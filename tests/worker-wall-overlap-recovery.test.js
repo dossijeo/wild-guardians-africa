@@ -43,12 +43,17 @@ test('a returning worker brushing a newly closed wall recovers a valid route thr
  // Reproduce a worker already inside the crop area when the final segments
  // are purchased. The closing wall brushes the worker's collision radius.
  worker.x=73.79870720221577;worker.z=2.400430932594735;
- worker.status='returning';worker.path=null;
+ worker.status='returning';
+ // A route calculated before the closing edit must be invalidated by the
+ // navigation version change and replaced with one through the new gate.
+ worker.path=[{x:0,z:0}];worker.destinationId='home-village-1';worker.pathVersion=nav.version;
+ const oldPathVersion=nav.version;
  const policy=createNativeFundedDefensePolicy({startDay:1,chunkPieces:8});let sequence=0;
  for(let i=0;i<20&&!policy.report().completed;i++){
   policy.act(s,nav,{command:kind=>`wall-${kind}-${sequence++}`,reserve:160});s.elapsed+=6;
  }
  assert(policy.report().completed);
+ assert.notEqual(nav.version,oldPathVersion);
  assert.equal(s.structures.filter(x=>x.kind==='wall'&&x.gate).length,1);
  const destination={...s.villages[0].entry,id:'home-'+s.villages[0].id};
  assert.equal(nav.walkable(worker.x,worker.z,.28,null,true),false);
@@ -82,4 +87,25 @@ test('several workers inside a newly closed wall can all recover their gate rout
   if(s.workers.every(worker=>worker.status==='home'))break;
  }
  assert(s.workers.every(worker=>worker.status==='home'));
+});
+
+test('the native day loop sends a trapped worker home and does not block the next hire',()=>{
+ const {s,nav}=createOpeningWorld({seed:123}),center=s.structures[0];
+ assert(Game.plant(s,'seed','mijo',center.x+6,center.z+1,nav));
+ Game.openInitialHiring(s);Game.hire(s,'hire',{olderFemale:1});
+ const worker=s.workers[0],oldId=worker.id;
+ const policy=createNativeFundedDefensePolicy({startDay:1,chunkPieces:8});let sequence=0;
+ for(let i=0;i<20&&!policy.report().completed;i++){
+  policy.act(s,nav,{command:kind=>`wall-${kind}-${sequence++}`,reserve:160});s.elapsed+=6;
+ }
+ assert(policy.report().completed);
+ worker.x=73.79870720221577;worker.z=2.400430932594735;
+ worker.status='returning';worker.path=null;
+ for(let i=0;i<150&&worker.status!=='home';i++)Game.tick(s,.5,nav);
+ assert.equal(worker.status,'home');
+ s.day=2;s.time=0;s.pauses=[];
+ Game.openInitialHiring(s);
+ Game.hire(s,'next-hire',{olderFemale:1});
+ assert(!s.workers.some(w=>w.id===oldId),'expired worker must leave the active roster');
+ assert.equal(s.workers.length,1);
 });

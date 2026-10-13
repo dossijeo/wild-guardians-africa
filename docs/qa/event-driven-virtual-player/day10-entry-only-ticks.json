@@ -1,0 +1,1272 @@
+{
+  "scope": "Copied native checkpoint advanced through real game ticks and production-equivalent Node entry transport, but without virtual-player decisions, spells or repairs. CPU diagnostic only; not an economic/raid campaign result or rendering frame-time.",
+  "input": "docs/qa/event-driven-virtual-player/pilot-good-sabana-123-14-start6/partial-state.json.gz",
+  "inputSha256": "bb7d428c4794afa186c4ebb5cd4af247fcbe15b4d66b51045a901efc8a46d324",
+  "fixedStep": 1,
+  "reloadMode": "continuous",
+  "hintMode": "no-hints",
+  "day": 10,
+  "startTime": 410.000000000025,
+  "endTime": 416.0000000000264,
+  "raid": true,
+  "samples": [
+    {
+      "time": 410.000000000025,
+      "dt": 1,
+      "milliseconds": 3.4635000000000105,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 19,
+      "plants": 1065
+    },
+    {
+      "time": 411.00000000002524,
+      "dt": 1,
+      "milliseconds": 0.3117000000000303,
+      "raidActors": 0,
+      "activeActors": 0,
+      "workers": 19,
+      "plants": 1065
+    },
+    {
+      "time": 412.00000000002547,
+      "dt": 1,
+      "milliseconds": 123327.1005,
+      "raidActors": 16,
+      "activeActors": 16,
+      "workers": 19,
+      "plants": 1065
+    },
+    {
+      "time": 413.0000000000257,
+      "dt": 1,
+      "milliseconds": 23.77390000000014,
+      "raidActors": 16,
+      "activeActors": 16,
+      "workers": 19,
+      "plants": 1065
+    },
+    {
+      "time": 414.0000000000259,
+      "dt": 1,
+      "milliseconds": 46.45089999999618,
+      "raidActors": 16,
+      "activeActors": 16,
+      "workers": 19,
+      "plants": 1065
+    },
+    {
+      "time": 415.00000000002615,
+      "dt": 1,
+      "milliseconds": 86.38910000000033,
+      "raidActors": 16,
+      "activeActors": 16,
+      "workers": 19,
+      "plants": 1065
+    }
+  ],
+  "phaseTrace": [
+    {
+      "phase": "raid-update",
+      "time": 412.1000000000255,
+      "milliseconds": 0.012999999999919964,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "worker-update",
+      "time": 412.1000000000255,
+      "milliseconds": 0.019099999999980355,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "raid-update",
+      "time": 412.2000000000255,
+      "milliseconds": 0.005400000000008731,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "worker-update",
+      "time": 412.2000000000255,
+      "milliseconds": 0.01089999999999236,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "raid-update",
+      "time": 412.30000000002553,
+      "milliseconds": 0.0005999999998493877,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "worker-update",
+      "time": 412.30000000002553,
+      "milliseconds": 0.010999999999967258,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "raid-update",
+      "time": 412.40000000002556,
+      "milliseconds": 0.0005000000001018634,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "worker-update",
+      "time": 412.40000000002556,
+      "milliseconds": 0.008000000000038199,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "raid-update",
+      "time": 412.5000000000256,
+      "milliseconds": 0.0003999999998995918,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "worker-update",
+      "time": 412.5000000000256,
+      "milliseconds": 0.008000000000038199,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "raid-update",
+      "time": 412.6000000000256,
+      "milliseconds": 0.0003999999998995918,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "worker-update",
+      "time": 412.6000000000256,
+      "milliseconds": 0.00909999999998945,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "raid-update",
+      "time": 412.7000000000256,
+      "milliseconds": 0.0003999999998995918,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "worker-update",
+      "time": 412.7000000000256,
+      "milliseconds": 0.008000000000038199,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "raid-update",
+      "time": 412.78841779753566,
+      "milliseconds": 0.0003999999998995918,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "worker-update",
+      "time": 412.78841779753566,
+      "milliseconds": 0.008100000000013097,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "spawn-prepared-entry",
+      "stage": "prepared-entry",
+      "elapsedMilliseconds": 0.20059999999989486,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "spawn-selected-entry",
+      "stage": "selected-entry",
+      "elapsedMilliseconds": 0.8379999999999654,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "spawn-resident-entry",
+      "stage": "resident-entry",
+      "elapsedMilliseconds": 0.8687999999999647,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "spawn-target-hint",
+      "stage": "target-hint",
+      "prepared": true,
+      "choices": 0,
+      "accepted": false,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "spawn-spawned",
+      "stage": "spawned",
+      "elapsedMilliseconds": 2.0269999999998163,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "target-detail",
+      "time": 412.8884177975357,
+      "animalId": "animal-9521",
+      "groupMilliseconds": 0.8304000000000542,
+      "approachMilliseconds": 40.17380000000003,
+      "groupChecks": 1,
+      "approachChecks": 1,
+      "groupRejected": 0,
+      "cropGroupSizes": [
+        246,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "closedRegions": 0,
+      "searchedRegions": 0,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "target-selection",
+      "time": 412.8884177975357,
+      "animalId": "animal-9521",
+      "milliseconds": 56.874900000000025,
+      "found": true,
+      "targetKind": "crop",
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "target-detail",
+      "time": 412.8884177975357,
+      "animalId": "animal-9522",
+      "groupMilliseconds": 0.8786000000000058,
+      "approachMilliseconds": 14.979700000000093,
+      "groupChecks": 1,
+      "approachChecks": 1,
+      "groupRejected": 0,
+      "cropGroupSizes": [
+        246,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "closedRegions": 0,
+      "searchedRegions": 0,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "target-selection",
+      "time": 412.8884177975357,
+      "animalId": "animal-9522",
+      "milliseconds": 21.117499999999836,
+      "found": true,
+      "targetKind": "crop",
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "target-detail",
+      "time": 412.8884177975357,
+      "animalId": "animal-9523",
+      "groupMilliseconds": 0.3751999999999498,
+      "approachMilliseconds": 19.817799999999806,
+      "groupChecks": 1,
+      "approachChecks": 1,
+      "groupRejected": 0,
+      "cropGroupSizes": [
+        246,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "closedRegions": 0,
+      "searchedRegions": 0,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "target-selection",
+      "time": 412.8884177975357,
+      "animalId": "animal-9523",
+      "milliseconds": 23.00460000000021,
+      "found": true,
+      "targetKind": "crop",
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "target-detail",
+      "time": 412.8884177975357,
+      "animalId": "animal-9524",
+      "groupMilliseconds": 0.6323000000002139,
+      "approachMilliseconds": 6.617399999999634,
+      "groupChecks": 2,
+      "approachChecks": 1,
+      "groupRejected": 0,
+      "cropGroupSizes": [
+        246,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "closedRegions": 0,
+      "searchedRegions": 0,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "target-selection",
+      "time": 412.8884177975357,
+      "animalId": "animal-9524",
+      "milliseconds": 10.240099999999984,
+      "found": true,
+      "targetKind": "crop",
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "target-detail",
+      "time": 412.8884177975357,
+      "animalId": "animal-9525",
+      "groupMilliseconds": 1.815099999999802,
+      "approachMilliseconds": 12.667300000000068,
+      "groupChecks": 5,
+      "approachChecks": 1,
+      "groupRejected": 0,
+      "cropGroupSizes": [
+        246,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "closedRegions": 0,
+      "searchedRegions": 0,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "target-selection",
+      "time": 412.8884177975357,
+      "animalId": "animal-9525",
+      "milliseconds": 16.667999999999665,
+      "found": true,
+      "targetKind": "crop",
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "target-detail",
+      "time": 412.8884177975357,
+      "animalId": "animal-9526",
+      "groupMilliseconds": 0.7880000000004657,
+      "approachMilliseconds": 6.793799999999919,
+      "groupChecks": 4,
+      "approachChecks": 1,
+      "groupRejected": 0,
+      "cropGroupSizes": [
+        246,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "closedRegions": 0,
+      "searchedRegions": 0,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "target-selection",
+      "time": 412.8884177975357,
+      "animalId": "animal-9526",
+      "milliseconds": 10.550499999999829,
+      "found": true,
+      "targetKind": "crop",
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "target-detail",
+      "time": 412.8884177975357,
+      "animalId": "animal-9527",
+      "groupMilliseconds": 1.0403999999994085,
+      "approachMilliseconds": 0.7341000000001259,
+      "groupChecks": 5,
+      "approachChecks": 1,
+      "groupRejected": 0,
+      "cropGroupSizes": [
+        246,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "closedRegions": 0,
+      "searchedRegions": 0,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "target-selection",
+      "time": 412.8884177975357,
+      "animalId": "animal-9527",
+      "milliseconds": 3.5999000000001615,
+      "found": true,
+      "targetKind": "crop",
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "target-detail",
+      "time": 412.8884177975357,
+      "animalId": "animal-9528",
+      "groupMilliseconds": 1.1443000000008396,
+      "approachMilliseconds": 4.537900000000263,
+      "groupChecks": 6,
+      "approachChecks": 1,
+      "groupRejected": 0,
+      "cropGroupSizes": [
+        246,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "closedRegions": 0,
+      "searchedRegions": 0,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "target-selection",
+      "time": 412.8884177975357,
+      "animalId": "animal-9528",
+      "milliseconds": 7.645800000000236,
+      "found": true,
+      "targetKind": "crop",
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "target-detail",
+      "time": 412.8884177975357,
+      "animalId": "animal-9529",
+      "groupMilliseconds": 60.40449999999191,
+      "approachMilliseconds": 16342.425100000002,
+      "groupChecks": 196,
+      "approachChecks": 196,
+      "groupRejected": 0,
+      "cropGroupSizes": [
+        246,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "closedRegions": 0,
+      "searchedRegions": 14,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "target-selection",
+      "time": 412.8884177975357,
+      "animalId": "animal-9529",
+      "milliseconds": 16408.5693,
+      "found": true,
+      "targetKind": "crop",
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "target-detail",
+      "time": 412.8884177975357,
+      "animalId": "animal-9530",
+      "groupMilliseconds": 55.19170000003578,
+      "approachMilliseconds": 14979.579699999995,
+      "groupChecks": 204,
+      "approachChecks": 203,
+      "groupRejected": 0,
+      "cropGroupSizes": [
+        246,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "closedRegions": 0,
+      "searchedRegions": 13,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "target-selection",
+      "time": 412.8884177975357,
+      "animalId": "animal-9530",
+      "milliseconds": 15042.7468,
+      "found": true,
+      "targetKind": "crop",
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "target-detail",
+      "time": 412.8884177975357,
+      "animalId": "animal-9531",
+      "groupMilliseconds": 61.697200000009616,
+      "approachMilliseconds": 14813.960799999957,
+      "groupChecks": 209,
+      "approachChecks": 207,
+      "groupRejected": 0,
+      "cropGroupSizes": [
+        246,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "closedRegions": 0,
+      "searchedRegions": 14,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "target-selection",
+      "time": 412.8884177975357,
+      "animalId": "animal-9531",
+      "milliseconds": 14881.442300000002,
+      "found": true,
+      "targetKind": "crop",
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "target-detail",
+      "time": 412.8884177975357,
+      "animalId": "animal-9532",
+      "groupMilliseconds": 67.73160000014468,
+      "approachMilliseconds": 16014.675299999959,
+      "groupChecks": 229,
+      "approachChecks": 226,
+      "groupRejected": 0,
+      "cropGroupSizes": [
+        246,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "closedRegions": 0,
+      "searchedRegions": 13,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "target-selection",
+      "time": 412.8884177975357,
+      "animalId": "animal-9532",
+      "milliseconds": 16088.141299999996,
+      "found": true,
+      "targetKind": "crop",
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "target-detail",
+      "time": 412.8884177975357,
+      "animalId": "animal-9533",
+      "groupMilliseconds": 19.60160000002361,
+      "approachMilliseconds": 4103.46620000001,
+      "groupChecks": 71,
+      "approachChecks": 71,
+      "groupRejected": 0,
+      "cropGroupSizes": [
+        246,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "closedRegions": 0,
+      "searchedRegions": 20,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "target-selection",
+      "time": 412.8884177975357,
+      "animalId": "animal-9533",
+      "milliseconds": 4127.907300000006,
+      "found": true,
+      "targetKind": "crop",
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "target-detail",
+      "time": 412.8884177975357,
+      "animalId": "animal-9534",
+      "groupMilliseconds": 67.06070000010368,
+      "approachMilliseconds": 17303.626399999906,
+      "groupChecks": 272,
+      "approachChecks": 260,
+      "groupRejected": 0,
+      "cropGroupSizes": [
+        246,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "closedRegions": 0,
+      "searchedRegions": 13,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "target-selection",
+      "time": 412.8884177975357,
+      "animalId": "animal-9534",
+      "milliseconds": 17379.395500000013,
+      "found": true,
+      "targetKind": "wall",
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "target-detail",
+      "time": 412.8884177975357,
+      "animalId": "animal-9535",
+      "groupMilliseconds": 70.9074999998702,
+      "approachMilliseconds": 19164.25289999992,
+      "groupChecks": 272,
+      "approachChecks": 260,
+      "groupRejected": 0,
+      "cropGroupSizes": [
+        246,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "closedRegions": 0,
+      "searchedRegions": 13,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "target-selection",
+      "time": 412.8884177975357,
+      "animalId": "animal-9535",
+      "milliseconds": 19241.3787,
+      "found": true,
+      "targetKind": "wall",
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "target-detail",
+      "time": 412.8884177975357,
+      "animalId": "animal-9536",
+      "groupMilliseconds": 68.73739999988175,
+      "approachMilliseconds": 19903.858100000027,
+      "groupChecks": 272,
+      "approachChecks": 260,
+      "groupRejected": 0,
+      "cropGroupSizes": [
+        246,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "closedRegions": 0,
+      "searchedRegions": 12,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "target-selection",
+      "time": 412.8884177975357,
+      "animalId": "animal-9536",
+      "milliseconds": 19978.520699999994,
+      "found": true,
+      "targetKind": "wall",
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "raid-update",
+      "time": 412.8884177975357,
+      "milliseconds": 123311.6039,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "worker-update",
+      "time": 412.8884177975357,
+      "milliseconds": 0.021600000007310882,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "raid-update",
+      "time": 412.9884177975357,
+      "milliseconds": 9.771400000012363,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "worker-update",
+      "time": 412.9884177975357,
+      "milliseconds": 0.030199999993783422,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "raid-update",
+      "time": 413.0000000000257,
+      "milliseconds": 2.436199999996461,
+      "tickStartTime": 412.00000000002547
+    },
+    {
+      "phase": "worker-update",
+      "time": 413.0000000000257,
+      "milliseconds": 0.013800000000628643,
+      "tickStartTime": 412.00000000002547
+    }
+  ],
+  "pathStats": {
+    "calls": 51228,
+    "failed": 51212,
+    "milliseconds": 122148.97189999845
+  },
+  "queryStats": {
+    "walkable": {
+      "calls": 3271907,
+      "milliseconds": 2818.9031999934787
+    },
+    "segmentClear": {
+      "calls": 28111987,
+      "milliseconds": 50981.88550003631
+    },
+    "terrainValid": {
+      "calls": 2544660,
+      "milliseconds": 16753.371999995947
+    },
+    "coarseSegmentClear": {
+      "calls": 473383,
+      "milliseconds": 20941.94189999575
+    },
+    "ring": {
+      "calls": 1691,
+      "rejected": 0,
+      "milliseconds": 4.537600000084012
+    }
+  },
+  "raidActors": [
+    {
+      "species": "warthog",
+      "spawn": {
+        "x": 108.22924541125312,
+        "z": 18.203909185684818
+      },
+      "status": "walking",
+      "hitsRemaining": 4,
+      "targetId": "plant-8928"
+    },
+    {
+      "species": "warthog",
+      "spawn": {
+        "x": 106.15911463532188,
+        "z": 20.77384275886183
+      },
+      "status": "walking",
+      "hitsRemaining": 3,
+      "targetId": "plant-8923"
+    },
+    {
+      "species": "buffalo",
+      "spawn": {
+        "x": 103.98774405196247,
+        "z": 23.26222572571428
+      },
+      "status": "walking",
+      "hitsRemaining": 6,
+      "targetId": "plant-8933"
+    },
+    {
+      "species": "warthog",
+      "spawn": {
+        "x": 111.34431640904343,
+        "z": 20.713158611056006
+      },
+      "status": "entering",
+      "hitsRemaining": 5,
+      "targetId": "plant-7694"
+    },
+    {
+      "species": "warthog",
+      "spawn": {
+        "x": 109.2741856331122,
+        "z": 23.283092184233016
+      },
+      "status": "entering",
+      "hitsRemaining": 3,
+      "targetId": "plant-8829"
+    },
+    {
+      "species": "warthog",
+      "spawn": {
+        "x": 107.20405485718096,
+        "z": 25.85302575741003
+      },
+      "status": "entering",
+      "hitsRemaining": 4,
+      "targetId": "plant-8919"
+    },
+    {
+      "species": "warthog",
+      "spawn": {
+        "x": 102.01885308345942,
+        "z": 25.913709905215853
+      },
+      "status": "walking",
+      "hitsRemaining": 4,
+      "targetId": "plant-8936"
+    },
+    {
+      "species": "warthog",
+      "spawn": {
+        "x": 105.13392408124975,
+        "z": 28.42295933058704
+      },
+      "status": "entering",
+      "hitsRemaining": 4,
+      "targetId": "plant-9396"
+    },
+    {
+      "species": "warthog",
+      "spawn": {
+        "x": 52.55493580038634,
+        "z": -27.659185922246568
+      },
+      "status": "entering",
+      "hitsRemaining": 4,
+      "targetId": "plant-9319"
+    },
+    {
+      "species": "warthog",
+      "spawn": {
+        "x": 54.87015154404113,
+        "z": -30.01073351060897
+      },
+      "status": "entering",
+      "hitsRemaining": 5,
+      "targetId": "plant-9299"
+    },
+    {
+      "species": "warthog",
+      "spawn": {
+        "x": 61.815798775005476,
+        "z": -37.065376275696174
+      },
+      "status": "entering",
+      "hitsRemaining": 4,
+      "targetId": "plant-8107"
+    },
+    {
+      "species": "warthog",
+      "spawn": {
+        "x": 58.96543806183894,
+        "z": -39.87169838921712
+      },
+      "status": "entering",
+      "hitsRemaining": 3,
+      "targetId": "plant-9386"
+    },
+    {
+      "species": "lion",
+      "spawn": {
+        "x": 59.6787305759236,
+        "z": -34.53843355523871
+      },
+      "status": "entering",
+      "hitsRemaining": 7,
+      "targetId": "plant-9413"
+    },
+    {
+      "species": "warthog",
+      "spawn": {
+        "x": 61.28065380549372,
+        "z": -42.22324597757952
+      },
+      "status": "entering",
+      "hitsRemaining": 3,
+      "targetId": "structure-4222"
+    },
+    {
+      "species": "warthog",
+      "spawn": {
+        "x": 54.68989699208912,
+        "z": -44.08118155949855
+      },
+      "status": "entering",
+      "hitsRemaining": 4,
+      "targetId": "structure-4221"
+    },
+    {
+      "species": "hyena",
+      "spawn": {
+        "x": 57.14763077140223,
+        "z": -46.292413042184904
+      },
+      "status": "entering",
+      "hitsRemaining": 5,
+      "targetId": "structure-4223"
+    }
+  ],
+  "eventCounts": {
+    "RaidSpawned": 1
+  },
+  "damagedStructures": [],
+  "entryTransport": {
+    "mode": "real-node-worker-with-production-cooperative-fallback",
+    "updates": 107,
+    "waits": [
+      {
+        "day": 10,
+        "time": 412.00000000002547,
+        "elapsed": 5812.000000002878,
+        "key": "[\"123\",\"sabana\",\"mapungubwe\",\"4.1.10.3\",1214176705,3,[\"warthog\",\"warthog\",\"buffalo\",\"warthog\",\"warthog\",\"warthog\",\"warthog\",\"warthog\",\"warthog\",\"warthog\",\"warthog\",\"warthog\",\"lion\",\"warthog\",\"warthog\",\"hyena\"],[-24,-72,216,168],{\"eye\":{\"x\":99.70247532024266,\"z\":30.57367599590944},\"target\":{\"x\":83,\"z\":0}},[[\"structure-2\",\"intact\",true],[\"structure-4196\",\"intact\",true],[\"structure-4197\",\"intact\",true],[\"structure-4220\",\"intact\",true],[\"structure-4221\",\"intact\",true],[\"structure-4222\",\"intact\",true],[\"structure-4223\",\"intact\",true],[\"structure-4224\",\"intact\",true],[\"structure-4242\",\"intact\",true],[\"structure-4243\",\"intact\",true],[\"structure-4258\",\"intact\",true],[\"structure-4259\",\"intact\",true],[\"structure-4260\",\"intact\",true],[\"structure-4261\",\"intact\",true],[\"structure-4262\",\"intact\",true],[\"structure-4263\",\"intact\",true],[\"structure-4264\",\"intact\",true],[\"structure-4265\",\"intact\",true],[\"structure-4290\",\"intact\",true],[\"structure-4291\",\"intact\",true],[\"structure-4307\",\"intact\",true],[\"structure-4308\",\"intact\",true],[\"structure-4309\",\"intact\",true],[\"structure-4310\",\"intact\",true],[\"structure-4311\",\"intact\",true],[\"structure-4328\",\"ruined\",false],[\"structure-4329\",\"ruined\",false],[\"structure-4330\",\"intact\",true],[\"structure-4331\",\"intact\",true],[\"structure-4343\",\"ruined\",false],[\"structure-4344\",\"intact\",true],[\"structure-4345\",\"intact\",true],[\"structure-4346\",\"ruined\",false],[\"structure-4347\",\"ruined\",false],[\"structure-4348\",\"ruined\",false],[\"structure-4364\",\"intact\",true],[\"structure-4365\",\"intact\",true],[\"structure-4366\",\"intact\",true],[\"structure-4388\",\"intact\",true],[\"structure-4389\",\"intact\",true],[\"structure-4390\",\"intact\",true],[\"structure-4391\",\"intact\",true],[\"structure-4410\",\"intact\",true],[\"structure-4411\",\"intact\",true],[\"structure-4412\",\"intact\",true],[\"structure-4429\",\"intact\",true],[\"structure-4430\",\"intact\",true],[\"structure-4431\",\"intact\",true],[\"structure-4432\",\"intact\",true]]]",
+        "updates": 95,
+        "waitMilliseconds": 1575.7823999999998,
+        "group": [
+          "warthog",
+          "warthog",
+          "buffalo",
+          "warthog",
+          "warthog",
+          "warthog",
+          "warthog",
+          "warthog",
+          "warthog",
+          "warthog",
+          "warthog",
+          "warthog",
+          "lion",
+          "warthog",
+          "warthog",
+          "hyena"
+        ],
+        "entryActors": 16,
+        "diagnostics": null
+      }
+    ],
+    "readyContexts": [
+      {
+        "key": "[\"123\",\"sabana\",\"mapungubwe\",\"4.1.10.3\",1214176705,3,[\"warthog\",\"warthog\",\"buffalo\",\"warthog\",\"warthog\",\"warthog\",\"warthog\",\"warthog\",\"warthog\",\"warthog\",\"warthog\",\"warthog\",\"lion\",\"warthog\",\"warthog\",\"hyena\"],[-24,-72,216,168],{\"eye\":{\"x\":99.70247532024266,\"z\":30.57367599590944},\"target\":{\"x\":83,\"z\":0}},[[\"structure-2\",\"intact\",true],[\"structure-4196\",\"intact\",true],[\"structure-4197\",\"intact\",true],[\"structure-4220\",\"intact\",true],[\"structure-4221\",\"intact\",true],[\"structure-4222\",\"intact\",true],[\"structure-4223\",\"intact\",true],[\"structure-4224\",\"intact\",true],[\"structure-4242\",\"intact\",true],[\"structure-4243\",\"intact\",true],[\"structure-4258\",\"intact\",true],[\"structure-4259\",\"intact\",true],[\"structure-4260\",\"intact\",true],[\"structure-4261\",\"intact\",true],[\"structure-4262\",\"intact\",true],[\"structure-4263\",\"intact\",true],[\"structure-4264\",\"intact\",true],[\"structure-4265\",\"intact\",true],[\"structure-4290\",\"intact\",true],[\"structure-4291\",\"intact\",true],[\"structure-4307\",\"intact\",true],[\"structure-4308\",\"intact\",true],[\"structure-4309\",\"intact\",true],[\"structure-4310\",\"intact\",true],[\"structure-4311\",\"intact\",true],[\"structure-4328\",\"ruined\",false],[\"structure-4329\",\"ruined\",false],[\"structure-4330\",\"intact\",true],[\"structure-4331\",\"intact\",true],[\"structure-4343\",\"ruined\",false],[\"structure-4344\",\"intact\",true],[\"structure-4345\",\"intact\",true],[\"structure-4346\",\"ruined\",false],[\"structure-4347\",\"ruined\",false],[\"structure-4348\",\"ruined\",false],[\"structure-4364\",\"intact\",true],[\"structure-4365\",\"intact\",true],[\"structure-4366\",\"intact\",true],[\"structure-4388\",\"intact\",true],[\"structure-4389\",\"intact\",true],[\"structure-4390\",\"intact\",true],[\"structure-4391\",\"intact\",true],[\"structure-4410\",\"intact\",true],[\"structure-4411\",\"intact\",true],[\"structure-4412\",\"intact\",true],[\"structure-4429\",\"intact\",true],[\"structure-4430\",\"intact\",true],[\"structure-4431\",\"intact\",true],[\"structure-4432\",\"intact\",true]]]",
+        "token": 1,
+        "day": 10,
+        "time": 412.00000000002547,
+        "elapsed": 5812.000000002878,
+        "group": [
+          "warthog",
+          "warthog",
+          "buffalo",
+          "warthog",
+          "warthog",
+          "warthog",
+          "warthog",
+          "warthog",
+          "warthog",
+          "warthog",
+          "warthog",
+          "warthog",
+          "lion",
+          "warthog",
+          "warthog",
+          "hyena"
+        ],
+        "entryActors": 16,
+        "diagnostics": null
+      }
+    ],
+    "preparer": {
+      "requests": 1,
+      "accepted": 1,
+      "obsolete": 0,
+      "used": 1,
+      "failed": 0
+    },
+    "workerFailure": null,
+    "scope": "Wall-clock waits are separate from simulated activity; no clock, RNG or geometry patches",
+    "workerClosedRegions": null,
+    "workerTargetChoices": [],
+    "workerTargetBytes": 33
+  },
+  "stateSha256": "7648a50966c677c3353c5aca31e45900a5a67ec9fa7a62813ad7e6b40061af8a"
+}

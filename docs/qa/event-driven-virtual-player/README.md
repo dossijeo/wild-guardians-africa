@@ -4,7 +4,10 @@ This branch is an isolated campaign-simulator experiment. It does not change
 prices, wages, crop production, attack damage or live-game balance parameters.
 The balance runner uses continuous native `Game.tick` calls; persistence checks
 remain a separate mode. Previous campaign outputs are retained under their
-original QA directories.
+original QA directories. `retained-native-pilots.zip` contains the unmodified
+receipts, source hashes, reports, daily rows and compressed native states for
+the ten Sabana pilots retained during development; it is an evidence archive,
+not a runtime dependency.
 
 ## Native wall closure and worker routes
 
@@ -22,6 +25,8 @@ passed 30/30 before the extra four-worker regression was added; the four
 worker and save/reload cases then passed in the focused test file. The
 unhostable-door test deliberately forces native gate placement to reject all
 candidates; it verifies that construction cannot seal the worker in.
+The later native-loop regression additionally verifies that a returning worker
+reaches home and is removed from the active roster before next-day hiring.
 
 No worker-exit certificate or per-plant accessibility check was added to the
 virtual player's ordinary decisions. The player asks for native paid wall
@@ -92,6 +97,16 @@ slots are blocked by a building or large terrain props. It does not claim
 certified protection. No economy, crop, raid-damage or attack-count parameter
 was changed to force a win. Later campaigns now write compact per-day CPU
 timings to `runtime-days.jsonl`.
+
+A second fixed-policy Sabana/Mapungubwe pilot (seed 712) reached a native
+defeat on night 20, with 30 coins and a peak of 213 living crops. Its compact
+timings show decision work generally below 0.5 seconds/day after the initial
+phase, whereas native `Game.tick` rose from about 0.7 seconds on day 1 to
+roughly 4–6 seconds on several later days. These are different evolving game
+states, so the numbers indicate where CPU time accrues rather than an A/B
+speedup claim. The 30-night target was not completed by either of these
+seeds. A separate Grand Canyon/Sahelian seven-night pilot is used next to
+check that the engine gate and planned policy do not rely on Sabana geometry.
 
 ## Test baseline and limits
 
