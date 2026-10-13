@@ -1,0 +1,135 @@
+{
+  "report": {
+    "stats": {
+      "seed": 712,
+      "biome": "desert",
+      "sceneFormat": true,
+      "settlement": true,
+      "current": [
+        {
+          "roundtripMs": 126.59999990463257,
+          "bytes": 502564,
+          "props": 1
+        },
+        {
+          "roundtripMs": 34.299999952316284,
+          "bytes": 502564,
+          "props": 2
+        }
+      ],
+      "spatial": [
+        {
+          "roundtripMs": 86,
+          "compiledMs": 6,
+          "spatialMs": 39,
+          "copyMs": 1,
+          "transferBytes": 90172,
+          "three": {
+            "ms": 4.599999904632568,
+            "vertices": 2401,
+            "waterVertices": 0
+          },
+          "props": 13,
+          "metrics": {
+            "loadedChunks": 1,
+            "loadedSectors": 16,
+            "sectorUpdates": 16,
+            "memoryBytes": 4194304
+          }
+        },
+        {
+          "roundtripMs": 18,
+          "compiledMs": 6,
+          "spatialMs": 16.899999856948853,
+          "copyMs": 0.6000001430511475,
+          "transferBytes": 90172,
+          "three": {
+            "ms": 1,
+            "vertices": 2401,
+            "waterVertices": 0
+          },
+          "props": 24,
+          "metrics": {
+            "loadedChunks": 2,
+            "loadedSectors": 32,
+            "sectorUpdates": 36,
+            "memoryBytes": 4194304
+          }
+        }
+      ],
+      "topology": {
+        "crossing": {
+          "x": 23,
+          "z": -18,
+          "nx": 24,
+          "nz": -18
+        },
+        "closedStatus": "blocked",
+        "reopenedStatus": "found",
+        "workerClosedStatus": "blocked",
+        "workerReopenedStatus": "found",
+        "wallAddMs": 4.5,
+        "wallRemoveMs": 1.5,
+        "sectorUpdatesAfterAdd": 44,
+        "sectorUpdatesAfterRemove": 52,
+        "evictMs": 3,
+        "reloadMs": 18.40000009536743,
+        "sameVisualPayload": true,
+        "loadedSectorsAfterReload": 32,
+        "memoryBytesAfterReload": 4194304
+      },
+      "barrierTopology": {
+        "workerOpen": true,
+        "animalClosed": false,
+        "workerClosed": false,
+        "workerReopened": true,
+        "animalReopened": true,
+        "localUpdates": 2,
+        "addMs": 0.8999998569488525,
+        "closeMs": 1.2000000476837158,
+        "reopenMs": 0.9000000953674316
+      },
+      "batchTopology": {
+        "count": 12,
+        "sectorUpdates": 6,
+        "operationMs": 3.700000047683716
+      },
+      "multipleSettlements": {
+        "secondLevel": 8.660337448120117,
+        "localSectorUpdates": 16,
+        "sameFirstSettlement": true,
+        "secondChunkChanged": true,
+        "memoryBytes": 4194304
+      },
+      "surfaceView": {
+        "sample": {
+          "x": 30.3,
+          "z": 5.7
+        },
+        "height": 15.680731296539307,
+        "difference": 4.76837158203125e-7
+      },
+      "spatialReload": {
+        "version": 2,
+        "settlements": 2,
+        "barriers": 1,
+        "nextBarrierId": 16,
+        "routeStatus": "blocked",
+        "restoredMemoryBytes": 4194304
+      },
+      "checks": {
+        "transferLengths": true,
+        "terrainSeam": true,
+        "wallEdit": true,
+        "dynamicPassage": true,
+        "batchedTopology": true,
+        "evictionRegeneration": true,
+        "multipleSettlements": true,
+        "spatialReload": true,
+        "surfaceView": true
+      }
+    },
+    "error": null
+  },
+  "errors": []
+}

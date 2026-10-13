@@ -47,6 +47,7 @@ struct Settlement {bool active=false;double x=0,z=0,y=0,hx=0,hz=0,clearRadius=0,
 struct ChunkRaster {int cx,cz;std::vector<uint8_t> pass,steps,inbound;};
 struct NavProfile {float radius=0;bool worker=false,ready=false;std::unordered_map<uint64_t,ChunkRaster> rasters;};
 uint32_t worldSeed=0;
+int worldBiome=0; // 0: savanna, 1: desert (experimental spatial recipes).
 int chunkX=0,chunkZ=0,nextBarrierId=1;
 float radiusNow=.3f;
 bool workerNow=true,navReady=false;
@@ -136,7 +137,28 @@ double noise(double x,double z,uint32_t salt){
   return (a+(b-a)*u)*(1-v)+(c+(d-c)*u)*v;
 }
 double riverX(double z){return -20+std::sin(z*.035+unit(cellHash(9,7,63))*2*pi)*17;}
+struct DesertSample {double height,dune,swale,gravel;};
+DesertSample desertSample(double x,double z){
+  const double wind=(unit(cellHash(3,9,7193))-.5)*1.30;
+  const double co=std::cos(wind),si=std::sin(wind);
+  const double u=x*co+z*si,v=-x*si+z*co;
+  const double phase=unit(cellHash(9,7,63))*2*pi;
+  const double bend=11*std::sin(v*.024+phase)+5*std::sin(v*.057+phase*.41)
+    +(noise(u*.007,v*.013,7101)-.5)*15;
+  const double wave=(u+bend)/74+(noise(u*.004,v*.006,7103)-.5)*.42;
+  const double q=wave-std::floor(wave),crest=.70;
+  const double dune=q<crest?std::pow(blend(q/crest),1.12):
+    std::pow(1-blend((q-crest)/(1-crest)),.96);
+  const double pocket=blend((noise(u*.010+31,v*.012-17,7111)-.48)/.28);
+  const double swale=1-blend((dune-.06)/.49),gravel=pocket*swale;
+  const double amplitude=8.8+noise(u*.006,v*.009,7121)*4.2;
+  const double secondary=std::pow(.5+.5*std::sin(u*.054+v*.011+phase),3)*2;
+  const double height=4+noise(x*.003,z*.003,7127)*2.2+
+    dune*amplitude*(1-gravel*.3)+secondary;
+  return {height,dune,swale,gravel};
+}
 double baseHeight(double x,double z){
+  if(worldBiome==1)return desertSample(x,z).height;
   const double broad=.58*noise(x*.012,z*.012,91)+.28*noise(x*.0243,z*.0243,9194)+.14*noise(x*.0496,z*.0496,29741);
   const double detail=noise(x*.050,z*.050,883);
   const double dry=2.4+broad*12+detail*2.2;
@@ -163,6 +185,7 @@ void selectNearbySettlements(int cx,int cz){
 }
 void preparePonds(int cx,int cz){
   ponds.clear();
+  if(worldBiome==1)return;
   constexpr double cell=64,halo=20;
   const double x0=cx*side-24,z0=cz*side-24;
   for(int tz=int(std::floor((z0-halo)/cell));tz<=int(std::floor((z0+side+halo)/cell));tz++)
@@ -210,6 +233,7 @@ double surface(double x,double z){
   return c+(latticeHeight(ix,iz+1)-c)*(1-fx)+(latticeHeight(ix+1,iz)-c)*(1-fz);
 }
 double fluidLevel(double x,double z){
+  if(worldBiome==1)return 0;
   if(std::abs(x-riverX(z))<6.1&&surface(x,z)<3.58)return 3.6;
   for(const Pond& p:ponds)if(std::hypot(x-p.x,z-p.z)<p.radius*.82&&surface(x,z)<p.level-.02)return p.level;
   return 0;
@@ -240,9 +264,11 @@ void buildGroundMask(int cx,int cz){
       +.28*noise(x*.0548,z*.0548,4916^9271)
       +.14*noise(x*.1115,z*.1115,4916^29714);
     const double shore=std::abs(x-riverX(z));
-    const double moisture=std::clamp(.2+broad*.55+
+    const double moisture=worldBiome==1?0:std::clamp(.2+broad*.55+
       (1-blend((shore-6)/17))*.35,0.0,1.0);
-    const double cover=blend((vegetation*.57+meso*.28+moisture*.15-.28)/.44)*.96;
+    const double cover=worldBiome==1?
+      blend((vegetation*.57+meso*.28-.52)/.44)*.18:
+      blend((vegetation*.57+meso*.28+moisture*.15-.28)/.44)*.96;
     const int at=(iz*35+ix)*4;
     groundMask[at]=uint8_t(std::lround(cover*255));
     groundMask[at+1]=uint8_t(std::lround(meso*255));
@@ -341,6 +367,7 @@ void buildRiverStrip(double z0,double z1,RiverEdgeCache& cache,int depth,bool ne
 }
 void buildWaterMesh(int cx,int cz){
   waterTriangles.clear();
+  if(worldBiome==1)return;
   const double minX=cx*side-24,maxX=minX+side,minZ=cz*side-24,maxZ=minZ+side;
   RiverEdgeCache riverEdges{minZ,minX,maxX};
   for(int z=int(minZ);z<int(maxZ);z++){
@@ -506,8 +533,21 @@ void populateChunk(int cx,int cz,bool visual=true){
   for(int z=0;z<grid;z++)for(int x=0;x<grid;x++){
     const int i=z*grid+x,wx=x0+x,wz=z0+z;
     heights[i]=float(latticeHeight(wx,wz));
-    // The palette is the existing Sabana biome's soil/grass/rock palette.
-    // Color still comes from this C++ world, not from a second JS generator.
+    // Biome-specific colors come from this C++ world, not a second JS recipe.
+    if(worldBiome==1){
+      const DesertSample sand=desertSample(wx,wz);
+      const double fine=noise(wx*.057,wz*.057,7139);
+      const double grass=.27+sand.dune*.37+fine*.14;
+      const double gravel=sand.gravel*.20,shade=.96+noise(wx*.15,wz*.15,7151)*.055;
+      constexpr double soil[3]={211.0/255,148.0/255,86.0/255};
+      constexpr double light[3]={228.0/255,184.0/255,117.0/255};
+      constexpr double rock[3]={183.0/255,118.0/255,77.0/255};
+      for(int k=0;k<3;k++){
+        const double base=soil[k]+(light[k]-soil[k])*grass;
+        colors[i*3+k]=float(std::clamp((base+(rock[k]-base)*gravel)*shade,0.0,1.0));
+      }
+      continue;
+    }
     const double patch=.58*noise(wx*.041,wz*.041,8913)
       +.28*noise(wx*.0832,wz*.0832,8913^9271)
       +.14*noise(wx*.1693,wz*.1693,8913^29714);
@@ -536,12 +576,17 @@ void populateChunk(int cx,int cz,bool visual=true){
   buildGroundMask(cx,cz);
   buildWaterMesh(cx,cz);
   }
-  constexpr double spacing[6]={13.5,7,2.8,9,10,32};
-  constexpr double density[6]={.53,.51,.72,.30,.28,.63};
-  constexpr int offsets[6]={0,4,7,10,13,17},counts[6]={4,3,3,3,4,2};
+  constexpr double savannaSpacing[6]={13.5,7,2.8,9,10,32};
+  constexpr double desertSpacing[6]={19,11,4.6,15,23,54};
+  constexpr double savannaDensity[6]={.53,.51,.72,.30,.28,.63};
+  constexpr double desertDensity[6]={.30,.22,.035,.17,.10,.12};
+  constexpr int savannaOffsets[6]={0,4,7,10,13,17},savannaCounts[6]={4,3,3,3,4,2};
+  constexpr int desertOffsets[6]={0,4,6,10,15,17},desertCounts[6]={4,2,4,5,2,3};
   constexpr float radii[20]={3.8f,3.1f,3.0f,1.7f,1.1f,.9f,1.4f,.45f,.35f,.5f,1.2f,1.7f,1.2f,1.8f,1.3f,1.0f,.9f,1.7f,4.0f,5.0f};
+  constexpr float desertRadii[20]={3.657f,2.417f,2.306f,2.499f,.817f,.703f,.706f,.635f,.538f,.645f,
+    1.422f,2.264f,1.05f,1.790f,1.982f,.85f,1.35f,5.235f,5.955f,2.4f};
   for(int type=0;type<6;type++){
-    const double cell=spacing[type];
+    const double cell=worldBiome==1?desertSpacing[type]:savannaSpacing[type];
     // A neighbor owns and renders a prop whose footprint crosses our edge.
     // Generate its collision record from the same global cells, without
     // duplicating the visible instance in this chunk.
@@ -549,13 +594,14 @@ void populateChunk(int cx,int cz,bool visual=true){
     for(int gz=int(std::floor((double(z0)-halo)/cell));gz<=int(std::floor((double(z0+48)+halo)/cell));gz++)
       for(int gx=int(std::floor((double(x0)-halo)/cell));gx<=int(std::floor((double(x0+48)+halo)/cell));gx++){
         const uint32_t h=cellHash(gx,gz,301+type*71);
-        if(unit(h)>density[type])continue;
+        if(unit(h)>(worldBiome==1?desertDensity[type]:savannaDensity[type]))continue;
         const double x=(gx+.14+unit(cellHash(gx,gz,310+type))*.72)*cell;
         const double z=(gz+.14+unit(cellHash(gx,gz,311+type))*.72)*cell;
         if(x<x0-halo||x>=x0+48+halo||z<z0-halo||z>=z0+48+halo||fluid(x,z))continue;
         const float scale=float(.78+unit(cellHash(gx,gz,312+type))*.43);
-        const int slot=offsets[type]+int(cellHash(gx,gz,315+type)%counts[type]);
-        const float radius=radii[slot]*scale;
+        const int slot=(worldBiome==1?desertOffsets[type]:savannaOffsets[type])+
+          int(cellHash(gx,gz,315+type)%(worldBiome==1?desertCounts[type]:savannaCounts[type]));
+        const float radius=(worldBiome==1?desertRadii[slot]:radii[slot])*scale;
         if(std::any_of(nearbySettlements.begin(),nearbySettlements.end(),[&](size_t i){
           const Settlement& site=settlements[i];
           return std::hypot(x-site.x,z-site.z)<site.clearRadius+radius+4;
@@ -697,8 +743,9 @@ int addBarrier(float x,float z,float halfX,float halfZ,int passMask){
 }
 
 extern "C" {
-int spatial_generate(uint32_t seed,int cx,int cz){
-  worldSeed=seed;barrierIndex().byId.clear();barrierIndex().buckets.clear();
+int spatial_generate_biome(uint32_t seed,int biome,int cx,int cz){
+  if(biome<0||biome>1)return -1;
+  worldSeed=seed;worldBiome=biome;barrierIndex().byId.clear();barrierIndex().buckets.clear();
   batchingBarriers=false;deferredBarrierRefresh.clear();barrierBatch.clear();barrierBatchIds.clear();
   barrierState.clear();settlementState.clear();
   settlements.clear();nearbySettlements.clear();
@@ -714,6 +761,7 @@ int spatial_generate(uint32_t seed,int cx,int cz){
   populateChunk(cx,cz);loadedChunks.emplace_back(cx,cz);
   return int(props.size());
 }
+int spatial_generate(uint32_t seed,int cx,int cz){return spatial_generate_biome(seed,0,cx,cz);}
 int spatial_add_chunk(int cx,int cz){
   if(!chunkRasters)return -1;
   if(chunkRasters->count(chunkKey(cx,cz)))return 0;
@@ -859,6 +907,7 @@ int spatial_add_barriers_batch(int count){
   return count;
 }
 uint32_t spatial_world_seed(){return worldSeed;}
+int spatial_world_biome(){return worldBiome;}
 int spatial_next_barrier_id(){return nextBarrierId;}
 int spatial_settlement_state_count(){return int(settlements.size());}
 SettlementStateRecord* spatial_settlement_state_ptr(){

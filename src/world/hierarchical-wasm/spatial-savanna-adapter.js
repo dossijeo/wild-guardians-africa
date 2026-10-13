@@ -14,8 +14,9 @@ export function createSpatialSavannaPrototype(module){
   const groundMask=()=>new Uint8Array(wasm.memory.buffer,wasm.spatial_ground_mask_ptr(),35*35*4);
   const waterLevels=()=>new Float32Array(wasm.memory.buffer,wasm.spatial_water_levels_ptr(),48*48);
   const waterTriangles=()=>new Float32Array(wasm.memory.buffer,wasm.spatial_water_triangles_ptr(),wasm.spatial_water_vertex_count()*3);
-  function generate(seed,cx,cz){
-    const count=wasm.spatial_generate(seed>>>0,cx|0,cz|0);
+  function generate(seed,cx,cz,biome='savanna'){
+    if(biome!=='savanna'&&biome!=='desert')throw RangeError('Unsupported spatial biome');
+    const count=wasm.spatial_generate_biome(seed>>>0,biome==='desert'?1:0,cx|0,cz|0);
     chunk={cx:cx|0,cz:cz|0,count};chunks=[[cx|0,cz|0]];navigationBuilt=false;generated=true;
     return chunk;
   }
@@ -114,7 +115,7 @@ export function createSpatialSavannaPrototype(module){
     },
     restoreState:(state,cx=0,cz=0)=>{
       validateSpatialState(state);
-      generate(state.seed,cx,cz);
+      generate(state.seed,cx,cz,state.biome??'savanna');
       applySpatialState(wasm,state);
       return chunk;
     },

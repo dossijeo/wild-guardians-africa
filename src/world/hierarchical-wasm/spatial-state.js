@@ -20,13 +20,16 @@ export function captureSpatialState(wasm){
       z:records.getFloat32(at+8,true),halfX:records.getFloat32(at+12,true),
       halfZ:records.getFloat32(at+16,true),passMask:records.getInt32(at+20,true)});
   }
-  return {version:1,seed:wasm.spatial_world_seed()>>>0,settlements,barriers,
+  return {version:2,biome:wasm.spatial_world_biome()===1?'desert':'savanna',
+    seed:wasm.spatial_world_seed()>>>0,settlements,barriers,
     nextBarrierId:wasm.spatial_next_barrier_id()};
 }
 
 export function validateSpatialState(state){
   const finiteF32=value=>Number.isFinite(value)&&Number.isFinite(Math.fround(value));
-  if(state?.version!==1||!Number.isInteger(state.seed)||state.seed<0||state.seed>0xffffffff||
+  if((state?.version!==1&&state?.version!==2)||
+     (state.version===2&&state.biome!=='savanna'&&state.biome!=='desert')||
+     !Number.isInteger(state.seed)||state.seed<0||state.seed>0xffffffff||
      !Array.isArray(state.settlements)||!Array.isArray(state.barriers)||
      state.settlements.length>100000||state.barriers.length>100000||
      !Number.isInteger(state.nextBarrierId)||

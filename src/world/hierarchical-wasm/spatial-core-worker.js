@@ -3,7 +3,7 @@ import {spatialChunkPayload,spatialChunkTransferables} from './spatial-savanna-p
 import {addSpatialBarriersBatch} from './spatial-barrier-batch.js';
 import {captureSpatialState,applySpatialState,validateSpatialState} from './spatial-state.js';
 
-let wasm=null,compiledMs=0,seed=null;
+let wasm=null,compiledMs=0,seed=null,biome=null;
 async function initialize(){
   if(wasm)return;
   const start=performance.now();
@@ -50,12 +50,13 @@ self.onmessage=async({data:request})=>{
         case 'snapshot':value=captureSpatialState(wasm);break;
         case 'restore':{
           const state=validateSpatialState(request.state);
-          seed=null;
-          wasm.spatial_generate(state.seed,request.cx??0,request.cz??0);
+          seed=null;biome=null;
+          wasm.spatial_generate_biome(state.seed,(state.biome??'savanna')==='desert'?1:0,
+            request.cx??0,request.cz??0);
           applySpatialState(wasm,state);
           for(const profile of request.profiles??[{radius:.28,worker:true},{radius:1.1,worker:false}])
             wasm.spatial_build_nav(profile.radius,profile.worker?1:0);
-          seed=state.seed;value=true;break;
+          seed=state.seed;biome=state.biome??'savanna';value=true;break;
         }
         default:throw Error(`Unknown spatial operation: ${request.op}`);
       }
@@ -66,12 +67,14 @@ self.onmessage=async({data:request})=>{
       return;
     }
     const started=performance.now();
+    const requestedBiome=request.biome??biome??'savanna';
+    if(requestedBiome!=='savanna'&&requestedBiome!=='desert')throw Error('Unsupported spatial biome');
     if(request.read){
-      if(seed!==request.seed||!wasm.spatial_select_chunk(request.cx,request.cz))
+      if(seed!==request.seed||biome!==requestedBiome||!wasm.spatial_select_chunk(request.cx,request.cz))
         throw Error('Requested spatial chunk is not resident in this world');
-    }else if(request.reset||seed!==request.seed){
-      seed=request.seed;
-      wasm.spatial_generate(seed,request.cx,request.cz);
+    }else if(request.reset||seed!==request.seed||biome!==requestedBiome){
+      seed=request.seed;biome=requestedBiome;
+      wasm.spatial_generate_biome(seed,biome==='desert'?1:0,request.cx,request.cz);
       if(request.settlement){const {x,z,hx,hz}=request.settlement;wasm.spatial_set_settlement(x,z,hx,hz);}
       if(request.profiles){
         for(const profile of request.profiles)wasm.spatial_build_nav(profile.radius,profile.worker?1:0);

@@ -18,6 +18,7 @@ import wasmUrl from '../../src/world/hierarchical-wasm/spatial-savanna.wasm?url'
 
 const status=document.querySelector('#status'),scenes=[];
 const parameters=new URLSearchParams(location.search),gameGround=parameters.get('ground')==='game';
+const biome=parameters.get('biome')==='desert'?'desert':'savanna';
 const gameWater=parameters.get('water')==='game';
 const settlement=parameters.get('settlement')==='1';
 const seed=Number(parameters.get('seed')??712);
@@ -28,7 +29,8 @@ function makeScene(ground,river,instances,models,assets,prototype=false,mask=nul
   const sun=new THREE.DirectionalLight('#fff1cd',2);sun.position.set(-35,60,20);scene.add(sun);
   const material=gameGround?nativeGroundMaterial('alta'):
     new THREE.MeshStandardMaterial({vertexColors:true,roughness:1,side:THREE.DoubleSide});
-  if(gameGround){biomeGround.attach(material,0,0,mask);toon.material(material);toon.update(false,sun,'sabana');}
+  if(gameGround){biomeGround.attach(material,0,0,mask);toon.material(material);
+    toon.update(false,sun,biome==='desert'?'desierto':'sabana');}
   scene.add(new THREE.Mesh(ground,material));
   if(river)scene.add(new THREE.Mesh(river,gameWater?
     paintedWaterMaterial('#49aeb6',false,seed):
@@ -57,8 +59,8 @@ function makeScene(ground,river,instances,models,assets,prototype=false,mask=nul
     waterVertices:river?.getAttribute('position').count??0,assetWaterInstances,prototype};
 }
 try{
-  const [pack,binary]=await Promise.all([fetch('/content/biome-savanna.json').then(r=>r.json()),fetch(wasmUrl).then(r=>r.arrayBuffer())]);
-  const assets=new Assets(),models=await assets.biome(pack),nav=new Navigation(String(seed),'sabana',pack.profile);
+  const [pack,binary]=await Promise.all([fetch(`/content/biome-${biome}.json`).then(r=>r.json()),fetch(wasmUrl).then(r=>r.arrayBuffer())]);
+  const assets=new Assets(),models=await assets.biome(pack),nav=new Navigation(String(seed),biome==='desert'?'desierto':'sabana',pack.profile);
   if(settlement){
     const x=10,z=8,hx=7,hz=6;
     const samples=[[x-hx,z-hz],[x+hx,z-hz],[x,z],[x-hx,z+hz],[x+hx,z+hz]]
@@ -67,10 +69,10 @@ try{
       clearRadius:19,softRadius:25,haloRadius:32};
     nav.field=new TerrainField(nav.config);nav.chunks.clear();
   }
-  if(gameGround){biomeGround=new BiomeGround();await biomeGround.load(assets,'savanna',pack.profile,nav.field);toon=new AfricanToon();}
+  if(gameGround){biomeGround=new BiomeGround();await biomeGround.load(assets,biome,pack.profile,nav.field);toon=new AfricanToon();}
   const current=buildNativeChunk(nav.config,pack.profile,0,0);
   const baseline=makeScene(nativeTerrainBuffer(current.terrain),nativeWaterBuffer(current.water),current.instances,models,pack.assets,false,current.groundMask);
-  const core=createSpatialSavannaPrototype(new WebAssembly.Module(binary));core.generate(seed,0,0);
+  const core=createSpatialSavannaPrototype(new WebAssembly.Module(binary));core.generate(seed,0,0,biome);
   if(settlement)core.setSettlement(10,8,7,6);
   core.buildNavigation(1.1,false);
   const spatial=core.chunkPayload();
@@ -87,7 +89,7 @@ try{
     }
   }
   render();addEventListener('resize',render);
-  window.qaStats={seed,baseline,candidate,gameGround,gameWater,settlement};window.qaReady=true;
-  status.textContent=`Semilla ${seed} · ${gameGround?'suelo del juego':'suelo básico'} · ${gameWater?'agua del juego':'agua básica'} · JS: ${baseline.count} objetos · WASM: ${candidate.count} objetos`;
+  window.qaStats={seed,biome,baseline,candidate,gameGround,gameWater,settlement};window.qaReady=true;
+  status.textContent=`${biome==='desert'?'Desierto':'Sabana'} · Semilla ${seed} · ${gameGround?'suelo del juego':'suelo básico'} · ${gameWater?'agua del juego':'agua básica'} · JS: ${baseline.count} objetos · WASM: ${candidate.count} objetos`;
 }catch(error){window.qaError=String(error.stack??error);status.textContent=window.qaError;}
 </script></body></html>

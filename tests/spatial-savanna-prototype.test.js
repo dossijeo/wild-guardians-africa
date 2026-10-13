@@ -48,6 +48,41 @@ test('one C++ source generates visual data and valid worker/animal routes',()=>{
   assert.deepEqual(Array.from(core.heights()),Array.from(first));assert.deepEqual(core.props(),objects);
   assert.deepEqual(Array.from(core.groundMask()),Array.from(mask));
 });
+test('the dry Desert chunk shares visible dunes, solid props and hierarchical routes',()=>{
+  const core=createSpatialSavannaPrototype(module);
+  core.generate(28,0,0,'desert');
+  const heights=Float32Array.from(core.heights()),props=core.props();
+  assert(Math.max(...heights)-Math.min(...heights)>8,'dune relief must be visible');
+  assert(props.length>0&&props.length<100,'desert props must remain sparse');
+  assert(core.water().every(value=>value===0));
+  assert.equal(core.waterTriangles().length,0);
+  assert(core.groundMask().every((value,i)=>i%4!==2||value===0),
+    'desert ground mask has no water moisture channel');
+  const west=Float32Array.from(core.heights());
+  assert(core.addChunk(1,0)>0);
+  const east=core.heights();
+  for(let z=0;z<49;z++)assert.equal(west[z*49+48],east[z*49],`desert height seam row ${z}`);
+  core.selectChunk(0,0);
+  const solid=props.find(prop=>prop.slot<=3||prop.slot>=10);
+  assert(solid,'desert fixture needs a visible solid prop');
+  for(const [radius,worker] of [[.28,true],[1.1,false]]){
+    core.buildNavigation(radius,worker);
+    assert(core.propBlocked(solid.x,solid.z),'visible desert props must block their collision point');
+    const {start,end}=crossing(core);
+    validRoute(core,start,core.route(start,end));
+  }
+  const wall=core.addBarrier(23.5,0,.8,5,0);assert(wall>0);
+  const state=JSON.parse(JSON.stringify(core.snapshot()));
+  assert.equal(state.version,2);assert.equal(state.biome,'desert');
+  const restored=createSpatialSavannaPrototype(module);
+  restored.restoreState(state,0,0);restored.addChunk(1,0);
+  restored.buildNavigation(.28,true);restored.buildNavigation(1.1,false);
+  assert.deepEqual(restored.snapshot(),state);
+  restored.selectChunk(0,0);
+  assert.deepEqual(Array.from(restored.heights()),Array.from(heights));
+  assert.deepEqual(restored.props(),props);
+  assert.equal(restored.waterTriangles().length,0);
+});
 test('the 35x35 ground material mask meets at adjacent chunk overlaps',()=>{
   const core=createSpatialSavannaPrototype(module);
   core.generate(28,0,0);

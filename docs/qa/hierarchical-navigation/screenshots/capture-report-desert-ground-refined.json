@@ -1,0 +1,57 @@
+{
+  "url": "http://127.0.0.1:5188",
+  "records": [
+    {
+      "seed": 712,
+      "file": "docs/qa/hierarchical-navigation/screenshots/desierto-seed-712-js-vs-wasm-desert-ground-refined-1600x900.png",
+      "stats": {
+        "seed": 712,
+        "biome": "desert",
+        "baseline": {
+          "count": 7,
+          "vertices": 13824,
+          "waterVertices": 0,
+          "assetWaterInstances": 0,
+          "prototype": false
+        },
+        "candidate": {
+          "count": 11,
+          "vertices": 2401,
+          "waterVertices": 0,
+          "assetWaterInstances": 0,
+          "prototype": true
+        },
+        "gameGround": true,
+        "gameWater": false,
+        "settlement": false
+      },
+      "errors": []
+    },
+    {
+      "seed": 28,
+      "file": "docs/qa/hierarchical-navigation/screenshots/desierto-seed-28-js-vs-wasm-desert-ground-refined-1600x900.png",
+      "stats": {
+        "seed": 28,
+        "biome": "desert",
+        "baseline": {
+          "count": 6,
+          "vertices": 13824,
+          "waterVertices": 0,
+          "assetWaterInstances": 0,
+          "prototype": false
+        },
+        "candidate": {
+          "count": 11,
+          "vertices": 2401,
+          "waterVertices": 0,
+          "assetWaterInstances": 0,
+          "prototype": true
+        },
+        "gameGround": true,
+        "gameWater": false,
+        "settlement": false
+      },
+      "errors": []
+    }
+  ]
+}

@@ -48,11 +48,12 @@ function prepareThree(data,cx,cz){
   return {ms:now()-start,vertices,waterVertices};
 }
 try{
-  const profile=await fetch('/content/biome-savanna.json').then(response=>response.json()).then(pack=>pack.profile);
   const parameters=new URLSearchParams(location.search),seed=Number(parameters.get('seed')??712);
+  const biome=parameters.get('biome')==='desert'?'desert':'savanna';
+  const profile=await fetch(`/content/biome-${biome}.json`).then(response=>response.json()).then(pack=>pack.profile);
   const sceneFormat=parameters.get('format')==='scene',settlement=parameters.get('settlement')==='1';
   const multiple=parameters.get('multi')==='1';
-  const nav=new Navigation(String(seed),'sabana',profile),baseline=new Worker(new URL('../../src/rendering/chunk-worker.js',import.meta.url),{type:'module'});
+  const nav=new Navigation(String(seed),biome==='desert'?'desierto':'sabana',profile),baseline=new Worker(new URL('../../src/rendering/chunk-worker.js',import.meta.url),{type:'module'});
   if(settlement){
     const x=10,z=8,hx=7,hz=6;
     const samples=[[x-hx,z-hz],[x+hx,z-hz],[x,z],[x-hx,z+hz],[x+hx,z+hz]]
@@ -65,7 +66,7 @@ try{
   const baselineSecond=await request(baseline,{id:2,epoch:0,config:nav.config,profile,cx:1,cz:0});
   baseline.terminate();
   const candidate=new Worker(new URL('../../src/world/hierarchical-wasm/spatial-core-worker.js',import.meta.url),{type:'module'});
-  const candidateFirst=await request(candidate,{id:3,seed,cx:0,cz:0,reset:true,radius:1.1,
+  const candidateFirst=await request(candidate,{id:3,seed,biome,cx:0,cz:0,reset:true,radius:1.1,
     profiles:sceneFormat?[{radius:.28,worker:true},{radius:1.1,worker:false}]:null,
     format:sceneFormat?'scene':'raw',settlement:settlement?{x:10,z:8,hx:7,hz:6}:null});
   const candidateSecond=await request(candidate,{id:4,seed,cx:1,cz:0,radius:1.1,
@@ -218,13 +219,13 @@ try{
     ...result.timing,three:prepareThree(result.data,result.cx,result.cz),
     props:sceneFormat?result.data.instances.reduce((n,list)=>n+list.length,0):result.data.count,
     metrics:result.metrics}));
-  window.qaStats={seed,sceneFormat,settlement,current,spatial,topology,barrierTopology,batchTopology,multipleSettlements,surfaceView,spatialReload,
+  window.qaStats={seed,biome,sceneFormat,settlement,current,spatial,topology,barrierTopology,batchTopology,multipleSettlements,surfaceView,spatialReload,
     checks:{transferLengths:true,terrainSeam:true,wallEdit:!!topology,
       dynamicPassage:!!barrierTopology,
       batchedTopology:batchTopology?.count===12,
       evictionRegeneration:topology?.sameVisualPayload===true,
       multipleSettlements:multipleSettlements?.sameFirstSettlement===true,
-      spatialReload:spatialReload?.version===1,
+      spatialReload:spatialReload?.version===2,
       surfaceView:surfaceView?.difference<=.00002}};window.qaReady=true;
   status.textContent=JSON.stringify(window.qaStats,null,2);
 }catch(error){window.qaError=String(error.stack??error);status.textContent=window.qaError;}

@@ -7,13 +7,14 @@ import {createLazySectorProbeSync} from '../../src/world/hierarchical-wasm/lazy-
 import {createSpatialSavannaPrototype} from '../../src/world/hierarchical-wasm/spatial-savanna-adapter.js';
 
 const output=process.argv[2]??'docs/qa/hierarchical-navigation/spatial-savanna-prototype.json';
-const profile=JSON.parse(readFileSync('public/content/biome-savanna.json','utf8')).profile;
+const biome=process.env.WG_QA_BIOME==='desert'?'desert':'savanna';
+const profile=JSON.parse(readFileSync(`public/content/biome-${biome}.json`,'utf8')).profile;
 const oldModule=new WebAssembly.Module(readFileSync('src/world/hierarchical-wasm/lazy-sectors.wasm'));
 const newBytes=readFileSync('src/world/hierarchical-wasm/spatial-savanna.wasm');
 const newModule=new WebAssembly.Module(newBytes);
 const timed=fn=>{const start=performance.now(),result=fn();return {ms:performance.now()-start,result};};
 function baseline(){
-  const nav=new Navigation('712','sabana',profile),config=nav.config;
+  const nav=new Navigation('712',biome==='desert'?'desierto':'sabana',profile),config=nav.config;
   const geometricCalls={walkable:0,segmentClear:0};
   for(const name of Object.keys(geometricCalls)){
     const original=nav[name].bind(nav);
@@ -36,7 +37,7 @@ function baseline(){
 }
 function candidate(){
   const core=createSpatialSavannaPrototype(newModule);
-  const generation=timed(()=>core.generate(712,0,0));
+  const generation=timed(()=>core.generate(712,0,0,biome));
   const visual=timed(()=>({ground:core.geometry(),water:core.waterGeometry()}));
   const objects=timed(()=>core.props());
   const navigation=timed(()=>core.buildNavigation(1.1,false));
@@ -55,7 +56,8 @@ function candidate(){
     routeMs:queries.ms,found:queries.result.filter(x=>x==='found').length,
     terrainBytes:geometry.getAttribute('position').array.byteLength+geometry.getAttribute('normal').array.byteLength+
       geometry.getAttribute('color').array.byteLength+geometry.index.array.byteLength,
-    waterBytes:river.getAttribute('position').array.byteLength+river.getAttribute('normal').array.byteLength+river.index.array.byteLength,
+    waterBytes:river.getAttribute('position').array.byteLength+
+      river.getAttribute('normal').array.byteLength+(river.index?.array.byteLength??0),
     propCount:objects.result.length,wallMs:wall.ms,removeWallMs:removal.ms,blockedAfterWall:blocked,
     geometricCalls:{walkable:0,segmentClear:0},
     metrics:core.metrics()};
@@ -63,7 +65,7 @@ function candidate(){
 }
 const rows=[];
 for(const variant of ['baseline','candidate','candidate','baseline'])rows.push(variant==='baseline'?baseline():candidate());
-const report={scope:'One Sabana chunk, seed 712, ABBA. Different procedural worlds and unequal visual features: diagnostic architectural prototype only.',
+const report={scope:`One ${biome} chunk, seed 712, ABBA. Different procedural worlds and unequal visual features: diagnostic architectural prototype only.`,
   wasmBytes:newBytes.byteLength,rows};
 mkdirSync(dirname(output),{recursive:true});writeFileSync(output,JSON.stringify(report,null,2)+'\n');
 console.log(JSON.stringify({wasmBytes:report.wasmBytes,rows:rows.map(({kind,visualMs,generationMs,navigationMs,totalMs,wallMs,removeWallMs,found,propCount,geometricCalls,metrics})=>({kind,visualMs,generationMs,navigationMs,totalMs,wallMs,removeWallMs,found,propCount,geometricCalls,metrics}))}));
