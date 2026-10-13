@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <cstdint>
 #include <vector>
@@ -21,6 +22,8 @@ int lazy_sector_updates();
 namespace {
 constexpr int side=48,grid=49,sector=12;
 constexpr int pad=4,latticeSpan=grid+pad*2;
+constexpr int propBucketWidth=8,propBucketSide=8;
+constexpr double maxIndexedRadius=2.0;
 constexpr double pi=3.14159265358979323846;
 struct Prop {float x,z,y,radius,scale,yaw;int32_t slot;};
 struct Wall {int id;float x,z,halfX,halfZ;bool active;};
@@ -33,6 +36,7 @@ std::vector<uint8_t> water;
 std::vector<double> lattice;
 std::vector<Prop> props;
 std::vector<Prop> solidProps;
+std::array<std::vector<int>,propBucketSide*propBucketSide> propBuckets;
 int haloPropCount=0;
 std::vector<Wall> walls;
 std::vector<uint8_t> staticPass,staticSteps;
@@ -77,10 +81,39 @@ bool terrainValid(double x,double z,float radius,bool worker){
   }
   return true;
 }
+bool propBlocked(double x,double z){
+  const int x0=chunkX*side-24-8,z0=chunkZ*side-24-8;
+  const int bx=int(std::floor((x-x0)/propBucketWidth)),bz=int(std::floor((z-z0)/propBucketWidth));
+  if(bx<0||bz<0||bx>=propBucketSide||bz>=propBucketSide){
+    for(const Prop& p:solidProps){
+      const double dx=p.x-x,dz=p.z-z,r=p.radius+radiusNow;
+      if(dx*dx+dz*dz<r*r)return true;
+    }
+    return false;
+  }
+  for(const int index:propBuckets[bz*propBucketSide+bx]){
+    const Prop& p=solidProps[index];
+    const double dx=p.x-x,dz=p.z-z,r=p.radius+radiusNow;
+    if(dx*dx+dz*dz<r*r)return true;
+  }
+  return false;
+}
+void indexSolidProps(){
+  for(auto& bucket:propBuckets)bucket.clear();
+  const int x0=chunkX*side-24-8,z0=chunkZ*side-24-8;
+  for(int i=0;i<int(solidProps.size());i++){
+    const Prop& p=solidProps[i];
+    const double r=p.radius+maxIndexedRadius;
+    const int a=std::max(0,int(std::floor((p.x-r-x0)/propBucketWidth)));
+    const int b=std::min(propBucketSide-1,int(std::floor((p.x+r-x0)/propBucketWidth)));
+    const int c=std::max(0,int(std::floor((p.z-r-z0)/propBucketWidth)));
+    const int d=std::min(propBucketSide-1,int(std::floor((p.z+r-z0)/propBucketWidth)));
+    for(int z=c;z<=d;z++)for(int x=a;x<=b;x++)propBuckets[z*propBucketSide+x].push_back(i);
+  }
+}
 bool terrainPropWalkable(int x,int z){
   if(!terrainValid(x,z,radiusNow,workerNow))return false;
-  for(const Prop& p:solidProps)if(std::hypot(p.x-x,p.z-z)<p.radius+radiusNow)return false;
-  return true;
+  return !propBlocked(x,z);
 }
 bool insideChunk(int x,int z){return x>=chunkX*side-24&&x<chunkX*side+24&&z>=chunkZ*side-24&&z<chunkZ*side+24;}
 int chunkIndex(int x,int z){return (z-(chunkZ*side-24))*side+x-(chunkX*side-24);}
@@ -97,7 +130,7 @@ bool terrainPropEdge(int x,int z,int nx,int nz){
   for(int i=1;i<4;i++){
     const double t=i/4.0,px=x+(nx-x)*t,pz=z+(nz-z)*t;
     if(!terrainValid(px,pz,radiusNow,workerNow))return false;
-    for(const Prop& p:solidProps)if(std::hypot(p.x-px,p.z-pz)<p.radius+radiusNow)return false;
+    if(propBlocked(px,pz))return false;
   }
   return true;
 }
@@ -168,7 +201,7 @@ int spatial_generate(uint32_t seed,int cx,int cz){
     // A neighbor owns and renders a prop whose footprint crosses our edge.
     // Generate its collision record from the same global cells, without
     // duplicating the visible instance in this chunk.
-    constexpr double halo=8;
+    constexpr double halo=10;
     for(int gz=int(std::floor((double(z0)-halo)/cell));gz<=int(std::floor((double(z0+48)+halo)/cell));gz++)
       for(int gx=int(std::floor((double(x0)-halo)/cell));gx<=int(std::floor((double(x0+48)+halo)/cell));gx++){
         const uint32_t h=cellHash(gx,gz,301+type*71);
@@ -183,13 +216,14 @@ int spatial_generate(uint32_t seed,int cx,int cz){
         const bool owned=x>=x0&&x<x0+48&&z>=z0&&z<z0+48;
         if(owned)props.push_back(prop);
         if((slot<=3||(slot>=10&&slot<=12)||slot>=18)&&
-           x+radius+1.1>=x0&&x-radius-1.1<x0+48&&
-           z+radius+1.1>=z0&&z-radius-1.1<z0+48){
+           x+radius+maxIndexedRadius>=x0&&x-radius-maxIndexedRadius<x0+48&&
+           z+radius+maxIndexedRadius>=z0&&z-radius-maxIndexedRadius<z0+48){
           solidProps.push_back(prop);
           if(!owned)haloPropCount++;
         }
       }
   }
+  indexSolidProps();
   return int(props.size());
 }
 float* spatial_heights_ptr(){return heights.data();}
@@ -199,6 +233,7 @@ Prop* spatial_props_ptr(){return props.data();}
 int spatial_prop_count(){return int(props.size());}
 int spatial_halo_prop_count(){return haloPropCount;}
 int spatial_build_nav(float radius,int worker){
+  if(radius<=0||radius>maxIndexedRadius)return 0;
   radiusNow=radius;workerNow=worker!=0;
   const int firstX=chunkX*side-24,firstZ=chunkZ*side-24;
   staticPass.resize(side*side);staticSteps.resize(side*side);
@@ -235,4 +270,5 @@ int spatial_remove_wall(int id){
 }
 int spatial_walkable(int x,int z){return walkable(x,z);}
 int spatial_edge(int x,int z,int nx,int nz){return std::abs(x-nx)+std::abs(z-nz)==1&&edge(x,z,nx,nz);}
+int spatial_prop_blocked(float x,float z){return propBlocked(x,z);}
 }

@@ -30,7 +30,7 @@ test('one C++ source generates visual data and valid worker/animal routes',()=>{
   assert(core.water().some(value=>value===1));
   const river=core.waterGeometry();
   assert(river.index.count>0);river.dispose();
-  for(const [radius,worker] of [[.28,true],[1.1,false]]){
+  for(const [radius,worker] of [[.28,true],[1.1,false],[1.55,false]]){
     assert.equal(core.buildNavigation(radius,worker),16);
     const {start,end}=crossing(core);
     validRoute(core,start,core.route(start,end));
@@ -84,4 +84,19 @@ test('a neighboring chunk owns the instance while its footprint blocks our edge'
     caseFound=true;
   }
   assert(caseFound,'expected a neighboring tree or rock to overlap a tested seam');
+});
+test('indexed obstacle checks agree with every visible solid across the surrounding chunks',()=>{
+  const core=createSpatialSavannaPrototype(module),neighbor=createSpatialSavannaPrototype(module),solids=[];
+  for(let cz=-1;cz<=1;cz++)for(let cx=-1;cx<=1;cx++){
+    neighbor.generate(712,cx,cz);
+    solids.push(...neighbor.props().filter(p=>p.slot<=3||p.slot>=10&&p.slot<=12||p.slot>=18));
+  }
+  core.generate(712,0,0);
+  for(const [radius,worker] of [[.28,true],[1.1,false]]){
+    core.buildNavigation(radius,worker);
+    for(let z=-24;z<24;z++)for(let x=-24;x<24;x++){
+      const expected=solids.some(p=>Math.hypot(p.x-x,p.z-z)<p.radius+radius);
+      assert.equal(core.propBlocked(x,z),expected,`prop occupancy at ${x},${z}, radius ${radius}`);
+    }
+  }
 });
