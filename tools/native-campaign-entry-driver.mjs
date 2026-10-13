@@ -4,7 +4,7 @@ import {raidEntryKey,activeRaidEntryPlan} from '../src/world/raid-entry-data.js'
 import {serialize} from '../src/persistence/snapshots.js';
 import {createNodeRaidEntryWorker} from './node-raid-entry-transport.mjs';
 export class NativeCampaignEntryDriver{
- constructor(nav,{createWorker=createNodeRaidEntryWorker,maxWaitMilliseconds=30000}={}){
+ constructor(nav,{createWorker=createNodeRaidEntryWorker,maxWaitMilliseconds=180000}={}){
   this.nav=nav;this.maxWaitMilliseconds=maxWaitMilliseconds;this.worker=null;this.waits=[];this.updates=0;this.contexts=[];
   this.preparer=new RaidEntryPreparer(nav,{createWorker:()=>this.worker=createWorker()});
  }
@@ -24,6 +24,10 @@ export class NativeCampaignEntryDriver{
     return ready;
    }
    if(performance.now()-began>this.maxWaitMilliseconds){if(serialize(s)!==frozen)throw Error('Pending entry wait changed simulated state');this.waits.push({day:s.day,time:s.time,elapsed:s.elapsed,updates,waitMilliseconds:performance.now()-began,status:'observation-deadline',key});throw Error('Entry preparation observation deadline; no restart or fabricated simulated result');}
+   // Waiting on the entry worker is wall-clock observation, not game time.
+   // Do not spin on setImmediate hundreds of thousands of times and compete
+   // with the worker that is actually preparing the native entry.
+   await new Promise(resolve=>setTimeout(resolve,10));
   }
  }
  report(){return {mode:'real-node-worker-with-production-cooperative-fallback',updates:this.updates,waits:structuredClone(this.waits),readyContexts:structuredClone(this.contexts),preparer:{...this.preparer.stats},workerFailure:this.worker?.failure?.message??null,scope:'Wall-clock waits are separate from simulated activity; no clock, RNG or geometry patches'};}

@@ -55,6 +55,20 @@ test('an unfunded plan is retained without additional native wall placements',()
  assert.equal(policy.report().plan.version,first.version);
 });
 
+test('planning observes new crop events after the rolling event buffer reaches 200 entries',()=>{
+ const {s,nav,options}=fixture(),policy=createNativePlannedDefensePolicy({startDay:1});
+ for(let i=0;i<20&&!policy.report().completed;i++){policy.act(s,nav,options);s.elapsed+=6;}
+ assert(policy.report().completed);
+ while(s.events.length<200)Game.emit(s,'Unrelated');
+ policy.observe(s);
+ const bounds=policy.report().completed.bounds,id='outside-test-crop';
+ s.plants.push({id,x:bounds[2]+4,z:0,alive:true});
+ Game.emit(s,'CropPlaced',{targetId:id});
+ assert.equal(s.events.length,200);
+ policy.observe(s);
+ assert.equal(policy.report().needsExpansion,true);
+});
+
 test('a previously validated plot reuses access only until native geometry changes',()=>{
  const {s,nav}=fixture(),plots=createNativeCampaignPlots(nav,()=>s,{reuseAccess:true});
  const first=plots.choose();assert(first);

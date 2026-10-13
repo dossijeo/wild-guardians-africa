@@ -31,18 +31,23 @@ export function corridorFirstContour(bounds,s){
 export function createNativePlannedDefensePolicy({startDay=6,material='zarzas',interval=5,chunkPieces=8}={}){
  if(!Number.isSafeInteger(startDay)||startDay<1||!Number.isFinite(interval)||interval<=0||!Number.isSafeInteger(chunkPieces)||chunkPieces<1)throw Error('Invalid planned defense policy');
  const pieceCost=wallSpec(material).cost;
- let plan=null,completed=null,next=0,eventsSeen=0,needsExpansion=false,breaches=0,builds=0,spent=0,planningCount=0,stalls=0,contourIndex=0;
+ let plan=null,completed=null,next=0,lastEventId=null,observedDay=0,needsExpansion=false,breaches=0,builds=0,spent=0,planningCount=0,stalls=0,contourIndex=0;
  const history=[];
  function observe(s){
-  if(s.events.length<eventsSeen)eventsSeen=0;
-  for(const event of s.events.slice(eventsSeen)){
+  if(s.day!==observedDay){
+   observedDay=s.day;
+   if(completed&&s.plants.some(p=>p.alive&&!inside(p,completed.bounds)))needsExpansion=true;
+  }
+  if(s.events.at(-1)?.id===lastEventId)return;
+  const previous=s.events.findIndex(event=>event.id===lastEventId);
+  for(const event of s.events.slice(previous+1)){
    if(event.type==='CropPlaced'&&completed){
     const crop=s.plants.find(p=>p.id===event.targetId);
     if(crop&&!inside(crop,completed.bounds))needsExpansion=true;
    }
    if(event.type==='StructureRuined'&&s.structures.some(w=>w.id===event.targetId&&w.kind==='wall'))breaches++;
   }
-  eventsSeen=s.events.length;
+  lastEventId=s.events.at(-1)?.id??null;
  }
  function newPlan(s){
   // Plot/crop bounds are sampled on a planning event, never per purchase.
