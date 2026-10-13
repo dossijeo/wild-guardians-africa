@@ -1,0 +1,96 @@
+{
+  "kind": "isolated-horizon-cpu-abba",
+  "note": "Different procedural worlds; excludes GPU upload, browser worker, and gameplay frames.",
+  "cases": [
+    {
+      "biome": "canyons",
+      "seed": 712,
+      "region": [
+        -120,
+        -120,
+        120,
+        120
+      ],
+      "timings": [
+        {
+          "implementation": "js",
+          "ms": 157.89,
+          "terrainBytes": 3715632,
+          "waterBytes": 165888
+        },
+        {
+          "implementation": "wasm",
+          "ms": 173.59,
+          "terrainBytes": 3715632,
+          "waterBytes": 165888
+        },
+        {
+          "implementation": "wasm",
+          "ms": 137.65,
+          "terrainBytes": 3715632,
+          "waterBytes": 165888
+        },
+        {
+          "implementation": "js",
+          "ms": 105.12,
+          "terrainBytes": 3715632,
+          "waterBytes": 165888
+        }
+      ],
+      "spatialMetrics": {
+        "memoryBytes": 4194304,
+        "loadedChunks": 1,
+        "residentPropRecords": 12,
+        "loadedSectors": 0,
+        "sectorSlots": 0,
+        "sectorUpdates": 0,
+        "haloProps": 1
+      }
+    },
+    {
+      "biome": "desert",
+      "seed": 712,
+      "region": [
+        -120,
+        -120,
+        120,
+        120
+      ],
+      "timings": [
+        {
+          "implementation": "js",
+          "ms": 196.87,
+          "terrainBytes": 4608576,
+          "waterBytes": 0
+        },
+        {
+          "implementation": "wasm",
+          "ms": 396.17,
+          "terrainBytes": 4608576,
+          "waterBytes": 0
+        },
+        {
+          "implementation": "wasm",
+          "ms": 393.97,
+          "terrainBytes": 4608576,
+          "waterBytes": 0
+        },
+        {
+          "implementation": "js",
+          "ms": 177.72,
+          "terrainBytes": 4608576,
+          "waterBytes": 0
+        }
+      ],
+      "spatialMetrics": {
+        "memoryBytes": 4194304,
+        "loadedChunks": 1,
+        "residentPropRecords": 6,
+        "loadedSectors": 0,
+        "sectorSlots": 0,
+        "sectorUpdates": 0,
+        "haloProps": 2
+      }
+    }
+  ]
+}
