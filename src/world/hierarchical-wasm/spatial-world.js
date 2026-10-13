@@ -30,7 +30,9 @@ export function createSpatialWorld(module){
     if(!generated)throw Error('Generate the world before selecting a chunk');
     const result=wasm.spatial_select_chunk(cx|0,cz|0);
     if(result>0)chunk={cx:cx|0,cz:cz|0,count:result-1};
-    return result>0?result-1:result;
+    // C returns 0 for an absent chunk and count+1 for a resident chunk.
+    // Preserve the distinction when a resident chunk has zero props.
+    return result>0?result-1:-1;
   }
   function removeChunk(cx,cz){
     const removed=wasm.spatial_remove_chunk(cx|0,cz|0);

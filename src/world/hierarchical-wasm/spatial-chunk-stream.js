@@ -6,7 +6,9 @@ import {NativeChunkStream} from '../../rendering/chunk-stream.js';
 export function createSpatialChunkStream(core,{loaded,onData,onError=()=>{},schedule,cancel}){
   if(!core?.currentChunk())throw Error('Generate the spatial world before streaming chunks');
   const build=(_config,_profile,cx,cz)=>{
-    if(!core.selectChunk(cx,cz)&&core.addChunk(cx,cz)<0)
+    // A resident chunk with zero props still returns 0; only a negative
+    // result means it is absent. Do not regenerate such a chunk on every read.
+    if(core.selectChunk(cx,cz)<0&&core.addChunk(cx,cz)<0)
       throw Error(`Could not generate spatial chunk ${cx},${cz}`);
     return core.chunkPayload();
   };

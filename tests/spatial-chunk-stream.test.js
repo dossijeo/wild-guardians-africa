@@ -8,6 +8,27 @@ import {WorldScene} from '../src/rendering/scene.js';
 
 const module=new WebAssembly.Module(readFileSync(new URL('../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
 
+test('chunk selection distinguishes an absent chunk from a resident chunk with zero props',async()=>{
+  const real=createSpatialWorld(module);
+  real.generate(712,0,0);
+  assert.equal(real.selectChunk(9,9),-1);
+  const installed=new Map(),scheduled=[];
+  let added=0,selected=0;
+  const core={currentChunk:()=>({cx:0,cz:0}),selectChunk:()=>{selected++;return 0;},
+    addChunk:()=>{added++;throw Error('Resident empty chunk was regenerated');},
+    chunkPayload:()=>({cx:2,cz:3})};
+  const stream=createSpatialChunkStream(core,{loaded:()=>installed,
+    onData:data=>installed.set(`${data.cx},${data.cz}`,data),
+    schedule:callback=>{scheduled.push(callback);return callback;},
+    cancel:callback=>{const index=scheduled.indexOf(callback);if(index>=0)scheduled.splice(index,1);}});
+  stream.plan(new Map([['2,3',{cx:2,cz:3,score:0}]]));
+  while(scheduled.length)scheduled.shift()();
+  await stream.whenIdle();
+  assert.equal(selected,1);assert.equal(added,0);
+  assert.equal(installed.size,1);
+  stream.dispose();
+});
+
 test('one resident C++ world supplies streamed render chunks and actor routes',async()=>{
   const core=createSpatialWorld(module),installed=new Map(),scheduled=[];
   core.generate(712,0,0);core.buildNavigation(.28,true);
