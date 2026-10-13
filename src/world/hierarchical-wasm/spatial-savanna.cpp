@@ -57,7 +57,7 @@ struct Settlement {bool active=false;double x=0,z=0,y=0,hx=0,hz=0,clearRadius=0,
 struct ChunkRaster {int cx,cz;std::vector<uint8_t> pass,steps,inbound;};
 struct NavProfile {float radius=0;bool worker=false,ready=false;std::unordered_map<uint64_t,ChunkRaster> rasters;};
 uint32_t worldSeed=0;
-int worldBiome=0; // 0: savanna, 1: desert, 2: grand river, 3: volcanoes.
+int worldBiome=0; // 0: savanna, 1: desert, 2: grand river, 3: volcanoes, 4: mangrove.
 int chunkX=0,chunkZ=0,nextBarrierId=1;
 float radiusNow=.3f;
 bool workerNow=true,navReady=false;
@@ -153,6 +153,20 @@ double noise(double x,double z,uint32_t salt){
   return (a+(b-a)*u)*(1-v)+(c+(d-c)*u)*v;
 }
 double riverX(double z){return -20+std::sin(z*.035+unit(cellHash(9,7,63))*2*pi)*17;}
+double settlementBlend(const Settlement& site,double x,double z);
+double wetlandMask(double x,double z){
+  const double phase=unit(cellHash(9,7,63))*2*pi;
+  const double warp=(noise(x*.065,z*.065,9201)-.5)*3.5;
+  const double channelA=1-blend((std::abs(x-(-10+18*std::sin(z*.034+phase)+
+    4.0*std::sin(z*.13+phase*.47)+warp))-1.3)/4.2);
+  const double channelB=1-blend((std::abs(z-(4+16*std::sin(x*.027+phase*.71)+
+    3.5*std::sin(x*.11-phase*.63)-warp))-1.2)/4.0);
+  const double basin=blend((noise(x*.014,z*.014,9211)-.67)/.23);
+  double mask=std::max({channelA,channelB*.96,basin*.92});
+  for(const size_t i:nearbySettlements)
+    mask*=1-settlementBlend(settlements[i],x,z);
+  return std::clamp(mask,0.0,1.0);
+}
 struct DesertSample {double height,dune,swale,gravel;};
 DesertSample desertSample(double x,double z){
   const double wind=(unit(cellHash(3,9,7193))-.5)*1.30;
@@ -175,6 +189,7 @@ DesertSample desertSample(double x,double z){
 }
 double baseHeight(double x,double z){
   if(worldBiome==1)return desertSample(x,z).height;
+  if(worldBiome==4)return 3.32;
   const double broad=.58*noise(x*.012,z*.012,91)+.28*noise(x*.0243,z*.0243,9194)+.14*noise(x*.0496,z*.0496,29741);
   const double detail=noise(x*.050,z*.050,883);
   const double dry=2.4+broad*12+detail*2.2;
@@ -201,7 +216,7 @@ void selectNearbySettlements(int cx,int cz){
 }
 void preparePonds(int cx,int cz){
   ponds.clear();
-  if(worldBiome==1)return;
+  if(worldBiome==1||worldBiome==4)return;
   constexpr double cell=64,halo=20;
   const double x0=cx*side-24,z0=cz*side-24;
   for(int tz=int(std::floor((z0-halo)/cell));tz<=int(std::floor((z0+side+halo)/cell));tz++)
@@ -250,6 +265,7 @@ double surface(double x,double z){
 }
 double fluidLevel(double x,double z){
   if(worldBiome==1)return 0;
+  if(worldBiome==4)return wetlandMask(x,z)>.61?3.34:0;
   if(std::abs(x-riverX(z))<6.1&&surface(x,z)<3.58)return 3.6;
   for(const Pond& p:ponds)if(std::hypot(x-p.x,z-p.z)<p.radius*.82&&surface(x,z)<p.level-.02)return p.level;
   return 0;
@@ -280,11 +296,12 @@ void buildGroundMask(int cx,int cz){
       +.28*noise(x*.0548,z*.0548,4916^9271)
       +.14*noise(x*.1115,z*.1115,4916^29714);
     const double shore=std::abs(x-riverX(z));
-    const double moisture=worldBiome==1?0:std::clamp(.2+broad*.55+
-      (1-blend((shore-6)/17))*.35,0.0,1.0);
+    const double moisture=worldBiome==1?0:worldBiome==4?
+      std::clamp(.52+broad*.18+wetlandMask(x,z)*.32,0.0,1.0):
+      std::clamp(.2+broad*.55+(1-blend((shore-6)/17))*.35,0.0,1.0);
     const double cover=worldBiome==1?
       blend((vegetation*.57+meso*.28-.52)/.44)*.18:
-      worldBiome==2?blend((vegetation*.57+meso*.28+moisture*.20-.22)/.42)*.96:
+      worldBiome==2||worldBiome==4?blend((vegetation*.57+meso*.28+moisture*.20-.22)/.42)*.96:
       blend((vegetation*.57+meso*.28+moisture*.15-.28)/.44)*(worldBiome==3?.55:.96);
     const int at=(iz*35+ix)*4;
     groundMask[at]=uint8_t(std::lround(cover*255));
@@ -386,6 +403,42 @@ void buildWaterMesh(int cx,int cz){
   waterTriangles.clear();
   if(worldBiome==1)return;
   const double minX=cx*side-24,maxX=minX+side,minZ=cz*side-24,maxZ=minZ+side;
+  if(worldBiome==4){
+    // Clip each terrain triangle against the same inundation threshold used
+    // for navigation. A shared vertex mask keeps adjacent chunks seamless.
+    std::array<float,(side+1)*(side+1)> mask{};
+    for(int z=0;z<=side;z++)for(int x=0;x<=side;x++)
+      mask[z*(side+1)+x]=float(wetlandMask(minX+x,minZ+z));
+    struct WetVertex {WaterPoint point;double mask;};
+    auto emit=[&](WetVertex a,WetVertex b,WetVertex c){
+      std::array<WetVertex,6> input{a,b,c},output{};
+      int count=3,next=0;
+      for(int i=0;i<count;i++){
+        const WetVertex& from=input[i],& to=input[(i+1)%count];
+        const bool inside=from.mask>.61,enter=to.mask>.61;
+        if(inside)output[next++]=from;
+        if(inside!=enter){
+          const double t=(.61-from.mask)/(to.mask-from.mask);
+          output[next++]={{from.point.x+(to.point.x-from.point.x)*t,
+            from.point.z+(to.point.z-from.point.z)*t},.61};
+        }
+      }
+      for(int i=1;i+1<next;i++){
+        const auto& a=output[0].point,& b=output[i].point,& c=output[i+1].point;
+        if(wetlandMask((a.x+b.x+c.x)/3,(a.z+b.z+c.z)/3)>.61)
+          waterTriangle(a,b,c,3.34);
+      }
+    };
+    for(int z=0;z<side;z++)for(int x=0;x<side;x++){
+      const double wx=minX+x,wz=minZ+z;
+      const WetVertex a{{wx,wz},mask[z*(side+1)+x]};
+      const WetVertex b{{wx+1,wz},mask[z*(side+1)+x+1]};
+      const WetVertex d{{wx,wz+1},mask[(z+1)*(side+1)+x]};
+      const WetVertex c{{wx+1,wz+1},mask[(z+1)*(side+1)+x+1]};
+      emit(a,d,b);emit(b,d,c);
+    }
+    return;
+  }
   RiverEdgeCache riverEdges{minZ,minX,maxX};
   for(int z=int(minZ);z<int(maxZ);z++){
     const bool nearSettlement=std::any_of(nearbySettlements.begin(),nearbySettlements.end(),[&](size_t i){
@@ -568,7 +621,7 @@ void populateChunk(int cx,int cz,bool visual=true){
     const double patch=.58*noise(wx*.041,wz*.041,8913)
       +.28*noise(wx*.0832,wz*.0832,8913^9271)
       +.14*noise(wx*.1693,wz*.1693,8913^29714);
-    const double grass=worldBiome==2?blend((patch-.20)/.39):blend((patch-.28)/.44);
+    const double grass=worldBiome==2||worldBiome==4?blend((patch-.20)/.39):blend((patch-.28)/.44);
     const double slope=std::hypot(latticeHeight(wx+1,wz)-latticeHeight(wx-1,wz),
       latticeHeight(wx,wz+1)-latticeHeight(wx,wz-1))*.5;
     const double rock=blend((slope-.42)/.98)*.62;
@@ -583,15 +636,18 @@ void populateChunk(int cx,int cz,bool visual=true){
     constexpr double volcanoSoil[3]={81.0/255,72.0/255,73.0/255};
     constexpr double volcanoFoliage[3]={121.0/255,114.0/255,72.0/255};
     constexpr double volcanoStone[3]={68.0/255,68.0/255,72.0/255};
+    constexpr double mangroveSoil[3]={165.0/255,138.0/255,101.0/255};
+    constexpr double mangroveFoliage[3]={148.0/255,155.0/255,102.0/255};
+    constexpr double mangroveStone[3]={140.0/255,134.0/255,119.0/255};
     constexpr double sand[3]={210.0/255,186.0/255,135.0/255};
     for(int k=0;k<3;k++){
-      const double soil=worldBiome==3?volcanoSoil[k]:worldBiome==2?riverSoil[k]:savannaSoil[k];
-      const double foliage=worldBiome==3?volcanoFoliage[k]:worldBiome==2?riverFoliage[k]:savannaFoliage[k];
-      const double stone=worldBiome==3?volcanoStone[k]:worldBiome==2?riverStone[k]:savannaStone[k];
+      const double soil=worldBiome==4?mangroveSoil[k]:worldBiome==3?volcanoSoil[k]:worldBiome==2?riverSoil[k]:savannaSoil[k];
+      const double foliage=worldBiome==4?mangroveFoliage[k]:worldBiome==3?volcanoFoliage[k]:worldBiome==2?riverFoliage[k]:savannaFoliage[k];
+      const double stone=worldBiome==4?mangroveStone[k]:worldBiome==3?volcanoStone[k]:worldBiome==2?riverStone[k]:savannaStone[k];
       double color=soil+(foliage-soil)*grass;
       color+=(stone-color)*rock;
       const double riverBank=worldBiome==3?soil+(volcanoStone[k]-soil)*.35:soil+(sand[k]-soil)*.34;
-      color+=(riverBank-color)*bank;
+      color+=(riverBank-color)*(worldBiome==4?wetlandMask(wx,wz)*.17:bank);
       colors[i*3+k]=float(std::clamp(color*shade,0.0,1.0));
     }
   }
@@ -608,6 +664,7 @@ void populateChunk(int cx,int cz,bool visual=true){
   constexpr double desertDensity[6]={.30,.22,.035,.17,.10,.12};
   constexpr double riverDensity[6]={.62,.63,.64,.28,.26,.57};
   constexpr double volcanoDensity[6]={.39,.44,.53,.52,.24,.60};
+  constexpr double mangroveDensity[6]={.64,.72,1.0,.24,.18,.44};
   constexpr int savannaOffsets[6]={0,4,7,10,13,17},savannaCounts[6]={4,3,3,3,4,2};
   constexpr int desertOffsets[6]={0,4,6,10,15,17},desertCounts[6]={4,2,4,5,2,3};
   // Generic scatter uses SLOTS radii; desert scatter uses authored bounds.
@@ -623,7 +680,7 @@ void populateChunk(int cx,int cz,bool visual=true){
     for(int gz=int(std::floor((double(z0)-halo)/cell));gz<=int(std::floor((double(z0+48)+halo)/cell));gz++)
       for(int gx=int(std::floor((double(x0)-halo)/cell));gx<=int(std::floor((double(x0+48)+halo)/cell));gx++){
         const uint32_t h=cellHash(gx,gz,301+type*71);
-        if(unit(h)>(worldBiome==1?desertDensity[type]:worldBiome==2?riverDensity[type]:worldBiome==3?volcanoDensity[type]:savannaDensity[type]))continue;
+        if(unit(h)>(worldBiome==1?desertDensity[type]:worldBiome==2?riverDensity[type]:worldBiome==3?volcanoDensity[type]:worldBiome==4?mangroveDensity[type]:savannaDensity[type]))continue;
         const double x=(gx+.14+unit(cellHash(gx,gz,310+type))*.72)*cell;
         const double z=(gz+.14+unit(cellHash(gx,gz,311+type))*.72)*cell;
         if(x<x0-halo||x>=x0+48+halo||z<z0-halo||z>=z0+48+halo)continue;
@@ -632,7 +689,9 @@ void populateChunk(int cx,int cz,bool visual=true){
           int(cellHash(gx,gz,315+type)%(worldBiome==1?desertCounts[type]:savannaCounts[type]));
         if(removedProps().count({type,gx,gz}))continue;
         const double waterLevel=fluidLevel(x,z);
-        if((worldBiome==2&&slot==9)?waterLevel==0:waterLevel!=0)continue;
+        const bool mangroveHabitat=worldBiome==4&&(slot==0||slot==1||slot==4);
+        if(mangroveHabitat){if(wetlandMask(x,z)<.56)continue;}
+        else if((worldBiome==2&&slot==9)?waterLevel==0:waterLevel!=0)continue;
         if(worldBiome==2&&(slot==7||slot==17)&&
            std::abs(std::abs(x-riverX(z))-6.1)>15)continue;
         const float radius=(worldBiome==1?desertRadii[slot]:radii[slot])*scale;
@@ -838,7 +897,7 @@ int addBarrier(float x,float z,float halfX,float halfZ,int passMask){
 
 extern "C" {
 int spatial_generate_biome(uint32_t seed,int biome,int cx,int cz){
-  if(biome<0||biome>3)return -1;
+  if(biome<0||biome>4)return -1;
   worldSeed=seed;worldBiome=biome;barrierIndex().byId.clear();barrierIndex().buckets.clear();
   removedProps().clear();removedPropState.clear();
   batchingBarriers=false;deferredBarrierRefresh.clear();barrierBatch.clear();barrierBatchIds.clear();

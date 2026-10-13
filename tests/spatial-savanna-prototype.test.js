@@ -139,11 +139,57 @@ test('Volcanoes shares basalt, lava, collision and both route profiles',()=>{
   assert.deepEqual(restored.snapshot(),state);
   assert.deepEqual(restored.props(),props);
 });
+test('Mangroves share flooded channels, terrain, obstacles and routes',()=>{
+  const core=createSpatialSavannaPrototype(module);
+  core.generate(28,0,0,'mangrove');
+  const heights=Float32Array.from(core.heights()),props=core.props();
+  assert(props.length>0);
+  assert(core.water().some(Boolean));
+  assert(core.water().some(value=>!value),'the marsh must retain dry routes');
+  assert(core.waterTriangles().length>0);
+  assert(core.waterLevels().some(level=>level>3.3));
+  const waterMesh=core.waterTriangles();
+  for(let i=0;i<waterMesh.length;i+=9){
+    const x=(waterMesh[i]+waterMesh[i+3]+waterMesh[i+6])/3;
+    const z=(waterMesh[i+2]+waterMesh[i+5]+waterMesh[i+8])/3;
+    assert(core.fluidLevel(x,z)>0,'visible water triangle must remain inside the logical flooded region');
+  }
+  const tree=props.find(prop=>prop.slot===0||prop.slot===1);
+  assert(tree,'the test seed needs a mangrove tree');
+  assert(core.propBlocked(tree.x,tree.z));
+  for(const [radius,worker] of [[.28,true],[1.1,false]]){
+    assert.equal(core.buildNavigation(radius,worker),16);
+    const {start,end}=crossing(core);
+    validRoute(core,start,core.route(start,end));
+  }
+  core.addChunk(1,0);
+  for(let z=0;z<49;z++)assert.equal(heights[z*49+48],core.heights()[z*49]);
+  const state=JSON.parse(JSON.stringify(core.snapshot()));
+  assert.equal(state.biome,'mangrove');
+  const restored=createSpatialSavannaPrototype(module);
+  restored.restoreState(state,0,0);
+  assert.deepEqual(restored.snapshot(),state);
+  assert.deepEqual(restored.props(),props);
+});
+test('a mangrove settlement dries its local flooded area without changing distant water',()=>{
+  const core=createSpatialSavannaPrototype(module);
+  core.generate(28,0,0,'mangrove');
+  const before=Uint8Array.from(core.water());
+  const flooded=before.findIndex((value,i)=>value&&
+    Math.abs(i%48-24)<12&&Math.abs(Math.floor(i/48)-24)<12);
+  assert(flooded>=0,'the fixture needs central flooded terrain');
+  const x=-24+flooded%48+.5,z=-24+Math.floor(flooded/48)+.5;
+  const distant={x:200,z:200,level:core.fluidLevel(200,200)};
+  core.addSettlement(x,z,4,4);
+  assert.equal(core.fluidLevel(x,z),0);
+  assert.notDeepEqual(Array.from(core.water()),Array.from(before));
+  assert.equal(core.fluidLevel(distant.x,distant.z),distant.level);
+});
 test('generated prop footprints follow each production scatter rule',()=>{
   const slots=[3.8,3.1,3.0,1.7,1.1,.9,1.4,.45,.35,.5,1.2,1.7,1.2,1.8,1.3,1.0,.9,1.7,4.0,5.0];
   const desert=JSON.parse(readFileSync(new URL('../public/content/biome-desert.json',import.meta.url))).profile.bounds;
   const core=createSpatialSavannaPrototype(module);
-  for(const biome of ['savanna','desert','grand_river','volcanoes']){
+  for(const biome of ['savanna','desert','grand_river','volcanoes','mangrove']){
     core.generate(28,0,0,biome);
     for(const prop of core.props().filter(prop=>prop.group<6)){
       const expected=(biome==='desert'?desert[prop.slot].radius:slots[prop.slot])*prop.scale;

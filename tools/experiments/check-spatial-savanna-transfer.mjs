@@ -7,7 +7,7 @@ const {chromium}=await import(pathToFileURL(modulePath).href);
 const base=process.env.WG_QA_URL??'http://127.0.0.1:5188';
 const sceneFormat=process.env.WG_QA_FORMAT==='scene',settlement=process.env.WG_QA_SETTLEMENT==='1';
 const multiple=process.env.WG_QA_MULTIPLE==='1';
-const biome=['savanna','desert','grand_river','volcanoes'].includes(process.env.WG_QA_BIOME)?
+const biome=['savanna','desert','grand_river','volcanoes','mangrove'].includes(process.env.WG_QA_BIOME)?
   process.env.WG_QA_BIOME:'savanna';
 const output=process.env.WG_QA_OUTPUT??(sceneFormat?'docs/qa/hierarchical-navigation/spatial-scene-payload-worker-transfer.json':
   'docs/qa/hierarchical-navigation/spatial-ground-mask-transfer.json');

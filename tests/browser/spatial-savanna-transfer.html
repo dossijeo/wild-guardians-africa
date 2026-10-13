@@ -49,12 +49,12 @@ function prepareThree(data,cx,cz){
 }
 try{
   const parameters=new URLSearchParams(location.search),seed=Number(parameters.get('seed')??712);
-  const biome=['savanna','desert','grand_river','volcanoes'].includes(parameters.get('biome'))?
+  const biome=['savanna','desert','grand_river','volcanoes','mangrove'].includes(parameters.get('biome'))?
     parameters.get('biome'):'savanna';
   const profile=await fetch(`/content/biome-${biome}.json`).then(response=>response.json()).then(pack=>pack.profile);
   const sceneFormat=parameters.get('format')==='scene',settlement=parameters.get('settlement')==='1';
   const multiple=parameters.get('multi')==='1';
-  const nav=new Navigation(String(seed),{savanna:'sabana',desert:'desierto',grand_river:'gran-rio',volcanoes:'volcanes'}[biome],profile),baseline=new Worker(new URL('../../src/rendering/chunk-worker.js',import.meta.url),{type:'module'});
+  const nav=new Navigation(String(seed),{savanna:'sabana',desert:'desierto',grand_river:'gran-rio',volcanoes:'volcanes',mangrove:'manglares'}[biome],profile),baseline=new Worker(new URL('../../src/rendering/chunk-worker.js',import.meta.url),{type:'module'});
   if(settlement){
     const x=10,z=8,hx=7,hz=6;
     const samples=[[x-hx,z-hz],[x+hx,z-hz],[x,z],[x-hx,z+hz],[x+hx,z+hz]]
@@ -161,14 +161,17 @@ try{
     const changed=await request(candidate,{id:202,seed,cx:3,cz:0,read:true,format:'scene'});
     const first=await request(candidate,{id:203,seed,cx:0,cz:0,read:true,format:'scene'});
     const same=(a,b)=>a.length===b.length&&a.every((value,index)=>value===b[index]);
-    if(added.value<=0||same(far.data.terrain.positions,changed.data.terrain.positions)||
-       !same(first.data.terrain.positions,candidateFirst.data.terrain.positions)||
-       !same(first.data.groundMask,candidateFirst.data.groundMask)||
-       JSON.stringify(first.data.instances)!==JSON.stringify(candidateFirst.data.instances)||
-       Math.abs(changed.data.terrain.positions[(8+24)*49*3+24*3+1]-added.value)>.001||
-       changed.metrics.loadedChunks!==3||
-       added.metrics.sectorUpdates-far.metrics.sectorUpdates>16)
-      throw Error('Second settlement did not update only its local spatial world');
+    const settlementChecks={created:added.value>0,
+      changedLocal:!same(far.data.terrain.positions,changed.data.terrain.positions)||
+        biome==='mangrove'&&!same(far.data.groundMask,changed.data.groundMask),
+      sameFirstTerrain:same(first.data.terrain.positions,candidateFirst.data.terrain.positions),
+      sameFirstMask:same(first.data.groundMask,candidateFirst.data.groundMask),
+      sameFirstProps:JSON.stringify(first.data.instances)===JSON.stringify(candidateFirst.data.instances),
+      correctLevel:Math.abs(changed.data.terrain.positions[(8+24)*49*3+24*3+1]-added.value)<=.001,
+      resident:changed.metrics.loadedChunks===3,
+      localSectors:added.metrics.sectorUpdates-far.metrics.sectorUpdates<=16};
+    if(Object.values(settlementChecks).some(value=>!value))
+      throw Error(`Second settlement did not update only its local spatial world: ${JSON.stringify(settlementChecks)}`);
     multipleSettlements={secondLevel:added.value,
       localSectorUpdates:added.metrics.sectorUpdates-far.metrics.sectorUpdates,
       sameFirstSettlement:true,secondChunkChanged:true,memoryBytes:changed.metrics.memoryBytes};
