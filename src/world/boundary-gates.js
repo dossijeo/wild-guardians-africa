@@ -45,7 +45,7 @@ export function boundaryEdges(layout,nav){
  }
  return edges.concat(terrainEdges(nav,box));
 }
-export function ensureBoundaryGates(layout,nav,canHost,isFree,omitted=[],rank=()=>0,eligible=()=>true){
+export function ensureBoundaryGates(layout,nav,canHost,isFree,omitted=[],rank=()=>0,eligible=()=>true,onUnhosted=()=>{}){
  if(!layout.pieces.length)return 0;
  const edges=boundaryEdges(layout,nav).concat(omitted);
  const virtual=edges.map(([a,b],i)=>({id:-i-1,kind:'boundary',material:'',hp:1,maxHp:1,x:(a[0]+b[0])/2,z:(a[1]+b[1])/2,angle:Math.atan2(b[1]-a[1],b[0]-a[0]),scaleX:Math.hypot(b[0]-a[0],b[1]-a[1])/WALL_UNIT}));
@@ -64,7 +64,7 @@ export function ensureBoundaryGates(layout,nav,canHost,isFree,omitted=[],rank=()
   if(perimeter.some(p=>p.kind==='gate'))continue;
   const candidates=face.hosts.map(id=>byId.get(id)).filter(p=>p?.kind==='wall'&&p.scaleX>=.55&&eligible(p));
   candidates.sort((a,b)=>rank(a,face)-rank(b,face)||Math.round(a.x*1e5)-Math.round(b.x*1e5)||Math.round(a.z*1e5)-Math.round(b.z*1e5)||a.id-b.id);
-  const chosen=candidates.find(canHost);if(!chosen)continue;
+  const chosen=candidates.find(canHost);if(!chosen){onUnhosted(face);continue;}
   const health=chosen.hp/chosen.maxHp,scale=({adobe:1.4,piedra:1.4,reforzado:1.6}[chosen.material]??1);
   chosen.kind='gate';chosen.autoGate=true;chosen.baseScaleX=chosen.baseScaleX??chosen.scaleX;chosen.scaleX=chosen.baseScaleX*scale;chosen.scaleY=chosen.scaleZ=scale;chosen.maxHp=layout.settings.hp[chosen.material]*.6;chosen.hp=chosen.maxHp*health;chosen.visual=health;added++;
  }
