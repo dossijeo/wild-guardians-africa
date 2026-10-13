@@ -43,10 +43,13 @@ test('C++ worker graph uses the physical gate portal and excludes animals',async
     let previous=outside;
     for(const point of route){assert(point&&nav.segmentClear(previous,point,.28,null,true));previous=point;}
   }
+  assert.equal(worker.region(outside)?.key,worker.region(inside)?.key,'the open gate joins worker regions');
   const animal=await createHierarchicalWasmNavigator(wasm,nav,{...bounds,radius:1.1,worker:false});animal.initialize();
   assert.equal(animal.route(outside,inside),null);
+  assert.notEqual(animal.region(outside)?.key,animal.region(inside)?.key);
   wall.gate=false;wall.gateOpen=false;nav.setState(s);
   worker.syncRect(wall.x-5,wall.z-5,wall.x+5,wall.z+5);
   assert.equal(worker.route(outside,inside),null,'removing the gate must remove its graph portal');
   assert.equal(worker.flatRoute(outside,inside),null);
+  assert.notEqual(worker.region(outside)?.key,worker.region(inside)?.key);
 });

@@ -49,6 +49,14 @@ for(const variant of ['javascript','wasm-hier','wasm-flat','wasm-flat','wasm-hie
     construction=await timed(()=>createHierarchicalNavigationAdapter(nav));impl=construction.value;
     initialization={milliseconds:0};
   }
+  const grouping=await timed(()=>{
+    const keys=new Set();
+    for(const crop of crops){
+      const region=variant==='javascript'?impl.region(crop,radius,null,false):impl.region(crop);
+      keys.add(region?.key??`unknown:${crop.id}`);
+    }
+    return {crops:crops.length,groups:keys.size};
+  });
   const passes=[];
   for(const phase of ['cold','warm']){
     const measured=await timed(()=>queries.map(({start,end,kind})=>{
@@ -62,10 +70,11 @@ for(const variant of ['javascript','wasm-hier','wasm-flat','wasm-flat','wasm-hie
       invalid:measured.value.filter(r=>r.found&&!r.valid).length});
   }
   rows.push({variant,queries:queries.length,constructionMs:construction.milliseconds,initializationMs:initialization.milliseconds,
+    groupingMs:grouping.milliseconds,grouping:grouping.value,
     rssDeltaBytes:process.memoryUsage().rss-before,wasmMemoryBytes:impl.wasm?.memory.buffer.byteLength??null,
     metrics:variant!=='javascript'?impl.metrics():impl.planner.metrics,passes});
 }
 const report={input,biome:saved.biome,day:saved.day,radius,bounds:{minX,minZ,maxX,maxZ},wasmBytes:wasm.byteLength,rows};
 mkdirSync(dirname(output),{recursive:true});writeFileSync(output,JSON.stringify(report,null,2)+'\n');
-console.log(JSON.stringify({biome:report.biome,day:report.day,wasmBytes:report.wasmBytes,rows:rows.map(({variant,queries,constructionMs,initializationMs,passes,metrics})=>({variant,queries,constructionMs,initializationMs,passes,metrics}))}));
+console.log(JSON.stringify({biome:report.biome,day:report.day,wasmBytes:report.wasmBytes,rows:rows.map(({variant,queries,constructionMs,initializationMs,groupingMs,grouping,passes,metrics})=>({variant,queries,constructionMs,initializationMs,groupingMs,grouping,passes,metrics}))}));
 if(rows.some(r=>r.passes.some(p=>p.invalid)))process.exitCode=2;

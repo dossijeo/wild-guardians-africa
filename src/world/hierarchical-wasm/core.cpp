@@ -2,6 +2,7 @@
 #include <cstdint>
 #include <cmath>
 #include <limits>
+#include <numeric>
 #include <queue>
 #include <tuple>
 #include <vector>
@@ -12,7 +13,7 @@
 namespace {
 int ox=0,oz=0,width=0,height=0,sectorSize=12,sectorsX=0,sectorsZ=0;
 std::vector<uint8_t> passable,steps,diagonals,closed,flatClosed;
-std::vector<int32_t> component,head,parent,previousArc,queueBuffer,routeBuffer,portalBuffer,flatParent,flatParentPortal,portalHead,portalNext;
+std::vector<int32_t> component,head,regionRoot,parent,previousArc,queueBuffer,routeBuffer,portalBuffer,flatParent,flatParentPortal,portalHead,portalNext;
 struct Arc {int32_t to,fromCell,toCell,next,portal;};
 struct Portal {int32_t fromCell,toCell;};
 std::vector<Arc> arcs;
@@ -35,6 +36,12 @@ int popOpen(){
 }
 int sector(int x,int z){return (z/sectorSize)*sectorsX+x/sectorSize;}
 int node(int cell){return component[cell];}
+int findRegion(int id){
+  int root=id;
+  while(regionRoot[root]!=root)root=regionRoot[root];
+  while(regionRoot[id]!=id){const int next=regionRoot[id];regionRoot[id]=root;id=next;}
+  return root;
+}
 void rebuildSector(int sx,int sz){
   const int x0=sx*sectorSize,z0=sz*sectorSize,x1=std::min(width,x0+sectorSize),z1=std::min(height,z0+sectorSize);
   for(int z=z0;z<z1;z++)for(int x=x0;x<x1;x++)component[index(x,z)]=-1;
@@ -59,9 +66,11 @@ void rebuildSector(int sx,int sz){
 void addArc(int from,int to,int fromCell,int toCell,int portal=-1){
   if(from<0||to<0||from==to)return;
   arcs.push_back({to,fromCell,toCell,head[from],portal});head[from]=static_cast<int>(arcs.size())-1;
+  regionRoot[findRegion(to)]=findRegion(from);
 }
 void rebuildGraph(){
   std::fill(head.begin(),head.end(),-1);arcs.clear();
+  std::iota(regionRoot.begin(),regionRoot.end(),0);
   std::fill(portalHead.begin(),portalHead.end(),-1);portalNext.assign(portals.size()*2,-1);
   for(int z=0;z<height;z++)for(int x=0;x<width;x++){
     const int cell=index(x,z),from=node(cell);if(from<0)continue;
@@ -109,7 +118,7 @@ int nav_init(int worldX,int worldZ,int w,int h,int size){
   sectorsX=(w+size-1)/size;sectorsZ=(h+size-1)/size;
   const size_t cells=static_cast<size_t>(w)*h,nodes=static_cast<size_t>(sectorsX)*sectorsZ*size*size;
   passable.assign(cells,0);steps.assign(cells,0);diagonals.assign(cells,0);component.assign(cells,-1);
-  head.assign(nodes,-1);parent.assign(cells,-1);costs.resize(nodes);closed.resize(nodes);previousArc.resize(nodes);
+  head.assign(nodes,-1);regionRoot.resize(nodes);parent.assign(cells,-1);costs.resize(nodes);closed.resize(nodes);previousArc.resize(nodes);
   flatParent.resize(cells);flatParentPortal.resize(cells);flatCosts.resize(cells);flatClosed.resize(cells);portalHead.resize(cells);
   queueBuffer.reserve(cells);routeBuffer.reserve(cells);portalBuffer.reserve(nodes);heapBuffer.reserve(cells);arcs.reserve(cells/3);
   portals.clear();sectorsBuilt=visitedGraph=visitedLocal=0;return 1;
@@ -138,6 +147,11 @@ int nav_add_portal(int fromX,int fromZ,int toX,int toZ){
   portals.push_back({a,b});return static_cast<int>(portals.size())-1;
 }
 int nav_commit_portals(){rebuildGraph();return static_cast<int>(arcs.size());}
+int nav_component(int worldX,int worldZ){
+  const int x=worldX-ox,z=worldZ-oz;
+  if(!inBounds(x,z))return -1;
+  const int id=component[index(x,z)];return id<0?-1:findRegion(id);
+}
 int nav_route(int startX,int startZ,int endX,int endZ){
   routeBuffer.clear();visitedGraph=visitedLocal=0;
   const int sx=startX-ox,sz=startZ-oz,tx=endX-ox,tz=endZ-oz;

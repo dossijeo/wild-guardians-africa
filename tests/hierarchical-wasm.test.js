@@ -65,3 +65,16 @@ test('raster preparation samples each cell once and refreshes only a local recta
   assert.equal(samples,9);
   assert(core.flatRoute({x:3,z:12},{x:19,z:12})?.length>0);
 });
+
+test('sector component lookup groups nearby crops without route searches',async()=>{
+  const f=fixture();
+  let clearanceChecks=0;
+  const nav={...f.nav,segmentClear(...args){clearanceChecks++;return f.clear(...args);}};
+  const core=await createHierarchicalWasmNavigator(wasm,nav,{minX:0,minZ:0,maxX:23,maxZ:23,radius:.5,sectorSize:8});
+  core.initialize();
+  clearanceChecks=0;
+  assert.equal(core.region({x:3,z:12})?.key,core.region({x:5,z:12})?.key);
+  assert.equal(clearanceChecks,2);
+  assert.notEqual(core.region({x:3,z:12})?.key,core.region({x:19,z:12})?.key);
+  assert.equal(core.region({x:11,z:12}),null);
+});

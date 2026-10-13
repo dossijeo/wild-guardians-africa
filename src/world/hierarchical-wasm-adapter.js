@@ -94,6 +94,19 @@ export async function createHierarchicalWasmNavigator(bytes,nav,{minX,minZ,maxX,
     const indices=new Int32Array(wasm.memory.buffer,wasm.nav_route_ptr(),n);
     return Array.from(indices,decode);
   }
-  return {wasm,initialize,syncRect,route,flatRoute,bytes:bytes.byteLength,dimensions:{width,height},
+  function region(point){
+    const x=Math.round(point.x),z=Math.round(point.z),candidates=[];
+    const direct=wasm.nav_component(x,z);
+    if(direct>=0&&nav.segmentClear(point,{x,z},radius,ignore,worker))return {key:String(direct),id:direct,cell:{x,z}};
+    for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){
+      if(dx===0&&dz===0)continue;
+      const cell={x:x+dx,z:z+dz},id=wasm.nav_component(cell.x,cell.z);
+      if(id<0||!nav.segmentClear(point,cell,radius,ignore,worker))continue;
+      candidates.push({id,cell,distance:Math.hypot(cell.x-point.x,cell.z-point.z)});
+    }
+    candidates.sort((a,b)=>a.distance-b.distance||a.cell.x-b.cell.x||a.cell.z-b.cell.z);
+    const result=candidates[0];return result?{key:String(result.id),id:result.id,cell:result.cell}:null;
+  }
+  return {wasm,initialize,syncRect,route,flatRoute,region,bytes:bytes.byteLength,dimensions:{width,height},
     metrics:()=>({sectorsBuilt:wasm.nav_sectors_built(),arcs:wasm.nav_arc_count(),graphNodes:wasm.nav_graph_nodes(),localNodes:wasm.nav_local_nodes(),flatNodes:wasm.nav_flat_nodes()})};
 }
