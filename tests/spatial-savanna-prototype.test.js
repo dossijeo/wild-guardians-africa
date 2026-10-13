@@ -60,6 +60,39 @@ test('neighboring chunks share their terrain seam and seed-dependent props',()=>
   core.generate(2027,0,0);
   assert.notDeepEqual(core.props(),westProps);
 });
+test('procedural pond shares one visual and navigation water source',()=>{
+  const core=createSpatialSavannaPrototype(module);
+  core.generate(28,0,0);
+  const pond=core.props().find(p=>p.slot===19&&p.x>-18&&p.x<18&&p.z>-18&&p.z<18);
+  assert(pond,'fixture needs an interior generated pond');
+  const x=Math.floor(pond.x+24),z=Math.floor(pond.z+24),at=z*48+x;
+  assert.equal(core.water()[at],1,'the pond must appear in the visual water mask');
+  assert(Math.abs(core.waterLevels()[at]-pond.y)<.001,'visible water level comes from the generated pond');
+  for(let i=0;i<core.water().length;i++)assert.equal(core.waterLevels()[i]>0,core.water()[i]===1,
+    `water occupancy and elevation must agree at cell ${i}`);
+  assert(core.heights()[Math.round(pond.z+24)*49+Math.round(pond.x+24)]<pond.y,
+    'the generated terrain must be carved below the pond surface');
+  core.buildNavigation(1.1,false);
+  assert.equal(core.walkable(Math.round(pond.x),Math.round(pond.z)),false,
+    'an animal cannot cross the same pond shown to the player');
+  const geo=core.waterGeometry();
+  assert(geo.getAttribute('position').count>0);geo.dispose();
+});
+test('a pond crossing a chunk boundary keeps its basin and fluid connectivity',()=>{
+  const core=createSpatialSavannaPrototype(module);
+  core.generate(17,0,0);
+  const pond=core.props().find(p=>p.slot===19&&p.x+p.radius>24);
+  assert(pond,'fixture needs a pond reaching the east edge');
+  const west=Float32Array.from(core.heights());
+  assert(core.addChunk(1,0)>0);
+  const east=core.heights();
+  for(let z=0;z<49;z++)assert.equal(west[z*49+48],east[z*49],`pond terrain seam at row ${z}`);
+  const row=Math.floor(pond.z+24);
+  assert.equal(core.water()[row*48],1,'neighboring chunk must receive the same pond water');
+  assert(Math.abs(core.waterLevels()[row*48]-pond.y)<.001);
+  core.buildNavigation(1.1,false);
+  assert.equal(core.walkable(24,Math.round(pond.z)),false,'animal occupancy must continue across seam');
+});
 test('a visible solid prop occupies its logical collision point',()=>{
   const core=createSpatialSavannaPrototype(module);
   core.generate(712,0,0);core.buildNavigation(1.1,false);

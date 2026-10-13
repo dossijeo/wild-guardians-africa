@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QA · Sabana actual y núcleo espacial</title>
+<style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#cdd6c5;font:14px system-ui}canvas{display:block}#labels{position:fixed;inset:12px 12px auto;display:flex;justify-content:space-between;pointer-events:none}#labels span{padding:7px 11px;background:#193028dd;color:white;border-radius:5px}#status{position:fixed;left:50%;top:12px;transform:translateX(-50%);padding:7px 11px;background:#193028dd;color:white;border-radius:5px;pointer-events:none}</style>
+</head><body><div id="labels"><span>Generador actual · JS</span><span>Núcleo espacial · C++/WASM</span></div><div id="status">Preparando comparación…</div><script type="module">
+import * as THREE from 'three';
+import {Assets} from '../../src/rendering/assets.js';
+import {Navigation} from '../../src/world/navigation.js';
+import {buildNativeChunk} from '../../src/rendering/chunk-data.js';
+import {nativeTerrainBuffer} from '../../src/rendering/terrain-geometry.js';
+import {nativeWaterBuffer} from '../../src/rendering/water-geometry.js';
+import {createSpatialSavannaPrototype} from '../../src/world/hierarchical-wasm/spatial-savanna-adapter.js';
+import wasmUrl from '../../src/world/hierarchical-wasm/spatial-savanna.wasm?url';
+
+const status=document.querySelector('#status'),scenes=[];
+function makeScene(ground,river,instances,models,prototype=false){
+  const scene=new THREE.Scene();scene.background=new THREE.Color('#cdd6c5');scene.fog=new THREE.Fog('#cdd6c5',75,145);
+  scene.add(new THREE.HemisphereLight('#fff9e6','#655034',2.2));
+  const sun=new THREE.DirectionalLight('#fff1cd',2);sun.position.set(-35,60,20);scene.add(sun);
+  const material=new THREE.MeshStandardMaterial({vertexColors:true,roughness:1,side:THREE.DoubleSide});
+  scene.add(new THREE.Mesh(ground,material));
+  if(river)scene.add(new THREE.Mesh(river,new THREE.MeshStandardMaterial({color:'#49aeb6',roughness:.38,side:THREE.DoubleSide})));
+  const dummy=new THREE.Object3D();let count=0;
+  for(let slot=0;slot<20;slot++){
+    const records=instances[slot];if(!records?.length)continue;
+    const source=models[slot][0],mesh=new THREE.InstancedMesh(source.geometry,source.material,records.length);
+    records.forEach((p,i)=>{dummy.position.set(p.x,p.y,p.z);dummy.rotation.y=p.yaw;
+      dummy.scale.set(p.sx??p.scale,p.sy??p.scale,p.sz??p.scale);dummy.updateMatrix();mesh.setMatrixAt(i,dummy.matrix);});
+    mesh.instanceMatrix.needsUpdate=true;mesh.computeBoundingSphere();scene.add(mesh);count+=records.length;
+  }
+  scenes.push(scene);return {count,vertices:ground.getAttribute('position').count,waterVertices:river?.getAttribute('position').count??0,prototype};
+}
+try{
+  const [pack,binary]=await Promise.all([fetch('/content/biome-savanna.json').then(r=>r.json()),fetch(wasmUrl).then(r=>r.arrayBuffer())]);
+  const seed=Number(new URLSearchParams(location.search).get('seed')??712);
+  const assets=new Assets(),models=await assets.biome(pack),nav=new Navigation(String(seed),'sabana',pack.profile);
+  const current=buildNativeChunk(nav.config,pack.profile,0,0);
+  const baseline=makeScene(nativeTerrainBuffer(current.terrain),nativeWaterBuffer(current.water),current.instances,models);
+  const core=createSpatialSavannaPrototype(new WebAssembly.Module(binary));core.generate(seed,0,0);core.buildNavigation(1.1,false);
+  const candidate=makeScene(core.geometry(),core.waterGeometry(),core.instances(),models,true);
+  const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);
+  renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.setScissorTest(true);document.body.append(renderer.domElement);
+  const camera=new THREE.PerspectiveCamera(53,1,.1,250);camera.position.set(48,44,57);camera.lookAt(0,5,0);
+  function render(){
+    renderer.setSize(innerWidth,innerHeight);const left=Math.floor(innerWidth/2),right=innerWidth-left;
+    for(const [i,width] of [left,right].entries()){
+      const x=i?left:0;renderer.setViewport(x,0,width,innerHeight);renderer.setScissor(x,0,width,innerHeight);
+      camera.aspect=width/innerHeight;camera.updateProjectionMatrix();renderer.render(scenes[i],camera);
+    }
+  }
+  render();addEventListener('resize',render);
+  window.qaStats={seed,baseline,candidate};window.qaReady=true;
+  status.textContent=`Semilla ${seed} · JS: ${baseline.count} objetos · WASM: ${candidate.count} objetos`;
+}catch(error){window.qaError=String(error.stack??error);status.textContent=window.qaError;}
+</script></body></html>

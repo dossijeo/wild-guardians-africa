@@ -29,6 +29,7 @@ constexpr int propBucketWidth=8,propBucketSide=8;
 constexpr double maxIndexedRadius=2.0;
 constexpr double pi=3.14159265358979323846;
 struct Prop {float x,z,y,radius,scale,yaw;int32_t slot;};
+struct Pond {double x,z,radius,level;};
 struct Wall {int id;float x,z,halfX,halfZ;bool active;};
 struct ChunkRaster {int cx,cz;std::vector<uint8_t> pass,steps,inbound;};
 uint32_t worldSeed=0;
@@ -37,7 +38,9 @@ float radiusNow=.3f;
 bool workerNow=true,navReady=false;
 std::vector<float> heights,colors;
 std::vector<uint8_t> water;
+std::vector<float> waterLevels;
 std::vector<double> lattice;
+std::vector<Pond> ponds;
 std::vector<Prop> props;
 std::vector<Prop> solidProps;
 std::array<std::vector<int>,propBucketSide*propBucketSide> propBuckets;
@@ -68,13 +71,40 @@ double noise(double x,double z,uint32_t salt){
   return (a+(b-a)*u)*(1-v)+(c+(d-c)*u)*v;
 }
 double riverX(double z){return -20+std::sin(z*.035+unit(cellHash(9,7,63))*2*pi)*17;}
-double height(double x,double z){
+double baseHeight(double x,double z){
   const double broad=.58*noise(x*.012,z*.012,91)+.28*noise(x*.0243,z*.0243,9194)+.14*noise(x*.0496,z*.0496,29741);
   const double detail=noise(x*.050,z*.050,883);
   const double dry=2.4+broad*12+detail*2.2;
   const double d=std::abs(x-riverX(z));
   const double channel=3.6-.63+blend((d-1.8)/4.2)*.68;
   return channel+(dry-channel)*blend((d-17)/75);
+}
+void preparePonds(int cx,int cz){
+  ponds.clear();
+  constexpr double cell=64,halo=20;
+  const double x0=cx*side-24,z0=cz*side-24;
+  for(int tz=int(std::floor((z0-halo)/cell));tz<=int(std::floor((z0+side+halo)/cell));tz++)
+  for(int tx=int(std::floor((x0-halo)/cell));tx<=int(std::floor((x0+side+halo)/cell));tx++){
+    if(unit(cellHash(tx,tz,7201))>.68)continue;
+    double x=(tx+.5+(unit(cellHash(tx,tz,7202))-.5)*.55)*cell;
+    const double z=(tz+.5+(unit(cellHash(tx,tz,7203))-.5)*.55)*cell;
+    const double river=riverX(z);
+    if(std::abs(x-river)<24)x=river+(x<river?-24:24);
+    const double radius=6+unit(cellHash(tx,tz,7204))*3.4;
+    const double reach=radius*1.4;
+    if(x+reach<x0||x-reach>x0+side||z+reach<z0||z-reach>z0+side)continue;
+    ponds.push_back({x,z,radius,baseHeight(x,z)-.4});
+  }
+}
+double height(double x,double z){
+  double h=baseHeight(x,z);
+  for(const Pond& p:ponds){
+    const double d=std::hypot(x-p.x,z-p.z)/p.radius;
+    if(d>=1.35)continue;
+    const double basin=p.level-.75+1.1*blend((d-.50)/.85);
+    h=std::min(h,basin);
+  }
+  return h;
 }
 double latticeHeight(int x,int z){
   const int ix=x-(chunkX*side-24)+pad,iz=z-(chunkZ*side-24)+pad;
@@ -87,7 +117,12 @@ double surface(double x,double z){
   const double c=latticeHeight(ix+1,iz+1);
   return c+(latticeHeight(ix,iz+1)-c)*(1-fx)+(latticeHeight(ix+1,iz)-c)*(1-fz);
 }
-bool fluid(double x,double z){return std::abs(x-riverX(z))<6.1&&surface(x,z)<3.58;}
+double fluidLevel(double x,double z){
+  if(std::abs(x-riverX(z))<6.1&&surface(x,z)<3.58)return 3.6;
+  for(const Pond& p:ponds)if(std::hypot(x-p.x,z-p.z)<p.radius*.82&&surface(x,z)<p.level-.02)return p.level;
+  return 0;
+}
+bool fluid(double x,double z){return fluidLevel(x,z)!=0;}
 bool terrainValid(double x,double z,float radius,bool worker){
   (void)worker;
   for(int i=0;i<5;i++){
@@ -202,7 +237,8 @@ void refreshRect(int minX,int minZ,int maxX,int maxZ){
 void populateChunk(int cx,int cz){
   chunkX=cx;chunkZ=cz;props.clear();solidProps.clear();staticPass.clear();staticSteps.clear();staticInbound.clear();haloPropCount=0;
   // The standalone no-entry WASM binary has no startup constructor pass.
-  heights.assign(grid*grid,0);colors.assign(grid*grid*3,0);water.assign(side*side,0);
+  preparePonds(cx,cz);
+  heights.assign(grid*grid,0);colors.assign(grid*grid*3,0);water.assign(side*side,0);waterLevels.assign(side*side,0);
   const int x0=cx*side-24,z0=cz*side-24;
   lattice.resize(latticeSpan*latticeSpan);
   for(int z=0;z<latticeSpan;z++)for(int x=0;x<latticeSpan;x++)
@@ -215,11 +251,13 @@ void populateChunk(int cx,int cz){
     colors[i*3+1]=float(.46+.19*grain+.09*wet);
     colors[i*3+2]=float(.29+.09*grain+.09*wet);
   }
-  for(int z=0;z<side;z++)for(int x=0;x<side;x++)
-    water[z*side+x]=fluid(x0+x+.5,z0+z+.5)?1:0;
+  for(int z=0;z<side;z++)for(int x=0;x<side;x++){
+    const double level=fluidLevel(x0+x+.5,z0+z+.5);
+    water[z*side+x]=level!=0;waterLevels[z*side+x]=float(level);
+  }
   constexpr double spacing[6]={13.5,7,2.8,9,10,32};
   constexpr double density[6]={.53,.51,.72,.30,.28,.63};
-  constexpr int offsets[6]={0,4,7,10,13,17},counts[6]={4,3,3,3,4,3};
+  constexpr int offsets[6]={0,4,7,10,13,17},counts[6]={4,3,3,3,4,2};
   constexpr float radii[20]={3.8f,3.1f,3.0f,1.7f,1.1f,.9f,1.4f,.45f,.35f,.5f,1.2f,1.7f,1.2f,1.8f,1.3f,1.0f,.9f,1.7f,4.0f,5.0f};
   for(int type=0;type<6;type++){
     const double cell=spacing[type];
@@ -247,6 +285,15 @@ void populateChunk(int cx,int cz){
           if(!owned)haloPropCount++;
         }
       }
+  }
+  for(const Pond& p:ponds){
+    const bool owned=p.x>=x0&&p.x<x0+side&&p.z>=z0&&p.z<z0+side;
+    const Prop prop={float(p.x),float(p.z),float(p.level),float(p.radius),float(p.radius/4),0,19};
+    if(owned)props.push_back(prop);
+    if(p.x+p.radius+maxIndexedRadius>=x0&&p.x-p.radius-maxIndexedRadius<x0+side&&
+       p.z+p.radius+maxIndexedRadius>=z0&&p.z-p.radius-maxIndexedRadius<z0+side){
+      solidProps.push_back(prop);if(!owned)haloPropCount++;
+    }
   }
   indexSolidProps();
 }
@@ -315,7 +362,7 @@ int spatial_remove_chunk(int cx,int cz){
   }
   if(chunkX==cx&&chunkZ==cz){
     if(!loadedChunks.empty())populateChunk(loadedChunks.back().first,loadedChunks.back().second);
-    else {props.clear();solidProps.clear();heights.clear();colors.clear();water.clear();}
+    else {props.clear();solidProps.clear();ponds.clear();heights.clear();colors.clear();water.clear();waterLevels.clear();}
   }
   return 1;
 }
@@ -324,6 +371,7 @@ int spatial_sector_slots(){return lazy_sector_slots();}
 float* spatial_heights_ptr(){return heights.data();}
 float* spatial_colors_ptr(){return colors.data();}
 uint8_t* spatial_water_ptr(){return water.data();}
+float* spatial_water_levels_ptr(){return waterLevels.data();}
 Prop* spatial_props_ptr(){return props.data();}
 int spatial_prop_count(){return int(props.size());}
 int spatial_halo_prop_count(){return haloPropCount;}
