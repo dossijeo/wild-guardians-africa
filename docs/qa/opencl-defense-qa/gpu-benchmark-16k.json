@@ -1,0 +1,57 @@
+{
+  "device": "Intel(R) UHD Graphics",
+  "platform": "Intel(R) OpenCL Graphics",
+  "fp64Supported": false,
+  "sampleCount": 16384,
+  "inputBytes": 1310720,
+  "outputBytes": 16384,
+  "cpuSlopeMs": 21.011999808251858,
+  "gpuPasses": [
+    {
+      "totalMs": 3.8457000628113747,
+      "uploadMs": 0.4467,
+      "kernelMs": 0.254531,
+      "downloadMs": 0.006979
+    },
+    {
+      "totalMs": 0.7840001489967108,
+      "uploadMs": 0.1408,
+      "kernelMs": 0.077916,
+      "downloadMs": 0.003125
+    },
+    {
+      "totalMs": 0.5521001294255257,
+      "uploadMs": 0.095499,
+      "kernelMs": 0.068489,
+      "downloadMs": 0.003489
+    },
+    {
+      "totalMs": 0.5154998507350683,
+      "uploadMs": 0.08,
+      "kernelMs": 0.067291,
+      "downloadMs": 0.003854
+    },
+    {
+      "totalMs": 0.493799801915884,
+      "uploadMs": 0.070199,
+      "kernelMs": 0.067812,
+      "downloadMs": 0.003072
+    },
+    {
+      "totalMs": 0.6636001635342836,
+      "uploadMs": 0.0685,
+      "kernelMs": 0.255833,
+      "downloadMs": 0.002291
+    },
+    {
+      "totalMs": 0.3599999472498894,
+      "uploadMs": 0.0573,
+      "kernelMs": 0.051822,
+      "downloadMs": 0.003072
+    }
+  ],
+  "gpuVsCpuSlopeMismatches": 0,
+  "gpuVsNativeTerrainMismatches": 169,
+  "replayAccepted": 16215,
+  "note": "The CPU has already generated 20 float64 heights per point. This measures only batched slope reduction and transfer, not terrain generation, colliders, pathfinding, or a production GPU acceleration. Rejected points use native CPU fallback."
+}
