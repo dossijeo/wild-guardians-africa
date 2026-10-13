@@ -56,6 +56,16 @@ test('cross-sector connectivity preserves directional edges',async()=>{
   assert.notEqual(probe.route({x:13,z:3},{x:2,z:3}).status,'found');
 });
 
+test('an unsampled one-way entrance cannot be certified as a sealed target',async()=>{
+  const walkable=(x,z)=>x>=0&&x<24&&z>=0&&z<8;
+  const nav={walkable,segmentClear:(a,b)=>walkable(a.x,a.z)&&walkable(b.x,b.z)&&b.x<=a.x};
+  const probe=await createLazySectorProbe(bytes,nav,{sectorSize:8});
+  probe.ensureSector(0,0);probe.ensureSector(2,0);
+  assert.equal(probe.route({x:18,z:3},{x:5,z:3}).status,'unknown');
+  probe.ensureSector(1,0);
+  assert.equal(probe.route({x:18,z:3},{x:5,z:3}).status,'found');
+});
+
 test('native automatic gate is a worker portal and never an animal crossing',async()=>{
   const {s,nav}=fixture('closed-walls');
   const gate=s.structures.find(o=>o.id==='wall-2-5');gate.gate=true;gate.gateOpen=true;nav.setState(s);
@@ -69,7 +79,7 @@ test('native automatic gate is a worker portal and never an animal crossing',asy
   assert.deepEqual(previous,inside);
   const animal=await createLazySectorProbe(bytes,nav,{sectorSize:12,radius:1.1,worker:false});
   animal.ensureRect(-12,-18,42,38);
-  assert.notEqual(animal.route(outside,inside).status,'found');
+  assert.equal(animal.route(outside,inside).status,'blocked');
   gate.gate=false;gate.gateOpen=false;nav.setState(s);
   worker.refreshPortals();
   worker.loadSector(Math.floor(gate.x/12),Math.floor(gate.z/12));

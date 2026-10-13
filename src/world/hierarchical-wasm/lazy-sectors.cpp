@@ -8,15 +8,15 @@
 namespace {
 constexpr int dx[4]={1,-1,0,0},dz[4]={0,0,1,-1};
 int sectorSize=0,updates=0;
-std::vector<uint8_t> stagedPass,stagedSteps;
+std::vector<uint8_t> stagedPass,stagedSteps,stagedInbound;
 struct Arc {int32_t to,fromCell,toCell,portal=-1;};
 struct Portal {int fromX,fromZ,toX,toZ;};
 struct Sector {
   int sx,sz,id,components=0;
-  std::vector<uint8_t> pass,steps;
+  std::vector<uint8_t> pass,steps,inbound;
   std::vector<int16_t> component;
   std::vector<std::vector<Arc>> edges;
-  std::vector<uint8_t> unknown;
+  std::vector<uint8_t> unknown,weakUnknown;
 };
 std::unordered_map<uint64_t,Sector>* sectors=nullptr;
 std::vector<Sector*> byId;
@@ -25,6 +25,9 @@ std::vector<uint8_t> visited;
 std::vector<int32_t> previousNode,localParent,routePoints;
 std::vector<Arc> previousArc,arcChain;
 std::vector<Portal> portals;
+std::vector<int32_t> weakHead,weakTo,weakNext;
+std::vector<uint8_t> weakOpen;
+bool weakDirty=true;
 uint64_t key(int sx,int sz){return (static_cast<uint64_t>(static_cast<uint32_t>(sx))<<32)|static_cast<uint32_t>(sz);}
 Sector* get(int sx,int sz){const auto it=sectors->find(key(sx,sz));return it==sectors->end()?nullptr:&it->second;}
 int floorDiv(int n,int d){return n>=0?n/d:-((-n+d-1)/d);}
@@ -51,17 +54,23 @@ void flood(Sector& sector){
 }
 void rebuildEdges(Sector& sector){
   sector.edges.assign(sector.components,{});sector.unknown.assign(sector.components,0);
+  sector.weakUnknown.assign(sector.components,0);
   for(int z=0;z<sectorSize;z++)for(int x=0;x<sectorSize;x++){
     const int at=cellIndex(x,z),component=sector.component[at];
     if(component<0)continue;
     for(int d=0;d<4;d++){
       const int nx=x+dx[d],nz=z+dz[d];
       if(nx>=0&&nz>=0&&nx<sectorSize&&nz<sectorSize)continue;
-      if(!(sector.steps[at]&(1<<d)))continue;
+      const bool outbound=sector.steps[at]&(1<<d),inbound=sector.inbound[at]&(1<<d);
+      if(!outbound&&!inbound)continue;
       const int neighborX=sector.sx+(nx<0?-1:nx>=sectorSize?1:0);
       const int neighborZ=sector.sz+(nz<0?-1:nz>=sectorSize?1:0);
       const Sector* neighbor=get(neighborX,neighborZ);
-      if(!neighbor){sector.unknown[component]=1;continue;}
+      if(!neighbor){
+        if(outbound)sector.unknown[component]=1;
+        sector.weakUnknown[component]=1;continue;
+      }
+      if(!outbound)continue;
       const int lx=(nx+sectorSize)%sectorSize,lz=(nz+sectorSize)%sectorSize;
       const int target=neighbor->component[cellIndex(lx,lz)];
       if(target<0)continue;
@@ -86,6 +95,32 @@ void rebuildEdges(Sector& sector){
       sector.edges[fromComponent].push_back({node,fromCell,toCell,static_cast<int>(id)*2+direction});
     }
   }
+}
+void rebuildWeakGraph(){
+  const int nodes=static_cast<int>(byId.size())*sectorSize*sectorSize;
+  weakHead.assign(nodes,-1);weakOpen.assign(nodes,0);weakTo.clear();weakNext.clear();
+  auto add=[&](int from,int to){
+    weakTo.push_back(to);weakNext.push_back(weakHead[from]);weakHead[from]=static_cast<int>(weakTo.size())-1;
+  };
+  for(const Sector* sector:byId)for(int component=0;component<sector->components;component++){
+    const int from=sector->id*sectorSize*sectorSize+component;
+    weakOpen[from]=sector->weakUnknown[component];
+    for(const Arc& arc:sector->edges[component]){add(from,arc.to);add(arc.to,from);}
+  }
+  weakDirty=false;
+}
+bool targetSealed(int source,int target){
+  if(weakDirty)rebuildWeakGraph();
+  visited.assign(weakHead.size(),0);queueBuffer.clear();queueBuffer.push_back(target);visited[target]=1;
+  for(size_t q=0;q<queueBuffer.size();q++){
+    const int node=queueBuffer[q];
+    if(node==source||weakOpen[node])return false;
+    for(int edge=weakHead[node];edge>=0;edge=weakNext[edge]){
+      const int next=weakTo[edge];
+      if(!visited[next]){visited[next]=1;queueBuffer.push_back(next);}
+    }
+  }
+  return true;
 }
 int32_t nodeAt(int worldX,int worldZ){
   const int sx=floorDiv(worldX,sectorSize),sz=floorDiv(worldZ,sectorSize);
@@ -129,17 +164,19 @@ int lazy_init(int size){
   if(!sectors)sectors=new std::unordered_map<uint64_t,Sector>();else sectors->clear();
   byId.clear();
   stagedPass.assign(size*size,0);stagedSteps.assign(size*size,0);
+  stagedInbound.assign(size*size,0);weakDirty=true;
   portals.clear();
   queueBuffer.reserve(size*size);return 1;
 }
 uint8_t* lazy_pass_ptr(){return stagedPass.data();}
 uint8_t* lazy_steps_ptr(){return stagedSteps.data();}
+uint8_t* lazy_inbound_ptr(){return stagedInbound.data();}
 int lazy_commit_sector(int sx,int sz){
   if(!sectorSize)return -1;
   auto [it,inserted]=sectors->try_emplace(key(sx,sz));
   Sector& sector=it->second;
   if(inserted){sector.id=static_cast<int>(byId.size());byId.push_back(&sector);sector.sx=sx;sector.sz=sz;}
-  sector.pass=stagedPass;sector.steps=stagedSteps;
+  sector.pass=stagedPass;sector.steps=stagedSteps;sector.inbound=stagedInbound;
   flood(sector);updates++;
   rebuildEdges(sector);
   for(int d=0;d<4;d++)if(Sector* neighbor=get(sx+dx[d],sz+dz[d]))rebuildEdges(*neighbor);
@@ -149,6 +186,7 @@ int lazy_commit_sector(int sx,int sz){
     if(ax==sx&&az==sz){if(Sector* other=get(bx,bz);other&&other!=&sector)rebuildEdges(*other);}
     if(bx==sx&&bz==sz){if(Sector* other=get(ax,az);other&&other!=&sector)rebuildEdges(*other);}
   }
+  weakDirty=true;
   return sector.id;
 }
 void lazy_clear_portals(){portals.clear();}
@@ -157,9 +195,11 @@ int lazy_add_portal(int fromX,int fromZ,int toX,int toZ){
 }
 int lazy_commit_portals(){
   for(Sector* sector:byId)rebuildEdges(*sector);
+  weakDirty=true;
   return static_cast<int>(portals.size());
 }
-// 1 reachable, 0 certified disconnected in known sectors, -1 unknown.
+// 1 connected in the component graph (a local directed route may still fail),
+// 0 certified disconnected, -1 unknown because required sectors are unloaded.
 int lazy_connected(int fromX,int fromZ,int toX,int toZ){
   if(!sectorSize)return -1;
   const int32_t source=nodeAt(fromX,fromZ),target=nodeAt(toX,toZ);
@@ -179,7 +219,7 @@ int lazy_connected(int fromX,int fromZ,int toX,int toZ){
       if(!visited[next]){visited[next]=1;queueBuffer.push_back(next);}
     }
   }
-  return unknown?-1:0;
+  return unknown&&!targetSealed(source,target)?-1:0;
 }
 // -1: unloaded/uncertain; 0: known impossible; positive: coordinate pairs.
 int lazy_route(int fromX,int fromZ,int toX,int toZ){
@@ -208,7 +248,7 @@ int lazy_route(int fromX,int fromZ,int toX,int toZ){
       queueBuffer.push_back(arc.to);
     }
   }
-  if(!visited[target])return unknown?-1:0;
+  if(!visited[target])return unknown&&!targetSealed(source,target)?-1:0;
   arcChain.clear();for(int at=target;at!=source;at=previousNode[at])arcChain.push_back(previousArc[at]);
   int currentNode=source,currentCell=firstCell;
   for(auto it=arcChain.rbegin();it!=arcChain.rend();++it){

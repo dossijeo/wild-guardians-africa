@@ -12,20 +12,26 @@ export async function createLazySectorProbe(bytes,nav,{sectorSize=12,radius=.28,
   const key=(sx,sz)=>`${sx},${sz}`;
   const pass=()=>new Uint8Array(wasm.memory.buffer,wasm.lazy_pass_ptr(),count);
   const steps=()=>new Uint8Array(wasm.memory.buffer,wasm.lazy_steps_ptr(),count);
+  const inbound=()=>new Uint8Array(wasm.memory.buffer,wasm.lazy_inbound_ptr(),count);
   const at=(x,z)=>z*sectorSize+x;
   function loadSector(sx,sz){
-    const x0=sx*sectorSize,z0=sz*sectorSize,p=pass(),e=steps();
+    const x0=sx*sectorSize,z0=sz*sectorSize,p=pass(),e=steps(),incoming=inbound();
     for(let z=0;z<sectorSize;z++)for(let x=0;x<sectorSize;x++)p[at(x,z)]=Number(nav.walkable(x0+x,z0+z,radius,ignore,worker));
     for(let z=0;z<sectorSize;z++)for(let x=0;x<sectorSize;x++){
-      const index=at(x,z);if(!p[index]){e[index]=0;continue;}
-      let mask=0;
+      const index=at(x,z);if(!p[index]){e[index]=0;incoming[index]=0;continue;}
+      let mask=0,incomingMask=0;
       for(const [d,dx,dz] of [[0,1,0],[1,-1,0],[2,0,1],[3,0,-1]]){
         const nx=x+dx,nz=z+dz,world={x:x0+x,z:z0+z},next={x:x0+nx,z:z0+nz};
-        const destinationPassable=nx>=0&&nz>=0&&nx<sectorSize&&nz<sectorSize?
+        const inside=nx>=0&&nz>=0&&nx<sectorSize&&nz<sectorSize;
+        const destinationPassable=inside?
           !!p[at(nx,nz)]:nav.walkable(next.x,next.z,radius,ignore,worker);
-        if(destinationPassable&&nav.segmentClear(world,next,radius,ignore,worker))mask|=1<<d;
+        const outbound=destinationPassable&&nav.segmentClear(world,next,radius,ignore,worker);
+        if(outbound)mask|=1<<d;
+        // A missing sector is already unknown when outbound is possible.
+        // Probe the reverse direction only when it might reveal a one-way entry.
+        if(!inside&&destinationPassable&&!outbound&&nav.segmentClear(next,world,radius,ignore,worker))incomingMask|=1<<d;
       }
-      e[index]=mask;
+      e[index]=mask;incoming[index]=incomingMask;
     }
     wasm.lazy_commit_sector(sx,sz);loaded.add(key(sx,sz));
   }
