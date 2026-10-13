@@ -1,0 +1,67 @@
+{
+  "input": "docs/qa/event-driven-virtual-player/pilot-expansive-sabana-123-day12-before-365/checkpoint-state.json.gz",
+  "seconds": 5,
+  "mode": "negative",
+  "day": 12,
+  "time": 365.0000000000148,
+  "biome": "sabana",
+  "plants": 1194,
+  "living": 266,
+  "sameState": true,
+  "rows": [
+    {
+      "variant": "baseline",
+      "milliseconds": 16164.7843,
+      "searches": 55242,
+      "success": 22,
+      "rssDeltaBytes": 202113024,
+      "hash": "df9ce7ede83b9aa1dcb45507466199a917bb828861d400b01d4cf1674f9e171f",
+      "metrics": {}
+    },
+    {
+      "variant": "candidate",
+      "milliseconds": 23773.0994,
+      "searches": 56503,
+      "success": 22,
+      "rssDeltaBytes": 201281536,
+      "hash": "df9ce7ede83b9aa1dcb45507466199a917bb828861d400b01d4cf1674f9e171f",
+      "metrics": {
+        "built": 17,
+        "reused": 50124,
+        "visited": 170926,
+        "buildMilliseconds": 3721.1895000000004,
+        "treeRoutes": 0,
+        "fallbacks": 56181,
+        "unreachable": 317,
+        "direct": 5
+      }
+    },
+    {
+      "variant": "candidate",
+      "milliseconds": 23996.262800000004,
+      "searches": 56503,
+      "success": 22,
+      "rssDeltaBytes": 88580096,
+      "hash": "df9ce7ede83b9aa1dcb45507466199a917bb828861d400b01d4cf1674f9e171f",
+      "metrics": {
+        "built": 17,
+        "reused": 50124,
+        "visited": 170926,
+        "buildMilliseconds": 3635.688399999992,
+        "treeRoutes": 0,
+        "fallbacks": 56181,
+        "unreachable": 317,
+        "direct": 5
+      }
+    },
+    {
+      "variant": "baseline",
+      "milliseconds": 16992.365700000002,
+      "searches": 55242,
+      "success": 22,
+      "rssDeltaBytes": 144580608,
+      "hash": "df9ce7ede83b9aa1dcb45507466199a917bb828861d400b01d4cf1674f9e171f",
+      "metrics": {}
+    }
+  ]
+}

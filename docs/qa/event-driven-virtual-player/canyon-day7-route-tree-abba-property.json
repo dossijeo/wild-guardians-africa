@@ -1,0 +1,73 @@
+{
+  "input": "docs/qa/event-driven-virtual-player/pilot-good-canyon-2026-day7-phase/checkpoint-state.json.gz",
+  "seconds": 1,
+  "mode": "routes",
+  "day": 7,
+  "time": 480.0000000000409,
+  "biome": "gran-canon",
+  "plants": 350,
+  "living": 178,
+  "sameState": false,
+  "baselineDeterministic": true,
+  "candidateDeterministic": true,
+  "rows": [
+    {
+      "variant": "baseline",
+      "milliseconds": 3375.6459000000004,
+      "searches": 335,
+      "nativeSearches": 340,
+      "success": 2,
+      "rssDeltaBytes": 47759360,
+      "hash": "2f95460825df78a17ee0356c0601f74905cf4d639899e7043ac6c2ad084ce89f",
+      "metrics": {}
+    },
+    {
+      "variant": "candidate",
+      "milliseconds": 3172.5914000000002,
+      "searches": 847,
+      "nativeSearches": 769,
+      "success": 2,
+      "rssDeltaBytes": 14852096,
+      "hash": "e871e94ec78d6f94666bbf898c82dd035f5986ea21d09fea46d63b17aca29e62",
+      "metrics": {
+        "built": 6,
+        "reused": 76,
+        "visited": 28291,
+        "buildMilliseconds": 389.58940000000075,
+        "treeRoutes": 1,
+        "fallbacks": 764,
+        "unreachable": 81,
+        "direct": 1
+      }
+    },
+    {
+      "variant": "candidate",
+      "milliseconds": 3144.4776,
+      "searches": 847,
+      "nativeSearches": 769,
+      "success": 2,
+      "rssDeltaBytes": 1490944,
+      "hash": "e871e94ec78d6f94666bbf898c82dd035f5986ea21d09fea46d63b17aca29e62",
+      "metrics": {
+        "built": 6,
+        "reused": 76,
+        "visited": 28291,
+        "buildMilliseconds": 398.0608999999995,
+        "treeRoutes": 1,
+        "fallbacks": 764,
+        "unreachable": 81,
+        "direct": 1
+      }
+    },
+    {
+      "variant": "baseline",
+      "milliseconds": 3295.515599999999,
+      "searches": 335,
+      "nativeSearches": 340,
+      "success": 2,
+      "rssDeltaBytes": 253952,
+      "hash": "2f95460825df78a17ee0356c0601f74905cf4d639899e7043ac6c2ad084ce89f",
+      "metrics": {}
+    }
+  ]
+}

@@ -5,13 +5,13 @@ const indexes=new WeakMap();
 export function activeCrops(plants){
   let index=indexes.get(plants);
   if(!index||plants.length<index.length){
-    index={length:plants.length,live:plants.filter(p=>p.alive),dirty:false};
+    index={length:plants.length,live:plants.filter(p=>p.alive!==false),dirty:false};
     indexes.set(plants,index);
   }else if(plants.length>index.length){
-    for(let i=index.length;i<plants.length;i++)if(plants[i].alive)index.live.push(plants[i]);
+    for(let i=index.length;i<plants.length;i++)if(plants[i].alive!==false)index.live.push(plants[i]);
     index.length=plants.length;
   }
-  if(index.dirty){index.live=index.live.filter(p=>p.alive);index.dirty=false;}
+  if(index.dirty){index.live=index.live.filter(p=>p.alive!==false);index.dirty=false;}
   return index.live;
 }
 export function cropBecameInactive(plants){

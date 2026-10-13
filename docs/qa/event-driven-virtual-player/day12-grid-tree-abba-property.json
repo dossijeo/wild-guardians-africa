@@ -1,0 +1,87 @@
+{
+  "input": "docs/qa/event-driven-virtual-player/pilot-expansive-sabana-123-day12-before-365/checkpoint-state.json.gz",
+  "seconds": 5,
+  "mode": "grid",
+  "day": 12,
+  "time": 365.0000000000148,
+  "biome": "sabana",
+  "plants": 1194,
+  "living": 266,
+  "sameState": false,
+  "baselineDeterministic": true,
+  "candidateDeterministic": true,
+  "rows": [
+    {
+      "variant": "baseline",
+      "milliseconds": 15679.015300000001,
+      "searches": 55242,
+      "nativeSearches": 55257,
+      "success": 22,
+      "rssDeltaBytes": 211791872,
+      "hash": "df9ce7ede83b9aa1dcb45507466199a917bb828861d400b01d4cf1674f9e171f",
+      "metrics": {}
+    },
+    {
+      "variant": "candidate",
+      "milliseconds": 22146.5082,
+      "searches": 34,
+      "nativeSearches": 26,
+      "success": 19,
+      "rssDeltaBytes": 68923392,
+      "hash": "f8093d6e51d3a726634cf12f39cc70137d8656c08a3ce16d47b58b487564243b",
+      "metrics": {
+        "built": 15,
+        "reused": 0,
+        "visited": 151389,
+        "buildMilliseconds": 19869.341400000012,
+        "treeRoutes": 15,
+        "fallbacks": 18,
+        "unreachable": 0,
+        "direct": 1,
+        "grid": {
+          "chunks": 288,
+          "cells": 73728,
+          "edges": 422312,
+          "buildMilliseconds": 19624.586500000056,
+          "edgeLookups": 165409
+        }
+      }
+    },
+    {
+      "variant": "candidate",
+      "milliseconds": 22155.4511,
+      "searches": 34,
+      "nativeSearches": 26,
+      "success": 19,
+      "rssDeltaBytes": 51404800,
+      "hash": "f8093d6e51d3a726634cf12f39cc70137d8656c08a3ce16d47b58b487564243b",
+      "metrics": {
+        "built": 15,
+        "reused": 0,
+        "visited": 151389,
+        "buildMilliseconds": 20046.268899999995,
+        "treeRoutes": 15,
+        "fallbacks": 18,
+        "unreachable": 0,
+        "direct": 1,
+        "grid": {
+          "chunks": 288,
+          "cells": 73728,
+          "edges": 422312,
+          "buildMilliseconds": 19839.649899999902,
+          "edgeLookups": 165409
+        }
+      }
+    },
+    {
+      "variant": "baseline",
+      "milliseconds": 16030.416500000007,
+      "searches": 55242,
+      "nativeSearches": 55257,
+      "success": 22,
+      "rssDeltaBytes": 294281216,
+      "hash": "df9ce7ede83b9aa1dcb45507466199a917bb828861d400b01d4cf1674f9e171f",
+      "metrics": {}
+    }
+  ]
+}

@@ -11,6 +11,15 @@ import {readFileSync} from 'node:fs';
 import {createOpeningWorld} from '../tools/check_opening.mjs';
 import {edgeDistance} from '../src/world/footprints.js';
 
+test('an animal discards a zero-progress route whose first static leg is blocked',()=>{
+ const animal={id:'stalled',x:0,z:0,radius:.9,status:'walking',path:[{x:2,z:0}],destinationId:'crop',pathVersion:1};
+ const state={workers:[{id:'blocker',x:1,z:0,radius:.3,status:'fleeing'}],raid:{animals:[animal]}};
+ const nav={version:1,path:()=>[{x:2,z:0}],walkable:()=>true,segmentClear:()=>false};
+ assert.equal(walkTo(state,animal,{id:'crop',x:2,z:0},.1,nav,{worker:false,speed:1.5}),false);
+ assert.equal(animal.x,0);
+ assert.equal(animal.path,null);
+});
+
 test('opposed animals route around each other when both short lookahead goals are occupied',()=>{
  const a={id:'outbound',x:94.1096081493741,z:14.519706064422435,radius:1.1,status:'retreating',hitsRemaining:0};
  const b={id:'inbound',x:95.98513086550021,z:17.985130865500206,radius:1.1,status:'walking',hitsRemaining:3};
@@ -84,15 +93,16 @@ for(const species of Object.keys(ANIMAL_ACTIONS.animals))test(`${species}: exhau
   assert.ok(arrived);assert.ok(detoured);assert.equal(worker.hits,0);assert.equal(animal.hitsRemaining,0);
   assert.equal(state.rng,rng);assert.equal(state.events.length,events);
 });
-test('An occupied narrow static passage waits, keeps the exit, and resumes when the person reaches home',()=>{
+test('An occupied narrow passage eventually passes the person without crossing static walls',()=>{
   const {state,animal,worker,nav}=fixture();nav.field.slope=(_x,z)=>Math.abs(z)>1.2?1:0;
-  const destination={id:'exit',x:4,z:0};
-  for(let i=0;i<100;i++)walkTo(state,animal,destination,.1,nav,{speed:3.8,worker:false});
-  assert.ok(animal.x<0);assert.ok(Math.hypot(animal.x,animal.z)>=animal.radius+.28);
-  assert.equal(animal.destinationId,'exit');assert.ok(animal.path.length);assert.equal(worker.hits,0);
-  worker.status='home';let arrived=false;
-  for(let i=0;i<100&&!arrived;i++)arrived=walkTo(state,animal,destination,.1,nav,{speed:3.8,worker:false});
-  assert.ok(arrived);
+  const destination={id:'exit',x:4,z:0};let arrived=false;
+  for(let i=0;i<100&&!arrived;i++){
+    const before={x:animal.x,z:animal.z};
+    arrived=walkTo(state,animal,destination,.1,nav,{speed:3.8,worker:false});state.elapsed+=.1;
+    assert(nav.segmentClear(before,animal,animal.radius,null,false));
+  }
+  assert.ok(arrived);assert.equal(animal.destinationId,'exit');assert.equal(worker.hits,0);
+  assert(state.events.some(e=>e.type==='UnitRecovery'&&e.kind==='mobile-pass'));
 });
 test('Workers avoid a retreating beast in both movement directions and charge only travelled running metres',()=>{
   const {state,animal,worker,nav}=fixture('rhino');animal.x=0;worker.x=-4;
@@ -104,16 +114,18 @@ test('Workers avoid a retreating beast in both movement directions and charge on
   }
   assert.ok(arrived);assert.ok(total>8);assert.equal(worker.runRemaining,50);assert.equal(worker.hits,0);
 });
-test('A worker blocked by a retreating body spends no reserve or gait time, then resumes the same paid route',()=>{
+test('A worker blocked by a retreating body waits before the bounded mobile-only pass',()=>{
   const {state,animal,worker,nav}=fixture();animal.x=0;worker.x=-1.4;
   // The destination itself is temporarily occupied, so no alternate endpoint
   // may replace it or count as an arrival.
   const destination={id:'delivery',x:0,z:0},position={x:worker.x,z:worker.z};
-  for(let i=0;i<50;i++)assert.equal(walkTo(state,worker,destination,.1,nav,{motion:{urgent:true}}),false);
+  for(let i=0;i<25;i++){assert.equal(walkTo(state,worker,destination,.1,nav,{motion:{urgent:true}}),false);state.elapsed+=.1;}
   assert.deepEqual({x:worker.x,z:worker.z},position);assert.equal(worker.runRemaining,50);assert.equal(worker.runPhase??0,0);assert.equal(worker.walkPhase??0,0);
-  animal.status='gone';let arrived=false;
-  for(let i=0;i<50&&!arrived;i++)arrived=walkTo(state,worker,destination,.1,nav,{motion:{urgent:true}});
-  assert.ok(arrived);assert.ok(Math.abs(worker.runRemaining-48.6)<1e-8);assert.ok(Math.abs(worker.runPhase-1.4/2.4)<1e-8);
+  let arrived=false;
+  for(let i=0;i<100&&!arrived;i++){arrived=walkTo(state,worker,destination,.1,nav,{motion:{urgent:true}});state.elapsed+=.1;}
+  assert.ok(arrived);assert.equal(worker.hits,0);
+  assert(state.events.some(e=>e.type==='UnitRecovery'&&e.kind==='mobile-pass'));
+  assert.ok(Math.abs(worker.runRemaining-48.6)<1e-8);assert.ok(Math.abs(worker.runPhase-1.4/2.4)<1e-8);
 });
 test('Two native animals crossing opposite ways maintain separation and both finish',()=>{
   const {state,animal:a,nav}=fixture('rhino');state.workers=[];

@@ -2,15 +2,17 @@ import {commitAgriculturalPower,consumeGrowthPower,settleMultiplyPower} from './
 import {activeRaidEntryPlan} from '../world/raid-entry-data.js';
 import {animalExitConnector} from './animal-exit-connectors.js';
 import {workerReturnRoute} from './worker-return-route.js';
+import {recoverWorkerWallOverlap} from './worker-wall-overlap-recovery.js';
 import {workerRiskClearance} from './worker-route-clearance.js';
 import {resolveFluidPlacement} from '../world/fluid-placement.js';
 import {ensurePurchaseBudget,HIRING_RESERVE} from './budget.js';
 import {ensureBoundaryGates} from '../world/boundary-gates.js';
 import {gatePortalPoints} from '../world/gate-passages.js';
-import {footprintDistance} from '../world/footprints.js';
+import {containsPoint,footprintDistance} from '../world/footprints.js';
 import {centerCulture,centerFootprint,centerServicePoint,centerDeliveryPoint} from '../world/centers.js';
 import {prepareActorMotion} from './actor-motion.js';
 import {animalRouteClearance} from './animal-route-clearance.js';
+import {mobilePassActive,clearBlockedStaticLeg,observeUnitProgress} from './unit-stuck-recovery.js';
 import {animalSlopeRecoveryPath} from './animal-slope-recovery.js';
 import {withNavigationQueries} from '../world/navigation-query-scope.js';
 import {BALANCE as B} from './balance.js';
@@ -67,7 +69,7 @@ export function previewCenter(s,{x,z,yaw=0},nav) {
   for(const village of villages){
     const culture=village.culture??s.culture;
     if(!cultures.has(culture)){
-      const resolved=resolveFluidPlacement(nav,(px,pz)=>[centerFootprint({kind:'center',x:px,z:pz,yaw,culture},s)],x,z,footprint=>s.plants.some(p=>p.alive&&footprintDistance(footprint.footprint,p.x,p.z)<.4)?{valid:false,reason:'Un cultivo ocupa este terreno'}:null);
+      const resolved=resolveFluidPlacement(nav,(px,pz)=>[centerFootprint({kind:'center',x:px,z:pz,yaw,culture},s)],x,z,footprint=>activeCrops(s.plants).some(p=>footprintDistance(footprint.footprint,p.x,p.z)<.4)?{valid:false,reason:'Un cultivo ocupa este terreno'}:null);
       const footprint=resolved.shapes[0],candidate={kind:'center',x:resolved.x,z:resolved.z,yaw,culture};
       const check=resolved.checks[0];
       cultures.set(culture,{candidate,footprint,check});
@@ -96,7 +98,13 @@ export function placeStructure(s,id,{kind='center',material='zarzas',gate=false,
   if(kind!=='center'&&kind!=='wall')throw new Error('Construcción desconocida');
   const cost=kind==='center'?B.work_center.cost:wallSpec(material).cost;
   const maxHp=structureHealth(kind,material,gate),entity={id:`structure-${s.nextId}`,created:s.sequence,kind,material,gate,x,z,yaw,...(kind==='center'?{culture}:{}),maxHp,hp:maxHp,status:'intact',villageId:village?.id,cost,collapseRemaining:0};
-  if(kind==='wall'&&!gate)for(const update of planNewWallGates(s,[entity],nav,[],()=>false))Object.assign(entity,update);
+  if(kind==='wall'&&!gate){
+    const gatePlan=planNewWallGates(s,[entity],nav,[],()=>false);
+    // Single-piece edits must obey the same enclosure rule as a wall stroke.
+    // Refuse a closure that cannot contain a traversable automatic gate.
+    if(gatePlan.unhostedWorker||gatePlan.unhosted&&!gatePlan.length)return false;
+    for(const update of gatePlan)Object.assign(entity,update);
+  }
   const suppression=entity.autoGate?nav.wallPlacement(entity).suppress??[]:check.suppress??[];
   return commit(s,id,kind==='center'?'center':'wall',()=>{
     ensurePurchaseBudget(s,cost);transact(s.ledger,id,rational(-cost));
@@ -139,7 +147,7 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
   interior.obstacles=[...nav.obstacles.filter(o=>o.kind!=='wall'),...[...s.structures,...newPieces].filter(p=>p.kind==='wall'&&p.status!=='ruined')];interior.suppressed=suppressedForGates;
   const omitted=blockedPieces.map(piece=>{const h=piece.baseScaleX*2.18/2,dx=Math.cos(piece.yaw)*h,dz=-Math.sin(piece.yaw)*h;return [[piece.x-dx,piece.z-dz],[piece.x+dx,piece.z+dz]];});
   const targets=s.structures.filter(operational).map(center=>{
-    const plants=s.plants.filter(q=>q.alive&&q.centerId===center.id),target=plants.length?{x:plants.reduce((sum,q)=>sum+q.x,0)/plants.length,z:plants.reduce((sum,q)=>sum+q.z,0)/plants.length}:centerServicePoint(center,s,.8);
+    const plants=activeCrops(s.plants).filter(q=>q.centerId===center.id),target=plants.length?{x:plants.reduce((sum,q)=>sum+q.x,0)/plants.length,z:plants.reduce((sum,q)=>sum+q.z,0)/plants.length}:centerServicePoint(center,s,.8);
     return target;
   }),scores=new Map();let approachRoutes;
   const routeDistance=(p,route)=>Math.min(...route.slice(1).map((b,i)=>{
@@ -159,21 +167,32 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
     if(!scores.has(p.id))scores.set(p.id,Math.min(...approachRoutes.map(({entry,target,path})=>(path?routeDistance(p,path):0)*1e6+dist(entry,p)+dist(p,target))));
     return scores.get(p.id);
   };
-  ensureBoundaryGates(layout,nav,canHost,(x,z)=>interior.walkable(x,z,.28,null,true),omitted,rank,p=>newIds.has(p.id));
+  let unhosted=false,unhostedWorker=false;
+  ensureBoundaryGates(layout,nav,canHost,(x,z)=>interior.walkable(x,z,.28,null,true),omitted,rank,p=>newIds.has(p.id),face=>{
+    unhosted=true;
+    const polygon=face.polygon.map(([x,z])=>({x,z}));
+    if(s.workers.some(w=>w.status!=='home'&&containsPoint(polygon,w.x,w.z)))unhostedWorker=true;
+  });
   const converted=layout.pieces.filter(p=>newIds.has(p.id)&&p.autoGate&&!s.structures.some(e=>e.id===p.entityId&&e.autoGate));
   const updates=converted.map(p=>({id:p.entityId,gate:true,autoGate:true,maxHp:p.maxHp,hp:p.hp})).filter(update=>{const piece=[...s.structures,...newPieces].find(p=>p.id===update.id),candidate={...piece,...update};return nav.wallPlacement(candidate).valid&&!cropOverlap(candidate);});
-  return updates;
+  return Object.assign(updates,{unhosted,unhostedWorker});
 }
 // Geometry/price quote is read-only and may describe a future purchase. Actual
 // preview/build still enforce available cash and the native hiring reserve.
 export function quoteWallChain(s,material,points,nav,options={}) {
   if(!permission(s,'wall'))throw new Error('Esta acción no está disponible ahora');
   const spec=wallSpec(material),slots=wallStroke(points,s.structures,{...options,maxPieces:Infinity});
-  const cropOverlap=piece=>{const c=Math.cos(piece.yaw),sn=Math.sin(piece.yaw),scale=piece.gate?(piece.material==='reforzado'?1.6:['adobe','piedra'].includes(piece.material)?1.4:1):1;return s.plants.some(p=>p.alive&&Math.abs((p.x-piece.x)*c-(p.z-piece.z)*sn)<1.09*(piece.baseScaleX??1)*scale+.4&&Math.abs((p.x-piece.x)*sn+(p.z-piece.z)*c)<.22*scale+.4);};
+  const cropOverlap=piece=>wallCropOverlap(s,piece);
   const blockedPieces=[];
   const newPieces=slots.map(slot=>({kind:'wall',material,gate:false,baseScaleX:slot.scaleX,x:slot.x,z:slot.z,yaw:-slot.angle,maxHp:spec.hp,hp:spec.hp,status:'intact',cost:spec.cost,collapseRemaining:0,villageId:nearest(s.villages,{x:slot.x,z:slot.z})?.id})).filter(piece=>{if(!nav.wallPlacement(piece).valid){blockedPieces.push(piece);return false;}return !cropOverlap(piece);}).slice(0,Math.max(0,Math.floor(options.maxPieces??Infinity)));
   newPieces.forEach((piece,i)=>Object.assign(piece,{id:`structure-${s.nextId+i}`,created:s.sequence+i}));
-  const updates=planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap);
+  const gatePlan=planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap);
+  if(gatePlan.unhostedWorker||gatePlan.unhosted&&!gatePlan.length){
+    // Never commit the closing module of a playable enclosure without a
+    // physically usable automatic door. Leave a real gap for a later edit.
+    return quoteWallChain(s,material,points,nav,{...options,maxPieces:newPieces.length-1});
+  }
+  const updates=gatePlan;
   for(const piece of newPieces){const update=updates.find(p=>p.id===piece.id);if(update)Object.assign(piece,update);}
   const checks=[...newPieces,...updates.filter(p=>!newPieces.some(e=>e.id===p.id)).map(p=>({...s.structures.find(e=>e.id===p.id),...p}))],suppressed=new Set();
   for(const piece of checks){
@@ -187,6 +206,10 @@ export function previewWallChain(s,material,points,nav,options={}) {
   const plan=quoteWallChain(s,material,points,nav,options);
   if(compare(s.ledger.balance,rational(plan.cost))<0)throw new Error('No hay monedas suficientes para todo el trazado');
   return plan;
+}
+export function wallCropOverlap(s,piece) {
+  const c=Math.cos(piece.yaw),sn=Math.sin(piece.yaw),scale=piece.gate?(piece.material==='reforzado'?1.6:['adobe','piedra'].includes(piece.material)?1.4:1):1;
+  return activeCrops(s.plants).some(p=>Math.abs((p.x-piece.x)*c-(p.z-piece.z)*sn)<1.09*(piece.baseScaleX??1)*scale+.4&&Math.abs((p.x-piece.x)*sn+(p.z-piece.z)*c)<.22*scale+.4);
 }
 export function buildWallChain(s,id,material,points,nav,options={}) {
   if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
@@ -213,7 +236,7 @@ export function removeWall(s,id,targetId,nav) {
 export function plant(s,id,species,x,z,nav) {
   const check=nav.placement(x,z,.4);
   if(!check.valid)throw new Error(check.reason);
-  if(s.plants.some(p=>p.alive&&dist(p,{x,z})<1.1))throw new Error('Necesitas separar las plantas');
+  if(activeCrops(s.plants).some(p=>dist(p,{x,z})<1.1))throw new Error('Necesitas separar las plantas');
   const center=nearest(s.structures.filter(operational),{x,z});
   return commit(s,id,'plant',()=>{
     ensurePurchaseBudget(s,cropSpec(species).plant_cost);transact(s.ledger,id,rational(-cropSpec(species).plant_cost));
@@ -227,9 +250,9 @@ export function plant(s,id,species,x,z,nav) {
   });
 }
 export function harvest(s,id,plantId) {
-  const p=s.plants.find(p=>p.id===plantId&&isMature(p));if(!p)throw new Error('Este cultivo todavía no está maduro');
+  const p=activeCrops(s.plants).find(p=>p.id===plantId&&isMature(p));if(!p)throw new Error('Este cultivo todavía no está maduro');
   return commit(s,id,'harvest',()=>{
-    const group=contiguousGroup(s.plants,p).filter(isMature);
+    const group=contiguousGroup(activeCrops(s.plants),p).filter(isMature);
     group.sort((a,b)=>{
       const ca=s.structures.find(c=>c.id===a.centerId),cb=s.structures.find(c=>c.id===b.centerId);
       return (ca?dist(a,ca):Infinity)-(cb?dist(b,cb):Infinity)||a.id.localeCompare(b.id);
@@ -262,7 +285,7 @@ export function hire(s,id,selection) {
   if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
   if(!s.pauses.includes('hiring'))throw new Error('La contratación no está abierta');
   const cost=hiringCost(selection);transact(s.ledger,id,rational(-cost));
-  const centers=s.structures.filter(operational).map(c=>({...c,plants:s.plants.filter(p=>p.alive&&p.centerId===c.id).length}));
+  const centers=s.structures.filter(operational).map(c=>({...c,plants:activeCrops(s.plants).filter(p=>p.centerId===c.id).length}));
   const total=Object.values(selection).reduce((a,b)=>a+b,0),quotas=allocateWorkers(centers,total),assigned=distributeProfiles(quotas,selection);
   for(const w of s.workers)w.contractDay??=s.hiringPaidDay??s.day-1;
   s.workers=s.workers.filter(w=>contractExpired(w,s)&&w.status!=='home');
@@ -275,7 +298,7 @@ export function hire(s,id,selection) {
   s.commandIds.push(id);s.hiringSelection={...selection};s.hiringPaidDay=s.day;s.initialPreparation=false;resume(s,'hiring');rebuildTasks(s);planDay(s);
   if(s.tutorial.step==='hire')s.tutorial.step='observe';emit(s,'HiringConfirmed',{count:total,cost});
 }
-export function openInitialHiring(s) {if(s.structures.some(operational)&&s.plants.some(p=>p.alive)&&s.hiringPaidDay!==s.day)pause(s,'hiring');}
+export function openInitialHiring(s) {if(s.structures.some(operational)&&activeCrops(s.plants).length&&s.hiringPaidDay!==s.day)pause(s,'hiring');}
 function queueMatureHarvest(s,p,queue) {
   if(!isMature(p))return;
   if(!p.harvestRequested){p.harvestRequested=true;emit(s,'HarvestRequested',{targetId:p.id,count:1,automatic:true});}
@@ -289,7 +312,7 @@ export function rebuildTasks(s) {
     if(committed.has(w.taskId)&&s.tasks.some(t=>t.id===w.taskId&&t.workerId===w.id))continue;
     w.taskId=null;w.taskApproach=null;if(['walking','acting'].includes(w.status))w.status='idle';
   }
-  for(const p of s.plants.filter(p=>p.alive)) {
+  for(const p of activeCrops(s.plants)) {
     if(!s.structures.some(c=>c.id===p.centerId&&operational(c)))continue;
     if(p.water[0].status==='due')enqueue(s,p.centerId,'initial',p.id);
     else if(p.water.some(w=>w.status==='due'))enqueue(s,p.centerId,'water',p.id);
@@ -308,7 +331,7 @@ export function recoverDisplacedWorkers(s) {
   }
   for(const village of s.villages){
     const centers=s.structures.filter(c=>operational(c)&&c.villageId===village.id)
-      .map(c=>({...c,plants:s.plants.filter(p=>p.alive&&p.centerId===c.id).length}));
+      .map(c=>({...c,plants:activeCrops(s.plants).filter(p=>p.centerId===c.id).length}));
     const pool=s.workers.filter(w=>w.villageId===village.id&&available(w)&&
       (w.displacedDay===s.day||!w.centerId&&w.status==='waiting'));
     if(!pool.length||!centers.length)continue;
@@ -362,7 +385,7 @@ export function spellAt(s,id,p) {
   return a?.remaining>0?a:index.areas.find(a=>a.kind===id&&a.remaining>0&&dist(a,p)<=a.radius);
 }
 function markMultiplyTargets(s,area){
-  for(const p of s.plants)if(p.alive&&(area.targetPlantId!==undefined?p.id===area.targetPlantId:dist(area,p)<=area.radius))p.multiplyHarvest=true;
+  for(const p of activeCrops(s.plants))if(area.targetPlantId!==undefined?p.id===area.targetPlantId:dist(area,p)<=area.radius)p.multiplyHarvest=true;
   area.exposureApplied=true;
 }
 export function previewSpell(s,kind,x,z,nav,targetPlantId) {
@@ -374,7 +397,7 @@ export function previewSpell(s,kind,x,z,nav,targetPlantId) {
 }
 function agriculturalTarget(s,kind,x,z,targetPlantId){
   if(kind==='shield')return null;
-  const p=s.plants.find(p=>p.alive&&(targetPlantId!==undefined?p.id===targetPlantId:p.x===x&&p.z===z));
+  const p=activeCrops(s.plants).find(p=>targetPlantId!==undefined?p.id===targetPlantId:p.x===x&&p.z===z);
   if(!p||p.x!==x||p.z!==z)throw new Error('Selecciona una planta para aplicar esta magia');
   if(kind==='growth'&&isMature(p))throw new Error('Esta planta ya está madura');
   return p;
@@ -425,22 +448,28 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
       if(!w.path)w.path=animalExitConnector(w,destination,nav);
       if(!w.path)w.path=animalSlopeRecoveryPath(nav,w,destination,w.radius??.28);
     }
+    if(!w.path&&worker&&!ignore){
+      if(recoverWorkerWallOverlap(nav,w,destination,w.radius??.28))w.destinationId=destination.id;
+    }
     if(!w.path&&worker&&!ignore&&['fleeing','returning','incapacitated'].includes(w.status)){
       w.path=workerSlopeRecoveryPath(nav,w,destination,w.radius??.28);
       if(!w.path)w.path=workerReturnRoute(nav,w,destination,w.radius??.28);
     }
     w.pathVersion=nav.version;
-    if(!w.path)return false;
+    if(!w.path){observeUnitProgress(s,w,previous,destination,dt,nav,worker,emit);return false;}
   }
   if(worker&&waitForGate(w,s.structures))return false;
-  const dynamicClear=prepareActorMotion(s,w,nav,worker);
+  const dynamicClear=mobilePassActive(s,w)?null:prepareActorMotion(s,w,nav,worker);
   const routeClearance=worker?workerRiskClearance(w,nav,{radius:w.radius??.28,ignore},dynamicClear):animalRouteClearance(w,nav,{radius:w.radius??.28,ignore,escapeProps:expandRoute},dynamicClear);
   const clear=routeClearance?.clear??dynamicClear;
   if(motion)moveWorker(w,dt,{...motion,gates:worker?s.structures:[],clear});else {
     const metres=worker?movePathWithGates(w,speed*dt,s.structures,clear):movePath(w,speed*dt,clear);w.motionPhase=(w.motionPhase??0)+metres/speed;
   }
   if(dist(previous,w)>1e-9)w.heading=Math.atan2(w.x-previous.x,w.z-previous.z);
-  if(routeClearance?.blocked()){w.path=null;return false;}
+  if(routeClearance?.blocked())w.path=null;
+  if(dist(previous,w)<=1e-9)clearBlockedStaticLeg(s,w,nav,worker,emit);
+  observeUnitProgress(s,w,previous,destination,dt,nav,worker,emit);
+  if(!w.path)return false;
   return w.path.length===0;
 }
 function completeTask(s,w,t,target,nav) {
@@ -482,20 +511,16 @@ function completeTask(s,w,t,target,nav) {
   s.tasks=s.tasks.filter(task=>task.id!==t.id);w.taskId=null;w.taskApproach=null;if(w.status!=='carrying')w.status='idle';w.path=null;
 }
 export function idleFarmAnchor(s,worker,center,livingCandidates=null){
-  let planted=null,live=null,plantedDistance=Infinity,liveDistance=Infinity;
-  // The worker pass supplies one shared living subset. Recheck object life as
-  // earlier workers can harvest during that same pass. Fall back to the exact
-  // original historical scan when this center no longer has living crops.
-  const candidates=livingCandidates?.some(p=>p.centerId===worker.centerId&&p.alive)?livingCandidates:s.plants;
+  let live=null,liveDistance=Infinity;
+  // A harvested or destroyed crop cannot anchor idle workers. Recheck life
+  // because an earlier worker may harvest during this same shared pass.
+  const candidates=livingCandidates??activeCrops(s.plants);
   for(const plant of candidates){
-    if(plant.centerId!==worker.centerId)continue;
+    if(!plant.alive||plant.centerId!==worker.centerId)continue;
     const distance=dist(plant,worker);
-    if(distance<plantedDistance||distance===plantedDistance&&plant.id.localeCompare(planted.id)<0){planted=plant;plantedDistance=distance;}
-    if(plant.alive&&(distance<liveDistance||distance===liveDistance&&plant.id.localeCompare(live.id)<0)){live=plant;liveDistance=distance;}
+    if(distance<liveDistance||distance===liveDistance&&plant.id.localeCompare(live.id)<0){live=plant;liveDistance=distance;}
   }
-  const plant=live??planted;
-  // Keep the cultivated area as the idle anchor after its last harvest too.
-  if(plant)return {...plant,id:'farm-'+plant.id,idleRadius:3};
+  if(live)return {...live,id:'farm-'+live.id,idleRadius:3};
   return {...center,...centerServicePoint(center,s,.8),id:'farm-'+center.id,idleRadius:2};
 }
 function reserveAvailableTasks(s,nav){
@@ -507,7 +532,7 @@ function reserveAvailableTasks(s,nav){
 function updateWorkers(s,dt,nav) {
   // Task removals/rebuilds replace the array; enqueues change its length.
   // Unchanged queues can reuse their index while reservation fields stay live.
-  const findPlant=workerEntityLookup(()=>s.plants,{reuse:true,appendOnly:true}),findCrate=workerEntityLookup(()=>s.crates,{reuse:true,appendOnly:true}),findTask=workerEntityLookup(()=>s.tasks,{reuse:true});
+  const findPlant=workerEntityLookup(()=>activeCrops(s.plants)),findCrate=workerEntityLookup(()=>s.crates,{reuse:true,appendOnly:true}),findTask=workerEntityLookup(()=>s.tasks,{reuse:true});
   let idlePlants;
   const newArrivals=[];
   if(!s.raid&&s.time<300)for(const w of s.workers){
@@ -557,7 +582,7 @@ function updateWorkers(s,dt,nav) {
       if(!t) {
         if(w.status!=='idle')w.status='idle';
         if(s.tasks.some(task=>task.centerId===w.centerId&&!task.workerId))cancelIdle(w);
-        else {idlePlants??=s.plants.filter(p=>p.alive);updateIdle(w,idleFarmAnchor(s,w,center,idlePlants),dt,nav,s.seed,s.structures);}
+        else {idlePlants??=activeCrops(s.plants);updateIdle(w,idleFarmAnchor(s,w,center,idlePlants),dt,nav,s.seed,s.structures);}
         continue;
       }
       const target=findPlant(t.targetId)??findCrate(t.targetId)??s.structures.find(e=>e.id===t.targetId);
@@ -604,7 +629,7 @@ function closeNight(s) {
   applyEvent(s);s.eventPlan=null;s.nightPlan=null;
   if(compare(s.ledger.balance,rational(dawnMinimum(s)))<0){s.result='defeat';notice(s,'El sol vuelve, pero el poblado no puede costear otra jornada.');emit(s,'GameOver');return;}
   if(s.completedNights>=100&&!s.postgame){s.result='victory';emit(s,'CampaignWon');return;}
-  for(const plant of s.plants.filter(p=>p.alive))plant.centerId=nearest(s.structures.filter(operational),plant)?.id??null;
+  for(const plant of activeCrops(s.plants))plant.centerId=nearest(s.structures.filter(operational),plant)?.id??null;
   s.hiringPaidDay=null;rebuildTasks(s);pause(s,'hiring');emit(s,'Dawn');
 }
 export function continuePostgame(s) {if(s.result!=='victory')return;s.result=null;s.postgame=true;s.nightPlan=null;s.dayPlan=null;pause(s,'hiring');emit(s,'PostgameStarted');}

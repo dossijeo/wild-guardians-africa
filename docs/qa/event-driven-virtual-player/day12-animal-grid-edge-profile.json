@@ -1,0 +1,80 @@
+{
+  "input": "docs/qa/event-driven-virtual-player/pilot-expansive-sabana-123-day12-before-365/checkpoint-state.json.gz",
+  "day": 12,
+  "time": 370.0000000000159,
+  "historyBefore": 1194,
+  "livingAfter": 266,
+  "tickMilliseconds": 16518.0995,
+  "phases": {
+    "raid-update": {
+      "calls": 51,
+      "milliseconds": 15374.993100000003,
+      "maxMilliseconds": 13719.7317,
+      "approachMilliseconds": 0,
+      "groupMilliseconds": 0,
+      "approachChecks": 0,
+      "groupChecks": 0
+    },
+    "target-selection": {
+      "calls": 17,
+      "milliseconds": 15288.584299999997,
+      "maxMilliseconds": 2665.4048999999995,
+      "approachMilliseconds": 0,
+      "groupMilliseconds": 0,
+      "approachChecks": 0,
+      "groupChecks": 0
+    },
+    "target-detail": {
+      "calls": 17,
+      "milliseconds": 287.79619999997067,
+      "maxMilliseconds": 55.82749999997759,
+      "approachMilliseconds": 13971.693600000002,
+      "groupMilliseconds": 287.79619999997067,
+      "approachChecks": 1923,
+      "groupChecks": 1924
+    },
+    "worker-update": {
+      "calls": 51,
+      "milliseconds": 50.421899999992235,
+      "maxMilliseconds": 31.70599999999999,
+      "approachMilliseconds": 0,
+      "groupMilliseconds": 0,
+      "approachChecks": 0,
+      "groupChecks": 0
+    }
+  },
+  "calls": {
+    "approachPath": {
+      "count": 55242,
+      "success": 22,
+      "milliseconds": 12826.398299999959
+    },
+    "approachReachability": {
+      "count": 125,
+      "milliseconds": 955.4489000000133
+    },
+    "approachGroupBlocked": {
+      "count": 1924,
+      "rejected": 0,
+      "milliseconds": 284.9462000000249
+    }
+  },
+  "segments": {
+    "short": {
+      "count": 69501,
+      "rejected": 4854,
+      "milliseconds": 2652.713100000311
+    },
+    "medium": {
+      "count": 1912,
+      "rejected": 519,
+      "milliseconds": 183.18619999995934
+    },
+    "long": {
+      "count": 61564,
+      "rejected": 61484,
+      "milliseconds": 1625.1806000000302
+    }
+  },
+  "stateChanged": true
+}

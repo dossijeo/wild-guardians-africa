@@ -1,0 +1,47 @@
+{
+  "input": "docs/qa/event-driven-virtual-player/pilot-expansive-sabana-123-day12-before-365/checkpoint-state.json.gz",
+  "day": 12,
+  "time": 370.0000000000159,
+  "historyBefore": 1194,
+  "livingAfter": 266,
+  "tickMilliseconds": 131019.06999999999,
+  "phases": {
+    "raid-update": {
+      "calls": 51,
+      "milliseconds": 127607.65159999995,
+      "maxMilliseconds": 114769.2795,
+      "approachMilliseconds": 0,
+      "groupMilliseconds": 0,
+      "approachChecks": 0,
+      "groupChecks": 0
+    },
+    "target-selection": {
+      "calls": 17,
+      "milliseconds": 127266.03150000001,
+      "maxMilliseconds": 20543.790699999998,
+      "approachMilliseconds": 0,
+      "groupMilliseconds": 0,
+      "approachChecks": 0,
+      "groupChecks": 0
+    },
+    "target-detail": {
+      "calls": 17,
+      "milliseconds": 825.5584000000199,
+      "maxMilliseconds": 158.2243999999955,
+      "approachMilliseconds": 123301.60629999985,
+      "groupMilliseconds": 825.5584000000199,
+      "approachChecks": 1923,
+      "groupChecks": 1924
+    },
+    "worker-update": {
+      "calls": 51,
+      "milliseconds": 146.14489999994066,
+      "maxMilliseconds": 96.81900000000007,
+      "approachMilliseconds": 0,
+      "groupMilliseconds": 0,
+      "approachChecks": 0,
+      "groupChecks": 0
+    }
+  },
+  "stateChanged": true
+}

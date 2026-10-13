@@ -1,0 +1,122 @@
+{
+  "input": "docs/qa/event-driven-virtual-player/pilot-expansive-sabana-123-day12-before-365/checkpoint-state.json.gz",
+  "seconds": 5,
+  "mode": "shared-tree",
+  "runSet": "abba",
+  "day": 12,
+  "time": 365.0000000000148,
+  "biome": "sabana",
+  "plants": 1194,
+  "living": 266,
+  "sameState": false,
+  "baselineDeterministic": true,
+  "candidateDeterministic": true,
+  "rows": [
+    {
+      "variant": "baseline",
+      "milliseconds": 15838.582400000001,
+      "searches": 55242,
+      "nativeSearches": 55257,
+      "success": 22,
+      "rssDeltaBytes": 217374720,
+      "hash": "df9ce7ede83b9aa1dcb45507466199a917bb828861d400b01d4cf1674f9e171f",
+      "metrics": {}
+    },
+    {
+      "variant": "candidate",
+      "milliseconds": 4810.348399999999,
+      "searches": 34,
+      "nativeSearches": 33,
+      "success": 19,
+      "rssDeltaBytes": 21635072,
+      "hash": "0f674c86b9fbac25ef66d15d7bb519c4fcc4aa28a61a74d2340938e9fdcdafd4",
+      "metrics": {
+        "built": 4,
+        "reused": 11,
+        "sharedOrigins": 11,
+        "sharedRouteSteps": 1207,
+        "sharedSmoothedSteps": 100,
+        "visited": 41214,
+        "buildMilliseconds": 2541.784599999999,
+        "treeRoutes": 15,
+        "fallbacks": 6,
+        "fallbackReasons": {
+          "inactive": 6
+        },
+        "unreachable": 12,
+        "direct": 1,
+        "nativeTrials": 0,
+        "activations": 0,
+        "gridRuns": [
+          {
+            "chunks": 272,
+            "cells": 47356,
+            "edges": 45088,
+            "buildMilliseconds": 2429.0531999995583,
+            "edgeLookups": 46185
+          }
+        ],
+        "grid": {
+          "chunks": 272,
+          "cells": 47356,
+          "edges": 45088,
+          "buildMilliseconds": 2429.0531999995583,
+          "edgeLookups": 46185
+        }
+      }
+    },
+    {
+      "variant": "candidate",
+      "milliseconds": 4699.9925,
+      "searches": 34,
+      "nativeSearches": 33,
+      "success": 19,
+      "rssDeltaBytes": 62038016,
+      "hash": "0f674c86b9fbac25ef66d15d7bb519c4fcc4aa28a61a74d2340938e9fdcdafd4",
+      "metrics": {
+        "built": 4,
+        "reused": 11,
+        "sharedOrigins": 11,
+        "sharedRouteSteps": 1207,
+        "sharedSmoothedSteps": 100,
+        "visited": 41214,
+        "buildMilliseconds": 2536.9062999999987,
+        "treeRoutes": 15,
+        "fallbacks": 6,
+        "fallbackReasons": {
+          "inactive": 6
+        },
+        "unreachable": 12,
+        "direct": 1,
+        "nativeTrials": 0,
+        "activations": 0,
+        "gridRuns": [
+          {
+            "chunks": 272,
+            "cells": 47356,
+            "edges": 45088,
+            "buildMilliseconds": 2434.004199999963,
+            "edgeLookups": 46185
+          }
+        ],
+        "grid": {
+          "chunks": 272,
+          "cells": 47356,
+          "edges": 45088,
+          "buildMilliseconds": 2434.004199999963,
+          "edgeLookups": 46185
+        }
+      }
+    },
+    {
+      "variant": "baseline",
+      "milliseconds": 16185.7834,
+      "searches": 55242,
+      "nativeSearches": 55257,
+      "success": 22,
+      "rssDeltaBytes": 145149952,
+      "hash": "df9ce7ede83b9aa1dcb45507466199a917bb828861d400b01d4cf1674f9e171f",
+      "metrics": {}
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 // Pure, unintegrated candidate. No clock, state, command or damage mutations.
 import {BALANCE as B} from './balance.js';
+import {activeCrops} from './active-crops.js';
 const THIRD_RAID_PRESSURE_CANDIDATE=Object.freeze({version:3,emaAlpha:1/3,referenceSpacing:1.5,referenceConeRadians:Math.PI/2,peripheralWeight:.5,qMeanMultiplier:1.5,activeWaveLimit:16,countPower:.5,introCountStart:8,introCountRise:2,hitPressureSteps:4});
 // First isolated military-only calibration: weak species retain crop danger
 // while producing less structural attrition. All saved v1-v3 recipes persist.
@@ -20,7 +21,7 @@ const finite=(v,label)=>{if(!Number.isFinite(v)||v<0)throw Error('Invalid '+labe
 const day=(d)=>{if(!Number.isSafeInteger(d)||d<1)throw Error('Invalid night');return d;};
 const pressure=(p)=>{if(!Number.isFinite(p)||p<0||p>1)throw Error('Invalid pressure');return p;};
 export function agriculturalRaidValue(plants,balance=B){
- let value=0;for(const p of plants)if(p.alive){const crop=balance.crops.find(c=>c.id===p.species);if(!crop)throw Error('Unknown crop');value+=crop.base_harvest_value;}
+ let value=0;for(const p of activeCrops(plants)){const crop=balance.crops.find(c=>c.id===p.species);if(!crop)throw Error('Unknown crop');value+=crop.base_harvest_value;}
  return finite(value,'agricultural value');
 }
 export function validateRaidPressureMemory(memory){

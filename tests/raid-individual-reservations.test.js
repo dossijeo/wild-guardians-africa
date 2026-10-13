@@ -66,3 +66,20 @@ test('a protected connected perimeter allows simultaneous attacks on separate pi
  const walls=raid.animals.filter(a=>s.structures.some(t=>t.id===a.targetId&&t.kind==='wall'));
  assert(walls.length>1);assert.equal(new Set(walls.map(a=>a.targetId)).size,walls.length);
 });
+test('a closed crop enclosure avoids per-crop A* and a physical breach reopens crop approaches',()=>{
+ for(const breached of [false,true]){
+  const {s,nav}=fixture('closed-walls');
+  if(breached){
+   for(const id of ['wall-2-4','wall-2-5']){const wall=s.structures.find(t=>t.id===id);wall.status='ruined';wall.hp=0;}
+   nav.setState(s);
+  }
+  const original=nav.approachPath.bind(nav),calls={crops:0,walls:0};
+  nav.approachPath=(start,end,...args)=>{
+   if(s.plants.some(p=>end.id?.startsWith(`approach-${p.id}-`)))calls.crops++;else calls.walls++;
+   return original(start,end,...args);
+  };
+  assert(spawnRaid(s,{group:Array(12).fill('warthog')},nav));updateRaid(s,0,nav);
+  assert.deepEqual(calls,breached?{crops:12,walls:0}:{crops:0,walls:12});
+  assert.equal(s.raid.animals.filter(a=>s.plants.some(p=>p.id===a.targetId)).length,breached?12:0);
+ }
+});

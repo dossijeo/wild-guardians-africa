@@ -6,13 +6,13 @@ import {cancelIdle} from '../src/simulation/idle.js';
 function reference(state,canExecute){
  for(const task of [...state.tasks].sort((a,b)=>a.created-b.created||a.id.localeCompare(b.id))){
   if(task.workerId)continue;
-  const target=[...state.plants,...state.crates,...state.structures].find(e=>e.id===task.targetId);if(!target)continue;
+  const target=[...state.plants.filter(p=>p.alive),...state.crates,...state.structures].find(e=>e.id===task.targetId);if(!target)continue;
   const workers=state.workers.filter(w=>w.centerId===task.centerId&&w.status==='idle'&&!w.taskId&&!w.incapacitated&&!contractExpired(w,state));
   const eligible=workers.filter(w=>canExecute(w,task,target));eligible.sort((a,b)=>Math.hypot(a.x-target.x,a.z-target.z)-Math.hypot(b.x-target.x,b.z-target.z)||a.id.localeCompare(b.id));
   const worker=eligible[0];task.blocked=!worker&&workers.length>0;if(worker){cancelIdle(worker);task.workerId=worker.id;worker.taskId=task.id;worker.status='walking';}
  }
 }
-function state(){return {day:2,plants:[{id:'plot',x:0,z:0}],crates:[],structures:[],tasks:[{id:'task',created:1,targetId:'plot',centerId:'center',workerId:null,blocked:false}],workers:[1,2,3,4].map(i=>({id:'worker-'+i,x:i,z:0,centerId:'center',status:'idle',taskId:null,incapacitated:false,contractDay:2}))};}
+function state(){return {day:2,plants:[{id:'plot',x:0,z:0,alive:true}],crates:[],structures:[],tasks:[{id:'task',created:1,targetId:'plot',centerId:'center',workerId:null,blocked:false}],workers:[1,2,3,4].map(i=>({id:'worker-'+i,x:i,z:0,centerId:'center',status:'idle',taskId:null,incapacitated:false,contractDay:2}))};}
 
 test('large historical farm keeps identical FIFO reservations for crops, loose crates and repairs',()=>{
  const s=state();
@@ -24,7 +24,7 @@ test('large historical farm keeps identical FIFO reservations for crops, loose c
  const prior=structuredClone(s),reachable=(w,t)=>!(t.id==='task-2'&&w.x<4);
  reference(prior,reachable);reserveTasks(s,reachable);assert.deepEqual(s,prior);
  // A subsequent reservation must see new entities; no cross-call index survives.
- s.plants.push({id:'new-plot',x:1,z:0});s.tasks.push({id:'new-task',created:61,centerId:'center',targetId:'new-plot',workerId:null,blocked:false});
+ s.plants.push({id:'new-plot',x:1,z:0,alive:true});s.tasks.push({id:'new-task',created:61,centerId:'center',targetId:'new-plot',workerId:null,blocked:false});
  s.workers.push({id:'new-worker',x:1,z:0,centerId:'center',status:'idle',taskId:null,contractDay:2});
  const next=structuredClone(s);reference(next,reachable);reserveTasks(s,reachable);assert.deepEqual(s,next);
 });
@@ -47,7 +47,7 @@ test('no idle eligible employee preserves missing-target and reserved flags with
 test('nearest-first reachability preserves full reservation state across varied FIFO, ties, missing targets and employee eligibility',()=>{
  let seed=8192;const random=()=>{seed^=seed<<13;seed^=seed>>>17;seed^=seed<<5;return (seed>>>0)/4294967296;};
  for(let sample=0;sample<500;sample++){
-  const s=state();s.plants=Array.from({length:8},(_,i)=>({id:'plot-'+i,x:Math.floor(random()*8),z:Math.floor(random()*8)}));
+  const s=state();s.plants=Array.from({length:8},(_,i)=>({id:'plot-'+i,x:Math.floor(random()*8),z:Math.floor(random()*8),alive:true}));
   s.tasks=Array.from({length:12},(_,i)=>({id:'task-'+i,created:Math.floor(random()*6),targetId:'plot-'+Math.floor(random()*10),centerId:random()<.7?'center':'other',workerId:random()<.1?'already-reserved':null,blocked:random()<.5}));
   s.workers=Array.from({length:10},(_,i)=>({id:'worker-'+i,x:Math.floor(random()*8),z:Math.floor(random()*8),centerId:random()<.7?'center':'other',status:random()<.8?'idle':'home',taskId:random()<.1?'existing':null,contractDay:random()<.1?1:2,incapacitated:random()<.1,idleState:{mode:'rest'},blocked:s.plants.filter(()=>random()<.3).map(p=>p.id)}));
   const prior=structuredClone(s),reachable=(w,t)=>!w.blocked.includes(t.targetId);reference(prior,reachable);reserveTasks(s,reachable);assert.deepEqual(s,prior,'scenario '+sample);
@@ -64,7 +64,7 @@ test('busy historical farms clear only existing unreserved targets in one collec
  let reads=0;for(const group of [s.plants,s.crates,s.structures])for(const entity of group){const id=entity.id;Object.defineProperty(entity,'id',{enumerable:true,get(){reads++;return id;}});}
  reserveTasks(s,()=>{throw Error('No reachability call');});const lookupReads=reads;
  assert.deepEqual(s,expected);assert.ok(lookupReads<=s.plants.length+s.crates.length+s.structures.length);
- s.plants.push({id:'missing-4'});const next=structuredClone(expected);next.plants.push({id:'missing-4'});reference(next,()=>false);reserveTasks(s,()=>false);assert.deepEqual(s,next);
+ s.plants.push({id:'missing-4',alive:true});const next=structuredClone(expected);next.plants.push({id:'missing-4',alive:true});reference(next,()=>false);reserveTasks(s,()=>false);assert.deepEqual(s,next);
 });
 
 test('busy farms with no blocked task avoid all historical entity collections',()=>{
@@ -74,7 +74,7 @@ test('busy farms with no blocked task avoid all historical entity collections',(
 });
 
 test('exhausted center pools clear remaining blocked flags without rescanning all employees',()=>{
- const s=state();s.plants=Array.from({length:1600},(_,i)=>({id:'p'+i,x:i%40,z:Math.floor(i/40)}));
+ const s=state();s.plants=Array.from({length:1600},(_,i)=>({id:'p'+i,x:i%40,z:Math.floor(i/40),alive:true}));
  s.tasks=s.plants.map((p,i)=>({id:'t'+i,created:i,targetId:p.id,centerId:i%2?'center':'other',workerId:null,blocked:true}));
  s.workers=Array.from({length:140},(_,i)=>({id:'w'+i,x:i%20,z:0,centerId:i%3?'center':'other',status:'idle',taskId:null,contractDay:2,incapacitated:false}));
  const expected=structuredClone(s);reference(expected,()=>true);

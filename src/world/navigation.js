@@ -19,6 +19,8 @@ import {animalSegmentClearance} from './animal-segment-clearance.js';
 export const BIOME_IDS={sabana:'savanna','gran-rio':'grand_river',manglares:'mangrove',volcanes:'volcanoes','gran-canon':'canyons',desierto:'desert'};
 export const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 const approachRegionCertificates=new WeakMap();
+const searchedRegionEndMemo=new WeakMap();
+const searchedStartCellProofs=new WeakMap();
 export class Navigation {
   constructor(seed,biome,profile) {
     this.config={seed:String(seed),biome:BIOME_IDS[biome]??biome,relief:1,density:1,river:true,n:1,cx:0,cz:0,layers:[true,true,true,true,true,true]};
@@ -179,7 +181,7 @@ export class Navigation {
   testWalkable(x,z,radius=.3,ignore=null,worker=false) {
     if(!this.terrainValid(x,z,radius,worker))return false;
     const point={x,z};
-    if(this.obstacles.some(o=>{
+    if(segmentNavigationObstacles(this,point,point,radius).some(o=>{
       if(o.id===ignore||worker&&o.kind==='shield')return false;
       if(outsideNavigationBounds(point,point,this.obstacleBounds?.get(o),radius))return false;
       if(worker&&o.gate){const frames=gateFrameFootprints(o);return frames?frames.some(p=>footprintDistance(p,x,z)<radius):false;}
@@ -292,6 +294,41 @@ export class Navigation {
     if(!reverse)return null;
     return [...reverse.slice(0,-1).reverse(),{x:end.x,z:end.z}];
   }
+  approachReachability(start,targets,radius,margin=32){
+    // The native A* for each service point is confined to its own corridor.
+    // Search a superset of those corridors once, using deliberately relaxed
+    // grid edges. Missing from this larger reachable set proves that every
+    // bounded native A* would also miss; possible points still use native A*.
+    if(targets.length<32||!this.field.canyon&&!this.obstacles.some(o=>o.kind==='wall'))return null;
+    const sx=Math.round(start.x),sz=Math.round(start.z);
+    let groupMinX=Infinity,groupMaxX=-Infinity,groupMinZ=Infinity,groupMaxZ=-Infinity;
+    for(const t of targets){groupMinX=Math.min(groupMinX,t.x);groupMaxX=Math.max(groupMaxX,t.x);groupMinZ=Math.min(groupMinZ,t.z);groupMaxZ=Math.max(groupMaxZ,t.z);}
+    const lowX=Math.floor(groupMinX-4),highX=Math.ceil(groupMaxX+4);
+    const lowZ=Math.floor(groupMinZ-4),highZ=Math.ceil(groupMaxZ+4);
+    const minX=Math.min(sx,lowX)-margin-2,maxX=Math.max(sx,highX)+margin+2;
+    const minZ=Math.min(sz,lowZ)-margin-2,maxZ=Math.max(sz,highZ)+margin+2;
+    if((maxX-minX+1)*(maxZ-minZ+1)>100000)return null;
+    const key=(x,z)=>`${x},${z}`,seen=new Set(),queue=[];
+    for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){
+      const x=sx+dx,z=sz+dz;
+      if(this.walkable(x,z,radius,null,false)){seen.add(key(x,z));queue.push({x,z});}
+    }
+    for(let i=0;i<queue.length;i++){
+      const {x,z}=queue[i];
+      for(const [dx,dz] of [[1,0],[-1,0],[0,1],[0,-1],[1,1],[-1,1],[1,-1],[-1,-1]]){
+        const nx=x+dx,nz=z+dz,k=key(nx,nz);
+        if(nx<minX||nx>maxX||nz<minZ||nz>maxZ||seen.has(k)||!this.walkable(nx,nz,radius,null,false))continue;
+        seen.add(k);queue.push({x:nx,z:nz});
+      }
+    }
+    return point=>{
+      if(point.x<lowX||point.x>highX||point.z<lowZ||point.z>highZ)return true;
+      const ex=Math.round(point.x),ez=Math.round(point.z);
+      for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++)if(seen.has(key(ex+dx,ez+dz)))return true;
+      // A direct fractional segment can succeed without any grid connector.
+      return this.segmentClear(point,start,radius,null,false);
+    };
+  }
   approachGroupBlocked(start,targets,radius,reach){
     if(!targets.length)return false;
     const bounds=[Infinity,Infinity,-Infinity,-Infinity];
@@ -391,6 +428,46 @@ export class Navigation {
     const cell=1,key=(x,z)=>`${x},${z}`,sx=Math.round(start.x),sz=Math.round(start.z),ex=Math.round(end.x),ez=Math.round(end.z);
     const maxVisited=12000*Math.max(1,(margin/16)**2),minX=Math.min(sx,ex)-margin,maxX=Math.max(sx,ex)+margin,minZ=Math.min(sz,ez)-margin,maxZ=Math.max(sz,ez)+margin;
     const portals=worker?this.portalGraph(radius,ignore):{nodes:new Map(),links:new Map()},inside=p=>p.x>=minX&&p.x<=maxX&&p.z>=minZ&&p.z<=maxZ;
+    if(!worker&&!skipDirect){
+      let proofs=searchedStartCellProofs.get(this);
+      if(!proofs||proofs.version!==this.version||proofs.field!==this.field||proofs.walkable!==this.walkable||proofs.segmentClear!==this.segmentClear){
+        proofs={version:this.version,field:this.field,walkable:this.walkable,segmentClear:this.segmentClear,entries:new Set()};
+        searchedStartCellProofs.set(this,proofs);
+      }
+      const proofKey=JSON.stringify([sx,sz,end.x,end.z,radius,ignore,worker,margin]);
+      if(proofs.entries.has(proofKey))return null;
+      for(const searched of this.searchedRegions){
+        if(searched.radius!==radius||searched.ignore!==ignore||searched.worker!==worker||
+          minX<searched.minX||maxX>searched.maxX||minZ<searched.minZ||maxZ>searched.maxZ)continue;
+        let contained=true;
+        for(let dz=-1;dz<=1&&contained;dz++)for(let dx=-1;dx<=1;dx++){
+          const x=sx+dx,z=sz+dz;
+          if(this.walkable(x,z,radius,ignore,worker)&&!searched.nodes.has(key(x,z))){contained=false;break;}
+        }
+        if(!contained)continue;
+        let memo=searchedRegionEndMemo.get(searched.nodes);
+        if(!memo||memo.version!==this.version||memo.walkable!==this.walkable||memo.segmentClear!==this.segmentClear){
+          memo={version:this.version,walkable:this.walkable,segmentClear:this.segmentClear,endpoints:new Map()};
+          searchedRegionEndMemo.set(searched.nodes,memo);
+        }
+        const endKey=JSON.stringify([end.x,end.z,radius,ignore,worker]);
+        let reachable=memo.endpoints.get(endKey);
+        if(reachable===undefined){
+          reachable=false;
+          for(let dz=-1;dz<=1&&!reachable;dz++)for(let dx=-1;dx<=1;dx++){
+            const x=ex+dx,z=ez+dz;
+            if(searched.nodes.has(key(x,z))&&this.segmentClear({x,z},end,radius,ignore,worker)){reachable=true;break;}
+          }
+          if(memo.endpoints.size>=64)evictOldest(memo.endpoints);
+          memo.endpoints.set(endKey,reachable);
+        }
+        if(!reachable){
+          if(proofs.entries.size>=20000)evictOldest(proofs.entries);
+          proofs.entries.add(proofKey);
+          return null;
+        }
+      }
+    }
     const open=new SearchFrontier(),costs=new Map(),previous=new Map();
     for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){
       const point={x:sx+dx,z:sz+dz};
@@ -414,7 +491,21 @@ export class Navigation {
     for(const searched of this.searchedRegions){
       if(searched.radius!==radius||searched.ignore!==ignore||searched.worker!==worker||
         minX<searched.minX||maxX>searched.maxX||minZ<searched.minZ||maxZ>searched.maxZ)continue;
-      if(open.length&&open.values().every(p=>searched.nodes.has(key(p.x,p.z)))&&!reachesEnd(searched.nodes))return null;
+      if(open.length&&open.values().every(p=>searched.nodes.has(key(p.x,p.z)))){
+        let memo=searchedRegionEndMemo.get(searched.nodes);
+        if(!memo||memo.version!==this.version||memo.walkable!==this.walkable||memo.segmentClear!==this.segmentClear){
+          memo={version:this.version,walkable:this.walkable,segmentClear:this.segmentClear,endpoints:new Map()};
+          searchedRegionEndMemo.set(searched.nodes,memo);
+        }
+        const endKey=JSON.stringify([end.x,end.z,radius,ignore,worker]);
+        let reachable=memo.endpoints.get(endKey);
+        if(reachable===undefined){
+          reachable=reachesEnd(searched.nodes);
+          if(memo.endpoints.size>=64)evictOldest(memo.endpoints);
+          memo.endpoints.set(endKey,reachable);
+        }
+        if(!reachable)return null;
+      }
     }
     const known=open.values().map(p=>this.closedRegions.get(regionKey(key(p.x,p.z))));
     if(known.length&&known.every(Boolean)){
@@ -444,7 +535,12 @@ export class Navigation {
         if(!walkable)continue;
         const k=point.key??key(x,z),g=cur.g+(point.length??Math.hypot(dx,dz));
         if(g>=(costs.get(k)??Infinity))continue;
-        if(!this.segmentClear(cur,{x,z},radius,ignore,worker))continue;
+        // Animal grid edges are static within a navigation epoch. Neighbor
+        // entries already cache point walkability; retain their exact swept
+        // segment result as well across searches of nearby service points.
+        const clear=!worker&&point.clear!==undefined?point.clear:this.segmentClear(cur,{x,z},radius,ignore,worker);
+        if(!worker&&this.searchNeighborCache)point.clear=clear;
+        if(!clear)continue;
         costs.set(k,g);previous.set(k,ck);open.push({x,z,g,f:g+Math.hypot(ex-x,ez-z)});
       }
     }

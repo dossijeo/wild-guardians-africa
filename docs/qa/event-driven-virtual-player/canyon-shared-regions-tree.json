@@ -1,0 +1,68 @@
+{
+  "input": "docs/qa/event-driven-virtual-player/pilot-good-canyon-2026-day7-phase/checkpoint-state.json.gz",
+  "seconds": 1,
+  "mode": "shared-regions-tree",
+  "runSet": "candidate",
+  "day": 7,
+  "time": 480.0000000000409,
+  "biome": "gran-canon",
+  "plants": 350,
+  "living": 178,
+  "sameState": true,
+  "baselineDeterministic": null,
+  "candidateDeterministic": null,
+  "rows": [
+    {
+      "variant": "candidate",
+      "milliseconds": 4470.668900000001,
+      "searches": 2,
+      "nativeSearches": 9,
+      "success": 2,
+      "rssDeltaBytes": 45481984,
+      "hash": "3516c5a644753254da701bb99c3a3376e97acbb9169f03c8adfb8c2c2fbe8782",
+      "metrics": {
+        "region": {
+          "components": 1,
+          "reused": 41,
+          "visited": 5674,
+          "componentMilliseconds": 384.35030000000006,
+          "queries": 34460,
+          "positive": 1,
+          "negative": 34454,
+          "direct": 5,
+          "uncertain": 0,
+          "groupSkips": 18,
+          "portalLinks": 0,
+          "portalBuildMilliseconds": 0.7788000000000181,
+          "grid": {
+            "chunks": 35,
+            "cells": 6008,
+            "edges": 6471,
+            "buildMilliseconds": 393.322600000001,
+            "edgeLookups": 11048
+          }
+        },
+        "route": {
+          "built": 1,
+          "reused": 0,
+          "sharedOrigins": 0,
+          "sharedRouteSteps": 0,
+          "sharedSmoothedSteps": 2,
+          "visited": 4977,
+          "buildMilliseconds": 44.332000000000335,
+          "treeRoutes": 1,
+          "fallbacks": 0,
+          "fallbackReasons": {},
+          "unreachable": 0,
+          "direct": 1,
+          "nativeTrials": 0,
+          "activations": 0,
+          "gridRuns": [
+            {}
+          ],
+          "grid": {}
+        }
+      }
+    }
+  ]
+}

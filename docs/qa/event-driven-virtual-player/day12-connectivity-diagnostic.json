@@ -1,0 +1,46 @@
+{
+  "input": "docs/qa/event-driven-virtual-player/pilot-expansive-sabana-123-day12-before-365/checkpoint-state.json.gz",
+  "seconds": 5,
+  "mode": "connectivity",
+  "runSet": "candidate",
+  "day": 12,
+  "time": 365.0000000000148,
+  "biome": "sabana",
+  "plants": 1194,
+  "living": 266,
+  "sameState": true,
+  "baselineDeterministic": null,
+  "candidateDeterministic": null,
+  "rows": [
+    {
+      "variant": "candidate",
+      "milliseconds": 20794.6462,
+      "searches": 49836,
+      "nativeSearches": 49851,
+      "success": 22,
+      "rssDeltaBytes": 182120448,
+      "hash": "df9ce7ede83b9aa1dcb45507466199a917bb828861d400b01d4cf1674f9e171f",
+      "metrics": {
+        "components": 4,
+        "reused": 240,
+        "visited": 52565,
+        "componentMilliseconds": 3431.1217999999994,
+        "queries": 61429,
+        "positive": 51166,
+        "negative": 10187,
+        "direct": 75,
+        "uncertain": 0,
+        "groupSkips": 18,
+        "portalLinks": 72,
+        "portalBuildMilliseconds": 20.876000000000204,
+        "grid": {
+          "chunks": 358,
+          "cells": 60651,
+          "edges": 54496,
+          "buildMilliseconds": 3288.462099999564,
+          "edgeLookups": 54496
+        }
+      }
+    }
+  ]
+}

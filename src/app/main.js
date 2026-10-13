@@ -25,6 +25,7 @@ import {GameScreenWakeLock} from '../ui/screen-wake-lock.js';
 import {spellCardsMarkup,refreshSpellCards} from '../ui/spell-cards.js';
 import {castPickedSpell} from './spell-placement.js';
 import {plantNearTouch} from './plant-placement.js';
+import {activeCrops} from '../simulation/active-crops.js';
 import {UiAudio,guidedPlacementKind} from '../audio/ui-audio.js';
 import {ToolSession} from '../ui/tool-session.js';
 import {ManualMagicActivity,bindMagicSelectionContact} from '../ui/manual-magic-activity.js';
@@ -226,7 +227,7 @@ function onPick({entityId,point,gestureSeconds=null}) {
   if(!state||screen!=='game')return;
   safe(()=>{
     if(state.pauses.includes('hiring')){if(surfaces.active!=='hiring')hiringDialog();return;}
-    const pickedPlant=state.plants.find(p=>p.id===entityId&&p.alive);
+    const pickedPlant=activeCrops(state.plants).find(p=>p.id===entityId);
     if(tool?.kind==='spell'){
       const applicationStarted=performance.now();
       if(castPickedSpell(state,commandId(),tool.spell,{entityId,point},nav)){
@@ -313,7 +314,7 @@ function updateUI(force=false) {
   const now=performance.now();if(!force&&now-lastUI<200)return;lastUI=now;
   manualMagicActivity.update(state);
   if(tool&&(['plant','center','wall'].includes(tool.kind)||tool.kind==='spell'&&tool.spell!=='shield')&&toolSession.expired(now/1000,tool.kind==='wall'&&world.wallDrawing.active))cancelTool();
-  if(state.day===1&&state.initialPreparation&&!tool&&!surfaces.active&&state.plants.some(p=>p.alive)&&state.structures.some(operational))Game.openInitialHiring(state);
+  if(state.day===1&&state.initialPreparation&&!tool&&!surfaces.active&&activeCrops(state.plants).length&&state.structures.some(operational))Game.openInitialHiring(state);
   const balance=numberOf(state.ledger.balance);if(balance>lastBudgetBalance&&balance>BUDGET_WARNING_THRESHOLD)reserveWarningShown=false;if(balance<=BUDGET_WARNING_THRESHOLD&&lastBudgetBalance>BUDGET_WARNING_THRESHOLD&&!reserveWarningShown){reserveWarningShown=true;budgetWarningUntil=now+18000;}lastBudgetBalance=balance;
   world.wallDrawing.setEnabled(tool?.kind==='wall'&&!tool.gate&&permission(state,'wall'));
   refreshBuildPermissions(document,state);refreshSpellCards(document,state);
@@ -337,7 +338,7 @@ function updateUI(force=false) {
   eventCards??=new EventCards(document.querySelector('#notices'),ASSETS);
   eventCards.render(noticeLifetime.visible(state,now/1000,activeTutorial,{tutorialVisible:guardian.lifecycle.phase!=='closed'||!!surfaces.active||document.hidden,maxVisible:stage.classList.contains('short')?2:3}),noticeLifetime,now/1000);
   document.querySelectorAll('[data-dismiss-notice]').forEach(el=>el.onclick=()=>{noticeLifetime.dismiss(el.dataset.dismissNotice);updateUI(true);});
-  document.querySelectorAll('[data-notice]').forEach(el=>el.onclick=()=>{const message=state.messages.find(m=>m.id===el.dataset.notice),target=[...state.plants,...state.structures,...state.workers,...(state.raid?.animals??[])].find(e=>e.id===message.target);if(target)world.focus(target);});
+  document.querySelectorAll('[data-notice]').forEach(el=>el.onclick=()=>{const message=state.messages.find(m=>m.id===el.dataset.notice),target=[...activeCrops(state.plants),...state.structures,...state.workers,...(state.raid?.animals??[])].find(e=>e.id===message.target);if(target)world.focus(target);});
   if(!state.pauses.includes('hiring'))surfaces.deferred.delete('hiring');
   if(state.pauses.includes('hiring')&&surfaces.shouldOpen('hiring',{mandatory:true}))hiringDialog();
   if(state.result&&!state.tutorial.reading&&surfaces.shouldOpen('result'))resultDialog();
@@ -374,7 +375,7 @@ function villageConfirmPanel() {
   bind('change-village-culture',villageCulturePanel);bind('found-village',()=>{const payload=villageCatalog.find(v=>v.id===(p.culture==='saheliana'?'saheliano':p.culture));Game.foundVillage(state,commandId(),p.culture,p.x,p.z,payload,nav);world.clearVillagePreview();pendingVillage=null;tool=null;hideHudPanel();save();world.syncResidentProps();});bind('cancel-village',cancelVillagePreview);
 }
 function contextPanel() {
-  const el=document.querySelector('#context');if(!state.structures.some(s=>s.id===selection)){selection=null;el.replaceChildren();if(surfaces.active==='context'){surfaces.active=null;uiAudio.close({silent:true});}return;}if(surfaces.active!=='context')openSurface('context');const scroll=el.querySelector('.context')?.scrollTop??0;const p=state.plants.find(p=>p.id===selection&&p.alive),structure=state.structures.find(s=>s.id===selection);
+  const el=document.querySelector('#context');if(!state.structures.some(s=>s.id===selection)){selection=null;el.replaceChildren();if(surfaces.active==='context'){surfaces.active=null;uiAudio.close({silent:true});}return;}if(surfaces.active!=='context')openSurface('context');const scroll=el.querySelector('.context')?.scrollTop??0;const p=activeCrops(state.plants).find(p=>p.id===selection),structure=state.structures.find(s=>s.id===selection);
   const key=JSON.stringify(p?[p.id,Math.floor(p.growth/cropSpec(p.species).growth_seconds*100),p.water.map(w=>w.status),p.harvestRequested,p.centerId,permission(state,'harvest')]:structure?[structure.id,structure.hp,structure.status,permission(state,'wall')]:null);if(el.dataset.key===key&&el.children.length)return;el.dataset.key=key;
   if(p) {selection=null;el.replaceChildren();return;  } else if(structure) {
     el.innerHTML=`<div class="context"><h3>${structure.kind==='center'?'Centro de trabajo':structure.gate?'Puerta':'Defensa'}</h3><p>${structure.status==='ruined'?'Ruinas':`${structure.hp}/${structure.maxHp} PV`}</p>${structure.hp<structure.maxHp?button('repair-action','Solicitar reparación'):''}${structure.kind==='wall'?button('remove-wall',structure.status==='ruined'?'Retirar escombros':'Eliminar muralla · +'+localMoney(Game.wallRefund(structure))+' monedas'):''}${button('close-context','Cerrar','ghost')}</div>`;bind('repair-action',()=>Game.requestRepair(state,commandId(),structure.id));

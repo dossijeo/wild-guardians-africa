@@ -1,3 +1,5 @@
+import {activeCrops} from '../simulation/active-crops.js';
+
 // Render-only cache. Verify membership AND IDs before reuse, including edits
 // with unchanged array length. Other entity fields remain live references.
 function refresh(array,entries,ids,index,unique){
@@ -15,7 +17,7 @@ export class WorkTargetIndex {
   constructor(){this.reset();}
   reset(){this.state=null;this.plants=null;this.structures=null;this.plantEntries=[];this.structureEntries=[];this.plantIds=[];this.structureIds=[];this.index=null;}
   forState(state){
-    const plants=state.plants,structures=state.structures;
+    const plants=activeCrops(state.plants),structures=state.structures;
     const unique=this.index?.size===plants.length+structures.length;
     if(this.state!==state||this.plants!==plants||this.structures!==structures||plants.length!==this.plantEntries.length||structures.length!==this.structureEntries.length||!refresh(plants,this.plantEntries,this.plantIds,this.index,unique)||!refresh(structures,this.structureEntries,this.structureIds,this.index,unique)){
       this.state=state;this.plants=plants;this.structures=structures;

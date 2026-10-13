@@ -1,5 +1,6 @@
 import {canyonFrame} from '../world/terrain.js';
 import {exteriorGroupWitness} from './raid-exterior-connectivity.js';
+import {activeCrops} from './active-crops.js';
 import {raidWallEnvelope,exteriorRaidWitness} from './raid-exterior-entry.js';
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 // Keep the complete wave, but align its bodies along the narrow dry bank.
@@ -7,7 +8,7 @@ const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 export function canyonRaidFormation(state,specs,bounds,nav,approach){
  const focus=state.structures.find(s=>s.kind==='center'&&s.hp>0&&s.status!=='collapsing');
  if(!focus||typeof nav.field.riverX!=='function')return null;
- const targets=[...state.structures.filter(s=>(s.kind==='center'||s.kind==='wall')&&s.hp>0&&s.status!=='collapsing'),...state.plants.filter(p=>p.alive)];
+ const targets=[...state.structures.filter(s=>(s.kind==='center'||s.kind==='wall')&&s.hp>0&&s.status!=='collapsing'),...activeCrops(state.plants)];
  const box=raidWallEnvelope(state,nav),radius=Math.max(...specs.map(s=>s.radius)),spacing=radius*2+1.5;
  const bank=focus.x>=nav.field.riverX(focus.z)?1:-1;
  const order=specs.map((s,i)=>({i,r:s.radius})).sort((a,b)=>b.r-a.r||a.i-b.i);

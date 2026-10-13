@@ -1,0 +1,63 @@
+{
+  "input": "docs/qa/event-driven-virtual-player/pilot-expansive-sabana-123-day12-before-365/checkpoint-state.json.gz",
+  "day": 12,
+  "time": 370.0000000000159,
+  "historyBefore": 1194,
+  "livingAfter": 266,
+  "tickMilliseconds": 39741.8242,
+  "phases": {
+    "raid-update": {
+      "calls": 51,
+      "milliseconds": 38599.35100000004,
+      "maxMilliseconds": 33871.55,
+      "approachMilliseconds": 0,
+      "groupMilliseconds": 0,
+      "approachChecks": 0,
+      "groupChecks": 0
+    },
+    "target-selection": {
+      "calls": 17,
+      "milliseconds": 38489.12729999999,
+      "maxMilliseconds": 5885.3762,
+      "approachMilliseconds": 0,
+      "groupMilliseconds": 0,
+      "approachChecks": 0,
+      "groupChecks": 0
+    },
+    "target-detail": {
+      "calls": 17,
+      "milliseconds": 301.89780000005794,
+      "maxMilliseconds": 55.06890000000021,
+      "approachMilliseconds": 37070.038200000025,
+      "groupMilliseconds": 301.89780000005794,
+      "approachChecks": 1923,
+      "groupChecks": 1924
+    },
+    "worker-update": {
+      "calls": 51,
+      "milliseconds": 51.24649999998326,
+      "maxMilliseconds": 30.8844,
+      "approachMilliseconds": 0,
+      "groupMilliseconds": 0,
+      "approachChecks": 0,
+      "groupChecks": 0
+    }
+  },
+  "calls": {
+    "approachPath": {
+      "count": 55242,
+      "success": 22,
+      "milliseconds": 35847.4254999999
+    },
+    "approachReachability": {
+      "count": 125,
+      "milliseconds": 1038.691800000001
+    },
+    "approachGroupBlocked": {
+      "count": 1924,
+      "rejected": 0,
+      "milliseconds": 298.24090000008937
+    }
+  },
+  "stateChanged": true
+}

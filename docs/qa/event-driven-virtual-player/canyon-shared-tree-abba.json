@@ -1,0 +1,118 @@
+{
+  "input": "docs/qa/event-driven-virtual-player/pilot-good-canyon-2026-day7-phase/checkpoint-state.json.gz",
+  "seconds": 1,
+  "mode": "shared-tree",
+  "runSet": "abba",
+  "day": 7,
+  "time": 480.0000000000409,
+  "biome": "gran-canon",
+  "plants": 350,
+  "living": 178,
+  "sameState": false,
+  "baselineDeterministic": true,
+  "candidateDeterministic": true,
+  "rows": [
+    {
+      "variant": "baseline",
+      "milliseconds": 3397.2104,
+      "searches": 335,
+      "nativeSearches": 340,
+      "success": 2,
+      "rssDeltaBytes": 45379584,
+      "hash": "2f95460825df78a17ee0356c0601f74905cf4d639899e7043ac6c2ad084ce89f",
+      "metrics": {}
+    },
+    {
+      "variant": "candidate",
+      "milliseconds": 3003.5501,
+      "searches": 847,
+      "nativeSearches": 5,
+      "success": 2,
+      "rssDeltaBytes": 14360576,
+      "hash": "2faa1f9533ae298f60223a09f55fdcd3c01fd680c845cc1b1ae307234b4995d1",
+      "metrics": {
+        "built": 1,
+        "reused": 81,
+        "sharedOrigins": 1,
+        "sharedRouteSteps": 17,
+        "sharedSmoothedSteps": 2,
+        "visited": 4798,
+        "buildMilliseconds": 242.67759999999998,
+        "treeRoutes": 1,
+        "fallbacks": 0,
+        "fallbackReasons": {},
+        "unreachable": 845,
+        "direct": 1,
+        "nativeTrials": 0,
+        "activations": 0,
+        "gridRuns": [
+          {
+            "chunks": 35,
+            "cells": 5081,
+            "edges": 5102,
+            "buildMilliseconds": 228.3699999999535,
+            "edgeLookups": 5116
+          }
+        ],
+        "grid": {
+          "chunks": 35,
+          "cells": 5081,
+          "edges": 5102,
+          "buildMilliseconds": 228.3699999999535,
+          "edgeLookups": 5116
+        }
+      }
+    },
+    {
+      "variant": "candidate",
+      "milliseconds": 2971.3965,
+      "searches": 847,
+      "nativeSearches": 5,
+      "success": 2,
+      "rssDeltaBytes": 6459392,
+      "hash": "2faa1f9533ae298f60223a09f55fdcd3c01fd680c845cc1b1ae307234b4995d1",
+      "metrics": {
+        "built": 1,
+        "reused": 81,
+        "sharedOrigins": 1,
+        "sharedRouteSteps": 17,
+        "sharedSmoothedSteps": 2,
+        "visited": 4798,
+        "buildMilliseconds": 238.6297999999997,
+        "treeRoutes": 1,
+        "fallbacks": 0,
+        "fallbackReasons": {},
+        "unreachable": 845,
+        "direct": 1,
+        "nativeTrials": 0,
+        "activations": 0,
+        "gridRuns": [
+          {
+            "chunks": 35,
+            "cells": 5081,
+            "edges": 5102,
+            "buildMilliseconds": 223.13299999995252,
+            "edgeLookups": 5116
+          }
+        ],
+        "grid": {
+          "chunks": 35,
+          "cells": 5081,
+          "edges": 5102,
+          "buildMilliseconds": 223.13299999995252,
+          "edgeLookups": 5116
+        }
+      }
+    },
+    {
+      "variant": "baseline",
+      "milliseconds": 3305.458699999999,
+      "searches": 335,
+      "nativeSearches": 340,
+      "success": 2,
+      "rssDeltaBytes": 7598080,
+      "hash": "2f95460825df78a17ee0356c0601f74905cf4d639899e7043ac6c2ad084ce89f",
+      "metrics": {}
+    }
+  ]
+}

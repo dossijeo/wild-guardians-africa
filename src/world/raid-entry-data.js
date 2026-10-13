@@ -1,3 +1,4 @@
+import {activeCrops} from '../simulation/active-crops.js';
 // Presentation preparation only: no RNG, actor creation or simulation commands.
 const WAVE_SPECIES=new Set(['warthog','hyena','buffalo','lion','rhino']);
 export function eligiblePendingRaidWavePlan(state){
@@ -41,7 +42,7 @@ export function raidEntryKey(state,nav,group,bounds=nav.activeBounds){
 }
 export function raidEntryRequest(state,nav,group,key,token){
   const {seed,biome,culture,terrainVersion,rng,villages,structures,suppressed,spells,navigationVersion}=state;
-  const plants=state.plants.filter(p=>p.alive).map(({id,species,x,z,alive,attackHits,attackHitPoints})=>({id,species,x,z,alive,attackHits,attackHitPoints}));
+  const plants=activeCrops(state.plants).map(({id,species,x,z,alive,attackHits,attackHitPoints})=>({id,species,x,z,alive,attackHits,attackHitPoints}));
   const workers=state.workers.map(({id,x,z,status,incapacitated})=>({id,x,z,status,incapacitated}));
   const wave=waveContext(state,group);
   return structuredClone({key,token,group,...(wave?{waveContext:{raidId:wave[0],index:wave[1]}}:{}),profile:nav.profile,bounds:nav.activeBounds,view:nav.raidView,

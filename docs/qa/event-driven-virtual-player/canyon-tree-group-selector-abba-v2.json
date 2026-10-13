@@ -1,0 +1,412 @@
+{
+  "input": "docs/qa/event-driven-virtual-player/pilot-good-canyon-2026-day7-phase/checkpoint-state.json.gz",
+  "seconds": 1,
+  "mode": "tree-group-selector",
+  "runSet": "abba",
+  "day": 7,
+  "time": 480.0000000000409,
+  "biome": "gran-canon",
+  "plants": 350,
+  "living": 178,
+  "sameState": false,
+  "baselineDeterministic": true,
+  "candidateDeterministic": true,
+  "rows": [
+    {
+      "variant": "baseline",
+      "milliseconds": 3314.2531000000004,
+      "searches": 335,
+      "nativeSearches": 340,
+      "success": 2,
+      "rssDeltaBytes": 45707264,
+      "hash": "2f95460825df78a17ee0356c0601f74905cf4d639899e7043ac6c2ad084ce89f",
+      "metrics": {},
+      "targets": [
+        {
+          "species": "warthog",
+          "status": "attacking",
+          "targetId": "structure-3676",
+          "hitsRemaining": 3
+        },
+        {
+          "species": "hyena",
+          "status": "walking",
+          "targetId": "structure-3547",
+          "hitsRemaining": 5
+        },
+        {
+          "species": "warthog",
+          "status": "waiting",
+          "targetId": null,
+          "hitsRemaining": 2
+        },
+        {
+          "species": "warthog",
+          "status": "waiting",
+          "targetId": null,
+          "hitsRemaining": 2
+        },
+        {
+          "species": "warthog",
+          "status": "attacking",
+          "targetId": "structure-2986",
+          "hitsRemaining": 2
+        },
+        {
+          "species": "warthog",
+          "status": "entering",
+          "targetId": "structure-3540",
+          "hitsRemaining": 2
+        },
+        {
+          "species": "warthog",
+          "status": "entering",
+          "targetId": "structure-2990",
+          "hitsRemaining": 4
+        },
+        {
+          "species": "warthog",
+          "status": "waiting",
+          "targetId": null,
+          "hitsRemaining": 2
+        },
+        {
+          "species": "warthog",
+          "status": "attacking",
+          "targetId": "structure-3644",
+          "hitsRemaining": 1
+        },
+        {
+          "species": "warthog",
+          "status": "waiting",
+          "targetId": null,
+          "hitsRemaining": 4
+        }
+      ]
+    },
+    {
+      "variant": "candidate",
+      "milliseconds": 3030.3899,
+      "searches": 848,
+      "nativeSearches": 5,
+      "success": 2,
+      "rssDeltaBytes": 10387456,
+      "hash": "2faa1f9533ae298f60223a09f55fdcd3c01fd680c845cc1b1ae307234b4995d1",
+      "metrics": {
+        "selection": {
+          "queries": 6,
+          "groups": 6,
+          "targets": 666,
+          "points": 833,
+          "probes": 1,
+          "routes": 0,
+          "certifiedSkips": 0,
+          "uncertain": 6,
+          "uncertainReasons": {
+            "boundary": 6
+          },
+          "stalePoints": 0
+        },
+        "route": {
+          "built": 1,
+          "reused": 82,
+          "sharedOrigins": 1,
+          "sharedRouteSteps": 17,
+          "sharedSmoothedSteps": 2,
+          "portalEdges": 0,
+          "portalTraversals": 0,
+          "batchQueries": 0,
+          "batchPoints": 0,
+          "batchRoutes": 0,
+          "batchSkips": 0,
+          "batchFallbacks": 0,
+          "visited": 4798,
+          "buildMilliseconds": 308.7111,
+          "treeRoutes": 1,
+          "fallbacks": 0,
+          "fallbackReasons": {},
+          "unreachable": 846,
+          "direct": 1,
+          "nativeTrials": 0,
+          "activations": 0,
+          "gridRuns": [
+            {
+              "chunks": 35,
+              "cells": 5081,
+              "edges": 5102,
+              "buildMilliseconds": 288.6436000000035,
+              "edgeLookups": 5116
+            }
+          ],
+          "grid": {
+            "chunks": 35,
+            "cells": 5081,
+            "edges": 5102,
+            "buildMilliseconds": 288.6436000000035,
+            "edgeLookups": 5116
+          }
+        }
+      },
+      "targets": [
+        {
+          "species": "warthog",
+          "status": "attacking",
+          "targetId": "structure-3676",
+          "hitsRemaining": 3
+        },
+        {
+          "species": "hyena",
+          "status": "walking",
+          "targetId": "structure-3547",
+          "hitsRemaining": 5
+        },
+        {
+          "species": "warthog",
+          "status": "waiting",
+          "targetId": null,
+          "hitsRemaining": 2
+        },
+        {
+          "species": "warthog",
+          "status": "waiting",
+          "targetId": null,
+          "hitsRemaining": 2
+        },
+        {
+          "species": "warthog",
+          "status": "attacking",
+          "targetId": "structure-2986",
+          "hitsRemaining": 2
+        },
+        {
+          "species": "warthog",
+          "status": "entering",
+          "targetId": "structure-3540",
+          "hitsRemaining": 2
+        },
+        {
+          "species": "warthog",
+          "status": "entering",
+          "targetId": "structure-2990",
+          "hitsRemaining": 4
+        },
+        {
+          "species": "warthog",
+          "status": "waiting",
+          "targetId": null,
+          "hitsRemaining": 2
+        },
+        {
+          "species": "warthog",
+          "status": "attacking",
+          "targetId": "structure-3644",
+          "hitsRemaining": 1
+        },
+        {
+          "species": "warthog",
+          "status": "waiting",
+          "targetId": null,
+          "hitsRemaining": 4
+        }
+      ]
+    },
+    {
+      "variant": "candidate",
+      "milliseconds": 3002.9044999999996,
+      "searches": 848,
+      "nativeSearches": 5,
+      "success": 2,
+      "rssDeltaBytes": 8781824,
+      "hash": "2faa1f9533ae298f60223a09f55fdcd3c01fd680c845cc1b1ae307234b4995d1",
+      "metrics": {
+        "selection": {
+          "queries": 6,
+          "groups": 6,
+          "targets": 666,
+          "points": 833,
+          "probes": 1,
+          "routes": 0,
+          "certifiedSkips": 0,
+          "uncertain": 6,
+          "uncertainReasons": {
+            "boundary": 6
+          },
+          "stalePoints": 0
+        },
+        "route": {
+          "built": 1,
+          "reused": 82,
+          "sharedOrigins": 1,
+          "sharedRouteSteps": 17,
+          "sharedSmoothedSteps": 2,
+          "portalEdges": 0,
+          "portalTraversals": 0,
+          "batchQueries": 0,
+          "batchPoints": 0,
+          "batchRoutes": 0,
+          "batchSkips": 0,
+          "batchFallbacks": 0,
+          "visited": 4798,
+          "buildMilliseconds": 280.47110000000066,
+          "treeRoutes": 1,
+          "fallbacks": 0,
+          "fallbackReasons": {},
+          "unreachable": 846,
+          "direct": 1,
+          "nativeTrials": 0,
+          "activations": 0,
+          "gridRuns": [
+            {
+              "chunks": 35,
+              "cells": 5081,
+              "edges": 5102,
+              "buildMilliseconds": 265.49269999994704,
+              "edgeLookups": 5116
+            }
+          ],
+          "grid": {
+            "chunks": 35,
+            "cells": 5081,
+            "edges": 5102,
+            "buildMilliseconds": 265.49269999994704,
+            "edgeLookups": 5116
+          }
+        }
+      },
+      "targets": [
+        {
+          "species": "warthog",
+          "status": "attacking",
+          "targetId": "structure-3676",
+          "hitsRemaining": 3
+        },
+        {
+          "species": "hyena",
+          "status": "walking",
+          "targetId": "structure-3547",
+          "hitsRemaining": 5
+        },
+        {
+          "species": "warthog",
+          "status": "waiting",
+          "targetId": null,
+          "hitsRemaining": 2
+        },
+        {
+          "species": "warthog",
+          "status": "waiting",
+          "targetId": null,
+          "hitsRemaining": 2
+        },
+        {
+          "species": "warthog",
+          "status": "attacking",
+          "targetId": "structure-2986",
+          "hitsRemaining": 2
+        },
+        {
+          "species": "warthog",
+          "status": "entering",
+          "targetId": "structure-3540",
+          "hitsRemaining": 2
+        },
+        {
+          "species": "warthog",
+          "status": "entering",
+          "targetId": "structure-2990",
+          "hitsRemaining": 4
+        },
+        {
+          "species": "warthog",
+          "status": "waiting",
+          "targetId": null,
+          "hitsRemaining": 2
+        },
+        {
+          "species": "warthog",
+          "status": "attacking",
+          "targetId": "structure-3644",
+          "hitsRemaining": 1
+        },
+        {
+          "species": "warthog",
+          "status": "waiting",
+          "targetId": null,
+          "hitsRemaining": 4
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "milliseconds": 3292.1339000000007,
+      "searches": 335,
+      "nativeSearches": 340,
+      "success": 2,
+      "rssDeltaBytes": 8232960,
+      "hash": "2f95460825df78a17ee0356c0601f74905cf4d639899e7043ac6c2ad084ce89f",
+      "metrics": {},
+      "targets": [
+        {
+          "species": "warthog",
+          "status": "attacking",
+          "targetId": "structure-3676",
+          "hitsRemaining": 3
+        },
+        {
+          "species": "hyena",
+          "status": "walking",
+          "targetId": "structure-3547",
+          "hitsRemaining": 5
+        },
+        {
+          "species": "warthog",
+          "status": "waiting",
+          "targetId": null,
+          "hitsRemaining": 2
+        },
+        {
+          "species": "warthog",
+          "status": "waiting",
+          "targetId": null,
+          "hitsRemaining": 2
+        },
+        {
+          "species": "warthog",
+          "status": "attacking",
+          "targetId": "structure-2986",
+          "hitsRemaining": 2
+        },
+        {
+          "species": "warthog",
+          "status": "entering",
+          "targetId": "structure-3540",
+          "hitsRemaining": 2
+        },
+        {
+          "species": "warthog",
+          "status": "entering",
+          "targetId": "structure-2990",
+          "hitsRemaining": 4
+        },
+        {
+          "species": "warthog",
+          "status": "waiting",
+          "targetId": null,
+          "hitsRemaining": 2
+        },
+        {
+          "species": "warthog",
+          "status": "attacking",
+          "targetId": "structure-3644",
+          "hitsRemaining": 1
+        },
+        {
+          "species": "warthog",
+          "status": "waiting",
+          "targetId": null,
+          "hitsRemaining": 4
+        }
+      ]
+    }
+  ]
+}

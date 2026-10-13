@@ -1,0 +1,52 @@
+{
+  "input": "docs/qa/event-driven-virtual-player/pilot-good-canyon-2026-day7-phase/checkpoint-state.json.gz",
+  "seconds": 1,
+  "mode": "shared-tree",
+  "day": 7,
+  "time": 480.0000000000409,
+  "biome": "gran-canon",
+  "milliseconds": 3986.8208,
+  "totals": {
+    "calls": 335,
+    "nativeOnly": 0,
+    "treeOnly": 0,
+    "both": 2,
+    "neither": 333,
+    "invalidTree": 0,
+    "invalidNative": 0
+  },
+  "metrics": {
+    "built": 1,
+    "reused": 79,
+    "sharedOrigins": 1,
+    "sharedRouteSteps": 17,
+    "sharedSmoothedSteps": 2,
+    "visited": 4798,
+    "buildMilliseconds": 283.91859999999997,
+    "treeRoutes": 1,
+    "fallbacks": 0,
+    "fallbackReasons": {},
+    "unreachable": 333,
+    "direct": 1,
+    "nativeTrials": 0,
+    "activations": 0,
+    "gridRuns": [
+      {
+        "chunks": 35,
+        "cells": 5081,
+        "edges": 5102,
+        "buildMilliseconds": 265.00429999999346,
+        "edgeLookups": 5116
+      }
+    ],
+    "grid": {
+      "chunks": 35,
+      "cells": 5081,
+      "edges": 5102,
+      "buildMilliseconds": 265.00429999999346,
+      "edgeLookups": 5116
+    }
+  },
+  "examples": [],
+  "stateHash": "2faa1f9533ae298f60223a09f55fdcd3c01fd680c845cc1b1ae307234b4995d1"
+}

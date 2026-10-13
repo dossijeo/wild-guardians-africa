@@ -1,0 +1,66 @@
+{
+  "input": "docs/qa/event-driven-virtual-player/pilot-expansive-sabana-123-day12-before-365/checkpoint-state.json.gz",
+  "seconds": 5,
+  "mode": "shared-batched",
+  "runSet": "candidate",
+  "day": 12,
+  "time": 365.0000000000148,
+  "biome": "sabana",
+  "plants": 1194,
+  "living": 266,
+  "sameState": true,
+  "baselineDeterministic": null,
+  "candidateDeterministic": null,
+  "rows": [
+    {
+      "variant": "candidate",
+      "milliseconds": 3364.143,
+      "searches": 22,
+      "nativeSearches": 43,
+      "success": 19,
+      "rssDeltaBytes": 65228800,
+      "hash": "1f844f068c0b7d329b96caad307ca10505f62b679a8b2d29e4ae8dcff2cf0673",
+      "metrics": {
+        "built": 4,
+        "reused": 12,
+        "sharedOrigins": 12,
+        "sharedRouteSteps": 1320,
+        "sharedSmoothedSteps": 101,
+        "portalEdges": 72,
+        "portalTraversals": 3,
+        "batchQueries": 16,
+        "batchPoints": 0,
+        "batchRoutes": 16,
+        "batchSkips": 0,
+        "batchFallbacks": 0,
+        "visited": 23764,
+        "buildMilliseconds": 1739.2828,
+        "treeRoutes": 16,
+        "fallbacks": 6,
+        "fallbackReasons": {
+          "inactive": 6
+        },
+        "unreachable": 0,
+        "direct": 0,
+        "nativeTrials": 0,
+        "activations": 0,
+        "gridRuns": [
+          {
+            "chunks": 173,
+            "cells": 27661,
+            "edges": 26560,
+            "buildMilliseconds": 1639.4193999999588,
+            "edgeLookups": 27764
+          }
+        ],
+        "grid": {
+          "chunks": 173,
+          "cells": 27661,
+          "edges": 26560,
+          "buildMilliseconds": 1639.4193999999588,
+          "edgeLookups": 27764
+        }
+      }
+    }
+  ]
+}

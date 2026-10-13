@@ -1,0 +1,183 @@
+{
+  "input": "docs/qa/event-driven-virtual-player/pilot-expansive-sabana-123-day12-before-365/checkpoint-state.json.gz",
+  "seconds": 5,
+  "mode": "shared-incremental",
+  "day": 12,
+  "time": 365.0000000000148,
+  "biome": "sabana",
+  "milliseconds": 4221.125,
+  "totals": {
+    "calls": 34,
+    "nativeOnly": 0,
+    "treeOnly": 8,
+    "both": 11,
+    "neither": 15,
+    "invalidTree": 0,
+    "invalidNative": 0
+  },
+  "metrics": {
+    "built": 4,
+    "reused": 11,
+    "sharedOrigins": 11,
+    "sharedRouteSteps": 1207,
+    "sharedSmoothedSteps": 100,
+    "visited": 21026,
+    "buildMilliseconds": 1367.5780000000004,
+    "treeRoutes": 15,
+    "fallbacks": 6,
+    "fallbackReasons": {
+      "inactive": 6
+    },
+    "unreachable": 12,
+    "direct": 1,
+    "nativeTrials": 0,
+    "activations": 0,
+    "gridRuns": [
+      {
+        "chunks": 157,
+        "cells": 24451,
+        "edges": 23546,
+        "buildMilliseconds": 1310.7129000000084,
+        "edgeLookups": 24643
+      }
+    ],
+    "grid": {
+      "chunks": 157,
+      "cells": 24451,
+      "edges": 23546,
+      "buildMilliseconds": 1310.7129000000084,
+      "edgeLookups": 24643
+    }
+  },
+  "examples": [
+    {
+      "category": "treeOnly",
+      "start": {
+        "x": 97.92010702396492,
+        "z": 23.86945380316323
+      },
+      "end": {
+        "x": 92.2359007837093,
+        "z": 12.032465345949475
+      },
+      "radius": 1.1,
+      "margin": 32,
+      "nativeWaypoints": 0,
+      "treeWaypoints": 9,
+      "treeError": null
+    },
+    {
+      "category": "treeOnly",
+      "start": {
+        "x": 95.0240845697267,
+        "z": 25.451558080557096
+      },
+      "end": {
+        "x": 87.18924282725533,
+        "z": 13.690941537037933
+      },
+      "radius": 1.1,
+      "margin": 32,
+      "nativeWaypoints": 0,
+      "treeWaypoints": 9,
+      "treeError": null
+    },
+    {
+      "category": "treeOnly",
+      "start": {
+        "x": 100.81612947820315,
+        "z": 22.287349525769358
+      },
+      "end": {
+        "x": 95.2298338643529,
+        "z": 10.535363973279207
+      },
+      "radius": 1.1,
+      "margin": 32,
+      "nativeWaypoints": 0,
+      "treeWaypoints": 9,
+      "treeError": null
+    },
+    {
+      "category": "treeOnly",
+      "start": {
+        "x": 99.83780917838172,
+        "z": 27.37978405072472
+      },
+      "end": {
+        "x": 89.89575309079977,
+        "z": 12.196800690099519
+      },
+      "radius": 1.1,
+      "margin": 32,
+      "nativeWaypoints": 0,
+      "treeWaypoints": 10,
+      "treeError": null
+    },
+    {
+      "category": "treeOnly",
+      "start": {
+        "x": 96.9417867241435,
+        "z": 28.961888328118587
+      },
+      "end": {
+        "x": 85.06569494515888,
+        "z": 12.175502252224335
+      },
+      "radius": 1.1,
+      "margin": 32,
+      "nativeWaypoints": 0,
+      "treeWaypoints": 9,
+      "treeError": null
+    },
+    {
+      "category": "treeOnly",
+      "start": {
+        "x": 93.94987916218443,
+        "z": 30.368476093134383
+      },
+      "end": {
+        "x": 83.88996654780046,
+        "z": 14.063908676999832
+      },
+      "radius": 0.9,
+      "margin": 32,
+      "nativeWaypoints": 0,
+      "treeWaypoints": 9,
+      "treeError": null
+    },
+    {
+      "category": "treeOnly",
+      "start": {
+        "x": 102.63794652489912,
+        "z": 25.622163260952775
+      },
+      "end": {
+        "x": 94.41949878619059,
+        "z": 8.51520808999793
+      },
+      "radius": 0.9,
+      "margin": 32,
+      "nativeWaypoints": 0,
+      "treeWaypoints": 10,
+      "treeError": null
+    },
+    {
+      "category": "treeOnly",
+      "start": {
+        "x": 104.67100300964978,
+        "z": 22.460410372156232
+      },
+      "end": {
+        "x": 97.12303752715441,
+        "z": 8.776239285010025
+      },
+      "radius": 1.1,
+      "margin": 32,
+      "nativeWaypoints": 0,
+      "treeWaypoints": 9,
+      "treeError": null
+    }
+  ],
+  "stateHash": "0f674c86b9fbac25ef66d15d7bb519c4fcc4aa28a61a74d2340938e9fdcdafd4"
+}

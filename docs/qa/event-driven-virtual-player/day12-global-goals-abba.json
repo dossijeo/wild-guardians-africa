@@ -1,0 +1,89 @@
+{
+  "input": "docs/qa/event-driven-virtual-player/pilot-expansive-sabana-123-day12-before-365/checkpoint-state.json.gz",
+  "seconds": 5,
+  "mode": "global-goals",
+  "day": 12,
+  "time": 365.0000000000148,
+  "biome": "sabana",
+  "plants": 1194,
+  "living": 266,
+  "sameState": false,
+  "baselineDeterministic": true,
+  "candidateDeterministic": true,
+  "rows": [
+    {
+      "variant": "baseline",
+      "milliseconds": 15988.5499,
+      "searches": 55242,
+      "nativeSearches": 55257,
+      "success": 22,
+      "rssDeltaBytes": 209481728,
+      "hash": "df9ce7ede83b9aa1dcb45507466199a917bb828861d400b01d4cf1674f9e171f",
+      "metrics": {}
+    },
+    {
+      "variant": "candidate",
+      "milliseconds": 18062.006799999996,
+      "searches": 55265,
+      "nativeSearches": 55272,
+      "success": 20,
+      "rssDeltaBytes": 117116928,
+      "hash": "a7d19d00b01dd2e75e9f1e2eecd1d90fcc8da4197b8a7ffbad67f5d5a6f238e6",
+      "metrics": {
+        "built": 4,
+        "reused": 13,
+        "visited": 29447,
+        "buildMilliseconds": 2661.888299999995,
+        "fieldRoutes": 2,
+        "misses": 15,
+        "fallbacks": 0,
+        "portalCount": 10,
+        "portalBuildMilliseconds": 18.993800000000192,
+        "grid": {
+          "chunks": 67,
+          "cells": 8883,
+          "edges": 51400,
+          "buildMilliseconds": 2240.922299999973,
+          "edgeLookups": 213497
+        }
+      }
+    },
+    {
+      "variant": "candidate",
+      "milliseconds": 19283.131500000003,
+      "searches": 55265,
+      "nativeSearches": 55272,
+      "success": 20,
+      "rssDeltaBytes": 176836608,
+      "hash": "a7d19d00b01dd2e75e9f1e2eecd1d90fcc8da4197b8a7ffbad67f5d5a6f238e6",
+      "metrics": {
+        "built": 4,
+        "reused": 13,
+        "visited": 29447,
+        "buildMilliseconds": 2790.2301000000007,
+        "fieldRoutes": 2,
+        "misses": 15,
+        "fallbacks": 0,
+        "portalCount": 10,
+        "portalBuildMilliseconds": 19.45350000000326,
+        "grid": {
+          "chunks": 67,
+          "cells": 8883,
+          "edges": 51400,
+          "buildMilliseconds": 2353.223400000141,
+          "edgeLookups": 213497
+        }
+      }
+    },
+    {
+      "variant": "baseline",
+      "milliseconds": 16836.7589,
+      "searches": 55242,
+      "nativeSearches": 55257,
+      "success": 22,
+      "rssDeltaBytes": 110641152,
+      "hash": "df9ce7ede83b9aa1dcb45507466199a917bb828861d400b01d4cf1674f9e171f",
+      "metrics": {}
+    }
+  ]
+}
