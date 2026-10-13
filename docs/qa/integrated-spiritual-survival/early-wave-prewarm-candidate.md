@@ -23,3 +23,5 @@ Frozen 14-night native pilot (`pilot-v161-early-wave-prewarm-frozen`, source `fc
 | Day p95 | 152 ms | 154 ms |
 
 All 14 daily values for money, delivered crops, destroyed crops, living crops, planted crops, wages and player actions match exactly; both end with 828 coins. The pilot's entry transport accepted 21 requests and used 18. Its longest preparation wait was 12.36 seconds of wall time outside simulated ticks. Thus night simulation work improved, but overall loading time and real-browser frame delivery remain unproven. The day-13 daytime path spike is now the largest measured tick, so a 100-night run remains on hold under the user's performance gate.
+
+Validation: the 20 focused wave-readiness tests and the web build pass. The full `npm test` run completed 4,312 tests with 4,240 passing and 72 failing; at least one failure is an unrelated postgame crate-value assertion in `acceptance-paid-reload.test.js`. The complete failure set has not yet been triaged, so this candidate is not cleared for integration. The run also includes the existing abandonment checks across biome/culture combinations; those are not the requested managed 100-night balance campaign.
