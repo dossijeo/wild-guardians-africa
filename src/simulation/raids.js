@@ -256,13 +256,14 @@ function targetFor(s,a,nav) {
   groups.sort((a,b)=>b.value-a.value||a.id.localeCompare(b.id));
   for(const group of groups){
    const potentiallyReachable=nav.approachReachability?.(a,group.targets,a.radius);
+   // One crop component has one physical accessibility question. Its plants
+   // do not change while this animal chooses a target, so never repeat the
+   // same enclosure check for every reserved or unsuitable member.
+   const groupStarted=trace?performance.now():0;
+   const groupBlocked=nav.approachGroupBlocked?.(a,group.targets,a.radius,.6+a.radius);
+   if(trace){groupChecks++;groupMilliseconds+=performance.now()-groupStarted;}
+   if(groupBlocked){groupRejected++;continue;}
    for(const p of group.targets.filter(p=>canAttackCrop(s,p)).sort((p,q)=>dist(a,p)-dist(a,q))) {
-    // Accessibility belongs to the valued connected zone; a native closed
-    // component proof can reject that zone once, without reserving it.
-    const groupStarted=trace?performance.now():0;
-    const groupBlocked=nav.approachGroupBlocked?.(a,group.targets,a.radius,.6+a.radius);
-    if(trace){groupChecks++;groupMilliseconds+=performance.now()-groupStarted;}
-    if(groupBlocked){groupRejected++;break;}
     if(targetReserved(s,a,p))continue;
     const shield=spellAt(s,'shield',p),approachStarted=trace?performance.now():0,approach=reachableApproach(a,p,nav,shield,potentiallyReachable);
     if(trace){approachChecks++;approachMilliseconds+=performance.now()-approachStarted;}
