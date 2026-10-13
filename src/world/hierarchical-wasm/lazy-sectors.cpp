@@ -9,7 +9,8 @@ namespace {
 constexpr int dx[4]={1,-1,0,0},dz[4]={0,0,1,-1};
 int sectorSize=0,updates=0;
 std::vector<uint8_t> stagedPass,stagedSteps;
-struct Arc {int32_t to,fromCell,toCell;};
+struct Arc {int32_t to,fromCell,toCell,portal=-1;};
+struct Portal {int fromX,fromZ,toX,toZ;};
 struct Sector {
   int sx,sz,id,components=0;
   std::vector<uint8_t> pass,steps;
@@ -23,6 +24,7 @@ std::vector<int32_t> queueBuffer;
 std::vector<uint8_t> visited;
 std::vector<int32_t> previousNode,localParent,routePoints;
 std::vector<Arc> previousArc,arcChain;
+std::vector<Portal> portals;
 uint64_t key(int sx,int sz){return (static_cast<uint64_t>(static_cast<uint32_t>(sx))<<32)|static_cast<uint32_t>(sz);}
 Sector* get(int sx,int sz){const auto it=sectors->find(key(sx,sz));return it==sectors->end()?nullptr:&it->second;}
 int floorDiv(int n,int d){return n>=0?n/d:-((-n+d-1)/d);}
@@ -68,6 +70,22 @@ void rebuildEdges(Sector& sector){
       edges.push_back({node,at,cellIndex(lx,lz)});
     }
   }
+  for(size_t id=0;id<portals.size();id++){
+    const Portal& portal=portals[id];
+    for(int direction=0;direction<2;direction++){
+      const int fromX=direction?portal.toX:portal.fromX,fromZ=direction?portal.toZ:portal.fromZ;
+      const int toX=direction?portal.fromX:portal.toX,toZ=direction?portal.fromZ:portal.toZ;
+      if(floorDiv(fromX,sectorSize)!=sector.sx||floorDiv(fromZ,sectorSize)!=sector.sz)continue;
+      const Sector* targetSector=get(floorDiv(toX,sectorSize),floorDiv(toZ,sectorSize));
+      if(!targetSector)continue;
+      const int fromCell=cellIndex(fromX-sector.sx*sectorSize,fromZ-sector.sz*sectorSize);
+      const int toCell=cellIndex(toX-targetSector->sx*sectorSize,toZ-targetSector->sz*sectorSize);
+      const int fromComponent=sector.component[fromCell],toComponent=targetSector->component[toCell];
+      if(fromComponent<0||toComponent<0)continue;
+      const int32_t node=targetSector->id*sectorSize*sectorSize+toComponent;
+      sector.edges[fromComponent].push_back({node,fromCell,toCell,static_cast<int>(id)*2+direction});
+    }
+  }
 }
 int32_t nodeAt(int worldX,int worldZ){
   const int sx=floorDiv(worldX,sectorSize),sz=floorDiv(worldZ,sectorSize);
@@ -111,6 +129,7 @@ int lazy_init(int size){
   if(!sectors)sectors=new std::unordered_map<uint64_t,Sector>();else sectors->clear();
   byId.clear();
   stagedPass.assign(size*size,0);stagedSteps.assign(size*size,0);
+  portals.clear();
   queueBuffer.reserve(size*size);return 1;
 }
 uint8_t* lazy_pass_ptr(){return stagedPass.data();}
@@ -124,7 +143,21 @@ int lazy_commit_sector(int sx,int sz){
   flood(sector);updates++;
   rebuildEdges(sector);
   for(int d=0;d<4;d++)if(Sector* neighbor=get(sx+dx[d],sz+dz[d]))rebuildEdges(*neighbor);
+  for(const Portal& portal:portals){
+    const int ax=floorDiv(portal.fromX,sectorSize),az=floorDiv(portal.fromZ,sectorSize);
+    const int bx=floorDiv(portal.toX,sectorSize),bz=floorDiv(portal.toZ,sectorSize);
+    if(ax==sx&&az==sz){if(Sector* other=get(bx,bz);other&&other!=&sector)rebuildEdges(*other);}
+    if(bx==sx&&bz==sz){if(Sector* other=get(ax,az);other&&other!=&sector)rebuildEdges(*other);}
+  }
   return sector.id;
+}
+void lazy_clear_portals(){portals.clear();}
+int lazy_add_portal(int fromX,int fromZ,int toX,int toZ){
+  portals.push_back({fromX,fromZ,toX,toZ});return static_cast<int>(portals.size())-1;
+}
+int lazy_commit_portals(){
+  for(Sector* sector:byId)rebuildEdges(*sector);
+  return static_cast<int>(portals.size());
 }
 // 1 reachable, 0 certified disconnected in known sectors, -1 unknown.
 int lazy_connected(int fromX,int fromZ,int toX,int toZ){
@@ -182,6 +215,7 @@ int lazy_route(int fromX,int fromZ,int toX,int toZ){
     const Sector& sector=*byId[currentNode/stride];
     if(!localPath(sector,currentCell,it->fromCell)){routePoints.clear();return -1;}
     const Sector& next=*byId[it->to/stride];
+    if(it->portal>=0){routePoints.push_back(INT32_MIN);routePoints.push_back(it->portal);}
     appendPoint(next,it->toCell);
     currentNode=it->to;currentCell=it->toCell;
   }

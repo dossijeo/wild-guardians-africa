@@ -1,0 +1,135 @@
+{
+  "scope": "24 worker routes through one native automatic gate; physical collision validation, palindromic variant order.",
+  "wasmBytes": {
+    "bounded": 27975,
+    "lazy": 25610
+  },
+  "rows": [
+    {
+      "variant": "hierarchical",
+      "setupMs": 2.2709000000000117,
+      "initializationMs": 270.12960000000004,
+      "passes": [
+        {
+          "phase": "cold",
+          "milliseconds": 2.0394000000000005,
+          "found": 24,
+          "invalid": 0
+        },
+        {
+          "phase": "warm",
+          "milliseconds": 1.7133000000000038,
+          "found": 24,
+          "invalid": 0
+        }
+      ],
+      "wasmMemoryBytes": 4194304,
+      "sectors": 25
+    },
+    {
+      "variant": "flat",
+      "setupMs": 0.6403999999999996,
+      "initializationMs": 482.3297,
+      "passes": [
+        {
+          "phase": "cold",
+          "milliseconds": 2.8034000000000106,
+          "found": 24,
+          "invalid": 0
+        },
+        {
+          "phase": "warm",
+          "milliseconds": 0.974399999999946,
+          "found": 24,
+          "invalid": 0
+        }
+      ],
+      "wasmMemoryBytes": 4194304,
+      "sectors": 25
+    },
+    {
+      "variant": "lazy",
+      "setupMs": 6.567299999999932,
+      "initializationMs": 60.54970000000003,
+      "passes": [
+        {
+          "phase": "cold",
+          "milliseconds": 2.3204999999999245,
+          "found": 24,
+          "invalid": 0
+        },
+        {
+          "phase": "warm",
+          "milliseconds": 0.7624000000000706,
+          "found": 24,
+          "invalid": 0
+        }
+      ],
+      "wasmMemoryBytes": 4194304,
+      "sectors": 6
+    },
+    {
+      "variant": "lazy",
+      "setupMs": 7.5914000000000215,
+      "initializationMs": 62.85750000000007,
+      "passes": [
+        {
+          "phase": "cold",
+          "milliseconds": 0.8891999999998461,
+          "found": 24,
+          "invalid": 0
+        },
+        {
+          "phase": "warm",
+          "milliseconds": 0.5934999999999491,
+          "found": 24,
+          "invalid": 0
+        }
+      ],
+      "wasmMemoryBytes": 4194304,
+      "sectors": 6
+    },
+    {
+      "variant": "flat",
+      "setupMs": 1.8297000000000025,
+      "initializationMs": 361.3297,
+      "passes": [
+        {
+          "phase": "cold",
+          "milliseconds": 2.5424000000000433,
+          "found": 24,
+          "invalid": 0
+        },
+        {
+          "phase": "warm",
+          "milliseconds": 0.8936999999998534,
+          "found": 24,
+          "invalid": 0
+        }
+      ],
+      "wasmMemoryBytes": 4194304,
+      "sectors": 25
+    },
+    {
+      "variant": "hierarchical",
+      "setupMs": 5.521099999999933,
+      "initializationMs": 195.5103999999999,
+      "passes": [
+        {
+          "phase": "cold",
+          "milliseconds": 1.1900000000000546,
+          "found": 24,
+          "invalid": 0
+        },
+        {
+          "phase": "warm",
+          "milliseconds": 0.7716000000000349,
+          "found": 24,
+          "invalid": 0
+        }
+      ],
+      "wasmMemoryBytes": 4194304,
+      "sectors": 25
+    }
+  ]
+}

@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createLazySectorProbe} from '../src/world/hierarchical-wasm/lazy-sectors-adapter.js';
+import {fixture} from '../tools/probe-raid-reservation-saturation.mjs';
 
 const bytes=readFileSync(new URL('../src/world/hierarchical-wasm/lazy-sectors.wasm',import.meta.url));
 function wallFixture(){
@@ -53,4 +54,24 @@ test('cross-sector connectivity preserves directional edges',async()=>{
   assert.equal(probe.connected({x:13,z:3},{x:2,z:3}),0);
   assert.equal(probe.route({x:2,z:3},{x:13,z:3}).status,'found');
   assert.notEqual(probe.route({x:13,z:3},{x:2,z:3}).status,'found');
+});
+
+test('native automatic gate is a worker portal and never an animal crossing',async()=>{
+  const {s,nav}=fixture('closed-walls');
+  const gate=s.structures.find(o=>o.id==='wall-2-5');gate.gate=true;gate.gateOpen=true;nav.setState(s);
+  const outside={x:15,z:29},inside={x:15,z:7};
+  const worker=await createLazySectorProbe(bytes,nav,{sectorSize:12,radius:.28,worker:true});
+  worker.ensureRect(-12,-18,42,38);
+  const result=worker.route(outside,inside);
+  assert.equal(result.status,'found');
+  let previous=outside;
+  for(const point of result.points){assert(nav.segmentClear(previous,point,.28,null,true));previous=point;}
+  assert.deepEqual(previous,inside);
+  const animal=await createLazySectorProbe(bytes,nav,{sectorSize:12,radius:1.1,worker:false});
+  animal.ensureRect(-12,-18,42,38);
+  assert.notEqual(animal.route(outside,inside).status,'found');
+  gate.gate=false;gate.gateOpen=false;nav.setState(s);
+  worker.refreshPortals();
+  worker.loadSector(Math.floor(gate.x/12),Math.floor(gate.z/12));
+  assert.notEqual(worker.route(outside,inside).status,'found');
 });

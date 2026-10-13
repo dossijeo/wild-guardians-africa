@@ -1,11 +1,14 @@
 // Isolated sparse-sector QA adapter. JavaScript samples physical geometry once
 // per loaded sector; C++ keeps the components and cross-sector connections.
+import {gatePortalPoints} from '../gate-passages.js';
+
 export async function createLazySectorProbe(bytes,nav,{sectorSize=12,radius=.28,worker=true,ignore=null}={}){
   const {instance}=await WebAssembly.instantiate(bytes,{env:{emscripten_notify_memory_growth(){}}});
   const wasm=instance.exports;
   if(!wasm.lazy_init(sectorSize))throw Error('Invalid lazy navigation sector size');
   const count=sectorSize*sectorSize;
   const loaded=new Set();
+  const portalRoutes=[];
   const key=(sx,sz)=>`${sx},${sz}`;
   const pass=()=>new Uint8Array(wasm.memory.buffer,wasm.lazy_pass_ptr(),count);
   const steps=()=>new Uint8Array(wasm.memory.buffer,wasm.lazy_steps_ptr(),count);
@@ -32,14 +35,48 @@ export async function createLazySectorProbe(bytes,nav,{sectorSize=12,radius=.28,
       for(let sx=Math.floor(minX/sectorSize);sx<=Math.floor(maxX/sectorSize);sx++)ensureSector(sx,sz);
   }
   function connected(a,b){return wasm.lazy_connected(Math.round(a.x),Math.round(a.z),Math.round(b.x),Math.round(b.z));}
+  function refreshPortals(){
+    wasm.lazy_clear_portals();portalRoutes.length=0;
+    if(worker){
+      const connector=(point,outward)=>{
+        const x=Math.round(point.x),z=Math.round(point.z),candidates=[];
+        for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){
+          const cell={x:x+dx,z:z+dz};
+          if(!nav.walkable(cell.x,cell.z,radius,ignore,worker))continue;
+          if(!nav.segmentClear(outward?point:cell,outward?cell:point,radius,ignore,worker))continue;
+          candidates.push({cell,distance:Math.hypot(cell.x-point.x,cell.z-point.z)});
+        }
+        candidates.sort((a,b)=>a.distance-b.distance||a.cell.x-b.cell.x||a.cell.z-b.cell.z);
+        return candidates[0]?.cell;
+      };
+      for(const gate of nav.obstacles??[]){
+        if(!gate.gate||gate.id===ignore)continue;
+        const pair=gatePortalPoints(gate,radius);
+        if(pair.length!==2||!nav.segmentClear(pair[0],pair[1],radius,ignore,worker))continue;
+        const from=connector(pair[0],false),to=connector(pair[1],true);
+        if(!from||!to)continue;
+        const id=wasm.lazy_add_portal(from.x,from.z,to.x,to.z);
+        portalRoutes[id*2]=pair;portalRoutes[id*2+1]=[pair[1],pair[0]];
+      }
+    }
+    wasm.lazy_commit_portals();
+  }
   function route(a,b){
     const count=wasm.lazy_route(Math.round(a.x),Math.round(a.z),Math.round(b.x),Math.round(b.z));
     if(count<0)return {status:'unknown',points:null};
     if(count===0)return {status:'blocked',points:null};
     const values=new Int32Array(wasm.memory.buffer,wasm.lazy_route_ptr(),count*2);
-    const points=[];for(let i=0;i<count;i++)points.push({x:values[i*2],z:values[i*2+1]});
+    const points=[];
+    for(let i=0;i<count;i++){
+      if(values[i*2]===-2147483648){
+        const crossing=portalRoutes[values[i*2+1]];
+        if(!crossing)return {status:'unknown',points:null};
+        points.push(...crossing);
+      }else points.push({x:values[i*2],z:values[i*2+1]});
+    }
     return {status:'found',points};
   }
-  return {wasm,loadSector,ensureSector,ensureRect,connected,route,
+  refreshPortals();
+  return {wasm,loadSector,ensureSector,ensureRect,connected,route,refreshPortals,
     metrics:()=>({loaded:wasm.lazy_loaded_sectors(),updates:wasm.lazy_sector_updates(),memoryBytes:wasm.memory.buffer.byteLength})};
 }
