@@ -115,6 +115,24 @@ This is a native navigation/raid performance finding, not a campaign defeat
 or a proof of gate failure. The pilot is archived separately as
 `pilot-good-canyon-2026-7.zip`.
 
+A repeated seven-night run with per-step timing located the costly interval
+at simulated time 475–499 on day 7. Twelve of those ticks exceeded three
+seconds, and the largest took 30.34 seconds. A cooperative checkpoint at
+day 7, time 480 retained the exact native state. The phase trace at time 475
+shows repeated animal target searches against 178 crop candidates; individual
+animals spent about 2.8–3.2 seconds on approach paths while workers consumed
+less than one millisecond across the traced tick. The two raw runs and the
+checkpoint are in `canyon-day7-navigation-trace.zip`.
+
+An exact-state negative-result memo for animal target selection was tested
+and removed: on the day-7 checkpoint, AB/BA native ticks were 15.99 and
+15.46 seconds for the reference, 16.15 and 15.95 seconds for the candidate.
+All four serialized states had the same SHA-256 hash. The rejected comparison
+is retained in `canyon-day7-negative-cache-abba.json`. The expensive searches
+were new approach queries as other actors moved, so caching only identical
+world states did not address the bottleneck. No changed raid behavior from
+that experiment remains in the branch.
+
 ## Test baseline and limits
 
 The focused wall/canyon/worker suite passed 31 tests before the final
