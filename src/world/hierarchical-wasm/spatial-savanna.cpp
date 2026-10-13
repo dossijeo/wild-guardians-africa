@@ -1075,6 +1075,30 @@ int addBarrier(float x,float z,float halfX,float halfZ,int passMask,float yaw=0)
   refreshBarrier(barrier);
   return barrier.id;
 }
+// Far-field presentation queries use the same deterministic C++ recipe without
+// making an offscreen chunk resident or disturbing the selected actor graph.
+// Height/fluid sampling reads the selected pond and settlement neighborhood.
+struct ScopedTerrainSample {
+  int previousX,previousZ;
+  std::vector<double> previousLattice;
+  std::vector<Pond> previousPonds;
+  std::vector<size_t> previousSettlements;
+  ScopedTerrainSample(double x,double z):previousX(chunkX),previousZ(chunkZ){
+    previousLattice.swap(lattice);
+    previousPonds.swap(ponds);
+    previousSettlements.swap(nearbySettlements);
+    chunkX=int(std::floor((x+24)/side));
+    chunkZ=int(std::floor((z+24)/side));
+    selectNearbySettlements(chunkX,chunkZ);
+    preparePonds(chunkX,chunkZ);
+  }
+  ~ScopedTerrainSample(){
+    chunkX=previousX;chunkZ=previousZ;
+    previousLattice.swap(lattice);
+    previousPonds.swap(ponds);
+    previousSettlements.swap(nearbySettlements);
+  }
+};
 }
 
 extern "C" {
@@ -1215,12 +1239,27 @@ float spatial_surface(float x,float z){
     return std::numeric_limits<float>::quiet_NaN();
   return float(surface(x,z));
 }
+float spatial_surface_anywhere(float x,float z){
+  if(!chunkRasters||!std::isfinite(x)||!std::isfinite(z))
+    return std::numeric_limits<float>::quiet_NaN();
+  if(residentSample(x,z))return float(surface(x,z));
+  const ScopedTerrainSample context(x,z);
+  return float(surface(x,z));
+}
 float spatial_fluid_level(float x,float z){
   if(!std::isfinite(x)||!std::isfinite(z))
     return std::numeric_limits<float>::quiet_NaN();
   const ChunkSpatialSample* sample=residentSample(x,z);
   return sample?float(fluidLevelFor(x,z,sample->ponds)):
     std::numeric_limits<float>::quiet_NaN();
+}
+float spatial_fluid_level_anywhere(float x,float z){
+  if(!chunkRasters||!std::isfinite(x)||!std::isfinite(z))
+    return std::numeric_limits<float>::quiet_NaN();
+  if(const ChunkSpatialSample* sample=residentSample(x,z))
+    return float(fluidLevelFor(x,z,sample->ponds));
+  const ScopedTerrainSample context(x,z);
+  return float(fluidLevel(x,z));
 }
 float* spatial_heights_ptr(){return heights.data();}
 float* spatial_colors_ptr(){return colors.data();}

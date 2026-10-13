@@ -603,6 +603,43 @@ test('resident surface and water queries match both rendered chunks in every bio
     }
   }
 });
+
+test('far terrain queries use the same native recipe without loading chunks or changing selected visual data',()=>{
+  for(const biome of ['sabana','gran-rio','manglares','volcanes','gran-canon','desierto']){
+    const core=createSpatialWorld(module);
+    assert(Number.isNaN(core.surfaceAnywhere(100,70)));
+    assert(Number.isNaN(core.fluidLevelAnywhere(100,70)));
+    core.generate(712,0,0,biome);core.setSettlement(0,0,15,12);
+    core.buildNavigationProfile(1,.28,true);
+    core.buildNavigationProfile(0,1.1,false);
+    const selected=core.currentChunk(),visual=core.chunkPayload();
+    const before=core.metrics(),points=[{x:25.25,z:.75},{x:100.3,z:70.7},{x:-110.2,z:-61.4}];
+    const distant=points.map(point=>({point,height:core.surfaceAnywhere(point.x,point.z),
+      fluid:core.fluidLevelAnywhere(point.x,point.z)}));
+    for(const sample of distant){
+      assert(Number.isFinite(sample.height),`${biome} far height`);
+      assert(Number.isFinite(sample.fluid),`${biome} far fluid`);
+      assert(Number.isNaN(core.surface(sample.point.x,sample.point.z)));
+    }
+    assert.deepEqual(core.currentChunk(),selected);
+    assert.equal(core.metrics().loadedChunks,before.loadedChunks);
+    assert.equal(core.metrics().sectorUpdates,before.sectorUpdates);
+    assert.deepEqual(core.chunkPayload(),visual);
+    for(const sample of distant){
+      const {x,z}=sample.point;
+      core.addChunk(Math.floor((x+24)/48),Math.floor((z+24)/48));
+      assert(Math.abs(core.surface(x,z)-sample.height)<.00001,`${biome} far height ${x},${z}`);
+      assert(Math.abs(core.fluidLevel(x,z)-sample.fluid)<.00001,`${biome} far fluid ${x},${z}`);
+    }
+    const restored=createSpatialWorld(module);
+    restored.restoreState(core.snapshot());
+    for(const sample of distant){
+      const {x,z}=sample.point;
+      assert(Math.abs(restored.surfaceAnywhere(x,z)-sample.height)<.00001);
+      assert(Math.abs(restored.fluidLevelAnywhere(x,z)-sample.fluid)<.00001);
+    }
+  }
+});
 test('five animal radii retain independent logical graphs across profile switches and wall edits',()=>{
   const core=createSpatialSavannaPrototype(module);
   core.generate(712,0,0,'savanna');
