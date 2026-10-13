@@ -272,3 +272,49 @@ test('a turning four-chunk viewport reuses sectors and restores routes after rev
   }
   assert.equal(core.metrics().memoryBytes,4194304);
 });
+test('worker and animal graphs survive profile switches and local topology edits',()=>{
+  const core=createSpatialSavannaPrototype(module);
+  core.generate(712,0,0);core.addChunk(1,0);
+  assert.equal(core.buildNavigation(.28,true),32);
+  assert.equal(core.buildNavigation(1.1,false),32);
+  const updatesAfterBuild=core.metrics().sectorUpdates;
+  let crossing=null;
+  for(let z=-20;z<20&&!crossing;z++){
+    const start={x:23,z},end={x:24,z};
+    if(core.edge(start.x,start.z,end.x,end.z)&&core.route(start,end).status==='found'){
+      core.selectNavigation(true);
+      if(core.route(start,end).status==='found')crossing={start,end};
+      core.selectNavigation(false);
+    }
+  }
+  assert(crossing,'both movement profiles need a shared seam passage');
+  for(let i=0;i<20;i++){
+    assert.equal(core.selectNavigation(true),32);
+    validRoute(core,crossing.start,core.route(crossing.start,crossing.end));
+    assert.equal(core.selectNavigation(false),32);
+    validRoute(core,crossing.start,core.route(crossing.start,crossing.end));
+  }
+  assert.equal(core.metrics().sectorUpdates,updatesAfterBuild,'switching profiles must not rebuild either graph');
+  const wall=core.addWall(23.5,0,.8,24);
+  for(const worker of [true,false]){
+    core.selectNavigation(worker);
+    assert.equal(core.edge(23,crossing.start.z,24,crossing.start.z),false);
+    assert.notEqual(core.route(crossing.start,crossing.end).status,'found');
+  }
+  assert.equal(core.removeWall(wall),1);
+  for(const worker of [true,false]){
+    core.selectNavigation(worker);
+    validRoute(core,crossing.start,core.route(crossing.start,crossing.end));
+  }
+  assert.equal(core.removeChunk(1,0),1);
+  for(const worker of [true,false]){
+    assert.equal(core.selectNavigation(worker),16);
+    assert.equal(core.route(crossing.start,crossing.end).status,'unknown');
+  }
+  assert(core.addChunk(1,0)>0);
+  for(const worker of [true,false]){
+    assert.equal(core.selectNavigation(worker),32);
+    validRoute(core,crossing.start,core.route(crossing.start,crossing.end));
+  }
+  assert.equal(core.metrics().memoryBytes,4194304);
+});

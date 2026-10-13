@@ -7,8 +7,6 @@
 // The movement engine remains responsible for physical motion.
 namespace {
 constexpr int dx[4]={1,-1,0,0},dz[4]={0,0,1,-1};
-int sectorSize=0,updates=0;
-std::vector<uint8_t> stagedPass,stagedSteps,stagedInbound;
 struct Arc {int32_t to,fromCell,toCell,portal=-1;};
 struct Portal {int fromX,fromZ,toX,toZ;};
 struct Sector {
@@ -18,17 +16,52 @@ struct Sector {
   std::vector<std::vector<Arc>> edges;
   std::vector<uint8_t> unknown,weakUnknown;
 };
-std::unordered_map<uint64_t,Sector>* sectors=nullptr;
-std::vector<Sector*> byId;
-std::vector<int> freeIds;
-std::vector<int32_t> queueBuffer;
-std::vector<uint8_t> visited;
-std::vector<int32_t> previousNode,localParent,routePoints;
-std::vector<Arc> previousArc,arcChain;
-std::vector<Portal> portals;
-std::vector<int32_t> weakHead,weakTo,weakNext;
-std::vector<uint8_t> weakOpen;
-bool weakDirty=true;
+struct Context {
+  int sectorSize=0,updates=0;
+  std::vector<uint8_t> stagedPass,stagedSteps,stagedInbound;
+  std::unordered_map<uint64_t,Sector>* sectors=nullptr;
+  std::vector<Sector*> byId;
+  std::vector<int> freeIds;
+  std::vector<int32_t> queueBuffer;
+  std::vector<uint8_t> visited;
+  std::vector<int32_t> previousNode,localParent,routePoints;
+  std::vector<Arc> previousArc,arcChain;
+  std::vector<Portal> portals;
+  std::vector<int32_t> weakHead,weakTo,weakNext;
+  std::vector<uint8_t> weakOpen;
+  bool weakDirty=true;
+};
+// Standalone no-entry WASM does not run global C++ constructors. Construct
+// each profile on first use instead of relying on zeroed vector internals.
+Context* contexts[2]={nullptr,nullptr};
+int selectedContext=0;
+Context& active(){
+  Context*& context=contexts[selectedContext];
+  if(!context)context=new Context();
+  return *context;
+}
+// Keep the existing sector algorithm scoped to the selected movement profile.
+#define sectorSize (active().sectorSize)
+#define updates (active().updates)
+#define stagedPass (active().stagedPass)
+#define stagedSteps (active().stagedSteps)
+#define stagedInbound (active().stagedInbound)
+#define sectors (active().sectors)
+#define byId (active().byId)
+#define freeIds (active().freeIds)
+#define queueBuffer (active().queueBuffer)
+#define visited (active().visited)
+#define previousNode (active().previousNode)
+#define localParent (active().localParent)
+#define routePoints (active().routePoints)
+#define previousArc (active().previousArc)
+#define arcChain (active().arcChain)
+#define portals (active().portals)
+#define weakHead (active().weakHead)
+#define weakTo (active().weakTo)
+#define weakNext (active().weakNext)
+#define weakOpen (active().weakOpen)
+#define weakDirty (active().weakDirty)
 uint64_t key(int sx,int sz){return (static_cast<uint64_t>(static_cast<uint32_t>(sx))<<32)|static_cast<uint32_t>(sz);}
 Sector* get(int sx,int sz){const auto it=sectors->find(key(sx,sz));return it==sectors->end()?nullptr:&it->second;}
 int floorDiv(int n,int d){return n>=0?n/d:-((-n+d-1)/d);}
@@ -162,6 +195,10 @@ bool localPath(const Sector& sector,int from,int to){
 }
 
 extern "C" {
+int lazy_select_context(int profile){
+  if(profile<0||profile>=2)return 0;
+  selectedContext=profile;return 1;
+}
 int lazy_init(int size){
   if(size<2||size>32)return 0;
   sectorSize=size;updates=0;

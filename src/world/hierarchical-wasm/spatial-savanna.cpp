@@ -10,6 +10,7 @@
 // connected to production world generation or save files.
 extern "C" {
 int lazy_init(int size);
+int lazy_select_context(int profile);
 uint8_t* lazy_pass_ptr();
 uint8_t* lazy_steps_ptr();
 uint8_t* lazy_inbound_ptr();
@@ -33,6 +34,7 @@ struct Pond {double x,z,radius,level;};
 struct WaterPoint {double x,z;};
 struct Wall {int id;float x,z,halfX,halfZ;bool active;};
 struct ChunkRaster {int cx,cz;std::vector<uint8_t> pass,steps,inbound;};
+struct NavProfile {float radius=0;bool worker=false,ready=false;std::unordered_map<uint64_t,ChunkRaster> rasters;};
 uint32_t worldSeed=0;
 int chunkX=0,chunkZ=0,nextWallId=1;
 float radiusNow=.3f;
@@ -49,8 +51,27 @@ std::array<std::vector<int>,propBucketSide*propBucketSide> propBuckets;
 int haloPropCount=0;
 std::vector<Wall> walls;
 std::vector<uint8_t> staticPass,staticSteps,staticInbound;
+// No-entry WASM does not initialize C++ globals; construct profiles lazily.
+NavProfile* navProfiles[2]={nullptr,nullptr};
+NavProfile& navProfile(int index){
+  NavProfile*& profile=navProfiles[index];
+  if(!profile)profile=new NavProfile();
+  return *profile;
+}
+int activeProfile=0;
 std::unordered_map<uint64_t,ChunkRaster>* chunkRasters=nullptr;
 std::vector<std::pair<int,int>> loadedChunks;
+void saveProfile(){
+  NavProfile& profile=navProfile(activeProfile);
+  profile.radius=radiusNow;profile.worker=workerNow;profile.ready=navReady;
+}
+void selectProfile(int index){
+  saveProfile();activeProfile=index;
+  const NavProfile& profile=navProfile(index);
+  radiusNow=profile.radius;workerNow=profile.worker;navReady=profile.ready;
+  chunkRasters=&navProfile(index).rasters;
+  lazy_select_context(index);
+}
 uint64_t chunkKey(int cx,int cz){return (uint64_t(uint32_t(cx))<<32)|uint32_t(cz);}
 int floorDiv(int n,int d){return n>=0?n/d:-((-n+d-1)/d);}
 const ChunkRaster* rasterAt(int x,int z){
@@ -384,8 +405,15 @@ void refreshNeighborBorders(int cx,int cz){
 
 extern "C" {
 int spatial_generate(uint32_t seed,int cx,int cz){
-  worldSeed=seed;navReady=false;walls.clear();
-  if(!chunkRasters)chunkRasters=new std::unordered_map<uint64_t,ChunkRaster>();else chunkRasters->clear();
+  worldSeed=seed;walls.clear();
+  for(int profile=0;profile<2;profile++){
+    NavProfile& state=navProfile(profile);
+    state.rasters.clear();state.ready=false;
+    state.radius=0;state.worker=profile==1;
+    lazy_select_context(profile);lazy_init(sector);
+  }
+  activeProfile=0;radiusNow=.3f;workerNow=false;navReady=false;
+  chunkRasters=&navProfile(0).rasters;lazy_select_context(0);
   loadedChunks.clear();nextWallId=1;
   populateChunk(cx,cz);loadedChunks.emplace_back(cx,cz);
   return int(props.size());
@@ -395,19 +423,29 @@ int spatial_add_chunk(int cx,int cz){
   if(chunkRasters->count(chunkKey(cx,cz)))return 0;
   for(const auto& [x,z]:loadedChunks)if(x==cx&&z==cz)return 0;
   populateChunk(cx,cz);loadedChunks.emplace_back(cx,cz);
-  if(navReady){buildActiveRaster();commitActiveSectors();refreshNeighborBorders(cx,cz);}
+  const int previous=activeProfile;
+  for(int profile=0;profile<2;profile++){
+    selectProfile(profile);
+    if(!navReady)continue;
+    populateChunk(cx,cz);buildActiveRaster();commitActiveSectors();refreshNeighborBorders(cx,cz);
+  }
+  selectProfile(previous);
   return int(props.size())+1;
 }
 int spatial_remove_chunk(int cx,int cz){
   const auto it=std::find(loadedChunks.begin(),loadedChunks.end(),std::pair<int,int>{cx,cz});
   if(it==loadedChunks.end())return 0;
   loadedChunks.erase(it);
-  if(navReady){
+  const int previous=activeProfile;
+  for(int profile=0;profile<2;profile++){
+    selectProfile(profile);
+    if(!navReady)continue;
     chunkRasters->erase(chunkKey(cx,cz));
     const int firstX=(cx*side-24)/sector,firstZ=(cz*side-24)/sector;
     for(int sz=0;sz<4;sz++)for(int sx=0;sx<4;sx++)lazy_remove_sector(firstX+sx,firstZ+sz);
     refreshNeighborBorders(cx,cz);
   }
+  selectProfile(previous);
   if(chunkX==cx&&chunkZ==cz){
     if(!loadedChunks.empty())populateChunk(loadedChunks.back().first,loadedChunks.back().second);
     else {props.clear();solidProps.clear();ponds.clear();heights.clear();colors.clear();water.clear();waterLevels.clear();waterTriangles.clear();}
@@ -427,6 +465,8 @@ int spatial_prop_count(){return int(props.size());}
 int spatial_halo_prop_count(){return haloPropCount;}
 int spatial_build_nav(float radius,int worker){
   if(loadedChunks.empty()||!chunkRasters||radius<=0||radius>maxIndexedRadius)return 0;
+  selectProfile(worker?1:0);
+  if(navReady&&radiusNow==radius)return lazy_loaded_sectors();
   radiusNow=radius;workerNow=worker!=0;
   if(!lazy_init(sector))return 0;
   const int selectedX=chunkX,selectedZ=chunkZ;
@@ -436,19 +476,37 @@ int spatial_build_nav(float radius,int worker){
   }
   if(chunkX!=selectedX||chunkZ!=selectedZ)populateChunk(selectedX,selectedZ);
   navReady=true;
+  saveProfile();
   return lazy_loaded_sectors();
+}
+int spatial_select_nav_profile(int worker){
+  selectProfile(worker?1:0);
+  return navReady?lazy_loaded_sectors():0;
 }
 int spatial_add_wall(float x,float z,float halfX,float halfZ){
   if(halfX<=0||halfZ<=0)return 0;
   const int id=nextWallId++;walls.push_back({id,x,z,halfX,halfZ,true});
-  const int r=int(std::ceil(std::max(radiusNow,1.1f)))+1;
-  refreshRect(int(std::floor(x-halfX))-r,int(std::floor(z-halfZ))-r,int(std::ceil(x+halfX))+r,int(std::ceil(z+halfZ))+r);
+  const float maxRadius=std::max(navProfile(0).radius,navProfile(1).radius);
+  const int r=int(std::ceil(maxRadius))+1;
+  const int previous=activeProfile;
+  for(int profile=0;profile<2;profile++){
+    selectProfile(profile);
+    refreshRect(int(std::floor(x-halfX))-r,int(std::floor(z-halfZ))-r,int(std::ceil(x+halfX))+r,int(std::ceil(z+halfZ))+r);
+  }
+  selectProfile(previous);
   return id;
 }
 int spatial_remove_wall(int id){
   for(Wall& w:walls)if(w.id==id&&w.active){
-    w.active=false;const int r=int(std::ceil(std::max(radiusNow,1.1f)))+1;
-    refreshRect(int(std::floor(w.x-w.halfX))-r,int(std::floor(w.z-w.halfZ))-r,int(std::ceil(w.x+w.halfX))+r,int(std::ceil(w.z+w.halfZ))+r);
+    w.active=false;
+    const float maxRadius=std::max(navProfile(0).radius,navProfile(1).radius);
+    const int r=int(std::ceil(maxRadius))+1;
+    const int previous=activeProfile;
+    for(int profile=0;profile<2;profile++){
+      selectProfile(profile);
+      refreshRect(int(std::floor(w.x-w.halfX))-r,int(std::floor(w.z-w.halfZ))-r,int(std::ceil(w.x+w.halfX))+r,int(std::ceil(w.z+w.halfZ))+r);
+    }
+    selectProfile(previous);
     return 1;
   }
   return 0;

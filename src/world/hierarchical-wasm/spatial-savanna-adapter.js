@@ -89,6 +89,10 @@ export function createSpatialSavannaPrototype(module){
       const loaded=wasm.spatial_build_nav(radius,worker?1:0);
       navigationBuilt=loaded>0;return loaded;
     },
+    selectNavigation:worker=>{
+      const loaded=wasm.spatial_select_nav_profile(worker?1:0);
+      navigationBuilt=loaded>0;return loaded;
+    },
     addWall:(x,z,halfX,halfZ)=>wasm.spatial_add_wall(x,z,halfX,halfZ),
     removeWall:id=>wasm.spatial_remove_wall(id),
     walkable:(x,z)=>Boolean(wasm.spatial_walkable(x,z)),
