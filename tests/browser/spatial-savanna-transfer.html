@@ -131,6 +131,12 @@ try{
     const seamFractional=await request(candidate,{id:id++,op:'route-world',x:23.8,z:crossing.z,nx:24.2,nz:crossing.z});
     if(seamFractional.value!=='found'||!(seamFractional.routePoints instanceof Float32Array))
       throw Error('Continuous worker route did not cross two resident chunks');
+    const oriented=await request(candidate,{id:id++,op:'barrier-oriented-add',x:24.04,z:crossing.z,
+      halfX:.4,halfZ:.22,yaw:.65,passMask:0});
+    if(oriented.value<=0)throw Error('Oriented barrier command was rejected');
+    const orientedBlocked=await request(candidate,{id:id++,op:'route-world',x:24.02,z:crossing.z,nx:24.08,nz:crossing.z});
+    if(orientedBlocked.value==='found')throw Error('Oriented wall did not block the continuous route');
+    await request(candidate,{id:id++,op:'barrier-remove',barrierId:oriented.value});
     const wall=await request(candidate,{id:id++,op:'wall-add',x:23.5,z:0,halfX:.8,halfZ:24});
     if(wall.value<=0)throw Error('The wall command was rejected');
     const fractionalBlocked=await request(candidate,{id:id++,op:'route-world',x:24.02,z:crossing.z,nx:24.08,nz:crossing.z});
@@ -289,12 +295,13 @@ try{
     checks:{transferLengths:true,terrainSeam:true,wallEdit:!!topology,
       routePoints:topology?.routePointCount>=1,
       continuousRoute:!!topology,
+      orientedWall:!!topology,
       speciesProfiles:speciesProfiles?.smallSectors>=32&&speciesProfiles?.largeSectors>=32,
       dynamicPassage:!!barrierTopology,
       batchedTopology:batchTopology?.count===12,
       evictionRegeneration:topology?.sameVisualPayload===true,
       multipleSettlements:multipleSettlements?.sameFirstSettlement===true,
-      spatialReload:spatialReload?.version===3&&spatialReload?.removedProps===1,
+      spatialReload:spatialReload?.version===4&&spatialReload?.removedProps===1,
       propRemoval:propRemoval?.sectorUpdates>0,
       surfaceView:surfaceView?.difference<=.00002&&surfaceView?.otherChunkDifference<=.00005}};window.qaReady=true;
   status.textContent=JSON.stringify(window.qaStats,null,2);

@@ -8,6 +8,8 @@ import {chunkTransferables} from '../src/rendering/chunk-data.js';
 import {SpatialSurfaceView} from '../src/world/hierarchical-wasm/spatial-surface-view.js';
 import {ANIMAL_SPATIAL_PROFILES} from '../src/world/hierarchical-wasm/spatial-movement-profiles.js';
 import {createSpatialWorld} from '../src/world/hierarchical-wasm/spatial-world.js';
+import {addSpatialWall,addSpatialWallsBatch} from '../src/world/hierarchical-wasm/spatial-wall-bridge.js';
+import {wallCollisionFrame} from '../src/world/wall-collision-frame.js';
 
 const module=new WebAssembly.Module(readFileSync(new URL('../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
 function validRoute(core,start,result){
@@ -77,6 +79,66 @@ test('continuous actor connectors preserve fractional and negative positions wit
   core.removeBarrier(wall);
   assert.equal(core.routeWorld(fixture.start,fixture.end).status,'found');
 });
+test('oriented C++ wall footprints match the game collision frame and survive reload',()=>{
+  const core=createSpatialSavannaPrototype(module);
+  core.generate(712,0,0);core.buildNavigation(.28,true);
+  const radius=.28,yaw=.63;
+  let wall,entrance,exit;
+  for(let z=-14;z<=14&&!wall;z++)for(let x=-14;x<=14&&!wall;x++){
+    const a={x:x-Math.sin(yaw)*.7,z:z-Math.cos(yaw)*.7};
+    const b={x:x+Math.sin(yaw)*.7,z:z+Math.cos(yaw)*.7};
+    if(core.localClear(a,b)){
+      wall={kind:'wall',material:'adobe',status:'intact',x,z,yaw,baseScaleX:1.8};
+      entrance=a;exit=b;
+    }
+  }
+  assert(wall,'expected a clear rotated-wall test site');
+  const frame=wallCollisionFrame(wall),samples=[];
+  for(let lz=-1;lz<=1;lz+=.2)for(let lx=-3;lx<=3;lx+=.2){
+    const point={x:wall.x+lx*frame.c+lz*frame.s,z:wall.z-lx*frame.s+lz*frame.c};
+    samples.push({point,clear:core.localClear(point,point),inside:
+      Math.abs(lx)<frame.width+radius-.02&&Math.abs(lz)<frame.depth+radius-.02});
+  }
+  const id=addSpatialWall(core,wall);
+  assert(id>0);
+  assert.equal(core.localClear(entrance,exit),false);
+  for(const {point,clear,inside} of samples){
+    const lx=(point.x-wall.x)*frame.c-(point.z-wall.z)*frame.s;
+    const lz=(point.x-wall.x)*frame.s+(point.z-wall.z)*frame.c;
+    if(Math.abs(Math.abs(lx)-frame.width-radius)<.02||Math.abs(Math.abs(lz)-frame.depth-radius)<.02)continue;
+    assert.equal(core.localClear(point,point),clear&&!inside,
+      `rotated wall mismatch at ${point.x},${point.z}`);
+  }
+  assert.throws(()=>addSpatialWall(core,{...wall,gate:true}),/non-gate/);
+  const state=core.snapshot();assert.equal(state.version,4);
+  assert(Math.abs(state.barriers[0].yaw-yaw)<1e-6);
+  const restored=createSpatialSavannaPrototype(module);
+  restored.restoreState(state);restored.buildNavigation(.28,true);
+  assert.deepEqual(restored.snapshot(),state);
+  assert.equal(restored.localClear(entrance,exit),false);
+  core.removeBarrier(id);assert.equal(core.localClear(entrance,exit),true);
+});
+test('a rotated wall chain is one topology transaction with the same result as individual placement',()=>{
+  const single=createSpatialSavannaPrototype(module),batch=createSpatialSavannaPrototype(module);
+  for(const core of [single,batch]){
+    core.generate(712,0,0);core.buildNavigation(.28,true);core.buildNavigation(1.1,false);
+  }
+  const walls=Array.from({length:12},(_,i)=>({kind:'wall',material:i%2?'piedra':'adobe',
+    status:'intact',x:-15+i*2.5,z:-5+i*.3,yaw:i*.17,baseScaleX:1+i%3*.2}));
+  const beforeSingle=single.metrics().sectorUpdates,beforeBatch=batch.metrics().sectorUpdates;
+  const oneByOne=walls.map(wall=>addSpatialWall(single,wall));
+  const together=addSpatialWallsBatch(batch,walls);
+  assert.deepEqual(together,oneByOne);
+  assert.deepEqual(batch.snapshot(),single.snapshot());
+  assert(batch.metrics().sectorUpdates-beforeBatch<single.metrics().sectorUpdates-beforeSingle);
+  for(const worker of [true,false]){
+    single.selectNavigation(worker);batch.selectNavigation(worker);
+    for(let z=-12;z<=12;z+=3)for(let x=-17;x<=17;x+=3){
+      assert.equal(batch.walkable(x,z),single.walkable(x,z));
+      assert.deepEqual(batch.route({x,z},{x:x+3,z}),single.route({x,z},{x:x+3,z}));
+    }
+  }
+});
 test('the dry Desert chunk shares visible dunes, solid props and hierarchical routes',()=>{
   const core=createSpatialSavannaPrototype(module);
   core.generate(28,0,0,'desert');
@@ -102,7 +164,7 @@ test('the dry Desert chunk shares visible dunes, solid props and hierarchical ro
   }
   const wall=core.addBarrier(23.5,0,.8,5,0);assert(wall>0);
   const state=JSON.parse(JSON.stringify(core.snapshot()));
-  assert.equal(state.version,3);assert.equal(state.biome,'desert');
+  assert.equal(state.version,4);assert.equal(state.biome,'desert');
   const restored=createSpatialSavannaPrototype(module);
   restored.restoreState(state,0,0);restored.addChunk(1,0);
   restored.buildNavigation(.28,true);restored.buildNavigation(1.1,false);
@@ -661,6 +723,8 @@ test('a wall-chain batch matches individual barriers with one local refresh per 
   const updates=batch.metrics().sectorUpdates;
   assert.throws(()=>batch.addBarriersBatch([{x:5,z:6,halfX:.4,halfZ:.4},
     {x:6,z:6,halfX:-1,halfZ:.4}]),/Invalid spatial barrier batch/);
+  assert.throws(()=>batch.addBarriersBatch([{x:5,z:6,halfX:.4,halfZ:.4,yaw:NaN}]),
+    /Invalid spatial barrier batch/);
   assert.equal(batch.metrics().sectorUpdates,updates,'invalid input must not change topology');
   assert.equal(batch.addBarrier(21,4,.4,.4),single.addBarrier(21,4,.4,.4),
     'invalid batch must not consume barrier IDs');

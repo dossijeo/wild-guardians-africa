@@ -101,6 +101,8 @@ export function createSpatialWorld(module){
     addWall:(x,z,halfX,halfZ)=>wasm.spatial_add_wall(x,z,halfX,halfZ),
     removeWall:id=>wasm.spatial_remove_wall(id),
     addBarrier:(x,z,halfX,halfZ,passMask=0)=>wasm.spatial_add_barrier(x,z,halfX,halfZ,passMask),
+    addOrientedBarrier:(x,z,halfX,halfZ,yaw,passMask=0)=>
+      wasm.spatial_add_oriented_barrier(x,z,halfX,halfZ,yaw,passMask),
     removeProp:({group,gx,gz})=>wasm.spatial_remove_prop(group,gx,gz),
     addBarriersBatch:barriers=>addSpatialBarriersBatch(wasm,barriers),
     snapshot:()=>{

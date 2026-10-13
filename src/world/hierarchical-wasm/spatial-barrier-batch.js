@@ -5,12 +5,12 @@ export function addSpatialBarriersBatch(wasm,barriers){
     throw Error('Expected 1–1024 spatial barriers');
   const pointer=wasm.spatial_barrier_batch_ptr(barriers.length);
   if(!pointer)throw Error('Could not allocate the spatial barrier batch');
-  const input=new Float32Array(wasm.memory.buffer,pointer,barriers.length*5);
+  const input=new Float32Array(wasm.memory.buffer,pointer,barriers.length*6);
   barriers.forEach((barrier,index)=>{
-    const offset=index*5;
+    const offset=index*6;
     input[offset]=barrier.x;input[offset+1]=barrier.z;
     input[offset+2]=barrier.halfX;input[offset+3]=barrier.halfZ;
-    input[offset+4]=barrier.passMask??0;
+    input[offset+4]=barrier.yaw??0;input[offset+5]=barrier.passMask??0;
   });
   if(wasm.spatial_add_barriers_batch(barriers.length)!==barriers.length)
     throw Error('Invalid spatial barrier batch; no barrier was changed');

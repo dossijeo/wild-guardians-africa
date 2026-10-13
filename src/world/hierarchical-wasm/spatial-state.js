@@ -13,17 +13,18 @@ export function captureSpatialState(wasm){
   const barriers=[];
   const barrierCount=wasm.spatial_barrier_state_count();
   const barrierPointer=wasm.spatial_barrier_state_ptr();
-  const records=new DataView(wasm.memory.buffer,barrierPointer,barrierCount*24);
+  const records=new DataView(wasm.memory.buffer,barrierPointer,barrierCount*28);
   for(let i=0;i<barrierCount;i++){
-    const at=i*24;
+    const at=i*28;
     barriers.push({id:records.getInt32(at,true),x:records.getFloat32(at+4,true),
       z:records.getFloat32(at+8,true),halfX:records.getFloat32(at+12,true),
-      halfZ:records.getFloat32(at+16,true),passMask:records.getInt32(at+20,true)});
+      halfZ:records.getFloat32(at+16,true),yaw:records.getFloat32(at+20,true),
+      passMask:records.getInt32(at+24,true)});
   }
   const removedProps=[],removedCount=wasm.spatial_removed_prop_count();
   const removed=new Int32Array(wasm.memory.buffer,wasm.spatial_removed_prop_state_ptr(),removedCount*3);
   for(let i=0;i<removedCount;i++)removedProps.push({group:removed[i*3],gx:removed[i*3+1],gz:removed[i*3+2]});
-  return {version:3,biome:wasm.spatial_world_biome()===1?'desert':
+  return {version:4,biome:wasm.spatial_world_biome()===1?'desert':
     wasm.spatial_world_biome()===2?'grand_river':wasm.spatial_world_biome()===3?'volcanoes':
     wasm.spatial_world_biome()===4?'mangrove':wasm.spatial_world_biome()===5?'canyons':'savanna',
     seed:wasm.spatial_world_seed()>>>0,settlements,barriers,removedProps,
@@ -32,11 +33,11 @@ export function captureSpatialState(wasm){
 
 export function validateSpatialState(state){
   const finiteF32=value=>Number.isFinite(value)&&Number.isFinite(Math.fround(value));
-  if((state?.version!==1&&state?.version!==2&&state?.version!==3)||
+  if((state?.version!==1&&state?.version!==2&&state?.version!==3&&state?.version!==4)||
      (state.version>=2&&!['savanna','desert','grand_river','volcanoes','mangrove','canyons'].includes(state.biome))||
      !Number.isInteger(state.seed)||state.seed<0||state.seed>0xffffffff||
      !Array.isArray(state.settlements)||!Array.isArray(state.barriers)||
-     (state.version===3&&(!Array.isArray(state.removedProps)||state.removedProps.length>100000))||
+     (state.version>=3&&(!Array.isArray(state.removedProps)||state.removedProps.length>100000))||
      state.settlements.length>100000||state.barriers.length>100000||
      !Number.isInteger(state.nextBarrierId)||
      state.nextBarrierId<1||state.nextBarrierId>0x7fffffff)
@@ -49,6 +50,7 @@ export function validateSpatialState(state){
     if(!Number.isInteger(barrier.id)||barrier.id<=previous||barrier.id>=state.nextBarrierId||
       !finiteF32(barrier.x)||!finiteF32(barrier.z)||
       !finiteF32(barrier.halfX)||!finiteF32(barrier.halfZ)||
+      (state.version>=4&&!finiteF32(barrier.yaw))||
       barrier.halfX<=0||barrier.halfZ<=0||barrier.halfX>100||barrier.halfZ>100||
       !Number.isInteger(barrier.passMask)||barrier.passMask<0||barrier.passMask>3)
       throw TypeError('Invalid spatial barrier');
@@ -88,12 +90,13 @@ export function applySpatialState(wasm,state){
   if(count){
     const pointer=wasm.spatial_barrier_restore_ptr(count);
     if(!pointer)throw Error('Could not allocate spatial barrier state');
-    const records=new DataView(wasm.memory.buffer,pointer,count*24);
+    const records=new DataView(wasm.memory.buffer,pointer,count*28);
     state.barriers.forEach((barrier,i)=>{
-      const at=i*24;
+      const at=i*28;
       records.setInt32(at,barrier.id,true);records.setFloat32(at+4,barrier.x,true);
       records.setFloat32(at+8,barrier.z,true);records.setFloat32(at+12,barrier.halfX,true);
-      records.setFloat32(at+16,barrier.halfZ,true);records.setInt32(at+20,barrier.passMask,true);
+      records.setFloat32(at+16,barrier.halfZ,true);records.setFloat32(at+20,barrier.yaw??0,true);
+      records.setInt32(at+24,barrier.passMask,true);
     });
   }else wasm.spatial_barrier_restore_ptr(0);
   if(wasm.spatial_restore_barriers(count,state.nextBarrierId)!==1)

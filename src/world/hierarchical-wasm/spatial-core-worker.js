@@ -59,6 +59,7 @@ self.onmessage=async({data:request})=>{
         case 'wall-add':value=wasm.spatial_add_wall(request.x,request.z,request.halfX,request.halfZ);break;
         case 'wall-remove':value=wasm.spatial_remove_wall(request.wallId);break;
         case 'barrier-add':value=wasm.spatial_add_barrier(request.x,request.z,request.halfX,request.halfZ,request.passMask);break;
+        case 'barrier-oriented-add':value=wasm.spatial_add_oriented_barrier(request.x,request.z,request.halfX,request.halfZ,request.yaw,request.passMask);break;
         case 'barrier-batch-add':value=addSpatialBarriersBatch(wasm,request.barriers);break;
         case 'barrier-remove':value=wasm.spatial_remove_barrier(request.barrierId);break;
         case 'barrier-passability':value=wasm.spatial_set_barrier_passability(request.barrierId,request.passMask);break;

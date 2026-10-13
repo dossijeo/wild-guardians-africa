@@ -45,9 +45,9 @@ struct PropKeyHash {size_t operator()(const PropKey& key)const{
 struct Pond {double x,z,radius,level;};
 struct ChunkSpatialSample {std::vector<double> lattice;std::vector<Pond> ponds;};
 struct WaterPoint {double x,z;};
-struct Barrier {int id;float x,z,halfX,halfZ;uint8_t passMask;};
-struct BarrierStateRecord {int32_t id;float x,z,halfX,halfZ;int32_t passMask;};
-static_assert(sizeof(BarrierStateRecord)==24);
+struct Barrier {int id;float x,z,halfX,halfZ,yaw,c,s;uint8_t passMask;};
+struct BarrierStateRecord {int32_t id;float x,z,halfX,halfZ,yaw;int32_t passMask;};
+static_assert(sizeof(BarrierStateRecord)==28);
 struct SettlementStateRecord {float x,z,hx,hz;};
 static_assert(sizeof(SettlementStateRecord)==16);
 struct BarrierIndex {
@@ -147,11 +147,14 @@ const ChunkSpatialSample* residentSample(double x,double z,int* outCx=nullptr,in
 }
 constexpr int barrierBucketWidth=8;
 uint64_t barrierKey(int bx,int bz){return chunkKey(bx,bz);}
+float barrierExtentX(const Barrier& barrier){return std::abs(barrier.c)*barrier.halfX+std::abs(barrier.s)*barrier.halfZ;}
+float barrierExtentZ(const Barrier& barrier){return std::abs(barrier.s)*barrier.halfX+std::abs(barrier.c)*barrier.halfZ;}
 void indexBarrier(const Barrier& barrier,bool add){
-  const int minX=int(std::floor((barrier.x-barrier.halfX-maxIndexedRadius)/barrierBucketWidth));
-  const int maxX=int(std::floor((barrier.x+barrier.halfX+maxIndexedRadius)/barrierBucketWidth));
-  const int minZ=int(std::floor((barrier.z-barrier.halfZ-maxIndexedRadius)/barrierBucketWidth));
-  const int maxZ=int(std::floor((barrier.z+barrier.halfZ+maxIndexedRadius)/barrierBucketWidth));
+  const float extentX=barrierExtentX(barrier),extentZ=barrierExtentZ(barrier);
+  const int minX=int(std::floor((barrier.x-extentX-maxIndexedRadius)/barrierBucketWidth));
+  const int maxX=int(std::floor((barrier.x+extentX+maxIndexedRadius)/barrierBucketWidth));
+  const int minZ=int(std::floor((barrier.z-extentZ-maxIndexedRadius)/barrierBucketWidth));
+  const int maxZ=int(std::floor((barrier.z+extentZ+maxIndexedRadius)/barrierBucketWidth));
   auto& buckets=barrierIndex().buckets;
   for(int bz=minZ;bz<=maxZ;bz++)for(int bx=minX;bx<=maxX;bx++){
     const auto key=barrierKey(bx,bz);
@@ -596,8 +599,10 @@ bool barrierClear(double x,double z){
   if(bucket==index.buckets.end())return true;
   for(const int id:bucket->second){
     const Barrier& w=index.byId.at(id);
-    if(!(w.passMask&profileBit)&&
-    std::abs(x-w.x)<w.halfX+radiusNow&&std::abs(z-w.z)<w.halfZ+radiusNow)return false;
+    if(w.passMask&profileBit)continue;
+    const double dx=x-w.x,dz=z-w.z;
+    if(std::abs(dx*w.c-dz*w.s)<w.halfX+radiusNow&&
+       std::abs(dx*w.s+dz*w.c)<w.halfZ+radiusNow)return false;
   }
   return true;
 }
@@ -932,10 +937,11 @@ void refreshBarrier(const Barrier& barrier){
   const int r=int(std::ceil(maxRadius))+1,previous=activeProfile;
   for(int profile=0;profile<navigationProfiles;profile++){
     selectProfile(profile);
-    refreshRect(int(std::floor(barrier.x-barrier.halfX))-r,
-      int(std::floor(barrier.z-barrier.halfZ))-r,
-      int(std::ceil(barrier.x+barrier.halfX))+r,
-      int(std::ceil(barrier.z+barrier.halfZ))+r);
+    const float extentX=barrierExtentX(barrier),extentZ=barrierExtentZ(barrier);
+    refreshRect(int(std::floor(barrier.x-extentX))-r,
+      int(std::floor(barrier.z-extentZ))-r,
+      int(std::ceil(barrier.x+extentX))+r,
+      int(std::ceil(barrier.z+extentZ))+r);
   }
   selectProfile(previous);
 }
@@ -980,12 +986,14 @@ void flushBarrierBatch(){
     selectProfile(profile);
     if(!navReady)continue;
     std::unordered_set<uint64_t> sectors;
-    for(const Barrier& barrier:deferredBarrierRefresh)
-      forEachRectSector(int(std::floor(barrier.x-barrier.halfX))-r,
-        int(std::floor(barrier.z-barrier.halfZ))-r,
-        int(std::ceil(barrier.x+barrier.halfX))+r,
-        int(std::ceil(barrier.z+barrier.halfZ))+r,
+    for(const Barrier& barrier:deferredBarrierRefresh){
+      const float extentX=barrierExtentX(barrier),extentZ=barrierExtentZ(barrier);
+      forEachRectSector(int(std::floor(barrier.x-extentX))-r,
+        int(std::floor(barrier.z-extentZ))-r,
+        int(std::ceil(barrier.x+extentX))+r,
+        int(std::ceil(barrier.z+extentZ))+r,
         [&](int sx,int sz){sectors.insert(chunkKey(sx,sz));});
+    }
     // Stable order keeps the graph update deterministic across runtimes.
     std::vector<uint64_t> ordered(sectors.begin(),sectors.end());
     std::sort(ordered.begin(),ordered.end());
@@ -994,11 +1002,11 @@ void flushBarrierBatch(){
   selectProfile(previous);
   deferredBarrierRefresh.clear();
 }
-int addBarrier(float x,float z,float halfX,float halfZ,int passMask){
+int addBarrier(float x,float z,float halfX,float halfZ,int passMask,float yaw=0){
   if(!std::isfinite(x)||!std::isfinite(z)||!std::isfinite(halfX)||!std::isfinite(halfZ)||
-     halfX<=0||halfZ<=0||halfX>100||halfZ>100||passMask<0||passMask>3||
+     !std::isfinite(yaw)||halfX<=0||halfZ<=0||halfX>100||halfZ>100||passMask<0||passMask>3||
      nextBarrierId==std::numeric_limits<int>::max())return 0;
-  const Barrier barrier={nextBarrierId++,x,z,halfX,halfZ,uint8_t(passMask)};
+  const Barrier barrier={nextBarrierId++,x,z,halfX,halfZ,yaw,float(std::cos(yaw)),float(std::sin(yaw)),uint8_t(passMask)};
   barrierIndex().byId.emplace(barrier.id,barrier);
   indexBarrier(barrier,true);
   refreshBarrier(barrier);
@@ -1203,28 +1211,32 @@ int spatial_remove_barrier(int id){return spatial_remove_wall(id);}
 int spatial_add_barrier(float x,float z,float halfX,float halfZ,int passMask){
   return addBarrier(x,z,halfX,halfZ,passMask);
 }
+int spatial_add_oriented_barrier(float x,float z,float halfX,float halfZ,float yaw,int passMask){
+  return addBarrier(x,z,halfX,halfZ,passMask,yaw);
+}
 float* spatial_barrier_batch_ptr(int count){
   if(count<1||count>1024)return nullptr;
-  barrierBatch.resize(size_t(count)*5);
+  barrierBatch.resize(size_t(count)*6);
   return barrierBatch.data();
 }
 int* spatial_barrier_batch_ids_ptr(){return barrierBatchIds.data();}
 int spatial_add_barriers_batch(int count){
-  if(count<1||count>1024||barrierBatch.size()<size_t(count)*5||
+  if(count<1||count>1024||barrierBatch.size()<size_t(count)*6||
      count>std::numeric_limits<int>::max()-nextBarrierId)return 0;
   for(int i=0;i<count;i++){
-    const float x=barrierBatch[i*5],z=barrierBatch[i*5+1];
-    const float halfX=barrierBatch[i*5+2],halfZ=barrierBatch[i*5+3];
-    const float passMask=barrierBatch[i*5+4];
+    const float x=barrierBatch[i*6],z=barrierBatch[i*6+1];
+    const float halfX=barrierBatch[i*6+2],halfZ=barrierBatch[i*6+3];
+    const float yaw=barrierBatch[i*6+4],passMask=barrierBatch[i*6+5];
     if(!std::isfinite(x)||!std::isfinite(z)||!std::isfinite(halfX)||!std::isfinite(halfZ)||
+       !std::isfinite(yaw)||
        halfX<=0||halfZ<=0||halfX>100||halfZ>100||
        !std::isfinite(passMask)||passMask<0||passMask>3||std::floor(passMask)!=passMask)return 0;
   }
   barrierBatchIds.resize(count);
   batchingBarriers=true;
   for(int i=0;i<count;i++)barrierBatchIds[i]=addBarrier(
-    barrierBatch[i*5],barrierBatch[i*5+1],barrierBatch[i*5+2],barrierBatch[i*5+3],
-    int(barrierBatch[i*5+4]));
+    barrierBatch[i*6],barrierBatch[i*6+1],barrierBatch[i*6+2],barrierBatch[i*6+3],
+    int(barrierBatch[i*6+5]),barrierBatch[i*6+4]);
   batchingBarriers=false;
   flushBarrierBatch();
   return count;
@@ -1242,7 +1254,7 @@ int spatial_barrier_state_count(){return int(barrierIndex().byId.size());}
 BarrierStateRecord* spatial_barrier_state_ptr(){
   barrierState.clear();barrierState.reserve(barrierIndex().byId.size());
   for(const auto& [id,barrier]:barrierIndex().byId)
-    barrierState.push_back({id,barrier.x,barrier.z,barrier.halfX,barrier.halfZ,int(barrier.passMask)});
+    barrierState.push_back({id,barrier.x,barrier.z,barrier.halfX,barrier.halfZ,barrier.yaw,int(barrier.passMask)});
   std::sort(barrierState.begin(),barrierState.end(),[](const auto& a,const auto& b){return a.id<b.id;});
   return barrierState.data();
 }
@@ -1258,13 +1270,14 @@ int spatial_restore_barriers(int count,int nextId){
   for(const BarrierStateRecord& item:barrierState){
     if(item.id<=previousId||item.id>=nextId||item.passMask<0||item.passMask>3||
        !std::isfinite(item.x)||!std::isfinite(item.z)||
-       !std::isfinite(item.halfX)||!std::isfinite(item.halfZ)||
+       !std::isfinite(item.halfX)||!std::isfinite(item.halfZ)||!std::isfinite(item.yaw)||
        item.halfX<=0||item.halfZ<=0||item.halfX>100||item.halfZ>100)return 0;
     previousId=item.id;
   }
   batchingBarriers=true;
   for(const BarrierStateRecord& item:barrierState){
-    const Barrier barrier={item.id,item.x,item.z,item.halfX,item.halfZ,uint8_t(item.passMask)};
+    const Barrier barrier={item.id,item.x,item.z,item.halfX,item.halfZ,item.yaw,
+      float(std::cos(item.yaw)),float(std::sin(item.yaw)),uint8_t(item.passMask)};
     barrierIndex().byId.emplace(item.id,barrier);
     indexBarrier(barrier,true);
     refreshBarrier(barrier);
