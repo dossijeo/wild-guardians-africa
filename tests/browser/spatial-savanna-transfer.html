@@ -5,6 +5,9 @@
 </head><body><h1>Sabana · Web Worker real</h1><pre id="status">Iniciando medición…</pre><script type="module">
 import * as THREE from 'three';
 import {Navigation} from '../../src/world/navigation.js';
+import {TerrainField} from '../../src/world/terrain.js';
+import {nativeTerrainBuffer} from '../../src/rendering/terrain-geometry.js';
+import {nativeWaterBuffer} from '../../src/rendering/water-geometry.js';
 
 const status=document.querySelector('#status'),now=()=>performance.now();
 function request(worker,message){
@@ -19,6 +22,11 @@ function request(worker,message){
   });
 }
 function prepareThree(data,cx,cz){
+  if(data.terrain){
+    const start=now(),geometry=nativeTerrainBuffer(data.terrain),water=nativeWaterBuffer(data.water);
+    const vertices=geometry.getAttribute('position').count,waterVertices=water?.getAttribute('position').count??0;
+    geometry.dispose();water?.dispose();return {ms:now()-start,vertices,waterVertices};
+  }
   const start=now(),positions=new Float32Array(49*49*3),indices=new Uint16Array(48*48*6);
   for(let z=0;z<49;z++)for(let x=0;x<49;x++){
     const i=z*49+x;positions[i*3]=cx*48-24+x;positions[i*3+1]=data.heights[i];positions[i*3+2]=cz*48-24+z;
@@ -40,31 +48,72 @@ function prepareThree(data,cx,cz){
 }
 try{
   const profile=await fetch('/content/biome-savanna.json').then(response=>response.json()).then(pack=>pack.profile);
-  const seed=Number(new URLSearchParams(location.search).get('seed')??712);
+  const parameters=new URLSearchParams(location.search),seed=Number(parameters.get('seed')??712);
+  const sceneFormat=parameters.get('format')==='scene',settlement=parameters.get('settlement')==='1';
   const nav=new Navigation(String(seed),'sabana',profile),baseline=new Worker(new URL('../../src/rendering/chunk-worker.js',import.meta.url),{type:'module'});
+  if(settlement){
+    const x=10,z=8,hx=7,hz=6;
+    const samples=[[x-hx,z-hz],[x+hx,z-hz],[x,z],[x-hx,z+hz],[x+hx,z+hz]]
+      .map(([px,pz])=>nav.field.surface(px,pz)).sort((a,b)=>a-b);
+    nav.config.settlementSite={x,z,hx,hz,y:samples[2],yaw:0,
+      clearRadius:19,softRadius:25,haloRadius:32};
+    nav.field=new TerrainField(nav.config);
+  }
   const baselineFirst=await request(baseline,{id:1,epoch:0,config:nav.config,profile,cx:0,cz:0});
   const baselineSecond=await request(baseline,{id:2,epoch:0,config:nav.config,profile,cx:1,cz:0});
   baseline.terminate();
   const candidate=new Worker(new URL('./spatial-savanna-transfer-worker.js',import.meta.url),{type:'module'});
-  const candidateFirst=await request(candidate,{id:3,seed,cx:0,cz:0,reset:true,radius:1.1});
-  const candidateSecond=await request(candidate,{id:4,seed,cx:1,cz:0,radius:1.1});
+  const candidateFirst=await request(candidate,{id:3,seed,cx:0,cz:0,reset:true,radius:1.1,
+    format:sceneFormat?'scene':'raw',settlement:settlement?{x:10,z:8,hx:7,hz:6}:null});
+  const candidateSecond=await request(candidate,{id:4,seed,cx:1,cz:0,radius:1.1,
+    format:sceneFormat?'scene':'raw'});
+  let topology=null;
+  if(sceneFormat){
+    let crossing=null,id=5;
+    for(let z=-18;z<=18;z++){
+      const edge=await request(candidate,{id:id++,op:'edge',x:23,z,nx:24,nz:z});
+      if(!edge.value)continue;
+      const route=await request(candidate,{id:id++,op:'route',x:23,z,nx:24,nz:z});
+      if(route.value==='found'){crossing={x:23,z,nx:24,nz:z};break;}
+    }
+    if(!crossing)throw Error('No valid cross-chunk route before wall construction');
+    const wall=await request(candidate,{id:id++,op:'wall-add',x:23.5,z:0,halfX:.8,halfZ:24});
+    if(wall.value<=0)throw Error('The wall command was rejected');
+    const blocked=await request(candidate,{id:id++,op:'route',...crossing});
+    const removed=await request(candidate,{id:id++,op:'wall-remove',wallId:wall.value});
+    const reopened=await request(candidate,{id:id++,op:'route',...crossing});
+    if(blocked.value==='found'||removed.value!==1||reopened.value!=='found')
+      throw Error(`Wall topology did not close and reopen the route: ${blocked.value}, ${removed.value}, ${reopened.value}`);
+    topology={crossing,closedStatus:blocked.value,reopenedStatus:reopened.value,
+      wallAddMs:wall.timing.operationMs,wallRemoveMs:removed.timing.operationMs,
+      sectorUpdatesAfterAdd:wall.metrics.sectorUpdates,
+      sectorUpdatesAfterRemove:removed.metrics.sectorUpdates};
+  }
   candidate.terminate();
   for(const result of [candidateFirst,candidateSecond]){
-    if(result.data.heights.length!==2401||result.data.colors.length!==7203||
+    if(sceneFormat){
+      if(result.data.terrain.positions.length!==7203||result.data.terrain.colors.length!==7203||
+         result.data.terrain.indices.length!==13824||result.data.groundMask.length!==4900||
+         result.data.water.length%9!==0||result.data.instances.length!==20)
+        throw Error('Transferred scene payload has inconsistent lengths');
+    }else if(result.data.heights.length!==2401||result.data.colors.length!==7203||
        result.data.water.length!==2304||result.data.groundMask.length!==4900||result.data.waterLevels.length!==2304||
        result.data.waterTriangles.length%9!==0||
        result.data.props.byteLength!==result.data.count*28)
       throw Error('Transferred WASM buffers have inconsistent lengths');
   }
-  for(let z=0;z<49;z++)if(candidateFirst.data.heights[z*49+48]!==candidateSecond.data.heights[z*49])
+  for(let z=0;z<49;z++)if((sceneFormat?candidateFirst.data.terrain.positions[(z*49+48)*3+1]:candidateFirst.data.heights[z*49+48])!==
+    (sceneFormat?candidateSecond.data.terrain.positions[z*49*3+1]:candidateSecond.data.heights[z*49]))
     throw Error(`Transferred terrain seam differs at row ${z}`);
   const current=[baselineFirst,baselineSecond].map(result=>({roundtripMs:result.roundtripMs,
     bytes:result.data.terrain.byteLength+result.data.water.byteLength+result.data.groundMask.byteLength,
     props:result.data.instances.reduce((n,list)=>n+list.length,0)}));
   const spatial=[candidateFirst,candidateSecond].map(result=>({roundtripMs:result.roundtripMs,
     ...result.timing,three:prepareThree(result.data,result.cx,result.cz),
-    props:result.data.count,metrics:result.metrics}));
-  window.qaStats={seed,current,spatial,checks:{transferLengths:true,terrainSeam:true}};window.qaReady=true;
+    props:sceneFormat?result.data.instances.reduce((n,list)=>n+list.length,0):result.data.count,
+    metrics:result.metrics}));
+  window.qaStats={seed,sceneFormat,settlement,current,spatial,topology,
+    checks:{transferLengths:true,terrainSeam:true,wallEdit:!!topology}};window.qaReady=true;
   status.textContent=JSON.stringify(window.qaStats,null,2);
 }catch(error){window.qaError=String(error.stack??error);status.textContent=window.qaError;}
 </script></body></html>

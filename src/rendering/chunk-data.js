@@ -3,6 +3,7 @@ import {buildGroundData} from './terrain-source.js';
 import {nativeChunkWaterData} from './water-data.js';
 import {buildGroundMask417} from './ground-mask.js';
 import {chunkBounds} from './water-source.js';
+import {spatialChunkTransferables} from '../world/hierarchical-wasm/spatial-savanna-payload.js';
 
 // Same deterministic native recipes as the local renderer and navigation.
 // Suppression is applied at installation using the current logical state.
@@ -13,6 +14,4 @@ export function buildNativeChunk(config,profile,cx,cz){
   return {cx,cz,terrain,water,groundMask:buildGroundMask417(config,profile,field,bounds),instances};
 }
 export const chunkTransferables=data=>data.terrain instanceof Float32Array?
-  [data.terrain.buffer,data.water.buffer,data.groundMask.buffer]:
-  [data.terrain.positions.buffer,data.terrain.colors.buffer,data.terrain.indices.buffer,
-    data.water.buffer,data.groundMask.buffer];
+  [data.terrain.buffer,data.water.buffer,data.groundMask.buffer]:spatialChunkTransferables(data);
