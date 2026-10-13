@@ -265,6 +265,19 @@ overlapped the full test suite, inflating its absolute time, but found
 `day12-live-crops-phase-profile.json`. This is a separate navigation/search
 cost, so no improvement to gameplay frame stability is claimed from this
 audit. The military parameters have not been changed to conceal it.
+An isolated call-count profile of the same state (`day12-native-search-call-profile.json`)
+measured 55,242 native `approachPath` calls, only 22 successful, consuming
+35.85 of the 39.74 seconds in `Game.tick`. The group reachability prefilter
+ran 125 times (1.04 seconds); the group-blocked certificate ran 1,924 times
+and rejected none (0.30 seconds). The route attempts, rather than historical
+crop scans or virtual-player decisions, therefore account for this stall.
+
+A stricter grid-connectivity prefilter was tested and removed. It preserved
+the exact serialized state hash in AB/BA but made the tick slower:
+reference 39.05/42.83 seconds, candidate 45.62/46.01 seconds. This negative
+result is retained as `day12-reachability-exact-edges-abba.json` so further
+work can focus on reducing repeated route attempts, not on making this
+particular prefilter more expensive.
 The focused simulation, rendering, and virtual-player regressions passed,
 and the web build passed. The full repository suite was attempted but stopped
 after its legacy `campaign.test.js` child continued consuming CPU for more

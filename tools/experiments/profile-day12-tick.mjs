@@ -18,6 +18,19 @@ const pose=nativeCameraPose(nav.field,[center.x,0,center.z],nav.field.canyon?0:.
 nav.setRaidView({x:pose.eye[0],z:pose.eye[2]},center);
 nav.setActiveBounds(activeChunkRegion({x:pose.eye[0],z:pose.eye[2]}).bounds);
 const phases=new Map();
+const calls={approachPath:{count:0,success:0,milliseconds:0},approachReachability:{count:0,milliseconds:0},approachGroupBlocked:{count:0,rejected:0,milliseconds:0}};
+for(const name of Object.keys(calls)){
+ const original=nav[name].bind(nav),metric=calls[name];
+ nav[name]=(...args)=>{
+  const started=performance.now();let result;
+  try{result=original(...args);return result;}
+  finally{
+   metric.count++;metric.milliseconds+=performance.now()-started;
+   if(name==='approachPath'&&result)metric.success++;
+   if(name==='approachGroupBlocked'&&result)metric.rejected++;
+  }
+ };
+}
 nav.__nativeTickPhaseTrace=row=>{
  const value=phases.get(row.phase)??{calls:0,milliseconds:0,maxMilliseconds:0};
  value.calls++;value.milliseconds+=row.milliseconds??row.groupMilliseconds??0;
@@ -29,5 +42,5 @@ nav.__nativeTickPhaseTrace=row=>{
  phases.set(row.phase,value);
 };
 const before=serialize(s),started=performance.now();Game.tick(s,5,nav);
-const result={input,day:s.day,time:s.time,historyBefore:JSON.parse(before).plants.length,livingAfter:s.plants.filter(p=>p.alive).length,tickMilliseconds:performance.now()-started,phases:Object.fromEntries([...phases].sort((a,b)=>b[1].milliseconds-a[1].milliseconds)),stateChanged:serialize(s)!==before};
+const result={input,day:s.day,time:s.time,historyBefore:JSON.parse(before).plants.length,livingAfter:s.plants.filter(p=>p.alive).length,tickMilliseconds:performance.now()-started,phases:Object.fromEntries([...phases].sort((a,b)=>b[1].milliseconds-a[1].milliseconds)),calls,stateChanged:serialize(s)!==before};
 writeFileSync(output,JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));
