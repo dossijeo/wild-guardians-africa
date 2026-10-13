@@ -10,21 +10,26 @@ const suffix=process.env.WG_QA_SUFFIX?`-${process.env.WG_QA_SUFFIX}`:'';
 const ground=process.env.WG_QA_GROUND==='game'?'&ground=game':'';
 const water=process.env.WG_QA_WATER==='game'?'&water=game':'';
 const settlement=process.env.WG_QA_SETTLEMENT==='1'?'&settlement=1':'';
-const biome=process.env.WG_QA_BIOME==='desert'?'desert':'savanna';
+const biome=['savanna','desert','grand_river'].includes(process.env.WG_QA_BIOME)?
+  process.env.WG_QA_BIOME:'savanna';
 await mkdir(out,{recursive:true});
-const browser=await chromium.launch({headless:true});
+const browser=await chromium.launch({headless:true,
+  ...(process.env.WG_QA_CHROME_PATH?{executablePath:process.env.WG_QA_CHROME_PATH}:{})});
 const records=[];
 try{
   for(const seed of [712,28]){
     const page=await browser.newPage({viewport:{width:1600,height:900},deviceScaleFactor:1});
     const errors=[];
     page.on('pageerror',error=>errors.push(String(error)));
-    page.on('console',message=>{if(message.type()==='error')errors.push(message.text());});
+    page.on('response',response=>{if(response.status()>=400)errors.push(`${response.status()} ${response.url()}`);});
+    page.on('console',message=>{if(message.type()==='error'&&
+      !message.location().url.endsWith('/favicon.ico'))
+      errors.push(`${message.text()} ${JSON.stringify(message.location())}`);});
     await page.goto(`${url}/tests/browser/spatial-savanna-visual-compare.html?seed=${seed}&biome=${biome}${ground}${water}${settlement}`);
     await page.waitForFunction(()=>window.qaReady||window.qaError,{timeout:120000});
     const result=await page.evaluate(()=>({stats:window.qaStats,error:window.qaError??null}));
     if(result.error||errors.length)throw Error(JSON.stringify({seed,...result,errors}));
-    const file=`${out}/${biome==='desert'?'desierto':'sabana'}-seed-${seed}-js-vs-wasm${suffix}-1600x900.png`;
+    const file=`${out}/${{savanna:'sabana',desert:'desierto',grand_river:'gran-rio'}[biome]}-seed-${seed}-js-vs-wasm${suffix}-1600x900.png`;
     await page.screenshot({path:file});
     records.push({seed,file,stats:result.stats,errors});
     await page.close();

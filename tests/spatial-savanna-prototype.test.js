@@ -83,6 +83,35 @@ test('the dry Desert chunk shares visible dunes, solid props and hierarchical ro
   assert.deepEqual(restored.props(),props);
   assert.equal(restored.waterTriangles().length,0);
 });
+test('Grand River shares wet terrain, floating flora, solids and both route profiles',()=>{
+  const core=createSpatialSavannaPrototype(module);
+  core.generate(28,0,0,'grand_river');
+  const first=Float32Array.from(core.heights()),props=core.props();
+  assert(core.water().some(Boolean));
+  assert(core.waterTriangles().length>0);
+  assert(props.length>0);
+  const floating=props.filter(prop=>prop.slot===9);
+  assert(floating.length>0,'the river fixture should include floating plants');
+  for(const prop of floating)
+    assert(Math.abs(prop.y-core.fluidLevel(prop.x,prop.z))<.001,
+      'floating plants must sit on the C++ water surface');
+  const solid=props.find(prop=>prop.slot<=3||prop.slot>=10&&prop.slot<=12||prop.slot>=18);
+  assert(solid);
+  for(const [radius,worker] of [[.28,true],[1.1,false]]){
+    assert.equal(core.buildNavigation(radius,worker),16);
+    assert(core.propBlocked(solid.x,solid.z));
+    const {start,end}=crossing(core);
+    validRoute(core,start,core.route(start,end));
+  }
+  core.addChunk(1,0);
+  const east=core.heights();
+  for(let z=0;z<49;z++)assert.equal(first[z*49+48],east[z*49]);
+  const state=JSON.parse(JSON.stringify(core.snapshot()));
+  assert.equal(state.biome,'grand_river');
+  const restored=createSpatialSavannaPrototype(module);
+  restored.restoreState(state,0,0);
+  assert.deepEqual(restored.props(),props);
+});
 test('removing a generated obstacle changes the same visual and logical world and survives reload',()=>{
   for(const biome of ['savanna','desert']){
     const core=createSpatialSavannaPrototype(module);
@@ -566,17 +595,20 @@ test('a neighboring chunk owns the instance while its footprint blocks our edge'
   assert(caseFound,'expected a neighboring tree or rock to overlap a tested seam');
 });
 test('indexed obstacle checks agree with every visible solid across the surrounding chunks',()=>{
-  const core=createSpatialSavannaPrototype(module),neighbor=createSpatialSavannaPrototype(module),solids=[];
-  for(let cz=-1;cz<=1;cz++)for(let cx=-1;cx<=1;cx++){
-    neighbor.generate(712,cx,cz);
-    solids.push(...neighbor.props().filter(p=>p.slot<=3||p.slot>=10&&p.slot<=12||p.slot>=18));
-  }
-  core.generate(712,0,0);
-  for(const [radius,worker] of [[.28,true],[1.1,false]]){
-    core.buildNavigation(radius,worker);
-    for(let z=-24;z<24;z++)for(let x=-24;x<24;x++){
-      const expected=solids.some(p=>Math.hypot(p.x-x,p.z-z)<p.radius+radius);
-      assert.equal(core.propBlocked(x,z),expected,`prop occupancy at ${x},${z}, radius ${radius}`);
+  for(const biome of ['savanna','desert','grand_river']){
+    const core=createSpatialSavannaPrototype(module),neighbor=createSpatialSavannaPrototype(module),solids=[];
+    for(let cz=-1;cz<=1;cz++)for(let cx=-1;cx<=1;cx++){
+      neighbor.generate(712,cx,cz,biome);
+      solids.push(...neighbor.props().filter(p=>p.slot<=3||p.slot>=10&&p.slot<=12||p.slot>=18));
+    }
+    core.generate(712,0,0,biome);
+    for(const [radius,worker] of [[.28,true],[1.1,false]]){
+      core.buildNavigation(radius,worker);
+      for(let z=-24;z<24;z++)for(let x=-24;x<24;x++){
+        const expected=solids.some(p=>Math.hypot(p.x-x,p.z-z)<p.radius+radius);
+        assert.equal(core.propBlocked(x,z),expected,
+          `${biome} prop occupancy at ${x},${z}, radius ${radius}`);
+      }
     }
   }
 });

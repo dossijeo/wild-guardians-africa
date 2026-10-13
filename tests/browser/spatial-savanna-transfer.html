@@ -49,11 +49,12 @@ function prepareThree(data,cx,cz){
 }
 try{
   const parameters=new URLSearchParams(location.search),seed=Number(parameters.get('seed')??712);
-  const biome=parameters.get('biome')==='desert'?'desert':'savanna';
+  const biome=['savanna','desert','grand_river'].includes(parameters.get('biome'))?
+    parameters.get('biome'):'savanna';
   const profile=await fetch(`/content/biome-${biome}.json`).then(response=>response.json()).then(pack=>pack.profile);
   const sceneFormat=parameters.get('format')==='scene',settlement=parameters.get('settlement')==='1';
   const multiple=parameters.get('multi')==='1';
-  const nav=new Navigation(String(seed),biome==='desert'?'desierto':'sabana',profile),baseline=new Worker(new URL('../../src/rendering/chunk-worker.js',import.meta.url),{type:'module'});
+  const nav=new Navigation(String(seed),{savanna:'sabana',desert:'desierto',grand_river:'gran-rio'}[biome],profile),baseline=new Worker(new URL('../../src/rendering/chunk-worker.js',import.meta.url),{type:'module'});
   if(settlement){
     const x=10,z=8,hx=7,hz=6;
     const samples=[[x-hx,z-hz],[x+hx,z-hz],[x,z],[x-hx,z+hz],[x+hx,z+hz]]

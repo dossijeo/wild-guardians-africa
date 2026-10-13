@@ -56,7 +56,8 @@ self.onmessage=async({data:request})=>{
         case 'restore':{
           const state=validateSpatialState(request.state);
           seed=null;biome=null;
-          wasm.spatial_generate_biome(state.seed,(state.biome??'savanna')==='desert'?1:0,
+          wasm.spatial_generate_biome(state.seed,(state.biome??'savanna')==='desert'?1:
+            state.biome==='grand_river'?2:0,
             request.cx??0,request.cz??0);
           applySpatialState(wasm,state);
           for(const profile of request.profiles??[{radius:.28,worker:true},{radius:1.1,worker:false}])
@@ -73,13 +74,13 @@ self.onmessage=async({data:request})=>{
     }
     const started=performance.now();
     const requestedBiome=request.biome??biome??'savanna';
-    if(requestedBiome!=='savanna'&&requestedBiome!=='desert')throw Error('Unsupported spatial biome');
+    if(!['savanna','desert','grand_river'].includes(requestedBiome))throw Error('Unsupported spatial biome');
     if(request.read){
       if(seed!==request.seed||biome!==requestedBiome||!wasm.spatial_select_chunk(request.cx,request.cz))
         throw Error('Requested spatial chunk is not resident in this world');
     }else if(request.reset||seed!==request.seed||biome!==requestedBiome){
       seed=request.seed;biome=requestedBiome;
-      wasm.spatial_generate_biome(seed,biome==='desert'?1:0,request.cx,request.cz);
+      wasm.spatial_generate_biome(seed,biome==='desert'?1:biome==='grand_river'?2:0,request.cx,request.cz);
       if(request.settlement){const {x,z,hx,hz}=request.settlement;wasm.spatial_set_settlement(x,z,hx,hz);}
       if(request.profiles){
         for(const profile of request.profiles)wasm.spatial_build_nav(profile.radius,profile.worker?1:0);
