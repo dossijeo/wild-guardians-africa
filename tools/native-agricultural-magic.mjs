@@ -4,6 +4,7 @@ import {performance} from 'node:perf_hooks';
 import {castPickedSpell} from '../src/app/spell-placement.js';
 import {ToolSession} from '../src/ui/tool-session.js';
 import {isMature} from '../src/simulation/crops.js';
+import {activeCrops} from '../src/simulation/active-crops.js';
 import {permission} from '../src/simulation/rules.js';
 
 export const AGRICULTURAL_MAGIC_CADENCE=Object.freeze({intensive:1,moderate:4,scarce:25,none:Infinity});
@@ -29,7 +30,7 @@ export function createAgriculturalMagicPolicy({mode='moderate'}={}){
    const areas=s.spells.filter(a=>a.remaining>0&&a.targetPlantId===undefined);
    for(const a of s.spells)if(a.remaining>0&&a.targetPlantId!==undefined)occupied.add(a.targetPlantId);
    const kinds=lastKind==='growth'?['multiply','growth']:['growth','multiply'];
-   const live=s.plants.filter(p=>p.alive);let chosen=null,kind=null;
+   const live=activeCrops(s.plants);let chosen=null,kind=null;
    for(const k of kinds){
     if(!permission(s,k))continue;
     for(let n=0;n<live.length;n++){

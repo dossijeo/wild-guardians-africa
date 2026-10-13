@@ -1,6 +1,7 @@
 import {PROFILES} from '../simulation/workforce.js';
 import {vfxDefinitions,vfxEnvironment} from './vfx-native.js';
 import {WorkTargetIndex} from './work-target-index.js';
+import {activeCrops} from '../simulation/active-crops.js';
 const definitions=new Map(vfxDefinitions.map(d=>[d.id,d]));
 const durations={water:3.4,harvest:3.6,repair:3.8};
 
@@ -13,7 +14,7 @@ export function workVfxPlans(state,targetIndex=null){
     // flee or idle. Tasks are local; the optional target cache verifies live edits.
     tasks??=new Map(state.tasks.map(t=>[t.id,t]));
     const task=tasks.get(worker.taskId);if(!task)continue;
-    targets??=targetIndex?targetIndex.forState(state):new Map([...state.plants,...state.structures].map(e=>[e.id,e]));
+    targets??=targetIndex?targetIndex.forState(state):new Map([...activeCrops(state.plants),...state.structures].map(e=>[e.id,e]));
     const target=targets.get(task.targetId);if(!target)continue;
     let kind=task.kind,id,elapsed,duration;
     const speed=PROFILES.find(p=>p.id===worker.profile)?.speed??1;

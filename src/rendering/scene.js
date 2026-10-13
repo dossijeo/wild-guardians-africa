@@ -43,6 +43,7 @@ import {NativeSky,skyNight} from './sky.js';
 import {waterTime} from './world-atmosphere.js';
 import {nativeChunkWater,nativeAssetWater,nativeWaterBuffer} from './water-geometry.js';
 import {cropSpec} from '../simulation/rules.js';
+import {activeCrops} from '../simulation/active-crops.js';
 import {BIOME_IDS} from '../world/navigation.js';
 import {createCropBatch,createCropBatchAsync} from './crop-batch.js';
 import {loadCropBridges} from './crop-library.js';
@@ -485,7 +486,7 @@ export class WorldScene {
     this.prepareUpcomingAnimalRigs(s);
     const desired=new Set();
     for(const v of s.villages){desired.add(v.id);if(!this.objects.has(v.id)){const mesh=this.villageMesh(v);this.objects.set(v.id,mesh);this.scene.add(mesh);}}
-    const visiblePlants=s.plants.filter(p=>p.alive&&Math.hypot(p.x-this.controls.target.x,p.z-this.controls.target.z)<140);
+    const visiblePlants=activeCrops(s.plants).filter(p=>Math.hypot(p.x-this.controls.target.x,p.z-this.controls.target.z)<140);
     if(visiblePlants.length>this.cropBatch.capacity)loadingSyncWitness(this.onLoadingSpan,'sync-crop-resize',()=>{this.cropBatch.dispose();this.cropBatch=createCropBatch(this.scene,this.renderer,this.cropGltf,this.cropBridgeData,2**Math.ceil(Math.log2(visiblePlants.length)));});
     if(this.onLoadingSpan)loadingSyncWitness(this.onLoadingSpan,'sync-crop-update',()=>this.cropBatch.update(visiblePlants,s.elapsed,(x,z)=>this.nav.field.surface(x,z),this.renderOrigin,this.nav.field));
     else this.cropBatch.update(visiblePlants,s.elapsed,(x,z)=>this.nav.field.surface(x,z),this.renderOrigin,this.nav.field);
@@ -526,7 +527,7 @@ export class WorldScene {
     const hits=this.raycaster.intersectObjects([...this.objects.values()],true);
     let entityId=null;for(const hit of hits){let object=hit.object;while(object&&!object.userData.entityId)object=object.parent;if(object){entityId=object.userData.entityId;break;}}
     let closest=hits[0]?.distance??Infinity;const point=new THREE.Vector3(),box=new THREE.Box3();
-    for(const plant of this.state.plants.filter(p=>p.alive)) {
+    for(const plant of activeCrops(this.state.plants)) {
       const y=this.nav.field.surface(plant.x,plant.z),sample=this.cropBatch.sample(plant.species,plant.growth),radius=plant.species==='platano'?.65:.45;
       box.min.set(plant.x-radius,y,plant.z-radius);box.max.set(plant.x+radius,y+Math.max(.16,sample.height),plant.z+radius);
       if(this.raycaster.ray.intersectBox(box,point)){const distance=point.distanceTo(this.raycaster.ray.origin);if(distance<closest){closest=distance;entityId=plant.id;}}
@@ -565,7 +566,7 @@ export class WorldScene {
     return boxes.filter(b=>b.max[0]>=loX&&b.min[0]<=hiX&&b.max[2]>=loZ&&b.min[2]<=hiZ);
   }
   tutorialGuideTarget(){
-    const step=this.state.tutorial.step,magicGuide=['magic.growth','magic.multiply'].includes(this.state.tutorial.reading),key=step+':'+this.tutorialToolKind+':'+this.nav.version+(magicGuide?':'+this.state.tutorial.reading+':'+this.tutorialSpellKind+':'+this.state.spells.length+':'+this.state.plants.length+':'+Math.floor(this.state.elapsed*5):'');
+    const step=this.state.tutorial.step,magicGuide=['magic.growth','magic.multiply'].includes(this.state.tutorial.reading),key=step+':'+this.tutorialToolKind+':'+this.nav.version+(magicGuide?':'+this.state.tutorial.reading+':'+this.tutorialSpellKind+':'+this.state.spells.length+':'+activeCrops(this.state.plants).length+':'+Math.floor(this.state.elapsed*5):'');
     let config=null;
     if(this.tutorialHandsEnabled!==false&&this.state.day===1&&!this.state.result&&(step!=='done'||magicGuide)){
       if(this.handTargetKey!==key){this.handTargetKey=key;this.handTargetCache=tutorialHandTarget(this.state,this.nav,this.tutorialToolKind,this.tutorialSpellKind);}config=this.handTargetCache;

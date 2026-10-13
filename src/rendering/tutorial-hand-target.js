@@ -1,6 +1,7 @@
 import {agriculturalGuidePlant} from '../tutorial/agricultural-guide.js';
 import {previewSpell,previewCenter} from '../simulation/game.js';
 import {centerGeometry,centerServicePoint} from '../world/centers.js';
+import {activeCrops} from '../simulation/active-crops.js';
 // World hands appear only after the corresponding placement tool is chosen.
 export function tutorialHandTarget(state,nav,toolKind=null,toolSpell=null){
   const reading=state.tutorial.reading;
@@ -24,7 +25,7 @@ export function tutorialHandTarget(state,nav,toolKind=null,toolSpell=null){
     }
     return null;
   }
-  if(!center||state.plants.some(p=>p.alive))return null;
+  if(!center||activeCrops(state.plants).length)return null;
   const departure=centerServicePoint(center,state,.8),seen=new Set();
   // Reach beyond the authored footprint even for the wider Sahel centre.
   const searchRings=Math.max(8,Math.ceil(centerGeometry(center,state).radius+3.6+1.5));

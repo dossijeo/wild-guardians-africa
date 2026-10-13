@@ -7,6 +7,7 @@ import {raidEntryChunks,includeRaidBounds} from '../world/raid-entry-residency.j
 import {raidEntryKey} from '../world/raid-entry-data.js';
 import {exteriorRaidEntry} from './raid-exterior-entry.js';
 import {createCropGrouping} from './crop-components.js';
+import {activeCrops} from './active-crops.js';
 import {RAID_NOTICE_TEXT} from './raid-notice.js';
 import {warmRaidNavigation} from '../world/raid-navigation-warmth.js';
 import {centerBoundaryPoint,centerCulture,centerDeliveryPoint} from '../world/centers.js';
@@ -147,7 +148,7 @@ export function chooseRaidEntry(s,specs,bounds,preferredSide,nav){
   // Require native target approaches rather than granting river crossings.
   const connectedBase=(state,group,box,side,navigation)=>{
     const entry=baseRaidEntry(state,group,box,side,navigation);if(!entry)return null;
-    const targets=[...state.structures.filter(t=>operational(t)||t.kind==='wall'&&t.hp>0&&t.status!=='collapsing'),...state.plants.filter(p=>p.alive)];
+    const targets=[...state.structures.filter(t=>operational(t)||t.kind==='wall'&&t.hp>0&&t.status!=='collapsing'),...activeCrops(state.plants)];
     return entry.entries.every((point,i)=>targets.length===0||targets.slice().sort((a,b)=>dist(a,point)-dist(b,point)).slice(0,8).some(target=>reachableApproach({...point,radius:group[i].radius},target,navigation)))?entry:null;
   };
   // The existing projected-camera fallback may need a bounded land detour.
@@ -202,7 +203,7 @@ export function spawnRaid(s,plan,nav,daytime=false) {
     {raidId:s.raid.id,fingerprint:prepared.targetFingerprint,startIndex:s.raid.animals.length-animals.length,animalIds:animals.map(a=>a.id),choices:prepared.targetChoices}:null;
   trace?.({stage:'target-hint',prepared:!!prepared,choices:prepared?.targetChoices?.length??0,accepted:!!nav.preparedRaidTargets});
   if(plan.introductory&&!daytime){
-    const count=s.plants.filter(p=>p.alive).length;
+    const count=activeCrops(s.plants).length;
     s.raid.introPlantCount=count;s.raid.introCropLimit=Math.max(0,Math.min(count-1,Math.ceil(count*.2)));s.raid.introCropsDestroyed=0;
   }
   for(const w of wave?[]:s.workers) {
@@ -213,7 +214,7 @@ export function spawnRaid(s,plan,nav,daytime=false) {
   }
   s.tasks=s.tasks.filter(t=>t.kind!=='repair');
   if(!wave)notice(s,RAID_NOTICE_TEXT,animals[0].id);
-  const exposed=s.plants.filter(p=>p.alive);
+  const exposed=activeCrops(s.plants);
   emit(s,wave?'RaidWaveSpawned':'RaidSpawned',{raidFacts:{id:s.raid.id,day:s.day,daytime,elapsed:s.elapsed,waveIndex:s.raid.waveIndex??0,pressureFacts:s.raid.pressureFacts??null,exposedLiving:exposed.length,exposedWounded:exposed.filter(p=>(p.attackHits??0)>0).length,actors:animals.map(a=>({id:a.id,species:a.species,hitsRemaining:a.hitsRemaining,...(a.damageProfile?{damageProfile:structuredClone(a.damageProfile)}:{}),spawn:{...a.spawn},exit:{...a.exit}}))}});mark?.('spawned');return true;
 }
 function release(s,a) {if(a.reservation&&s.raid.reservations[a.reservation]===a.id){delete s.raid.reservations[a.reservation];s.raid.waitRevision=((s.raid.waitRevision??0)+1)>>>0;}a.reservation=null;a.targetId=null;a.path=null;a.approach=null;a.approachShieldId=null;}
@@ -241,7 +242,7 @@ export function raidTarget(s,id){
   const eligible=t=>t.id===id&&(!('alive' in t)||canAttackCrop(s,t))&&(!('status' in t)||t.status==='intact');
   // Keep crop-first selection and eligibility without allocating a copy of
   // the complete farm history for every animal and simulation step.
-  return s.plants.find(eligible)??s.structures.find(eligible);
+  return activeCrops(s.plants).find(eligible)??s.structures.find(eligible);
 }
 function targetFor(s,a,nav) {
   const trace=nav.__nativeTickPhaseTrace;

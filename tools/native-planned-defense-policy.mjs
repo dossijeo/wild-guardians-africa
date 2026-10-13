@@ -5,6 +5,7 @@ import {numberOf} from '../src/simulation/money.js';
 import {permission,wallSpec} from '../src/simulation/rules.js';
 import {wallStroke,WALL_UNIT} from '../src/world/wall-layout.js';
 import {centerServicePoint} from '../src/world/centers.js';
+import {activeCrops} from '../src/simulation/active-crops.js';
 import {closedDefenseContours} from './native-closed-defense-policy.mjs';
 
 const strokeOptions={smooth:false,snap:false};
@@ -36,13 +37,13 @@ export function createNativePlannedDefensePolicy({startDay=6,material='zarzas',i
  function observe(s){
   if(s.day!==observedDay){
    observedDay=s.day;
-   if(completed&&s.plants.some(p=>p.alive&&!inside(p,completed.bounds)))needsExpansion=true;
+   if(completed&&activeCrops(s.plants).some(p=>!inside(p,completed.bounds)))needsExpansion=true;
   }
   if(s.events.at(-1)?.id===lastEventId)return;
   const previous=s.events.findIndex(event=>event.id===lastEventId);
   for(const event of s.events.slice(previous+1)){
    if(event.type==='CropPlaced'&&completed){
-    const crop=s.plants.find(p=>p.id===event.targetId);
+    const crop=activeCrops(s.plants).find(p=>p.id===event.targetId);
     if(crop&&!inside(crop,completed.bounds))needsExpansion=true;
    }
    if(event.type==='StructureRuined'&&s.structures.some(w=>w.id===event.targetId&&w.kind==='wall'))breaches++;
@@ -76,7 +77,7 @@ export function createNativePlannedDefensePolicy({startDay=6,material='zarzas',i
   // A cheap slot comparison is sufficient to decide whether the intention is
   // finished. It says nothing about enemy access or a certified enclosure.
   const missing=wallStroke(plan.points,s.structures,strokeOptions);
-  if(!missing.length){completed=plan;plan=null;contourIndex=0;needsExpansion=s.plants.some(p=>p.alive&&!inside(p,completed.bounds));history.push({day:s.day,time:s.time,kind:'trace-filled',version:completed.version});return 0;}
+  if(!missing.length){completed=plan;plan=null;contourIndex=0;needsExpansion=activeCrops(s.plants).some(p=>!inside(p,completed.bounds));history.push({day:s.day,time:s.time,kind:'trace-filled',version:completed.version});return 0;}
   const funds=Math.max(0,numberOf(s.ledger.balance)-reserve);
   const count=Math.min(chunkPieces,missing.length,Math.floor(funds/pieceCost));
   if(!count)return 0;
@@ -90,7 +91,7 @@ export function createNativePlannedDefensePolicy({startDay=6,material='zarzas',i
    // This is a placement check, never a route or perimeter certificate.
    if(!Game.quoteWallChain(s,material,plan.points,nav,strokeOptions).pieces.length){
     const finished=plan;completed=finished;plan=null;contourIndex=0;
-    needsExpansion=s.plants.some(p=>p.alive&&!inside(p,finished.bounds));
+    needsExpansion=activeCrops(s.plants).some(p=>!inside(p,finished.bounds));
     history.push({day:s.day,time:s.time,kind:'trace-obstructed',version:finished.version,unplaced:missing.length});
     return 0;
    }

@@ -9,7 +9,7 @@ test('Living farm anchors do not read historical coordinates; mutations affect t
   assert.equal(idleFarmAnchor(state,worker,center,state.plants.filter(p=>p.alive)).id,'farm-live');
   state.plants=[{id:'old',centerId:'center',alive:false,x:1,z:0},live];
   live.alive=false;
-  assert.equal(idleFarmAnchor(state,worker,center,state.plants.filter(p=>p.alive)).id,'farm-old');
+  assert.equal(idleFarmAnchor(state,worker,center,state.plants.filter(p=>p.alive)).id,'farm-center');
   live.alive=true;live.x=-1;
   assert.equal(idleFarmAnchor(state,worker,center,state.plants.filter(p=>p.alive)).id,'farm-live');
 });
@@ -23,5 +23,5 @@ test('An earlier harvest invalidates a shared living subset without retaining st
   const subset=state.plants.filter(p=>p.alive);
   assert.equal(idleFarmAnchor(state,worker,center,subset).id,'farm-live');
   live.alive=false;
-  assert.equal(idleFarmAnchor(state,worker,center,subset).id,'farm-old');
+  assert.equal(idleFarmAnchor(state,worker,center,subset).id,'farm-center');
 });

@@ -1,5 +1,6 @@
 import {contractExpired} from './workforce.js';
 import {cancelIdle} from './idle.js';
+import {activeCrops} from './active-crops.js';
 
 export function enqueue(state,centerId,kind,targetId) {
   if(!centerId || state.tasks.some(t=>t.kind===kind&&t.targetId===targetId))return null;
@@ -34,17 +35,16 @@ export function reserveTasks(state,canExecute=()=>true) {
     const blocked=state.tasks.filter(t=>!t.workerId&&t.blocked);
     if(!blocked.length)return;
     const missing=new Set(blocked.map(t=>t.targetId));
-    for(const group of [state.plants,state.crates,state.structures]){
+    for(const group of [activeCrops(state.plants),state.crates,state.structures]){
       if(!missing.size)break;
       for(const entity of group){missing.delete(entity.id);if(!missing.size)break;}
     }
     for(const t of blocked)if(!missing.has(t.targetId))t.blocked=false;
     return;
   }
-  // Resolve pending targets once. Historical crops/crates remain in the save,
-  // but must not be copied and searched separately for every queued task.
+  // Resolve pending targets once. Dead crops remain only in save history.
   const needed=new Set(state.tasks.filter(t=>!t.workerId).map(t=>t.targetId)),targets=new Map();
-  for(const group of [state.plants,state.crates,state.structures]) {
+  for(const group of [activeCrops(state.plants),state.crates,state.structures]) {
     if(!needed.size)break;
     for(const entity of group) {
       if(needed.delete(entity.id))targets.set(entity.id,entity);

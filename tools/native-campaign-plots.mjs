@@ -1,4 +1,5 @@
 import {activeChunkRegion} from '../src/world/active-region.js';
+import {activeCrops} from '../src/simulation/active-crops.js';
 import {nativeCameraPose} from '../src/rendering/terrain-camera.js';
 import {centerServicePoint} from '../src/world/centers.js';
 import {footprintFluidSample} from '../src/world/fluid-placement.js';
@@ -37,7 +38,7 @@ export function createNativeCampaignPlots(nav,getState,{spacing=1.5,checksPerDec
   if(okay&&reuseAccess)p.accessVersion=nav.version;
   return okay;}
  function choose(){
-  const s=getState(),occupied=new Set(s.plants.filter(p=>p.alive).map(p=>p.x+','+p.z));
+  const s=getState(),occupied=new Set(activeCrops(s.plants).map(p=>p.x+','+p.z));
   // Reused plots revalidate current walls, fluids and paths; old legality is not cached.
   let attempts=0;
   for(let n=0;n<plots.length&&attempts<checksPerDecision;n++){

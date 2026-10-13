@@ -21,7 +21,7 @@ test('raid target lookup retains the previous selection across crop damage, intr
 });
 
 test('raid target lookup does not spread or copy a large farm history',()=>{
- const plants=Array.from({length:16000},(_,i)=>({id:'old-'+i,alive:false}));
+ const plants=Array.from({length:16000},()=>({get id(){throw Error('Dead crop ID read');},alive:false}));
  const crop={id:'crop',alive:true,attackHits:0},structure={id:'center',status:'intact'};
  plants.push(crop);
  const structures=[structure],state={plants,structures,raid:{}};

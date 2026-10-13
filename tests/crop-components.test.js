@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createCropGrouping} from '../src/simulation/crop-components.js';
 import {contiguousGroup} from '../src/simulation/crops.js';
+import {cropBecameInactive} from '../src/simulation/active-crops.js';
 
 test('selection-scoped components preserve reference BFS identity and ordering across dense, sparse and duplicate-ID farms',()=>{
  let seed=712;const random=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/2**32;};
@@ -30,6 +31,7 @@ test('fresh selection scopes reflect destroyed, harvested and newly planted crop
  const plants=Array.from({length:100},(_,i)=>({id:'p-'+i,species:'mijo',alive:true,x:i*1.5,z:0}));
  assert.equal(createCropGrouping(plants).group(plants[0]).length,100);
  plants[40].alive=false;
+ cropBecameInactive(plants);
  assert.equal(createCropGrouping(plants).group(plants[0]).length,40);
  plants.push({id:'new',species:'mijo',alive:true,x:60,z:0});
  assert.deepEqual(createCropGrouping(plants).group(plants[0]),contiguousGroup(plants,plants[0]));

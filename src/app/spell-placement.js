@@ -1,9 +1,10 @@
 import {cast} from '../simulation/game.js';
+import {activeCrops} from '../simulation/active-crops.js';
 
 // A tall crop can occlude terrain several metres behind it. Entity selection
 // takes precedence so a power aimed at that crop actually covers the crop.
 export function castPickedSpell(state,id,kind,{entityId,point},nav){
-  const plant=state.plants.find(p=>p.id===entityId&&p.alive);
+  const plant=activeCrops(state.plants).find(p=>p.id===entityId);
   if(kind!=='shield'){
     if(!plant)return false;
     return cast(state,id,kind,plant.x,plant.z,nav,plant.id);

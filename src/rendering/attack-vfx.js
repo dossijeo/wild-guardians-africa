@@ -1,6 +1,7 @@
 import {centerBoundaryPoint,centerCulture} from '../world/centers.js';
 import {vfxDefinitions,vfxEnvironment} from './vfx-native.js';
 import {ANIMAL_ACTIONS} from '../simulation/animal-actions-data.js';
+import {activeCrops} from '../simulation/active-crops.js';
 
 const definitions=new Map(vfxDefinitions.map(d=>[d.id,d]));
 // Last decorative contact in each original composition. A combo still consumes
@@ -21,7 +22,7 @@ function frame(species,animal,target){
 function shieldFor(state,target){return state.spells.find(s=>s.kind==='shield'&&s.remaining>0&&Math.hypot(s.x-target.x,s.z-target.z)<=s.radius);}
 
 export function attackVfxPlans(state){
-  const plans=new Map(),targets=new Map([...state.plants,...state.structures].map(t=>[t.id,t]));
+  const plans=new Map(),targets=new Map([...activeCrops(state.plants),...state.structures].map(t=>[t.id,t]));
   for(const animal of state.raid?.animals??[]){
     if(animal.status!=='attacking'||animal.hitApplied||animal.hitsRemaining<=0||!animal.attackId||!(animal.attackDuration>0))continue;
     const target=targets.get(animal.targetId),contact=attackVfxContacts[animal.species];

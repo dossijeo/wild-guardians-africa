@@ -1,4 +1,5 @@
 import {rational,add,negate,multiply,compare,numberOf} from './money.js';
+import {activeCrops} from './active-crops.js';
 
 // Frozen candidate: 12 original 30-second, +50% growth applications;
 // 12 reference millet harvests at 11 coins. Never derives from farm wealth.
@@ -58,9 +59,9 @@ export function agriculturalPowerReport(s,day=s.day){
     const a=days?.[kind]??{budget:rational(AGRICULTURAL_POWER[kind]),requested:zero(),committed:zero(),consumed:zero(),liquidated:zero(),paid:'0',applications:0};
     let pending=zero();
     if(kind==='growth')for(const spell of s.spells??[]){
-      if(spell.kind===kind&&spell.remaining>0&&spell.power?.day===Number(day)&&s.plants?.some(p=>p.id===spell.targetPlantId&&p.alive))pending=add(pending,subtract(spell.power.amount,spell.power.consumed??zero()));
+      if(spell.kind===kind&&spell.remaining>0&&spell.power?.day===Number(day)&&activeCrops(s.plants??[]).some(p=>p.id===spell.targetPlantId))pending=add(pending,subtract(spell.power.amount,spell.power.consumed??zero()));
     }
-    else for(const e of [...(s.plants??[]),...(s.crates??[])])if(e.multiplyPower?.day===Number(day)&&e.alive!==false&&!e.delivered&&!e.multiplyPowerSettled)pending=add(pending,e.multiplyPower.amount);
+    else for(const e of [...activeCrops(s.plants??[]),...(s.crates??[])])if(e.multiplyPower?.day===Number(day)&&!e.delivered&&!e.multiplyPowerSettled)pending=add(pending,e.multiplyPower.amount);
     return [kind,{...a,available:subtract(a.budget,a.committed),pending,forfeited:subtract(subtract(a.committed,a.consumed),pending),unpaidFraction:subtract(a.liquidated,rational(a.paid))}];
   }));
 }

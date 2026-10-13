@@ -1,9 +1,10 @@
 import {nextRandom,randomInt,cropSpec} from './rules.js';
 import {isMature} from './crops.js';
+import {activeCrops} from './active-crops.js';
 import {emit,notice} from './game.js';
 export function selectEvent(s) {
   if(s.eventPlan || nextRandom(s)>=.2)return;
-  const eligible=s.plants.filter(p=>p.alive);
+  const eligible=activeCrops(s.plants);
   const counts=new Map();for(const p of eligible)counts.set(p.species,(counts.get(p.species)??0)+1);
   const species=[...counts].filter(([,count])=>count>=5).map(([id])=>id);
   const specific=nextRandom(s)<.6;
@@ -16,7 +17,7 @@ export function selectEvent(s) {
 }
 export function applyEvent(s) {
   const event=s.eventPlan;if(!event||event.applied)return;
-  const eligible=s.plants.filter(p=>p.alive&&(!event.species||p.species===event.species));
+  const eligible=activeCrops(s.plants).filter(p=>!event.species||p.species===event.species);
   // Sampling without replacement; the persisted RNG guarantees reload equivalence.
   for(let i=eligible.length-1;i>0;i--){const j=randomInt(s,0,i);[eligible[i],eligible[j]]=[eligible[j],eligible[i]];}
   const selected=eligible.slice(0,event.negative?Math.floor(eligible.length*event.affectedFraction):eligible.length);
@@ -45,4 +46,3 @@ export function applyEvent(s) {
     emit(s,'AgriculturalEventApplied',{kind:event.kind,targets:event.targetIds,day:s.day,noticeId:s.messages.at(-1).id});
   }
 }
-

@@ -1,4 +1,5 @@
 // Last-resort physical exit for an exhausted animal whose assigned retreat
+import {activeCrops} from './active-crops.js';
 // corridor became disconnected. The candidate must stay outside the farm and
 // every metre to it is validated by the native body-width swept test.
 const RADII=[4,6,8,12];
@@ -7,7 +8,7 @@ export function animalLocalRetreatExit(state,actor,nav,prior=null){
  if(actor.status!=='retreating'||!nav.walkable||!nav.segmentClear)return null;
  let minX=Infinity,maxX=-Infinity,minZ=Infinity,maxZ=-Infinity;
  const include=p=>{minX=Math.min(minX,p.x);maxX=Math.max(maxX,p.x);minZ=Math.min(minZ,p.z);maxZ=Math.max(maxZ,p.z);};
- for(const p of state.plants)if(p.alive)include(p);
+ for(const p of activeCrops(state.plants))include(p);
  for(const o of state.structures)if(o.status==='intact')include(o);
  if(!Number.isFinite(minX))return null;
  const centerX=(minX+maxX)/2,centerZ=(minZ+maxZ)/2;

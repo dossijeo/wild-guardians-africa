@@ -236,6 +236,42 @@ path fallback where connectivity cannot be proven.
 
 ## Test baseline and limits
 
+## Historical crop scan audit (day-12 snapshot)
+
+The `1,194 plants` previously reported for the expansive Sabana seed-123
+pilot at day 12 counted all records retained by the save model. Only 266
+were alive at the captured state. The daily live counts for nights 1–12 were
+96, 126, 163, 156, 187, 142, 187, 268, 225, 305, 266, and 208. The
+largest observed live count in this pilot was 311. The arbitrary figure of
+200 is **not** used as a cap or balance target.
+
+Runtime scans in the game simulation, render/VFX layer, and virtual-player
+policies now use the shared `activeCrops` index where only living crops can
+be relevant. Historical crop records remain in the save state, and an
+explicit `historicalPlants` metric is retained for diagnostics; they are not
+discarded from persistence. Focused regressions cover dead-crop exclusion
+from target lookups, task selection, work effects, placement and capacity.
+
+This change does **not** resolve the dominant day-12 stall. In the archived
+state just before the night-12 raid, an AB/BA 5-second native tick comparison
+with camera-derived raid entry produced identical serialized state hashes.
+Reference times were 41.82/42.61 seconds, versus 43.31/41.85 seconds after
+the live-crop scan change. See `day12-live-crops-native-camera-abba.json`.
+The phase trace attributes almost all of the long tick to raid target
+selection, specifically 1,923 native approach-path checks. An isolated
+run measured roughly 40 seconds for the tick; a later instrumented run
+overlapped the full test suite, inflating its absolute time, but found
+123.3 seconds in approach-path checks out of 131.0 seconds total. See
+`day12-live-crops-phase-profile.json`. This is a separate navigation/search
+cost, so no improvement to gameplay frame stability is claimed from this
+audit. The military parameters have not been changed to conceal it.
+The focused simulation, rendering, and virtual-player regressions passed,
+and the web build passed. The full repository suite was attempted but stopped
+after its legacy `campaign.test.js` child continued consuming CPU for more
+than six minutes; at the stop the log contained 865 passes and 43 failures.
+This branch therefore does not claim a green full suite.
+
+
 The focused wall/canyon/worker suite passed 31 tests before the final
 documentation update, including a worker returning through the automatic gate
 after save/reload and four workers simultaneously inside a closed perimeter.
