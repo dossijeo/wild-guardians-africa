@@ -1,0 +1,41 @@
+{
+  "status": "observed-isolated-qa",
+  "sourceHead": null,
+  "inputSha256": "65e5de27074c631325f9532b64eb0199631854974a700bf5290872cfb5908980",
+  "day": 12,
+  "time": 119.99999999999699,
+  "wallId": "structure-4224",
+  "wallHp": 100,
+  "navVersion": 118,
+  "runs": {
+    "coldMs": 1136.5086999999999,
+    "warmMs": 2.6207999999999174,
+    "nonlethalHpChangeMs": 861.2476000000001,
+    "restoredMs": 2.7678000000000793
+  },
+  "equivalent": true,
+  "proofSummary": {
+    "valid": false,
+    "reason": "native-service-component-unproven",
+    "checks": [
+      {
+        "radius": 1.1,
+        "services": {
+          "reason": "native-service-poses-in-positive-closed-components",
+          "poses": 5568,
+          "certified": 4399
+        }
+      },
+      {
+        "radius": 0.9,
+        "services": {
+          "reason": "native-service-component-unproven",
+          "poses": 4856,
+          "certified": 4050,
+          "targetId": "plant-10697"
+        }
+      }
+    ]
+  },
+  "scope": "Read-only copy of a retained state; one wall loses one HP without changing status/geometry, then is restored. Same native quote, view and geometry epoch. No campaign result or game integration."
+}

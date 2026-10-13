@@ -10,7 +10,10 @@ export function nativeServiceComponentProof(s,view,targets,radius,outside,outlin
  // successful per-target service certificates; new crops still receive all 32
  // physical pose checks. Ad-hoc/mutable diagnostic views take the full path.
  const cacheable=view.state===s&&Number.isSafeInteger(view.version);
- const cacheKey=cacheable?JSON.stringify([view.version,radius,outside.x,outside.z,outline,s.structures.map(c=>[c.id,c.kind,c.status,c.hp,c.x,c.z,c.yaw])]):null;
+ // HP loss above the collapse threshold does not change collision geometry or
+ // service reachability. Status, pose and the native geometry epoch still
+ // invalidate certificates on collapse, repair/rebuild or movement.
+ const cacheKey=cacheable?JSON.stringify([view.version,radius,outside.x,outside.z,outline,s.structures.map(c=>[c.id,c.kind,c.status,c.x,c.z,c.yaw,c.gate,c.material,c.baseScaleX,c.culture])]):null;
  let scopes=cacheable?positiveServiceCertificates.get(view):null;
  if(cacheable&&!scopes){scopes=new Map();positiveServiceCertificates.set(view,scopes);}
  let cache=scopes?.get(cacheKey);

@@ -67,3 +67,21 @@ test('native positive service certificates reuse unchanged crops but check new c
  const d=nativeServiceComponentProof(s,v,[first,second],radius,outside,outline);
  assert.deepEqual(d,c);assert.equal(segments,256,'Geometry epoch invalidates all certificates');
 });
+test('nonlethal wall HP changes retain service certificates; collapse status invalidates them',()=>{
+ const wall={id:'wall',kind:'wall',status:'intact',hp:100,x:3,z:0,yaw:0};
+ const s={structures:[wall]},v=view();v.state=s;v.version=7;v.approachRegionBlocked=()=>true;
+ const segment=v.segmentClear;let segments=0;
+ v.segmentClear=(...args)=>{segments++;return segment(...args);};
+ const crop={id:'crop',x:0,z:0};
+ const first=nativeServiceComponentProof(s,v,[crop],radius,outside,outline);
+ assert(first.valid);assert.equal(segments,64);
+ wall.hp=99;
+ assert.deepEqual(nativeServiceComponentProof(s,v,[crop],radius,outside,outline),first);
+ assert.equal(segments,64,'HP-only wear does not alter service geometry');
+ wall.status='collapsing';
+ assert.deepEqual(nativeServiceComponentProof(s,v,[crop],radius,outside,outline),first);
+ assert.equal(segments,128,'a structural status change invalidates the certificate');
+ wall.status='intact';wall.gate=true;
+ assert.deepEqual(nativeServiceComponentProof(s,v,[crop],radius,outside,outline),first);
+ assert.equal(segments,192,'an in-place wall geometry change invalidates the certificate');
+});

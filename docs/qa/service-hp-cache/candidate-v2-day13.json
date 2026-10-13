@@ -1,0 +1,64 @@
+{
+  "status": "observed-isolated-qa",
+  "sourceHead": null,
+  "inputSha256": "ecb5dd11f7ad6b8a384dfb12dc74cd9ef2c6deba626a200c96d9cd57d5ca1181",
+  "day": 13,
+  "time": 139.9999999999957,
+  "wallId": "structure-4224",
+  "wallHp": 100,
+  "navVersion": 211,
+  "runs": {
+    "coldMs": 2657.5027,
+    "warmMs": 4.4309000000002925,
+    "nonlethalHpChangeMs": 4.328700000000026,
+    "restoredMs": 4.798899999999776
+  },
+  "equivalent": true,
+  "proofSummary": {
+    "valid": false,
+    "reason": "native-worker-route-blocked",
+    "checks": [
+      {
+        "radius": 1.1,
+        "services": {
+          "reason": "native-service-poses-in-positive-closed-components",
+          "poses": 4864,
+          "certified": 4141
+        }
+      },
+      {
+        "radius": 0.9,
+        "services": {
+          "reason": "native-service-poses-in-positive-closed-components",
+          "poses": 4864,
+          "certified": 4336
+        }
+      },
+      {
+        "radius": 0.97,
+        "services": {
+          "reason": "native-service-poses-in-positive-closed-components",
+          "poses": 4864,
+          "certified": 4250
+        }
+      },
+      {
+        "radius": 0.85,
+        "services": {
+          "reason": "native-service-poses-in-positive-closed-components",
+          "poses": 4864,
+          "certified": 4374
+        }
+      },
+      {
+        "radius": 1.55,
+        "services": {
+          "reason": "native-service-poses-in-positive-closed-components",
+          "poses": 4864,
+          "certified": 3630
+        }
+      }
+    ]
+  },
+  "scope": "Read-only copy of a retained state; one wall loses one HP without changing status/geometry, then is restored. Same native quote, view and geometry epoch. No campaign result or game integration."
+}
