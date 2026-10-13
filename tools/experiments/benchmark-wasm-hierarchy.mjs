@@ -39,12 +39,12 @@ function requests(nav){
   return out;
 }
 const rows=[];
-for(const variant of ['javascript','wasm-hier','wasm-flat','wasm-flat','wasm-hier','javascript']){
+for(const variant of ['javascript','wasm-hier','wasm-flat','wasm-tree','wasm-tree','wasm-flat','wasm-hier','javascript']){
   const state=structuredClone(saved),nav=new Navigation(state.seed,state.biome,profile);nav.setState(state);
   const queries=requests(nav),before=process.memoryUsage().rss;
   let construction,initialization,impl;
   if(variant!=='javascript'){
-    construction=await timed(()=>createHierarchicalWasmNavigatorSync(module,nav,{minX,minZ,maxX,maxZ,radius,worker:false,sectorSize:12,diagonal:variant==='wasm-flat'}));
+    construction=await timed(()=>createHierarchicalWasmNavigatorSync(module,nav,{minX,minZ,maxX,maxZ,radius,worker:false,sectorSize:12,diagonal:variant!=='wasm-hier'}));
     impl=construction.value;initialization=await timed(()=>impl.initialize());
   }else{
     construction=await timed(()=>createHierarchicalNavigationAdapter(nav));impl=construction.value;
@@ -61,7 +61,7 @@ for(const variant of ['javascript','wasm-hier','wasm-flat','wasm-flat','wasm-hie
   const passes=[];
   for(const phase of ['cold','warm']){
     const measured=await timed(()=>queries.map(({start,end,kind})=>{
-      const route=variant==='wasm-hier'?impl.route(start,end):variant==='wasm-flat'?impl.flatRoute(start,end):impl.path(start,end,radius,null,false,32);
+      const route=variant==='wasm-hier'?impl.route(start,end):variant==='wasm-flat'?impl.flatRoute(start,end):variant==='wasm-tree'?impl.treeRoute(start,end):impl.path(start,end,radius,null,false,32);
       let valid=!!route,previous=start;
       for(const point of route??[]){if(!nav.segmentClear(previous,point,radius,null,false))valid=false;previous=point;}
       return {kind,found:!!route,valid};
@@ -72,7 +72,7 @@ for(const variant of ['javascript','wasm-hier','wasm-flat','wasm-flat','wasm-hie
   }
   const facade=await timed(()=>queries.map(({start,end,kind})=>{
     const path=variant==='javascript'?impl.path(start,end,radius,null,false,32):
-      impl.path(start,end,{flat:variant==='wasm-flat'});
+      impl.path(start,end,{flat:variant==='wasm-flat',tree:variant==='wasm-tree'});
     let valid=!!path,previous=start;
     for(const point of path??[]){if(!point||!nav.segmentClear(previous,point,radius,null,false))valid=false;previous=point;}
     return {kind,found:!!path,valid};

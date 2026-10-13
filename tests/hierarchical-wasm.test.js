@@ -52,6 +52,21 @@ test('C++ flat A* baseline and hierarchy obey the same wall and breach',async()=
   assert.equal(core.flatRoute(start,end),null);
 });
 
+test('C++ shared-origin tree reuses explored cells and invalidates after a breach closes',async()=>{
+  const f=fixture();f.blocked.delete('11,12');
+  const core=await createHierarchicalWasmNavigator(wasm,f.nav,{minX:0,minZ:0,maxX:23,maxZ:23,radius:.5,sectorSize:8,diagonal:true});
+  core.initialize();
+  const start={x:3,z:12};
+  for(const end of [{x:19,z:12},{x:20,z:12},{x:20,z:13}]){
+    const route=core.treeRoute(start,end);assert(route?.length>0);
+    let previous=start;for(const point of route){assert(f.clear(previous,point));previous=point;}
+  }
+  assert(core.metrics().treeNodes>0);
+  f.blocked.add('11,12');core.syncRect(11,12,11,12);
+  assert.equal(core.treeRoute(start,{x:19,z:12}),null);
+  assert(core.treeRoute(start,{x:5,z:12})?.length>0);
+});
+
 test('raster preparation samples each cell once and refreshes only a local rectangle',async()=>{
   const f=fixture();
   let samples=0;

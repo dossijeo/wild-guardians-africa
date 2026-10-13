@@ -21,6 +21,14 @@ std::vector<Portal> portals;
 std::vector<double> costs,flatCosts;
 using Item=std::tuple<double,uint32_t,int32_t>;
 std::vector<Item> heapBuffer;
+// QA comparator for the former incremental shared-origin route tree. Unlike
+// flat A*, one search frontier is retained across many destination queries.
+std::vector<Item> treeHeap;
+std::vector<double> treeCosts;
+std::vector<int32_t> treeParent,treeParentPortal;
+std::vector<uint8_t> treeClosed;
+int treeSource=-1,treeVisited=0;
+uint32_t treeOrder=0;
 int32_t visitedGraph=0,visitedLocal=0,visitedFlat=0,sectorsBuilt=0;
 constexpr int dx[4]={1,-1,0,0},dz[4]={0,0,1,-1},opposite[4]={1,0,3,2};
 constexpr int diagX[4]={1,-1,1,-1},diagZ[4]={1,1,-1,-1};
@@ -29,6 +37,14 @@ bool inBounds(int x,int z){return x>=0&&z>=0&&x<width&&z<height;}
 void pushOpen(double score,uint32_t order,int32_t cell){
   heapBuffer.emplace_back(score,order,cell);
   std::push_heap(heapBuffer.begin(),heapBuffer.end(),std::greater<Item>{});
+}
+void pushTree(double score,int32_t cell){
+  treeHeap.emplace_back(score,treeOrder++,cell);
+  std::push_heap(treeHeap.begin(),treeHeap.end(),std::greater<Item>{});
+}
+int popTree(){
+  std::pop_heap(treeHeap.begin(),treeHeap.end(),std::greater<Item>{});
+  const int cell=std::get<2>(treeHeap.back());treeHeap.pop_back();return cell;
 }
 int popOpen(){
   std::pop_heap(heapBuffer.begin(),heapBuffer.end(),std::greater<Item>{});
@@ -120,6 +136,8 @@ int nav_init(int worldX,int worldZ,int w,int h,int size){
   passable.assign(cells,0);steps.assign(cells,0);diagonals.assign(cells,0);component.assign(cells,-1);
   head.assign(nodes,-1);regionRoot.resize(nodes);parent.assign(cells,-1);costs.resize(nodes);closed.resize(nodes);previousArc.resize(nodes);
   flatParent.resize(cells);flatParentPortal.resize(cells);flatCosts.resize(cells);flatClosed.resize(cells);portalHead.resize(cells);
+  treeCosts.resize(cells);treeParent.resize(cells);treeParentPortal.resize(cells);treeClosed.resize(cells);
+  treeSource=-1;treeVisited=0;treeHeap.clear();
   queueBuffer.reserve(cells);routeBuffer.reserve(cells);portalBuffer.reserve(nodes);heapBuffer.reserve(cells);arcs.reserve(cells/3);
   portals.clear();sectorsBuilt=visitedGraph=visitedLocal=0;return 1;
 }
@@ -128,11 +146,13 @@ uint8_t* nav_steps_ptr(){return steps.data();}
 uint8_t* nav_diag_ptr(){return diagonals.data();}
 int nav_commit(){
   if(!width)return 0;
+  treeSource=-1;treeHeap.clear();
   for(int sz=0;sz<sectorsZ;sz++)for(int sx=0;sx<sectorsX;sx++)rebuildSector(sx,sz);
   rebuildGraph();return static_cast<int>(arcs.size());
 }
 int nav_refresh(int x,int z,int w,int h){
   if(!width||w<1||h<1)return 0;
+  treeSource=-1;treeHeap.clear();
   const int x0=std::clamp(x-ox,0,width-1),z0=std::clamp(z-oz,0,height-1);
   const int x1=std::clamp(x+w-1-ox,0,width-1),z1=std::clamp(z+h-1-oz,0,height-1);
   for(int sz=z0/sectorSize;sz<=z1/sectorSize;sz++)for(int sx=x0/sectorSize;sx<=x1/sectorSize;sx++)rebuildSector(sx,sz);
@@ -146,7 +166,7 @@ int nav_add_portal(int fromX,int fromZ,int toX,int toZ){
   if(!passable[a]||!passable[b])return -1;
   portals.push_back({a,b});return static_cast<int>(portals.size())-1;
 }
-int nav_commit_portals(){rebuildGraph();return static_cast<int>(arcs.size());}
+int nav_commit_portals(){treeSource=-1;treeHeap.clear();rebuildGraph();return static_cast<int>(arcs.size());}
 int nav_component(int worldX,int worldZ){
   const int x=worldX-ox,z=worldZ-oz;
   if(!inBounds(x,z))return -1;
@@ -242,6 +262,60 @@ int nav_route_flat(int startX,int startZ,int endX,int endZ){
   std::reverse(routeBuffer.begin(),routeBuffer.end());
   return static_cast<int>(routeBuffer.size());
 }
+int nav_tree_begin(int startX,int startZ){
+  const int x=startX-ox,z=startZ-oz;
+  treeSource=-1;treeHeap.clear();treeVisited=0;treeOrder=0;
+  if(!inBounds(x,z)||!passable[index(x,z)])return 0;
+  treeSource=index(x,z);
+  std::fill(treeCosts.begin(),treeCosts.end(),std::numeric_limits<double>::infinity());
+  std::fill(treeParent.begin(),treeParent.end(),-1);
+  std::fill(treeParentPortal.begin(),treeParentPortal.end(),-1);
+  std::fill(treeClosed.begin(),treeClosed.end(),0);
+  treeCosts[treeSource]=0;treeParent[treeSource]=treeSource;
+  pushTree(0,treeSource);return 1;
+}
+int nav_tree_route(int endX,int endZ){
+  routeBuffer.clear();
+  const int x=endX-ox,z=endZ-oz;
+  if(treeSource<0||!inBounds(x,z))return 0;
+  const int target=index(x,z);
+  if(!passable[target]||target==treeSource)return 0;
+  while(!treeClosed[target]&&!treeHeap.empty()&&treeVisited<30000){
+    const int current=popTree();if(treeClosed[current])continue;
+    treeClosed[current]=1;treeVisited++;
+    const int cx=current%width,cz=current/width;
+    for(int d=0;d<8;d++){
+      const bool diagonal=d>=4;
+      if(!(diagonal?diagonals[current]&(1<<(d-4)):steps[current]&(1<<d)))continue;
+      const int nx=cx+(diagonal?diagX[d-4]:dx[d]),nz=cz+(diagonal?diagZ[d-4]:dz[d]);
+      if(!inBounds(nx,nz))continue;
+      const int next=index(nx,nz);if(treeClosed[next]||!passable[next])continue;
+      const double cost=treeCosts[current]+(diagonal?1.4142135623730951:1);
+      if(cost>=treeCosts[next])continue;
+      treeCosts[next]=cost;treeParent[next]=current;treeParentPortal[next]=-1;pushTree(cost,next);
+    }
+    for(int code=portalHead[current];code>=0;code=portalNext[code]){
+      const Portal& portal=portals[code/2];
+      const int next=(code&1)?portal.fromCell:portal.toCell;
+      if(treeClosed[next]||!passable[next])continue;
+      const double cost=treeCosts[current]+1;
+      if(cost>=treeCosts[next])continue;
+      treeCosts[next]=cost;treeParent[next]=current;treeParentPortal[next]=code;pushTree(cost,next);
+    }
+  }
+  if(!treeClosed[target])return 0;
+  for(int at=target;at!=treeSource;at=treeParent[at]){
+    if(at<0||treeParent[at]<0){routeBuffer.clear();return 0;}
+    routeBuffer.push_back(at);
+    if(treeParentPortal[at]>=0){
+      routeBuffer.push_back(-2-treeParentPortal[at]*2);
+      routeBuffer.push_back(-1-treeParentPortal[at]*2);
+    }
+  }
+  std::reverse(routeBuffer.begin(),routeBuffer.end());
+  return static_cast<int>(routeBuffer.size());
+}
+int nav_tree_nodes(){return treeVisited;}
 int32_t* nav_route_ptr(){return routeBuffer.data();}
 int nav_sectors_built(){return sectorsBuilt;}
 int nav_graph_nodes(){return visitedGraph;}

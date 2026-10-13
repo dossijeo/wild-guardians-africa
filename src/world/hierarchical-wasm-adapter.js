@@ -23,6 +23,7 @@ function createNavigator(instance,bytesLength,nav,{minX,minZ,maxX,maxZ,radius,wo
     steps:new Uint8Array(wasm.memory.buffer,wasm.nav_steps_ptr(),count),
     diagonals:new Uint8Array(wasm.memory.buffer,wasm.nav_diag_ptr(),count)});
   const portalRoutes=[];
+  let treeOrigin=null;
   const rasterIndex=(x,z)=>(z-minZ)*width+x-minX;
   const inBounds=(x,z)=>x>=minX&&x<=maxX&&z>=minZ&&z<=maxZ;
   function sampleCell(x,z,pass){
@@ -48,6 +49,7 @@ function createNavigator(instance,bytesLength,nav,{minX,minZ,maxX,maxZ,radius,wo
     diagonals[i]=diagonalMask;
   }
   function syncRect(x0=minX,z0=minZ,x1=maxX,z1=maxZ){
+    treeOrigin=null;
     const a=Math.max(minX,Math.floor(x0)-1),b=Math.min(maxX,Math.ceil(x1)+1);
     const c=Math.max(minZ,Math.floor(z0)-1),d=Math.min(maxZ,Math.ceil(z1)+1);
     const {pass,steps,diagonals}=buffers();
@@ -57,6 +59,7 @@ function createNavigator(instance,bytesLength,nav,{minX,minZ,maxX,maxZ,radius,wo
     return refreshPortals();
   }
   function refreshPortals(){
+    treeOrigin=null;
     wasm.nav_clear_portals();portalRoutes.length=0;
     if(worker){
       const {pass}=buffers();
@@ -86,6 +89,7 @@ function createNavigator(instance,bytesLength,nav,{minX,minZ,maxX,maxZ,radius,wo
     return wasm.nav_commit_portals();
   }
   function initialize(){
+    treeOrigin=null;
     const {pass,steps,diagonals}=buffers();
     for(let z=minZ;z<=maxZ;z++)for(let x=minX;x<=maxX;x++)sampleCell(x,z,pass);
     for(let z=minZ;z<=maxZ;z++)for(let x=minX;x<=maxX;x++)sampleEdges(x,z,pass,steps,diagonals);
@@ -101,6 +105,17 @@ function createNavigator(instance,bytesLength,nav,{minX,minZ,maxX,maxZ,radius,wo
   }
   function flatRoute(start,end){
     const n=wasm.nav_route_flat(Math.round(start.x),Math.round(start.z),Math.round(end.x),Math.round(end.z));
+    if(n<=0)return null;
+    const indices=new Int32Array(wasm.memory.buffer,wasm.nav_route_ptr(),n);
+    return Array.from(indices,decode);
+  }
+  function treeRoute(start,end){
+    const sx=Math.round(start.x),sz=Math.round(start.z);
+    if(!treeOrigin||treeOrigin.x!==sx||treeOrigin.z!==sz){
+      if(!wasm.nav_tree_begin(sx,sz))return null;
+      treeOrigin={x:sx,z:sz};
+    }
+    const n=wasm.nav_tree_route(Math.round(end.x),Math.round(end.z));
     if(n<=0)return null;
     const indices=new Int32Array(wasm.memory.buffer,wasm.nav_route_ptr(),n);
     return Array.from(indices,decode);
@@ -130,7 +145,7 @@ function createNavigator(instance,bytesLength,nav,{minX,minZ,maxX,maxZ,radius,wo
     cells.sort((a,b)=>a.distance-b.distance||a.cell.x-b.cell.x||a.cell.z-b.cell.z);
     return cells;
   }
-  function path(start,end,{flat=false}={}){
+  function path(start,end,{flat=false,tree=false}={}){
     if(nav.segmentClear(start,end,radius,ignore,worker))return [{x:end.x,z:end.z}];
     const sources=connectors(start,true),targets=connectors(end,false);
     for(const source of sources)for(const target of targets){
@@ -138,7 +153,7 @@ function createNavigator(instance,bytesLength,nav,{minX,minZ,maxX,maxZ,radius,wo
       // prevents both search cores from exploring every unreachable pairing.
       if(source.id!==target.id)continue;
       const middle=source.cell.x===target.cell.x&&source.cell.z===target.cell.z?[]:
-        (flat?flatRoute(source.cell,target.cell):route(source.cell,target.cell));
+        (tree?treeRoute(source.cell,target.cell):flat?flatRoute(source.cell,target.cell):route(source.cell,target.cell));
       if(!middle)continue;
       const result=[source.cell,...middle,{x:end.x,z:end.z}];
       let previous=start,valid=true;
@@ -150,6 +165,6 @@ function createNavigator(instance,bytesLength,nav,{minX,minZ,maxX,maxZ,radius,wo
     }
     return null;
   }
-  return {wasm,initialize,syncRect,route,flatRoute,path,region,bytes:bytesLength,dimensions:{width,height},
-    metrics:()=>({sectorsBuilt:wasm.nav_sectors_built(),arcs:wasm.nav_arc_count(),graphNodes:wasm.nav_graph_nodes(),localNodes:wasm.nav_local_nodes(),flatNodes:wasm.nav_flat_nodes()})};
+  return {wasm,initialize,syncRect,route,flatRoute,treeRoute,path,region,bytes:bytesLength,dimensions:{width,height},
+    metrics:()=>({sectorsBuilt:wasm.nav_sectors_built(),arcs:wasm.nav_arc_count(),graphNodes:wasm.nav_graph_nodes(),localNodes:wasm.nav_local_nodes(),flatNodes:wasm.nav_flat_nodes(),treeNodes:wasm.nav_tree_nodes()})};
 }
