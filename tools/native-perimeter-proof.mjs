@@ -4,6 +4,8 @@ import {ANIMAL_ACTIONS} from '../src/simulation/animal-actions-data.js';
 import {centerFootprint} from '../src/world/centers.js';
 import {operational} from '../src/simulation/rules.js';
 import {nativeServiceComponentProof} from './native-service-component-proof.mjs';
+import {buildNavigationObstacleIndex} from '../src/world/navigation-obstacle-index.js';
+import {navigationBounds} from '../src/world/navigation-bounds.js';
 const proofViews=new WeakMap();
 export function nativePerimeterProof(s,nav,plan,bounds,{cache=true,outline=null}={}){
  // Native epochs invalidate obstacle/terrain/suppression changes. Bounds and
@@ -15,6 +17,8 @@ export function nativePerimeterProof(s,nav,plan,bounds,{cache=true,outline=null}
   const updates=new Map(plan.updates.map(q=>[q.id,q]));
   view=nav.forBuildingPlacement({id:'qa-empty-proposal',x:1e12,z:1e12,radius:0,kind:'house'});
   view.obstacles=[...nav.obstacles.map(w=>updates.has(w.id)?{...w,...updates.get(w.id)}:w),...plan.pieces];
+  view.obstacleIndex=buildNavigationObstacleIndex(view.obstacles);
+  view.obstacleBounds=new WeakMap(view.obstacles.map(o=>[o,navigationBounds(o)]));
   if(cache)proofViews.set(nav,{key,state:s,view});
  }
  const land=[...s.plants.filter(p=>p.alive),...s.structures.filter(operational).flatMap(c=>centerFootprint(c,s).footprint)],radii=[...new Set(Object.values(ANIMAL_ACTIONS.animals).map(a=>a.presentation.footprint.radius))];

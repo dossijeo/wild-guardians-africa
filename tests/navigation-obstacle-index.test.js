@@ -37,3 +37,16 @@ test('index retains native obstacle order and proposed geometry falls back to th
  const proposed=nav.forBuildingPlacement({id:'proposed',kind:'house',x:0,z:0,radius:2});
  assert.equal(segmentNavigationObstacles(proposed,start,end,.28),proposed.obstacles);
 });
+
+test('indexed point walkability matches the full obstacle scan for walls and gates',()=>{
+ const nav=fixture(),index=nav.obstacleIndex;
+ let seed=91027;const random=()=>{seed^=seed<<13;seed^=seed>>>17;seed^=seed<<5;return (seed>>>0)/4294967296;};
+ for(let i=0;i<1000;i++){
+  const x=(random()-.5)*90,z=(random()-.5)*60,radius=[.28,.7,1.2][i%3],worker=i%2===0;
+  const indexed=nav.testWalkable(x,z,radius,null,worker);
+  nav.obstacleIndex=null;
+  const full=nav.testWalkable(x,z,radius,null,worker);
+  nav.obstacleIndex=index;
+  assert.equal(indexed,full,`point ${i}`);
+ }
+});

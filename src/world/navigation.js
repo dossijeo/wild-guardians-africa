@@ -179,7 +179,7 @@ export class Navigation {
   testWalkable(x,z,radius=.3,ignore=null,worker=false) {
     if(!this.terrainValid(x,z,radius,worker))return false;
     const point={x,z};
-    if(this.obstacles.some(o=>{
+    if(segmentNavigationObstacles(this,point,point,radius).some(o=>{
       if(o.id===ignore||worker&&o.kind==='shield')return false;
       if(outsideNavigationBounds(point,point,this.obstacleBounds?.get(o),radius))return false;
       if(worker&&o.gate){const frames=gateFrameFootprints(o);return frames?frames.some(p=>footprintDistance(p,x,z)<radius):false;}
