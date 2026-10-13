@@ -25,9 +25,9 @@ test('P follows independent formula with clamping and growing/retiring agricultu
  assert.throws(()=>raidPressureSummary(8,0,memory));
 });
 test('species formulas apply jointly with no cash-dependent input',()=>{
- const bases=[1,1,2,2,3],radii=[.7,1.2,2,1.6,2.8];
+ const bases=[1,1,2,2,3],radii=[.7,1.2,2,1.6,2.8],structureScales=[.5,.6,.85,.85,.9];
  for(let i=0;i<ids.length;i++)for(const p of [0,.49,.5,.66,1]){
-  const s=raidSpeciesPressure(ids[i],p),a=B.animals[i];assert.equal(s.minHits,a.hit_budget_min+Math.floor(4*p));assert.equal(s.maxHits,a.hit_budget_max+Math.floor(4*p));assert.equal(s.cropDamage,bases[i]+Math.floor(1.5*p));assert.equal(s.structureDamage,Math.round(a.structure_hit_damage*(1+.5*p)));assert.equal(s.attackRadius,radii[i]*(1+.3*p));assert.equal(s.areaCap,1+Math.floor(6*p));
+  const s=raidSpeciesPressure(ids[i],p),a=B.animals[i];assert.equal(s.minHits,a.hit_budget_min+Math.floor(4*p));assert.equal(s.maxHits,a.hit_budget_max+Math.floor(4*p));assert.equal(s.cropDamage,bases[i]+Math.floor(1.5*p));assert.equal(s.structureDamage,Math.round(a.structure_hit_damage*(1+.5*p)*structureScales[i]));assert.equal(s.attackRadius,radii[i]*(1+.3*p));assert.equal(s.areaCap,1+Math.floor(6*p));
  }
 });
 test('mixture interpolates weak opening to final proportions, preserves unlocks and finite rounding',()=>{
@@ -107,4 +107,5 @@ test('candidate-3 count warmup and joint hit progression match the selected nati
  assert.equal(envelope.mean,129.5);assert(envelope.max<=envelope.q);
  for(const config of [{...C,countPower:0},{...C,introCountStart:-1},{...C,introCountRise:NaN}])assert.throws(()=>raidAnimalCount(6,.5,config));
  assert.throws(()=>raidSpeciesPressure('warthog',.5,B,{...C,hitPressureSteps:NaN}));
+ assert.throws(()=>raidSpeciesPressure('warthog',.5,B,{...C,structureScales:[1]}));
 });

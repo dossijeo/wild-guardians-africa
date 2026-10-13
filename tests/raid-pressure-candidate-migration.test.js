@@ -1,9 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
+import {gunzipSync} from 'node:zlib';
+import {BALANCE as B} from '../src/simulation/balance.js';
 import {deserialize,serialize} from '../src/persistence/snapshots.js';
 import {preparePressureNight} from '../src/simulation/raid-pressure-plan.js';
-import {RAID_PRESSURE_CANDIDATE as C,raidPressureCandidateForVersion,raidCompositionCounts,planRaidProductComposition} from '../src/simulation/raid-pressure-budget.js';
+import {RAID_PRESSURE_CANDIDATE as C,raidPressureCandidateForVersion,raidSpeciesPressure,raidCompositionCounts,planRaidProductComposition,raidAnimalCount} from '../src/simulation/raid-pressure-budget.js';
 const original=kind=>readFileSync(new URL(`./fixtures/raid-pressure-v1/${kind}.json`,import.meta.url),'utf8').trim();
 test('historical untagged planned and active multi-wave saves retain actors, RNG, EMA and paid state',()=>{
  for(const kind of ['planned','active']){
@@ -14,15 +16,15 @@ test('historical untagged planned and active multi-wave saves retain actors, RNG
   if(kind==='active')assert.equal(state.raid.animals.length,16);
  }
 });
-test('following night adopts candidate 3 once; tagged saved plan reuses with no reroll',()=>{
+test('following night adopts candidate 4 once; tagged saved plan reuses with no reroll',()=>{
  const state=deserialize(original('planned'));state.day=100;state.nightPlan=null;
- const next=preparePressureNight(state);assert.equal(next.reused,false);assert.equal(next.plan.pressureFacts.candidateVersion,3);assert.equal(next.memory.version,1);assert.equal(next.memory.lastDay,100);
+ const next=preparePressureNight(state);assert.equal(next.reused,false);assert.equal(next.plan.pressureFacts.candidateVersion,4);assert.equal(next.memory.version,1);assert.equal(next.memory.lastDay,100);
  state.rng=next.rng;state.nightPlan=next.plan;state.raidPressureMemory=next.memory;
  const loaded=deserialize(serialize(state)),retry=preparePressureNight(loaded);
  assert.equal(retry.reused,true);assert.equal(retry.rng,next.rng);assert.deepEqual(retry.plan,next.plan);assert.deepEqual(retry.memory,next.memory);
 });
 test('unknown provenance and changing a historical budget recipe are rejected',()=>{
- for(const version of [null,0,4,'1',{},Infinity]){
+ for(const version of [null,0,5,'1',{},Infinity]){
   assert.throws(()=>raidPressureCandidateForVersion(version));
   const state=JSON.parse(original('planned'));state.nightPlan.pressureFacts.candidateVersion=version;
   assert.throws(()=>deserialize(JSON.stringify(state)));assert.throws(()=>preparePressureNight(state));
@@ -31,7 +33,7 @@ test('unknown provenance and changing a historical budget recipe are rejected',(
  assert.throws(()=>deserialize(JSON.stringify(state)));
 });
 test('1.5 budget preserves intended species composition and full maximum-hit envelope across pressures',()=>{
- const ids=['warthog','hyena','buffalo','lion','rhino'];assert.equal(C.qMeanMultiplier,1.5);assert.equal(C.version,3);
+ const ids=['warthog','hyena','buffalo','lion','rhino'];assert.equal(C.qMeanMultiplier,1.5);assert.equal(C.version,4);
  for(let i=0;i<=100;i++)for(const unlocked of [ids.slice(0,1),ids.slice(0,2),ids]){
   const pressure=i/100,count=Math.round(4+30*pressure),plan=planRaidProductComposition(count,pressure,unlocked);
   assert.deepEqual(plan.counts,raidCompositionCounts(count,pressure,unlocked));assert.equal(plan.adjustments.length,0);assert(plan.maximumProduct<=plan.q+1e-9);
@@ -47,7 +49,37 @@ for(const kind of ['planned','active'])test(`candidate-2 ${kind} save retains it
  const altered=JSON.parse(raw);delete altered.nightPlan.pressureFacts.candidateVersion;assert.throws(()=>deserialize(JSON.stringify(altered)));
  if(kind==='planned'){
   state.day=100;state.nightPlan=null;const next=preparePressureNight(state);
-  assert.equal(next.plan.pressureFacts.candidateVersion,3);assert(next.plan.waves.flat().length>19);
+  assert.equal(next.plan.pressureFacts.candidateVersion,4);assert(next.plan.waves.flat().length>19);
   state.nightPlan=next.plan;state.rng=next.rng;state.raidPressureMemory=next.memory;assert.doesNotThrow(()=>deserialize(serialize(state)));
+ }
+});
+test('real active candidate-3 save retains its original structure damage and adopts version 4 only on a new night',()=>{
+ const bytes=readFileSync(new URL('./fixtures/raid-pressure-v3-active.json.gz',import.meta.url));
+ const raw=gunzipSync(bytes).toString('utf8'),state=deserialize(raw),before=serialize(state);
+ assert.equal(before,raw);assert.equal(state.nightPlan.pressureFacts.candidateVersion,3);assert.equal(state.raid.animals.length,16);
+ const old=raidPressureCandidateForVersion(3),p=state.nightPlan.pressureFacts.pressure;
+ assert.equal(old.version,3);
+ for(const actor of state.nightPlan.waves.flat()){
+  assert.equal(actor.damageProfile.structureDamage,raidSpeciesPressure(actor.species,p,B,old).structureDamage);
+ }
+ const retry=preparePressureNight(state);assert.equal(retry.reused,true);assert.deepEqual(retry.plan,state.nightPlan);assert.equal(retry.rng,state.rng);assert.equal(serialize(state),before);
+ state.raid=null;state.nightPlan=null;state.day++;const next=preparePressureNight(state);
+ assert.equal(next.plan.pressureFacts.candidateVersion,4);
+ const nextPressure=next.plan.pressureFacts.pressure;
+ assert(next.plan.waves.flat().some(actor=>actor.damageProfile.structureDamage<raidSpeciesPressure(actor.species,nextPressure,B,old).structureDamage));
+});
+test('candidate 4 changes structural force only: count, composition, crop envelope and range remain candidate 3',()=>{
+ const old=raidPressureCandidateForVersion(3),ids=B.animals.map(a=>a.id);
+ for(const pressure of [0,.2,.5,.8,1]){
+  for(const night of [6,14,50,100])assert.equal(raidAnimalCount(night,pressure,old),raidAnimalCount(night,pressure,C));
+  for(const id of ids){
+   const prior=raidSpeciesPressure(id,pressure,B,old),next=raidSpeciesPressure(id,pressure,B,C);
+   for(const key of ['minHits','maxHits','cropDamage','attackRadius','areaCap'])assert.equal(next[key],prior[key]);
+   assert(next.structureDamage<=prior.structureDamage);
+  }
+  const count=raidAnimalCount(50,pressure,C),before=planRaidProductComposition(count,pressure,ids,old),after=planRaidProductComposition(count,pressure,ids,C);
+  assert.deepEqual(after.counts,before.counts);assert.equal(after.q,before.q);
+  for(const key of ['min','mean','max'])assert.equal(after.envelope[key],before.envelope[key]);
+  assert(after.envelope.structure.mean<=before.envelope.structure.mean);
  }
 });

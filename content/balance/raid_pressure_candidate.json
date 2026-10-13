@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "population": {"base": 4, "span": 30, "pressurePower": 0.5, "introStartAtNight6": 8, "introRisePerNight": 2},
   "hitPressureSteps": 4,
   "status": "pure-unintegrated-candidate",
@@ -69,5 +69,6 @@
     1.6,
     2.8
   ],
+  "speciesStructureScales": [0.5, 0.6, 0.85, 0.85, 0.9],
   "structureRounding": "Math.round"
 }
