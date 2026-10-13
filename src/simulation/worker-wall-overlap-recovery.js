@@ -1,4 +1,5 @@
 import {wallCollisionFrame} from '../world/wall-collision-frame.js';
+import {segmentNavigationObstacles} from '../world/navigation-obstacle-index.js';
 
 // A wall may finish while a worker is brushing its edge. Native path search
 // cannot start from inside the actor-expanded collision rectangle. Move only
@@ -6,7 +7,7 @@ import {wallCollisionFrame} from '../world/wall-collision-frame.js';
 export function recoverWorkerWallOverlap(nav,worker,destination,radius=.28){
  if(nav.walkable(worker.x,worker.z,radius,null,true))return false;
  const candidates=[];
- for(const wall of nav.obstacles){
+ for(const wall of segmentNavigationObstacles(nav,worker,worker,radius)){
   if(wall.kind!=='wall'||wall.gate||wall.status==='ruined')continue;
   const frame=wallCollisionFrame(wall),dx=worker.x-wall.x,dz=worker.z-wall.z;
   const lx=dx*frame.c-dz*frame.s,lz=dx*frame.s+dz*frame.c;

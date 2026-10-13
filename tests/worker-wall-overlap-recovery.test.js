@@ -18,6 +18,22 @@ test('native construction leaves a gap when no automatic gate can be hosted',()=
  assert.equal(quote.gates,0);
 });
 
+test('single-piece wall edits cannot close an enclosure without a traversable gate',()=>{
+ const {s,nav}=createOpeningWorld(),center=s.structures[0];
+ assert(Game.plant(s,'seed','mijo',center.x+6,center.z+1,nav));
+ Game.openInitialHiring(s);Game.hire(s,'hire',{olderFemale:1});
+ const points=closedDefenseContours(s)[0].points;
+ assert(Game.buildWallChain(s,'walls','zarzas',points,nav,{smooth:false,snap:false}));
+ const gate=s.structures.find(piece=>piece.autoGate);
+ assert(gate);
+ assert(Game.removeWall(s,'remove-gate',gate.id,nav));
+ const placement=nav.wallPlacement.bind(nav),before=s.structures.length;
+ nav.wallPlacement=wall=>wall.gate?{valid:false}:placement(wall);
+ assert.equal(Game.placeStructure(s,'blocked-closure',{kind:'wall',material:gate.material,x:gate.x,z:gate.z,yaw:gate.yaw},nav),false);
+ assert.equal(s.structures.length,before);
+ assert.equal(s.ledger.entries['blocked-closure'],undefined);
+});
+
 test('a returning worker brushing a newly closed wall recovers a valid route through the automatic gate',()=>{
  const {s,nav}=createOpeningWorld({seed:123}),center=s.structures[0];
  assert(Game.plant(s,'seed','mijo',center.x+6,center.z+1,nav));

@@ -97,7 +97,13 @@ export function placeStructure(s,id,{kind='center',material='zarzas',gate=false,
   if(kind!=='center'&&kind!=='wall')throw new Error('Construcción desconocida');
   const cost=kind==='center'?B.work_center.cost:wallSpec(material).cost;
   const maxHp=structureHealth(kind,material,gate),entity={id:`structure-${s.nextId}`,created:s.sequence,kind,material,gate,x,z,yaw,...(kind==='center'?{culture}:{}),maxHp,hp:maxHp,status:'intact',villageId:village?.id,cost,collapseRemaining:0};
-  if(kind==='wall'&&!gate)for(const update of planNewWallGates(s,[entity],nav,[],()=>false))Object.assign(entity,update);
+  if(kind==='wall'&&!gate){
+    const gatePlan=planNewWallGates(s,[entity],nav,[],()=>false);
+    // Single-piece edits must obey the same enclosure rule as a wall stroke.
+    // Refuse a closure that cannot contain a traversable automatic gate.
+    if(gatePlan.unhosted&&!gatePlan.length)return false;
+    for(const update of gatePlan)Object.assign(entity,update);
+  }
   const suppression=entity.autoGate?nav.wallPlacement(entity).suppress??[]:check.suppress??[];
   return commit(s,id,kind==='center'?'center':'wall',()=>{
     ensurePurchaseBudget(s,cost);transact(s.ledger,id,rational(-cost));
