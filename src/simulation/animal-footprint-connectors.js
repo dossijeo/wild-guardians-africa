@@ -97,3 +97,11 @@ export function animalFootprintConnector(actor,end,nav){
  }
  return null;
 }
+
+// The caller must not replace the original exit while this incremental
+// connector can still discover a valid route. A null result means either
+// pending or exhausted; expose that distinction without restarting work.
+export function animalFootprintConnectorExhausted(actor,end,nav){
+ const a=attempts.get(actor);
+ return !!a?.failed&&same(a,nav,actor,end,actor.radius??.28);
+}

@@ -18,7 +18,7 @@ const nav=new Navigation(state.seed,state.biome,profile);nav.setState(state);
 const provenance=intensiveRunProvenance(process.argv.slice(2));
 provenance.sourceHashes['tools/replay_raid_checkpoint.mjs']=createHash('sha256').update(readFileSync(new URL(import.meta.url))).digest('hex');
 const trace=[],started=performance.now(),initialDay=state.day,initialElapsed=state.elapsed;
-const capture=()=>({elapsed:state.elapsed-initialElapsed,day:state.day,time:state.time,pauses:[...state.pauses],result:state.result,animals:state.raid?.animals.map(a=>({id:a.id,species:a.species,status:a.status,x:a.x,z:a.z,hitsRemaining:a.hitsRemaining,targetId:a.targetId,path:a.path.map(p=>({x:p.x,z:p.z})),exit:a.exit,destinationId:a.destinationId,approach:a.approach}))??null});
+const capture=()=>({elapsed:state.elapsed-initialElapsed,day:state.day,time:state.time,pauses:[...state.pauses],result:state.result,animals:state.raid?.animals.map(a=>({id:a.id,species:a.species,status:a.status,x:a.x,z:a.z,hitsRemaining:a.hitsRemaining,targetId:a.targetId,path:a.path?.map(p=>({x:p.x,z:p.z}))??null,exit:a.exit,retreatExit:a.retreatExit??null,destinationId:a.destinationId,approach:a.approach}))??null});
 trace.push(capture());
 let steps=0;
 while(steps<seconds&&state.raid&&!state.result&&state.day===initialDay&&!state.pauses.length){
