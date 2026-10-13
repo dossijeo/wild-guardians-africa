@@ -3,10 +3,57 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createSpatialWorld} from '../src/world/hierarchical-wasm/spatial-world.js';
 import {createSpatialChunkStream} from '../src/world/hierarchical-wasm/spatial-chunk-stream.js';
+import {createSpatialSavannaSession} from '../src/world/hierarchical-wasm/spatial-savanna-session.js';
+import {villageLayout} from '../src/world/villages.js';
 import * as THREE from 'three';
 import {WorldScene} from '../src/rendering/scene.js';
 
 const module=new WebAssembly.Module(readFileSync(new URL('../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+
+test('a Sabana game state renders and routes from one spatial authority through topology events',async()=>{
+  const pack=JSON.parse(readFileSync(new URL('../public/content/villages.json',import.meta.url),'utf8'))[0];
+  const state={seed:'712',biome:'sabana',villages:[{id:'village-1',x:0,z:0,
+    buildings:villageLayout(pack,0,0)}],structures:[{id:'center-1',kind:'center',
+      villageId:'village-1',culture:'mapungubwe',status:'intact',x:23,z:0,yaw:0,hp:100}],spells:[]};
+  const installed=new Map(),scheduled=[];
+  const session=createSpatialSavannaSession(module,state,{loaded:()=>installed,
+    onData:data=>installed.set(`${data.cx},${data.cz}`,data),
+    schedule:callback=>{scheduled.push(callback);return callback;},
+    cancel:callback=>{const index=scheduled.indexOf(callback);if(index>=0)scheduled.splice(index,1);}});
+  const {core,stream}=session;
+  assert.equal(core.snapshot().polygons.length,1+state.villages[0].buildings.filter(b=>b.kind!=='Zona común').length);
+  stream.plan(new Map([['0,0',{cx:0,cz:0,score:0}],['1,0',{cx:1,cz:0,score:1}]]));
+  while(scheduled.length)scheduled.shift()();
+  await stream.whenIdle();
+  assert.equal(installed.size,2);assert.equal(core.metrics().loadedChunks,2);
+  for(const payload of installed.values()){
+    const center=payload.cx*48;
+    assert.equal(payload.terrain.positions[(24*49+24)*3+1],Math.fround(core.surface(center,0)));
+  }
+  let passage;
+  for(let z=-18;z<=18&&!passage;z++){
+    const start={x:23.8,z},end={x:24.2,z};
+    if(session.routeActor(start,end).status==='found'&&
+       session.routeActor(start,end,{worker:false,species:'warthog'}).status==='found')
+      passage={start,end};
+  }
+  assert(passage,'workers and animals should share a physically open chunk seam');
+  state.structures.push({id:'wall-1',kind:'wall',material:'adobe',status:'intact',
+    x:23.5,z:passage.start.z,yaw:0,baseScaleX:1,hp:100,gate:false});
+  state.spells.push({id:'shield-1',kind:'shield',x:10,z:10,radius:1.95,remaining:10});
+  session.syncState(state);
+  assert.equal(core.snapshot().barriers.length,1);
+  assert.equal(core.snapshot().polygons.length,2+state.villages[0].buildings.filter(b=>b.kind!=='Zona común').length);
+  assert.equal(core.localClear(passage.start,passage.end),false);
+  assert.notEqual(session.routeActor(passage.start,passage.end).status,'found');
+  state.structures.at(-1).status='ruined';state.spells[0].remaining=0;
+  session.syncState(state);
+  assert.equal(core.snapshot().barriers.length,0);
+  assert.equal(core.localClear(passage.start,passage.end),true);
+  assert.equal(session.routeActor(passage.start,passage.end).status,'found');
+  assert.throws(()=>session.syncState({...state,suppressed:['legacy-prop-id']}),/not yet supported/);
+  session.dispose();
+});
 
 test('chunk selection distinguishes an absent chunk from a resident chunk with zero props',async()=>{
   const real=createSpatialWorld(module);

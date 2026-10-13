@@ -14,6 +14,7 @@ import {createSpatialWallMirror} from '../src/world/hierarchical-wasm/spatial-wa
 import {addSpatialCenter,removeSpatialCenter} from '../src/world/hierarchical-wasm/spatial-center-bridge.js';
 import {createSpatialCenterMirror} from '../src/world/hierarchical-wasm/spatial-center-mirror.js';
 import {addSpatialVillageBuildings,removeSpatialVillageBuildings} from '../src/world/hierarchical-wasm/spatial-village-bridge.js';
+import {createSpatialShieldMirror,spatialShieldFootprint} from '../src/world/hierarchical-wasm/spatial-shield-mirror.js';
 import {centerFootprint} from '../src/world/centers.js';
 import {villageLayout} from '../src/world/villages.js';
 import {footprintDistance} from '../src/world/footprints.js';
@@ -375,6 +376,37 @@ test('authored village houses share exact collision polygons with the C++ graph'
     removeSpatialVillageBuildings(core,ids);
     assert.equal(core.snapshot().polygons.length,0);
   }
+});
+test('spatial shields block animals, preserve worker access and expire without stale topology',()=>{
+  const core=createSpatialSavannaPrototype(module);
+  core.generate(712,0,0);core.setSettlement(0,0,15,15);
+  core.buildNavigation(.28,true);core.buildNavigation(1.1,false);
+  const point={x:0,z:0};
+  core.selectNavigation(false);
+  assert.equal(core.localClear(point,point),true);
+  const shield={id:'spell-1',kind:'shield',x:0,z:0,radius:1.95,remaining:12};
+  const outline=spatialShieldFootprint(shield);
+  assert.equal(outline.length,64);
+  assert(outline.every(p=>Math.hypot(p.x,p.z)>=1.95));
+  assert(Math.max(...outline.map(p=>Math.hypot(p.x,p.z)))-1.95<.003);
+  const mirror=createSpatialShieldMirror(core);
+  assert.deepEqual(mirror.sync([shield]),{count:1,added:1});
+  core.selectNavigation(true);
+  assert.equal(core.localClear(point,point),true);
+  core.selectNavigation(false);
+  assert.equal(core.localClear(point,point),false);
+  const updates=core.metrics().sectorUpdates;
+  shield.remaining=3;
+  assert.deepEqual(mirror.sync([shield]),{count:1,added:0});
+  assert.equal(core.metrics().sectorUpdates,updates);
+  const state=core.snapshot(),restored=createSpatialSavannaPrototype(module);
+  restored.restoreState(state);restored.buildNavigation(.28,true);restored.buildNavigation(1.1,false);
+  assert.deepEqual(restored.snapshot(),state);
+  assert.equal(restored.localClear(point,point),false);
+  shield.remaining=0;
+  assert.deepEqual(mirror.sync([shield]),{count:0,added:0});
+  assert.equal(core.localClear(point,point),true);
+  assert.equal(core.snapshot().polygons.length,0);
 });
 test('the dry Desert chunk shares visible dunes, solid props and hierarchical routes',()=>{
   const core=createSpatialSavannaPrototype(module);
