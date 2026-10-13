@@ -7,25 +7,25 @@
       "settlement": false,
       "current": [
         {
-          "roundtripMs": 102.70000004768372,
+          "roundtripMs": 87,
           "bytes": 502564,
           "props": 20
         },
         {
-          "roundtripMs": 39.30000019073486,
+          "roundtripMs": 27.899999856948853,
           "bytes": 502564,
           "props": 32
         }
       ],
       "spatial": [
         {
-          "roundtripMs": 70.60000014305115,
-          "compiledMs": 9.299999952316284,
-          "spatialMs": 39.200000047683716,
-          "copyMs": 2.0999999046325684,
+          "roundtripMs": 63.90000009536743,
+          "compiledMs": 9.700000047683716,
+          "spatialMs": 32.799999952316284,
+          "copyMs": 1.9000000953674316,
           "transferBytes": 95212,
           "three": {
-            "ms": 6.200000047683716,
+            "ms": 7.199999809265137,
             "vertices": 2401,
             "waterVertices": 420
           },
@@ -38,13 +38,13 @@
           }
         },
         {
-          "roundtripMs": 36.799999952316284,
-          "compiledMs": 9.299999952316284,
-          "spatialMs": 34.09999990463257,
+          "roundtripMs": 26.5,
+          "compiledMs": 9.700000047683716,
+          "spatialMs": 24,
           "copyMs": 1.9000000953674316,
           "transferBytes": 90172,
           "three": {
-            "ms": 1.6999998092651367,
+            "ms": 1.5999999046325684,
             "vertices": 2401,
             "waterVertices": 0
           },
@@ -69,12 +69,12 @@
         "reopenedStatus": "found",
         "workerClosedStatus": "blocked",
         "workerReopenedStatus": "found",
-        "wallAddMs": 3.200000047683716,
-        "wallRemoveMs": 1.7000000476837158,
+        "wallAddMs": 5.3999998569488525,
+        "wallRemoveMs": 1.6999998092651367,
         "sectorUpdatesAfterAdd": 44,
         "sectorUpdatesAfterRemove": 52,
-        "evictMs": 3.6999998092651367,
-        "reloadMs": 34,
+        "evictMs": 3.1000001430511475,
+        "reloadMs": 45.799999952316284,
         "sameVisualPayload": true,
         "loadedSectorsAfterReload": 32,
         "memoryBytesAfterReload": 4194304
@@ -86,14 +86,14 @@
         "workerReopened": true,
         "animalReopened": true,
         "localUpdates": 4,
-        "addMs": 1.8999998569488525,
-        "closeMs": 1.7000000476837158,
-        "reopenMs": 1.5999999046325684
+        "addMs": 1.5999999046325684,
+        "closeMs": 3.200000047683716,
+        "reopenMs": 1.5
       },
       "batchTopology": {
         "count": 12,
         "sectorUpdates": 6,
-        "operationMs": 4.3999998569488525
+        "operationMs": 3.8000001907348633
       },
       "multipleSettlements": {
         "secondLevel": 38.3246955871582,
@@ -121,14 +121,23 @@
       },
       "propRemoval": {
         "id": "spatial:0:0:-2",
-        "operationMs": 19.299999952316284,
+        "operationMs": 23.40000009536743,
         "sectorUpdates": 4
+      },
+      "speciesProfiles": {
+        "smallSectors": 32,
+        "largeSectors": 32,
+        "smallPass": false,
+        "largePass": false,
+        "buildMs": 39.59999990463257,
+        "memoryBytes": 4194304
       },
       "checks": {
         "transferLengths": true,
         "terrainSeam": true,
         "wallEdit": true,
         "routePoints": true,
+        "speciesProfiles": true,
         "dynamicPassage": true,
         "batchedTopology": true,
         "evictionRegeneration": true,

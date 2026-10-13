@@ -6,6 +6,7 @@ import {nativeTerrainBuffer} from '../src/rendering/terrain-geometry.js';
 import {nativeWaterBuffer} from '../src/rendering/water-geometry.js';
 import {chunkTransferables} from '../src/rendering/chunk-data.js';
 import {SpatialSurfaceView} from '../src/world/hierarchical-wasm/spatial-surface-view.js';
+import {ANIMAL_SPATIAL_PROFILES} from '../src/world/hierarchical-wasm/spatial-movement-profiles.js';
 
 const module=new WebAssembly.Module(readFileSync(new URL('../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
 function validRoute(core,start,result){
@@ -207,6 +208,49 @@ test('Gran Cañón keeps its gorge, water barrier and worker crossing in one spa
   restored.restoreState(state,0,0);
   assert.deepEqual(restored.snapshot(),state);
   assert.deepEqual(restored.props(),props);
+});
+test('five animal radii retain independent logical graphs across profile switches and wall edits',()=>{
+  const core=createSpatialSavannaPrototype(module);
+  core.generate(712,0,0,'savanna');
+  const profiles=Object.values(ANIMAL_SPATIAL_PROFILES).map(({index,radius})=>[index,radius]);
+  const grids=new Map();
+  for(const [index,radius] of profiles){
+    assert(core.buildNavigationProfile(index,radius,false)>0,`animal profile ${index}`);
+    const values=[];
+    for(let z=-20;z<=20;z+=2)for(let x=-20;x<=20;x+=2)
+      values.push(core.walkable(x,z));
+    grids.set(index,values);
+  }
+  const small=grids.get(ANIMAL_SPATIAL_PROFILES.lion.index),large=grids.get(ANIMAL_SPATIAL_PROFILES.rhino.index);
+  assert(small.some((value,i)=>value&&!large[i]),'species radii should distinguish a narrow passage');
+  assert(large.every((value,i)=>!value||small[i]),'a large species cannot enter cells unavailable to a smaller one');
+  const before=core.metrics().sectorUpdates;
+  for(const [index] of profiles){
+    assert(core.selectNavigationProfile(index)>0);
+    const values=[];
+    for(let z=-20;z<=20;z+=2)for(let x=-20;x<=20;x+=2)
+      values.push(core.walkable(x,z));
+    assert.deepEqual(values,grids.get(index),`profile ${index} changed on selection`);
+  }
+  assert.equal(core.metrics().sectorUpdates,before,'switching must not rebuild the selected graph');
+  const wall=core.addWall(10,0,.8,24);
+  assert(wall>0);
+  for(const [index] of profiles){
+    core.selectNavigationProfile(index);
+    assert(!core.edge(9,0,10,0),`wall must update profile ${index}`);
+  }
+  assert.equal(core.removeWall(wall),1);
+  for(const [index] of profiles){
+    core.selectNavigationProfile(index);
+    assert.deepEqual([...Array(21)].map((_,i)=>core.walkable(-20+i*2,0)),
+      grids.get(index).slice(10*21,11*21),`profile ${index} did not recover after wall removal`);
+  }
+  assert(core.addChunk(1,0)>0);
+  for(const [index] of profiles)
+    assert.equal(core.selectNavigationProfile(index),32,`profile ${index} did not stream the second chunk`);
+  assert.equal(core.removeChunk(1,0),1);
+  for(const [index] of profiles)
+    assert.equal(core.selectNavigationProfile(index),16,`profile ${index} did not evict the second chunk`);
 });
 test('generated prop footprints follow each production scatter rule',()=>{
   const slots=[3.8,3.1,3.0,1.7,1.1,.9,1.4,.45,.35,.5,1.2,1.7,1.2,1.8,1.3,1.0,.9,1.7,4.0,5.0];

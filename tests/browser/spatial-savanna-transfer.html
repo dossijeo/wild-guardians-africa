@@ -9,6 +9,7 @@ import {TerrainField} from '../../src/world/terrain.js';
 import {nativeTerrainBuffer} from '../../src/rendering/terrain-geometry.js';
 import {nativeWaterBuffer} from '../../src/rendering/water-geometry.js';
 import {SpatialSurfaceView} from '../../src/world/hierarchical-wasm/spatial-surface-view.js';
+import {ANIMAL_SPATIAL_PROFILES} from '../../src/world/hierarchical-wasm/spatial-movement-profiles.js';
 
 const status=document.querySelector('#status'),now=()=>performance.now();
 function request(worker,message){
@@ -72,8 +73,23 @@ try{
     format:sceneFormat?'scene':'raw',settlement:settlement?{x:10,z:8,hx:7,hz:6}:null});
   const candidateSecond=await request(candidate,{id:4,seed,cx:1,cz:0,radius:1.1,
     format:sceneFormat?'scene':'raw'});
-  let topology=null,barrierTopology=null,batchTopology=null,multipleSettlements=null,surfaceView=null,spatialReload=null,propRemoval=null;
+  let topology=null,barrierTopology=null,batchTopology=null,multipleSettlements=null,surfaceView=null,spatialReload=null,propRemoval=null,speciesProfiles=null;
   if(sceneFormat){
+    let profileId=300;
+    const small=await request(candidate,{id:profileId++,op:'build-profile',...ANIMAL_SPATIAL_PROFILES.lion});
+    const large=await request(candidate,{id:profileId++,op:'build-profile',...ANIMAL_SPATIAL_PROFILES.rhino});
+    if(small.value<32||large.value<32)throw Error('Species navigation profiles did not build');
+    await request(candidate,{id:profileId++,op:'profile',index:ANIMAL_SPATIAL_PROFILES.lion.index});
+    const smallPass=await request(candidate,{id:profileId++,op:'walkable',x:-16,z:-18});
+    await request(candidate,{id:profileId++,op:'profile',index:ANIMAL_SPATIAL_PROFILES.rhino.index});
+    const largePass=await request(candidate,{id:profileId++,op:'walkable',x:-16,z:-18});
+    if(biome==='savanna'&&(!smallPass.value||largePass.value))
+      throw Error('Small and large species received the same clearance at a known narrow point');
+    await request(candidate,{id:profileId++,op:'profile',index:0});
+    speciesProfiles={smallSectors:small.value,largeSectors:large.value,
+      smallPass:smallPass.value,largePass:largePass.value,
+      buildMs:small.timing.operationMs+large.timing.operationMs,
+      memoryBytes:large.metrics.memoryBytes};
     const view=new SpatialSurfaceView();view.install(candidateFirst.data);view.install(candidateSecond.data);
     const query={x:30.3,z:5.7};
     const exact=await request(candidate,{id:190,op:'surface',...query});
@@ -251,9 +267,10 @@ try{
     ...result.timing,three:prepareThree(result.data,result.cx,result.cz),
     props:sceneFormat?result.data.instances.reduce((n,list)=>n+list.length,0):result.data.count,
     metrics:result.metrics}));
-  window.qaStats={seed,biome,sceneFormat,settlement,current,spatial,topology,barrierTopology,batchTopology,multipleSettlements,surfaceView,spatialReload,propRemoval,
+  window.qaStats={seed,biome,sceneFormat,settlement,current,spatial,topology,barrierTopology,batchTopology,multipleSettlements,surfaceView,spatialReload,propRemoval,speciesProfiles,
     checks:{transferLengths:true,terrainSeam:true,wallEdit:!!topology,
       routePoints:topology?.routePointCount>=1,
+      speciesProfiles:speciesProfiles?.smallSectors>=32&&speciesProfiles?.largeSectors>=32,
       dynamicPassage:!!barrierTopology,
       batchedTopology:batchTopology?.count===12,
       evictionRegeneration:topology?.sameVisualPayload===true,

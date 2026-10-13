@@ -101,8 +101,17 @@ export function createSpatialSavannaPrototype(module){
       const loaded=wasm.spatial_build_nav(radius,worker?1:0);
       navigationBuilt=loaded>0;return loaded;
     },
+    buildNavigationProfile:(index,radius,worker=false)=>{
+      if(!chunk)throw Error('Generate a chunk before building its navigation');
+      const loaded=wasm.spatial_build_nav_profile(index,radius,worker?1:0);
+      navigationBuilt=loaded>0;return loaded;
+    },
     selectNavigation:worker=>{
       const loaded=wasm.spatial_select_nav_profile(worker?1:0);
+      navigationBuilt=loaded>0;return loaded;
+    },
+    selectNavigationProfile:index=>{
+      const loaded=wasm.spatial_select_nav_profile_index(index);
       navigationBuilt=loaded>0;return loaded;
     },
     addWall:(x,z,halfX,halfZ)=>wasm.spatial_add_wall(x,z,halfX,halfZ),

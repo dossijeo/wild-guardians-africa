@@ -33,7 +33,8 @@ struct Context {
 };
 // Standalone no-entry WASM does not run global C++ constructors. Construct
 // each profile on first use instead of relying on zeroed vector internals.
-Context* contexts[2]={nullptr,nullptr};
+constexpr int navigationProfiles=6;
+Context* contexts[navigationProfiles]={};
 int selectedContext=0;
 Context& active(){
   Context*& context=contexts[selectedContext];
@@ -196,7 +197,7 @@ bool localPath(const Sector& sector,int from,int to){
 
 extern "C" {
 int lazy_select_context(int profile){
-  if(profile<0||profile>=2)return 0;
+  if(profile<0||profile>=navigationProfiles)return 0;
   selectedContext=profile;return 1;
 }
 int lazy_init(int size){

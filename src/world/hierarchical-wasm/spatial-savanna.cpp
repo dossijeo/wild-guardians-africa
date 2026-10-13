@@ -87,11 +87,18 @@ std::vector<Settlement> settlements;
 std::vector<size_t> nearbySettlements;
 std::vector<uint8_t> staticPass,staticSteps,staticInbound;
 // No-entry WASM does not initialize C++ globals; construct profiles lazily.
-NavProfile* navProfiles[2]={nullptr,nullptr};
+constexpr int navigationProfiles=6;
+NavProfile* navProfiles[navigationProfiles]={};
 NavProfile& navProfile(int index){
   NavProfile*& profile=navProfiles[index];
   if(!profile)profile=new NavProfile();
   return *profile;
+}
+float maxBuiltRadius(){
+  float result=0;
+  for(int i=0;i<navigationProfiles;i++)if(navProfiles[i]&&navProfiles[i]->ready)
+    result=std::max(result,navProfiles[i]->radius);
+  return result;
 }
 int activeProfile=0;
 std::unordered_map<uint64_t,ChunkRaster>* chunkRasters=nullptr;
@@ -862,7 +869,7 @@ void refreshSettlementChunks(const std::vector<Settlement>& changed){
       return settlementNearChunk(site,chunkCx,chunkCz);
     }))continue;
     populateChunk(cx,cz);
-    for(int profile=0;profile<2;profile++){
+    for(int profile=0;profile<navigationProfiles;profile++){
       selectProfile(profile);
       if(!navReady)continue;
       buildActiveRaster();commitActiveSectors();refreshNeighborBorders(cx,cz);
@@ -873,9 +880,9 @@ void refreshSettlementChunks(const std::vector<Settlement>& changed){
 }
 void refreshBarrier(const Barrier& barrier){
   if(batchingBarriers){deferredBarrierRefresh.push_back(barrier);return;}
-  const float maxRadius=std::max(navProfile(0).radius,navProfile(1).radius);
+  const float maxRadius=maxBuiltRadius();
   const int r=int(std::ceil(maxRadius))+1,previous=activeProfile;
-  for(int profile=0;profile<2;profile++){
+  for(int profile=0;profile<navigationProfiles;profile++){
     selectProfile(profile);
     refreshRect(int(std::floor(barrier.x-barrier.halfX))-r,
       int(std::floor(barrier.z-barrier.halfZ))-r,
@@ -896,7 +903,7 @@ void refreshRemovedPropChunks(const Prop* changed){
       changed->z-changed->radius-maxIndexedRadius>=firstZ+side))continue;
     affected.emplace_back(cx,cz);
   }
-  for(int profile=0;profile<2;profile++){
+  for(int profile=0;profile<navigationProfiles;profile++){
     selectProfile(profile);
     if(!navReady)continue;
     for(const auto& [cx,cz]:affected){
@@ -919,9 +926,9 @@ void refreshRemovedPropChunks(const Prop* changed){
   if(!loadedChunks.empty())populateChunk(selectedX,selectedZ);
 }
 void flushBarrierBatch(){
-  const float maxRadius=std::max(navProfile(0).radius,navProfile(1).radius);
+  const float maxRadius=maxBuiltRadius();
   const int r=int(std::ceil(maxRadius))+1,previous=activeProfile;
-  for(int profile=0;profile<2;profile++){
+  for(int profile=0;profile<navigationProfiles;profile++){
     selectProfile(profile);
     if(!navReady)continue;
     std::unordered_set<uint64_t> sectors;
@@ -959,7 +966,7 @@ int spatial_generate_biome(uint32_t seed,int biome,int cx,int cz){
   batchingBarriers=false;deferredBarrierRefresh.clear();barrierBatch.clear();barrierBatchIds.clear();
   barrierState.clear();settlementState.clear();
   settlements.clear();nearbySettlements.clear();
-  for(int profile=0;profile<2;profile++){
+  for(int profile=0;profile<navigationProfiles;profile++){
     NavProfile& state=navProfile(profile);
     state.rasters.clear();state.ready=false;
     state.radius=0;state.worker=profile==1;
@@ -978,7 +985,7 @@ int spatial_add_chunk(int cx,int cz){
   for(const auto& [x,z]:loadedChunks)if(x==cx&&z==cz)return 0;
   populateChunk(cx,cz);loadedChunks.emplace_back(cx,cz);
   const int previous=activeProfile;
-  for(int profile=0;profile<2;profile++){
+  for(int profile=0;profile<navigationProfiles;profile++){
     selectProfile(profile);
     if(!navReady)continue;
     // Both radii rasterize the same freshly generated terrain and props.
@@ -997,7 +1004,7 @@ int spatial_remove_chunk(int cx,int cz){
   if(it==loadedChunks.end())return 0;
   loadedChunks.erase(it);
   const int previous=activeProfile;
-  for(int profile=0;profile<2;profile++){
+  for(int profile=0;profile<navigationProfiles;profile++){
     selectProfile(profile);
     if(!navReady)continue;
     chunkRasters->erase(chunkKey(cx,cz));
@@ -1096,9 +1103,10 @@ int spatial_water_vertex_count(){return int(waterTriangles.size()/3);}
 Prop* spatial_props_ptr(){return props.data();}
 int spatial_prop_count(){return int(props.size());}
 int spatial_halo_prop_count(){return haloPropCount;}
-int spatial_build_nav(float radius,int worker){
+int spatial_build_nav_profile(int index,float radius,int worker){
+  if(index<0||index>=navigationProfiles||(index==1)!=(worker!=0))return 0;
   if(loadedChunks.empty()||!chunkRasters||radius<=0||radius>maxIndexedRadius)return 0;
-  selectProfile(worker?1:0);
+  selectProfile(index);
   if(navReady&&radiusNow==radius)return lazy_loaded_sectors();
   radiusNow=radius;workerNow=worker!=0;
   if(!lazy_init(sector))return 0;
@@ -1112,9 +1120,14 @@ int spatial_build_nav(float radius,int worker){
   saveProfile();
   return lazy_loaded_sectors();
 }
-int spatial_select_nav_profile(int worker){
-  selectProfile(worker?1:0);
+int spatial_build_nav(float radius,int worker){return spatial_build_nav_profile(worker?1:0,radius,worker);}
+int spatial_select_nav_profile_index(int index){
+  if(index<0||index>=navigationProfiles)return 0;
+  selectProfile(index);
   return navReady?lazy_loaded_sectors():0;
+}
+int spatial_select_nav_profile(int worker){
+  return spatial_select_nav_profile_index(worker?1:0);
 }
 int spatial_add_wall(float x,float z,float halfX,float halfZ){
   return addBarrier(x,z,halfX,halfZ,0);

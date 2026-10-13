@@ -33,6 +33,7 @@ self.onmessage=async({data:request})=>{
       const started=performance.now();let value,routePoints;
       switch(request.op){
         case 'edge':value=Boolean(wasm.spatial_edge(request.x,request.z,request.nx,request.nz));break;
+        case 'walkable':value=Boolean(wasm.spatial_walkable(request.x,request.z));break;
         case 'route':{
           const count=wasm.lazy_route(request.x,request.z,request.nx,request.nz);
           value=count<0?'unknown':count===0?'blocked':'found';
@@ -52,7 +53,10 @@ self.onmessage=async({data:request})=>{
              !wasm.spatial_select_chunk(request.cx,request.cz))throw Error('Prop chunk is not resident');
           value=wasm.spatial_remove_prop(request.group,request.gx,request.gz);break;
         }
-        case 'profile':value=wasm.spatial_select_nav_profile(request.worker?1:0);break;
+        case 'profile':value=request.index===undefined?
+          wasm.spatial_select_nav_profile(request.worker?1:0):
+          wasm.spatial_select_nav_profile_index(request.index);break;
+        case 'build-profile':value=wasm.spatial_build_nav_profile(request.index,request.radius,request.worker?1:0);break;
         case 'surface':value=wasm.spatial_surface(request.x,request.z);break;
         case 'snapshot':value=captureSpatialState(wasm);break;
         case 'restore':{
@@ -63,7 +67,7 @@ self.onmessage=async({data:request})=>{
             request.cx??0,request.cz??0);
           applySpatialState(wasm,state);
           for(const profile of request.profiles??[{radius:.28,worker:true},{radius:1.1,worker:false}])
-            wasm.spatial_build_nav(profile.radius,profile.worker?1:0);
+            wasm.spatial_build_nav_profile(profile.index??(profile.worker?1:0),profile.radius,profile.worker?1:0);
           seed=state.seed;biome=state.biome??'savanna';value=true;break;
         }
         default:throw Error(`Unknown spatial operation: ${request.op}`);
@@ -86,7 +90,8 @@ self.onmessage=async({data:request})=>{
       wasm.spatial_generate_biome(seed,biome==='desert'?1:biome==='grand_river'?2:biome==='volcanoes'?3:biome==='mangrove'?4:biome==='canyons'?5:0,request.cx,request.cz);
       if(request.settlement){const {x,z,hx,hz}=request.settlement;wasm.spatial_set_settlement(x,z,hx,hz);}
       if(request.profiles){
-        for(const profile of request.profiles)wasm.spatial_build_nav(profile.radius,profile.worker?1:0);
+        for(const profile of request.profiles)
+          wasm.spatial_build_nav_profile(profile.index??(profile.worker?1:0),profile.radius,profile.worker?1:0);
       }else wasm.spatial_build_nav(request.radius??1.1,0);
     }else wasm.spatial_add_chunk(request.cx,request.cz);
     const spatialMs=performance.now()-started,copyStarted=performance.now();
