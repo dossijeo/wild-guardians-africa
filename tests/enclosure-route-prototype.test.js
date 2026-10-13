@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {fixture} from '../tools/probe-raid-reservation-saturation.mjs';
 import {spawnRaid,updateRaid} from '../src/simulation/raids.js';
 import {installEnclosureRouteTree} from '../tools/experiments/enclosure-route-tree-prototype.mjs';
+import {installSharedConnectivity} from '../tools/experiments/shared-connectivity-prototype.mjs';
 import {breachPortalTable} from '../tools/experiments/breach-portal-prototype.mjs';
 import {deserialize,serialize} from '../src/persistence/snapshots.js';
 import {Navigation} from '../src/world/navigation.js';
@@ -81,4 +82,33 @@ test('incremental shared tree reuses a breached approach and validates every mov
   };
   assert(spawnRaid(s,{group:Array(12).fill('warthog')},nav));updateRaid(s,0,nav);
   assert(checked>0);assert(metrics.reused>0);assert(metrics.sharedOrigins>0);assert(metrics.portalEdges>0);
+});
+
+for(const [layout,breach] of [['mono',false],['closed-walls',false],['closed-walls',true]])test(`region-driven selector follows a physical ${layout} route, breach=${breach}`,()=>{
+ const {s,nav}=fixture(layout);
+ if(breach){ruin(s,'wall-2-4','wall-2-5');nav.setState(s);}
+ const region={},route={};installSharedConnectivity(nav,region,true);
+ installEnclosureRouteTree(nav,route,false,true,false,true,false,true);
+ assert(spawnRaid(s,{group:Array(5).fill('warthog')},nav));updateRaid(s,0,nav);
+ const crops=new Set(s.plants.filter(p=>p.alive).map(p=>p.id));
+ const cropTargets=s.raid.animals.filter(a=>crops.has(a.targetId)).length;
+ assert.equal(cropTargets,breach||layout==='mono'?5:0);
+ for(const animal of s.raid.animals){
+   let from=animal;
+   for(const point of animal.path??[]){assert(nav.segmentClear(from,point,animal.radius,null,false));from=point;}
+ }
+ assert(region.selectionQueries>0);
+});
+
+test('region-driven targeting is deterministic across a save and fresh navigation index',()=>{
+ const {s,nav}=fixture('closed-walls');ruin(s,'wall-2-4','wall-2-5');nav.setState(s);
+ installSharedConnectivity(nav,{},true);installEnclosureRouteTree(nav,{},false,true,false,true,false,true);
+ assert(spawnRaid(s,{group:Array(5).fill('warthog')},nav));updateRaid(s,0,nav);
+ const copy=deserialize(serialize(s)),fresh=new Navigation(copy.seed,copy.biome,nav.profile);
+ fresh.field=nav.field;fresh.propsAt=()=>[];fresh.setState(copy);fresh.setActiveBounds(nav.activeBounds);fresh.setRaidView(nav.raidView.eye,nav.raidView.target);
+ installSharedConnectivity(fresh,{},true);installEnclosureRouteTree(fresh,{},false,true,false,true,false,true);
+ for(let i=0;i<15;i++){
+   Game.tick(s,.1,nav);Game.tick(copy,.1,fresh);
+   assert.equal(serialize(s),serialize(copy));
+ }
 });

@@ -12,7 +12,7 @@ const inside=(b,x,z)=>x>=b.minX&&x<=b.maxX&&z>=b.minZ&&z<=b.maxZ;
 const nativeMargin=40;
 
 export function installSharedConnectivity(nav,metrics={},selectionOnly=false){
-  Object.assign(metrics,{components:0,reused:0,visited:0,componentMilliseconds:0,queries:0,positive:0,negative:0,direct:0,uncertain:0,groupSkips:0,selectionQueries:0,selectionPoints:0,selectionRejected:0,selectionGroups:0,selectionTargets:0,selectionRoutes:0,selectionSkips:0,portalLinks:0,portalBuildMilliseconds:0,grid:{}});
+  Object.assign(metrics,{components:0,reused:0,visited:0,componentMilliseconds:0,queries:0,positive:0,negative:0,direct:0,uncertain:0,groupSkips:0,selectionQueries:0,selectionPoints:0,selectionRejected:0,selectionGroups:0,selectionTargets:0,selectionRoutes:0,selectionSkips:0,probeQueries:0,probeRoutes:0,portalLinks:0,portalBuildMilliseconds:0,grid:{}});
   const originalReach=nav.approachReachability.bind(nav),originalGroup=nav.approachGroupBlocked.bind(nav);
   let version=null,grid=null,bounds=null,portals=null,byRadius=new Map();
   const prepare=()=>{
@@ -103,8 +103,7 @@ export function installSharedConnectivity(nav,metrics={},selectionOnly=false){
   }
   nav.sharedCropSelection=(actor,groups,accept)=>{
     metrics.selectionQueries++;
-    const region=component(actor,actor.radius);
-    if(!region){metrics.uncertain++;return undefined;}
+    prepare();if(!bounds){metrics.uncertain++;return undefined;}
     const index=radiusIndex(actor.radius);
     const candidates=target=>{
       if(index.serviceCache.has(target.id))return index.serviceCache.get(target.id);
@@ -126,6 +125,25 @@ export function installSharedConnectivity(nav,metrics={},selectionOnly=false){
       }
       index.serviceCache.set(target.id,points);return points;
     };
+    // In an open region, the first prioritized group commonly has an obvious
+    // local route. Ask the shared tree for at most two nearby group members
+    // before building an entire connectivity component to reject a barrier.
+    const leading=groups.find(group=>group.targets.length);
+    if(leading){
+      const nearest=[...leading.targets].sort((a,b)=>Math.hypot(a.x-actor.x,a.z-actor.z)-Math.hypot(b.x-actor.x,b.z-actor.z)||a.id.localeCompare(b.id)).slice(0,2);
+      for(const target of nearest){
+        if(nav.state.spells?.some(sp=>sp.kind==='shield'&&sp.remaining>0&&Math.hypot(sp.x-target.x,sp.z-target.z)<=sp.radius))continue;
+        const points=[...candidates(target)].sort((a,b)=>Math.hypot(a.x-actor.x,a.z-actor.z)-Math.hypot(b.x-actor.x,b.z-actor.z));
+        for(const point of points.slice(0,2)){
+          if(!accept(target,point))continue;
+          metrics.probeQueries++;
+          const path=nav.approachPath(actor,point,actor.radius,32);
+          if(path){metrics.probeRoutes++;return {target,approach:{point,path}};}
+        }
+      }
+    }
+    const region=component(actor,actor.radius);
+    if(!region){metrics.uncertain++;return undefined;}
     for(const group of groups){
       metrics.selectionGroups++;
       if(region.blockedGroups.has(group.id)){metrics.groupSkips++;continue;}
