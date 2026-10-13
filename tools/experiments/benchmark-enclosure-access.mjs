@@ -38,7 +38,7 @@ for(const candidate of runSet==='candidate'?[true]:[false,true,true,false]){
       installSharedConnectivity(nav,metrics.region);
       installEnclosureRouteTree(nav,metrics.route,false,true,false,true);
     }
-    else (['routes','negative','grid','adaptive','shared-tree','shared-tree-pruned','shared-incremental'].includes(mode)?installEnclosureRouteTree:installEnclosureAccessPrototype)(nav,metrics,mode==='negative',mode==='grid'||mode==='adaptive'||mode.startsWith('shared-'),mode==='adaptive',mode.startsWith('shared-'),mode==='shared-tree-pruned',mode==='shared-incremental');
+    else (['routes','negative','grid','adaptive','shared-tree','shared-tree-pruned','shared-incremental','shared-batched','adaptive-shared-incremental'].includes(mode)?installEnclosureRouteTree:installEnclosureAccessPrototype)(nav,metrics,mode==='negative',mode==='grid'||mode==='adaptive'||mode.startsWith('shared-')||mode==='adaptive-shared-incremental',mode==='adaptive'||mode==='adaptive-shared-incremental',mode.startsWith('shared-')||mode==='adaptive-shared-incremental',mode==='shared-tree-pruned',mode==='shared-incremental'||mode==='shared-batched'||mode==='adaptive-shared-incremental',mode==='shared-batched');
   }
   let searches=0,success=0,nativeSearches=0;const path=nav.approachPath.bind(nav),findSteps=nav.findPathSteps.bind(nav);
   nav.findPathSteps=(...args)=>{if(args[4]===false)nativeSearches++;return findSteps(...args);};

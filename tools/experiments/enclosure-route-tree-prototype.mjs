@@ -6,13 +6,66 @@ import {activeCrops} from '../../src/simulation/active-crops.js';
 import {logicalAnimalGrid} from './logical-animal-grid-prototype.mjs';
 import {breachPortalTable} from './breach-portal-prototype.mjs';
 
-export function installEnclosureRouteTree(nav,metrics={},negativeOnly=false,gridMode=false,adaptive=false,shareOrigins=false,pruneReach=false,incremental=false){
+export function installEnclosureRouteTree(nav,metrics={},negativeOnly=false,gridMode=false,adaptive=false,shareOrigins=false,pruneReach=false,incremental=false,batchTargets=false){
   const original=nav.approachPath.bind(nav),fields=[];
   const originalReach=nav.approachReachability?.bind(nav);
-  Object.assign(metrics,{built:0,reused:0,sharedOrigins:0,sharedRouteSteps:0,sharedSmoothedSteps:0,portalEdges:0,portalTraversals:0,visited:0,buildMilliseconds:0,treeRoutes:0,fallbacks:0,fallbackReasons:{},unreachable:0,direct:0,nativeTrials:0,activations:0,gridRuns:[]});
+  Object.assign(metrics,{built:0,reused:0,sharedOrigins:0,sharedRouteSteps:0,sharedSmoothedSteps:0,portalEdges:0,portalTraversals:0,batchQueries:0,batchPoints:0,batchRoutes:0,batchSkips:0,batchFallbacks:0,visited:0,buildMilliseconds:0,treeRoutes:0,fallbacks:0,fallbackReasons:{},unreachable:0,direct:0,nativeTrials:0,activations:0,gridRuns:[]});
   let grid=null,gridVersion=null;
   let decisionVersion=null,failedNative=0,active=!adaptive;
   const fallback=(reason,start,end,radius,margin)=>{metrics.fallbacks++;metrics.fallbackReasons[reason]=(metrics.fallbackReasons[reason]??0)+1;return original(start,end,radius,margin);};
+  if(batchTargets)nav.sharedCropSelection=(actor,groups,accept)=>{
+    metrics.batchQueries++;
+    const findField=()=>fields.find(f=>f.version===nav.version&&f.radius===actor.radius&&f.complete&&
+      (()=>{
+        const sx=Math.round(actor.x),sz=Math.round(actor.z);
+        for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){
+          const x=sx+dx,z=sz+dz;
+          if(x<f.minX||x>f.maxX||z<f.minZ||z>f.maxZ)continue;
+          if(Number.isFinite(f.cost[(z-f.minZ)*f.width+x-f.minX])&&nav.segmentClear(actor,{x,z},actor.radius,null,false))return true;
+        }
+        return false;
+      })());
+    let field=findField();
+    if(!field){
+      outer:for(const group of groups)for(const target of [...group.targets].sort((a,b)=>Math.hypot(a.x-actor.x,a.z-actor.z)-Math.hypot(b.x-actor.x,b.z-actor.z)||a.id.localeCompare(b.id))){
+        if(nav.state.spells?.some(sp=>sp.kind==='shield'&&sp.remaining>0&&Math.hypot(sp.x-target.x,sp.z-target.z)<=sp.radius))continue;
+        const reach=.6+actor.radius,angle=Math.atan2(actor.x-target.x,actor.z-target.z);
+        for(let sample=0;sample<32;sample++){
+          const offset=sample===0?0:Math.ceil(sample/2)*(sample%2?1:-1)*Math.PI/16;
+          const point={id:`approach-${target.id}-direct-${sample}`,x:target.x+Math.sin(angle+offset)*reach,z:target.z+Math.cos(angle+offset)*reach};
+          if(!nav.walkable(point.x,point.z,actor.radius,null,false)||!accept(target,point))continue;
+          const path=nav.approachPath(actor,point,actor.radius,32);
+          if(path){metrics.batchRoutes++;return {target,approach:{point,path}};}
+          break outer;
+        }
+      }
+      field=findField();
+    }
+    if(!field){metrics.batchFallbacks++;return undefined;}
+    for(const group of groups)for(const target of [...group.targets].sort((a,b)=>Math.hypot(a.x-actor.x,a.z-actor.z)-Math.hypot(b.x-actor.x,b.z-actor.z)||a.id.localeCompare(b.id))){
+      if(nav.state.spells?.some(sp=>sp.kind==='shield'&&sp.remaining>0&&Math.hypot(sp.x-target.x,sp.z-target.z)<=sp.radius)){metrics.batchFallbacks++;return undefined;}
+      const reach=.6+actor.radius,angle=Math.atan2(actor.x-target.x,actor.z-target.z);
+      for(let sample=0;sample<32;sample++){
+        const offset=sample===0?0:Math.ceil(sample/2)*(sample%2?1:-1)*Math.PI/16;
+        const point={id:`approach-${target.id}-direct-${sample}`,x:target.x+Math.sin(angle+offset)*reach,z:target.z+Math.cos(angle+offset)*reach};
+        metrics.batchPoints++;
+        if(!nav.walkable(point.x,point.z,actor.radius,null,false)||!accept(target,point))continue;
+        let possible=nav.segmentClear(actor,point,actor.radius,null,false);
+        if(!possible){
+          const ex=Math.round(point.x),ez=Math.round(point.z);
+          for(let dz=-1;dz<=1&&!possible;dz++)for(let dx=-1;dx<=1;dx++){
+            const x=ex+dx,z=ez+dz;
+            if(x<field.minX||x>field.maxX||z<field.minZ||z>field.maxZ)continue;
+            if(Number.isFinite(field.cost[(z-field.minZ)*field.width+x-field.minX])&&nav.segmentClear({x,z},point,actor.radius,null,false))possible=true;
+          }
+        }
+        if(!possible)continue;
+        const path=nav.approachPath(actor,point,actor.radius,32);
+        if(path){metrics.batchRoutes++;return {target,approach:{point,path}};}
+      }
+    }
+    metrics.batchSkips++;return null;
+  };
   if(shareOrigins&&pruneReach&&originalReach)nav.approachReachability=(start,targets,radius,margin=32)=>{
     const field=fields.find(f=>f.version===nav.version&&f.radius===radius&&f.complete&&
       (()=>{

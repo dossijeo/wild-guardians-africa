@@ -255,8 +255,8 @@ function targetFor(s,a,nav) {
   }
   groups.sort((a,b)=>b.value-a.value||a.id.localeCompare(b.id));
   if(nav.sharedCropSelection){
-    const shared=nav.sharedCropSelection(a,groups.map(g=>({id:g.id,targets:g.targets.filter(p=>canAttackCrop(s,p))})),(_target,point)=>
-      reservedApproachClear(s,a,point)&&actorSegmentClear(point,point,a,actorBlockers(s,a,false)));
+    const shared=nav.sharedCropSelection(a,groups.map(g=>({id:g.id,targets:g.targets.filter(p=>canAttackCrop(s,p))})),(target,point)=>
+      !targetReserved(s,a,target)&&reservedApproachClear(s,a,point)&&actorSegmentClear(point,point,a,actorBlockers(s,a,false)));
     if(shared!==undefined){
       if(shared){detail();return {target:shared.target,reservation:targetReservationKey(shared.target,a),approach:shared.approach,shieldId:null};}
       // A complete, conservative region proof excludes crops only. Structures

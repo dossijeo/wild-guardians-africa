@@ -1,0 +1,64 @@
+{
+  "input": "docs/qa/event-driven-virtual-player/pilot-good-canyon-2026-day7-phase/checkpoint-state.json.gz",
+  "seconds": 1,
+  "mode": "shared-batched",
+  "runSet": "candidate",
+  "day": 7,
+  "time": 480.0000000000409,
+  "biome": "gran-canon",
+  "plants": 350,
+  "living": 178,
+  "sameState": true,
+  "baselineDeterministic": null,
+  "candidateDeterministic": null,
+  "rows": [
+    {
+      "variant": "candidate",
+      "milliseconds": 4106.415,
+      "searches": 336,
+      "nativeSearches": 5,
+      "success": 2,
+      "rssDeltaBytes": 55967744,
+      "hash": "2faa1f9533ae298f60223a09f55fdcd3c01fd680c845cc1b1ae307234b4995d1",
+      "metrics": {
+        "built": 1,
+        "reused": 115,
+        "sharedOrigins": 1,
+        "sharedRouteSteps": 17,
+        "sharedSmoothedSteps": 2,
+        "portalEdges": 0,
+        "portalTraversals": 0,
+        "batchQueries": 6,
+        "batchPoints": 34176,
+        "batchRoutes": 0,
+        "batchSkips": 6,
+        "batchFallbacks": 0,
+        "visited": 4798,
+        "buildMilliseconds": 335.7998999999999,
+        "treeRoutes": 1,
+        "fallbacks": 0,
+        "fallbackReasons": {},
+        "unreachable": 334,
+        "direct": 1,
+        "nativeTrials": 0,
+        "activations": 0,
+        "gridRuns": [
+          {
+            "chunks": 35,
+            "cells": 5081,
+            "edges": 5102,
+            "buildMilliseconds": 316.52329999999864,
+            "edgeLookups": 5116
+          }
+        ],
+        "grid": {
+          "chunks": 35,
+          "cells": 5081,
+          "edges": 5102,
+          "buildMilliseconds": 316.52329999999864,
+          "edgeLookups": 5116
+        }
+      }
+    }
+  ]
+}
