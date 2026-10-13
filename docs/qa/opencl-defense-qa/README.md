@@ -8,7 +8,7 @@
 - Retained native snapshot: `docs/qa/integrated-spiritual-survival/pilot-v90-q9-good-rolling-zarzas-canyon-712-seven/partial-state.json.gz`, SHA-256 `bf193cf625f19b9fe86731e30ebb445ebb2d7ce3f4489d52d7dbf7a455f39ab1`.
 - The snapshot is day 6 of a stopped Gran Cañón/Saheliana native pilot. Its retained candidate wall plan is evaluated hypothetically with `nativePerimeterProof`; no wall is purchased or added to the saved game.
 - GPU: Intel UHD Graphics, Intel OpenCL Graphics platform, **no FP64 support**.
-- Reproduce the sample with `node tools/experiments/opencl-defense-capture.mjs <pilot-directory> <fresh-output.json> capture`; set `OPENCL_QA_SAMPLE_LIMIT=16384` for the large batch. Run `python tools/experiments/opencl-defense-slope.py <output.json.workload.json.gz> <results.json> <gpu-report.json>`, then use the capture script's `replay` mode with that results file. `OPENCL_QA_FORCE_CPU=1` exercises the no-GPU fallback. The retained snapshot already exists in this branch; intermediate workload/result arrays are regenerated, not committed.
+- QA runner requirements: Node.js, Python with NumPy and PyOpenCL, and an installed OpenCL driver. Reproduce the sample with `node tools/experiments/opencl-defense-capture.mjs <pilot-directory> <fresh-output.json> capture`; set `OPENCL_QA_SAMPLE_LIMIT=16384` for the large batch. Run `python tools/experiments/opencl-defense-slope.py <output.json.workload.json.gz> <results.json> <gpu-report.json>`, then use the capture script's `replay` mode with that results file. `OPENCL_QA_FORCE_CPU=1` exercises the no-GPU fallback. The retained snapshot already exists in this branch; intermediate workload/result arrays are regenerated, not committed.
 
 ## Where parallelism is and is not useful
 
