@@ -1,19 +1,20 @@
 // Renderer-facing copies of the C++ chunk buffers. This module deliberately
 // has no Three.js or terrain-generator dependency so it can run in a worker.
 export function spatialProps(wasm){
-  const count=wasm.spatial_prop_count(),view=new DataView(wasm.memory.buffer,wasm.spatial_props_ptr(),count*28);
+  const count=wasm.spatial_prop_count(),view=new DataView(wasm.memory.buffer,wasm.spatial_props_ptr(),count*40);
   return Array.from({length:count},(_,i)=>{
-    const at=i*28;
+    const at=i*40;
     return {x:view.getFloat32(at,true),z:view.getFloat32(at+4,true),y:view.getFloat32(at+8,true),
-      radius:view.getFloat32(at+12,true),scale:view.getFloat32(at+16,true),yaw:view.getFloat32(at+20,true),slot:view.getInt32(at+24,true)};
+      radius:view.getFloat32(at+12,true),scale:view.getFloat32(at+16,true),yaw:view.getFloat32(at+20,true),
+      slot:view.getInt32(at+24,true),group:view.getInt32(at+28,true),gx:view.getInt32(at+32,true),gz:view.getInt32(at+36,true)};
   });
 }
 
 export function spatialInstances(wasm,cx,cz){
   const lists=Array.from({length:20},()=>[]);
-  for(const [index,prop] of spatialProps(wasm).entries()){
-    const {slot,scale,...position}=prop;
-    lists[slot].push({id:`spatial:${cx}:${cz}:${index}`,slot,...position,
+  for(const prop of spatialProps(wasm)){
+    const {slot,scale,group,gx,gz,...position}=prop;
+    lists[slot].push({id:`spatial:${group}:${gx}:${gz}`,slot,...position,
       scale,sx:scale,sy:scale,sz:scale,tint:1,priority:0});
   }
   return lists;

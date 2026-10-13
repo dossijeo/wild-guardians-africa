@@ -73,7 +73,7 @@ test('the dry Desert chunk shares visible dunes, solid props and hierarchical ro
   }
   const wall=core.addBarrier(23.5,0,.8,5,0);assert(wall>0);
   const state=JSON.parse(JSON.stringify(core.snapshot()));
-  assert.equal(state.version,2);assert.equal(state.biome,'desert');
+  assert.equal(state.version,3);assert.equal(state.biome,'desert');
   const restored=createSpatialSavannaPrototype(module);
   restored.restoreState(state,0,0);restored.addChunk(1,0);
   restored.buildNavigation(.28,true);restored.buildNavigation(1.1,false);
@@ -82,6 +82,36 @@ test('the dry Desert chunk shares visible dunes, solid props and hierarchical ro
   assert.deepEqual(Array.from(restored.heights()),Array.from(heights));
   assert.deepEqual(restored.props(),props);
   assert.equal(restored.waterTriangles().length,0);
+});
+test('removing a generated obstacle changes the same visual and logical world and survives reload',()=>{
+  for(const biome of ['savanna','desert']){
+    const core=createSpatialSavannaPrototype(module);
+    core.generate(28,0,0,biome);
+    core.buildNavigation(.28,true);core.buildNavigation(1.1,false);
+    const solid=core.props().find(p=>p.group<=5&&
+      (p.slot<=3||(p.slot>=10&&p.slot<=12)||p.slot>=18));
+    assert(solid,`${biome} needs a removable solid`);
+    const identity={group:solid.group,gx:solid.gx,gz:solid.gz};
+    const before=core.instances().flat().find(p=>p.id===`spatial:${solid.group}:${solid.gx}:${solid.gz}`);
+    assert(before,'rendered instance must expose the stable identity');
+    assert(core.propBlocked(solid.x,solid.z));
+    assert.equal(core.removeProp(identity),1);
+    assert.equal(core.removeProp(identity),0,'a prop cannot be removed twice');
+    assert(!core.props().some(p=>p.group===solid.group&&p.gx===solid.gx&&p.gz===solid.gz));
+    assert(!core.propBlocked(solid.x,solid.z),'the removed prop must leave no logical collider');
+    const state=JSON.parse(JSON.stringify(core.snapshot()));
+    assert.deepEqual(state.removedProps,[identity]);
+    const restored=createSpatialSavannaPrototype(module);
+    restored.restoreState(state,0,0);
+    restored.buildNavigation(.28,true);restored.buildNavigation(1.1,false);
+    assert.deepEqual(restored.snapshot(),state);
+    assert.deepEqual(restored.props(),core.props());
+    for(const worker of [true,false]){
+      core.selectNavigation(worker);restored.selectNavigation(worker);
+      const x=Math.round(solid.x),z=Math.round(solid.z);
+      assert.equal(restored.walkable(x,z),core.walkable(x,z));
+    }
+  }
 });
 test('the 35x35 ground material mask meets at adjacent chunk overlaps',()=>{
   const core=createSpatialSavannaPrototype(module);
@@ -428,7 +458,14 @@ test('versioned spatial state restores settlements, sparse barrier IDs and both 
   const before=restored.snapshot();
   assert.throws(()=>restored.restoreState({...before,barriers:[before.barriers[0],before.barriers[0]]}),
     /Invalid spatial barrier/);
+  assert.throws(()=>restored.restoreState({...before,removedProps:[
+    {group:0,gx:1,gz:2},{group:0,gx:1,gz:2}]}),/sorted and unique/);
   assert.deepEqual(restored.snapshot(),before,'invalid snapshots must not reset a running world');
+  const legacy={...state,version:2};delete legacy.removedProps;
+  const legacyRestored=createSpatialSavannaPrototype(module);
+  legacyRestored.restoreState(legacy,0,0);
+  assert.equal(legacyRestored.snapshot().biome,'savanna');
+  assert.deepEqual(legacyRestored.snapshot().removedProps,[]);
 });
 test('neighboring chunks share their terrain seam and seed-dependent props',()=>{
   const core=createSpatialSavannaPrototype(module);
@@ -505,6 +542,14 @@ test('a neighboring chunk owns the instance while its footprint blocks our edge'
     core.buildNavigation(1.1,false);
     const z=Math.max(-24,Math.min(23,Math.round(external.z)));
     assert.equal(core.walkable(23,z),false);
+    core.addChunk(1,0);core.selectChunk(0,0);
+    const halo=core.metrics().haloProps;
+    core.selectChunk(1,0);
+    assert.equal(core.removeProp(external),1);
+    core.selectChunk(0,0);
+    assert.equal(core.metrics().haloProps,halo-1,'neighboring logical halo must lose the removed prop');
+    core.selectChunk(1,0);
+    assert(!core.props().some(p=>p.group===external.group&&p.gx===external.gx&&p.gz===external.gz));
     caseFound=true;
   }
   assert(caseFound,'expected a neighboring tree or rock to overlap a tested seam');

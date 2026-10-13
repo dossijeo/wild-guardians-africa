@@ -20,17 +20,21 @@ export function captureSpatialState(wasm){
       z:records.getFloat32(at+8,true),halfX:records.getFloat32(at+12,true),
       halfZ:records.getFloat32(at+16,true),passMask:records.getInt32(at+20,true)});
   }
-  return {version:2,biome:wasm.spatial_world_biome()===1?'desert':'savanna',
-    seed:wasm.spatial_world_seed()>>>0,settlements,barriers,
+  const removedProps=[],removedCount=wasm.spatial_removed_prop_count();
+  const removed=new Int32Array(wasm.memory.buffer,wasm.spatial_removed_prop_state_ptr(),removedCount*3);
+  for(let i=0;i<removedCount;i++)removedProps.push({group:removed[i*3],gx:removed[i*3+1],gz:removed[i*3+2]});
+  return {version:3,biome:wasm.spatial_world_biome()===1?'desert':'savanna',
+    seed:wasm.spatial_world_seed()>>>0,settlements,barriers,removedProps,
     nextBarrierId:wasm.spatial_next_barrier_id()};
 }
 
 export function validateSpatialState(state){
   const finiteF32=value=>Number.isFinite(value)&&Number.isFinite(Math.fround(value));
-  if((state?.version!==1&&state?.version!==2)||
-     (state.version===2&&state.biome!=='savanna'&&state.biome!=='desert')||
+  if((state?.version!==1&&state?.version!==2&&state?.version!==3)||
+     (state.version>=2&&state.biome!=='savanna'&&state.biome!=='desert')||
      !Number.isInteger(state.seed)||state.seed<0||state.seed>0xffffffff||
      !Array.isArray(state.settlements)||!Array.isArray(state.barriers)||
+     (state.version===3&&(!Array.isArray(state.removedProps)||state.removedProps.length>100000))||
      state.settlements.length>100000||state.barriers.length>100000||
      !Number.isInteger(state.nextBarrierId)||
      state.nextBarrierId<1||state.nextBarrierId>0x7fffffff)
@@ -48,11 +52,32 @@ export function validateSpatialState(state){
       throw TypeError('Invalid spatial barrier');
     previous=barrier.id;
   }
+  let last=null;
+  for(const prop of state.removedProps??[]){
+    if(!Number.isInteger(prop.group)||prop.group<0||prop.group>5||
+       !Number.isInteger(prop.gx)||prop.gx<-0x80000000||prop.gx>0x7fffffff||
+       !Number.isInteger(prop.gz)||prop.gz<-0x80000000||prop.gz>0x7fffffff)
+      throw TypeError('Invalid removed spatial prop');
+    const key=[prop.group,prop.gx,prop.gz];
+    if(last&&((key[0]<last[0])||(key[0]===last[0]&&key[1]<last[1])||
+       (key[0]===last[0]&&key[1]===last[1]&&key[2]<=last[2])))
+      throw TypeError('Removed spatial props must be sorted and unique');
+    last=key;
+  }
   return state;
 }
 
 export function applySpatialState(wasm,state){
   validateSpatialState(state);
+  const removed=state.removedProps??[];
+  if(removed.length){
+    const pointer=wasm.spatial_removed_prop_restore_ptr(removed.length);
+    if(!pointer)throw Error('Could not allocate removed spatial props');
+    const records=new Int32Array(wasm.memory.buffer,pointer,removed.length*3);
+    removed.forEach((prop,i)=>{records[i*3]=prop.group;records[i*3+1]=prop.gx;records[i*3+2]=prop.gz;});
+    if(wasm.spatial_restore_removed_props(removed.length)!==1)
+      throw Error('Could not restore removed spatial props');
+  }
   for(const site of state.settlements){
     if(wasm.spatial_add_settlement(site.x,site.z,site.hx,site.hz)<0)
       throw Error('Could not restore spatial settlement');

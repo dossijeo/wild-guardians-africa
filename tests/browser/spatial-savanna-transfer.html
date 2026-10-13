@@ -71,7 +71,7 @@ try{
     format:sceneFormat?'scene':'raw',settlement:settlement?{x:10,z:8,hx:7,hz:6}:null});
   const candidateSecond=await request(candidate,{id:4,seed,cx:1,cz:0,radius:1.1,
     format:sceneFormat?'scene':'raw'});
-  let topology=null,barrierTopology=null,batchTopology=null,multipleSettlements=null,surfaceView=null,spatialReload=null;
+  let topology=null,barrierTopology=null,batchTopology=null,multipleSettlements=null,surfaceView=null,spatialReload=null,propRemoval=null;
   if(sceneFormat){
     const view=new SpatialSurfaceView();view.install(candidateFirst.data);view.install(candidateSecond.data);
     const query={x:30.3,z:5.7};
@@ -173,6 +173,19 @@ try{
       sameFirstSettlement:true,secondChunkChanged:true,memoryBytes:changed.metrics.memoryBytes};
   }
   if(sceneFormat){
+    const solid=candidateFirst.data.instances.flat().find(prop=>prop.slot<=3||
+      (prop.slot>=10&&prop.slot<=12)||prop.slot>=18);
+    if(!solid)throw Error('No removable solid prop in the first chunk');
+    const [,group,gx,gz]=solid.id.split(':').map(Number);
+    if(group>5)throw Error('The selected solid is a fixed water feature');
+    const beforeProp=await request(candidate,{id:220,op:'profile',worker:false});
+    const removedProp=await request(candidate,{id:221,op:'prop-remove',cx:0,cz:0,group,gx,gz});
+    const afterProp=await request(candidate,{id:222,seed,cx:0,cz:0,read:true,format:'scene'});
+    if(removedProp.value!==1||afterProp.data.instances.flat().some(prop=>prop.id===solid.id)||
+       removedProp.metrics.sectorUpdates<=beforeProp.metrics.sectorUpdates)
+      throw Error('A removed prop remains visible in the spatial chunk');
+    propRemoval={id:solid.id,operationMs:removedProp.timing.operationMs,
+      sectorUpdates:removedProp.metrics.sectorUpdates-beforeProp.metrics.sectorUpdates};
     const wall=await request(candidate,{id:210,op:'barrier-add',x:23.5,z:topology.crossing.z,
       halfX:.8,halfZ:.45,passMask:0});
     const saved=await request(candidate,{id:211,op:'snapshot'});
@@ -188,10 +201,12 @@ try{
       if(!restored.value||wall.value<=0||JSON.stringify(restoredState.value)!==JSON.stringify(saved.value)||
          !same(restoredFirst.data.terrain.positions,candidateFirst.data.terrain.positions)||
          !same(restoredFirst.data.groundMask,candidateFirst.data.groundMask)||
+         JSON.stringify(restoredFirst.data.instances)!==JSON.stringify(afterProp.data.instances)||
          !same(restoredSecond.data.terrain.positions,candidateSecond.data.terrain.positions)||
          route.value!==liveRoute.value)
         throw Error('The versioned spatial state did not restore visual and route behavior');
       spatialReload={version:saved.value.version,settlements:saved.value.settlements.length,
+        removedProps:saved.value.removedProps.length,
         barriers:saved.value.barriers.length,nextBarrierId:saved.value.nextBarrierId,
         routeStatus:route.value,restoredMemoryBytes:restored.metrics.memoryBytes};
     }finally{reloadedWorker.terminate();}
@@ -206,7 +221,7 @@ try{
     }else if(result.data.heights.length!==2401||result.data.colors.length!==7203||
        result.data.water.length!==2304||result.data.groundMask.length!==4900||result.data.waterLevels.length!==2304||
        result.data.waterTriangles.length%9!==0||
-       result.data.props.byteLength!==result.data.count*28)
+       result.data.props.byteLength!==result.data.count*40)
       throw Error('Transferred WASM buffers have inconsistent lengths');
   }
   for(let z=0;z<49;z++)if((sceneFormat?candidateFirst.data.terrain.positions[(z*49+48)*3+1]:candidateFirst.data.heights[z*49+48])!==
@@ -219,13 +234,14 @@ try{
     ...result.timing,three:prepareThree(result.data,result.cx,result.cz),
     props:sceneFormat?result.data.instances.reduce((n,list)=>n+list.length,0):result.data.count,
     metrics:result.metrics}));
-  window.qaStats={seed,biome,sceneFormat,settlement,current,spatial,topology,barrierTopology,batchTopology,multipleSettlements,surfaceView,spatialReload,
+  window.qaStats={seed,biome,sceneFormat,settlement,current,spatial,topology,barrierTopology,batchTopology,multipleSettlements,surfaceView,spatialReload,propRemoval,
     checks:{transferLengths:true,terrainSeam:true,wallEdit:!!topology,
       dynamicPassage:!!barrierTopology,
       batchedTopology:batchTopology?.count===12,
       evictionRegeneration:topology?.sameVisualPayload===true,
       multipleSettlements:multipleSettlements?.sameFirstSettlement===true,
-      spatialReload:spatialReload?.version===2,
+      spatialReload:spatialReload?.version===3&&spatialReload?.removedProps===1,
+      propRemoval:propRemoval?.sectorUpdates>0,
       surfaceView:surfaceView?.difference<=.00002}};window.qaReady=true;
   status.textContent=JSON.stringify(window.qaStats,null,2);
 }catch(error){window.qaError=String(error.stack??error);status.textContent=window.qaError;}

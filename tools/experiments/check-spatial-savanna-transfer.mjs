@@ -10,7 +10,8 @@ const multiple=process.env.WG_QA_MULTIPLE==='1';
 const biome=process.env.WG_QA_BIOME==='desert'?'desert':'savanna';
 const output=process.env.WG_QA_OUTPUT??(sceneFormat?'docs/qa/hierarchical-navigation/spatial-scene-payload-worker-transfer.json':
   'docs/qa/hierarchical-navigation/spatial-ground-mask-transfer.json');
-const browser=await chromium.launch({headless:true});
+const browser=await chromium.launch({headless:true,
+  ...(process.env.WG_QA_CHROME_PATH?{executablePath:process.env.WG_QA_CHROME_PATH}:{})});
 try{
   const page=await browser.newPage();
   const errors=[];page.on('pageerror',error=>errors.push(String(error)));

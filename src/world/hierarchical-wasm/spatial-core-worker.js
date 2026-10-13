@@ -23,7 +23,7 @@ function visualBuffers(){
     groundMask:new Uint8Array(memory,wasm.spatial_ground_mask_ptr(),35*35*4).slice(),
     waterLevels:new Float32Array(memory,wasm.spatial_water_levels_ptr(),48*48).slice(),
     waterTriangles:new Float32Array(memory,wasm.spatial_water_triangles_ptr(),wasm.spatial_water_vertex_count()*3).slice(),
-    props:new Uint8Array(memory,wasm.spatial_props_ptr(),count*28).slice(),count};
+    props:new Uint8Array(memory,wasm.spatial_props_ptr(),count*40).slice(),count};
 }
 self.onmessage=async({data:request})=>{
   try{
@@ -45,6 +45,11 @@ self.onmessage=async({data:request})=>{
         case 'barrier-passability':value=wasm.spatial_set_barrier_passability(request.barrierId,request.passMask);break;
         case 'chunk-remove':value=wasm.spatial_remove_chunk(request.cx,request.cz);break;
         case 'settlement-add':value=wasm.spatial_add_settlement(request.x,request.z,request.hx,request.hz);break;
+        case 'prop-remove':{
+          if(request.cx!==undefined&&request.cz!==undefined&&
+             !wasm.spatial_select_chunk(request.cx,request.cz))throw Error('Prop chunk is not resident');
+          value=wasm.spatial_remove_prop(request.group,request.gx,request.gz);break;
+        }
         case 'profile':value=wasm.spatial_select_nav_profile(request.worker?1:0);break;
         case 'surface':value=wasm.spatial_surface(request.x,request.z);break;
         case 'snapshot':value=captureSpatialState(wasm);break;

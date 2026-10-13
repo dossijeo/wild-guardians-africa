@@ -108,6 +108,7 @@ export function createSpatialSavannaPrototype(module){
     addWall:(x,z,halfX,halfZ)=>wasm.spatial_add_wall(x,z,halfX,halfZ),
     removeWall:id=>wasm.spatial_remove_wall(id),
     addBarrier:(x,z,halfX,halfZ,passMask=0)=>wasm.spatial_add_barrier(x,z,halfX,halfZ,passMask),
+    removeProp:({group,gx,gz})=>wasm.spatial_remove_prop(group,gx,gz),
     addBarriersBatch:barriers=>addSpatialBarriersBatch(wasm,barriers),
     snapshot:()=>{
       if(!generated)throw Error('Generate the world before capturing spatial state');

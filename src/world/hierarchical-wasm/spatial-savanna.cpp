@@ -31,7 +31,17 @@ constexpr int pad=4,latticeSpan=grid+pad*2;
 constexpr int propBucketWidth=8,propBucketSide=8;
 constexpr double maxIndexedRadius=2.0;
 constexpr double pi=3.14159265358979323846;
-struct Prop {float x,z,y,radius,scale,yaw;int32_t slot;};
+struct Prop {float x,z,y,radius,scale,yaw;int32_t slot,group,gx,gz;};
+static_assert(sizeof(Prop)==40);
+struct PropKey {int32_t group,gx,gz;bool operator==(const PropKey& other)const{
+  return group==other.group&&gx==other.gx&&gz==other.gz;
+}};
+struct PropKeyHash {size_t operator()(const PropKey& key)const{
+  const uint64_t a=uint32_t(key.group)*0x9e3779b185ebca87ULL;
+  const uint64_t b=uint32_t(key.gx)*0xc2b2ae3d27d4eb4fULL;
+  const uint64_t c=uint32_t(key.gz)*0x165667b19e3779f9ULL;
+  return size_t(a^b^c);
+}};
 struct Pond {double x,z,radius,level;};
 struct WaterPoint {double x,z;};
 struct Barrier {int id;float x,z,halfX,halfZ;uint8_t passMask;};
@@ -60,6 +70,12 @@ std::vector<double> lattice;
 std::vector<Pond> ponds;
 std::vector<Prop> props;
 std::vector<Prop> solidProps;
+std::unordered_set<PropKey,PropKeyHash>* removedPropRegistry=nullptr;
+std::vector<int32_t> removedPropState;
+std::unordered_set<PropKey,PropKeyHash>& removedProps(){
+  if(!removedPropRegistry)removedPropRegistry=new std::unordered_set<PropKey,PropKeyHash>();
+  return *removedPropRegistry;
+}
 std::array<std::vector<int>,propBucketSide*propBucketSide> propBuckets;
 int haloPropCount=0;
 BarrierIndex* barrierRegistry=nullptr;
@@ -601,12 +617,14 @@ void populateChunk(int cx,int cz,bool visual=true){
         const float scale=float(.78+unit(cellHash(gx,gz,312+type))*.43);
         const int slot=(worldBiome==1?desertOffsets[type]:savannaOffsets[type])+
           int(cellHash(gx,gz,315+type)%(worldBiome==1?desertCounts[type]:savannaCounts[type]));
+        if(removedProps().count({type,gx,gz}))continue;
         const float radius=(worldBiome==1?desertRadii[slot]:radii[slot])*scale;
         if(std::any_of(nearbySettlements.begin(),nearbySettlements.end(),[&](size_t i){
           const Settlement& site=settlements[i];
           return std::hypot(x-site.x,z-site.z)<site.clearRadius+radius+4;
         }))continue;
-        const Prop prop={float(x),float(z),float(surface(x,z)),radius,scale,float(unit(cellHash(gx,gz,317))*2*pi),slot};
+        const Prop prop={float(x),float(z),float(surface(x,z)),radius,scale,
+          float(unit(cellHash(gx,gz,317))*2*pi),slot,type,gx,gz};
         const bool owned=x>=x0&&x<x0+48&&z>=z0&&z<z0+48;
         if(owned)props.push_back(prop);
         if((slot<=3||(slot>=10&&slot<=12)||slot>=18)&&
@@ -619,7 +637,8 @@ void populateChunk(int cx,int cz,bool visual=true){
   }
   for(const Pond& p:ponds){
     const bool owned=p.x>=x0&&p.x<x0+side&&p.z>=z0&&p.z<z0+side;
-    const Prop prop={float(p.x),float(p.z),float(p.level),float(p.radius),float(p.radius/4),0,19};
+    const Prop prop={float(p.x),float(p.z),float(p.level),float(p.radius),float(p.radius/4),0,19,6,
+      int(std::lround(p.x)),int(std::lround(p.z))};
     if(owned)props.push_back(prop);
     if(p.x+p.radius+maxIndexedRadius>=x0&&p.x-p.radius-maxIndexedRadius<x0+side&&
        p.z+p.radius+maxIndexedRadius>=z0&&p.z-p.radius-maxIndexedRadius<z0+side){
@@ -709,6 +728,39 @@ void refreshBarrier(const Barrier& barrier){
   }
   selectProfile(previous);
 }
+void refreshRemovedPropChunks(const Prop* changed){
+  const int selectedX=chunkX,selectedZ=chunkZ,previous=activeProfile;
+  std::vector<std::pair<int,int>> affected;
+  for(const auto& [cx,cz]:loadedChunks){
+    const int firstX=cx*side-24,firstZ=cz*side-24;
+    if(changed&&(
+      changed->x+changed->radius+maxIndexedRadius<firstX||
+      changed->x-changed->radius-maxIndexedRadius>=firstX+side||
+      changed->z+changed->radius+maxIndexedRadius<firstZ||
+      changed->z-changed->radius-maxIndexedRadius>=firstZ+side))continue;
+    affected.emplace_back(cx,cz);
+  }
+  for(int profile=0;profile<2;profile++){
+    selectProfile(profile);
+    if(!navReady)continue;
+    for(const auto& [cx,cz]:affected){
+      populateChunk(cx,cz,false);
+      buildActiveRaster();
+    }
+    if(changed){
+      const double reach=changed->radius+radiusNow+2;
+      refreshRect(int(std::floor(changed->x-reach)),int(std::floor(changed->z-reach)),
+        int(std::ceil(changed->x+reach)),int(std::ceil(changed->z+reach)));
+    }else{
+      for(const auto& [cx,cz]:affected){
+        chunkX=cx;chunkZ=cz;
+        commitActiveSectors();refreshNeighborBorders(cx,cz);
+      }
+    }
+  }
+  selectProfile(previous);
+  if(!loadedChunks.empty())populateChunk(selectedX,selectedZ);
+}
 void flushBarrierBatch(){
   const float maxRadius=std::max(navProfile(0).radius,navProfile(1).radius);
   const int r=int(std::ceil(maxRadius))+1,previous=activeProfile;
@@ -746,6 +798,7 @@ extern "C" {
 int spatial_generate_biome(uint32_t seed,int biome,int cx,int cz){
   if(biome<0||biome>1)return -1;
   worldSeed=seed;worldBiome=biome;barrierIndex().byId.clear();barrierIndex().buckets.clear();
+  removedProps().clear();removedPropState.clear();
   batchingBarriers=false;deferredBarrierRefresh.clear();barrierBatch.clear();barrierBatchIds.clear();
   barrierState.clear();settlementState.clear();
   settlements.clear();nearbySettlements.clear();
@@ -819,6 +872,49 @@ float spatial_add_settlement(float x,float z,float hx,float hz){
   settlements.push_back(site);
   refreshSettlementChunks({site});
   return float(site.y);
+}
+int spatial_remove_prop(int group,int gx,int gz){
+  if(group<0||group>5||removedProps().count({group,gx,gz}))return 0;
+  const auto found=std::find_if(props.begin(),props.end(),[&](const Prop& prop){
+    return prop.group==group&&prop.gx==gx&&prop.gz==gz;
+  });
+  if(found==props.end())return 0;
+  const Prop changed=*found;
+  removedProps().insert({group,gx,gz});
+  refreshRemovedPropChunks(&changed);
+  return 1;
+}
+int spatial_removed_prop_count(){return int(removedProps().size());}
+int32_t* spatial_removed_prop_state_ptr(){
+  std::vector<PropKey> ordered(removedProps().begin(),removedProps().end());
+  std::sort(ordered.begin(),ordered.end(),[](const PropKey& a,const PropKey& b){
+    if(a.group!=b.group)return a.group<b.group;
+    if(a.gx!=b.gx)return a.gx<b.gx;
+    return a.gz<b.gz;
+  });
+  removedPropState.clear();removedPropState.reserve(ordered.size()*3);
+  for(const PropKey& key:ordered){
+    removedPropState.push_back(key.group);
+    removedPropState.push_back(key.gx);
+    removedPropState.push_back(key.gz);
+  }
+  return removedPropState.data();
+}
+int32_t* spatial_removed_prop_restore_ptr(int count){
+  if(count<0||count>100000)return nullptr;
+  removedPropState.resize(size_t(count)*3);
+  return removedPropState.data();
+}
+int spatial_restore_removed_props(int count){
+  if(count<0||count>100000||removedPropState.size()<size_t(count)*3)return 0;
+  std::unordered_set<PropKey,PropKeyHash> replacement;
+  for(int i=0;i<count;i++){
+    const PropKey key={removedPropState[i*3],removedPropState[i*3+1],removedPropState[i*3+2]};
+    if(key.group<0||key.group>5||!replacement.insert(key).second)return 0;
+  }
+  removedProps().swap(replacement);
+  refreshRemovedPropChunks(nullptr);
+  return 1;
 }
 int spatial_sector_slots(){return lazy_sector_slots();}
 float spatial_surface(float x,float z){
