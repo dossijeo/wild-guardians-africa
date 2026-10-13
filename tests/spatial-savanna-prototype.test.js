@@ -26,6 +26,20 @@ function crossing(core){
   }
   throw Error('No unblocked test crossing found');
 }
+test('saved-game biome IDs address the same spatial worlds as internal biome names',()=>{
+  const names=[['sabana','savanna'],['desierto','desert'],['gran-rio','grand_river'],
+    ['volcanes','volcanoes'],['manglares','mangrove'],['gran-canon','canyons']];
+  const core=createSpatialWorld(module);
+  for(const [gameName,internalName] of names){
+    core.generate(712,0,0,gameName);
+    const heights=Float32Array.from(core.heights()),water=Uint8Array.from(core.water());
+    const props=structuredClone(core.props());
+    core.generate(712,0,0,internalName);
+    assert.deepEqual(core.heights(),heights,gameName);
+    assert.deepEqual(core.water(),water,gameName);
+    assert.deepEqual(core.props(),props,gameName);
+  }
+});
 test('one C++ source generates visual data and valid worker/animal routes',()=>{
   const core=createSpatialSavannaPrototype(module);
   core.generate(712,0,0);

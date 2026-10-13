@@ -2,6 +2,7 @@ import {spatialProps,spatialInstances,spatialChunkPayload} from './spatial-savan
 import {addSpatialBarriersBatch} from './spatial-barrier-batch.js';
 import {captureSpatialState,applySpatialState,validateSpatialState} from './spatial-state.js';
 import {spatialWorldRoute} from './spatial-local-route.js';
+import {BIOME_IDS,SPATIAL_BIOME_CODES} from '../biome-ids.js';
 
 // Synchronous world authority. The same WASM instance answers spatial queries
 // and supplies visual buffers; rendering remains the caller's responsibility.
@@ -15,8 +16,9 @@ export function createSpatialWorld(module){
   const waterLevels=()=>new Float32Array(wasm.memory.buffer,wasm.spatial_water_levels_ptr(),48*48);
   const waterTriangles=()=>new Float32Array(wasm.memory.buffer,wasm.spatial_water_triangles_ptr(),wasm.spatial_water_vertex_count()*3);
   function generate(seed,cx,cz,biome='savanna'){
-    if(!['savanna','desert','grand_river','volcanoes','mangrove','canyons'].includes(biome))throw RangeError('Unsupported spatial biome');
-    const count=wasm.spatial_generate_biome(seed>>>0,biome==='desert'?1:biome==='grand_river'?2:biome==='volcanoes'?3:biome==='mangrove'?4:biome==='canyons'?5:0,cx|0,cz|0);
+    const name=BIOME_IDS[biome]??biome;
+    if(!Object.hasOwn(SPATIAL_BIOME_CODES,name))throw RangeError('Unsupported spatial biome');
+    const count=wasm.spatial_generate_biome(seed>>>0,SPATIAL_BIOME_CODES[name],cx|0,cz|0);
     chunk={cx:cx|0,cz:cz|0,count};chunks=[[cx|0,cz|0]];navigationBuilt=false;generated=true;
     return chunk;
   }
