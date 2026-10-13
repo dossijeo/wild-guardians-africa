@@ -3,11 +3,12 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createSpatialWorld} from '../src/world/hierarchical-wasm/spatial-world.js';
 import {createSpatialChunkStream} from '../src/world/hierarchical-wasm/spatial-chunk-stream.js';
-import {createSpatialSavannaSession} from '../src/world/hierarchical-wasm/spatial-savanna-session.js';
+import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
 import {villageLayout} from '../src/world/villages.js';
 import * as THREE from 'three';
 import {WorldScene} from '../src/rendering/scene.js';
 import {refreshResidentProps} from '../src/rendering/resident-props.js';
+import {BIOME_IDS} from '../src/world/biome-ids.js';
 
 const module=new WebAssembly.Module(readFileSync(new URL('../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
 
@@ -17,7 +18,7 @@ test('a Sabana game state renders and routes from one spatial authority through 
     buildings:villageLayout(pack,0,0)}],structures:[{id:'center-1',kind:'center',
       villageId:'village-1',culture:'mapungubwe',status:'intact',x:23,z:0,yaw:0,hp:100}],spells:[]};
   const installed=new Map(),scheduled=[];
-  const session=createSpatialSavannaSession(module,state,{loaded:()=>installed,
+  const session=createSpatialGameSession(module,state,{loaded:()=>installed,
     onData:data=>installed.set(`${data.cx},${data.cz}`,data),
     schedule:callback=>{scheduled.push(callback);return callback;},
     cancel:callback=>{const index=scheduled.indexOf(callback);if(index>=0)scheduled.splice(index,1);}});
@@ -68,6 +69,29 @@ test('a Sabana game state renders and routes from one spatial authority through 
   assert.equal(group.userData.contactInstances.flat().some(prop=>prop.id===visible.id),false);
   assert.deepEqual(session.syncState(state).removedProps,[]);
   session.dispose();
+});
+
+test('the same game-state session streams and routes in all six biomes',async()=>{
+  const pack=JSON.parse(readFileSync(new URL('../public/content/villages.json',import.meta.url),'utf8'))[0];
+  for(const biome of Object.keys(BIOME_IDS)){
+    const state={seed:'712',biome,villages:[{id:'village-1',x:0,z:0,
+      buildings:villageLayout(pack,0,0)}],structures:[],spells:[],suppressed:[]};
+    const installed=new Map(),session=createSpatialGameSession(module,state,{loaded:()=>installed,
+      onData:data=>installed.set(`${data.cx},${data.cz}`,data)});
+    session.stream.plan(new Map([['0,0',{cx:0,cz:0,score:0}]]));
+    await session.stream.whenIdle();
+    const payload=installed.get('0,0');
+    assert.equal(payload.terrain.positions.length,49*49*3,biome);
+    assert.equal(session.core.snapshot().biome,BIOME_IDS[biome]);
+    let worker=false,animal=false;
+    for(let z=-16;z<=16&&!(worker&&animal);z+=4)for(let x=-16;x<=16;x+=4){
+      const point={x,z};
+      worker ||= session.routeActor(point,point).status==='found';
+      animal ||= session.routeActor(point,point,{worker:false}).status==='found';
+    }
+    assert(worker&&animal,`${biome} has no usable actor positions`);
+    session.dispose();
+  }
 });
 
 test('chunk selection distinguishes an absent chunk from a resident chunk with zero props',async()=>{

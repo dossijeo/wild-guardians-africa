@@ -7,12 +7,13 @@ import {createSpatialShieldMirror} from './spatial-shield-mirror.js';
 import {createSpatialPropMirror} from './spatial-prop-mirror.js';
 import {addSpatialVillageBuildings} from './spatial-village-bridge.js';
 import {WORKER_SPATIAL_PROFILE,ANIMAL_SPATIAL_PROFILES} from './spatial-movement-profiles.js';
+import {BIOME_IDS} from '../biome-ids.js';
 
 // One authoritative WASM instance supplies the renderer and the actor graph.
-// This is a Sabana integration probe; it is not wired into normal gameplay.
-export function createSpatialSavannaSession(module,state,streamOptions){
-  if(state?.biome!=='sabana'||!Array.isArray(state.villages)||!state.villages.length)
-    throw TypeError('Expected a Sabana game state with a village');
+// This is a six-biome integration probe; it is not wired into normal gameplay.
+export function createSpatialGameSession(module,state,streamOptions){
+  if(!Object.hasOwn(BIOME_IDS,state?.biome)||!Array.isArray(state.villages)||!state.villages.length)
+    throw TypeError('Expected a supported game biome and a village');
   const core=createSpatialWorld(module),first=state.villages[0];
   const cx=Math.floor((first.x+24)/48),cz=Math.floor((first.z+24)/48);
   core.generate(state.seed,cx,cz,state.biome);

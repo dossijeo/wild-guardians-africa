@@ -1,6 +1,6 @@
 import {readFileSync,writeFileSync} from 'node:fs';
 import {performance} from 'node:perf_hooks';
-import {createSpatialSavannaSession} from '../../src/world/hierarchical-wasm/spatial-savanna-session.js';
+import {createSpatialGameSession} from '../../src/world/hierarchical-wasm/spatial-game-session.js';
 import {villageLayout} from '../../src/world/villages.js';
 
 const bytes=readFileSync('src/world/hierarchical-wasm/spatial-savanna.wasm');
@@ -14,7 +14,7 @@ const jobs=new Map([['0,0',{cx:0,cz:0,score:0}],['1,0',{cx:1,cz:0,score:1}]]);
 const rows=[];
 for(let sample=0;sample<8;sample++){
   const start=performance.now(),module=new WebAssembly.Module(bytes),compileMs=performance.now()-start;
-  const loaded=new Map(),session=createSpatialSavannaSession(module,state,{loaded:()=>loaded,
+  const loaded=new Map(),session=createSpatialGameSession(module,state,{loaded:()=>loaded,
     onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
   const setupMs=performance.now()-start-compileMs;
   const streamStart=performance.now();session.stream.plan(jobs);
