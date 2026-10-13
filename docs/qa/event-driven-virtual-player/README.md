@@ -165,6 +165,17 @@ choices were not measured. A fix must keep physical target decisions native
 while removing redundant work or allowing the valid entry to become ready
 independently of expensive optional warm-up.
 
+A first-animal replay also exceeded 180 seconds without returning a target.
+An instrumented replay logged more than 1,300 native path searches during
+that first selection, including repeated failed routes from service points
+around nearby crops toward the same exterior animal. This localizes the
+problem inside one target search, rather than merely multiplying a cheap
+search by twelve animals. A conservative closed-region flood-fill prototype
+was tried against the same snapshot; the first-animal replay still failed to
+finish in 30 seconds, so that prototype was removed before commit. The trace
+mode remains available in `profile-raid-entry-stages.mjs`; no crop target,
+raid, or navigation rule from the rejected prototype remains in this branch.
+
 A repeated seven-night run with per-step timing located the costly interval
 at simulated time 475–499 on day 7. Twelve of those ticks exceeded three
 seconds, and the largest took 30.34 seconds. A cooperative checkpoint at
