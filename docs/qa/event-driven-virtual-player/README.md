@@ -153,6 +153,18 @@ exact partial state, prior ledgers, entry diagnostics and source hashes are
 preserved in `pilot-expansive-sabana-123-14-incomplete.zip`. Investigate
 entry preparation before launching another long campaign from this policy.
 
+`tools/experiments/profile-raid-entry-stages.mjs` replays that saved request
+without advancing the campaign. On the 12-animal, 268-crop, 75-structure
+snapshot, native entry selection found a valid entry in 10.51 seconds
+(10.82 seconds on the second isolated run). The subsequent optional
+`warmRaidApproaches` phase remained busy past the runner's 180-second entry
+deadline and the isolated profiler was stopped after crossing that limit.
+Thus the observed deadline is dominated by target warm-up rather than
+choosing an exterior spawn; its exact full duration and any later target
+choices were not measured. A fix must keep physical target decisions native
+while removing redundant work or allowing the valid entry to become ready
+independently of expensive optional warm-up.
+
 A repeated seven-night run with per-step timing located the costly interval
 at simulated time 475–499 on day 7. Twelve of those ticks exceeded three
 seconds, and the largest took 30.34 seconds. A cooperative checkpoint at
