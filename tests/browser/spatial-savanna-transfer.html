@@ -31,8 +31,12 @@ function prepareThree(data,cx,cz){
   geometry.setAttribute('position',new THREE.BufferAttribute(positions,3));
   geometry.setAttribute('color',new THREE.BufferAttribute(data.colors,3));
   geometry.setIndex(new THREE.BufferAttribute(indices,1));geometry.computeVertexNormals();
-  const vertices=geometry.getAttribute('position').count;geometry.dispose();
-  return {ms:now()-start,vertices};
+  const waterGeometry=new THREE.BufferGeometry();
+  waterGeometry.setAttribute('position',new THREE.BufferAttribute(data.waterTriangles,3));
+  waterGeometry.computeVertexNormals();
+  const vertices=geometry.getAttribute('position').count,waterVertices=waterGeometry.getAttribute('position').count;
+  geometry.dispose();waterGeometry.dispose();
+  return {ms:now()-start,vertices,waterVertices};
 }
 try{
   const profile=await fetch('/content/biome-savanna.json').then(response=>response.json()).then(pack=>pack.profile);
@@ -48,6 +52,7 @@ try{
   for(const result of [candidateFirst,candidateSecond]){
     if(result.data.heights.length!==2401||result.data.colors.length!==7203||
        result.data.water.length!==2304||result.data.waterLevels.length!==2304||
+       result.data.waterTriangles.length%9!==0||
        result.data.props.byteLength!==result.data.count*28)
       throw Error('Transferred WASM buffers have inconsistent lengths');
   }

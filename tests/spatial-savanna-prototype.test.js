@@ -29,7 +29,7 @@ test('one C++ source generates visual data and valid worker/animal routes',()=>{
   assert.equal(geometry.getAttribute('position').count,2401);assert.equal(geometry.index.count,13824);geometry.dispose();
   assert(core.water().some(value=>value===1));
   const river=core.waterGeometry();
-  assert(river.index.count>0);river.dispose();
+  assert(river.getAttribute('position').count>0);river.dispose();
   for(const [radius,worker] of [[.28,true],[1.1,false],[1.55,false]]){
     assert.equal(core.buildNavigation(radius,worker),16);
     const {start,end}=crossing(core);
@@ -76,20 +76,30 @@ test('procedural pond shares one visual and navigation water source',()=>{
   assert.equal(core.walkable(Math.round(pond.x),Math.round(pond.z)),false,
     'an animal cannot cross the same pond shown to the player');
   const geo=core.waterGeometry();
-  assert(geo.getAttribute('position').count>0);geo.dispose();
+  assert(geo.getAttribute('position').count>0);
+  const surface=core.waterTriangles();
+  assert.equal(surface.length%9,0);
+  assert(surface.some((value,i)=>i%3===1&&Math.abs(value-pond.y)<.001),
+    'a smooth pond surface must use the same elevation as its visible model');
+  geo.dispose();
 });
 test('a pond crossing a chunk boundary keeps its basin and fluid connectivity',()=>{
   const core=createSpatialSavannaPrototype(module);
   core.generate(17,0,0);
   const pond=core.props().find(p=>p.slot===19&&p.x+p.radius>24);
   assert(pond,'fixture needs a pond reaching the east edge');
-  const west=Float32Array.from(core.heights());
+  const west=Float32Array.from(core.heights()),westWater=Float32Array.from(core.waterTriangles());
   assert(core.addChunk(1,0)>0);
-  const east=core.heights();
+  const east=core.heights(),eastWater=core.waterTriangles();
   for(let z=0;z<49;z++)assert.equal(west[z*49+48],east[z*49],`pond terrain seam at row ${z}`);
   const row=Math.floor(pond.z+24);
   assert.equal(core.water()[row*48],1,'neighboring chunk must receive the same pond water');
   assert(Math.abs(core.waterLevels()[row*48]-pond.y)<.001);
+  const seamZ=vertices=>[...new Set(Array.from({length:vertices.length/3},(_,i)=>i*3)
+    .filter(i=>Math.abs(vertices[i]-24)<.0001&&Math.abs(vertices[i+1]-pond.y)<.001)
+    .map(i=>vertices[i+2].toFixed(4)))].sort();
+  assert(seamZ(westWater).length>=2);
+  assert.deepEqual(seamZ(westWater),seamZ(eastWater),'pond surface must meet at the chunk seam');
   core.buildNavigation(1.1,false);
   assert.equal(core.walkable(24,Math.round(pond.z)),false,'animal occupancy must continue across seam');
 });

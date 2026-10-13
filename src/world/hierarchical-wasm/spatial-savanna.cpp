@@ -30,6 +30,7 @@ constexpr double maxIndexedRadius=2.0;
 constexpr double pi=3.14159265358979323846;
 struct Prop {float x,z,y,radius,scale,yaw;int32_t slot;};
 struct Pond {double x,z,radius,level;};
+struct WaterPoint {double x,z;};
 struct Wall {int id;float x,z,halfX,halfZ;bool active;};
 struct ChunkRaster {int cx,cz;std::vector<uint8_t> pass,steps,inbound;};
 uint32_t worldSeed=0;
@@ -39,6 +40,7 @@ bool workerNow=true,navReady=false;
 std::vector<float> heights,colors;
 std::vector<uint8_t> water;
 std::vector<float> waterLevels;
+std::vector<float> waterTriangles;
 std::vector<double> lattice;
 std::vector<Pond> ponds;
 std::vector<Prop> props;
@@ -123,6 +125,51 @@ double fluidLevel(double x,double z){
   return 0;
 }
 bool fluid(double x,double z){return fluidLevel(x,z)!=0;}
+void waterTriangle(const WaterPoint& a,const WaterPoint& b,const WaterPoint& c,double y){
+  for(const WaterPoint& p:{a,b,c}){
+    waterTriangles.push_back(float(p.x));waterTriangles.push_back(float(y));waterTriangles.push_back(float(p.z));
+  }
+}
+std::vector<WaterPoint> clipWaterPolygon(const std::vector<WaterPoint>& source,bool alongX,double limit,bool greater){
+  std::vector<WaterPoint> result;
+  if(source.empty())return result;
+  WaterPoint previous=source.back();
+  auto coordinate=[alongX](const WaterPoint& p){return alongX?p.x:p.z;};
+  bool wasInside=greater?coordinate(previous)>=limit:coordinate(previous)<=limit;
+  for(const WaterPoint& current:source){
+    const bool inside=greater?coordinate(current)>=limit:coordinate(current)<=limit;
+    if(inside!=wasInside){
+      const double t=(limit-coordinate(previous))/(coordinate(current)-coordinate(previous));
+      result.push_back({previous.x+(current.x-previous.x)*t,previous.z+(current.z-previous.z)*t});
+    }
+    if(inside)result.push_back(current);
+    previous=current;wasInside=inside;
+  }
+  return result;
+}
+void buildWaterMesh(int cx,int cz){
+  waterTriangles.clear();
+  const double minX=cx*side-24,maxX=minX+side,minZ=cz*side-24,maxZ=minZ+side;
+  for(int z=int(minZ);z<int(maxZ);z++){
+    const double left0=std::clamp(riverX(z)-6.1,minX,maxX),right0=std::clamp(riverX(z)+6.1,minX,maxX);
+    const double left1=std::clamp(riverX(z+1)-6.1,minX,maxX),right1=std::clamp(riverX(z+1)+6.1,minX,maxX);
+    if(right0<=left0&&right1<=left1)continue;
+    const WaterPoint a{left0,double(z)},b{right0,double(z)},c{right1,double(z+1)},d{left1,double(z+1)};
+    waterTriangle(a,d,b,3.6);waterTriangle(b,d,c,3.6);
+  }
+  for(const Pond& p:ponds){
+    std::vector<WaterPoint> outline;outline.reserve(48);
+    for(int i=0;i<48;i++){
+      const double angle=2*pi*i/48;
+      outline.push_back({p.x+std::cos(angle)*p.radius*.82,p.z+std::sin(angle)*p.radius*.82});
+    }
+    outline=clipWaterPolygon(outline,true,minX,true);
+    outline=clipWaterPolygon(outline,true,maxX,false);
+    outline=clipWaterPolygon(outline,false,minZ,true);
+    outline=clipWaterPolygon(outline,false,maxZ,false);
+    for(size_t i=1;i+1<outline.size();i++)waterTriangle(outline[0],outline[i+1],outline[i],p.level);
+  }
+}
 bool terrainValid(double x,double z,float radius,bool worker){
   (void)worker;
   for(int i=0;i<5;i++){
@@ -255,6 +302,7 @@ void populateChunk(int cx,int cz){
     const double level=fluidLevel(x0+x+.5,z0+z+.5);
     water[z*side+x]=level!=0;waterLevels[z*side+x]=float(level);
   }
+  buildWaterMesh(cx,cz);
   constexpr double spacing[6]={13.5,7,2.8,9,10,32};
   constexpr double density[6]={.53,.51,.72,.30,.28,.63};
   constexpr int offsets[6]={0,4,7,10,13,17},counts[6]={4,3,3,3,4,2};
@@ -362,7 +410,7 @@ int spatial_remove_chunk(int cx,int cz){
   }
   if(chunkX==cx&&chunkZ==cz){
     if(!loadedChunks.empty())populateChunk(loadedChunks.back().first,loadedChunks.back().second);
-    else {props.clear();solidProps.clear();ponds.clear();heights.clear();colors.clear();water.clear();waterLevels.clear();}
+    else {props.clear();solidProps.clear();ponds.clear();heights.clear();colors.clear();water.clear();waterLevels.clear();waterTriangles.clear();}
   }
   return 1;
 }
@@ -372,6 +420,8 @@ float* spatial_heights_ptr(){return heights.data();}
 float* spatial_colors_ptr(){return colors.data();}
 uint8_t* spatial_water_ptr(){return water.data();}
 float* spatial_water_levels_ptr(){return waterLevels.data();}
+float* spatial_water_triangles_ptr(){return waterTriangles.data();}
+int spatial_water_vertex_count(){return int(waterTriangles.size()/3);}
 Prop* spatial_props_ptr(){return props.data();}
 int spatial_prop_count(){return int(props.size());}
 int spatial_halo_prop_count(){return haloPropCount;}
