@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import {spatialProps,spatialInstances,spatialChunkPayload} from './spatial-savanna-payload.js';
+import {addSpatialBarriersBatch} from './spatial-barrier-batch.js';
 
 // QA-only adapter. The C++ module owns all procedural and collision data;
 // JavaScript only copies its display buffers into Three.js-owned geometry.
@@ -105,6 +106,7 @@ export function createSpatialSavannaPrototype(module){
     addWall:(x,z,halfX,halfZ)=>wasm.spatial_add_wall(x,z,halfX,halfZ),
     removeWall:id=>wasm.spatial_remove_wall(id),
     addBarrier:(x,z,halfX,halfZ,passMask=0)=>wasm.spatial_add_barrier(x,z,halfX,halfZ,passMask),
+    addBarriersBatch:barriers=>addSpatialBarriersBatch(wasm,barriers),
     removeBarrier:id=>wasm.spatial_remove_barrier(id),
     setBarrierPassability:(id,passMask)=>wasm.spatial_set_barrier_passability(id,passMask),
     walkable:(x,z)=>Boolean(wasm.spatial_walkable(x,z)),

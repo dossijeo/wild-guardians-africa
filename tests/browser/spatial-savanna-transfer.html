@@ -70,7 +70,7 @@ try{
     format:sceneFormat?'scene':'raw',settlement:settlement?{x:10,z:8,hx:7,hz:6}:null});
   const candidateSecond=await request(candidate,{id:4,seed,cx:1,cz:0,radius:1.1,
     format:sceneFormat?'scene':'raw'});
-  let topology=null,barrierTopology=null,multipleSettlements=null,surfaceView=null;
+  let topology=null,barrierTopology=null,batchTopology=null,multipleSettlements=null,surfaceView=null;
   if(sceneFormat){
     const view=new SpatialSurfaceView();view.install(candidateFirst.data);view.install(candidateSecond.data);
     const query={x:30.3,z:5.7};
@@ -120,6 +120,17 @@ try{
       animalReopened:animalOpen.value,localUpdates:gate.metrics.sectorUpdates-removed.metrics.sectorUpdates,
       addMs:gate.timing.operationMs,closeMs:closedGate.timing.operationMs,
       reopenMs:openedGate.timing.operationMs};
+    const chain=Array.from({length:12},(_,i)=>({x:-15+i,z:0,halfX:.49,halfZ:.45,passMask:0}));
+    const built=await request(candidate,{id:id++,op:'barrier-batch-add',barriers:chain});
+    const updates=built.metrics.sectorUpdates-removedGate.metrics.sectorUpdates;
+    if(!Array.isArray(built.value)||built.value.length!==chain.length||
+       new Set(built.value).size!==chain.length||built.value.some(value=>value<=0)||updates>=chain.length)
+      throw Error('Batched wall chain did not reduce repeated sector rebuilds');
+    for(const barrierId of built.value){
+      const cleared=await request(candidate,{id:id++,op:'barrier-remove',barrierId});
+      if(cleared.value!==1)throw Error('Could not remove a batched barrier');
+    }
+    batchTopology={count:chain.length,sectorUpdates:updates,operationMs:built.timing.operationMs};
     const evicted=await request(candidate,{id:id++,op:'chunk-remove',cx:1,cz:0});
     if(evicted.value!==1||evicted.metrics.loadedChunks!==1)throw Error('Chunk eviction did not release the second chunk');
     const restored=await request(candidate,{id:id++,seed,cx:1,cz:0,format:'scene'});
@@ -183,9 +194,10 @@ try{
     ...result.timing,three:prepareThree(result.data,result.cx,result.cz),
     props:sceneFormat?result.data.instances.reduce((n,list)=>n+list.length,0):result.data.count,
     metrics:result.metrics}));
-  window.qaStats={seed,sceneFormat,settlement,current,spatial,topology,barrierTopology,multipleSettlements,surfaceView,
+  window.qaStats={seed,sceneFormat,settlement,current,spatial,topology,barrierTopology,batchTopology,multipleSettlements,surfaceView,
     checks:{transferLengths:true,terrainSeam:true,wallEdit:!!topology,
       dynamicPassage:!!barrierTopology,
+      batchedTopology:batchTopology?.count===12,
       evictionRegeneration:topology?.sameVisualPayload===true,
       multipleSettlements:multipleSettlements?.sameFirstSettlement===true,
       surfaceView:surfaceView?.difference<=.00002}};window.qaReady=true;

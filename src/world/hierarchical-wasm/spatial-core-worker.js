@@ -1,5 +1,6 @@
 import wasmUrl from './spatial-savanna.wasm?url';
 import {spatialChunkPayload,spatialChunkTransferables} from './spatial-savanna-payload.js';
+import {addSpatialBarriersBatch} from './spatial-barrier-batch.js';
 
 let wasm=null,compiledMs=0,seed=null;
 async function initialize(){
@@ -38,6 +39,7 @@ self.onmessage=async({data:request})=>{
         case 'wall-add':value=wasm.spatial_add_wall(request.x,request.z,request.halfX,request.halfZ);break;
         case 'wall-remove':value=wasm.spatial_remove_wall(request.wallId);break;
         case 'barrier-add':value=wasm.spatial_add_barrier(request.x,request.z,request.halfX,request.halfZ,request.passMask);break;
+        case 'barrier-batch-add':value=addSpatialBarriersBatch(wasm,request.barriers);break;
         case 'barrier-remove':value=wasm.spatial_remove_barrier(request.barrierId);break;
         case 'barrier-passability':value=wasm.spatial_set_barrier_passability(request.barrierId,request.passMask);break;
         case 'chunk-remove':value=wasm.spatial_remove_chunk(request.cx,request.cz);break;

@@ -320,6 +320,43 @@ test('indexed dynamic barriers preserve point and edge collision semantics acros
     edges.forEach(({x,z,nx,nz},i)=>assert.equal(core.edge(x,z,nx,nz),original.edges[i]));
   }
 });
+test('a wall-chain batch matches individual barriers with one local refresh per sector',()=>{
+  const single=createSpatialSavannaPrototype(module),batch=createSpatialSavannaPrototype(module);
+  for(const core of [single,batch]){
+    core.generate(712,0,0);core.buildNavigation(.28,true);core.buildNavigation(1.1,false);
+  }
+  const chain=Array.from({length:40},(_,i)=>({x:-20+i,z:0,halfX:.49,halfZ:.45,passMask:0}));
+  const beforeSingle=single.metrics().sectorUpdates,beforeBatch=batch.metrics().sectorUpdates;
+  const individualIds=chain.map(({x,z,halfX,halfZ,passMask})=>single.addBarrier(x,z,halfX,halfZ,passMask));
+  const batchIds=batch.addBarriersBatch(chain);
+  assert.deepEqual(batchIds,individualIds);
+  assert(batch.metrics().sectorUpdates-beforeBatch<single.metrics().sectorUpdates-beforeSingle,
+    'a sector crossed by several wall modules should be rebuilt once in the batch');
+  for(const worker of [true,false]){
+    single.selectNavigation(worker);batch.selectNavigation(worker);
+    for(let z=-4;z<=4;z++)for(let x=-22;x<=22;x++){
+      assert.equal(batch.walkable(x,z),single.walkable(x,z),`passability ${x},${z},${worker}`);
+      assert.equal(batch.edge(x,z,x+1,z),single.edge(x,z,x+1,z),`east edge ${x},${z},${worker}`);
+      assert.equal(batch.edge(x,z,x,z+1),single.edge(x,z,x,z+1),`north edge ${x},${z},${worker}`);
+    }
+    for(const [start,end] of [[{x:-22,z:-3},{x:22,z:-3}],
+      [{x:-22,z:3},{x:22,z:3}],[{x:0,z:-3},{x:0,z:3}]])
+      assert.deepEqual(batch.route(start,end),single.route(start,end));
+  }
+  const updates=batch.metrics().sectorUpdates;
+  assert.throws(()=>batch.addBarriersBatch([{x:5,z:6,halfX:.4,halfZ:.4},
+    {x:6,z:6,halfX:-1,halfZ:.4}]),/Invalid spatial barrier batch/);
+  assert.equal(batch.metrics().sectorUpdates,updates,'invalid input must not change topology');
+  assert.equal(batch.addBarrier(21,4,.4,.4),single.addBarrier(21,4,.4,.4),
+    'invalid batch must not consume barrier IDs');
+  for(const id of [individualIds[0],individualIds[20],individualIds[39]]){
+    assert.equal(batch.removeBarrier(id),single.removeBarrier(id));
+  }
+  for(const worker of [true,false]){
+    single.selectNavigation(worker);batch.selectNavigation(worker);
+    assert.deepEqual(batch.route({x:0,z:-3},{x:0,z:3}),single.route({x:0,z:-3},{x:0,z:3}));
+  }
+});
 test('neighboring chunks share their terrain seam and seed-dependent props',()=>{
   const core=createSpatialSavannaPrototype(module);
   core.generate(2026,0,0);

@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <limits>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 // Isolated spatial-authority experiment. The same deterministic functions
@@ -74,6 +75,10 @@ NavProfile& navProfile(int index){
 int activeProfile=0;
 std::unordered_map<uint64_t,ChunkRaster>* chunkRasters=nullptr;
 std::vector<std::pair<int,int>> loadedChunks;
+std::vector<float> barrierBatch;
+std::vector<int> barrierBatchIds;
+std::vector<Barrier> deferredBarrierRefresh;
+bool batchingBarriers=false;
 void saveProfile(){
   NavProfile& profile=navProfile(activeProfile);
   profile.radius=radiusNow;profile.worker=workerNow;profile.ready=navReady;
@@ -463,7 +468,7 @@ void refreshSector(int sx,int sz){
   }
   lazy_commit_sector(sx,sz);
 }
-void refreshRect(int minX,int minZ,int maxX,int maxZ){
+template<class F> void forEachRectSector(int minX,int minZ,int maxX,int maxZ,F visit){
   if(!navReady)return;
   for(int cz=floorDiv(minZ+24,side);cz<=floorDiv(maxZ+24,side);cz++)
   for(int cx=floorDiv(minX+24,side);cx<=floorDiv(maxX+24,side);cx++){
@@ -472,8 +477,11 @@ void refreshRect(int minX,int minZ,int maxX,int maxZ){
     if(maxX<firstX||minX>=firstX+side||maxZ<firstZ||minZ>=firstZ+side)continue;
     const int a=std::max(0,floorDiv(minX-firstX,sector)),b=std::min(3,floorDiv(maxX-firstX,sector));
     const int c=std::max(0,floorDiv(minZ-firstZ,sector)),d=std::min(3,floorDiv(maxZ-firstZ,sector));
-    for(int sz=c;sz<=d;sz++)for(int sx=a;sx<=b;sx++)refreshSector(firstX/sector+sx,firstZ/sector+sz);
+    for(int sz=c;sz<=d;sz++)for(int sx=a;sx<=b;sx++)visit(firstX/sector+sx,firstZ/sector+sz);
   }
+}
+void refreshRect(int minX,int minZ,int maxX,int maxZ){
+  forEachRectSector(minX,minZ,maxX,maxZ,[](int sx,int sz){refreshSector(sx,sz);});
 }
 void populateChunk(int cx,int cz,bool visual=true){
   chunkX=cx;chunkZ=cz;props.clear();solidProps.clear();staticPass.clear();staticSteps.clear();staticInbound.clear();haloPropCount=0;
@@ -637,6 +645,7 @@ void refreshSettlementChunks(const std::vector<Settlement>& changed){
   if(!loadedChunks.empty())populateChunk(selectedX,selectedZ);
 }
 void refreshBarrier(const Barrier& barrier){
+  if(batchingBarriers){deferredBarrierRefresh.push_back(barrier);return;}
   const float maxRadius=std::max(navProfile(0).radius,navProfile(1).radius);
   const int r=int(std::ceil(maxRadius))+1,previous=activeProfile;
   for(int profile=0;profile<2;profile++){
@@ -647,6 +656,27 @@ void refreshBarrier(const Barrier& barrier){
       int(std::ceil(barrier.z+barrier.halfZ))+r);
   }
   selectProfile(previous);
+}
+void flushBarrierBatch(){
+  const float maxRadius=std::max(navProfile(0).radius,navProfile(1).radius);
+  const int r=int(std::ceil(maxRadius))+1,previous=activeProfile;
+  for(int profile=0;profile<2;profile++){
+    selectProfile(profile);
+    if(!navReady)continue;
+    std::unordered_set<uint64_t> sectors;
+    for(const Barrier& barrier:deferredBarrierRefresh)
+      forEachRectSector(int(std::floor(barrier.x-barrier.halfX))-r,
+        int(std::floor(barrier.z-barrier.halfZ))-r,
+        int(std::ceil(barrier.x+barrier.halfX))+r,
+        int(std::ceil(barrier.z+barrier.halfZ))+r,
+        [&](int sx,int sz){sectors.insert(chunkKey(sx,sz));});
+    // Stable order keeps the graph update deterministic across runtimes.
+    std::vector<uint64_t> ordered(sectors.begin(),sectors.end());
+    std::sort(ordered.begin(),ordered.end());
+    for(uint64_t key:ordered)refreshSector(int(int32_t(key>>32)),int(int32_t(key)));
+  }
+  selectProfile(previous);
+  deferredBarrierRefresh.clear();
 }
 int addBarrier(float x,float z,float halfX,float halfZ,int passMask){
   if(!std::isfinite(x)||!std::isfinite(z)||!std::isfinite(halfX)||!std::isfinite(halfZ)||
@@ -663,6 +693,7 @@ int addBarrier(float x,float z,float halfX,float halfZ,int passMask){
 extern "C" {
 int spatial_generate(uint32_t seed,int cx,int cz){
   worldSeed=seed;barrierIndex().byId.clear();barrierIndex().buckets.clear();
+  batchingBarriers=false;deferredBarrierRefresh.clear();barrierBatch.clear();barrierBatchIds.clear();
   settlements.clear();nearbySettlements.clear();
   for(int profile=0;profile<2;profile++){
     NavProfile& state=navProfile(profile);
@@ -793,6 +824,32 @@ int spatial_remove_wall(int id){
 int spatial_remove_barrier(int id){return spatial_remove_wall(id);}
 int spatial_add_barrier(float x,float z,float halfX,float halfZ,int passMask){
   return addBarrier(x,z,halfX,halfZ,passMask);
+}
+float* spatial_barrier_batch_ptr(int count){
+  if(count<1||count>1024)return nullptr;
+  barrierBatch.resize(size_t(count)*5);
+  return barrierBatch.data();
+}
+int* spatial_barrier_batch_ids_ptr(){return barrierBatchIds.data();}
+int spatial_add_barriers_batch(int count){
+  if(count<1||count>1024||barrierBatch.size()<size_t(count)*5||
+     count>std::numeric_limits<int>::max()-nextBarrierId)return 0;
+  for(int i=0;i<count;i++){
+    const float x=barrierBatch[i*5],z=barrierBatch[i*5+1];
+    const float halfX=barrierBatch[i*5+2],halfZ=barrierBatch[i*5+3];
+    const float passMask=barrierBatch[i*5+4];
+    if(!std::isfinite(x)||!std::isfinite(z)||!std::isfinite(halfX)||!std::isfinite(halfZ)||
+       halfX<=0||halfZ<=0||halfX>100||halfZ>100||
+       !std::isfinite(passMask)||passMask<0||passMask>3||std::floor(passMask)!=passMask)return 0;
+  }
+  barrierBatchIds.resize(count);
+  batchingBarriers=true;
+  for(int i=0;i<count;i++)barrierBatchIds[i]=addBarrier(
+    barrierBatch[i*5],barrierBatch[i*5+1],barrierBatch[i*5+2],barrierBatch[i*5+3],
+    int(barrierBatch[i*5+4]));
+  batchingBarriers=false;
+  flushBarrierBatch();
+  return count;
 }
 int spatial_set_barrier_passability(int id,int passMask){
   if(passMask<0||passMask>3)return 0;
