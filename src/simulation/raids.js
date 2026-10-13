@@ -2,6 +2,7 @@ import {canyonRaidFormation} from './canyon-raid-formation.js';
 import {resolveAgriculturalImpact,validDamageProfile} from './raid-agricultural-impact.js';
 import {animalLocalRetreatExit} from './animal-local-retreat-exit.js';
 import {animalFootprintConnectorExhausted} from './animal-footprint-connectors.js';
+import {RETREAT_DESPAWN_SECONDS} from './unit-stuck-recovery.js';
 import {liveWaitQueue,occupiedEligibleGroup,enqueueWait,leaveWait,observeWaitProgress,waitEpoch,RAID_WAIT_SECONDS} from './raid-contention.js';
 import {raidEntryChunks,includeRaidBounds} from '../world/raid-entry-residency.js';
 import {raidEntryKey} from '../world/raid-entry-data.js';
@@ -384,6 +385,10 @@ export function updateRaid(s,dt,nav) {
           const alternate=animalLocalRetreatExit(s,a,nav,a.retreatExit);
           if(alternate){a.retreatExit=alternate;a.path=null;a.retreatNoPathSince=s.elapsed;}
         }
+      }
+      if(a.status==='retreating'&&a.hitsRemaining<=0&&a.stuckRecovery?.stalledFor>=RETREAT_DESPAWN_SECONDS){
+        emit(s,'UnitRecovery',{unitId:a.id,unitKind:'animal',kind:'retreat-despawn',cause:'exit-stalled',duration:a.stuckRecovery.stalledFor,x:a.x,z:a.z,day:s.day,time:s.time});
+        a.status='gone';a.path=null;delete a.retreatExit;delete a.retreatNoPathSince;delete a.stuckRecovery;
       }
       continue;
     }

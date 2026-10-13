@@ -8,6 +8,7 @@ import {breachPortalTable} from './breach-portal-prototype.mjs';
 
 export function installEnclosureRouteTree(nav,metrics={},negativeOnly=false,gridMode=false,adaptive=false,shareOrigins=false,pruneReach=false,incremental=false,batchTargets=false){
   const original=nav.approachPath.bind(nav),fields=[];
+  nav.__sharedRouteFields=fields;
   const originalReach=nav.approachReachability?.bind(nav);
   Object.assign(metrics,{built:0,reused:0,sharedOrigins:0,sharedRouteSteps:0,sharedSmoothedSteps:0,portalEdges:0,portalTraversals:0,batchQueries:0,batchPoints:0,batchRoutes:0,batchSkips:0,batchFallbacks:0,visited:0,buildMilliseconds:0,treeRoutes:0,fallbacks:0,fallbackReasons:{},unreachable:0,direct:0,nativeTrials:0,activations:0,gridRuns:[]});
   let grid=null,gridVersion=null;
@@ -152,7 +153,7 @@ export function installEnclosureRouteTree(nav,metrics={},negativeOnly=false,grid
       }
       const directions=[[1,0],[-1,0],[0,1],[0,-1],[1,1],[-1,1],[1,-1],[-1,-1]];
       let visited=0;
-      field={version:nav.version,radius,startX:start.x,startZ:start.z,minX,minZ,maxX,maxZ,width,cost,previous,edgeVia,complete:!frontier.length};
+      field={version:nav.version,radius,startX:start.x,startZ:start.z,minX,minZ,maxX,maxZ,width,cost,previous,edgeVia,complete:!frontier.length,touchedBoundary:false};
       field.expand=goal=>{
         if(field.complete||visited>=30000)return;
         const goalFound=()=>{
@@ -168,6 +169,7 @@ export function installEnclosureRouteTree(nav,metrics={},negativeOnly=false,grid
         const beganExpansion=performance.now(),before=visited;
         while(frontier.length&&visited<30000){
           const cur=frontier.pop();if(cur.g>cost[cur.i])continue;
+          if(cur.x===minX||cur.x===maxX||cur.z===minZ||cur.z===maxZ)field.touchedBoundary=true;
           visited++;
           for(let direction=0;direction<directions.length;direction++){
             const [dx,dz]=directions[direction];

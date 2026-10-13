@@ -35,7 +35,7 @@ export function parseNativeCampaignArgs(args){
  o.cropPolicy=o['crop-policy']??'legacy';delete o['crop-policy'];if(!['legacy','cashflow'].includes(o.cropPolicy))throw Error('Unknown crop policy');
  o.defensePolicy=o['defense-policy']??'expanding';delete o['defense-policy'];if(!['legacy','expanding','closed','funded','routed','shore','planned'].includes(o.defensePolicy))throw Error('Unknown defense policy');
  o.campaignMode=o['campaign-mode']??'persistence';delete o['campaign-mode'];if(!['balance','persistence'].includes(o.campaignMode))throw Error('Unknown campaign mode');
- o.navigationMode=o['navigation-mode']??'native';delete o['navigation-mode'];if(!['native','grid-tree','adaptive-grid-tree','shared-tree','shared-incremental','adaptive-shared-incremental','region-goals-tree'].includes(o.navigationMode))throw Error('Unknown navigation mode');
+ o.navigationMode=o['navigation-mode']??'native';delete o['navigation-mode'];if(!['native','grid-tree','adaptive-grid-tree','shared-tree','shared-incremental','adaptive-shared-incremental','region-goals-tree','tree-group-selector'].includes(o.navigationMode))throw Error('Unknown navigation mode');
  o.defenseMaterial=o['defense-material']??'zarzas';delete o['defense-material'];wallSpec(o.defenseMaterial);
  if(o.defenseMaterial!=='zarzas'&&!['funded','routed','shore','planned'].includes(o.defensePolicy))throw Error('Explicit defense material requires funded/routed/shore/planned policy');
  o.defenseStartDay=Number(o['defense-start-day']??1);delete o['defense-start-day'];if(!Number.isSafeInteger(o.defenseStartDay)||o.defenseStartDay<1||o.defenseStartDay!==1&&!['closed','funded','routed','shore','planned'].includes(o.defensePolicy))throw Error('Explicit defense start requires closed/funded/routed/planned policy and positive integer day');
@@ -57,6 +57,7 @@ export function nativeCampaignProvenance(options){
  paths.push('tools/native-q15-labour-policy.mjs');
  paths.push('tools/native-planned-defense-policy.mjs');
  paths.push('tools/experiments/enclosure-route-tree-prototype.mjs','tools/experiments/logical-animal-grid-prototype.mjs');
+ paths.push('tools/experiments/shared-tree-group-selector.mjs');
  for(const path of paths)p.sourceHashes[path]=createHash('sha256').update(readFileSync(new URL(path,root))).digest('hex');
  return {...p,protocol:{...campaignProtocolForLabour(options.labourPolicy),profile:options.profile??'olderFemale',plotFluidClearance:options.plotFluidClearance??0,defenseMaterial:options.defenseMaterial??'zarzas',repairPolicy:options.repairPolicy??'legacy',defenseFunding:options.defenseFunding??'contour',campaignMode:options.campaignMode??'persistence',navigationMode:options.navigationMode??'native',cropHitPoints:CROP_HIT_POINTS}};
 }

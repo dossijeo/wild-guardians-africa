@@ -13,6 +13,7 @@ import {installEnclosureRouteTree} from './enclosure-route-tree-prototype.mjs';
 import {installSharedRegionPrototype} from './shared-region-prototype.mjs';
 import {installSharedGoalField} from './shared-goal-field-prototype.mjs';
 import {installSharedConnectivity} from './shared-connectivity-prototype.mjs';
+import {installSharedTreeGroupSelector} from './shared-tree-group-selector.mjs';
 
 const [input,output,secondsText='5',mode='access',runSet='abba']=process.argv.slice(2);
 if(!input||!output)throw Error('Usage: node benchmark-enclosure-access.mjs snapshot.json.gz output.json [seconds]');
@@ -42,6 +43,11 @@ for(const candidate of runSet==='candidate'?[true]:[false,true,true,false]){
       metrics.region={};metrics.route={};
       installSharedConnectivity(nav,metrics.region,true);
       installEnclosureRouteTree(nav,metrics.route,false,true,false,true,false,true);
+    }
+    else if(mode==='tree-group-selector'){
+      metrics.selection={};metrics.route={};
+      installEnclosureRouteTree(nav,metrics.route,false,true,false,true,false,true);
+      installSharedTreeGroupSelector(nav,metrics.selection);
     }
     else (['routes','negative','grid','adaptive','shared-tree','shared-tree-pruned','shared-incremental','shared-batched','adaptive-shared-incremental'].includes(mode)?installEnclosureRouteTree:installEnclosureAccessPrototype)(nav,metrics,mode==='negative',mode==='grid'||mode==='adaptive'||mode.startsWith('shared-')||mode==='adaptive-shared-incremental',mode==='adaptive'||mode==='adaptive-shared-incremental',mode.startsWith('shared-')||mode==='adaptive-shared-incremental',mode==='shared-tree-pruned',mode==='shared-incremental'||mode==='shared-batched'||mode==='adaptive-shared-incremental',mode==='shared-batched');
   }

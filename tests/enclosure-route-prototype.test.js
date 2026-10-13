@@ -4,6 +4,7 @@ import {fixture} from '../tools/probe-raid-reservation-saturation.mjs';
 import {spawnRaid,updateRaid} from '../src/simulation/raids.js';
 import {installEnclosureRouteTree} from '../tools/experiments/enclosure-route-tree-prototype.mjs';
 import {installSharedConnectivity} from '../tools/experiments/shared-connectivity-prototype.mjs';
+import {installSharedTreeGroupSelector} from '../tools/experiments/shared-tree-group-selector.mjs';
 import {breachPortalTable} from '../tools/experiments/breach-portal-prototype.mjs';
 import {deserialize,serialize} from '../src/persistence/snapshots.js';
 import {Navigation} from '../src/world/navigation.js';
@@ -111,4 +112,20 @@ test('region-driven targeting is deterministic across a save and fresh navigatio
    Game.tick(s,.1,nav);Game.tick(copy,.1,fresh);
    assert.equal(serialize(s),serialize(copy));
  }
+});
+
+for(const [layout,breach] of [['mono',false],['closed-walls',false],['closed-walls',true]])test(`single-tree selector preserves physical routes: ${layout}, breach=${breach}`,()=>{
+ const {s,nav}=fixture(layout);
+ if(breach){ruin(s,'wall-2-4','wall-2-5');nav.setState(s);}
+ const selection={},route={};installEnclosureRouteTree(nav,route,false,true,false,true,false,true);
+ installSharedTreeGroupSelector(nav,selection);
+ assert(spawnRaid(s,{group:Array(5).fill('warthog')},nav));updateRaid(s,0,nav);
+ const crops=new Set(s.plants.filter(p=>p.alive).map(p=>p.id));
+ assert.equal(s.raid.animals.filter(a=>crops.has(a.targetId)).length,breach||layout==='mono'?5:0);
+ for(const animal of s.raid.animals){
+   let previous=animal;
+   for(const point of animal.path??[]){assert(nav.segmentClear(previous,point,animal.radius,null,false));previous=point;}
+ }
+ assert(selection.queries>0);
+ assert.equal(selection.componentMilliseconds,undefined,'selector must not build a second region component');
 });

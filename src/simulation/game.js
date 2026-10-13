@@ -12,6 +12,7 @@ import {containsPoint,footprintDistance} from '../world/footprints.js';
 import {centerCulture,centerFootprint,centerServicePoint,centerDeliveryPoint} from '../world/centers.js';
 import {prepareActorMotion} from './actor-motion.js';
 import {animalRouteClearance} from './animal-route-clearance.js';
+import {mobilePassActive,clearBlockedStaticLeg,observeUnitProgress} from './unit-stuck-recovery.js';
 import {animalSlopeRecoveryPath} from './animal-slope-recovery.js';
 import {withNavigationQueries} from '../world/navigation-query-scope.js';
 import {BALANCE as B} from './balance.js';
@@ -455,24 +456,20 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
       if(!w.path)w.path=workerReturnRoute(nav,w,destination,w.radius??.28);
     }
     w.pathVersion=nav.version;
-    if(!w.path)return false;
+    if(!w.path){observeUnitProgress(s,w,previous,destination,dt,nav,worker,emit);return false;}
   }
   if(worker&&waitForGate(w,s.structures))return false;
-  const dynamicClear=prepareActorMotion(s,w,nav,worker);
+  const dynamicClear=mobilePassActive(s,w)?null:prepareActorMotion(s,w,nav,worker);
   const routeClearance=worker?workerRiskClearance(w,nav,{radius:w.radius??.28,ignore},dynamicClear):animalRouteClearance(w,nav,{radius:w.radius??.28,ignore,escapeProps:expandRoute},dynamicClear);
   const clear=routeClearance?.clear??dynamicClear;
   if(motion)moveWorker(w,dt,{...motion,gates:worker?s.structures:[],clear});else {
     const metres=worker?movePathWithGates(w,speed*dt,s.structures,clear):movePath(w,speed*dt,clear);w.motionPhase=(w.motionPhase??0)+metres/speed;
   }
   if(dist(previous,w)>1e-9)w.heading=Math.atan2(w.x-previous.x,w.z-previous.z);
-  if(routeClearance?.blocked()){w.path=null;return false;}
-  // An actor can be pushed off a previously valid connector by local body
-  // avoidance. If the static first leg has since become impossible, discard
-  // that route instead of retrying the same zero-length move indefinitely.
-  if(!worker&&w.path?.length&&dist(previous,w)<=1e-9&&
-    nav.segmentClear&&!nav.segmentClear(w,w.path[0],w.radius??.28,ignore,false)){
-    w.path=null;return false;
-  }
+  if(routeClearance?.blocked())w.path=null;
+  if(dist(previous,w)<=1e-9)clearBlockedStaticLeg(s,w,nav,worker,emit);
+  observeUnitProgress(s,w,previous,destination,dt,nav,worker,emit);
+  if(!w.path)return false;
   return w.path.length===0;
 }
 function completeTask(s,w,t,target,nav) {
