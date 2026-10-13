@@ -304,6 +304,11 @@ shows 55,242 `approachPath` calls (22 successful), now taking 18.28 of 21.92
 seconds. Further large gains require reducing the number of attempted
 service points while retaining physically valid target selection; neither
 historical-crop filtering nor a more expensive point-by-point proof does that.
+Moving that same proof before `Navigation.path` was also tested and removed:
+`day12-prepath-region-proof-abba.json` reports 21.73/23.49 seconds for the
+retained reference and 21.79/22.41 seconds for the candidate, again with
+identical state hashes. Moving the check saved no meaningful time because
+the remaining cost lies in the number of distinct service-point probes.
 The focused simulation, rendering, and virtual-player regressions passed,
 and the web build passed. The full repository suite was attempted but stopped
 after its legacy `campaign.test.js` child continued consuming CPU for more
