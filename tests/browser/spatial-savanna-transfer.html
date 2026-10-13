@@ -70,7 +70,7 @@ try{
     format:sceneFormat?'scene':'raw',settlement:settlement?{x:10,z:8,hx:7,hz:6}:null});
   const candidateSecond=await request(candidate,{id:4,seed,cx:1,cz:0,radius:1.1,
     format:sceneFormat?'scene':'raw'});
-  let topology=null,barrierTopology=null,batchTopology=null,multipleSettlements=null,surfaceView=null;
+  let topology=null,barrierTopology=null,batchTopology=null,multipleSettlements=null,surfaceView=null,spatialReload=null;
   if(sceneFormat){
     const view=new SpatialSurfaceView();view.install(candidateFirst.data);view.install(candidateSecond.data);
     const query={x:30.3,z:5.7};
@@ -171,6 +171,30 @@ try{
       localSectorUpdates:added.metrics.sectorUpdates-far.metrics.sectorUpdates,
       sameFirstSettlement:true,secondChunkChanged:true,memoryBytes:changed.metrics.memoryBytes};
   }
+  if(sceneFormat){
+    const wall=await request(candidate,{id:210,op:'barrier-add',x:23.5,z:topology.crossing.z,
+      halfX:.8,halfZ:.45,passMask:0});
+    const saved=await request(candidate,{id:211,op:'snapshot'});
+    const reloadedWorker=new Worker(new URL('../../src/world/hierarchical-wasm/spatial-core-worker.js',import.meta.url),{type:'module'});
+    try{
+      const restored=await request(reloadedWorker,{id:212,op:'restore',state:saved.value,cx:0,cz:0});
+      const restoredState=await request(reloadedWorker,{id:213,op:'snapshot'});
+      const restoredFirst=await request(reloadedWorker,{id:214,seed,cx:0,cz:0,read:true,format:'scene'});
+      const restoredSecond=await request(reloadedWorker,{id:215,seed,cx:1,cz:0,format:'scene'});
+      const route=await request(reloadedWorker,{id:216,op:'route',...topology.crossing});
+      const liveRoute=await request(candidate,{id:217,op:'route',...topology.crossing});
+      const same=(a,b)=>a.length===b.length&&a.every((value,index)=>value===b[index]);
+      if(!restored.value||wall.value<=0||JSON.stringify(restoredState.value)!==JSON.stringify(saved.value)||
+         !same(restoredFirst.data.terrain.positions,candidateFirst.data.terrain.positions)||
+         !same(restoredFirst.data.groundMask,candidateFirst.data.groundMask)||
+         !same(restoredSecond.data.terrain.positions,candidateSecond.data.terrain.positions)||
+         route.value!==liveRoute.value)
+        throw Error('The versioned spatial state did not restore visual and route behavior');
+      spatialReload={version:saved.value.version,settlements:saved.value.settlements.length,
+        barriers:saved.value.barriers.length,nextBarrierId:saved.value.nextBarrierId,
+        routeStatus:route.value,restoredMemoryBytes:restored.metrics.memoryBytes};
+    }finally{reloadedWorker.terminate();}
+  }
   candidate.terminate();
   for(const result of [candidateFirst,candidateSecond]){
     if(sceneFormat){
@@ -194,12 +218,13 @@ try{
     ...result.timing,three:prepareThree(result.data,result.cx,result.cz),
     props:sceneFormat?result.data.instances.reduce((n,list)=>n+list.length,0):result.data.count,
     metrics:result.metrics}));
-  window.qaStats={seed,sceneFormat,settlement,current,spatial,topology,barrierTopology,batchTopology,multipleSettlements,surfaceView,
+  window.qaStats={seed,sceneFormat,settlement,current,spatial,topology,barrierTopology,batchTopology,multipleSettlements,surfaceView,spatialReload,
     checks:{transferLengths:true,terrainSeam:true,wallEdit:!!topology,
       dynamicPassage:!!barrierTopology,
       batchedTopology:batchTopology?.count===12,
       evictionRegeneration:topology?.sameVisualPayload===true,
       multipleSettlements:multipleSettlements?.sameFirstSettlement===true,
+      spatialReload:spatialReload?.version===1,
       surfaceView:surfaceView?.difference<=.00002}};window.qaReady=true;
   status.textContent=JSON.stringify(window.qaStats,null,2);
 }catch(error){window.qaError=String(error.stack??error);status.textContent=window.qaError;}

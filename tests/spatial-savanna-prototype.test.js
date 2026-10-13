@@ -357,6 +357,44 @@ test('a wall-chain batch matches individual barriers with one local refresh per 
     assert.deepEqual(batch.route({x:0,z:-3},{x:0,z:3}),single.route({x:0,z:-3},{x:0,z:3}));
   }
 });
+test('versioned spatial state restores settlements, sparse barrier IDs and both navigation profiles',()=>{
+  const original=createSpatialSavannaPrototype(module);
+  original.generate(2026,0,0);original.addChunk(1,0);
+  original.setSettlement(10,8,7,6);original.addSettlement(62,8,7,6);
+  original.buildNavigation(.28,true);original.buildNavigation(1.1,false);
+  const removed=original.addBarrier(-12,3,.5,.5);assert.equal(original.removeBarrier(removed),1);
+  const ids=original.addBarriersBatch([
+    {x:23.5,z:0,halfX:.8,halfZ:7,passMask:0},
+    {x:23.5,z:10,halfX:.8,halfZ:4,passMask:1}
+  ]);
+  const state=JSON.parse(JSON.stringify(original.snapshot()));
+  assert.deepEqual(state.barriers.map(barrier=>barrier.id),ids);
+  assert.equal(state.nextBarrierId,ids.at(-1)+1);
+  const payloads=[0,1].map(cx=>{original.selectChunk(cx,0);return original.chunkPayload();});
+  const routes=[];
+  for(const worker of [true,false]){
+    original.selectNavigation(worker);
+    routes.push(original.route({x:20,z:0},{x:27,z:0}));
+  }
+  const restored=createSpatialSavannaPrototype(module);
+  restored.restoreState(state,0,0);restored.addChunk(1,0);
+  restored.buildNavigation(.28,true);restored.buildNavigation(1.1,false);
+  assert.deepEqual(restored.snapshot(),state);
+  for(const [cx,payload] of payloads.entries()){
+    restored.selectChunk(cx,0);
+    assert.deepEqual(restored.chunkPayload(),payload);
+  }
+  for(const [index,worker] of [true,false].entries()){
+    restored.selectNavigation(worker);
+    assert.deepEqual(restored.route({x:20,z:0},{x:27,z:0}),routes[index]);
+  }
+  assert.equal(restored.addBarrier(6,2,.4,.4),original.addBarrier(6,2,.4,.4),
+    'the next barrier ID must survive reload');
+  const before=restored.snapshot();
+  assert.throws(()=>restored.restoreState({...before,barriers:[before.barriers[0],before.barriers[0]]}),
+    /Invalid spatial barrier/);
+  assert.deepEqual(restored.snapshot(),before,'invalid snapshots must not reset a running world');
+});
 test('neighboring chunks share their terrain seam and seed-dependent props',()=>{
   const core=createSpatialSavannaPrototype(module);
   core.generate(2026,0,0);

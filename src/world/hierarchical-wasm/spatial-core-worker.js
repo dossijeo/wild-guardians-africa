@@ -1,6 +1,7 @@
 import wasmUrl from './spatial-savanna.wasm?url';
 import {spatialChunkPayload,spatialChunkTransferables} from './spatial-savanna-payload.js';
 import {addSpatialBarriersBatch} from './spatial-barrier-batch.js';
+import {captureSpatialState,applySpatialState,validateSpatialState} from './spatial-state.js';
 
 let wasm=null,compiledMs=0,seed=null;
 async function initialize(){
@@ -28,7 +29,7 @@ self.onmessage=async({data:request})=>{
   try{
     await initialize();
     if(request.op){
-      if(seed===null)throw Error('Generate the spatial world before editing or routing');
+      if(seed===null&&request.op!=='restore')throw Error('Generate the spatial world before editing or routing');
       const started=performance.now();let value;
       switch(request.op){
         case 'edge':value=Boolean(wasm.spatial_edge(request.x,request.z,request.nx,request.nz));break;
@@ -46,6 +47,16 @@ self.onmessage=async({data:request})=>{
         case 'settlement-add':value=wasm.spatial_add_settlement(request.x,request.z,request.hx,request.hz);break;
         case 'profile':value=wasm.spatial_select_nav_profile(request.worker?1:0);break;
         case 'surface':value=wasm.spatial_surface(request.x,request.z);break;
+        case 'snapshot':value=captureSpatialState(wasm);break;
+        case 'restore':{
+          const state=validateSpatialState(request.state);
+          seed=null;
+          wasm.spatial_generate(state.seed,request.cx??0,request.cz??0);
+          applySpatialState(wasm,state);
+          for(const profile of request.profiles??[{radius:.28,worker:true},{radius:1.1,worker:false}])
+            wasm.spatial_build_nav(profile.radius,profile.worker?1:0);
+          seed=state.seed;value=true;break;
+        }
         default:throw Error(`Unknown spatial operation: ${request.op}`);
       }
       self.postMessage({id:request.id,value,

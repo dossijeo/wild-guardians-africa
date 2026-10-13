@@ -35,6 +35,10 @@ struct Prop {float x,z,y,radius,scale,yaw;int32_t slot;};
 struct Pond {double x,z,radius,level;};
 struct WaterPoint {double x,z;};
 struct Barrier {int id;float x,z,halfX,halfZ;uint8_t passMask;};
+struct BarrierStateRecord {int32_t id;float x,z,halfX,halfZ;int32_t passMask;};
+static_assert(sizeof(BarrierStateRecord)==24);
+struct SettlementStateRecord {float x,z,hx,hz;};
+static_assert(sizeof(SettlementStateRecord)==16);
 struct BarrierIndex {
   std::unordered_map<int,Barrier> byId;
   std::unordered_map<uint64_t,std::vector<int>> buckets;
@@ -79,6 +83,8 @@ std::vector<float> barrierBatch;
 std::vector<int> barrierBatchIds;
 std::vector<Barrier> deferredBarrierRefresh;
 bool batchingBarriers=false;
+std::vector<BarrierStateRecord> barrierState;
+std::vector<SettlementStateRecord> settlementState;
 void saveProfile(){
   NavProfile& profile=navProfile(activeProfile);
   profile.radius=radiusNow;profile.worker=workerNow;profile.ready=navReady;
@@ -694,6 +700,7 @@ extern "C" {
 int spatial_generate(uint32_t seed,int cx,int cz){
   worldSeed=seed;barrierIndex().byId.clear();barrierIndex().buckets.clear();
   batchingBarriers=false;deferredBarrierRefresh.clear();barrierBatch.clear();barrierBatchIds.clear();
+  barrierState.clear();settlementState.clear();
   settlements.clear();nearbySettlements.clear();
   for(int profile=0;profile<2;profile++){
     NavProfile& state=navProfile(profile);
@@ -850,6 +857,50 @@ int spatial_add_barriers_batch(int count){
   batchingBarriers=false;
   flushBarrierBatch();
   return count;
+}
+uint32_t spatial_world_seed(){return worldSeed;}
+int spatial_next_barrier_id(){return nextBarrierId;}
+int spatial_settlement_state_count(){return int(settlements.size());}
+SettlementStateRecord* spatial_settlement_state_ptr(){
+  settlementState.clear();settlementState.reserve(settlements.size());
+  for(const Settlement& site:settlements)settlementState.push_back({float(site.x),float(site.z),float(site.hx),float(site.hz)});
+  return settlementState.data();
+}
+int spatial_barrier_state_count(){return int(barrierIndex().byId.size());}
+BarrierStateRecord* spatial_barrier_state_ptr(){
+  barrierState.clear();barrierState.reserve(barrierIndex().byId.size());
+  for(const auto& [id,barrier]:barrierIndex().byId)
+    barrierState.push_back({id,barrier.x,barrier.z,barrier.halfX,barrier.halfZ,int(barrier.passMask)});
+  std::sort(barrierState.begin(),barrierState.end(),[](const auto& a,const auto& b){return a.id<b.id;});
+  return barrierState.data();
+}
+BarrierStateRecord* spatial_barrier_restore_ptr(int count){
+  if(count<0||count>100000)return nullptr;
+  barrierState.resize(count);
+  return barrierState.data();
+}
+int spatial_restore_barriers(int count,int nextId){
+  if(count<0||count>100000||barrierState.size()!=size_t(count)||
+     nextId<1||!barrierIndex().byId.empty())return 0;
+  int previousId=0;
+  for(const BarrierStateRecord& item:barrierState){
+    if(item.id<=previousId||item.id>=nextId||item.passMask<0||item.passMask>3||
+       !std::isfinite(item.x)||!std::isfinite(item.z)||
+       !std::isfinite(item.halfX)||!std::isfinite(item.halfZ)||
+       item.halfX<=0||item.halfZ<=0||item.halfX>100||item.halfZ>100)return 0;
+    previousId=item.id;
+  }
+  batchingBarriers=true;
+  for(const BarrierStateRecord& item:barrierState){
+    const Barrier barrier={item.id,item.x,item.z,item.halfX,item.halfZ,uint8_t(item.passMask)};
+    barrierIndex().byId.emplace(item.id,barrier);
+    indexBarrier(barrier,true);
+    refreshBarrier(barrier);
+  }
+  batchingBarriers=false;
+  nextBarrierId=nextId;
+  flushBarrierBatch();
+  return 1;
 }
 int spatial_set_barrier_passability(int id,int passMask){
   if(passMask<0||passMask>3)return 0;
