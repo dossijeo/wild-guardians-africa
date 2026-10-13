@@ -25,7 +25,7 @@ export function captureSpatialState(wasm){
   for(let i=0;i<removedCount;i++)removedProps.push({group:removed[i*3],gx:removed[i*3+1],gz:removed[i*3+2]});
   return {version:3,biome:wasm.spatial_world_biome()===1?'desert':
     wasm.spatial_world_biome()===2?'grand_river':wasm.spatial_world_biome()===3?'volcanoes':
-    wasm.spatial_world_biome()===4?'mangrove':'savanna',
+    wasm.spatial_world_biome()===4?'mangrove':wasm.spatial_world_biome()===5?'canyons':'savanna',
     seed:wasm.spatial_world_seed()>>>0,settlements,barriers,removedProps,
     nextBarrierId:wasm.spatial_next_barrier_id()};
 }
@@ -33,7 +33,7 @@ export function captureSpatialState(wasm){
 export function validateSpatialState(state){
   const finiteF32=value=>Number.isFinite(value)&&Number.isFinite(Math.fround(value));
   if((state?.version!==1&&state?.version!==2&&state?.version!==3)||
-     (state.version>=2&&!['savanna','desert','grand_river','volcanoes','mangrove'].includes(state.biome))||
+     (state.version>=2&&!['savanna','desert','grand_river','volcanoes','mangrove','canyons'].includes(state.biome))||
      !Number.isInteger(state.seed)||state.seed<0||state.seed>0xffffffff||
      !Array.isArray(state.settlements)||!Array.isArray(state.barriers)||
      (state.version===3&&(!Array.isArray(state.removedProps)||state.removedProps.length>100000))||

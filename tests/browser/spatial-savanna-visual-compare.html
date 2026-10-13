@@ -18,15 +18,16 @@ import wasmUrl from '../../src/world/hierarchical-wasm/spatial-savanna.wasm?url'
 
 const status=document.querySelector('#status'),scenes=[];
 const parameters=new URLSearchParams(location.search),gameGround=parameters.get('ground')==='game';
-const biome=['savanna','desert','grand_river','volcanoes','mangrove'].includes(parameters.get('biome'))?
+const biome=['savanna','desert','grand_river','volcanoes','mangrove','canyons'].includes(parameters.get('biome'))?
   parameters.get('biome'):'savanna';
-const gameBiome={savanna:'sabana',desert:'desierto',grand_river:'gran-rio',volcanoes:'volcanes',mangrove:'manglares'}[biome];
+const gameBiome={savanna:'sabana',desert:'desierto',grand_river:'gran-rio',volcanoes:'volcanes',mangrove:'manglares',canyons:'gran-canon'}[biome];
 const gameWater=parameters.get('water')==='game';
 const settlement=parameters.get('settlement')==='1';
 const seed=Number(parameters.get('seed')??712);
 let biomeGround=null,toon=null;
 function makeScene(ground,river,instances,models,assets,prototype=false,mask=null){
-  const scene=new THREE.Scene();scene.background=new THREE.Color('#cdd6c5');scene.fog=new THREE.Fog('#cdd6c5',75,145);
+  const scene=new THREE.Scene();scene.background=new THREE.Color('#cdd6c5');
+  scene.fog=new THREE.Fog('#cdd6c5',biome==='canyons'?180:75,biome==='canyons'?330:145);
   scene.add(new THREE.HemisphereLight('#fff9e6','#655034',2.2));
   const sun=new THREE.DirectionalLight('#fff1cd',2);sun.position.set(-35,60,20);scene.add(sun);
   const material=gameGround?nativeGroundMaterial('alta'):
@@ -34,7 +35,7 @@ function makeScene(ground,river,instances,models,assets,prototype=false,mask=nul
   if(gameGround){biomeGround.attach(material,0,0,mask);toon.material(material);
     toon.update(false,sun,gameBiome);}
   scene.add(new THREE.Mesh(ground,material));
-  const fluidColor=biome==='volcanoes'?'#ed5c18':biome==='mangrove'?'#50b9b4':'#49aeb6';
+  const fluidColor=biome==='volcanoes'?'#ed5c18':biome==='mangrove'?'#50b9b4':biome==='canyons'?'#3aadb6':'#49aeb6';
   if(river)scene.add(new THREE.Mesh(river,gameWater?
     paintedWaterMaterial(fluidColor,biome==='volcanoes',seed):
     new THREE.MeshStandardMaterial({color:fluidColor,roughness:.38,side:THREE.DoubleSide})));
@@ -83,7 +84,9 @@ try{
     spatial.instances,models,pack.assets,true,spatial.groundMask);
   const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);
   renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.setScissorTest(true);document.body.append(renderer.domElement);
-  const camera=new THREE.PerspectiveCamera(53,1,.1,250);camera.position.set(48,44,57);camera.lookAt(0,5,0);
+  const camera=new THREE.PerspectiveCamera(53,1,.1,250);
+  if(biome==='canyons'){camera.position.set(70,85,95);camera.lookAt(0,10,0);}
+  else {camera.position.set(48,44,57);camera.lookAt(0,5,0);}
   function render(){
     renderer.setSize(innerWidth,innerHeight);const left=Math.floor(innerWidth/2),right=innerWidth-left;
     for(const [i,width] of [left,right].entries()){
@@ -93,6 +96,6 @@ try{
   }
   render();addEventListener('resize',render);
   window.qaStats={seed,biome,baseline,candidate,gameGround,gameWater,settlement};window.qaReady=true;
-  status.textContent=`${{savanna:'Sabana',desert:'Desierto',grand_river:'Gran río',volcanoes:'Volcanes',mangrove:'Manglares'}[biome]} · Semilla ${seed} · ${gameGround?'suelo del juego':'suelo básico'} · ${gameWater?(biome==='volcanoes'?'lava del juego':'agua del juego'):'fluido básico'} · JS: ${baseline.count} objetos · WASM: ${candidate.count} objetos`;
+  status.textContent=`${{savanna:'Sabana',desert:'Desierto',grand_river:'Gran río',volcanoes:'Volcanes',mangrove:'Manglares',canyons:'Gran Cañón'}[biome]} · Semilla ${seed} · ${gameGround?'suelo del juego':'suelo básico'} · ${gameWater?(biome==='volcanoes'?'lava del juego':'agua del juego'):'fluido básico'} · JS: ${baseline.count} objetos · WASM: ${candidate.count} objetos`;
 }catch(error){window.qaError=String(error.stack??error);status.textContent=window.qaError;}
 </script></body></html>

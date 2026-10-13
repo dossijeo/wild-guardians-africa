@@ -185,14 +185,39 @@ test('a mangrove settlement dries its local flooded area without changing distan
   assert.notDeepEqual(Array.from(core.water()),Array.from(before));
   assert.equal(core.fluidLevel(distant.x,distant.z),distant.level);
 });
+test('Gran Cañón keeps its gorge, water barrier and worker crossing in one spatial core',()=>{
+  const core=createSpatialSavannaPrototype(module);
+  core.generate(712,0,0,'canyons');
+  const heights=Float32Array.from(core.heights()),props=core.props();
+  assert(Math.max(...heights)-Math.min(...heights)>20,'the gorge needs visible height');
+  assert(props.some(prop=>prop.slot>=2&&prop.slot<=4),'the canyon needs a geological landmark');
+  assert(core.water().some(Boolean));
+  assert(core.waterTriangles().length>0);
+  const wet={x:-12,z:0};assert(core.fluidLevel(wet.x,wet.z)>0);
+  core.buildNavigation(.28,true);
+  assert(core.walkable(wet.x,wet.z),'workers must be able to cross the canyon river');
+  validRoute(core,{x:-19,z:0},core.route({x:-19,z:0},{x:-4,z:0}));
+  core.buildNavigation(1.1,false);
+  assert(!core.walkable(wet.x,wet.z),'animals must not enter the canyon river');
+  core.addChunk(1,0);
+  for(let z=0;z<49;z++)assert.equal(heights[z*49+48],core.heights()[z*49]);
+  const state=JSON.parse(JSON.stringify(core.snapshot()));
+  assert.equal(state.biome,'canyons');
+  const restored=createSpatialSavannaPrototype(module);
+  restored.restoreState(state,0,0);
+  assert.deepEqual(restored.snapshot(),state);
+  assert.deepEqual(restored.props(),props);
+});
 test('generated prop footprints follow each production scatter rule',()=>{
   const slots=[3.8,3.1,3.0,1.7,1.1,.9,1.4,.45,.35,.5,1.2,1.7,1.2,1.8,1.3,1.0,.9,1.7,4.0,5.0];
   const desert=JSON.parse(readFileSync(new URL('../public/content/biome-desert.json',import.meta.url))).profile.bounds;
+  const canyon=JSON.parse(readFileSync(new URL('../public/content/biome-canyons.json',import.meta.url))).profile.bounds;
   const core=createSpatialSavannaPrototype(module);
-  for(const biome of ['savanna','desert','grand_river','volcanoes','mangrove']){
+  for(const biome of ['savanna','desert','grand_river','volcanoes','mangrove','canyons']){
     core.generate(28,0,0,biome);
     for(const prop of core.props().filter(prop=>prop.group<6)){
-      const expected=(biome==='desert'?desert[prop.slot].radius:slots[prop.slot])*prop.scale;
+      const expected=(biome==='desert'?desert[prop.slot].radius:
+        biome==='canyons'?canyon[prop.slot].radius:slots[prop.slot])*prop.scale;
       assert(Math.abs(prop.radius-expected)<.0005,`${biome} slot ${prop.slot} radius`);
     }
   }

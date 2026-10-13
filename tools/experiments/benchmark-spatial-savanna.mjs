@@ -7,26 +7,28 @@ import {createLazySectorProbeSync} from '../../src/world/hierarchical-wasm/lazy-
 import {createSpatialSavannaPrototype} from '../../src/world/hierarchical-wasm/spatial-savanna-adapter.js';
 
 const output=process.argv[2]??'docs/qa/hierarchical-navigation/spatial-savanna-prototype.json';
-const biome=['savanna','desert','grand_river','volcanoes','mangrove'].includes(process.env.WG_QA_BIOME)?
+const biome=['savanna','desert','grand_river','volcanoes','mangrove','canyons'].includes(process.env.WG_QA_BIOME)?
   process.env.WG_QA_BIOME:'savanna';
 const profile=JSON.parse(readFileSync(`public/content/biome-${biome}.json`,'utf8')).profile;
 const oldModule=new WebAssembly.Module(readFileSync('src/world/hierarchical-wasm/lazy-sectors.wasm'));
 const newBytes=readFileSync('src/world/hierarchical-wasm/spatial-savanna.wasm');
 const newModule=new WebAssembly.Module(newBytes);
 const timed=fn=>{const start=performance.now(),result=fn();return {ms:performance.now()-start,result};};
+const canyonWorker=biome==='canyons';
+const routePair=z=>canyonWorker?[{x:-5,z},{x:0,z}]:[{x:7,z},{x:13,z}];
 function baseline(){
-  const nav=new Navigation('712',{savanna:'sabana',desert:'desierto',grand_river:'gran-rio',volcanoes:'volcanes',mangrove:'manglares'}[biome],profile),config=nav.config;
+  const nav=new Navigation('712',{savanna:'sabana',desert:'desierto',grand_river:'gran-rio',volcanoes:'volcanes',mangrove:'manglares',canyons:'gran-canon'}[biome],profile),config=nav.config;
   const geometricCalls={walkable:0,segmentClear:0};
   for(const name of Object.keys(geometricCalls)){
     const original=nav[name].bind(nav);
     nav[name]=(...args)=>{geometricCalls[name]++;return original(...args);};
   }
   const visual=timed(()=>buildNativeChunk(config,profile,0,0));
-  const probe=createLazySectorProbeSync(oldModule,nav,{radius:1.1,worker:false});
+  const probe=createLazySectorProbeSync(oldModule,nav,{radius:canyonWorker?.28:1.1,worker:canyonWorker});
   const navigation=timed(()=>probe.ensureRect(-24,-24,23,23));
   const queries=timed(()=>{
     const results=[];
-    for(let z=-18;z<=18;z+=3)results.push(probe.route({x:7,z},{x:13,z}).status);
+    for(let z=-18;z<=18;z+=3)results.push(probe.route(...routePair(z)).status);
     return results;
   });
   return {kind:'current JavaScript generation + JavaScript physical sampling + sparse C++ graph',
@@ -41,14 +43,14 @@ function candidate(){
   const generation=timed(()=>core.generate(712,0,0,biome));
   const visual=timed(()=>({ground:core.geometry(),water:core.waterGeometry()}));
   const objects=timed(()=>core.props());
-  const navigation=timed(()=>core.buildNavigation(1.1,false));
+  const navigation=timed(()=>core.buildNavigation(canyonWorker?.28:1.1,canyonWorker));
   const queries=timed(()=>{
     const results=[];
-    for(let z=-18;z<=18;z+=3)results.push(core.route({x:7,z},{x:13,z}).status);
+    for(let z=-18;z<=18;z+=3)results.push(core.route(...routePair(z)).status);
     return results;
   });
   const wall=timed(()=>core.addWall(10,0,.8,24));
-  const blocked=core.route({x:7,z:18},{x:13,z:18}).status;
+  const blocked=core.route(...routePair(18)).status;
   const removal=timed(()=>core.removeWall(wall.result));
   const geometry=visual.result.ground,river=visual.result.water;
   const result={kind:'C++ generation + same-module logical graph; JS Three.js buffer construction',
@@ -67,6 +69,8 @@ function candidate(){
 const rows=[];
 for(const variant of ['baseline','candidate','candidate','baseline'])rows.push(variant==='baseline'?baseline():candidate());
 const report={scope:`One ${biome} chunk, seed 712, ABBA. Different procedural worlds and unequal visual features: diagnostic architectural prototype only.`,
+  navigationProfile:canyonWorker?'worker':'animal',
+  routeEndpoints:canyonWorker?'(-5,z) to (0,z)':'(7,z) to (13,z)',
   wasmBytes:newBytes.byteLength,rows};
 mkdirSync(dirname(output),{recursive:true});writeFileSync(output,JSON.stringify(report,null,2)+'\n');
 console.log(JSON.stringify({wasmBytes:report.wasmBytes,rows:rows.map(({kind,visualMs,generationMs,navigationMs,totalMs,wallMs,removeWallMs,found,propCount,geometricCalls,metrics})=>({kind,visualMs,generationMs,navigationMs,totalMs,wallMs,removeWallMs,found,propCount,geometricCalls,metrics}))}));
