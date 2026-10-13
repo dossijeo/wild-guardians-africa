@@ -1,5 +1,7 @@
 import {canyonRaidFormation} from './canyon-raid-formation.js';
 import {resolveAgriculturalImpact,validDamageProfile} from './raid-agricultural-impact.js';
+import {animalLocalRetreatExit} from './animal-local-retreat-exit.js';
+import {animalFootprintConnectorExhausted} from './animal-footprint-connectors.js';
 import {liveWaitQueue,occupiedEligibleGroup,enqueueWait,leaveWait,observeWaitProgress,waitEpoch,RAID_WAIT_SECONDS} from './raid-contention.js';
 import {raidEntryChunks,includeRaidBounds} from '../world/raid-entry-residency.js';
 import {raidEntryKey} from '../world/raid-entry-data.js';
@@ -345,7 +347,18 @@ export function updateRaid(s,dt,nav) {
     }
     if(a.hitsRemaining<=0&&a.status!=='retreating'){release(s,a);leaveWait(s.raid,a);a.status='retreating';emit(s,'AnimalRetreating',{targetId:a.id,species:a.species,hitsRemaining:a.hitsRemaining,reason:'budget-exhausted'});}
     if(a.status==='retreating') {
-      if(walkTo(s,a,{...(a.exit??a.spawn),id:`exit-${a.id}`},dt,nav,{speed:3.8,worker:false,expandRoute:true,routeVia:a.spawn}))a.status='gone';continue;
+      const prior={x:a.x,z:a.z};
+      if(walkTo(s,a,{...(a.retreatExit??a.exit??a.spawn),id:`exit-${a.id}`},dt,nav,{speed:3.8,worker:false,expandRoute:true,routeVia:a.spawn})){
+        a.status='gone';delete a.retreatExit;delete a.retreatNoPathSince;
+      }else if(a.path?.length||dist(a,prior)>1e-7)delete a.retreatNoPathSince;
+      else {
+        a.retreatNoPathSince??=s.elapsed;
+        if(s.elapsed-a.retreatNoPathSince>=10&&animalFootprintConnectorExhausted(a,a.exit??a.spawn,nav)){
+          const alternate=animalLocalRetreatExit(s,a,nav,a.retreatExit);
+          if(alternate){a.retreatExit=alternate;a.path=null;a.retreatNoPathSince=s.elapsed;}
+        }
+      }
+      continue;
     }
     if(a.hitsRemaining<=0)continue;
     let target=raidTarget(s,a.targetId);
