@@ -125,6 +125,14 @@ timings are preserved in `pilot-bad-sabana-123-7.zip`. The runner's older
 inactivity field is retained as historical output but is no longer an
 acceptance criterion after unlimited agricultural magic was approved.
 
+The fixed `expansive` policy on the same seed and biome also completed seven
+native nights, with 1,205 coins, 187 living crops, 12 workers, and no crop
+loss on day 7. Its day-7 native tick time was 3.39 seconds and virtual-player
+decision time was 0.46 seconds. `pilot-expansive-sabana-123-7.zip` retains
+the native state and daily ledgers. These two seven-night profiles have
+different economic decisions and evolving world states; they do not establish
+relative military difficulty or 100-night survivability.
+
 A repeated seven-night run with per-step timing located the costly interval
 at simulated time 475–499 on day 7. Twelve of those ticks exceeded three
 seconds, and the largest took 30.34 seconds. A cooperative checkpoint at
