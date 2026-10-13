@@ -128,6 +128,9 @@ try{
     if(fractional.value!=='found'||!(fractional.routePoints instanceof Float32Array)||
        fractional.routePoints.length!==2||Math.abs(fractional.routePoints[0]-24.08)>.0001)
       throw Error('Continuous worker route lost its fractional endpoint');
+    const seamFractional=await request(candidate,{id:id++,op:'route-world',x:23.8,z:crossing.z,nx:24.2,nz:crossing.z});
+    if(seamFractional.value!=='found'||!(seamFractional.routePoints instanceof Float32Array))
+      throw Error('Continuous worker route did not cross two resident chunks');
     const wall=await request(candidate,{id:id++,op:'wall-add',x:23.5,z:0,halfX:.8,halfZ:24});
     if(wall.value<=0)throw Error('The wall command was rejected');
     const fractionalBlocked=await request(candidate,{id:id++,op:'route-world',x:24.02,z:crossing.z,nx:24.08,nz:crossing.z});

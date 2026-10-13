@@ -860,6 +860,49 @@ test('two resident chunks share a graph and a wall closes and reopens their seam
   assert.equal(core.metrics().loadedChunks,2);
   validRoute(core,path.start,core.route(path.start,path.end));
 });
+test('fractional routes cross resident chunk seams regardless of the selected visual chunk',()=>{
+  const core=createSpatialSavannaPrototype(module);
+  core.generate(712,0,0);core.addChunk(1,0);core.buildNavigation(.28,true);
+  let crossing;
+  for(let z=-18;z<=18&&!crossing;z++){
+    const start={x:23.8,z},end={x:24.2,z};
+    if(core.route({x:23,z},{x:24,z}).status==='found'&&core.localClear(start,end))crossing={start,end};
+  }
+  assert(crossing,'expected a continuous passage across two resident chunks');
+  for(const [cx,cz] of [[1,0],[0,0]]){
+    core.selectChunk(cx,cz);
+    assert.equal(core.routeWorld(crossing.start,crossing.end).status,'found');
+    assert(core.localClear(crossing.start,crossing.end));
+  }
+  core.removeChunk(1,0);
+  assert.notEqual(core.routeWorld(crossing.start,crossing.end).status,'found',
+    'an evicted neighbor cannot be treated as physically clear');
+});
+test('resident prop collision agrees with the selected chunk after edits and reload',()=>{
+  const core=createSpatialSavannaPrototype(module);
+  core.generate(712,0,0);core.addChunk(1,0);
+  const compare=()=>{
+    const samples=[];
+    core.selectChunk(0,0);
+    for(let z=-20;z<=20;z+=2)for(let x=25;x<=43;x+=2)
+      samples.push({x:x+.13,z:z+.17,clear:core.localClear({x:x+.13,z:z+.17},{x:x+.13,z:z+.17})});
+    core.selectChunk(1,0);
+    for(const sample of samples)assert.equal(core.localClear(sample,sample),sample.clear,
+      `resident prop collision diverged at ${sample.x},${sample.z}`);
+  };
+  for(const [radius,worker] of [[.28,true],[1.1,false]]){
+    core.buildNavigation(radius,worker);compare();
+  }
+  const prop=core.props().find(p=>p.slot<=3||p.slot>=10&&p.slot<=12||p.slot>=18);
+  assert(prop);
+  core.removeProp(prop);
+  compare();
+  const saved=core.snapshot(),restored=createSpatialSavannaPrototype(module);
+  restored.restoreState(saved,0,0);restored.addChunk(1,0);restored.buildNavigation(1.1,false);
+  assert.deepEqual(restored.snapshot(),saved);
+  const point={x:prop.x,z:prop.z};
+  assert.equal(restored.localClear(point,point),core.localClear(point,point));
+});
 test('negative chunk coordinates retain the shared border and graph',()=>{
   const core=createSpatialSavannaPrototype(module);
   core.generate(712,0,0);core.buildNavigation(.28,true);

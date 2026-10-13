@@ -76,6 +76,11 @@ std::unordered_map<uint64_t,ChunkSpatialSample>& residentSpatial(){
 }
 std::vector<Prop> props;
 std::vector<Prop> solidProps;
+std::unordered_map<uint64_t,std::vector<Prop>>* residentPropRegistry=nullptr;
+std::unordered_map<uint64_t,std::vector<Prop>>& residentSolidProps(){
+  if(!residentPropRegistry)residentPropRegistry=new std::unordered_map<uint64_t,std::vector<Prop>>();
+  return *residentPropRegistry;
+}
 std::unordered_set<PropKey,PropKeyHash>* removedPropRegistry=nullptr;
 std::vector<int32_t> removedPropState;
 std::unordered_set<PropKey,PropKeyHash>& removedProps(){
@@ -556,6 +561,16 @@ bool propBlocked(double x,double z){
   }
   return false;
 }
+bool residentPropBlocked(double x,double z,int cx,int cz){
+  if(cx==chunkX&&cz==chunkZ)return propBlocked(x,z);
+  const auto found=residentSolidProps().find(chunkKey(cx,cz));
+  if(found==residentSolidProps().end())return true; // Unloaded terrain is never certified clear.
+  for(const Prop& p:found->second){
+    const double dx=p.x-x,dz=p.z-z,r=p.radius+radiusNow;
+    if(dx*dx+dz*dz<r*r)return true;
+  }
+  return false;
+}
 void indexSolidProps(){
   for(auto& bucket:propBuckets)bucket.clear();
   const int x0=chunkX*side-24-8,z0=chunkZ*side-24-8;
@@ -816,6 +831,7 @@ void populateChunk(int cx,int cz,bool visual=true){
     }
   }
   indexSolidProps();
+  residentSolidProps()[chunkKey(cx,cz)]=solidProps;
 }
 void buildActiveRaster(){
   const int firstX=chunkX*side-24,firstZ=chunkZ*side-24;
@@ -1008,6 +1024,7 @@ int spatial_generate_biome(uint32_t seed,int biome,int cx,int cz){
   chunkRasters=&navProfile(0).rasters;lazy_select_context(0);
   loadedChunks.clear();nextBarrierId=1;
   residentSpatial().clear();
+  residentSolidProps().clear();
   populateChunk(cx,cz);loadedChunks.emplace_back(cx,cz);
   return int(props.size());
 }
@@ -1037,6 +1054,7 @@ int spatial_remove_chunk(int cx,int cz){
   if(it==loadedChunks.end())return 0;
   loadedChunks.erase(it);
   residentSpatial().erase(chunkKey(cx,cz));
+  residentSolidProps().erase(chunkKey(cx,cz));
   const int previous=activeProfile;
   for(int profile=0;profile<navigationProfiles;profile++){
     selectProfile(profile);
@@ -1054,6 +1072,11 @@ int spatial_remove_chunk(int cx,int cz){
   return 1;
 }
 int spatial_chunk_count(){return int(loadedChunks.size());}
+int spatial_resident_prop_count(){
+  int count=0;
+  for(const auto& [key,records]:residentSolidProps())count+=int(records.size());
+  return count;
+}
 float spatial_set_settlement(float x,float z,float hx,float hz){
   if(!std::isfinite(x)||!std::isfinite(z)||!std::isfinite(hx)||!std::isfinite(hz)||
      hx<=0||hz<=0||hx>100||hz>100)return -1;
@@ -1275,11 +1298,10 @@ int spatial_local_clear(float x,float z,float nx,float nz){
   const int steps=std::max(1,int(std::ceil(distance/.2)));
   for(int i=0;i<=steps;i++){
     const double t=double(i)/steps,px=x+(nx-x)*t,pz=z+(nz-z)*t;
-    // The active chunk owns the indexed prop halo. Do not claim a clear
-    // connector for a different chunk until that chunk's prop index is active.
-    if(int(std::floor((px+24)/side))!=chunkX||int(std::floor((pz+24)/side))!=chunkZ||
-       !rasterAt(int(std::round(px)),int(std::round(pz)))||
-       !terrainValid(px,pz,radiusNow,workerNow)||propBlocked(px,pz)||!barrierClear(px,pz))return 0;
+    const int cx=int(std::floor((px+24)/side)),cz=int(std::floor((pz+24)/side));
+    if(!rasterAt(int(std::round(px)),int(std::round(pz)))||
+       !terrainValid(px,pz,radiusNow,workerNow)||residentPropBlocked(px,pz,cx,cz)||
+       !barrierClear(px,pz))return 0;
   }
   return 1;
 }

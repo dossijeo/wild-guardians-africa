@@ -120,7 +120,8 @@ export function createSpatialWorld(module){
     propBlocked:(x,z)=>Boolean(wasm.spatial_prop_blocked(x,z)),
     surface,slope,
     fluidLevel:(x,z)=>wasm.spatial_fluid_level(x,z),
-    metrics:()=>({memoryBytes:wasm.memory.buffer.byteLength,loadedChunks:wasm.spatial_chunk_count(),loadedSectors:wasm.lazy_loaded_sectors(),
+    metrics:()=>({memoryBytes:wasm.memory.buffer.byteLength,loadedChunks:wasm.spatial_chunk_count(),
+      residentPropRecords:wasm.spatial_resident_prop_count?.()??null,loadedSectors:wasm.lazy_loaded_sectors(),
       sectorSlots:wasm.spatial_sector_slots(),
       sectorUpdates:wasm.lazy_sector_updates(),haloProps:wasm.spatial_halo_prop_count()})};
 }
