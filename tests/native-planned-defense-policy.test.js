@@ -32,6 +32,7 @@ test('persistent planned wall buys native pieces, closes with a worker gate, and
  assert.equal(report.spent,walls.length*10);
  assert.equal(walls.filter(w=>w.gate).length,1);
  const gate=walls.find(w=>w.gate),portals=gatePortalPoints(gate);
+ assert(Math.abs(gate.z)<2,'the native automatic gate should lie on the village corridor');
  assert(nav.segmentClear(portals[0],portals[1],.28,null,true));
  const restored=deserialize(serialize(s));nav.setState(restored);
  assert.equal(restored.structures.filter(w=>w.kind==='wall').length,walls.length);

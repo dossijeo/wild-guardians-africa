@@ -3,13 +3,31 @@
 import * as Game from '../src/simulation/game.js';
 import {numberOf} from '../src/simulation/money.js';
 import {permission,wallSpec} from '../src/simulation/rules.js';
-import {wallStroke} from '../src/world/wall-layout.js';
+import {wallStroke,WALL_UNIT} from '../src/world/wall-layout.js';
 import {Navigation} from '../src/world/navigation.js';
 import {centerServicePoint} from '../src/world/centers.js';
 import {closedDefenseContours} from './native-closed-defense-policy.mjs';
 
 const strokeOptions={smooth:false,snap:false};
 const inside=(p,b,margin=1)=>p.x>=b[0]+margin&&p.x<=b[2]-margin&&p.z>=b[1]+margin&&p.z<=b[3]-margin;
+const clamp=(x,lo,hi)=>Math.max(lo,Math.min(hi,x));
+
+// Starting a closed stroke on the village/field corridor makes its last paid
+// slot the corridor gate. The game's native gate algorithm remains authoritative.
+export function corridorFirstContour(bounds,s){
+ const [x0,z0,x1,z1]=bounds,center=s.structures.find(c=>c.kind==='center'&&c.status==='intact');
+ const entry=s.villages[0]?.entry??s.villages[0];
+ if(!center||!entry)return [[x0,z0],[x1,z0],[x1,z1],[x0,z1],[x0,z0]];
+ const service=centerServicePoint(center,s,.8),dx=entry.x-service.x,dz=entry.z-service.z;
+ if(Math.abs(dx)>=Math.abs(dz)){
+  const z=clamp(service.z,z0+WALL_UNIT,z1-WALL_UNIT);
+  return dx<0?[[x0,z],[x0,z0],[x1,z0],[x1,z1],[x0,z1],[x0,z]]:
+   [[x1,z],[x1,z1],[x0,z1],[x0,z0],[x1,z0],[x1,z]];
+ }
+ const x=clamp(service.x,x0+WALL_UNIT,x1-WALL_UNIT);
+ return dz<0?[[x,z0],[x1,z0],[x1,z1],[x0,z1],[x0,z0],[x,z0]]:
+  [[x,z1],[x0,z1],[x0,z0],[x1,z0],[x1,z1],[x,z1]];
+}
 
 function closingWouldStrandWorkers(s,nav,preview){
  const replacements=new Map(preview.updates.map(update=>[update.id,update]));
@@ -52,7 +70,7 @@ export function createNativePlannedDefensePolicy({startDay=6,material='zarzas',i
   const candidate=closedDefenseContours(s,{previous:completed?.bounds})[contourIndex];
   if(!candidate)return null;
   planningCount++;
-  return {bounds:candidate.bounds,points:candidate.points,createdDay:s.day,createdTime:s.time,version:planningCount,stalledUntilDay:0,paidPieces:0};
+  return {bounds:candidate.bounds,points:corridorFirstContour(candidate.bounds,s),createdDay:s.day,createdTime:s.time,version:planningCount,stalledUntilDay:0,paidPieces:0};
  }
  function act(s,nav,{command,reserve=0}){
   observe(s);
