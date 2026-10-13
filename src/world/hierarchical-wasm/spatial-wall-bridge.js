@@ -56,16 +56,22 @@ export function addSpatialGate(core,gate){
   return core.addBarriersBatch(spatialGateBarriers(gate));
 }
 
+export function spatialStructureBarriers(structure){
+  if(structure?.kind!=='wall'||structure.status==='ruined')
+    throw TypeError('Expected an intact wall or gate module');
+  if(structure.gate)return spatialGateBarriers(structure);
+  const frame=wallCollisionFrame(structure);
+  return [{x:frame.x,z:frame.z,halfX:frame.width,halfZ:frame.depth,
+    yaw:frame.yaw,passMask:0}];
+}
+
 export function addSpatialStructuresBatch(core,structures){
   if(!Array.isArray(structures)||!structures.length||structures.length>1024)
     throw TypeError('Expected 1–1024 intact wall or gate modules');
   const barriers=[],counts=[];
   for(const structure of structures){
-    if(structure?.kind!=='wall'||structure.status==='ruined')
-      throw TypeError('Expected an intact wall or gate module');
-    if(structure.gate){const parts=spatialGateBarriers(structure);barriers.push(...parts);counts.push(parts.length);}
-    else {const frame=wallCollisionFrame(structure);barriers.push({x:frame.x,z:frame.z,
-      halfX:frame.width,halfZ:frame.depth,yaw:frame.yaw,passMask:0});counts.push(1);}
+    const parts=spatialStructureBarriers(structure);
+    barriers.push(...parts);counts.push(parts.length);
   }
   if(barriers.length>1024)throw RangeError('Too many spatial pieces in one batch');
   const ids=core.addBarriersBatch(barriers),groups=[];

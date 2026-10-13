@@ -116,6 +116,7 @@ std::unordered_map<uint64_t,ChunkRaster>* chunkRasters=nullptr;
 std::vector<std::pair<int,int>> loadedChunks;
 std::vector<float> barrierBatch;
 std::vector<int> barrierBatchIds;
+std::vector<int> barrierRemovalIds;
 std::vector<Barrier> deferredBarrierRefresh;
 bool batchingBarriers=false;
 std::vector<BarrierStateRecord> barrierState;
@@ -1019,7 +1020,7 @@ int spatial_generate_biome(uint32_t seed,int biome,int cx,int cz){
   if(biome<0||biome>5)return -1;
   worldSeed=seed;worldBiome=biome;barrierIndex().byId.clear();barrierIndex().buckets.clear();
   removedProps().clear();removedPropState.clear();
-  batchingBarriers=false;deferredBarrierRefresh.clear();barrierBatch.clear();barrierBatchIds.clear();
+  batchingBarriers=false;deferredBarrierRefresh.clear();barrierBatch.clear();barrierBatchIds.clear();barrierRemovalIds.clear();
   barrierState.clear();settlementState.clear();
   settlements.clear();nearbySettlements.clear();
   for(int profile=0;profile<navigationProfiles;profile++){
@@ -1240,6 +1241,41 @@ int spatial_add_barriers_batch(int count){
   batchingBarriers=false;
   flushBarrierBatch();
   return count;
+}
+int* spatial_barrier_removal_ptr(int count){
+  if(count<1||count>1024)return nullptr;
+  barrierRemovalIds.resize(count);
+  return barrierRemovalIds.data();
+}
+// Retire and add authorized rigid pieces as one local sector refresh. This is
+// needed when the game converts an existing wall into an automatic gate.
+int spatial_apply_barrier_batch(int removeCount,int addCount){
+  if(removeCount<0||removeCount>1024||addCount<0||addCount>1024||
+     removeCount+addCount==0||barrierRemovalIds.size()<size_t(removeCount)||
+     barrierBatch.size()<size_t(addCount)*6||
+     addCount>std::numeric_limits<int>::max()-nextBarrierId)return 0;
+  std::unordered_set<int> unique;
+  for(int i=0;i<removeCount;i++){
+    const int id=barrierRemovalIds[i];
+    if(!unique.insert(id).second||!barrierIndex().byId.count(id))return 0;
+  }
+  for(int i=0;i<addCount;i++){
+    const float x=barrierBatch[i*6],z=barrierBatch[i*6+1];
+    const float halfX=barrierBatch[i*6+2],halfZ=barrierBatch[i*6+3];
+    const float yaw=barrierBatch[i*6+4],passMask=barrierBatch[i*6+5];
+    if(!std::isfinite(x)||!std::isfinite(z)||!std::isfinite(halfX)||!std::isfinite(halfZ)||
+       !std::isfinite(yaw)||halfX<=0||halfZ<=0||halfX>100||halfZ>100||
+       !std::isfinite(passMask)||passMask<0||passMask>3||std::floor(passMask)!=passMask)return 0;
+  }
+  barrierBatchIds.resize(addCount);
+  batchingBarriers=true;
+  for(int i=0;i<removeCount;i++)spatial_remove_barrier(barrierRemovalIds[i]);
+  for(int i=0;i<addCount;i++)barrierBatchIds[i]=addBarrier(
+    barrierBatch[i*6],barrierBatch[i*6+1],barrierBatch[i*6+2],barrierBatch[i*6+3],
+    int(barrierBatch[i*6+5]),barrierBatch[i*6+4]);
+  batchingBarriers=false;
+  flushBarrierBatch();
+  return 1;
 }
 uint32_t spatial_world_seed(){return worldSeed;}
 int spatial_world_biome(){return worldBiome;}

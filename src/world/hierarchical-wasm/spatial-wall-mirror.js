@@ -1,4 +1,4 @@
-import {addSpatialStructuresBatch,removeSpatialStructure} from './spatial-wall-bridge.js';
+import {spatialStructureBarriers,removeSpatialStructure} from './spatial-wall-bridge.js';
 
 // Experimental state-to-topology seam. The game remains responsible for
 // authorizing placement, damage and destruction; this only mirrors the
@@ -15,19 +15,31 @@ export function createSpatialWallMirror(core){
       if(wall.id==null||desired.has(wall.id))throw TypeError('Wall IDs must be unique');
       desired.set(wall.id,wall);
     }
-    for(const [id,previous] of installed){
-      if(desired.has(id)&&previous.signature===signature(desired.get(id)))continue;
-      if(!removeSpatialStructure(core,previous.ids))
-        throw Error(`Could not remove spatial wall ${id}`);
-      installed.delete(id);
-    }
-    const additions=[...desired].filter(([id])=>!installed.has(id));
-    // A chain commit (including an automatic-gate conversion) becomes one
-    // graph refresh, rather than rebuilding sectors for every new module.
-    for(let offset=0;offset<additions.length;offset+=256){
-      const batch=additions.slice(offset,offset+256);
-      const groups=addSpatialStructuresBatch(core,batch.map(([,wall])=>wall));
-      batch.forEach(([id,wall],index)=>installed.set(id,{signature:signature(wall),ids:groups[index]}));
+    const removals=[...installed].filter(([id,previous])=>
+      !desired.has(id)||previous.signature!==signature(desired.get(id)));
+    const additions=[...desired].filter(([id,wall])=>
+      !installed.has(id)||installed.get(id).signature!==signature(wall));
+    // Gate conversion and chain construction change the local graph once.
+    // Bounded transactions keep very large farms free of artificial limits.
+    let removeOffset=0,addOffset=0;
+    while(removeOffset<removals.length||addOffset<additions.length){
+      const removeBatch=[];
+      let removeCount=0;
+      while(removeOffset<removals.length&&
+        removeCount+removals[removeOffset][1].ids.length<=1024){
+        const item=removals[removeOffset++];removeBatch.push(item);
+        removeCount+=item[1].ids.length;
+      }
+      const addBatch=additions.slice(addOffset,addOffset+256);
+      addOffset+=addBatch.length;
+      const parts=addBatch.map(([,wall])=>spatialStructureBarriers(wall));
+      const ids=core.applyBarrierChanges(removeBatch.flatMap(([,record])=>record.ids),parts.flat());
+      for(const [id] of removeBatch)installed.delete(id);
+      let index=0;
+      addBatch.forEach(([id,wall],item)=>{
+        installed.set(id,{signature:signature(wall),ids:ids.slice(index,index+parts[item].length)});
+        index+=parts[item].length;
+      });
     }
     return {count:installed.size,added:additions.length};
   }

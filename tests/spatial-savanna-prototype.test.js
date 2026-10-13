@@ -237,8 +237,20 @@ test('wall topology mirror reacts to placement, gate conversion and ruin but ign
   assert.deepEqual(mirror.sync(walls),{count:2,added:0});
   assert.equal(core.metrics().sectorUpdates,updates,
     'HP and articulated leaf motion do not change logical topology');
+  const beforeConversion=core.snapshot(),oldGateId=mirror.barrierIds('two')[0];
+  const sequential=createSpatialSavannaPrototype(module);
+  sequential.restoreState(beforeConversion);
+  sequential.buildNavigation(.28,true);sequential.buildNavigation(1.1,false);
+  const sequentialBefore=sequential.metrics().sectorUpdates;
+  sequential.removeBarrier(oldGateId);
+  addSpatialGate(sequential,{...walls[1],gate:true});
   walls[1].gate=true;walls[1].autoGate=true;
+  const atomicBefore=core.metrics().sectorUpdates;
   assert.deepEqual(mirror.sync(walls),{count:2,added:1});
+  assert.deepEqual(core.snapshot(),sequential.snapshot());
+  assert(core.metrics().sectorUpdates-atomicBefore<
+    sequential.metrics().sectorUpdates-sequentialBefore,
+  'gate conversion should refresh fewer sectors as one transaction');
   assert.equal(core.snapshot().barriers.length,4);
   assert.deepEqual(mirror.barrierIds('one'),firstIds);
   assert.equal(mirror.barrierIds('two').length,3);
@@ -248,6 +260,17 @@ test('wall topology mirror reacts to placement, gate conversion and ruin but ign
   assert.deepEqual(mirror.barrierIds('one'),[]);
   mirror.clear();
   assert.equal(core.snapshot().barriers.length,0);
+});
+test('a rejected native topology transaction changes neither barriers nor routes',()=>{
+  const core=createSpatialSavannaPrototype(module);
+  core.generate(712,0,0);core.buildNavigation(.28,true);
+  const id=core.addBarrier(5,5,.4,.4,0),before=core.snapshot();
+  const updates=core.metrics().sectorUpdates;
+  assert.throws(()=>core.applyBarrierChanges([id,id],[]),/unique positive integers/);
+  assert.throws(()=>core.applyBarrierChanges([id],[{x:3,z:4,halfX:NaN,halfZ:1}]),
+    /Invalid spatial topology/);
+  assert.deepEqual(core.snapshot(),before);
+  assert.equal(core.metrics().sectorUpdates,updates);
 });
 test('the dry Desert chunk shares visible dunes, solid props and hierarchical routes',()=>{
   const core=createSpatialSavannaPrototype(module);
