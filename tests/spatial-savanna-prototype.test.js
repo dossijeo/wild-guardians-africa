@@ -112,6 +112,45 @@ test('Grand River shares wet terrain, floating flora, solids and both route prof
   restored.restoreState(state,0,0);
   assert.deepEqual(restored.props(),props);
 });
+test('Volcanoes shares basalt, lava, collision and both route profiles',()=>{
+  const core=createSpatialSavannaPrototype(module);
+  core.generate(28,0,0,'volcanoes');
+  const heights=Float32Array.from(core.heights()),props=core.props();
+  assert(props.length>0);
+  assert(core.water().some(Boolean),'lava must occupy wet terrain cells');
+  assert(core.waterTriangles().length>0,'lava needs visible geometry');
+  const colors=core.colors();
+  assert(colors[0]<.6&&colors[1]<.6&&colors[2]<.6,'terrain must retain a dark basalt palette');
+  const solid=props.find(prop=>prop.slot<=3||prop.slot>=10&&prop.slot<=12||prop.slot>=18);
+  assert(solid);
+  for(const [radius,worker] of [[.28,true],[1.1,false]]){
+    assert.equal(core.buildNavigation(radius,worker),16);
+    assert(core.propBlocked(solid.x,solid.z));
+    const {start,end}=crossing(core);
+    validRoute(core,start,core.route(start,end));
+  }
+  core.addChunk(1,0);
+  for(let z=0;z<49;z++)assert.equal(heights[z*49+48],core.heights()[z*49]);
+  const wall=core.addBarrier(23.5,0,.8,5,0);assert(wall>0);
+  const state=JSON.parse(JSON.stringify(core.snapshot()));
+  assert.equal(state.biome,'volcanoes');
+  const restored=createSpatialSavannaPrototype(module);
+  restored.restoreState(state,0,0);
+  assert.deepEqual(restored.snapshot(),state);
+  assert.deepEqual(restored.props(),props);
+});
+test('generated prop footprints follow each production scatter rule',()=>{
+  const slots=[3.8,3.1,3.0,1.7,1.1,.9,1.4,.45,.35,.5,1.2,1.7,1.2,1.8,1.3,1.0,.9,1.7,4.0,5.0];
+  const desert=JSON.parse(readFileSync(new URL('../public/content/biome-desert.json',import.meta.url))).profile.bounds;
+  const core=createSpatialSavannaPrototype(module);
+  for(const biome of ['savanna','desert','grand_river','volcanoes']){
+    core.generate(28,0,0,biome);
+    for(const prop of core.props().filter(prop=>prop.group<6)){
+      const expected=(biome==='desert'?desert[prop.slot].radius:slots[prop.slot])*prop.scale;
+      assert(Math.abs(prop.radius-expected)<.0005,`${biome} slot ${prop.slot} radius`);
+    }
+  }
+});
 test('removing a generated obstacle changes the same visual and logical world and survives reload',()=>{
   for(const biome of ['savanna','desert']){
     const core=createSpatialSavannaPrototype(module);

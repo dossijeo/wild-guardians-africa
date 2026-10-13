@@ -7,7 +7,7 @@ import {createLazySectorProbeSync} from '../../src/world/hierarchical-wasm/lazy-
 import {createSpatialSavannaPrototype} from '../../src/world/hierarchical-wasm/spatial-savanna-adapter.js';
 
 const output=process.argv[2]??'docs/qa/hierarchical-navigation/spatial-savanna-prototype.json';
-const biome=['savanna','desert','grand_river'].includes(process.env.WG_QA_BIOME)?
+const biome=['savanna','desert','grand_river','volcanoes'].includes(process.env.WG_QA_BIOME)?
   process.env.WG_QA_BIOME:'savanna';
 const profile=JSON.parse(readFileSync(`public/content/biome-${biome}.json`,'utf8')).profile;
 const oldModule=new WebAssembly.Module(readFileSync('src/world/hierarchical-wasm/lazy-sectors.wasm'));
@@ -15,7 +15,7 @@ const newBytes=readFileSync('src/world/hierarchical-wasm/spatial-savanna.wasm');
 const newModule=new WebAssembly.Module(newBytes);
 const timed=fn=>{const start=performance.now(),result=fn();return {ms:performance.now()-start,result};};
 function baseline(){
-  const nav=new Navigation('712',{savanna:'sabana',desert:'desierto',grand_river:'gran-rio'}[biome],profile),config=nav.config;
+  const nav=new Navigation('712',{savanna:'sabana',desert:'desierto',grand_river:'gran-rio',volcanoes:'volcanes'}[biome],profile),config=nav.config;
   const geometricCalls={walkable:0,segmentClear:0};
   for(const name of Object.keys(geometricCalls)){
     const original=nav[name].bind(nav);

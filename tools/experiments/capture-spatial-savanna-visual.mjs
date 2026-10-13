@@ -10,7 +10,7 @@ const suffix=process.env.WG_QA_SUFFIX?`-${process.env.WG_QA_SUFFIX}`:'';
 const ground=process.env.WG_QA_GROUND==='game'?'&ground=game':'';
 const water=process.env.WG_QA_WATER==='game'?'&water=game':'';
 const settlement=process.env.WG_QA_SETTLEMENT==='1'?'&settlement=1':'';
-const biome=['savanna','desert','grand_river'].includes(process.env.WG_QA_BIOME)?
+const biome=['savanna','desert','grand_river','volcanoes'].includes(process.env.WG_QA_BIOME)?
   process.env.WG_QA_BIOME:'savanna';
 await mkdir(out,{recursive:true});
 const browser=await chromium.launch({headless:true,
@@ -29,7 +29,7 @@ try{
     await page.waitForFunction(()=>window.qaReady||window.qaError,{timeout:120000});
     const result=await page.evaluate(()=>({stats:window.qaStats,error:window.qaError??null}));
     if(result.error||errors.length)throw Error(JSON.stringify({seed,...result,errors}));
-    const file=`${out}/${{savanna:'sabana',desert:'desierto',grand_river:'gran-rio'}[biome]}-seed-${seed}-js-vs-wasm${suffix}-1600x900.png`;
+    const file=`${out}/${{savanna:'sabana',desert:'desierto',grand_river:'gran-rio',volcanoes:'volcanes'}[biome]}-seed-${seed}-js-vs-wasm${suffix}-1600x900.png`;
     await page.screenshot({path:file});
     records.push({seed,file,stats:result.stats,errors});
     await page.close();

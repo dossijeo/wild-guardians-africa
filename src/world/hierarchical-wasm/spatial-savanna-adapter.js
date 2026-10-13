@@ -15,8 +15,8 @@ export function createSpatialSavannaPrototype(module){
   const waterLevels=()=>new Float32Array(wasm.memory.buffer,wasm.spatial_water_levels_ptr(),48*48);
   const waterTriangles=()=>new Float32Array(wasm.memory.buffer,wasm.spatial_water_triangles_ptr(),wasm.spatial_water_vertex_count()*3);
   function generate(seed,cx,cz,biome='savanna'){
-    if(!['savanna','desert','grand_river'].includes(biome))throw RangeError('Unsupported spatial biome');
-    const count=wasm.spatial_generate_biome(seed>>>0,biome==='desert'?1:biome==='grand_river'?2:0,cx|0,cz|0);
+    if(!['savanna','desert','grand_river','volcanoes'].includes(biome))throw RangeError('Unsupported spatial biome');
+    const count=wasm.spatial_generate_biome(seed>>>0,biome==='desert'?1:biome==='grand_river'?2:biome==='volcanoes'?3:0,cx|0,cz|0);
     chunk={cx:cx|0,cz:cz|0,count};chunks=[[cx|0,cz|0]];navigationBuilt=false;generated=true;
     return chunk;
   }

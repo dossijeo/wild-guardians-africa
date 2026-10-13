@@ -18,9 +18,9 @@ import wasmUrl from '../../src/world/hierarchical-wasm/spatial-savanna.wasm?url'
 
 const status=document.querySelector('#status'),scenes=[];
 const parameters=new URLSearchParams(location.search),gameGround=parameters.get('ground')==='game';
-const biome=['savanna','desert','grand_river'].includes(parameters.get('biome'))?
+const biome=['savanna','desert','grand_river','volcanoes'].includes(parameters.get('biome'))?
   parameters.get('biome'):'savanna';
-const gameBiome={savanna:'sabana',desert:'desierto',grand_river:'gran-rio'}[biome];
+const gameBiome={savanna:'sabana',desert:'desierto',grand_river:'gran-rio',volcanoes:'volcanes'}[biome];
 const gameWater=parameters.get('water')==='game';
 const settlement=parameters.get('settlement')==='1';
 const seed=Number(parameters.get('seed')??712);
@@ -34,9 +34,10 @@ function makeScene(ground,river,instances,models,assets,prototype=false,mask=nul
   if(gameGround){biomeGround.attach(material,0,0,mask);toon.material(material);
     toon.update(false,sun,gameBiome);}
   scene.add(new THREE.Mesh(ground,material));
+  const fluidColor=biome==='volcanoes'?'#ed5c18':'#49aeb6';
   if(river)scene.add(new THREE.Mesh(river,gameWater?
-    paintedWaterMaterial('#49aeb6',false,seed):
-    new THREE.MeshStandardMaterial({color:'#49aeb6',roughness:.38,side:THREE.DoubleSide})));
+    paintedWaterMaterial(fluidColor,biome==='volcanoes',seed):
+    new THREE.MeshStandardMaterial({color:fluidColor,roughness:.38,side:THREE.DoubleSide})));
   const dummy=new THREE.Object3D();let count=0,assetWaterInstances=0;
   for(let slot=0;slot<20;slot++){
     const records=instances[slot];if(!records?.length)continue;
@@ -48,7 +49,7 @@ function makeScene(ground,river,instances,models,assets,prototype=false,mask=nul
       const waterGeometry=nativeAssetWater(assets[slot]);
       if(waterGeometry){
         const water=new THREE.InstancedMesh(waterGeometry,
-          paintedWaterMaterial('#49aeb6',false,seed),records.length);
+          paintedWaterMaterial(fluidColor,biome==='volcanoes',seed),records.length);
         records.forEach((p,i)=>{dummy.position.set(p.x,p.y,p.z);dummy.rotation.y=p.yaw;
           dummy.scale.set(p.sx??p.scale,p.sy??p.scale,p.sz??p.scale);
           dummy.updateMatrix();water.setMatrixAt(i,dummy.matrix);});
@@ -92,6 +93,6 @@ try{
   }
   render();addEventListener('resize',render);
   window.qaStats={seed,biome,baseline,candidate,gameGround,gameWater,settlement};window.qaReady=true;
-  status.textContent=`${{savanna:'Sabana',desert:'Desierto',grand_river:'Gran río'}[biome]} · Semilla ${seed} · ${gameGround?'suelo del juego':'suelo básico'} · ${gameWater?'agua del juego':'agua básica'} · JS: ${baseline.count} objetos · WASM: ${candidate.count} objetos`;
+  status.textContent=`${{savanna:'Sabana',desert:'Desierto',grand_river:'Gran río',volcanoes:'Volcanes'}[biome]} · Semilla ${seed} · ${gameGround?'suelo del juego':'suelo básico'} · ${gameWater?(biome==='volcanoes'?'lava del juego':'agua del juego'):'fluido básico'} · JS: ${baseline.count} objetos · WASM: ${candidate.count} objetos`;
 }catch(error){window.qaError=String(error.stack??error);status.textContent=window.qaError;}
 </script></body></html>
