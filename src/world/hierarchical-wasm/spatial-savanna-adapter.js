@@ -20,6 +20,16 @@ export function createSpatialSavannaPrototype(module){
         radius:view.getFloat32(at+12,true),scale:view.getFloat32(at+16,true),yaw:view.getFloat32(at+20,true),slot:view.getInt32(at+24,true)};
     });
   }
+  function instances(){
+    if(!chunk)throw Error('Generate a chunk before reading prop instances');
+    const lists=Array.from({length:20},()=>[]);
+    for(const [index,prop] of props().entries()){
+      const {slot,scale,...position}=prop;
+      lists[slot].push({id:`spatial:${chunk.cx}:${chunk.cz}:${index}`,slot,...position,
+        scale,sx:scale,sy:scale,sz:scale,tint:1,priority:0});
+    }
+    return lists;
+  }
   function geometry(){
     if(!chunk)throw Error('Generate a chunk before building its geometry');
     const {cx,cz}=chunk,ground=heights(),rgb=colors(),positions=new Float32Array(49*49*3);
@@ -46,7 +56,7 @@ export function createSpatialSavannaPrototype(module){
     for(let i=0;i<count;i++)points.push({x:pairs[i*2],z:pairs[i*2+1]});
     return {status:'found',points};
   }
-  return {wasm,generate,heights,colors,props,geometry,route,
+  return {wasm,generate,heights,colors,props,instances,geometry,route,
     buildNavigation:(radius,worker)=>{
       if(!chunk)throw Error('Generate a chunk before building its navigation');
       const loaded=wasm.spatial_build_nav(radius,worker?1:0);

@@ -22,6 +22,9 @@ test('one C++ source generates visual data and valid worker/animal routes',()=>{
   const first=Float32Array.from(core.heights()),objects=core.props();
   assert.equal(first.length,2401);assert.equal(core.colors().length,7203);
   assert(objects.length>0&&objects.every(o=>o.x>=-24&&o.x<24&&o.z>=-24&&o.z<24));
+  const lists=core.instances();
+  assert.equal(lists.length,20);assert.equal(lists.reduce((n,list)=>n+list.length,0),objects.length);
+  assert(lists.flat().every(p=>p.id&&p.slot>=0&&p.slot<20&&p.sx===p.scale));
   const geometry=core.geometry();
   assert.equal(geometry.getAttribute('position').count,2401);assert.equal(geometry.index.count,13824);geometry.dispose();
   for(const [radius,worker] of [[.28,true],[1.1,false]]){
