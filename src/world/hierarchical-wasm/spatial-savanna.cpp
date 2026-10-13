@@ -242,14 +242,16 @@ bool walkable(int x,int z){
   const ChunkRaster* chunk=rasterAt(x,z);
   return chunk&&chunk->pass[rasterIndex(*chunk,x,z)]&&wallClear(x,z);
 }
-bool terrainPropEdge(int x,int z,int nx,int nz){
-  if(!terrainPropWalkable(x,z)||!terrainPropWalkable(nx,nz))return false;
+bool terrainPropSegment(int x,int z,int nx,int nz){
   for(int i=1;i<4;i++){
     const double t=i/4.0,px=x+(nx-x)*t,pz=z+(nz-z)*t;
     if(!terrainValid(px,pz,radiusNow,workerNow))return false;
     if(propBlocked(px,pz))return false;
   }
   return true;
+}
+bool terrainPropEdge(int x,int z,int nx,int nz){
+  return terrainPropWalkable(x,z)&&terrainPropWalkable(nx,nz)&&terrainPropSegment(x,z,nx,nz);
 }
 bool wallEdgeClear(int x,int z,int nx,int nz){
   if(!wallClear(x,z)||!wallClear(nx,nz))return false;
@@ -368,20 +370,28 @@ void populateChunk(int cx,int cz){
 }
 void buildActiveRaster(){
   const int firstX=chunkX*side-24,firstZ=chunkZ*side-24;
-  staticPass.resize(side*side);staticSteps.resize(side*side);staticInbound.resize(side*side);
+  staticPass.resize(side*side);staticSteps.assign(side*side,0);staticInbound.resize(side*side);
   for(int z=0;z<side;z++)for(int x=0;x<side;x++)staticPass[z*side+x]=terrainPropWalkable(firstX+x,firstZ+z);
   constexpr int dx[4]={1,-1,0,0},dz[4]={0,0,1,-1};
   for(int z=0;z<side;z++)for(int x=0;x<side;x++){
     const int wx=firstX+x,wz=firstZ+z,i=z*side+x;
-    uint8_t mask=0;
-    if(staticPass[i])for(int d=0;d<4;d++){
+    if(!staticPass[i])continue;
+    // Interior edges are symmetric: the endpoint passability was already
+    // sampled, so test the three interior points once for both directions.
+    for(const int d:{0,2}){
       const int nx=wx+dx[d],nz=wz+dz[d];
-      // This prototype's terrainPropEdge is symmetric; one physical sample
-      // supplies both directions. Directional terrain rules must split them.
-      if(terrainPropEdge(wx,wz,nx,nz))mask|=1<<d;
+      const int localX=x+dx[d],localZ=z+dz[d];
+      if(localX<side&&localZ<side){
+        const int next=localZ*side+localX;
+        if(staticPass[next]&&terrainPropSegment(wx,wz,nx,nz)){
+          staticSteps[i]|=1<<d;staticSteps[next]|=1<<(d^1);
+        }
+      }else if(terrainPropEdge(wx,wz,nx,nz))staticSteps[i]|=1<<d;
     }
-    staticSteps[i]=mask;staticInbound[i]=mask;
+    for(const int d:{1,3})if((d==1&&x==0)||(d==3&&z==0))
+      if(terrainPropEdge(wx,wz,wx+dx[d],wz+dz[d]))staticSteps[i]|=1<<d;
   }
+  staticInbound=staticSteps;
   chunkRasters->insert_or_assign(chunkKey(chunkX,chunkZ),ChunkRaster{chunkX,chunkZ,staticPass,staticSteps,staticInbound});
 }
 void commitActiveSectors(){
@@ -427,7 +437,8 @@ int spatial_add_chunk(int cx,int cz){
   for(int profile=0;profile<2;profile++){
     selectProfile(profile);
     if(!navReady)continue;
-    populateChunk(cx,cz);buildActiveRaster();commitActiveSectors();refreshNeighborBorders(cx,cz);
+    // Both radii rasterize the same freshly generated terrain and props.
+    buildActiveRaster();commitActiveSectors();refreshNeighborBorders(cx,cz);
   }
   selectProfile(previous);
   return int(props.size())+1;
