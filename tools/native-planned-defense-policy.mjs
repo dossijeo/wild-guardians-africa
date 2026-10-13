@@ -84,6 +84,16 @@ export function createNativePlannedDefensePolicy({startDay=6,material='zarzas',i
   // Exactly one authoritative native quote/commit. We do not call either
   // exhaustive perimeter or service-component proof on this ordinary action.
   if(!Game.buildWallChain(s,id,material,plan.points,nav,{...strokeOptions,maxPieces:count})){
+   // The native planner can omit modules occupied by buildings and large
+   // rocks. Those gaps may serve as natural barriers; the virtual player
+   // accepts the imperfect result and lets actual raids test its defense.
+   // This is a placement check, never a route or perimeter certificate.
+   if(!Game.quoteWallChain(s,material,plan.points,nav,strokeOptions).pieces.length){
+    const finished=plan;completed=finished;plan=null;contourIndex=0;
+    needsExpansion=s.plants.some(p=>p.alive&&!inside(p,finished.bounds));
+    history.push({day:s.day,time:s.time,kind:'trace-obstructed',version:finished.version,unplaced:missing.length});
+    return 0;
+   }
    stalls++;plan.stalledUntilDay=s.day+1;
    history.push({day:s.day,time:s.time,kind:'native-placement-stalled',version:plan.version,missing:missing.length});
    return 0;

@@ -55,6 +55,20 @@ test('an unfunded plan is retained without additional native wall placements',()
  assert.equal(policy.report().plan.version,first.version);
 });
 
+test('an already paid trace stops retrying modules the native placement rejects',()=>{
+ const {s,nav,options}=fixture(),policy=createNativePlannedDefensePolicy({startDay:1});
+ assert.equal(policy.act(s,nav,options),1);
+ const before=policy.report();assert(before.plan.paidPieces>0);
+ const placement=nav.wallPlacement.bind(nav);
+ nav.wallPlacement=wall=>wall.kind==='wall'?{valid:false,reason:'terrain obstacle'}:placement(wall);
+ s.elapsed+=6;
+ assert.equal(policy.act(s,nav,options),0);
+ const after=policy.report();
+ assert(after.completed);
+ assert.equal(after.stalls,0);
+ assert(after.history.some(row=>row.kind==='trace-obstructed'));
+});
+
 test('planning observes new crop events after the rolling event buffer reaches 200 entries',()=>{
  const {s,nav,options}=fixture(),policy=createNativePlannedDefensePolicy({startDay:1});
  for(let i=0;i<20&&!policy.report().completed;i++){policy.act(s,nav,options);s.elapsed+=6;}
