@@ -411,6 +411,13 @@ This branch therefore does not claim a green full suite.
 The focused wall/canyon/worker suite passed 31 tests before the final
 documentation update, including a worker returning through the automatic gate
 after save/reload and four workers simultaneously inside a closed perimeter.
+
+The subsequent defensive-region prototype and AB/BA results are documented in
+[`enclosure-index-prototype.md`](enclosure-index-prototype.md). The retained
+Sabana day-12 snapshot has a ruined gate, so its crops cannot safely be
+classified as unreachable behind a sealed wall. Shared connectivity alone
+did not reduce A* work; a shared route tree was faster but changed native
+outcomes and remains QA-only.
 The actor-yield regression confirms that the retained night-11 raid advances
 and finishes through native movement.
 
