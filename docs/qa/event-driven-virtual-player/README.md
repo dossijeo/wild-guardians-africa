@@ -82,3 +82,30 @@ The 79,593-byte compressed snapshot is copied into
 `tests/fixtures/raid-deadlock-day11.json.gz` for a deterministic regression
 test. This fix changes no animal speed, collision radius, attack budget or
 damage.
+
+The continued Sabana/Mapungubwe seed-123 pilot after that fix reached a real
+native defeat on night 24 (`pilot-good-sabana-123-30-yield-fix`). The raid
+traffic deadlock was gone; this outcome is neither a 30-night completion nor
+evidence that a reasonable defender can survive 100 nights. The current
+planned policy retains an incomplete physical wall contour because eight
+slots are blocked by a building or large terrain props. It does not claim
+certified protection. No economy, crop, raid-damage or attack-count parameter
+was changed to force a win. Later campaigns now write compact per-day CPU
+timings to `runtime-days.jsonl`.
+
+## Test baseline and limits
+
+The focused wall/canyon/worker suite passed 31 tests before the final
+documentation update, including a worker returning through the automatic gate
+after save/reload and four workers simultaneously inside a closed perimeter.
+The actor-yield regression confirms that the retained night-11 raid advances
+and finishes through native movement.
+
+The full repository suite was run but is not green: 4,231 tests passed and 69
+failed or were stopped, including one legacy campaign child stopped after more
+than five minutes. Five affected test files were rerun in a detached checkout
+of the exact branch base (`34b19e7f`) and in this branch: both runs had the
+same 29 failing test names out of 76 tests. Those selected failures are
+inherited; the remaining full-suite failures have not all been classified.
+The web build passed. A PR must retain this distinction rather than claiming
+that the full test suite passes.
