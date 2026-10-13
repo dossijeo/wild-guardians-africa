@@ -108,8 +108,12 @@ test('removing a generated obstacle changes the same visual and logical world an
     assert.deepEqual(restored.props(),core.props());
     for(const worker of [true,false]){
       core.selectNavigation(worker);restored.selectNavigation(worker);
-      const x=Math.round(solid.x),z=Math.round(solid.z);
-      assert.equal(restored.walkable(x,z),core.walkable(x,z));
+      for(let z=-24;z<24;z++)for(let x=-24;x<24;x++){
+        assert.equal(core.walkable(x,z),restored.walkable(x,z),`${biome} cell ${x},${z}`);
+        for(const [dx,dz] of [[1,0],[0,1]])if(x+dx<24&&z+dz<24)
+          assert.equal(core.edge(x,z,x+dx,z+dz),restored.edge(x,z,x+dx,z+dz),
+            `${biome} edge ${x},${z} → ${x+dx},${z+dz}`);
+      }
     }
   }
 });
@@ -550,6 +554,13 @@ test('a neighboring chunk owns the instance while its footprint blocks our edge'
     assert.equal(core.metrics().haloProps,halo-1,'neighboring logical halo must lose the removed prop');
     core.selectChunk(1,0);
     assert(!core.props().some(p=>p.group===external.group&&p.gx===external.gx&&p.gz===external.gz));
+    const restored=createSpatialSavannaPrototype(module);
+    restored.restoreState(core.snapshot(),0,0);restored.addChunk(1,0);
+    restored.buildNavigation(1.1,false);
+    for(let x=20;x<=27;x++)for(let zz=-24;zz<24;zz++){
+      assert.equal(core.walkable(x,zz),restored.walkable(x,zz));
+      if(x<27)assert.equal(core.edge(x,zz,x+1,zz),restored.edge(x,zz,x+1,zz));
+    }
     caseFound=true;
   }
   assert(caseFound,'expected a neighboring tree or rock to overlap a tested seam');

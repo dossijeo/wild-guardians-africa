@@ -673,6 +673,30 @@ void buildActiveRaster(){
   staticInbound=staticSteps;
   chunkRasters->insert_or_assign(chunkKey(chunkX,chunkZ),ChunkRaster{chunkX,chunkZ,staticPass,staticSteps,staticInbound});
 }
+void patchActiveRaster(const Prop& changed){
+  const auto it=chunkRasters->find(chunkKey(chunkX,chunkZ));
+  if(it==chunkRasters->end())return;
+  ChunkRaster& raster=it->second;
+  const int firstX=chunkX*side-24,firstZ=chunkZ*side-24;
+  // An edge can change when either endpoint or an interior sample touches
+  // the removed footprint. Two extra cells cover both sides of that edge.
+  const double reach=changed.radius+radiusNow+2;
+  const int minX=std::max(firstX,int(std::floor(changed.x-reach)));
+  const int maxX=std::min(firstX+side-1,int(std::ceil(changed.x+reach)));
+  const int minZ=std::max(firstZ,int(std::floor(changed.z-reach)));
+  const int maxZ=std::min(firstZ+side-1,int(std::ceil(changed.z+reach)));
+  constexpr int dx[4]={1,-1,0,0},dz[4]={0,0,1,-1};
+  for(int z=minZ;z<=maxZ;z++)for(int x=minX;x<=maxX;x++){
+    const int i=(z-firstZ)*side+x-firstX;
+    raster.pass[i]=terrainPropWalkable(x,z);
+    raster.steps[i]=raster.inbound[i]=0;
+    if(!raster.pass[i])continue;
+    for(int d=0;d<4;d++){
+      if(terrainPropEdge(x,z,x+dx[d],z+dz[d]))raster.steps[i]|=1<<d;
+      if(terrainPropEdge(x+dx[d],z+dz[d],x,z))raster.inbound[i]|=1<<d;
+    }
+  }
+}
 void commitActiveSectors(){
   const int firstX=chunkX*side-24,firstZ=chunkZ*side-24;
   for(int sz=0;sz<4;sz++)for(int sx=0;sx<4;sx++)refreshSector(firstX/sector+sx,firstZ/sector+sz);
@@ -745,7 +769,8 @@ void refreshRemovedPropChunks(const Prop* changed){
     if(!navReady)continue;
     for(const auto& [cx,cz]:affected){
       populateChunk(cx,cz,false);
-      buildActiveRaster();
+      if(changed)patchActiveRaster(*changed);
+      else buildActiveRaster();
     }
     if(changed){
       const double reach=changed->radius+radiusNow+2;
