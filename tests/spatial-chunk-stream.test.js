@@ -7,6 +7,7 @@ import {createSpatialSavannaSession} from '../src/world/hierarchical-wasm/spatia
 import {villageLayout} from '../src/world/villages.js';
 import * as THREE from 'three';
 import {WorldScene} from '../src/rendering/scene.js';
+import {refreshResidentProps} from '../src/rendering/resident-props.js';
 
 const module=new WebAssembly.Module(readFileSync(new URL('../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
 
@@ -51,7 +52,21 @@ test('a Sabana game state renders and routes from one spatial authority through 
   assert.equal(core.snapshot().barriers.length,0);
   assert.equal(core.localClear(passage.start,passage.end),true);
   assert.equal(session.routeActor(passage.start,passage.end).status,'found');
-  assert.throws(()=>session.syncState({...state,suppressed:['legacy-prop-id']}),/not yet supported/);
+  const source=[...installed.values()].find(chunk=>chunk.instances.some(list=>list.length));
+  const visible=source?.instances.flat()[0];
+  assert(visible?.id.startsWith('spatial:'));
+  assert.throws(()=>session.syncState({...state,suppressed:['legacy-prop-id']}),/Unsupported spatial prop ID/);
+  state.suppressed=[visible.id];
+  const change=session.syncState(state);
+  assert.deepEqual(change.removedProps,[visible.id]);
+  assert.equal(core.selectChunk(source.cx,source.cz)>=0,true);
+  assert.equal(core.instances().flat().some(prop=>prop.id===visible.id),false);
+  const group={children:[],userData:{propSources:source.instances,
+    contactInstances:source.instances.map(list=>list.slice())}};
+  const refreshed=refreshResidentProps(new Map([[`${source.cx},${source.cz}`,group]]),session.suppressed,()=>{});
+  assert.deepEqual(refreshed,{chunks:1,slots:1});
+  assert.equal(group.userData.contactInstances.flat().some(prop=>prop.id===visible.id),false);
+  assert.deepEqual(session.syncState(state).removedProps,[]);
   session.dispose();
 });
 

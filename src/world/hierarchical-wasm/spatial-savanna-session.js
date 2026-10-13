@@ -4,6 +4,7 @@ import {createSpatialChunkStream} from './spatial-chunk-stream.js';
 import {createSpatialWallMirror} from './spatial-wall-mirror.js';
 import {createSpatialCenterMirror} from './spatial-center-mirror.js';
 import {createSpatialShieldMirror} from './spatial-shield-mirror.js';
+import {createSpatialPropMirror} from './spatial-prop-mirror.js';
 import {addSpatialVillageBuildings} from './spatial-village-bridge.js';
 import {WORKER_SPATIAL_PROFILE,ANIMAL_SPATIAL_PROFILES} from './spatial-movement-profiles.js';
 
@@ -12,8 +13,6 @@ import {WORKER_SPATIAL_PROFILE,ANIMAL_SPATIAL_PROFILES} from './spatial-movement
 export function createSpatialSavannaSession(module,state,streamOptions){
   if(state?.biome!=='sabana'||!Array.isArray(state.villages)||!state.villages.length)
     throw TypeError('Expected a Sabana game state with a village');
-  if(state.suppressed?.length)
-    throw Error('Procedural prop suppression is not yet supported by this spatial session');
   const core=createSpatialWorld(module),first=state.villages[0];
   const cx=Math.floor((first.x+24)/48),cz=Math.floor((first.z+24)/48);
   core.generate(state.seed,cx,cz,state.biome);
@@ -37,8 +36,9 @@ export function createSpatialSavannaSession(module,state,streamOptions){
   }
   for(const village of state.villages)installVillage(village,state,village===first);
   const walls=createSpatialWallMirror(core),centers=createSpatialCenterMirror(core),
-    shields=createSpatialShieldMirror(core);
-  walls.sync(state.structures);centers.sync(state);shields.sync(state.spells);
+    shields=createSpatialShieldMirror(core),props=createSpatialPropMirror(core);
+  props.sync(state.suppressed);walls.sync(state.structures);
+  centers.sync(state);shields.sync(state.spells);
   const profiles=new Set();
   function selectProfile(profile){
     if(!profiles.has(profile.index)){
@@ -52,10 +52,10 @@ export function createSpatialSavannaSession(module,state,streamOptions){
   function syncState(next){
     if(next.seed!==state.seed||next.biome!==state.biome)
       throw TypeError('A spatial session cannot change seed or biome');
-    if(next.suppressed?.length)
-      throw Error('Procedural prop suppression is not yet supported by this spatial session');
     for(const village of next.villages)if(!villages.has(village.id))installVillage(village,next);
+    const propChanges=props.sync(next.suppressed);
     walls.sync(next.structures);centers.sync(next);shields.sync(next.spells);
+    return {suppressed:props.suppressed,removedProps:propChanges.added};
   }
   function routeActor(start,end,{worker=true,species='warthog'}={}){
     const profile=worker?WORKER_SPATIAL_PROFILE:ANIMAL_SPATIAL_PROFILES[species];
@@ -63,5 +63,5 @@ export function createSpatialSavannaSession(module,state,streamOptions){
     selectProfile(profile);
     return core.routeWorld(start,end);
   }
-  return {core,stream,syncState,routeActor,dispose:()=>stream.dispose()};
+  return {core,stream,suppressed:props.suppressed,syncState,routeActor,dispose:()=>stream.dispose()};
 }
