@@ -156,6 +156,19 @@ export function createSpatialWorld(module){
         throw RangeError('Invalid native ground-color coordinates');
       return new Float32Array(wasm.memory.buffer,wasm.spatial_ground_color_result_ptr(),count*3).slice();
     },
+    canyonHorizon:(region,waterColor,river=true)=>{
+      if(!generated||![region?.cx,region?.cz,...(region?.bounds??[])].every(Number.isSafeInteger)||
+         region.bounds.length!==4||!Array.isArray(waterColor)||waterColor.length!==3||
+         !waterColor.every(v=>Number.isFinite(v)&&v>=0&&v<=1))
+        throw TypeError('Expected a generated canyon, integer region bounds and RGB water color');
+      const count=wasm.spatial_build_canyon_horizon(region.cx,region.cz,...region.bounds,
+        river?1:0,...waterColor);
+      if(!count)throw Error('Native canyon horizon could not be built');
+      const terrain=new Float32Array(wasm.memory.buffer,wasm.spatial_canyon_horizon_terrain_ptr(),count*9).slice();
+      const waterCount=wasm.spatial_canyon_horizon_water_count();
+      const water=new Float32Array(wasm.memory.buffer,wasm.spatial_canyon_horizon_water_ptr(),waterCount*9).slice();
+      return {terrain,water};
+    },
     metrics:()=>({memoryBytes:wasm.memory.buffer.byteLength,loadedChunks:wasm.spatial_chunk_count(),
       residentPropRecords:wasm.spatial_resident_prop_count?.()??null,loadedSectors:wasm.lazy_loaded_sectors(),
       sectorSlots:wasm.spatial_sector_slots(),

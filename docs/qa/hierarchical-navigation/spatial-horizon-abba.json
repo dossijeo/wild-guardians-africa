@@ -1,6 +1,6 @@
 {
   "kind": "isolated-horizon-cpu-abba",
-  "note": "Different procedural worlds; excludes GPU upload, browser worker, and gameplay frames.",
+  "note": "The existing JS generator uses a different world; spatial-js and native use the same C++ world. Excludes GPU upload, browser worker, and gameplay frames.",
   "cases": [
     {
       "biome": "canyons",
@@ -14,31 +14,43 @@
       "timings": [
         {
           "implementation": "js",
-          "ms": 244.78,
+          "ms": 156.19,
           "terrainBytes": 3715632,
           "waterBytes": 165888
         },
         {
-          "implementation": "wasm",
-          "ms": 259.44,
+          "implementation": "spatial-js",
+          "ms": 154,
           "terrainBytes": 3715632,
           "waterBytes": 165888
         },
         {
-          "implementation": "wasm",
-          "ms": 253.42,
+          "implementation": "native",
+          "ms": 67,
+          "terrainBytes": 3715632,
+          "waterBytes": 165888
+        },
+        {
+          "implementation": "native",
+          "ms": 56.23,
+          "terrainBytes": 3715632,
+          "waterBytes": 165888
+        },
+        {
+          "implementation": "spatial-js",
+          "ms": 152.27,
           "terrainBytes": 3715632,
           "waterBytes": 165888
         },
         {
           "implementation": "js",
-          "ms": 140.96,
+          "ms": 108.79,
           "terrainBytes": 3715632,
           "waterBytes": 165888
         }
       ],
       "spatialMetrics": {
-        "memoryBytes": 4194304,
+        "memoryBytes": 5373952,
         "loadedChunks": 1,
         "residentPropRecords": 12,
         "loadedSectors": 0,
@@ -59,25 +71,25 @@
       "timings": [
         {
           "implementation": "js",
-          "ms": 245.61,
+          "ms": 183.64,
           "terrainBytes": 4608576,
           "waterBytes": 0
         },
         {
-          "implementation": "wasm",
-          "ms": 455.18,
+          "implementation": "spatial-js",
+          "ms": 296.77,
           "terrainBytes": 4608576,
           "waterBytes": 0
         },
         {
-          "implementation": "wasm",
-          "ms": 390.33,
+          "implementation": "spatial-js",
+          "ms": 327.45,
           "terrainBytes": 4608576,
           "waterBytes": 0
         },
         {
           "implementation": "js",
-          "ms": 253.5,
+          "ms": 203.31,
           "terrainBytes": 4608576,
           "waterBytes": 0
         }

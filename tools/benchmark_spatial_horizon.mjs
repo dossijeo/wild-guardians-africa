@@ -6,7 +6,7 @@ import {buildSpatialHorizonData} from '../src/rendering/spatial-horizon-data.js'
 import {makeCanyonHorizon,makeDesertHorizon} from '../src/rendering/horizon-source.js';
 
 const wasm=new WebAssembly.Module(readFileSync(new URL('../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
-const report={kind:'isolated-horizon-cpu-abba',note:'Different procedural worlds; excludes GPU upload, browser worker, and gameplay frames.',cases:[]};
+const report={kind:'isolated-horizon-cpu-abba',note:'The existing JS generator uses a different world; spatial-js and native use the same C++ world. Excludes GPU upload, browser worker, and gameplay frames.',cases:[]};
 for(const biome of ['canyons','desert']){
   const seed=712,config={seed:String(seed),biome,relief:1,river:true};
   const profile=JSON.parse(readFileSync(new URL(`../public/content/biome-${biome}.json`,import.meta.url))).profile;
@@ -15,9 +15,13 @@ for(const biome of ['canyons','desert']){
   const old=()=>biome==='canyons'?makeCanyonHorizon(config,profile,0,0,region.bounds):
     makeDesertHorizon(config,profile,0,0,region.bounds);
   const current=()=>buildSpatialHorizonData(core,{config,profile,region});
+  const native=()=>core.canyonHorizon(region,[58/255,173/255,182/255]);
+  const order=biome==='canyons'?['js','spatial-js','native','native','spatial-js','js']:
+    ['js','spatial-js','spatial-js','js'];
   const timings=[];
-  for(const implementation of ['js','wasm','wasm','js']){
-    const start=performance.now(),result=(implementation==='js'?old:current)();
+  for(const implementation of order){
+    const start=performance.now(),result=(implementation==='js'?old:
+      implementation==='native'?native:current)();
     timings.push({implementation,ms:+(performance.now()-start).toFixed(2),
       terrainBytes:result.terrain.byteLength,waterBytes:result.water.byteLength});
   }

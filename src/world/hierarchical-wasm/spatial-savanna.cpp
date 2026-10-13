@@ -6,6 +6,7 @@
 #include <optional>
 #include <unordered_map>
 #include <unordered_set>
+#include <utility>
 #include <vector>
 
 // Isolated spatial-authority experiment. The same deterministic functions
@@ -70,6 +71,7 @@ float radiusNow=.3f;
 bool workerNow=true,navReady=false;
 std::vector<float> heights,colors;
 std::vector<float> groundQueryInput,groundQueryOutput;
+std::vector<float> canyonHorizonTerrain,canyonHorizonWater;
 std::vector<uint8_t> water;
 std::vector<uint8_t> groundMask;
 std::vector<float> waterLevels;
@@ -1104,6 +1106,41 @@ struct ScopedTerrainSample {
     previousSettlements.swap(nearbySettlements);
   }
 };
+struct HorizonPoint {float x,y,z;};
+struct HorizonColor {float r,g,b;};
+struct HorizonSampler {
+  std::optional<ScopedTerrainSample> context;
+  int cx=std::numeric_limits<int>::min(),cz=std::numeric_limits<int>::min();
+  void select(double x,double z){
+    const int nextX=int(std::floor((x+24)/side)),nextZ=int(std::floor((z+24)/side));
+    if(cx==nextX&&cz==nextZ)return;
+    context.reset();context.emplace(x,z);cx=nextX;cz=nextZ;
+  }
+  HorizonPoint point(double x,double z,int ox,int oz){
+    select(x,z);return {float(x-ox),float(surface(x,z)),float(z-oz)};
+  }
+  HorizonColor color(double x,double z){
+    select(x,z);float result[3];groundColorAt(x,z,result);
+    return {result[0],result[1],result[2]};
+  }
+  float riverEdge(double z,int direction){
+    const double center=riverX(z);select(center,z);
+    return float(riverWetEdge(z,direction));
+  }
+};
+void horizonTri(std::vector<float>& out,const HorizonPoint& a,const HorizonPoint& b,
+                const HorizonPoint& c,const HorizonColor& ca,const HorizonColor& cb,
+                const HorizonColor& cc){
+  const double ux=double(b.x)-a.x,uy=double(b.y)-a.y,uz=double(b.z)-a.z;
+  const double vx=double(c.x)-a.x,vy=double(c.y)-a.y,vz=double(c.z)-a.z;
+  double nx=uy*vz-uz*vy,ny=uz*vx-ux*vz,nz=ux*vy-uy*vx;
+  const double length=std::hypot(nx,ny,nz);
+  if(length>0){nx/=length;ny/=length;nz/=length;}else{nx=ny=nz=0;}
+  for(const auto& vertex:std::array<std::pair<HorizonPoint,HorizonColor>,3>{{{a,ca},{b,cb},{c,cc}}}){
+    const auto& p=vertex.first;const auto& color=vertex.second;
+    out.insert(out.end(),{p.x,p.y,p.z,float(nx),float(ny),float(nz),color.r,color.g,color.b});
+  }
+}
 }
 
 extern "C" {
@@ -1318,6 +1355,69 @@ int spatial_ground_color_batch(int count){
   return count;
 }
 float* spatial_ground_color_result_ptr(){return groundQueryOutput.data();}
+int spatial_build_canyon_horizon(int cx,int cz,int minX,int minZ,int maxX,int maxZ,
+                                 int river,float waterR,float waterG,float waterB){
+  if(!chunkRasters||worldBiome!=5||minX>=maxX||minZ>=maxZ||
+     std::abs(cx)>1000000||std::abs(cz)>1000000)return 0;
+  constexpr int radius=384,dx=4,dz=8;
+  constexpr int cols=radius*2/dx,rows=radius*2/dz;
+  const int ox=cx*side,oz=cz*side;
+  std::vector<HorizonPoint> points;
+  std::vector<HorizonColor> colors;
+  points.reserve((cols+1)*(rows+1));colors.reserve(points.capacity());
+  canyonHorizonTerrain.clear();canyonHorizonWater.clear();
+  canyonHorizonTerrain.reserve(103212*9);
+  HorizonSampler sampler;
+  for(int j=0;j<=rows;j++)for(int i=0;i<=cols;i++){
+    const int x=ox-radius+i*dx,z=oz-radius+j*dz;
+    points.push_back(sampler.point(x,z,ox,oz));colors.push_back(sampler.color(x,z));
+  }
+  for(int j=0;j<rows;j++)for(int i=0;i<cols;i++){
+    const int x=ox-radius+i*dx,z=oz-radius+j*dz;
+    if(x>=minX&&z>=minZ&&x+dx<=maxX&&z+dz<=maxZ)continue;
+    const int a=j*(cols+1)+i,b=a+1,d=a+cols+1,c=d+1;
+    const bool touches=((x+dx==minX||x==maxX)&&z>=minZ&&z+dz<=maxZ)||
+      ((z+dz==minZ||z==maxZ)&&x>=minX&&x+dx<=maxX);
+    if(!touches){
+      horizonTri(canyonHorizonTerrain,points[a],points[d],points[b],colors[a],colors[d],colors[b]);
+      horizonTri(canyonHorizonTerrain,points[b],points[d],points[c],colors[b],colors[d],colors[c]);
+      continue;
+    }
+    const std::array<std::array<int,2>,4> corners={{{x,z},{x,z+dz},{x+dx,z+dz},{x+dx,z}}};
+    std::vector<std::array<int,2>> ring;
+    ring.reserve(2*(dx+dz));
+    for(int k=0;k<4;k++){
+      const auto& p=corners[k];const auto& q=corners[(k+1)%4];
+      const bool edge=(p[0]==q[0]&&(p[0]==minX||p[0]==maxX)&&p[1]>=minZ&&q[1]>=minZ&&p[1]<=maxZ&&q[1]<=maxZ)||
+        (p[1]==q[1]&&(p[1]==minZ||p[1]==maxZ)&&p[0]>=minX&&q[0]>=minX&&p[0]<=maxX&&q[0]<=maxX);
+      const int steps=edge?std::abs(p[0]-q[0])+std::abs(p[1]-q[1]):1;
+      for(int t=0;t<steps;t++)ring.push_back({p[0]+(q[0]-p[0])*t/steps,p[1]+(q[1]-p[1])*t/steps});
+    }
+    const auto center=sampler.point(x+dx*.5,z+dz*.5,ox,oz);
+    const auto centerColor=sampler.color(x+dx*.5,z+dz*.5);
+    for(size_t k=0;k<ring.size();k++){
+      const auto& p=ring[k];const auto& q=ring[(k+1)%ring.size()];
+      horizonTri(canyonHorizonTerrain,center,sampler.point(p[0],p[1],ox,oz),
+        sampler.point(q[0],q[1],ox,oz),centerColor,sampler.color(p[0],p[1]),sampler.color(q[0],q[1]));
+    }
+  }
+  if(river){
+    const float level=float(mainRiverLevel());
+    const HorizonColor color={waterR,waterG,waterB};
+    for(int z=oz-radius;z<oz+radius;z++){
+      const float left=sampler.riverEdge(z,-1)-1.2f,right=sampler.riverEdge(z,1)+1.2f;
+      const float nextLeft=sampler.riverEdge(z+1,-1)-1.2f,nextRight=sampler.riverEdge(z+1,1)+1.2f;
+      const HorizonPoint a={left-ox,level,float(z-oz)},b={right-ox,level,float(z-oz)};
+      const HorizonPoint d={nextLeft-ox,level,float(z+1-oz)},c={nextRight-ox,level,float(z+1-oz)};
+      horizonTri(canyonHorizonWater,a,d,b,color,color,color);
+      horizonTri(canyonHorizonWater,b,d,c,color,color,color);
+    }
+  }
+  return int(canyonHorizonTerrain.size()/9);
+}
+float* spatial_canyon_horizon_terrain_ptr(){return canyonHorizonTerrain.data();}
+int spatial_canyon_horizon_water_count(){return int(canyonHorizonWater.size()/9);}
+float* spatial_canyon_horizon_water_ptr(){return canyonHorizonWater.data();}
 float* spatial_heights_ptr(){return heights.data();}
 float* spatial_colors_ptr(){return colors.data();}
 uint8_t* spatial_water_ptr(){return water.data();}

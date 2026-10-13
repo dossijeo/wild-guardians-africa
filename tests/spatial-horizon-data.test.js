@@ -37,3 +37,37 @@ for(const biome of ['canyons','desert'])test(`one spatial source builds ${biome}
   assert.deepEqual(result,again,'same native world and region must generate the same buffers');
   console.log(`${biome} native horizon: ${elapsed.toFixed(1)} ms, ${result.terrain.length/9} ground vertices`);
 });
+
+test('C++ canyon horizon preserves the QA mesh and selected navigation context',()=>{
+  const core=createSpatialWorld(module),biome='canyons',seed=712;
+  core.generate(seed,0,0,biome);core.buildNavigation(.28,true);
+  const selected=core.currentChunk();
+  const waterColor=[58/255,173/255,182/255];
+  for(const eye of [{x:0,z:0},{x:-48,z:48}]){
+    const region=activeChunkRegion(eye,'media'),before=core.metrics();
+    const expected=buildSpatialHorizonData(core,{config:{biome,river:true},profile:profile(biome),region});
+    const actual=core.canyonHorizon(region,waterColor);
+    assert.equal(actual.terrain.length,expected.terrain.length);
+    assert.equal(actual.water.length,expected.water.length);
+    let largestHeightDelta=0,largestColorDelta=0,largestNormalDelta=0,largestWaterDelta=0;
+    for(let i=0;i<actual.terrain.length;i+=9){
+      assert.equal(actual.terrain[i],expected.terrain[i]);
+      assert.equal(actual.terrain[i+2],expected.terrain[i+2]);
+      largestHeightDelta=Math.max(largestHeightDelta,Math.abs(actual.terrain[i+1]-expected.terrain[i+1]));
+      for(let k=3;k<6;k++)largestNormalDelta=Math.max(largestNormalDelta,Math.abs(actual.terrain[i+k]-expected.terrain[i+k]));
+      for(let k=6;k<9;k++)largestColorDelta=Math.max(largestColorDelta,Math.abs(actual.terrain[i+k]-expected.terrain[i+k]));
+    }
+    for(let i=0;i<actual.water.length;i++)largestWaterDelta=Math.max(largestWaterDelta,Math.abs(actual.water[i]-expected.water[i]));
+    assert.ok(largestHeightDelta<.001,`height drift ${largestHeightDelta}`);
+    assert.ok(largestColorDelta<.001,`color drift ${largestColorDelta}`);
+    assert.ok(largestNormalDelta<.001,`normal drift ${largestNormalDelta}`);
+    assert.ok(largestWaterDelta<.01,`water drift ${largestWaterDelta}`);
+    assert.deepEqual(core.currentChunk(),selected);
+    const after=core.metrics();
+    assert.ok(after.memoryBytes>=before.memoryBytes);
+    delete after.memoryBytes;delete before.memoryBytes;
+    assert.deepEqual(after,before);
+  }
+  const dry=core.canyonHorizon(activeChunkRegion({x:0,z:0},'media'),waterColor,false);
+  assert.equal(dry.water.length,0);
+});
