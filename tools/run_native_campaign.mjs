@@ -66,9 +66,17 @@ export async function runNativeCampaignCase(options,{run=simulateNativeCampaign,
  try{
   if(inputs.trackedChanges.length)throw Error('Freeze tracked runtime before launching native pilot');
   const {checkpointDay,checkpointTime,checkpointStop,timingDay,raidTraceDay,raidTraceTime,phaseTraceDay,phaseTraceTime,...campaignOptions}=options;let checkpointSaved=false;
+  const timingByDay=new Map();
   const r=await run({...campaignOptions,slotId:`native-${options.strategy}-${options.seed}`,
    ...((raidTraceDay||phaseTraceDay)?{tickTraceTarget:{day:phaseTraceDay??raidTraceDay,time:phaseTraceTime??raidTraceTime}}:{}),
-   ...(timingDay?{onStepTiming:row=>{if(row.day===timingDay)appendFileSync(resolve(out,'timings.jsonl'),JSON.stringify(row)+'\n');}}:{}),
+   onStepTiming:row=>{
+    const day=timingByDay.get(row.day)??{day:row.day,ticks:0,decisionMilliseconds:0,tickMilliseconds:0,maxDecisionMilliseconds:0,maxTickMilliseconds:0};
+    day.ticks++;day.decisionMilliseconds+=row.decisionMilliseconds??0;day.tickMilliseconds+=row.tickMilliseconds??0;
+    day.maxDecisionMilliseconds=Math.max(day.maxDecisionMilliseconds,row.decisionMilliseconds??0);
+    day.maxTickMilliseconds=Math.max(day.maxTickMilliseconds,row.tickMilliseconds??0);
+    timingByDay.set(row.day,day);
+    if(row.day===timingDay)appendFileSync(resolve(out,'timings.jsonl'),JSON.stringify(row)+'\n');
+   },
    ...(raidTraceDay?{onRaidSpawnTrace:row=>{if(row.day===raidTraceDay&&Math.abs(row.time-raidTraceTime)<1e-6)appendFileSync(resolve(out,'raid-spawn-trace.jsonl'),JSON.stringify(row)+'\n');}}:{}),
    ...(phaseTraceDay?{onTickPhaseTrace:row=>{if(row.day===phaseTraceDay&&Math.abs(row.tickStartTime-phaseTraceTime)<1e-6)appendFileSync(resolve(out,'tick-phase-trace.jsonl'),JSON.stringify(row)+'\n');}}:{}),
    onTick:s=>{
@@ -81,6 +89,7 @@ export async function runNativeCampaignCase(options,{run=simulateNativeCampaign,
    },
    onDay:row=>{
     appendFileSync(resolve(out,'days.jsonl'),JSON.stringify(row)+'\n');
+    const timing=timingByDay.get(row.day);if(timing){appendFileSync(resolve(out,'runtime-days.jsonl'),JSON.stringify(timing)+'\n');timingByDay.delete(row.day);}
     if(options['stop-cash']!==undefined&&row.day>=options['stop-min-day']&&row.money>=options['stop-cash'])throw calibrationStop(`Calibration cash ceiling ${options['stop-cash']} reached on day ${row.day}`);
    }});
   const {state,nav,...report}=r;writeFileSync(resolve(out,'state.json.gz'),gzipSync(Buffer.from(serialize(state))));save('report.json',report);
