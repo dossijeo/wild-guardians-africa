@@ -8,7 +8,7 @@ import {resolveFluidPlacement} from '../world/fluid-placement.js';
 import {ensurePurchaseBudget,HIRING_RESERVE} from './budget.js';
 import {ensureBoundaryGates} from '../world/boundary-gates.js';
 import {gatePortalPoints} from '../world/gate-passages.js';
-import {footprintDistance} from '../world/footprints.js';
+import {containsPoint,footprintDistance} from '../world/footprints.js';
 import {centerCulture,centerFootprint,centerServicePoint,centerDeliveryPoint} from '../world/centers.js';
 import {prepareActorMotion} from './actor-motion.js';
 import {animalRouteClearance} from './animal-route-clearance.js';
@@ -101,7 +101,7 @@ export function placeStructure(s,id,{kind='center',material='zarzas',gate=false,
     const gatePlan=planNewWallGates(s,[entity],nav,[],()=>false);
     // Single-piece edits must obey the same enclosure rule as a wall stroke.
     // Refuse a closure that cannot contain a traversable automatic gate.
-    if(gatePlan.unhosted&&!gatePlan.length)return false;
+    if(gatePlan.unhostedWorker||gatePlan.unhosted&&!gatePlan.length)return false;
     for(const update of gatePlan)Object.assign(entity,update);
   }
   const suppression=entity.autoGate?nav.wallPlacement(entity).suppress??[]:check.suppress??[];
@@ -166,11 +166,15 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
     if(!scores.has(p.id))scores.set(p.id,Math.min(...approachRoutes.map(({entry,target,path})=>(path?routeDistance(p,path):0)*1e6+dist(entry,p)+dist(p,target))));
     return scores.get(p.id);
   };
-  let unhosted=false;
-  ensureBoundaryGates(layout,nav,canHost,(x,z)=>interior.walkable(x,z,.28,null,true),omitted,rank,p=>newIds.has(p.id),()=>{unhosted=true;});
+  let unhosted=false,unhostedWorker=false;
+  ensureBoundaryGates(layout,nav,canHost,(x,z)=>interior.walkable(x,z,.28,null,true),omitted,rank,p=>newIds.has(p.id),face=>{
+    unhosted=true;
+    const polygon=face.polygon.map(([x,z])=>({x,z}));
+    if(s.workers.some(w=>w.status!=='home'&&containsPoint(polygon,w.x,w.z)))unhostedWorker=true;
+  });
   const converted=layout.pieces.filter(p=>newIds.has(p.id)&&p.autoGate&&!s.structures.some(e=>e.id===p.entityId&&e.autoGate));
   const updates=converted.map(p=>({id:p.entityId,gate:true,autoGate:true,maxHp:p.maxHp,hp:p.hp})).filter(update=>{const piece=[...s.structures,...newPieces].find(p=>p.id===update.id),candidate={...piece,...update};return nav.wallPlacement(candidate).valid&&!cropOverlap(candidate);});
-  return Object.assign(updates,{unhosted});
+  return Object.assign(updates,{unhosted,unhostedWorker});
 }
 // Geometry/price quote is read-only and may describe a future purchase. Actual
 // preview/build still enforce available cash and the native hiring reserve.
@@ -182,7 +186,7 @@ export function quoteWallChain(s,material,points,nav,options={}) {
   const newPieces=slots.map(slot=>({kind:'wall',material,gate:false,baseScaleX:slot.scaleX,x:slot.x,z:slot.z,yaw:-slot.angle,maxHp:spec.hp,hp:spec.hp,status:'intact',cost:spec.cost,collapseRemaining:0,villageId:nearest(s.villages,{x:slot.x,z:slot.z})?.id})).filter(piece=>{if(!nav.wallPlacement(piece).valid){blockedPieces.push(piece);return false;}return !cropOverlap(piece);}).slice(0,Math.max(0,Math.floor(options.maxPieces??Infinity)));
   newPieces.forEach((piece,i)=>Object.assign(piece,{id:`structure-${s.nextId+i}`,created:s.sequence+i}));
   const gatePlan=planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap);
-  if(gatePlan.unhosted&&!gatePlan.length){
+  if(gatePlan.unhostedWorker||gatePlan.unhosted&&!gatePlan.length){
     // Never commit the closing module of a playable enclosure without a
     // physically usable automatic door. Leave a real gap for a later edit.
     return quoteWallChain(s,material,points,nav,{...options,maxPieces:newPieces.length-1});
