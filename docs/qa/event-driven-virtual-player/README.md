@@ -133,6 +133,15 @@ were new approach queries as other actors moved, so caching only identical
 world states did not address the bottleneck. No changed raid behavior from
 that experiment remains in the branch.
 
+A second prototype memoized failed searches per crop group while tracking
+nearby actor bodies, reserved approaches, shields, and native geometry. It
+also preserved the exact serialized state but did not produce a stable gain:
+AB/BA reference ticks were 16.17/15.06 seconds and candidate ticks were
+15.43/16.09 seconds. The prototype was removed; its comparison remains in
+`canyon-day7-group-cache-abba.json`. The remaining work is a shared,
+conservative connectivity result for candidate approaches, with exact native
+path fallback where connectivity cannot be proven.
+
 ## Test baseline and limits
 
 The focused wall/canyon/worker suite passed 31 tests before the final
