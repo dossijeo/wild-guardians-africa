@@ -309,6 +309,19 @@ Moving that same proof before `Navigation.path` was also tested and removed:
 retained reference and 21.79/22.41 seconds for the candidate, again with
 identical state hashes. Moving the check saved no meaningful time because
 the remaining cost lies in the number of distinct service-point probes.
+
+A narrower positive-only cache now shares the bounded-region proof between
+service points that round to the same navigation cell and have the same
+endpoint, radius, corridor and geometry epoch. Direct fractional routes are
+still checked before using it; searches with `skipDirect` bypass it. Two
+day-12 AB/BA repeats against the retained early-certificate version gave
+reference 21.67/23.35 and 21.68/23.33 seconds, versus candidate 21.28/21.15
+and 20.19/21.18 seconds, respectively. All eight serialized states were
+identical. The separate Gran Cañón day-7 snapshot showed no material speed
+change (reference 3.52/3.42, candidate 3.56/3.41 seconds) and identical
+states. See the `day12-searched-cell-proof-abba*.json` and
+`canyon-day7-searched-cell-proof-abba.json` reports. This is a modest local
+gain, not a resolution of the 100-night runtime problem.
 The focused simulation, rendering, and virtual-player regressions passed,
 and the web build passed. The full repository suite was attempted but stopped
 after its legacy `campaign.test.js` child continued consuming CPU for more
