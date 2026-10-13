@@ -60,3 +60,15 @@ The next benchmark must address redundant target-route searches themselves
 without changing physical reachability or animal decisions. The campaign
 results remain experimental until the planned 30-, 60- and 100-night runs,
 multi-seed comparisons, and performance checks are complete.
+
+An additional conservative grid-connectivity filter reproduced native route
+acceptance on a 400-plus-pair fixture, but took 184.9 seconds on the retained
+night-10 preparation, slower than the original 147.2-second worker wait. It
+was removed rather than kept as unproven complexity.
+
+The first 30-night continuation stopped as `incomplete-harness-error` on day
+11. The real raid remained active after the runner's 2,400-second simulated
+observation budget: eight animals were still walking or retreating with
+nonempty paths. This is neither a native defeat nor a completed day. The
+snapshot in `pilot-good-sabana-123-30/partial-state.json.gz` is retained for
+isolated navigation/deadlock diagnosis before another long campaign.
