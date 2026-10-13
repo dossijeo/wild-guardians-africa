@@ -193,6 +193,20 @@ These are isolated measurements, not yet a successful campaign or proof that
 every possible terrain layout has identical target choices. A frozen-source
 native pilot and broader comparison remain required.
 
+The frozen-source Sabana/Mapungubwe seed-123 `expansive` pilot with this
+prefilter completed its 14-night horizon (`pilot-expansive-sabana-123-14-reachability.zip`).
+The otherwise matching prior pilot stopped after seven nights with an entry
+observation deadline on day 8. The new day-8 entry wait was 37.18 seconds;
+all 18 worker requests in the 14-night pilot were accepted and none failed.
+At the day-14 horizon the native ledger held 878 coins, 124 living crops and
+23 workers. This is neither a 100-night victory nor evidence of acceptable
+runtime: native `Game.tick` used 35.90 seconds on day 8, 49.56 on day 11,
+93.61 on day 12, and 72.16 on day 13. The largest day-12 tick was 44.61
+seconds. Virtual-player decision time stayed below 1.5 seconds per day on
+those days. The next bottleneck is native tick/animal navigation under a
+dense farm, not the virtual player's wall plan or the original day-8 entry
+preparation deadline.
+
 A repeated seven-night run with per-step timing located the costly interval
 at simulated time 475–499 on day 7. Twelve of those ticks exceeded three
 seconds, and the largest took 30.34 seconds. A cooperative checkpoint at
