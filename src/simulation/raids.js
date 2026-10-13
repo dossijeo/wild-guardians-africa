@@ -5,6 +5,7 @@ import {raidEntryChunks,includeRaidBounds} from '../world/raid-entry-residency.j
 import {raidEntryKey} from '../world/raid-entry-data.js';
 import {exteriorRaidEntry} from './raid-exterior-entry.js';
 import {createCropGrouping} from './crop-components.js';
+import {activeCrops} from './active-crops.js';
 import {RAID_NOTICE_TEXT} from './raid-notice.js';
 import {warmRaidNavigation} from '../world/raid-navigation-warmth.js';
 import {centerBoundaryPoint,centerCulture,centerDeliveryPoint} from '../world/centers.js';
@@ -26,6 +27,20 @@ import {defensiveGroups} from './defensive-groups.js';
 import {targetReservationKey,targetReserved,reservedApproachClear,reconcileTargetReservations} from './raid-target-reservations.js';
 import {applyCropImpact,cropImpactDamage,CROP_HIT_POINTS} from './crop-impact-health.js';
 const dist=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z),entrySelections=new WeakMap();
+const cropTargetIndexes=new WeakMap();
+function cropTargetGroups(plants){
+  const living=activeCrops(plants),cached=cropTargetIndexes.get(plants);
+  if(cached&&cached.historyLength===plants.length&&cached.livingLength===living.length)return cached.groups;
+  const components=createCropGrouping(plants),seen=new Set(),groups=[];
+  for(const p of components.living)if(!seen.has(p.id)){
+    const group=components.group(p);group.forEach(crop=>seen.add(crop.id));
+    const id=group.map(crop=>crop.id).sort()[0];
+    groups.push({id:`crop:${id}`,targets:group,value:group.length*B.crops.find(crop=>crop.id===p.species).base_harvest_value,regions:new Map()});
+  }
+  groups.sort((a,b)=>b.value-a.value||a.id.localeCompare(b.id));
+  cropTargetIndexes.set(plants,{historyLength:plants.length,livingLength:living.length,groups});
+  return groups;
+}
 export function planNight(s) {
   const prepared=preparePressureNight(s);
   s.nightPlan=prepared.plan;s.raidPressureMemory=prepared.memory;s.rng=prepared.rng;
@@ -204,9 +219,9 @@ function release(s,a) {if(a.reservation&&s.raid.reservations[a.reservation]===a.
 export function reachableApproach(a,target,nav,shield=null){
   const focus=shield??target,r=shield?shield.radius+a.radius+.1:(target.kind==='wall'?1.2:.6)+a.radius;
   const angle=Math.atan2(a.x-focus.x,a.z-focus.z);
-  for(let sample=0;sample<32;sample++){
-    if(nav.approachRegionBlocked?.(a,focus,a.radius,r))return null;
-    const offset=sample===0?0:Math.ceil(sample/2)*(sample%2?1:-1)*Math.PI/16;
+  // One preferred service point and bounded local alternatives. Connectivity
+  // is decided at region level by targetFor; this is only the final approach.
+  for(const [sample,offset] of [0,Math.PI/4,-Math.PI/4,Math.PI/2,-Math.PI/2,Math.PI].entries()){
     const point={id:`approach-${target.id}-${shield?.id??'direct'}-${sample}`,...(!shield&&target.kind==='center'?centerBoundaryPoint(target,angle+offset,a.radius+.5,nav.state):{x:focus.x+Math.sin(angle+offset)*r,z:focus.z+Math.cos(angle+offset)*r})};
     if(nav.state?.raid&&!reservedApproachClear(nav.state,a,point))continue;
     if(nav.state&&!actorSegmentClear(point,point,a,actorBlockers(nav.state,a,false)))continue;
@@ -227,21 +242,30 @@ export function raidTarget(s,id){
   return s.plants.find(eligible)??s.structures.find(eligible);
 }
 function targetFor(s,a,nav) {
-  const groups=[],seen=new Set(),components=createCropGrouping(s.plants);
-  for(const p of components.living)if(!seen.has(p.id)) {
-    const group=components.group(p);group.forEach(p=>seen.add(p.id));const id=group.map(p=>p.id).sort()[0];
-    groups.push({id:`crop:${id}`,targets:group,value:group.length*B.crops.find(c=>c.id===p.species).base_harvest_value});
-  }
-  groups.sort((a,b)=>b.value-a.value||a.id.localeCompare(b.id));
+  const groups=cropTargetGroups(s.plants);
   for(const group of groups){
-   for(const p of group.targets.filter(p=>canAttackCrop(s,p)).sort((p,q)=>dist(a,p)-dist(a,q))) {
-    // Accessibility belongs to the valued connected zone; a native closed
-    // component proof can reject that zone once, without reserving it.
-    if(nav.approachGroupBlocked?.(a,group.targets,a.radius,.6+a.radius))break;
-    if(targetReserved(s,a,p))continue;
-    const shield=spellAt(s,'shield',p),approach=reachableApproach(a,p,nav,shield);
-    if(approach)return {target:p,reservation:targetReservationKey(p,a),approach,shieldId:shield?.id??null};
-   }
+    const profile=String(a.radius),entry=group.regions.get(profile);
+    let byRegion=entry?.version===nav.version?entry.byRegion:null;
+    if(!byRegion){
+      byRegion=new Map();
+      for(const p of group.targets){
+        const key=nav.regionFor?.(p,a.radius,null,false)?.key??`unknown:${p.id}`;
+        if(!byRegion.has(key))byRegion.set(key,[]);
+        byRegion.get(key).push(p);
+      }
+      group.regions.set(profile,{version:nav.version,byRegion});
+    }
+    for(const candidates of byRegion.values()){
+      const eligible=candidates.filter(p=>canAttackCrop(s,p)&&!targetReserved(s,a,p));
+      if(!eligible.length)continue;
+      eligible.sort((p,q)=>dist(a,p)-dist(a,q));
+      // One abstract connectivity query represents all crops in this region.
+      if(nav.regionConnected?.(a,eligible[0],a.radius,null,false,32)===false)continue;
+      for(const p of eligible){
+        const shield=spellAt(s,'shield',p),approach=reachableApproach(a,p,nav,shield);
+        if(approach)return {target:p,reservation:targetReservationKey(p,a),approach,shieldId:shield?.id??null};
+      }
+    }
   }
   // If crops are blocked, resolve the nearest visible barrier, without weakest-material omniscience.
   const structures=defensiveGroups(s),near=g=>Math.min(...g.targets.map(t=>dist(a,t)));
