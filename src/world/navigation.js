@@ -535,7 +535,12 @@ export class Navigation {
         if(!walkable)continue;
         const k=point.key??key(x,z),g=cur.g+(point.length??Math.hypot(dx,dz));
         if(g>=(costs.get(k)??Infinity))continue;
-        if(!this.segmentClear(cur,{x,z},radius,ignore,worker))continue;
+        // Animal grid edges are static within a navigation epoch. Neighbor
+        // entries already cache point walkability; retain their exact swept
+        // segment result as well across searches of nearby service points.
+        const clear=!worker&&point.clear!==undefined?point.clear:this.segmentClear(cur,{x,z},radius,ignore,worker);
+        if(!worker&&this.searchNeighborCache)point.clear=clear;
+        if(!clear)continue;
         costs.set(k,g);previous.set(k,ck);open.push({x,z,g,f:g+Math.hypot(ex-x,ez-z)});
       }
     }

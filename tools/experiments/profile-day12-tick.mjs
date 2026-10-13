@@ -19,6 +19,14 @@ nav.setRaidView({x:pose.eye[0],z:pose.eye[2]},center);
 nav.setActiveBounds(activeChunkRegion({x:pose.eye[0],z:pose.eye[2]}).bounds);
 const phases=new Map();
 const calls={approachPath:{count:0,success:0,milliseconds:0},approachReachability:{count:0,milliseconds:0},approachGroupBlocked:{count:0,rejected:0,milliseconds:0}};
+const segments={short:{count:0,rejected:0,milliseconds:0},medium:{count:0,rejected:0,milliseconds:0},long:{count:0,rejected:0,milliseconds:0}};
+const segmentClear=nav.segmentClear.bind(nav);
+nav.segmentClear=(start,end,...args)=>{
+ const distance=Math.hypot(start.x-end.x,start.z-end.z),metric=segments[distance>10?'long':distance>2?'medium':'short'];
+ const began=performance.now(),clear=segmentClear(start,end,...args);
+ metric.count++;metric.milliseconds+=performance.now()-began;if(!clear)metric.rejected++;
+ return clear;
+};
 for(const name of Object.keys(calls)){
  const original=nav[name].bind(nav),metric=calls[name];
  nav[name]=(...args)=>{
@@ -42,5 +50,5 @@ nav.__nativeTickPhaseTrace=row=>{
  phases.set(row.phase,value);
 };
 const before=serialize(s),started=performance.now();Game.tick(s,5,nav);
-const result={input,day:s.day,time:s.time,historyBefore:JSON.parse(before).plants.length,livingAfter:s.plants.filter(p=>p.alive).length,tickMilliseconds:performance.now()-started,phases:Object.fromEntries([...phases].sort((a,b)=>b[1].milliseconds-a[1].milliseconds)),calls,stateChanged:serialize(s)!==before};
+const result={input,day:s.day,time:s.time,historyBefore:JSON.parse(before).plants.length,livingAfter:s.plants.filter(p=>p.alive).length,tickMilliseconds:performance.now()-started,phases:Object.fromEntries([...phases].sort((a,b)=>b[1].milliseconds-a[1].milliseconds)),calls,segments,stateChanged:serialize(s)!==before};
 writeFileSync(output,JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));

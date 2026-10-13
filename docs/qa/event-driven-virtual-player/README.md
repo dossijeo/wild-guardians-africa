@@ -322,6 +322,23 @@ change (reference 3.52/3.42, candidate 3.56/3.41 seconds) and identical
 states. See the `day12-searched-cell-proof-abba*.json` and
 `canyon-day7-searched-cell-proof-abba.json` reports. This is a modest local
 gain, not a resolution of the 100-night runtime problem.
+The next profile (`day12-segment-length-profile.json`) isolated 5,484,136
+short grid-edge `segmentClear` calls, costing 6.70 seconds, versus 61,564
+long segments costing 1.66 seconds. The search-neighbor cache already held
+walkability for each directed grid edge; it now also retains that edge's
+exact animal clearance within the navigation epoch. Worker edges retain their
+existing behavior. In the same snapshot, short-edge calls dropped to 69,501
+(2.65 seconds) and the native tick to 16.52 seconds; see
+`day12-animal-grid-edge-profile.json`.
+
+The day-12 AB/BA comparison against the previous commit measured reference
+19.84/20.79 seconds and candidate 16.66/16.39 seconds, with four identical
+serialized states. A Gran Cañón day-7 replay measured reference 3.79/3.40
+seconds and candidate 3.44/3.43 seconds, also with identical states. See
+`day12-animal-grid-edge-abba.json` and `canyon-day7-animal-grid-edge-abba.json`.
+The 94 focused navigation, actor-motion and raid tests and the web build
+passed. The remaining 16-second day-12 slice still prevents treating the
+100-night campaign runtime as solved.
 The focused simulation, rendering, and virtual-player regressions passed,
 and the web build passed. The full repository suite was attempted but stopped
 after its legacy `campaign.test.js` child continued consuming CPU for more

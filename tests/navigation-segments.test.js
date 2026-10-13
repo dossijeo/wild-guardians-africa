@@ -135,3 +135,20 @@ test('a searched-region endpoint proof is reused for nearby distinct origins',()
   assert.equal(nav.findPath({x:.3,z:0},end,.3,null,false,32),null);
   assert.equal(refreshed,1,'changing the collision function invalidates the memo');
 });
+
+test('animal grid-edge clearance is reused only within the current navigation epoch',()=>{
+  const nav=flat([]);nav.walkable=()=>true;nav.searchNeighborCache=new Map();
+  let edgeChecks=0;
+  nav.segmentClear=(a,b)=>{
+    if(Math.hypot(a.x-b.x,a.z-b.z)>2)return false;
+    edgeChecks++;return true;
+  };
+  assert(nav.findPath({x:0,z:0},{x:8,z:0},.3,null,false,16));
+  const first=edgeChecks;
+  assert(nav.findPath({x:.2,z:0},{x:8,z:0},.3,null,false,16));
+  const reused=edgeChecks-first;
+  assert(reused<first,`the second route reuses previously checked grid edges: first=${first}, second=${reused}`);
+  nav.invalidateGeometryQueries();
+  assert(nav.findPath({x:.2,z:0},{x:8,z:0},.3,null,false,16));
+  assert(edgeChecks-first-reused>reused,'geometry invalidation discards the edge results');
+});

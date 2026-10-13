@@ -1,0 +1,80 @@
+{
+  "input": "docs/qa/event-driven-virtual-player/pilot-expansive-sabana-123-day12-before-365/checkpoint-state.json.gz",
+  "day": 12,
+  "time": 370.0000000000159,
+  "historyBefore": 1194,
+  "livingAfter": 266,
+  "tickMilliseconds": 21911.704299999998,
+  "phases": {
+    "raid-update": {
+      "calls": 51,
+      "milliseconds": 20711.947899999996,
+      "maxMilliseconds": 18671.2065,
+      "approachMilliseconds": 0,
+      "groupMilliseconds": 0,
+      "approachChecks": 0,
+      "groupChecks": 0
+    },
+    "target-selection": {
+      "calls": 17,
+      "milliseconds": 20631.957300000005,
+      "maxMilliseconds": 3305.3641,
+      "approachMilliseconds": 0,
+      "groupMilliseconds": 0,
+      "approachChecks": 0,
+      "groupChecks": 0
+    },
+    "target-detail": {
+      "calls": 17,
+      "milliseconds": 300.8720999999389,
+      "maxMilliseconds": 52.37559999998848,
+      "approachMilliseconds": 19295.348300000056,
+      "groupMilliseconds": 300.8720999999389,
+      "approachChecks": 1923,
+      "groupChecks": 1924
+    },
+    "worker-update": {
+      "calls": 51,
+      "milliseconds": 49.7841999999863,
+      "maxMilliseconds": 33.014999999999986,
+      "approachMilliseconds": 0,
+      "groupMilliseconds": 0,
+      "approachChecks": 0,
+      "groupChecks": 0
+    }
+  },
+  "calls": {
+    "approachPath": {
+      "count": 55242,
+      "success": 22,
+      "milliseconds": 18164.14459999979
+    },
+    "approachReachability": {
+      "count": 125,
+      "milliseconds": 959.0310000000229
+    },
+    "approachGroupBlocked": {
+      "count": 1924,
+      "rejected": 0,
+      "milliseconds": 298.4714999999394
+    }
+  },
+  "segments": {
+    "short": {
+      "count": 5484136,
+      "rejected": 5004,
+      "milliseconds": 6704.257599999817
+    },
+    "medium": {
+      "count": 1912,
+      "rejected": 519,
+      "milliseconds": 187.30220000002066
+    },
+    "long": {
+      "count": 61564,
+      "rejected": 61484,
+      "milliseconds": 1664.7488000003887
+    }
+  },
+  "stateChanged": true
+}
