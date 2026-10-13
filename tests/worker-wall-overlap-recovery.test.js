@@ -5,6 +5,7 @@ import {createOpeningWorld} from '../tools/check_opening.mjs';
 import {createNativeFundedDefensePolicy} from '../tools/native-funded-defense-policy.mjs';
 import {closedDefenseContours} from '../tools/native-closed-defense-policy.mjs';
 import {wallStroke} from '../src/world/wall-layout.js';
+import {Navigation} from '../src/world/navigation.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 
 test('native construction leaves a gap when no automatic gate can be hosted',()=>{
@@ -17,6 +18,21 @@ test('native construction leaves a gap when no automatic gate can be hosted',()=
  const quote=Game.quoteWallChain(s,'zarzas',points,nav,{smooth:false,snap:false});
  assert.equal(quote.pieces.length,expected-1);
  assert.equal(quote.gates,0);
+});
+
+test('a second ungated enclosure cannot trap a worker when another face has a gate',()=>{
+ const nav=new Navigation(712,'sabana',{});
+ nav.field={blocked:()=>false,slope:()=>0,surface:()=>0};nav.propsAt=()=>[];
+ const s=Game.newGame({seed:712});Game.placeStructure(s,'center',{x:-12,z:-12},nav);
+ const n=6.54,points=[[0,0],[n,0],[n,n],[0,n],[0,0],[-n,0],[-n,n],[0,n]],options={smooth:false,snap:false};
+ const placement=nav.wallPlacement.bind(nav);
+ nav.wallPlacement=wall=>wall.gate&&wall.x<=.1?{valid:false}:placement(wall);
+ const empty=Game.quoteWallChain(s,'zarzas',points,nav,options);
+ assert.equal(empty.pieces.length,21);assert.equal(empty.gates,1);
+ s.workers=[{id:'inside-left',x:-3,z:3,status:'returning'}];
+ const occupied=Game.quoteWallChain(s,'zarzas',points,nav,options);
+ assert.equal(occupied.pieces.length,20,'leave the last blocking module unbuilt');
+ assert.equal(occupied.gates,1,'preserve the door in the other enclosure');
 });
 
 test('single-piece wall edits cannot close an enclosure without a traversable gate',()=>{
