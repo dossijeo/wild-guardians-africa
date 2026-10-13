@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {fixture} from '../tools/probe-raid-reservation-saturation.mjs';
 import {createHierarchicalNavigationAdapter} from '../src/world/hierarchical-navigation-adapter.js';
-import {createHierarchicalWasmNavigator} from '../src/world/hierarchical-wasm-adapter.js';
+import {createHierarchicalWasmNavigator,createHierarchicalWasmNavigatorSync} from '../src/world/hierarchical-wasm-adapter.js';
 import {readFileSync} from 'node:fs';
 
 const wasm=readFileSync(new URL('../src/world/hierarchical-wasm/core.wasm',import.meta.url));
@@ -52,4 +52,19 @@ test('C++ worker graph uses the physical gate portal and excludes animals',async
   assert.equal(worker.route(outside,inside),null,'removing the gate must remove its graph portal');
   assert.equal(worker.flatRoute(outside,inside),null);
   assert.notEqual(worker.region(outside)?.key,worker.region(inside)?.key);
+});
+
+test('synchronous WASM facade keeps fractional worker endpoints physically valid',()=>{
+  const {s,nav}=fixture('closed-walls');
+  const wall=s.structures.find(t=>t.id==='wall-2-5');wall.gate=true;wall.gateOpen=true;nav.setState(s);
+  const module=new WebAssembly.Module(wasm);
+  const core=createHierarchicalWasmNavigatorSync(module,nav,{minX:-12,minZ:-18,maxX:42,maxZ:38,radius:.28,worker:true,diagonal:true});
+  core.initialize();
+  const start={x:15.2,z:29.1},end={x:15.2,z:7.1};
+  for(const route of [core.path(start,end),core.path(start,end,{flat:true})]){
+    assert(route?.length>0);
+    assert.deepEqual(route.at(-1),end);
+    let previous=start;
+    for(const point of route){assert(nav.segmentClear(previous,point,.28,null,true));previous=point;}
+  }
 });
