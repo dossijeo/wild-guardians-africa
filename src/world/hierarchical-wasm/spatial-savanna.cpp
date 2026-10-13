@@ -204,6 +204,17 @@ double fluidLevel(double x,double z){
   return 0;
 }
 bool fluid(double x,double z){return fluidLevel(x,z)!=0;}
+double riverWetEdge(double z,int direction){
+  const double center=riverX(z);
+  if(fluidLevel(center,z)!=3.6)return center;
+  double wet=0,dry=6.1;
+  for(int i=0;i<8;i++){
+    const double middle=(wet+dry)*.5;
+    if(fluidLevel(center+direction*middle,z)==3.6)wet=middle;
+    else dry=middle;
+  }
+  return center+direction*wet;
+}
 void buildGroundMask(int cx,int cz){
   // RGBA8 channels match the game's ground material contract: vegetation
   // cover, broad variation, moisture, settlement wear.
@@ -264,33 +275,70 @@ std::vector<WaterPoint> clipWaterPolygon(const std::vector<WaterPoint>& source,b
   }
   return result;
 }
+bool riverTriangleWet(const WaterPoint& a,const WaterPoint& b,const WaterPoint& c){
+  return fluidLevel((a.x+b.x+c.x)/3,(a.z+b.z+c.z)/3)==3.6;
+}
+struct RiverEdgeCache {
+  double minZ,minX,maxX;
+  std::array<std::pair<double,double>,side*8+1> edges{};
+  std::array<bool,side*8+1> ready{};
+  const std::pair<double,double>& at(double z){
+    const int i=std::clamp(int(std::lround((z-minZ)*8)),0,side*8);
+    if(!ready[i]){
+      edges[i]={std::clamp(riverWetEdge(z,-1),minX,maxX),
+        std::clamp(riverWetEdge(z,1),minX,maxX)};
+      ready[i]=true;
+    }
+    return edges[i];
+  }
+};
+void buildRiverStrip(double z0,double z1,RiverEdgeCache& cache,int depth,bool nearSettlement){
+  const auto [left0,right0]=cache.at(z0);
+  const auto [left1,right1]=cache.at(z1);
+  if(right0<=left0&&right1<=left1)return;
+  const double middle=(z0+z1)*.5;
+  const auto [middleLeft,middleRight]=cache.at(middle);
+  if(depth<3&&(std::abs(middleLeft-(left0+left1)*.5)>.04||
+               std::abs(middleRight-(right0+right1)*.5)>.04)){
+    buildRiverStrip(z0,middle,cache,depth+1,nearSettlement);
+    buildRiverStrip(middle,z1,cache,depth+1,nearSettlement);
+    return;
+  }
+  if(nearSettlement){
+    constexpr int slices=13;
+    for(int i=0;i<slices;i++){
+      const double t0=double(i)/slices,t1=double(i+1)/slices;
+      const WaterPoint a{left0+(right0-left0)*t0,z0};
+      const WaterPoint b{left0+(right0-left0)*t1,z0};
+      const WaterPoint c{left1+(right1-left1)*t1,z1};
+      const WaterPoint d{left1+(right1-left1)*t0,z1};
+      if(riverTriangleWet(a,d,b))waterTriangle(a,d,b,3.6);
+      if(riverTriangleWet(b,d,c))waterTriangle(b,d,c,3.6);
+    }
+    return;
+  }
+  const WaterPoint a{left0,z0},b{right0,z0},c{right1,z1},d{left1,z1};
+  const bool first=riverTriangleWet(a,d,b),second=riverTriangleWet(b,d,c);
+  if(first&&second){waterTriangle(a,d,b,3.6);waterTriangle(b,d,c,3.6);return;}
+  if(depth<3){
+    buildRiverStrip(z0,middle,cache,depth+1,false);
+    buildRiverStrip(middle,z1,cache,depth+1,false);
+  }else{
+    if(first)waterTriangle(a,d,b,3.6);
+    if(second)waterTriangle(b,d,c,3.6);
+  }
+}
 void buildWaterMesh(int cx,int cz){
   waterTriangles.clear();
   const double minX=cx*side-24,maxX=minX+side,minZ=cz*side-24,maxZ=minZ+side;
+  RiverEdgeCache riverEdges{minZ,minX,maxX};
   for(int z=int(minZ);z<int(maxZ);z++){
-    const double left0=std::clamp(riverX(z)-6.1,minX,maxX),right0=std::clamp(riverX(z)+6.1,minX,maxX);
-    const double left1=std::clamp(riverX(z+1)-6.1,minX,maxX),right1=std::clamp(riverX(z+1)+6.1,minX,maxX);
-    if(right0<=left0&&right1<=left1)continue;
-    const WaterPoint a{left0,double(z)},b{right0,double(z)},c{right1,double(z+1)},d{left1,double(z+1)};
     const bool nearSettlement=std::any_of(nearbySettlements.begin(),nearbySettlements.end(),[&](size_t i){
       const Settlement& site=settlements[i];
       return z+1>=site.z-site.hz-6&&z<=site.z+site.hz+6&&
-        std::max(right0,right1)>=site.x-site.hx-6&&std::min(left0,left1)<=site.x+site.hx+6;
+        riverX(z)+6.1>=site.x-site.hx-6&&riverX(z)-6.1<=site.x+site.hx+6;
     });
-    if(!nearSettlement){waterTriangle(a,d,b,3.6);waterTriangle(b,d,c,3.6);continue;}
-    // A flattened site can dry out part of a river strip. Clip only the
-    // affected strip against the same fluid source used by navigation.
-    constexpr int slices=13;
-    for(int i=0;i<slices;i++){
-      const double t0=double(i)/slices,t1=double(i+1)/slices,tm=(t0+t1)*.5;
-      const double centerX=(left0+(right0-left0)*tm+left1+(right1-left1)*tm)*.5;
-      if(fluidLevel(centerX,z+.5)!=3.6)continue;
-      const WaterPoint s0{left0+(right0-left0)*t0,double(z)};
-      const WaterPoint e0{left0+(right0-left0)*t1,double(z)};
-      const WaterPoint s1{left1+(right1-left1)*t0,double(z+1)};
-      const WaterPoint e1{left1+(right1-left1)*t1,double(z+1)};
-      waterTriangle(s0,s1,e0,3.6);waterTriangle(e0,s1,e1,3.6);
-    }
+    buildRiverStrip(z,z+1,riverEdges,0,nearSettlement);
   }
   for(const Pond& p:ponds){
     std::vector<WaterPoint> outline;outline.reserve(48);
@@ -427,16 +475,20 @@ void refreshRect(int minX,int minZ,int maxX,int maxZ){
     for(int sz=c;sz<=d;sz++)for(int sx=a;sx<=b;sx++)refreshSector(firstX/sector+sx,firstZ/sector+sz);
   }
 }
-void populateChunk(int cx,int cz){
+void populateChunk(int cx,int cz,bool visual=true){
   chunkX=cx;chunkZ=cz;props.clear();solidProps.clear();staticPass.clear();staticSteps.clear();staticInbound.clear();haloPropCount=0;
   selectNearbySettlements(cx,cz);
   // The standalone no-entry WASM binary has no startup constructor pass.
   preparePonds(cx,cz);
-  heights.assign(grid*grid,0);colors.assign(grid*grid*3,0);water.assign(side*side,0);waterLevels.assign(side*side,0);
+  if(visual){
+    heights.assign(grid*grid,0);colors.assign(grid*grid*3,0);
+    water.assign(side*side,0);waterLevels.assign(side*side,0);
+  }
   const int x0=cx*side-24,z0=cz*side-24;
   lattice.resize(latticeSpan*latticeSpan);
   for(int z=0;z<latticeSpan;z++)for(int x=0;x<latticeSpan;x++)
     lattice[z*latticeSpan+x]=height(x0+x-pad,z0+z-pad);
+  if(visual){
   for(int z=0;z<grid;z++)for(int x=0;x<grid;x++){
     const int i=z*grid+x,wx=x0+x,wz=z0+z;
     heights[i]=float(latticeHeight(wx,wz));
@@ -469,6 +521,7 @@ void populateChunk(int cx,int cz){
   }
   buildGroundMask(cx,cz);
   buildWaterMesh(cx,cz);
+  }
   constexpr double spacing[6]={13.5,7,2.8,9,10,32};
   constexpr double density[6]={.53,.51,.72,.30,.28,.63};
   constexpr int offsets[6]={0,4,7,10,13,17},counts[6]={4,3,3,3,4,2};
@@ -688,6 +741,12 @@ float spatial_surface(float x,float z){
     return std::numeric_limits<float>::quiet_NaN();
   return float(surface(x,z));
 }
+float spatial_fluid_level(float x,float z){
+  if(!std::isfinite(x)||!std::isfinite(z)||loadedChunks.empty()||
+    x<chunkX*side-24||x>chunkX*side+24||z<chunkZ*side-24||z>chunkZ*side+24)
+    return std::numeric_limits<float>::quiet_NaN();
+  return float(fluidLevel(x,z));
+}
 float* spatial_heights_ptr(){return heights.data();}
 float* spatial_colors_ptr(){return colors.data();}
 uint8_t* spatial_water_ptr(){return water.data();}
@@ -707,7 +766,7 @@ int spatial_build_nav(float radius,int worker){
   const int selectedX=chunkX,selectedZ=chunkZ;
   chunkRasters->clear();
   for(const auto& [cx,cz]:loadedChunks){
-    populateChunk(cx,cz);buildActiveRaster();commitActiveSectors();refreshNeighborBorders(cx,cz);
+    populateChunk(cx,cz,false);buildActiveRaster();commitActiveSectors();refreshNeighborBorders(cx,cz);
   }
   if(chunkX!=selectedX||chunkZ!=selectedZ)populateChunk(selectedX,selectedZ);
   navReady=true;

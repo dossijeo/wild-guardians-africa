@@ -1,0 +1,51 @@
+{
+  "url": "http://127.0.0.1:5188",
+  "records": [
+    {
+      "seed": 712,
+      "file": "docs/qa/hierarchical-navigation/screenshots/sabana-seed-712-js-vs-wasm-settlement-game-ground-water-1600x900.png",
+      "stats": {
+        "seed": 712,
+        "baseline": {
+          "count": 102,
+          "vertices": 13824,
+          "waterVertices": 90,
+          "prototype": false
+        },
+        "candidate": {
+          "count": 79,
+          "vertices": 2401,
+          "waterVertices": 270,
+          "prototype": true
+        },
+        "gameGround": true,
+        "gameWater": true,
+        "settlement": true
+      },
+      "errors": []
+    },
+    {
+      "seed": 28,
+      "file": "docs/qa/hierarchical-navigation/screenshots/sabana-seed-28-js-vs-wasm-settlement-game-ground-water-1600x900.png",
+      "stats": {
+        "seed": 28,
+        "baseline": {
+          "count": 64,
+          "vertices": 13824,
+          "waterVertices": 222,
+          "prototype": false
+        },
+        "candidate": {
+          "count": 97,
+          "vertices": 2401,
+          "waterVertices": 168,
+          "prototype": true
+        },
+        "gameGround": true,
+        "gameWater": true,
+        "settlement": true
+      },
+      "errors": []
+    }
+  ]
+}

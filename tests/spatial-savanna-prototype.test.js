@@ -83,6 +83,18 @@ test('a WASM chunk uses the production render payload contract and transfers wit
   assert(received.instances.reduce((count,slot)=>count+slot.length,0)>0);
   ground.dispose();river?.dispose();
 });
+test('building both navigation profiles does not regenerate or change the selected visual chunk',()=>{
+  const core=createSpatialSavannaPrototype(module);
+  core.generate(28,0,0);
+  core.setSettlement(10,8,7,6);
+  core.addChunk(1,0);
+  core.selectChunk(0,0);
+  const before=core.chunkPayload();
+  core.buildNavigation(.28,true);
+  core.buildNavigation(1.1,false);
+  const after=core.chunkPayload();
+  assert.deepEqual(after,before);
+});
 test('the JS surface view samples only transferred WASM triangles across chunks and site updates',()=>{
   const core=createSpatialSavannaPrototype(module),view=new SpatialSurfaceView();
   core.generate(712,0,0);
@@ -149,6 +161,56 @@ test('a river strip no longer renders across dry settlement terrain',()=>{
     assert(!(Math.abs(x-siteX)<4&&Math.abs(z-8)<3&&Math.abs(triangles[i+1]-3.6)<.01),
       `river triangle remains above dry settlement terrain at (${x},${z})`);
   }
+});
+test('generated water triangles remain on the spatial core\'s wet terrain',()=>{
+  const core=createSpatialSavannaPrototype(module);
+  const contains=(v,i,x,z)=>{
+    const ax=v[i+3]-v[i],az=v[i+5]-v[i+2];
+    const bx=v[i+6]-v[i+3],bz=v[i+8]-v[i+5];
+    const cx=v[i]-v[i+6],cz=v[i+2]-v[i+8];
+    const a=ax*(z-v[i+2])-az*(x-v[i]);
+    const b=bx*(z-v[i+5])-bz*(x-v[i+3]);
+    const c=cx*(z-v[i+8])-cz*(x-v[i+6]);
+    // The curved bank is approximated by straight triangle edges. A few
+    // centimetres at a 1 m sample point are visually and physically benign.
+    const tolerance=.08;
+    const pa=tolerance*Math.hypot(ax,az),pb=tolerance*Math.hypot(bx,bz),pc=tolerance*Math.hypot(cx,cz);
+    return a>=-pa&&b>=-pb&&c>=-pc||a<=pa&&b<=pb&&c<=pc;
+  };
+  for(const seed of [28,712,17])for(const settlement of [false,true]){
+    core.generate(seed,0,0);
+    if(settlement)core.setSettlement(10,8,7,6);
+    const vertices=core.waterTriangles();
+    assert(vertices.length>0);
+    for(let i=0;i<vertices.length;i+=9){
+      const x=(vertices[i]+vertices[i+3]+vertices[i+6])/3;
+      const y=vertices[i+1];
+      const z=(vertices[i+2]+vertices[i+5]+vertices[i+8])/3;
+      const level=core.fluidLevel(x,z);
+      assert(Math.abs(level-y)<.001,
+        `dry water triangle ${i/9} at ${x},${z}, rendered ${y}, logical ${level}, seed ${seed}, settlement ${settlement}`);
+    }
+    for(let z=-23.5;z<24;z++)for(let x=-23.5;x<24;x++){
+      if(Math.abs(core.fluidLevel(x,z)-3.6)>.001)continue;
+      let covered=false;
+      for(let i=0;i<vertices.length;i+=9)if(Math.abs(vertices[i+1]-3.6)<.001&&contains(vertices,i,x,z)){
+        covered=true;break;
+      }
+      assert(covered,`navigational river has no visible water at ${x},${z}, seed ${seed}, settlement ${settlement}`);
+    }
+  }
+});
+test('the clipped river surface joins at a north-south chunk seam',()=>{
+  const core=createSpatialSavannaPrototype(module);
+  core.generate(17,0,0);
+  const south=Float32Array.from(core.waterTriangles());
+  assert(core.addChunk(0,1)>0);
+  const north=core.waterTriangles();
+  const seam=vertices=>[...new Set(Array.from({length:vertices.length/3},(_,i)=>i*3)
+    .filter(i=>Math.abs(vertices[i+2]-24)<.0001&&Math.abs(vertices[i+1]-3.6)<.001)
+    .map(i=>vertices[i].toFixed(4)))].sort();
+  assert(seam(south).length>=2);
+  assert.deepEqual(seam(south),seam(north));
 });
 test('multiple settlements preserve distant terrain and refresh only nearby resident chunks',()=>{
   const core=createSpatialSavannaPrototype(module);
