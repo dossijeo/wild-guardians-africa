@@ -8,6 +8,7 @@ export function createSpatialSavannaPrototype(module){
   const heights=()=>new Float32Array(wasm.memory.buffer,wasm.spatial_heights_ptr(),49*49);
   const colors=()=>new Float32Array(wasm.memory.buffer,wasm.spatial_colors_ptr(),49*49*3);
   const water=()=>new Uint8Array(wasm.memory.buffer,wasm.spatial_water_ptr(),48*48);
+  const groundMask=()=>new Uint8Array(wasm.memory.buffer,wasm.spatial_ground_mask_ptr(),35*35*4);
   const waterLevels=()=>new Float32Array(wasm.memory.buffer,wasm.spatial_water_levels_ptr(),48*48);
   const waterTriangles=()=>new Float32Array(wasm.memory.buffer,wasm.spatial_water_triangles_ptr(),wasm.spatial_water_vertex_count()*3);
   function generate(seed,cx,cz){
@@ -83,7 +84,7 @@ export function createSpatialSavannaPrototype(module){
     for(let i=0;i<count;i++)points.push({x:pairs[i*2],z:pairs[i*2+1]});
     return {status:'found',points};
   }
-  return {wasm,generate,addChunk,removeChunk,heights,colors,water,waterLevels,waterTriangles,props,instances,geometry,waterGeometry,route,
+  return {wasm,generate,addChunk,removeChunk,heights,colors,water,groundMask,waterLevels,waterTriangles,props,instances,geometry,waterGeometry,route,
     buildNavigation:(radius,worker)=>{
       if(!chunk)throw Error('Generate a chunk before building its navigation');
       const loaded=wasm.spatial_build_nav(radius,worker?1:0);

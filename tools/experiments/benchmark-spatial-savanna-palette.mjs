@@ -5,7 +5,7 @@ import {performance} from 'node:perf_hooks';
 import {createSpatialSavannaPrototype} from '../../src/world/hierarchical-wasm/spatial-savanna-adapter.js';
 
 const output=process.argv[2]??'docs/qa/hierarchical-navigation/spatial-savanna-palette-benchmark.json';
-const source='6f3796c6';
+const source=process.env.WG_QA_BASELINE_COMMIT??'6f3796c6';
 const binary='src/world/hierarchical-wasm/spatial-savanna.wasm';
 const modules={before:new WebAssembly.Module(execFileSync('git',['show',`${source}:${binary}`])),
   after:new WebAssembly.Module(readFileSync(binary))};
@@ -21,7 +21,7 @@ function run(which){
 }
 const rows=[];
 for(let trial=0;trial<12;trial++)for(const which of trial%2?['after','before']:['before','after'])rows.push({trial,...run(which)});
-const report={scope:'Twelve ABBA pairs; one Sabana seed 712 chunk, generation then animal graph. Only vertex-color formula differs.',source,rows};
+const report={scope:'Twelve ABBA pairs; one Sabana seed 712 chunk, generation then animal graph. Compare the named source revision with the current WASM binary.',source,rows};
 mkdirSync(dirname(output),{recursive:true});writeFileSync(output,JSON.stringify(report,null,2)+'\n');
 for(const which of ['before','after']){
   const times=rows.filter(row=>row.which===which).map(row=>row.totalMs).sort((a,b)=>a-b);

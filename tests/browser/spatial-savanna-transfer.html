@@ -51,7 +51,7 @@ try{
   candidate.terminate();
   for(const result of [candidateFirst,candidateSecond]){
     if(result.data.heights.length!==2401||result.data.colors.length!==7203||
-       result.data.water.length!==2304||result.data.waterLevels.length!==2304||
+       result.data.water.length!==2304||result.data.groundMask.length!==4900||result.data.waterLevels.length!==2304||
        result.data.waterTriangles.length%9!==0||
        result.data.props.byteLength!==result.data.count*28)
       throw Error('Transferred WASM buffers have inconsistent lengths');

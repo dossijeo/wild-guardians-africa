@@ -21,6 +21,11 @@ test('one C++ source generates visual data and valid worker/animal routes',()=>{
   core.generate(712,0,0);
   const first=Float32Array.from(core.heights()),objects=core.props();
   assert.equal(first.length,2401);assert.equal(core.colors().length,7203);
+  const mask=Uint8Array.from(core.groundMask());
+  assert.equal(mask.length,4900);
+  assert(mask.some((value,index)=>index%4===0&&value>0));
+  assert(mask.some((value,index)=>index%4===2&&value>0));
+  assert(mask.every((value,index)=>index%4!==3||value===0),'the unbuilt settlement has no wear mask');
   assert(objects.length>0&&objects.every(o=>o.x>=-24&&o.x<24&&o.z>=-24&&o.z<24));
   const lists=core.instances();
   assert.equal(lists.length,20);assert.equal(lists.reduce((n,list)=>n+list.length,0),objects.length);
@@ -37,6 +42,18 @@ test('one C++ source generates visual data and valid worker/animal routes',()=>{
   }
   core.generate(712,0,0);
   assert.deepEqual(Array.from(core.heights()),Array.from(first));assert.deepEqual(core.props(),objects);
+  assert.deepEqual(Array.from(core.groundMask()),Array.from(mask));
+});
+test('the 35x35 ground material mask meets at adjacent chunk overlaps',()=>{
+  const core=createSpatialSavannaPrototype(module);
+  core.generate(28,0,0);
+  const west=Uint8Array.from(core.groundMask());
+  core.addChunk(1,0);
+  const east=core.groundMask();
+  for(let z=0;z<35;z++)for(let x=0;x<3;x++)for(let channel=0;channel<4;channel++){
+    const a=(z*35+32+x)*4+channel,b=(z*35+x)*4+channel;
+    assert.equal(west[a],east[b],`ground mask overlap at (${x},${z}), channel ${channel}`);
+  }
 });
 test('placing and destroying a wall updates local sectors and restores a route',()=>{
   const core=createSpatialSavannaPrototype(module);core.generate(123,0,0);

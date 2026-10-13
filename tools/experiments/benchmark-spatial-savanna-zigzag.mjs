@@ -12,7 +12,7 @@ path.push(...path.slice(0,-1).reverse());
 const key=(x,z)=>`${x},${z}`;
 function chunkDigest(core){
   const digest=createHash('sha256');
-  for(const data of [core.heights(),core.colors(),core.water(),core.waterLevels(),core.waterTriangles()])
+  for(const data of [core.heights(),core.colors(),core.water(),core.groundMask(),core.waterLevels(),core.waterTriangles()])
     digest.update(Buffer.from(data.buffer,data.byteOffset,data.byteLength));
   digest.update(JSON.stringify(core.props()));
   return digest.digest('hex');

@@ -41,6 +41,7 @@ float radiusNow=.3f;
 bool workerNow=true,navReady=false;
 std::vector<float> heights,colors;
 std::vector<uint8_t> water;
+std::vector<uint8_t> groundMask;
 std::vector<float> waterLevels;
 std::vector<float> waterTriangles;
 std::vector<double> lattice;
@@ -146,6 +147,31 @@ double fluidLevel(double x,double z){
   return 0;
 }
 bool fluid(double x,double z){return fluidLevel(x,z)!=0;}
+void buildGroundMask(int cx,int cz){
+  // RGBA8 channels match the game's ground material contract: vegetation
+  // cover, broad variation, moisture, settlement wear. This prototype has
+  // no settlement site, so wear remains zero until that geometry is owned here.
+  groundMask.resize(35*35*4);
+  const int x0=cx*side-24,z0=cz*side-24;
+  for(int iz=0;iz<35;iz++)for(int ix=0;ix<35;ix++){
+    const double x=x0+(ix-1)*1.5,z=z0+(iz-1)*1.5;
+    const double vegetation=noise(x*.045,z*.045,3*7781);
+    const double meso=std::clamp(noise(x*.030,z*.030,97103)*.64+
+      noise(x*.115,z*.115,97109)*.36,0.0,1.0);
+    const double broad=.58*noise(x*.027,z*.027,4916)
+      +.28*noise(x*.0548,z*.0548,4916^9271)
+      +.14*noise(x*.1115,z*.1115,4916^29714);
+    const double shore=std::abs(x-riverX(z));
+    const double moisture=std::clamp(.2+broad*.55+
+      (1-blend((shore-6)/17))*.35,0.0,1.0);
+    const double cover=blend((vegetation*.57+meso*.28+moisture*.15-.28)/.44)*.96;
+    const int at=(iz*35+ix)*4;
+    groundMask[at]=uint8_t(std::lround(cover*255));
+    groundMask[at+1]=uint8_t(std::lround(meso*255));
+    groundMask[at+2]=uint8_t(std::lround(moisture*255));
+    groundMask[at+3]=0;
+  }
+}
 void waterTriangle(const WaterPoint& a,const WaterPoint& b,const WaterPoint& c,double y){
   for(const WaterPoint& p:{a,b,c}){
     waterTriangles.push_back(float(p.x));waterTriangles.push_back(float(y));waterTriangles.push_back(float(p.z));
@@ -343,6 +369,7 @@ void populateChunk(int cx,int cz){
     const double level=fluidLevel(x0+x+.5,z0+z+.5);
     water[z*side+x]=level!=0;waterLevels[z*side+x]=float(level);
   }
+  buildGroundMask(cx,cz);
   buildWaterMesh(cx,cz);
   constexpr double spacing[6]={13.5,7,2.8,9,10,32};
   constexpr double density[6]={.53,.51,.72,.30,.28,.63};
@@ -477,7 +504,7 @@ int spatial_remove_chunk(int cx,int cz){
   selectProfile(previous);
   if(chunkX==cx&&chunkZ==cz){
     if(!loadedChunks.empty())populateChunk(loadedChunks.back().first,loadedChunks.back().second);
-    else {props.clear();solidProps.clear();ponds.clear();heights.clear();colors.clear();water.clear();waterLevels.clear();waterTriangles.clear();}
+    else {props.clear();solidProps.clear();ponds.clear();heights.clear();colors.clear();water.clear();groundMask.clear();waterLevels.clear();waterTriangles.clear();}
   }
   return 1;
 }
@@ -486,6 +513,7 @@ int spatial_sector_slots(){return lazy_sector_slots();}
 float* spatial_heights_ptr(){return heights.data();}
 float* spatial_colors_ptr(){return colors.data();}
 uint8_t* spatial_water_ptr(){return water.data();}
+uint8_t* spatial_ground_mask_ptr(){return groundMask.data();}
 float* spatial_water_levels_ptr(){return waterLevels.data();}
 float* spatial_water_triangles_ptr(){return waterTriangles.data();}
 int spatial_water_vertex_count(){return int(waterTriangles.size()/3);}

@@ -17,6 +17,7 @@ function visualBuffers(){
   return {heights:new Float32Array(memory,wasm.spatial_heights_ptr(),49*49).slice(),
     colors:new Float32Array(memory,wasm.spatial_colors_ptr(),49*49*3).slice(),
     water:new Uint8Array(memory,wasm.spatial_water_ptr(),48*48).slice(),
+    groundMask:new Uint8Array(memory,wasm.spatial_ground_mask_ptr(),35*35*4).slice(),
     waterLevels:new Float32Array(memory,wasm.spatial_water_levels_ptr(),48*48).slice(),
     waterTriangles:new Float32Array(memory,wasm.spatial_water_triangles_ptr(),wasm.spatial_water_vertex_count()*3).slice(),
     props:new Uint8Array(memory,wasm.spatial_props_ptr(),count*28).slice(),count};
@@ -32,11 +33,11 @@ self.onmessage=async({data:request})=>{
     }else wasm.spatial_add_chunk(request.cx,request.cz);
     const spatialMs=performance.now()-started,copyStarted=performance.now();
     const data=visualBuffers(),copyMs=performance.now()-copyStarted;
-    const transferBytes=data.heights.byteLength+data.colors.byteLength+data.water.byteLength+data.waterLevels.byteLength+data.waterTriangles.byteLength+data.props.byteLength;
+    const transferBytes=data.heights.byteLength+data.colors.byteLength+data.water.byteLength+data.groundMask.byteLength+data.waterLevels.byteLength+data.waterTriangles.byteLength+data.props.byteLength;
     self.postMessage({id:request.id,cx:request.cx,cz:request.cz,data,
       timing:{compiledMs,spatialMs,copyMs,transferBytes},
       metrics:{loadedChunks:wasm.spatial_chunk_count(),loadedSectors:wasm.lazy_loaded_sectors(),
         memoryBytes:wasm.memory.buffer.byteLength}},
-    [data.heights.buffer,data.colors.buffer,data.water.buffer,data.waterLevels.buffer,data.waterTriangles.buffer,data.props.buffer]);
+    [data.heights.buffer,data.colors.buffer,data.water.buffer,data.groundMask.buffer,data.waterLevels.buffer,data.waterTriangles.buffer,data.props.buffer]);
   }catch(error){self.postMessage({id:request.id,error:String(error.stack??error)});}
 };

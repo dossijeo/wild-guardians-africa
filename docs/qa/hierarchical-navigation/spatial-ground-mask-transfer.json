@@ -1,0 +1,63 @@
+{
+  "report": {
+    "stats": {
+      "seed": 712,
+      "current": [
+        {
+          "roundtripMs": 92.20000004768372,
+          "bytes": 503644,
+          "props": 202
+        },
+        {
+          "roundtripMs": 39.19999980926514,
+          "bytes": 502564,
+          "props": 216
+        }
+      ],
+      "spatial": [
+        {
+          "roundtripMs": 39.299999952316284,
+          "compiledMs": 8.799999952316284,
+          "spatialMs": 13.700000047683716,
+          "copyMs": 0.5,
+          "transferBytes": 64684,
+          "three": {
+            "ms": 6.400000095367432,
+            "vertices": 2401,
+            "waterVertices": 270
+          },
+          "props": 236,
+          "metrics": {
+            "loadedChunks": 1,
+            "loadedSectors": 16,
+            "memoryBytes": 4194304
+          }
+        },
+        {
+          "roundtripMs": 10.599999904632568,
+          "compiledMs": 8.799999952316284,
+          "spatialMs": 10.299999952316284,
+          "copyMs": 0.09999990463256836,
+          "transferBytes": 62004,
+          "three": {
+            "ms": 1.2999999523162842,
+            "vertices": 2401,
+            "waterVertices": 0
+          },
+          "props": 256,
+          "metrics": {
+            "loadedChunks": 2,
+            "loadedSectors": 32,
+            "memoryBytes": 4194304
+          }
+        }
+      ],
+      "checks": {
+        "transferLengths": true,
+        "terrainSeam": true
+      }
+    },
+    "error": null
+  },
+  "errors": []
+}
