@@ -38,15 +38,16 @@ for(const biome of ['canyons','desert'])test(`one spatial source builds ${biome}
   console.log(`${biome} native horizon: ${elapsed.toFixed(1)} ms, ${result.terrain.length/9} ground vertices`);
 });
 
-test('C++ canyon horizon preserves the QA mesh and selected navigation context',()=>{
-  const core=createSpatialWorld(module),biome='canyons',seed=712;
+for(const biome of ['canyons','desert'])test(`C++ ${biome} horizon preserves the QA mesh and selected navigation context`,()=>{
+  const core=createSpatialWorld(module),seed=712;
   core.generate(seed,0,0,biome);core.buildNavigation(.28,true);
   const selected=core.currentChunk();
-  const waterColor=[58/255,173/255,182/255];
+  const color=profile(biome).colors.water;
+  const waterColor=[1,3,5].map(i=>parseInt(color.slice(i,i+2),16)/255);
   for(const eye of [{x:0,z:0},{x:-48,z:48}]){
     const region=activeChunkRegion(eye,'media'),before=core.metrics();
     const expected=buildSpatialHorizonData(core,{config:{biome,river:true},profile:profile(biome),region});
-    const actual=core.canyonHorizon(region,waterColor);
+    const actual=core.horizon(region,waterColor);
     assert.equal(actual.terrain.length,expected.terrain.length);
     assert.equal(actual.water.length,expected.water.length);
     let largestHeightDelta=0,largestColorDelta=0,largestNormalDelta=0,largestWaterDelta=0;
@@ -68,6 +69,6 @@ test('C++ canyon horizon preserves the QA mesh and selected navigation context',
     delete after.memoryBytes;delete before.memoryBytes;
     assert.deepEqual(after,before);
   }
-  const dry=core.canyonHorizon(activeChunkRegion({x:0,z:0},'media'),waterColor,false);
+  const dry=core.horizon(activeChunkRegion({x:0,z:0},'media'),waterColor,false);
   assert.equal(dry.water.length,0);
 });

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QA · Horizonte del núcleo espacial</title>
+<style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#b9c6d1;font:14px system-ui}canvas{display:block}#labels{position:fixed;inset:12px 12px auto;display:flex;justify-content:space-between;pointer-events:none}#labels span,#status{padding:7px 11px;background:#193028dd;color:white;border-radius:5px}#status{position:fixed;left:50%;top:12px;transform:translateX(-50%);pointer-events:none}</style>
+</head><body><div id="labels"><span>Mismo mundo · malla desde JS</span><span>Mismo mundo · malla desde C++</span></div><div id="status">Preparando horizonte…</div><script type="module">
+import * as THREE from 'three';
+import {createSpatialWorld} from '../../src/world/hierarchical-wasm/spatial-world.js';
+import {activeChunkRegion} from '../../src/world/active-region.js';
+import {buildSpatialHorizonData} from '../../src/rendering/spatial-horizon-data.js';
+import {nativeTerrainBuffer} from '../../src/rendering/terrain-geometry.js';
+import {nativeWaterBuffer} from '../../src/rendering/water-geometry.js';
+import wasmUrl from '../../src/world/hierarchical-wasm/spatial-savanna.wasm?url';
+
+const status=document.querySelector('#status'),query=new URLSearchParams(location.search);
+const biome=query.get('biome')==='desert'?'desert':'canyons',seed=Number(query.get('seed')??712);
+const region=activeChunkRegion({x:0,z:0},'media'),scenes=[];
+try{
+  const [bytes,pack]=await Promise.all([fetch(wasmUrl).then(r=>r.arrayBuffer()),
+    fetch(`/content/biome-${biome}.json`).then(r=>r.json())]);
+  const core=createSpatialWorld(new WebAssembly.Module(bytes));core.generate(seed,0,0,biome);
+  const chunks=[];
+  for(let cz=-2;cz<=2;cz++)for(let cx=-2;cx<=2;cx++){
+    if(cx||cz)core.addChunk(cx,cz);
+    core.selectChunk(cx,cz);chunks.push(core.chunkPayload());
+  }
+  const source=buildSpatialHorizonData(core,{config:{biome,river:true},profile:pack.profile,region});
+  const waterHex=pack.profile.colors.water,waterColor=[1,3,5].map(i=>parseInt(waterHex.slice(i,i+2),16)/255);
+  const native=core.horizon(region,waterColor);
+  const clippedWater=data=>{
+    const result=[];
+    for(let i=0;i<data.length;i+=27){
+      const x=(data[i]+data[i+9]+data[i+18])/3,z=(data[i+2]+data[i+11]+data[i+20])/3;
+      if(x>=region.bounds[0]&&x<region.bounds[2]&&z>=region.bounds[1]&&z<region.bounds[3])continue;
+      for(let j=i;j<i+27;j++)result.push(data[j]);
+    }
+    return Float32Array.from(result);
+  };
+  const addMesh=(scene,data,material,originX=0,originZ=0)=>{
+    if(!data?.length)return;
+    const mesh=new THREE.Mesh(nativeTerrainBuffer(data),material);
+    mesh.position.set(originX,0,originZ);scene.add(mesh);
+  };
+  for(const horizon of [source,native]){
+    const scene=new THREE.Scene();scene.background=new THREE.Color(biome==='desert'?'#d8c2a6':'#b9c6d1');
+    scene.add(new THREE.HemisphereLight('#fff9e6','#695747',2));
+    const sun=new THREE.DirectionalLight('#fff1cd',2);sun.position.set(-200,300,100);scene.add(sun);
+    const groundMaterial=new THREE.MeshStandardMaterial({vertexColors:true,roughness:1,side:THREE.DoubleSide});
+    const waterMaterial=new THREE.MeshStandardMaterial({color:waterHex,roughness:.45,side:THREE.DoubleSide});
+    addMesh(scene,horizon.terrain,groundMaterial);
+    addMesh(scene,clippedWater(horizon.water),waterMaterial);
+    for(const chunk of chunks){
+      const ground=new THREE.Mesh(nativeTerrainBuffer(chunk.terrain),groundMaterial);
+      ground.position.set(chunk.cx*48,0,chunk.cz*48);scene.add(ground);
+      const water=nativeWaterBuffer(chunk.water);
+      if(water){const mesh=new THREE.Mesh(water,waterMaterial);
+        mesh.position.set(chunk.cx*48,0,chunk.cz*48);scene.add(mesh);}
+    }
+    scenes.push(scene);
+  }
+  const renderer=new THREE.WebGLRenderer({antialias:true});
+  renderer.setPixelRatio(1);renderer.setScissorTest(true);renderer.outputColorSpace=THREE.SRGBColorSpace;
+  document.body.append(renderer.domElement);
+  const camera=new THREE.PerspectiveCamera(49,1,.1,1600);
+  camera.position.set(biome==='desert'?300:240,biome==='desert'?230:260,biome==='desert'?380:440);
+  camera.lookAt(0,biome==='desert'?8:20,0);
+  const render=()=>{
+    renderer.setSize(innerWidth,innerHeight);
+    const left=Math.floor(innerWidth/2);
+    for(let i=0;i<2;i++){
+      const x=i?left:0,width=i?innerWidth-left:left;
+      renderer.setViewport(x,0,width,innerHeight);renderer.setScissor(x,0,width,innerHeight);
+      camera.aspect=width/innerHeight;camera.updateProjectionMatrix();renderer.render(scenes[i],camera);
+    }
+  };
+  render();addEventListener('resize',render);
+  window.qaStats={biome,seed,chunkCount:chunks.length,sourceVertices:source.terrain.length/9,
+    nativeVertices:native.terrain.length/9,wasmMemory:core.metrics().memoryBytes};
+  window.qaReady=true;status.textContent=`${biome} · semilla ${seed} · 25 chunks · un núcleo espacial`;
+}catch(error){window.qaError=String(error.stack??error);status.textContent=window.qaError;}
+</script></body></html>

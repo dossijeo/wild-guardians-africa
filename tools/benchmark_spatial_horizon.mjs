@@ -15,9 +15,9 @@ for(const biome of ['canyons','desert']){
   const old=()=>biome==='canyons'?makeCanyonHorizon(config,profile,0,0,region.bounds):
     makeDesertHorizon(config,profile,0,0,region.bounds);
   const current=()=>buildSpatialHorizonData(core,{config,profile,region});
-  const native=()=>core.canyonHorizon(region,[58/255,173/255,182/255]);
-  const order=biome==='canyons'?['js','spatial-js','native','native','spatial-js','js']:
-    ['js','spatial-js','spatial-js','js'];
+  const water=profile.colors.water;
+  const native=()=>core.horizon(region,[1,3,5].map(i=>parseInt(water.slice(i,i+2),16)/255));
+  const order=['js','spatial-js','native','native','spatial-js','js'];
   const timings=[];
   for(const implementation of order){
     const start=performance.now(),result=(implementation==='js'?old:

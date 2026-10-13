@@ -2,6 +2,7 @@
 #include <array>
 #include <cmath>
 #include <cstdint>
+#include <cstring>
 #include <limits>
 #include <optional>
 #include <unordered_map>
@@ -71,7 +72,7 @@ float radiusNow=.3f;
 bool workerNow=true,navReady=false;
 std::vector<float> heights,colors;
 std::vector<float> groundQueryInput,groundQueryOutput;
-std::vector<float> canyonHorizonTerrain,canyonHorizonWater;
+std::vector<float> horizonTerrain,horizonWater;
 std::vector<uint8_t> water;
 std::vector<uint8_t> groundMask;
 std::vector<float> waterLevels;
@@ -1141,6 +1142,26 @@ void horizonTri(std::vector<float>& out,const HorizonPoint& a,const HorizonPoint
     out.insert(out.end(),{p.x,p.y,p.z,float(nx),float(ny),float(nz),color.r,color.g,color.b});
   }
 }
+void horizonDesertNormals(HorizonSampler& sampler,int ox,int oz){
+  std::unordered_map<uint64_t,std::array<float,3>> normals;
+  normals.reserve(25000);
+  for(size_t i=0;i<horizonTerrain.size();i+=9){
+    const float lx=horizonTerrain[i],lz=horizonTerrain[i+2];
+    uint32_t xb,zb;std::memcpy(&xb,&lx,sizeof(xb));std::memcpy(&zb,&lz,sizeof(zb));
+    const uint64_t key=(uint64_t(xb)<<32)|zb;
+    auto found=normals.find(key);
+    if(found==normals.end()){
+      const double x=ox+double(lx),z=oz+double(lz);
+      const double nx=sampler.point(x-.5,z,ox,oz).y-sampler.point(x+.5,z,ox,oz).y;
+      const double nz=sampler.point(x,z-.5,ox,oz).y-sampler.point(x,z+.5,ox,oz).y;
+      const double length=std::hypot(nx,1.0,nz);
+      found=normals.emplace(key,std::array<float,3>{float(nx/length),float(1/length),float(nz/length)}).first;
+    }
+    horizonTerrain[i+3]=found->second[0];
+    horizonTerrain[i+4]=found->second[1];
+    horizonTerrain[i+5]=found->second[2];
+  }
+}
 }
 
 extern "C" {
@@ -1355,18 +1376,19 @@ int spatial_ground_color_batch(int count){
   return count;
 }
 float* spatial_ground_color_result_ptr(){return groundQueryOutput.data();}
-int spatial_build_canyon_horizon(int cx,int cz,int minX,int minZ,int maxX,int maxZ,
-                                 int river,float waterR,float waterG,float waterB){
-  if(!chunkRasters||worldBiome!=5||minX>=maxX||minZ>=maxZ||
+int spatial_build_horizon(int cx,int cz,int minX,int minZ,int maxX,int maxZ,
+                          int river,float waterR,float waterG,float waterB){
+  if(!chunkRasters||(worldBiome!=1&&worldBiome!=5)||minX>=maxX||minZ>=maxZ||
      std::abs(cx)>1000000||std::abs(cz)>1000000)return 0;
-  constexpr int radius=384,dx=4,dz=8;
-  constexpr int cols=radius*2/dx,rows=radius*2/dz;
+  const bool canyon=worldBiome==5;
+  const int radius=canyon?384:576,dx=canyon?4:8,dz=8;
+  const int cols=radius*2/dx,rows=radius*2/dz;
   const int ox=cx*side,oz=cz*side;
   std::vector<HorizonPoint> points;
   std::vector<HorizonColor> colors;
   points.reserve((cols+1)*(rows+1));colors.reserve(points.capacity());
-  canyonHorizonTerrain.clear();canyonHorizonWater.clear();
-  canyonHorizonTerrain.reserve(103212*9);
+  horizonTerrain.clear();horizonWater.clear();
+  horizonTerrain.reserve((canyon?103212:128016)*9);
   HorizonSampler sampler;
   for(int j=0;j<=rows;j++)for(int i=0;i<=cols;i++){
     const int x=ox-radius+i*dx,z=oz-radius+j*dz;
@@ -1379,8 +1401,8 @@ int spatial_build_canyon_horizon(int cx,int cz,int minX,int minZ,int maxX,int ma
     const bool touches=((x+dx==minX||x==maxX)&&z>=minZ&&z+dz<=maxZ)||
       ((z+dz==minZ||z==maxZ)&&x>=minX&&x+dx<=maxX);
     if(!touches){
-      horizonTri(canyonHorizonTerrain,points[a],points[d],points[b],colors[a],colors[d],colors[b]);
-      horizonTri(canyonHorizonTerrain,points[b],points[d],points[c],colors[b],colors[d],colors[c]);
+      horizonTri(horizonTerrain,points[a],points[d],points[b],colors[a],colors[d],colors[b]);
+      horizonTri(horizonTerrain,points[b],points[d],points[c],colors[b],colors[d],colors[c]);
       continue;
     }
     const std::array<std::array<int,2>,4> corners={{{x,z},{x,z+dz},{x+dx,z+dz},{x+dx,z}}};
@@ -1397,11 +1419,11 @@ int spatial_build_canyon_horizon(int cx,int cz,int minX,int minZ,int maxX,int ma
     const auto centerColor=sampler.color(x+dx*.5,z+dz*.5);
     for(size_t k=0;k<ring.size();k++){
       const auto& p=ring[k];const auto& q=ring[(k+1)%ring.size()];
-      horizonTri(canyonHorizonTerrain,center,sampler.point(p[0],p[1],ox,oz),
+      horizonTri(horizonTerrain,center,sampler.point(p[0],p[1],ox,oz),
         sampler.point(q[0],q[1],ox,oz),centerColor,sampler.color(p[0],p[1]),sampler.color(q[0],q[1]));
     }
   }
-  if(river){
+  if(canyon&&river){
     const float level=float(mainRiverLevel());
     const HorizonColor color={waterR,waterG,waterB};
     for(int z=oz-radius;z<oz+radius;z++){
@@ -1409,15 +1431,32 @@ int spatial_build_canyon_horizon(int cx,int cz,int minX,int minZ,int maxX,int ma
       const float nextLeft=sampler.riverEdge(z+1,-1)-1.2f,nextRight=sampler.riverEdge(z+1,1)+1.2f;
       const HorizonPoint a={left-ox,level,float(z-oz)},b={right-ox,level,float(z-oz)};
       const HorizonPoint d={nextLeft-ox,level,float(z+1-oz)},c={nextRight-ox,level,float(z+1-oz)};
-      horizonTri(canyonHorizonWater,a,d,b,color,color,color);
-      horizonTri(canyonHorizonWater,b,d,c,color,color,color);
+      horizonTri(horizonWater,a,d,b,color,color,color);
+      horizonTri(horizonWater,b,d,c,color,color,color);
     }
   }
-  return int(canyonHorizonTerrain.size()/9);
+  if(!canyon){
+    const auto apron=[&](int axis,int value,int from,int to){
+      const auto p=[&](int t,double offset){
+        const double x=axis==0?value+offset:t,z=axis==0?t:value+offset;
+        auto result=sampler.point(x,z,ox,oz);result.y-=.012f;return result;
+      };
+      for(int t=from;t<to;t++){
+        const auto a=p(t,-.10),b=p(t,.10),c=p(t+1,.10),d=p(t+1,-.10);
+        const auto color=sampler.color(axis==0?value:t,axis==0?t:value);
+        horizonTri(horizonTerrain,a,b,d,color,color,color);
+        horizonTri(horizonTerrain,b,c,d,color,color,color);
+      }
+    };
+    apron(0,minX,minZ,maxZ);apron(0,maxX,minZ,maxZ);
+    apron(1,minZ,minX,maxX);apron(1,maxZ,minX,maxX);
+    horizonDesertNormals(sampler,ox,oz);
+  }
+  return int(horizonTerrain.size()/9);
 }
-float* spatial_canyon_horizon_terrain_ptr(){return canyonHorizonTerrain.data();}
-int spatial_canyon_horizon_water_count(){return int(canyonHorizonWater.size()/9);}
-float* spatial_canyon_horizon_water_ptr(){return canyonHorizonWater.data();}
+float* spatial_horizon_terrain_ptr(){return horizonTerrain.data();}
+int spatial_horizon_water_count(){return int(horizonWater.size()/9);}
+float* spatial_horizon_water_ptr(){return horizonWater.data();}
 float* spatial_heights_ptr(){return heights.data();}
 float* spatial_colors_ptr(){return colors.data();}
 uint8_t* spatial_water_ptr(){return water.data();}

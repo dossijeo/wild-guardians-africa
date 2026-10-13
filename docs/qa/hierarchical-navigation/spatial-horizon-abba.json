@@ -14,37 +14,37 @@
       "timings": [
         {
           "implementation": "js",
-          "ms": 156.19,
+          "ms": 175.58,
           "terrainBytes": 3715632,
           "waterBytes": 165888
         },
         {
           "implementation": "spatial-js",
-          "ms": 154,
+          "ms": 158.07,
           "terrainBytes": 3715632,
           "waterBytes": 165888
         },
         {
           "implementation": "native",
-          "ms": 67,
+          "ms": 66.95,
           "terrainBytes": 3715632,
           "waterBytes": 165888
         },
         {
           "implementation": "native",
-          "ms": 56.23,
+          "ms": 53.16,
           "terrainBytes": 3715632,
           "waterBytes": 165888
         },
         {
           "implementation": "spatial-js",
-          "ms": 152.27,
+          "ms": 141.42,
           "terrainBytes": 3715632,
           "waterBytes": 165888
         },
         {
           "implementation": "js",
-          "ms": 108.79,
+          "ms": 113.48,
           "terrainBytes": 3715632,
           "waterBytes": 165888
         }
@@ -71,31 +71,43 @@
       "timings": [
         {
           "implementation": "js",
-          "ms": 183.64,
+          "ms": 184.46,
           "terrainBytes": 4608576,
           "waterBytes": 0
         },
         {
           "implementation": "spatial-js",
-          "ms": 296.77,
+          "ms": 312.96,
+          "terrainBytes": 4608576,
+          "waterBytes": 0
+        },
+        {
+          "implementation": "native",
+          "ms": 123.7,
+          "terrainBytes": 4608576,
+          "waterBytes": 0
+        },
+        {
+          "implementation": "native",
+          "ms": 111.65,
           "terrainBytes": 4608576,
           "waterBytes": 0
         },
         {
           "implementation": "spatial-js",
-          "ms": 327.45,
+          "ms": 320.61,
           "terrainBytes": 4608576,
           "waterBytes": 0
         },
         {
           "implementation": "js",
-          "ms": 203.31,
+          "ms": 173.81,
           "terrainBytes": 4608576,
           "waterBytes": 0
         }
       ],
       "spatialMetrics": {
-        "memoryBytes": 4194304,
+        "memoryBytes": 6815744,
         "loadedChunks": 1,
         "residentPropRecords": 6,
         "loadedSectors": 0,
