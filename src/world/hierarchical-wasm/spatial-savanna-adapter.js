@@ -7,6 +7,7 @@ export function createSpatialSavannaPrototype(module){
   let chunk=null,navigationBuilt=false;
   const heights=()=>new Float32Array(wasm.memory.buffer,wasm.spatial_heights_ptr(),49*49);
   const colors=()=>new Float32Array(wasm.memory.buffer,wasm.spatial_colors_ptr(),49*49*3);
+  const water=()=>new Uint8Array(wasm.memory.buffer,wasm.spatial_water_ptr(),48*48);
   function generate(seed,cx,cz){
     const count=wasm.spatial_generate(seed>>>0,cx|0,cz|0);
     chunk={cx:cx|0,cz:cz|0,count};navigationBuilt=false;
@@ -47,6 +48,18 @@ export function createSpatialSavannaPrototype(module){
     geo.setIndex(new THREE.BufferAttribute(indices,1));geo.computeVertexNormals();
     return geo;
   }
+  function waterGeometry(){
+    if(!chunk)throw Error('Generate a chunk before building its water');
+    const mask=water(),positions=[],indices=[];
+    for(let z=0;z<48;z++)for(let x=0;x<48;x++)if(mask[z*48+x]){
+      const wx=chunk.cx*48-24+x,wz=chunk.cz*48-24+z,i=positions.length/3;
+      positions.push(wx,3.6,wz,wx+1,3.6,wz,wx,3.6,wz+1,wx+1,3.6,wz+1);
+      indices.push(i,i+2,i+1,i+1,i+2,i+3);
+    }
+    const geo=new THREE.BufferGeometry();
+    geo.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));
+    geo.setIndex(indices);geo.computeVertexNormals();return geo;
+  }
   function route(start,end){
     if(!navigationBuilt)return {status:'unknown',points:[]};
     const count=wasm.lazy_route(start.x|0,start.z|0,end.x|0,end.z|0);
@@ -56,7 +69,7 @@ export function createSpatialSavannaPrototype(module){
     for(let i=0;i<count;i++)points.push({x:pairs[i*2],z:pairs[i*2+1]});
     return {status:'found',points};
   }
-  return {wasm,generate,heights,colors,props,instances,geometry,route,
+  return {wasm,generate,heights,colors,water,props,instances,geometry,waterGeometry,route,
     buildNavigation:(radius,worker)=>{
       if(!chunk)throw Error('Generate a chunk before building its navigation');
       const loaded=wasm.spatial_build_nav(radius,worker?1:0);

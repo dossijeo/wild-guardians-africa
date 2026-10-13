@@ -37,7 +37,7 @@ function baseline(){
 function candidate(){
   const core=createSpatialSavannaPrototype(newModule);
   const generation=timed(()=>core.generate(712,0,0));
-  const visual=timed(()=>core.geometry());
+  const visual=timed(()=>({ground:core.geometry(),water:core.waterGeometry()}));
   const objects=timed(()=>core.props());
   const navigation=timed(()=>core.buildNavigation(1.1,false));
   const queries=timed(()=>{
@@ -48,17 +48,18 @@ function candidate(){
   const wall=timed(()=>core.addWall(10,0,.8,24));
   const blocked=core.route({x:7,z:18},{x:13,z:18}).status;
   const removal=timed(()=>core.removeWall(wall.result));
-  const geometry=visual.result;
+  const geometry=visual.result.ground,river=visual.result.water;
   const result={kind:'C++ generation + same-module logical graph; JS Three.js buffer construction',
     generationMs:generation.ms,visualMs:visual.ms,objectDecodeMs:objects.ms,navigationMs:navigation.ms,
     totalMs:generation.ms+visual.ms+objects.ms+navigation.ms,
     routeMs:queries.ms,found:queries.result.filter(x=>x==='found').length,
     terrainBytes:geometry.getAttribute('position').array.byteLength+geometry.getAttribute('normal').array.byteLength+
       geometry.getAttribute('color').array.byteLength+geometry.index.array.byteLength,
+    waterBytes:river.getAttribute('position').array.byteLength+river.getAttribute('normal').array.byteLength+river.index.array.byteLength,
     propCount:objects.result.length,wallMs:wall.ms,removeWallMs:removal.ms,blockedAfterWall:blocked,
     geometricCalls:{walkable:0,segmentClear:0},
     metrics:core.metrics()};
-  geometry.dispose();return result;
+  geometry.dispose();river.dispose();return result;
 }
 const rows=[];
 for(const variant of ['baseline','candidate','candidate','baseline'])rows.push(variant==='baseline'?baseline():candidate());

@@ -27,6 +27,9 @@ test('one C++ source generates visual data and valid worker/animal routes',()=>{
   assert(lists.flat().every(p=>p.id&&p.slot>=0&&p.slot<20&&p.sx===p.scale));
   const geometry=core.geometry();
   assert.equal(geometry.getAttribute('position').count,2401);assert.equal(geometry.index.count,13824);geometry.dispose();
+  assert(core.water().some(value=>value===1));
+  const river=core.waterGeometry();
+  assert(river.index.count>0);river.dispose();
   for(const [radius,worker] of [[.28,true],[1.1,false]]){
     assert.equal(core.buildNavigation(radius,worker),16);
     const {start,end}=crossing(core);

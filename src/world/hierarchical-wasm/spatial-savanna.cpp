@@ -29,6 +29,7 @@ int chunkX=0,chunkZ=0,nextWallId=1;
 float radiusNow=.3f;
 bool workerNow=true,navReady=false;
 std::vector<float> heights,colors;
+std::vector<uint8_t> water;
 std::vector<double> lattice;
 std::vector<Prop> props;
 std::vector<Wall> walls;
@@ -141,7 +142,7 @@ extern "C" {
 int spatial_generate(uint32_t seed,int cx,int cz){
   worldSeed=seed;chunkX=cx;chunkZ=cz;navReady=false;walls.clear();props.clear();staticPass.clear();staticSteps.clear();nextWallId=1;
   // The standalone no-entry WASM binary has no startup constructor pass.
-  heights.assign(grid*grid,0);colors.assign(grid*grid*3,0);
+  heights.assign(grid*grid,0);colors.assign(grid*grid*3,0);water.assign(side*side,0);
   const int x0=cx*side-24,z0=cz*side-24;
   lattice.resize(latticeSpan*latticeSpan);
   for(int z=0;z<latticeSpan;z++)for(int x=0;x<latticeSpan;x++)
@@ -154,6 +155,8 @@ int spatial_generate(uint32_t seed,int cx,int cz){
     colors[i*3+1]=float(.46+.19*grain+.09*wet);
     colors[i*3+2]=float(.29+.09*grain+.09*wet);
   }
+  for(int z=0;z<side;z++)for(int x=0;x<side;x++)
+    water[z*side+x]=fluid(x0+x+.5,z0+z+.5)?1:0;
   constexpr double spacing[6]={13.5,7,2.8,9,10,32};
   constexpr double density[6]={.53,.51,.72,.30,.28,.63};
   constexpr int offsets[6]={0,4,7,10,13,17},counts[6]={4,3,3,3,4,3};
@@ -177,6 +180,7 @@ int spatial_generate(uint32_t seed,int cx,int cz){
 }
 float* spatial_heights_ptr(){return heights.data();}
 float* spatial_colors_ptr(){return colors.data();}
+uint8_t* spatial_water_ptr(){return water.data();}
 Prop* spatial_props_ptr(){return props.data();}
 int spatial_prop_count(){return int(props.size());}
 int spatial_build_nav(float radius,int worker){
