@@ -1,0 +1,35 @@
+{
+  "status": "prefix-only",
+  "reference": {
+    "sourceHead": "51565e3dfde669b3d2f8a264c4dce387086a913c",
+    "receipt": "running",
+    "days": 12
+  },
+  "candidate": {
+    "sourceHead": "48696b3273dc958092f844b149be434325fac48f",
+    "receipt": "running",
+    "days": 8
+  },
+  "policyMatches": true,
+  "changedSourceHashes": [
+    "tools/native-service-component-proof.mjs"
+  ],
+  "commonDays": 8,
+  "identicalCommonDays": true,
+  "firstDifferentDay": null,
+  "timing": {
+    "reference": {
+      "rows": 120,
+      "meanMs": 1112.6745583333352,
+      "p50Ms": 0.7263999999850057,
+      "p95Ms": 10410.800099999993,
+      "maxMs": 10822.73490000004
+    },
+    "candidate": null
+  },
+  "inputHashes": {
+    "referenceDays": "70c3feeabbd21a297e28262a041e3dfa853b1eefcf3cfe61d56431c2200836a3",
+    "candidateDays": "4ad368582fd35e11203a344bff39468e377017ad9983229db92cd6d8f1e5bf0b"
+  },
+  "scope": "Identical completed daily rows prove only the observed shared prefix. A running receipt is not victory, defeat or campaign acceptance. Timing files may cover different intervals and concurrent host load."
+}
