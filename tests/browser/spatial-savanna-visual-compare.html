@@ -6,6 +6,7 @@
 import * as THREE from 'three';
 import {Assets} from '../../src/rendering/assets.js';
 import {Navigation} from '../../src/world/navigation.js';
+import {TerrainField} from '../../src/world/terrain.js';
 import {buildNativeChunk} from '../../src/rendering/chunk-data.js';
 import {nativeTerrainBuffer} from '../../src/rendering/terrain-geometry.js';
 import {nativeWaterBuffer} from '../../src/rendering/water-geometry.js';
@@ -17,6 +18,7 @@ import wasmUrl from '../../src/world/hierarchical-wasm/spatial-savanna.wasm?url'
 
 const status=document.querySelector('#status'),scenes=[];
 const parameters=new URLSearchParams(location.search),gameGround=parameters.get('ground')==='game';
+const settlement=parameters.get('settlement')==='1';
 let biomeGround=null,toon=null;
 function makeScene(ground,river,instances,models,prototype=false,mask=null){
   const scene=new THREE.Scene();scene.background=new THREE.Color('#cdd6c5');scene.fog=new THREE.Fog('#cdd6c5',75,145);
@@ -41,10 +43,20 @@ try{
   const [pack,binary]=await Promise.all([fetch('/content/biome-savanna.json').then(r=>r.json()),fetch(wasmUrl).then(r=>r.arrayBuffer())]);
   const seed=Number(parameters.get('seed')??712);
   const assets=new Assets(),models=await assets.biome(pack),nav=new Navigation(String(seed),'sabana',pack.profile);
+  if(settlement){
+    const x=10,z=8,hx=7,hz=6;
+    const samples=[[x-hx,z-hz],[x+hx,z-hz],[x,z],[x-hx,z+hz],[x+hx,z+hz]]
+      .map(([px,pz])=>nav.field.surface(px,pz)).sort((a,b)=>a-b);
+    nav.config.settlementSite={x,z,hx,hz,y:samples[2],yaw:0,
+      clearRadius:19,softRadius:25,haloRadius:32};
+    nav.field=new TerrainField(nav.config);nav.chunks.clear();
+  }
   if(gameGround){biomeGround=new BiomeGround();await biomeGround.load(assets,'savanna',pack.profile,nav.field);toon=new AfricanToon();}
   const current=buildNativeChunk(nav.config,pack.profile,0,0);
   const baseline=makeScene(nativeTerrainBuffer(current.terrain),nativeWaterBuffer(current.water),current.instances,models,false,current.groundMask);
-  const core=createSpatialSavannaPrototype(new WebAssembly.Module(binary));core.generate(seed,0,0);core.buildNavigation(1.1,false);
+  const core=createSpatialSavannaPrototype(new WebAssembly.Module(binary));core.generate(seed,0,0);
+  if(settlement)core.setSettlement(10,8,7,6);
+  core.buildNavigation(1.1,false);
   const candidate=makeScene(core.geometry(),core.waterGeometry(),core.instances(),models,true,Uint8Array.from(core.groundMask()));
   const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);
   renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.setScissorTest(true);document.body.append(renderer.domElement);
@@ -57,7 +69,7 @@ try{
     }
   }
   render();addEventListener('resize',render);
-  window.qaStats={seed,baseline,candidate,gameGround};window.qaReady=true;
+  window.qaStats={seed,baseline,candidate,gameGround,settlement};window.qaReady=true;
   status.textContent=`Semilla ${seed} · ${gameGround?'material del juego':'material básico'} · JS: ${baseline.count} objetos · WASM: ${candidate.count} objetos`;
 }catch(error){window.qaError=String(error.stack??error);status.textContent=window.qaError;}
 </script></body></html>

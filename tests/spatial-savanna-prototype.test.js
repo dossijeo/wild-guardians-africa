@@ -55,6 +55,45 @@ test('the 35x35 ground material mask meets at adjacent chunk overlaps',()=>{
     assert.equal(west[a],east[b],`ground mask overlap at (${x},${z}), channel ${channel}`);
   }
 });
+test('a settlement command flattens and clears the same C++ terrain used for navigation',()=>{
+  const core=createSpatialSavannaPrototype(module);
+  core.generate(712,0,0);
+  core.buildNavigation(.28,true);core.buildNavigation(1.1,false);
+  const before=core.metrics().sectorUpdates;
+  const level=core.setSettlement(10,8,7,6);
+  assert(Number.isFinite(level)&&level>0);
+  assert(Math.abs(core.heights()[(8+24)*49+(10+24)]-level)<.001);
+  assert(core.groundMask().some((value,index)=>index%4===3&&value>0));
+  assert(core.props().every(prop=>Math.hypot(prop.x-10,prop.z-8)>=19+prop.radius+4));
+  assert(core.metrics().sectorUpdates>before,'the topological edit must refresh resident sectors');
+  const west=Float32Array.from(core.heights());
+  assert(core.addChunk(1,0)>0);
+  for(let z=0;z<49;z++)assert.equal(west[z*49+48],core.heights()[z*49]);
+  for(const worker of [true,false]){
+    assert.equal(core.selectNavigation(worker),32);
+    for(let z=-18;z<19;z++)if(core.edge(23,z,24,z))
+      validRoute(core,{x:23,z},core.route({x:23,z},{x:24,z}));
+  }
+  core.generate(712,0,0);
+  assert(core.groundMask().every((value,index)=>index%4!==3||value===0));
+  assert.equal(core.setSettlement(10,8,7,6),level);
+});
+test('a river strip no longer renders across dry settlement terrain',()=>{
+  const core=createSpatialSavannaPrototype(module);
+  core.generate(712,0,0);
+  const riverCells=[];
+  for(let x=-23;x<24;x++)if(core.water()[(8+24)*48+x+24])riverCells.push(x);
+  assert(riverCells.length>0);
+  const siteX=Math.max(...riverCells)+5;
+  assert(core.setSettlement(siteX,8,7,6)>3.58);
+  const triangles=core.waterTriangles();
+  for(let i=0;i<triangles.length;i+=9){
+    const x=(triangles[i]+triangles[i+3]+triangles[i+6])/3;
+    const z=(triangles[i+2]+triangles[i+5]+triangles[i+8])/3;
+    assert(!(Math.abs(x-siteX)<4&&Math.abs(z-8)<3&&Math.abs(triangles[i+1]-3.6)<.01),
+      `river triangle remains above dry settlement terrain at (${x},${z})`);
+  }
+});
 test('placing and destroying a wall updates local sectors and restores a route',()=>{
   const core=createSpatialSavannaPrototype(module);core.generate(123,0,0);
   core.buildNavigation(1.1,false);

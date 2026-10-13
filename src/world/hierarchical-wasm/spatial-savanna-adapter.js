@@ -85,6 +85,10 @@ export function createSpatialSavannaPrototype(module){
     return {status:'found',points};
   }
   return {wasm,generate,addChunk,removeChunk,heights,colors,water,groundMask,waterLevels,waterTriangles,props,instances,geometry,waterGeometry,route,
+    setSettlement:(x,z,hx,hz)=>{
+      if(!generated)throw Error('Generate the world before placing a settlement');
+      return wasm.spatial_set_settlement(x,z,hx,hz);
+    },
     buildNavigation:(radius,worker)=>{
       if(!chunk)throw Error('Generate a chunk before building its navigation');
       const loaded=wasm.spatial_build_nav(radius,worker?1:0);

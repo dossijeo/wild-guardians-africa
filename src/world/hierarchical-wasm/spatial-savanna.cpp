@@ -33,6 +33,7 @@ struct Prop {float x,z,y,radius,scale,yaw;int32_t slot;};
 struct Pond {double x,z,radius,level;};
 struct WaterPoint {double x,z;};
 struct Wall {int id;float x,z,halfX,halfZ;bool active;};
+struct Settlement {bool active=false;double x=0,z=0,y=0,hx=0,hz=0,clearRadius=0,softRadius=0,haloRadius=0;};
 struct ChunkRaster {int cx,cz;std::vector<uint8_t> pass,steps,inbound;};
 struct NavProfile {float radius=0;bool worker=false,ready=false;std::unordered_map<uint64_t,ChunkRaster> rasters;};
 uint32_t worldSeed=0;
@@ -51,6 +52,7 @@ std::vector<Prop> solidProps;
 std::array<std::vector<int>,propBucketSide*propBucketSide> propBuckets;
 int haloPropCount=0;
 std::vector<Wall> walls;
+Settlement settlement;
 std::vector<uint8_t> staticPass,staticSteps,staticInbound;
 // No-entry WASM does not initialize C++ globals; construct profiles lazily.
 NavProfile* navProfiles[2]={nullptr,nullptr};
@@ -103,6 +105,12 @@ double baseHeight(double x,double z){
   const double channel=3.6-.63+blend((d-1.8)/4.2)*.68;
   return channel+(dry-channel)*blend((d-17)/75);
 }
+double settlementBlend(double x,double z){
+  if(!settlement.active)return 0;
+  const double edge=std::max(std::abs(x-settlement.x)-settlement.hx,
+    std::abs(z-settlement.z)-settlement.hz);
+  return 1-blend(edge/6);
+}
 void preparePonds(int cx,int cz){
   ponds.clear();
   constexpr double cell=64,halo=20;
@@ -115,6 +123,7 @@ void preparePonds(int cx,int cz){
     const double river=riverX(z);
     if(std::abs(x-river)<24)x=river+(x<river?-24:24);
     const double radius=6+unit(cellHash(tx,tz,7204))*3.4;
+    if(settlement.active&&std::hypot(x-settlement.x,z-settlement.z)<settlement.clearRadius+radius+11)continue;
     const double reach=radius*1.4;
     if(x+reach<x0||x-reach>x0+side||z+reach<z0||z-reach>z0+side)continue;
     ponds.push_back({x,z,radius,baseHeight(x,z)-.4});
@@ -128,7 +137,8 @@ double height(double x,double z){
     const double basin=p.level-.75+1.1*blend((d-.50)/.85);
     h=std::min(h,basin);
   }
-  return h;
+  const double weight=settlementBlend(x,z);
+  return h+(settlement.y-h)*weight;
 }
 double latticeHeight(int x,int z){
   const int ix=x-(chunkX*side-24)+pad,iz=z-(chunkZ*side-24)+pad;
@@ -149,8 +159,7 @@ double fluidLevel(double x,double z){
 bool fluid(double x,double z){return fluidLevel(x,z)!=0;}
 void buildGroundMask(int cx,int cz){
   // RGBA8 channels match the game's ground material contract: vegetation
-  // cover, broad variation, moisture, settlement wear. This prototype has
-  // no settlement site, so wear remains zero until that geometry is owned here.
+  // cover, broad variation, moisture, settlement wear.
   groundMask.resize(35*35*4);
   const int x0=cx*side-24,z0=cz*side-24;
   for(int iz=0;iz<35;iz++)for(int ix=0;ix<35;ix++){
@@ -169,7 +178,20 @@ void buildGroundMask(int cx,int cz){
     groundMask[at]=uint8_t(std::lround(cover*255));
     groundMask[at+1]=uint8_t(std::lround(meso*255));
     groundMask[at+2]=uint8_t(std::lround(moisture*255));
-    groundMask[at+3]=0;
+    double wear=0;
+    if(settlement.active){
+      const double dx=x-settlement.x,dz=z-settlement.z,d=std::hypot(dx,dz);
+      if(d<settlement.haloRadius+4){
+        const double core=1-blend((d-settlement.clearRadius*.48)/
+          (settlement.clearRadius+2.3+(meso-.5)*3-settlement.clearRadius*.48));
+        const double warp=(noise(x*.055,z*.055,97137)-.5)*1.05;
+        const double line=std::min(std::abs(dx+warp),std::abs(dz-warp));
+        const double path=(1-blend((line-1.05)/2.05))*
+          (1-blend((d-(settlement.softRadius-2))/(settlement.haloRadius-settlement.softRadius+3)));
+        wear=std::clamp(std::max(core*(.81+.19*meso),path*.74),0.0,1.0);
+      }
+    }
+    groundMask[at+3]=uint8_t(std::lround(wear*255));
   }
 }
 void waterTriangle(const WaterPoint& a,const WaterPoint& b,const WaterPoint& c,double y){
@@ -202,7 +224,23 @@ void buildWaterMesh(int cx,int cz){
     const double left1=std::clamp(riverX(z+1)-6.1,minX,maxX),right1=std::clamp(riverX(z+1)+6.1,minX,maxX);
     if(right0<=left0&&right1<=left1)continue;
     const WaterPoint a{left0,double(z)},b{right0,double(z)},c{right1,double(z+1)},d{left1,double(z+1)};
-    waterTriangle(a,d,b,3.6);waterTriangle(b,d,c,3.6);
+    const bool nearSettlement=settlement.active&&z+1>=settlement.z-settlement.hz-6&&
+      z<=settlement.z+settlement.hz+6&&std::max(right0,right1)>=settlement.x-settlement.hx-6&&
+      std::min(left0,left1)<=settlement.x+settlement.hx+6;
+    if(!nearSettlement){waterTriangle(a,d,b,3.6);waterTriangle(b,d,c,3.6);continue;}
+    // A flattened site can dry out part of a river strip. Clip only the
+    // affected strip against the same fluid source used by navigation.
+    constexpr int slices=13;
+    for(int i=0;i<slices;i++){
+      const double t0=double(i)/slices,t1=double(i+1)/slices,tm=(t0+t1)*.5;
+      const double centerX=(left0+(right0-left0)*tm+left1+(right1-left1)*tm)*.5;
+      if(fluidLevel(centerX,z+.5)!=3.6)continue;
+      const WaterPoint s0{left0+(right0-left0)*t0,double(z)};
+      const WaterPoint e0{left0+(right0-left0)*t1,double(z)};
+      const WaterPoint s1{left1+(right1-left1)*t0,double(z+1)};
+      const WaterPoint e1{left1+(right1-left1)*t1,double(z+1)};
+      waterTriangle(s0,s1,e0,3.6);waterTriangle(e0,s1,e1,3.6);
+    }
   }
   for(const Pond& p:ponds){
     std::vector<WaterPoint> outline;outline.reserve(48);
@@ -391,6 +429,7 @@ void populateChunk(int cx,int cz){
         const float scale=float(.78+unit(cellHash(gx,gz,312+type))*.43);
         const int slot=offsets[type]+int(cellHash(gx,gz,315+type)%counts[type]);
         const float radius=radii[slot]*scale;
+        if(settlement.active&&std::hypot(x-settlement.x,z-settlement.z)<settlement.clearRadius+radius+4)continue;
         const Prop prop={float(x),float(z),float(surface(x,z)),radius,scale,float(unit(cellHash(gx,gz,317))*2*pi),slot};
         const bool owned=x>=x0&&x<x0+48&&z>=z0&&z<z0+48;
         if(owned)props.push_back(prop);
@@ -460,7 +499,7 @@ void refreshNeighborBorders(int cx,int cz){
 
 extern "C" {
 int spatial_generate(uint32_t seed,int cx,int cz){
-  worldSeed=seed;walls.clear();
+  worldSeed=seed;walls.clear();settlement=Settlement{};
   for(int profile=0;profile<2;profile++){
     NavProfile& state=navProfile(profile);
     state.rasters.clear();state.ready=false;
@@ -509,6 +548,36 @@ int spatial_remove_chunk(int cx,int cz){
   return 1;
 }
 int spatial_chunk_count(){return int(loadedChunks.size());}
+float spatial_set_settlement(float x,float z,float hx,float hz){
+  if(!std::isfinite(x)||!std::isfinite(z)||!std::isfinite(hx)||!std::isfinite(hz)||
+     hx<=0||hz<=0||hx>100||hz>100)return -1;
+  const Settlement old=settlement;
+  const double samples[5]={baseHeight(x-hx,z-hz),baseHeight(x+hx,z-hz),
+    baseHeight(x,z),baseHeight(x-hx,z+hz),baseHeight(x+hx,z+hz)};
+  std::array<double,5> sorted;std::copy(samples,samples+5,sorted.begin());
+  std::sort(sorted.begin(),sorted.end());
+  const double clear=std::max(19.0,std::hypot(double(hx),double(hz)));
+  settlement={true,x,z,sorted[2],hx,hz,clear,clear+6,clear+13};
+  const int selectedX=chunkX,selectedZ=chunkZ,previous=activeProfile;
+  auto affected=[&](int cx,int cz,const Settlement& site){
+    if(!site.active)return false;
+    const double minX=cx*side-24,maxX=minX+side,minZ=cz*side-24,maxZ=minZ+side;
+    const double px=std::clamp(site.x,minX,maxX),pz=std::clamp(site.z,minZ,maxZ);
+    return std::hypot(site.x-px,site.z-pz)<site.haloRadius+10;
+  };
+  for(const auto& [cx,cz]:loadedChunks){
+    if(!affected(cx,cz,old)&&!affected(cx,cz,settlement))continue;
+    populateChunk(cx,cz);
+    for(int profile=0;profile<2;profile++){
+      selectProfile(profile);
+      if(!navReady)continue;
+      buildActiveRaster();commitActiveSectors();refreshNeighborBorders(cx,cz);
+    }
+  }
+  selectProfile(previous);
+  if(!loadedChunks.empty())populateChunk(selectedX,selectedZ);
+  return float(settlement.y);
+}
 int spatial_sector_slots(){return lazy_sector_slots();}
 float* spatial_heights_ptr(){return heights.data();}
 float* spatial_colors_ptr(){return colors.data();}
