@@ -10,6 +10,7 @@ import {ANIMAL_SPATIAL_PROFILES} from '../src/world/hierarchical-wasm/spatial-mo
 import {createSpatialWorld} from '../src/world/hierarchical-wasm/spatial-world.js';
 import {addSpatialWall,addSpatialWallsBatch,addSpatialGate,addSpatialStructuresBatch,
   removeSpatialStructure,spatialGateBarriers} from '../src/world/hierarchical-wasm/spatial-wall-bridge.js';
+import {createSpatialWallMirror} from '../src/world/hierarchical-wasm/spatial-wall-mirror.js';
 import {wallCollisionFrame} from '../src/world/wall-collision-frame.js';
 
 const module=new WebAssembly.Module(readFileSync(new URL('../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
@@ -198,6 +199,34 @@ test('mixed gate and wall placement batches the topology and preserves barrier g
   assert.equal(new Set(groups.flat()).size,5);
   assert.equal(core.snapshot().barriers.length,5);
   for(const group of groups)assert.equal(removeSpatialStructure(core,group),true);
+  assert.equal(core.snapshot().barriers.length,0);
+});
+test('wall topology mirror reacts to placement, gate conversion and ruin but ignores HP and leaf motion',()=>{
+  const core=createSpatialSavannaPrototype(module);
+  core.generate(712,0,0);core.buildNavigation(.28,true);core.buildNavigation(1.1,false);
+  const mirror=createSpatialWallMirror(core);
+  const walls=[{id:'one',kind:'wall',material:'adobe',status:'intact',hp:100,
+    x:-10,z:0,yaw:.3,gate:false},
+  {id:'two',kind:'wall',material:'zarzas',status:'intact',hp:100,
+    x:-7,z:0,yaw:0,gate:false}];
+  assert.deepEqual(mirror.sync(walls),{count:2,added:2});
+  assert.equal(core.snapshot().barriers.length,2);
+  const firstIds=mirror.barrierIds('one');
+  const updates=core.metrics().sectorUpdates;
+  walls[0].hp=21;walls[1].gateOpen=.7;
+  assert.deepEqual(mirror.sync(walls),{count:2,added:0});
+  assert.equal(core.metrics().sectorUpdates,updates,
+    'HP and articulated leaf motion do not change logical topology');
+  walls[1].gate=true;walls[1].autoGate=true;
+  assert.deepEqual(mirror.sync(walls),{count:2,added:1});
+  assert.equal(core.snapshot().barriers.length,4);
+  assert.deepEqual(mirror.barrierIds('one'),firstIds);
+  assert.equal(mirror.barrierIds('two').length,3);
+  walls[0].status='ruined';
+  assert.deepEqual(mirror.sync(walls),{count:1,added:0});
+  assert.equal(core.snapshot().barriers.length,3);
+  assert.deepEqual(mirror.barrierIds('one'),[]);
+  mirror.clear();
   assert.equal(core.snapshot().barriers.length,0);
 });
 test('the dry Desert chunk shares visible dunes, solid props and hierarchical routes',()=>{
