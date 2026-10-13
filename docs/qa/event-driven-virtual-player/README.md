@@ -143,6 +143,16 @@ per-day ledgers, raid evidence, protocol and source hashes. This is one seed
 and one poor-management policy, so it does not yet establish the requested
 win-rate distribution.
 
+The matching 14-night `expansive` run did **not** complete: after seven
+recorded nights, native raid-entry preparation for day 8 at simulated time
+385 reached its 180-second observation deadline. The entry preparer had
+accepted seven of eight requests, reported no worker failure, and left the
+eighth unresolved after 10,812 cooperative presentation updates. This is
+`incomplete-harness-error`, not a game defeat or a balance observation. The
+exact partial state, prior ledgers, entry diagnostics and source hashes are
+preserved in `pilot-expansive-sabana-123-14-incomplete.zip`. Investigate
+entry preparation before launching another long campaign from this policy.
+
 A repeated seven-night run with per-step timing located the costly interval
 at simulated time 475–499 on day 7. Twelve of those ticks exceeded three
 seconds, and the largest took 30.34 seconds. A cooperative checkpoint at
