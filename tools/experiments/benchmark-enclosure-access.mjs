@@ -25,7 +25,7 @@ for(const candidate of [false,true,true,false]){
     nav.setRaidView({x:pose.eye[0],z:pose.eye[2]},center);
     nav.setActiveBounds(activeChunkRegion({x:pose.eye[0],z:pose.eye[2]}).bounds);
   }
-  const metrics={};if(candidate)(mode==='routes'||mode==='negative'||mode==='grid'?installEnclosureRouteTree:installEnclosureAccessPrototype)(nav,metrics,mode==='negative',mode==='grid');
+  const metrics={};if(candidate)(['routes','negative','grid','adaptive'].includes(mode)?installEnclosureRouteTree:installEnclosureAccessPrototype)(nav,metrics,mode==='negative',mode==='grid'||mode==='adaptive',mode==='adaptive');
   let searches=0,success=0,nativeSearches=0;const path=nav.approachPath.bind(nav),findSteps=nav.findPathSteps.bind(nav);
   nav.findPathSteps=(...args)=>{if(args[4]===false)nativeSearches++;return findSteps(...args);};
   nav.approachPath=(...args)=>{searches++;const value=path(...args);if(value)success++;return value;};

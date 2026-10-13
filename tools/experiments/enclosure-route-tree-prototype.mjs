@@ -5,14 +5,21 @@ import {SearchFrontier} from '../../src/world/search-frontier.js';
 import {activeCrops} from '../../src/simulation/active-crops.js';
 import {logicalAnimalGrid} from './logical-animal-grid-prototype.mjs';
 
-export function installEnclosureRouteTree(nav,metrics={},negativeOnly=false,gridMode=false){
+export function installEnclosureRouteTree(nav,metrics={},negativeOnly=false,gridMode=false,adaptive=false){
   const original=nav.approachPath.bind(nav),fields=[];
-  Object.assign(metrics,{built:0,reused:0,visited:0,buildMilliseconds:0,treeRoutes:0,fallbacks:0,fallbackReasons:{},unreachable:0,direct:0});
+  Object.assign(metrics,{built:0,reused:0,visited:0,buildMilliseconds:0,treeRoutes:0,fallbacks:0,fallbackReasons:{},unreachable:0,direct:0,nativeTrials:0,activations:0,gridRuns:[]});
   let grid=null,gridVersion=null;
+  let decisionVersion=null,failedNative=0,active=!adaptive;
   const fallback=(reason,start,end,radius,margin)=>{metrics.fallbacks++;metrics.fallbackReasons[reason]=(metrics.fallbackReasons[reason]??0)+1;return original(start,end,radius,margin);};
   nav.approachPath=(start,end,radius,margin=32)=>{
     if(!nav.state?.raid)return fallback('inactive',start,end,radius,margin);
-    if(gridMode&&gridVersion!==nav.version){grid=logicalAnimalGrid(nav,metrics.grid={});gridVersion=nav.version;}
+    if(decisionVersion!==nav.version){decisionVersion=nav.version;failedNative=0;active=!adaptive;}
+    if(!active){
+      const native=original(start,end,radius,margin);metrics.nativeTrials++;
+      if(!native&&nav.walkable(end.x,end.z,radius,null,false)&&++failedNative>=5000){active=true;metrics.activations++;}
+      if(!active||native)return native;
+    }
+    if(gridMode&&gridVersion!==nav.version){metrics.grid={};metrics.gridRuns.push(metrics.grid);grid=logicalAnimalGrid(nav,metrics.grid);gridVersion=nav.version;}
     if(!nav.walkable(end.x,end.z,radius,null,false)){metrics.unreachable++;return null;}
     if(nav.segmentClear(start,end,radius,null,false)){metrics.direct++;return [{x:end.x,z:end.z}];}
     const sx=Math.round(start.x),sz=Math.round(start.z),same=f=>f.version===nav.version&&f.radius===radius&&f.startX===start.x&&f.startZ===start.z;

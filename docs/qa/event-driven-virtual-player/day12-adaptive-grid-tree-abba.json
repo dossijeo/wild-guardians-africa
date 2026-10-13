@@ -1,0 +1,115 @@
+{
+  "input": "docs/qa/event-driven-virtual-player/pilot-expansive-sabana-123-day12-before-365/checkpoint-state.json.gz",
+  "seconds": 5,
+  "mode": "adaptive",
+  "day": 12,
+  "time": 365.0000000000148,
+  "biome": "sabana",
+  "plants": 1194,
+  "living": 266,
+  "sameState": false,
+  "baselineDeterministic": true,
+  "candidateDeterministic": true,
+  "rows": [
+    {
+      "variant": "baseline",
+      "milliseconds": 15433.193899999998,
+      "searches": 55242,
+      "nativeSearches": 55257,
+      "success": 22,
+      "rssDeltaBytes": 166285312,
+      "hash": "df9ce7ede83b9aa1dcb45507466199a917bb828861d400b01d4cf1674f9e171f",
+      "metrics": {}
+    },
+    {
+      "variant": "candidate",
+      "milliseconds": 6840.164000000001,
+      "searches": 5480,
+      "nativeSearches": 5456,
+      "success": 19,
+      "rssDeltaBytes": 113172480,
+      "hash": "fb5983c60c2680289e9dfeec90b587ba1e3c0e8842679dabf9102436c2d9546b",
+      "metrics": {
+        "built": 15,
+        "reused": 0,
+        "visited": 151389,
+        "buildMilliseconds": 3134.4770000000026,
+        "treeRoutes": 15,
+        "fallbacks": 6,
+        "fallbackReasons": {
+          "inactive": 6
+        },
+        "unreachable": 17,
+        "direct": 1,
+        "nativeTrials": 5442,
+        "activations": 1,
+        "gridRuns": [
+          {
+            "chunks": 288,
+            "cells": 49593,
+            "edges": 56678,
+            "buildMilliseconds": 2852.877000000073,
+            "edgeLookups": 165409
+          }
+        ],
+        "grid": {
+          "chunks": 288,
+          "cells": 49593,
+          "edges": 56678,
+          "buildMilliseconds": 2852.877000000073,
+          "edgeLookups": 165409
+        }
+      }
+    },
+    {
+      "variant": "candidate",
+      "milliseconds": 7114.134699999999,
+      "searches": 5480,
+      "nativeSearches": 5456,
+      "success": 19,
+      "rssDeltaBytes": 15159296,
+      "hash": "fb5983c60c2680289e9dfeec90b587ba1e3c0e8842679dabf9102436c2d9546b",
+      "metrics": {
+        "built": 15,
+        "reused": 0,
+        "visited": 151389,
+        "buildMilliseconds": 3247.7103000000025,
+        "treeRoutes": 15,
+        "fallbacks": 6,
+        "fallbackReasons": {
+          "inactive": 6
+        },
+        "unreachable": 17,
+        "direct": 1,
+        "nativeTrials": 5442,
+        "activations": 1,
+        "gridRuns": [
+          {
+            "chunks": 288,
+            "cells": 49593,
+            "edges": 56678,
+            "buildMilliseconds": 2985.1574999998265,
+            "edgeLookups": 165409
+          }
+        ],
+        "grid": {
+          "chunks": 288,
+          "cells": 49593,
+          "edges": 56678,
+          "buildMilliseconds": 2985.1574999998265,
+          "edgeLookups": 165409
+        }
+      }
+    },
+    {
+      "variant": "baseline",
+      "milliseconds": 16112.9434,
+      "searches": 55242,
+      "nativeSearches": 55257,
+      "success": 22,
+      "rssDeltaBytes": 243650560,
+      "hash": "df9ce7ede83b9aa1dcb45507466199a917bb828861d400b01d4cf1674f9e171f",
+      "metrics": {}
+    }
+  ]
+}
