@@ -11,6 +11,10 @@ import {createSpatialWorld} from '../src/world/hierarchical-wasm/spatial-world.j
 import {addSpatialWall,addSpatialWallsBatch,addSpatialGate,addSpatialStructuresBatch,
   removeSpatialStructure,spatialGateBarriers} from '../src/world/hierarchical-wasm/spatial-wall-bridge.js';
 import {createSpatialWallMirror} from '../src/world/hierarchical-wasm/spatial-wall-mirror.js';
+import {addSpatialCenter,removeSpatialCenter} from '../src/world/hierarchical-wasm/spatial-center-bridge.js';
+import {createSpatialCenterMirror} from '../src/world/hierarchical-wasm/spatial-center-mirror.js';
+import {centerFootprint} from '../src/world/centers.js';
+import {footprintDistance} from '../src/world/footprints.js';
 import {wallCollisionFrame} from '../src/world/wall-collision-frame.js';
 
 const module=new WebAssembly.Module(readFileSync(new URL('../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
@@ -126,7 +130,7 @@ test('oriented C++ wall footprints match the game collision frame and survive re
       `rotated wall mismatch at ${point.x},${point.z}`);
   }
   assert.throws(()=>addSpatialWall(core,{...wall,gate:true}),/non-gate/);
-  const state=core.snapshot();assert.equal(state.version,4);
+  const state=core.snapshot();assert.equal(state.version,5);
   assert(Math.abs(state.barriers[0].yaw-yaw)<1e-6);
   const restored=createSpatialSavannaPrototype(module);
   restored.restoreState(state);restored.buildNavigation(.28,true);
@@ -272,6 +276,74 @@ test('a rejected native topology transaction changes neither barriers nor routes
   assert.deepEqual(core.snapshot(),before);
   assert.equal(core.metrics().sectorUpdates,updates);
 });
+test('work-center polygons match all five authored footprints across profiles and reload',()=>{
+  for(const culture of ['mapungubwe','saheliana','suajili','musgum','etiope']){
+    const core=createSpatialSavannaPrototype(module);
+    core.generate(712,0,0);core.setSettlement(10,8,13,13);
+    const center={id:`center-${culture}`,kind:'center',culture,status:'intact',
+      x:10,z:8,yaw:.47};
+    const footprint=centerFootprint(center).footprint;
+    const samples=[];
+    for(let z=-7;z<=7;z+=.7)for(let x=-8;x<=8;x+=.7)
+      samples.push({x:center.x+x,z:center.z+z});
+    for(const [radius,worker] of [[.28,true],[1.1,false],[1.55,false]]){
+      core.buildNavigation(radius,worker);
+      const baseline=samples.map(point=>core.localClear(point,point));
+      const id=addSpatialCenter(core,center);
+      assert(id>0);
+      let checked=0;
+      samples.forEach((point,i)=>{
+        const distance=footprintDistance(footprint,point.x,point.z);
+        if(!baseline[i]||Math.abs(distance-radius)<.015)return;
+        assert.equal(core.localClear(point,point),distance>=radius,
+          `${culture}: mismatched ${worker?'worker':'animal'} footprint at ${point.x},${point.z}`);
+        checked++;
+      });
+      assert(checked>100,`${culture}: insufficient comparable samples`);
+      const state=core.snapshot();
+      assert.equal(state.version,5);assert.equal(state.polygons.length,1);
+      const restored=createSpatialSavannaPrototype(module);
+      restored.restoreState(state);restored.buildNavigation(radius,worker);
+      assert.deepEqual(restored.snapshot(),state);
+      for(const point of samples.filter((_,i)=>i%19===0))
+        assert.equal(restored.localClear(point,point),core.localClear(point,point));
+      assert.equal(removeSpatialCenter(core,id),1);
+      samples.forEach((point,i)=>assert.equal(core.localClear(point,point),baseline[i]));
+    }
+  }
+});
+test('work-center topology mirrors placement and ruin without rebuilding for HP or repair',()=>{
+  const core=createSpatialSavannaPrototype(module);
+  core.generate(712,0,0);core.setSettlement(10,8,13,13);
+  core.buildNavigation(.28,true);core.buildNavigation(1.1,false);
+  const state={culture:'mapungubwe',villages:[],structures:[
+    {id:'center-1',kind:'center',status:'intact',x:10,z:8,yaw:.2,hp:100}]};
+  const mirror=createSpatialCenterMirror(core);
+  assert.deepEqual(mirror.sync(state),{count:1,added:1});
+  const firstId=mirror.polygonId('center-1'),updates=core.metrics().sectorUpdates;
+  state.structures[0].hp=17;
+  assert.deepEqual(mirror.sync(state),{count:1,added:0});
+  state.structures[0].hp=100;
+  assert.deepEqual(mirror.sync(state),{count:1,added:0});
+  assert.equal(core.metrics().sectorUpdates,updates);
+  assert.equal(mirror.polygonId('center-1'),firstId);
+  state.structures[0].status='ruined';
+  assert.deepEqual(mirror.sync(state),{count:0,added:0});
+  assert.equal(core.snapshot().polygons.length,0);
+  state.structures[0].status='intact';
+  assert.deepEqual(mirror.sync(state),{count:1,added:1});
+  assert.notEqual(mirror.polygonId('center-1'),firstId);
+  mirror.clear();assert.equal(core.snapshot().polygons.length,0);
+});
+test('version 4 spatial snapshots still restore without polygon records',()=>{
+  const original=createSpatialSavannaPrototype(module);
+  original.generate(712,0,0);original.addOrientedBarrier(4,6,.5,2,.3,0);
+  const current=original.snapshot();
+  const {polygons:unused,nextPolygonId:unusedId,...legacy}={...current,version:4};
+  const restored=createSpatialSavannaPrototype(module);
+  restored.restoreState(legacy);
+  assert.deepEqual(restored.snapshot(),current);
+});
 test('the dry Desert chunk shares visible dunes, solid props and hierarchical routes',()=>{
   const core=createSpatialSavannaPrototype(module);
   core.generate(28,0,0,'desert');
@@ -297,7 +369,7 @@ test('the dry Desert chunk shares visible dunes, solid props and hierarchical ro
   }
   const wall=core.addBarrier(23.5,0,.8,5,0);assert(wall>0);
   const state=JSON.parse(JSON.stringify(core.snapshot()));
-  assert.equal(state.version,4);assert.equal(state.biome,'desert');
+  assert.equal(state.version,5);assert.equal(state.biome,'desert');
   const restored=createSpatialSavannaPrototype(module);
   restored.restoreState(state,0,0);restored.addChunk(1,0);
   restored.buildNavigation(.28,true);restored.buildNavigation(1.1,false);

@@ -21,24 +21,37 @@ export function captureSpatialState(wasm){
       halfZ:records.getFloat32(at+16,true),yaw:records.getFloat32(at+20,true),
       passMask:records.getInt32(at+24,true)});
   }
+  const polygons=[];
+  const polygonCount=wasm.spatial_polygon_state_count();
+  const polygonPointer=wasm.spatial_polygon_state_ptr();
+  const polygonRecords=new DataView(wasm.memory.buffer,polygonPointer,polygonCount*528);
+  for(let i=0;i<polygonCount;i++){
+    const at=i*528,count=polygonRecords.getInt32(at+4,true),points=[];
+    for(let j=0;j<count;j++)points.push({x:polygonRecords.getFloat32(at+16+j*8,true),
+      z:polygonRecords.getFloat32(at+20+j*8,true)});
+    polygons.push({id:polygonRecords.getInt32(at,true),
+      passMask:polygonRecords.getInt32(at+8,true),points});
+  }
   const removedProps=[],removedCount=wasm.spatial_removed_prop_count();
   const removed=new Int32Array(wasm.memory.buffer,wasm.spatial_removed_prop_state_ptr(),removedCount*3);
   for(let i=0;i<removedCount;i++)removedProps.push({group:removed[i*3],gx:removed[i*3+1],gz:removed[i*3+2]});
-  return {version:4,biome:wasm.spatial_world_biome()===1?'desert':
+  return {version:5,biome:wasm.spatial_world_biome()===1?'desert':
     wasm.spatial_world_biome()===2?'grand_river':wasm.spatial_world_biome()===3?'volcanoes':
     wasm.spatial_world_biome()===4?'mangrove':wasm.spatial_world_biome()===5?'canyons':'savanna',
-    seed:wasm.spatial_world_seed()>>>0,settlements,barriers,removedProps,
-    nextBarrierId:wasm.spatial_next_barrier_id()};
+    seed:wasm.spatial_world_seed()>>>0,settlements,barriers,polygons,removedProps,
+    nextBarrierId:wasm.spatial_next_barrier_id(),nextPolygonId:wasm.spatial_next_polygon_id()};
 }
 
 export function validateSpatialState(state){
   const finiteF32=value=>Number.isFinite(value)&&Number.isFinite(Math.fround(value));
-  if((state?.version!==1&&state?.version!==2&&state?.version!==3&&state?.version!==4)||
+  if((state?.version!==1&&state?.version!==2&&state?.version!==3&&state?.version!==4&&state?.version!==5)||
      (state.version>=2&&!['savanna','desert','grand_river','volcanoes','mangrove','canyons'].includes(state.biome))||
      !Number.isInteger(state.seed)||state.seed<0||state.seed>0xffffffff||
      !Array.isArray(state.settlements)||!Array.isArray(state.barriers)||
      (state.version>=3&&(!Array.isArray(state.removedProps)||state.removedProps.length>100000))||
      state.settlements.length>100000||state.barriers.length>100000||
+     (state.version>=5&&(!Array.isArray(state.polygons)||state.polygons.length>100000||
+       !Number.isInteger(state.nextPolygonId)||state.nextPolygonId<1||state.nextPolygonId>0x7fffffff))||
      !Number.isInteger(state.nextBarrierId)||
      state.nextBarrierId<1||state.nextBarrierId>0x7fffffff)
     throw TypeError('Invalid spatial state version or header');
@@ -55,6 +68,22 @@ export function validateSpatialState(state){
       !Number.isInteger(barrier.passMask)||barrier.passMask<0||barrier.passMask>3)
       throw TypeError('Invalid spatial barrier');
     previous=barrier.id;
+  }
+  previous=0;
+  for(const polygon of state.polygons??[]){
+    if(!Number.isInteger(polygon.id)||polygon.id<=previous||polygon.id>=state.nextPolygonId||
+       !Number.isInteger(polygon.passMask)||polygon.passMask<0||polygon.passMask>3||
+       !Array.isArray(polygon.points)||polygon.points.length<3||polygon.points.length>64||
+       polygon.points.some(p=>!finiteF32(p?.x)||!finiteF32(p?.z)))
+      throw TypeError('Invalid spatial polygon');
+    const xs=polygon.points.map(p=>p.x),zs=polygon.points.map(p=>p.z);
+    const area=polygon.points.reduce((sum,p,i)=>{
+      const next=polygon.points[(i+1)%polygon.points.length];
+      return sum+p.x*next.z-p.z*next.x;
+    },0);
+    if(Math.max(...xs)-Math.min(...xs)>100||Math.max(...zs)-Math.min(...zs)>100||
+       !Number.isFinite(area)||Math.abs(area)<1e-4)throw TypeError('Invalid spatial polygon');
+    previous=polygon.id;
   }
   let last=null;
   for(const prop of state.removedProps??[]){
@@ -101,4 +130,23 @@ export function applySpatialState(wasm,state){
   }else wasm.spatial_barrier_restore_ptr(0);
   if(wasm.spatial_restore_barriers(count,state.nextBarrierId)!==1)
     throw Error('Could not restore spatial barriers');
+  const polygonCount=state.polygons?.length??0;
+  if(polygonCount){
+    const pointer=wasm.spatial_polygon_restore_ptr(polygonCount);
+    if(!pointer)throw Error('Could not allocate spatial polygon state');
+    const records=new DataView(wasm.memory.buffer,pointer,polygonCount*528);
+    state.polygons.forEach((polygon,i)=>{
+      const at=i*528;
+      records.setInt32(at,polygon.id,true);
+      records.setInt32(at+4,polygon.points.length,true);
+      records.setInt32(at+8,polygon.passMask,true);
+      records.setInt32(at+12,0,true);
+      polygon.points.forEach((point,j)=>{
+        records.setFloat32(at+16+j*8,point.x,true);
+        records.setFloat32(at+20+j*8,point.z,true);
+      });
+    });
+  }else wasm.spatial_polygon_restore_ptr(0);
+  if(wasm.spatial_restore_polygons(polygonCount,state.nextPolygonId??1)!==1)
+    throw Error('Could not restore spatial polygons');
 }

@@ -48,6 +48,10 @@ struct WaterPoint {double x,z;};
 struct Barrier {int id;float x,z,halfX,halfZ,yaw,c,s;uint8_t passMask;};
 struct BarrierStateRecord {int32_t id;float x,z,halfX,halfZ,yaw;int32_t passMask;};
 static_assert(sizeof(BarrierStateRecord)==28);
+constexpr int maxPolygonVertices=64;
+struct PolygonObstacle {int id;uint8_t passMask;float minX,minZ,maxX,maxZ;std::vector<float> xy;};
+struct PolygonStateRecord {int32_t id,count,passMask,reserved;float xy[maxPolygonVertices*2];};
+static_assert(sizeof(PolygonStateRecord)==528);
 struct SettlementStateRecord {float x,z,hx,hz;};
 static_assert(sizeof(SettlementStateRecord)==16);
 struct BarrierIndex {
@@ -60,6 +64,7 @@ struct NavProfile {float radius=0;bool worker=false,ready=false;std::unordered_m
 uint32_t worldSeed=0;
 int worldBiome=0; // 0: savanna, 1: desert, 2: grand river, 3: volcanoes, 4: mangrove, 5: canyons.
 int chunkX=0,chunkZ=0,nextBarrierId=1;
+int nextPolygonId=1;
 float radiusNow=.3f;
 bool workerNow=true,navReady=false;
 std::vector<float> heights,colors;
@@ -94,6 +99,17 @@ BarrierIndex& barrierIndex(){
   if(!barrierRegistry)barrierRegistry=new BarrierIndex();
   return *barrierRegistry;
 }
+struct PolygonIndex {
+  std::unordered_map<int,PolygonObstacle> byId;
+  std::unordered_map<uint64_t,std::vector<int>> buckets;
+};
+PolygonIndex* polygonRegistry=nullptr;
+PolygonIndex& polygonIndex(){
+  if(!polygonRegistry)polygonRegistry=new PolygonIndex();
+  return *polygonRegistry;
+}
+std::vector<float> polygonInput;
+std::vector<PolygonStateRecord> polygonState;
 std::vector<Settlement> settlements;
 std::vector<size_t> nearbySettlements;
 std::vector<uint8_t> staticPass,staticSteps,staticInbound;
@@ -164,6 +180,21 @@ void indexBarrier(const Barrier& barrier,bool add){
       auto& ids=it->second;
       ids.erase(std::remove(ids.begin(),ids.end(),barrier.id),ids.end());
       if(ids.empty())buckets.erase(it);
+    }
+  }
+}
+void indexPolygon(const PolygonObstacle& polygon,bool add){
+  const int minX=int(std::floor((polygon.minX-maxIndexedRadius)/barrierBucketWidth));
+  const int maxX=int(std::floor((polygon.maxX+maxIndexedRadius)/barrierBucketWidth));
+  const int minZ=int(std::floor((polygon.minZ-maxIndexedRadius)/barrierBucketWidth));
+  const int maxZ=int(std::floor((polygon.maxZ+maxIndexedRadius)/barrierBucketWidth));
+  for(int bz=minZ;bz<=maxZ;bz++)for(int bx=minX;bx<=maxX;bx++){
+    const auto key=barrierKey(bx,bz);
+    if(add)polygonIndex().buckets[key].push_back(polygon.id);
+    else if(auto it=polygonIndex().buckets.find(key);it!=polygonIndex().buckets.end()){
+      auto& ids=it->second;
+      ids.erase(std::remove(ids.begin(),ids.end(),polygon.id),ids.end());
+      if(ids.empty())polygonIndex().buckets.erase(it);
     }
   }
 }
@@ -594,16 +625,37 @@ bool terrainPropWalkable(int x,int z){
 }
 bool barrierClear(double x,double z){
   const uint8_t profileBit=workerNow?1:2;
-  const auto& index=barrierIndex();
   const int bx=int(std::floor(x/barrierBucketWidth)),bz=int(std::floor(z/barrierBucketWidth));
-  const auto bucket=index.buckets.find(barrierKey(bx,bz));
-  if(bucket==index.buckets.end())return true;
-  for(const int id:bucket->second){
-    const Barrier& w=index.byId.at(id);
-    if(w.passMask&profileBit)continue;
-    const double dx=x-w.x,dz=z-w.z;
-    if(std::abs(dx*w.c-dz*w.s)<w.halfX+radiusNow&&
-       std::abs(dx*w.s+dz*w.c)<w.halfZ+radiusNow)return false;
+  const auto key=barrierKey(bx,bz);
+  const auto& index=barrierIndex();
+  if(const auto bucket=index.buckets.find(key);bucket!=index.buckets.end()){
+    for(const int id:bucket->second){
+      const Barrier& w=index.byId.at(id);
+      if(w.passMask&profileBit)continue;
+      const double dx=x-w.x,dz=z-w.z;
+      if(std::abs(dx*w.c-dz*w.s)<w.halfX+radiusNow&&
+         std::abs(dx*w.s+dz*w.c)<w.halfZ+radiusNow)return false;
+    }
+  }
+  if(polygonRegistry&&!polygonRegistry->byId.empty()){
+    const auto& polygons=*polygonRegistry;
+    if(const auto bucket=polygons.buckets.find(key);bucket!=polygons.buckets.end())
+    for(const int id:bucket->second){
+      const PolygonObstacle& p=polygons.byId.at(id);
+      if(p.passMask&profileBit||x<p.minX-radiusNow||x>p.maxX+radiusNow||
+         z<p.minZ-radiusNow||z>p.maxZ+radiusNow)continue;
+      bool inside=false;
+      double nearest=std::numeric_limits<double>::infinity();
+      const int count=int(p.xy.size()/2);
+      for(int i=0,j=count-1;i<count;j=i++){
+        const double ax=p.xy[i*2],az=p.xy[i*2+1],bx=p.xy[j*2],bz=p.xy[j*2+1];
+        if((az>z)!=(bz>z)&&x<(bx-ax)*(z-az)/(bz-az)+ax)inside=!inside;
+        const double dx=bx-ax,dz=bz-az,length=dx*dx+dz*dz;
+        const double t=length?std::clamp(((x-ax)*dx+(z-az)*dz)/length,0.0,1.0):0;
+        nearest=std::min(nearest,std::hypot(x-ax-dx*t,z-az-dz*t));
+      }
+      if(inside||nearest<radiusNow)return false;
+    }
   }
   return true;
 }
@@ -946,6 +998,16 @@ void refreshBarrier(const Barrier& barrier){
   }
   selectProfile(previous);
 }
+void refreshPolygon(const PolygonObstacle& polygon){
+  const int r=int(std::ceil(maxBuiltRadius()))+1,previous=activeProfile;
+  for(int profile=0;profile<navigationProfiles;profile++){
+    selectProfile(profile);
+    if(navReady)refreshRect(int(std::floor(polygon.minX))-r,
+      int(std::floor(polygon.minZ))-r,int(std::ceil(polygon.maxX))+r,
+      int(std::ceil(polygon.maxZ))+r);
+  }
+  selectProfile(previous);
+}
 void refreshRemovedPropChunks(const Prop* changed){
   const int selectedX=chunkX,selectedZ=chunkZ,previous=activeProfile;
   std::vector<std::pair<int,int>> affected;
@@ -1019,6 +1081,7 @@ extern "C" {
 int spatial_generate_biome(uint32_t seed,int biome,int cx,int cz){
   if(biome<0||biome>5)return -1;
   worldSeed=seed;worldBiome=biome;barrierIndex().byId.clear();barrierIndex().buckets.clear();
+  polygonIndex().byId.clear();polygonIndex().buckets.clear();polygonInput.clear();polygonState.clear();nextPolygonId=1;
   removedProps().clear();removedPropState.clear();
   batchingBarriers=false;deferredBarrierRefresh.clear();barrierBatch.clear();barrierBatchIds.clear();barrierRemovalIds.clear();
   barrierState.clear();settlementState.clear();
@@ -1209,6 +1272,40 @@ int spatial_remove_wall(int id){
   return 1;
 }
 int spatial_remove_barrier(int id){return spatial_remove_wall(id);}
+float* spatial_polygon_input_ptr(int count){
+  if(count<3||count>maxPolygonVertices)return nullptr;
+  polygonInput.resize(size_t(count)*2);
+  return polygonInput.data();
+}
+int spatial_add_polygon(int count,int passMask){
+  if(count<3||count>maxPolygonVertices||polygonInput.size()<size_t(count)*2||
+     passMask<0||passMask>3||nextPolygonId==std::numeric_limits<int>::max())return 0;
+  float minX=std::numeric_limits<float>::infinity(),minZ=minX;
+  float maxX=-minX,maxZ=-minX;
+  double area=0;
+  for(int i=0;i<count;i++){
+    const float x=polygonInput[i*2],z=polygonInput[i*2+1];
+    const int next=(i+1)%count;
+    if(!std::isfinite(x)||!std::isfinite(z))return 0;
+    minX=std::min(minX,x);maxX=std::max(maxX,x);
+    minZ=std::min(minZ,z);maxZ=std::max(maxZ,z);
+    area+=double(x)*polygonInput[next*2+1]-double(z)*polygonInput[next*2];
+  }
+  if(maxX-minX>100||maxZ-minZ>100||!std::isfinite(area)||std::abs(area)<1e-4)return 0;
+  PolygonObstacle polygon={nextPolygonId++,uint8_t(passMask),minX,minZ,maxX,maxZ,
+    std::vector<float>(polygonInput.begin(),polygonInput.begin()+count*2)};
+  polygonIndex().byId.emplace(polygon.id,polygon);
+  indexPolygon(polygon,true);refreshPolygon(polygon);
+  return polygon.id;
+}
+int spatial_remove_polygon(int id){
+  auto& index=polygonIndex();
+  const auto it=index.byId.find(id);
+  if(it==index.byId.end())return 0;
+  const PolygonObstacle polygon=it->second;
+  indexPolygon(polygon,false);index.byId.erase(it);refreshPolygon(polygon);
+  return 1;
+}
 int spatial_add_barrier(float x,float z,float halfX,float halfZ,int passMask){
   return addBarrier(x,z,halfX,halfZ,passMask);
 }
@@ -1321,6 +1418,61 @@ int spatial_restore_barriers(int count,int nextId){
   batchingBarriers=false;
   nextBarrierId=nextId;
   flushBarrierBatch();
+  return 1;
+}
+int spatial_next_polygon_id(){return nextPolygonId;}
+int spatial_polygon_state_count(){return int(polygonIndex().byId.size());}
+PolygonStateRecord* spatial_polygon_state_ptr(){
+  polygonState.clear();polygonState.reserve(polygonIndex().byId.size());
+  for(const auto& [id,polygon]:polygonIndex().byId){
+    PolygonStateRecord item{};
+    item.id=id;item.count=int(polygon.xy.size()/2);item.passMask=polygon.passMask;
+    std::copy(polygon.xy.begin(),polygon.xy.end(),item.xy);
+    polygonState.push_back(item);
+  }
+  std::sort(polygonState.begin(),polygonState.end(),[](const auto& a,const auto& b){return a.id<b.id;});
+  return polygonState.data();
+}
+PolygonStateRecord* spatial_polygon_restore_ptr(int count){
+  if(count<0||count>100000)return nullptr;
+  polygonState.resize(count);
+  return polygonState.data();
+}
+int spatial_restore_polygons(int count,int nextId){
+  if(count<0||count>100000||polygonState.size()!=size_t(count)||
+     nextId<1||!polygonIndex().byId.empty())return 0;
+  int previousId=0;
+  for(const PolygonStateRecord& item:polygonState){
+    if(item.id<=previousId||item.id>=nextId||item.count<3||
+       item.count>maxPolygonVertices||item.passMask<0||item.passMask>3)return 0;
+    float minX=std::numeric_limits<float>::infinity(),minZ=minX,maxX=-minX,maxZ=-minX;
+    double area=0;
+    for(int i=0;i<item.count;i++){
+      const float x=item.xy[i*2],z=item.xy[i*2+1];
+      if(!std::isfinite(x)||!std::isfinite(z))return 0;
+      minX=std::min(minX,x);maxX=std::max(maxX,x);
+      minZ=std::min(minZ,z);maxZ=std::max(maxZ,z);
+      const int next=(i+1)%item.count;
+      area+=double(x)*item.xy[next*2+1]-double(z)*item.xy[next*2];
+    }
+    if(maxX-minX>100||maxZ-minZ>100||!std::isfinite(area)||std::abs(area)<1e-4)return 0;
+    previousId=item.id;
+  }
+  for(const PolygonStateRecord& item:polygonState){
+    PolygonObstacle polygon={item.id,uint8_t(item.passMask),
+      std::numeric_limits<float>::infinity(),std::numeric_limits<float>::infinity(),
+      -std::numeric_limits<float>::infinity(),-std::numeric_limits<float>::infinity(),
+      std::vector<float>(item.xy,item.xy+item.count*2)};
+    for(int i=0;i<item.count;i++){
+      polygon.minX=std::min(polygon.minX,item.xy[i*2]);
+      polygon.maxX=std::max(polygon.maxX,item.xy[i*2]);
+      polygon.minZ=std::min(polygon.minZ,item.xy[i*2+1]);
+      polygon.maxZ=std::max(polygon.maxZ,item.xy[i*2+1]);
+    }
+    polygonIndex().byId.emplace(item.id,polygon);
+    indexPolygon(polygon,true);refreshPolygon(polygon);
+  }
+  nextPolygonId=nextId;
   return 1;
 }
 int spatial_set_barrier_passability(int id,int passMask){

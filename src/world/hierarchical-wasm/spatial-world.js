@@ -121,6 +121,19 @@ export function createSpatialWorld(module){
       return chunk;
     },
     removeBarrier:id=>wasm.spatial_remove_barrier(id),
+    addPolygon:(points,passMask=0)=>{
+      if(!Array.isArray(points)||points.length<3||points.length>64||
+         !points.every(p=>Number.isFinite(p?.x)&&Number.isFinite(p?.z)))
+        throw TypeError('Expected a finite 3–64 vertex spatial polygon');
+      const pointer=wasm.spatial_polygon_input_ptr(points.length);
+      if(!pointer)throw Error('Could not allocate spatial polygon');
+      const input=new Float32Array(wasm.memory.buffer,pointer,points.length*2);
+      points.forEach((point,i)=>{input[i*2]=point.x;input[i*2+1]=point.z;});
+      const id=wasm.spatial_add_polygon(points.length,passMask);
+      if(!id)throw Error('Invalid spatial polygon');
+      return id;
+    },
+    removePolygon:id=>wasm.spatial_remove_polygon(id),
     setBarrierPassability:(id,passMask)=>wasm.spatial_set_barrier_passability(id,passMask),
     walkable:(x,z)=>Boolean(wasm.spatial_walkable(x,z)),
     edge:(x,z,nx,nz)=>Boolean(wasm.spatial_edge(x,z,nx,nz)),
