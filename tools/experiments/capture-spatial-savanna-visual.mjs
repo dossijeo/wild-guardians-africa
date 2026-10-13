@@ -6,6 +6,7 @@ if(!modulePath)throw Error('Set WG_QA_PLAYWRIGHT_MODULE to the local Playwright 
 const {chromium}=await import(pathToFileURL(modulePath).href);
 const url=process.env.WG_QA_URL??'http://127.0.0.1:5188';
 const out='docs/qa/hierarchical-navigation/screenshots';
+const suffix=process.env.WG_QA_SUFFIX?`-${process.env.WG_QA_SUFFIX}`:'';
 await mkdir(out,{recursive:true});
 const browser=await chromium.launch({headless:true});
 const records=[];
@@ -18,11 +19,11 @@ try{
     await page.waitForFunction(()=>window.qaReady||window.qaError,{timeout:120000});
     const result=await page.evaluate(()=>({stats:window.qaStats,error:window.qaError??null}));
     if(result.error||errors.length)throw Error(JSON.stringify({seed,...result,errors}));
-    const file=`${out}/sabana-seed-${seed}-js-vs-wasm-1600x900.png`;
+    const file=`${out}/sabana-seed-${seed}-js-vs-wasm${suffix}-1600x900.png`;
     await page.screenshot({path:file});
     records.push({seed,file,stats:result.stats,errors});
     await page.close();
   }
 }finally{await browser.close();}
-await writeFile(`${out}/capture-report.json`,JSON.stringify({url,records},null,2)+'\n');
+await writeFile(`${out}/capture-report${suffix}.json`,JSON.stringify({url,records},null,2)+'\n');
 console.log(JSON.stringify(records));

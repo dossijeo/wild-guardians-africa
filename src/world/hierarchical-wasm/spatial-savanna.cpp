@@ -316,10 +316,28 @@ void populateChunk(int cx,int cz){
   for(int z=0;z<grid;z++)for(int x=0;x<grid;x++){
     const int i=z*grid+x,wx=x0+x,wz=z0+z;
     heights[i]=float(latticeHeight(wx,wz));
-    const double grain=noise(wx*.041,wz*.041,8913),wet=std::max(0.0,1-std::abs(wx-riverX(wz))/25);
-    colors[i*3]=float(.65-.16*grain-.06*wet);
-    colors[i*3+1]=float(.46+.19*grain+.09*wet);
-    colors[i*3+2]=float(.29+.09*grain+.09*wet);
+    // The palette is the existing Sabana biome's soil/grass/rock palette.
+    // Color still comes from this C++ world, not from a second JS generator.
+    const double patch=.58*noise(wx*.041,wz*.041,8913)
+      +.28*noise(wx*.0832,wz*.0832,8913^9271)
+      +.14*noise(wx*.1693,wz*.1693,8913^29714);
+    const double grass=blend((patch-.28)/.44);
+    const double slope=std::hypot(latticeHeight(wx+1,wz)-latticeHeight(wx-1,wz),
+      latticeHeight(wx,wz+1)-latticeHeight(wx,wz-1))*.5;
+    const double rock=blend((slope-.42)/.98)*.62;
+    const double bank=(1-blend((std::abs(wx-riverX(wz))-6)/4))*.58;
+    const double shade=.94+noise(wx*.11,wz*.11,1181)*.12;
+    constexpr double soil[3]={174.0/255,120.0/255,80.0/255};
+    constexpr double foliage[3]={182.0/255,178.0/255,103.0/255};
+    constexpr double stone[3]={148.0/255,123.0/255,96.0/255};
+    constexpr double sand[3]={210.0/255,186.0/255,135.0/255};
+    for(int k=0;k<3;k++){
+      double color=soil[k]+(foliage[k]-soil[k])*grass;
+      color+=(stone[k]-color)*rock;
+      const double riverBank=soil[k]+(sand[k]-soil[k])*.34;
+      color+=(riverBank-color)*bank;
+      colors[i*3+k]=float(std::clamp(color*shade,0.0,1.0));
+    }
   }
   for(int z=0;z<side;z++)for(int x=0;x<side;x++){
     const double level=fluidLevel(x0+x+.5,z0+z+.5);
