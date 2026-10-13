@@ -249,3 +249,26 @@ test('an unloaded middle chunk leaves distant connectivity unknown',()=>{
   assert.equal(core.removeChunk(1,0),1);
   assert.equal(core.route(crossing.start,crossing.end).status,'unknown');
 });
+test('a turning four-chunk viewport reuses sectors and restores routes after revisiting',()=>{
+  const core=createSpatialSavannaPrototype(module),resident=new Set(['0,0']);
+  core.generate(17,0,0);core.buildNavigation(1.1,false);
+  const path=[[0,0],[1,0],[1,1],[0,1],[0,0]];
+  for(const [cx,cz] of path){
+    const wanted=new Set([`${cx},${cz}`,`${cx+1},${cz}`,`${cx},${cz+1}`,`${cx+1},${cz+1}`]);
+    for(const id of [...resident])if(!wanted.has(id)){
+      assert.equal(core.removeChunk(...id.split(',').map(Number)),1);resident.delete(id);
+    }
+    for(const id of wanted)if(!resident.has(id)){
+      assert(core.addChunk(...id.split(',').map(Number))>0);resident.add(id);
+    }
+    assert.equal(core.metrics().loadedSectors,64);
+    assert.equal(core.metrics().sectorSlots,64);
+    const x=cx*48+23;
+    let checked=false;
+    for(let z=cz*48-24;z<cz*48+24;z++)if(core.edge(x,z,x+1,z)){
+      validRoute(core,{x,z},core.route({x,z},{x:x+1,z}));checked=true;break;
+    }
+    assert(checked,'each viewport should expose at least one traversable seam');
+  }
+  assert.equal(core.metrics().memoryBytes,4194304);
+});
