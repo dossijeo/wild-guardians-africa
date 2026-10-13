@@ -115,6 +115,16 @@ This is a native navigation/raid performance finding, not a campaign defeat
 or a proof of gate failure. The pilot is archived separately as
 `pilot-good-canyon-2026-7.zip`.
 
+The fixed `bad` policy was also run through seven native Sabana/Mapungubwe
+nights on seed 123. It completed that observation horizon with 31 coins,
+225 living crops, 23 crops lost on day 7, and no simulator error. Its day-7
+native tick time was 1.69 seconds versus 0.02 seconds of virtual-player
+decision time. This is a short coverage pilot, not evidence of a 100-night
+loss or calibrated difficulty; the raw receipt, ledger, state, protocol and
+timings are preserved in `pilot-bad-sabana-123-7.zip`. The runner's older
+inactivity field is retained as historical output but is no longer an
+acceptance criterion after unlimited agricultural magic was approved.
+
 A repeated seven-night run with per-step timing located the costly interval
 at simulated time 475–499 on day 7. Twelve of those ticks exceeded three
 seconds, and the largest took 30.34 seconds. A cooperative checkpoint at
