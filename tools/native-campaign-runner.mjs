@@ -33,6 +33,7 @@ import {createNativeCampaignPlots} from './native-campaign-plots.mjs';
 import {createNativeCampaignExpansion} from './native-campaign-expansion.mjs';
 
 import {campaignFinanceCheckpoint,campaignFinanceDelta} from './native-campaign-finance.mjs';
+import {installEnclosureRouteTree} from './experiments/enclosure-route-tree-prototype.mjs';
 
 import {q4DawnPlan,q4AdditionalPlan,q4RecoveryReserve} from './native-q4-labour-policy.mjs';
 import {createQ5LabourPolicy} from './native-q5-labour-policy.mjs';
@@ -47,15 +48,17 @@ import {createQ15LabourPolicy} from './native-q15-labour-policy.mjs';
 import {campaignCropChoice} from './native-campaign-crop-policy.mjs';
 
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
-export async function simulateNativeCampaign({days=100,strategy='good',labourPolicy='legacy',profile='olderFemale',mixed=true,cropPolicy='legacy',middayHiring=false,plantsPerWorker=12,defend=false,reserveLabourGrowth=true,reserveMaintenance=true,burstPlanting=false,cameraEntry=true,defensePolicy='expanding',defenseStartDay=1,defenseMaterial='zarzas',repairPolicy='legacy',defenseFunding='contour',plotFluidClearance=0,campaignMode='persistence',nativeEvidence=true,onDay,onTick,onDecision,onStepTiming,onRaidSpawnTrace,onTickPhaseTrace,tickTraceTarget,...world}={}){
+export async function simulateNativeCampaign({days=100,strategy='good',labourPolicy='legacy',profile='olderFemale',mixed=true,cropPolicy='legacy',middayHiring=false,plantsPerWorker=12,defend=false,reserveLabourGrowth=true,reserveMaintenance=true,burstPlanting=false,cameraEntry=true,defensePolicy='expanding',defenseStartDay=1,defenseMaterial='zarzas',repairPolicy='legacy',defenseFunding='contour',plotFluidClearance=0,campaignMode='persistence',navigationMode='native',nativeEvidence=true,onDay,onTick,onDecision,onStepTiming,onRaidSpawnTrace,onTickPhaseTrace,tickTraceTarget,...world}={}){
  if(!Number.isSafeInteger(days)||days<1||days>180)throw Error('Native protocol permits1–180 days only');
  if(!Number.isSafeInteger(plantsPerWorker)||plantsPerWorker<1)throw new Error('Plants per worker must be a positive integer');
  if(!['legacy','cashflow'].includes(cropPolicy))throw Error('Unknown crop policy');
  if(!['balance','persistence'].includes(campaignMode))throw Error('Unknown campaign mode');
+ if(!['native','grid-tree'].includes(navigationMode))throw Error('Unknown navigation mode');
  const protocol={...campaignProtocolForLabour(labourPolicy),profile,plotFluidClearance,defenseMaterial,repairPolicy,defenseFunding,cropHitPoints:CROP_HIT_POINTS},q4=labourPolicy==='q4',q5=['q5','q6','q7','q8','q9','q12','q13','q14','q15'].includes(labourPolicy),q6=['q6','q7','q8','q9','q12','q13','q14','q15'].includes(labourPolicy),q7=['q7','q8','q9','q12','q13','q14','q15'].includes(labourPolicy),labourHistory=[],labourObservations=[],labourReasons={};
  const policy=nativeCampaignStrategy(strategy),agriculturalMagic=createAgriculturalMagicPolicy({mode:policy.agriculturalMagic});defend=policy.defend;middayHiring=policy.middayHiring;plantsPerWorker=6;
  if(typeof Game.nightEntryPending!=='function')throw Error('Native pending entry handshake is not integrated; no campaign started');
  const opening=createOpeningWorld(world),nav=opening.nav;let s=opening.s,sequence=0;
+ const routeMetrics={};if(navigationMode==='grid-tree')installEnclosureRouteTree(nav,routeMetrics,false,true);
  const preferredProfile=profile;let worker=PROFILES.find(p=>p.id===profile);if(!worker)throw new Error('Unknown worker profile');
  if(!['legacy','expanding','closed','funded','routed','shore','planned'].includes(defensePolicy))throw Error('Unknown defense policy');
  if(!['legacy','breach-first'].includes(repairPolicy)||repairPolicy!=='legacy'&&!['funded','routed','shore'].includes(defensePolicy))throw Error('Unsupported native repair policy');
@@ -210,6 +213,6 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
  }
  const idleRuns=daily.map(r=>r.longestIdle).sort((a,b)=>a-b),unoccupied=daily.reduce((n,r)=>n+r.unoccupiedSeconds,0),daylight=daily.reduce((n,r)=>n+r.daylightSeconds,0);
  const activity={magicSelectionAndEffectCreditSeconds:0,humanManualTimeMeasured:false,scope:'Non-magic decision-window proxy, not human activity duration',daylightSeconds:daylight,unoccupiedSeconds:unoccupied,unoccupiedFraction:daylight?unoccupied/daylight:null,longestIdle:Math.max(...idleRuns),p90LongestIdle:idleRuns[Math.ceil(idleRuns.length*.9)-1]};
- return {protocol,agriculturalMagic:agriculturalMagic.report(s),strategy,labourPolicy,labourHistory,labourObservations,labourReasons,...(q7?{trialHiring:q5Policy.report()}:{}),raidEvidence:raidEvidence.report(s),entryTransport:driver.report(),peaceAfter100:true,expansion:expansion?.report()??null,plotSearch:plotSearch.report(),...(evidence?{nativeEvidence:evidence.report(s)}:{}),biome:s.biome,culture:s.culture,seed:s.seed,policy:{profile:preferredProfile,mixed,cropPolicy,middayHiring,plantsPerWorker,defend,centerRepairEnabled:policy.repair,shieldEnabled:policy.shield,cashPolicy:policy.cashPolicy,reserveMaintenance,burstPlanting,cameraEntry,defensePolicy,defenseStartDay,defenseMaterial,repairPolicy,defenseFunding,plotFluidClearance,campaignMode},defense:defense?.report(s)??null,additionalHiring,result:s.result,completedNights:s.completedNights,money:numberOf(s.ledger.balance),maximumLiving,plots:plots.length,reloads,counts,activity,daily,state:s,nav};
+ return {protocol,agriculturalMagic:agriculturalMagic.report(s),strategy,labourPolicy,labourHistory,labourObservations,labourReasons,...(q7?{trialHiring:q5Policy.report()}:{}),raidEvidence:raidEvidence.report(s),entryTransport:driver.report(),peaceAfter100:true,expansion:expansion?.report()??null,plotSearch:plotSearch.report(),...(evidence?{nativeEvidence:evidence.report(s)}:{}),biome:s.biome,culture:s.culture,seed:s.seed,policy:{profile:preferredProfile,mixed,cropPolicy,middayHiring,plantsPerWorker,defend,centerRepairEnabled:policy.repair,shieldEnabled:policy.shield,cashPolicy:policy.cashPolicy,reserveMaintenance,burstPlanting,cameraEntry,defensePolicy,defenseStartDay,defenseMaterial,repairPolicy,defenseFunding,plotFluidClearance,campaignMode,navigationMode},routeMetrics,defense:defense?.report(s)??null,additionalHiring,result:s.result,completedNights:s.completedNights,money:numberOf(s.ledger.balance),maximumLiving,plots:plots.length,reloads,counts,activity,daily,state:s,nav};
  } catch(error){let receipts;try{receipts=partialEvidence();}catch(e){receipts={evidenceError:e.message};}error.nativeCampaignPartial={strategy,policy:{centerRepairEnabled:policy.repair,shieldEnabled:policy.shield},seed:s.seed,day:s.day,time:s.time,result:s.result,state:serialize(s),entryTransport:driver.report(),receipts};throw error;} finally {await driver.dispose();}
 }

@@ -25,14 +25,15 @@ for(const candidate of [false,true,true,false]){
     nav.setRaidView({x:pose.eye[0],z:pose.eye[2]},center);
     nav.setActiveBounds(activeChunkRegion({x:pose.eye[0],z:pose.eye[2]}).bounds);
   }
-  const metrics={};if(candidate)(mode==='routes'||mode==='negative'?installEnclosureRouteTree:installEnclosureAccessPrototype)(nav,metrics,mode==='negative');
-  let searches=0,success=0;const path=nav.approachPath.bind(nav);
+  const metrics={};if(candidate)(mode==='routes'||mode==='negative'||mode==='grid'?installEnclosureRouteTree:installEnclosureAccessPrototype)(nav,metrics,mode==='negative',mode==='grid');
+  let searches=0,success=0,nativeSearches=0;const path=nav.approachPath.bind(nav),findSteps=nav.findPathSteps.bind(nav);
+  nav.findPathSteps=(...args)=>{if(args[4]===false)nativeSearches++;return findSteps(...args);};
   nav.approachPath=(...args)=>{searches++;const value=path(...args);if(value)success++;return value;};
   const before=process.memoryUsage().rss,began=performance.now();Game.tick(s,seconds,nav);
   const milliseconds=performance.now()-began,hash=createHash('sha256').update(serialize(s)).digest('hex');
-  rows.push({variant:candidate?'candidate':'baseline',milliseconds,searches,success,rssDeltaBytes:process.memoryUsage().rss-before,hash,metrics});
-  console.log(JSON.stringify({variant:candidate?'candidate':'baseline',milliseconds,searches,success,metrics}));
+  rows.push({variant:candidate?'candidate':'baseline',milliseconds,searches,nativeSearches,success,rssDeltaBytes:process.memoryUsage().rss-before,hash,metrics});
+  console.log(JSON.stringify({variant:candidate?'candidate':'baseline',milliseconds,searches,nativeSearches,success,metrics}));
 }
-const report={input,seconds,mode,day:source.day,time:source.time,biome:source.biome,plants:source.plants.length,living:source.plants.filter(p=>p.alive).length,sameState:rows.every(r=>r.hash===rows[0].hash),rows};
+const report={input,seconds,mode,day:source.day,time:source.time,biome:source.biome,plants:source.plants.length,living:source.plants.filter(p=>p.alive).length,sameState:rows.every(r=>r.hash===rows[0].hash),baselineDeterministic:rows[0].hash===rows[3].hash,candidateDeterministic:rows[1].hash===rows[2].hash,rows};
 writeFileSync(output,JSON.stringify(report,null,2)+'\n');
-if(!report.sameState)process.exitCode=2;
+if(!report.baselineDeterministic||!report.candidateDeterministic)process.exitCode=2;

@@ -11,7 +11,7 @@ import {wallSpec} from '../src/simulation/rules.js';
 import {intensiveRunProvenance} from './intensive-run-provenance.mjs';
 import {NATIVE_CAMPAIGN_PROTOCOL,nativeCampaignStrategy,campaignProtocolForLabour} from './native-campaign-protocol.mjs';
 export function parseNativeCampaignArgs(args){
- const allowed=new Set(['out','days','seed','strategy','biome','culture','stop-file','stop-cash','stop-min-day','labour-policy','defense-policy','defense-start-day','defense-material','crop-policy','profile','plot-fluid-clearance','repair-policy','defense-funding','campaign-mode','checkpoint-day','checkpoint-time','checkpoint-stop','timing-day','raid-trace-day','raid-trace-time','phase-trace-day','phase-trace-time']),o={days:7,seed:712,strategy:'good',biome:'sabana',culture:'mapungubwe',profile:'olderFemale'};
+ const allowed=new Set(['out','days','seed','strategy','biome','culture','stop-file','stop-cash','stop-min-day','labour-policy','defense-policy','defense-start-day','defense-material','crop-policy','profile','plot-fluid-clearance','repair-policy','defense-funding','campaign-mode','navigation-mode','checkpoint-day','checkpoint-time','checkpoint-stop','timing-day','raid-trace-day','raid-trace-time','phase-trace-day','phase-trace-time']),o={days:7,seed:712,strategy:'good',biome:'sabana',culture:'mapungubwe',profile:'olderFemale'};
  for(let i=0;i<args.length;i+=2){const k=args[i]?.replace(/^--/,'');if(!allowed.has(k)||args[i+1]===undefined)throw Error('Use --out DIR --days 1..180 --seed INTEGER --strategy expansive|good|bad|no-walls|no-shield --biome NAME --culture NAME');o[k]=args[i+1];}
  for(const k of ['days','seed'])o[k]=Number(o[k]);
  if(!Number.isSafeInteger(o.days)||o.days<1||o.days>180||!Number.isSafeInteger(o.seed)||o.seed<0)throw Error('Invalid native days/seed');
@@ -35,6 +35,7 @@ export function parseNativeCampaignArgs(args){
  o.cropPolicy=o['crop-policy']??'legacy';delete o['crop-policy'];if(!['legacy','cashflow'].includes(o.cropPolicy))throw Error('Unknown crop policy');
  o.defensePolicy=o['defense-policy']??'expanding';delete o['defense-policy'];if(!['legacy','expanding','closed','funded','routed','shore','planned'].includes(o.defensePolicy))throw Error('Unknown defense policy');
  o.campaignMode=o['campaign-mode']??'persistence';delete o['campaign-mode'];if(!['balance','persistence'].includes(o.campaignMode))throw Error('Unknown campaign mode');
+ o.navigationMode=o['navigation-mode']??'native';delete o['navigation-mode'];if(!['native','grid-tree'].includes(o.navigationMode))throw Error('Unknown navigation mode');
  o.defenseMaterial=o['defense-material']??'zarzas';delete o['defense-material'];wallSpec(o.defenseMaterial);
  if(o.defenseMaterial!=='zarzas'&&!['funded','routed','shore','planned'].includes(o.defensePolicy))throw Error('Explicit defense material requires funded/routed/shore/planned policy');
  o.defenseStartDay=Number(o['defense-start-day']??1);delete o['defense-start-day'];if(!Number.isSafeInteger(o.defenseStartDay)||o.defenseStartDay<1||o.defenseStartDay!==1&&!['closed','funded','routed','shore','planned'].includes(o.defensePolicy))throw Error('Explicit defense start requires closed/funded/routed/planned policy and positive integer day');
@@ -55,8 +56,9 @@ export function nativeCampaignProvenance(options){
  paths.push('tools/native-q14-labour-policy.mjs');
  paths.push('tools/native-q15-labour-policy.mjs');
  paths.push('tools/native-planned-defense-policy.mjs');
+ paths.push('tools/experiments/enclosure-route-tree-prototype.mjs','tools/experiments/logical-animal-grid-prototype.mjs');
  for(const path of paths)p.sourceHashes[path]=createHash('sha256').update(readFileSync(new URL(path,root))).digest('hex');
- return {...p,protocol:{...campaignProtocolForLabour(options.labourPolicy),profile:options.profile??'olderFemale',plotFluidClearance:options.plotFluidClearance??0,defenseMaterial:options.defenseMaterial??'zarzas',repairPolicy:options.repairPolicy??'legacy',defenseFunding:options.defenseFunding??'contour',campaignMode:options.campaignMode??'persistence',cropHitPoints:CROP_HIT_POINTS}};
+ return {...p,protocol:{...campaignProtocolForLabour(options.labourPolicy),profile:options.profile??'olderFemale',plotFluidClearance:options.plotFluidClearance??0,defenseMaterial:options.defenseMaterial??'zarzas',repairPolicy:options.repairPolicy??'legacy',defenseFunding:options.defenseFunding??'contour',campaignMode:options.campaignMode??'persistence',navigationMode:options.navigationMode??'native',cropHitPoints:CROP_HIT_POINTS}};
 }
 export async function runNativeCampaignCase(options,{run=simulateNativeCampaign,provenance=nativeCampaignProvenance}={}){
  const out=options.out;if(existsSync(out)&&readdirSync(out).length)throw Error('Refusing to overwrite original campaign evidence');mkdirSync(out,{recursive:true});
