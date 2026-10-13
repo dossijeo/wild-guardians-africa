@@ -220,6 +220,44 @@ test('a dynamic passage updates local worker and animal topology independently',
   assert.equal(core.removeWall(gate),1);
   assert.equal(core.setBarrierPassability(gate,0),0,'removed barriers cannot be changed');
 });
+test('indexed dynamic barriers preserve point and edge collision semantics across both profiles',()=>{
+  const core=createSpatialSavannaPrototype(module);core.generate(123,0,0);
+  core.buildNavigation(.28,true);core.buildNavigation(1.1,false);
+  const points=[],edges=[],base=new Map();
+  for(let z=-23;z<=22;z++)for(let x=-23;x<=22;x++){
+    points.push({x,z});edges.push({x,z,nx:x+1,nz:z},{x,z,nx:x,nz:z+1});
+  }
+  for(const worker of [true,false]){
+    core.selectNavigation(worker);
+    base.set(worker,{points:points.map(({x,z})=>core.walkable(x,z)),
+      edges:edges.map(({x,z,nx,nz})=>core.edge(x,z,nx,nz))});
+  }
+  const barriers=[];
+  for(let i=0;i<24;i++){
+    const x=-22+(i%8)*6,z=-20+Math.floor(i/8)*16,passMask=i%4;
+    barriers.push({id:core.addBarrier(x,z,.3+(i%3)*.2,.4,passMask),x,z,
+      halfX:.3+(i%3)*.2,halfZ:.4,passMask});
+  }
+  const clear=(x,z,radius,bit)=>barriers.every(b=>(b.passMask&bit)||
+    !(Math.abs(x-b.x)<b.halfX+radius&&Math.abs(z-b.z)<b.halfZ+radius));
+  for(const worker of [true,false]){
+    const radius=worker?0.28:1.1,bit=worker?1:2,original=base.get(worker);
+    core.selectNavigation(worker);
+    points.forEach(({x,z},i)=>assert.equal(core.walkable(x,z),
+      original.points[i]&&clear(x,z,radius,bit),`point ${x},${z}, worker ${worker}`));
+    edges.forEach(({x,z,nx,nz},i)=>{
+      let expected=original.edges[i]&&clear(x,z,radius,bit)&&clear(nx,nz,radius,bit);
+      for(let t=1;t<4;t++)expected=expected&&clear(x+(nx-x)*t/4,z+(nz-z)*t/4,radius,bit);
+      assert.equal(core.edge(x,z,nx,nz),expected,`edge ${x},${z} -> ${nx},${nz}, worker ${worker}`);
+    });
+  }
+  for(const barrier of barriers)assert.equal(core.removeBarrier(barrier.id),1);
+  for(const worker of [true,false]){
+    core.selectNavigation(worker);const original=base.get(worker);
+    points.forEach(({x,z},i)=>assert.equal(core.walkable(x,z),original.points[i]));
+    edges.forEach(({x,z,nx,nz},i)=>assert.equal(core.edge(x,z,nx,nz),original.edges[i]));
+  }
+});
 test('neighboring chunks share their terrain seam and seed-dependent props',()=>{
   const core=createSpatialSavannaPrototype(module);
   core.generate(2026,0,0);

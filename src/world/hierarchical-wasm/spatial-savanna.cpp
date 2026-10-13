@@ -33,7 +33,11 @@ constexpr double pi=3.14159265358979323846;
 struct Prop {float x,z,y,radius,scale,yaw;int32_t slot;};
 struct Pond {double x,z,radius,level;};
 struct WaterPoint {double x,z;};
-struct Barrier {int id;float x,z,halfX,halfZ;uint8_t passMask;bool active;};
+struct Barrier {int id;float x,z,halfX,halfZ;uint8_t passMask;};
+struct BarrierIndex {
+  std::unordered_map<int,Barrier> byId;
+  std::unordered_map<uint64_t,std::vector<int>> buckets;
+};
 struct Settlement {bool active=false;double x=0,z=0,y=0,hx=0,hz=0,clearRadius=0,softRadius=0,haloRadius=0;};
 struct ChunkRaster {int cx,cz;std::vector<uint8_t> pass,steps,inbound;};
 struct NavProfile {float radius=0;bool worker=false,ready=false;std::unordered_map<uint64_t,ChunkRaster> rasters;};
@@ -52,7 +56,11 @@ std::vector<Prop> props;
 std::vector<Prop> solidProps;
 std::array<std::vector<int>,propBucketSide*propBucketSide> propBuckets;
 int haloPropCount=0;
-std::vector<Barrier> barriers;
+BarrierIndex* barrierRegistry=nullptr;
+BarrierIndex& barrierIndex(){
+  if(!barrierRegistry)barrierRegistry=new BarrierIndex();
+  return *barrierRegistry;
+}
 std::vector<Settlement> settlements;
 std::vector<size_t> nearbySettlements;
 std::vector<uint8_t> staticPass,staticSteps,staticInbound;
@@ -78,6 +86,24 @@ void selectProfile(int index){
   lazy_select_context(index);
 }
 uint64_t chunkKey(int cx,int cz){return (uint64_t(uint32_t(cx))<<32)|uint32_t(cz);}
+constexpr int barrierBucketWidth=8;
+uint64_t barrierKey(int bx,int bz){return chunkKey(bx,bz);}
+void indexBarrier(const Barrier& barrier,bool add){
+  const int minX=int(std::floor((barrier.x-barrier.halfX-maxIndexedRadius)/barrierBucketWidth));
+  const int maxX=int(std::floor((barrier.x+barrier.halfX+maxIndexedRadius)/barrierBucketWidth));
+  const int minZ=int(std::floor((barrier.z-barrier.halfZ-maxIndexedRadius)/barrierBucketWidth));
+  const int maxZ=int(std::floor((barrier.z+barrier.halfZ+maxIndexedRadius)/barrierBucketWidth));
+  auto& buckets=barrierIndex().buckets;
+  for(int bz=minZ;bz<=maxZ;bz++)for(int bx=minX;bx<=maxX;bx++){
+    const auto key=barrierKey(bx,bz);
+    if(add)buckets[key].push_back(barrier.id);
+    else if(auto it=buckets.find(key);it!=buckets.end()){
+      auto& ids=it->second;
+      ids.erase(std::remove(ids.begin(),ids.end(),barrier.id),ids.end());
+      if(ids.empty())buckets.erase(it);
+    }
+  }
+}
 int floorDiv(int n,int d){return n>=0?n/d:-((-n+d-1)/d);}
 const ChunkRaster* rasterAt(int x,int z){
   if(!chunkRasters)return nullptr;
@@ -324,8 +350,15 @@ bool terrainPropWalkable(int x,int z){
 }
 bool barrierClear(double x,double z){
   const uint8_t profileBit=workerNow?1:2;
-  for(const Barrier& w:barriers)if(w.active&&!(w.passMask&profileBit)&&
+  const auto& index=barrierIndex();
+  const int bx=int(std::floor(x/barrierBucketWidth)),bz=int(std::floor(z/barrierBucketWidth));
+  const auto bucket=index.buckets.find(barrierKey(bx,bz));
+  if(bucket==index.buckets.end())return true;
+  for(const int id:bucket->second){
+    const Barrier& w=index.byId.at(id);
+    if(!(w.passMask&profileBit)&&
     std::abs(x-w.x)<w.halfX+radiusNow&&std::abs(z-w.z)<w.halfZ+radiusNow)return false;
+  }
   return true;
 }
 bool walkable(int x,int z){
@@ -566,8 +599,9 @@ int addBarrier(float x,float z,float halfX,float halfZ,int passMask){
   if(!std::isfinite(x)||!std::isfinite(z)||!std::isfinite(halfX)||!std::isfinite(halfZ)||
      halfX<=0||halfZ<=0||halfX>100||halfZ>100||passMask<0||passMask>3||
      nextBarrierId==std::numeric_limits<int>::max())return 0;
-  const Barrier barrier={nextBarrierId++,x,z,halfX,halfZ,uint8_t(passMask),true};
-  barriers.push_back(barrier);
+  const Barrier barrier={nextBarrierId++,x,z,halfX,halfZ,uint8_t(passMask)};
+  barrierIndex().byId.emplace(barrier.id,barrier);
+  indexBarrier(barrier,true);
   refreshBarrier(barrier);
   return barrier.id;
 }
@@ -575,7 +609,8 @@ int addBarrier(float x,float z,float halfX,float halfZ,int passMask){
 
 extern "C" {
 int spatial_generate(uint32_t seed,int cx,int cz){
-  worldSeed=seed;barriers.clear();settlements.clear();nearbySettlements.clear();
+  worldSeed=seed;barrierIndex().byId.clear();barrierIndex().buckets.clear();
+  settlements.clear();nearbySettlements.clear();
   for(int profile=0;profile<2;profile++){
     NavProfile& state=navProfile(profile);
     state.rasters.clear();state.ready=false;
@@ -687,12 +722,14 @@ int spatial_add_wall(float x,float z,float halfX,float halfZ){
   return addBarrier(x,z,halfX,halfZ,0);
 }
 int spatial_remove_wall(int id){
-  for(Barrier& w:barriers)if(w.id==id&&w.active){
-    w.active=false;
-    refreshBarrier(w);
-    return 1;
-  }
-  return 0;
+  auto& index=barrierIndex();
+  const auto it=index.byId.find(id);
+  if(it==index.byId.end())return 0;
+  const Barrier barrier=it->second;
+  indexBarrier(barrier,false);
+  index.byId.erase(it);
+  refreshBarrier(barrier);
+  return 1;
 }
 int spatial_remove_barrier(int id){return spatial_remove_wall(id);}
 int spatial_add_barrier(float x,float z,float halfX,float halfZ,int passMask){
@@ -700,14 +737,15 @@ int spatial_add_barrier(float x,float z,float halfX,float halfZ,int passMask){
 }
 int spatial_set_barrier_passability(int id,int passMask){
   if(passMask<0||passMask>3)return 0;
-  for(Barrier& barrier:barriers)if(barrier.id==id&&barrier.active){
-    if(barrier.passMask!=passMask){
-      barrier.passMask=uint8_t(passMask);
-      refreshBarrier(barrier);
-    }
-    return 1;
+  auto& index=barrierIndex();
+  const auto it=index.byId.find(id);
+  if(it==index.byId.end())return 0;
+  Barrier& barrier=it->second;
+  if(barrier.passMask!=passMask){
+    barrier.passMask=uint8_t(passMask);
+    refreshBarrier(barrier);
   }
-  return 0;
+  return 1;
 }
 int spatial_walkable(int x,int z){return walkable(x,z);}
 int spatial_edge(int x,int z,int nx,int nz){return std::abs(x-nx)+std::abs(z-nz)==1&&edge(x,z,nx,nz);}
