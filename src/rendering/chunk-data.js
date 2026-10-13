@@ -12,4 +12,7 @@ export function buildNativeChunk(config,profile,cx,cz){
   const {instances}=scatterWorld({...config,bounds},profile,field);
   return {cx,cz,terrain,water,groundMask:buildGroundMask417(config,profile,field,bounds),instances};
 }
-export const chunkTransferables=data=>[data.terrain.buffer,data.water.buffer,data.groundMask.buffer];
+export const chunkTransferables=data=>data.terrain instanceof Float32Array?
+  [data.terrain.buffer,data.water.buffer,data.groundMask.buffer]:
+  [data.terrain.positions.buffer,data.terrain.colors.buffer,data.terrain.indices.buffer,
+    data.water.buffer,data.groundMask.buffer];

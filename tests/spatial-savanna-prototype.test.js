@@ -2,6 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createSpatialSavannaPrototype} from '../src/world/hierarchical-wasm/spatial-savanna-adapter.js';
+import {nativeTerrainBuffer} from '../src/rendering/terrain-geometry.js';
+import {nativeWaterBuffer} from '../src/rendering/water-geometry.js';
+import {chunkTransferables} from '../src/rendering/chunk-data.js';
 
 const module=new WebAssembly.Module(readFileSync(new URL('../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
 function validRoute(core,start,result){
@@ -54,6 +57,30 @@ test('the 35x35 ground material mask meets at adjacent chunk overlaps',()=>{
     const a=(z*35+32+x)*4+channel,b=(z*35+x)*4+channel;
     assert.equal(west[a],east[b],`ground mask overlap at (${x},${z}), channel ${channel}`);
   }
+});
+test('a WASM chunk uses the production render payload contract and transfers without JS terrain sampling',()=>{
+  const core=createSpatialSavannaPrototype(module);
+  core.generate(712,0,0);core.addChunk(1,0);
+  const payload=core.chunkPayload();
+  assert.equal(payload.cx,1);assert.equal(payload.cz,0);
+  assert.equal(payload.terrain.positions.length,49*49*3);
+  assert.equal(payload.terrain.colors.length,49*49*3);
+  assert.equal(payload.terrain.indices.length,48*48*6);
+  assert.equal(payload.groundMask.length,35*35*4);
+  assert.equal(payload.terrain.positions[0],-24);
+  assert.equal(payload.terrain.positions[2],-24);
+  assert.equal(payload.terrain.positions[1],core.heights()[0]);
+  const buffers=chunkTransferables(payload);
+  assert.equal(buffers.length,5);
+  const received=structuredClone(payload,{transfer:buffers});
+  assert.equal(payload.terrain.positions.byteLength,0);
+  const ground=nativeTerrainBuffer(received.terrain),river=nativeWaterBuffer(received.water);
+  assert.equal(ground.getAttribute('position').count,2401);
+  assert.equal(ground.index.count,48*48*6);
+  assert.equal(ground.getAttribute('color').count,2401);
+  assert.equal(ground.getAttribute('normal').count,2401);
+  assert(received.instances.reduce((count,slot)=>count+slot.length,0)>0);
+  ground.dispose();river?.dispose();
 });
 test('a settlement command flattens and clears the same C++ terrain used for navigation',()=>{
   const core=createSpatialSavannaPrototype(module);

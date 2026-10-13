@@ -75,6 +75,22 @@ export function createSpatialSavannaPrototype(module){
     geo.setAttribute('position',new THREE.BufferAttribute(positions,3));
     geo.computeVertexNormals();return geo;
   }
+  function chunkPayload(){
+    if(!chunk)throw Error('Generate a chunk before reading its render payload');
+    const {cx,cz}=chunk,ground=heights(),rgb=colors();
+    const positions=new Float32Array(49*49*3),indices=new Uint16Array(48*48*6);
+    for(let z=0;z<49;z++)for(let x=0;x<49;x++){
+      const i=z*49+x;positions[i*3]=x-24;positions[i*3+1]=ground[i];positions[i*3+2]=z-24;
+    }
+    for(let z=0;z<48;z++)for(let x=0;x<48;x++){
+      const i=z*48+x,k=i*6,a=z*49+x,b=a+1,d=a+49,c=d+1;
+      indices.set([a,d,b,b,d,c],k);
+    }
+    const river=Float32Array.from(waterTriangles());
+    for(let i=0;i<river.length;i+=3){river[i]-=cx*48;river[i+2]-=cz*48;}
+    return {cx,cz,terrain:{positions,colors:Float32Array.from(rgb),indices},water:river,
+      groundMask:Uint8Array.from(groundMask()),instances:instances()};
+  }
   function route(start,end){
     if(!navigationBuilt)return {status:'unknown',points:[]};
     const count=wasm.lazy_route(start.x|0,start.z|0,end.x|0,end.z|0);
@@ -84,7 +100,7 @@ export function createSpatialSavannaPrototype(module){
     for(let i=0;i<count;i++)points.push({x:pairs[i*2],z:pairs[i*2+1]});
     return {status:'found',points};
   }
-  return {wasm,generate,addChunk,removeChunk,heights,colors,water,groundMask,waterLevels,waterTriangles,props,instances,geometry,waterGeometry,route,
+  return {wasm,generate,addChunk,removeChunk,heights,colors,water,groundMask,waterLevels,waterTriangles,props,instances,geometry,waterGeometry,chunkPayload,route,
     setSettlement:(x,z,hx,hz)=>{
       if(!generated)throw Error('Generate the world before placing a settlement');
       return wasm.spatial_set_settlement(x,z,hx,hz);

@@ -57,7 +57,9 @@ try{
   const core=createSpatialSavannaPrototype(new WebAssembly.Module(binary));core.generate(seed,0,0);
   if(settlement)core.setSettlement(10,8,7,6);
   core.buildNavigation(1.1,false);
-  const candidate=makeScene(core.geometry(),core.waterGeometry(),core.instances(),models,true,Uint8Array.from(core.groundMask()));
+  const spatial=core.chunkPayload();
+  const candidate=makeScene(nativeTerrainBuffer(spatial.terrain),nativeWaterBuffer(spatial.water),
+    spatial.instances,models,true,spatial.groundMask);
   const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);
   renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.setScissorTest(true);document.body.append(renderer.domElement);
   const camera=new THREE.PerspectiveCamera(53,1,.1,250);camera.position.set(48,44,57);camera.lookAt(0,5,0);
