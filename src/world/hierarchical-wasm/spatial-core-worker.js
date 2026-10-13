@@ -1,5 +1,5 @@
-import wasmUrl from '../../src/world/hierarchical-wasm/spatial-savanna.wasm?url';
-import {spatialChunkPayload,spatialChunkTransferables} from '../../src/world/hierarchical-wasm/spatial-savanna-payload.js';
+import wasmUrl from './spatial-savanna.wasm?url';
+import {spatialChunkPayload,spatialChunkTransferables} from './spatial-savanna-payload.js';
 
 let wasm=null,compiledMs=0,seed=null;
 async function initialize(){
@@ -37,6 +37,8 @@ self.onmessage=async({data:request})=>{
         }
         case 'wall-add':value=wasm.spatial_add_wall(request.x,request.z,request.halfX,request.halfZ);break;
         case 'wall-remove':value=wasm.spatial_remove_wall(request.wallId);break;
+        case 'chunk-remove':value=wasm.spatial_remove_chunk(request.cx,request.cz);break;
+        case 'profile':value=wasm.spatial_select_nav_profile(request.worker?1:0);break;
         default:throw Error(`Unknown spatial operation: ${request.op}`);
       }
       self.postMessage({id:request.id,value,
@@ -50,7 +52,9 @@ self.onmessage=async({data:request})=>{
       seed=request.seed;
       wasm.spatial_generate(seed,request.cx,request.cz);
       if(request.settlement){const {x,z,hx,hz}=request.settlement;wasm.spatial_set_settlement(x,z,hx,hz);}
-      wasm.spatial_build_nav(request.radius??1.1,0);
+      if(request.profiles){
+        for(const profile of request.profiles)wasm.spatial_build_nav(profile.radius,profile.worker?1:0);
+      }else wasm.spatial_build_nav(request.radius??1.1,0);
     }else wasm.spatial_add_chunk(request.cx,request.cz);
     const spatialMs=performance.now()-started,copyStarted=performance.now();
     const sceneFormat=request.format==='scene';
