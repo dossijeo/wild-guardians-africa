@@ -254,6 +254,16 @@ function targetFor(s,a,nav) {
     groups.push({id:`crop:${id}`,targets:group,value:group.length*B.crops.find(c=>c.id===p.species).base_harvest_value});
   }
   groups.sort((a,b)=>b.value-a.value||a.id.localeCompare(b.id));
+  if(nav.sharedCropSelection){
+    const shared=nav.sharedCropSelection(a,groups.map(g=>({id:g.id,targets:g.targets.filter(p=>canAttackCrop(s,p))})),(_target,point)=>
+      reservedApproachClear(s,a,point)&&actorSegmentClear(point,point,a,actorBlockers(s,a,false)));
+    if(shared!==undefined){
+      if(shared){detail();return {target:shared.target,reservation:targetReservationKey(shared.target,a),approach:shared.approach,shieldId:null};}
+      // A complete, conservative region proof excludes crops only. Structures
+      // are still considered below as physical barriers or alternate targets.
+      groups.length=0;
+    }
+  }
   for(const group of groups){
    const potentiallyReachable=nav.approachReachability?.(a,group.targets,a.radius);
    // One crop component has one physical accessibility question. Its plants
@@ -263,6 +273,18 @@ function targetFor(s,a,nav) {
    const groupBlocked=nav.approachGroupBlocked?.(a,group.targets,a.radius,.6+a.radius);
    if(trace){groupChecks++;groupMilliseconds+=performance.now()-groupStarted;}
    if(groupBlocked){groupRejected++;continue;}
+   // Experimental navigators can answer one multi-target query for the whole
+   // crop group. Undefined requests the native per-target fallback; null is a
+   // certified absence of a physically reachable service point.
+   if(nav.sharedCropApproach){
+    const eligible=group.targets.filter(p=>canAttackCrop(s,p)&&!targetReserved(s,a,p));
+    const shared=nav.sharedCropApproach(a,eligible,group.id,(_target,point)=>
+      reservedApproachClear(s,a,point)&&actorSegmentClear(point,point,a,actorBlockers(s,a,false)));
+    if(shared!==undefined){
+      if(shared){detail();return {target:shared.target,reservation:targetReservationKey(shared.target,a),approach:shared.approach,shieldId:null};}
+      continue;
+    }
+   }
    for(const p of group.targets.filter(p=>canAttackCrop(s,p)).sort((p,q)=>dist(a,p)-dist(a,q))) {
     if(targetReserved(s,a,p))continue;
     const shield=spellAt(s,'shield',p),approachStarted=trace?performance.now():0,approach=reachableApproach(a,p,nav,shield,potentiallyReachable);

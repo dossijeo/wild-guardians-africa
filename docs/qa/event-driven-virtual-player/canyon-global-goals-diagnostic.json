@@ -1,0 +1,49 @@
+{
+  "input": "docs/qa/event-driven-virtual-player/pilot-good-canyon-2026-day7-phase/checkpoint-state.json.gz",
+  "seconds": 1,
+  "mode": "global-goals",
+  "runSet": "candidate",
+  "day": 7,
+  "time": 480.0000000000409,
+  "biome": "gran-canon",
+  "plants": 350,
+  "living": 178,
+  "sameState": true,
+  "baselineDeterministic": null,
+  "candidateDeterministic": null,
+  "rows": [
+    {
+      "variant": "candidate",
+      "milliseconds": 3761.8925,
+      "searches": 335,
+      "nativeSearches": 340,
+      "success": 2,
+      "rssDeltaBytes": 49369088,
+      "hash": "2f95460825df78a17ee0356c0601f74905cf4d639899e7043ac6c2ad084ce89f",
+      "metrics": {
+        "built": 1,
+        "reused": 5,
+        "visited": 2164,
+        "sources": 1989,
+        "completeFields": 0,
+        "boundaryFields": 1,
+        "buildMilliseconds": 226.6586,
+        "fieldRoutes": 0,
+        "misses": 6,
+        "missReasons": {
+          "no-field-label-unknown": 6
+        },
+        "fallbacks": 0,
+        "portalCount": 1,
+        "portalBuildMilliseconds": 0.733399999999989,
+        "grid": {
+          "chunks": 11,
+          "cells": 914,
+          "edges": 3767,
+          "buildMilliseconds": 142.6868999999994,
+          "edgeLookups": 15068
+        }
+      }
+    }
+  ]
+}

@@ -24,7 +24,7 @@ if(center){
   nav.setActiveBounds(activeChunkRegion({x:pose.eye[0],z:pose.eye[2]}).bounds);
 }
 const native=nav.approachPath.bind(nav),metrics={};
-installEnclosureRouteTree(nav,metrics,false,mode==='grid');
+installEnclosureRouteTree(nav,metrics,false,mode==='grid'||mode==='shared-tree'||mode==='shared-incremental',false,mode==='shared-tree'||mode==='shared-incremental',false,mode==='shared-incremental');
 const tree=nav.approachPath.bind(nav),rows=[],totals={calls:0,nativeOnly:0,treeOnly:0,both:0,neither:0,invalidTree:0,invalidNative:0};
 function valid(route,start,end,radius){
   if(!route)return null;
