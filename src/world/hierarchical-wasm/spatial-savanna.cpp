@@ -52,7 +52,8 @@ std::vector<Prop> solidProps;
 std::array<std::vector<int>,propBucketSide*propBucketSide> propBuckets;
 int haloPropCount=0;
 std::vector<Wall> walls;
-Settlement settlement;
+std::vector<Settlement> settlements;
+std::vector<size_t> nearbySettlements;
 std::vector<uint8_t> staticPass,staticSteps,staticInbound;
 // No-entry WASM does not initialize C++ globals; construct profiles lazily.
 NavProfile* navProfiles[2]={nullptr,nullptr};
@@ -105,11 +106,22 @@ double baseHeight(double x,double z){
   const double channel=3.6-.63+blend((d-1.8)/4.2)*.68;
   return channel+(dry-channel)*blend((d-17)/75);
 }
-double settlementBlend(double x,double z){
-  if(!settlement.active)return 0;
-  const double edge=std::max(std::abs(x-settlement.x)-settlement.hx,
-    std::abs(z-settlement.z)-settlement.hz);
+double settlementBlend(const Settlement& site,double x,double z){
+  const double edge=std::max(std::abs(x-site.x)-site.hx,
+    std::abs(z-site.z)-site.hz);
   return 1-blend(edge/6);
+}
+bool settlementNearChunk(const Settlement& site,int cx,int cz){
+  const double minX=cx*side-24,maxX=minX+side,minZ=cz*side-24,maxZ=minZ+side;
+  const double px=std::clamp(site.x,minX,maxX),pz=std::clamp(site.z,minZ,maxZ);
+  // Ponds can be generated from up to 20 m outside the chunk, then cleared
+  // by a settlement another radius plus 11 m away from their center.
+  return std::hypot(site.x-px,site.z-pz)<site.haloRadius+32;
+}
+void selectNearbySettlements(int cx,int cz){
+  nearbySettlements.clear();
+  for(size_t i=0;i<settlements.size();i++)
+    if(settlementNearChunk(settlements[i],cx,cz))nearbySettlements.push_back(i);
 }
 void preparePonds(int cx,int cz){
   ponds.clear();
@@ -123,7 +135,10 @@ void preparePonds(int cx,int cz){
     const double river=riverX(z);
     if(std::abs(x-river)<24)x=river+(x<river?-24:24);
     const double radius=6+unit(cellHash(tx,tz,7204))*3.4;
-    if(settlement.active&&std::hypot(x-settlement.x,z-settlement.z)<settlement.clearRadius+radius+11)continue;
+    if(std::any_of(nearbySettlements.begin(),nearbySettlements.end(),[&](size_t i){
+      const Settlement& site=settlements[i];
+      return std::hypot(x-site.x,z-site.z)<site.clearRadius+radius+11;
+    }))continue;
     const double reach=radius*1.4;
     if(x+reach<x0||x-reach>x0+side||z+reach<z0||z-reach>z0+side)continue;
     ponds.push_back({x,z,radius,baseHeight(x,z)-.4});
@@ -137,8 +152,13 @@ double height(double x,double z){
     const double basin=p.level-.75+1.1*blend((d-.50)/.85);
     h=std::min(h,basin);
   }
-  const double weight=settlementBlend(x,z);
-  return h+(settlement.y-h)*weight;
+  double weight=0,level=h;
+  for(const size_t i:nearbySettlements){
+    const Settlement& site=settlements[i];
+    const double influence=settlementBlend(site,x,z);
+    if(influence>weight){weight=influence;level=site.y;}
+  }
+  return h+(level-h)*weight;
 }
 double latticeHeight(int x,int z){
   const int ix=x-(chunkX*side-24)+pad,iz=z-(chunkZ*side-24)+pad;
@@ -179,16 +199,17 @@ void buildGroundMask(int cx,int cz){
     groundMask[at+1]=uint8_t(std::lround(meso*255));
     groundMask[at+2]=uint8_t(std::lround(moisture*255));
     double wear=0;
-    if(settlement.active){
-      const double dx=x-settlement.x,dz=z-settlement.z,d=std::hypot(dx,dz);
-      if(d<settlement.haloRadius+4){
-        const double core=1-blend((d-settlement.clearRadius*.48)/
-          (settlement.clearRadius+2.3+(meso-.5)*3-settlement.clearRadius*.48));
+    for(const size_t i:nearbySettlements){
+      const Settlement& site=settlements[i];
+      const double dx=x-site.x,dz=z-site.z,d=std::hypot(dx,dz);
+      if(d<site.haloRadius+4){
+        const double core=1-blend((d-site.clearRadius*.48)/
+          (site.clearRadius+2.3+(meso-.5)*3-site.clearRadius*.48));
         const double warp=(noise(x*.055,z*.055,97137)-.5)*1.05;
         const double line=std::min(std::abs(dx+warp),std::abs(dz-warp));
         const double path=(1-blend((line-1.05)/2.05))*
-          (1-blend((d-(settlement.softRadius-2))/(settlement.haloRadius-settlement.softRadius+3)));
-        wear=std::clamp(std::max(core*(.81+.19*meso),path*.74),0.0,1.0);
+          (1-blend((d-(site.softRadius-2))/(site.haloRadius-site.softRadius+3)));
+        wear=std::max(wear,std::clamp(std::max(core*(.81+.19*meso),path*.74),0.0,1.0));
       }
     }
     groundMask[at+3]=uint8_t(std::lround(wear*255));
@@ -224,9 +245,11 @@ void buildWaterMesh(int cx,int cz){
     const double left1=std::clamp(riverX(z+1)-6.1,minX,maxX),right1=std::clamp(riverX(z+1)+6.1,minX,maxX);
     if(right0<=left0&&right1<=left1)continue;
     const WaterPoint a{left0,double(z)},b{right0,double(z)},c{right1,double(z+1)},d{left1,double(z+1)};
-    const bool nearSettlement=settlement.active&&z+1>=settlement.z-settlement.hz-6&&
-      z<=settlement.z+settlement.hz+6&&std::max(right0,right1)>=settlement.x-settlement.hx-6&&
-      std::min(left0,left1)<=settlement.x+settlement.hx+6;
+    const bool nearSettlement=std::any_of(nearbySettlements.begin(),nearbySettlements.end(),[&](size_t i){
+      const Settlement& site=settlements[i];
+      return z+1>=site.z-site.hz-6&&z<=site.z+site.hz+6&&
+        std::max(right0,right1)>=site.x-site.hx-6&&std::min(left0,left1)<=site.x+site.hx+6;
+    });
     if(!nearSettlement){waterTriangle(a,d,b,3.6);waterTriangle(b,d,c,3.6);continue;}
     // A flattened site can dry out part of a river strip. Clip only the
     // affected strip against the same fluid source used by navigation.
@@ -370,6 +393,7 @@ void refreshRect(int minX,int minZ,int maxX,int maxZ){
 }
 void populateChunk(int cx,int cz){
   chunkX=cx;chunkZ=cz;props.clear();solidProps.clear();staticPass.clear();staticSteps.clear();staticInbound.clear();haloPropCount=0;
+  selectNearbySettlements(cx,cz);
   // The standalone no-entry WASM binary has no startup constructor pass.
   preparePonds(cx,cz);
   heights.assign(grid*grid,0);colors.assign(grid*grid*3,0);water.assign(side*side,0);waterLevels.assign(side*side,0);
@@ -429,7 +453,10 @@ void populateChunk(int cx,int cz){
         const float scale=float(.78+unit(cellHash(gx,gz,312+type))*.43);
         const int slot=offsets[type]+int(cellHash(gx,gz,315+type)%counts[type]);
         const float radius=radii[slot]*scale;
-        if(settlement.active&&std::hypot(x-settlement.x,z-settlement.z)<settlement.clearRadius+radius+4)continue;
+        if(std::any_of(nearbySettlements.begin(),nearbySettlements.end(),[&](size_t i){
+          const Settlement& site=settlements[i];
+          return std::hypot(x-site.x,z-site.z)<site.clearRadius+radius+4;
+        }))continue;
         const Prop prop={float(x),float(z),float(surface(x,z)),radius,scale,float(unit(cellHash(gx,gz,317))*2*pi),slot};
         const bool owned=x>=x0&&x<x0+48&&z>=z0&&z<z0+48;
         if(owned)props.push_back(prop);
@@ -495,11 +522,36 @@ void refreshNeighborBorders(int cx,int cz){
     }
   }
 }
+Settlement makeSettlement(double x,double z,double hx,double hz){
+  const double samples[5]={baseHeight(x-hx,z-hz),baseHeight(x+hx,z-hz),
+    baseHeight(x,z),baseHeight(x-hx,z+hz),baseHeight(x+hx,z+hz)};
+  std::array<double,5> sorted;std::copy(samples,samples+5,sorted.begin());
+  std::sort(sorted.begin(),sorted.end());
+  const double clear=std::max(19.0,std::hypot(hx,hz));
+  return {true,x,z,sorted[2],hx,hz,clear,clear+6,clear+13};
+}
+void refreshSettlementChunks(const std::vector<Settlement>& changed){
+  const int selectedX=chunkX,selectedZ=chunkZ,previous=activeProfile;
+  for(const auto& [cx,cz]:loadedChunks){
+    const int chunkCx=cx,chunkCz=cz;
+    if(!std::any_of(changed.begin(),changed.end(),[&](const Settlement& site){
+      return settlementNearChunk(site,chunkCx,chunkCz);
+    }))continue;
+    populateChunk(cx,cz);
+    for(int profile=0;profile<2;profile++){
+      selectProfile(profile);
+      if(!navReady)continue;
+      buildActiveRaster();commitActiveSectors();refreshNeighborBorders(cx,cz);
+    }
+  }
+  selectProfile(previous);
+  if(!loadedChunks.empty())populateChunk(selectedX,selectedZ);
+}
 }
 
 extern "C" {
 int spatial_generate(uint32_t seed,int cx,int cz){
-  worldSeed=seed;walls.clear();settlement=Settlement{};
+  worldSeed=seed;walls.clear();settlements.clear();nearbySettlements.clear();
   for(int profile=0;profile<2;profile++){
     NavProfile& state=navProfile(profile);
     state.rasters.clear();state.ready=false;
@@ -527,6 +579,11 @@ int spatial_add_chunk(int cx,int cz){
   selectProfile(previous);
   return int(props.size())+1;
 }
+int spatial_select_chunk(int cx,int cz){
+  if(std::find(loadedChunks.begin(),loadedChunks.end(),std::pair<int,int>{cx,cz})==loadedChunks.end())return 0;
+  populateChunk(cx,cz);
+  return int(props.size())+1;
+}
 int spatial_remove_chunk(int cx,int cz){
   const auto it=std::find(loadedChunks.begin(),loadedChunks.end(),std::pair<int,int>{cx,cz});
   if(it==loadedChunks.end())return 0;
@@ -551,32 +608,19 @@ int spatial_chunk_count(){return int(loadedChunks.size());}
 float spatial_set_settlement(float x,float z,float hx,float hz){
   if(!std::isfinite(x)||!std::isfinite(z)||!std::isfinite(hx)||!std::isfinite(hz)||
      hx<=0||hz<=0||hx>100||hz>100)return -1;
-  const Settlement old=settlement;
-  const double samples[5]={baseHeight(x-hx,z-hz),baseHeight(x+hx,z-hz),
-    baseHeight(x,z),baseHeight(x-hx,z+hz),baseHeight(x+hx,z+hz)};
-  std::array<double,5> sorted;std::copy(samples,samples+5,sorted.begin());
-  std::sort(sorted.begin(),sorted.end());
-  const double clear=std::max(19.0,std::hypot(double(hx),double(hz)));
-  settlement={true,x,z,sorted[2],hx,hz,clear,clear+6,clear+13};
-  const int selectedX=chunkX,selectedZ=chunkZ,previous=activeProfile;
-  auto affected=[&](int cx,int cz,const Settlement& site){
-    if(!site.active)return false;
-    const double minX=cx*side-24,maxX=minX+side,minZ=cz*side-24,maxZ=minZ+side;
-    const double px=std::clamp(site.x,minX,maxX),pz=std::clamp(site.z,minZ,maxZ);
-    return std::hypot(site.x-px,site.z-pz)<site.haloRadius+10;
-  };
-  for(const auto& [cx,cz]:loadedChunks){
-    if(!affected(cx,cz,old)&&!affected(cx,cz,settlement))continue;
-    populateChunk(cx,cz);
-    for(int profile=0;profile<2;profile++){
-      selectProfile(profile);
-      if(!navReady)continue;
-      buildActiveRaster();commitActiveSectors();refreshNeighborBorders(cx,cz);
-    }
-  }
-  selectProfile(previous);
-  if(!loadedChunks.empty())populateChunk(selectedX,selectedZ);
-  return float(settlement.y);
+  std::vector<Settlement> changed=settlements;
+  const Settlement site=makeSettlement(x,z,hx,hz);
+  settlements.assign(1,site);changed.push_back(site);
+  refreshSettlementChunks(changed);
+  return float(site.y);
+}
+float spatial_add_settlement(float x,float z,float hx,float hz){
+  if(!std::isfinite(x)||!std::isfinite(z)||!std::isfinite(hx)||!std::isfinite(hz)||
+     hx<=0||hz<=0||hx>100||hz>100)return -1;
+  const Settlement site=makeSettlement(x,z,hx,hz);
+  settlements.push_back(site);
+  refreshSettlementChunks({site});
+  return float(site.y);
 }
 int spatial_sector_slots(){return lazy_sector_slots();}
 float* spatial_heights_ptr(){return heights.data();}

@@ -23,6 +23,12 @@ export function createSpatialSavannaPrototype(module){
     if(result>0){chunk={cx:cx|0,cz:cz|0,count:result-1};chunks.push([cx|0,cz|0]);}
     return result>0?result-1:result;
   }
+  function selectChunk(cx,cz){
+    if(!generated)throw Error('Generate the world before selecting a chunk');
+    const result=wasm.spatial_select_chunk(cx|0,cz|0);
+    if(result>0)chunk={cx:cx|0,cz:cz|0,count:result-1};
+    return result>0?result-1:result;
+  }
   function removeChunk(cx,cz){
     const removed=wasm.spatial_remove_chunk(cx|0,cz|0);
     if(removed){
@@ -78,10 +84,14 @@ export function createSpatialSavannaPrototype(module){
     for(let i=0;i<count;i++)points.push({x:pairs[i*2],z:pairs[i*2+1]});
     return {status:'found',points};
   }
-  return {wasm,generate,addChunk,removeChunk,heights,colors,water,groundMask,waterLevels,waterTriangles,props,instances,geometry,waterGeometry,chunkPayload,route,
+  return {wasm,generate,addChunk,selectChunk,removeChunk,heights,colors,water,groundMask,waterLevels,waterTriangles,props,instances,geometry,waterGeometry,chunkPayload,route,
     setSettlement:(x,z,hx,hz)=>{
       if(!generated)throw Error('Generate the world before placing a settlement');
       return wasm.spatial_set_settlement(x,z,hx,hz);
+    },
+    addSettlement:(x,z,hx,hz)=>{
+      if(!generated)throw Error('Generate the world before placing a settlement');
+      return wasm.spatial_add_settlement(x,z,hx,hz);
     },
     buildNavigation:(radius,worker)=>{
       if(!chunk)throw Error('Generate a chunk before building its navigation');

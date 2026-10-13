@@ -50,6 +50,7 @@ try{
   const profile=await fetch('/content/biome-savanna.json').then(response=>response.json()).then(pack=>pack.profile);
   const parameters=new URLSearchParams(location.search),seed=Number(parameters.get('seed')??712);
   const sceneFormat=parameters.get('format')==='scene',settlement=parameters.get('settlement')==='1';
+  const multiple=parameters.get('multi')==='1';
   const nav=new Navigation(String(seed),'sabana',profile),baseline=new Worker(new URL('../../src/rendering/chunk-worker.js',import.meta.url),{type:'module'});
   if(settlement){
     const x=10,z=8,hx=7,hz=6;
@@ -68,7 +69,7 @@ try{
     format:sceneFormat?'scene':'raw',settlement:settlement?{x:10,z:8,hx:7,hz:6}:null});
   const candidateSecond=await request(candidate,{id:4,seed,cx:1,cz:0,radius:1.1,
     format:sceneFormat?'scene':'raw'});
-  let topology=null;
+  let topology=null,multipleSettlements=null;
   if(sceneFormat){
     let crossing=null,id=5;
     for(let z=-18;z<=18;z++){
@@ -114,6 +115,24 @@ try{
       sameVisualPayload:true,loadedSectorsAfterReload:restored.metrics.loadedSectors,
       memoryBytesAfterReload:restored.metrics.memoryBytes};
   }
+  if(sceneFormat&&multiple){
+    const far=await request(candidate,{id:200,seed,cx:3,cz:0,format:'scene'});
+    const added=await request(candidate,{id:201,op:'settlement-add',x:144,z:8,hx:7,hz:6});
+    const changed=await request(candidate,{id:202,seed,cx:3,cz:0,read:true,format:'scene'});
+    const first=await request(candidate,{id:203,seed,cx:0,cz:0,read:true,format:'scene'});
+    const same=(a,b)=>a.length===b.length&&a.every((value,index)=>value===b[index]);
+    if(added.value<=0||same(far.data.terrain.positions,changed.data.terrain.positions)||
+       !same(first.data.terrain.positions,candidateFirst.data.terrain.positions)||
+       !same(first.data.groundMask,candidateFirst.data.groundMask)||
+       JSON.stringify(first.data.instances)!==JSON.stringify(candidateFirst.data.instances)||
+       Math.abs(changed.data.terrain.positions[(8+24)*49*3+24*3+1]-added.value)>.001||
+       changed.metrics.loadedChunks!==3||
+       added.metrics.sectorUpdates-far.metrics.sectorUpdates>16)
+      throw Error('Second settlement did not update only its local spatial world');
+    multipleSettlements={secondLevel:added.value,
+      localSectorUpdates:added.metrics.sectorUpdates-far.metrics.sectorUpdates,
+      sameFirstSettlement:true,secondChunkChanged:true,memoryBytes:changed.metrics.memoryBytes};
+  }
   candidate.terminate();
   for(const result of [candidateFirst,candidateSecond]){
     if(sceneFormat){
@@ -137,9 +156,10 @@ try{
     ...result.timing,three:prepareThree(result.data,result.cx,result.cz),
     props:sceneFormat?result.data.instances.reduce((n,list)=>n+list.length,0):result.data.count,
     metrics:result.metrics}));
-  window.qaStats={seed,sceneFormat,settlement,current,spatial,topology,
+  window.qaStats={seed,sceneFormat,settlement,current,spatial,topology,multipleSettlements,
     checks:{transferLengths:true,terrainSeam:true,wallEdit:!!topology,
-      evictionRegeneration:topology?.sameVisualPayload===true}};window.qaReady=true;
+      evictionRegeneration:topology?.sameVisualPayload===true,
+      multipleSettlements:multipleSettlements?.sameFirstSettlement===true}};window.qaReady=true;
   status.textContent=JSON.stringify(window.qaStats,null,2);
 }catch(error){window.qaError=String(error.stack??error);status.textContent=window.qaError;}
 </script></body></html>

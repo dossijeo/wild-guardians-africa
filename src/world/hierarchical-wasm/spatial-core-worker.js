@@ -38,6 +38,7 @@ self.onmessage=async({data:request})=>{
         case 'wall-add':value=wasm.spatial_add_wall(request.x,request.z,request.halfX,request.halfZ);break;
         case 'wall-remove':value=wasm.spatial_remove_wall(request.wallId);break;
         case 'chunk-remove':value=wasm.spatial_remove_chunk(request.cx,request.cz);break;
+        case 'settlement-add':value=wasm.spatial_add_settlement(request.x,request.z,request.hx,request.hz);break;
         case 'profile':value=wasm.spatial_select_nav_profile(request.worker?1:0);break;
         default:throw Error(`Unknown spatial operation: ${request.op}`);
       }
@@ -48,7 +49,10 @@ self.onmessage=async({data:request})=>{
       return;
     }
     const started=performance.now();
-    if(request.reset||seed!==request.seed){
+    if(request.read){
+      if(seed!==request.seed||!wasm.spatial_select_chunk(request.cx,request.cz))
+        throw Error('Requested spatial chunk is not resident in this world');
+    }else if(request.reset||seed!==request.seed){
       seed=request.seed;
       wasm.spatial_generate(seed,request.cx,request.cz);
       if(request.settlement){const {x,z,hx,hz}=request.settlement;wasm.spatial_set_settlement(x,z,hx,hz);}
@@ -67,7 +71,7 @@ self.onmessage=async({data:request})=>{
     self.postMessage({id:request.id,cx:request.cx,cz:request.cz,data,
       timing:{compiledMs,spatialMs,copyMs,transferBytes},
       metrics:{loadedChunks:wasm.spatial_chunk_count(),loadedSectors:wasm.lazy_loaded_sectors(),
-        memoryBytes:wasm.memory.buffer.byteLength}},
+        sectorUpdates:wasm.lazy_sector_updates(),memoryBytes:wasm.memory.buffer.byteLength}},
     transfer);
   }catch(error){self.postMessage({id:request.id,error:String(error.stack??error)});}
 };

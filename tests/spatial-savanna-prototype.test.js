@@ -121,6 +121,36 @@ test('a river strip no longer renders across dry settlement terrain',()=>{
       `river triangle remains above dry settlement terrain at (${x},${z})`);
   }
 });
+test('multiple settlements preserve distant terrain and refresh only nearby resident chunks',()=>{
+  const core=createSpatialSavannaPrototype(module);
+  core.generate(712,0,0);
+  core.buildNavigation(.28,true);core.buildNavigation(1.1,false);
+  const firstLevel=core.setSettlement(10,8,7,6);
+  const firstHeights=Float32Array.from(core.heights());
+  const firstMask=Uint8Array.from(core.groundMask());
+  const firstProps=core.props();
+  core.addChunk(2,0);
+  const distantOriginal=Float32Array.from(core.heights());
+  const before=core.metrics().sectorUpdates;
+  const secondLevel=core.addSettlement(96,8,7,6);
+  const updated=core.metrics().sectorUpdates-before;
+  assert(Number.isFinite(secondLevel)&&secondLevel>0);
+  assert(updated>0&&updated<=16,`distant settlement refreshed ${updated} sectors`);
+  assert(Math.abs(core.heights()[(8+24)*49+24]-secondLevel)<.001);
+  assert(core.groundMask().some((value,index)=>index%4===3&&value>0));
+  assert(core.props().every(prop=>Math.hypot(prop.x-96,prop.z-8)>=19+prop.radius+4));
+  assert.notDeepEqual(Array.from(core.heights()),Array.from(distantOriginal));
+  const sectors=core.metrics().sectorUpdates;
+  assert(core.selectChunk(0,0)>0);
+  assert.equal(core.metrics().sectorUpdates,sectors,'reading a resident chunk must not rebuild navigation');
+  assert.deepEqual(Array.from(core.heights()),Array.from(firstHeights));
+  assert.deepEqual(Array.from(core.groundMask()),Array.from(firstMask));
+  assert.deepEqual(core.props(),firstProps);
+  assert.equal(core.setSettlement(10,8,7,6),firstLevel);
+  assert(core.selectChunk(2,0)>0);
+  assert.deepEqual(Array.from(core.heights()),Array.from(distantOriginal),
+    'replacing the settlement list must remove the old distant site');
+});
 test('placing and destroying a wall updates local sectors and restores a route',()=>{
   const core=createSpatialSavannaPrototype(module);core.generate(123,0,0);
   core.buildNavigation(1.1,false);
