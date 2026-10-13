@@ -8,7 +8,8 @@ import {chunkTransferables} from '../src/rendering/chunk-data.js';
 import {SpatialSurfaceView} from '../src/world/hierarchical-wasm/spatial-surface-view.js';
 import {ANIMAL_SPATIAL_PROFILES} from '../src/world/hierarchical-wasm/spatial-movement-profiles.js';
 import {createSpatialWorld} from '../src/world/hierarchical-wasm/spatial-world.js';
-import {addSpatialWall,addSpatialWallsBatch} from '../src/world/hierarchical-wasm/spatial-wall-bridge.js';
+import {addSpatialWall,addSpatialWallsBatch,addSpatialGate,addSpatialStructuresBatch,
+  removeSpatialStructure,spatialGateBarriers} from '../src/world/hierarchical-wasm/spatial-wall-bridge.js';
 import {wallCollisionFrame} from '../src/world/wall-collision-frame.js';
 
 const module=new WebAssembly.Module(readFileSync(new URL('../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
@@ -138,6 +139,66 @@ test('a rotated wall chain is one topology transaction with the same result as i
       assert.deepEqual(batch.route({x,z},{x:x+3,z}),single.route({x,z},{x:x+3,z}));
     }
   }
+});
+test('native gate frames permit workers through the aperture but block animals',()=>{
+  for(const material of ['zarzas','empalizada','adobe','piedra','reforzado']){
+    const core=createSpatialSavannaPrototype(module);
+    core.generate(712,0,0);core.buildNavigation(.28,true);core.buildNavigation(1.1,false);
+    const yaw=.37,c=Math.cos(yaw),s=Math.sin(yaw);
+    let gate;
+    for(let z=-22;z<=22&&!gate;z++)for(let x=-22;x<=22&&!gate;x++){
+      const points=[[0,0],[0,-.65],[0,.65]].map(([lx,lz])=>({x:x+lx*c+lz*s,z:z-lx*s+lz*c}));
+      const approach={x:x-.65*s,z:z-.65*c},exit={x:x+.65*s,z:z+.65*c};
+      core.selectNavigation(true);
+      if(points.every(point=>core.localClear(point,point))&&core.localClear(approach,exit)){
+        core.selectNavigation(false);
+        if(core.localClear({x,z},{x,z}))
+          gate={kind:'wall',gate:true,material,status:'intact',x,z,yaw,baseScaleX:1};
+      }
+    }
+    assert(gate,`expected a clear gate site for ${material}`);
+    const parts=spatialGateBarriers(gate);
+    assert.equal(parts.length,3);
+    assert.deepEqual(parts.map(p=>p.passMask),[0,0,1]);
+    const ids=addSpatialGate(core,gate);
+    assert.equal(ids.length,3);
+    core.selectNavigation(true);
+    assert.equal(core.localClear({x:gate.x,z:gate.z},{x:gate.x,z:gate.z}),true,
+      `${material}: the worker graph must retain the central portal`);
+    const approach={x:gate.x-.65*s,z:gate.z-.65*c};
+    const exit={x:gate.x+.65*s,z:gate.z+.65*c};
+    assert.equal(core.localClear(approach,exit),true,
+      `${material}: a worker must cross the opened gate`);
+    const left={x:gate.x-1.1*c,z:gate.z+1.1*s};
+    assert.equal(core.localClear(left,left),false,`${material}: frame must block its own side`);
+    core.selectNavigation(false);
+    assert.equal(core.localClear({x:gate.x,z:gate.z},{x:gate.x,z:gate.z}),false,
+      `${material}: animals cannot use the worker portal`);
+    assert.equal(core.localClear(approach,exit),false,
+      `${material}: an animal cannot cross the gate`);
+    const state=core.snapshot();
+    const restored=createSpatialSavannaPrototype(module);
+    restored.restoreState(state);restored.buildNavigation(.28,true);restored.buildNavigation(1.1,false);
+    assert.deepEqual(restored.snapshot(),state);
+    restored.selectNavigation(true);
+    assert.equal(restored.localClear({x:gate.x,z:gate.z},{x:gate.x,z:gate.z}),true);
+    assert.equal(removeSpatialStructure(core,ids),true);
+    core.selectNavigation(false);
+    assert.equal(core.localClear({x:gate.x,z:gate.z},{x:gate.x,z:gate.z}),true);
+  }
+});
+test('mixed gate and wall placement batches the topology and preserves barrier groups',()=>{
+  const core=createSpatialSavannaPrototype(module);
+  core.generate(712,0,0);core.buildNavigation(.28,true);core.buildNavigation(1.1,false);
+  const structures=[{kind:'wall',gate:false,material:'adobe',status:'intact',x:-10,z:0,yaw:0},
+    {kind:'wall',gate:true,material:'adobe',status:'intact',x:-7,z:0,yaw:0},
+    {kind:'wall',gate:false,material:'adobe',status:'intact',x:-4,z:0,yaw:0}];
+  const groups=addSpatialStructuresBatch(core,structures);
+  assert.deepEqual(groups.map(group=>group.length),[1,3,1]);
+  assert.equal(new Set(groups.flat()).size,5);
+  assert.equal(core.snapshot().barriers.length,5);
+  for(const group of groups)assert.equal(removeSpatialStructure(core,group),true);
+  assert.equal(core.snapshot().barriers.length,0);
 });
 test('the dry Desert chunk shares visible dunes, solid props and hierarchical routes',()=>{
   const core=createSpatialSavannaPrototype(module);
