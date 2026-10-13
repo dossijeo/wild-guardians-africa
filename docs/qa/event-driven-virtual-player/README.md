@@ -356,6 +356,14 @@ collection accounted for 0.97 s. Raising the search-neighbor cache from
 candidate 16.87/17.81 s (`day12-neighbor-cache-8192-abba.json`). The larger
 cache did not relieve the repeated A* work and offered no favorable
 memory/time tradeoff.
+Line-level profile samples put the largest A* self-time on cost lookup and
+frontier insertion in `findPathSteps` (lines 537 and 544 in the profiled
+source). Replacing animal string grid keys with corridor-local numeric keys
+passed 87 focused tests and preserved the exact day-12 state, but AB/BA
+times were effectively equal: reference 16.64/17.04 seconds and candidate
+16.64/16.66 seconds. The prototype was removed; see
+`day12-numeric-grid-keys-abba.json`. The next useful approach must avoid
+entire redundant searches, rather than changing the key representation.
 The focused simulation, rendering, and virtual-player regressions passed,
 and the web build passed. The full repository suite was attempted but stopped
 after its legacy `campaign.test.js` child continued consuming CPU for more
