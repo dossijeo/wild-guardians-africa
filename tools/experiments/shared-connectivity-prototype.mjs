@@ -11,8 +11,8 @@ const key=(x,z)=>`${x},${z}`;
 const inside=(b,x,z)=>x>=b.minX&&x<=b.maxX&&z>=b.minZ&&z<=b.maxZ;
 const nativeMargin=40;
 
-export function installSharedConnectivity(nav,metrics={}){
-  Object.assign(metrics,{components:0,reused:0,visited:0,componentMilliseconds:0,queries:0,positive:0,negative:0,direct:0,uncertain:0,groupSkips:0,portalLinks:0,portalBuildMilliseconds:0,grid:{}});
+export function installSharedConnectivity(nav,metrics={},selectionOnly=false){
+  Object.assign(metrics,{components:0,reused:0,visited:0,componentMilliseconds:0,queries:0,positive:0,negative:0,direct:0,uncertain:0,groupSkips:0,selectionQueries:0,selectionPoints:0,selectionRejected:0,selectionGroups:0,selectionTargets:0,selectionRoutes:0,selectionSkips:0,portalLinks:0,portalBuildMilliseconds:0,grid:{}});
   const originalReach=nav.approachReachability.bind(nav),originalGroup=nav.approachGroupBlocked.bind(nav);
   let version=null,grid=null,bounds=null,portals=null,byRadius=new Map();
   const prepare=()=>{
@@ -76,7 +76,7 @@ export function installSharedConnectivity(nav,metrics={}){
     }
     metrics.components++;metrics.visited+=queue.length;metrics.componentMilliseconds+=performance.now()-started;
     if(exhausted)return null;
-    const result={cells};index.components.push(result);
+    const result={cells,serviceCache:new Map()};index.components.push(result);
     for(const k of cells)index.members.set(k,result);
     return result;
   }
@@ -93,6 +93,45 @@ export function installSharedConnectivity(nav,metrics={}){
     }
     metrics.negative++;cache.set(k,false);return false;
   }
+  nav.sharedCropSelection=(actor,groups,accept)=>{
+    metrics.selectionQueries++;
+    const region=component(actor,actor.radius);
+    if(!region){metrics.uncertain++;return undefined;}
+    const candidates=target=>{
+      if(region.serviceCache.has(target.id))return region.serviceCache.get(target.id);
+      const points=[],reach=.6+actor.radius,seen=new Set();
+      // Select interaction points from this region's nearby cells. The old
+      // 32-angle ring was repeated for every crop and every animal.
+      const cx=Math.round(target.x),cz=Math.round(target.z),extent=Math.ceil(reach)+1;
+      for(let dz=-extent;dz<=extent;dz++)for(let dx=-extent;dx<=extent;dx++){
+        const x=cx+dx,z=cz+dz,deltaX=x-target.x,deltaZ=z-target.z,length=Math.hypot(deltaX,deltaZ);
+        if(!region.cells.has(key(x,z))||length<.01||length>reach+1.5)continue;
+        const px=target.x+deltaX/length*reach,pz=target.z+deltaZ/length*reach;
+        const sector=Math.round(Math.atan2(deltaX,deltaZ)*4/Math.PI);
+        if(seen.has(sector))continue;
+        seen.add(sector);metrics.selectionPoints++;
+        if(!nav.walkable(px,pz,actor.radius,null,false)||!nav.segmentClear({x,z},{x:px,z:pz},actor.radius,null,false)){
+          metrics.selectionRejected++;continue;
+        }
+        points.push({id:`approach-${target.id}-region-${sector}`,x:px,z:pz,cell:{x,z}});
+      }
+      region.serviceCache.set(target.id,points);return points;
+    };
+    for(const group of groups){
+      metrics.selectionGroups++;
+      for(const target of [...group.targets].sort((a,b)=>Math.hypot(a.x-actor.x,a.z-actor.z)-Math.hypot(b.x-actor.x,b.z-actor.z)||a.id.localeCompare(b.id))){
+      metrics.selectionTargets++;
+      if(nav.state.spells?.some(sp=>sp.kind==='shield'&&sp.remaining>0&&Math.hypot(sp.x-target.x,sp.z-target.z)<=sp.radius)){metrics.uncertain++;return undefined;}
+      for(const point of candidates(target).sort((a,b)=>Math.hypot(a.x-actor.x,a.z-actor.z)-Math.hypot(b.x-actor.x,b.z-actor.z))){
+        if(!accept(target,point))continue;
+        const path=nav.approachPath(actor,point,actor.radius,32);
+        if(path){metrics.selectionRoutes++;return {target,approach:{point,path}};}
+      }
+      }
+    }
+    metrics.selectionSkips++;return null;
+  };
+  if(selectionOnly)return metrics;
   nav.approachReachability=(actor,targets,radius,margin=32)=>{
     const region=component(actor,radius);
     if(!region){metrics.uncertain++;return originalReach(actor,targets,radius,margin);}

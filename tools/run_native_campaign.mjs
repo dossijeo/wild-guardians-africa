@@ -35,7 +35,7 @@ export function parseNativeCampaignArgs(args){
  o.cropPolicy=o['crop-policy']??'legacy';delete o['crop-policy'];if(!['legacy','cashflow'].includes(o.cropPolicy))throw Error('Unknown crop policy');
  o.defensePolicy=o['defense-policy']??'expanding';delete o['defense-policy'];if(!['legacy','expanding','closed','funded','routed','shore','planned'].includes(o.defensePolicy))throw Error('Unknown defense policy');
  o.campaignMode=o['campaign-mode']??'persistence';delete o['campaign-mode'];if(!['balance','persistence'].includes(o.campaignMode))throw Error('Unknown campaign mode');
- o.navigationMode=o['navigation-mode']??'native';delete o['navigation-mode'];if(!['native','grid-tree','adaptive-grid-tree','shared-tree','shared-incremental','adaptive-shared-incremental'].includes(o.navigationMode))throw Error('Unknown navigation mode');
+ o.navigationMode=o['navigation-mode']??'native';delete o['navigation-mode'];if(!['native','grid-tree','adaptive-grid-tree','shared-tree','shared-incremental','adaptive-shared-incremental','region-goals-tree'].includes(o.navigationMode))throw Error('Unknown navigation mode');
  o.defenseMaterial=o['defense-material']??'zarzas';delete o['defense-material'];wallSpec(o.defenseMaterial);
  if(o.defenseMaterial!=='zarzas'&&!['funded','routed','shore','planned'].includes(o.defensePolicy))throw Error('Explicit defense material requires funded/routed/shore/planned policy');
  o.defenseStartDay=Number(o['defense-start-day']??1);delete o['defense-start-day'];if(!Number.isSafeInteger(o.defenseStartDay)||o.defenseStartDay<1||o.defenseStartDay!==1&&!['closed','funded','routed','shore','planned'].includes(o.defensePolicy))throw Error('Explicit defense start requires closed/funded/routed/planned policy and positive integer day');

@@ -34,6 +34,7 @@ import {createNativeCampaignExpansion} from './native-campaign-expansion.mjs';
 
 import {campaignFinanceCheckpoint,campaignFinanceDelta} from './native-campaign-finance.mjs';
 import {installEnclosureRouteTree} from './experiments/enclosure-route-tree-prototype.mjs';
+import {installSharedConnectivity} from './experiments/shared-connectivity-prototype.mjs';
 
 import {q4DawnPlan,q4AdditionalPlan,q4RecoveryReserve} from './native-q4-labour-policy.mjs';
 import {createQ5LabourPolicy} from './native-q5-labour-policy.mjs';
@@ -53,12 +54,17 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
  if(!Number.isSafeInteger(plantsPerWorker)||plantsPerWorker<1)throw new Error('Plants per worker must be a positive integer');
  if(!['legacy','cashflow'].includes(cropPolicy))throw Error('Unknown crop policy');
  if(!['balance','persistence'].includes(campaignMode))throw Error('Unknown campaign mode');
- if(!['native','grid-tree','adaptive-grid-tree','shared-tree','shared-incremental','adaptive-shared-incremental'].includes(navigationMode))throw Error('Unknown navigation mode');
+ if(!['native','grid-tree','adaptive-grid-tree','shared-tree','shared-incremental','adaptive-shared-incremental','region-goals-tree'].includes(navigationMode))throw Error('Unknown navigation mode');
  const protocol={...campaignProtocolForLabour(labourPolicy),profile,plotFluidClearance,defenseMaterial,repairPolicy,defenseFunding,cropHitPoints:CROP_HIT_POINTS},q4=labourPolicy==='q4',q5=['q5','q6','q7','q8','q9','q12','q13','q14','q15'].includes(labourPolicy),q6=['q6','q7','q8','q9','q12','q13','q14','q15'].includes(labourPolicy),q7=['q7','q8','q9','q12','q13','q14','q15'].includes(labourPolicy),labourHistory=[],labourObservations=[],labourReasons={};
  const policy=nativeCampaignStrategy(strategy),agriculturalMagic=createAgriculturalMagicPolicy({mode:policy.agriculturalMagic});defend=policy.defend;middayHiring=policy.middayHiring;plantsPerWorker=6;
  if(typeof Game.nightEntryPending!=='function')throw Error('Native pending entry handshake is not integrated; no campaign started');
  const opening=createOpeningWorld(world),nav=opening.nav;let s=opening.s,sequence=0;
- const routeMetrics={};if(navigationMode!=='native')installEnclosureRouteTree(nav,routeMetrics,false,true,navigationMode==='adaptive-grid-tree'||navigationMode==='adaptive-shared-incremental',navigationMode==='shared-tree'||navigationMode==='shared-incremental'||navigationMode==='adaptive-shared-incremental',false,navigationMode==='shared-incremental'||navigationMode==='adaptive-shared-incremental');
+ const routeMetrics={};
+ if(navigationMode==='region-goals-tree'){
+   routeMetrics.region={};routeMetrics.route={};
+   installSharedConnectivity(nav,routeMetrics.region,true);
+   installEnclosureRouteTree(nav,routeMetrics.route,false,true,false,true,false,true);
+ }else if(navigationMode!=='native')installEnclosureRouteTree(nav,routeMetrics,false,true,navigationMode==='adaptive-grid-tree'||navigationMode==='adaptive-shared-incremental',navigationMode==='shared-tree'||navigationMode==='shared-incremental'||navigationMode==='adaptive-shared-incremental',false,navigationMode==='shared-incremental'||navigationMode==='adaptive-shared-incremental');
  const preferredProfile=profile;let worker=PROFILES.find(p=>p.id===profile);if(!worker)throw new Error('Unknown worker profile');
  if(!['legacy','expanding','closed','funded','routed','shore','planned'].includes(defensePolicy))throw Error('Unknown defense policy');
  if(!['legacy','breach-first'].includes(repairPolicy)||repairPolicy!=='legacy'&&!['funded','routed','shore'].includes(defensePolicy))throw Error('Unsupported native repair policy');

@@ -38,6 +38,11 @@ for(const candidate of runSet==='candidate'?[true]:[false,true,true,false]){
       installSharedConnectivity(nav,metrics.region);
       installEnclosureRouteTree(nav,metrics.route,false,true,false,true);
     }
+    else if(mode==='region-goals-tree'){
+      metrics.region={};metrics.route={};
+      installSharedConnectivity(nav,metrics.region,true);
+      installEnclosureRouteTree(nav,metrics.route,false,true,false,true,false,true);
+    }
     else (['routes','negative','grid','adaptive','shared-tree','shared-tree-pruned','shared-incremental','shared-batched','adaptive-shared-incremental'].includes(mode)?installEnclosureRouteTree:installEnclosureAccessPrototype)(nav,metrics,mode==='negative',mode==='grid'||mode==='adaptive'||mode.startsWith('shared-')||mode==='adaptive-shared-incremental',mode==='adaptive'||mode==='adaptive-shared-incremental',mode.startsWith('shared-')||mode==='adaptive-shared-incremental',mode==='shared-tree-pruned',mode==='shared-incremental'||mode==='shared-batched'||mode==='adaptive-shared-incremental',mode==='shared-batched');
   }
   let searches=0,success=0,nativeSearches=0;const path=nav.approachPath.bind(nav),findSteps=nav.findPathSteps.bind(nav);
@@ -45,7 +50,8 @@ for(const candidate of runSet==='candidate'?[true]:[false,true,true,false]){
   nav.approachPath=(...args)=>{searches++;const value=path(...args);if(value)success++;return value;};
   const before=process.memoryUsage().rss,began=performance.now();Game.tick(s,seconds,nav);
   const milliseconds=performance.now()-began,hash=createHash('sha256').update(serialize(s)).digest('hex');
-  rows.push({variant:candidate?'candidate':'baseline',milliseconds,searches,nativeSearches,success,rssDeltaBytes:process.memoryUsage().rss-before,hash,metrics});
+  const targets=s.raid?.animals.map(a=>({species:a.species,status:a.status,targetId:a.targetId,hitsRemaining:a.hitsRemaining}))??[];
+  rows.push({variant:candidate?'candidate':'baseline',milliseconds,searches,nativeSearches,success,rssDeltaBytes:process.memoryUsage().rss-before,hash,metrics,targets});
   console.log(JSON.stringify({variant:candidate?'candidate':'baseline',milliseconds,searches,nativeSearches,success,metrics}));
 }
 const report={input,seconds,mode,runSet,day:source.day,time:source.time,biome:source.biome,plants:source.plants.length,living:source.plants.filter(p=>p.alive).length,sameState:rows.every(r=>r.hash===rows[0].hash),baselineDeterministic:rows.length===4?rows[0].hash===rows[3].hash:null,candidateDeterministic:rows.length===4?rows[1].hash===rows[2].hash:null,rows};
