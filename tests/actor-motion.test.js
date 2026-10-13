@@ -11,6 +11,15 @@ import {readFileSync} from 'node:fs';
 import {createOpeningWorld} from '../tools/check_opening.mjs';
 import {edgeDistance} from '../src/world/footprints.js';
 
+test('an animal discards a zero-progress route whose first static leg is blocked',()=>{
+ const animal={id:'stalled',x:0,z:0,radius:.9,status:'walking',path:[{x:2,z:0}],destinationId:'crop',pathVersion:1};
+ const state={workers:[{id:'blocker',x:1,z:0,radius:.3,status:'fleeing'}],raid:{animals:[animal]}};
+ const nav={version:1,path:()=>[{x:2,z:0}],walkable:()=>true,segmentClear:()=>false};
+ assert.equal(walkTo(state,animal,{id:'crop',x:2,z:0},.1,nav,{worker:false,speed:1.5}),false);
+ assert.equal(animal.x,0);
+ assert.equal(animal.path,null);
+});
+
 test('opposed animals route around each other when both short lookahead goals are occupied',()=>{
  const a={id:'outbound',x:94.1096081493741,z:14.519706064422435,radius:1.1,status:'retreating',hitsRemaining:0};
  const b={id:'inbound',x:95.98513086550021,z:17.985130865500206,radius:1.1,status:'walking',hitsRemaining:3};

@@ -1,0 +1,144 @@
+{
+  "input": "docs/qa/event-driven-virtual-player/pilot-good-canyon-2026-day7-phase/checkpoint-state.json.gz",
+  "seconds": 1,
+  "mode": "region-goals-tree",
+  "runSet": "candidate",
+  "day": 7,
+  "time": 480.0000000000409,
+  "biome": "gran-canon",
+  "plants": 350,
+  "living": 178,
+  "sameState": true,
+  "baselineDeterministic": null,
+  "candidateDeterministic": null,
+  "rows": [
+    {
+      "variant": "candidate",
+      "milliseconds": 677.0364,
+      "searches": 335,
+      "nativeSearches": 5,
+      "success": 2,
+      "rssDeltaBytes": 39063552,
+      "hash": "2faa1f9533ae298f60223a09f55fdcd3c01fd680c845cc1b1ae307234b4995d1",
+      "metrics": {
+        "region": {
+          "components": 1,
+          "reused": 5,
+          "visited": 5674,
+          "componentMilliseconds": 400.9429,
+          "queries": 0,
+          "positive": 0,
+          "negative": 0,
+          "direct": 0,
+          "uncertain": 0,
+          "groupSkips": 0,
+          "selectionQueries": 6,
+          "selectionPoints": 1255,
+          "selectionRejected": 74,
+          "selectionGroups": 18,
+          "selectionTargets": 1068,
+          "selectionRoutes": 0,
+          "selectionSkips": 6,
+          "portalLinks": 0,
+          "portalBuildMilliseconds": 0.8769000000000062,
+          "grid": {
+            "chunks": 43,
+            "cells": 6808,
+            "edges": 6164,
+            "buildMilliseconds": 409.1314000000049,
+            "edgeLookups": 10850
+          }
+        },
+        "route": {
+          "built": 1,
+          "reused": 114,
+          "sharedOrigins": 1,
+          "sharedRouteSteps": 17,
+          "sharedSmoothedSteps": 2,
+          "portalEdges": 0,
+          "portalTraversals": 0,
+          "batchQueries": 0,
+          "batchPoints": 0,
+          "batchRoutes": 0,
+          "batchSkips": 0,
+          "batchFallbacks": 0,
+          "visited": 4798,
+          "buildMilliseconds": 38.078899999999976,
+          "treeRoutes": 1,
+          "fallbacks": 0,
+          "fallbackReasons": {},
+          "unreachable": 333,
+          "direct": 1,
+          "nativeTrials": 0,
+          "activations": 0,
+          "gridRuns": [
+            {}
+          ],
+          "grid": {}
+        }
+      },
+      "targets": [
+        {
+          "species": "warthog",
+          "status": "attacking",
+          "targetId": "structure-3676",
+          "hitsRemaining": 3
+        },
+        {
+          "species": "hyena",
+          "status": "walking",
+          "targetId": "structure-3547",
+          "hitsRemaining": 5
+        },
+        {
+          "species": "warthog",
+          "status": "waiting",
+          "targetId": null,
+          "hitsRemaining": 2
+        },
+        {
+          "species": "warthog",
+          "status": "waiting",
+          "targetId": null,
+          "hitsRemaining": 2
+        },
+        {
+          "species": "warthog",
+          "status": "attacking",
+          "targetId": "structure-2986",
+          "hitsRemaining": 2
+        },
+        {
+          "species": "warthog",
+          "status": "entering",
+          "targetId": "structure-3540",
+          "hitsRemaining": 2
+        },
+        {
+          "species": "warthog",
+          "status": "entering",
+          "targetId": "structure-2990",
+          "hitsRemaining": 4
+        },
+        {
+          "species": "warthog",
+          "status": "waiting",
+          "targetId": null,
+          "hitsRemaining": 2
+        },
+        {
+          "species": "warthog",
+          "status": "attacking",
+          "targetId": "structure-3644",
+          "hitsRemaining": 1
+        },
+        {
+          "species": "warthog",
+          "status": "waiting",
+          "targetId": null,
+          "hitsRemaining": 4
+        }
+      ]
+    }
+  ]
+}

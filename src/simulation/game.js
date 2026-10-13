@@ -466,6 +466,13 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
   }
   if(dist(previous,w)>1e-9)w.heading=Math.atan2(w.x-previous.x,w.z-previous.z);
   if(routeClearance?.blocked()){w.path=null;return false;}
+  // An actor can be pushed off a previously valid connector by local body
+  // avoidance. If the static first leg has since become impossible, discard
+  // that route instead of retrying the same zero-length move indefinitely.
+  if(!worker&&w.path?.length&&dist(previous,w)<=1e-9&&
+    nav.segmentClear&&!nav.segmentClear(w,w.path[0],w.radius??.28,ignore,false)){
+    w.path=null;return false;
+  }
   return w.path.length===0;
 }
 function completeTask(s,w,t,target,nav) {

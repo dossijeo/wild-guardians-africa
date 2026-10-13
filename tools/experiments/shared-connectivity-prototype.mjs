@@ -40,7 +40,7 @@ export function installSharedConnectivity(nav,metrics={},selectionOnly=false){
         }
       }
     }
-    index={members:new Map(),components:[],links};byRadius.set(radius,index);return index;
+    index={members:new Map(),components:[],links,serviceCache:new Map()};byRadius.set(radius,index);return index;
   }
   function actorSeeds(actor,radius){
     const points=[],sx=Math.round(actor.x),sz=Math.round(actor.z);
@@ -54,29 +54,37 @@ export function installSharedConnectivity(nav,metrics={},selectionOnly=false){
     prepare();if(!bounds)return null;
     const index=radiusIndex(radius),seeds=actorSeeds(actor,radius);
     if(!seeds.length)return null;
+    const seedKeys=new Set(seeds.map(p=>key(p.x,p.z)));
+    for(const existing of index.components)if(!existing.complete&&!seeds.some(p=>existing.cells.has(key(p.x,p.z))))existing.extend(seedKeys);
     const previous=new Set(seeds.map(p=>index.members.get(key(p.x,p.z))).filter(Boolean));
-    if(previous.size===1&&seeds.every(p=>index.members.has(key(p.x,p.z)))){
-      metrics.reused++;return [...previous][0];
-    }
+    if(previous.size===1){metrics.reused++;return [...previous][0];}
     if(previous.size>1)return null; // fractional actor connector joins grid components; native fallback
-    const started=performance.now(),cells=new Set(),queue=[];
+    const cells=new Set(),queue=[];
     for(const point of seeds){const k=key(point.x,point.z);if(!cells.has(k)){cells.add(k);queue.push(point);}}
-    let exhausted=false;
-    for(let i=0;i<queue.length;i++){
-      if(i>=120000){exhausted=true;break;}
-      const p=queue[i];
-      for(let d=0;d<8;d++){
-        const [dx,dz]=dirs[d],x=p.x+dx,z=p.z+dz,k=key(x,z);
-        if(!inside(bounds,x,z)||cells.has(k)||!grid.walkable(x,z,radius)||!grid.step(p.x,p.z,x,z,radius,d))continue;
-        cells.add(k);queue.push({x,z});
+    const result={cells,queue,head:0,complete:false,uncertain:false,blockedGroups:new Set()};
+    result.extend=goals=>{
+      const found=()=>{for(const k of goals)if(cells.has(k))return true;return false;};
+      if(found())return true;
+      if(result.complete||result.uncertain)return false;
+      const started=performance.now();
+      while(result.head<queue.length){
+        if(result.head>=120000){result.uncertain=true;break;}
+        const p=queue[result.head++];metrics.visited++;
+        for(let d=0;d<8;d++){
+          const [dx,dz]=dirs[d],x=p.x+dx,z=p.z+dz,k=key(x,z);
+          if(!inside(bounds,x,z)||cells.has(k)||!grid.walkable(x,z,radius)||!grid.step(p.x,p.z,x,z,radius,d))continue;
+          cells.add(k);queue.push({x,z});index.members.set(k,result);
+        }
+        for(const to of index.links.get(key(p.x,p.z))??[]){
+          const k=key(to.x,to.z);if(!cells.has(k)){cells.add(k);queue.push(to);index.members.set(k,result);}
+        }
+        if(found())break;
       }
-      for(const to of index.links.get(key(p.x,p.z))??[]){
-        const k=key(to.x,to.z);if(!cells.has(k)){cells.add(k);queue.push(to);}
-      }
-    }
-    metrics.components++;metrics.visited+=queue.length;metrics.componentMilliseconds+=performance.now()-started;
-    if(exhausted)return null;
-    const result={cells,serviceCache:new Map()};index.components.push(result);
+      result.complete=result.head===queue.length;
+      metrics.componentMilliseconds+=performance.now()-started;
+      return found();
+    };
+    metrics.components++;index.components.push(result);
     for(const k of cells)index.members.set(k,result);
     return result;
   }
@@ -97,15 +105,16 @@ export function installSharedConnectivity(nav,metrics={},selectionOnly=false){
     metrics.selectionQueries++;
     const region=component(actor,actor.radius);
     if(!region){metrics.uncertain++;return undefined;}
+    const index=radiusIndex(actor.radius);
     const candidates=target=>{
-      if(region.serviceCache.has(target.id))return region.serviceCache.get(target.id);
+      if(index.serviceCache.has(target.id))return index.serviceCache.get(target.id);
       const points=[],reach=.6+actor.radius,seen=new Set();
       // Select interaction points from this region's nearby cells. The old
       // 32-angle ring was repeated for every crop and every animal.
       const cx=Math.round(target.x),cz=Math.round(target.z),extent=Math.ceil(reach)+1;
       for(let dz=-extent;dz<=extent;dz++)for(let dx=-extent;dx<=extent;dx++){
         const x=cx+dx,z=cz+dz,deltaX=x-target.x,deltaZ=z-target.z,length=Math.hypot(deltaX,deltaZ);
-        if(!region.cells.has(key(x,z))||length<.01||length>reach+1.5)continue;
+        if(length<.01||length>reach+1.5||!grid.walkable(x,z,actor.radius))continue;
         const px=target.x+deltaX/length*reach,pz=target.z+deltaZ/length*reach;
         const sector=Math.round(Math.atan2(deltaX,deltaZ)*4/Math.PI);
         if(seen.has(sector))continue;
@@ -115,19 +124,27 @@ export function installSharedConnectivity(nav,metrics={},selectionOnly=false){
         }
         points.push({id:`approach-${target.id}-region-${sector}`,x:px,z:pz,cell:{x,z}});
       }
-      region.serviceCache.set(target.id,points);return points;
+      index.serviceCache.set(target.id,points);return points;
     };
     for(const group of groups){
       metrics.selectionGroups++;
+      if(region.blockedGroups.has(group.id)){metrics.groupSkips++;continue;}
+      let reachableCell=false,blockedCertifiable=true;
       for(const target of [...group.targets].sort((a,b)=>Math.hypot(a.x-actor.x,a.z-actor.z)-Math.hypot(b.x-actor.x,b.z-actor.z)||a.id.localeCompare(b.id))){
       metrics.selectionTargets++;
       if(nav.state.spells?.some(sp=>sp.kind==='shield'&&sp.remaining>0&&Math.hypot(sp.x-target.x,sp.z-target.z)<=sp.radius)){metrics.uncertain++;return undefined;}
-      for(const point of candidates(target).sort((a,b)=>Math.hypot(a.x-actor.x,a.z-actor.z)-Math.hypot(b.x-actor.x,b.z-actor.z))){
-        if(!accept(target,point))continue;
+      const physical=candidates(target),options=physical.filter(point=>accept(target,point));
+      if(!options.length){if(physical.length)blockedCertifiable=false;continue;}
+      region.extend(new Set(options.map(point=>key(point.cell.x,point.cell.z))));
+      if(region.uncertain){metrics.uncertain++;return undefined;}
+      for(const point of options.sort((a,b)=>Math.hypot(a.x-actor.x,a.z-actor.z)-Math.hypot(b.x-actor.x,b.z-actor.z))){
+        if(!region.cells.has(key(point.cell.x,point.cell.z)))continue;
+        reachableCell=true;
         const path=nav.approachPath(actor,point,actor.radius,32);
         if(path){metrics.selectionRoutes++;return {target,approach:{point,path}};}
       }
       }
+      if(region.complete&&blockedCertifiable&&!reachableCell)region.blockedGroups.add(group.id);
     }
     metrics.selectionSkips++;return null;
   };
