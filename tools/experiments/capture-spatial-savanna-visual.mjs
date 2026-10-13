@@ -7,6 +7,7 @@ const {chromium}=await import(pathToFileURL(modulePath).href);
 const url=process.env.WG_QA_URL??'http://127.0.0.1:5188';
 const out='docs/qa/hierarchical-navigation/screenshots';
 const suffix=process.env.WG_QA_SUFFIX?`-${process.env.WG_QA_SUFFIX}`:'';
+const ground=process.env.WG_QA_GROUND==='game'?'&ground=game':'';
 await mkdir(out,{recursive:true});
 const browser=await chromium.launch({headless:true});
 const records=[];
@@ -15,7 +16,8 @@ try{
     const page=await browser.newPage({viewport:{width:1600,height:900},deviceScaleFactor:1});
     const errors=[];
     page.on('pageerror',error=>errors.push(String(error)));
-    await page.goto(`${url}/tests/browser/spatial-savanna-visual-compare.html?seed=${seed}`);
+    page.on('console',message=>{if(message.type()==='error')errors.push(message.text());});
+    await page.goto(`${url}/tests/browser/spatial-savanna-visual-compare.html?seed=${seed}${ground}`);
     await page.waitForFunction(()=>window.qaReady||window.qaError,{timeout:120000});
     const result=await page.evaluate(()=>({stats:window.qaStats,error:window.qaError??null}));
     if(result.error||errors.length)throw Error(JSON.stringify({seed,...result,errors}));
