@@ -146,6 +146,16 @@ export function createSpatialWorld(module){
     riverEdge:(z,direction)=>wasm.spatial_river_edge(z,direction),
     riverLevel:()=>wasm.spatial_river_level(),
     wetlandMaskAnywhere:(x,z)=>wasm.spatial_wetland_mask_anywhere(x,z),
+    groundColorsAnywhere:points=>{
+      if(!(points instanceof Float32Array)||points.length===0||points.length%2||points.length>100000)
+        throw TypeError('Expected 1–50,000 native ground-color coordinate pairs');
+      const count=points.length/2,pointer=wasm.spatial_ground_color_input_ptr(count);
+      if(!pointer)throw Error('Could not allocate ground-color query');
+      new Float32Array(wasm.memory.buffer,pointer,points.length).set(points);
+      if(wasm.spatial_ground_color_batch(count)!==count)
+        throw RangeError('Invalid native ground-color coordinates');
+      return new Float32Array(wasm.memory.buffer,wasm.spatial_ground_color_result_ptr(),count*3).slice();
+    },
     metrics:()=>({memoryBytes:wasm.memory.buffer.byteLength,loadedChunks:wasm.spatial_chunk_count(),
       residentPropRecords:wasm.spatial_resident_prop_count?.()??null,loadedSectors:wasm.lazy_loaded_sectors(),
       sectorSlots:wasm.spatial_sector_slots(),

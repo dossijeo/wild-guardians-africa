@@ -3,6 +3,7 @@
 #include <cmath>
 #include <cstdint>
 #include <limits>
+#include <optional>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
@@ -68,6 +69,7 @@ int nextPolygonId=1;
 float radiusNow=.3f;
 bool workerNow=true,navReady=false;
 std::vector<float> heights,colors;
+std::vector<float> groundQueryInput,groundQueryOutput;
 std::vector<uint8_t> water;
 std::vector<uint8_t> groundMask;
 std::vector<float> waterLevels;
@@ -728,6 +730,57 @@ template<class F> void forEachRectSector(int minX,int minZ,int maxX,int maxZ,F v
 void refreshRect(int minX,int minZ,int maxX,int maxZ){
   forEachRectSector(minX,minZ,maxX,maxZ,[](int sx,int sz){refreshSector(sx,sz);});
 }
+void groundColorAt(double wx,double wz,float* output){
+  if(worldBiome==1){
+    const DesertSample sand=desertSample(wx,wz);
+    const double fine=noise(wx*.057,wz*.057,7139);
+    const double grass=.27+sand.dune*.37+fine*.14;
+    const double gravel=sand.gravel*.20,shade=.96+noise(wx*.15,wz*.15,7151)*.055;
+    constexpr double soil[3]={211.0/255,148.0/255,86.0/255};
+    constexpr double light[3]={228.0/255,184.0/255,117.0/255};
+    constexpr double rock[3]={183.0/255,118.0/255,77.0/255};
+    for(int k=0;k<3;k++){
+      const double base=soil[k]+(light[k]-soil[k])*grass;
+      output[k]=float(std::clamp((base+(rock[k]-base)*gravel)*shade,0.0,1.0));
+    }
+    return;
+  }
+  const double patch=.58*noise(wx*.041,wz*.041,8913)
+    +.28*noise(wx*.0832,wz*.0832,8913^9271)
+    +.14*noise(wx*.1693,wz*.1693,8913^29714);
+  const double grass=worldBiome==2||worldBiome==4?blend((patch-.20)/.39):blend((patch-.28)/.44);
+  const double slope=std::hypot(latticeHeight(wx+1,wz)-latticeHeight(wx-1,wz),
+    latticeHeight(wx,wz+1)-latticeHeight(wx,wz-1))*.5;
+  const double rock=blend((slope-.42)/.98)*.62;
+  const double bank=(1-blend((std::abs(wx-riverX(wz))-6)/4))*.58;
+  const double shade=.94+noise(wx*.11,wz*.11,1181)*.12;
+  constexpr double savannaSoil[3]={174.0/255,120.0/255,80.0/255};
+  constexpr double savannaFoliage[3]={182.0/255,178.0/255,103.0/255};
+  constexpr double savannaStone[3]={148.0/255,123.0/255,96.0/255};
+  constexpr double riverSoil[3]={138.0/255,121.0/255,79.0/255};
+  constexpr double riverFoliage[3]={127.0/255,156.0/255,76.0/255};
+  constexpr double riverStone[3]={139.0/255,146.0/255,130.0/255};
+  constexpr double volcanoSoil[3]={81.0/255,72.0/255,73.0/255};
+  constexpr double volcanoFoliage[3]={121.0/255,114.0/255,72.0/255};
+  constexpr double volcanoStone[3]={68.0/255,68.0/255,72.0/255};
+  constexpr double mangroveSoil[3]={165.0/255,138.0/255,101.0/255};
+  constexpr double mangroveFoliage[3]={148.0/255,155.0/255,102.0/255};
+  constexpr double mangroveStone[3]={140.0/255,134.0/255,119.0/255};
+  constexpr double canyonSoil[3]={185.0/255,116.0/255,67.0/255};
+  constexpr double canyonFoliage[3]={173.0/255,152.0/255,96.0/255};
+  constexpr double canyonStone[3]={189.0/255,101.0/255,64.0/255};
+  constexpr double sand[3]={210.0/255,186.0/255,135.0/255};
+  for(int k=0;k<3;k++){
+    const double soil=worldBiome==5?canyonSoil[k]:worldBiome==4?mangroveSoil[k]:worldBiome==3?volcanoSoil[k]:worldBiome==2?riverSoil[k]:savannaSoil[k];
+    const double foliage=worldBiome==5?canyonFoliage[k]:worldBiome==4?mangroveFoliage[k]:worldBiome==3?volcanoFoliage[k]:worldBiome==2?riverFoliage[k]:savannaFoliage[k];
+    const double stone=worldBiome==5?canyonStone[k]:worldBiome==4?mangroveStone[k]:worldBiome==3?volcanoStone[k]:worldBiome==2?riverStone[k]:savannaStone[k];
+    double color=soil+(foliage-soil)*grass;
+    color+=(stone-color)*rock;
+    const double riverBank=worldBiome==3?soil+(volcanoStone[k]-soil)*.35:soil+(sand[k]-soil)*.34;
+    color+=(riverBank-color)*(worldBiome==4?wetlandMask(wx,wz)*.17:bank);
+    output[k]=float(std::clamp(color*shade,0.0,1.0));
+  }
+}
 void populateChunk(int cx,int cz,bool visual=true){
   chunkX=cx;chunkZ=cz;props.clear();solidProps.clear();staticPass.clear();staticSteps.clear();staticInbound.clear();haloPropCount=0;
   selectNearbySettlements(cx,cz);
@@ -750,55 +803,7 @@ void populateChunk(int cx,int cz,bool visual=true){
     const int i=z*grid+x,wx=x0+x,wz=z0+z;
     heights[i]=float(latticeHeight(wx,wz));
     // Biome-specific colors come from this C++ world, not a second JS recipe.
-    if(worldBiome==1){
-      const DesertSample sand=desertSample(wx,wz);
-      const double fine=noise(wx*.057,wz*.057,7139);
-      const double grass=.27+sand.dune*.37+fine*.14;
-      const double gravel=sand.gravel*.20,shade=.96+noise(wx*.15,wz*.15,7151)*.055;
-      constexpr double soil[3]={211.0/255,148.0/255,86.0/255};
-      constexpr double light[3]={228.0/255,184.0/255,117.0/255};
-      constexpr double rock[3]={183.0/255,118.0/255,77.0/255};
-      for(int k=0;k<3;k++){
-        const double base=soil[k]+(light[k]-soil[k])*grass;
-        colors[i*3+k]=float(std::clamp((base+(rock[k]-base)*gravel)*shade,0.0,1.0));
-      }
-      continue;
-    }
-    const double patch=.58*noise(wx*.041,wz*.041,8913)
-      +.28*noise(wx*.0832,wz*.0832,8913^9271)
-      +.14*noise(wx*.1693,wz*.1693,8913^29714);
-    const double grass=worldBiome==2||worldBiome==4?blend((patch-.20)/.39):blend((patch-.28)/.44);
-    const double slope=std::hypot(latticeHeight(wx+1,wz)-latticeHeight(wx-1,wz),
-      latticeHeight(wx,wz+1)-latticeHeight(wx,wz-1))*.5;
-    const double rock=blend((slope-.42)/.98)*.62;
-    const double bank=(1-blend((std::abs(wx-riverX(wz))-6)/4))*.58;
-    const double shade=.94+noise(wx*.11,wz*.11,1181)*.12;
-    constexpr double savannaSoil[3]={174.0/255,120.0/255,80.0/255};
-    constexpr double savannaFoliage[3]={182.0/255,178.0/255,103.0/255};
-    constexpr double savannaStone[3]={148.0/255,123.0/255,96.0/255};
-    constexpr double riverSoil[3]={138.0/255,121.0/255,79.0/255};
-    constexpr double riverFoliage[3]={127.0/255,156.0/255,76.0/255};
-    constexpr double riverStone[3]={139.0/255,146.0/255,130.0/255};
-    constexpr double volcanoSoil[3]={81.0/255,72.0/255,73.0/255};
-    constexpr double volcanoFoliage[3]={121.0/255,114.0/255,72.0/255};
-    constexpr double volcanoStone[3]={68.0/255,68.0/255,72.0/255};
-    constexpr double mangroveSoil[3]={165.0/255,138.0/255,101.0/255};
-    constexpr double mangroveFoliage[3]={148.0/255,155.0/255,102.0/255};
-    constexpr double mangroveStone[3]={140.0/255,134.0/255,119.0/255};
-    constexpr double canyonSoil[3]={185.0/255,116.0/255,67.0/255};
-    constexpr double canyonFoliage[3]={173.0/255,152.0/255,96.0/255};
-    constexpr double canyonStone[3]={189.0/255,101.0/255,64.0/255};
-    constexpr double sand[3]={210.0/255,186.0/255,135.0/255};
-    for(int k=0;k<3;k++){
-      const double soil=worldBiome==5?canyonSoil[k]:worldBiome==4?mangroveSoil[k]:worldBiome==3?volcanoSoil[k]:worldBiome==2?riverSoil[k]:savannaSoil[k];
-      const double foliage=worldBiome==5?canyonFoliage[k]:worldBiome==4?mangroveFoliage[k]:worldBiome==3?volcanoFoliage[k]:worldBiome==2?riverFoliage[k]:savannaFoliage[k];
-      const double stone=worldBiome==5?canyonStone[k]:worldBiome==4?mangroveStone[k]:worldBiome==3?volcanoStone[k]:worldBiome==2?riverStone[k]:savannaStone[k];
-      double color=soil+(foliage-soil)*grass;
-      color+=(stone-color)*rock;
-      const double riverBank=worldBiome==3?soil+(volcanoStone[k]-soil)*.35:soil+(sand[k]-soil)*.34;
-      color+=(riverBank-color)*(worldBiome==4?wetlandMask(wx,wz)*.17:bank);
-      colors[i*3+k]=float(std::clamp(color*shade,0.0,1.0));
-    }
+    groundColorAt(wx,wz,colors.data()+i*3);
   }
   for(int z=0;z<side;z++)for(int x=0;x<side;x++){
     const double level=fluidLevel(x0+x+.5,z0+z+.5);
@@ -1284,6 +1289,35 @@ float spatial_wetland_mask_anywhere(float x,float z){
   const ScopedTerrainSample context(x,z);
   return float(wetlandMask(x,z));
 }
+float* spatial_ground_color_input_ptr(int count){
+  if(count<=0||count>50000)return nullptr;
+  groundQueryInput.resize(size_t(count)*2);
+  groundQueryOutput.resize(size_t(count)*3);
+  return groundQueryInput.data();
+}
+int spatial_ground_color_batch(int count){
+  if(!chunkRasters||count<=0||count>50000||
+     groundQueryInput.size()<size_t(count)*2||groundQueryOutput.size()<size_t(count)*3)
+    return 0;
+  for(int i=0;i<count;i++){
+    const float x=groundQueryInput[i*2],z=groundQueryInput[i*2+1];
+    if(!std::isfinite(x)||!std::isfinite(z)||std::floor(x)!=x||std::floor(z)!=z||
+       std::abs(x)>1.0e8f||std::abs(z)>1.0e8f)return 0;
+  }
+  std::optional<ScopedTerrainSample> context;
+  int previousCx=std::numeric_limits<int>::min(),previousCz=previousCx;
+  for(int i=0;i<count;i++){
+    const float x=groundQueryInput[i*2],z=groundQueryInput[i*2+1];
+    const int cx=int(std::floor((x+24)/side)),cz=int(std::floor((z+24)/side));
+    if(cx!=previousCx||cz!=previousCz){
+      context.reset();context.emplace(x,z);
+      previousCx=cx;previousCz=cz;
+    }
+    groundColorAt(x,z,groundQueryOutput.data()+i*3);
+  }
+  return count;
+}
+float* spatial_ground_color_result_ptr(){return groundQueryOutput.data();}
 float* spatial_heights_ptr(){return heights.data();}
 float* spatial_colors_ptr(){return colors.data();}
 uint8_t* spatial_water_ptr(){return water.data();}

@@ -669,6 +669,33 @@ test('native far-water geometry exposes the river edges and wetland mask used by
   assert(Number.isNaN(desert.riverEdge(96,-1)));
   assert(Number.isNaN(desert.wetlandMaskAnywhere(0,96)));
 });
+
+test('batched native far-ground colors exactly match rendered chunk colors in all six biomes',()=>{
+  const coordinates=(cx,cz)=>{
+    const points=new Float32Array(49*49*2);
+    for(let z=0;z<49;z++)for(let x=0;x<49;x++){
+      const i=(z*49+x)*2;points[i]=cx*48+x-24;points[i+1]=cz*48+z-24;
+    }
+    return points;
+  };
+  for(const biome of ['sabana','gran-rio','manglares','volcanes','gran-canon','desierto']){
+    const core=createSpatialWorld(module);core.generate(712,0,0,biome);
+    core.setSettlement(0,0,15,12);core.buildNavigationProfile(1,.28,true);
+    const near=Float32Array.from(core.colors()),before=core.metrics(),selected=core.currentChunk();
+    assert.deepEqual(core.groundColorsAnywhere(coordinates(0,0)),near,`${biome} resident color`);
+    const far=core.groundColorsAnywhere(coordinates(3,2));
+    assert.deepEqual(core.currentChunk(),selected);
+    assert.equal(core.metrics().loadedChunks,before.loadedChunks);
+    assert.equal(core.metrics().sectorUpdates,before.sectorUpdates);
+    assert.throws(()=>core.groundColorsAnywhere(new Float32Array([.5,0])),/Invalid native/);
+    core.addChunk(3,2);
+    assert.deepEqual(far,Float32Array.from(core.colors()),`${biome} far color`);
+    const restored=createSpatialWorld(module);
+    restored.restoreState(core.snapshot());
+    assert.deepEqual(restored.groundColorsAnywhere(coordinates(3,2)),far,
+      `${biome} restored far color`);
+  }
+});
 test('five animal radii retain independent logical graphs across profile switches and wall edits',()=>{
   const core=createSpatialSavannaPrototype(module);
   core.generate(712,0,0,'savanna');
