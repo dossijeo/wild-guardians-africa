@@ -1,0 +1,56 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><title>QA · horizonte espacial en Worker</title></head>
+<body><pre id="status">Preparando WASM…</pre><script type="module">
+import {createSpatialWorld} from '../../src/world/hierarchical-wasm/spatial-world.js';
+import {activeChunkRegion} from '../../src/world/active-region.js';
+import wasmUrl from '../../src/world/hierarchical-wasm/spatial-savanna.wasm?url';
+
+const status=document.querySelector('#status'),report=[];
+try{
+  const bytes=await fetch(wasmUrl).then(response=>response.arrayBuffer());
+  const module=new WebAssembly.Module(bytes),region=activeChunkRegion({x:0,z:0},'media');
+  let serial=0;
+  for(const biome of ['canyons','desert']){
+    const core=createSpatialWorld(module);core.generate(712,0,0,biome);
+    const worker=new Worker(new URL('../../src/world/hierarchical-wasm/spatial-horizon-worker.js',import.meta.url),{type:'module'});
+    const color=[58/255,173/255,182/255];
+    let largestFrameGap=0,lastFrame=performance.now(),active=true;
+    const sampleFrame=()=>{
+      const now=performance.now();largestFrameGap=Math.max(largestFrameGap,now-lastFrame);lastFrame=now;
+      if(active)requestAnimationFrame(sampleFrame);
+    };
+    requestAnimationFrame(sampleFrame);
+    const ask=state=>new Promise((resolve,reject)=>{
+      const id=++serial,start=performance.now();
+      const timeout=setTimeout(()=>reject(Error('Spatial horizon worker timeout')),120000);
+      worker.onmessage=({data})=>{
+        if(data.id!==id)return;
+        clearTimeout(timeout);
+        data.error?reject(Error(data.error)):resolve({...data,roundtripMs:performance.now()-start});
+      };
+      worker.onerror=error=>{clearTimeout(timeout);reject(error);};
+      worker.postMessage({id,state,region,waterColor:color,river:true});
+    });
+    try{
+      for(const topology of ['initial','settlement']){
+        if(topology==='settlement')core.setSettlement(12,8,8,7);
+        const expected=core.horizon(region,color);
+        largestFrameGap=0;lastFrame=performance.now();
+        const response=await ask(core.snapshot());
+        const {terrain,water}=response.data;
+        if(terrain.length!==expected.terrain.length||water.length!==expected.water.length)
+          throw Error(`${biome} ${topology}: wrong buffer lengths`);
+        let largestDelta=0;
+        for(let i=0;i<terrain.length;i++)largestDelta=Math.max(largestDelta,Math.abs(terrain[i]-expected.terrain[i]));
+        for(let i=0;i<water.length;i++)largestDelta=Math.max(largestDelta,Math.abs(water[i]-expected.water[i]));
+        if(largestDelta>.001)throw Error(`${biome} ${topology}: ${largestDelta} buffer difference`);
+        report.push({biome,topology,roundtripMs:+response.roundtripMs.toFixed(2),
+          terrainBytes:terrain.byteLength,waterBytes:water.byteLength,
+          wasmMemoryBytes:response.metrics.memoryBytes,
+          loadedChunks:response.metrics.loadedChunks,loadedSectors:response.metrics.loadedSectors,
+          largestFrameGapMs:+largestFrameGap.toFixed(2),largestDelta});
+      }
+    }finally{active=false;worker.terminate();}
+  }
+  window.qaReport=report;window.qaReady=true;status.textContent=JSON.stringify(report,null,2);
+}catch(error){window.qaError=String(error.stack??error);status.textContent=window.qaError;}
+</script></body></html>
