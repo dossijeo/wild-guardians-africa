@@ -13,6 +13,12 @@ export function createSpatialSavannaPrototype(module){
     chunk={cx:cx|0,cz:cz|0,count};navigationBuilt=false;
     return chunk;
   }
+  function addChunk(cx,cz){
+    if(!chunk)throw Error('Generate the world before adding a chunk');
+    const count=wasm.spatial_add_chunk(cx|0,cz|0);
+    if(count>0)chunk={cx:cx|0,cz:cz|0,count};
+    return count;
+  }
   function props(){
     const count=wasm.spatial_prop_count(),view=new DataView(wasm.memory.buffer,wasm.spatial_props_ptr(),count*28);
     return Array.from({length:count},(_,i)=>{
@@ -69,7 +75,7 @@ export function createSpatialSavannaPrototype(module){
     for(let i=0;i<count;i++)points.push({x:pairs[i*2],z:pairs[i*2+1]});
     return {status:'found',points};
   }
-  return {wasm,generate,heights,colors,water,props,instances,geometry,waterGeometry,route,
+  return {wasm,generate,addChunk,heights,colors,water,props,instances,geometry,waterGeometry,route,
     buildNavigation:(radius,worker)=>{
       if(!chunk)throw Error('Generate a chunk before building its navigation');
       const loaded=wasm.spatial_build_nav(radius,worker?1:0);
@@ -80,6 +86,6 @@ export function createSpatialSavannaPrototype(module){
     walkable:(x,z)=>Boolean(wasm.spatial_walkable(x,z)),
     edge:(x,z,nx,nz)=>Boolean(wasm.spatial_edge(x,z,nx,nz)),
     propBlocked:(x,z)=>Boolean(wasm.spatial_prop_blocked(x,z)),
-    metrics:()=>({memoryBytes:wasm.memory.buffer.byteLength,loadedSectors:wasm.lazy_loaded_sectors(),
+    metrics:()=>({memoryBytes:wasm.memory.buffer.byteLength,loadedChunks:wasm.spatial_chunk_count(),loadedSectors:wasm.lazy_loaded_sectors(),
       sectorUpdates:wasm.lazy_sector_updates(),haloProps:wasm.spatial_halo_prop_count()})};
 }

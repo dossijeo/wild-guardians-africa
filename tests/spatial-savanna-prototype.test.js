@@ -100,3 +100,51 @@ test('indexed obstacle checks agree with every visible solid across the surround
     }
   }
 });
+test('two resident chunks share a graph and a wall closes and reopens their seam',()=>{
+  const core=createSpatialSavannaPrototype(module);
+  core.generate(712,0,0);const west=Float32Array.from(core.heights());
+  assert.equal(core.buildNavigation(1.1,false),16);
+  assert.equal(core.route({x:17,z:0},{x:31,z:0}).status,'unknown');
+  assert(core.addChunk(1,0)>0);
+  assert.equal(core.metrics().loadedChunks,2);
+  assert.equal(core.metrics().loadedSectors,32);
+  const east=Float32Array.from(core.heights());
+  for(let z=0;z<49;z++)assert.equal(west[z*49+48],east[z*49]);
+  let path=null;
+  for(let z=-19;z<20&&!path;z++){
+    const start={x:17,z},end={x:31,z};
+    if(core.walkable(start.x,start.z)&&core.walkable(end.x,end.z)){
+      const result=core.route(start,end);
+      if(result.status==='found')path={start,end,result};
+    }
+  }
+  assert(path,'expected a physical route across the resident seam');
+  validRoute(core,path.start,path.result);
+  const before=core.metrics().sectorUpdates;
+  const wall=core.addWall(23.5,0,.8,24);
+  assert.equal(core.route(path.start,path.end).status,'blocked');
+  assert(core.metrics().sectorUpdates-before<32,'wall edit must not rebuild all sectors');
+  assert.equal(core.removeWall(wall),1);
+  validRoute(core,path.start,core.route(path.start,path.end));
+  assert.equal(core.buildNavigation(.28,true),32);
+  assert.equal(core.metrics().loadedChunks,2);
+  validRoute(core,path.start,core.route(path.start,path.end));
+});
+test('negative chunk coordinates retain the shared border and graph',()=>{
+  const core=createSpatialSavannaPrototype(module);
+  core.generate(712,0,0);core.buildNavigation(.28,true);
+  const center=Float32Array.from(core.heights());
+  assert(core.addChunk(-1,0)>0);
+  const west=Float32Array.from(core.heights());
+  for(let z=0;z<49;z++)assert.equal(west[z*49+48],center[z*49]);
+  assert.equal(core.metrics().loadedSectors,32);
+  assert.notEqual(core.route({x:-32,z:0},{x:0,z:0}).status,'unknown');
+});
+test('chunks requested before the first graph build become resident together',()=>{
+  const core=createSpatialSavannaPrototype(module);
+  core.generate(712,0,0);
+  assert(core.addChunk(1,0)>0);
+  assert.equal(core.buildNavigation(1.1,false),32);
+  assert.equal(core.metrics().loadedChunks,2);
+  assert.notEqual(core.route({x:17,z:0},{x:31,z:0}).status,'unknown');
+});

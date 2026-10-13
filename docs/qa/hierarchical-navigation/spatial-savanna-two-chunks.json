@@ -1,0 +1,89 @@
+{
+  "scope": "Two adjacent Sabana chunks, seed 712, ABBA. Different procedural worlds and visual work: diagnostic only.",
+  "rows": [
+    {
+      "kind": "current JS generator + JS physical raster + sparse C++ graph",
+      "firstVisualMs": 78.9801,
+      "secondVisualMs": 56.72,
+      "navigationMs": 583.2644,
+      "totalMs": 718.9645,
+      "routeMs": 1.465599999999995,
+      "found": 3,
+      "geometricCalls": {
+        "walkable": 5671,
+        "segmentClear": 11764
+      },
+      "propCount": 418,
+      "metrics": {
+        "loaded": 32,
+        "updates": 32,
+        "memoryBytes": 4194304
+      }
+    },
+    {
+      "kind": "one C++ spatial source + resident two-chunk graph",
+      "firstGenerationMs": 2.092999999999961,
+      "firstVisualMs": 13.74109999999996,
+      "firstNavigationMs": 20.266700000000014,
+      "secondGenerationAndNavigationMs": 17.99090000000001,
+      "secondVisualMs": 1.6902999999999793,
+      "totalMs": 55.781999999999925,
+      "routeMs": 0.8613000000000284,
+      "found": 6,
+      "geometricCalls": {
+        "walkable": 0,
+        "segmentClear": 0
+      },
+      "propCount": 492,
+      "metrics": {
+        "memoryBytes": 4194304,
+        "loadedChunks": 2,
+        "loadedSectors": 32,
+        "sectorUpdates": 36,
+        "haloProps": 10
+      }
+    },
+    {
+      "kind": "one C++ spatial source + resident two-chunk graph",
+      "firstGenerationMs": 0.6059999999999945,
+      "firstVisualMs": 2.2730000000000246,
+      "firstNavigationMs": 14.347399999999993,
+      "secondGenerationAndNavigationMs": 19.172699999999963,
+      "secondVisualMs": 1.8731000000000222,
+      "totalMs": 38.2722,
+      "routeMs": 0.18250000000000455,
+      "found": 6,
+      "geometricCalls": {
+        "walkable": 0,
+        "segmentClear": 0
+      },
+      "propCount": 492,
+      "metrics": {
+        "memoryBytes": 4194304,
+        "loadedChunks": 2,
+        "loadedSectors": 32,
+        "sectorUpdates": 36,
+        "haloProps": 10
+      }
+    },
+    {
+      "kind": "current JS generator + JS physical raster + sparse C++ graph",
+      "firstVisualMs": 45.955100000000016,
+      "secondVisualMs": 32.72480000000007,
+      "navigationMs": 550.8477999999999,
+      "totalMs": 629.5277,
+      "routeMs": 0.19329999999990832,
+      "found": 3,
+      "geometricCalls": {
+        "walkable": 5671,
+        "segmentClear": 11764
+      },
+      "propCount": 418,
+      "metrics": {
+        "loaded": 32,
+        "updates": 32,
+        "memoryBytes": 4194304
+      }
+    }
+  ]
+}

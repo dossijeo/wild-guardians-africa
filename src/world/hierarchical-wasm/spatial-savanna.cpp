@@ -2,6 +2,7 @@
 #include <array>
 #include <cmath>
 #include <cstdint>
+#include <unordered_map>
 #include <vector>
 
 // Isolated spatial-authority experiment. The same deterministic functions
@@ -27,6 +28,7 @@ constexpr double maxIndexedRadius=2.0;
 constexpr double pi=3.14159265358979323846;
 struct Prop {float x,z,y,radius,scale,yaw;int32_t slot;};
 struct Wall {int id;float x,z,halfX,halfZ;bool active;};
+struct ChunkRaster {int cx,cz;std::vector<uint8_t> pass,steps;};
 uint32_t worldSeed=0;
 int chunkX=0,chunkZ=0,nextWallId=1;
 float radiusNow=.3f;
@@ -40,6 +42,18 @@ std::array<std::vector<int>,propBucketSide*propBucketSide> propBuckets;
 int haloPropCount=0;
 std::vector<Wall> walls;
 std::vector<uint8_t> staticPass,staticSteps;
+std::unordered_map<uint64_t,ChunkRaster>* chunkRasters=nullptr;
+std::vector<std::pair<int,int>> loadedChunks;
+uint64_t chunkKey(int cx,int cz){return (uint64_t(uint32_t(cx))<<32)|uint32_t(cz);}
+int floorDiv(int n,int d){return n>=0?n/d:-((-n+d-1)/d);}
+const ChunkRaster* rasterAt(int x,int z){
+  if(!chunkRasters)return nullptr;
+  const auto it=chunkRasters->find(chunkKey(floorDiv(x+24,side),floorDiv(z+24,side)));
+  return it==chunkRasters->end()?nullptr:&it->second;
+}
+int rasterIndex(const ChunkRaster& chunk,int x,int z){
+  return (z-(chunk.cz*side-24))*side+x-(chunk.cx*side-24);
+}
 uint32_t hash(uint32_t a){a^=a>>16;a*=0x7feb352du;a^=a>>15;a*=0x846ca68bu;return a^(a>>16);}
 uint32_t cellHash(int x,int z,uint32_t salt){return hash(worldSeed^uint32_t(x)*0x9e3779b1u^uint32_t(z)*0x85ebca77u^salt);}
 double unit(uint32_t v){return double(v)/4294967296.0;}
@@ -115,15 +129,13 @@ bool terrainPropWalkable(int x,int z){
   if(!terrainValid(x,z,radiusNow,workerNow))return false;
   return !propBlocked(x,z);
 }
-bool insideChunk(int x,int z){return x>=chunkX*side-24&&x<chunkX*side+24&&z>=chunkZ*side-24&&z<chunkZ*side+24;}
-int chunkIndex(int x,int z){return (z-(chunkZ*side-24))*side+x-(chunkX*side-24);}
 bool wallClear(double x,double z){
   for(const Wall& w:walls)if(w.active&&std::abs(x-w.x)<w.halfX+radiusNow&&std::abs(z-w.z)<w.halfZ+radiusNow)return false;
   return true;
 }
 bool walkable(int x,int z){
-  const bool base=insideChunk(x,z)&&!staticPass.empty()?staticPass[chunkIndex(x,z)]:terrainPropWalkable(x,z);
-  return base&&wallClear(x,z);
+  const ChunkRaster* chunk=rasterAt(x,z);
+  return chunk&&chunk->pass[rasterIndex(*chunk,x,z)]&&wallClear(x,z);
 }
 bool terrainPropEdge(int x,int z,int nx,int nz){
   if(!terrainPropWalkable(x,z)||!terrainPropWalkable(nx,nz))return false;
@@ -139,8 +151,8 @@ bool edge(int x,int z,int nx,int nz){
   int direction=-1;
   for(int d=0;d<4;d++)if(nx==x+dx[d]&&nz==z+dz[d]){direction=d;break;}
   if(direction<0||!walkable(x,z)||!walkable(nx,nz))return false;
-  const bool base=insideChunk(x,z)&&!staticSteps.empty()?
-    !!(staticSteps[chunkIndex(x,z)]&(1<<direction)):terrainPropEdge(x,z,nx,nz);
+  const ChunkRaster* chunk=rasterAt(x,z);
+  const bool base=chunk&&!!(chunk->steps[rasterIndex(*chunk,x,z)]&(1<<direction));
   if(!base)return false;
   for(int i=1;i<4;i++){
     const double t=i/4.0;
@@ -157,7 +169,7 @@ void refreshSector(int sx,int sz){
     if(!pass[i])continue;
     for(int d=0;d<4;d++){
       const int nx=x+dx[d],nz=z+dz[d];
-      if(!insideChunk(nx,nz))continue;
+      if(!rasterAt(nx,nz))continue;
       if(edge(x,z,nx,nz))steps[i]|=1<<d;
       if(edge(nx,nz,x,z))inbound[i]|=1<<d;
     }
@@ -166,16 +178,18 @@ void refreshSector(int sx,int sz){
 }
 void refreshRect(int minX,int minZ,int maxX,int maxZ){
   if(!navReady)return;
-  const int firstX=chunkX*side-24,firstZ=chunkZ*side-24;
-  const int a=std::max(0,(minX-firstX)/sector),b=std::min(3,(maxX-firstX)/sector);
-  const int c=std::max(0,(minZ-firstZ)/sector),d=std::min(3,(maxZ-firstZ)/sector);
-  for(int sz=c;sz<=d;sz++)for(int sx=a;sx<=b;sx++)refreshSector((firstX/sector)+sx,(firstZ/sector)+sz);
+  for(int cz=floorDiv(minZ+24,side);cz<=floorDiv(maxZ+24,side);cz++)
+  for(int cx=floorDiv(minX+24,side);cx<=floorDiv(maxX+24,side);cx++){
+    if(!chunkRasters->count(chunkKey(cx,cz)))continue;
+    const int firstX=cx*side-24,firstZ=cz*side-24;
+    if(maxX<firstX||minX>=firstX+side||maxZ<firstZ||minZ>=firstZ+side)continue;
+    const int a=std::max(0,floorDiv(minX-firstX,sector)),b=std::min(3,floorDiv(maxX-firstX,sector));
+    const int c=std::max(0,floorDiv(minZ-firstZ,sector)),d=std::min(3,floorDiv(maxZ-firstZ,sector));
+    for(int sz=c;sz<=d;sz++)for(int sx=a;sx<=b;sx++)refreshSector(firstX/sector+sx,firstZ/sector+sz);
+  }
 }
-}
-
-extern "C" {
-int spatial_generate(uint32_t seed,int cx,int cz){
-  worldSeed=seed;chunkX=cx;chunkZ=cz;navReady=false;walls.clear();props.clear();solidProps.clear();staticPass.clear();staticSteps.clear();nextWallId=1;haloPropCount=0;
+void populateChunk(int cx,int cz){
+  chunkX=cx;chunkZ=cz;props.clear();solidProps.clear();staticPass.clear();staticSteps.clear();haloPropCount=0;
   // The standalone no-entry WASM binary has no startup constructor pass.
   heights.assign(grid*grid,0);colors.assign(grid*grid*3,0);water.assign(side*side,0);
   const int x0=cx*side-24,z0=cz*side-24;
@@ -224,17 +238,8 @@ int spatial_generate(uint32_t seed,int cx,int cz){
       }
   }
   indexSolidProps();
-  return int(props.size());
 }
-float* spatial_heights_ptr(){return heights.data();}
-float* spatial_colors_ptr(){return colors.data();}
-uint8_t* spatial_water_ptr(){return water.data();}
-Prop* spatial_props_ptr(){return props.data();}
-int spatial_prop_count(){return int(props.size());}
-int spatial_halo_prop_count(){return haloPropCount;}
-int spatial_build_nav(float radius,int worker){
-  if(radius<=0||radius>maxIndexedRadius)return 0;
-  radiusNow=radius;workerNow=worker!=0;
+void buildActiveRaster(){
   const int firstX=chunkX*side-24,firstZ=chunkZ*side-24;
   staticPass.resize(side*side);staticSteps.resize(side*side);
   for(int z=0;z<side;z++)for(int x=0;x<side;x++)staticPass[z*side+x]=terrainPropWalkable(firstX+x,firstZ+z);
@@ -244,13 +249,65 @@ int spatial_build_nav(float radius,int worker){
     uint8_t mask=0;
     if(staticPass[i])for(int d=0;d<4;d++){
       const int nx=wx+dx[d],nz=wz+dz[d];
-      if(insideChunk(nx,nz)&&staticPass[chunkIndex(nx,nz)]&&terrainPropEdge(wx,wz,nx,nz))mask|=1<<d;
+      if(terrainPropEdge(wx,wz,nx,nz))mask|=1<<d;
     }
     staticSteps[i]=mask;
   }
-  if(!lazy_init(sector))return 0;
-  navReady=true;
+  chunkRasters->insert_or_assign(chunkKey(chunkX,chunkZ),ChunkRaster{chunkX,chunkZ,staticPass,staticSteps});
+}
+void commitActiveSectors(){
+  const int firstX=chunkX*side-24,firstZ=chunkZ*side-24;
   for(int sz=0;sz<4;sz++)for(int sx=0;sx<4;sx++)refreshSector(firstX/sector+sx,firstZ/sector+sz);
+}
+void refreshNeighborBorders(int cx,int cz){
+  constexpr int dx[4]={1,-1,0,0},dz[4]={0,0,1,-1};
+  for(int direction=0;direction<4;direction++){
+    const int nx=cx+dx[direction],nz=cz+dz[direction];
+    if(!chunkRasters->count(chunkKey(nx,nz)))continue;
+    const int firstX=(nx*side-24)/sector,firstZ=(nz*side-24)/sector;
+    for(int i=0;i<4;i++){
+      const int sx=firstX+(direction==0?0:direction==1?3:i);
+      const int sz=firstZ+(direction==2?0:direction==3?3:i);
+      refreshSector(sx,sz);
+    }
+  }
+}
+}
+
+extern "C" {
+int spatial_generate(uint32_t seed,int cx,int cz){
+  worldSeed=seed;navReady=false;walls.clear();
+  if(!chunkRasters)chunkRasters=new std::unordered_map<uint64_t,ChunkRaster>();else chunkRasters->clear();
+  loadedChunks.clear();nextWallId=1;
+  populateChunk(cx,cz);loadedChunks.emplace_back(cx,cz);
+  return int(props.size());
+}
+int spatial_add_chunk(int cx,int cz){
+  if(loadedChunks.empty())return -1;
+  if(chunkRasters->count(chunkKey(cx,cz)))return 0;
+  for(const auto& [x,z]:loadedChunks)if(x==cx&&z==cz)return 0;
+  populateChunk(cx,cz);loadedChunks.emplace_back(cx,cz);
+  if(navReady){buildActiveRaster();commitActiveSectors();refreshNeighborBorders(cx,cz);}
+  return int(props.size());
+}
+int spatial_chunk_count(){return int(loadedChunks.size());}
+float* spatial_heights_ptr(){return heights.data();}
+float* spatial_colors_ptr(){return colors.data();}
+uint8_t* spatial_water_ptr(){return water.data();}
+Prop* spatial_props_ptr(){return props.data();}
+int spatial_prop_count(){return int(props.size());}
+int spatial_halo_prop_count(){return haloPropCount;}
+int spatial_build_nav(float radius,int worker){
+  if(loadedChunks.empty()||!chunkRasters||radius<=0||radius>maxIndexedRadius)return 0;
+  radiusNow=radius;workerNow=worker!=0;
+  if(!lazy_init(sector))return 0;
+  const int selectedX=chunkX,selectedZ=chunkZ;
+  chunkRasters->clear();
+  for(const auto& [cx,cz]:loadedChunks){
+    populateChunk(cx,cz);buildActiveRaster();commitActiveSectors();refreshNeighborBorders(cx,cz);
+  }
+  if(chunkX!=selectedX||chunkZ!=selectedZ)populateChunk(selectedX,selectedZ);
+  navReady=true;
   return lazy_loaded_sectors();
 }
 int spatial_add_wall(float x,float z,float halfX,float halfZ){
