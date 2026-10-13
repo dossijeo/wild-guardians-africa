@@ -13,7 +13,9 @@ import {addSpatialWall,addSpatialWallsBatch,addSpatialGate,addSpatialStructuresB
 import {createSpatialWallMirror} from '../src/world/hierarchical-wasm/spatial-wall-mirror.js';
 import {addSpatialCenter,removeSpatialCenter} from '../src/world/hierarchical-wasm/spatial-center-bridge.js';
 import {createSpatialCenterMirror} from '../src/world/hierarchical-wasm/spatial-center-mirror.js';
+import {addSpatialVillageBuildings,removeSpatialVillageBuildings} from '../src/world/hierarchical-wasm/spatial-village-bridge.js';
 import {centerFootprint} from '../src/world/centers.js';
+import {villageLayout} from '../src/world/villages.js';
 import {footprintDistance} from '../src/world/footprints.js';
 import {wallCollisionFrame} from '../src/world/wall-collision-frame.js';
 
@@ -343,6 +345,36 @@ test('version 4 spatial snapshots still restore without polygon records',()=>{
   const restored=createSpatialSavannaPrototype(module);
   restored.restoreState(legacy);
   assert.deepEqual(restored.snapshot(),current);
+});
+test('authored village houses share exact collision polygons with the C++ graph',()=>{
+  const payloads=JSON.parse(readFileSync(new URL('../public/content/villages.json',import.meta.url),'utf8'));
+  for(const payload of payloads){
+    const core=createSpatialSavannaPrototype(module);
+    core.generate(712,0,0);core.setSettlement(0,0,40,40);
+    const buildings=villageLayout(payload,0,0),village={id:'village-1',buildings};
+    const solids=buildings.filter(building=>building.kind!=='Zona común');
+    const ids=addSpatialVillageBuildings(core,village);
+    assert.equal(ids.size,solids.length);
+    assert.equal(core.snapshot().polygons.length,solids.length);
+    core.buildNavigation(.28,true);
+    let checked=0;
+    for(const building of solids){
+      const {footprint}=building;
+      const xs=footprint.map(p=>p.x),zs=footprint.map(p=>p.z);
+      for(let z=Math.floor(Math.min(...zs))-1;z<=Math.ceil(Math.max(...zs))+1;z++)
+        for(let x=Math.floor(Math.min(...xs))-1;x<=Math.ceil(Math.max(...xs))+1;x++){
+          const distance=footprintDistance(footprint,x,z);
+          if(Math.abs(distance-.28)<.02)continue;
+          if(distance<.28){assert.equal(core.localClear({x,z},{x,z}),false);checked++;}
+        }
+    }
+    assert(checked>20,`${payload.id}: not enough occupied building cells`);
+    const saved=core.snapshot(),restored=createSpatialSavannaPrototype(module);
+    restored.restoreState(saved);restored.buildNavigation(.28,true);
+    assert.deepEqual(restored.snapshot(),saved);
+    removeSpatialVillageBuildings(core,ids);
+    assert.equal(core.snapshot().polygons.length,0);
+  }
 });
 test('the dry Desert chunk shares visible dunes, solid props and hierarchical routes',()=>{
   const core=createSpatialSavannaPrototype(module);
