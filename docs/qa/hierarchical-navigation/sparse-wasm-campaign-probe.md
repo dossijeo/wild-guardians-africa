@@ -1,0 +1,18 @@
+# Seven-night native campaign: sparse WASM hybrid probe
+
+This is a **QA hybrid**, not a production navigator. The experimental hook tries the sparse C++/WASM sector route, validates every returned segment with native `Navigation.segmentClear`, and delegates unresolved requests to the existing JS hierarchical navigator. Region selection and connectivity queries still use the JS navigator. The same native campaign runner, Sabana/Mapungubwe, seed 712, and good-management policy were used in sequential control/probe/probe/control order. Full daily ledgers and metrics remain in [control 1](sabana-7-control-current.json), [probe 1](sabana-7-sparse-probe.json), [probe 2](sabana-7-sparse-probe-repeat.json), and [control 2](sabana-7-control-repeat.json).
+
+| Run | Nights completed | Wall time | Day-7 coins | Day-7 living crops | Day-7 deliveries | Crops destroyed through day 7 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Control 1 | 7 | 108.76 s | 921 | 131 | 121 | 4 |
+| WASM hybrid 1 | 7 | 81.61 s | 742 | 135 | 106 | 0 |
+| WASM hybrid 2 | 7 | 81.10 s | 742 | 135 | 106 | 0 |
+| Control 2 | 7 | 112.32 s | 921 | 131 | 121 | 4 |
+
+The runs within each variant repeated their economic state, but **the variants did not perform identical work**. Different physically validated routes changed deliveries, raid losses, planting and the subsequent simulation state. The observed 25–28% shorter wall time is therefore a campaign-level result for this candidate, not a controlled claim that its pathfinding algorithm alone is 25–28% faster. It still meets the user's criterion that alternative valid routes are allowed; a separate movement and persistence audit remains required.
+
+At the end of the repeated WASM run, the hook counted 6,212 `path` requests: 2,680 direct physical segments, 1,118 WASM routes, and 2,414 JS fallbacks. The WASM attempt spent 3.87 s; fallbacks spent 9.16 s. Of the non-direct attempts, 421 reached unloaded territory, 759 reported a blocked connector pair, and 1,234 lacked a valid sampled endpoint connector. Blocked outcomes were still delegated because only the nearest three connector candidates per endpoint were tried; treating them as definitive would risk rejecting another valid approach. No route returned by WASM failed its native segment check. The hook materialized 45 sectors across seven profile instances and made 146 sector updates. At 4 MiB initial linear memory per instance, those seven instances reserve approximately 28 MiB before JavaScript objects and physical-world caches; a production implementation needs profile sharing or a measured memory budget.
+
+By the end of night 5, the repeated candidate had 2,507 path requests and only 117 fallbacks. The fallback count rose to 1,047 by night 6 and 2,414 by night 7, coinciding with more animal activity and physically difficult endpoints. This is the next architectural problem to fix. The selector must ask the region graph for accessible target groups or attackable barriers, while the sparse planner must find local service points without reverting to the old 32-approach loop. Adding more per-crop fallback queries would undermine the redesign.
+
+The first-night control and probe are retained separately as [control](sabana-1-control.json) and [probe](sabana-1-sparse-probe.json). They complete in 2.24 and 1.94 s, respectively, but are too short to establish sustained performance. The seven-night results are promising enough to continue the prototype, **not** sufficient for a PR or merge. Required next gates: longer mixed-biome campaigns, property tests for real movement and save/restore, a no-fallback selector, topology-update accounting, and RAM/VRAM observations in the actual browser runtime.

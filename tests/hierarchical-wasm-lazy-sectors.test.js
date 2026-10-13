@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {createLazySectorProbe} from '../src/world/hierarchical-wasm/lazy-sectors-adapter.js';
+import {createLazySectorProbe,createLazySectorProbeSync} from '../src/world/hierarchical-wasm/lazy-sectors-adapter.js';
 import {fixture} from '../tools/probe-raid-reservation-saturation.mjs';
 
 const bytes=readFileSync(new URL('../src/world/hierarchical-wasm/lazy-sectors.wasm',import.meta.url));
@@ -43,6 +43,19 @@ test('a local breach updates one sector and its neighboring graph edges',async()
   blocked.add('11,12');probe.loadSector(1,1);
   assert.equal(probe.connected({x:3,z:12},{x:19,z:12}),0);
   assert.equal(probe.route({x:3,z:12},{x:19,z:12}).status,'blocked');
+});
+
+test('synchronous probe invalidates only loaded sectors touched by a topology edit',()=>{
+  const {nav,blocked}=wallFixture();
+  const probe=createLazySectorProbeSync(new WebAssembly.Module(bytes),nav,{sectorSize:8});
+  probe.ensureRect(0,0,23,23);
+  const before=probe.metrics();
+  blocked.delete('11,12');probe.invalidateRect(11,12,11,12);
+  assert.equal(probe.route({x:3,z:12},{x:19,z:12}).status,'found');
+  assert.equal(probe.metrics().loaded,before.loaded);
+  assert(probe.metrics().updates>before.updates);
+  probe.clear();assert.equal(probe.metrics().loaded,0);
+  assert.equal(probe.route({x:3,z:12},{x:19,z:12}).status,'unknown');
 });
 
 test('cross-sector connectivity preserves directional edges',async()=>{

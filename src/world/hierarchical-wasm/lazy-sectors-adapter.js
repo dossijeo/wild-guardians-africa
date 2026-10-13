@@ -4,6 +4,15 @@ import {gatePortalPoints} from '../gate-passages.js';
 
 export async function createLazySectorProbe(bytes,nav,{sectorSize=12,radius=.28,worker=true,ignore=null}={}){
   const {instance}=await WebAssembly.instantiate(bytes,{env:{emscripten_notify_memory_growth(){}}});
+  return createProbe(instance,nav,{sectorSize,radius,worker,ignore});
+}
+
+export function createLazySectorProbeSync(module,nav,{sectorSize=12,radius=.28,worker=true,ignore=null}={}){
+  const instance=new WebAssembly.Instance(module,{env:{emscripten_notify_memory_growth(){}}});
+  return createProbe(instance,nav,{sectorSize,radius,worker,ignore});
+}
+
+function createProbe(instance,nav,{sectorSize,radius,worker,ignore}){
   const wasm=instance.exports;
   if(!wasm.lazy_init(sectorSize))throw Error('Invalid lazy navigation sector size');
   const count=sectorSize*sectorSize;
@@ -39,6 +48,16 @@ export async function createLazySectorProbe(bytes,nav,{sectorSize=12,radius=.28,
   function ensureRect(minX,minZ,maxX,maxZ){
     for(let sz=Math.floor(minZ/sectorSize);sz<=Math.floor(maxZ/sectorSize);sz++)
       for(let sx=Math.floor(minX/sectorSize);sx<=Math.floor(maxX/sectorSize);sx++)ensureSector(sx,sz);
+  }
+  function invalidateRect(minX,minZ,maxX,maxZ){
+    const left=Math.floor((minX-1)/sectorSize),right=Math.floor((maxX+1)/sectorSize);
+    const top=Math.floor((minZ-1)/sectorSize),bottom=Math.floor((maxZ+1)/sectorSize);
+    for(let sz=top;sz<=bottom;sz++)for(let sx=left;sx<=right;sx++)
+      if(loaded.has(key(sx,sz)))loadSector(sx,sz);
+    refreshPortals();
+  }
+  function clear(){
+    wasm.lazy_init(sectorSize);loaded.clear();refreshPortals();
   }
   function connected(a,b){return wasm.lazy_connected(Math.round(a.x),Math.round(a.z),Math.round(b.x),Math.round(b.z));}
   function refreshPortals(){
@@ -83,6 +102,6 @@ export async function createLazySectorProbe(bytes,nav,{sectorSize=12,radius=.28,
     return {status:'found',points};
   }
   refreshPortals();
-  return {wasm,loadSector,ensureSector,ensureRect,connected,route,refreshPortals,
+  return {wasm,loadSector,ensureSector,ensureRect,invalidateRect,clear,connected,route,refreshPortals,
     metrics:()=>({loaded:wasm.lazy_loaded_sectors(),updates:wasm.lazy_sector_updates(),memoryBytes:wasm.memory.buffer.byteLength})};
 }
