@@ -211,6 +211,12 @@ test('wall topology mirror reacts to placement, gate conversion and ruin but ign
     x:-7,z:0,yaw:0,gate:false}];
   assert.deepEqual(mirror.sync(walls),{count:2,added:2});
   assert.equal(core.snapshot().barriers.length,2);
+  const reloaded=createSpatialSavannaPrototype(module);
+  reloaded.generate(712,0,0);reloaded.buildNavigation(.28,true);reloaded.buildNavigation(1.1,false);
+  const reloadedMirror=createSpatialWallMirror(reloaded);
+  assert.deepEqual(reloadedMirror.sync(structuredClone(walls)),{count:2,added:2});
+  assert.deepEqual(reloaded.snapshot(),core.snapshot(),
+    'rebuilding spatial topology from saved game structures is deterministic');
   const firstIds=mirror.barrierIds('one');
   const updates=core.metrics().sectorUpdates;
   walls[0].hp=21;walls[1].gateOpen=.7;
