@@ -12,7 +12,7 @@ const measuredAsync=async fn=>{const t=performance.now(),value=await fn();return
 async function one(variant){
   const {s,nav}=fixture('closed-walls'),before=process.memoryUsage().rss;
   const compiled=variant!=='javascript';
-  const created=await measuredAsync(()=>compiled?createHierarchicalWasmNavigator(bytes,nav,{...bounds,diagonal:variant==='wasm-flat'}):createHierarchicalNavigationAdapter(nav));
+  const created=await measuredAsync(()=>compiled?createHierarchicalWasmNavigator(bytes,nav,{...bounds,diagonal:variant==='wasm-flat'||variant==='wasm-tree'}):createHierarchicalNavigationAdapter(nav));
   const engine=created.value,initialized=measured(()=>engine.initialize?.()??null),rows=[];
   const starts=[12,14,16,18].map(x=>({x,z:29}));
   const targets=[8,10,12,14,16,18].map(x=>({x,z:7}));
@@ -21,6 +21,7 @@ async function one(variant){
     const result=measured(()=>requests.map(({start,end})=>{
       const path=variant==='wasm-hier'?(facade?engine.path(start,end):engine.route(start,end)):
         variant==='wasm-flat'?(facade?engine.path(start,end,{flat:true}):engine.flatRoute(start,end)):
+        variant==='wasm-tree'?(facade?engine.path(start,end,{tree:true}):engine.treeRoute(start,end)):
           engine.path(start,end,radius,null,false,24);
       let valid=!!path,previous=start;
       for(const point of path??[]){if(!nav.segmentClear(previous,point,radius,null,false))valid=false;previous=point;}
@@ -37,7 +38,7 @@ async function one(variant){
     rssDeltaBytes:process.memoryUsage().rss-before,wasmMemoryBytes:engine.wasm?.memory.buffer.byteLength??null,rows,
     metrics:compiled?engine.metrics():engine.planner.metrics};
 }
-const rows=[];for(const variant of ['javascript','wasm-hier','wasm-flat','wasm-flat','wasm-hier','javascript'])rows.push(await one(variant));
+const rows=[];for(const variant of ['javascript','wasm-hier','wasm-tree','wasm-flat','wasm-flat','wasm-tree','wasm-hier','javascript'])rows.push(await one(variant));
 const report={scope:'Native closed 100-crop perimeter, then two destroyed wall modules. One animal radius, 24 fixed outside-to-crop queries per phase. Includes construction, raster synchronization and real physical segment verification.',rows};
 mkdirSync(dirname(output),{recursive:true});writeFileSync(output,JSON.stringify(report,null,2)+'\n');
 console.log(JSON.stringify(rows.map(({variant,setupMilliseconds,initializeMilliseconds,updateMilliseconds,rows})=>({variant,setupMilliseconds,initializeMilliseconds,updateMilliseconds,rows}))));
