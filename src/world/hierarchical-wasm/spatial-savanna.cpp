@@ -43,6 +43,7 @@ struct PropKeyHash {size_t operator()(const PropKey& key)const{
   return size_t(a^b^c);
 }};
 struct Pond {double x,z,radius,level;};
+struct ChunkSpatialSample {std::vector<double> lattice;std::vector<Pond> ponds;};
 struct WaterPoint {double x,z;};
 struct Barrier {int id;float x,z,halfX,halfZ;uint8_t passMask;};
 struct BarrierStateRecord {int32_t id;float x,z,halfX,halfZ;int32_t passMask;};
@@ -68,6 +69,11 @@ std::vector<float> waterLevels;
 std::vector<float> waterTriangles;
 std::vector<double> lattice;
 std::vector<Pond> ponds;
+std::unordered_map<uint64_t,ChunkSpatialSample>* residentSpatialRegistry=nullptr;
+std::unordered_map<uint64_t,ChunkSpatialSample>& residentSpatial(){
+  if(!residentSpatialRegistry)residentSpatialRegistry=new std::unordered_map<uint64_t,ChunkSpatialSample>();
+  return *residentSpatialRegistry;
+}
 std::vector<Prop> props;
 std::vector<Prop> solidProps;
 std::unordered_set<PropKey,PropKeyHash>* removedPropRegistry=nullptr;
@@ -121,6 +127,19 @@ void selectProfile(int index){
   lazy_select_context(index);
 }
 uint64_t chunkKey(int cx,int cz){return (uint64_t(uint32_t(cx))<<32)|uint32_t(cz);}
+const ChunkSpatialSample* residentSample(double x,double z,int* outCx=nullptr,int* outCz=nullptr){
+  const int cx=int(std::floor((x+24)/side)),cz=int(std::floor((z+24)/side));
+  const int candidatesX[2]={cx,cx-1},candidatesZ[2]={cz,cz-1};
+  for(int iz=0;iz<(z==cz*side-24?2:1);iz++)
+    for(int ix=0;ix<(x==cx*side-24?2:1);ix++){
+      const int px=candidatesX[ix],pz=candidatesZ[iz];
+      const auto found=residentSpatial().find(chunkKey(px,pz));
+      if(found==residentSpatial().end())continue;
+      if(outCx)*outCx=px;if(outCz)*outCz=pz;
+      return &found->second;
+    }
+  return nullptr;
+}
 constexpr int barrierBucketWidth=8;
 uint64_t barrierKey(int bx,int bz){return chunkKey(bx,bz);}
 void indexBarrier(const Barrier& barrier,bool add){
@@ -288,7 +307,14 @@ double height(double x,double z){
 }
 double latticeHeight(int x,int z){
   const int ix=x-(chunkX*side-24)+pad,iz=z-(chunkZ*side-24)+pad;
-  return ix>=0&&iz>=0&&ix<latticeSpan&&iz<latticeSpan&&!lattice.empty()?lattice[iz*latticeSpan+ix]:height(x,z);
+  if(ix>=0&&iz>=0&&ix<latticeSpan&&iz<latticeSpan&&!lattice.empty())return lattice[iz*latticeSpan+ix];
+  int cx=0,cz=0;
+  if(const ChunkSpatialSample* sample=residentSample(x,z,&cx,&cz)){
+    const int lx=x-(cx*side-24)+pad,lz=z-(cz*side-24)+pad;
+    if(lx>=0&&lz>=0&&lx<latticeSpan&&lz<latticeSpan)
+      return sample->lattice[lz*latticeSpan+lx];
+  }
+  return height(x,z);
 }
 double surface(double x,double z){
   const int ix=int(std::floor(x)),iz=int(std::floor(z));
@@ -297,15 +323,16 @@ double surface(double x,double z){
   const double c=latticeHeight(ix+1,iz+1);
   return c+(latticeHeight(ix,iz+1)-c)*(1-fx)+(latticeHeight(ix+1,iz)-c)*(1-fz);
 }
-double fluidLevel(double x,double z){
+double fluidLevelFor(double x,double z,const std::vector<Pond>& localPonds){
   if(worldBiome==1)return 0;
   if(worldBiome==4)return wetlandMask(x,z)>.61?3.34:0;
   if(worldBiome==5)return std::abs(x-riverX(z))<mainRiverReach(z)&&
     surface(x,z)<3.275?3.28:0;
   if(std::abs(x-riverX(z))<6.1&&surface(x,z)<3.58)return 3.6;
-  for(const Pond& p:ponds)if(std::hypot(x-p.x,z-p.z)<p.radius*.82&&surface(x,z)<p.level-.02)return p.level;
+  for(const Pond& p:localPonds)if(std::hypot(x-p.x,z-p.z)<p.radius*.82&&surface(x,z)<p.level-.02)return p.level;
   return 0;
 }
+double fluidLevel(double x,double z){return fluidLevelFor(x,z,ponds);}
 bool fluid(double x,double z){return fluidLevel(x,z)!=0;}
 double riverWetEdge(double z,int direction){
   const double center=riverX(z);
@@ -641,6 +668,10 @@ void populateChunk(int cx,int cz,bool visual=true){
   lattice.resize(latticeSpan*latticeSpan);
   for(int z=0;z<latticeSpan;z++)for(int x=0;x<latticeSpan;x++)
     lattice[z*latticeSpan+x]=height(x0+x-pad,z0+z-pad);
+  // Graph rebuilds, prop edits and chunk selection reuse the resident relief.
+  // A settlement explicitly invalidates affected samples before regeneration.
+  if(!residentSpatial().count(chunkKey(cx,cz)))
+    residentSpatial()[chunkKey(cx,cz)]={lattice,ponds};
   if(visual){
   for(int z=0;z<grid;z++)for(int x=0;x<grid;x++){
     const int i=z*grid+x,wx=x0+x,wz=z0+z;
@@ -868,6 +899,7 @@ void refreshSettlementChunks(const std::vector<Settlement>& changed){
     if(!std::any_of(changed.begin(),changed.end(),[&](const Settlement& site){
       return settlementNearChunk(site,chunkCx,chunkCz);
     }))continue;
+    residentSpatial().erase(chunkKey(cx,cz));
     populateChunk(cx,cz);
     for(int profile=0;profile<navigationProfiles;profile++){
       selectProfile(profile);
@@ -975,6 +1007,7 @@ int spatial_generate_biome(uint32_t seed,int biome,int cx,int cz){
   activeProfile=0;radiusNow=.3f;workerNow=false;navReady=false;
   chunkRasters=&navProfile(0).rasters;lazy_select_context(0);
   loadedChunks.clear();nextBarrierId=1;
+  residentSpatial().clear();
   populateChunk(cx,cz);loadedChunks.emplace_back(cx,cz);
   return int(props.size());
 }
@@ -1003,6 +1036,7 @@ int spatial_remove_chunk(int cx,int cz){
   const auto it=std::find(loadedChunks.begin(),loadedChunks.end(),std::pair<int,int>{cx,cz});
   if(it==loadedChunks.end())return 0;
   loadedChunks.erase(it);
+  residentSpatial().erase(chunkKey(cx,cz));
   const int previous=activeProfile;
   for(int profile=0;profile<navigationProfiles;profile++){
     selectProfile(profile);
@@ -1082,16 +1116,16 @@ int spatial_restore_removed_props(int count){
 }
 int spatial_sector_slots(){return lazy_sector_slots();}
 float spatial_surface(float x,float z){
-  if(!std::isfinite(x)||!std::isfinite(z)||loadedChunks.empty()||
-    x<chunkX*side-24||x>chunkX*side+24||z<chunkZ*side-24||z>chunkZ*side+24)
+  if(!std::isfinite(x)||!std::isfinite(z)||!residentSample(x,z))
     return std::numeric_limits<float>::quiet_NaN();
   return float(surface(x,z));
 }
 float spatial_fluid_level(float x,float z){
-  if(!std::isfinite(x)||!std::isfinite(z)||loadedChunks.empty()||
-    x<chunkX*side-24||x>chunkX*side+24||z<chunkZ*side-24||z>chunkZ*side+24)
+  if(!std::isfinite(x)||!std::isfinite(z))
     return std::numeric_limits<float>::quiet_NaN();
-  return float(fluidLevel(x,z));
+  const ChunkSpatialSample* sample=residentSample(x,z);
+  return sample?float(fluidLevelFor(x,z,sample->ponds)):
+    std::numeric_limits<float>::quiet_NaN();
 }
 float* spatial_heights_ptr(){return heights.data();}
 float* spatial_colors_ptr(){return colors.data();}

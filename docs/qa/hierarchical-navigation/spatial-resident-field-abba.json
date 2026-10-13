@@ -1,0 +1,45 @@
+{
+  "scope": "ABBA, same Sabana seed and 80-step two-chunk residency. Compares committed 0578f168 WASM with resident field samples; excludes compilation, visual upload and game simulation.",
+  "rows": [
+    {
+      "version": "before",
+      "otherResidentSurface": null,
+      "medianStepMs": 10.636400000000037,
+      "p95StepMs": 14.622100000000046,
+      "totalStepMs": 871.0312999999999,
+      "memoryBytes": 4194304,
+      "loadedChunks": 2,
+      "loadedSectors": 32
+    },
+    {
+      "version": "after",
+      "otherResidentSurface": 3.426513433456421,
+      "medianStepMs": 12.210100000000011,
+      "p95StepMs": 15.622000000000071,
+      "totalStepMs": 982.6422000000007,
+      "memoryBytes": 4194304,
+      "loadedChunks": 2,
+      "loadedSectors": 32
+    },
+    {
+      "version": "after",
+      "otherResidentSurface": 3.426513433456421,
+      "medianStepMs": 11.929699999999684,
+      "p95StepMs": 16.48160000000007,
+      "totalStepMs": 978.1972000000014,
+      "memoryBytes": 4194304,
+      "loadedChunks": 2,
+      "loadedSectors": 32
+    },
+    {
+      "version": "before",
+      "otherResidentSurface": null,
+      "medianStepMs": 10.141900000000078,
+      "p95StepMs": 12.736300000000028,
+      "totalStepMs": 804.0311000000002,
+      "memoryBytes": 4194304,
+      "loadedChunks": 2,
+      "loadedSectors": 32
+    }
+  ]
+}

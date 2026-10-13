@@ -7,6 +7,7 @@ import {nativeWaterBuffer} from '../src/rendering/water-geometry.js';
 import {chunkTransferables} from '../src/rendering/chunk-data.js';
 import {SpatialSurfaceView} from '../src/world/hierarchical-wasm/spatial-surface-view.js';
 import {ANIMAL_SPATIAL_PROFILES} from '../src/world/hierarchical-wasm/spatial-movement-profiles.js';
+import {createSpatialWorld} from '../src/world/hierarchical-wasm/spatial-world.js';
 
 const module=new WebAssembly.Module(readFileSync(new URL('../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
 function validRoute(core,start,result){
@@ -208,6 +209,41 @@ test('Gran Cañón keeps its gorge, water barrier and worker crossing in one spa
   restored.restoreState(state,0,0);
   assert.deepEqual(restored.snapshot(),state);
   assert.deepEqual(restored.props(),props);
+});
+test('the render payload and synchronous field query read one spatial world across chunks',()=>{
+  const core=createSpatialWorld(module),view=new SpatialSurfaceView();
+  core.generate(28,0,0,'canyons');view.install(core.chunkPayload());
+  core.addChunk(1,0);view.install(core.chunkPayload());
+  for(const cx of [0,1])for(let zi=0;zi<12;zi++)for(let xi=0;xi<12;xi++){
+    const x=cx*48-22.5+xi*4,z=-22.5+zi*4;
+    assert(Math.abs(view.surface(x,z)-core.surface(x,z))<.00005,`surface ${x},${z}`);
+    const slope=Math.hypot(core.surface(x+.8,z)-core.surface(x-.8,z),
+      core.surface(x,z+.8)-core.surface(x,z-.8))/1.6;
+    assert(Math.abs(core.slope(x,z)-slope)<1e-9);
+  }
+  const a=core.currentChunk();assert.equal(a.cx,1);
+  assert(core.selectChunk(0,0)>=0);assert.equal(core.currentChunk().cx,0);
+  assert(Number.isNaN(core.surface(96,0)),'unloaded terrain is unknown');
+});
+test('resident surface and water queries match both rendered chunks in every biome',()=>{
+  for(const biome of ['savanna','desert','grand_river','volcanoes','mangrove','canyons']){
+    const core=createSpatialWorld(module),view=new SpatialSurfaceView();
+    core.generate(28,0,0,biome);
+    const firstWater=Float32Array.from(core.waterLevels());view.install(core.chunkPayload());
+    core.addChunk(1,0);
+    const secondWater=Float32Array.from(core.waterLevels());view.install(core.chunkPayload());
+    for(const [cx,water] of [[0,firstWater],[1,secondWater]]){
+      for(let zi=0;zi<8;zi++)for(let xi=0;xi<8;xi++){
+        const x=cx*48-21.75+xi*6,z=-21.25+zi*6;
+        assert(Math.abs(view.surface(x,z)-core.surface(x,z))<.00005,`${biome} surface ${cx}`);
+      }
+      for(let zi=0;zi<48;zi+=3)for(let xi=0;xi<48;xi+=3){
+        const x=cx*48-23.5+xi,z=-23.5+zi;
+        assert(Math.abs(water[zi*48+xi]-core.fluidLevel(x,z))<.00001,
+          `${biome} water ${cx} ${xi},${zi}`);
+      }
+    }
+  }
 });
 test('five animal radii retain independent logical graphs across profile switches and wall edits',()=>{
   const core=createSpatialSavannaPrototype(module);

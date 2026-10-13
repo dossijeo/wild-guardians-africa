@@ -95,7 +95,16 @@ try{
     const exact=await request(candidate,{id:190,op:'surface',...query});
     if(Math.abs(view.surface(query.x,query.z)-exact.value)>.00002)
       throw Error('Transferred terrain view differs from WASM surface');
-    surfaceView={sample:query,height:view.surface(query.x,query.z),difference:Math.abs(view.surface(query.x,query.z)-exact.value)};
+    const otherQuery={x:-15.3,z:1.7};
+    const other=await request(candidate,{id:191,op:'surface',...otherQuery});
+    if(Math.abs(view.surface(otherQuery.x,otherQuery.z)-other.value)>.00005)
+      throw Error('A resident chunk lost its surface query when another chunk became active');
+    const canyonWater=biome==='canyons'?await request(candidate,{id:192,op:'fluid-level',x:-12,z:0}):null;
+    if(canyonWater&&!(canyonWater.value>0))
+      throw Error('Canyon river query lost a resident chunk after selecting another');
+    surfaceView={sample:query,height:view.surface(query.x,query.z),difference:Math.abs(view.surface(query.x,query.z)-exact.value),
+      otherChunkDifference:Math.abs(view.surface(otherQuery.x,otherQuery.z)-other.value),
+      canyonWaterLevel:canyonWater?.value??null};
     let crossing=null,crossingRoute=null,id=5;
     for(let z=-18;z<=18;z++){
       const edge=await request(candidate,{id:id++,op:'edge',x:23,z,nx:24,nz:z});
@@ -277,7 +286,7 @@ try{
       multipleSettlements:multipleSettlements?.sameFirstSettlement===true,
       spatialReload:spatialReload?.version===3&&spatialReload?.removedProps===1,
       propRemoval:propRemoval?.sectorUpdates>0,
-      surfaceView:surfaceView?.difference<=.00002}};window.qaReady=true;
+      surfaceView:surfaceView?.difference<=.00002&&surfaceView?.otherChunkDifference<=.00005}};window.qaReady=true;
   status.textContent=JSON.stringify(window.qaStats,null,2);
 }catch(error){window.qaError=String(error.stack??error);status.textContent=window.qaError;}
 </script></body></html>

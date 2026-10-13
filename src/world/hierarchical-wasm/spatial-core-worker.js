@@ -58,6 +58,7 @@ self.onmessage=async({data:request})=>{
           wasm.spatial_select_nav_profile_index(request.index);break;
         case 'build-profile':value=wasm.spatial_build_nav_profile(request.index,request.radius,request.worker?1:0);break;
         case 'surface':value=wasm.spatial_surface(request.x,request.z);break;
+        case 'fluid-level':value=wasm.spatial_fluid_level(request.x,request.z);break;
         case 'snapshot':value=captureSpatialState(wasm);break;
         case 'restore':{
           const state=validateSpatialState(request.state);
