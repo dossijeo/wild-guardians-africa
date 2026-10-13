@@ -640,6 +640,35 @@ test('far terrain queries use the same native recipe without loading chunks or c
     }
   }
 });
+
+test('native far-water geometry exposes the river edges and wetland mask used by its own fluid rules',()=>{
+  for(const biome of ['sabana','gran-rio','volcanes','gran-canon']){
+    const core=createSpatialWorld(module);core.generate(712,0,0,biome);
+    core.setSettlement(0,0,15,12);
+    const before=core.metrics(),selected=core.currentChunk(),z=96;
+    const center=core.riverCenter(z),left=core.riverEdge(z,-1),right=core.riverEdge(z,1);
+    assert(left<center&&center<right,`${biome} river edges`);
+    assert(Math.abs(core.fluidLevelAnywhere(center,z)-core.riverLevel())<.00001);
+    assert(Math.abs(core.fluidLevelAnywhere((left+center)/2,z)-core.riverLevel())<.00001);
+    assert(Math.abs(core.fluidLevelAnywhere((right+center)/2,z)-core.riverLevel())<.00001);
+    assert.deepEqual(core.currentChunk(),selected);
+    assert.equal(core.metrics().loadedChunks,before.loadedChunks);
+    assert.equal(core.metrics().sectorUpdates,before.sectorUpdates);
+    core.addChunk(Math.floor((center+24)/48),Math.floor((z+24)/48));
+    assert.equal(core.fluidLevel(center,z),core.fluidLevelAnywhere(center,z));
+  }
+  const mangrove=createSpatialWorld(module);mangrove.generate(712,0,0,'manglares');
+  mangrove.setSettlement(0,0,15,12);
+  assert(Number.isNaN(mangrove.riverCenter(96)));
+  for(let z=50;z<=110;z+=5)for(let x=-45;x<=25;x+=5){
+    const mask=mangrove.wetlandMaskAnywhere(x,z);
+    assert.equal(mangrove.fluidLevelAnywhere(x,z)>0,mask>.61,`wetland ${x},${z}`);
+  }
+  const desert=createSpatialWorld(module);desert.generate(712,0,0,'desierto');
+  assert(Number.isNaN(desert.riverCenter(96)));
+  assert(Number.isNaN(desert.riverEdge(96,-1)));
+  assert(Number.isNaN(desert.wetlandMaskAnywhere(0,96)));
+});
 test('five animal radii retain independent logical graphs across profile switches and wall edits',()=>{
   const core=createSpatialSavannaPrototype(module);
   core.generate(712,0,0,'savanna');

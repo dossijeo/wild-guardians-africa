@@ -1261,6 +1261,29 @@ float spatial_fluid_level_anywhere(float x,float z){
   const ScopedTerrainSample context(x,z);
   return float(fluidLevel(x,z));
 }
+float spatial_river_center(float z){
+  if(!chunkRasters||!std::isfinite(z)||worldBiome==1||worldBiome==4)
+    return std::numeric_limits<float>::quiet_NaN();
+  return float(riverX(z));
+}
+float spatial_river_edge(float z,int direction){
+  if(!chunkRasters||!std::isfinite(z)||(direction!=-1&&direction!=1)||
+     worldBiome==1||worldBiome==4)
+    return std::numeric_limits<float>::quiet_NaN();
+  const double center=riverX(z);
+  const ScopedTerrainSample context(center,z);
+  return float(riverWetEdge(z,direction));
+}
+float spatial_river_level(){
+  return chunkRasters&&worldBiome!=1&&worldBiome!=4?float(mainRiverLevel()):
+    std::numeric_limits<float>::quiet_NaN();
+}
+float spatial_wetland_mask_anywhere(float x,float z){
+  if(!chunkRasters||worldBiome!=4||!std::isfinite(x)||!std::isfinite(z))
+    return std::numeric_limits<float>::quiet_NaN();
+  const ScopedTerrainSample context(x,z);
+  return float(wetlandMask(x,z));
+}
 float* spatial_heights_ptr(){return heights.data();}
 float* spatial_colors_ptr(){return colors.data();}
 uint8_t* spatial_water_ptr(){return water.data();}
