@@ -133,6 +133,16 @@ the native state and daily ledgers. These two seven-night profiles have
 different economic decisions and evolving world states; they do not establish
 relative military difficulty or 100-night survivability.
 
+Continuing the same `bad` policy and seed to a 14-night horizon produced a
+native economic defeat at the end of night 11. The final ledger held 22
+coins, below the 30-coin minimum needed for another worker day; 55 crops
+remained alive and the center retained 600 HP. Day 11 lost 62 crops to
+physical attacks. The runner did not force a defeat or stop early on a
+forecast. `pilot-bad-sabana-123-14.zip` preserves the final state, receipt,
+per-day ledgers, raid evidence, protocol and source hashes. This is one seed
+and one poor-management policy, so it does not yet establish the requested
+win-rate distribution.
+
 A repeated seven-night run with per-step timing located the costly interval
 at simulated time 475–499 on day 7. Twelve of those ticks exceeded three
 seconds, and the largest took 30.34 seconds. A cooperative checkpoint at
