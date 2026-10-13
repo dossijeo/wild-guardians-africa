@@ -236,6 +236,43 @@ path fallback where connectivity cannot be proven.
 
 ## Test baseline and limits
 
+## Mixed physical perimeter correction (candidate)
+
+The planned player previously treated an empty native wall quote as a finished
+`trace-obstructed` perimeter. That conflated an impassable building/rock with
+a crop, an animal-passable placement restriction or an unhostable automatic
+gate. In the Sabana seed-123 good-policy defeat, this happened on days 6 and
+9 (8 and 9 unplaced slots respectively); the old report did not prove that
+those openings were physically closed.
+
+The candidate now checks omitted slots only when the native quote has no more
+buildable pieces. It samples the same animal walkability used by navigation
+along the whole proposed module, using the smallest current animal radius.
+Only a fully blocked span can count as a natural/structural section, and the
+native worker gate must have a traversable portal. Crops use the game's exact
+wall-overlap predicate and move the affected outer contour side without
+removing or damaging an existing plant. Funds, unhostable gates and other
+placement failures remain distinct pending states. When a collision barrier
+changes, the finished mixed trace is rechecked and an opened gap becomes a
+build plan again. These are local checks on a planning/geometry event, not
+per-tick exhaustive perimeter certificates.
+
+The focused planned-policy, native boundary-gate and Grand Canyon tests pass
+(36 tests); the web build passes. A fixture covers a paid wall plus building,
+worker portal, crop detour, and barrier removal. Wider seed-123/712 campaign
+results and before/after decision timings remain necessary before accepting
+the fix as campaign balance evidence. No production raid, collision, terrain,
+economy or plant-health rule changed.
+
+Immediately before this policy change, the same expansive Sabana seed-123
+profile completed a 14-night performance pilot on the retained navigation
+optimizations. Native `Game.tick` accumulated 33.71, 45.29 and 33.99 seconds
+on days 8, 12 and 14; the largest day-8 tick alone took 24.37 seconds. The
+result is `pilot-expansive-sabana-123-14-optimized`. The successful horizon
+does not make a 100-night run computationally acceptable yet, and its policy
+behavior is the old mixed-perimeter interpretation. It must not be used as a
+post-correction outcome.
+
 ## Historical crop scan audit (day-12 snapshot)
 
 The `1,194 plants` previously reported for the expansive Sabana seed-123
