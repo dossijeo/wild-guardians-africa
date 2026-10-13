@@ -50,6 +50,33 @@ test('one C++ source generates visual data and valid worker/animal routes',()=>{
   assert.deepEqual(Array.from(core.heights()),Array.from(first));assert.deepEqual(core.props(),objects);
   assert.deepEqual(Array.from(core.groundMask()),Array.from(mask));
 });
+test('continuous actor connectors preserve fractional and negative positions without crossing static barriers',()=>{
+  const core=createSpatialSavannaPrototype(module);
+  core.generate(712,0,0);
+  core.buildNavigation(.28,true);
+  let fixture;
+  for(let z=-16;z<=16&&!fixture;z++)for(let x=-17;x<=-7&&!fixture;x++){
+    const start={x:x-.12,z:z+.12},end={x:x+4-.12,z:z+.12};
+    if(!core.localClear(start,{x,z})||!core.localClear(end,{x:x+4,z}))continue;
+    if(core.route({x,z},{x:x+4,z}).status==='found')fixture={start,end};
+  }
+  assert(fixture,'expected a fractional crossing on the negative side of the chunk');
+  assert.throws(()=>core.route(fixture.start,fixture.end),/integer coordinates/);
+  const initial=core.routeWorld(fixture.start,fixture.end);
+  assert.equal(initial.status,'found');
+  assert.deepEqual(initial.points.at(-1),fixture.end);
+  let previous=fixture.start;
+  for(const point of initial.points){
+    assert(core.localClear(previous,point),`continuous connector must be physically clear: ${JSON.stringify([previous,point])}`);
+    previous=point;
+  }
+  const wall=core.addBarrier(fixture.end.x,fixture.end.z,.3,.3,0);
+  assert(wall>0);
+  assert.equal(core.localClear(fixture.end,fixture.end),false);
+  assert.notEqual(core.routeWorld(fixture.start,fixture.end).status,'found');
+  core.removeBarrier(wall);
+  assert.equal(core.routeWorld(fixture.start,fixture.end).status,'found');
+});
 test('the dry Desert chunk shares visible dunes, solid props and hierarchical routes',()=>{
   const core=createSpatialSavannaPrototype(module);
   core.generate(28,0,0,'desert');

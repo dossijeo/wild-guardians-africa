@@ -1,6 +1,7 @@
 import {spatialProps,spatialInstances,spatialChunkPayload} from './spatial-savanna-payload.js';
 import {addSpatialBarriersBatch} from './spatial-barrier-batch.js';
 import {captureSpatialState,applySpatialState,validateSpatialState} from './spatial-state.js';
+import {spatialWorldRoute} from './spatial-local-route.js';
 
 // Synchronous world authority. The same WASM instance answers spatial queries
 // and supplies visual buffers; rendering remains the caller's responsibility.
@@ -54,8 +55,10 @@ export function createSpatialWorld(module){
     return spatialChunkPayload(wasm,chunk.cx,chunk.cz);
   }
   function route(start,end){
+    if(![start?.x,start?.z,end?.x,end?.z].every(Number.isSafeInteger))
+      throw RangeError('Grid routes require integer coordinates; use routeWorld for actor positions');
     if(!navigationBuilt)return {status:'unknown',points:[]};
-    const count=wasm.lazy_route(start.x|0,start.z|0,end.x|0,end.z|0);
+    const count=wasm.lazy_route(start.x,start.z,end.x,end.z);
     if(count<0)return {status:'unknown',points:[]};
     if(!count)return {status:'blocked',points:[]};
     const pairs=new Int32Array(wasm.memory.buffer,wasm.lazy_route_ptr(),count*2),points=[];
@@ -67,6 +70,8 @@ export function createSpatialWorld(module){
     surface(x,z+.8)-surface(x,z-.8))/1.6;
   return {wasm,generate,addChunk,selectChunk,removeChunk,currentChunk:()=>chunk,
     heights,colors,water,groundMask,waterLevels,waterTriangles,props,instances,chunkPayload,route,
+    routeWorld:(start,end)=>navigationBuilt?spatialWorldRoute(wasm,route,start,end):{status:'unknown',points:[]},
+    localClear:(start,end)=>Boolean(wasm.spatial_local_clear(start.x,start.z,end.x,end.z)),
     setSettlement:(x,z,hx,hz)=>{
       if(!generated)throw Error('Generate the world before placing a settlement');
       return wasm.spatial_set_settlement(x,z,hx,hz);

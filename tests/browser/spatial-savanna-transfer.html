@@ -124,8 +124,14 @@ try{
       if(!step.value)throw Error('Transferred WASM route contains an invalid physical edge');
       previous=next;
     }
+    const fractional=await request(candidate,{id:id++,op:'route-world',x:24.02,z:crossing.z,nx:24.08,nz:crossing.z});
+    if(fractional.value!=='found'||!(fractional.routePoints instanceof Float32Array)||
+       fractional.routePoints.length!==2||Math.abs(fractional.routePoints[0]-24.08)>.0001)
+      throw Error('Continuous worker route lost its fractional endpoint');
     const wall=await request(candidate,{id:id++,op:'wall-add',x:23.5,z:0,halfX:.8,halfZ:24});
     if(wall.value<=0)throw Error('The wall command was rejected');
+    const fractionalBlocked=await request(candidate,{id:id++,op:'route-world',x:24.02,z:crossing.z,nx:24.08,nz:crossing.z});
+    if(fractionalBlocked.value==='found')throw Error('Continuous worker route crossed a solid wall');
     const blocked=await request(candidate,{id:id++,op:'route',...crossing});
     const workerProfile=await request(candidate,{id:id++,op:'profile',worker:true});
     const workerBlocked=await request(candidate,{id:id++,op:'route',...crossing});
@@ -279,6 +285,7 @@ try{
   window.qaStats={seed,biome,sceneFormat,settlement,current,spatial,topology,barrierTopology,batchTopology,multipleSettlements,surfaceView,spatialReload,propRemoval,speciesProfiles,
     checks:{transferLengths:true,terrainSeam:true,wallEdit:!!topology,
       routePoints:topology?.routePointCount>=1,
+      continuousRoute:!!topology,
       speciesProfiles:speciesProfiles?.smallSectors>=32&&speciesProfiles?.largeSectors>=32,
       dynamicPassage:!!barrierTopology,
       batchedTopology:batchTopology?.count===12,

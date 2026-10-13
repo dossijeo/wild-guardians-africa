@@ -1265,5 +1265,23 @@ int spatial_set_barrier_passability(int id,int passMask){
 }
 int spatial_walkable(int x,int z){return walkable(x,z);}
 int spatial_edge(int x,int z,int nx,int nz){return std::abs(x-nx)+std::abs(z-nz)==1&&edge(x,z,nx,nz);}
+// A short continuous connector from an actor to the discrete graph (or back).
+// The same terrain, prop and barrier predicates used to rasterize navigation
+// validate the actual swept segment. Longer routes belong to the sector graph.
+int spatial_local_clear(float x,float z,float nx,float nz){
+  if(!navReady||!std::isfinite(x)||!std::isfinite(z)||!std::isfinite(nx)||!std::isfinite(nz))return 0;
+  const double distance=std::hypot(double(nx)-x,double(nz)-z);
+  if(distance>1.5)return 0;
+  const int steps=std::max(1,int(std::ceil(distance/.2)));
+  for(int i=0;i<=steps;i++){
+    const double t=double(i)/steps,px=x+(nx-x)*t,pz=z+(nz-z)*t;
+    // The active chunk owns the indexed prop halo. Do not claim a clear
+    // connector for a different chunk until that chunk's prop index is active.
+    if(int(std::floor((px+24)/side))!=chunkX||int(std::floor((pz+24)/side))!=chunkZ||
+       !rasterAt(int(std::round(px)),int(std::round(pz)))||
+       !terrainValid(px,pz,radiusNow,workerNow)||propBlocked(px,pz)||!barrierClear(px,pz))return 0;
+  }
+  return 1;
+}
 int spatial_prop_blocked(float x,float z){return propBlocked(x,z);}
 }

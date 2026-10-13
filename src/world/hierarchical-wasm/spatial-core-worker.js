@@ -2,6 +2,7 @@ import wasmUrl from './spatial-savanna.wasm?url';
 import {spatialChunkPayload,spatialChunkTransferables} from './spatial-savanna-payload.js';
 import {addSpatialBarriersBatch} from './spatial-barrier-batch.js';
 import {captureSpatialState,applySpatialState,validateSpatialState} from './spatial-state.js';
+import {spatialWorldRoute} from './spatial-local-route.js';
 
 let wasm=null,compiledMs=0,seed=null,biome=null;
 async function initialize(){
@@ -35,9 +36,24 @@ self.onmessage=async({data:request})=>{
         case 'edge':value=Boolean(wasm.spatial_edge(request.x,request.z,request.nx,request.nz));break;
         case 'walkable':value=Boolean(wasm.spatial_walkable(request.x,request.z));break;
         case 'route':{
+          if(![request.x,request.z,request.nx,request.nz].every(Number.isSafeInteger))
+            throw RangeError('Grid routes require integer coordinates; use route-world for actor positions');
           const count=wasm.lazy_route(request.x,request.z,request.nx,request.nz);
           value=count<0?'unknown':count===0?'blocked':'found';
           if(count>0)routePoints=new Int32Array(wasm.memory.buffer,wasm.lazy_route_ptr(),count*2).slice();
+          break;
+        }
+        case 'route-world':{
+          const gridRoute=(from,to)=>{
+            const count=wasm.lazy_route(from.x,from.z,to.x,to.z);
+            if(count<=0)return {status:count<0?'unknown':'blocked',points:[]};
+            const pairs=new Int32Array(wasm.memory.buffer,wasm.lazy_route_ptr(),count*2),points=[];
+            for(let i=0;i<count;i++)points.push({x:pairs[2*i],z:pairs[2*i+1]});
+            return {status:'found',points};
+          };
+          const result=spatialWorldRoute(wasm,gridRoute,{x:request.x,z:request.z},{x:request.nx,z:request.nz});
+          value=result.status;
+          if(result.points.length)routePoints=Float32Array.from(result.points.flatMap(point=>[point.x,point.z]));
           break;
         }
         case 'wall-add':value=wasm.spatial_add_wall(request.x,request.z,request.halfX,request.halfZ);break;
