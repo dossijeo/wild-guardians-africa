@@ -43,6 +43,35 @@ test('async horizon preserves the old geometry, clipping vector and resident reg
  horizon.dispose();assert.equal(scene.children.length,0);assert.equal(w.terminated,1);
 });
 
+test('spatial horizon coalesces camera jobs, snapshots only revisions and never falls back to JS terrain',()=>{
+ const w=worker(),scene=new THREE.Scene(),errors=[];
+ let revision=1,snapshots=0;
+ const spatial={revision:()=>revision,snapshot:()=>{snapshots++;return {version:1,seed:712,biome:'canyons',settlements:[]};}};
+ const horizon=new NativeHorizon(scene,()=>new THREE.MeshBasicMaterial(),null,null,
+   {spatial,workerFactory:()=>w,onFallback:error=>errors.push(error)});
+ const config={biome:'canyons',seed:712,river:true},profile={colors:{water:'#3aadb6'}},
+   first=nativeNearRegion({x:0,z:0}),next=nativeNearRegion({x:48,z:0}),
+   data={terrain:new Float32Array(27),water:new Float32Array()};
+ horizon.update(config,profile,first,'media');
+ assert.equal(w.requests.length,1);assert.equal(snapshots,1);
+ assert.deepEqual(w.requests[0].waterColor,[58/255,173/255,182/255]);
+ horizon.update(config,profile,first,'media');assert.equal(snapshots,1);
+ revision=2;horizon.update(config,profile,next,'media');
+ assert.equal(snapshots,2);assert.equal(w.requests.length,1,'new region waits for the active job');
+ w.reply(0,data);assert.equal(w.requests.length,2);
+ assert.equal(horizon.group,null,'obsolete geometry never appears');
+ w.reply(1,data);assert.deepEqual(horizon.update(config,profile,next,'media'),next);
+ assert.ok(horizon.group);
+ revision=3;horizon.update(config,profile,first,'media');
+ assert.equal(w.requests.length,3);w.onerror(new Error('Worker failed'));
+ assert.equal(errors.length,1);assert.equal(w.terminated,1);
+ const retained=horizon.group;
+ assert.deepEqual(horizon.update(config,profile,first,'media'),next);
+ assert.equal(horizon.group,retained);
+ assert.equal(snapshots,3,'failed worker does not repeatedly serialize spatial state');
+ horizon.dispose();
+});
+
 test('world streaming adopts the ready horizon rectangle instead of dropping old resident chunks early',()=>{
  const requested=nativeNearRegion({x:96,z:0}),retained=nativeNearRegion({x:0,z:0}),world=Object.create(WorldScene.prototype),contacts=new NativeContacts();
  Object.assign(world,{contacts,chunkRevision:0,contactPrototypes:Array.from({length:20},()=>({radius:1,group:0})),nav:{config:{biome:'canyons',layers:Array(6).fill(true)}},pack:{profile:{}},camera:{position:{x:96,z:0}},controls:{target:{x:0,z:0}},quality:'media',prototypes:[],scene:new THREE.Scene(),chunks:new Map(),terrainMeshes:[],horizon:{update(c,p,region){assert.deepEqual(region,requested);return retained;}},terrain:()=>{const group=new THREE.Group();group.userData.contactInstances=Array.from({length:20},()=>[]);return group;}});

@@ -1,6 +1,6 @@
 import {spatialProps,spatialInstances,spatialChunkPayload} from './spatial-savanna-payload.js';
 import {addSpatialBarriersBatch,applySpatialBarrierChanges} from './spatial-barrier-batch.js';
-import {captureSpatialState,applySpatialState,validateSpatialState} from './spatial-state.js';
+import {captureSpatialState,captureSpatialTerrainState,applySpatialState,validateSpatialState} from './spatial-state.js';
 import {spatialWorldRoute} from './spatial-local-route.js';
 import {BIOME_IDS,SPATIAL_BIOME_CODES} from '../biome-ids.js';
 
@@ -113,6 +113,10 @@ export function createSpatialWorld(module){
     snapshot:()=>{
       if(!generated)throw Error('Generate the world before capturing spatial state');
       return captureSpatialState(wasm);
+    },
+    terrainState:()=>{
+      if(!generated)throw Error('Generate the world before capturing terrain state');
+      return captureSpatialTerrainState(wasm);
     },
     restoreState:(state,cx=0,cz=0)=>{
       validateSpatialState(state);

@@ -5,9 +5,24 @@ import {performance} from 'node:perf_hooks';
 import {createSpatialWorld} from '../src/world/hierarchical-wasm/spatial-world.js';
 import {activeChunkRegion} from '../src/world/active-region.js';
 import {buildSpatialHorizonData} from '../src/rendering/spatial-horizon-data.js';
+import {validateSpatialTerrainState} from '../src/world/hierarchical-wasm/spatial-state.js';
 
 const module=new WebAssembly.Module(readFileSync(new URL('../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
 const profile=id=>JSON.parse(readFileSync(new URL(`../public/content/biome-${id}.json`,import.meta.url))).profile;
+
+test('horizon state carries terrain changes but excludes attack and construction topology',()=>{
+  const core=createSpatialWorld(module);core.generate(712,0,0,'desert');
+  const initial=core.terrainState();
+  assert.deepEqual(Object.keys(initial).sort(),['biome','seed','settlements','version']);
+  core.addWall(3,5,.5,2);core.addPolygon([{x:8,z:8},{x:10,z:8},{x:9,z:10}]);
+  assert.deepEqual(core.terrainState(),initial);
+  assert.ok(core.snapshot().barriers.length&&core.snapshot().polygons.length);
+  core.setSettlement(12,8,8,7);
+  const changed=core.terrainState();
+  assert.equal(changed.settlements.length,1);
+  assert.deepEqual(validateSpatialTerrainState(changed),changed);
+  assert.throws(()=>validateSpatialTerrainState({...changed,settlements:[{x:Infinity,z:0,hx:7,hz:6}]}));
+});
 
 for(const biome of ['canyons','desert'])test(`one spatial source builds ${biome} foreground and far horizon`,()=>{
   const core=createSpatialWorld(module),seed=712,region=activeChunkRegion({x:0,z:0},'media');

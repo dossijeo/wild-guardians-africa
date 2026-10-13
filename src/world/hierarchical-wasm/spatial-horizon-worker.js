@@ -1,4 +1,5 @@
 import {createSpatialWorld} from './spatial-world.js';
+import {validateSpatialTerrainState} from './spatial-state.js';
 import wasmUrl from './spatial-savanna.wasm?url';
 
 let modulePromise=null,core=null;
@@ -14,7 +15,10 @@ async function spatialCore(){
 self.onmessage=async({data:request})=>{
   try{
     const world=await spatialCore();
-    world.restoreState(request.state,request.region.cx,request.region.cz);
+    const state=validateSpatialTerrainState(request.state);
+    world.generate(state.seed,request.region.cx,request.region.cz,state.biome);
+    for(const site of state.settlements)if(!Number.isFinite(
+      world.addSettlement(site.x,site.z,site.hx,site.hz)))throw Error('Invalid horizon settlement');
     const data=world.horizon(request.region,request.waterColor,request.river);
     self.postMessage({id:request.id,data,metrics:world.metrics()},[data.terrain.buffer,data.water.buffer]);
   }catch(error){self.postMessage({id:request.id,error:String(error.stack??error)});}

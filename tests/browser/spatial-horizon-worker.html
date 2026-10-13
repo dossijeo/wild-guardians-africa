@@ -2,6 +2,8 @@
 <body><pre id="status">Preparando WASM…</pre><script type="module">
 import {createSpatialWorld} from '../../src/world/hierarchical-wasm/spatial-world.js';
 import {activeChunkRegion} from '../../src/world/active-region.js';
+import {NativeHorizon} from '../../src/rendering/horizon.js';
+import * as THREE from 'three';
 import wasmUrl from '../../src/world/hierarchical-wasm/spatial-savanna.wasm?url';
 
 const status=document.querySelector('#status'),report=[];
@@ -35,7 +37,7 @@ try{
         if(topology==='settlement')core.setSettlement(12,8,8,7);
         const expected=core.horizon(region,color);
         largestFrameGap=0;lastFrame=performance.now();
-        const response=await ask(core.snapshot());
+        const state=core.terrainState(),response=await ask(state);
         const {terrain,water}=response.data;
         if(terrain.length!==expected.terrain.length||water.length!==expected.water.length)
           throw Error(`${biome} ${topology}: wrong buffer lengths`);
@@ -46,10 +48,30 @@ try{
         report.push({biome,topology,roundtripMs:+response.roundtripMs.toFixed(2),
           terrainBytes:terrain.byteLength,waterBytes:water.byteLength,
           wasmMemoryBytes:response.metrics.memoryBytes,
+          stateBytes:JSON.stringify(state).length,
           loadedChunks:response.metrics.loadedChunks,loadedSectors:response.metrics.loadedSectors,
           largestFrameGapMs:+largestFrameGap.toFixed(2),largestDelta});
       }
     }finally{active=false;worker.terminate();}
+    let revision=1;
+    const scene=new THREE.Scene(),controller=new NativeHorizon(scene,
+      ()=>new THREE.MeshBasicMaterial(),null,null,{spatial:{revision:()=>revision,
+        snapshot:()=>core.terrainState()}});
+    try{
+      const config={biome,seed:712,river:true},profile={colors:{water:'#3aadb6'}};
+      controller.update(config,profile,region,'media');
+      await controller.whenReady();controller.update(config,profile,region,'media');
+      if(!controller.group||scene.children.length!==1)throw Error(`${biome}: horizon controller did not install native mesh`);
+      const previous=controller.group;
+      core.addSettlement(96,0,7,6);revision++;
+      controller.update(config,profile,region,'media');
+      if(controller.group!==previous)throw Error(`${biome}: old horizon was removed before replacement`);
+      await controller.whenReady();controller.update(config,profile,region,'media');
+      if(controller.group===previous||scene.children.length!==1)
+        throw Error(`${biome}: revised horizon was not installed`);
+      report.push({biome,topology:'controller',revision,terrainVertices:
+        controller.group.children[0].geometry.getAttribute('position').count});
+    }finally{controller.dispose();}
   }
   window.qaReport=report;window.qaReady=true;status.textContent=JSON.stringify(report,null,2);
 }catch(error){window.qaError=String(error.stack??error);status.textContent=window.qaError;}

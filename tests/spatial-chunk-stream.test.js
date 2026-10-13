@@ -23,6 +23,10 @@ test('a Sabana game state renders and routes from one spatial authority through 
     schedule:callback=>{scheduled.push(callback);return callback;},
     cancel:callback=>{const index=scheduled.indexOf(callback);if(index>=0)scheduled.splice(index,1);}});
   const {core,stream}=session;
+  assert.equal(session.horizonSource.revision(),1);
+  assert.equal(session.horizonSource.snapshot().seed,712);
+  assert.deepEqual(Object.keys(session.horizonSource.snapshot()).sort(),
+    ['biome','seed','settlements','version']);
   assert.equal(core.snapshot().polygons.length,1+state.villages[0].buildings.filter(b=>b.kind!=='Zona común').length);
   stream.plan(new Map([['0,0',{cx:0,cz:0,score:0}],['1,0',{cx:1,cz:0,score:1}]]));
   while(scheduled.length)scheduled.shift()();
@@ -44,6 +48,7 @@ test('a Sabana game state renders and routes from one spatial authority through 
     x:23.5,z:passage.start.z,yaw:0,baseScaleX:1,hp:100,gate:false});
   state.spells.push({id:'shield-1',kind:'shield',x:10,z:10,radius:1.95,remaining:10});
   session.syncState(state);
+  assert.equal(session.horizonSource.revision(),1,'wall and shield edits do not change far terrain');
   assert.equal(core.snapshot().barriers.length,1);
   assert.equal(core.snapshot().polygons.length,2+state.villages[0].buildings.filter(b=>b.kind!=='Zona común').length);
   assert.equal(core.localClear(passage.start,passage.end),false);
@@ -68,6 +73,10 @@ test('a Sabana game state renders and routes from one spatial authority through 
   assert.deepEqual(refreshed,{chunks:1,slots:1});
   assert.equal(group.userData.contactInstances.flat().some(prop=>prop.id===visible.id),false);
   assert.deepEqual(session.syncState(state).removedProps,[]);
+  assert.equal(session.horizonSource.revision(),1,'removing an obstacle does not rebuild the far mesh');
+  state.villages.push({id:'village-2',x:96,z:0,buildings:villageLayout(pack,96,0)});
+  session.syncState(state);
+  assert.equal(session.horizonSource.revision(),2,'a new settlement updates native relief');
   session.dispose();
 });
 

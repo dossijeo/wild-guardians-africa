@@ -7,17 +7,35 @@ import {activeChunkRegion} from '../world/active-region.js';
 
 // ChunkManager.plan centers resident terrain on the eye, not the point of interest.
 export const nativeNearRegion=activeChunkRegion;
+const spatialHorizonWorker=()=>typeof Worker==='undefined'?null:
+  new Worker(new URL('../world/hierarchical-wasm/spatial-horizon-worker.js',import.meta.url),{type:'module'});
+const waterRgb=value=>[1,3,5].map(i=>parseInt(value.slice(i,i+2),16)/255);
 
 export class NativeHorizon{
-  constructor(scene,waterMaterial,onMaterialChange=null,groundMaterial=null,options={}){this.scene=scene;this.waterMaterial=waterMaterial;this.onMaterialChange=onMaterialChange;this.groundMaterial=groundMaterial;this.group=null;this.key=null;this.region=null;this.generator=new HorizonGenerator(options);}
+  constructor(scene,waterMaterial,onMaterialChange=null,groundMaterial=null,options={}){
+    this.scene=scene;this.waterMaterial=waterMaterial;this.onMaterialChange=onMaterialChange;
+    this.groundMaterial=groundMaterial;this.group=null;this.key=null;this.region=null;
+    this.spatial=options.spatial??null;
+    this.generator=new HorizonGenerator({...options,
+      workerFactory:options.workerFactory??(this.spatial?spatialHorizonWorker:undefined)});
+  }
   update(config,profile,region,quality,force=false){
-    const key=JSON.stringify([config.biome,config.seed,config.relief,config.river,region.cx,region.cz,region.range]);
+    const revision=this.spatial?.revision();
+    if(this.spatial&&!Number.isSafeInteger(revision))throw TypeError('Spatial horizon needs an integer terrain revision');
+    const key=JSON.stringify([config.biome,config.seed,config.relief,config.river,region.cx,region.cz,region.range,revision]);
     const materialKey=JSON.stringify([config.biome,config.seed,config.relief,config.river,quality==='muy_baja']);
     if(!['canyons','desert'].includes(config.biome)){this.generator.cancel();this.clear();return region;}
     const ready=this.generator.take(key);
     if(!ready&&!force&&this.key===key){this.generator.cancel();if(this.group)updateGroundQuality(this.group.children.filter(o=>o.userData.nativeHorizon==='terrain'),quality,this.onMaterialChange);this.materialKey=materialKey;return this.region;}
+    if(!ready&&!force&&this.spatial&&this.generator.latest?.key===key)return this.region??region;
     let data=ready;
-    if(!data){if(this.generator.plan({key,config,profile,region},force))return this.region??region;data=buildHorizonData({config,profile,region});}
+    if(!data){
+      if(this.spatial&&(this.generator.disabled||this.generator.dead))return this.region??region;
+      const task=this.spatial?{key,region,state:this.spatial.snapshot(),
+        waterColor:waterRgb(profile.colors.water),river:config.river}:{key,config,profile,region};
+      if(this.generator.plan(task,force)||this.spatial)return this.region??region;
+      data=buildHorizonData({config,profile,region});
+    }
     const retained=this.materialKey===materialKey?this.group?.children.find(o=>o.userData.nativeHorizon==='terrain')?.material:null;
     this.clear(retained);this.key=key;this.materialKey=materialKey;this.region=structuredClone(region);
     const group=new THREE.Group();group.name='native-horizon';group.position.set(region.cx*48,0,region.cz*48);

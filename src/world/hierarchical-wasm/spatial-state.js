@@ -1,6 +1,6 @@
-// Compact, versioned QA snapshot of the C++ spatial authority. Residency and
-// route trees are derived data; only the seed and authorized topology persist.
-export function captureSpatialState(wasm){
+// The far horizon depends on relief and settlement flattening, not walls,
+// shields or removed props. Read only that small spatial subset for workers.
+function spatialSettlements(wasm){
   const settlements=[];
   const siteCount=wasm.spatial_settlement_state_count();
   const sitePointer=wasm.spatial_settlement_state_ptr();
@@ -10,6 +10,33 @@ export function captureSpatialState(wasm){
     settlements.push({x:sites.getFloat32(at,true),z:sites.getFloat32(at+4,true),
       hx:sites.getFloat32(at+8,true),hz:sites.getFloat32(at+12,true)});
   }
+  return settlements;
+}
+const spatialBiome=wasm=>wasm.spatial_world_biome()===1?'desert':
+  wasm.spatial_world_biome()===2?'grand_river':wasm.spatial_world_biome()===3?'volcanoes':
+  wasm.spatial_world_biome()===4?'mangrove':wasm.spatial_world_biome()===5?'canyons':'savanna';
+
+export function captureSpatialTerrainState(wasm){
+  return {version:1,seed:wasm.spatial_world_seed()>>>0,biome:spatialBiome(wasm),
+    settlements:spatialSettlements(wasm)};
+}
+
+export function validateSpatialTerrainState(state){
+  if(state?.version!==1||!Number.isInteger(state.seed)||state.seed<0||state.seed>0xffffffff||
+     !['savanna','desert','grand_river','volcanoes','mangrove','canyons'].includes(state.biome)||
+     !Array.isArray(state.settlements)||state.settlements.length>100000)
+    throw TypeError('Invalid spatial terrain state');
+  for(const site of state.settlements)if(![site?.x,site?.z,site?.hx,site?.hz].every(
+       value=>Number.isFinite(value)&&Number.isFinite(Math.fround(value)))||
+     site.hx<=0||site.hz<=0||site.hx>100||site.hz>100)
+    throw TypeError('Invalid spatial terrain settlement');
+  return state;
+}
+
+// Compact, versioned QA snapshot of the C++ spatial authority. Residency and
+// route trees are derived data; only the seed and authorized topology persist.
+export function captureSpatialState(wasm){
+  const settlements=spatialSettlements(wasm);
   const barriers=[];
   const barrierCount=wasm.spatial_barrier_state_count();
   const barrierPointer=wasm.spatial_barrier_state_ptr();
@@ -35,9 +62,7 @@ export function captureSpatialState(wasm){
   const removedProps=[],removedCount=wasm.spatial_removed_prop_count();
   const removed=new Int32Array(wasm.memory.buffer,wasm.spatial_removed_prop_state_ptr(),removedCount*3);
   for(let i=0;i<removedCount;i++)removedProps.push({group:removed[i*3],gx:removed[i*3+1],gz:removed[i*3+2]});
-  return {version:5,biome:wasm.spatial_world_biome()===1?'desert':
-    wasm.spatial_world_biome()===2?'grand_river':wasm.spatial_world_biome()===3?'volcanoes':
-    wasm.spatial_world_biome()===4?'mangrove':wasm.spatial_world_biome()===5?'canyons':'savanna',
+  return {version:5,biome:spatialBiome(wasm),
     seed:wasm.spatial_world_seed()>>>0,settlements,barriers,polygons,removedProps,
     nextBarrierId:wasm.spatial_next_barrier_id(),nextPolygonId:wasm.spatial_next_polygon_id()};
 }

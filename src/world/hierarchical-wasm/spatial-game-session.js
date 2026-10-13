@@ -18,6 +18,7 @@ export function createSpatialGameSession(module,state,streamOptions){
   const cx=Math.floor((first.x+24)/48),cz=Math.floor((first.z+24)/48);
   core.generate(state.seed,cx,cz,state.biome);
   const villages=new Map();
+  let terrainRevision=0;
   function installVillage(village,gameState,initial=false){
     if(village?.id==null||villages.has(village.id)||!Array.isArray(village.buildings))
       throw TypeError('Expected a new spatial village with buildings');
@@ -34,6 +35,7 @@ export function createSpatialGameSession(module,state,streamOptions){
       core.addSettlement(village.x,village.z,hx,hz);
     if(!Number.isFinite(level))throw Error('Could not create spatial settlement');
     villages.set(village.id,addSpatialVillageBuildings(core,village));
+    terrainRevision++;
   }
   for(const village of state.villages)installVillage(village,state,village===first);
   const walls=createSpatialWallMirror(core),centers=createSpatialCenterMirror(core),
@@ -64,5 +66,9 @@ export function createSpatialGameSession(module,state,streamOptions){
     selectProfile(profile);
     return core.routeWorld(start,end);
   }
-  return {core,stream,suppressed:props.suppressed,syncState,routeActor,dispose:()=>stream.dispose()};
+  // Only settlements change the far relief. Walls, crop turnover, shield HP and
+  // removed props leave its mesh intact, so they must not queue new horizons.
+  const horizonSource={revision:()=>terrainRevision,snapshot:()=>core.terrainState()};
+  return {core,stream,horizonSource,suppressed:props.suppressed,syncState,routeActor,
+    dispose:()=>stream.dispose()};
 }
