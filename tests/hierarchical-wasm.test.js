@@ -51,3 +51,17 @@ test('C++ flat A* baseline and hierarchy obey the same wall and breach',async()=
   assert.equal(core.route(start,end),null);
   assert.equal(core.flatRoute(start,end),null);
 });
+
+test('raster preparation samples each cell once and refreshes only a local rectangle',async()=>{
+  const f=fixture();
+  let samples=0;
+  const nav={...f.nav,walkable(...args){samples++;return f.walkable(...args);}};
+  const core=await createHierarchicalWasmNavigator(wasm,nav,{minX:0,minZ:0,maxX:23,maxZ:23,radius:.5,sectorSize:8,diagonal:true});
+  core.initialize();
+  assert.equal(samples,24*24);
+  samples=0;
+  f.blocked.delete('11,12');
+  core.syncRect(11,12,11,12);
+  assert.equal(samples,9);
+  assert(core.flatRoute({x:3,z:12},{x:19,z:12})?.length>0);
+});

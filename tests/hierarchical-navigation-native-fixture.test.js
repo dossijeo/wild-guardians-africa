@@ -2,6 +2,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {fixture} from '../tools/probe-raid-reservation-saturation.mjs';
 import {createHierarchicalNavigationAdapter} from '../src/world/hierarchical-navigation-adapter.js';
+import {createHierarchicalWasmNavigator} from '../src/world/hierarchical-wasm-adapter.js';
+import {readFileSync} from 'node:fs';
+
+const wasm=readFileSync(new URL('../src/world/hierarchical-wasm/core.wasm',import.meta.url));
 
 test('new sector graph respects a native closed wall and its physical breach',()=>{
   const {s,nav}=fixture('closed-walls'),adapter=createHierarchicalNavigationAdapter(nav);
@@ -26,4 +30,23 @@ test('a native open gate becomes a worker portal but never an animal crossing',(
   let previous=outside;
   for(const point of worker){assert(nav.segmentClear(previous,point,.28,null,true));previous=point;}
   assert.equal(adapter.path(outside,inside,1.1,null,false,24),null);
+});
+
+test('C++ worker graph uses the physical gate portal and excludes animals',async()=>{
+  const {s,nav}=fixture('closed-walls');
+  const wall=s.structures.find(t=>t.id==='wall-2-5');wall.gate=true;wall.gateOpen=true;nav.setState(s);
+  const bounds={minX:-12,minZ:-18,maxX:42,maxZ:38,sectorSize:12};
+  const worker=await createHierarchicalWasmNavigator(wasm,nav,{...bounds,radius:.28,worker:true,diagonal:true});worker.initialize();
+  const outside={x:15,z:29},inside={x:15,z:7};
+  for(const route of [worker.route(outside,inside),worker.flatRoute(outside,inside)]){
+    assert(route?.length>0);
+    let previous=outside;
+    for(const point of route){assert(point&&nav.segmentClear(previous,point,.28,null,true));previous=point;}
+  }
+  const animal=await createHierarchicalWasmNavigator(wasm,nav,{...bounds,radius:1.1,worker:false});animal.initialize();
+  assert.equal(animal.route(outside,inside),null);
+  wall.gate=false;wall.gateOpen=false;nav.setState(s);
+  worker.syncRect(wall.x-5,wall.z-5,wall.x+5,wall.z+5);
+  assert.equal(worker.route(outside,inside),null,'removing the gate must remove its graph portal');
+  assert.equal(worker.flatRoute(outside,inside),null);
 });

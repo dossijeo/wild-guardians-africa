@@ -1,6 +1,6 @@
 # C++/WebAssembly navigation comparison (experimental)
 
-This branch contains two C++ search cores in the same 21,901-byte WASM module:
+This branch contains two C++ search cores in the same WASM module (24,502 bytes after adding native worker portals):
 
 - `nav_route`: 12-cell sectors, flood-filled local components, an abstract inter-sector graph, then local routes.
 - `nav_route_flat`: eight-neighbor A* over the same physically sampled grid. This represents the former flat search topology, **not** the entire old JavaScript target selector, cache, or planner.
@@ -28,5 +28,19 @@ The old flat A* pays for diagonal-edge sampling, which is part of its route mode
 WASM is promising on these bounded cases, and the hierarchical core currently beats the C++ version of the old flat A*. This is **not** enough to choose a production navigator. The current C++ proof rasterizes a finite rectangle up front; the game's world needs lazy chunks and topology updates. A local edit rebuilds affected sector components but still rebuilds the abstract graph globally. Worker gates, species-specific profiles, multigoal targeting, and full integration with animal/worker motion remain to be implemented and measured. Initial raster preparation is a synchronous 0.12–0.48 second cost in these cases, which would be a visible stall if placed on the gameplay thread without staging.
 
 The JS prototype completed a 14-night Sabana campaign in 388.7 seconds wall time before the latest crop-index changes. This is not directly comparable with the historical 115.1 seconds of accumulated `Game.tick`, and it does not demonstrate a sustained improvement. No 30-, 60-, or 100-night campaign has run with the WASM core. Do not merge or claim production readiness from these microbenchmarks.
+
+The current WASM instance reserves roughly 16.9 MB of linear memory in these fixtures. Multiple independently instantiated profiles would multiply that cost, so production integration must share or bound instances and measure peak memory. RSS deltas in the individual trials are noisy because of JavaScript GC and should not be treated as reliable peak-memory measurements.
+
+A matched seven-night Sabana seed-712 campaign provides a direct sustained warning: [the original navigator at `45814718`](sabana-7-baseline.json) completed in **76.72 s**, while [the JS hierarchical prototype based on that revision](sabana-7-js-prototype.json) took **111.09 s** (45% slower). Both completed seven nights. Their valid routes led to different farm states (127 versus 131 living plants, 157 versus 121 deliveries, and 0 versus 4 destroyed plants), so this is a practical campaign comparison rather than an identical-workload microbenchmark. The WASM proof is not used by that campaign. It must be integrated and retested before selecting it for the game.
+
+## Two-pass raster experiment
+
+The adapter now samples every cell's passability once, then builds physical edge masks from that stored raster. The bounded 24 × 24 regression fixture verifies exactly 576 passability samples at initialization and nine for a one-cell update, including the necessary neighbor ring. The first [Gran Cañón repeat](canyon-day7-wasm-two-pass.json) still takes approximately 0.45–0.50 seconds for hierarchical setup and queries; the [perimeter repeat](closed-breach-wasm-two-pass.json) is roughly 0.09–0.12 seconds. These timings vary with host load. The change removes redundant geometry queries and preserves every route in the tested fixtures, but the measured runtime benefit is not yet strong enough to claim a substantial overall speedup.
+
+## Native worker gate
+
+The C++ graph now accepts explicit portal connections with fractional physical waypoints. Both C++ variants found all 24 worker routes through a native automatic gate, while an animal of raid radius remained blocked. Every returned segment passed `Navigation.segmentClear`; removing the gate also removed both variants' routes. The [ABBA gate benchmark](worker-gate-wasm.json) measured 215–248 ms for hierarchical setup plus its first 24 routes and 375–401 ms for flat A*. On an initialized grid the queries were all below 3.3 ms and close enough that this fixture alone does not distinguish their steady-state cost. The larger setup cost for flat A* includes its diagonal-edge raster.
+
+Sequential repeats with the portal-capable binary preserve the earlier ranking: [Gran Cañón day 7](canyon-day7-wasm-portals.json) required 446–460 ms for hierarchical setup plus 94 cold queries, versus 967–970 ms for flat A*. In the [closed-perimeter fixture](closed-breach-wasm-portals.json), setup plus 24 rejected routes required 111–118 ms versus 160–173 ms. Concurrent trial runs were overwritten by these sequential repeats because host contention distorted their timings. Both algorithms still found all 24 routes after the physical breach, with no invalid returned segments.
 
 Next validation: build lazy, per-profile raster updates and gate portals; run physically valid actor movement with the new planner; compare sustained 14-night campaigns against the original navigator, then progress to 30/60/100 nights only if the shorter campaigns remain correct and faster. Retain both C++ algorithms as experimental controls until that comparison is complete.

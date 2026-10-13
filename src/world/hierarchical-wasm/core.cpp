@@ -12,9 +12,11 @@
 namespace {
 int ox=0,oz=0,width=0,height=0,sectorSize=12,sectorsX=0,sectorsZ=0;
 std::vector<uint8_t> passable,steps,diagonals,closed,flatClosed;
-std::vector<int32_t> component,head,parent,previousArc,queueBuffer,routeBuffer,portalBuffer,flatParent;
-struct Arc {int32_t to,fromCell,toCell,next;};
+std::vector<int32_t> component,head,parent,previousArc,queueBuffer,routeBuffer,portalBuffer,flatParent,flatParentPortal,portalHead,portalNext;
+struct Arc {int32_t to,fromCell,toCell,next,portal;};
+struct Portal {int32_t fromCell,toCell;};
 std::vector<Arc> arcs;
+std::vector<Portal> portals;
 std::vector<double> costs,flatCosts;
 using Item=std::tuple<double,uint32_t,int32_t>;
 std::vector<Item> heapBuffer;
@@ -54,18 +56,27 @@ void rebuildSector(int sx,int sz){
   }
   sectorsBuilt++;
 }
-void addArc(int from,int to,int fromCell,int toCell){
+void addArc(int from,int to,int fromCell,int toCell,int portal=-1){
   if(from<0||to<0||from==to)return;
-  arcs.push_back({to,fromCell,toCell,head[from]});head[from]=static_cast<int>(arcs.size())-1;
+  arcs.push_back({to,fromCell,toCell,head[from],portal});head[from]=static_cast<int>(arcs.size())-1;
 }
 void rebuildGraph(){
   std::fill(head.begin(),head.end(),-1);arcs.clear();
+  std::fill(portalHead.begin(),portalHead.end(),-1);portalNext.assign(portals.size()*2,-1);
   for(int z=0;z<height;z++)for(int x=0;x<width;x++){
     const int cell=index(x,z),from=node(cell);if(from<0)continue;
     for(int d=0;d<4;d++){
       const int nx=x+dx[d],nz=z+dz[d];if(!inBounds(nx,nz)||sector(x,z)==sector(nx,nz)||!(steps[cell]&(1<<d)))continue;
       const int next=index(nx,nz);if(passable[next])addArc(from,node(next),cell,next);
     }
+  }
+  for(size_t i=0;i<portals.size();i++){
+    const Portal& portal=portals[i];
+    if(component[portal.fromCell]<0||component[portal.toCell]<0)continue;
+    addArc(node(portal.fromCell),node(portal.toCell),portal.fromCell,portal.toCell,static_cast<int>(i)*2);
+    addArc(node(portal.toCell),node(portal.fromCell),portal.toCell,portal.fromCell,static_cast<int>(i)*2+1);
+    portalNext[i*2]=portalHead[portal.fromCell];portalHead[portal.fromCell]=static_cast<int>(i)*2;
+    portalNext[i*2+1]=portalHead[portal.toCell];portalHead[portal.toCell]=static_cast<int>(i)*2+1;
   }
 }
 bool localRoute(int from,int to){
@@ -99,9 +110,9 @@ int nav_init(int worldX,int worldZ,int w,int h,int size){
   const size_t cells=static_cast<size_t>(w)*h,nodes=static_cast<size_t>(sectorsX)*sectorsZ*size*size;
   passable.assign(cells,0);steps.assign(cells,0);diagonals.assign(cells,0);component.assign(cells,-1);
   head.assign(nodes,-1);parent.assign(cells,-1);costs.resize(nodes);closed.resize(nodes);previousArc.resize(nodes);
-  flatParent.resize(cells);flatCosts.resize(cells);flatClosed.resize(cells);
+  flatParent.resize(cells);flatParentPortal.resize(cells);flatCosts.resize(cells);flatClosed.resize(cells);portalHead.resize(cells);
   queueBuffer.reserve(cells);routeBuffer.reserve(cells);portalBuffer.reserve(nodes);heapBuffer.reserve(cells);arcs.reserve(cells/3);
-  sectorsBuilt=visitedGraph=visitedLocal=0;return 1;
+  portals.clear();sectorsBuilt=visitedGraph=visitedLocal=0;return 1;
 }
 uint8_t* nav_pass_ptr(){return passable.data();}
 uint8_t* nav_steps_ptr(){return steps.data();}
@@ -118,6 +129,15 @@ int nav_refresh(int x,int z,int w,int h){
   for(int sz=z0/sectorSize;sz<=z1/sectorSize;sz++)for(int sx=x0/sectorSize;sx<=x1/sectorSize;sx++)rebuildSector(sx,sz);
   rebuildGraph();return static_cast<int>(arcs.size());
 }
+void nav_clear_portals(){portals.clear();}
+int nav_add_portal(int fromX,int fromZ,int toX,int toZ){
+  const int ax=fromX-ox,az=fromZ-oz,bx=toX-ox,bz=toZ-oz;
+  if(!inBounds(ax,az)||!inBounds(bx,bz))return -1;
+  const int a=index(ax,az),b=index(bx,bz);
+  if(!passable[a]||!passable[b])return -1;
+  portals.push_back({a,b});return static_cast<int>(portals.size())-1;
+}
+int nav_commit_portals(){rebuildGraph();return static_cast<int>(arcs.size());}
 int nav_route(int startX,int startZ,int endX,int endZ){
   routeBuffer.clear();visitedGraph=visitedLocal=0;
   const int sx=startX-ox,sz=startZ-oz,tx=endX-ox,tz=endZ-oz;
@@ -149,6 +169,10 @@ int nav_route(int startX,int startZ,int endX,int endZ){
   for(auto it=portalBuffer.rbegin();it!=portalBuffer.rend();++it){
     const Arc& arc=arcs[*it];
     if(!localRoute(at,arc.fromCell)){routeBuffer.clear();return 0;}
+    if(arc.portal>=0){
+      routeBuffer.push_back(-1-arc.portal*2);
+      routeBuffer.push_back(-2-arc.portal*2);
+    }
     routeBuffer.push_back(arc.toCell);at=arc.toCell;
   }
   if(!localRoute(at,target)){routeBuffer.clear();return 0;}
@@ -165,6 +189,7 @@ int nav_route_flat(int startX,int startZ,int endX,int endZ){
   const double infinity=std::numeric_limits<double>::infinity();
   std::fill(flatCosts.begin(),flatCosts.end(),infinity);
   std::fill(flatParent.begin(),flatParent.end(),-1);
+  std::fill(flatParentPortal.begin(),flatParentPortal.end(),-1);
   std::fill(flatClosed.begin(),flatClosed.end(),0);
   heapBuffer.clear();uint32_t order=0;flatCosts[source]=0;pushOpen(std::hypot(tx-sx,tz-sz),order++,source);
   while(!heapBuffer.empty()&&visitedFlat<12000){
@@ -182,9 +207,24 @@ int nav_route_flat(int startX,int startZ,int endX,int endZ){
       flatCosts[next]=cost;flatParent[next]=current;
       pushOpen(cost+std::hypot(tx-nx,tz-nz),order++,next);
     }
+    for(int code=portalHead[current];code>=0;code=portalNext[code]){
+      const Portal& portal=portals[code/2];
+      const int next=(code&1)?portal.fromCell:portal.toCell;
+      if(flatClosed[next]||!passable[next])continue;
+      const double cost=flatCosts[current]+1;
+      if(cost>=flatCosts[next])continue;
+      flatCosts[next]=cost;flatParent[next]=current;flatParentPortal[next]=code;
+      pushOpen(cost+std::hypot(tx-next%width,tz-next/width),order++,next);
+    }
   }
   if(flatParent[target]<0)return 0;
-  for(int at=target;at!=source;at=flatParent[at])routeBuffer.push_back(at);
+  for(int at=target;at!=source;at=flatParent[at]){
+    routeBuffer.push_back(at);
+    if(flatParentPortal[at]>=0){
+      routeBuffer.push_back(-2-flatParentPortal[at]*2);
+      routeBuffer.push_back(-1-flatParentPortal[at]*2);
+    }
+  }
   std::reverse(routeBuffer.begin(),routeBuffer.end());
   return static_cast<int>(routeBuffer.size());
 }

@@ -1,6 +1,8 @@
 // The geometry raster is transferred in two contiguous byte buffers. The
 // compiled core owns the raster, sector components, abstract graph, and A*.
 // Physical movement and collision validation stay in the JavaScript engine.
+import {gatePortalPoints} from './gate-passages.js';
+
 export async function createHierarchicalWasmNavigator(bytes,nav,{minX,minZ,maxX,maxZ,radius,worker=false,ignore=null,sectorSize=12,diagonal=false}){
   const {instance}=await WebAssembly.instantiate(bytes,{env:{emscripten_notify_memory_growth(){}}});
   const wasm=instance.exports,width=maxX-minX+1,height=maxZ-minZ+1;
@@ -9,23 +11,27 @@ export async function createHierarchicalWasmNavigator(bytes,nav,{minX,minZ,maxX,
   const buffers=()=>({pass:new Uint8Array(wasm.memory.buffer,wasm.nav_pass_ptr(),count),
     steps:new Uint8Array(wasm.memory.buffer,wasm.nav_steps_ptr(),count),
     diagonals:new Uint8Array(wasm.memory.buffer,wasm.nav_diag_ptr(),count)});
-  function rasterCell(x,z,pass,steps,diagonals){
-    const i=(z-minZ)*width+x-minX;
-    pass[i]=Number(nav.walkable(x,z,radius,ignore,worker));
+  const portalRoutes=[];
+  const rasterIndex=(x,z)=>(z-minZ)*width+x-minX;
+  const inBounds=(x,z)=>x>=minX&&x<=maxX&&z>=minZ&&z<=maxZ;
+  function sampleCell(x,z,pass){
+    pass[rasterIndex(x,z)]=Number(nav.walkable(x,z,radius,ignore,worker));
+  }
+  function sampleEdges(x,z,pass,steps,diagonals){
+    const i=rasterIndex(x,z);
     if(!pass[i]){steps[i]=0;diagonals[i]=0;return;}
     let mask=0;
     for(const [d,dx,dz] of [[0,1,0],[1,-1,0],[2,0,1],[3,0,-1]]){
       const nx=x+dx,nz=z+dz;
-      if(nx<minX||nx>maxX||nz<minZ||nz>maxZ)continue;
-      if(nav.walkable(nx,nz,radius,ignore,worker)&&nav.segmentClear(point(x,z),point(nx,nz),radius,ignore,worker))mask|=1<<d;
+      if(!inBounds(nx,nz)||!pass[rasterIndex(nx,nz)])continue;
+      if(nav.segmentClear(point(x,z),point(nx,nz),radius,ignore,worker))mask|=1<<d;
     }
     steps[i]=mask;
     if(!diagonal){diagonals[i]=0;return;}
     let diagonalMask=0;
     for(const [d,dx,dz] of [[0,1,1],[1,-1,1],[2,1,-1],[3,-1,-1]]){
       const nx=x+dx,nz=z+dz;
-      if(nx<minX||nx>maxX||nz<minZ||nz>maxZ)continue;
-      if(!nav.walkable(nx,nz,radius,ignore,worker)||!nav.walkable(x+dx,z,radius,ignore,worker)||!nav.walkable(x,z+dz,radius,ignore,worker))continue;
+      if(!inBounds(nx,nz)||!pass[rasterIndex(nx,nz)]||!pass[rasterIndex(x+dx,z)]||!pass[rasterIndex(x,z+dz)])continue;
       if(nav.segmentClear(point(x,z),point(nx,nz),radius,ignore,worker))diagonalMask|=1<<d;
     }
     diagonals[i]=diagonalMask;
@@ -34,25 +40,59 @@ export async function createHierarchicalWasmNavigator(bytes,nav,{minX,minZ,maxX,
     const a=Math.max(minX,Math.floor(x0)-1),b=Math.min(maxX,Math.ceil(x1)+1);
     const c=Math.max(minZ,Math.floor(z0)-1),d=Math.min(maxZ,Math.ceil(z1)+1);
     const {pass,steps,diagonals}=buffers();
-    for(let z=c;z<=d;z++)for(let x=a;x<=b;x++)rasterCell(x,z,pass,steps,diagonals);
-    return wasm.nav_refresh(a,c,b-a+1,d-c+1);
+    for(let z=c;z<=d;z++)for(let x=a;x<=b;x++)sampleCell(x,z,pass);
+    for(let z=c;z<=d;z++)for(let x=a;x<=b;x++)sampleEdges(x,z,pass,steps,diagonals);
+    wasm.nav_refresh(a,c,b-a+1,d-c+1);
+    return refreshPortals();
+  }
+  function refreshPortals(){
+    wasm.nav_clear_portals();portalRoutes.length=0;
+    if(worker){
+      const {pass}=buffers();
+      const connector=(point,outward)=>{
+        const x=Math.round(point.x),z=Math.round(point.z),candidates=[];
+        for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){
+          const cell={x:x+dx,z:z+dz};
+          if(!inBounds(cell.x,cell.z)||!pass[rasterIndex(cell.x,cell.z)])continue;
+          if(!nav.segmentClear(outward?point:cell,outward?cell:point,radius,ignore,worker))continue;
+          candidates.push({cell,distance:Math.hypot(cell.x-point.x,cell.z-point.z)});
+        }
+        candidates.sort((a,b)=>a.distance-b.distance||a.cell.x-b.cell.x||a.cell.z-b.cell.z);
+        return candidates[0]?.cell;
+      };
+      for(const gate of nav.obstacles){
+        if(!gate.gate||gate.id===ignore)continue;
+        const pair=gatePortalPoints(gate,radius);
+        if(pair.length!==2||!nav.segmentClear(pair[0],pair[1],radius,ignore,worker))continue;
+        const from=connector(pair[0],false),to=connector(pair[1],true);
+        if(!from||!to)continue;
+        const id=wasm.nav_add_portal(from.x,from.z,to.x,to.z);
+        if(id<0)continue;
+        portalRoutes[id*2]=pair;
+        portalRoutes[id*2+1]=[pair[1],pair[0]];
+      }
+    }
+    return wasm.nav_commit_portals();
   }
   function initialize(){
     const {pass,steps,diagonals}=buffers();
-    for(let z=minZ;z<=maxZ;z++)for(let x=minX;x<=maxX;x++)rasterCell(x,z,pass,steps,diagonals);
-    return wasm.nav_commit();
+    for(let z=minZ;z<=maxZ;z++)for(let x=minX;x<=maxX;x++)sampleCell(x,z,pass);
+    for(let z=minZ;z<=maxZ;z++)for(let x=minX;x<=maxX;x++)sampleEdges(x,z,pass,steps,diagonals);
+    wasm.nav_commit();return refreshPortals();
   }
+  const decode=i=>i>=0?point(minX+i%width,minZ+Math.floor(i/width)):
+    portalRoutes[Math.floor((-1-i)/2)]?.[(-1-i)%2]??null;
   function route(start,end){
     const n=wasm.nav_route(Math.round(start.x),Math.round(start.z),Math.round(end.x),Math.round(end.z));
     if(n<=0)return null;
     const indices=new Int32Array(wasm.memory.buffer,wasm.nav_route_ptr(),n);
-    return Array.from(indices,i=>point(minX+i%width,minZ+Math.floor(i/width)));
+    return Array.from(indices,decode);
   }
   function flatRoute(start,end){
     const n=wasm.nav_route_flat(Math.round(start.x),Math.round(start.z),Math.round(end.x),Math.round(end.z));
     if(n<=0)return null;
     const indices=new Int32Array(wasm.memory.buffer,wasm.nav_route_ptr(),n);
-    return Array.from(indices,i=>point(minX+i%width,minZ+Math.floor(i/width)));
+    return Array.from(indices,decode);
   }
   return {wasm,initialize,syncRect,route,flatRoute,bytes:bytes.byteLength,dimensions:{width,height},
     metrics:()=>({sectorsBuilt:wasm.nav_sectors_built(),arcs:wasm.nav_arc_count(),graphNodes:wasm.nav_graph_nodes(),localNodes:wasm.nav_local_nodes(),flatNodes:wasm.nav_flat_nodes()})};
