@@ -32,6 +32,8 @@ std::vector<float> heights,colors;
 std::vector<uint8_t> water;
 std::vector<double> lattice;
 std::vector<Prop> props;
+std::vector<Prop> solidProps;
+int haloPropCount=0;
 std::vector<Wall> walls;
 std::vector<uint8_t> staticPass,staticSteps;
 uint32_t hash(uint32_t a){a^=a>>16;a*=0x7feb352du;a^=a>>15;a*=0x846ca68bu;return a^(a>>16);}
@@ -77,7 +79,7 @@ bool terrainValid(double x,double z,float radius,bool worker){
 }
 bool terrainPropWalkable(int x,int z){
   if(!terrainValid(x,z,radiusNow,workerNow))return false;
-  for(const Prop& p:props)if((p.slot<=3||(p.slot>=10&&p.slot<=12)||p.slot>=18)&&std::hypot(p.x-x,p.z-z)<p.radius+radiusNow)return false;
+  for(const Prop& p:solidProps)if(std::hypot(p.x-x,p.z-z)<p.radius+radiusNow)return false;
   return true;
 }
 bool insideChunk(int x,int z){return x>=chunkX*side-24&&x<chunkX*side+24&&z>=chunkZ*side-24&&z<chunkZ*side+24;}
@@ -95,7 +97,7 @@ bool terrainPropEdge(int x,int z,int nx,int nz){
   for(int i=1;i<4;i++){
     const double t=i/4.0,px=x+(nx-x)*t,pz=z+(nz-z)*t;
     if(!terrainValid(px,pz,radiusNow,workerNow))return false;
-    for(const Prop& p:props)if((p.slot<=3||(p.slot>=10&&p.slot<=12)||p.slot>=18)&&std::hypot(p.x-px,p.z-pz)<p.radius+radiusNow)return false;
+    for(const Prop& p:solidProps)if(std::hypot(p.x-px,p.z-pz)<p.radius+radiusNow)return false;
   }
   return true;
 }
@@ -140,7 +142,7 @@ void refreshRect(int minX,int minZ,int maxX,int maxZ){
 
 extern "C" {
 int spatial_generate(uint32_t seed,int cx,int cz){
-  worldSeed=seed;chunkX=cx;chunkZ=cz;navReady=false;walls.clear();props.clear();staticPass.clear();staticSteps.clear();nextWallId=1;
+  worldSeed=seed;chunkX=cx;chunkZ=cz;navReady=false;walls.clear();props.clear();solidProps.clear();staticPass.clear();staticSteps.clear();nextWallId=1;haloPropCount=0;
   // The standalone no-entry WASM binary has no startup constructor pass.
   heights.assign(grid*grid,0);colors.assign(grid*grid*3,0);water.assign(side*side,0);
   const int x0=cx*side-24,z0=cz*side-24;
@@ -163,17 +165,29 @@ int spatial_generate(uint32_t seed,int cx,int cz){
   constexpr float radii[20]={3.8f,3.1f,3.0f,1.7f,1.1f,.9f,1.4f,.45f,.35f,.5f,1.2f,1.7f,1.2f,1.8f,1.3f,1.0f,.9f,1.7f,4.0f,5.0f};
   for(int type=0;type<6;type++){
     const double cell=spacing[type];
-    for(int gz=int(std::floor(double(z0)/cell));gz<=int(std::floor(double(z0+47)/cell));gz++)
-      for(int gx=int(std::floor(double(x0)/cell));gx<=int(std::floor(double(x0+47)/cell));gx++){
+    // A neighbor owns and renders a prop whose footprint crosses our edge.
+    // Generate its collision record from the same global cells, without
+    // duplicating the visible instance in this chunk.
+    constexpr double halo=8;
+    for(int gz=int(std::floor((double(z0)-halo)/cell));gz<=int(std::floor((double(z0+48)+halo)/cell));gz++)
+      for(int gx=int(std::floor((double(x0)-halo)/cell));gx<=int(std::floor((double(x0+48)+halo)/cell));gx++){
         const uint32_t h=cellHash(gx,gz,301+type*71);
         if(unit(h)>density[type])continue;
         const double x=(gx+.14+unit(cellHash(gx,gz,310+type))*.72)*cell;
         const double z=(gz+.14+unit(cellHash(gx,gz,311+type))*.72)*cell;
-        if(x<x0||x>=x0+48||z<z0||z>=z0+48||fluid(x,z))continue;
+        if(x<x0-halo||x>=x0+48+halo||z<z0-halo||z>=z0+48+halo||fluid(x,z))continue;
         const float scale=float(.78+unit(cellHash(gx,gz,312+type))*.43);
         const int slot=offsets[type]+int(cellHash(gx,gz,315+type)%counts[type]);
         const float radius=radii[slot]*scale;
-        props.push_back({float(x),float(z),float(surface(x,z)),radius,scale,float(unit(cellHash(gx,gz,317))*2*pi),slot});
+        const Prop prop={float(x),float(z),float(surface(x,z)),radius,scale,float(unit(cellHash(gx,gz,317))*2*pi),slot};
+        const bool owned=x>=x0&&x<x0+48&&z>=z0&&z<z0+48;
+        if(owned)props.push_back(prop);
+        if((slot<=3||(slot>=10&&slot<=12)||slot>=18)&&
+           x+radius+1.1>=x0&&x-radius-1.1<x0+48&&
+           z+radius+1.1>=z0&&z-radius-1.1<z0+48){
+          solidProps.push_back(prop);
+          if(!owned)haloPropCount++;
+        }
       }
   }
   return int(props.size());
@@ -183,6 +197,7 @@ float* spatial_colors_ptr(){return colors.data();}
 uint8_t* spatial_water_ptr(){return water.data();}
 Prop* spatial_props_ptr(){return props.data();}
 int spatial_prop_count(){return int(props.size());}
+int spatial_halo_prop_count(){return haloPropCount;}
 int spatial_build_nav(float radius,int worker){
   radiusNow=radius;workerNow=worker!=0;
   const int firstX=chunkX*side-24,firstZ=chunkZ*side-24;

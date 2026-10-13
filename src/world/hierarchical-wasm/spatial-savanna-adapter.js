@@ -79,5 +79,6 @@ export function createSpatialSavannaPrototype(module){
     removeWall:id=>wasm.spatial_remove_wall(id),
     walkable:(x,z)=>Boolean(wasm.spatial_walkable(x,z)),
     edge:(x,z,nx,nz)=>Boolean(wasm.spatial_edge(x,z,nx,nz)),
-    metrics:()=>({memoryBytes:wasm.memory.buffer.byteLength,loadedSectors:wasm.lazy_loaded_sectors(),sectorUpdates:wasm.lazy_sector_updates()})};
+    metrics:()=>({memoryBytes:wasm.memory.buffer.byteLength,loadedSectors:wasm.lazy_loaded_sectors(),
+      sectorUpdates:wasm.lazy_sector_updates(),haloProps:wasm.spatial_halo_prop_count()})};
 }

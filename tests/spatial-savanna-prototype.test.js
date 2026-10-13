@@ -67,3 +67,21 @@ test('a visible solid prop occupies its logical collision point',()=>{
   assert(prop);
   assert.equal(core.walkable(Math.round(prop.x),Math.round(prop.z)),false);
 });
+test('a neighboring chunk owns the instance while its footprint blocks our edge',()=>{
+  const core=createSpatialSavannaPrototype(module);
+  let caseFound=false;
+  for(let seed=1;seed<=60&&!caseFound;seed++){
+    core.generate(seed,1,0);
+    const external=core.props().find(p=>(p.slot<=3||p.slot>=10&&p.slot<=12||p.slot>=18)&&
+      p.x>=24&&p.x-p.radius-1.1<23.5&&p.z>=-24&&p.z<24);
+    if(!external)continue;
+    core.generate(seed,0,0);
+    assert(core.metrics().haloProps>0);
+    assert(!core.props().some(p=>p.x===external.x&&p.z===external.z&&p.slot===external.slot));
+    core.buildNavigation(1.1,false);
+    const z=Math.max(-24,Math.min(23,Math.round(external.z)));
+    assert.equal(core.walkable(23,z),false);
+    caseFound=true;
+  }
+  assert(caseFound,'expected a neighboring tree or rock to overlap a tested seam');
+});
