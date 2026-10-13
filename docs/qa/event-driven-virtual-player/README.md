@@ -105,8 +105,15 @@ phase, whereas native `Game.tick` rose from about 0.7 seconds on day 1 to
 roughly 4–6 seconds on several later days. These are different evolving game
 states, so the numbers indicate where CPU time accrues rather than an A/B
 speedup claim. The 30-night target was not completed by either of these
-seeds. A separate Grand Canyon/Sahelian seven-night pilot is used next to
-check that the engine gate and planned policy do not rely on Sabana geometry.
+seeds. A separate Grand Canyon/Sahelian seed-2026 pilot completed seven nights
+without a trapped worker or navigation deadlock. It had 121 coins and peaked
+at 178 living crops. The engine is still too costly there for an unexamined
+long run: native `Game.tick` accumulated 55.24 seconds on day 6 and 189.12
+seconds on day 7, while virtual-player decisions used 0.13 and 0.44 seconds
+respectively. The largest individual ticks were 12.85 and 29.74 seconds.
+This is a native navigation/raid performance finding, not a campaign defeat
+or a proof of gate failure. The pilot is archived separately as
+`pilot-good-canyon-2026-7.zip`.
 
 ## Test baseline and limits
 
