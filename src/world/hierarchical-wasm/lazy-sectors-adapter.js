@@ -32,6 +32,14 @@ export async function createLazySectorProbe(bytes,nav,{sectorSize=12,radius=.28,
       for(let sx=Math.floor(minX/sectorSize);sx<=Math.floor(maxX/sectorSize);sx++)ensureSector(sx,sz);
   }
   function connected(a,b){return wasm.lazy_connected(Math.round(a.x),Math.round(a.z),Math.round(b.x),Math.round(b.z));}
-  return {wasm,loadSector,ensureSector,ensureRect,connected,
+  function route(a,b){
+    const count=wasm.lazy_route(Math.round(a.x),Math.round(a.z),Math.round(b.x),Math.round(b.z));
+    if(count<0)return {status:'unknown',points:null};
+    if(count===0)return {status:'blocked',points:null};
+    const values=new Int32Array(wasm.memory.buffer,wasm.lazy_route_ptr(),count*2);
+    const points=[];for(let i=0;i<count;i++)points.push({x:values[i*2],z:values[i*2+1]});
+    return {status:'found',points};
+  }
+  return {wasm,loadSector,ensureSector,ensureRect,connected,route,
     metrics:()=>({loaded:wasm.lazy_loaded_sectors(),updates:wasm.lazy_sector_updates(),memoryBytes:wasm.memory.buffer.byteLength})};
 }

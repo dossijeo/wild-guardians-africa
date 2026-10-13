@@ -1,0 +1,49 @@
+{
+  "input": "C:\\Users\\PC\\source\\repos\\wild-guardians-event-driven-player\\docs\\qa\\event-driven-virtual-player\\pilot-good-canyon-2026-day7-phase\\checkpoint-state.json.gz",
+  "biome": "gran-canon",
+  "day": 7,
+  "radius": 1.1,
+  "requests": 94,
+  "preparationMs": 82.91570000000002,
+  "coverageMs": 518.3438,
+  "passes": [
+    {
+      "label": "occupied sectors",
+      "milliseconds": 1.7450000000000045,
+      "counts": {
+        "found": 23,
+        "blocked": 0,
+        "unknown": 71,
+        "invalid": 0,
+        "foundLocal": 23,
+        "foundCrop": 0,
+        "blockedCrop": 0,
+        "unknownCrop": 66
+      },
+      "metrics": {
+        "loaded": 12,
+        "updates": 12,
+        "memoryBytes": 4194304
+      }
+    },
+    {
+      "label": "full bounded coverage",
+      "milliseconds": 0.6591000000000804,
+      "counts": {
+        "found": 28,
+        "blocked": 0,
+        "unknown": 66,
+        "invalid": 0,
+        "foundLocal": 28,
+        "foundCrop": 0,
+        "blockedCrop": 0,
+        "unknownCrop": 66
+      },
+      "metrics": {
+        "loaded": 64,
+        "updates": 64,
+        "memoryBytes": 4194304
+      }
+    }
+  ]
+}

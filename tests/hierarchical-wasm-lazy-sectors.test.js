@@ -15,10 +15,13 @@ test('unloaded sectors stay unknown; a closed barrier becomes certified after co
   const probe=await createLazySectorProbe(bytes,nav,{sectorSize:8});
   probe.ensureSector(0,1);
   assert.equal(probe.connected({x:3,z:12},{x:19,z:12}),-1);
+  assert.equal(probe.route({x:3,z:12},{x:19,z:12}).status,'unknown');
   probe.ensureRect(0,0,23,23);
   assert.equal(probe.metrics().loaded,9);
   assert.equal(probe.connected({x:3,z:12},{x:19,z:12}),0);
+  assert.equal(probe.route({x:3,z:12},{x:19,z:12}).status,'blocked');
   assert.equal(probe.connected({x:3,z:12},{x:5,z:12}),1);
+  assert.deepEqual(probe.route({x:3,z:12},{x:5,z:12}).points,[{x:4,z:12},{x:5,z:12}]);
 });
 
 test('a local breach updates one sector and its neighboring graph edges',async()=>{
@@ -29,10 +32,16 @@ test('a local breach updates one sector and its neighboring graph edges',async()
   const before=probe.metrics();
   blocked.delete('11,12');probe.loadSector(1,1);
   assert.equal(probe.connected({x:3,z:12},{x:19,z:12}),1);
+  const path=probe.route({x:3,z:12},{x:19,z:12});
+  assert.equal(path.status,'found');
+  let previous={x:3,z:12};
+  for(const point of path.points){assert(nav.segmentClear(previous,point));previous=point;}
+  assert.deepEqual(previous,{x:19,z:12});
   assert.equal(probe.metrics().loaded,before.loaded);
   assert.equal(probe.metrics().updates,before.updates+1);
   blocked.add('11,12');probe.loadSector(1,1);
   assert.equal(probe.connected({x:3,z:12},{x:19,z:12}),0);
+  assert.equal(probe.route({x:3,z:12},{x:19,z:12}).status,'blocked');
 });
 
 test('cross-sector connectivity preserves directional edges',async()=>{
@@ -42,4 +51,6 @@ test('cross-sector connectivity preserves directional edges',async()=>{
   probe.ensureRect(0,0,15,7);
   assert.equal(probe.connected({x:2,z:3},{x:13,z:3}),1);
   assert.equal(probe.connected({x:13,z:3},{x:2,z:3}),0);
+  assert.equal(probe.route({x:2,z:3},{x:13,z:3}).status,'found');
+  assert.notEqual(probe.route({x:13,z:3},{x:2,z:3}).status,'found');
 });
