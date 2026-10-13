@@ -72,3 +72,13 @@ observation budget: eight animals were still walking or retreating with
 nonempty paths. This is neither a native defeat nor a completed day. The
 snapshot in `pilot-good-sabana-123-30/partial-state.json.gz` is retained for
 isolated navigation/deadlock diagnosis before another long campaign.
+
+That snapshot exposed a physical traffic deadlock. The chosen animal had a
+valid place where its opposing peer could yield, but the motion code checked
+the point without assigning it to the peer's path. With the one-line route
+assignment, four of the eight bodies moved in the first native second and the
+raid ended physically after 170 more seconds; the game advanced to day 12.
+The 79,593-byte compressed snapshot is copied into
+`tests/fixtures/raid-deadlock-day11.json.gz` for a deterministic regression
+test. This fix changes no animal speed, collision radius, attack budget or
+damage.

@@ -93,13 +93,19 @@ export function prepareActorMotion(state,actor,nav,worker){
     const opposing=blockers.find(other=>distance(actor,other)<=horizon&&edgeDistance(actor,goal,other.x,other.z)<radius(actor)+radius(other)+.1&&
       other.path?.length&&
       (next.x-actor.x)*(other.path[0].x-other.x)+(next.z-actor.z)*(other.path[0].z-other.z)<0);
-    if(!opposing)return;
+    if(!opposing)return false;
     // Identity breaks ties, but the elected body may be boxed in by terrain
     // or fleeing workers. Let the other body yield only when the elected one
     // has no physically clear yield; never relax clearance or move either body.
-    if(String(actor.id)<String(opposing.id)&&yieldPoint(opposing,actor,state.workers.includes(opposing)))return;
+    if(String(actor.id)<String(opposing.id)){
+      const point=yieldPoint(opposing,actor,state.workers.includes(opposing));
+      // A valid yield must become the other actor's next waypoint. Merely
+      // testing that the point exists leaves both bodies waiting forever.
+      if(point){opposing.path=[point,...opposing.path];return true;}
+    }
     const point=yieldPoint(actor,opposing,worker);
-    if(point)actor.path=[point,...actor.path];
+    if(point){actor.path=[point,...actor.path];return true;}
+    return false;
   };
   // Old saves may retain a long connector created by a remote yield. Repair
   // its next local section through native terrain search before advancing;
