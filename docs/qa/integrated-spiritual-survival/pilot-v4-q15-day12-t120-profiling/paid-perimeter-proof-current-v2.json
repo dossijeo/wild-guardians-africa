@@ -1,0 +1,71 @@
+{
+  "status": "observed-read-only-paid-perimeter-proof",
+  "inputSha256": "65e5de27074c631325f9532b64eb0199631854974a700bf5290872cfb5908980",
+  "snapshotSourceHead": "5980e3be185282a5a4fc3fcf0caa987128e73d1c",
+  "probeSourceHead": "51565e3dfde669b3d2f8a264c4dce387086a913c",
+  "day": 12,
+  "time": 119.99999999999699,
+  "plants": 173,
+  "walls": 92,
+  "quoteMs": 28.943299999999994,
+  "proofMs": 1140.1125,
+  "profileFile": null,
+  "plan": {
+    "pieces": 0,
+    "updates": 0
+  },
+  "proof": {
+    "valid": false,
+    "reason": "native-service-component-unproven",
+    "checks": [
+      {
+        "radius": 1.1,
+        "inside": {
+          "x": 99,
+          "z": 3
+        },
+        "outside": {
+          "x": 99,
+          "z": -20
+        },
+        "completeClosedComponent": false,
+        "services": {
+          "valid": true,
+          "reason": "native-service-poses-in-positive-closed-components",
+          "poses": 5568,
+          "blocked": 1169,
+          "certified": 4399,
+          "physicalConnectors": 0,
+          "emptyNativeOrigins": 0,
+          "regions": 1,
+          "scope": "Native 32 service poses per target from the tested exterior origin: body/contact-blocked poses and positively enclosed native origin components. Empty origin frontiers without a positive physical connector are unproven. Not a bounded route failure or universal continuous-angle proof."
+        }
+      },
+      {
+        "radius": 0.9,
+        "inside": {
+          "x": 99,
+          "z": 3
+        },
+        "outside": {
+          "x": 108.75,
+          "z": 3
+        },
+        "completeClosedComponent": false,
+        "services": {
+          "valid": false,
+          "reason": "native-service-component-unproven",
+          "targetId": "plant-10697",
+          "point": {
+            "x": 73.08366294972068,
+            "z": 1.4410633090064808
+          },
+          "poses": 4856,
+          "blocked": 805,
+          "certified": 4050
+        }
+      }
+    ]
+  },
+  "scope": "Cold native quote and hypothetical proof of the retained paid contour on a copied campaign state. Does not resume the player policy or imply actual interception."
+}
