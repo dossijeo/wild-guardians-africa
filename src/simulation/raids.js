@@ -217,13 +217,14 @@ export function spawnRaid(s,plan,nav,daytime=false) {
   emit(s,wave?'RaidWaveSpawned':'RaidSpawned',{raidFacts:{id:s.raid.id,day:s.day,daytime,elapsed:s.elapsed,waveIndex:s.raid.waveIndex??0,pressureFacts:s.raid.pressureFacts??null,exposedLiving:exposed.length,exposedWounded:exposed.filter(p=>(p.attackHits??0)>0).length,actors:animals.map(a=>({id:a.id,species:a.species,hitsRemaining:a.hitsRemaining,...(a.damageProfile?{damageProfile:structuredClone(a.damageProfile)}:{}),spawn:{...a.spawn},exit:{...a.exit}}))}});mark?.('spawned');return true;
 }
 function release(s,a) {if(a.reservation&&s.raid.reservations[a.reservation]===a.id){delete s.raid.reservations[a.reservation];s.raid.waitRevision=((s.raid.waitRevision??0)+1)>>>0;}a.reservation=null;a.targetId=null;a.path=null;a.approach=null;a.approachShieldId=null;}
-export function reachableApproach(a,target,nav,shield=null){
+export function reachableApproach(a,target,nav,shield=null,potentiallyReachable=null){
   const focus=shield??target,r=shield?shield.radius+a.radius+.1:(target.kind==='wall'?1.2:.6)+a.radius;
   const angle=Math.atan2(a.x-focus.x,a.z-focus.z);
   if(nav.approachRegionBlocked?.(a,focus,a.radius,r)||(!shield&&target.kind!=='center'&&nav.approachRingBlocked?.(a,focus,a.radius,r,angle)))return null;
   for(let sample=0;sample<32;sample++){
     const offset=sample===0?0:Math.ceil(sample/2)*(sample%2?1:-1)*Math.PI/16;
     const point={id:`approach-${target.id}-${shield?.id??'direct'}-${sample}`,...(!shield&&target.kind==='center'?centerBoundaryPoint(target,angle+offset,a.radius+.5,nav.state):{x:focus.x+Math.sin(angle+offset)*r,z:focus.z+Math.cos(angle+offset)*r})};
+    if(potentiallyReachable&&!potentiallyReachable(point))continue;
     if(nav.state?.raid&&!reservedApproachClear(nav.state,a,point))continue;
     if(nav.state&&!actorSegmentClear(point,point,a,actorBlockers(nav.state,a,false)))continue;
     // A complete 32-cell corridor lets the native search certify enclosed
@@ -253,6 +254,7 @@ function targetFor(s,a,nav) {
   }
   groups.sort((a,b)=>b.value-a.value||a.id.localeCompare(b.id));
   for(const group of groups){
+   const potentiallyReachable=nav.approachReachability?.(a,group.targets,a.radius);
    for(const p of group.targets.filter(p=>canAttackCrop(s,p)).sort((p,q)=>dist(a,p)-dist(a,q))) {
     // Accessibility belongs to the valued connected zone; a native closed
     // component proof can reject that zone once, without reserving it.
@@ -261,17 +263,18 @@ function targetFor(s,a,nav) {
     if(trace){groupChecks++;groupMilliseconds+=performance.now()-groupStarted;}
     if(groupBlocked){groupRejected++;break;}
     if(targetReserved(s,a,p))continue;
-    const shield=spellAt(s,'shield',p),approachStarted=trace?performance.now():0,approach=reachableApproach(a,p,nav,shield);
+    const shield=spellAt(s,'shield',p),approachStarted=trace?performance.now():0,approach=reachableApproach(a,p,nav,shield,potentiallyReachable);
     if(trace){approachChecks++;approachMilliseconds+=performance.now()-approachStarted;}
     if(approach){detail();return {target:p,reservation:targetReservationKey(p,a),approach,shieldId:shield?.id??null};}
    }
   }
   // If crops are blocked, resolve the nearest visible barrier, without weakest-material omniscience.
   const structures=defensiveGroups(s),near=g=>Math.min(...g.targets.map(t=>dist(a,t)));
+  const structureReachability=nav.approachReachability?.(a,structures.flatMap(g=>g.targets),a.radius);
   structures.sort((p,q)=>groups.length?near(p)-near(q):q.value-p.value||near(p)-near(q)||p.id.localeCompare(q.id));
   for(const group of structures)for(const structure of [...group.targets].sort((p,q)=>dist(a,p)-dist(a,q)||p.id.localeCompare(q.id))) {
     if(targetReserved(s,a,structure))continue;
-    const shield=spellAt(s,'shield',structure),approachStarted=trace?performance.now():0,approach=reachableApproach(a,structure,nav,shield);
+    const shield=spellAt(s,'shield',structure),approachStarted=trace?performance.now():0,approach=reachableApproach(a,structure,nav,shield,structureReachability);
     if(trace){approachChecks++;approachMilliseconds+=performance.now()-approachStarted;}
     if(approach){detail();return {target:structure,reservation:targetReservationKey(structure,a),approach,shieldId:shield?.id??null};}
   }

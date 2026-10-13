@@ -176,6 +176,23 @@ finish in 30 seconds, so that prototype was removed before commit. The trace
 mode remains available in `profile-raid-entry-stages.mjs`; no crop target,
 raid, or navigation rule from the rejected prototype remains in this branch.
 
+A new bounded group-reachability prefilter now uses one relaxed grid flood
+over a superset of each native target corridor. It discards a service point
+only when no grid connector is reachable *and* the exact direct fractional
+segment is blocked; all remaining candidates still use the existing native
+route finder and target ordering. The filter is disabled for small groups,
+open non-canyon maps without walls, and excessive search areas. On the same
+day-8 snapshot, the first-animal target warm-up completed in 8.55 seconds
+instead of exceeding 180 seconds, and the full 12-animal warm-up completed
+in 25.56 seconds; none of the twelve selected a target in that particular
+state. Twelve rejected crop points and twelve rejected structure points were
+checked against the exact native route finder, all returning no route.
+Three synthetic route-property tests (barrier, detour, fractional direct
+path), the focused 99-test navigation/raid suite, and the web build passed.
+These are isolated measurements, not yet a successful campaign or proof that
+every possible terrain layout has identical target choices. A frozen-source
+native pilot and broader comparison remain required.
+
 A repeated seven-night run with per-step timing located the costly interval
 at simulated time 475–499 on day 7. Twelve of those ticks exceeded three
 seconds, and the largest took 30.34 seconds. A cooperative checkpoint at

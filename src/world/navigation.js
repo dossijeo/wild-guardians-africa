@@ -292,6 +292,41 @@ export class Navigation {
     if(!reverse)return null;
     return [...reverse.slice(0,-1).reverse(),{x:end.x,z:end.z}];
   }
+  approachReachability(start,targets,radius,margin=32){
+    // The native A* for each service point is confined to its own corridor.
+    // Search a superset of those corridors once, using deliberately relaxed
+    // grid edges. Missing from this larger reachable set proves that every
+    // bounded native A* would also miss; possible points still use native A*.
+    if(targets.length<32||!this.field.canyon&&!this.obstacles.some(o=>o.kind==='wall'))return null;
+    const sx=Math.round(start.x),sz=Math.round(start.z);
+    let groupMinX=Infinity,groupMaxX=-Infinity,groupMinZ=Infinity,groupMaxZ=-Infinity;
+    for(const t of targets){groupMinX=Math.min(groupMinX,t.x);groupMaxX=Math.max(groupMaxX,t.x);groupMinZ=Math.min(groupMinZ,t.z);groupMaxZ=Math.max(groupMaxZ,t.z);}
+    const lowX=Math.floor(groupMinX-4),highX=Math.ceil(groupMaxX+4);
+    const lowZ=Math.floor(groupMinZ-4),highZ=Math.ceil(groupMaxZ+4);
+    const minX=Math.min(sx,lowX)-margin-2,maxX=Math.max(sx,highX)+margin+2;
+    const minZ=Math.min(sz,lowZ)-margin-2,maxZ=Math.max(sz,highZ)+margin+2;
+    if((maxX-minX+1)*(maxZ-minZ+1)>100000)return null;
+    const key=(x,z)=>`${x},${z}`,seen=new Set(),queue=[];
+    for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){
+      const x=sx+dx,z=sz+dz;
+      if(this.walkable(x,z,radius,null,false)){seen.add(key(x,z));queue.push({x,z});}
+    }
+    for(let i=0;i<queue.length;i++){
+      const {x,z}=queue[i];
+      for(const [dx,dz] of [[1,0],[-1,0],[0,1],[0,-1],[1,1],[-1,1],[1,-1],[-1,-1]]){
+        const nx=x+dx,nz=z+dz,k=key(nx,nz);
+        if(nx<minX||nx>maxX||nz<minZ||nz>maxZ||seen.has(k)||!this.walkable(nx,nz,radius,null,false))continue;
+        seen.add(k);queue.push({x:nx,z:nz});
+      }
+    }
+    return point=>{
+      if(point.x<lowX||point.x>highX||point.z<lowZ||point.z>highZ)return true;
+      const ex=Math.round(point.x),ez=Math.round(point.z);
+      for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++)if(seen.has(key(ex+dx,ez+dz)))return true;
+      // A direct fractional segment can succeed without any grid connector.
+      return this.segmentClear(point,start,radius,null,false);
+    };
+  }
   approachGroupBlocked(start,targets,radius,reach){
     if(!targets.length)return false;
     const bounds=[Infinity,Infinity,-Infinity,-Infinity];
