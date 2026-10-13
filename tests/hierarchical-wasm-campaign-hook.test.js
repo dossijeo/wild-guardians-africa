@@ -4,6 +4,7 @@ import {readFileSync} from 'node:fs';
 import {Navigation} from '../src/world/navigation.js';
 import {fixture} from '../tools/probe-raid-reservation-saturation.mjs';
 import {installSparseWasmCampaignHook} from '../tools/experiments/sparse-wasm-campaign-hook.mjs';
+import {createHierarchicalNavigationAdapter} from '../src/world/hierarchical-navigation-adapter.js';
 
 const module=new WebAssembly.Module(readFileSync(new URL('../src/world/hierarchical-wasm/lazy-sectors.wasm',import.meta.url)));
 
@@ -24,4 +25,18 @@ test('QA hybrid preserves native gate validity and restores Navigation methods',
     assert.equal(hook.metrics().wasmInvalid,0);
   }finally{hook.uninstall();}
   assert.equal(Navigation.prototype.path,previous);
+});
+
+test('QA hybrid skips the same connectorless target that the JS navigator rejects',()=>{
+  const {s,nav}=fixture('closed-walls');
+  const start={x:15,z:29},center=s.structures.find(o=>o.kind==='center');
+  assert(center);
+  const end={x:center.x,z:center.z},legacy=createHierarchicalNavigationAdapter(nav);
+  assert.equal(legacy.path(start,end,1.1,null,false,24),null);
+  const hook=installSparseWasmCampaignHook(module);
+  try{
+    assert.equal(nav.path(start,end,1.1,null,false,24),null);
+    assert.equal(hook.metrics().certifiedNoConnector,1);
+    assert.equal(hook.metrics().fallbacks,0);
+  }finally{hook.uninstall();}
 });

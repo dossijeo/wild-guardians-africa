@@ -9,7 +9,8 @@ export function installSparseWasmCampaignHook(module){
   const original={path:Navigation.prototype.path,regionFor:Navigation.prototype.regionFor,
     regionConnected:Navigation.prototype.regionConnected};
   const totals={requests:0,direct:0,wasmFound:0,wasmUnknown:0,wasmBlocked:0,wasmInvalid:0,
-    noConnectors:0,fallbacks:0,wasmMs:0,fallbackMs:0,profiles:0};
+    noConnectors:0,noSource:0,noTarget:0,certifiedNoConnector:0,fallbacks:0,fallbackFound:0,
+    wasmMs:0,fallbackMs:0,profiles:0,byProfile:{},examples:[]};
   const owners=new WeakSet();
   const allProbes=[];
   function install(nav){
@@ -40,14 +41,30 @@ export function installSparseWasmCampaignHook(module){
       invalidateRect(...rect){legacy.invalidateRect(...rect);for(const probe of probes.values())probe.invalidateRect(...rect);},
       path(start,end,radius=.3,ignore=null,worker=true,margin=32){
         totals.requests++;
+        const profileKey=`${worker?'worker':'animal'}:${radius}:${ignore??''}`;
+        const profileStats=totals.byProfile[profileKey]??={requests:0,direct:0,wasmFound:0,unknown:0,blocked:0,
+          noSource:0,noTarget:0,fallbacks:0,fallbackFound:0};
+        profileStats.requests++;
         const began=performance.now();
         if(nav.segmentClear(start,end,radius,ignore,worker)){
-          totals.direct++;totals.wasmMs+=performance.now()-began;return [{x:end.x,z:end.z}];
+          totals.direct++;profileStats.direct++;totals.wasmMs+=performance.now()-began;return [{x:end.x,z:end.z}];
         }
         const probe=profile(radius,worker,ignore);
         const sources=connector(start,radius,worker,ignore,true);
         const targets=connector(end,radius,worker,ignore,false);
-        if(!sources.length||!targets.length)totals.noConnectors++;
+        if(!sources.length||!targets.length){
+          totals.noConnectors++;
+          if(!sources.length){totals.noSource++;profileStats.noSource++;}
+          if(!targets.length){totals.noTarget++;profileStats.noTarget++;}
+          if(totals.examples.length<20)totals.examples.push({profile:profileKey,start:{x:start.x,z:start.z},end:{x:end.x,z:end.z},
+            noSource:!sources.length,noTarget:!targets.length,sourceWalkable:nav.walkable(start.x,start.z,radius,ignore,worker),
+            targetWalkable:nav.walkable(end.x,end.z,radius,ignore,worker)});
+          // The existing JS navigator uses the same 3x3 endpoint connector
+          // predicate and returns null before searching when either is empty.
+          totals.certifiedNoConnector++;
+          totals.wasmMs+=performance.now()-began;
+          return null;
+        }
         let unknown=false,blocked=false;
         for(const source of sources)for(const target of targets){
           probe.ensureSector(Math.floor(source.cell.x/12),Math.floor(source.cell.z/12));
@@ -61,14 +78,16 @@ export function installSparseWasmCampaignHook(module){
             if(!nav.segmentClear(previous,point,radius,ignore,worker)){valid=false;break;}
             previous=point;
           }
-          if(valid){totals.wasmFound++;totals.wasmMs+=performance.now()-began;return route;}
+          if(valid){totals.wasmFound++;profileStats.wasmFound++;totals.wasmMs+=performance.now()-began;return route;}
           totals.wasmInvalid++;
         }
-        if(unknown)totals.wasmUnknown++;
-        else if(blocked)totals.wasmBlocked++;
+        if(unknown){totals.wasmUnknown++;profileStats.unknown++;}
+        else if(blocked){totals.wasmBlocked++;profileStats.blocked++;}
         totals.wasmMs+=performance.now()-began;
         const fallbackStart=performance.now(),result=legacy.path(start,end,radius,ignore,worker,margin);
-        totals.fallbacks++;totals.fallbackMs+=performance.now()-fallbackStart;
+        totals.fallbacks++;profileStats.fallbacks++;
+        if(result){totals.fallbackFound++;profileStats.fallbackFound++;}
+        totals.fallbackMs+=performance.now()-fallbackStart;
         return result;
       },
     };
@@ -79,7 +98,8 @@ export function installSparseWasmCampaignHook(module){
   Navigation.prototype.regionConnected=function(...args){install(this);return original.regionConnected.call(this,...args);};
   return {metrics:()=>{
     const sectors=allProbes.map(p=>p.metrics());
-    return {...totals,sectorsLoaded:sectors.reduce((n,s)=>n+s.loaded,0),
+    return {...totals,byProfile:structuredClone(totals.byProfile),examples:structuredClone(totals.examples),
+      sectorsLoaded:sectors.reduce((n,s)=>n+s.loaded,0),
       sectorUpdates:sectors.reduce((n,s)=>n+s.updates,0),
       wasmReservedBytes:sectors.reduce((n,s)=>n+s.memoryBytes,0)};
   },uninstall(){Object.assign(Navigation.prototype,original);}};
