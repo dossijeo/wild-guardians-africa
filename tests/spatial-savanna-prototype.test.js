@@ -192,6 +192,34 @@ test('placing and destroying a wall updates local sectors and restores a route',
   assert.equal(core.removeWall(wall),1);
   validRoute(core,start,core.route(start,end));
 });
+test('a dynamic passage updates local worker and animal topology independently',()=>{
+  const core=createSpatialSavannaPrototype(module);core.generate(712,0,0);
+  core.buildNavigation(.28,true);core.buildNavigation(1.1,false);
+  core.setSettlement(10,8,7,6);
+  for(const worker of [true,false]){
+    core.selectNavigation(worker);
+    assert.equal(core.walkable(10,8),true,'fixture needs a clear settlement cell');
+  }
+  const before=core.metrics().sectorUpdates;
+  const gate=core.addBarrier(10,8,.4,.4,1);
+  assert(gate>0);
+  assert(core.metrics().sectorUpdates>before);
+  assert(core.metrics().sectorUpdates-before<16,'only nearby sectors should change');
+  core.selectNavigation(true);assert.equal(core.walkable(10,8),true);
+  core.selectNavigation(false);assert.equal(core.walkable(10,8),false);
+  assert.equal(core.setBarrierPassability(gate,0),1);
+  core.selectNavigation(true);assert.equal(core.walkable(10,8),false);
+  const unchanged=core.metrics().sectorUpdates;
+  assert.equal(core.setBarrierPassability(gate,0),1);
+  assert.equal(core.metrics().sectorUpdates,unchanged,'an unchanged gate must not rebuild sectors');
+  assert.equal(core.setBarrierPassability(gate,3),1);
+  for(const worker of [true,false]){
+    core.selectNavigation(worker);assert.equal(core.walkable(10,8),true);
+  }
+  assert.equal(core.setBarrierPassability(gate,4),0);
+  assert.equal(core.removeWall(gate),1);
+  assert.equal(core.setBarrierPassability(gate,0),0,'removed barriers cannot be changed');
+});
 test('neighboring chunks share their terrain seam and seed-dependent props',()=>{
   const core=createSpatialSavannaPrototype(module);
   core.generate(2026,0,0);

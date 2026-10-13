@@ -70,7 +70,7 @@ try{
     format:sceneFormat?'scene':'raw',settlement:settlement?{x:10,z:8,hx:7,hz:6}:null});
   const candidateSecond=await request(candidate,{id:4,seed,cx:1,cz:0,radius:1.1,
     format:sceneFormat?'scene':'raw'});
-  let topology=null,multipleSettlements=null,surfaceView=null;
+  let topology=null,barrierTopology=null,multipleSettlements=null,surfaceView=null;
   if(sceneFormat){
     const view=new SpatialSurfaceView();view.install(candidateFirst.data);view.install(candidateSecond.data);
     const query={x:30.3,z:5.7};
@@ -100,6 +100,26 @@ try{
     if(blocked.value==='found'||workerBlocked.value==='found'||removed.value!==1||
        reopened.value!=='found'||workerReopened.value!=='found'||workerProfile.value<32)
       throw Error(`Wall topology did not close and reopen the route: ${blocked.value}, ${removed.value}, ${reopened.value}`);
+    const gate=await request(candidate,{id:id++,op:'barrier-add',x:23.5,z:crossing.z,halfX:.8,halfZ:.4,passMask:1});
+    const animalClosed=await request(candidate,{id:id++,op:'edge',...crossing});
+    await request(candidate,{id:id++,op:'profile',worker:true});
+    const workerOpen=await request(candidate,{id:id++,op:'edge',...crossing});
+    const closedGate=await request(candidate,{id:id++,op:'barrier-passability',barrierId:gate.value,passMask:0});
+    const workerClosed=await request(candidate,{id:id++,op:'edge',...crossing});
+    const openedGate=await request(candidate,{id:id++,op:'barrier-passability',barrierId:gate.value,passMask:3});
+    const workerBothOpen=await request(candidate,{id:id++,op:'edge',...crossing});
+    await request(candidate,{id:id++,op:'profile',worker:false});
+    const animalOpen=await request(candidate,{id:id++,op:'edge',...crossing});
+    const removedGate=await request(candidate,{id:id++,op:'barrier-remove',barrierId:gate.value});
+    if(gate.value<=0||animalClosed.value||!workerOpen.value||closedGate.value!==1||
+       workerClosed.value||openedGate.value!==1||!workerBothOpen.value||
+       !animalOpen.value||removedGate.value!==1)
+      throw Error('Dynamic passage did not update worker and animal sectors independently');
+    barrierTopology={workerOpen:workerOpen.value,animalClosed:animalClosed.value,
+      workerClosed:workerClosed.value,workerReopened:workerBothOpen.value,
+      animalReopened:animalOpen.value,localUpdates:gate.metrics.sectorUpdates-removed.metrics.sectorUpdates,
+      addMs:gate.timing.operationMs,closeMs:closedGate.timing.operationMs,
+      reopenMs:openedGate.timing.operationMs};
     const evicted=await request(candidate,{id:id++,op:'chunk-remove',cx:1,cz:0});
     if(evicted.value!==1||evicted.metrics.loadedChunks!==1)throw Error('Chunk eviction did not release the second chunk');
     const restored=await request(candidate,{id:id++,seed,cx:1,cz:0,format:'scene'});
@@ -163,8 +183,9 @@ try{
     ...result.timing,three:prepareThree(result.data,result.cx,result.cz),
     props:sceneFormat?result.data.instances.reduce((n,list)=>n+list.length,0):result.data.count,
     metrics:result.metrics}));
-  window.qaStats={seed,sceneFormat,settlement,current,spatial,topology,multipleSettlements,surfaceView,
+  window.qaStats={seed,sceneFormat,settlement,current,spatial,topology,barrierTopology,multipleSettlements,surfaceView,
     checks:{transferLengths:true,terrainSeam:true,wallEdit:!!topology,
+      dynamicPassage:!!barrierTopology,
       evictionRegeneration:topology?.sameVisualPayload===true,
       multipleSettlements:multipleSettlements?.sameFirstSettlement===true,
       surfaceView:surfaceView?.difference<=.00002}};window.qaReady=true;

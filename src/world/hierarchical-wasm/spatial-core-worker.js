@@ -37,6 +37,9 @@ self.onmessage=async({data:request})=>{
         }
         case 'wall-add':value=wasm.spatial_add_wall(request.x,request.z,request.halfX,request.halfZ);break;
         case 'wall-remove':value=wasm.spatial_remove_wall(request.wallId);break;
+        case 'barrier-add':value=wasm.spatial_add_barrier(request.x,request.z,request.halfX,request.halfZ,request.passMask);break;
+        case 'barrier-remove':value=wasm.spatial_remove_barrier(request.barrierId);break;
+        case 'barrier-passability':value=wasm.spatial_set_barrier_passability(request.barrierId,request.passMask);break;
         case 'chunk-remove':value=wasm.spatial_remove_chunk(request.cx,request.cz);break;
         case 'settlement-add':value=wasm.spatial_add_settlement(request.x,request.z,request.hx,request.hz);break;
         case 'profile':value=wasm.spatial_select_nav_profile(request.worker?1:0);break;

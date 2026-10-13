@@ -33,12 +33,12 @@ constexpr double pi=3.14159265358979323846;
 struct Prop {float x,z,y,radius,scale,yaw;int32_t slot;};
 struct Pond {double x,z,radius,level;};
 struct WaterPoint {double x,z;};
-struct Wall {int id;float x,z,halfX,halfZ;bool active;};
+struct Barrier {int id;float x,z,halfX,halfZ;uint8_t passMask;bool active;};
 struct Settlement {bool active=false;double x=0,z=0,y=0,hx=0,hz=0,clearRadius=0,softRadius=0,haloRadius=0;};
 struct ChunkRaster {int cx,cz;std::vector<uint8_t> pass,steps,inbound;};
 struct NavProfile {float radius=0;bool worker=false,ready=false;std::unordered_map<uint64_t,ChunkRaster> rasters;};
 uint32_t worldSeed=0;
-int chunkX=0,chunkZ=0,nextWallId=1;
+int chunkX=0,chunkZ=0,nextBarrierId=1;
 float radiusNow=.3f;
 bool workerNow=true,navReady=false;
 std::vector<float> heights,colors;
@@ -52,7 +52,7 @@ std::vector<Prop> props;
 std::vector<Prop> solidProps;
 std::array<std::vector<int>,propBucketSide*propBucketSide> propBuckets;
 int haloPropCount=0;
-std::vector<Wall> walls;
+std::vector<Barrier> barriers;
 std::vector<Settlement> settlements;
 std::vector<size_t> nearbySettlements;
 std::vector<uint8_t> staticPass,staticSteps,staticInbound;
@@ -322,13 +322,15 @@ bool terrainPropWalkable(int x,int z){
   if(!terrainValid(x,z,radiusNow,workerNow))return false;
   return !propBlocked(x,z);
 }
-bool wallClear(double x,double z){
-  for(const Wall& w:walls)if(w.active&&std::abs(x-w.x)<w.halfX+radiusNow&&std::abs(z-w.z)<w.halfZ+radiusNow)return false;
+bool barrierClear(double x,double z){
+  const uint8_t profileBit=workerNow?1:2;
+  for(const Barrier& w:barriers)if(w.active&&!(w.passMask&profileBit)&&
+    std::abs(x-w.x)<w.halfX+radiusNow&&std::abs(z-w.z)<w.halfZ+radiusNow)return false;
   return true;
 }
 bool walkable(int x,int z){
   const ChunkRaster* chunk=rasterAt(x,z);
-  return chunk&&chunk->pass[rasterIndex(*chunk,x,z)]&&wallClear(x,z);
+  return chunk&&chunk->pass[rasterIndex(*chunk,x,z)]&&barrierClear(x,z);
 }
 bool terrainPropSegment(int x,int z,int nx,int nz){
   for(int i=1;i<4;i++){
@@ -342,10 +344,10 @@ bool terrainPropEdge(int x,int z,int nx,int nz){
   return terrainPropWalkable(x,z)&&terrainPropWalkable(nx,nz)&&terrainPropSegment(x,z,nx,nz);
 }
 bool wallEdgeClear(int x,int z,int nx,int nz){
-  if(!wallClear(x,z)||!wallClear(nx,nz))return false;
+  if(!barrierClear(x,z)||!barrierClear(nx,nz))return false;
   for(int i=1;i<4;i++){
     const double t=i/4.0;
-    if(!wallClear(x+(nx-x)*t,z+(nz-z)*t))return false;
+    if(!barrierClear(x+(nx-x)*t,z+(nz-z)*t))return false;
   }
   return true;
 }
@@ -548,11 +550,32 @@ void refreshSettlementChunks(const std::vector<Settlement>& changed){
   selectProfile(previous);
   if(!loadedChunks.empty())populateChunk(selectedX,selectedZ);
 }
+void refreshBarrier(const Barrier& barrier){
+  const float maxRadius=std::max(navProfile(0).radius,navProfile(1).radius);
+  const int r=int(std::ceil(maxRadius))+1,previous=activeProfile;
+  for(int profile=0;profile<2;profile++){
+    selectProfile(profile);
+    refreshRect(int(std::floor(barrier.x-barrier.halfX))-r,
+      int(std::floor(barrier.z-barrier.halfZ))-r,
+      int(std::ceil(barrier.x+barrier.halfX))+r,
+      int(std::ceil(barrier.z+barrier.halfZ))+r);
+  }
+  selectProfile(previous);
+}
+int addBarrier(float x,float z,float halfX,float halfZ,int passMask){
+  if(!std::isfinite(x)||!std::isfinite(z)||!std::isfinite(halfX)||!std::isfinite(halfZ)||
+     halfX<=0||halfZ<=0||halfX>100||halfZ>100||passMask<0||passMask>3||
+     nextBarrierId==std::numeric_limits<int>::max())return 0;
+  const Barrier barrier={nextBarrierId++,x,z,halfX,halfZ,uint8_t(passMask),true};
+  barriers.push_back(barrier);
+  refreshBarrier(barrier);
+  return barrier.id;
+}
 }
 
 extern "C" {
 int spatial_generate(uint32_t seed,int cx,int cz){
-  worldSeed=seed;walls.clear();settlements.clear();nearbySettlements.clear();
+  worldSeed=seed;barriers.clear();settlements.clear();nearbySettlements.clear();
   for(int profile=0;profile<2;profile++){
     NavProfile& state=navProfile(profile);
     state.rasters.clear();state.ready=false;
@@ -561,7 +584,7 @@ int spatial_generate(uint32_t seed,int cx,int cz){
   }
   activeProfile=0;radiusNow=.3f;workerNow=false;navReady=false;
   chunkRasters=&navProfile(0).rasters;lazy_select_context(0);
-  loadedChunks.clear();nextWallId=1;
+  loadedChunks.clear();nextBarrierId=1;
   populateChunk(cx,cz);loadedChunks.emplace_back(cx,cz);
   return int(props.size());
 }
@@ -661,29 +684,27 @@ int spatial_select_nav_profile(int worker){
   return navReady?lazy_loaded_sectors():0;
 }
 int spatial_add_wall(float x,float z,float halfX,float halfZ){
-  if(halfX<=0||halfZ<=0)return 0;
-  const int id=nextWallId++;walls.push_back({id,x,z,halfX,halfZ,true});
-  const float maxRadius=std::max(navProfile(0).radius,navProfile(1).radius);
-  const int r=int(std::ceil(maxRadius))+1;
-  const int previous=activeProfile;
-  for(int profile=0;profile<2;profile++){
-    selectProfile(profile);
-    refreshRect(int(std::floor(x-halfX))-r,int(std::floor(z-halfZ))-r,int(std::ceil(x+halfX))+r,int(std::ceil(z+halfZ))+r);
-  }
-  selectProfile(previous);
-  return id;
+  return addBarrier(x,z,halfX,halfZ,0);
 }
 int spatial_remove_wall(int id){
-  for(Wall& w:walls)if(w.id==id&&w.active){
+  for(Barrier& w:barriers)if(w.id==id&&w.active){
     w.active=false;
-    const float maxRadius=std::max(navProfile(0).radius,navProfile(1).radius);
-    const int r=int(std::ceil(maxRadius))+1;
-    const int previous=activeProfile;
-    for(int profile=0;profile<2;profile++){
-      selectProfile(profile);
-      refreshRect(int(std::floor(w.x-w.halfX))-r,int(std::floor(w.z-w.halfZ))-r,int(std::ceil(w.x+w.halfX))+r,int(std::ceil(w.z+w.halfZ))+r);
+    refreshBarrier(w);
+    return 1;
+  }
+  return 0;
+}
+int spatial_remove_barrier(int id){return spatial_remove_wall(id);}
+int spatial_add_barrier(float x,float z,float halfX,float halfZ,int passMask){
+  return addBarrier(x,z,halfX,halfZ,passMask);
+}
+int spatial_set_barrier_passability(int id,int passMask){
+  if(passMask<0||passMask>3)return 0;
+  for(Barrier& barrier:barriers)if(barrier.id==id&&barrier.active){
+    if(barrier.passMask!=passMask){
+      barrier.passMask=uint8_t(passMask);
+      refreshBarrier(barrier);
     }
-    selectProfile(previous);
     return 1;
   }
   return 0;
