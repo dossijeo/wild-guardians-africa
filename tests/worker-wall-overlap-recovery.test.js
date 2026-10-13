@@ -62,3 +62,24 @@ test('a returning worker brushing a newly closed wall recovers a valid route thr
  for(let i=0;i<150&&!restoredReached;i++)restoredReached=Game.walkTo(loaded,restored,destination,.5,nav);
  assert(restoredReached,'the same native route must recover after saving inside the wall');
 });
+
+test('several workers inside a newly closed wall can all recover their gate routes',()=>{
+ const {s,nav}=createOpeningWorld({seed:123}),center=s.structures[0];
+ assert(Game.plant(s,'seed','mijo',center.x+6,center.z+1,nav));
+ Game.openInitialHiring(s);Game.hire(s,'hire',{olderFemale:4});
+ const policy=createNativeFundedDefensePolicy({startDay:1,chunkPieces:8});let sequence=0;
+ for(let i=0;i<20&&!policy.report().completed;i++){
+  policy.act(s,nav,{command:kind=>`wall-${kind}-${sequence++}`,reserve:160});s.elapsed+=6;
+ }
+ assert(policy.report().completed);
+ const destination={...s.villages[0].entry,id:'home-'+s.villages[0].id};
+ for(const worker of s.workers){
+  worker.x=73.79870720221577;worker.z=2.400430932594735;
+  worker.status='returning';worker.path=null;
+ }
+ for(let i=0;i<300;i++){
+  for(const worker of s.workers)if(worker.status!=='home'&&Game.walkTo(s,worker,destination,.5,nav))worker.status='home';
+  if(s.workers.every(worker=>worker.status==='home'))break;
+ }
+ assert(s.workers.every(worker=>worker.status==='home'));
+});
