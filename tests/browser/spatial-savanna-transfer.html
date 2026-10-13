@@ -80,14 +80,25 @@ try{
     if(Math.abs(view.surface(query.x,query.z)-exact.value)>.00002)
       throw Error('Transferred terrain view differs from WASM surface');
     surfaceView={sample:query,height:view.surface(query.x,query.z),difference:Math.abs(view.surface(query.x,query.z)-exact.value)};
-    let crossing=null,id=5;
+    let crossing=null,crossingRoute=null,id=5;
     for(let z=-18;z<=18;z++){
       const edge=await request(candidate,{id:id++,op:'edge',x:23,z,nx:24,nz:z});
       if(!edge.value)continue;
       const route=await request(candidate,{id:id++,op:'route',x:23,z,nx:24,nz:z});
-      if(route.value==='found'){crossing={x:23,z,nx:24,nz:z};break;}
+      if(route.value==='found'){crossing={x:23,z,nx:24,nz:z};crossingRoute=route;break;}
     }
     if(!crossing)throw Error('No valid cross-chunk route before wall construction');
+    if(!(crossingRoute.routePoints instanceof Int32Array)||crossingRoute.routePoints.length<2||
+      crossingRoute.routePoints.length%2||
+      crossingRoute.routePoints.at(-2)!==crossing.nx||crossingRoute.routePoints.at(-1)!==crossing.nz)
+      throw Error('WASM worker did not transfer the complete route points');
+    let previous={x:crossing.x,z:crossing.z};
+    for(let point=0;point<crossingRoute.routePoints.length;point+=2){
+      const next={x:crossingRoute.routePoints[point],z:crossingRoute.routePoints[point+1]};
+      const step=await request(candidate,{id:id++,op:'edge',...previous,nx:next.x,nz:next.z});
+      if(!step.value)throw Error('Transferred WASM route contains an invalid physical edge');
+      previous=next;
+    }
     const wall=await request(candidate,{id:id++,op:'wall-add',x:23.5,z:0,halfX:.8,halfZ:24});
     if(wall.value<=0)throw Error('The wall command was rejected');
     const blocked=await request(candidate,{id:id++,op:'route',...crossing});
@@ -99,7 +110,7 @@ try{
     await request(candidate,{id:id++,op:'profile',worker:true});
     const workerReopened=await request(candidate,{id:id++,op:'route',...crossing});
     await request(candidate,{id:id++,op:'profile',worker:false});
-    if(blocked.value==='found'||workerBlocked.value==='found'||removed.value!==1||
+    if(blocked.value==='found'||blocked.routePoints||workerBlocked.value==='found'||removed.value!==1||
        reopened.value!=='found'||workerReopened.value!=='found'||workerProfile.value<32)
       throw Error(`Wall topology did not close and reopen the route: ${blocked.value}, ${removed.value}, ${reopened.value}`);
     const gate=await request(candidate,{id:id++,op:'barrier-add',x:23.5,z:crossing.z,halfX:.8,halfZ:.4,passMask:1});
@@ -146,7 +157,8 @@ try{
     const revisited=await request(candidate,{id:id++,op:'route',...crossing});
     if(revisited.value!=='found'||restored.metrics.loadedChunks!==2)
       throw Error('Chunk regeneration did not restore cross-chunk navigation');
-    topology={crossing,closedStatus:blocked.value,reopenedStatus:reopened.value,
+    topology={crossing,routePointCount:crossingRoute.routePoints.length/2,
+      closedStatus:blocked.value,reopenedStatus:reopened.value,
       workerClosedStatus:workerBlocked.value,workerReopenedStatus:workerReopened.value,
       wallAddMs:wall.timing.operationMs,wallRemoveMs:removed.timing.operationMs,
       sectorUpdatesAfterAdd:wall.metrics.sectorUpdates,
@@ -207,7 +219,8 @@ try{
          !same(restoredFirst.data.groundMask,candidateFirst.data.groundMask)||
          JSON.stringify(restoredFirst.data.instances)!==JSON.stringify(afterProp.data.instances)||
          !same(restoredSecond.data.terrain.positions,candidateSecond.data.terrain.positions)||
-         route.value!==liveRoute.value)
+         route.value!==liveRoute.value||
+         JSON.stringify(Array.from(route.routePoints??[]))!==JSON.stringify(Array.from(liveRoute.routePoints??[])))
         throw Error('The versioned spatial state did not restore visual and route behavior');
       spatialReload={version:saved.value.version,settlements:saved.value.settlements.length,
         removedProps:saved.value.removedProps.length,
@@ -240,6 +253,7 @@ try{
     metrics:result.metrics}));
   window.qaStats={seed,biome,sceneFormat,settlement,current,spatial,topology,barrierTopology,batchTopology,multipleSettlements,surfaceView,spatialReload,propRemoval,
     checks:{transferLengths:true,terrainSeam:true,wallEdit:!!topology,
+      routePoints:topology?.routePointCount>=1,
       dynamicPassage:!!barrierTopology,
       batchedTopology:batchTopology?.count===12,
       evictionRegeneration:topology?.sameVisualPayload===true,

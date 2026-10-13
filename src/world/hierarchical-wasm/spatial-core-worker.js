@@ -30,12 +30,14 @@ self.onmessage=async({data:request})=>{
     await initialize();
     if(request.op){
       if(seed===null&&request.op!=='restore')throw Error('Generate the spatial world before editing or routing');
-      const started=performance.now();let value;
+      const started=performance.now();let value,routePoints;
       switch(request.op){
         case 'edge':value=Boolean(wasm.spatial_edge(request.x,request.z,request.nx,request.nz));break;
         case 'route':{
           const count=wasm.lazy_route(request.x,request.z,request.nx,request.nz);
-          value=count<0?'unknown':count===0?'blocked':'found';break;
+          value=count<0?'unknown':count===0?'blocked':'found';
+          if(count>0)routePoints=new Int32Array(wasm.memory.buffer,wasm.lazy_route_ptr(),count*2).slice();
+          break;
         }
         case 'wall-add':value=wasm.spatial_add_wall(request.x,request.z,request.halfX,request.halfZ);break;
         case 'wall-remove':value=wasm.spatial_remove_wall(request.wallId);break;
@@ -66,10 +68,11 @@ self.onmessage=async({data:request})=>{
         }
         default:throw Error(`Unknown spatial operation: ${request.op}`);
       }
-      self.postMessage({id:request.id,value,
+      self.postMessage({id:request.id,value,routePoints,
         timing:{operationMs:performance.now()-started},
         metrics:{loadedChunks:wasm.spatial_chunk_count(),loadedSectors:wasm.lazy_loaded_sectors(),
-          sectorUpdates:wasm.lazy_sector_updates(),memoryBytes:wasm.memory.buffer.byteLength}});
+          sectorUpdates:wasm.lazy_sector_updates(),memoryBytes:wasm.memory.buffer.byteLength}},
+        routePoints?[routePoints.buffer]:[]);
       return;
     }
     const started=performance.now();
