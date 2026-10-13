@@ -293,6 +293,17 @@ four serialized states sharing the same SHA-256 hash. This is a 42% reduction
 in this specific five-second simulation slice; 23 seconds remains too slow
 for an interactive tick or an efficient 100-night campaign. Focused navigation
 tests (43) and the web build passed after removing temporary failure probes.
+An additional whole-ring certificate tried to reject all 32 approach samples
+for a target at once. Against the retained early certificate, AB/BA times
+were 21.54/23.12 seconds for the reference and 22.34/22.28 seconds for the
+candidate, with identical state hashes. The difference was within run noise;
+the extra method was removed. The raw comparison remains in
+`day12-searched-ring-proof-abba.json`.
+The post-change call profile (`day12-early-region-call-profile.json`) still
+shows 55,242 `approachPath` calls (22 successful), now taking 18.28 of 21.92
+seconds. Further large gains require reducing the number of attempted
+service points while retaining physically valid target selection; neither
+historical-crop filtering nor a more expensive point-by-point proof does that.
 The focused simulation, rendering, and virtual-player regressions passed,
 and the web build passed. The full repository suite was attempted but stopped
 after its legacy `campaign.test.js` child continued consuming CPU for more
