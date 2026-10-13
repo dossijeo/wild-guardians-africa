@@ -278,6 +278,21 @@ reference 39.05/42.83 seconds, candidate 45.62/46.01 seconds. This negative
 result is retained as `day12-reachability-exact-edges-abba.json` so further
 work can focus on reducing repeated route attempts, not on making this
 particular prefilter more expensive.
+The failure-reason probe (`day12-native-path-failure-profile.json`) found
+46,203 searches rejected by an already explored bounded region, compared with
+8,999 searches exhausted normally. Caching only that region's answer for the
+same endpoint was insufficient: `day12-searched-region-end-memo-abba.json`
+preserved the state but took 40.08/41.04 seconds versus 37.90/40.66 seconds.
+
+The retained optimization applies the existing bounded-region certificate
+*before* creating the A* frontier when all potentially valid origin cells lie
+inside the proven region. It keeps the later native check as fallback. In the
+day-12 AB/BA replay, `day12-early-searched-region-abba.json`, the reference
+took 38.71/41.50 seconds and the candidate 23.49/22.99 seconds, with all
+four serialized states sharing the same SHA-256 hash. This is a 42% reduction
+in this specific five-second simulation slice; 23 seconds remains too slow
+for an interactive tick or an efficient 100-night campaign. Focused navigation
+tests (43) and the web build passed after removing temporary failure probes.
 The focused simulation, rendering, and virtual-player regressions passed,
 and the web build passed. The full repository suite was attempted but stopped
 after its legacy `campaign.test.js` child continued consuming CPU for more

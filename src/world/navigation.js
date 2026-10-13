@@ -19,6 +19,7 @@ import {animalSegmentClearance} from './animal-segment-clearance.js';
 export const BIOME_IDS={sabana:'savanna','gran-rio':'grand_river',manglares:'mangrove',volcanes:'volcanoes','gran-canon':'canyons',desierto:'desert'};
 export const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 const approachRegionCertificates=new WeakMap();
+const searchedRegionEndMemo=new WeakMap();
 export class Navigation {
   constructor(seed,biome,profile) {
     this.config={seed:String(seed),biome:BIOME_IDS[biome]??biome,relief:1,density:1,river:true,n:1,cx:0,cz:0,layers:[true,true,true,true,true,true]};
@@ -426,6 +427,33 @@ export class Navigation {
     const cell=1,key=(x,z)=>`${x},${z}`,sx=Math.round(start.x),sz=Math.round(start.z),ex=Math.round(end.x),ez=Math.round(end.z);
     const maxVisited=12000*Math.max(1,(margin/16)**2),minX=Math.min(sx,ex)-margin,maxX=Math.max(sx,ex)+margin,minZ=Math.min(sz,ez)-margin,maxZ=Math.max(sz,ez)+margin;
     const portals=worker?this.portalGraph(radius,ignore):{nodes:new Map(),links:new Map()},inside=p=>p.x>=minX&&p.x<=maxX&&p.z>=minZ&&p.z<=maxZ;
+    if(!worker&&this.searchedRegions.length)for(const searched of this.searchedRegions){
+      if(searched.radius!==radius||searched.ignore!==ignore||searched.worker!==worker||
+        minX<searched.minX||maxX>searched.maxX||minZ<searched.minZ||maxZ>searched.maxZ)continue;
+      let contained=true;
+      for(let dz=-1;dz<=1&&contained;dz++)for(let dx=-1;dx<=1;dx++){
+        const x=sx+dx,z=sz+dz;
+        if(this.walkable(x,z,radius,ignore,worker)&&!searched.nodes.has(key(x,z))){contained=false;break;}
+      }
+      if(!contained)continue;
+      let memo=searchedRegionEndMemo.get(searched.nodes);
+      if(!memo||memo.version!==this.version||memo.walkable!==this.walkable||memo.segmentClear!==this.segmentClear){
+        memo={version:this.version,walkable:this.walkable,segmentClear:this.segmentClear,endpoints:new Map()};
+        searchedRegionEndMemo.set(searched.nodes,memo);
+      }
+      const endKey=JSON.stringify([end.x,end.z,radius,ignore,worker]);
+      let reachable=memo.endpoints.get(endKey);
+      if(reachable===undefined){
+        reachable=false;
+        for(let dz=-1;dz<=1&&!reachable;dz++)for(let dx=-1;dx<=1;dx++){
+          const x=ex+dx,z=ez+dz;
+          if(searched.nodes.has(key(x,z))&&this.segmentClear({x,z},end,radius,ignore,worker)){reachable=true;break;}
+        }
+        if(memo.endpoints.size>=64)evictOldest(memo.endpoints);
+        memo.endpoints.set(endKey,reachable);
+      }
+      if(!reachable)return null;
+    }
     const open=new SearchFrontier(),costs=new Map(),previous=new Map();
     for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){
       const point={x:sx+dx,z:sz+dz};
@@ -449,7 +477,21 @@ export class Navigation {
     for(const searched of this.searchedRegions){
       if(searched.radius!==radius||searched.ignore!==ignore||searched.worker!==worker||
         minX<searched.minX||maxX>searched.maxX||minZ<searched.minZ||maxZ>searched.maxZ)continue;
-      if(open.length&&open.values().every(p=>searched.nodes.has(key(p.x,p.z)))&&!reachesEnd(searched.nodes))return null;
+      if(open.length&&open.values().every(p=>searched.nodes.has(key(p.x,p.z)))){
+        let memo=searchedRegionEndMemo.get(searched.nodes);
+        if(!memo||memo.version!==this.version||memo.walkable!==this.walkable||memo.segmentClear!==this.segmentClear){
+          memo={version:this.version,walkable:this.walkable,segmentClear:this.segmentClear,endpoints:new Map()};
+          searchedRegionEndMemo.set(searched.nodes,memo);
+        }
+        const endKey=JSON.stringify([end.x,end.z,radius,ignore,worker]);
+        let reachable=memo.endpoints.get(endKey);
+        if(reachable===undefined){
+          reachable=reachesEnd(searched.nodes);
+          if(memo.endpoints.size>=64)evictOldest(memo.endpoints);
+          memo.endpoints.set(endKey,reachable);
+        }
+        if(!reachable)return null;
+      }
     }
     const known=open.values().map(p=>this.closedRegions.get(regionKey(key(p.x,p.z))));
     if(known.length&&known.every(Boolean)){

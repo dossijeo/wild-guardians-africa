@@ -109,3 +109,24 @@ test('Wider searches find physical detours beyond the local corridor without reu
   let previous=start;for(const p of path){assert.ok(nav.segmentClear(previous,p,.45,null,false));previous=p;}assert.deepEqual(path.at(-1),end);
   assert.equal(nav.path(start,end,.45,null,false),null,'A failed narrow corridor remains separately cached');assert.deepEqual(nav.path(start,end,.45,null,false,32),path);
 });
+
+test('a searched-region endpoint proof is reused for nearby distinct origins',()=>{
+  const nav=flat([]),end={x:20.2,z:0},nodes=new Set(['-1,-1','-1,0','-1,1','0,-1','0,0','0,1','1,-1','1,0','1,1','20,0']);
+  nav.searchedRegions=[{nodes,minX:-100,maxX:100,minZ:-100,maxZ:100,radius:.3,ignore:null,worker:false}];
+  nav.walkable=()=>true;
+  let endpointChecks=0,originConnectors=0;
+  nav.segmentClear=(a,b)=>{
+    if(b.x===end.x&&b.z===end.z){if(a.x===20&&a.z===0)endpointChecks++;return false;}
+    originConnectors++;
+    return true;
+  };
+  assert.equal(nav.findPath({x:.1,z:0},end,.3,null,false,32),null);
+  assert.equal(endpointChecks,1);
+  assert.equal(nav.findPath({x:.2,z:0},end,.3,null,false,32),null);
+  assert.equal(endpointChecks,1);
+  assert.equal(originConnectors,0,'the searched-region proof runs before building origin connectors');
+  let refreshed=0;
+  nav.segmentClear=(a,b)=>{if(b.x===end.x&&b.z===end.z){if(a.x===20&&a.z===0)refreshed++;return false;}return true;};
+  assert.equal(nav.findPath({x:.3,z:0},end,.3,null,false,32),null);
+  assert.equal(refreshed,1,'changing the collision function invalidates the memo');
+});
