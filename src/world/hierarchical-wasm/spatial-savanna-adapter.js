@@ -1,0 +1,60 @@
+import * as THREE from 'three';
+
+// QA-only adapter. The C++ module owns all procedural and collision data;
+// JavaScript only copies its display buffers into Three.js-owned geometry.
+export function createSpatialSavannaPrototype(module){
+  const wasm=new WebAssembly.Instance(module,{env:{emscripten_notify_memory_growth(){}}}).exports;
+  let chunk=null,navigationBuilt=false;
+  const heights=()=>new Float32Array(wasm.memory.buffer,wasm.spatial_heights_ptr(),49*49);
+  const colors=()=>new Float32Array(wasm.memory.buffer,wasm.spatial_colors_ptr(),49*49*3);
+  function generate(seed,cx,cz){
+    const count=wasm.spatial_generate(seed>>>0,cx|0,cz|0);
+    chunk={cx:cx|0,cz:cz|0,count};navigationBuilt=false;
+    return chunk;
+  }
+  function props(){
+    const count=wasm.spatial_prop_count(),view=new DataView(wasm.memory.buffer,wasm.spatial_props_ptr(),count*28);
+    return Array.from({length:count},(_,i)=>{
+      const at=i*28;
+      return {x:view.getFloat32(at,true),z:view.getFloat32(at+4,true),y:view.getFloat32(at+8,true),
+        radius:view.getFloat32(at+12,true),scale:view.getFloat32(at+16,true),yaw:view.getFloat32(at+20,true),slot:view.getInt32(at+24,true)};
+    });
+  }
+  function geometry(){
+    if(!chunk)throw Error('Generate a chunk before building its geometry');
+    const {cx,cz}=chunk,ground=heights(),rgb=colors(),positions=new Float32Array(49*49*3);
+    for(let z=0;z<49;z++)for(let x=0;x<49;x++){
+      const i=z*49+x;positions[i*3]=cx*48-24+x;positions[i*3+1]=ground[i];positions[i*3+2]=cz*48-24+z;
+    }
+    const indices=new Uint16Array(48*48*6);
+    for(let z=0;z<48;z++)for(let x=0;x<48;x++){
+      const i=z*48+x,k=i*6,a=z*49+x,b=a+1,d=a+49,c=d+1;
+      indices.set([a,d,b,b,d,c],k);
+    }
+    const geo=new THREE.BufferGeometry();
+    geo.setAttribute('position',new THREE.BufferAttribute(positions,3));
+    geo.setAttribute('color',new THREE.BufferAttribute(Float32Array.from(rgb),3));
+    geo.setIndex(new THREE.BufferAttribute(indices,1));geo.computeVertexNormals();
+    return geo;
+  }
+  function route(start,end){
+    if(!navigationBuilt)return {status:'unknown',points:[]};
+    const count=wasm.lazy_route(start.x|0,start.z|0,end.x|0,end.z|0);
+    if(count<0)return {status:'unknown',points:[]};
+    if(!count)return {status:'blocked',points:[]};
+    const pairs=new Int32Array(wasm.memory.buffer,wasm.lazy_route_ptr(),count*2),points=[];
+    for(let i=0;i<count;i++)points.push({x:pairs[i*2],z:pairs[i*2+1]});
+    return {status:'found',points};
+  }
+  return {wasm,generate,heights,colors,props,geometry,route,
+    buildNavigation:(radius,worker)=>{
+      if(!chunk)throw Error('Generate a chunk before building its navigation');
+      const loaded=wasm.spatial_build_nav(radius,worker?1:0);
+      navigationBuilt=loaded>0;return loaded;
+    },
+    addWall:(x,z,halfX,halfZ)=>wasm.spatial_add_wall(x,z,halfX,halfZ),
+    removeWall:id=>wasm.spatial_remove_wall(id),
+    walkable:(x,z)=>Boolean(wasm.spatial_walkable(x,z)),
+    edge:(x,z,nx,nz)=>Boolean(wasm.spatial_edge(x,z,nx,nz)),
+    metrics:()=>({memoryBytes:wasm.memory.buffer.byteLength,loadedSectors:wasm.lazy_loaded_sectors(),sectorUpdates:wasm.lazy_sector_updates()})};
+}
