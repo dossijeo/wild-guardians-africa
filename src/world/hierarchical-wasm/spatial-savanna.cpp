@@ -14,9 +14,11 @@ uint8_t* lazy_pass_ptr();
 uint8_t* lazy_steps_ptr();
 uint8_t* lazy_inbound_ptr();
 int lazy_commit_sector(int sx,int sz);
+int lazy_remove_sector(int sx,int sz);
 int lazy_route(int fromX,int fromZ,int toX,int toZ);
 int32_t* lazy_route_ptr();
 int lazy_loaded_sectors();
+int lazy_sector_slots();
 int lazy_sector_updates();
 }
 
@@ -28,7 +30,7 @@ constexpr double maxIndexedRadius=2.0;
 constexpr double pi=3.14159265358979323846;
 struct Prop {float x,z,y,radius,scale,yaw;int32_t slot;};
 struct Wall {int id;float x,z,halfX,halfZ;bool active;};
-struct ChunkRaster {int cx,cz;std::vector<uint8_t> pass,steps;};
+struct ChunkRaster {int cx,cz;std::vector<uint8_t> pass,steps,inbound;};
 uint32_t worldSeed=0;
 int chunkX=0,chunkZ=0,nextWallId=1;
 float radiusNow=.3f;
@@ -41,7 +43,7 @@ std::vector<Prop> solidProps;
 std::array<std::vector<int>,propBucketSide*propBucketSide> propBuckets;
 int haloPropCount=0;
 std::vector<Wall> walls;
-std::vector<uint8_t> staticPass,staticSteps;
+std::vector<uint8_t> staticPass,staticSteps,staticInbound;
 std::unordered_map<uint64_t,ChunkRaster>* chunkRasters=nullptr;
 std::vector<std::pair<int,int>> loadedChunks;
 uint64_t chunkKey(int cx,int cz){return (uint64_t(uint32_t(cx))<<32)|uint32_t(cz);}
@@ -146,6 +148,14 @@ bool terrainPropEdge(int x,int z,int nx,int nz){
   }
   return true;
 }
+bool wallEdgeClear(int x,int z,int nx,int nz){
+  if(!wallClear(x,z)||!wallClear(nx,nz))return false;
+  for(int i=1;i<4;i++){
+    const double t=i/4.0;
+    if(!wallClear(x+(nx-x)*t,z+(nz-z)*t))return false;
+  }
+  return true;
+}
 bool edge(int x,int z,int nx,int nz){
   constexpr int dx[4]={1,-1,0,0},dz[4]={0,0,1,-1};
   int direction=-1;
@@ -153,12 +163,7 @@ bool edge(int x,int z,int nx,int nz){
   if(direction<0||!walkable(x,z)||!walkable(nx,nz))return false;
   const ChunkRaster* chunk=rasterAt(x,z);
   const bool base=chunk&&!!(chunk->steps[rasterIndex(*chunk,x,z)]&(1<<direction));
-  if(!base)return false;
-  for(int i=1;i<4;i++){
-    const double t=i/4.0;
-    if(!wallClear(x+(nx-x)*t,z+(nz-z)*t))return false;
-  }
-  return true;
+  return base&&wallEdgeClear(x,z,nx,nz);
 }
 void refreshSector(int sx,int sz){
   uint8_t* pass=lazy_pass_ptr(),*steps=lazy_steps_ptr(),*inbound=lazy_inbound_ptr();
@@ -169,7 +174,13 @@ void refreshSector(int sx,int sz){
     if(!pass[i])continue;
     for(int d=0;d<4;d++){
       const int nx=x+dx[d],nz=z+dz[d];
-      if(!rasterAt(nx,nz))continue;
+      if(!rasterAt(nx,nz)){
+        const ChunkRaster* chunk=rasterAt(x,z);
+        const int at=rasterIndex(*chunk,x,z);
+        if((chunk->steps[at]&(1<<d))&&wallEdgeClear(x,z,nx,nz))steps[i]|=1<<d;
+        if((chunk->inbound[at]&(1<<d))&&wallEdgeClear(nx,nz,x,z))inbound[i]|=1<<d;
+        continue;
+      }
       if(edge(x,z,nx,nz))steps[i]|=1<<d;
       if(edge(nx,nz,x,z))inbound[i]|=1<<d;
     }
@@ -189,7 +200,7 @@ void refreshRect(int minX,int minZ,int maxX,int maxZ){
   }
 }
 void populateChunk(int cx,int cz){
-  chunkX=cx;chunkZ=cz;props.clear();solidProps.clear();staticPass.clear();staticSteps.clear();haloPropCount=0;
+  chunkX=cx;chunkZ=cz;props.clear();solidProps.clear();staticPass.clear();staticSteps.clear();staticInbound.clear();haloPropCount=0;
   // The standalone no-entry WASM binary has no startup constructor pass.
   heights.assign(grid*grid,0);colors.assign(grid*grid*3,0);water.assign(side*side,0);
   const int x0=cx*side-24,z0=cz*side-24;
@@ -241,7 +252,7 @@ void populateChunk(int cx,int cz){
 }
 void buildActiveRaster(){
   const int firstX=chunkX*side-24,firstZ=chunkZ*side-24;
-  staticPass.resize(side*side);staticSteps.resize(side*side);
+  staticPass.resize(side*side);staticSteps.resize(side*side);staticInbound.resize(side*side);
   for(int z=0;z<side;z++)for(int x=0;x<side;x++)staticPass[z*side+x]=terrainPropWalkable(firstX+x,firstZ+z);
   constexpr int dx[4]={1,-1,0,0},dz[4]={0,0,1,-1};
   for(int z=0;z<side;z++)for(int x=0;x<side;x++){
@@ -249,11 +260,13 @@ void buildActiveRaster(){
     uint8_t mask=0;
     if(staticPass[i])for(int d=0;d<4;d++){
       const int nx=wx+dx[d],nz=wz+dz[d];
+      // This prototype's terrainPropEdge is symmetric; one physical sample
+      // supplies both directions. Directional terrain rules must split them.
       if(terrainPropEdge(wx,wz,nx,nz))mask|=1<<d;
     }
-    staticSteps[i]=mask;
+    staticSteps[i]=mask;staticInbound[i]=mask;
   }
-  chunkRasters->insert_or_assign(chunkKey(chunkX,chunkZ),ChunkRaster{chunkX,chunkZ,staticPass,staticSteps});
+  chunkRasters->insert_or_assign(chunkKey(chunkX,chunkZ),ChunkRaster{chunkX,chunkZ,staticPass,staticSteps,staticInbound});
 }
 void commitActiveSectors(){
   const int firstX=chunkX*side-24,firstZ=chunkZ*side-24;
@@ -283,14 +296,31 @@ int spatial_generate(uint32_t seed,int cx,int cz){
   return int(props.size());
 }
 int spatial_add_chunk(int cx,int cz){
-  if(loadedChunks.empty())return -1;
+  if(!chunkRasters)return -1;
   if(chunkRasters->count(chunkKey(cx,cz)))return 0;
   for(const auto& [x,z]:loadedChunks)if(x==cx&&z==cz)return 0;
   populateChunk(cx,cz);loadedChunks.emplace_back(cx,cz);
   if(navReady){buildActiveRaster();commitActiveSectors();refreshNeighborBorders(cx,cz);}
-  return int(props.size());
+  return int(props.size())+1;
+}
+int spatial_remove_chunk(int cx,int cz){
+  const auto it=std::find(loadedChunks.begin(),loadedChunks.end(),std::pair<int,int>{cx,cz});
+  if(it==loadedChunks.end())return 0;
+  loadedChunks.erase(it);
+  if(navReady){
+    chunkRasters->erase(chunkKey(cx,cz));
+    const int firstX=(cx*side-24)/sector,firstZ=(cz*side-24)/sector;
+    for(int sz=0;sz<4;sz++)for(int sx=0;sx<4;sx++)lazy_remove_sector(firstX+sx,firstZ+sz);
+    refreshNeighborBorders(cx,cz);
+  }
+  if(chunkX==cx&&chunkZ==cz){
+    if(!loadedChunks.empty())populateChunk(loadedChunks.back().first,loadedChunks.back().second);
+    else {props.clear();solidProps.clear();heights.clear();colors.clear();water.clear();}
+  }
+  return 1;
 }
 int spatial_chunk_count(){return int(loadedChunks.size());}
+int spatial_sector_slots(){return lazy_sector_slots();}
 float* spatial_heights_ptr(){return heights.data();}
 float* spatial_colors_ptr(){return colors.data();}
 uint8_t* spatial_water_ptr(){return water.data();}

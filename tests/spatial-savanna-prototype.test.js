@@ -43,7 +43,8 @@ test('placing and destroying a wall updates local sectors and restores a route',
   core.buildNavigation(1.1,false);
   const {start,end}=crossing(core),before=core.metrics().sectorUpdates;
   const wall=core.addWall(10,0,.8,24);assert(wall>0);
-  assert.equal(core.route(start,end).status,'blocked');
+  assert.notEqual(core.route(start,end).status,'found');
+  assert.equal(core.edge(9,18,10,18),false);
   assert(core.metrics().sectorUpdates>before);
   assert(core.metrics().sectorUpdates-before<16);
   assert.equal(core.removeWall(wall),1);
@@ -122,7 +123,8 @@ test('two resident chunks share a graph and a wall closes and reopens their seam
   validRoute(core,path.start,path.result);
   const before=core.metrics().sectorUpdates;
   const wall=core.addWall(23.5,0,.8,24);
-  assert.equal(core.route(path.start,path.end).status,'blocked');
+  assert.notEqual(core.route(path.start,path.end).status,'found');
+  assert.equal(core.edge(23,path.start.z,24,path.start.z),false);
   assert(core.metrics().sectorUpdates-before<32,'wall edit must not rebuild all sectors');
   assert.equal(core.removeWall(wall),1);
   validRoute(core,path.start,core.route(path.start,path.end));
@@ -138,7 +140,10 @@ test('negative chunk coordinates retain the shared border and graph',()=>{
   const west=Float32Array.from(core.heights());
   for(let z=0;z<49;z++)assert.equal(west[z*49+48],center[z*49]);
   assert.equal(core.metrics().loadedSectors,32);
-  assert.notEqual(core.route({x:-32,z:0},{x:0,z:0}).status,'unknown');
+  let seam=null;
+  for(let z=-24;z<24&&!seam;z++)if(core.edge(-25,z,-24,z))seam={start:{x:-25,z},end:{x:-24,z}};
+  assert(seam,'expected at least one physical passage across the negative seam');
+  validRoute(core,seam.start,core.route(seam.start,seam.end));
 });
 test('chunks requested before the first graph build become resident together',()=>{
   const core=createSpatialSavannaPrototype(module);
@@ -147,4 +152,57 @@ test('chunks requested before the first graph build become resident together',()
   assert.equal(core.buildNavigation(1.1,false),32);
   assert.equal(core.metrics().loadedChunks,2);
   assert.notEqual(core.route({x:17,z:0},{x:31,z:0}).status,'unknown');
+});
+test('evicting and regenerating a chunk reuses sector slots and preserves wall topology',()=>{
+  const core=createSpatialSavannaPrototype(module);
+  core.generate(712,0,0);core.buildNavigation(1.1,false);
+  core.addChunk(1,0);
+  let crossing=null;
+  for(let z=-19;z<20&&!crossing;z++){
+    const start={x:17,z},end={x:31,z};
+    if(core.route(start,end).status==='found')crossing={start,end};
+  }
+  assert(crossing);
+  const wall=core.addWall(23.5,0,.8,24);
+  assert.notEqual(core.route(crossing.start,crossing.end).status,'found');
+  const memoryBefore=core.metrics().memoryBytes;
+  for(let i=0;i<20;i++){
+    assert.equal(core.removeChunk(1,0),1);
+    assert.equal(core.metrics().loadedChunks,1);
+    assert.equal(core.metrics().loadedSectors,16);
+    assert.equal(core.route(crossing.start,crossing.end).status,'unknown');
+    assert(core.addChunk(1,0)>0);
+    assert.equal(core.metrics().loadedSectors,32);
+    assert.equal(core.metrics().sectorSlots,32);
+    assert.notEqual(core.route(crossing.start,crossing.end).status,'found');
+  }
+  assert(core.metrics().memoryBytes<=memoryBefore+65536);
+  assert.equal(core.removeWall(wall),1);
+  validRoute(core,crossing.start,core.route(crossing.start,crossing.end));
+});
+test('evicting the final chunk leaves an empty reusable graph',()=>{
+  const core=createSpatialSavannaPrototype(module);
+  core.generate(712,0,0);core.buildNavigation(1.1,false);
+  assert.equal(core.removeChunk(0,0),1);
+  assert.equal(core.metrics().loadedChunks,0);
+  assert.equal(core.metrics().loadedSectors,0);
+  assert.equal(core.route({x:7,z:0},{x:13,z:0}).status,'unknown');
+  assert(core.addChunk(0,0)>0);
+  assert.equal(core.metrics().loadedSectors,16);
+  assert.equal(core.metrics().sectorSlots,16);
+  const {start,end}=crossing(core);
+  validRoute(core,start,core.route(start,end));
+});
+test('an unloaded middle chunk leaves distant connectivity unknown',()=>{
+  const core=createSpatialSavannaPrototype(module);
+  core.generate(712,0,0);core.buildNavigation(1.1,false);
+  core.addChunk(1,0);core.addChunk(2,0);
+  let crossing=null;
+  for(let z=-19;z<20&&!crossing;z++){
+    const start={x:17,z},end={x:79,z};
+    if(core.route(start,end).status==='found')crossing={start,end};
+  }
+  assert(crossing);
+  assert.equal(core.removeChunk(1,0),1);
+  assert.equal(core.route(crossing.start,crossing.end).status,'unknown');
 });

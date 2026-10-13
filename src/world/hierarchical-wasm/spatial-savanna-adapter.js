@@ -4,20 +4,31 @@ import * as THREE from 'three';
 // JavaScript only copies its display buffers into Three.js-owned geometry.
 export function createSpatialSavannaPrototype(module){
   const wasm=new WebAssembly.Instance(module,{env:{emscripten_notify_memory_growth(){}}}).exports;
-  let chunk=null,navigationBuilt=false;
+  let chunk=null,navigationBuilt=false,chunks=[],generated=false;
   const heights=()=>new Float32Array(wasm.memory.buffer,wasm.spatial_heights_ptr(),49*49);
   const colors=()=>new Float32Array(wasm.memory.buffer,wasm.spatial_colors_ptr(),49*49*3);
   const water=()=>new Uint8Array(wasm.memory.buffer,wasm.spatial_water_ptr(),48*48);
   function generate(seed,cx,cz){
     const count=wasm.spatial_generate(seed>>>0,cx|0,cz|0);
-    chunk={cx:cx|0,cz:cz|0,count};navigationBuilt=false;
+    chunk={cx:cx|0,cz:cz|0,count};chunks=[[cx|0,cz|0]];navigationBuilt=false;generated=true;
     return chunk;
   }
   function addChunk(cx,cz){
-    if(!chunk)throw Error('Generate the world before adding a chunk');
-    const count=wasm.spatial_add_chunk(cx|0,cz|0);
-    if(count>0)chunk={cx:cx|0,cz:cz|0,count};
-    return count;
+    if(!generated)throw Error('Generate the world before adding a chunk');
+    const result=wasm.spatial_add_chunk(cx|0,cz|0);
+    if(result>0){chunk={cx:cx|0,cz:cz|0,count:result-1};chunks.push([cx|0,cz|0]);}
+    return result>0?result-1:result;
+  }
+  function removeChunk(cx,cz){
+    const removed=wasm.spatial_remove_chunk(cx|0,cz|0);
+    if(removed){
+      chunks=chunks.filter(([x,z])=>x!==(cx|0)||z!==(cz|0));
+      if(chunk?.cx===(cx|0)&&chunk?.cz===(cz|0)){
+        const last=chunks.at(-1);
+        chunk=last?{cx:last[0],cz:last[1],count:wasm.spatial_prop_count()}:null;
+      }
+    }
+    return removed;
   }
   function props(){
     const count=wasm.spatial_prop_count(),view=new DataView(wasm.memory.buffer,wasm.spatial_props_ptr(),count*28);
@@ -75,7 +86,7 @@ export function createSpatialSavannaPrototype(module){
     for(let i=0;i<count;i++)points.push({x:pairs[i*2],z:pairs[i*2+1]});
     return {status:'found',points};
   }
-  return {wasm,generate,addChunk,heights,colors,water,props,instances,geometry,waterGeometry,route,
+  return {wasm,generate,addChunk,removeChunk,heights,colors,water,props,instances,geometry,waterGeometry,route,
     buildNavigation:(radius,worker)=>{
       if(!chunk)throw Error('Generate a chunk before building its navigation');
       const loaded=wasm.spatial_build_nav(radius,worker?1:0);
@@ -87,5 +98,6 @@ export function createSpatialSavannaPrototype(module){
     edge:(x,z,nx,nz)=>Boolean(wasm.spatial_edge(x,z,nx,nz)),
     propBlocked:(x,z)=>Boolean(wasm.spatial_prop_blocked(x,z)),
     metrics:()=>({memoryBytes:wasm.memory.buffer.byteLength,loadedChunks:wasm.spatial_chunk_count(),loadedSectors:wasm.lazy_loaded_sectors(),
+      sectorSlots:wasm.spatial_sector_slots(),
       sectorUpdates:wasm.lazy_sector_updates(),haloProps:wasm.spatial_halo_prop_count()})};
 }

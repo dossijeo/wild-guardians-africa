@@ -20,6 +20,7 @@ struct Sector {
 };
 std::unordered_map<uint64_t,Sector>* sectors=nullptr;
 std::vector<Sector*> byId;
+std::vector<int> freeIds;
 std::vector<int32_t> queueBuffer;
 std::vector<uint8_t> visited;
 std::vector<int32_t> previousNode,localParent,routePoints;
@@ -102,10 +103,13 @@ void rebuildWeakGraph(){
   auto add=[&](int from,int to){
     weakTo.push_back(to);weakNext.push_back(weakHead[from]);weakHead[from]=static_cast<int>(weakTo.size())-1;
   };
-  for(const Sector* sector:byId)for(int component=0;component<sector->components;component++){
-    const int from=sector->id*sectorSize*sectorSize+component;
-    weakOpen[from]=sector->weakUnknown[component];
-    for(const Arc& arc:sector->edges[component]){add(from,arc.to);add(arc.to,from);}
+  for(const Sector* sector:byId){
+    if(!sector)continue;
+    for(int component=0;component<sector->components;component++){
+      const int from=sector->id*sectorSize*sectorSize+component;
+      weakOpen[from]=sector->weakUnknown[component];
+      for(const Arc& arc:sector->edges[component]){add(from,arc.to);add(arc.to,from);}
+    }
   }
   weakDirty=false;
 }
@@ -162,7 +166,7 @@ int lazy_init(int size){
   if(size<2||size>32)return 0;
   sectorSize=size;updates=0;
   if(!sectors)sectors=new std::unordered_map<uint64_t,Sector>();else sectors->clear();
-  byId.clear();
+  byId.clear();freeIds.clear();
   stagedPass.assign(size*size,0);stagedSteps.assign(size*size,0);
   stagedInbound.assign(size*size,0);weakDirty=true;
   portals.clear();
@@ -175,7 +179,11 @@ int lazy_commit_sector(int sx,int sz){
   if(!sectorSize)return -1;
   auto [it,inserted]=sectors->try_emplace(key(sx,sz));
   Sector& sector=it->second;
-  if(inserted){sector.id=static_cast<int>(byId.size());byId.push_back(&sector);sector.sx=sx;sector.sz=sz;}
+  if(inserted){
+    if(freeIds.empty()){sector.id=static_cast<int>(byId.size());byId.push_back(&sector);}
+    else {sector.id=freeIds.back();freeIds.pop_back();byId[sector.id]=&sector;}
+    sector.sx=sx;sector.sz=sz;
+  }
   sector.pass=stagedPass;sector.steps=stagedSteps;sector.inbound=stagedInbound;
   flood(sector);updates++;
   rebuildEdges(sector);
@@ -189,12 +197,28 @@ int lazy_commit_sector(int sx,int sz){
   weakDirty=true;
   return sector.id;
 }
+int lazy_remove_sector(int sx,int sz){
+  if(!sectorSize)return 0;
+  const auto it=sectors->find(key(sx,sz));
+  if(it==sectors->end())return 0;
+  const int id=it->second.id;
+  byId[id]=nullptr;freeIds.push_back(id);sectors->erase(it);
+  for(int d=0;d<4;d++)if(Sector* neighbor=get(sx+dx[d],sz+dz[d]))rebuildEdges(*neighbor);
+  for(const Portal& portal:portals){
+    const int ax=floorDiv(portal.fromX,sectorSize),az=floorDiv(portal.fromZ,sectorSize);
+    const int bx=floorDiv(portal.toX,sectorSize),bz=floorDiv(portal.toZ,sectorSize);
+    if(ax==sx&&az==sz){if(Sector* other=get(bx,bz))rebuildEdges(*other);}
+    if(bx==sx&&bz==sz){if(Sector* other=get(ax,az))rebuildEdges(*other);}
+  }
+  weakDirty=true;updates++;
+  return 1;
+}
 void lazy_clear_portals(){portals.clear();}
 int lazy_add_portal(int fromX,int fromZ,int toX,int toZ){
   portals.push_back({fromX,fromZ,toX,toZ});return static_cast<int>(portals.size())-1;
 }
 int lazy_commit_portals(){
-  for(Sector* sector:byId)rebuildEdges(*sector);
+  for(Sector* sector:byId)if(sector)rebuildEdges(*sector);
   weakDirty=true;
   return static_cast<int>(portals.size());
 }
@@ -263,6 +287,7 @@ int lazy_route(int fromX,int fromZ,int toX,int toZ){
   return static_cast<int>(routePoints.size()/2);
 }
 int32_t* lazy_route_ptr(){return routePoints.data();}
-int lazy_loaded_sectors(){return static_cast<int>(byId.size());}
+int lazy_loaded_sectors(){return sectors?static_cast<int>(sectors->size()):0;}
+int lazy_sector_slots(){return static_cast<int>(byId.size());}
 int lazy_sector_updates(){return updates;}
 }
