@@ -332,7 +332,7 @@ export function spawnRaid(s,plan,nav,daytime=false) {
   if(wave){previous.animals.push(...animals);previous.waveIndex=plan.index;delete previous.pendingWavePlan;}
   else s.raid={id:`raid-${s.day}-${daytime?'day':'night'}`,animals,encounters:[],reservations:{},daytime,...(plan.pressureVersion===1?{waves:structuredClone(plan.waves),waveIndex:0,pressureFacts:structuredClone(plan.pressureFacts)}:{})};
   if(plan.introductory&&!daytime){
-    const count=s.plants.filter(p=>p.alive).length;
+    const count=activeCrops(s.plants).filter(p=>p.alive).length;
     s.raid.introPlantCount=count;s.raid.introCropLimit=Math.max(0,Math.min(count-1,Math.ceil(count*.2)));s.raid.introCropsDestroyed=0;
   }
   for(const w of wave?[]:s.workers) {
@@ -343,7 +343,7 @@ export function spawnRaid(s,plan,nav,daytime=false) {
   }
   s.tasks=s.tasks.filter(t=>t.kind!=='repair');
   if(!wave)notice(s,RAID_NOTICE_TEXT,animals[0].id);
-  const exposed=s.plants.filter(p=>p.alive);
+  const exposed=activeCrops(s.plants).filter(p=>p.alive);
   emit(s,wave?'RaidWaveSpawned':'RaidSpawned',{raidFacts:{id:s.raid.id,day:s.day,daytime,elapsed:s.elapsed,waveIndex:s.raid.waveIndex??0,pressureFacts:s.raid.pressureFacts??null,exposedLiving:exposed.length,exposedWounded:exposed.filter(p=>(p.attackHits??0)>0).length,actors:animals.map(a=>({id:a.id,species:a.species,hitsRemaining:a.hitsRemaining,...(a.damageProfile?{damageProfile:structuredClone(a.damageProfile)}:{}),spawn:{...a.spawn},exit:{...a.exit}}))}});return true;
 }
 function release(s,a) {if(a.reservation&&s.raid.reservations[a.reservation]===a.id){delete s.raid.reservations[a.reservation];s.raid.waitRevision=((s.raid.waitRevision??0)+1)>>>0;}a.reservation=null;a.targetId=null;a.path=null;a.approach=null;a.approachShieldId=null;}
@@ -377,7 +377,7 @@ export function raidTarget(s,id){
   const eligible=t=>t.id===id&&(!('alive' in t)||canAttackCrop(s,t))&&(!('status' in t)||t.status==='intact');
   // Keep crop-first selection and eligibility without allocating a copy of
   // the complete farm history for every animal and simulation step.
-  return s.plants.find(eligible)??s.structures.find(eligible);
+  return activeCrops(s.plants).find(eligible)??s.structures.find(eligible);
 }
 export function targetFor(s,a,nav) {
   const stats=nav.raidSelectionStats;

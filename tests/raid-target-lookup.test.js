@@ -1,11 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {raidTarget} from '../src/simulation/raids.js';
+import {activeCrops} from '../src/simulation/active-crops.js';
+import {cropImpactDamage,CROP_HIT_POINTS} from '../src/simulation/crop-impact-health.js';
 
 // The previous implementation is the independent selection reference. This
 // also covers invalid earlier matches rather than only unique valid IDs.
 const reference=(s,id)=>[...s.plants,...s.structures].find(t=>t.id===id&&
- (!('alive' in t)||(t.alive&&((t.attackHits??0)<1||s.raid.introCropLimit===undefined||(s.raid.introCropsDestroyed??0)<s.raid.introCropLimit)))&&
+ (!('alive' in t)||(t.alive&&(cropImpactDamage(t)<CROP_HIT_POINTS-1||
+   s.raid.introCropLimit===undefined||(s.raid.introCropsDestroyed??0)<s.raid.introCropLimit)))&&
  (!('status' in t)||t.status==='intact'));
 
 test('raid target lookup retains the previous selection across crop damage, introductory limits and structure states',()=>{
@@ -29,4 +32,16 @@ test('raid target lookup does not spread or copy a large farm history',()=>{
  assert.equal(raidTarget(state,'crop'),crop);
  assert.equal(raidTarget(state,'center'),structure);
  assert.equal(raidTarget(state,'missing'),undefined);
+});
+
+test('repeated raid target lookup does not revisit historical crops',()=>{
+ let historicalReads=0;
+ const plants=Array.from({length:20000},(_,i)=>({id:`old-${i}`,
+   get alive(){historicalReads++;return false;}}));
+ const crop={id:'crop',alive:true,attackHits:0};plants.push(crop);
+ const state={plants,structures:[],raid:{}};
+ activeCrops(plants);
+ historicalReads=0;
+ for(let i=0;i<100;i++)assert.equal(raidTarget(state,'crop'),crop);
+ assert.equal(historicalReads,0);
 });
