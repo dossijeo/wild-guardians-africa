@@ -59,10 +59,26 @@ export function createSpatialNavigationMovement(session,state){
     }
     return true;
   };
-  const path=(start,end,radius=.28,ignore=null,worker=true)=>{
+  let failedWorkerEpoch='',failedWorkerRoutes=new Set();
+  const path=(start,end,radius=.28,ignore=null,worker=true,cacheBlocked=false)=>{
     validate(start,end);
     const options=profile(radius,worker,ignore);
+    // A native `blocked` result proves this exact route impossible in the
+    // current physical graph. Actor occupancy and moving gate leaves are
+    // checked during motion, outside routeActor. Chunk residency is separate
+    // from the topology revision and must invalidate the proof too.
+    // Placement previews use `path` against temporary barriers. Only live
+    // actor requests through `workerPath` can retain a blocked proof.
+    const cacheable=cacheBlocked===true&&worker&&typeof session.core?.chunkRevision==='function';
+    const epoch=cacheable?`${session.topologySource.revision()}:${session.core.chunkRevision()}`:null;
+    if(cacheable&&epoch!==failedWorkerEpoch){failedWorkerEpoch=epoch;failedWorkerRoutes=new Set();}
+    const key=cacheable?`${start.x},${start.z}|${end.x},${end.z}:${radius}`:null;
+    if(cacheable&&failedWorkerRoutes.has(key))return null;
     const result=session.routeActor(start,end,options);
+    if(cacheable&&result.status==='blocked'){
+      if(failedWorkerRoutes.size>=256)failedWorkerRoutes.delete(failedWorkerRoutes.values().next().value);
+      failedWorkerRoutes.add(key);
+    }
     if(result.status==='unknown'){
       // The native route can also be unknown when a fractional endpoint has
       // no physically valid connector to its nearby grid anchors. If its
@@ -245,7 +261,7 @@ export function createSpatialNavigationMovement(session,state){
     propsAt,placement,wallPlacement,placementFootprint,
     workerSurface,actorSurface,
     setState,syncCropPlacement,
-    workerPath:(start,end,radius=.28,ignore=null)=>path(start,end,radius,ignore,true),
+    workerPath:(start,end,radius=.28,ignore=null)=>path(start,end,radius,ignore,true,true),
     workerMotionClear,wallOverlapMotionClear,
   };
   // The ordinary exterior witness extends its ray beyond the active box.

@@ -1,0 +1,75 @@
+{
+  "snapshotSha256": "8bcc3d672cd8029fec13c4b009b0c2230b843e61ccfa51f98d2a7bdbe94d0494",
+  "steps": 10,
+  "order": "AB/BA",
+  "results": [
+    {
+      "mode": "base",
+      "ticks": 10,
+      "totalMs": 4584.332599999999,
+      "warmMs": 728.1652999999988,
+      "firstMs": 3856.1673,
+      "calls": 2300,
+      "nulls": 2300,
+      "workerMs": 547.8607999999876,
+      "version": 4,
+      "loadedChunks": 81,
+      "routeStatuses": {
+        "found:": 9,
+        "blocked:": 2300
+      },
+      "stateSha256": "37575675c2753ba884e8f331a2dc214a6b99cab49d0ca45101aa2cbec3d73236"
+    },
+    {
+      "mode": "cache",
+      "ticks": 10,
+      "totalMs": 4027.890300000001,
+      "warmMs": 219.40899999999965,
+      "firstMs": 3808.4813000000013,
+      "calls": 2300,
+      "nulls": 2300,
+      "workerMs": 12.230699999985518,
+      "version": 4,
+      "loadedChunks": 81,
+      "routeStatuses": {
+        "found:": 9,
+        "blocked:": 23
+      },
+      "stateSha256": "37575675c2753ba884e8f331a2dc214a6b99cab49d0ca45101aa2cbec3d73236"
+    },
+    {
+      "mode": "cache",
+      "ticks": 10,
+      "totalMs": 4014.756900000004,
+      "warmMs": 236.61680000000342,
+      "firstMs": 3778.1401000000005,
+      "calls": 2300,
+      "nulls": 2300,
+      "workerMs": 11.320299999912095,
+      "version": 4,
+      "loadedChunks": 81,
+      "routeStatuses": {
+        "found:": 9,
+        "blocked:": 23
+      },
+      "stateSha256": "37575675c2753ba884e8f331a2dc214a6b99cab49d0ca45101aa2cbec3d73236"
+    },
+    {
+      "mode": "base",
+      "ticks": 10,
+      "totalMs": 4410.615099999992,
+      "warmMs": 702.0560999999907,
+      "firstMs": 3708.559000000001,
+      "calls": 2300,
+      "nulls": 2300,
+      "workerMs": 553.425899999962,
+      "version": 4,
+      "loadedChunks": 81,
+      "routeStatuses": {
+        "found:": 9,
+        "blocked:": 2300
+      },
+      "stateSha256": "37575675c2753ba884e8f331a2dc214a6b99cab49d0ca45101aa2cbec3d73236"
+    }
+  ]
+}

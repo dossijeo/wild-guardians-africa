@@ -141,6 +141,70 @@ test('a resident but physically blocked endpoint is not mistaken for missing ter
   assert.throws(()=>nav.path({x:0,z:0},{x:2,z:0}),SpatialChunkUnavailable);
 });
 
+test('blocked worker route proof expires when native topology or chunk residency changes',()=>{
+  const state={structures:[],villages:[]};
+  let topology=1,chunks=1,status='blocked',calls=0;
+  const session={field:{},suppressed:new Set(),
+    core:{chunkRevision:()=>chunks},topologySource:{revision:()=>topology},
+    actorCanStand:()=>true,actorStepClear:()=>true,
+    routeActor:(_start,end)=>{calls++;return {status,points:status==='found'?[end]:[]};}};
+  const nav=createSpatialNavigationMovement(session,state),start={x:0,z:0},end={x:2,z:0};
+  assert.equal(nav.workerPath(start,end),null);
+  status='found';
+  assert.equal(nav.workerPath(start,end),null);
+  assert.equal(calls,1,'unchanged physical graph reuses a blocked proof');
+  assert.deepEqual(nav.workerPath(start,{x:3,z:0}),[{x:3,z:0}],
+    'a different destination needs its own route');
+  assert.deepEqual(nav.workerPath({x:1,z:0},end),[end],
+    'a moving worker needs its own route');
+  assert.deepEqual(nav.path(start,end),[end],
+    'placement previews do not reuse live worker proofs');
+  chunks++;
+  assert.deepEqual(nav.workerPath(start,end),[end]);
+  status='blocked';topology++;
+  assert.equal(nav.workerPath(start,end),null);
+  status='found';topology++;
+  assert.deepEqual(nav.workerPath(start,end),[end]);
+  assert.equal(calls,7);
+  status='blocked';topology++;
+  assert.equal(nav.workerPath(start,end),null);
+  status='found';
+  assert.deepEqual(createSpatialNavigationMovement(session,state).workerPath(start,end),[end],
+    'a fresh adapter after restoration starts without stale route proofs');
+});
+
+test('native chunk revision changes on residency additions and removals',()=>{
+  const state={seed:712,biome:'sabana',villages:[{id:'village-1',x:0,z:0,
+    buildings:villageLayout(pack,0,0)}],structures:[],spells:[],suppressed:[]};
+  const loaded=new Map(),session=createSpatialGameSession(module,state,{
+    loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+  try{
+    const initial=session.core.chunkRevision();
+    assert(session.core.addChunk(1,0)>=0);
+    assert(session.core.chunkRevision()>initial);
+    const added=session.core.chunkRevision();
+    assert(session.core.removeChunk(1,0));
+    assert(session.core.chunkRevision()>added);
+  }finally{session.dispose();}
+});
+
+test('a breached wall makes a previously blocked worker route available',()=>{
+  const wall={id:'wall-1',status:'intact'},state={structures:[wall],villages:[]};
+  let topology=1,calls=0;
+  const session={field:{},suppressed:new Set(),
+    core:{chunkRevision:()=>1},topologySource:{revision:()=>topology},
+    actorCanStand:()=>true,actorStepClear:()=>true,
+    routeActor:(_start,end)=>{calls++;return wall.status==='intact'?
+      {status:'blocked',points:[]}:{status:'found',points:[end]};}};
+  const nav=createSpatialNavigationMovement(session,state),start={x:0,z:0},end={x:2,z:0};
+  assert.equal(nav.workerPath(start,end),null);
+  assert.equal(nav.workerPath(start,end),null);
+  assert.equal(calls,1);
+  wall.status='ruined';topology++;
+  assert.deepEqual(nav.workerPath(start,end),[end]);
+  assert.equal(calls,2);
+});
+
 test('native-backed crop placement checks terrain, structures, props and unknown chunks',async()=>{
   const state={seed:'712',biome:'sabana',villages:[{id:'village-1',x:0,z:0,
     buildings:villageLayout(pack,0,0)}],structures:[],spells:[],suppressed:[]};
