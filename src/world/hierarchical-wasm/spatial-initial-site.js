@@ -16,9 +16,10 @@ const chunkJobs=(points,margin=20)=>{
 
 // Sabana integration probe. All terrain, prop and movement decisions below
 // come from one C++ world; the game-state clone is only a proposed layout.
-export async function probeSpatialSavannaStart(module,state,payload,{x=60,z=0}={}){
+export async function probeSpatialSavannaStart(module,state,payload,{x=60,z=0,chunkMargin=20}={}){
   if(state?.biome!=='sabana'||!state.villages?.length||state.structures?.length||
-    !Array.isArray(payload?.units)||![x,z].every(Number.isFinite))
+    !Array.isArray(payload?.units)||![x,z,chunkMargin].every(Number.isFinite)||
+    chunkMargin<0)
     throw TypeError('Expected a new Sabana game and an authored village');
   const trial=structuredClone(state),village=trial.villages[0];
   Object.assign(village,{x,z,buildings:villageLayout(payload,x,z)});
@@ -29,10 +30,11 @@ export async function probeSpatialSavannaStart(module,state,payload,{x=60,z=0}={
   const session=createSpatialGameSession(module,trial,{
     loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
   try{
+    let chunkExpansions=0;
     const extent=[...village.buildings.flatMap(building=>building.footprint??[building]),
       ...shape.footprint,{x:center.x+16,z:center.z+10},
       {x:center.x+4,z:center.z-10}];
-    session.stream.plan(chunkJobs(extent));
+    session.stream.plan(chunkJobs(extent,chunkMargin));
     await session.stream.whenIdle();
     const nativeProps=(px,pz,radius)=>{
       const result=session.queryPropsAt(px,pz,radius);
@@ -40,39 +42,74 @@ export async function probeSpatialSavannaStart(module,state,payload,{x=60,z=0}={
         {x:px,z:pz},{x:px,z:pz},result.missing);
       return result.props;
     };
-    // Evaluate the proposed buildings against ground and props without treating
-    // those same proposed buildings as pre-existing placement obstructions.
-    const proposal=createSpatialPlacement(session,{structures:[],villages:[]},nativeProps);
-    const checks=village.buildings.map(building=>proposal.placementFootprint(building));
-    const centerCheck=proposal.placementFootprint(shape);
-    if(checks.some(check=>!check.valid)||!centerCheck.valid||
-      village.buildings.some(building=>building.kind!=='Zona común'&&
-        building.footprint&&footprintsOverlap(shape.footprint,building.footprint)))
-      return {valid:false,reason:'building-placement',checks,centerCheck};
-    const nav=createSpatialNavigationMovement(session,trial);
-    const departure=centerServicePoint(center,trial,.8);
-    let entry=null;
-    for(let radius=0;radius<=20&&!entry;radius+=2)
-      for(let angle=0,count=radius?16:1;angle<count&&!entry;angle++){
-        const point={x:x+Math.cos(angle/count*Math.PI*2)*radius,
-          z:z+Math.sin(angle/count*Math.PI*2)*radius};
-        if(nav.walkable(point.x,point.z,.28,null,true)&&
-          nav.path(point,departure,.28,null,true))entry=point;
+    const evaluate=()=>{
+      // The proposed buildings are not yet pre-existing placement obstacles.
+      const proposal=createSpatialPlacement(session,{structures:[],villages:[]},nativeProps);
+      const checks=village.buildings.map(building=>proposal.placementFootprint(building));
+      const centerCheck=proposal.placementFootprint(shape);
+      if(checks.some(check=>!check.valid)||!centerCheck.valid||
+        village.buildings.some(building=>building.kind!=='Zona común'&&
+          building.footprint&&footprintsOverlap(shape.footprint,building.footprint)))
+        return {valid:false,reason:'building-placement',checks,centerCheck};
+      const nav=createSpatialNavigationMovement(session,trial);
+      const departure=centerServicePoint(center,trial,.8);
+      let entry=null;
+      for(let radius=0;radius<=20&&!entry;radius+=2)
+        for(let angle=0,count=radius?16:1;angle<count&&!entry;angle++){
+          const point={x:x+Math.cos(angle/count*Math.PI*2)*radius,
+            z:z+Math.sin(angle/count*Math.PI*2)*radius};
+          if(nav.walkable(point.x,point.z,.28,null,true)&&
+            nav.path(point,departure,.28,null,true))entry=point;
+        }
+      if(!entry)return {valid:false,reason:'village-entry'};
+      const farm=[];
+      for(let dz=-9;dz<=9&&farm.length<12;dz+=1.5)
+        for(let dx=4.5;dx<=15&&farm.length<12;dx+=1.5){
+          const point={x:Math.round((center.x+dx)/1.5)*1.5,
+            z:Math.round((center.z+dz)/1.5)*1.5};
+          if(nav.placement(point.x,point.z,.4).valid&&
+            nav.path(departure,point,.28,null,true)&&
+            nav.path(point,departure,.28,null,true))farm.push(point);
+        }
+      if(farm.length<12)return {valid:false,reason:'farm-access',entry,farm};
+      return {valid:true,site:{x,z,buildings:village.buildings,
+        center:{kind:'center',x:center.x,z:center.z,culture:center.culture},entry,
+        suppress:[...new Set([...checks,centerCheck].flatMap(check=>check.suppress??[]))]},
+      farm,loadedChunks:session.core.metrics().loadedChunks,chunkExpansions};
+    };
+    for(let attempt=0;attempt<4;attempt++){
+      try{return evaluate();}
+      catch(error){
+        if(!(error instanceof SpatialChunkUnavailable))throw error;
+        const needed=error.missing.length?error.missing:
+          [...chunkJobs([error.start,error.end],48).values()];
+        const desired=new Map(session.stream.desired);
+        for(const point of needed)desired.set(`${point.cx},${point.cz}`,
+          {cx:point.cx,cz:point.cz,score:0});
+        if(desired.size===session.stream.desired.size)throw error;
+        session.stream.plan(desired);
+        await session.stream.whenIdle();
+        chunkExpansions++;
       }
-    if(!entry)return {valid:false,reason:'village-entry'};
-    const farm=[];
-    for(let dz=-9;dz<=9&&farm.length<12;dz+=1.5)
-      for(let dx=4.5;dx<=15&&farm.length<12;dx+=1.5){
-        const point={x:Math.round((center.x+dx)/1.5)*1.5,
-          z:Math.round((center.z+dz)/1.5)*1.5};
-        if(nav.placement(point.x,point.z,.4).valid&&
-          nav.path(departure,point,.28,null,true)&&
-          nav.path(point,departure,.28,null,true))farm.push(point);
-      }
-    if(farm.length<12)return {valid:false,reason:'farm-access',entry,farm};
-    return {valid:true,site:{x,z,buildings:village.buildings,
-      center:{kind:'center',x:center.x,z:center.z,culture:center.culture},entry,
-      suppress:[...new Set([...checks,centerCheck].flatMap(check=>check.suppress??[]))]},
-    farm,loadedChunks:session.core.metrics().loadedChunks};
+    }
+    throw Error('Spatial starting site exceeded bounded chunk-demand retries');
   }finally{session.dispose();}
+}
+
+// Preserve the existing deterministic expanding-ring search, but evaluate
+// every candidate against the C++ world instead of a second JS terrain recipe.
+export async function findSpatialSavannaStart(module,state,payload,{signal}={}){
+  let attempts=0;
+  for(let ring=0;ring<70;ring++){
+    const count=ring?Math.max(24,Math.ceil(2*Math.PI*ring)):1;
+    for(let angle=0;angle<count;angle++){
+      if(signal?.aborted)throw new DOMException('Initial location cancelled','AbortError');
+      const x=60+Math.cos(angle/count*Math.PI*2)*ring*12;
+      const z=Math.sin(angle/count*Math.PI*2)*ring*12;
+      const result=await probeSpatialSavannaStart(module,state,payload,{x,z});
+      attempts++;
+      if(result.valid)return {...result,attempts};
+    }
+  }
+  throw Error('No native Sabana starting site was found');
 }

@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import * as Game from '../src/simulation/game.js';
-import {probeSpatialSavannaStart} from '../src/world/hierarchical-wasm/spatial-initial-site.js';
+import {probeSpatialSavannaStart,findSpatialSavannaStart} from '../src/world/hierarchical-wasm/spatial-initial-site.js';
 
 const module=new WebAssembly.Module(readFileSync(new URL(
   '../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
@@ -20,4 +20,26 @@ test('native Sabana start probe checks buildings, entry and twelve routed farm s
     assert(result.site.entry);
     assert.deepEqual(state,before,'the candidate probe must not mutate gameplay');
   }
+});
+
+test('native start search is deterministic, cancellation-aware and expands missing chunks',async()=>{
+  const state=Game.newGame({seed:712,biome:'sabana',culture:'mapungubwe',slotId:'native-search'});
+  const first=await findSpatialSavannaStart(module,state,packs[0]);
+  const second=await findSpatialSavannaStart(module,state,packs[0]);
+  assert.equal(first.attempts,1);
+  assert.deepEqual(first,second);
+  const narrow=await probeSpatialSavannaStart(module,state,packs[0],{chunkMargin:0});
+  assert.equal(narrow.valid,true,JSON.stringify(narrow));
+  assert.deepEqual(narrow.site,first.site);
+  const edgeCases=[];
+  for(const x of [42,48,54,66,72,78]){
+    const result=await probeSpatialSavannaStart(module,state,packs[0],
+      {x,chunkMargin:0});
+    edgeCases.push({x,valid:result.valid,expansions:result.chunkExpansions??0});
+    if(result.chunkExpansions>0)break;
+  }
+  assert(edgeCases.some(item=>item.expansions>0),JSON.stringify(edgeCases));
+  const controller=new AbortController();controller.abort();
+  await assert.rejects(findSpatialSavannaStart(module,state,packs[0],
+    {signal:controller.signal}),{name:'AbortError'});
 });
