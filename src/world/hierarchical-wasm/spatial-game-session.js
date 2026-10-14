@@ -95,7 +95,11 @@ export function createSpatialGameSession(module,state,streamOptions){
   // Only settlements change the far relief. Walls, crop turnover, shield HP and
   // removed props leave its mesh intact, so they must not queue new horizons.
   const horizonSource={revision:()=>terrainRevision,snapshot:()=>core.terrainState()};
-  return {core,field,stream,horizonSource,suppressed:props.suppressed,syncState,
+  // Region memberships expire only after changes to physical passability.
+  // Crop turnover and structure HP updates keep the same component IDs.
+  const topologySource={revision:()=>terrainRevision+walls.revision()+
+    centers.revision()+shields.revision()+props.revision()};
+  return {core,field,stream,horizonSource,topologySource,suppressed:props.suppressed,syncState,
     routeActor,actorConnectivity,actorRegions,actorCanStand,actorStepClear,
     dispose:()=>stream.dispose()};
 }

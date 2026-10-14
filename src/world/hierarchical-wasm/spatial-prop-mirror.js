@@ -4,6 +4,7 @@ const SPATIAL_ID=/^spatial:([0-5]):(-?\d+):(-?\d+)$/;
 // describe a different procedural world and must never be silently replayed.
 export function createSpatialPropMirror(core){
   const suppressed=new Set();
+  let revision=0;
   function sync(ids=[]){
     if(!Array.isArray(ids))throw TypeError('Expected suppressed prop IDs');
     const parsed=ids.map(id=>{
@@ -22,7 +23,8 @@ export function createSpatialPropMirror(core){
       if(core.removeProp(prop)!==1)throw Error(`Could not suppress spatial prop ${prop.id}`);
       suppressed.add(prop.id);added.push(prop.id);
     }
+    if(added.length)revision++;
     return {count:suppressed.size,added};
   }
-  return {sync,suppressed};
+  return {sync,suppressed,revision:()=>revision};
 }

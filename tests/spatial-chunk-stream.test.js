@@ -26,6 +26,13 @@ test('a Sabana game state renders and routes from one spatial authority through 
   assert.equal(session.field.surface(0,0),core.surfaceAnywhere(0,0));
   assert.equal(session.field.waterInfo(0,0).inside,core.fluidLevelAnywhere(0,0)>0);
   assert.equal(session.horizonSource.revision(),1);
+  const initialTopology=session.topologySource.revision();
+  state.plants=[{id:'crop-a',alive:true,x:3,z:3}];
+  session.syncState(state);
+  state.plants[0].alive=false;
+  session.syncState(state);
+  assert.equal(session.topologySource.revision(),initialTopology,
+    'crop turnover does not invalidate native regions');
   assert.equal(session.horizonSource.snapshot().seed,712);
   assert.deepEqual(Object.keys(session.horizonSource.snapshot()).sort(),
     ['biome','seed','settlements','version']);
@@ -54,6 +61,12 @@ test('a Sabana game state renders and routes from one spatial authority through 
     x:23.5,z:passage.start.z,yaw:0,baseScaleX:1,hp:100,gate:false});
   state.spells.push({id:'shield-1',kind:'shield',x:10,z:10,radius:1.95,remaining:10});
   session.syncState(state);
+  const builtTopology=session.topologySource.revision();
+  assert(builtTopology>initialTopology);
+  state.structures.at(-1).hp=51;state.spells[0].remaining=5;
+  session.syncState(state);
+  assert.equal(session.topologySource.revision(),builtTopology,
+    'damage and shield duration do not change passability');
   assert.equal(session.horizonSource.revision(),1,'wall and shield edits do not change far terrain');
   assert.equal(core.snapshot().barriers.length,1);
   assert.equal(core.snapshot().polygons.length,2+state.villages[0].buildings.filter(b=>b.kind!=='Zona común').length);
@@ -64,6 +77,7 @@ test('a Sabana game state renders and routes from one spatial authority through 
   assert.notEqual(session.routeActor(passage.start,passage.end).status,'found');
   state.structures.at(-1).status='ruined';state.spells[0].remaining=0;
   session.syncState(state);
+  assert(session.topologySource.revision()>builtTopology);
   assert.equal(core.snapshot().barriers.length,0);
   assert.equal(core.localClear(passage.start,passage.end),true);
   assert.equal(session.actorStepClear(passage.start,passage.end),true);
@@ -75,6 +89,7 @@ test('a Sabana game state renders and routes from one spatial authority through 
   assert.throws(()=>session.syncState({...state,suppressed:['legacy-prop-id']}),/Unsupported spatial prop ID/);
   state.suppressed=[visible.id];
   const change=session.syncState(state);
+  const removedTopology=session.topologySource.revision();
   assert.deepEqual(change.removedProps,[visible.id]);
   assert.equal(core.selectChunk(source.cx,source.cz)>=0,true);
   assert.equal(core.instances().flat().some(prop=>prop.id===visible.id),false);
@@ -84,9 +99,11 @@ test('a Sabana game state renders and routes from one spatial authority through 
   assert.deepEqual(refreshed,{chunks:1,slots:1});
   assert.equal(group.userData.contactInstances.flat().some(prop=>prop.id===visible.id),false);
   assert.deepEqual(session.syncState(state).removedProps,[]);
+  assert.equal(session.topologySource.revision(),removedTopology);
   assert.equal(session.horizonSource.revision(),1,'removing an obstacle does not rebuild the far mesh');
   state.villages.push({id:'village-2',x:96,z:0,buildings:villageLayout(pack,96,0)});
   session.syncState(state);
+  assert(session.topologySource.revision()>removedTopology);
   assert.equal(session.horizonSource.revision(),2,'a new settlement updates native relief');
   assert.equal(session.field.surface(96,0),core.surfaceAnywhere(96,0));
   session.dispose();

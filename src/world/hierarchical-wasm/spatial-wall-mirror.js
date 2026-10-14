@@ -5,6 +5,7 @@ import {spatialStructureBarriers,removeSpatialStructure} from './spatial-wall-br
 // resulting rigid footprints into the spatial navigator.
 export function createSpatialWallMirror(core){
   const installed=new Map();
+  let revision=0;
   const signature=wall=>[wall.x,wall.z,wall.yaw??0,wall.baseScaleX??1,
     wall.material,Boolean(wall.gate)].join(':');
   function sync(structures){
@@ -41,6 +42,7 @@ export function createSpatialWallMirror(core){
         index+=parts[item].length;
       });
     }
+    if(removals.length||additions.length)revision++;
     return {count:installed.size,added:additions.length};
   }
   function clear(){
@@ -49,5 +51,5 @@ export function createSpatialWallMirror(core){
     }
     installed.clear();
   }
-  return {sync,clear,barrierIds:id=>installed.get(id)?.ids.slice()??[]};
+  return {sync,clear,revision:()=>revision,barrierIds:id=>installed.get(id)?.ids.slice()??[]};
 }

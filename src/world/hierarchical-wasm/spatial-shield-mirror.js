@@ -15,6 +15,7 @@ export function spatialShieldFootprint(shield){
 
 export function createSpatialShieldMirror(core){
   const installed=new Map();
+  let revision=0;
   const signature=shield=>[shield.x,shield.z,shield.radius].join(':');
   function sync(spells){
     if(!Array.isArray(spells))throw TypeError('Expected game spells');
@@ -24,11 +25,13 @@ export function createSpatialShieldMirror(core){
       if(shield.id==null||desired.has(shield.id))throw TypeError('Shield IDs must be unique');
       desired.set(shield.id,shield);
     }
+    let removed=0;
     for(const [id,previous] of installed){
       if(desired.has(id)&&previous.signature===signature(desired.get(id)))continue;
       if(core.removePolygon(previous.polygonId)!==1)
         throw Error(`Could not remove spatial shield ${id}`);
       installed.delete(id);
+      removed++;
     }
     let added=0;
     for(const [id,shield] of desired){
@@ -37,6 +40,7 @@ export function createSpatialShieldMirror(core){
         polygonId:core.addPolygon(spatialShieldFootprint(shield),1)});
       added++;
     }
+    if(removed||added)revision++;
     return {count:installed.size,added};
   }
   function clear(){
@@ -46,5 +50,5 @@ export function createSpatialShieldMirror(core){
     }
     installed.clear();
   }
-  return {sync,clear,polygonId:id=>installed.get(id)?.polygonId??null};
+  return {sync,clear,revision:()=>revision,polygonId:id=>installed.get(id)?.polygonId??null};
 }

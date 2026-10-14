@@ -5,6 +5,7 @@ import {addSpatialCenter,removeSpatialCenter} from './spatial-center-bridge.js';
 // disappears. Damage and repair on an intact center keep its polygon resident.
 export function createSpatialCenterMirror(core){
   const installed=new Map();
+  let revision=0;
   const signature=(center,state)=>[center.x,center.z,center.yaw??0,
     centerCulture(center,state)].join(':');
   function sync(state){
@@ -15,11 +16,13 @@ export function createSpatialCenterMirror(core){
       if(center.id==null||desired.has(center.id))throw TypeError('Work center IDs must be unique');
       desired.set(center.id,center);
     }
+    let removed=0;
     for(const [id,previous] of installed){
       if(desired.has(id)&&previous.signature===signature(desired.get(id),state))continue;
       if(removeSpatialCenter(core,previous.polygonId)!==1)
         throw Error(`Could not remove spatial work center ${id}`);
       installed.delete(id);
+      removed++;
     }
     let added=0;
     for(const [id,center] of desired){
@@ -27,6 +30,7 @@ export function createSpatialCenterMirror(core){
       installed.set(id,{signature:signature(center,state),polygonId:addSpatialCenter(core,center,state)});
       added++;
     }
+    if(removed||added)revision++;
     return {count:installed.size,added};
   }
   function clear(){
@@ -36,5 +40,5 @@ export function createSpatialCenterMirror(core){
     }
     installed.clear();
   }
-  return {sync,clear,polygonId:id=>installed.get(id)?.polygonId??null};
+  return {sync,clear,revision:()=>revision,polygonId:id=>installed.get(id)?.polygonId??null};
 }
