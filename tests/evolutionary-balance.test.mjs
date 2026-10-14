@@ -27,6 +27,8 @@ test('search cohorts cannot overlap and truncation cannot count as victory',()=>
  assert.throws(()=>validateConfig({train:[{biome:'sabana',seed:712}],holdout:[{biome:'sabana',seed:712}]}));
  assert.throws(()=>validateConfig({train:[{biome:'sabana',seed:712}],holdout:[{biome:'sabana',seed:123}],requireBiomeHoldout:true}));
  assert.throws(()=>validateConfig({population:2,initialPopulation:[DEFAULT_GENES,DEFAULT_GENES]}));
+ assert.throws(()=>validateConfig({costStop:{maxDayGameTickMs:0,maxElapsedWallMs:1000}}));
+ assert.equal(validateConfig({costStop:{maxDayGameTickMs:180000,maxElapsedWallMs:1800000}}).costStop.maxDayGameTickMs,180000);
  assert.equal(scoreCampaign({status:'error',rows:[],completedNights:99},100).valid,false);
  assert.equal(scoreCampaign({status:'completed',rows:[{money:500,living:10,delivered:20}],completedNights:7,result:null},100).valid,false);
  assert.equal(scoreCampaign({status:'completed',rows:[{money:500,living:10,delivered:20}],completedNights:7,result:'defeat'},100).completed,7);

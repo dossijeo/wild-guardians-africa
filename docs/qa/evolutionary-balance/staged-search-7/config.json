@@ -1,0 +1,22 @@
+{
+  "rngSeed": 2414,
+  "generations": 2,
+  "population": 3,
+  "days": 7,
+  "train": [
+    {"biome": "sabana", "seed": 411},
+    {"biome": "gran-rio", "seed": 626}
+  ],
+  "holdout": [
+    {"biome": "volcanes", "seed": 907}
+  ],
+  "requireBiomeHoldout": true,
+  "baselines": ["good-current-magic", "good", "expansive", "bad", "no-walls"],
+  "costStop": {"maxDayGameTickMs": 180000, "maxElapsedWallMs": 1800000},
+  "initialPopulation": [
+    {"plantsPerWorker": 6, "wageReserveDays": 1, "seedReserve": 0, "defenseCashFraction": 0.2, "defenseStartDay": 2, "repairHealthFraction": 0.8, "magicIntervalSeconds": 5, "growthShare": 0, "plantingIntervalSeconds": 1, "wallMaterial": "zarzas", "magicPriority": "multiply"},
+    {"plantsPerWorker": 6, "wageReserveDays": 1, "seedReserve": 25, "defenseCashFraction": 0.35, "defenseStartDay": 1, "repairHealthFraction": 0.8, "magicIntervalSeconds": 5, "growthShare": 0.25, "plantingIntervalSeconds": 1, "wallMaterial": "zarzas", "magicPriority": "multiply"},
+    {"plantsPerWorker": 7, "wageReserveDays": 1, "seedReserve": 0, "defenseCashFraction": 0.3, "defenseStartDay": 2, "repairHealthFraction": 0.85, "magicIntervalSeconds": 4, "growthShare": 0.5, "plantingIntervalSeconds": 2, "wallMaterial": "zarzas", "magicPriority": "growth"}
+  ],
+  "output": "docs/qa/evolutionary-balance/staged-search-7/results"
+}

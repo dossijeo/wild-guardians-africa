@@ -1,5 +1,5 @@
 // Reproducible search over virtual-player decisions. Game/Wild Engine are unchanged.
-import {readFileSync,writeFileSync,mkdirSync,existsSync} from 'node:fs';
+import {readFileSync,writeFileSync,appendFileSync,mkdirSync,existsSync} from 'node:fs';
 import {resolve,join} from 'node:path';
 import {execFileSync} from 'node:child_process';
 import {pathToFileURL} from 'node:url';
@@ -27,6 +27,11 @@ export function validateConfig(raw){
  if(c.holdout.some(x=>seen.has(`${x.biome}:${x.seed}`)))throw Error('Train/holdout overlap');
  if(c.requireBiomeHoldout&&c.holdout.some(x=>c.train.some(y=>x.biome===y.biome)))
   throw Error('Holdout biome overlaps training');
+ if(c.costStop!==undefined){
+  if(!c.costStop||!Number.isSafeInteger(c.costStop.maxDayGameTickMs)||c.costStop.maxDayGameTickMs<1000||
+   !Number.isSafeInteger(c.costStop.maxElapsedWallMs)||c.costStop.maxElapsedWallMs<1000)
+   throw Error('Invalid cooperative campaign cost stop');
+ }
  if(c.initialPopulation!==undefined){
   if(!Array.isArray(c.initialPopulation)||!c.initialPopulation.length||c.initialPopulation.length>c.population)
    throw Error('Invalid initial population');
@@ -95,9 +100,24 @@ export async function runSearch(config){
   const id=genes?genomeId(genes):strategy,key=`${implementationId}-${id}-${scenario.biome}-${scenario.seed}-${c.days}`;
   if(cache.has(key))return cache.get(key);
   const path=join(out,`${key}.json`);
-  const report=existsSync(path)?JSON.parse(readFileSync(path,'utf8')):await evaluateOne(scenario,c.days,strategy,genes);
+  let day=0,dayGameTickMs=0;
+  const began=Date.now(),progressPath=join(out,`progress-${key}.jsonl`);
+  const report=existsSync(path)?JSON.parse(readFileSync(path,'utf8')):await evaluateOne(scenario,c.days,strategy,genes,
+   row=>{
+    const progress={strategy,id,biome:scenario.biome,seed:scenario.seed,day:row.day,
+     money:row.money,living:row.living,destroyed:row.destroyed,gameTickMs:row.wallTime?.gameTickMs};
+    appendFileSync(progressPath,JSON.stringify(progress)+'\n');
+    console.log(JSON.stringify(progress));
+   },false,(state,_nav,timing)=>{
+    if(state.day!==day){day=state.day;dayGameTickMs=0;}
+    dayGameTickMs+=timing.gameTickMs??0;
+    if(c.costStop&&(dayGameTickMs>c.costStop.maxDayGameTickMs||Date.now()-began>c.costStop.maxElapsedWallMs)){
+     const error=new Error(`Cooperative computational cost stop at day ${state.day}`);
+     error.name='CampaignCostStop';throw error;
+    }
+   });
   if(!existsSync(path))writeFileSync(path,JSON.stringify(report,null,2)+'\n');
-  if(report.status==='error')throw Error(`Technical campaign error in ${path}: ${report.message}`);
+  if(report.status==='error')throw Error(`${report.name==='CampaignCostStop'?'Cost stop':'Technical campaign error'} in ${path}: ${report.message}`);
   cache.set(key,report);return report;
  }
  let population=c.initialPopulation??[validateGenes(DEFAULT_GENES)];
