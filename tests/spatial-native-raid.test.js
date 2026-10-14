@@ -35,20 +35,30 @@ test('Volcanes day-10 raid uses the replacement center for the headless camera',
     };
     for(let z=cz-2;z<=cz+2;z++)for(let x=cx-2;x<=cx+2;x++)load(x,z);
     const nav=createSpatialNavigationMovement(session,state);
+    const currentCenter=syncNativeCampaignRaidView(state,nav,null);
+    assert.equal(currentCenter.key,`${center.id}:83:0`);
+    // Plot search focuses the navigation view on a parcel without replacing
+    // the operational center. The runner must restore its raid view anyway.
     nav.setActiveBounds(bounds);nav.setRaidView(eye,stale);
     assert.equal(spawnRaid(state,state.nightPlan,nav),false);
     assert(nav.raidEntryFailure);
-    const previousCenter='structure-1:84:9';
-    const currentCenter=syncNativeCampaignRaidView(state,nav,previousCenter);
+    assert.equal(syncNativeCampaignRaidView(state,nav,currentCenter),currentCenter);
     const pose=nativeCameraPose(session.field,[center.x,0,center.z],.5,1.16,38);
     assert.deepEqual(nav.raidView,{eye:{x:pose.eye[0],z:pose.eye[2]},target:{x:83,z:0}});
-    assert.equal(currentCenter,`${center.id}:83:0`);
-    assert.equal(syncNativeCampaignRaidView(state,nav,currentCenter),currentCenter);
     assert.equal(spawnRaid(state,state.nightPlan,nav),true);
     assert.equal(nav.raidEntryFailure,undefined);
     assert.equal(state.raid.animals.length,state.nightPlan.group.length);
     assert(state.raid.animals.every(a=>nav.walkable(a.x,a.z,a.radius,null,false)&&
       nav.segmentClear(a,a.exit,a.radius,null,false)));
+    const entryBounds=nav.activeBounds;
+    syncNativeCampaignRaidView(state,nav,currentCenter);
+    assert.deepEqual(nav.activeBounds,entryBounds,'valid raid residency remains pinned');
+    const replacement={...center,id:'structure-3',x:251,z:144};
+    const changed=syncNativeCampaignRaidView({...state,structures:[replacement]},nav,currentCenter);
+    const movedPose=nativeCameraPose(session.field,[251,0,144],.5,1.16,38);
+    assert.equal(changed.key,'structure-3:251:144');
+    assert.deepEqual(nav.raidView.target,{x:251,z:144});
+    assert.deepEqual(nav.activeBounds,activeChunkRegion({x:movedPose.eye[0],z:movedPose.eye[2]}).bounds);
   }finally{session.dispose();}
 });
 
