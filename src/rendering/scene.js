@@ -325,16 +325,17 @@ export class WorldScene {
     if(stats.chunks){this.chunkRevision++;this.handStaticBoxes=null;this.releaseNativeShadow?.cache.invalidate();this.contacts.update(this.chunks,this.contactPrototypes,this.nearBounds,this.chunkRevision,this.nav.config.layers);}
     return stats;
   }
-  removeInstalledChunk(key,group){
+  removeInstalledChunk(key,group,{evict=true}={}){
     disposeAssetShadows(group);this.scene.remove(group);
     group.traverse(o=>{if(o.isInstancedMesh){o.dispose();if(o.geometry.userData.obstruction||o.geometry.userData.nativeChunkClip)o.geometry.dispose();if(o.userData.nativeFluid==='asset'&&o.material!==this.fluidMaterial)o.material.dispose();return;}if(o.isMesh){o.geometry.dispose();if(o.material!==this.fluidMaterial)o.material.dispose();}});
     this.terrainMeshes=this.terrainMeshes.filter(o=>o.parent!==group);
-    this.chunks.delete(key);this.chunkRevision++;this.handStaticBoxes=null;
+    this.chunks.delete(key);
+    if(evict){this.chunkRevision++;this.handStaticBoxes=null;const [cx,cz]=key.split(',').map(Number);this.chunkStream?.releaseChunk?.(cx,cz);}
   }
   installChunk(data){
     const key=data.cx+','+data.cz,group=this.terrain(data.cx,data.cz,data);
     const previous=this.chunks.get(key);
-    if(previous)this.removeInstalledChunk(key,previous);
+    if(previous)this.removeInstalledChunk(key,previous,{evict:false});
     this.chunks.set(key,group);this.scene.add(group);this.chunkRevision++;this.handStaticBoxes=null;
     this.onChunkProgress?.({loaded:this.chunks.size,desired:this.chunkStream.desired.size,...this.chunkStream.summary()});
   }
