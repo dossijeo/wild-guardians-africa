@@ -73,13 +73,13 @@ the dense-raid reload test now service those requests on each tick.
 
 | Biome / seed | Early ticks / loop wall time | Middle ticks / loop wall time | Late ticks / loop wall time |
 | --- | ---: | ---: | ---: |
-| Sabana / 712 | 822 / 1.23 s | 1,218 / 2.46 s | 1,132 / 3.44 s |
-| Gran Río / 712 | 822 / 1.20 s | 1,218 / 2.48 s | 1,423 / 3.49 s |
-| Manglares / 712 | 862 / 3.05 s | 1,172 / 3.15 s | 1,317 / 4.74 s |
-| Volcanes / 712 | 1,029 / 1.20 s | 1,279 / 2.84 s | 1,672 / 3.00 s |
-| Desierto / 712 | 1,949 / 1.28 s | 2,065 / 3.67 s | 1,633 / 4.51 s |
-| Gran Cañón / 123 | 561 / 1.05 s | 765 / 3.27 s | 1,008 / 6.70 s |
-| Gran Cañón / 712 | 524 / 1.15 s | 770 / 2.95 s | 1,018 / 4.45 s |
+| Sabana / 712 | 822 / 1.12 s | 1,218 / 2.45 s | 1,132 / 3.29 s |
+| Gran Río / 712 | 822 / 1.15 s | 1,218 / 2.50 s | 1,423 / 3.37 s |
+| Manglares / 712 | 862 / 1.65 s | 1,172 / 3.18 s | 1,317 / 4.48 s |
+| Volcanes / 712 | 1,029 / 1.20 s | 1,279 / 2.40 s | 1,495 / 3.18 s |
+| Desierto / 712 | 1,949 / 1.37 s | 2,065 / 3.85 s | 1,633 / 4.73 s |
+| Gran Cañón / 123 | 561 / 1.09 s | 765 / 3.34 s | 839 / 3.83 s |
+| Gran Cañón / 712 | 524 / 1.15 s | 770 / 2.98 s | 624 / 3.97 s |
 
 The first serviced late Manglares raid remained active with ten animals
 after 4,000 ticks, despite real crop and structure hits. Its 2,400- and
@@ -93,7 +93,8 @@ invariance regression failed before the fix and passes afterward. With the
 same workload and serviced chunks, the late raid now finishes at tick 1,317
 with one `RaidEnded`. All 21 serviced stage raids therefore complete on the
 same corrected WASM binary (`d9d16b813010` SHA-256 prefix). Each refreshed
-report also records the C++ source and runner hashes; its `source.commit`
+report also records C++/WASM, raid, Canyon formation, landing guard and runner
+hashes; its `source.commit`
 field names the parent checkout at execution, before this fix was committed.
 Loop wall time
 includes QA event collection and chunk servicing; it is not isolated
@@ -120,20 +121,51 @@ bound, not a demonstrated engine hang. Individual positive JSON reports are
 and `engine-stage-stress-canyon-{123,712}.json`. Each includes attack and retreat
 counts. Timings are single-run QA observations, not portable thresholds.
 
-A separate, opt-in Sabana wall-ring fixture uses 49 paid `zarzas` wall
-modules and one automatic gate. Crops are planted inside the perimeter, so
-the animals must strike the physical defense instead of exterior crops.
-The early, middle and late incursions (40/100/100 crops, 6/14/16 animals)
-resolved at ticks 218/753/829, with 445/1,155/1,430 actual wall HP lost and
-2/8/13 ruined wall modules. A native static-collision sweep checked every
-animal displacement and found zero crossings in all three phases. The
-fixture and full counters are in `engine-stage-stress-sabana-712-wall-ring.json`.
-The 100-crop ceiling here is the fixed size of this enclosed **test fixture**,
-not a gameplay cap; the open late-phase stress above uses 300 crops.
+A separate, opt-in wall-ring fixture plants crops inside a paid `zarzas`
+perimeter with automatic gates, so the animals must strike the physical
+defense. Each biome was exercised at early/middle/late phase strength
+(6/14/16 animals). The fixed Sabana, Gran Río, Manglares, Volcanes and
+Desierto fixtures held 40/100/100 crops. The narrow Gran Cañón fixture held
+40 crops in each phase; this is a **test enclosure size**, not a gameplay cap.
+Every raid ended once and damaged or ruined actual wall modules. The native
+static-collision audit checked every animal displacement, including turns
+through a waypoint, and found no crossings in the final runs.
 
-Before merging, expand the integrated spatial-world phase-stress matrix with
-late-stage wall/perimeter topology in more seeds and biomes, plus sustained
-campaign-scale performance. Investigate the
+| Biome / seed | Early ticks / ruined walls | Middle ticks / ruined walls | Late ticks / ruined walls |
+| --- | ---: | ---: | ---: |
+| Sabana / 712 | 218 / 2 | 753 / 8 | 829 / 13 |
+| Gran Río / 712 | 218 / 2 | 814 / 9 | 872 / 13 |
+| Manglares / 712 | 196 / 2 | 546 / 11 | 836 / 13 |
+| Volcanes / 712 | 116 / 3 | 712 / 8 | 809 / 13 |
+| Desierto / 712 | 191 / 2 | 650 / 10 | 677 / 11 |
+| Gran Cañón / 123 | 501 / 4 | 605 / 4 | 905 / 7 |
+| Gran Cañón / 712 | 264 / 4 | 615 / 5 | 1,181 / 6 |
+
+The JSON reports are `engine-stage-stress-*-wall-ring.json`. Gran Cañón
+712 initially could not stage the full late mixed-species wave beside the
+river: the fixed row stride based on the largest animal wasted valid dry-bank
+positions. A denser **candidate** stride, still enforcing each species'
+physical body clearance, admits all 16 animals; a regression also checks a
+16-warthog formation. Gran Cañón 123 then exposed a fractional rhino landing
+inside a static pocket between a route's sampled waypoint checks. The
+movement guard now validates each actual landing against the native spatial
+world. A separate auditor warning in the middle raid was a harmless corner
+chord: one tick traversed a valid waypoint bend, so the audit now validates
+the two travelled segments. Its pre-fix capture is retained as
+`engine-canyon-wall-before-middle-282.json.gz`.
+
+After the stricter fractional-landing check, the existing good virtual-player
+policy completed a continuous 14-night Sabana/712 campaign in 265.3 s wall
+time, including 149.0 s accumulated `Game.tick`. The archived earlier
+14-night run accumulated 148.5 s `Game.tick` and took 313.0 s wall time.
+These are single runs with different physical trajectories and worker/crop
+counts, so the close tick totals show no obvious sustained regression, not
+an exact AB timing proof. The new daily tick totals range from 0.5 to 16.2 s;
+the late days fluctuate rather than rising monotonically. The full daily
+ledger and tick bands are in `wild-engine-14-night-sabana-after-landing.json`.
+
+Before merging, verify sustained campaign-scale performance and any relevant
+wall/river corner cases beyond this constructed matrix. Investigate the
 Gran Cañón retreat reasons, inspect relevant failures from the full suite and
 complete the platform checks. Publish input states and results. A 100-night
 winning bot campaign may inform later balance work but is **not** an engine
