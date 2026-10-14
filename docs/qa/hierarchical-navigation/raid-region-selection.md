@@ -293,6 +293,12 @@ two-hit, one-crop-per-strike model. They now count actual `CropHit` events
 from the area impact and check that every reported destruction corresponds
 to a destructive crop impact, while retaining the worker-return, task,
 ledger and save/load assertions. All 20 pass without changing raid damage.
+The 43 `player-raids` cases now use the approved one-hit crop resistance,
+quarter-step peripheral damage and progressive horde ceiling (34), rather
+than the earlier two-hit/one-or-two-animal assumptions. They still verify
+all 100 night plans, introductory species and strike budgets, exactly-once
+destruction across reload, and introductory crop-loss limits. All 43 pass;
+only test expectations changed.
 
 ## Reproduce
 
