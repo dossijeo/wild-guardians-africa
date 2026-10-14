@@ -7,6 +7,7 @@ import {repairRoute} from '../../src/world/work-points.js';
 import {gatePortalPoints} from '../../src/world/gate-passages.js';
 import {tick} from '../../src/simulation/game.js';
 import {centerFootprint} from '../../src/world/centers.js';
+import {wallStroke} from '../../src/world/wall-layout.js';
 
 const state=deserialize(JSON.parse(gunzipSync(readFileSync(new URL(
   '../../tests/fixtures/desierto983-pr42-d7-repair.json.gz',import.meta.url)))));
@@ -16,10 +17,12 @@ const loaded=new Map(),session=createSpatialGameSession(module,state,{
   loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
 try{
   const radius=Number(process.argv[2]??2);
+  const desired=new Map();
   for(let cz=-radius;cz<=radius;cz++)for(let cx=-radius;cx<=radius+2;cx++){
-    if(session.core.selectChunk(cx,cz)<0)session.core.addChunk(cx,cz);
-    loaded.set(`${cx},${cz}`,session.core.chunkPayload());
+    desired.set(`${cx},${cz}`,{cx,cz,score:Math.abs(cx-1)+Math.abs(cz)});
   }
+  session.stream.plan(desired);
+  await session.stream.whenIdle();
   session.core.enableConnectivityDiagnostics();
   const nav=createSpatialNavigationMovement(session,state);
   console.log(JSON.stringify({centerFootprints:state.structures.filter(s=>s.kind==='center')
@@ -42,6 +45,22 @@ try{
   }
   console.log(JSON.stringify({map}));
   const worker=state.workers.find(w=>w.id==='worker-3519');
+  const nearWorker=state.workers.find(w=>w.id==='worker-3522');
+  console.log(JSON.stringify({eastEdgeCandidates:[90,96].map(x=>{
+    const slots=wallStroke([[x,-18],[x,18]],state.structures,{smooth:false,snap:false});
+    const probes=slots
+      .map(slot=>{
+        const piece={kind:'wall',material:'zarzas',gate:false,baseScaleX:slot.scaleX,
+          x:slot.x,z:slot.z,yaw:-slot.angle};
+        const near={x:slot.x-.6,z:slot.z};
+        return {z:slot.z,placement:nav.wallPlacement(piece).valid,
+          nearStand:session.actorCanStand(near,{worker:true}),
+          nearConnection:session.actorConnectivity(nearWorker,near,{worker:true})};
+      });
+    return {x,slots:slots.length,legal:probes.filter(p=>p.placement).length,
+      accessible:probes.filter(p=>p.placement&&p.nearConnection==='possible').length,
+      probes};
+  })}));
   const targets=state.tasks.filter(t=>t.kind==='repair').map(t=>state.structures.find(s=>s.id===t.targetId));
   console.log(JSON.stringify({workers:state.workers.map(w=>({id:w.id,x:w.x,z:w.z,
     centerId:w.centerId,status:w.status})),

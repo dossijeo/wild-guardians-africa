@@ -14,6 +14,8 @@ El muestreo físico del mismo estado muestra una franja no transitable aproximad
 
 En la misma captura hay 83 cultivos vivos, todos al oeste de `x=91`; el más oriental está en `x=88,5`. Por tanto, las piezas dañadas de `x=96` tampoco están protegiendo una parcela situada al otro lado de la pendiente. La política experimental debe comparar una alternativa de trazado o la barrera natural antes de comprar allí; el motor no debe alterar la transitabilidad para compensar esa decisión.
 
+El replay carga ahora los chunks mediante el stream nativo con su revisión de terreno y compara los tramos del borde oriental. De los tres módulos todavía no construidos en `x=96`, los tres admiten colocación pero ninguno tiene un punto de servicio conectado con el trabajador próximo. Una línea candidata en `x=90` tiene 17 módulos legalmente colocables; sólo diez ofrecen esa conexión. Los siete restantes caen en una zona donde su punto de servicio no es transitable o la ruta es inconclusa. Por ello, desplazar sin más todo el rectángulo seis metros hacia dentro tampoco basta: el planificador debe tratar la barrera natural por tramos y comprobar accesos locales. Estos son ensayos de geometría en un estado congelado, no una construcción pagada ni una nueva campaña.
+
 La prueba `tests/spatial-repair-unknown.test.js` reproduce el `SpatialChunkUnavailable` original, comprueba la puerta y ejecuta 50 ticks sin fallo; las dos tareas siguen pendientes, sin asignación falsa. En el replay local, esos 50 ticks tardaron 65 ms de `Game.tick` aproximadamente. También se añadió una prueba de reserva de tareas que distingue explícitamente `unknown` de `blocked`.
 
 ## Piloto sostenido
