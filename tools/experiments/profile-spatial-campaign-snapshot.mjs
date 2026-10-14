@@ -52,14 +52,18 @@ try{
     'segmentClear','workerMotionClear','propsAt','regionFor',
     'regionConnected','setState','wallPlacement']){
     const fn=nav[name];if(typeof fn!=='function')continue;
-    calls[name]={count:0,ms:0,...(name==='approachPath'?{found:0,blocked:0,unknown:0,unknownExamples:[]}:{})};
+    calls[name]={count:0,ms:0,...(name==='approachPath'?{found:0,blocked:0,unknown:0,
+      unknownCauses:{},unknownExamples:[]}:{})};
     nav[name]=(...args)=>{
       const start=performance.now();
       try{const result=fn(...args);
         if(name==='approachPath')calls[name][result?'found':'blocked']++;
         return result;
       }catch(error){if(name==='approachPath'&&error?.name==='SpatialChunkUnavailable')
-        {calls[name].unknown++;if(calls[name].unknownExamples.length<3)
+        {calls[name].unknown++;
+          const cause=error.details?.routeReason??'unspecified';
+          calls[name].unknownCauses[cause]=(calls[name].unknownCauses[cause]??0)+1;
+          if(calls[name].unknownExamples.length<3)
           calls[name].unknownExamples.push({start:error.start,end:error.end,
             missing:error.missing,details:error.details});}throw error;
       }finally{calls[name].count++;

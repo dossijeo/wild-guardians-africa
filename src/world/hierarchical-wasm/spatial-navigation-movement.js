@@ -72,7 +72,8 @@ export function createSpatialNavigationMovement(session,state){
         'ready'&&!session.actorCanStand(point,options);
       if(knownBlocked(start)||knownBlocked(end))return null;
       if(typeof session.actorRegions!=='function')
-        throw new SpatialChunkUnavailable(start,end,result.missing??[]);
+        throw new SpatialChunkUnavailable(start,end,result.missing??[],
+          {routeReason:result.reason??'unspecified'});
       const startRegions=session.actorRegions(start,options),
         endRegions=session.actorRegions(end,options);
       // A standable service point may sit in a sub-grid pocket beside a wall.
@@ -82,6 +83,7 @@ export function createSpatialNavigationMovement(session,state){
       if(!startRegions.unknown&&!startRegions.ids.length||
          !endRegions.unknown&&!endRegions.ids.length)return null;
       throw new SpatialChunkUnavailable(start,end,[],{
+        routeReason:result.reason??'unspecified',
         startRegions,endRegions,
         startProps:session.queryPropsAt?.(start.x,start.z,1.5).status,
         endProps:session.queryPropsAt?.(end.x,end.z,1.5).status});

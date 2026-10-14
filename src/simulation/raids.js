@@ -41,7 +41,8 @@ function regionDecisionScope(s,nav){
   return scope;
 }
 function cropRegionDecision(s,a,nav,group,regionKey,candidates,scope,origin,sectors){
-  const key=`${a.radius}:${origin}:${group.id}:${regionKey}`;
+  const destination=regionKey.startsWith('unknown:')?`${group.id}:${regionKey}`:regionKey;
+  const key=`${a.radius}:${origin}:${destination}`;
   const old=scope.decisions.get(key);
   if(old&&old.sectors===sectors){
     if(nav.raidSelectionStats)nav.raidSelectionStats.regionCacheHits=(nav.raidSelectionStats.regionCacheHits??0)+1;
@@ -64,7 +65,8 @@ function cropRegionDecision(s,a,nav,group,regionKey,candidates,scope,origin,sect
 }
 function enclosedCropRegion(nav,scope,group,regionKey,candidates,radius,sectors){
   if(!nav.enclosureFor)return null;
-  const key=`enclosure:${radius}:${group.id}:${regionKey}`;
+  const destination=regionKey.startsWith('unknown:')?`${group.id}:${regionKey}`:regionKey;
+  const key=`enclosure:${radius}:${destination}`;
   const previous=scope.decisions.get(key);
   if(previous?.sectors===sectors)return previous.result;
   const stats=nav.raidSelectionStats,started=stats?performance.now():0;
@@ -430,9 +432,12 @@ function targetForImpl(s,a,nav,stats){
           !originEnclosure.ids.some(id=>enclosure.ids.includes(id));
         if(definitelyOutside){
           certifiedSealedCrop=true;
-          if(status==='unknown')scope.decisions.set(
-            `${a.radius}:${origin}:${group.id}:${regionKey}`,
-            {status:'blocked',at:s.elapsed,sectors:sectorRevision});
+          if(status==='unknown'){
+            const destination=regionKey.startsWith('unknown:')?
+              `${group.id}:${regionKey}`:regionKey;
+            scope.decisions.set(`${a.radius}:${origin}:${destination}`,
+              {status:'blocked',at:s.elapsed,sectors:sectorRevision});
+          }
           for(const [id,point] of perimeterWallSides(nav,scope,enclosure,
             originEnclosure,a.radius,s.structures,sectorRevision))sealedWallSides.set(id,point);
         }else if(status==='unknown'){

@@ -91,5 +91,8 @@ export function spatialWorldRoute(wasm,gridRoute,start,end){
       return {status:'found',points};
     }
   }
-  return {status:unknown||!startReachable||!endReachable?'unknown':'blocked',points:[]};
+  const status=unknown||!startReachable||!endReachable?'unknown':'blocked';
+  return {status,points:[],...(status==='unknown'?{
+    reason:!startReachable?'start-connector':!endReachable?'end-connector':'native-graph'
+  }:{})};
 }

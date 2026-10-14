@@ -8,15 +8,18 @@
       "ms": 0
     },
     "path": {
-      "count": 3,
-      "ms": 0.20679999999981646
+      "count": 2,
+      "ms": 0.177599999999984
     },
     "approachPath": {
-      "count": 272,
-      "ms": 103.6952999999998,
+      "count": 267,
+      "ms": 98.33329999999836,
       "found": 14,
       "blocked": 0,
-      "unknown": 258,
+      "unknown": 253,
+      "unknownCauses": {
+        "native-graph": 253
+      },
       "unknownExamples": [
         {
           "start": {
@@ -29,6 +32,7 @@
           },
           "missing": [],
           "details": {
+            "routeReason": "native-graph",
             "startRegions": {
               "ids": [
                 13248
@@ -56,6 +60,7 @@
           },
           "missing": [],
           "details": {
+            "routeReason": "native-graph",
             "startRegions": {
               "ids": [
                 13248
@@ -83,6 +88,7 @@
           },
           "missing": [],
           "details": {
+            "routeReason": "native-graph",
             "startRegions": {
               "ids": [
                 13248
@@ -102,12 +108,12 @@
       ]
     },
     "walkable": {
-      "count": 3234,
-      "ms": 17.86539999999951
+      "count": 3441,
+      "ms": 18.573100000006434
     },
     "segmentClear": {
-      "count": 314,
-      "ms": 4.53909999999928
+      "count": 432,
+      "ms": 6.145400000001246
     },
     "workerMotionClear": {
       "count": 0,
@@ -118,12 +124,12 @@
       "ms": 0
     },
     "regionFor": {
-      "count": 268,
-      "ms": 17.053399999998874
+      "count": 266,
+      "ms": 16.768500000000245
     },
     "regionConnected": {
-      "count": 115,
-      "ms": 8.057900000000473
+      "count": 72,
+      "ms": 6.350400000000548
     },
     "setState": {
       "count": 0,
@@ -138,7 +144,7 @@
     {
       "day": 6,
       "time": 445.00000000003297,
-      "ms": 3.720300000000009,
+      "ms": 2.4687999999999874,
       "sectorUpdates": 0,
       "connectivityDemand": 0,
       "workers": 0,
@@ -148,7 +154,7 @@
     {
       "day": 6,
       "time": 446.0000000000332,
-      "ms": 0.7474000000000274,
+      "ms": 0.46380000000004884,
       "sectorUpdates": 0,
       "connectivityDemand": 0,
       "workers": 0,
@@ -158,7 +164,7 @@
     {
       "day": 6,
       "time": 447.0000000000334,
-      "ms": 0.41459999999995034,
+      "ms": 0.2118000000000393,
       "sectorUpdates": 0,
       "connectivityDemand": 0,
       "workers": 0,
@@ -168,7 +174,7 @@
     {
       "day": 6,
       "time": 448.00000000003365,
-      "ms": 0.3627999999999929,
+      "ms": 0.15569999999996753,
       "sectorUpdates": 0,
       "connectivityDemand": 0,
       "workers": 0,
@@ -178,7 +184,7 @@
     {
       "day": 6,
       "time": 449.0000000000339,
-      "ms": 0.12219999999996389,
+      "ms": 0.1341000000000463,
       "sectorUpdates": 0,
       "connectivityDemand": 0,
       "workers": 0,
@@ -188,7 +194,7 @@
     {
       "day": 6,
       "time": 450.0000000000341,
-      "ms": 0.14859999999998763,
+      "ms": 0.12639999999998963,
       "sectorUpdates": 0,
       "connectivityDemand": 0,
       "workers": 0,
@@ -198,7 +204,7 @@
     {
       "day": 6,
       "time": 451.00000000003433,
-      "ms": 0.13119999999997844,
+      "ms": 0.12119999999998754,
       "sectorUpdates": 0,
       "connectivityDemand": 0,
       "workers": 0,
@@ -208,7 +214,7 @@
     {
       "day": 6,
       "time": 452.00000000003456,
-      "ms": 0.11590000000001055,
+      "ms": 0.129099999999994,
       "sectorUpdates": 0,
       "connectivityDemand": 0,
       "workers": 0,
@@ -218,7 +224,7 @@
     {
       "day": 6,
       "time": 453.0000000000348,
-      "ms": 0.12250000000000227,
+      "ms": 0.12549999999998818,
       "sectorUpdates": 0,
       "connectivityDemand": 0,
       "workers": 0,
@@ -228,7 +234,7 @@
     {
       "day": 6,
       "time": 454.000000000035,
-      "ms": 0.14460000000002537,
+      "ms": 0.8244000000000256,
       "sectorUpdates": 0,
       "connectivityDemand": 0,
       "workers": 0,
@@ -238,7 +244,7 @@
     {
       "day": 6,
       "time": 455.00000000003524,
-      "ms": 0.12029999999998608,
+      "ms": 0.12069999999999936,
       "sectorUpdates": 0,
       "connectivityDemand": 0,
       "workers": 0,
@@ -248,7 +254,7 @@
     {
       "day": 6,
       "time": 456.00000000003547,
-      "ms": 0.12380000000001701,
+      "ms": 0.10070000000001755,
       "sectorUpdates": 0,
       "connectivityDemand": 0,
       "workers": 0,
@@ -258,7 +264,7 @@
     {
       "day": 6,
       "time": 457.0000000000357,
-      "ms": 81.19480000000004,
+      "ms": 77.94549999999998,
       "sectorUpdates": 0,
       "connectivityDemand": 16,
       "workers": 0,
@@ -268,7 +274,7 @@
     {
       "day": 6,
       "time": 458.0000000000359,
-      "ms": 8.106599999999958,
+      "ms": 8.146799999999985,
       "sectorUpdates": 0,
       "connectivityDemand": 16,
       "workers": 0,
@@ -278,7 +284,7 @@
     {
       "day": 6,
       "time": 459.00000000003615,
-      "ms": 6.35450000000003,
+      "ms": 4.456400000000031,
       "sectorUpdates": 0,
       "connectivityDemand": 16,
       "workers": 0,
@@ -288,7 +294,7 @@
     {
       "day": 6,
       "time": 460.0000000000364,
-      "ms": 2.928800000000024,
+      "ms": 2.6952999999999747,
       "sectorUpdates": 0,
       "connectivityDemand": 16,
       "workers": 0,
@@ -298,7 +304,7 @@
     {
       "day": 6,
       "time": 461.0000000000366,
-      "ms": 4.637200000000007,
+      "ms": 3.657000000000039,
       "sectorUpdates": 0,
       "connectivityDemand": 16,
       "workers": 0,
@@ -308,7 +314,7 @@
     {
       "day": 6,
       "time": 462.00000000003683,
-      "ms": 12.640499999999975,
+      "ms": 10.479900000000043,
       "sectorUpdates": 0,
       "connectivityDemand": 16,
       "workers": 0,
@@ -318,7 +324,7 @@
     {
       "day": 6,
       "time": 463.00000000003706,
-      "ms": 4.966100000000097,
+      "ms": 3.178600000000074,
       "sectorUpdates": 0,
       "connectivityDemand": 16,
       "workers": 0,
@@ -328,7 +334,7 @@
     {
       "day": 6,
       "time": 464.0000000000373,
-      "ms": 3.5585000000000946,
+      "ms": 2.898200000000088,
       "sectorUpdates": 0,
       "connectivityDemand": 16,
       "workers": 0,
@@ -338,7 +344,7 @@
     {
       "day": 6,
       "time": 465.0000000000375,
-      "ms": 2.853900000000067,
+      "ms": 2.9045999999999594,
       "sectorUpdates": 0,
       "connectivityDemand": 16,
       "workers": 0,
@@ -348,7 +354,7 @@
     {
       "day": 6,
       "time": 466.00000000003774,
-      "ms": 13.855899999999906,
+      "ms": 13.488899999999944,
       "sectorUpdates": 0,
       "connectivityDemand": 16,
       "workers": 0,
@@ -358,7 +364,7 @@
     {
       "day": 6,
       "time": 467.00000000003797,
-      "ms": 3.1854999999999336,
+      "ms": 3.2729000000000497,
       "sectorUpdates": 0,
       "connectivityDemand": 16,
       "workers": 0,
@@ -368,7 +374,7 @@
     {
       "day": 6,
       "time": 468.0000000000382,
-      "ms": 3.0591000000000577,
+      "ms": 3.414700000000039,
       "sectorUpdates": 0,
       "connectivityDemand": 16,
       "workers": 0,
@@ -378,7 +384,7 @@
     {
       "day": 6,
       "time": 469.0000000000384,
-      "ms": 5.488699999999994,
+      "ms": 3.0212000000000216,
       "sectorUpdates": 0,
       "connectivityDemand": 16,
       "workers": 0,
@@ -388,7 +394,7 @@
     {
       "day": 6,
       "time": 470.00000000003865,
-      "ms": 7.156600000000026,
+      "ms": 6.505400000000009,
       "sectorUpdates": 0,
       "connectivityDemand": 16,
       "workers": 0,
@@ -398,7 +404,7 @@
     {
       "day": 6,
       "time": 471.0000000000389,
-      "ms": 12.267200000000003,
+      "ms": 10.540000000000077,
       "sectorUpdates": 0,
       "connectivityDemand": 16,
       "workers": 0,
@@ -408,7 +414,7 @@
     {
       "day": 6,
       "time": 472.0000000000391,
-      "ms": 4.109199999999987,
+      "ms": 2.8577999999999975,
       "sectorUpdates": 0,
       "connectivityDemand": 16,
       "workers": 0,
@@ -418,7 +424,7 @@
     {
       "day": 6,
       "time": 473.00000000003934,
-      "ms": 3.1738000000000284,
+      "ms": 5.542800000000057,
       "sectorUpdates": 0,
       "connectivityDemand": 16,
       "workers": 0,
@@ -428,7 +434,7 @@
     {
       "day": 6,
       "time": 474.00000000003956,
-      "ms": 4.250599999999963,
+      "ms": 3.3981999999999744,
       "sectorUpdates": 0,
       "connectivityDemand": 16,
       "workers": 0,
@@ -438,7 +444,7 @@
     {
       "day": 6,
       "time": 475.0000000000398,
-      "ms": 12.243000000000052,
+      "ms": 11.430500000000052,
       "sectorUpdates": 0,
       "connectivityDemand": 16,
       "workers": 0,
@@ -448,7 +454,7 @@
     {
       "day": 6,
       "time": 476.00000000004,
-      "ms": 5.029099999999971,
+      "ms": 5.595200000000091,
       "sectorUpdates": 0,
       "connectivityDemand": 16,
       "workers": 0,
@@ -458,7 +464,7 @@
     {
       "day": 6,
       "time": 477.00000000004025,
-      "ms": 8.66089999999997,
+      "ms": 9.115300000000047,
       "sectorUpdates": 0,
       "connectivityDemand": 16,
       "workers": 0,
@@ -468,7 +474,7 @@
     {
       "day": 6,
       "time": 478.0000000000405,
-      "ms": 2.6545999999999594,
+      "ms": 1.4216000000000122,
       "sectorUpdates": 0,
       "connectivityDemand": 16,
       "workers": 0,
@@ -478,7 +484,7 @@
     {
       "day": 6,
       "time": 479.0000000000407,
-      "ms": 6.252700000000004,
+      "ms": 6.356100000000083,
       "sectorUpdates": 0,
       "connectivityDemand": 16,
       "workers": 0,
@@ -488,7 +494,7 @@
     {
       "day": 6,
       "time": 480.0000000000409,
-      "ms": 13.154700000000048,
+      "ms": 16.527400000000057,
       "sectorUpdates": 0,
       "connectivityDemand": 16,
       "workers": 0,
@@ -498,7 +504,7 @@
     {
       "day": 6,
       "time": 481.00000000004115,
-      "ms": 3.8170000000000073,
+      "ms": 3.523400000000038,
       "sectorUpdates": 0,
       "connectivityDemand": 16,
       "workers": 0,
@@ -508,7 +514,7 @@
     {
       "day": 6,
       "time": 482.0000000000414,
-      "ms": 4.85469999999998,
+      "ms": 3.4618000000000393,
       "sectorUpdates": 0,
       "connectivityDemand": 16,
       "workers": 0,
@@ -518,7 +524,7 @@
     {
       "day": 6,
       "time": 483.0000000000416,
-      "ms": 2.7994999999999663,
+      "ms": 4.302699999999959,
       "sectorUpdates": 0,
       "connectivityDemand": 16,
       "workers": 0,
@@ -528,7 +534,7 @@
     {
       "day": 6,
       "time": 484.00000000004184,
-      "ms": 13.505999999999972,
+      "ms": 11.713200000000029,
       "sectorUpdates": 0,
       "connectivityDemand": 16,
       "workers": 0,
@@ -538,7 +544,7 @@
     {
       "day": 6,
       "time": 485.00000000004206,
-      "ms": 2.70799999999997,
+      "ms": 2.6159000000000106,
       "sectorUpdates": 0,
       "connectivityDemand": 16,
       "workers": 0,
@@ -548,7 +554,7 @@
     {
       "day": 6,
       "time": 486.0000000000423,
-      "ms": 2.7206999999999653,
+      "ms": 6.293000000000006,
       "sectorUpdates": 0,
       "connectivityDemand": 16,
       "workers": 0,
@@ -558,7 +564,7 @@
     {
       "day": 6,
       "time": 487.0000000000425,
-      "ms": 4.65829999999994,
+      "ms": 4.42470000000003,
       "sectorUpdates": 0,
       "connectivityDemand": 16,
       "workers": 0,
@@ -568,7 +574,7 @@
     {
       "day": 6,
       "time": 488.00000000004275,
-      "ms": 11.725199999999973,
+      "ms": 13.522100000000023,
       "sectorUpdates": 0,
       "connectivityDemand": 16,
       "workers": 0,
@@ -578,7 +584,7 @@
     {
       "day": 6,
       "time": 489.000000000043,
-      "ms": 1.5949000000000524,
+      "ms": 1.5330000000000155,
       "sectorUpdates": 0,
       "connectivityDemand": 16,
       "workers": 0,
@@ -588,7 +594,7 @@
     {
       "day": 6,
       "time": 490.0000000000432,
-      "ms": 4.0312999999999874,
+      "ms": 2.5873000000000275,
       "sectorUpdates": 0,
       "connectivityDemand": 16,
       "workers": 0,
@@ -598,7 +604,7 @@
     {
       "day": 6,
       "time": 491.0000000000434,
-      "ms": 2.7922999999999547,
+      "ms": 2.45049999999992,
       "sectorUpdates": 0,
       "connectivityDemand": 16,
       "workers": 0,
@@ -608,7 +614,7 @@
     {
       "day": 6,
       "time": 492.00000000004366,
-      "ms": 2.192700000000059,
+      "ms": 2.532299999999964,
       "sectorUpdates": 0,
       "connectivityDemand": 16,
       "workers": 0,
@@ -618,7 +624,7 @@
     {
       "day": 6,
       "time": 493.0000000000439,
-      "ms": 10.542800000000057,
+      "ms": 13.471900000000005,
       "sectorUpdates": 0,
       "connectivityDemand": 16,
       "workers": 0,
@@ -628,7 +634,7 @@
     {
       "day": 6,
       "time": 494.0000000000441,
-      "ms": 7.116800000000012,
+      "ms": 8.142200000000003,
       "sectorUpdates": 0,
       "connectivityDemand": 16,
       "workers": 0,
@@ -637,26 +643,26 @@
     }
   ],
   "raidSelection": {
-    "selections": 227,
-    "groups": 1362,
+    "selections": 225,
+    "groups": 1350,
     "groupVisits": {
-      "crop:plant-1999": 227,
-      "crop:plant-2017": 227,
-      "crop:plant-2013": 227,
-      "crop:plant-2010": 227,
-      "crop:plant-2295": 227,
-      "crop:plant-2300": 227
+      "crop:plant-1999": 225,
+      "crop:plant-2017": 225,
+      "crop:plant-2013": 225,
+      "crop:plant-2010": 225,
+      "crop:plant-2295": 225,
+      "crop:plant-2300": 225
     },
-    "regions": 2951,
-    "regionQueries": 91,
-    "unknown": 2951,
-    "enclosureClassifications": 13,
-    "enclosureClassificationMs": 0.47669999999993706,
-    "selectionMs": 184.9523999999983,
+    "regions": 2925,
+    "regionQueries": 48,
+    "unknown": 2925,
+    "enclosureClassifications": 8,
+    "enclosureClassificationMs": 0.2715999999999781,
+    "regionCacheHits": 2790,
+    "selectionMs": 173.03190000000131,
     "maxRegionalQueriesPerTick": 16,
-    "decisionCacheEntries": 141,
-    "regionCacheHits": 2729,
-    "budgetDeferrals": 131
+    "decisionCacheEntries": 92,
+    "budgetDeferrals": 87
   },
   "connectivityDemand": [
     "1,0",
@@ -680,12 +686,11 @@
   "nativeConnectivityReasons": {
     "connected": {
       "5": 7,
-      "8": 462
+      "8": 240
     },
     "route": {
-      "4": 1,
       "5": 31,
-      "8": 3918
+      "8": 3884
     }
   },
   "enclosureSamples": {
@@ -694,9 +699,9 @@
       "-1": 37
     }
   },
-  "heapDeltaBytes": 1398400,
-  "totalMs": 313.11690000000004,
-  "stateSha256": "fe2df5a9827a1d1787d1958346ec81043f6ee4e90e3580539705aab13d659909",
+  "heapDeltaBytes": -1163080,
+  "totalMs": 304.40650000000085,
+  "stateSha256": "7edf8512b38d007c85c27422e661319ec381ffef0127221524fddf81834adee2",
   "animals": [
     {
       "id": "animal-2604",

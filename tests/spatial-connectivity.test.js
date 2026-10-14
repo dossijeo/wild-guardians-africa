@@ -2,9 +2,25 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createSpatialWorld} from '../src/world/hierarchical-wasm/spatial-world.js';
+import {spatialWorldRoute} from '../src/world/hierarchical-wasm/spatial-local-route.js';
 
 const module=new WebAssembly.Module(readFileSync(new URL(
   '../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+
+test('route diagnostics distinguish missing endpoint connectors from unknown native graph',()=>{
+  const start={x:.2,z:.2},end={x:3.2,z:.2};
+  const blocked={spatial_local_clear:()=>false,spatial_walkable:()=>true};
+  assert.equal(spatialWorldRoute(blocked,()=>({status:'unknown',points:[]}),start,end).reason,
+    'start-connector');
+  const startOnly={spatial_local_clear:(x,z,tx,tz)=>x<2&&Math.hypot(x-tx,z-tz)<1.5,
+    spatial_walkable:()=>true};
+  assert.equal(spatialWorldRoute(startOnly,()=>({status:'unknown',points:[]}),start,end).reason,
+    'end-connector');
+  const both={spatial_local_clear:(x,z,tx,tz)=>Math.hypot(x-tx,z-tz)<1.5,
+    spatial_walkable:()=>true};
+  assert.equal(spatialWorldRoute(both,()=>({status:'unknown',points:[]}),start,end).reason,
+    'native-graph');
+});
 
 test('native component connectivity rejects a sealed enclosure without requesting a route',()=>{
   const core=createSpatialWorld(module);core.generate(712,0,0,'savanna');

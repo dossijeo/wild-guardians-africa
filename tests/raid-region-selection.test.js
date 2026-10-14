@@ -41,8 +41,18 @@ test('unloaded crop components stay grouped instead of becoming one query per pl
   assert.equal(f.routes(),0);
 });
 
+test('separate crop groups in one native region share a connectivity decision',()=>{
+  const f=fixture();
+  f.state.plants=[...f.plants,{id:'distant-crop',species:'mijo',x:100,z:0,
+    alive:true,growth:30}];
+  assert.deepEqual(targetFor(f.state,f.animal,f.nav),{unknown:true});
+  assert.equal(f.queries(),1);
+});
+
 test('native group decisions are capped per tick and continue on later ticks',()=>{
   const f=fixture();f.state.plants=f.plants.slice(0,30).map((plant,i)=>({...plant,x:20+i*10,z:0}));
+  f.nav.regionFor=point=>({key:point===f.animal?'origin':`crop:${point.x}`,
+    ids:[1]});
   assert.deepEqual(targetFor(f.state,f.animal,f.nav),{unknown:true});
   assert.equal(f.queries(),16);
   f.state.elapsed++;
@@ -120,6 +130,23 @@ test('a nested crop enclosure nominates its reachable outer wall first',()=>{
       {ids:[2],status:'sealed'}:{ids:[3],status:'sealed'};
   const chosen=targetFor(f.state,f.animal,f.nav);
   assert.equal(chosen?.target?.id,'outer-wall');
+});
+
+test('animals in one origin region reuse the same reachable wall-side decision',()=>{
+  const f=fixture(),other={...f.animal,id:'animal-2'};
+  f.state.raid.animals.push(other);
+  f.state.structures.push({id:'wall-1',kind:'wall',x:5,z:0,yaw:Math.PI/2,
+    baseScaleX:1,material:'zarzas',status:'intact',hp:100,cost:50,gate:false});
+  f.nav.regionFor=point=>({key:point.species==='warthog'?'origin':'crop',ids:[1]});
+  let queries=0;
+  f.nav.regionConnected=(_from,to)=>{queries++;return to.x<5?true:null;};
+  f.nav.enclosureFor=()=>({ids:[1],status:'open-frontier'});
+  const first=targetFor(f.state,f.animal,f.nav);
+  const afterFirst=queries;
+  const second=targetFor(f.state,other,f.nav);
+  assert.equal(first?.target?.id,'wall-1');
+  assert.equal(second?.target?.id,'wall-1');
+  assert.equal(queries,afterFirst,'the second animal reuses crop and wall-side topology');
 });
 
 test('an alternative native access to crops retains crop-first selection',()=>{

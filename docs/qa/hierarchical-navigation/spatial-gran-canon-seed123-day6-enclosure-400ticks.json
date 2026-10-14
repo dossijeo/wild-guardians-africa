@@ -9,14 +9,17 @@
     },
     "path": {
       "count": 18,
-      "ms": 1.7259999999994307
+      "ms": 1.3620999999998276
     },
     "approachPath": {
-      "count": 780,
-      "ms": 443.4770000000011,
-      "found": 41,
+      "count": 772,
+      "ms": 457.20350000000025,
+      "found": 36,
       "blocked": 0,
-      "unknown": 739,
+      "unknown": 736,
+      "unknownCauses": {
+        "native-graph": 736
+      },
       "unknownExamples": [
         {
           "start": {
@@ -29,6 +32,7 @@
           },
           "missing": [],
           "details": {
+            "routeReason": "native-graph",
             "startRegions": {
               "ids": [
                 13248
@@ -56,6 +60,7 @@
           },
           "missing": [],
           "details": {
+            "routeReason": "native-graph",
             "startRegions": {
               "ids": [
                 13248
@@ -83,6 +88,7 @@
           },
           "missing": [],
           "details": {
+            "routeReason": "native-graph",
             "startRegions": {
               "ids": [
                 13248
@@ -102,12 +108,12 @@
       ]
     },
     "walkable": {
-      "count": 10359,
-      "ms": 57.796299999987866
+      "count": 14871,
+      "ms": 72.57710000001248
     },
     "segmentClear": {
-      "count": 4003,
-      "ms": 93.75480000000164
+      "count": 4557,
+      "ms": 102.4777000000081
     },
     "workerMotionClear": {
       "count": 0,
@@ -118,16 +124,16 @@
       "ms": 0
     },
     "regionFor": {
-      "count": 1190,
-      "ms": 46.40049999999849
+      "count": 1140,
+      "ms": 50.713000000000534
     },
     "regionConnected": {
-      "count": 466,
-      "ms": 39.67069999999842
+      "count": 394,
+      "ms": 34.28940000000205
     },
     "setState": {
       "count": 3,
-      "ms": 3.557300000000396
+      "ms": 3.984699999999748
     },
     "wallPlacement": {
       "count": 0,
@@ -138,7 +144,7 @@
     {
       "day": 6,
       "time": 445.00000000003297,
-      "ms": 4.538999999999987,
+      "ms": 3.015899999999988,
       "sectorUpdates": 0,
       "connectivityDemand": 0,
       "workers": 0,
@@ -148,7 +154,7 @@
     {
       "day": 6,
       "time": 446.0000000000332,
-      "ms": 0.5490999999999531,
+      "ms": 0.5153999999999996,
       "sectorUpdates": 0,
       "connectivityDemand": 0,
       "workers": 0,
@@ -158,7 +164,7 @@
     {
       "day": 6,
       "time": 447.0000000000334,
-      "ms": 0.23689999999999145,
+      "ms": 0.22530000000000427,
       "sectorUpdates": 0,
       "connectivityDemand": 0,
       "workers": 0,
@@ -168,7 +174,7 @@
     {
       "day": 6,
       "time": 448.00000000003365,
-      "ms": 0.16509999999999536,
+      "ms": 0.1494000000000142,
       "sectorUpdates": 0,
       "connectivityDemand": 0,
       "workers": 0,
@@ -178,7 +184,7 @@
     {
       "day": 6,
       "time": 449.0000000000339,
-      "ms": 0.1593000000000302,
+      "ms": 0.15229999999996835,
       "sectorUpdates": 0,
       "connectivityDemand": 0,
       "workers": 0,
@@ -188,7 +194,7 @@
     {
       "day": 6,
       "time": 450.0000000000341,
-      "ms": 0.15190000000001191,
+      "ms": 0.174699999999973,
       "sectorUpdates": 0,
       "connectivityDemand": 0,
       "workers": 0,
@@ -198,7 +204,7 @@
     {
       "day": 6,
       "time": 451.00000000003433,
-      "ms": 0.14150000000000773,
+      "ms": 0.15300000000002,
       "sectorUpdates": 0,
       "connectivityDemand": 0,
       "workers": 0,
@@ -208,7 +214,7 @@
     {
       "day": 6,
       "time": 452.00000000003456,
-      "ms": 0.168200000000013,
+      "ms": 0.17020000000002256,
       "sectorUpdates": 0,
       "connectivityDemand": 0,
       "workers": 0,
@@ -218,7 +224,7 @@
     {
       "day": 6,
       "time": 453.0000000000348,
-      "ms": 0.15379999999998972,
+      "ms": 0.13409999999998945,
       "sectorUpdates": 0,
       "connectivityDemand": 0,
       "workers": 0,
@@ -228,7 +234,7 @@
     {
       "day": 6,
       "time": 454.000000000035,
-      "ms": 0.9872000000000298,
+      "ms": 0.9002000000000407,
       "sectorUpdates": 0,
       "connectivityDemand": 0,
       "workers": 0,
@@ -238,7 +244,7 @@
     {
       "day": 6,
       "time": 455.00000000003524,
-      "ms": 0.24639999999999418,
+      "ms": 0.12690000000003465,
       "sectorUpdates": 0,
       "connectivityDemand": 0,
       "workers": 0,
@@ -248,7 +254,7 @@
     {
       "day": 6,
       "time": 456.00000000003547,
-      "ms": 0.23110000000002628,
+      "ms": 0.11099999999999,
       "sectorUpdates": 0,
       "connectivityDemand": 0,
       "workers": 0,
@@ -258,7 +264,7 @@
     {
       "day": 6,
       "time": 457.0000000000357,
-      "ms": 124.40219999999994,
+      "ms": 123.51240000000001,
       "sectorUpdates": 20,
       "connectivityDemand": 16,
       "workers": 0,
@@ -268,7 +274,7 @@
     {
       "day": 6,
       "time": 458.0000000000359,
-      "ms": 60.92680000000007,
+      "ms": 70.91379999999992,
       "sectorUpdates": 44,
       "connectivityDemand": 16,
       "workers": 0,
@@ -278,7 +284,7 @@
     {
       "day": 6,
       "time": 459.00000000003615,
-      "ms": 47.094499999999925,
+      "ms": 53.790700000000015,
       "sectorUpdates": 64,
       "connectivityDemand": 16,
       "workers": 0,
@@ -288,7 +294,7 @@
     {
       "day": 6,
       "time": 460.0000000000364,
-      "ms": 32.98919999999998,
+      "ms": 30.848400000000083,
       "sectorUpdates": 88,
       "connectivityDemand": 16,
       "workers": 0,
@@ -298,7 +304,7 @@
     {
       "day": 6,
       "time": 461.0000000000366,
-      "ms": 59.826400000000035,
+      "ms": 57.22059999999999,
       "sectorUpdates": 112,
       "connectivityDemand": 16,
       "workers": 0,
@@ -308,7 +314,7 @@
     {
       "day": 6,
       "time": 462.00000000003683,
-      "ms": 69.68369999999993,
+      "ms": 69.822,
       "sectorUpdates": 136,
       "connectivityDemand": 16,
       "workers": 0,
@@ -318,7 +324,7 @@
     {
       "day": 6,
       "time": 463.00000000003706,
-      "ms": 64.78279999999995,
+      "ms": 66.57820000000004,
       "sectorUpdates": 156,
       "connectivityDemand": 16,
       "workers": 0,
@@ -328,7 +334,7 @@
     {
       "day": 6,
       "time": 464.0000000000373,
-      "ms": 72.0202999999999,
+      "ms": 69.20629999999994,
       "sectorUpdates": 180,
       "connectivityDemand": 16,
       "workers": 0,
@@ -338,7 +344,7 @@
     {
       "day": 6,
       "time": 465.0000000000375,
-      "ms": 69.34349999999995,
+      "ms": 67.76970000000006,
       "sectorUpdates": 204,
       "connectivityDemand": 16,
       "workers": 0,
@@ -348,7 +354,7 @@
     {
       "day": 6,
       "time": 466.00000000003774,
-      "ms": 69.18989999999985,
+      "ms": 68.86159999999995,
       "sectorUpdates": 228,
       "connectivityDemand": 16,
       "workers": 0,
@@ -358,7 +364,7 @@
     {
       "day": 6,
       "time": 467.00000000003797,
-      "ms": 75.30819999999994,
+      "ms": 71.61660000000006,
       "sectorUpdates": 252,
       "connectivityDemand": 16,
       "workers": 0,
@@ -368,7 +374,7 @@
     {
       "day": 6,
       "time": 468.0000000000382,
-      "ms": 72.93079999999986,
+      "ms": 60.91750000000002,
       "sectorUpdates": 272,
       "connectivityDemand": 16,
       "workers": 0,
@@ -378,7 +384,7 @@
     {
       "day": 6,
       "time": 469.0000000000384,
-      "ms": 67.73239999999987,
+      "ms": 74.03620000000001,
       "sectorUpdates": 296,
       "connectivityDemand": 16,
       "workers": 0,
@@ -388,7 +394,7 @@
     {
       "day": 6,
       "time": 470.00000000003865,
-      "ms": 58.83309999999983,
+      "ms": 57.03269999999998,
       "sectorUpdates": 320,
       "connectivityDemand": 16,
       "workers": 0,
@@ -398,7 +404,7 @@
     {
       "day": 6,
       "time": 471.0000000000389,
-      "ms": 29.021599999999808,
+      "ms": 33.477100000000064,
       "sectorUpdates": 344,
       "connectivityDemand": 16,
       "workers": 0,
@@ -408,7 +414,7 @@
     {
       "day": 6,
       "time": 472.0000000000391,
-      "ms": 64.4253000000001,
+      "ms": 77.24360000000001,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -418,7 +424,7 @@
     {
       "day": 6,
       "time": 473.00000000003934,
-      "ms": 30.83979999999997,
+      "ms": 28.55450000000019,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -428,7 +434,7 @@
     {
       "day": 6,
       "time": 474.00000000003956,
-      "ms": 3.584600000000137,
+      "ms": 4.161000000000058,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -438,7 +444,7 @@
     {
       "day": 6,
       "time": 475.0000000000398,
-      "ms": 6.083900000000085,
+      "ms": 5.7538999999999305,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -448,7 +454,7 @@
     {
       "day": 6,
       "time": 476.00000000004,
-      "ms": 7.182499999999891,
+      "ms": 4.06659999999988,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -458,7 +464,7 @@
     {
       "day": 6,
       "time": 477.00000000004025,
-      "ms": 31.7487000000001,
+      "ms": 28.446899999999914,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -468,7 +474,7 @@
     {
       "day": 6,
       "time": 478.0000000000405,
-      "ms": 2.210399999999936,
+      "ms": 1.7901999999999134,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -478,7 +484,7 @@
     {
       "day": 6,
       "time": 479.0000000000407,
-      "ms": 3.219100000000026,
+      "ms": 5.150100000000066,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -488,7 +494,7 @@
     {
       "day": 6,
       "time": 480.0000000000409,
-      "ms": 4.13390000000004,
+      "ms": 3.9395999999999276,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -498,7 +504,7 @@
     {
       "day": 6,
       "time": 481.00000000004115,
-      "ms": 3.4516000000000986,
+      "ms": 3.4597000000001117,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -508,7 +514,7 @@
     {
       "day": 6,
       "time": 482.0000000000414,
-      "ms": 20.804999999999836,
+      "ms": 18.466000000000122,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -518,7 +524,7 @@
     {
       "day": 6,
       "time": 483.0000000000416,
-      "ms": 4.000999999999976,
+      "ms": 5.285099999999829,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -528,7 +534,7 @@
     {
       "day": 6,
       "time": 484.00000000004184,
-      "ms": 4.316500000000133,
+      "ms": 3.5458000000000993,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -538,7 +544,7 @@
     {
       "day": 6,
       "time": 485.00000000004206,
-      "ms": 4.6159999999999854,
+      "ms": 3.057199999999966,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -548,7 +554,7 @@
     {
       "day": 6,
       "time": 486.0000000000423,
-      "ms": 20.454700000000003,
+      "ms": 19.158100000000104,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -558,7 +564,7 @@
     {
       "day": 6,
       "time": 487.0000000000425,
-      "ms": 3.151299999999992,
+      "ms": 3.1387999999999465,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -568,7 +574,7 @@
     {
       "day": 6,
       "time": 488.00000000004275,
-      "ms": 2.8315999999999804,
+      "ms": 3.4312999999999647,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -578,7 +584,7 @@
     {
       "day": 6,
       "time": 489.000000000043,
-      "ms": 2.1049000000000433,
+      "ms": 2.9108000000001084,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -588,7 +594,7 @@
     {
       "day": 6,
       "time": 490.0000000000432,
-      "ms": 3.3900999999998476,
+      "ms": 3.0522000000000844,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -598,7 +604,7 @@
     {
       "day": 6,
       "time": 491.0000000000434,
-      "ms": 19.376500000000078,
+      "ms": 20.120899999999892,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -608,7 +614,7 @@
     {
       "day": 6,
       "time": 492.00000000004366,
-      "ms": 2.8684999999998126,
+      "ms": 2.992300000000114,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -618,7 +624,7 @@
     {
       "day": 6,
       "time": 493.0000000000439,
-      "ms": 2.3291999999999007,
+      "ms": 3.6049000000000433,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -628,7 +634,7 @@
     {
       "day": 6,
       "time": 494.0000000000441,
-      "ms": 2.8900999999998476,
+      "ms": 4.188800000000128,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -638,7 +644,7 @@
     {
       "day": 6,
       "time": 495.00000000004434,
-      "ms": 18.647100000000137,
+      "ms": 26.03690000000006,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -648,7 +654,7 @@
     {
       "day": 6,
       "time": 496.00000000004457,
-      "ms": 2.209400000000187,
+      "ms": 3.0937000000001262,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -658,7 +664,7 @@
     {
       "day": 6,
       "time": 497.0000000000448,
-      "ms": 2.083799999999883,
+      "ms": 2.6421000000000276,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -668,7 +674,7 @@
     {
       "day": 6,
       "time": 498.000000000045,
-      "ms": 1.9338000000000193,
+      "ms": 2.6485000000000127,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -678,7 +684,7 @@
     {
       "day": 6,
       "time": 499.00000000004525,
-      "ms": 18.995699999999943,
+      "ms": 19.686500000000024,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -688,7 +694,7 @@
     {
       "day": 6,
       "time": 500.0000000000455,
-      "ms": 0.9121999999999844,
+      "ms": 1.0347000000001572,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -698,7 +704,7 @@
     {
       "day": 6,
       "time": 501.0000000000457,
-      "ms": 1.589200000000119,
+      "ms": 2.321899999999914,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -708,7 +714,7 @@
     {
       "day": 6,
       "time": 502.00000000004593,
-      "ms": 2.5895000000000437,
+      "ms": 3.0937999999998738,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -718,7 +724,7 @@
     {
       "day": 6,
       "time": 503.00000000004616,
-      "ms": 1.314600000000155,
+      "ms": 1.831000000000131,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -728,7 +734,7 @@
     {
       "day": 6,
       "time": 504.0000000000464,
-      "ms": 27.965199999999868,
+      "ms": 28.066400000000158,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -738,7 +744,7 @@
     {
       "day": 6,
       "time": 505.0000000000466,
-      "ms": 30.19530000000009,
+      "ms": 39.487100000000055,
       "sectorUpdates": 369,
       "connectivityDemand": 16,
       "workers": 0,
@@ -748,7 +754,7 @@
     {
       "day": 6,
       "time": 506.00000000004684,
-      "ms": 3.782699999999977,
+      "ms": 5.426999999999907,
       "sectorUpdates": 369,
       "connectivityDemand": 16,
       "workers": 0,
@@ -758,7 +764,7 @@
     {
       "day": 6,
       "time": 507.00000000004707,
-      "ms": 5.017599999999902,
+      "ms": 4.764700000000175,
       "sectorUpdates": 369,
       "connectivityDemand": 16,
       "workers": 0,
@@ -768,7 +774,7 @@
     {
       "day": 6,
       "time": 508.0000000000473,
-      "ms": 6.873600000000124,
+      "ms": 5.941199999999981,
       "sectorUpdates": 369,
       "connectivityDemand": 16,
       "workers": 0,
@@ -778,7 +784,7 @@
     {
       "day": 6,
       "time": 509.0000000000475,
-      "ms": 22.304200000000037,
+      "ms": 30.234899999999925,
       "sectorUpdates": 369,
       "connectivityDemand": 16,
       "workers": 0,
@@ -788,7 +794,7 @@
     {
       "day": 6,
       "time": 510.00000000004775,
-      "ms": 2.764699999999948,
+      "ms": 1.4615000000001146,
       "sectorUpdates": 369,
       "connectivityDemand": 16,
       "workers": 0,
@@ -798,7 +804,7 @@
     {
       "day": 6,
       "time": 511.000000000048,
-      "ms": 3.113900000000058,
+      "ms": 5.17229999999995,
       "sectorUpdates": 369,
       "connectivityDemand": 16,
       "workers": 0,
@@ -808,8 +814,8 @@
     {
       "day": 6,
       "time": 512.0000000000482,
-      "ms": 3.466299999999819,
-      "sectorUpdates": 369,
+      "ms": 8.098099999999931,
+      "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
       "tasks": 33,
@@ -818,7 +824,7 @@
     {
       "day": 6,
       "time": 513.0000000000484,
-      "ms": 7.920800000000099,
+      "ms": 2.4950000000001182,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -828,7 +834,7 @@
     {
       "day": 6,
       "time": 514.0000000000487,
-      "ms": 6.935600000000022,
+      "ms": 3.8944000000001324,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -838,7 +844,7 @@
     {
       "day": 6,
       "time": 515.0000000000489,
-      "ms": 3.397399999999834,
+      "ms": 3.3635000000001583,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -848,7 +854,7 @@
     {
       "day": 6,
       "time": 516.0000000000491,
-      "ms": 3.1667999999999665,
+      "ms": 4.890800000000127,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -858,7 +864,7 @@
     {
       "day": 6,
       "time": 517.0000000000493,
-      "ms": 3.329099999999926,
+      "ms": 3.5239999999998872,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -868,7 +874,7 @@
     {
       "day": 6,
       "time": 518.0000000000496,
-      "ms": 5.600799999999936,
+      "ms": 4.011400000000094,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -878,7 +884,7 @@
     {
       "day": 6,
       "time": 519.0000000000498,
-      "ms": 4.257000000000062,
+      "ms": 8.117499999999836,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -888,7 +894,7 @@
     {
       "day": 6,
       "time": 520.00000000005,
-      "ms": 11.8583000000001,
+      "ms": 11.410100000000057,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -898,7 +904,7 @@
     {
       "day": 6,
       "time": 521.0000000000502,
-      "ms": 6.809500000000071,
+      "ms": 6.872700000000123,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -908,7 +914,7 @@
     {
       "day": 6,
       "time": 522.0000000000505,
-      "ms": 6.8429000000001,
+      "ms": 5.291899999999941,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -918,7 +924,7 @@
     {
       "day": 6,
       "time": 523.0000000000507,
-      "ms": 6.773500000000013,
+      "ms": 6.198000000000093,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -928,7 +934,7 @@
     {
       "day": 6,
       "time": 524.0000000000509,
-      "ms": 7.790300000000116,
+      "ms": 3.7885000000001128,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -938,7 +944,7 @@
     {
       "day": 6,
       "time": 525.0000000000512,
-      "ms": 6.666300000000092,
+      "ms": 4.47180000000003,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -948,7 +954,7 @@
     {
       "day": 6,
       "time": 526.0000000000514,
-      "ms": 6.328999999999951,
+      "ms": 6.87259999999992,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -958,7 +964,7 @@
     {
       "day": 6,
       "time": 527.0000000000516,
-      "ms": 5.545599999999922,
+      "ms": 5.637899999999945,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -968,7 +974,7 @@
     {
       "day": 6,
       "time": 528.0000000000518,
-      "ms": 3.9157000000000153,
+      "ms": 4.609199999999873,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -978,7 +984,7 @@
     {
       "day": 6,
       "time": 529.0000000000521,
-      "ms": 3.190800000000081,
+      "ms": 6.782500000000027,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -988,7 +994,7 @@
     {
       "day": 6,
       "time": 530.0000000000523,
-      "ms": 4.602499999999964,
+      "ms": 13.063100000000077,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -998,7 +1004,7 @@
     {
       "day": 6,
       "time": 531.0000000000525,
-      "ms": 2.72180000000003,
+      "ms": 5.706699999999955,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1008,7 +1014,7 @@
     {
       "day": 6,
       "time": 532.0000000000528,
-      "ms": 5.397999999999911,
+      "ms": 7.578600000000051,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1018,7 +1024,7 @@
     {
       "day": 6,
       "time": 533.000000000053,
-      "ms": 5.67410000000018,
+      "ms": 11.143199999999979,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1028,7 +1034,7 @@
     {
       "day": 6,
       "time": 534.0000000000532,
-      "ms": 7.505400000000009,
+      "ms": 6.752300000000105,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1038,7 +1044,7 @@
     {
       "day": 6,
       "time": 535.0000000000534,
-      "ms": 2.200700000000097,
+      "ms": 7.02980000000025,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1048,7 +1054,7 @@
     {
       "day": 6,
       "time": 536.0000000000537,
-      "ms": 2.1503999999999905,
+      "ms": 8.903499999999894,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1058,7 +1064,7 @@
     {
       "day": 6,
       "time": 537.0000000000539,
-      "ms": 6.703700000000026,
+      "ms": 4.002700000000004,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1068,7 +1074,7 @@
     {
       "day": 6,
       "time": 538.0000000000541,
-      "ms": 3.909400000000005,
+      "ms": 3.793500000000222,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1078,7 +1084,7 @@
     {
       "day": 6,
       "time": 539.0000000000543,
-      "ms": 4.96550000000002,
+      "ms": 5.416900000000169,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1088,7 +1094,7 @@
     {
       "day": 6,
       "time": 540.0000000000546,
-      "ms": 2.541300000000092,
+      "ms": 5.8533000000002176,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1098,7 +1104,7 @@
     {
       "day": 6,
       "time": 541.0000000000548,
-      "ms": 3.200900000000047,
+      "ms": 4.44419999999991,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1108,7 +1114,7 @@
     {
       "day": 6,
       "time": 542.000000000055,
-      "ms": 2.766800000000103,
+      "ms": 3.2046000000000276,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1118,7 +1124,7 @@
     {
       "day": 6,
       "time": 543.0000000000553,
-      "ms": 3.8655999999998585,
+      "ms": 3.9589999999998327,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1128,7 +1134,7 @@
     {
       "day": 6,
       "time": 544.0000000000555,
-      "ms": 3.288300000000163,
+      "ms": 2.832800000000134,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1138,7 +1144,7 @@
     {
       "day": 6,
       "time": 545.0000000000557,
-      "ms": 1.8306000000002314,
+      "ms": 3.28879999999981,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1148,7 +1154,7 @@
     {
       "day": 6,
       "time": 546.0000000000559,
-      "ms": 4.0919999999996435,
+      "ms": 2.6406999999999243,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1158,7 +1164,7 @@
     {
       "day": 6,
       "time": 547.0000000000562,
-      "ms": 4.116399999999885,
+      "ms": 3.6887000000001535,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1168,7 +1174,7 @@
     {
       "day": 6,
       "time": 548.0000000000564,
-      "ms": 8.440299999999752,
+      "ms": 7.574500000000171,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1178,7 +1184,7 @@
     {
       "day": 6,
       "time": 549.0000000000566,
-      "ms": 7.036799999999857,
+      "ms": 5.621900000000096,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1188,7 +1194,7 @@
     {
       "day": 6,
       "time": 550.0000000000568,
-      "ms": 6.085199999999986,
+      "ms": 7.23259999999982,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1198,7 +1204,7 @@
     {
       "day": 6,
       "time": 551.0000000000571,
-      "ms": 3.3166000000001077,
+      "ms": 4.221100000000206,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1208,7 +1214,7 @@
     {
       "day": 6,
       "time": 552.0000000000573,
-      "ms": 3.8390000000003965,
+      "ms": 3.167699999999968,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1218,7 +1224,7 @@
     {
       "day": 6,
       "time": 553.0000000000575,
-      "ms": 4.881199999999808,
+      "ms": 5.030099999999948,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1228,7 +1234,7 @@
     {
       "day": 6,
       "time": 554.0000000000578,
-      "ms": 8.397300000000087,
+      "ms": 2.528099999999995,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1238,7 +1244,7 @@
     {
       "day": 6,
       "time": 555.000000000058,
-      "ms": 6.018900000000031,
+      "ms": 3.7795000000000982,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1248,7 +1254,7 @@
     {
       "day": 6,
       "time": 556.0000000000582,
-      "ms": 1.6105999999999767,
+      "ms": 3.83849999999984,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1258,7 +1264,7 @@
     {
       "day": 6,
       "time": 557.0000000000584,
-      "ms": 1.6449999999999818,
+      "ms": 2.658400000000256,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1268,7 +1274,7 @@
     {
       "day": 6,
       "time": 558.0000000000587,
-      "ms": 2.2759000000000924,
+      "ms": 2.680699999999888,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1278,7 +1284,7 @@
     {
       "day": 6,
       "time": 559.0000000000589,
-      "ms": 4.8429000000001,
+      "ms": 3.3866000000002714,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1288,7 +1294,7 @@
     {
       "day": 6,
       "time": 560.0000000000591,
-      "ms": 4.144200000000183,
+      "ms": 1.841399999999794,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1298,7 +1304,7 @@
     {
       "day": 6,
       "time": 561.0000000000593,
-      "ms": 2.8148999999998523,
+      "ms": 2.3310999999998785,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1308,7 +1314,7 @@
     {
       "day": 6,
       "time": 562.0000000000596,
-      "ms": 3.225800000000163,
+      "ms": 4.464400000000296,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1318,7 +1324,7 @@
     {
       "day": 6,
       "time": 563.0000000000598,
-      "ms": 7.956900000000132,
+      "ms": 3.1132000000002336,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1328,7 +1334,7 @@
     {
       "day": 6,
       "time": 564.00000000006,
-      "ms": 2.5657999999998538,
+      "ms": 4.2357999999999265,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1338,7 +1344,7 @@
     {
       "day": 6,
       "time": 565.0000000000603,
-      "ms": 2.553200000000288,
+      "ms": 2.0757999999996173,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1348,7 +1354,7 @@
     {
       "day": 6,
       "time": 566.0000000000605,
-      "ms": 3.1550999999999476,
+      "ms": 3.817800000000261,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1358,7 +1364,7 @@
     {
       "day": 6,
       "time": 567.0000000000607,
-      "ms": 4.324100000000271,
+      "ms": 1.8899000000001251,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1368,7 +1374,7 @@
     {
       "day": 6,
       "time": 568.0000000000609,
-      "ms": 2.1170999999999367,
+      "ms": 4.93560000000025,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1378,7 +1384,7 @@
     {
       "day": 6,
       "time": 569.0000000000612,
-      "ms": 4.064300000000003,
+      "ms": 4.833499999999731,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1388,7 +1394,7 @@
     {
       "day": 6,
       "time": 570.0000000000614,
-      "ms": 2.330399999999827,
+      "ms": 1.8685999999997875,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1398,7 +1404,7 @@
     {
       "day": 6,
       "time": 571.0000000000616,
-      "ms": 2.9565999999999804,
+      "ms": 1.941200000000208,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1408,7 +1414,7 @@
     {
       "day": 6,
       "time": 572.0000000000618,
-      "ms": 1.3723999999997432,
+      "ms": 1.3757000000000517,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1418,7 +1424,7 @@
     {
       "day": 6,
       "time": 573.0000000000621,
-      "ms": 3.5626000000002023,
+      "ms": 1.0975000000003092,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1428,7 +1434,7 @@
     {
       "day": 6,
       "time": 574.0000000000623,
-      "ms": 5.697100000000319,
+      "ms": 1.2575000000001637,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1438,7 +1444,7 @@
     {
       "day": 6,
       "time": 575.0000000000625,
-      "ms": 3.1999000000000706,
+      "ms": 0.698399999999765,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1448,7 +1454,7 @@
     {
       "day": 6,
       "time": 576.0000000000628,
-      "ms": 2.4919999999997344,
+      "ms": 1.5532000000002881,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1458,7 +1464,7 @@
     {
       "day": 6,
       "time": 577.000000000063,
-      "ms": 1.2723000000000866,
+      "ms": 0.8070999999999913,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1468,7 +1474,7 @@
     {
       "day": 6,
       "time": 578.0000000000632,
-      "ms": 3.311899999999696,
+      "ms": 1.8718000000003485,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1478,7 +1484,7 @@
     {
       "day": 6,
       "time": 579.0000000000634,
-      "ms": 2.6912999999999556,
+      "ms": 1.1455000000000837,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1488,7 +1494,7 @@
     {
       "day": 6,
       "time": 580.0000000000637,
-      "ms": 1.6475000000000364,
+      "ms": 4.529199999999946,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1498,7 +1504,7 @@
     {
       "day": 6,
       "time": 581.0000000000639,
-      "ms": 1.6513999999997395,
+      "ms": 5.492000000000189,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1508,7 +1514,7 @@
     {
       "day": 6,
       "time": 582.0000000000641,
-      "ms": 2.2835000000000036,
+      "ms": 6.5417999999999665,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1518,7 +1524,7 @@
     {
       "day": 6,
       "time": 583.0000000000643,
-      "ms": 2.1977999999999156,
+      "ms": 3.1536000000000968,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1528,7 +1534,7 @@
     {
       "day": 6,
       "time": 584.0000000000646,
-      "ms": 1.1523999999999432,
+      "ms": 4.283199999999852,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1538,7 +1544,7 @@
     {
       "day": 6,
       "time": 585.0000000000648,
-      "ms": 5.078500000000076,
+      "ms": 5.567699999999604,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1548,7 +1554,7 @@
     {
       "day": 6,
       "time": 586.000000000065,
-      "ms": 6.09940000000006,
+      "ms": 3.2489000000000487,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1558,7 +1564,7 @@
     {
       "day": 6,
       "time": 587.0000000000653,
-      "ms": 3.459600000000137,
+      "ms": 2.144800000000032,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1568,7 +1574,7 @@
     {
       "day": 6,
       "time": 588.0000000000655,
-      "ms": 1.3015000000000327,
+      "ms": 2.5001000000002023,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1578,7 +1584,7 @@
     {
       "day": 6,
       "time": 589.0000000000657,
-      "ms": 1.2776000000003478,
+      "ms": 1.5385000000001128,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1588,7 +1594,7 @@
     {
       "day": 6,
       "time": 590.0000000000659,
-      "ms": 0.9658000000003995,
+      "ms": 2.114900000000034,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1598,7 +1604,7 @@
     {
       "day": 6,
       "time": 591.0000000000662,
-      "ms": 0.9059000000002015,
+      "ms": 5.367199999999684,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1608,7 +1614,7 @@
     {
       "day": 6,
       "time": 592.0000000000664,
-      "ms": 0.9312999999997373,
+      "ms": 1.5607000000004518,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1618,7 +1624,7 @@
     {
       "day": 6,
       "time": 593.0000000000666,
-      "ms": 1.0534999999999854,
+      "ms": 1.0886000000000422,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1628,7 +1634,7 @@
     {
       "day": 6,
       "time": 594.0000000000668,
-      "ms": 0.7632999999996173,
+      "ms": 0.7806000000000495,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1638,7 +1644,7 @@
     {
       "day": 6,
       "time": 595.0000000000671,
-      "ms": 0.9390999999995984,
+      "ms": 0.9636000000000422,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1648,7 +1654,7 @@
     {
       "day": 6,
       "time": 596.0000000000673,
-      "ms": 1.2013999999999214,
+      "ms": 1.5318999999999505,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1658,7 +1664,7 @@
     {
       "day": 6,
       "time": 597.0000000000675,
-      "ms": 3.250500000000102,
+      "ms": 1.0585000000000946,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1668,7 +1674,7 @@
     {
       "day": 6,
       "time": 598.0000000000678,
-      "ms": 5.0231000000003405,
+      "ms": 1.4283000000000357,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1678,7 +1684,7 @@
     {
       "day": 6,
       "time": 599.000000000068,
-      "ms": 2.0171000000000276,
+      "ms": 3.1297999999997046,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1688,7 +1694,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 1.4643000000000939,
+      "ms": 0.9531999999999243,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1698,7 +1704,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 2.156999999999698,
+      "ms": 1.7296000000001186,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1708,7 +1714,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 2.2687999999998283,
+      "ms": 1.863800000000083,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1718,7 +1724,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 1.6808999999998377,
+      "ms": 0.9042999999996937,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1728,7 +1734,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 1.6774999999997817,
+      "ms": 0.8489000000004125,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1738,7 +1744,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 1.3842999999997119,
+      "ms": 0.802599999999984,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1748,7 +1754,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 1.3125999999997475,
+      "ms": 0.8052999999999884,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1758,7 +1764,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 1.0207000000000335,
+      "ms": 0.8596999999999753,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1768,7 +1774,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 1.4470000000001164,
+      "ms": 0.9049999999997453,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1778,7 +1784,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 2.5601000000001477,
+      "ms": 0.8816000000001623,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1788,7 +1794,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 1.4945999999999913,
+      "ms": 0.8232000000002699,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1798,7 +1804,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 1.9083999999998014,
+      "ms": 1.0131000000001222,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1808,7 +1814,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 1.026600000000144,
+      "ms": 0.7559000000001106,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1818,7 +1824,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 0.903599999999642,
+      "ms": 0.723700000000008,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1828,7 +1834,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 1.6182000000003427,
+      "ms": 0.5394999999998618,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1838,7 +1844,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 2.292099999999664,
+      "ms": 0.15980000000035943,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1848,7 +1854,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 0.8715000000001965,
+      "ms": 0.1972000000000662,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1858,7 +1864,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 0.9035000000003492,
+      "ms": 0.8156000000003587,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1868,7 +1874,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 0.7651000000000749,
+      "ms": 0.25919999999996435,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1878,7 +1884,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 0.7236000000002605,
+      "ms": 0.15810000000010405,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1888,7 +1894,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 0.5032000000001062,
+      "ms": 0.5226000000002387,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1898,7 +1904,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 0.41640000000006694,
+      "ms": 0.09720000000015716,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1908,7 +1914,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 1.10149999999976,
+      "ms": 0.36819999999988795,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1918,7 +1924,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 0.7550000000001091,
+      "ms": 0.2907000000000153,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1928,7 +1934,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 1.3481999999999061,
+      "ms": 0.2788999999997941,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1938,7 +1944,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 0.7962999999999738,
+      "ms": 0.2525999999998021,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1948,7 +1954,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 0.8785000000002583,
+      "ms": 0.2844000000000051,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1958,7 +1964,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 0.9475999999999658,
+      "ms": 0.42990000000008877,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1968,7 +1974,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 0.6660000000001673,
+      "ms": 0.788499999999658,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1978,7 +1984,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 2.0545999999999367,
+      "ms": 0.6972999999998137,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1988,7 +1994,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 0.8002999999998792,
+      "ms": 0.5994000000000597,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -1998,7 +2004,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 0.8135000000002037,
+      "ms": 0.5561999999999898,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -2008,7 +2014,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 0.8184999999998581,
+      "ms": 0.6867000000002008,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -2018,7 +2024,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 0.45859999999993306,
+      "ms": 0.3283999999998741,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -2028,7 +2034,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 0.37270000000035,
+      "ms": 0.35649999999986903,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -2038,7 +2044,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 1.087500000000091,
+      "ms": 0.3065999999998894,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -2048,7 +2054,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 0.7114000000001397,
+      "ms": 0.33120000000008076,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -2058,7 +2064,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 0.5482999999999265,
+      "ms": 0.6866999999997461,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -2068,7 +2074,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 0.637000000000171,
+      "ms": 0.4331999999999425,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -2078,7 +2084,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 0.5770000000002256,
+      "ms": 0.31510000000025684,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -2088,7 +2094,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 0.6015999999999622,
+      "ms": 0.3042000000000371,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -2098,7 +2104,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 0.5686000000000604,
+      "ms": 0.31419999999980064,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -2108,7 +2114,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 0.5502999999998792,
+      "ms": 0.3198000000002139,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -2118,7 +2124,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 0.5686999999998079,
+      "ms": 0.3020000000001346,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -2128,7 +2134,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 0.57549999999992,
+      "ms": 0.3002000000001317,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -2138,7 +2144,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 0.5355999999997039,
+      "ms": 0.25540000000000873,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -2148,7 +2154,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 0.5799999999999272,
+      "ms": 0.2817000000000007,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -2158,7 +2164,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 0.5142000000000735,
+      "ms": 0.26450000000022555,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -2168,7 +2174,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 0.6064000000001215,
+      "ms": 0.2693999999996777,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -2178,7 +2184,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 0.9155000000000655,
+      "ms": 0.3912000000000262,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -2188,7 +2194,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 0.8578999999999724,
+      "ms": 0.24909999999999854,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -2198,7 +2204,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 0.5197000000002845,
+      "ms": 0.27660000000014406,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -2208,7 +2214,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 0.5273999999999432,
+      "ms": 0.26339999999981956,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -2218,7 +2224,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 0.559400000000096,
+      "ms": 0.2450000000003456,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -2228,7 +2234,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 0.5863000000003922,
+      "ms": 0.24470000000019354,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -2238,7 +2244,7 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 0.5165000000001783,
+      "ms": 0.28949999999986176,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
@@ -2248,41 +2254,41 @@
     {
       "day": 6,
       "time": 600,
-      "ms": 2.477600000000166,
+      "ms": 1.908100000000104,
       "sectorUpdates": 371,
       "connectivityDemand": 16,
       "workers": 0,
-      "tasks": 24,
+      "tasks": 20,
       "raidAnimals": 0
     }
   ],
   "raidSelection": {
-    "selections": 365,
-    "groups": 2100,
+    "selections": 364,
+    "groups": 2104,
     "groupVisits": {
-      "crop:plant-1999": 353,
-      "crop:plant-2017": 348,
-      "crop:plant-2013": 347,
-      "crop:plant-2010": 347,
-      "crop:plant-2295": 347,
-      "crop:plant-2300": 347,
-      "crop:plant-2257": 2,
-      "crop:plant-2261": 3,
-      "crop:plant-2285": 5,
-      "crop:plant-2326": 1
+      "crop:plant-1999": 354,
+      "crop:plant-2017": 350,
+      "crop:plant-2013": 348,
+      "crop:plant-2010": 348,
+      "crop:plant-2295": 348,
+      "crop:plant-2300": 348,
+      "crop:plant-2257": 5,
+      "crop:plant-2285": 1,
+      "crop:plant-2333": 1,
+      "crop:plant-2358": 1
     },
-    "regions": 4531,
-    "regionQueries": 379,
-    "unknown": 4512,
-    "enclosureClassifications": 209,
-    "enclosureClassificationMs": 9.916499999998905,
-    "selectionMs": 641.3687999999993,
+    "regions": 4541,
+    "regionQueries": 291,
+    "unknown": 4525,
+    "enclosureClassifications": 129,
+    "enclosureClassificationMs": 6.965300000000752,
+    "regionCacheHits": 3467,
+    "selectionMs": 655.9323999999938,
     "maxRegionalQueriesPerTick": 16,
-    "decisionCacheEntries": 16,
-    "regionCacheHits": 3118,
-    "budgetDeferrals": 1034,
-    "accessible": 19,
-    "cropAttempts": 28
+    "decisionCacheEntries": 17,
+    "budgetDeferrals": 783,
+    "accessible": 16,
+    "cropAttempts": 21
   },
   "connectivityDemand": [
     "1,0",
@@ -2306,30 +2312,30 @@
   "nativeConnectivityReasons": {
     "connected": {
       "4": 2,
-      "5": 34,
-      "8": 2163
+      "5": 36,
+      "8": 1768
     },
     "route": {
-      "4": 7,
-      "5": 61,
-      "8": 9835
+      "4": 6,
+      "5": 56,
+      "8": 9817
     }
   },
   "enclosureSamples": {},
-  "heapDeltaBytes": 6757672,
-  "totalMs": 1784.6832000000013,
-  "stateSha256": "f03bb4cb52ee87de462c211437a632e7891b54b6d2bb38d2d95fac156bc46d13",
+  "heapDeltaBytes": 6594848,
+  "totalMs": 1811.5142000000055,
+  "stateSha256": "48e9727929c0b88d05866dd10dc8fe38701255420cc328fb0cec8543a9636e5a",
   "animals": [],
-  "mobileRecoveryEvents": 3,
+  "mobileRecoveryEvents": 1,
   "raidEventCounts": {
-    "AnimalTargetUnavailable": 130,
+    "AnimalTargetUnavailable": 134,
     "StructureHit": 6,
     "AnimalLogicalHit": 19,
     "StructureRuined": 2,
     "AnimalRetreating": 7,
     "CropHit": 13,
     "CropDestroyed": 13,
-    "AnimalRouteUnavailable": 5
+    "AnimalRouteUnavailable": 3
   },
   "wallRecoveryEvents": 0,
   "raidEnded": true

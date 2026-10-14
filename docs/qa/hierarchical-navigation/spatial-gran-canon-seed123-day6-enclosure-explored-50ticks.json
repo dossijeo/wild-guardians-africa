@@ -9,14 +9,17 @@
     },
     "path": {
       "count": 2,
-      "ms": 0.13159999999993488
+      "ms": 0.13580000000001746
     },
     "approachPath": {
-      "count": 611,
-      "ms": 334.4743999999971,
+      "count": 613,
+      "ms": 361.02560000000125,
       "found": 12,
       "blocked": 0,
-      "unknown": 599,
+      "unknown": 601,
+      "unknownCauses": {
+        "native-graph": 601
+      },
       "unknownExamples": [
         {
           "start": {
@@ -29,6 +32,7 @@
           },
           "missing": [],
           "details": {
+            "routeReason": "native-graph",
             "startRegions": {
               "ids": [
                 13248
@@ -56,6 +60,7 @@
           },
           "missing": [],
           "details": {
+            "routeReason": "native-graph",
             "startRegions": {
               "ids": [
                 13248
@@ -83,6 +88,7 @@
           },
           "missing": [],
           "details": {
+            "routeReason": "native-graph",
             "startRegions": {
               "ids": [
                 13248
@@ -102,12 +108,12 @@
       ]
     },
     "walkable": {
-      "count": 3202,
-      "ms": 19.854699999992874
+      "count": 3325,
+      "ms": 23.410800000000563
     },
     "segmentClear": {
-      "count": 210,
-      "ms": 4.944500000001369
+      "count": 234,
+      "ms": 5.628800000001547
     },
     "workerMotionClear": {
       "count": 0,
@@ -118,12 +124,12 @@
       "ms": 0
     },
     "regionFor": {
-      "count": 850,
-      "ms": 28.8152000000008
+      "count": 849,
+      "ms": 32.49949999999967
     },
     "regionConnected": {
-      "count": 327,
-      "ms": 27.611999999999398
+      "count": 302,
+      "ms": 27.5199000000016
     },
     "setState": {
       "count": 0,
@@ -138,7 +144,7 @@
     {
       "day": 6,
       "time": 445.00000000003297,
-      "ms": 3.428099999999972,
+      "ms": 3.7742999999999824,
       "sectorUpdates": 0,
       "connectivityDemand": 0,
       "workers": 0,
@@ -148,7 +154,7 @@
     {
       "day": 6,
       "time": 446.0000000000332,
-      "ms": 0.5581999999999994,
+      "ms": 0.43559999999996535,
       "sectorUpdates": 0,
       "connectivityDemand": 0,
       "workers": 0,
@@ -158,7 +164,7 @@
     {
       "day": 6,
       "time": 447.0000000000334,
-      "ms": 0.24639999999999418,
+      "ms": 0.18259999999997945,
       "sectorUpdates": 0,
       "connectivityDemand": 0,
       "workers": 0,
@@ -168,7 +174,7 @@
     {
       "day": 6,
       "time": 448.00000000003365,
-      "ms": 0.16210000000000946,
+      "ms": 0.11830000000003338,
       "sectorUpdates": 0,
       "connectivityDemand": 0,
       "workers": 0,
@@ -178,7 +184,7 @@
     {
       "day": 6,
       "time": 449.0000000000339,
-      "ms": 0.14640000000002829,
+      "ms": 0.10009999999999764,
       "sectorUpdates": 0,
       "connectivityDemand": 0,
       "workers": 0,
@@ -188,7 +194,7 @@
     {
       "day": 6,
       "time": 450.0000000000341,
-      "ms": 0.15809999999999036,
+      "ms": 0.09890000000001464,
       "sectorUpdates": 0,
       "connectivityDemand": 0,
       "workers": 0,
@@ -198,7 +204,7 @@
     {
       "day": 6,
       "time": 451.00000000003433,
-      "ms": 0.12899999999996226,
+      "ms": 0.11660000000000537,
       "sectorUpdates": 0,
       "connectivityDemand": 0,
       "workers": 0,
@@ -208,7 +214,7 @@
     {
       "day": 6,
       "time": 452.00000000003456,
-      "ms": 0.154200000000003,
+      "ms": 0.09969999999998436,
       "sectorUpdates": 0,
       "connectivityDemand": 0,
       "workers": 0,
@@ -218,7 +224,7 @@
     {
       "day": 6,
       "time": 453.0000000000348,
-      "ms": 1.125500000000045,
+      "ms": 0.11769999999995662,
       "sectorUpdates": 0,
       "connectivityDemand": 0,
       "workers": 0,
@@ -228,7 +234,7 @@
     {
       "day": 6,
       "time": 454.000000000035,
-      "ms": 0.15999999999996817,
+      "ms": 0.10979999999995016,
       "sectorUpdates": 0,
       "connectivityDemand": 0,
       "workers": 0,
@@ -238,7 +244,7 @@
     {
       "day": 6,
       "time": 455.00000000003524,
-      "ms": 0.13220000000001164,
+      "ms": 0.12430000000000518,
       "sectorUpdates": 0,
       "connectivityDemand": 0,
       "workers": 0,
@@ -248,7 +254,7 @@
     {
       "day": 6,
       "time": 456.00000000003547,
-      "ms": 0.12189999999998236,
+      "ms": 0.10230000000001382,
       "sectorUpdates": 0,
       "connectivityDemand": 0,
       "workers": 0,
@@ -258,7 +264,7 @@
     {
       "day": 6,
       "time": 457.0000000000357,
-      "ms": 122.00289999999995,
+      "ms": 120.26439999999997,
       "sectorUpdates": 20,
       "connectivityDemand": 16,
       "workers": 0,
@@ -268,7 +274,7 @@
     {
       "day": 6,
       "time": 458.0000000000359,
-      "ms": 63.560100000000034,
+      "ms": 75.10199999999998,
       "sectorUpdates": 44,
       "connectivityDemand": 16,
       "workers": 0,
@@ -278,7 +284,7 @@
     {
       "day": 6,
       "time": 459.00000000003615,
-      "ms": 49.718399999999974,
+      "ms": 56.364900000000034,
       "sectorUpdates": 64,
       "connectivityDemand": 16,
       "workers": 0,
@@ -288,7 +294,7 @@
     {
       "day": 6,
       "time": 460.0000000000364,
-      "ms": 27.557800000000043,
+      "ms": 28.861999999999966,
       "sectorUpdates": 88,
       "connectivityDemand": 16,
       "workers": 0,
@@ -298,7 +304,7 @@
     {
       "day": 6,
       "time": 461.0000000000366,
-      "ms": 48.98070000000007,
+      "ms": 54.059099999999944,
       "sectorUpdates": 112,
       "connectivityDemand": 16,
       "workers": 0,
@@ -308,7 +314,7 @@
     {
       "day": 6,
       "time": 462.00000000003683,
-      "ms": 62.984500000000025,
+      "ms": 71.4932,
       "sectorUpdates": 136,
       "connectivityDemand": 16,
       "workers": 0,
@@ -318,7 +324,7 @@
     {
       "day": 6,
       "time": 463.00000000003706,
-      "ms": 60.225900000000024,
+      "ms": 70.81409999999994,
       "sectorUpdates": 156,
       "connectivityDemand": 16,
       "workers": 0,
@@ -328,7 +334,7 @@
     {
       "day": 6,
       "time": 464.0000000000373,
-      "ms": 68.09990000000005,
+      "ms": 66.3821999999999,
       "sectorUpdates": 180,
       "connectivityDemand": 16,
       "workers": 0,
@@ -338,7 +344,7 @@
     {
       "day": 6,
       "time": 465.0000000000375,
-      "ms": 73.95550000000003,
+      "ms": 64.69409999999993,
       "sectorUpdates": 204,
       "connectivityDemand": 16,
       "workers": 0,
@@ -348,7 +354,7 @@
     {
       "day": 6,
       "time": 466.00000000003774,
-      "ms": 59.96730000000002,
+      "ms": 72.66529999999989,
       "sectorUpdates": 228,
       "connectivityDemand": 16,
       "workers": 0,
@@ -358,7 +364,7 @@
     {
       "day": 6,
       "time": 467.00000000003797,
-      "ms": 65.48250000000007,
+      "ms": 95.11720000000014,
       "sectorUpdates": 252,
       "connectivityDemand": 16,
       "workers": 0,
@@ -368,7 +374,7 @@
     {
       "day": 6,
       "time": 468.0000000000382,
-      "ms": 61.91910000000007,
+      "ms": 95.80749999999989,
       "sectorUpdates": 272,
       "connectivityDemand": 16,
       "workers": 0,
@@ -378,7 +384,7 @@
     {
       "day": 6,
       "time": 469.0000000000384,
-      "ms": 69.94820000000004,
+      "ms": 72.21699999999987,
       "sectorUpdates": 296,
       "connectivityDemand": 16,
       "workers": 0,
@@ -388,7 +394,7 @@
     {
       "day": 6,
       "time": 470.00000000003865,
-      "ms": 51.82489999999984,
+      "ms": 57.199499999999944,
       "sectorUpdates": 320,
       "connectivityDemand": 16,
       "workers": 0,
@@ -398,7 +404,7 @@
     {
       "day": 6,
       "time": 471.0000000000389,
-      "ms": 28.31230000000005,
+      "ms": 32.352800000000116,
       "sectorUpdates": 344,
       "connectivityDemand": 16,
       "workers": 0,
@@ -408,7 +414,7 @@
     {
       "day": 6,
       "time": 472.0000000000391,
-      "ms": 68.3762999999999,
+      "ms": 71.18209999999999,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -418,7 +424,7 @@
     {
       "day": 6,
       "time": 473.00000000003934,
-      "ms": 26.15169999999989,
+      "ms": 26.49050000000011,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -428,7 +434,7 @@
     {
       "day": 6,
       "time": 474.00000000003956,
-      "ms": 4.545800000000099,
+      "ms": 4.791899999999941,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -438,7 +444,7 @@
     {
       "day": 6,
       "time": 475.0000000000398,
-      "ms": 4.516400000000203,
+      "ms": 5.833100000000059,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -448,7 +454,7 @@
     {
       "day": 6,
       "time": 476.00000000004,
-      "ms": 7.136700000000019,
+      "ms": 3.856800000000021,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -458,7 +464,7 @@
     {
       "day": 6,
       "time": 477.00000000004025,
-      "ms": 31.91150000000016,
+      "ms": 26.311300000000074,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -468,7 +474,7 @@
     {
       "day": 6,
       "time": 478.0000000000405,
-      "ms": 2.049199999999928,
+      "ms": 1.9441999999999098,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -478,7 +484,7 @@
     {
       "day": 6,
       "time": 479.0000000000407,
-      "ms": 4.421199999999999,
+      "ms": 3.990000000000009,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -488,7 +494,7 @@
     {
       "day": 6,
       "time": 480.0000000000409,
-      "ms": 3.6551999999999225,
+      "ms": 3.75630000000001,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -498,7 +504,7 @@
     {
       "day": 6,
       "time": 481.00000000004115,
-      "ms": 3.2376999999999043,
+      "ms": 3.1948999999999614,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -508,7 +514,7 @@
     {
       "day": 6,
       "time": 482.0000000000414,
-      "ms": 19.61909999999989,
+      "ms": 20.149400000000014,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -518,7 +524,7 @@
     {
       "day": 6,
       "time": 483.0000000000416,
-      "ms": 5.345600000000104,
+      "ms": 4.1814999999999145,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -528,7 +534,7 @@
     {
       "day": 6,
       "time": 484.00000000004184,
-      "ms": 3.5549999999998363,
+      "ms": 3.231899999999996,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -538,7 +544,7 @@
     {
       "day": 6,
       "time": 485.00000000004206,
-      "ms": 4.409199999999828,
+      "ms": 4.266599999999926,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -548,7 +554,7 @@
     {
       "day": 6,
       "time": 486.0000000000423,
-      "ms": 20.051100000000133,
+      "ms": 18.55260000000021,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -558,7 +564,7 @@
     {
       "day": 6,
       "time": 487.0000000000425,
-      "ms": 3.217200000000048,
+      "ms": 2.921299999999974,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -568,7 +574,7 @@
     {
       "day": 6,
       "time": 488.00000000004275,
-      "ms": 3.0799999999999272,
+      "ms": 2.46329999999989,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -578,7 +584,7 @@
     {
       "day": 6,
       "time": 489.000000000043,
-      "ms": 1.840900000000147,
+      "ms": 1.2822000000001026,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -588,7 +594,7 @@
     {
       "day": 6,
       "time": 490.0000000000432,
-      "ms": 2.102200000000039,
+      "ms": 2.7998999999999796,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -598,7 +604,7 @@
     {
       "day": 6,
       "time": 491.0000000000434,
-      "ms": 16.569400000000087,
+      "ms": 21.752099999999928,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -608,7 +614,7 @@
     {
       "day": 6,
       "time": 492.00000000004366,
-      "ms": 1.97400000000016,
+      "ms": 3.1901000000000295,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -618,7 +624,7 @@
     {
       "day": 6,
       "time": 493.0000000000439,
-      "ms": 2.9812000000001717,
+      "ms": 4.559400000000096,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -628,7 +634,7 @@
     {
       "day": 6,
       "time": 494.0000000000441,
-      "ms": 2.445299999999861,
+      "ms": 4.65319999999997,
       "sectorUpdates": 368,
       "connectivityDemand": 16,
       "workers": 0,
@@ -637,26 +643,26 @@
     }
   ],
   "raidSelection": {
-    "selections": 235,
-    "groups": 1410,
+    "selections": 234,
+    "groups": 1404,
     "groupVisits": {
-      "crop:plant-1999": 235,
-      "crop:plant-2017": 235,
-      "crop:plant-2013": 235,
-      "crop:plant-2010": 235,
-      "crop:plant-2295": 235,
-      "crop:plant-2300": 235
+      "crop:plant-1999": 234,
+      "crop:plant-2017": 234,
+      "crop:plant-2013": 234,
+      "crop:plant-2010": 234,
+      "crop:plant-2295": 234,
+      "crop:plant-2300": 234
     },
-    "regions": 3055,
-    "regionQueries": 260,
-    "unknown": 3055,
-    "enclosureClassifications": 195,
-    "enclosureClassificationMs": 8.705200000000104,
-    "selectionMs": 465.9928000000016,
+    "regions": 3042,
+    "regionQueries": 219,
+    "unknown": 3042,
+    "enclosureClassifications": 120,
+    "enclosureClassificationMs": 7.557100000000673,
+    "regionCacheHits": 2111,
+    "selectionMs": 495.89769999999953,
     "maxRegionalQueriesPerTick": 16,
-    "decisionCacheEntries": 111,
-    "regionCacheHits": 1898,
-    "budgetDeferrals": 897
+    "decisionCacheEntries": 81,
+    "budgetDeferrals": 712
   },
   "connectivityDemand": [
     "1,0",
@@ -679,12 +685,12 @@
   "sectorUpdates": 368,
   "nativeConnectivityReasons": {
     "connected": {
-      "5": 22,
-      "8": 1638
+      "5": 23,
+      "8": 1492
     },
     "route": {
       "5": 29,
-      "8": 8080
+      "8": 8096
     }
   },
   "enclosureSamples": {
@@ -693,9 +699,9 @@
       "-1": 37
     }
   },
-  "heapDeltaBytes": -19608,
-  "totalMs": 1164.2540000000006,
-  "stateSha256": "70cb3681c2659b156d8a3f9f1e13859dd75e4edb46a4b4b7c06bed54c359402e",
+  "heapDeltaBytes": 4669864,
+  "totalMs": 1284.1300999999994,
+  "stateSha256": "61eba43ac34c86d83ebb15f01cdbe7668e680c1cb38047007ef022c1d59b423a",
   "animals": [
     {
       "id": "animal-2604",

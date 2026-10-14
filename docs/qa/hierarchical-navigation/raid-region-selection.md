@@ -20,6 +20,13 @@ to 9×9 still produced open-frontier results. This means that the queried crop
 region is not certified as closed in this checkpoint; loading a wider square
 does not prove that the animal can or cannot reach it.
 
+The JS↔WASM endpoint diagnostic now separates absent continuous-to-grid
+connectors from an inconclusive native graph. In the final 50-tick replay,
+all 253 `SpatialChunkUnavailable` approach failures reported `native-graph`;
+none reported a missing start or end connector. The C++ calls behind them
+likewise report open-frontier. This rules out fractional endpoint bridging as
+the cause of this specific query flood.
+
 The frozen state has 21 intact wall modules in an open L-shaped trace, not a
 wall-only closed ring. Native `lazy_enclosure` classified 37 of the 41 living
 crop-center samples as open-frontier for the warthog profile; four rounded
@@ -38,8 +45,9 @@ labels are discarded when sectors or portals change and rebuilt after load.
 They are shared by all plants and animals of a movement profile.
 
 The raid selector groups living crops, consults native connectivity once per
-origin/group/profile/revision, and classifies an unresolved group at most once
-per sector revision. Only a crop region certified sealed and distinct from
+origin/native-region/profile/revision even when several crop groups share that
+region, and classifies an unresolved region at most once per sector revision.
+Only a crop region certified sealed and distinct from
 the animal's region can nominate perimeter walls. A wall qualifies when
 physical probes on its two sides map to distinct native regions. These wall
 adjacencies form a small graph derived from the authoritative WASM labels;
@@ -51,8 +59,9 @@ unresolved, a nearby wall can still be selected as an independent physical
 structure target when a direct local approach is clear. This does not label
 the crops blocked.
 
-Unknown results remain pending and are retried after native sector updates
-or a bounded interval. Region decisions are limited to 16 graph queries per
+Unknown crop-region decisions remain pending until native sector or topology
+revisions change; uncertain local structure approaches can be retried after a
+short bounded interval. Region decisions are limited to 16 graph queries per
 tick. Sparse chunk demand is capped at 16 pins per raid. Unresolved structure
 approaches are shared by native origin region and wall/center, avoiding a new
 query on each small animal movement. Planting or harvesting refreshes crop
@@ -66,21 +75,21 @@ per-crop query flood, but it is not a fully local invalidation scheme.
 
 | Measure, 50 ticks | Comparable baseline | Earlier group selector | Enclosure selector |
 | --- | ---: | ---: | ---: |
-| `approachPath` calls | 46,071 | 524 | 272 |
-| Unknown detailed routes | 46,057 | 508 | 258 |
-| Native region queries | 3,136 | 618 | 115 |
-| `Game.tick` total | 15,527 ms | 478 ms | 367 ms |
-| Enclosure classifications | — | — | 13 (<1 ms measured) |
+| `approachPath` calls | 46,071 | 524 | 267 |
+| Unknown detailed routes | 46,057 | 508 | 253 |
+| Native region queries | 3,136 | 618 | 72 |
+| `Game.tick` total | 15,527 ms | 478 ms | 342 ms |
+| Enclosure classifications | — | — | 8 (0.33 ms measured) |
 
-The shared selector cache contained 141 entries at the end of the replay.
+The shared selector cache contained 92 entries at the end of the replay.
 Process heap deltas varied with garbage collection and are not a reliable
 per-cache memory measurement; a sustained heap profile is still needed.
 The selector uses the same native revision stamp for group, enclosure and
 wall-side decisions. Two identical frozen replays produced the same
-serialized-state SHA-256 and 272 approach calls.
+serialized-state SHA-256 and 267 approach calls after this sharing change.
 
 The native graph still reports open-frontier for this snapshot. The final
-bounded-demand variant produced 611 detailed calls, 599 unknown and 1,164 ms
+bounded-demand variant produced 613 detailed calls, 601 unknown and 1,284 ms
 over 50 ticks, including 368 sector updates. This is a negative result for
 the hypothesis that the bounded resident expansion alone resolves the canyon
 access. The cache prevents the unresolved topology from multiplying by every
@@ -93,11 +102,11 @@ animal crop region is sealed, selects a reachable perimeter wall, preserves
 worker passage, saves/loads the enclosure, removes two wall modules, observes
 the native classification reopen, and selects the crop through the breach.
 Unit tests also cover natural-only isolation, an outer wall around a nested
-crop enclosure, a separate accessible plantation, open-frontier uncertainty,
-alternative crop access, region budget, and cache invalidation. All 26 targeted
-tests pass. The 63 native
-spatial, connectivity and raid tests pass,
-including fixtures across all six biomes. The 185 playable tests and web build
+crop enclosure, a separate accessible plantation, shared decisions across
+crop groups and animals, open-frontier uncertainty, alternative crop access,
+region budget, and cache invalidation. All 92 combined spatial, connectivity,
+raid and movement tests pass, including fixtures across all six biomes. The
+185 playable tests and web build
 also pass; those suites do not replace sustained campaign QA.
 
 The final 212-tick replay with sparse chunk demand completed its raid. It
@@ -131,6 +140,14 @@ An additional fixed expansive-policy Sabana run with a 30-night cap ended in
 native defeat on day 18 after 280 seconds. It also cannot establish
 30-night sustained performance, but it showed no technical navigation stall
 before the defeat. No policy or balance parameter was changed for this run.
+Sabana seed 2026 with the same fixed good policy lasted longer, but also
+ended in native defeat on day 21 after 380 seconds. The 30-night cap was not
+reached; this result is retained as another negative campaign observation.
+Gran Río seed 2026 with the same policy reached day 21 and then ended in
+native defeat after 316 seconds. Thus three biomes have physical campaign
+coverage (Sabana, Gran Cañón and Gran Río), but no campaign has reached 30
+nights, much less 60 or 100. The other three biomes have native functional
+test coverage rather than long campaign evidence.
 
 An intermediate headless 30-night run was stopped at day 8 because its QA
 driver retained raid-only resident chunks between nights, unlike the renderer.
