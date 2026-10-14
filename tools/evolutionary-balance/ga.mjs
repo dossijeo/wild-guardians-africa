@@ -1,5 +1,5 @@
 import {createHash} from 'node:crypto';
-import {DEFAULT_GENES,GENE_SCHEMA,MATERIALS,validateGenes} from './policy-genes.mjs';
+import {DEFAULT_GENES,GENE_SCHEMA,MATERIALS,WALL_POLICIES,validateGenes} from './policy-genes.mjs';
 
 export function seededRandom(seed){
  let state=seed>>>0;
@@ -13,6 +13,7 @@ export function randomGenome(random){
  for(const [key,[min,max,step]] of Object.entries(GENE_SCHEMA))
   genes[key]=+(min+Math.floor(random()*(Math.round((max-min)/step)+1))*step).toFixed(8);
  genes.wallMaterial=MATERIALS[Math.floor(random()*MATERIALS.length)];
+ genes.wallPolicy=WALL_POLICIES[Math.floor(random()*WALL_POLICIES.length)];
  genes.magicPriority=random()<0.5?'growth':'multiply';
  return validateGenes(genes);
 }
@@ -24,6 +25,7 @@ export function breed(a,b,random,mutationRate=0.2){
   genes[key]=+Math.min(max,Math.max(min,value)).toFixed(8);
  }
  genes.wallMaterial=random()<mutationRate?MATERIALS[Math.floor(random()*MATERIALS.length)]:random()<0.5?a.wallMaterial:b.wallMaterial;
+ genes.wallPolicy=random()<mutationRate?WALL_POLICIES[Math.floor(random()*WALL_POLICIES.length)]:random()<0.5?a.wallPolicy:b.wallPolicy;
  genes.magicPriority=random()<mutationRate?(random()<0.5?'growth':'multiply'):random()<0.5?a.magicPriority:b.magicPriority;
  return validateGenes(genes);
 }

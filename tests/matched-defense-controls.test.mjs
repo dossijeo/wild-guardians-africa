@@ -3,6 +3,13 @@ import assert from 'node:assert/strict';
 import {DEFAULT_GENES} from '../tools/evolutionary-balance/policy-genes.mjs';
 import {MATCHED_DEFENSE_CONTROLS,matchedDefenseControl} from '../tools/evolutionary-balance/matched-defense-controls.mjs';
 import {simulateNativeCampaign} from '../tools/native-campaign-runner.mjs';
+import {validateMatchedConfig} from '../tools/evolutionary-balance/run-matched-defense.mjs';
+
+test('matched diagnostic validates bounded runtime and a frozen wall-capable genome',()=>{
+ assert.equal(validateMatchedConfig({days:14,seed:123}).maxDayGameTickMs,60000);
+ assert.throws(()=>validateMatchedConfig({days:14,seed:123,genes:{...DEFAULT_GENES,wallPolicy:'none'}}));
+ assert.throws(()=>validateMatchedConfig({days:14,seed:123,maxDayGameTickMs:0}));
+});
 
 test('matched arms share frozen agriculture and differ only in walls and Shield',()=>{
  assert.deepEqual(Object.keys(MATCHED_DEFENSE_CONTROLS),[

@@ -33,6 +33,9 @@ test('GA genes mutate reproducibly and remain inside policy bounds',()=>{
  for(let i=0;i<20;i++)validateGenes(breed(first[i],first[(i+1)%20],a));
  assert.equal(genomeId(DEFAULT_GENES),genomeId({...DEFAULT_GENES}));
  assert.throws(()=>validateGenes({...DEFAULT_GENES,plantsPerWorker:1}));
+ assert.equal(validateGenes({...DEFAULT_GENES,wallPolicy:'none'}).wallPolicy,'none');
+ assert.notEqual(genomeId(DEFAULT_GENES),genomeId({...DEFAULT_GENES,wallPolicy:'none'}));
+ assert.throws(()=>validateGenes({...DEFAULT_GENES,wallPolicy:'unknown'}));
 });
 test('daily magic schedule distributes growth and multiplication without imposing a use cap',()=>{
  const order=(growthShare,magicPriority)=>Array.from({length:8},(_,i)=>
@@ -81,4 +84,13 @@ test('desert pilot skips uncertain plots and still completes a paid native day',
  assert.ok(report.plotSearch.unknownPaths>0);
  assert.ok(report.rows[0].planted>0);
  assert.equal(report.rows[0].reconciled,true);
+});
+test('zero-wall gene suppresses wall construction without suppressing agricultural powers', {timeout:60000},async()=>{
+ const report=await evaluateOne({biome:'sabana',seed:712},2,'evolved',
+  {...DEFAULT_GENES,wallPolicy:'none'});
+ assert.equal(report.status,'completed',report.message);
+ assert.equal(report.policy.buildRepairWalls,false);
+ assert.equal(report.policy.useShield,true);
+ assert.equal(report.rows.reduce((n,row)=>n+row.walls,0),0);
+ assert.ok(report.rows.reduce((n,row)=>n+row.magic.multiply,0)>0);
 });

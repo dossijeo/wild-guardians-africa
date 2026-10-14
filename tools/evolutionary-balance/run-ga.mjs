@@ -6,7 +6,7 @@ import {pathToFileURL} from 'node:url';
 import {createHash} from 'node:crypto';
 import {simulateNativeCampaign} from '../native-campaign-runner.mjs';
 import {createSpatialCampaignOpening} from '../experiments/spatial-campaign-opening.mjs';
-import {DEFAULT_GENES,validateGenes} from './policy-genes.mjs';
+import {DEFAULT_GENES,GENE_SCHEMA_VERSION,validateGenes} from './policy-genes.mjs';
 import {breed,genomeId,randomGenome,scoreCampaign,seededRandom} from './ga.mjs';
 import {matchedDefenseControl} from './matched-defense-controls.mjs';
 
@@ -54,7 +54,7 @@ export async function evaluateOne({biome,seed},days,strategy,genes,onDay,detaile
   const effectiveStrategy=matched?'evolved':currentMagicRules?strategy.slice(0,-'-current-magic'.length):strategy;
   const r=await simulateNativeCampaign({days,biome,seed,culture:'mapungubwe',strategy:effectiveStrategy,
    evolutionaryGenes:genes,currentMagicRules,nativeEvidence:false,reloadRaids:false,
-   buildRepairWalls:matched?.buildRepairWalls??true,useShield:matched?.useShield??true,
+   buildRepairWalls:matched?.buildRepairWalls??(genes?.wallPolicy!=='none'),useShield:matched?.useShield??true,
    openingFactory:createSpatialCampaignOpening,entryDriverFactory,
    onDay,
    onTick:(state,nav,timing)=>{nav.serviceRaidConnectivityDemand?.();onTickObserver?.(state,nav,timing);}});
@@ -95,7 +95,7 @@ export async function runSearch(config){
  const worktreeDiffHash=createHash('sha256').update(execFileSync('git',['diff','--binary'])).digest('hex');
  const implementationId=createHash('sha256').update(JSON.stringify({sourceHash,moduleHashes,worktreeDiffHash})).digest('hex').slice(0,12);
  const runId=createHash('sha256').update(JSON.stringify({implementationId,config:c})).digest('hex').slice(0,12);
- const stamp={sourceHash,moduleHashes,worktreeDiffHash,implementationId,runId,config:c,
+ const stamp={sourceHash,moduleHashes,worktreeDiffHash,implementationId,runId,geneSchemaVersion:GENE_SCHEMA_VERSION,config:c,
   gameBalance:'unchanged',runKind:'native-Wild-Engine-campaign'};
  writeFileSync(join(out,`config-${runId}.json`),JSON.stringify(stamp,null,2)+'\n');
  const cache=new Map();
