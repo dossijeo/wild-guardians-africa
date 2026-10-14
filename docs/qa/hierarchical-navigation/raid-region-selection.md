@@ -499,6 +499,14 @@ the separate JS/WASM hierarchy and lazy-sector files pass 16/16. This is a
 test-only update; no collision, movement or path-planning production code
 changed. The recorded global 93-failure count predates these assertions.
 
+The fractional-walk capacity test also assumed fractional coordinates were
+never cached. The current exact-coordinate fractional cache is separate from
+the 50,000-entry integer cache and invalidates on a topology epoch change.
+The acceptance test now checks one physical evaluation for two identical
+fractional queries and a fresh evaluation after `setState`. The complete
+navigation-query-capacity file passes 3/3. This is another test-only contract
+update; the global suite has not yet been rerun after it.
+
 A same-policy Gran Cañón seed 123 native campaign was repeated after the
 committed-target fix. Against `selector-village-14-canyon-123.json.gz`, all
 daily gameplay fields, complete raid evidence, entry transport and plot
