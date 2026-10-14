@@ -149,6 +149,16 @@ coverage (Sabana, Gran Cañón and Gran Río), but no campaign has reached 30
 nights, much less 60 or 100. The other three biomes have native functional
 test coverage rather than long campaign evidence.
 
+After the final cross-group region-decision sharing commit (`9a64fa4a`), a
+fresh Sabana seed 712 good-policy campaign completed the 14-night cap in
+279.4 seconds with no technical stall, 108 living crops and 755 coins. Its
+accumulated `Game.tick` time was 154.4 seconds. The previous enclosure build
+also took about 280 seconds wall time but 132.6 seconds of `Game.tick` and
+ended with only 15 living crops. The selector's extra reusable decisions
+changed gameplay outcomes and the work performed by the engine; these two
+campaign timings cannot establish an isolated navigation speedup or
+regression. The frozen 50-tick state remains the equivalent-load comparison.
+
 An intermediate headless 30-night run was stopped at day 8 because its QA
 driver retained raid-only resident chunks between nights, unlike the renderer.
 The driver now releases those chunks when the raid ends. This was a harness
