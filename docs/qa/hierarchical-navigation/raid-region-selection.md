@@ -399,6 +399,16 @@ complete focused files pass: 22/22 cases. No Shield, damage, navigation or
 reservation production parameter changed. This focused result postdates the
 `57585091` full-suite log.
 
+A same-policy Gran Cañón seed 123 native campaign was repeated after the
+committed-target fix. Against `selector-village-14-canyon-123.json.gz`, all
+daily gameplay fields, complete raid evidence, entry transport and plot
+search match; only timing fields differ. Both runs finish nine nights and
+lose on day 10 with one crop and 81 coins. `Game.tick` totals were 38.11 s
+versus 38.69 s, with overall wall time 63.66 s versus 64.02 s. Those small
+timing differences do not establish a speedup. The new ledger is retained as
+`selector-548316a1-canyon-123.json.gz`. This regression check does not
+establish a 30-night survivor or military-balance acceptance.
+
 ## Reproduce
 
 ```powershell
