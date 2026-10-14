@@ -16,7 +16,11 @@ export function animalRouteClearance(actor,nav,{radius,ignore,escapeProps=false}
   // even when reusing that prefix: a fractional landing can fall between
   // samples of the longer connector to its integer waypoint.
   if(nav.terrainValid&&!nav.terrainValid(end.x,end.z,radius,false)){blocked=true;verified.delete(actor);return false;}
-  if(nav.walkable&&!nav.walkable(end.x,end.z,radius,ignore,false)){
+  // An actor restored already overlapping a prop must be able to walk out.
+  // The legacy swept escape check permits only monotonically increasing
+  // clearance from that prop and still rejects walls, new props and terrain.
+  if(nav.walkable&&!nav.walkable(end.x,end.z,radius,ignore,false)&&
+    !(escapeProps&&nav.testSegmentClear?.(start,end,radius,ignore,false,true))){
    blocked=true;verified.delete(actor);return false;
   }
   const point=actor.path[0];if(!point)return true;
