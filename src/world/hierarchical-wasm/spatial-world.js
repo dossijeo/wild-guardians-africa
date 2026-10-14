@@ -1,7 +1,7 @@
 import {spatialProps,spatialInstances,spatialChunkPayload} from './spatial-savanna-payload.js';
 import {addSpatialBarriersBatch,applySpatialBarrierChanges} from './spatial-barrier-batch.js';
 import {captureSpatialState,captureSpatialTerrainState,applySpatialState,validateSpatialState} from './spatial-state.js';
-import {spatialWorldRoute,spatialWorldConnectivity,spatialWorldComponents} from './spatial-local-route.js';
+import {spatialWorldRoute,spatialWorldConnectivity,spatialWorldComponents,spatialWorldEnclosure} from './spatial-local-route.js';
 import {BIOME_IDS,SPATIAL_BIOME_CODES} from '../biome-ids.js';
 import {gatePortalPoints} from '../gate-passages.js';
 
@@ -11,6 +11,13 @@ export function createSpatialWorld(module){
   const wasm=new WebAssembly.Instance(module,{env:{emscripten_notify_memory_growth(){}}}).exports;
   let chunk=null,navigationBuilt=false,chunks=[],generated=false;
   let workerPortalRoutes=[];
+  let diagnoseConnectivity=false;
+  const connectivityReasons={connected:{},route:{}};
+  const countReason=kind=>{
+    if(!diagnoseConnectivity)return;
+    const code=wasm.lazy_connected_reason();
+    connectivityReasons[kind][code]=(connectivityReasons[kind][code]??0)+1;
+  };
   const heights=()=>new Float32Array(wasm.memory.buffer,wasm.spatial_heights_ptr(),49*49);
   const colors=()=>new Float32Array(wasm.memory.buffer,wasm.spatial_colors_ptr(),49*49*3);
   const water=()=>new Uint8Array(wasm.memory.buffer,wasm.spatial_water_ptr(),48*48);
@@ -72,6 +79,7 @@ export function createSpatialWorld(module){
       throw RangeError('Grid routes require integer coordinates; use routeWorld for actor positions');
     if(!navigationBuilt)return {status:'unknown',points:[]};
     const count=wasm.lazy_route(start.x,start.z,end.x,end.z);
+    countReason('route');
     if(count<0)return {status:'unknown',points:[]};
     if(!count)return {status:'blocked',points:[]};
     const pairs=new Int32Array(wasm.memory.buffer,wasm.lazy_route_ptr(),count*2),points=[];
@@ -89,6 +97,7 @@ export function createSpatialWorld(module){
       throw RangeError('Grid connectivity requires integer coordinates');
     if(!navigationBuilt)return 'unknown';
     const result=wasm.lazy_connected(start.x,start.z,end.x,end.z);
+    countReason('connected');
     return result<0?'unknown':result?'possible':'blocked';
   }
   function componentAt(point){
@@ -162,10 +171,14 @@ export function createSpatialWorld(module){
     wasm.lazy_commit_portals();
   }
   return {wasm,generate,addChunk,selectChunk,removeChunk,currentChunk:()=>chunk,
+    enableConnectivityDiagnostics:()=>{diagnoseConnectivity=true;},
+    connectivityDiagnostics:()=>structuredClone(connectivityReasons),
+    enclosureAt:point=>navigationBuilt?wasm.lazy_enclosure(point.x,point.z):-1,
     heights,colors,water,groundMask,waterLevels,waterTriangles,props,instances,chunkPayload,changedChunks,route,connected,componentAt,
     routeWorld:(start,end)=>navigationBuilt?spatialWorldRoute(wasm,route,start,end):{status:'unknown',points:[]},
     connectedWorld:(start,end)=>navigationBuilt?spatialWorldConnectivity(wasm,connected,start,end):'unknown',
     componentsWorld:point=>navigationBuilt?spatialWorldComponents(wasm,componentAt,point):{ids:[],unknown:true},
+    enclosureWorld:point=>navigationBuilt?spatialWorldEnclosure(wasm,point):{ids:[],status:'unknown'},
     componentsWorldBatch,setWorkerGatePortals,
     localClear:(start,end)=>Boolean(wasm.spatial_local_clear(start.x,start.z,end.x,end.z)),
     localClearExcept:(start,end,ids)=>{

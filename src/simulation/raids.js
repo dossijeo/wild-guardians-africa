@@ -24,10 +24,138 @@ import {ANIMAL_ACTIONS} from './animal-actions-data.js';
 import {actorBlockers,actorSegmentClear} from './actor-motion.js';
 import {activeChunkRegion,validActiveBounds} from '../world/active-region.js';
 import {defensiveGroups} from './defensive-groups.js';
+import {wallCollisionFrame} from '../world/wall-collision-frame.js';
 import {targetReservationKey,targetReserved,reservedApproachClear,reconcileTargetReservations} from './raid-target-reservations.js';
 import {applyCropImpact,cropImpactDamage,CROP_HIT_POINTS} from './crop-impact-health.js';
 const dist=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z),entrySelections=new WeakMap();
 const cropTargetIndexes=new WeakMap();
+const raidRegionDecisions=new WeakMap();
+const RAID_REGION_QUERIES_PER_TICK=16,RAID_REGION_RETRY_SECONDS=4;
+function regionDecisionScope(s,nav){
+  let scope=raidRegionDecisions.get(nav);
+  if(!scope||scope.raid!==s.raid||scope.topology!==nav.version){
+    scope={raid:s.raid,topology:nav.version,decisions:new Map(),tick:-1,queries:0};
+    raidRegionDecisions.set(nav,scope);
+  }
+  if(scope.tick!==s.elapsed){scope.tick=s.elapsed;scope.queries=0;}
+  return scope;
+}
+function cropRegionDecision(s,a,nav,group,regionKey,candidates,scope,origin,sectors){
+  const key=`${a.radius}:${origin}:${group.id}:${regionKey}`;
+  const old=scope.decisions.get(key);
+  if(old&&old.sectors===sectors){
+    if(nav.raidSelectionStats)nav.raidSelectionStats.regionCacheHits=(nav.raidSelectionStats.regionCacheHits??0)+1;
+    return old.status;
+  }
+  if(scope.queries>=RAID_REGION_QUERIES_PER_TICK){
+    if(nav.raidSelectionStats)nav.raidSelectionStats.budgetDeferrals=(nav.raidSelectionStats.budgetDeferrals??0)+1;
+    return 'unknown';
+  }
+  scope.queries++;
+  if(nav.raidSelectionStats)nav.raidSelectionStats.regionQueries=(nav.raidSelectionStats.regionQueries??0)+1;
+  // All members share this graph component. The result is a region decision,
+  // not a route to each plant. Missing sectors remain pending across ticks.
+  const result=nav.regionConnected(a,candidates[0],a.radius,null,false);
+  const status=result===true?'accessible':result===false?'blocked':'unknown';
+  if(scope.decisions.size>=2048)scope.decisions.delete(scope.decisions.keys().next().value);
+  scope.decisions.set(key,{status,at:s.elapsed,sectors});
+  if(status==='unknown')nav.requestRaidConnectivity?.(a,candidates[0],a.radius);
+  return status;
+}
+function enclosedCropRegion(nav,scope,group,regionKey,candidates,radius,sectors){
+  if(!nav.enclosureFor)return null;
+  const key=`enclosure:${radius}:${group.id}:${regionKey}`;
+  const previous=scope.decisions.get(key);
+  if(previous?.sectors===sectors)return previous.result;
+  const stats=nav.raidSelectionStats,started=stats?performance.now():0;
+  // Only one native classification per crop region and movement profile.
+  // Plants may be non-standable, so try a few representatives of the same
+  // group; uncertainty never certifies a wall attack.
+  let result={ids:[],status:'unknown'};
+  for(const crop of candidates.slice(0,4)){
+    const current=nav.enclosureFor(crop,radius);
+    if(current.status==='sealed'){result=current;break;}
+    if(current.status==='open-frontier')result=current;
+  }
+  if(stats){
+    stats.enclosureClassifications=(stats.enclosureClassifications??0)+1;
+    stats.enclosureClassificationMs=(stats.enclosureClassificationMs??0)+performance.now()-started;
+  }
+  scope.decisions.set(key,{sectors,result});
+  return result;
+}
+function wallSideDecision(nav,scope,a,side,wallId,origin,sectors){
+  const key=`wall-side:${a.radius}:${origin}:${wallId}:${side.x.toFixed(2)},${side.z.toFixed(2)}`;
+  const old=scope.decisions.get(key);
+  if(old?.sectors===sectors)return old.status;
+  if(scope.queries>=RAID_REGION_QUERIES_PER_TICK)return null;
+  scope.queries++;
+  const status=nav.regionConnected(a,side,a.radius,null,false);
+  scope.decisions.set(key,{sectors,status});
+  return status;
+}
+function wallRegionPortals(nav,scope,radius,structures,sectors){
+  const key=`wall-portals:${radius}`;
+  const previous=scope.decisions.get(key);
+  if(previous?.sectors===sectors)return previous.graph;
+  const stats=nav.raidSelectionStats,started=stats?performance.now():0;
+  const graph=new Map(),add=(from,to,wallId,point)=>{
+    if(!graph.has(from))graph.set(from,[]);
+    graph.get(from).push({to,wallId,point});
+  };
+  for(const wall of structures){
+    if(wall.kind!=='wall'||wall.status==='ruined')continue;
+    const frame=wallCollisionFrame(wall),normal={x:Math.sin(frame.yaw),z:Math.cos(frame.yaw)},
+      tangent={x:frame.c,z:-frame.s},offset=frame.depth+radius+.6;
+    for(const along of [0,-.6,.6]){
+      const center={x:frame.x+tangent.x*frame.width*along,
+        z:frame.z+tangent.z*frame.width*along};
+      const pair=[1,-1].map(sign=>({x:center.x+normal.x*offset*sign,
+        z:center.z+normal.z*offset*sign}));
+      const regions=pair.map(point=>nav.enclosureFor(point,radius));
+      if(regions.some(region=>region.status==='unknown'||!region.ids.length)||
+         regions[0].ids.some(id=>regions[1].ids.includes(id)))continue;
+      for(const from of regions[0].ids)for(const to of regions[1].ids){
+        add(from,to,wall.id,pair[0]);add(to,from,wall.id,pair[1]);
+      }
+      break;
+    }
+  }
+  if(stats){
+    stats.wallPortalBuilds=(stats.wallPortalBuilds??0)+1;
+    stats.wallPortalBuildMs=(stats.wallPortalBuildMs??0)+performance.now()-started;
+  }
+  scope.decisions.set(key,{sectors,graph});
+  return graph;
+}
+function perimeterWallSides(nav,scope,enclosure,origin,radius,structures,sectors){
+  const key=`perimeter:${radius}:${enclosure.ids.join('|')}:${origin.ids.join('|')}`;
+  const previous=scope.decisions.get(key);
+  if(previous?.sectors===sectors)return previous.sides;
+  const stats=nav.raidSelectionStats,started=stats?performance.now():0;
+  const graph=wallRegionPortals(nav,scope,radius,structures,sectors);
+  const distances=new Map(),queue=[];
+  for(const id of enclosure.ids){distances.set(id,0);queue.push(id);}
+  for(let i=0;i<queue.length;i++){
+    const from=queue[i],depth=distances.get(from);
+    for(const edge of graph.get(from)??[])if(!distances.has(edge.to)){
+      distances.set(edge.to,depth+1);queue.push(edge.to);
+    }
+  }
+  const sides=new Map();
+  const best=Math.min(...origin.ids.map(id=>distances.get(id)??Infinity));
+  if(Number.isFinite(best))for(const id of origin.ids){
+    if(distances.get(id)!==best)continue;
+    for(const edge of graph.get(id)??[])
+      if(distances.get(edge.to)===best-1)sides.set(edge.wallId,edge.point);
+  }
+  if(stats){
+    stats.perimeterClassifications=(stats.perimeterClassifications??0)+1;
+    stats.perimeterClassificationMs=(stats.perimeterClassificationMs??0)+performance.now()-started;
+  }
+  scope.decisions.set(key,{sectors,sides});
+  return sides;
+}
 function cropTargetGroups(plants){
   const living=activeCrops(plants),cached=cropTargetIndexes.get(plants);
   if(cached&&cached.historyLength===plants.length&&cached.livingLength===living.length)return cached.groups;
@@ -249,40 +377,133 @@ export function raidTarget(s,id){
   // the complete farm history for every animal and simulation step.
   return s.plants.find(eligible)??s.structures.find(eligible);
 }
-function targetFor(s,a,nav) {
+export function targetFor(s,a,nav) {
+  const stats=nav.raidSelectionStats;
+  const started=stats?performance.now():0;
+  if(stats)stats.selections=(stats.selections??0)+1;
+  try{return targetForImpl(s,a,nav,stats);}finally{
+    if(stats)stats.selectionMs=(stats.selectionMs??0)+performance.now()-started;
+    const scope=raidRegionDecisions.get(nav);
+    if(stats&&scope){
+      stats.maxRegionalQueriesPerTick=Math.max(stats.maxRegionalQueriesPerTick??0,scope.queries);
+      stats.decisionCacheEntries=scope.decisions.size;
+    }
+  }
+}
+function targetForImpl(s,a,nav,stats){
   let unknown=false;
+  const sealedWallSides=new Map();
+  const unresolvedCropRepresentatives=[];
+  let certifiedSealedCrop=false;
+  const scope=nav.spatialSectorRevision?regionDecisionScope(s,nav):null;
+  const origin=scope?(nav.regionFor?.(a,a.radius,null,false)?.key??
+    `unknown:${a.id}`):null;
+  const originEnclosure=scope&&nav.enclosureFor?.(a,a.radius);
+  const sectorRevision=scope?nav.spatialSectorRevision(a.radius):0;
   const markUnknown=()=>{unknown=true;};
   const groups=cropTargetGroups(s.plants);
   for(const group of groups){
+    if(stats){stats.groups=(stats.groups??0)+1;stats.groupVisits??={};stats.groupVisits[group.id]=(stats.groupVisits[group.id]??0)+1;}
     const profile=String(a.radius),entry=group.regions.get(profile);
-    let byRegion=entry?.version===nav.version?entry.byRegion:null;
+    let byRegion=entry?.version===nav.version&&entry?.sectors===sectorRevision?
+      entry.byRegion:null;
     if(!byRegion){
       byRegion=new Map();
       for(const p of group.targets){
-        const key=nav.regionFor?.(p,a.radius,null,false)?.key??`unknown:${p.id}`;
+        const key=nav.regionFor?.(p,a.radius,null,false)?.key??`unknown:${group.id}`;
         if(!byRegion.has(key))byRegion.set(key,[]);
         byRegion.get(key).push(p);
       }
-      group.regions.set(profile,{version:nav.version,byRegion});
+      group.regions.set(profile,{version:nav.version,sectors:sectorRevision,byRegion});
     }
-    for(const candidates of byRegion.values()){
+    for(const [regionKey,candidates] of byRegion){
+      if(stats)stats.regions=(stats.regions??0)+1;
+      // One abstract connectivity query represents all crops in this region.
+      const status=scope?cropRegionDecision(s,a,nav,group,regionKey,candidates,scope,origin,sectorRevision):
+        nav.regionConnected?.(a,candidates[0],a.radius,null,false)===false?'blocked':'accessible';
+      if(stats)stats[status]=(stats[status]??0)+1;
+      if(status==='unknown'||status==='blocked'){
+        const enclosure=scope&&enclosedCropRegion(nav,scope,group,regionKey,
+          candidates,a.radius,sectorRevision);
+        const definitelyOutside=enclosure?.status==='sealed'&&
+          originEnclosure?.status!=='unknown'&&originEnclosure?.ids?.length>0&&
+          !originEnclosure.ids.some(id=>enclosure.ids.includes(id));
+        if(definitelyOutside){
+          certifiedSealedCrop=true;
+          if(status==='unknown')scope.decisions.set(
+            `${a.radius}:${origin}:${group.id}:${regionKey}`,
+            {status:'blocked',at:s.elapsed,sectors:sectorRevision});
+          for(const [id,point] of perimeterWallSides(nav,scope,enclosure,
+            originEnclosure,a.radius,s.structures,sectorRevision))sealedWallSides.set(id,point);
+        }else if(status==='unknown'){
+          unknown=true;unresolvedCropRepresentatives.push(candidates[0]);
+        }
+        continue;
+      }
       const eligible=candidates.filter(p=>canAttackCrop(s,p)&&!targetReserved(s,a,p));
       if(!eligible.length)continue;
       eligible.sort((p,q)=>dist(a,p)-dist(a,q));
-      // One abstract connectivity query represents all crops in this region.
-      if(nav.regionConnected?.(a,eligible[0],a.radius,null,false,32)===false)continue;
       for(const p of eligible){
+        if(stats)stats.cropAttempts=(stats.cropAttempts??0)+1;
         const shield=spellAt(s,'shield',p),approach=reachableApproach(a,p,nav,shield,markUnknown);
         if(approach)return {target:p,reservation:targetReservationKey(p,a),approach,shieldId:shield?.id??null};
       }
     }
   }
-  // If crops are blocked, resolve the nearest visible barrier, without weakest-material omniscience.
+  // Certified enclosures nominate their perimeter; unresolved regions leave
+  // only independently reachable nearby structures as alternatives.
   const structures=defensiveGroups(s),near=g=>Math.min(...g.targets.map(t=>dist(a,t)));
   structures.sort((p,q)=>groups.length?near(p)-near(q):q.value-p.value||near(p)-near(q)||p.id.localeCompare(q.id));
   for(const group of structures)for(const structure of [...group.targets].sort((p,q)=>dist(a,p)-dist(a,q)||p.id.localeCompare(q.id))) {
     if(targetReserved(s,a,structure))continue;
-    const shield=spellAt(s,'shield',structure),approach=reachableApproach(a,structure,nav,shield,markUnknown);
+    if(nav.spatialSectorRevision){
+      if(structure.kind==='wall'){
+        const nearSide=sealedWallSides.get(structure.id);
+        if(!nearSide&&certifiedSealedCrop)continue;
+        if(!nearSide){
+          // Unknown crop connectivity does not certify an enclosure. A wall
+          // visibly between the animal and an unresolved crop group can still
+          // be chosen as an independent structure target, but only when its
+          // near side is reachable in the native graph.
+          const frame=wallCollisionFrame(structure);
+          const local=point=>({x:(point.x-frame.x)*frame.c-(point.z-frame.z)*frame.s,
+            z:(point.x-frame.x)*frame.s+(point.z-frame.z)*frame.c});
+          const from=local(a),sign=Math.sign(from.z);
+          if(!sign)continue;
+          let between=false;
+          for(const crop of unresolvedCropRepresentatives){
+            const to=local(crop);
+            if(from.z*to.z>=0)continue;
+            const crossing=from.x+(to.x-from.x)*(-from.z)/(to.z-from.z);
+            if(Math.abs(crossing)<=frame.width+a.radius){between=true;break;}
+          }
+          if(!between)continue;
+          const offset=frame.depth+a.radius+.6;
+          const side={x:frame.x+Math.sin(frame.yaw)*offset*sign,
+            z:frame.z+Math.cos(frame.yaw)*offset*sign};
+          const reachable=wallSideDecision(nav,scope,a,side,structure.id,
+            origin,sectorRevision);
+          if(reachable!==true){if(reachable===null)unknown=true;continue;}
+        }
+        if(nearSide){
+          const reachable=wallSideDecision(nav,scope,a,nearSide,structure.id,
+            origin,sectorRevision);
+          if(reachable!==true){if(reachable===null)unknown=true;continue;}
+        }
+      }
+    }
+    // An unloaded route to the same structure from the same native region is
+    // one unresolved question, not one question per moving animal per tick.
+    const key=scope?`approach:${a.radius}:${origin}:${structure.id}`:null;
+    const old=key&&scope.decisions.get(key);
+    if(old?.status==='unknown'&&old.sectors===sectorRevision&&s.elapsed-old.at<RAID_REGION_RETRY_SECONDS){unknown=true;continue;}
+    const shield=spellAt(s,'shield',structure);
+    let unresolved=false;
+    const approach=reachableApproach(a,structure,nav,shield,()=>{unresolved=true;markUnknown();});
+    if(key&&unresolved&&!approach){
+      if(scope.decisions.size>=2048)scope.decisions.delete(scope.decisions.keys().next().value);
+      scope.decisions.set(key,{status:'unknown',at:s.elapsed,sectors:sectorRevision});
+    }
     if(approach)return {target:structure,reservation:targetReservationKey(structure,a),approach,shieldId:shield?.id??null};
   }
   return unknown?{unknown:true}:null;

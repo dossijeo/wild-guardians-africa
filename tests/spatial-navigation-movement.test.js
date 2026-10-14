@@ -4,6 +4,8 @@ import {readFileSync} from 'node:fs';
 import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
 import {createSpatialNavigationMovement,SpatialChunkUnavailable} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
 import {createSpatialPlacement} from '../src/world/hierarchical-wasm/spatial-placement.js';
+import {targetFor} from '../src/simulation/raids.js';
+import {ANIMAL_SPATIAL_PROFILES} from '../src/world/hierarchical-wasm/spatial-movement-profiles.js';
 import {findSpatialStart} from '../src/world/hierarchical-wasm/spatial-initial-site.js';
 import {villageLayout} from '../src/world/villages.js';
 import * as Game from '../src/simulation/game.js';
@@ -13,6 +15,24 @@ import {serialize,deserialize} from '../src/persistence/snapshots.js';
 const module=new WebAssembly.Module(readFileSync(new URL(
   '../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
 const pack=JSON.parse(readFileSync(new URL('../public/content/villages.json',import.meta.url),'utf8'))[0];
+
+test('raid connectivity requests sparse bounded chunks and clears pins for a new raid',()=>{
+  const state={seed:'712',biome:'sabana',villages:[{id:'village-1',x:0,z:0,
+    buildings:villageLayout(pack,0,0)}],structures:[],spells:[],suppressed:[],
+    raid:{id:'raid-one',animals:[]}};
+  const installed=new Map(),session=createSpatialGameSession(module,state,{
+    loaded:()=>installed,onData:data=>installed.set(`${data.cx},${data.cz}`,data)});
+  try{
+    const nav=createSpatialNavigationMovement(session,state);
+    for(let i=0;i<100;i++)nav.requestRaidConnectivity({x:0,z:0},{x:120+i*48,z:0},1.1);
+    assert.equal(nav.raidConnectivityDemand.size,16);
+    const old=nav.raidConnectivityDemand;
+    state.raid={id:'raid-two',animals:[]};
+    nav.requestRaidConnectivity({x:0,z:0},{x:120,z:0},1.1);
+    assert.notEqual(nav.raidConnectivityDemand,old);
+    assert(nav.raidConnectivityDemand.size<=1);
+  }finally{session.dispose();}
+});
 
 test('movement contract uses only native profiles, topology and physically checked routes',async()=>{
   const state={seed:'712',biome:'sabana',villages:[{id:'village-1',x:0,z:0,
@@ -362,6 +382,35 @@ test('a native wall ring creates an automatic door that a worker can cross',asyn
         if(nav.placement(x,z,.4).valid)crop={x,z};
     assert(crop,'the native enclosure needs a plantable interior');
     assert.equal(Game.plant(state,'native-gate-crop','mijo',crop.x,crop.z,nav),true);
+    const animalEnclosure=nav.enclosureFor(crop,1.1);
+    assert.equal(animalEnclosure.status,'sealed',
+      'the native graph certifies the wall ring despite its worker gate');
+    assert(animalEnclosure.ids.length>0);
+    const center={x:points[0][0]+4,z:points[0][1]+4};
+    let radiusProfilesChecked=0;
+    for(const {radius} of Object.values(ANIMAL_SPATIAL_PROFILES)){
+      if(nav.walkable(center.x,center.z,radius,null,false)){
+        radiusProfilesChecked++;
+        assert.equal(nav.enclosureFor(center,radius).status,'sealed',
+          `closed ring should be classified for radius ${radius}`);
+      }
+    }
+    assert.equal(radiusProfilesChecked,5,'the ring fixture must exercise every animal radius');
+    const outsideCandidates=[
+      {x:points[0][0]-3,z:points[0][1]+4},
+      {x:points[1][0]+3,z:points[1][1]+4},
+      {x:points[0][0]+4,z:points[0][1]-3},
+      {x:points[2][0]-4,z:points[2][1]+3}];
+    const outside=outsideCandidates.find(point=>nav.walkable(point.x,point.z,1.1,null,false)&&
+      nav.enclosureFor(point,1.1).ids.every(id=>!animalEnclosure.ids.includes(id)));
+    assert(outside,'fixture needs an exterior animal point');
+    const animal={id:'native-ring-animal',species:'warthog',radius:1.1,
+      ...outside,status:'waiting',hitsRemaining:2,spawn:outside,exit:outside};
+    state.raid={animals:[animal],reservations:{},waitRevision:0};
+    const selected=targetFor(state,animal,nav);
+    assert.equal(selected?.target?.kind,'wall',
+      'a sealed crop region redirects the animal to a reachable wall');
+    state.raid=null;
     state.villages[0].entry=a;
     Game.openInitialHiring(state);
     Game.hire(state,'native-gate-worker',{olderFemale:1});
@@ -379,6 +428,21 @@ test('a native wall ring creates an automatic door that a worker can cross',asyn
       assert(reloadedNav.path(a,b,.28,null,true),
         'the worker-only gate portal must be rebuilt from the saved wall');
       assert.equal(reloadedNav.path(a,b,1.1,null,false),null);
+      assert.equal(reloadedNav.enclosureFor(crop,1.1).status,'sealed',
+        'native enclosure classification must be reconstructed after load');
+      const neighbor=restored.structures.filter(item=>item.kind==='wall'&&
+        item.id!==selected.target.id&&!item.gate)
+        .sort((left,right)=>Math.hypot(left.x-selected.target.x,left.z-selected.target.z)-
+          Math.hypot(right.x-selected.target.x,right.z-selected.target.z))[0];
+      assert(neighbor,'ring needs a neighboring wall for a navigable breach');
+      assert.equal(Game.removeWall(restored,'native-breach-first',selected.target.id,reloadedNav),true);
+      assert.equal(Game.removeWall(restored,'native-breach-second',neighbor.id,reloadedNav),true);
+      assert.notEqual(reloadedNav.enclosureFor(crop,1.1).status,'sealed',
+        'removing a wide enough section must invalidate the native enclosure');
+      restored.raid={animals:[animal],reservations:{},waitRevision:0};
+      const opened=targetFor(restored,animal,reloadedNav);
+      assert.equal(opened?.target?.id,restored.plants.at(-1).id,
+        'after a breach the animal can select the crop through the native route');
     }finally{reload.dispose();}
   }finally{session.dispose();}
 });

@@ -18,6 +18,7 @@ struct Sector {
 };
 struct Context {
   int sectorSize=0,updates=0;
+  int connectivityReason=0,weakFailure=0;
   std::vector<uint8_t> stagedPass,stagedSteps,stagedInbound;
   std::unordered_map<uint64_t,Sector>* sectors=nullptr;
   std::vector<Sector*> byId;
@@ -29,6 +30,8 @@ struct Context {
   std::vector<Portal> portals;
   std::vector<int32_t> weakHead,weakTo,weakNext;
   std::vector<uint8_t> weakOpen;
+  std::vector<int32_t> weakRegion;
+  std::vector<uint8_t> weakRegionOpen;
   bool weakDirty=true;
 };
 // Standalone no-entry WASM does not run global C++ constructors. Construct
@@ -62,7 +65,11 @@ Context& active(){
 #define weakTo (active().weakTo)
 #define weakNext (active().weakNext)
 #define weakOpen (active().weakOpen)
+#define weakRegion (active().weakRegion)
+#define weakRegionOpen (active().weakRegionOpen)
 #define weakDirty (active().weakDirty)
+#define connectivityReason (active().connectivityReason)
+#define weakFailure (active().weakFailure)
 uint64_t key(int sx,int sz){return (static_cast<uint64_t>(static_cast<uint32_t>(sx))<<32)|static_cast<uint32_t>(sz);}
 Sector* get(int sx,int sz){const auto it=sectors->find(key(sx,sz));return it==sectors->end()?nullptr:&it->second;}
 int floorDiv(int n,int d){return n>=0?n/d:-((-n+d-1)/d);}
@@ -145,20 +152,39 @@ void rebuildWeakGraph(){
       for(const Arc& arc:sector->edges[component]){add(from,arc.to);add(arc.to,from);}
     }
   }
+  weakRegion.assign(nodes,-1);weakRegionOpen.clear();
+  for(const Sector* sector:byId){
+    if(!sector)continue;
+    for(int component=0;component<sector->components;component++){
+      const int seed=sector->id*sectorSize*sectorSize+component;
+      if(weakRegion[seed]>=0)continue;
+      const int region=static_cast<int>(weakRegionOpen.size());
+      weakRegionOpen.push_back(0);queueBuffer.clear();queueBuffer.push_back(seed);
+      weakRegion[seed]=region;
+      for(size_t q=0;q<queueBuffer.size();q++){
+        const int node=queueBuffer[q];
+        if(weakOpen[node])weakRegionOpen[region]=1;
+        for(int edge=weakHead[node];edge>=0;edge=weakNext[edge]){
+          const int next=weakTo[edge];
+          if(weakRegion[next]<0){weakRegion[next]=region;queueBuffer.push_back(next);}
+        }
+      }
+    }
+  }
   weakDirty=false;
 }
 bool targetSealed(int source,int target){
   if(weakDirty)rebuildWeakGraph();
-  visited.assign(weakHead.size(),0);queueBuffer.clear();queueBuffer.push_back(target);visited[target]=1;
-  for(size_t q=0;q<queueBuffer.size();q++){
-    const int node=queueBuffer[q];
-    if(node==source||weakOpen[node])return false;
-    for(int edge=weakHead[node];edge>=0;edge=weakNext[edge]){
-      const int next=weakTo[edge];
-      if(!visited[next]){visited[next]=1;queueBuffer.push_back(next);}
-    }
-  }
-  return true;
+  if(weakRegion[target]==weakRegion[source]){weakFailure=1;return false;}
+  if(weakRegionOpen[weakRegion[target]]){weakFailure=2;return false;}
+  weakFailure=0;return true;
+}
+// An enclosure is certified only if its weak component cannot reach any
+// unloaded frontier. This is independent of the querying animal's position.
+int enclosureAt(int target){
+  if(target<0)return target==-1?-1:0;
+  if(weakDirty)rebuildWeakGraph();
+  return weakRegionOpen[weakRegion[target]]?-1:1;
 }
 int32_t nodeAt(int worldX,int worldZ){
   const int sx=floorDiv(worldX,sectorSize),sz=floorDiv(worldZ,sectorSize);
@@ -268,11 +294,12 @@ int lazy_component(int worldX,int worldZ){
 // 1 connected in the component graph (a local directed route may still fail),
 // 0 certified disconnected, -1 unknown because required sectors are unloaded.
 int lazy_connected(int fromX,int fromZ,int toX,int toZ){
-  if(!sectorSize)return -1;
+  connectivityReason=0;
+  if(!sectorSize){connectivityReason=1;return -1;}
   const int32_t source=nodeAt(fromX,fromZ),target=nodeAt(toX,toZ);
-  if(source==-1||target==-1)return -1;
-  if(source<0||target<0)return 0;
-  if(source==target)return 1;
+  if(source==-1||target==-1){connectivityReason=2;return -1;}
+  if(source<0||target<0){connectivityReason=3;return 0;}
+  if(source==target){connectivityReason=4;return 1;}
   const int maxNodes=static_cast<int>(byId.size())*sectorSize*sectorSize;
   visited.assign(maxNodes,0);queueBuffer.clear();queueBuffer.push_back(source);visited[source]=1;
   bool unknown=false;
@@ -282,25 +309,49 @@ int lazy_connected(int fromX,int fromZ,int toX,int toZ){
     if(sector.unknown[local])unknown=true;
     for(const Arc& arc:sector.edges[local]){
       const int32_t next=arc.to;
-      if(next==target)return 1;
+      if(next==target){connectivityReason=5;return 1;}
       if(!visited[next]){visited[next]=1;queueBuffer.push_back(next);}
     }
   }
-  return unknown&&!targetSealed(source,target)?-1:0;
+  if(!unknown){connectivityReason=6;return 0;}
+  if(targetSealed(source,target)){connectivityReason=7;return 0;}
+  connectivityReason=weakFailure==1?10:8;return -1;
+}
+// Codes: 1 uninitialized, 2 endpoint sector missing, 3 blocked endpoint,
+// 4 same component, 5 reachable, 6 disconnected with no open source frontier,
+// 7 certified sealed target, 8 open frontier, 10 weakly connected source.
+int lazy_connected_reason(){return connectivityReason;}
+// 1 sealed weak component, -1 open/missing frontier, 0 blocked cell.
+int lazy_enclosure(int worldX,int worldZ){
+  return sectorSize?enclosureAt(nodeAt(worldX,worldZ)):-1;
+}
+// Shared weak-region identity for enclosure membership and wall-side probes.
+// IDs are valid only until the next sector/topology revision.
+int lazy_weak_region(int worldX,int worldZ){
+  if(!sectorSize)return -1;
+  const int node=nodeAt(worldX,worldZ);
+  if(node<0)return node;
+  if(weakDirty)rebuildWeakGraph();
+  return weakRegion[node];
 }
 // -1: unloaded/uncertain; 0: known impossible; positive: coordinate pairs.
 int lazy_route(int fromX,int fromZ,int toX,int toZ){
   routePoints.clear();
-  if(!sectorSize)return -1;
+  connectivityReason=0;
+  if(!sectorSize){connectivityReason=1;return -1;}
   const int32_t source=nodeAt(fromX,fromZ),target=nodeAt(toX,toZ);
-  if(source==-1||target==-1)return -1;
-  if(source<0||target<0)return 0;
+  if(source==-1||target==-1){connectivityReason=2;return -1;}
+  if(source<0||target<0){connectivityReason=3;return 0;}
   const int stride=sectorSize*sectorSize;
   const Sector& first=*byId[source/stride];
   const Sector& last=*byId[target/stride];
   const int firstCell=cellIndex(fromX-first.sx*sectorSize,fromZ-first.sz*sectorSize);
   const int lastCell=cellIndex(toX-last.sx*sectorSize,toZ-last.sz*sectorSize);
-  if(source==target)return localPath(first,firstCell,lastCell)?static_cast<int>(routePoints.size()/2):-1;
+  if(source==target){
+    const bool found=localPath(first,firstCell,lastCell);
+    connectivityReason=found?4:9;
+    return found?static_cast<int>(routePoints.size()/2):-1;
+  }
   const int maxNodes=static_cast<int>(byId.size())*stride;
   visited.assign(maxNodes,0);previousNode.assign(maxNodes,-1);previousArc.resize(maxNodes);
   queueBuffer.clear();queueBuffer.push_back(source);visited[source]=1;
@@ -315,18 +366,27 @@ int lazy_route(int fromX,int fromZ,int toX,int toZ){
       queueBuffer.push_back(arc.to);
     }
   }
-  if(!visited[target])return unknown&&!targetSealed(source,target)?-1:0;
+  if(!visited[target]){
+    if(!unknown){connectivityReason=6;return 0;}
+    if(targetSealed(source,target)){connectivityReason=7;return 0;}
+    connectivityReason=weakFailure==1?10:8;return -1;
+  }
   arcChain.clear();for(int at=target;at!=source;at=previousNode[at])arcChain.push_back(previousArc[at]);
   int currentNode=source,currentCell=firstCell;
   for(auto it=arcChain.rbegin();it!=arcChain.rend();++it){
     const Sector& sector=*byId[currentNode/stride];
-    if(!localPath(sector,currentCell,it->fromCell)){routePoints.clear();return -1;}
+    if(!localPath(sector,currentCell,it->fromCell)){
+      routePoints.clear();connectivityReason=9;return -1;
+    }
     const Sector& next=*byId[it->to/stride];
     if(it->portal>=0){routePoints.push_back(INT32_MIN);routePoints.push_back(it->portal);}
     appendPoint(next,it->toCell);
     currentNode=it->to;currentCell=it->toCell;
   }
-  if(!localPath(last,currentCell,lastCell)){routePoints.clear();return -1;}
+  if(!localPath(last,currentCell,lastCell)){
+    routePoints.clear();connectivityReason=9;return -1;
+  }
+  connectivityReason=5;
   return static_cast<int>(routePoints.size()/2);
 }
 int32_t* lazy_route_ptr(){return routePoints.data();}

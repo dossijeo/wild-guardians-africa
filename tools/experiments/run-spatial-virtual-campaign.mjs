@@ -33,6 +33,7 @@ try{
         living:decision.living,pendingTasks:decision.pendingTasks});
       if(recent.length>32)recent.shift();
     },onTick:(state,nav,timing)=>{
+      nav.serviceRaidConnectivityDemand?.();
       if(captureAt>0&&state.day===captureDay&&state.time>=captureAt){
         writeFileSync(output.replace(/\.json$/,'-capture-state.json'),serialize(state));
         throw Error('Intentional spatial profile capture');

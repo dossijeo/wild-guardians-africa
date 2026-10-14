@@ -34,13 +34,33 @@ export async function createSpatialCampaignOpening({seed=712,biome='sabana',
     session.stream.plan(jobs);
     await session.stream.whenIdle();
     const nav=createSpatialNavigationMovement(session,state);
+    const boundedChunks=new Set(),raidOnlyChunks=new Set();
+    nav.serviceRaidConnectivityDemand=()=>{
+      if(!state.raid){
+        for(const key of raidOnlyChunks)if(!boundedChunks.has(key)){
+          const [x,z]=key.split(',').map(Number);
+          session.core.removeChunk(x,z);loaded.delete(key);
+        }
+        raidOnlyChunks.clear();return false;
+      }
+      const key=[...(nav.raidConnectivityDemand??[])].find(value=>!loaded.has(value));
+      if(!key)return false;
+      const [x,z]=key.split(',').map(Number);
+      if(session.core.selectChunk(x,z)<0&&session.core.addChunk(x,z)<0)
+        throw Error(`Native campaign could not resolve raid chunk ${key}`);
+      loaded.set(key,session.core.chunkPayload());
+      raidOnlyChunks.add(key);
+      return true;
+    };
     const setActiveBounds=nav.setActiveBounds;
     // The campaign has no renderer to request chunks. Mirror the camera's
     // finite resident region synchronously before its ordinary game commands.
     nav.setActiveBounds=bounds=>{
       const minX=chunkAt(bounds[0]),maxX=chunkAt(bounds[2]-1e-6),
         minZ=chunkAt(bounds[1]),maxZ=chunkAt(bounds[3]-1e-6);
+      boundedChunks.clear();
       for(let z=minZ;z<=maxZ;z++)for(let x=minX;x<=maxX;x++){
+        boundedChunks.add(`${x},${z}`);
         if(session.core.selectChunk(x,z)>=0)continue;
         if(session.core.addChunk(x,z)<0)
           throw Error(`Native campaign could not load chunk ${x},${z}`);

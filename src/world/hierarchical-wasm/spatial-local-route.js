@@ -25,6 +25,21 @@ export function spatialWorldComponents(wasm,gridComponent,point){
   }
   return {ids:[...ids].sort((a,b)=>a-b),unknown};
 }
+export function spatialWorldEnclosure(wasm,point){
+  if(!finitePoint(point))throw RangeError('Enclosure lookup needs finite world coordinates');
+  const ids=new Set();
+  let unknown=false,frontier=false;
+  for(const anchor of anchors(point)){
+    if(!wasm.spatial_local_clear(point.x,point.z,anchor.x,anchor.z))continue;
+    const id=wasm.lazy_weak_region(anchor.x,anchor.z);
+    if(id===-1){unknown=true;continue;}
+    if(id<0)continue;
+    ids.add(id);
+    if(wasm.lazy_enclosure(anchor.x,anchor.z)!==1)frontier=true;
+  }
+  return {ids:[...ids].sort((a,b)=>a-b),
+    status:unknown||!ids.size?'unknown':frontier?'open-frontier':'sealed'};
+}
 
 // A positive component result is only a possibility: directed local edges
 // can still make the final route fail. Unknown residency is never blocked.

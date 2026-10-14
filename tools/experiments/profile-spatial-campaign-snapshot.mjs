@@ -28,6 +28,8 @@ try{
     loaded.set(`${x},${z}`,session.core.chunkPayload());
   }
   const nav=createSpatialNavigationMovement(session,state);
+  session.core.enableConnectivityDiagnostics();
+  nav.raidSelectionStats={};
   if(process.env.WG_UNSTABLE_SPATIAL_OBSTACLES==='1'){
     const getter=Object.getOwnPropertyDescriptor(nav,'obstacles').get;
     Object.defineProperty(nav,'obstacles',{configurable:true,
@@ -65,20 +67,48 @@ try{
     };
   }
   const rows=[];
+  const heapBefore=process.memoryUsage().heapUsed;
+  const sectorUpdatesBefore=session.core.wasm.lazy_sector_updates();
   const initialAnimals=new Map((state.raid?.animals??[]).map(a=>[a.id,
     {x:a.x,z:a.z,hits:a.hitsRemaining}]));
   for(let i=0;i<steps;i++){
     const start=performance.now(),day=state.day,time=state.time;
     Game.tick(state,1,nav);
+    if(process.env.WG_SPATIAL_PROFILE_SERVICE_DEMAND==='1'){
+      const key=[...(nav.raidConnectivityDemand??[])].find(item=>!loaded.has(item));
+      if(key){const [x,z]=key.split(',').map(Number);
+        if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+        loaded.set(key,session.core.chunkPayload());
+      }
+    }
     rows.push({day,time,ms:performance.now()-start,
+      sectorUpdates:session.core.wasm.lazy_sector_updates()-sectorUpdatesBefore,
+      connectivityDemand:nav.raidConnectivityDemand?.size??0,
       workers:state.workers.filter(w=>w.status!=='home').length,
       tasks:state.tasks.length,raidAnimals:state.raid?.animals?.length??0});
     if(state.day!==day||state.result)break;
   }
+  const enclosureSamples={};
+  for(const species of [...new Set((state.raid?.animals??[]).map(a=>a.species))]){
+    const counts={};
+    for(const plant of state.plants.filter(p=>p.alive)){
+      session.actorRegions(plant,{worker:false,species});
+      const code=session.core.enclosureAt({x:Math.round(plant.x),z:Math.round(plant.z)});
+      counts[code]=(counts[code]??0)+1;
+    }
+    enclosureSamples[species]=counts;
+  }
   const report={input,steps:rows.length,residentRadius,calls,rows,
+    raidSelection:nav.raidSelectionStats,
+    connectivityDemand:[...(nav.raidConnectivityDemand??[])],
+    sectorUpdates:session.core.wasm.lazy_sector_updates()-sectorUpdatesBefore,
+    nativeConnectivityReasons:session.core.connectivityDiagnostics(),
+    enclosureSamples,
+    heapDeltaBytes:process.memoryUsage().heapUsed-heapBefore,
     totalMs:rows.reduce((sum,row)=>sum+row.ms,0),
     stateSha256:createHash('sha256').update(serialize(state)).digest('hex'),
     animals:(state.raid?.animals??[]).map(a=>({id:a.id,status:a.status,
+      targetId:a.targetId,
       moved:Math.hypot(a.x-(initialAnimals.get(a.id)?.x??a.x),
         a.z-(initialAnimals.get(a.id)?.z??a.z)),
       hitsUsed:(initialAnimals.get(a.id)?.hits??a.hitsRemaining)-a.hitsRemaining,
@@ -86,6 +116,7 @@ try{
       dynamicStallSeconds:a.dynamicStallSeconds??0})),
     mobileRecoveryEvents:state.events.filter(e=>
       e.type==='ActorMobileCollisionRecovery').length,
+    raidEventCounts:Object.fromEntries([...new Set(state.events.map(e=>e.type).filter(type=>type.startsWith('Animal')||type.startsWith('Crop')||type.startsWith('Structure')))].map(type=>[type,state.events.filter(e=>e.type===type).length])),
     wallRecoveryEvents:state.events.filter(e=>
       e.type==='AnimalWallOverlapRecovery').length,
     raidEnded:state.events.some(e=>e.type==='RaidEnded')};

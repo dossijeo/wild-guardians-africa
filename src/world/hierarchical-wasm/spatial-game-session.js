@@ -114,9 +114,17 @@ export function createSpatialGameSession(module,state,streamOptions){
     actorProfile(options);
     return core.connectedWorld(start,end);
   }
+  function actorSectorRevision(options){
+    actorProfile(options);
+    return core.wasm.lazy_sector_updates();
+  }
   function actorRegions(point,options){
     actorProfile(options);
     return core.componentsWorld(point);
+  }
+  function actorEnclosure(point,options){
+    actorProfile(options);
+    return core.enclosureWorld(point);
   }
   function actorRegionsBatch(points,options){
     actorProfile(options);
@@ -184,7 +192,7 @@ export function createSpatialGameSession(module,state,streamOptions){
     streamOptions.loaded(),props.suppressed,x,z,radius,
     key=>chunkRevisions.get(key)??0);
   return {core,field,stream,horizonSource,topologySource,suppressed:props.suppressed,syncState,
-    routeActor,actorConnectivity,actorRegions,actorRegionsBatch,actorCanStand,actorStepClear,
+    routeActor,actorConnectivity,actorSectorRevision,actorRegions,actorEnclosure,actorRegionsBatch,actorCanStand,actorStepClear,
     actorStepClearExceptWalls,
     queryPropsAt,withWallPreview,
     dispose:()=>stream.dispose()};

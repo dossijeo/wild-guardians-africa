@@ -103,6 +103,33 @@ export function createSpatialNavigationMovement(session,state){
     const result=session.actorConnectivity(start,end,profile(radius,worker,ignore));
     return result==='blocked'?false:result==='possible'?true:null;
   };
+  const enclosureFor=(point,radius=.28)=>{
+    if(!finitePoint(point))throw TypeError('Expected a finite actor position');
+    return session.actorEnclosure(point,profile(radius,false,null));
+  };
+  let raidDemandEpoch=null;
+  const requestRaidConnectivity=(start,end,radius)=>{
+    const raid=state.raid;
+    if(!raid)return false;
+    if(raidDemandEpoch!==raid){raidDemandEpoch=raid;view.raidConnectivityDemand=new Set();}
+    const demand=view.raidConnectivityDemand;
+    if(demand.size>=16)return false;
+    const chunk=point=>({cx:Math.floor((point.x+24)/48),cz:Math.floor((point.z+24)/48)});
+    const from=chunk(start),to=chunk(end),candidates=[];
+    const steps=Math.max(Math.abs(to.cx-from.cx),Math.abs(to.cz-from.cz),1);
+    for(let i=0;i<=steps;i++)candidates.push({cx:Math.round(from.cx+(to.cx-from.cx)*i/steps),
+      cz:Math.round(from.cz+(to.cz-from.cz)*i/steps)});
+    for(let ring=1;ring<=2;ring++)for(let z=-ring;z<=ring;z++)for(let x=-ring;x<=ring;x++){
+      if(Math.max(Math.abs(x),Math.abs(z))===ring)candidates.push({cx:to.cx+x,cz:to.cz+z});
+    }
+    const loaded=session.stream?.loaded?.()??null;
+    for(const {cx,cz} of candidates){
+      const key=`${cx},${cz}`;
+      if(loaded?.has(key)||demand.has(key))continue;
+      demand.add(key);return true;
+    }
+    return false;
+  };
   const propsAt=(x,z,radius)=>{
     if(!session.queryPropsAt)throw TypeError('Spatial prop query is unavailable');
     const result=session.queryPropsAt(x,z,radius);
@@ -203,7 +230,9 @@ export function createSpatialNavigationMovement(session,state){
       return obstacleList;
     },
     get version(){return session.topologySource.revision();},
-    walkable,segmentClear,path,regionFor,regionConnected,terrainValid,withWallPreview,
+    walkable,segmentClear,path,regionFor,regionConnected,enclosureFor,terrainValid,withWallPreview,
+    spatialSectorRevision:radius=>session.actorSectorRevision(profile(radius,false,null)),
+    requestRaidConnectivity,
     approachPath:(start,end,radius)=>path(start,end,radius,null,false),
     propsAt,placement,wallPlacement,placementFootprint,
     workerSurface,actorSurface,
