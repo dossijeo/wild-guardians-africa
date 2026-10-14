@@ -134,6 +134,14 @@ export function createSpatialGameSession(module,state,streamOptions){
     actorProfile(options);
     return core.localClear(start,end);
   }
+  function actorStepClearExceptWalls(start,end,wallIds,options){
+    if(!Array.isArray(wallIds)||wallIds.length<1||wallIds.length>4)
+      throw TypeError('Expected 1–4 overlapping wall IDs');
+    actorProfile(options);
+    const ids=wallIds.flatMap(id=>walls.barrierIds(id));
+    if(ids.length!==wallIds.length)return false;
+    return core.localClearExcept(start,end,ids);
+  }
   let activeWallPreview=null;
   function withWallPreview(proposed,suppress,inspect){
     if(!Array.isArray(proposed)||!Array.isArray(suppress)||typeof inspect!=='function')
@@ -177,6 +185,7 @@ export function createSpatialGameSession(module,state,streamOptions){
     key=>chunkRevisions.get(key)??0);
   return {core,field,stream,horizonSource,topologySource,suppressed:props.suppressed,syncState,
     routeActor,actorConnectivity,actorRegions,actorRegionsBatch,actorCanStand,actorStepClear,
+    actorStepClearExceptWalls,
     queryPropsAt,withWallPreview,
     dispose:()=>stream.dispose()};
 }

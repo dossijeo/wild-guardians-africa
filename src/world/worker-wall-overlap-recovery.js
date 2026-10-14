@@ -23,10 +23,13 @@ export function workerWallOverlapRecoveryPath(nav,actor,end,radius=.28){
  // Ignore exactly the initially overlapping wall for this short outward
  // prefix. All other solids, props, terrain, fluids and moving gate leaves
  // retain the native swept-body checks. The tail uses ordinary navigation.
- const collision=Object.assign(Object.create(nav),{obstacles:nav.obstacles.filter(o=>!overlapping.includes(o)),walkCache:new Map(),segmentCache:new Map(),workerRouteCache:new Map()});
+ const collision=nav.wallOverlapMotionClear?null:Object.assign(Object.create(nav),{obstacles:nav.obstacles.filter(o=>!overlapping.includes(o)),walkCache:new Map(),segmentCache:new Map(),workerRouteCache:new Map()});
  for(const face of faces.filter(face=>face.length<=nearest+1e-9)){
   const exit={x:wall.x+face.x*c+face.z*s,z:wall.z-face.x*s+face.z*c};
-  if(!nav.walkable(exit.x,exit.z,radius,null,true)||!collision.workerMotionClear(actor,exit,radius))continue;
+  const clear=nav.wallOverlapMotionClear?
+    nav.wallOverlapMotionClear(actor,exit,radius,overlapping.map(o=>o.id)):
+    collision.workerMotionClear(actor,exit,radius);
+  if(!nav.walkable(exit.x,exit.z,radius,null,true)||!clear)continue;
   const tail=nav.workerPath({...actor,...exit},end,radius,null);
   if(tail)return [exit,...tail];
  }

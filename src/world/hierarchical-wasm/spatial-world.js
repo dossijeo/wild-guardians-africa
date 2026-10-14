@@ -168,6 +168,13 @@ export function createSpatialWorld(module){
     componentsWorld:point=>navigationBuilt?spatialWorldComponents(wasm,componentAt,point):{ids:[],unknown:true},
     componentsWorldBatch,setWorkerGatePortals,
     localClear:(start,end)=>Boolean(wasm.spatial_local_clear(start.x,start.z,end.x,end.z)),
+    localClearExcept:(start,end,ids)=>{
+      if(!Array.isArray(ids)||ids.length<1||ids.length>4||
+        ids.some(id=>!Number.isSafeInteger(id)||id<=0))
+        throw TypeError('Expected 1–4 native barrier IDs');
+      return Boolean(wasm.spatial_local_clear_except(start.x,start.z,end.x,end.z,
+        ...Array.from({length:4},(_,i)=>ids[i]??0)));
+    },
     setSettlement:(x,z,hx,hz)=>{
       if(!generated)throw Error('Generate the world before placing a settlement');
       return wasm.spatial_set_settlement(x,z,hx,hz);

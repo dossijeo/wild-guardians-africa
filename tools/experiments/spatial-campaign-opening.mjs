@@ -34,6 +34,20 @@ export async function createSpatialCampaignOpening({seed=712,biome='sabana',
     session.stream.plan(jobs);
     await session.stream.whenIdle();
     const nav=createSpatialNavigationMovement(session,state);
+    const setActiveBounds=nav.setActiveBounds;
+    // The campaign has no renderer to request chunks. Mirror the camera's
+    // finite resident region synchronously before its ordinary game commands.
+    nav.setActiveBounds=bounds=>{
+      const minX=chunkAt(bounds[0]),maxX=chunkAt(bounds[2]-1e-6),
+        minZ=chunkAt(bounds[1]),maxZ=chunkAt(bounds[3]-1e-6);
+      for(let z=minZ;z<=maxZ;z++)for(let x=minX;x<=maxX;x++){
+        if(session.core.selectChunk(x,z)>=0)continue;
+        if(session.core.addChunk(x,z)<0)
+          throw Error(`Native campaign could not load chunk ${x},${z}`);
+        loaded.set(`${x},${z}`,session.core.chunkPayload());
+      }
+      setActiveBounds(bounds);
+    };
     nav.setActiveBounds([(cx-1)*48-24,(cz-1)*48-24,
       (cx+1)*48+24,(cz+1)*48+24]);
     const pose=nativeCameraPose(nav.field,
@@ -45,6 +59,6 @@ export async function createSpatialCampaignOpening({seed=712,biome='sabana',
     state.tutorial.step='center';
     if(!Game.placeStructure(state,'spatial-opening-center',start.site.center,nav))
       throw Error('Native starting site rejected its work center');
-    return {state,nav,session,start,loaded};
+    return {state,s:state,nav,session,start,loaded,dispose:()=>session.dispose()};
   }catch(error){session.dispose();throw error;}
 }

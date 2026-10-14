@@ -646,13 +646,14 @@ bool terrainPropWalkable(int x,int z){
   if(!terrainValid(x,z,radiusNow,workerNow))return false;
   return !propBlocked(x,z);
 }
-bool barrierClear(double x,double z){
+bool barrierClear(double x,double z,const int* ignored=nullptr,int ignoredCount=0){
   const uint8_t profileBit=workerNow?1:2;
   const int bx=int(std::floor(x/barrierBucketWidth)),bz=int(std::floor(z/barrierBucketWidth));
   const auto key=barrierKey(bx,bz);
   const auto& index=barrierIndex();
   if(const auto bucket=index.buckets.find(key);bucket!=index.buckets.end()){
     for(const int id:bucket->second){
+      if(ignored&&std::find(ignored,ignored+ignoredCount,id)!=ignored+ignoredCount)continue;
       const Barrier& w=index.byId.at(id);
       if(w.passMask&profileBit)continue;
       const double dx=x-w.x,dz=z-w.z;
@@ -1780,8 +1781,9 @@ int spatial_edge(int x,int z,int nx,int nz){return std::abs(x-nx)+std::abs(z-nz)
 // A short continuous connector from an actor to the discrete graph (or back).
 // The same terrain, prop and barrier predicates used to rasterize navigation
 // validate the actual swept segment. Longer routes belong to the sector graph.
-int spatial_local_clear(float x,float z,float nx,float nz){
+int spatial_local_clear_except(float x,float z,float nx,float nz,int ignore0,int ignore1,int ignore2,int ignore3){
   if(!navReady||!std::isfinite(x)||!std::isfinite(z)||!std::isfinite(nx)||!std::isfinite(nz))return 0;
+  const int ignored[]={ignore0,ignore1,ignore2,ignore3};
   const double distance=std::hypot(double(nx)-x,double(nz)-z);
   if(distance>1.5)return 0;
   const int steps=std::max(1,int(std::ceil(distance/.2)));
@@ -1790,9 +1792,12 @@ int spatial_local_clear(float x,float z,float nx,float nz){
     const int cx=int(std::floor((px+24)/side)),cz=int(std::floor((pz+24)/side));
     if(!rasterAt(int(std::round(px)),int(std::round(pz)))||
        !terrainValid(px,pz,radiusNow,workerNow)||residentPropBlocked(px,pz,cx,cz)||
-       !barrierClear(px,pz))return 0;
+       !barrierClear(px,pz,ignored,4))return 0;
   }
   return 1;
+}
+int spatial_local_clear(float x,float z,float nx,float nz){
+  return spatial_local_clear_except(x,z,nx,nz,0,0,0,0);
 }
 // One JS->WASM call classifies many actor/crop positions. Each output row is
 // [unknown, component0..3]; -1 denotes an unused component slot. Keep every

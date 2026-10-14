@@ -10,12 +10,13 @@ const animalProfiles=Object.entries(ANIMAL_SPATIAL_PROFILES);
 const finitePoint=point=>Number.isFinite(point?.x)&&Number.isFinite(point?.z);
 
 export class SpatialChunkUnavailable extends Error {
-  constructor(start,end,missing=[]){
+  constructor(start,end,missing=[],details=null){
     super('Spatial navigation needs more resident chunks');
     this.name='SpatialChunkUnavailable';
     this.start={x:start.x,z:start.z};
     this.end={x:end.x,z:end.z};
     this.missing=missing;
+    if(details)this.details=details;
   }
 }
 
@@ -70,7 +71,18 @@ export function createSpatialNavigationMovement(session,state){
       const knownBlocked=point=>session.queryPropsAt?.(point.x,point.z,1.5).status===
         'ready'&&!session.actorCanStand(point,options);
       if(knownBlocked(start)||knownBlocked(end))return null;
-      throw new SpatialChunkUnavailable(start,end);
+      const startRegions=session.actorRegions(start,options),
+        endRegions=session.actorRegions(end,options);
+      // A standable service point may sit in a sub-grid pocket beside a wall.
+      // If its entire local neighborhood is resident but has no connector to
+      // an integer cell, this candidate is physically unusable by the graph;
+      // let the caller try another point instead of demanding more chunks.
+      if(!startRegions.unknown&&!startRegions.ids.length||
+         !endRegions.unknown&&!endRegions.ids.length)return null;
+      throw new SpatialChunkUnavailable(start,end,[],{
+        startRegions,endRegions,
+        startProps:session.queryPropsAt?.(start.x,start.z,1.5).status,
+        endProps:session.queryPropsAt?.(end.x,end.z,1.5).status});
     }
     return result.status==='found'?result.points:null;
   };
@@ -130,6 +142,20 @@ export function createSpatialNavigationMovement(session,state){
     }
     return true;
   };
+  const wallOverlapMotionClear=(start,end,radius,wallIds)=>{
+    validate(start,end);
+    const options=profile(radius,true,null);
+    const distance=Math.hypot(end.x-start.x,end.z-start.z);
+    const count=Math.max(1,Math.ceil(distance/1.25));
+    let previous=start;
+    for(let i=1;i<=count;i++){
+      const point={x:start.x+(end.x-start.x)*i/count,
+        z:start.z+(end.z-start.z)*i/count};
+      if(!session.actorStepClearExceptWalls(previous,point,wallIds,options))return false;
+      previous=point;
+    }
+    return true;
+  };
   const workerSurface=(x,z)=>session.field.canyon?
     Math.max(session.field.surface(x,z),session.field.riverLevel):session.field.surface(x,z);
   const actorSurface=(x,z)=>{
@@ -153,13 +179,27 @@ export function createSpatialNavigationMovement(session,state){
     }
     return true;
   };
+  let obstacleVersion=-1,obstacleStructures=null,obstacleVillages=null,
+    obstacleList=null;
   const view={field:session.field,config,chunk,suppressed:session.suppressed,state,
-    get obstacles(){return [
-      ...state.structures.filter(item=>item.status!=='ruined').map(item=>
-        item.kind==='center'?centerFootprint(item,state):{...item,radius:.7}),
-      ...state.villages.flatMap(village=>(village.buildings??[])
-        .filter(item=>item.kind!=='Zona común').map(item=>({...item,radius:item.radius??2.8})))
-    ];},
+    get obstacles(){
+      // The geometry is unchanged between topology revisions. A stable source
+      // identity lets worker service-point and collision indexes reuse their
+      // results instead of invalidating on every read of this adapter.
+      const version=session.topologySource.revision();
+      if(obstacleList===null||obstacleVersion!==version||
+        obstacleStructures!==state.structures||obstacleVillages!==state.villages){
+        obstacleList=[
+          ...state.structures.filter(item=>item.status!=='ruined').map(item=>
+            item.kind==='center'?centerFootprint(item,state):{...item,radius:.7}),
+          ...state.villages.flatMap(village=>(village.buildings??[])
+            .filter(item=>item.kind!=='Zona común').map(item=>({...item,radius:item.radius??2.8})))
+        ];
+        obstacleVersion=version;obstacleStructures=state.structures;
+        obstacleVillages=state.villages;
+      }
+      return obstacleList;
+    },
     get version(){return session.topologySource.revision();},
     walkable,segmentClear,path,regionFor,regionConnected,terrainValid,withWallPreview,
     approachPath:(start,end,radius)=>path(start,end,radius,null,false),
@@ -167,7 +207,7 @@ export function createSpatialNavigationMovement(session,state){
     workerSurface,actorSurface,
     setState,syncCropPlacement,
     workerPath:(start,end,radius=.28,ignore=null)=>path(start,end,radius,ignore,true),
-    workerMotionClear,
+    workerMotionClear,wallOverlapMotionClear,
   };
   // The ordinary exterior witness extends its ray beyond the active box.
   // A resident-only C++ world cannot certify that unloaded destination, so
