@@ -5,6 +5,8 @@ import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-g
 import {createSpatialNavigationMovement,SpatialChunkUnavailable} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
 import {createSpatialPlacement} from '../src/world/hierarchical-wasm/spatial-placement.js';
 import {villageLayout} from '../src/world/villages.js';
+import * as Game from '../src/simulation/game.js';
+import {numberOf} from '../src/simulation/money.js';
 
 const module=new WebAssembly.Module(readFileSync(new URL(
   '../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
@@ -152,6 +154,34 @@ test('native-backed construction placement checks whole wall traces and building
   field.surface=()=>0;
   field.fluidInside=(x,z)=>x>.5&&z>.5;
   assert.equal(placement.placementFootprint(building).fluid,true);
+});
+
+test('a real paid crop action keeps the C++ terrain and prop authority in sync',async()=>{
+  const state=Game.newGame({seed:712,biome:'sabana',culture:'mapungubwe',slotId:'spatial-plant'});
+  state.villages[0].buildings=villageLayout(pack,0,0);
+  state.structures.push({id:'center-1',kind:'center',x:0,z:0,culture:'mapungubwe',
+    villageId:'village-1',status:'intact',hp:600,maxHp:600});
+  const loaded=new Map(),session=createSpatialGameSession(module,state,{
+    loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+  try{
+    session.stream.plan(new Map([['0,0',{cx:0,cz:0,score:0}]]));
+    await session.stream.whenIdle();
+    const nav=createSpatialNavigationMovement(session,state);
+    let site;
+    for(let z=-14;z<=14&&!site;z+=1.5)for(let x=-14;x<=14&&!site;x+=1.5){
+      const check=nav.placement(x,z,.4);
+      if(check.valid&&check.suppress.length===0)site={x,z};
+    }
+    assert(site,'fixture needs crop ground that does not remove a prop');
+    const before=numberOf(state.ledger.balance),revision=nav.version;
+    assert.equal(Game.plant(state,'spatial-paid-crop','mijo',site.x,site.z,nav),true);
+    assert.equal(state.plants.length,1);
+    assert.equal(state.plants[0].x,site.x);
+    assert(numberOf(state.ledger.balance)<before,'the real purchase charges its seed');
+    assert.equal(nav.version,revision,'a crop on clear ground changes no passability');
+    assert.equal(session.core.metrics().loadedChunks,1);
+    assert.equal(state.tasks.length,1,'the real crop action enqueues agricultural work');
+  }finally{session.dispose();}
 });
 
 test('a saved suppression survives reload while its owning chunk is not resident',async()=>{

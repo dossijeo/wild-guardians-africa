@@ -66,6 +66,14 @@ export function createSpatialNavigationMovement(session,state){
   };
   const {placement,wallPlacement,placementFootprint}=
     createSpatialPlacement(session,state,propsAt);
+  const setState=next=>{
+    if(next!==state)throw TypeError('A spatial movement adapter needs its owning game state');
+    return session.syncState(next);
+  };
+  const syncCropPlacement=(next,removedProps=[])=>{
+    if(!Array.isArray(removedProps))throw TypeError('Expected removed spatial prop IDs');
+    return setState(next);
+  };
   let gateRevision=null,gateSource=null,gates=[];
   const activeGates=()=>{
     const revision=session.topologySource.revision();
@@ -101,6 +109,7 @@ export function createSpatialNavigationMovement(session,state){
     get version(){return session.topologySource.revision();},
     walkable,segmentClear,path,propsAt,placement,wallPlacement,placementFootprint,
     workerSurface,actorSurface,
+    setState,syncCropPlacement,
     workerPath:(start,end,radius=.28,ignore=null)=>path(start,end,radius,ignore,true),
     workerMotionClear,
   };
