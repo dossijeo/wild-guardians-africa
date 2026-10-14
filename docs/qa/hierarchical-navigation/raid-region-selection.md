@@ -577,6 +577,24 @@ The fractional and spatial movement files pass 24/24; all 186 playable tests
 and the web build pass. The ordinary game still uses its established world;
 the spatial adapter remains behind the development QA flag.
 
+An actual same-session native-world campaign after that change completed all
+14 requested Sabana/Mapungubwe seed 712 nights in 290.1 s, retaining 114
+living crops and 744 coins. A subsequent 30-night-cap run reproduced all 14
+earlier daily gameplay rows on the selected money, crop, workforce and result
+fields, then ended in a genuine defeat on night 17 after 371.8 s: 16 nights
+completed, 101 crops and 692 coins before the destroyed center ended play.
+The native raid auditor reports `verified`, no coverage loss and no issues;
+the final raid spawned 18 animals, recorded 36 crop hits, 36 structural hits,
+three center hits and all assigned attacks consumed. Its final wall and
+center damage was physical, not a path timeout or synthetic defeat. Complete
+daily ledgers, tick bands and raid evidence are archived in
+`spatial-virtual-14-c9867c75.json.gz` and
+`spatial-virtual-30-c9867c75.json.gz`. The latter is **not** a completed
+30-night survival campaign. Its per-day `Game.tick` costs varied from roughly
+0.5 to 18.9 s without monotonic growth through the defeat; that observation
+does not establish 60/100-night scalability or acceptable balance. No attack
+or economic parameters were changed in this navigation branch.
+
 ## Deferred engine name
 
 After the WASM spatial core is functionally and performance-stable, rename
