@@ -37,7 +37,10 @@ defeats; these demonstrate natural loss resolution but do not cover the
 late-game workload. `spatial-campaign-terminal.test.js` now passes 4/4 on a
 real C++ Sabana world: explicitly constructed night-100 states resolve a
 physical raid before victory or economic defeat, emit one terminal event,
-and survive terminal save/load. A separate mid-campaign fixture saves during
+and survive terminal save/load. The victory fixture now also enters postgame
+on the native spatial world, advances a complete peaceful day to day 102,
+checks that no raid respawns, and round-trips the resulting save. A separate
+mid-campaign fixture saves during
 a 100-crop, 16-animal raid, rebuilds the C++ spatial session from the saved
 game, and completes the raid with real impacts; every post-reload movement
 step is checked against native static collision. A second variant saves only
@@ -102,8 +105,19 @@ includes QA event collection and chunk servicing; it is not isolated
 benchmark.
 Gran Cañón seed 123 recorded eight and six
 `waiting-expired-or-stage-blocked` retreats in middle and late loads, leaving
-23 and 13 unused strikes. Earlier captured waits had walkable original staging
-points; the newly changed late trajectory has not been individually audited.
+23 and 13 unused strikes. The refreshed middle and late seed-123 captures
+(`engine-canyon-wait-final-123-{middle,late}.json.gz`) show the first retiring
+animal at a walkable stage point. All 136 and 256 surviving crops respectively
+return `unknown`, with native connectivity reason 8 (open sector frontier),
+not a certified `blocked` result. The source and sampled crop both have valid
+local grid components; the uncertainty lies between those components. An
+offline diagnostic expanded the middle capture to 121 resident chunks and
+still found 136 `unknown`, zero `possible` and zero `blocked`. Thus merely
+enlarging residency does not resolve this particular Canyon separation, and
+the bounded waiting rule prevents the incursion from hanging. These are
+observed limits of the constructed Canyon layout, not proof that every crop
+is physically unreachable. The full refreshed seed-123 stage report is
+`engine-canyon-recheck-123.json`.
 Seed 712 also showed the pattern: one, eight and five such retreats
 across early/middle/late phases, leaving 2, 28 and 18 strikes. Other
 attackers exhausted their budgets. These repeated retreats may reflect

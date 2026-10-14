@@ -38,8 +38,15 @@ try{
   const nav=createSpatialNavigationMovement(session,state);
   nav.setActiveBounds(capture.activeBounds);
   nav.setRaidView(capture.raidView.eye,capture.raidView.target);
+  session.core.enableConnectivityDiagnostics?.();
   const crops=state.plants.filter(plant=>plant.alive),
     counts={possible:0,blocked:0,unknown:0,walkable:0},candidates=[];
+  const profile={worker:false,species:actor.species};
+  const actorRegions=session.actorRegions(actor,profile);
+  const sampledCrop=crops.find(crop=>nav.walkable(crop.x,crop.z,actor.radius,null,false));
+  const cropRegions=sampledCrop?session.actorRegions(sampledCrop,profile):null;
+  const sampleConnectivity=sampledCrop?session.actorConnectivity(actor,sampledCrop,profile):null;
+  const sampleRoute=sampledCrop?session.routeActor(actor,sampledCrop,profile):null;
   for(const crop of crops){
     const walkable=nav.walkable(crop.x,crop.z,actor.radius,null,false);
     if(walkable)counts.walkable++;
@@ -59,6 +66,8 @@ try{
     animal:{id:actor.id,species:actor.species,status:actor.status,
       hitsRemaining:actor.hitsRemaining,x:actor.x,z:actor.z,radius:actor.radius},
     crops:crops.length,counts,candidates,nativeReasons,
+    actorRegions,sampledCrop:sampledCrop&&{id:sampledCrop.id,x:sampledCrop.x,z:sampledCrop.z},
+    cropRegions,sampleConnectivity,sampleRoute:sampleRoute&&{status:sampleRoute.status,reason:sampleRoute.reason},
     selected:selected&&{unknown:selected.unknown??false,
       targetId:selected.target?.id,kind:selected.target?.kind}},null,2)+'\n');
 }finally{session.dispose();}

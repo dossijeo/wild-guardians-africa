@@ -51,6 +51,19 @@ for(const [balance,expected,event] of [
     const frozen=serialize(restored);
     Game.tick(restored,30,nav);
     assert.equal(serialize(restored),frozen,'a terminal save stays inert');
+    if(expected==='victory'){
+      Game.continuePostgame(state);
+      assert.equal(state.postgame,true);
+      assert.equal(state.result,null);
+      Game.hire(state,'native-postgame-hire',{});
+      for(let i=0;i<20;i++)Game.tick(state,30,nav);
+      assert.equal(state.day,102,'the native spatial world advances after victory');
+      assert.equal(state.completedNights,101);
+      assert.equal(state.raid,null,'postgame stays peaceful');
+      assert.equal(state.events.filter(item=>item.type==='PostgameStarted').length,1);
+      assert.equal(state.events.filter(item=>item.type==='CampaignWon').length,1);
+      assert.equal(serialize(deserialize(serialize(state))),serialize(state));
+    }
   }finally{session.dispose();}
 });
 
