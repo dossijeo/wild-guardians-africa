@@ -507,6 +507,18 @@ fractional queries and a fresh evaluation after `setState`. The complete
 navigation-query-capacity file passes 3/3. This is another test-only contract
 update; the global suite has not yet been rerun after it.
 
+`Game.tick` no longer creates a per-tick `withNavigationQueries` scope. The
+hierarchical `Navigation.path()` does not call `navigationQueryResult` or
+`rememberNavigationQuery`; those helpers are retained only in legacy QA and
+benchmark sources. A frozen Gran Cañón day-6 replay after this removal has
+the same serialized-state SHA-256 as the archived selector run, with exactly
+267 approach calls and 253 native-graph unknown results in both. The new
+report is `query-scope-removal-50-ticks.json`. Its total of 373 ms versus
+the archived 342 ms is a single noisy comparison, not evidence of a speedup.
+Thirty-seven focused simulation, raid and agricultural tests pass, and the
+web build passes. The change removes a dormant execution layer without
+altering navigation decisions or gameplay state.
+
 A same-policy Gran Cañón seed 123 native campaign was repeated after the
 committed-target fix. Against `selector-village-14-canyon-123.json.gz`, all
 daily gameplay fields, complete raid evidence, entry transport and plot

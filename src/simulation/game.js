@@ -13,7 +13,6 @@ import {centerCulture,centerFootprint,centerServicePoint,centerDeliveryPoint} fr
 import {actorBlockers,actorSegmentClear,prepareActorMotion} from './actor-motion.js';
 import {animalRouteClearance} from './animal-route-clearance.js';
 import {animalSlopeRecoveryPath} from './animal-slope-recovery.js';
-import {withNavigationQueries} from '../world/navigation-query-scope.js';
 import {BALANCE as B} from './balance.js';
 import {wallVisualAt,recordWallPresentation} from './structure-presentation.js';
 import {rational,rationalNumber,add,multiply,negate,transact,compare,numberOf} from './money.js';
@@ -773,9 +772,6 @@ function prepareClockEvents(s,nav){
   if(s.nightPlan&&!s.nightPlan.done&&s.time>=s.nightPlan.at&&(!s.dayPlan||activeRaidEntryPlan(s)!==s.dayPlan)){s.nightPlan.done=!s.nightPlan.group?.length||spawnRaid(s,s.nightPlan,nav)!==false;}
 }
 export function tick(s,seconds,nav) {
-  return withNavigationQueries(nav,()=>tickScoped(s,seconds,nav));
-}
-function tickScoped(s,seconds,nav) {
   if(!Number.isFinite(seconds)||seconds<0)throw new Error('Paso temporal inválido');
   let left=seconds;
   while(left>1e-9 && !s.pauses.length && !s.result) {
