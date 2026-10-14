@@ -71,6 +71,8 @@ export function createSpatialNavigationMovement(session,state){
       const knownBlocked=point=>session.queryPropsAt?.(point.x,point.z,1.5).status===
         'ready'&&!session.actorCanStand(point,options);
       if(knownBlocked(start)||knownBlocked(end))return null;
+      if(typeof session.actorRegions!=='function')
+        throw new SpatialChunkUnavailable(start,end,result.missing??[]);
       const startRegions=session.actorRegions(start,options),
         endRegions=session.actorRegions(end,options);
       // A standable service point may sit in a sub-grid pocket beside a wall.
@@ -142,9 +144,9 @@ export function createSpatialNavigationMovement(session,state){
     }
     return true;
   };
-  const wallOverlapMotionClear=(start,end,radius,wallIds)=>{
+  const wallOverlapMotionClear=(start,end,radius,wallIds,worker=true)=>{
     validate(start,end);
-    const options=profile(radius,true,null);
+    const options=profile(radius,worker,null);
     const distance=Math.hypot(end.x-start.x,end.z-start.z);
     const count=Math.max(1,Math.ceil(distance/1.25));
     let previous=start;

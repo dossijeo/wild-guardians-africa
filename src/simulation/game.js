@@ -10,7 +10,7 @@ import {ensureBoundaryGates} from '../world/boundary-gates.js';
 import {gatePortalPoints} from '../world/gate-passages.js';
 import {containsPoint,footprintDistance} from '../world/footprints.js';
 import {centerCulture,centerFootprint,centerServicePoint,centerDeliveryPoint} from '../world/centers.js';
-import {prepareActorMotion} from './actor-motion.js';
+import {actorBlockers,actorSegmentClear,prepareActorMotion} from './actor-motion.js';
 import {animalRouteClearance} from './animal-route-clearance.js';
 import {animalSlopeRecoveryPath} from './animal-slope-recovery.js';
 import {withNavigationQueries} from '../world/navigation-query-scope.js';
@@ -30,7 +30,7 @@ import {villageLayout,findVillageEntry,nearestVillageRoute} from '../world/villa
 import {LOCOMOTION as L} from './locomotion-calibration.js';
 import {dailyRunMetres,urgentWork,moveWorker,movePath,movePathWithGates} from './locomotion.js';
 import {workerSlopeRecoveryPath} from '../world/worker-slope-recovery.js';
-import {workerWallOverlapRecoveryPath} from '../world/worker-wall-overlap-recovery.js';
+import {animalWallOverlapRecovery,workerWallOverlapRecoveryPath} from '../world/worker-wall-overlap-recovery.js';
 import {createUrgencyPass} from './work-urgency.js';
 import {repairRoute,wateringRoute,canWaterFrom} from '../world/work-points.js';
 import {updateIdle,cancelIdle} from './idle.js';
@@ -442,6 +442,13 @@ export function cast(s,id,kind,x,z,nav,targetPlantId) {
 export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignore=null,worker=true,motion=null,expandRoute=false,routeVia=null}={}) {
   const previous={x:w.x,z:w.z};
   if(worker)w.running=false;
+  if(w.mobileRecoveryDestinationId!==destination.id||
+    w.mobileRecoveryVersion!==nav.version){
+    w.mobileRecoveryDestinationId=destination.id;
+    w.mobileRecoveryVersion=nav.version;
+    w.mobileRecoveryAttempts=0;
+  }
+  if(w.wallEscape&&w.pathVersion!==nav.version)delete w.wallEscape;
   if(!w.path||w.destinationId!==destination.id||w.pathVersion!==nav.version) {
     w.path=worker&&nav.workerPath?nav.workerPath(w,destination,w.radius??.28,ignore):nav.path(w,destination,w.radius??.28,ignore,worker);w.destinationId=destination.id;
     // The local search corridor is not a physical enclosure. Exhausted animals
@@ -457,6 +464,13 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
       w.path=nav.propOverlapExitPath?.(w,destination,w.radius??.28,ignore,worker)??null;
       if(!w.path)w.path=animalExitConnector(w,destination,nav);
       if(!w.path)w.path=animalSlopeRecoveryPath(nav,w,destination,w.radius??.28);
+      if(!w.path){
+        const recovery=animalWallOverlapRecovery(nav,w,destination,w.radius??.28);
+        if(recovery){w.path=recovery.path;w.wallEscape={exit:recovery.exit,
+          wallIds:recovery.wallIds};
+          emit(s,'AnimalWallOverlapRecovery',{actorId:w.id,x:w.x,z:w.z,
+            wallIds:recovery.wallIds});}
+      }
     }
     if(!w.path&&worker&&!ignore&&['fleeing','returning','incapacitated'].includes(w.status)){
       w.path=workerWallOverlapRecoveryPath(nav,w,destination,w.radius??.28);
@@ -468,13 +482,55 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
     if(!w.path)return false;
   }
   if(worker&&waitForGate(w,s.structures))return false;
-  const dynamicClear=prepareActorMotion(s,w,nav,worker);
+  if(!worker&&w.wallEscape){
+    const {exit,wallIds}=w.wallEscape,remaining=dist(w,exit);
+    if(remaining>1e-8){
+      const metres=movePath(w,Math.min(speed*dt,remaining),
+        (a,b)=>nav.wallOverlapMotionClear(a,b,w.radius??.28,wallIds,false));
+      w.motionPhase=(w.motionPhase??0)+metres/speed;
+      if(metres>1e-8){w.heading=Math.atan2(w.x-previous.x,w.z-previous.z);
+        w.dynamicStallSeconds=0;}
+    }
+    if(dist(w,exit)<=1e-7){delete w.wallEscape;
+      if(w.path?.length&&dist(w,w.path[0])<=1e-7)w.path.shift();}
+    return w.path?.length===0;
+  }
+  // The ordinary local avoidance remains first. Only after real stationary
+  // time, and only when a short static step is valid but occupied by another
+  // moving body, temporarily ignore mobile collisions. Static terrain,
+  // barriers and the live gate leaf remain authoritative throughout.
+  const next=w.path[0],distanceToNext=next?dist(w,next):0;
+  const probe=next&&distanceToNext>1e-8?{
+    x:w.x+(next.x-w.x)*Math.min(.5,distanceToNext)/distanceToNext,
+    z:w.z+(next.z-w.z)*Math.min(.5,distanceToNext)/distanceToNext}:null;
+  if((worker||w.status==='retreating')&&
+    (w.dynamicStallSeconds??0)>=3&&
+    (w.mobileRecoveryAttempts??0)<2&&probe){
+    const blockers=actorBlockers(s,w,worker);
+    const staticClear=worker?nav.workerMotionClear?.(w,probe,w.radius??.28):
+      nav.segmentClear?.(w,probe,w.radius??.28,ignore,false);
+    if(staticClear&&actorSegmentClear(next,next,w,blockers)&&
+      !actorSegmentClear(w,probe,w,blockers)){
+      w.mobilePhaseRemaining=3;w.dynamicStallSeconds=0;
+      w.mobileRecoveryAttempts=(w.mobileRecoveryAttempts??0)+1;
+      emit(s,'ActorMobileCollisionRecovery',{actorId:w.id,
+        x:w.x,z:w.z,elapsed:s.elapsed,duration:3});
+    }
+  }
+  const phased=(w.mobilePhaseRemaining??0)>0;
+  const dynamicClear=phased?
+    (worker?(a,b)=>nav.workerMotionClear?.(a,b,w.radius??.28)??
+      nav.segmentClear?.(a,b,w.radius??.28,ignore,true)??false:null):
+    prepareActorMotion(s,w,nav,worker);
   const routeClearance=worker?workerRiskClearance(w,nav,{radius:w.radius??.28,ignore},dynamicClear):animalRouteClearance(w,nav,{radius:w.radius??.28,ignore,escapeProps:expandRoute},dynamicClear);
   const clear=routeClearance?.clear??dynamicClear;
   if(motion)moveWorker(w,dt,{...motion,gates:worker?s.structures:[],clear});else {
     const metres=worker?movePathWithGates(w,speed*dt,s.structures,clear):movePath(w,speed*dt,clear);w.motionPhase=(w.motionPhase??0)+metres/speed;
   }
   if(dist(previous,w)>1e-9)w.heading=Math.atan2(w.x-previous.x,w.z-previous.z);
+  if(phased)w.mobilePhaseRemaining=Math.max(0,w.mobilePhaseRemaining-dt);
+  if(dist(previous,w)>1e-8||!w.path?.length)w.dynamicStallSeconds=0;
+  else w.dynamicStallSeconds=Math.min(3,(w.dynamicStallSeconds??0)+dt);
   if(routeClearance?.blocked()){w.path=null;return false;}
   return w.path.length===0;
 }

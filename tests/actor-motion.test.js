@@ -84,15 +84,30 @@ for(const species of Object.keys(ANIMAL_ACTIONS.animals))test(`${species}: exhau
   assert.ok(arrived);assert.ok(detoured);assert.equal(worker.hits,0);assert.equal(animal.hitsRemaining,0);
   assert.equal(state.rng,rng);assert.equal(state.events.length,events);
 });
-test('An occupied narrow static passage waits, keeps the exit, and resumes when the person reaches home',()=>{
+test('An occupied narrow passage phases mobile collisions after a bounded wait, retaining static clearance',()=>{
   const {state,animal,worker,nav}=fixture();nav.field.slope=(_x,z)=>Math.abs(z)>1.2?1:0;
-  const destination={id:'exit',x:4,z:0};
-  for(let i=0;i<100;i++)walkTo(state,animal,destination,.1,nav,{speed:3.8,worker:false});
-  assert.ok(animal.x<0);assert.ok(Math.hypot(animal.x,animal.z)>=animal.radius+.28);
-  assert.equal(animal.destinationId,'exit');assert.ok(animal.path.length);assert.equal(worker.hits,0);
-  worker.status='home';let arrived=false;
-  for(let i=0;i<100&&!arrived;i++)arrived=walkTo(state,animal,destination,.1,nav,{speed:3.8,worker:false});
+  const destination={id:'exit',x:4,z:0};let arrived=false;
+  for(let i=0;i<100&&!arrived;i++){
+    const before={x:animal.x,z:animal.z};
+    arrived=walkTo(state,animal,destination,.1,nav,{speed:3.8,worker:false});
+    assert.ok(Math.hypot(animal.x-before.x,animal.z-before.z)<=.38+1e-8);
+    assert.ok(nav.segmentClear(before,animal,animal.radius,null,false));
+  }
   assert.ok(arrived);
+  assert.ok(state.events.some(e=>e.type==='ActorMobileCollisionRecovery'));
+  assert.equal(animal.destinationId,'exit');assert.equal(worker.hits,0);
+});
+test('mobile collision recovery stops after two attempts for the same destination',()=>{
+  const {state,animal,nav}=fixture();nav.field.slope=(_x,z)=>Math.abs(z)>1.2?1:0;
+  const destination={id:'exit',x:4,z:0};
+  animal.mobileRecoveryDestinationId=destination.id;
+  animal.mobileRecoveryVersion=nav.version;
+  animal.mobileRecoveryAttempts=2;
+  animal.dynamicStallSeconds=3;
+  walkTo(state,animal,destination,.1,nav,{speed:3.8,worker:false});
+  assert.equal(animal.mobileRecoveryAttempts,2);
+  assert.equal(animal.mobilePhaseRemaining??0,0);
+  assert.equal(state.events.some(e=>e.type==='ActorMobileCollisionRecovery'),false);
 });
 test('Workers avoid a retreating beast in both movement directions and charge only travelled running metres',()=>{
   const {state,animal,worker,nav}=fixture('rhino');animal.x=0;worker.x=-4;

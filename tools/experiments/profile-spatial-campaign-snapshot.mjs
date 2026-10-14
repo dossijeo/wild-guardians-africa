@@ -56,6 +56,8 @@ try{
     };
   }
   const rows=[];
+  const initialAnimals=new Map((state.raid?.animals??[]).map(a=>[a.id,
+    {x:a.x,z:a.z,hits:a.hitsRemaining}]));
   for(let i=0;i<steps;i++){
     const start=performance.now(),day=state.day,time=state.time;
     Game.tick(state,1,nav);
@@ -66,7 +68,18 @@ try{
   }
   const report={input,steps:rows.length,calls,rows,
     totalMs:rows.reduce((sum,row)=>sum+row.ms,0),
-    stateSha256:createHash('sha256').update(serialize(state)).digest('hex')};
+    stateSha256:createHash('sha256').update(serialize(state)).digest('hex'),
+    animals:(state.raid?.animals??[]).map(a=>({id:a.id,status:a.status,
+      moved:Math.hypot(a.x-(initialAnimals.get(a.id)?.x??a.x),
+        a.z-(initialAnimals.get(a.id)?.z??a.z)),
+      hitsUsed:(initialAnimals.get(a.id)?.hits??a.hitsRemaining)-a.hitsRemaining,
+      mobilePhaseRemaining:a.mobilePhaseRemaining??0,
+      dynamicStallSeconds:a.dynamicStallSeconds??0})),
+    mobileRecoveryEvents:state.events.filter(e=>
+      e.type==='ActorMobileCollisionRecovery').length,
+    wallRecoveryEvents:state.events.filter(e=>
+      e.type==='AnimalWallOverlapRecovery').length,
+    raidEnded:state.events.some(e=>e.type==='RaidEnded')};
   if(output)writeFileSync(output,JSON.stringify(report,null,2)+'\n');
   console.log(JSON.stringify(report));
 }finally{session.dispose();}
