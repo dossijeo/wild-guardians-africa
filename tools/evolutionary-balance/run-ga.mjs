@@ -25,7 +25,7 @@ export function validateConfig(raw){
  if(c.holdout.some(x=>seen.has(`${x.biome}:${x.seed}`)))throw Error('Train/holdout overlap');
  return c;
 }
-async function evaluateOne({biome,seed},days,strategy,genes){
+export async function evaluateOne({biome,seed},days,strategy,genes,onDay,detailedEvidence=false,onTickObserver){
  const entryDriverFactory=nav=>({
   async advancePresentation(){if(nav.raidEntryFailure)throw Error('Native raid entry failed');},
   async waitForEntry(){if(nav.raidEntryFailure)throw Error('Native raid entry failed');},
@@ -37,16 +37,24 @@ async function evaluateOne({biome,seed},days,strategy,genes){
   const r=await simulateNativeCampaign({days,biome,seed,culture:'mapungubwe',strategy:effectiveStrategy,
    evolutionaryGenes:genes,currentMagicRules,nativeEvidence:false,reloadRaids:false,
    openingFactory:createSpatialCampaignOpening,entryDriverFactory,
-   onTick:(state,nav)=>nav.serviceRaidConnectivityDemand?.()});
+   onDay,
+   onTick:(state,nav,timing)=>{nav.serviceRaidConnectivityDemand?.();onTickObserver?.(state,nav,timing);}});
   return {status:'completed',biome,seed,days,strategy,genes:genes??null,
    completedNights:r.completedNights,result:r.result,rows:r.daily.map(row=>({
     day:row.day,money:row.money,living:row.living,planted:row.planted,
     delivered:row.delivered,destroyed:row.destroyed,staff:row.staff,magic:row.magic,
     income:row.finance.income,seeds:row.finance.seeds,wages:row.finance.wages,
     walls:row.finance.walls,repairs:row.finance.repairs,
-    reconciled:row.finance.reconciliationDifference===0})),
+    reconciled:row.finance.reconciliationDifference===0,wallTime:row.wallTime})),
    policy:r.policy,defense:{paidCost:r.defense?.paidCost??0,paidPieces:r.defense?.paidPieces??0},
-   raid:r.raidEvidence.raids.map(x=>({day:x.day,animals:Object.values(x.species).reduce((n,s)=>n+s.generated,0),cropsDestroyed:x.cropsDestroyed,wallHpLost:x.wallHpLost}))};
+   ...(detailedEvidence?{raidEvidence:r.raidEvidence,defenseEvidence:r.defense}:{}),
+   raid:r.raidEvidence.raids.map(x=>({day:x.day,animals:Object.values(x.species).reduce((n,s)=>n+s.generated,0),
+    attraction:x.pressureFacts?.observedValue??null,pressure:x.pressureFacts?.pressure??null,
+    livingAtSpawn:x.exposedLivingAtSpawn??null,cropsDestroyed:x.cropsDestroyed,
+    potentialAgriculturalHp:x.potentialAgriculturalHp,effectiveAgriculturalHp:x.effectiveAgriculturalHp,
+    wallHits:x.wallHits,wallHpLost:x.wallHpLost,structuresRuined:x.structuresRuined?.length??0,
+    shieldContacts:x.shieldContacts,routeUnavailableAttempts:x.routeUnavailableAttempts,
+    targetUnavailableAttempts:x.targetUnavailableAttempts}))};
  }catch(error){return {status:'error',biome,seed,days,strategy,genes:genes??null,
   message:error.message,day:error.nativeCampaignPartial?.day??null,
   partialState:error.nativeCampaignPartial?.state??null,

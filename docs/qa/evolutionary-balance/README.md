@@ -147,6 +147,66 @@ invalida las fincas vacías y al nuevo registro de aplicaciones mágicas; los
 resultados físicos nativos se conservan sin retocarlos. Las gráficas están en
 [`pilot-7day/trajectories.svg`](pilot-7day/trajectories.svg).
 
+### Piloto emparejado de 14 noches
+
+Se ejecutaron cuatro campañas nativas continuas en Sabana/Mapungubwe,
+semillas 712 y 123. El candidato fue el genoma inicial `376ca7…`; el control
+`good-current-magic` usa el mismo calendario vigente de magia, de modo que la
+comparación no atribuye al genoma la corrección del calendario legado. La
+configuración, SHA-256 de los módulos y progreso diario están en
+[`paired-14/config.json`](paired-14/config.json), y cada brazo conserva su
+informe nativo. No hubo recargas artificiales. No se cambiaron precios, daño ni
+presión militar. Las cuatro campañas llegaron a 14/14 noches sin victoria o
+derrota terminal; **14 noches no acreditan supervivencia hasta la 100**.
+
+| Semilla | Política | Caja día 14 | Plantas vivas | Destruidas | Ingresos | Semillas | Salarios | Murallas | Reparaciones | `Game.tick` acumulado |
+|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 712 | Candidato | 924 | 157 | 49 | 18.696 | 8.839 | 8.048 | 860 | 725 | 133,2 s |
+| 712 | Control | 549 | 86 | 99 | 16.294 | 7.650 | 7.384 | 860 | 551 | 107,1 s |
+| 123 | Candidato | 932 | 133 | 78 | 18.358 | 8.740 | 7.840 | 790 | 756 | 42,3 s |
+| 123 | Control | 536 | 79 | 108 | 16.616 | 7.820 | 7.321 | 900 | 739 | 45,1 s |
+
+El candidato termina ambos pilotos con más caja y cultivos, pero también
+siembra más y paga más salarios/semillas. Los picos de pérdida no desaparecen:
+el candidato perdió 57 plantas en la noche 11 de la semilla 123. Las
+aplicaciones registradas fueron 783 de Multiplicar y cero de Crecimiento en
+cada brazo; este piloto **no mide** una estrategia mixta de ambas magias.
+Las cifras de murallas pagadas y `wallHits` no certifican el porcentaje de
+cultivos protegidos ni el cierre físico del recinto.
+Las hordas tampoco fueron idénticas: con la misma regla militar y semilla, la
+atracción varía al cambiar el valor agrícola. En la semilla 712 aparecieron
+138 animales ante el candidato y 134 ante el control; en la 123, 137 y 134.
+Las murallas perdieron respectivamente 7.116/5.624 HP (712) y 7.925/6.548 HP
+(123), con 86/86 y 79/90 piezas pagadas. Más desgaste estructural y menos
+cultivos perdidos es una observación interesante, pero sin datos de brechas y
+recintos no prueba por sí sola mayor eficacia defensiva. Los informes reducidos
+de esta batería no registraron composición por especie ni estado topológico;
+esas observaciones quedan pendientes.
+
+El rendimiento exige diagnóstico antes de ampliar la campaña: en semilla 712,
+el candidato gastó 52,6 y 48,8 s de `Game.tick` en los días 13 y 14; el control
+gastó 24,4 y 24,8 s en los días 10 y 11. El coste no puede atribuirse sólo al
+genoma. Los días siguientes y su navegación deben perfilarse con un checkpoint
+reproducible. La estrategia es **candidata provisional**; faltan otras semillas,
+biomas, horizontes mayores, estado real de recintos y perfiles de rendimiento.
+Las trayectorias comparativas están en
+[`paired-14/trajectories.svg`](paired-14/trajectories.svg).
+
+Un replay congelado del candidato en Sabana/712 conservó estados de inicio y
+de incursión del día 13 en [`profile-sabana-712`](profile-sabana-712). El
+snapshot de incursión, perfilado durante 50 ticks, gastó 3,414 s en `Game.tick`:
+4.151 llamadas `approachPath` (23 rutas, 4.128 negativas), 4.818 `workerPath`
+y 58.854 `walkable`. La selección ocupó 1,566 s y `approachPath` 1,305 s.
+Una muestra de una de cada 20 llamadas sitúa 206/208 en
+`reachableApproach → targetForImpl` al recorrer estructuras/murallas, frente a
+una en selección de cultivo y otra en revalidación; hubo sólo 25 intentos
+individuales de cultivo. El cuello residual es la aproximación repetida a
+estructuras, no la contratación del bot. Esta rama de balance **no cambia** el
+navegador; el perfil es evidencia para una corrección separada de Wild Engine.
+El replay puede variar en milisegundos frente a la batería por reconstrucción
+de residencia y carga del host; el diagnóstico se basa en recuentos y stacks,
+no en igualdad exacta de tiempos.
+
 ## Siguiente puerta de calidad
 
 1. Usar el piloto de siete noches y repetirlo con más semillas/biomas si no hay

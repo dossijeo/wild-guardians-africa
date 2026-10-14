@@ -54,9 +54,13 @@ try{
     'regionConnected','setState','wallPlacement']){
     const fn=nav[name];if(typeof fn!=='function')continue;
     calls[name]={count:0,ms:0,...(name==='approachPath'?{found:0,blocked:0,unknown:0,
-      unknownCauses:{},unknownExamples:[]}:{})};
+      unknownCauses:{},unknownExamples:[],stackSamples:{}}:{})};
     nav[name]=(...args)=>{
       const start=performance.now();
+      if(name==='approachPath'&&process.env.WG_PROFILE_APPROACH_STACKS==='1'&&calls[name].count%20===0){
+        const stack=new Error().stack?.split('\n').slice(2,6).map(s=>s.trim()).join(' | ')??'unknown';
+        calls[name].stackSamples[stack]=(calls[name].stackSamples[stack]??0)+1;
+      }
       try{const result=fn(...args);
         if(name==='approachPath')calls[name][result?'found':'blocked']++;
         return result;
