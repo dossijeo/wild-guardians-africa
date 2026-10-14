@@ -300,6 +300,21 @@ all 100 night plans, introductory species and strike budgets, exactly-once
 destruction across reload, and introductory crop-loss limits. All 43 pass;
 only test expectations changed.
 
+After the provisional-sector fix, a fresh native Sabana/Mapungubwe seed 712
+good-policy campaign completed the 14-night cap in 276.8 seconds, with no
+raid evidence issues. Against the archived identical-policy 14-night run
+(`spatial-sabana-seed712-enclosure-latest-14nights.json.gz`), all 14 daily
+rows match in every gameplay field; only measured wall times differ. The
+complete `raidEvidence`, entry transport and plot-search reports also match.
+The farm ends with 108 living crops and 755 coins in both runs. Accumulated
+`Game.tick` was 151.7 seconds versus 154.4 seconds before, and the largest
+daily `Game.tick` cost was 16.6 versus 16.9 seconds (day 10 in both).
+These small timing differences are not an isolated speedup claim, but the
+matching decisions and physical evidence show no new campaign regression
+through night 14. The full new report is retained as
+`selector-village-14-sabana-712.json.gz`; 30/60/100-night survival remains
+unverified.
+
 ## Reproduce
 
 ```powershell
