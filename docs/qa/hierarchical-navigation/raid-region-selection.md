@@ -621,8 +621,20 @@ base mijo delivery (665 to 676) rather than the male worker's 6/5 bonus.
 It still requires paid hiring, physical watering and movement, maturation,
 pickup, save/reload and a single physical delivery. All 30 biome/culture
 vertical tests pass. This changes only QA fixture and expectations, not game
-workforce, crop timing, navigation or income rules. The global 82-failure
-count predates this correction and has not been refreshed.
+workforce, crop timing, navigation or income rules. The earlier global
+82-failure count predates this correction.
+
+The complete suite at `d7a314d2` ran 4,322 tests in 446.9 seconds:
+**4,249 passed and 73 failed**. Nine previously failing test names now pass,
+including both Gran Cañón vertical cases; no test name newly failed. The
+complete output is retained as `full-suite-d7a314d2.log.gz`. Four remaining
+QA-147 failures expected the retired unconditional ×2 Multiply crate value.
+Their fixture now checks the actual unmodified crate value, the bounded
+`132/13` committed power, the 10-coin liquidated bonus, a single rounded
+ledger delivery and save/reload for all four worker profiles. That focused
+file passes 8/8. This correction postdates the global run, so no lower
+repository-wide failure count is claimed. No production agricultural rule was
+changed.
 
 ## Deferred engine name
 
