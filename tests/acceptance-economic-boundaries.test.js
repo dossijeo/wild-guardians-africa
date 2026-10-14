@@ -102,7 +102,11 @@ test('QA-132: an unaffordable remembered selection does not defeat an otherwise 
 
 test('QA-134: starting night 100 is not a victory before the guaranteed incursion resolves',()=>{
  for(const culture of Game.CULTURES){
-  const {s,nav}=farm(culture);s.day=100;s.completedNights=99;s.time=299.9;s.dayPlan={done:true};s.ledger.balance=rational(105);
+  const {s,nav}=farm(culture);s.day=100;s.completedNights=99;s.time=299.9;s.dayPlan={done:true};
+  // A real late-game raid can destroy this deliberately unprotected center.
+  // Keep enough capital for native recovery so this case isolates the timing
+  // of victory; the 799/800/835 defeat boundaries are exercised above.
+  s.ledger.balance=rational(10000);
   Game.tick(s,.1,nav);assert.equal(s.time,300);assert.equal(s.result,null);assert.equal(s.completedNights,99);
   assert.equal(s.events.filter(e=>e.type==='NightStarted').length,1);assert.equal(s.events.filter(e=>e.type==='CampaignWon').length,0);
   Game.tick(s,299.9,nav);assert.equal(s.result,null);assert.equal(s.completedNights,99);assert.equal(s.raid,null);

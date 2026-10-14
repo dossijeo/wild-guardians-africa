@@ -648,6 +648,20 @@ The independent exact-price unit file passes 4/4. The 100-village run paid
 it is a structural/precision test, not evidence that a real farm can earn
 that sum. These test-only changes also postdate the last global suite.
 
+The final-night timing fixture had only 105 coins and no crops or defenses.
+The real night-100 plan sends 24 warthogs even with zero crop value because
+time pressure remains; they destroyed its sole center and caused an authentic
+defeat before dawn. Giving that timing fixture ample recovery capital lets it
+test its intended ordering without suppressing the physical raid. The whole
+economic-boundaries file passes 23/23, while separate exact 799/800/835
+tests continue to cover insolvency. Postgame QA now acknowledges the valid
+once-per-day agricultural reminders instead of assuming there can be no
+messages after `world.expansion`: all five cultures completed 300 peaceful
+postgame nights each, with 12 periodic reloads and no new raid. The focused
+daily/interrupted/magic reminder files pass 15/15; the Growth-specific test
+excludes the independent, valid Multiply reminder. No attack pressure,
+tutorial, economy or postgame production behavior was changed.
+
 ## Deferred engine name
 
 After the WASM spatial core is functionally and performance-stable, rename
