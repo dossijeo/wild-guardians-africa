@@ -9,23 +9,26 @@ import * as Game from '../src/simulation/game.js';
 
 const wasm=new WebAssembly.Module(readFileSync(new URL(
   '../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+const snapshot=gunzipSync(readFileSync(new URL(
+  '../docs/qa/hierarchical-navigation/spatial-sabana-seed123-enclosure-30nights-state.json.gz',
+  import.meta.url))).toString();
 
-test('retreating animal replaces a statically blocked route with a physically clear exit',()=>{
-  const snapshot=gunzipSync(readFileSync(new URL(
-    '../docs/qa/hierarchical-navigation/spatial-sabana-seed123-enclosure-30nights-state.json.gz',
-    import.meta.url))).toString();
-  const state=deserialize(snapshot),loaded=new Map();
-  const session=createSpatialGameSession(wasm,state,{
+function loadNavigation(state){
+  const loaded=new Map(),session=createSpatialGameSession(wasm,state,{
     loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+  const village=state.villages[0],cx=Math.floor((village.x+24)/48),
+    cz=Math.floor((village.z+24)/48);
+  for(let z=cz-4;z<=cz+4;z++)for(let x=cx-4;x<=cx+4;x++){
+    if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+    loaded.set(`${x},${z}`,session.core.chunkPayload());
+  }
+  return {session,nav:createSpatialNavigationMovement(session,state)};
+}
+
+for(const reload of [false,true])test(`blocked retreat uses a physical exit${reload?' after save/load':''}`,()=>{
+  let state=deserialize(snapshot),{session,nav}=loadNavigation(state),
+    animal=state.raid.animals.find(a=>a.id==='animal-10819');
   try{
-    const village=state.villages[0],cx=Math.floor((village.x+24)/48),
-      cz=Math.floor((village.z+24)/48);
-    for(let z=cz-4;z<=cz+4;z++)for(let x=cx-4;x<=cx+4;x++){
-      if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
-      loaded.set(`${x},${z}`,session.core.chunkPayload());
-    }
-    const nav=createSpatialNavigationMovement(session,state);
-    const animal=state.raid.animals.find(a=>a.id==='animal-10819');
     assert.equal(animal.status,'retreating');
     let checkedRecoverySave=false;
     for(let i=0;i<400&&state.raid;i++){
@@ -39,11 +42,17 @@ test('retreating animal replaces a statically blocked route with a physically cl
         assert.deepEqual(restored.raid.animals.find(a=>a.id===animal.id).exitRouteRecovery,
           animal.exitRouteRecovery);
         checkedRecoverySave=true;
+        if(reload){
+          session.dispose();
+          state=restored;
+          ({session,nav}=loadNavigation(state));
+          animal=state.raid.animals.find(a=>a.id==='animal-10819');
+        }
       }
     }
     assert(checkedRecoverySave,'the stale static connector must trigger recovery');
     assert(state.events.some(e=>e.type==='AnimalExitRouteRecovery'&&
-      e.actorId===animal.id),JSON.stringify(state.events.filter(e=>e.type==='AnimalExitRouteRecovery')));
+      e.actorId===animal.id));
     assert.equal(animal.status,'gone');
     assert(Math.hypot(animal.x-animal.exit.x,animal.z-animal.exit.z)<1e-6);
   }finally{session.dispose();}

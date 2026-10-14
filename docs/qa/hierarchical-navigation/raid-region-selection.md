@@ -104,7 +104,7 @@ the native classification reopen, and selects the crop through the breach.
 Unit tests also cover natural-only isolation, an outer wall around a nested
 crop enclosure, a separate accessible plantation, shared decisions across
 crop groups and animals, open-frontier uncertainty, alternative crop access,
-region budget, and cache invalidation. All 96 combined spatial, connectivity,
+region budget, and cache invalidation. All 97 combined spatial, connectivity,
 raid and movement tests pass, including fixtures across all six biomes. The
 185 playable tests and web build
 also pass; those suites do not replace sustained campaign QA.
@@ -182,8 +182,12 @@ speed or attack budget. On the saved state the connector found a 73-point
 route after 170 budgeted calls (236 ms total); a native replay recorded one
 `AnimalExitRouteRecovery` and the warthog reached its actual exit. A snapshot
 regression exercises the recovery and its serialized pending state. The
-full-campaign rerun is required to distinguish this repair from a replay-only
-success.
+full-campaign rerun below distinguishes the repair from a replay-only success.
+An additional regression now actually disposes the WASM session during the
+pending recovery, deserializes the saved state, rebuilds the native world and
+resumes the raid. The warthog again reaches its physical exit; every measured
+movement segment passes the native static collision check. This checks
+continued behavior after load, not only that the recovery flag serializes.
 
 The rerun used the identical Sabana seed 123, good policy and 30-night cap.
 Its daily money and crop counts matched the failed run through day 10; it
