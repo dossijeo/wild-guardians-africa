@@ -1,0 +1,165 @@
+{
+  "sourceHash": "2b208619dca8c79d3bd859493e2e735db0e78a60",
+  "case": "default-no-walls-desierto-983-21",
+  "raidId": "raid-6-night",
+  "day": 6,
+  "elapsed": 3399.9999999976067,
+  "activeBounds": [
+    -24,
+    -72,
+    216,
+    168
+  ],
+  "raidView": {
+    "eye": {
+      "x": 99.70247532024266,
+      "z": 30.57367599590944
+    },
+    "target": {
+      "x": 83,
+      "z": 0
+    }
+  },
+  "cropsAlive": 130,
+  "animals": 8,
+  "loadedChunks": 36,
+  "queries": [
+    {
+      "species": "warthog",
+      "animalId": "animal-3828",
+      "spawn": {
+        "x": 211.65,
+        "z": -14
+      },
+      "targetId": "plant-3782",
+      "target": {
+        "x": 88.5,
+        "z": -13.5
+      },
+      "distance": 123.15101501814755,
+      "connectivity": "unknown",
+      "unknownReason": "graph-unresolved-despite-known-endpoints",
+      "from": {
+        "ids": [
+          23472
+        ],
+        "unknown": false
+      },
+      "to": {
+        "ids": [
+          18577
+        ],
+        "unknown": false
+      },
+      "enclosure": {
+        "ids": [
+          0
+        ],
+        "status": "open-frontier"
+      }
+    },
+    {
+      "species": "warthog",
+      "animalId": "animal-3828",
+      "spawn": {
+        "x": 211.65,
+        "z": -14
+      },
+      "targetId": "plant-3726",
+      "target": {
+        "x": 82.5,
+        "z": -4.5
+      },
+      "distance": 129.49892856699628,
+      "connectivity": "unknown",
+      "unknownReason": "graph-unresolved-despite-known-endpoints",
+      "from": {
+        "ids": [
+          23472
+        ],
+        "unknown": false
+      },
+      "to": {
+        "ids": [
+          19008
+        ],
+        "unknown": false
+      },
+      "enclosure": {
+        "ids": [
+          0
+        ],
+        "status": "open-frontier"
+      }
+    },
+    {
+      "species": "hyena",
+      "animalId": "animal-3829",
+      "spawn": {
+        "x": 211.65,
+        "z": -10
+      },
+      "targetId": "plant-3003",
+      "target": {
+        "x": 88.5,
+        "z": -10.5
+      },
+      "distance": 123.15101501814755,
+      "connectivity": "unknown",
+      "unknownReason": "graph-unresolved-despite-known-endpoints",
+      "from": {
+        "ids": [
+          24048
+        ],
+        "unknown": false
+      },
+      "to": {
+        "ids": [
+          19152
+        ],
+        "unknown": false
+      },
+      "enclosure": {
+        "ids": [
+          0
+        ],
+        "status": "open-frontier"
+      }
+    },
+    {
+      "species": "hyena",
+      "animalId": "animal-3829",
+      "spawn": {
+        "x": 211.65,
+        "z": -10
+      },
+      "targetId": "plant-3651",
+      "target": {
+        "x": 82.5,
+        "z": -6
+      },
+      "distance": 129.2119286289002,
+      "connectivity": "unknown",
+      "unknownReason": "graph-unresolved-despite-known-endpoints",
+      "from": {
+        "ids": [
+          24048
+        ],
+        "unknown": false
+      },
+      "to": {
+        "ids": [
+          19008
+        ],
+        "unknown": false
+      },
+      "enclosure": {
+        "ids": [
+          0
+        ],
+        "status": "open-frontier"
+      }
+    }
+  ],
+  "caveat": "Offline rebuild loads every chunk in captured activeBounds; results can differ from live residency. Two crop witnesses per species do not certify all targets."
+}

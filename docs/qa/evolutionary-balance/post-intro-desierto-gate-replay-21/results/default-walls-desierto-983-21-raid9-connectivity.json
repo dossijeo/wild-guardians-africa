@@ -1,0 +1,213 @@
+{
+  "sourceHash": "2b208619dca8c79d3bd859493e2e735db0e78a60",
+  "case": "default-walls-desierto-983-21",
+  "raidId": "raid-9-night",
+  "day": 9,
+  "elapsed": 5220.000000000825,
+  "activeBounds": [
+    -24,
+    -72,
+    216,
+    168
+  ],
+  "raidView": {
+    "eye": {
+      "x": 99.70247532024266,
+      "z": 30.57367599590944
+    },
+    "target": {
+      "x": 83,
+      "z": 0
+    }
+  },
+  "cropsAlive": 126,
+  "animals": 14,
+  "loadedChunks": 36,
+  "queries": [
+    {
+      "species": "hyena",
+      "animalId": "animal-5579",
+      "spawn": {
+        "x": 102.54082060931395,
+        "z": 32.327613286694586
+      },
+      "targetId": "plant-5546",
+      "target": {
+        "x": 90,
+        "z": 13.5
+      },
+      "distance": 22.621918654886727,
+      "connectivity": "unknown",
+      "unknownReason": "endpoint-without-grid-connector",
+      "from": {
+        "ids": [
+          32544
+        ],
+        "unknown": false
+      },
+      "to": {
+        "ids": [],
+        "unknown": false
+      },
+      "enclosure": {
+        "ids": [],
+        "status": "unknown"
+      }
+    },
+    {
+      "species": "hyena",
+      "animalId": "animal-5579",
+      "spawn": {
+        "x": 102.54082060931395,
+        "z": 32.327613286694586
+      },
+      "targetId": "plant-5311",
+      "target": {
+        "x": 85.5,
+        "z": -3
+      },
+      "distance": 39.22282278945587,
+      "connectivity": "unknown",
+      "unknownReason": "endpoint-without-grid-connector",
+      "from": {
+        "ids": [
+          32544
+        ],
+        "unknown": false
+      },
+      "to": {
+        "ids": [],
+        "unknown": false
+      },
+      "enclosure": {
+        "ids": [],
+        "status": "unknown"
+      }
+    },
+    {
+      "species": "warthog",
+      "animalId": "animal-5580",
+      "spawn": {
+        "x": 99.74068326279658,
+        "z": 34.08523407646653
+      },
+      "targetId": "plant-5546",
+      "target": {
+        "x": 90,
+        "z": 13.5
+      },
+      "distance": 22.77351032250066,
+      "connectivity": "unknown",
+      "unknownReason": "endpoint-without-grid-connector",
+      "from": {
+        "ids": [
+          32544
+        ],
+        "unknown": false
+      },
+      "to": {
+        "ids": [],
+        "unknown": false
+      },
+      "enclosure": {
+        "ids": [],
+        "status": "unknown"
+      }
+    },
+    {
+      "species": "warthog",
+      "animalId": "animal-5580",
+      "spawn": {
+        "x": 99.74068326279658,
+        "z": 34.08523407646653
+      },
+      "targetId": "plant-5303",
+      "target": {
+        "x": 87,
+        "z": -3
+      },
+      "distance": 39.21274788266208,
+      "connectivity": "unknown",
+      "unknownReason": "endpoint-without-grid-connector",
+      "from": {
+        "ids": [
+          32544
+        ],
+        "unknown": false
+      },
+      "to": {
+        "ids": [],
+        "unknown": false
+      },
+      "enclosure": {
+        "ids": [],
+        "status": "unknown"
+      }
+    },
+    {
+      "species": "buffalo",
+      "animalId": "animal-5586",
+      "spawn": {
+        "x": 98.7000376429566,
+        "z": 39.063582868376145
+      },
+      "targetId": "plant-5546",
+      "target": {
+        "x": 90,
+        "z": 13.5
+      },
+      "distance": 27.00347059281818,
+      "connectivity": "unknown",
+      "unknownReason": "endpoint-without-grid-connector",
+      "from": {
+        "ids": [
+          33120
+        ],
+        "unknown": false
+      },
+      "to": {
+        "ids": [],
+        "unknown": false
+      },
+      "enclosure": {
+        "ids": [],
+        "status": "unknown"
+      }
+    },
+    {
+      "species": "buffalo",
+      "animalId": "animal-5586",
+      "spawn": {
+        "x": 98.7000376429566,
+        "z": 39.063582868376145
+      },
+      "targetId": "plant-5283",
+      "target": {
+        "x": 76.5,
+        "z": 1.5
+      },
+      "distance": 43.6332949621966,
+      "connectivity": "blocked",
+      "unknownReason": null,
+      "from": {
+        "ids": [
+          33120
+        ],
+        "unknown": false
+      },
+      "to": {
+        "ids": [
+          19584
+        ],
+        "unknown": false
+      },
+      "enclosure": {
+        "ids": [
+          9
+        ],
+        "status": "sealed"
+      }
+    }
+  ],
+  "caveat": "Offline rebuild loads every chunk in captured activeBounds; results can differ from live residency. Two crop witnesses per species do not certify all targets."
+}

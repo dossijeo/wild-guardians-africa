@@ -1,0 +1,289 @@
+{
+  "sourceHash": "2b208619dca8c79d3bd859493e2e735db0e78a60",
+  "case": "default-no-walls-desierto-983-21",
+  "raidId": "raid-10-night",
+  "day": 10,
+  "elapsed": 5800.000000002858,
+  "activeBounds": [
+    -24,
+    -72,
+    216,
+    168
+  ],
+  "raidView": {
+    "eye": {
+      "x": 99.70247532024266,
+      "z": 30.57367599590944
+    },
+    "target": {
+      "x": 83,
+      "z": 0
+    }
+  },
+  "cropsAlive": 168,
+  "animals": 16,
+  "loadedChunks": 36,
+  "queries": [
+    {
+      "species": "warthog",
+      "animalId": "animal-7738",
+      "spawn": {
+        "x": -19.65,
+        "z": -30
+      },
+      "targetId": "plant-7673",
+      "target": {
+        "x": 73.5,
+        "z": -6
+      },
+      "distance": 96.19211246250912,
+      "connectivity": "unknown",
+      "unknownReason": "endpoint-without-grid-connector",
+      "from": {
+        "ids": [
+          4032
+        ],
+        "unknown": false
+      },
+      "to": {
+        "ids": [],
+        "unknown": false
+      },
+      "enclosure": {
+        "ids": [],
+        "status": "unknown"
+      }
+    },
+    {
+      "species": "warthog",
+      "animalId": "animal-7738",
+      "spawn": {
+        "x": -19.65,
+        "z": -30
+      },
+      "targetId": "plant-7517",
+      "target": {
+        "x": 85.5,
+        "z": -13.5
+      },
+      "distance": 106.43670654431206,
+      "connectivity": "unknown",
+      "unknownReason": "graph-unresolved-despite-known-endpoints",
+      "from": {
+        "ids": [
+          4032
+        ],
+        "unknown": false
+      },
+      "to": {
+        "ids": [
+          18577
+        ],
+        "unknown": false
+      },
+      "enclosure": {
+        "ids": [
+          0
+        ],
+        "status": "open-frontier"
+      }
+    },
+    {
+      "species": "buffalo",
+      "animalId": "animal-7739",
+      "spawn": {
+        "x": -19.65,
+        "z": -26
+      },
+      "targetId": "plant-7673",
+      "target": {
+        "x": 73.5,
+        "z": -6
+      },
+      "distance": 95.27288439005089,
+      "connectivity": "unknown",
+      "unknownReason": "endpoint-without-grid-connector",
+      "from": {
+        "ids": [
+          4032
+        ],
+        "unknown": false
+      },
+      "to": {
+        "ids": [],
+        "unknown": false
+      },
+      "enclosure": {
+        "ids": [],
+        "status": "unknown"
+      }
+    },
+    {
+      "species": "buffalo",
+      "animalId": "animal-7739",
+      "spawn": {
+        "x": -19.65,
+        "z": -26
+      },
+      "targetId": "plant-7440",
+      "target": {
+        "x": 81,
+        "z": 6
+      },
+      "distance": 105.61449947805463,
+      "connectivity": "unknown",
+      "unknownReason": "graph-unresolved-despite-known-endpoints",
+      "from": {
+        "ids": [
+          4032
+        ],
+        "unknown": false
+      },
+      "to": {
+        "ids": [
+          19584
+        ],
+        "unknown": false
+      },
+      "enclosure": {
+        "ids": [
+          0
+        ],
+        "status": "open-frontier"
+      }
+    },
+    {
+      "species": "hyena",
+      "animalId": "animal-7740",
+      "spawn": {
+        "x": -19.65,
+        "z": -22
+      },
+      "targetId": "plant-7673",
+      "target": {
+        "x": 73.5,
+        "z": -6
+      },
+      "distance": 94.51413915388532,
+      "connectivity": "unknown",
+      "unknownReason": "endpoint-without-grid-connector",
+      "from": {
+        "ids": [
+          16128
+        ],
+        "unknown": false
+      },
+      "to": {
+        "ids": [],
+        "unknown": false
+      },
+      "enclosure": {
+        "ids": [],
+        "status": "unknown"
+      }
+    },
+    {
+      "species": "hyena",
+      "animalId": "animal-7740",
+      "spawn": {
+        "x": -19.65,
+        "z": -22
+      },
+      "targetId": "plant-7440",
+      "target": {
+        "x": 81,
+        "z": 6
+      },
+      "distance": 104.47211350403514,
+      "connectivity": "unknown",
+      "unknownReason": "graph-unresolved-despite-known-endpoints",
+      "from": {
+        "ids": [
+          16128
+        ],
+        "unknown": false
+      },
+      "to": {
+        "ids": [
+          19584
+        ],
+        "unknown": false
+      },
+      "enclosure": {
+        "ids": [
+          0
+        ],
+        "status": "open-frontier"
+      }
+    },
+    {
+      "species": "lion",
+      "animalId": "animal-7742",
+      "spawn": {
+        "x": -19.65,
+        "z": -14
+      },
+      "targetId": "plant-7673",
+      "target": {
+        "x": 73.5,
+        "z": -6
+      },
+      "distance": 93.49290080000728,
+      "connectivity": "unknown",
+      "unknownReason": "graph-unresolved-despite-known-endpoints",
+      "from": {
+        "ids": [
+          16128
+        ],
+        "unknown": false
+      },
+      "to": {
+        "ids": [
+          19008
+        ],
+        "unknown": false
+      },
+      "enclosure": {
+        "ids": [
+          0
+        ],
+        "status": "open-frontier"
+      }
+    },
+    {
+      "species": "lion",
+      "animalId": "animal-7742",
+      "spawn": {
+        "x": -19.65,
+        "z": -14
+      },
+      "targetId": "plant-7256",
+      "target": {
+        "x": 81,
+        "z": 10.5
+      },
+      "distance": 103.58895935378443,
+      "connectivity": "unknown",
+      "unknownReason": "graph-unresolved-despite-known-endpoints",
+      "from": {
+        "ids": [
+          16128
+        ],
+        "unknown": false
+      },
+      "to": {
+        "ids": [
+          19584
+        ],
+        "unknown": false
+      },
+      "enclosure": {
+        "ids": [
+          0
+        ],
+        "status": "open-frontier"
+      }
+    }
+  ],
+  "caveat": "Offline rebuild loads every chunk in captured activeBounds; results can differ from live residency. Two crop witnesses per species do not certify all targets."
+}
