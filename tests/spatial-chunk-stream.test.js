@@ -41,6 +41,10 @@ test('a Sabana game state renders and routes from one spatial authority through 
   while(scheduled.length)scheduled.shift()();
   await stream.whenIdle();
   assert.equal(installed.size,2);assert.equal(core.metrics().loadedChunks,2);
+  const nearby=session.queryPropsAt(0,0,4);
+  assert.equal(nearby.status,'ready');
+  assert.deepEqual(nearby.props.map(prop=>prop.id),installed.get('0,0').instances.flat()
+    .filter(prop=>Math.hypot(prop.x,prop.z)<12).map(prop=>prop.id));
   for(const payload of installed.values()){
     const center=payload.cx*48;
     assert.equal(payload.terrain.positions[(24*49+24)*3+1],Math.fround(core.surface(center,0)));
@@ -93,6 +97,8 @@ test('a Sabana game state renders and routes from one spatial authority through 
   assert.deepEqual(change.removedProps,[visible.id]);
   assert.equal(core.selectChunk(source.cx,source.cz)>=0,true);
   assert.equal(core.instances().flat().some(prop=>prop.id===visible.id),false);
+  assert.equal(session.queryPropsAt(visible.x,visible.z,0).props
+    .some(prop=>prop.id===visible.id),false);
   const group={children:[],userData:{propSources:source.instances,
     contactInstances:source.instances.map(list=>list.slice())}};
   const refreshed=refreshResidentProps(new Map([[`${source.cx},${source.cz}`,group]]),session.suppressed,()=>{});
@@ -106,6 +112,13 @@ test('a Sabana game state renders and routes from one spatial authority through 
   assert(session.topologySource.revision()>removedTopology);
   assert.equal(session.horizonSource.revision(),2,'a new settlement updates native relief');
   assert.equal(session.field.surface(96,0),core.surfaceAnywhere(96,0));
+  assert.equal(session.queryPropsAt(0,0,4).status,'unknown',
+    'old visual prop records cannot answer after settlement terrain changes');
+  installed.delete('0,0');
+  stream.plan(new Map([['0,0',{cx:0,cz:0,score:0}]]),true);
+  while(scheduled.length)scheduled.shift()();
+  await stream.whenIdle();
+  assert.equal(session.queryPropsAt(0,0,4).status,'ready');
   session.dispose();
 });
 
@@ -231,6 +244,7 @@ test('production terrain installer accepts the same C++ payload used for navigat
     quality:'media',terrainMeshes:[],waterPrototypes:Array(20).fill(null),
     fluidMaterial:new THREE.MeshBasicMaterial(),state:{biome:'sabana'}};
   const group=WorldScene.prototype.terrain.call(world,0,0,data);
+  assert.equal(group.userData.spatialAuthority,'spatial-wasm');
   assert.equal(world.terrainMeshes[0].geometry.getAttribute('position').count,49*49);
   assert.equal(group.userData.contactInstances.flat().length,data.instances.flat().length);
   const center=world.terrainMeshes[0].geometry.getAttribute('position').getY(24*49+24);

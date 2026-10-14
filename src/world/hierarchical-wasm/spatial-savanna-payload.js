@@ -35,7 +35,7 @@ export function spatialChunkPayload(wasm,cx,cz){
   const river=new Float32Array(memory,wasm.spatial_water_triangles_ptr(),wasm.spatial_water_vertex_count()*3).slice();
   for(let i=0;i<river.length;i+=3){river[i]-=cx*48;river[i+2]-=cz*48;}
   const groundMask=new Uint8Array(memory,wasm.spatial_ground_mask_ptr(),35*35*4).slice();
-  return {cx,cz,terrain:{positions,colors:rgb.slice(),indices},water:river,
+  return {authority:'spatial-wasm',cx,cz,terrain:{positions,colors:rgb.slice(),indices},water:river,
     groundMask,instances:spatialInstances(wasm,cx,cz)};
 }
 

@@ -6,6 +6,7 @@ import {createSpatialWallMirror} from './spatial-wall-mirror.js';
 import {createSpatialCenterMirror} from './spatial-center-mirror.js';
 import {createSpatialShieldMirror} from './spatial-shield-mirror.js';
 import {createSpatialPropMirror} from './spatial-prop-mirror.js';
+import {queryResidentSpatialProps} from './spatial-prop-query.js';
 import {addSpatialVillageBuildings} from './spatial-village-bridge.js';
 import {WORKER_SPATIAL_PROFILE,ANIMAL_SPATIAL_PROFILES} from './spatial-movement-profiles.js';
 import {BIOME_IDS} from '../biome-ids.js';
@@ -59,7 +60,11 @@ export function createSpatialGameSession(module,state,streamOptions){
   }
   selectProfile(WORKER_SPATIAL_PROFILE);
   selectProfile(ANIMAL_SPATIAL_PROFILES.warthog);
-  const stream=createSpatialChunkStream(core,streamOptions);
+  const stream=createSpatialChunkStream(core,{...streamOptions,
+    onData:data=>{
+      data.terrainRevision=terrainRevision;
+      streamOptions.onData(data);
+    }});
   function syncState(next){
     if(next.seed!==state.seed||next.biome!==state.biome)
       throw TypeError('A spatial session cannot change seed or biome');
@@ -103,7 +108,10 @@ export function createSpatialGameSession(module,state,streamOptions){
   // Crop turnover and structure HP updates keep the same component IDs.
   const topologySource={revision:()=>terrainRevision+walls.revision()+
     centers.revision()+shields.revision()+props.revision()};
+  const queryPropsAt=(x,z,radius)=>queryResidentSpatialProps(
+    streamOptions.loaded(),props.suppressed,x,z,radius,terrainRevision);
   return {core,field,stream,horizonSource,topologySource,suppressed:props.suppressed,syncState,
     routeActor,actorConnectivity,actorRegions,actorRegionsBatch,actorCanStand,actorStepClear,
+    queryPropsAt,
     dispose:()=>stream.dispose()};
 }

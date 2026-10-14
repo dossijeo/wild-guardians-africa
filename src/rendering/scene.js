@@ -296,6 +296,10 @@ export class WorldScene {
   }
   terrain(cx,cz,payload=null) {
     const group=new THREE.Group();group.position.set(cx*48,0,cz*48);group.userData.nativeChunkOrigin=[cx*48,cz*48];
+    if(payload?.authority==='spatial-wasm'){
+      group.userData.spatialAuthority='spatial-wasm';
+      group.userData.spatialTerrainRevision=payload.terrainRevision;
+    }
     const geometry=payload?nativeTerrainBuffer(payload.terrain):nativeGroundGeometry(this.nav.field,this.pack.profile,cx,cz);
     const material=nativeGroundMaterial(this.quality);
     this.biomeGround?.attach(material,cx,cz,payload?.groundMask);material.userData.toonGround=true;material.userData.nativeGroundColor=true;const ground=new THREE.Mesh(geometry,material);ground.position.set(0,0,0);ground.receiveShadow=true;ground.userData.ground=true;group.add(ground);this.terrainMeshes.push(ground);if(this.mudPatches){const mud=this.mudPatches.chunk(this.nav.field,cx,cz);if(mud){group.add(mud);group.userData.mudSurface=mud.geometry.userData;}}
