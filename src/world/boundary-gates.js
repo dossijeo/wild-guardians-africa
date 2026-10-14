@@ -60,8 +60,8 @@ export function ensureBoundaryGates(layout,nav,canHost,isFree,omitted=[],rank=()
   const probes=polygon.flatMap((a,i)=>{const b=polygon[(i+1)%polygon.length],dx=b.x-a.x,dz=b.z-a.z,length=Math.hypot(dx,dz)||1;return [.1,.5,1,2].map(offset=>({x:(a.x+b.x)/2-dz/length*offset,z:(a.z+b.z)/2+dx/length*offset}));});
   if(!probes.some(p=>containsPoint(polygon,p.x,p.z)&&isFree(p.x,p.z)))continue;
   onPlayableFace(face);
-  // An existing door remains the enclosure's door even if its approach is
-  // temporarily obstructed. Reconstruction must never add a second one.
+  // Keep existing doors fixed during face reconstruction. The game may add
+  // another on a new module if its route audit proves that access was cut.
   if(perimeter.some(p=>p.kind==='gate'))continue;
   const candidates=face.hosts.map(id=>byId.get(id)).filter(p=>p?.kind==='wall'&&p.scaleX>=.55&&eligible(p));
   candidates.sort((a,b)=>rank(a,face)-rank(b,face)||Math.round(a.x*1e5)-Math.round(b.x*1e5)||Math.round(a.z*1e5)-Math.round(b.z*1e5)||a.id-b.id);
