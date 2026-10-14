@@ -338,6 +338,13 @@ still unresolved; the largest groups concern old village prices, old
 connected-group reservation exclusivity, previous magic rules and historical
 navigation APIs. No production acceptance is claimed from this improvement.
 
+The eight defensive-reservation acceptance tests no longer enforce the
+removed connected-group lock. They now verify simultaneous independent
+centre approach slots, distinct wall modules within the same connected
+perimeter, distinct plants in one contiguous crop group, physical approach
+spacing, target destruction, and deterministic save/load continuation.
+All eight pass without changing target-selection or combat code.
+
 ## Reproduce
 
 ```powershell
