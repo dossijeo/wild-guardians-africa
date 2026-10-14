@@ -9,7 +9,7 @@ const angles=32,budget=8;
 export function animalExitConnector(actor,end,nav){
  const radius=actor.radius??.28;
  if(!nav.segmentClear||!nav.walkable)return null;
- const key=JSON.stringify([nav.version??0,actor.x,actor.z,end.x,end.z,radius]);
+ const key=JSON.stringify([nav.version??0,nav.residencyRevision??0,actor.x,actor.z,end.x,end.z,radius]);
  let search=actor.exitConnectorSearch;
  if(!search||search.key!==key)search=actor.exitConnectorSearch={key,next:0};
  if(search.exhausted)return null;

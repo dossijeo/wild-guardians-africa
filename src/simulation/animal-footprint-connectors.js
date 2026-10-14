@@ -20,7 +20,7 @@ function offsetCorners(polygon,radius){
 }
 const providerKeys=['walkable','segmentClear','terrainValid','propsAt'],fieldKeys=['slope','surface','fluidInside','waterInfo'];
 function same(a,nav,actor,end,radius){
- if(a.nav!==nav||a.version!==nav.version||a.obstacles!==nav.obstacles||a.obstacleCount!==(nav.obstacles?.length??0)||a.field!==nav.field||a.x!==actor.x||a.z!==actor.z||a.ex!==end.x||a.ez!==end.z||a.radius!==radius)return false;
+ if(a.nav!==nav||a.version!==nav.version||a.residencyRevision!==(nav.residencyRevision??0)||a.obstacles!==nav.obstacles||a.obstacleCount!==(nav.obstacles?.length??0)||a.field!==nav.field||a.x!==actor.x||a.z!==actor.z||a.ex!==end.x||a.ez!==end.z||a.radius!==radius)return false;
  for(const key of providerKeys)if(a.providers[key]!==nav[key])return false;
  for(const key of fieldKeys)if(a.fieldProviders[key]!==nav.field?.[key])return false;
  for(const o of a.selected){
@@ -30,7 +30,7 @@ function same(a,nav,actor,end,radius){
  return true;
 }
 function init(nav,actor,end,radius){return {
- nav,version:nav.version,obstacles:nav.obstacles,obstacleCount:nav.obstacles?.length??0,field:nav.field,
+ nav,version:nav.version,residencyRevision:nav.residencyRevision??0,obstacles:nav.obstacles,obstacleCount:nav.obstacles?.length??0,field:nav.field,
  providers:Object.fromEntries(providerKeys.map(k=>[k,nav[k]])),fieldProviders:Object.fromEntries(fieldKeys.map(k=>[k,nav.field?.[k]])),
  x:actor.x,z:actor.z,ex:end.x,ez:end.z,radius,scan:0,selected:[],phase:'scan',raw:null,points:[],point:0,costs:[],previous:[],closed:new Set(),current:null,edge:1,failed:false
 };}

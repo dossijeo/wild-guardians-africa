@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import {deserialize,serialize} from '../../src/persistence/snapshots.js';
 import {createSpatialGameSession} from '../../src/world/hierarchical-wasm/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+import {ANIMAL_SPATIAL_PROFILES} from '../../src/world/hierarchical-wasm/spatial-movement-profiles.js';
 import {gatePortalPoints} from '../../src/world/gate-passages.js';
 import {cachedWateringRoute} from '../../src/world/watering-route-cache.js';
 
@@ -27,11 +28,16 @@ assert(gate?.gate);
 const [start,end]=gatePortalPoints(gate,.28),wasm=session.core.wasm;
 function inspect(stage){
   const cachedPath=nav.workerPath(start,end),fresh=session.routeActor(start,end,{worker:true});
+  const animalFresh=session.actorConnectivity(start,end,{worker:false,species:'warthog'});
+  const animalJs=nav.regionConnected(start,end,ANIMAL_SPATIAL_PROFILES.warthog.radius,null,false);
+  assert.equal(animalJs,animalFresh==='possible'?true:
+    animalFresh==='blocked'?false:null,`stale animal connectivity at ${stage}`);
   session.actorRegions(start,{worker:true});
   const cachedConnected=wasm.nav_cached_connected(65,3,68,3);
   const hitConnected=wasm.nav_cached_connected(65,3,68,3);
   const freshConnected=wasm.lazy_connected(65,3,68,3);
   const row={stage,jsPath:cachedPath?'found':'blocked',freshPath:fresh.status,
+    animalJs,animalFresh,
     wasmCached:cachedConnected,wasmHit:hitConnected,wasmFresh:freshConnected,
     topologyRevision:session.topologySource.revision(),chunkRevision:session.core.chunkRevision(),
     sectorRevision:wasm.lazy_sector_updates(),nativeHits:wasm.nav_cache_total_hits(),
@@ -81,11 +87,20 @@ try{
   try{cachedWateringRoute(worker,plant,nav,compute);}
   catch(error){cachedUnknown=error.name==='SpatialChunkUnavailable';}
   assert(freshUnknown&&cachedUnknown,'JS cache must not hide an unloaded sector');
+  const nativeMissing=session.routeActor(start,end,{worker:true});
+  let workerMissing='blocked';
+  try{workerMissing=nav.workerPath(start,end)?'found':'blocked';}
+  catch(error){if(error.name!=='SpatialChunkUnavailable')throw error;workerMissing='unknown';}
+  assert.equal(workerMissing,nativeMissing.status,
+    'a JS negative worker-route proof must not hide native unknown');
   assert.equal(computations,2);
   session.core.addChunk(1,0);loaded.set('1,0',session.core.chunkPayload());
   assert(cachedWateringRoute(worker,plant,nav,compute));
+  const nativeResident=session.routeActor(start,end,{worker:true});
+  assert.equal(nav.workerPath(start,end)?'found':'blocked',nativeResident.status);
   assert.equal(computations,3);
   rows.push({stage:'js-watering-route-residency',freshUnknown,cachedUnknown,
+    workerMissing,nativeMissing:nativeMissing.status,nativeResident:nativeResident.status,
     computations,topologyRevision:nav.version,residencyRevision:nav.residencyRevision});
 
   // Portal revisions must invalidate a native answer even when no sector is
