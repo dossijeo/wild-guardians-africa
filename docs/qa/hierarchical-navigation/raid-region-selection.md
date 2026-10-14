@@ -446,6 +446,18 @@ predicate. Its earlier failure (`17` paid versus `11` base coins) was an
 auditor mismatch, not evidence of an illegal landing. No production terrain,
 movement or economic rule changed.
 
+The complete suite was rerun at `dc298b5a` in 447.6 seconds: 4,321 tests,
+4,228 passed and **93 failed**. Compared with `7fc37943`, eleven former
+failures are resolved and there are no newly failing test names. The exact
+TAP output is retained in `full-suite-dc298b5a.log.gz`. This remains a red
+suite, so neither core stabilization nor the deferred `wild-engine` rename
+is accepted. One remaining navigation-test cluster assumes that precomputed
+JS paths are consumed by `Navigation.path`; the hierarchical adapter now
+plans paths directly. The worker still computes and transfers those unused
+path arrays, so this warrants architectural cleanup and a before/after cost
+measurement rather than reinstating the retired routing behavior to satisfy
+the old assertions.
+
 A same-policy Gran Cañón seed 123 native campaign was repeated after the
 committed-target fix. Against `selector-village-14-canyon-123.json.gz`, all
 daily gameplay fields, complete raid evidence, entry transport and plot
