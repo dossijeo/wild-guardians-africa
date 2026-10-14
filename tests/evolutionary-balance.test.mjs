@@ -4,6 +4,26 @@ import {DEFAULT_GENES,validateGenes,preferredAgriculturalPower} from '../tools/e
 import {seededRandom,randomGenome,breed,scoreCampaign,genomeId} from '../tools/evolutionary-balance/ga.mjs';
 import {validateConfig,evaluateOne} from '../tools/evolutionary-balance/run-ga.mjs';
 import {calibrate} from '../tools/evolutionary-balance/calibrate-model.mjs';
+import {archiveGaReports} from '../tools/evolutionary-balance/archive-ga-reports.mjs';
+import {mkdtempSync,writeFileSync,readFileSync,existsSync,rmSync} from 'node:fs';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+import {gunzipSync} from 'node:zlib';
+
+test('GA campaign archives retain exact reports and exclude incomplete progress',()=>{
+ const dir=mkdtempSync(join(tmpdir(),'wg-ga-archive-'));
+ try{
+  const name='123456789abc-1234567890abcdef-sabana-411-7.json',raw='{"result":"defeat","completedNights":5}\n';
+  writeFileSync(join(dir,name),raw);
+  writeFileSync(join(dir,'progress-partial.jsonl'),'{"day":2}\n');
+  const entries=archiveGaReports(dir);
+  assert.equal(entries.length,1);
+  assert.equal(entries[0].source,name);
+  assert.equal(gunzipSync(readFileSync(join(dir,`${name}.gz`))).toString(),raw);
+  assert.equal(existsSync(join(dir,name)),false);
+  assert.equal(existsSync(join(dir,'progress-partial.jsonl')),true);
+ }finally{rmSync(dir,{recursive:true,force:true});}
+});
 
 test('GA genes mutate reproducibly and remain inside policy bounds',()=>{
  const a=seededRandom(712),b=seededRandom(712);

@@ -1,0 +1,12 @@
+# Staged policy search: seven-night screening (incomplete)
+
+This experimental batch used the unchanged production balance and Wild Engine at source `7eef1cb8de9a158aed2a832f4546a0d792b14023`. The full source/module hashes, seed set, genes, and computational limits are in `results/config-4ff6ffc065dc.json`. Training cases were Sabana/411 and Gran Río/626; Volcanes/907 was reserved as a holdout. The run was stopped cooperatively after repeated expensive days, before the second generation and holdout. `results/search-4ff6ffc065dc.json` contains **generation 0 only**. There is no selected or validated policy from this batch.
+
+| Genome ID | Sabana/411 | Gran Río/626 | Observation |
+| --- | --- | --- | --- |
+| `eee9529b306e0091` (default) | 7/7, 118 live, 1,133 cash | 7/7, 115 live, 1,166 cash | Passed only this short training screen. |
+| `16093a056558656e` | Native defeat night 6, 15 live, 27 cash | Native defeat night 5, 12 live, 7 cash | Weak production and cash. |
+| `6806093ee811c41c` | Native defeat night 5, 71 live, 12 cash | Native defeat night 5, 70 live, 9 cash | Navigation/simulation cost grew sharply: day 4 `Game.tick` 140/122 s. |
+| `d7df1dfd16b991e7` | Native defeat night 5, 63 live, 9 cash | Interrupted during day 3; last recorded day 2, 72 live, 398 cash | Day 4/5 `Game.tick` in Sabana 113/125 s. The interrupted Gran Río case is **not a defeat**. |
+
+Completed native reports and per-day progress are preserved verbatim in `results/`. The partial Gran Río case has a progress log but no completed report or terminal result. The run was stopped by the experiment operator because the screening limit of 180 s `Game.tick` per day was too permissive for poor candidates; the limit was not crossed, so this is a **batch-level computational cost stop**, not a per-campaign engine error. The next short screening should use a 45–60 s/day ceiling and keep a cost stop distinct from native defeat. It must include a zero-wall investment genome and compare matched wall, no-wall-with-Shield, and no-defense controls with identical agricultural powers. This batch cannot answer whether ignoring walls is optimal, nor whether any candidate survives late nights.
