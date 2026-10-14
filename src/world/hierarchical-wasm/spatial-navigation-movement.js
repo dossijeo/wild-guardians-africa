@@ -6,11 +6,12 @@ const animalProfiles=Object.entries(ANIMAL_SPATIAL_PROFILES);
 const finitePoint=point=>Number.isFinite(point?.x)&&Number.isFinite(point?.z);
 
 export class SpatialChunkUnavailable extends Error {
-  constructor(start,end){
+  constructor(start,end,missing=[]){
     super('Spatial navigation needs more resident chunks');
     this.name='SpatialChunkUnavailable';
     this.start={x:start.x,z:start.z};
     this.end={x:end.x,z:end.z};
+    this.missing=missing;
   }
 }
 
@@ -56,6 +57,12 @@ export function createSpatialNavigationMovement(session,state){
     if(result.status==='unknown')throw new SpatialChunkUnavailable(start,end);
     return result.status==='found'?result.points:null;
   };
+  const propsAt=(x,z,radius)=>{
+    if(!session.queryPropsAt)throw TypeError('Spatial prop query is unavailable');
+    const result=session.queryPropsAt(x,z,radius);
+    if(result.status==='unknown')throw new SpatialChunkUnavailable({x,z},{x,z},result.missing);
+    return result.props;
+  };
   let gateRevision=null,gateSource=null,gates=[];
   const activeGates=()=>{
     const revision=session.topologySource.revision();
@@ -81,9 +88,15 @@ export function createSpatialNavigationMovement(session,state){
     }
     return true;
   };
-  return {field:session.field,suppressed:session.suppressed,
+  const workerSurface=(x,z)=>session.field.canyon?
+    Math.max(session.field.surface(x,z),session.field.riverLevel):session.field.surface(x,z);
+  const actorSurface=(x,z)=>{
+    const ground=session.field.surface(x,z),water=session.field.canyon&&session.field.waterInfo(x,z);
+    return water?.inside?Math.max(ground,water.level-.10):ground;
+  };
+  return {field:session.field,suppressed:session.suppressed,state,
     get version(){return session.topologySource.revision();},
-    walkable,segmentClear,path,
+    walkable,segmentClear,path,propsAt,workerSurface,actorSurface,
     workerPath:(start,end,radius=.28,ignore=null)=>path(start,end,radius,ignore,true),
     workerMotionClear,
   };

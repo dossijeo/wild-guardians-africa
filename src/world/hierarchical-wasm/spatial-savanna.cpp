@@ -92,6 +92,12 @@ std::unordered_map<uint64_t,std::vector<Prop>>& residentSolidProps(){
   if(!residentPropRegistry)residentPropRegistry=new std::unordered_map<uint64_t,std::vector<Prop>>();
   return *residentPropRegistry;
 }
+std::unordered_map<uint64_t,std::vector<Prop>>* residentVisiblePropRegistry=nullptr;
+std::unordered_map<uint64_t,std::vector<Prop>>& residentVisibleProps(){
+  if(!residentVisiblePropRegistry)
+    residentVisiblePropRegistry=new std::unordered_map<uint64_t,std::vector<Prop>>();
+  return *residentVisiblePropRegistry;
+}
 std::unordered_set<PropKey,PropKeyHash>* removedPropRegistry=nullptr;
 std::vector<int32_t> removedPropState;
 std::unordered_set<PropKey,PropKeyHash>& removedProps(){
@@ -910,6 +916,7 @@ void populateChunk(int cx,int cz,bool visual=true){
   }
   indexSolidProps();
   residentSolidProps()[chunkKey(cx,cz)]=solidProps;
+  residentVisibleProps()[chunkKey(cx,cz)]=props;
 }
 void buildActiveRaster(){
   const int firstX=chunkX*side-24,firstZ=chunkZ*side-24;
@@ -1201,6 +1208,7 @@ int spatial_generate_biome(uint32_t seed,int biome,int cx,int cz){
   loadedChunks.clear();nextBarrierId=1;
   residentSpatial().clear();
   residentSolidProps().clear();
+  residentVisibleProps().clear();
   populateChunk(cx,cz);loadedChunks.emplace_back(cx,cz);
   return int(props.size());
 }
@@ -1231,6 +1239,7 @@ int spatial_remove_chunk(int cx,int cz){
   loadedChunks.erase(it);
   residentSpatial().erase(chunkKey(cx,cz));
   residentSolidProps().erase(chunkKey(cx,cz));
+  residentVisibleProps().erase(chunkKey(cx,cz));
   const int previous=activeProfile;
   for(int profile=0;profile<navigationProfiles;profile++){
     selectProfile(profile);
@@ -1251,6 +1260,11 @@ int spatial_chunk_count(){return int(loadedChunks.size());}
 int spatial_resident_prop_count(){
   int count=0;
   for(const auto& [key,records]:residentSolidProps())count+=int(records.size());
+  return count;
+}
+int spatial_resident_visible_prop_count(){
+  int count=0;
+  for(const auto& [key,records]:residentVisibleProps())count+=int(records.size());
   return count;
 }
 int spatial_changed_chunk_count(){return int(changedSettlementChunks.size()/2);}
@@ -1274,10 +1288,14 @@ float spatial_add_settlement(float x,float z,float hx,float hz){
 }
 int spatial_remove_prop(int group,int gx,int gz){
   if(group<0||group>5||removedProps().count({group,gx,gz}))return 0;
-  const auto found=std::find_if(props.begin(),props.end(),[&](const Prop& prop){
-    return prop.group==group&&prop.gx==gx&&prop.gz==gz;
-  });
-  if(found==props.end())return 0;
+  const Prop* found=nullptr;
+  for(const auto& [key,visible]:residentVisibleProps()){
+    const auto it=std::find_if(visible.begin(),visible.end(),[&](const Prop& prop){
+      return prop.group==group&&prop.gx==gx&&prop.gz==gz;
+    });
+    if(it!=visible.end()){found=&*it;break;}
+  }
+  if(!found)return 0;
   const Prop changed=*found;
   removedProps().insert({group,gx,gz});
   refreshRemovedPropChunks(&changed);

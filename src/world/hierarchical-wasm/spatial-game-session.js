@@ -47,8 +47,8 @@ export function createSpatialGameSession(module,state,streamOptions){
   }
   for(const village of state.villages)installVillage(village,state,village===first);
   const walls=createSpatialWallMirror(core),centers=createSpatialCenterMirror(core),
-    shields=createSpatialShieldMirror(core),props=createSpatialPropMirror(core);
-  props.sync(state.suppressed);walls.sync(state.structures);
+    shields=createSpatialShieldMirror(core),props=createSpatialPropMirror(core,state.suppressed);
+  walls.sync(state.structures);
   centers.sync(state);shields.sync(state.spells);
   const profiles=new Set();
   function selectProfile(profile){

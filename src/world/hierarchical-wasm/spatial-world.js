@@ -157,6 +157,21 @@ export function createSpatialWorld(module){
     addOrientedBarrier:(x,z,halfX,halfZ,yaw,passMask=0)=>
       wasm.spatial_add_oriented_barrier(x,z,halfX,halfZ,yaw,passMask),
     removeProp:({group,gx,gz})=>wasm.spatial_remove_prop(group,gx,gz),
+    restoreRemovedProps:records=>{
+      if(!Array.isArray(records)||records.length>100000||
+         !records.every(p=>Number.isSafeInteger(p.group)&&p.group>=0&&p.group<=5&&
+           Number.isInteger(p.gx)&&p.gx>=-2147483648&&p.gx<=2147483647&&
+           Number.isInteger(p.gz)&&p.gz>=-2147483648&&p.gz<=2147483647))
+        throw TypeError('Expected valid removed spatial prop records');
+      const pointer=wasm.spatial_removed_prop_restore_ptr(records.length);
+      if(records.length&&!pointer)throw Error('Could not allocate removed spatial props');
+      if(records.length){
+        const view=new Int32Array(wasm.memory.buffer,pointer,records.length*3);
+        records.forEach((p,i)=>{view[i*3]=p.group;view[i*3+1]=p.gx;view[i*3+2]=p.gz;});
+      }
+      if(wasm.spatial_restore_removed_props(records.length)!==1)
+        throw Error('Could not restore removed spatial props');
+    },
     addBarriersBatch:barriers=>addSpatialBarriersBatch(wasm,barriers),
     applyBarrierChanges:(removeIds,barriers)=>applySpatialBarrierChanges(wasm,removeIds,barriers),
     snapshot:()=>{
@@ -225,7 +240,9 @@ export function createSpatialWorld(module){
       return {terrain,water};
     },
     metrics:()=>({memoryBytes:wasm.memory.buffer.byteLength,loadedChunks:wasm.spatial_chunk_count(),
-      residentPropRecords:wasm.spatial_resident_prop_count?.()??null,loadedSectors:wasm.lazy_loaded_sectors(),
+      residentPropRecords:wasm.spatial_resident_prop_count?.()??null,
+      residentVisiblePropRecords:wasm.spatial_resident_visible_prop_count?.()??null,
+      loadedSectors:wasm.lazy_loaded_sectors(),
       sectorSlots:wasm.spatial_sector_slots(),
       sectorUpdates:wasm.lazy_sector_updates(),haloProps:wasm.spatial_halo_prop_count()})};
 }

@@ -202,6 +202,8 @@ test('one resident C++ world supplies streamed render chunks and actor routes',a
   await stream.whenIdle();
   assert.equal(stream.summary().created,2);
   assert.equal(core.metrics().loadedChunks,2);
+  assert.equal(core.metrics().residentVisiblePropRecords,
+    [...installed.values()].reduce((count,data)=>count+data.instances.flat().length,0));
   for(const [key,data] of installed){
     const center=24*49+24;
     assert.equal(data.terrain.positions[center*3+1],
@@ -222,6 +224,8 @@ test('one resident C++ world supplies streamed render chunks and actor routes',a
   installed.delete('1,0');
   assert.equal(stream.releaseChunk(1,0),1);
   assert.equal(core.metrics().loadedChunks,1);
+  assert.equal(core.metrics().residentVisiblePropRecords,
+    installed.get('0,0').instances.flat().length);
   assert.notEqual(core.routeWorld(crossing.start,crossing.end).status,'found');
   stream.dispose();
 });

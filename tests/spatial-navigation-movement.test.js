@@ -21,6 +21,14 @@ test('movement contract uses only native profiles, topology and physically check
     const nav=createSpatialNavigationMovement(session,state);
     assert.equal(nav.field,session.field);
     assert.equal(nav.suppressed,session.suppressed);
+    assert.equal(nav.state,state);
+    assert.deepEqual(nav.propsAt(0,0,4),session.queryPropsAt(0,0,4).props);
+    const visible=[...installed.values()].flatMap(chunk=>chunk.instances.flat())[0];
+    assert(visible);
+    state.suppressed.push(visible.id);session.syncState(state);
+    assert.equal(nav.propsAt(visible.x,visible.z,0).some(prop=>prop.id===visible.id),false);
+    assert.throws(()=>nav.propsAt(480,0,1),error=>
+      error instanceof SpatialChunkUnavailable&&error.missing.length>0);
     let crossing;
     for(let z=-18;z<=18&&!crossing;z++){
       const start={x:23.8,z},end={x:24.2,z};
@@ -63,4 +71,29 @@ test('worker movement keeps the live gate leaf collision outside the native rout
   gate.gateOpen=.5;assert.equal(nav.workerMotionClear(start,end),false);
   gate.gateOpen=1;assert.equal(nav.workerMotionClear(start,end),true);
   gate.status='ruined';assert.equal(nav.workerMotionClear(start,end),true);
+});
+
+test('a saved suppression survives reload while its owning chunk is not resident',async()=>{
+  const state={seed:'712',biome:'sabana',villages:[{id:'village-1',x:0,z:0,
+    buildings:villageLayout(pack,0,0)}],structures:[],spells:[],suppressed:[]};
+  const firstChunks=new Map(),first=createSpatialGameSession(module,state,{
+    loaded:()=>firstChunks,onData:data=>firstChunks.set(`${data.cx},${data.cz}`,data)});
+  first.stream.plan(new Map([['1,0',{cx:1,cz:0,score:0}]]));
+  await first.stream.whenIdle();
+  const removed=firstChunks.get('1,0').instances.flat()[0];
+  assert(removed,'fixture needs a visible prop in the distant chunk');
+  first.dispose();
+  state.suppressed=[removed.id];
+  const restoredChunks=new Map(),restored=createSpatialGameSession(module,state,{
+    loaded:()=>restoredChunks,onData:data=>restoredChunks.set(`${data.cx},${data.cz}`,data)});
+  try{
+    assert.equal(restored.core.metrics().loadedChunks,1);
+    restored.stream.plan(new Map([['1,0',{cx:1,cz:0,score:0}]]));
+    await restored.stream.whenIdle();
+    assert.equal(restoredChunks.get('1,0').instances.flat()
+      .some(prop=>prop.id===removed.id),false);
+    const nav=createSpatialNavigationMovement(restored,state);
+    assert.equal(nav.propsAt(removed.x,removed.z,0)
+      .some(prop=>prop.id===removed.id),false);
+  }finally{restored.dispose();}
 });
