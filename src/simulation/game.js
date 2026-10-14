@@ -75,12 +75,18 @@ export function previewCenter(s,{x,z,yaw=0},nav) {
     }
     const {candidate,footprint,check}=cultures.get(culture);
     if(!check.valid){failure??=check.reason;continue;}buildable=true;
-    const routes=nav.forBuildingPlacement?.(footprint,check.suppress??[])??nav;
     const departure=centerServicePoint(candidate,s,.8),entry=village.entry??village;
-    const outbound=routes.path(entry,departure,.28,null,true),inbound=outbound&&routes.path(departure,entry,.28,null,true);
-    if(!inbound)continue;
-    const routeLength=inbound.reduce((length,p,i)=>length+dist(p,i?inbound[i-1]:departure),0);
-    candidates.push({...candidate,footprint,suppress:check.suppress??[],villageId:village.id,routeLength,valid:true,cost:B.work_center.cost});
+    const inspect=routes=>{
+      // A route snapped out of a new footprint is not a valid departure:
+      // workers must still be able to stand at the actual village entry.
+      if(nav.withCenterPreview&&routes.walkable(entry.x,entry.z,.28,null,true)===false)return;
+      const outbound=routes.path(entry,departure,.28,null,true),inbound=outbound&&routes.path(departure,entry,.28,null,true);
+      if(!inbound)return;
+      const routeLength=inbound.reduce((length,p,i)=>length+dist(p,i?inbound[i-1]:departure),0);
+      candidates.push({...candidate,footprint,suppress:check.suppress??[],villageId:village.id,routeLength,valid:true,cost:B.work_center.cost});
+    };
+    if(nav.withCenterPreview)nav.withCenterPreview(footprint,check.suppress??[],inspect);
+    else inspect(nav.forBuildingPlacement?.(footprint,check.suppress??[])??nav);
   }
   candidates.sort((a,b)=>a.routeLength-b.routeLength||a.villageId.localeCompare(b.villageId));
   return candidates[0]??{valid:false,cost:B.work_center.cost,reason:buildable?'El centro no tiene un camino válido al poblado':failure??'El centro no tiene un camino válido al poblado'};

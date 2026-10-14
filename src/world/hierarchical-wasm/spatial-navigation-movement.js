@@ -203,6 +203,9 @@ export function createSpatialNavigationMovement(session,state){
     session.withWallPreview(walls,suppressed,()=>inspect({walkable,segmentClear}));
   const withVillageEntryPreview=(buildings,inspect)=>
     session.withVillageEntryPreview(buildings,inspect);
+  const withCenterPreview=(building,suppressed,inspect)=>
+    session.withWallPreview([],suppressed,()=>
+      session.withVillageEntryPreview([building],()=>inspect({walkable,path})));
   const terrainValid=(x,z,radius=.28,worker=false)=>{
     for(const [dx,dz] of [[0,0],[radius,0],[-radius,0],[0,radius],[0,-radius]]){
       const px=x+dx,pz=z+dz;
@@ -235,7 +238,7 @@ export function createSpatialNavigationMovement(session,state){
     },
     get version(){return session.topologySource.revision();},
     walkable,segmentClear,path,regionFor,regionConnected,enclosureFor,terrainValid,
-    withWallPreview,withVillageEntryPreview,
+    withWallPreview,withVillageEntryPreview,withCenterPreview,
     spatialSectorRevision:radius=>session.actorSectorRevision(profile(radius,false,null)),
     requestRaidConnectivity,
     approachPath:(start,end,radius)=>path(start,end,radius,null,false),
