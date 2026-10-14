@@ -283,6 +283,12 @@ still include expectations from previous magic and crop-durability rules,
 old navigation APIs, and some raid/persistence cases that require individual
 triage. This branch has **not** passed repository-wide QA and remains a draft.
 
+One of those failures was a QA hook metric tied to the former call order.
+After the blocked-endpoint fix, `Navigation.path` correctly returns before
+requesting the hybrid WASM hook; the hook records zero requests rather than
+one certified missing connector. The test now asserts the physical endpoint
+is blocked and that no hook or fallback work runs. Both hook tests pass.
+
 ## Reproduce
 
 ```powershell

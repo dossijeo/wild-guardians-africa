@@ -27,7 +27,7 @@ test('QA hybrid preserves native gate validity and restores Navigation methods',
   assert.equal(Navigation.prototype.path,previous);
 });
 
-test('QA hybrid skips the same connectorless target that the JS navigator rejects',()=>{
+test('QA hybrid skips a physically blocked target before requesting a route',()=>{
   const {s,nav}=fixture('closed-walls');
   const start={x:15,z:29},center=s.structures.find(o=>o.kind==='center');
   assert(center);
@@ -35,8 +35,10 @@ test('QA hybrid skips the same connectorless target that the JS navigator reject
   assert.equal(legacy.path(start,end,1.1,null,false,24),null);
   const hook=installSparseWasmCampaignHook(module);
   try{
+    assert.equal(nav.walkable(end.x,end.z,1.1,null,false),false);
     assert.equal(nav.path(start,end,1.1,null,false,24),null);
-    assert.equal(hook.metrics().certifiedNoConnector,1);
+    assert.equal(hook.metrics().requests,0);
+    assert.equal(hook.metrics().certifiedNoConnector,0);
     assert.equal(hook.metrics().fallbacks,0);
   }finally{hook.uninstall();}
 });
