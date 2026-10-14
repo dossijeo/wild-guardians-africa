@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QA · Escena con autoridad espacial WASM</title>
+<style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#152426}canvas{display:block;width:100%;height:100%}#status{position:fixed;top:12px;left:12px;padding:8px 12px;background:#172823dd;color:#fff;font:14px system-ui}</style>
+</head><body><canvas id="world"></canvas><div id="status">Preparando mundo WASM…</div><script type="module">
+import * as Game from '../../src/simulation/game.js';
+import {WorldScene} from '../../src/rendering/scene.js';
+import {findSpatialStart} from '../../src/world/hierarchical-wasm/spatial-initial-site.js';
+import {createSpatialGameSession} from '../../src/world/hierarchical-wasm/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+import wasmUrl from '../../src/world/hierarchical-wasm/spatial-savanna.wasm?url';
+
+const query=new URLSearchParams(location.search);
+const biome=['sabana','gran-canon','desierto'].includes(query.get('biome'))?
+  query.get('biome'):'sabana';
+const seed=Number(query.get('seed')??712);
+const canvas=document.querySelector('#world'),status=document.querySelector('#status');
+let scene=null,session=null;
+try{
+  const begun=performance.now();
+  const [bytes,packs]=await Promise.all([fetch(wasmUrl).then(response=>response.arrayBuffer()),
+    fetch('/content/villages.json').then(response=>response.json())]);
+  const assetsReady=performance.now();
+  const module=new WebAssembly.Module(bytes),payload=packs[0];
+  const state=Game.newGame({seed,biome,culture:'mapungubwe',slotId:'spatial-scene-qa'});
+  const start=await findSpatialStart(module,state,payload);
+  const siteReady=performance.now();
+  Object.assign(state.villages[0],start.site);
+  state.suppressed.push(...start.site.suppress);
+  scene=new WorldScene(canvas,()=>{});
+  session=createSpatialGameSession(module,state,{
+    loaded:()=>scene.chunks,onData:data=>scene.installChunk(data),
+    onError:error=>{throw error;}});
+  const sessionReady=performance.now();
+  const navigation=createSpatialNavigationMovement(session,state);
+  await scene.load(state,navigation,payload,{spatialSession:session,farVegetation:false});
+  const sceneReady=performance.now();
+  scene.resize();scene.render(0);
+  const terrainChunks=[...scene.chunks.values()].filter(group=>group.userData?.spatialAuthority==='spatial-wasm').length;
+  if(terrainChunks<1||terrainChunks!==scene.chunks.size||
+     scene.nav.field!==session.field||scene.chunkStream!==session.stream||
+     (['gran-canon','desierto'].includes(biome)&&!scene.horizon?.group))
+    throw Error('Scene did not adopt the authoritative native world');
+  window.qaStats={biome,seed,startAttempts:start.attempts,terrainChunks,
+    loadedChunks:session.core.metrics().loadedChunks,
+    nativeProps:[...scene.chunks.values()].reduce((sum,group)=>
+      sum+group.userData.propSources.flat().length,0),
+    sectorUpdates:session.core.metrics().sectorUpdates,
+    horizon:Boolean(scene.horizon?.group),
+    memoryBytes:session.core.metrics().memoryBytes,
+    timingMs:{assetFetch:assetsReady-begun,startingSite:siteReady-assetsReady,
+      sessionInit:sessionReady-siteReady,sceneLoad:sceneReady-sessionReady,
+      total:sceneReady-begun}};
+  window.qaReady=true;
+  status.textContent=`${biome} · ${terrainChunks} chunks del mismo núcleo WASM`;
+}catch(error){window.qaError=String(error.stack??error);status.textContent=window.qaError;}
+window.addEventListener('beforeunload',()=>{scene?.dispose();session?.dispose();});
+</script></body></html>

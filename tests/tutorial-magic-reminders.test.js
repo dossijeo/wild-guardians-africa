@@ -55,10 +55,13 @@ test('growth cannot repeat today and receives its full reading time on the follo
  const {s,c}=setup(),p=createPlant('plant','mijo',10,10,'center');s.plants.push(p);c.update();assert.equal(c.presentation(),null);
  p.water[0].status='manual';s.elapsed+=2;c.update();assert.equal(c.presentation().id,'reminder.growth');
  c.advance(60);c.update();assert.equal(c.presentation(),null);
+ // Keep this case about Growth; Multiplicar has its own useful reminder and
+ // may legitimately appear later in the same day when a harvest is unmarked.
+ p.multiplyHarvest=true;
  s.elapsed+=119;c.update();assert.equal(c.presentation(),null);
  s.elapsed+=1;c.update();assert.equal(c.presentation(),null);
  s.day++;c.update();assert.equal(c.presentation().id,'reminder.growth');assert.equal(c.advance(1),false);
- c.dismiss();s.cooldowns.growth=90;s.elapsed+=120;c.update();assert.equal(c.presentation(),null);
+ c.dismiss();s.elapsed+=120;c.update();assert.equal(c.presentation(),null);
 });
 test('multiply requires working labour and unmarked live crops, with a gap between peaceful reminders',()=>{
  const {s,c}=setup(),p=createPlant('plant','mijo',10,10,'center');s.plants.push(p);

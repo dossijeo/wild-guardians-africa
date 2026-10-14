@@ -1,0 +1,23 @@
+{
+  "branch": "codex/hierarchical-navigation-openra",
+  "scope": "QA-only Sabana C++/WASM spatial authority; production world unchanged",
+  "nativeAbbaSeed712": {
+    "wasmBytes": 69903,
+    "currentTotalMs": [610.6543, 429.5239],
+    "spatialTotalMs": [43.2649, 24.3469],
+    "currentJsGeometryCallsPerChunk": {"walkable": 2789, "segmentClear": 5202},
+    "spatialJsGeometryCallsPerChunk": {"walkable": 0, "segmentClear": 0}
+  },
+  "browserWorkerSeed28": {
+    "page": "tests/browser/spatial-savanna-transfer.html?seed=28",
+    "current": [{"roundtripMs": 79.5, "bytes": 505228, "props": 176}, {"roundtripMs": 41.4, "bytes": 502564, "props": 189}],
+    "spatial": [{"roundtripMs": 48.4, "compiledMs": 4.7, "spatialMs": 27.7, "copyMs": 0.3, "transferBytes": 56180, "props": 223}, {"roundtripMs": 20.3, "spatialMs": 19.9, "copyMs": 0, "transferBytes": 56824, "props": 246}],
+    "checks": {"transferLengths": true, "terrainSeam": true}
+  },
+  "visualInspection": {
+    "page": "tests/browser/spatial-savanna-visual-compare.html?seed=28",
+    "result": "Pond asset, carved basin and water surface are visible in the WASM chunk. The same pond is blocked in the logical animal grid. Terrain coloration, river edge and prop distribution remain visibly different from production.",
+    "screenshotSaved": false
+  },
+  "limits": ["World recipes and visual payloads are not equivalent", "Local desktop development-server samples only", "No GPU upload or complete prop instantiation timing", "No game-loop streaming or six-biome validation"]
+}

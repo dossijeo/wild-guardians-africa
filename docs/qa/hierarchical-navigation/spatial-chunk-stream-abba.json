@@ -1,0 +1,43 @@
+{
+  "scope": "Two requested Sabana chunks, seed 712, local scheduled stream, cold navigator or WASM compilation plus graph and render payload, then one actor route. Different procedural recipes; no GPU upload, physical actor movement, full-game simulation or worker transfer.",
+  "rows": [
+    {
+      "kind": "js",
+      "readyMs": 147.779,
+      "routeMs": 24.270700000000005,
+      "routeStatus": "found",
+      "chunks": 2,
+      "props": 418
+    },
+    {
+      "kind": "wasm",
+      "compileMs": 1.3141999999999996,
+      "readyMs": 56.80509999999998,
+      "routeMs": 1.240000000000009,
+      "routeStatus": "found",
+      "chunks": 2,
+      "props": 492,
+      "memoryBytes": 4194304,
+      "residentPropRecords": 44
+    },
+    {
+      "kind": "wasm",
+      "compileMs": 0.15500000000002956,
+      "readyMs": 37.12609999999995,
+      "routeMs": 0.20229999999997972,
+      "routeStatus": "found",
+      "chunks": 2,
+      "props": 492,
+      "memoryBytes": 4194304,
+      "residentPropRecords": 44
+    },
+    {
+      "kind": "js",
+      "readyMs": 102.3494,
+      "routeMs": 14.556600000000003,
+      "routeStatus": "found",
+      "chunks": 2,
+      "props": 418
+    }
+  ]
+}

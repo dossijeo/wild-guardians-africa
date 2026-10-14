@@ -1,0 +1,27 @@
+{
+  "environment": "Local Windows desktop, Codex in-app browser, Vite development server, Sabana seed 712, sequential chunks (0,0) and (1,0)",
+  "page": "tests/browser/spatial-savanna-transfer.html",
+  "meaning": "Production JavaScript chunk worker compared with QA-only C++/WASM spatial worker; different world recipes and visual payloads, so timings are not production-equivalent",
+  "units": "milliseconds except bytes, props, sectors and memoryBytes",
+  "runs": [
+    {
+      "current": [{"roundtripMs": 167.5, "bytes": 503644, "props": 202}, {"roundtripMs": 45.1, "bytes": 502564, "props": 216}],
+      "spatial": [{"roundtripMs": 59.8, "compiledMs": 13.9, "spatialMs": 24.4, "copyMs": 0.3, "transferBytes": 47328, "threeMs": 4.1, "props": 236}, {"roundtripMs": 24.5, "spatialMs": 24.1, "copyMs": 0, "transferBytes": 47888, "threeMs": 2, "props": 256}]
+    },
+    {
+      "current": [{"roundtripMs": 121.5, "bytes": 503644, "props": 202}, {"roundtripMs": 45.2, "bytes": 502564, "props": 216}],
+      "spatial": [{"roundtripMs": 43.5, "compiledMs": 10.6, "spatialMs": 20.1, "copyMs": 0.3, "transferBytes": 47328, "threeMs": 3.9, "props": 236}, {"roundtripMs": 21.1, "spatialMs": 20.7, "copyMs": 0.1, "transferBytes": 47888, "threeMs": 1, "props": 256}]
+    },
+    {
+      "current": [{"roundtripMs": 87.7, "bytes": 503644, "props": 202}, {"roundtripMs": 47.1, "bytes": 502564, "props": 216}],
+      "spatial": [{"roundtripMs": 45, "compiledMs": 7.1, "spatialMs": 21.1, "copyMs": 0.2, "transferBytes": 47328, "threeMs": 3, "props": 236}, {"roundtripMs": 24.7, "spatialMs": 24.2, "copyMs": 0.2, "transferBytes": 47888, "threeMs": 1.2, "props": 256}]
+    },
+    {
+      "current": [{"roundtripMs": 89.6, "bytes": 503644, "props": 202}, {"roundtripMs": 48.3, "bytes": 502564, "props": 216}],
+      "spatial": [{"roundtripMs": 46.2, "compiledMs": 4.2, "spatialMs": 23.4, "copyMs": 0.2, "transferBytes": 47328, "threeMs": 3.2, "props": 236}, {"roundtripMs": 20.9, "spatialMs": 20.7, "copyMs": 0.1, "transferBytes": 47888, "threeMs": 0.9, "props": 256}],
+      "checks": {"transferLengths": true, "terrainSeam": true}
+    }
+  ],
+  "candidateResidentAfterSecondChunk": {"loadedChunks": 2, "loadedSectors": 32, "memoryBytes": 4194304},
+  "limits": ["Different terrain and prop distributions", "Current worker transfers richer terrain, water and ground-mask data", "No GPU upload or full prop instantiation timing", "No mobile or packaged-build measurement", "No game loop or sustained streaming"]
+}

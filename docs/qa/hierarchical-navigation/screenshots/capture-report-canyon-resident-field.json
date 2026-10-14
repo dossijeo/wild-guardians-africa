@@ -1,0 +1,57 @@
+{
+  "url": "http://127.0.0.1:5188",
+  "records": [
+    {
+      "seed": 712,
+      "file": "docs/qa/hierarchical-navigation/screenshots/gran-canon-seed-712-js-vs-wasm-canyon-resident-field-1600x900.png",
+      "stats": {
+        "seed": 712,
+        "biome": "canyons",
+        "baseline": {
+          "count": 20,
+          "vertices": 13824,
+          "waterVertices": 0,
+          "assetWaterInstances": 0,
+          "prototype": false
+        },
+        "candidate": {
+          "count": 54,
+          "vertices": 2401,
+          "waterVertices": 420,
+          "assetWaterInstances": 0,
+          "prototype": true
+        },
+        "gameGround": false,
+        "gameWater": true,
+        "settlement": false
+      },
+      "errors": []
+    },
+    {
+      "seed": 28,
+      "file": "docs/qa/hierarchical-navigation/screenshots/gran-canon-seed-28-js-vs-wasm-canyon-resident-field-1600x900.png",
+      "stats": {
+        "seed": 28,
+        "biome": "canyons",
+        "baseline": {
+          "count": 50,
+          "vertices": 13824,
+          "waterVertices": 234,
+          "assetWaterInstances": 0,
+          "prototype": false
+        },
+        "candidate": {
+          "count": 66,
+          "vertices": 2401,
+          "waterVertices": 204,
+          "assetWaterInstances": 0,
+          "prototype": true
+        },
+        "gameGround": false,
+        "gameWater": true,
+        "settlement": false
+      },
+      "errors": []
+    }
+  ]
+}

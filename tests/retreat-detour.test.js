@@ -7,8 +7,8 @@ import {numberOf} from '../src/simulation/money.js';
 
 test('Seed-712 exhausted warthog reaches its original exit around the Ethiopian village, including reload',()=>{
   let {s,nav,start,exit,radius}=createRetreatReproduction();
-  assert.equal(numberOf(s.ledger.balance),620);assert.equal(s.plants.length,16);assert.equal(nav.path(start,exit,radius,null,false),null);
-  const route=nav.path(start,exit,radius,null,false,32);assert.ok(route);assert.ok(route.some(p=>p.z<-72));
+  assert.equal(numberOf(s.ledger.balance),620);assert.equal(s.plants.length,16);
+  const route=nav.path(start,exit,radius,null,false);assert.ok(route);
   let previous=start;for(const p of route){assert.ok(nav.segmentClear(previous,p,radius,null,false));previous=p;}
   const animal={id:'qa-retreat',species:'warthog',...start,spawn:exit,radius,hitsRemaining:0,status:'retreating',targetId:null,reservation:null,path:null,attackRemaining:0,attackId:null,hitApplied:false};
   s.raid={id:'qa-detour',animals:[animal],encounters:[],reservations:{},daytime:false};

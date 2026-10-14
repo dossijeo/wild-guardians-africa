@@ -1,0 +1,107 @@
+{
+  "report": {
+    "stats": {
+      "seed": 712,
+      "sceneFormat": true,
+      "settlement": true,
+      "current": [
+        {
+          "roundtripMs": 78.5,
+          "bytes": 503644,
+          "props": 102
+        },
+        {
+          "roundtripMs": 41.90000009536743,
+          "bytes": 502564,
+          "props": 188
+        }
+      ],
+      "spatial": [
+        {
+          "roundtripMs": 51.5,
+          "compiledMs": 7.299999952316284,
+          "spatialMs": 29.09999990463257,
+          "copyMs": 1.2000000476837158,
+          "transferBytes": 93412,
+          "three": {
+            "ms": 5.200000047683716,
+            "vertices": 2401,
+            "waterVertices": 270
+          },
+          "props": 79,
+          "metrics": {
+            "loadedChunks": 1,
+            "loadedSectors": 16,
+            "sectorUpdates": 16,
+            "memoryBytes": 4194304
+          }
+        },
+        {
+          "roundtripMs": 18.5,
+          "compiledMs": 7.299999952316284,
+          "spatialMs": 16.799999952316284,
+          "copyMs": 0.9000000953674316,
+          "transferBytes": 90172,
+          "three": {
+            "ms": 0.7999999523162842,
+            "vertices": 2401,
+            "waterVertices": 0
+          },
+          "props": 231,
+          "metrics": {
+            "loadedChunks": 2,
+            "loadedSectors": 32,
+            "sectorUpdates": 36,
+            "memoryBytes": 4194304
+          }
+        }
+      ],
+      "topology": {
+        "crossing": {
+          "x": 23,
+          "z": -18,
+          "nx": 24,
+          "nz": -18
+        },
+        "closedStatus": "blocked",
+        "reopenedStatus": "found",
+        "workerClosedStatus": "blocked",
+        "workerReopenedStatus": "found",
+        "wallAddMs": 1,
+        "wallRemoveMs": 1.5999999046325684,
+        "sectorUpdatesAfterAdd": 44,
+        "sectorUpdatesAfterRemove": 52,
+        "evictMs": 1.9000000953674316,
+        "reloadMs": 17.299999952316284,
+        "sameVisualPayload": true,
+        "loadedSectorsAfterReload": 32,
+        "memoryBytesAfterReload": 4194304
+      },
+      "multipleSettlements": {
+        "secondLevel": 12.275043487548828,
+        "localSectorUpdates": 16,
+        "sameFirstSettlement": true,
+        "secondChunkChanged": true,
+        "memoryBytes": 4194304
+      },
+      "surfaceView": {
+        "sample": {
+          "x": 30.3,
+          "z": 5.7
+        },
+        "height": 5.95703911781311,
+        "difference": 2.384185791015625e-7
+      },
+      "checks": {
+        "transferLengths": true,
+        "terrainSeam": true,
+        "wallEdit": true,
+        "evictionRegeneration": true,
+        "multipleSettlements": true,
+        "surfaceView": true
+      }
+    },
+    "error": null
+  },
+  "errors": []
+}

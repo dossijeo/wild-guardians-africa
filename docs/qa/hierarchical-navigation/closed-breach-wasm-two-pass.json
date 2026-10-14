@@ -1,0 +1,261 @@
+{
+  "scope": "Native closed 100-crop perimeter, then two destroyed wall modules. One animal radius, 24 fixed outside-to-crop queries per phase. Includes construction, raster synchronization and real physical segment verification.",
+  "rows": [
+    {
+      "variant": "javascript",
+      "wasmBytes": null,
+      "setupMilliseconds": 0.20660000000000878,
+      "initializeMilliseconds": 0.010200000000025966,
+      "updateMilliseconds": 0.17849999999998545,
+      "rssDeltaBytes": 45355008,
+      "wasmMemoryBytes": null,
+      "rows": [
+        {
+          "phase": "closed-cold",
+          "milliseconds": 469.81449999999995,
+          "found": 0,
+          "invalid": 0
+        },
+        {
+          "phase": "closed-warm",
+          "milliseconds": 84.18060000000003,
+          "found": 0,
+          "invalid": 0
+        },
+        {
+          "phase": "breach-cold",
+          "milliseconds": 12.939500000000066,
+          "found": 24,
+          "invalid": 0
+        },
+        {
+          "phase": "breach-warm",
+          "milliseconds": 4.094499999999925,
+          "found": 24,
+          "invalid": 0
+        }
+      ],
+      "metrics": {
+        "sectorsBuilt": 70,
+        "sectorsInvalidated": 2,
+        "cellSamples": 10080,
+        "edgeSamples": 37148,
+        "graphSearches": 3930,
+        "graphNodes": 141454,
+        "localSearches": 142
+      }
+    },
+    {
+      "variant": "wasm-hier",
+      "wasmBytes": 21901,
+      "setupMilliseconds": 17.368400000000065,
+      "initializeMilliseconds": 103.98599999999999,
+      "updateMilliseconds": 2.4879000000000815,
+      "rssDeltaBytes": 1966080,
+      "wasmMemoryBytes": 16908288,
+      "rows": [
+        {
+          "phase": "closed-cold",
+          "milliseconds": 1.1003000000000611,
+          "found": 0,
+          "invalid": 0
+        },
+        {
+          "phase": "closed-warm",
+          "milliseconds": 0.45150000000001,
+          "found": 0,
+          "invalid": 0
+        },
+        {
+          "phase": "breach-cold",
+          "milliseconds": 1.0451000000000477,
+          "found": 24,
+          "invalid": 0
+        },
+        {
+          "phase": "breach-warm",
+          "milliseconds": 0.5782999999998992,
+          "found": 24,
+          "invalid": 0
+        }
+      ],
+      "metrics": {
+        "sectorsBuilt": 29,
+        "arcs": 796,
+        "graphNodes": 2,
+        "localNodes": 219,
+        "flatNodes": 0
+      }
+    },
+    {
+      "variant": "wasm-flat",
+      "wasmBytes": 21901,
+      "setupMilliseconds": 2.19399999999996,
+      "initializeMilliseconds": 150.03279999999995,
+      "updateMilliseconds": 3.6252999999999247,
+      "rssDeltaBytes": -9728000,
+      "wasmMemoryBytes": 16908288,
+      "rows": [
+        {
+          "phase": "closed-cold",
+          "milliseconds": 12.745800000000031,
+          "found": 0,
+          "invalid": 0
+        },
+        {
+          "phase": "closed-warm",
+          "milliseconds": 8.868399999999951,
+          "found": 0,
+          "invalid": 0
+        },
+        {
+          "phase": "breach-cold",
+          "milliseconds": 1.669499999999971,
+          "found": 24,
+          "invalid": 0
+        },
+        {
+          "phase": "breach-warm",
+          "milliseconds": 0.6881000000000768,
+          "found": 24,
+          "invalid": 0
+        }
+      ],
+      "metrics": {
+        "sectorsBuilt": 29,
+        "arcs": 796,
+        "graphNodes": 0,
+        "localNodes": 0,
+        "flatNodes": 88
+      }
+    },
+    {
+      "variant": "wasm-flat",
+      "wasmBytes": 21901,
+      "setupMilliseconds": 0.6204999999999927,
+      "initializeMilliseconds": 161.5566,
+      "updateMilliseconds": 2.193399999999883,
+      "rssDeltaBytes": 5402624,
+      "wasmMemoryBytes": 16908288,
+      "rows": [
+        {
+          "phase": "closed-cold",
+          "milliseconds": 8.805200000000013,
+          "found": 0,
+          "invalid": 0
+        },
+        {
+          "phase": "closed-warm",
+          "milliseconds": 9.296100000000024,
+          "found": 0,
+          "invalid": 0
+        },
+        {
+          "phase": "breach-cold",
+          "milliseconds": 1.1888000000001284,
+          "found": 24,
+          "invalid": 0
+        },
+        {
+          "phase": "breach-warm",
+          "milliseconds": 0.9173000000000684,
+          "found": 24,
+          "invalid": 0
+        }
+      ],
+      "metrics": {
+        "sectorsBuilt": 29,
+        "arcs": 796,
+        "graphNodes": 0,
+        "localNodes": 0,
+        "flatNodes": 88
+      }
+    },
+    {
+      "variant": "wasm-hier",
+      "wasmBytes": 21901,
+      "setupMilliseconds": 5.37480000000005,
+      "initializeMilliseconds": 88.27389999999991,
+      "updateMilliseconds": 2.8888999999999214,
+      "rssDeltaBytes": -2981888,
+      "wasmMemoryBytes": 16908288,
+      "rows": [
+        {
+          "phase": "closed-cold",
+          "milliseconds": 0.22019999999997708,
+          "found": 0,
+          "invalid": 0
+        },
+        {
+          "phase": "closed-warm",
+          "milliseconds": 0.14830000000006294,
+          "found": 0,
+          "invalid": 0
+        },
+        {
+          "phase": "breach-cold",
+          "milliseconds": 0.9770000000000891,
+          "found": 24,
+          "invalid": 0
+        },
+        {
+          "phase": "breach-warm",
+          "milliseconds": 0.5328999999999269,
+          "found": 24,
+          "invalid": 0
+        }
+      ],
+      "metrics": {
+        "sectorsBuilt": 29,
+        "arcs": 796,
+        "graphNodes": 2,
+        "localNodes": 219,
+        "flatNodes": 0
+      }
+    },
+    {
+      "variant": "javascript",
+      "wasmBytes": null,
+      "setupMilliseconds": 0.04549999999994725,
+      "initializeMilliseconds": 0.0009000000000014552,
+      "updateMilliseconds": 0.01700000000005275,
+      "rssDeltaBytes": 11919360,
+      "wasmMemoryBytes": null,
+      "rows": [
+        {
+          "phase": "closed-cold",
+          "milliseconds": 404.93450000000007,
+          "found": 0,
+          "invalid": 0
+        },
+        {
+          "phase": "closed-warm",
+          "milliseconds": 73.94959999999992,
+          "found": 0,
+          "invalid": 0
+        },
+        {
+          "phase": "breach-cold",
+          "milliseconds": 9.721000000000004,
+          "found": 24,
+          "invalid": 0
+        },
+        {
+          "phase": "breach-warm",
+          "milliseconds": 2.761600000000044,
+          "found": 24,
+          "invalid": 0
+        }
+      ],
+      "metrics": {
+        "sectorsBuilt": 70,
+        "sectorsInvalidated": 2,
+        "cellSamples": 10080,
+        "edgeSamples": 37148,
+        "graphSearches": 3930,
+        "graphNodes": 141454,
+        "localSearches": 142
+      }
+    }
+  ]
+}

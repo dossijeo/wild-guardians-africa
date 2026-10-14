@@ -10,7 +10,7 @@ function until(s,nav,check){for(let i=0;!check()&&i<6000&&!s.pauses.length;i++)G
 test('all 100 campaign nights have animals even with no crops, for 30 seeds',()=>{
  for(let seed=1;seed<=30;seed++){
   const s=Game.newGame({seed});
-  for(let day=1;day<=100;day++){s.day=day;planNight(s);assert.ok(s.nightPlan.group.length>=1&&s.nightPlan.group.length<=2);if(day<=5)assert.deepEqual(s.nightPlan.group,[species[day-1]]);}
+  for(let day=1;day<=100;day++){s.day=day;planNight(s);assert.ok(s.nightPlan.group.length>=1&&s.nightPlan.group.length<=34);if(day<=5)assert.deepEqual(s.nightPlan.group,[species[day-1]]);}
   s.postgame=true;planNight(s);assert.deepEqual(s.nightPlan.group,[]);
  }
 });
@@ -21,16 +21,18 @@ test('five introductory nights spawn their planned new species with a progressiv
   spawnRaid(s,s.nightPlan,nav);assert.deepEqual(s.raid.animals.map(a=>a.species),[species[day-1]]);assert.equal(s.raid.animals[0].hitsRemaining,[2,3,4,4,5][day-1]);
  }
 });
-for(const id of species)test(`${id}: first physical crop hit survives reload; second hit destroys exactly once`,()=>{
- let s=Game.newGame({slotId:'two-hits-'+id});Game.resume(s,'intro');let nav=navigation(s);Game.placeStructure(s,'center',{x:-12,z:0},nav);Game.plant(s,'seed','mijo',8,4,nav);
+for(const id of species)test(`${id}: first physical crop hit destroys exactly once and persists across reload`,()=>{
+ let s=Game.newGame({slotId:'one-hit-'+id});Game.resume(s,'intro');let nav=navigation(s);Game.placeStructure(s,'center',{x:-12,z:0},nav);Game.plant(s,'seed','mijo',8,4,nav);
  s.day=6;s.time=320;s.initialPreparation=false;s.dayPlan={done:true};s.nightPlan={done:true};spawnRaid(s,{group:[id]},nav);
- until(s,nav,()=>s.plants[0].attackHits===1);assert.equal(s.plants[0].alive,true);assert.equal(s.events.filter(e=>e.type==='CropDestroyed').length,0);
- s=deserialize(serialize(s));nav=navigation(s);until(s,nav,()=>!s.plants[0].alive);
- assert.equal(s.plants[0].attackHits,2);assert.equal(s.events.filter(e=>e.type==='CropHit').length,2);assert.equal(s.events.filter(e=>e.type==='CropDestroyed').length,1);
+ until(s,nav,()=>!s.plants[0].alive);assert.equal(s.plants[0].attackHits,1);assert.equal(s.events.filter(e=>e.type==='CropDestroyed').length,1);
+ s=deserialize(serialize(s));nav=navigation(s);until(s,nav,()=>!s.raid);
+ assert.equal(s.plants[0].attackHits,1);assert.equal(s.events.filter(e=>e.type==='CropHit'&&e.targetId===s.plants[0].id).length,1);assert.equal(s.events.filter(e=>e.type==='CropDestroyed'&&e.targetId===s.plants[0].id).length,1);
 });
-test('saved damage cannot be fractional, exceed two strikes or leave a living crop with two strikes',()=>{
+test('saved one-hit crop damage uses legal quarter steps and cannot leave a living crop fully damaged',()=>{
  const s=Game.newGame();Game.resume(s,'intro');const nav=navigation(s);Game.placeStructure(s,'center',{x:-12,z:0},nav);Game.plant(s,'seed','mijo',8,4,nav);
- for(const hits of [-1,.5,3,2]){s.plants[0].attackHits=hits;assert.throws(()=>serialize(s));}s.plants[0].attackHits=1;assert.doesNotThrow(()=>serialize(s));
+ for(const hits of [-1,.3,3,2,1]){s.plants[0].attackHits=hits;assert.throws(()=>serialize(s));}
+ for(const hits of [0,.25,.5,.75]){s.plants[0].attackHits=hits;assert.doesNotThrow(()=>serialize(s));}
+ s.plants[0].alive=false;s.plants[0].attackHits=1;assert.doesNotThrow(()=>serialize(s));
 });
 
 for(const [index,id] of species.entries())for(const count of [1,2,5,10,20,50])test(`introductory ${id} threatens crops and buildings but cannot destroy all ${count} starting plants`,()=>{
@@ -47,7 +49,7 @@ for(const [index,id] of species.entries())for(const count of [1,2,5,10,20,50])te
 
 for(const [index,id] of species.entries())test(`introductory ${id}: damaged crops respect the destruction quota after a mid-attack save`,()=>{
  let s=Game.newGame({slotId:'damaged-intro-'+id});Game.resume(s,'intro');let nav=navigation(s);Game.placeStructure(s,'center',{x:-12,z:0},nav);
- for(let i=0;i<10;i++){Game.plant(s,'seed-'+i,'mijo',8+(i%5)*2,4+Math.floor(i/5)*2,nav);s.plants.at(-1).attackHits=1;}
+ for(let i=0;i<10;i++){Game.plant(s,'seed-'+i,'mijo',8+(i%5)*2,4+Math.floor(i/5)*2,nav);s.plants.at(-1).attackHits=.5;}
  s.day=index+1;s.time=320;s.initialPreparation=false;s.dayPlan={done:true};planNight(s);s.nightPlan.done=true;spawnRaid(s,s.nightPlan,nav);
  until(s,nav,()=>s.raid.introCropsDestroyed===1);
  const restored=deserialize(serialize(s)),fresh=navigation(restored);

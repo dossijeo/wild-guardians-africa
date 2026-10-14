@@ -1,0 +1,67 @@
+{
+  "report": {
+    "stats": {
+      "seed": 712,
+      "sceneFormat": false,
+      "settlement": false,
+      "current": [
+        {
+          "roundtripMs": 79.40000009536743,
+          "bytes": 503644,
+          "props": 202
+        },
+        {
+          "roundtripMs": 36.299999952316284,
+          "bytes": 502564,
+          "props": 216
+        }
+      ],
+      "spatial": [
+        {
+          "roundtripMs": 33.5,
+          "compiledMs": 4.400000095367432,
+          "spatialMs": 14.299999952316284,
+          "copyMs": 0.20000004768371582,
+          "transferBytes": 64684,
+          "three": {
+            "ms": 5.799999952316284,
+            "vertices": 2401,
+            "waterVertices": 270
+          },
+          "props": 236,
+          "metrics": {
+            "loadedChunks": 1,
+            "loadedSectors": 16,
+            "memoryBytes": 4194304
+          }
+        },
+        {
+          "roundtripMs": 11,
+          "compiledMs": 4.400000095367432,
+          "spatialMs": 10.600000143051147,
+          "copyMs": 0.09999990463256836,
+          "transferBytes": 62004,
+          "three": {
+            "ms": 1.1000001430511475,
+            "vertices": 2401,
+            "waterVertices": 0
+          },
+          "props": 256,
+          "metrics": {
+            "loadedChunks": 2,
+            "loadedSectors": 32,
+            "memoryBytes": 4194304
+          }
+        }
+      ],
+      "topology": null,
+      "checks": {
+        "transferLengths": true,
+        "terrainSeam": true,
+        "wallEdit": false
+      }
+    },
+    "error": null
+  },
+  "errors": []
+}

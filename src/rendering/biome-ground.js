@@ -22,19 +22,32 @@ export class BiomeGround {
       }
     }catch(error){this.dispose();throw error;}
   }
-  uniforms(cx,cz,bytes=null){
+  uniforms(cx,cz,bytes=null,{mapped=true}={}){
     this.assertOpen();
-    const bo=chunkBounds(cx,cz),data=bytes??buildGroundMask417(this.field.c,this.profile,this.field,bo);
-    const mask=new THREE.DataTexture(data,35,35,THREE.RGBAFormat);mask.minFilter=mask.magFilter=THREE.LinearFilter;mask.generateMipmaps=false;mask.needsUpdate=true;this.masks.add(mask);
+    const bo=chunkBounds(cx,cz);
+    let mask;
+    if(mapped){
+      const data=bytes??buildGroundMask417(this.field.c,this.profile,this.field,bo);
+      mask=new THREE.DataTexture(data,35,35,THREE.RGBAFormat);
+      mask.minFilter=mask.magFilter=THREE.LinearFilter;mask.generateMipmaps=false;
+      mask.needsUpdate=true;this.masks.add(mask);
+    }else{
+      // The far shader replaces this sample with a constant. Reuse one valid
+      // sampler instead of generating a discarded JavaScript terrain mask.
+      this.unmappedMask??=new THREE.DataTexture(new Uint8Array([0,128,0,0]),1,1,THREE.RGBAFormat);
+      this.unmappedMask.needsUpdate=true;mask=this.unmappedMask;
+    }
     const tile=this.tile,colors=this.profile.colors,soil=hex(colors.soil),grass=hex(colors.grass),foliage=hex(colors.foliage),blend=this.field.c.biome==='grand_river'?.32:.20;
-    return {uGroundPureMoss:{value:this.tile.pureMoss?1:0},uGroundMask:{value:mask},uGroundRect:{value:new THREE.Vector4(bo.minX,bo.minZ,1.5,35)},uGroundMapped:{value:1},uGroundOn:{value:1},uGroundStrength:{value:1},uGroundMicro:{value:1},uGroundDebug:{value:0},uGroundRelief:{value:1},uGroundParams:{value:new THREE.Vector4(tile.scale,tile.blend,tile.normalBoost,tile.relief??tile.jitter??0)},uGroundSeed:{value:new THREE.Vector2(hashCell(this.field.seed,0,1,417)/4294967296,hashCell(this.field.seed,1,0,417)/4294967296)},uGroundSoil:{value:new THREE.Vector3(...soil)},uGroundGrass:{value:new THREE.Vector3(...grass.map((v,i)=>v+(foliage[i]-v)*blend))},uGroundDetailMap:{value:this.textures[0]},uGroundNormal:{value:this.textures[1]},uGroundARH:{value:this.textures[2]}};
+    return {uGroundPureMoss:{value:this.tile.pureMoss?1:0},uGroundMask:{value:mask},uGroundRect:{value:new THREE.Vector4(bo.minX,bo.minZ,1.5,35)},uGroundMapped:{value:mapped?1:0},uGroundOn:{value:1},uGroundStrength:{value:1},uGroundMicro:{value:1},uGroundDebug:{value:0},uGroundRelief:{value:1},uGroundParams:{value:new THREE.Vector4(tile.scale,tile.blend,tile.normalBoost,tile.relief??tile.jitter??0)},uGroundSeed:{value:new THREE.Vector2(hashCell(this.field.seed,0,1,417)/4294967296,hashCell(this.field.seed,1,0,417)/4294967296)},uGroundSoil:{value:new THREE.Vector3(...soil)},uGroundGrass:{value:new THREE.Vector3(...grass.map((v,i)=>v+(foliage[i]-v)*blend))},uGroundDetailMap:{value:this.textures[0]},uGroundNormal:{value:this.textures[1]},uGroundARH:{value:this.textures[2]}};
   }
-  attach(material,cx,cz,bytes=null){
-    const uniforms=this.uniforms(cx,cz,bytes);material.userData.biomeGround=uniforms;
+  attach(material,cx,cz,bytes=null,options){
+    const uniforms=this.uniforms(cx,cz,bytes,options);material.userData.biomeGround=uniforms;
     const mask=uniforms.uGroundMask.value;let owners=0;
-    material.userData.retainBiomeGround=next=>{owners++;next.addEventListener('dispose',()=>{if(--owners===0&&this.masks.delete(mask))mask.dispose();});};
+    material.userData.retainBiomeGround=next=>{owners++;next.addEventListener('dispose',()=>{
+      if(--owners===0&&mask!==this.unmappedMask&&this.masks.delete(mask))mask.dispose();
+    });};
     material.userData.retainBiomeGround(material);
   }
   assertOpen(){if(this.disposed)throw new Error('Ground load cancelled');}
-  dispose(){if(this.disposed)return;this.disposed=true;this.loading.abort();for(const texture of [...this.textures,...this.masks])texture.dispose();this.textures=[];this.masks.clear();}
+  dispose(){if(this.disposed)return;this.disposed=true;this.loading.abort();for(const texture of [...this.textures,...this.masks,this.unmappedMask].filter(Boolean))texture.dispose();this.textures=[];this.masks.clear();this.unmappedMask=null;}
 }

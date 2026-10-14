@@ -99,6 +99,8 @@ test('native mixed canyon waves retain all 16 dry bodies without overlap and det
  const bounds=[center.x-128,center.z-128,center.x+128,center.z+128],entry=chooseRaidEntry(s,specs,bounds,0,nav);assert(entry);assert.equal(entry.entries.length,16);assert.equal(s.rng,rng);
  assert.deepEqual(chooseRaidEntry(s,specs,bounds,0,nav),entry);
  for(let i=0;i<16;i++){
+  assert.equal(Math.sign(entry.entries[i].x-nav.field.riverX(entry.entries[i].z)),
+   Math.sign(center.x-nav.field.riverX(center.z)));
   assert(nav.walkable(entry.entries[i].x,entry.entries[i].z,specs[i].radius,null,false));assert(nav.segmentClear(entry.entries[i],entry.exits[i],specs[i].radius,null,false));
   for(let j=0;j<i;j++)assert(Math.hypot(entry.entries[i].x-entry.entries[j].x,entry.entries[i].z-entry.entries[j].z)>specs[i].radius+specs[j].radius+1);
  }

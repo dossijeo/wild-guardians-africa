@@ -1,0 +1,185 @@
+{
+  "base": "http://127.0.0.1:5188",
+  "report": [
+    {
+      "biome": "canyons",
+      "topology": "initial",
+      "roundtripMs": 84.1,
+      "terrainBytes": 3715632,
+      "waterBytes": 165888,
+      "wasmMemoryBytes": 4980736,
+      "stateBytes": 59,
+      "loadedChunks": 1,
+      "loadedSectors": 0,
+      "largestFrameGapMs": 16.8,
+      "largestDelta": 0
+    },
+    {
+      "biome": "canyons",
+      "topology": "settlement",
+      "roundtripMs": 61.3,
+      "terrainBytes": 3715632,
+      "waterBytes": 165888,
+      "wasmMemoryBytes": 4980736,
+      "stateBytes": 87,
+      "loadedChunks": 1,
+      "loadedSectors": 0,
+      "largestFrameGapMs": 17,
+      "largestDelta": 0
+    },
+    {
+      "biome": "canyons",
+      "topology": "controller",
+      "revision": 2,
+      "terrainVertices": 103212
+    },
+    {
+      "biome": "canyons",
+      "topology": "travel-50-settlements",
+      "settlements": 52,
+      "stateBytes": 1824,
+      "frames": 65,
+      "travel": [
+        {
+          "cx": 0,
+          "cz": 0,
+          "totalMs": 172,
+          "snapshotAndPostMs": 0.2,
+          "installMs": 4.1,
+          "largestFrameGapMs": 43.7
+        },
+        {
+          "cx": 1,
+          "cz": 0,
+          "totalMs": 197.6,
+          "snapshotAndPostMs": 0.1,
+          "installMs": 4.1,
+          "largestFrameGapMs": 23.5
+        },
+        {
+          "cx": 2,
+          "cz": 0,
+          "totalMs": 180.7,
+          "snapshotAndPostMs": 0.1,
+          "installMs": 3.1,
+          "largestFrameGapMs": 17.3
+        },
+        {
+          "cx": 3,
+          "cz": 0,
+          "totalMs": 184,
+          "snapshotAndPostMs": 0.1,
+          "installMs": 2.6,
+          "largestFrameGapMs": 17
+        },
+        {
+          "cx": 1,
+          "cz": 0,
+          "totalMs": 183.1,
+          "snapshotAndPostMs": 0.1,
+          "installMs": 3,
+          "largestFrameGapMs": 17
+        },
+        {
+          "cx": 0,
+          "cz": 0,
+          "totalMs": 166.3,
+          "snapshotAndPostMs": 0.2,
+          "installMs": 3.1,
+          "largestFrameGapMs": 16.8
+        }
+      ]
+    },
+    {
+      "biome": "desert",
+      "topology": "initial",
+      "roundtripMs": 146.7,
+      "terrainBytes": 4608576,
+      "waterBytes": 0,
+      "wasmMemoryBytes": 6356992,
+      "stateBytes": 58,
+      "loadedChunks": 1,
+      "loadedSectors": 0,
+      "largestFrameGapMs": 17.9,
+      "largestDelta": 0
+    },
+    {
+      "biome": "desert",
+      "topology": "settlement",
+      "roundtripMs": 121.9,
+      "terrainBytes": 4608576,
+      "waterBytes": 0,
+      "wasmMemoryBytes": 6356992,
+      "stateBytes": 86,
+      "loadedChunks": 1,
+      "loadedSectors": 0,
+      "largestFrameGapMs": 16.9,
+      "largestDelta": 0
+    },
+    {
+      "biome": "desert",
+      "topology": "controller",
+      "revision": 2,
+      "terrainVertices": 128016
+    },
+    {
+      "biome": "desert",
+      "topology": "travel-50-settlements",
+      "settlements": 52,
+      "stateBytes": 1823,
+      "frames": 97,
+      "travel": [
+        {
+          "cx": 0,
+          "cz": 0,
+          "totalMs": 236.7,
+          "snapshotAndPostMs": 0.1,
+          "installMs": 4.1,
+          "largestFrameGapMs": 17.9
+        },
+        {
+          "cx": 1,
+          "cz": 0,
+          "totalMs": 301,
+          "snapshotAndPostMs": 0,
+          "installMs": 4.1,
+          "largestFrameGapMs": 17
+        },
+        {
+          "cx": 2,
+          "cz": 0,
+          "totalMs": 263.5,
+          "snapshotAndPostMs": 0.2,
+          "installMs": 3.5,
+          "largestFrameGapMs": 16.9
+        },
+        {
+          "cx": 3,
+          "cz": 0,
+          "totalMs": 266.2,
+          "snapshotAndPostMs": 0.1,
+          "installMs": 3.6,
+          "largestFrameGapMs": 16.9
+        },
+        {
+          "cx": 1,
+          "cz": 0,
+          "totalMs": 265.6,
+          "snapshotAndPostMs": 0.1,
+          "installMs": 4,
+          "largestFrameGapMs": 17.6
+        },
+        {
+          "cx": 0,
+          "cz": 0,
+          "totalMs": 249.6,
+          "snapshotAndPostMs": 0.2,
+          "installMs": 3.1,
+          "largestFrameGapMs": 20.8
+        }
+      ]
+    }
+  ],
+  "error": null,
+  "errors": []
+}

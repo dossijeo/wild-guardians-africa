@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QA · Transferencia espacial WASM</title>
+<style>body{margin:0;padding:24px;background:#182821;color:#f3ecd5;font:14px/1.5 system-ui}pre{white-space:pre-wrap;word-break:break-word}h1{font-size:20px}</style>
+</head><body><h1>Sabana · Web Worker real</h1><pre id="status">Iniciando medición…</pre><script type="module">
+import * as THREE from 'three';
+import {Navigation} from '../../src/world/navigation.js';
+import {TerrainField} from '../../src/world/terrain.js';
+import {nativeTerrainBuffer} from '../../src/rendering/terrain-geometry.js';
+import {nativeWaterBuffer} from '../../src/rendering/water-geometry.js';
+import {SpatialSurfaceView} from '../../src/world/hierarchical-wasm/spatial-surface-view.js';
+import {ANIMAL_SPATIAL_PROFILES} from '../../src/world/hierarchical-wasm/spatial-movement-profiles.js';
+
+const status=document.querySelector('#status'),now=()=>performance.now();
+function request(worker,message){
+  return new Promise((resolve,reject)=>{
+    const start=now(),timer=setTimeout(()=>{worker.removeEventListener('message',receive);reject(Error('Worker timeout'));},20000);
+    function receive({data}){
+      if(data.id!==message.id)return;
+      clearTimeout(timer);worker.removeEventListener('message',receive);
+      if(data.error)reject(Error(data.error));else resolve({roundtripMs:now()-start,...data});
+    }
+    worker.addEventListener('message',receive);worker.postMessage(message);
+  });
+}
+function prepareThree(data,cx,cz){
+  if(data.terrain){
+    const start=now(),geometry=nativeTerrainBuffer(data.terrain),water=nativeWaterBuffer(data.water);
+    const vertices=geometry.getAttribute('position').count,waterVertices=water?.getAttribute('position').count??0;
+    geometry.dispose();water?.dispose();return {ms:now()-start,vertices,waterVertices};
+  }
+  const start=now(),positions=new Float32Array(49*49*3),indices=new Uint16Array(48*48*6);
+  for(let z=0;z<49;z++)for(let x=0;x<49;x++){
+    const i=z*49+x;positions[i*3]=cx*48-24+x;positions[i*3+1]=data.heights[i];positions[i*3+2]=cz*48-24+z;
+  }
+  for(let z=0;z<48;z++)for(let x=0;x<48;x++){
+    const i=z*48+x,k=i*6,a=z*49+x,b=a+1,d=a+49,c=d+1;
+    indices.set([a,d,b,b,d,c],k);
+  }
+  const geometry=new THREE.BufferGeometry();
+  geometry.setAttribute('position',new THREE.BufferAttribute(positions,3));
+  geometry.setAttribute('color',new THREE.BufferAttribute(data.colors,3));
+  geometry.setIndex(new THREE.BufferAttribute(indices,1));geometry.computeVertexNormals();
+  const waterGeometry=new THREE.BufferGeometry();
+  waterGeometry.setAttribute('position',new THREE.BufferAttribute(data.waterTriangles,3));
+  waterGeometry.computeVertexNormals();
+  const vertices=geometry.getAttribute('position').count,waterVertices=waterGeometry.getAttribute('position').count;
+  geometry.dispose();waterGeometry.dispose();
+  return {ms:now()-start,vertices,waterVertices};
+}
+try{
+  const parameters=new URLSearchParams(location.search),seed=Number(parameters.get('seed')??712);
+  const biome=['savanna','desert','grand_river','volcanoes','mangrove','canyons'].includes(parameters.get('biome'))?
+    parameters.get('biome'):'savanna';
+  const profile=await fetch(`/content/biome-${biome}.json`).then(response=>response.json()).then(pack=>pack.profile);
+  const sceneFormat=parameters.get('format')==='scene',settlement=parameters.get('settlement')==='1';
+  const multiple=parameters.get('multi')==='1';
+  const nav=new Navigation(String(seed),{savanna:'sabana',desert:'desierto',grand_river:'gran-rio',volcanoes:'volcanes',mangrove:'manglares',canyons:'gran-canon'}[biome],profile),baseline=new Worker(new URL('../../src/rendering/chunk-worker.js',import.meta.url),{type:'module'});
+  if(settlement){
+    const x=10,z=8,hx=7,hz=6;
+    const samples=[[x-hx,z-hz],[x+hx,z-hz],[x,z],[x-hx,z+hz],[x+hx,z+hz]]
+      .map(([px,pz])=>nav.field.surface(px,pz)).sort((a,b)=>a-b);
+    nav.config.settlementSite={x,z,hx,hz,y:samples[2],yaw:0,
+      clearRadius:19,softRadius:25,haloRadius:32};
+    nav.field=new TerrainField(nav.config);
+  }
+  const baselineFirst=await request(baseline,{id:1,epoch:0,config:nav.config,profile,cx:0,cz:0});
+  const baselineSecond=await request(baseline,{id:2,epoch:0,config:nav.config,profile,cx:1,cz:0});
+  baseline.terminate();
+  const candidate=new Worker(new URL('../../src/world/hierarchical-wasm/spatial-core-worker.js',import.meta.url),{type:'module'});
+  const candidateFirst=await request(candidate,{id:3,seed,biome,cx:0,cz:0,reset:true,radius:1.1,
+    profiles:sceneFormat?[{radius:.28,worker:true},{radius:1.1,worker:false}]:null,
+    format:sceneFormat?'scene':'raw',settlement:settlement?{x:10,z:8,hx:7,hz:6}:null});
+  const candidateSecond=await request(candidate,{id:4,seed,cx:1,cz:0,radius:1.1,
+    format:sceneFormat?'scene':'raw'});
+  let topology=null,barrierTopology=null,batchTopology=null,multipleSettlements=null,surfaceView=null,spatialReload=null,propRemoval=null,speciesProfiles=null;
+  if(sceneFormat){
+    let profileId=300;
+    const small=await request(candidate,{id:profileId++,op:'build-profile',...ANIMAL_SPATIAL_PROFILES.lion});
+    const large=await request(candidate,{id:profileId++,op:'build-profile',...ANIMAL_SPATIAL_PROFILES.rhino});
+    if(small.value<32||large.value<32)throw Error('Species navigation profiles did not build');
+    await request(candidate,{id:profileId++,op:'profile',index:ANIMAL_SPATIAL_PROFILES.lion.index});
+    const smallPass=await request(candidate,{id:profileId++,op:'walkable',x:-16,z:-18});
+    await request(candidate,{id:profileId++,op:'profile',index:ANIMAL_SPATIAL_PROFILES.rhino.index});
+    const largePass=await request(candidate,{id:profileId++,op:'walkable',x:-16,z:-18});
+    if(biome==='savanna'&&(!smallPass.value||largePass.value))
+      throw Error('Small and large species received the same clearance at a known narrow point');
+    await request(candidate,{id:profileId++,op:'profile',index:0});
+    speciesProfiles={smallSectors:small.value,largeSectors:large.value,
+      smallPass:smallPass.value,largePass:largePass.value,
+      buildMs:small.timing.operationMs+large.timing.operationMs,
+      memoryBytes:large.metrics.memoryBytes};
+    const view=new SpatialSurfaceView();view.install(candidateFirst.data);view.install(candidateSecond.data);
+    const query={x:30.3,z:5.7};
+    const exact=await request(candidate,{id:190,op:'surface',...query});
+    if(Math.abs(view.surface(query.x,query.z)-exact.value)>.00002)
+      throw Error('Transferred terrain view differs from WASM surface');
+    const otherQuery={x:-15.3,z:1.7};
+    const other=await request(candidate,{id:191,op:'surface',...otherQuery});
+    if(Math.abs(view.surface(otherQuery.x,otherQuery.z)-other.value)>.00005)
+      throw Error('A resident chunk lost its surface query when another chunk became active');
+    const canyonWater=biome==='canyons'?await request(candidate,{id:192,op:'fluid-level',x:-12,z:0}):null;
+    if(canyonWater&&!(canyonWater.value>0))
+      throw Error('Canyon river query lost a resident chunk after selecting another');
+    surfaceView={sample:query,height:view.surface(query.x,query.z),difference:Math.abs(view.surface(query.x,query.z)-exact.value),
+      otherChunkDifference:Math.abs(view.surface(otherQuery.x,otherQuery.z)-other.value),
+      canyonWaterLevel:canyonWater?.value??null};
+    let crossing=null,crossingRoute=null,id=5;
+    for(let z=-18;z<=18;z++){
+      const edge=await request(candidate,{id:id++,op:'edge',x:23,z,nx:24,nz:z});
+      if(!edge.value)continue;
+      const route=await request(candidate,{id:id++,op:'route',x:23,z,nx:24,nz:z});
+      if(route.value==='found'){crossing={x:23,z,nx:24,nz:z};crossingRoute=route;break;}
+    }
+    if(!crossing)throw Error('No valid cross-chunk route before wall construction');
+    if(!(crossingRoute.routePoints instanceof Int32Array)||crossingRoute.routePoints.length<2||
+      crossingRoute.routePoints.length%2||
+      crossingRoute.routePoints.at(-2)!==crossing.nx||crossingRoute.routePoints.at(-1)!==crossing.nz)
+      throw Error('WASM worker did not transfer the complete route points');
+    let previous={x:crossing.x,z:crossing.z};
+    for(let point=0;point<crossingRoute.routePoints.length;point+=2){
+      const next={x:crossingRoute.routePoints[point],z:crossingRoute.routePoints[point+1]};
+      const step=await request(candidate,{id:id++,op:'edge',...previous,nx:next.x,nz:next.z});
+      if(!step.value)throw Error('Transferred WASM route contains an invalid physical edge');
+      previous=next;
+    }
+    const fractional=await request(candidate,{id:id++,op:'route-world',x:24.02,z:crossing.z,nx:24.08,nz:crossing.z});
+    if(fractional.value!=='found'||!(fractional.routePoints instanceof Float32Array)||
+       fractional.routePoints.length!==2||Math.abs(fractional.routePoints[0]-24.08)>.0001)
+      throw Error('Continuous worker route lost its fractional endpoint');
+    const seamFractional=await request(candidate,{id:id++,op:'route-world',x:23.8,z:crossing.z,nx:24.2,nz:crossing.z});
+    if(seamFractional.value!=='found'||!(seamFractional.routePoints instanceof Float32Array))
+      throw Error('Continuous worker route did not cross two resident chunks');
+    const oriented=await request(candidate,{id:id++,op:'barrier-oriented-add',x:24.04,z:crossing.z,
+      halfX:.4,halfZ:.22,yaw:.65,passMask:0});
+    if(oriented.value<=0)throw Error('Oriented barrier command was rejected');
+    const orientedBlocked=await request(candidate,{id:id++,op:'route-world',x:24.02,z:crossing.z,nx:24.08,nz:crossing.z});
+    if(orientedBlocked.value==='found')throw Error('Oriented wall did not block the continuous route');
+    await request(candidate,{id:id++,op:'barrier-remove',barrierId:oriented.value});
+    const wall=await request(candidate,{id:id++,op:'wall-add',x:23.5,z:0,halfX:.8,halfZ:24});
+    if(wall.value<=0)throw Error('The wall command was rejected');
+    const fractionalBlocked=await request(candidate,{id:id++,op:'route-world',x:24.02,z:crossing.z,nx:24.08,nz:crossing.z});
+    if(fractionalBlocked.value==='found')throw Error('Continuous worker route crossed a solid wall');
+    const blocked=await request(candidate,{id:id++,op:'route',...crossing});
+    const workerProfile=await request(candidate,{id:id++,op:'profile',worker:true});
+    const workerBlocked=await request(candidate,{id:id++,op:'route',...crossing});
+    await request(candidate,{id:id++,op:'profile',worker:false});
+    const removed=await request(candidate,{id:id++,op:'wall-remove',wallId:wall.value});
+    const reopened=await request(candidate,{id:id++,op:'route',...crossing});
+    await request(candidate,{id:id++,op:'profile',worker:true});
+    const workerReopened=await request(candidate,{id:id++,op:'route',...crossing});
+    await request(candidate,{id:id++,op:'profile',worker:false});
+    if(blocked.value==='found'||blocked.routePoints||workerBlocked.value==='found'||removed.value!==1||
+       reopened.value!=='found'||workerReopened.value!=='found'||workerProfile.value<32)
+      throw Error(`Wall topology did not close and reopen the route: ${blocked.value}, ${removed.value}, ${reopened.value}`);
+    const gate=await request(candidate,{id:id++,op:'barrier-add',x:23.5,z:crossing.z,halfX:.8,halfZ:.4,passMask:1});
+    const animalClosed=await request(candidate,{id:id++,op:'edge',...crossing});
+    await request(candidate,{id:id++,op:'profile',worker:true});
+    const workerOpen=await request(candidate,{id:id++,op:'edge',...crossing});
+    const closedGate=await request(candidate,{id:id++,op:'barrier-passability',barrierId:gate.value,passMask:0});
+    const workerClosed=await request(candidate,{id:id++,op:'edge',...crossing});
+    const openedGate=await request(candidate,{id:id++,op:'barrier-passability',barrierId:gate.value,passMask:3});
+    const workerBothOpen=await request(candidate,{id:id++,op:'edge',...crossing});
+    await request(candidate,{id:id++,op:'profile',worker:false});
+    const animalOpen=await request(candidate,{id:id++,op:'edge',...crossing});
+    const removedGate=await request(candidate,{id:id++,op:'barrier-remove',barrierId:gate.value});
+    if(gate.value<=0||animalClosed.value||!workerOpen.value||closedGate.value!==1||
+       workerClosed.value||openedGate.value!==1||!workerBothOpen.value||
+       !animalOpen.value||removedGate.value!==1)
+      throw Error('Dynamic passage did not update worker and animal sectors independently');
+    barrierTopology={workerOpen:workerOpen.value,animalClosed:animalClosed.value,
+      workerClosed:workerClosed.value,workerReopened:workerBothOpen.value,
+      animalReopened:animalOpen.value,localUpdates:gate.metrics.sectorUpdates-removed.metrics.sectorUpdates,
+      addMs:gate.timing.operationMs,closeMs:closedGate.timing.operationMs,
+      reopenMs:openedGate.timing.operationMs};
+    const chain=Array.from({length:12},(_,i)=>({x:-15+i,z:0,halfX:.49,halfZ:.45,passMask:0}));
+    const built=await request(candidate,{id:id++,op:'barrier-batch-add',barriers:chain});
+    const updates=built.metrics.sectorUpdates-removedGate.metrics.sectorUpdates;
+    if(!Array.isArray(built.value)||built.value.length!==chain.length||
+       new Set(built.value).size!==chain.length||built.value.some(value=>value<=0)||updates>=chain.length)
+      throw Error('Batched wall chain did not reduce repeated sector rebuilds');
+    for(const barrierId of built.value){
+      const cleared=await request(candidate,{id:id++,op:'barrier-remove',barrierId});
+      if(cleared.value!==1)throw Error('Could not remove a batched barrier');
+    }
+    batchTopology={count:chain.length,sectorUpdates:updates,operationMs:built.timing.operationMs};
+    const evicted=await request(candidate,{id:id++,op:'chunk-remove',cx:1,cz:0});
+    if(evicted.value!==1||evicted.metrics.loadedChunks!==1)throw Error('Chunk eviction did not release the second chunk');
+    const restored=await request(candidate,{id:id++,seed,cx:1,cz:0,format:'scene'});
+    const same=(a,b)=>a.length===b.length&&a.every((value,index)=>value===b[index]);
+    if(!same(restored.data.terrain.positions,candidateSecond.data.terrain.positions)||
+       !same(restored.data.terrain.colors,candidateSecond.data.terrain.colors)||
+       !same(restored.data.water,candidateSecond.data.water)||
+       !same(restored.data.groundMask,candidateSecond.data.groundMask)||
+       JSON.stringify(restored.data.instances)!==JSON.stringify(candidateSecond.data.instances))
+      throw Error('Evicted chunk did not regenerate the same visual payload');
+    const revisited=await request(candidate,{id:id++,op:'route',...crossing});
+    if(revisited.value!=='found'||restored.metrics.loadedChunks!==2)
+      throw Error('Chunk regeneration did not restore cross-chunk navigation');
+    topology={crossing,routePointCount:crossingRoute.routePoints.length/2,
+      closedStatus:blocked.value,reopenedStatus:reopened.value,
+      workerClosedStatus:workerBlocked.value,workerReopenedStatus:workerReopened.value,
+      wallAddMs:wall.timing.operationMs,wallRemoveMs:removed.timing.operationMs,
+      sectorUpdatesAfterAdd:wall.metrics.sectorUpdates,
+      sectorUpdatesAfterRemove:removed.metrics.sectorUpdates,
+      evictMs:evicted.timing.operationMs,reloadMs:restored.roundtripMs,
+      sameVisualPayload:true,loadedSectorsAfterReload:restored.metrics.loadedSectors,
+      memoryBytesAfterReload:restored.metrics.memoryBytes};
+  }
+  if(sceneFormat&&multiple){
+    const far=await request(candidate,{id:200,seed,cx:3,cz:0,format:'scene'});
+    const added=await request(candidate,{id:201,op:'settlement-add',x:144,z:8,hx:7,hz:6});
+    const changed=await request(candidate,{id:202,seed,cx:3,cz:0,read:true,format:'scene'});
+    const first=await request(candidate,{id:203,seed,cx:0,cz:0,read:true,format:'scene'});
+    const same=(a,b)=>a.length===b.length&&a.every((value,index)=>value===b[index]);
+    const settlementChecks={created:added.value>0,
+      changedLocal:!same(far.data.terrain.positions,changed.data.terrain.positions)||
+        biome==='mangrove'&&!same(far.data.groundMask,changed.data.groundMask),
+      sameFirstTerrain:same(first.data.terrain.positions,candidateFirst.data.terrain.positions),
+      sameFirstMask:same(first.data.groundMask,candidateFirst.data.groundMask),
+      sameFirstProps:JSON.stringify(first.data.instances)===JSON.stringify(candidateFirst.data.instances),
+      correctLevel:Math.abs(changed.data.terrain.positions[(8+24)*49*3+24*3+1]-added.value)<=.001,
+      resident:changed.metrics.loadedChunks===3,
+      localSectors:added.metrics.sectorUpdates-far.metrics.sectorUpdates<=16};
+    if(Object.values(settlementChecks).some(value=>!value))
+      throw Error(`Second settlement did not update only its local spatial world: ${JSON.stringify(settlementChecks)}`);
+    multipleSettlements={secondLevel:added.value,
+      localSectorUpdates:added.metrics.sectorUpdates-far.metrics.sectorUpdates,
+      sameFirstSettlement:true,secondChunkChanged:true,memoryBytes:changed.metrics.memoryBytes};
+  }
+  if(sceneFormat){
+    const solid=candidateFirst.data.instances.flat().find(prop=>prop.slot<=3||
+      (prop.slot>=10&&prop.slot<=12)||prop.slot>=18);
+    if(!solid)throw Error('No removable solid prop in the first chunk');
+    const [,group,gx,gz]=solid.id.split(':').map(Number);
+    if(group>5)throw Error('The selected solid is a fixed water feature');
+    const beforeProp=await request(candidate,{id:220,op:'profile',worker:false});
+    const removedProp=await request(candidate,{id:221,op:'prop-remove',cx:0,cz:0,group,gx,gz});
+    const afterProp=await request(candidate,{id:222,seed,cx:0,cz:0,read:true,format:'scene'});
+    if(removedProp.value!==1||afterProp.data.instances.flat().some(prop=>prop.id===solid.id)||
+       removedProp.metrics.sectorUpdates<=beforeProp.metrics.sectorUpdates)
+      throw Error('A removed prop remains visible in the spatial chunk');
+    propRemoval={id:solid.id,operationMs:removedProp.timing.operationMs,
+      sectorUpdates:removedProp.metrics.sectorUpdates-beforeProp.metrics.sectorUpdates};
+    const wall=await request(candidate,{id:210,op:'barrier-add',x:23.5,z:topology.crossing.z,
+      halfX:.8,halfZ:.45,passMask:0});
+    const saved=await request(candidate,{id:211,op:'snapshot'});
+    const reloadedWorker=new Worker(new URL('../../src/world/hierarchical-wasm/spatial-core-worker.js',import.meta.url),{type:'module'});
+    try{
+      const restored=await request(reloadedWorker,{id:212,op:'restore',state:saved.value,cx:0,cz:0});
+      const restoredState=await request(reloadedWorker,{id:213,op:'snapshot'});
+      const restoredFirst=await request(reloadedWorker,{id:214,seed,cx:0,cz:0,read:true,format:'scene'});
+      const restoredSecond=await request(reloadedWorker,{id:215,seed,cx:1,cz:0,format:'scene'});
+      const route=await request(reloadedWorker,{id:216,op:'route',...topology.crossing});
+      const liveRoute=await request(candidate,{id:217,op:'route',...topology.crossing});
+      const same=(a,b)=>a.length===b.length&&a.every((value,index)=>value===b[index]);
+      if(!restored.value||wall.value<=0||JSON.stringify(restoredState.value)!==JSON.stringify(saved.value)||
+         !same(restoredFirst.data.terrain.positions,candidateFirst.data.terrain.positions)||
+         !same(restoredFirst.data.groundMask,candidateFirst.data.groundMask)||
+         JSON.stringify(restoredFirst.data.instances)!==JSON.stringify(afterProp.data.instances)||
+         !same(restoredSecond.data.terrain.positions,candidateSecond.data.terrain.positions)||
+         route.value!==liveRoute.value||
+         JSON.stringify(Array.from(route.routePoints??[]))!==JSON.stringify(Array.from(liveRoute.routePoints??[])))
+        throw Error('The versioned spatial state did not restore visual and route behavior');
+      spatialReload={version:saved.value.version,settlements:saved.value.settlements.length,
+        removedProps:saved.value.removedProps.length,
+        barriers:saved.value.barriers.length,nextBarrierId:saved.value.nextBarrierId,
+        routeStatus:route.value,restoredMemoryBytes:restored.metrics.memoryBytes};
+    }finally{reloadedWorker.terminate();}
+  }
+  candidate.terminate();
+  for(const result of [candidateFirst,candidateSecond]){
+    if(sceneFormat){
+      if(result.data.terrain.positions.length!==7203||result.data.terrain.colors.length!==7203||
+         result.data.terrain.indices.length!==13824||result.data.groundMask.length!==4900||
+         result.data.water.length%9!==0||result.data.instances.length!==20)
+        throw Error('Transferred scene payload has inconsistent lengths');
+    }else if(result.data.heights.length!==2401||result.data.colors.length!==7203||
+       result.data.water.length!==2304||result.data.groundMask.length!==4900||result.data.waterLevels.length!==2304||
+       result.data.waterTriangles.length%9!==0||
+       result.data.props.byteLength!==result.data.count*40)
+      throw Error('Transferred WASM buffers have inconsistent lengths');
+  }
+  for(let z=0;z<49;z++)if((sceneFormat?candidateFirst.data.terrain.positions[(z*49+48)*3+1]:candidateFirst.data.heights[z*49+48])!==
+    (sceneFormat?candidateSecond.data.terrain.positions[z*49*3+1]:candidateSecond.data.heights[z*49]))
+    throw Error(`Transferred terrain seam differs at row ${z}`);
+  const current=[baselineFirst,baselineSecond].map(result=>({roundtripMs:result.roundtripMs,
+    bytes:result.data.terrain.byteLength+result.data.water.byteLength+result.data.groundMask.byteLength,
+    props:result.data.instances.reduce((n,list)=>n+list.length,0)}));
+  const spatial=[candidateFirst,candidateSecond].map(result=>({roundtripMs:result.roundtripMs,
+    ...result.timing,three:prepareThree(result.data,result.cx,result.cz),
+    props:sceneFormat?result.data.instances.reduce((n,list)=>n+list.length,0):result.data.count,
+    metrics:result.metrics}));
+  window.qaStats={seed,biome,sceneFormat,settlement,current,spatial,topology,barrierTopology,batchTopology,multipleSettlements,surfaceView,spatialReload,propRemoval,speciesProfiles,
+    checks:{transferLengths:true,terrainSeam:true,wallEdit:!!topology,
+      routePoints:topology?.routePointCount>=1,
+      continuousRoute:!!topology,
+      orientedWall:!!topology,
+      speciesProfiles:speciesProfiles?.smallSectors>=32&&speciesProfiles?.largeSectors>=32,
+      dynamicPassage:!!barrierTopology,
+      batchedTopology:batchTopology?.count===12,
+      evictionRegeneration:topology?.sameVisualPayload===true,
+      multipleSettlements:multipleSettlements?.sameFirstSettlement===true,
+      spatialReload:spatialReload?.version===4&&spatialReload?.removedProps===1,
+      propRemoval:propRemoval?.sectorUpdates>0,
+      surfaceView:surfaceView?.difference<=.00002&&surfaceView?.otherChunkDifference<=.00005}};window.qaReady=true;
+  status.textContent=JSON.stringify(window.qaStats,null,2);
+}catch(error){window.qaError=String(error.stack??error);status.textContent=window.qaError;}
+</script></body></html>

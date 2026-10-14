@@ -12,9 +12,13 @@ function* search(nav,actor,end,radius){
   const point=queue[head],grid={x:Math.round(point.x),z:Math.round(point.z)},key=`${grid.x},${grid.z}`;
   if(!tails.has(key)&&nav.walkable(grid.x,grid.z,radius,null,true)&&nav.segmentClear(point,grid,radius,null,true)){
    tails.add(key);if(++attempts>8)return null;
-   // Reuse the native resumable A*: do not synchronously drain a large
-   // ordinary search merely to connect this short fractional prefix.
-   const tail=yield*nav.findPathSteps(grid,end,radius,null,true,16,{yieldEvery:4});
+   // The legacy navigation view exposes a resumable search. The spatial
+   // WASM view resolves the tail inside its native sector graph instead.
+   // Yield before that bounded native query so local recovery stays spread
+   // across ticks and never substitutes a JavaScript pathfinder.
+   let tail;
+   if(nav.findPathSteps)tail=yield*nav.findPathSteps(grid,end,radius,null,true,16,{yieldEvery:4});
+   else{yield;tail=nav.path(grid,end,radius,null,true);}
    if(tail){const prefix=[];for(let node=head;node>0;node=queue[node].parent)prefix.push({x:queue[node].x,z:queue[node].z});prefix.reverse();const route=[...prefix,grid,...tail];return nav.smoothPathSteps?yield*nav.smoothPathSteps(actor,route,radius,null,true):route;}
   }
   for(const [dx,dz] of offsets){
@@ -29,7 +33,7 @@ function* search(nav,actor,end,radius){
  return null;
 }
 export function workerFractionalConnector(nav,actor,end,radius=.28){
- if(!['fleeing','returning','incapacitated'].includes(actor.status)||!nav.workerPath||!nav.findPathSteps||!nav.walkable||!nav.segmentClear)return null;
+ if(!['fleeing','returning','incapacitated'].includes(actor.status)||!nav.workerPath||!nav.path||!nav.walkable||!nav.segmentClear)return null;
  if(![actor.x,actor.z,end.x,end.z,radius].every(Number.isFinite)||radius<=0)return null;
  let memo=worlds.get(nav);if(!memo||memo.version!==nav.version){memo={version:nav.version,active:new Map(),failed:new Map()};worlds.set(nav,memo);}
  const key=navigationPathKey(actor,end,radius,null,true,3)+JSON.stringify(actor.terrainAvoidance??[]);

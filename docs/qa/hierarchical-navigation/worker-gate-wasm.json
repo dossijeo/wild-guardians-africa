@@ -1,0 +1,86 @@
+{
+  "scope": "24 worker routes through one native automatic gate; physical collision validation, ABBA order.",
+  "wasmBytes": 24502,
+  "rows": [
+    {
+      "variant": "hierarchical",
+      "setupMs": 3.159800000000004,
+      "initializationMs": 244.96569999999997,
+      "passes": [
+        {
+          "phase": "cold",
+          "milliseconds": 2.8210000000000264,
+          "found": 24,
+          "invalid": 0
+        },
+        {
+          "phase": "warm",
+          "milliseconds": 1.2291999999999916,
+          "found": 24,
+          "invalid": 0
+        }
+      ],
+      "wasmMemoryBytes": 16908288
+    },
+    {
+      "variant": "flat",
+      "setupMs": 0.6807000000000016,
+      "initializationMs": 397.21930000000003,
+      "passes": [
+        {
+          "phase": "cold",
+          "milliseconds": 3.2380999999999176,
+          "found": 24,
+          "invalid": 0
+        },
+        {
+          "phase": "warm",
+          "milliseconds": 1.0475999999999885,
+          "found": 24,
+          "invalid": 0
+        }
+      ],
+      "wasmMemoryBytes": 16908288
+    },
+    {
+      "variant": "flat",
+      "setupMs": 4.98479999999995,
+      "initializationMs": 369.29740000000004,
+      "passes": [
+        {
+          "phase": "cold",
+          "milliseconds": 0.8180999999999585,
+          "found": 24,
+          "invalid": 0
+        },
+        {
+          "phase": "warm",
+          "milliseconds": 0.7802999999998974,
+          "found": 24,
+          "invalid": 0
+        }
+      ],
+      "wasmMemoryBytes": 16908288
+    },
+    {
+      "variant": "hierarchical",
+      "setupMs": 0.856899999999996,
+      "initializationMs": 214.8628000000001,
+      "passes": [
+        {
+          "phase": "cold",
+          "milliseconds": 0.7840000000001055,
+          "found": 24,
+          "invalid": 0
+        },
+        {
+          "phase": "warm",
+          "milliseconds": 0.6238999999998214,
+          "found": 24,
+          "invalid": 0
+        }
+      ],
+      "wasmMemoryBytes": 16908288
+    }
+  ]
+}

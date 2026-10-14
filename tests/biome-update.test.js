@@ -48,6 +48,25 @@ test('ground material retains packed maps and masks across live quality changes 
   mesh.material.dispose();assert.equal(disposed,1);ground.dispose();assert.equal(disposed,1);mesh.geometry.dispose();
 });
 
+test('unmapped horizon ground reuses a neutral sampler without running the JS terrain recipe',()=>{
+  const ground=new BiomeGround();
+  ground.field={seed:712,c:{biome:'savanna'},surface(){throw Error('No JS terrain query');}};
+  ground.profile=JSON.parse(readFileSync('public/content/biome-savanna.json')).profile;
+  ground.tile={scale:.1,blend:1,normalBoost:1};
+  ground.textures=Array.from({length:3},()=>new THREE.Texture());
+  const first=new THREE.MeshStandardMaterial(),second=new THREE.MeshStandardMaterial();
+  ground.attach(first,0,0,null,{mapped:false});
+  ground.attach(second,1,0,null,{mapped:false});
+  assert.equal(first.userData.biomeGround.uGroundMapped.value,0);
+  assert.equal(first.userData.biomeGround.uGroundMask.value,
+    second.userData.biomeGround.uGroundMask.value);
+  assert.equal(first.userData.biomeGround.uGroundMask.value.image.width,1);
+  assert.equal(ground.masks.size,0);
+  let disposed=0;ground.unmappedMask.addEventListener('dispose',()=>disposed++);
+  first.dispose();second.dispose();assert.equal(disposed,0);
+  ground.dispose();assert.equal(disposed,1);
+});
+
 test('new terrain pad survives navigation recreation while an earlier snapshot keeps its original field',()=>{
   const profile=JSON.parse(readFileSync('public/content/biome-savanna.json')).profile;
   const state={terrainVersion:'4.1.10.3',navigationVersion:1,suppressed:[],structures:[],spells:[],villages:[{id:'v',x:60,z:0,buildings:[{kind:'house',x:60,z:0,radius:3}]}]};

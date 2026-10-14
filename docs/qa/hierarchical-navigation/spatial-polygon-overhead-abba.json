@@ -1,0 +1,118 @@
+{
+  "scope": "ABBA isolated same-world comparison against a committed WASM binary before optional polygon obstacles. No dynamic polygon placed; measures generation, two graph builds and 50 route queries. Module compilation excluded.",
+  "baselineCommit": "3acfd185",
+  "sha256": {
+    "before": "32ccf0b26e8a8987d3544c4463c27952e9e77363214e5ecb9a0ed4dd85959bd6",
+    "after": "ff64f0b6f868a47b80729b922e7e0fdfaa1abea306ba29fb4fccf7762bc980a2"
+  },
+  "rows": [
+    {
+      "seed": 712,
+      "mode": "before",
+      "generationMs": 6.674999999999997,
+      "workerBuildMs": 22.7626,
+      "animalBuildMs": 12.667299999999997,
+      "routesMs": 1.535899999999998,
+      "memoryBytes": 4194304
+    },
+    {
+      "seed": 712,
+      "mode": "after",
+      "generationMs": 8.040300000000002,
+      "workerBuildMs": 33.12190000000001,
+      "animalBuildMs": 15.845100000000002,
+      "routesMs": 1.2143000000000086,
+      "memoryBytes": 4194304
+    },
+    {
+      "seed": 712,
+      "mode": "after",
+      "generationMs": 1.9367000000000019,
+      "workerBuildMs": 11.050099999999986,
+      "animalBuildMs": 9.277600000000007,
+      "routesMs": 0.28870000000000573,
+      "memoryBytes": 4194304
+    },
+    {
+      "seed": 712,
+      "mode": "before",
+      "generationMs": 1.6185000000000116,
+      "workerBuildMs": 10.453599999999994,
+      "animalBuildMs": 9.848199999999991,
+      "routesMs": 1.4014999999999986,
+      "memoryBytes": 4194304
+    },
+    {
+      "seed": 28,
+      "mode": "before",
+      "generationMs": 1.8001000000000147,
+      "workerBuildMs": 10.351699999999994,
+      "animalBuildMs": 9.969499999999982,
+      "routesMs": 0.2769999999999868,
+      "memoryBytes": 4194304
+    },
+    {
+      "seed": 28,
+      "mode": "after",
+      "generationMs": 1.5394000000000005,
+      "workerBuildMs": 10.884500000000003,
+      "animalBuildMs": 8.702100000000002,
+      "routesMs": 0.2937999999999761,
+      "memoryBytes": 4194304
+    },
+    {
+      "seed": 28,
+      "mode": "after",
+      "generationMs": 1.6656999999999869,
+      "workerBuildMs": 10.62299999999999,
+      "animalBuildMs": 8.876999999999953,
+      "routesMs": 0.384900000000016,
+      "memoryBytes": 4194304
+    },
+    {
+      "seed": 28,
+      "mode": "before",
+      "generationMs": 1.8541999999999916,
+      "workerBuildMs": 11.486400000000003,
+      "animalBuildMs": 8.529200000000003,
+      "routesMs": 0.1967000000000212,
+      "memoryBytes": 4194304
+    },
+    {
+      "seed": 123,
+      "mode": "before",
+      "generationMs": 1.5808000000000106,
+      "workerBuildMs": 8.386599999999987,
+      "animalBuildMs": 6.6725999999999885,
+      "routesMs": 0.12860000000000582,
+      "memoryBytes": 4194304
+    },
+    {
+      "seed": 123,
+      "mode": "after",
+      "generationMs": 1.5536000000000172,
+      "workerBuildMs": 9.368899999999996,
+      "animalBuildMs": 6.675900000000013,
+      "routesMs": 0.12289999999995871,
+      "memoryBytes": 4194304
+    },
+    {
+      "seed": 123,
+      "mode": "after",
+      "generationMs": 1.451599999999985,
+      "workerBuildMs": 8.874400000000037,
+      "animalBuildMs": 7.191100000000006,
+      "routesMs": 0.1348000000000411,
+      "memoryBytes": 4194304
+    },
+    {
+      "seed": 123,
+      "mode": "before",
+      "generationMs": 1.5561999999999898,
+      "workerBuildMs": 9.77660000000003,
+      "animalBuildMs": 6.522599999999954,
+      "routesMs": 0.13049999999998363,
+      "memoryBytes": 4194304
+    }
+  ]
+}

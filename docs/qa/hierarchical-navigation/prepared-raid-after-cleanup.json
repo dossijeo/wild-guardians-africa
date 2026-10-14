@@ -1,0 +1,53 @@
+{
+  "input": "docs/qa/populated-raids/sabana.json",
+  "repeats": 2,
+  "sourceHashes": {
+    "src/world/raid-entry-data.js": "8cbeebc9b1d9ae64efa8719dbbabd8f1c393b7f7a0b65ccac6eded131aa5cc66",
+    "src/world/compute-raid-entry.js": "3b08df22616cf93a03f0875f52341175da4f1ff9926134f365148c43f586fba0",
+    "src/world/raid-entry-preparer.js": "641e8cf63637312820370535dffaab7a21f602fa52624fd65b9426e8ae950886",
+    "src/world/navigation.js": "20439b77e2e4c056092e6bad43910642ff90c1a93408616173fcccd4fbbb90e2",
+    "src/world/raid-navigation-warmth.js": "7b8617ca5a560b97d98ab82ae0a95ae02fe90e4f754d3ffeaead1cf35a6d9622",
+    "src/simulation/raids.js": "2ec54eb91d3133e8d1156982eaf73eb5ae4a422d24f83e227f41bf38cddda52d",
+    "tools/benchmark_prepared_raid_entry.mjs": "69f760dfc8ef2870e0383e095e209dc29b37831730579a4cf03336db64cda7c8"
+  },
+  "stateSha256": "9c7b5d464e979bb5a092517f1705cbb8374520aac7ee175697f93c36fb37ecc6",
+  "summary": {
+    "reference": {
+      "medianSpawnMs": 761.9313000000002
+    },
+    "prepared": {
+      "medianSpawnMs": 5.303100000000086
+    }
+  },
+  "rows": [
+    {
+      "iteration": 0,
+      "mode": "reference",
+      "spawnMs": 709.6084000000001,
+      "preparationMs": null,
+      "sha256": "9c7b5d464e979bb5a092517f1705cbb8374520aac7ee175697f93c36fb37ecc6"
+    },
+    {
+      "iteration": 0,
+      "mode": "prepared",
+      "spawnMs": 6.811700000000201,
+      "preparationMs": 1472.4144000000001,
+      "sha256": "9c7b5d464e979bb5a092517f1705cbb8374520aac7ee175697f93c36fb37ecc6"
+    },
+    {
+      "iteration": 1,
+      "mode": "prepared",
+      "spawnMs": 3.794499999999971,
+      "preparationMs": 1531.6342,
+      "sha256": "9c7b5d464e979bb5a092517f1705cbb8374520aac7ee175697f93c36fb37ecc6"
+    },
+    {
+      "iteration": 1,
+      "mode": "reference",
+      "spawnMs": 814.2542000000003,
+      "preparationMs": null,
+      "sha256": "9c7b5d464e979bb5a092517f1705cbb8374520aac7ee175697f93c36fb37ecc6"
+    }
+  ],
+  "scope": "Alternating identical native spawn replays. Preparation is measured separately and excluded from spawn CPU. Browser worker/frame timing and physical phone acceptance are separate."
+}

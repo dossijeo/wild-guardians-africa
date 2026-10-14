@@ -1,0 +1,781 @@
+{
+  "input": "docs/qa/hierarchical-navigation/spatial-gran-canon-seed123-day6-capture-capture-state.json",
+  "steps": 50,
+  "residentRadius": 1,
+  "calls": {
+    "workerPath": {
+      "count": 0,
+      "ms": 0
+    },
+    "path": {
+      "count": 7,
+      "ms": 0.30759999999986576
+    },
+    "approachPath": {
+      "count": 524,
+      "ms": 161.15850000000074,
+      "found": 16,
+      "blocked": 0,
+      "unknown": 508,
+      "unknownExamples": [
+        {
+          "start": {
+            "x": -22.17869415283203,
+            "z": 22.380000000000003
+          },
+          "end": {
+            "x": -9.789613136134783,
+            "z": 43.99547089944206
+          },
+          "missing": [],
+          "details": {
+            "startRegions": {
+              "ids": [
+                13248
+              ],
+              "unknown": false
+            },
+            "endRegions": {
+              "ids": [
+                19153
+              ],
+              "unknown": false
+            },
+            "startProps": "unknown",
+            "endProps": "unknown"
+          }
+        },
+        {
+          "start": {
+            "x": -22.17869415283203,
+            "z": 22.380000000000003
+          },
+          "end": {
+            "x": -7.504231324571957,
+            "z": 43.90025880863093
+          },
+          "missing": [],
+          "details": {
+            "startRegions": {
+              "ids": [
+                13248
+              ],
+              "unknown": false
+            },
+            "endRegions": {
+              "ids": [
+                19153
+              ],
+              "unknown": false
+            },
+            "startProps": "unknown",
+            "endProps": "unknown"
+          }
+        },
+        {
+          "start": {
+            "x": -23.223638916015624,
+            "z": 18.68
+          },
+          "end": {
+            "x": -9.860981045562438,
+            "z": 44.03471387937285
+          },
+          "missing": [],
+          "details": {
+            "startRegions": {
+              "ids": [
+                13248
+              ],
+              "unknown": false
+            },
+            "endRegions": {
+              "ids": [
+                19153
+              ],
+              "unknown": false
+            },
+            "startProps": "unknown",
+            "endProps": "unknown"
+          }
+        }
+      ]
+    },
+    "walkable": {
+      "count": 7250,
+      "ms": 25.317799999995373
+    },
+    "segmentClear": {
+      "count": 639,
+      "ms": 9.019100000000833
+    },
+    "workerMotionClear": {
+      "count": 0,
+      "ms": 0
+    },
+    "propsAt": {
+      "count": 0,
+      "ms": 0
+    },
+    "regionFor": {
+      "count": 280,
+      "ms": 15.71749999999895
+    },
+    "regionConnected": {
+      "count": 618,
+      "ms": 41.13079999999934
+    },
+    "setState": {
+      "count": 0,
+      "ms": 0
+    },
+    "wallPlacement": {
+      "count": 0,
+      "ms": 0
+    }
+  },
+  "rows": [
+    {
+      "day": 6,
+      "time": 445.00000000003297,
+      "ms": 2.717899999999986,
+      "sectorUpdates": 0,
+      "connectivityDemand": 0,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 0
+    },
+    {
+      "day": 6,
+      "time": 446.0000000000332,
+      "ms": 0.5118999999999687,
+      "sectorUpdates": 0,
+      "connectivityDemand": 0,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 0
+    },
+    {
+      "day": 6,
+      "time": 447.0000000000334,
+      "ms": 0.2296000000000049,
+      "sectorUpdates": 0,
+      "connectivityDemand": 0,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 0
+    },
+    {
+      "day": 6,
+      "time": 448.00000000003365,
+      "ms": 0.141900000000021,
+      "sectorUpdates": 0,
+      "connectivityDemand": 0,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 0
+    },
+    {
+      "day": 6,
+      "time": 449.0000000000339,
+      "ms": 0.15039999999999054,
+      "sectorUpdates": 0,
+      "connectivityDemand": 0,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 0
+    },
+    {
+      "day": 6,
+      "time": 450.0000000000341,
+      "ms": 0.15989999999999327,
+      "sectorUpdates": 0,
+      "connectivityDemand": 0,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 0
+    },
+    {
+      "day": 6,
+      "time": 451.00000000003433,
+      "ms": 0.16399999999998727,
+      "sectorUpdates": 0,
+      "connectivityDemand": 0,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 0
+    },
+    {
+      "day": 6,
+      "time": 452.00000000003456,
+      "ms": 0.15910000000002356,
+      "sectorUpdates": 0,
+      "connectivityDemand": 0,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 0
+    },
+    {
+      "day": 6,
+      "time": 453.0000000000348,
+      "ms": 1.0749999999999886,
+      "sectorUpdates": 0,
+      "connectivityDemand": 0,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 0
+    },
+    {
+      "day": 6,
+      "time": 454.000000000035,
+      "ms": 0.14510000000001355,
+      "sectorUpdates": 0,
+      "connectivityDemand": 0,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 0
+    },
+    {
+      "day": 6,
+      "time": 455.00000000003524,
+      "ms": 0.14400000000000546,
+      "sectorUpdates": 0,
+      "connectivityDemand": 0,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 0
+    },
+    {
+      "day": 6,
+      "time": 456.00000000003547,
+      "ms": 0.12709999999998445,
+      "sectorUpdates": 0,
+      "connectivityDemand": 0,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 0
+    },
+    {
+      "day": 6,
+      "time": 457.0000000000357,
+      "ms": 85.31040000000002,
+      "sectorUpdates": 0,
+      "connectivityDemand": 16,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 8
+    },
+    {
+      "day": 6,
+      "time": 458.0000000000359,
+      "ms": 7.744800000000055,
+      "sectorUpdates": 0,
+      "connectivityDemand": 16,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 8
+    },
+    {
+      "day": 6,
+      "time": 459.00000000003615,
+      "ms": 6.027699999999982,
+      "sectorUpdates": 0,
+      "connectivityDemand": 16,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 8
+    },
+    {
+      "day": 6,
+      "time": 460.0000000000364,
+      "ms": 3.92330000000004,
+      "sectorUpdates": 0,
+      "connectivityDemand": 16,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 8
+    },
+    {
+      "day": 6,
+      "time": 461.0000000000366,
+      "ms": 4.452800000000025,
+      "sectorUpdates": 0,
+      "connectivityDemand": 16,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 8
+    },
+    {
+      "day": 6,
+      "time": 462.00000000003683,
+      "ms": 20.685299999999984,
+      "sectorUpdates": 0,
+      "connectivityDemand": 16,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 8
+    },
+    {
+      "day": 6,
+      "time": 463.00000000003706,
+      "ms": 6.933099999999968,
+      "sectorUpdates": 0,
+      "connectivityDemand": 16,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 8
+    },
+    {
+      "day": 6,
+      "time": 464.0000000000373,
+      "ms": 10.455600000000004,
+      "sectorUpdates": 0,
+      "connectivityDemand": 16,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 8
+    },
+    {
+      "day": 6,
+      "time": 465.0000000000375,
+      "ms": 5.7053999999999405,
+      "sectorUpdates": 0,
+      "connectivityDemand": 16,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 8
+    },
+    {
+      "day": 6,
+      "time": 466.00000000003774,
+      "ms": 21.2491,
+      "sectorUpdates": 0,
+      "connectivityDemand": 16,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 8
+    },
+    {
+      "day": 6,
+      "time": 467.00000000003797,
+      "ms": 4.256200000000035,
+      "sectorUpdates": 0,
+      "connectivityDemand": 16,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 8
+    },
+    {
+      "day": 6,
+      "time": 468.0000000000382,
+      "ms": 5.543900000000008,
+      "sectorUpdates": 0,
+      "connectivityDemand": 16,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 8
+    },
+    {
+      "day": 6,
+      "time": 469.0000000000384,
+      "ms": 3.5036999999999807,
+      "sectorUpdates": 0,
+      "connectivityDemand": 16,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 8
+    },
+    {
+      "day": 6,
+      "time": 470.00000000003865,
+      "ms": 22.548099999999977,
+      "sectorUpdates": 0,
+      "connectivityDemand": 16,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 8
+    },
+    {
+      "day": 6,
+      "time": 471.0000000000389,
+      "ms": 7.15420000000006,
+      "sectorUpdates": 0,
+      "connectivityDemand": 16,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 8
+    },
+    {
+      "day": 6,
+      "time": 472.0000000000391,
+      "ms": 6.100300000000061,
+      "sectorUpdates": 0,
+      "connectivityDemand": 16,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 8
+    },
+    {
+      "day": 6,
+      "time": 473.00000000003934,
+      "ms": 4.246799999999894,
+      "sectorUpdates": 0,
+      "connectivityDemand": 16,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 8
+    },
+    {
+      "day": 6,
+      "time": 474.00000000003956,
+      "ms": 4.230399999999918,
+      "sectorUpdates": 0,
+      "connectivityDemand": 16,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 8
+    },
+    {
+      "day": 6,
+      "time": 475.0000000000398,
+      "ms": 19.6413,
+      "sectorUpdates": 0,
+      "connectivityDemand": 16,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 8
+    },
+    {
+      "day": 6,
+      "time": 476.00000000004,
+      "ms": 3.844500000000039,
+      "sectorUpdates": 0,
+      "connectivityDemand": 16,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 8
+    },
+    {
+      "day": 6,
+      "time": 477.00000000004025,
+      "ms": 15.211999999999989,
+      "sectorUpdates": 0,
+      "connectivityDemand": 16,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 8
+    },
+    {
+      "day": 6,
+      "time": 478.0000000000405,
+      "ms": 8.370900000000006,
+      "sectorUpdates": 0,
+      "connectivityDemand": 16,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 8
+    },
+    {
+      "day": 6,
+      "time": 479.0000000000407,
+      "ms": 5.705700000000093,
+      "sectorUpdates": 0,
+      "connectivityDemand": 16,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 8
+    },
+    {
+      "day": 6,
+      "time": 480.0000000000409,
+      "ms": 15.468399999999974,
+      "sectorUpdates": 0,
+      "connectivityDemand": 16,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 8
+    },
+    {
+      "day": 6,
+      "time": 481.00000000004115,
+      "ms": 5.3151000000000295,
+      "sectorUpdates": 0,
+      "connectivityDemand": 16,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 8
+    },
+    {
+      "day": 6,
+      "time": 482.0000000000414,
+      "ms": 5.702199999999948,
+      "sectorUpdates": 0,
+      "connectivityDemand": 16,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 8
+    },
+    {
+      "day": 6,
+      "time": 483.0000000000416,
+      "ms": 11.566799999999944,
+      "sectorUpdates": 0,
+      "connectivityDemand": 16,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 8
+    },
+    {
+      "day": 6,
+      "time": 484.00000000004184,
+      "ms": 16.72219999999993,
+      "sectorUpdates": 0,
+      "connectivityDemand": 16,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 8
+    },
+    {
+      "day": 6,
+      "time": 485.00000000004206,
+      "ms": 9.543000000000006,
+      "sectorUpdates": 0,
+      "connectivityDemand": 16,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 8
+    },
+    {
+      "day": 6,
+      "time": 486.0000000000423,
+      "ms": 5.708000000000084,
+      "sectorUpdates": 0,
+      "connectivityDemand": 16,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 8
+    },
+    {
+      "day": 6,
+      "time": 487.0000000000425,
+      "ms": 6.884400000000028,
+      "sectorUpdates": 0,
+      "connectivityDemand": 16,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 8
+    },
+    {
+      "day": 6,
+      "time": 488.00000000004275,
+      "ms": 13.693300000000022,
+      "sectorUpdates": 0,
+      "connectivityDemand": 16,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 8
+    },
+    {
+      "day": 6,
+      "time": 489.000000000043,
+      "ms": 5.930599999999913,
+      "sectorUpdates": 0,
+      "connectivityDemand": 16,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 8
+    },
+    {
+      "day": 6,
+      "time": 490.0000000000432,
+      "ms": 4.1200999999999794,
+      "sectorUpdates": 0,
+      "connectivityDemand": 16,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 8
+    },
+    {
+      "day": 6,
+      "time": 491.0000000000434,
+      "ms": 5.368000000000052,
+      "sectorUpdates": 0,
+      "connectivityDemand": 16,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 8
+    },
+    {
+      "day": 6,
+      "time": 492.00000000004366,
+      "ms": 6.674800000000005,
+      "sectorUpdates": 0,
+      "connectivityDemand": 16,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 8
+    },
+    {
+      "day": 6,
+      "time": 493.0000000000439,
+      "ms": 13.868599999999901,
+      "sectorUpdates": 0,
+      "connectivityDemand": 16,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 8
+    },
+    {
+      "day": 6,
+      "time": 494.0000000000441,
+      "ms": 3.823600000000056,
+      "sectorUpdates": 0,
+      "connectivityDemand": 16,
+      "workers": 0,
+      "tasks": 33,
+      "raidAnimals": 8
+    }
+  ],
+  "raidSelection": {
+    "selections": 239,
+    "groups": 1434,
+    "groupVisits": {
+      "crop:plant-1999": 239,
+      "crop:plant-2017": 239,
+      "crop:plant-2013": 239,
+      "crop:plant-2010": 239,
+      "crop:plant-2295": 239,
+      "crop:plant-2300": 239
+    },
+    "regions": 3107,
+    "regionQueries": 523,
+    "unknown": 3107,
+    "selectionMs": 267.94259999999883,
+    "maxRegionalQueriesPerTick": 16,
+    "regionCacheHits": 2373,
+    "budgetDeferrals": 211
+  },
+  "connectivityDemand": [
+    "1,0",
+    "1,1",
+    "-1,2",
+    "0,2",
+    "1,2",
+    "1,-1",
+    "2,-1",
+    "2,0",
+    "2,1",
+    "-2,2",
+    "2,2",
+    "-2,3",
+    "-1,3",
+    "0,3",
+    "1,3",
+    "2,3"
+  ],
+  "sectorUpdates": 0,
+  "nativeConnectivityReasons": {
+    "connected": {
+      "4": 2,
+      "5": 89,
+      "8": 2767
+    },
+    "route": {
+      "4": 1,
+      "5": 36,
+      "8": 6050
+    }
+  },
+  "enclosureSamples": {
+    "warthog": {
+      "0": 4,
+      "-1": 37
+    }
+  },
+  "totalMs": 418.9604999999999,
+  "stateSha256": "54661fce7d96cc3b1552114780b3ae55b9c03d32e3bd96b2b7ca9b55a2a2f949",
+  "animals": [
+    {
+      "id": "animal-2604",
+      "status": "attacking",
+      "targetId": "structure-549",
+      "moved": 0,
+      "hitsUsed": 0,
+      "mobilePhaseRemaining": 0,
+      "dynamicStallSeconds": 0
+    },
+    {
+      "id": "animal-2605",
+      "status": "waiting",
+      "targetId": null,
+      "moved": 0,
+      "hitsUsed": 0,
+      "mobilePhaseRemaining": 0,
+      "dynamicStallSeconds": 0
+    },
+    {
+      "id": "animal-2606",
+      "status": "retreating",
+      "targetId": null,
+      "moved": 0,
+      "hitsUsed": 0,
+      "mobilePhaseRemaining": 0,
+      "dynamicStallSeconds": 0
+    },
+    {
+      "id": "animal-2607",
+      "status": "walking",
+      "targetId": "structure-862",
+      "moved": 0,
+      "hitsUsed": 0,
+      "mobilePhaseRemaining": 0,
+      "dynamicStallSeconds": 0
+    },
+    {
+      "id": "animal-2608",
+      "status": "waiting",
+      "targetId": null,
+      "moved": 0,
+      "hitsUsed": 0,
+      "mobilePhaseRemaining": 0,
+      "dynamicStallSeconds": 0
+    },
+    {
+      "id": "animal-2609",
+      "status": "waiting",
+      "targetId": null,
+      "moved": 0,
+      "hitsUsed": 0,
+      "mobilePhaseRemaining": 0,
+      "dynamicStallSeconds": 0
+    },
+    {
+      "id": "animal-2610",
+      "status": "waiting",
+      "targetId": null,
+      "moved": 0,
+      "hitsUsed": 0,
+      "mobilePhaseRemaining": 0,
+      "dynamicStallSeconds": 0
+    },
+    {
+      "id": "animal-2611",
+      "status": "waiting",
+      "targetId": null,
+      "moved": 0,
+      "hitsUsed": 0,
+      "mobilePhaseRemaining": 0,
+      "dynamicStallSeconds": 0
+    }
+  ],
+  "mobileRecoveryEvents": 0,
+  "raidEventCounts": {
+    "AnimalTargetUnavailable": 190,
+    "AnimalRouteUnavailable": 3,
+    "StructureHit": 3,
+    "AnimalLogicalHit": 3,
+    "AnimalRetreating": 1
+  },
+  "wallRecoveryEvents": 0,
+  "raidEnded": false
+}

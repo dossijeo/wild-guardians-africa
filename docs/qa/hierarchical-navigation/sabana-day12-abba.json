@@ -1,0 +1,109 @@
+{
+  "input": "C:\\Users\\PC\\source\\repos\\wild-guardians-event-driven-player\\docs\\qa\\event-driven-virtual-player\\pilot-expansive-sabana-123-day12-before-365\\checkpoint-state.json.gz",
+  "day": 12,
+  "time": 365.0000000000148,
+  "requests": 3,
+  "rows": [
+    {
+      "variant": "native",
+      "passes": [
+        {
+          "phase": "cold",
+          "milliseconds": 360.7353,
+          "found": 3,
+          "invalid": 0,
+          "routeHash": "9c552ba336aa8fcfd6f63422b84a5904c9320c7ffa84bc93a4e516e94a1b955d"
+        },
+        {
+          "phase": "warm",
+          "milliseconds": 14.904999999999973,
+          "found": 3,
+          "invalid": 0,
+          "routeHash": "9c552ba336aa8fcfd6f63422b84a5904c9320c7ffa84bc93a4e516e94a1b955d"
+        }
+      ],
+      "rssDeltaBytes": 40185856,
+      "metrics": null
+    },
+    {
+      "variant": "hierarchical",
+      "passes": [
+        {
+          "phase": "cold",
+          "milliseconds": 1105.2741,
+          "found": 3,
+          "invalid": 0,
+          "routeHash": "3560c90815b0bc7ec5194f04f8fd73baadc9621c832c3fdd57a1fcf780755925"
+        },
+        {
+          "phase": "warm",
+          "milliseconds": 2.30399999999986,
+          "found": 3,
+          "invalid": 0,
+          "routeHash": "3560c90815b0bc7ec5194f04f8fd73baadc9621c832c3fdd57a1fcf780755925"
+        }
+      ],
+      "rssDeltaBytes": 10006528,
+      "metrics": {
+        "sectorsBuilt": 33,
+        "sectorsInvalidated": 0,
+        "cellSamples": 4752,
+        "edgeSamples": 13328,
+        "graphSearches": 6,
+        "graphNodes": 118,
+        "localSearches": 40
+      }
+    },
+    {
+      "variant": "hierarchical",
+      "passes": [
+        {
+          "phase": "cold",
+          "milliseconds": 1047.29,
+          "found": 3,
+          "invalid": 0,
+          "routeHash": "3560c90815b0bc7ec5194f04f8fd73baadc9621c832c3fdd57a1fcf780755925"
+        },
+        {
+          "phase": "warm",
+          "milliseconds": 1.4684000000002015,
+          "found": 3,
+          "invalid": 0,
+          "routeHash": "3560c90815b0bc7ec5194f04f8fd73baadc9621c832c3fdd57a1fcf780755925"
+        }
+      ],
+      "rssDeltaBytes": 15740928,
+      "metrics": {
+        "sectorsBuilt": 33,
+        "sectorsInvalidated": 0,
+        "cellSamples": 4752,
+        "edgeSamples": 13328,
+        "graphSearches": 6,
+        "graphNodes": 118,
+        "localSearches": 40
+      }
+    },
+    {
+      "variant": "native",
+      "passes": [
+        {
+          "phase": "cold",
+          "milliseconds": 283.4728,
+          "found": 3,
+          "invalid": 0,
+          "routeHash": "9c552ba336aa8fcfd6f63422b84a5904c9320c7ffa84bc93a4e516e94a1b955d"
+        },
+        {
+          "phase": "warm",
+          "milliseconds": 12.477300000000014,
+          "found": 3,
+          "invalid": 0,
+          "routeHash": "9c552ba336aa8fcfd6f63422b84a5904c9320c7ffa84bc93a4e516e94a1b955d"
+        }
+      ],
+      "rssDeltaBytes": 12394496,
+      "metrics": null
+    }
+  ],
+  "candidateDeterministic": true
+}

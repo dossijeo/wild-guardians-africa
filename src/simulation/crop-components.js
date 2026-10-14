@@ -1,10 +1,11 @@
 import {contiguousGroup} from './crops.js';
+import {activeCrops} from './active-crops.js';
 
 // One synchronous target-selection scope only. No index survives damage,
 // planting, harvesting or save restoration. Preserve the original BFS order:
 // equal-distance targets rely on the stable order of the component's members.
 export function createCropGrouping(plants,maxDistance=1.7){
- const living=plants.filter(p=>p.alive),species=new Map();
+ const living=activeCrops(plants).filter(p=>p.alive),species=new Map();
  for(const plant of living){let row=species.get(plant.species);if(!row)species.set(plant.species,row={plants:[],cells:null});row.plants.push(plant);}
  const safe=p=>Number.isSafeInteger(Math.floor(p.x/maxDistance))&&Number.isSafeInteger(Math.floor(p.z/maxDistance));
  const key=(x,z)=>x+','+z;

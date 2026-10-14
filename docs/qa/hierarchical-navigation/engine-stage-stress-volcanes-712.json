@@ -1,0 +1,480 @@
+{
+  "kind": "synthetic phase-equivalent spatial stress",
+  "tickLimit": 2400,
+  "source": {
+    "commit": "98d56c5b271cc7c4a1547ab55e17ef7033562c2b",
+    "cppSha256": "34c9614564b88a42ef4b5506696c964ea7f9792366e3ffd0b95e2841a3636881",
+    "wasmSha256": "d9d16b81301074d92620f549125784a7ad3121063ad98b8c08f359dffa3dc987",
+    "raidsSha256": "2ec54eb91d3133e8d1156982eaf73eb5ae4a422d24f83e227f41bf38cddda52d",
+    "canyonFormationSha256": "92a6392a7fd448fec5c7b1dc36bd0b652a7b4bff57e9fb26477916c3db5cc616",
+    "animalRouteClearanceSha256": "111004768678577413377f906f5b2e636ff3c60a8b6eb3a6908e45189f756900",
+    "runnerSha256": "eecc3c521c4f99fb895450c7513d9c2ca87b902fa8e65ec2d7a5375ade712f28"
+  },
+  "results": [
+    {
+      "phase": "early",
+      "day": 6,
+      "biome": "volcanes",
+      "seed": 712,
+      "crops": 40,
+      "animals": 6,
+      "preparationMs": 72.60910000000001,
+      "tickMs": 1204.2336,
+      "ticks": 1029,
+      "wallRing": false,
+      "wallModules": 0,
+      "automaticGates": 0,
+      "wallHpLost": 0,
+      "ruinedWalls": 0,
+      "invalidStaticMoves": 0,
+      "invalidStaticMoveExamples": [],
+      "moved": 6,
+      "raidActive": false,
+      "result": null,
+      "raidEnded": 1,
+      "connectivityChunksServiced": 16,
+      "loadedChunks": 9,
+      "maxLoadedChunks": 25,
+      "cropHits": 19,
+      "structureHits": 0,
+      "logicalMisses": 0,
+      "routeUnavailable": 2,
+      "targetUnavailable": 0,
+      "attackBudgetUsed": 19,
+      "retreatReasons": [
+        [
+          "budget-exhausted",
+          6
+        ]
+      ],
+      "retreatUnusedHits": [
+        [
+          "budget-exhausted",
+          0
+        ]
+      ],
+      "retreatDiagnostics": [
+        {
+          "species": "warthog",
+          "reason": "budget-exhausted",
+          "hitsRemaining": 0,
+          "x": 59.70042836708277,
+          "z": -52.267823989990966,
+          "spawnWalkable": true
+        },
+        {
+          "species": "warthog",
+          "reason": "budget-exhausted",
+          "hitsRemaining": 0,
+          "x": 58.413736797636226,
+          "z": -52,
+          "spawnWalkable": true
+        },
+        {
+          "species": "hyena",
+          "reason": "budget-exhausted",
+          "hitsRemaining": 0,
+          "x": 67.69992094851423,
+          "z": -53.69144683179529,
+          "spawnWalkable": true
+        },
+        {
+          "species": "warthog",
+          "reason": "budget-exhausted",
+          "hitsRemaining": 0,
+          "x": 69.97429246216083,
+          "z": -52.8574711020124,
+          "spawnWalkable": true
+        },
+        {
+          "species": "hyena",
+          "reason": "budget-exhausted",
+          "hitsRemaining": 0,
+          "x": 81.68927073700803,
+          "z": -54.15171555472862,
+          "spawnWalkable": true
+        },
+        {
+          "species": "hyena",
+          "reason": "budget-exhausted",
+          "hitsRemaining": 0,
+          "x": 85.97723982351035,
+          "z": -54.98916827876614,
+          "spawnWalkable": true
+        }
+      ],
+      "exitAbandonments": [],
+      "heapBefore": 15667568,
+      "heapAfter": 18834616,
+      "native": {
+        "memoryBytes": 10027008,
+        "loadedChunks": 9,
+        "residentPropRecords": 181,
+        "residentVisiblePropRecords": 1434,
+        "loadedSectors": 144,
+        "sectorSlots": 400,
+        "sectorUpdates": 912,
+        "haloProps": 7
+      },
+      "issues": []
+    },
+    {
+      "phase": "middle",
+      "day": 50,
+      "biome": "volcanes",
+      "seed": 712,
+      "crops": 150,
+      "animals": 14,
+      "preparationMs": 297.8024999999998,
+      "tickMs": 2395.1016999999997,
+      "ticks": 1279,
+      "wallRing": false,
+      "wallModules": 0,
+      "automaticGates": 0,
+      "wallHpLost": 0,
+      "ruinedWalls": 0,
+      "invalidStaticMoves": 0,
+      "invalidStaticMoveExamples": [],
+      "moved": 14,
+      "raidActive": false,
+      "result": null,
+      "raidEnded": 1,
+      "connectivityChunksServiced": 16,
+      "loadedChunks": 9,
+      "maxLoadedChunks": 25,
+      "cropHits": 36,
+      "structureHits": 14,
+      "logicalMisses": 3,
+      "routeUnavailable": 17,
+      "targetUnavailable": 0,
+      "attackBudgetUsed": 53,
+      "retreatReasons": [
+        [
+          "budget-exhausted",
+          14
+        ]
+      ],
+      "retreatUnusedHits": [
+        [
+          "budget-exhausted",
+          0
+        ]
+      ],
+      "retreatDiagnostics": [
+        {
+          "species": "buffalo",
+          "reason": "budget-exhausted",
+          "hitsRemaining": 0,
+          "x": 80.9197462283529,
+          "z": 3.8377981902920033,
+          "spawnWalkable": true
+        },
+        {
+          "species": "hyena",
+          "reason": "budget-exhausted",
+          "hitsRemaining": 0,
+          "x": 85.60916669443253,
+          "z": 3.389052629277233,
+          "spawnWalkable": true
+        },
+        {
+          "species": "warthog",
+          "reason": "budget-exhausted",
+          "hitsRemaining": 0,
+          "x": 35.74869819408466,
+          "z": -52.94709525310064,
+          "spawnWalkable": true
+        },
+        {
+          "species": "lion",
+          "reason": "budget-exhausted",
+          "hitsRemaining": 0,
+          "x": 62.48035174609212,
+          "z": -51,
+          "spawnWalkable": true
+        },
+        {
+          "species": "warthog",
+          "reason": "budget-exhausted",
+          "hitsRemaining": 0,
+          "x": 39.604637130447614,
+          "z": -56.02052202765824,
+          "spawnWalkable": true
+        },
+        {
+          "species": "buffalo",
+          "reason": "budget-exhausted",
+          "hitsRemaining": 0,
+          "x": 71,
+          "z": -51.24447261704791,
+          "spawnWalkable": true
+        },
+        {
+          "species": "hyena",
+          "reason": "budget-exhausted",
+          "hitsRemaining": 0,
+          "x": 84,
+          "z": -51.554418395957775,
+          "spawnWalkable": true
+        },
+        {
+          "species": "buffalo",
+          "reason": "budget-exhausted",
+          "hitsRemaining": 0,
+          "x": 93.32825860757956,
+          "z": -51,
+          "spawnWalkable": true
+        },
+        {
+          "species": "warthog",
+          "reason": "budget-exhausted",
+          "hitsRemaining": 0,
+          "x": 79.49016346605944,
+          "z": -51.970605700061256,
+          "spawnWalkable": true
+        },
+        {
+          "species": "hyena",
+          "reason": "budget-exhausted",
+          "hitsRemaining": 0,
+          "x": 99.98894862098189,
+          "z": -52,
+          "spawnWalkable": true
+        },
+        {
+          "species": "warthog",
+          "reason": "budget-exhausted",
+          "hitsRemaining": 0,
+          "x": 103.91206578460606,
+          "z": -50.94674531143761,
+          "spawnWalkable": true
+        },
+        {
+          "species": "hyena",
+          "reason": "budget-exhausted",
+          "hitsRemaining": 0,
+          "x": 105.19496080891331,
+          "z": -53,
+          "spawnWalkable": true
+        },
+        {
+          "species": "hyena",
+          "reason": "budget-exhausted",
+          "hitsRemaining": 0,
+          "x": 79.00152907894855,
+          "z": -50.68999971618133,
+          "spawnWalkable": true
+        },
+        {
+          "species": "warthog",
+          "reason": "budget-exhausted",
+          "hitsRemaining": 0,
+          "x": 53.25948915355164,
+          "z": -54,
+          "spawnWalkable": true
+        }
+      ],
+      "exitAbandonments": [],
+      "heapBefore": 20163296,
+      "heapAfter": 23208992,
+      "native": {
+        "memoryBytes": 17760256,
+        "loadedChunks": 9,
+        "residentPropRecords": 181,
+        "residentVisiblePropRecords": 1409,
+        "loadedSectors": 144,
+        "sectorSlots": 400,
+        "sectorUpdates": 1017,
+        "haloProps": 7
+      },
+      "issues": []
+    },
+    {
+      "phase": "late",
+      "day": 100,
+      "biome": "volcanes",
+      "seed": 712,
+      "crops": 300,
+      "animals": 16,
+      "preparationMs": 564.7979000000005,
+      "tickMs": 3184.3104000000003,
+      "ticks": 1495,
+      "wallRing": false,
+      "wallModules": 0,
+      "automaticGates": 0,
+      "wallHpLost": 0,
+      "ruinedWalls": 0,
+      "invalidStaticMoves": 0,
+      "invalidStaticMoveExamples": [],
+      "moved": 16,
+      "raidActive": false,
+      "result": "victory",
+      "raidEnded": 1,
+      "connectivityChunksServiced": 16,
+      "loadedChunks": 9,
+      "maxLoadedChunks": 25,
+      "cropHits": 53,
+      "structureHits": 13,
+      "logicalMisses": 3,
+      "routeUnavailable": 31,
+      "targetUnavailable": 0,
+      "attackBudgetUsed": 69,
+      "retreatReasons": [
+        [
+          "budget-exhausted",
+          16
+        ]
+      ],
+      "retreatUnusedHits": [
+        [
+          "budget-exhausted",
+          0
+        ]
+      ],
+      "retreatDiagnostics": [
+        {
+          "species": "lion",
+          "reason": "budget-exhausted",
+          "hitsRemaining": 0,
+          "x": 87.75174511874461,
+          "z": 2.865264400740259,
+          "spawnWalkable": true
+        },
+        {
+          "species": "warthog",
+          "reason": "budget-exhausted",
+          "hitsRemaining": 0,
+          "x": 40.757106148903766,
+          "z": -52,
+          "spawnWalkable": true
+        },
+        {
+          "species": "buffalo",
+          "reason": "budget-exhausted",
+          "hitsRemaining": 0,
+          "x": 64.48076003684456,
+          "z": -53,
+          "spawnWalkable": true
+        },
+        {
+          "species": "warthog",
+          "reason": "budget-exhausted",
+          "hitsRemaining": 0,
+          "x": 36.827177766160105,
+          "z": -54,
+          "spawnWalkable": true
+        },
+        {
+          "species": "hyena",
+          "reason": "budget-exhausted",
+          "hitsRemaining": 0,
+          "x": 41.8974256822609,
+          "z": -53,
+          "spawnWalkable": true
+        },
+        {
+          "species": "rhino",
+          "reason": "budget-exhausted",
+          "hitsRemaining": 0,
+          "x": 92.07452724407598,
+          "z": -51.95925760972453,
+          "spawnWalkable": true
+        },
+        {
+          "species": "hyena",
+          "reason": "budget-exhausted",
+          "hitsRemaining": 0,
+          "x": 99.20126330928467,
+          "z": -51,
+          "spawnWalkable": true
+        },
+        {
+          "species": "rhino",
+          "reason": "budget-exhausted",
+          "hitsRemaining": 0,
+          "x": 97.2632851776256,
+          "z": -54.06029082244264,
+          "spawnWalkable": true
+        },
+        {
+          "species": "warthog",
+          "reason": "budget-exhausted",
+          "hitsRemaining": 0,
+          "x": 119.3233663625177,
+          "z": -51.12980115927275,
+          "spawnWalkable": true
+        },
+        {
+          "species": "lion",
+          "reason": "budget-exhausted",
+          "hitsRemaining": 0,
+          "x": 121.61124666079654,
+          "z": -53,
+          "spawnWalkable": true
+        },
+        {
+          "species": "lion",
+          "reason": "budget-exhausted",
+          "hitsRemaining": 0,
+          "x": 117.66343961692473,
+          "z": -51,
+          "spawnWalkable": true
+        },
+        {
+          "species": "hyena",
+          "reason": "budget-exhausted",
+          "hitsRemaining": 0,
+          "x": 125.52052740764137,
+          "z": -53,
+          "spawnWalkable": true
+        },
+        {
+          "species": "buffalo",
+          "reason": "budget-exhausted",
+          "hitsRemaining": 0,
+          "x": 134,
+          "z": -51.412658557099164,
+          "spawnWalkable": true
+        },
+        {
+          "species": "hyena",
+          "reason": "budget-exhausted",
+          "hitsRemaining": 0,
+          "x": 129.94728716783922,
+          "z": -53.0810065557536,
+          "spawnWalkable": true
+        },
+        {
+          "species": "buffalo",
+          "reason": "budget-exhausted",
+          "hitsRemaining": 0,
+          "x": 30.756582858360883,
+          "z": -50.03641248215478,
+          "spawnWalkable": true
+        },
+        {
+          "species": "buffalo",
+          "reason": "budget-exhausted",
+          "hitsRemaining": 0,
+          "x": 32.391718059211414,
+          "z": -49,
+          "spawnWalkable": true
+        }
+      ],
+      "exitAbandonments": [],
+      "heapBefore": 30056728,
+      "heapAfter": 18000576,
+      "native": {
+        "memoryBytes": 19595264,
+        "loadedChunks": 9,
+        "residentPropRecords": 181,
+        "residentVisiblePropRecords": 1372,
+        "loadedSectors": 144,
+        "sectorSlots": 400,
+        "sectorUpdates": 932,
+        "haloProps": 7
+      },
+      "issues": []
+    }
+  ]
+}

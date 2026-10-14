@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QA · Sabana actual y núcleo espacial</title>
+<style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#cdd6c5;font:14px system-ui}canvas{display:block}#labels{position:fixed;inset:12px 12px auto;display:flex;justify-content:space-between;pointer-events:none}#labels span{padding:7px 11px;background:#193028dd;color:white;border-radius:5px}#status{position:fixed;left:50%;top:12px;transform:translateX(-50%);padding:7px 11px;background:#193028dd;color:white;border-radius:5px;pointer-events:none}</style>
+</head><body><div id="labels"><span>Generador actual · JS</span><span>Núcleo espacial · C++/WASM</span></div><div id="status">Preparando comparación…</div><script type="module">
+import * as THREE from 'three';
+import {Assets} from '../../src/rendering/assets.js';
+import {Navigation} from '../../src/world/navigation.js';
+import {TerrainField} from '../../src/world/terrain.js';
+import {buildNativeChunk} from '../../src/rendering/chunk-data.js';
+import {nativeTerrainBuffer} from '../../src/rendering/terrain-geometry.js';
+import {nativeAssetWater,nativeWaterBuffer} from '../../src/rendering/water-geometry.js';
+import {createSpatialSavannaPrototype} from '../../src/world/hierarchical-wasm/spatial-savanna-adapter.js';
+import {BiomeGround} from '../../src/rendering/biome-ground.js';
+import {AfricanToon,paintedWaterMaterial} from '../../src/rendering/african-toon.js';
+import {nativeGroundMaterial} from '../../src/rendering/render-quality.js';
+import wasmUrl from '../../src/world/hierarchical-wasm/spatial-savanna.wasm?url';
+
+const status=document.querySelector('#status'),scenes=[];
+const parameters=new URLSearchParams(location.search),gameGround=parameters.get('ground')==='game';
+const biome=['savanna','desert','grand_river','volcanoes','mangrove','canyons'].includes(parameters.get('biome'))?
+  parameters.get('biome'):'savanna';
+const gameBiome={savanna:'sabana',desert:'desierto',grand_river:'gran-rio',volcanoes:'volcanes',mangrove:'manglares',canyons:'gran-canon'}[biome];
+const gameWater=parameters.get('water')==='game';
+const settlement=parameters.get('settlement')==='1';
+const seed=Number(parameters.get('seed')??712);
+let biomeGround=null,toon=null;
+function makeScene(ground,river,instances,models,assets,prototype=false,mask=null){
+  const scene=new THREE.Scene();scene.background=new THREE.Color('#cdd6c5');
+  scene.fog=new THREE.Fog('#cdd6c5',biome==='canyons'?180:75,biome==='canyons'?330:145);
+  scene.add(new THREE.HemisphereLight('#fff9e6','#655034',2.2));
+  const sun=new THREE.DirectionalLight('#fff1cd',2);sun.position.set(-35,60,20);scene.add(sun);
+  const material=gameGround?nativeGroundMaterial('alta'):
+    new THREE.MeshStandardMaterial({vertexColors:true,roughness:1,side:THREE.DoubleSide});
+  if(gameGround){biomeGround.attach(material,0,0,mask);toon.material(material);
+    toon.update(false,sun,gameBiome);}
+  scene.add(new THREE.Mesh(ground,material));
+  const fluidColor=biome==='volcanoes'?'#ed5c18':biome==='mangrove'?'#50b9b4':biome==='canyons'?'#3aadb6':'#49aeb6';
+  if(river)scene.add(new THREE.Mesh(river,gameWater?
+    paintedWaterMaterial(fluidColor,biome==='volcanoes',seed):
+    new THREE.MeshStandardMaterial({color:fluidColor,roughness:.38,side:THREE.DoubleSide})));
+  const dummy=new THREE.Object3D();let count=0,assetWaterInstances=0;
+  for(let slot=0;slot<20;slot++){
+    const records=instances[slot];if(!records?.length)continue;
+    const source=models[slot][0],mesh=new THREE.InstancedMesh(source.geometry,source.material,records.length);
+    records.forEach((p,i)=>{dummy.position.set(p.x,p.y,p.z);dummy.rotation.y=p.yaw;
+      dummy.scale.set(p.sx??p.scale,p.sy??p.scale,p.sz??p.scale);dummy.updateMatrix();mesh.setMatrixAt(i,dummy.matrix);});
+    mesh.instanceMatrix.needsUpdate=true;mesh.computeBoundingSphere();scene.add(mesh);count+=records.length;
+    if(gameWater){
+      const waterGeometry=nativeAssetWater(assets[slot]);
+      if(waterGeometry){
+        const water=new THREE.InstancedMesh(waterGeometry,
+          paintedWaterMaterial(fluidColor,biome==='volcanoes',seed),records.length);
+        records.forEach((p,i)=>{dummy.position.set(p.x,p.y,p.z);dummy.rotation.y=p.yaw;
+          dummy.scale.set(p.sx??p.scale,p.sy??p.scale,p.sz??p.scale);
+          dummy.updateMatrix();water.setMatrixAt(i,dummy.matrix);});
+        water.instanceMatrix.needsUpdate=true;water.computeBoundingSphere();scene.add(water);
+        assetWaterInstances+=records.length;
+      }
+    }
+  }
+  scenes.push(scene);return {count,vertices:ground.getAttribute('position').count,
+    waterVertices:river?.getAttribute('position').count??0,assetWaterInstances,prototype};
+}
+try{
+  const [pack,binary]=await Promise.all([fetch(`/content/biome-${biome}.json`).then(r=>r.json()),fetch(wasmUrl).then(r=>r.arrayBuffer())]);
+  const assets=new Assets(),models=await assets.biome(pack),nav=new Navigation(String(seed),gameBiome,pack.profile);
+  if(settlement){
+    const x=10,z=8,hx=7,hz=6;
+    const samples=[[x-hx,z-hz],[x+hx,z-hz],[x,z],[x-hx,z+hz],[x+hx,z+hz]]
+      .map(([px,pz])=>nav.field.surface(px,pz)).sort((a,b)=>a-b);
+    nav.config.settlementSite={x,z,hx,hz,y:samples[2],yaw:0,
+      clearRadius:19,softRadius:25,haloRadius:32};
+    nav.field=new TerrainField(nav.config);nav.chunks.clear();
+  }
+  if(gameGround){biomeGround=new BiomeGround();await biomeGround.load(assets,biome,pack.profile,nav.field);toon=new AfricanToon();}
+  const current=buildNativeChunk(nav.config,pack.profile,0,0);
+  const baseline=makeScene(nativeTerrainBuffer(current.terrain),nativeWaterBuffer(current.water),current.instances,models,pack.assets,false,current.groundMask);
+  const core=createSpatialSavannaPrototype(new WebAssembly.Module(binary));core.generate(seed,0,0,biome);
+  if(settlement)core.setSettlement(10,8,7,6);
+  core.buildNavigation(1.1,false);
+  const spatial=core.chunkPayload();
+  const candidate=makeScene(nativeTerrainBuffer(spatial.terrain),nativeWaterBuffer(spatial.water),
+    spatial.instances,models,pack.assets,true,spatial.groundMask);
+  const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);
+  renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.setScissorTest(true);document.body.append(renderer.domElement);
+  const camera=new THREE.PerspectiveCamera(53,1,.1,250);
+  if(biome==='canyons'){camera.position.set(70,85,95);camera.lookAt(0,10,0);}
+  else {camera.position.set(48,44,57);camera.lookAt(0,5,0);}
+  function render(){
+    renderer.setSize(innerWidth,innerHeight);const left=Math.floor(innerWidth/2),right=innerWidth-left;
+    for(const [i,width] of [left,right].entries()){
+      const x=i?left:0;renderer.setViewport(x,0,width,innerHeight);renderer.setScissor(x,0,width,innerHeight);
+      camera.aspect=width/innerHeight;camera.updateProjectionMatrix();renderer.render(scenes[i],camera);
+    }
+  }
+  render();addEventListener('resize',render);
+  window.qaStats={seed,biome,baseline,candidate,gameGround,gameWater,settlement};window.qaReady=true;
+  status.textContent=`${{savanna:'Sabana',desert:'Desierto',grand_river:'Gran río',volcanoes:'Volcanes',mangrove:'Manglares',canyons:'Gran Cañón'}[biome]} · Semilla ${seed} · ${gameGround?'suelo del juego':'suelo básico'} · ${gameWater?(biome==='volcanoes'?'lava del juego':'agua del juego'):'fluido básico'} · JS: ${baseline.count} objetos · WASM: ${candidate.count} objetos`;
+}catch(error){window.qaError=String(error.stack??error);status.textContent=window.qaError;}
+</script></body></html>

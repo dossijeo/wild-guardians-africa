@@ -5,6 +5,7 @@ import {raidEntryChunks,includeRaidBounds} from '../world/raid-entry-residency.j
 import {raidEntryKey} from '../world/raid-entry-data.js';
 import {exteriorRaidEntry} from './raid-exterior-entry.js';
 import {createCropGrouping} from './crop-components.js';
+import {activeCrops} from './active-crops.js';
 import {RAID_NOTICE_TEXT} from './raid-notice.js';
 import {warmRaidNavigation} from '../world/raid-navigation-warmth.js';
 import {centerBoundaryPoint,centerCulture,centerDeliveryPoint} from '../world/centers.js';
@@ -23,9 +24,153 @@ import {ANIMAL_ACTIONS} from './animal-actions-data.js';
 import {actorBlockers,actorSegmentClear} from './actor-motion.js';
 import {activeChunkRegion,validActiveBounds} from '../world/active-region.js';
 import {defensiveGroups} from './defensive-groups.js';
+import {wallCollisionFrame} from '../world/wall-collision-frame.js';
 import {targetReservationKey,targetReserved,reservedApproachClear,reconcileTargetReservations} from './raid-target-reservations.js';
 import {applyCropImpact,cropImpactDamage,CROP_HIT_POINTS} from './crop-impact-health.js';
 const dist=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z),entrySelections=new WeakMap();
+const cropTargetIndexes=new WeakMap();
+const raidRegionDecisions=new WeakMap();
+const RAID_REGION_QUERIES_PER_TICK=16,RAID_REGION_RETRY_SECONDS=4;
+function regionDecisionScope(s,nav){
+  let scope=raidRegionDecisions.get(nav);
+  if(!scope||scope.raid!==s.raid||scope.topology!==nav.version){
+    scope={raid:s.raid,topology:nav.version,decisions:new Map(),tick:-1,queries:0};
+    raidRegionDecisions.set(nav,scope);
+  }
+  if(scope.tick!==s.elapsed){scope.tick=s.elapsed;scope.queries=0;}
+  return scope;
+}
+function cropRegionDecision(s,a,nav,group,regionKey,candidates,scope,origin,sectors){
+  const destination=regionKey.startsWith('unknown:')?`${group.id}:${regionKey}`:regionKey;
+  const key=`${a.radius}:${origin}:${destination}`;
+  const old=scope.decisions.get(key);
+  if(old&&old.sectors===sectors){
+    if(nav.raidSelectionStats)nav.raidSelectionStats.regionCacheHits=(nav.raidSelectionStats.regionCacheHits??0)+1;
+    return old.status;
+  }
+  if(scope.queries>=RAID_REGION_QUERIES_PER_TICK){
+    if(nav.raidSelectionStats)nav.raidSelectionStats.budgetDeferrals=(nav.raidSelectionStats.budgetDeferrals??0)+1;
+    return 'unknown';
+  }
+  scope.queries++;
+  if(nav.raidSelectionStats)nav.raidSelectionStats.regionQueries=(nav.raidSelectionStats.regionQueries??0)+1;
+  // All members share this graph component. The result is a region decision,
+  // not a route to each plant. Missing sectors remain pending across ticks.
+  const result=nav.regionConnected(a,candidates[0],a.radius,null,false);
+  const status=result===true?'accessible':result===false?'blocked':'unknown';
+  if(scope.decisions.size>=2048)scope.decisions.delete(scope.decisions.keys().next().value);
+  scope.decisions.set(key,{status,at:s.elapsed,sectors});
+  if(status==='unknown')nav.requestRaidConnectivity?.(a,candidates[0],a.radius);
+  return status;
+}
+function enclosedCropRegion(nav,scope,group,regionKey,candidates,radius,sectors){
+  if(!nav.enclosureFor)return null;
+  const destination=regionKey.startsWith('unknown:')?`${group.id}:${regionKey}`:regionKey;
+  const key=`enclosure:${radius}:${destination}`;
+  const previous=scope.decisions.get(key);
+  if(previous?.sectors===sectors)return previous.result;
+  const stats=nav.raidSelectionStats,started=stats?performance.now():0;
+  // Only one native classification per crop region and movement profile.
+  // Plants may be non-standable, so try a few representatives of the same
+  // group; uncertainty never certifies a wall attack.
+  let result={ids:[],status:'unknown'};
+  for(const crop of candidates.slice(0,4)){
+    const current=nav.enclosureFor(crop,radius);
+    if(current.status==='sealed'){result=current;break;}
+    if(current.status==='open-frontier')result=current;
+  }
+  if(stats){
+    stats.enclosureClassifications=(stats.enclosureClassifications??0)+1;
+    stats.enclosureClassificationMs=(stats.enclosureClassificationMs??0)+performance.now()-started;
+  }
+  scope.decisions.set(key,{sectors,result});
+  return result;
+}
+function wallSideDecision(nav,scope,a,side,wallId,origin,sectors){
+  const key=`wall-side:${a.radius}:${origin}:${wallId}:${side.x.toFixed(2)},${side.z.toFixed(2)}`;
+  const old=scope.decisions.get(key);
+  if(old?.sectors===sectors)return old.status;
+  if(scope.queries>=RAID_REGION_QUERIES_PER_TICK)return null;
+  scope.queries++;
+  const status=nav.regionConnected(a,side,a.radius,null,false);
+  scope.decisions.set(key,{sectors,status});
+  return status;
+}
+function wallRegionPortals(nav,scope,radius,structures,sectors){
+  const key=`wall-portals:${radius}`;
+  const previous=scope.decisions.get(key);
+  if(previous?.sectors===sectors)return previous.graph;
+  const stats=nav.raidSelectionStats,started=stats?performance.now():0;
+  const graph=new Map(),add=(from,to,wallId,point)=>{
+    if(!graph.has(from))graph.set(from,[]);
+    graph.get(from).push({to,wallId,point});
+  };
+  for(const wall of structures){
+    if(wall.kind!=='wall'||wall.status==='ruined')continue;
+    const frame=wallCollisionFrame(wall),normal={x:Math.sin(frame.yaw),z:Math.cos(frame.yaw)},
+      tangent={x:frame.c,z:-frame.s},offset=frame.depth+radius+.6;
+    for(const along of [0,-.6,.6]){
+      const center={x:frame.x+tangent.x*frame.width*along,
+        z:frame.z+tangent.z*frame.width*along};
+      const pair=[1,-1].map(sign=>({x:center.x+normal.x*offset*sign,
+        z:center.z+normal.z*offset*sign}));
+      const regions=pair.map(point=>nav.enclosureFor(point,radius));
+      if(regions.some(region=>region.status==='unknown'||!region.ids.length)||
+         regions[0].ids.some(id=>regions[1].ids.includes(id)))continue;
+      for(const from of regions[0].ids)for(const to of regions[1].ids){
+        add(from,to,wall.id,pair[0]);add(to,from,wall.id,pair[1]);
+      }
+      break;
+    }
+  }
+  if(stats){
+    stats.wallPortalBuilds=(stats.wallPortalBuilds??0)+1;
+    stats.wallPortalBuildMs=(stats.wallPortalBuildMs??0)+performance.now()-started;
+  }
+  scope.decisions.set(key,{sectors,graph});
+  return graph;
+}
+function perimeterWallSides(nav,scope,enclosure,origin,radius,structures,sectors){
+  const key=`perimeter:${radius}:${enclosure.ids.join('|')}:${origin.ids.join('|')}`;
+  const previous=scope.decisions.get(key);
+  if(previous?.sectors===sectors)return previous.sides;
+  const stats=nav.raidSelectionStats,started=stats?performance.now():0;
+  const graph=wallRegionPortals(nav,scope,radius,structures,sectors);
+  const distances=new Map(),queue=[];
+  for(const id of enclosure.ids){distances.set(id,0);queue.push(id);}
+  for(let i=0;i<queue.length;i++){
+    const from=queue[i],depth=distances.get(from);
+    for(const edge of graph.get(from)??[])if(!distances.has(edge.to)){
+      distances.set(edge.to,depth+1);queue.push(edge.to);
+    }
+  }
+  const sides=new Map();
+  const best=Math.min(...origin.ids.map(id=>distances.get(id)??Infinity));
+  if(Number.isFinite(best))for(const id of origin.ids){
+    if(distances.get(id)!==best)continue;
+    for(const edge of graph.get(id)??[])
+      if(distances.get(edge.to)===best-1)sides.set(edge.wallId,edge.point);
+  }
+  if(stats){
+    stats.perimeterClassifications=(stats.perimeterClassifications??0)+1;
+    stats.perimeterClassificationMs=(stats.perimeterClassificationMs??0)+performance.now()-started;
+  }
+  scope.decisions.set(key,{sectors,sides});
+  return sides;
+}
+function cropTargetGroups(plants){
+  const living=activeCrops(plants),cached=cropTargetIndexes.get(plants);
+  if(cached&&cached.historyLength===plants.length&&cached.livingLength===living.length)return cached.groups;
+  const components=createCropGrouping(plants),seen=new Set(),groups=[];
+  for(const p of components.living)if(!seen.has(p.id)){
+    const group=components.group(p);group.forEach(crop=>seen.add(crop.id));
+    const id=group.map(crop=>crop.id).sort()[0];
+    groups.push({id:`crop:${id}`,targets:group,value:group.length*B.crops.find(crop=>crop.id===p.species).base_harvest_value,regions:new Map()});
+  }
+  groups.sort((a,b)=>b.value-a.value||a.id.localeCompare(b.id));
+  cropTargetIndexes.set(plants,{historyLength:plants.length,livingLength:living.length,groups});
+  return groups;
+}
 export function planNight(s) {
   const prepared=preparePressureNight(s);
   s.nightPlan=prepared.plan;s.raidPressureMemory=prepared.memory;s.rng=prepared.rng;
@@ -70,7 +215,15 @@ export function cameraRaidEntry(s,specs,bounds,nav,view=nav.raidView,maxSearches
           if(!nav.walkable(approach.x,approach.z,radius,null,false))continue;
           if(nav.segmentClear?.(point,approach,radius,null,false)){reachable=true;break;}
           if(searches>=maxSearches)continue;searches++;
-          if((nav.approachPath??nav.path).call(nav,point,approach,radius,null,false)){reachable=true;break;}
+          try{
+            if((nav.approachPath??nav.path).call(nav,point,approach,radius,null,false)){
+              reachable=true;break;
+            }
+          }catch(error){
+            // A speculative entrance candidate may need chunks that are not
+            // resident yet. Try the next candidate; do not abort the raid tick.
+            if(error?.name!=='SpatialChunkUnavailable')throw error;
+          }
         }
         if(!reachable)continue;chosen={point,exit};break;
       }
@@ -136,16 +289,9 @@ function baseRaidEntry(s,specs,bounds,preferredSide,nav){
 }
 export function chooseRaidEntry(s,specs,bounds,preferredSide,nav){
   if(!nav.field?.canyon)return exteriorRaidEntry(s,specs,bounds,preferredSide,nav,baseRaidEntry,cameraRaidEntry);
-  // Dry plateau/other-bank entries need not connect to the canyon farm.
-  // Require native target approaches rather than granting river crossings.
-  const connectedBase=(state,group,box,side,navigation)=>{
-    const entry=baseRaidEntry(state,group,box,side,navigation);if(!entry)return null;
-    const targets=[...state.structures.filter(t=>operational(t)||t.kind==='wall'&&t.hp>0&&t.status!=='collapsing'),...state.plants.filter(p=>p.alive)];
-    return entry.entries.every((point,i)=>targets.length===0||targets.slice().sort((a,b)=>dist(a,point)-dist(b,point)).slice(0,8).some(target=>reachableApproach({...point,radius:group[i].radius},target,navigation)))?entry:null;
-  };
-  // The existing projected-camera fallback may need a bounded land detour.
-  const connectedCamera=(...args)=>{args[5]=Math.max(args[5]??2,2);return cameraRaidEntry(...args);};
-  const entry=exteriorRaidEntry(s,specs,bounds,preferredSide,nav,connectedBase,connectedCamera)??canyonRaidFormation(s,specs,bounds,nav,reachableApproach);
+  // Canyon animals follow the river on the farm's bank. Generic edge and
+  // camera entries can choose the opposite bank, which cannot reach crops.
+  const entry=canyonRaidFormation(s,specs,bounds,nav,reachableApproach);
   if(entry)return entry;
   // One half-chunk search extension lets a complete bank formation straddle
   // the current resident edge. It is not a terrain override or a smaller wave.
@@ -186,7 +332,7 @@ export function spawnRaid(s,plan,nav,daytime=false) {
   if(wave){previous.animals.push(...animals);previous.waveIndex=plan.index;delete previous.pendingWavePlan;}
   else s.raid={id:`raid-${s.day}-${daytime?'day':'night'}`,animals,encounters:[],reservations:{},daytime,...(plan.pressureVersion===1?{waves:structuredClone(plan.waves),waveIndex:0,pressureFacts:structuredClone(plan.pressureFacts)}:{})};
   if(plan.introductory&&!daytime){
-    const count=s.plants.filter(p=>p.alive).length;
+    const count=activeCrops(s.plants).filter(p=>p.alive).length;
     s.raid.introPlantCount=count;s.raid.introCropLimit=Math.max(0,Math.min(count-1,Math.ceil(count*.2)));s.raid.introCropsDestroyed=0;
   }
   for(const w of wave?[]:s.workers) {
@@ -197,22 +343,29 @@ export function spawnRaid(s,plan,nav,daytime=false) {
   }
   s.tasks=s.tasks.filter(t=>t.kind!=='repair');
   if(!wave)notice(s,RAID_NOTICE_TEXT,animals[0].id);
-  const exposed=s.plants.filter(p=>p.alive);
+  const exposed=activeCrops(s.plants).filter(p=>p.alive);
   emit(s,wave?'RaidWaveSpawned':'RaidSpawned',{raidFacts:{id:s.raid.id,day:s.day,daytime,elapsed:s.elapsed,waveIndex:s.raid.waveIndex??0,pressureFacts:s.raid.pressureFacts??null,exposedLiving:exposed.length,exposedWounded:exposed.filter(p=>(p.attackHits??0)>0).length,actors:animals.map(a=>({id:a.id,species:a.species,hitsRemaining:a.hitsRemaining,...(a.damageProfile?{damageProfile:structuredClone(a.damageProfile)}:{}),spawn:{...a.spawn},exit:{...a.exit}}))}});return true;
 }
 function release(s,a) {if(a.reservation&&s.raid.reservations[a.reservation]===a.id){delete s.raid.reservations[a.reservation];s.raid.waitRevision=((s.raid.waitRevision??0)+1)>>>0;}a.reservation=null;a.targetId=null;a.path=null;a.approach=null;a.approachShieldId=null;}
-export function reachableApproach(a,target,nav,shield=null){
+export function reachableApproach(a,target,nav,shield=null,onUnknown=null){
   const focus=shield??target,r=shield?shield.radius+a.radius+.1:(target.kind==='wall'?1.2:.6)+a.radius;
   const angle=Math.atan2(a.x-focus.x,a.z-focus.z);
-  for(let sample=0;sample<32;sample++){
-    if(nav.approachRegionBlocked?.(a,focus,a.radius,r))return null;
-    const offset=sample===0?0:Math.ceil(sample/2)*(sample%2?1:-1)*Math.PI/16;
+  // One preferred service point and bounded local alternatives. Connectivity
+  // is decided at region level by targetFor; this is only the final approach.
+  for(const [sample,offset] of [0,Math.PI/4,-Math.PI/4,Math.PI/2,-Math.PI/2,Math.PI].entries()){
     const point={id:`approach-${target.id}-${shield?.id??'direct'}-${sample}`,...(!shield&&target.kind==='center'?centerBoundaryPoint(target,angle+offset,a.radius+.5,nav.state):{x:focus.x+Math.sin(angle+offset)*r,z:focus.z+Math.cos(angle+offset)*r})};
     if(nav.state?.raid&&!reservedApproachClear(nav.state,a,point))continue;
     if(nav.state&&!actorSegmentClear(point,point,a,actorBlockers(nav.state,a,false)))continue;
+    if(!nav.walkable(point.x,point.z,a.radius,null,false))continue;
     // A complete 32-cell corridor lets the native search certify enclosed
     // islands once and reuse that proof across nearby crop service points.
-    const path=nav.approachPath?nav.approachPath(a,point,a.radius,32):nav.path(a,point,a.radius,null,false,32);
+    let path;
+    try{path=nav.approachPath?nav.approachPath(a,point,a.radius,32):nav.path(a,point,a.radius,null,false,32);}
+    catch(error){
+      if(error?.name!=='SpatialChunkUnavailable')throw error;
+      onUnknown?.();
+      continue;
+    }
     if(path)return {point,path};
   }
   return null;
@@ -224,34 +377,141 @@ export function raidTarget(s,id){
   const eligible=t=>t.id===id&&(!('alive' in t)||canAttackCrop(s,t))&&(!('status' in t)||t.status==='intact');
   // Keep crop-first selection and eligibility without allocating a copy of
   // the complete farm history for every animal and simulation step.
-  return s.plants.find(eligible)??s.structures.find(eligible);
+  return activeCrops(s.plants).find(eligible)??s.structures.find(eligible);
 }
-function targetFor(s,a,nav) {
-  const groups=[],seen=new Set(),components=createCropGrouping(s.plants);
-  for(const p of components.living)if(!seen.has(p.id)) {
-    const group=components.group(p);group.forEach(p=>seen.add(p.id));const id=group.map(p=>p.id).sort()[0];
-    groups.push({id:`crop:${id}`,targets:group,value:group.length*B.crops.find(c=>c.id===p.species).base_harvest_value});
+export function targetFor(s,a,nav) {
+  const stats=nav.raidSelectionStats;
+  const started=stats?performance.now():0;
+  if(stats)stats.selections=(stats.selections??0)+1;
+  try{return targetForImpl(s,a,nav,stats);}finally{
+    if(stats)stats.selectionMs=(stats.selectionMs??0)+performance.now()-started;
+    const scope=raidRegionDecisions.get(nav);
+    if(stats&&scope){
+      stats.maxRegionalQueriesPerTick=Math.max(stats.maxRegionalQueriesPerTick??0,scope.queries);
+      stats.decisionCacheEntries=scope.decisions.size;
+    }
   }
-  groups.sort((a,b)=>b.value-a.value||a.id.localeCompare(b.id));
+}
+function targetForImpl(s,a,nav,stats){
+  let unknown=false;
+  const sealedWallSides=new Map();
+  const unresolvedCropRepresentatives=[];
+  let certifiedSealedCrop=false;
+  const scope=nav.spatialSectorRevision?regionDecisionScope(s,nav):null;
+  const origin=scope?(nav.regionFor?.(a,a.radius,null,false)?.key??
+    `unknown:${a.id}`):null;
+  const originEnclosure=scope&&nav.enclosureFor?.(a,a.radius);
+  const sectorRevision=scope?nav.spatialSectorRevision(a.radius):0;
+  const markUnknown=()=>{unknown=true;};
+  const groups=cropTargetGroups(s.plants);
   for(const group of groups){
-   for(const p of group.targets.filter(p=>canAttackCrop(s,p)).sort((p,q)=>dist(a,p)-dist(a,q))) {
-    // Accessibility belongs to the valued connected zone; a native closed
-    // component proof can reject that zone once, without reserving it.
-    if(nav.approachGroupBlocked?.(a,group.targets,a.radius,.6+a.radius))break;
-    if(targetReserved(s,a,p))continue;
-    const shield=spellAt(s,'shield',p),approach=reachableApproach(a,p,nav,shield);
-    if(approach)return {target:p,reservation:targetReservationKey(p,a),approach,shieldId:shield?.id??null};
-   }
+    if(stats){stats.groups=(stats.groups??0)+1;stats.groupVisits??={};stats.groupVisits[group.id]=(stats.groupVisits[group.id]??0)+1;}
+    const profile=String(a.radius),entry=group.regions.get(profile);
+    let byRegion=entry?.version===nav.version&&entry?.sectors===sectorRevision?
+      entry.byRegion:null;
+    if(!byRegion){
+      byRegion=new Map();
+      for(const p of group.targets){
+        const key=nav.regionFor?.(p,a.radius,null,false)?.key??`unknown:${group.id}`;
+        if(!byRegion.has(key))byRegion.set(key,[]);
+        byRegion.get(key).push(p);
+      }
+      group.regions.set(profile,{version:nav.version,sectors:sectorRevision,byRegion});
+    }
+    for(const [regionKey,candidates] of byRegion){
+      if(stats)stats.regions=(stats.regions??0)+1;
+      // One abstract connectivity query represents all crops in this region.
+      const status=scope?cropRegionDecision(s,a,nav,group,regionKey,candidates,scope,origin,sectorRevision):
+        nav.regionConnected?.(a,candidates[0],a.radius,null,false)===false?'blocked':'accessible';
+      if(stats)stats[status]=(stats[status]??0)+1;
+      if(status==='unknown'||status==='blocked'){
+        const enclosure=scope&&enclosedCropRegion(nav,scope,group,regionKey,
+          candidates,a.radius,sectorRevision);
+        const definitelyOutside=enclosure?.status==='sealed'&&
+          originEnclosure?.status!=='unknown'&&originEnclosure?.ids?.length>0&&
+          !originEnclosure.ids.some(id=>enclosure.ids.includes(id));
+        if(definitelyOutside){
+          certifiedSealedCrop=true;
+          if(status==='unknown'){
+            const destination=regionKey.startsWith('unknown:')?
+              `${group.id}:${regionKey}`:regionKey;
+            scope.decisions.set(`${a.radius}:${origin}:${destination}`,
+              {status:'blocked',at:s.elapsed,sectors:sectorRevision});
+          }
+          for(const [id,point] of perimeterWallSides(nav,scope,enclosure,
+            originEnclosure,a.radius,s.structures,sectorRevision))sealedWallSides.set(id,point);
+        }else if(status==='unknown'){
+          unknown=true;unresolvedCropRepresentatives.push(candidates[0]);
+        }
+        continue;
+      }
+      const eligible=candidates.filter(p=>canAttackCrop(s,p)&&!targetReserved(s,a,p));
+      if(!eligible.length)continue;
+      eligible.sort((p,q)=>dist(a,p)-dist(a,q));
+      for(const p of eligible){
+        if(stats)stats.cropAttempts=(stats.cropAttempts??0)+1;
+        const shield=spellAt(s,'shield',p),approach=reachableApproach(a,p,nav,shield,markUnknown);
+        if(approach)return {target:p,reservation:targetReservationKey(p,a),approach,shieldId:shield?.id??null};
+      }
+    }
   }
-  // If crops are blocked, resolve the nearest visible barrier, without weakest-material omniscience.
+  // Certified enclosures nominate their perimeter; unresolved regions leave
+  // only independently reachable nearby structures as alternatives.
   const structures=defensiveGroups(s),near=g=>Math.min(...g.targets.map(t=>dist(a,t)));
   structures.sort((p,q)=>groups.length?near(p)-near(q):q.value-p.value||near(p)-near(q)||p.id.localeCompare(q.id));
   for(const group of structures)for(const structure of [...group.targets].sort((p,q)=>dist(a,p)-dist(a,q)||p.id.localeCompare(q.id))) {
     if(targetReserved(s,a,structure))continue;
-    const shield=spellAt(s,'shield',structure),approach=reachableApproach(a,structure,nav,shield);
+    if(nav.spatialSectorRevision){
+      if(structure.kind==='wall'){
+        const nearSide=sealedWallSides.get(structure.id);
+        if(!nearSide&&certifiedSealedCrop)continue;
+        if(!nearSide){
+          // Unknown crop connectivity does not certify an enclosure. A wall
+          // visibly between the animal and an unresolved crop group can still
+          // be chosen as an independent structure target, but only when its
+          // near side is reachable in the native graph.
+          const frame=wallCollisionFrame(structure);
+          const local=point=>({x:(point.x-frame.x)*frame.c-(point.z-frame.z)*frame.s,
+            z:(point.x-frame.x)*frame.s+(point.z-frame.z)*frame.c});
+          const from=local(a),sign=Math.sign(from.z);
+          if(!sign)continue;
+          let between=false;
+          for(const crop of unresolvedCropRepresentatives){
+            const to=local(crop);
+            if(from.z*to.z>=0)continue;
+            const crossing=from.x+(to.x-from.x)*(-from.z)/(to.z-from.z);
+            if(Math.abs(crossing)<=frame.width+a.radius){between=true;break;}
+          }
+          if(!between)continue;
+          const offset=frame.depth+a.radius+.6;
+          const side={x:frame.x+Math.sin(frame.yaw)*offset*sign,
+            z:frame.z+Math.cos(frame.yaw)*offset*sign};
+          const reachable=wallSideDecision(nav,scope,a,side,structure.id,
+            origin,sectorRevision);
+          if(reachable!==true){if(reachable===null)unknown=true;continue;}
+        }
+        if(nearSide){
+          const reachable=wallSideDecision(nav,scope,a,nearSide,structure.id,
+            origin,sectorRevision);
+          if(reachable!==true){if(reachable===null)unknown=true;continue;}
+        }
+      }
+    }
+    // An unloaded route to the same structure from the same native region is
+    // one unresolved question, not one question per moving animal per tick.
+    const key=scope?`approach:${a.radius}:${origin}:${structure.id}`:null;
+    const old=key&&scope.decisions.get(key);
+    if(old?.status==='unknown'&&old.sectors===sectorRevision&&s.elapsed-old.at<RAID_REGION_RETRY_SECONDS){unknown=true;continue;}
+    const shield=spellAt(s,'shield',structure);
+    let unresolved=false;
+    const approach=reachableApproach(a,structure,nav,shield,()=>{unresolved=true;markUnknown();});
+    if(key&&unresolved&&!approach){
+      if(scope.decisions.size>=2048)scope.decisions.delete(scope.decisions.keys().next().value);
+      scope.decisions.set(key,{status:'unknown',at:s.elapsed,sectors:sectorRevision});
+    }
     if(approach)return {target:structure,reservation:targetReservationKey(structure,a),approach,shieldId:shield?.id??null};
   }
-  return null;
+  return unknown?{unknown:true}:null;
 }
 export function warmRaidApproaches(state,specs,entry,nav){
   if(!entry)return;
@@ -263,7 +523,7 @@ export function warmRaidApproaches(state,specs,entry,nav){
     nav.state=preview;
     for(const animal of preview.raid.animals){
       const selected=targetFor(preview,animal,nav);
-      if(selected){preview.raid.reservations[selected.reservation]=animal.id;animal.targetId=selected.target.id;animal.approach=selected.approach.point;}
+      if(selected&&!selected.unknown){preview.raid.reservations[selected.reservation]=animal.id;animal.targetId=selected.target.id;animal.approach=selected.approach.point;}
     }
   }finally{nav.state=originalState;}
 }
@@ -339,9 +599,9 @@ export function updateRaid(s,dt,nav) {
         wait.epoch=epoch;wait.retryAt=s.elapsed+1;
       }
       const selected=targetFor(s,a,nav);
-      if(!selected){
+      if(!selected||selected.unknown){
         emit(s,'AnimalTargetUnavailable',{targetId:a.id,species:a.species,hitsRemaining:a.hitsRemaining});
-        if(occupiedEligibleGroup(s,a,p=>canAttackCrop(s,p)))enqueueWait(s,a);
+        if(selected?.unknown||occupiedEligibleGroup(s,a,p=>canAttackCrop(s,p)))enqueueWait(s,a);
         else {leaveWait(s.raid,a);a.status='retreating';emit(s,'AnimalRetreating',{targetId:a.id,species:a.species,hitsRemaining:a.hitsRemaining,reason:'no-reachable-unleased-target'});}
         continue;
       }

@@ -1,8 +1,8 @@
-// Bounded immutable prop chunks, static collision answers and successful path
-// query results. Actor choices, reservations and failed search regions stay local.
+// Bounded immutable prop chunks and static collision answers. Actor choices,
+// reservations, failed regions and WASM routes stay local to the worker.
 export function raidNavigationWarmth(nav){
   return {version:nav.version,chunks:[...nav.chunks].slice(-8),
-    walk:[...nav.walkCache].slice(-5000),segments:[...nav.segmentCache].slice(-10000),paths:[...(nav.warmPaths??[])]};
+    walk:[...nav.walkCache].slice(-5000),segments:[...nav.segmentCache].slice(-10000)};
 }
 export const navigationPathKey=(start,end,radius,ignore,worker,margin)=>`${start.x},${start.z}|${end.x},${end.z}:${radius}:${ignore}:${worker}:${margin}`;
 export function warmRaidNavigation(nav,warmth){
@@ -15,6 +15,5 @@ export function warmRaidNavigation(nav,warmth){
   for(const [target,entries,limit] of [[nav.walkCache,warmth.walk,50000],[nav.segmentCache,warmth.segments,100000]]){
     for(const [key,value] of entries){if(target.size>=limit)break;if(!target.has(key))target.set(key,value);}
   }
-  nav.preparedPaths={version:nav.version,entries:new Map(warmth.paths??[])};
   return true;
 }

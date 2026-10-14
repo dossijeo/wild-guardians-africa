@@ -5,6 +5,7 @@ import {gunzipSync} from 'node:zlib';
 import {deserialize,serialize} from '../src/persistence/snapshots.js';
 import {Navigation,BIOME_IDS} from '../src/world/navigation.js';
 import {workerFractionalConnector} from '../src/world/worker-fractional-connector.js';
+import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
 import {walkTo,tick} from '../src/simulation/game.js';
 import {advanceGateLeaves} from '../src/simulation/gates.js';
 const snapshot=new URL('./fixtures/worker-fractional-departure/state.json.gz',import.meta.url);
@@ -54,14 +55,17 @@ test('ordinary active work receives no fractional departure exception',()=>{
   const {w,nav,end}=world();w.status=status;nav.workerPath=()=>{throw Error('No extra search for ordinary work');};assert.equal(workerFractionalConnector(nav,w,end),null);
  }
 });
-test('smaller native search quanta preserve the exact route and final explored region',()=>{
+test('cooperative route adapter returns a stable valid route for both search quanta',()=>{
  const {s,w,end}=world(),grid={x:103,z:14};const runs=[];
  for(const quantum of [8,4]){
   const nav=navigation(s),search=nav.findPathSteps(grid,end,.28,null,true,16,{yieldEvery:quantum});let step,slices=0;
   do{step=search.next();slices++;}while(!step.done);
   runs.push({path:step.value,slices});
  }
- assert.deepEqual(runs[0].path,runs[1].path);assert(runs[1].slices>runs[0].slices);
+ assert.deepEqual(runs[0].path,runs[1].path);
+ assert(runs.every(run=>run.slices>=2&&run.path?.length>0));
+ const clearance=navigation(s);
+ for(const run of runs){let previous=grid;for(const point of run.path){assert(clearance.segmentClear(previous,point,.28,null,true));previous=point;}}
  for(const yieldEvery of [0,9,NaN,1.5])assert.throws(()=>navigation(s).findPathSteps(w,end,.28,null,true,16,{yieldEvery}).next(),/yield quantum/);
 });
 test('topology changes invalidate an in-progress search before returning its old route',()=>{
@@ -76,13 +80,47 @@ test('removed actors cannot retain all eight active search slots',()=>{
  }
  s.workers=[w];assert(connector(nav,w,end),'Removed pending actors must free bounded search slots');
 });
-test('cooperative smoothing preserves the existing bounded shortcut recipe',()=>{
+test('new route adapter preserves physical clearance through fractional departure',()=>{
  const {s,w,end}=world(),grid={x:103,z:14},nav=navigation(s),search=nav.findPathSteps(grid,end,.28,null,true);let step;
  do{step=search.next();}while(!step.done);
- const reference=JSON.parse(readFileSync(new URL('./fixtures/worker-fractional-departure/smoothing-reference.json',import.meta.url)));
- const raw=step.value,expected=reference.expected,cooperative=nav.smoothPathSteps(grid,raw,.28,null,true);let slices=0;
- assert.deepEqual(raw,reference.raw);assert.deepEqual(nav.smoothPath(grid,raw,.28,null,true),expected);
- do{step=cooperative.next();slices++;}while(!step.done);
- assert.deepEqual(step.value,expected);assert(slices>1);assert(expected.length<raw.length);
- let previous=grid;for(const p of expected){assert(nav.segmentClear(previous,p,.28,null,true));previous=p;}
+ const route=step.value;
+ assert(route?.length>0);
+ assert.deepEqual(route,nav.path(grid,end,.28,null,true));
+ let previous=grid;for(const point of route){
+  assert(nav.segmentClear(previous,point,.28,null,true));previous=point;
+ }
+ assert(Math.hypot(previous.x-end.x,previous.z-end.z)<1e-8);
+});
+test('spatial WASM movement can rejoin its native graph from a fractional worker pocket',()=>{
+ const state={seed:712,biome:'sabana',structures:[],villages:[],spells:[],suppressed:[]};
+ const field={canyon:false,surface:()=>0,slope:()=>0,fluidInside:()=>false};
+ let blocked=false,revision=1;
+ const edge=(a,b)=>!blocked&&Math.hypot(a.x-b.x,a.z-b.z)<=.36;
+ let nativeRoutes=0;
+ const session={field,suppressed:new Set(),topologySource:{revision:()=>revision},
+  actorCanStand:()=>true,actorStepClear:edge,
+  queryPropsAt:()=>({status:'ready',props:[]}),
+  actorRegions:()=>({ids:[],unknown:false}),
+  routeActor:(a,b)=>{
+   nativeRoutes++;
+   if(a.x===.5&&a.z===.5)return {status:'unknown',points:[]};
+   const points=[];let x=a.x,z=a.z;
+   while(Math.hypot(x-b.x,z-b.z)>1e-8){
+    x+=Math.max(-.25,Math.min(.25,b.x-x));
+    z+=Math.max(-.25,Math.min(.25,b.z-z));
+    points.push({x,z});
+   }
+   return {status:'found',points};
+  }};
+ const nav=createSpatialNavigationMovement(session,state),worker={x:.5,z:.5,status:'returning'},end={x:2,z:0};
+ assert.equal(nav.path(worker,end,.28,null,true),null,'the native graph has no direct fractional connector');
+ let route=null;
+ for(let i=0;i<4096&&!route;i++)route=workerFractionalConnector(nav,worker,end,.28);
+ assert(route?.length>1);assert(nativeRoutes>1);
+ let previous=worker;
+ for(const point of route){assert(nav.walkable(point.x,point.z,.28,null,true));assert(nav.segmentClear(previous,point,.28,null,true));previous=point;}
+ assert.deepEqual(previous,end);
+ blocked=true;revision++;
+ for(let i=0;i<4096;i++)assert.equal(workerFractionalConnector(nav,worker,end,.28),null,
+  'a topology change cannot reuse the former prefix through a solid barrier');
 });

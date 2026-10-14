@@ -1,5 +1,6 @@
 import {sweptFootprintDistance} from '../world/footprints.js';
 const attempts=new WeakMap(),BUDGET=8,MAX_NODES=96,MAX_FOOTPRINTS=4;
+export const animalFootprintConnectorFailed=actor=>attempts.get(actor)?.failed===true;
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 // Miter points supplement grid sampling; they are proposals, not clearance.
 // Both adjacent offset half-planes define the point, then native walk/swept

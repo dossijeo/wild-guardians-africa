@@ -7,6 +7,7 @@ import {updateWorkerEncounters} from '../src/simulation/encounters.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {Navigation} from '../src/world/navigation.js';
 import {updateRaid,reachableApproach} from '../src/simulation/raids.js';
+import {reservedApproachClear} from '../src/simulation/raid-target-reservations.js';
 import {readFileSync} from 'node:fs';
 import {createOpeningWorld} from '../tools/check_opening.mjs';
 import {edgeDistance} from '../src/world/footprints.js';
@@ -84,15 +85,30 @@ for(const species of Object.keys(ANIMAL_ACTIONS.animals))test(`${species}: exhau
   assert.ok(arrived);assert.ok(detoured);assert.equal(worker.hits,0);assert.equal(animal.hitsRemaining,0);
   assert.equal(state.rng,rng);assert.equal(state.events.length,events);
 });
-test('An occupied narrow static passage waits, keeps the exit, and resumes when the person reaches home',()=>{
+test('An occupied narrow passage phases mobile collisions after a bounded wait, retaining static clearance',()=>{
   const {state,animal,worker,nav}=fixture();nav.field.slope=(_x,z)=>Math.abs(z)>1.2?1:0;
-  const destination={id:'exit',x:4,z:0};
-  for(let i=0;i<100;i++)walkTo(state,animal,destination,.1,nav,{speed:3.8,worker:false});
-  assert.ok(animal.x<0);assert.ok(Math.hypot(animal.x,animal.z)>=animal.radius+.28);
-  assert.equal(animal.destinationId,'exit');assert.ok(animal.path.length);assert.equal(worker.hits,0);
-  worker.status='home';let arrived=false;
-  for(let i=0;i<100&&!arrived;i++)arrived=walkTo(state,animal,destination,.1,nav,{speed:3.8,worker:false});
+  const destination={id:'exit',x:4,z:0};let arrived=false;
+  for(let i=0;i<100&&!arrived;i++){
+    const before={x:animal.x,z:animal.z};
+    arrived=walkTo(state,animal,destination,.1,nav,{speed:3.8,worker:false});
+    assert.ok(Math.hypot(animal.x-before.x,animal.z-before.z)<=.38+1e-8);
+    assert.ok(nav.segmentClear(before,animal,animal.radius,null,false));
+  }
   assert.ok(arrived);
+  assert.ok(state.events.some(e=>e.type==='ActorMobileCollisionRecovery'));
+  assert.equal(animal.destinationId,'exit');assert.equal(worker.hits,0);
+});
+test('mobile collision recovery stops after two attempts for the same destination',()=>{
+  const {state,animal,nav}=fixture();nav.field.slope=(_x,z)=>Math.abs(z)>1.2?1:0;
+  const destination={id:'exit',x:4,z:0};
+  animal.mobileRecoveryDestinationId=destination.id;
+  animal.mobileRecoveryVersion=nav.version;
+  animal.mobileRecoveryAttempts=2;
+  animal.dynamicStallSeconds=3;
+  walkTo(state,animal,destination,.1,nav,{speed:3.8,worker:false});
+  assert.equal(animal.mobileRecoveryAttempts,2);
+  assert.equal(animal.mobilePhaseRemaining??0,0);
+  assert.equal(state.events.some(e=>e.type==='ActorMobileCollisionRecovery'),false);
 });
 test('Workers avoid a retreating beast in both movement directions and charge only travelled running metres',()=>{
   const {state,animal,worker,nav}=fixture('rhino');animal.x=0;worker.x=-4;
@@ -152,7 +168,7 @@ test('Legacy overlaps may escape continuously but cannot move deeper or across t
   assert.equal(actorSegmentClear(actor,{x:.4,z:0},actor,[other]),false);
   assert.equal(actorSegmentClear(actor,{x:-2,z:0},actor,[other]),false);
 });
-test('Crowded crop approaches are recomputed outside the other native bodies and the raid completes',()=>{
+test('An occupied crop service ring waits for clearance and the raid then completes',()=>{
   const {state,nav}=fixture();state.workers=[];
   state.plants=[
     {id:'p1',x:228,z:34.5,species:'girasol',alive:true},
@@ -164,8 +180,14 @@ test('Crowded crop approaches are recomputed outside the other native bodies and
   const animals=positions.map((p,i)=>({id:'crowd-'+i,species:'warthog',...p,radius:1.1,hitsRemaining:2,status:'walking',targetId:state.plants[i].id,reservation:'crop:'+state.plants[i].id,spawn:{x:176.5936382952636,z:34.34991014827507+i*4},path:[endpoints[i]],approach:{id:'occupied-'+i,...endpoints[i]},destinationId:'occupied-'+i,pathVersion:nav.version}));
   state.raid.animals=animals;state.raid.reservations=Object.fromEntries(animals.map(a=>[a.reservation,a.id]));
   assert.equal(actorSegmentClear(endpoints[1],endpoints[1],animals[1],[animals[0],animals[2]]),false);
+  // The target's entire legal service ring is blocked by either a live body
+  // or another reserved approach. No finer angular search could find a point.
+  for(let i=0;i<1024;i++){
+    const angle=i*Math.PI*2/1024,point={x:state.plants[1].x+Math.sin(angle)*1.7,z:state.plants[1].z+Math.cos(angle)*1.7};
+    assert.ok(!reservedApproachClear(state,animals[1],point)||!actorSegmentClear(point,point,animals[1],[animals[0],animals[2]]));
+  }
   const approach=reachableApproach(animals[1],state.plants[1],nav);
-  assert.ok(approach);assert.ok(actorSegmentClear(approach.point,approach.point,animals[1],[animals[0],animals[2]]));
+  assert.equal(approach,null,'all service points are physically occupied until another animal moves');
   for(let i=0;i<3000&&state.raid;i++){
     state.elapsed+=.1;updateRaid(state,.1,nav);
     for(let a=0;a<animals.length;a++)for(let b=a+1;b<animals.length;b++)if(animals[a].status!=='gone'&&animals[b].status!=='gone')assert.ok(Math.hypot(animals[a].x-animals[b].x,animals[a].z-animals[b].z)>=2.2-1e-8);

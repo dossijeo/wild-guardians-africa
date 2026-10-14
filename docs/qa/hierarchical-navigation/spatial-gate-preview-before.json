@@ -1,0 +1,29 @@
+{
+  "source": "Native Sabana seed 712, Mapungubwe, Node desktop",
+  "revision": "3909f314",
+  "warmup": "twenty previews after one valid-site search; separate from load",
+  "residentChunks": 9,
+  "loadMs": 262.78280000000007,
+  "siteSearch": {
+    "candidates": 1,
+    "ms": 585.5777
+  },
+  "preview": {
+    "samples": 20,
+    "minMs": 546.1840000000002,
+    "medianMs": 560.6873999999998,
+    "p95Ms": 576.3380999999999,
+    "maxMs": 582.0356000000002
+  },
+  "buildMs": 594.0882999999994,
+  "calls": {
+    "path": {"count": 21, "ms": 1.6181999999948857},
+    "wallPlacement": {"count": 1008, "ms": 35.44029999999566},
+    "propsAt": {"count": 21, "ms": 0.09049999999933789},
+    "withWallPreview": {"count": 1995, "ms": 11728.59779999997}
+  },
+  "wallPieces": 15,
+  "automaticGates": 1,
+  "wasmMemoryBytes": 4194304,
+  "limitation": "Native and legacy worlds differ; this is not a production frame-time or AB comparison."
+}

@@ -1,37 +1,39 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {Navigation} from '../src/world/navigation.js';
+import {readFileSync} from 'node:fs';
+import {createLazySectorProbeSync} from '../src/world/hierarchical-wasm/lazy-sectors-adapter.js';
 
-test('one failure beyond capacity retains recent failed routes and evicts only the oldest',()=>{
-  const nav=new Navigation(712,'gran-canon',{}),start={x:0,z:0};let searches=0;
-  nav.findPath=()=>{searches++;return null;};
-  for(let x=0;x<50000;x++)assert.equal(nav.path(start,{x,z:1}),null);
-  assert.equal(searches,50000);assert.equal(nav.failedPaths.size,50000);
-  assert.equal(nav.path(start,{x:50000,z:1}),null);
-  assert.equal(searches,50001);assert.equal(nav.failedPaths.size,50000);
-  // This recent failure must survive insertion of an unrelated failed query.
-  assert.equal(nav.path(start,{x:49999,z:1}),null);assert.equal(searches,50001);
-  assert.equal(nav.path(start,{x:0,z:1}),null);assert.equal(searches,50002);
-  assert.equal(nav.failedPaths.size,50000);
-  assert.equal(nav.path(start,{x:50000,z:1}),null);assert.equal(searches,50002);
+const module=new WebAssembly.Module(readFileSync(new URL('../src/world/hierarchical-wasm/lazy-sectors.wasm',import.meta.url)));
+function fixture(){
+  const blocked=new Set();for(let z=0;z<24;z++)blocked.add(`11,${z}`);
+  const walkable=(x,z)=>x>=0&&x<24&&z>=0&&z<24&&!blocked.has(`${x},${z}`);
+  const nav={walkable,segmentClear:(a,b)=>walkable(a.x,a.z)&&walkable(b.x,b.z)};
+  const probe=createLazySectorProbeSync(module,nav,{sectorSize:8});
+  return {blocked,probe};
+}
+
+test('many failed destinations reuse resident sectors without growing a per-target cache',()=>{
+  const {probe}=fixture(),start={x:3,z:12};probe.ensureRect(0,0,23,23);
+  assert.equal(probe.route(start,{x:19,z:12}).status,'blocked');
+  const before=probe.metrics();
+  for(let i=0;i<1000;i++){
+    const end={x:12+i%12,z:Math.floor(i/12)%24};
+    assert.equal(probe.route(start,end).status,'blocked');
+  }
+  assert.deepEqual(probe.metrics(),before);
 });
 
-test('geometry invalidation still retries previously failed routes after capacity eviction',()=>{
-  const nav=new Navigation(712,'gran-canon',{}),start={x:0,z:0};let searches=0,blocked=true;
-  nav.findPath=(_a,b)=>{searches++;return blocked?null:[{x:b.x,z:b.z}];};
-  for(let x=0;x<=50000;x++)assert.equal(nav.path(start,{x,z:1},.28,null,false),null);
-  const end={x:50000,z:1},before=searches;
-  blocked=false;
-  // A changed fixture alone does not invalidate established navigation data.
-  assert.equal(nav.path(start,end,.28,null,false),null);assert.equal(searches,before);
-  nav.setState({structures:[],villages:[],spells:[],suppressed:[]});
-  assert.equal(nav.failedPaths.size,0);
-  assert.deepEqual(nav.path(start,end,.28,null,false),[end]);assert.equal(searches,before+1);
-  // Refill after clear: the persistent FIFO cursor must see the new entries.
-  blocked=true;
-  for(let x=0;x<=50000;x++)assert.equal(nav.path(start,{x,z:2}),null);
-  const count=searches;
-  assert.equal(nav.path(start,{x:49999,z:2}),null);assert.equal(searches,count);
-  assert.equal(nav.path(start,{x:0,z:2}),null);assert.equal(searches,count+1);
-  assert.equal(nav.failedPaths.size,50000);
+test('an inconclusive route is never cached as blocked across coverage and a later breach',()=>{
+  const {blocked,probe}=fixture(),start={x:3,z:12},end={x:19,z:12};
+  probe.ensureSector(0,1);
+  for(let i=0;i<100;i++)assert.equal(probe.route(start,end).status,'unknown');
+  probe.ensureRect(0,0,23,23);
+  assert.equal(probe.route(start,end).status,'blocked');
+  const before=probe.metrics();
+  blocked.delete('11,12');probe.invalidateRect(11,12,11,12);
+  const opened=probe.route(start,end);
+  assert.equal(opened.status,'found');assert(opened.points.length>0);
+  assert.equal(probe.metrics().loaded,before.loaded);
+  blocked.add('11,12');probe.invalidateRect(11,12,11,12);
+  assert.equal(probe.route(start,end).status,'blocked');
 });

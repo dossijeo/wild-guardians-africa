@@ -1,0 +1,217 @@
+{
+  "input": "C:\\Users\\PC\\source\\repos\\wild-guardians-event-driven-player\\docs\\qa\\event-driven-virtual-player\\pilot-good-canyon-2026-day7-phase\\checkpoint-state.json.gz",
+  "biome": "gran-canon",
+  "day": 7,
+  "radius": 1.1,
+  "bounds": {
+    "minX": -26,
+    "minZ": -20,
+    "maxX": 55,
+    "maxZ": 65
+  },
+  "wasmBytes": 21901,
+  "rows": [
+    {
+      "variant": "javascript",
+      "queries": 94,
+      "constructionMs": 0.3550999999999931,
+      "initializationMs": 0,
+      "rssDeltaBytes": 35680256,
+      "wasmMemoryBytes": null,
+      "metrics": {
+        "sectorsBuilt": 69,
+        "sectorsInvalidated": 0,
+        "cellSamples": 9936,
+        "edgeSamples": 28805,
+        "graphSearches": 7948,
+        "graphNodes": 260482,
+        "localSearches": 0
+      },
+      "passes": [
+        {
+          "phase": "cold",
+          "milliseconds": 1234.6814,
+          "found": 28,
+          "foundLocal": 28,
+          "foundCrop": 0,
+          "invalid": 0
+        },
+        {
+          "phase": "warm",
+          "milliseconds": 144.91809999999987,
+          "found": 28,
+          "foundLocal": 28,
+          "foundCrop": 0,
+          "invalid": 0
+        }
+      ]
+    },
+    {
+      "variant": "wasm-hier",
+      "queries": 94,
+      "constructionMs": 12.31029999999987,
+      "initializationMs": 484.7941999999998,
+      "rssDeltaBytes": 6635520,
+      "wasmMemoryBytes": 16908288,
+      "metrics": {
+        "sectorsBuilt": 56,
+        "arcs": 1046,
+        "graphNodes": 24,
+        "localNodes": 0,
+        "flatNodes": 0
+      },
+      "passes": [
+        {
+          "phase": "cold",
+          "milliseconds": 1.9997000000000753,
+          "found": 28,
+          "foundLocal": 28,
+          "foundCrop": 0,
+          "invalid": 0
+        },
+        {
+          "phase": "warm",
+          "milliseconds": 1.0892999999998665,
+          "found": 28,
+          "foundLocal": 28,
+          "foundCrop": 0,
+          "invalid": 0
+        }
+      ]
+    },
+    {
+      "variant": "wasm-flat",
+      "queries": 94,
+      "constructionMs": 42.136299999999665,
+      "initializationMs": 940.7278999999999,
+      "rssDeltaBytes": -8949760,
+      "wasmMemoryBytes": 16908288,
+      "metrics": {
+        "sectorsBuilt": 56,
+        "arcs": 1046,
+        "graphNodes": 0,
+        "localNodes": 0,
+        "flatNodes": 2225
+      },
+      "passes": [
+        {
+          "phase": "cold",
+          "milliseconds": 21.67910000000029,
+          "found": 28,
+          "foundLocal": 28,
+          "foundCrop": 0,
+          "invalid": 0
+        },
+        {
+          "phase": "warm",
+          "milliseconds": 20.007000000000062,
+          "found": 28,
+          "foundLocal": 28,
+          "foundCrop": 0,
+          "invalid": 0
+        }
+      ]
+    },
+    {
+      "variant": "wasm-flat",
+      "queries": 94,
+      "constructionMs": 7.8828999999996086,
+      "initializationMs": 918.6215000000002,
+      "rssDeltaBytes": -2351104,
+      "wasmMemoryBytes": 16908288,
+      "metrics": {
+        "sectorsBuilt": 56,
+        "arcs": 1046,
+        "graphNodes": 0,
+        "localNodes": 0,
+        "flatNodes": 2225
+      },
+      "passes": [
+        {
+          "phase": "cold",
+          "milliseconds": 20.882000000000062,
+          "found": 28,
+          "foundLocal": 28,
+          "foundCrop": 0,
+          "invalid": 0
+        },
+        {
+          "phase": "warm",
+          "milliseconds": 19.911399999999958,
+          "found": 28,
+          "foundLocal": 28,
+          "foundCrop": 0,
+          "invalid": 0
+        }
+      ]
+    },
+    {
+      "variant": "wasm-hier",
+      "queries": 94,
+      "constructionMs": 13.809499999999844,
+      "initializationMs": 437.5014000000001,
+      "rssDeltaBytes": 5423104,
+      "wasmMemoryBytes": 16908288,
+      "metrics": {
+        "sectorsBuilt": 56,
+        "arcs": 1046,
+        "graphNodes": 24,
+        "localNodes": 0,
+        "flatNodes": 0
+      },
+      "passes": [
+        {
+          "phase": "cold",
+          "milliseconds": 1.1063999999996668,
+          "found": 28,
+          "foundLocal": 28,
+          "foundCrop": 0,
+          "invalid": 0
+        },
+        {
+          "phase": "warm",
+          "milliseconds": 1.1898000000001048,
+          "found": 28,
+          "foundLocal": 28,
+          "foundCrop": 0,
+          "invalid": 0
+        }
+      ]
+    },
+    {
+      "variant": "javascript",
+      "queries": 94,
+      "constructionMs": 0.0536999999994805,
+      "initializationMs": 0,
+      "rssDeltaBytes": 13266944,
+      "wasmMemoryBytes": null,
+      "metrics": {
+        "sectorsBuilt": 69,
+        "sectorsInvalidated": 0,
+        "cellSamples": 9936,
+        "edgeSamples": 28805,
+        "graphSearches": 7948,
+        "graphNodes": 260482,
+        "localSearches": 0
+      },
+      "passes": [
+        {
+          "phase": "cold",
+          "milliseconds": 1029.2510999999995,
+          "found": 28,
+          "foundLocal": 28,
+          "foundCrop": 0,
+          "invalid": 0
+        },
+        {
+          "phase": "warm",
+          "milliseconds": 134.19630000000052,
+          "found": 28,
+          "foundLocal": 28,
+          "foundCrop": 0,
+          "invalid": 0
+        }
+      ]
+    }
+  ]
+}

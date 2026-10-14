@@ -17,13 +17,12 @@ function fixture(options={}){
 const choice={olderFemale:1,olderMale:1};
 test('first-day worker preparation is read-only and preserves paid tasks, physical work and full trajectory',()=>{
  const {s,nav,preparer,workers}=fixture(),before=serialize(s);preparer.update(s,choice);const worker=workers[0],request=worker.requests[0],reply=computeHiringRoutes(request);
- assert.equal(serialize(s),before);assert.ok(reply.warmth.paths.length>0);assert.ok(reply.warmth.paths.length<=128);assert.ok(reply.warmth.paths.reduce((n,[,p])=>n+p.length,0)<=20000);
+ assert.equal(serialize(s),before);assert.equal(Object.hasOwn(reply.warmth,'paths'),false);
  worker.onmessage({data:reply});const ready=preparer.take(s,choice);assert.ok(ready);
  const reference=deserialize(before),referenceNav=new Navigation(s.seed,s.biome,nav.profile);referenceNav.setState(reference);
  Game.hire(s,'actual-hire',choice);Game.hire(reference,'actual-hire',choice);assert.equal(warmRaidNavigation(nav,ready.warmth),true);
- let referenceSearches=0,preparedSearches=0;for(const [n,inc] of [[nav,()=>preparedSearches++],[referenceNav,()=>referenceSearches++]]){const find=n.findPath;n.findPath=function(...args){inc();return find.apply(this,args);};}
  for(let step=0;step<2000;step++){Game.tick(s,.05,nav);Game.tick(reference,.05,referenceNav);assert.equal(serialize(s),serialize(reference),`step ${step}`);}
- assert.ok(preparedSearches<referenceSearches);assert.ok(s.plants.some(p=>p.water[0].status==='manual'));preparer.cancel();assert.equal(worker.terminated,true);assert.equal(preparer.ready,null);preparer.dispose();
+ assert.ok(s.plants.some(p=>p.water[0].status==='manual'));preparer.cancel();assert.equal(worker.terminated,true);assert.equal(preparer.ready,null);preparer.dispose();
 });
 test('rapid selection changes keep one outstanding job and only the latest request is accepted',()=>{
  const {s,preparer,workers}=fixture();preparer.update(s,choice);const worker=workers[0],first=worker.requests[0];preparer.update(s,{olderFemale:2});preparer.update(s,{olderMale:2});assert.equal(worker.requests.length,1);

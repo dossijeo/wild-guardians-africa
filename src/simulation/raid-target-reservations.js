@@ -23,14 +23,21 @@ export function reconcileTargetReservations(state,release){
  for(const a of raid.animals){
   if(!active(a)||!a.targetId)continue;
   const target=byId.get(a.targetId);
-  if(!target||('alive' in target?!target.alive:target.status!=='intact'||target.hp<=0)){release(state,a);continue;}
+  if(!target||('alive' in target?!target.alive:target.status!=='intact'||target.hp<=0)){
+   // A strike already in its animation remains committed to the original ID.
+   // Drop the obsolete lease now, then let attack completion record a miss.
+   // Clearing targetId here would erase that commitment before the hit frame.
+   if(a.status==='attacking')a.reservation=null;
+   else release(state,a);
+   continue;
+  }
   const key=targetReservationKey(target,a);
   if(claimed.has(key)||a.approach&&approaches.some(other=>Math.hypot(a.approach.x-other.approach.x,a.approach.z-other.approach.z)<(a.radius??.28)+(other.radius??.28)+.1)){
    release(state,a);a.status='walking';a.attackRemaining=0;a.attackId=null;a.hitApplied=false;continue;
   }
   claimed.add(key);a.reservation=key;owners[key]=a.id;if(a.approach)approaches.push(a);
  }
- const before=Object.entries(raid.reservations).sort().map(e=>e.join(':')).join('|'),after=Object.entries(owners).sort().map(e=>e.join(':')).join('|');
+ const before=Object.entries(raid.reservations??{}).sort().map(e=>e.join(':')).join('|'),after=Object.entries(owners).sort().map(e=>e.join(':')).join('|');
  raid.reservations=owners;raid.targetReservationVersion=2;
  if(before!==after)raid.waitRevision=((raid.waitRevision??0)+1)>>>0;
 }

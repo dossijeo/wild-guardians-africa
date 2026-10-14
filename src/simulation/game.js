@@ -10,10 +10,9 @@ import {ensureBoundaryGates} from '../world/boundary-gates.js';
 import {gatePortalPoints} from '../world/gate-passages.js';
 import {containsPoint,footprintDistance} from '../world/footprints.js';
 import {centerCulture,centerFootprint,centerServicePoint,centerDeliveryPoint} from '../world/centers.js';
-import {prepareActorMotion} from './actor-motion.js';
+import {actorBlockers,actorSegmentClear,prepareActorMotion} from './actor-motion.js';
 import {animalRouteClearance} from './animal-route-clearance.js';
 import {animalSlopeRecoveryPath} from './animal-slope-recovery.js';
-import {withNavigationQueries} from '../world/navigation-query-scope.js';
 import {BALANCE as B} from './balance.js';
 import {wallVisualAt,recordWallPresentation} from './structure-presentation.js';
 import {rational,rationalNumber,add,multiply,negate,transact,compare,numberOf} from './money.js';
@@ -30,7 +29,7 @@ import {villageLayout,findVillageEntry,nearestVillageRoute} from '../world/villa
 import {LOCOMOTION as L} from './locomotion-calibration.js';
 import {dailyRunMetres,urgentWork,moveWorker,movePath,movePathWithGates} from './locomotion.js';
 import {workerSlopeRecoveryPath} from '../world/worker-slope-recovery.js';
-import {workerWallOverlapRecoveryPath} from '../world/worker-wall-overlap-recovery.js';
+import {animalWallOverlapRecovery,workerWallOverlapRecoveryPath} from '../world/worker-wall-overlap-recovery.js';
 import {createUrgencyPass} from './work-urgency.js';
 import {repairRoute,wateringRoute,canWaterFrom} from '../world/work-points.js';
 import {updateIdle,cancelIdle} from './idle.js';
@@ -76,12 +75,18 @@ export function previewCenter(s,{x,z,yaw=0},nav) {
     }
     const {candidate,footprint,check}=cultures.get(culture);
     if(!check.valid){failure??=check.reason;continue;}buildable=true;
-    const routes=nav.forBuildingPlacement?.(footprint,check.suppress??[])??nav;
     const departure=centerServicePoint(candidate,s,.8),entry=village.entry??village;
-    const outbound=routes.path(entry,departure,.28,null,true),inbound=outbound&&routes.path(departure,entry,.28,null,true);
-    if(!inbound)continue;
-    const routeLength=inbound.reduce((length,p,i)=>length+dist(p,i?inbound[i-1]:departure),0);
-    candidates.push({...candidate,footprint,suppress:check.suppress??[],villageId:village.id,routeLength,valid:true,cost:B.work_center.cost});
+    const inspect=routes=>{
+      // A route snapped out of a new footprint is not a valid departure:
+      // workers must still be able to stand at the actual village entry.
+      if(nav.withCenterPreview&&routes.walkable(entry.x,entry.z,.28,null,true)===false)return;
+      const outbound=routes.path(entry,departure,.28,null,true),inbound=outbound&&routes.path(departure,entry,.28,null,true);
+      if(!inbound)return;
+      const routeLength=inbound.reduce((length,p,i)=>length+dist(p,i?inbound[i-1]:departure),0);
+      candidates.push({...candidate,footprint,suppress:check.suppress??[],villageId:village.id,routeLength,valid:true,cost:B.work_center.cost});
+    };
+    if(nav.withCenterPreview)nav.withCenterPreview(footprint,check.suppress??[],inspect);
+    else inspect(nav.forBuildingPlacement?.(footprint,check.suppress??[])??nav);
   }
   candidates.sort((a,b)=>a.routeLength-b.routeLength||a.villageId.localeCompare(b.villageId));
   return candidates[0]??{valid:false,cost:B.work_center.cost,reason:buildable?'El centro no tiene un camino válido al poblado':failure??'El centro no tiene un camino válido al poblado'};
@@ -132,23 +137,33 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
   const originals=new Map([...s.structures,...newPieces].map(p=>[p.created,p]));
   const suppressedForGates=new Set(nav.suppressed);
   for(const piece of newPieces)for(const id of nav.wallPlacement(piece).suppress??[])suppressedForGates.add(id);
-  const canHost=p=>{
+  const canHostCandidate=p=>{
     const original=originals.get(p.id);if(!original)return false;
     const candidate={...original,gate:true},check=nav.wallPlacement(candidate);
     if(!check.valid||cropOverlap(candidate))return false;
     const points=gatePortalPoints(candidate);if(points.length!==2)return false;
+    if(nav.withWallPreview){
+      const proposed=newPieces.map(piece=>piece.created===p.id?candidate:piece);
+      return nav.withWallPreview(proposed,[...suppressedForGates,...check.suppress??[]],draft=>
+        points.every(point=>draft.walkable(point.x,point.z,.28,null,true))&&
+        draft.segmentClear(points[0],points[1],.28,null,true));
+    }
     const draft=nav.forBuildingPlacement(candidate);
     draft.obstacles=[...nav.obstacles.filter(o=>o.kind!=='wall'),...layout.pieces.filter(q=>originals.get(q.id)?.status!=='ruined').map(q=>({...originals.get(q.id),gate:q.id===p.id||q.kind==='gate'}))];
     draft.suppressed=new Set([...suppressedForGates,...check.suppress??[]]);
     return points.every(point=>draft.walkable(point.x,point.z,.28,null,true))&&draft.segmentClear(points[0],points[1],.28,null,true);
   };
-  const interior=nav.forBuildingPlacement(newPieces[0]??s.structures[0]);
-  interior.obstacles=[...nav.obstacles.filter(o=>o.kind!=='wall'),...[...s.structures,...newPieces].filter(p=>p.kind==='wall'&&p.status!=='ruined')];interior.suppressed=suppressedForGates;
+  const interior=nav.withWallPreview?null:nav.forBuildingPlacement(newPieces[0]??s.structures[0]);
+  if(interior){interior.obstacles=[...nav.obstacles.filter(o=>o.kind!=='wall'),...[...s.structures,...newPieces].filter(p=>p.kind==='wall'&&p.status!=='ruined')];interior.suppressed=suppressedForGates;}
   const omitted=blockedPieces.map(piece=>{const h=piece.baseScaleX*2.18/2,dx=Math.cos(piece.yaw)*h,dz=-Math.sin(piece.yaw)*h;return [[piece.x-dx,piece.z-dz],[piece.x+dx,piece.z+dz]];});
   const targets=s.structures.filter(operational).map(center=>{
     const plants=s.plants.filter(q=>q.alive&&q.centerId===center.id),target=plants.length?{x:plants.reduce((sum,q)=>sum+q.x,0)/plants.length,z:plants.reduce((sum,q)=>sum+q.z,0)/plants.length}:centerServicePoint(center,s,.8);
     return target;
   }),scores=new Map();let approachRoutes;
+  const loadApproachRoutes=()=>targets.flatMap(target=>s.villages.map(v=>{
+    const entry=v.entry??v,path=nav.path(entry,target,.28,null,true);
+    return {entry,target,path:path?[entry,...path]:null};
+  }));
   const routeDistance=(p,route)=>Math.min(...route.slice(1).map((b,i)=>{
     const a=route[i],dx=b.x-a.x,dz=b.z-a.z,length=dx*dx+dz*dz;
     const t=length?Math.max(0,Math.min(1,((p.x-a.x)*dx+(p.z-a.z)*dz)/length)):0;
@@ -159,19 +174,24 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
     // Reuse existing shortest navigation routes, including buildings and cliffs.
     // Computed only for a fresh enclosure; incremental edits always prefer the
     // last new module rather than relocating an older wall.
-    approachRoutes??=targets.flatMap(target=>s.villages.map(v=>{
-      const entry=v.entry??v,path=nav.path(entry,target,.28,null,true);
-      return {entry,target,path:path?[entry,...path]:null};
-    }));
+    approachRoutes??=nav.withWallPreview?
+      nav.withWallPreview([],[...suppressedForGates],loadApproachRoutes):
+      loadApproachRoutes();
     if(!scores.has(p.id))scores.set(p.id,Math.min(...approachRoutes.map(({entry,target,path})=>(path?routeDistance(p,path):0)*1e6+dist(entry,p)+dist(p,target))));
     return scores.get(p.id);
   };
   let unhosted=false,unhostedWorker=false;
-  ensureBoundaryGates(layout,nav,canHost,(x,z)=>interior.walkable(x,z,.28,null,true),omitted,rank,p=>newIds.has(p.id),face=>{
+  const ensure=isFree=>ensureBoundaryGates(layout,nav,canHostCandidate,isFree,omitted,rank,p=>newIds.has(p.id),face=>{
     unhosted=true;
     const polygon=face.polygon.map(([x,z])=>({x,z}));
     if(s.workers.some(w=>w.status!=='home'&&containsPoint(polygon,w.x,w.z)))unhostedWorker=true;
   });
+  if(nav.withWallPreview){
+    // One draft serves every room probe. Candidate doors replace that draft
+    // only while the host check runs, then restore it before the next probe.
+    nav.withWallPreview(newPieces,[...suppressedForGates],draft=>
+      ensure((x,z)=>draft.walkable(x,z,.28,null,true)));
+  }else ensure((x,z)=>interior.walkable(x,z,.28,null,true));
   const converted=layout.pieces.filter(p=>newIds.has(p.id)&&p.autoGate&&!s.structures.some(e=>e.id===p.entityId&&e.autoGate));
   const updates=converted.map(p=>({id:p.entityId,gate:true,autoGate:true,maxHp:p.maxHp,hp:p.hp})).filter(update=>{const piece=[...s.structures,...newPieces].find(p=>p.id===update.id),candidate={...piece,...update};return nav.wallPlacement(candidate).valid&&!cropOverlap(candidate);});
   return Object.assign(updates,{unhosted,unhostedWorker});
@@ -427,8 +447,40 @@ export function cast(s,id,kind,x,z,nav,targetPlantId) {
 export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignore=null,worker=true,motion=null,expandRoute=false,routeVia=null}={}) {
   const previous={x:w.x,z:w.z};
   if(worker)w.running=false;
+  if(w.exitRouteRecovery&&
+    (w.exitRouteRecovery.destinationId!==destination.id||w.exitRouteRecovery.version!==nav.version))
+    delete w.exitRouteRecovery;
+  const abandonExhaustedExit=()=>{
+    const exhausted=w.exitConnectorSearch?.exhausted===true,
+      timedOut=w.exitRouteRecovery&&s.elapsed-w.exitRouteRecovery.startedAt>=1500;
+    if(worker||!expandRoute||w.status!=='retreating'||w.hitsRemaining>0||
+      (!exhausted&&!timedOut))return false;
+    emit(s,'AnimalRetreatExitAbandoned',{actorId:w.id,x:w.x,z:w.z,elapsed:s.elapsed,
+      reason:exhausted?'bounded-search-exhausted':'recovery-timeout',
+      seconds:s.elapsed-(w.exitRouteRecovery?.startedAt??s.elapsed)});
+    delete w.exitConnectorSearch;delete w.exitRouteRecovery;w.path=null;
+    return true;
+  };
+  if(w.mobileRecoveryDestinationId!==destination.id||
+    w.mobileRecoveryVersion!==nav.version){
+    w.mobileRecoveryDestinationId=destination.id;
+    w.mobileRecoveryVersion=nav.version;
+    w.mobileRecoveryAttempts=0;
+    w.mobileProgressDistance=dist(w,destination);
+    w.mobileProgressAt=s.elapsed;
+  }
+  if(!Number.isFinite(w.mobileProgressDistance)||!Number.isFinite(w.mobileProgressAt)){
+    w.mobileProgressDistance=dist(w,destination);
+    w.mobileProgressAt=s.elapsed;
+  }
+  if(w.wallEscape&&w.pathVersion!==nav.version)delete w.wallEscape;
   if(!w.path||w.destinationId!==destination.id||w.pathVersion!==nav.version) {
-    w.path=worker&&nav.workerPath?nav.workerPath(w,destination,w.radius??.28,ignore):nav.path(w,destination,w.radius??.28,ignore,worker);w.destinationId=destination.id;
+    if(w.exitRouteRecovery){
+      w.path=animalExitConnector(w,destination,nav);
+      if(!w.path)return abandonExhaustedExit();
+      delete w.exitRouteRecovery;
+    }else w.path=worker&&nav.workerPath?nav.workerPath(w,destination,w.radius??.28,ignore):nav.path(w,destination,w.radius??.28,ignore,worker);
+    w.destinationId=destination.id;
     // The local search corridor is not a physical enclosure. Exhausted animals
     // can need a wider detour to reach the same exit they entered through.
     if(!w.path&&expandRoute)for(const margin of [32,64]){w.path=nav.path(w,destination,w.radius??.28,ignore,worker,margin);if(w.path)break;}
@@ -442,6 +494,13 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
       w.path=nav.propOverlapExitPath?.(w,destination,w.radius??.28,ignore,worker)??null;
       if(!w.path)w.path=animalExitConnector(w,destination,nav);
       if(!w.path)w.path=animalSlopeRecoveryPath(nav,w,destination,w.radius??.28);
+      if(!w.path){
+        const recovery=animalWallOverlapRecovery(nav,w,destination,w.radius??.28);
+        if(recovery){w.path=recovery.path;w.wallEscape={exit:recovery.exit,
+          wallIds:recovery.wallIds};
+          emit(s,'AnimalWallOverlapRecovery',{actorId:w.id,x:w.x,z:w.z,
+            wallIds:recovery.wallIds});}
+      }
     }
     if(!w.path&&worker&&!ignore&&['fleeing','returning','incapacitated'].includes(w.status)){
       w.path=workerWallOverlapRecoveryPath(nav,w,destination,w.radius??.28);
@@ -450,16 +509,75 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
       if(!w.path)w.path=workerReturnRoute(nav,w,destination,w.radius??.28);
     }
     w.pathVersion=nav.version;
-    if(!w.path)return false;
+    if(!w.path)return abandonExhaustedExit();
   }
   if(worker&&waitForGate(w,s.structures))return false;
-  const dynamicClear=prepareActorMotion(s,w,nav,worker);
+  if(!worker&&w.wallEscape){
+    const {exit,wallIds}=w.wallEscape,remaining=dist(w,exit);
+    if(remaining>1e-8){
+      const metres=movePath(w,Math.min(speed*dt,remaining),
+        (a,b)=>nav.wallOverlapMotionClear(a,b,w.radius??.28,wallIds,false));
+      w.motionPhase=(w.motionPhase??0)+metres/speed;
+      if(metres>1e-8){w.heading=Math.atan2(w.x-previous.x,w.z-previous.z);
+        w.dynamicStallSeconds=0;}
+    }
+    if(dist(w,exit)<=1e-7){delete w.wallEscape;
+      if(w.path?.length&&dist(w,w.path[0])<=1e-7)w.path.shift();}
+    return w.path?.length===0;
+  }
+  // The ordinary local avoidance remains first. Only after stationary time
+  // or prolonged movement without destination progress, and only when a short
+  // static step is valid but occupied by another moving body, temporarily
+  // ignore mobile collisions. Static terrain,
+  // barriers and the live gate leaf remain authoritative throughout.
+  const next=w.path[0],distanceToNext=next?dist(w,next):0;
+  if(!worker&&expandRoute&&next&&s.elapsed-w.mobileProgressAt>=12&&
+    nav.segmentClear?.(w,next,w.radius??.28,ignore,false)===false){
+    w.path=null;
+    w.exitRouteRecovery={destinationId:destination.id,version:nav.version,
+      startedAt:s.elapsed};
+    emit(s,'AnimalExitRouteRecovery',{actorId:w.id,x:w.x,z:w.z,
+      exitId:destination.id,reason:'stale-static-connector'});
+    return false;
+  }
+  const probe=next&&distanceToNext>1e-8?{
+    x:w.x+(next.x-w.x)*Math.min(.5,distanceToNext)/distanceToNext,
+    z:w.z+(next.z-w.z)*Math.min(.5,distanceToNext)/distanceToNext}:null;
+  if(((w.dynamicStallSeconds??0)>=3||
+    s.elapsed-w.mobileProgressAt>=12)&&
+    (w.mobileRecoveryAttempts??0)<2&&probe){
+    const blockers=actorBlockers(s,w,worker);
+    const staticClear=worker?nav.workerMotionClear?.(w,probe,w.radius??.28):
+      nav.segmentClear?.(w,probe,w.radius??.28,ignore,false);
+    if(staticClear&&actorSegmentClear(destination,destination,w,blockers)&&
+      !actorSegmentClear(w,probe,w,blockers)){
+      w.mobilePhaseRemaining=3;w.dynamicStallSeconds=0;
+      w.mobileRecoveryAttempts=(w.mobileRecoveryAttempts??0)+1;
+      w.mobileProgressDistance=dist(w,destination);
+      w.mobileProgressAt=s.elapsed;
+      emit(s,'ActorMobileCollisionRecovery',{actorId:w.id,
+        x:w.x,z:w.z,elapsed:s.elapsed,duration:3});
+    }
+  }
+  const phased=(w.mobilePhaseRemaining??0)>0;
+  const dynamicClear=phased?
+    (worker?(a,b)=>nav.workerMotionClear?.(a,b,w.radius??.28)??
+      nav.segmentClear?.(a,b,w.radius??.28,ignore,true)??false:null):
+    prepareActorMotion(s,w,nav,worker);
   const routeClearance=worker?workerRiskClearance(w,nav,{radius:w.radius??.28,ignore},dynamicClear):animalRouteClearance(w,nav,{radius:w.radius??.28,ignore,escapeProps:expandRoute},dynamicClear);
   const clear=routeClearance?.clear??dynamicClear;
   if(motion)moveWorker(w,dt,{...motion,gates:worker?s.structures:[],clear});else {
     const metres=worker?movePathWithGates(w,speed*dt,s.structures,clear):movePath(w,speed*dt,clear);w.motionPhase=(w.motionPhase??0)+metres/speed;
   }
   if(dist(previous,w)>1e-9)w.heading=Math.atan2(w.x-previous.x,w.z-previous.z);
+  if(phased)w.mobilePhaseRemaining=Math.max(0,w.mobilePhaseRemaining-dt);
+  if(dist(previous,w)>1e-8||!w.path?.length)w.dynamicStallSeconds=0;
+  else w.dynamicStallSeconds=Math.min(3,(w.dynamicStallSeconds??0)+dt);
+  const remaining=dist(w,destination);
+  if(remaining<=w.mobileProgressDistance-.75){
+    w.mobileProgressDistance=remaining;
+    w.mobileProgressAt=s.elapsed;
+  }
   if(routeClearance?.blocked()){w.path=null;return false;}
   return w.path.length===0;
 }
@@ -660,9 +778,6 @@ function prepareClockEvents(s,nav){
   if(s.nightPlan&&!s.nightPlan.done&&s.time>=s.nightPlan.at&&(!s.dayPlan||activeRaidEntryPlan(s)!==s.dayPlan)){s.nightPlan.done=!s.nightPlan.group?.length||spawnRaid(s,s.nightPlan,nav)!==false;}
 }
 export function tick(s,seconds,nav) {
-  return withNavigationQueries(nav,()=>tickScoped(s,seconds,nav));
-}
-function tickScoped(s,seconds,nav) {
   if(!Number.isFinite(seconds)||seconds<0)throw new Error('Paso temporal inválido');
   let left=seconds;
   while(left>1e-9 && !s.pauses.length && !s.result) {

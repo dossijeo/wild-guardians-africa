@@ -38,7 +38,13 @@ for(const culture of Game.CULTURES)test(`QA-135/136 ${culture}: continue actual 
   const day=101+night;assert.equal(s.day,day);assert.deepEqual(s.pauses,['hiring']);
   if(night%25===0){repo.save(s);const text=serialize(s);s=repo.load(s.slotId);nav=navigation(s);assert.equal(serialize(s),text);controller=new TutorialController(s,profile);const held=serialize(s);Game.tick(s,10,nav);assert.equal(serialize(s),held);reloads++;}
   Game.hire(s,'qa-postgame-hire-'+day,{});controller.update();
-  if(controller.presentation()?.reading){assert.equal(controller.presentation().id,'world.expansion');controller.acknowledge();}
+  const shownToday=new Set();
+  for(let i=0;i<4;i++){
+   const message=controller.presentation();if(!message)break;
+   assert.ok(message.id==='world.expansion'||message.id.startsWith('reminder.'),`Unexpected postgame reading: ${message.id}`);
+   assert.ok(!shownToday.has(message.id),`Repeated postgame message on day ${day}: ${message.id}`);
+   shownToday.add(message.id);controller.dismiss({message});
+  }
   assert.equal(controller.presentation(),null);assert.ok(attraction(s.plants)>=10000);
   advance(300);assert.equal(s.time,300);assert.equal(s.day,day);assert.equal(s.dayPlan.done,true);dayPlans++;
   assert.deepEqual(s.nightPlan.group,[]);assert.equal(s.nightPlan.done,false);assert.ok(s.nightPlan.at>300&&s.nightPlan.at<600);nightPlans++;

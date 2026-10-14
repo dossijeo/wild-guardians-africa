@@ -18,7 +18,9 @@ function fixture(culture='mapungubwe',deferRaid=false){
  return state;
 }
 function hit(state,target,animalIndex=0){
- const animal=state.raid.animals[animalIndex];Object.assign(animal,{status:'attacking',animation:'Right_Hand_Sword_Slash',targetId:target.id,attackRemaining:.01,hitsRemaining:3,hitApplied:false,approachShieldId:null});
+ // This audio fixture commits a hit directly. An entry preview's approach
+ // belongs to navigation, and can legitimately be leased by another actor.
+ const animal=state.raid.animals[animalIndex];Object.assign(animal,{status:'attacking',animation:'Right_Hand_Sword_Slash',targetId:target.id,approach:null,attackRemaining:.01,hitsRemaining:3,hitApplied:false,approachShieldId:null});
  updateRaid(state,.02,nav);return state.events.filter(e=>e.type==='StructureHit').at(-1);
 }
 function audioFixture(){
@@ -70,7 +72,10 @@ test('late decode and scene disposal prevent stale danger sources',async()=>{
 });
 test('simultaneous critical crossings group one warning while preserving each material contact',async()=>{
  const state=fixture('mapungubwe',true),walls=[];
- for(let i=0;i<3;i++){Game.placeStructure(state,'wall-'+i,{kind:'wall',material:'zarzas',x:10+i*5,z:0},nav);walls.push(state.structures.at(-1));}
+ for(let i=0;i<3;i++){
+  assert.equal(Game.placeStructure(state,'wall-'+i,{kind:'wall',material:'zarzas',x:10+i*8,z:0},nav),true);
+  walls.push(state.structures.at(-1));
+ }
  spawnRaid(state,{group:['warthog','warthog','warthog']},nav);const hits=[];
  for(const [index,wall] of walls.entries()){wall.hp=collapseThreshold(wall)*2+10;hits.push(hit(state,wall,index));}
  const {audio,sources}=audioFixture();audio.process(hits,{state});await flush();
