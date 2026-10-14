@@ -359,6 +359,15 @@ an obstacle, reuses built sectors on a repeat query, and becomes direct after
 the obstacle is removed and geometry invalidated. This changes only QA
 expectations, not movement or attack rules.
 
+The full suite at `eeab77c8` completed in 445.6 seconds: 4,321 tests,
+4,203 passed and **118 failed**. Relative to `3e695f69`, precisely 12
+formerly failing cases now pass (eight defensive-reservation cases and four
+paid-defense retreat/navigation cases); there are no newly failing test
+names. The complete TAP output is retained in `full-suite-eeab77c8.log.gz`.
+These remaining failures still prevent repository-wide acceptance and PR
+integration. In particular, the campaign evidence above has not established
+a 30/60/100-night survivor or a sustained large-farm performance bound.
+
 ## Reproduce
 
 ```powershell
