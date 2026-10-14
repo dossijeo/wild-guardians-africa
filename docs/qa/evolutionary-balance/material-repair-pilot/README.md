@@ -9,7 +9,9 @@ ejecutada antes sobre el mismo runtime y se conserva en
 `../worker-ab-candidate14/candidate.json.gz`. Los `stamp.json` registran
 parámetros y hashes del runner y la política. Los informes completos,
 progreso diario y checkpoints nativos se archivaron sin recargas, con hashes
-en `archive-index.json` y `checkpoints/index.jsonl`.
+en `archive-index.json` y `checkpoints/index.jsonl`. Los checkpoints están
+empaquetados sin pérdida en `checkpoints/snapshots.tar.gz`; el índice
+`checkpoints/archive-index.json` registra cada miembro y su SHA-256.
 
 | Política | Noches | Caja día 14 | Cultivos vivos | Destruidos | Ingresos | Semillas | Salarios | Muros pagados | Reparaciones | Ruinas registradas |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|

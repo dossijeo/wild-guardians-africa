@@ -10,6 +10,8 @@ noches. No hubo recargas ni cambios de genes. `evolved/stamp.json` conserva
 SHA-256 del runner, parámetros y umbrales de parada. `progress.jsonl`,
 `report.json.gz` (con índice SHA-256) y checkpoints comprimidos conservan la
 evidencia. El informe se comprimió sin pérdida después de la corrida.
+Los snapshots se agruparon después en `evolved/checkpoints/snapshots.tar.gz`;
+`evolved/checkpoints/archive-index.json` conserva sus hashes individuales.
 
 La campaña terminó por **derrota nativa en la noche 31**: treinta noches
 superadas, cero plantas vivas, 220 monedas, 29 plantas destruidas en esa noche.

@@ -10,6 +10,10 @@ opciones. Los `report.json.gz`, sus índices SHA-256 `archive-index.json`,
 y estado. Los informes JSON se comprimieron sin pérdida tras la corrida; el
 runner original escribió JSON plano. Los checkpoints son observaciones
 del estado, no recargas durante la campaña.
+Se agruparon después en `checkpoints/snapshots.tar.gz` de cada brazo; el
+`checkpoints/archive-index.json` preserva el SHA-256 de cada miembro y el
+`checkpoints/index.jsonl` conserva su día y tiempo originales. Para repetir
+una auditoría de un snapshot, extraer el miembro deseado del archivo.
 
 `evolved` designa aquí el candidato congelado `eee9529b306e0091`, idéntico a
 `DEFAULT_GENES`. No se ha demostrado una mejora evolutiva: la búsqueda corta
