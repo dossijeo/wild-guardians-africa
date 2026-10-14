@@ -32,9 +32,16 @@ export function createSpatialGameSession(module,state,streamOptions){
   function installVillage(village,gameState,initial=false){
     if(village?.id==null||villages.has(village.id)||!Array.isArray(village.buildings))
       throw TypeError('Expected a new spatial village with buildings');
+    const activeCenters=gameState.structures.filter(s=>s.kind==='center'&&
+      s.villageId===village.id&&s.status!=='ruined');
+    const planned=village.center;
+    const plannedCenters=planned&&Number.isFinite(planned.x)&&Number.isFinite(planned.z)&&
+      !activeCenters.some(center=>Math.hypot(center.x-planned.x,center.z-planned.z)<.01&&
+        Math.abs((center.yaw??0)-(planned.yaw??0))<1e-6&&
+        (center.culture??village.culture)===(planned.culture??village.culture))?
+      [planned]:[];
     const footprints=[...village.buildings.filter(b=>b.kind!=='Zona común').map(b=>b.footprint),
-      ...gameState.structures.filter(s=>s.kind==='center'&&s.villageId===village.id&&
-        s.status!=='ruined').map(s=>centerFootprint(s,gameState).footprint)];
+      ...[...activeCenters,...plannedCenters].map(s=>centerFootprint(s,gameState).footprint)];
     const points=footprints.flat();
     if(!points.length)throw TypeError('A spatial village needs physical buildings');
     const sites=gameState.biome==='gran-canon'?footprints.map(footprint=>{

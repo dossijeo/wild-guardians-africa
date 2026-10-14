@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import * as Game from '../src/simulation/game.js';
 import {probeSpatialStart,findSpatialStart} from '../src/world/hierarchical-wasm/spatial-initial-site.js';
+import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
+import {centerFootprint} from '../src/world/centers.js';
 
 const module=new WebAssembly.Module(readFileSync(new URL(
   '../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
@@ -69,5 +71,32 @@ test('native Gran Cañón start keeps the river and proves hostile land access',
     assert(result.site.buildings.some(building=>building.x<result.site.x));
     assert(result.site.buildings.some(building=>building.x>result.site.x));
     t.diagnostic(`${culture}/${seed}: ${result.attempts} candidates, ${result.loadedChunks} chunks`);
+  }
+});
+
+test('planned center levels the same native terrain before and after purchase',async()=>{
+  for(const [biome,seed] of [['sabana',712],['gran-canon',123]]){
+    const state=Game.newGame({seed,biome,culture:'mapungubwe',
+      slotId:'native-center-terrain'});
+    const start=await findSpatialStart(module,state,packs[0]);
+    const planned=structuredClone(state);
+    Object.assign(planned.villages[0],start.site);
+    const purchased=structuredClone(planned);
+    purchased.structures.push({id:'center-1',villageId:'village-1',
+      ...start.site.center,status:'intact',hp:600,maxHp:600});
+    const options=()=>({loaded:()=>new Map(),onData:()=>{}});
+    const before=createSpatialGameSession(module,planned,options());
+    const after=createSpatialGameSession(module,purchased,options());
+    try{
+      assert.deepEqual(before.core.snapshot().settlements,
+        after.core.snapshot().settlements,`${biome}: center purchase changed terrain sites`);
+      assert.equal(after.core.snapshot().polygons.length,
+        before.core.snapshot().polygons.length+1,
+        `${biome}: planned center must not exist as a physical building`);
+      const points=[...centerFootprint(start.site.center,planned).footprint,...start.farm];
+      for(const point of points)
+        assert.equal(before.field.surface(point.x,point.z),
+          after.field.surface(point.x,point.z),`${biome}: terrain changed at ${JSON.stringify(point)}`);
+    }finally{before.dispose();after.dispose();}
   }
 });
