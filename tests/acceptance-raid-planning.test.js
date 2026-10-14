@@ -53,16 +53,22 @@ test('QA-088 revised: the first-night clock spawns one mandatory warthog with ze
  const ordinary=Game.newGame({seed:712});ordinary.day=2;planNight(ordinary);assert.deepEqual(ordinary.nightPlan.group,['hyena']);
 });
 
-test('QA-089 revised: a thousand guaranteed nightly plans use fresh independent timing and composition draws',()=>{
- const s=fixture();let oracle=s.rng;const groups=new Set();
- const draw=()=>{oracle^=oracle<<13;oracle^=oracle>>>17;oracle^=oracle<<5;oracle>>>=0;return oracle/4294967296;};
- for(let i=0;i<1000;i++){
-  const when=draw();draw();draw();
-  s.day=6+i;s.completedNights=5+i;planNight(s);
-  assert.equal(s.nightPlan.at,323+when*225);assert.ok(s.nightPlan.group.length>0);assert.equal(s.rng,oracle);
-  groups.add(signature(s.nightPlan.group));s.nightPlan.done=true;
+test('QA-089 revised: a thousand seeded pressure plans are varied, deterministic and never rerolled',()=>{
+ const base=fixture(),groups=new Set(),times=new Set();
+ base.plants.forEach((plant,i)=>{plant.x=(i%11)*2;plant.z=Math.floor(i/11)*2;});
+ for(let seed=1;seed<=1000;seed++){
+  const s=structuredClone(base),copy=structuredClone(base);s.day=copy.day=50;s.completedNights=copy.completedNights=49;s.rng=copy.rng=seed;
+  let oracle=seed;oracle^=oracle<<13;oracle^=oracle>>>17;oracle^=oracle<<5;oracle>>>=0;
+  planNight(s);planNight(copy);
+  assert.equal(s.nightPlan.at,323+oracle/4294967296*225,'The first draw controls timing');
+  assert.ok(s.nightPlan.group.length>0);assert.deepEqual(copy.nightPlan,s.nightPlan);assert.equal(copy.rng,s.rng);
+  groups.add(signature(s.nightPlan.group));times.add(s.nightPlan.at);
+  const planned=structuredClone(s.nightPlan),rng=s.rng;planNight(s);
+  assert.deepEqual(s.nightPlan,planned,'Replanning the same night reuses its committed plan');assert.equal(s.rng,rng);
+  if(seed%100===0){const restored=deserialize(serialize(s));planNight(restored);assert.deepEqual(restored.nightPlan,planned);assert.equal(restored.rng,rng);}
  }
- assert.ok(groups.size>1,'Composition remains random while the nightly incursion is guaranteed');
+ assert.ok(groups.size>1,'Composition varies across independent seeds');
+ assert.ok(times.size>1,'Timing varies across independent seeds');
 });
 
 test('QA-090: budget three chooses precisely three warthogs or one unlocked hyena',()=>{

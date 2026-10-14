@@ -399,6 +399,20 @@ complete focused files pass: 22/22 cases. No Shield, damage, navigation or
 reservation production parameter changed. This focused result postdates the
 `57585091` full-suite log.
 
+The frozen full suite at `7fc37943` completed in 449.0 seconds: 4,321
+tests, 4,217 passed and **104 failed**. Eleven previous failures were
+resolved by the current one-hit Shield and reservation assertions; no test
+name newly failed. The complete TAP output is retained as
+`full-suite-7fc37943.log.gz`. The global suite is still not green.
+
+The old QA-089 timing/composition test also assumed that the retired raid
+planner consumed exactly three RNG draws per night. Its replacement uses
+1,000 independent seeds at night 50 and verifies that the first draw fixes
+the attack time, plans vary across seeds, two identical states produce the
+same composition and final RNG, and repeated planning plus periodic
+save/load never rerolls a committed plan. All eight tests in the raid-planning
+file pass. This is a test-only update after the `7fc37943` full-suite run.
+
 A same-policy Gran Cañón seed 123 native campaign was repeated after the
 committed-target fix. Against `selector-village-14-canyon-123.json.gz`, all
 daily gameplay fields, complete raid evidence, entry transport and plot
@@ -408,6 +422,17 @@ versus 38.69 s, with overall wall time 63.66 s versus 64.02 s. Those small
 timing differences do not establish a speedup. The new ledger is retained as
 `selector-548316a1-canyon-123.json.gz`. This regression check does not
 establish a 30-night survivor or military-balance acceptance.
+
+## Deferred engine name
+
+After the WASM spatial core is functionally and performance-stable, rename
+`spatial-savanna` to `wild-engine` consistently across its C++ source,
+compiled WASM, JS adapters, workers, runtime imports, build script and tests.
+The current name occurs in all those live paths. Keep archived benchmark and
+QA filenames intact as historical evidence, and verify the new artifact name
+in the web package and Windows build before retiring the old one. This rename
+is explicitly deferred until stabilization; it is not part of the current
+selector correction.
 
 ## Reproduce
 
