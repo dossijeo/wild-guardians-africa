@@ -100,12 +100,12 @@ Loop wall time
 includes QA event collection and chunk servicing; it is not isolated
 `Game.tick` CPU, a visual frame-rate measurement or a sustained-campaign
 benchmark.
-Gran Cañón seed 123 recorded eight and five
+Gran Cañón seed 123 recorded eight and six
 `waiting-expired-or-stage-blocked` retreats in middle and late loads, leaving
-23 and 15 unused strikes. All 13 affected animals' original staging points
-remained walkable, so this was bounded wait expiry rather than an invalid
-staging cell. Seed 712 also showed the pattern: one, eight and six such retreats
-across early/middle/late phases, leaving 2, 28 and 19 strikes. Other
+23 and 13 unused strikes. Earlier captured waits had walkable original staging
+points; the newly changed late trajectory has not been individually audited.
+Seed 712 also showed the pattern: one, eight and five such retreats
+across early/middle/late phases, leaving 2, 28 and 18 strikes. Other
 attackers exhausted their budgets. These repeated retreats may reflect
 genuinely unreachable or saturated targets in this synthetic placement or a
 navigation/selection flaw; inspect their positions and accessible alternatives
