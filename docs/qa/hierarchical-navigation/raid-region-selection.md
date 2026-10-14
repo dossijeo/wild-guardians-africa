@@ -2,7 +2,10 @@
 
 Experimental branch `codex/hierarchical-navigation-openra`; no balance, damage,
 wave composition or virtual-player policy was changed. This is navigation QA,
-not production acceptance.
+not production acceptance. The [Wild Engine integration gate](wild-engine-integration-gate.md)
+requires physically valid lifecycle and phase-equivalent stress coverage, but
+does not require a virtual-player victory over 100 nights. Balance calibration
+belongs to a later, separate phase.
 
 ## Cause of `unknown`
 
@@ -690,6 +693,16 @@ removal. This reduces dead JS navigation code but does not claim a measured
 runtime speedup or change physical route behavior.
 The playable suite passes 186/186 and the web production build succeeds after
 the deletion. The repository-wide suite has not been rerun on this commit.
+
+The frozen full suite at `90c1c2a9` subsequently ran 4,318 tests in 464.3 s:
+**4,271 passed and 47 failed**. There were no newly failing test names
+compared with `8b6693b9`. Of the four missing failures, three belonged to
+the deleted navigation-scope tests and one archival capacity check now passes.
+The complete output is retained as `full-suite-90c1c2a9.log.gz`. The suite
+remains red. Separately, the new native spatial-world night-100 transition
+tests pass 2/2: a physical raid finishes before a single victory or economic
+defeat event, and the terminal state survives save/load. These controlled
+fixtures do not represent a winning 100-night virtual-player campaign.
 
 ## Deferred engine name
 
