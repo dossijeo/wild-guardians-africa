@@ -181,6 +181,22 @@ test('a real paid crop action keeps the C++ terrain and prop authority in sync',
     assert.equal(nav.version,revision,'a crop on clear ground changes no passability');
     assert.equal(session.core.metrics().loadedChunks,1);
     assert.equal(state.tasks.length,1,'the real crop action enqueues agricultural work');
+    let entry;
+    for(let dz=-8;dz<=8&&!entry;dz+=2)for(let dx=-8;dx<=8&&!entry;dx+=2){
+      const point={x:site.x+dx,z:site.z+dz};
+      if(Math.hypot(dx,dz)>5&&nav.walkable(point.x,point.z,.28,null,true)&&
+        nav.segmentClear(point,site,.28,null,true))entry=point;
+    }
+    assert(entry,'the native graph should connect a worker entry to the crop');
+    state.villages[0].entry=entry;
+    Game.openInitialHiring(state);
+    Game.hire(state,'spatial-worker',{olderMale:1});
+    const worker=state.workers[0],start={x:worker.x,z:worker.z};
+    for(let i=0;i<240;i++)Game.tick(state,.1,nav);
+    assert(Math.hypot(worker.x-start.x,worker.z-start.z)>1,
+      'a paid worker should move toward a real task on native routes');
+    assert(state.events.some(event=>event.type==='WaterSatisfied'),
+      'the native route should let the worker finish a physical watering task');
   }finally{session.dispose();}
 });
 
