@@ -34,6 +34,7 @@ try{
       target=state.plants.find(item=>item.id===actor.targetId)??
         state.structures.find(item=>item.id===actor.targetId);
     const destination=actor.status==='retreating'?actor.exit:actor.approach;
+    const following=actor.path?.[1];
     let freshPath=null,freshPathStatus='none';
     if(destination)try{
       freshPath=nav.path(actor,destination,actor.radius,null,false);
@@ -80,6 +81,7 @@ try{
       pathVersion:actor.pathVersion,navVersion:nav.version,
       standable:nav.walkable(actor.x,actor.z,actor.radius,null,false),
       staticNext:next?nav.segmentClear(actor,next,actor.radius,null,false):null,
+      staticFollowing:next&&following?nav.segmentClear(next,following,actor.radius,null,false):null,
       staticProbe:probe?nav.segmentClear(actor,probe,actor.radius,null,false):null,
       nextWalkable,gridNextPass,gridNextPropBlocked,
       selectedChunkPropBlocked,selectedChunkWalkable,selectedTerrain,

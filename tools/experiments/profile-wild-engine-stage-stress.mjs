@@ -25,6 +25,9 @@ const output=process.argv[4];
 const tickLimit=Number(process.argv[5]??2400);
 const waitCapturePrefix=process.argv[6];
 const wallRing=process.env.WG_ENGINE_WALL_RING==='1';
+const wallCropTarget=Number(process.env.WG_ENGINE_WALL_CROPS??100);
+if(wallRing&&(!Number.isSafeInteger(wallCropTarget)||wallCropTarget<1||wallCropTarget>300))
+  throw RangeError('WG_ENGINE_WALL_CROPS must be an integer from 1 to 300');
 const timedCaptureTick=Number(process.env.WG_ENGINE_CAPTURE_TICK??0);
 const timedCapturePrefix=process.env.WG_ENGINE_CAPTURE_PREFIX;
 const results=[];
@@ -33,6 +36,8 @@ const source={commit:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).
   cppSha256:sha('../../src/world/hierarchical-wasm/spatial-savanna.cpp'),
   wasmSha256:sha('../../src/world/hierarchical-wasm/spatial-savanna.wasm'),
   raidsSha256:sha('../../src/simulation/raids.js'),
+  canyonFormationSha256:sha('../../src/simulation/canyon-raid-formation.js'),
+  animalRouteClearanceSha256:sha('../../src/simulation/animal-route-clearance.js'),
   runnerSha256:sha('./profile-wild-engine-stage-stress.mjs')};
 
 for(const phase of phases){
@@ -54,7 +59,7 @@ for(const phase of phases){
     }
     const originalWallHp=new Map(state.structures.filter(item=>item.kind==='wall')
       .map(item=>[item.id,item.hp]));
-    const cropTarget=wallRing?Math.min(phase.crops,100):phase.crops;
+    const cropTarget=wallRing?Math.min(phase.crops,wallCropTarget):phase.crops;
     let placed=0;
     const preparationStart=performance.now();
     for(let dz=-54;dz<=54&&placed<cropTarget;dz+=2)
@@ -75,7 +80,10 @@ for(const phase of phases){
     const before=process.memoryUsage();
     const spawned=spawnRaid(state,{at:310,group:phase.group,
       done:false,introductory:false},nav);
-    if(spawned===false)throw Error('Raid could not enter physically');
+    if(spawned===false)throw Error(`Raid could not enter physically: ${JSON.stringify({
+      phase:phase.name,entryVersion:nav.raidEntryFailure?.version,
+      group:nav.raidEntryFailure?.group,
+      bounds:nav.activeBounds})}`);
     const actors=[...state.raid.animals];
     const initial=actors.map(actor=>({id:actor.id,x:actor.x,z:actor.z,
       hitsRemaining:actor.hitsRemaining}));
@@ -91,16 +99,30 @@ for(const phase of phases){
     let ticks=0;
     for(;ticks<tickLimit&&state.raid&&!state.result;ticks++){
       const priorPositions=wallRing?actors.map(actor=>({x:actor.x,z:actor.z})):null;
+      const priorWaypoints=wallRing?actors.map(actor=>actor.path?.[0]):null;
       Game.tick(state,.25,nav);
       if(nav.serviceRaidConnectivityDemand?.())connectivityChunksServiced++;
       if(priorPositions)for(const [index,actor] of actors.entries()){
         const prior=priorPositions[index];
         if(Math.hypot(actor.x-prior.x,actor.z-prior.z)<1e-8)continue;
         if(nav.segmentClear(prior,actor,actor.radius,null,false))continue;
+        // A single tick can pass one waypoint and turn. The straight chord
+        // can cut a corner even though both physical substeps were clear.
+        const via=priorWaypoints[index],viaLength=via?
+          Math.hypot(via.x-prior.x,via.z-prior.z)+
+          Math.hypot(actor.x-via.x,actor.z-via.z):Infinity;
+        if(via&&viaLength<=1.05&&
+          nav.segmentClear(prior,via,actor.radius,null,false)&&
+          nav.segmentClear(via,actor,actor.radius,null,false))continue;
         invalidStaticMoves++;
         if(invalidStaticMoveExamples.length<4)invalidStaticMoveExamples.push({
           tick:ticks+1,id:actor.id,species:actor.species,
-          from:prior,to:{x:actor.x,z:actor.z}});
+          status:actor.status,from:prior,to:{x:actor.x,z:actor.z},
+          fromStandable:nav.walkable(prior.x,prior.z,actor.radius,null,false),
+          toStandable:nav.walkable(actor.x,actor.z,actor.radius,null,false),
+          pathNext:actor.path?.[0],targetId:actor.targetId,
+          recoveryAttempts:actor.mobileRecoveryAttempts,
+          dynamicStallSeconds:actor.dynamicStallSeconds});
       }
       maxLoadedChunks=Math.max(maxLoadedChunks,loaded.size);
       if(timedCapturePrefix&&ticks+1===timedCaptureTick){
@@ -189,6 +211,11 @@ for(const phase of phases){
     if(row.raidEnded!==(state.raid?0:1))row.issues.push(`Raid ended ${row.raidEnded} times`);
     results.push(row);
     process.stdout.write(`${JSON.stringify(row)}\n`);
+  }catch(error){
+    const row={phase:phase.name,biome,seed,wallRing,raidActive:null,
+      issues:[error.message]};
+    results.push(row);
+    process.stderr.write(`${phase.name}: ${error.message}\n`);
   }finally{session.dispose();}
 }
 

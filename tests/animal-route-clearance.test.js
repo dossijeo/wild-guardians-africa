@@ -53,3 +53,14 @@ test('a larger step cannot move beyond the cached safe prefix without another sw
  const guard=animalRouteClearance(actor,nav,{radius:.5},null);
  assert.equal(guard.clear(actor,{x:8,z:0}),false);assert.ok(guard.blocked());assert.ok(checks>1);
 });
+
+test('a fractional landing cannot enter a static pocket missed by the waypoint prefix',()=>{
+ const actor={x:0,z:0,path:[{x:1,z:0}]};
+ const nav={version:1,segmentClear:()=>true,
+  walkable:x=>x<.4||x>.6};
+ const guard=animalRouteClearance(actor,nav,{radius:.9},null);
+ assert.equal(guard.clear(actor,{x:.5,z:0}),false);
+ assert(guard.blocked());
+ assert.equal(animalRouteClearance(actor,nav,{radius:.9},null)
+  .clear(actor,{x:.3,z:0}),true);
+});
