@@ -662,6 +662,13 @@ daily/interrupted/magic reminder files pass 15/15; the Growth-specific test
 excludes the independent, valid Multiply reminder. No attack pressure,
 tutorial, economy or postgame production behavior was changed.
 
+The complete suite on `8b6693b9` then ran 4,322 tests in 460.1 seconds:
+**4,271 passed and 51 failed**. Compared with the archived `d7a314d2`
+suite, 22 previously failing test names disappeared and no test name newly
+failed. The complete output is retained as `full-suite-8b6693b9.log.gz`.
+The repository suite is still red; this count does not certify the WASM
+branch for integration or establish long-campaign survivor performance.
+
 ## Deferred engine name
 
 After the WASM spatial core is functionally and performance-stable, rename
