@@ -2,10 +2,11 @@
   "kind": "synthetic phase-equivalent spatial stress",
   "tickLimit": 2400,
   "source": {
-    "commit": "a9dc629c4b9b2592c6a5beec7064823472d0f194",
-    "wasmSha256": "08156a91ef2e0df55bcf01a016ac3d89d9189b7353ef14a7b38f146e5e5ebffd",
+    "commit": "18f1def4849850af076d305b12dca3e003871950",
+    "wasmSha256": "d9d16b81301074d92620f549125784a7ad3121063ad98b8c08f359dffa3dc987",
     "raidsSha256": "2ec54eb91d3133e8d1156982eaf73eb5ae4a422d24f83e227f41bf38cddda52d",
-    "runnerSha256": "77f9e49b4f89666253bc4213b3031a4e002e0df0a750e4cf40dfb3cc72ac6eb2"
+    "runnerSha256": "e6f54c6c95aaa22f290bebddac0561391e954f05e2fe530123d96681188b4682",
+    "cppSha256": "34c9614564b88a42ef4b5506696c964ea7f9792366e3ffd0b95e2841a3636881"
   },
   "results": [
     {
@@ -15,16 +16,21 @@
       "seed": 712,
       "crops": 40,
       "animals": 6,
-      "preparationMs": 11.880400000000009,
-      "tickMs": 711.2284999999999,
+      "preparationMs": 8.134300000000053,
+      "tickMs": 1279.9969,
       "ticks": 1949,
       "moved": 6,
       "raidActive": false,
       "result": null,
       "raidEnded": 1,
+      "connectivityChunksServiced": 16,
+      "loadedChunks": 9,
+      "maxLoadedChunks": 25,
       "cropHits": 19,
       "structureHits": 0,
       "logicalMisses": 0,
+      "routeUnavailable": 12,
+      "targetUnavailable": 0,
       "attackBudgetUsed": 19,
       "retreatReasons": [
         [
@@ -89,16 +95,16 @@
         }
       ],
       "exitAbandonments": [],
-      "heapBefore": 12146824,
-      "heapAfter": 16364536,
+      "heapBefore": 12671296,
+      "heapAfter": 21604976,
       "native": {
-        "memoryBytes": 4194304,
+        "memoryBytes": 9568256,
         "loadedChunks": 9,
         "residentPropRecords": 32,
         "residentVisiblePropRecords": 87,
         "loadedSectors": 144,
-        "sectorSlots": 144,
-        "sectorUpdates": 192,
+        "sectorSlots": 400,
+        "sectorUpdates": 928,
         "haloProps": 0
       },
       "issues": []
@@ -110,16 +116,21 @@
       "seed": 712,
       "crops": 150,
       "animals": 14,
-      "preparationMs": 45.315900000000056,
-      "tickMs": 2771.1232999999997,
+      "preparationMs": 51.81050000000005,
+      "tickMs": 3668.1317000000004,
       "ticks": 2065,
       "moved": 14,
       "raidActive": false,
       "result": null,
       "raidEnded": 1,
+      "connectivityChunksServiced": 16,
+      "loadedChunks": 9,
+      "maxLoadedChunks": 25,
       "cropHits": 38,
       "structureHits": 13,
       "logicalMisses": 2,
+      "routeUnavailable": 18,
+      "targetUnavailable": 0,
       "attackBudgetUsed": 53,
       "retreatReasons": [
         [
@@ -248,16 +259,16 @@
         }
       ],
       "exitAbandonments": [],
-      "heapBefore": 20140744,
-      "heapAfter": 21483856,
+      "heapBefore": 18587208,
+      "heapAfter": 30651896,
       "native": {
-        "memoryBytes": 5570560,
+        "memoryBytes": 17367040,
         "loadedChunks": 9,
         "residentPropRecords": 32,
         "residentVisiblePropRecords": 84,
         "loadedSectors": 144,
-        "sectorSlots": 144,
-        "sectorUpdates": 212,
+        "sectorSlots": 400,
+        "sectorUpdates": 948,
         "haloProps": 0
       },
       "positionAt2000": [
@@ -341,16 +352,21 @@
       "seed": 712,
       "crops": 300,
       "animals": 16,
-      "preparationMs": 63.240600000000086,
-      "tickMs": 3384.906899999999,
+      "preparationMs": 63.944799999999304,
+      "tickMs": 4506.7437,
       "ticks": 1633,
       "moved": 16,
       "raidActive": false,
       "result": "victory",
       "raidEnded": 1,
+      "connectivityChunksServiced": 16,
+      "loadedChunks": 9,
+      "maxLoadedChunks": 25,
       "cropHits": 56,
       "structureHits": 12,
       "logicalMisses": 1,
+      "routeUnavailable": 26,
+      "targetUnavailable": 0,
       "attackBudgetUsed": 69,
       "retreatReasons": [
         [
@@ -495,16 +511,16 @@
         }
       ],
       "exitAbandonments": [],
-      "heapBefore": 23797992,
-      "heapAfter": 26330616,
+      "heapBefore": 23562048,
+      "heapAfter": 30416384,
       "native": {
-        "memoryBytes": 6684672,
+        "memoryBytes": 20185088,
         "loadedChunks": 9,
         "residentPropRecords": 32,
         "residentVisiblePropRecords": 83,
         "loadedSectors": 144,
-        "sectorSlots": 144,
-        "sectorUpdates": 196,
+        "sectorSlots": 400,
+        "sectorUpdates": 916,
         "haloProps": 0
       },
       "issues": []

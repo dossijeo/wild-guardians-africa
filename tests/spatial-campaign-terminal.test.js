@@ -74,7 +74,10 @@ test('a dense native raid resumes after saving and rebuilding the spatial world'
     const group=[...Array(4).fill('warthog'),...Array(5).fill('hyena'),
       ...Array(4).fill('buffalo'),...Array(3).fill('lion')];
     assert.notEqual(spawnRaid(state,{at:310,group,done:false},nav),false);
-    for(let i=0;i<80;i++)Game.tick(state,.25,nav);
+    for(let i=0;i<80;i++){
+      Game.tick(state,.25,nav);
+      nav.serviceRaidConnectivityDemand?.();
+    }
     assert(state.raid,'the save occurs while attackers are still active');
     const saved=deserialize(serialize(state));
     assert.equal(saved.raid.animals.length,16);
@@ -104,6 +107,7 @@ test('a dense native raid resumes after saving and rebuilding the spatial world'
       const actors=state.raid.animals;
       const previous=actors.map(actor=>({x:actor.x,z:actor.z}));
       Game.tick(state,.25,nav);
+      nav.serviceRaidConnectivityDemand?.();
       for(const [index,actor] of actors.entries()){
         if(Math.hypot(actor.x-previous[index].x,actor.z-previous[index].z)<1e-8)
           continue;

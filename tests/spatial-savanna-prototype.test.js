@@ -545,6 +545,22 @@ test('a mangrove settlement dries its local flooded area without changing distan
   assert.notDeepEqual(Array.from(core.water()),Array.from(before));
   assert.equal(core.fluidLevel(distant.x,distant.z),distant.level);
 });
+test('mangrove water and local clearance do not depend on the selected resident chunk',()=>{
+  const core=createSpatialWorld(module);
+  core.generate(712,1,0,'mangrove');
+  core.setSettlement(60,0,15,12);
+  core.buildNavigationProfile(3,.97,false);
+  const point={x:52,z:-1},shore={x:51.03,z:-1};
+  const near={fluid:core.fluidLevel(shore.x,shore.z),
+    clear:core.localClear(point,point)};
+  core.addChunk(4,0);
+  const far={fluid:core.fluidLevel(shore.x,shore.z),
+    clear:core.localClear(point,point)};
+  assert.deepEqual(far,near);
+  core.selectChunk(1,0);
+  assert.deepEqual({fluid:core.fluidLevel(shore.x,shore.z),
+    clear:core.localClear(point,point)},near);
+});
 test('Gran Cañón keeps its gorge, water barrier and worker crossing in one spatial core',()=>{
   const core=createSpatialSavannaPrototype(module);
   core.generate(712,0,0,'canyons');

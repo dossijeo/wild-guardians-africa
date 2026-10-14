@@ -252,8 +252,13 @@ double wetlandMask(double x,double z){
     3.5*std::sin(x*.11-phase*.63)-warp))-1.2)/4.0);
   const double basin=blend((noise(x*.014,z*.014,9211)-.67)/.23);
   double mask=std::max({channelA,channelB*.96,basin*.92});
-  for(const size_t i:nearbySettlements)
-    mask*=1-settlementBlend(settlements[i],x,z);
+  // Movement queries can inspect any resident chunk while another chunk is
+  // selected for rendering. Wetness must depend on the queried position,
+  // never on the selected chunk's settlement shortlist.
+  for(const Settlement& site:settlements){
+    if(std::abs(x-site.x)>=site.hx+6||std::abs(z-site.z)>=site.hz+6)continue;
+    mask*=1-settlementBlend(site,x,z);
+  }
   return std::clamp(mask,0.0,1.0);
 }
 struct DesertSample {double height,dune,swale,gravel;};

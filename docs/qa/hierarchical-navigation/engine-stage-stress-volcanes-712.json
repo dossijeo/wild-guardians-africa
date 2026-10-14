@@ -2,10 +2,11 @@
   "kind": "synthetic phase-equivalent spatial stress",
   "tickLimit": 2400,
   "source": {
-    "commit": "a9dc629c4b9b2592c6a5beec7064823472d0f194",
-    "wasmSha256": "08156a91ef2e0df55bcf01a016ac3d89d9189b7353ef14a7b38f146e5e5ebffd",
+    "commit": "18f1def4849850af076d305b12dca3e003871950",
+    "wasmSha256": "d9d16b81301074d92620f549125784a7ad3121063ad98b8c08f359dffa3dc987",
     "raidsSha256": "2ec54eb91d3133e8d1156982eaf73eb5ae4a422d24f83e227f41bf38cddda52d",
-    "runnerSha256": "77f9e49b4f89666253bc4213b3031a4e002e0df0a750e4cf40dfb3cc72ac6eb2"
+    "runnerSha256": "e6f54c6c95aaa22f290bebddac0561391e954f05e2fe530123d96681188b4682",
+    "cppSha256": "34c9614564b88a42ef4b5506696c964ea7f9792366e3ffd0b95e2841a3636881"
   },
   "results": [
     {
@@ -15,16 +16,21 @@
       "seed": 712,
       "crops": 40,
       "animals": 6,
-      "preparationMs": 77.67179999999996,
-      "tickMs": 465.42700000000013,
+      "preparationMs": 82.77850000000012,
+      "tickMs": 1203.8487,
       "ticks": 1029,
       "moved": 6,
       "raidActive": false,
       "result": null,
       "raidEnded": 1,
+      "connectivityChunksServiced": 16,
+      "loadedChunks": 9,
+      "maxLoadedChunks": 25,
       "cropHits": 19,
       "structureHits": 0,
       "logicalMisses": 0,
+      "routeUnavailable": 2,
+      "targetUnavailable": 0,
       "attackBudgetUsed": 19,
       "retreatReasons": [
         [
@@ -89,16 +95,16 @@
         }
       ],
       "exitAbandonments": [],
-      "heapBefore": 15634776,
-      "heapAfter": 22300672,
+      "heapBefore": 15976576,
+      "heapAfter": 23605144,
       "native": {
-        "memoryBytes": 4194304,
+        "memoryBytes": 10027008,
         "loadedChunks": 9,
         "residentPropRecords": 181,
         "residentVisiblePropRecords": 1434,
         "loadedSectors": 144,
-        "sectorSlots": 144,
-        "sectorUpdates": 192,
+        "sectorSlots": 400,
+        "sectorUpdates": 912,
         "haloProps": 7
       },
       "issues": []
@@ -110,16 +116,21 @@
       "seed": 712,
       "crops": 150,
       "animals": 14,
-      "preparationMs": 275.4332999999999,
-      "tickMs": 1307.9806000000003,
+      "preparationMs": 308.2045000000003,
+      "tickMs": 2842.4121,
       "ticks": 1279,
       "moved": 14,
       "raidActive": false,
       "result": null,
       "raidEnded": 1,
+      "connectivityChunksServiced": 16,
+      "loadedChunks": 9,
+      "maxLoadedChunks": 25,
       "cropHits": 36,
       "structureHits": 14,
       "logicalMisses": 3,
+      "routeUnavailable": 17,
+      "targetUnavailable": 0,
       "attackBudgetUsed": 53,
       "retreatReasons": [
         [
@@ -248,16 +259,16 @@
         }
       ],
       "exitAbandonments": [],
-      "heapBefore": 23962856,
-      "heapAfter": 37854040,
+      "heapBefore": 25594512,
+      "heapAfter": 30522616,
       "native": {
-        "memoryBytes": 5570560,
+        "memoryBytes": 17760256,
         "loadedChunks": 9,
         "residentPropRecords": 181,
         "residentVisiblePropRecords": 1409,
         "loadedSectors": 144,
-        "sectorSlots": 144,
-        "sectorUpdates": 281,
+        "sectorSlots": 400,
+        "sectorUpdates": 1017,
         "haloProps": 7
       },
       "issues": []
@@ -269,16 +280,21 @@
       "seed": 712,
       "crops": 300,
       "animals": 16,
-      "preparationMs": 631.1144999999997,
-      "tickMs": 1821.9760999999999,
-      "ticks": 1877,
+      "preparationMs": 605.2614999999996,
+      "tickMs": 3002.4745000000003,
+      "ticks": 1672,
       "moved": 16,
       "raidActive": false,
       "result": "victory",
       "raidEnded": 1,
+      "connectivityChunksServiced": 16,
+      "loadedChunks": 9,
+      "maxLoadedChunks": 25,
       "cropHits": 53,
       "structureHits": 13,
       "logicalMisses": 3,
+      "routeUnavailable": 31,
+      "targetUnavailable": 0,
       "attackBudgetUsed": 69,
       "retreatReasons": [
         [
@@ -321,7 +337,7 @@
           "species": "warthog",
           "reason": "budget-exhausted",
           "hitsRemaining": 0,
-          "x": 36.827746607467034,
+          "x": 36.827177766160105,
           "z": -54,
           "spawnWalkable": true
         },
@@ -361,47 +377,47 @@
           "species": "warthog",
           "reason": "budget-exhausted",
           "hitsRemaining": 0,
-          "x": 52.242890073133815,
-          "z": -55,
+          "x": 52.133696762895376,
+          "z": -55.03040242813572,
+          "spawnWalkable": true
+        },
+        {
+          "species": "lion",
+          "reason": "budget-exhausted",
+          "hitsRemaining": 0,
+          "x": 123.37082621639114,
+          "z": -53,
           "spawnWalkable": true
         },
         {
           "species": "buffalo",
           "reason": "budget-exhausted",
           "hitsRemaining": 0,
-          "x": 120,
-          "z": -53.0342135623731,
+          "x": 109.02569805988027,
+          "z": -52.020112622077086,
+          "spawnWalkable": true
+        },
+        {
+          "species": "lion",
+          "reason": "budget-exhausted",
+          "hitsRemaining": 0,
+          "x": 117.98668574304253,
+          "z": -52.98198926277688,
           "spawnWalkable": true
         },
         {
           "species": "hyena",
           "reason": "budget-exhausted",
           "hitsRemaining": 0,
-          "x": 128.1571932611653,
-          "z": -53.17615525972324,
+          "x": 121.13581470019648,
+          "z": -53,
           "spawnWalkable": true
         },
         {
-          "species": "buffalo",
+          "species": "hyena",
           "reason": "budget-exhausted",
           "hitsRemaining": 0,
-          "x": 124.03602221038831,
-          "z": -51.03279047481995,
-          "spawnWalkable": true
-        },
-        {
-          "species": "lion",
-          "reason": "budget-exhausted",
-          "hitsRemaining": 0,
-          "x": 134,
-          "z": -51.08597459011674,
-          "spawnWalkable": true
-        },
-        {
-          "species": "lion",
-          "reason": "budget-exhausted",
-          "hitsRemaining": 0,
-          "x": 135.9897953266522,
+          "x": 129.76238897374844,
           "z": -51,
           "spawnWalkable": true
         },
@@ -409,30 +425,30 @@
           "species": "buffalo",
           "reason": "budget-exhausted",
           "hitsRemaining": 0,
-          "x": 29.243427736698713,
-          "z": -50.036470902295044,
+          "x": 34.59257259887978,
+          "z": -51,
           "spawnWalkable": true
         },
         {
-          "species": "hyena",
+          "species": "buffalo",
           "reason": "budget-exhausted",
           "hitsRemaining": 0,
-          "x": 32.823429015445285,
-          "z": -51.310267699651746,
+          "x": 31.516094484318568,
+          "z": -50,
           "spawnWalkable": true
         }
       ],
       "exitAbandonments": [],
-      "heapBefore": 24694944,
-      "heapAfter": 28162352,
+      "heapBefore": 27180472,
+      "heapAfter": 24166336,
       "native": {
-        "memoryBytes": 6619136,
+        "memoryBytes": 19595264,
         "loadedChunks": 9,
         "residentPropRecords": 181,
         "residentVisiblePropRecords": 1372,
         "loadedSectors": 144,
-        "sectorSlots": 144,
-        "sectorUpdates": 196,
+        "sectorSlots": 400,
+        "sectorUpdates": 932,
         "haloProps": 7
       },
       "issues": []

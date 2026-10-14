@@ -2,9 +2,11 @@ import {performance} from 'node:perf_hooks';
 import {readFileSync,writeFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {execFileSync} from 'node:child_process';
+import {gzipSync} from 'node:zlib';
 import * as Game from '../../src/simulation/game.js';
 import {spawnRaid} from '../../src/simulation/raids.js';
 import {rational} from '../../src/simulation/money.js';
+import {serialize} from '../../src/persistence/snapshots.js';
 import {createSpatialCampaignOpening} from './spatial-campaign-opening.mjs';
 
 // Synthetic phase-equivalent engine stress, never a virtual-player campaign or
@@ -21,15 +23,19 @@ const biome=process.argv[2]??'sabana';
 const seed=Number(process.argv[3]??712);
 const output=process.argv[4];
 const tickLimit=Number(process.argv[5]??2400);
+const waitCapturePrefix=process.argv[6];
+const timedCaptureTick=Number(process.env.WG_ENGINE_CAPTURE_TICK??0);
+const timedCapturePrefix=process.env.WG_ENGINE_CAPTURE_PREFIX;
 const results=[];
 const sha=path=>createHash('sha256').update(readFileSync(new URL(path,import.meta.url))).digest('hex');
 const source={commit:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),
+  cppSha256:sha('../../src/world/hierarchical-wasm/spatial-savanna.cpp'),
   wasmSha256:sha('../../src/world/hierarchical-wasm/spatial-savanna.wasm'),
   raidsSha256:sha('../../src/simulation/raids.js'),
   runnerSha256:sha('./profile-wild-engine-stage-stress.mjs')};
 
 for(const phase of phases){
-  const {state,nav,session,start}=await createSpatialCampaignOpening({
+  const {state,nav,session,start,loaded}=await createSpatialCampaignOpening({
     seed,biome,slotId:`engine-stage-${biome}-${seed}-${phase.name}`
   });
   try{
@@ -60,11 +66,23 @@ for(const phase of phases){
       hitsRemaining:actor.hitsRemaining}));
     const tickStart=performance.now();
     const eventCounts={},retreatReasons={},retreatUnusedHits={},retreatDiagnostics=[],exitAbandonments=[];
+    let capturedWait=false;
     let positionAt2000=null;
+    let connectivityChunksServiced=0;
+    let maxLoadedChunks=loaded.size;
     let lastEventId=Number(state.events.at(-1)?.id.split('-')[1]??-1);
     let ticks=0;
     for(;ticks<tickLimit&&state.raid&&!state.result;ticks++){
       Game.tick(state,.25,nav);
+      if(nav.serviceRaidConnectivityDemand?.())connectivityChunksServiced++;
+      maxLoadedChunks=Math.max(maxLoadedChunks,loaded.size);
+      if(timedCapturePrefix&&ticks+1===timedCaptureTick){
+        const capture={source,phase:phase.name,seed,biome,
+          activeBounds:nav.activeBounds,raidView:nav.raidView,
+          loadedChunks:[...loaded.keys()],snapshot:serialize(state)};
+        writeFileSync(`${timedCapturePrefix}-${phase.name}-${ticks+1}.json.gz`,
+          gzipSync(JSON.stringify(capture),{level:9}));
+      }
       if(ticks===1999)positionAt2000=actors.map(actor=>({
         status:actor.status,x:actor.x,z:actor.z}));
       for(const item of state.events){
@@ -79,6 +97,15 @@ for(const phase of phases){
             hitsRemaining:item.hitsRemaining,x:actor?.x,z:actor?.z,
             spawnWalkable:actor?nav.walkable(actor.spawn.x,actor.spawn.z,
               actor.radius,null,false):null});
+          if(waitCapturePrefix&&!capturedWait&&item.reason==='waiting-expired-or-stage-blocked'){
+            const capture={source,phase:phase.name,seed,biome,
+              actorId:item.targetId,activeBounds:nav.activeBounds,
+              raidView:nav.raidView,loadedChunks:[...loaded.keys()],
+              snapshot:serialize(state)};
+            writeFileSync(`${waitCapturePrefix}-${phase.name}.json.gz`,
+              gzipSync(JSON.stringify(capture),{level:9}));
+            capturedWait=true;
+          }
         }
         if(item.type==='AnimalRetreatExitAbandoned')
           exitAbandonments.push({actorId:item.actorId,reason:item.reason,
@@ -98,9 +125,13 @@ for(const phase of phases){
       crops:placed,animals:phase.group.length,preparationMs,tickMs,ticks,
       moved,raidActive:!!state.raid,result:state.result,
       raidEnded:eventCounts.RaidEnded??0,
+      connectivityChunksServiced,
+      loadedChunks:loaded.size,maxLoadedChunks,
       cropHits:eventCounts.CropHit??0,
       structureHits:eventCounts.StructureHit??0,
       logicalMisses:eventCounts.AnimalLogicalMiss??0,
+      routeUnavailable:eventCounts.AnimalRouteUnavailable??0,
+      targetUnavailable:eventCounts.AnimalTargetUnavailable??0,
       attackBudgetUsed:initial.reduce((sum,entry,i)=>
         sum+entry.hitsRemaining-actors[i].hitsRemaining,0),
       retreatReasons:Object.entries(retreatReasons),
@@ -115,8 +146,10 @@ for(const phase of phases){
     if(state.raid){
       row.issues.push(`Raid did not finish within ${ticks} ticks`);
       row.activeAnimals=actors.filter(actor=>actor.status!=='gone').map(actor=>({
-        species:actor.species,status:actor.status,hitsRemaining:actor.hitsRemaining,
-        x:actor.x,z:actor.z,exit:actor.exit}));
+        id:actor.id,species:actor.species,status:actor.status,
+        hitsRemaining:actor.hitsRemaining,x:actor.x,z:actor.z,exit:actor.exit,
+        targetId:actor.targetId,destinationId:actor.destinationId,
+        pathLength:actor.path?.length??0,pathVersion:actor.pathVersion}));
     }
     if(row.raidEnded!==(state.raid?0:1))row.issues.push(`Raid ended ${row.raidEnded} times`);
     results.push(row);

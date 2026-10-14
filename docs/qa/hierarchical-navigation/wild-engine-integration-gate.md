@@ -62,28 +62,46 @@ ticks, event totals, retreat reasons, elapsed time and memory. The first runs
 use day 6 / 40 crops / 6 animals, day 50 / 150 crops / 14 animals and day 100
 / 300 crops / 16 simultaneous animals. They are explicitly **constructed
 loads**, not actual day-50 or day-100 farm states or a balance verdict.
+The initial runner omitted the campaign's `serviceRaidConnectivityDemand`
+step. Those seven results are archived as
+`engine-stage-stress-unserviced-*.json.gz` and are not valid evidence that
+the integrated raid completes under normal chunk servicing. The runner and
+the dense-raid reload test now service those requests on each tick.
 
 | Biome / seed | Early ticks / loop wall time | Middle ticks / loop wall time | Late ticks / loop wall time |
 | --- | ---: | ---: | ---: |
-| Sabana / 712 | 822 / 0.40 s | 1,218 / 1.28 s | 1,132 / 1.88 s |
-| Gran Río / 712 | 822 / 0.39 s | 1,218 / 1.29 s | 1,423 / 1.99 s |
-| Manglares / 712 | 862 / 0.49 s | 1,172 / 1.22 s | 1,317 / 2.20 s |
-| Volcanes / 712 | 1,029 / 0.47 s | 1,279 / 1.31 s | 1,877 / 1.82 s |
-| Desierto / 712 | 1,949 / 0.71 s | 2,065 / 2.77 s | 1,633 / 3.38 s |
-| Gran Cañón / 123 | 561 / 0.33 s | 765 / 2.24 s | 1,008 / 5.42 s |
-| Gran Cañón / 712 | 524 / 0.36 s | 698 / 1.94 s | 702 / 2.32 s |
+| Sabana / 712 | 822 / 1.23 s | 1,218 / 2.46 s | 1,132 / 3.44 s |
+| Gran Río / 712 | 822 / 1.20 s | 1,218 / 2.48 s | 1,423 / 3.49 s |
+| Manglares / 712 | 862 / 3.05 s | 1,172 / 3.15 s | 1,317 / 4.74 s |
+| Volcanes / 712 | 1,029 / 1.20 s | 1,279 / 2.84 s | 1,672 / 3.00 s |
+| Desierto / 712 | 1,949 / 1.28 s | 2,065 / 3.67 s | 1,633 / 4.51 s |
+| Gran Cañón / 123 | 561 / 1.05 s | 765 / 3.27 s | 1,008 / 6.70 s |
+| Gran Cañón / 712 | 524 / 1.15 s | 770 / 2.95 s | 1,018 / 4.45 s |
 
-All 21 raids moved every spawned animal, made real crop or structure hits,
-and reached exactly one `RaidEnded` within the 2,400-tick guard. This is
-about 0.3–5.4 ms of elapsed tick-loop time per simulated tick, including QA
-event collection; it is not isolated `Game.tick` CPU, a visual frame-rate
-measurement or a sustained-campaign benchmark.
+The first serviced late Manglares raid remained active with ten animals
+after 4,000 ticks, despite real crop and structure hits. Its 2,400- and
+4,000-tick negative reports and a 2,400-tick state capture are retained.
+The cause was an inconsistent Manglares water query: `wetlandMask` used the
+settlement shortlist for the *selected rendering chunk*, even while movement
+queried a different resident chunk. At one captured waypoint the graph
+reported dry, passable ground, while continuous movement reported water;
+selecting that waypoint's chunk changed the answer. The new selection-
+invariance regression failed before the fix and passes afterward. With the
+same workload and serviced chunks, the late raid now finishes at tick 1,317
+with one `RaidEnded`. All 21 serviced stage raids therefore complete on the
+same corrected WASM binary (`d9d16b813010` SHA-256 prefix). Each refreshed
+report also records the C++ source and runner hashes; its `source.commit`
+field names the parent checkout at execution, before this fix was committed.
+Loop wall time
+includes QA event collection and chunk servicing; it is not isolated
+`Game.tick` CPU, a visual frame-rate measurement or a sustained-campaign
+benchmark.
 Gran Cañón seed 123 recorded eight and five
 `waiting-expired-or-stage-blocked` retreats in middle and late loads, leaving
 23 and 15 unused strikes. All 13 affected animals' original staging points
 remained walkable, so this was bounded wait expiry rather than an invalid
-staging cell. Seed 712 also showed the pattern: one, ten and six such retreats
-across early/middle/late phases, leaving 2, 27 and 19 strikes. Other
+staging cell. Seed 712 also showed the pattern: one, eight and six such retreats
+across early/middle/late phases, leaving 2, 28 and 19 strikes. Other
 attackers exhausted their budgets. These repeated retreats may reflect
 genuinely unreachable or saturated targets in this synthetic placement or a
 navigation/selection flaw; inspect their positions and accessible alternatives
