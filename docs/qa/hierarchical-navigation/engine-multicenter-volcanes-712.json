@@ -1,0 +1,284 @@
+{
+  "source": {
+    "commit": "925fba6695a1a6c2a46e6a00c5347186bf7e2e38",
+    "cppSha256": "34c9614564b88a42ef4b5506696c964ea7f9792366e3ffd0b95e2841a3636881",
+    "wasmSha256": "d9d16b81301074d92620f549125784a7ad3121063ad98b8c08f359dffa3dc987",
+    "runnerSha256": "c176aa848f9cea120eaf7b876590be78178ff1b92de54b9f23affa7ac38b3c84"
+  },
+  "biome": "volcanes",
+  "seed": 712,
+  "description": "Constructed native day-100 workload, not a played campaign or balance result",
+  "unresolvedCenterCandidates": 0,
+  "centers": [
+    {
+      "id": "structure-2",
+      "x": 83,
+      "z": 0,
+      "crops": 107,
+      "workers": 3
+    },
+    {
+      "id": "structure-3",
+      "x": 76.78834291753951,
+      "z": 23.18221983093764,
+      "crops": 115,
+      "workers": 3
+    },
+    {
+      "id": "structure-4",
+      "x": 59.81778016906236,
+      "z": -6.2116570824604995,
+      "crops": 78,
+      "workers": 3
+    }
+  ],
+  "centerRoutes": [
+    {
+      "id": "structure-2",
+      "entry": {
+        "x": 60,
+        "z": 0
+      },
+      "departure": {
+        "x": 87.95499901771545,
+        "z": 0
+      },
+      "path": 37
+    },
+    {
+      "id": "structure-3",
+      "entry": {
+        "x": 60,
+        "z": 0
+      },
+      "departure": {
+        "x": 81.74334193525496,
+        "z": 23.18221983093764
+      },
+      "path": 46
+    },
+    {
+      "id": "structure-4",
+      "entry": {
+        "x": 60,
+        "z": 0
+      },
+      "departure": {
+        "x": 64.77277918677781,
+        "z": -6.2116570824604995
+      },
+      "path": 12
+    }
+  ],
+  "crops": 300,
+  "workers": 9,
+  "elapsed": 120,
+  "ticks": 480,
+  "loopMs": 1044.1887000000002,
+  "tickMsTotal": 624.674500000001,
+  "firstTickMs": 132.9552000000001,
+  "tickMsP95": 3.4349999999999454,
+  "tickMsMax": 132.9552000000001,
+  "workerDistance": [
+    {
+      "id": "worker-606",
+      "centerId": "structure-2",
+      "start": {
+        "x": 60,
+        "z": 0
+      },
+      "end": {
+        "x": 82.57126228790818,
+        "z": 4.013858911655659
+      },
+      "distance": 22.92537774241078,
+      "status": "walking",
+      "pathLength": 2,
+      "taskId": "task-682"
+    },
+    {
+      "id": "worker-608",
+      "centerId": "structure-2",
+      "start": {
+        "x": 60,
+        "z": 0
+      },
+      "end": {
+        "x": 79.05446955948536,
+        "z": -4.983859067722659
+      },
+      "distance": 19.695473119482948,
+      "status": "walking",
+      "pathLength": 1,
+      "taskId": "task-678"
+    },
+    {
+      "id": "worker-610",
+      "centerId": "structure-2",
+      "start": {
+        "x": 60,
+        "z": 0
+      },
+      "end": {
+        "x": 86.17682689296748,
+        "z": -5.893764243973874
+      },
+      "distance": 26.832121107879836,
+      "status": "acting",
+      "pathLength": 0,
+      "taskId": "task-680"
+    },
+    {
+      "id": "worker-612",
+      "centerId": "structure-3",
+      "start": {
+        "x": 60,
+        "z": 0
+      },
+      "end": {
+        "x": 71.52861625675014,
+        "z": 19.55758016881837
+      },
+      "distance": 22.702597535417862,
+      "status": "acting",
+      "pathLength": 0,
+      "taskId": "task-683"
+    },
+    {
+      "id": "worker-614",
+      "centerId": "structure-3",
+      "start": {
+        "x": 60,
+        "z": 0
+      },
+      "end": {
+        "x": 82.24309198508972,
+        "z": 21.822147413964647
+      },
+      "distance": 31.16025126365265,
+      "status": "walking",
+      "pathLength": 1,
+      "taskId": "task-692"
+    },
+    {
+      "id": "worker-616",
+      "centerId": "structure-3",
+      "start": {
+        "x": 60,
+        "z": 0
+      },
+      "end": {
+        "x": 70.81536600939336,
+        "z": 26.352659855705795
+      },
+      "distance": 28.48569506590403,
+      "status": "acting",
+      "pathLength": 0,
+      "taskId": "task-689"
+    },
+    {
+      "id": "worker-618",
+      "centerId": "structure-4",
+      "start": {
+        "x": 60,
+        "z": 0
+      },
+      "end": {
+        "x": 52.556048968684074,
+        "z": -1.8323693559188703
+      },
+      "distance": 7.6661583869067025,
+      "status": "acting",
+      "pathLength": 0,
+      "taskId": "task-754"
+    },
+    {
+      "id": "worker-620",
+      "centerId": "structure-4",
+      "start": {
+        "x": 60,
+        "z": 0
+      },
+      "end": {
+        "x": 67.01906603324015,
+        "z": -10.437390839877912
+      },
+      "distance": 12.578013178692133,
+      "status": "acting",
+      "pathLength": 0,
+      "taskId": "task-752"
+    },
+    {
+      "id": "worker-622",
+      "centerId": "structure-4",
+      "start": {
+        "x": 60,
+        "z": 0
+      },
+      "end": {
+        "x": 60,
+        "z": -21.65630384648329
+      },
+      "distance": 21.65630384648329,
+      "status": "walking",
+      "pathLength": 35,
+      "taskId": "task-749"
+    }
+  ],
+  "events": {
+    "WaterSatisfied": 75,
+    "CropPicked": 0,
+    "CrateDelivered": 0,
+    "ActorMobileCollisionRecovery": 0
+  },
+  "tasks": 255,
+  "peakTasks": 300,
+  "loadedChunks": 9,
+  "peakLoadedChunks": 9,
+  "heapDeltaBytes": 1331768,
+  "result": null,
+  "pauses": [],
+  "topologyRevision": 8,
+  "native": {
+    "memoryBytes": 4194304,
+    "loadedChunks": 9,
+    "residentPropRecords": 181,
+    "residentVisiblePropRecords": 1437,
+    "loadedSectors": 144,
+    "sectorSlots": 144,
+    "sectorUpdates": 261,
+    "haloProps": 7
+  },
+  "reload": {
+    "savedBytes": 164364,
+    "tickMs": 125.50610000000006,
+    "result": null,
+    "pauses": [],
+    "centerRoutes": [
+      {
+        "id": "structure-2",
+        "path": 37
+      },
+      {
+        "id": "structure-3",
+        "path": 46
+      },
+      {
+        "id": "structure-4",
+        "path": 12
+      }
+    ],
+    "workersMoved": 9,
+    "newWaterEvents": 17,
+    "native": {
+      "memoryBytes": 4194304,
+      "loadedChunks": 9,
+      "residentPropRecords": 166,
+      "residentVisiblePropRecords": 1310,
+      "loadedSectors": 144,
+      "sectorSlots": 144,
+      "sectorUpdates": 192,
+      "haloProps": 7
+    }
+  }
+}

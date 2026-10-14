@@ -271,3 +271,69 @@ share the same initial nearby jobs and only one work center, so they test
 larger crop/task state under active work rather than many distinct worker
 routes or the staffing pattern of a mature multi-center estate. Those
 larger-layout and sustained-campaign cases remain open.
+
+### Multi-center worker entry and navigation
+
+The one-center fixture missed a real native preview defect. In Sabana/712,
+`previewCenter` accepted a paid work center at `(59, 0)` while the village's
+worker entry was `(60, 0)`. It checked a route against the old C++ graph,
+without first installing the proposed center polygon. After three centers
+were built, all three entry-to-center route queries failed; nine hired
+workers remained `arriving` at the entry through 120 simulated seconds and
+no watering occurred. The first exploratory run took about 4.95 s of
+`Game.tick` CPU for 480 ticks because workers repeatedly failed to enter.
+This was a negative QA result, not a valid late-estate performance sample.
+The new regression `spatial-center-entry-preview.test.js` failed before the
+fix because the obstructing preview was accepted.
+
+The native center preview now temporarily applies both the proposed polygon
+and any prop suppression to the C++ spatial world, verifies that the village
+entry itself remains standable, and tests both directions of travel before
+removing the preview. It uses the same center footprint as permanent native
+collision. No center cost, worker speed or navigation rule changed. The red
+entry regression passes after the fix; the combined center, fluid placement,
+postgame village and route test group passes **65/65**.
+
+`tools/experiments/profile-wild-engine-multicenter.mjs` constructs a
+day-100-equivalent estate through three paid centers, 300 real planting
+commands and nine paid hires. It then advances 480 native daytime ticks.
+The complete reports are `engine-multicenter-*.json`; their source hash
+identifies the C++/WASM binary and runner used before this fix was committed.
+
+| Biome / seed | Center routes | Workers moved | Watering events | Total tick CPU / first tick / p95 tick |
+| --- | ---: | ---: | ---: | ---: |
+| Sabana / 712 | 3/3 | 9/9 | 75 | 580 / 127 / 2.94 ms |
+| Gran Río / 712 | 3/3 | 9/9 | 75 | 627 / 138 / 3.37 ms |
+| Manglares / 712 | 3/3 | 9/9 | 65 | 707 / 230 / 3.22 ms |
+| Volcanes / 712 | 3/3 | 9/9 | 75 | 625 / 133 / 3.43 ms |
+| Desierto / 712 | 3/3 | 9/9 | 75 | 593 / 128 / 2.59 ms |
+
+These are sequential Node `Game.tick` measurements after the concurrent
+full-suite run finished, not rendered frame times or a proof of 100-night
+economic survival. All five fixtures completed without pauses, results or
+mobile-collision recovery. The cold first tick remains noticeably more
+expensive than steady work; measure the actual browser-visible transition
+before treating it as a gameplay hitch. Each fixture then saves, creates a
+fresh C++ spatial session, restores its resident chunks and advances another
+30 daytime seconds. All 15 center routes remain available, all 45 workers
+move, and 16–17 new `WaterSatisfied` events occur per biome after reload.
+Serialized states round-trip exactly before this continuation. The save is
+156–164 KiB for these constructed 300-crop estates; it does not include a
+separate rendered-world cache.
+
+Gran Cañón/123 did not produce a comparable multi-center estate within its
+current resident bounds: 144 candidate sites yielded only the existing
+work center, and two otherwise plausible route checks were `unknown` rather
+than certified blocked. The negative result is retained as
+`engine-multicenter-canyon-123-negative.json`. It does not prove that a
+second center is impossible farther along the canyon; extending residency
+and validating a physically reachable site remains separate work.
+
+The complete repository suite after the center-preview fix and prior audio
+fixture correction ran **4,327 tests in 479.6 s: 4,281 passed, 46 failed**.
+Compared with `full-suite-aae8ebd4.log.gz`, the failure-name set has no new
+members; the resolved test is the three-wall material-contact audio fixture.
+The full TAP output is `full-suite-center-preview.log.gz`. The seven-file
+center, fluid-placement, native postgame and route group passes 65/65; the
+web production build passes. The 46 remaining historical suite failures are
+not silently treated as a green repository-wide suite.
