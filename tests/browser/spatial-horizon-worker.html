@@ -81,16 +81,21 @@ try{
       renderer.setSize(320,180,false);
       const camera=new THREE.PerspectiveCamera(65,320/180,.1,3000);
       camera.position.set(0,110,170);camera.lookAt(0,0,0);
-      let frames=true,frameLast=performance.now(),maxGap=0,frameCount=0;
+      const coldRenderStart=performance.now();renderer.render(scene,camera);
+      const coldRenderMs=performance.now()-coldRenderStart;
+      let frames=true,frameLast=performance.now(),maxGap=0,maxRenderMs=0,frameCount=0;
       const renderFrame=()=>{if(!frames)return;const now=performance.now();
         maxGap=Math.max(maxGap,now-frameLast);frameLast=now;frameCount++;
-        renderer.render(scene,camera);requestAnimationFrame(renderFrame);};
+        renderer.render(scene,camera);
+        maxRenderMs=Math.max(maxRenderMs,performance.now()-now);
+        requestAnimationFrame(renderFrame);};
       requestAnimationFrame(renderFrame);
       const travel=[];
+      let liveGeometries=0;
       try{
         for(const x of [0,48,96,144,48,0]){
           const target=activeChunkRegion({x,z:0},'media');
-          maxGap=0;frameLast=performance.now();
+          maxGap=maxRenderMs=0;frameLast=performance.now();
           const started=performance.now();
           controller.update(config,profile,target,'media');
           const snapshotAndPostMs=performance.now()-started;
@@ -104,11 +109,15 @@ try{
           travel.push({cx:target.cx,cz:target.cz,
             totalMs:+(performance.now()-started).toFixed(2),
             snapshotAndPostMs:+snapshotAndPostMs.toFixed(2),installMs:+installMs.toFixed(2),
-            largestFrameGapMs:+maxGap.toFixed(2)});
+            largestFrameGapMs:+maxGap.toFixed(2),largestRenderMs:+maxRenderMs.toFixed(2)});
         }
+        liveGeometries=renderer.info.memory.geometries;
+        if(liveGeometries>(biome==='canyons'?2:1))
+          throw Error(`${biome}: old horizon geometry remained on the GPU`);
       }finally{frames=false;renderer.dispose();renderer.forceContextLoss();}
       report.push({biome,topology:'travel-50-settlements',settlements:core.terrainState().settlements.length,
-        stateBytes:JSON.stringify(core.terrainState()).length,frames:frameCount,travel});
+        stateBytes:JSON.stringify(core.terrainState()).length,coldRenderMs:+coldRenderMs.toFixed(2),
+        liveGeometries,frames:frameCount,travel});
     }finally{controller.dispose();}
   }
   window.qaReport=report;window.qaReady=true;status.textContent=JSON.stringify(report,null,2);
