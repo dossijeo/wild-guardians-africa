@@ -1,0 +1,9 @@
+# Phase-2 short policy screen, gene schema v2
+
+This is a seven-night **technical/productivity screen**, not a survival estimate for the 100-night campaign. It uses unchanged game balance. The three initial legal genomes are the historical default with the new explicit `wallPolicy:'planned'`, the same policy with `wallPolicy:'none'`, and a planned-wall policy that gives half its agricultural spell choices to Crecimiento. The `none` arm still uses Escudo; the matched diagnostic measures no-wall/no-Shield separately. No fitness penalty is imposed for omitting walls. If a no-wall policy dominates robustly, report it as a design/balance signal rather than approving a defense-free strategy by fiat.
+
+Training: Sabana/411 and Gran Río/626. Untouched biome/seed reserve: Desierto/431. Volcanes/907 is excluded here after the separate no-wall diagnostic hit a technical raid-entry failure. All baselines remain labeled, especially the legacy `no-walls` profile, whose agricultural calendar and cash policy differ from the new genes. The matched controls provide the causal wall/Shield comparison.
+
+The first screen used a 180 s daily `Game.tick` ceiling and was stopped at batch level after repeated 113–140 s days. This version limits each candidate to 60 s/day and 8 minutes wall time, marking a limit hit `computational-cost-stop` rather than defeat. Technical engine errors remain separate. Only native terminal defeat or completed horizon determines a campaign outcome. Candidate selection will consider sustained production and later 14/30-night recovery evidence; seven-night cash alone cannot establish competence.
+
+Historical v1 genome IDs and their SHA-stamped reports retain their original meaning. The v2 schema adds a discrete wall policy and has separate implementation IDs and source hashes; reports from different schema versions are not pooled as one cohort.

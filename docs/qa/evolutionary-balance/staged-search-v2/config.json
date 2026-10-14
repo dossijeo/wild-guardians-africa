@@ -1,0 +1,22 @@
+{
+  "rngSeed": 6229,
+  "generations": 2,
+  "population": 3,
+  "days": 7,
+  "train": [
+    {"biome":"sabana","seed":411},
+    {"biome":"gran-rio","seed":626}
+  ],
+  "holdout": [
+    {"biome":"desierto","seed":431}
+  ],
+  "requireBiomeHoldout": true,
+  "baselines": ["good-current-magic","good","expansive","bad","no-walls"],
+  "initialPopulation": [
+    {},
+    {"wallPolicy":"none"},
+    {"growthShare":0.5,"magicPriority":"growth"}
+  ],
+  "costStop": {"maxDayGameTickMs":60000,"maxElapsedWallMs":480000},
+  "output": "docs/qa/evolutionary-balance/staged-search-v2/results"
+}
