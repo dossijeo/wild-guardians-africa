@@ -30,6 +30,17 @@ import {q4DawnPlan,q4AdditionalPlan,q4RecoveryReserve} from './native-q4-labour-
 import {validateGenes,preferredAgriculturalPower} from './evolutionary-balance/policy-genes.mjs';
 
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
+export function syncNativeCampaignRaidView(state,nav,previousCenter){
+ const center=state.structures.find(operational);
+ if(!center)return null;
+ const key=`${center.id}:${center.x}:${center.z}`;
+ if(key===previousCenter)return key;
+ const pose=nativeCameraPose(nav.field,[center.x,0,center.z],nav.field.canyon?0:.5,nav.field.canyon?1.18:1.16,nav.field.canyon?34:38);
+ const eye={x:pose.eye[0],z:pose.eye[2]};
+ nav.setRaidView(eye,center);
+ nav.setActiveBounds(activeChunkRegion(eye).bounds);
+ return key;
+}
 export async function simulateNativeCampaign({days=100,strategy='good',labourPolicy='legacy',profile='olderFemale',mixed=true,middayHiring=false,plantsPerWorker=12,defend=false,reserveLabourGrowth=true,reserveMaintenance=true,burstPlanting=false,cameraEntry=true,defensePolicy='expanding',buildRepairWalls=true,useShield=true,nativeEvidence=true,onDay,onTick,onDecision,openingFactory=createOpeningWorld,entryDriverFactory=nav=>new NativeCampaignEntryDriver(nav),reloadRaids=true,evolutionaryGenes=null,currentMagicRules=false,...world}={}){
  if(!Number.isSafeInteger(days)||days<1||days>180)throw Error('Native protocol permits1–180 days only');
  if(!Number.isSafeInteger(plantsPerWorker)||plantsPerWorker<1)throw new Error('Plants per worker must be a positive integer');
@@ -46,10 +57,9 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
  try {
  const evidence=nativeEvidence?createNativeCampaignEvidence(s):null,raidEvidence=createNativeRaidCampaignEvidence(s);
  const command=kind=>`intensive-${kind}-${sequence++}`,center=s.structures[0],origin=centerServicePoint(center,s,.8);
- if(cameraEntry){
-  const pose=nativeCameraPose(nav.field,[center.x,0,center.z],nav.field.canyon?0:.5,nav.field.canyon?1.18:1.16,nav.field.canyon?34:38);
-  nav.setRaidView({x:pose.eye[0],z:pose.eye[2]},center);nav.setActiveBounds(activeChunkRegion({x:pose.eye[0],z:pose.eye[2]}).bounds);
- }
+ let raidViewCenter=null;
+ const syncRaidView=()=>{if(cameraEntry)raidViewCenter=syncNativeCampaignRaidView(s,nav,raidViewCenter);};
+ syncRaidView();
  const plots=[];let nextWages=worker.wage,staff=1,plantedSequence=0,lastMagicElapsed=-Infinity,lastPlantElapsed=-Infinity,magicUsesToday=0;
  const expansion=policy.foundVillages?createNativeCampaignExpansion():null;
  const daily=[],counts={},seen=new Set(),savedRaids=new Set(),additionalHiring={count:0,cost:0},magicApplications={growth:0,multiply:0,benefited:0,ineffective:0,multiplyIncome:0,growthSecondsCompleted:0};let maximumLiving=0,reloads=0,settledDeliveryIncome=0;
@@ -157,6 +167,7 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
   while(s.day===day&&!s.result){
    if(s.pauses.length)throw new Error('Unexpected pause: '+s.pauses);
    let wallStart=performance.now();
+   syncRaidView();
    await driver.advancePresentation(s);
    if(Game.nightEntryPending(s)&&s.time>=600)await driver.waitForEntry(s);
    presentationWallMs+=performance.now()-wallStart;
@@ -164,6 +175,7 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
    wallStart=performance.now();
    const decision=act();actions+=decision.actions;
    const decisionStepMs=performance.now()-wallStart;
+   syncRaidView();
    decisionWallMs+=decisionStepMs;
    const centerRequests=s.tasks.filter(t=>t.kind==='repair'&&!beforeRepairs.has(t.id)&&s.structures.some(c=>c.id===t.targetId&&c.kind==='center')).length;
    const dt=s.time<300||s.raid?1:5;
@@ -181,6 +193,7 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
    wallStart=performance.now();
    Game.tick(s,dt,nav);evidence?.finishDecision(s);
    const tickStepMs=performance.now()-wallStart;
+   syncRaidView();
    tickWallMs+=tickStepMs;
    const actualDt=s.elapsed-tickStart,daylightDt=tickTime<300?Math.min(actualDt,300-tickTime):0;daylightSeconds+=daylightDt;
    if(!decision.actions){idle[decision.reason]=(idle[decision.reason]??0)+actualDt;unoccupiedSeconds+=daylightDt;idleRun+=daylightDt;longestIdle=Math.max(longestIdle,idleRun);}else idleRun=0;

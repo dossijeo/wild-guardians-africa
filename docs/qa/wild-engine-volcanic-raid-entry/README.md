@@ -1,0 +1,7 @@
+# Volcanes/907 native raid entry at day 10
+
+The matched no-walls/current-magic campaign failed with `Native raid entry failed` at day 10, time 355. The compressed failure artifact is preserved as [`tests/fixtures/volcanes-907-day10-native-entry.json.gz`](../../../tests/fixtures/volcanes-907-day10-native-entry.json.gz). It came from `docs/qa/evolutionary-balance/matched-defense-volcanes-14/results/matched-no-walls-current-magic-volcanes-907-14.json.gz` in the evolutionary-balance lab, source SHA `7fd6c1bcb0c725da7b8449bbb2514859eb5a92f1`; the copied gzip has SHA-256 `9feb237d1f7638b1cba1d68b34ec10bc98810c7ccaabcee14924867d827c1969`.
+
+The saved state has a live replacement center `structure-2` at `(83, 0)` and a planned raid of 15 animals. The headless runner's raid camera was still aimed at the old center `(84, 9)`, with eye `(100.70247532024266, 39.57367599590944)`. With the same state, native terrain, loaded chunks, and raid group, that stale view produces `raidEntryFailure`. Recomputing the camera from the live center allows all 15 animals to enter with walkable origins and clear exits. The engine's native spawn rules and damage were not changed.
+
+The runner now refreshes its raid camera and active bounds when the operational center changes, including before either presentation phase and after campaign decisions. An unchanged center leaves the camera and bounds untouched. The focused native regression test restores the failure artifact, confirms the stale-view failure, then verifies successful physical entry after the camera update.
