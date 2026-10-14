@@ -3,6 +3,7 @@ import {activeRaidEntryPlan} from '../world/raid-entry-data.js';
 import {animalExitConnector} from './animal-exit-connectors.js';
 import {workerReturnRoute} from './worker-return-route.js';
 import {workerFractionalConnector} from '../world/worker-fractional-connector.js';
+import {SpatialChunkUnavailable} from '../world/hierarchical-wasm/spatial-navigation-movement.js';
 import {workerRiskClearance} from './worker-route-clearance.js';
 import {resolveFluidPlacement} from '../world/fluid-placement.js';
 import {ensurePurchaseBudget,HIRING_RESERVE} from './budget.js';
@@ -680,11 +681,20 @@ export function idleFarmAnchor(s,worker,center,livingCandidates=null){
   if(plant)return {...plant,id:'farm-'+plant.id,idleRadius:3};
   return {...center,...centerServicePoint(center,s,.8),id:'farm-'+center.id,idleRadius:2};
 }
+function taskRouteWhenKnown(compute){
+  try{return compute();}
+  catch(error){
+    if(error instanceof SpatialChunkUnavailable)return undefined;
+    throw error;
+  }
+}
 function reserveAvailableTasks(s,nav){
   if(!s.raid&&s.time<300)reserveTasks(s,(w,t,target)=>{
     if(s.time>=profile(w).end)return false;
-    return t.kind==='repair'?!!repairRoute(w,target,nav):t.kind==='initial'||t.kind==='water'?!!wateringRoute(w,target,nav):
-      !!(nav.workerPath?nav.workerPath(w,target,.28,null):nav.path(w,target,.28,null,true));
+    const route=taskRouteWhenKnown(()=>t.kind==='repair'?repairRoute(w,target,nav):
+      t.kind==='initial'||t.kind==='water'?wateringRoute(w,target,nav):
+        (nav.workerPath?nav.workerPath(w,target,.28,null):nav.path(w,target,.28,null,true)));
+    return route===undefined?null:!!route;
   });
 }
 function updateWorkers(s,dt,nav) {
@@ -749,14 +759,14 @@ function updateWorkers(s,dt,nav) {
         let destination=target;
         if(t.kind==='repair'){
           if(w.taskApproach?.taskId!==t.id||w.path===null){
-            const route=repairRoute(w,target,nav);
+            const route=taskRouteWhenKnown(()=>repairRoute(w,target,nav));
             if(!route){releaseTask(s,w);w.status='idle';continue;}
             w.taskApproach={taskId:t.id,destination:route.destination};w.path=route.path;w.destinationId=route.destination.id;w.pathVersion=nav.version;
           }
           destination=w.taskApproach.destination;
         }else if(t.kind==='initial'||t.kind==='water'){
           if(w.taskApproach?.taskId!==t.id||w.path===null||w.pathVersion!==nav.version){
-            const route=wateringRoute(w,target,nav);
+            const route=taskRouteWhenKnown(()=>wateringRoute(w,target,nav));
             if(!route){releaseTask(s,w);w.status='idle';continue;}
             w.taskApproach={taskId:t.id,destination:route.destination};w.path=route.path;w.destinationId=route.destination.id;w.pathVersion=nav.version;
           }

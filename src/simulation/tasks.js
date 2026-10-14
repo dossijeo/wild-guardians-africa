@@ -63,6 +63,14 @@ export function reserveTasks(state,canExecute=()=>true) {
     const target=targets.get(t.targetId);
     if(!target)continue;
     const workers=available.get(t.centerId)??[];
+    // A pending native graph query is not a physical proof that this task is
+    // blocked. Retry on a later reservation pass as sectors become resident.
+    let pending=false;
+    const reachable=w=>{
+      const result=canExecute(w,t,target);
+      if(result===null)pending=true;
+      return Boolean(result);
+    };
     // Reachability can require A*: test nearest candidates until one succeeds.
     // The pure predicate and ordering retain the nearest eligible worker.
     // Most tasks are reachable by the nearest employee. Find that candidate
@@ -71,7 +79,7 @@ export function reserveTasks(state,canExecute=()=>true) {
     let worker;
     if(workers.length<8){
       workers.sort((a,b)=>Math.hypot(a.x-target.x,a.z-target.z)-Math.hypot(b.x-target.x,b.z-target.z)||a.id.localeCompare(b.id));
-      worker=workers.find(w=>canExecute(w,t,target));
+      worker=workers.find(reachable);
     }else{
       const distances=new Map();
       let nearest=workers[0],nearestDistance=Math.hypot(nearest.x-target.x,nearest.z-target.z);
@@ -81,13 +89,13 @@ export function reserveTasks(state,canExecute=()=>true) {
         distances.set(candidate,distance);
         if((distance-nearestDistance||candidate.id.localeCompare(nearest.id))<0){nearest=candidate;nearestDistance=distance;}
       }
-      worker=canExecute(nearest,t,target)?nearest:null;
+      worker=reachable(nearest)?nearest:null;
       if(!worker){
         workers.sort((a,b)=>distances.get(a)-distances.get(b)||a.id.localeCompare(b.id));
-        worker=workers.find(w=>w!==nearest&&canExecute(w,t,target));
+        worker=workers.find(w=>w!==nearest&&reachable(w));
       }
     }
-    t.blocked=!worker && workers.length>0;
+    t.blocked=!worker && workers.length>0 && !pending;
     if(worker) { cancelIdle(worker);t.workerId=worker.id;worker.taskId=t.id;worker.status='walking';workers.splice(workers.indexOf(worker),1); }
   }
 }
