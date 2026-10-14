@@ -368,6 +368,19 @@ These remaining failures still prevent repository-wide acceptance and PR
 integration. In particular, the campaign evidence above has not established
 a 30/60/100-night survivor or a sustained large-farm performance bound.
 
+Subsequent failure triage found one actual reservation defect: when a target
+was destroyed after an animal had committed its attack animation, reservation
+reconciliation erased `targetId` before the hit frame. It now relinquishes
+the obsolete lease while retaining the committed target ID until the
+animation resolves as a miss. A replacement structure receives no phantom
+damage. A focused 54-test run of animal actions, individual reservations and
+region selection passes. Two other old test assumptions were updated without
+changing game rules: a synthetic terrain swap must invalidate the hierarchical
+sectors (all eight watering-approach tests pass), and an exhausted animal may
+find a different valid return route without requiring the old search's
+initial failure (the physical exit/reload test passes). These changes postdate
+the `eeab77c8` full-suite count; a fresh full-suite result is still needed.
+
 ## Reproduce
 
 ```powershell
