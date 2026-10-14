@@ -144,10 +144,9 @@ Sabana seed 2026 with the same fixed good policy lasted longer, but also
 ended in native defeat on day 21 after 380 seconds. The 30-night cap was not
 reached; this result is retained as another negative campaign observation.
 Gran Río seed 2026 with the same policy reached day 21 and then ended in
-native defeat after 316 seconds. Thus three biomes have physical campaign
-coverage (Sabana, Gran Cañón and Gran Río), but no campaign has reached 30
-nights, much less 60 or 100. The other three biomes have native functional
-test coverage rather than long campaign evidence.
+native defeat after 316 seconds. Thus three biomes initially had physical
+campaign coverage (Sabana, Gran Cañón and Gran Río), but no campaign reached
+30 nights, much less 60 or 100.
 
 After the final cross-group region-decision sharing commit (`9a64fa4a`), a
 fresh Sabana seed 712 good-policy campaign completed the 14-night cap in
@@ -198,6 +197,14 @@ reconciliation is exact. This confirms the day-11 technical stall is fixed,
 but it does not establish 30-night survivor performance or approve the
 current military balance. Both the failed and recovered daily ledgers remain
 available as compressed reports.
+
+A fixed good-policy Volcanes seed 712 run adds a fourth biome with campaign
+coverage. It completed 17 nights and ended in a native defeat on day 18,
+after 300.7 seconds wall time and 184.4 seconds of `Game.tick`, with zero
+crops and 65 coins. Raid evidence was verified and did not lose coverage.
+No technical navigation stall occurred. Manglares and Desierto still have
+native functional tests rather than prolonged campaign evidence; none of the
+four campaign biomes has yet supplied a 30-night survivor.
 
 Repeated raid target lookup also now uses the existing live-crop index, so
 the lookup does not rescan thousands of historical plants. A regression with
