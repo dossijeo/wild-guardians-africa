@@ -7,7 +7,7 @@ import {createSpatialCenterMirror} from './spatial-center-mirror.js';
 import {createSpatialShieldMirror} from './spatial-shield-mirror.js';
 import {createSpatialPropMirror} from './spatial-prop-mirror.js';
 import {queryResidentSpatialProps} from './spatial-prop-query.js';
-import {addSpatialVillageBuildings} from './spatial-village-bridge.js';
+import {addSpatialVillageBuildings,removeSpatialVillageBuildings} from './spatial-village-bridge.js';
 import {spatialStructureBarriers} from './spatial-wall-bridge.js';
 import {WORKER_SPATIAL_PROFILE,ANIMAL_SPATIAL_PROFILES} from './spatial-movement-profiles.js';
 import {BIOME_IDS} from '../biome-ids.js';
@@ -101,8 +101,11 @@ export function createSpatialGameSession(module,state,streamOptions){
   function syncState(next){
     if(next.seed!==state.seed||next.biome!==state.biome)
       throw TypeError('A spatial session cannot change seed or biome');
-    for(const village of next.villages)if(!villages.has(village.id))installVillage(village,next);
+    // A founded village can clear props that were present at preview time.
+    // Register its paid suppressions before the settlement regenerates those
+    // chunks, so the native prop identity is still available to remove.
     const propChanges=props.sync(next.suppressed);
+    for(const village of next.villages)if(!villages.has(village.id))installVillage(village,next);
     walls.sync(next.structures);centers.sync(next);shields.sync(next.spells);
     return {suppressed:props.suppressed,removedProps:propChanges.added};
   }
@@ -181,6 +184,13 @@ export function createSpatialGameSession(module,state,streamOptions){
       if(parentRemoved)parent.ids=core.applyBarrierChanges([],parent.barriers);
     }
   }
+  function withVillageEntryPreview(buildings,inspect){
+    if(!Array.isArray(buildings)||typeof inspect!=='function')
+      throw TypeError('Expected provisional village buildings and a callback');
+    const ids=addSpatialVillageBuildings(core,{id:'entry-preview',buildings:
+      buildings.map((building,index)=>({...building,key:`entry-preview-${index}`}))});
+    try{return inspect();}finally{removeSpatialVillageBuildings(core,ids);}
+  }
   // Only settlements change the far relief. Walls, crop turnover, shield HP and
   // removed props leave its mesh intact, so they must not queue new horizons.
   const horizonSource={revision:()=>terrainRevision,snapshot:()=>core.terrainState()};
@@ -194,6 +204,6 @@ export function createSpatialGameSession(module,state,streamOptions){
   return {core,field,stream,horizonSource,topologySource,suppressed:props.suppressed,syncState,
     routeActor,actorConnectivity,actorSectorRevision,actorRegions,actorEnclosure,actorRegionsBatch,actorCanStand,actorStepClear,
     actorStepClearExceptWalls,
-    queryPropsAt,withWallPreview,
+    queryPropsAt,withWallPreview,withVillageEntryPreview,
     dispose:()=>stream.dispose()};
 }

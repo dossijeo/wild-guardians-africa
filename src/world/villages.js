@@ -52,15 +52,18 @@ export function canyonVillageLayout(payload,field,z) {
   return {buildings:layout,endZ:Math.max(...rows)};
 }
 export function findVillageEntry(nav,layout,x,z,destination=null,additionalObstacles=[]) {
-  const oldObstacles=nav.obstacles;
-  nav.obstacles=[...(oldObstacles??[]),...additionalObstacles,...layout.filter(b=>b.kind!=='Zona común').map(b=>({...b,id:`entry:${b.key}`,kind:'house'}))];resetProvisionalNavigation(nav);
-  try {
+  const search=()=>{
     for(let radius=0;radius<=20;radius+=2)for(let angle=0;angle<(radius?16:1);angle++){
       const point={x:x+Math.cos(angle/16*Math.PI*2)*radius,z:z+Math.sin(angle/16*Math.PI*2)*radius};
       if(nav.walkable(point.x,point.z,.28,null,true)&&(!destination||nav.path(point,destination,.28,null,true)))return point;
     }
     return null;
-  }finally {nav.obstacles=oldObstacles;resetProvisionalNavigation(nav);}
+  };
+  if(nav.withVillageEntryPreview)return nav.withVillageEntryPreview(
+    [...layout,...additionalObstacles],search);
+  const oldObstacles=nav.obstacles;
+  nav.obstacles=[...(oldObstacles??[]),...additionalObstacles,...layout.filter(b=>b.kind!=='Zona común').map(b=>({...b,id:`entry:${b.key}`,kind:'house'}))];resetProvisionalNavigation(nav);
+  try {return search();}finally {nav.obstacles=oldObstacles;resetProvisionalNavigation(nav);}
 }
 function* initialLocations(nav,payload,legacy=false) {
   const originalField=nav.field;
