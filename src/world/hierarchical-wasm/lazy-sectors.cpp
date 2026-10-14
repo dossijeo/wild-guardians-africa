@@ -260,6 +260,11 @@ int lazy_commit_portals(){
   weakDirty=true;
   return static_cast<int>(portals.size());
 }
+// Sector-local component identity. Callers must discard it after topology
+// changes; -1 means unloaded and -2 means a non-walkable cell.
+int lazy_component(int worldX,int worldZ){
+  return sectorSize?nodeAt(worldX,worldZ):-1;
+}
 // 1 connected in the component graph (a local directed route may still fail),
 // 0 certified disconnected, -1 unknown because required sectors are unloaded.
 int lazy_connected(int fromX,int fromZ,int toX,int toZ){

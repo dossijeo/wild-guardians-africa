@@ -11,11 +11,15 @@ test('native component connectivity rejects a sealed enclosure without requestin
   core.setSettlement(0,0,7,6);core.buildNavigationProfile(0,1.1,false);
   const outside={x:12,z:0},inside={x:0,z:0};
   assert.equal(core.connected(outside,inside),'possible');
+  const initialRegion=core.componentAt(inside);
+  assert(initialRegion>=0);
+  assert(core.componentsWorld({x:.2,z:.1}).ids.includes(initialRegion));
   assert.equal(core.connectedWorld({x:12.2,z:.1},{x:.2,z:.1}),'possible');
   const walls=[[-6,0,.5,6],[6,0,.5,6],[0,-6,6.5,.5],[0,6,6.5,.5]]
     .map(([x,z,hx,hz])=>core.addWall(x,z,hx,hz));
   assert(walls.every(id=>id>0));
   assert.equal(core.connected(outside,inside),'blocked');
+  assert.notEqual(core.componentAt(outside),core.componentAt(inside));
   assert.equal(core.connectedWorld({x:12.2,z:.1},{x:.2,z:.1}),'blocked');
   assert.notEqual(core.route(outside,inside).status,'found');
   assert.equal(core.removeWall(walls[1]),1);
@@ -23,4 +27,5 @@ test('native component connectivity rejects a sealed enclosure without requestin
   assert.equal(core.route(outside,inside).status,'found');
   assert.equal(core.connected(outside,{x:60,z:0}),'unknown',
     'unloaded terrain cannot be declared sealed');
+  assert.deepEqual(core.componentsWorld({x:60,z:0}),{ids:[],unknown:true});
 });

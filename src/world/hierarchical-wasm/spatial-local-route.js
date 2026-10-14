@@ -10,6 +10,22 @@ const anchors=point=>{
   return candidates.sort((a,b)=>distance(point,a)-distance(point,b)||a.x-b.x||a.z-b.z);
 };
 
+// Return every nearby sector component reached by a short physical connector.
+// A boundary position can touch more than one component; collapsing that set
+// to one ID would incorrectly exclude otherwise reachable target groups.
+export function spatialWorldComponents(wasm,gridComponent,point){
+  if(!finitePoint(point))throw RangeError('Region lookup needs finite world coordinates');
+  const ids=new Set();
+  let unknown=false;
+  for(const anchor of anchors(point)){
+    const result=gridComponent(anchor);
+    if(result===null){unknown=true;continue;}
+    if(!wasm.spatial_local_clear(point.x,point.z,anchor.x,anchor.z))continue;
+    if(result>=0)ids.add(result);
+  }
+  return {ids:[...ids].sort((a,b)=>a-b),unknown};
+}
+
 // A positive component result is only a possibility: directed local edges
 // can still make the final route fail. Unknown residency is never blocked.
 export function spatialWorldConnectivity(wasm,gridConnected,start,end){

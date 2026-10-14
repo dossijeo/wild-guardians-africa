@@ -1,7 +1,7 @@
 import {spatialProps,spatialInstances,spatialChunkPayload} from './spatial-savanna-payload.js';
 import {addSpatialBarriersBatch,applySpatialBarrierChanges} from './spatial-barrier-batch.js';
 import {captureSpatialState,captureSpatialTerrainState,applySpatialState,validateSpatialState} from './spatial-state.js';
-import {spatialWorldRoute,spatialWorldConnectivity} from './spatial-local-route.js';
+import {spatialWorldRoute,spatialWorldConnectivity,spatialWorldComponents} from './spatial-local-route.js';
 import {BIOME_IDS,SPATIAL_BIOME_CODES} from '../biome-ids.js';
 
 // Synchronous world authority. The same WASM instance answers spatial queries
@@ -76,13 +76,21 @@ export function createSpatialWorld(module){
     const result=wasm.lazy_connected(start.x,start.z,end.x,end.z);
     return result<0?'unknown':result?'possible':'blocked';
   }
+  function componentAt(point){
+    if(![point?.x,point?.z].every(Number.isSafeInteger))
+      throw RangeError('Grid component lookup requires integer coordinates');
+    if(!navigationBuilt)return null;
+    const result=wasm.lazy_component(point.x,point.z);
+    return result===-1?null:result;
+  }
   const surface=(x,z)=>wasm.spatial_surface(x,z);
   const slope=(x,z)=>Math.hypot(surface(x+.8,z)-surface(x-.8,z),
     surface(x,z+.8)-surface(x,z-.8))/1.6;
   return {wasm,generate,addChunk,selectChunk,removeChunk,currentChunk:()=>chunk,
-    heights,colors,water,groundMask,waterLevels,waterTriangles,props,instances,chunkPayload,route,connected,
+    heights,colors,water,groundMask,waterLevels,waterTriangles,props,instances,chunkPayload,route,connected,componentAt,
     routeWorld:(start,end)=>navigationBuilt?spatialWorldRoute(wasm,route,start,end):{status:'unknown',points:[]},
     connectedWorld:(start,end)=>navigationBuilt?spatialWorldConnectivity(wasm,connected,start,end):'unknown',
+    componentsWorld:point=>navigationBuilt?spatialWorldComponents(wasm,componentAt,point):{ids:[],unknown:true},
     localClear:(start,end)=>Boolean(wasm.spatial_local_clear(start.x,start.z,end.x,end.z)),
     setSettlement:(x,z,hx,hz)=>{
       if(!generated)throw Error('Generate the world before placing a settlement');
