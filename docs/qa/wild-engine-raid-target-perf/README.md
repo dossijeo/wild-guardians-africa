@@ -54,6 +54,14 @@ as historical context only; it came from a different revision.
 
 The paired original reports are stored as gzip JSON in this directory.
 
+A separate frozen Gran Cañón/seed-123 day-7 replay (50 ticks) retained the
+same serialized state hash and the same 33 detailed approach routes in both
+versions. This scene has no repeated blocked-service-point storm, so the new
+decision does not eliminate work there. First measurements were 329 ms for
+`main` and 353 ms for the candidate, with only ~3 ms of selection difference;
+short ABBA repeats varied widely (including a 430 ms outlier). We therefore
+make no speedup claim for this sparse case and keep it as a regression control.
+
 The selected 80 navigation/raid tests pass, covering gates, local breaches,
 reconstruction, reservations, contention and save/reload. The new focused
 tests also verify that unknown connectivity is not treated as blocked and that
