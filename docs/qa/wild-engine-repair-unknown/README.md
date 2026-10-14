@@ -6,6 +6,8 @@ La captura congelada `tests/fixtures/desierto983-pr42-d7-repair.json.gz` procede
 
 La reserva de tareas admite ahora un resultado pendiente distinto de una prueba física negativa. Una ruta nativa inconclusa deja la reparación sin trabajador y con `blocked: false`, para volver a consultarla en una pasada futura. Si una ruta asignada deja de poder resolverse, se libera la tarea sin cobrar la reparación ni mover al trabajador a través de obstáculos. Las excepciones distintas se siguen propagando.
 
+La selección del punto de servicio de una reparación examina ahora todas las alternativas físicas aunque una consulta anterior devuelva `unknown`. Si alguna alternativa tiene ruta válida, la utiliza; sólo mantiene la tarea pendiente cuando ninguna tiene ruta y al menos una permanece inconclusa. La captura Desierto/983 todavía carece de una ruta certificada hacia las dos piezas afectadas, por lo que este ajuste no demuestra reparaciones pagadas en aquel piloto.
+
 La prueba `tests/spatial-repair-unknown.test.js` reproduce el `SpatialChunkUnavailable` original, comprueba la puerta y ejecuta 50 ticks sin fallo; las dos tareas siguen pendientes, sin asignación falsa. En el replay local, esos 50 ticks tardaron 65 ms de `Game.tick` aproximadamente. También se añadió una prueba de reserva de tareas que distingue explícitamente `unknown` de `blocked`.
 
 ## Piloto sostenido

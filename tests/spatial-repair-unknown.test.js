@@ -15,6 +15,31 @@ const module=new WebAssembly.Module(readFileSync(new URL(
 const frozen=JSON.parse(gunzipSync(readFileSync(new URL(
   './fixtures/desierto983-pr42-d7-repair.json.gz',import.meta.url))));
 
+test('repair tries another physical service point after an inconclusive route',()=>{
+  const attempted=[],worker={x:0,z:0},target={id:'wall-a',kind:'wall',x:4,z:0,yaw:0};
+  const nav={path(_from,to){
+    attempted.push(to);
+    if(attempted.length===1)throw new SpatialChunkUnavailable(worker,to,[]);
+    return [{x:to.x,z:to.z}];
+  }};
+  const route=repairRoute(worker,target,nav);
+  assert.equal(attempted.length,2);
+  assert.deepEqual(route.destination,attempted[1]);
+  assert.deepEqual(route.path,[{x:attempted[1].x,z:attempted[1].z}]);
+});
+
+test('repair remains pending only after all service points are checked',()=>{
+  const worker={x:0,z:0},target={id:'wall-a',kind:'wall',x:4,z:0,yaw:0};
+  let attempts=0;
+  const nav={path(_from,to){
+    attempts++;
+    if(attempts===1)throw new SpatialChunkUnavailable(worker,to,[]);
+    return null;
+  }};
+  assert.throws(()=>repairRoute(worker,target,nav),SpatialChunkUnavailable);
+  assert.equal(attempts,4);
+});
+
 test('unresolved native repair routes defer tasks without hiding a working automatic gate',()=>{
   const state=deserialize(frozen),loaded=new Map();
   const session=createSpatialGameSession(module,state,{

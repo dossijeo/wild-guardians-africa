@@ -4,7 +4,7 @@ import {cachedWateringRoute} from './watering-route-cache.js';
 // Service points outside the same footprints used by Navigation.
 export function repairRoute(worker,target,nav){
   const radius=.28,clearance=.1;
-  let points;
+  let points,unresolved=null;
   if(target.kind==='center'){
     const angle=Math.atan2(worker.x-target.x,worker.z-target.z);
     points=Array.from({length:16},(_,i)=>{
@@ -18,9 +18,17 @@ export function repairRoute(worker,target,nav){
     points.sort((a,b)=>Math.hypot(a.x-worker.x,a.z-worker.z)-Math.hypot(b.x-worker.x,b.z-worker.z));
   }
   for(const [index,point] of points.entries()){
-    const destination={...point,id:`repair-point-${target.id}-${index}`},path=nav.path(worker,destination,radius,null,true);
+    const destination={...point,id:`repair-point-${target.id}-${index}`};
+    let path;
+    try{path=nav.path(worker,destination,radius,null,true);}
+    catch(error){
+      if(error?.name!=='SpatialChunkUnavailable')throw error;
+      unresolved??=error;
+      continue;
+    }
     if(path)return {destination,path};
   }
+  if(unresolved)throw unresolved;
   return null;
 }
 
