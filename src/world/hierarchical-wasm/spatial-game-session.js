@@ -74,15 +74,35 @@ export function createSpatialGameSession(module,state,streamOptions){
   walls.sync(state.structures);
   centers.sync(state);shields.sync(state.spells);
   const profiles=new Set();
-  let workerPortalRevision=-1;
+  let workerPortalRevision=-1,workerPortalChunkRevision=-1,
+    workerPortalTerrainRevision=-1,workerPortalCenterRevision=-1,
+    workerPortalPropRevision=-1;
+  let activeWallPreview=null;
+  function installWorkerPortals(extra=[]){
+    const gates=new Map(state.structures.filter(s=>s.kind==='wall'&&s.gate)
+      .map(s=>[s.id,s]));
+    for(const wall of extra)if(wall.kind==='wall'){
+      if(wall.gate)gates.set(wall.id,wall);
+      else gates.delete(wall.id);
+    }
+    core.setWorkerGatePortals([...gates.values()]);
+    workerPortalRevision=walls.revision();
+    workerPortalChunkRevision=core.chunkRevision();
+    workerPortalTerrainRevision=terrainRevision;
+    workerPortalCenterRevision=centers.revision();
+    workerPortalPropRevision=props.revision();
+  }
   function selectProfile(profile){
     if(!profiles.has(profile.index)){
       core.buildNavigationProfile(profile.index,profile.radius,profile.worker);
       profiles.add(profile.index);
     }else core.selectNavigationProfile(profile.index);
-    if(profile.worker&&workerPortalRevision!==walls.revision()){
-      core.setWorkerGatePortals(state.structures.filter(s=>s.kind==='wall'&&s.gate));
-      workerPortalRevision=walls.revision();
+    if(profile.worker&&(workerPortalRevision!==walls.revision()||
+      workerPortalChunkRevision!==core.chunkRevision()||
+      workerPortalTerrainRevision!==terrainRevision||
+      workerPortalCenterRevision!==centers.revision()||
+      workerPortalPropRevision!==props.revision())){
+      installWorkerPortals(activeWallPreview?.proposed??[]);
     }
   }
   function actorProfile({worker=true,species='warthog'}={}){
@@ -153,8 +173,7 @@ export function createSpatialGameSession(module,state,streamOptions){
     if(ids.length!==wallIds.length)return false;
     return core.localClearExcept(start,end,ids);
   }
-  let activeWallPreview=null;
-  function withWallPreview(proposed,suppress,inspect){
+  function withWallPreview(proposed,suppress,inspect,refreshPortals=false){
     if(!Array.isArray(proposed)||!Array.isArray(suppress)||typeof inspect!=='function')
       throw TypeError('Expected proposed walls, suppressed props and a callback');
     const parent=activeWallPreview;
@@ -172,13 +191,22 @@ export function createSpatialGameSession(module,state,streamOptions){
       if(desired.length!==previous.length||desired.some(id=>!previous.includes(id)))
         core.restoreRemovedProps(records(desired));
       if(barriers.length)ids=core.applyBarrierChanges([],barriers);
-      context={ids,barriers,suppressed:desired};
+      context={ids,barriers,suppressed:desired,proposed,
+        refreshPortals:refreshPortals||parent?.refreshPortals};
       activeWallPreview=context;
+      if(context.refreshPortals){
+        selectProfile(WORKER_SPATIAL_PROFILE);
+        installWorkerPortals(proposed);
+      }
       return inspect();
     }finally{
       if(context?.ids.length)core.applyBarrierChanges(context.ids,[]);
       else if(!context&&ids.length)core.applyBarrierChanges(ids,[]);
       activeWallPreview=parent;
+      if(context?.refreshPortals){
+        selectProfile(WORKER_SPATIAL_PROFILE);
+        installWorkerPortals(parent?.proposed??[]);
+      }
       if(desired.length!==previous.length||desired.some(id=>!previous.includes(id)))
         core.restoreRemovedProps(records(previous));
       if(parentRemoved)parent.ids=core.applyBarrierChanges([],parent.barriers);

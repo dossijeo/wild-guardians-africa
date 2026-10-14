@@ -23,7 +23,7 @@ import {activeCrops,cropBecameInactive} from './active-crops.js';
 import {workerEntityLookup} from './worker-entity-lookup.js';
 import {enqueue,taskEnqueuer,reserveTasks,releaseTask} from './tasks.js';
 import {planNight,updateRaid,spawnRaid,planDay} from './raids.js';
-import {wallStroke,wallLayout,wallStrokeLine} from '../world/wall-layout.js';
+import {wallStroke,wallLayout,wallStrokeLine,WALL_UNIT} from '../world/wall-layout.js';
 import {selectEvent,applyEvent} from './events.js';
 import {villageLayout,findVillageEntry,nearestVillageRoute} from '../world/villages.js';
 import {LOCOMOTION as L} from './locomotion-calibration.js';
@@ -130,7 +130,7 @@ export function wallRefund(target){
   const amount=multiply(rational(target.cost),BigInt(health.n)*BigInt(maximum.d),BigInt(health.d)*BigInt(maximum.n));
   return rational((BigInt(amount.n)+BigInt(amount.d)-1n)/BigInt(amount.d));
 }
-function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
+function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap,forceAccessAudit=false){
   if(!newPieces.length)return [];
   const newIds=new Set(newPieces.map(p=>p.created));
   const layout=wallLayout([...s.structures,...newPieces],Object.fromEntries(B.walls.map(w=>[w.id,w.hp])));
@@ -180,12 +180,12 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
     if(!scores.has(p.id))scores.set(p.id,Math.min(...approachRoutes.map(({entry,target,path})=>(path?routeDistance(p,path):0)*1e6+dist(entry,p)+dist(p,target))));
     return scores.get(p.id);
   };
-  let unhosted=false,unhostedWorker=false;
+  let unhosted=false,unhostedWorker=false,newPlayableFace=false;
   const ensure=isFree=>ensureBoundaryGates(layout,nav,canHostCandidate,isFree,omitted,rank,p=>newIds.has(p.id),face=>{
     unhosted=true;
     const polygon=face.polygon.map(([x,z])=>({x,z}));
     if(s.workers.some(w=>w.status!=='home'&&containsPoint(polygon,w.x,w.z)))unhostedWorker=true;
-  });
+  },()=>{newPlayableFace=true;});
   if(nav.withWallPreview){
     // One draft serves every room probe. Candidate doors replace that draft
     // only while the host check runs, then restore it before the next probe.
@@ -194,22 +194,68 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
   }else ensure((x,z)=>interior.walkable(x,z,.28,null,true));
   const converted=layout.pieces.filter(p=>newIds.has(p.id)&&p.autoGate&&!s.structures.some(e=>e.id===p.entityId&&e.autoGate));
   const updates=converted.map(p=>({id:p.entityId,gate:true,autoGate:true,maxHp:p.maxHp,hp:p.hp})).filter(update=>{const piece=[...s.structures,...newPieces].find(p=>p.id===update.id),candidate={...piece,...update};return nav.wallPlacement(candidate).valid&&!cropOverlap(candidate);});
+  // A stroke that joins existing walls at both ends can divide a compound
+  // perimeter even when the face finder sees an older door. Open extensions
+  // need no route audit; this cheap geometric check runs before any searches.
+  const oldWalls=layout.pieces.filter(p=>p.hp>0&&!p.collapse&&!newIds.has(p.id));
+  const touching=piece=>oldWalls.filter(p=>
+    Math.hypot(p.x-piece.x,p.z-piece.z)<=(p.scaleX+piece.baseScaleX)*WALL_UNIT/2+.25);
+  const first=touching(newPieces[0]),last=touching(newPieces.at(-1));
+  const accessRelevant=forceAccessAudit||newPlayableFace||
+    first.some(a=>last.some(b=>a.id!==b.id));
+  if(accessRelevant&&nav.withWallPreview){
+    // A door on a compound perimeter may open into the same sealed component
+    // on both sides. Preserve every existing worker/center route when the new
+    // stroke closes, even if the face already contains an older auto-gate.
+    const witnesses=[];
+    for(const center of s.structures.filter(operational)){
+      const village=s.villages.find(v=>v.id===center.villageId);
+      if(village)witnesses.push([village.entry??village,centerServicePoint(center,s,.8)]);
+    }
+    for(const worker of s.workers.filter(w=>w.status!=='home')){
+      const village=s.villages.find(v=>v.id===worker.villageId);
+      if(village)witnesses.push([worker,village.entry??village]);
+    }
+    const known=(routes,a,b)=>{
+      try{return !!routes.path(a,b,.28,null,true);}
+      catch(error){if(error.name==='SpatialChunkUnavailable')return null;throw error;}
+    };
+    const reachable=witnesses.filter(([a,b])=>known(nav,a,b)===true);
+    const proposed=()=>newPieces.map(piece=>({...piece,...updates.find(u=>u.id===piece.id)}));
+    const preserved=()=>nav.withWallPreview(proposed(),[...suppressedForGates],draft=>
+      reachable.every(([a,b])=>known(draft,a,b)===true),true);
+    if(reachable.length&&!preserved()){
+      for(const piece of newPieces){
+        if(piece.gate||updates.some(u=>u.id===piece.id))continue;
+        const candidate={...piece,gate:true,autoGate:true,
+          maxHp:layout.settings.hp[piece.material]*.6,
+          hp:piece.hp/piece.maxHp*layout.settings.hp[piece.material]*.6};
+        if(!nav.wallPlacement(candidate).valid||cropOverlap(candidate)||
+          !canHostCandidate(layout.pieces.find(p=>p.id===piece.created)))continue;
+        const update={id:piece.id,gate:true,autoGate:true,maxHp:candidate.maxHp,hp:candidate.hp};
+        updates.push(update);
+        if(preserved())break;
+        updates.pop();
+      }
+      if(!preserved())unhostedWorker=true;
+    }
+  }
   return Object.assign(updates,{unhosted,unhostedWorker});
 }
 // Geometry/price quote is read-only and may describe a future purchase. Actual
 // preview/build still enforce available cash and the native hiring reserve.
-export function quoteWallChain(s,material,points,nav,options={}) {
+export function quoteWallChain(s,material,points,nav,options={},forceAccessAudit=false) {
   if(!permission(s,'wall'))throw new Error('Esta acción no está disponible ahora');
   const spec=wallSpec(material),slots=wallStroke(points,s.structures,{...options,maxPieces:Infinity});
   const cropOverlap=piece=>{const c=Math.cos(piece.yaw),sn=Math.sin(piece.yaw),scale=piece.gate?(piece.material==='reforzado'?1.6:['adobe','piedra'].includes(piece.material)?1.4:1):1;return s.plants.some(p=>p.alive&&Math.abs((p.x-piece.x)*c-(p.z-piece.z)*sn)<1.09*(piece.baseScaleX??1)*scale+.4&&Math.abs((p.x-piece.x)*sn+(p.z-piece.z)*c)<.22*scale+.4);};
   const blockedPieces=[];
   const newPieces=slots.map(slot=>({kind:'wall',material,gate:false,baseScaleX:slot.scaleX,x:slot.x,z:slot.z,yaw:-slot.angle,maxHp:spec.hp,hp:spec.hp,status:'intact',cost:spec.cost,collapseRemaining:0,villageId:nearest(s.villages,{x:slot.x,z:slot.z})?.id})).filter(piece=>{if(!nav.wallPlacement(piece).valid){blockedPieces.push(piece);return false;}return !cropOverlap(piece);}).slice(0,Math.max(0,Math.floor(options.maxPieces??Infinity)));
   newPieces.forEach((piece,i)=>Object.assign(piece,{id:`structure-${s.nextId+i}`,created:s.sequence+i}));
-  const gatePlan=planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap);
+  const gatePlan=planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap,forceAccessAudit);
   if(gatePlan.unhostedWorker||gatePlan.unhosted&&!gatePlan.length){
     // The closing module remains unbuilt; the player can later edit the
     // stroke without trapping a worker in a room that has no usable door.
-    return quoteWallChain(s,material,points,nav,{...options,maxPieces:newPieces.length-1});
+    return quoteWallChain(s,material,points,nav,{...options,maxPieces:newPieces.length-1},true);
   }
   const updates=gatePlan;
   for(const piece of newPieces){const update=updates.find(p=>p.id===piece.id);if(update)Object.assign(piece,update);}
