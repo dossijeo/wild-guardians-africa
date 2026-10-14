@@ -132,7 +132,7 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
   const originals=new Map([...s.structures,...newPieces].map(p=>[p.created,p]));
   const suppressedForGates=new Set(nav.suppressed);
   for(const piece of newPieces)for(const id of nav.wallPlacement(piece).suppress??[])suppressedForGates.add(id);
-  const canHost=p=>{
+  const canHostCandidate=p=>{
     const original=originals.get(p.id);if(!original)return false;
     const candidate={...original,gate:true},check=nav.wallPlacement(candidate);
     if(!check.valid||cropOverlap(candidate))return false;
@@ -155,6 +155,10 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
     const plants=s.plants.filter(q=>q.alive&&q.centerId===center.id),target=plants.length?{x:plants.reduce((sum,q)=>sum+q.x,0)/plants.length,z:plants.reduce((sum,q)=>sum+q.z,0)/plants.length}:centerServicePoint(center,s,.8);
     return target;
   }),scores=new Map();let approachRoutes;
+  const loadApproachRoutes=()=>targets.flatMap(target=>s.villages.map(v=>{
+    const entry=v.entry??v,path=nav.path(entry,target,.28,null,true);
+    return {entry,target,path:path?[entry,...path]:null};
+  }));
   const routeDistance=(p,route)=>Math.min(...route.slice(1).map((b,i)=>{
     const a=route[i],dx=b.x-a.x,dz=b.z-a.z,length=dx*dx+dz*dz;
     const t=length?Math.max(0,Math.min(1,((p.x-a.x)*dx+(p.z-a.z)*dz)/length)):0;
@@ -165,22 +169,24 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
     // Reuse existing shortest navigation routes, including buildings and cliffs.
     // Computed only for a fresh enclosure; incremental edits always prefer the
     // last new module rather than relocating an older wall.
-    approachRoutes??=targets.flatMap(target=>s.villages.map(v=>{
-      const entry=v.entry??v,path=nav.path(entry,target,.28,null,true);
-      return {entry,target,path:path?[entry,...path]:null};
-    }));
+    approachRoutes??=nav.withWallPreview?
+      nav.withWallPreview([],[...suppressedForGates],loadApproachRoutes):
+      loadApproachRoutes();
     if(!scores.has(p.id))scores.set(p.id,Math.min(...approachRoutes.map(({entry,target,path})=>(path?routeDistance(p,path):0)*1e6+dist(entry,p)+dist(p,target))));
     return scores.get(p.id);
   };
   let unhosted=false,unhostedWorker=false;
-  const isFree=(x,z)=>nav.withWallPreview?
-    nav.withWallPreview(newPieces,[...suppressedForGates],draft=>draft.walkable(x,z,.28,null,true)):
-    interior.walkable(x,z,.28,null,true);
-  ensureBoundaryGates(layout,nav,canHost,isFree,omitted,rank,p=>newIds.has(p.id),face=>{
+  const ensure=isFree=>ensureBoundaryGates(layout,nav,canHostCandidate,isFree,omitted,rank,p=>newIds.has(p.id),face=>{
     unhosted=true;
     const polygon=face.polygon.map(([x,z])=>({x,z}));
     if(s.workers.some(w=>w.status!=='home'&&containsPoint(polygon,w.x,w.z)))unhostedWorker=true;
   });
+  if(nav.withWallPreview){
+    // One draft serves every room probe. Candidate doors replace that draft
+    // only while the host check runs, then restore it before the next probe.
+    nav.withWallPreview(newPieces,[...suppressedForGates],draft=>
+      ensure((x,z)=>draft.walkable(x,z,.28,null,true)));
+  }else ensure((x,z)=>interior.walkable(x,z,.28,null,true));
   const converted=layout.pieces.filter(p=>newIds.has(p.id)&&p.autoGate&&!s.structures.some(e=>e.id===p.entityId&&e.autoGate));
   const updates=converted.map(p=>({id:p.entityId,gate:true,autoGate:true,maxHp:p.maxHp,hp:p.hp})).filter(update=>{const piece=[...s.structures,...newPieces].find(p=>p.id===update.id),candidate={...piece,...update};return nav.wallPlacement(candidate).valid&&!cropOverlap(candidate);});
   return Object.assign(updates,{unhosted,unhostedWorker});

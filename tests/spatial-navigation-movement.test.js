@@ -296,6 +296,17 @@ test('ordinary wall placement previews its enclosure on the native world and res
     }
     assert(wall);
     const a={x:wall.x,z:wall.z-1.4},b={x:wall.x,z:wall.z+1.4};
+    const prop=[...loaded.values()].flatMap(chunk=>chunk.instances.flat())[0];
+    assert(prop);
+    const beforeProps=session.core.snapshot().removedProps;
+    assert.throws(()=>session.withWallPreview([wall],[prop.id],()=>
+      session.withWallPreview([{...wall,gate:true}],[prop.id],()=>{
+        throw Error('intentional nested preview failure');
+      })),/intentional nested preview failure/);
+    assert.deepEqual(session.core.snapshot().removedProps,beforeProps,
+      'a failed preview must restore native prop suppression');
+    assert.equal(nav.segmentClear(a,b,.28,null,true),true,
+      'a failed nested preview must restore the original topology');
     assert.equal(Game.placeStructure(state,'native-ordinary-wall',wall,nav),true);
     assert.equal(state.structures.length,2);
     assert.equal(nav.segmentClear(a,b,.28,null,true),false);
@@ -341,6 +352,20 @@ test('a native wall ring creates an automatic door that a worker can cross',asyn
     assert.equal(nav.path(a,b,1.1,null,false),null,
       'the worker portal must not leak into the animal graph');
     assert.equal(plan.gates,1);
+    let crop;
+    for(let z=points[0][1]+2;z<points[2][1]-1&&!crop;z+=1.5)
+      for(let x=points[0][0]+2;x<points[2][0]-1&&!crop;x+=1.5)
+        if(nav.placement(x,z,.4).valid)crop={x,z};
+    assert(crop,'the native enclosure needs a plantable interior');
+    assert.equal(Game.plant(state,'native-gate-crop','mijo',crop.x,crop.z,nav),true);
+    state.villages[0].entry=a;
+    Game.openInitialHiring(state);
+    Game.hire(state,'native-gate-worker',{olderFemale:1});
+    const worker=state.workers[0];
+    worker.x=b.x;worker.z=b.z;worker.status='returning';worker.path=null;
+    for(let i=0;i<200&&worker.status!=='home';i++)Game.tick(state,.25,nav);
+    assert.equal(worker.status,'home',
+      'a real returning worker must walk out through the native automatic gate');
     const restored=deserialize(serialize(state)),otherChunks=new Map();
     const reload=createSpatialGameSession(module,restored,{
       loaded:()=>otherChunks,onData:data=>otherChunks.set(`${data.cx},${data.cz}`,data)});

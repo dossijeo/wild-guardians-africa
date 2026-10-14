@@ -134,25 +134,35 @@ export function createSpatialGameSession(module,state,streamOptions){
     actorProfile(options);
     return core.localClear(start,end);
   }
+  let activeWallPreview=null;
   function withWallPreview(proposed,suppress,inspect){
     if(!Array.isArray(proposed)||!Array.isArray(suppress)||typeof inspect!=='function')
       throw TypeError('Expected proposed walls, suppressed props and a callback');
-    const previous=[...props.suppressed];
-    const extra=[...new Set(suppress)].filter(id=>!props.suppressed.has(id));
+    const parent=activeWallPreview;
+    const previous=parent?.suppressed??[...props.suppressed];
+    const desired=[...new Set([...props.suppressed,...suppress])];
     const records=ids=>ids.map(id=>{
       const match=/^spatial:([0-5]):(-?\d+):(-?\d+)$/.exec(id);
       if(!match)throw TypeError(`Unsupported spatial prop ID: ${id}`);
       return {group:Number(match[1]),gx:Number(match[2]),gz:Number(match[3])};
     });
-    let ids=[];
+    const barriers=proposed.flatMap(wall=>spatialStructureBarriers(wall));
+    let ids=[],context=null,parentRemoved=false;
     try{
-      if(extra.length)core.restoreRemovedProps(records([...previous,...extra]));
-      const barriers=proposed.flatMap(wall=>spatialStructureBarriers(wall));
+      if(parent?.ids.length){core.applyBarrierChanges(parent.ids,[]);parent.ids=[];parentRemoved=true;}
+      if(desired.length!==previous.length||desired.some(id=>!previous.includes(id)))
+        core.restoreRemovedProps(records(desired));
       if(barriers.length)ids=core.applyBarrierChanges([],barriers);
+      context={ids,barriers,suppressed:desired};
+      activeWallPreview=context;
       return inspect();
     }finally{
-      if(ids.length)core.applyBarrierChanges(ids,[]);
-      if(extra.length)core.restoreRemovedProps(records(previous));
+      if(context?.ids.length)core.applyBarrierChanges(context.ids,[]);
+      else if(!context&&ids.length)core.applyBarrierChanges(ids,[]);
+      activeWallPreview=parent;
+      if(desired.length!==previous.length||desired.some(id=>!previous.includes(id)))
+        core.restoreRemovedProps(records(previous));
+      if(parentRemoved)parent.ids=core.applyBarrierChanges([],parent.barriers);
     }
   }
   // Only settlements change the far relief. Walls, crop turnover, shield HP and
