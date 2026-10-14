@@ -45,6 +45,13 @@ try{
   const targets=state.tasks.filter(t=>t.kind==='repair').map(t=>state.structures.find(s=>s.id===t.targetId));
   console.log(JSON.stringify({workers:state.workers.map(w=>({id:w.id,x:w.x,z:w.z,
     centerId:w.centerId,status:w.status})),
+  livingCropBands:{west:state.plants.filter(p=>p.alive&&p.x<91).length,
+    ridge:state.plants.filter(p=>p.alive&&p.x>=91&&p.x<95).length,
+    east:state.plants.filter(p=>p.alive&&p.x>=95).length},
+  livingCropBounds:state.plants.filter(p=>p.alive).reduce((bounds,p)=>({
+    minX:Math.min(bounds.minX,p.x),minZ:Math.min(bounds.minZ,p.z),
+    maxX:Math.max(bounds.maxX,p.x),maxZ:Math.max(bounds.maxZ,p.z)}),
+  {minX:Infinity,minZ:Infinity,maxX:-Infinity,maxZ:-Infinity}),
   centers:state.structures.filter(s=>s.kind==='center').map(s=>({id:s.id,x:s.x,z:s.z,
     status:s.status})),repairTasks:state.tasks.filter(t=>t.kind==='repair'),
   nearbyWalls:state.structures.filter(s=>s.kind==='wall'&&s.x>=80&&s.x<=100&&
