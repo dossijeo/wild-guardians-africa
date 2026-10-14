@@ -553,6 +553,16 @@ all worker routes near buildings are short. The corner connector belongs to
 work-point selection, while the general WASM path can still take a longer
 valid route; broader route-quality measurement remains necessary.
 
+The obsolete failure-capacity tests used a mocked `findPath()` and asserted
+the retired JavaScript `failedPaths` FIFO. They now exercise the C++ lazy
+sector graph directly. One thousand destinations across a certified closed
+barrier retain the same loaded-sector count, update count and WASM memory
+size. Repeated `unknown` results remain inconclusive until resident coverage
+is loaded; opening one wall cell then changes the same query to `found`, and
+closing it restores `blocked`. The new file and the existing lazy-sector
+regressions pass 8/8. This is test-only coverage for bounded topology state,
+not a claim that every open-frontier query is cheap in a long campaign.
+
 ## Deferred engine name
 
 After the WASM spatial core is functionally and performance-stable, rename
