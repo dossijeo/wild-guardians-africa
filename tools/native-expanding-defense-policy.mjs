@@ -5,8 +5,9 @@ import {wallStroke} from '../src/world/wall-layout.js';
 import {numberOf} from '../src/simulation/money.js';
 import {permission,operational,wallSpec} from '../src/simulation/rules.js';
 import {HIRING_RESERVE} from '../src/simulation/budget.js';
-export function createNativeExpandingDefensePolicy({startDay=2,material='zarzas',interval=30,repairWalls=true,repairFraction=0.8,reserveMode='none'}={}){
+export function createNativeExpandingDefensePolicy({startDay=2,material='zarzas',interval=30,repairWalls=true,repairFraction=0.8,repairPriority='creation',reserveMode='none'}={}){
  if(!['none','next-stroke'].includes(reserveMode))throw Error('Invalid defense reserve mode');
+ if(!['creation','ruined-first'].includes(repairPriority))throw Error('Invalid wall repair priority');
  if(!(repairFraction>0&&repairFraction<=1))throw Error('Invalid repair fraction');
  const cost=wallSpec(material).cost;let nextAttempt=0,capitalTarget=0,built=null,repairRequests=0;
  const history=[],owned=new Set();
@@ -18,7 +19,10 @@ export function createNativeExpandingDefensePolicy({startDay=2,material='zarzas'
   protectedCash=Math.max(protectedCash,HIRING_RESERVE);
   let pending=s.tasks.filter(t=>t.kind==='repair').reduce((n,t)=>{const p=s.structures.find(p=>p.id===t.targetId);return n+(p?Math.ceil(numberOf(Game.repairCost(p))):0);},0);
   // Request native repairs, but do not count uncompleted requests as useful work.
-  for(const wall of s.structures)if(repairWalls&&owned.has(wall.id)&&['intact','ruined'].includes(wall.status)&&wall.hp<wall.maxHp*repairFraction&&!s.tasks.some(t=>t.kind==='repair'&&t.targetId===wall.id)){
+  const repairCandidates=repairWalls?s.structures.filter(wall=>owned.has(wall.id)&&['intact','ruined'].includes(wall.status)&&wall.hp<wall.maxHp*repairFraction&&!s.tasks.some(t=>t.kind==='repair'&&t.targetId===wall.id)):[];
+  if(repairPriority==='ruined-first')repairCandidates.sort((a,b)=>
+   Number(b.status==='ruined')-Number(a.status==='ruined')||a.x-b.x||a.z-b.z||String(a.id).localeCompare(String(b.id)));
+  for(const wall of repairCandidates){
    const payment=Math.ceil(numberOf(Game.repairCost(wall)));
    if(numberOf(s.ledger.balance)>=protectedCash+pending+payment){Game.requestRepair(s,command('repair'),wall.id);repairRequests++;pending+=payment;}
   }
@@ -48,5 +52,5 @@ export function createNativeExpandingDefensePolicy({startDay=2,material='zarzas'
   }
   row.reason='no-new-legal-pieces';history.push(row);return 0;
  }
- return {reserve,act,report:s=>structuredClone({startDay,material,reserveMode,repairWalls,repairFraction,capitalTarget,built,history,repairRequests,paidCost:history.reduce((n,r)=>n+r.paidCost,0),paidPieces:history.reduce((n,r)=>n+r.paidPieces,0),scope:'Paid expanding native perimeters; actual interception not established by construction alone; repairs requested never counted as completion'})};
+ return {reserve,act,report:s=>structuredClone({startDay,material,reserveMode,repairWalls,repairFraction,repairPriority,capitalTarget,built,history,repairRequests,paidCost:history.reduce((n,r)=>n+r.paidCost,0),paidPieces:history.reduce((n,r)=>n+r.paidPieces,0),scope:'Paid expanding native perimeters; actual interception not established by construction alone; repairs requested never counted as completion'})};
 }

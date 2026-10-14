@@ -36,7 +36,7 @@ export function validateConfig(raw){
  }
  return c;
 }
-export async function evaluateOne({biome,seed},days,strategy,genes,onDay,detailedEvidence=false,onTickObserver){
+export async function evaluateOne({biome,seed},days,strategy,genes,onDay,detailedEvidence=false,onTickObserver,{defenseRepairPriority='creation'}={}){
  const entryDriverFactory=nav=>({
   async advancePresentation(){if(nav.raidEntryFailure)throw Error('Native raid entry failed');},
   async waitForEntry(){if(nav.raidEntryFailure)throw Error('Native raid entry failed');},
@@ -46,7 +46,7 @@ export async function evaluateOne({biome,seed},days,strategy,genes,onDay,detaile
   const currentMagicRules=strategy.endsWith('-current-magic');
   const effectiveStrategy=currentMagicRules?strategy.slice(0,-'-current-magic'.length):strategy;
   const r=await simulateNativeCampaign({days,biome,seed,culture:'mapungubwe',strategy:effectiveStrategy,
-   evolutionaryGenes:genes,currentMagicRules,nativeEvidence:false,reloadRaids:false,
+   evolutionaryGenes:genes,currentMagicRules,nativeEvidence:false,reloadRaids:false,defenseRepairPriority,
    openingFactory:createSpatialCampaignOpening,entryDriverFactory,
    onDay,
    onTick:(state,nav,timing)=>{nav.serviceRaidConnectivityDemand?.();onTickObserver?.(state,nav,timing);}});
