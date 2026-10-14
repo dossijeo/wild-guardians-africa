@@ -123,6 +123,21 @@ directorios `profile-manglares-123-day10/` y
 muestrear por evento de topología, nunca cada tick; `unknown` no recibe crédito
 defensivo.
 
+`replay-enclosure-raid.mjs` llevó ambos snapshots del día 10 hasta terminar
+la incursión con y sin observador. En cada brazo, el SHA-256 del estado final
+serializado fue **idéntico entre los dos pases**, por lo que la observación no
+alteró estado persistente ni RNG del replay. En ambos aparecieron aperturas
+topológicas tras perder módulos: 13 piezas en el líder, ocho en el control,
+y los cultivos inicialmente protegidos terminaron clasificados como abiertos.
+Sin embargo, el replay reconstruye residencia y navegación derivada a partir
+del guardado: el líder perdió dos cultivos en el replay y **cero en la campaña
+continua** de ese día; el control perdió cero en ambos. Por ello, la secuencia
+de brechas y las bajas del replay **no son una reconstrucción exacta de la
+campaña**, ni prueban la causa de las 5 frente a 50 pérdidas finales. Se
+conservan ambos informes como QA de topología y de invarianza del observador,
+con SHA de cada snapshot. Para atribuir eficacia defensiva hará falta observar
+la campaña nativa continua por eventos, con su residencia original.
+
 Conclusión provisional: hay una política que sobrevive mejor que el control en
 esta única reserva de catorce noches, pero **no hay estrategia competitiva
 generalizable demostrada**. El modelo de destrucción agrícola de Fase 1 sigue
