@@ -60,6 +60,28 @@ capacity-evidence check now passes. The full TAP log is
 `full-suite-90c1c2a9.log.gz`. The four lifecycle tests were added after this
 frozen suite, so they are not included in that count.
 
+The full suite at `168cc63f` found one **new, relevant** failure: the exact
+night-54 paid-defense reload case left a buffalo retreating inside its
+pre-existing tree overlap. The fractional-landing guard had rejected every
+intermediate position until the animal was completely clear of the tree. The
+negative 4,325-test run (4,277 pass / 48 fail) is preserved as
+`full-suite-168cc63f.log.gz`. Commit `eb0004b0` permits only the existing
+physically swept, monotonically outward prop-escape step; it still rejects
+new obstacles, walls and bad terrain. The frozen buffalo case and 12 other
+focused route, Canyon and lifecycle tests pass. The full suite on `eb0004b0`
+ran 4,325 tests in 472.6 s: **4,278 passed and 47 failed**, with exactly the
+same failing test names as `90c1c2a9`. Its complete output is
+`full-suite-eb0004b0.log.gz`. This comparison does not make the 47 historical
+failures acceptable for unrelated integration; it shows no new failure in
+the engine branch's latest tested state.
+
+After the native village-entry and founding-order fix at `aae8ebd4`, the
+repository suite ran 4,326 tests in 467.1 s: **4,279 passed and the same 47
+failed**. The failure-name comparison with `eb0004b0` is empty; the new paid
+C++ postgame village test is included in this run. The complete log is
+`full-suite-aae8ebd4.log.gz`. The web production build and the focused
+31-test village, footprint, retreat and lifecycle group also passed.
+
 A reproducible synthetic workload runner,
 `tools/experiments/profile-wild-engine-stage-stress.mjs`, creates crops with
 `Game.plant`, spawns animals through `spawnRaid`, and advances only with
@@ -184,6 +206,33 @@ Gran Cañón retreat reasons, inspect relevant failures from the full suite and
 complete the platform checks. Publish input states and results. A 100-night
 winning bot campaign may inform later balance work but is **not** an engine
 gate.
+
+Native-world postgame founding is now demonstrated in Desierto/712. An exploratory
+Sabana/712 search streamed a 7×7 chunk area around the initial center and
+tested 120 nearby positions (radii 45, 60, 75, 90 and 105 m; 24 directions)
+for a seven-building Suajili village through the real `previewVillage` API.
+None was accepted: 105 collided with large trees or rocks, nine with fluid,
+three with invalid terrain and three with existing buildings. This is not an
+exhaustive survey and cannot prove that expansion is impossible. A separate
+60-position Mapungubwe search in Sabana also found no legal site.
+
+In the 102-position Desierto/Suajili search, 18 positions reached the entry
+check and threw a `TypeError`: legacy `findVillageEntry` tried to assign the
+WASM adapter's getter-only `obstacles`. The native entry check now temporarily
+installs the **proposed building polygons in the C++ world**, finds a worker
+entry, and removes those polygons afterward. The first valid candidate is
+`(94.64685702961343, 43.466662183008076)`. Founding also exposed a command
+ordering error: the new settlement regenerated its chunks before the paid
+prop suppressions were registered, so a previously visible prop could no
+longer be removed. The session now registers those suppressions before
+installing the settlement. `spatial-postgame-village.test.js` confirms an
+actual second village for 50,000 coins, one founding event, no preview
+barrier residue, permanent building collisions, save/reload, two native
+settlements, a worker route back to the paid work center and 30 seconds of
+peaceful native postgame after restoration. The relevant
+village, footprint, retreat and lifecycle group passes 31/31. Native village
+feasibility across the other biomes remains to be sampled; no collision or
+economic rule was weakened to obtain this candidate.
 
 Once this engine gate is satisfied, calibrate economics, attacks and frozen
 virtual-player policies on a separate branch or phase. Keep any resulting
