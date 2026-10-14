@@ -683,7 +683,8 @@ export function idleFarmAnchor(s,worker,center,livingCandidates=null){
 function reserveAvailableTasks(s,nav){
   if(!s.raid&&s.time<300)reserveTasks(s,(w,t,target)=>{
     if(s.time>=profile(w).end)return false;
-    return t.kind==='repair'?!!repairRoute(w,target,nav):t.kind==='initial'||t.kind==='water'?!!wateringRoute(w,target,nav):!!nav.path(w,target,.28,null,true);
+    return t.kind==='repair'?!!repairRoute(w,target,nav):t.kind==='initial'||t.kind==='water'?!!wateringRoute(w,target,nav):
+      !!(nav.workerPath?nav.workerPath(w,target,.28,null):nav.path(w,target,.28,null,true));
   });
 }
 function updateWorkers(s,dt,nav) {
