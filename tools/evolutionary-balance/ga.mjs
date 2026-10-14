@@ -40,6 +40,11 @@ export function scoreCampaign(report,targetDays){
   return {score:-1e9,valid:false,reason:'no-active-farm',completed,productive,living,cash};
  const noFarmPenalty=productive===0?1000:0;
  // Survival dominates. Modest secondary rewards cannot offset one lost night.
- return {score:completed*1000+Math.min(150,Math.max(-100,cash)/20)+Math.min(70,living/2)+Math.min(30,productive/20)-noFarmPenalty,
-  valid:true,completed,productive,living,cash,result:report.result};
+ // A native defeat on the final sampled night is worse than remaining alive
+ // after that night, even though both reports count the same completed nights.
+ const terminalDefeatPenalty=report.result==='defeat'?500:0;
+ return {score:completed*1000-terminalDefeatPenalty+
+  Math.min(150,Math.max(-100,cash)/20)+Math.min(70,living/2)+
+  Math.min(30,productive/20)-noFarmPenalty,
+  scoreVersion:'terminal-defeat-v2',valid:true,completed,productive,living,cash,result:report.result};
 }

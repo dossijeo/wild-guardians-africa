@@ -1,5 +1,10 @@
 # Laboratorio evolutivo: primer corte (fases 1–2)
 
+La búsqueda más reciente de genes de gestión con balance fijo, reserva de otro
+bioma y comparación emparejada de catorce noches se documenta en
+[`management-search/README.md`](management-search/README.md). Aún no demuestra
+una estrategia generalizable ni una victoria de cien noches.
+
 Estado: **experimental; ningún ajuste de balance aprobado**. Esta rama sólo cambia
 políticas del jugador virtual y herramientas de QA. Wild Engine sigue resolviendo
 terreno, rutas, ataques, daños, producción y ledger reales. No hay victoria de 100

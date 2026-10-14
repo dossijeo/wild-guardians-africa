@@ -1,0 +1,87 @@
+{
+  "sourceHash": "7f358aad97287b40e300026306d26f05cc4e0c29",
+  "moduleHashes": {
+    "tools/native-campaign-runner.mjs": "daed3907265ad50956f3fe8ab142eb10e51bcf7e6fccf087831b71850e39b01f",
+    "tools/native-expanding-defense-policy.mjs": "4a6540674a0b8e971c456ea08834e79ff7021176f6179587f931b9c0a31a02c2",
+    "tools/evolutionary-balance/run-ga.mjs": "c40b6091d21f7168958092cd8f23d663a4205a18d6e928ead27a0f8017a12331",
+    "tools/evolutionary-balance/ga.mjs": "50c125732ce78be6ac92397b0c36aad833d886e9a49aa80666efdd4f516edc1c",
+    "tools/evolutionary-balance/policy-genes.mjs": "07ad66ebed9172b56fab1b9ff6109d585e2f3ebc7f64feefbf2ce05f78e2c575"
+  },
+  "worktreeDiffHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "implementationId": "6c4ed923d31a",
+  "runId": "569680ef8525",
+  "config": {
+    "rngSeed": 1407,
+    "generations": 2,
+    "population": 3,
+    "days": 7,
+    "train": [
+      {
+        "biome": "sabana",
+        "seed": 712
+      },
+      {
+        "biome": "gran-rio",
+        "seed": 2026
+      }
+    ],
+    "holdout": [
+      {
+        "biome": "manglares",
+        "seed": 123
+      }
+    ],
+    "baselines": [
+      "good-current-magic",
+      "good",
+      "expansive",
+      "bad",
+      "no-walls"
+    ],
+    "output": "docs/qa/evolutionary-balance/management-search/results-7",
+    "requireBiomeHoldout": true,
+    "initialPopulation": [
+      {
+        "plantsPerWorker": 6,
+        "wageReserveDays": 1,
+        "seedReserve": 0,
+        "defenseCashFraction": 0.2,
+        "defenseStartDay": 2,
+        "repairHealthFraction": 0.8,
+        "magicIntervalSeconds": 5,
+        "growthShare": 0,
+        "plantingIntervalSeconds": 1,
+        "wallMaterial": "zarzas",
+        "magicPriority": "multiply"
+      },
+      {
+        "plantsPerWorker": 8,
+        "wageReserveDays": 2,
+        "seedReserve": 50,
+        "defenseCashFraction": 0.35,
+        "defenseStartDay": 2,
+        "repairHealthFraction": 0.85,
+        "magicIntervalSeconds": 5,
+        "growthShare": 0.25,
+        "plantingIntervalSeconds": 2,
+        "wallMaterial": "zarzas",
+        "magicPriority": "multiply"
+      },
+      {
+        "plantsPerWorker": 5,
+        "wageReserveDays": 1,
+        "seedReserve": 25,
+        "defenseCashFraction": 0.4,
+        "defenseStartDay": 1,
+        "repairHealthFraction": 0.9,
+        "magicIntervalSeconds": 5,
+        "growthShare": 0,
+        "plantingIntervalSeconds": 1,
+        "wallMaterial": "empalizada",
+        "magicPriority": "multiply"
+      }
+    ]
+  },
+  "gameBalance": "unchanged",
+  "runKind": "native-Wild-Engine-campaign"
+}

@@ -30,6 +30,10 @@ test('search cohorts cannot overlap and truncation cannot count as victory',()=>
  assert.equal(scoreCampaign({status:'error',rows:[],completedNights:99},100).valid,false);
  assert.equal(scoreCampaign({status:'completed',rows:[{money:500,living:10,delivered:20}],completedNights:7,result:null},100).valid,false);
  assert.equal(scoreCampaign({status:'completed',rows:[{money:500,living:10,delivered:20}],completedNights:7,result:'defeat'},100).completed,7);
+ const survivor=scoreCampaign({status:'completed',rows:[{money:500,living:10,delivered:20}],completedNights:7,result:null},7);
+ const defeated=scoreCampaign({status:'completed',rows:[{money:500,living:10,delivered:20}],completedNights:7,result:'defeat'},7);
+ assert.equal(defeated.scoreVersion,'terminal-defeat-v2');
+ assert.equal(survivor.score-defeated.score,500);
  assert.equal(scoreCampaign({status:'completed',rows:[{money:500,living:0,planted:0,delivered:0}],completedNights:7,result:null},7).valid,false);
 });
 test('calibration predicts from ledger outcomes without folding structural damage into crop damage',()=>{

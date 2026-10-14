@@ -1,0 +1,58 @@
+{
+  "config": {
+    "sourceHash": "7f358aad97287b40e300026306d26f05cc4e0c29",
+    "moduleHashes": {
+      "tools/evolutionary-balance/run-paired.mjs": "a1fdd48793dd05f25addd44e999c9a78fa1992ca639aede368a7443f7a7ac8f9",
+      "tools/evolutionary-balance/run-ga.mjs": "c40b6091d21f7168958092cd8f23d663a4205a18d6e928ead27a0f8017a12331",
+      "tools/native-campaign-runner.mjs": "daed3907265ad50956f3fe8ab142eb10e51bcf7e6fccf087831b71850e39b01f",
+      "tools/native-expanding-defense-policy.mjs": "4a6540674a0b8e971c456ea08834e79ff7021176f6179587f931b9c0a31a02c2"
+    },
+    "days": 14,
+    "biome": "manglares",
+    "seeds": [
+      123
+    ],
+    "genes": {
+      "plantsPerWorker": 6,
+      "wageReserveDays": 1,
+      "seedReserve": 0,
+      "defenseCashFraction": 0.2,
+      "defenseStartDay": 2,
+      "repairHealthFraction": 0.8,
+      "magicIntervalSeconds": 5,
+      "growthShare": 0,
+      "plantingIntervalSeconds": 1,
+      "wallMaterial": "zarzas",
+      "magicPriority": "multiply"
+    },
+    "controls": [
+      "evolved",
+      "good-current-magic"
+    ],
+    "balance": "production unchanged"
+  },
+  "cases": [
+    {
+      "strategy": "evolved",
+      "seed": 123,
+      "status": "completed",
+      "completedNights": 14,
+      "result": null,
+      "daysRecorded": 14,
+      "finalCash": 905,
+      "finalLiving": 167,
+      "destroyed": 5
+    },
+    {
+      "strategy": "good-current-magic",
+      "seed": 123,
+      "status": "completed",
+      "completedNights": 14,
+      "result": null,
+      "daysRecorded": 14,
+      "finalCash": 980,
+      "finalLiving": 99,
+      "destroyed": 50
+    }
+  ]
+}

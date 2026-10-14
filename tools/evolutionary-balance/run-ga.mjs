@@ -117,9 +117,17 @@ export async function runSearch(config){
   writeFileSync(join(out,`search-${runId}.json`),JSON.stringify({stamp,generations},null,2)+'\n');
   const elite=ranked.slice(0,Math.max(2,Math.ceil(c.population/2)));
   population=[elite[0].genes];
+  const nextIds=new Set(population.map(genomeId));
+  let attempts=0;
   while(population.length<c.population){
    const a=elite[Math.floor(random()*elite.length)].genes,b=elite[Math.floor(random()*elite.length)].genes;
-   population.push(breed(a,b,random));
+   const child=attempts++<c.population*20?breed(a,b,random):randomGenome(random);
+   const id=genomeId(child);
+   if(nextIds.has(id)){
+    if(attempts>c.population*200)throw Error('Could not form a distinct next generation');
+    continue;
+   }
+   population.push(child);nextIds.add(id);
   }
  }
  const pilotLeader=generations.flatMap(x=>x.ranked).sort((a,b)=>b.score-a.score||b.meanScore-a.meanScore)[0];
