@@ -1,5 +1,16 @@
 # Wild Engine integration gate
 
+## Integration decision (14 October 2026)
+
+The user authorized integrating Wild Engine before every edge case and long
+campaign has been exercised. The matrix below remains a regression and
+follow-up checklist, not a claim that every row is complete. The available
+native lifecycle, save/reload, topology, worker-entry, six-biome opening and
+constructed-estate evidence supports this earlier integration. A genuine
+economic or military defeat is not an engine failure. The remaining 46
+repository-wide failures and untested long-campaign conditions are recorded
+below and must not be presented as passing QA.
+
 This gate concerns the spatial world and hierarchical navigation in the
 experimental branch. It does **not** require a virtual player to win 100
 nights. Economic viability, raid difficulty and virtual-player strategy are
