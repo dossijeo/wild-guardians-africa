@@ -3,9 +3,11 @@
 Esta cohorte usa Wild Engine y el balance de producción sin alterar, después de
 la mejora de navegación de PR #37. Código ejecutado: `7f358aad97287b40e300026306d26f05cc4e0c29`;
 el registro de siete noches guarda además SHA-256 de los módulos y del diff en
-`results-7/config-569680ef8525.json`. Los informes de campaña de `results-7`
-se conservan como `.json.gz`; `results-7/archive-index.json` registra SHA-256
-del JSON original y del archivo comprimido para reconstrucción exacta. Las campañas anteriores de Sabana en
+`results-7/config-569680ef8525.json`. Los catorce informes nativos de `results-7`
+se conservan byte a byte en `results-7/reports-bundle.json.gz`; `results-7/archive-index.json`
+registra nombres, tamaños y SHA-256 originales. Se recuperan mediante
+`node tools/evolutionary-balance/archive-native-reports.mjs docs/qa/evolutionary-balance/management-search/results-7 <destino>`.
+Las campañas anteriores de Sabana en
 este laboratorio pertenecen a otro hash y no se agregan a esta cohorte.
 
 ## Protocolo

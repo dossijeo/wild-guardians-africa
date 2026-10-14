@@ -12,7 +12,7 @@ Historical v1 genome IDs and their SHA-stamped reports retain their original mea
 
 ## Completed seven-night screen (smoke evidence only)
 
-The run completed without a computational cost stop or technical error: source `7a3df5c490b8b0b5eb2274f4bd53890aac3ec4b5`, implementation `097dade8faa6`, run `955308005048`, clean worktree diff hash `e3b0c442...`. All 16 native reports are preserved as verified gzip archives with original and archive SHA-256 in `results/archive-index.json`; daily progress, search ranking, result and exact config remain readable. All reported arms reached seven nights. The first five nights are introductory, leaving only nights six and seven under the later attack pressure. These data are **not** a selection of the best strategy.
+The run completed without a computational cost stop or technical error: source `7a3df5c490b8b0b5eb2274f4bd53890aac3ec4b5`, implementation `097dade8faa6`, run `955308005048`, clean worktree diff hash `e3b0c442...`. All 16 native reports are preserved byte for byte inside `results/reports-bundle.json.gz`; `results/archive-index.json` retains each original filename, original and compressed SHA-256. Restore with `node tools/evolutionary-balance/archive-native-reports.mjs docs/qa/evolutionary-balance/staged-search-v2/results <destination>`. Daily progress, search ranking, result and exact config remain readable. All reported arms reached seven nights. The first five nights are introductory, leaving only nights six and seven under the later attack pressure. These data are **not** a selection of the best strategy.
 
 | Genome / control | Scenario | Delivered crates | Destroyed crops | Final live crops | Final cash |
 | --- | --- | ---: | ---: | ---: | ---: |
