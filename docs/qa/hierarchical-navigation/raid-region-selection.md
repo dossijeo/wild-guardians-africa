@@ -264,6 +264,12 @@ tests, 185 playable tests and the web build. The frozen Canyon replay still
 reports 267 detailed approaches and 253 open-frontier unknowns. This fix
 requires a new full-suite run before revising the 199-failure aggregate.
 
+One worker-clearance test had a 150-tick arrival limit tied to the old
+detour. The hierarchical route follows a different collision-safe corridor
+and arrives on tick 166 at unchanged speed; every sampled landing remains
+terrain-valid. The limit is now 200 ticks, preserving its permanent-stall
+check without requiring the old route. All six worker-clearance tests pass.
+
 ## Reproduce
 
 ```powershell
