@@ -22,7 +22,18 @@ export function validateConfig(raw){
   for(const row of c[key])if(!row||typeof row.biome!=='string'||!Number.isSafeInteger(row.seed)||row.seed<0)throw Error(`Invalid ${key} scenario`);
  }
  const seen=new Set(c.train.map(x=>`${x.biome}:${x.seed}`));
+ if(seen.size!==c.train.length||new Set(c.holdout.map(x=>`${x.biome}:${x.seed}`)).size!==c.holdout.length)
+  throw Error('Duplicate cohort scenario');
  if(c.holdout.some(x=>seen.has(`${x.biome}:${x.seed}`)))throw Error('Train/holdout overlap');
+ if(c.requireBiomeHoldout&&c.holdout.some(x=>c.train.some(y=>x.biome===y.biome)))
+  throw Error('Holdout biome overlaps training');
+ if(c.initialPopulation!==undefined){
+  if(!Array.isArray(c.initialPopulation)||!c.initialPopulation.length||c.initialPopulation.length>c.population)
+   throw Error('Invalid initial population');
+  c.initialPopulation=c.initialPopulation.map(validateGenes);
+  if(new Set(c.initialPopulation.map(genomeId)).size!==c.initialPopulation.length)
+   throw Error('Duplicate initial genomes');
+ }
  return c;
 }
 export async function evaluateOne({biome,seed},days,strategy,genes,onDay,detailedEvidence=false,onTickObserver){
@@ -46,7 +57,8 @@ export async function evaluateOne({biome,seed},days,strategy,genes,onDay,detaile
     income:row.finance.income,seeds:row.finance.seeds,wages:row.finance.wages,
     walls:row.finance.walls,repairs:row.finance.repairs,
     reconciled:row.finance.reconciliationDifference===0,wallTime:row.wallTime})),
-   policy:r.policy,defense:{paidCost:r.defense?.paidCost??0,paidPieces:r.defense?.paidPieces??0},
+   policy:r.policy,plotSearch:r.plotSearch,
+   defense:{paidCost:r.defense?.paidCost??0,paidPieces:r.defense?.paidPieces??0},
    ...(detailedEvidence?{raidEvidence:r.raidEvidence,defenseEvidence:r.defense}:{}),
    raid:r.raidEvidence.raids.map(x=>({day:x.day,animals:Object.values(x.species).reduce((n,s)=>n+s.generated,0),
     attraction:x.pressureFacts?.observedValue??null,pressure:x.pressureFacts?.pressure??null,
@@ -56,7 +68,10 @@ export async function evaluateOne({biome,seed},days,strategy,genes,onDay,detaile
     shieldContacts:x.shieldContacts,routeUnavailableAttempts:x.routeUnavailableAttempts,
     targetUnavailableAttempts:x.targetUnavailableAttempts}))};
  }catch(error){return {status:'error',biome,seed,days,strategy,genes:genes??null,
-  message:error.message,day:error.nativeCampaignPartial?.day??null,
+  name:error.name,message:error.message,stack:error.stack??null,
+  navigation:error.name==='SpatialChunkUnavailable'?{
+   start:error.start,end:error.end,missing:error.missing,details:error.details}:null,
+  day:error.nativeCampaignPartial?.day??null,
   partialState:error.nativeCampaignPartial?.state??null,
   partialReceipts:error.nativeCampaignPartial?.receipts??null};}
 }
@@ -82,9 +97,10 @@ export async function runSearch(config){
   const path=join(out,`${key}.json`);
   const report=existsSync(path)?JSON.parse(readFileSync(path,'utf8')):await evaluateOne(scenario,c.days,strategy,genes);
   if(!existsSync(path))writeFileSync(path,JSON.stringify(report,null,2)+'\n');
+  if(report.status==='error')throw Error(`Technical campaign error in ${path}: ${report.message}`);
   cache.set(key,report);return report;
  }
- let population=[validateGenes(DEFAULT_GENES)];
+ let population=c.initialPopulation??[validateGenes(DEFAULT_GENES)];
  while(population.length<c.population)population.push(randomGenome(random));
  const generations=[];
  for(let generation=0;generation<c.generations;generation++){

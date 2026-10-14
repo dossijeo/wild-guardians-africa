@@ -207,10 +207,67 @@ El replay puede variar en milisegundos frente a la batería por reconstrucción
 de residencia y carga del host; el diagnóstico se basa en recuentos y stacks,
 no en igualdad exacta de tiempos.
 
+### Diversidad de magias y reserva de biomas
+
+El gen adicional `growthShare` reparte los turnos de uso entre Crecimiento y
+Multiplicar en un ciclo de cuatro aplicaciones (0, 25, 50, 75 o 100 % de
+preferencia por Crecimiento). `magicPriority` decide el orden dentro del ciclo.
+Si no hay objetivo válido para la magia preferida, se intenta la otra. Cada
+toque sigue usando `Game.cast`, con los presupuestos diarios originales; la
+política no impone un número máximo de acciones. `growthShare=0` reproduce la
+decisión del genoma piloto anterior. Se registran aplicaciones efectivas,
+segundos realmente adelantados al terminar cada efecto y monedas extra de
+Multiplicar sólo cuando la caja se entrega.
+
+Se compararon cuatro repartos **con todos los demás genes idénticos** durante
+tres jornadas en entrenamiento Sabana/712 y Gran Río/2026. Se reservaron
+Manglares/123 y Desierto/909, sin repetir bioma ni semilla. Son jornadas
+introductorias; no prueban eficacia militar.
+
+| Bioma de entrenamiento | Política de magia | Caja día 3 | Plantas | Cajas | Crecimiento real | Ingreso extra de Multiplicar |
+|---|---|---:|---:|---:|---:|---:|
+| Sabana | 0 % Crecimiento | 607 | 74 | 215 | 0 s | 323 |
+| Sabana | 50 %, primero Crecimiento | 600 | 68 | 224 | 119 s | 276 |
+| Sabana | 50 %, primero Multiplicar | 586 | 71 | 227 | 106 s | 278 |
+| Sabana | 100 % Crecimiento preferido | 461 | 54 | 216 | 147 s | 48 |
+| Gran Río | 0 % Crecimiento | 593 | 65 | 215 | 0 s | 323 |
+| Gran Río | 50 %, primero Crecimiento | 502 | 73 | 224 | 120 s | 276 |
+| Gran Río | 50 %, primero Multiplicar | 562 | 73 | 232 | 109 s | 278 |
+| Gran Río | 100 % Crecimiento preferido | 474 | 44 | 213 | 155 s | 48 |
+
+El filtro corto eligió 50 % con prioridad Multiplicar por un margen pequeño.
+En la reserva, comparado con `good-current-magic` (mismo calendario de usos,
+sin cambio de reglas), el candidato obtuvo:
+
+| Bioma de reserva | Política | Caja día 3 | Plantas | Cajas | Crecimiento real | Ingreso extra de Multiplicar |
+|---|---|---:|---:|---:|---:|---:|
+| Manglares | Candidato | 503 | 76 | 221 | 106 s | 276 |
+| Manglares | Control | 597 | 86 | 212 | 0 s | 321 |
+| Desierto | Candidato | 402 | 77 | 181 | 134 s | 274 |
+| Desierto | Control | 465 | 80 | 173 | 0 s | 322 |
+
+Los cuatro brazos de reserva llegaron a 3/3 jornadas y conciliaron el ledger.
+El candidato entregó más cajas, pero cerró con menos caja y plantas que el
+control en ambos biomas: **la pequeña ventaja de entrenamiento no se sostuvo
+fuera de muestra**. No hay genoma competitivo demostrado, ni evidencia para
+modificar la potencia de las magias. Los reportes y la gráfica están en
+[`multi-biome-magic-3day-v2`](multi-biome-magic-3day-v2).
+
+El primer intento, conservado en
+[`multi-biome-magic-3day`](multi-biome-magic-3day), se detuvo en Desierto/909
+por `SpatialChunkUnavailable` al validar una parcela. El informe de error
+retiene el estado y los recibos parciales; no se contabilizó como derrota.
+El explorador del **simulador** ahora omite una parcela cuya ruta no está
+certificada y continúa buscando una legal, sin tocar la navegación ni las
+reglas del juego. Una prueba nativa reproduce Desierto/909 y verifica una
+jornada completa, siembra pagada y ledger conciliado. La segunda cohorte se
+recalculó íntegra tras el arreglo; no mezcla informes anteriores.
+
 ## Siguiente puerta de calidad
 
-1. Usar el piloto de siete noches y repetirlo con más semillas/biomas si no hay
-   fallo técnico; conservar los controles con calendario de magias actual.
+1. Extender la comparación multi-bioma de magia a 7–14 noches cuando se
+   estabilice el coste de `Game.tick`; conservar controles con calendario
+   vigente y comprobar la ventaja fuera de muestra, que aquí no apareció.
 2. Instrumentar estado real de recintos para calibrar pérdidas y reparaciones.
 3. Ajustar el modelo y demostrar menor error fuera de muestra antes de usarlo
    para filtrar miles de configuraciones de balance.

@@ -27,7 +27,7 @@ import {createNativeCampaignExpansion} from './native-campaign-expansion.mjs';
 import {campaignFinanceCheckpoint,campaignFinanceDelta} from './native-campaign-finance.mjs';
 
 import {q4DawnPlan,q4AdditionalPlan,q4RecoveryReserve} from './native-q4-labour-policy.mjs';
-import {validateGenes} from './evolutionary-balance/policy-genes.mjs';
+import {validateGenes,preferredAgriculturalPower} from './evolutionary-balance/policy-genes.mjs';
 
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 export async function simulateNativeCampaign({days=100,strategy='good',labourPolicy='legacy',profile='olderFemale',mixed=true,middayHiring=false,plantsPerWorker=12,defend=false,reserveLabourGrowth=true,reserveMaintenance=true,burstPlanting=false,cameraEntry=true,defensePolicy='expanding',nativeEvidence=true,onDay,onTick,onDecision,openingFactory=createOpeningWorld,entryDriverFactory=nav=>new NativeCampaignEntryDriver(nav),reloadRaids=true,evolutionaryGenes=null,currentMagicRules=false,...world}={}){
@@ -50,12 +50,12 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
   const pose=nativeCameraPose(nav.field,[center.x,0,center.z],nav.field.canyon?0:.5,nav.field.canyon?1.18:1.16,nav.field.canyon?34:38);
   nav.setRaidView({x:pose.eye[0],z:pose.eye[2]},center);nav.setActiveBounds(activeChunkRegion({x:pose.eye[0],z:pose.eye[2]}).bounds);
  }
- const plots=[];let nextWages=worker.wage,staff=1,plantedSequence=0,lastMagicElapsed=-Infinity,lastPlantElapsed=-Infinity;
+ const plots=[];let nextWages=worker.wage,staff=1,plantedSequence=0,lastMagicElapsed=-Infinity,lastPlantElapsed=-Infinity,magicUsesToday=0;
  const expansion=policy.foundVillages?createNativeCampaignExpansion():null;
- const daily=[],counts={},seen=new Set(),savedRaids=new Set(),additionalHiring={count:0,cost:0},magicApplications={growth:0,multiply:0,benefited:0,ineffective:0};let maximumLiving=0,reloads=0,settledDeliveryIncome=0;
+ const daily=[],counts={},seen=new Set(),savedRaids=new Set(),additionalHiring={count:0,cost:0},magicApplications={growth:0,multiply:0,benefited:0,ineffective:0,multiplyIncome:0,growthSecondsCompleted:0};let maximumLiving=0,reloads=0,settledDeliveryIncome=0;
  let financeStart=campaignFinanceCheckpoint(s);
  partialEvidence=()=>({currentFinance:campaignFinanceDelta(financeStart,s),daily:structuredClone(daily),nativeEvidence:evidence?.report(s)??null,raidEvidence:raidEvidence.report(s),labourHistory,labourReasons,defense:defense?.report(s)??null,expansion:expansion?.report()??null});
- const collect=()=>{for(const e of s.events)if(!seen.has(e.id)){seen.add(e.id);counts[e.type]=(counts[e.type]??0)+1;if(e.type==='CrateDelivered'){const q=s.ledger.entries['deliver:'+e.targetId];assert.ok(q&&q.d==='1'&&Number(q.n)>0);settledDeliveryIncome+=Number(q.n);}if(e.type==='HiringConfirmed'&&e.additional){additionalHiring.count+=e.count;additionalHiring.cost+=e.cost;}if(e.type==='SpellActivated'&&['growth','multiply'].includes(e.kind)){magicApplications[e.kind]++;magicApplications[e.benefited?'benefited':'ineffective']++;}}};
+ const collect=()=>{for(const e of s.events)if(!seen.has(e.id)){seen.add(e.id);counts[e.type]=(counts[e.type]??0)+1;if(e.type==='CrateDelivered'){const q=s.ledger.entries['deliver:'+e.targetId];assert.ok(q&&q.d==='1'&&Number(q.n)>0);settledDeliveryIncome+=Number(q.n);const crate=s.crates.find(c=>c.id===e.targetId);magicApplications.multiplyIncome+=numberOf(crate?.multiplyIncome??0);}if(e.type==='HiringConfirmed'&&e.additional){additionalHiring.count+=e.count;additionalHiring.cost+=e.cost;}if(e.type==='SpellActivated'&&['growth','multiply'].includes(e.kind)){magicApplications[e.kind]++;magicApplications[e.benefited?'benefited':'ineffective']++;}if(e.type==='AgriculturalSpellEnded'&&e.kind==='growth')magicApplications.growthSecondsCompleted+=e.growthSecondsAdded??0;}};
  const plotSearch=createNativeCampaignPlots(nav,()=>s);
  const choosePlot=()=>{const p=plotSearch.choose();if(p&&!plots.some(q=>q.x===p.x&&q.z===p.z))plots.push(p);return p;};
  const nextSpecies=()=>mixed&&s.day>=10&&numberOf(s.ledger.balance)>1000?['mijo','girasol','sorgo','maiz','batata','algodon','yuca','platano'][plantedSequence%8]:'mijo';
@@ -115,13 +115,13 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
   const live=s.plants.filter(p=>p.alive);
   if(genes||currentMagicRules){
    if(s.elapsed-lastMagicElapsed>=(genes?.magicIntervalSeconds??5)){
-    const priority=genes?.magicPriority??'multiply';
+    const priority=genes?preferredAgriculturalPower(genes,magicUsesToday):'multiply';
     const kinds=[priority,priority==='growth'?'multiply':'growth'];
     for(const kind of kinds){
      const point=live.find(p=>(kind==='multiply'?!p.multiplyHarvest:!isMature(p)&&p.water.every(w=>w.status!=='due'))&&
       !s.spells.some(a=>a.remaining>0&&a.targetPlantId===p.id));
      if(point&&Game.previewSpell(s,kind,point.x,point.z,nav,point.id).valid&&Game.cast(s,command(kind),kind,point.x,point.z,nav,point.id)){
-      actions++;lastMagicElapsed=s.elapsed;break;
+      actions++;lastMagicElapsed=s.elapsed;magicUsesToday++;break;
      }
     }
    }
@@ -150,6 +150,7 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
  hire();collect();
  while(s.day<=days&&!s.result){
   const day=s.day,start=s.elapsed,before=financeStart.balance,baseline={...counts},additionalBaseline={...additionalHiring},magicBaseline={...magicApplications},idle={budget:0,space:0,'shift-end':0,incursion:0,night:0},initialStaff=staff;
+  magicUsesToday=0;
   let longestIdle=0,idleRun=0,actions=0,daylightSeconds=0,unoccupiedSeconds=0,
     decisionWallMs=0,tickWallMs=0,presentationWallMs=0;
   while(s.day===day&&!s.result){

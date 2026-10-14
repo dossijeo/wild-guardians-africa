@@ -34,6 +34,7 @@
   "coefficients": {
     "incomePerPriorPlant": 11.923353293413173,
     "wagesPerPriorPlant": 4.998802395209581,
+    "wagesToRaidAttraction": 0.40763506955677775,
     "seedCostPerPlant": 5.0049751243781095,
     "nonRaidPlantExitPerPriorPlant": 1.1065868263473053,
     "attractionPerLivingPlantAtSpawn": 11.059033989266547,
@@ -43,6 +44,13 @@
     "wallRepairCoinsPerHp": 0.13028571428571428,
     "meanPlantedPerDay": 100.5,
     "meanWallSpend": 54
+  },
+  "observability": {
+    "raidNightsInTraining": 5,
+    "enclosureCoverageMeasured": false,
+    "breachTimingMeasured": false,
+    "defenseEffectIdentifiable": false,
+    "reason": "Native report has wall contact/HP, but no certified crop membership or breach timing."
   },
   "holdoutError": {
     "income": {

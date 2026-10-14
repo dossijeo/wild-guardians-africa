@@ -31,6 +31,7 @@ export function calibrate(report){
  const raidTrain=train.filter(r=>r.attraction!==null&&r.day>5);
  const c={incomePerPriorPlant:div(sum(train,'income'),sum(train,'priorLiving')),
   wagesPerPriorPlant:div(sum(train,'wages'),sum(train,'priorLiving')),
+  wagesToRaidAttraction:div(sum(raidTrain,'wages'),sum(raidTrain,'attraction')),
   seedCostPerPlant:div(sum(train,'seeds'),sum(train,'planted')),
   nonRaidPlantExitPerPriorPlant:div(sum(train,'nonRaidPlantExit'),sum(train,'priorLiving')),
   attractionPerLivingPlantAtSpawn:div(sum(raidTrain,'attraction'),sum(raidTrain,'livingAtSpawn')),
@@ -52,6 +53,9 @@ export function calibrate(report){
  return {source:{biome:report.biome,seed:report.seed,strategy:report.strategy,status:report.status,
   result:report.result,completedNights:report.completedNights,rows:rows.length},
   trainingDays:train.map(r=>r.day),validationDays:holdout.map(r=>r.day),coefficients:c,
+  observability:{raidNightsInTraining:raidTrain.length,
+   enclosureCoverageMeasured:false,breachTimingMeasured:false,
+   defenseEffectIdentifiable:false,reason:'Native report has wall contact/HP, but no certified crop membership or breach timing.'},
   holdoutError:error,holdoutPredictions:predictions,
   limitations:['Single-run conditional ratios; no causal identification of policy or defense efficacy.',
    'One-step prediction uses actual prior plants, purchases, raid potential and wall HP damage; it is not a stand-alone forecast.',

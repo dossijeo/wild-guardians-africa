@@ -1,0 +1,182 @@
+{
+  "status": "completed",
+  "biome": "sabana",
+  "seed": 712,
+  "days": 3,
+  "strategy": "evolved",
+  "genes": {
+    "plantsPerWorker": 6,
+    "wageReserveDays": 1,
+    "seedReserve": 0,
+    "defenseCashFraction": 0.2,
+    "defenseStartDay": 2,
+    "repairHealthFraction": 0.8,
+    "magicIntervalSeconds": 5,
+    "growthShare": 0.5,
+    "plantingIntervalSeconds": 1,
+    "wallMaterial": "zarzas",
+    "magicPriority": "multiply"
+  },
+  "completedNights": 3,
+  "result": null,
+  "rows": [
+    {
+      "day": 1,
+      "money": 475,
+      "living": 66,
+      "planted": 109,
+      "delivered": 44,
+      "destroyed": 0,
+      "staff": 8,
+      "magic": {
+        "growth": 23,
+        "multiply": 30,
+        "benefited": 53,
+        "ineffective": 0,
+        "multiplyIncome": 93,
+        "growthSecondsCompleted": 59.0247054134493
+      },
+      "income": 577,
+      "seeds": 550,
+      "wages": 252,
+      "walls": 0,
+      "repairs": 0,
+      "reconciled": true,
+      "wallTime": {
+        "decisionMs": 4437.953700000144,
+        "gameTickMs": 510.9402000000846,
+        "presentationMs": 0.5738000000856118
+      }
+    },
+    {
+      "day": 2,
+      "money": 624,
+      "living": 77,
+      "planted": 96,
+      "delivered": 85,
+      "destroyed": 0,
+      "staff": 11,
+      "magic": {
+        "growth": 30,
+        "multiply": 30,
+        "benefited": 60,
+        "ineffective": 0,
+        "multiplyIncome": 95,
+        "growthSecondsCompleted": 25.73185100676129
+      },
+      "income": 1030,
+      "seeds": 480,
+      "wages": 381,
+      "walls": 20,
+      "repairs": 0,
+      "reconciled": true,
+      "wallTime": {
+        "decisionMs": 4069.924599999882,
+        "gameTickMs": 1291.0169000000606,
+        "presentationMs": 0.7480999998515472
+      }
+    },
+    {
+      "day": 3,
+      "money": 586,
+      "living": 71,
+      "planted": 92,
+      "delivered": 98,
+      "destroyed": 0,
+      "staff": 13,
+      "magic": {
+        "growth": 24,
+        "multiply": 26,
+        "benefited": 50,
+        "ineffective": 0,
+        "multiplyIncome": 90,
+        "growthSecondsCompleted": 21.600552922878492
+      },
+      "income": 1168,
+      "seeds": 460,
+      "wages": 396,
+      "walls": 350,
+      "repairs": 0,
+      "reconciled": true,
+      "wallTime": {
+        "decisionMs": 10481.29520000008,
+        "gameTickMs": 1245.8589000000939,
+        "presentationMs": 0.8730999999679625
+      }
+    }
+  ],
+  "policy": {
+    "profile": "olderFemale",
+    "mixed": true,
+    "middayHiring": true,
+    "plantsPerWorker": 6,
+    "defend": true,
+    "cashPolicy": "minimum-reinvestment",
+    "reserveMaintenance": true,
+    "burstPlanting": false,
+    "cameraEntry": true,
+    "defensePolicy": "expanding",
+    "evolutionaryGenes": {
+      "plantsPerWorker": 6,
+      "wageReserveDays": 1,
+      "seedReserve": 0,
+      "defenseCashFraction": 0.2,
+      "defenseStartDay": 2,
+      "repairHealthFraction": 0.8,
+      "magicIntervalSeconds": 5,
+      "growthShare": 0.5,
+      "plantingIntervalSeconds": 1,
+      "wallMaterial": "zarzas",
+      "magicPriority": "multiply"
+    },
+    "currentMagicRules": true
+  },
+  "defense": {
+    "paidCost": 370,
+    "paidPieces": 37
+  },
+  "raid": [
+    {
+      "day": 1,
+      "animals": 1,
+      "attraction": 726,
+      "pressure": 0.09213773209616928,
+      "livingAtSpawn": 66,
+      "cropsDestroyed": 0,
+      "potentialAgriculturalHp": 2,
+      "effectiveAgriculturalHp": 0,
+      "wallHits": 0,
+      "wallHpLost": 0,
+      "structuresRuined": 0,
+      "shieldContacts": 2
+    },
+    {
+      "day": 2,
+      "animals": 1,
+      "attraction": 869,
+      "pressure": 0.1101199630495105,
+      "livingAtSpawn": 77,
+      "cropsDestroyed": 0,
+      "potentialAgriculturalHp": 3,
+      "effectiveAgriculturalHp": 0,
+      "wallHits": 0,
+      "wallHpLost": 0,
+      "structuresRuined": 0,
+      "shieldContacts": 3
+    },
+    {
+      "day": 3,
+      "animals": 1,
+      "attraction": 781,
+      "pressure": 0.10652394972202298,
+      "livingAtSpawn": 71,
+      "cropsDestroyed": 0,
+      "potentialAgriculturalHp": 4,
+      "effectiveAgriculturalHp": 0,
+      "wallHits": 0,
+      "wallHpLost": 0,
+      "structuresRuined": 0,
+      "shieldContacts": 4
+    }
+  ]
+}
