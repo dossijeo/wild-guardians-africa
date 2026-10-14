@@ -51,3 +51,51 @@ test('a native Sabana incursion spawns physically and advances through Game.tick
       'the native route should lead to a physical attack, not only a retreat');
   }finally{session.dispose();}
 });
+
+for(const count of [1,5])test(`${count} native raiders attack an accessible wall instead of crossing a closed crop enclosure`,async()=>{
+  const state=Game.newGame({seed:712,biome:'sabana',culture:'mapungubwe',
+    slotId:'spatial-walled-raid'});
+  state.villages[0].buildings=villageLayout(pack,0,0);
+  state.structures.push({id:'center-1',kind:'center',x:0,z:0,culture:'mapungubwe',
+    villageId:'village-1',status:'intact',hp:600,maxHp:600});
+  const loaded=new Map(),session=createSpatialGameSession(module,state,{
+    loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+  try{
+    const jobs=new Map();
+    for(let cz=-1;cz<=1;cz++)for(let cx=-1;cx<=1;cx++)
+      jobs.set(`${cx},${cz}`,{cx,cz,score:Math.hypot(cx,cz)});
+    session.stream.plan(jobs);await session.stream.whenIdle();
+    const nav=createSpatialNavigationMovement(session,state);
+    nav.setActiveBounds([-36,-36,36,36]);
+    let ring,inside;
+    for(let z=-14;z<=14&&!ring;z+=4)for(let x=-14;x<=14&&!ring;x+=4){
+      const candidate=[[x,z],[x+8,z],[x+8,z+8],[x,z+8],[x,z]];
+      const crop={x:x+4,z:z+4};
+      if(!nav.placement(crop.x,crop.z,.4).valid)continue;
+      const plan=Game.previewWallChain(state,'zarzas',candidate,nav,
+        {smooth:false,snap:false});
+      if(plan.gates===1&&plan.pieces.length>=12){ring=candidate;inside=crop;}
+    }
+    assert(ring);
+    assert.equal(Game.plant(state,'protected-crop','mijo',inside.x,inside.z,nav),true);
+    assert.equal(Game.buildWallChain(state,'protected-ring','zarzas',ring,nav,
+      {smooth:false,snap:false}),true);
+    const walls=state.structures.filter(item=>item.kind==='wall');
+    assert(walls.length>=12);
+    nav.setRaidView({x:ring[0][0]-7,z:ring[0][1]+4},inside);
+    state.time=310;
+    assert.notEqual(spawnRaid(state,{at:310,group:Array(count).fill('warthog'),done:false,
+      introductory:true},nav),false);
+    assert.equal(state.raid.animals.length,count);
+    const animals=[...state.raid.animals],initialHits=animals.map(animal=>animal.hitsRemaining);
+    for(let i=0;i<2000&&state.raid;i++)Game.tick(state,.25,nav);
+    assert.equal(state.raid,null,JSON.stringify(animals.map(animal=>({
+      status:animal.status,hitsRemaining:animal.hitsRemaining,x:animal.x,z:animal.z}))));
+    assert(animals.some((animal,i)=>animal.hitsRemaining<initialHits[i]));
+    if(count>1)assert(animals.filter((animal,i)=>animal.hitsRemaining<initialHits[i]).length>=2,
+      'independent attackers should spend their own attack budgets');
+    assert(state.events.some(event=>event.type==='StructureHit'&&
+      walls.some(wall=>wall.id===event.targetId)),
+    'the animal should damage a real wall rather than cross the closed perimeter');
+  }finally{session.dispose();}
+});

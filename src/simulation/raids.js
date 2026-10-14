@@ -224,7 +224,7 @@ export function spawnRaid(s,plan,nav,daytime=false) {
   emit(s,wave?'RaidWaveSpawned':'RaidSpawned',{raidFacts:{id:s.raid.id,day:s.day,daytime,elapsed:s.elapsed,waveIndex:s.raid.waveIndex??0,pressureFacts:s.raid.pressureFacts??null,exposedLiving:exposed.length,exposedWounded:exposed.filter(p=>(p.attackHits??0)>0).length,actors:animals.map(a=>({id:a.id,species:a.species,hitsRemaining:a.hitsRemaining,...(a.damageProfile?{damageProfile:structuredClone(a.damageProfile)}:{}),spawn:{...a.spawn},exit:{...a.exit}}))}});return true;
 }
 function release(s,a) {if(a.reservation&&s.raid.reservations[a.reservation]===a.id){delete s.raid.reservations[a.reservation];s.raid.waitRevision=((s.raid.waitRevision??0)+1)>>>0;}a.reservation=null;a.targetId=null;a.path=null;a.approach=null;a.approachShieldId=null;}
-export function reachableApproach(a,target,nav,shield=null){
+export function reachableApproach(a,target,nav,shield=null,onUnknown=null){
   const focus=shield??target,r=shield?shield.radius+a.radius+.1:(target.kind==='wall'?1.2:.6)+a.radius;
   const angle=Math.atan2(a.x-focus.x,a.z-focus.z);
   // One preferred service point and bounded local alternatives. Connectivity
@@ -235,7 +235,13 @@ export function reachableApproach(a,target,nav,shield=null){
     if(nav.state&&!actorSegmentClear(point,point,a,actorBlockers(nav.state,a,false)))continue;
     // A complete 32-cell corridor lets the native search certify enclosed
     // islands once and reuse that proof across nearby crop service points.
-    const path=nav.approachPath?nav.approachPath(a,point,a.radius,32):nav.path(a,point,a.radius,null,false,32);
+    let path;
+    try{path=nav.approachPath?nav.approachPath(a,point,a.radius,32):nav.path(a,point,a.radius,null,false,32);}
+    catch(error){
+      if(error?.name!=='SpatialChunkUnavailable')throw error;
+      onUnknown?.();
+      continue;
+    }
     if(path)return {point,path};
   }
   return null;
@@ -250,6 +256,8 @@ export function raidTarget(s,id){
   return s.plants.find(eligible)??s.structures.find(eligible);
 }
 function targetFor(s,a,nav) {
+  let unknown=false;
+  const markUnknown=()=>{unknown=true;};
   const groups=cropTargetGroups(s.plants);
   for(const group of groups){
     const profile=String(a.radius),entry=group.regions.get(profile);
@@ -270,7 +278,7 @@ function targetFor(s,a,nav) {
       // One abstract connectivity query represents all crops in this region.
       if(nav.regionConnected?.(a,eligible[0],a.radius,null,false,32)===false)continue;
       for(const p of eligible){
-        const shield=spellAt(s,'shield',p),approach=reachableApproach(a,p,nav,shield);
+        const shield=spellAt(s,'shield',p),approach=reachableApproach(a,p,nav,shield,markUnknown);
         if(approach)return {target:p,reservation:targetReservationKey(p,a),approach,shieldId:shield?.id??null};
       }
     }
@@ -280,10 +288,10 @@ function targetFor(s,a,nav) {
   structures.sort((p,q)=>groups.length?near(p)-near(q):q.value-p.value||near(p)-near(q)||p.id.localeCompare(q.id));
   for(const group of structures)for(const structure of [...group.targets].sort((p,q)=>dist(a,p)-dist(a,q)||p.id.localeCompare(q.id))) {
     if(targetReserved(s,a,structure))continue;
-    const shield=spellAt(s,'shield',structure),approach=reachableApproach(a,structure,nav,shield);
+    const shield=spellAt(s,'shield',structure),approach=reachableApproach(a,structure,nav,shield,markUnknown);
     if(approach)return {target:structure,reservation:targetReservationKey(structure,a),approach,shieldId:shield?.id??null};
   }
-  return null;
+  return unknown?{unknown:true}:null;
 }
 export function warmRaidApproaches(state,specs,entry,nav){
   if(!entry)return;
@@ -295,7 +303,7 @@ export function warmRaidApproaches(state,specs,entry,nav){
     nav.state=preview;
     for(const animal of preview.raid.animals){
       const selected=targetFor(preview,animal,nav);
-      if(selected){preview.raid.reservations[selected.reservation]=animal.id;animal.targetId=selected.target.id;animal.approach=selected.approach.point;}
+      if(selected&&!selected.unknown){preview.raid.reservations[selected.reservation]=animal.id;animal.targetId=selected.target.id;animal.approach=selected.approach.point;}
     }
   }finally{nav.state=originalState;}
 }
@@ -371,9 +379,9 @@ export function updateRaid(s,dt,nav) {
         wait.epoch=epoch;wait.retryAt=s.elapsed+1;
       }
       const selected=targetFor(s,a,nav);
-      if(!selected){
+      if(!selected||selected.unknown){
         emit(s,'AnimalTargetUnavailable',{targetId:a.id,species:a.species,hitsRemaining:a.hitsRemaining});
-        if(occupiedEligibleGroup(s,a,p=>canAttackCrop(s,p)))enqueueWait(s,a);
+        if(selected?.unknown||occupiedEligibleGroup(s,a,p=>canAttackCrop(s,p)))enqueueWait(s,a);
         else {leaveWait(s.raid,a);a.status='retreating';emit(s,'AnimalRetreating',{targetId:a.id,species:a.species,hitsRemaining:a.hitsRemaining,reason:'no-reachable-unleased-target'});}
         continue;
       }
