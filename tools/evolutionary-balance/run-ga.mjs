@@ -117,7 +117,9 @@ export async function runSearch(config){
     }
    });
   if(!existsSync(path))writeFileSync(path,JSON.stringify(report,null,2)+'\n');
-  if(report.status==='error')throw Error(`${report.name==='CampaignCostStop'?'Cost stop':'Technical campaign error'} in ${path}: ${report.message}`);
+  if(report.status==='error'&&report.name!=='CampaignCostStop')
+   throw Error(`Technical campaign error in ${path}: ${report.message}`);
+  if(report.name==='CampaignCostStop')console.warn(`Candidate computational cost stop in ${path}: ${report.message}`);
   cache.set(key,report);return report;
  }
  let population=c.initialPopulation??[validateGenes(DEFAULT_GENES)];
@@ -126,8 +128,12 @@ export async function runSearch(config){
  for(let generation=0;generation<c.generations;generation++){
   const ranked=[];
   for(const genes of population){
-   const reports=[];
-   for(const scenario of c.train)reports.push(await one(scenario,'evolved',genes));
+  const reports=[];
+   for(const scenario of c.train){
+    const report=await one(scenario,'evolved',genes);
+    reports.push(report);
+    if(report.name==='CampaignCostStop')break;
+   }
    const scores=reports.map(r=>scoreCampaign(r,c.days));
    ranked.push({id:genomeId(genes),genes,score:Math.min(...scores.map(x=>x.score)),meanScore:scores.reduce((n,x)=>n+x.score,0)/scores.length,
     cases:reports.map((r,i)=>({biome:r.biome,seed:r.seed,...scores[i]}))});
@@ -135,6 +141,7 @@ export async function runSearch(config){
   ranked.sort((a,b)=>b.score-a.score||b.meanScore-a.meanScore||a.id.localeCompare(b.id));
   generations.push({generation,ranked});
   writeFileSync(join(out,`search-${runId}.json`),JSON.stringify({stamp,generations},null,2)+'\n');
+  if(ranked.every(x=>x.score<=-1e9))break;
   const elite=ranked.slice(0,Math.max(2,Math.ceil(c.population/2)));
   population=[elite[0].genes];
   const nextIds=new Set(population.map(genomeId));
@@ -151,6 +158,12 @@ export async function runSearch(config){
   }
  }
  const pilotLeader=generations.flatMap(x=>x.ranked).sort((a,b)=>b.score-a.score||b.meanScore-a.meanScore)[0];
+ if(!pilotLeader||pilotLeader.score<=-1e9){
+  const result={stamp,pilotLeader:null,holdout:[],status:'no-evaluable-candidate',
+   limits:'All screened candidates stopped for computational cost or technical validity; no policy selected.'};
+  writeFileSync(join(out,`result-${runId}.json`),JSON.stringify(result,null,2)+'\n');
+  return result;
+ }
  const finalists=[{strategy:'evolved',genes:pilotLeader.genes},...c.baselines.map(strategy=>({strategy,genes:null}))];
  const holdout=[];
  for(const finalist of finalists)for(const scenario of c.holdout){

@@ -31,7 +31,9 @@ export function scoreCampaign(report,targetDays){
  const rows=report.rows??[];
  const completed=Math.min(targetDays,Math.max(0,report.completedNights??0));
  const terminal=report.result==='defeat'||report.result==='victory';
- if(report.status==='error'||!rows.length||!terminal&&completed<targetDays)return {score:-1e9,valid:false,reason:'technical-or-truncated'};
+ if(report.status==='error')return {score:-1e9,valid:false,
+  reason:report.name==='CampaignCostStop'?'computational-cost-stop':'technical-error'};
+ if(!rows.length||!terminal&&completed<targetDays)return {score:-1e9,valid:false,reason:'truncated'};
  const productive=rows.reduce((n,r)=>n+(r.delivered??0),0);
  const living=rows.at(-1)?.living??0;
  const cash=rows.at(-1)?.money??0;
