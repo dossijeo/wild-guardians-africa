@@ -222,6 +222,25 @@ initialization. The preceding lookup reference test had encoded the old
 two-hit crop rule; it was updated to the current one-hit rule without changing
 combat behavior.
 
+## Repository-wide test status
+
+At `e8007a9f`, the full `npm test` run completed in 467.6 seconds:
+4,321 tests, 4,122 passed and **199 failed**. The focused 18-test
+retreat/evidence/persistence set, 185 playable tests, web build and PR
+`validate` check pass. The failing full-suite cases span legacy Growth and
+Multiply expectations, navigation geometry and route expectations, animal
+raid behavior, and several other systems. Some explicitly assert rules or
+routes replaced by experimental work, but the full set has **not** been
+triaged against the branch's base revision. Therefore this is not a clean
+repository-wide QA result and is not grounds for merging the PR. The complete
+local TAP output is retained outside the committed report as
+`full-suite-e8007a9f.log`; the aggregate failure count is recorded here so
+the limitation remains visible even without that local file.
+
+The 30-night-cap native campaigns reported above all ended in real defeat
+before night 30. They demonstrate several biomes and seeds without a
+navigation stall, but cannot validate sustained 30/60/100-night performance.
+
 ## Reproduce
 
 ```powershell
