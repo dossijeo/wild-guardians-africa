@@ -35,8 +35,7 @@ try{
   const navigation=createSpatialNavigationMovement(session,state);
   await scene.load(state,navigation,payload,{spatialSession:session,farVegetation:false});
   const sceneReady=performance.now();
-  scene.resize();scene.sync(0);scene.updateCamera();
-  scene.renderer.render(scene.scene,scene.camera);
+  scene.resize();scene.render(0);
   const terrainChunks=[...scene.chunks.values()].filter(group=>group.userData?.spatialAuthority==='spatial-wasm').length;
   if(terrainChunks<1||terrainChunks!==scene.chunks.size||
      scene.nav.field!==session.field||scene.chunkStream!==session.stream||
@@ -44,6 +43,8 @@ try{
     throw Error('Scene did not adopt the authoritative native world');
   window.qaStats={biome,seed,startAttempts:start.attempts,terrainChunks,
     loadedChunks:session.core.metrics().loadedChunks,
+    nativeProps:[...scene.chunks.values()].reduce((sum,group)=>
+      sum+group.userData.propSources.flat().length,0),
     sectorUpdates:session.core.metrics().sectorUpdates,
     horizon:Boolean(scene.horizon?.group),
     memoryBytes:session.core.metrics().memoryBytes,
