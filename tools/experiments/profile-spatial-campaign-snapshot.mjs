@@ -48,7 +48,7 @@ try{
   }
   nav.setActiveBounds([(cx-residentRadius)*48-24,(cz-residentRadius)*48-24,
     (cx+residentRadius)*48+24,(cz+residentRadius)*48+24]);
-  const calls={};
+  const calls={},approachTargets=new Map();
   for(const name of ['workerPath','path','approachPath','walkable',
     'segmentClear','workerMotionClear','propsAt','regionFor',
     'regionConnected','setState','wallPlacement']){
@@ -58,7 +58,13 @@ try{
     nav[name]=(...args)=>{
       const start=performance.now();
       try{const result=fn(...args);
-        if(name==='approachPath')calls[name][result?'found':'blocked']++;
+        if(name==='approachPath'){
+          calls[name][result?'found':'blocked']++;
+          const id=String(args[1]?.id??'unknown');
+          const row=approachTargets.get(id)??{calls:0,found:0,blocked:0,ms:0};
+          row.calls++;row[result?'found':'blocked']++;
+          row.ms+=performance.now()-start;approachTargets.set(id,row);
+        }
         return result;
       }catch(error){if(name==='approachPath'&&error?.name==='SpatialChunkUnavailable')
         {calls[name].unknown++;
@@ -104,6 +110,7 @@ try{
     enclosureSamples[species]=counts;
   }
   const report={input,steps:rows.length,residentRadius,calls,rows,
+    topApproachTargets:[...approachTargets].sort((a,b)=>b[1].calls-a[1].calls).slice(0,30),
     raidSelection:nav.raidSelectionStats,
     connectivityDemand:[...(nav.raidConnectivityDemand??[])],
     sectorUpdates:session.core.wasm.lazy_sector_updates()-sectorUpdatesBefore,

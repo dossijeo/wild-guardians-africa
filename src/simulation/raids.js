@@ -347,7 +347,7 @@ export function spawnRaid(s,plan,nav,daytime=false) {
   emit(s,wave?'RaidWaveSpawned':'RaidSpawned',{raidFacts:{id:s.raid.id,day:s.day,daytime,elapsed:s.elapsed,waveIndex:s.raid.waveIndex??0,pressureFacts:s.raid.pressureFacts??null,exposedLiving:exposed.length,exposedWounded:exposed.filter(p=>(p.attackHits??0)>0).length,actors:animals.map(a=>({id:a.id,species:a.species,hitsRemaining:a.hitsRemaining,...(a.damageProfile?{damageProfile:structuredClone(a.damageProfile)}:{}),spawn:{...a.spawn},exit:{...a.exit}}))}});return true;
 }
 function release(s,a) {if(a.reservation&&s.raid.reservations[a.reservation]===a.id){delete s.raid.reservations[a.reservation];s.raid.waitRevision=((s.raid.waitRevision??0)+1)>>>0;}a.reservation=null;a.targetId=null;a.path=null;a.approach=null;a.approachShieldId=null;}
-export function reachableApproach(a,target,nav,shield=null,onUnknown=null){
+export function reachableApproach(a,target,nav,shield=null,onUnknown=null,regionDecision=null){
   const focus=shield??target,r=shield?shield.radius+a.radius+.1:(target.kind==='wall'?1.2:.6)+a.radius;
   const angle=Math.atan2(a.x-focus.x,a.z-focus.z);
   // One preferred service point and bounded local alternatives. Connectivity
@@ -357,6 +357,25 @@ export function reachableApproach(a,target,nav,shield=null,onUnknown=null){
     if(nav.state?.raid&&!reservedApproachClear(nav.state,a,point))continue;
     if(nav.state&&!actorSegmentClear(point,point,a,actorBlockers(nav.state,a,false)))continue;
     if(!nav.walkable(point.x,point.z,a.radius,null,false))continue;
+    // The native region graph can prove that this service point is on the
+    // opposite side of a barrier. Only ask for a detailed route when the
+    // regions might connect; unknown connectivity still gets a full search.
+    if(nav.regionConnected){
+      const {scope,origin,sectors}=regionDecision??{};
+      const destination=scope&&origin&&!origin.startsWith('unknown:')?
+        nav.regionFor?.(point,a.radius,null,false)?.key:null;
+      const key=destination?`service-region:${a.radius}:${origin}:${destination}`:null;
+      let connected=key&&scope.decisions.get(key)?.sectors===sectors?
+        scope.decisions.get(key).status:undefined;
+      if(connected===undefined){
+        connected=nav.regionConnected(a,point,a.radius,null,false);
+        if(key&&connected!==null){
+          if(scope.decisions.size>=2048)scope.decisions.delete(scope.decisions.keys().next().value);
+          scope.decisions.set(key,{sectors,status:connected});
+        }
+      }
+      if(connected===false)continue;
+    }
     // A complete 32-cell corridor lets the native search certify enclosed
     // islands once and reuse that proof across nearby crop service points.
     let path;
@@ -450,7 +469,8 @@ function targetForImpl(s,a,nav,stats){
       eligible.sort((p,q)=>dist(a,p)-dist(a,q));
       for(const p of eligible){
         if(stats)stats.cropAttempts=(stats.cropAttempts??0)+1;
-        const shield=spellAt(s,'shield',p),approach=reachableApproach(a,p,nav,shield,markUnknown);
+        const shield=spellAt(s,'shield',p),approach=reachableApproach(a,p,nav,shield,markUnknown,
+          scope?{scope,origin,sectors:sectorRevision}:null);
         if(approach)return {target:p,reservation:targetReservationKey(p,a),approach,shieldId:shield?.id??null};
       }
     }
@@ -504,7 +524,8 @@ function targetForImpl(s,a,nav,stats){
     if(old?.status==='unknown'&&old.sectors===sectorRevision&&s.elapsed-old.at<RAID_REGION_RETRY_SECONDS){unknown=true;continue;}
     const shield=spellAt(s,'shield',structure);
     let unresolved=false;
-    const approach=reachableApproach(a,structure,nav,shield,()=>{unresolved=true;markUnknown();});
+    const approach=reachableApproach(a,structure,nav,shield,()=>{unresolved=true;markUnknown();},
+      scope?{scope,origin,sectors:sectorRevision}:null);
     if(key&&unresolved&&!approach){
       if(scope.decisions.size>=2048)scope.decisions.delete(scope.decisions.keys().next().value);
       scope.decisions.set(key,{status:'unknown',at:s.elapsed,sectors:sectorRevision});
