@@ -25,6 +25,7 @@ test('post-intro fitness distinguishes native defeat, technical censor and colla
   income:100,wages:40,seeds:40,repairs:0,destroyed:0}));
  const survivor={status:'completed',completedNights:14,result:null,rows,raid:[]};
  const defeated={...survivor,result:'defeat'};
+ assert.deepEqual([postIntroMetrics(survivor).pressureDays,postIntroMetrics(survivor).delivered],[9,90]);
  const live=scorePostIntro(survivor,14,{minimumTerminalDeliveryPerDay:5});
  assert.equal(live.valid,true);
  assert.equal(live.scoreVersion,'post-intro-v1');
