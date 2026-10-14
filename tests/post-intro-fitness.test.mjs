@@ -48,6 +48,11 @@ test('post-intro pilot requires distinct paired native scenarios and frozen lega
  const valid=validatePilotConfig(config);
  assert.equal(valid.days,14);
  assert.equal(valid.genomes.none.wallPolicy,'none');
+ assert.deepEqual(validatePilotConfig({...config,caseSelection:[{name:'walls',biome:'sabana',seed:411}]}).caseSelection,
+  [{name:'walls',biome:'sabana',seed:411}]);
+ assert.throws(()=>validatePilotConfig({...config,caseSelection:[{name:'walls',biome:'desierto',seed:983}]}),/case selection/);
+ assert.throws(()=>validatePilotConfig({...config,caseSelection:[{name:'missing',biome:'sabana',seed:411}]}),/case selection/);
+ assert.throws(()=>validatePilotConfig({...config,caseSelection:[{name:'walls',biome:'sabana',seed:411},{name:'walls',biome:'sabana',seed:411}]}),/case selection/);
  assert.equal(validatePilotConfig({...config,minimumTerminalDeliveryPerDay:493/6}).minimumTerminalDeliveryPerDay,493/6);
  assert.throws(()=>validatePilotConfig({...config,minimumTerminalDeliveryPerDay:-1}),/delivery floor/);
  assert.throws(()=>validatePilotConfig({...config,days:7}),/budget/);

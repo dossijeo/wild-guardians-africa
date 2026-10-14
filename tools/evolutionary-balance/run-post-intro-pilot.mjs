@@ -27,6 +27,13 @@ export function validatePilotConfig(raw){
  if(!c.genomes||Object.keys(c.genomes).length<2||Object.keys(c.genomes).some(x=>!/^[a-z0-9-]+$/.test(x)))
   throw Error('Need named frozen genomes');
  c.genomes=Object.fromEntries(Object.entries(c.genomes).map(([name,genes])=>[name,validateGenes(genes)]));
+ if(c.caseSelection!==undefined){
+  if(!Array.isArray(c.caseSelection)||c.caseSelection.length===0||
+   c.caseSelection.some(x=>!x||typeof x.name!=='string'||typeof x.biome!=='string'||!Number.isInteger(x.seed)||
+    !(x.name in c.genomes)||!c.scenarios.some(s=>s.biome===x.biome&&s.seed===x.seed))||
+   new Set(c.caseSelection.map(x=>`${x.name}:${x.biome}:${x.seed}`)).size!==c.caseSelection.length)
+   throw Error('Invalid frozen case selection');
+ }
  if(typeof c.output!=='string'||!c.output)throw Error('Missing output');
  return c;
 }
@@ -45,6 +52,7 @@ export async function runPostIntroPilot(raw){
  writeFileSync(configPath,JSON.stringify(stamp,null,2)+'\n');
  const cases=[];
  for(const [name,genes] of Object.entries(c.genomes))for(const scenario of c.scenarios){
+  if(c.caseSelection&&!c.caseSelection.some(x=>x.name===name&&x.biome===scenario.biome&&x.seed===scenario.seed))continue;
   const stem=`${name}-${scenario.biome}-${scenario.seed}-${c.days}`;
   const archive=join(out,`${stem}.json.gz`),progress=join(out,`${stem}.jsonl`);
   let day=0,gameTickMs=0;const began=Date.now();
