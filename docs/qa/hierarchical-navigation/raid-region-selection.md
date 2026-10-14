@@ -529,6 +529,16 @@ timing differences do not establish a speedup. The new ledger is retained as
 `selector-548316a1-canyon-123.json.gz`. This regression check does not
 establish a 30-night survivor or military-balance acceptance.
 
+The full suite at frozen commit `5daf925b` completed in 444.1 seconds:
+4,321 tests, 4,239 passed and **82 failed**. Eleven failing test names from
+`dc298b5a` are resolved, with no newly failing names. The full TAP record is
+`full-suite-5daf925b.log.gz`. This is still a red suite and does not establish
+core stabilization. One rendering test used a plain-object `WorldScene`
+fixture that omitted the existing `removeInstalledChunk` method; the fixture
+now supplies the real method. Its complete file passes 6/6 after that
+test-only correction. The 82-failure count predates this correction; no new
+global count is claimed.
+
 ## Deferred engine name
 
 After the WASM spatial core is functionally and performance-stable, rename
