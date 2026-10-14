@@ -20,8 +20,9 @@ export function createNativeExpandingDefensePolicy({startDay=2,material='zarzas'
   let pending=s.tasks.filter(t=>t.kind==='repair').reduce((n,t)=>{const p=s.structures.find(p=>p.id===t.targetId);return n+(p?Math.ceil(numberOf(Game.repairCost(p))):0);},0);
   // Request native repairs, but do not count uncompleted requests as useful work.
   const repairCandidates=repairWalls?s.structures.filter(wall=>owned.has(wall.id)&&['intact','ruined'].includes(wall.status)&&wall.hp<wall.maxHp*repairFraction&&!s.tasks.some(t=>t.kind==='repair'&&t.targetId===wall.id)):[];
+  // Stable sort preserves the original structure order within each class.
   if(repairPriority==='ruined-first')repairCandidates.sort((a,b)=>
-   Number(b.status==='ruined')-Number(a.status==='ruined')||a.x-b.x||a.z-b.z||String(a.id).localeCompare(String(b.id)));
+   Number(b.status==='ruined')-Number(a.status==='ruined'));
   for(const wall of repairCandidates){
    const payment=Math.ceil(numberOf(Game.repairCost(wall)));
    if(numberOf(s.ledger.balance)>=protectedCash+pending+payment){Game.requestRepair(s,command('repair'),wall.id);repairRequests++;pending+=payment;}

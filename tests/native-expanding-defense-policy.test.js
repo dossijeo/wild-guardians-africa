@@ -41,3 +41,16 @@ test('optional ruined-first priority spends a one-repair budget on a late ruin',
  }
  assert.throws(()=>createNativeExpandingDefensePolicy({repairPriority:'other'}),/priority/);
 });
+
+test('ruined-first preserves creation order when no wall is ruined',()=>{
+ for(const priority of ['creation','ruined-first']){
+  const {s,nav,options,policy}=fixture({repairPriority:priority});
+  assert.equal(policy.act(s,nav,options),1);
+  const walls=s.structures.filter(w=>w.kind==='wall');
+  const first=walls[0],later=walls.at(-1);
+  first.hp=first.maxHp/2;later.hp=later.maxHp/2;
+  s.ledger.balance=rational(105);s.elapsed+=31;nav.setState(s);
+  assert.equal(policy.act(s,nav,options),0);
+  assert.deepEqual(s.tasks.filter(t=>t.kind==='repair').map(t=>t.targetId),[first.id]);
+ }
+});

@@ -1,6 +1,6 @@
 # AB de prioridad de reparación del jugador virtual
 
-La opción `defenseRepairPriority` acepta `creation` (valor predeterminado y comportamiento histórico) o `ruined-first`. Sólo ordena los muros **propios** que ya cumplen el umbral de reparación y no tienen tarea pendiente. `ruined-first` solicita primero los arruinados; dentro de cada grupo usa posición X/Z e ID como desempate determinista. Conserva coste, reserva, umbral, comandos nativos y orden de tareas posterior.
+La opción `defenseRepairPriority` acepta `creation` (valor predeterminado y comportamiento histórico) o `ruined-first`. Sólo ordena los muros **propios** que ya cumplen el umbral de reparación y no tienen tarea pendiente. `ruined-first` solicita primero los arruinados y conserva el orden original de `s.structures` dentro de cada grupo. Conserva coste, reserva, umbral, comandos nativos y orden de tareas posterior.
 
 Para un AB pareado, pasar el mismo objeto de genes congelados, escenario, semilla y número de días a `evaluateOne` en ambas llamadas, cambiando sólo el último argumento:
 
