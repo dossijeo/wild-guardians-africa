@@ -34,6 +34,10 @@ export function validatePilotConfig(raw){
    new Set(c.caseSelection.map(x=>`${x.name}:${x.biome}:${x.seed}`)).size!==c.caseSelection.length)
    throw Error('Invalid frozen case selection');
  }
+ if(c.raidProbeSnapshotDays!==undefined&&(!Array.isArray(c.raidProbeSnapshotDays)||
+  new Set(c.raidProbeSnapshotDays).size!==c.raidProbeSnapshotDays.length||
+  c.raidProbeSnapshotDays.some(day=>!Number.isInteger(day)||day<1||day>c.days)))
+  throw Error('Invalid raid probe snapshot days');
  if(typeof c.output!=='string'||!c.output)throw Error('Missing output');
  return c;
 }
@@ -56,13 +60,22 @@ export async function runPostIntroPilot(raw){
   const stem=`${name}-${scenario.biome}-${scenario.seed}-${c.days}`;
   const archive=join(out,`${stem}.json.gz`),progress=join(out,`${stem}.jsonl`);
   let day=0,gameTickMs=0;const began=Date.now();
+  const capturedRaids=new Set();
   const report=existsSync(archive)?JSON.parse(gunzipSync(readFileSync(archive))):
    await evaluateOne(scenario,c.days,'evolved',genes,row=>{
     const sample={name,biome:scenario.biome,seed:scenario.seed,day:row.day,
      result:row.result,money:row.money,living:row.living,destroyed:row.destroyed,
      delivered:row.delivered,gameTickMs:row.wallTime?.gameTickMs};
     appendFileSync(progress,JSON.stringify(sample)+'\n');console.log(JSON.stringify(sample));
-   },true,(state,_nav,timing)=>{
+   },true,(state,nav,timing)=>{
+    if(state.raid&&c.raidProbeSnapshotDays?.includes(state.day)&&!capturedRaids.has(state.raid.id)){
+     capturedRaids.add(state.raid.id);
+     const capture={sourceHash:stamp.sourceHash,case:stem,raidId:state.raid.id,
+      day:state.day,elapsed:state.elapsed,activeBounds:nav.activeBounds,
+      raidView:nav.raidView,state};
+     writeFileSync(join(out,`${stem}-raid${state.day}-probe.json.gz`),
+      gzipSync(JSON.stringify(capture),{level:9,mtime:0}));
+    }
     if(state.day!==day){day=state.day;gameTickMs=0;}
     gameTickMs+=timing.gameTickMs??0;
     if(gameTickMs>c.maxDayGameTickMs||Date.now()-began>c.maxElapsedWallMs){

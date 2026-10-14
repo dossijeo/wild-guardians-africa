@@ -53,6 +53,9 @@ test('post-intro pilot requires distinct paired native scenarios and frozen lega
  assert.throws(()=>validatePilotConfig({...config,caseSelection:[{name:'walls',biome:'desierto',seed:983}]}),/case selection/);
  assert.throws(()=>validatePilotConfig({...config,caseSelection:[{name:'missing',biome:'sabana',seed:411}]}),/case selection/);
  assert.throws(()=>validatePilotConfig({...config,caseSelection:[{name:'walls',biome:'sabana',seed:411},{name:'walls',biome:'sabana',seed:411}]}),/case selection/);
+ assert.deepEqual(validatePilotConfig({...config,raidProbeSnapshotDays:[6,7]}).raidProbeSnapshotDays,[6,7]);
+ assert.throws(()=>validatePilotConfig({...config,raidProbeSnapshotDays:[0]}),/raid probe/);
+ assert.throws(()=>validatePilotConfig({...config,raidProbeSnapshotDays:[6,6]}),/raid probe/);
  assert.equal(validatePilotConfig({...config,minimumTerminalDeliveryPerDay:493/6}).minimumTerminalDeliveryPerDay,493/6);
  assert.throws(()=>validatePilotConfig({...config,minimumTerminalDeliveryPerDay:-1}),/delivery floor/);
  assert.throws(()=>validatePilotConfig({...config,days:7}),/budget/);
