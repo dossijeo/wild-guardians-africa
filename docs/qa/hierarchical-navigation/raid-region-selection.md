@@ -345,6 +345,20 @@ perimeter, distinct plants in one contiguous crop group, physical approach
 spacing, target destruction, and deterministic save/load continuation.
 All eight pass without changing target-selection or combat code.
 
+The seven recorded paid-defense retreat tests also pass with the hierarchical
+navigator. The night-31 and night-39 replays finish after save/load while
+checking every swept segment against static geometry and current mobile
+bodies. They no longer require crossing a worker's *historical* position,
+because a different physically valid route need not do so. In the bounded
+night-39 progress case, the animal travelled 46.74 m in 12.5 seconds at its
+unchanged 3.8 m/s speed; its distance to the original exit fell 38.85 m.
+The progress threshold was adjusted from 40 m to 35 m to permit that valid
+detour while still rejecting stalls. An obsolete sliced-A* API assertion was
+replaced with a hierarchical-sector test: a route detours physically around
+an obstacle, reuses built sectors on a repeat query, and becomes direct after
+the obstacle is removed and geometry invalidated. This changes only QA
+expectations, not movement or attack rules.
+
 ## Reproduce
 
 ```powershell
