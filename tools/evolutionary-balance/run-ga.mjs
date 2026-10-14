@@ -145,7 +145,7 @@ export async function runSearch(config){
   generations.push({generation,ranked});
   writeFileSync(join(out,`search-${runId}.json`),JSON.stringify({stamp,generations},null,2)+'\n');
   if(ranked.every(x=>x.score<=-1e9))break;
-  const elite=ranked.slice(0,Math.max(2,Math.ceil(c.population/2)));
+  const elite=ranked.filter(x=>x.score>-1e9).slice(0,Math.max(2,Math.ceil(c.population/2)));
   population=[elite[0].genes];
   const nextIds=new Set(population.map(genomeId));
   let attempts=0;
