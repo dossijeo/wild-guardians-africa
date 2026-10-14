@@ -36,8 +36,10 @@ explican por sí solos la derrota. El índice espacial clasificó 124 de 129
 cultivos como alcanzables desde el exterior el día 20 y 25 de 29 el día 30.
 Restaurar en memoria los diez y trece módulos arruinados, respectivamente,
 redujo los cultivos alcanzables a cero; los restantes se clasificaron como
-sellados o `unknown`. Es una prueba de sensibilidad topológica del snapshot,
-no una reparación económica ni una reproducción completa de la incursión.
+sellados o `unknown` (cinco y cuatro casos). La auditoría se reproduce con
+`codex/virtual-perimeter-gap-policy`/`5199a96278d880388c2dd0fedf55d6aace9a7fc8`;
+es una prueba de sensibilidad topológica del snapshot, no una reparación
+económica ni una reproducción completa de la incursión.
 
 Las reparaciones sí se pagaron: 142, 67, 65 y 62 monedas en los días 19, 20,
 29 y 30. Que haya ruinas en snapshots posteriores y ninguna tarea pendiente

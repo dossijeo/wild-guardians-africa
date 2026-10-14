@@ -160,7 +160,9 @@ semillas 712 y 123. El candidato fue el genoma inicial `376ca7…`; el control
 comparación no atribuye al genoma la corrección del calendario legado. La
 configuración, SHA-256 de los módulos y progreso diario están en
 [`paired-14/config.json`](paired-14/config.json), y cada brazo conserva su
-informe nativo. No hubo recargas artificiales. No se cambiaron precios, daño ni
+informe nativo en `.json.gz`, con hashes del original y del archivo en
+[`paired-14/archive-index.json`](paired-14/archive-index.json). No hubo
+recargas artificiales. No se cambiaron precios, daño ni
 presión militar. Las cuatro campañas llegaron a 14/14 noches sin victoria o
 derrota terminal; **14 noches no acreditan supervivencia hasta la 100**.
 
