@@ -233,9 +233,8 @@ raid behavior, and several other systems. Some explicitly assert rules or
 routes replaced by experimental work, but the full set has **not** been
 triaged against the branch's base revision. Therefore this is not a clean
 repository-wide QA result and is not grounds for merging the PR. The complete
-local TAP output is retained outside the committed report as
-`full-suite-e8007a9f.log`; the aggregate failure count is recorded here so
-the limitation remains visible even without that local file.
+TAP output is retained in `full-suite-e8007a9f.log.gz`; the aggregate
+failure count is recorded here for quick review.
 
 The 30-night-cap native campaigns reported above all ended in real defeat
 before night 30. They demonstrate several biomes and seeds without a
