@@ -636,6 +636,18 @@ file passes 8/8. This correction postdates the global run, so no lower
 repository-wide failure count is claimed. No production agricultural rule was
 changed.
 
+The native village-expansion acceptance suite had retained the superseded
+flat 2,000-coin price and therefore aborted before testing paid founding.
+Its fixtures now use the approved candidate price sequence (50,000 for the
+second village, 80,000 for the third) and an exact `BigInt` balance for the
+ordinal-100 run. All 17 integrated cases pass across five cultures, including
+99 paid additional villages, contiguous hulls, preview/commit agreement,
+invalid placement, hiring reserve, duplicate confirmation and save/reload.
+The independent exact-price unit file passes 4/4. The 100-village run paid
+13,449,218,115,035,982,237,709,000 coins and retained exactly 10,000;
+it is a structural/precision test, not evidence that a real farm can earn
+that sum. These test-only changes also postdate the last global suite.
+
 ## Deferred engine name
 
 After the WASM spatial core is functionally and performance-stable, rename
