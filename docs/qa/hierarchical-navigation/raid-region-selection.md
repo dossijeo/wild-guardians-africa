@@ -127,6 +127,11 @@ so these durations do not isolate navigation speed. Neither run validates
 sustained 30/60/100-night performance; this branch must not be merged on
 this evidence alone.
 
+An additional fixed expansive-policy Sabana run with a 30-night cap ended in
+native defeat on day 18 after 280 seconds. It also cannot establish
+30-night sustained performance, but it showed no technical navigation stall
+before the defeat. No policy or balance parameter was changed for this run.
+
 An intermediate headless 30-night run was stopped at day 8 because its QA
 driver retained raid-only resident chunks between nights, unlike the renderer.
 The driver now releases those chunks when the raid ends. This was a harness
