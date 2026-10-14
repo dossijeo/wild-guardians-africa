@@ -49,6 +49,7 @@ test('a Sabana game state renders and routes from one spatial authority through 
   assert.equal(session.actorCanStand(passage.start),true);
   assert.equal(session.actorStepClear(passage.start,passage.end),true);
   assert.equal(session.actorStepClear(passage.start,passage.end,{worker:false,species:'warthog'}),true);
+  assert.equal(session.actorConnectivity(passage.start,passage.end),'possible');
   state.structures.push({id:'wall-1',kind:'wall',material:'adobe',status:'intact',
     x:23.5,z:passage.start.z,yaw:0,baseScaleX:1,hp:100,gate:false});
   state.spells.push({id:'shield-1',kind:'shield',x:10,z:10,radius:1.95,remaining:10});
@@ -59,12 +60,14 @@ test('a Sabana game state renders and routes from one spatial authority through 
   assert.equal(core.localClear(passage.start,passage.end),false);
   assert.equal(session.actorStepClear(passage.start,passage.end),false);
   assert.equal(session.actorStepClear(passage.start,passage.end,{worker:false,species:'warthog'}),false);
+  assert.notEqual(session.actorConnectivity(passage.start,passage.end),'possible');
   assert.notEqual(session.routeActor(passage.start,passage.end).status,'found');
   state.structures.at(-1).status='ruined';state.spells[0].remaining=0;
   session.syncState(state);
   assert.equal(core.snapshot().barriers.length,0);
   assert.equal(core.localClear(passage.start,passage.end),true);
   assert.equal(session.actorStepClear(passage.start,passage.end),true);
+  assert.equal(session.actorConnectivity(passage.start,passage.end),'possible');
   assert.equal(session.routeActor(passage.start,passage.end).status,'found');
   const source=[...installed.values()].find(chunk=>chunk.instances.some(list=>list.length));
   const visible=source?.instances.flat()[0];

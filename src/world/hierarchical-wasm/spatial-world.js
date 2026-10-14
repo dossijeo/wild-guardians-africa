@@ -1,7 +1,7 @@
 import {spatialProps,spatialInstances,spatialChunkPayload} from './spatial-savanna-payload.js';
 import {addSpatialBarriersBatch,applySpatialBarrierChanges} from './spatial-barrier-batch.js';
 import {captureSpatialState,captureSpatialTerrainState,applySpatialState,validateSpatialState} from './spatial-state.js';
-import {spatialWorldRoute} from './spatial-local-route.js';
+import {spatialWorldRoute,spatialWorldConnectivity} from './spatial-local-route.js';
 import {BIOME_IDS,SPATIAL_BIOME_CODES} from '../biome-ids.js';
 
 // Synchronous world authority. The same WASM instance answers spatial queries
@@ -69,12 +69,20 @@ export function createSpatialWorld(module){
     for(let i=0;i<count;i++)points.push({x:pairs[i*2],z:pairs[i*2+1]});
     return {status:'found',points};
   }
+  function connected(start,end){
+    if(![start?.x,start?.z,end?.x,end?.z].every(Number.isSafeInteger))
+      throw RangeError('Grid connectivity requires integer coordinates');
+    if(!navigationBuilt)return 'unknown';
+    const result=wasm.lazy_connected(start.x,start.z,end.x,end.z);
+    return result<0?'unknown':result?'possible':'blocked';
+  }
   const surface=(x,z)=>wasm.spatial_surface(x,z);
   const slope=(x,z)=>Math.hypot(surface(x+.8,z)-surface(x-.8,z),
     surface(x,z+.8)-surface(x,z-.8))/1.6;
   return {wasm,generate,addChunk,selectChunk,removeChunk,currentChunk:()=>chunk,
-    heights,colors,water,groundMask,waterLevels,waterTriangles,props,instances,chunkPayload,route,
+    heights,colors,water,groundMask,waterLevels,waterTriangles,props,instances,chunkPayload,route,connected,
     routeWorld:(start,end)=>navigationBuilt?spatialWorldRoute(wasm,route,start,end):{status:'unknown',points:[]},
+    connectedWorld:(start,end)=>navigationBuilt?spatialWorldConnectivity(wasm,connected,start,end):'unknown',
     localClear:(start,end)=>Boolean(wasm.spatial_local_clear(start.x,start.z,end.x,end.z)),
     setSettlement:(x,z,hx,hz)=>{
       if(!generated)throw Error('Generate the world before placing a settlement');

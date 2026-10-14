@@ -72,6 +72,10 @@ export function createSpatialGameSession(module,state,streamOptions){
     actorProfile({worker,species});
     return core.routeWorld(start,end);
   }
+  function actorConnectivity(start,end,options){
+    actorProfile(options);
+    return core.connectedWorld(start,end);
+  }
   function actorCanStand(point,options){
     if(!Number.isFinite(point?.x)||!Number.isFinite(point?.z))
       throw TypeError('Expected a finite actor position');
@@ -88,6 +92,6 @@ export function createSpatialGameSession(module,state,streamOptions){
   // removed props leave its mesh intact, so they must not queue new horizons.
   const horizonSource={revision:()=>terrainRevision,snapshot:()=>core.terrainState()};
   return {core,field,stream,horizonSource,suppressed:props.suppressed,syncState,
-    routeActor,actorCanStand,actorStepClear,
+    routeActor,actorConnectivity,actorCanStand,actorStepClear,
     dispose:()=>stream.dispose()};
 }
