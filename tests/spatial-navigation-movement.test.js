@@ -76,6 +76,19 @@ test('worker movement keeps the live gate leaf collision outside the native rout
   gate.status='ruined';assert.equal(nav.workerMotionClear(start,end),true);
 });
 
+test('a resident but physically blocked endpoint is not mistaken for missing terrain',()=>{
+  const state={structures:[],villages:[]};
+  const session={field:{canyon:false,surface:()=>0,slope:()=>0},
+    suppressed:new Set(),topologySource:{revision:()=>1},
+    actorCanStand:point=>point.x!==2,actorStepClear:()=>false,
+    routeActor:()=>({status:'unknown',points:[]}),
+    queryPropsAt:()=>({status:'ready',props:[]})};
+  const nav=createSpatialNavigationMovement(session,state);
+  assert.equal(nav.path({x:0,z:0},{x:2,z:0}),null);
+  session.queryPropsAt=()=>({status:'unknown',missing:[{cx:1,cz:0}]});
+  assert.throws(()=>nav.path({x:0,z:0},{x:2,z:0}),SpatialChunkUnavailable);
+});
+
 test('native-backed crop placement checks terrain, structures, props and unknown chunks',async()=>{
   const state={seed:'712',biome:'sabana',villages:[{id:'village-1',x:0,z:0,
     buildings:villageLayout(pack,0,0)}],structures:[],spells:[],suppressed:[]};

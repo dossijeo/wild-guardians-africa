@@ -54,8 +54,18 @@ export function createSpatialNavigationMovement(session,state){
   };
   const path=(start,end,radius=.28,ignore=null,worker=true)=>{
     validate(start,end);
-    const result=session.routeActor(start,end,profile(radius,worker,ignore));
-    if(result.status==='unknown')throw new SpatialChunkUnavailable(start,end);
+    const options=profile(radius,worker,ignore);
+    const result=session.routeActor(start,end,options);
+    if(result.status==='unknown'){
+      // The native route can also be unknown when a fractional endpoint has
+      // no physically valid connector to its nearby grid anchors. If its
+      // entire local neighborhood is resident, this is a blocked endpoint,
+      // not missing terrain that should trigger more chunk generation.
+      const knownBlocked=point=>session.queryPropsAt?.(point.x,point.z,1.5).status===
+        'ready'&&!session.actorCanStand(point,options);
+      if(knownBlocked(start)||knownBlocked(end))return null;
+      throw new SpatialChunkUnavailable(start,end);
+    }
     return result.status==='found'?result.points:null;
   };
   const propsAt=(x,z,radius)=>{

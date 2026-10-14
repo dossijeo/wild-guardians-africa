@@ -14,13 +14,15 @@ const chunkJobs=(points,margin=20)=>{
   return jobs;
 };
 
-// Sabana integration probe. All terrain, prop and movement decisions below
+const ordinaryBiomes=new Set(['sabana','gran-rio','manglares','volcanes','desierto']);
+
+// Non-canyon integration probe. All terrain, prop and movement decisions below
 // come from one C++ world; the game-state clone is only a proposed layout.
-export async function probeSpatialSavannaStart(module,state,payload,{x=60,z=0,chunkMargin=20}={}){
-  if(state?.biome!=='sabana'||!state.villages?.length||state.structures?.length||
+export async function probeSpatialStart(module,state,payload,{x=60,z=0,chunkMargin=20}={}){
+  if(!ordinaryBiomes.has(state?.biome)||!state.villages?.length||state.structures?.length||
     !Array.isArray(payload?.units)||![x,z,chunkMargin].every(Number.isFinite)||
     chunkMargin<0)
-    throw TypeError('Expected a new Sabana game and an authored village');
+    throw TypeError('Expected a new non-canyon game and an authored village');
   const trial=structuredClone(state),village=trial.villages[0];
   Object.assign(village,{x,z,buildings:villageLayout(payload,x,z)});
   const center={id:'spatial-start-center',kind:'center',x:x+23,z,
@@ -53,25 +55,34 @@ export async function probeSpatialSavannaStart(module,state,payload,{x=60,z=0,ch
         return {valid:false,reason:'building-placement',checks,centerCheck};
       const nav=createSpatialNavigationMovement(session,trial);
       const departure=centerServicePoint(center,trial,.8);
+      let unresolved=null;
+      const reaches=(start,end)=>{
+        if(nav.segmentClear(start,end,.28,null,true))return true;
+        try{return Boolean(nav.path(start,end,.28,null,true));}
+        catch(error){
+          if(!(error instanceof SpatialChunkUnavailable))throw error;
+          unresolved??=error;
+          return false;
+        }
+      };
       let entry=null;
       for(let radius=0;radius<=20&&!entry;radius+=2)
         for(let angle=0,count=radius?16:1;angle<count&&!entry;angle++){
           const point={x:x+Math.cos(angle/count*Math.PI*2)*radius,
             z:z+Math.sin(angle/count*Math.PI*2)*radius};
           if(nav.walkable(point.x,point.z,.28,null,true)&&
-            nav.path(point,departure,.28,null,true))entry=point;
+            reaches(point,departure))entry=point;
         }
-      if(!entry)return {valid:false,reason:'village-entry'};
+      if(!entry){if(unresolved)throw unresolved;return {valid:false,reason:'village-entry'};}
       const farm=[];
       for(let dz=-9;dz<=9&&farm.length<12;dz+=1.5)
         for(let dx=4.5;dx<=15&&farm.length<12;dx+=1.5){
           const point={x:Math.round((center.x+dx)/1.5)*1.5,
             z:Math.round((center.z+dz)/1.5)*1.5};
           if(nav.placement(point.x,point.z,.4).valid&&
-            nav.path(departure,point,.28,null,true)&&
-            nav.path(point,departure,.28,null,true))farm.push(point);
+            reaches(departure,point)&&reaches(point,departure))farm.push(point);
         }
-      if(farm.length<12)return {valid:false,reason:'farm-access',entry,farm};
+      if(farm.length<12){if(unresolved)throw unresolved;return {valid:false,reason:'farm-access',entry,farm};}
       return {valid:true,site:{x,z,buildings:village.buildings,
         center:{kind:'center',x:center.x,z:center.z,culture:center.culture},entry,
         suppress:[...new Set([...checks,centerCheck].flatMap(check=>check.suppress??[]))]},
@@ -98,7 +109,7 @@ export async function probeSpatialSavannaStart(module,state,payload,{x=60,z=0,ch
 
 // Preserve the existing deterministic expanding-ring search, but evaluate
 // every candidate against the C++ world instead of a second JS terrain recipe.
-export async function findSpatialSavannaStart(module,state,payload,{signal}={}){
+export async function findSpatialStart(module,state,payload,{signal}={}){
   let attempts=0;
   for(let ring=0;ring<70;ring++){
     const count=ring?Math.max(24,Math.ceil(2*Math.PI*ring)):1;
@@ -106,10 +117,10 @@ export async function findSpatialSavannaStart(module,state,payload,{signal}={}){
       if(signal?.aborted)throw new DOMException('Initial location cancelled','AbortError');
       const x=60+Math.cos(angle/count*Math.PI*2)*ring*12;
       const z=Math.sin(angle/count*Math.PI*2)*ring*12;
-      const result=await probeSpatialSavannaStart(module,state,payload,{x,z});
+      const result=await probeSpatialStart(module,state,payload,{x,z});
       attempts++;
       if(result.valid)return {...result,attempts};
     }
   }
-  throw Error('No native Sabana starting site was found');
+  throw Error('No native starting site was found');
 }
