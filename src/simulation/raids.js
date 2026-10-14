@@ -226,6 +226,7 @@ export function reachableApproach(a,target,nav,shield=null,onUnknown=null){
     const point={id:`approach-${target.id}-${shield?.id??'direct'}-${sample}`,...(!shield&&target.kind==='center'?centerBoundaryPoint(target,angle+offset,a.radius+.5,nav.state):{x:focus.x+Math.sin(angle+offset)*r,z:focus.z+Math.cos(angle+offset)*r})};
     if(nav.state?.raid&&!reservedApproachClear(nav.state,a,point))continue;
     if(nav.state&&!actorSegmentClear(point,point,a,actorBlockers(nav.state,a,false)))continue;
+    if(!nav.walkable(point.x,point.z,a.radius,null,false))continue;
     // A complete 32-cell corridor lets the native search certify enclosed
     // islands once and reuse that proof across nearby crop service points.
     let path;

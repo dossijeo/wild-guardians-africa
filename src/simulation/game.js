@@ -447,6 +447,12 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
     w.mobileRecoveryDestinationId=destination.id;
     w.mobileRecoveryVersion=nav.version;
     w.mobileRecoveryAttempts=0;
+    w.mobileProgressDistance=dist(w,destination);
+    w.mobileProgressAt=s.elapsed;
+  }
+  if(!Number.isFinite(w.mobileProgressDistance)||!Number.isFinite(w.mobileProgressAt)){
+    w.mobileProgressDistance=dist(w,destination);
+    w.mobileProgressAt=s.elapsed;
   }
   if(w.wallEscape&&w.pathVersion!==nav.version)delete w.wallEscape;
   if(!w.path||w.destinationId!==destination.id||w.pathVersion!==nav.version) {
@@ -495,24 +501,27 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
       if(w.path?.length&&dist(w,w.path[0])<=1e-7)w.path.shift();}
     return w.path?.length===0;
   }
-  // The ordinary local avoidance remains first. Only after real stationary
-  // time, and only when a short static step is valid but occupied by another
-  // moving body, temporarily ignore mobile collisions. Static terrain,
+  // The ordinary local avoidance remains first. Only after stationary time
+  // or prolonged movement without destination progress, and only when a short
+  // static step is valid but occupied by another moving body, temporarily
+  // ignore mobile collisions. Static terrain,
   // barriers and the live gate leaf remain authoritative throughout.
   const next=w.path[0],distanceToNext=next?dist(w,next):0;
   const probe=next&&distanceToNext>1e-8?{
     x:w.x+(next.x-w.x)*Math.min(.5,distanceToNext)/distanceToNext,
     z:w.z+(next.z-w.z)*Math.min(.5,distanceToNext)/distanceToNext}:null;
-  if((worker||w.status==='retreating')&&
-    (w.dynamicStallSeconds??0)>=3&&
+  if(((w.dynamicStallSeconds??0)>=3||
+    s.elapsed-w.mobileProgressAt>=12)&&
     (w.mobileRecoveryAttempts??0)<2&&probe){
     const blockers=actorBlockers(s,w,worker);
     const staticClear=worker?nav.workerMotionClear?.(w,probe,w.radius??.28):
       nav.segmentClear?.(w,probe,w.radius??.28,ignore,false);
-    if(staticClear&&actorSegmentClear(next,next,w,blockers)&&
+    if(staticClear&&actorSegmentClear(destination,destination,w,blockers)&&
       !actorSegmentClear(w,probe,w,blockers)){
       w.mobilePhaseRemaining=3;w.dynamicStallSeconds=0;
       w.mobileRecoveryAttempts=(w.mobileRecoveryAttempts??0)+1;
+      w.mobileProgressDistance=dist(w,destination);
+      w.mobileProgressAt=s.elapsed;
       emit(s,'ActorMobileCollisionRecovery',{actorId:w.id,
         x:w.x,z:w.z,elapsed:s.elapsed,duration:3});
     }
@@ -531,6 +540,11 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
   if(phased)w.mobilePhaseRemaining=Math.max(0,w.mobilePhaseRemaining-dt);
   if(dist(previous,w)>1e-8||!w.path?.length)w.dynamicStallSeconds=0;
   else w.dynamicStallSeconds=Math.min(3,(w.dynamicStallSeconds??0)+dt);
+  const remaining=dist(w,destination);
+  if(remaining<=w.mobileProgressDistance-.75){
+    w.mobileProgressDistance=remaining;
+    w.mobileProgressAt=s.elapsed;
+  }
   if(routeClearance?.blocked()){w.path=null;return false;}
   return w.path.length===0;
 }

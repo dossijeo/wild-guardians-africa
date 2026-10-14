@@ -20,8 +20,10 @@ const session=createSpatialGameSession(wasm,state,{
 });
 try{
   const village=state.villages[0],cx=Math.floor((village.x+24)/48),
-    cz=Math.floor((village.z+24)/48);
-  for(let z=cz-1;z<=cz+1;z++)for(let x=cx-1;x<=cx+1;x++){
+    cz=Math.floor((village.z+24)/48),residentRadius=Number(process.env.WG_SPATIAL_PROFILE_RADIUS??1);
+  if(!Number.isSafeInteger(residentRadius)||residentRadius<1||residentRadius>4)
+    throw RangeError('Expected resident radius 1–4 chunks');
+  for(let z=cz-residentRadius;z<=cz+residentRadius;z++)for(let x=cx-residentRadius;x<=cx+residentRadius;x++){
     if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
     loaded.set(`${x},${z}`,session.core.chunkPayload());
   }
@@ -41,17 +43,24 @@ try{
       return obstacles;
     }});
   }
-  nav.setActiveBounds([(cx-1)*48-24,(cz-1)*48-24,
-    (cx+1)*48+24,(cz+1)*48+24]);
+  nav.setActiveBounds([(cx-residentRadius)*48-24,(cz-residentRadius)*48-24,
+    (cx+residentRadius)*48+24,(cz+residentRadius)*48+24]);
   const calls={};
   for(const name of ['workerPath','path','approachPath','walkable',
     'segmentClear','workerMotionClear','propsAt','regionFor',
     'regionConnected','setState','wallPlacement']){
     const fn=nav[name];if(typeof fn!=='function')continue;
-    calls[name]={count:0,ms:0};
+    calls[name]={count:0,ms:0,...(name==='approachPath'?{found:0,blocked:0,unknown:0,unknownExamples:[]}:{})};
     nav[name]=(...args)=>{
       const start=performance.now();
-      try{return fn(...args);}finally{calls[name].count++;
+      try{const result=fn(...args);
+        if(name==='approachPath')calls[name][result?'found':'blocked']++;
+        return result;
+      }catch(error){if(name==='approachPath'&&error?.name==='SpatialChunkUnavailable')
+        {calls[name].unknown++;if(calls[name].unknownExamples.length<3)
+          calls[name].unknownExamples.push({start:error.start,end:error.end,
+            missing:error.missing,details:error.details});}throw error;
+      }finally{calls[name].count++;
         calls[name].ms+=performance.now()-start;}
     };
   }
@@ -66,7 +75,7 @@ try{
       tasks:state.tasks.length,raidAnimals:state.raid?.animals?.length??0});
     if(state.day!==day||state.result)break;
   }
-  const report={input,steps:rows.length,calls,rows,
+  const report={input,steps:rows.length,residentRadius,calls,rows,
     totalMs:rows.reduce((sum,row)=>sum+row.ms,0),
     stateSha256:createHash('sha256').update(serialize(state)).digest('hex'),
     animals:(state.raid?.animals??[]).map(a=>({id:a.id,status:a.status,
