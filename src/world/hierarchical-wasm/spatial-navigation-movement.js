@@ -1,6 +1,7 @@
 import {ANIMAL_SPATIAL_PROFILES,WORKER_SPATIAL_PROFILE} from './spatial-movement-profiles.js';
 import {gateFrameFootprints,gateSwingPolygon} from '../gate-passages.js';
 import {sweptFootprintDistance} from '../footprints.js';
+import {createSpatialPlacement} from './spatial-placement.js';
 
 const animalProfiles=Object.entries(ANIMAL_SPATIAL_PROFILES);
 const finitePoint=point=>Number.isFinite(point?.x)&&Number.isFinite(point?.z);
@@ -63,6 +64,7 @@ export function createSpatialNavigationMovement(session,state){
     if(result.status==='unknown')throw new SpatialChunkUnavailable({x,z},{x,z},result.missing);
     return result.props;
   };
+  const placement=createSpatialPlacement(session,state,propsAt);
   let gateRevision=null,gateSource=null,gates=[];
   const activeGates=()=>{
     const revision=session.topologySource.revision();
@@ -96,7 +98,7 @@ export function createSpatialNavigationMovement(session,state){
   };
   return {field:session.field,suppressed:session.suppressed,state,
     get version(){return session.topologySource.revision();},
-    walkable,segmentClear,path,propsAt,workerSurface,actorSurface,
+    walkable,segmentClear,path,propsAt,placement,workerSurface,actorSurface,
     workerPath:(start,end,radius=.28,ignore=null)=>path(start,end,radius,ignore,true),
     workerMotionClear,
   };

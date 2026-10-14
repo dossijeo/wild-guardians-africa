@@ -59,7 +59,7 @@ test('movement contract uses only native profiles, topology and physically check
 test('worker movement keeps the live gate leaf collision outside the native route graph',()=>{
   const gate={id:'gate-1',kind:'wall',material:'empalizada',gate:true,
     x:0,z:0,yaw:0,baseScaleX:1,hp:100,maxHp:100,status:'intact',gateOpen:0};
-  const state={structures:[gate]};
+  const state={structures:[gate],villages:[]};
   const session={field:{},suppressed:new Set(),topologySource:{revision:()=>1},
     actorCanStand:()=>true,actorStepClear:()=>true,
     routeActor:(_start,end)=>({status:'found',points:[end]})};
@@ -71,6 +71,39 @@ test('worker movement keeps the live gate leaf collision outside the native rout
   gate.gateOpen=.5;assert.equal(nav.workerMotionClear(start,end),false);
   gate.gateOpen=1;assert.equal(nav.workerMotionClear(start,end),true);
   gate.status='ruined';assert.equal(nav.workerMotionClear(start,end),true);
+});
+
+test('native-backed crop placement checks terrain, structures, props and unknown chunks',async()=>{
+  const state={seed:'712',biome:'sabana',villages:[{id:'village-1',x:0,z:0,
+    buildings:villageLayout(pack,0,0)}],structures:[],spells:[],suppressed:[]};
+  const loaded=new Map(),session=createSpatialGameSession(module,state,{
+    loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+  try{
+    session.stream.plan(new Map([['0,0',{cx:0,cz:0,score:0}]]));
+    await session.stream.whenIdle();
+    const nav=createSpatialNavigationMovement(session,state);
+    assert.throws(()=>nav.placement(480,0,.4),SpatialChunkUnavailable);
+    const fluid=Array.from({length:49},(_,i)=>({x:i-24,z:0}))
+      .find(point=>session.field.fluidInside(point.x,point.z));
+    if(fluid)assert.equal(nav.placement(fluid.x,fluid.z,.4).valid,false);
+    let open;
+    for(let z=-14;z<=14&&!open;z+=2)for(let x=-14;x<=14&&!open;x+=2)
+      if(nav.placement(x,z,.4).valid)open={x,z};
+    assert(open,'native chunk should contain usable agricultural ground');
+    const structure={id:'placed-wall',kind:'wall',...open,status:'intact',radius:.7};
+    state.structures.push(structure);session.syncState(state);
+    assert.equal(nav.placement(open.x,open.z,.4).reason,'La construcción solapa otro edificio');
+    assert.equal(nav.placement(open.x,open.z,.4,{ignoreWalls:true}).valid,true);
+    const prop=[...loaded.values()].flatMap(chunk=>chunk.instances.flat())
+      .find(item=>item.slot<4||(item.slot>=10&&item.slot<=12)||item.slot>=18);
+    if(prop&&Math.abs(prop.x)<19&&Math.abs(prop.z)<19){
+      assert.equal(nav.placement(prop.x,prop.z,.4).valid,false);
+      state.suppressed.push(prop.id);session.syncState(state);
+      assert.equal(nav.propsAt(prop.x,prop.z,.4)
+        .some(item=>item.id===prop.id),false);
+    }
+    assert.equal(nav.placement(Number.NaN,0,.4).valid,false);
+  }finally{session.dispose();}
 });
 
 test('a saved suppression survives reload while its owning chunk is not resident',async()=>{
