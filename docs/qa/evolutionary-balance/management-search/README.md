@@ -99,6 +99,21 @@ de 30 o 100 noches. La instrumentación de recintos debe muestrearse por evento
 topológico y conservar `unknown` como categoría separada; no debe usarse aún
 para puntuar defensas.
 
+El observador QA de Wild Engine, incorporado después de las campañas sin
+modificar sus resultados, clasificó el snapshot **real** del inicio de la
+incursión del día 10 del líder. De 143 cultivos vivos, certificó 124 protegidos
+frente a jabalí y búfalo y 128 frente a hiena; dejó 19, 19 y 15 como
+`unknown`, respectivamente. No registró cultivos abiertos o expuestos en ese
+instante. Por tanto, la mayoría sí pertenece a un recinto cerrado según los
+perfiles físicos observados, pero no se conoce el estado tras brechas ni la
+clasificación equivalente del control. Esta observación no demuestra por sí
+sola por qué se perdieron 5 frente a 50 plantas hasta el día 14. La muestra
+fría tardó 1,20 s; cinco repeticiones calientes, 18–25 ms cada una con 143
+cultivos y 21 chunks residentes. El detalle está en
+`profile-manglares-123-day10/enclosure-raid-sample.json`. Su coste aconseja
+muestrear por evento de topología, nunca cada tick; `unknown` no recibe crédito
+defensivo.
+
 Conclusión provisional: hay una política que sobrevive mejor que el control en
 esta única reserva de catorce noches, pero **no hay estrategia competitiva
 generalizable demostrada**. El modelo de destrucción agrícola de Fase 1 sigue

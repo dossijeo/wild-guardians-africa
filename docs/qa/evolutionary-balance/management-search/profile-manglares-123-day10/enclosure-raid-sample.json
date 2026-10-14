@@ -1,0 +1,86 @@
+{
+  "scope": "Read-only reconstruction of an archived Wild Engine active raid. Classification uses animal physical profiles and resident WASM components; no campaign ticks, balance changes or synthetic breach.",
+  "source": "docs/qa/evolutionary-balance/management-search/profile-manglares-123-day10/evolved-manglares-123-day10-raid.json",
+  "sourceSha256": "8bcc3d672cd8029fec13c4b009b0c2230b843e61ccfa51f98d2a7bdbe94d0494",
+  "seed": "123",
+  "biome": "manglares",
+  "day": 10,
+  "raidId": "raid-10-night",
+  "livingCrops": 143,
+  "residentChunks": 21,
+  "walls": 90,
+  "sample": {
+    "reason": "spawn",
+    "raidId": "raid-10-night",
+    "day": 10,
+    "elapsed": 6069.0000000038335,
+    "topology": 4,
+    "profiles": [
+      {
+        "species": "warthog",
+        "radius": 1.1,
+        "origins": 14,
+        "regions": 6,
+        "crops": 143,
+        "protected": 124,
+        "exposed": 0,
+        "open": 0,
+        "unknown": 19
+      },
+      {
+        "species": "hyena",
+        "radius": 0.9,
+        "origins": 1,
+        "regions": 6,
+        "crops": 143,
+        "protected": 128,
+        "exposed": 0,
+        "open": 0,
+        "unknown": 15
+      },
+      {
+        "species": "buffalo",
+        "radius": 0.97,
+        "origins": 1,
+        "regions": 6,
+        "crops": 143,
+        "protected": 124,
+        "exposed": 0,
+        "open": 0,
+        "unknown": 19
+      }
+    ],
+    "transition": {
+      "previousProtected": 0,
+      "newlyExposed": 0,
+      "stillProtected": 0,
+      "removedWalls": [],
+      "breachExposure": 0
+    },
+    "wallCount": 90,
+    "livingCrops": 143,
+    "elapsedMs": 1201.6598999999999
+  },
+  "counters": {
+    "samples": 1,
+    "plantsClassified": 429,
+    "regionBatches": 3,
+    "enclosureQueries": 18,
+    "connectivityQueries": 48,
+    "unknownRegions": 53,
+    "elapsedMs": 1201.6598999999999
+  },
+  "cost": {
+    "hotSampleMs": [
+      25.23209999999972,
+      20.541099999999915,
+      21.447099999999864,
+      22.04820000000018,
+      18.08349999999973
+    ],
+    "idleCalls": 100000,
+    "idleTotalMs": 20.80159999999978,
+    "idleUsPerCall": 0.2080159999999978,
+    "note": "Five repeated full samples on the same warm resident topology; idle calls retain the same state and event ring. Timings exclude snapshot and chunk load and are not frame-time estimates."
+  }
+}
