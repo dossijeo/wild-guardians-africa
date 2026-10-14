@@ -251,6 +251,19 @@ the same 267 approaches and 253 native-graph unknowns; the output is in
 that the other 198 or fewer full-suite failures have been resolved; the
 entire suite has not been rerun after this change.
 
+The same triage exposed stale hierarchical sectors during initial-village
+placement. The village search temporarily changes the terrain pad, building
+obstacles and suppressed props. It cleared old walk/segment caches but left
+the sector graph alive. In Sabana/Mapungubwe seed 712, `(86, 0)` was
+physically walkable after placement while its cached sector still marked it
+blocked; clearing the graph made the worker route valid. The provisional
+terrain/obstacle transitions now clear the hierarchical sectors as well.
+All 61 initial-world route tests pass (33 failed in the prior full-suite
+run), as do ten initial-loading/Canyon-defense tests, 28 focused spatial
+tests, 185 playable tests and the web build. The frozen Canyon replay still
+reports 267 detailed approaches and 253 open-frontier unknowns. This fix
+requires a new full-suite run before revising the 199-failure aggregate.
+
 ## Reproduce
 
 ```powershell
