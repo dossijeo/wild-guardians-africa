@@ -248,8 +248,7 @@ clearance before graph work. The formerly failing blocked-endpoint test and
 28 focused spatial/raid tests pass. A repeat of the frozen Canyon state kept
 the same 267 approaches and 253 native-graph unknowns; the output is in
 `selector-endpoint-check.json`. This is a narrow correction, not a claim
-that the other 198 or fewer full-suite failures have been resolved; the
-entire suite has not been rerun after this change.
+that all remaining full-suite failures have been resolved.
 
 The same triage exposed stale hierarchical sectors during initial-village
 placement. The village search temporarily changes the terrain pad, building
@@ -262,7 +261,7 @@ All 61 initial-world route tests pass (33 failed in the prior full-suite
 run), as do ten initial-loading/Canyon-defense tests, 28 focused spatial
 tests, 185 playable tests and the web build. The frozen Canyon replay still
 reports 267 detailed approaches and 253 open-frontier unknowns. This fix
-requires a new full-suite run before revising the 199-failure aggregate.
+was included in the subsequent full-suite run below.
 
 One worker-clearance test had a 150-tick arrival limit tied to the old
 detour. The hierarchical route follows a different collision-safe corridor
@@ -274,6 +273,15 @@ as empty, then creates the current individual-reservation map. This removes
 the exception in two synthetic raid-end/worker-displacement tests without
 changing target ownership in normal raids. The 17 displacement and
 individual-reservation tests pass.
+
+At frozen commit `0f58b340`, the full suite completed in 447.2 seconds:
+4,321 tests, 4,158 passed and **163 failed**, an improvement of 36 passing
+tests relative to `e8007a9f`. Its exact TAP output is retained in
+`full-suite-0f58b340.log.gz`. The run includes the endpoint, provisional
+village, worker test and absent-reservation corrections. Remaining failures
+still include expectations from previous magic and crop-durability rules,
+old navigation APIs, and some raid/persistence cases that require individual
+triage. This branch has **not** passed repository-wide QA and remains a draft.
 
 ## Reproduce
 
