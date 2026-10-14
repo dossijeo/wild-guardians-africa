@@ -47,6 +47,8 @@ test('post-intro pilot requires distinct paired native scenarios and frozen lega
  const valid=validatePilotConfig(config);
  assert.equal(valid.days,14);
  assert.equal(valid.genomes.none.wallPolicy,'none');
+ assert.equal(validatePilotConfig({...config,minimumTerminalDeliveryPerDay:493/6}).minimumTerminalDeliveryPerDay,493/6);
+ assert.throws(()=>validatePilotConfig({...config,minimumTerminalDeliveryPerDay:-1}),/delivery floor/);
  assert.throws(()=>validatePilotConfig({...config,days:7}),/budget/);
  assert.throws(()=>validatePilotConfig({...config,scenarios:[scenarios[0],scenarios[0]]}),/distinct/);
  assert.throws(()=>validatePilotConfig({...config,genomes:{walls:{},none:{wallPolicy:'bad'}}}),/wall/);

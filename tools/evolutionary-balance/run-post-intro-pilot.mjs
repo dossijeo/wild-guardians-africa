@@ -11,11 +11,15 @@ import {postIntroMetrics,scorePostIntro} from './post-intro-fitness.mjs';
 
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
 export function validatePilotConfig(raw){
- const c={days:14,maxDayGameTickMs:60000,maxElapsedWallMs:900000,...raw};
+ const c={days:14,maxDayGameTickMs:60000,maxElapsedWallMs:900000,
+  minimumTerminalDeliveryPerDay:null,...raw};
  if(!Number.isInteger(c.days)||c.days<14||c.days>100||
   !Number.isInteger(c.maxDayGameTickMs)||c.maxDayGameTickMs<1000||
   !Number.isInteger(c.maxElapsedWallMs)||c.maxElapsedWallMs<1000)
   throw Error('Invalid post-intro pilot budget');
+ if(c.minimumTerminalDeliveryPerDay!==null&&
+  (!Number.isFinite(c.minimumTerminalDeliveryPerDay)||c.minimumTerminalDeliveryPerDay<0))
+  throw Error('Invalid frozen delivery floor');
  if(!Array.isArray(c.scenarios)||c.scenarios.length<2||
   new Set(c.scenarios.map(x=>`${x.biome}:${x.seed}`)).size!==c.scenarios.length||
   c.scenarios.some(x=>typeof x.biome!=='string'||!Number.isInteger(x.seed)||x.seed<0))
@@ -59,7 +63,8 @@ export async function runPostIntroPilot(raw){
     }
    });
   if(!existsSync(archive))writeFileSync(archive,gzipSync(JSON.stringify(report,null,2)+'\n',{level:9,mtime:0}));
-  const fitness=scorePostIntro(report,c.days),metrics=postIntroMetrics(report);
+  const fitness=scorePostIntro(report,c.days,{minimumTerminalDeliveryPerDay:c.minimumTerminalDeliveryPerDay}),
+   metrics=postIntroMetrics(report);
   cases.push({name,biome:scenario.biome,seed:scenario.seed,
    stop:report.status==='error'?report.name==='CampaignCostStop'?'computational-cost-stop':'technical-error':
     report.result==='defeat'?'native-defeat':report.completedNights>=c.days?'horizon-survivor':'truncated',
