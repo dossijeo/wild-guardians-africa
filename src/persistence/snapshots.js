@@ -43,12 +43,15 @@ export function validateSnapshot(state) {
     const recovery=animal.exitRouteRecovery;
     if(!recovery||typeof recovery.destinationId!=='string'||
       recovery.destinationId!==`exit-${animal.id}`||
-      !Number.isSafeInteger(recovery.version)||recovery.version<0)
+      !Number.isSafeInteger(recovery.version)||recovery.version<0||
+      recovery.startedAt!==undefined&&(!Number.isFinite(recovery.startedAt)||
+      recovery.startedAt<0||recovery.startedAt>state.elapsed))
       throw new Error('Recuperación de salida inválida');
   }
   for(const animal of state.raid?.animals??[])if(animal.exitConnectorSearch!==undefined){
     const search=animal.exitConnectorSearch;
     if(!search||typeof search.key!=='string'||search.key.length>256||!Number.isSafeInteger(search.next)||search.next<0||search.next>192)throw new Error('Conector de salida inválido');
+    if(search.exhausted!==undefined&&typeof search.exhausted!=='boolean')throw new Error('Agotamiento de salida inválido');
     if(search.fine!==undefined&&!validExitFrontier(search.fine))throw new Error('Conector fraccional inválido');
     if(search.quarter!==undefined&&!validExitFrontier(search.quarter))throw new Error('Conector fraccional fino inválido');
   }

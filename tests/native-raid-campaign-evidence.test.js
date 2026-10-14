@@ -44,3 +44,15 @@ test('exact native spawn receipt survives a full incursion between observer call
  for(let i=0;s.raid&&i<12000;i++)Game.tick(s,.05,nav);
  assert.equal(s.raid,null);const r=observer.report(s);assert.equal(r.status,'verified');assert.equal(r.raids[0].species.warthog.initialHitBudget,initial);assert.equal(r.raids[0].exposedLivingAtSpawn,1);assert.equal(r.raids[0].ended,true);
 });
+
+test('campaign evidence identifies exceptional abandoned retreats separately from physical exits',()=>{
+ const {s,nav}=fixture(),observer=createNativeRaidCampaignEvidence(s);
+ spawnRaid(s,{group:['warthog']},nav);observer.observe(s);
+ const id=s.raid.animals[0].id;
+ Game.emit(s,'AnimalRetreatExitAbandoned',{actorId:id,x:4,z:5,
+   reason:'bounded-search-exhausted',seconds:120});
+ const report=observer.report(s);
+ assert.equal(report.status,'verified');
+ assert.deepEqual(report.raids[0].exitAbandonments,[{id,
+   reason:'bounded-search-exhausted',elapsed:s.elapsed,x:4,z:5,seconds:120}]);
+});

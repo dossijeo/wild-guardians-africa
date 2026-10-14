@@ -445,6 +445,17 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
   if(w.exitRouteRecovery&&
     (w.exitRouteRecovery.destinationId!==destination.id||w.exitRouteRecovery.version!==nav.version))
     delete w.exitRouteRecovery;
+  const abandonExhaustedExit=()=>{
+    const exhausted=w.exitConnectorSearch?.exhausted===true,
+      timedOut=w.exitRouteRecovery&&s.elapsed-w.exitRouteRecovery.startedAt>=1500;
+    if(worker||!expandRoute||w.status!=='retreating'||w.hitsRemaining>0||
+      (!exhausted&&!timedOut))return false;
+    emit(s,'AnimalRetreatExitAbandoned',{actorId:w.id,x:w.x,z:w.z,elapsed:s.elapsed,
+      reason:exhausted?'bounded-search-exhausted':'recovery-timeout',
+      seconds:s.elapsed-(w.exitRouteRecovery?.startedAt??s.elapsed)});
+    delete w.exitConnectorSearch;delete w.exitRouteRecovery;w.path=null;
+    return true;
+  };
   if(w.mobileRecoveryDestinationId!==destination.id||
     w.mobileRecoveryVersion!==nav.version){
     w.mobileRecoveryDestinationId=destination.id;
@@ -461,7 +472,7 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
   if(!w.path||w.destinationId!==destination.id||w.pathVersion!==nav.version) {
     if(w.exitRouteRecovery){
       w.path=animalExitConnector(w,destination,nav);
-      if(!w.path)return false;
+      if(!w.path)return abandonExhaustedExit();
       delete w.exitRouteRecovery;
     }else w.path=worker&&nav.workerPath?nav.workerPath(w,destination,w.radius??.28,ignore):nav.path(w,destination,w.radius??.28,ignore,worker);
     w.destinationId=destination.id;
@@ -493,7 +504,7 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
       if(!w.path)w.path=workerReturnRoute(nav,w,destination,w.radius??.28);
     }
     w.pathVersion=nav.version;
-    if(!w.path)return false;
+    if(!w.path)return abandonExhaustedExit();
   }
   if(worker&&waitForGate(w,s.structures))return false;
   if(!worker&&w.wallEscape){
@@ -518,7 +529,8 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
   if(!worker&&expandRoute&&next&&s.elapsed-w.mobileProgressAt>=12&&
     nav.segmentClear?.(w,next,w.radius??.28,ignore,false)===false){
     w.path=null;
-    w.exitRouteRecovery={destinationId:destination.id,version:nav.version};
+    w.exitRouteRecovery={destinationId:destination.id,version:nav.version,
+      startedAt:s.elapsed};
     emit(s,'AnimalExitRouteRecovery',{actorId:w.id,x:w.x,z:w.z,
       exitId:destination.id,reason:'stale-static-connector'});
     return false;

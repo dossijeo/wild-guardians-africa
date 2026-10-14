@@ -1,5 +1,5 @@
 import {SearchFrontier} from '../world/search-frontier.js';
-import {animalFootprintConnector} from './animal-footprint-connectors.js';
+import {animalFootprintConnector,animalFootprintConnectorFailed} from './animal-footprint-connectors.js';
 import {animalGridExitBridge} from './animal-grid-exit-bridge.js';
 const distances=[4,8,12,16,24,32];
 const angles=32,budget=8;
@@ -12,6 +12,7 @@ export function animalExitConnector(actor,end,nav){
  const key=JSON.stringify([nav.version??0,actor.x,actor.z,end.x,end.z,radius]);
  let search=actor.exitConnectorSearch;
  if(!search||search.key!==key)search=actor.exitConnectorSearch={key,next:0};
+ if(search.exhausted)return null;
  const heading=Math.atan2(end.x-actor.x,end.z-actor.z);
  const ringWasPending=search.next<distances.length*angles;
  const limit=Math.min(distances.length*angles,search.next+budget);
@@ -44,7 +45,9 @@ export function animalExitConnector(actor,end,nav){
    const quarter=fractionalExit(actor,end,nav,search,radius,.25,'quarter');
    if(quarter)return quarter;
    if(search.quarter?.items.length&&search.quarter.visited<4096)return null;
-   return animalFootprintConnector(actor,end,nav);
+   const footprint=animalFootprintConnector(actor,end,nav);
+   if(!footprint&&animalFootprintConnectorFailed(actor))search.exhausted=true;
+   return footprint;
   }
  }
  return null;

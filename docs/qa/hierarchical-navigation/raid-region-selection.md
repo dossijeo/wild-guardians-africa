@@ -187,6 +187,15 @@ pending recovery, deserializes the saved state, rebuilds the native world and
 resumes the raid. The warthog again reaches its physical exit; every measured
 movement segment passes the native static collision check. This checks
 continued behavior after load, not only that the recovery flag serializes.
+If every bounded physical connector also fails, its final failure is recorded
+separately from a pending search. Only a retreating animal with no attacks
+left can then leave through a controlled `AnimalRetreatExitAbandoned` event;
+the same event has a 1,500-second no-progress backstop if a connector never
+resolves. Neither path adds damage, moves the animal through a barrier, nor
+changes its speed. A closed-gap test verifies the exhausted-search case,
+the timeout case and that an animal retaining attacks is not removed by this
+safety valve. These are exceptional fallback events and must be counted in
+campaign QA rather than treated as physically completed retreats.
 
 The rerun used the identical Sabana seed 123, good policy and 30-night cap.
 Its daily money and crop counts matched the failed run through day 10; it

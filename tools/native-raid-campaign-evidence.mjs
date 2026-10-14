@@ -48,6 +48,12 @@ export function createNativeRaidCampaignEvidence(initial){
    if(e.type==='AnimalRetreating'){
     r.retirements??=[];r.retirements.push({id:e.targetId,species:e.species,hitsRemaining:e.hitsRemaining??null,reason:e.reason??null});
    }
+   if(e.type==='AnimalRetreatExitAbandoned'){
+    if(!r.actors.some(a=>a.id===e.actorId))issue('Retreat abandonment actor missing from spawned cohort');
+    r.exitAbandonments??=[];
+    r.exitAbandonments.push({id:e.actorId,reason:e.reason??null,
+      elapsed:e.elapsed??s.elapsed,x:e.x,z:e.z,seconds:e.seconds??null});
+   }
    if(e.type==='RaidWaveSpawned'){
     const f=e.raidFacts;
     if(!f||f.id!==r.id||f.waveIndex!==r.waves.length){issue('Wave identity or order mismatch');continue;}

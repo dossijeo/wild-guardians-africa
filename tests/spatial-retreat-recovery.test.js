@@ -57,3 +57,20 @@ for(const reload of [false,true])test(`blocked retreat uses a physical exit${rel
     assert(Math.hypot(animal.x-animal.exit.x,animal.z-animal.exit.z)<1e-6);
   }finally{session.dispose();}
 });
+
+test('an exhausted exit search survives save/load and remains an audited retreat',()=>{
+  const state=deserialize(snapshot),animal=state.raid.animals.find(a=>a.id==='animal-10819'),
+    destination={...animal.exit,id:`exit-${animal.id}`},nav={version:1,
+      walkable:()=>false,segmentClear:()=>false};
+  animal.path=null;animal.hitsRemaining=0;
+  animal.exitRouteRecovery={destinationId:destination.id,version:1,
+    startedAt:state.elapsed-1};
+  animal.exitConnectorSearch={key:JSON.stringify([1,animal.x,animal.z,
+    destination.x,destination.z,animal.radius]),next:192,exhausted:true};
+  const restored=deserialize(serialize(state)),retreat=restored.raid.animals.find(a=>a.id===animal.id);
+  assert.equal(Game.walkTo(restored,retreat,destination,1,nav,
+    {worker:false,expandRoute:true}),true);
+  assert(restored.events.some(e=>e.type==='AnimalRetreatExitAbandoned'&&
+    e.actorId===animal.id&&e.reason==='bounded-search-exhausted'));
+  assert.equal(retreat.x,animal.x);assert.equal(retreat.z,animal.z);
+});

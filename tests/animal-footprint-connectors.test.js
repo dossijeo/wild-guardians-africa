@@ -1,5 +1,7 @@
 import test from 'node:test';import assert from 'node:assert/strict';
 import {Navigation} from '../src/world/navigation.js';import {animalFootprintConnector} from '../src/simulation/animal-footprint-connectors.js';
+import {animalExitConnector} from '../src/simulation/animal-exit-connectors.js';
+import {newGame,walkTo} from '../src/simulation/game.js';
 const rectangle=(x1,z1,x2,z2)=>[{x:x1,z:z1},{x:x2,z:z1},{x:x2,z:z2},{x:x1,z:z2}];
 function world(){const n=new Navigation(712,'sabana',{});n.field={slope:()=>0,fluidInside:(x,z)=>x<-9||x>7.5||z<-8.5||z>8.5};n.propsAt=()=>[];n.version=1;n.obstacles=[{id:'center',kind:'center',footprint:rectangle(.32,-3,6,3)},{id:'house',kind:'house',footprint:rectangle(-10,-8,-1.86,0)}];return n;}
 const actor=()=>({id:'retreat',status:'retreating',x:5.05,z:-6,radius:1}),end={x:5.05,z:6};
@@ -13,3 +15,32 @@ test('a failed attempt is not rebuilt every frame and retries after a new topolo
 test('in-place selected footprint edits invalidate the failed geometry proof',()=>{const n=world(),a=actor();n.obstacles[1].footprint=rectangle(-10,-8,-1.6,0);assert.equal(finish(a,end,n),null);n.obstacles[1].footprint[1].x=-1.86;n.obstacles[1].footprint[2].x=-1.86;assert(finish(a,end,n));});
 
 test('a wall ring introduced during recovery invalidates the pending proof and cannot be crossed',()=>{const n=world(),a=actor();assert.equal(animalFootprintConnector(a,end,n),null);const ring=[{x:5.05,z:-8,yaw:0},{x:5.05,z:-4,yaw:0},{x:3.05,z:-6,yaw:Math.PI/2},{x:7.05,z:-6,yaw:Math.PI/2}];n.obstacles.push(...ring.map((wall,i)=>({...wall,id:`wall${i}`,kind:'wall',baseScaleX:3})));assert(n.walkable(a.x,a.z,a.radius,null,false),'The origin itself stays valid');n.version++;assert.equal(finish(a,end,n),null);});
+
+test('exhausted physical exit search releases only a retreating animal with no attacks left',()=>{
+ const n=world(),a={...actor(),hitsRemaining:0};
+ n.obstacles[1].footprint=rectangle(-10,-8,-1.6,0);
+ for(let i=0;i<2600&&!a.exitConnectorSearch?.exhausted;i++)
+  assert.equal(animalExitConnector(a,end,n),null);
+ assert.equal(a.exitConnectorSearch?.exhausted,true);
+ a.exitRouteRecovery={destinationId:'exit-retreat',version:n.version,startedAt:0};
+ const s=newGame({seed:712,slotId:'exit-exhausted'});s.elapsed=100;
+ assert.equal(walkTo(s,a,{...end,id:'exit-retreat'},1,n,
+  {worker:false,expandRoute:true}),true);
+ assert(s.events.some(e=>e.type==='AnimalRetreatExitAbandoned'&&
+  e.actorId===a.id&&e.reason==='bounded-search-exhausted'));
+ assert.equal(a.x,5.05);assert.equal(a.z,-6);
+ const armed={...actor(),hitsRemaining:1,
+  exitConnectorSearch:{key:JSON.stringify([n.version,5.05,-6,end.x,end.z,1]),next:192,exhausted:true},
+  exitRouteRecovery:{destinationId:'exit-retreat',version:n.version,startedAt:0}};
+ assert.equal(walkTo(s,armed,{...end,id:'exit-retreat'},1,n,
+  {worker:false,expandRoute:true}),false);
+ assert.equal(s.events.filter(e=>e.type==='AnimalRetreatExitAbandoned').length,1);
+ const pending={...actor(),hitsRemaining:0,
+  exitRouteRecovery:{destinationId:'exit-retreat',version:1,startedAt:0}};
+ const unknown={version:1,walkable:()=>false,segmentClear:()=>false};
+ s.elapsed=1600;
+ assert.equal(walkTo(s,pending,{...end,id:'exit-retreat'},1,unknown,
+  {worker:false,expandRoute:true}),true);
+ assert(s.events.some(e=>e.type==='AnimalRetreatExitAbandoned'&&
+  e.reason==='recovery-timeout'));
+});
