@@ -1,4 +1,4 @@
-# Extensión congelada y diagnóstico del trazado defensivo
+# Extensión congelada y diagnóstico de defensa
 
 Se repitió la política candidata `DEFAULT_GENES` de la PR #36, con el mismo
 Wild Engine más la corrección de rutas de trabajadores (`sourceHash`
@@ -29,20 +29,23 @@ tres por edificio. En el amanecer del día 20 había 744 monedas y quedaban
 148 después de reservar el 80 % de la caja, antes de otros costes; no es una
 explicación suficiente atribuir todos los slots pendientes a falta de fondos.
 
-El trazado actual no distingue si esos obstáculos cierran físicamente el
-perímetro para cada especie, ni se desvía alrededor de un paso animal real.
-Además, `wallStroke` excluye los módulos existentes aunque estén arruinados,
-por lo que comprar piezas nuevas no cierra una brecha creada por su derrumbe;
-la política depende de reparaciones pagadas y ejecutadas. Los genes actuales
-pueden variar material, presupuesto y umbral de reparación, pero no pueden
-corregir la geometría del anillo. En la noche 31 hubo 29 plantas destruidas y
-cero impactos contra muralla. Esto es compatible con animales que alcanzan
-cultivos sin encontrar una barrera intacta, pero el reporte no certifica por sí
-solo su ruta ni la causa del acceso. La protección efectiva exige observación
-topológica durante una incursión continua; recargar un snapshot para replay
-puede alterar residencia y secuencia física.
+Una auditoría topológica independiente con Wild Engine comprobó que los doce
+huecos rechazados del día 20 bloquean localmente al animal más pequeño. En el
+día 30, once bloquean y uno resulta transitable. Por tanto, esos rechazos no
+explican por sí solos la derrota. El índice espacial clasificó 124 de 129
+cultivos como alcanzables desde el exterior el día 20 y 25 de 29 el día 30.
+Restaurar en memoria los diez y trece módulos arruinados, respectivamente,
+redujo los cultivos alcanzables a cero; los restantes se clasificaron como
+sellados o `unknown`. Es una prueba de sensibilidad topológica del snapshot,
+no una reparación económica ni una reproducción completa de la incursión.
 
-Estos datos justifican reparar primero la política legal de trazado del
-jugador virtual, manteniendo intactos daños, precios y navegación física, y
-congelar esa nueva versión antes de otra búsqueda genética. Manglares/123 es
-ya un escenario de desarrollo, no una reserva virgen.
+Las reparaciones sí se pagaron: 142, 67, 65 y 62 monedas en los días 19, 20,
+29 y 30. Que haya ruinas en snapshots posteriores y ninguna tarea pendiente
+al amanecer no demuestra un defecto de la política. Puede tratarse de daño
+nocturno recurrente, material insuficiente o umbrales de reparación; falta
+separar esas causas mediante observación continua y nuevos pilotos emparejados.
+En la noche 31 hubo 29 plantas destruidas y cero impactos contra muralla.
+El reporte no certifica por sí solo la ruta de cada animal. Los genes de
+material, reserva de caja y prioridad de reparación son decisiones legales
+que deben evaluarse antes de modificar el trazado o el balance. Manglares/123
+es ya un escenario de desarrollo, no una reserva virgen.

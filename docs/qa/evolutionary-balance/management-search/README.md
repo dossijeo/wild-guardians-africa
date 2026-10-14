@@ -92,7 +92,9 @@ cuatro chunks de radio residente se observaron 7,69 s de `Game.tick`, incluidos
 (3,57 s), cero `approachPath`, 350 selecciones de animales y 197 eventos
 `AnimalTargetUnavailable`. El replay con radio uno terminó en
 `SpatialChunkUnavailable` por residencia insuficiente: **fallo de perfilado**,
-no derrota del juego. El informe válido es `profile-50ticks-radius4.json`.
+no derrota del juego. El informe válido está archivado sin pérdida en
+`profile-50ticks-radius4.json.gz`, con hash del original y del archivo en
+`profile-manglares-123-day10/archive-index.json`.
 
 El coste diario real del líder saltó a 17,8/28,7/26,8/32,4 s de `Game.tick`
 entre los días 9–12. El control también alcanzó 29,3 s el día 10. Estos datos
