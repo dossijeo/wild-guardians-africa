@@ -2,6 +2,7 @@ import {ANIMAL_SPATIAL_PROFILES,WORKER_SPATIAL_PROFILE} from './spatial-movement
 import {gateFrameFootprints,gateSwingPolygon} from '../gate-passages.js';
 import {sweptFootprintDistance} from '../footprints.js';
 import {createSpatialPlacement} from './spatial-placement.js';
+import {BIOME_IDS} from '../biome-ids.js';
 
 const animalProfiles=Object.entries(ANIMAL_SPATIAL_PROFILES);
 const finitePoint=point=>Number.isFinite(point?.x)&&Number.isFinite(point?.z);
@@ -22,6 +23,9 @@ export function createSpatialNavigationMovement(session,state){
   if(!session?.routeActor||!session?.actorCanStand||!session?.actorStepClear)
     throw TypeError('Expected a spatial game session');
   if(!Array.isArray(state?.structures))throw TypeError('Expected live game structures');
+  const config={seed:String(state.seed),biome:BIOME_IDS[state.biome],
+    relief:1,density:1,river:!['desert','mangrove'].includes(BIOME_IDS[state.biome]),
+    n:1,cx:0,cz:0,layers:[true,true,true,true,true,true]};
   const profile=(radius,worker,ignore)=>{
     if(ignore!=null)throw Error('Native target exclusion is not implemented');
     if(worker){
@@ -115,7 +119,13 @@ export function createSpatialNavigationMovement(session,state){
     const ground=session.field.surface(x,z),water=session.field.canyon&&session.field.waterInfo(x,z);
     return water?.inside?Math.max(ground,water.level-.10):ground;
   };
-  return {field:session.field,suppressed:session.suppressed,state,
+  const chunk=(cx,cz)=>{
+    if(session.core.selectChunk(cx,cz)<0)
+      throw new SpatialChunkUnavailable({x:cx*48,z:cz*48},
+        {x:cx*48,z:cz*48},[{cx,cz}]);
+    return session.core.chunkPayload();
+  };
+  return {field:session.field,config,chunk,suppressed:session.suppressed,state,
     get version(){return session.topologySource.revision();},
     walkable,segmentClear,path,propsAt,placement,wallPlacement,placementFootprint,
     workerSurface,actorSurface,

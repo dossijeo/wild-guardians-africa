@@ -23,6 +23,11 @@ test('movement contract uses only native profiles, topology and physically check
     await session.stream.whenIdle();
     const nav=createSpatialNavigationMovement(session,state);
     assert.equal(nav.field,session.field);
+    assert.equal(nav.config.biome,'savanna');
+    assert.equal(nav.config.seed,'712');
+    assert.equal(nav.chunk(0,0).cx,0);
+    assert.throws(()=>nav.chunk(100,0),error=>
+      error instanceof SpatialChunkUnavailable&&error.missing[0].cx===100);
     assert.equal(nav.suppressed,session.suppressed);
     assert.equal(nav.state,state);
     assert.deepEqual(nav.propsAt(0,0,4),session.queryPropsAt(0,0,4).props);

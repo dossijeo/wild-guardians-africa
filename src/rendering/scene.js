@@ -151,7 +151,11 @@ export class WorldScene {
     check();this.loadingProgress.update(id);
     await waitGpuFrame({check,nextFrame,signal});check();
   }
-  async load(state,nav,villagePayload,{farVegetation=false,loadingProgress=null}={}) {
+  async load(state,nav,villagePayload,
+    {farVegetation=false,loadingProgress=null,spatialSession=null}={}) {
+    if(spatialSession&&nav.field!==spatialSession.field)
+      throw TypeError('Spatial scene and navigation must share one terrain authority');
+    this.spatialSession=spatialSession;
     this.loadingProgress=loadingProgress;
     const phase=(label,run)=>loadingAwaitWitness(this.onLoadingSpan,label,run);
     const milestone=id=>phase('load-milestone:'+id,()=>this.loadingMilestone(id));
@@ -180,7 +184,7 @@ export class WorldScene {
     this.locomotionVfx=new LocomotionVfx(this.vfxLibrary,this.destructionPass,this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z),(x,z)=>this.nav.field.canyon?this.nav.field.waterInfo(x,z):null);await milestone('vfx');
     this.raidCamera=new RaidCameraDirector(this.camera,this.controls,nav.field);this.focusFarm();
     const initialFarRegion=this.loadingCpuBudget&&loadingProgress&&farVegetation?startInitialFarRegion(this,farVegetation===true?{}:farVegetation):null;
-    this.chunkStream=new NativeChunkStream(this.nav.config,this.pack.profile,{loaded:()=>this.chunks,onData:data=>this.installChunk(data),onError:error=>this.onError?.(error),onFallback:error=>console.warn('Generación local de chunks:',error.message??error)});
+    this.chunkStream=spatialSession?.stream??new NativeChunkStream(this.nav.config,this.pack.profile,{loaded:()=>this.chunks,onData:data=>this.installChunk(data),onError:error=>this.onError?.(error),onFallback:error=>console.warn('Generación local de chunks:',error.message??error)});
     this.syncChunks();await phase('load-chunks-horizon-ready',()=>this.loadReady(Promise.all([this.chunkStream.whenReady(),this.horizon.whenReady()])));if(this.disposed)throw new Error('Carga de mundo cancelada');this.syncChunks();await milestone('chunks');
     await this.loadReady(this.prepareSavedAnimalRigs(state));loadingSyncWitness(this.onLoadingSpan,'restore-sync',()=>this.sync(0));
     this.setCameraExclusion(true,{trees:true});this.updateCamera();
@@ -343,7 +347,7 @@ export class WorldScene {
   syncChunks(force=false) {
     if(!this.nav||!this.prototypes)return;
     const requested=nativeNearRegion(this.camera.position,this.quality,this.farResidentRange??null);
-    this.horizon??=new NativeHorizon(this.scene,(bounds,outside)=>paintedWaterMaterial(this.pack.profile.colors.water,false,this.nav.field.seed,bounds,this.fluidLighting,outside),mesh=>this.materialRegistry?.refresh(mesh),(material,cx,cz)=>{this.biomeGround?.attach(material,cx,cz,null,{mapped:false});});
+    this.horizon??=new NativeHorizon(this.scene,(bounds,outside)=>paintedWaterMaterial(this.pack.profile.colors.water,false,this.nav.field.seed,bounds,this.fluidLighting,outside),mesh=>this.materialRegistry?.refresh(mesh),(material,cx,cz)=>{this.biomeGround?.attach(material,cx,cz,null,{mapped:false});},{spatial:this.spatialSession?.horizonSource});
     // Adopt the horizon and its matching resident rectangle in the same frame.
     // Keeping the preceding rectangle while the worker runs avoids exposing
     // the old horizon's centre hole or overlapping its seam with new chunks.

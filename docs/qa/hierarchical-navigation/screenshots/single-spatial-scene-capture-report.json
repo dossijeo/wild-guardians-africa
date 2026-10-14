@@ -1,0 +1,74 @@
+{
+  "base": "http://127.0.0.1:5188",
+  "records": [
+    {
+      "biome": "sabana",
+      "file": "docs/qa/hierarchical-navigation/screenshots/sabana-seed-712-single-spatial-scene-1600x900.png",
+      "stats": {
+        "biome": "sabana",
+        "seed": 712,
+        "startAttempts": 1,
+        "terrainChunks": 15,
+        "loadedChunks": 15,
+        "sectorUpdates": 328,
+        "horizon": false,
+        "memoryBytes": 4194304,
+        "timingMs": {
+          "assetFetch": 20.5,
+          "startingSite": 100.29999995231628,
+          "sessionInit": 51.799999952316284,
+          "sceneLoad": 5885.300000190735,
+          "total": 6057.900000095367
+        }
+      },
+      "error": null,
+      "errors": []
+    },
+    {
+      "biome": "gran-canon",
+      "file": "docs/qa/hierarchical-navigation/screenshots/gran-canon-seed-712-single-spatial-scene-1600x900.png",
+      "stats": {
+        "biome": "gran-canon",
+        "seed": 712,
+        "startAttempts": 11,
+        "terrainChunks": 16,
+        "loadedChunks": 16,
+        "sectorUpdates": 348,
+        "horizon": true,
+        "memoryBytes": 4194304,
+        "timingMs": {
+          "assetFetch": 20.200000047683716,
+          "startingSite": 3671.7000000476837,
+          "sessionInit": 76.09999990463257,
+          "sceneLoad": 5844.799999952316,
+          "total": 9612.799999952316
+        }
+      },
+      "error": null,
+      "errors": []
+    },
+    {
+      "biome": "desierto",
+      "file": "docs/qa/hierarchical-navigation/screenshots/desierto-seed-712-single-spatial-scene-1600x900.png",
+      "stats": {
+        "biome": "desierto",
+        "seed": 712,
+        "startAttempts": 1,
+        "terrainChunks": 16,
+        "loadedChunks": 16,
+        "sectorUpdates": 352,
+        "horizon": true,
+        "memoryBytes": 4194304,
+        "timingMs": {
+          "assetFetch": 19.09999990463257,
+          "startingSite": 78.90000009536743,
+          "sessionInit": 45.5,
+          "sceneLoad": 5462,
+          "total": 5605.5
+        }
+      },
+      "error": null,
+      "errors": []
+    }
+  ]
+}
