@@ -6,6 +6,7 @@ import {createSpatialNavigationMovement} from '../../src/world/hierarchical-wasm
 import {repairRoute} from '../../src/world/work-points.js';
 import {gatePortalPoints} from '../../src/world/gate-passages.js';
 import {tick} from '../../src/simulation/game.js';
+import {centerFootprint} from '../../src/world/centers.js';
 
 const state=deserialize(JSON.parse(gunzipSync(readFileSync(new URL(
   '../../tests/fixtures/desierto983-pr42-d7-repair.json.gz',import.meta.url)))));
@@ -21,6 +22,25 @@ try{
   }
   session.core.enableConnectivityDiagnostics();
   const nav=createSpatialNavigationMovement(session,state);
+  console.log(JSON.stringify({centerFootprints:state.structures.filter(s=>s.kind==='center')
+    .map(s=>({id:s.id,footprint:centerFootprint(s,state).footprint})),
+  terrainProbe:[90,91,92,93,94,95,96].map(x=>({x,z:8,
+    surface:session.field.surface(x,8),slope:session.field.slope(x,8),
+    props:session.queryPropsAt(x,8,1.5)}))}));
+  const west=session.actorRegions({x:88,z:8},{worker:true}).ids,
+    east=session.actorRegions({x:95,z:8},{worker:true}).ids;
+  const map=[];
+  for(let z=17;z>=-1;z--){
+    let row='';
+    for(let x=80;x<=99;x++){
+      const point={x,z},regions=session.actorRegions(point,{worker:true});
+      row+=!session.actorCanStand(point,{worker:true})?'#':
+        regions.ids.some(id=>west.includes(id))?'W':
+        regions.ids.some(id=>east.includes(id))?'E':regions.ids.length?'.':'?';
+    }
+    map.push(`${String(z).padStart(3)} ${row}`);
+  }
+  console.log(JSON.stringify({map}));
   const worker=state.workers.find(w=>w.id==='worker-3519');
   const targets=state.tasks.filter(t=>t.kind==='repair').map(t=>state.structures.find(s=>s.id===t.targetId));
   console.log(JSON.stringify({workers:state.workers.map(w=>({id:w.id,x:w.x,z:w.z,
