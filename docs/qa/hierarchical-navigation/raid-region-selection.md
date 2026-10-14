@@ -379,7 +379,15 @@ changing game rules: a synthetic terrain swap must invalidate the hierarchical
 sectors (all eight watering-approach tests pass), and an exhausted animal may
 find a different valid return route without requiring the old search's
 initial failure (the physical exit/reload test passes). These changes postdate
-the `eeab77c8` full-suite count; a fresh full-suite result is still needed.
+the `eeab77c8` full-suite count; their fresh full-suite result follows.
+
+That fresh full suite at `57585091` completed in 445.3 seconds: 4,321 tests,
+4,206 passed and **115 failed**. Exactly the three cases described above
+changed from fail to pass; no test name newly failed. The complete TAP log is
+retained in `full-suite-57585091.log.gz`. The PR validation workflow also
+passed, including playable tests and web build. Repository-wide QA remains
+incomplete, and neither that workflow nor the focused tests establish
+30/60/100-night survivor performance.
 
 ## Reproduce
 
