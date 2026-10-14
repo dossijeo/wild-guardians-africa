@@ -137,13 +137,19 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
     const candidate={...original,gate:true},check=nav.wallPlacement(candidate);
     if(!check.valid||cropOverlap(candidate))return false;
     const points=gatePortalPoints(candidate);if(points.length!==2)return false;
+    if(nav.withWallPreview){
+      const proposed=newPieces.map(piece=>piece.created===p.id?candidate:piece);
+      return nav.withWallPreview(proposed,[...suppressedForGates,...check.suppress??[]],draft=>
+        points.every(point=>draft.walkable(point.x,point.z,.28,null,true))&&
+        draft.segmentClear(points[0],points[1],.28,null,true));
+    }
     const draft=nav.forBuildingPlacement(candidate);
     draft.obstacles=[...nav.obstacles.filter(o=>o.kind!=='wall'),...layout.pieces.filter(q=>originals.get(q.id)?.status!=='ruined').map(q=>({...originals.get(q.id),gate:q.id===p.id||q.kind==='gate'}))];
     draft.suppressed=new Set([...suppressedForGates,...check.suppress??[]]);
     return points.every(point=>draft.walkable(point.x,point.z,.28,null,true))&&draft.segmentClear(points[0],points[1],.28,null,true);
   };
-  const interior=nav.forBuildingPlacement(newPieces[0]??s.structures[0]);
-  interior.obstacles=[...nav.obstacles.filter(o=>o.kind!=='wall'),...[...s.structures,...newPieces].filter(p=>p.kind==='wall'&&p.status!=='ruined')];interior.suppressed=suppressedForGates;
+  const interior=nav.withWallPreview?null:nav.forBuildingPlacement(newPieces[0]??s.structures[0]);
+  if(interior){interior.obstacles=[...nav.obstacles.filter(o=>o.kind!=='wall'),...[...s.structures,...newPieces].filter(p=>p.kind==='wall'&&p.status!=='ruined')];interior.suppressed=suppressedForGates;}
   const omitted=blockedPieces.map(piece=>{const h=piece.baseScaleX*2.18/2,dx=Math.cos(piece.yaw)*h,dz=-Math.sin(piece.yaw)*h;return [[piece.x-dx,piece.z-dz],[piece.x+dx,piece.z+dz]];});
   const targets=s.structures.filter(operational).map(center=>{
     const plants=s.plants.filter(q=>q.alive&&q.centerId===center.id),target=plants.length?{x:plants.reduce((sum,q)=>sum+q.x,0)/plants.length,z:plants.reduce((sum,q)=>sum+q.z,0)/plants.length}:centerServicePoint(center,s,.8);
@@ -167,7 +173,10 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
     return scores.get(p.id);
   };
   let unhosted=false,unhostedWorker=false;
-  ensureBoundaryGates(layout,nav,canHost,(x,z)=>interior.walkable(x,z,.28,null,true),omitted,rank,p=>newIds.has(p.id),face=>{
+  const isFree=(x,z)=>nav.withWallPreview?
+    nav.withWallPreview(newPieces,[...suppressedForGates],draft=>draft.walkable(x,z,.28,null,true)):
+    interior.walkable(x,z,.28,null,true);
+  ensureBoundaryGates(layout,nav,canHost,isFree,omitted,rank,p=>newIds.has(p.id),face=>{
     unhosted=true;
     const polygon=face.polygon.map(([x,z])=>({x,z}));
     if(s.workers.some(w=>w.status!=='home'&&containsPoint(polygon,w.x,w.z)))unhostedWorker=true;

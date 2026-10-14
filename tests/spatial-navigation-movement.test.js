@@ -8,6 +8,7 @@ import {findSpatialStart} from '../src/world/hierarchical-wasm/spatial-initial-s
 import {villageLayout} from '../src/world/villages.js';
 import * as Game from '../src/simulation/game.js';
 import {numberOf} from '../src/simulation/money.js';
+import {serialize,deserialize} from '../src/persistence/snapshots.js';
 
 const module=new WebAssembly.Module(readFileSync(new URL(
   '../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
@@ -270,6 +271,86 @@ test('real wall purchase and removal update the same rendered native collision w
     assert.equal(nav.segmentClear(site.a,site.b,1.1,null,false),true,
       'the same native graph reopens after removing the wall');
     assert.equal(session.core.metrics().loadedChunks,1);
+  }finally{session.dispose();}
+});
+
+test('ordinary wall placement previews its enclosure on the native world and restores temporary topology',async()=>{
+  const state=Game.newGame({seed:712,biome:'sabana',culture:'mapungubwe',slotId:'spatial-gate-preview'});
+  state.villages[0].buildings=villageLayout(pack,0,0);
+  state.structures.push({id:'center-1',kind:'center',x:0,z:0,culture:'mapungubwe',
+    villageId:'village-1',status:'intact',hp:600,maxHp:600});
+  const loaded=new Map(),session=createSpatialGameSession(module,state,{
+    loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+  try{
+    const jobs=new Map();
+    for(let cz=-1;cz<=1;cz++)for(let cx=-1;cx<=1;cx++)
+      jobs.set(`${cx},${cz}`,{cx,cz,score:Math.hypot(cx,cz)});
+    session.stream.plan(jobs);
+    await session.stream.whenIdle();
+    const nav=createSpatialNavigationMovement(session,state);
+    let wall;
+    for(let z=-16;z<=16&&!wall;z+=2)for(let x=-16;x<=16&&!wall;x+=2){
+      const candidate={kind:'wall',material:'zarzas',gate:false,x,z,yaw:0};
+      if(nav.wallPlacement(candidate).valid&&
+        nav.segmentClear({x,z:z-1.4},{x,z:z+1.4},.28,null,true))wall=candidate;
+    }
+    assert(wall);
+    const a={x:wall.x,z:wall.z-1.4},b={x:wall.x,z:wall.z+1.4};
+    assert.equal(Game.placeStructure(state,'native-ordinary-wall',wall,nav),true);
+    assert.equal(state.structures.length,2);
+    assert.equal(nav.segmentClear(a,b,.28,null,true),false);
+    assert.equal(Game.removeWall(state,'native-ordinary-wall-remove',state.structures.at(-1).id,nav),true);
+    assert.equal(nav.segmentClear(a,b,.28,null,true),true);
+  }finally{session.dispose();}
+});
+
+test('a native wall ring creates an automatic door that a worker can cross',async()=>{
+  const state=Game.newGame({seed:712,biome:'sabana',culture:'mapungubwe',slotId:'spatial-auto-gate'});
+  state.villages[0].buildings=villageLayout(pack,0,0);
+  state.structures.push({id:'center-1',kind:'center',x:0,z:0,culture:'mapungubwe',
+    villageId:'village-1',status:'intact',hp:600,maxHp:600});
+  const loaded=new Map(),session=createSpatialGameSession(module,state,{
+    loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+  try{
+    const jobs=new Map();
+    for(let cz=-1;cz<=1;cz++)for(let cx=-1;cx<=1;cx++)
+      jobs.set(`${cx},${cz}`,{cx,cz,score:Math.hypot(cx,cz)});
+    session.stream.plan(jobs);await session.stream.whenIdle();
+    const nav=createSpatialNavigationMovement(session,state);
+    let points,plan;
+    for(let z=-14;z<=14&&!points;z+=4)for(let x=-14;x<=14&&!points;x+=4){
+      const ring=[[x,z],[x+8,z],[x+8,z+8],[x,z+8],[x,z]];
+      const candidate=Game.previewWallChain(state,'zarzas',ring,nav,{smooth:false,snap:false});
+      if(candidate.gates===1&&candidate.pieces.length>=12){points=ring;plan=candidate;}
+    }
+    assert(points,'native terrain should admit a closed wall ring');
+    assert.equal(Game.buildWallChain(state,'native-ring','zarzas',points,nav,{smooth:false,snap:false}),true);
+    const gate=state.structures.find(item=>item.autoGate);
+    assert(gate,'the real purchase must create an automatic gate');
+    const {gatePortalPoints}=await import('../src/world/gate-passages.js');
+    const [a,b]=gatePortalPoints(gate);
+    assert(a&&b);
+    assert(nav.path(a,b,.28,null,true),JSON.stringify({points,gate,a,b,
+      standA:nav.walkable(a.x,a.z,.28,null,true),
+      standB:nav.walkable(b.x,b.z,.28,null,true),
+      clear:nav.segmentClear(a,b,.28,null,true),
+      connected:nav.regionConnected(a,b,.28,null,true)}));
+    assert(nav.path(b,a,.28,null,true));
+    assert.equal(nav.segmentClear(a,b,1.1,null,false),false,
+      'the gate remains a rigid barrier for animals');
+    assert.equal(nav.path(a,b,1.1,null,false),null,
+      'the worker portal must not leak into the animal graph');
+    assert.equal(plan.gates,1);
+    const restored=deserialize(serialize(state)),otherChunks=new Map();
+    const reload=createSpatialGameSession(module,restored,{
+      loaded:()=>otherChunks,onData:data=>otherChunks.set(`${data.cx},${data.cz}`,data)});
+    try{
+      reload.stream.plan(jobs);await reload.stream.whenIdle();
+      const reloadedNav=createSpatialNavigationMovement(reload,restored);
+      assert(reloadedNav.path(a,b,.28,null,true),
+        'the worker-only gate portal must be rebuilt from the saved wall');
+      assert.equal(reloadedNav.path(a,b,1.1,null,false),null);
+    }finally{reload.dispose();}
   }finally{session.dispose();}
 });
 

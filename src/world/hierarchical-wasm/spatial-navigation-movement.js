@@ -3,6 +3,7 @@ import {gateFrameFootprints,gateSwingPolygon} from '../gate-passages.js';
 import {sweptFootprintDistance} from '../footprints.js';
 import {createSpatialPlacement} from './spatial-placement.js';
 import {BIOME_IDS} from '../biome-ids.js';
+import {centerFootprint} from '../centers.js';
 
 const animalProfiles=Object.entries(ANIMAL_SPATIAL_PROFILES);
 const finitePoint=point=>Number.isFinite(point?.x)&&Number.isFinite(point?.z);
@@ -140,9 +141,26 @@ export function createSpatialNavigationMovement(session,state){
         {x:cx*48,z:cz*48},[{cx,cz}]);
     return session.core.chunkPayload();
   };
+  const withWallPreview=(walls,suppressed,inspect)=>
+    session.withWallPreview(walls,suppressed,()=>inspect({walkable,segmentClear}));
+  const terrainValid=(x,z,radius=.28,worker=false)=>{
+    for(const [dx,dz] of [[0,0],[radius,0],[-radius,0],[0,radius],[0,-radius]]){
+      const px=x+dx,pz=z+dz;
+      if(!worker&&session.field.fluidInside(px,pz))return false;
+      if(!Number.isFinite(session.field.slope(px,pz))||session.field.slope(px,pz)>.5)
+        return false;
+    }
+    return true;
+  };
   return {field:session.field,config,chunk,suppressed:session.suppressed,state,
+    get obstacles(){return [
+      ...state.structures.filter(item=>item.status!=='ruined').map(item=>
+        item.kind==='center'?centerFootprint(item,state):{...item,radius:.7}),
+      ...state.villages.flatMap(village=>(village.buildings??[])
+        .filter(item=>item.kind!=='Zona común').map(item=>({...item,radius:item.radius??2.8})))
+    ];},
     get version(){return session.topologySource.revision();},
-    walkable,segmentClear,path,regionFor,regionConnected,
+    walkable,segmentClear,path,regionFor,regionConnected,terrainValid,withWallPreview,
     approachPath:(start,end,radius)=>path(start,end,radius,null,false),
     propsAt,placement,wallPlacement,placementFootprint,
     workerSurface,actorSurface,

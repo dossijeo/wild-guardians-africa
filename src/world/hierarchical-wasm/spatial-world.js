@@ -3,12 +3,14 @@ import {addSpatialBarriersBatch,applySpatialBarrierChanges} from './spatial-barr
 import {captureSpatialState,captureSpatialTerrainState,applySpatialState,validateSpatialState} from './spatial-state.js';
 import {spatialWorldRoute,spatialWorldConnectivity,spatialWorldComponents} from './spatial-local-route.js';
 import {BIOME_IDS,SPATIAL_BIOME_CODES} from '../biome-ids.js';
+import {gatePortalPoints} from '../gate-passages.js';
 
 // Synchronous world authority. The same WASM instance answers spatial queries
 // and supplies visual buffers; rendering remains the caller's responsibility.
 export function createSpatialWorld(module){
   const wasm=new WebAssembly.Instance(module,{env:{emscripten_notify_memory_growth(){}}}).exports;
   let chunk=null,navigationBuilt=false,chunks=[],generated=false;
+  let workerPortalRoutes=[];
   const heights=()=>new Float32Array(wasm.memory.buffer,wasm.spatial_heights_ptr(),49*49);
   const colors=()=>new Float32Array(wasm.memory.buffer,wasm.spatial_colors_ptr(),49*49*3);
   const water=()=>new Uint8Array(wasm.memory.buffer,wasm.spatial_water_ptr(),48*48);
@@ -26,6 +28,7 @@ export function createSpatialWorld(module){
     if(!Object.hasOwn(SPATIAL_BIOME_CODES,name))throw RangeError('Unsupported spatial biome');
     const count=wasm.spatial_generate_biome(seed>>>0,SPATIAL_BIOME_CODES[name],cx|0,cz|0);
     chunk={cx:cx|0,cz:cz|0,count};chunks=[[cx|0,cz|0]];navigationBuilt=false;generated=true;
+    workerPortalRoutes=[];
     return chunk;
   }
   function addChunk(cx,cz){
@@ -72,7 +75,13 @@ export function createSpatialWorld(module){
     if(count<0)return {status:'unknown',points:[]};
     if(!count)return {status:'blocked',points:[]};
     const pairs=new Int32Array(wasm.memory.buffer,wasm.lazy_route_ptr(),count*2),points=[];
-    for(let i=0;i<count;i++)points.push({x:pairs[i*2],z:pairs[i*2+1]});
+    for(let i=0;i<count;i++){
+      if(pairs[i*2]===-2147483648){
+        const crossing=workerPortalRoutes[pairs[i*2+1]];
+        if(!crossing)return {status:'unknown',points:[]};
+        points.push(...crossing);
+      }else points.push({x:pairs[i*2],z:pairs[i*2+1]});
+    }
     return {status:'found',points};
   }
   function connected(start,end){
@@ -118,12 +127,46 @@ export function createSpatialWorld(module){
   const surface=(x,z)=>wasm.spatial_surface(x,z);
   const slope=(x,z)=>Math.hypot(surface(x+.8,z)-surface(x-.8,z),
     surface(x,z+.8)-surface(x,z-.8))/1.6;
+  function setWorkerGatePortals(gates){
+    wasm.lazy_clear_portals();
+    workerPortalRoutes=[];
+    const clear=(a,b)=>{
+      const length=Math.hypot(a.x-b.x,a.z-b.z),steps=Math.max(1,Math.ceil(length/1.25));
+      for(let i=0;i<steps;i++){
+        const p={x:a.x+(b.x-a.x)*i/steps,z:a.z+(b.z-a.z)*i/steps};
+        const q={x:a.x+(b.x-a.x)*(i+1)/steps,z:a.z+(b.z-a.z)*(i+1)/steps};
+        if(!wasm.spatial_local_clear(p.x,p.z,q.x,q.z))return false;
+      }
+      return true;
+    };
+    const connector=point=>{
+      const candidates=[];
+      for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){
+        const cell={x:Math.round(point.x)+dx,z:Math.round(point.z)+dz};
+        if(wasm.spatial_walkable(cell.x,cell.z)&&clear(point,cell))
+          candidates.push({cell,distance:Math.hypot(cell.x-point.x,cell.z-point.z)});
+      }
+      candidates.sort((a,b)=>a.distance-b.distance||a.cell.x-b.cell.x||a.cell.z-b.cell.z);
+      return candidates[0]?.cell;
+    };
+    for(const gate of gates){
+      if(!gate.gate||gate.status==='ruined')continue;
+      const pair=gatePortalPoints(gate,.28);
+      if(pair.length!==2||!clear(pair[0],pair[1])||!clear(pair[1],pair[0]))continue;
+      const from=connector(pair[0]),to=connector(pair[1]);
+      if(!from||!to)continue;
+      const id=wasm.lazy_add_portal(from.x,from.z,to.x,to.z);
+      workerPortalRoutes[id*2]=pair;
+      workerPortalRoutes[id*2+1]=[pair[1],pair[0]];
+    }
+    wasm.lazy_commit_portals();
+  }
   return {wasm,generate,addChunk,selectChunk,removeChunk,currentChunk:()=>chunk,
     heights,colors,water,groundMask,waterLevels,waterTriangles,props,instances,chunkPayload,changedChunks,route,connected,componentAt,
     routeWorld:(start,end)=>navigationBuilt?spatialWorldRoute(wasm,route,start,end):{status:'unknown',points:[]},
     connectedWorld:(start,end)=>navigationBuilt?spatialWorldConnectivity(wasm,connected,start,end):'unknown',
     componentsWorld:point=>navigationBuilt?spatialWorldComponents(wasm,componentAt,point):{ids:[],unknown:true},
-    componentsWorldBatch,
+    componentsWorldBatch,setWorkerGatePortals,
     localClear:(start,end)=>Boolean(wasm.spatial_local_clear(start.x,start.z,end.x,end.z)),
     setSettlement:(x,z,hx,hz)=>{
       if(!generated)throw Error('Generate the world before placing a settlement');

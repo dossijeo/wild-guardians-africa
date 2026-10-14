@@ -8,6 +8,7 @@ import {createSpatialShieldMirror} from './spatial-shield-mirror.js';
 import {createSpatialPropMirror} from './spatial-prop-mirror.js';
 import {queryResidentSpatialProps} from './spatial-prop-query.js';
 import {addSpatialVillageBuildings} from './spatial-village-bridge.js';
+import {spatialStructureBarriers} from './spatial-wall-bridge.js';
 import {WORKER_SPATIAL_PROFILE,ANIMAL_SPATIAL_PROFILES} from './spatial-movement-profiles.js';
 import {BIOME_IDS} from '../biome-ids.js';
 
@@ -73,11 +74,16 @@ export function createSpatialGameSession(module,state,streamOptions){
   walls.sync(state.structures);
   centers.sync(state);shields.sync(state.spells);
   const profiles=new Set();
+  let workerPortalRevision=-1;
   function selectProfile(profile){
     if(!profiles.has(profile.index)){
       core.buildNavigationProfile(profile.index,profile.radius,profile.worker);
       profiles.add(profile.index);
     }else core.selectNavigationProfile(profile.index);
+    if(profile.worker&&workerPortalRevision!==walls.revision()){
+      core.setWorkerGatePortals(state.structures.filter(s=>s.kind==='wall'&&s.gate));
+      workerPortalRevision=walls.revision();
+    }
   }
   function actorProfile({worker=true,species='warthog'}={}){
     const profile=worker?WORKER_SPATIAL_PROFILE:ANIMAL_SPATIAL_PROFILES[species];
@@ -128,6 +134,27 @@ export function createSpatialGameSession(module,state,streamOptions){
     actorProfile(options);
     return core.localClear(start,end);
   }
+  function withWallPreview(proposed,suppress,inspect){
+    if(!Array.isArray(proposed)||!Array.isArray(suppress)||typeof inspect!=='function')
+      throw TypeError('Expected proposed walls, suppressed props and a callback');
+    const previous=[...props.suppressed];
+    const extra=[...new Set(suppress)].filter(id=>!props.suppressed.has(id));
+    const records=ids=>ids.map(id=>{
+      const match=/^spatial:([0-5]):(-?\d+):(-?\d+)$/.exec(id);
+      if(!match)throw TypeError(`Unsupported spatial prop ID: ${id}`);
+      return {group:Number(match[1]),gx:Number(match[2]),gz:Number(match[3])};
+    });
+    let ids=[];
+    try{
+      if(extra.length)core.restoreRemovedProps(records([...previous,...extra]));
+      const barriers=proposed.flatMap(wall=>spatialStructureBarriers(wall));
+      if(barriers.length)ids=core.applyBarrierChanges([],barriers);
+      return inspect();
+    }finally{
+      if(ids.length)core.applyBarrierChanges(ids,[]);
+      if(extra.length)core.restoreRemovedProps(records(previous));
+    }
+  }
   // Only settlements change the far relief. Walls, crop turnover, shield HP and
   // removed props leave its mesh intact, so they must not queue new horizons.
   const horizonSource={revision:()=>terrainRevision,snapshot:()=>core.terrainState()};
@@ -140,6 +167,6 @@ export function createSpatialGameSession(module,state,streamOptions){
     key=>chunkRevisions.get(key)??0);
   return {core,field,stream,horizonSource,topologySource,suppressed:props.suppressed,syncState,
     routeActor,actorConnectivity,actorRegions,actorRegionsBatch,actorCanStand,actorStepClear,
-    queryPropsAt,
+    queryPropsAt,withWallPreview,
     dispose:()=>stream.dispose()};
 }
