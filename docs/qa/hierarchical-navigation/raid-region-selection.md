@@ -539,6 +539,20 @@ now supplies the real method. Its complete file passes 6/6 after that
 test-only correction. The 82-failure count predates this correction; no new
 global count is claimed.
 
+The recorded Gran Cañón day-1 building route exposes a remaining distinction
+between the integer-grid navigator and a physically valid local connector.
+The hierarchical worker route traverses about 72.3 m around the center;
+the existing work-point corner connector finds a swept-clear route under 7 m.
+The direct segment is blocked. Inserting a wall on the lattice's first cell
+makes that cell unwalkable, removes the corner shortcut and causes the
+hierarchical planner to return no route from that recorded start. The updated
+building-route file tests these actual contracts and the water/rotated-footprint
+clearance rules, passing 19/19.
+This is test-only triage: it neither changes the engine nor establishes that
+all worker routes near buildings are short. The corner connector belongs to
+work-point selection, while the general WASM path can still take a longer
+valid route; broader route-quality measurement remains necessary.
+
 ## Deferred engine name
 
 After the WASM spatial core is functionally and performance-stable, rename
