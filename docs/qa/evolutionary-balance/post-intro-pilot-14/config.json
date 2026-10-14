@@ -1,0 +1,15 @@
+{
+  "days": 14,
+  "scenarios": [
+    {"biome":"sabana","seed":411},
+    {"biome":"gran-rio","seed":626}
+  ],
+  "genomes": {
+    "default-walls": {},
+    "default-no-walls": {"wallPolicy":"none"},
+    "growth-half-walls": {"growthShare":0.5,"magicPriority":"growth"}
+  },
+  "maxDayGameTickMs": 60000,
+  "maxElapsedWallMs": 900000,
+  "output": "docs/qa/evolutionary-balance/post-intro-pilot-14/results"
+}

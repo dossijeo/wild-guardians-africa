@@ -1,0 +1,7 @@
+# Fourteen-night post-introduction policy pilot
+
+This is the first primary-horizon diagnostic after the seven-night technical screen. It freezes three legal virtual-player genomes: default with planned walls, the same genes with no walls (Shield remains), and a planned-wall variant that directs half of agricultural spell choices to Crecimiento. Sabana/411 and Gran Río/626 were already used for the seven-night screen, so they are **development seeds**, not untouched holdout. All use unchanged production balance and the same post-PR39 Wild Engine runner.
+
+The run is sequential. The 60 s daily `Game.tick` and 15-minute case wall-clock ceilings are cooperative technical cost stops, never native defeats. Each case records a full compressed native report, daily progress, source and module hashes, and exact config. The versioned `post-intro-v1` diagnostic measures day-6-onward deliveries, paid ledger, destruction, terminal production and recovery trend. No empirically calibrated delivery floor is yet supplied, so the raw score is provisional and **cannot select a final strategy**. A survivor with collapsed production will be shown as such, and no-walls receives no direct penalty.
+
+After these development pilots, derive an activity reference from native controls and freeze it before a new genetic search. Use new seeds and biomes for reserved validation. Escalate to 21/30 nights only if the native behavior and compute cost justify it.

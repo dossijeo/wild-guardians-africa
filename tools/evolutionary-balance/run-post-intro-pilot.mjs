@@ -1,0 +1,81 @@
+// Bounded native policy pilot. This does not select a genome or modify game balance.
+import {readFileSync,writeFileSync,appendFileSync,mkdirSync,existsSync} from 'node:fs';
+import {resolve,join} from 'node:path';
+import {execFileSync} from 'node:child_process';
+import {createHash} from 'node:crypto';
+import {gzipSync,gunzipSync} from 'node:zlib';
+import {pathToFileURL} from 'node:url';
+import {evaluateOne} from './run-ga.mjs';
+import {validateGenes,GENE_SCHEMA_VERSION} from './policy-genes.mjs';
+import {postIntroMetrics,scorePostIntro} from './post-intro-fitness.mjs';
+
+const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
+export function validatePilotConfig(raw){
+ const c={days:14,maxDayGameTickMs:60000,maxElapsedWallMs:900000,...raw};
+ if(!Number.isInteger(c.days)||c.days<14||c.days>100||
+  !Number.isInteger(c.maxDayGameTickMs)||c.maxDayGameTickMs<1000||
+  !Number.isInteger(c.maxElapsedWallMs)||c.maxElapsedWallMs<1000)
+  throw Error('Invalid post-intro pilot budget');
+ if(!Array.isArray(c.scenarios)||c.scenarios.length<2||
+  new Set(c.scenarios.map(x=>`${x.biome}:${x.seed}`)).size!==c.scenarios.length||
+  c.scenarios.some(x=>typeof x.biome!=='string'||!Number.isInteger(x.seed)||x.seed<0))
+  throw Error('Need distinct native scenarios');
+ if(!c.genomes||Object.keys(c.genomes).length<2||Object.keys(c.genomes).some(x=>!/^[a-z0-9-]+$/.test(x)))
+  throw Error('Need named frozen genomes');
+ c.genomes=Object.fromEntries(Object.entries(c.genomes).map(([name,genes])=>[name,validateGenes(genes)]));
+ if(typeof c.output!=='string'||!c.output)throw Error('Missing output');
+ return c;
+}
+export async function runPostIntroPilot(raw){
+ const c=validatePilotConfig(raw),out=resolve(c.output);mkdirSync(out,{recursive:true});
+ const modules=['tools/native-campaign-runner.mjs','tools/evolutionary-balance/run-ga.mjs',
+  'tools/evolutionary-balance/run-post-intro-pilot.mjs','tools/evolutionary-balance/post-intro-fitness.mjs',
+  'tools/evolutionary-balance/policy-genes.mjs'];
+ const stamp={sourceHash:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),
+  geneSchemaVersion:GENE_SCHEMA_VERSION,
+  moduleHashes:Object.fromEntries(modules.map(path=>[path,sha(readFileSync(path))])),
+  config:c,balance:'production unchanged',purpose:'post-intro native policy pilot'};
+ const configPath=join(out,'config.json');
+ if(existsSync(configPath)&&JSON.stringify(JSON.parse(readFileSync(configPath)))!==JSON.stringify(stamp))
+  throw Error('Pilot output belongs to another source/configuration');
+ writeFileSync(configPath,JSON.stringify(stamp,null,2)+'\n');
+ const cases=[];
+ for(const [name,genes] of Object.entries(c.genomes))for(const scenario of c.scenarios){
+  const stem=`${name}-${scenario.biome}-${scenario.seed}-${c.days}`;
+  const archive=join(out,`${stem}.json.gz`),progress=join(out,`${stem}.jsonl`);
+  let day=0,gameTickMs=0;const began=Date.now();
+  const report=existsSync(archive)?JSON.parse(gunzipSync(readFileSync(archive))):
+   await evaluateOne(scenario,c.days,'evolved',genes,row=>{
+    const sample={name,biome:scenario.biome,seed:scenario.seed,day:row.day,
+     result:row.result,money:row.money,living:row.living,destroyed:row.destroyed,
+     delivered:row.delivered,gameTickMs:row.wallTime?.gameTickMs};
+    appendFileSync(progress,JSON.stringify(sample)+'\n');console.log(JSON.stringify(sample));
+   },true,(state,_nav,timing)=>{
+    if(state.day!==day){day=state.day;gameTickMs=0;}
+    gameTickMs+=timing.gameTickMs??0;
+    if(gameTickMs>c.maxDayGameTickMs||Date.now()-began>c.maxElapsedWallMs){
+     const error=new Error(`Cooperative computational cost stop at day ${state.day}`);
+     error.name='CampaignCostStop';throw error;
+    }
+   });
+  if(!existsSync(archive))writeFileSync(archive,gzipSync(JSON.stringify(report,null,2)+'\n',{level:9,mtime:0}));
+  const fitness=scorePostIntro(report,c.days),metrics=postIntroMetrics(report);
+  cases.push({name,biome:scenario.biome,seed:scenario.seed,
+   stop:report.status==='error'?report.name==='CampaignCostStop'?'computational-cost-stop':'technical-error':
+    report.result==='defeat'?'native-defeat':report.completedNights>=c.days?'horizon-survivor':'truncated',
+   completedNights:report.completedNights??null,result:report.result??null,
+   finalCash:report.rows?.at(-1)?.money??null,finalLiving:report.rows?.at(-1)?.living??null,
+   delivered:report.rows?.reduce((n,row)=>n+row.delivered,0)??null,
+   destroyed:report.rows?.reduce((n,row)=>n+row.destroyed,0)??null,
+   fitness,metrics});
+  writeFileSync(join(out,'summary.json'),JSON.stringify({stamp,cases},null,2)+'\n');
+ }
+ return {stamp,cases};
+}
+if(process.argv[1]&&pathToFileURL(resolve(process.argv[1])).href===import.meta.url){
+ const path=process.argv[2];if(!path)throw Error('Usage: node run-post-intro-pilot.mjs <config.json>');
+ runPostIntroPilot(JSON.parse(readFileSync(resolve(path),'utf8'))).then(x=>
+  console.log(JSON.stringify(x.cases.map(({name,biome,seed,stop,completedNights,finalCash,finalLiving})=>
+   ({name,biome,seed,stop,completedNights,finalCash,finalLiving})))),
+  e=>{console.error(e);process.exitCode=1;});
+}
