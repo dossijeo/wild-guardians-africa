@@ -473,6 +473,21 @@ speed improvement. This removes obsolete copies and worker-message payload,
 not the remaining expensive preview calculations. The global 93-failure
 count predates this cleanup.
 
+A follow-up experiment tested removing `warmRaidApproaches` from the raid
+worker on the same populated Sabana snapshot. With the preview, two prepared
+runs spent 1,472/1,532 ms preparing and their first visible `Game.tick` took
+about 17 ms (median). Without it, preparation fell to 641/674 ms, but the
+first visible tick rose to about 300 ms (median); the 20-tick window rose
+from about 21 to 302 ms. Alternating prepared/reference runs verified the
+same serialized state after every tick in both variants. The negative
+measurements and source hashes are preserved in
+`first-routes-before-warm-preview.json`,
+`first-routes-without-warm-preview.json`, and
+`prepared-raid-without-warm-preview.json`. The experiment was reverted:
+moving several hundred milliseconds onto the frame thread would harm
+interactive smoothness even though the worker finishes sooner. This preview
+remains useful; only its unused copied path arrays were removed.
+
 A same-policy Gran Cañón seed 123 native campaign was repeated after the
 committed-target fix. Against `selector-village-14-canyon-123.json.gz`, all
 daily gameplay fields, complete raid evidence, entry transport and plot
