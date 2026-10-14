@@ -379,6 +379,14 @@ double fluidLevelFor(double x,double z,const std::vector<Pond>& localPonds){
 }
 double fluidLevel(double x,double z){return fluidLevelFor(x,z,ponds);}
 bool fluid(double x,double z){return fluidLevel(x,z)!=0;}
+double waterShore(double x,double z,const std::vector<Pond>& localPonds){
+  if(worldBiome==1)return std::numeric_limits<double>::infinity();
+  if(worldBiome==4)return std::min(42.0,std::abs(wetlandMask(x,z)-.61)*52);
+  double shore=std::abs(std::abs(x-riverX(z))-mainRiverReach(z));
+  for(const Pond& p:localPonds)
+    shore=std::min(shore,std::abs(std::hypot(x-p.x,z-p.z)-p.radius*.82));
+  return shore;
+}
 double riverWetEdge(double z,int direction){
   const double center=riverX(z);
   if(fluidLevel(center,z)!=mainRiverLevel())return center;
@@ -1326,6 +1334,14 @@ float spatial_fluid_level_anywhere(float x,float z){
   const ScopedTerrainSample context(x,z);
   return float(fluidLevel(x,z));
 }
+float spatial_water_shore_anywhere(float x,float z){
+  if(!chunkRasters||!std::isfinite(x)||!std::isfinite(z))
+    return std::numeric_limits<float>::quiet_NaN();
+  if(const ChunkSpatialSample* sample=residentSample(x,z))
+    return float(waterShore(x,z,sample->ponds));
+  const ScopedTerrainSample context(x,z);
+  return float(waterShore(x,z,ponds));
+}
 float spatial_river_center(float z){
   if(!chunkRasters||!std::isfinite(z)||worldBiome==1||worldBiome==4)
     return std::numeric_limits<float>::quiet_NaN();
@@ -1342,6 +1358,10 @@ float spatial_river_edge(float z,int direction){
 float spatial_river_level(){
   return chunkRasters&&worldBiome!=1&&worldBiome!=4?float(mainRiverLevel()):
     std::numeric_limits<float>::quiet_NaN();
+}
+float spatial_fluid_surface_level(){
+  if(!chunkRasters)return std::numeric_limits<float>::quiet_NaN();
+  return worldBiome==1?0:worldBiome==4?3.34f:float(mainRiverLevel());
 }
 float spatial_wetland_mask_anywhere(float x,float z){
   if(!chunkRasters||worldBiome!=4||!std::isfinite(x)||!std::isfinite(z))

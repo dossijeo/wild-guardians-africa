@@ -23,6 +23,8 @@ test('a Sabana game state renders and routes from one spatial authority through 
     schedule:callback=>{scheduled.push(callback);return callback;},
     cancel:callback=>{const index=scheduled.indexOf(callback);if(index>=0)scheduled.splice(index,1);}});
   const {core,stream}=session;
+  assert.equal(session.field.surface(0,0),core.surfaceAnywhere(0,0));
+  assert.equal(session.field.waterInfo(0,0).inside,core.fluidLevelAnywhere(0,0)>0);
   assert.equal(session.horizonSource.revision(),1);
   assert.equal(session.horizonSource.snapshot().seed,712);
   assert.deepEqual(Object.keys(session.horizonSource.snapshot()).sort(),
@@ -77,6 +79,7 @@ test('a Sabana game state renders and routes from one spatial authority through 
   state.villages.push({id:'village-2',x:96,z:0,buildings:villageLayout(pack,96,0)});
   session.syncState(state);
   assert.equal(session.horizonSource.revision(),2,'a new settlement updates native relief');
+  assert.equal(session.field.surface(96,0),core.surfaceAnywhere(96,0));
   session.dispose();
 });
 

@@ -146,9 +146,11 @@ export function createSpatialWorld(module){
     surfaceAnywhere:(x,z)=>wasm.spatial_surface_anywhere(x,z),
     fluidLevel:(x,z)=>wasm.spatial_fluid_level(x,z),
     fluidLevelAnywhere:(x,z)=>wasm.spatial_fluid_level_anywhere(x,z),
+    waterShoreAnywhere:(x,z)=>wasm.spatial_water_shore_anywhere(x,z),
     riverCenter:z=>wasm.spatial_river_center(z),
     riverEdge:(z,direction)=>wasm.spatial_river_edge(z,direction),
     riverLevel:()=>wasm.spatial_river_level(),
+    fluidSurfaceLevel:()=>wasm.spatial_fluid_surface_level(),
     wetlandMaskAnywhere:(x,z)=>wasm.spatial_wetland_mask_anywhere(x,z),
     groundColorsAnywhere:points=>{
       if(!(points instanceof Float32Array)||points.length===0||points.length%2||points.length>100000)

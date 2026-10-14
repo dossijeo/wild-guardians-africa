@@ -1,5 +1,6 @@
 import {centerFootprint} from '../centers.js';
 import {createSpatialWorld} from './spatial-world.js';
+import {createSpatialTerrainView} from './spatial-terrain-view.js';
 import {createSpatialChunkStream} from './spatial-chunk-stream.js';
 import {createSpatialWallMirror} from './spatial-wall-mirror.js';
 import {createSpatialCenterMirror} from './spatial-center-mirror.js';
@@ -17,6 +18,7 @@ export function createSpatialGameSession(module,state,streamOptions){
   const core=createSpatialWorld(module),first=state.villages[0];
   const cx=Math.floor((first.x+24)/48),cz=Math.floor((first.z+24)/48);
   core.generate(state.seed,cx,cz,state.biome);
+  const field=createSpatialTerrainView(core);
   const villages=new Map();
   let terrainRevision=0;
   function installVillage(village,gameState,initial=false){
@@ -69,6 +71,6 @@ export function createSpatialGameSession(module,state,streamOptions){
   // Only settlements change the far relief. Walls, crop turnover, shield HP and
   // removed props leave its mesh intact, so they must not queue new horizons.
   const horizonSource={revision:()=>terrainRevision,snapshot:()=>core.terrainState()};
-  return {core,stream,horizonSource,suppressed:props.suppressed,syncState,routeActor,
+  return {core,field,stream,horizonSource,suppressed:props.suppressed,syncState,routeActor,
     dispose:()=>stream.dispose()};
 }
