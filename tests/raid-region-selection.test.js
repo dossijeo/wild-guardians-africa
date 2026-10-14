@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {targetFor} from '../src/simulation/raids.js';
+import {targetFor,reachableApproach} from '../src/simulation/raids.js';
 import {raidResidentDemand} from '../src/world/raid-entry-residency.js';
 
 function fixture(){
@@ -22,6 +22,48 @@ function fixture(){
     setConnectivity:value=>{connectivity=value;},advanceSector:()=>{sectors++;},
     queries:()=>queries,routes:()=>routes};
 }
+
+test('a native blocked service region skips detailed routes without hiding a reachable alternative',()=>{
+  const animal={id:'animal',x:0,z:0,radius:1.1};
+  const target={id:'structure',kind:'wall',x:4,z:0};
+  let routes=0,checks=0;
+  const nav={walkable:()=>true,regionConnected:(_start,point)=>{
+    checks++;return point.x<2.1?false:true;
+  },approachPath:(_start,point)=>{routes++;return [{x:point.x,z:point.z}];}};
+  const selected=reachableApproach(animal,target,nav);
+  assert(selected?.point);
+  assert(checks>=2);
+  assert.equal(routes,1);
+});
+
+test('unknown service connectivity still asks the native router',()=>{
+  const animal={id:'animal',x:0,z:0,radius:1.1};
+  const target={id:'plant',x:2,z:0};
+  let routes=0;
+  const nav={walkable:()=>true,regionConnected:()=>null,
+    approachPath:(_start,point)=>{routes++;return [{x:point.x,z:point.z}];}};
+  assert(reachableApproach(animal,target,nav)?.point);
+  assert.equal(routes,1);
+});
+
+test('shared service-region decision is refreshed after a sector revision',()=>{
+  const animal={id:'animal',x:0,z:0,radius:1.1};
+  const target={id:'wall',kind:'wall',x:4,z:0};
+  const scope={decisions:new Map()};
+  let connected=false,queries=0,routes=0;
+  const nav={walkable:()=>true,regionFor:()=>({key:'destination'}),
+    regionConnected:()=>{queries++;return connected;},
+    approachPath:(_start,point)=>{routes++;return [{x:point.x,z:point.z}];}};
+  const decision=sectors=>({scope,origin:'origin',sectors});
+  assert.equal(reachableApproach(animal,target,nav,null,null,decision(1)),null);
+  const firstQueries=queries;
+  assert.equal(reachableApproach(animal,target,nav,null,null,decision(1)),null);
+  assert.equal(queries,firstQueries,'same regions must reuse the decision');
+  connected=true;
+  assert(reachableApproach(animal,target,nav,null,null,decision(2))?.point);
+  assert(queries>firstQueries,'topology update must ask the native graph again');
+  assert.equal(routes,1);
+});
 
 test('an unresolved crop region remains pending without enumerating its hundred plants',()=>{
   const f=fixture();
