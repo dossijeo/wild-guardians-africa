@@ -288,6 +288,11 @@ After the blocked-endpoint fix, `Navigation.path` correctly returns before
 requesting the hybrid WASM hook; the hook records zero requests rather than
 one certified missing connector. The test now asserts the physical endpoint
 is blocked and that no hook or fallback work runs. Both hook tests pass.
+The 20 physical raid-return acceptance cases also asserted the former
+two-hit, one-crop-per-strike model. They now count actual `CropHit` events
+from the area impact and check that every reported destruction corresponds
+to a destructive crop impact, while retaining the worker-return, task,
+ledger and save/load assertions. All 20 pass without changing raid damage.
 
 ## Reproduce
 
