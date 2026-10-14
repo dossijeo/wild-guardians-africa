@@ -315,6 +315,20 @@ through night 14. The full new report is retained as
 `selector-village-14-sabana-712.json.gz`; 30/60/100-night survival remains
 unverified.
 
+Gran Cañón seed 123 produced an earlier day-10 defeat on the current branch,
+so it was compared against an isolated detached checkout at `f89815e4`
+before the provisional-sector reset. Both runs used the same good policy and
+14-night cap. They completed nine nights and ended in native defeat on day
+10 with one crop and 81 coins. All common daily gameplay fields, the full
+`raidEvidence`, entry transport and plot-search report match exactly. The
+baseline took 64.51 seconds wall time and 38.82 seconds of `Game.tick`; the
+current run took 64.02 and 38.69 seconds respectively. Both reports are
+retained as `ab-before-canyon-123.json.gz` and
+`selector-village-14-canyon-123.json.gz`. The earlier archived day-14 Canyon
+run used a different selector revision and is not a same-source baseline for
+this sector reset. This A/B shows the reset did not cause the day-10 defeat;
+it does not validate the current military balance or a 30-night survivor.
+
 ## Reproduce
 
 ```powershell
