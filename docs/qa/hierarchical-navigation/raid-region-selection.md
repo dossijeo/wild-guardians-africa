@@ -488,6 +488,17 @@ moving several hundred milliseconds onto the frame thread would harm
 interactive smoothness even though the worker finishes sooner. This preview
 remains useful; only its unused copied path arrays were removed.
 
+Seven navigation assertions still targeted the retired JS search's
+`searchNeighbors`, `failedPaths`, `closedRegions`, and narrow-margin failure
+behavior. They now verify the equivalent physical and architectural
+properties of the hierarchical navigator: cached sector reuse, independent
+movement profiles, non-contaminating construction previews, route-array
+isolation, wall/shield blocking, valid same-side routes, and a physical detour
+around a long barrier. The complete segment/neighbor files pass 15/15, and
+the separate JS/WASM hierarchy and lazy-sector files pass 16/16. This is a
+test-only update; no collision, movement or path-planning production code
+changed. The recorded global 93-failure count predates these assertions.
+
 A same-policy Gran Cañón seed 123 native campaign was repeated after the
 committed-target fix. Against `selector-village-14-canyon-123.json.gz`, all
 daily gameplay fields, complete raid evidence, entry transport and plot

@@ -27,37 +27,31 @@ test('Directed edge caches retain collision semantics and invalidate when struct
   state.spells=[];nav.setState(state);assert.equal(nav.segmentClear(a,b,.28,null,false),true);
   nav.segmentClear({x:-3.1,z:0},b,.28,null,false);assert.equal(nav.segmentCache.size,1);
 });
-test('Failed routes are reused only for identical endpoints and clear when an obstacle changes',()=>{
+test('Actor permissions and topology changes determine reachability without stale routes',()=>{
   const nav=flat(),state={structures:[],villages:[],spells:[{id:'shield',kind:'shield',x:3,z:0,radius:1,remaining:20}],suppressed:[]};
-  nav.setState(state);const a={x:0,z:0},b={x:3,z:0};let searches=0;
-  const find=nav.findPath.bind(nav);nav.findPath=(...args)=>{searches++;return find(...args);};
-  assert.equal(nav.path(a,b,.28,null,false),null);assert.equal(nav.path(a,b,.28,null,false),null);assert.equal(searches,1);
-  assert.ok(nav.path(a,b,.28,null,true));assert.equal(searches,2);
-  state.spells=[];nav.setState(state);assert.equal(nav.failedPaths.size,0);
-  assert.ok(nav.path(a,b,.28,null,false));assert.equal(searches,3);
+  nav.setState(state);const a={x:0,z:0},b={x:3,z:0};
+  assert.equal(nav.path(a,b,.28,null,false),null);assert.equal(nav.path(a,b,.28,null,false),null);
+  assert.ok(checkRoute(nav,a,b,.28),'A worker can pass the defensive spell');
+  state.spells=[];nav.setState(state);
+  const route=nav.path(a,b,.28,null,false);assert.ok(route);
+  let previous=a;for(const point of route){assert.ok(nav.segmentClear(previous,point,.28,null,false));previous=point;}
 });
-test('Exhaustively explored enclosed regions reject other unreachable targets without another flood search',()=>{
+test('A closed physical enclosure blocks departure until its walls are removed',()=>{
   const box=(x0,z0,x1,z1)=>[{x:x0,z:z0},{x:x1,z:z0},{x:x1,z:z1},{x:x0,z:z1}];
   const walls=[box(-3,-3,-2.5,3),box(2.5,-3,3,3),box(-3,-3,3,-2.5),box(-3,2.5,3,3)];
   const nav=flat(),state={structures:[],villages:[{buildings:walls.map((footprint,i)=>({key:`wall-${i}`,kind:'house',footprint}))}],spells:[],suppressed:[]};
   nav.setState(state);const start={x:0,z:0};
-  assert.equal(nav.path(start,{x:20,z:0},.28,null,false),null);assert.ok(nav.closedRegions.size>0);
-  const cachedSize=nav.segmentCache.size;
+  assert.equal(nav.path(start,{x:20,z:0},.28,null,false),null);
   assert.equal(nav.path({x:.1,z:.1},{x:21,z:2},.28,null,false),null);
-  assert.ok(nav.segmentCache.size<=cachedSize+9,'Known closed region avoids exploring grid edges again');
   assert.ok(nav.path(start,{x:1,z:1},.28,null,false),'Destinations inside the region remain reachable');
-  state.villages=[];nav.setState(state);assert.equal(nav.closedRegions.size,0);
+  state.villages=[];nav.setState(state);
   assert.ok(nav.path(start,{x:21,z:2},.28,null,false),'Removing the enclosure permits departure');
 });
-test('A search touching corridor bounds does not certify a globally closed region',()=>{
+test('A long barrier blocks crossings without hiding valid same-side routes',()=>{
   const nav=flat([],[{id:'barrier',kind:'house',footprint:[{x:4,z:-100},{x:5,z:-100},{x:5,z:100},{x:4,z:100}]}]);
   assert.equal(nav.path({x:0,z:0},{x:10,z:0},.28,null,false),null);
-  assert.equal(nav.closedRegions.size,0);
-  assert.equal(nav.searchedRegions.length,1);
-  let expanded=0;const original=nav.testSegmentClear.bind(nav);nav.testSegmentClear=(...args)=>{expanded++;return original(...args);};
   assert.equal(nav.path({x:0,z:0},{x:9,z:0},.28,null,false),null);
-  assert.ok(expanded<12,'Contained failed corridor reuses exhaustive reachability');
-  assert.ok(nav.path({x:0,z:0},{x:-5,z:0},.28,null,false),'Reachable same-side destinations remain valid');
+  checkRoute(nav,{x:0,z:0},{x:-5,z:0},.28);
 });
 test('Region reuse matches fresh searches across origins, endpoints, radii and actor permissions',()=>{
   const obstacles=[{id:'barrier',kind:'house',footprint:[{x:4,z:-100},{x:5,z:-100},{x:5,z:100},{x:4,z:100}]}];
@@ -103,9 +97,10 @@ test('Center repair paths go around the center footprint and reject a completely
   assert.equal(repairRoute({x:-5,z:0},target,{path:()=>null}),null);
 });
 
-test('Wider searches find physical detours beyond the local corridor without reusing its cached failure',()=>{
+test('The hierarchical navigator finds a physical detour around a long barrier',()=>{
   const nav=flat([],[{id:'barrier',kind:'house',footprint:[{x:4,z:-20},{x:5,z:-20},{x:5,z:20},{x:4,z:20}]}]),start={x:0,z:0},end={x:10,z:0};
-  assert.equal(nav.path(start,end,.45,null,false),null);const path=nav.path(start,end,.45,null,false,32);assert.ok(path);assert.ok(path.some(p=>Math.abs(p.z)>20));
+  const path=nav.path(start,end,.45,null,false);assert.ok(path);assert.ok(path.some(p=>Math.abs(p.z)>20));
   let previous=start;for(const p of path){assert.ok(nav.segmentClear(previous,p,.45,null,false));previous=p;}assert.deepEqual(path.at(-1),end);
-  assert.equal(nav.path(start,end,.45,null,false),null,'A failed narrow corridor remains separately cached');assert.deepEqual(nav.path(start,end,.45,null,false,32),path);
+  const wider=nav.path(start,end,.45,null,false,32);assert.ok(wider);previous=start;
+  for(const p of wider){assert.ok(nav.segmentClear(previous,p,.45,null,false));previous=p;}assert.deepEqual(wider.at(-1),end);
 });

@@ -3,41 +3,46 @@ import assert from 'node:assert/strict';
 import {Navigation} from '../src/world/navigation.js';
 
 function flat(){
-  const nav=new Navigation(712,'sabana',{});nav.field={blocked:()=>false,slope:()=>0};nav.propsAt=()=>[];
+  const nav=new Navigation(712,'sabana',{});
+  nav.field={blocked:()=>false,slope:()=>0};nav.propsAt=()=>[];
   nav.setState({structures:[],villages:[],spells:[],suppressed:[]});return nav;
 }
-const empty={nodes:new Map(),links:new Map()};
 
-test('Repeated overlapping A* searches preserve waypoint order while reusing cell geometry',()=>{
-  const cached=flat(),reference=flat();
+test('Overlapping routes reuse logical sectors while preserving physical waypoints',()=>{
+  const cached=flat(),fresh=flat();
   const wall={id:'barrier',kind:'house',x:0,z:0,footprint:[{x:2,z:-4},{x:3,z:-4},{x:3,z:4},{x:2,z:4}]};
-  for(const nav of [cached,reference])nav.obstacles=[wall];reference.searchNeighborCache=undefined;
-  let checks=0;const walk=cached.walkable.bind(cached);cached.walkable=(...args)=>{checks++;return walk(...args);};
-  for(const radius of [.1,.28,.9])for(const worker of [true,false])for(const start of [{x:0,z:0},{x:.25,z:1},{x:-1,z:-1}]){
-    const end={x:7.25,z:0};assert.deepEqual(cached.path(start,end,radius,null,worker),reference.path(start,end,radius,null,worker));
-  }
-  const before=checks;cached.path({x:0,z:0},{x:7.25,z:0},.28,null,true);const cachedChecks=checks-before;
-  cached.searchNeighborCache.clear();const freshBefore=checks;cached.path({x:0,z:0},{x:7.25,z:0},.28,null,true);
-  assert.ok(cachedChecks<checks-freshBefore,'A second route performs fewer geometry lookups');
+  for(const nav of [cached,fresh])nav.obstacles=[wall];
+  const start={x:0,z:0},end={x:7.25,z:0};
+  const first=cached.path(start,end,.28,null,true);assert.ok(first);
+  const planner=cached._hierarchical.planner,built=planner.metrics.sectorsBuilt;
+  assert.deepEqual(cached.path(start,end,.28,null,true),first);
+  assert.equal(planner.metrics.sectorsBuilt,built,'An unchanged route reuses its sectors');
+  assert.deepEqual(first,fresh.path(start,end,.28,null,true));
+  let previous=start;for(const point of first){assert.ok(cached.segmentClear(previous,point,.28,null,true));previous=point;}
 });
 
-test('Geometry epochs, actor permissions and proposed buildings cannot contaminate neighbor results',()=>{
-  const nav=flat(),state=nav.state;nav.findPath({x:0,z:0},{x:5,z:0});
-  const a=nav.searchNeighbors({x:0,z:0},.28,null,true,empty);
-  assert.equal(nav.searchNeighbors({x:0,z:0},.28,null,true,empty),a);
-  assert.notEqual(nav.searchNeighbors({x:0,z:0},.9,null,true,empty),a);
-  assert.notEqual(nav.searchNeighbors({x:0,z:0},.28,'center',true,empty),a);
-  assert.notEqual(nav.searchNeighbors({x:0,z:0},.28,null,false,empty),a);
-  const count=nav.searchNeighborCache.size,preview=nav.forBuildingPlacement({id:'preview',x:2,z:0,radius:1,kind:'house'});
-  assert.notEqual(preview.searchNeighborCache,nav.searchNeighborCache);preview.findPath({x:0,z:0},{x:5,z:0});assert.equal(nav.searchNeighborCache.size,count);
-  const previous=nav.searchNeighborCache;state.spells=[{id:'shield',kind:'shield',x:2,z:0,radius:1,remaining:20}];nav.setState(state);
-  assert.notEqual(nav.searchNeighborCache,previous);assert.equal(nav.searchNeighborCache.size,0);
-  assert.equal(nav.walkable(2,0,.28,null,false),false);assert.equal(nav.walkable(2,0,.28,null,true),true);
+test('Movement profiles and proposed geometry cannot contaminate live sectors',()=>{
+  const nav=flat(),state=nav.state,from={x:0,z:0},to={x:5,z:0};
+  assert.ok(nav.path(from,to,.28,null,true));
+  const adapter=nav._hierarchical,worker=adapter.profile(.28,true,null);
+  assert.notEqual(adapter.profile(.9,true,null),worker);
+  assert.notEqual(adapter.profile(.28,false,null),worker);
+  assert.notEqual(adapter.profile(.28,true,'center'),worker);
+  const preview=nav.forBuildingPlacement({id:'preview',kind:'house',x:2,z:0,radius:1});
+  preview.path(from,to,.28,null,true);
+  assert.notEqual(preview._hierarchical,adapter);
+  assert.ok(nav.path(from,to,.28,null,true));
+  state.spells=[{id:'shield',kind:'shield',x:5,z:0,radius:1,remaining:20}];nav.setState(state);
+  assert.equal(nav.path(from,to,.28,null,false),null);
+  assert.ok(nav.path(from,to,.28,null,true));
 });
 
-test('Transient neighbor graph stays bounded and route arrays cannot mutate its cached points',()=>{
-  const nav=flat();for(let i=0;i<4200;i++)nav.searchNeighbors({x:i,z:0},.28,null,true,empty);
-  assert.equal(nav.searchNeighborCache.size,4096);
-  const route=nav.path({x:0,z:0},{x:4,z:0});route[0].x=100;
-  assert.deepEqual(nav.path({x:0,z:0},{x:4,z:0}),[{x:4,z:0}]);
+test('Returned route mutations do not alter the shared sector graph',()=>{
+  const nav=flat(),from={x:0,z:0},to={x:4,z:0};
+  const original=nav.path(from,to);assert.ok(original);
+  const built=nav._hierarchical.planner.metrics.sectorsBuilt;
+  original[0].x=100;original.push({x:999,z:999});
+  const next=nav.path(from,to);
+  assert.deepEqual(next.at(-1),to);assert.ok(next.every(point=>point.x!==999));
+  assert.equal(nav._hierarchical.planner.metrics.sectorsBuilt,built);
 });
