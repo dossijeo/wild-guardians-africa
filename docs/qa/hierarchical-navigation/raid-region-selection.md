@@ -329,6 +329,15 @@ run used a different selector revision and is not a same-source baseline for
 this sector reset. This A/B shows the reset did not cause the day-10 defeat;
 it does not validate the current military balance or a 30-night survivor.
 
+At frozen commit `3e695f69`, the full suite completed in 437.6 seconds:
+4,321 tests, 4,191 passed and **130 failed**, 33 fewer failures than the
+`0f58b340` run. The exact TAP output is retained as
+`full-suite-3e695f69.log.gz`. This includes the updated physical raid-return,
+one-hit crop and blocked-endpoint hook assertions. Remaining failures are
+still unresolved; the largest groups concern old village prices, old
+connected-group reservation exclusivity, previous magic rules and historical
+navigation APIs. No production acceptance is claimed from this improvement.
+
 ## Reproduce
 
 ```powershell
