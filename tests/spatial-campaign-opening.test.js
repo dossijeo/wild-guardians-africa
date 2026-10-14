@@ -70,3 +70,47 @@ test('a native wall enclosure still admits a physical introductory raid',async()
     assert(state.events.some(event=>event.type==='RaidEnded'));
   }finally{session.dispose();}
 });
+
+test('a Desert raider completes its physical retreat after spending both hits',async()=>{
+  const {state,nav,session,start}=await createSpatialCampaignOpening({biome:'desierto'});
+  try{
+    for(const [i,point] of start.farm.slice(0,10).entries())
+      assert.equal(Game.plant(state,`desert-retreat-crop-${i}`,'mijo',
+        point.x,point.z,nav),true);
+    Game.openInitialHiring(state);
+    Game.hire(state,'desert-retreat-hire',{olderFemale:1});
+    for(let step=0;step<1500&&state.day===1&&!state.result;step++)
+      Game.tick(state,.5,nav);
+    assert.equal(state.day,2);
+    assert.equal(state.raid,null);
+    const events=state.events;
+    assert(events.some(event=>event.type==='AnimalRetreating'&&
+      event.reason==='budget-exhausted'));
+    assert(events.some(event=>event.type==='RaidEnded'));
+  }finally{session.dispose();}
+});
+
+for(const biome of ['sabana','desierto'])test(`${biome} grid routes have physically clear movement segments`,async()=>{
+  const {nav,session,start}=await createSpatialCampaignOpening({biome});
+  try{
+    const center=start.site.center,points=[];
+    for(let z=center.z-15;z<=center.z+15;z+=5)
+      for(let x=center.x-15;x<=center.x+15;x+=5)
+        if(nav.walkable(x,z,1.1,null,false))points.push({x,z});
+    let routes=0;
+    for(let i=0;i<points.length;i+=3)for(let j=1;j<points.length;j+=5){
+      let path;
+      try{path=nav.path(points[i],points[j],1.1,null,false);}
+      catch(error){if(error?.name==='SpatialChunkUnavailable')continue;throw error;}
+      if(!path)continue;
+      routes++;
+      let from=points[i];
+      for(const to of path){
+        assert(nav.segmentClear(from,to,1.1,null,false),
+          `route contains an impassable ${biome} segment ${JSON.stringify({from,to})}`);
+        from=to;
+      }
+    }
+    assert(routes>20,'the sample should exercise more than direct local routes');
+  }finally{session.dispose();}
+});

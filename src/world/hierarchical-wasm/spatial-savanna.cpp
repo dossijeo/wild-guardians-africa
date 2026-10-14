@@ -687,8 +687,11 @@ bool walkable(int x,int z){
   return chunk&&chunk->pass[rasterIndex(*chunk,x,z)]&&barrierClear(x,z);
 }
 bool terrainPropSegment(int x,int z,int nx,int nz){
-  for(int i=1;i<4;i++){
-    const double t=i/4.0,px=x+(nx-x)*t,pz=z+(nz-z)*t;
+  // Match spatial_local_clear's 0.2 m samples on a one-metre grid edge.
+  // Otherwise the abstract graph can admit an edge that continuous motion
+  // immediately rejects, leaving an exhausted raider unable to retreat.
+  for(int i=1;i<5;i++){
+    const double t=i/5.0,px=x+(nx-x)*t,pz=z+(nz-z)*t;
     if(!terrainValid(px,pz,radiusNow,workerNow))return false;
     if(propBlocked(px,pz))return false;
   }
@@ -699,8 +702,8 @@ bool terrainPropEdge(int x,int z,int nx,int nz){
 }
 bool wallEdgeClear(int x,int z,int nx,int nz){
   if(!barrierClear(x,z)||!barrierClear(nx,nz))return false;
-  for(int i=1;i<4;i++){
-    const double t=i/4.0;
+  for(int i=1;i<5;i++){
+    const double t=i/5.0;
     if(!barrierClear(x+(nx-x)*t,z+(nz-z)*t))return false;
   }
   return true;
