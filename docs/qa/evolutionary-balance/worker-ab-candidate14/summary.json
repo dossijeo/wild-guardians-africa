@@ -1,0 +1,130 @@
+{
+  "stamp": {
+    "sourceHash": "723ff991e2de3ed0149236ce069b33d698c958c4",
+    "baseLabCommit": "de719e0bdda877fe4ee183fb7107f69db4f7b585",
+    "runtimeCommit": "2486ba01076e8e221c3ec413167937a49b2fd401",
+    "baselineSha256": "6efacb58159ae8b5193bdfdc3ddfe85c2fa9206fcbaec72d128381e9fdfc9660",
+    "baselinePath": "C:\\Users\\PC\\source\\repos\\wild-guardians-evolutionary-worker-ab\\docs\\qa\\evolutionary-balance\\management-search\\paired-14-manglares-123\\evolved-manglares-123-14.json",
+    "runnerSha256": "39491b421f738ce18bde31d729e500d7cfb09dfaf2287bda781f9abdc4788ad8",
+    "input": {
+      "biome": "manglares",
+      "seed": 123,
+      "days": 14,
+      "strategy": "evolved",
+      "genes": {
+        "plantsPerWorker": 6,
+        "wageReserveDays": 1,
+        "seedReserve": 0,
+        "defenseCashFraction": 0.2,
+        "defenseStartDay": 2,
+        "repairHealthFraction": 0.8,
+        "magicIntervalSeconds": 5,
+        "growthShare": 0,
+        "plantingIntervalSeconds": 1,
+        "wallMaterial": "zarzas",
+        "magicPriority": "multiply"
+      }
+    }
+  },
+  "statusSame": true,
+  "dailySame": true,
+  "raidsSame": true,
+  "baseline": {
+    "status": "completed",
+    "result": null,
+    "completedNights": 14,
+    "tickMs": 139805.07139999955
+  },
+  "candidate": {
+    "status": "completed",
+    "result": null,
+    "completedNights": 14,
+    "tickMs": 111281.69330000044
+  },
+  "byDay": [
+    {
+      "day": 1,
+      "baselineTickMs": 675.2020999999991,
+      "candidateTickMs": 644.5709000000074,
+      "samePhysicalEconomic": true
+    },
+    {
+      "day": 2,
+      "baselineTickMs": 1519.5453000000107,
+      "candidateTickMs": 1577.5483000000004,
+      "samePhysicalEconomic": true
+    },
+    {
+      "day": 3,
+      "baselineTickMs": 1659.794800000036,
+      "candidateTickMs": 1659.6376000000237,
+      "samePhysicalEconomic": true
+    },
+    {
+      "day": 4,
+      "baselineTickMs": 2094.086299999988,
+      "candidateTickMs": 2078.0307999999495,
+      "samePhysicalEconomic": true
+    },
+    {
+      "day": 5,
+      "baselineTickMs": 2122.2287000001015,
+      "candidateTickMs": 2000.5224000000235,
+      "samePhysicalEconomic": true
+    },
+    {
+      "day": 6,
+      "baselineTickMs": 2391.2776999997586,
+      "candidateTickMs": 2348.8732000000673,
+      "samePhysicalEconomic": true
+    },
+    {
+      "day": 7,
+      "baselineTickMs": 3475.0348000000668,
+      "candidateTickMs": 3702.666799999948,
+      "samePhysicalEconomic": true
+    },
+    {
+      "day": 8,
+      "baselineTickMs": 3321.6141000001226,
+      "candidateTickMs": 3584.5067000000126,
+      "samePhysicalEconomic": true
+    },
+    {
+      "day": 9,
+      "baselineTickMs": 17781.645200000014,
+      "candidateTickMs": 11637.602899999867,
+      "samePhysicalEconomic": true
+    },
+    {
+      "day": 10,
+      "baselineTickMs": 28659.707300000184,
+      "candidateTickMs": 18225.75580000051,
+      "samePhysicalEconomic": true
+    },
+    {
+      "day": 11,
+      "baselineTickMs": 26763.679999999644,
+      "candidateTickMs": 22236.611899999698,
+      "samePhysicalEconomic": true
+    },
+    {
+      "day": 12,
+      "baselineTickMs": 32398.958200000256,
+      "candidateTickMs": 24407.15519999998,
+      "samePhysicalEconomic": true
+    },
+    {
+      "day": 13,
+      "baselineTickMs": 6867.259700001217,
+      "candidateTickMs": 6979.414499999606,
+      "samePhysicalEconomic": true
+    },
+    {
+      "day": 14,
+      "baselineTickMs": 10075.037199998158,
+      "candidateTickMs": 10198.796300000744,
+      "samePhysicalEconomic": true
+    }
+  ]
+}
