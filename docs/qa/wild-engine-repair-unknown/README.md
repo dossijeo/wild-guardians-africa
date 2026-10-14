@@ -8,4 +8,8 @@ La reserva de tareas admite ahora un resultado pendiente distinto de una prueba 
 
 La prueba `tests/spatial-repair-unknown.test.js` reproduce el `SpatialChunkUnavailable` original, comprueba la puerta y ejecuta 50 ticks sin fallo; las dos tareas siguen pendientes, sin asignación falsa. En el replay local, esos 50 ticks tardaron 65 ms de `Game.tick` aproximadamente. También se añadió una prueba de reserva de tareas que distingue explícitamente `unknown` de `blocked`.
 
-Esto corrige la detención técnica. **No demuestra todavía que los dos tramos puedan repararse físicamente ni valida una campaña defendida de 21 noches.** Hay que repetir esa cohorte con el mismo jugador y parámetros antes de interpretar su balance.
+## Piloto sostenido
+
+Se integró este cambio, sin modificar la política ni el balance, sobre la versión experimental de balance `f9f7ebf5`. El commit combinado de prueba fue `75daffa7`. Con la misma entrada Desierto/983 defendida, el piloto completó **21/21 noches** sin fallo técnico: 149 cultivos vivos y 965 monedas al final, 43 golpes a murallas y 3 a cultivos registrados. Los 21 tiempos de `Game.tick` sumaron 73,15 s; el máximo diario fue 5,84 s. La entrada, configuración con hashes, informe completo, progreso diario y snapshots de incursiones están en [`pilot-21/`](pilot-21/).
+
+**Limitación importante:** el informe registra cero reparaciones pagadas durante esas 21 jornadas. La corrección evita la detención y conserva las tareas inciertas, pero todavía no demuestra que los trabajadores puedan alcanzar esos tramos para repararlos. No se presenta este piloto como validación final de eficacia defensiva ni como comparación concluyente con el control sin murallas. Hay que investigar la accesibilidad física de las reparaciones y repetir después la pareja de campañas.

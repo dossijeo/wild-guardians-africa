@@ -24,6 +24,12 @@ try{
   const worker=state.workers.find(w=>w.id==='worker-3519');
   const targets=state.tasks.filter(t=>t.kind==='repair').map(t=>state.structures.find(s=>s.id===t.targetId));
   const gates=state.structures.filter(s=>s.kind==='wall'&&s.gate&&s.status!=='ruined');
+  const probes=[[84,-2],[88,-2],[90,0],[92,2],[94,5],[95,8],[95.4,8.357],[96.6,8.357],[95,12]];
+  console.log(JSON.stringify({probes:probes.map(([x,z])=>{
+    const point={x,z};return {point,stand:session.actorCanStand(point,{worker:true}),
+      region:session.actorRegions(point,{worker:true}),
+      route:session.routeActor(worker,point,{worker:true}).status};
+  })}));
   console.log(JSON.stringify({gates:gates.map(g=>{
     const pair=gatePortalPoints(g,.28);
     return {id:g.id,x:g.x,z:g.z,pair,
