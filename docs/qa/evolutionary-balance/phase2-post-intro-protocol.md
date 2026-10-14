@@ -12,6 +12,6 @@ The seven-night GA results (`staged-search-v2`, source `7a3df5c4`) are a technic
 
 ## Current evidence and limits
 
-The Manglares/123 paired 14-night cohort favored walls+Shield strongly, but that seed has been used for development. Volcanes/907 is censored for the no-wall+Shield arm at day 10 under the earlier headless raid-view bug; all three arms must be rerun at one corrected source hash before comparison. The no-wall seven-night leader lost 50–53 crops in each training/holdout scenario while scoring above the defended default on cash. This illustrates why the primary fitness must cover more raids and recovery.
+The Manglares/123 paired 14-night cohort favored walls+Shield strongly, but that seed has been used for development. Volcanes/907 is censored for the no-wall+Shield arm at day 10 under the earlier headless raid-view bug; all three arms must be rerun at one corrected source hash before comparison. The no-wall seven-night leader lost **cumulatively** 50 crops in Sabana/411 (23 on day 6, 27 on day 7), 51 in Gran Río/626 (25+26), and 53 in Desierto/431 (3+3 on days 3–4 and 21+26 on days 6–7), while the short score favored its cash. This illustrates why the primary fitness must cover more raids and recovery.
 
 No 14/21-night evolutionary search or 100-night victory is claimed here. The military/economic balance of production remains unchanged.
