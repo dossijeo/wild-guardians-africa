@@ -11,6 +11,7 @@ import {villageLayout} from '../src/world/villages.js';
 import {spawnRaid} from '../src/simulation/raids.js';
 import * as Game from '../src/simulation/game.js';
 import {syncNativeCampaignRaidView} from '../tools/native-campaign-runner.mjs';
+import {createNativeCampaignPlots} from '../tools/native-campaign-plots.mjs';
 
 const module=new WebAssembly.Module(readFileSync(new URL(
   '../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
@@ -37,9 +38,17 @@ test('Volcanes day-10 raid uses the replacement center for the headless camera',
     const nav=createSpatialNavigationMovement(session,state);
     const currentCenter=syncNativeCampaignRaidView(state,nav,null);
     assert.equal(currentCenter.key,`${center.id}:83:0`);
-    // Plot search focuses the navigation view on a parcel without replacing
-    // the operational center. The runner must restore its raid view anyway.
-    nav.setActiveBounds(bounds);nav.setRaidView(eye,stale);
+    // Plot search can focus a previously explored parcel without replacing
+    // the operational center. Use its real focus path to overwrite raidView.
+    const placement=nav.placement,path=nav.path;
+    nav.placement=()=>({valid:true});nav.path=()=>[];
+    try{
+      const plotState={...state,structures:[{...center,x:84,z:9}],plants:[]};
+      createNativeCampaignPlots(nav,()=>plotState,{spacing:48,checksPerDecision:1}).choose();
+    }finally{nav.placement=placement;nav.path=path;}
+    assert.deepEqual(nav.raidView.target,stale);
+    assert.deepEqual(nav.raidView.eye,eye);
+    assert.deepEqual(nav.activeBounds,bounds);
     assert.equal(spawnRaid(state,state.nightPlan,nav),false);
     assert(nav.raidEntryFailure);
     assert.equal(syncNativeCampaignRaidView(state,nav,currentCenter),currentCenter);
