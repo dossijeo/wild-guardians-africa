@@ -117,6 +117,17 @@ bound, not a demonstrated engine hang. Individual positive JSON reports are
 and `engine-stage-stress-canyon-{123,712}.json`. Each includes attack and retreat
 counts. Timings are single-run QA observations, not portable thresholds.
 
+A separate, opt-in Sabana wall-ring fixture uses 49 paid `zarzas` wall
+modules and one automatic gate. Crops are planted inside the perimeter, so
+the animals must strike the physical defense instead of exterior crops.
+The early, middle and late incursions (40/100/100 crops, 6/14/16 animals)
+resolved at ticks 218/753/829, with 445/1,155/1,430 actual wall HP lost and
+2/8/13 ruined wall modules. A native static-collision sweep checked every
+animal displacement and found zero crossings in all three phases. The
+fixture and full counters are in `engine-stage-stress-sabana-712-wall-ring.json`.
+The 100-crop ceiling here is the fixed size of this enclosed **test fixture**,
+not a gameplay cap; the open late-phase stress above uses 300 crops.
+
 Before merging, expand the integrated spatial-world phase-stress matrix with
 late-stage wall/perimeter topology, more seeds across the other biomes,
 save/load in a late dense raid and explicit physical collision audits. Investigate the

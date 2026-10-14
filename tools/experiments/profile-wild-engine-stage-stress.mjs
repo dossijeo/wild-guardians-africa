@@ -24,6 +24,7 @@ const seed=Number(process.argv[3]??712);
 const output=process.argv[4];
 const tickLimit=Number(process.argv[5]??2400);
 const waitCapturePrefix=process.argv[6];
+const wallRing=process.env.WG_ENGINE_WALL_RING==='1';
 const timedCaptureTick=Number(process.env.WG_ENGINE_CAPTURE_TICK??0);
 const timedCapturePrefix=process.env.WG_ENGINE_CAPTURE_PREFIX;
 const results=[];
@@ -42,18 +43,32 @@ for(const phase of phases){
     state.tutorial.step='done';state.initialPreparation=false;
     state.ledger.balance=rational(1000000);
     const {x:cx,z:cz}=start.site.center;
+    let ringBounds=null;
+    if(wallRing){
+      const x0=cx-10,x1=cx+22,
+        z0=Math.min(...start.farm.map(point=>point.z))-10,z1=cz+10;
+      ringBounds={x0,x1,z0,z1};
+      if(!Game.buildWallChain(state,`engine-stage-ring-${phase.name}`,'zarzas',
+        [[x0,z0],[x1,z0],[x1,z1],[x0,z1],[x0,z0]],nav,
+        {smooth:false,snap:false}))throw Error('Could not construct native wall ring');
+    }
+    const originalWallHp=new Map(state.structures.filter(item=>item.kind==='wall')
+      .map(item=>[item.id,item.hp]));
+    const cropTarget=wallRing?Math.min(phase.crops,100):phase.crops;
     let placed=0;
     const preparationStart=performance.now();
-    for(let dz=-54;dz<=54&&placed<phase.crops;dz+=2)
-      for(let dx=-54;dx<=54&&placed<phase.crops;dx+=2){
+    for(let dz=-54;dz<=54&&placed<cropTarget;dz+=2)
+      for(let dx=-54;dx<=54&&placed<cropTarget;dx+=2){
         const x=cx+dx,z=cz+dz;
+        if(ringBounds&&(x<=ringBounds.x0+2||x>=ringBounds.x1-2||
+          z<=ringBounds.z0+2||z>=ringBounds.z1-2))continue;
         const [x0,z0,x1,z1]=nav.activeBounds;
         if(x<x0+5||x>x1-5||z<z0+5||z>z1-5)continue;
         if(!nav.placement(x,z,.4).valid)continue;
         try{if(Game.plant(state,`stage-${placed}`,'mijo',x,z,nav))placed++;}
         catch(error){if(error.message!=='Necesitas separar las plantas')throw error;}
       }
-    if(placed<phase.crops)throw Error(`Only ${placed}/${phase.crops} crops could be placed`);
+    if(placed<cropTarget)throw Error(`Only ${placed}/${cropTarget} crops could be placed`);
     state.day=phase.day;state.completedNights=phase.day-1;
     state.time=310;state.nightPlan={done:true};state.dayPlan={done:true};
     const preparationMs=performance.now()-preparationStart;
@@ -70,11 +85,23 @@ for(const phase of phases){
     let positionAt2000=null;
     let connectivityChunksServiced=0;
     let maxLoadedChunks=loaded.size;
+    let invalidStaticMoves=0;
+    const invalidStaticMoveExamples=[];
     let lastEventId=Number(state.events.at(-1)?.id.split('-')[1]??-1);
     let ticks=0;
     for(;ticks<tickLimit&&state.raid&&!state.result;ticks++){
+      const priorPositions=wallRing?actors.map(actor=>({x:actor.x,z:actor.z})):null;
       Game.tick(state,.25,nav);
       if(nav.serviceRaidConnectivityDemand?.())connectivityChunksServiced++;
+      if(priorPositions)for(const [index,actor] of actors.entries()){
+        const prior=priorPositions[index];
+        if(Math.hypot(actor.x-prior.x,actor.z-prior.z)<1e-8)continue;
+        if(nav.segmentClear(prior,actor,actor.radius,null,false))continue;
+        invalidStaticMoves++;
+        if(invalidStaticMoveExamples.length<4)invalidStaticMoveExamples.push({
+          tick:ticks+1,id:actor.id,species:actor.species,
+          from:prior,to:{x:actor.x,z:actor.z}});
+      }
       maxLoadedChunks=Math.max(maxLoadedChunks,loaded.size);
       if(timedCapturePrefix&&ticks+1===timedCaptureTick){
         const capture={source,phase:phase.name,seed,biome,
@@ -123,6 +150,13 @@ for(const phase of phases){
     const after=process.memoryUsage();
     const row={phase:phase.name,day:phase.day,biome,seed,
       crops:placed,animals:phase.group.length,preparationMs,tickMs,ticks,
+      wallRing,wallModules:originalWallHp.size,
+      automaticGates:state.structures.filter(item=>item.kind==='wall'&&item.gate).length,
+      wallHpLost:state.structures.filter(item=>originalWallHp.has(item.id))
+        .reduce((sum,item)=>sum+Math.max(0,originalWallHp.get(item.id)-item.hp),0),
+      ruinedWalls:state.structures.filter(item=>originalWallHp.has(item.id)&&
+        item.status==='ruined').length,
+      invalidStaticMoves,invalidStaticMoveExamples,
       moved,raidActive:!!state.raid,result:state.result,
       raidEnded:eventCounts.RaidEnded??0,
       connectivityChunksServiced,
@@ -143,6 +177,7 @@ for(const phase of phases){
     if(positionAt2000)row.positionAt2000=positionAt2000;
     row.issues=[];
     if(moved!==phase.group.length)row.issues.push(`Only ${moved}/${phase.group.length} animals moved`);
+    if(invalidStaticMoves)row.issues.push(`${invalidStaticMoves} movements crossed native static collision`);
     if(state.raid){
       row.issues.push(`Raid did not finish within ${ticks} ticks`);
       row.activeAnimals=actors.filter(actor=>actor.status!=='gone').map(actor=>({
