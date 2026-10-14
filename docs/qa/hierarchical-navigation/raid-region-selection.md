@@ -563,6 +563,20 @@ closing it restores `blocked`. The new file and the existing lazy-sector
 regressions pass 8/8. This is test-only coverage for bounded topology state,
 not a claim that every open-frontier query is cheap in a long campaign.
 
+The fractional worker-departure recovery was unavailable on the experimental
+spatial movement adapter: it required the legacy `findPathSteps` iterator,
+which that adapter intentionally does not implement. It now uses the native
+`path` operation for the tail after its existing bounded, physically checked
+fractional prefix, yielding before the native query. It still applies only
+to fleeing, returning or incapacitated workers, limits concurrent attempts,
+and never relaxes static collision. A spatial-adapter contract fixture proves
+that a standable sub-grid pocket can rejoin a native route and that a topology
+revision closing all edges rejects the former prefix. This is a synthetic
+connector fixture, not yet a physical-device or full native-campaign replay.
+The fractional and spatial movement files pass 24/24; all 186 playable tests
+and the web build pass. The ordinary game still uses its established world;
+the spatial adapter remains behind the development QA flag.
+
 ## Deferred engine name
 
 After the WASM spatial core is functionally and performance-stable, rename

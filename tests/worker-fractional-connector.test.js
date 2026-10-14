@@ -5,6 +5,7 @@ import {gunzipSync} from 'node:zlib';
 import {deserialize,serialize} from '../src/persistence/snapshots.js';
 import {Navigation,BIOME_IDS} from '../src/world/navigation.js';
 import {workerFractionalConnector} from '../src/world/worker-fractional-connector.js';
+import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
 import {walkTo,tick} from '../src/simulation/game.js';
 import {advanceGateLeaves} from '../src/simulation/gates.js';
 const snapshot=new URL('./fixtures/worker-fractional-departure/state.json.gz',import.meta.url);
@@ -89,4 +90,37 @@ test('new route adapter preserves physical clearance through fractional departur
   assert(nav.segmentClear(previous,point,.28,null,true));previous=point;
  }
  assert(Math.hypot(previous.x-end.x,previous.z-end.z)<1e-8);
+});
+test('spatial WASM movement can rejoin its native graph from a fractional worker pocket',()=>{
+ const state={seed:712,biome:'sabana',structures:[],villages:[],spells:[],suppressed:[]};
+ const field={canyon:false,surface:()=>0,slope:()=>0,fluidInside:()=>false};
+ let blocked=false,revision=1;
+ const edge=(a,b)=>!blocked&&Math.hypot(a.x-b.x,a.z-b.z)<=.36;
+ let nativeRoutes=0;
+ const session={field,suppressed:new Set(),topologySource:{revision:()=>revision},
+  actorCanStand:()=>true,actorStepClear:edge,
+  queryPropsAt:()=>({status:'ready',props:[]}),
+  actorRegions:()=>({ids:[],unknown:false}),
+  routeActor:(a,b)=>{
+   nativeRoutes++;
+   if(a.x===.5&&a.z===.5)return {status:'unknown',points:[]};
+   const points=[];let x=a.x,z=a.z;
+   while(Math.hypot(x-b.x,z-b.z)>1e-8){
+    x+=Math.max(-.25,Math.min(.25,b.x-x));
+    z+=Math.max(-.25,Math.min(.25,b.z-z));
+    points.push({x,z});
+   }
+   return {status:'found',points};
+  }};
+ const nav=createSpatialNavigationMovement(session,state),worker={x:.5,z:.5,status:'returning'},end={x:2,z:0};
+ assert.equal(nav.path(worker,end,.28,null,true),null,'the native graph has no direct fractional connector');
+ let route=null;
+ for(let i=0;i<4096&&!route;i++)route=workerFractionalConnector(nav,worker,end,.28);
+ assert(route?.length>1);assert(nativeRoutes>1);
+ let previous=worker;
+ for(const point of route){assert(nav.walkable(point.x,point.z,.28,null,true));assert(nav.segmentClear(previous,point,.28,null,true));previous=point;}
+ assert.deepEqual(previous,end);
+ blocked=true;revision++;
+ for(let i=0;i<4096;i++)assert.equal(workerFractionalConnector(nav,worker,end,.28),null,
+  'a topology change cannot reuse the former prefix through a solid barrier');
 });
