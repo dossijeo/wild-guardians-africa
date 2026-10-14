@@ -21,7 +21,8 @@ El runner `tools/experiments/run-worker-ab-candidate14.mjs` llama a
 jornada en `progress.jsonl` y el reporte nativo en `candidate.json.gz`
 (archivo sin pérdida e índice SHA-256 en `archive-index.json`). Compara
 todas las filas diarias salvo el tiempo medido y las síntesis de incursión con
-`management-search/paired-14-manglares-123/evolved-manglares-123-14.json`.
+`management-search/paired-14-manglares-123/evolved-manglares-123-14.json.gz`
+(compresión sin pérdida; SHA del JSON original en `archive-index.json`).
 No cambia genes, precios, daños, RNG, navegación física ni balance.
 
 | Noches | Estado diario físico/económico | Incursiones | `Game.tick` baseline | `Game.tick` cambio |

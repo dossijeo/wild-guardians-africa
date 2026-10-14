@@ -1,11 +1,15 @@
 import {readdirSync,readFileSync,writeFileSync} from 'node:fs';
 import {resolve,join} from 'node:path';
 import {pathToFileURL} from 'node:url';
+import {gunzipSync} from 'node:zlib';
 
 const xml=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
 export function plotRun(folder){
- const files=readdirSync(folder).filter(x=>x.endsWith('.json')&&!['config.json','search.json','result.json'].includes(x));
- const reports=files.map(x=>JSON.parse(readFileSync(join(folder,x),'utf8'))).filter(x=>x.status==='completed'&&x.rows?.length);
+ const files=readdirSync(folder).filter(x=>(x.endsWith('.json')||x.endsWith('.json.gz'))&&
+  !['config.json','search.json','result.json','archive-index.json'].includes(x));
+ const reports=files.map(x=>JSON.parse(x.endsWith('.gz')?
+  gunzipSync(readFileSync(join(folder,x))):readFileSync(join(folder,x),'utf8')))
+  .filter(x=>x.status==='completed'&&x.rows?.length);
  const width=960,height=790,left=80,right=30,colors=['#687d3c','#af652e','#586d7c','#9b3f42','#aa8a32','#574e75'];
  const panels=[{key:'money',label:'Monedas al cierre',y:60},{key:'living',label:'Cultivos vivos',y:245},
   {key:'destroyed',label:'Cultivos destruidos',y:430},{key:'wages',label:'Salarios pagados',y:615}];

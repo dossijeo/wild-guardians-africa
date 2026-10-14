@@ -4,14 +4,15 @@ import {resolve,join} from 'node:path';
 import {createHash} from 'node:crypto';
 import {execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
+import {gunzipSync} from 'node:zlib';
 import {evaluateOne} from '../evolutionary-balance/run-ga.mjs';
 import {DEFAULT_GENES} from '../evolutionary-balance/policy-genes.mjs';
 
 const digest=content=>createHash('sha256').update(content).digest('hex');
-const baselinePath=resolve('docs/qa/evolutionary-balance/management-search/paired-14-manglares-123/evolved-manglares-123-14.json');
+const baselinePath=resolve('docs/qa/evolutionary-balance/management-search/paired-14-manglares-123/evolved-manglares-123-14.json.gz');
 const output=resolve('docs/qa/evolutionary-balance/worker-ab-candidate14');
 mkdirSync(output,{recursive:true});
-const baselineSource=readFileSync(baselinePath),baseline=JSON.parse(baselineSource);
+const baselineSource=gunzipSync(readFileSync(baselinePath)),baseline=JSON.parse(baselineSource);
 const sourceHash=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
 const input={biome:'manglares',seed:123,days:14,strategy:'evolved',genes:DEFAULT_GENES};
 const stamp={sourceHash,baseLabCommit:'de719e0bdda877fe4ee183fb7107f69db4f7b585',

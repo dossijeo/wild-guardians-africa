@@ -3,6 +3,7 @@ import {readFileSync,writeFileSync,appendFileSync,mkdirSync,existsSync} from 'no
 import {resolve,join} from 'node:path';
 import {execFileSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
+import {gzipSync,gunzipSync} from 'node:zlib';
 import {pathToFileURL} from 'node:url';
 import {evaluateOne} from './run-ga.mjs';
 import {DEFAULT_GENES,validateGenes} from './policy-genes.mjs';
@@ -25,15 +26,19 @@ export async function runPaired({days=14,biome='sabana',seeds=[712,123],genes=DE
  writeFileSync(join(dir,'config.json'),JSON.stringify(config,null,2)+'\n');
  const cases=[];
  for(const seed of seeds)for(const strategy of ['evolved','good-current-magic']){
-  const name=`${strategy}-${biome}-${seed}-${days}`,path=join(dir,`${name}.json`),progress=join(dir,`${name}.jsonl`);
-  const report=existsSync(path)?JSON.parse(readFileSync(path,'utf8')):await evaluateOne({biome,seed},days,strategy,
+  const name=`${strategy}-${biome}-${seed}-${days}`,path=join(dir,`${name}.json.gz`),
+   legacyPath=join(dir,`${name}.json`),progress=join(dir,`${name}.jsonl`);
+  const report=existsSync(path)?JSON.parse(gunzipSync(readFileSync(path))):
+   existsSync(legacyPath)?JSON.parse(readFileSync(legacyPath,'utf8')):
+   await evaluateOne({biome,seed},days,strategy,
    strategy==='evolved'?genes:null,row=>{
     const sample={day:row.day,money:row.money,living:row.living,destroyed:row.destroyed,
      gameTickMs:row.wallTime?.gameTickMs,result:row.result};
     appendFileSync(progress,JSON.stringify(sample)+'\n');
     console.log(JSON.stringify({strategy,seed,...sample}));
    },true);
-  if(!existsSync(path))writeFileSync(path,JSON.stringify(report,null,2)+'\n');
+  if(!existsSync(path)&&!existsSync(legacyPath))
+   writeFileSync(path,gzipSync(JSON.stringify(report,null,2)+'\n',{level:9,mtime:0}));
   cases.push({strategy,seed,status:report.status,completedNights:report.completedNights??null,
    result:report.result??null,daysRecorded:report.rows?.length??0,
    finalCash:report.rows?.at(-1)?.money??null,finalLiving:report.rows?.at(-1)?.living??null,

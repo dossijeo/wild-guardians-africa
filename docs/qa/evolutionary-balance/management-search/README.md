@@ -22,7 +22,11 @@ este laboratorio pertenecen a otro hash y no se agregan a esta cohorte.
 - `protocol-14.json` deja definida una búsqueda posterior, **no ejecutada**.
   `paired-14-manglares-123.json` sí ejecutó sólo el líder y el control de paridad
   durante catorce noches, sin evolución adicional. Los informes detallados,
-  progreso diario y ledger están en `paired-14-manglares-123/`.
+progreso diario y ledger están en `paired-14-manglares-123/`.
+Los dos informes detallados de esa cohorte se archivaron sin pérdida como
+`.json.gz` para mantener revisable el diff de la PR; `archive-index.json`
+registra tamaños y SHA-256 antes y después de comprimir. `run-paired.mjs` y
+`plot-run.mjs` leen esos archivos comprimidos.
 
 | Entrenamiento, 7 noches | Sabana/712 | Gran Río/2026 | Lectura |
 |---|---:|---:|---|
