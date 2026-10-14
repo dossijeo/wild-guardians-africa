@@ -458,6 +458,21 @@ path arrays, so this warrants architectural cleanup and a before/after cost
 measurement rather than reinstating the retired routing behavior to satisfy
 the old assertions.
 
+The raid-entry and hiring workers no longer copy successful paths into their
+replies: `Navigation.path()` delegates to the hierarchical adapter and never
+consumed those arrays. The workers still perform the native entry and hiring
+preview work and return bounded static collision/prop data. A legacy `paths`
+field in a reply cannot override a WASM route. Crops preserve static answers;
+real prop removals invalidate them. All 41 focused raid-entry, hiring and
+warmth tests pass, including complete movement trajectories in six biomes;
+the web build passes. The identical Sabana populated-entry snapshot was run
+twice per mode before and after in `prepared-raid-*-cleanup.json`. Median
+preparation was about 1.48 s before and 1.50 s after, with prepared spawn
+about 4.8 versus 5.3 ms; two samples per version are insufficient to claim a
+speed improvement. This removes obsolete copies and worker-message payload,
+not the remaining expensive preview calculations. The global 93-failure
+count predates this cleanup.
+
 A same-policy Gran Cañón seed 123 native campaign was repeated after the
 committed-target fix. Against `selector-village-14-canyon-123.json.gz`, all
 daily gameplay fields, complete raid evidence, entry transport and plot
