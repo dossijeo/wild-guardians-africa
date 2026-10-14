@@ -595,6 +595,21 @@ daily ledgers, tick bands and raid evidence are archived in
 does not establish 60/100-night scalability or acceptable balance. No attack
 or economic parameters were changed in this navigation branch.
 
+A second unchanged-policy 30-night-cap Sabana/Mapungubwe campaign used seed
+2026. It completed 20 nights and lost its work center during night 21 after
+346.5 s, with 64 coins and no living crops at the terminal row. The final
+raid recorded 11 crop hits, 27 structure hits and 21 center hits; its audit
+was again `verified` with no coverage loss or issues. Daily `Game.tick` cost
+ranged from about 0.6 to 20.4 s through that run, with no navigation timeout
+or unbounded wait. The full ledger and tick bands are archived in
+`spatial-virtual-30-c9867c75-seed2026.json.gz`. Together, seeds 712 and
+2026 show two genuine early defeats for the fixed `good` policy, not a
+30-night survivor. They are insufficient to estimate a victory percentage,
+but do contradict treating this policy as demonstrated 100-night-capable.
+Any military calibration belongs to the separate balance work, using more
+seeds and unchanged player policy; this navigation branch has not changed
+attack composition, damage, radius, economy or virtual-player decisions.
+
 ## Deferred engine name
 
 After the WASM spatial core is functionally and performance-stable, rename
