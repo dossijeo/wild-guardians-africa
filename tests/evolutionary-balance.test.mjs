@@ -5,6 +5,7 @@ import {seededRandom,randomGenome,breed,scoreCampaign,genomeId} from '../tools/e
 import {validateConfig,evaluateOne} from '../tools/evolutionary-balance/run-ga.mjs';
 import {calibrate} from '../tools/evolutionary-balance/calibrate-model.mjs';
 import {archiveGaReports} from '../tools/evolutionary-balance/archive-ga-reports.mjs';
+import {archiveProgress,restoreProgress} from '../tools/evolutionary-balance/archive-progress.mjs';
 import {mkdtempSync,writeFileSync,readFileSync,existsSync,rmSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
@@ -22,6 +23,22 @@ test('GA campaign archives retain exact reports and exclude incomplete progress'
   assert.equal(gunzipSync(readFileSync(join(dir,`${name}.gz`))).toString(),raw);
   assert.equal(existsSync(join(dir,name)),false);
   assert.equal(existsSync(join(dir,'progress-partial.jsonl')),true);
+ }finally{rmSync(dir,{recursive:true,force:true});}
+});
+
+test('progress bundle roundtrips exact logs and checks each original hash',()=>{
+ const dir=mkdtempSync(join(tmpdir(),'wg-ga-progress-'));
+ const restored=join(dir,'restored');
+ try{
+  const first='{"day":1}\n{"day":2}\n',second='{"day":3,"note":"é"}\n';
+  writeFileSync(join(dir,'first.jsonl'),first);writeFileSync(join(dir,'second.jsonl'),second);
+  assert.equal(archiveProgress(dir).count,2);
+  assert.equal(existsSync(join(dir,'first.jsonl')),false);
+  assert.equal(restoreProgress(join(dir,'progress-bundle.json.gz'),restored),2);
+  assert.equal(readFileSync(join(restored,'first.jsonl'),'utf8'),first);
+  assert.equal(readFileSync(join(restored,'second.jsonl'),'utf8'),second);
+  writeFileSync(join(dir,'third.jsonl'),'{}\n');
+  assert.throws(()=>archiveProgress(dir),/already exists/);
  }finally{rmSync(dir,{recursive:true,force:true});}
 });
 

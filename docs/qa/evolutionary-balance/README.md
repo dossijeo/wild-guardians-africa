@@ -281,3 +281,19 @@ recalculó íntegra tras el arreglo; no mezcla informes anteriores.
 4. Sólo entonces congelar una o varias políticas competentes, comparar V1 y
    variantes militares mediante campañas nativas de 10–20, 30–60 y 100 noches.
    La optimización de balance sigue separada y no toca producción sin revisión.
+
+## Registros de progreso archivados
+
+Para mantener revisable la PR, algunos directorios de resultados agrupan sus
+archivos `.jsonl` en `progress-bundle.json.gz`. El paquete conserva el nombre,
+el tamaño, el SHA-256 y los bytes exactos de cada registro original. El script
+[`archive-progress.mjs`](../../../tools/evolutionary-balance/archive-progress.mjs)
+verifica el roundtrip antes de retirar los duplicados; para restaurarlos:
+
+```sh
+node tools/evolutionary-balance/archive-progress.mjs <directorio-de-resultados> <directorio-destino>
+```
+
+Los reportes de campaña `.json.gz`, configuraciones, snapshots y resultados
+negativos siguen intactos. Las cohortes anteriores a cada consolidación
+conservan sus propios hashes de código y no se mezclan con campañas nuevas.
