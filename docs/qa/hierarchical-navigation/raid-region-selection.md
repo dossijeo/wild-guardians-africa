@@ -389,6 +389,16 @@ passed, including playable tests and web build. Repository-wide QA remains
 incomplete, and neither that workflow nor the focused tests establish
 30/60/100-night survivor performance.
 
+Further raid acceptance triage found eleven test cases still assuming the
+former two-hit crop durability: five committed Shield-border cases, one
+cross-species active-Shield case, and five destroyed-crop reservation cases
+(the sixth Shield case already passed). They now assert the approved one-hit
+rule while retaining physical distance, blocked-contact, post-expiry travel,
+individual lease release, remaining hit budgets and reload checks. Both
+complete focused files pass: 22/22 cases. No Shield, damage, navigation or
+reservation production parameter changed. This focused result postdates the
+`57585091` full-suite log.
+
 ## Reproduce
 
 ```powershell
