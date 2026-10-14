@@ -31,6 +31,10 @@ test('post-intro fitness distinguishes native defeat, technical censor and colla
  assert.equal(live.score-scorePostIntro(defeated,14,{minimumTerminalDeliveryPerDay:5}).score,500);
  assert.equal(scorePostIntro(survivor,14,{minimumTerminalDeliveryPerDay:11}).reason,'collapsed-production');
  assert.equal(scorePostIntro({...survivor,rows:rows.map(r=>({...r,delivered:r.day>11?0:r.delivered}))},14).reason,'collapsed-production');
+ const defeatedInactive=scorePostIntro({...defeated,rows:rows.map(r=>({...r,delivered:r.day>11?0:r.delivered}))},14);
+ assert.equal(defeatedInactive.valid,true);
+ assert.equal(defeatedInactive.nativeResult,'defeat');
+ assert.equal(defeatedInactive.competitiveEligible,false);
  assert.equal(scorePostIntro({...survivor,status:'error',name:'CampaignCostStop'},14).reason,'computational-cost-stop');
  assert.equal(scorePostIntro({...survivor,completedNights:7,result:null},14).reason,'truncated');
  assert.throws(()=>scorePostIntro(survivor,7),/14 nights/);

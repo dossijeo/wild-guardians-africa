@@ -41,8 +41,9 @@ export function scorePostIntro(report,targetDays,{minimumTerminalDeliveryPerDay=
   (minimumTerminalDeliveryPerDay===null||metrics.terminalDeliveryPerDay>=minimumTerminalDeliveryPerDay);
  // The native result remains intact. A farm with collapsed delivery may survive
  // the horizon but cannot be selected as a competent virtual-player policy.
- if(!eligible)return {score:-1e9,valid:false,reason:'collapsed-production',
-  scoreVersion:'post-intro-v1',completed,metrics,minimumTerminalDeliveryPerDay};
+ if(!eligible&&report.result!=='defeat')return {score:-1e9,valid:false,reason:'collapsed-production',
+  scoreVersion:'post-intro-v1',completed,metrics,minimumTerminalDeliveryPerDay,
+  nativeResult:report.result,competitiveEligible:false};
  const terminalDefeatPenalty=report.result==='defeat'?500:0;
  const cropLossFraction=metrics.destroyed/Math.max(1,
   (report.raid??[]).filter(raid=>raid.day>=6).reduce((n,raid)=>n+Number(raid.livingAtSpawn??0),0));
@@ -55,5 +56,6 @@ export function scorePostIntro(report,targetDays,{minimumTerminalDeliveryPerDay=
   Math.min(125,cropLossFraction*250);
  return {score:Math.min(targetDays,completed)*1000-terminalDefeatPenalty+secondary,
   valid:true,scoreVersion:'post-intro-v1',completed,metrics,cropLossFraction,
-  minimumTerminalDeliveryPerDay,result:report.result};
+  minimumTerminalDeliveryPerDay,result:report.result,nativeResult:report.result,
+  competitiveEligible:minimumTerminalDeliveryPerDay===null?null:eligible};
 }
