@@ -9,7 +9,7 @@ import {gatePortalPoints} from '../gate-passages.js';
 // and supplies visual buffers; rendering remains the caller's responsibility.
 export function createSpatialWorld(module){
   const wasm=new WebAssembly.Instance(module,{env:{emscripten_notify_memory_growth(){}}}).exports;
-  let chunk=null,navigationBuilt=false,chunks=[],generated=false;
+  let chunk=null,navigationBuilt=false,chunks=[],generated=false,chunkRevision=0;
   let workerPortalRoutes=[];
   let diagnoseConnectivity=false;
   const connectivityReasons={connected:{},route:{}};
@@ -35,13 +35,13 @@ export function createSpatialWorld(module){
     if(!Object.hasOwn(SPATIAL_BIOME_CODES,name))throw RangeError('Unsupported spatial biome');
     const count=wasm.spatial_generate_biome(seed>>>0,SPATIAL_BIOME_CODES[name],cx|0,cz|0);
     chunk={cx:cx|0,cz:cz|0,count};chunks=[[cx|0,cz|0]];navigationBuilt=false;generated=true;
-    workerPortalRoutes=[];
+    workerPortalRoutes=[];chunkRevision++;
     return chunk;
   }
   function addChunk(cx,cz){
     if(!generated)throw Error('Generate the world before adding a chunk');
     const result=wasm.spatial_add_chunk(cx|0,cz|0);
-    if(result>0){chunk={cx:cx|0,cz:cz|0,count:result-1};chunks.push([cx|0,cz|0]);}
+    if(result>0){chunk={cx:cx|0,cz:cz|0,count:result-1};chunks.push([cx|0,cz|0]);chunkRevision++;}
     return result>0?result-1:result;
   }
   function selectChunk(cx,cz){
@@ -55,6 +55,7 @@ export function createSpatialWorld(module){
   function removeChunk(cx,cz){
     const removed=wasm.spatial_remove_chunk(cx|0,cz|0);
     if(removed){
+      chunkRevision++;
       chunks=chunks.filter(([x,z])=>x!==(cx|0)||z!==(cz|0));
       if(chunk?.cx===(cx|0)&&chunk?.cz===(cz|0)){
         const last=chunks.at(-1);
@@ -176,6 +177,7 @@ export function createSpatialWorld(module){
     enclosureAt:point=>navigationBuilt?wasm.lazy_enclosure(point.x,point.z):-1,
     heights,colors,water,groundMask,waterLevels,waterTriangles,props,instances,chunkPayload,changedChunks,route,connected,componentAt,
     routeWorld:(start,end)=>navigationBuilt?spatialWorldRoute(wasm,route,start,end):{status:'unknown',points:[]},
+    chunkRevision:()=>chunkRevision,
     connectedWorld:(start,end)=>navigationBuilt?spatialWorldConnectivity(wasm,connected,start,end):'unknown',
     componentsWorld:point=>navigationBuilt?spatialWorldComponents(wasm,componentAt,point):{ids:[],unknown:true},
     enclosureWorld:point=>navigationBuilt?spatialWorldEnclosure(wasm,point):{ids:[],status:'unknown'},
