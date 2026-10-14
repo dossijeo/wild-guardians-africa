@@ -59,7 +59,7 @@
     },
     "wallCount": 49,
     "livingCrops": 30,
-    "elapsedMs": 431.0503000000001
+    "elapsedMs": 417.36480000000006
   },
   "counters": {
     "samples": 1,
@@ -68,6 +68,19 @@
     "enclosureQueries": 9,
     "connectivityQueries": 0,
     "unknownRegions": 12,
-    "elapsedMs": 431.0503000000001
+    "elapsedMs": 417.36480000000006
+  },
+  "cost": {
+    "hotSampleMs": [
+      1.2024999999998727,
+      1.3694000000000415,
+      1.1722999999999502,
+      1.1727000000000771,
+      1.2589000000000397
+    ],
+    "idleCalls": 100000,
+    "idleTotalMs": 26.50579999999991,
+    "idleUsPerCall": 0.26505799999999907,
+    "note": "Five repeated full samples on the same warm resident topology; idle calls retain the same state and event ring. Timings exclude snapshot and chunk load and are not frame-time estimates."
   }
 }

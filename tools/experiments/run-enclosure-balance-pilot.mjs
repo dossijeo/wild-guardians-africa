@@ -1,4 +1,5 @@
 import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
+import assert from 'node:assert/strict';
 import {gunzipSync} from 'node:zlib';
 import {createHash} from 'node:crypto';
 import {dirname,relative,resolve} from 'node:path';
@@ -31,14 +32,29 @@ try{
   const nav=createSpatialNavigationMovement(session,state);
   const observer=new EnclosureBalanceObserver({session});
   const row=observer.observe(state,nav);
+  const warmObserver=new EnclosureBalanceObserver({session});
+  const hot=[];
+  for(let i=0;i<5;i++){
+    const sample=warmObserver.sample(state,nav,state.raid.animals,'hot-repeat');
+    assert.deepEqual(sample.profiles,row.profiles);
+    hot.push(sample.elapsedMs);
+  }
+  const idleCount=100000,idleStart=performance.now();
+  for(let i=0;i<idleCount;i++)assert.equal(observer.observe(state,nav),null);
+  const idleMs=performance.now()-idleStart;
+  assert.equal(observer.report().counters.samples,1);
   const report={scope:'Read-only reconstruction of an archived Wild Engine active raid. Classification uses animal physical profiles and resident WASM components; no campaign ticks, balance changes or synthetic breach.',
     source:relative(process.cwd(),input).replaceAll('\\','/'),
     sourceSha256:createHash('sha256').update(source).digest('hex'),
     seed:state.seed,biome:state.biome,day:state.day,raidId:state.raid.id,
     livingCrops:state.plants.filter(p=>p.alive).length,residentChunks:chunks.size,
     walls:state.structures.filter(s=>s.kind==='wall'&&s.status!=='ruined').length,
-    sample:row,counters:observer.report().counters};
+    sample:row,counters:observer.report().counters,
+    cost:{hotSampleMs:hot,idleCalls:idleCount,idleTotalMs:idleMs,
+      idleUsPerCall:idleMs*1000/idleCount,
+      note:'Five repeated full samples on the same warm resident topology; idle calls retain the same state and event ring. Timings exclude snapshot and chunk load and are not frame-time estimates.'}};
   mkdirSync(dirname(output),{recursive:true});writeFileSync(output,JSON.stringify(report,null,2)+'\n');
   console.log(JSON.stringify({output,crops:report.livingCrops,profiles:row.profiles,
-    elapsedMs:row.elapsedMs,residentChunks:chunks.size}));
+    elapsedMs:row.elapsedMs,hotSampleMs:hot,idleUsPerCall:report.cost.idleUsPerCall,
+    residentChunks:chunks.size}));
 }finally{session.dispose();}

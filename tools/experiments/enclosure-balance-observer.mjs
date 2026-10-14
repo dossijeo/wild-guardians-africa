@@ -16,10 +16,16 @@ export class EnclosureBalanceObserver {
       enclosureQueries:0,connectivityQueries:0,unknownRegions:0,elapsedMs:0};
   }
   observe(state,nav){
-    const events=state.events.filter(event=>eventNumber(event)>this.lastEvent);
-    if(state.events.length)this.lastEvent=eventNumber(state.events.at(-1));
+    // The event ring is capped, but most ticks add no event. In that common
+    // case avoid even scanning the ring; observation stays constant work.
+    const newest=state.events.length?eventNumber(state.events.at(-1)):-1;
+    const events=newest===this.lastEvent?[]:
+      state.events.filter(event=>eventNumber(event)>this.lastEvent);
+    this.lastEvent=newest;
     const spawn=events.some(event=>event.type==='RaidSpawned'||event.type==='RaidWaveSpawned');
-    const ended=events.some(event=>event.type==='RaidEnded');
+    // RaidEnded is emitted after state.raid is cleared. Keep the previous
+    // actors and also recognize the state transition if the event ring rolled.
+    const ended=events.some(event=>event.type==='RaidEnded')||(!state.raid&&!!this.raid);
     const active=state.raid;
     if(active){this.raid=active;}
     const actors=active?.animals??this.raid?.animals??[];

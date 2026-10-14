@@ -58,6 +58,17 @@ test('unknown enclosure or connectivity never claims physical protection',()=>{
   assert.equal(sample.transition.newlyExposed,0);
 });
 
+test('raid end is sampled after state.raid clears even if the event ring rolls',()=>{
+  const f=fixture(),observer=new EnclosureBalanceObserver({session:f.session});
+  observer.observe(f.state,f.nav);
+  f.state.raid=null;
+  f.state.events=[];
+  const ended=observer.observe(f.state,f.nav);
+  assert.equal(ended.reason,'end');
+  assert.equal(ended.raidId,'raid-4');
+  assert.equal(observer.observe(f.state,f.nav),null);
+});
+
 test('Wild Engine observes a real closed crop ring and its wall breach',async()=>{
   const module=new WebAssembly.Module(readFileSync(new URL(
     '../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
@@ -101,10 +112,17 @@ test('Wild Engine observes a real closed crop ring and its wall breach',async()=
     const left=state.structures.filter(s=>s.kind==='wall'&&s.x<ring[0][0]+1);
     assert(left.length>0);
     const removed=new Set(left.map(w=>w.id));
+    const before=nav.version;
     state.structures=state.structures.filter(s=>!removed.has(s.id));
     nav.setState(state);
+    assert(nav.version>before,'wall destruction must advance physical topology');
     const breached=observer.observe(state,nav);
     assert.equal(breached.transition.breachExposure,1,JSON.stringify(breached));
     assert.equal(breached.profiles[0].protected,0);
+    const brokenVersion=nav.version;
+    state.structures.push(...left);nav.setState(state);
+    assert(nav.version>brokenVersion,'wall reconstruction must advance physical topology');
+    const rebuilt=observer.observe(state,nav);
+    assert.equal(rebuilt.profiles[0].protected,1);
   }finally{session.dispose();}
 });
