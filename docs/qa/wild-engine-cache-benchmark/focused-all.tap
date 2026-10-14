@@ -1,0 +1,181 @@
+TAP version 13
+# (node:39384) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: static clearance is reused along the same segment and rechecked after a bend, edit, displacement or epoch
+ok 1 - static clearance is reused along the same segment and rechecked after a bend, edit, displacement or epoch
+  ---
+  duration_ms: 2.0686
+  ...
+# Subtest: a restored connector approaches its safe prefix, stops before a tree and replans a native clear route
+ok 2 - a restored connector approaches its safe prefix, stops before a tree and replans a native clear route
+  ---
+  duration_ms: 38.9909
+  ...
+# Subtest: dynamic body clearance is never cached by the static segment guard
+ok 3 - dynamic body clearance is never cached by the static segment guard
+  ---
+  duration_ms: 0.3666
+  ...
+# Subtest: a larger step cannot move beyond the cached safe prefix without another swept check
+ok 4 - a larger step cannot move beyond the cached safe prefix without another swept check
+  ---
+  duration_ms: 0.2905
+  ...
+# Subtest: a fractional landing cannot enter a static pocket missed by the waypoint prefix
+ok 5 - a fractional landing cannot enter a static pocket missed by the waypoint prefix
+  ---
+  duration_ms: 0.4263
+  ...
+# (node:35420) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: residency pins actual sparse birth/exit chunks without generating the expanded rectangle
+ok 6 - residency pins actual sparse birth/exit chunks without generating the expanded rectangle
+  ---
+  duration_ms: 4.0426
+  ...
+# Subtest: pins are evicted and bounds restored after cancellation, without disrupting normal chunks
+ok 7 - pins are evicted and bounds restored after cancellation, without disrupting normal chunks
+  ---
+  duration_ms: 1.6433
+  ...
+# Subtest: active actor next-step corridor remains pinned and all demand disappears after real departure
+ok 8 - active actor next-step corridor remains pinned and all demand disappears after real departure
+  ---
+  duration_ms: 0.5546
+  ...
+# Subtest: a raid-entry certificate is invalidated when sector residency changes
+ok 9 - a raid-entry certificate is invalidated when sector residency changes
+  ---
+  duration_ms: 5.1031
+  ...
+# Subtest: bounds refresh retains validated sparse demand while a new full worker key is prepared
+ok 10 - bounds refresh retains validated sparse demand while a new full worker key is prepared
+  ---
+  duration_ms: 3.6009
+  ...
+# Subtest: headless driver waits for the same retained daytime owner instead of the nighttime key
+ok 11 - headless driver waits for the same retained daytime owner instead of the nighttime key
+  ---
+  duration_ms: 26.2402
+  ...
+# Subtest: signed zero retains the native atan2 approach direction
+ok 12 - signed zero retains the native atan2 approach direction
+  ---
+  duration_ms: 4.8144
+  ...
+# Subtest: an exact successful query is reused without sharing its mutable route
+ok 13 - an exact successful query is reused without sharing its mutable route
+  ---
+  duration_ms: 0.4614
+  ...
+# Subtest: unreachable exact queries are reused; geometry epochs and world identities reopen them
+ok 14 - unreachable exact queries are reused; geometry epochs and world identities reopen them
+  ---
+  duration_ms: 0.8615
+  ...
+# Subtest: a chunk residency change invalidates a cached route even with unchanged topology
+ok 15 - a chunk residency change invalidates a cached route even with unchanged topology
+  ---
+  duration_ms: 0.5093
+  ...
+# Subtest: coordinates, body radius, species, crop identity and avoided terrain remain exact inputs
+ok 16 - coordinates, body radius, species, crop identity and avoided terrain remain exact inputs
+  ---
+  duration_ms: 0.5
+  ...
+# Subtest: changed query implementations invalidate, and unversioned adapters are never memoized
+ok 17 - changed query implementations invalidate, and unversioned adapters are never memoized
+  ---
+  duration_ms: 0.3125
+  ...
+# Subtest: replacing terrain callbacks invalidates even without an adapter epoch change
+ok 18 - replacing terrain callbacks invalidates even without an adapter epoch change
+  ---
+  duration_ms: 0.4576
+  ...
+# Subtest: a geometry change during computation cannot publish under the previous epoch
+ok 19 - a geometry change during computation cannot publish under the previous epoch
+  ---
+  duration_ms: 0.2519
+  ...
+# Subtest: entry and point budgets evict or reject instead of retaining unbounded queries
+ok 20 - entry and point budgets evict or reject instead of retaining unbounded queries
+  ---
+  duration_ms: 64.9329
+  ...
+# Subtest: native canyon 1 matches frozen uncached routes, including repeats and reload
+ok 21 - native canyon 1 matches frozen uncached routes, including repeats and reload
+  ---
+  duration_ms: 101.2322
+  ...
+# Subtest: native canyon 10 matches frozen uncached routes, including repeats and reload
+ok 22 - native canyon 10 matches frozen uncached routes, including repeats and reload
+  ---
+  duration_ms: 81.1122
+  ...
+# (node:33856) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: native tick completes isolated departure as home
+ok 23 - native tick completes isolated departure as home
+  ---
+  duration_ms: 1052.5013
+  ...
+# Subtest: native tick completes isolated departure as home after mid-search reload
+ok 24 - native tick completes isolated departure as home after mid-search reload
+  ---
+  duration_ms: 965.0416
+  ...
+# Subtest: archived valid fractional origin obtains a wholly native swept route to the village
+ok 25 - archived valid fractional origin obtains a wholly native swept route to the village
+  ---
+  duration_ms: 1114.8146
+  ...
+# Subtest: native departure moves continuously and survives reload without income, clock or task changes
+ok 26 - native departure moves continuously and survives reload without income, clock or task changes
+  ---
+  duration_ms: 1135.0105
+  ...
+# Subtest: local connector never ignores a new enclosing solid, and failure is cached until topology changes
+ok 27 - local connector never ignores a new enclosing solid, and failure is cached until topology changes
+  ---
+  duration_ms: 1021.9896
+  ...
+# Subtest: ordinary active work receives no fractional departure exception
+ok 28 - ordinary active work receives no fractional departure exception
+  ---
+  duration_ms: 275.3951
+  ...
+# Subtest: cooperative route adapter returns a stable valid route for both search quanta
+ok 29 - cooperative route adapter returns a stable valid route for both search quanta
+  ---
+  duration_ms: 1924.7315
+  ...
+# Subtest: topology changes invalidate an in-progress search before returning its old route
+ok 30 - topology changes invalidate an in-progress search before returning its old route
+  ---
+  duration_ms: 75.2492
+  ...
+# Subtest: removed actors cannot retain all eight active search slots
+ok 31 - removed actors cannot retain all eight active search slots
+  ---
+  duration_ms: 965.1851
+  ...
+# Subtest: new route adapter preserves physical clearance through fractional departure
+ok 32 - new route adapter preserves physical clearance through fractional departure
+  ---
+  duration_ms: 995.1334
+  ...
+# Subtest: spatial WASM movement can rejoin its native graph from a fractional worker pocket
+ok 33 - spatial WASM movement can rejoin its native graph from a fractional worker pocket
+  ---
+  duration_ms: 7.5798
+  ...
+1..33
+# tests 33
+# suites 0
+# pass 33
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 9792.8076

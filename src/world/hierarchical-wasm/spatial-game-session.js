@@ -17,7 +17,8 @@ import {BIOME_IDS} from '../biome-ids.js';
 export function createSpatialGameSession(module,state,streamOptions){
   if(!Object.hasOwn(BIOME_IDS,state?.biome)||!Array.isArray(state.villages)||!state.villages.length)
     throw TypeError('Expected a supported game biome and a village');
-  const core=streamOptions.core??createSpatialWorld(module),first=state.villages[0];
+  const core=streamOptions.core??createSpatialWorld(module,{
+    experimentalNativeCache:streamOptions.experimentalNativeCache}),first=state.villages[0];
   const cx=Math.floor((first.x+24)/48),cz=Math.floor((first.z+24)/48);
   if(streamOptions.core){
     const generated=core.terrainState();

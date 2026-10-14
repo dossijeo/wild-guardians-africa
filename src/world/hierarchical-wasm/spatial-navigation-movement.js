@@ -253,6 +253,7 @@ export function createSpatialNavigationMovement(session,state){
       return obstacleList;
     },
     get version(){return session.topologySource.revision();},
+    get residencyRevision(){return session.core?.chunkRevision?.()??0;},
     walkable,segmentClear,path,regionFor,regionConnected,enclosureFor,terrainValid,
     withWallPreview,withVillageEntryPreview,withCenterPreview,
     spatialSectorRevision:radius=>session.actorSectorRevision(profile(radius,false,null)),

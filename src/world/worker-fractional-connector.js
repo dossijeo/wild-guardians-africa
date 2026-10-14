@@ -35,7 +35,11 @@ function* search(nav,actor,end,radius){
 export function workerFractionalConnector(nav,actor,end,radius=.28){
  if(!['fleeing','returning','incapacitated'].includes(actor.status)||!nav.workerPath||!nav.path||!nav.walkable||!nav.segmentClear)return null;
  if(![actor.x,actor.z,end.x,end.z,radius].every(Number.isFinite)||radius<=0)return null;
- let memo=worlds.get(nav);if(!memo||memo.version!==nav.version){memo={version:nav.version,active:new Map(),failed:new Map()};worlds.set(nav,memo);}
+ let memo=worlds.get(nav);
+ if(!memo||memo.version!==nav.version||memo.residencyRevision!==nav.residencyRevision){
+  memo={version:nav.version,residencyRevision:nav.residencyRevision,active:new Map(),failed:new Map()};
+  worlds.set(nav,memo);
+ }
  const key=navigationPathKey(actor,end,radius,null,true,3)+JSON.stringify(actor.terrainAvoidance??[]);
  if(memo.failed.has(key))return null;
  let attempt=memo.active.get(actor);

@@ -1,0 +1,100 @@
+{
+  "fixture": "desierto983-d15",
+  "rows": [
+    {
+      "stage": "automatic-gate-open",
+      "jsPath": "found",
+      "freshPath": "found",
+      "wasmCached": 1,
+      "wasmHit": 1,
+      "wasmFresh": 1,
+      "topologyRevision": 3,
+      "chunkRevision": 9,
+      "sectorRevision": 192,
+      "nativeHits": 2,
+      "nativeMisses": 2
+    },
+    {
+      "stage": "gate-converted-to-solid",
+      "jsPath": "blocked",
+      "freshPath": "blocked",
+      "wasmCached": 0,
+      "wasmHit": 0,
+      "wasmFresh": 0,
+      "topologyRevision": 4,
+      "chunkRevision": 9,
+      "sectorRevision": 194,
+      "nativeHits": 9,
+      "nativeMisses": 9
+    },
+    {
+      "stage": "gate-restored",
+      "jsPath": "found",
+      "freshPath": "found",
+      "wasmCached": 1,
+      "wasmHit": 1,
+      "wasmFresh": 1,
+      "topologyRevision": 5,
+      "chunkRevision": 9,
+      "sectorRevision": 196,
+      "nativeHits": 11,
+      "nativeMisses": 11
+    },
+    {
+      "stage": "wall-removed-breach",
+      "jsPath": "found",
+      "freshPath": "found",
+      "wasmCached": 1,
+      "wasmHit": 1,
+      "wasmFresh": 1,
+      "topologyRevision": 6,
+      "chunkRevision": 9,
+      "sectorRevision": 198,
+      "nativeHits": 13,
+      "nativeMisses": 13
+    },
+    {
+      "stage": "wall-restored",
+      "jsPath": "found",
+      "freshPath": "found",
+      "wasmCached": 1,
+      "wasmHit": 1,
+      "wasmFresh": 1,
+      "topologyRevision": 7,
+      "chunkRevision": 9,
+      "sectorRevision": 200,
+      "nativeHits": 15,
+      "nativeMisses": 15
+    },
+    {
+      "stage": "residency-remove-and-restore",
+      "before": 0,
+      "absent": -1,
+      "restored": 0,
+      "nativeHits": 15,
+      "nativeMisses": 18
+    },
+    {
+      "stage": "js-watering-route-residency",
+      "freshUnknown": true,
+      "cachedUnknown": true,
+      "computations": 3,
+      "topologyRevision": 7,
+      "residencyRevision": 13
+    },
+    {
+      "stage": "native-portal-only-revision",
+      "portalBefore": 1,
+      "portalCached": 0,
+      "portalFresh": 0,
+      "sectorBefore": 320,
+      "sectorAfter": 320
+    },
+    {
+      "stage": "save-load-new-session",
+      "jsPath": "found",
+      "freshPath": "found",
+      "nativeEntries": 1
+    }
+  ]
+}

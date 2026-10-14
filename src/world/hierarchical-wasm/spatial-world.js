@@ -7,8 +7,10 @@ import {gatePortalPoints} from '../gate-passages.js';
 
 // Synchronous world authority. The same WASM instance answers spatial queries
 // and supplies visual buffers; rendering remains the caller's responsibility.
-export function createSpatialWorld(module){
+export function createSpatialWorld(module,{experimentalNativeCache=false}={}){
   const wasm=new WebAssembly.Instance(module,{env:{emscripten_notify_memory_growth(){}}}).exports;
+  if(experimentalNativeCache&&(!wasm.nav_cached_route||!wasm.nav_cached_connected))
+    throw Error('The benchmark needs its separately compiled cache prototype');
   let chunk=null,navigationBuilt=false,chunks=[],generated=false,chunkRevision=0;
   let workerPortalRoutes=[];
   let diagnoseConnectivity=false;
@@ -79,7 +81,8 @@ export function createSpatialWorld(module){
     if(![start?.x,start?.z,end?.x,end?.z].every(Number.isSafeInteger))
       throw RangeError('Grid routes require integer coordinates; use routeWorld for actor positions');
     if(!navigationBuilt)return {status:'unknown',points:[]};
-    const count=wasm.lazy_route(start.x,start.z,end.x,end.z);
+    const count=(experimentalNativeCache?wasm.nav_cached_route:wasm.lazy_route)(
+      start.x,start.z,end.x,end.z);
     countReason('route');
     if(count<0)return {status:'unknown',points:[]};
     if(!count)return {status:'blocked',points:[]};
@@ -97,7 +100,8 @@ export function createSpatialWorld(module){
     if(![start?.x,start?.z,end?.x,end?.z].every(Number.isSafeInteger))
       throw RangeError('Grid connectivity requires integer coordinates');
     if(!navigationBuilt)return 'unknown';
-    const result=wasm.lazy_connected(start.x,start.z,end.x,end.z);
+    const result=(experimentalNativeCache?wasm.nav_cached_connected:wasm.lazy_connected)(
+      start.x,start.z,end.x,end.z);
     countReason('connected');
     return result<0?'unknown':result?'possible':'blocked';
   }

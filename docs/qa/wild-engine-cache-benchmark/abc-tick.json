@@ -1,0 +1,1443 @@
+{
+  "source": {
+    "wasmSha256": "36dc95b30291cd609be9b1138cf538b3974e16a7e2c72f1d38b5a9178c574952",
+    "fixtureSha256": {
+      "docs/qa/hierarchical-navigation/spatial-gran-canon-seed123-day6-capture-capture-state.json": "62ead11540e3914e8f4bb90f9b6c639271a54e44e4d7f3d0258a781cb87021fb",
+      "docs/qa/hierarchical-navigation/spatial-virtual-sabana-14-state.json": "59f20da4ba56a147d7346157052581e63c22f2b70059274d14ad19f2bca3cc6e",
+      "docs/qa/wild-engine-cache-benchmark/manglares-123-d10-raid-state.json.gz": "764d2d569ea6f893f8d074eefb155d7255cb40cbe7400ccf9f4d2516ac144364",
+      "tests/fixtures/desierto983-d15-partial-state.json.gz": "9f4dd3846951204276e2cf1b45348767c29d128816ffb2d401dddc4b31c56fb6"
+    }
+  },
+  "repeats": 2,
+  "ticks": 2,
+  "cases": [
+    {
+      "fixture": "gran-canon-123-day6",
+      "hashes": [
+        "ec5561123c976c278b8c242f52cde17899101f923d6ce03412f604a037f984cb"
+      ],
+      "sameState": true,
+      "runs": [
+        {
+          "round": 0,
+          "mode": "A",
+          "setupMs": 604.6445,
+          "rows": [
+            {
+              "day": 6,
+              "ms": 2.3781000000000176
+            },
+            {
+              "day": 6,
+              "ms": 0.4250999999999294
+            }
+          ],
+          "gameTickMs": 2.803199999999947,
+          "routeCalls": 0,
+          "routeMs": 0,
+          "wasmCalls": 0,
+          "jsHits": 0,
+          "jsMisses": 0,
+          "connectivityCalls": 0,
+          "nativeHits": 0,
+          "nativeMisses": 0,
+          "nativeEntries": 0,
+          "jsEntries": 0,
+          "jsHeapDeltaBytes": 342096,
+          "wasmMemoryBytes": 4194304,
+          "stateSha256": "ec5561123c976c278b8c242f52cde17899101f923d6ce03412f604a037f984cb"
+        },
+        {
+          "round": 0,
+          "mode": "B",
+          "setupMs": 539.9817,
+          "rows": [
+            {
+              "day": 6,
+              "ms": 0.6236999999998716
+            },
+            {
+              "day": 6,
+              "ms": 0.3188999999999851
+            }
+          ],
+          "gameTickMs": 0.9425999999998567,
+          "routeCalls": 0,
+          "routeMs": 0,
+          "wasmCalls": 0,
+          "jsHits": 0,
+          "jsMisses": 0,
+          "connectivityCalls": 0,
+          "nativeHits": 0,
+          "nativeMisses": 0,
+          "nativeEntries": 0,
+          "jsEntries": 0,
+          "jsHeapDeltaBytes": 267240,
+          "wasmMemoryBytes": 4194304,
+          "stateSha256": "ec5561123c976c278b8c242f52cde17899101f923d6ce03412f604a037f984cb"
+        },
+        {
+          "round": 0,
+          "mode": "C",
+          "setupMs": 527.6459,
+          "rows": [
+            {
+              "day": 6,
+              "ms": 0.23050000000012005
+            },
+            {
+              "day": 6,
+              "ms": 0.13769999999999527
+            }
+          ],
+          "gameTickMs": 0.3682000000001153,
+          "routeCalls": 0,
+          "routeMs": 0,
+          "wasmCalls": 0,
+          "jsHits": 0,
+          "jsMisses": 0,
+          "connectivityCalls": 0,
+          "nativeHits": 0,
+          "nativeMisses": 0,
+          "nativeEntries": 0,
+          "jsEntries": 0,
+          "jsHeapDeltaBytes": 266848,
+          "wasmMemoryBytes": 4194304,
+          "stateSha256": "ec5561123c976c278b8c242f52cde17899101f923d6ce03412f604a037f984cb"
+        },
+        {
+          "round": 0,
+          "mode": "C",
+          "setupMs": 552.0708000000002,
+          "rows": [
+            {
+              "day": 6,
+              "ms": 0.1772000000000844
+            },
+            {
+              "day": 6,
+              "ms": 0.09149999999999636
+            }
+          ],
+          "gameTickMs": 0.26870000000008076,
+          "routeCalls": 0,
+          "routeMs": 0,
+          "wasmCalls": 0,
+          "jsHits": 0,
+          "jsMisses": 0,
+          "connectivityCalls": 0,
+          "nativeHits": 0,
+          "nativeMisses": 0,
+          "nativeEntries": 0,
+          "jsEntries": 0,
+          "jsHeapDeltaBytes": 266904,
+          "wasmMemoryBytes": 4194304,
+          "stateSha256": "ec5561123c976c278b8c242f52cde17899101f923d6ce03412f604a037f984cb"
+        },
+        {
+          "round": 0,
+          "mode": "B",
+          "setupMs": 533.8636000000001,
+          "rows": [
+            {
+              "day": 6,
+              "ms": 0.24200000000018917
+            },
+            {
+              "day": 6,
+              "ms": 0.13239999999996144
+            }
+          ],
+          "gameTickMs": 0.3744000000001506,
+          "routeCalls": 0,
+          "routeMs": 0,
+          "wasmCalls": 0,
+          "jsHits": 0,
+          "jsMisses": 0,
+          "connectivityCalls": 0,
+          "nativeHits": 0,
+          "nativeMisses": 0,
+          "nativeEntries": 0,
+          "jsEntries": 0,
+          "jsHeapDeltaBytes": 333624,
+          "wasmMemoryBytes": 4194304,
+          "stateSha256": "ec5561123c976c278b8c242f52cde17899101f923d6ce03412f604a037f984cb"
+        },
+        {
+          "round": 0,
+          "mode": "A",
+          "setupMs": 540.9150999999997,
+          "rows": [
+            {
+              "day": 6,
+              "ms": 0.18089999999983775
+            },
+            {
+              "day": 6,
+              "ms": 0.09570000000030632
+            }
+          ],
+          "gameTickMs": 0.27660000000014406,
+          "routeCalls": 0,
+          "routeMs": 0,
+          "wasmCalls": 0,
+          "jsHits": 0,
+          "jsMisses": 0,
+          "connectivityCalls": 0,
+          "nativeHits": 0,
+          "nativeMisses": 0,
+          "nativeEntries": 0,
+          "jsEntries": 0,
+          "jsHeapDeltaBytes": 266968,
+          "wasmMemoryBytes": 4194304,
+          "stateSha256": "ec5561123c976c278b8c242f52cde17899101f923d6ce03412f604a037f984cb"
+        },
+        {
+          "round": 1,
+          "mode": "C",
+          "setupMs": 545.4975,
+          "rows": [
+            {
+              "day": 6,
+              "ms": 0.20879999999988286
+            },
+            {
+              "day": 6,
+              "ms": 0.10209999999960928
+            }
+          ],
+          "gameTickMs": 0.31089999999949214,
+          "routeCalls": 0,
+          "routeMs": 0,
+          "wasmCalls": 0,
+          "jsHits": 0,
+          "jsMisses": 0,
+          "connectivityCalls": 0,
+          "nativeHits": 0,
+          "nativeMisses": 0,
+          "nativeEntries": 0,
+          "jsEntries": 0,
+          "jsHeapDeltaBytes": 266920,
+          "wasmMemoryBytes": 4194304,
+          "stateSha256": "ec5561123c976c278b8c242f52cde17899101f923d6ce03412f604a037f984cb"
+        },
+        {
+          "round": 1,
+          "mode": "B",
+          "setupMs": 545.3043000000002,
+          "rows": [
+            {
+              "day": 6,
+              "ms": 0.23739999999997963
+            },
+            {
+              "day": 6,
+              "ms": 0.14720000000033906
+            }
+          ],
+          "gameTickMs": 0.3846000000003187,
+          "routeCalls": 0,
+          "routeMs": 0,
+          "wasmCalls": 0,
+          "jsHits": 0,
+          "jsMisses": 0,
+          "connectivityCalls": 0,
+          "nativeHits": 0,
+          "nativeMisses": 0,
+          "nativeEntries": 0,
+          "jsEntries": 0,
+          "jsHeapDeltaBytes": 266872,
+          "wasmMemoryBytes": 4194304,
+          "stateSha256": "ec5561123c976c278b8c242f52cde17899101f923d6ce03412f604a037f984cb"
+        },
+        {
+          "round": 1,
+          "mode": "A",
+          "setupMs": 562.0396000000001,
+          "rows": [
+            {
+              "day": 6,
+              "ms": 0.17819999999937863
+            },
+            {
+              "day": 6,
+              "ms": 0.09380000000055588
+            }
+          ],
+          "gameTickMs": 0.2719999999999345,
+          "routeCalls": 0,
+          "routeMs": 0,
+          "wasmCalls": 0,
+          "jsHits": 0,
+          "jsMisses": 0,
+          "connectivityCalls": 0,
+          "nativeHits": 0,
+          "nativeMisses": 0,
+          "nativeEntries": 0,
+          "jsEntries": 0,
+          "jsHeapDeltaBytes": 266904,
+          "wasmMemoryBytes": 4194304,
+          "stateSha256": "ec5561123c976c278b8c242f52cde17899101f923d6ce03412f604a037f984cb"
+        },
+        {
+          "round": 1,
+          "mode": "A",
+          "setupMs": 565.8163000000004,
+          "rows": [
+            {
+              "day": 6,
+              "ms": 0.23539999999957217
+            },
+            {
+              "day": 6,
+              "ms": 0.12950000000000728
+            }
+          ],
+          "gameTickMs": 0.36489999999957945,
+          "routeCalls": 0,
+          "routeMs": 0,
+          "wasmCalls": 0,
+          "jsHits": 0,
+          "jsMisses": 0,
+          "connectivityCalls": 0,
+          "nativeHits": 0,
+          "nativeMisses": 0,
+          "nativeEntries": 0,
+          "jsEntries": 0,
+          "jsHeapDeltaBytes": 270080,
+          "wasmMemoryBytes": 4194304,
+          "stateSha256": "ec5561123c976c278b8c242f52cde17899101f923d6ce03412f604a037f984cb"
+        },
+        {
+          "round": 1,
+          "mode": "B",
+          "setupMs": 532.7451000000001,
+          "rows": [
+            {
+              "day": 6,
+              "ms": 0.2316000000000713
+            },
+            {
+              "day": 6,
+              "ms": 0.20200000000022555
+            }
+          ],
+          "gameTickMs": 0.43360000000029686,
+          "routeCalls": 0,
+          "routeMs": 0,
+          "wasmCalls": 0,
+          "jsHits": 0,
+          "jsMisses": 0,
+          "connectivityCalls": 0,
+          "nativeHits": 0,
+          "nativeMisses": 0,
+          "nativeEntries": 0,
+          "jsEntries": 0,
+          "jsHeapDeltaBytes": 266896,
+          "wasmMemoryBytes": 4194304,
+          "stateSha256": "ec5561123c976c278b8c242f52cde17899101f923d6ce03412f604a037f984cb"
+        },
+        {
+          "round": 1,
+          "mode": "C",
+          "setupMs": 553.8359999999993,
+          "rows": [
+            {
+              "day": 6,
+              "ms": 0.15130000000044674
+            },
+            {
+              "day": 6,
+              "ms": 0.07600000000002183
+            }
+          ],
+          "gameTickMs": 0.22730000000046857,
+          "routeCalls": 0,
+          "routeMs": 0,
+          "wasmCalls": 0,
+          "jsHits": 0,
+          "jsMisses": 0,
+          "connectivityCalls": 0,
+          "nativeHits": 0,
+          "nativeMisses": 0,
+          "nativeEntries": 0,
+          "jsEntries": 0,
+          "jsHeapDeltaBytes": 235840,
+          "wasmMemoryBytes": 4194304,
+          "stateSha256": "ec5561123c976c278b8c242f52cde17899101f923d6ce03412f604a037f984cb"
+        }
+      ]
+    },
+    {
+      "fixture": "sabana-day13",
+      "hashes": [
+        "83b7a1cba61590d87f290a4036e1495777e483a5ef230e414ca9788374334a5e"
+      ],
+      "sameState": true,
+      "runs": [
+        {
+          "round": 0,
+          "mode": "A",
+          "setupMs": 432.8802999999998,
+          "rows": [
+            {
+              "day": 13,
+              "ms": 14.584499999999935
+            },
+            {
+              "day": 13,
+              "ms": 6.904700000000048
+            }
+          ],
+          "gameTickMs": 21.489199999999983,
+          "routeCalls": 31,
+          "routeMs": 4.085199999998622,
+          "wasmCalls": 31,
+          "jsHits": 0,
+          "jsMisses": 0,
+          "connectivityCalls": 0,
+          "nativeHits": 0,
+          "nativeMisses": 0,
+          "nativeEntries": 0,
+          "jsEntries": 0,
+          "jsHeapDeltaBytes": -3718160,
+          "wasmMemoryBytes": 4194304,
+          "stateSha256": "83b7a1cba61590d87f290a4036e1495777e483a5ef230e414ca9788374334a5e"
+        },
+        {
+          "round": 0,
+          "mode": "B",
+          "setupMs": 458.7338,
+          "rows": [
+            {
+              "day": 13,
+              "ms": 6.581700000000637
+            },
+            {
+              "day": 13,
+              "ms": 3.1995000000006257
+            }
+          ],
+          "gameTickMs": 9.781200000001263,
+          "routeCalls": 31,
+          "routeMs": 2.2218999999995503,
+          "wasmCalls": 12,
+          "jsHits": 19,
+          "jsMisses": 12,
+          "connectivityCalls": 0,
+          "nativeHits": 0,
+          "nativeMisses": 0,
+          "nativeEntries": 0,
+          "jsEntries": 12,
+          "jsHeapDeltaBytes": 5880400,
+          "wasmMemoryBytes": 4194304,
+          "stateSha256": "83b7a1cba61590d87f290a4036e1495777e483a5ef230e414ca9788374334a5e"
+        },
+        {
+          "round": 0,
+          "mode": "C",
+          "setupMs": 461.01790000000074,
+          "rows": [
+            {
+              "day": 13,
+              "ms": 6.175199999999677
+            },
+            {
+              "day": 13,
+              "ms": 5.160699999998542
+            }
+          ],
+          "gameTickMs": 11.335899999998219,
+          "routeCalls": 31,
+          "routeMs": 2.389999999999418,
+          "wasmCalls": 31,
+          "jsHits": 0,
+          "jsMisses": 0,
+          "connectivityCalls": 0,
+          "nativeHits": 0,
+          "nativeMisses": 10,
+          "nativeEntries": 10,
+          "jsEntries": 0,
+          "jsHeapDeltaBytes": -6122016,
+          "wasmMemoryBytes": 4194304,
+          "stateSha256": "83b7a1cba61590d87f290a4036e1495777e483a5ef230e414ca9788374334a5e"
+        },
+        {
+          "round": 0,
+          "mode": "C",
+          "setupMs": 469.6787999999997,
+          "rows": [
+            {
+              "day": 13,
+              "ms": 4.941199999999299
+            },
+            {
+              "day": 13,
+              "ms": 3.7800999999999476
+            }
+          ],
+          "gameTickMs": 8.721299999999246,
+          "routeCalls": 31,
+          "routeMs": 1.7284999999974389,
+          "wasmCalls": 31,
+          "jsHits": 0,
+          "jsMisses": 0,
+          "connectivityCalls": 0,
+          "nativeHits": 0,
+          "nativeMisses": 10,
+          "nativeEntries": 10,
+          "jsEntries": 0,
+          "jsHeapDeltaBytes": 5932312,
+          "wasmMemoryBytes": 4194304,
+          "stateSha256": "83b7a1cba61590d87f290a4036e1495777e483a5ef230e414ca9788374334a5e"
+        },
+        {
+          "round": 0,
+          "mode": "B",
+          "setupMs": 467.0529999999999,
+          "rows": [
+            {
+              "day": 13,
+              "ms": 5.8431000000000495
+            },
+            {
+              "day": 13,
+              "ms": 2.494799999998577
+            }
+          ],
+          "gameTickMs": 8.337899999998626,
+          "routeCalls": 31,
+          "routeMs": 1.702000000002954,
+          "wasmCalls": 12,
+          "jsHits": 19,
+          "jsMisses": 12,
+          "connectivityCalls": 0,
+          "nativeHits": 0,
+          "nativeMisses": 0,
+          "nativeEntries": 0,
+          "jsEntries": 12,
+          "jsHeapDeltaBytes": 5664336,
+          "wasmMemoryBytes": 4194304,
+          "stateSha256": "83b7a1cba61590d87f290a4036e1495777e483a5ef230e414ca9788374334a5e"
+        },
+        {
+          "round": 0,
+          "mode": "A",
+          "setupMs": 574.3618999999999,
+          "rows": [
+            {
+              "day": 13,
+              "ms": 6.674300000000585
+            },
+            {
+              "day": 13,
+              "ms": 8.71849999999904
+            }
+          ],
+          "gameTickMs": 15.392799999999625,
+          "routeCalls": 31,
+          "routeMs": 2.244399999988673,
+          "wasmCalls": 31,
+          "jsHits": 0,
+          "jsMisses": 0,
+          "connectivityCalls": 0,
+          "nativeHits": 0,
+          "nativeMisses": 0,
+          "nativeEntries": 0,
+          "jsEntries": 0,
+          "jsHeapDeltaBytes": -6327680,
+          "wasmMemoryBytes": 4194304,
+          "stateSha256": "83b7a1cba61590d87f290a4036e1495777e483a5ef230e414ca9788374334a5e"
+        },
+        {
+          "round": 1,
+          "mode": "C",
+          "setupMs": 523.4017999999996,
+          "rows": [
+            {
+              "day": 13,
+              "ms": 7.448699999999008
+            },
+            {
+              "day": 13,
+              "ms": 2.4688999999998487
+            }
+          ],
+          "gameTickMs": 9.917599999998856,
+          "routeCalls": 31,
+          "routeMs": 2.275500000003376,
+          "wasmCalls": 31,
+          "jsHits": 0,
+          "jsMisses": 0,
+          "connectivityCalls": 0,
+          "nativeHits": 0,
+          "nativeMisses": 10,
+          "nativeEntries": 10,
+          "jsEntries": 0,
+          "jsHeapDeltaBytes": 5691720,
+          "wasmMemoryBytes": 4194304,
+          "stateSha256": "83b7a1cba61590d87f290a4036e1495777e483a5ef230e414ca9788374334a5e"
+        },
+        {
+          "round": 1,
+          "mode": "B",
+          "setupMs": 457.9751000000015,
+          "rows": [
+            {
+              "day": 13,
+              "ms": 6.527900000000955
+            },
+            {
+              "day": 13,
+              "ms": 2.333099999999831
+            }
+          ],
+          "gameTickMs": 8.861000000000786,
+          "routeCalls": 31,
+          "routeMs": 2.4254000000019005,
+          "wasmCalls": 12,
+          "jsHits": 19,
+          "jsMisses": 12,
+          "connectivityCalls": 0,
+          "nativeHits": 0,
+          "nativeMisses": 0,
+          "nativeEntries": 0,
+          "jsEntries": 12,
+          "jsHeapDeltaBytes": 5690552,
+          "wasmMemoryBytes": 4194304,
+          "stateSha256": "83b7a1cba61590d87f290a4036e1495777e483a5ef230e414ca9788374334a5e"
+        },
+        {
+          "round": 1,
+          "mode": "A",
+          "setupMs": 461.7487999999994,
+          "rows": [
+            {
+              "day": 13,
+              "ms": 4.641200000000026
+            },
+            {
+              "day": 13,
+              "ms": 5.181699999999182
+            }
+          ],
+          "gameTickMs": 9.822899999999208,
+          "routeCalls": 31,
+          "routeMs": 1.5817000000024564,
+          "wasmCalls": 31,
+          "jsHits": 0,
+          "jsMisses": 0,
+          "connectivityCalls": 0,
+          "nativeHits": 0,
+          "nativeMisses": 0,
+          "nativeEntries": 0,
+          "jsEntries": 0,
+          "jsHeapDeltaBytes": -6440856,
+          "wasmMemoryBytes": 4194304,
+          "stateSha256": "83b7a1cba61590d87f290a4036e1495777e483a5ef230e414ca9788374334a5e"
+        },
+        {
+          "round": 1,
+          "mode": "A",
+          "setupMs": 455.9243000000006,
+          "rows": [
+            {
+              "day": 13,
+              "ms": 6.167499999999563
+            },
+            {
+              "day": 13,
+              "ms": 4.036900000000969
+            }
+          ],
+          "gameTickMs": 10.204400000000533,
+          "routeCalls": 31,
+          "routeMs": 1.9728000000086467,
+          "wasmCalls": 31,
+          "jsHits": 0,
+          "jsMisses": 0,
+          "connectivityCalls": 0,
+          "nativeHits": 0,
+          "nativeMisses": 0,
+          "nativeEntries": 0,
+          "jsEntries": 0,
+          "jsHeapDeltaBytes": 5534232,
+          "wasmMemoryBytes": 4194304,
+          "stateSha256": "83b7a1cba61590d87f290a4036e1495777e483a5ef230e414ca9788374334a5e"
+        },
+        {
+          "round": 1,
+          "mode": "B",
+          "setupMs": 473.8701999999994,
+          "rows": [
+            {
+              "day": 13,
+              "ms": 5.8510000000005675
+            },
+            {
+              "day": 13,
+              "ms": 2.2461999999995896
+            }
+          ],
+          "gameTickMs": 8.097200000000157,
+          "routeCalls": 31,
+          "routeMs": 1.8614999999972497,
+          "wasmCalls": 12,
+          "jsHits": 19,
+          "jsMisses": 12,
+          "connectivityCalls": 0,
+          "nativeHits": 0,
+          "nativeMisses": 0,
+          "nativeEntries": 0,
+          "jsEntries": 12,
+          "jsHeapDeltaBytes": 5469864,
+          "wasmMemoryBytes": 4194304,
+          "stateSha256": "83b7a1cba61590d87f290a4036e1495777e483a5ef230e414ca9788374334a5e"
+        },
+        {
+          "round": 1,
+          "mode": "C",
+          "setupMs": 455.32620000000134,
+          "rows": [
+            {
+              "day": 13,
+              "ms": 5.010700000000725
+            },
+            {
+              "day": 13,
+              "ms": 4.637399999999616
+            }
+          ],
+          "gameTickMs": 9.64810000000034,
+          "routeCalls": 31,
+          "routeMs": 1.9488000000019383,
+          "wasmCalls": 31,
+          "jsHits": 0,
+          "jsMisses": 0,
+          "connectivityCalls": 0,
+          "nativeHits": 0,
+          "nativeMisses": 10,
+          "nativeEntries": 10,
+          "jsEntries": 0,
+          "jsHeapDeltaBytes": -6533344,
+          "wasmMemoryBytes": 4194304,
+          "stateSha256": "83b7a1cba61590d87f290a4036e1495777e483a5ef230e414ca9788374334a5e"
+        }
+      ]
+    },
+    {
+      "fixture": "manglares-123-day10",
+      "hashes": [
+        "8b7c893811dfa54cb6510fd1df5c847c2f915a1125ffb480cc65c0c5e3b2c169"
+      ],
+      "sameState": true,
+      "runs": [
+        {
+          "round": 0,
+          "mode": "A",
+          "setupMs": 1663.0049,
+          "rows": [
+            {
+              "day": 10,
+              "ms": 1726.9320000000007
+            },
+            {
+              "day": 10,
+              "ms": 57.04449999999997
+            }
+          ],
+          "gameTickMs": 1783.9765000000007,
+          "routeCalls": 469,
+          "routeMs": 1654.0388999999795,
+          "wasmCalls": 469,
+          "jsHits": 0,
+          "jsMisses": 0,
+          "connectivityCalls": 55,
+          "nativeHits": 0,
+          "nativeMisses": 0,
+          "nativeEntries": 0,
+          "jsEntries": 0,
+          "jsHeapDeltaBytes": -11578192,
+          "wasmMemoryBytes": 12845056,
+          "stateSha256": "8b7c893811dfa54cb6510fd1df5c847c2f915a1125ffb480cc65c0c5e3b2c169"
+        },
+        {
+          "round": 0,
+          "mode": "B",
+          "setupMs": 1669.026600000001,
+          "rows": [
+            {
+              "day": 10,
+              "ms": 1755.1790999999976
+            },
+            {
+              "day": 10,
+              "ms": 21.602900000001682
+            }
+          ],
+          "gameTickMs": 1776.7819999999992,
+          "routeCalls": 469,
+          "routeMs": 1688.152699999955,
+          "wasmCalls": 32,
+          "jsHits": 437,
+          "jsMisses": 32,
+          "connectivityCalls": 55,
+          "nativeHits": 0,
+          "nativeMisses": 0,
+          "nativeEntries": 0,
+          "jsEntries": 32,
+          "jsHeapDeltaBytes": -3053608,
+          "wasmMemoryBytes": 12845056,
+          "stateSha256": "8b7c893811dfa54cb6510fd1df5c847c2f915a1125ffb480cc65c0c5e3b2c169"
+        },
+        {
+          "round": 0,
+          "mode": "C",
+          "setupMs": 1752.449099999998,
+          "rows": [
+            {
+              "day": 10,
+              "ms": 1642.8291000000027
+            },
+            {
+              "day": 10,
+              "ms": 38.46089999999822
+            }
+          ],
+          "gameTickMs": 1681.2900000000009,
+          "routeCalls": 469,
+          "routeMs": 1597.7696000000215,
+          "wasmCalls": 469,
+          "jsHits": 0,
+          "jsMisses": 0,
+          "connectivityCalls": 55,
+          "nativeHits": 1350,
+          "nativeMisses": 248,
+          "nativeEntries": 248,
+          "jsEntries": 0,
+          "jsHeapDeltaBytes": -1448,
+          "wasmMemoryBytes": 12910592,
+          "stateSha256": "8b7c893811dfa54cb6510fd1df5c847c2f915a1125ffb480cc65c0c5e3b2c169"
+        },
+        {
+          "round": 0,
+          "mode": "C",
+          "setupMs": 1680.6850999999988,
+          "rows": [
+            {
+              "day": 10,
+              "ms": 1666.9559000000008
+            },
+            {
+              "day": 10,
+              "ms": 36.280900000001566
+            }
+          ],
+          "gameTickMs": 1703.2368000000024,
+          "routeCalls": 469,
+          "routeMs": 1617.7803999999123,
+          "wasmCalls": 469,
+          "jsHits": 0,
+          "jsMisses": 0,
+          "connectivityCalls": 55,
+          "nativeHits": 1350,
+          "nativeMisses": 248,
+          "nativeEntries": 248,
+          "jsEntries": 0,
+          "jsHeapDeltaBytes": -8285720,
+          "wasmMemoryBytes": 12910592,
+          "stateSha256": "8b7c893811dfa54cb6510fd1df5c847c2f915a1125ffb480cc65c0c5e3b2c169"
+        },
+        {
+          "round": 0,
+          "mode": "B",
+          "setupMs": 1687.3620999999985,
+          "rows": [
+            {
+              "day": 10,
+              "ms": 1622.061999999998
+            },
+            {
+              "day": 10,
+              "ms": 22.71180000000095
+            }
+          ],
+          "gameTickMs": 1644.773799999999,
+          "routeCalls": 469,
+          "routeMs": 1565.75219999997,
+          "wasmCalls": 32,
+          "jsHits": 437,
+          "jsMisses": 32,
+          "connectivityCalls": 55,
+          "nativeHits": 0,
+          "nativeMisses": 0,
+          "nativeEntries": 0,
+          "jsEntries": 32,
+          "jsHeapDeltaBytes": 4150176,
+          "wasmMemoryBytes": 12845056,
+          "stateSha256": "8b7c893811dfa54cb6510fd1df5c847c2f915a1125ffb480cc65c0c5e3b2c169"
+        },
+        {
+          "round": 0,
+          "mode": "A",
+          "setupMs": 1676.008099999999,
+          "rows": [
+            {
+              "day": 10,
+              "ms": 1692.9782999999989
+            },
+            {
+              "day": 10,
+              "ms": 59.57770000000164
+            }
+          ],
+          "gameTickMs": 1752.5560000000005,
+          "routeCalls": 469,
+          "routeMs": 1668.743400000043,
+          "wasmCalls": 469,
+          "jsHits": 0,
+          "jsMisses": 0,
+          "connectivityCalls": 55,
+          "nativeHits": 0,
+          "nativeMisses": 0,
+          "nativeEntries": 0,
+          "jsEntries": 0,
+          "jsHeapDeltaBytes": -360408,
+          "wasmMemoryBytes": 12845056,
+          "stateSha256": "8b7c893811dfa54cb6510fd1df5c847c2f915a1125ffb480cc65c0c5e3b2c169"
+        },
+        {
+          "round": 1,
+          "mode": "C",
+          "setupMs": 1697.357600000003,
+          "rows": [
+            {
+              "day": 10,
+              "ms": 1610.7410000000018
+            },
+            {
+              "day": 10,
+              "ms": 37.43309999999474
+            }
+          ],
+          "gameTickMs": 1648.1740999999965,
+          "routeCalls": 469,
+          "routeMs": 1570.1263000000108,
+          "wasmCalls": 469,
+          "jsHits": 0,
+          "jsMisses": 0,
+          "connectivityCalls": 55,
+          "nativeHits": 1350,
+          "nativeMisses": 248,
+          "nativeEntries": 248,
+          "jsEntries": 0,
+          "jsHeapDeltaBytes": 142488,
+          "wasmMemoryBytes": 12910592,
+          "stateSha256": "8b7c893811dfa54cb6510fd1df5c847c2f915a1125ffb480cc65c0c5e3b2c169"
+        },
+        {
+          "round": 1,
+          "mode": "B",
+          "setupMs": 1738.7956999999951,
+          "rows": [
+            {
+              "day": 10,
+              "ms": 1709.7854000000007
+            },
+            {
+              "day": 10,
+              "ms": 28.604000000006636
+            }
+          ],
+          "gameTickMs": 1738.3894000000073,
+          "routeCalls": 469,
+          "routeMs": 1649.2047999999922,
+          "wasmCalls": 32,
+          "jsHits": 437,
+          "jsMisses": 32,
+          "connectivityCalls": 55,
+          "nativeHits": 0,
+          "nativeMisses": 0,
+          "nativeEntries": 0,
+          "jsEntries": 32,
+          "jsHeapDeltaBytes": -6433080,
+          "wasmMemoryBytes": 12845056,
+          "stateSha256": "8b7c893811dfa54cb6510fd1df5c847c2f915a1125ffb480cc65c0c5e3b2c169"
+        },
+        {
+          "round": 1,
+          "mode": "A",
+          "setupMs": 1736.1494999999995,
+          "rows": [
+            {
+              "day": 10,
+              "ms": 1689.5798000000068
+            },
+            {
+              "day": 10,
+              "ms": 47.34449999999924
+            }
+          ],
+          "gameTickMs": 1736.924300000006,
+          "routeCalls": 469,
+          "routeMs": 1652.3559000000023,
+          "wasmCalls": 469,
+          "jsHits": 0,
+          "jsMisses": 0,
+          "connectivityCalls": 55,
+          "nativeHits": 0,
+          "nativeMisses": 0,
+          "nativeEntries": 0,
+          "jsEntries": 0,
+          "jsHeapDeltaBytes": -3825560,
+          "wasmMemoryBytes": 12845056,
+          "stateSha256": "8b7c893811dfa54cb6510fd1df5c847c2f915a1125ffb480cc65c0c5e3b2c169"
+        },
+        {
+          "round": 1,
+          "mode": "A",
+          "setupMs": 1696.560000000005,
+          "rows": [
+            {
+              "day": 10,
+              "ms": 1657.8614000000016
+            },
+            {
+              "day": 10,
+              "ms": 51.78000000000611
+            }
+          ],
+          "gameTickMs": 1709.6414000000077,
+          "routeCalls": 469,
+          "routeMs": 1630.57600000003,
+          "wasmCalls": 469,
+          "jsHits": 0,
+          "jsMisses": 0,
+          "connectivityCalls": 55,
+          "nativeHits": 0,
+          "nativeMisses": 0,
+          "nativeEntries": 0,
+          "jsEntries": 0,
+          "jsHeapDeltaBytes": -7727832,
+          "wasmMemoryBytes": 12845056,
+          "stateSha256": "8b7c893811dfa54cb6510fd1df5c847c2f915a1125ffb480cc65c0c5e3b2c169"
+        },
+        {
+          "round": 1,
+          "mode": "B",
+          "setupMs": 1723.2121000000043,
+          "rows": [
+            {
+              "day": 10,
+              "ms": 1658.4256000000023
+            },
+            {
+              "day": 10,
+              "ms": 23.57109999999375
+            }
+          ],
+          "gameTickMs": 1681.996699999996,
+          "routeCalls": 469,
+          "routeMs": 1605.717900000025,
+          "wasmCalls": 32,
+          "jsHits": 437,
+          "jsMisses": 32,
+          "connectivityCalls": 55,
+          "nativeHits": 0,
+          "nativeMisses": 0,
+          "nativeEntries": 0,
+          "jsEntries": 32,
+          "jsHeapDeltaBytes": -3003872,
+          "wasmMemoryBytes": 12845056,
+          "stateSha256": "8b7c893811dfa54cb6510fd1df5c847c2f915a1125ffb480cc65c0c5e3b2c169"
+        },
+        {
+          "round": 1,
+          "mode": "C",
+          "setupMs": 1691.5705000000016,
+          "rows": [
+            {
+              "day": 10,
+              "ms": 1631.5837000000029
+            },
+            {
+              "day": 10,
+              "ms": 35.27919999999722
+            }
+          ],
+          "gameTickMs": 1666.8629,
+          "routeCalls": 469,
+          "routeMs": 1595.1821000001291,
+          "wasmCalls": 469,
+          "jsHits": 0,
+          "jsMisses": 0,
+          "connectivityCalls": 55,
+          "nativeHits": 1350,
+          "nativeMisses": 248,
+          "nativeEntries": 248,
+          "jsEntries": 0,
+          "jsHeapDeltaBytes": -2777976,
+          "wasmMemoryBytes": 12910592,
+          "stateSha256": "8b7c893811dfa54cb6510fd1df5c847c2f915a1125ffb480cc65c0c5e3b2c169"
+        }
+      ]
+    },
+    {
+      "fixture": "desierto-983-day15",
+      "hashes": [
+        "5fdf4e3a01f74dbc4be2b41a8213ca27a258b14f33bef7e723e2f8c101a6ba6d"
+      ],
+      "sameState": true,
+      "runs": [
+        {
+          "round": 0,
+          "mode": "A",
+          "setupMs": 367.4579999999987,
+          "rows": [
+            {
+              "day": 15,
+              "ms": 797.8845999999976
+            },
+            {
+              "day": 15,
+              "ms": 187.87020000000484
+            }
+          ],
+          "gameTickMs": 985.7548000000024,
+          "routeCalls": 4875,
+          "routeMs": 324.53599999967264,
+          "wasmCalls": 4875,
+          "jsHits": 0,
+          "jsMisses": 0,
+          "connectivityCalls": 0,
+          "nativeHits": 0,
+          "nativeMisses": 0,
+          "nativeEntries": 0,
+          "jsEntries": 0,
+          "jsHeapDeltaBytes": -4178208,
+          "wasmMemoryBytes": 4194304,
+          "stateSha256": "5fdf4e3a01f74dbc4be2b41a8213ca27a258b14f33bef7e723e2f8c101a6ba6d"
+        },
+        {
+          "round": 0,
+          "mode": "B",
+          "setupMs": 390.25100000000384,
+          "rows": [
+            {
+              "day": 15,
+              "ms": 675.8585000000021
+            },
+            {
+              "day": 15,
+              "ms": 73.12629999999626
+            }
+          ],
+          "gameTickMs": 748.9847999999984,
+          "routeCalls": 4875,
+          "routeMs": 104.79629999989265,
+          "wasmCalls": 866,
+          "jsHits": 4009,
+          "jsMisses": 866,
+          "connectivityCalls": 0,
+          "nativeHits": 0,
+          "nativeMisses": 0,
+          "nativeEntries": 0,
+          "jsEntries": 866,
+          "jsHeapDeltaBytes": -3057832,
+          "wasmMemoryBytes": 4194304,
+          "stateSha256": "5fdf4e3a01f74dbc4be2b41a8213ca27a258b14f33bef7e723e2f8c101a6ba6d"
+        },
+        {
+          "round": 0,
+          "mode": "C",
+          "setupMs": 376.369200000001,
+          "rows": [
+            {
+              "day": 15,
+              "ms": 656.626599999996
+            },
+            {
+              "day": 15,
+              "ms": 121.03889999999956
+            }
+          ],
+          "gameTickMs": 777.6654999999955,
+          "routeCalls": 4875,
+          "routeMs": 159.16809999977704,
+          "wasmCalls": 4875,
+          "jsHits": 0,
+          "jsMisses": 0,
+          "connectivityCalls": 0,
+          "nativeHits": 11647,
+          "nativeMisses": 432,
+          "nativeEntries": 432,
+          "jsEntries": 0,
+          "jsHeapDeltaBytes": 4681584,
+          "wasmMemoryBytes": 4194304,
+          "stateSha256": "5fdf4e3a01f74dbc4be2b41a8213ca27a258b14f33bef7e723e2f8c101a6ba6d"
+        },
+        {
+          "round": 0,
+          "mode": "C",
+          "setupMs": 390.8104000000021,
+          "rows": [
+            {
+              "day": 15,
+              "ms": 653.8361000000004
+            },
+            {
+              "day": 15,
+              "ms": 129.81880000000092
+            }
+          ],
+          "gameTickMs": 783.6549000000014,
+          "routeCalls": 4875,
+          "routeMs": 163.8794000001435,
+          "wasmCalls": 4875,
+          "jsHits": 0,
+          "jsMisses": 0,
+          "connectivityCalls": 0,
+          "nativeHits": 11647,
+          "nativeMisses": 432,
+          "nativeEntries": 432,
+          "jsEntries": 0,
+          "jsHeapDeltaBytes": 3965128,
+          "wasmMemoryBytes": 4194304,
+          "stateSha256": "5fdf4e3a01f74dbc4be2b41a8213ca27a258b14f33bef7e723e2f8c101a6ba6d"
+        },
+        {
+          "round": 0,
+          "mode": "B",
+          "setupMs": 380.0955000000031,
+          "rows": [
+            {
+              "day": 15,
+              "ms": 678.7655999999988
+            },
+            {
+              "day": 15,
+              "ms": 71.86410000000615
+            }
+          ],
+          "gameTickMs": 750.629700000005,
+          "routeCalls": 4875,
+          "routeMs": 104.11899999973684,
+          "wasmCalls": 866,
+          "jsHits": 4009,
+          "jsMisses": 866,
+          "connectivityCalls": 0,
+          "nativeHits": 0,
+          "nativeMisses": 0,
+          "nativeEntries": 0,
+          "jsEntries": 866,
+          "jsHeapDeltaBytes": -8174616,
+          "wasmMemoryBytes": 4194304,
+          "stateSha256": "5fdf4e3a01f74dbc4be2b41a8213ca27a258b14f33bef7e723e2f8c101a6ba6d"
+        },
+        {
+          "round": 0,
+          "mode": "A",
+          "setupMs": 404.7986000000019,
+          "rows": [
+            {
+              "day": 15,
+              "ms": 780.3260999999984
+            },
+            {
+              "day": 15,
+              "ms": 193.94089999999414
+            }
+          ],
+          "gameTickMs": 974.2669999999925,
+          "routeCalls": 4875,
+          "routeMs": 335.89519999996264,
+          "wasmCalls": 4875,
+          "jsHits": 0,
+          "jsMisses": 0,
+          "connectivityCalls": 0,
+          "nativeHits": 0,
+          "nativeMisses": 0,
+          "nativeEntries": 0,
+          "jsEntries": 0,
+          "jsHeapDeltaBytes": 2520712,
+          "wasmMemoryBytes": 4194304,
+          "stateSha256": "5fdf4e3a01f74dbc4be2b41a8213ca27a258b14f33bef7e723e2f8c101a6ba6d"
+        },
+        {
+          "round": 1,
+          "mode": "C",
+          "setupMs": 381.1296999999977,
+          "rows": [
+            {
+              "day": 15,
+              "ms": 656.911500000002
+            },
+            {
+              "day": 15,
+              "ms": 125.67609999999695
+            }
+          ],
+          "gameTickMs": 782.5875999999989,
+          "routeCalls": 4875,
+          "routeMs": 166.85710000046674,
+          "wasmCalls": 4875,
+          "jsHits": 0,
+          "jsMisses": 0,
+          "connectivityCalls": 0,
+          "nativeHits": 11647,
+          "nativeMisses": 432,
+          "nativeEntries": 432,
+          "jsEntries": 0,
+          "jsHeapDeltaBytes": 2212048,
+          "wasmMemoryBytes": 4194304,
+          "stateSha256": "5fdf4e3a01f74dbc4be2b41a8213ca27a258b14f33bef7e723e2f8c101a6ba6d"
+        },
+        {
+          "round": 1,
+          "mode": "B",
+          "setupMs": 376.81909999999334,
+          "rows": [
+            {
+              "day": 15,
+              "ms": 655.379200000003
+            },
+            {
+              "day": 15,
+              "ms": 66.58520000000135
+            }
+          ],
+          "gameTickMs": 721.9644000000044,
+          "routeCalls": 4875,
+          "routeMs": 106.61029999982566,
+          "wasmCalls": 866,
+          "jsHits": 4009,
+          "jsMisses": 866,
+          "connectivityCalls": 0,
+          "nativeHits": 0,
+          "nativeMisses": 0,
+          "nativeEntries": 0,
+          "jsEntries": 866,
+          "jsHeapDeltaBytes": 7038752,
+          "wasmMemoryBytes": 4194304,
+          "stateSha256": "5fdf4e3a01f74dbc4be2b41a8213ca27a258b14f33bef7e723e2f8c101a6ba6d"
+        },
+        {
+          "round": 1,
+          "mode": "A",
+          "setupMs": 380.3873999999996,
+          "rows": [
+            {
+              "day": 15,
+              "ms": 781.0475000000006
+            },
+            {
+              "day": 15,
+              "ms": 183.63250000000698
+            }
+          ],
+          "gameTickMs": 964.6800000000076,
+          "routeCalls": 4875,
+          "routeMs": 321.51249999980064,
+          "wasmCalls": 4875,
+          "jsHits": 0,
+          "jsMisses": 0,
+          "connectivityCalls": 0,
+          "nativeHits": 0,
+          "nativeMisses": 0,
+          "nativeEntries": 0,
+          "jsEntries": 0,
+          "jsHeapDeltaBytes": 2160480,
+          "wasmMemoryBytes": 4194304,
+          "stateSha256": "5fdf4e3a01f74dbc4be2b41a8213ca27a258b14f33bef7e723e2f8c101a6ba6d"
+        },
+        {
+          "round": 1,
+          "mode": "A",
+          "setupMs": 365.25800000000163,
+          "rows": [
+            {
+              "day": 15,
+              "ms": 768.5016000000032
+            },
+            {
+              "day": 15,
+              "ms": 187.35450000000128
+            }
+          ],
+          "gameTickMs": 955.8561000000045,
+          "routeCalls": 4875,
+          "routeMs": 317.46599999969476,
+          "wasmCalls": 4875,
+          "jsHits": 0,
+          "jsMisses": 0,
+          "connectivityCalls": 0,
+          "nativeHits": 0,
+          "nativeMisses": 0,
+          "nativeEntries": 0,
+          "jsEntries": 0,
+          "jsHeapDeltaBytes": 2515232,
+          "wasmMemoryBytes": 4194304,
+          "stateSha256": "5fdf4e3a01f74dbc4be2b41a8213ca27a258b14f33bef7e723e2f8c101a6ba6d"
+        },
+        {
+          "round": 1,
+          "mode": "B",
+          "setupMs": 373.7534000000014,
+          "rows": [
+            {
+              "day": 15,
+              "ms": 674.4709000000003
+            },
+            {
+              "day": 15,
+              "ms": 71.45070000000123
+            }
+          ],
+          "gameTickMs": 745.9216000000015,
+          "routeCalls": 4875,
+          "routeMs": 107.26439999969443,
+          "wasmCalls": 866,
+          "jsHits": 4009,
+          "jsMisses": 866,
+          "connectivityCalls": 0,
+          "nativeHits": 0,
+          "nativeMisses": 0,
+          "nativeEntries": 0,
+          "jsEntries": 866,
+          "jsHeapDeltaBytes": 7291176,
+          "wasmMemoryBytes": 4194304,
+          "stateSha256": "5fdf4e3a01f74dbc4be2b41a8213ca27a258b14f33bef7e723e2f8c101a6ba6d"
+        },
+        {
+          "round": 1,
+          "mode": "C",
+          "setupMs": 384.3816999999981,
+          "rows": [
+            {
+              "day": 15,
+              "ms": 701.2832999999955
+            },
+            {
+              "day": 15,
+              "ms": 147.21929999999702
+            }
+          ],
+          "gameTickMs": 848.5025999999925,
+          "routeCalls": 4875,
+          "routeMs": 182.64559999971243,
+          "wasmCalls": 4875,
+          "jsHits": 0,
+          "jsMisses": 0,
+          "connectivityCalls": 0,
+          "nativeHits": 11647,
+          "nativeMisses": 432,
+          "nativeEntries": 432,
+          "jsEntries": 0,
+          "jsHeapDeltaBytes": 2629664,
+          "wasmMemoryBytes": 4194304,
+          "stateSha256": "5fdf4e3a01f74dbc4be2b41a8213ca27a258b14f33bef7e723e2f8c101a6ba6d"
+        }
+      ]
+    }
+  ]
+}

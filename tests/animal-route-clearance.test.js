@@ -6,15 +6,16 @@ import {walkTo} from '../src/simulation/game.js';
 
 test('static clearance is reused along the same segment and rechecked after a bend, edit, displacement or epoch',()=>{
  const actor={x:0,z:0,path:[{x:100,z:0}]};let checks=0;
- const nav={version:1,segmentClear:()=>{checks++;return true;}};
+ const nav={version:1,residencyRevision:1,segmentClear:()=>{checks++;return true;}};
  const step=()=>{const end={x:actor.x+.1,z:actor.z};assert.ok(animalRouteClearance(actor,nav,{radius:.5},null).clear(actor,end));Object.assign(actor,end);};
  for(let i=0;i<100;i++)step();assert.equal(checks,3,'Reuse four-metre prefixes instead of 100 per-frame static queries');
  actor.path[0].x++;step();assert.equal(checks,4);
  actor.x+=1;step();assert.equal(checks,5);
  nav.version++;step();assert.equal(checks,6);
- actor.path=[{x:100,z:0}];step();assert.equal(checks,7);
+ nav.residencyRevision++;step();assert.equal(checks,7);
+ actor.path=[{x:100,z:0}];step();assert.equal(checks,8);
  const end={x:actor.x+.1,z:actor.z};
- assert.ok(animalRouteClearance(actor,nav,{radius:.9},null).clear(actor,end));assert.equal(checks,8);
+ assert.ok(animalRouteClearance(actor,nav,{radius:.9},null).clear(actor,end));assert.equal(checks,9);
 });
 
 test('a restored connector approaches its safe prefix, stops before a tree and replans a native clear route',()=>{

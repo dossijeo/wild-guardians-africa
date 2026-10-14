@@ -21,7 +21,8 @@ export function raidEntryKey(state,nav,group,bounds=nav.activeBounds){
   // too: a collapse may begin before its obstacle is removed from navigation.
   const structures=state.structures.map(s=>[s.id,s.status,s.hp>0]);
   const wave=waveContext(state,group);if(state.raid&&!wave)return null;
-  const inputs=[state.seed,state.biome,state.culture,state.terrainVersion,state.rng,nav.version,group,bounds,nav.raidView,structures];
+  const inputs=[state.seed,state.biome,state.culture,state.terrainVersion,state.rng,nav.version,
+    nav.residencyRevision,group,bounds,nav.raidView,structures];
   if(wave)inputs.push(['wave',...wave]);
   return JSON.stringify(inputs);
 }

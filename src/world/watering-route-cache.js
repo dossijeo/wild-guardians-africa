@@ -1,7 +1,7 @@
 // Exact static queries only. Worker movement, target geometry, world replacement
 // and every native navigation epoch invalidate admission; no rounded positions.
 const worlds=new WeakMap(),MAX_ENTRIES=8192,MAX_POINTS=20000;
-const context=nav=>[nav.version,nav.state,nav.field,nav.obstacles,nav.suppressed,
+const context=nav=>[nav.version,nav.residencyRevision,nav.state,nav.field,nav.obstacles,nav.suppressed,
   nav.preparedPaths,nav.walkable,nav.segmentClear,nav.path,nav.workerSurface,
   nav.field?.surface,nav.field?.blocked,nav.field?.slope,nav.field?.waterInfo,
   nav.field?.canyon,nav.field?.riverLevel];
