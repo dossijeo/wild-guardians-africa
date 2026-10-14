@@ -1,0 +1,40 @@
+{
+  "stamp": {
+    "sourceCommit": "170fc4aeaa2825e7b38b3a2006537d4c6ab6f500",
+    "scriptSha256": "c79615820002ddeed2c91d5cf18bf66da81e918a9c27107007919cfcd12cbcbf",
+    "runnerSha256": "49e41ddb49b8e7453d2952e3119b6d34276ff49a1a5f990cbf3d2b75a0195fce",
+    "policySha256": "443729cab01202708b7ddde03a28221a10875e7a8b8e93a8091eb16a216fddcd",
+    "input": {
+      "biome": "manglares",
+      "seed": 123,
+      "days": 14,
+      "strategy": "evolved",
+      "genes": {
+        "plantsPerWorker": 6,
+        "wageReserveDays": 1,
+        "seedReserve": 0,
+        "defenseCashFraction": 0.2,
+        "defenseStartDay": 2,
+        "repairHealthFraction": 0.8,
+        "magicIntervalSeconds": 5,
+        "growthShare": 0,
+        "plantingIntervalSeconds": 1,
+        "wallMaterial": "zarzas",
+        "magicPriority": "multiply"
+      },
+      "defenseRepairPriority": "ruined-first"
+    },
+    "balance": "production-unchanged",
+    "costStop": {
+      "maxDayGameTickMs": 180000,
+      "maxElapsedWallMs": 1800000
+    }
+  },
+  "classification": "horizon-complete",
+  "completedNights": 14,
+  "result": null,
+  "finalCash": 638,
+  "finalLiving": 59,
+  "totalGameTickMs": 72050.84569999925,
+  "technicalError": null
+}
