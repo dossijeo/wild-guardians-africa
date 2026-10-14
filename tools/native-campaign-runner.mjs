@@ -8,7 +8,6 @@ import {cropSpec,permission,operational} from '../src/simulation/rules.js';
 import {numberOf} from '../src/simulation/money.js';
 import {PROFILES,hiringCost} from '../src/simulation/workforce.js';
 import {isMature} from '../src/simulation/crops.js';
-import {centerServicePoint} from '../src/world/centers.js';
 import {activeChunkRegion} from '../src/world/active-region.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {nativeCameraPose} from '../src/rendering/terrain-camera.js';
@@ -29,6 +28,23 @@ import {campaignFinanceCheckpoint,campaignFinanceDelta} from './native-campaign-
 import {q4DawnPlan,q4AdditionalPlan,q4RecoveryReserve} from './native-q4-labour-policy.mjs';
 
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
+export function syncNativeCampaignRaidView(state,nav,previousCenter){
+ const center=state.structures.find(operational);
+ if(!center)return null;
+ const key=`${center.id}:${center.x}:${center.z}`;
+ let context=previousCenter;
+ if(context?.key!==key){
+  const pose=nativeCameraPose(nav.field,[center.x,0,center.z],nav.field.canyon?0:.5,nav.field.canyon?1.18:1.16,nav.field.canyon?34:38);
+  const eye={x:pose.eye[0],z:pose.eye[2]};
+  context={key,eye,bounds:activeChunkRegion(eye).bounds};
+ }
+ const view=nav.raidView;
+ if(view?.eye?.x!==context.eye.x||view?.eye?.z!==context.eye.z||view?.target?.x!==center.x||view?.target?.z!==center.z){
+  nav.setRaidView(context.eye,center);
+  nav.setActiveBounds(context.bounds);
+ }
+ return context;
+}
 export async function simulateNativeCampaign({days=100,strategy='good',labourPolicy='legacy',profile='olderFemale',mixed=true,middayHiring=false,plantsPerWorker=12,defend=false,reserveLabourGrowth=true,reserveMaintenance=true,burstPlanting=false,cameraEntry=true,defensePolicy='expanding',nativeEvidence=true,onDay,onTick,onDecision,openingFactory=createOpeningWorld,entryDriverFactory=nav=>new NativeCampaignEntryDriver(nav),reloadRaids=true,...world}={}){
  if(!Number.isSafeInteger(days)||days<1||days>180)throw Error('Native protocol permits1–180 days only');
  if(!Number.isSafeInteger(plantsPerWorker)||plantsPerWorker<1)throw new Error('Plants per worker must be a positive integer');
@@ -42,11 +58,10 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
  const driver=entryDriverFactory(nav);let partialEvidence=()=>({});
  try {
  const evidence=nativeEvidence?createNativeCampaignEvidence(s):null,raidEvidence=createNativeRaidCampaignEvidence(s);
- const command=kind=>`intensive-${kind}-${sequence++}`,center=s.structures[0],origin=centerServicePoint(center,s,.8);
- if(cameraEntry){
-  const pose=nativeCameraPose(nav.field,[center.x,0,center.z],nav.field.canyon?0:.5,nav.field.canyon?1.18:1.16,nav.field.canyon?34:38);
-  nav.setRaidView({x:pose.eye[0],z:pose.eye[2]},center);nav.setActiveBounds(activeChunkRegion({x:pose.eye[0],z:pose.eye[2]}).bounds);
- }
+ const command=kind=>`intensive-${kind}-${sequence++}`;
+ let raidViewCenter=null;
+ const syncRaidView=()=>{if(cameraEntry)raidViewCenter=syncNativeCampaignRaidView(s,nav,raidViewCenter);};
+ syncRaidView();
  const plots=[];let nextWages=worker.wage,staff=1,plantedSequence=0;
  const expansion=policy.foundVillages?createNativeCampaignExpansion():null;
  const daily=[],counts={},seen=new Set(),savedRaids=new Set(),additionalHiring={count:0,cost:0};let maximumLiving=0,reloads=0,settledDeliveryIncome=0;
@@ -99,7 +114,8 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
     const selection={[profile]:extra},cost=hiringCost(selection,{time:s.time});
     const tomorrow=Math.max(labourReserve(),desired*worker.wage);
     if(numberOf(s.ledger.balance)>=cost+tomorrow+maintenanceReserve()+(defense?.reserve(s)??0)+savingsReserve()){
-     if(Game.hireAdditional(s,command('hire'),selection,center.id)){staff+=extra;nextWages=staff*worker.wage;actions++;}
+     const hiringCenter=s.structures.find(operational);
+     if(hiringCenter&&Game.hireAdditional(s,command('hire'),selection,hiringCenter.id)){staff+=extra;nextWages=staff*worker.wage;actions++;}
     }
    }
   }
@@ -145,6 +161,7 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
    wallStart=performance.now();
    const decision=act();actions+=decision.actions;
    const decisionStepMs=performance.now()-wallStart;
+   syncRaidView();
    decisionWallMs+=decisionStepMs;
    const centerRequests=s.tasks.filter(t=>t.kind==='repair'&&!beforeRepairs.has(t.id)&&s.structures.some(c=>c.id===t.targetId&&c.kind==='center')).length;
    const dt=s.time<300||s.raid?1:5;
@@ -162,6 +179,7 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
    wallStart=performance.now();
    Game.tick(s,dt,nav);evidence?.finishDecision(s);
    const tickStepMs=performance.now()-wallStart;
+   syncRaidView();
    tickWallMs+=tickStepMs;
    const actualDt=s.elapsed-tickStart,daylightDt=tickTime<300?Math.min(actualDt,300-tickTime):0;daylightSeconds+=daylightDt;
    if(!decision.actions){idle[decision.reason]=(idle[decision.reason]??0)+actualDt;unoccupiedSeconds+=daylightDt;idleRun+=daylightDt;longestIdle=Math.max(longestIdle,idleRun);}else idleRun=0;
