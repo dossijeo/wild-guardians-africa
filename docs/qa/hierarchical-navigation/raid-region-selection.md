@@ -436,6 +436,16 @@ passes 17/17 cases. These changes affect QA expectations only; no crop,
 water, magic or economic production rule was changed. The frozen full-suite
 count above predates this test-only change.
 
+The intensive-farm auditor also compared each `deliver:` ledger entry with
+the crate's base value alone. The current delivery transaction includes the
+separately settled Multiply income, so the auditor now adds that exact
+entitlement before applying the transaction's whole-coin rounding. The
+Desert/Suajili seed 712 native nine-night terrain-landing test was rerun in
+full and passes 2/2; every observed animal landing met the native terrain
+predicate. Its earlier failure (`17` paid versus `11` base coins) was an
+auditor mismatch, not evidence of an illegal landing. No production terrain,
+movement or economic rule changed.
+
 A same-policy Gran Cañón seed 123 native campaign was repeated after the
 committed-target fix. Against `selector-village-14-canyon-123.json.gz`, all
 daily gameplay fields, complete raid evidence, entry transport and plot

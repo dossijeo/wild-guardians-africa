@@ -4,7 +4,7 @@ import {pathToFileURL} from 'node:url';
 import {createOpeningWorld} from './check_opening.mjs';
 import * as Game from '../src/simulation/game.js';
 import {cropSpec,permission,operational} from '../src/simulation/rules.js';
-import {numberOf} from '../src/simulation/money.js';
+import {numberOf,add,rational} from '../src/simulation/money.js';
 import {PROFILES,hiringCost} from '../src/simulation/workforce.js';
 import {isMature} from '../src/simulation/crops.js';
 import {centerServicePoint} from '../src/world/centers.js';
@@ -154,7 +154,12 @@ export function auditIntensiveFarm(report,{victory=false}={}){
   assert.equal(crate.species,p.species);assert.ok(p.growth>=cropSpec(p.species).growth_seconds);
   assert.ok(p.water.every(w=>['manual','magic'].includes(w.status)));
   const charge=s.ledger.entries['deliver:'+crate.id];
-  if(crate.delivered){assert.ok(charge);assert.equal(charge.n,String((BigInt(crate.value.n)+BigInt(crate.value.d)-1n)/BigInt(crate.value.d)));assert.equal(crate.carrierId,null);}
+  if(crate.delivered){
+   assert.ok(charge);
+   const settled=add(crate.value,crate.multiplyIncome??rational(0));
+   assert.equal(charge.n,String((BigInt(settled.n)+BigInt(settled.d)-1n)/BigInt(settled.d)));
+   assert.equal(crate.carrierId,null);
+  }
   else assert.equal(charge,undefined);
  }
  assert.equal(report.counts.CrateDelivered??0,s.crates.filter(c=>c.delivered).length);
