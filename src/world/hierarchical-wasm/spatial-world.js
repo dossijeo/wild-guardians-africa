@@ -15,6 +15,12 @@ export function createSpatialWorld(module){
   const groundMask=()=>new Uint8Array(wasm.memory.buffer,wasm.spatial_ground_mask_ptr(),35*35*4);
   const waterLevels=()=>new Float32Array(wasm.memory.buffer,wasm.spatial_water_levels_ptr(),48*48);
   const waterTriangles=()=>new Float32Array(wasm.memory.buffer,wasm.spatial_water_triangles_ptr(),wasm.spatial_water_vertex_count()*3);
+  function changedChunks(){
+    const count=wasm.spatial_changed_chunk_count();
+    if(!count)return [];
+    const pairs=new Int32Array(wasm.memory.buffer,wasm.spatial_changed_chunks_ptr(),count*2);
+    return Array.from({length:count},(_,i)=>({cx:pairs[i*2],cz:pairs[i*2+1]}));
+  }
   function generate(seed,cx,cz,biome='savanna'){
     const name=BIOME_IDS[biome]??biome;
     if(!Object.hasOwn(SPATIAL_BIOME_CODES,name))throw RangeError('Unsupported spatial biome');
@@ -113,7 +119,7 @@ export function createSpatialWorld(module){
   const slope=(x,z)=>Math.hypot(surface(x+.8,z)-surface(x-.8,z),
     surface(x,z+.8)-surface(x,z-.8))/1.6;
   return {wasm,generate,addChunk,selectChunk,removeChunk,currentChunk:()=>chunk,
-    heights,colors,water,groundMask,waterLevels,waterTriangles,props,instances,chunkPayload,route,connected,componentAt,
+    heights,colors,water,groundMask,waterLevels,waterTriangles,props,instances,chunkPayload,changedChunks,route,connected,componentAt,
     routeWorld:(start,end)=>navigationBuilt?spatialWorldRoute(wasm,route,start,end):{status:'unknown',points:[]},
     connectedWorld:(start,end)=>navigationBuilt?spatialWorldConnectivity(wasm,connected,start,end):'unknown',
     componentsWorld:point=>navigationBuilt?spatialWorldComponents(wasm,componentAt,point):{ids:[],unknown:true},

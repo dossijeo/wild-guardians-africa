@@ -47,6 +47,45 @@ test('travel and forced rebuild discard obsolete responses and regenerate the cu
  const oldEpoch=f.messages.at(-1);f.plan([[8,0,0]],true);f.reply(oldEpoch);assert.equal(f.installed.length,0);assert.equal(f.messages.at(-1).epoch,1);f.reply();assert.equal(f.installed.length,1);assert.equal(f.stream.stats.discarded,2);assert.deepEqual(await f.stream.whenIdle(),{cancelled:false});f.stream.dispose();
 });
 
+test('invalidating a loaded chunk refreshes it without counting stale data as ready',async()=>{
+ const f=fixture();f.plan([[0,0,0]]);f.reply();assert.equal(f.installed.length,1);
+ f.stream.invalidate(['0,0']);assert.equal(f.stream.summary().stale,1);
+ assert.equal(f.messages.length,2);
+ let ready=false;const pending=f.stream.whenReady(1).then(()=>ready=true);
+ await Promise.resolve();assert.equal(ready,false);
+ f.reply();await pending;
+ assert.equal(f.installed.length,2);assert.equal(f.stream.summary().stale,0);
+ assert.equal(f.stream.freshLoaded(),1);f.stream.dispose();
+});
+
+test('a newer invalidation rejects an in-flight stale refresh',async()=>{
+ const f=fixture();f.plan([[0,0,0]]);f.reply();
+ f.stream.invalidate(['0,0']);const obsolete=f.messages.at(-1);
+ f.stream.invalidate(['0,0']);f.reply(obsolete);
+ assert.equal(f.installed.length,1);
+ assert.equal(f.messages.at(-1).epoch,f.stream.epoch);
+ f.reply();assert.equal(f.installed.length,2);
+ assert.equal(f.stream.summary().stale,0);f.stream.dispose();
+});
+
+test('invalidation leaves offscreen work alone and discards an in-flight changed chunk',()=>{
+ const f=fixture();f.plan([[0,0,0]]);f.reply();f.plan([[1,0,0]]);
+ const pending=f.messages.at(-1),epoch=f.stream.epoch;
+ f.stream.invalidate(['0,0']);
+ assert.equal(f.stream.epoch,epoch);
+ assert.equal(f.stream.busy.id,pending.id);
+ f.reply();assert.equal(f.installed.length,2);
+ f.plan([[0,0,0]]);assert.equal(f.messages.at(-1).cx,0);f.reply();
+ assert.equal(f.installed.length,3);
+ f.plan([[2,0,0]]);const obsolete=f.messages.at(-1);
+ f.stream.invalidate(['2,0']);f.reply(obsolete);
+ assert.equal(f.installed.length,3);
+ assert.equal(f.messages.at(-1).cx,2);
+ assert.notEqual(f.messages.at(-1).epoch,obsolete.epoch);
+ f.reply();assert.equal(f.installed.length,4);
+ f.stream.dispose();
+});
+
 test('worker failure preserves pending work in asynchronous local mode and dispose cancels it',async()=>{
  const f=fixture();f.plan([[0,0,0],[1,0,1]]);f.worker.onerror(new Error('fixture worker crash'));assert.equal(f.worker.terminated,true);assert.equal(f.stream.summary().worker,false);assert.equal(f.stream.stats.fallbacks,1);assert.equal(f.installed.length,0);
  const idle=f.stream.whenIdle();f.scheduled.shift()();assert.equal(f.installed[0].local,true);f.scheduled.shift()();assert.deepEqual(await idle,{cancelled:false});assert.equal(f.installed.length,2);

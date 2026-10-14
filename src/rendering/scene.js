@@ -325,7 +325,19 @@ export class WorldScene {
     if(stats.chunks){this.chunkRevision++;this.handStaticBoxes=null;this.releaseNativeShadow?.cache.invalidate();this.contacts.update(this.chunks,this.contactPrototypes,this.nearBounds,this.chunkRevision,this.nav.config.layers);}
     return stats;
   }
-  installChunk(data){const group=this.terrain(data.cx,data.cz,data);this.chunks.set(data.cx+','+data.cz,group);this.scene.add(group);this.chunkRevision++;this.handStaticBoxes=null;this.onChunkProgress?.({loaded:this.chunks.size,desired:this.chunkStream.desired.size,...this.chunkStream.summary()});}
+  removeInstalledChunk(key,group){
+    disposeAssetShadows(group);this.scene.remove(group);
+    group.traverse(o=>{if(o.isInstancedMesh){o.dispose();if(o.geometry.userData.obstruction||o.geometry.userData.nativeChunkClip)o.geometry.dispose();if(o.userData.nativeFluid==='asset'&&o.material!==this.fluidMaterial)o.material.dispose();return;}if(o.isMesh){o.geometry.dispose();if(o.material!==this.fluidMaterial)o.material.dispose();}});
+    this.terrainMeshes=this.terrainMeshes.filter(o=>o.parent!==group);
+    this.chunks.delete(key);this.chunkRevision++;this.handStaticBoxes=null;
+  }
+  installChunk(data){
+    const key=data.cx+','+data.cz,group=this.terrain(data.cx,data.cz,data);
+    const previous=this.chunks.get(key);
+    if(previous)this.removeInstalledChunk(key,previous);
+    this.chunks.set(key,group);this.scene.add(group);this.chunkRevision++;this.handStaticBoxes=null;
+    this.onChunkProgress?.({loaded:this.chunks.size,desired:this.chunkStream.desired.size,...this.chunkStream.summary()});
+  }
   whenChunksReady(){return this.chunkStream?.whenIdle()??Promise.resolve({cancelled:false});}
   syncChunks(force=false) {
     if(!this.nav||!this.prototypes)return;
@@ -347,7 +359,7 @@ export class WorldScene {
     this.nearBounds=visibleRegion.bounds;this.nav.setActiveBounds?.(includeRaidBounds(logicalBounds,raidPins));this.nav.setRaidView?.(this.camera.position,this.controls.target);
     const desired=new Set();for(let dz=-range;dz<=range;dz++)for(let dx=-range;dx<=range;dx++)desired.add(`${cx+dx},${cz+dz}`);
     for(const key of raidPins)desired.add(key);
-    for(const [key,group] of this.chunks)if(force||!desired.has(key)){disposeAssetShadows(group);this.scene.remove(group);group.traverse(o=>{if(o.isInstancedMesh){o.dispose();if(o.geometry.userData.obstruction||o.geometry.userData.nativeChunkClip)o.geometry.dispose();if(o.userData.nativeFluid==='asset'&&o.material!==this.fluidMaterial)o.material.dispose();return;}if(o.isMesh){o.geometry.dispose();if(o.material!==this.fluidMaterial)o.material.dispose();}});this.terrainMeshes=this.terrainMeshes.filter(o=>o.parent!==group);this.chunks.delete(key);this.chunkRevision++;this.handStaticBoxes=null;}
+    for(const [key,group] of this.chunks)if(force||!desired.has(key))this.removeInstalledChunk(key,group);
     if(this.chunkStream){const key=cx+','+cz+':'+range+(raidPins.size?':'+[...raidPins].sort().join(';'):'');if(force||this.streamPlanKey!==key){const eye=this.camera.position,target=this.controls.target,length=Math.hypot(target.x-eye.x,target.y-eye.y,target.z-eye.z)||1,fx=(target.x-eye.x)/length,fz=(target.z-eye.z)/length;this.streamPlanKey=key;const jobs=new Map([...desired].map(k=>{const [x,z]=k.split(',').map(Number),dx=x*48-eye.x,dz=z*48-eye.z;return [k,{cx:x,cz:z,score:Math.hypot(dx,dz)-.18*(dx*fx+dz*fz)}];}));this.chunkStream.plan(jobs,force);}else this.chunkStream.dispatch();}
     else for(const key of desired)if(!this.chunks.has(key)){const [x,z]=key.split(',').map(Number),group=this.terrain(x,z);this.chunks.set(key,group);this.scene.add(group);this.chunkRevision++;this.handStaticBoxes=null;}
     // Retain the original exact terrain for picking even beyond the visual radius.

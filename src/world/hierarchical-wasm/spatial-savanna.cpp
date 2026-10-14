@@ -119,6 +119,7 @@ std::vector<float> regionBatchInput;
 std::vector<int32_t> regionBatchOutput;
 std::vector<PolygonStateRecord> polygonState;
 std::vector<Settlement> settlements;
+std::vector<int32_t> changedSettlementChunks;
 std::vector<size_t> nearbySettlements;
 std::vector<uint8_t> staticPass,staticSteps,staticInbound;
 // No-entry WASM does not initialize C++ globals; construct profiles lazily.
@@ -987,6 +988,7 @@ Settlement makeSettlement(double x,double z,double hx,double hz){
 }
 void refreshSettlementChunks(const std::vector<Settlement>& changed){
   const int selectedX=chunkX,selectedZ=chunkZ,previous=activeProfile;
+  changedSettlementChunks.clear();
   bool touched=false;
   for(const auto& [cx,cz]:loadedChunks){
     const int chunkCx=cx,chunkCz=cz;
@@ -994,6 +996,8 @@ void refreshSettlementChunks(const std::vector<Settlement>& changed){
       return settlementNearChunk(site,chunkCx,chunkCz);
     }))continue;
     touched=true;
+    changedSettlementChunks.push_back(cx);
+    changedSettlementChunks.push_back(cz);
     residentSpatial().erase(chunkKey(cx,cz));
     populateChunk(cx,cz);
     for(int profile=0;profile<navigationProfiles;profile++){
@@ -1185,7 +1189,7 @@ int spatial_generate_biome(uint32_t seed,int biome,int cx,int cz){
   removedProps().clear();removedPropState.clear();
   batchingBarriers=false;deferredBarrierRefresh.clear();barrierBatch.clear();barrierBatchIds.clear();barrierRemovalIds.clear();
   barrierState.clear();settlementState.clear();
-  settlements.clear();nearbySettlements.clear();
+  settlements.clear();nearbySettlements.clear();changedSettlementChunks.clear();
   for(int profile=0;profile<navigationProfiles;profile++){
     NavProfile& state=navProfile(profile);
     state.rasters.clear();state.ready=false;
@@ -1249,6 +1253,8 @@ int spatial_resident_prop_count(){
   for(const auto& [key,records]:residentSolidProps())count+=int(records.size());
   return count;
 }
+int spatial_changed_chunk_count(){return int(changedSettlementChunks.size()/2);}
+int32_t* spatial_changed_chunks_ptr(){return changedSettlementChunks.data();}
 float spatial_set_settlement(float x,float z,float hx,float hz){
   if(!std::isfinite(x)||!std::isfinite(z)||!std::isfinite(hx)||!std::isfinite(hz)||
      hx<=0||hz<=0||hx>100||hz>100)return -1;

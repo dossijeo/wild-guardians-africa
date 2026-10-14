@@ -112,12 +112,19 @@ test('a Sabana game state renders and routes from one spatial authority through 
   assert(session.topologySource.revision()>removedTopology);
   assert.equal(session.horizonSource.revision(),2,'a new settlement updates native relief');
   assert.equal(session.field.surface(96,0),core.surfaceAnywhere(96,0));
-  assert.equal(session.queryPropsAt(0,0,4).status,'unknown',
-    'old visual prop records cannot answer after settlement terrain changes');
-  installed.delete('0,0');
-  stream.plan(new Map([['0,0',{cx:0,cz:0,score:0}]]),true);
+  const changedKeys=new Set(core.changedChunks().map(({cx,cz})=>`${cx},${cz}`));
+  assert.equal(stream.summary().stale,changedKeys.size);
+  assert.equal(session.queryPropsAt(0,0,4).status,
+    changedKeys.has('0,0')?'unknown':'ready');
   while(scheduled.length)scheduled.shift()();
   await stream.whenIdle();
+  assert.equal(session.queryPropsAt(0,0,4).status,'ready');
+  assert.equal(stream.summary().stale,0);
+  state.villages.push({id:'village-3',x:960,z:0,buildings:villageLayout(pack,960,0)});
+  session.syncState(state);
+  assert.deepEqual(core.changedChunks(),[],
+    'a distant settlement does not invalidate near resident chunks');
+  assert.equal(stream.summary().stale,0);
   assert.equal(session.queryPropsAt(0,0,4).status,'ready');
   session.dispose();
 });

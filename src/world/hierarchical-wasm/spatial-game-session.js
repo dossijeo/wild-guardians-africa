@@ -21,7 +21,9 @@ export function createSpatialGameSession(module,state,streamOptions){
   core.generate(state.seed,cx,cz,state.biome);
   const field=createSpatialTerrainView(core);
   const villages=new Map();
+  const chunkRevisions=new Map();
   let terrainRevision=0;
+  let stream=null;
   function installVillage(village,gameState,initial=false){
     if(village?.id==null||villages.has(village.id)||!Array.isArray(village.buildings))
       throw TypeError('Expected a new spatial village with buildings');
@@ -37,8 +39,11 @@ export function createSpatialGameSession(module,state,streamOptions){
     const level=initial?core.setSettlement(village.x,village.z,hx,hz):
       core.addSettlement(village.x,village.z,hx,hz);
     if(!Number.isFinite(level))throw Error('Could not create spatial settlement');
+    const changed=core.changedChunks().map(({cx,cz})=>`${cx},${cz}`);
+    for(const key of changed)chunkRevisions.set(key,(chunkRevisions.get(key)??0)+1);
     villages.set(village.id,addSpatialVillageBuildings(core,village));
     terrainRevision++;
+    if(stream)stream.invalidate(changed);
   }
   for(const village of state.villages)installVillage(village,state,village===first);
   const walls=createSpatialWallMirror(core),centers=createSpatialCenterMirror(core),
@@ -60,9 +65,9 @@ export function createSpatialGameSession(module,state,streamOptions){
   }
   selectProfile(WORKER_SPATIAL_PROFILE);
   selectProfile(ANIMAL_SPATIAL_PROFILES.warthog);
-  const stream=createSpatialChunkStream(core,{...streamOptions,
+  stream=createSpatialChunkStream(core,{...streamOptions,
     onData:data=>{
-      data.terrainRevision=terrainRevision;
+      data.terrainRevision=chunkRevisions.get(`${data.cx},${data.cz}`)??0;
       streamOptions.onData(data);
     }});
   function syncState(next){
@@ -109,7 +114,8 @@ export function createSpatialGameSession(module,state,streamOptions){
   const topologySource={revision:()=>terrainRevision+walls.revision()+
     centers.revision()+shields.revision()+props.revision()};
   const queryPropsAt=(x,z,radius)=>queryResidentSpatialProps(
-    streamOptions.loaded(),props.suppressed,x,z,radius,terrainRevision);
+    streamOptions.loaded(),props.suppressed,x,z,radius,
+    key=>chunkRevisions.get(key)??0);
   return {core,field,stream,horizonSource,topologySource,suppressed:props.suppressed,syncState,
     routeActor,actorConnectivity,actorRegions,actorRegionsBatch,actorCanStand,actorStepClear,
     queryPropsAt,

@@ -9,8 +9,9 @@ export function queryResidentSpatialProps(loaded,suppressed,x,z,radius,terrainRe
   const reach=radius+8,props=[],missing=[];
   for(let cz=minZ;cz<=maxZ;cz++)for(let cx=minX;cx<=maxX;cx++){
     const key=`${cx},${cz}`,chunk=loaded.get(key);
-    const trusted=(terrainRevision===null||
-      (chunk?.terrainRevision??chunk?.userData?.spatialTerrainRevision)===terrainRevision)&&
+    const expected=typeof terrainRevision==='function'?terrainRevision(key):terrainRevision;
+    const trusted=(expected===null||
+      (chunk?.terrainRevision??chunk?.userData?.spatialTerrainRevision)===expected)&&
       (chunk?.authority==='spatial-wasm'||
       chunk?.userData?.spatialAuthority==='spatial-wasm');
     const instances=trusted?(chunk.instances??chunk.userData?.propSources):null;

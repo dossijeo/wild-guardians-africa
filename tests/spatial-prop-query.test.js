@@ -23,4 +23,6 @@ test('resident spatial prop queries never treat an unloaded or JS-generated chun
   assert.equal(queryResidentSpatialProps(chunks,suppressed,0,0,4,2).status,'unknown');
   chunks.get('0,0').userData.spatialTerrainRevision=2;
   assert.equal(queryResidentSpatialProps(chunks,suppressed,0,0,4,2).status,'ready');
+  assert.equal(queryResidentSpatialProps(chunks,suppressed,0,0,4,key=>
+    key==='0,0'?2:0).status,'ready');
 });
