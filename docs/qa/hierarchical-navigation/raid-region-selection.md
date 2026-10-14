@@ -426,6 +426,16 @@ the next dawn. All three tests in `acceptance-crate-recovery.test.js` pass.
 This is test-only triage after the `7fc37943` full-suite run, so the recorded
 global failure count has not been updated.
 
+Six old agricultural acceptance assertions likewise assumed full-strength
+Growth or an immediate doubled crate. The updated tests use the committed
+Growth entitlement, check that fractional Growth does not water a crop for
+free when it crosses a checkpoint, and verify that the original crate value
+and Multiply entitlement survive pickup, expiry and reload before a single
+physical delivery. The complete `acceptance-agriculture.test.js` file now
+passes 17/17 cases. These changes affect QA expectations only; no crop,
+water, magic or economic production rule was changed. The frozen full-suite
+count above predates this test-only change.
+
 A same-policy Gran Cañón seed 123 native campaign was repeated after the
 committed-target fix. Against `selector-village-14-canyon-123.json.gz`, all
 daily gameplay fields, complete raid evidence, entry transport and plot
