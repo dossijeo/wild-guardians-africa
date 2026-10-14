@@ -8,6 +8,8 @@ La reserva de tareas admite ahora un resultado pendiente distinto de una prueba 
 
 La selección del punto de servicio de una reparación examina ahora todas las alternativas físicas aunque una consulta anterior devuelva `unknown`. Si alguna alternativa tiene ruta válida, la utiliza; sólo mantiene la tarea pendiente cuando ninguna tiene ruta y al menos una permanece inconclusa. La captura Desierto/983 todavía carece de una ruta certificada hacia las dos piezas afectadas, por lo que este ajuste no demuestra reparaciones pagadas en aquel piloto.
 
+Se amplió el replay para inspeccionar los 14 trabajadores y las cuatro aproximaciones de cada una de esas dos piezas. Con sectores residentes en un radio de cuatro chunks, ninguno obtuvo una ruta nativa (`0/14` por pieza) ni un segmento directo libre (`0/56` por pieza); todas las consultas de reparación siguieron en `SpatialChunkUnavailable`. La puerta automática sí permite llegar a ambos lados. Esto localiza la incertidumbre en el acceso desde esa zona hasta las piezas dañadas, sin demostrar que el terreno sea definitivamente intransitable ni justificar una ruta inventada.
+
 La prueba `tests/spatial-repair-unknown.test.js` reproduce el `SpatialChunkUnavailable` original, comprueba la puerta y ejecuta 50 ticks sin fallo; las dos tareas siguen pendientes, sin asignación falsa. En el replay local, esos 50 ticks tardaron 65 ms de `Game.tick` aproximadamente. También se añadió una prueba de reserva de tareas que distingue explícitamente `unknown` de `blocked`.
 
 ## Piloto sostenido

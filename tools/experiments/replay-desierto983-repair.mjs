@@ -23,6 +23,13 @@ try{
   const nav=createSpatialNavigationMovement(session,state);
   const worker=state.workers.find(w=>w.id==='worker-3519');
   const targets=state.tasks.filter(t=>t.kind==='repair').map(t=>state.structures.find(s=>s.id===t.targetId));
+  console.log(JSON.stringify({workers:state.workers.map(w=>({id:w.id,x:w.x,z:w.z,
+    centerId:w.centerId,status:w.status})),
+  centers:state.structures.filter(s=>s.kind==='center').map(s=>({id:s.id,x:s.x,z:s.z,
+    status:s.status})),repairTasks:state.tasks.filter(t=>t.kind==='repair'),
+  nearbyWalls:state.structures.filter(s=>s.kind==='wall'&&s.x>=80&&s.x<=100&&
+    s.z>=-5&&s.z<=18).map(s=>({id:s.id,x:s.x,z:s.z,yaw:s.yaw,
+      gate:s.gate,status:s.status,hp:s.hp}))}));
   const gates=state.structures.filter(s=>s.kind==='wall'&&s.gate&&s.status!=='ruined');
   const probes=[[84,-2],[88,-2],[90,0],[92,2],[94,5],[95,8],[95.4,8.357],[96.6,8.357],[95,12]];
   console.log(JSON.stringify({probes:probes.map(([x,z])=>{
@@ -56,6 +63,13 @@ try{
         stand:session.actorCanStand(point,{worker:true})};
     });
     console.log(JSON.stringify(result));
+    console.log(JSON.stringify({target:target.id,workerApproaches:state.workers.map(candidate=>{
+      const entry={id:candidate.id,region:session.actorRegions(candidate,{worker:true}).ids,
+        direct:result.approaches.map(item=>session.actorStepClear(candidate,item.point,{worker:true}))};
+      try{entry.route=repairRoute(candidate,target,nav)?'found':'blocked';}
+      catch(error){entry.error=error.name;}
+      return entry;
+    })}));
   }
   console.log(JSON.stringify(session.core.connectivityDiagnostics()));
   const ticks=Number(process.argv.find(arg=>arg.startsWith('--ticks='))?.slice(8)??
