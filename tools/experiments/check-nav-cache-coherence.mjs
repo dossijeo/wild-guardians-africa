@@ -26,8 +26,14 @@ const state=deserialize(snapshot),{session,nav,loaded}=create(state),rows=[];
 const gate=state.structures.find(s=>s.id==='structure-9865');
 assert(gate?.gate);
 const [start,end]=gatePortalPoints(gate,.28),wasm=session.core.wasm;
+const gateWorker={...start,radius:.28},gatePlant={id:'gate-coherence',species:'mijo',...end};
+const gateRoute=()=>{const points=nav.path(start,end,.28,null,true);
+  return points?{destination:end,path:points}:null;};
 function inspect(stage){
   const cachedPath=nav.workerPath(start,end),fresh=session.routeActor(start,end,{worker:true});
+  const jsCached=cachedWateringRoute(gateWorker,gatePlant,nav,gateRoute);
+  assert.equal(jsCached?.path?'found':'blocked',fresh.status,
+    `stale JS watering route at ${stage}`);
   const animalFresh=session.actorConnectivity(start,end,{worker:false,species:'warthog'});
   const animalJs=nav.regionConnected(start,end,ANIMAL_SPATIAL_PROFILES.warthog.radius,null,false);
   assert.equal(animalJs,animalFresh==='possible'?true:
@@ -36,7 +42,8 @@ function inspect(stage){
   const cachedConnected=wasm.nav_cached_connected(65,3,68,3);
   const hitConnected=wasm.nav_cached_connected(65,3,68,3);
   const freshConnected=wasm.lazy_connected(65,3,68,3);
-  const row={stage,jsPath:cachedPath?'found':'blocked',freshPath:fresh.status,
+  const row={stage,jsPath:cachedPath?'found':'blocked',
+    jsCachedPath:jsCached?.path?'found':'blocked',freshPath:fresh.status,
     animalJs,animalFresh,
     wasmCached:cachedConnected,wasmHit:hitConnected,wasmFresh:freshConnected,
     topologyRevision:session.topologySource.revision(),chunkRevision:session.core.chunkRevision(),
