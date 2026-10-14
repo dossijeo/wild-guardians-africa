@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
 import {createSpatialNavigationMovement,SpatialChunkUnavailable} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+import {createSpatialPlacement} from '../src/world/hierarchical-wasm/spatial-placement.js';
 import {villageLayout} from '../src/world/villages.js';
 
 const module=new WebAssembly.Module(readFileSync(new URL(
@@ -90,6 +91,20 @@ test('native-backed crop placement checks terrain, structures, props and unknown
     for(let z=-14;z<=14&&!open;z+=2)for(let x=-14;x<=14&&!open;x+=2)
       if(nav.placement(x,z,.4).valid)open={x,z};
     assert(open,'native chunk should contain usable agricultural ground');
+    let buildable;
+    for(let z=-14;z<=14&&!buildable;z+=2)for(let x=-14;x<=14&&!buildable;x+=2){
+      const wall={kind:'wall',material:'adobe',x,z,yaw:0};
+      const footprint={kind:'house',x,z,radius:.6,footprint:[
+        {x:x-.5,z:z-.5},{x:x+.5,z:z-.5},
+        {x:x+.5,z:z+.5},{x:x-.5,z:z+.5}]};
+      if(nav.wallPlacement(wall).valid&&nav.placementFootprint(footprint).valid)
+        buildable={wall,footprint};
+    }
+    assert(buildable,'native terrain should support a wall and a building hull');
+    assert.throws(()=>nav.wallPlacement({...buildable.wall,x:480}),SpatialChunkUnavailable);
+    assert.throws(()=>nav.placementFootprint({...buildable.footprint,x:480,
+      footprint:buildable.footprint.footprint.map(p=>({x:p.x+480,z:p.z}))}),
+    SpatialChunkUnavailable);
     const structure={id:'placed-wall',kind:'wall',...open,status:'intact',radius:.7};
     state.structures.push(structure);session.syncState(state);
     assert.equal(nav.placement(open.x,open.z,.4).reason,'La construcción solapa otro edificio');
@@ -104,6 +119,39 @@ test('native-backed crop placement checks terrain, structures, props and unknown
     }
     assert.equal(nav.placement(Number.NaN,0,.4).valid,false);
   }finally{session.dispose();}
+});
+
+test('native-backed construction placement checks whole wall traces and building hulls',()=>{
+  const field={canyon:false,wetland:false,surface:()=>0,slope:()=>0,
+    fluidInside:()=>false};
+  const state={structures:[],villages:[]};
+  const props=[];
+  const placement=createSpatialPlacement({field},state,()=>props);
+  const wall={kind:'wall',material:'adobe',x:0,z:0,yaw:0};
+  assert.deepEqual(placement.wallPlacement(wall),{valid:true,suppress:[]});
+  field.fluidInside=()=>true;
+  assert.equal(placement.wallPlacement(wall).fluid,true);
+  field.fluidInside=()=>false;
+  // A village house exercises the authored polygon collision.
+  state.villages.push({buildings:[{kind:'Casa',x:0,z:0,radius:2.8,
+    footprint:[{x:-2,z:-2},{x:2,z:-2},{x:2,z:2},{x:-2,z:2}]}]});
+  assert.equal(placement.wallPlacement(wall).reason,'La muralla queda dentro de un edificio');
+  state.villages.length=0;
+  props.push({id:'stone',x:0,z:0,slot:10,radius:.8});
+  assert.equal(placement.wallPlacement(wall).reason,'Un árbol o roca grande ocupa este terreno');
+  props.length=0;
+  props.push({id:'grass',x:0,z:0,slot:9,radius:.3});
+  assert.deepEqual(placement.wallPlacement(wall),{valid:true,suppress:['grass']});
+  props.length=0;
+  const building={kind:'center',x:0,z:0,radius:2,
+    footprint:[{x:-1,z:-1},{x:1,z:-1},{x:1,z:1},{x:-1,z:1}]};
+  assert.deepEqual(placement.placementFootprint(building),{valid:true,suppress:[]});
+  field.surface=x=>x*.2;
+  assert.equal(placement.placementFootprint(building).reason,
+    'El edificio necesita suelo nivelado en toda su base');
+  field.surface=()=>0;
+  field.fluidInside=(x,z)=>x>.5&&z>.5;
+  assert.equal(placement.placementFootprint(building).fluid,true);
 });
 
 test('a saved suppression survives reload while its owning chunk is not resident',async()=>{

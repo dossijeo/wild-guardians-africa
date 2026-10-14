@@ -64,7 +64,8 @@ export function createSpatialNavigationMovement(session,state){
     if(result.status==='unknown')throw new SpatialChunkUnavailable({x,z},{x,z},result.missing);
     return result.props;
   };
-  const placement=createSpatialPlacement(session,state,propsAt);
+  const {placement,wallPlacement,placementFootprint}=
+    createSpatialPlacement(session,state,propsAt);
   let gateRevision=null,gateSource=null,gates=[];
   const activeGates=()=>{
     const revision=session.topologySource.revision();
@@ -98,7 +99,8 @@ export function createSpatialNavigationMovement(session,state){
   };
   return {field:session.field,suppressed:session.suppressed,state,
     get version(){return session.topologySource.revision();},
-    walkable,segmentClear,path,propsAt,placement,workerSurface,actorSurface,
+    walkable,segmentClear,path,propsAt,placement,wallPlacement,placementFootprint,
+    workerSurface,actorSurface,
     workerPath:(start,end,radius=.28,ignore=null)=>path(start,end,radius,ignore,true),
     workerMotionClear,
   };
