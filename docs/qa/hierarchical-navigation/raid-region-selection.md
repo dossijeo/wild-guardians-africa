@@ -164,6 +164,34 @@ driver retained raid-only resident chunks between nights, unlike the renderer.
 The driver now releases those chunks when the raid ends. This was a harness
 error, not an economic defeat; no game rule was changed for the correction.
 
+## Sabana seed 123 retreat regression
+
+A separate 30-night-cap good-policy campaign failed technically during night
+11 after 206.7 seconds. This is **not** an economic defeat: fifteen animals
+had departed, while one warthog with no hits remaining remained in retreat.
+Its native path started at grid point `(96, 103)` from continuous position
+`(95.379, 103)`, but the swept static check rejected that first connector.
+During a 50-tick replay it moved only 0.0016 m, although a logical route
+remained installed. The saved state and full negative report are retained.
+
+The movement safety path now notices twelve seconds without meaningful
+destination progress when the next static connector is invalid. It discards
+that path and runs the existing bounded, physically checked exit connector
+across subsequent ticks. It does not phase through static obstacles or change
+speed or attack budget. On the saved state the connector found a 73-point
+route after 170 budgeted calls (236 ms total); a native replay recorded one
+`AnimalExitRouteRecovery` and the warthog reached its actual exit. A snapshot
+regression exercises the recovery and its serialized pending state. The
+full-campaign rerun is required to distinguish this repair from a replay-only
+success.
+
+Repeated raid target lookup also now uses the existing live-crop index, so
+the lookup does not rescan thousands of historical plants. A regression with
+20,000 dead records confirms zero historical-plant reads after index
+initialization. The preceding lookup reference test had encoded the old
+two-hit crop rule; it was updated to the current one-hit rule without changing
+combat behavior.
+
 ## Reproduce
 
 ```powershell

@@ -39,6 +39,13 @@ export function validateSnapshot(state) {
     const ids=animal.agriculturalAttackIds;if(ids!==undefined&&(!Array.isArray(ids)||ids.length>64||new Set(ids).size!==ids.length||ids.some(id=>typeof id!=='string'||!id.length||id.length>96)))throw new Error('Impactos agrícolas inválidos');
   }
   for(const animal of state.raid?.animals??[])if(animal.exit!==undefined&&(!animal.exit||!Number.isFinite(animal.exit.x)||!Number.isFinite(animal.exit.z)))throw new Error('Salida de animal inválida');
+  for(const animal of state.raid?.animals??[])if(animal.exitRouteRecovery!==undefined){
+    const recovery=animal.exitRouteRecovery;
+    if(!recovery||typeof recovery.destinationId!=='string'||
+      recovery.destinationId!==`exit-${animal.id}`||
+      !Number.isSafeInteger(recovery.version)||recovery.version<0)
+      throw new Error('Recuperación de salida inválida');
+  }
   for(const animal of state.raid?.animals??[])if(animal.exitConnectorSearch!==undefined){
     const search=animal.exitConnectorSearch;
     if(!search||typeof search.key!=='string'||search.key.length>256||!Number.isSafeInteger(search.next)||search.next<0||search.next>192)throw new Error('Conector de salida inválido');

@@ -6,6 +6,7 @@ import {deserialize} from '../../src/persistence/snapshots.js';
 import {serialize} from '../../src/persistence/snapshots.js';
 import {createSpatialGameSession} from '../../src/world/hierarchical-wasm/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+import {animalExitConnector} from '../../src/simulation/animal-exit-connectors.js';
 
 const input=process.argv[2],steps=Number(process.argv[3]??10),
   output=process.argv[4];
@@ -112,10 +113,15 @@ try{
     totalMs:rows.reduce((sum,row)=>sum+row.ms,0),
     stateSha256:createHash('sha256').update(serialize(state)).digest('hex'),
     animals:(state.raid?.animals??[]).map(a=>({id:a.id,status:a.status,
-      targetId:a.targetId,
+      targetId:a.targetId,x:a.x,z:a.z,
       moved:Math.hypot(a.x-(initialAnimals.get(a.id)?.x??a.x),
         a.z-(initialAnimals.get(a.id)?.z??a.z)),
       hitsUsed:(initialAnimals.get(a.id)?.hits??a.hitsRemaining)-a.hitsRemaining,
+      pathPoints:a.path?.length??0,pathHead:a.path?.[0]??null,
+      pathHeadStaticClear:a.path?.[0]?nav.segmentClear(a,a.path[0],a.radius,null,false):null,
+      exitDistance:a.exit?Math.hypot(a.x-a.exit.x,a.z-a.exit.z):null,
+      pathVersion:a.pathVersion,recoveryAttempts:a.mobileRecoveryAttempts??0,
+      secondsSinceProgress:state.elapsed-(a.mobileProgressAt??state.elapsed),
       mobilePhaseRemaining:a.mobilePhaseRemaining??0,
       dynamicStallSeconds:a.dynamicStallSeconds??0})),
     mobileRecoveryEvents:state.events.filter(e=>
@@ -124,6 +130,14 @@ try{
     wallRecoveryEvents:state.events.filter(e=>
       e.type==='AnimalWallOverlapRecovery').length,
     raidEnded:state.events.some(e=>e.type==='RaidEnded')};
+  if(process.env.WG_RETREAT_CONNECTOR_PROBE==='1'){
+    const actor=state.raid?.animals.find(a=>a.status==='retreating');
+    if(actor){let path=null,attempts=0;const started=performance.now();
+      for(;attempts<600&&!path;attempts++)path=animalExitConnector(actor,actor.exit,nav);
+      report.retreatConnectorProbe={attempts,ms:performance.now()-started,
+        pathPoints:path?.length??0,first:path?.[0]??null};
+    }
+  }
   if(output)writeFileSync(output,JSON.stringify(report,null,2)+'\n');
   console.log(JSON.stringify(report));
 }finally{session.dispose();}

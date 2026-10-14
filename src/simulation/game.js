@@ -442,6 +442,9 @@ export function cast(s,id,kind,x,z,nav,targetPlantId) {
 export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignore=null,worker=true,motion=null,expandRoute=false,routeVia=null}={}) {
   const previous={x:w.x,z:w.z};
   if(worker)w.running=false;
+  if(w.exitRouteRecovery&&
+    (w.exitRouteRecovery.destinationId!==destination.id||w.exitRouteRecovery.version!==nav.version))
+    delete w.exitRouteRecovery;
   if(w.mobileRecoveryDestinationId!==destination.id||
     w.mobileRecoveryVersion!==nav.version){
     w.mobileRecoveryDestinationId=destination.id;
@@ -456,7 +459,12 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
   }
   if(w.wallEscape&&w.pathVersion!==nav.version)delete w.wallEscape;
   if(!w.path||w.destinationId!==destination.id||w.pathVersion!==nav.version) {
-    w.path=worker&&nav.workerPath?nav.workerPath(w,destination,w.radius??.28,ignore):nav.path(w,destination,w.radius??.28,ignore,worker);w.destinationId=destination.id;
+    if(w.exitRouteRecovery){
+      w.path=animalExitConnector(w,destination,nav);
+      if(!w.path)return false;
+      delete w.exitRouteRecovery;
+    }else w.path=worker&&nav.workerPath?nav.workerPath(w,destination,w.radius??.28,ignore):nav.path(w,destination,w.radius??.28,ignore,worker);
+    w.destinationId=destination.id;
     // The local search corridor is not a physical enclosure. Exhausted animals
     // can need a wider detour to reach the same exit they entered through.
     if(!w.path&&expandRoute)for(const margin of [32,64]){w.path=nav.path(w,destination,w.radius??.28,ignore,worker,margin);if(w.path)break;}
@@ -507,6 +515,14 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
   // ignore mobile collisions. Static terrain,
   // barriers and the live gate leaf remain authoritative throughout.
   const next=w.path[0],distanceToNext=next?dist(w,next):0;
+  if(!worker&&expandRoute&&next&&s.elapsed-w.mobileProgressAt>=12&&
+    nav.segmentClear?.(w,next,w.radius??.28,ignore,false)===false){
+    w.path=null;
+    w.exitRouteRecovery={destinationId:destination.id,version:nav.version};
+    emit(s,'AnimalExitRouteRecovery',{actorId:w.id,x:w.x,z:w.z,
+      exitId:destination.id,reason:'stale-static-connector'});
+    return false;
+  }
   const probe=next&&distanceToNext>1e-8?{
     x:w.x+(next.x-w.x)*Math.min(.5,distanceToNext)/distanceToNext,
     z:w.z+(next.z-w.z)*Math.min(.5,distanceToNext)/distanceToNext}:null;
