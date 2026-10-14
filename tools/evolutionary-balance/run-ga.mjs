@@ -8,6 +8,7 @@ import {simulateNativeCampaign} from '../native-campaign-runner.mjs';
 import {createSpatialCampaignOpening} from '../experiments/spatial-campaign-opening.mjs';
 import {DEFAULT_GENES,validateGenes} from './policy-genes.mjs';
 import {breed,genomeId,randomGenome,scoreCampaign,seededRandom} from './ga.mjs';
+import {matchedDefenseControl} from './matched-defense-controls.mjs';
 
 const DEFAULT_CONFIG={rngSeed:712,generations:2,population:4,days:7,
  train:[{biome:'sabana',seed:712},{biome:'gran-rio',seed:2026}],
@@ -48,10 +49,12 @@ export async function evaluateOne({biome,seed},days,strategy,genes,onDay,detaile
   report(){return {mode:'same-session-native-entry'};},async dispose(){}
  });
  try{
-  const currentMagicRules=strategy.endsWith('-current-magic');
-  const effectiveStrategy=currentMagicRules?strategy.slice(0,-'-current-magic'.length):strategy;
+  const matched=matchedDefenseControl(strategy,genes);
+  const currentMagicRules=!!matched||strategy.endsWith('-current-magic');
+  const effectiveStrategy=matched?'evolved':currentMagicRules?strategy.slice(0,-'-current-magic'.length):strategy;
   const r=await simulateNativeCampaign({days,biome,seed,culture:'mapungubwe',strategy:effectiveStrategy,
    evolutionaryGenes:genes,currentMagicRules,nativeEvidence:false,reloadRaids:false,
+   buildRepairWalls:matched?.buildRepairWalls??true,useShield:matched?.useShield??true,
    openingFactory:createSpatialCampaignOpening,entryDriverFactory,
    onDay,
    onTick:(state,nav,timing)=>{nav.serviceRaidConnectivityDemand?.();onTickObserver?.(state,nav,timing);}});
