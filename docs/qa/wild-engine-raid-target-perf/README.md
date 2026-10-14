@@ -31,11 +31,28 @@ skipping other points; only the native graph's explicit `blocked` result is.
 An accessible point still uses the usual route planner and physical movement.
 
 The snapshot measures a specific expensive raid, not sustained campaign speed.
-A complete 14-night Sabana/712 `good` campaign finished in 324.7 seconds on
-this branch, with 14 completed nights, 135 living plants and 730 coins. A
-same-commit `main` control is being run separately. Do not treat this as an
-exact paired speedup until the control finishes; the older 388.7-second
-campaign came from a different revision.
+A paired 14-night Sabana/712 `good` campaign used the exact parent `main`
+commit `143685e0` as control and this branch as candidate, with the same
+runner, seed and parameters. Both completed all 14 nights. **Every daily
+result field except measured wall time matches exactly**, including money,
+living plants, planting, delivery, destruction and action counts. They finish
+with 135 living plants and 730 coins. The 50-tick serialized snapshot hash
+also matches exactly.
+
+| Measure | Parent `main` | Candidate | Ratio |
+| --- | ---: | ---: | ---: |
+| Total campaign wall time | 457.4 s | 324.7 s | 1.41× |
+| Accumulated `Game.tick` | 447.5 s | 315.7 s | 1.42× |
+| Day 13 `Game.tick` | 53.3 s | 29.2 s | 1.83× |
+| Completed nights | 14 | 14 | equal |
+
+These are sequential wall-clock runs on a shared host, so the exact speedup
+can vary with load. The large reduction in detailed native queries on the
+frozen snapshot and the identical daily campaign results support the
+mechanistic explanation. The older 388.7-second historical campaign is kept
+as historical context only; it came from a different revision.
+
+The paired original reports are stored as gzip JSON in this directory.
 
 The selected 80 navigation/raid tests pass, covering gates, local breaches,
 reconstruction, reservations, contention and save/reload. The new focused
