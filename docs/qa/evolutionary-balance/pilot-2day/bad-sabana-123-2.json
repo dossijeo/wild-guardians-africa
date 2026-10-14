@@ -1,0 +1,73 @@
+{
+  "status": "completed",
+  "biome": "sabana",
+  "seed": 123,
+  "days": 2,
+  "strategy": "bad",
+  "genes": null,
+  "completedNights": 2,
+  "result": null,
+  "rows": [
+    {
+      "day": 1,
+      "money": 306,
+      "living": 80,
+      "planted": 120,
+      "delivered": 41,
+      "destroyed": 0,
+      "staff": 8,
+      "income": 451,
+      "seeds": 605,
+      "wages": 240,
+      "walls": 0,
+      "repairs": 0,
+      "reconciled": true
+    },
+    {
+      "day": 2,
+      "money": 411,
+      "living": 83,
+      "planted": 73,
+      "delivered": 70,
+      "destroyed": 0,
+      "staff": 10,
+      "income": 770,
+      "seeds": 365,
+      "wages": 300,
+      "walls": 0,
+      "repairs": 0,
+      "reconciled": true
+    }
+  ],
+  "policy": {
+    "profile": "olderFemale",
+    "mixed": true,
+    "middayHiring": false,
+    "plantsPerWorker": 6,
+    "defend": false,
+    "cashPolicy": "minimum-reinvestment",
+    "reserveMaintenance": true,
+    "burstPlanting": false,
+    "cameraEntry": true,
+    "defensePolicy": "expanding",
+    "evolutionaryGenes": null
+  },
+  "defense": {
+    "paidCost": 0,
+    "paidPieces": 0
+  },
+  "raid": [
+    {
+      "day": 1,
+      "animals": 1,
+      "cropsDestroyed": 0,
+      "wallHpLost": 0
+    },
+    {
+      "day": 2,
+      "animals": 1,
+      "cropsDestroyed": 0,
+      "wallHpLost": 0
+    }
+  ]
+}

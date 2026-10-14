@@ -1,0 +1,130 @@
+{
+  "stamp": {
+    "sourceHash": "143685e0f6be233d5a786143209fa8a06e982072",
+    "config": {
+      "rngSeed": 712,
+      "generations": 1,
+      "population": 2,
+      "days": 2,
+      "train": [
+        {
+          "biome": "sabana",
+          "seed": 712
+        }
+      ],
+      "holdout": [
+        {
+          "biome": "sabana",
+          "seed": 123
+        }
+      ],
+      "baselines": [
+        "good",
+        "expansive",
+        "bad",
+        "no-walls"
+      ],
+      "output": "docs/qa/evolutionary-balance/pilot-2day"
+    },
+    "gameBalance": "unchanged",
+    "runKind": "native-Wild-Engine-campaign"
+  },
+  "winner": {
+    "id": "376ca7abd586e58c",
+    "genes": {
+      "plantsPerWorker": 6,
+      "wageReserveDays": 1,
+      "seedReserve": 0,
+      "defenseCashFraction": 0.2,
+      "defenseStartDay": 2,
+      "repairHealthFraction": 0.8,
+      "magicIntervalSeconds": 5,
+      "plantingIntervalSeconds": 1,
+      "wallMaterial": "zarzas",
+      "magicPriority": "multiply"
+    },
+    "score": 2065.6,
+    "meanScore": 2065.6,
+    "cases": [
+      {
+        "biome": "sabana",
+        "seed": 712,
+        "score": 2065.6,
+        "valid": true,
+        "completed": 2,
+        "productive": 119,
+        "living": 70,
+        "cash": 493,
+        "result": null
+      }
+    ]
+  },
+  "holdout": [
+    {
+      "strategy": "evolved",
+      "id": "376ca7abd586e58c",
+      "biome": "sabana",
+      "seed": 123,
+      "score": 2078.75,
+      "valid": true,
+      "completed": 2,
+      "productive": 124,
+      "living": 90,
+      "cash": 551,
+      "result": null
+    },
+    {
+      "strategy": "good",
+      "id": "good",
+      "biome": "sabana",
+      "seed": 123,
+      "score": 2060.3500000000004,
+      "valid": true,
+      "completed": 2,
+      "productive": 116,
+      "living": 64,
+      "cash": 451,
+      "result": null
+    },
+    {
+      "strategy": "expansive",
+      "id": "expansive",
+      "biome": "sabana",
+      "seed": 123,
+      "score": 2068.25,
+      "valid": true,
+      "completed": 2,
+      "productive": 118,
+      "living": 86,
+      "cash": 387,
+      "result": null
+    },
+    {
+      "strategy": "bad",
+      "id": "bad",
+      "biome": "sabana",
+      "seed": 123,
+      "score": 2067.6000000000004,
+      "valid": true,
+      "completed": 2,
+      "productive": 111,
+      "living": 83,
+      "cash": 411,
+      "result": null
+    },
+    {
+      "strategy": "no-walls",
+      "id": "no-walls",
+      "biome": "sabana",
+      "seed": 123,
+      "score": 2070.15,
+      "valid": true,
+      "completed": 2,
+      "productive": 117,
+      "living": 89,
+      "cash": 396,
+      "result": null
+    }
+  ],
+  "limits": "Short-horizon screen only; no 100-night victory or balance approval."
+}

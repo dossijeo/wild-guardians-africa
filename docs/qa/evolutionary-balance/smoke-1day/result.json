@@ -1,0 +1,73 @@
+{
+  "stamp": {
+    "sourceHash": "143685e0f6be233d5a786143209fa8a06e982072",
+    "config": {
+      "rngSeed": 712,
+      "generations": 1,
+      "population": 2,
+      "days": 1,
+      "train": [
+        {
+          "biome": "sabana",
+          "seed": 712
+        }
+      ],
+      "holdout": [
+        {
+          "biome": "sabana",
+          "seed": 123
+        }
+      ],
+      "baselines": [],
+      "output": "docs/qa/evolutionary-balance/smoke-1day"
+    },
+    "gameBalance": "unchanged",
+    "runKind": "native-Wild-Engine-campaign"
+  },
+  "winner": {
+    "id": "376ca7abd586e58c",
+    "genes": {
+      "plantsPerWorker": 6,
+      "wageReserveDays": 1,
+      "seedReserve": 0,
+      "defenseCashFraction": 0.2,
+      "defenseStartDay": 2,
+      "repairHealthFraction": 0.8,
+      "magicIntervalSeconds": 5,
+      "plantingIntervalSeconds": 1,
+      "wallMaterial": "zarzas",
+      "magicPriority": "multiply"
+    },
+    "score": 1058.2,
+    "meanScore": 1058.2,
+    "cases": [
+      {
+        "biome": "sabana",
+        "seed": 712,
+        "score": 1058.2,
+        "valid": true,
+        "completed": 1,
+        "productive": 44,
+        "living": 60,
+        "cash": 520,
+        "result": null
+      }
+    ]
+  },
+  "holdout": [
+    {
+      "strategy": "evolved",
+      "id": "376ca7abd586e58c",
+      "biome": "sabana",
+      "seed": 123,
+      "score": 1058.2,
+      "valid": true,
+      "completed": 1,
+      "productive": 44,
+      "living": 60,
+      "cash": 520,
+      "result": null
+    }
+  ],
+  "limits": "Short-horizon screen only; no 100-night victory or balance approval."
+}

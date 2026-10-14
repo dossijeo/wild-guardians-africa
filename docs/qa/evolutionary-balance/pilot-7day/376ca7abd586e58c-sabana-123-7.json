@@ -1,0 +1,201 @@
+{
+  "status": "completed",
+  "biome": "sabana",
+  "seed": 123,
+  "days": 7,
+  "strategy": "evolved",
+  "genes": {
+    "plantsPerWorker": 6,
+    "wageReserveDays": 1,
+    "seedReserve": 0,
+    "defenseCashFraction": 0.2,
+    "defenseStartDay": 2,
+    "repairHealthFraction": 0.8,
+    "magicIntervalSeconds": 5,
+    "plantingIntervalSeconds": 1,
+    "wallMaterial": "zarzas",
+    "magicPriority": "multiply"
+  },
+  "completedNights": 7,
+  "result": null,
+  "rows": [
+    {
+      "day": 1,
+      "money": 520,
+      "living": 60,
+      "planted": 103,
+      "delivered": 44,
+      "destroyed": 0,
+      "staff": 8,
+      "income": 587,
+      "seeds": 520,
+      "wages": 247,
+      "walls": 0,
+      "repairs": 0,
+      "reconciled": true
+    },
+    {
+      "day": 2,
+      "money": 551,
+      "living": 90,
+      "planted": 110,
+      "delivered": 80,
+      "destroyed": 0,
+      "staff": 10,
+      "income": 993,
+      "seeds": 550,
+      "wages": 372,
+      "walls": 40,
+      "repairs": 0,
+      "reconciled": true
+    },
+    {
+      "day": 3,
+      "money": 575,
+      "living": 73,
+      "planted": 95,
+      "delivered": 112,
+      "destroyed": 0,
+      "staff": 15,
+      "income": 1339,
+      "seeds": 475,
+      "wages": 450,
+      "walls": 390,
+      "repairs": 0,
+      "reconciled": true
+    },
+    {
+      "day": 4,
+      "money": 670,
+      "living": 97,
+      "planted": 113,
+      "delivered": 89,
+      "destroyed": 0,
+      "staff": 13,
+      "income": 1085,
+      "seeds": 565,
+      "wages": 425,
+      "walls": 0,
+      "repairs": 0,
+      "reconciled": true
+    },
+    {
+      "day": 5,
+      "money": 949,
+      "living": 91,
+      "planted": 103,
+      "delivered": 109,
+      "destroyed": 0,
+      "staff": 17,
+      "income": 1304,
+      "seeds": 515,
+      "wages": 510,
+      "walls": 0,
+      "repairs": 0,
+      "reconciled": true
+    },
+    {
+      "day": 6,
+      "money": 1088,
+      "living": 106,
+      "planted": 126,
+      "delivered": 109,
+      "destroyed": 2,
+      "staff": 16,
+      "income": 1306,
+      "seeds": 630,
+      "wages": 511,
+      "walls": 0,
+      "repairs": 26,
+      "reconciled": true
+    },
+    {
+      "day": 7,
+      "money": 1182,
+      "living": 116,
+      "planted": 127,
+      "delivered": 117,
+      "destroyed": 0,
+      "staff": 18,
+      "income": 1393,
+      "seeds": 635,
+      "wages": 596,
+      "walls": 0,
+      "repairs": 68,
+      "reconciled": true
+    }
+  ],
+  "policy": {
+    "profile": "olderFemale",
+    "mixed": true,
+    "middayHiring": true,
+    "plantsPerWorker": 6,
+    "defend": true,
+    "cashPolicy": "minimum-reinvestment",
+    "reserveMaintenance": true,
+    "burstPlanting": false,
+    "cameraEntry": true,
+    "defensePolicy": "expanding",
+    "evolutionaryGenes": {
+      "plantsPerWorker": 6,
+      "wageReserveDays": 1,
+      "seedReserve": 0,
+      "defenseCashFraction": 0.2,
+      "defenseStartDay": 2,
+      "repairHealthFraction": 0.8,
+      "magicIntervalSeconds": 5,
+      "plantingIntervalSeconds": 1,
+      "wallMaterial": "zarzas",
+      "magicPriority": "multiply"
+    },
+    "currentMagicRules": true
+  },
+  "defense": {
+    "paidCost": 430,
+    "paidPieces": 43
+  },
+  "raid": [
+    {
+      "day": 1,
+      "animals": 1,
+      "cropsDestroyed": 0,
+      "wallHpLost": 0
+    },
+    {
+      "day": 2,
+      "animals": 1,
+      "cropsDestroyed": 0,
+      "wallHpLost": 0
+    },
+    {
+      "day": 3,
+      "animals": 1,
+      "cropsDestroyed": 0,
+      "wallHpLost": 0
+    },
+    {
+      "day": 4,
+      "animals": 1,
+      "cropsDestroyed": 0,
+      "wallHpLost": 0
+    },
+    {
+      "day": 5,
+      "animals": 1,
+      "cropsDestroyed": 0,
+      "wallHpLost": 260
+    },
+    {
+      "day": 6,
+      "animals": 8,
+      "cropsDestroyed": 2,
+      "wallHpLost": 592
+    },
+    {
+      "day": 7,
+      "animals": 10,
+      "cropsDestroyed": 0,
+      "wallHpLost": 609
+    }
+  ]
+}
