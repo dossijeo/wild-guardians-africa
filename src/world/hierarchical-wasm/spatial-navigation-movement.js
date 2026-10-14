@@ -228,6 +228,17 @@ export function createSpatialNavigationMovement(session,state){
       z=clamp(point.z,z0+inset,z1-inset);
     const edges=[{x,z:z0+inset},{x:x0+inset,z},
       {x:x1-inset,z},{x,z:z1-inset}];
+    // A winding Canyon bank can reach the resident north/south boundary at a
+    // very different x from the animal's current position. The four projected
+    // edge points alone can falsely classify that connected dry corridor as
+    // enclosed. Sample the native river edge on both banks and still require
+    // a complete actor-sized route; this grants no water or wall crossing.
+    if(view.field.canyon&&typeof view.field.riverEdge==='function')
+      for(const boundaryZ of [z0+inset,z1-inset])for(const side of [-1,1]){
+        const edgeX=view.field.riverEdge(boundaryZ,side)+side*4.2;
+        if(edgeX-radius>=x0&&edgeX+radius<=x1)
+          edges.push({x:edgeX,z:boundaryZ});
+      }
     edges.sort((a,b)=>Math.hypot(point.x-a.x,point.z-a.z)-
       Math.hypot(point.x-b.x,point.z-b.z));
     const options=profile(radius,false,null);

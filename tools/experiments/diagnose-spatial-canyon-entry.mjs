@@ -18,7 +18,7 @@ const loaded=new Map(),session=createSpatialGameSession(wasm,state,{
 });
 try{
   const bounds=[-120,72,120,312],expanded=[-144,48,144,336];
-  for(let z=1;z<=7;z++)for(let x=-3;x<=3;x++){
+  for(let z=0;z<=8;z++)for(let x=-4;x<=4;x++){
     if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
     session.core.selectChunk(x,z);loaded.set(`${x},${z}`,session.core.chunkPayload());
   }
@@ -67,13 +67,17 @@ try{
     targets:targets.map(t=>({id:t.id,distance:Math.hypot(t.x-entry.x,t.z-entry.z),
       reachable:!!reachableApproach({...entry,radius:specs[0].radius},t,nav)}))
       .filter(t=>t.reachable).sort((a,b)=>a.distance-b.distance).slice(0,5)}));
+  let baseline=null,baselineError=null;
+  try{baseline=chooseRaidEntry(state,specs,bounds,0,nav);}
+  catch(error){baselineError={name:error.name,message:error.message,
+    start:error.start??null,end:error.end??null};}
   const report={day:state.day,biome:state.biome,radius:specs[0].radius,
     bounds,wallEnvelope:raidWallEnvelope(state,nav),
     riverAtFarm:nav.field.riverX(state.villages[0].z),
     farm:state.villages[0].center,nearest,bankProbes,edgeProbes,originalLandRoutes,
     northEdge:{...northEdge,walkable:nav.walkable(northX,northZ,specs[0].radius,null,false),
       route:!!nav.path(north,northEdge,specs[0].radius,null,false)},
-    baseline:chooseRaidEntry(state,specs,bounds,0,nav),
+    baseline,baselineError,
     canyonFormation:canyonRaidFormation(state,specs,bounds,nav,reachableApproach),
     geometryOnly,
     expandedGeometryOnly:canyonRaidFormation(state,specs,expanded,nav,()=>true)};

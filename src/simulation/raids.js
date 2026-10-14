@@ -159,16 +159,9 @@ function baseRaidEntry(s,specs,bounds,preferredSide,nav){
 }
 export function chooseRaidEntry(s,specs,bounds,preferredSide,nav){
   if(!nav.field?.canyon)return exteriorRaidEntry(s,specs,bounds,preferredSide,nav,baseRaidEntry,cameraRaidEntry);
-  // Dry plateau/other-bank entries need not connect to the canyon farm.
-  // Require native target approaches rather than granting river crossings.
-  const connectedBase=(state,group,box,side,navigation)=>{
-    const entry=baseRaidEntry(state,group,box,side,navigation);if(!entry)return null;
-    const targets=[...state.structures.filter(t=>operational(t)||t.kind==='wall'&&t.hp>0&&t.status!=='collapsing'),...state.plants.filter(p=>p.alive)];
-    return entry.entries.every((point,i)=>targets.length===0||targets.slice().sort((a,b)=>dist(a,point)-dist(b,point)).slice(0,8).some(target=>reachableApproach({...point,radius:group[i].radius},target,navigation)))?entry:null;
-  };
-  // The existing projected-camera fallback may need a bounded land detour.
-  const connectedCamera=(...args)=>{args[5]=Math.max(args[5]??2,2);return cameraRaidEntry(...args);};
-  const entry=exteriorRaidEntry(s,specs,bounds,preferredSide,nav,connectedBase,connectedCamera)??canyonRaidFormation(s,specs,bounds,nav,reachableApproach);
+  // Canyon animals follow the river on the farm's bank. Generic edge and
+  // camera entries can choose the opposite bank, which cannot reach crops.
+  const entry=canyonRaidFormation(s,specs,bounds,nav,reachableApproach);
   if(entry)return entry;
   // One half-chunk search extension lets a complete bank formation straddle
   // the current resident edge. It is not a terrain override or a smaller wave.

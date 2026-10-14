@@ -884,6 +884,12 @@ void populateChunk(int cx,int cz,bool visual=true){
           const double distance=std::abs(x-riverX(z));
           const int side=x<riverX(z)?-1:1;
           const double wallStart=17.8+noise(z*.014,side*17,2803)*5.5;
+          // Keep one continuous dry ingress on each bank for the largest
+          // animal. Solid procedural props otherwise seal short canyon pockets
+          // even where the terrain itself leaves a traversable corridor.
+          const bool solid=slot<=3||(slot>=10&&slot<=12)||slot>=18;
+          const double lane=mainRiverReach(z)+4.2;
+          if(solid&&std::abs(distance-lane)<radius+1.55+1.0)continue;
           if(distance-radius<mainRiverReach(z)+.3)continue;
           if(type==0&&distance>wallStart-1.1)continue;
           if((type==1||type==2||type==4)&&
