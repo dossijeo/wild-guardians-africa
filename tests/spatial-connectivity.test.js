@@ -29,3 +29,22 @@ test('native component connectivity rejects a sealed enclosure without requestin
     'unloaded terrain cannot be declared sealed');
   assert.deepEqual(core.componentsWorld({x:60,z:0}),{ids:[],unknown:true});
 });
+
+test('native batch region lookup matches scalar regions across walls and unloaded chunks',()=>{
+  const core=createSpatialWorld(module);core.generate(712,0,0,'savanna');
+  core.setSettlement(0,0,7,6);core.buildNavigationProfile(0,1.1,false);
+  const points=[];
+  for(let z=-18;z<=18;z+=3)for(let x=-18;x<=18;x+=3)
+    points.push({x:x+.2,z:z-.3});
+  points.push({x:60,z:0});
+  const check=()=>assert.deepEqual(core.componentsWorldBatch(points),
+    points.map(point=>core.componentsWorld(point)));
+  check();
+  const wall=core.addWall(8,0,.5,6);assert(wall>0);check();
+  assert.equal(core.removeWall(wall),1);check();
+  const longBatch=Array.from({length:4097},(_,i)=>points[i%points.length]);
+  assert.deepEqual(core.componentsWorldBatch(longBatch).at(-1),
+    core.componentsWorld(longBatch.at(-1)));
+  assert.deepEqual(core.componentsWorldBatch([]),[]);
+  assert.throws(()=>core.componentsWorldBatch([{x:Infinity,z:0}]),/finite/);
+});

@@ -22,6 +22,7 @@ uint8_t* lazy_inbound_ptr();
 int lazy_commit_sector(int sx,int sz);
 int lazy_remove_sector(int sx,int sz);
 int lazy_route(int fromX,int fromZ,int toX,int toZ);
+int lazy_component(int worldX,int worldZ);
 int32_t* lazy_route_ptr();
 int lazy_loaded_sectors();
 int lazy_sector_slots();
@@ -114,6 +115,8 @@ PolygonIndex& polygonIndex(){
   return *polygonRegistry;
 }
 std::vector<float> polygonInput;
+std::vector<float> regionBatchInput;
+std::vector<int32_t> regionBatchOutput;
 std::vector<PolygonStateRecord> polygonState;
 std::vector<Settlement> settlements;
 std::vector<size_t> nearbySettlements;
@@ -1543,7 +1546,8 @@ int spatial_add_polygon(int count,int passMask){
   for(int i=0;i<count;i++){
     const float x=polygonInput[i*2],z=polygonInput[i*2+1];
     const int next=(i+1)%count;
-    if(!std::isfinite(x)||!std::isfinite(z))return 0;
+    constexpr float limit=2147483000.0f;
+    if(!std::isfinite(x)||!std::isfinite(z)||std::abs(x)>limit||std::abs(z)>limit)return 0;
     minX=std::min(minX,x);maxX=std::max(maxX,x);
     minZ=std::min(minZ,z);maxZ=std::max(maxZ,z);
     area+=double(x)*polygonInput[next*2+1]-double(z)*polygonInput[next*2];
@@ -1762,6 +1766,39 @@ int spatial_local_clear(float x,float z,float nx,float nz){
        !barrierClear(px,pz))return 0;
   }
   return 1;
+}
+// One JS->WASM call classifies many actor/crop positions. Each output row is
+// [unknown, component0..3]; -1 denotes an unused component slot. Keep every
+// reachable anchor: a fractional position may straddle two components.
+float* spatial_region_batch_input_ptr(int count){
+  if(count<1||count>4096)return nullptr;
+  regionBatchInput.resize(size_t(count)*2);
+  return regionBatchInput.data();
+}
+int32_t* spatial_region_batch_output_ptr(){return regionBatchOutput.data();}
+int spatial_region_batch(int count){
+  if(count<1||count>4096||regionBatchInput.size()<size_t(count)*2)return 0;
+  regionBatchOutput.assign(size_t(count)*5,-1);
+  for(int i=0;i<count;i++){
+    const float x=regionBatchInput[i*2],z=regionBatchInput[i*2+1];
+    if(!std::isfinite(x)||!std::isfinite(z))return 0;
+    const int xs[2]={int(std::floor(x)),int(std::ceil(x))};
+    const int zs[2]={int(std::floor(z)),int(std::ceil(z))};
+    int found=0;
+    regionBatchOutput[i*5]=0;
+    for(int xi=0;xi<2;xi++)for(int zi=0;zi<2;zi++){
+      if((xi&&xs[xi]==xs[0])||(zi&&zs[zi]==zs[0]))continue;
+      const int ax=xs[xi],az=zs[zi],component=lazy_component(ax,az);
+      if(component==-1){regionBatchOutput[i*5]=1;continue;}
+      if(component<0)continue;
+      bool duplicate=false;
+      for(int slot=0;slot<found;slot++)if(regionBatchOutput[i*5+1+slot]==component){duplicate=true;break;}
+      if(duplicate||!spatial_local_clear(x,z,float(ax),float(az)))continue;
+      regionBatchOutput[i*5+1+found++]=component;
+    }
+    std::sort(regionBatchOutput.begin()+i*5+1,regionBatchOutput.begin()+i*5+1+found);
+  }
+  return count;
 }
 int spatial_prop_blocked(float x,float z){return propBlocked(x,z);}
 }

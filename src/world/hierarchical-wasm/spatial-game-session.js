@@ -80,6 +80,10 @@ export function createSpatialGameSession(module,state,streamOptions){
     actorProfile(options);
     return core.componentsWorld(point);
   }
+  function actorRegionsBatch(points,options){
+    actorProfile(options);
+    return core.componentsWorldBatch(points);
+  }
   function actorCanStand(point,options){
     if(!Number.isFinite(point?.x)||!Number.isFinite(point?.z))
       throw TypeError('Expected a finite actor position');
@@ -100,6 +104,6 @@ export function createSpatialGameSession(module,state,streamOptions){
   const topologySource={revision:()=>terrainRevision+walls.revision()+
     centers.revision()+shields.revision()+props.revision()};
   return {core,field,stream,horizonSource,topologySource,suppressed:props.suppressed,syncState,
-    routeActor,actorConnectivity,actorRegions,actorCanStand,actorStepClear,
+    routeActor,actorConnectivity,actorRegions,actorRegionsBatch,actorCanStand,actorStepClear,
     dispose:()=>stream.dispose()};
 }

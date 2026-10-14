@@ -128,6 +128,10 @@ test('the same game-state session streams and routes in all six biomes',async()=
       animal ||= session.routeActor(point,point,{worker:false}).status==='found';
     }
     assert(worker&&animal,`${biome} has no usable actor positions`);
+    const samples=[{x:-8.2,z:-7.7},{x:0.2,z:.3},{x:8.4,z:7.5}];
+    for(const options of [{worker:true},{worker:false,species:'warthog'}])
+      assert.deepEqual(session.actorRegionsBatch(samples,options),
+        samples.map(point=>session.actorRegions(point,options)),biome);
     if(biome==='gran-canon'){
       let riverCrossing=null;
       for(let z=-20;z<=20&&!riverCrossing;z+=2)for(let x=-22;x<=22;x++){
@@ -137,6 +141,9 @@ test('the same game-state session streams and routes in all six biomes',async()=
           riverCrossing=point;
       }
       assert(riverCrossing,'a canyon worker should use water that blocks an animal');
+      assert(session.actorRegionsBatch([riverCrossing],{worker:true})[0].ids.length>0);
+      assert.equal(session.actorRegionsBatch([riverCrossing],
+        {worker:false,species:'warthog'})[0].ids.length,0);
     }
     session.dispose();
   }

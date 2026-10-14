@@ -83,6 +83,32 @@ export function createSpatialWorld(module){
     const result=wasm.lazy_component(point.x,point.z);
     return result===-1?null:result;
   }
+  function componentsWorldBatch(points){
+    if(!Array.isArray(points)||!points.every(point=>
+      Number.isFinite(point?.x)&&Number.isFinite(point?.z)&&
+      Math.abs(point.x)<2147483000&&Math.abs(point.z)<2147483000))
+      throw RangeError('Region batch needs finite world coordinates');
+    if(!navigationBuilt)return points.map(()=>({ids:[],unknown:true}));
+    const result=[];
+    for(let offset=0;offset<points.length;offset+=4096){
+      const count=Math.min(4096,points.length-offset);
+      const pointer=wasm.spatial_region_batch_input_ptr(count);
+      if(!pointer)throw Error('Could not allocate native region batch');
+      const input=new Float32Array(wasm.memory.buffer,pointer,count*2);
+      for(let i=0;i<count;i++){
+        input[i*2]=points[offset+i].x;
+        input[i*2+1]=points[offset+i].z;
+      }
+      if(wasm.spatial_region_batch(count)!==count)throw Error('Native region batch failed');
+      const rows=new Int32Array(wasm.memory.buffer,wasm.spatial_region_batch_output_ptr(),count*5);
+      for(let i=0;i<count;i++){
+        const ids=[];
+        for(let slot=1;slot<=4;slot++)if(rows[i*5+slot]>=0)ids.push(rows[i*5+slot]);
+        result.push({ids,unknown:rows[i*5]!==0});
+      }
+    }
+    return result;
+  }
   const surface=(x,z)=>wasm.spatial_surface(x,z);
   const slope=(x,z)=>Math.hypot(surface(x+.8,z)-surface(x-.8,z),
     surface(x,z+.8)-surface(x,z-.8))/1.6;
@@ -91,6 +117,7 @@ export function createSpatialWorld(module){
     routeWorld:(start,end)=>navigationBuilt?spatialWorldRoute(wasm,route,start,end):{status:'unknown',points:[]},
     connectedWorld:(start,end)=>navigationBuilt?spatialWorldConnectivity(wasm,connected,start,end):'unknown',
     componentsWorld:point=>navigationBuilt?spatialWorldComponents(wasm,componentAt,point):{ids:[],unknown:true},
+    componentsWorldBatch,
     localClear:(start,end)=>Boolean(wasm.spatial_local_clear(start.x,start.z,end.x,end.z)),
     setSettlement:(x,z,hx,hz)=>{
       if(!generated)throw Error('Generate the world before placing a settlement');
