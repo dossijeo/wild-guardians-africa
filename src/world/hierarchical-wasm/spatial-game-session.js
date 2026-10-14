@@ -16,9 +16,14 @@ import {BIOME_IDS} from '../biome-ids.js';
 export function createSpatialGameSession(module,state,streamOptions){
   if(!Object.hasOwn(BIOME_IDS,state?.biome)||!Array.isArray(state.villages)||!state.villages.length)
     throw TypeError('Expected a supported game biome and a village');
-  const core=createSpatialWorld(module),first=state.villages[0];
+  const core=streamOptions.core??createSpatialWorld(module),first=state.villages[0];
   const cx=Math.floor((first.x+24)/48),cz=Math.floor((first.z+24)/48);
-  core.generate(state.seed,cx,cz,state.biome);
+  if(streamOptions.core){
+    const generated=core.terrainState();
+    if(String(generated.seed)!==String(state.seed)||
+      generated.biome!==BIOME_IDS[state.biome])
+      throw TypeError('Pre-generated spatial world does not match game state');
+  }else core.generate(state.seed,cx,cz,state.biome);
   const field=createSpatialTerrainView(core);
   const villages=new Map();
   const chunkRevisions=new Map();
@@ -32,18 +37,28 @@ export function createSpatialGameSession(module,state,streamOptions){
         s.status!=='ruined').map(s=>centerFootprint(s,gameState).footprint)];
     const points=footprints.flat();
     if(!points.length)throw TypeError('A spatial village needs physical buildings');
-    const hx=Math.max(...points.map(p=>Math.abs(p.x-village.x)))+1.25;
-    const hz=Math.max(...points.map(p=>Math.abs(p.z-village.z)))+1.25;
-    if(![village.x,village.z,hx,hz].every(Number.isFinite)||hx>100||hz>100)
-      throw RangeError('Spatial settlement exceeds supported bounds');
-    const level=initial?core.setSettlement(village.x,village.z,hx,hz):
-      core.addSettlement(village.x,village.z,hx,hz);
-    if(!Number.isFinite(level))throw Error('Could not create spatial settlement');
-    const changed=core.changedChunks().map(({cx,cz})=>`${cx},${cz}`);
+    const sites=gameState.biome==='gran-canon'?footprints.map(footprint=>{
+      const xs=footprint.map(point=>point.x),zs=footprint.map(point=>point.z);
+      const minX=Math.min(...xs),maxX=Math.max(...xs),
+        minZ=Math.min(...zs),maxZ=Math.max(...zs);
+      return {x:(minX+maxX)/2,z:(minZ+maxZ)/2,
+        hx:(maxX-minX)/2+1.25,hz:(maxZ-minZ)/2+1.25};
+    }):[{x:village.x,z:village.z,
+      hx:Math.max(...points.map(p=>Math.abs(p.x-village.x)))+1.25,
+      hz:Math.max(...points.map(p=>Math.abs(p.z-village.z)))+1.25}];
+    const changed=new Set();
+    for(const [i,site] of sites.entries()){
+      if(!Object.values(site).every(Number.isFinite)||site.hx>100||site.hz>100)
+        throw RangeError('Spatial settlement exceeds supported bounds');
+      const level=initial&&i===0?core.setSettlement(site.x,site.z,site.hx,site.hz):
+        core.addSettlement(site.x,site.z,site.hx,site.hz);
+      if(!Number.isFinite(level))throw Error('Could not create spatial settlement');
+      for(const {cx,cz} of core.changedChunks())changed.add(`${cx},${cz}`);
+    }
     for(const key of changed)chunkRevisions.set(key,(chunkRevisions.get(key)??0)+1);
     villages.set(village.id,addSpatialVillageBuildings(core,village));
     terrainRevision++;
-    if(stream)stream.invalidate(changed);
+    if(stream)stream.invalidate([...changed]);
   }
   for(const village of state.villages)installVillage(village,state,village===first);
   const walls=createSpatialWallMirror(core),centers=createSpatialCenterMirror(core),

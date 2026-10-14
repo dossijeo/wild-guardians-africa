@@ -15,6 +15,7 @@ export function createSpatialTerrainView(core){
     seed,c:{seed:String(seed),biome,river:!desert&&!wetland},canyon,wetland,desert,
     riverActive:!desert&&!wetland,riverLevel:core.fluidSurfaceLevel(),
     surface,fluidInside,waterInfo,riverX:z=>core.riverCenter(z),
+    riverEdge:(z,direction)=>core.riverEdge(z,direction),
     wetlandLevel:()=>core.fluidSurfaceLevel(),
     slope:(x,z)=>Math.hypot(surface(x+.8,z)-surface(x-.8,z),
       surface(x,z+.8)-surface(x,z-.8))/1.6,

@@ -2,8 +2,13 @@ import {centerFootprint,centerServicePoint} from '../centers.js';
 import {villageLayout} from '../villages.js';
 import {footprintsOverlap} from '../footprints.js';
 import {createSpatialGameSession} from './spatial-game-session.js';
+import {createSpatialWorld} from './spatial-world.js';
+import {createSpatialTerrainView} from './spatial-terrain-view.js';
+import {spatialCanyonLayout} from './spatial-canyon-layout.js';
 import {createSpatialNavigationMovement,SpatialChunkUnavailable} from './spatial-navigation-movement.js';
 import {createSpatialPlacement} from './spatial-placement.js';
+import {canyonLandAccess} from '../canyon-land-access.js';
+import {ANIMAL_SPATIAL_PROFILES} from './spatial-movement-profiles.js';
 
 const chunkCoordinate=value=>Math.floor((value+24)/48);
 const chunkJobs=(points,margin=20)=>{
@@ -16,21 +21,30 @@ const chunkJobs=(points,margin=20)=>{
 
 const ordinaryBiomes=new Set(['sabana','gran-rio','manglares','volcanes','desierto']);
 
-// Non-canyon integration probe. All terrain, prop and movement decisions below
+// Integration probe. All terrain, prop and movement decisions below
 // come from one C++ world; the game-state clone is only a proposed layout.
 export async function probeSpatialStart(module,state,payload,{x=60,z=0,chunkMargin=20}={}){
-  if(!ordinaryBiomes.has(state?.biome)||!state.villages?.length||state.structures?.length||
+  if(!(ordinaryBiomes.has(state?.biome)||state?.biome==='gran-canon')||
+    !state.villages?.length||state.structures?.length||
     !Array.isArray(payload?.units)||![x,z,chunkMargin].every(Number.isFinite)||
     chunkMargin<0)
-    throw TypeError('Expected a new non-canyon game and an authored village');
+    throw TypeError('Expected a new supported game and an authored village');
   const trial=structuredClone(state),village=trial.villages[0];
-  Object.assign(village,{x,z,buildings:villageLayout(payload,x,z)});
-  const center={id:'spatial-start-center',kind:'center',x:x+23,z,
+  let core=null,layout=null;
+  if(state.biome==='gran-canon'){
+    core=createSpatialWorld(module);
+    core.generate(state.seed,chunkCoordinate(x),chunkCoordinate(z),state.biome);
+    layout=spatialCanyonLayout(payload,createSpatialTerrainView(core),z);
+    x=layout.x;
+  }
+  Object.assign(village,{x,z,buildings:layout?.buildings??villageLayout(payload,x,z)});
+  const center={id:'spatial-start-center',kind:'center',x:layout?.center.x??x+23,
+    z:layout?.center.z??z,
     culture:village.culture,villageId:village.id,status:'intact',hp:600,maxHp:600};
   trial.structures.push(center);
   const shape=centerFootprint(center,trial),loaded=new Map();
   const session=createSpatialGameSession(module,trial,{
-    loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+    core,loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
   try{
     let chunkExpansions=0;
     const extent=[...village.buildings.flatMap(building=>building.footprint??[building]),
@@ -83,10 +97,18 @@ export async function probeSpatialStart(module,state,payload,{x=60,z=0,chunkMarg
             reaches(departure,point)&&reaches(point,departure))farm.push(point);
         }
       if(farm.length<12){if(unresolved)throw unresolved;return {valid:false,reason:'farm-access',entry,farm};}
+      let landAccess=null;
+      if(state.biome==='gran-canon'){
+        landAccess=canyonLandAccess(nav,farm,
+          {radius:ANIMAL_SPATIAL_PROFILES.warthog.radius});
+        if(!landAccess){if(unresolved)throw unresolved;
+          return {valid:false,reason:'no-hostile-land-access',entry,farm};}
+      }
       return {valid:true,site:{x,z,buildings:village.buildings,
         center:{kind:'center',x:center.x,z:center.z,culture:center.culture},entry,
         suppress:[...new Set([...checks,centerCheck].flatMap(check=>check.suppress??[]))]},
-      farm,loadedChunks:session.core.metrics().loadedChunks,chunkExpansions};
+      farm,landAccess,loadedChunks:session.core.metrics().loadedChunks,
+      chunkExpansions};
     };
     for(let attempt=0;attempt<4;attempt++){
       try{return evaluate();}
@@ -97,7 +119,9 @@ export async function probeSpatialStart(module,state,payload,{x=60,z=0,chunkMarg
         const desired=new Map(session.stream.desired);
         for(const point of needed)desired.set(`${point.cx},${point.cz}`,
           {cx:point.cx,cz:point.cz,score:0});
-        if(desired.size===session.stream.desired.size)throw error;
+        if(desired.size===session.stream.desired.size)
+          return {valid:false,reason:'unresolved-native-route',
+            start:error.start,end:error.end,chunkExpansions};
         session.stream.plan(desired);
         await session.stream.whenIdle();
         chunkExpansions++;
@@ -115,8 +139,9 @@ export async function findSpatialStart(module,state,payload,{signal}={}){
     const count=ring?Math.max(24,Math.ceil(2*Math.PI*ring)):1;
     for(let angle=0;angle<count;angle++){
       if(signal?.aborted)throw new DOMException('Initial location cancelled','AbortError');
-      const x=60+Math.cos(angle/count*Math.PI*2)*ring*12;
-      const z=Math.sin(angle/count*Math.PI*2)*ring*12;
+      const canyon=state.biome==='gran-canon';
+      const x=canyon?0:60+Math.cos(angle/count*Math.PI*2)*ring*12;
+      const z=canyon?ring*24+angle*12-30:Math.sin(angle/count*Math.PI*2)*ring*12;
       const result=await probeSpatialStart(module,state,payload,{x,z});
       attempts++;
       if(result.valid)return {...result,attempts};

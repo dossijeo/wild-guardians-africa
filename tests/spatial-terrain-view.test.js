@@ -14,6 +14,8 @@ for(const biome of ['savanna','desert','grand_river','volcanoes','mangrove','can
     assert.equal(field.c.biome,biome);
     assert.equal(field.seed,core.terrainState().seed);
     assert.equal(field.riverLevel,core.fluidSurfaceLevel());
+    for(const z of [-12,0,18])for(const direction of [-1,1])
+      assert.equal(field.riverEdge(z,direction),core.riverEdge(z,direction));
     for(const [x,z] of [[0,0],[18.25,-7.5],[-20,11],[75.25,60.5]]){
       assert.equal(field.surface(x,z),core.surfaceAnywhere(x,z));
       const info=field.waterInfo(x,z),level=core.fluidLevelAnywhere(x,z);
@@ -38,3 +40,17 @@ for(const biome of ['savanna','desert','grand_river','volcanoes','mangrove','can
     if(biome!=='mangrove')assert(nearby.some(point=>field.surface(point.x,point.z)!==point.before),
       'the view must observe a native terrain edit');
   });
+
+test('a canyon settlement spanning both banks preserves the wet river barrier',()=>{
+  const core=createSpatialWorld(module);core.generate(712,0,0,'canyons');
+  const field=createSpatialTerrainView(core),center=field.riverX(0);
+  const points=[-12,-6,0,6,12].map(z=>({x:field.riverX(z),z}));
+  assert(points.every(point=>field.fluidInside(point.x,point.z)));
+  core.setSettlement(center,0,27,16);
+  for(const point of points){
+    assert.equal(field.fluidInside(point.x,point.z),true,
+      `settlement must not dry the river at z=${point.z}`);
+    assert(field.surface(point.x,point.z)<field.riverLevel,
+      `settlement must not fill the riverbed at z=${point.z}`);
+  }
+});

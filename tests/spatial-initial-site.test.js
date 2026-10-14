@@ -56,3 +56,18 @@ test('five non-canyon biomes evaluate their first settlement with one native wor
       assert.equal(result.farm.length,12);
     }
 });
+
+test('native Gran Cañón start keeps the river and proves hostile land access',async(t)=>{
+  for(const pack of packs)for(const seed of [712,123]){
+    const culture=pack.id==='saheliano'?'saheliana':pack.id;
+    const state=Game.newGame({seed,biome:'gran-canon',
+      culture,slotId:'native-canyon-start'});
+    const result=await findSpatialStart(module,state,pack);
+    assert.equal(result.valid,true,`${culture}/${seed}: ${JSON.stringify(result)}`);
+    assert.equal(result.farm.length,12);
+    assert(result.landAccess?.path.length>0);
+    assert(result.site.buildings.some(building=>building.x<result.site.x));
+    assert(result.site.buildings.some(building=>building.x>result.site.x));
+    t.diagnostic(`${culture}/${seed}: ${result.attempts} candidates, ${result.loadedChunks} chunks`);
+  }
+});
