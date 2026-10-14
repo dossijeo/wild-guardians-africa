@@ -1,16 +1,75 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
+import {gunzipSync} from 'node:zlib';
 import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+import {nativeCameraPose} from '../src/rendering/terrain-camera.js';
+import {activeChunkRegion} from '../src/world/active-region.js';
+import {deserialize} from '../src/persistence/snapshots.js';
 import {villageLayout} from '../src/world/villages.js';
 import {spawnRaid} from '../src/simulation/raids.js';
 import * as Game from '../src/simulation/game.js';
+import {syncNativeCampaignRaidView} from '../tools/native-campaign-runner.mjs';
+import {createNativeCampaignPlots} from '../tools/native-campaign-plots.mjs';
 
 const module=new WebAssembly.Module(readFileSync(new URL(
   '../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
 const pack=JSON.parse(readFileSync(new URL('../public/content/villages.json',
   import.meta.url),'utf8'))[0];
+
+test('Volcanes day-10 raid uses the replacement center for the headless camera',()=>{
+  const artifact=JSON.parse(gunzipSync(readFileSync(new URL(
+    './fixtures/volcanes-907-day10-native-entry.json.gz',import.meta.url))));
+  const state=deserialize(artifact.partialState),loaded=new Map();
+  const session=createSpatialGameSession(module,state,{
+    loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+  try{
+    const center=state.structures.find(s=>s.kind==='center'&&s.status==='intact');
+    assert.deepEqual({x:center.x,z:center.z},{x:83,z:0});
+    const stale={x:84,z:9},eye={x:100.70247532024266,z:39.57367599590944};
+    const bounds=activeChunkRegion(eye).bounds;
+    const cx=Math.floor((eye.x+24)/48),cz=Math.floor((eye.z+24)/48);
+    const load=(x,z)=>{
+      if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+      loaded.set(`${x},${z}`,session.core.chunkPayload());
+    };
+    for(let z=cz-2;z<=cz+2;z++)for(let x=cx-2;x<=cx+2;x++)load(x,z);
+    const nav=createSpatialNavigationMovement(session,state);
+    const currentCenter=syncNativeCampaignRaidView(state,nav,null);
+    assert.equal(currentCenter.key,`${center.id}:83:0`);
+    // Plot search can focus a previously explored parcel without replacing
+    // the operational center. Use its real focus path to overwrite raidView.
+    const placement=nav.placement,path=nav.path;
+    nav.placement=()=>({valid:true});nav.path=()=>[];
+    try{
+      const plotState={...state,structures:[{...center,x:84,z:9}],plants:[]};
+      createNativeCampaignPlots(nav,()=>plotState,{spacing:48,checksPerDecision:1}).choose();
+    }finally{nav.placement=placement;nav.path=path;}
+    assert.deepEqual(nav.raidView.target,stale);
+    assert.deepEqual(nav.raidView.eye,eye);
+    assert.deepEqual(nav.activeBounds,bounds);
+    assert.equal(spawnRaid(state,state.nightPlan,nav),false);
+    assert(nav.raidEntryFailure);
+    assert.equal(syncNativeCampaignRaidView(state,nav,currentCenter),currentCenter);
+    const pose=nativeCameraPose(session.field,[center.x,0,center.z],.5,1.16,38);
+    assert.deepEqual(nav.raidView,{eye:{x:pose.eye[0],z:pose.eye[2]},target:{x:83,z:0}});
+    assert.equal(spawnRaid(state,state.nightPlan,nav),true);
+    assert.equal(nav.raidEntryFailure,undefined);
+    assert.equal(state.raid.animals.length,state.nightPlan.group.length);
+    assert(state.raid.animals.every(a=>nav.walkable(a.x,a.z,a.radius,null,false)&&
+      nav.segmentClear(a,a.exit,a.radius,null,false)));
+    const entryBounds=nav.activeBounds;
+    syncNativeCampaignRaidView(state,nav,currentCenter);
+    assert.deepEqual(nav.activeBounds,entryBounds,'valid raid residency remains pinned');
+    const replacement={...center,id:'structure-3',x:251,z:144};
+    const changed=syncNativeCampaignRaidView({...state,structures:[replacement]},nav,currentCenter);
+    const movedPose=nativeCameraPose(session.field,[251,0,144],.5,1.16,38);
+    assert.equal(changed.key,'structure-3:251:144');
+    assert.deepEqual(nav.raidView.target,{x:251,z:144});
+    assert.deepEqual(nav.activeBounds,activeChunkRegion({x:movedPose.eye[0],z:movedPose.eye[2]}).bounds);
+  }finally{session.dispose();}
+});
 
 test('a native Sabana incursion spawns physically and advances through Game.tick',async()=>{
   const state=Game.newGame({seed:712,biome:'sabana',culture:'mapungubwe',
