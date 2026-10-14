@@ -34,11 +34,15 @@ save/reload, retreat and six-biome opening. Frozen Gran Cañón day-6 and
 Sabana day-12 benchmarks cover costly raid/navigation states. Sabana native
 campaigns have advanced 16 and 20 completed nights and ended in audited
 defeats; these demonstrate natural loss resolution but do not cover the
-late-game workload. `spatial-campaign-terminal.test.js` now passes 2/2 on a
-real C++ Sabana world: an explicitly constructed night-100 state resolves a
-physical raid before victory or economic defeat, emits one terminal event,
-and survives terminal save/load. It is a transition fixture, not a played
-100-night campaign. The archived five-culture postgame timing tests use
+late-game workload. `spatial-campaign-terminal.test.js` now passes 3/3 on a
+real C++ Sabana world: explicitly constructed night-100 states resolve a
+physical raid before victory or economic defeat, emit one terminal event,
+and survive terminal save/load. A separate mid-campaign fixture saves during
+a 100-crop, 16-animal raid, rebuilds the C++ spatial session from the saved
+game, and completes the raid with real impacts; every post-reload movement
+step is checked against native static collision. These are controlled
+lifecycle fixtures, not a played 100-night campaign. The archived
+five-culture postgame timing tests use
 ordinary game-state fixtures and do not by themselves certify sustained C++
 spatial-world postgame play.
 
@@ -47,7 +51,7 @@ The full repository suite on `90c1c2a9` ran 4,318 tests in 464.3 seconds:
 with `8b6693b9`. Three old navigation-scope cases disappeared because their
 retired implementation and tests were removed; one corrected historical
 capacity-evidence check now passes. The full TAP log is
-`full-suite-90c1c2a9.log.gz`. The two terminal tests were added after this
+`full-suite-90c1c2a9.log.gz`. The three lifecycle tests were added after this
 frozen suite, so they are not included in that count.
 
 A reproducible synthetic workload runner,
@@ -96,8 +100,8 @@ and `engine-stage-stress-canyon-{123,712}.json`. Each includes attack and retrea
 counts. Timings are single-run QA observations, not portable thresholds.
 
 Before merging, expand the integrated spatial-world phase-stress matrix with
-late-stage wall/perimeter topology, multiple seeds and biomes, save/load in an
-active dense raid, and explicit physical collision audits. Investigate the
+late-stage wall/perimeter topology, more seeds across the other biomes,
+save/load in a late dense raid and explicit physical collision audits. Investigate the
 Gran Cañón retreat reasons, inspect relevant failures from the full suite and
 complete the platform checks. Publish input states and results. A 100-night
 winning bot campaign may inform later balance work but is **not** an engine
