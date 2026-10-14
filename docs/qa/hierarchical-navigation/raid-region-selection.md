@@ -269,6 +269,11 @@ detour. The hierarchical route follows a different collision-safe corridor
 and arrives on tick 166 at unchanged speed; every sampled landing remains
 terrain-valid. The limit is now 200 ticks, preserving its permanent-stall
 check without requiring the old route. All six worker-clearance tests pass.
+The reservation reconciliation now treats a missing `raid.reservations` map
+as empty, then creates the current individual-reservation map. This removes
+the exception in two synthetic raid-end/worker-displacement tests without
+changing target ownership in normal raids. The 17 displacement and
+individual-reservation tests pass.
 
 ## Reproduce
 

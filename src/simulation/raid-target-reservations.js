@@ -30,7 +30,7 @@ export function reconcileTargetReservations(state,release){
   }
   claimed.add(key);a.reservation=key;owners[key]=a.id;if(a.approach)approaches.push(a);
  }
- const before=Object.entries(raid.reservations).sort().map(e=>e.join(':')).join('|'),after=Object.entries(owners).sort().map(e=>e.join(':')).join('|');
+ const before=Object.entries(raid.reservations??{}).sort().map(e=>e.join(':')).join('|'),after=Object.entries(owners).sort().map(e=>e.join(':')).join('|');
  raid.reservations=owners;raid.targetReservationVersion=2;
  if(before!==after)raid.waitRevision=((raid.waitRevision??0)+1)>>>0;
 }
