@@ -1,0 +1,73 @@
+{
+  "scope": "Read-only reconstruction of an archived Wild Engine active raid. Classification uses animal physical profiles and resident WASM components; no campaign ticks, balance changes or synthetic breach.",
+  "source": "docs/qa/hierarchical-navigation/spatial-virtual-sabana-30-stable-obstacles-state.json",
+  "sourceSha256": "7aab0c1498b1899d13889924df1d9de7b0f0fb8a3d3cc23c9b99876fe5b20ee0",
+  "seed": "712",
+  "biome": "sabana",
+  "day": 25,
+  "raidId": "raid-25-night",
+  "livingCrops": 30,
+  "residentChunks": 12,
+  "walls": 49,
+  "sample": {
+    "reason": "initial",
+    "raidId": "raid-25-night",
+    "day": 25,
+    "elapsed": 17959.30000001714,
+    "topology": 4,
+    "profiles": [
+      {
+        "species": "warthog",
+        "radius": 1.1,
+        "origins": 14,
+        "regions": 3,
+        "crops": 30,
+        "protected": 0,
+        "exposed": 0,
+        "open": 26,
+        "unknown": 4
+      },
+      {
+        "species": "buffalo",
+        "radius": 0.97,
+        "origins": 1,
+        "regions": 3,
+        "crops": 30,
+        "protected": 0,
+        "exposed": 0,
+        "open": 26,
+        "unknown": 4
+      },
+      {
+        "species": "hyena",
+        "radius": 0.9,
+        "origins": 1,
+        "regions": 3,
+        "crops": 30,
+        "protected": 0,
+        "exposed": 0,
+        "open": 26,
+        "unknown": 4
+      }
+    ],
+    "transition": {
+      "previousProtected": 0,
+      "newlyExposed": 0,
+      "stillProtected": 0,
+      "removedWalls": [],
+      "breachExposure": 0
+    },
+    "wallCount": 49,
+    "livingCrops": 30,
+    "elapsedMs": 431.0503000000001
+  },
+  "counters": {
+    "samples": 1,
+    "plantsClassified": 90,
+    "regionBatches": 3,
+    "enclosureQueries": 9,
+    "connectivityQueries": 0,
+    "unknownRegions": 12,
+    "elapsedMs": 431.0503000000001
+  }
+}
