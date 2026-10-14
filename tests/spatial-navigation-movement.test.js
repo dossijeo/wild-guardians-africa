@@ -4,6 +4,7 @@ import {readFileSync} from 'node:fs';
 import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
 import {createSpatialNavigationMovement,SpatialChunkUnavailable} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
 import {createSpatialPlacement} from '../src/world/hierarchical-wasm/spatial-placement.js';
+import {findSpatialStart} from '../src/world/hierarchical-wasm/spatial-initial-site.js';
 import {villageLayout} from '../src/world/villages.js';
 import * as Game from '../src/simulation/game.js';
 import {numberOf} from '../src/simulation/money.js';
@@ -47,6 +48,10 @@ test('movement contract uses only native profiles, topology and physically check
     assert(nav.walkable(crossing.start.x,crossing.start.z,.28,null,true));
     assert(nav.walkable(crossing.start.x,crossing.start.z,1.1,null,false));
     assert(nav.segmentClear(crossing.start,crossing.end,.28,null,true));
+    assert(nav.regionFor(crossing.start,1.1,null,false)?.key);
+    assert.equal(nav.regionConnected(crossing.start,crossing.end,1.1,null,false),true);
+    assert.equal(nav.regionConnected(crossing.start,{x:480,z:0},1.1,null,false),null,
+      'nonresident terrain is unknown, not certified blocked');
     const before=nav.version;
     state.structures.push({id:'wall-1',kind:'wall',material:'adobe',status:'intact',
       x:23.5,z:crossing.start.z,yaw:0,baseScaleX:1,hp:100,gate:false});
@@ -62,6 +67,23 @@ test('movement contract uses only native profiles, topology and physically check
     assert.throws(()=>nav.path(crossing.start,crossing.end,.28,'wall-1',true),
       /target exclusion/);
   }finally{session.dispose();}
+});
+
+test('native region adapter distinguishes blocked, possible and unknown connectivity',()=>{
+  const state={seed:712,biome:'sabana',structures:[],villages:[]};
+  let connection='blocked',regions={ids:[12,7],unknown:false};
+  const session={field:{},suppressed:new Set(),topologySource:{revision:()=>1},
+    actorCanStand:()=>true,actorStepClear:()=>true,
+    routeActor:()=>({status:'blocked',points:[]}),
+    actorConnectivity:()=>connection,actorRegions:()=>regions};
+  const nav=createSpatialNavigationMovement(session,state);
+  const a={x:0,z:0},b={x:4,z:0};
+  assert.deepEqual(nav.regionFor(a,.28,null,true),{key:'7|12',ids:[7,12]});
+  assert.equal(nav.regionConnected(a,b,.28,null,true),false);
+  connection='possible';assert.equal(nav.regionConnected(a,b,.28,null,true),true);
+  connection='unknown';assert.equal(nav.regionConnected(a,b,.28,null,true),null);
+  regions={ids:[],unknown:true};assert.equal(nav.regionFor(a,.28,null,true),null);
+  assert.throws(()=>nav.regionFor({x:Infinity,z:0},.28,null,true),/finite/);
 });
 
 test('worker movement keeps the live gate leaf collision outside the native route graph',()=>{
@@ -215,6 +237,62 @@ test('a real paid crop action keeps the C++ terrain and prop authority in sync',
       'a paid worker should move toward a real task on native routes');
     assert(state.events.some(event=>event.type==='WaterSatisfied'),
       'the native route should let the worker finish a physical watering task');
+  }finally{session.dispose();}
+});
+
+test('real wall purchase and removal update the same rendered native collision world',async()=>{
+  const state=Game.newGame({seed:712,biome:'sabana',culture:'mapungubwe',slotId:'spatial-wall'});
+  state.villages[0].buildings=villageLayout(pack,0,0);
+  state.structures.push({id:'center-1',kind:'center',x:0,z:0,culture:'mapungubwe',
+    villageId:'village-1',status:'intact',hp:600,maxHp:600});
+  const loaded=new Map(),session=createSpatialGameSession(module,state,{
+    loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+  try{
+    session.stream.plan(new Map([['0,0',{cx:0,cz:0,score:0}]]));
+    await session.stream.whenIdle();
+    const nav=createSpatialNavigationMovement(session,state);
+    let site;
+    for(let z=-16;z<=16&&!site;z+=2)for(let x=-16;x<=16&&!site;x+=2){
+      const wall={kind:'wall',material:'zarzas',gate:true,x,z,yaw:0};
+      const a={x,z:z-1.4},b={x,z:z+1.4};
+      if(nav.wallPlacement(wall).valid&&
+         nav.segmentClear(a,b,1.1,null,false))site={wall,a,b};
+    }
+    assert(site,'fixture needs a valid clear wall crossing');
+    const before=numberOf(state.ledger.balance),revision=nav.version;
+    assert.equal(Game.placeStructure(state,'spatial-wall-purchase',site.wall,nav),true);
+    assert(numberOf(state.ledger.balance)<before,'the game charges the real wall price');
+    assert(nav.version>revision,'the native topology sees the purchase');
+    assert.equal(nav.segmentClear(site.a,site.b,1.1,null,false),false,
+      'an animal cannot cross the paid wall');
+    const wallId=state.structures.at(-1).id;
+    assert.equal(Game.removeWall(state,'spatial-wall-removal',wallId,nav),true);
+    assert.equal(nav.segmentClear(site.a,site.b,1.1,null,false),true,
+      'the same native graph reopens after removing the wall');
+    assert.equal(session.core.metrics().loadedChunks,1);
+  }finally{session.dispose();}
+});
+
+test('a native initial site permits the first paid work center through the game action',async()=>{
+  const state=Game.newGame({seed:712,biome:'sabana',culture:'mapungubwe',slotId:'spatial-center'});
+  const start=await findSpatialStart(module,state,pack);
+  Object.assign(state.villages[0],start.site);
+  state.suppressed.push(...start.site.suppress);
+  const loaded=new Map(),session=createSpatialGameSession(module,state,{
+    loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+  try{
+    const cx=Math.floor((start.site.center.x+24)/48),
+      cz=Math.floor((start.site.center.z+24)/48),jobs=new Map();
+    for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++)
+      jobs.set(`${cx+dx},${cz+dz}`,{cx:cx+dx,cz:cz+dz,score:Math.hypot(dx,dz)});
+    session.stream.plan(jobs);await session.stream.whenIdle();
+    const nav=createSpatialNavigationMovement(session,state);
+    const before=numberOf(state.ledger.balance);
+    assert.equal(Game.placeStructure(state,'spatial-first-center',{
+      kind:'center',x:start.site.center.x,z:start.site.center.z},nav),true);
+    assert.equal(state.structures.filter(item=>item.kind==='center').length,1);
+    assert.equal(numberOf(state.ledger.balance),before-800);
+    assert.equal(state.villages[0].entry.x,start.site.entry.x);
   }finally{session.dispose();}
 });
 

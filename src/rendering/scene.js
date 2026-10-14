@@ -167,7 +167,9 @@ export class WorldScene {
     this.warmedAnimals=new Set();
     this.animalPreload=new AnimalPreload(this.assets,id=>this.models.find(m=>m.source.includes(animalSources[id])),{skinEnvelope:this.animalSkinEnvelope===true});
     this.nav.raidEntryResident=(entry,radii)=>[...raidEntryChunks(entry,radii)].every(key=>this.chunks.has(key));
-    this.raidEntryPreparer=new RaidEntryPreparer(this.nav);
+    // The legacy preparer would reconstruct a second JavaScript terrain in
+    // its worker. Spatial QA keeps all route decisions in the native session.
+    this.raidEntryPreparer=spatialSession?null:new RaidEntryPreparer(this.nav);
     await phase('load-animal-models',()=>this.loadReady(this.warmAnimalModels(Object.keys(animalSources))));await milestone('animals');
     for(const [profile,library] of Object.entries(this.workerLibraries)){const path=this.wateringPaths.profiles[profile];if(path?.sourceSha256!==library.sha256)throw Error('Recorrido de regadera desactualizado: '+profile);this.wateringEmitters.set(profile,createWateringEmitter(path));}
     const cropModel=this.models.find(m=>m.source.includes('Cultivos'));

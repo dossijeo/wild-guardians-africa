@@ -72,6 +72,21 @@ export function createSpatialNavigationMovement(session,state){
     }
     return result.status==='found'?result.points:null;
   };
+  const regionFor=(point,radius=.28,ignore=null,worker=true)=>{
+    if(!finitePoint(point))throw TypeError('Expected a finite actor position');
+    const result=session.actorRegions(point,profile(radius,worker,ignore));
+    if(result.unknown||!result.ids.length)return null;
+    // Several local connectors can reach distinct components at a boundary.
+    // Keep all of them in the grouping key; connectivity itself still queries
+    // the graph and never rejects a route from this grouping approximation.
+    const ids=[...result.ids].sort((a,b)=>a-b);
+    return {key:ids.join('|'),ids};
+  };
+  const regionConnected=(start,end,radius=.28,ignore=null,worker=true)=>{
+    validate(start,end);
+    const result=session.actorConnectivity(start,end,profile(radius,worker,ignore));
+    return result==='blocked'?false:result==='possible'?true:null;
+  };
   const propsAt=(x,z,radius)=>{
     if(!session.queryPropsAt)throw TypeError('Spatial prop query is unavailable');
     const result=session.queryPropsAt(x,z,radius);
@@ -127,7 +142,9 @@ export function createSpatialNavigationMovement(session,state){
   };
   return {field:session.field,config,chunk,suppressed:session.suppressed,state,
     get version(){return session.topologySource.revision();},
-    walkable,segmentClear,path,propsAt,placement,wallPlacement,placementFootprint,
+    walkable,segmentClear,path,regionFor,regionConnected,
+    approachPath:(start,end,radius)=>path(start,end,radius,null,false),
+    propsAt,placement,wallPlacement,placementFootprint,
     workerSurface,actorSurface,
     setState,syncCropPlacement,
     workerPath:(start,end,radius=.28,ignore=null)=>path(start,end,radius,ignore,true),
