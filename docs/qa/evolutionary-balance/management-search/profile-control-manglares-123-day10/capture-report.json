@@ -1,0 +1,63 @@
+{
+  "source": "26ad9e7c088f9022910ad6df4f67bfce531a8258",
+  "moduleHashes": {
+    "tools/evolutionary-balance/capture-checkpoint.mjs": "297e59b33c73e040cdc7b401b2dcf91f990587f48982b00220b12b9c728292cb",
+    "tools/evolutionary-balance/run-ga.mjs": "9b27bcb37619c8cfad2fda2d007481b49465333d08a0cabbce402153d5147ad8",
+    "tools/native-campaign-runner.mjs": "daed3907265ad50956f3fe8ab142eb10e51bcf7e6fccf087831b71850e39b01f"
+  },
+  "biome": "manglares",
+  "seed": 123,
+  "day": 10,
+  "days": 10,
+  "strategy": "good-current-magic",
+  "genes": null,
+  "snapshots": [
+    {
+      "name": "good-current-magic-manglares-123-day10-dawn.json",
+      "day": 10,
+      "time": 0,
+      "raid": false,
+      "triggeringTickMs": 2.46730000001844,
+      "sha256": "1bdc93a15fd6ba88dd408947bed606d165e68386cf1b563e9b5771424fe328f4"
+    },
+    {
+      "name": "good-current-magic-manglares-123-day10-raid.json",
+      "day": 10,
+      "time": 430.00000000002956,
+      "raid": true,
+      "triggeringTickMs": 430.8564999999944,
+      "sha256": "9d2d0b77cd346c678e4f4f2d2ffe57b8b2b80eae0135ff8ec57dfc7788d74c8f"
+    }
+  ],
+  "status": "completed",
+  "completedNights": 10,
+  "result": null,
+  "lastRow": {
+    "day": 10,
+    "money": 974,
+    "living": 124,
+    "planted": 120,
+    "delivered": 131,
+    "destroyed": 0,
+    "staff": 23,
+    "magic": {
+      "growth": 0,
+      "multiply": 60,
+      "benefited": 60,
+      "ineffective": 0,
+      "multiplyIncome": 110,
+      "growthSecondsCompleted": 0
+    },
+    "income": 1551,
+    "seeds": 600,
+    "wages": 690,
+    "walls": 50,
+    "repairs": 117,
+    "reconciled": true,
+    "wallTime": {
+      "decisionMs": 15062.476500000223,
+      "gameTickMs": 44922.56820000004,
+      "presentationMs": 4.243799999647308
+    }
+  }
+}

@@ -104,13 +104,22 @@ modificar sus resultados, clasificó el snapshot **real** del inicio de la
 incursión del día 10 del líder. De 143 cultivos vivos, certificó 124 protegidos
 frente a jabalí y búfalo y 128 frente a hiena; dejó 19, 19 y 15 como
 `unknown`, respectivamente. No registró cultivos abiertos o expuestos en ese
-instante. Por tanto, la mayoría sí pertenece a un recinto cerrado según los
-perfiles físicos observados, pero no se conoce el estado tras brechas ni la
-clasificación equivalente del control. Esta observación no demuestra por sí
-sola por qué se perdieron 5 frente a 50 plantas hasta el día 14. La muestra
+instante. El snapshot emparejado del control, también al empezar su incursión
+del día 10, tenía 124 cultivos: 108 protegidos y 16 `unknown` frente a
+jabalí/búfalo; 111 protegidos y 13 `unknown` frente a hiena. El porcentaje
+certificado es prácticamente igual: 86,7 % del líder frente a 87,1 % del
+control para jabalí/búfalo; hiena 89,5 % en ambos. Los animales empezaron a
+atacar en distintos instantes del día por las diferencias legítimas de cada
+partida, de modo que esto es una comparación de estado topológico y no de
+posición temporal idéntica. La mayoría de ambas fincas sí pertenece a un
+recinto cerrado al inicio de esa incursión. **El cierre inicial no explica por
+sí solo las 5 frente a 50 pérdidas**; faltan brechas, tiempo de exposición,
+selección de objetivos y estado de noches posteriores. La muestra del líder
 fría tardó 1,20 s; cinco repeticiones calientes, 18–25 ms cada una con 143
-cultivos y 21 chunks residentes. El detalle está en
-`profile-manglares-123-day10/enclosure-raid-sample.json`. Su coste aconseja
+cultivos y 21 chunks residentes. La del control tardó 1,57 s fría y 24–34 ms
+caliente, con los mismos 21 chunks residentes. Los detalles están en los
+directorios `profile-manglares-123-day10/` y
+`profile-control-manglares-123-day10/`. Su coste aconseja
 muestrear por evento de topología, nunca cada tick; `unknown` no recibe crédito
 defensivo.
 
