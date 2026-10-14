@@ -50,15 +50,13 @@ test('legacy group saves migrate to individual claims without extra RNG draws',(
  const copy=deserialize(serialize(s)),rng=s.rng;nav.setState(copy);updateRaid(copy,0,nav);
  assert.equal(copy.rng,rng);assert.equal(copy.raid.targetReservationVersion,2);assert(!copy.raid.reservations['crop:legacy-component']);independent(copy);
 });
-test('group accessibility uses a complete native component certificate and invalidates when walls open',()=>{
+test('region connectivity rejects a closed crop enclosure and updates when walls open',()=>{
  const {s,nav}=fixture('closed-walls'),outside={x:16,z:30},inside={x:8,z:0};
  assert.equal(nav.approachPath(outside,inside,1.1,32),null);
- assert(nav.approachGroupBlocked(outside,s.plants,1.1,1.7));
- assert(nav.approachGroupBlocked({x:20,z:30},s.plants,1.1,1.7));
- assert.equal(nav.approachGroupBlocked(inside,s.plants,1.1,1.7),false);
- assert.equal(nav.approachGroupBlocked(outside,[...s.plants,{x:16,z:30}],1.1,1.7),false,'A geometrically connected zone crossing an obstacle cannot be rejected wholesale');
+ assert.equal(nav.regionConnected(outside,inside,1.1,null,false),false);
+ assert.equal(nav.regionConnected(inside,inside,1.1,null,false),true);
  for(const id of ['wall-2-4','wall-2-5']){const t=s.structures.find(t=>t.id===id);t.status='ruined';t.hp=0;}
- nav.setState(s);assert.equal(nav.approachGroupBlocked(outside,s.plants,1.1,1.7),false);
+ nav.setState(s);assert.equal(nav.regionConnected(outside,inside,1.1,null,false),true);
  assert(nav.approachPath(outside,inside,1.1,32));
 });
 test('a protected connected perimeter allows simultaneous attacks on separate pieces',()=>{

@@ -58,10 +58,19 @@ try{
     if(!nav.walkable(candidate.x,candidate.z,specs[0].radius,null,false))continue;
     edgeProbes.push({edge,...candidate,connected:nav.regionConnected(north,candidate,specs[0].radius,null,false)});
   }
+  const initial=process.argv[4]?JSON.parse(readFileSync(process.argv[4],'utf8')):null;
+  const initialEntries=initial?.checks.filter(c=>c.species==='rhino'&&c.witness)
+    .map(c=>({distance:c.distance,point:c.witness.entry}))??[];
+  const originalLandRoutes=initialEntries.map(({distance,point:entry})=>({distance,entry,
+    walkable:nav.walkable(entry.x,entry.z,specs[0].radius,null,false),
+    exterior:exteriorRaidWitness(entry,specs[0].radius,raidWallEnvelope(state,nav),nav),
+    targets:targets.map(t=>({id:t.id,distance:Math.hypot(t.x-entry.x,t.z-entry.z),
+      reachable:!!reachableApproach({...entry,radius:specs[0].radius},t,nav)}))
+      .filter(t=>t.reachable).sort((a,b)=>a.distance-b.distance).slice(0,5)}));
   const report={day:state.day,biome:state.biome,radius:specs[0].radius,
     bounds,wallEnvelope:raidWallEnvelope(state,nav),
     riverAtFarm:nav.field.riverX(state.villages[0].z),
-    farm:state.villages[0].center,nearest,bankProbes,edgeProbes,
+    farm:state.villages[0].center,nearest,bankProbes,edgeProbes,originalLandRoutes,
     northEdge:{...northEdge,walkable:nav.walkable(northX,northZ,specs[0].radius,null,false),
       route:!!nav.path(north,northEdge,specs[0].radius,null,false)},
     baseline:chooseRaidEntry(state,specs,bounds,0,nav),

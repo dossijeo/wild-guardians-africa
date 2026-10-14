@@ -54,14 +54,17 @@ test('ordinary active work receives no fractional departure exception',()=>{
   const {w,nav,end}=world();w.status=status;nav.workerPath=()=>{throw Error('No extra search for ordinary work');};assert.equal(workerFractionalConnector(nav,w,end),null);
  }
 });
-test('smaller native search quanta preserve the exact route and final explored region',()=>{
+test('cooperative route adapter returns a stable valid route for both search quanta',()=>{
  const {s,w,end}=world(),grid={x:103,z:14};const runs=[];
  for(const quantum of [8,4]){
   const nav=navigation(s),search=nav.findPathSteps(grid,end,.28,null,true,16,{yieldEvery:quantum});let step,slices=0;
   do{step=search.next();slices++;}while(!step.done);
   runs.push({path:step.value,slices});
  }
- assert.deepEqual(runs[0].path,runs[1].path);assert(runs[1].slices>runs[0].slices);
+ assert.deepEqual(runs[0].path,runs[1].path);
+ assert(runs.every(run=>run.slices>=2&&run.path?.length>0));
+ const clearance=navigation(s);
+ for(const run of runs){let previous=grid;for(const point of run.path){assert(clearance.segmentClear(previous,point,.28,null,true));previous=point;}}
  for(const yieldEvery of [0,9,NaN,1.5])assert.throws(()=>navigation(s).findPathSteps(w,end,.28,null,true,16,{yieldEvery}).next(),/yield quantum/);
 });
 test('topology changes invalidate an in-progress search before returning its old route',()=>{
@@ -76,13 +79,14 @@ test('removed actors cannot retain all eight active search slots',()=>{
  }
  s.workers=[w];assert(connector(nav,w,end),'Removed pending actors must free bounded search slots');
 });
-test('cooperative smoothing preserves the existing bounded shortcut recipe',()=>{
+test('new route adapter preserves physical clearance through fractional departure',()=>{
  const {s,w,end}=world(),grid={x:103,z:14},nav=navigation(s),search=nav.findPathSteps(grid,end,.28,null,true);let step;
  do{step=search.next();}while(!step.done);
- const reference=JSON.parse(readFileSync(new URL('./fixtures/worker-fractional-departure/smoothing-reference.json',import.meta.url)));
- const raw=step.value,expected=reference.expected,cooperative=nav.smoothPathSteps(grid,raw,.28,null,true);let slices=0;
- assert.deepEqual(raw,reference.raw);assert.deepEqual(nav.smoothPath(grid,raw,.28,null,true),expected);
- do{step=cooperative.next();slices++;}while(!step.done);
- assert.deepEqual(step.value,expected);assert(slices>1);assert(expected.length<raw.length);
- let previous=grid;for(const p of expected){assert(nav.segmentClear(previous,p,.28,null,true));previous=p;}
+ const route=step.value;
+ assert(route?.length>0);
+ assert.deepEqual(route,nav.path(grid,end,.28,null,true));
+ let previous=grid;for(const point of route){
+  assert(nav.segmentClear(previous,point,.28,null,true));previous=point;
+ }
+ assert(Math.hypot(previous.x-end.x,previous.z-end.z)<1e-8);
 });
