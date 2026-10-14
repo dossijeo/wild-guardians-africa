@@ -610,6 +610,20 @@ Any military calibration belongs to the separate balance work, using more
 seeds and unchanged player policy; this navigation branch has not changed
 attack composition, damage, radius, economy or virtual-player decisions.
 
+Two full-suite vertical agriculture failures in Gran Cañón were caused by
+the QA scenario's own timing and payout assumptions. It hired an older male
+whose shift ends at game time 250, required crop maturity before 240 and
+required pickup before 250. In the Saheliana and Etiope canyon worlds the
+real, watered crop matures later; this does not make its position unreachable.
+The vertical test now uses an older female working until 300, permits real
+maturation until 280 and pickup until 290, and expects the actual 11-coin
+base mijo delivery (665 to 676) rather than the male worker's 6/5 bonus.
+It still requires paid hiring, physical watering and movement, maturation,
+pickup, save/reload and a single physical delivery. All 30 biome/culture
+vertical tests pass. This changes only QA fixture and expectations, not game
+workforce, crop timing, navigation or income rules. The global 82-failure
+count predates this correction and has not been refreshed.
+
 ## Deferred engine name
 
 After the WASM spatial core is functionally and performance-stable, rename
