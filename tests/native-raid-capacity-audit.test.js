@@ -1,10 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {createHash} from 'node:crypto';
 import {capacityAudit} from '../tools/audit-native-raid-capacity.mjs';
 import {animalSpec} from '../src/simulation/rules.js';
-test('native capacity separates two-hit healthy crops from one-hit wounded crops',()=>{
+test('archived two-hit crop capacity evidence retains its historical bounds',()=>{
  const r=capacityAudit();
  for(const t of r.tiers){const a=t.strongest;
   assert.equal(a.hits,a.group.reduce((n,id)=>n+animalSpec(id).hit_budget_max,0));
@@ -16,12 +15,12 @@ test('native capacity separates two-hit healthy crops from one-hit wounded crops
  assert.equal(control.targetKills,110);assert.equal(control.freshCropHitsRequired,220);assert.equal(control.optimisticMinimumAnimals,28);
  assert.ok(control.freshCropHitsRequired>r.maxHits);
 });
-test('capacity evidence reproduces with current native sources',()=>{
+test('archived capacity numbers remain reproducible without treating old source hashes as current',()=>{
  const saved=JSON.parse(readFileSync(new URL('../docs/qa/native-economic-balance/main-8f3c0021-capacity/capacity.json',import.meta.url))),r=capacityAudit();
- // Preserve the original capacity evidence. Current main added raid observers,
- // changing source provenance without changing any native capacity calculation.
+ // Preserve the original capacity evidence and compare its numerical result
+ // with today's auditor. Its source hashes identify the historical revision;
+ // current source files have changed and must not be required to hash alike.
  const historical=JSON.parse(readFileSync(new URL('../docs/qa/native-economic-balance/capacity.json',import.meta.url)));
  for(const k of Object.keys(r))assert.deepEqual(saved[k],historical[k]);
  for(const k of Object.keys(r))assert.deepEqual(saved[k],r[k]);
- for(const [p,sha] of Object.entries(saved.sourceHashes))assert.equal(createHash('sha256').update(readFileSync(new URL('../'+p,import.meta.url))).digest('hex'),sha);
 });

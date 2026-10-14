@@ -669,6 +669,28 @@ failed. The complete output is retained as `full-suite-8b6693b9.log.gz`.
 The repository suite is still red; this count does not certify the WASM
 branch for integration or establish long-campaign survivor performance.
 
+The old `native-economic-balance` capacity artifact is preserved as historical
+two-hit-crop evidence. Its numerical audit still reproduces, but its frozen
+source SHA-256 values refer to the original revision, not the current WASM
+branch. Requiring today's changed source files to match those old hashes was
+an invalid acceptance check. The focused archival audit now passes 2/2 and
+explicitly identifies itself as historical; it does **not** validate current
+one-hit crops or progressive-horde destructive capacity. Those require fresh
+native raid measurements.
+
+The old synchronous navigation-query scope was no longer imported by the
+game after the WASM hierarchy took over route planning. Its only live
+references were a test that monkey-patched the retired `findPath` entry point
+and a historical comparison benchmark that required an external old checkout.
+Both measured an algorithm the current `Navigation.path` never calls. The
+unused scope module, its obsolete test and that benchmark have been removed;
+their archived benchmark outputs remain available in QA history. Current
+hierarchical route, lazy-sector and failure-capacity tests pass 18/18 after
+removal. This reduces dead JS navigation code but does not claim a measured
+runtime speedup or change physical route behavior.
+The playable suite passes 186/186 and the web production build succeeds after
+the deletion. The repository-wide suite has not been rerun on this commit.
+
 ## Deferred engine name
 
 After the WASM spatial core is functionally and performance-stable, rename
