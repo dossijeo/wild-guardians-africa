@@ -4,6 +4,7 @@ import {sweptFootprintDistance} from '../footprints.js';
 import {createSpatialPlacement} from './spatial-placement.js';
 import {BIOME_IDS} from '../biome-ids.js';
 import {centerFootprint} from '../centers.js';
+import {validActiveBounds} from '../active-region.js';
 
 const animalProfiles=Object.entries(ANIMAL_SPATIAL_PROFILES);
 const finitePoint=point=>Number.isFinite(point?.x)&&Number.isFinite(point?.z);
@@ -152,7 +153,7 @@ export function createSpatialNavigationMovement(session,state){
     }
     return true;
   };
-  return {field:session.field,config,chunk,suppressed:session.suppressed,state,
+  const view={field:session.field,config,chunk,suppressed:session.suppressed,state,
     get obstacles(){return [
       ...state.structures.filter(item=>item.status!=='ruined').map(item=>
         item.kind==='center'?centerFootprint(item,state):{...item,radius:.7}),
@@ -168,4 +169,13 @@ export function createSpatialNavigationMovement(session,state){
     workerPath:(start,end,radius=.28,ignore=null)=>path(start,end,radius,ignore,true),
     workerMotionClear,
   };
+  view.setActiveBounds=bounds=>{
+    if(!validActiveBounds(bounds))throw new RangeError('Invalid active terrain bounds');
+    view.activeBounds=[...bounds];
+  };
+  view.setRaidView=(eye,target)=>{
+    if(![eye?.x,eye?.z,target?.x,target?.z].every(Number.isFinite))return;
+    view.raidView={eye:{x:eye.x,z:eye.z},target:{x:target.x,z:target.z}};
+  };
+  return view;
 }

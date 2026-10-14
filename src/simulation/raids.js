@@ -85,7 +85,15 @@ export function cameraRaidEntry(s,specs,bounds,nav,view=nav.raidView,maxSearches
           if(!nav.walkable(approach.x,approach.z,radius,null,false))continue;
           if(nav.segmentClear?.(point,approach,radius,null,false)){reachable=true;break;}
           if(searches>=maxSearches)continue;searches++;
-          if((nav.approachPath??nav.path).call(nav,point,approach,radius,null,false)){reachable=true;break;}
+          try{
+            if((nav.approachPath??nav.path).call(nav,point,approach,radius,null,false)){
+              reachable=true;break;
+            }
+          }catch(error){
+            // A speculative entrance candidate may need chunks that are not
+            // resident yet. Try the next candidate; do not abort the raid tick.
+            if(error?.name!=='SpatialChunkUnavailable')throw error;
+          }
         }
         if(!reachable)continue;chosen={point,exit};break;
       }

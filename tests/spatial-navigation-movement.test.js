@@ -24,6 +24,10 @@ test('movement contract uses only native profiles, topology and physically check
       ['1,0',{cx:1,cz:0,score:1}]]));
     await session.stream.whenIdle();
     const nav=createSpatialNavigationMovement(session,state);
+    nav.setActiveBounds([-48,-48,48,48]);
+    nav.setRaidView({x:10,z:12},{x:0,z:0});
+    assert.deepEqual(nav.activeBounds,[-48,-48,48,48]);
+    assert.deepEqual(nav.raidView,{eye:{x:10,z:12},target:{x:0,z:0}});
     assert.equal(nav.field,session.field);
     assert.equal(nav.config.biome,'savanna');
     assert.equal(nav.config.seed,'712');
