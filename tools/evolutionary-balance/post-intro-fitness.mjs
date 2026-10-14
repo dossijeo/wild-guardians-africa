@@ -57,5 +57,5 @@ export function scorePostIntro(report,targetDays,{minimumTerminalDeliveryPerDay=
  return {score:Math.min(targetDays,completed)*1000-terminalDefeatPenalty+secondary,
   valid:true,scoreVersion:'post-intro-v1',completed,metrics,cropLossFraction,
   minimumTerminalDeliveryPerDay,result:report.result,nativeResult:report.result,
-  competitiveEligible:minimumTerminalDeliveryPerDay===null?null:eligible};
+  competitiveEligible:eligible?(minimumTerminalDeliveryPerDay===null?null:true):false};
 }
