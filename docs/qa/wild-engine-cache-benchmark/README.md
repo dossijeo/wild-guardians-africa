@@ -74,6 +74,6 @@ El benchmark nativo es un prototipo separado. La prueba completa del juego está
 
 ## Validaciones y fallos de la suite general
 
-La build web terminó correctamente. Las 33 pruebas focales sobre el código final pasaron; se conserva su salida en [`focused-all.tap`](focused-all.tap). La prueba diferencial con la partida congelada también pasó.
+La build web terminó correctamente. Las 33 pruebas focales sobre el código final pasaron; se conserva su salida en [`focused-all.tap`](focused-all.tap). La suite jugable usada por CI pasó 186/186 casos ([`playable-tests.tap`](playable-tests.tap)). La prueba diferencial con la partida congelada también pasó.
 
 La suite completa del repositorio terminó con **4294 aprobadas y 46 fallidas**. Se conserva la salida íntegra comprimida en [`test-suite-diagnostics.zip`](test-suite-diagnostics.zip) y un índice de fallas en [`test-suite-failures.txt`](test-suite-failures.txt). Las fallas observadas se concentran en expectativas de balance/victoria, coste fijo de poblados, desbloqueos/cooldowns y alcance antiguos de las magias, tutorial, interfaz de poderes y catálogo de audio. Ninguna prueba focal de las invalidaciones o rutas cambiadas falló. Esas áreas no fueron modificadas en esta rama; no se declara verde la suite completa ni se atribuye causalidad sin una comparación integral con `main`.
