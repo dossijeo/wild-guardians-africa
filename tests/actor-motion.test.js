@@ -7,6 +7,7 @@ import {updateWorkerEncounters} from '../src/simulation/encounters.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {Navigation} from '../src/world/navigation.js';
 import {updateRaid,reachableApproach} from '../src/simulation/raids.js';
+import {reservedApproachClear} from '../src/simulation/raid-target-reservations.js';
 import {readFileSync} from 'node:fs';
 import {createOpeningWorld} from '../tools/check_opening.mjs';
 import {edgeDistance} from '../src/world/footprints.js';
@@ -167,7 +168,7 @@ test('Legacy overlaps may escape continuously but cannot move deeper or across t
   assert.equal(actorSegmentClear(actor,{x:.4,z:0},actor,[other]),false);
   assert.equal(actorSegmentClear(actor,{x:-2,z:0},actor,[other]),false);
 });
-test('Crowded crop approaches are recomputed outside the other native bodies and the raid completes',()=>{
+test('An occupied crop service ring waits for clearance and the raid then completes',()=>{
   const {state,nav}=fixture();state.workers=[];
   state.plants=[
     {id:'p1',x:228,z:34.5,species:'girasol',alive:true},
@@ -179,8 +180,14 @@ test('Crowded crop approaches are recomputed outside the other native bodies and
   const animals=positions.map((p,i)=>({id:'crowd-'+i,species:'warthog',...p,radius:1.1,hitsRemaining:2,status:'walking',targetId:state.plants[i].id,reservation:'crop:'+state.plants[i].id,spawn:{x:176.5936382952636,z:34.34991014827507+i*4},path:[endpoints[i]],approach:{id:'occupied-'+i,...endpoints[i]},destinationId:'occupied-'+i,pathVersion:nav.version}));
   state.raid.animals=animals;state.raid.reservations=Object.fromEntries(animals.map(a=>[a.reservation,a.id]));
   assert.equal(actorSegmentClear(endpoints[1],endpoints[1],animals[1],[animals[0],animals[2]]),false);
+  // The target's entire legal service ring is blocked by either a live body
+  // or another reserved approach. No finer angular search could find a point.
+  for(let i=0;i<1024;i++){
+    const angle=i*Math.PI*2/1024,point={x:state.plants[1].x+Math.sin(angle)*1.7,z:state.plants[1].z+Math.cos(angle)*1.7};
+    assert.ok(!reservedApproachClear(state,animals[1],point)||!actorSegmentClear(point,point,animals[1],[animals[0],animals[2]]));
+  }
   const approach=reachableApproach(animals[1],state.plants[1],nav);
-  assert.ok(approach);assert.ok(actorSegmentClear(approach.point,approach.point,animals[1],[animals[0],animals[2]]));
+  assert.equal(approach,null,'all service points are physically occupied until another animal moves');
   for(let i=0;i<3000&&state.raid;i++){
     state.elapsed+=.1;updateRaid(state,.1,nav);
     for(let a=0;a<animals.length;a++)for(let b=a+1;b<animals.length;b++)if(animals[a].status!=='gone'&&animals[b].status!=='gone')assert.ok(Math.hypot(animals[a].x-animals[b].x,animals[a].z-animals[b].z)>=2.2-1e-8);
