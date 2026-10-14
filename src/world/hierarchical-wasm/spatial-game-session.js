@@ -51,6 +51,12 @@ export function createSpatialGameSession(module,state,streamOptions){
       profiles.add(profile.index);
     }else core.selectNavigationProfile(profile.index);
   }
+  function actorProfile({worker=true,species='warthog'}={}){
+    const profile=worker?WORKER_SPATIAL_PROFILE:ANIMAL_SPATIAL_PROFILES[species];
+    if(!profile)throw RangeError('Unsupported spatial actor profile');
+    selectProfile(profile);
+    return profile;
+  }
   selectProfile(WORKER_SPATIAL_PROFILE);
   selectProfile(ANIMAL_SPATIAL_PROFILES.warthog);
   const stream=createSpatialChunkStream(core,streamOptions);
@@ -63,14 +69,25 @@ export function createSpatialGameSession(module,state,streamOptions){
     return {suppressed:props.suppressed,removedProps:propChanges.added};
   }
   function routeActor(start,end,{worker=true,species='warthog'}={}){
-    const profile=worker?WORKER_SPATIAL_PROFILE:ANIMAL_SPATIAL_PROFILES[species];
-    if(!profile)throw RangeError('Unsupported spatial actor profile');
-    selectProfile(profile);
+    actorProfile({worker,species});
     return core.routeWorld(start,end);
+  }
+  function actorCanStand(point,options){
+    if(!Number.isFinite(point?.x)||!Number.isFinite(point?.z))
+      throw TypeError('Expected a finite actor position');
+    actorProfile(options);
+    return core.localClear(point,point);
+  }
+  function actorStepClear(start,end,options){
+    if(![start?.x,start?.z,end?.x,end?.z].every(Number.isFinite))
+      throw TypeError('Expected finite actor step endpoints');
+    actorProfile(options);
+    return core.localClear(start,end);
   }
   // Only settlements change the far relief. Walls, crop turnover, shield HP and
   // removed props leave its mesh intact, so they must not queue new horizons.
   const horizonSource={revision:()=>terrainRevision,snapshot:()=>core.terrainState()};
-  return {core,field,stream,horizonSource,suppressed:props.suppressed,syncState,routeActor,
+  return {core,field,stream,horizonSource,suppressed:props.suppressed,syncState,
+    routeActor,actorCanStand,actorStepClear,
     dispose:()=>stream.dispose()};
 }
