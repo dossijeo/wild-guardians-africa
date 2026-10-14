@@ -169,6 +169,32 @@ export function createSpatialNavigationMovement(session,state){
     workerPath:(start,end,radius=.28,ignore=null)=>path(start,end,radius,ignore,true),
     workerMotionClear,
   };
+  // The ordinary exterior witness extends its ray beyond the active box.
+  // A resident-only C++ world cannot certify that unloaded destination, so
+  // prove a native route to an inset of the already resident camera boundary.
+  // This remains conservative: the whole actor must first lie outside the
+  // constructed envelope, and an unknown/blocked native route is rejected.
+  view.spatialExteriorWitness=(point,radius,wallBox)=>{
+    const bounds=view.activeBounds;
+    if(!bounds||!(point.x-radius>wallBox[2]||point.x+radius<wallBox[0]||
+      point.z-radius>wallBox[3]||point.z+radius<wallBox[1]))return false;
+    const inset=radius+2;
+    const [x0,z0,x1,z1]=bounds;
+    const clamp=(value,lo,hi)=>Math.min(hi,Math.max(lo,value));
+    if(x1-x0<=inset*2||z1-z0<=inset*2)return false;
+    const x=clamp(point.x,x0+inset,x1-inset),
+      z=clamp(point.z,z0+inset,z1-inset);
+    const edges=[{x,z:z0+inset},{x:x0+inset,z},
+      {x:x1-inset,z},{x,z:z1-inset}];
+    edges.sort((a,b)=>Math.hypot(point.x-a.x,point.z-a.z)-
+      Math.hypot(point.x-b.x,point.z-b.z));
+    const options=profile(radius,false,null);
+    for(const edge of edges){
+      if(!session.actorCanStand(edge,options))continue;
+      if(session.routeActor(point,edge,options).status==='found')return true;
+    }
+    return false;
+  };
   view.setActiveBounds=bounds=>{
     if(!validActiveBounds(bounds))throw new RangeError('Invalid active terrain bounds');
     view.activeBounds=[...bounds];

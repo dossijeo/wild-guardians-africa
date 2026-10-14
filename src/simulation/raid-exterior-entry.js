@@ -26,6 +26,7 @@ function crossings(p,dx,dz,b,r){
 // never prove enclosure. A conservative fallback may reject bend-only routes.
 export function exteriorRaidWitness(p,r,box,nav){
  if(!box)return true;if(!nav.segmentClear)return false;
+ if(nav.spatialExteriorWitness)return nav.spatialExteriorWitness(p,r,box);
  const active=nav.activeBounds??box,b=[Math.min(active[0],box[0]-48),Math.min(active[1],box[1]-48),Math.max(active[2],box[2]+48),Math.max(active[3],box[3]+48)];
  // Reference bounds also cover nearby natural barriers: being outside the
  // finite wall AABB alone does not certify a wall plus cliff pocket.
