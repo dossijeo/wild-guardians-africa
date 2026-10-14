@@ -215,8 +215,8 @@ export function createSpatialNavigationMovement(session,state){
         {x:cx*48,z:cz*48},[{cx,cz}]);
     return session.core.chunkPayload();
   };
-  const withWallPreview=(walls,suppressed,inspect)=>
-    session.withWallPreview(walls,suppressed,()=>inspect({walkable,segmentClear}));
+  const withWallPreview=(walls,suppressed,inspect,refreshPortals=false)=>
+    session.withWallPreview(walls,suppressed,()=>inspect({walkable,segmentClear,path}),refreshPortals);
   const withVillageEntryPreview=(buildings,inspect)=>
     session.withVillageEntryPreview(buildings,inspect);
   const withCenterPreview=(building,suppressed,inspect)=>
