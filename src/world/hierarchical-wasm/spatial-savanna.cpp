@@ -976,11 +976,13 @@ Settlement makeSettlement(double x,double z,double hx,double hz){
 }
 void refreshSettlementChunks(const std::vector<Settlement>& changed){
   const int selectedX=chunkX,selectedZ=chunkZ,previous=activeProfile;
+  bool touched=false;
   for(const auto& [cx,cz]:loadedChunks){
     const int chunkCx=cx,chunkCz=cz;
     if(!std::any_of(changed.begin(),changed.end(),[&](const Settlement& site){
       return settlementNearChunk(site,chunkCx,chunkCz);
     }))continue;
+    touched=true;
     residentSpatial().erase(chunkKey(cx,cz));
     populateChunk(cx,cz);
     for(int profile=0;profile<navigationProfiles;profile++){
@@ -990,7 +992,7 @@ void refreshSettlementChunks(const std::vector<Settlement>& changed){
     }
   }
   selectProfile(previous);
-  if(!loadedChunks.empty())populateChunk(selectedX,selectedZ);
+  if(touched)populateChunk(selectedX,selectedZ);
 }
 void refreshBarrier(const Barrier& barrier){
   if(batchingBarriers){deferredBarrierRefresh.push_back(barrier);return;}

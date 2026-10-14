@@ -71,6 +71,44 @@ try{
         throw Error(`${biome}: revised horizon was not installed`);
       report.push({biome,topology:'controller',revision,terrainVertices:
         controller.group.children[0].geometry.getAttribute('position').count});
+      // Travel exercises the actual horizon owner, including main-thread
+      // snapshot creation, worker transfer, and BufferGeometry installation.
+      // Distant villages must not trigger JS geometry sampling or grow the
+      // message with wall/prop topology.
+      for(let i=0;i<50;i++)core.addSettlement(5000+i*120,4000,7,6);
+      revision++;
+      const renderer=new THREE.WebGLRenderer({antialias:false,powerPreference:'low-power'});
+      renderer.setSize(320,180,false);
+      const camera=new THREE.PerspectiveCamera(65,320/180,.1,3000);
+      camera.position.set(0,110,170);camera.lookAt(0,0,0);
+      let frames=true,frameLast=performance.now(),maxGap=0,frameCount=0;
+      const renderFrame=()=>{if(!frames)return;const now=performance.now();
+        maxGap=Math.max(maxGap,now-frameLast);frameLast=now;frameCount++;
+        renderer.render(scene,camera);requestAnimationFrame(renderFrame);};
+      requestAnimationFrame(renderFrame);
+      const travel=[];
+      try{
+        for(const x of [0,48,96,144,48,0]){
+          const target=activeChunkRegion({x,z:0},'media');
+          maxGap=0;frameLast=performance.now();
+          const started=performance.now();
+          controller.update(config,profile,target,'media');
+          const snapshotAndPostMs=performance.now()-started;
+          await controller.whenReady();
+          const installStarted=performance.now();
+          controller.update(config,profile,target,'media');
+          const installMs=performance.now()-installStarted;
+          if(controller.region.cx!==target.cx||controller.region.cz!==target.cz||scene.children.length!==1)
+            throw Error(`${biome}: travel did not adopt region ${target.cx},${target.cz}`);
+          await new Promise(resolve=>requestAnimationFrame(resolve));
+          travel.push({cx:target.cx,cz:target.cz,
+            totalMs:+(performance.now()-started).toFixed(2),
+            snapshotAndPostMs:+snapshotAndPostMs.toFixed(2),installMs:+installMs.toFixed(2),
+            largestFrameGapMs:+maxGap.toFixed(2)});
+        }
+      }finally{frames=false;renderer.dispose();renderer.forceContextLoss();}
+      report.push({biome,topology:'travel-50-settlements',settlements:core.terrainState().settlements.length,
+        stateBytes:JSON.stringify(core.terrainState()).length,frames:frameCount,travel});
     }finally{controller.dispose();}
   }
   window.qaReport=report;window.qaReady=true;status.textContent=JSON.stringify(report,null,2);

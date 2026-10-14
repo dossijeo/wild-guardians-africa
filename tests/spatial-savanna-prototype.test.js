@@ -976,6 +976,12 @@ test('multiple settlements preserve distant terrain and refresh only nearby resi
   assert.deepEqual(Array.from(core.heights()),Array.from(firstHeights));
   assert.deepEqual(Array.from(core.groundMask()),Array.from(firstMask));
   assert.deepEqual(core.props(),firstProps);
+  const unchangedUpdates=core.metrics().sectorUpdates;
+  assert(Number.isFinite(core.addSettlement(5000,4000,7,6)));
+  assert.equal(core.metrics().sectorUpdates,unchangedUpdates,
+    'a village outside resident chunks must not rebuild navigation');
+  assert.deepEqual(Array.from(core.heights()),Array.from(firstHeights));
+  assert.deepEqual(core.props(),firstProps);
   assert.equal(core.setSettlement(10,8,7,6),firstLevel);
   assert(core.selectChunk(2,0)>0);
   assert.deepEqual(Array.from(core.heights()),Array.from(distantOriginal),
