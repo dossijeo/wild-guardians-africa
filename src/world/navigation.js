@@ -233,6 +233,10 @@ export class Navigation {
     return {valid:true,suppress:props.filter(p=>footprintDistance(polygon,p.x,p.z)<(p.radius??.5)).map(p=>p.id)};
   }
   path(start,end,radius=.3,ignore=null,worker=true,margin=16) {
+    // A destination outside the unit's physical clearance cannot become
+    // reachable through an abstract sector connection (including sub-cell
+    // routes). Reject it before constructing or consulting the graph.
+    if(!this.walkable(end.x,end.z,radius,ignore,worker))return null;
     this._hierarchical??=createHierarchicalNavigationAdapter(this);
     return this._hierarchical.path(start,end,radius,ignore,worker,margin);
   }

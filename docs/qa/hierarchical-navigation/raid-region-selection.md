@@ -240,6 +240,17 @@ The 30-night-cap native campaigns reported above all ended in real defeat
 before night 30. They demonstrate several biomes and seeds without a
 navigation stall, but cannot validate sustained 30/60/100-night performance.
 
+The first full-suite navigation failure exposed a genuine missing endpoint
+guard: `Navigation.path` could enter the hierarchical connector check even
+when the exact destination was physically blocked (including sub-cell
+routes). It now rejects that destination through the normal `walkable`
+clearance before graph work. The formerly failing blocked-endpoint test and
+28 focused spatial/raid tests pass. A repeat of the frozen Canyon state kept
+the same 267 approaches and 253 native-graph unknowns; the output is in
+`selector-endpoint-check.json`. This is a narrow correction, not a claim
+that the other 198 or fewer full-suite failures have been resolved; the
+entire suite has not been rerun after this change.
+
 ## Reproduce
 
 ```powershell
