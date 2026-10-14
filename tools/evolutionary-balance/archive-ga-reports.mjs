@@ -7,7 +7,7 @@ import {gzipSync,gunzipSync} from 'node:zlib';
 const sha256=bytes=>createHash('sha256').update(bytes).digest('hex');
 export function archiveGaReports(directory){
  const dir=resolve(directory),index=[];
- for(const name of readdirSync(dir).filter(n=>/^\w{12}-\w{16}-.+-\d+-\d+\.json$/.test(n)).sort()){
+ for(const name of readdirSync(dir).filter(n=>/^[a-f0-9]{12}-.+-\d+-\d+\.json$/.test(n)).sort()){
   const source=join(dir,name),raw=readFileSync(source),gz=gzipSync(raw,{level:9});
   if(!gunzipSync(gz).equals(raw))throw Error(`Archive verification failed: ${name}`);
   const archive=`${name}.gz`;
