@@ -414,6 +414,7 @@ export function targetFor(s,a,nav) {
 function targetForImpl(s,a,nav,stats){
   let unknown=false;
   const sealedWallSides=new Map();
+  const sealedCropRepresentatives=[];
   const unresolvedCropRepresentatives=[];
   let certifiedSealedCrop=false;
   const scope=nav.spatialSectorRevision?regionDecisionScope(s,nav):null;
@@ -457,8 +458,18 @@ function targetForImpl(s,a,nav,stats){
             scope.decisions.set(`${a.radius}:${origin}:${destination}`,
               {status:'blocked',at:s.elapsed,sectors:sectorRevision});
           }
-          for(const [id,point] of perimeterWallSides(nav,scope,enclosure,
-            originEnclosure,a.radius,s.structures,sectorRevision))sealedWallSides.set(id,point);
+          const perimeter=perimeterWallSides(nav,scope,enclosure,
+            originEnclosure,a.radius,s.structures,sectorRevision);
+          for(const [id,point] of perimeter)sealedWallSides.set(id,point);
+          // The wall-only graph can have no path to a sealed crop when a
+          // sampled wall side is unknown. Nominate only walls crossed toward
+          // a nearby crop; the native path must still reach the attack side.
+          if(!perimeter.size){
+            sealedCropRepresentatives.push(...[...candidates]
+              .sort((p,q)=>dist(a,p)-dist(a,q)).slice(0,8));
+            sealedCropRepresentatives.sort((p,q)=>dist(a,p)-dist(a,q));
+            sealedCropRepresentatives.length=Math.min(sealedCropRepresentatives.length,8);
+          }
         }else if(status==='unknown'){
           unknown=true;unresolvedCropRepresentatives.push(candidates[0]);
         }
@@ -477,6 +488,7 @@ function targetForImpl(s,a,nav,stats){
   }
   // Certified enclosures nominate their perimeter; unresolved regions leave
   // only independently reachable nearby structures as alternatives.
+  const geometricWallCrops=[...unresolvedCropRepresentatives,...sealedCropRepresentatives];
   const structures=defensiveGroups(s),near=g=>Math.min(...g.targets.map(t=>dist(a,t)));
   structures.sort((p,q)=>groups.length?near(p)-near(q):q.value-p.value||near(p)-near(q)||p.id.localeCompare(q.id));
   for(const group of structures)for(const structure of [...group.targets].sort((p,q)=>dist(a,p)-dist(a,q)||p.id.localeCompare(q.id))) {
@@ -484,19 +496,18 @@ function targetForImpl(s,a,nav,stats){
     if(nav.spatialSectorRevision){
       if(structure.kind==='wall'){
         const nearSide=sealedWallSides.get(structure.id);
-        if(!nearSide&&certifiedSealedCrop)continue;
+        if(!nearSide&&certifiedSealedCrop&&!sealedCropRepresentatives.length)continue;
         if(!nearSide){
-          // Unknown crop connectivity does not certify an enclosure. A wall
-          // visibly between the animal and an unresolved crop group can still
-          // be chosen as an independent structure target, but only when its
-          // near side is reachable in the native graph.
+          // A missing graph edge or unresolved crop does not certify a wall.
+          // The wall must intersect the route toward a crop and its near side
+          // must be reachable in the native graph.
           const frame=wallCollisionFrame(structure);
           const local=point=>({x:(point.x-frame.x)*frame.c-(point.z-frame.z)*frame.s,
             z:(point.x-frame.x)*frame.s+(point.z-frame.z)*frame.c});
           const from=local(a),sign=Math.sign(from.z);
           if(!sign)continue;
           let between=false;
-          for(const crop of unresolvedCropRepresentatives){
+          for(const crop of geometricWallCrops){
             const to=local(crop);
             if(from.z*to.z>=0)continue;
             const crossing=from.x+(to.x-from.x)*(-from.z)/(to.z-from.z);
