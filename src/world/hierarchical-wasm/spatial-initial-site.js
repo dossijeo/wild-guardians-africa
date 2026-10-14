@@ -23,12 +23,16 @@ const ordinaryBiomes=new Set(['sabana','gran-rio','manglares','volcanes','desier
 
 // Integration probe. All terrain, prop and movement decisions below
 // come from one C++ world; the game-state clone is only a proposed layout.
-export async function probeSpatialStart(module,state,payload,{x=60,z=0,chunkMargin=20}={}){
+// Start with the chunks touched by the proposal; request additional neighbors
+// only if a native route or prop query proves they are needed.
+export async function probeSpatialStart(module,state,payload,
+  {x=60,z=0,chunkMargin=0,measure=false}={}){
   if(!(ordinaryBiomes.has(state?.biome)||state?.biome==='gran-canon')||
     !state.villages?.length||state.structures?.length||
     !Array.isArray(payload?.units)||![x,z,chunkMargin].every(Number.isFinite)||
     chunkMargin<0)
     throw TypeError('Expected a new supported game and an authored village');
+  const started=measure?performance.now():0;
   const trial=structuredClone(state),village=trial.villages[0];
   let core=null,layout=null;
   if(state.biome==='gran-canon'){
@@ -45,13 +49,19 @@ export async function probeSpatialStart(module,state,payload,{x=60,z=0,chunkMarg
   const shape=centerFootprint(center,trial),loaded=new Map();
   const session=createSpatialGameSession(module,trial,{
     core,loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+  const setupMs=measure?performance.now()-started:0;
+  let streamMs=0,evaluateMs=0;
+  const finish=result=>measure?{...result,timings:{setupMs,streamMs,evaluateMs,
+    totalMs:performance.now()-started}}:result;
   try{
     let chunkExpansions=0;
     const extent=[...village.buildings.flatMap(building=>building.footprint??[building]),
       ...shape.footprint,{x:center.x+16,z:center.z+10},
       {x:center.x+4,z:center.z-10}];
     session.stream.plan(chunkJobs(extent,chunkMargin));
+    const firstStreamAt=measure?performance.now():0;
     await session.stream.whenIdle();
+    if(measure)streamMs+=performance.now()-firstStreamAt;
     const nativeProps=(px,pz,radius)=>{
       const result=session.queryPropsAt(px,pz,radius);
       if(result.status==='unknown')throw new SpatialChunkUnavailable(
@@ -111,21 +121,25 @@ export async function probeSpatialStart(module,state,payload,{x=60,z=0,chunkMarg
       chunkExpansions};
     };
     for(let attempt=0;attempt<4;attempt++){
-      try{return evaluate();}
-      catch(error){
-        if(!(error instanceof SpatialChunkUnavailable))throw error;
-        const needed=error.missing.length?error.missing:
-          [...chunkJobs([error.start,error.end],48).values()];
-        const desired=new Map(session.stream.desired);
-        for(const point of needed)desired.set(`${point.cx},${point.cz}`,
-          {cx:point.cx,cz:point.cz,score:0});
-        if(desired.size===session.stream.desired.size)
-          return {valid:false,reason:'unresolved-native-route',
-            start:error.start,end:error.end,chunkExpansions};
-        session.stream.plan(desired);
-        await session.stream.whenIdle();
-        chunkExpansions++;
-      }
+      const evaluationAt=measure?performance.now():0;
+      let result,error,failed=false;
+      try{result=evaluate();}catch(caught){error=caught;failed=true;}
+      if(measure)evaluateMs+=performance.now()-evaluationAt;
+      if(!failed)return finish(result);
+      if(!(error instanceof SpatialChunkUnavailable))throw error;
+      const needed=error.missing.length?error.missing:
+        [...chunkJobs([error.start,error.end],48).values()];
+      const desired=new Map(session.stream.desired);
+      for(const point of needed)desired.set(`${point.cx},${point.cz}`,
+        {cx:point.cx,cz:point.cz,score:0});
+      if(desired.size===session.stream.desired.size)
+        return finish({valid:false,reason:'unresolved-native-route',
+          start:error.start,end:error.end,chunkExpansions});
+      session.stream.plan(desired);
+      const expansionAt=measure?performance.now():0;
+      await session.stream.whenIdle();
+      if(measure)streamMs+=performance.now()-expansionAt;
+      chunkExpansions++;
     }
     throw Error('Spatial starting site exceeded bounded chunk-demand retries');
   }finally{session.dispose();}
