@@ -237,3 +237,37 @@ economic rule was weakened to obtain this candidate.
 Once this engine gate is satisfied, calibrate economics, attacks and frozen
 virtual-player policies on a separate branch or phase. Keep any resulting
 balance changes out of the engine acceptance measurements.
+
+### Constructed daytime worker load
+
+`tools/experiments/profile-wild-engine-worker-phases.mjs` complements the
+night-raid matrix. For each biome it creates separate day-6/50/100 native
+worlds, plants 40/150/300 mijo through `Game.plant`, hires three paid
+workers through `Game.hire`, and advances 120 simulated daytime seconds with
+480 ordinary `Game.tick` calls. The six reports are
+`engine-worker-phases-*.json`. They include the exact C++/WASM and runner
+hashes, tick distribution, worker motion, riego events, tasks, resident
+chunks, memory and native sector metrics. The source commit in each report
+is the parent checkout used while the runner itself was still uncommitted;
+the runner hash identifies the executed source.
+
+| Biome / seed | Total tick CPU ms, early / middle / late | 95th-percentile tick ms, early / middle / late | First tick ms, early / middle / late |
+| --- | ---: | ---: | ---: |
+| Sabana / 712 | 249 / 218 / 208 | .57 / .55 / .50 | 85 / 63 / 61 |
+| Gran Río / 712 | 239 / 210 / 227 | .52 / .60 / .55 | 85 / 59 / 67 |
+| Manglares / 712 | 275 / 267 / 244 | .53 / .70 / .50 | 109 / 78 / 72 |
+| Volcanes / 712 | 255 / 249 / 221 | .59 / .69 / .58 | 90 / 62 / 66 |
+| Desierto / 712 | 218 / 248 / 211 | .51 / .80 / .65 | 81 / 62 / 56 |
+| Gran Cañón / 123 | 231 / 259 / 229 | .46 / .70 / .41 | 97 / 82 / 85 |
+
+All 18 fixtures completed 480 ticks without a result or pause. All three
+workers moved in every fixture; `WaterSatisfied` fired 22 times per fixture
+except in Gran Cañón, where it fired 17 times. No mobile-collision recovery
+was needed. Timings are isolated Node simulation measurements, not rendered
+frame times. The expensive first tick builds cold native navigation data;
+the real game's worker/raid preparation may warm part of that work, so this
+fixture alone neither proves nor disproves a visible hitch. The three phases
+share the same initial nearby jobs and only one work center, so they test
+larger crop/task state under active work rather than many distinct worker
+routes or the staffing pattern of a mature multi-center estate. Those
+larger-layout and sustained-campaign cases remain open.
