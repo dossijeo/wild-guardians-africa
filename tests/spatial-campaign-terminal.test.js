@@ -8,6 +8,7 @@ import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {createSpatialCampaignOpening} from '../tools/experiments/spatial-campaign-opening.mjs';
 import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+import {gatePortalPoints} from '../src/world/gate-passages.js';
 
 const module=new WebAssembly.Module(readFileSync(new URL(
   '../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
@@ -53,17 +54,31 @@ for(const [balance,expected,event] of [
   }finally{session.dispose();}
 });
 
-test('a dense native raid resumes after saving and rebuilding the spatial world',async()=>{
+for(const withWalls of [false,true])test(
+  `a dense native raid resumes after ${withWalls?'wall collapse and ':''}save/load`,async()=>{
   let {state,nav,session,start,loaded}=await createSpatialCampaignOpening({
-    seed:712,biome:'sabana',culture:'mapungubwe',slotId:'spatial-dense-reload'});
+    seed:712,biome:'sabana',culture:'mapungubwe',
+    slotId:withWalls?'spatial-wall-collapse-reload':'spatial-dense-reload'});
   try{
     state.tutorial.step='done';state.initialPreparation=false;
     state.ledger.balance=rational(1000000);
     const {x:cx,z:cz}=start.site.center;
+    let ringBounds=null;
+    if(withWalls){
+      const x0=cx-10,x1=cx+22,
+        z0=Math.min(...start.farm.map(point=>point.z))-10,z1=cz+10;
+      ringBounds={x0,x1,z0,z1};
+      assert.equal(Game.buildWallChain(state,'spatial-reload-ring','zarzas',
+        [[x0,z0],[x1,z0],[x1,z1],[x0,z1],[x0,z0]],nav,
+        {smooth:false,snap:false}),true);
+      assert(state.structures.some(item=>item.kind==='wall'&&item.gate));
+    }
     let planted=0;
     for(let dz=-38;dz<=38&&planted<100;dz+=2)
       for(let dx=-38;dx<=38&&planted<100;dx+=2){
         const x=cx+dx,z=cz+dz;
+        if(ringBounds&&(x<=ringBounds.x0+2||x>=ringBounds.x1-2||
+          z<=ringBounds.z0+2||z>=ringBounds.z1-2))continue;
         if(!nav.placement(x,z,.4).valid)continue;
         assert.equal(Game.plant(state,`dense-${planted}`,'mijo',x,z,nav),true);
         planted++;
@@ -74,13 +89,20 @@ test('a dense native raid resumes after saving and rebuilding the spatial world'
     const group=[...Array(4).fill('warthog'),...Array(5).fill('hyena'),
       ...Array(4).fill('buffalo'),...Array(3).fill('lion')];
     assert.notEqual(spawnRaid(state,{at:310,group,done:false},nav),false);
-    for(let i=0;i<80;i++){
+    for(let i=0;i<(withWalls?800:80);i++){
       Game.tick(state,.25,nav);
       nav.serviceRaidConnectivityDemand?.();
+      if(withWalls&&state.structures.some(item=>item.kind==='wall'&&
+        item.status==='ruined'))break;
     }
     assert(state.raid,'the save occurs while attackers are still active');
+    const ruinedBefore=state.structures.filter(item=>item.kind==='wall'&&
+      item.status==='ruined').length;
+    if(withWalls)assert(ruinedBefore>0,'the save follows a physical wall collapse');
     const saved=deserialize(serialize(state));
     assert.equal(saved.raid.animals.length,16);
+    assert.equal(saved.structures.filter(item=>item.kind==='wall'&&
+      item.status==='ruined').length,ruinedBefore);
     const bounds=[...nav.activeBounds],raidView=structuredClone(nav.raidView);
     const keys=[...loaded.keys()];
     session.dispose();
@@ -95,6 +117,14 @@ test('a dense native raid resumes after saving and rebuilding the spatial world'
     nav=createSpatialNavigationMovement(session,state);
     nav.setActiveBounds(bounds);
     nav.setRaidView(raidView.eye,raidView.target);
+    if(withWalls){
+      const gate=state.structures.find(item=>item.kind==='wall'&&item.gate&&
+        item.status!=='ruined');
+      assert(gate,'the restored perimeter retains its automatic gate');
+      const [inside,outside]=gatePortalPoints(gate);
+      assert(nav.workerPath(inside,outside,.28),
+        'workers retain a route through the automatic gate after wall collapse and reload');
+    }
     nav.serviceRaidConnectivityDemand=()=>{
       const key=[...(nav.raidConnectivityDemand??[])].find(item=>!loaded.has(item));
       if(!key)return false;
@@ -116,6 +146,8 @@ test('a dense native raid resumes after saving and rebuilding the spatial world'
       }
     }
     assert.equal(state.raid,null,'the reloaded raid must finish');
+    if(withWalls)assert(state.structures.filter(item=>item.kind==='wall'&&
+      item.status==='ruined').length>=ruinedBefore);
     assert.equal(state.events.filter(item=>item.type==='RaidEnded').length,1);
     assert(state.events.some(item=>item.type==='CropHit'||item.type==='StructureHit'));
   }finally{session.dispose();}
