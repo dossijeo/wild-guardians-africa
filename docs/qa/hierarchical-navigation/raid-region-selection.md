@@ -104,7 +104,7 @@ the native classification reopen, and selects the crop through the breach.
 Unit tests also cover natural-only isolation, an outer wall around a nested
 crop enclosure, a separate accessible plantation, shared decisions across
 crop groups and animals, open-frontier uncertainty, alternative crop access,
-region budget, and cache invalidation. All 92 combined spatial, connectivity,
+region budget, and cache invalidation. All 96 combined spatial, connectivity,
 raid and movement tests pass, including fixtures across all six biomes. The
 185 playable tests and web build
 also pass; those suites do not replace sustained campaign QA.
@@ -184,6 +184,16 @@ route after 170 budgeted calls (236 ms total); a native replay recorded one
 regression exercises the recovery and its serialized pending state. The
 full-campaign rerun is required to distinguish this repair from a replay-only
 success.
+
+The rerun used the identical Sabana seed 123, good policy and 30-night cap.
+Its daily money and crop counts matched the failed run through day 10; it
+passed night 11 normally and continued to a **native defeat on day 16** with
+two crops and 522 coins. It completed 15 nights in 330.5 seconds, including
+148.7 seconds of `Game.tick`. Raid evidence is verified and ledger
+reconciliation is exact. This confirms the day-11 technical stall is fixed,
+but it does not establish 30-night survivor performance or approve the
+current military balance. Both the failed and recovered daily ledgers remain
+available as compressed reports.
 
 Repeated raid target lookup also now uses the existing live-crop index, so
 the lookup does not rescan thousands of historical plants. A regression with
