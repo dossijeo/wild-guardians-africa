@@ -413,6 +413,19 @@ same composition and final RNG, and repeated planning plus periodic
 save/load never rerolls a committed plan. All eight tests in the raid-planning
 file pass. This is a test-only update after the `7fc37943` full-suite run.
 
+The QA-066/067/069/071 cargo-recovery fixture also assumed the retired
+immediate x2 harvest value. Under the current shared agricultural-power
+rules, its original crate carries 14.52 base coins and a separate exact
+132/13-coin Multiply entitlement. Delivery liquidates 10 whole bonus coins;
+the ledger rounds the combined 24.52-coin transaction to 25 coins once.
+The fixture now verifies the base value and committed entitlement across
+save/load, a different worker profile recovering the same box, exact payout,
+and no duplicate delivery. It also marks its separately scripted raid as the
+night's completed plan, preventing an unrelated second horde from delaying
+the next dawn. All three tests in `acceptance-crate-recovery.test.js` pass.
+This is test-only triage after the `7fc37943` full-suite run, so the recorded
+global failure count has not been updated.
+
 A same-policy Gran Cañón seed 123 native campaign was repeated after the
 committed-target fix. Against `selector-village-14-canyon-123.json.gz`, all
 daily gameplay fields, complete raid evidence, entry transport and plot
