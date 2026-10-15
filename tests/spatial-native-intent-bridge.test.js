@@ -52,6 +52,49 @@ test('a saved native animal route resumes movement with its original lease',
  }finally{session.dispose();}
 });
 
+test('loading during a committed strike applies its damage frame exactly once',
+ {skip:!module&&'Build and select the experimental WASM first'},()=>{
+ const game=deserialize(gunzipSync(readFileSync(new URL(
+  './fixtures/sabana712-d1-native-committed-attack.json.gz',import.meta.url))).toString());
+ const expected=deserialize(gunzipSync(readFileSync(new URL(
+  './fixtures/sabana712-d1-native-committed-attack-after-hit.json.gz',
+   import.meta.url))).toString());
+ const loaded=new Map(),session=createSpatialGameSession(module,game,{
+  loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+ try{
+  for(let z=-1;z<=1;z++)for(let x=1;x<=3;x++){
+   if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+   loaded.set(`${x},${z}`,session.core.chunkPayload());
+  }
+  const planner=createEventDrivenTaskPlanner(session);
+  const restored=planner.resetFromState(game);
+  assert.equal(restored.restoredAnimalAttacks,1);
+  assert.equal(restored.restoredAnimalRoutes,0);
+  const nav=createSpatialNavigationMovement(session,game);
+  const stopTasks=planner.observeTasks(game),stopWorld=planner.observeWorld(game);
+  nav.intentTaskPlanner=planner;
+  try{
+   for(let step=0;step<4;step++){
+    tick(game,1,nav);
+    nav.serviceRaidConnectivityDemand?.();
+   }
+   const actor=game.raid.animals.find(item=>item.id==='animal-396');
+   assert.equal(actor.hitsRemaining,1);
+   assert.equal(game.events.filter(event=>
+    event.type==='AnimalLogicalHit'&&event.attackId==='attack-662').length,1);
+   const actual=JSON.parse(serialize(game));
+   const reference=JSON.parse(serialize(expected));
+   // A restored session has a fresh navigation revision. Those counters are
+   // internal; the confirmed world, event order and RNG must still match.
+   for(const state of [actual,reference])for(const animal of state.raid.animals){
+    delete animal.pathVersion;
+    delete animal.mobileRecoveryVersion;
+   }
+   assert.deepEqual(actual,reference);
+  }finally{stopTasks();stopWorld();}
+ }finally{session.dispose();}
+});
+
 test('restoring a committed animal strike uses the live target index, not crop history',
  {skip:!module&&'Build and select the experimental WASM first'},()=>{
  const game=deserialize(gunzipSync(readFileSync(new URL(
