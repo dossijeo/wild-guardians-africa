@@ -74,11 +74,11 @@ export function createSpatialIntentBridge(session){
   const planningWorkers=new Map(),planningTasks=new Map();
   const protectionObservers=new Set();
   let observedProtection=new Map(),observedCropProtection=new Map(),
-    pendingProtection=false;
+    pendingProtection=false,protectionRevision=0;
   const protectionMetrics={queries:0,notifications:0,queryMs:0};
   const publish=event=>{for(const observer of protectionObservers)observer(event);};
   const stopTopology=session.observeTopologyChanges?.(change=>{
-    pendingProtection=true;
+    pendingProtection=true;protectionRevision++;
     publish({type:'crop-topology-changed',reason:change.type,change});
   });
   const apply=rows=>{
@@ -119,7 +119,7 @@ export function createSpatialIntentBridge(session){
       for(const crop of state.plants)if(crop.alive)
         cropsById.set(numericId(crop.id),crop.id);
       observedProtection=new Map();observedCropProtection=new Map();
-      pendingProtection=true;
+      pendingProtection=true;protectionRevision++;
       publish({type:'crop-protection-reset',reason:'state-restored'});
     }
     catch(error){
@@ -257,9 +257,9 @@ export function createSpatialIntentBridge(session){
     }
     if(changes.length)applyEvents(state,changes);
     if(topologyChanged&&!stopTopology){
-      pendingProtection=true;
+      pendingProtection=true;protectionRevision++;
       publish({type:'crop-topology-changed',reason:'committed-structure-change'});
-    }else if(cropChanged)pendingProtection=true;
+    }else if(cropChanged){pendingProtection=true;protectionRevision++;}
     if(events.some(event=>event.type==='Dawn'))publish({type:'day-start',day:state.day});
     if(events.some(event=>event.type==='CrateDelivered'))
       publish({type:'funds-changed',balance:state.ledger.balance});
@@ -341,6 +341,7 @@ export function createSpatialIntentBridge(session){
   };
   const publishCropProtectionChanges=()=>{
     if(!pendingProtection||!protectionObservers.size)return 0;
+    const revision=protectionRevision;
     const started=performance.now();
     const current=new Map(getUnprotectedCropGroups({includeProtected:true})
       .map(group=>[group.id,group]));
@@ -363,7 +364,7 @@ export function createSpatialIntentBridge(session){
     observedProtection=new Map([...current].map(([id,group])=>[id,group.protection]));
     observedCropProtection=new Map([...current.values()].flatMap(group=>
       group.cropIds.map(cropId=>[cropId,group.protection])));
-    pendingProtection=false;
+    pendingProtection=protectionRevision!==revision;
     protectionMetrics.notifications+=emitted;
     protectionMetrics.queryMs+=performance.now()-started;
     return emitted;
