@@ -31,7 +31,7 @@ namespace {
 constexpr int changeWidth=10,resultWidth=8,maxChangeBatch=4096;
 constexpr double maxId=9007199254740991.0;
 constexpr double pi=3.14159265358979323846;
-struct Worker {uint64_t id,center;double x,z;bool eligible;double rank;};
+struct Worker {uint64_t id,center;double x,z;bool eligible,actionActive;double rank;};
 // Target kind: 0 direct, 1 ordinary crop, 2 banana, 3 wall, 4 center.
 struct Target {
   uint64_t id;double x,z;bool active;int kind;double yaw,shape;
@@ -134,7 +134,8 @@ bool parse(const double* row,Change& change){
   change.center=uint64_t(row[3]);change.x=row[4];change.z=row[5];
   change.assigned=uint64_t(row[6]);change.flag=row[6]!=0;
   change.target=uint64_t(row[7]);change.created=row[8];change.rank=row[9];
-  if(change.kind==1)return (change.center>0||row[6]==0)&&row[6]<=1;
+  if(change.kind==1)return (change.center>0||row[6]==0)&&
+    row[6]<=1&&row[7]<=1;
   if(change.kind==2)return change.center<=4&&row[6]<=1&&change.rank>=0;
   if(change.kind==4)return (change.center==3||change.center==4)&&
     row[4]>=0&&row[5]>0&&row[4]<=row[5]&&row[6]<=2&&row[7]<=5;
@@ -474,7 +475,7 @@ int nav_intent_apply_changes(double sequence,int count){
       }
     }else if(change.kind==1){
       s.workers.insert_or_assign(change.id,Worker{change.id,change.center,
-        change.x,change.z,change.flag,change.rank});
+        change.x,change.z,change.flag,change.target!=0,change.rank});
     }else if(change.kind==2){
       auto found=s.targets.find(change.id);
       if(found==s.targets.end()){
@@ -528,6 +529,40 @@ double nav_intent_topology_revision(){return double(lazy_route_revision());}
 int nav_intent_worker_count(){return int(state().workers.size());}
 int nav_intent_target_count(){return int(state().targets.size());}
 int nav_intent_task_count(){return int(state().tasks.size());}
+// Reconstruct only logical assignments after a saved game has projected its
+// confirmed workers, targets and tasks. Route handles belong to the new
+// session and are generated afterwards from current physical positions.
+int nav_intent_restore_assigned_tasks(){
+  IntentState& s=state();
+  if(!s.activeIntents.empty()||s.proposalOpen)return -1;
+  std::vector<const Task*> assigned;
+  assigned.reserve(s.tasks.size());
+  std::unordered_set<uint64_t> actors;
+  for(const auto& item:s.tasks){
+    const Task& task=item.second;
+    if(!task.assigned)continue;
+    const auto worker=s.workers.find(task.assigned);
+    const auto target=s.targets.find(task.target);
+    if(worker==s.workers.end()||target==s.targets.end()||
+       !target->second.active||worker->second.center!=task.center||
+       !actors.insert(task.assigned).second)return -2;
+    assigned.push_back(&task);
+  }
+  std::sort(assigned.begin(),assigned.end(),[](const Task* a,const Task* b){
+    return a->id<b->id;
+  });
+  for(const Task* task:assigned){
+    const Worker& worker=s.workers.at(task->assigned);
+    const PlanningState mode=worker.actionActive?
+      PlanningState::ActionActive:PlanningState::NeedsPlan;
+    ActiveIntent intent{worker.id,task->id,task->target,mode,0,0,
+      lazy_route_revision()};
+    s.activeIntents.insert_or_assign(worker.id,intent);
+    s.byTarget[task->target].insert(worker.id);
+    s.byTask[task->id].insert(worker.id);
+  }
+  return int(assigned.size());
+}
 // Sorted incrementally as structure HP events arrive. Queries copy only the
 // requested result rows; they never rescan live crops, walls or navigation.
 int nav_intent_damaged_structures(int kind){

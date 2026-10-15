@@ -29,7 +29,7 @@ const workerRow=(worker,state)=>[1,1,numericId(worker.id),
     worker.status==='arriving'&&!worker.raidReturn)&&
     !worker.taskId&&!worker.incapacitated&&
     !contractExpired(worker,state)&&state.time<(profileEnd.get(worker.profile)??0)?1:0,
-  0,0,lexicalRank(worker.id)];
+  worker.status==='acting'?1:0,0,lexicalRank(worker.id)];
 const targetRow=(entity,state)=>{
   if('alive' in entity)return [1,2,numericId(entity.id),
     entity.species==='platano'?2:1,entity.x,entity.z,entity.alive?1:0,0,0,0];
@@ -76,6 +76,7 @@ export function createSpatialIntentBridge(session){
   const wasm=session?.core?.wasm;
   for(const name of ['nav_intent_reset','nav_intent_changes_ptr',
     'nav_intent_apply_changes','nav_intent_plan_tasks','nav_intent_results_ptr',
+    'nav_intent_restore_assigned_tasks',
     'nav_intent_discard','nav_intent_commit','nav_intent_damaged_structures',
     'nav_intent_damaged_ptr','nav_intent_crop_groups',
     'nav_intent_crop_groups_ptr','nav_intent_crop_members_ptr',
@@ -246,6 +247,20 @@ export function createSpatialIntentBridge(session){
         approach:{x:data[at+6],z:data[at+7]}};
     });
   };
+  const restoreAssignedTasks=state=>{
+    if(!initialized)throw Error('Reset the native intent session first');
+    const workers=new Map(state.workers.map(worker=>[worker.id,worker]));
+    for(const task of state.tasks)if(task.workerId){
+      const worker=workers.get(task.workerId);
+      if(!worker||worker.taskId!==task.id||worker.centerId!==task.centerId)
+        throw Error(`Inconsistent saved task assignment: ${task.id}`);
+    }
+    session.actorSectorRevision({worker:true});
+    const restored=wasm.nav_intent_restore_assigned_tasks();
+    if(restored<0)throw Error(`Native assigned-task restoration failed: ${restored}`);
+    const routed=restored?wasm.nav_intent_replan_pending_routes():0;
+    return {restored,routed};
+  };
   const proposalRoute=row=>{
     const {routeOffset,routeCount}=row,total=wasm.nav_intent_route_point_count();
     if(!Number.isInteger(routeOffset)||!Number.isInteger(routeCount)||routeCount<1||
@@ -371,7 +386,8 @@ export function createSpatialIntentBridge(session){
     wasm.nav_intent_replan_pending_routes();
     return true;
   };
-  return {resetFromState,applyEvents,applyCommittedEvents,planTasks,proposalRoute,
+  return {resetFromState,applyEvents,applyCommittedEvents,planTasks,
+    restoreAssignedTasks,proposalRoute,
     getDamagedWalls:()=>getDamaged('wall'),
     getDamagedCenters:()=>getDamaged('center'),
     getUnprotectedCropGroups,
@@ -416,6 +432,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
       observedTaskState=null;
     }
     const result=bridge.resetFromState(state);
+    const restored=bridge.restoreAssignedTasks(state);
     eligible.clear();projectedPositions.clear();requests.clear();
     pendingTaskEvents=[];pendingWorldEvents=[];total=0;
     lastPlan=null;lastPlanFacts=null;
@@ -423,7 +440,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     dirty=true;nextRetry=Infinity;lastTime=-Infinity;
     lastNavigationVersion=null;
     initialized=true;
-    return result;
+    return {...result,...restored};
   };
   const applyEvents=(state,events)=>{
     lastPlan=null;lastPlanFacts=null;

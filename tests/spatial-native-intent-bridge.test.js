@@ -223,12 +223,24 @@ test('event-fed native intent bridge replays live state and only changes on expl
   assert.equal(restoredWorker.taskId,task.id);
   assert.deepEqual(restoredWorker.path,worker.path,
    'a saved action preserves the physical path without serializing its native handle');
-  planner.resetFromState(restored);
+  const restoredIndex=planner.resetFromState(restored);
+  assert.equal(restoredIndex.restored,1,
+   'a saved worker assignment is reconstructed as a native intention');
+  assert.equal(restoredIndex.routed,1,
+   'the restored worker receives a fresh native route from its saved position');
   assert.equal(planner.routePoints(committedIntent.routeHandle),null,
    'a restored session rejects its former route handle');
+  assert.equal(wasm.nav_intent_actor(9263),1);
+  const restoredNative=Array.from(new Float64Array(wasm.memory.buffer,
+   wasm.nav_intent_actor_ptr(),10));
+  assert.equal(restoredNative[3],Number(plant.id.split('-').at(-1)));
+  const restoredHandle={session:restoredNative[4],slot:restoredNative[5],
+   generation:restoredNative[6]};
+  assert(planner.routePoints(restoredHandle)?.length>0);
   assert.throws(()=>planner.commitTaskBatchToState(game,nativePlan,{navVersion:nav.version}),
    /current planning batch/,'the same native proposal cannot be committed twice');
   const restoredNav=createSpatialNavigationMovement(session,restored);
+  planner.reconcileWorkerRoutes(restored,{navVersion:restoredNav.version});
   const restoredPlant=restored.plants.find(item=>item.id===plant.id);
   let previous={x:restoredWorker.x,z:restoredWorker.z};
   for(const point of restoredWorker.path){
@@ -236,7 +248,12 @@ test('event-fed native intent bridge replays live state and only changes on expl
     'the committed route respects native static worker clearance');
    previous=point;
   }
-  restoredNav.workerPath=()=>{throw Error('ordinary movement unexpectedly replanned');};
+  const workerPath=restoredNav.workerPath.bind(restoredNav);
+  restoredNav.workerPath=(actor,...args)=>{
+   if(actor.id===restoredWorker.id)
+    throw Error('restored intention unexpectedly used the legacy planner');
+   return workerPath(actor,...args);
+  };
   let reached=false;
   for(let step=0;step<1000&&!reached;step++){
    restored.elapsed+=.2;
@@ -245,6 +262,30 @@ test('event-fed native intent bridge replays live state and only changes on expl
   assert(reached,'the continuous movement controller completes the native route');
   assert(canWaterFrom(restoredWorker,restoredPlant,restoredNav),
    'the reached interaction point permits the actual watering action');
+  restoredWorker.status='acting';restoredWorker.actionRemaining=1;
+  const activeAction=planner.resetFromState(restored);
+  assert.deepEqual([activeAction.restored,activeAction.routed],[1,0],
+   'an action already in progress is restored without another route search');
+  assert.equal(wasm.nav_intent_actor(9263),1);
+  const actingNative=new Float64Array(wasm.memory.buffer,
+   wasm.nav_intent_actor_ptr(),10);
+  assert.equal(actingNative[1],2,'the committed action retains its logical phase');
+  assert.equal(actingNative[6],0,'no stale route handle survives the restore');
+  const stopRestoredTasks=planner.observeTasks(restored);
+  const stopRestoredWorld=planner.observeWorld(restored);
+  restoredNav.intentTaskPlanner=planner;
+  tick(restored,.6,restoredNav);tick(restored,.6,restoredNav);
+  assert.notEqual(restoredWorker.taskId,task.id,
+   'the restored committed action completes without restarting its route');
+  assert(!restored.tasks.some(item=>item.id===task.id),
+   'the completed saved task cannot remain reserved or run twice');
+  if(wasm.nav_intent_actor(9263)){
+   const nextIntent=new Float64Array(wasm.memory.buffer,
+    wasm.nav_intent_actor_ptr(),10);
+   assert.notEqual(nextIntent[2],999999,
+    'a newly assigned task has a distinct native intention');
+  }
+  stopRestoredTasks();stopRestoredWorld();
  }finally{session.dispose();}
 });
 
