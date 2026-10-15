@@ -46,16 +46,17 @@ export function syncNativeCampaignRaidView(state,nav,previousCenter){
  }
  return context;
 }
-export async function simulateNativeCampaign({days=100,strategy='good',labourPolicy='legacy',profile='olderFemale',mixed=true,middayHiring=false,plantsPerWorker=12,defend=false,reserveLabourGrowth=true,reserveMaintenance=true,burstPlanting=false,cameraEntry=true,defensePolicy='expanding',nativeEvidence=true,decisionProfile=false,preparedWallQuotes=true,spatialAdvice=false,onDay,onTick,onDecision,openingFactory=createOpeningWorld,entryDriverFactory=nav=>new NativeCampaignEntryDriver(nav),reloadRaids=true,...world}={}){
+export async function simulateNativeCampaign({days=100,strategy='good',labourPolicy='legacy',profile='olderFemale',mixed=true,middayHiring=false,plantsPerWorker=12,defend=false,reserveLabourGrowth=true,reserveMaintenance=true,burstPlanting=false,cameraEntry=true,defensePolicy='expanding',nativeEvidence=true,decisionProfile=false,preparedWallQuotes=true,spatialAdvice=null,onDay,onTick,onDecision,openingFactory=createOpeningWorld,entryDriverFactory=nav=>new NativeCampaignEntryDriver(nav),reloadRaids=true,...world}={}){
  if(!Number.isSafeInteger(days)||days<1||days>180)throw Error('Native protocol permits1–180 days only');
  if(!Number.isSafeInteger(plantsPerWorker)||plantsPerWorker<1)throw new Error('Plants per worker must be a positive integer');
  const protocol=campaignProtocolForLabour(labourPolicy),q4=labourPolicy==='q4',labourHistory=[],labourReasons={};
  const policy=nativeCampaignStrategy(strategy);defend=policy.defend;middayHiring=policy.middayHiring;plantsPerWorker=6;
  if(typeof Game.nightEntryPending!=='function')throw Error('Native pending entry handshake is not integrated; no campaign started');
  const opening=await openingFactory(world),nav=opening.nav;let s=opening.s,sequence=0;
- if(spatialAdvice&&!opening.session)throw Error('Spatial advice requires a Wild Engine session');
+ const useSpatialAdvice=spatialAdvice??Boolean(opening.session);
+ if(useSpatialAdvice&&!opening.session)throw Error('Spatial advice requires a Wild Engine session');
  const adviceInitStart=performance.now();
- const advice=spatialAdvice?createSpatialIntentBridge(opening.session):null;
+ const advice=useSpatialAdvice?createSpatialIntentBridge(opening.session):null;
  advice?.resetFromState(s);
  const spatialAdviceInitMs=advice?performance.now()-adviceInitStart:0;
  const spatialSync={calls:0,events:0,ms:0};
@@ -111,7 +112,9 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
     if(site.status==='pending')return null;
    }
   }
-  if(!p){if(advice)spatialSite.legacyFallback++;p=timed('plot.choose',()=>plotSearch.choose());}
+  // Unknown or pending native space remains unresolved until Wild Engine loads
+  // the relevant sectors. A second JS site search would bypass that authority.
+  if(!p&&!advice)p=timed('plot.choose',()=>plotSearch.choose());
   if(p&&!plots.some(q=>q.x===p.x&&q.z===p.z))plots.push(p);
   return p;
  };

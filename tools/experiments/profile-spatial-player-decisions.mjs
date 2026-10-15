@@ -12,7 +12,8 @@ const days=Number(process.argv[2]??14);
 const output=process.argv[3]??'.cache/spatial-player-decisions-baseline.json';
 const engine=process.argv[4]??'legacy';
 const preparedQuotes=process.argv[5]!=='recompute';
-const spatialAdvice=process.argv[6]==='advice';
+const spatialAdvice=process.argv[6]==='control'?false:
+  process.argv[6]==='advice'?true:null;
 const seed=Number(process.argv[7]??712);
 if(!Number.isSafeInteger(days)||days<1||days>100)throw Error('Invalid days');
 if(!Number.isSafeInteger(seed)||seed<1)throw Error('Invalid seed');
@@ -48,7 +49,8 @@ try{
     money:row.money,finance,wallTime:row.wallTime,phases:row.decisionPhases};
    daily.push(item);console.log(JSON.stringify(item));
   }});
- const report={source,sourceFiles,engine,preparedQuotes,spatialAdvice,
+ const report={source,sourceFiles,engine,preparedQuotes,
+  spatialAdvice:spatialAdvice??engine==='wild-engine',
   spatialSite:result.spatialSite,spatialAdviceInitMs:result.spatialAdviceInitMs,
   spatialSync:result.spatialSync,daysRequested:days,completedNights:result.completedNights,
   result:result.result,biome:result.biome,seed:result.seed,strategy:result.strategy,
