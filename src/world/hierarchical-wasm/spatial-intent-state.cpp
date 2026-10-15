@@ -18,6 +18,7 @@ const float* spatial_world_route_ptr();
 int spatial_world_route_reason();
 uint32_t lazy_route_revision();
 int lazy_selected_context();
+int spatial_select_nav_profile_index(int);
 int lazy_weak_region(int,int);
 int lazy_enclosure(int,int);
 int spatial_local_clear(float,float,float,float);
@@ -79,6 +80,8 @@ struct ActiveIntent {
   PlanningState state=PlanningState::NeedsPlan;
   uint32_t slot=0,generation=0,topology=0;
   bool animal=false,tacticalPending=false;
+  int profile=1;
+  float routeStartX=0,routeStartZ=0;
 };
 struct RouteSlot {std::vector<float> points;uint32_t generation=0;bool active=false;};
 struct Change {
@@ -572,6 +575,7 @@ int nav_intent_restore_assigned_tasks(){
       PlanningState::ActionActive:PlanningState::NeedsPlan;
     ActiveIntent intent{worker.id,task->id,task->target,mode,0,0,
       lazy_route_revision()};
+    intent.profile=lazy_selected_context();
     s.activeIntents.insert_or_assign(worker.id,intent);
     s.byTarget[task->target].insert(worker.id);
     s.byTask[task->id].insert(worker.id);
@@ -846,6 +850,7 @@ int nav_intent_commit(){
     if(!route.generation)route.generation=1;
     ActiveIntent intent{workerId,taskId,s.tasks.at(taskId).target,
       PlanningState::RouteActive,slot,route.generation,lazy_route_revision()};
+    intent.profile=lazy_selected_context();
     s.activeIntents.insert_or_assign(workerId,intent);
     s.byTarget[intent.target].insert(workerId);
     s.byTask[intent.task].insert(workerId);
@@ -906,8 +911,9 @@ bool activeRouteClear(const IntentState& s,const ActiveIntent& intent){
   if(!route.active||route.generation!=intent.generation||
      route.points.size()<2||route.points.size()%2)return false;
   const auto worker=s.workers.find(intent.actor);
-  if(worker==s.workers.end())return false;
-  float x=float(worker->second.x),z=float(worker->second.z);
+  if(!intent.animal&&worker==s.workers.end())return false;
+  float x=intent.animal?intent.routeStartX:float(worker->second.x);
+  float z=intent.animal?intent.routeStartZ:float(worker->second.z);
   for(size_t i=0;i<route.points.size();i+=2){
     const float nextX=route.points[i],nextZ=route.points[i+1];
     if(!spatial_local_clear(x,z,nextX,nextZ))return false;
@@ -916,10 +922,13 @@ bool activeRouteClear(const IntentState& s,const ActiveIntent& intent){
   return true;
 }
 int nav_intent_reconcile_topology(){
-  IntentState& s=state();const uint32_t revision=lazy_route_revision();
-  std::vector<uint64_t> affected;
+  IntentState& s=state();const int originalProfile=lazy_selected_context();
+  std::vector<std::pair<uint64_t,uint32_t>> affected;
   for(auto& item:s.activeIntents){
     ActiveIntent& intent=item.second;
+    if(lazy_selected_context()!=intent.profile)
+      spatial_select_nav_profile_index(intent.profile);
+    const uint32_t revision=lazy_route_revision();
     if(intent.topology==revision)continue;
     if(intent.state==PlanningState::RouteActive&&activeRouteClear(s,intent)){
       intent.topology=revision;
@@ -928,10 +937,12 @@ int nav_intent_reconcile_topology(){
     if(intent.state==PlanningState::RouteActive||
        intent.state==PlanningState::WaitingUnknown||
        intent.state==PlanningState::WaitingBlocked)
-      affected.push_back(item.first);
+      affected.emplace_back(item.first,revision);
   }
+  if(lazy_selected_context()!=originalProfile)
+    spatial_select_nav_profile_index(originalProfile);
   std::sort(affected.begin(),affected.end());
-  for(uint64_t actor:affected){
+  for(const auto& [actor,revision]:affected){
     ActiveIntent& intent=s.activeIntents.at(actor);
     if(intent.animal){
       releaseIntent(s,actor,PlanningState::Cancelled);
@@ -1068,6 +1079,8 @@ int nav_intent_register_attack(double actorId,double targetId,
   if(!route.generation)route.generation=1;
   ActiveIntent intent{actor,0,targetIdValue,PlanningState::RouteActive,
     slot,route.generation,lazy_route_revision(),true,false};
+  intent.profile=lazy_selected_context();
+  intent.routeStartX=float(startX);intent.routeStartZ=float(startZ);
   s.activeIntents.insert_or_assign(actor,intent);
   s.byTarget[targetIdValue].insert(actor);
   emitIntentChange(s,intent);

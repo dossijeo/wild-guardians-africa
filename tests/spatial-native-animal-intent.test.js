@@ -57,6 +57,11 @@ test('native animal leases preserve committed strikes and reject duplicate targe
     const oldHandle=Array.from(active.slice(4,7));
     assert.equal(active[1],1);
     assert(wasm.nav_intent_route_points(...oldHandle)>0);
+    assert(session.core.addWall(end.x+18,end.z+18,.3,.3)>0);
+    session.actorSectorRevision({worker:true});
+    assert.equal(wasm.nav_intent_reconcile_topology(),0,
+      'a remote wall does not invalidate a physically clear animal route');
+    assert(wasm.nav_intent_route_points(...oldHandle)>0);
     assert.equal(register(102,13),1);
     assert.equal(register(103,13),1,
       'a center permits separate animal approaches');

@@ -648,9 +648,29 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     const latest=new Map();
     for(const change of changes)latest.set(change.actorId,change);
     const workers=new Map(state.workers.map(worker=>[numericId(worker.id),worker]));
+    const animals=new Map((state.raid?.animals??[])
+      .map(animal=>[numericId(animal.id),animal]));
     const tasks=new Map(state.tasks.map(task=>[numericId(task.id),task]));
     const targetFor=taskTargetLookup(state);
     for(const change of latest.values()){
+      const animal=animals.get(change.actorId);
+      if(animal&&change.state===5&&animal.status!=='attacking'&&
+        animal.targetId&&numericId(animal.targetId)===change.targetId){
+        const target=targetFor(animal.targetId);
+        // The native route was invalidated by a confirmed world change.
+        // Retain a still-valid target and lease; the raid controller will
+        // request one replacement route at its next action boundary.
+        animal.path=null;
+        if(!target||'alive' in target&&!target.alive||
+          ('status' in target&&target.status!=='intact')){
+          if(animal.reservation&&state.raid.reservations[animal.reservation]===animal.id){
+            delete state.raid.reservations[animal.reservation];
+            state.raid.waitRevision=((state.raid.waitRevision??0)+1)>>>0;
+          }
+          animal.targetId=null;animal.reservation=null;
+          animal.approach=null;animal.approachShieldId=null;
+        }
+      }
       const worker=workers.get(change.actorId);
       if(!worker||!worker.taskId||numericId(worker.taskId)!==change.taskId)continue;
       const task=tasks.get(change.taskId);
