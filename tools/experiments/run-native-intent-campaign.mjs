@@ -140,6 +140,7 @@ try{
       lastEvent:latestState.events.at(-1)?.type??null,
       stateSha256:createHash('sha256').update(serialize(latestState)).digest('hex')
     }:null,
+    policy:result.policy,defense:result.defense,plotSearch:result.plotSearch,
     nativeIntent:result.nativeIntent,raidEvidence:result.raidEvidence,
     raidSelection:raidSelection(),rows};
   writeFileSync(path,JSON.stringify(report,null,2)+'\n');
