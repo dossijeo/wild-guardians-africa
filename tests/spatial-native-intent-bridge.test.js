@@ -58,6 +58,18 @@ test('loading an active raid restores distinct routes and reservations for eight
     const before=initial.get(animal.id);
     return Math.hypot(animal.x-before.x,animal.z-before.z)>.1;
    }),'at least one restored route advances physically');
+   let remainingTicks=0;
+   while(game.raid&&remainingTicks<1000){
+    tick(game,.1,nav);
+    nav.serviceRaidConnectivityDemand?.();
+    remainingTicks++;
+   }
+   assert.equal(game.raid,null,'the restored multi-animal raid ends');
+   const hits=game.events.filter(event=>event.type==='AnimalLogicalHit');
+   assert.equal(hits.length,24,'the eight animals spend their actual hit budgets');
+   assert.equal(new Set(hits.map(event=>event.attackId)).size,hits.length,
+    'no committed attack applies its damage twice');
+   assert.equal(game.events.filter(event=>event.type==='RaidEnded').length,1);
    assert.doesNotThrow(()=>serialize(game));
   }finally{stopTasks();stopWorld();}
  }finally{session.dispose();}
