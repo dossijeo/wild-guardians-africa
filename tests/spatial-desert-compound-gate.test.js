@@ -7,6 +7,7 @@ import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-g
 import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
 import {centerServicePoint} from '../src/world/centers.js';
 import {gatePortalPoints} from '../src/world/gate-passages.js';
+import {wallStroke,wallStrokeLine} from '../src/world/wall-layout.js';
 import {rational,numberOf} from '../src/simulation/money.js';
 import * as Game from '../src/simulation/game.js';
 
@@ -100,5 +101,43 @@ test('an unhostable extra gate leaves the closing module unbuilt and charges onl
     assert.equal(balance-numberOf(state.ledger.balance),30);
     assert.equal(state.structures.filter(s=>s.kind==='wall').length,115);
     assert(workers.every(w=>nav.path(w,state.villages[0].entry,.28,null,true)));
+  }finally{session.dispose();}
+});
+
+test('closing a compound perimeter one paid module at a time preserves worker exit',async()=>{
+  const state=deserialize(snapshot);
+  state.structures=state.structures.filter(s=>!(s.kind==='wall'&&s.created>=27114));
+  state.ledger.balance=rational(10000);
+  const workers=state.workers.filter(w=>w.status==='fleeing'||w.status==='arriving');
+  const center=state.structures.find(s=>s.kind==='center'&&s.status!=='ruined');
+  const target=w=>w.status==='fleeing'?state.villages[0].entry:
+    centerServicePoint(center,state,.8);
+  const {session,nav}=await resident(state);
+  try{
+    const initialGates=state.structures.filter(s=>s.kind==='wall'&&s.autoGate).length;
+    const slots=wallStroke([[66,-7.18],[66,-18]],state.structures,
+      {smooth:false,snap:false});
+    assert.equal(slots.length,5);
+    assert(workers.every(w=>nav.path(w,target(w),.28,null,true)));
+    for(const [i,slot] of slots.entries()){
+      const stroke=wallStrokeLine([slot]),before=numberOf(state.ledger.balance);
+      assert(Game.buildWallChain(state,`incremental-gate-${i}`,'zarzas',stroke,nav,
+        {smooth:false,snap:false,maxPieces:1}));
+      assert.equal(before-numberOf(state.ledger.balance),10);
+      assert(workers.every(w=>nav.path(w,target(w),.28,null,true)),
+        `paid module ${i+1} trapped a worker`);
+    }
+    assert(state.structures.filter(s=>s.kind==='wall'&&s.autoGate).length>initialGates);
+    const reloaded=deserialize(serialize(state)),second=await resident(reloaded);
+    try{
+      const reloadedCenter=reloaded.structures.find(s=>s.id===center.id);
+      assert(reloaded.workers.filter(w=>w.status==='fleeing'||w.status==='arriving')
+        .every(w=>second.nav.path(w,w.status==='fleeing'?reloaded.villages[0].entry:
+          centerServicePoint(reloadedCenter,reloaded,.8),.28,null,true)));
+    }finally{second.session.dispose();}
+    const beforePositions=new Map(workers.map(w=>[w.id,{x:w.x,z:w.z}]));
+    Game.tick(state,1,nav);
+    assert(workers.every(w=>Math.hypot(w.x-beforePositions.get(w.id).x,
+      w.z-beforePositions.get(w.id).z)>.05),'all workers resume physical movement');
   }finally{session.dispose();}
 });
