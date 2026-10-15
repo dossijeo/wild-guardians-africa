@@ -417,6 +417,7 @@ test('a confirmed enclosure breach reconsiders other wall attackers at an event 
     villageId:'village-1',status:'intact',hp:600,maxHp:600});
   const loaded=new Map(),session=createSpatialGameSession(module,state,{
     loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+  let restoredSession,stopRestoredWorld=()=>{},stopRestoredTasks=()=>{};
   try{
     const jobs=new Map();
     for(let cz=-1;cz<=1;cz++)for(let cx=-1;cx<=1;cx++)
@@ -465,6 +466,20 @@ test('a confirmed enclosure breach reconsiders other wall attackers at an event 
       assert.equal(wasm.nav_intent_wall_opportunity_candidates(),2,
         'the native inverse index should contain both wall attackers');
       const priorTargets=new Map(attackers.map(animal=>[animal.id,animal.targetId]));
+      const saved=deserialize(serialize(state)),restoredLoaded=new Map();
+      restoredSession=createSpatialGameSession(module,saved,{
+        loaded:()=>restoredLoaded,
+        onData:data=>restoredLoaded.set(`${data.cx},${data.cz}`,data)});
+      restoredSession.stream.plan(jobs);
+      await restoredSession.stream.whenIdle();
+      const restoredNav=createSpatialNavigationMovement(restoredSession,saved);
+      restoredNav.setActiveBounds([-36,-36,36,36]);
+      restoredNav.setRaidView(nav.raidView.eye,nav.raidView.target);
+      const restoredPlanner=createEventDrivenTaskPlanner(restoredSession);
+      assert.equal(restoredPlanner.resetFromState(saved).restoredAnimalRoutes,2);
+      stopRestoredWorld=restoredPlanner.observeWorld(saved);
+      stopRestoredTasks=restoredPlanner.observeTasks(saved);
+      restoredNav.intentTaskPlanner=restoredPlanner;
       const walls=state.structures.filter(wall=>wall.kind==='wall'&&
         wall.status==='intact');
       const breach=walls.filter(wall=>
@@ -473,8 +488,12 @@ test('a confirmed enclosure breach reconsiders other wall attackers at an event 
       for(const wall of breach){
         wall.status='ruined';wall.hp=0;
         Game.emit(state,'StructureRuined',{targetId:wall.id});
+        const restoredWall=saved.structures.find(item=>item.id===wall.id);
+        restoredWall.status='ruined';restoredWall.hp=0;
+        Game.emit(saved,'StructureRuined',{targetId:wall.id});
       }
       nav.setState(state);
+      restoredNav.setState(saved);
       const originalPlanAttackCrop=planner.planAttackCrop;
       const nativeBreachPlans=[];
       planner.planAttackCrop=(...args)=>{
@@ -485,6 +504,7 @@ test('a confirmed enclosure breach reconsiders other wall attackers at an event 
         return result;
       };
       Game.tick(state,.25,nav);
+      Game.tick(saved,.25,restoredNav);
       if(process.env.WILD_ENGINE_NATIVE_ROUTE_WASM)
         assert(nativeBreachPlans.some(plan=>plan?.status==='found'),
           `native crop planner should resolve the opened access: ${JSON.stringify(nativeBreachPlans)}`);
@@ -502,8 +522,33 @@ test('a confirmed enclosure breach reconsiders other wall attackers at an event 
       assert.equal(new Set(Object.values(state.raid.reservations)).size,
         Object.values(state.raid.reservations).length,
         'reconsideration must not duplicate animal reservations');
+      for(const animal of state.raid.animals){
+        const resumed=saved.raid.animals.find(item=>item.id===animal.id);
+        assert.equal(resumed.targetId,animal.targetId,
+          'loaded attackers reconsider the same target after the breach');
+        assert.equal(resumed.reservation,animal.reservation);
+        assert.equal(resumed.hitsRemaining,animal.hitsRemaining);
+      }
+      assert.deepEqual(saved.raid.reservations,state.raid.reservations);
+      const continuousState=JSON.parse(serialize(state));
+      const resumedState=JSON.parse(serialize(saved));
+      for(const copy of [continuousState,resumedState]){
+        for(const animal of copy.raid.animals){
+          delete animal.pathVersion;
+          delete animal.mobileRecoveryVersion;
+          if(animal.raidWait)delete animal.raidWait.epoch;
+        }
+      }
+      const continuous=JSON.stringify(continuousState),resumed=JSON.stringify(resumedState);
+      if(continuous!==resumed){
+        let index=0;
+        while(index<Math.min(continuous.length,resumed.length)&&
+          continuous[index]===resumed[index])index++;
+        assert.fail(`saved breach state diverged at ${index}: ${
+          continuous.slice(index-150,index+90)} versus ${resumed.slice(index-150,index+90)}`);
+      }
       assert.equal(wasm.nav_intent_wall_opportunity_candidates(),0,
         'releasing wall intentions must remove inverse dependencies');
     }finally{stopTasks();stopWorld();delete nav.intentTaskPlanner;}
-  }finally{session.dispose();}
+  }finally{stopRestoredTasks();stopRestoredWorld();restoredSession?.dispose();session.dispose();}
 });
