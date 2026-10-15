@@ -1,0 +1,80 @@
+{
+  "fixture": "tests/fixtures/manglares-123-d10-raid-state.json.gz",
+  "fixtureSha256": "764d2d569ea6f893f8d074eefb155d7255cb40cbe7400ccf9f4d2516ac144364",
+  "wasmSha256": "53b2bd65530b0e9b3e920974184dc0e0450d25c8bd685492d26b1b803e1e75d8",
+  "count": 30,
+  "rows": [
+    {
+      "mode": "A",
+      "ticks": 30,
+      "totalMs": 5055.496899999996,
+      "routeMs": 4113.628799999999,
+      "routeCalls": 32,
+      "cacheHits": 0,
+      "cacheMisses": 0,
+      "memoryBytes": 33816576,
+      "stateSha256": "64bcfa2f1fee25ab22490d2785c2de7c44b25732e600531abe6cb23f4e445921",
+      "firstDifference": null
+    },
+    {
+      "mode": "B",
+      "ticks": 30,
+      "totalMs": 4855.592799999993,
+      "routeMs": 3970.73290000001,
+      "routeCalls": 32,
+      "cacheHits": 0,
+      "cacheMisses": 0,
+      "memoryBytes": 33816576,
+      "stateSha256": "64bcfa2f1fee25ab22490d2785c2de7c44b25732e600531abe6cb23f4e445921",
+      "firstDifference": null
+    },
+    {
+      "mode": "C",
+      "ticks": 30,
+      "totalMs": 5075.146399999987,
+      "routeMs": 4279.9463,
+      "routeCalls": 32,
+      "cacheHits": 0,
+      "cacheMisses": 32,
+      "memoryBytes": 33882112,
+      "stateSha256": "64bcfa2f1fee25ab22490d2785c2de7c44b25732e600531abe6cb23f4e445921",
+      "firstDifference": null
+    },
+    {
+      "mode": "C",
+      "ticks": 30,
+      "totalMs": 5322.663699999997,
+      "routeMs": 4527.629599999993,
+      "routeCalls": 32,
+      "cacheHits": 0,
+      "cacheMisses": 32,
+      "memoryBytes": 33882112,
+      "stateSha256": "64bcfa2f1fee25ab22490d2785c2de7c44b25732e600531abe6cb23f4e445921",
+      "firstDifference": null
+    },
+    {
+      "mode": "B",
+      "ticks": 30,
+      "totalMs": 4671.757500000014,
+      "routeMs": 3925.7829999999667,
+      "routeCalls": 32,
+      "cacheHits": 0,
+      "cacheMisses": 0,
+      "memoryBytes": 33816576,
+      "stateSha256": "64bcfa2f1fee25ab22490d2785c2de7c44b25732e600531abe6cb23f4e445921",
+      "firstDifference": null
+    },
+    {
+      "mode": "A",
+      "ticks": 30,
+      "totalMs": 4623.385000000017,
+      "routeMs": 3906.8222999999853,
+      "routeCalls": 32,
+      "cacheHits": 0,
+      "cacheMisses": 0,
+      "memoryBytes": 33816576,
+      "stateSha256": "64bcfa2f1fee25ab22490d2785c2de7c44b25732e600531abe6cb23f4e445921",
+      "firstDifference": null
+    }
+  ]
+}

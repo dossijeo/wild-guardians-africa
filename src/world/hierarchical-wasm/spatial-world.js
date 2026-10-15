@@ -93,6 +93,63 @@ export function createSpatialWorld(module){
     }
     return {status:'found',points};
   }
+  // Experimental native whole-world planner. Production continues through
+  // routeWorld until differential and sustained campaign QA are complete.
+  function routeWorldNative(start,end,{cached=false}={}){
+    if(![start?.x,start?.z,end?.x,end?.z].every(Number.isFinite))
+      throw RangeError('World routes require finite coordinates');
+    if(!navigationBuilt||typeof wasm.spatial_world_route!=='function')
+      return {status:'unknown',points:[]};
+    const count=cached?wasm.spatial_world_route_cached(start.x,start.z,end.x,end.z):
+      wasm.spatial_world_route(start.x,start.z,end.x,end.z);
+    countReason('route');
+    if(count<0){
+      const reason={1:'start-connector',2:'end-connector',3:'native-graph',
+        4:'invalid-coordinate'}[wasm.spatial_world_route_reason()]??'native-graph';
+      return {status:'unknown',points:[],reason};
+    }
+    if(!count)return {status:'blocked',points:[]};
+    const values=new Float32Array(wasm.memory.buffer,wasm.spatial_world_route_ptr(),count*2);
+    const points=Array.from({length:count},(_,i)=>({x:values[i*2],z:values[i*2+1]}));
+    // Preserve the caller's exact endpoint. The native physical search uses
+    // float32, while actor state and the current planner retain JS doubles.
+    if(Math.hypot(points.at(-1).x-end.x,points.at(-1).z-end.z)<1e-4)
+      points[points.length-1]={x:end.x,z:end.z};
+    return {status:'found',points};
+  }
+  function routeWorldNativeBatch(queries){
+    if(!Array.isArray(queries)||queries.length>4096||queries.some(q=>
+      ![q.start?.x,q.start?.z,q.end?.x,q.end?.z].every(Number.isFinite)))
+      throw RangeError('Expected at most 4096 finite world route queries');
+    if(!navigationBuilt)return queries.map(()=>({status:'unknown',points:[]}));
+    const pointer=wasm.spatial_route_batch_input_ptr(queries.length);
+    if(!pointer&&queries.length)throw Error('Could not allocate native route batch');
+    const input=new Float32Array(wasm.memory.buffer,pointer,queries.length*4);
+    for(let i=0;i<queries.length;i++){
+      const {start,end}=queries[i];
+      input[i*4]=start.x;input[i*4+1]=start.z;
+      input[i*4+2]=end.x;input[i*4+3]=end.z;
+    }
+    if(wasm.spatial_world_route_batch(queries.length)!==queries.length)
+      throw Error('Native route batch failed');
+    const rows=new Int32Array(wasm.memory.buffer,wasm.spatial_route_batch_rows_ptr(),queries.length*4);
+    const points=new Float32Array(wasm.memory.buffer,wasm.spatial_route_batch_points_ptr(),
+      wasm.spatial_route_batch_point_count()*2);
+    return queries.map((_,i)=>{
+      const count=rows[i*4];
+      if(count<0)return {status:'unknown',points:[],
+        reason:{1:'start-connector',2:'end-connector',3:'native-graph',
+          4:'invalid-coordinate'}[rows[i*4+2]]??'native-graph'};
+      if(!count)return {status:'blocked',points:[]};
+      const offset=rows[i*4+1]*2;
+      const route=Array.from({length:count},(_,j)=>({
+        x:points[offset+j*2],z:points[offset+j*2+1]}));
+      if(Math.hypot(route.at(-1).x-queries[i].end.x,
+        route.at(-1).z-queries[i].end.z)<1e-4)
+        route[route.length-1]={x:queries[i].end.x,z:queries[i].end.z};
+      return {status:'found',points:route};
+    });
+  }
   function connected(start,end){
     if(![start?.x,start?.z,end?.x,end?.z].every(Number.isSafeInteger))
       throw RangeError('Grid connectivity requires integer coordinates');
@@ -162,10 +219,20 @@ export function createSpatialWorld(module){
     for(const gate of gates){
       if(!gate.gate||gate.status==='ruined')continue;
       const pair=gatePortalPoints(gate,.28);
-      if(pair.length!==2||!clear(pair[0],pair[1])||!clear(pair[1],pair[0]))continue;
-      const from=connector(pair[0]),to=connector(pair[1]);
-      if(!from||!to)continue;
-      const id=wasm.lazy_add_portal(from.x,from.z,to.x,to.z);
+      if(pair.length!==2)continue;
+      let id;
+      if(typeof wasm.spatial_add_gate_portal==='function'){
+        id=wasm.spatial_add_gate_portal(pair[0].x,pair[0].z,pair[1].x,pair[1].z);
+      }else{
+        if(!clear(pair[0],pair[1])||!clear(pair[1],pair[0]))continue;
+        const from=connector(pair[0]),to=connector(pair[1]);
+        if(!from||!to)continue;
+        id=typeof wasm.lazy_add_portal_world==='function'?
+          wasm.lazy_add_portal_world(from.x,from.z,to.x,to.z,
+            pair[0].x,pair[0].z,pair[1].x,pair[1].z):
+          wasm.lazy_add_portal(from.x,from.z,to.x,to.z);
+      }
+      if(id<0)continue;
       workerPortalRoutes[id*2]=pair;
       workerPortalRoutes[id*2+1]=[pair[1],pair[0]];
     }
@@ -177,6 +244,8 @@ export function createSpatialWorld(module){
     enclosureAt:point=>navigationBuilt?wasm.lazy_enclosure(point.x,point.z):-1,
     heights,colors,water,groundMask,waterLevels,waterTriangles,props,instances,chunkPayload,changedChunks,route,connected,componentAt,
     routeWorld:(start,end)=>navigationBuilt?spatialWorldRoute(wasm,route,start,end):{status:'unknown',points:[]},
+    routeWorldNative,
+    routeWorldNativeBatch,
     chunkRevision:()=>chunkRevision,
     connectedWorld:(start,end)=>navigationBuilt?spatialWorldConnectivity(wasm,connected,start,end):'unknown',
     componentsWorld:point=>navigationBuilt?spatialWorldComponents(wasm,componentAt,point):{ids:[],unknown:true},

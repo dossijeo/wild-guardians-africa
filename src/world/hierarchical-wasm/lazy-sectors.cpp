@@ -8,7 +8,7 @@
 namespace {
 constexpr int dx[4]={1,-1,0,0},dz[4]={0,0,1,-1};
 struct Arc {int32_t to,fromCell,toCell,portal=-1;};
-struct Portal {int fromX,fromZ,toX,toZ;};
+struct Portal {int fromX,fromZ,toX,toZ;float fromWorldX,fromWorldZ,toWorldX,toWorldZ;};
 struct Sector {
   int sx,sz,id,components=0;
   std::vector<uint8_t> pass,steps,inbound;
@@ -18,6 +18,7 @@ struct Sector {
 };
 struct Context {
   int sectorSize=0,updates=0;
+  uint32_t routeRevision=1;
   int connectivityReason=0,weakFailure=0;
   std::vector<uint8_t> stagedPass,stagedSteps,stagedInbound;
   std::unordered_map<uint64_t,Sector>* sectors=nullptr;
@@ -226,9 +227,12 @@ int lazy_select_context(int profile){
   if(profile<0||profile>=navigationProfiles)return 0;
   selectedContext=profile;return 1;
 }
+int lazy_selected_context(){return selectedContext;}
+uint32_t lazy_route_revision(){return active().routeRevision;}
 int lazy_init(int size){
   if(size<2||size>32)return 0;
   sectorSize=size;updates=0;
+  active().routeRevision++;
   if(!sectors)sectors=new std::unordered_map<uint64_t,Sector>();else sectors->clear();
   byId.clear();freeIds.clear();
   stagedPass.assign(size*size,0);stagedSteps.assign(size*size,0);
@@ -250,6 +254,7 @@ int lazy_commit_sector(int sx,int sz){
   }
   sector.pass=stagedPass;sector.steps=stagedSteps;sector.inbound=stagedInbound;
   flood(sector);updates++;
+  active().routeRevision++;
   rebuildEdges(sector);
   for(int d=0;d<4;d++)if(Sector* neighbor=get(sx+dx[d],sz+dz[d]))rebuildEdges(*neighbor);
   for(const Portal& portal:portals){
@@ -275,15 +280,39 @@ int lazy_remove_sector(int sx,int sz){
     if(bx==sx&&bz==sz){if(Sector* other=get(ax,az))rebuildEdges(*other);}
   }
   weakDirty=true;updates++;
+  active().routeRevision++;
   return 1;
 }
 void lazy_clear_portals(){portals.clear();}
 int lazy_add_portal(int fromX,int fromZ,int toX,int toZ){
-  portals.push_back({fromX,fromZ,toX,toZ});return static_cast<int>(portals.size())-1;
+  portals.push_back({fromX,fromZ,toX,toZ,float(fromX),float(fromZ),float(toX),float(toZ)});
+  return static_cast<int>(portals.size())-1;
+}
+// World-space gate points are registered once when portals change. Route
+// reconstruction can then remain entirely native, including the crossing.
+int lazy_add_portal_world(int fromX,int fromZ,int toX,int toZ,
+  float fromWorldX,float fromWorldZ,float toWorldX,float toWorldZ){
+  portals.push_back({fromX,fromZ,toX,toZ,fromWorldX,fromWorldZ,toWorldX,toWorldZ});
+  return static_cast<int>(portals.size())-1;
+}
+int lazy_portal_world_points(int encoded,float* out){
+  if(encoded<0||!out)return 0;
+  const int id=encoded/2;
+  if(id>=static_cast<int>(portals.size()))return 0;
+  const Portal& portal=portals[id];
+  if(encoded&1){
+    out[0]=portal.toWorldX;out[1]=portal.toWorldZ;
+    out[2]=portal.fromWorldX;out[3]=portal.fromWorldZ;
+  }else{
+    out[0]=portal.fromWorldX;out[1]=portal.fromWorldZ;
+    out[2]=portal.toWorldX;out[3]=portal.toWorldZ;
+  }
+  return 1;
 }
 int lazy_commit_portals(){
   for(Sector* sector:byId)if(sector)rebuildEdges(*sector);
   weakDirty=true;
+  active().routeRevision++;
   return static_cast<int>(portals.size());
 }
 // Sector-local component identity. Callers must discard it after topology
