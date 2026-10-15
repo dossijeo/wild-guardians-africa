@@ -65,8 +65,44 @@ test('incremental native task index plans, discards and commits one global assig
   assert.equal(wasm.nav_intent_commit(),2);
   assert.equal(results().length,0,'committed workers and tasks cannot be assigned twice');
   assert.equal(wasm.nav_intent_last_sequence(),1,'planning does not fabricate world events');
+  assert.equal(wasm.nav_intent_change_count(),2,
+   'one native intention is emitted for each committed worker assignment');
+  assert.equal(wasm.nav_intent_actor(1),1);
+  const active=Array.from(new Float64Array(wasm.memory.buffer,
+   wasm.nav_intent_actor_ptr(),10));
+  assert.deepEqual(active.slice(0,4),[1,1,102,11]);
+  const [handleSession,handleSlot,handleGeneration]=active.slice(4,7);
+  assert(wasm.nav_intent_route_points(handleSession,handleSlot,handleGeneration)>0);
+  const queryCount=wasm.nav_intent_route_queries();
+  assert.equal(wasm.nav_intent_actor(1),1);
+  assert.equal(wasm.nav_intent_route_queries(),queryCount,
+   'reading an active intent never replans during ordinary movement');
+  wasm.nav_intent_clear_changes();
+  assert.equal(write(2,[row(0,2,11)]),1);
+  assert.equal(wasm.nav_intent_change_count(),1,
+   'destroying a crop invalidates only its dependent worker');
+  assert.equal(wasm.nav_intent_actor(1),0,
+   'the destroyed target cannot remain in the active-intent registry');
+  assert.equal(wasm.nav_intent_route_points(handleSession,handleSlot,handleGeneration),-1,
+   'a released route handle cannot be reused');
+  assert.equal(wasm.nav_intent_actor(2),1,'unaffected worker keeps its intention');
+  assert.equal(wasm.nav_intent_invalidation_count(),1);
+  const barrier=session.core.applyBarrierChanges([],[{
+   x:origin.x+5,z:origin.z+5,halfX:.35,halfZ:.35,passMask:0}]);
+  try{
+   assert.equal(wasm.nav_intent_reconcile_topology(),1);
+   assert.equal(wasm.nav_intent_actor(2),1);
+   const pending=new Float64Array(wasm.memory.buffer,wasm.nav_intent_actor_ptr(),10);
+   assert.deepEqual([pending[1],pending[2],pending[3]],[0,101,12],
+    'a physical invalidation retains the worker task and target');
+  }finally{session.core.applyBarrierChanges(barrier,[]);}
+  assert.equal(wasm.nav_intent_replan_pending_routes(),1);
+  assert.equal(wasm.nav_intent_actor(2),1);
+  assert.equal(new Float64Array(wasm.memory.buffer,wasm.nav_intent_actor_ptr(),10)[1],1);
 
   wasm.nav_intent_reset();
+  assert.equal(wasm.nav_intent_route_points(handleSession,handleSlot,handleGeneration),-1,
+   'restoring a session rejects previous route handles');
   assert.equal(write(1,initial),1);
   assert.deepEqual(results(),first,'a restored entity snapshot recreates decisions');
   session.actorRegions(origin,{worker:false,species:'warthog'});

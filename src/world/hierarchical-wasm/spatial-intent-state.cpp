@@ -70,6 +70,16 @@ struct DamageOrder {
 };
 // Task kind: 0 direct, 1 water/initial, 2 repair.
 struct Task {uint64_t id,center,target,assigned;double created,rank;int kind;};
+// A committed route belongs to the native session. It remains pinned while an
+// actor uses it; speculative task batches never acquire a route handle.
+enum class PlanningState:int {NeedsPlan=0,RouteActive=1,ActionActive=2,
+  WaitingUnknown=3,WaitingBlocked=4,Cancelled=5};
+struct ActiveIntent {
+  uint64_t actor=0,task=0,target=0;
+  PlanningState state=PlanningState::NeedsPlan;
+  uint32_t slot=0,generation=0,topology=0;
+};
+struct RouteSlot {std::vector<float> points;uint32_t generation=0;bool active=false;};
 struct Change {
   int op,kind;
   uint64_t id,center,target,assigned;
@@ -93,6 +103,13 @@ struct IntentState {
   std::vector<double> changes,results;
   std::vector<float> routes;
   std::vector<std::pair<uint64_t,uint64_t>> proposals;
+  std::unordered_map<uint64_t,ActiveIntent> activeIntents;
+  std::unordered_map<uint64_t,std::unordered_set<uint64_t>> byTarget,byTask;
+  std::vector<RouteSlot> routeSlots;
+  std::vector<double> intentChanges;
+  std::array<double,10> intentResult{};
+  uint32_t session=0;
+  uint64_t invalidations=0;
   uint64_t sequence=0,entityRevision=0,damageRevision=0,plannedEntityRevision=0;
   uint32_t plannedGraphRevision=0;
   int plannedProfile=-1;
@@ -126,6 +143,63 @@ bool parse(const double* row,Change& change){
   return change.center>0&&change.target>0&&integer(row[4],true)&&row[4]<=2;
 }
 void clearProposal(IntentState& s){s.proposals.clear();s.proposalOpen=false;}
+void emitIntentChange(IntentState& s,const ActiveIntent& intent){
+  s.intentChanges.insert(s.intentChanges.end(),{double(intent.actor),
+    double(int(intent.state)),double(intent.task),double(intent.target),
+    double(s.session),double(intent.slot),double(intent.generation),
+    double(intent.topology)});
+}
+void releaseRoute(IntentState& s,ActiveIntent& intent){
+  if(intent.slot<s.routeSlots.size()){
+    RouteSlot& route=s.routeSlots[intent.slot];
+    if(route.active&&route.generation==intent.generation){
+      route.active=false;route.points.clear();route.generation++;
+    }
+  }
+  intent.slot=0;intent.generation=0;
+}
+void releaseIntent(IntentState& s,uint64_t actor,PlanningState next){
+  const auto found=s.activeIntents.find(actor);
+  if(found==s.activeIntents.end())return;
+  ActiveIntent& intent=found->second;
+  if(intent.target){auto it=s.byTarget.find(intent.target);
+    if(it!=s.byTarget.end()){it->second.erase(actor);if(it->second.empty())s.byTarget.erase(it);}}
+  if(intent.task){auto it=s.byTask.find(intent.task);
+    if(it!=s.byTask.end()){it->second.erase(actor);if(it->second.empty())s.byTask.erase(it);}}
+  releaseRoute(s,intent);intent.state=next;
+  emitIntentChange(s,intent);
+  intent.task=0;intent.target=0;s.invalidations++;
+}
+void invalidateDependents(IntentState& s,const Change& change){
+  if(change.kind==1){
+    if(!change.op){
+      releaseIntent(s,change.id,PlanningState::Cancelled);
+      s.activeIntents.erase(change.id);
+    }
+    return;
+  }
+  if(change.kind!=2&&change.kind!=3)return;
+  const auto& index=change.kind==2?s.byTarget:s.byTask;
+  const auto found=index.find(change.id);
+  if(found==index.end())return;
+  const bool invalid=!change.op||change.kind==2&&!change.flag||
+    change.kind==3&&change.assigned==0;
+  if(!invalid)return;
+  std::vector<uint64_t> actors(found->second.begin(),found->second.end());
+  std::sort(actors.begin(),actors.end());
+  for(uint64_t actor:actors){
+    const auto active=s.activeIntents.find(actor);
+    if(active==s.activeIntents.end())continue;
+    const uint64_t task=active->second.task;
+    releaseIntent(s,actor,PlanningState::NeedsPlan);
+    s.activeIntents.erase(actor);
+    const auto worker=s.workers.find(actor);
+    if(worker!=s.workers.end())worker->second.eligible=true;
+    const auto pending=s.tasks.find(task);
+    if(pending!=s.tasks.end()&&pending->second.assigned==actor)
+      pending->second.assigned=0;
+  }
+}
 bool damaged(const Target& target){
   return target.damageKnown&&target.hp<target.maxHp&&
     (target.kind==3||target.kind==4);
@@ -291,6 +365,11 @@ extern "C" {
 // Reset on a new WASM world/session or before replaying a restored snapshot.
 void nav_intent_reset(){
   IntentState& s=state();
+  s.session++;
+  if(!s.session)s.session=1;
+  s.activeIntents.clear();s.byTarget.clear();s.byTask.clear();
+  s.routeSlots.clear();s.intentChanges.clear();s.intentResult.fill(0);
+  s.invalidations=0;
   s.workers.clear();s.targets.clear();s.tasks.clear();
   s.damagedWalls.clear();s.damagedCenters.clear();s.damagedResults.clear();
   s.cropGroups.clear();s.cropGroupRows.clear();s.cropGroupMembers.clear();
@@ -349,6 +428,7 @@ int nav_intent_apply_changes(double sequence,int count){
        found->second.status!=int(change.assigned))planningChange=true;
   }
   for(const Change& change:parsed){
+    invalidateDependents(s,change);
     if(!change.op){
       if(change.kind==1)s.workers.erase(change.id);
       else if(change.kind==2){
@@ -667,8 +747,143 @@ int nav_intent_commit(){
   }
   for(const auto& [taskId,workerId]:s.proposals){
     s.tasks.at(taskId).assigned=workerId;s.workers.at(workerId).eligible=false;
+    size_t at=0;
+    while(at<s.results.size()&&s.results[at]!=double(taskId))at+=resultWidth;
+    if(at==s.results.size())continue;
+    if(at+4>=s.results.size()||s.results[at+2]!=1)continue;
+    const size_t offset=size_t(s.results[at+3])*2;
+    const size_t count=size_t(s.results[at+4])*2;
+    if(offset+count>s.routes.size())continue;
+    const auto existing=s.activeIntents.find(workerId);
+    if(existing!=s.activeIntents.end())releaseIntent(s,workerId,PlanningState::Cancelled);
+    uint32_t slot=uint32_t(s.routeSlots.size());
+    for(uint32_t i=0;i<s.routeSlots.size();i++)if(!s.routeSlots[i].active){slot=i;break;}
+    if(slot==s.routeSlots.size())s.routeSlots.emplace_back();
+    RouteSlot& route=s.routeSlots[slot];
+    route.points.assign(s.routes.begin()+offset,s.routes.begin()+offset+count);
+    route.active=true;route.generation++;
+    if(!route.generation)route.generation=1;
+    ActiveIntent intent{workerId,taskId,s.tasks.at(taskId).target,
+      PlanningState::RouteActive,slot,route.generation,lazy_route_revision()};
+    s.activeIntents.insert_or_assign(workerId,intent);
+    s.byTarget[intent.target].insert(workerId);
+    s.byTask[intent.task].insert(workerId);
+    emitIntentChange(s,intent);
   }
   if(!s.proposals.empty())s.entityRevision++;
   const int committed=int(s.proposals.size());clearProposal(s);return committed;
+}
+// Drain only changes caused by confirmed events or a committed task batch.
+// Ordinary movement and ticks do not invoke the planner or emit rows.
+int nav_intent_change_count(){return int(state().intentChanges.size()/8);}
+const double* nav_intent_change_ptr(){return state().intentChanges.data();}
+void nav_intent_clear_changes(){state().intentChanges.clear();}
+double nav_intent_invalidation_count(){return double(state().invalidations);}
+int nav_intent_actor(double actorId){
+  IntentState& s=state();s.intentResult.fill(0);
+  if(!integer(actorId))return 0;
+  const auto found=s.activeIntents.find(uint64_t(actorId));
+  if(found==s.activeIntents.end())return 0;
+  const ActiveIntent& intent=found->second;
+  s.intentResult={double(intent.actor),double(int(intent.state)),
+    double(intent.task),double(intent.target),double(s.session),
+    double(intent.slot),double(intent.generation),double(intent.topology),
+    double(s.entityRevision),double(lazy_route_revision())};
+  return 1;
+}
+const double* nav_intent_actor_ptr(){return state().intentResult.data();}
+int nav_intent_route_points(double session,double slot,double generation){
+  const IntentState& s=state();
+  if(!integer(session)||!integer(slot,true)||!integer(generation)||
+    uint32_t(session)!=s.session||slot>=s.routeSlots.size())return -1;
+  const RouteSlot& route=s.routeSlots[size_t(slot)];
+  return route.active&&route.generation==uint32_t(generation)?
+    int(route.points.size()/2):-1;
+}
+const float* nav_intent_route_ptr(double slot){
+  const IntentState& s=state();
+  return integer(slot,true)&&slot<s.routeSlots.size()?
+    s.routeSlots[size_t(slot)].points.data():nullptr;
+}
+// Topology updates originate in Wild Engine. This explicit boundary is a
+// conservative first stage; sector dependency indexing follows separately.
+int nav_intent_reconcile_topology(){
+  IntentState& s=state();const uint32_t revision=lazy_route_revision();
+  std::vector<uint64_t> affected;
+  for(const auto& item:s.activeIntents)
+    if((item.second.state==PlanningState::RouteActive||
+        item.second.state==PlanningState::WaitingUnknown||
+        item.second.state==PlanningState::WaitingBlocked)&&
+       item.second.topology!=revision)affected.push_back(item.first);
+  std::sort(affected.begin(),affected.end());
+  for(uint64_t actor:affected){
+    ActiveIntent& intent=s.activeIntents.at(actor);
+    releaseRoute(s,intent);intent.state=PlanningState::NeedsPlan;
+    intent.topology=revision;emitIntentChange(s,intent);s.invalidations++;
+  }
+  return int(affected.size());
+}
+// Called at an event boundary after the JS authority projects current actor
+// positions. The target and reservation survive a route-only invalidation.
+int nav_intent_replan_pending_routes(){
+  IntentState& s=state();std::vector<uint64_t> actors;
+  for(const auto& item:s.activeIntents)
+    if(item.second.state==PlanningState::NeedsPlan)actors.push_back(item.first);
+  std::sort(actors.begin(),actors.end());
+  int planned=0;
+  for(uint64_t actor:actors){
+    ActiveIntent& intent=s.activeIntents.at(actor);
+    const auto worker=s.workers.find(actor);
+    const auto task=s.tasks.find(intent.task);
+    const auto target=s.targets.find(intent.target);
+    if(worker==s.workers.end()||task==s.tasks.end()||
+       target==s.targets.end()||!target->second.active||
+       task->second.assigned!=actor){
+      releaseIntent(s,actor,PlanningState::Cancelled);continue;
+    }
+    const ServicePoints points=servicePoints(worker->second,target->second,task->second.kind);
+    bool unknown=false;
+    for(int i=0;i<points.count;i++){
+      const Point point=points.values[size_t(i)];s.routeQueries++;
+      const int count=spatial_world_route_cached(float(worker->second.x),
+        float(worker->second.z),float(point.x),float(point.z));
+      if(count<0){unknown=true;if(task->second.kind==1)break;continue;}
+      if(!count)continue;
+      uint32_t slot=uint32_t(s.routeSlots.size());
+      for(uint32_t j=0;j<s.routeSlots.size();j++)if(!s.routeSlots[j].active){slot=j;break;}
+      if(slot==s.routeSlots.size())s.routeSlots.emplace_back();
+      RouteSlot& route=s.routeSlots[slot];const float* path=spatial_world_route_ptr();
+      route.points.assign(path,path+count*2);route.active=true;route.generation++;
+      if(!route.generation)route.generation=1;
+      intent.slot=slot;intent.generation=route.generation;
+      intent.state=PlanningState::RouteActive;intent.topology=lazy_route_revision();
+      emitIntentChange(s,intent);planned++;break;
+    }
+    if(intent.state!=PlanningState::RouteActive){
+      intent.state=unknown?PlanningState::WaitingUnknown:PlanningState::WaitingBlocked;
+      intent.topology=lazy_route_revision();emitIntentChange(s,intent);
+    }
+  }
+  return planned;
+}
+int nav_intent_action_active(double actorId){
+  if(!integer(actorId))return 0;
+  IntentState& s=state();const auto it=s.activeIntents.find(uint64_t(actorId));
+  if(it==s.activeIntents.end()||it->second.state!=PlanningState::RouteActive)return 0;
+  it->second.state=PlanningState::ActionActive;emitIntentChange(s,it->second);return 1;
+}
+int nav_intent_finish(double actorId){
+  if(!integer(actorId))return 0;
+  IntentState& s=state();const uint64_t actor=uint64_t(actorId);
+  const auto found=s.activeIntents.find(actor);if(found==s.activeIntents.end())return 0;
+  const uint64_t taskId=found->second.task;
+  releaseIntent(s,actor,PlanningState::Cancelled);
+  s.activeIntents.erase(actor);
+  const auto task=s.tasks.find(taskId);
+  if(task!=s.tasks.end()&&task->second.assigned==actor)task->second.assigned=0;
+  const auto worker=s.workers.find(actor);
+  if(worker!=s.workers.end())worker->second.eligible=true;
+  s.entityRevision++;
+  return 1;
 }
 }

@@ -74,6 +74,21 @@ test('event-fed native intent bridge replays live state and only changes on expl
    'reload rebuilds the native read model from live entities');
   assert.deepEqual(bridge.planTasks(),first);
   bridge.discard();
+  assert.equal(bridge.planTasks()[0].status,1);
+  assert.equal(bridge.commit(),1);
+  const [assigned]=bridge.intentChanges();
+  assert.equal(assigned.actorId,9263);
+  assert.equal(assigned.targetId,Number(plant.id.split('-').at(-1)));
+  assert(bridge.routePoints(assigned.routeHandle)?.length>0);
+  assert.deepEqual(bridge.intentChanges(),[],
+   'draining an event batch cannot repeat an old assignment');
+  plant.alive=false;
+  bridge.applyEvents(game,[{type:'target',entity:plant}]);
+  const [invalidated]=bridge.intentChanges();
+  assert.equal(invalidated.actorId,9263);
+  assert.equal(invalidated.state,0);
+  assert.equal(bridge.routePoints(assigned.routeHandle),null);
+  plant.alive=true;
 
   const planner=createEventDrivenTaskPlanner(session);
   assert.throws(()=>planner.planIfNeeded(0),/Reset/);

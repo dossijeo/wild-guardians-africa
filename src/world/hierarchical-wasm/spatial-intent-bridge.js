@@ -66,7 +66,11 @@ export function createSpatialIntentBridge(session){
     'nav_intent_damaged_ptr','nav_intent_crop_groups',
     'nav_intent_crop_groups_ptr','nav_intent_crop_members_ptr',
     'nav_intent_find_planting_site','nav_intent_planting_site_ptr',
-    'nav_intent_release_planting_site'])
+    'nav_intent_release_planting_site','nav_intent_change_count',
+    'nav_intent_change_ptr','nav_intent_clear_changes',
+    'nav_intent_route_points','nav_intent_route_ptr',
+    'nav_intent_reconcile_topology','nav_intent_replan_pending_routes',
+    'nav_intent_action_active','nav_intent_finish'])
     if(typeof wasm?.[name]!=='function')throw TypeError(`Missing ${name}`);
   let sequence=0,initialized=false;
   const structuresById=new Map();
@@ -292,11 +296,35 @@ export function createSpatialIntentBridge(session){
   };
   const releasePlantingSite=(reservationId,{committed=false}={})=>
     wasm.nav_intent_release_planting_site(reservationId,committed?1:0)===1;
+  const intentChanges=()=>{
+    const count=wasm.nav_intent_change_count();
+    const data=Array.from(new Float64Array(wasm.memory.buffer,
+      wasm.nav_intent_change_ptr(),count*8));
+    wasm.nav_intent_clear_changes();
+    return Array.from({length:count},(_,index)=>{
+      const at=index*8;
+      return {actorId:data[at],state:data[at+1],taskId:data[at+2]||null,
+        targetId:data[at+3]||null,routeHandle:data[at+6]?
+          {session:data[at+4],slot:data[at+5],generation:data[at+6]}:null,
+        topologyRevision:data[at+7]};
+    });
+  };
+  const routePoints=handle=>{
+    const count=wasm.nav_intent_route_points(handle.session,handle.slot,handle.generation);
+    if(count<0)return null;
+    return new Float32Array(wasm.memory.buffer,
+      wasm.nav_intent_route_ptr(handle.slot),count*2);
+  };
   return {resetFromState,applyEvents,applyCommittedEvents,planTasks,
     getDamagedWalls:()=>getDamaged('wall'),
     getDamagedCenters:()=>getDamaged('center'),
     getUnprotectedCropGroups,
     findPlantingSite,releasePlantingSite,
+    intentChanges,routePoints,
+    reconcileTopology:()=>wasm.nav_intent_reconcile_topology(),
+    replanPendingRoutes:()=>wasm.nav_intent_replan_pending_routes(),
+    markActionActive:actorId=>wasm.nav_intent_action_active(numericId(actorId))===1,
+    finishAction:actorId=>wasm.nav_intent_finish(numericId(actorId))===1,
     discard:()=>wasm.nav_intent_discard(),
     commit:()=>wasm.nav_intent_commit(),
     sequence:()=>sequence};
