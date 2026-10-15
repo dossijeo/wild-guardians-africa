@@ -399,7 +399,7 @@ export function raidTarget(s,id){
   // the complete farm history for every animal and simulation step.
   return activeCrops(s.plants).find(eligible)??s.structures.find(eligible);
 }
-export function targetFor(s,a,nav,{allowUnknownFallback=false}={}) {
+export function targetFor(s,a,nav) {
   nav.planningObserver?.({kind:'attackSelection',actorId:a.id,elapsed:s.elapsed});
   const stats=nav.raidSelectionStats;
   const started=stats?performance.now():0;
@@ -429,10 +429,7 @@ export function targetFor(s,a,nav,{allowUnknownFallback=false}={}) {
     // An unresolved native crop region is pending topology, not evidence that
     // crops are blocked. Do not re-enter the old per-target selector and issue
     // independent approach searches for the same unknown sector.
-    // A confirmed breach must be reconsidered at this event boundary. Until
-    // the native planner can resolve every newly opened portal immediately,
-    // use the established selector once for that exceptional tactical wake.
-    if(native?.status==='unknown'&&!allowUnknownFallback)return {unknown:true};
+    if(native?.status==='unknown')return {unknown:true};
     return targetForImpl(s,a,nav,stats);
   }finally{
     if(stats)stats.selectionMs=(stats.selectionMs??0)+performance.now()-started;
@@ -681,7 +678,7 @@ export function updateRaid(s,dt,nav) {
         if(wait.epoch===epoch&&s.elapsed<wait.retryAt)continue;
         wait.epoch=epoch;wait.retryAt=s.elapsed+8;
       }
-      const selected=targetFor(s,a,nav,{allowUnknownFallback:tactical.has(a.id)});
+      const selected=targetFor(s,a,nav);
       if(!selected||selected.unknown){
         emit(s,'AnimalTargetUnavailable',{targetId:a.id,species:a.species,hitsRemaining:a.hitsRemaining});
         if(selected?.unknown||occupiedEligibleGroup(s,a,p=>canAttackCrop(s,p)))enqueueWait(s,a);
