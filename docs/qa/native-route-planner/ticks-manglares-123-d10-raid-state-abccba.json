@@ -1,78 +1,774 @@
 {
   "fixture": "tests/fixtures/manglares-123-d10-raid-state.json.gz",
   "fixtureSha256": "764d2d569ea6f893f8d074eefb155d7255cb40cbe7400ccf9f4d2516ac144364",
-  "wasmSha256": "53b2bd65530b0e9b3e920974184dc0e0450d25c8bd685492d26b1b803e1e75d8",
+  "wasmSha256": "275044aa697eaa87de5917ce36dadf636d2ab700ef454c36828faa5cb7bfb4c5",
   "count": 30,
   "rows": [
     {
       "mode": "A",
       "ticks": 30,
-      "totalMs": 5055.496899999996,
-      "routeMs": 4113.628799999999,
+      "totalMs": 4748.818599999998,
+      "routeMs": 3871.745100000001,
       "routeCalls": 32,
       "cacheHits": 0,
       "cacheMisses": 0,
       "memoryBytes": 33816576,
+      "planning": {
+        "simulatedSeconds": 30.00000000010914,
+        "byKind": {
+          "routeRefresh": 6909,
+          "attackSelection": 210,
+          "taskPass": 300
+        },
+        "maxActorCount": {
+          "routeRefresh": 300,
+          "attackSelection": 30
+        },
+        "topActors": [
+          {
+            "actorId": "worker-6926",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6927",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6928",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6929",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6930",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6931",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6932",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6933",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6934",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6935",
+            "counts": {
+              "routeRefresh": 300
+            }
+          }
+        ],
+        "repeatedSameAction": [
+          [
+            "routeRefresh:worker-6926:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6927:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6928:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6929:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6930:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6931:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6932:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6933:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6934:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6935:home-village-1",
+            300
+          ]
+        ]
+      },
       "stateSha256": "64bcfa2f1fee25ab22490d2785c2de7c44b25732e600531abe6cb23f4e445921",
       "firstDifference": null
     },
     {
       "mode": "B",
       "ticks": 30,
-      "totalMs": 4855.592799999993,
-      "routeMs": 3970.73290000001,
+      "totalMs": 4721.754200000005,
+      "routeMs": 3895.8036000000047,
       "routeCalls": 32,
       "cacheHits": 0,
       "cacheMisses": 0,
       "memoryBytes": 33816576,
+      "planning": {
+        "simulatedSeconds": 30.00000000010914,
+        "byKind": {
+          "routeRefresh": 6909,
+          "attackSelection": 210,
+          "taskPass": 300
+        },
+        "maxActorCount": {
+          "routeRefresh": 300,
+          "attackSelection": 30
+        },
+        "topActors": [
+          {
+            "actorId": "worker-6926",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6927",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6928",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6929",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6930",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6931",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6932",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6933",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6934",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6935",
+            "counts": {
+              "routeRefresh": 300
+            }
+          }
+        ],
+        "repeatedSameAction": [
+          [
+            "routeRefresh:worker-6926:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6927:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6928:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6929:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6930:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6931:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6932:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6933:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6934:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6935:home-village-1",
+            300
+          ]
+        ]
+      },
       "stateSha256": "64bcfa2f1fee25ab22490d2785c2de7c44b25732e600531abe6cb23f4e445921",
       "firstDifference": null
     },
     {
       "mode": "C",
       "ticks": 30,
-      "totalMs": 5075.146399999987,
-      "routeMs": 4279.9463,
+      "totalMs": 5167.767700000004,
+      "routeMs": 4344.678799999991,
       "routeCalls": 32,
       "cacheHits": 0,
       "cacheMisses": 32,
       "memoryBytes": 33882112,
+      "planning": {
+        "simulatedSeconds": 30.00000000010914,
+        "byKind": {
+          "routeRefresh": 6909,
+          "attackSelection": 210,
+          "taskPass": 300
+        },
+        "maxActorCount": {
+          "routeRefresh": 300,
+          "attackSelection": 30
+        },
+        "topActors": [
+          {
+            "actorId": "worker-6926",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6927",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6928",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6929",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6930",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6931",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6932",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6933",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6934",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6935",
+            "counts": {
+              "routeRefresh": 300
+            }
+          }
+        ],
+        "repeatedSameAction": [
+          [
+            "routeRefresh:worker-6926:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6927:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6928:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6929:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6930:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6931:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6932:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6933:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6934:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6935:home-village-1",
+            300
+          ]
+        ]
+      },
       "stateSha256": "64bcfa2f1fee25ab22490d2785c2de7c44b25732e600531abe6cb23f4e445921",
       "firstDifference": null
     },
     {
       "mode": "C",
       "ticks": 30,
-      "totalMs": 5322.663699999997,
-      "routeMs": 4527.629599999993,
+      "totalMs": 5479.943300000014,
+      "routeMs": 4682.838199999998,
       "routeCalls": 32,
       "cacheHits": 0,
       "cacheMisses": 32,
       "memoryBytes": 33882112,
+      "planning": {
+        "simulatedSeconds": 30.00000000010914,
+        "byKind": {
+          "routeRefresh": 6909,
+          "attackSelection": 210,
+          "taskPass": 300
+        },
+        "maxActorCount": {
+          "routeRefresh": 300,
+          "attackSelection": 30
+        },
+        "topActors": [
+          {
+            "actorId": "worker-6926",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6927",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6928",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6929",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6930",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6931",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6932",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6933",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6934",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6935",
+            "counts": {
+              "routeRefresh": 300
+            }
+          }
+        ],
+        "repeatedSameAction": [
+          [
+            "routeRefresh:worker-6926:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6927:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6928:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6929:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6930:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6931:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6932:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6933:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6934:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6935:home-village-1",
+            300
+          ]
+        ]
+      },
       "stateSha256": "64bcfa2f1fee25ab22490d2785c2de7c44b25732e600531abe6cb23f4e445921",
       "firstDifference": null
     },
     {
       "mode": "B",
       "ticks": 30,
-      "totalMs": 4671.757500000014,
-      "routeMs": 3925.7829999999667,
+      "totalMs": 4899.478499999976,
+      "routeMs": 4115.713600000003,
       "routeCalls": 32,
       "cacheHits": 0,
       "cacheMisses": 0,
       "memoryBytes": 33816576,
+      "planning": {
+        "simulatedSeconds": 30.00000000010914,
+        "byKind": {
+          "routeRefresh": 6909,
+          "attackSelection": 210,
+          "taskPass": 300
+        },
+        "maxActorCount": {
+          "routeRefresh": 300,
+          "attackSelection": 30
+        },
+        "topActors": [
+          {
+            "actorId": "worker-6926",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6927",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6928",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6929",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6930",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6931",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6932",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6933",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6934",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6935",
+            "counts": {
+              "routeRefresh": 300
+            }
+          }
+        ],
+        "repeatedSameAction": [
+          [
+            "routeRefresh:worker-6926:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6927:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6928:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6929:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6930:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6931:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6932:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6933:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6934:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6935:home-village-1",
+            300
+          ]
+        ]
+      },
       "stateSha256": "64bcfa2f1fee25ab22490d2785c2de7c44b25732e600531abe6cb23f4e445921",
       "firstDifference": null
     },
     {
       "mode": "A",
       "ticks": 30,
-      "totalMs": 4623.385000000017,
-      "routeMs": 3906.8222999999853,
+      "totalMs": 4871.824900000021,
+      "routeMs": 4108.915600000015,
       "routeCalls": 32,
       "cacheHits": 0,
       "cacheMisses": 0,
       "memoryBytes": 33816576,
+      "planning": {
+        "simulatedSeconds": 30.00000000010914,
+        "byKind": {
+          "routeRefresh": 6909,
+          "attackSelection": 210,
+          "taskPass": 300
+        },
+        "maxActorCount": {
+          "routeRefresh": 300,
+          "attackSelection": 30
+        },
+        "topActors": [
+          {
+            "actorId": "worker-6926",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6927",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6928",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6929",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6930",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6931",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6932",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6933",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6934",
+            "counts": {
+              "routeRefresh": 300
+            }
+          },
+          {
+            "actorId": "worker-6935",
+            "counts": {
+              "routeRefresh": 300
+            }
+          }
+        ],
+        "repeatedSameAction": [
+          [
+            "routeRefresh:worker-6926:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6927:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6928:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6929:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6930:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6931:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6932:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6933:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6934:home-village-1",
+            300
+          ],
+          [
+            "routeRefresh:worker-6935:home-village-1",
+            300
+          ]
+        ]
+      },
       "stateSha256": "64bcfa2f1fee25ab22490d2785c2de7c44b25732e600531abe6cb23f4e445921",
       "firstDifference": null
     }

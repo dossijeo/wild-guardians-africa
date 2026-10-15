@@ -399,6 +399,7 @@ export function raidTarget(s,id){
   return activeCrops(s.plants).find(eligible)??s.structures.find(eligible);
 }
 export function targetFor(s,a,nav) {
+  nav.planningObserver?.({kind:'attackSelection',actorId:a.id,elapsed:s.elapsed});
   const stats=nav.raidSelectionStats;
   const started=stats?performance.now():0;
   if(stats)stats.selections=(stats.selections??0)+1;
@@ -626,9 +627,9 @@ export function updateRaid(s,dt,nav) {
         if(dist(a,a.spawn)>.08&&(a.path||s.elapsed>=wait.moveRetryAt)){
           walkTo(s,a,{...a.spawn,id:'wait-'+a.id},dt,nav,{speed:1.5,worker:false});if(!a.path)wait.moveRetryAt=s.elapsed+1;
         }
-        const epoch=waitEpoch(s,nav);
+        const epoch=waitEpoch(s,nav,a);
         if(wait.epoch===epoch&&s.elapsed<wait.retryAt)continue;
-        wait.epoch=epoch;wait.retryAt=s.elapsed+1;
+        wait.epoch=epoch;wait.retryAt=s.elapsed+8;
       }
       const selected=targetFor(s,a,nav);
       if(!selected||selected.unknown){

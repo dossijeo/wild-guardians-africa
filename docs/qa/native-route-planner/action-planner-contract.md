@@ -1,6 +1,14 @@
 # Native intention planner: ownership and transition contract
 
-This specifies the required API before policy code moves. It is a design contract, **not** a claim that the APIs below are implemented.
+This specifies the required API before policy code moves. It is a design contract, **not** a claim that the APIs below are fully implemented. A shadow-only global task assignment kernel now exists for direct target positions; it has no incremental entity index or committed reservations.
+
+## Event-driven planning is the primary objective
+
+The present tick loop calls `reserveAvailableTasks()` after every worker update, even when no task, idle worker, topology or sector changed. A worker with no return route also enters `walkTo()` every tick; before the experimental wait guard this attempted the same route repeatedly. Raid waiters use a timed target-selection retry. These are planning triggers, not movement updates. Moving those calls into WASM unchanged would preserve the polling problem.
+
+Each actor has one logical planning state: `needs_plan`, `route_active`, `waiting_unknown`, `waiting_blocked`, or `action_active`. A new action, completed action, released/invalid target, changed task eligibility, changed lease, relevant topology or sector-residency event transitions to `needs_plan`. A successful native batch selects and reserves a target and returns a route together. While `route_active`, movement follows that route without reselecting or searching. `waiting_unknown` requests the missing sector work once and waits for a sector event; `waiting_blocked` waits for topology/eligibility change. A bounded, low-frequency retry handles dynamic changes without reliable events, and must never turn `unknown` into `blocked`.
+
+The JS bridge must coalesce duplicate invalidations and queue each actor at most once per event epoch. Changes in plant growth, HP with unchanged collision, movement along a valid route and ordinary animation frames do not trigger planning. Native cache lookup happens only after an action request is justified; cache hit rate is secondary to requests per actor/action. Instrument `taskPass`, `taskCandidate`, `attackSelection`, `routeRefresh` and `routeDeferred` per actor and per simulated minute. The acceptance metric is approximately one native planning request per actor/action (every several seconds of gameplay), with documented extra requests tied to explicit invalidations. A mean alone is insufficient: report the worst actor, repeated actor/target pairs and pending-unknown cases.
 
 ## Authority
 
@@ -49,4 +57,4 @@ A handle is `(session, slot, generation)`, never a raw pointer. A slot stores a 
 3. Test closed/open/nested enclosures, all animal radii, multiple independent center approaches, shield occupancy, worker gate routes, missing sectors, preview/discard, target destruction and route eviction.
 4. Only switch a policy's production entry point after full physical replay and sustained `Game.tick` improvement. Remove the corresponding JS cache/selector in the same switch, retaining one authority. Keep a diagnostic comparison build, not two active production planners.
 
-The current route-only prototype implements none of the entity synchronization, policy or commitment APIs. Its zero native cache hits in sampled real ticks demonstrate why the action-level experiment is needed before replacing the game planner.
+The current prototype implements the route query and a shadow subset of task ordering, but none of the entity synchronization or commitment APIs. A small transitional wait guard now prevents repeated failed movement-route searches until topology/residency changes or an eight-second recovery deadline; raid waiters also wake on sector revision. This is not the native event-driven action planner: task queue assignment still runs each tick, target selection remains JS and there is no committed native lease. Its zero native cache hits in sampled real ticks demonstrate why the action-level experiment is needed before replacing the game planner.

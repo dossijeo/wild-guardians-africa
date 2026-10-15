@@ -1,8 +1,8 @@
 import {commitAgriculturalPower,consumeGrowthPower,settleMultiplyPower} from './agricultural-power.js';
 import {activeRaidEntryPlan} from '../world/raid-entry-data.js';
 import {animalExitConnector} from './animal-exit-connectors.js';
-import {workerReturnRoute} from './worker-return-route.js';
-import {workerFractionalConnector} from '../world/worker-fractional-connector.js';
+import {workerReturnRoute,workerReturnRoutePending} from './worker-return-route.js';
+import {workerFractionalConnector,workerFractionalConnectorPending} from '../world/worker-fractional-connector.js';
 import {SpatialChunkUnavailable} from '../world/hierarchical-wasm/spatial-navigation-movement.js';
 import {workerRiskClearance} from './worker-route-clearance.js';
 import {resolveFluidPlacement} from '../world/fluid-placement.js';
@@ -35,6 +35,13 @@ import {createUrgencyPass} from './work-urgency.js';
 import {repairRoute,wateringRoute,canWaterFrom} from '../world/work-points.js';
 import {updateIdle,cancelIdle} from './idle.js';
 import {advanceGateLeaves,waitForGate} from './gates.js';
+
+// A failed plan is a waiting state, not a request to repeat the same search
+// on every movement tick. Kept outside saves: a restored actor gets one fresh
+// attempt, then waits for topology/residency or a bounded dynamic retry.
+const routePlanWaits=new WeakMap();
+const ROUTE_RETRY_SECONDS=8;
+const taskPlanWaits=new WeakMap();
 
 export const BIOMES=['sabana','gran-rio','manglares','volcanes','gran-canon','desierto'];
 export const CULTURES=['mapungubwe','saheliana','suajili','musgum','etiope'];
@@ -513,6 +520,16 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
   }
   if(w.wallEscape&&w.pathVersion!==nav.version)delete w.wallEscape;
   if(!w.path||w.destinationId!==destination.id||w.pathVersion!==nav.version) {
+    const sectors=nav.spatialSectorRevision?.(w.radius??.28,worker)??0;
+    const epoch=`${destination.id}:${destination.x}:${destination.z}:${nav.version}:${sectors}:${worker?'worker':w.species??'animal'}`;
+    const wait=routePlanWaits.get(w);
+    const pendingSearch=!!w.exitRouteRecovery||!!w.exitConnectorSearch&&!w.exitConnectorSearch.exhausted||
+      worker&&(workerReturnRoutePending(nav,w)||workerFractionalConnectorPending(nav,w));
+    if(!nav.forcePlanningPoll&&!pendingSearch&&!w.path&&wait?.epoch===epoch&&s.elapsed<wait.retryAt){
+      nav.planningObserver?.({kind:'routeDeferred',actorId:w.id,elapsed:s.elapsed,destinationId:destination.id});
+      return abandonExhaustedExit();
+    }
+    nav.planningObserver?.({kind:'routeRefresh',actorId:w.id,elapsed:s.elapsed,destinationId:destination.id});
     if(w.exitRouteRecovery){
       w.path=animalExitConnector(w,destination,nav);
       if(!w.path)return abandonExhaustedExit();
@@ -547,7 +564,8 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
       if(!w.path)w.path=workerReturnRoute(nav,w,destination,w.radius??.28);
     }
     w.pathVersion=nav.version;
-    if(!w.path)return abandonExhaustedExit();
+    if(!w.path){routePlanWaits.set(w,{epoch,retryAt:s.elapsed+ROUTE_RETRY_SECONDS});return abandonExhaustedExit();}
+    routePlanWaits.delete(w);
   }
   if(worker&&waitForGate(w,s.structures))return false;
   if(!worker&&w.wallEscape){
@@ -680,13 +698,29 @@ function taskRouteWhenKnown(compute){
   }
 }
 function reserveAvailableTasks(s,nav){
-  if(!s.raid&&s.time<300)reserveTasks(s,(w,t,target)=>{
+  if(s.raid||s.time>=300)return;
+  const idle=s.workers.filter(w=>w.status==='idle'&&!w.taskId&&!w.incapacitated&&!contractExpired(w,s))
+    .map(w=>`${w.id}:${w.centerId}`).join('|');
+  const sectors=nav.spatialSectorRevision?.(.28,true)??0;
+  const wait=taskPlanWaits.get(s);
+  if(!nav.forcePlanningPoll&&wait&&wait.tasks===s.tasks&&wait.length===s.tasks.length&&wait.idle===idle&&
+    wait.topology===nav.version&&wait.sectors===sectors&&s.elapsed<wait.retryAt){
+    nav.planningObserver?.({kind:'taskDeferred',actorId:null,elapsed:s.elapsed});
+    return;
+  }
+  nav.planningObserver?.({kind:'taskPass',actorId:null,elapsed:s.elapsed});
+  reserveTasks(s,(w,t,target)=>{
     if(s.time>=profile(w).end)return false;
+    nav.planningObserver?.({kind:'taskCandidate',actorId:w.id,elapsed:s.elapsed,taskId:t.id});
     const route=taskRouteWhenKnown(()=>t.kind==='repair'?repairRoute(w,target,nav):
       t.kind==='initial'||t.kind==='water'?wateringRoute(w,target,nav):
         (nav.workerPath?nav.workerPath(w,target,.28,null):nav.path(w,target,.28,null,true)));
     return route===undefined?null:!!route;
   });
+  taskPlanWaits.set(s,{tasks:s.tasks,length:s.tasks.length,
+    idle:s.workers.filter(w=>w.status==='idle'&&!w.taskId&&!w.incapacitated&&!contractExpired(w,s))
+      .map(w=>`${w.id}:${w.centerId}`).join('|'),
+    topology:nav.version,sectors,retryAt:s.elapsed+ROUTE_RETRY_SECONDS});
 }
 function updateWorkers(s,dt,nav) {
   // Task removals/rebuilds replace the array; enqueues change its length.

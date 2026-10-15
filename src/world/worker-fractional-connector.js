@@ -1,6 +1,7 @@
 import {navigationPathKey} from './raid-navigation-warmth.js';
 import {evictOldest} from './fifo-eviction.js';
 const worlds=new WeakMap(),STEP=.25,LIMIT=12,MAX_ACTIVE=8;
+export function workerFractionalConnectorPending(nav,actor){return worlds.get(nav)?.active.has(actor)??false;}
 const offsets=[[1,0],[-1,0],[0,1],[0,-1],[1,1],[-1,1],[1,-1],[-1,-1]];
 // A valid fractional position can have no swept connection to the metre grid.
 // Search only a 3 m local patch, then rejoin ordinary worker navigation.
