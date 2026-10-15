@@ -847,9 +847,10 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
       event.type==='WallRemoved')&&observedTaskState.raid){
       const structures=new Map(observedTaskState.structures.map(item=>
         [item.id,item]));
+      const animals=new Map(observedTaskState.raid.animals.map(item=>
+        [numericId(item.id),item]));
       for(const actorId of bridge.wallOpportunityCandidates()){
-        const animal=observedTaskState.raid.animals.find(item=>
-          numericId(item.id)===actorId);
+        const animal=animals.get(actorId);
         if(!animal)continue;
         const target=structures.get(animal.targetId);
         if(target?.kind!=='wall'||target.status!=='intact')continue;
