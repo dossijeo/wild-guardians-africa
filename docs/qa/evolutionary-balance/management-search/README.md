@@ -409,3 +409,18 @@ Conclusión provisional: hay una política que sobrevive mejor que el control en
 esta única reserva de catorce noches, pero **no hay estrategia competitiva
 generalizable demostrada**. El modelo de destrucción agrícola de Fase 1 sigue
 siendo demasiado impreciso para filtrar parámetros militares.
+
+## Control histórico de gestión en la búsqueda actual
+
+La búsqueda de catorce noches sincronizada con `main` terminó también el brazo
+`good` de Manglares/123. Sobrevivió 14/14 noches con 106 cultivos, 807 monedas,
+40 plantas perdidas desde la noche 6, 114⅓ cajas/día en las tres jornadas
+finales y margen operativo terminal de +184. El genoma `4419e5eb34a46b9f`
+en el mismo escenario terminó con 121 cultivos, 911 monedas, 45 pérdidas,
+117⅓ cajas/día y margen +186. Ambos ledgers concilian. `good` conserva la
+política mágica histórica y **no** es el control con las reglas mágicas actuales;
+este último está registrado aparte como `good-current-magic`. Las diferencias
+de cinco pérdidas a favor de `good` tampoco prueban superioridad militar o
+económica general: las fincas evolucionaron de forma distinta bajo la misma
+regla de presión. El informe nativo está en
+`results-14-main-sync/712f0156ff37-good-manglares-123-14.json`.
