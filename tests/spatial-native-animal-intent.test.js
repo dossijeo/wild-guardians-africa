@@ -190,3 +190,65 @@ test('native animal leases preserve committed strikes and reject duplicate targe
     assert.equal(restoredRoute[3],12);
   }finally{session.dispose();}
 });
+
+test('topology validation retains a verified remaining attack route when a wall closes behind it',
+ {skip:!module&&'Build and select the experimental WASM first'},()=>{
+  const game=deserialize(gunzipSync(readFileSync(new URL(
+    './fixtures/desierto983-d15-partial-state.json.gz',import.meta.url))).toString());
+  const session=createSpatialGameSession(module,game,{
+    loaded:()=>new Map(),onData:()=>{}});
+  try{
+    for(let z=-1;z<=1;z++)for(let x=-1;x<=1;x++)
+      if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+    const wasm=session.core.wasm;
+    session.actorSectorRevision({worker:false,species:'hyena'});
+    let origin,end;
+    for(let z=-10;z<=10&&!end;z++)for(let x=-10;x<=10&&!end;x++)
+      for(const dx of [6,-6,8,-8]){
+        const from={x:x+.2,z:z+.2},to={x:from.x+dx,z:from.z};
+        const route=session.routeActor(from,to,{worker:false,species:'hyena'});
+        if(route.status!=='found')continue;
+        const steps=Math.ceil(Math.abs(dx)/1.25);
+        let clear=true;
+        for(let i=0;i<steps;i++)if(!wasm.spatial_local_clear(
+          from.x+dx*i/steps,from.z,from.x+dx*(i+1)/steps,from.z)){
+          clear=false;break;
+        }
+        if(clear){origin=from;end=to;break;}
+      }
+    assert(origin&&end,'the fixture contains a straight physical route');
+    wasm.nav_intent_reset();
+    const changes=wasm.nav_intent_changes_ptr(1);
+    new Float64Array(wasm.memory.buffer,changes,10)
+      .set([1,2,11,1,end.x,end.z,1,0,0,0]);
+    assert.equal(wasm.nav_intent_apply_changes(1,1),1);
+    session.actorSectorRevision({worker:false,species:'hyena'});
+    const input=wasm.nav_intent_attack_route_input_ptr(2);
+    new Float32Array(wasm.memory.buffer,input,4)
+      .set([origin.x,origin.z,end.x,end.z]);
+    assert.equal(wasm.nav_intent_register_attack(101,11,origin.x,origin.z,2),1);
+    assert.equal(wasm.nav_intent_actor(101),1);
+    const handle=Array.from(new Float64Array(wasm.memory.buffer,
+      wasm.nav_intent_actor_ptr(),10).slice(4,7));
+    const current={x:origin.x+(end.x-origin.x)*.8,z:origin.z};
+    const progress=wasm.nav_intent_route_progress_input_ptr(1);
+    new Float32Array(wasm.memory.buffer,progress,2).set([end.x,end.z]);
+    assert.equal(wasm.nav_intent_route_progress(101,current.x,current.z,1),1);
+    assert(session.core.addWall((origin.x+end.x)/2,origin.z,.3,.3)>0);
+    session.actorSectorRevision({worker:false,species:'hyena'});
+    assert.equal(session.routeActor(current,end,
+      {worker:false,species:'hyena'}).status,'found');
+    assert.equal(wasm.nav_intent_reconcile_topology(),0,
+      'a wall behind the actor does not invalidate its verified route suffix');
+    assert(wasm.nav_intent_route_points(...handle)>0);
+    new Float32Array(wasm.memory.buffer,progress,2).set([end.x+.5,end.z]);
+    assert.equal(wasm.nav_intent_route_progress(101,current.x,current.z,1),0,
+      'a changed JS path cannot advance the native route cursor');
+    const ahead={x:current.x+(end.x-current.x)*.6,z:current.z};
+    assert(session.core.addWall(ahead.x,ahead.z,.3,.3)>0);
+    session.actorSectorRevision({worker:false,species:'hyena'});
+    assert.equal(wasm.nav_intent_reconcile_topology(),1,
+      'an obstacle on the remaining route still invalidates it');
+    assert.equal(wasm.nav_intent_route_points(...handle),-1);
+  }finally{session.dispose();}
+});

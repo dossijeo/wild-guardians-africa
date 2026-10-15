@@ -93,6 +93,7 @@ struct ActiveIntent {
   bool animal=false,tacticalPending=false,lease=true;
   int profile=1;
   float routeStartX=0,routeStartZ=0;
+  uint32_t routeCursor=0;
   float approachX=0,approachZ=0,approachRadius=0;
   bool approachKnown=false;
   std::vector<uint64_t> blockedCropGroups;
@@ -127,6 +128,7 @@ struct IntentState {
   std::vector<double> wallOpportunityActors;
   std::vector<RouteSlot> routeSlots;
   std::vector<float> attackRouteInput;
+  std::vector<float> routeProgressInput;
   // Transient mobile-body snapshot supplied once at an attack planning event.
   // It never becomes a topological cache or invalidates a committed route.
   std::vector<double> attackBlockers;
@@ -1052,7 +1054,8 @@ bool activeRouteClear(const IntentState& s,const ActiveIntent& intent){
   if(!intent.animal&&worker==s.workers.end())return false;
   float x=intent.animal?intent.routeStartX:float(worker->second.x);
   float z=intent.animal?intent.routeStartZ:float(worker->second.z);
-  for(size_t i=0;i<route.points.size();i+=2){
+  if(!spatial_local_clear(x,z,x,z))return false;
+  for(size_t i=size_t(intent.routeCursor)*2;i<route.points.size();i+=2){
     const float nextX=route.points[i],nextZ=route.points[i+1];
     // The local predicate accepts only short connector segments. World routes
     // may contain validated shortcuts spanning several cells.
@@ -1060,6 +1063,38 @@ bool activeRouteClear(const IntentState& s,const ActiveIntent& intent){
     x=nextX;z=nextZ;
   }
   return true;
+}
+// JS movement consumes a suffix of the pinned native route. At a topology
+// event, accept that progress only when every remaining point exactly matches
+// the native suffix. An unmatched or stale JS path retains conservative full
+// route validation; ordinary movement ticks never call this entry point.
+float* nav_intent_route_progress_input_ptr(int count){
+  if(count<0||count>4096)return nullptr;
+  IntentState& s=state();s.routeProgressInput.resize(size_t(count)*2);
+  return s.routeProgressInput.data();
+}
+int nav_intent_route_progress(double actorId,double x,double z,int count){
+  if(!integer(actorId)||!coordinate(x)||!coordinate(z)||
+     count<0||count>4096)return -1;
+  IntentState& s=state();const auto found=s.activeIntents.find(uint64_t(actorId));
+  if(found==s.activeIntents.end()||
+     found->second.state!=PlanningState::RouteActive)return 0;
+  ActiveIntent& intent=found->second;
+  if(intent.slot>=s.routeSlots.size())return 0;
+  const RouteSlot& route=s.routeSlots[intent.slot];
+  if(!route.active||route.generation!=intent.generation||
+     route.points.size()%2||size_t(count)*2>route.points.size()||
+     s.routeProgressInput.size()!=size_t(count)*2)return 0;
+  const size_t cursor=route.points.size()/2-size_t(count);
+  if(cursor<intent.routeCursor)return 0;
+  for(size_t i=0;i<size_t(count)*2;i++)
+    if(route.points[cursor*2+i]!=s.routeProgressInput[i])return 0;
+  if(!count&&route.points.size()>=2&&
+     std::hypot(double(x)-route.points[route.points.size()-2],
+                double(z)-route.points.back())>.1)return 0;
+  intent.routeCursor=uint32_t(cursor);
+  if(intent.animal){intent.routeStartX=float(x);intent.routeStartZ=float(z);}
+  return 1;
 }
 int nav_intent_reconcile_topology(){
   IntentState& s=state();const int originalProfile=lazy_selected_context();
@@ -1136,6 +1171,7 @@ int nav_intent_replan_attack_route(double actorId,double startX,double startZ,
   intent.state=PlanningState::RouteActive;
   intent.topology=lazy_route_revision();
   intent.routeStartX=float(startX);intent.routeStartZ=float(startZ);
+  intent.routeCursor=0;
   emitIntentChange(s,intent);
   return 1;
 }
@@ -1169,6 +1205,7 @@ int nav_intent_replan_pending_routes(){
       route.points=service.points;route.active=true;route.generation++;
       if(!route.generation)route.generation=1;
       intent.slot=slot;intent.generation=route.generation;
+      intent.routeCursor=0;
       intent.state=PlanningState::RouteActive;intent.topology=lazy_route_revision();
       planned++;
     }

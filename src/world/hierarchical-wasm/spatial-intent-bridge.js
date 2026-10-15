@@ -86,6 +86,7 @@ export function createSpatialIntentBridge(session){
     'nav_intent_release_planting_site','nav_intent_change_count',
     'nav_intent_change_ptr','nav_intent_clear_changes',
     'nav_intent_route_points','nav_intent_route_ptr',
+    'nav_intent_route_progress_input_ptr','nav_intent_route_progress',
     'nav_intent_reconcile_topology','nav_intent_replan_attack_route',
     'nav_intent_replan_pending_routes',
     'nav_intent_request_reroute',
@@ -392,6 +393,26 @@ export function createSpatialIntentBridge(session){
     return Float32Array.from(new Float32Array(wasm.memory.buffer,
       wasm.nav_intent_route_ptr(handle.session,handle.slot,handle.generation),count*2));
   };
+  const projectRouteProgress=state=>{
+    let accepted=0;
+    for(const actors of [state.workers,state.raid?.animals??[]])for(const actor of actors){
+      const path=actor.path;
+      if(!Array.isArray(path)||path.length>4096||
+         path.some(point=>!Number.isFinite(point.x)||!Number.isFinite(point.z)))
+        continue;
+      const pointer=wasm.nav_intent_route_progress_input_ptr(path.length);
+      if(path.length&&!pointer)throw Error('Native route progress allocation failed');
+      if(path.length){
+        const input=new Float32Array(wasm.memory.buffer,pointer,path.length*2);
+        for(let i=0;i<path.length;i++){
+          input[i*2]=path[i].x;input[i*2+1]=path[i].z;
+        }
+      }
+      if(wasm.nav_intent_route_progress(numericId(actor.id),actor.x,actor.z,
+        path.length)===1)accepted++;
+    }
+    return accepted;
+  };
   // A committed world event is the only reason to reconsider live routes.
   // The caller projects affected actor positions in the same delta batch;
   // normal movement reads routePoints() without entering the planner.
@@ -572,7 +593,7 @@ export function createSpatialIntentBridge(session){
     getDamagedCenters:()=>getDamaged('center'),
     getUnprotectedCropGroups,
     findPlantingSite,releasePlantingSite,
-    intentChanges,routePoints,processEventBoundary,requestReroute,
+    intentChanges,routePoints,projectRouteProgress,processEventBoundary,requestReroute,
     registerAttackIntent,planAttackCrop,replanAttackRoute,
     reconsiderWallOpportunity,wallOpportunityCandidates,
     markAttackActive:actorId=>wasm.nav_intent_attack_action_active(numericId(actorId))===1,
@@ -801,6 +822,9 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
   };
   const reconcileTopology=()=>{
     topologyReconciliations++;
+    // JS consumes native path points while moving. Publish only a verified
+    // remaining suffix at a topology event, never on ordinary walking ticks.
+    bridge.projectRouteProgress(observedTaskState??sourceState);
     const invalidated=session.core.wasm.nav_intent_reconcile_topology();
     topologyRouteInvalidations+=invalidated;
     if(invalidated)session.core.wasm.nav_intent_replan_pending_routes();
