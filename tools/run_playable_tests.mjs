@@ -19,6 +19,7 @@ const tests = [
   'raid-pressure-lifecycle.test.js',
   'raid-pressure-plan.test.js',
   'raid-saheliana-exit.test.js',
+  'animal-slope-recovery.test.js',
   'tutorial-agricultural-guide.test.js',
   'village-expansion-price.test.js',
   'worker-wall-overlap-recovery.test.js',

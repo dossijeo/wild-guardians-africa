@@ -80,6 +80,18 @@ test('a failed animal retreat recovery retries after sector residency changes',(
  assert.equal(animalSlopeRecoveryPath(nav,actor,exit,actor.radius),null);
  assert(calls>first);
 });
+test('a validated marginal exit cannot hide a new resident collision',()=>{
+ const nav=world(),actor=animal(),path=animalSlopeRecoveryPath(nav,actor,exit,actor.radius);
+ assert.ok(path);actor.path=path;nav.residencyRevision=1;
+ const first=path[0],middle={x:first.x*.25,z:first.z*.25};
+ assert.equal(animalSlopeRecoveryClear(actor,nav,actor,middle,actor.radius),true);
+ actor.x=middle.x;actor.z=middle.z;
+ nav.testSegmentClear=()=>false;
+ nav.residencyRevision++;
+ const next={x:first.x*.5,z:first.z*.5};
+ assert.equal(animalSlopeRecoveryClear(actor,nav,actor,next,actor.radius),false,
+  'the prior exceptional clearance must not survive a sector residency change');
+});
 test('an ordinary legal retreat does not rescan a recovery proof each frame',()=>{
  let calls=0;const nav=world(()=>{calls++;return .49;}),actor=animal();actor.path=[{x:.4,z:0}];
  animalSlopeRecoveryClear(actor,nav,actor,{x:.01,z:0},actor.radius);const count=calls;

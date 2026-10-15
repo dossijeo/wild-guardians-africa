@@ -59,6 +59,18 @@ La auditoría adicional de incursiones encontró la misma dependencia implícita
 
 La prueba diferencial nativa ampliada compara **resultado, código de causa y ruta completa** de la caché C++ con consultas frescas para cinco pares de celdas y dos perfiles (trabajador y facóquero). Repite los diez casos tras abrir/cerrar la puerta, abrir/reparar la brecha, descargar/recargar un sector y cambiar sólo portales. También inserta una muralla de vista previa sin confirmarla, compara durante la vista previa y después de descartarla, y exige nuevos fallos de caché en ambos cambios de grafo. No hubo discrepancias en esta matriz; sus recuentos por etapa están en [`coherence.json`](coherence.json). `tests/nav-cache-coherence.test.js` ejecuta la misma comparación sin escribir evidencia y forma parte de `test:playable`, la suite de CI. Este control refuerza la comprobación de invalidación del prototipo, sin convertir sus cachés en parte del WASM distribuido.
 
+Una revisión posterior encontró que la excepción de retirada por pendiente
+`animalSlopeRecoveryClear` conservaba un comprobante de segmento válido con
+`nav.version`, pero sin la revisión de residencia. Una prueba roja reprodujo
+que el comprobante permitía seguir por el segmento tras aparecer una colisión
+al cambiar los sectores residentes sin cambiar la topología confirmada. Ahora
+el comprobante positivo y el rechazo memorizado se invalidan por ambas
+revisiones. La regresión y los 27 tests focales de salida animal, despeje y
+coherencia diferencial pasan; se añadió el archivo de recuperación animal a
+`test:playable`, que ahora pasa 209/209 casos localmente. Es una ruta
+excepcional heredada, no una
+migración de las cachés ordinarias a WASM.
+
 ## Inventario de responsabilidades
 
 | Estado JS | Función | Resultado |
