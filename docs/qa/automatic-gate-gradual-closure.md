@@ -32,7 +32,7 @@ Validación local: 45 pruebas dirigidas, 186/186 pruebas jugables y build web.
 `node tools/experiments/benchmark-gradual-wall-audit.mjs` compara el mismo
 guardado Desierto/983, con 42 trabajadores y un módulo pendiente, contra
 `7d257501` en orden AB/BA tras calentar ambos caminos. En una ejecución de
-cuatro cotizaciones por variante, la mediana fue 8,0 ms antes y 19,1 ms después; otra
+cuatro cotizaciones por variante, la mediana fue 7,6 ms antes y 19,1 ms después; otra
 ejecución dio 9,7 y 17,9 ms, respectivamente. El sobrecoste medido está en
 torno a 8–11 ms por trazo individual en este escenario. La cotización ocurre
 al confirmar una compra de muralla, no durante el movimiento ni cada
