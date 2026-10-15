@@ -69,6 +69,15 @@ clasifica como **producción colapsada**, no como derrota nativa. Su informe y
 progreso originales se conservan; este resultado no autoriza a seleccionar la
 política ni a alterar la presión militar.
 
+El mismo genoma completó también 14/14 noches en Gran Río/2026, sin derrota
+terminal, pero acabó con sólo siete cultivos y 141 monedas. Entregó cero cajas
+en los días 11 y 12, 26 en el 13 y cuatro en el 14: diez cajas/día de media
+terminal, muy por debajo del umbral. El ledger concilia en los 14 días. Esta
+segunda observación refuerza el rechazo de la política por producción, sin
+atribuir todavía el colapso a una causa concreta: la secuencia combina daños,
+contratación y decisiones de gasto que requieren un análisis separado. El
+informe y el progreso nativos se conservan en `results-14-main-sync/`.
+
 Esta cohorte usa Wild Engine y el balance de producción sin alterar, después de
 la mejora de navegación de PR #37. Código ejecutado: `7f358aad97287b40e300026306d26f05cc4e0c29`;
 el registro de siete noches guarda además SHA-256 de los módulos y del diff en
