@@ -120,6 +120,8 @@ struct IntentState {
   std::vector<std::pair<uint64_t,uint64_t>> proposals;
   std::unordered_map<uint64_t,ActiveIntent> activeIntents;
   std::unordered_map<uint64_t,std::unordered_set<uint64_t>> byTarget,byTask;
+  std::unordered_map<uint64_t,std::unordered_set<uint64_t>> byBlockedCropGroup;
+  std::vector<double> wallOpportunityActors;
   std::vector<RouteSlot> routeSlots;
   std::vector<float> attackRouteInput;
   std::array<double,10> attackResult{};
@@ -185,6 +187,14 @@ void releaseIntent(IntentState& s,uint64_t actor,PlanningState next){
     if(it!=s.byTarget.end()){it->second.erase(actor);if(it->second.empty())s.byTarget.erase(it);}}
   if(intent.task){auto it=s.byTask.find(intent.task);
     if(it!=s.byTask.end()){it->second.erase(actor);if(it->second.empty())s.byTask.erase(it);}}
+  for(uint64_t group:intent.blockedCropGroups){
+    auto it=s.byBlockedCropGroup.find(group);
+    if(it!=s.byBlockedCropGroup.end()){
+      it->second.erase(actor);
+      if(it->second.empty())s.byBlockedCropGroup.erase(it);
+    }
+  }
+  intent.blockedCropGroups.clear();
   releaseRoute(s,intent);intent.state=next;
   emitIntentChange(s,intent);
   intent.task=0;intent.target=0;s.invalidations++;
@@ -506,6 +516,7 @@ void nav_intent_reset(){
   s.session++;
   if(!s.session)s.session=1;
   s.activeIntents.clear();s.byTarget.clear();s.byTask.clear();
+  s.byBlockedCropGroup.clear();s.wallOpportunityActors.clear();
   s.routeSlots.clear();s.intentChanges.clear();s.intentResult.fill(0);
   s.attackRouteInput.clear();
   s.invalidations=0;
@@ -1241,11 +1252,33 @@ int nav_intent_track_wall_opportunities(double actorId,double startX,
   if(!attackSourceAnchor(startX,startZ,x,z))return -1;
   rebuildCropGroups(s);
   ActiveIntent& intent=found->second;
+  for(uint64_t group:intent.blockedCropGroups){
+    auto it=s.byBlockedCropGroup.find(group);
+    if(it!=s.byBlockedCropGroup.end()){
+      it->second.erase(intent.actor);
+      if(it->second.empty())s.byBlockedCropGroup.erase(it);
+    }
+  }
   intent.blockedCropGroups.clear();
   for(CropGroup& group:s.cropGroups)
-    if(attackGroupAccess(s,group,float(radius),x,z)==0)
+    if(attackGroupAccess(s,group,float(radius),x,z)==0){
       intent.blockedCropGroups.push_back(group.id);
+      s.byBlockedCropGroup[group.id].insert(intent.actor);
+    }
   return int(intent.blockedCropGroups.size());
+}
+// Return only wall intentions that depended on a proven blocked crop group.
+// The caller supplies current continuous positions for this small candidate
+// set; no all-animal scan is needed when a barrier changes.
+int nav_intent_wall_opportunity_candidates(){
+  IntentState& s=state();std::set<uint64_t> actors;
+  for(const auto& [group,dependents]:s.byBlockedCropGroup)
+    actors.insert(dependents.begin(),dependents.end());
+  s.wallOpportunityActors.assign(actors.begin(),actors.end());
+  return int(s.wallOpportunityActors.size());
+}
+const double* nav_intent_wall_opportunity_candidates_ptr(){
+  return state().wallOpportunityActors.data();
 }
 // Called only after a confirmed barrier/topology event. A newly reachable
 // group is a reason to reconsider a wall target; this is not a crop route or

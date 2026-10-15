@@ -90,6 +90,8 @@ export function createSpatialIntentBridge(session){
     'nav_intent_request_reroute',
     'nav_intent_attack_route_input_ptr','nav_intent_register_attack',
     'nav_intent_track_wall_opportunities',
+    'nav_intent_wall_opportunity_candidates',
+    'nav_intent_wall_opportunity_candidates_ptr',
     'nav_intent_reconsider_wall_opportunity',
     'nav_intent_plan_attack_crop','nav_intent_attack_result_ptr',
     'nav_intent_attack_action_active','nav_intent_restore_attack_action',
@@ -431,6 +433,11 @@ export function createSpatialIntentBridge(session){
     return wasm.nav_intent_reconsider_wall_opportunity(numericId(animal.id),
       animal.x,animal.z,animal.radius);
   };
+  const wallOpportunityCandidates=()=>{
+    const count=wasm.nav_intent_wall_opportunity_candidates();
+    return count?Array.from(new Float64Array(wasm.memory.buffer,
+      wasm.nav_intent_wall_opportunity_candidates_ptr(),count)):[];
+  };
   const planAttackCrop=(state,animal)=>{
     if(!initialized||!state.raid)throw Error('No native raid intention session');
     // Shield borders and introductory crop quotas alter interaction geometry
@@ -534,7 +541,7 @@ export function createSpatialIntentBridge(session){
     findPlantingSite,releasePlantingSite,
     intentChanges,routePoints,processEventBoundary,requestReroute,
     registerAttackIntent,planAttackCrop,replanAttackRoute,
-    reconsiderWallOpportunity,
+    reconsiderWallOpportunity,wallOpportunityCandidates,
     markAttackActive:actorId=>wasm.nav_intent_attack_action_active(numericId(actorId))===1,
     finishAttackIntent:actorId=>wasm.nav_intent_attack_finished(numericId(actorId)),
     cancelAttackIntent:actorId=>wasm.nav_intent_attack_cancel(numericId(actorId))===1,
@@ -750,7 +757,10 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
       event.type==='WallRemoved')&&observedTaskState.raid){
       const structures=new Map(observedTaskState.structures.map(item=>
         [item.id,item]));
-      for(const animal of observedTaskState.raid.animals){
+      for(const actorId of bridge.wallOpportunityCandidates()){
+        const animal=observedTaskState.raid.animals.find(item=>
+          numericId(item.id)===actorId);
+        if(!animal)continue;
         const target=structures.get(animal.targetId);
         if(target?.kind!=='wall'||target.status!=='intact')continue;
         if(bridge.reconsiderWallOpportunity(animal)===1&&

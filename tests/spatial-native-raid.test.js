@@ -436,6 +436,8 @@ test('a confirmed enclosure breach reconsiders other wall attackers at an event 
           Number(animal.id.split('-').at(-1)),animal.x,animal.z,
           animal.radius)>0,'the native intent should remember a blocked crop group');
       }
+      assert.equal(wasm.nav_intent_wall_opportunity_candidates(),2,
+        'the native inverse index should contain both wall attackers');
       const priorTargets=new Map(attackers.map(animal=>[animal.id,animal.targetId]));
       const walls=state.structures.filter(wall=>wall.kind==='wall'&&
         wall.status==='intact');
@@ -462,6 +464,8 @@ test('a confirmed enclosure breach reconsiders other wall attackers at an event 
       assert.equal(new Set(Object.values(state.raid.reservations)).size,
         Object.values(state.raid.reservations).length,
         'reconsideration must not duplicate animal reservations');
+      assert.equal(wasm.nav_intent_wall_opportunity_candidates(),0,
+        'releasing wall intentions must remove inverse dependencies');
     }finally{stopTasks();stopWorld();delete nav.intentTaskPlanner;}
   }finally{session.dispose();}
 });
