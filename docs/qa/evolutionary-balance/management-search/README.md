@@ -11,7 +11,7 @@ ranking no selecciona una política competente de 14 noches. Esta limitación
 se detectó durante la primera campaña, antes de interpretar resultados.
 
 Las búsquedas posteriores de al menos 14 noches requieren ahora
-`post-intro-v1` y un umbral de entregas terminales fijado previamente con
+`post-intro-v2` y un umbral de entregas terminales fijado previamente con
 controles nativos de entrenamiento y su fuente documentada. Esto impide que
 las cinco noches introductorias o una explotación casi inactiva determinen
 silenciosamente el ganador. No se alteró la campaña ya iniciada, sus genes ni
@@ -39,6 +39,13 @@ semillas, umbral y reglas físicas para una búsqueda posterior. No se lanzará
 mientras las dos cohortes anteriores sigan ejecutándose; sus rankings son
 exploratorios y deberán evaluarse con el criterio versionado antes de elegir
 una política.
+
+Para comprobar que cambiar el evaluador no cambió una campaña ya ejecutada,
+`compare-native-campaigns.mjs` compara informes completos del mismo genoma y
+escenario: economía diaria, cultivos, incursiones, política y defensa. Excluye
+únicamente las duraciones de `wallTime`, afectadas por la concurrencia de
+procesos. El hash obtenido prueba igualdad de **esos observables**, no de
+todos los estados serializados, que estos informes no contienen.
 
 Esta cohorte usa Wild Engine y el balance de producción sin alterar, después de
 la mejora de navegación de PR #37. Código ejecutado: `7f358aad97287b40e300026306d26f05cc4e0c29`;
