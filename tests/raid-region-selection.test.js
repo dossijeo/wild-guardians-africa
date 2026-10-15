@@ -173,6 +173,19 @@ test('natural isolation without a wall on the native region boundary cannot nomi
   assert.equal(targetFor(f.state,f.animal,f.nav),null);
 });
 
+test('a disconnected wall graph nominates only a reachable wall crossed toward a sealed crop',()=>{
+  const f=fixture();f.state.plants=[{...f.plants[0],x:20,z:0}];
+  const wall=(id,z)=>({id,kind:'wall',x:5,z,yaw:Math.PI/2,
+    baseScaleX:1,material:'zarzas',status:'intact',hp:100,cost:10,gate:false});
+  f.state.structures.push(wall('unrelated',8));
+  f.nav.regionConnected=(_from,to)=>to.x<5;
+  f.nav.enclosureFor=point=>point.x>10?{ids:[3],status:'sealed'}:
+    point.x>5?{ids:[2],status:'sealed'}:{ids:[1],status:'open-frontier'};
+  assert.equal(targetFor(f.state,f.animal,f.nav),null);
+  f.state.structures.push(wall('crossing',0));f.nav.version++;
+  assert.equal(targetFor(f.state,f.animal,f.nav)?.target.id,'crossing');
+});
+
 test('an open-frontier region never licenses a wall attack',()=>{
   const f=fixture();f.setConnectivity(null);
   f.nav.enclosureFor=()=>({ids:[2],status:'open-frontier'});

@@ -33,6 +33,16 @@ test('reachable nearest employee requires only one route query; blocked nearest 
  const blocked=state(),attempts=[];reserveTasks(blocked,w=>{attempts.push(w.id);return w.id==='worker-3';});assert.deepEqual(attempts,['worker-1','worker-2','worker-3']);assert.equal(blocked.tasks[0].workerId,'worker-3');
  const none=state();let queries=0;reserveTasks(none,()=>{queries++;return false;});assert.equal(queries,4);assert.equal(none.tasks[0].workerId,null);assert.equal(none.tasks[0].blocked,true);
 });
+test('an unresolved native route leaves the task pending without certifying it blocked',()=>{
+ const s=state();let calls=0;
+ reserveTasks(s,()=>{calls++;return null;});
+ assert.equal(calls,4);
+ assert.equal(s.tasks[0].workerId,null);
+ assert.equal(s.tasks[0].blocked,false);
+ reserveTasks(s,w=>w.id==='worker-2');
+ assert.equal(s.tasks[0].workerId,'worker-2');
+ assert.equal(s.tasks[0].blocked,false);
+});
 
 test('no idle eligible employee preserves missing-target and reserved flags without querying routes',()=>{
  const s=state();s.workers.forEach((w,i)=>{w.status=i%2?'acting':'walking';w.taskId='occupied-'+i;});

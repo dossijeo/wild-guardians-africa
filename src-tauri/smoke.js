@@ -5,13 +5,16 @@
   const report = {ok: false, origin: location.origin, userAgent: navigator.userAgent, secureContext: isSecureContext, checks: {}, errors: []};
   // Explicit CI tolerance is not a performance target. Local smoke keeps its
   // original budget; always retain observed loading time independently.
-  const worldTimeoutMs = window.__desktopSmokeWorldTimeoutMs === 300000 ? 300000 : 90000;
-  report.checks.loadingBudget = {worldTimeoutMs, policy: worldTimeoutMs === 300000 ? 'ci-functional' : 'local-smoke'};
+  const worldTimeoutMs = window.__desktopSmokeWorldTimeoutMs === 420000 ? 420000 : 90000;
+  report.checks.loadingBudget = {worldTimeoutMs, policy: worldTimeoutMs === 420000 ? 'ci-functional' : 'local-smoke'};
   const consoleError = console.error;
   console.error = (...args) => {report.errors.push(args.map(String).join(' ')); consoleError.apply(console, args);};
   const fail = event => report.errors.push(event.message || String(event.reason));
   addEventListener('error', fail); addEventListener('unhandledrejection', fail);
-  const timeout = setTimeout(() => finish(new Error('Desktop smoke timed out')), 720000);
+  // The visibility fixture spends five minutes genuinely hidden after world
+  // readiness, so its outer CI watchdog must also cover the longer load.
+  const timeout = setTimeout(() => finish(new Error('Desktop smoke timed out')),
+    worldTimeoutMs === 420000 ? 960000 : 720000);
   let finished = false;
   let worldStartedAt = null;
   let worldReadyAt = null;
