@@ -1050,6 +1050,10 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     },
     planAttackCrop:(state,animal)=>{
       if(state!==observedTaskState&&state!==sourceState)return null;
+      // A preceding strike or harvest may have removed a crop earlier in this
+      // same Game.tick. Project confirmed events before choosing and leasing
+      // another target; never let the native index lag its JS authority here.
+      if(pendingWorldEvents.length)flushWorldEvents();
       const result=bridge.planAttackCrop(state,animal);
       if(result!==null){
         recordAnimalPlan(animal,state.elapsed);

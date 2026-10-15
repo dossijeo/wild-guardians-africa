@@ -94,6 +94,40 @@ test('a confirmed ruin cancels travelling animal leases but defers committed str
  }finally{session.dispose();}
 });
 
+test('an attack plan sees a crop destroyed earlier in the same event boundary',
+ {skip:!module&&'Build and select the experimental WASM first'},()=>{
+ const game=deserialize(gunzipSync(readFileSync(new URL(
+  './fixtures/desierto983-d15-partial-state.json.gz',import.meta.url))).toString());
+ const crop=game.plants.find(plant=>plant.alive);
+ assert(crop);
+ game.raid={animals:[],reservations:{}};
+ const animal={id:'animal-1000002',species:'hyena',status:'walking',
+  x:crop.x+2,z:crop.z+2,radius:.34,hitsRemaining:1};
+ game.raid.animals.push(animal);
+ const loaded=new Map(),session=createSpatialGameSession(module,game,{
+  loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+ try{
+  const cx=Math.floor((crop.x+24)/48),cz=Math.floor((crop.z+24)/48);
+  for(let z=cz-1;z<=cz+1;z++)for(let x=cx-1;x<=cx+1;x++){
+   if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+   loaded.set(`${x},${z}`,session.core.chunkPayload());
+  }
+  const planner=createEventDrivenTaskPlanner(session);
+  planner.resetFromState(game);
+  const stop=planner.observeWorld(game),wasm=session.core.wasm;
+  try{
+   const count=wasm.nav_intent_target_count();
+   crop.alive=false;
+   emit(game,'CropDestroyed',{targetId:crop.id,animalId:'animal-older'});
+   assert.equal(wasm.nav_intent_target_count(),count,
+    'confirmed event is queued until the deterministic planning boundary');
+   planner.planAttackCrop(game,animal);
+   assert.equal(wasm.nav_intent_target_count(),count-1,
+    'the native selector must not see a crop destroyed earlier in this tick');
+  }finally{stop();}
+ }finally{session.dispose();}
+});
+
 test('event-fed native intent bridge replays live state and only changes on explicit deltas',
  {skip:!module&&'Build and select the experimental WASM first'},()=>{
  const game=deserialize(gunzipSync(readFileSync(new URL(
