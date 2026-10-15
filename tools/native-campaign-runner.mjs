@@ -57,7 +57,7 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
  const opening=await openingFactory(world),nav=opening.nav;let s=opening.s,sequence=0;
  const worker=PROFILES.find(p=>p.id===profile);if(!worker)throw new Error('Unknown worker profile');
  if(!['legacy','expanding'].includes(defensePolicy))throw Error('Unknown defense policy');
- const defense=defend&&buildRepairWalls?(defensePolicy==='expanding'?createNativeExpandingDefensePolicy({repairWalls:policy.repair,reserveMode:'none',startDay:genes?.defenseStartDay??2,material:genes?.wallMaterial??'zarzas',repairFraction:genes?.repairHealthFraction??0.8}):createFarmDefensePolicy()):null;
+ const defense=defend&&buildRepairWalls?(defensePolicy==='expanding'?createNativeExpandingDefensePolicy({repairWalls:policy.repair,reserveMode:'none',startDay:genes?.defenseStartDay??2,material:genes?.wallMaterial??'zarzas',repairFraction:genes?.repairHealthFraction??0.8,serviceSide:genes?.wallPolicy==='service-side'}):createFarmDefensePolicy()):null;
  const driver=entryDriverFactory(nav);let partialEvidence=()=>({});
  try {
  const evidence=nativeEvidence?createNativeCampaignEvidence(s):null,raidEvidence=createNativeRaidCampaignEvidence(s);

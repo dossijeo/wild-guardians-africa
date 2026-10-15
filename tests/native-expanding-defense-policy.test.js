@@ -23,3 +23,28 @@ test('failed/unaffordable strokes and uncompleted repair requests are not counte
  assert.equal(policy.act(s,nav,options),0);assert.ok(s.tasks.some(t=>t.kind==='repair'&&t.targetId===wall.id));assert.equal(policy.report(s).repairRequests,1);
  s.elapsed+=31;s.ledger.balance=rational(30);assert.equal(policy.act(s,nav,options),0);assert.equal(policy.report(s).history.at(-1).reason,'budget');
 });
+test('service-side candidate buys only walls with a native worker-side connection',()=>{
+ const {s,nav,options}=fixture(),cash=numberOf(s.ledger.balance);
+ const policy=createNativeExpandingDefensePolicy({serviceSide:true});
+ let queries=0;
+ nav.regionConnected=(_source,side)=>{queries++;return side.x<0;};
+ assert.equal(policy.act(s,nav,options),1);
+ const report=policy.report(s),row=report.history[0];
+ assert(queries>0);
+ assert(row.gaps.some(gap=>gap.reason==='service-side-blocked'));
+ assert(row.ids.length>0);
+ assert(s.structures.filter(w=>row.ids.includes(w.id)).every(w=>w.x<1));
+ assert.equal(cash-numberOf(s.ledger.balance),report.paidCost);
+ assert.equal(report.paidPieces,row.ids.length);
+});
+test('service-side candidate defers unknown connectivity without charging for walls',()=>{
+ const {s,nav,options}=fixture(),cash=numberOf(s.ledger.balance);
+ const policy=createNativeExpandingDefensePolicy({serviceSide:true});
+ nav.regionConnected=()=>null;
+ assert.equal(policy.act(s,nav,options),0);
+ const report=policy.report(s),row=report.history[0];
+ assert.equal(row.reason,'no-serviceable-legal-pieces');
+ assert(row.gaps.some(gap=>gap.reason==='service-side-unknown'));
+ assert.equal(report.paidPieces,0);
+ assert.equal(numberOf(s.ledger.balance),cash);
+});
