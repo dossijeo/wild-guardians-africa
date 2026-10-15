@@ -16,6 +16,7 @@ function facts(report){
   const q=raid.get(r.day),prior=report.rows[i-1]?.living??r.living;
   const finance=r.finance??r;
   return {day:r.day,priorLiving:prior,living:r.living,planted:r.planted,destroyed:r.destroyed,
+   raidDestroyed:q?.cropsDestroyed??null,raidEnded:q?.ended===true,
    nonRaidPlantExit:Math.max(0,prior+r.planted-r.destroyed-r.living),
    income:finance.income,wages:finance.wages,seeds:finance.seeds,
    walls:finance.walls,repairs:finance.repairs,money:r.money,
@@ -27,11 +28,12 @@ function facts(report){
 }
 export function calibrate(report){
  // A terminal row may contain only part of a normal working day.
- const rows=facts(report).filter(r=>!(report.result==='defeat'&&r.day>(report.completedNights??Infinity)));
+ const allRows=facts(report);
+ const rows=allRows.filter(r=>!(report.result==='defeat'&&r.day>(report.completedNights??Infinity)));
  const split=Math.min(rows.length-2,Math.max(7,Math.floor(rows.length*0.6)));
  if(split<2)throw Error('Not enough completed days to calibrate and validate');
  const train=rows.slice(0,split),holdout=rows.slice(split);
- const raidTrain=train.filter(r=>r.attraction!==null&&r.day>5);
+ const raidTrain=train.filter(r=>r.raidEnded&&r.attraction!==null&&r.day>5);
  const pressureVersions=[...new Set(rows.filter(r=>r.attraction!==null&&r.day>5).map(r=>r.raidPressureVersion))];
  if(pressureVersions.length>1)throw Error('Mixed raid pressure versions cannot share one projection');
  const raidPressureVersion=pressureVersions[0]??1;
@@ -42,7 +44,7 @@ export function calibrate(report){
   seedCostPerPlant:div(sum(train,'seeds'),sum(train,'planted')),
   nonRaidPlantExitPerPriorPlant:div(sum(train,'nonRaidPlantExit'),sum(train,'priorLiving')),
   attractionPerLivingPlantAtSpawn:div(sum(raidTrain,'attraction'),sum(raidTrain,'livingAtSpawn')),
-  agriculturalDamageEfficiency:div(sum(raidTrain,'destroyed'),sum(raidTrain,'potential')),
+  agriculturalDamageEfficiency:div(sum(raidTrain,'raidDestroyed'),sum(raidTrain,'potential')),
   potentialPerAnimal:div(sum(raidTrain,'potential'),sum(raidTrain,'animals')),
   wallHpLostPerAnimal:div(sum(raidTrain,'wallHpLost'),sum(raidTrain,'animals')),
   wallRepairCoinsPerHp:div(sum(train,'repairs'),sum(train,'wallHpLost')),
@@ -57,6 +59,16 @@ export function calibrate(report){
   const den=predictions.reduce((n,p)=>n+p.actual[key],0),abs=predictions.reduce((n,p)=>n+Math.abs(p.actual[key]-p.predicted[key]),0);
   error[key]={absolute:abs,weightedAbsoluteFraction:den?abs/den:null};
  }
+ // The defeat row has an incomplete day's economy, but its ended raid still
+ // provides a valid agricultural-damage observation for the holdout.
+ const trainingDays=new Set(train.map(r=>r.day));
+ const raidHoldoutPredictions=allRows.filter(r=>r.day>5&&r.raidEnded&&
+  r.raidDestroyed!==null&&!trainingDays.has(r.day))
+  .map(r=>({day:r.day,terminal:r.day>(report.completedNights??Infinity)&&report.result==='defeat',
+   actualDestroyed:r.raidDestroyed,predictedDestroyed:r.potential*c.agriculturalDamageEfficiency}));
+ const raidDestroyedActual=raidHoldoutPredictions.reduce((n,r)=>n+r.actualDestroyed,0);
+ const raidDestroyedAbsoluteError=raidHoldoutPredictions.reduce((n,r)=>
+  n+Math.abs(r.actualDestroyed-r.predictedDestroyed),0);
  return {source:{biome:report.biome,seed:report.seed,strategy:report.strategy,status:report.status,
   result:report.result,completedNights:report.completedNights,rows:rows.length,raidPressureVersion},
   trainingDays:train.map(r=>r.day),validationDays:holdout.map(r=>r.day),coefficients:c,
@@ -64,6 +76,9 @@ export function calibrate(report){
    enclosureCoverageMeasured:false,breachTimingMeasured:false,
    defenseEffectIdentifiable:false,reason:'Native report has wall contact/HP, but no certified crop membership or breach timing.'},
   holdoutError:error,holdoutPredictions:predictions,
+  raidHoldoutError:{absolute:raidDestroyedAbsoluteError,
+   weightedAbsoluteFraction:raidDestroyedActual?raidDestroyedAbsoluteError/raidDestroyedActual:null},
+  raidHoldoutPredictions,
   limitations:['Single-run conditional ratios; no causal identification of policy or defense efficacy.',
    'One-step prediction uses actual prior plants, purchases, raid potential and wall HP damage; it is not a stand-alone forecast.',
    'Crop destruction is not inferred from structural HP; separate physical outcomes are fitted.',

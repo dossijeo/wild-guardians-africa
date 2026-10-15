@@ -175,6 +175,54 @@
       }
     }
   ],
+  "raidHoldoutError": {
+    "absolute": 77.10714285714286,
+    "weightedAbsoluteFraction": 0.7868075801749271
+  },
+  "raidHoldoutPredictions": [
+    {
+      "day": 8,
+      "terminal": false,
+      "actualDestroyed": 22,
+      "predictedDestroyed": 17.642857142857142
+    },
+    {
+      "day": 9,
+      "terminal": false,
+      "actualDestroyed": 37,
+      "predictedDestroyed": 20.892857142857142
+    },
+    {
+      "day": 10,
+      "terminal": false,
+      "actualDestroyed": 18,
+      "predictedDestroyed": 20.42857142857143
+    },
+    {
+      "day": 11,
+      "terminal": false,
+      "actualDestroyed": 15,
+      "predictedDestroyed": 19.035714285714285
+    },
+    {
+      "day": 12,
+      "terminal": false,
+      "actualDestroyed": 0,
+      "predictedDestroyed": 15.785714285714286
+    },
+    {
+      "day": 13,
+      "terminal": false,
+      "actualDestroyed": 0,
+      "predictedDestroyed": 19.5
+    },
+    {
+      "day": 14,
+      "terminal": true,
+      "actualDestroyed": 6,
+      "predictedDestroyed": 20.892857142857142
+    }
+  ],
   "limitations": [
     "Single-run conditional ratios; no causal identification of policy or defense efficacy.",
     "One-step prediction uses actual prior plants, purchases, raid potential and wall HP damage; it is not a stand-alone forecast.",

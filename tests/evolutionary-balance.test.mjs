@@ -85,7 +85,8 @@ test('search cohorts cannot overlap and truncation cannot count as victory',()=>
 test('calibration predicts from ledger outcomes without folding structural damage into crop damage',()=>{
  const rows=Array.from({length:10},(_,i)=>({day:i+1,living:20,planted:4,destroyed:i>5?2:0,
   finance:{income:100,wages:60,seeds:20,walls:10,repairs:i>5?5:0}}));
- const raids=rows.map(r=>({day:r.day,daytime:false,pressureFacts:{observedValue:220},
+ const raids=rows.map(r=>({day:r.day,daytime:false,ended:true,cropsDestroyed:r.destroyed,
+  pressureFacts:{observedValue:220},
   species:{warthog:{generated:2}},potentialAgriculturalHp:4,wallHpLost:40,exposedLivingAtSpawn:20,wallHits:3}));
  const m=calibrate({rows,raidEvidence:{raids},completedNights:9,result:'defeat',status:'completed'});
  assert.equal(m.source.rows,9);
@@ -94,6 +95,13 @@ test('calibration predicts from ledger outcomes without folding structural damag
  assert.equal(m.observability.defenseEffectIdentifiable,false);
  assert.ok(m.coefficients.wagesToRaidAttraction>0);
  assert.ok(m.holdoutPredictions.length>0);
+ assert.equal(m.holdoutPredictions.some(r=>r.day===10),false,
+  'the defeat row is not a complete economic day');
+ assert.equal(m.raidHoldoutPredictions.at(-1).day,10);
+ assert.equal(m.raidHoldoutPredictions.at(-1).terminal,true,
+  'an ended terminal raid remains valid agricultural-damage evidence');
+ assert.equal(m.raidHoldoutPredictions.at(-1).actualDestroyed,2);
+ assert.ok(m.raidHoldoutError.absolute>0);
  assert.equal(m.source.raidPressureVersion,1);
  const currentRaids=raids.map(r=>({...r,pressureFacts:{...r.pressureFacts,candidateVersion:3}}));
  const currentRows=rows.map(({finance,...row})=>({...row,...finance}));

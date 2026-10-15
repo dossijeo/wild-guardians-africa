@@ -23,11 +23,23 @@ Los dos informes nuevos proceden del piloto de entradas de incursión
 checkout nativo `d9110380`. Las fuentes comprimidas, configuraciones,
 hashes y salidas del modelo están preservados en `sources/` y `results/`.
 La jornada terminal parcial se excluye de la calibración.
+Su incursión, si terminó, sí se incluye en una validación separada del
+daño agrícola; sus ingresos y gastos parciales siguen excluidos.
 
 | Bioma/semilla | Entrenamiento | Validación | Error ingresos | Error salarios | Error semillas | Error cultivos destruidos | Error reparaciones | Resultado nativo | Cribado contable |
 | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | --- | --- |
 | Sabana/712 | días 1–9 | días 10–15 | 8,0 % | 2,0 % | 2,7 % | **72,7 %** | 34,7 % | derrota día 16 | inviabilidad día 81 |
 | Gran Cañón/123 | días 1–7 | días 8–13 | 28,4 % | 17,5 % | 0,3 % | **67,6 %** | 72,9 % | derrota día 14 | inviabilidad día 11 |
+
+Al incorporar únicamente el daño medido en la incursión terminal, el error
+agrícola de validación es **82,4 %** en Sabana (días 10–16) y **78,7 %** en
+Gran Cañón (días 8–14). El modelo predice 3,4 cultivos destruidos en la
+noche 16 de Sabana frente a 57 reales, y 20,9 en la noche 14 de Gran Cañón
+frente a seis reales. El campo `raidHoldoutError` del JSON contiene esta
+medida separada de la conciliación económica de días completos.
+El informe histórico de Sabana/712 también arroja **88,5 %** al incluir
+únicamente el daño de su incursión terminal, por lo que el desajuste no
+depende de una sola campaña nueva.
 
 El error es la suma de diferencias absolutas en la ventana de validación,
 dividida por el total real de cada variable. El cribado contable usa
