@@ -128,6 +128,15 @@ por debajo del corte de 120 s/día, pero la trayectoria de coste debe revisarse
 antes de ampliar a campañas largas. Los informes y progresos se conservan en
 `results-14-main-sync/`.
 
+La primera mutación del ensayo con evaluador `post-intro-v1`, genoma
+`835711fac6025e72`, completó 14/14 noches en Sabana/712, con 27 cultivos y
+223 monedas. Entregó 19⅓ cajas/día de media en las tres jornadas finales;
+el evaluador versionado `post-intro-v2` la clasifica igualmente como
+`collapsed-production`. El margen operativo terminal fue −82 monedas en
+esas tres jornadas y todos los registros conciliaron con el ledger. Se
+conserva el informe original de `v1` en `results-14-post-intro/`; Gran Río
+del mismo genoma sigue en curso, por lo que aún no hay evaluación de pareja.
+
 Esta cohorte usa Wild Engine y el balance de producción sin alterar, después de
 la mejora de navegación de PR #37. Código ejecutado: `7f358aad97287b40e300026306d26f05cc4e0c29`;
 el registro de siete noches guarda además SHA-256 de los módulos y del diff en
