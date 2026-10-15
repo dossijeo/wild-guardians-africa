@@ -194,6 +194,9 @@ test('a native Sabana incursion spawns physically and advances through Game.tick
           'ordinary travel ticks never request another native crop plan');
         assert.equal(planner.metrics(state.elapsed).nativeAnimalPlans,1);
         assert.deepEqual(Object.values(planner.metrics(state.elapsed).perAnimalPerMinute),[1]);
+        assert.deepEqual(Object.values(planner.metrics(state.elapsed+61).perAnimalPerMinute),[0]);
+        assert.deepEqual(Object.values(planner.metrics(state.elapsed+61).animalPlansByActor),[1]);
+        assert.deepEqual(Object.values(planner.metrics(state.elapsed+61).animalPeakPlansPerMinute),[1]);
         const saved=deserialize(serialize(state));
         const committed=saved.raid.animals.find(item=>item.id===animal.id);
         assert.equal(committed.attackId,animal.attackId);
