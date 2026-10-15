@@ -153,6 +153,20 @@ test('a native Sabana incursion spawns physically and advances through Game.tick
       planner.cancelAttackIntent(probeAnimal.id);
     }
     state.raid.animals.pop();
+    const reservedSite={id:'animal-999998',status:'walking',
+      x:probeAnimal.x+12,z:probeAnimal.z+12,radius:.28,
+      targetId:state.plants.find(plant=>plant.id!==freePlan.target.id).id,
+      approach:freePlan.approach.point};
+    state.raid.animals.push(reservedSite);
+    const reservedPlan=planner.planAttackCrop(state,probeAnimal);
+    assert.equal(reservedPlan?.status,'found',
+      'a reserved attack site leaves another reachable physical approach');
+    assert(Math.hypot(reservedPlan.approach.point.x-reservedSite.approach.x,
+      reservedPlan.approach.point.z-reservedSite.approach.z)>=
+      (probeAnimal.radius??.28)+reservedSite.radius+.1-1e-8,
+    'native crop selection must honor another animal’s future attack site');
+    planner.cancelAttackIntent(probeAnimal.id);
+    state.raid.animals.pop();
     planner.resetFromState(state);
     let stopWorld=planner.observeWorld(state),stopTasks=planner.observeTasks(state);
     const intentCalls={registered:0,committed:0,finished:0,

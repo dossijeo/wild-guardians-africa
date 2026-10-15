@@ -477,6 +477,15 @@ export function createSpatialIntentBridge(session){
       return null;
     session.actorSectorRevision({worker:false,species:animal.species});
     const blockers=actorBlockers(state,animal,false);
+    // Physical bodies and reserved future attack sites are different facts.
+    // Send both in the same transient batch so native site selection cannot
+    // return an approach that the confirmed raid reservation would reject.
+    for(const other of state.raid.animals){
+      if(other===animal||!other.approach||
+        ['gone','retreating','waiting'].includes(other.status))continue;
+      blockers.push({x:other.approach.x,z:other.approach.z,
+        radius:(other.radius??.28)+.1});
+    }
     const blockerPtr=wasm.nav_intent_attack_blockers_ptr(blockers.length);
     if(!blockerPtr&&blockers.length)
       throw Error('Native attack blocker allocation failed');
