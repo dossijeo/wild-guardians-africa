@@ -1,5 +1,6 @@
 import {LOCOMOTION as L} from './locomotion-calibration.js';
 import {moveWorker} from './locomotion.js';
+import {markRouteOwner,hasRouteOwner} from './route-owner.js';
 
 // Cosmetic choices have their own persisted stream: waiting never consumes a raid/event roll.
 function seedFor(worker,seed){
@@ -20,15 +21,20 @@ export function updateIdle(worker,anchor,seconds,nav,seed,gates=[]){
     idle=worker.idleState={anchorId:anchor.id,mode:'rest',elapsed:0,rng:seedFor(worker,seed),remaining:source.idleSeconds*2};
   }
   worker.running=false;idle.approachRetry=Math.max(0,(idle.approachRetry??0)-seconds);
+  if(idle.mode==='walk'&&Number.isSafeInteger(nav.residencyRevision)&&!hasRouteOwner(worker,nav))
+    idle.pathResidencyRevision=-1;
+  if(idle.mode==='walk'&&idle.pathResidencyRevision==null)idle.pathResidencyRevision=0;
   if(idle.mode!=='walk'&&idle.approachRetry===0&&anchor.idleRadius&&Math.hypot(worker.x-anchor.x,worker.z-anchor.z)>anchor.idleRadius){
     idle.approachRetry=1;const path=nav.path(worker,anchor,.28,null,true);
-    if(path){idle.mode='walk';idle.destination=anchor;idle.pathVersion=nav.version;idle.elapsed=0;worker.path=path;worker.destinationId=anchor.id;worker.pathVersion=nav.version;}
+    if(path){idle.mode='walk';idle.destination=anchor;idle.pathVersion=nav.version;idle.pathResidencyRevision=nav.residencyRevision??0;idle.elapsed=0;worker.path=path;worker.destinationId=anchor.id;worker.pathVersion=nav.version;worker.pathResidencyRevision=nav.residencyRevision??0;markRouteOwner(worker,nav);}
   }
   if(idle.mode==='walk'){
-    if(idle.pathVersion!==nav.version){
+    if(idle.pathVersion!==nav.version||idle.pathResidencyRevision!==(nav.residencyRevision??0)){
       const path=idle.destination.id===anchor.id?nav.path(worker,idle.destination,.28,null,true):localPath(worker,idle.destination,anchor,nav);
       if(!path){cancelWalk(worker,idle,source);return;}
-      worker.path=path;idle.pathVersion=nav.version;
+      worker.path=path;idle.pathVersion=nav.version;idle.pathResidencyRevision=nav.residencyRevision??0;
+      worker.pathVersion=nav.version;worker.pathResidencyRevision=nav.residencyRevision??0;
+      markRouteOwner(worker,nav);
     }
     const previous={x:worker.x,z:worker.z};
     const arrived=moveWorker(worker,seconds,{gates}); // Ambient walking never requests a run.
@@ -47,8 +53,8 @@ export function updateIdle(worker,anchor,seconds,nav,seed,gates=[]){
       const destination={id:`idle-${worker.id}`,x:anchor.x+Math.sin(angle)*radius,z:anchor.z+Math.cos(angle)*radius};
       const path=localPath(worker,destination,anchor,nav);
       if(!path||Math.hypot(worker.x-destination.x,worker.z-destination.z)<.75)continue;
-      idle.mode='walk';idle.destination=destination;idle.pathVersion=nav.version;idle.elapsed=0;
-      worker.path=path;worker.destinationId=destination.id;worker.pathVersion=nav.version;return;
+      idle.mode='walk';idle.destination=destination;idle.pathVersion=nav.version;idle.pathResidencyRevision=nav.residencyRevision??0;idle.elapsed=0;
+      worker.path=path;worker.destinationId=destination.id;worker.pathVersion=nav.version;worker.pathResidencyRevision=nav.residencyRevision??0;markRouteOwner(worker,nav);return;
     }
   }
   cancelWalk(worker,idle,source);

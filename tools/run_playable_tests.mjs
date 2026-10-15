@@ -19,6 +19,7 @@ const tests = [
   'raid-pressure-lifecycle.test.js',
   'raid-pressure-plan.test.js',
   'raid-saheliana-exit.test.js',
+  'animal-slope-recovery.test.js',
   'tutorial-agricultural-guide.test.js',
   'village-expansion-price.test.js',
   'worker-wall-overlap-recovery.test.js',
@@ -26,6 +27,7 @@ const tests = [
   'game-juice.test.js',
   'desktop-exit.test.mjs',
   'menu-library-fullscreen.test.js',
+  'nav-cache-coherence.test.js',
 ];
 
 const result = spawnSync(process.execPath, ['--test', ...tests.map((name) => `tests/${name}`)], {

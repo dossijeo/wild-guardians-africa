@@ -18,6 +18,9 @@ struct Sector {
 };
 struct Context {
   int sectorSize=0,updates=0;
+#ifdef WG_NAV_CACHE_PROTOTYPE
+  int topologyEpoch=0;
+#endif
   int connectivityReason=0,weakFailure=0;
   std::vector<uint8_t> stagedPass,stagedSteps,stagedInbound;
   std::unordered_map<uint64_t,Sector>* sectors=nullptr;
@@ -229,6 +232,9 @@ int lazy_select_context(int profile){
 int lazy_init(int size){
   if(size<2||size>32)return 0;
   sectorSize=size;updates=0;
+#ifdef WG_NAV_CACHE_PROTOTYPE
+  active().topologyEpoch++;
+#endif
   if(!sectors)sectors=new std::unordered_map<uint64_t,Sector>();else sectors->clear();
   byId.clear();freeIds.clear();
   stagedPass.assign(size*size,0);stagedSteps.assign(size*size,0);
@@ -250,6 +256,9 @@ int lazy_commit_sector(int sx,int sz){
   }
   sector.pass=stagedPass;sector.steps=stagedSteps;sector.inbound=stagedInbound;
   flood(sector);updates++;
+#ifdef WG_NAV_CACHE_PROTOTYPE
+  active().topologyEpoch++;
+#endif
   rebuildEdges(sector);
   for(int d=0;d<4;d++)if(Sector* neighbor=get(sx+dx[d],sz+dz[d]))rebuildEdges(*neighbor);
   for(const Portal& portal:portals){
@@ -275,15 +284,25 @@ int lazy_remove_sector(int sx,int sz){
     if(bx==sx&&bz==sz){if(Sector* other=get(ax,az))rebuildEdges(*other);}
   }
   weakDirty=true;updates++;
+#ifdef WG_NAV_CACHE_PROTOTYPE
+  active().topologyEpoch++;
+#endif
   return 1;
 }
-void lazy_clear_portals(){portals.clear();}
+void lazy_clear_portals(){portals.clear();
+#ifdef WG_NAV_CACHE_PROTOTYPE
+  active().topologyEpoch++;
+#endif
+}
 int lazy_add_portal(int fromX,int fromZ,int toX,int toZ){
   portals.push_back({fromX,fromZ,toX,toZ});return static_cast<int>(portals.size())-1;
 }
 int lazy_commit_portals(){
   for(Sector* sector:byId)if(sector)rebuildEdges(*sector);
   weakDirty=true;
+#ifdef WG_NAV_CACHE_PROTOTYPE
+  active().topologyEpoch++;
+#endif
   return static_cast<int>(portals.size());
 }
 // Sector-local component identity. Callers must discard it after topology

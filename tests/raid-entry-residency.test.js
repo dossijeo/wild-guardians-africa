@@ -10,6 +10,15 @@ test('residency pins actual sparse birth/exit chunks without generating the expa
 test('pins are evicted and bounds restored after cancellation, without disrupting normal chunks',()=>{const {w,nav,planned}=world();const entry={entries:[{x:0,z:320}],exits:[{x:0,z:323}]};nav.raidEntryDemand={entry,radii:[1.1]};WorldScene.prototype.syncChunks.call(w);const key=[...raidEntryChunks(entry,[1.1])][0];w.chunks.set(key,{userData:{},traverse(){}});delete nav.raidEntryDemand;WorldScene.prototype.syncChunks.call(w);assert.equal(w.chunks.has(key),false);assert.equal(planned.at(-1).size,25);assert.deepEqual(nav.activeBounds,[-120,-120,120,120]);});
 test('active actor next-step corridor remains pinned and all demand disappears after real departure',()=>{const {nav,state}=world();state.raid={animals:[{x:23,z:0,radius:1.1,exit:{x:0,z:0},path:[{x:60,z:0}],status:'walking'}]};const keys=raidResidentDemand(state,nav);assert(keys.has('0,0'));assert(keys.has('1,0'));state.raid.animals[0].status='gone';assert.equal(raidResidentDemand(state,nav).size,0);});
 
+test('a raid-entry certificate is invalidated when sector residency changes',()=>{
+ const {s,nav}=topologyFixture('closed');
+ nav.residencyRevision=1;
+ const before=raidEntryKey(s,nav,['warthog']);
+ assert(before);
+ nav.residencyRevision=2;
+ assert.notEqual(raidEntryKey(s,nav,['warthog']),before);
+});
+
 test('bounds refresh retains validated sparse demand while a new full worker key is prepared',()=>{const {s,nav}=topologyFixture('closed');s.nightPlan={at:500,group:['warthog'],done:false};const requests=[],worker={postMessage(r){requests.push(r);},terminate(){}},p=new RaidEntryPreparer(nav,{createWorker:()=>worker});p.update(s);worker.onmessage({data:{key:requests[0].key,token:requests[0].token,entry:{entries:[{x:0,z:320}],exits:[{x:0,z:323}]}}});const demand=nav.pendingRaidEntry;nav.setActiveBounds([-60,-60,60,360]);p.update(s);assert.equal(nav.pendingRaidEntry,demand);assert.equal(p.ready,null);assert.equal(requests.length,2);worker.onmessage({data:{key:requests[1].key,token:requests[1].token,entry:demand.entry}});assert.equal(p.ready.key,raidEntryKey(s,nav,s.nightPlan.group));nav.setRaidView({x:11,z:8},{x:0,z:0});p.update(s);assert.equal(nav.pendingRaidEntry,null);p.dispose();});
 
 

@@ -54,6 +54,17 @@ test('failed recovery is bounded and memoized until the route epoch changes',()=
  nav.version++;assert.equal(workerSlopeRecoveryPath(nav,start(),home),null);assert(calls>first);
 });
 
+test('a failed return recovery retries after sector residency changes',()=>{
+ let calls=0;const nav=world(()=>{calls++;return .505;});nav.residencyRevision=1;
+ assert.equal(workerSlopeRecoveryPath(nav,start(),home),null);
+ const first=calls;
+ assert.equal(workerSlopeRecoveryPath(nav,start(),home),null);
+ assert.equal(calls,first);
+ nav.residencyRevision++;
+ assert.equal(workerSlopeRecoveryPath(nav,start(),home),null);
+ assert(calls>first);
+});
+
 test('no new destination route is sought when the start is already valid',()=>{
  const nav=world(()=>.49);let calls=0;nav.path=()=>{calls++;return [];};
  assert.equal(workerSlopeRecoveryPath(nav,start(),home),null);assert.equal(calls,0);

@@ -48,6 +48,9 @@ test('local connector never ignores a new enclosing solid, and failure is cached
  let queries=0;const native=nav.walkable.bind(nav);nav.walkable=(...args)=>{queries++;return native(...args);};
  assert.equal(workerFractionalConnector(nav,w,end),null);const first=queries;
  for(let i=0;i<50;i++)assert.equal(workerFractionalConnector(nav,w,end),null);assert.equal(queries,first);
+ nav.residencyRevision=1;
+ assert.equal(workerFractionalConnector(nav,w,end),null);
+ assert(queries>first,'a changed resident sector must reopen the failed search');
  village.buildings=original;nav.setState(s);assert(connector(nav,w,end));
 });
 test('ordinary active work receives no fractional departure exception',()=>{

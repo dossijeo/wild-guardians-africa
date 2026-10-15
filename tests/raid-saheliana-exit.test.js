@@ -42,6 +42,16 @@ test('impossible connector searches are bounded, exhausted once and reset on geo
  assert.equal(calls,208);animalExitConnector(actor,end,nav);assert.equal(calls,208);
  nav.version++;animalExitConnector(actor,end,nav);assert.equal(calls,216);
 });
+test('an exhausted exit search retries after sector residency changes without a topology edit',()=>{
+ let calls=0;const nav={version:1,residencyRevision:1,
+  walkable:()=>{calls++;return false;},segmentClear:()=>false};
+ const actor={x:0,z:0,radius:1},end={x:10,z:10};
+ for(let i=0;i<30;i++)animalExitConnector(actor,end,nav);
+ const before=calls;
+ animalExitConnector(actor,end,nav);assert.equal(calls,before);
+ nav.residencyRevision++;
+ animalExitConnector(actor,end,nav);assert.equal(calls,before+8);
+});
 test('snapshot rejects corrupt connector cursors while older snapshots remain valid',()=>{
  const s=load();assert.doesNotThrow(()=>serialize(s));
  for(const bad of [{key:'x',next:-1},{key:'x',next:193},{key:'x',next:NaN},{key:1,next:0}]){

@@ -5,6 +5,7 @@ import {workerReturnRoute} from './worker-return-route.js';
 import {workerFractionalConnector} from '../world/worker-fractional-connector.js';
 import {SpatialChunkUnavailable} from '../world/hierarchical-wasm/spatial-navigation-movement.js';
 import {workerRiskClearance} from './worker-route-clearance.js';
+import {markRouteOwner,hasRouteOwner} from './route-owner.js';
 import {resolveFluidPlacement} from '../world/fluid-placement.js';
 import {ensurePurchaseBudget,HIRING_RESERVE} from './budget.js';
 import {ensureBoundaryGates} from '../world/boundary-gates.js';
@@ -484,9 +485,16 @@ export function cast(s,id,kind,x,z,nav,targetPlantId) {
 }
 export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignore=null,worker=true,motion=null,expandRoute=false,routeVia=null}={}) {
   const previous={x:w.x,z:w.z};
+  const residencyRevision=nav.residencyRevision??0;
+  // A saved route can have the same numeric revision as a new native session.
+  // Its non-serialized ownership is absent, so it must be replanned.
+  if(w.path&&Number.isSafeInteger(nav.residencyRevision)&&!hasRouteOwner(w,nav))
+    w.path=null;
+  if(w.path&&w.pathResidencyRevision==null)w.pathResidencyRevision=residencyRevision;
   if(worker)w.running=false;
   if(w.exitRouteRecovery&&
-    (w.exitRouteRecovery.destinationId!==destination.id||w.exitRouteRecovery.version!==nav.version))
+    (w.exitRouteRecovery.destinationId!==destination.id||w.exitRouteRecovery.version!==nav.version||
+     w.exitRouteRecovery.residencyRevision!==residencyRevision))
     delete w.exitRouteRecovery;
   const abandonExhaustedExit=()=>{
     const exhausted=w.exitConnectorSearch?.exhausted===true,
@@ -500,9 +508,10 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
     return true;
   };
   if(w.mobileRecoveryDestinationId!==destination.id||
-    w.mobileRecoveryVersion!==nav.version){
+    w.mobileRecoveryVersion!==nav.version||w.mobileRecoveryResidencyRevision!==residencyRevision){
     w.mobileRecoveryDestinationId=destination.id;
     w.mobileRecoveryVersion=nav.version;
+    w.mobileRecoveryResidencyRevision=residencyRevision;
     w.mobileRecoveryAttempts=0;
     w.mobileProgressDistance=dist(w,destination);
     w.mobileProgressAt=s.elapsed;
@@ -511,8 +520,9 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
     w.mobileProgressDistance=dist(w,destination);
     w.mobileProgressAt=s.elapsed;
   }
-  if(w.wallEscape&&w.pathVersion!==nav.version)delete w.wallEscape;
-  if(!w.path||w.destinationId!==destination.id||w.pathVersion!==nav.version) {
+  if(w.wallEscape&&(w.pathVersion!==nav.version||w.pathResidencyRevision!==residencyRevision))delete w.wallEscape;
+  if(!w.path||w.destinationId!==destination.id||w.pathVersion!==nav.version||
+     w.pathResidencyRevision!==residencyRevision) {
     if(w.exitRouteRecovery){
       w.path=animalExitConnector(w,destination,nav);
       if(!w.path)return abandonExhaustedExit();
@@ -547,6 +557,9 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
       if(!w.path)w.path=workerReturnRoute(nav,w,destination,w.radius??.28);
     }
     w.pathVersion=nav.version;
+    // The native query may make another sector resident while planning.
+    w.pathResidencyRevision=nav.residencyRevision??0;
+    markRouteOwner(w,nav);
     if(!w.path)return abandonExhaustedExit();
   }
   if(worker&&waitForGate(w,s.structures))return false;
@@ -573,6 +586,7 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
     nav.segmentClear?.(w,next,w.radius??.28,ignore,false)===false){
     w.path=null;
     w.exitRouteRecovery={destinationId:destination.id,version:nav.version,
+      residencyRevision,
       startedAt:s.elapsed};
     emit(s,'AnimalExitRouteRecovery',{actorId:w.id,x:w.x,z:w.z,
       exitId:destination.id,reason:'stale-static-connector'});
@@ -752,14 +766,15 @@ function updateWorkers(s,dt,nav) {
           if(w.taskApproach?.taskId!==t.id||w.path===null){
             const route=taskRouteWhenKnown(()=>repairRoute(w,target,nav));
             if(!route){releaseTask(s,w);w.status='idle';continue;}
-            w.taskApproach={taskId:t.id,destination:route.destination};w.path=route.path;w.destinationId=route.destination.id;w.pathVersion=nav.version;
+            w.taskApproach={taskId:t.id,destination:route.destination};w.path=route.path;w.destinationId=route.destination.id;w.pathVersion=nav.version;w.pathResidencyRevision=nav.residencyRevision??0;markRouteOwner(w,nav);
           }
           destination=w.taskApproach.destination;
         }else if(t.kind==='initial'||t.kind==='water'){
-          if(w.taskApproach?.taskId!==t.id||w.path===null||w.pathVersion!==nav.version){
+          if(w.taskApproach?.taskId!==t.id||w.path===null||w.pathVersion!==nav.version||
+             w.pathResidencyRevision!==(nav.residencyRevision??0)){
             const route=taskRouteWhenKnown(()=>wateringRoute(w,target,nav));
             if(!route){releaseTask(s,w);w.status='idle';continue;}
-            w.taskApproach={taskId:t.id,destination:route.destination};w.path=route.path;w.destinationId=route.destination.id;w.pathVersion=nav.version;
+            w.taskApproach={taskId:t.id,destination:route.destination};w.path=route.path;w.destinationId=route.destination.id;w.pathVersion=nav.version;w.pathResidencyRevision=nav.residencyRevision??0;markRouteOwner(w,nav);
           }
           destination=w.taskApproach.destination;
         }

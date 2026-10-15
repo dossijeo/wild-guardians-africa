@@ -1,7 +1,7 @@
 // Exact static queries only. Worker movement, target geometry, world replacement
 // and every native navigation epoch invalidate admission; no rounded positions.
 const worlds=new WeakMap(),MAX_ENTRIES=8192,MAX_POINTS=20000;
-const context=nav=>[nav.version,nav.state,nav.field,nav.obstacles,nav.suppressed,
+const context=nav=>[nav.version,nav.residencyRevision,nav.state,nav.field,nav.obstacles,nav.suppressed,
   nav.preparedPaths,nav.walkable,nav.segmentClear,nav.path,nav.workerSurface,
   nav.field?.surface,nav.field?.blocked,nav.field?.slope,nav.field?.waterInfo,
   nav.field?.canyon,nav.field?.riverLevel];
@@ -9,7 +9,7 @@ const same=(a,b)=>a.length===b.length&&a.every((v,i)=>v===b[i]);
 const copy=route=>route?{...route,destination:{...route.destination},path:route.path.map(p=>({...p}))}:null;
 export function cachedWateringRoute(worker,plant,nav,compute){
  const radius=worker.radius??.28;
- if(!Number.isSafeInteger(nav.version)||nav.version<1||!nav.state||
+ if(nav.graphPreviewActive||!Number.isSafeInteger(nav.version)||nav.version<1||!nav.state||
     ![worker.x,worker.z,plant.x,plant.z,radius].every(Number.isFinite))return compute(worker,plant,nav);
  const epoch=[compute,...context(nav)];let cache=worlds.get(nav);
  if(!cache||!same(cache.epoch,epoch)){cache={epoch,entries:new Map(),points:0};worlds.set(nav,cache);}

@@ -1,0 +1,102 @@
+{
+  "iterations": 250000,
+  "rounds": 4,
+  "results": [
+    {
+      "round": 0,
+      "name": "jsLookup",
+      "ms": 3.2992999999999952,
+      "checksum": -270000
+    },
+    {
+      "round": 0,
+      "name": "wasmTrivial",
+      "ms": 4.037100000000002,
+      "checksum": 0
+    },
+    {
+      "round": 0,
+      "name": "wasmCacheHit",
+      "ms": 4.7808999999999955,
+      "checksum": -270000
+    },
+    {
+      "round": 0,
+      "name": "wasmFresh",
+      "ms": 3.3126000000000033,
+      "checksum": -270000
+    },
+    {
+      "round": 1,
+      "name": "wasmFresh",
+      "ms": 2.1633999999999958,
+      "checksum": -270000
+    },
+    {
+      "round": 1,
+      "name": "wasmCacheHit",
+      "ms": 4.9343000000000075,
+      "checksum": -270000
+    },
+    {
+      "round": 1,
+      "name": "wasmTrivial",
+      "ms": 1.3463999999999885,
+      "checksum": 0
+    },
+    {
+      "round": 1,
+      "name": "jsLookup",
+      "ms": 1.7789000000000073,
+      "checksum": -270000
+    },
+    {
+      "round": 2,
+      "name": "jsLookup",
+      "ms": 1.7025000000000006,
+      "checksum": -270000
+    },
+    {
+      "round": 2,
+      "name": "wasmTrivial",
+      "ms": 1.3130999999999915,
+      "checksum": 0
+    },
+    {
+      "round": 2,
+      "name": "wasmCacheHit",
+      "ms": 5.076900000000009,
+      "checksum": -270000
+    },
+    {
+      "round": 2,
+      "name": "wasmFresh",
+      "ms": 1.9557999999999964,
+      "checksum": -270000
+    },
+    {
+      "round": 3,
+      "name": "wasmFresh",
+      "ms": 2.3593999999999937,
+      "checksum": -270000
+    },
+    {
+      "round": 3,
+      "name": "wasmCacheHit",
+      "ms": 4.595300000000009,
+      "checksum": -270000
+    },
+    {
+      "round": 3,
+      "name": "wasmTrivial",
+      "ms": 1.2291999999999916,
+      "checksum": 0
+    },
+    {
+      "round": 3,
+      "name": "jsLookup",
+      "ms": 1.6502000000000123,
+      "checksum": -270000
+    }
+  ]
+}

@@ -25,6 +25,20 @@ test('unreachable exact queries are reused; geometry epochs and world identities
   const before=queries;edit();cachedWateringRoute(worker,plant,nav,compute);assert.equal(queries,before+1);
  }
 });
+test('a chunk residency change invalidates a cached route even with unchanged topology',()=>{
+ const nav={...world(),residencyRevision:1};let queries=0;
+ const compute=()=>{queries++;return nav.residencyRevision===2?null:
+   {destination:{x:1,z:2},path:[{x:1,z:2}]};};
+ assert.ok(cachedWateringRoute(worker,plant,nav,compute));
+ assert.ok(cachedWateringRoute(worker,plant,nav,compute));
+ assert.equal(queries,1);
+ nav.residencyRevision=2;
+ assert.equal(cachedWateringRoute(worker,plant,nav,compute),null);
+ assert.equal(queries,2);
+ nav.residencyRevision=3;
+ assert.ok(cachedWateringRoute(worker,plant,nav,compute));
+ assert.equal(queries,3);
+});
 test('coordinates, body radius, species, crop identity and avoided terrain remain exact inputs',()=>{
  const nav=world();let queries=0;const compute=()=>{queries++;return null;};
  cachedWateringRoute(worker,plant,nav,compute);

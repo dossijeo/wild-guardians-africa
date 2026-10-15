@@ -69,7 +69,8 @@ export function createSpatialNavigationMovement(session,state){
     // from the topology revision and must invalidate the proof too.
     // Placement previews use `path` against temporary barriers. Only live
     // actor requests through `workerPath` can retain a blocked proof.
-    const cacheable=cacheBlocked===true&&worker&&typeof session.core?.chunkRevision==='function';
+    const cacheable=cacheBlocked===true&&worker&&!session.graphPreviewActive?.()&&
+      typeof session.core?.chunkRevision==='function';
     const epoch=cacheable?`${session.topologySource.revision()}:${session.core.chunkRevision()}`:null;
     if(cacheable&&epoch!==failedWorkerEpoch){failedWorkerEpoch=epoch;failedWorkerRoutes=new Set();}
     const key=cacheable?`${start.x},${start.z}|${end.x},${end.z}:${radius}`:null;
@@ -253,6 +254,8 @@ export function createSpatialNavigationMovement(session,state){
       return obstacleList;
     },
     get version(){return session.topologySource.revision();},
+    get residencyRevision(){return session.core?.chunkRevision?.()??0;},
+    get graphPreviewActive(){return session.graphPreviewActive?.()??false;},
     walkable,segmentClear,path,regionFor,regionConnected,enclosureFor,terrainValid,
     withWallPreview,withVillageEntryPreview,withCenterPreview,
     spatialSectorRevision:radius=>session.actorSectorRevision(profile(radius,false,null)),

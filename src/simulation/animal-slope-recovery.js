@@ -37,7 +37,9 @@ function proof(nav,start,point,radius){
     Math.max(0,slope-.5)>Math.max(0,prior-.5)+1e-10)return null;
   prior=slope;
  }
- return {nav,version:nav.version,radius,start:{x:start.x,z:start.z},last:{x:start.x,z:start.z},lastSlope:initial,point:{...point},length};
+ return {nav,version:nav.version,residencyRevision:nav.residencyRevision??0,
+  radius,start:{x:start.x,z:start.z},last:{x:start.x,z:start.z},lastSlope:initial,
+  point:{...point},length};
 }
 
 // Repair an already marginal legacy retreat, never ordinary animal routing.
@@ -46,7 +48,7 @@ function proof(nav,start,point,radius){
 export function animalSlopeRecoveryPath(nav,actor,end,radius){
  if(actor.status!=='retreating'||!nav.field||
    (nav.field.canyon?typeof nav.workerSurface!=='function':typeof nav.field.slope!=='function'))return null;
- const key=JSON.stringify([nav.version,actor.x,actor.z,end.x,end.z,radius]);
+ const key=JSON.stringify([nav.version,nav.residencyRevision??0,actor.x,actor.z,end.x,end.z,radius]);
  const prior=attempts.get(actor);if(prior?.nav===nav&&prior.key===key)return null;
  const reject=()=>{attempts.set(actor,{nav,key});return null;};
  const initial=footprintSlope(nav,actor,radius);
@@ -68,13 +70,17 @@ export function animalSlopeRecoveryClear(actor,nav,start,end,radius){
  const point=actor.path?.[0];
  if(actor.status!=='retreating'||!point)return false;
  let cached=verified.get(actor);
- if(cached?.disabled&&cached.nav===nav&&cached.version===nav.version&&cached.radius===radius&&cached.path===actor.path&&
+ if(cached?.disabled&&cached.nav===nav&&cached.version===nav.version&&
+   cached.residencyRevision===(nav.residencyRevision??0)&&cached.radius===radius&&cached.path===actor.path&&
    cached.first===point&&cached.px===point.x&&cached.pz===point.z)return false;
- if(!(cached?.nav===nav&&cached.version===nav.version&&cached.radius===radius&&
+ if(!(cached?.nav===nav&&cached.version===nav.version&&
+   cached.residencyRevision===(nav.residencyRevision??0)&&cached.radius===radius&&
    !cached.disabled&&cached.path===actor.path&&cached.point.x===point.x&&cached.point.z===point.z&&
    distance(cached.last,start)<1e-8)){
   cached=proof(nav,start,point,radius);
-  if(!cached){verified.set(actor,{nav,version:nav.version,radius,path:actor.path,first:point,px:point.x,pz:point.z,disabled:true});return false;}
+  if(!cached){verified.set(actor,{nav,version:nav.version,
+    residencyRevision:nav.residencyRevision??0,radius,path:actor.path,
+    first:point,px:point.x,pz:point.z,disabled:true});return false;}
   cached.path=actor.path;verified.set(actor,cached);
  }
  // Substeps can neither leave the validated segment nor travel backward.

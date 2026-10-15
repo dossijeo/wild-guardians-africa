@@ -1,0 +1,165 @@
+{
+  "fixture": "desierto983-d15",
+  "rows": [
+    {
+      "stage": "automatic-gate-open",
+      "jsPath": "found",
+      "jsCachedPath": "found",
+      "freshPath": "found",
+      "animalJs": null,
+      "animalFresh": "unknown",
+      "wasmCached": 1,
+      "wasmHit": 1,
+      "wasmFresh": 1,
+      "topologyRevision": 3,
+      "chunkRevision": 9,
+      "sectorRevision": 192,
+      "nativePairs": 10,
+      "nativeHits": 5,
+      "nativeMisses": 20
+    },
+    {
+      "stage": "gate-converted-to-solid",
+      "jsPath": "blocked",
+      "jsCachedPath": "blocked",
+      "freshPath": "blocked",
+      "animalJs": null,
+      "animalFresh": "unknown",
+      "wasmCached": 0,
+      "wasmHit": 0,
+      "wasmFresh": 0,
+      "topologyRevision": 4,
+      "chunkRevision": 9,
+      "sectorRevision": 194,
+      "nativePairs": 10,
+      "nativeHits": 20,
+      "nativeMisses": 45
+    },
+    {
+      "stage": "gate-restored",
+      "jsPath": "found",
+      "jsCachedPath": "found",
+      "freshPath": "found",
+      "animalJs": null,
+      "animalFresh": "unknown",
+      "wasmCached": 1,
+      "wasmHit": 1,
+      "wasmFresh": 1,
+      "topologyRevision": 5,
+      "chunkRevision": 9,
+      "sectorRevision": 196,
+      "nativePairs": 10,
+      "nativeHits": 25,
+      "nativeMisses": 65
+    },
+    {
+      "stage": "wall-removed-breach",
+      "jsPath": "found",
+      "jsCachedPath": "found",
+      "freshPath": "found",
+      "animalJs": null,
+      "animalFresh": "unknown",
+      "wasmCached": 1,
+      "wasmHit": 1,
+      "wasmFresh": 1,
+      "topologyRevision": 6,
+      "chunkRevision": 9,
+      "sectorRevision": 198,
+      "nativePairs": 10,
+      "nativeHits": 30,
+      "nativeMisses": 85
+    },
+    {
+      "stage": "wall-restored",
+      "jsPath": "found",
+      "jsCachedPath": "found",
+      "freshPath": "found",
+      "animalJs": null,
+      "animalFresh": "unknown",
+      "wasmCached": 1,
+      "wasmHit": 1,
+      "wasmFresh": 1,
+      "topologyRevision": 7,
+      "chunkRevision": 9,
+      "sectorRevision": 200,
+      "nativePairs": 10,
+      "nativeHits": 35,
+      "nativeMisses": 105
+    },
+    {
+      "stage": "uncommitted-wall-preview",
+      "pairs": 10,
+      "cached": 1,
+      "fresh": 1,
+      "missesBeforePreview": 105,
+      "misses": 125
+    },
+    {
+      "stage": "wall-preview-discarded",
+      "pairs": 10,
+      "confirmed": "possible",
+      "afterPreview": "possible",
+      "missesBeforeDiscardedQuery": 126,
+      "missesAfterDiscardedQuery": 145
+    },
+    {
+      "stage": "js-portal-only-preview",
+      "fresh": "blocked",
+      "js": "blocked",
+      "committedRevision": 7,
+      "previewRevision": 7,
+      "committedResidency": 9,
+      "previewResidency": 9
+    },
+    {
+      "stage": "residency-remove-and-restore",
+      "before": 0,
+      "absent": -1,
+      "restored": 0,
+      "absentPairs": 10,
+      "restoredPairs": 10,
+      "nativeHits": 47,
+      "nativeMisses": 192
+    },
+    {
+      "stage": "js-watering-route-residency",
+      "freshUnknown": true,
+      "cachedUnknown": true,
+      "workerMissing": "unknown",
+      "nativeMissing": "unknown",
+      "nativeResident": "found",
+      "computations": 3,
+      "topologyRevision": 7,
+      "residencyRevision": 13
+    },
+    {
+      "stage": "active-worker-route-residency",
+      "replanned": true,
+      "pathPoints": 5,
+      "residencyRevision": 13
+    },
+    {
+      "stage": "native-portal-only-revision",
+      "portalBefore": 1,
+      "portalCached": 0,
+      "portalFresh": 0,
+      "sectorBefore": 324,
+      "sectorAfter": 324,
+      "portalPairs": 10
+    },
+    {
+      "stage": "js-negative-portal-preview",
+      "fresh": "found",
+      "js": "found",
+      "topologyRevision": 7,
+      "residencyRevision": 13
+    },
+    {
+      "stage": "save-load-new-session",
+      "jsPath": "found",
+      "freshPath": "found",
+      "nativeEntries": 1,
+      "restoredRouteReplanned": true
+    }
+  ]
+}
