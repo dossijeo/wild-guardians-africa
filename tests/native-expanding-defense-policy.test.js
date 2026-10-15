@@ -42,7 +42,7 @@ test('native enclosure policy wakes on Wild Engine notices instead of rechecking
   assert.equal(policy.needsAction(s),false);
  }
  assert.equal(groupQueries,0,'ordinary ticks perform no crop-group query');
- notify({type:'funds-changed'});
+ notify({type:'funds-changed',delta:20,income:0});
  assert.equal(policy.act(s,nav,options),0);
  assert.equal(groupQueries,0,'new money does not recompute an absent enclosure');
  notify({type:'crop-groups-updated',groups:[{id:'crop:plant-1',value:10,
