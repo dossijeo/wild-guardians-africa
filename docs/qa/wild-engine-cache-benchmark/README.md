@@ -1,6 +1,6 @@
 # Cachés de navegación: decisión experimental
 
-Rama `codex/wild-engine-wasm-cache-benchmark`, base `020b6abcaa602d51823bd477dd3cdf4de73b1e26`. No cambia economía, daño ni políticas del jugador virtual. El prototipo C++ se compila aparte: el WASM distribuido por el juego no contiene `nav_cached_*`.
+Rama `codex/wild-engine-wasm-cache-benchmark`, base original `020b6abcaa602d51823bd477dd3cdf4de73b1e26`, sincronizada después con `main` en `8e32ce0d` (incluye puertas graduales y presupuesto de QA Windows). No cambia economía, daño ni políticas del jugador virtual. El prototipo C++ se compila aparte: el WASM distribuido por el juego no contiene `nav_cached_*`. Los resultados previos a la sincronización permanecen en el commit `279152cf`; las tablas y JSON siguientes corresponden a la repetición sobre `main` actualizado.
 
 ## Decisión
 
@@ -28,12 +28,12 @@ Medianas en milisegundos para 128 consultas; primera pasada / pasada caliente. A
 
 | Fixture, perfil, consulta | A | B | C |
 | --- | ---: | ---: | ---: |
-| Gran Cañón d6, trabajador, ruta | 1,741 / 1,789 | 1,911 / 0,010 | 2,157 / 0,045 |
-| Sabana d13, facóquero, ruta | 2,496 / 2,360 | 2,450 / 0,003 | 2,345 / 0,025 |
-| Manglares d10, facóquero, ruta | 10,626 / 10,066 | 10,189 / 0,004 | 11,090 / 0,043 |
-| Desierto d15, trabajador, ruta | 2,467 / 1,642 | 2,894 / 0,003 | 1,619 / 0,030 |
+| Gran Cañón d6, trabajador, ruta | 1,753 / 1,684 | 1,782 / 0,003 | 1,830 / 0,036 |
+| Sabana d13, facóquero, ruta | 2,214 / 2,240 | 2,272 / 0,003 | 2,499 / 0,026 |
+| Manglares d10, facóquero, ruta | 9,877 / 9,556 | 9,581 / 0,003 | 9,233 / 0,037 |
+| Desierto d15, trabajador, ruta | 1,367 / 1,428 | 1,400 / 0,003 | 1,428 / 0,026 |
 
-Las otras doce combinaciones de perfil y tipo, incluidas conectividad, están en [`abc-low-level.json`](abc-low-level.json). La preparación inicial de chunks + navegación tardó aproximadamente 528 ms (Gran Cañón), 397 ms (Sabana), 1763 ms (Manglares) y 472 ms (Desierto); ese coste compartido no se atribuye a un cruce JS↔WASM. En la carga sintética de 250.000 consultas por pasada, un hit JS tardó 1,7–3,4 ms tras el calentamiento y un hit en `unordered_map` WASM 4,3–4,9 ms. Una llamada trivial WASM tardó 1,3–1,5 ms. La consulta nativa fresca sobre un grafo vacío fue incluso más barata que la caché nativa, lo que demuestra que cachear no siempre ayuda.
+Las otras doce combinaciones de perfil y tipo, incluidas conectividad, están en [`abc-low-level.json`](abc-low-level.json). La preparación inicial de chunks + navegación tardó aproximadamente 461 ms (Gran Cañón), 387 ms (Sabana), 1649 ms (Manglares) y 362 ms (Desierto); ese coste compartido no se atribuye a un cruce JS↔WASM. En la carga sintética de 250.000 consultas por pasada, un hit JS tardó alrededor de 1,7 ms tras el calentamiento y un hit en `unordered_map` WASM alrededor de 4,6 ms. Una llamada trivial WASM tardó alrededor de 1,2 ms. La consulta nativa fresca sobre un grafo vacío fue incluso más barata que la caché nativa, lo que demuestra que cachear no siempre ayuda.
 
 ### `Game.tick` (dos ticks, 12 ejecuciones por fixture)
 
@@ -41,9 +41,9 @@ Mediana en milisegundos. Los brazos son comparables y los hashes coinciden, pero
 
 | Fixture | A | B | C | Consultas `routeActor` | Hits JS B / hits nativos C (1.ª ejecución) |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Sabana d13 | 15,4 | 8,9 | 9,9 | 31 | 19 / 0 |
-| Manglares d10 | 1752,6 | 1738,4 | 1681,3 | 469 | 437 / 1350 |
-| Desierto d15 | 974,3 | 749,0 | 783,7 | 4875 | 4009 / 11647 |
+| Sabana d13 | 13,6 | 8,0 | 11,2 | 31 | 19 / 0 |
+| Manglares d10 | 1731,3 | 1628,1 | 1644,8 | 469 | 437 / 1350 |
+| Desierto d15 | 966,0 | 714,8 | 790,0 | 4875 | 4009 / 11647 |
 
 Los contadores nativos incluyen llamadas internas a conectividad y pueden superar `routeActor`. En Manglares, el coste total del tick domina tanto que la diferencia B/C es pequeña y variable. La memoria lineal fue 4 MiB salvo Manglares (aprox. 12,8 MiB); el incremento de heap JS por ejecución se mezcla con GC y no ofrece una comparación fiable. B retuvo hasta 866 entradas JS en Desierto; C hasta 432 entradas nativas. No se observó una ventaja sostenida de C que justifique la refactorización global.
 
@@ -85,3 +85,5 @@ El benchmark nativo es un prototipo separado. La prueba completa del juego está
 La build web terminó correctamente. Las 33 pruebas focales iniciales pasaron y se conserva su salida en [`focused-all.tap`](focused-all.tap). Tras ampliar la invalidación de salidas animales, se ejecutaron 49 pruebas focales con 49 aprobadas. La suite jugable usada por CI pasó 186/186 casos ([`playable-tests.tap`](playable-tests.tap)). La prueba diferencial con la partida congelada también pasó.
 
 La suite completa del repositorio terminó con **4294 aprobadas y 46 fallidas**. Se conserva la salida íntegra comprimida en [`test-suite-diagnostics.zip`](test-suite-diagnostics.zip) y un índice de fallas en [`test-suite-failures.txt`](test-suite-failures.txt). Las fallas observadas se concentran en expectativas de balance/victoria, coste fijo de poblados, desbloqueos/cooldowns y alcance antiguos de las magias, tutorial, interfaz de poderes y catálogo de audio. Ninguna prueba focal de las invalidaciones o rutas cambiadas falló. Esas áreas no fueron modificadas en esta rama; no se declara verde la suite completa ni se atribuye causalidad sin una comparación integral con `main`.
+
+Tras sincronizar con `main` en `8e32ce0d`, se repitieron la comparación diferencial contra consultas nativas frescas, las pruebas de puertas y reparaciones incorporadas por `main`, 105 pruebas focales, 187/187 jugables y la build web: todas pasaron. Los cuatro fixtures AB/BA mantuvieron el mismo hash de estado entre A/B/C. En los tres que realmente emitieron rutas, B (caché JS) conservó una mediana de `Game.tick` inferior a C (caché WASM): 8,0 frente a 11,2 ms en Sabana; 1628,1 frente a 1644,8 ms en Manglares; 714,8 frente a 790,0 ms en Desierto. Gran Cañón no emitió rutas en esos dos ticks y no informa esa comparación. La conclusión experimental sigue siendo conservar la caché JS con invalidación por revisiones nativas, pendiente de revisión humana; no se ha fusionado en `main`.
