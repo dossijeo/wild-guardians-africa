@@ -42,3 +42,34 @@ test('opt-in raid reports confirmed leases and committed damage frames once',()=
     'every committed clip reaches exactly one logical damage frame');
   assert(counts.register>=counts.start);
 });
+
+test('a lost native travel path waits for an event or bounded recovery retry',()=>{
+  const {s,nav}=fixture('mono');
+  let selections=0;
+  nav.planningObserver=event=>{
+    if(event.kind==='attackSelection')selections++;
+  };
+  nav.intentTaskPlanner={
+    registerAttackIntent:()=>true,
+    cancelAttackIntent:()=>true
+  };
+  assert(spawnRaid(s,{group:['warthog']},nav));
+  let animal=s.raid.animals[0];
+  for(let tick=0;tick<100&&!animal.targetId;tick++){
+    s.elapsed+=.1;updateRaid(s,.1,nav);
+    animal=s.raid.animals[0];
+  }
+  assert(animal.targetId&&animal.path?.length,
+    'the fixture needs a confirmed route before simulating its loss');
+  animal.path=null;
+  s.elapsed+=.1;updateRaid(s,.1,nav);
+  animal=s.raid.animals[0];
+  assert.equal(animal.status,'waiting');
+  assert.equal(animal.targetId,null);
+  const before=selections;
+  for(let tick=0;tick<20;tick++){
+    s.elapsed+=.1;updateRaid(s,.1,nav);
+  }
+  assert.equal(selections,before,
+    'ordinary ticks cannot restart a failed target search');
+});

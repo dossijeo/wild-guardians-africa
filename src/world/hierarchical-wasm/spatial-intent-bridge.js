@@ -792,6 +792,8 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     // whose replacement or waiting state will be delivered below.
     for(const worker of state.workers)if(worker.taskId&&worker.path&&
       worker.status==='walking')worker.pathVersion=version;
+    for(const animal of state.raid?.animals??[])if(animal.targetId&&
+      animal.path&&animal.status!=='attacking')animal.pathVersion=version;
     return invalidated;
   };
   const requestReroute=(state,worker)=>{

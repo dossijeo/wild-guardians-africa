@@ -641,6 +641,14 @@ export function updateRaid(s,dt,nav) {
       a.status='walking';a.path=null;
       if(reconsider>0||!target||target.alive===false||
         target.status&&target.status!=='intact')release(s,a,nav);
+      else if(nav.intentTaskPlanner&&a.approach){
+        if(dist(a,a.approach)>.1)release(s,a,nav);
+        else {
+          // The next strike is a new action at the same validated position.
+          // Keep an empty movement path instead of asking for another route.
+          a.path=[];a.destinationId=a.approach.id;a.pathVersion=nav.version;
+        }
+      }
       // Finish the committed animation before spending another hit or retreating.
       continue;
     }
@@ -684,7 +692,11 @@ export function updateRaid(s,dt,nav) {
     // lease or run the old per-crop approach search.
     if(nav.intentTaskPlanner?.attackRoutePending?.(a.id))continue;
     const shield=spellAt(s,'shield',target);
-    if(!a.approach||a.approachShieldId!==(shield?.id??null)||!reservedApproachClear(s,a,a.approach)||!actorSegmentClear(a.approach,a.approach,a,actorBlockers(s,a,false))) {
+    const approachChanged=!a.approach||a.approachShieldId!==(shield?.id??null);
+    const legacyApproachBlocked=!nav.intentTaskPlanner&&a.approach&&
+      (!reservedApproachClear(s,a,a.approach)||
+       !actorSegmentClear(a.approach,a.approach,a,actorBlockers(s,a,false)));
+    if(approachChanged||legacyApproachBlocked) {
       const approach=reachableApproach(a,target,nav,shield);
       if(!approach){emit(s,'AnimalRouteUnavailable',{targetId:a.id,species:a.species,phase:'approach'});release(s,a,nav);a.status='walking';continue;}
       a.approach=approach.point;a.approachShieldId=shield?.id??null;
@@ -692,7 +704,11 @@ export function updateRaid(s,dt,nav) {
       nav.intentTaskPlanner?.registerAttackIntent(s,a,target,a.path??[]);
     }
     if(a.status!=='attacking') {
-      if(walkTo(s,a,a.approach,dt,nav,{speed:a.status==='entering'?3.8:1.5,worker:false})) {
+      if(walkTo(s,a,a.approach,dt,nav,{speed:a.status==='entering'?3.8:1.5,
+        worker:false,externallyPlanned:!!nav.intentTaskPlanner})) {
+        if(nav.intentTaskPlanner&&(!reservedApproachClear(s,a,a.approach)||
+          !actorSegmentClear(a.approach,a.approach,a,actorBlockers(s,a,false))))
+          continue;
         a.heading=Math.atan2(target.x-a.x,target.z-a.z);
         // A previous committed strike releases its native lease at the damage
         // frame. Renew it only when this next strike actually begins.
@@ -701,7 +717,16 @@ export function updateRaid(s,dt,nav) {
         nav.intentTaskPlanner?.markAttackActive(a.id);
         const roll=nextRandom(s);a.animation=roll<.45?'Right_Hand_Sword_Slash':roll<.75?'Charged_Upward_Slash':roll<.9?'Weapon_Combo':'Weapon_Combo_2';
         a.attackDuration=ANIMAL_ACTIONS.animals[a.species].clips[a.animation].duration;a.attackRemaining=a.attackDuration;
-      } else if(!a.path){emit(s,'AnimalRouteUnavailable',{targetId:a.id,species:a.species,phase:'travel'});release(s,a,nav);a.status='walking';}
+      } else if(!a.path){
+        emit(s,'AnimalRouteUnavailable',{targetId:a.id,species:a.species,phase:'travel'});
+        release(s,a,nav);
+        if(nav.intentTaskPlanner){
+          enqueueWait(s,a);
+          a.raidWait.epoch=waitEpoch(s,nav,a);
+          a.raidWait.retryAt=s.elapsed+8;
+        }
+        else a.status='walking';
+      }
       else if(dist(a,s.structures.find(operational)??target)<25)a.status='walking';
     }
   }

@@ -352,7 +352,7 @@ for(const count of [1,5])test(`${count} native raiders attack an accessible wall
     assert.notEqual(spawnRaid(state,{at:310,group:Array(count).fill('warthog'),done:false,
       introductory:false},nav),false);
     assert.equal(state.raid.animals.length,count);
-    let stopWorld,stopTasks,nativeCropStatus=[];
+    let stopWorld,stopTasks,nativeCropStatus=[],routeRefreshDuringAttack=0;
     if(count===1){
       const planner=createEventDrivenTaskPlanner(session);
       planner.resetFromState(state);
@@ -363,6 +363,10 @@ for(const count of [1,5])test(`${count} native raiders attack an accessible wall
         nativeCropStatus.push(result?.status??'fallback');return result;
       };
       nav.intentTaskPlanner=planner;
+      nav.planningObserver=event=>{
+        if(event.kind==='routeRefresh'&&state.raid?.animals.some(animal=>
+          animal.id===event.actorId&&animal.targetId))routeRefreshDuringAttack++;
+      };
     }
     const animals=[...state.raid.animals],initialHits=animals.map(animal=>animal.hitsRemaining);
     for(let i=0;i<2000&&state.raid;i++)Game.tick(state,.25,nav);
@@ -378,6 +382,8 @@ for(const count of [1,5])test(`${count} native raiders attack an accessible wall
       assert(nativeCropStatus.length>0);
       assert(nativeCropStatus.every(status=>status!=='found'),
         'a closed crop enclosure must not produce a native crop route');
+      assert.equal(routeRefreshDuringAttack,0,
+        'an active wall intention must not invoke the legacy route planner');
       stopTasks();stopWorld();delete nav.intentTaskPlanner;
     }
   }finally{session.dispose();}
