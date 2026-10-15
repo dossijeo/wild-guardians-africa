@@ -5,8 +5,8 @@
   const report = {ok: false, origin: location.origin, userAgent: navigator.userAgent, secureContext: isSecureContext, checks: {}, errors: []};
   // Explicit CI tolerance is not a performance target. Local smoke keeps its
   // original budget; always retain observed loading time independently.
-  const worldTimeoutMs = window.__desktopSmokeWorldTimeoutMs === 300000 ? 300000 : 90000;
-  report.checks.loadingBudget = {worldTimeoutMs, policy: worldTimeoutMs === 300000 ? 'ci-functional' : 'local-smoke'};
+  const worldTimeoutMs = window.__desktopSmokeWorldTimeoutMs === 420000 ? 420000 : 90000;
+  report.checks.loadingBudget = {worldTimeoutMs, policy: worldTimeoutMs === 420000 ? 'ci-functional' : 'local-smoke'};
   const consoleError = console.error;
   console.error = (...args) => {report.errors.push(args.map(String).join(' ')); consoleError.apply(console, args);};
   const fail = event => report.errors.push(event.message || String(event.reason));

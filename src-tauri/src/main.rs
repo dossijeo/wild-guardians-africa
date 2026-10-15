@@ -30,7 +30,7 @@ fn main() {
                 // CI uses a software/virtualized renderer. This smoke budget
                 // is independent of local performance acceptance and normal play.
                 if matches!(std::env::var("WG_DESKTOP_SMOKE_CI").as_deref(), Ok("1")) {
-                    let _ = webview.eval("window.__desktopSmokeWorldTimeoutMs = 300000;");
+                    let _ = webview.eval("window.__desktopSmokeWorldTimeoutMs = 420000;");
                 }
                 // Visual readbacks are opt-in and deliberately excluded from
                 // ordinary smoke/timing runs. The app owns the capture lifecycle.

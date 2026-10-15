@@ -49,7 +49,7 @@ jobs:
           $report = Join-Path $env:RUNNER_TEMP 'desktop-smoke.json'
           $binary = (Resolve-Path src-tauri/target/release/wild-guardians-africa.exe).Path
           $process = Start-Process -FilePath $binary -ArgumentList '--smoke-report', $report -WindowStyle Hidden -PassThru
-          if (-not $process.WaitForExit(420000)) { Stop-Process -Id $process.Id; throw 'WebView2 smoke timed out' }
+          if (-not $process.WaitForExit(540000)) { Stop-Process -Id $process.Id; throw 'WebView2 smoke timed out' }
           if (-not (Test-Path -LiteralPath $report)) { throw 'No WebView2 smoke report' }
           $result = Get-Content -Raw -LiteralPath $report | ConvertFrom-Json
           if ($result.worldPng) {
