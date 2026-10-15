@@ -72,6 +72,13 @@ test('incremental native task index plans, discards and commits one global assig
    'changing the movement profile invalidates provisional worker routes');
   session.actorRegions(origin,{worker:true});
   assert.deepEqual(results(),first,'worker profile replans deterministically');
+  const barriers=session.core.applyBarrierChanges([],[{
+   x:(origin.x+second.x)/2,z:origin.z,halfX:.4,halfZ:.4,passMask:0}]);
+  try{
+   assert.equal(wasm.nav_intent_commit(),0,
+    'a physical topology change invalidates provisional routes');
+  }finally{session.core.applyBarrierChanges(barriers,[]);}
+  assert.deepEqual(results(),first,'removing the temporary barrier restores the route');
   assert.equal(write(3,[row(0,2,11)]),0,'skipped sequence is rejected');
   assert.equal(write(2,[row(0,2,11)]),1);
   assert.equal(wasm.nav_intent_commit(),0,'a target removal invalidates provisional leases');
