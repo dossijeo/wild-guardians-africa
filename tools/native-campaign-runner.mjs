@@ -16,7 +16,6 @@ import {mkdirSync,writeFileSync} from 'node:fs';
 import {intensiveRunProvenance} from './intensive-run-provenance.mjs';
 import {createFarmDefensePolicy} from './farm-defense-policy.mjs';
 import {createNativeExpandingDefensePolicy} from './native-expanding-defense-policy.mjs';
-import {createNativeCertifiedEnclosurePolicy} from './native-certified-enclosure-policy.mjs';
 import {createNativeCampaignEvidence} from './native-campaign-evidence.mjs';
 import {createNativeRaidCampaignEvidence} from './native-raid-campaign-evidence.mjs';
 import {NativeCampaignEntryDriver} from './native-campaign-entry-driver.mjs';
@@ -92,9 +91,7 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
   spatialEvents=[];
  };
  const worker=PROFILES.find(p=>p.id===profile);if(!worker)throw new Error('Unknown worker profile');
- if(!['legacy','expanding','certified'].includes(defensePolicy))throw Error('Unknown defense policy');
- if(defensePolicy==='certified'&&(!advice||reloadRaids))
-  throw Error('Certified defense requires one continuous Wild Engine advice session');
+ if(!['legacy','expanding'].includes(defensePolicy))throw Error('Unknown defense policy');
  let decisionPhases=null;
  const measure=(kind,ms)=>{
   if(!decisionPhases)return;
@@ -106,11 +103,7 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
   const start=performance.now();
   try{return fn();}finally{measure(kind,performance.now()-start);}
  };
- const defense=defend?(defensePolicy==='certified'?
-  createNativeCertifiedEnclosurePolicy(s,nav,advice,{measure:decisionProfile?measure:null}):
-  defensePolicy==='expanding'?createNativeExpandingDefensePolicy({repairWalls:policy.repair,reserveMode:'none',measure:decisionProfile?measure:null,preparedQuotes:preparedWallQuotes,spatialAdvice:advice}):createFarmDefensePolicy()):null;
- let stopDefenseEvents=defense?.onGameEvent?
-  Game.observeGameEvents(s,defense.onGameEvent):null;
+ const defense=defend?(defensePolicy==='expanding'?createNativeExpandingDefensePolicy({repairWalls:policy.repair,reserveMode:'none',measure:decisionProfile?measure:null,preparedQuotes:preparedWallQuotes,spatialAdvice:advice}):createFarmDefensePolicy()):null;
  const protectionEvents=[];
  const stopProtectionEvents=intentPlanner&&advice?
   intentPlanner.observeCropProtection(change=>{
@@ -276,7 +269,7 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
    collect();evidence?.observe(s);raidEvidence.observe(s);
    onTick?.(s,nav,{decisionMs:decisionStepMs,gameTickMs:tickStepMs,dt});
    await driver.advancePresentation(s);
-   if(reloadRaids&&s.raid&&!savedRaids.has(s.raid.id)){savedRaids.add(s.raid.id);stopSpatialEvents?.();stopDefenseEvents?.();s=deserialize(serialize(s));nav.setState(s);advice?.resetFromState(s);spatialEvents=[];stopSpatialEvents=advice?Game.observeGameEvents(s,event=>spatialEvents.push(event)):null;stopDefenseEvents=defense?.onGameEvent?Game.observeGameEvents(s,defense.onGameEvent):null;reloads++;}
+   if(reloadRaids&&s.raid&&!savedRaids.has(s.raid.id)){savedRaids.add(s.raid.id);stopSpatialEvents?.();s=deserialize(serialize(s));nav.setState(s);advice?.resetFromState(s);spatialEvents=[];stopSpatialEvents=advice?Game.observeGameEvents(s,event=>spatialEvents.push(event)):null;reloads++;}
    if(s.elapsed-start>2400)throw new Error(`Unfinished real incursion on day ${day}: ${JSON.stringify(s.raid)}`);
   }
   const finance=campaignFinanceDelta(financeStart,s);
@@ -296,5 +289,5 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
  const idleRuns=daily.map(r=>r.longestIdle).sort((a,b)=>a-b),unoccupied=daily.reduce((n,r)=>n+r.unoccupiedSeconds,0),daylight=daily.reduce((n,r)=>n+r.daylightSeconds,0);
  const activity={daylightSeconds:daylight,unoccupiedSeconds:unoccupied,unoccupiedFraction:daylight?unoccupied/daylight:null,longestIdle:Math.max(...idleRuns),p90LongestIdle:idleRuns[Math.ceil(idleRuns.length*.9)-1]};
  return {protocol,strategy,labourPolicy,labourHistory,labourReasons,raidEvidence:raidEvidence.report(s),entryTransport:driver.report(),peaceAfter100:true,expansion:expansion?.report()??null,plotSearch:plotSearch.report(),spatialSite:advice?spatialSite:null,spatialAdviceInitMs,spatialSync:advice?spatialSync:null,protectionEvents,nativeIntent:intentPlanner?.metrics(s.elapsed)??null,...(evidence?{nativeEvidence:evidence.report(s)}:{}),biome:s.biome,culture:s.culture,seed:s.seed,policy:{profile,mixed,middayHiring,plantsPerWorker,defend,cashPolicy:policy.cashPolicy,reserveMaintenance,burstPlanting,cameraEntry,defensePolicy},defense:defense?.report(s)??null,additionalHiring,result:s.result,completedNights:s.completedNights,money:numberOf(s.ledger.balance),maximumLiving,plots:plots.length,reloads,counts,activity,daily,state:s,nav};
- } catch(error){let receipts;try{receipts=partialEvidence();}catch(e){receipts={evidenceError:e.message};}error.nativeCampaignPartial={strategy,seed:s.seed,day:s.day,time:s.time,result:s.result,state:serialize(s),entryTransport:driver.report(),receipts};throw error;} finally {stopProtectionEvents?.();stopDefenseEvents?.();stopIntentTasks?.();stopIntentWorld?.();if(intentPlanner)delete nav.intentTaskPlanner;stopSpatialEvents?.();await driver.dispose();await opening.dispose?.();}
+ } catch(error){let receipts;try{receipts=partialEvidence();}catch(e){receipts={evidenceError:e.message};}error.nativeCampaignPartial={strategy,seed:s.seed,day:s.day,time:s.time,result:s.result,state:serialize(s),entryTransport:driver.report(),receipts};throw error;} finally {stopProtectionEvents?.();stopIntentTasks?.();stopIntentWorld?.();if(intentPlanner)delete nav.intentTaskPlanner;stopSpatialEvents?.();await driver.dispose();await opening.dispose?.();}
 }
