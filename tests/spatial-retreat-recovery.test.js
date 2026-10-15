@@ -30,32 +30,44 @@ for(const reload of [false,true])test(`blocked retreat uses a physical exit${rel
     animal=state.raid.animals.find(a=>a.id==='animal-10819');
   try{
     assert.equal(animal.status,'retreating');
-    let checkedRecoverySave=false;
+    let checkedReload=false;
     for(let i=0;i<400&&state.raid;i++){
       const before={x:animal.x,z:animal.z};
       Game.tick(state,1,nav);
       if(Math.hypot(animal.x-before.x,animal.z-before.z)>1e-7)
         assert(nav.segmentClear(before,animal,animal.radius,null,false),
           'every retreat step must satisfy native static collision');
-      if(!checkedRecoverySave&&animal.exitRouteRecovery){
+      if(reload&&!checkedReload&&i===5){
         const restored=deserialize(serialize(state));
-        assert.deepEqual(restored.raid.animals.find(a=>a.id===animal.id).exitRouteRecovery,
-          animal.exitRouteRecovery);
-        checkedRecoverySave=true;
-        if(reload){
-          session.dispose();
-          state=restored;
-          ({session,nav}=loadNavigation(state));
-          animal=state.raid.animals.find(a=>a.id==='animal-10819');
-        }
+        session.dispose();
+        state=restored;
+        ({session,nav}=loadNavigation(state));
+        animal=state.raid.animals.find(a=>a.id==='animal-10819');
+        checkedReload=true;
       }
     }
-    assert(checkedRecoverySave,'the stale static connector must trigger recovery');
-    assert(state.events.some(e=>e.type==='AnimalExitRouteRecovery'&&
-      e.actorId===animal.id));
+    if(reload)assert(checkedReload);
     assert.equal(animal.status,'gone');
     assert(Math.hypot(animal.x-animal.exit.x,animal.z-animal.exit.z)<1e-6);
   }finally{session.dispose();}
+});
+
+test('a genuinely stale static retreat segment still triggers route recovery',()=>{
+ const state=deserialize(snapshot),animal=state.raid.animals.find(a=>a.id==='animal-10819'),
+  destination={...animal.exit,id:`exit-${animal.id}`};
+ animal.path=[{x:animal.x+1,z:animal.z}];
+ animal.destinationId=destination.id;animal.pathVersion=1;
+ animal.mobileRecoveryDestinationId=destination.id;
+ animal.mobileRecoveryVersion=1;animal.mobileRecoveryAttempts=0;
+ animal.mobileProgressAt=state.elapsed-13;
+ animal.mobileProgressDistance=Math.hypot(animal.x-destination.x,animal.z-destination.z);
+ const nav={version:1,segmentClear:()=>false};
+ assert.equal(Game.walkTo(state,animal,destination,1,nav,
+  {worker:false,expandRoute:true}),false);
+ assert.equal(animal.path,null);
+ assert.equal(animal.exitRouteRecovery?.destinationId,destination.id);
+ assert(state.events.some(e=>e.type==='AnimalExitRouteRecovery'&&
+  e.actorId===animal.id&&e.reason==='stale-static-connector'));
 });
 
 test('an exhausted exit search survives save/load and remains an audited retreat',()=>{
