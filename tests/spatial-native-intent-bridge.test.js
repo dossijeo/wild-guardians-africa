@@ -17,6 +17,52 @@ import {enqueue,notifyWorkerPlanningChange,replaceTasks} from '../src/simulation
 const binary=process.env.WILD_ENGINE_NATIVE_ROUTE_WASM;
 const module=binary?new WebAssembly.Module(readFileSync(binary)):null;
 
+test('loading an active raid restores distinct routes and reservations for eight animals',
+ {skip:!module&&'Build and select the experimental WASM first'},()=>{
+ const game=deserialize(gunzipSync(readFileSync(new URL(
+  './fixtures/sabana712-d6-native-multi-reservation.json.gz',import.meta.url))).toString());
+ const loaded=new Map(),session=createSpatialGameSession(module,game,{
+  loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+ try{
+  for(let z=-1;z<=2;z++)for(let x=1;x<=3;x++){
+   if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+   loaded.set(`${x},${z}`,session.core.chunkPayload());
+  }
+  const planner=createEventDrivenTaskPlanner(session);
+  const restored=planner.resetFromState(game);
+  assert.equal(restored.restoredAnimalRoutes,8);
+  assert.equal(restored.invalidSavedAnimalRoutes,0);
+  const nav=createSpatialNavigationMovement(session,game);
+  const stopTasks=planner.observeTasks(game),stopWorld=planner.observeWorld(game);
+  nav.intentTaskPlanner=planner;
+  try{
+   const actors=game.raid.animals.filter(animal=>animal.targetId);
+   assert.equal(actors.length,8);
+   const initial=new Map(actors.map(animal=>[animal.id,{x:animal.x,z:animal.z,
+    targetId:animal.targetId,reservation:animal.reservation,
+    hitsRemaining:animal.hitsRemaining}]));
+   assert.equal(new Set(actors.map(animal=>animal.reservation)).size,8);
+   for(let step=0;step<5;step++){
+    tick(game,.1,nav);
+    nav.serviceRaidConnectivityDemand?.();
+   }
+   for(const animal of actors){
+    const before=initial.get(animal.id);
+    assert.equal(animal.targetId,before.targetId);
+    assert.equal(animal.reservation,before.reservation);
+    assert.equal(game.raid.reservations[before.reservation],animal.id);
+    assert.equal(animal.hitsRemaining,before.hitsRemaining);
+    assert.equal(planner.attackRoutePending(animal.id),false);
+   }
+   assert(actors.some(animal=>{
+    const before=initial.get(animal.id);
+    return Math.hypot(animal.x-before.x,animal.z-before.z)>.1;
+   }),'at least one restored route advances physically');
+   assert.doesNotThrow(()=>serialize(game));
+  }finally{stopTasks();stopWorld();}
+ }finally{session.dispose();}
+});
+
 test('a saved native animal route resumes movement with its original lease',
  {skip:!module&&'Build and select the experimental WASM first'},()=>{
  const game=deserialize(gunzipSync(readFileSync(new URL(
