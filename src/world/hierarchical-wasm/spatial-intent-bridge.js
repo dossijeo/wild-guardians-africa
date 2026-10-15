@@ -315,7 +315,7 @@ export function createSpatialIntentBridge(session){
     const revisions=[];
     for(const [species,profile] of Object.entries(ANIMAL_SPATIAL_PROFILES)){
       session.actorSectorRevision({worker:false,species});
-      const count=wasm.nav_intent_crop_groups();
+      const count=wasm.nav_intent_crop_groups(profile.radius);
       if(count<0)throw Error('Native crop group query failed');
       const rows=Array.from(new Float64Array(wasm.memory.buffer,
         wasm.nav_intent_crop_groups_ptr(),count*12));

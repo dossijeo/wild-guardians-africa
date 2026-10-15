@@ -215,3 +215,42 @@ test('missing sectors cannot certify a proposed perimeter',
   assert.notEqual(plan.status,'protected');
  }finally{session.dispose();}
 });
+
+test('a center-adjacent crop uses valid animal attack sites to certify its enclosure',
+ {skip:!module&&'Build and select the spatial-services WASM first'},()=>{
+ const game=deserialize(gunzipSync(readFileSync(new URL(
+  './fixtures/sabana712-d2-enclosure-connectors.json.gz',import.meta.url))).toString());
+ const loaded=new Map(),session=createSpatialGameSession(module,game,{
+  loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+ try{
+  for(let z=-1;z<=1;z++)for(let x=1;x<=3;x++){
+   if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+   loaded.set(`${x},${z}`,session.core.chunkPayload());
+  }
+  const nav=createSpatialNavigationMovement(session,game);
+  const bridge=createSpatialIntentBridge(session);bridge.resetFromState(game);
+  const group=bridge.getUnprotectedCropGroups()[0];
+  assert.equal(group.id,'crop:plant-106');
+  assert.equal(group.cropIds.length,68);
+  assert.equal(group.protection,'unprotected');
+  const b=group.bounds,margin=2.5;
+  const points=[[b.minX-margin,b.minZ-margin],[b.maxX+margin,b.minZ-margin],
+   [b.maxX+margin,b.maxZ+margin],[b.minX-margin,b.maxZ+margin],
+   [b.minX-margin,b.minZ-margin]];
+  const before=serialize(game);
+  const quote=Game.quoteWallChain(game,'zarzas',points,nav,
+   {smooth:false,snap:false});
+  assert.equal(quote.expectedSlots.length,36);
+  assert.equal(quote.pieces.length,35);
+  assert.equal(quote.blockedPieces.length,1,
+   'one physical obstacle substitutes for a wall module');
+  const after=nav.withWallPreview(quote.previewPieces,quote.suppressed,()=>
+   bridge.getUnprotectedCropGroups({includeProtected:true})
+    .find(item=>item.id===group.id),true);
+  assert.equal(after.protection,'protected',JSON.stringify(after.profiles));
+  assert(Object.values(after.profiles).every(status=>status==='protected'));
+  assert.equal(bridge.getUnprotectedCropGroups()[0].protection,'unprotected',
+   'the speculative barrier must not certify the live world');
+  assert.equal(serialize(game),before);
+ }finally{session.dispose();}
+});

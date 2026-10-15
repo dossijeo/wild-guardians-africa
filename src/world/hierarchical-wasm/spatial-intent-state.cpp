@@ -395,7 +395,7 @@ void rebuildCropGroups(IntentState& s){
   });
   s.cropGroupsDirty=false;
 }
-int cropProtection(const IntentState& s,const CropGroup& group){
+int cropProtection(const IntentState& s,const CropGroup& group,float radius){
   bool open=false,unknown=false;
   for(uint64_t id:group.crops){
     const Target& crop=s.targets.at(id);
@@ -409,6 +409,26 @@ int cropProtection(const IntentState& s,const CropGroup& group){
       if(region<0)continue;
       found=true;
       if(lazy_enclosure(x,z)!=1)open=true;
+    }
+    if(!found){
+      // A crop beside a center may have no clear floor/ceil connector, while
+      // the animal can still attack it from a nearby interaction site. Use
+      // the same twelve local sites as attackSitesFor before calling the
+      // whole group unknown. This work runs only for unresolved crops when
+      // the selected profile's topology changes, never per animal or tick.
+      constexpr int directions=12;
+      for(int sample=0;sample<directions;sample++){
+        const double angle=2*pi*sample/directions;
+        const float px=float(crop.x+std::sin(angle)*(.6+radius));
+        const float pz=float(crop.z+std::cos(angle)*(.6+radius));
+        const int x=int(std::round(px)),z=int(std::round(pz));
+        if(!spatial_local_clear(px,pz,float(x),float(z)))continue;
+        const int region=lazy_weak_region(x,z);
+        if(region==-1){unknown=true;continue;}
+        if(region<0)continue;
+        found=true;
+        if(lazy_enclosure(x,z)!=1)open=true;
+      }
     }
     if(!found)unknown=true;
   }
@@ -752,7 +772,7 @@ int nav_intent_damaged_structures(int kind){
 const double* nav_intent_damaged_ptr(){return state().damagedResults.data();}
 // The selected Wild Engine animal profile owns the protection verdict. Clients
 // combine verdicts across relevant species; -1 is never certified protected.
-int nav_intent_crop_groups(){
+int nav_intent_crop_groups(float radius){
   IntentState& s=state();rebuildCropGroups(s);
   s.cropGroupRows.clear();s.cropGroupMembers.clear();
   s.cropGroupRows.reserve(s.cropGroups.size()*12);
@@ -761,7 +781,7 @@ int nav_intent_crop_groups(){
   for(CropGroup& group:s.cropGroups){
     auto status=group.protection.find(profile);
     if(status==group.protection.end()||status->second.first!=revision){
-      const int result=cropProtection(s,group);
+      const int result=cropProtection(s,group,radius);
       status=group.protection.insert_or_assign(profile,std::make_pair(revision,result)).first;
     }
     const size_t offset=s.cropGroupMembers.size();
