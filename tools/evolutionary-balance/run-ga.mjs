@@ -8,6 +8,7 @@ import {simulateNativeCampaign} from '../native-campaign-runner.mjs';
 import {createSpatialCampaignOpening} from '../experiments/spatial-campaign-opening.mjs';
 import {DEFAULT_GENES,GENE_SCHEMA_VERSION,validateGenes} from './policy-genes.mjs';
 import {breed,genomeId,randomGenome,scoreCampaign,seededRandom} from './ga.mjs';
+import {scorePostIntro} from './post-intro-fitness.mjs';
 import {matchedDefenseControl} from './matched-defense-controls.mjs';
 
 const DEFAULT_CONFIG={rngSeed:712,generations:2,population:4,days:7,
@@ -18,6 +19,16 @@ export function validateConfig(raw){
  const c={...DEFAULT_CONFIG,...raw};
  for(const key of ['rngSeed','generations','population','days'])if(!Number.isSafeInteger(c[key])||c[key]<1)throw Error(`Invalid ${key}`);
  if(c.days>100||c.population<2||c.population>100||c.generations>100)throw Error('Unsafe GA budget');
+ c.fitnessVersion??='terminal-defeat-v2';
+ if(c.days>=14){
+  if(c.fitnessVersion!=='post-intro-v1')
+   throw Error('Campaigns of 14+ nights require explicit post-intro-v1 fitness');
+  if(!Number.isFinite(c.minimumTerminalDeliveryPerDay)||
+     c.minimumTerminalDeliveryPerDay<=0||
+     typeof c.deliveryFloorSource!=='string'||!c.deliveryFloorSource.trim())
+   throw Error('Post-intro search requires a positive frozen delivery floor and its source');
+ }else if(c.fitnessVersion!=='terminal-defeat-v2')
+  throw Error('Short searches require terminal-defeat-v2 fitness');
  for(const key of ['train','holdout']){
   if(!Array.isArray(c[key])||!c[key].length)throw Error(`Empty ${key} cohort`);
   for(const row of c[key])if(!row||typeof row.biome!=='string'||!Number.isSafeInteger(row.seed)||row.seed<0)throw Error(`Invalid ${key} scenario`);
@@ -41,6 +52,13 @@ export function validateConfig(raw){
    throw Error('Duplicate initial genomes');
  }
  return c;
+}
+export function scoreSearchReport(report,config){
+ if(config.fitnessVersion==='post-intro-v1')
+  return scorePostIntro(report,config.days,
+   {minimumTerminalDeliveryPerDay:config.minimumTerminalDeliveryPerDay});
+ if(config.fitnessVersion==='terminal-defeat-v2')return scoreCampaign(report,config.days);
+ throw Error('Unknown frozen fitness version');
 }
 export async function evaluateOne({biome,seed},days,strategy,genes,onDay,detailedEvidence=false,onTickObserver){
  const entryDriverFactory=nav=>({
@@ -85,11 +103,13 @@ export async function evaluateOne({biome,seed},days,strategy,genes,onDay,detaile
 }
 export async function runSearch(config){
  const c=validateConfig(config),out=resolve(c.output),random=seededRandom(c.rngSeed);
+ const score=report=>scoreSearchReport(report,c);
  mkdirSync(out,{recursive:true});
  const sourceHash=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
  const moduleHashes={};
  for(const path of ['tools/native-campaign-runner.mjs','tools/native-expanding-defense-policy.mjs',
   'tools/evolutionary-balance/run-ga.mjs','tools/evolutionary-balance/ga.mjs',
+  'tools/evolutionary-balance/post-intro-fitness.mjs',
   'tools/evolutionary-balance/policy-genes.mjs'])
   moduleHashes[path]=createHash('sha256').update(readFileSync(path)).digest('hex');
  const worktreeDiffHash=createHash('sha256').update(execFileSync('git',['diff','--binary'])).digest('hex');
@@ -137,7 +157,7 @@ export async function runSearch(config){
     reports.push(report);
     if(report.name==='CampaignCostStop')break;
    }
-   const scores=reports.map(r=>scoreCampaign(r,c.days));
+   const scores=reports.map(score);
    ranked.push({id:genomeId(genes),genes,score:Math.min(...scores.map(x=>x.score)),meanScore:scores.reduce((n,x)=>n+x.score,0)/scores.length,
     cases:reports.map((r,i)=>({biome:r.biome,seed:r.seed,...scores[i]}))});
   }
@@ -172,7 +192,7 @@ export async function runSearch(config){
  for(const finalist of finalists)for(const scenario of c.holdout){
   const report=await one(scenario,finalist.strategy,finalist.genes);
   holdout.push({strategy:finalist.strategy,id:finalist.genes?genomeId(finalist.genes):finalist.strategy,
-   biome:scenario.biome,seed:scenario.seed,...scoreCampaign(report,c.days)});
+   biome:scenario.biome,seed:scenario.seed,...score(report)});
  }
  const result={stamp,pilotLeader,holdout,
   limits:'Short-horizon pilot ranking only; cash, production and defenses can trade off. No 100-night victory, competitive strategy or balance approval.'};

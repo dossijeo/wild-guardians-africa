@@ -1,5 +1,22 @@
 # Búsqueda acotada de gestión con balance fijo
 
+## Cohorte de 14 noches iniciada tras sincronizar con `main`
+
+`protocol-14-main-sync.json` fijó la ejecución nativa iniciada en el commit
+`2fde4049`, con dos semillas de entrenamiento, una reserva de otro bioma y un
+corte cooperativo de coste por campaña. **Su versión del runner aún ordenaba
+genomas con `terminal-defeat-v2`**, diseñado para el cribado corto. Los
+informes físicos de cada campaña se conservarán como evidencia, pero su
+ranking no selecciona una política competente de 14 noches. Esta limitación
+se detectó durante la primera campaña, antes de interpretar resultados.
+
+Las búsquedas posteriores de al menos 14 noches requieren ahora
+`post-intro-v1` y un umbral de entregas terminales fijado previamente con
+controles nativos de entrenamiento y su fuente documentada. Esto impide que
+las cinco noches introductorias o una explotación casi inactiva determinen
+silenciosamente el ganador. No se alteró la campaña ya iniciada, sus genes ni
+el balance de producción; su hash de fuente distingue ambos evaluadores.
+
 Esta cohorte usa Wild Engine y el balance de producción sin alterar, después de
 la mejora de navegación de PR #37. Código ejecutado: `7f358aad97287b40e300026306d26f05cc4e0c29`;
 el registro de siete noches guarda además SHA-256 de los módulos y del diff en

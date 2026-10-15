@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {DEFAULT_GENES,validateGenes,preferredAgriculturalPower} from '../tools/evolutionary-balance/policy-genes.mjs';
 import {seededRandom,randomGenome,breed,scoreCampaign,genomeId} from '../tools/evolutionary-balance/ga.mjs';
-import {validateConfig,evaluateOne} from '../tools/evolutionary-balance/run-ga.mjs';
+import {validateConfig,evaluateOne,scoreSearchReport} from '../tools/evolutionary-balance/run-ga.mjs';
 import {calibrate,screenProjection} from '../tools/evolutionary-balance/calibrate-model.mjs';
 import {RAID_PRESSURE_CANDIDATE,raidAnimalCount} from '../src/simulation/raid-pressure-budget.js';
 import {archiveGaReports} from '../tools/evolutionary-balance/archive-ga-reports.mjs';
@@ -70,6 +70,18 @@ test('search cohorts cannot overlap and truncation cannot count as victory',()=>
  assert.throws(()=>validateConfig({train:[{biome:'sabana',seed:712}],holdout:[{biome:'sabana',seed:123}],requireBiomeHoldout:true}));
  assert.throws(()=>validateConfig({population:2,initialPopulation:[DEFAULT_GENES,DEFAULT_GENES]}));
  assert.throws(()=>validateConfig({costStop:{maxDayGameTickMs:0,maxElapsedWallMs:1000}}));
+ assert.throws(()=>validateConfig({days:14}),/post-intro-v1/);
+ assert.throws(()=>validateConfig({days:14,fitnessVersion:'post-intro-v1'}),/delivery floor/);
+ assert.equal(validateConfig({days:14,fitnessVersion:'post-intro-v1',
+  minimumTerminalDeliveryPerDay:82,deliveryFloorSource:'frozen training controls'}).fitnessVersion,
+  'post-intro-v1');
+ const longReport={status:'completed',completedNights:14,result:null,
+  rows:Array.from({length:14},(_,i)=>({day:i+1,money:600,living:100,
+   delivered:100,destroyed:0,income:200,seeds:40,wages:90,repairs:10,walls:0})),
+  raid:Array.from({length:9},(_,i)=>({day:i+6,livingAtSpawn:100,attraction:1000}))};
+ assert.equal(scoreSearchReport(longReport,validateConfig({days:14,
+  fitnessVersion:'post-intro-v1',minimumTerminalDeliveryPerDay:82,
+  deliveryFloorSource:'frozen training controls'})).scoreVersion,'post-intro-v1');
  assert.equal(validateConfig({costStop:{maxDayGameTickMs:180000,maxElapsedWallMs:1800000}}).costStop.maxDayGameTickMs,180000);
  assert.equal(scoreCampaign({status:'error',rows:[],completedNights:99},100).valid,false);
  assert.equal(scoreCampaign({status:'error',name:'CampaignCostStop',rows:[],completedNights:5,result:null},7).reason,
