@@ -13,8 +13,14 @@ export function createNativeExpandingDefensePolicy({startDay=2,material='zarzas'
   try{return fn();}finally{measure(kind,performance.now()-start);}
  };
  const cost=wallSpec(material).cost;let nextAttempt=0,capitalTarget=0,built=null,repairRequests=0;
- const history=[],owned=new Set();
+ const history=[],owned=new Set();let protectionWakes=0;
  const reserve=s=>reserveMode==='next-stroke'&&s.day>=startDay?capitalTarget:0;
+ const onCropProtectionChanged=change=>{
+  if(change.previous!=='protected'||change.protection!=='unprotected')return;
+  // The native graph has certified a real breach. Retry on the next ordinary
+  // decision boundary instead of waiting for the periodic expansion interval.
+  nextAttempt=0;protectionWakes++;
+ };
  function act(s,nav,{command,reserve:protectedCash}){
   if(s.day<startDay||!permission(s,'wall')||s.raid||s.elapsed<nextAttempt)return 0;
   nextAttempt=s.elapsed+interval;
@@ -55,5 +61,5 @@ export function createNativeExpandingDefensePolicy({startDay=2,material='zarzas'
   }
   row.reason='no-new-legal-pieces';history.push(row);return 0;
  }
- return {reserve,act,report:s=>structuredClone({startDay,material,reserveMode,repairWalls,capitalTarget,built,history,repairRequests,paidCost:history.reduce((n,r)=>n+r.paidCost,0),paidPieces:history.reduce((n,r)=>n+r.paidPieces,0),scope:'Paid expanding native perimeters; actual interception not established by construction alone; repairs requested never counted as completion'})};
+ return {reserve,act,onCropProtectionChanged,report:s=>structuredClone({startDay,material,reserveMode,repairWalls,capitalTarget,built,history,repairRequests,protectionWakes,paidCost:history.reduce((n,r)=>n+r.paidCost,0),paidPieces:history.reduce((n,r)=>n+r.paidPieces,0),scope:'Paid expanding native perimeters; actual interception not established by construction alone; repairs requested never counted as completion'})};
 }

@@ -55,9 +55,9 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
  const opening=await openingFactory(world),nav=opening.nav;let s=opening.s,sequence=0;
  const useSpatialAdvice=spatialAdvice??Boolean(opening.session);
  if(useSpatialAdvice&&!opening.session)throw Error('Spatial advice requires a Wild Engine session');
- if(nativeIntents&&(!opening.session||useSpatialAdvice||reloadRaids)){
+ if(nativeIntents&&(!opening.session||reloadRaids)){
   await opening.dispose?.();
-  throw Error('Experimental native intentions require one continuous Wild Engine session without a second spatial advice index');
+  throw Error('Experimental native intentions require one continuous Wild Engine session');
  }
  const intentPlanner=nativeIntents?createEventDrivenTaskPlanner(opening.session):null;
  intentPlanner?.resetFromState(s);
@@ -65,14 +65,23 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
   stopIntentWorld=intentPlanner?.observeWorld(s);
  if(intentPlanner)nav.intentTaskPlanner=intentPlanner;
  const adviceInitStart=performance.now();
- const advice=useSpatialAdvice?createSpatialIntentBridge(opening.session):null;
- advice?.resetFromState(s);
+ // A session has one native intent index. Spatial advice and action planning
+ // share it; constructing another bridge would reset active routes and leases.
+ const advice=useSpatialAdvice?(intentPlanner??createSpatialIntentBridge(opening.session)):null;
+ if(advice&&!intentPlanner)advice.resetFromState(s);
  const spatialAdviceInitMs=advice?performance.now()-adviceInitStart:0;
  const spatialSync={calls:0,events:0,ms:0};
  let spatialEvents=[];
- let stopSpatialEvents=advice?Game.observeGameEvents(s,event=>spatialEvents.push(event)):null;
+ let stopSpatialEvents=advice&&!intentPlanner?
+  Game.observeGameEvents(s,event=>spatialEvents.push(event)):null;
  const syncAdvice=()=>{
   if(!advice)return;
+  if(intentPlanner){
+   const started=performance.now(),events=intentPlanner.flushWorldEvents();
+   if(events){spatialSync.calls++;spatialSync.events+=events;
+    spatialSync.ms+=performance.now()-started;}
+   return;
+  }
   const fresh=spatialEvents;
   if(!fresh.length)return;
   const started=performance.now();
@@ -95,6 +104,13 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
   try{return fn();}finally{measure(kind,performance.now()-start);}
  };
  const defense=defend?(defensePolicy==='expanding'?createNativeExpandingDefensePolicy({repairWalls:policy.repair,reserveMode:'none',measure:decisionProfile?measure:null,preparedQuotes:preparedWallQuotes,spatialAdvice:advice}):createFarmDefensePolicy()):null;
+ const protectionEvents=[];
+ const stopProtectionEvents=intentPlanner&&advice?
+  intentPlanner.observeCropProtection(change=>{
+   protectionEvents.push({day:s.day,time:s.time,groupId:change.groupId,
+    previous:change.previous,protection:change.protection});
+   defense?.onCropProtectionChanged?.(change);
+  }):null;
  const driver=entryDriverFactory(nav);let partialEvidence=()=>({});
  try {
  const evidence=nativeEvidence?createNativeCampaignEvidence(s):null,raidEvidence=createNativeRaidCampaignEvidence(s);
@@ -272,6 +288,6 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
  }
  const idleRuns=daily.map(r=>r.longestIdle).sort((a,b)=>a-b),unoccupied=daily.reduce((n,r)=>n+r.unoccupiedSeconds,0),daylight=daily.reduce((n,r)=>n+r.daylightSeconds,0);
  const activity={daylightSeconds:daylight,unoccupiedSeconds:unoccupied,unoccupiedFraction:daylight?unoccupied/daylight:null,longestIdle:Math.max(...idleRuns),p90LongestIdle:idleRuns[Math.ceil(idleRuns.length*.9)-1]};
- return {protocol,strategy,labourPolicy,labourHistory,labourReasons,raidEvidence:raidEvidence.report(s),entryTransport:driver.report(),peaceAfter100:true,expansion:expansion?.report()??null,plotSearch:plotSearch.report(),spatialSite:advice?spatialSite:null,spatialAdviceInitMs,spatialSync:advice?spatialSync:null,nativeIntent:intentPlanner?.metrics(s.elapsed)??null,...(evidence?{nativeEvidence:evidence.report(s)}:{}),biome:s.biome,culture:s.culture,seed:s.seed,policy:{profile,mixed,middayHiring,plantsPerWorker,defend,cashPolicy:policy.cashPolicy,reserveMaintenance,burstPlanting,cameraEntry,defensePolicy},defense:defense?.report(s)??null,additionalHiring,result:s.result,completedNights:s.completedNights,money:numberOf(s.ledger.balance),maximumLiving,plots:plots.length,reloads,counts,activity,daily,state:s,nav};
- } catch(error){let receipts;try{receipts=partialEvidence();}catch(e){receipts={evidenceError:e.message};}error.nativeCampaignPartial={strategy,seed:s.seed,day:s.day,time:s.time,result:s.result,state:serialize(s),entryTransport:driver.report(),receipts};throw error;} finally {stopIntentTasks?.();stopIntentWorld?.();if(intentPlanner)delete nav.intentTaskPlanner;stopSpatialEvents?.();await driver.dispose();await opening.dispose?.();}
+ return {protocol,strategy,labourPolicy,labourHistory,labourReasons,raidEvidence:raidEvidence.report(s),entryTransport:driver.report(),peaceAfter100:true,expansion:expansion?.report()??null,plotSearch:plotSearch.report(),spatialSite:advice?spatialSite:null,spatialAdviceInitMs,spatialSync:advice?spatialSync:null,protectionEvents,nativeIntent:intentPlanner?.metrics(s.elapsed)??null,...(evidence?{nativeEvidence:evidence.report(s)}:{}),biome:s.biome,culture:s.culture,seed:s.seed,policy:{profile,mixed,middayHiring,plantsPerWorker,defend,cashPolicy:policy.cashPolicy,reserveMaintenance,burstPlanting,cameraEntry,defensePolicy},defense:defense?.report(s)??null,additionalHiring,result:s.result,completedNights:s.completedNights,money:numberOf(s.ledger.balance),maximumLiving,plots:plots.length,reloads,counts,activity,daily,state:s,nav};
+ } catch(error){let receipts;try{receipts=partialEvidence();}catch(e){receipts={evidenceError:e.message};}error.nativeCampaignPartial={strategy,seed:s.seed,day:s.day,time:s.time,result:s.result,state:serialize(s),entryTransport:driver.report(),receipts};throw error;} finally {stopProtectionEvents?.();stopIntentTasks?.();stopIntentWorld?.();if(intentPlanner)delete nav.intentTaskPlanner;stopSpatialEvents?.();await driver.dispose();await opening.dispose?.();}
 }

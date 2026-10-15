@@ -7,7 +7,7 @@ import {createCropGrouping} from '../src/simulation/crop-components.js';
 import {createPlant} from '../src/simulation/crops.js';
 import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
-import {createSpatialIntentBridge} from '../src/world/hierarchical-wasm/spatial-intent-bridge.js';
+import {createSpatialIntentBridge,createEventDrivenTaskPlanner} from '../src/world/hierarchical-wasm/spatial-intent-bridge.js';
 import {createCropEnclosurePlanner} from '../src/world/hierarchical-wasm/spatial-crop-enclosure-plan.js';
 import {villageLayout} from '../src/world/villages.js';
 import * as Game from '../src/simulation/game.js';
@@ -117,7 +117,16 @@ test('a paid closed wall ring protects the crop; removing a wall invalidates cer
   const before=bridge.getUnprotectedCropGroups({includeProtected:true});
   assert.equal(before.length,1);
   assert.equal(before[0].protection,'protected',JSON.stringify(before[0].profiles));
+  const planner=createEventDrivenTaskPlanner(session);planner.resetFromState(game);
+  const stopWorld=planner.observeWorld(game),changes=[];
+  const stopProtection=planner.observeCropProtection(change=>changes.push(change));
+  assert.equal(planner.getUnprotectedCropGroups({includeProtected:true})[0].protection,
+   'protected');
   const wall=game.structures.find(item=>item.kind==='wall'&&!item.gate);
+  wall.hp-=1;
+  Game.emit(game,'StructureHit',{targetId:wall.id});
+  planner.flushWorldEvents();
+  assert.equal(changes.length,0,'HP loss without a topology change is not a breach');
   const candidates=game.structures.filter(item=>item.kind==='wall'&&!item.gate)
    .sort((a,b)=>Math.hypot(a.x-wall.x,a.z-wall.z)-
     Math.hypot(b.x-wall.x,b.z-wall.z));
@@ -129,10 +138,16 @@ test('a paid closed wall ring protects the crop; removing a wall invalidates cer
   }
   assert.notEqual(nav.enclosureFor(inside,1.1).status,'sealed',
    'the native graph must first confirm a physical breach');
-  bridge.applyCommittedEvents(game,game.events.filter(event=>
-   event.type==='WallRemoved'&&removed.includes(event.targetId)));
-  const after=bridge.getUnprotectedCropGroups({includeProtected:true});
+  assert.equal(changes.length,0,'confirmed wall events wait for the event boundary');
+  planner.flushWorldEvents();
+  const after=planner.getUnprotectedCropGroups({includeProtected:true});
   assert.notEqual(after[0].protection,'protected');
+  assert.deepEqual(changes.map(change=>({groupId:change.groupId,
+   previous:change.previous,protection:change.protection})),[{groupId:before[0].id,
+   previous:'protected',protection:after[0].protection}]);
+  planner.flushWorldEvents();
+  assert.equal(changes.length,1,'an unchanged topology cannot repeat the notification');
+  stopProtection();stopWorld();
  }finally{session.dispose();}
 });
 

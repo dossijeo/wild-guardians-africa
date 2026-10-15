@@ -621,7 +621,8 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
   const bridge=createSpatialIntentBridge(session);
   const eligible=new Set(),requests=new Map(),animalRequests=new Map(),
     projectedPositions=new Map(),pendingAttackRoutes=new Map(),
-    tacticalReconsiderations=new Set();
+    tacticalReconsiderations=new Set(),cropProtectionListeners=new Set();
+  let cropProtectionSnapshot=null;
   let pendingTaskEvents=[];
   let pendingWorldEvents=[];
   let observedTaskState=null,stopTaskObserver=null,stopWorldObserver=null;
@@ -662,7 +663,40 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     lastNavigationVersion=null;
     pendingNativeChanges=true;
     initialized=true;
+    if(cropProtectionListeners.size)cropProtectionSnapshot=new Map(
+      bridge.getUnprotectedCropGroups({includeProtected:true})
+        .map(group=>[group.id,group]));
+    else cropProtectionSnapshot=null;
     return {...result,...restored,...restoredAnimals};
+  };
+  const publishCropProtectionChanges=({cropOnly=false}={})=>{
+    if(!cropProtectionListeners.size)return;
+    if(cropOnly&&!Array.from(cropProtectionSnapshot?.values()??[])
+      .some(group=>group.protection==='protected'))return;
+    const next=new Map(bridge.getUnprotectedCropGroups({includeProtected:true})
+      .map(group=>[group.id,group]));
+    const previous=cropProtectionSnapshot;
+    cropProtectionSnapshot=next;
+    if(!previous)return;
+    for(const [id,group] of next){
+      const old=previous.get(id);
+      if(!old||old.protection===group.protection)continue;
+      const change={type:'CropGroupProtectionChanged',groupId:id,
+        previous:old.protection,protection:group.protection,group};
+      for(const listener of cropProtectionListeners)listener(change);
+    }
+  };
+  const observeCropProtection=listener=>{
+    if(!initialized)throw Error('Reset the native intent session before observing crop protection');
+    if(typeof listener!=='function')throw TypeError('Expected a crop protection listener');
+    if(!cropProtectionListeners.size)cropProtectionSnapshot=new Map(
+      bridge.getUnprotectedCropGroups({includeProtected:true})
+        .map(group=>[group.id,group]));
+    cropProtectionListeners.add(listener);
+    return ()=>{
+      cropProtectionListeners.delete(listener);
+      if(!cropProtectionListeners.size)cropProtectionSnapshot=null;
+    };
   };
   const applyEvents=(state,events)=>{
     lastPlan=null;lastPlanFacts=null;
@@ -682,6 +716,11 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     }
     if(events.some(event=>event.type!=='structureDamage'))dirty=true;
     pendingNativeChanges=true;
+    const topology=events.some(event=>event.type==='target'&&!event.remove&&
+      (event.entity.kind==='wall'||event.entity.kind==='center'));
+    const crops=events.some(event=>event.type==='target'&&
+      (event.remove||'alive' in event.entity));
+    if(topology||crops)publishCropProtectionChanges({cropOnly:!topology});
     return result;
   };
   const planIfNeeded=simulatedSeconds=>{
@@ -865,6 +904,10 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     }
     if(events.some(event=>event.type==='CrateDropped'))
       session.core.wasm.nav_intent_replan_pending_routes();
+    const cropChanged=events.some(event=>
+      ['CropPlaced','CropDestroyed','CropPicked'].includes(event.type));
+    if(topologyChanged||cropChanged)
+      publishCropProtectionChanges({cropOnly:!topologyChanged});
     return events.length;
   };
   // A revision is an event, not a reason to poll paths on every tick. The
@@ -884,6 +927,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
       worker.status==='walking')worker.pathVersion=version;
     for(const animal of state.raid?.animals??[])if(animal.targetId&&
       animal.path&&animal.status!=='attacking')animal.pathVersion=version;
+    publishCropProtectionChanges();
     return invalidated;
   };
   const requestReroute=(state,worker)=>{
@@ -1066,6 +1110,13 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     };
   };
   return {resetFromState,applyEvents,observeTasks,observeWorld,
+    observeCropProtection,getUnprotectedCropGroups:bridge.getUnprotectedCropGroups,
+    getDamagedWalls:()=>{flushWorldEvents();return bridge.getDamagedWalls();},
+    getDamagedCenters:()=>{flushWorldEvents();return bridge.getDamagedCenters();},
+    findPlantingSite:(...args)=>{
+      flushWorldEvents();return bridge.findPlantingSite(...args);
+    },
+    releasePlantingSite:bridge.releasePlantingSite,
     flushTaskEvents,flushWorldEvents,reconcileNavigationRevision,requestReroute,
     reconcileWorkerRoutes,planIfNeeded,
     hasPendingAt,needsReconciliation,metrics,

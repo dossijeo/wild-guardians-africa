@@ -23,3 +23,16 @@ test('failed/unaffordable strokes and uncompleted repair requests are not counte
  assert.equal(policy.act(s,nav,options),0);assert.ok(s.tasks.some(t=>t.kind==='repair'&&t.targetId===wall.id));assert.equal(policy.report(s).repairRequests,1);
  s.elapsed+=31;s.ledger.balance=rational(30);assert.equal(policy.act(s,nav,options),0);assert.equal(policy.report(s).history.at(-1).reason,'budget');
 });
+test('a certified protection loss wakes the defense policy before its periodic interval',()=>{
+ const {s,nav,options,policy}=fixture();
+ assert.equal(policy.act(s,nav,options),1);
+ const before=policy.report(s).history.length;
+ policy.onCropProtectionChanged({previous:'protected',protection:'unknown'});
+ assert.equal(policy.act(s,nav,options),0);
+ assert.equal(policy.report(s).history.length,before,
+  'unknown is not a certified breach');
+ policy.onCropProtectionChanged({previous:'protected',protection:'unprotected'});
+ policy.act(s,nav,options);
+ assert.equal(policy.report(s).history.length,before+1);
+ assert.equal(policy.report(s).protectionWakes,1);
+});

@@ -17,6 +17,8 @@ if(!['intent','control'].includes(mode))throw RangeError('Unknown campaign mode'
 const path=resolve(out),started=performance.now(),rows=[];
 let latestState=null,latestNav=null,dayWorkerSnapshot=[];
 const captureRaidDay=Number(process.env.WILD_ENGINE_CAPTURE_RAID_DAY??0);
+const spatialAdvice=process.env.WILD_ENGINE_SPATIAL_ADVICE==='1';
+const defensePolicy=process.env.WILD_ENGINE_DEFENSE_POLICY??'legacy';
 let capturedRaid=false;
 const assignments=[],seenAssignments=new Set();
 const intentTiming={};
@@ -50,7 +52,7 @@ const entryDriverFactory=nav=>({
   async dispose(){}
 });
 const parameters={days,biome,seed,strategy,nativeIntents:mode==='intent',
-  spatialAdvice:false,defensePolicy:'legacy',reloadRaids:false};
+  spatialAdvice,defensePolicy,reloadRaids:false};
 try{
   const result=await simulateNativeCampaign({...parameters,
     culture:'mapungubwe',nativeEvidence:false,
@@ -141,6 +143,8 @@ try{
       stateSha256:createHash('sha256').update(serialize(latestState)).digest('hex')
     }:null,
     policy:result.policy,defense:result.defense,plotSearch:result.plotSearch,
+    spatialSite:result.spatialSite,spatialSync:result.spatialSync,
+    protectionEvents:result.protectionEvents,
     nativeIntent:result.nativeIntent,raidEvidence:result.raidEvidence,
     raidSelection:raidSelection(),rows};
   writeFileSync(path,JSON.stringify(report,null,2)+'\n');
