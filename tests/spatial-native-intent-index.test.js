@@ -170,5 +170,16 @@ test('incremental native task index plans, discards and commits one global assig
    assert(session.actorCanStand({x:repair[6],z:repair[7]},{worker:true}));
    assert(repair[4]>0);
   }finally{session.core.applyBarrierChanges(wall,[]);}
+
+  wasm.nav_intent_reset();
+  assert.equal(write(1,initial),1);
+  assert.equal(results().length,2);
+  assert.equal(wasm.nav_intent_commit(),2);
+  wasm.nav_intent_clear_changes();
+  assert.equal(write(2,[row(0,2,11),row(0,3,102)]),1);
+  assert.equal(wasm.nav_intent_change_count(),1,
+   'simultaneous target and task removal coalesce one actor invalidation');
+  assert.equal(wasm.nav_intent_actor(1),0);
+  assert.equal(wasm.nav_intent_actor(2),1);
  }finally{session.dispose();}
 });
