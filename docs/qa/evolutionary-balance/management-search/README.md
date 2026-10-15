@@ -451,3 +451,11 @@ desde la noche 6 y 54⅓ cajas/día terminales. Su margen operativo de los tres
 umbral congelado; no se declara estrategia sostenible. Las catorce filas
 concilian. Informe:
 `results-14-main-sync/712f0156ff37-expansive-manglares-123-14.json`.
+
+El control histórico `bad` de Manglares/123 sufrió **derrota nativa** al
+amanecer del día 14: completó 13 noches, terminó con una planta viva y 61
+monedas. Desde la noche 6 perdió 356 plantas; las últimas tres jornadas
+entregaron 19⅔ cajas/día y dejaron margen operativo de −348. Todas sus filas
+económicas concilian. Esta derrota no es un paro computacional ni un criterio
+de fitness que haya terminado artificialmente la partida. Informe:
+`results-14-main-sync/712f0156ff37-bad-manglares-123-14.json`.
