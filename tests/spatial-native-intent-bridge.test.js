@@ -17,6 +17,32 @@ import {enqueue,notifyWorkerPlanningChange,replaceTasks} from '../src/simulation
 const binary=process.env.WILD_ENGINE_NATIVE_ROUTE_WASM;
 const module=binary?new WebAssembly.Module(readFileSync(binary)):null;
 
+test('restoring a committed animal strike uses the live target index, not crop history',
+ {skip:!module&&'Build and select the experimental WASM first'},()=>{
+ const game=deserialize(gunzipSync(readFileSync(new URL(
+  './fixtures/desierto983-d15-partial-state.json.gz',import.meta.url))).toString());
+ const plant=game.plants.find(item=>item.alive);
+ assert(plant);
+ const session=createSpatialGameSession(module,game,{
+  loaded:()=>new Map(),onData:()=>{}});
+ try{
+  const bridge=createSpatialIntentBridge(session);
+  bridge.resetFromState(game);
+  const animal={id:'animal-999999',species:'hyena',status:'attacking',
+    targetId:plant.id,reservation:'crop:999999',x:plant.x+1,z:plant.z,
+    radius:.28,approach:{x:plant.x+1,z:plant.z}};
+  game.raid={animals:[animal],reservations:{[animal.reservation]:animal.id}};
+  Object.defineProperty(game.plants,Symbol.iterator,{value:()=>{
+    throw Error('historical crops must not be scanned per animal');
+  }});
+  assert.equal(bridge.restoreAttackIntents(game).restoredAnimalAttacks,1);
+  assert.equal(session.core.wasm.nav_intent_actor(999999),1);
+  const native=new Float64Array(session.core.wasm.memory.buffer,
+    session.core.wasm.nav_intent_actor_ptr(),10);
+  assert.equal(native[3],Number(plant.id.split('-').at(-1)));
+ }finally{session.dispose();}
+});
+
 test('a confirmed ruin cancels travelling animal leases but defers committed strikes',
  {skip:!module&&'Build and select the experimental WASM first'},()=>{
  const game=deserialize(gunzipSync(readFileSync(new URL(

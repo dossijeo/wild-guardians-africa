@@ -541,8 +541,11 @@ export function createSpatialIntentBridge(session){
       if(!animal.targetId||['gone','retreating','waiting'].includes(animal.status))
         continue;
       session.actorSectorRevision({worker:false,species:animal.species});
-      const target=[...state.plants,...state.structures]
-        .find(item=>item.id===animal.targetId);
+      // The confirmed read model already indexes live crops and structures.
+      // Saved crop history may be large and must not be scanned per animal.
+      const targetId=numericId(animal.targetId);
+      const target=animal.targetId.startsWith('plant-')?
+        cropObjects.get(targetId):structuresById.get(targetId);
       if(animal.status==='attacking'){
         if(wasm.nav_intent_restore_attack_action(numericId(animal.id),
           numericId(animal.targetId),Number(!!animal.reservation&&
