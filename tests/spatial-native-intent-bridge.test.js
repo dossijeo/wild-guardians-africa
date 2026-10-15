@@ -169,6 +169,8 @@ test('event-fed native intent bridge replays live state and only changes on expl
   for(let tick=1;tick<=100;tick++)assert.equal(planner.planIfNeeded(tick/10),null,
    'ordinary ticks and route movement do not replan');
   assert.equal(planner.metrics(10).nativePlanningCalls,1);
+  assert.equal(planner.metrics(10).nativeInvalidations,
+   wasm.nav_intent_invalidation_count());
   assert.equal(planner.metrics(10).perWorkerPerMinute[9263],1);
   assert.equal(planner.metrics(10).nativeTaskRouteQueries,routeQueries);
   assert(planner.metrics(10).nativeTaskCandidates>0);

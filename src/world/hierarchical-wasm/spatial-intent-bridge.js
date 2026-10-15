@@ -726,6 +726,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     return count;
   };
   const metrics=simulatedSeconds=>({nativePlanningCalls:total,
+    nativeInvalidations:session.core.wasm.nav_intent_invalidation_count(),
     nativeTaskRouteQueries:taskRouteQueries,nativeTaskCandidates:taskCandidates,
     perWorkerPerMinute:Object.fromEntries([...requests].map(([id,times])=>
       [id,times.filter(time=>time>simulatedSeconds-60).length])),
