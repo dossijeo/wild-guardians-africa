@@ -52,10 +52,16 @@ try{
  const report={source,sourceFiles,engine,preparedQuotes,
   spatialAdvice:spatialAdvice??engine==='wild-engine',
   spatialSite:result.spatialSite,spatialAdviceInitMs:result.spatialAdviceInitMs,
-  spatialSync:result.spatialSync,daysRequested:days,completedNights:result.completedNights,
+  spatialSync:result.spatialSync,spatialProtection:result.spatialProtection,
+  daysRequested:days,completedNights:result.completedNights,
   result:result.result,biome:result.biome,seed:result.seed,strategy:result.strategy,
   policy:result.policy,defense:{paidCost:result.defense?.paidCost,
-   paidPieces:result.defense?.paidPieces,repairRequests:result.defense?.repairRequests},
+   paidPieces:result.defense?.paidPieces,repairRequests:result.defense?.repairRequests,
+   capitalTarget:result.defense?.capitalTarget,
+   planReasons:result.defense?.history?.reduce((counts,row)=>{
+    const key=row.reason??row.status??'built';counts[key]=(counts[key]??0)+1;
+    return counts;
+   },{}),firstPlans:result.defense?.history?.slice(0,4)},
   daily};
  mkdirSync(dirname(output),{recursive:true});writeFileSync(output,JSON.stringify(report,null,2));
 }catch(error){

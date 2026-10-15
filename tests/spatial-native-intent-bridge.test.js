@@ -39,6 +39,23 @@ test('event-fed native intent bridge replays live state and only changes on expl
   assert.equal(initial.targets,game.plants.filter(p=>p.alive).length+
    game.crates.filter(c=>!c.delivered).length+game.structures.length);
   assert.equal(initial.tasks,1);
+  const notices=[];
+  const stopProtection=bridge.observeCropProtection(event=>notices.push(event));
+  const initialNotices=notices.length;
+  const protectionQueries=bridge.cropProtectionMetrics().queries;
+  for(let tick=0;tick<100;tick++)bridge.syncActionBoundary(game);
+  assert.equal(notices.length,initialNotices,
+   'ordinary ticks never reclassify native crop protection');
+  assert.equal(bridge.cropProtectionMetrics().queries,protectionQueries);
+  assert.equal(bridge.syncActionBoundary(game),0,
+   'an unchanged action boundary sends no native delta');
+  const originalX=worker.x,originalCreated=task.created;
+  worker.x+=.25;task.created++;
+  assert.equal(bridge.syncActionBoundary(game),2,
+   'only the changed worker and task reach the native planner');
+  worker.x=originalX;task.created=originalCreated;
+  assert.equal(bridge.syncActionBoundary(game),2);
+  assert.equal(bridge.syncActionBoundary(game),0);
   const first=bridge.planTasks();
   assert.equal(first.length,1);
   assert.equal(first[0].taskId,999999);
@@ -57,6 +74,7 @@ test('event-fed native intent bridge replays live state and only changes on expl
   bridge.discard();
   bridge.applyEvents(game,[{type:'task',remove:true,id:task.id}]);
   assert.equal(wasm.nav_intent_task_count(),0);
+  stopProtection();
 
   plant.alive=true;
   bridge.applyEvents(game,[{type:'target',entity:plant},{type:'task',entity:task}]);
@@ -98,6 +116,15 @@ test('event-fed native intent bridge replays live state and only changes on expl
    'a committed target loss wakes planning once');
   assert.equal(planner.planIfNeeded(10.2),null);
   assert.equal(planner.metrics(10.2).nativePlanningCalls,3);
+  const topology=[];
+  const stopTopology=session.observeTopologyChanges(change=>topology.push(change));
+  const wall=game.structures.find(item=>item.kind==='wall'&&item.status!=='ruined');
+  assert(wall);
+  wall.status='ruined';wall.hp=0;
+  session.syncState(game);
+  assert(topology.some(change=>change.type==='topology-changed'),
+   'a confirmed wall removal notifies consumers of the native graph');
+  stopTopology();
  }finally{session.dispose();}
 });
 

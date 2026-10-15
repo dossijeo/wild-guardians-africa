@@ -4,6 +4,7 @@ import * as Game from '../src/simulation/game.js';
 import {createOpeningWorld} from '../tools/check_opening.mjs';
 import {Navigation} from '../src/world/navigation.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
+import {rational} from '../src/simulation/money.js';
 
 const options={smooth:false,snap:false};
 const perimeter=[[73,-15.5],[102.5,-15.5],[102.5,15.5],[73,15.5],[73,-15.5]];
@@ -22,6 +23,13 @@ test('a wall stroke leaves its closing piece unbuilt if no gate is physically va
  const quote=Game.quoteWallChain(s,'zarzas',perimeter,nav,options);
  assert(quote.pieces.length<withGate.pieces.length);
  assert.equal(quote.gates,0);
+ s.ledger.balance=rational(quote.cost+100);
+ const prepared=Game.previewWallChain(s,'zarzas',perimeter,nav,options);
+ assert.equal(prepared.pieces.length,quote.pieces.length);
+ assert(Game.buildWallChain(s,'bounded-ungated-wall','zarzas',perimeter,nav,
+  {...options,preparedPlan:prepared}),
+ 'internal gate-safety truncation must not invalidate its own paid quote');
+ assert.equal(s.structures.filter(item=>item.kind==='wall').length,quote.pieces.length);
 });
 
 test('a single-piece rebuild cannot seal a room without a valid automatic gate',()=>{

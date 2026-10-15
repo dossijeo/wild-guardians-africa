@@ -1204,6 +1204,7 @@ void horizonDesertNormals(HorizonSampler& sampler,int ox,int oz){
 }
 
 extern "C" {
+float spatial_selected_nav_radius(){return radiusNow;}
 int spatial_generate_biome(uint32_t seed,int biome,int cx,int cz){
   if(biome<0||biome>5)return -1;
   worldSeed=seed;worldBiome=biome;barrierIndex().byId.clear();barrierIndex().buckets.clear();

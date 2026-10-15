@@ -1,0 +1,18 @@
+Command: npm test
+Environment: WILD_ENGINE_SPATIAL_SERVICES_WASM and WILD_ENGINE_NATIVE_ROUTE_WASM both pointed to src/world/hierarchical-wasm/spatial-savanna.wasm.
+Observed through test 910 before cooperative stop. The full suite did not complete.
+
+Failures observed (7):
+387 Sabana/Mapungubwe/712/olderFemale: sunflower farm sustains paid work, real deliveries and raids through night 100 — expected victory, actual defeat.
+388 Sabana/Mapungubwe/712/olderFemale: mixed eight-crop farm sustains paid work, real deliveries and raids through night 100 — expected victory, actual defeat.
+452 Growth consumes season once; a saved later checkpoint freezes at its original tolerance — expected magic watering, actual due.
+454 growth: native blessing lasts its approved simulated duration without hearts, extra gameplay or lost reload phase — old cooldown assertion.
+455 multiply: native blessing lasts its approved simulated duration without hearts, extra gameplay or lost reload phase — old cooldown assertion.
+456 QA-115: growth crosses sunset on the real clock; native VFX continue without night agriculture — old growth expectation.
+457 QA-115: multiply crosses sunset on the real clock; native VFX continue without night agriculture — old cooldown assertion.
+
+No files implementing agricultural magic, attack pressure, or these seven tests differ from origin/main in this branch. The Game change is confined to prepared wall quotes. These failures were not modified to pass this navigation change.
+
+Focused command: node --test tests/native-expanding-defense-policy.test.js tests/spatial-native-crop-groups.test.js tests/spatial-native-intent-bridge.test.js tests/wall-gate-worker-closure.test.js
+Focused result: 15 tests passed, 0 failed.
+Web build: npm run build passed.

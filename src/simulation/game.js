@@ -257,6 +257,10 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
 // Geometry/price quote is read-only and may describe a future purchase. Actual
 // preview/build still enforce available cash and the native hiring reserve.
 export function quoteWallChain(s,material,points,nav,options={}) {
+  return quoteWallChainInternal(s,material,points,nav,options,
+    options.maxPieces??Infinity);
+}
+function quoteWallChainInternal(s,material,points,nav,options,requestedMaxPieces){
   if(!permission(s,'wall'))throw new Error('Esta acción no está disponible ahora');
   const spec=wallSpec(material),slots=wallStroke(points,s.structures,{...options,maxPieces:Infinity});
   const cropOverlap=piece=>{const c=Math.cos(piece.yaw),sn=Math.sin(piece.yaw),scale=piece.gate?(piece.material==='reforzado'?1.6:['adobe','piedra'].includes(piece.material)?1.4:1):1;return s.plants.some(p=>p.alive&&Math.abs((p.x-piece.x)*c-(p.z-piece.z)*sn)<1.09*(piece.baseScaleX??1)*scale+.4&&Math.abs((p.x-piece.x)*sn+(p.z-piece.z)*c)<.22*scale+.4);};
@@ -267,7 +271,8 @@ export function quoteWallChain(s,material,points,nav,options={}) {
   if(gatePlan.unhostedWorker||gatePlan.unhosted&&!gatePlan.length){
     // The closing module remains unbuilt; the player can later edit the
     // stroke without trapping a worker in a room that has no usable door.
-    return quoteWallChain(s,material,points,nav,{...options,maxPieces:newPieces.length-1});
+    return quoteWallChainInternal(s,material,points,nav,{...options,
+      maxPieces:newPieces.length-1},requestedMaxPieces);
   }
   const updates=gatePlan;
   for(const piece of newPieces){const update=updates.find(p=>p.id===piece.id);if(update)Object.assign(piece,update);}
@@ -281,7 +286,7 @@ export function quoteWallChain(s,material,points,nav,options={}) {
     expectedSlots:slots,blockedPieces,blockedCrops};
   preparedWallQuotes.set(plan,{state:s,nav,material,points:JSON.stringify(points),
     smooth:options.smooth??true,snap:options.snap??true,
-    maxPieces:options.maxPieces??Infinity,sequence:s.sequence,nextId:s.nextId,
+    maxPieces:requestedMaxPieces,sequence:s.sequence,nextId:s.nextId,
     elapsed:s.elapsed,version:nav.version,structureCount:s.structures.length,
     plantCount:s.plants.length,workerCount:s.workers.length,
     quote:structuredClone(plan)});
