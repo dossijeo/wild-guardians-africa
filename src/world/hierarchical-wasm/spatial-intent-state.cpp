@@ -490,9 +490,11 @@ int nav_intent_find_planting_site(double centerId,double minX,double minZ,
     const int loX=int(std::ceil(minX/1.5)),hiX=int(std::floor(maxX/1.5));
     const int loZ=int(std::ceil(minZ/1.5)),hiZ=int(std::floor(maxZ/1.5));
     if(loX>hiX||loZ>hiZ){s.plantResult[0]=0;return 0;}
-    const int sx=std::clamp(int(std::round(center.x/1.5)),loX,hiX);
-    const int sz=std::clamp(int(std::round(center.z/1.5)),loZ,hiZ);
-    const double dx=sx*1.5-center.x,dz=sz*1.5-center.z;
+    // Workers enter and leave through the service point. Ordering sites from
+    // the building centroid can seed the far side first despite valid routes.
+    const int sx=std::clamp(int(std::round(center.serviceX/1.5)),loX,hiX);
+    const int sz=std::clamp(int(std::round(center.serviceZ/1.5)),loZ,hiZ);
+    const double dx=sx*1.5-center.serviceX,dz=sz*1.5-center.serviceZ;
     search.pending.push({sx,sz,dx*dx+dz*dz});
     search.visited.insert(cropCell(sx,sz));
   }
@@ -502,7 +504,7 @@ int nav_intent_find_planting_site(double centerId,double minX,double minZ,
   auto enqueue=[&](int x,int z){
     if(x<loX||x>hiX||z<loZ||z>hiZ)return;
     if(!search.visited.insert(cropCell(x,z)).second)return;
-    const double dx=x*1.5-center.x,dz=z*1.5-center.z;
+    const double dx=x*1.5-center.serviceX,dz=z*1.5-center.serviceZ;
     search.pending.push({x,z,dx*dx+dz*dz});
   };
   while(examined<budget&&!search.pending.empty()){

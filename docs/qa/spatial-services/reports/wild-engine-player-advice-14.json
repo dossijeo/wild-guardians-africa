@@ -1,0 +1,335 @@
+{
+  "source": "c362295e8e52f7d727363c3c12d0782d4695dc0d",
+  "sourceFiles": {
+    "tools/native-campaign-runner.mjs": "60fba09aa656029bf2d8c618d0c344576a56858dbca29ec1ed1675a193e27b10",
+    "tools/native-campaign-plots.mjs": "90594ef3875e28cb5dadb329ff71ab2a6f1212fb6849247649f93c30f39de68f",
+    "tools/native-expanding-defense-policy.mjs": "f33ee4101d267609b146cafad4971052c4e5471ca1de4a075dbdde31755cff2b"
+  },
+  "engine": "wild-engine",
+  "preparedQuotes": true,
+  "spatialAdvice": true,
+  "spatialSite": {
+    "found": 278,
+    "pending": 57,
+    "blocked": 0,
+    "no-space": 0,
+    "unknown": 0,
+    "legacyFallback": 0
+  },
+  "daysRequested": 14,
+  "completedNights": 8,
+  "result": "defeat",
+  "biome": "sabana",
+  "seed": "712",
+  "strategy": "good",
+  "policy": {
+    "profile": "olderFemale",
+    "mixed": true,
+    "middayHiring": true,
+    "plantsPerWorker": 6,
+    "defend": true,
+    "cashPolicy": "progressive-village",
+    "reserveMaintenance": true,
+    "burstPlanting": false,
+    "cameraEntry": true,
+    "defensePolicy": "expanding"
+  },
+  "daily": [
+    {
+      "day": 1,
+      "living": 51,
+      "planted": 87,
+      "money": 422,
+      "wallTime": {
+        "decisionMs": 46.6379999999981,
+        "gameTickMs": 703.8792999999985,
+        "presentationMs": 1.0319000000022243
+      },
+      "phases": {
+        "defense.act": {
+          "calls": 300,
+          "ms": 1.6925999999983787
+        },
+        "plot.nativeSite": {
+          "calls": 87,
+          "ms": 9.872500000001082
+        },
+        "other": {
+          "calls": 0,
+          "ms": 44.94539999999972
+        }
+      }
+    },
+    {
+      "day": 2,
+      "living": 52,
+      "planted": 49,
+      "money": 345,
+      "wallTime": {
+        "decisionMs": 173.60649999999873,
+        "gameTickMs": 667.9560000000006,
+        "presentationMs": 0.5115000000077998
+      },
+      "phases": {
+        "defense.wallStroke": {
+          "calls": 10,
+          "ms": 1.7681999999997515
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 137.27530000000502
+        },
+        "plot.nativeSite": {
+          "calls": 56,
+          "ms": 6.657599999999775
+        },
+        "defense.previewWallChain": {
+          "calls": 4,
+          "ms": 97.18029999999953
+        },
+        "defense.wallPlacement": {
+          "calls": 184,
+          "ms": 17.083400000001348
+        },
+        "defense.buildWallChain": {
+          "calls": 4,
+          "ms": 16.219600000000128
+        },
+        "other": {
+          "calls": 0,
+          "ms": 36.331199999993714
+        }
+      }
+    },
+    {
+      "day": 3,
+      "living": 49,
+      "planted": 48,
+      "money": 356,
+      "wallTime": {
+        "decisionMs": 140.85110000000986,
+        "gameTickMs": 8117.862899999971,
+        "presentationMs": 0.9469999999942047
+      },
+      "phases": {
+        "defense.wallStroke": {
+          "calls": 10,
+          "ms": 1.5184999999987667
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 63.22389999998586
+        },
+        "plot.nativeSite": {
+          "calls": 52,
+          "ms": 8.234600000000228
+        },
+        "defense.previewWallChain": {
+          "calls": 2,
+          "ms": 40.89619999999968
+        },
+        "defense.wallPlacement": {
+          "calls": 117,
+          "ms": 10.704199999991033
+        },
+        "defense.buildWallChain": {
+          "calls": 2,
+          "ms": 6.648600000000442
+        },
+        "other": {
+          "calls": 0,
+          "ms": 77.627200000024
+        }
+      }
+    },
+    {
+      "day": 4,
+      "living": 42,
+      "planted": 29,
+      "money": 327,
+      "wallTime": {
+        "decisionMs": 100.40969999998197,
+        "gameTickMs": 4498.263499999979,
+        "presentationMs": 0.798800000018673
+      },
+      "phases": {
+        "defense.wallStroke": {
+          "calls": 10,
+          "ms": 1.2300000000032014
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 36.505099999993035
+        },
+        "plot.nativeSite": {
+          "calls": 32,
+          "ms": 4.214899999995396
+        },
+        "defense.previewWallChain": {
+          "calls": 1,
+          "ms": 22.798099999999977
+        },
+        "defense.wallPlacement": {
+          "calls": 60,
+          "ms": 5.298899999999776
+        },
+        "defense.buildWallChain": {
+          "calls": 1,
+          "ms": 4.745899999999892
+        },
+        "other": {
+          "calls": 0,
+          "ms": 63.90459999998893
+        }
+      }
+    },
+    {
+      "day": 5,
+      "living": 44,
+      "planted": 34,
+      "money": 265,
+      "wallTime": {
+        "decisionMs": 7510.810100000008,
+        "gameTickMs": 2173.7064999999475,
+        "presentationMs": 0.8206999999911204
+      },
+      "phases": {
+        "defense.wallStroke": {
+          "calls": 10,
+          "ms": 1.9680000000080327
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 7414.197099999994
+        },
+        "plot.nativeSite": {
+          "calls": 61,
+          "ms": 10.146399999997811
+        },
+        "defense.previewWallChain": {
+          "calls": 7,
+          "ms": 7269.476499999999
+        },
+        "defense.wallPlacement": {
+          "calls": 375,
+          "ms": 27.752999999993335
+        },
+        "defense.buildWallChain": {
+          "calls": 7,
+          "ms": 111.60709999999926
+        },
+        "other": {
+          "calls": 0,
+          "ms": 96.61300000001393
+        }
+      }
+    },
+    {
+      "day": 6,
+      "living": 17,
+      "planted": 18,
+      "money": 296,
+      "wallTime": {
+        "decisionMs": 89.81049999999595,
+        "gameTickMs": 4480.200199999999,
+        "presentationMs": 1.7773999999953958
+      },
+      "phases": {
+        "defense.wallStroke": {
+          "calls": 10,
+          "ms": 1.2784000000065134
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 3.6468999999669904
+        },
+        "plot.nativeSite": {
+          "calls": 22,
+          "ms": 3.3300000000017462
+        },
+        "other": {
+          "calls": 0,
+          "ms": 86.16360000002896
+        }
+      }
+    },
+    {
+      "day": 7,
+      "living": 0,
+      "planted": 12,
+      "money": 174,
+      "wallTime": {
+        "decisionMs": 4708.434300000063,
+        "gameTickMs": 1103.1314000000784,
+        "presentationMs": 1.1529999999947904
+      },
+      "phases": {
+        "defense.wallStroke": {
+          "calls": 10,
+          "ms": 1.4730000000126893
+        },
+        "defense.previewWallChain": {
+          "calls": 4,
+          "ms": 4428.308999999987
+        },
+        "defense.wallPlacement": {
+          "calls": 136,
+          "ms": 11.224300000059884
+        },
+        "defense.buildWallChain": {
+          "calls": 4,
+          "ms": 193.60800000000017
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 4636.953499999992
+        },
+        "plot.nativeSite": {
+          "calls": 24,
+          "ms": 4.81090000000404
+        },
+        "other": {
+          "calls": 0,
+          "ms": 71.4808000000703
+        }
+      }
+    },
+    {
+      "day": 8,
+      "living": 0,
+      "planted": 0,
+      "money": 34,
+      "wallTime": {
+        "decisionMs": 119.1784999999727,
+        "gameTickMs": 350.9314000000013,
+        "presentationMs": 0.8123999999224907
+      },
+      "phases": {
+        "defense.wallStroke": {
+          "calls": 10,
+          "ms": 2.558199999992212
+        },
+        "defense.previewWallChain": {
+          "calls": 1,
+          "ms": 63.20259999999689
+        },
+        "defense.wallPlacement": {
+          "calls": 20,
+          "ms": 1.555099999983213
+        },
+        "defense.buildWallChain": {
+          "calls": 1,
+          "ms": 15.533799999997427
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 84.5065000000468
+        },
+        "other": {
+          "calls": 0,
+          "ms": 34.6719999999259
+        }
+      }
+    }
+  ]
+}

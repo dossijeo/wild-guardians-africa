@@ -5,7 +5,7 @@ import {wallStroke} from '../src/world/wall-layout.js';
 import {numberOf} from '../src/simulation/money.js';
 import {permission,operational,wallSpec} from '../src/simulation/rules.js';
 import {HIRING_RESERVE} from '../src/simulation/budget.js';
-export function createNativeExpandingDefensePolicy({startDay=2,material='zarzas',interval=30,repairWalls=true,reserveMode='none',measure=null}={}){
+export function createNativeExpandingDefensePolicy({startDay=2,material='zarzas',interval=30,repairWalls=true,reserveMode='none',measure=null,preparedQuotes=true,spatialAdvice=null}={}){
  if(!['none','next-stroke'].includes(reserveMode))throw Error('Invalid defense reserve mode');
  const timed=(kind,fn)=>{
   if(!measure)return fn();
@@ -22,7 +22,10 @@ export function createNativeExpandingDefensePolicy({startDay=2,material='zarzas'
   protectedCash=Math.max(protectedCash,HIRING_RESERVE);
   let pending=s.tasks.filter(t=>t.kind==='repair').reduce((n,t)=>{const p=s.structures.find(p=>p.id===t.targetId);return n+(p?Math.ceil(numberOf(Game.repairCost(p))):0);},0);
   // Request native repairs, but do not count uncompleted requests as useful work.
-  for(const wall of s.structures)if(repairWalls&&owned.has(wall.id)&&['intact','ruined'].includes(wall.status)&&wall.hp<wall.maxHp*.8&&!s.tasks.some(t=>t.kind==='repair'&&t.targetId===wall.id)){
+  const damaged=spatialAdvice?spatialAdvice.getDamagedWalls()
+   .sort((a,b)=>Number(a.id.split('-').at(-1))-Number(b.id.split('-').at(-1)))
+   .map(item=>s.structures.find(wall=>wall.id===item.id)).filter(Boolean):s.structures;
+  for(const wall of damaged)if(repairWalls&&owned.has(wall.id)&&['intact','ruined'].includes(wall.status)&&wall.hp<wall.maxHp*.8&&!s.tasks.some(t=>t.kind==='repair'&&t.targetId===wall.id)){
    const payment=Math.ceil(numberOf(Game.repairCost(wall)));
    if(numberOf(s.ledger.balance)>=protectedCash+pending+payment){Game.requestRepair(s,command('repair'),wall.id);repairRequests++;pending+=payment;}
   }
@@ -45,7 +48,7 @@ export function createNativeExpandingDefensePolicy({startDay=2,material='zarzas'
    const check=timed('defense.wallPlacement',()=>nav.wallPlacement(piece));
    row.gaps.push({x:slot.x,z:slot.z,reason:!check.valid?check.reason??'native-placement':plan.pieces.length>=maxPieces?'budget-limit':'crop-overlap-or-native-omission'});
   }
-  if(plan.pieces.length&&timed('defense.buildWallChain',()=>Game.buildWallChain(s,command('wall'),material,points,nav,{...options,maxPieces}))){
+  if(plan.pieces.length&&timed('defense.buildWallChain',()=>Game.buildWallChain(s,command('wall'),material,points,nav,{...options,maxPieces,...preparedQuotes?{preparedPlan:plan}:{}}))){
    row.paidPieces=plan.pieces.length;row.paidCost=plan.cost;row.ids=plan.pieces.map(p=>p.id);row.gates=plan.gates;
    for(const id of row.ids){if(!s.structures.some(w=>w.id===id&&w.kind==='wall'))throw Error('Preview ID does not name an actual paid wall');owned.add(id);}
    built={day:s.day,bounds,points,cost:plan.cost,pieces:plan.pieces.length,expectedPieces:slots.length,ids:[...owned]};history.push(row);return 1;

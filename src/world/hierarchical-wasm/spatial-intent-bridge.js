@@ -163,6 +163,43 @@ export function createSpatialIntentBridge(session){
       throw error;
     }
   };
+  // Translate only confirmed simulation events. A restored game uses
+  // resetFromState(); this incremental projection never owns game rules.
+  const applyCommittedEvents=(state,events)=>{
+    const changes=[];
+    let structures=null,plants=null;
+    const structureFor=id=>state.structures.at(-1)?.id===id?state.structures.at(-1):
+      (structures??=new Map(state.structures.map(item=>[item.id,item]))).get(id);
+    const plantFor=id=>state.plants.at(-1)?.id===id?state.plants.at(-1):
+      (plants??=new Map(state.plants.filter(item=>item.alive)
+        .map(item=>[item.id,item]))).get(id);
+    for(const event of events){
+      if(event.type==='CropPlaced'){
+        const entity=plantFor(event.targetId);
+        if(entity)changes.push({type:'target',entity});
+      }else if(event.type==='CropDestroyed'||event.type==='CropPicked')
+        changes.push({type:'target',remove:true,id:event.targetId});
+      else if(event.type==='PlacementCommitted'&&
+        (event.kind==='center'||event.kind==='wall')){
+        const entity=structureFor(event.targetId);
+        if(entity)changes.push({type:'target',entity});
+      }else if(event.type==='WallChainBuilt'){
+        const first=numericId(event.targetId),latest=state.structures.slice(-event.count);
+        for(let offset=0;offset<event.count;offset++){
+          const id=`structure-${first+offset}`;
+          const entity=latest[offset]?.id===id?latest[offset]:structureFor(id);
+          if(entity)changes.push({type:'target',entity});
+        }
+      }else if(event.type==='WallRemoved')
+        changes.push({type:'target',remove:true,id:event.targetId});
+      else if(['StructureHit','StructureRuined','RepairApplied'].includes(event.type)){
+        const entity=structureFor(event.targetId);
+        if(entity)changes.push({type:'structureDamage',entity});
+      }
+    }
+    if(changes.length)applyEvents(state,changes);
+    return changes.length;
+  };
   const planTasks=()=>{
     if(!initialized)throw Error('Reset the native intent session first');
     session.actorSectorRevision({worker:true});
@@ -255,7 +292,7 @@ export function createSpatialIntentBridge(session){
   };
   const releasePlantingSite=(reservationId,{committed=false}={})=>
     wasm.nav_intent_release_planting_site(reservationId,committed?1:0)===1;
-  return {resetFromState,applyEvents,planTasks,
+  return {resetFromState,applyEvents,applyCommittedEvents,planTasks,
     getDamagedWalls:()=>getDamaged('wall'),
     getDamagedCenters:()=>getDamaged('center'),
     getUnprotectedCropGroups,

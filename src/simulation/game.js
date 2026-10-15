@@ -42,6 +42,8 @@ import {advanceGateLeaves,waitForGate} from './gates.js';
 const routePlanWaits=new WeakMap();
 const ROUTE_RETRY_SECONDS=8;
 const taskPlanWaits=new WeakMap();
+const preparedWallQuotes=new WeakMap();
+const eventObservers=new WeakMap();
 
 export const BIOMES=['sabana','gran-rio','manglares','volcanes','gran-canon','desierto'];
 export const CULTURES=['mapungubwe','saheliana','suajili','musgum','etiope'];
@@ -54,7 +56,18 @@ export function newGame({biome='sabana',culture='mapungubwe',seed=Date.now(),slo
 }
 export const pause=(s,reason)=>{if(!s.pauses.includes(reason))s.pauses.push(reason);};
 export const resume=(s,reason)=>{s.pauses=s.pauses.filter(r=>r!==reason);};
-export function emit(s,type,detail={}) {s.events.push({id:`event-${s.sequence++}`,type,...detail});if(s.events.length>200)s.events.shift();}
+export function observeGameEvents(s,callback){
+  if(typeof callback!=='function')throw TypeError('Expected a game event observer');
+  let listeners=eventObservers.get(s);
+  if(!listeners){listeners=new Set();eventObservers.set(s,listeners);}
+  listeners.add(callback);
+  return ()=>listeners.delete(callback);
+}
+export function emit(s,type,detail={}) {
+  const event={id:`event-${s.sequence++}`,type,...detail};
+  s.events.push(event);if(s.events.length>200)s.events.shift();
+  for(const callback of eventObservers.get(s)??[])callback(event);
+}
 export function notice(s,text,target=null) {s.messages.push({id:`message-${s.sequence++}`,text,target});if(s.messages.length>8)s.messages.shift();}
 const dist=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 const profile=w=>PROFILES.find(p=>p.id===w.profile);
@@ -247,8 +260,8 @@ export function quoteWallChain(s,material,points,nav,options={}) {
   if(!permission(s,'wall'))throw new Error('Esta acción no está disponible ahora');
   const spec=wallSpec(material),slots=wallStroke(points,s.structures,{...options,maxPieces:Infinity});
   const cropOverlap=piece=>{const c=Math.cos(piece.yaw),sn=Math.sin(piece.yaw),scale=piece.gate?(piece.material==='reforzado'?1.6:['adobe','piedra'].includes(piece.material)?1.4:1):1;return s.plants.some(p=>p.alive&&Math.abs((p.x-piece.x)*c-(p.z-piece.z)*sn)<1.09*(piece.baseScaleX??1)*scale+.4&&Math.abs((p.x-piece.x)*sn+(p.z-piece.z)*c)<.22*scale+.4);};
-  const blockedPieces=[];
-  const newPieces=slots.map(slot=>({kind:'wall',material,gate:false,baseScaleX:slot.scaleX,x:slot.x,z:slot.z,yaw:-slot.angle,maxHp:spec.hp,hp:spec.hp,status:'intact',cost:spec.cost,collapseRemaining:0,villageId:nearest(s.villages,{x:slot.x,z:slot.z})?.id})).filter(piece=>{if(!nav.wallPlacement(piece).valid){blockedPieces.push(piece);return false;}return !cropOverlap(piece);}).slice(0,Math.max(0,Math.floor(options.maxPieces??Infinity)));
+  const blockedPieces=[],blockedCrops=[];
+  const newPieces=slots.map(slot=>({kind:'wall',material,gate:false,baseScaleX:slot.scaleX,x:slot.x,z:slot.z,yaw:-slot.angle,maxHp:spec.hp,hp:spec.hp,status:'intact',cost:spec.cost,collapseRemaining:0,villageId:nearest(s.villages,{x:slot.x,z:slot.z})?.id})).filter(piece=>{if(!nav.wallPlacement(piece).valid){blockedPieces.push(piece);return false;}if(cropOverlap(piece)){blockedCrops.push(piece);return false;}return true;}).slice(0,Math.max(0,Math.floor(options.maxPieces??Infinity)));
   newPieces.forEach((piece,i)=>Object.assign(piece,{id:`structure-${s.nextId+i}`,created:s.sequence+i}));
   const gatePlan=planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap);
   if(gatePlan.unhostedWorker||gatePlan.unhosted&&!gatePlan.length){
@@ -264,7 +277,15 @@ export function quoteWallChain(s,material,points,nav,options={}) {
     for(const key of check.suppress??[])suppressed.add(key);
   }
   const cost=spec.cost*newPieces.length;
-  return {pieces:newPieces,previewPieces:checks,updates,suppressed:[...suppressed],cost,gates:updates.length};
+  const plan={pieces:newPieces,previewPieces:checks,updates,suppressed:[...suppressed],cost,gates:updates.length,
+    expectedSlots:slots,blockedPieces,blockedCrops};
+  preparedWallQuotes.set(plan,{state:s,nav,material,points:JSON.stringify(points),
+    smooth:options.smooth??true,snap:options.snap??true,
+    maxPieces:options.maxPieces??Infinity,sequence:s.sequence,nextId:s.nextId,
+    elapsed:s.elapsed,version:nav.version,structureCount:s.structures.length,
+    plantCount:s.plants.length,workerCount:s.workers.length,
+    quote:structuredClone(plan)});
+  return plan;
 }
 export function previewWallChain(s,material,points,nav,options={}) {
   const plan=quoteWallChain(s,material,points,nav,options);
@@ -273,7 +294,26 @@ export function previewWallChain(s,material,points,nav,options={}) {
 }
 export function buildWallChain(s,id,material,points,nav,options={}) {
   if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
-  const plan=previewWallChain(s,material,points,nav,options),newPieces=plan.pieces;
+  const prepared=preparedWallQuotes.get(options.preparedPlan);
+  let plan;
+  if(options.preparedPlan){
+    if(!prepared||!Number.isFinite(nav.version)||prepared.state!==s||prepared.nav!==nav||
+      prepared.material!==material||prepared.points!==JSON.stringify(points)||
+      prepared.smooth!==(options.smooth??true)||
+      prepared.snap!==(options.snap??true)||
+      prepared.maxPieces!==(options.maxPieces??Infinity)||
+      prepared.sequence!==s.sequence||prepared.nextId!==s.nextId||
+      prepared.elapsed!==s.elapsed||prepared.version!==nav.version||
+      prepared.structureCount!==s.structures.length||
+      prepared.plantCount!==s.plants.length||
+      prepared.workerCount!==s.workers.length)
+      throw Error('La cotización de la muralla ha caducado');
+    plan=prepared.quote;
+    if(compare(s.ledger.balance,rational(plan.cost))<0)
+      throw Error('No hay monedas suficientes para todo el trazado');
+    preparedWallQuotes.delete(options.preparedPlan);
+  }else plan=previewWallChain(s,material,points,nav,options);
+  const newPieces=plan.pieces;
   if(!newPieces.length)return false;
   return commit(s,id,'wall',()=>{
     ensurePurchaseBudget(s,plan.cost);transact(s.ledger,id,rational(-plan.cost));

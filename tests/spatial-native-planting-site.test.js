@@ -52,6 +52,14 @@ test('native planting advice reserves legal bidirectional sites and confirms pai
   const third=bridge.findPlantingSite(center.id,{budget:64});
   assert.equal(third.status,'found',JSON.stringify(third));
   assert.notDeepEqual(third.point,first.point);
+  assert.equal(bridge.releasePlantingSite(third.reservationId),true);
+  planted.alive=false;
+  bridge.applyCommittedEvents(game,[{type:'CropPicked',targetId:planted.id}]);
+  const replanted=bridge.findPlantingSite(center.id,{budget:64});
+  assert.equal(replanted.status,'found');
+  assert.deepEqual(replanted.point,first.point,
+   'a harvested crop frees its original site in the native occupancy index');
+  assert.equal(bridge.releasePlantingSite(replanted.reservationId),true);
   const restored=deserialize(serialize(game));
   bridge.resetFromState(restored);
   const replay=bridge.findPlantingSite(center.id,{budget:64});
