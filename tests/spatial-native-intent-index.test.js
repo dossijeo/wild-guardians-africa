@@ -96,13 +96,32 @@ test('incremental native task index plans, discards and commits one global assig
   const barrier=session.core.applyBarrierChanges([],[{
    x:origin.x+5,z:origin.z+5,halfX:.35,halfZ:.35,passMask:0}]);
   try{
-   assert.equal(wasm.nav_intent_reconcile_topology(),2);
+   assert.equal(wasm.nav_intent_reconcile_topology(),0,
+    'an unrelated barrier does not discard physically valid routes');
+   assert.equal(wasm.nav_intent_actor(2),1);
+   const active=new Float64Array(wasm.memory.buffer,wasm.nav_intent_actor_ptr(),10);
+   assert.deepEqual([active[1],active[2],active[3]],[1,101,12],
+    'the existing intention and its target remain active');
+  }finally{session.core.applyBarrierChanges(barrier,[]);}
+  assert.equal(wasm.nav_intent_actor(2),1);
+  const routeIntent=Array.from(new Float64Array(wasm.memory.buffer,
+   wasm.nav_intent_actor_ptr(),10));
+  const routeCount=wasm.nav_intent_route_points(...routeIntent.slice(4,7));
+  assert(routeCount>0);
+  const route=Array.from(new Float32Array(wasm.memory.buffer,
+   wasm.nav_intent_route_ptr(...routeIntent.slice(4,7)),routeCount*2));
+  const at=Math.floor((routeCount-1)/2)*2;
+  const obstruction=session.core.applyBarrierChanges([],[{
+   x:route[at],z:route[at+1],halfX:.35,halfZ:.35,passMask:0}]);
+  try{
+   assert(wasm.nav_intent_reconcile_topology()>0,
+    'an obstacle intersecting a pinned path invalidates it at the event boundary');
    assert.equal(wasm.nav_intent_actor(2),1);
    const pending=new Float64Array(wasm.memory.buffer,wasm.nav_intent_actor_ptr(),10);
    assert.deepEqual([pending[1],pending[2],pending[3]],[0,101,12],
-    'a physical invalidation retains the worker task and target');
-  }finally{session.core.applyBarrierChanges(barrier,[]);}
-  assert.equal(wasm.nav_intent_replan_pending_routes(),2);
+    'route invalidation retains the same worker task and target');
+  }finally{session.core.applyBarrierChanges(obstruction,[]);}
+  assert(wasm.nav_intent_replan_pending_routes()>0);
   assert.equal(wasm.nav_intent_actor(2),1);
   assert.equal(new Float64Array(wasm.memory.buffer,wasm.nav_intent_actor_ptr(),10)[1],1);
   assert.equal(wasm.nav_intent_action_active(2),1);

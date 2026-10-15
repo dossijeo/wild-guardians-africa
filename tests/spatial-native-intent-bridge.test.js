@@ -90,6 +90,17 @@ test('event-fed native intent bridge replays live state and only changes on expl
   assert(bridge.routePoints(assigned.routeHandle)?.length>0);
   assert.deepEqual(bridge.intentChanges(),[],
    'draining an event batch cannot repeat an old assignment');
+  session.actorSectorRevision({worker:true});
+  const priorTopology=wasm.nav_intent_topology_revision();
+  const unrelatedWall=session.core.addWall(worker.x+25,worker.z+25,.35,.35);
+  assert(unrelatedWall>0);
+  assert.notEqual(wasm.nav_intent_topology_revision(),priorTopology);
+  assert.equal(bridge.reconcileTopology(),0,
+   'a remote topological event preserves a physically valid active route');
+  assert(bridge.routePoints(assigned.routeHandle)?.length>0,
+   'the same pinned route handle survives an unrelated wall');
+  assert.deepEqual(bridge.intentChanges(),[],
+   'an unchanged route emits no redundant planning notification');
   plant.alive=false;
   const boundary=bridge.processEventBoundary(game,[{type:'target',entity:plant}]);
   assert.equal(boundary.invalidated,0);

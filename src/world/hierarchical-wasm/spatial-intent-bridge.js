@@ -8,8 +8,8 @@ import {ANIMAL_SPATIAL_PROFILES} from './spatial-movement-profiles.js';
 import {applyConfirmedTaskAssignments,notifyWorkerPlanningChange,
   observeTaskChanges,releaseTask,replaceTasks} from '../../simulation/tasks.js';
 
-// Experimental event-fed bridge. Gameplay does not call it yet: it is used to
-// prove the native read model can be rebuilt after load and changed by deltas.
+// Event-fed bridge. Game.tick uses its worker task gate when the opt-in native
+// intent planner is attached; animal attack selection remains in raids.js.
 const width=10,maxBatch=4096;
 const profileEnd=new Map(PROFILES.map(profile=>[profile.id,profile.end]));
 const materialCodes=new Map(BALANCE.walls.map((wall,index)=>[wall.id,index+1]));
@@ -359,6 +359,7 @@ export function createSpatialIntentBridge(session){
   // normal movement reads routePoints() without entering the planner.
   const processEventBoundary=(state,events,{topologyChanged=false}={})=>{
     applyEvents(state,events);
+    if(topologyChanged)session.actorSectorRevision({worker:true});
     const invalidated=topologyChanged?wasm.nav_intent_reconcile_topology():0;
     const rerouted=invalidated?wasm.nav_intent_replan_pending_routes():0;
     return {invalidated,rerouted,changes:intentChanges()};
@@ -556,6 +557,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     if(topologyChanged)syncChangedPositions(true);
     bridge.applyCommittedEvents(observedTaskState,events);
     if(topologyChanged){
+      session.actorSectorRevision({worker:true});
       const invalidated=session.core.wasm.nav_intent_reconcile_topology();
       if(invalidated)session.core.wasm.nav_intent_replan_pending_routes();
     }

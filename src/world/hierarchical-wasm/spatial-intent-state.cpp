@@ -846,16 +846,40 @@ const float* nav_intent_route_ptr(double session,double slot,double generation){
   return route.active&&route.generation==uint32_t(generation)?
     route.points.data():nullptr;
 }
-// Topology updates originate in Wild Engine. This explicit boundary is a
-// conservative first stage; sector dependency indexing follows separately.
+// A topological event may be unrelated to an active worker path. Validate the
+// pinned polyline against the updated native collision map at this boundary,
+// rather than discarding every route merely because the global revision moved.
+// The continuous mover still performs its ordinary local collision checks.
+bool activeRouteClear(const IntentState& s,const ActiveIntent& intent){
+  if(intent.slot>=s.routeSlots.size())return false;
+  const RouteSlot& route=s.routeSlots[intent.slot];
+  if(!route.active||route.generation!=intent.generation||
+     route.points.size()<2||route.points.size()%2)return false;
+  const auto worker=s.workers.find(intent.actor);
+  if(worker==s.workers.end())return false;
+  float x=float(worker->second.x),z=float(worker->second.z);
+  for(size_t i=0;i<route.points.size();i+=2){
+    const float nextX=route.points[i],nextZ=route.points[i+1];
+    if(!spatial_local_clear(x,z,nextX,nextZ))return false;
+    x=nextX;z=nextZ;
+  }
+  return true;
+}
 int nav_intent_reconcile_topology(){
   IntentState& s=state();const uint32_t revision=lazy_route_revision();
   std::vector<uint64_t> affected;
-  for(const auto& item:s.activeIntents)
-    if((item.second.state==PlanningState::RouteActive||
-        item.second.state==PlanningState::WaitingUnknown||
-        item.second.state==PlanningState::WaitingBlocked)&&
-       item.second.topology!=revision)affected.push_back(item.first);
+  for(auto& item:s.activeIntents){
+    ActiveIntent& intent=item.second;
+    if(intent.topology==revision)continue;
+    if(intent.state==PlanningState::RouteActive&&activeRouteClear(s,intent)){
+      intent.topology=revision;
+      continue;
+    }
+    if(intent.state==PlanningState::RouteActive||
+       intent.state==PlanningState::WaitingUnknown||
+       intent.state==PlanningState::WaitingBlocked)
+      affected.push_back(item.first);
+  }
   std::sort(affected.begin(),affected.end());
   for(uint64_t actor:affected){
     ActiveIntent& intent=s.activeIntents.at(actor);
