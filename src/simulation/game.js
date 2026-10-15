@@ -697,25 +697,63 @@ function taskRouteWhenKnown(compute){
     throw error;
   }
 }
+const taskCandidateWaits=new WeakMap();
 function reserveAvailableTasks(s,nav){
   if(s.raid||s.time>=300)return;
   const idle=s.workers.filter(w=>w.status==='idle'&&!w.taskId&&!w.incapacitated&&!contractExpired(w,s))
     .map(w=>`${w.id}:${w.centerId}`).join('|');
   const sectors=nav.spatialSectorRevision?.(.28,true)??0;
   const wait=taskPlanWaits.get(s);
-  if(!nav.forcePlanningPoll&&wait&&wait.tasks===s.tasks&&wait.length===s.tasks.length&&
-    wait.taskRevision===taskPlanningRevision(s)&&wait.idle===idle&&
-    wait.topology===nav.version&&wait.sectors===sectors&&s.elapsed<wait.retryAt){
+  const taskRevision=taskPlanningRevision(s);
+  const wakes=[];
+  if(!wait)wakes.push('initial');
+  else{
+    if(wait.tasks!==s.tasks||wait.length!==s.tasks.length)wakes.push('queue');
+    if(wait.taskRevision!==taskRevision)wakes.push('lease');
+    if(wait.idle!==idle)wakes.push('idle-workers');
+    if(wait.topology!==nav.version)wakes.push('topology');
+    if(wait.sectors!==sectors)wakes.push('sector-residency');
+    if(s.elapsed>=wait.retryAt)wakes.push('bounded-retry');
+  }
+  if(!nav.forcePlanningPoll&&!wakes.length){
     nav.planningObserver?.({kind:'taskDeferred',actorId:null,elapsed:s.elapsed});
     return;
   }
+  nav.planningObserver?.({kind:'taskWake',actorId:null,elapsed:s.elapsed,reasons:wakes});
   nav.planningObserver?.({kind:'taskPass',actorId:null,elapsed:s.elapsed});
+  let deferred=taskCandidateWaits.get(s);
+  if(!deferred){deferred=new Map();taskCandidateWaits.set(s,deferred);}
+  if(deferred.size>Math.max(128,s.tasks.length*2)){
+    const active=new Set(s.tasks.map(t=>t.id));
+    for(const id of deferred.keys())if(!active.has(id))deferred.delete(id);
+  }
   reserveTasks(s,(w,t,target)=>{
     if(s.time>=profile(w).end)return false;
+    let byWorker=deferred.get(t.id);
+    const previous=byWorker?.get(w.id);
+    if(!nav.forcePlanningPoll&&!nav.forceTaskCandidatePoll&&previous&&previous.topology===nav.version&&
+      previous.sectors===sectors&&previous.kind===t.kind&&
+      previous.targetX===target.x&&previous.targetZ===target.z&&
+      Math.hypot(previous.workerX-w.x,previous.workerZ-w.z)<.5&&
+      s.elapsed<previous.retryAt){
+      nav.planningObserver?.({kind:'taskCandidateDeferred',actorId:w.id,elapsed:s.elapsed,taskId:t.id});
+      // The prior failed point is waiting for an event, not a fresh proof that
+      // the task is currently blocked at this worker's moving position.
+      return null;
+    }
     nav.planningObserver?.({kind:'taskCandidate',actorId:w.id,elapsed:s.elapsed,taskId:t.id});
     const route=taskRouteWhenKnown(()=>t.kind==='repair'?repairRoute(w,target,nav):
       t.kind==='initial'||t.kind==='water'?wateringRoute(w,target,nav):
         (nav.workerPath?nav.workerPath(w,target,.28,null):nav.path(w,target,.28,null,true)));
+    nav.planningObserver?.({kind:'taskCandidateResult',actorId:w.id,elapsed:s.elapsed,
+      taskId:t.id,outcome:route===undefined?'unknown':route?'found':'blocked'});
+    if(route)byWorker?.delete(w.id);
+    else{
+      if(!byWorker){byWorker=new Map();deferred.set(t.id,byWorker);}
+      byWorker.set(w.id,{topology:nav.version,sectors,kind:t.kind,
+        targetX:target.x,targetZ:target.z,workerX:w.x,workerZ:w.z,
+        retryAt:s.elapsed+ROUTE_RETRY_SECONDS});
+    }
     return route===undefined?null:route;
   },(w,t,target,route)=>{
     if(nav.forceRouteRebuild)return;

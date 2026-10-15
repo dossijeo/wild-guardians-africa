@@ -1,0 +1,181 @@
+{
+  "fixture": "tests/fixtures/watering-gran-canon-saheliana-detour-10.json.gz",
+  "fixtureSha256": "4036a5cb5818d1cff20ad58088aad3da601163f4b17106b594abd40579418c5c",
+  "wasmSha256": "b4ec886a34919b471d912d4f4fd2d6b3446724f8c222661defc831541f396163",
+  "count": 200,
+  "rows": [
+    {
+      "mode": "A",
+      "ticks": 200,
+      "totalMs": 637.4231000000045,
+      "routeMs": 38.05040000001418,
+      "routeCalls": 2528,
+      "cacheHits": 0,
+      "cacheMisses": 0,
+      "memoryBytes": 15663104,
+      "planning": {
+        "simulatedSeconds": 200.0000000000011,
+        "byKind": {
+          "taskWake": 121,
+          "taskPass": 121,
+          "taskDeferred": 1538,
+          "taskCandidate": 7191,
+          "taskCandidateResult": 7191,
+          "routeRefresh": 42,
+          "routeDeferred": 2010
+        },
+        "wakeReasons": {
+          "initial": 1,
+          "queue": 106,
+          "lease": 63,
+          "idle-workers": 48,
+          "bounded-retry": 1
+        },
+        "candidateOutcomes": {
+          "blocked": 7144,
+          "found": 47
+        },
+        "planningRequestsPerActorMinute": [
+          {
+            "actorId": "worker-16",
+            "requests": 3395,
+            "perMinute": 1018.4999999999943
+          },
+          {
+            "actorId": "worker-12",
+            "requests": 3286,
+            "perMinute": 985.7999999999945
+          },
+          {
+            "actorId": "worker-10",
+            "requests": 148,
+            "perMinute": 44.39999999999976
+          },
+          {
+            "actorId": "worker-14",
+            "requests": 138,
+            "perMinute": 41.39999999999977
+          },
+          {
+            "actorId": "worker-6",
+            "requests": 135,
+            "perMinute": 40.49999999999977
+          },
+          {
+            "actorId": "worker-8",
+            "requests": 131,
+            "perMinute": 39.299999999999784
+          }
+        ],
+        "maxActorCount": {
+          "taskWake": 0,
+          "taskDeferred": 0,
+          "taskCandidate": 3390,
+          "taskCandidateResult": 3390,
+          "routeRefresh": 9,
+          "routeDeferred": 335
+        },
+        "topActors": [
+          {
+            "actorId": "worker-16",
+            "counts": {
+              "taskCandidate": 3390,
+              "taskCandidateResult": 3390,
+              "routeRefresh": 5,
+              "routeDeferred": 335
+            }
+          },
+          {
+            "actorId": "worker-12",
+            "counts": {
+              "taskCandidate": 3281,
+              "taskCandidateResult": 3281,
+              "routeRefresh": 5,
+              "routeDeferred": 335
+            }
+          },
+          {
+            "actorId": "worker-10",
+            "counts": {
+              "taskCandidate": 139,
+              "taskCandidateResult": 139,
+              "routeRefresh": 9,
+              "routeDeferred": 335
+            }
+          },
+          {
+            "actorId": "worker-14",
+            "counts": {
+              "taskCandidate": 131,
+              "taskCandidateResult": 131,
+              "routeRefresh": 7,
+              "routeDeferred": 335
+            }
+          },
+          {
+            "actorId": "worker-6",
+            "counts": {
+              "taskCandidate": 126,
+              "taskCandidateResult": 126,
+              "routeRefresh": 9,
+              "routeDeferred": 335
+            }
+          },
+          {
+            "actorId": "worker-8",
+            "counts": {
+              "taskCandidate": 124,
+              "taskCandidateResult": 124,
+              "routeRefresh": 7,
+              "routeDeferred": 335
+            }
+          }
+        ],
+        "repeatedSameAction": [
+          [
+            "routeDeferred:worker-6:home-village-1",
+            335
+          ],
+          [
+            "routeDeferred:worker-8:home-village-1",
+            335
+          ],
+          [
+            "routeDeferred:worker-10:home-village-1",
+            335
+          ],
+          [
+            "routeDeferred:worker-12:home-village-1",
+            335
+          ],
+          [
+            "routeDeferred:worker-14:home-village-1",
+            335
+          ],
+          [
+            "routeDeferred:worker-16:home-village-1",
+            335
+          ],
+          [
+            "taskCandidate:worker-16:task-91",
+            118
+          ],
+          [
+            "taskCandidateResult:worker-16:task-91",
+            118
+          ],
+          [
+            "taskCandidate:worker-16:task-125",
+            118
+          ],
+          [
+            "taskCandidateResult:worker-16:task-125",
+            118
+          ]
+        ]
+      },
+      "stateSha256": "cbfd93c49b6e5705a417317c1a8f7b782cffb1f89984068cfe1271ead645d770",
+      "firstDifference": null
+    }
+  ]
+}
