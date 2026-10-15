@@ -40,7 +40,7 @@ With Emscripten configured, run `bash tools/build-spatial-savanna-wasm.sh`, then
 node --test tests/spatial-native-intent-index.test.js tests/spatial-native-intent-bridge.test.js tests/spatial-native-intent-differential.test.js
 ```
 
-The focused checks cover global FIFO assignment, event-driven target invalidation, unaffected worker preservation, topology route invalidation with same-task replanning, stale route handles, save-style reset, and no replan on ordinary intent reads. They do not establish campaign equivalence or sustained performance.
+The focused checks cover global FIFO assignment, event-driven target invalidation, unaffected worker preservation, topology route invalidation with same-task replanning, stale route handles, save-style reset, and no replan on ordinary intent reads. One real Desert watering assignment is now committed into the JavaScript worker state, serialized/restored, then moved through the continuous controller along native-static-clear segments to a valid watering point without another path request. This proves that controlled path only; it does not establish campaign equivalence, other work kinds, or sustained performance.
 
 ## Next integration gates
 

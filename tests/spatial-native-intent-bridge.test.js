@@ -4,9 +4,11 @@ import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
 import {execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
-import {deserialize} from '../src/persistence/snapshots.js';
-import {emit,rebuildTasks} from '../src/simulation/game.js';
+import {deserialize,serialize} from '../src/persistence/snapshots.js';
+import {emit,rebuildTasks,walkTo} from '../src/simulation/game.js';
 import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+import {canWaterFrom} from '../src/world/work-points.js';
 import {createSpatialIntentBridge,createEventDrivenTaskPlanner} from
  '../src/world/hierarchical-wasm/spatial-intent-bridge.js';
 import {enqueue,notifyWorkerPlanningChange,replaceTasks} from '../src/simulation/tasks.js';
@@ -178,25 +180,58 @@ test('event-fed native intent bridge replays live state and only changes on expl
   stopWorld();
   plant.alive=true;worker.status='idle';worker.taskId=null;game.tasks=[task];
   planner.resetFromState(game);
+  const nav=createSpatialNavigationMovement(session,game);
+  const stopCommitObserver=planner.observeTasks(game);
   const nativePlan=planner.planIfNeeded(0);
   assert.throws(()=>planner.commitTaskBatchToState(game,nativePlan,{navVersion:NaN}),
    /current planning batch/);
   assert.equal(task.workerId,null,'a rejected commit leaves the JS lease untouched');
   const originalTarget=task.targetId;
   task.targetId='plant-1000002';
-  assert.throws(()=>planner.commitTaskBatchToState(game,nativePlan,{navVersion:1}),
+  assert.throws(()=>planner.commitTaskBatchToState(game,nativePlan,{navVersion:nav.version}),
    /target changed|inputs changed/,
    'a task changed without a projected delta cannot receive the stale native route');
   assert.equal(task.workerId,null);
   task.targetId=originalTarget;
-  assert.equal(planner.commitTaskBatchToState(game,nativePlan,{navVersion:1}),1);
+  assert.equal(planner.commitTaskBatchToState(game,nativePlan,{navVersion:nav.version}),1);
   assert.equal(task.workerId,worker.id);
   assert.equal(worker.taskId,task.id);
   assert.equal(worker.status,'walking');
   assert(worker.path.length>0,'the native route is copied once when action starts');
   assert.equal(worker.taskApproach.taskId,task.id);
-  assert.throws(()=>planner.commitTaskBatchToState(game,nativePlan,{navVersion:1}),
+  const [committedIntent]=planner.intentChanges();
+  assert.equal(planner.flushTaskEvents(),2,
+   'the confirmed JS assignment projects task and worker changes together');
+  assert(planner.routePoints(committedIntent.routeHandle)?.length>0,
+   'projecting the confirmed assignment preserves its active native route');
+  stopCommitObserver();
+  const restored=deserialize(serialize(game));
+  const restoredWorker=restored.workers.find(item=>item.id===worker.id);
+  assert.equal(restoredWorker.taskId,task.id);
+  assert.deepEqual(restoredWorker.path,worker.path,
+   'a saved action preserves the physical path without serializing its native handle');
+  planner.resetFromState(restored);
+  assert.equal(planner.routePoints(committedIntent.routeHandle),null,
+   'a restored session rejects its former route handle');
+  assert.throws(()=>planner.commitTaskBatchToState(game,nativePlan,{navVersion:nav.version}),
    /current planning batch/,'the same native proposal cannot be committed twice');
+  const restoredNav=createSpatialNavigationMovement(session,restored);
+  const restoredPlant=restored.plants.find(item=>item.id===plant.id);
+  let previous={x:restoredWorker.x,z:restoredWorker.z};
+  for(const point of restoredWorker.path){
+   assert(restoredNav.segmentClear(previous,point,.28,null,true),
+    'the committed route respects native static worker clearance');
+   previous=point;
+  }
+  restoredNav.workerPath=()=>{throw Error('ordinary movement unexpectedly replanned');};
+  let reached=false;
+  for(let step=0;step<1000&&!reached;step++){
+   restored.elapsed+=.2;
+   reached=walkTo(restored,restoredWorker,restoredWorker.taskApproach.destination,.2,restoredNav);
+  }
+  assert(reached,'the continuous movement controller completes the native route');
+  assert(canWaterFrom(restoredWorker,restoredPlant,restoredNav),
+   'the reached interaction point permits the actual watering action');
  }finally{session.dispose();}
 });
 
