@@ -42,6 +42,24 @@ distinguen por sí solos terreno inaccesible, conectividad desconocida,
 reservas temporales o agotamiento de espera; hace falta observación de
 entradas, regiones y contactos antes de calibrar daño o economía defensiva.
 
+El informe nativo del brazo `none` precisa el patrón: en las noches 6–10,
+todos los animales de la primera oleada aparecieron en un borde del área
+activa, agotaron unos 90 s de espera y se retiraron con los golpes intactos.
+En la noche 11, los primeros 16 repitieron ese patrón; dos animales de la
+segunda oleada nacieron cerca del centro agrícola, atacaron y agotaron sus
+golpes. La reconstrucción offline **histórica** de una captura de noche 6
+(fuente `20ae0954`, no emparejable con este piloto) devolvió `unknown` para
+dos cultivos testigo por especie incluso con los 36 chunks del área activa
+residentes: los extremos tenían componentes conocidos, pero el grafo no
+resolvió una conexión. Eso no prueba una ruta imposible fuera del área. El
+código de entrada intenta primero una formación completa cerca de la cámara
+o finca y, si no cabe o no se certifica, acepta una formación en el borde
+con sólo una prueba **local** de spawn→salida. La combinación es una hipótesis
+concreta para explicar por qué 16 animales esperan y grupos pequeños tardíos
+sí llegan a atacar. La siguiente corrección del motor debe comprobar la
+accesibilidad física desde las entradas de oleadas grandes, sin teletransportar
+animales ni cambiar sus presupuestos de ataque.
+
 Reproducir desde la raíz del repositorio:
 
 ```
