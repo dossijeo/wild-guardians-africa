@@ -207,8 +207,21 @@ mientras el control no gastó en esos conceptos. Ambos ledgers concilian.
 La diferencia observada es de 245 pérdidas agrícolas menos con muros en esta
 única semilla. La presión varió después de divergir el tamaño de las fincas,
 según la misma regla militar para ambos brazos; el resultado es una comparación
-de políticas completas, no una tasa física de interceptación aislada. El
-tercer brazo, sin muros ni Escudo, sigue en ejecución.
+de políticas completas, no una tasa física de interceptación aislada.
+
+El tercer brazo (`matched-no-defense-current-magic`) terminó en **derrota
+nativa** al amanecer del día 13, con doce noches contabilizadas, 30 cultivos
+y 650 monedas. No tuvo murallas ni Escudo; desde la noche 6 perdió 345
+cultivos (363 incluyendo la introducción). La incursión final registró ocho
+golpes a centro, 176 HP estructurales perdidos, una estructura arruinada y 46
+cultivos destruidos. Con el centro arruinado, `dawnMinimum` exige 800 monedas
+para otro centro y 100 de reserva de contratación; las 650 disponibles no
+alcanzaban. La derrota corresponde a la regla nativa de solvencia tras daños
+físicos, no a un corte técnico ni a una eliminación sintética de plantas.
+Sus trece filas económicas concilian. El informe nativo, progreso y resumen
+final están en `matched-sabana712-14/`. La comparación completa favorece
+defender en esta semilla, mientras que el resultado de 100 noches y la
+generalización entre biomas siguen sin probarse.
 
 El mismo genoma defendido `4419e5eb34a46b9f` completó también 14/14 noches
 en Manglares con dos semillas. Con la 123 terminó con 121 cultivos, 911
