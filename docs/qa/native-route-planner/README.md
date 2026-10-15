@@ -42,6 +42,8 @@ In a 30-second Manglares raid state, the prior polling trace made 6,909 failed m
 
 A continuous Sabana/seed 712/good campaign on source `71e1c95658abf4ab6b52889c0ca740c051305d57` completed 14 nights in 399.3 wall seconds; the complete report is [`campaign-sabana-14.json`](campaign-sabana-14.json). Summing its 14 day bands gives 151.0 seconds in `Game.tick` and 196.4 seconds in virtual-player decisions. Decision time rose to about 52.7 seconds on day 12 and 52.2 seconds on day 14. This run predates the isolated native entity-index prototype and does not compare an activated native action planner. It shows sustained campaign progress but also a distinct virtual-player decision bottleneck; it is not evidence of a viable 100-night runtime or of gameplay balance.
 
+The 14-night Sabana campaign was repeated with the per-candidate wait guard on source `7eb88542` using the same seed and virtual-player policy. It completed in 401.8 wall seconds, including 151.8 seconds of `Game.tick` and 198.4 seconds of virtual-player decisions. Its per-day result rows match the earlier run **except for measured wall times**; the day-14 money and live-crop count remain 958 and 110. The full report is [`campaign-sabana-14-candidate-wait.json`](campaign-sabana-14-candidate-wait.json). This establishes no sustained speedup: the 200-tick Gran Cañón gain addresses a localized repeated-candidate workload, while this Sabana run is dominated by other worker/navigation and virtual-player decision costs. It would be wrong to extrapolate the short trace to a 100-night campaign.
+
 ## Frozen measurements
 
 Run `SPATIAL_WASM_OUTPUT=.cache/native-route-prototype.wasm bash tools/build-spatial-savanna-wasm.sh` with Emscripten activated, then:
