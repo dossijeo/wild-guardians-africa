@@ -174,8 +174,22 @@ void releaseIntent(IntentState& s,uint64_t actor,PlanningState next){
 void invalidateDependents(IntentState& s,const Change& change){
   if(change.kind==1){
     if(!change.op){
+      const auto active=s.activeIntents.find(change.id);
+      const uint64_t taskId=active==s.activeIntents.end()?0:active->second.task;
       releaseIntent(s,change.id,PlanningState::Cancelled);
       s.activeIntents.erase(change.id);
+      const auto task=s.tasks.find(taskId);
+      if(task!=s.tasks.end()&&task->second.assigned==change.id)task->second.assigned=0;
+    }else{
+      const auto current=s.workers.find(change.id);
+      if(current!=s.workers.end()&&current->second.center!=change.center){
+        const auto active=s.activeIntents.find(change.id);
+        const uint64_t taskId=active==s.activeIntents.end()?0:active->second.task;
+        releaseIntent(s,change.id,PlanningState::Cancelled);
+        s.activeIntents.erase(change.id);
+        const auto task=s.tasks.find(taskId);
+        if(task!=s.tasks.end()&&task->second.assigned==change.id)task->second.assigned=0;
+      }
     }
     return;
   }
@@ -183,14 +197,29 @@ void invalidateDependents(IntentState& s,const Change& change){
   const auto& index=change.kind==2?s.byTarget:s.byTask;
   const auto found=index.find(change.id);
   if(found==index.end())return;
+  const auto oldTarget=change.kind==2?s.targets.find(change.id):s.targets.end();
+  const auto oldTask=change.kind==3?s.tasks.find(change.id):s.tasks.end();
   const bool invalid=!change.op||change.kind==2&&!change.flag||
-    change.kind==3&&change.assigned==0;
-  if(!invalid)return;
+    change.kind==3&&(change.assigned==0||
+      oldTask!=s.tasks.end()&&(oldTask->second.target!=change.target||
+        oldTask->second.center!=change.center||
+        oldTask->second.assigned!=change.assigned||
+        oldTask->second.kind!=int(change.x)));
+  const bool moved=change.kind==2&&change.op&&change.flag&&
+    oldTarget!=s.targets.end()&&
+    (oldTarget->second.x!=change.x||oldTarget->second.z!=change.z);
+  if(!invalid&&!moved)return;
   std::vector<uint64_t> actors(found->second.begin(),found->second.end());
   std::sort(actors.begin(),actors.end());
   for(uint64_t actor:actors){
     const auto active=s.activeIntents.find(actor);
     if(active==s.activeIntents.end())continue;
+    if(moved&&!invalid){
+      ActiveIntent& intent=active->second;
+      releaseRoute(s,intent);intent.state=PlanningState::NeedsPlan;
+      emitIntentChange(s,intent);s.invalidations++;
+      continue;
+    }
     const uint64_t task=active->second.task;
     releaseIntent(s,actor,PlanningState::NeedsPlan);
     s.activeIntents.erase(actor);
