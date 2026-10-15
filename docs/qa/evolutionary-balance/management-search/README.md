@@ -424,3 +424,13 @@ de cinco pérdidas a favor de `good` tampoco prueban superioridad militar o
 económica general: las fincas evolucionaron de forma distinta bajo la misma
 regla de presión. El informe nativo está en
 `results-14-main-sync/712f0156ff37-good-manglares-123-14.json`.
+
+El mismo control histórico terminó la reserva Manglares/24681357 con 99
+cultivos, 782 monedas, 102 pérdidas desde la noche 6, 87 cajas/día terminales
+y margen operativo de −41. Sus catorce filas concilian. En esa semilla,
+`good-current-magic` terminó con 94 cultivos, 846 monedas, 65 pérdidas,
+99⅓ cajas/día y margen +223; el genoma evolucionado con magia actual terminó
+con 129/861, 15 pérdidas, 118 cajas/día y margen +72. La divergencia entre
+semillas confirma que el brazo histórico no debe reemplazar al control de
+magias actuales ni justificar una selección por una sola reserva. Informe:
+`results-14-post-intro/deb7ec2b4ed1-good-manglares-24681357-14.json`.
