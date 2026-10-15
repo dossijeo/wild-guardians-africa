@@ -1,0 +1,72 @@
+{
+  "sourceHash": "d66858a12a0649dfc34b99e531d3e39c3cf6adcc",
+  "geneSchemaVersion": "virtual-player-v3-service-side-policy",
+  "moduleHashes": {
+    "tools/native-campaign-runner.mjs": "7a1c8dac4c793ea44ee7c21d34e98bbe840d836c46c44d10364f3e526b081b49",
+    "tools/evolutionary-balance/run-ga.mjs": "b6e28e28393bb4ccac2a7756ac17dc6346442dfcc4fd7b091c2c5dfdc1d56f2c",
+    "tools/evolutionary-balance/run-post-intro-pilot.mjs": "38a953c1884af58baa423500de192aebdf191be50f99b5d1c12d0668fa14f9a3",
+    "tools/evolutionary-balance/post-intro-fitness.mjs": "6b5ff70302dc203907164b64cb598e53b69a5ab2e5424af4c77036db7b2e4f7c",
+    "tools/evolutionary-balance/policy-genes.mjs": "fa8dd7c82f4289bc1b016dd15cbf7b3fd66182e0b1d1ec963c0dc127a1d0edfd"
+  },
+  "config": {
+    "days": 14,
+    "maxDayGameTickMs": 60000,
+    "maxElapsedWallMs": 900000,
+    "minimumTerminalDeliveryPerDay": null,
+    "output": "docs/qa/evolutionary-balance/service-side-desierto983-14",
+    "scenarios": [
+      {
+        "seed": 983,
+        "biome": "desierto"
+      },
+      {
+        "seed": 712,
+        "biome": "sabana"
+      }
+    ],
+    "genomes": {
+      "service-side": {
+        "plantsPerWorker": 6,
+        "wageReserveDays": 1,
+        "seedReserve": 0,
+        "defenseCashFraction": 0.2,
+        "defenseStartDay": 2,
+        "repairHealthFraction": 0.8,
+        "magicIntervalSeconds": 5,
+        "growthShare": 0,
+        "plantingIntervalSeconds": 1,
+        "wallMaterial": "zarzas",
+        "magicPriority": "multiply",
+        "wallPolicy": "service-side"
+      },
+      "planned": {
+        "plantsPerWorker": 6,
+        "wageReserveDays": 1,
+        "seedReserve": 0,
+        "defenseCashFraction": 0.2,
+        "defenseStartDay": 2,
+        "repairHealthFraction": 0.8,
+        "magicIntervalSeconds": 5,
+        "growthShare": 0,
+        "plantingIntervalSeconds": 1,
+        "wallMaterial": "zarzas",
+        "magicPriority": "multiply",
+        "wallPolicy": "planned"
+      }
+    },
+    "caseSelection": [
+      {
+        "seed": 983,
+        "biome": "desierto",
+        "name": "planned"
+      },
+      {
+        "seed": 983,
+        "biome": "desierto",
+        "name": "service-side"
+      }
+    ]
+  },
+  "balance": "production unchanged",
+  "purpose": "post-intro native policy pilot"
+}

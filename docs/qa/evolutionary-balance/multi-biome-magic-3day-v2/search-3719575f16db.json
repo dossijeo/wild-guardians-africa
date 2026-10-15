@@ -1,0 +1,277 @@
+{
+  "stamp": {
+    "sourceHash": "bfb22fd39097c9bd66d2462036f0fe0fa742595b",
+    "moduleHashes": {
+      "tools/native-campaign-runner.mjs": "daed3907265ad50956f3fe8ab142eb10e51bcf7e6fccf087831b71850e39b01f",
+      "tools/native-expanding-defense-policy.mjs": "4a6540674a0b8e971c456ea08834e79ff7021176f6179587f931b9c0a31a02c2",
+      "tools/evolutionary-balance/run-ga.mjs": "c0ee3ae9b394ba460a940fa8c9bf779c1251b23925d0542fab54fb1bcc66c002",
+      "tools/evolutionary-balance/ga.mjs": "50c125732ce78be6ac92397b0c36aad833d886e9a49aa80666efdd4f516edc1c",
+      "tools/evolutionary-balance/policy-genes.mjs": "07ad66ebed9172b56fab1b9ff6109d585e2f3ebc7f64feefbf2ce05f78e2c575"
+    },
+    "worktreeDiffHash": "02c9aaf5b824c9ae16376c0502b1557a429ed2dc8c8e181fea4ed7b8a8ad9201",
+    "implementationId": "f16f9d3331fa",
+    "runId": "3719575f16db",
+    "config": {
+      "rngSeed": 712,
+      "generations": 1,
+      "population": 4,
+      "days": 3,
+      "train": [
+        {
+          "biome": "sabana",
+          "seed": 712
+        },
+        {
+          "biome": "gran-rio",
+          "seed": 2026
+        }
+      ],
+      "holdout": [
+        {
+          "biome": "manglares",
+          "seed": 123
+        },
+        {
+          "biome": "desierto",
+          "seed": 909
+        }
+      ],
+      "baselines": [
+        "good-current-magic"
+      ],
+      "output": "docs/qa/evolutionary-balance/multi-biome-magic-3day-v2",
+      "requireBiomeHoldout": true,
+      "initialPopulation": [
+        {
+          "plantsPerWorker": 6,
+          "wageReserveDays": 1,
+          "seedReserve": 0,
+          "defenseCashFraction": 0.2,
+          "defenseStartDay": 2,
+          "repairHealthFraction": 0.8,
+          "magicIntervalSeconds": 5,
+          "growthShare": 0,
+          "plantingIntervalSeconds": 1,
+          "wallMaterial": "zarzas",
+          "magicPriority": "multiply"
+        },
+        {
+          "plantsPerWorker": 6,
+          "wageReserveDays": 1,
+          "seedReserve": 0,
+          "defenseCashFraction": 0.2,
+          "defenseStartDay": 2,
+          "repairHealthFraction": 0.8,
+          "magicIntervalSeconds": 5,
+          "growthShare": 0.5,
+          "plantingIntervalSeconds": 1,
+          "wallMaterial": "zarzas",
+          "magicPriority": "growth"
+        },
+        {
+          "plantsPerWorker": 6,
+          "wageReserveDays": 1,
+          "seedReserve": 0,
+          "defenseCashFraction": 0.2,
+          "defenseStartDay": 2,
+          "repairHealthFraction": 0.8,
+          "magicIntervalSeconds": 5,
+          "growthShare": 0.5,
+          "plantingIntervalSeconds": 1,
+          "wallMaterial": "zarzas",
+          "magicPriority": "multiply"
+        },
+        {
+          "plantsPerWorker": 6,
+          "wageReserveDays": 1,
+          "seedReserve": 0,
+          "defenseCashFraction": 0.2,
+          "defenseStartDay": 2,
+          "repairHealthFraction": 0.8,
+          "magicIntervalSeconds": 5,
+          "growthShare": 1,
+          "plantingIntervalSeconds": 1,
+          "wallMaterial": "zarzas",
+          "magicPriority": "growth"
+        }
+      ]
+    },
+    "gameBalance": "unchanged",
+    "runKind": "native-Wild-Engine-campaign"
+  },
+  "generations": [
+    {
+      "generation": 0,
+      "ranked": [
+        {
+          "id": "cae8cec8c9a3e8af",
+          "genes": {
+            "plantsPerWorker": 6,
+            "wageReserveDays": 1,
+            "seedReserve": 0,
+            "defenseCashFraction": 0.2,
+            "defenseStartDay": 2,
+            "repairHealthFraction": 0.8,
+            "magicIntervalSeconds": 5,
+            "growthShare": 0.5,
+            "plantingIntervalSeconds": 1,
+            "wallMaterial": "zarzas",
+            "magicPriority": "multiply"
+          },
+          "score": 3076.15,
+          "meanScore": 3076.175,
+          "cases": [
+            {
+              "biome": "sabana",
+              "seed": 712,
+              "score": 3076.15,
+              "valid": true,
+              "completed": 3,
+              "productive": 227,
+              "living": 71,
+              "cash": 586,
+              "result": null
+            },
+            {
+              "biome": "gran-rio",
+              "seed": 2026,
+              "score": 3076.2,
+              "valid": true,
+              "completed": 3,
+              "productive": 232,
+              "living": 73,
+              "cash": 562,
+              "result": null
+            }
+          ]
+        },
+        {
+          "id": "eee9529b306e0091",
+          "genes": {
+            "plantsPerWorker": 6,
+            "wageReserveDays": 1,
+            "seedReserve": 0,
+            "defenseCashFraction": 0.2,
+            "defenseStartDay": 2,
+            "repairHealthFraction": 0.8,
+            "magicIntervalSeconds": 5,
+            "growthShare": 0,
+            "plantingIntervalSeconds": 1,
+            "wallMaterial": "zarzas",
+            "magicPriority": "multiply"
+          },
+          "score": 3072.9,
+          "meanScore": 3075.5,
+          "cases": [
+            {
+              "biome": "sabana",
+              "seed": 712,
+              "score": 3078.1,
+              "valid": true,
+              "completed": 3,
+              "productive": 215,
+              "living": 74,
+              "cash": 607,
+              "result": null
+            },
+            {
+              "biome": "gran-rio",
+              "seed": 2026,
+              "score": 3072.9,
+              "valid": true,
+              "completed": 3,
+              "productive": 215,
+              "living": 65,
+              "cash": 593,
+              "result": null
+            }
+          ]
+        },
+        {
+          "id": "1cfc123bee2b21f5",
+          "genes": {
+            "plantsPerWorker": 6,
+            "wageReserveDays": 1,
+            "seedReserve": 0,
+            "defenseCashFraction": 0.2,
+            "defenseStartDay": 2,
+            "repairHealthFraction": 0.8,
+            "magicIntervalSeconds": 5,
+            "growthShare": 0.5,
+            "plantingIntervalSeconds": 1,
+            "wallMaterial": "zarzas",
+            "magicPriority": "growth"
+          },
+          "score": 3072.7999999999997,
+          "meanScore": 3074,
+          "cases": [
+            {
+              "biome": "sabana",
+              "seed": 712,
+              "score": 3075.2,
+              "valid": true,
+              "completed": 3,
+              "productive": 224,
+              "living": 68,
+              "cash": 600,
+              "result": null
+            },
+            {
+              "biome": "gran-rio",
+              "seed": 2026,
+              "score": 3072.7999999999997,
+              "valid": true,
+              "completed": 3,
+              "productive": 224,
+              "living": 73,
+              "cash": 502,
+              "result": null
+            }
+          ]
+        },
+        {
+          "id": "cc46d955faf45769",
+          "genes": {
+            "plantsPerWorker": 6,
+            "wageReserveDays": 1,
+            "seedReserve": 0,
+            "defenseCashFraction": 0.2,
+            "defenseStartDay": 2,
+            "repairHealthFraction": 0.8,
+            "magicIntervalSeconds": 5,
+            "growthShare": 1,
+            "plantingIntervalSeconds": 1,
+            "wallMaterial": "zarzas",
+            "magicPriority": "growth"
+          },
+          "score": 3056.35,
+          "meanScore": 3058.6000000000004,
+          "cases": [
+            {
+              "biome": "sabana",
+              "seed": 712,
+              "score": 3060.8500000000004,
+              "valid": true,
+              "completed": 3,
+              "productive": 216,
+              "living": 54,
+              "cash": 461,
+              "result": null
+            },
+            {
+              "biome": "gran-rio",
+              "seed": 2026,
+              "score": 3056.35,
+              "valid": true,
+              "completed": 3,
+              "productive": 213,
+              "living": 44,
+              "cash": 474,
+              "result": null
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

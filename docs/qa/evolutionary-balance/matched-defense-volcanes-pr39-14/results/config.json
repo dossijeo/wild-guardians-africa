@@ -1,0 +1,49 @@
+{
+  "sourceHash": "545e04bac4c76b82551e85a3adbdb7be299064f9",
+  "geneSchemaVersion": "virtual-player-v2-wall-policy",
+  "moduleHashes": {
+    "tools/evolutionary-balance/run-matched-defense.mjs": "2a72145de0215a51a307e7053eb310311971e7463a3f8be410e7a1e6b34fcc40",
+    "tools/evolutionary-balance/run-ga.mjs": "b6e28e28393bb4ccac2a7756ac17dc6346442dfcc4fd7b091c2c5dfdc1d56f2c",
+    "tools/evolutionary-balance/policy-genes.mjs": "61c6e840b1f9d110817040d034095a1134d183626fe6ac3324aeda932f5a8866",
+    "tools/evolutionary-balance/matched-defense-controls.mjs": "a998a927a0807dd664ecdd7c8e2e6b41b0a0411c54245fc0b57966ead85ad1e7",
+    "tools/native-campaign-runner.mjs": "cb3ece0a6c29fbf3e2f70fd30094ad18cb804135beb59d7c3ffd4db1fb2aa4dd",
+    "tools/native-expanding-defense-policy.mjs": "4a6540674a0b8e971c456ea08834e79ff7021176f6179587f931b9c0a31a02c2"
+  },
+  "config": {
+    "days": 14,
+    "biome": "volcanes",
+    "seed": 907,
+    "genes": {
+      "plantsPerWorker": 6,
+      "wageReserveDays": 1,
+      "seedReserve": 0,
+      "defenseCashFraction": 0.2,
+      "defenseStartDay": 2,
+      "repairHealthFraction": 0.8,
+      "magicIntervalSeconds": 5,
+      "growthShare": 0,
+      "plantingIntervalSeconds": 1,
+      "wallMaterial": "zarzas",
+      "magicPriority": "multiply",
+      "wallPolicy": "planned"
+    },
+    "output": "docs/qa/evolutionary-balance/matched-defense-volcanes-pr39-14/results",
+    "maxDayGameTickMs": 60000,
+    "maxElapsedWallMs": 900000
+  },
+  "arms": {
+    "matched-walls-current-magic": {
+      "buildRepairWalls": true,
+      "useShield": true
+    },
+    "matched-no-walls-current-magic": {
+      "buildRepairWalls": false,
+      "useShield": true
+    },
+    "matched-no-defense-current-magic": {
+      "buildRepairWalls": false,
+      "useShield": false
+    }
+  },
+  "balance": "production unchanged"
+}

@@ -1,0 +1,23 @@
+{
+  "rngSeed": 712,
+  "generations": 1,
+  "population": 4,
+  "days": 3,
+  "requireBiomeHoldout": true,
+  "train": [
+    {"biome": "sabana", "seed": 712},
+    {"biome": "gran-rio", "seed": 2026}
+  ],
+  "holdout": [
+    {"biome": "manglares", "seed": 123},
+    {"biome": "desierto", "seed": 909}
+  ],
+  "initialPopulation": [
+    {"growthShare": 0, "magicPriority": "multiply"},
+    {"growthShare": 0.5, "magicPriority": "growth"},
+    {"growthShare": 0.5, "magicPriority": "multiply"},
+    {"growthShare": 1, "magicPriority": "growth"}
+  ],
+  "baselines": ["good-current-magic"],
+  "output": "docs/qa/evolutionary-balance/multi-biome-magic-3day"
+}

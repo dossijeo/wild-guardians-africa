@@ -1,0 +1,603 @@
+{
+  "kind": "post-intro-v1-to-v2-offline-rescore",
+  "sourceSearch": "docs/qa/evolutionary-balance/management-search/results-14-post-intro/search-7dc683338c58.json",
+  "sourceSearchSha256": "75938ef8d6b723fdbb72e636db332f1099da40735087d0617e85e0bca7b888f4",
+  "sourceStamp": {
+    "sourceHash": "68ffb4a5abf827b147883a20525c71f0d1890c1b",
+    "moduleHashes": {
+      "tools/native-campaign-runner.mjs": "7a1c8dac4c793ea44ee7c21d34e98bbe840d836c46c44d10364f3e526b081b49",
+      "tools/native-expanding-defense-policy.mjs": "b649e7b65ba0dacb7b362e550f81b5c3e8edb98cba1ebd2a27ee566625ad4842",
+      "tools/evolutionary-balance/run-ga.mjs": "274a4576a24af8f806a17a0cfd481a5d1bc7fec9696d5253a261e1b4551b7058",
+      "tools/evolutionary-balance/ga.mjs": "655da41f6ee35041b0b6b1c1bb92b93d148ac68ba8194339b7406bd7efe87f1e",
+      "tools/evolutionary-balance/post-intro-fitness.mjs": "6b5ff70302dc203907164b64cb598e53b69a5ab2e5424af4c77036db7b2e4f7c",
+      "tools/evolutionary-balance/policy-genes.mjs": "fa8dd7c82f4289bc1b016dd15cbf7b3fd66182e0b1d1ec963c0dc127a1d0edfd"
+    },
+    "worktreeDiffHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "implementationId": "deb7ec2b4ed1",
+    "runId": "7dc683338c58",
+    "geneSchemaVersion": "virtual-player-v3-service-side-policy",
+    "config": {
+      "rngSeed": 1407,
+      "generations": 2,
+      "population": 3,
+      "days": 14,
+      "train": [
+        {
+          "biome": "sabana",
+          "seed": 712
+        },
+        {
+          "biome": "gran-rio",
+          "seed": 2026
+        }
+      ],
+      "holdout": [
+        {
+          "biome": "manglares",
+          "seed": 24681357
+        }
+      ],
+      "baselines": [
+        "good-current-magic",
+        "good",
+        "expansive",
+        "bad",
+        "no-walls"
+      ],
+      "output": "docs/qa/evolutionary-balance/management-search/results-14-post-intro",
+      "requireBiomeHoldout": true,
+      "initialPopulation": [
+        {
+          "plantsPerWorker": 6,
+          "wageReserveDays": 1,
+          "seedReserve": 0,
+          "defenseCashFraction": 0.2,
+          "defenseStartDay": 2,
+          "repairHealthFraction": 0.8,
+          "magicIntervalSeconds": 5,
+          "growthShare": 0,
+          "plantingIntervalSeconds": 1,
+          "wallMaterial": "zarzas",
+          "magicPriority": "multiply",
+          "wallPolicy": "planned"
+        },
+        {
+          "plantsPerWorker": 8,
+          "wageReserveDays": 2,
+          "seedReserve": 50,
+          "defenseCashFraction": 0.35,
+          "defenseStartDay": 2,
+          "repairHealthFraction": 0.85,
+          "magicIntervalSeconds": 5,
+          "growthShare": 0.25,
+          "plantingIntervalSeconds": 2,
+          "wallMaterial": "zarzas",
+          "magicPriority": "multiply",
+          "wallPolicy": "planned"
+        },
+        {
+          "plantsPerWorker": 5,
+          "wageReserveDays": 1,
+          "seedReserve": 25,
+          "defenseCashFraction": 0.4,
+          "defenseStartDay": 1,
+          "repairHealthFraction": 0.9,
+          "magicIntervalSeconds": 5,
+          "growthShare": 0,
+          "plantingIntervalSeconds": 1,
+          "wallMaterial": "empalizada",
+          "magicPriority": "multiply",
+          "wallPolicy": "planned"
+        }
+      ],
+      "costStop": {
+        "maxDayGameTickMs": 120000,
+        "maxElapsedWallMs": 900000
+      },
+      "fitnessVersion": "post-intro-v1",
+      "minimumTerminalDeliveryPerDay": 82.16666666666667,
+      "deliveryFloorSource": "docs/qa/evolutionary-balance/post-intro-pilot-14/README.md:26-28 (six native development controls; interpolated lower quartile)"
+    },
+    "gameBalance": "unchanged",
+    "runKind": "native-Wild-Engine-campaign"
+  },
+  "scoring": "post-intro-v2; native reports unchanged",
+  "generations": [
+    {
+      "generation": 0,
+      "historical": [
+        "4419e5eb34a46b9f",
+        "2db23cb3f5302cc9",
+        "f4967cb9f88e23dd"
+      ],
+      "revised": [
+        "4419e5eb34a46b9f",
+        "2db23cb3f5302cc9",
+        "f4967cb9f88e23dd"
+      ],
+      "rankUnchanged": true,
+      "entries": [
+        {
+          "id": "4419e5eb34a46b9f",
+          "score": 14090.5607279748,
+          "meanScore": 14128.238976411682
+        },
+        {
+          "id": "2db23cb3f5302cc9",
+          "score": 5154.5,
+          "meanScore": 7181.6470856102005
+        },
+        {
+          "id": "f4967cb9f88e23dd",
+          "score": -1000000000,
+          "meanScore": -1000000000
+        }
+      ]
+    },
+    {
+      "generation": 1,
+      "historical": [
+        "4419e5eb34a46b9f",
+        "d131ef6cd76dc6ce",
+        "835711fac6025e72"
+      ],
+      "revised": [
+        "4419e5eb34a46b9f",
+        "d131ef6cd76dc6ce",
+        "835711fac6025e72"
+      ],
+      "rankUnchanged": true,
+      "entries": [
+        {
+          "id": "4419e5eb34a46b9f",
+          "score": 14090.5607279748,
+          "meanScore": 14128.238976411682
+        },
+        {
+          "id": "d131ef6cd76dc6ce",
+          "score": -1000000000,
+          "meanScore": -499993007.77707547
+        },
+        {
+          "id": "835711fac6025e72",
+          "score": -1000000000,
+          "meanScore": -1000000000
+        }
+      ]
+    }
+  ],
+  "holdout": {
+    "resultSha256": "77d46e82839e586c2361c30b4c07e1a2c4840f05262c404e20f2967c733a55cc",
+    "oldLeader": "4419e5eb34a46b9f",
+    "revisedLeader": "4419e5eb34a46b9f",
+    "leaderUnchanged": true,
+    "rows": [
+      {
+        "strategy": "evolved",
+        "id": "4419e5eb34a46b9f",
+        "biome": "manglares",
+        "seed": 24681357,
+        "file": "deb7ec2b4ed1-4419e5eb34a46b9f-manglares-24681357-14.json",
+        "sha256": "0ff601dc386894b9f32161b245a2f8b2efcb612338a86be54f4e157acf9981a6",
+        "completedNights": 14,
+        "result": null,
+        "v1": {
+          "score": 14173.30203014074,
+          "valid": true,
+          "reason": null
+        },
+        "v2": {
+          "score": 14173.30203014074,
+          "valid": true,
+          "reason": null
+        }
+      },
+      {
+        "strategy": "good-current-magic",
+        "id": "good-current-magic",
+        "biome": "manglares",
+        "seed": 24681357,
+        "file": "deb7ec2b4ed1-good-current-magic-manglares-24681357-14.json",
+        "sha256": "80fe393833d5affcb7f515a195044d1163f9e0737df73584ab30284709e9f288",
+        "completedNights": 14,
+        "result": null,
+        "v1": {
+          "score": 14150.076803916592,
+          "valid": true,
+          "reason": null
+        },
+        "v2": {
+          "score": 14150.076803916592,
+          "valid": true,
+          "reason": null
+        }
+      },
+      {
+        "strategy": "good",
+        "id": "good",
+        "biome": "manglares",
+        "seed": 24681357,
+        "file": "deb7ec2b4ed1-good-manglares-24681357-14.json",
+        "sha256": "cceb328d1502b8b9c9ae150a4912fc10574bee1c82e94731c30847106cfe789c",
+        "completedNights": 14,
+        "result": null,
+        "v1": {
+          "score": 14103.129863207461,
+          "valid": true,
+          "reason": null
+        },
+        "v2": {
+          "score": 14103.129863207461,
+          "valid": true,
+          "reason": null
+        }
+      },
+      {
+        "strategy": "expansive",
+        "id": "expansive",
+        "biome": "manglares",
+        "seed": 24681357,
+        "file": "deb7ec2b4ed1-expansive-manglares-24681357-14.json",
+        "sha256": "9701f39966f36e0b8efec89d4989a18d55188b43a3295e5d4ed4797a238f9863",
+        "completedNights": 14,
+        "result": null,
+        "v1": {
+          "score": -1000000000,
+          "valid": false,
+          "reason": "collapsed-production"
+        },
+        "v2": {
+          "score": -1000000000,
+          "valid": false,
+          "reason": "collapsed-production"
+        }
+      },
+      {
+        "strategy": "bad",
+        "id": "bad",
+        "biome": "manglares",
+        "seed": 24681357,
+        "file": "deb7ec2b4ed1-bad-manglares-24681357-14.json",
+        "sha256": "c5ef81b0ab73a4c73ae2c8bc072c79797acd8a4a52bdee76e9048180ed2c3fae",
+        "completedNights": 13,
+        "result": "defeat",
+        "v1": {
+          "score": 12415.530477451448,
+          "valid": true,
+          "reason": null
+        },
+        "v2": {
+          "score": 12115.530477451448,
+          "valid": true,
+          "reason": null
+        }
+      },
+      {
+        "strategy": "no-walls",
+        "id": "no-walls",
+        "biome": "manglares",
+        "seed": 24681357,
+        "file": "deb7ec2b4ed1-no-walls-manglares-24681357-14.json",
+        "sha256": "bb1feb68ca022d2d0d2f7c0eae8e90d763620b6ea8df4b60b33a16785ed5ca81",
+        "completedNights": 14,
+        "result": null,
+        "v1": {
+          "score": -1000000000,
+          "valid": false,
+          "reason": "collapsed-production"
+        },
+        "v2": {
+          "score": -1000000000,
+          "valid": false,
+          "reason": "collapsed-production"
+        }
+      }
+    ]
+  },
+  "reports": [
+    {
+      "id": "4419e5eb34a46b9f",
+      "biome": "sabana",
+      "seed": 712,
+      "file": "deb7ec2b4ed1-4419e5eb34a46b9f-sabana-712-14.json",
+      "sha256": "6dd7f91c69366d7e98feb0776cc36794403869053d7f0b00bfae2824deaaeae8",
+      "completedNights": 14,
+      "result": null,
+      "v1": {
+        "score": 14090.5607279748,
+        "valid": true,
+        "reason": null
+      },
+      "v2": {
+        "score": 14090.5607279748,
+        "valid": true,
+        "reason": null
+      }
+    },
+    {
+      "id": "4419e5eb34a46b9f",
+      "biome": "gran-rio",
+      "seed": 2026,
+      "file": "deb7ec2b4ed1-4419e5eb34a46b9f-gran-rio-2026-14.json",
+      "sha256": "a3274f22313b677d9d1b92e75f9b5cd123e2e41269965790b41a2493ce332e2c",
+      "completedNights": 14,
+      "result": null,
+      "v1": {
+        "score": 14165.917224848561,
+        "valid": true,
+        "reason": null
+      },
+      "v2": {
+        "score": 14165.917224848561,
+        "valid": true,
+        "reason": null
+      }
+    },
+    {
+      "id": "2db23cb3f5302cc9",
+      "biome": "sabana",
+      "seed": 712,
+      "file": "deb7ec2b4ed1-2db23cb3f5302cc9-sabana-712-14.json",
+      "sha256": "a981937e419e46920ae4d779f51f9326f635b93991d47fa9cac8d6cdea5e1991",
+      "completedNights": 6,
+      "result": "defeat",
+      "v1": {
+        "score": 5454.5,
+        "valid": true,
+        "reason": null
+      },
+      "v2": {
+        "score": 5154.5,
+        "valid": true,
+        "reason": null
+      }
+    },
+    {
+      "id": "2db23cb3f5302cc9",
+      "biome": "gran-rio",
+      "seed": 2026,
+      "file": "deb7ec2b4ed1-2db23cb3f5302cc9-gran-rio-2026-14.json",
+      "sha256": "71806de2da2f19ece10fa66e61f858fb4905883fecea5becb5f50aba37326566",
+      "completedNights": 10,
+      "result": "defeat",
+      "v1": {
+        "score": 9508.794171220401,
+        "valid": true,
+        "reason": null
+      },
+      "v2": {
+        "score": 9208.794171220401,
+        "valid": true,
+        "reason": null
+      }
+    },
+    {
+      "id": "f4967cb9f88e23dd",
+      "biome": "sabana",
+      "seed": 712,
+      "file": "deb7ec2b4ed1-f4967cb9f88e23dd-sabana-712-14.json",
+      "sha256": "413b86b4185a578de175e90121a3745cd41fe93e02dc8a0546ec2e0627cb58a8",
+      "completedNights": 14,
+      "result": null,
+      "v1": {
+        "score": -1000000000,
+        "valid": false,
+        "reason": "collapsed-production"
+      },
+      "v2": {
+        "score": -1000000000,
+        "valid": false,
+        "reason": "collapsed-production"
+      }
+    },
+    {
+      "id": "f4967cb9f88e23dd",
+      "biome": "gran-rio",
+      "seed": 2026,
+      "file": "deb7ec2b4ed1-f4967cb9f88e23dd-gran-rio-2026-14.json",
+      "sha256": "6e95835a102654ac7a77220ceb24094c9f802ddce795fe6c9600f2c92e0dbc23",
+      "completedNights": 14,
+      "result": null,
+      "v1": {
+        "score": -1000000000,
+        "valid": false,
+        "reason": "collapsed-production"
+      },
+      "v2": {
+        "score": -1000000000,
+        "valid": false,
+        "reason": "collapsed-production"
+      }
+    },
+    {
+      "id": "d131ef6cd76dc6ce",
+      "biome": "sabana",
+      "seed": 712,
+      "file": "deb7ec2b4ed1-d131ef6cd76dc6ce-sabana-712-14.json",
+      "sha256": "cd0d331c928cea6265d17e78604e6914e06aa139a8120ecf10f0ca1639d6bba0",
+      "completedNights": 14,
+      "result": null,
+      "v1": {
+        "score": 13984.445849046018,
+        "valid": true,
+        "reason": null
+      },
+      "v2": {
+        "score": 13984.445849046018,
+        "valid": true,
+        "reason": null
+      }
+    },
+    {
+      "id": "d131ef6cd76dc6ce",
+      "biome": "gran-rio",
+      "seed": 2026,
+      "file": "deb7ec2b4ed1-d131ef6cd76dc6ce-gran-rio-2026-14.json",
+      "sha256": "365262d1f076721be01064f31475d86638161f1038b39adefd303d5ab8c4ff99",
+      "completedNights": 14,
+      "result": null,
+      "v1": {
+        "score": -1000000000,
+        "valid": false,
+        "reason": "collapsed-production"
+      },
+      "v2": {
+        "score": -1000000000,
+        "valid": false,
+        "reason": "collapsed-production"
+      }
+    },
+    {
+      "id": "835711fac6025e72",
+      "biome": "sabana",
+      "seed": 712,
+      "file": "deb7ec2b4ed1-835711fac6025e72-sabana-712-14.json",
+      "sha256": "a1cc4834c1b5320415bac5a821b84cb9a8f9175c345dd90e8b704652c83b26cf",
+      "completedNights": 14,
+      "result": null,
+      "v1": {
+        "score": -1000000000,
+        "valid": false,
+        "reason": "collapsed-production"
+      },
+      "v2": {
+        "score": -1000000000,
+        "valid": false,
+        "reason": "collapsed-production"
+      }
+    },
+    {
+      "id": "835711fac6025e72",
+      "biome": "gran-rio",
+      "seed": 2026,
+      "file": "deb7ec2b4ed1-835711fac6025e72-gran-rio-2026-14.json",
+      "sha256": "3ca7ce1ebf31ab0ec9ba69006c30ecaa1d637e76686364c20e0842e25d75134e",
+      "completedNights": 14,
+      "result": null,
+      "v1": {
+        "score": -1000000000,
+        "valid": false,
+        "reason": "collapsed-production"
+      },
+      "v2": {
+        "score": -1000000000,
+        "valid": false,
+        "reason": "collapsed-production"
+      }
+    },
+    {
+      "id": "4419e5eb34a46b9f",
+      "biome": "manglares",
+      "seed": 24681357,
+      "file": "deb7ec2b4ed1-4419e5eb34a46b9f-manglares-24681357-14.json",
+      "sha256": "0ff601dc386894b9f32161b245a2f8b2efcb612338a86be54f4e157acf9981a6",
+      "completedNights": 14,
+      "result": null,
+      "v1": {
+        "score": 14173.30203014074,
+        "valid": true,
+        "reason": null
+      },
+      "v2": {
+        "score": 14173.30203014074,
+        "valid": true,
+        "reason": null
+      }
+    },
+    {
+      "id": "good-current-magic",
+      "biome": "manglares",
+      "seed": 24681357,
+      "file": "deb7ec2b4ed1-good-current-magic-manglares-24681357-14.json",
+      "sha256": "80fe393833d5affcb7f515a195044d1163f9e0737df73584ab30284709e9f288",
+      "completedNights": 14,
+      "result": null,
+      "v1": {
+        "score": 14150.076803916592,
+        "valid": true,
+        "reason": null
+      },
+      "v2": {
+        "score": 14150.076803916592,
+        "valid": true,
+        "reason": null
+      }
+    },
+    {
+      "id": "good",
+      "biome": "manglares",
+      "seed": 24681357,
+      "file": "deb7ec2b4ed1-good-manglares-24681357-14.json",
+      "sha256": "cceb328d1502b8b9c9ae150a4912fc10574bee1c82e94731c30847106cfe789c",
+      "completedNights": 14,
+      "result": null,
+      "v1": {
+        "score": 14103.129863207461,
+        "valid": true,
+        "reason": null
+      },
+      "v2": {
+        "score": 14103.129863207461,
+        "valid": true,
+        "reason": null
+      }
+    },
+    {
+      "id": "expansive",
+      "biome": "manglares",
+      "seed": 24681357,
+      "file": "deb7ec2b4ed1-expansive-manglares-24681357-14.json",
+      "sha256": "9701f39966f36e0b8efec89d4989a18d55188b43a3295e5d4ed4797a238f9863",
+      "completedNights": 14,
+      "result": null,
+      "v1": {
+        "score": -1000000000,
+        "valid": false,
+        "reason": "collapsed-production"
+      },
+      "v2": {
+        "score": -1000000000,
+        "valid": false,
+        "reason": "collapsed-production"
+      }
+    },
+    {
+      "id": "bad",
+      "biome": "manglares",
+      "seed": 24681357,
+      "file": "deb7ec2b4ed1-bad-manglares-24681357-14.json",
+      "sha256": "c5ef81b0ab73a4c73ae2c8bc072c79797acd8a4a52bdee76e9048180ed2c3fae",
+      "completedNights": 13,
+      "result": "defeat",
+      "v1": {
+        "score": 12415.530477451448,
+        "valid": true,
+        "reason": null
+      },
+      "v2": {
+        "score": 12115.530477451448,
+        "valid": true,
+        "reason": null
+      }
+    },
+    {
+      "id": "no-walls",
+      "biome": "manglares",
+      "seed": 24681357,
+      "file": "deb7ec2b4ed1-no-walls-manglares-24681357-14.json",
+      "sha256": "bb1feb68ca022d2d0d2f7c0eae8e90d763620b6ea8df4b60b33a16785ed5ca81",
+      "completedNights": 14,
+      "result": null,
+      "v1": {
+        "score": -1000000000,
+        "valid": false,
+        "reason": "collapsed-production"
+      },
+      "v2": {
+        "score": -1000000000,
+        "valid": false,
+        "reason": "collapsed-production"
+      }
+    }
+  ]
+}

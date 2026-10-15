@@ -1,0 +1,773 @@
+{
+  "sourceHash": "175865f3ff75d3d1431e0a13e6293ec58f1ecb88",
+  "case": "default-walls-desierto-983-21",
+  "raidId": "raid-6-night",
+  "day": 6,
+  "elapsed": 3484.9999999975284,
+  "activeBounds": [
+    -24,
+    -72,
+    216,
+    168
+  ],
+  "raidView": {
+    "eye": {
+      "x": 99.70247532024266,
+      "z": 30.57367599590944
+    },
+    "target": {
+      "x": 83,
+      "z": 0
+    }
+  },
+  "cropsAlive": 77,
+  "animals": 8,
+  "loadedChunks": 36,
+  "queries": [
+    {
+      "species": "warthog",
+      "animalId": "animal-3401",
+      "spawn": {
+        "x": 102.6367057170348,
+        "z": 32.50312979907266
+      },
+      "targetId": "plant-3139",
+      "target": {
+        "x": 88.5,
+        "z": 10.5
+      },
+      "distance": 23.910528239814703,
+      "connectivity": "blocked",
+      "unknownReason": null,
+      "from": {
+        "ids": [
+          32544
+        ],
+        "unknown": false
+      },
+      "to": {
+        "ids": [
+          19728
+        ],
+        "unknown": false
+      },
+      "approachWitnesses": [],
+      "enclosure": {
+        "ids": [
+          9
+        ],
+        "status": "sealed"
+      }
+    },
+    {
+      "species": "warthog",
+      "animalId": "animal-3401",
+      "spawn": {
+        "x": 102.6367057170348,
+        "z": 32.50312979907266
+      },
+      "targetId": "plant-3372",
+      "target": {
+        "x": 78,
+        "z": 3
+      },
+      "distance": 35.67443985115871,
+      "connectivity": "blocked",
+      "unknownReason": null,
+      "from": {
+        "ids": [
+          32544
+        ],
+        "unknown": false
+      },
+      "to": {
+        "ids": [
+          19584
+        ],
+        "unknown": false
+      },
+      "approachWitnesses": [],
+      "enclosure": {
+        "ids": [
+          9
+        ],
+        "status": "sealed"
+      }
+    },
+    {
+      "species": "hyena",
+      "animalId": "animal-3406",
+      "spawn": {
+        "x": 104.45852276373077,
+        "z": 35.83794353425608
+      },
+      "targetId": "plant-3139",
+      "target": {
+        "x": 88.5,
+        "z": 10.5
+      },
+      "distance": 29.493732620269775,
+      "connectivity": "blocked",
+      "unknownReason": null,
+      "from": {
+        "ids": [
+          33120
+        ],
+        "unknown": false
+      },
+      "to": {
+        "ids": [
+          19728
+        ],
+        "unknown": false
+      },
+      "approachWitnesses": [],
+      "enclosure": {
+        "ids": [
+          8
+        ],
+        "status": "sealed"
+      }
+    },
+    {
+      "species": "hyena",
+      "animalId": "animal-3406",
+      "spawn": {
+        "x": 104.45852276373077,
+        "z": 35.83794353425608
+      },
+      "targetId": "plant-3372",
+      "target": {
+        "x": 78,
+        "z": 3
+      },
+      "distance": 41.59445576545128,
+      "connectivity": "blocked",
+      "unknownReason": null,
+      "from": {
+        "ids": [
+          33120
+        ],
+        "unknown": false
+      },
+      "to": {
+        "ids": [
+          19584
+        ],
+        "unknown": false
+      },
+      "approachWitnesses": [],
+      "enclosure": {
+        "ids": [
+          8
+        ],
+        "status": "sealed"
+      }
+    }
+  ],
+  "wallSideWitnesses": [
+    {
+      "species": "warthog",
+      "animalId": "animal-3401",
+      "walls": 57,
+      "counts": {
+        "not-standable": 66,
+        "accessible": 18,
+        "blocked": 27,
+        "unknown": 3
+      },
+      "reachable": [
+        {
+          "wallId": "structure-1871",
+          "gate": false,
+          "sign": -1,
+          "point": {
+            "x": 97.92,
+            "z": 16.928571428571427
+          },
+          "distance": 15.521119375437694,
+          "standable": true,
+          "connectivity": "accessible",
+          "enclosure": {
+            "ids": [
+              5
+            ],
+            "status": "open-frontier"
+          }
+        },
+        {
+          "wallId": "structure-1870",
+          "gate": false,
+          "sign": -1,
+          "point": {
+            "x": 97.92,
+            "z": 14.785714285714285
+          },
+          "distance": 17.641206576078226,
+          "standable": true,
+          "connectivity": "accessible",
+          "enclosure": {
+            "ids": [
+              5
+            ],
+            "status": "open-frontier"
+          }
+        },
+        {
+          "wallId": "structure-1869",
+          "gate": false,
+          "sign": -1,
+          "point": {
+            "x": 97.92,
+            "z": 12.642857142857142
+          },
+          "distance": 19.766205142174652,
+          "standable": true,
+          "connectivity": "accessible",
+          "enclosure": {
+            "ids": [
+              5
+            ],
+            "status": "open-frontier"
+          }
+        },
+        {
+          "wallId": "structure-1868",
+          "gate": false,
+          "sign": -1,
+          "point": {
+            "x": 97.92,
+            "z": 10.5
+          },
+          "distance": 21.8946850960361,
+          "standable": true,
+          "connectivity": "accessible",
+          "enclosure": {
+            "ids": [
+              5
+            ],
+            "status": "open-frontier"
+          }
+        },
+        {
+          "wallId": "structure-1586",
+          "gate": false,
+          "sign": -1,
+          "point": {
+            "x": 97.92,
+            "z": 8.357142857142858
+          },
+          "distance": 24.02572118909288,
+          "standable": true,
+          "connectivity": "accessible",
+          "enclosure": {
+            "ids": [
+              5
+            ],
+            "status": "open-frontier"
+          }
+        },
+        {
+          "wallId": "structure-1538",
+          "gate": false,
+          "sign": -1,
+          "point": {
+            "x": 97.92,
+            "z": 6.214285714285712
+          },
+          "distance": 26.158688715737572,
+          "standable": true,
+          "connectivity": "accessible",
+          "enclosure": {
+            "ids": [
+              5
+            ],
+            "status": "open-frontier"
+          }
+        },
+        {
+          "wallId": "structure-1537",
+          "gate": false,
+          "sign": -1,
+          "point": {
+            "x": 97.92,
+            "z": 4.07142857142857
+          },
+          "distance": 28.293150857885607,
+          "standable": true,
+          "connectivity": "accessible",
+          "enclosure": {
+            "ids": [
+              5
+            ],
+            "status": "open-frontier"
+          }
+        },
+        {
+          "wallId": "structure-1536",
+          "gate": false,
+          "sign": -1,
+          "point": {
+            "x": 97.92,
+            "z": 1.9285714285714273
+          },
+          "distance": 30.42879309267257,
+          "standable": true,
+          "connectivity": "accessible",
+          "enclosure": {
+            "ids": [
+              5
+            ],
+            "status": "open-frontier"
+          }
+        },
+        {
+          "wallId": "structure-1535",
+          "gate": false,
+          "sign": -1,
+          "point": {
+            "x": 97.92,
+            "z": -0.2142857142857154
+          },
+          "distance": 32.565383249021814,
+          "standable": true,
+          "connectivity": "accessible",
+          "enclosure": {
+            "ids": [
+              5
+            ],
+            "status": "open-frontier"
+          }
+        },
+        {
+          "wallId": "structure-1534",
+          "gate": false,
+          "sign": -1,
+          "point": {
+            "x": 97.92,
+            "z": -2.3571428571428577
+          },
+          "distance": 34.70274624153037,
+          "standable": true,
+          "connectivity": "accessible",
+          "enclosure": {
+            "ids": [
+              5
+            ],
+            "status": "open-frontier"
+          }
+        },
+        {
+          "wallId": "structure-1487",
+          "gate": false,
+          "sign": -1,
+          "point": {
+            "x": 97.92,
+            "z": -4.5
+          },
+          "distance": 36.840747559215174,
+          "standable": true,
+          "connectivity": "accessible",
+          "enclosure": {
+            "ids": [
+              5
+            ],
+            "status": "open-frontier"
+          }
+        },
+        {
+          "wallId": "structure-1486",
+          "gate": false,
+          "sign": -1,
+          "point": {
+            "x": 97.92,
+            "z": -6.642857142857142
+          },
+          "distance": 38.9792821664147,
+          "standable": true,
+          "connectivity": "accessible",
+          "enclosure": {
+            "ids": [
+              5
+            ],
+            "status": "open-frontier"
+          }
+        },
+        {
+          "wallId": "structure-1485",
+          "gate": false,
+          "sign": -1,
+          "point": {
+            "x": 97.92,
+            "z": -8.785714285714276
+          },
+          "distance": 41.11826685507936,
+          "standable": true,
+          "connectivity": "accessible",
+          "enclosure": {
+            "ids": [
+              5
+            ],
+            "status": "open-frontier"
+          }
+        },
+        {
+          "wallId": "structure-1484",
+          "gate": false,
+          "sign": -1,
+          "point": {
+            "x": 97.92,
+            "z": -10.928571428571443
+          },
+          "distance": 43.257634858963904,
+          "standable": true,
+          "connectivity": "accessible",
+          "enclosure": {
+            "ids": [
+              5
+            ],
+            "status": "open-frontier"
+          }
+        },
+        {
+          "wallId": "structure-1483",
+          "gate": false,
+          "sign": -1,
+          "point": {
+            "x": 97.92,
+            "z": -13.07142857142857
+          },
+          "distance": 45.39733198643691,
+          "standable": true,
+          "connectivity": "accessible",
+          "enclosure": {
+            "ids": [
+              5
+            ],
+            "status": "open-frontier"
+          }
+        },
+        {
+          "wallId": "structure-1482",
+          "gate": false,
+          "sign": -1,
+          "point": {
+            "x": 97.92,
+            "z": -15.214285714285724
+          },
+          "distance": 47.5373137950755,
+          "standable": true,
+          "connectivity": "accessible",
+          "enclosure": {
+            "ids": [
+              5
+            ],
+            "status": "open-frontier"
+          }
+        }
+      ]
+    },
+    {
+      "species": "hyena",
+      "animalId": "animal-3406",
+      "walls": 57,
+      "counts": {
+        "not-standable": 56,
+        "accessible": 19,
+        "blocked": 29,
+        "unknown": 10
+      },
+      "reachable": [
+        {
+          "wallId": "structure-1872",
+          "gate": false,
+          "sign": -1,
+          "point": {
+            "x": 94.92857142857143,
+            "z": 19.72
+          },
+          "distance": 19.859880763704158,
+          "standable": true,
+          "connectivity": "accessible",
+          "enclosure": {
+            "ids": [
+              5
+            ],
+            "status": "open-frontier"
+          }
+        },
+        {
+          "wallId": "structure-1871",
+          "gate": false,
+          "sign": -1,
+          "point": {
+            "x": 97.72,
+            "z": 16.928571428571427
+          },
+          "distance": 20.427940000600316,
+          "standable": true,
+          "connectivity": "accessible",
+          "enclosure": {
+            "ids": [
+              5
+            ],
+            "status": "open-frontier"
+          }
+        },
+        {
+          "wallId": "structure-1870",
+          "gate": false,
+          "sign": -1,
+          "point": {
+            "x": 97.72,
+            "z": 14.785714285714285
+          },
+          "distance": 22.441641278667014,
+          "standable": true,
+          "connectivity": "accessible",
+          "enclosure": {
+            "ids": [
+              5
+            ],
+            "status": "open-frontier"
+          }
+        },
+        {
+          "wallId": "structure-1869",
+          "gate": false,
+          "sign": -1,
+          "point": {
+            "x": 97.72,
+            "z": 12.642857142857142
+          },
+          "distance": 24.477284722003052,
+          "standable": true,
+          "connectivity": "accessible",
+          "enclosure": {
+            "ids": [
+              5
+            ],
+            "status": "open-frontier"
+          }
+        },
+        {
+          "wallId": "structure-1868",
+          "gate": false,
+          "sign": -1,
+          "point": {
+            "x": 97.72,
+            "z": 10.5
+          },
+          "distance": 26.52981991859395,
+          "standable": true,
+          "connectivity": "accessible",
+          "enclosure": {
+            "ids": [
+              5
+            ],
+            "status": "open-frontier"
+          }
+        },
+        {
+          "wallId": "structure-1586",
+          "gate": false,
+          "sign": -1,
+          "point": {
+            "x": 97.72,
+            "z": 8.357142857142858
+          },
+          "distance": 28.59560973180031,
+          "standable": true,
+          "connectivity": "accessible",
+          "enclosure": {
+            "ids": [
+              5
+            ],
+            "status": "open-frontier"
+          }
+        },
+        {
+          "wallId": "structure-1538",
+          "gate": false,
+          "sign": -1,
+          "point": {
+            "x": 97.72,
+            "z": 6.214285714285712
+          },
+          "distance": 30.67197614147528,
+          "standable": true,
+          "connectivity": "accessible",
+          "enclosure": {
+            "ids": [
+              5
+            ],
+            "status": "open-frontier"
+          }
+        },
+        {
+          "wallId": "structure-1537",
+          "gate": false,
+          "sign": -1,
+          "point": {
+            "x": 97.72,
+            "z": 4.07142857142857
+          },
+          "distance": 32.75690794904813,
+          "standable": true,
+          "connectivity": "accessible",
+          "enclosure": {
+            "ids": [
+              5
+            ],
+            "status": "open-frontier"
+          }
+        },
+        {
+          "wallId": "structure-1536",
+          "gate": false,
+          "sign": -1,
+          "point": {
+            "x": 97.72,
+            "z": 1.9285714285714275
+          },
+          "distance": 34.848867841164996,
+          "standable": true,
+          "connectivity": "accessible",
+          "enclosure": {
+            "ids": [
+              5
+            ],
+            "status": "open-frontier"
+          }
+        },
+        {
+          "wallId": "structure-1535",
+          "gate": false,
+          "sign": -1,
+          "point": {
+            "x": 97.72,
+            "z": -0.2142857142857154
+          },
+          "distance": 36.94666202390878,
+          "standable": true,
+          "connectivity": "accessible",
+          "enclosure": {
+            "ids": [
+              5
+            ],
+            "status": "open-frontier"
+          }
+        },
+        {
+          "wallId": "structure-1534",
+          "gate": false,
+          "sign": -1,
+          "point": {
+            "x": 97.72,
+            "z": -2.3571428571428577
+          },
+          "distance": 39.0493502260446,
+          "standable": true,
+          "connectivity": "accessible",
+          "enclosure": {
+            "ids": [
+              5
+            ],
+            "status": "open-frontier"
+          }
+        },
+        {
+          "wallId": "structure-1487",
+          "gate": false,
+          "sign": -1,
+          "point": {
+            "x": 97.72,
+            "z": -4.5
+          },
+          "distance": 41.15618234133269,
+          "standable": true,
+          "connectivity": "accessible",
+          "enclosure": {
+            "ids": [
+              5
+            ],
+            "status": "open-frontier"
+          }
+        },
+        {
+          "wallId": "structure-1486",
+          "gate": false,
+          "sign": -1,
+          "point": {
+            "x": 97.72,
+            "z": -6.642857142857142
+          },
+          "distance": 43.266553019846015,
+          "standable": true,
+          "connectivity": "accessible",
+          "enclosure": {
+            "ids": [
+              5
+            ],
+            "status": "open-frontier"
+          }
+        },
+        {
+          "wallId": "structure-1485",
+          "gate": false,
+          "sign": -1,
+          "point": {
+            "x": 97.72,
+            "z": -8.785714285714276
+          },
+          "distance": 45.379968587413735,
+          "standable": true,
+          "connectivity": "accessible",
+          "enclosure": {
+            "ids": [
+              5
+            ],
+            "status": "open-frontier"
+          }
+        },
+        {
+          "wallId": "structure-1484",
+          "gate": false,
+          "sign": -1,
+          "point": {
+            "x": 97.72,
+            "z": -10.928571428571443
+          },
+          "distance": 47.496022583365395,
+          "standable": true,
+          "connectivity": "accessible",
+          "enclosure": {
+            "ids": [
+              5
+            ],
+            "status": "open-frontier"
+          }
+        },
+        {
+          "wallId": "structure-1483",
+          "gate": false,
+          "sign": -1,
+          "point": {
+            "x": 97.72,
+            "z": -13.07142857142857
+          },
+          "distance": 49.61437742181032,
+          "standable": true,
+          "connectivity": "accessible",
+          "enclosure": {
+            "ids": [
+              5
+            ],
+            "status": "open-frontier"
+          }
+        }
+      ]
+    }
+  ],
+  "caveat": "Offline rebuild loads every chunk in captured activeBounds; results can differ from live residency. Two crop witnesses and wall-center side samples per species do not certify all physical attack positions."
+}

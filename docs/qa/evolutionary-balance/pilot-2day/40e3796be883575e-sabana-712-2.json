@@ -1,0 +1,95 @@
+{
+  "status": "completed",
+  "biome": "sabana",
+  "seed": 712,
+  "days": 2,
+  "strategy": "evolved",
+  "genes": {
+    "plantsPerWorker": 11,
+    "wageReserveDays": 4,
+    "seedReserve": 140,
+    "defenseCashFraction": 0.4,
+    "defenseStartDay": 5,
+    "repairHealthFraction": 0.65,
+    "magicIntervalSeconds": 26,
+    "plantingIntervalSeconds": 10,
+    "wallMaterial": "reforzado",
+    "magicPriority": "growth"
+  },
+  "completedNights": 2,
+  "result": null,
+  "rows": [
+    {
+      "day": 1,
+      "money": 506,
+      "living": 0,
+      "planted": 0,
+      "delivered": 1,
+      "destroyed": 0,
+      "staff": 7,
+      "income": 21,
+      "seeds": 5,
+      "wages": 210,
+      "walls": 0,
+      "repairs": 0,
+      "reconciled": true
+    },
+    {
+      "day": 2,
+      "money": 477,
+      "living": 14,
+      "planted": 26,
+      "delivered": 12,
+      "destroyed": 0,
+      "staff": 1,
+      "income": 150,
+      "seeds": 130,
+      "wages": 49,
+      "walls": 0,
+      "repairs": 0,
+      "reconciled": true
+    }
+  ],
+  "policy": {
+    "profile": "olderFemale",
+    "mixed": true,
+    "middayHiring": true,
+    "plantsPerWorker": 11,
+    "defend": true,
+    "cashPolicy": "minimum-reinvestment",
+    "reserveMaintenance": true,
+    "burstPlanting": false,
+    "cameraEntry": true,
+    "defensePolicy": "expanding",
+    "evolutionaryGenes": {
+      "plantsPerWorker": 11,
+      "wageReserveDays": 4,
+      "seedReserve": 140,
+      "defenseCashFraction": 0.4,
+      "defenseStartDay": 5,
+      "repairHealthFraction": 0.65,
+      "magicIntervalSeconds": 26,
+      "plantingIntervalSeconds": 10,
+      "wallMaterial": "reforzado",
+      "magicPriority": "growth"
+    }
+  },
+  "defense": {
+    "paidCost": 0,
+    "paidPieces": 0
+  },
+  "raid": [
+    {
+      "day": 1,
+      "animals": 1,
+      "cropsDestroyed": 0,
+      "wallHpLost": 0
+    },
+    {
+      "day": 2,
+      "animals": 1,
+      "cropsDestroyed": 0,
+      "wallHpLost": 0
+    }
+  ]
+}

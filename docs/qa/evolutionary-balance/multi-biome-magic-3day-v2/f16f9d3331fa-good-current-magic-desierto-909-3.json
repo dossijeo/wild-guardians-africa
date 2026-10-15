@@ -1,0 +1,160 @@
+{
+  "status": "completed",
+  "biome": "desierto",
+  "seed": 909,
+  "days": 3,
+  "strategy": "good-current-magic",
+  "genes": null,
+  "completedNights": 3,
+  "result": null,
+  "rows": [
+    {
+      "day": 1,
+      "money": 421,
+      "living": 65,
+      "planted": 101,
+      "delivered": 35,
+      "destroyed": 2,
+      "staff": 8,
+      "magic": {
+        "growth": 0,
+        "multiply": 53,
+        "benefited": 53,
+        "ineffective": 0,
+        "multiplyIncome": 97,
+        "growthSecondsCompleted": 0
+      },
+      "income": 482,
+      "seeds": 510,
+      "wages": 251,
+      "walls": 0,
+      "repairs": 0,
+      "reconciled": true,
+      "wallTime": {
+        "decisionMs": 4694.825399999507,
+        "gameTickMs": 489.4835999996867,
+        "presentationMs": 0.5340000003343448
+      }
+    },
+    {
+      "day": 2,
+      "money": 400,
+      "living": 70,
+      "planted": 69,
+      "delivered": 64,
+      "destroyed": 0,
+      "staff": 11,
+      "magic": {
+        "growth": 0,
+        "multiply": 60,
+        "benefited": 60,
+        "ineffective": 0,
+        "multiplyIncome": 115,
+        "growthSecondsCompleted": 0
+      },
+      "income": 819,
+      "seeds": 345,
+      "wages": 335,
+      "walls": 160,
+      "repairs": 0,
+      "reconciled": true,
+      "wallTime": {
+        "decisionMs": 3023.710899999831,
+        "gameTickMs": 1778.4887000009185,
+        "presentationMs": 0.6894999996875413
+      }
+    },
+    {
+      "day": 3,
+      "money": 465,
+      "living": 80,
+      "planted": 84,
+      "delivered": 74,
+      "destroyed": 0,
+      "staff": 12,
+      "magic": {
+        "growth": 0,
+        "multiply": 50,
+        "benefited": 50,
+        "ineffective": 0,
+        "multiplyIncome": 110,
+        "growthSecondsCompleted": 0
+      },
+      "income": 924,
+      "seeds": 420,
+      "wages": 369,
+      "walls": 70,
+      "repairs": 0,
+      "reconciled": true,
+      "wallTime": {
+        "decisionMs": 4207.073599999596,
+        "gameTickMs": 1421.5458999997354,
+        "presentationMs": 0.7802999999257736
+      }
+    }
+  ],
+  "policy": {
+    "profile": "olderFemale",
+    "mixed": true,
+    "middayHiring": true,
+    "plantsPerWorker": 6,
+    "defend": true,
+    "cashPolicy": "progressive-village",
+    "reserveMaintenance": true,
+    "burstPlanting": false,
+    "cameraEntry": true,
+    "defensePolicy": "expanding",
+    "evolutionaryGenes": null,
+    "currentMagicRules": true
+  },
+  "defense": {
+    "paidCost": 230,
+    "paidPieces": 23
+  },
+  "raid": [
+    {
+      "day": 1,
+      "animals": 1,
+      "attraction": 737,
+      "pressure": 0.09321016564378733,
+      "livingAtSpawn": 67,
+      "cropsDestroyed": 2,
+      "potentialAgriculturalHp": 2,
+      "effectiveAgriculturalHp": 2,
+      "wallHits": 0,
+      "wallHpLost": 0,
+      "structuresRuined": 0,
+      "shieldContacts": 0
+    },
+    {
+      "day": 2,
+      "animals": 1,
+      "attraction": 770,
+      "pressure": 0.10093263858293539,
+      "livingAtSpawn": 70,
+      "cropsDestroyed": 0,
+      "potentialAgriculturalHp": 3,
+      "effectiveAgriculturalHp": 0,
+      "wallHits": 0,
+      "wallHpLost": 0,
+      "structuresRuined": 0,
+      "shieldContacts": 0,
+      "targetUnavailableAttempts": 83
+    },
+    {
+      "day": 3,
+      "animals": 1,
+      "attraction": 902,
+      "pressure": 0.11762000764318403,
+      "livingAtSpawn": 80,
+      "cropsDestroyed": 0,
+      "potentialAgriculturalHp": 4,
+      "effectiveAgriculturalHp": 0,
+      "wallHits": 0,
+      "wallHpLost": 0,
+      "structuresRuined": 0,
+      "shieldContacts": 0,
+      "targetUnavailableAttempts": 83
+    }
+  ]
+}

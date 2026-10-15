@@ -1,0 +1,233 @@
+{
+  "source": {
+    "biome": "gran-canon",
+    "seed": 123,
+    "strategy": "evolved",
+    "status": "completed",
+    "result": "defeat",
+    "completedNights": 13,
+    "rows": 13,
+    "raidPressureVersion": 3,
+    "path": "docs\\qa\\evolutionary-balance\\model-current-pressure\\sources\\canyon123\\report.json.gz",
+    "sha256": "2622110851b261dc0b4a980b1c45f11aed811d1a63b7cff9442d0dbc43459155"
+  },
+  "trainingDays": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "validationDays": [
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ],
+  "coefficients": {
+    "incomePerPriorPlant": 10.27250608272506,
+    "wagesPerPriorPlant": 5.226277372262774,
+    "wagesToRaidAttraction": 0.43584784010315925,
+    "seedCostPerPlant": 5.012658227848101,
+    "nonRaidPlantExitPerPriorPlant": 0.9124087591240876,
+    "attractionPerLivingPlantAtSpawn": 11,
+    "agriculturalDamageEfficiency": 0.4642857142857143,
+    "potentialPerAnimal": 3.111111111111111,
+    "wallHpLostPerAnimal": 18.666666666666668,
+    "wallRepairCoinsPerHp": 0.05952380952380952,
+    "meanPlantedPerDay": 56.42857142857143,
+    "meanWallSpend": 44.285714285714285
+  },
+  "observability": {
+    "raidNightsInTraining": 2,
+    "enclosureCoverageMeasured": false,
+    "breachTimingMeasured": false,
+    "defenseEffectIdentifiable": false,
+    "reason": "Native report has wall contact/HP, but no certified crop membership or breach timing."
+  },
+  "holdoutError": {
+    "income": {
+      "absolute": 346.8150851581509,
+      "weightedAbsoluteFraction": 0.28404183878636435
+    },
+    "wages": {
+      "absolute": 135.39416058394158,
+      "weightedAbsoluteFraction": 0.17515415340742765
+    },
+    "seeds": {
+      "absolute": 1.7341772151898773,
+      "weightedAbsoluteFraction": 0.002531645569620259
+    },
+    "destroyed": {
+      "absolute": 62.214285714285715,
+      "weightedAbsoluteFraction": 0.6762422360248447
+    },
+    "repairs": {
+      "absolute": 125.39285714285715,
+      "weightedAbsoluteFraction": 0.7290282392026579
+    }
+  },
+  "holdoutPredictions": [
+    {
+      "day": 8,
+      "actual": {
+        "income": 387,
+        "wages": 285,
+        "seeds": 220,
+        "destroyed": 22,
+        "repairs": 10
+      },
+      "predicted": {
+        "income": 523.8978102189781,
+        "wages": 266.54014598540147,
+        "seeds": 220.55696202531647,
+        "destroyed": 17.642857142857142,
+        "repairs": 11.428571428571427
+      }
+    },
+    {
+      "day": 9,
+      "actual": {
+        "income": 550,
+        "wages": 248,
+        "seeds": 260,
+        "destroyed": 37,
+        "repairs": 3
+      },
+      "predicted": {
+        "income": 451.99026763990264,
+        "wages": 229.95620437956205,
+        "seeds": 260.65822784810126,
+        "destroyed": 20.892857142857142,
+        "repairs": 0
+      }
+    },
+    {
+      "day": 10,
+      "actual": {
+        "income": 122,
+        "wages": 120,
+        "seeds": 75,
+        "destroyed": 18,
+        "repairs": 114
+      },
+      "predicted": {
+        "income": 174.63260340632604,
+        "wages": 88.84671532846716,
+        "seeds": 75.18987341772151,
+        "destroyed": 20.42857142857143,
+        "repairs": 14.642857142857142
+      }
+    },
+    {
+      "day": 11,
+      "actual": {
+        "income": 72,
+        "wages": 60,
+        "seeds": 80,
+        "destroyed": 15,
+        "repairs": 28
+      },
+      "predicted": {
+        "income": 41.09002433090024,
+        "wages": 20.905109489051096,
+        "seeds": 80.20253164556962,
+        "destroyed": 19.035714285714285,
+        "repairs": 14.642857142857142
+      }
+    },
+    {
+      "day": 12,
+      "actual": {
+        "income": 34,
+        "wages": 30,
+        "seeds": 30,
+        "destroyed": 0,
+        "repairs": 10
+      },
+      "predicted": {
+        "income": 10.27250608272506,
+        "wages": 5.226277372262774,
+        "seeds": 30.075949367088608,
+        "destroyed": 15.785714285714286,
+        "repairs": 3.75
+      }
+    },
+    {
+      "day": 13,
+      "actual": {
+        "income": 56,
+        "wages": 30,
+        "seeds": 20,
+        "destroyed": 0,
+        "repairs": 7
+      },
+      "predicted": {
+        "income": 51.3625304136253,
+        "wages": 26.13138686131387,
+        "seeds": 20.050632911392405,
+        "destroyed": 19.5,
+        "repairs": 5
+      }
+    }
+  ],
+  "raidHoldoutError": {
+    "absolute": 77.10714285714286,
+    "weightedAbsoluteFraction": 0.7868075801749271
+  },
+  "raidHoldoutPredictions": [
+    {
+      "day": 8,
+      "terminal": false,
+      "actualDestroyed": 22,
+      "predictedDestroyed": 17.642857142857142
+    },
+    {
+      "day": 9,
+      "terminal": false,
+      "actualDestroyed": 37,
+      "predictedDestroyed": 20.892857142857142
+    },
+    {
+      "day": 10,
+      "terminal": false,
+      "actualDestroyed": 18,
+      "predictedDestroyed": 20.42857142857143
+    },
+    {
+      "day": 11,
+      "terminal": false,
+      "actualDestroyed": 15,
+      "predictedDestroyed": 19.035714285714285
+    },
+    {
+      "day": 12,
+      "terminal": false,
+      "actualDestroyed": 0,
+      "predictedDestroyed": 15.785714285714286
+    },
+    {
+      "day": 13,
+      "terminal": false,
+      "actualDestroyed": 0,
+      "predictedDestroyed": 19.5
+    },
+    {
+      "day": 14,
+      "terminal": true,
+      "actualDestroyed": 6,
+      "predictedDestroyed": 20.892857142857142
+    }
+  ],
+  "limitations": [
+    "Single-run conditional ratios; no causal identification of policy or defense efficacy.",
+    "One-step prediction uses actual prior plants, purchases, raid potential and wall HP damage; it is not a stand-alone forecast.",
+    "Crop destruction is not inferred from structural HP; separate physical outcomes are fitted.",
+    "Wall-contact evidence is not proof of a closed enclosure; catastrophic breaches require spatial Wild Engine evaluation.",
+    "Income timing, crop mix and magic effects are pooled, so extrapolation to another policy or 100 nights is unsafe."
+  ]
+}

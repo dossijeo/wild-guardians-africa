@@ -1,0 +1,25 @@
+{
+  "sourceHash": "143685e0f6be233d5a786143209fa8a06e982072",
+  "config": {
+    "rngSeed": 712,
+    "generations": 1,
+    "population": 2,
+    "days": 1,
+    "train": [
+      {
+        "biome": "sabana",
+        "seed": 712
+      }
+    ],
+    "holdout": [
+      {
+        "biome": "sabana",
+        "seed": 123
+      }
+    ],
+    "baselines": [],
+    "output": "docs/qa/evolutionary-balance/smoke-1day"
+  },
+  "gameBalance": "unchanged",
+  "runKind": "native-Wild-Engine-campaign"
+}

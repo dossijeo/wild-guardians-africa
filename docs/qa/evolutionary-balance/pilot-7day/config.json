@@ -1,0 +1,36 @@
+{
+  "sourceHash": "143685e0f6be233d5a786143209fa8a06e982072",
+  "moduleHashes": {
+    "tools/native-campaign-runner.mjs": "871af677f8eea0d67466a620cd34189eb2a10db587d745fe5acde8ffbb9eecce",
+    "tools/native-expanding-defense-policy.mjs": "4a6540674a0b8e971c456ea08834e79ff7021176f6179587f931b9c0a31a02c2",
+    "tools/evolutionary-balance/run-ga.mjs": "75bd2f1784898fd7f9dc8d06e0108e3a56beec384248f1f9877f8d4f07e1cbcd",
+    "tools/evolutionary-balance/ga.mjs": "36c252ca1abc19f34eda26ddec81d50fef7d37cdd1cc6f51f715337c6cdabbee",
+    "tools/evolutionary-balance/policy-genes.mjs": "49bd4260a564910b6ed98a3e4be71e120faa881f17c5a2c31a5039508907033e"
+  },
+  "config": {
+    "rngSeed": 712,
+    "generations": 1,
+    "population": 2,
+    "days": 7,
+    "train": [
+      {
+        "biome": "sabana",
+        "seed": 712
+      }
+    ],
+    "holdout": [
+      {
+        "biome": "sabana",
+        "seed": 123
+      }
+    ],
+    "baselines": [
+      "good",
+      "good-current-magic",
+      "no-walls"
+    ],
+    "output": "docs/qa/evolutionary-balance/pilot-7day"
+  },
+  "gameBalance": "unchanged",
+  "runKind": "native-Wild-Engine-campaign"
+}

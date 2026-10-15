@@ -1,0 +1,41 @@
+{
+  "stamp": {
+    "sourceHash": "723ff991e2de3ed0149236ce069b33d698c958c4",
+    "baseLabCommit": "de719e0bdda877fe4ee183fb7107f69db4f7b585",
+    "runtimeCommit": "2486ba01076e8e221c3ec413167937a49b2fd401",
+    "runnerSha256": "1b57bc1599d203cd50fa999908dcca59820bf50c7118b1779b3f808ba80bef34",
+    "options": {
+      "biome": "manglares",
+      "seed": 123,
+      "days": 60,
+      "strategy": "evolved",
+      "genes": {
+        "plantsPerWorker": 6,
+        "wageReserveDays": 1,
+        "seedReserve": 0,
+        "defenseCashFraction": 0.2,
+        "defenseStartDay": 2,
+        "repairHealthFraction": 0.8,
+        "magicIntervalSeconds": 5,
+        "growthShare": 0,
+        "plantingIntervalSeconds": 1,
+        "wallMaterial": "zarzas",
+        "magicPriority": "multiply"
+      }
+    },
+    "checkpointKind": "State after first observed tick of each game day; no reloads",
+    "costStop": {
+      "maxDayGameTickMs": 180000,
+      "maxElapsedWallMs": 2700000
+    }
+  },
+  "classification": "native-defeat",
+  "status": "completed",
+  "result": "defeat",
+  "completedNights": 30,
+  "daysRecorded": 31,
+  "finalCash": 220,
+  "finalLiving": 0,
+  "totalGameTickMs": 245805.76059999928,
+  "technicalError": null
+}

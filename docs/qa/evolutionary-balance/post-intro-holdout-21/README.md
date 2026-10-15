@@ -1,0 +1,32 @@
+# Independent 21-night validation
+
+These two seeds and biomes were not used in the Phase-2 seven- or fourteen-night genome screens. The two arms share all `DEFAULT_GENES` and current agricultural magic. They differ only in whether the virtual player builds and repairs walls; Shield remains enabled for both. Production balance and native simulation rules remain unchanged.
+
+The competitive activity floor of 82⅙ delivered boxes per terminal day is frozen **before** these runs. It is the interpolated lower quartile of the six terminal three-night rates in the development pilot (`post-intro-pilot-14`, source `401f2d00ef6b9806e210c245798cf7ae9818a7bf`): 71, 78⅓, 93⅔, 104, 107⅔ and 119⅓. Paid wages, seeds and repairs required about 81.1–85.5 terminal boxes/day to break even in the two no-wall development arms. The floor is an evaluation convention, not a game rule; report raw delivery and native results even if a case falls below it. A native defeat remains a native defeat regardless of eligibility.
+
+The runner records source/module hashes, compressed full reports, daily progress and cost stops. A stop after more than 60 seconds of `Game.tick` on one day or 15 minutes elapsed per case is a **technical computational stop**, never a simulated defeat. Results of 21 nights cannot establish a viable 100-night strategy; they determine whether longer testing is warranted.
+
+## Native outcomes
+
+Source `1082d98ef63fa0ffecc70284df2fcbfa278494fe`. Every completed daily ledger reconciles; `results/integrity.json` records compressed artifact SHA-256 and size. All loss figures below exclude introductory nights 1–5. The raw reports retain nightly money, production, wages, seeds, repairs, magic, animal composition and damage.
+
+| Biome / seed | Policy | Native outcome | Crop losses, nights 6+ | Terminal boxes/day | Final plants | Final cash | Eligibility |
+| --- | --- | --- | ---: | ---: | ---: | ---: | --- |
+| Manglares / 764 | walls + Shield | Defeat during night 18; 17 complete | 249 | 27.3 | 6 | 249 | Below floor; physical defeat retained |
+| Manglares / 764 | no walls + Shield | Defeat during night 15; 14 complete | 416 | 47.3 | 4 | 483 | Below floor; physical defeat retained |
+| Desierto / 983 | walls + Shield | **Computational cost stop day 15** | Censored | Censored | Censored | Censored | Excluded from fitness and survival comparison |
+| Desierto / 983 | no walls + Shield | 21-night horizon survivor | 299 | 101.0 | 70 | 718 | Above frozen activity floor, not a 100-night win |
+
+In Manglares, walls delayed defeat by three nights and reduced crop loss, but did not sustain recovery. The defended arm still delivered 91/101 boxes on days 11/12; after losses of 48 crops on day 13 and 49 on day 16, day-17 income fell to 172 while paid seeds/wages/repairs totaled 415. Attraction fell from 1,331 on day 11 to 286 on defeat day 18, while animal count fell only from 17 to 16. This is a **Phase-3 pressure-feedback sensitivity candidate**, not a Phase-2 balance change. The report alone does not certify the state of its enclosure or prove where every animal entered.
+
+Desierto/no-walls is a crucial non-dominance and accessibility case: raids on days 6–10 generated 8–16 animals with 29–51 initial hit budget each, yet each raid had **zero logical contacts and zero budget consumed**. `targetUnavailableAttempts` rose from 664 to 1,456. Days 11–15 had some physical losses; day 16 had 91 contacts and 104 crops destroyed, day 20 another 78 crops destroyed. The farm recovered to 149 plants on day 19, then ended day 21 at 70. This may reflect real terrain access, crop expansion or an AI/navigation limitation. Do not infer that ignoring walls is broadly optimal until the no-contact nights are physically audited. The above-floor 101 terminal boxes/day coexists with a slightly negative terminal operating balance (−44 coins over three days) and heavy cumulative loss.
+
+## Censored Desierto wall case: targeted navigation QA
+
+The native runner preserved its exact `partialState` at day 15, time 249. The same bytes are in the error report and `desierto983-d15-partial-state.json.gz` (uncompressed SHA-256 `a4ce4f042c6c153d13f92623ee6622456f42ba7da9bc17ec0f8deac01d559423`). This state is not a native defeat. Its 42 workers are 22 fleeing and 20 arriving, all with `path:null`, despite an intact center, 117 wall modules and two intact auto-gates. Day 10–14 `Game.tick` consumed about 3.1–5.4 seconds per day; day 15 crossed the 60-second daily cap before mid-day. A 20-tick QA replay via `profile-spatial-campaign-snapshot.mjs` measured 8,400 `workerPath` calls, 32,835 `path` calls, 5,581 `segmentClear` calls, and 75,200 native route reason 7 (`targetSealed`). This is repeated route planning for fleeing/arriving workers, not the result of economic defeat.
+
+The state has 1,337 plant records, only 115 alive. A **diagnostic-only altered snapshot** removed 1,222 historical plants and the provenance IDs on their 1,219 already delivered crates to satisfy snapshot validation; it made the same 8,400/32,835 route calls and the same 75,200 reason-7 results across 20 ticks. Warm replay time was about 157 vs 163 ms/tick, within run-to-run variation; this does not implicate historical plants as the cause. This altered snapshot is not a valid balance campaign and was never used for fitness.
+
+`diagnose-gates.mjs` loads the same local sector radius as the profiler and checks the physical crossing and logical route between each gate's two portal points. The gate at `(72, −14.79)` is physically clear to a worker of radius .28, but its sides are separate graph regions (433 and 11522), `regionConnected=false`, and `path=null`. The gate at `(66, 2.56)` has a valid five-point route across it. The sampled fleeing workers cannot route to the village at `(60, 0)`. This strongly suggests a missing/invalid logical worker portal or an inaccessible connector at the first gate; its exact cause and behavior in the continuous campaign require a dedicated engine regression. No engine rule was changed in this laboratory branch. The QA snapshots/profiles are retained; their replay rebuilds navigation after load and is not claimed to reproduce all continuous-campaign state bit for bit.
+
+The technical stop and uncontacted Desierto raids prevent a fair wall-versus-no-wall survival conclusion for that biome. Phase 2 remains open; this holdout does not justify advancing to a 30- or 100-night balance claim.

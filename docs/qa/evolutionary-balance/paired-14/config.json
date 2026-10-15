@@ -1,0 +1,32 @@
+{
+  "sourceHash": "41563094904fd2d8630f1c78932dd202cfdb4b25",
+  "moduleHashes": {
+    "tools/evolutionary-balance/run-paired.mjs": "5e15aa731c0ed3df2d64e51bdbb3236492862961ebe9907217c2bef19399ba2d",
+    "tools/evolutionary-balance/run-ga.mjs": "abe155673e80e6fa65e28e90371ee0ae3f2a7a54d4ff781061cd87e99d32cfa3",
+    "tools/native-campaign-runner.mjs": "758f6f822bae08cf81c38fe1b29a15baf99be5cc1fe4e3f274d1c2c0e166659c",
+    "tools/native-expanding-defense-policy.mjs": "4a6540674a0b8e971c456ea08834e79ff7021176f6179587f931b9c0a31a02c2"
+  },
+  "days": 14,
+  "biome": "sabana",
+  "seeds": [
+    712,
+    123
+  ],
+  "genes": {
+    "plantsPerWorker": 6,
+    "wageReserveDays": 1,
+    "seedReserve": 0,
+    "defenseCashFraction": 0.2,
+    "defenseStartDay": 2,
+    "repairHealthFraction": 0.8,
+    "magicIntervalSeconds": 5,
+    "plantingIntervalSeconds": 1,
+    "wallMaterial": "zarzas",
+    "magicPriority": "multiply"
+  },
+  "controls": [
+    "evolved",
+    "good-current-magic"
+  ],
+  "balance": "production unchanged"
+}

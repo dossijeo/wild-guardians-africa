@@ -3,7 +3,7 @@ import {nativeCameraPose} from '../src/rendering/terrain-camera.js';
 import {centerServicePoint} from '../src/world/centers.js';
 // Bounded searches and genuine camera residency; no permanent gigantic bounds.
 export function createNativeCampaignPlots(nav,getState,{spacing=1.5,checksPerDecision=8}={}){
- let candidates=[],index=0,regions=new Set(),plots=[],transitions=[],lastReason='searching',reuseCursor=0,regionAnchor=null;
+ let candidates=[],index=0,regions=new Set(),plots=[],transitions=[],lastReason='searching',reuseCursor=0,regionAnchor=null,unknownPaths=0;
  const offsets=[[0,0],[96,0],[-96,0],[0,96],[0,-96],[96,96],[-96,96],[96,-96],[-96,-96]];
  const focus=p=>{
   const pose=nativeCameraPose(nav.field,[p.x,0,p.z],nav.field.canyon?0:.5,1.16,38);
@@ -18,7 +18,17 @@ export function createNativeCampaignPlots(nav,getState,{spacing=1.5,checksPerDec
    candidates.sort((a,b)=>Math.hypot(a.x-origin.x,a.z-origin.z)-Math.hypot(b.x-origin.x,b.z-origin.z)||a.z-b.z||a.x-b.x);return true;
   }return false;
  }
- function valid(p,s){const c=s.structures.find(c=>c.id===p.centerId&&c.status==='intact');if(!c)return false;const origin=centerServicePoint(c,s,.8);return nav.placement(p.x,p.z,.4).valid&&nav.path(origin,p,.28,null,true)&&nav.path(p,origin,.28,null,true);}
+ function valid(p,s){
+  const c=s.structures.find(c=>c.id===p.centerId&&c.status==='intact');if(!c)return false;
+  const origin=centerServicePoint(c,s,.8);
+  try{return nav.placement(p.x,p.z,.4).valid&&!!nav.path(origin,p,.28,null,true)&&!!nav.path(p,origin,.28,null,true);}
+  catch(error){
+   // Unknown connectivity is neither a legal planting site nor a technical
+   // defeat. Keep searching other resident plots without changing game rules.
+   if(error?.name!=='SpatialChunkUnavailable')throw error;
+   unknownPaths++;return false;
+  }
+ }
  function choose(){
   const s=getState(),occupied=new Set(s.plants.filter(p=>p.alive).map(p=>p.x+','+p.z));
   // Reused plots revalidate current walls, fluids and paths; old legality is not cached.
@@ -32,5 +42,5 @@ export function createNativeCampaignPlots(nav,getState,{spacing=1.5,checksPerDec
    const p=candidates[index++];if(occupied.has(p.x+','+p.z)||!valid(p,s))continue;plots.push(p);lastReason='active';return p;
   }lastReason='searching';return null;
  }
- return {choose,reason:()=>lastReason,report:()=>({plots:plots.length,transitions:structuredClone(transitions),checksPerDecision,scope:'Native finite resident regions; every placement requires legal outward and return paths. Exhaustion preserved; no inaccessible logical crops.'})};
+ return {choose,reason:()=>lastReason,report:()=>({plots:plots.length,transitions:structuredClone(transitions),checksPerDecision,unknownPaths,scope:'Native finite resident regions; every placement requires legal outward and return paths. Unknown routes are skipped, never certified as usable.'})};
 }

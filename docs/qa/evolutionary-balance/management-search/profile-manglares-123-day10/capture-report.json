@@ -1,0 +1,75 @@
+{
+  "source": "7f358aad97287b40e300026306d26f05cc4e0c29",
+  "moduleHashes": {
+    "tools/evolutionary-balance/capture-checkpoint.mjs": "297e59b33c73e040cdc7b401b2dcf91f990587f48982b00220b12b9c728292cb",
+    "tools/evolutionary-balance/run-ga.mjs": "c40b6091d21f7168958092cd8f23d663a4205a18d6e928ead27a0f8017a12331",
+    "tools/native-campaign-runner.mjs": "daed3907265ad50956f3fe8ab142eb10e51bcf7e6fccf087831b71850e39b01f"
+  },
+  "biome": "manglares",
+  "seed": 123,
+  "day": 10,
+  "days": 10,
+  "strategy": "evolved",
+  "genes": {
+    "plantsPerWorker": 6,
+    "wageReserveDays": 1,
+    "seedReserve": 0,
+    "defenseCashFraction": 0.2,
+    "defenseStartDay": 2,
+    "repairHealthFraction": 0.8,
+    "magicIntervalSeconds": 5,
+    "growthShare": 0,
+    "plantingIntervalSeconds": 1,
+    "wallMaterial": "zarzas",
+    "magicPriority": "multiply"
+  },
+  "snapshots": [
+    {
+      "name": "evolved-manglares-123-day10-dawn.json",
+      "day": 10,
+      "time": 0,
+      "raid": false,
+      "triggeringTickMs": 3.129799999995157,
+      "sha256": "886c53ae5c3e1f75e05cd0d76d6a416dbf8a58c1929a42ab272aad497ad0988d"
+    },
+    {
+      "name": "evolved-manglares-123-day10-raid.json",
+      "day": 10,
+      "time": 510.00000000004775,
+      "raid": true,
+      "triggeringTickMs": 439.54509999998845,
+      "sha256": "8bcc3d672cd8029fec13c4b009b0c2230b843e61ccfa51f98d2a7bdbe94d0494"
+    }
+  ],
+  "status": "completed",
+  "completedNights": 10,
+  "result": null,
+  "lastRow": {
+    "day": 10,
+    "money": 917,
+    "living": 143,
+    "planted": 140,
+    "delivered": 134,
+    "destroyed": 0,
+    "staff": 23,
+    "magic": {
+      "growth": 0,
+      "multiply": 60,
+      "benefited": 60,
+      "ineffective": 0,
+      "multiplyIncome": 110,
+      "growthSecondsCompleted": 0
+    },
+    "income": 1584,
+    "seeds": 700,
+    "wages": 710,
+    "walls": 10,
+    "repairs": 88,
+    "reconciled": true,
+    "wallTime": {
+      "decisionMs": 9162.03249999974,
+      "gameTickMs": 28371.819499999605,
+      "presentationMs": 3.9875000001920853
+    }
+  }
+}

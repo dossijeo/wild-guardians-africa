@@ -1,0 +1,72 @@
+{
+  "source": "41563094904fd2d8630f1c78932dd202cfdb4b25",
+  "moduleHashes": {
+    "tools/evolutionary-balance/capture-checkpoint.mjs": "297e59b33c73e040cdc7b401b2dcf91f990587f48982b00220b12b9c728292cb",
+    "tools/evolutionary-balance/run-ga.mjs": "54cbc279e6f7ebced9924ff2de4a4f24dcef65a12057e619930fbeb7ec96d53d",
+    "tools/native-campaign-runner.mjs": "758f6f822bae08cf81c38fe1b29a15baf99be5cc1fe4e3f274d1c2c0e166659c"
+  },
+  "biome": "sabana",
+  "seed": 712,
+  "day": 13,
+  "days": 13,
+  "strategy": "evolved",
+  "genes": {
+    "plantsPerWorker": 6,
+    "wageReserveDays": 1,
+    "seedReserve": 0,
+    "defenseCashFraction": 0.2,
+    "defenseStartDay": 2,
+    "repairHealthFraction": 0.8,
+    "magicIntervalSeconds": 5,
+    "plantingIntervalSeconds": 1,
+    "wallMaterial": "zarzas",
+    "magicPriority": "multiply"
+  },
+  "snapshots": [
+    {
+      "name": "evolved-sabana-712-day13-dawn.json",
+      "day": 13,
+      "time": 0,
+      "raid": false,
+      "triggeringTickMs": 1.777299999987008,
+      "sha256": "1a7defbc17d6c19cc5ff89c0033996ac9a3677b9f987ef78753a84a848e53b91"
+    },
+    {
+      "name": "evolved-sabana-712-day13-raid.json",
+      "day": 13,
+      "time": 535.0000000000534,
+      "raid": true,
+      "triggeringTickMs": 1067.1614000000118,
+      "sha256": "b9709d2318664406636ebc097742163f56ff33c5abe93ced492d58cedd8bebfa"
+    }
+  ],
+  "status": "completed",
+  "completedNights": 13,
+  "result": null,
+  "lastRow": {
+    "day": 13,
+    "money": 1187,
+    "living": 129,
+    "planted": 114,
+    "delivered": 74,
+    "destroyed": 7,
+    "staff": 16,
+    "magic": {
+      "growth": 0,
+      "multiply": 60,
+      "benefited": 60,
+      "ineffective": 0
+    },
+    "income": 1770,
+    "seeds": 665,
+    "wages": 594,
+    "walls": 150,
+    "repairs": 105,
+    "reconciled": true,
+    "wallTime": {
+      "decisionMs": 4702.646199999959,
+      "gameTickMs": 50924.36609999984,
+      "presentationMs": 2.2236000002594665
+    }
+  }
+}

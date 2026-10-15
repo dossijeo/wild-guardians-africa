@@ -1,0 +1,81 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {gunzipSync} from 'node:zlib';
+import {postIntroMetrics,scorePostIntro,scorePostIntroV2} from '../tools/evolutionary-balance/post-intro-fitness.mjs';
+import {validatePilotConfig} from '../tools/evolutionary-balance/run-post-intro-pilot.mjs';
+
+const mangroves=arm=>JSON.parse(gunzipSync(readFileSync(new URL(
+ `../docs/qa/evolutionary-balance/matched-defense-14/results/${arm}-manglares-123-14.json.gz`,import.meta.url))));
+
+test('post-intro metrics expose native crop and delivery collapse without treating reinvestment as inactivity',()=>{
+ const defended=postIntroMetrics(mangroves('matched-walls-current-magic'));
+ const noWalls=postIntroMetrics(mangroves('matched-no-walls-current-magic'));
+ const noDefense=postIntroMetrics(mangroves('matched-no-defense-current-magic'));
+ assert.deepEqual([defended.opening.delivered,defended.terminal.delivered],[341,352]);
+ assert.deepEqual([noWalls.opening.delivered,noWalls.terminal.delivered],[357,203]);
+ assert.deepEqual([noDefense.opening.delivered,noDefense.terminal.delivered],[359,157]);
+ assert.equal(defended.terminal.operating,-142);
+ assert.equal(defended.productiveAtEnd,true);
+ assert.deepEqual([defended.terminal.living,noWalls.terminal.living,noDefense.terminal.living],[167,19,6]);
+});
+
+test('post-intro fitness distinguishes native defeat, technical censor and collapsed farm',()=>{
+ const rows=Array.from({length:14},(_,i)=>({day:i+1,delivered:10,living:30,money:500,
+  income:100,wages:40,seeds:40,repairs:0,destroyed:0}));
+ const survivor={status:'completed',completedNights:14,result:null,rows,raid:[]};
+ const defeated={...survivor,result:'defeat'};
+ assert.deepEqual([postIntroMetrics(survivor).pressureDays,postIntroMetrics(survivor).delivered],[9,90]);
+ const live=scorePostIntro(survivor,14,{minimumTerminalDeliveryPerDay:5});
+ assert.equal(live.valid,true);
+ assert.equal(live.scoreVersion,'post-intro-v1');
+ assert.equal(live.score-scorePostIntro(defeated,14,{minimumTerminalDeliveryPerDay:5}).score,500);
+ assert.equal(scorePostIntro(survivor,14,{minimumTerminalDeliveryPerDay:11}).reason,'collapsed-production');
+ assert.equal(scorePostIntro({...survivor,rows:rows.map(r=>({...r,delivered:r.day>11?0:r.delivered}))},14).reason,'collapsed-production');
+ const defeatedInactive=scorePostIntro({...defeated,rows:rows.map(r=>({...r,delivered:r.day>11?0:r.delivered}))},14);
+ assert.equal(defeatedInactive.valid,true);
+ assert.equal(defeatedInactive.nativeResult,'defeat');
+ assert.equal(defeatedInactive.competitiveEligible,false);
+ assert.equal(scorePostIntro({...survivor,status:'error',name:'CampaignCostStop'},14).reason,'computational-cost-stop');
+ assert.equal(scorePostIntro({...survivor,completedNights:7,result:null},14).reason,'truncated');
+ assert.throws(()=>scorePostIntro(survivor,7),/14 nights/);
+});
+
+test('v2 always ranks a live horizon survivor above a terminal defeat at that horizon',()=>{
+ const row=(day,delivered,income,seeds,wages,destroyed)=>({day,delivered,
+  income,seeds,wages,repairs:0,destroyed,living:30,money:500});
+ const weak={status:'completed',completedNights:14,result:null,
+  rows:Array.from({length:14},(_,i)=>i<3?row(i+1,100,100,0,0,0):
+   i>=11?row(i+1,1,0,300,0,30):row(i+1,10,20,0,0,0)),
+  raid:Array.from({length:9},(_,i)=>({day:i+6,livingAtSpawn:30}))};
+ const strongDefeat={...weak,result:'defeat',
+  rows:Array.from({length:14},(_,i)=>row(i+1,1000,2000,0,0,0))};
+ assert(scorePostIntro(strongDefeat,14).score>scorePostIntro(weak,14).score,
+  'the historical v1 counterexample must remain visible');
+ const survivorScore=scorePostIntroV2(weak,14),defeatScore=scorePostIntroV2(strongDefeat,14);
+ assert.equal(survivorScore.scoreVersion,'post-intro-v2');
+ assert.equal(defeatScore.scoreVersion,'post-intro-v2');
+ assert(survivorScore.score>defeatScore.score);
+});
+
+test('post-intro pilot requires distinct paired native scenarios and frozen legal genes',()=>{
+ const scenarios=[{biome:'sabana',seed:411},{biome:'gran-rio',seed:626}];
+ const config={output:'docs/qa/evolutionary-balance/post-intro-pilot-14/results',
+  scenarios,genomes:{walls:{},none:{wallPolicy:'none'}}};
+ const valid=validatePilotConfig(config);
+ assert.equal(valid.days,14);
+ assert.equal(valid.genomes.none.wallPolicy,'none');
+ assert.deepEqual(validatePilotConfig({...config,caseSelection:[{name:'walls',biome:'sabana',seed:411}]}).caseSelection,
+  [{name:'walls',biome:'sabana',seed:411}]);
+ assert.throws(()=>validatePilotConfig({...config,caseSelection:[{name:'walls',biome:'desierto',seed:983}]}),/case selection/);
+ assert.throws(()=>validatePilotConfig({...config,caseSelection:[{name:'missing',biome:'sabana',seed:411}]}),/case selection/);
+ assert.throws(()=>validatePilotConfig({...config,caseSelection:[{name:'walls',biome:'sabana',seed:411},{name:'walls',biome:'sabana',seed:411}]}),/case selection/);
+ assert.deepEqual(validatePilotConfig({...config,raidProbeSnapshotDays:[6,7]}).raidProbeSnapshotDays,[6,7]);
+ assert.throws(()=>validatePilotConfig({...config,raidProbeSnapshotDays:[0]}),/raid probe/);
+ assert.throws(()=>validatePilotConfig({...config,raidProbeSnapshotDays:[6,6]}),/raid probe/);
+ assert.equal(validatePilotConfig({...config,minimumTerminalDeliveryPerDay:493/6}).minimumTerminalDeliveryPerDay,493/6);
+ assert.throws(()=>validatePilotConfig({...config,minimumTerminalDeliveryPerDay:-1}),/delivery floor/);
+ assert.throws(()=>validatePilotConfig({...config,days:7}),/budget/);
+ assert.throws(()=>validatePilotConfig({...config,scenarios:[scenarios[0],scenarios[0]]}),/distinct/);
+ assert.throws(()=>validatePilotConfig({...config,genomes:{walls:{},none:{wallPolicy:'bad'}}}),/wall/);
+});

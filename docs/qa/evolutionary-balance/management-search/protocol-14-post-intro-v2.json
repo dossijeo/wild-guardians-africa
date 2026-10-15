@@ -1,0 +1,79 @@
+{
+  "rngSeed": 1407,
+  "generations": 2,
+  "population": 3,
+  "days": 14,
+  "train": [
+    {
+      "biome": "sabana",
+      "seed": 712
+    },
+    {
+      "biome": "gran-rio",
+      "seed": 2026
+    }
+  ],
+  "holdout": [
+    {
+      "biome": "manglares",
+      "seed": 24681357
+    }
+  ],
+  "requireBiomeHoldout": true,
+  "initialPopulation": [
+    {
+      "plantsPerWorker": 6,
+      "wageReserveDays": 1,
+      "seedReserve": 0,
+      "defenseCashFraction": 0.2,
+      "defenseStartDay": 2,
+      "repairHealthFraction": 0.8,
+      "magicIntervalSeconds": 5,
+      "growthShare": 0,
+      "plantingIntervalSeconds": 1,
+      "wallMaterial": "zarzas",
+      "magicPriority": "multiply"
+    },
+    {
+      "plantsPerWorker": 8,
+      "wageReserveDays": 2,
+      "seedReserve": 50,
+      "defenseCashFraction": 0.35,
+      "defenseStartDay": 2,
+      "repairHealthFraction": 0.85,
+      "magicIntervalSeconds": 5,
+      "growthShare": 0.25,
+      "plantingIntervalSeconds": 2,
+      "wallMaterial": "zarzas",
+      "magicPriority": "multiply"
+    },
+    {
+      "plantsPerWorker": 5,
+      "wageReserveDays": 1,
+      "seedReserve": 25,
+      "defenseCashFraction": 0.4,
+      "defenseStartDay": 1,
+      "repairHealthFraction": 0.9,
+      "magicIntervalSeconds": 5,
+      "growthShare": 0,
+      "plantingIntervalSeconds": 1,
+      "wallMaterial": "empalizada",
+      "magicPriority": "multiply"
+    }
+  ],
+  "baselines": [
+    "good-current-magic",
+    "good",
+    "expansive",
+    "bad",
+    "no-walls"
+  ],
+  "output": "docs/qa/evolutionary-balance/management-search/results-14-post-intro-v2",
+  "costStop": {
+    "maxDayGameTickMs": 120000,
+    "maxElapsedWallMs": 900000
+  },
+  "fitnessVersion": "post-intro-v2",
+  "minimumTerminalDeliveryPerDay": 82.16666666666667,
+  "deliveryFloorSource": "docs/qa/evolutionary-balance/post-intro-pilot-14/README.md:26-28 (six native development controls; interpolated lower quartile)"
+}

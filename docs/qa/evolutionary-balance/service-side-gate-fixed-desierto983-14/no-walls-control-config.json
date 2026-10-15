@@ -1,0 +1,68 @@
+{
+  "days": 14,
+  "maxDayGameTickMs": 60000,
+  "maxElapsedWallMs": 900000,
+  "minimumTerminalDeliveryPerDay": null,
+  "output": "docs/qa/evolutionary-balance/service-side-gate-fixed-desierto983-14/no-walls-control",
+  "scenarios": [
+    {
+      "seed": 983,
+      "biome": "desierto"
+    },
+    {
+      "seed": 712,
+      "biome": "sabana"
+    }
+  ],
+  "genomes": {
+    "service-side": {
+      "plantsPerWorker": 6,
+      "wageReserveDays": 1,
+      "seedReserve": 0,
+      "defenseCashFraction": 0.2,
+      "defenseStartDay": 2,
+      "repairHealthFraction": 0.8,
+      "magicIntervalSeconds": 5,
+      "growthShare": 0,
+      "plantingIntervalSeconds": 1,
+      "wallMaterial": "zarzas",
+      "magicPriority": "multiply",
+      "wallPolicy": "service-side"
+    },
+    "planned": {
+      "plantsPerWorker": 6,
+      "wageReserveDays": 1,
+      "seedReserve": 0,
+      "defenseCashFraction": 0.2,
+      "defenseStartDay": 2,
+      "repairHealthFraction": 0.8,
+      "magicIntervalSeconds": 5,
+      "growthShare": 0,
+      "plantingIntervalSeconds": 1,
+      "wallMaterial": "zarzas",
+      "magicPriority": "multiply",
+      "wallPolicy": "planned"
+    },
+    "no-walls": {
+      "plantsPerWorker": 6,
+      "wageReserveDays": 1,
+      "seedReserve": 0,
+      "defenseCashFraction": 0.2,
+      "defenseStartDay": 2,
+      "repairHealthFraction": 0.8,
+      "magicIntervalSeconds": 5,
+      "growthShare": 0,
+      "plantingIntervalSeconds": 1,
+      "wallMaterial": "zarzas",
+      "magicPriority": "multiply",
+      "wallPolicy": "none"
+    }
+  },
+  "caseSelection": [
+    {
+      "seed": 983,
+      "biome": "desierto",
+      "name": "no-walls"
+    }
+  ]
+}

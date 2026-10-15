@@ -1,0 +1,260 @@
+{
+  "source": {
+    "biome": "sabana",
+    "seed": 712,
+    "strategy": "good",
+    "status": "completed",
+    "result": "defeat",
+    "completedNights": 17,
+    "rows": 17,
+    "raidPressureVersion": 3,
+    "path": "docs\\qa\\hierarchical-navigation\\spatial-sabana-seed712-enclosure-final-30nights.json.gz",
+    "sha256": "d1acbf7925192b38b0c00b08a2268d6d77bc4378026a7aaa6fdcf004bdb28276"
+  },
+  "trainingDays": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "validationDays": [
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ],
+  "coefficients": {
+    "incomePerPriorPlant": 11.923353293413173,
+    "wagesPerPriorPlant": 4.998802395209581,
+    "wagesToRaidAttraction": 0.40763506955677775,
+    "seedCostPerPlant": 5.0049751243781095,
+    "nonRaidPlantExitPerPriorPlant": 1.1065868263473053,
+    "attractionPerLivingPlantAtSpawn": 11.059033989266547,
+    "agriculturalDamageEfficiency": 0.2962962962962963,
+    "potentialPerAnimal": 3.6,
+    "wallHpLostPerAnimal": 43.75,
+    "wallRepairCoinsPerHp": 0.13028571428571428,
+    "meanPlantedPerDay": 100.5,
+    "meanWallSpend": 54
+  },
+  "observability": {
+    "raidNightsInTraining": 5,
+    "enclosureCoverageMeasured": false,
+    "breachTimingMeasured": false,
+    "defenseEffectIdentifiable": false,
+    "reason": "Native report has wall contact/HP, but no certified crop membership or breach timing."
+  },
+  "holdoutError": {
+    "income": {
+      "absolute": 428.0215568862275,
+      "weightedAbsoluteFraction": 0.12731158741410692
+    },
+    "wages": {
+      "absolute": 105.36646706586818,
+      "weightedAbsoluteFraction": 0.06444432236444537
+    },
+    "seeds": {
+      "absolute": 1.6218905472637068,
+      "weightedAbsoluteFraction": 0.000995024875621906
+    },
+    "destroyed": {
+      "absolute": 127.07407407407409,
+      "weightedAbsoluteFraction": 0.8644494834971027
+    },
+    "repairs": {
+      "absolute": 216.31657142857142,
+      "weightedAbsoluteFraction": 0.5830635348479014
+    }
+  },
+  "holdoutPredictions": [
+    {
+      "day": 11,
+      "actual": {
+        "income": 944,
+        "wages": 450,
+        "seeds": 410,
+        "destroyed": 15,
+        "repairs": 40
+      },
+      "predicted": {
+        "income": 1013.4850299401197,
+        "wages": 424.8982035928144,
+        "seeds": 410.407960199005,
+        "destroyed": 18.37037037037037,
+        "repairs": 90.93942857142856
+      }
+    },
+    {
+      "day": 12,
+      "actual": {
+        "income": 910,
+        "wages": 390,
+        "seeds": 495,
+        "destroyed": 51,
+        "repairs": 31
+      },
+      "predicted": {
+        "income": 906.1748502994012,
+        "wages": 379.90898203592815,
+        "seeds": 495.4925373134328,
+        "destroyed": 19.555555555555554,
+        "repairs": 0
+      }
+    },
+    {
+      "day": 13,
+      "actual": {
+        "income": 353,
+        "wages": 240,
+        "seeds": 175,
+        "destroyed": 2,
+        "repairs": 109
+      },
+      "predicted": {
+        "income": 572.3209580838324,
+        "wages": 239.9425149700599,
+        "seeds": 175.17412935323384,
+        "destroyed": 19.25925925925926,
+        "repairs": 133.67314285714286
+      }
+    },
+    {
+      "day": 14,
+      "actual": {
+        "income": 635,
+        "wages": 305,
+        "seeds": 295,
+        "destroyed": 51,
+        "repairs": 20
+      },
+      "predicted": {
+        "income": 667.7077844311377,
+        "wages": 279.93293413173654,
+        "seeds": 295.29353233830847,
+        "destroyed": 16.88888888888889,
+        "repairs": 0
+      }
+    },
+    {
+      "day": 15,
+      "actual": {
+        "income": 181,
+        "wages": 95,
+        "seeds": 105,
+        "destroyed": 0,
+        "repairs": 97
+      },
+      "predicted": {
+        "income": 178.8502994011976,
+        "wages": 74.98203592814372,
+        "seeds": 105.1044776119403,
+        "destroyed": 15.11111111111111,
+        "repairs": 123.25028571428571
+      }
+    },
+    {
+      "day": 16,
+      "actual": {
+        "income": 339,
+        "wages": 125,
+        "seeds": 145,
+        "destroyed": 26,
+        "repairs": 20
+      },
+      "predicted": {
+        "income": 274.237125748503,
+        "wages": 114.97245508982036,
+        "seeds": 145.14427860696517,
+        "destroyed": 12.74074074074074,
+        "repairs": 0
+      }
+    },
+    {
+      "day": 17,
+      "actual": {
+        "income": 0,
+        "wages": 30,
+        "seeds": 5,
+        "destroyed": 2,
+        "repairs": 54
+      },
+      "predicted": {
+        "income": 35.77005988023952,
+        "wages": 14.996407185628744,
+        "seeds": 5.0049751243781095,
+        "destroyed": 14.518518518518517,
+        "repairs": 97.45371428571428
+      }
+    }
+  ],
+  "raidHoldoutError": {
+    "absolute": 134.51851851851853,
+    "weightedAbsoluteFraction": 0.8849902534113061
+  },
+  "raidHoldoutPredictions": [
+    {
+      "day": 11,
+      "terminal": false,
+      "actualDestroyed": 15,
+      "predictedDestroyed": 18.37037037037037
+    },
+    {
+      "day": 12,
+      "terminal": false,
+      "actualDestroyed": 51,
+      "predictedDestroyed": 19.555555555555554
+    },
+    {
+      "day": 13,
+      "terminal": false,
+      "actualDestroyed": 2,
+      "predictedDestroyed": 19.25925925925926
+    },
+    {
+      "day": 14,
+      "terminal": false,
+      "actualDestroyed": 51,
+      "predictedDestroyed": 16.88888888888889
+    },
+    {
+      "day": 15,
+      "terminal": false,
+      "actualDestroyed": 0,
+      "predictedDestroyed": 15.11111111111111
+    },
+    {
+      "day": 16,
+      "terminal": false,
+      "actualDestroyed": 26,
+      "predictedDestroyed": 12.74074074074074
+    },
+    {
+      "day": 17,
+      "terminal": false,
+      "actualDestroyed": 2,
+      "predictedDestroyed": 14.518518518518517
+    },
+    {
+      "day": 18,
+      "terminal": true,
+      "actualDestroyed": 5,
+      "predictedDestroyed": 12.444444444444443
+    }
+  ],
+  "limitations": [
+    "Single-run conditional ratios; no causal identification of policy or defense efficacy.",
+    "One-step prediction uses actual prior plants, purchases, raid potential and wall HP damage; it is not a stand-alone forecast.",
+    "Crop destruction is not inferred from structural HP; separate physical outcomes are fitted.",
+    "Wall-contact evidence is not proof of a closed enclosure; catastrophic breaches require spatial Wild Engine evaluation.",
+    "Income timing, crop mix and magic effects are pooled, so extrapolation to another policy or 100 nights is unsafe."
+  ]
+}

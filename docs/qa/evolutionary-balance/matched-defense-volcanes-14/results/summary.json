@@ -1,0 +1,89 @@
+{
+  "stamp": {
+    "sourceHash": "7fd6c1bcb0c725da7b8449bbb2514859eb5a92f1",
+    "geneSchemaVersion": "virtual-player-v2-wall-policy",
+    "moduleHashes": {
+      "tools/evolutionary-balance/run-matched-defense.mjs": "2a72145de0215a51a307e7053eb310311971e7463a3f8be410e7a1e6b34fcc40",
+      "tools/evolutionary-balance/run-ga.mjs": "36772edf3305565385a64f9b94db387f4db646dc9cb6d5e2687c3de0ff8030d8",
+      "tools/evolutionary-balance/policy-genes.mjs": "61c6e840b1f9d110817040d034095a1134d183626fe6ac3324aeda932f5a8866",
+      "tools/evolutionary-balance/matched-defense-controls.mjs": "a998a927a0807dd664ecdd7c8e2e6b41b0a0411c54245fc0b57966ead85ad1e7",
+      "tools/native-campaign-runner.mjs": "ab42c0ed7412e3d72d98a005df86fbb8a0e61f1cc7e0d5d6abf07950293ef567",
+      "tools/native-expanding-defense-policy.mjs": "4a6540674a0b8e971c456ea08834e79ff7021176f6179587f931b9c0a31a02c2"
+    },
+    "config": {
+      "days": 14,
+      "biome": "volcanes",
+      "seed": 907,
+      "genes": {
+        "plantsPerWorker": 6,
+        "wageReserveDays": 1,
+        "seedReserve": 0,
+        "defenseCashFraction": 0.2,
+        "defenseStartDay": 2,
+        "repairHealthFraction": 0.8,
+        "magicIntervalSeconds": 5,
+        "growthShare": 0,
+        "plantingIntervalSeconds": 1,
+        "wallMaterial": "zarzas",
+        "magicPriority": "multiply",
+        "wallPolicy": "planned"
+      },
+      "output": "docs/qa/evolutionary-balance/matched-defense-volcanes-14/results",
+      "maxDayGameTickMs": 60000,
+      "maxElapsedWallMs": 900000
+    },
+    "arms": {
+      "matched-walls-current-magic": {
+        "buildRepairWalls": true,
+        "useShield": true
+      },
+      "matched-no-walls-current-magic": {
+        "buildRepairWalls": false,
+        "useShield": true
+      },
+      "matched-no-defense-current-magic": {
+        "buildRepairWalls": false,
+        "useShield": false
+      }
+    },
+    "balance": "production unchanged"
+  },
+  "cases": [
+    {
+      "strategy": "matched-walls-current-magic",
+      "status": "completed",
+      "stop": "native-defeat",
+      "completedNights": 11,
+      "result": "defeat",
+      "finalCash": 110,
+      "finalLiving": 2,
+      "destroyed": 90,
+      "wallCost": 470,
+      "shieldContacts": 34
+    },
+    {
+      "strategy": "matched-no-walls-current-magic",
+      "status": "error",
+      "stop": "technical-error",
+      "completedNights": null,
+      "result": null,
+      "finalCash": null,
+      "finalLiving": null,
+      "destroyed": null,
+      "wallCost": null,
+      "shieldContacts": null
+    },
+    {
+      "strategy": "matched-no-defense-current-magic",
+      "status": "completed",
+      "stop": "native-defeat",
+      "completedNights": 9,
+      "result": "defeat",
+      "finalCash": 208,
+      "finalLiving": 5,
+      "destroyed": 173,
+      "wallCost": 0,
+      "shieldContacts": 0
+    }
+  ]
+}
