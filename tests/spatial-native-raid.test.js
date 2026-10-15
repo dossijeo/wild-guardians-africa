@@ -80,6 +80,7 @@ test('a native Sabana incursion spawns physically and advances through Game.tick
     villageId:'village-1',status:'intact',hp:600,maxHp:600});
   const loaded=new Map(),session=createSpatialGameSession(module,state,{
     loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+  let restoredSession;
   try{
     const jobs=new Map();
     for(let cz=-1;cz<=1;cz++)for(let cx=-1;cx<=1;cx++)
@@ -118,10 +119,34 @@ test('a native Sabana incursion spawns physically and advances through Game.tick
         const committed=saved.raid.animals.find(item=>item.id===animal.id);
         assert.equal(committed.attackId,animal.attackId);
         assert.equal(committed.attackRemaining,animal.attackRemaining);
+        const restoredLoaded=new Map();
+        restoredSession=createSpatialGameSession(module,saved,{
+          loaded:()=>restoredLoaded,
+          onData:data=>restoredLoaded.set(`${data.cx},${data.cz}`,data)});
+        const savedChunks=new Map();
+        for(let cz=-1;cz<=1;cz++)for(let cx=-1;cx<=1;cx++)
+          savedChunks.set(`${cx},${cz}`,{cx,cz,score:Math.hypot(cx,cz)});
+        restoredSession.stream.plan(savedChunks);
+        await restoredSession.stream.whenIdle();
+        const restoredNav=createSpatialNavigationMovement(restoredSession,saved);
+        restoredNav.setActiveBounds([-36,-36,36,36]);
+        restoredNav.setRaidView(nav.raidView.eye,nav.raidView.target);
+        const restoredPlanner=createEventDrivenTaskPlanner(restoredSession);
+        assert.equal(restoredPlanner.resetFromState(saved).restoredAnimalAttacks,1);
+        const stopRestoredWorld=restoredPlanner.observeWorld(saved);
+        const stopRestoredTasks=restoredPlanner.observeTasks(saved);
+        restoredNav.intentTaskPlanner=restoredPlanner;
         stopTasks();stopWorld();
         const report=planner.resetFromState(state);
         assert.equal(report.restoredAnimalAttacks,1);
         stopWorld=planner.observeWorld(state);stopTasks=planner.observeTasks(state);
+        for(let step=0;step<15;step++){
+          Game.tick(state,.1,nav);Game.tick(saved,.1,restoredNav);
+          assert.equal(serialize(saved),serialize(state),
+            'native session restoration preserves the committed raid outcome');
+        }
+        stopRestoredTasks();stopRestoredWorld();
+        delete restoredNav.intentTaskPlanner;
         restoredCommittedStrike=true;
       }
     }
@@ -138,7 +163,7 @@ test('a native Sabana incursion spawns physically and advances through Game.tick
     assert.equal(intentCalls.committed,intentCalls.finished,
       'real native raid intentions finish once at each committed damage frame');
     stopTasks();stopWorld();delete nav.intentTaskPlanner;
-  }finally{session.dispose();}
+  }finally{restoredSession?.dispose();session.dispose();}
 });
 
 for(const count of [1,5])test(`${count} native raiders attack an accessible wall instead of crossing a closed crop enclosure`,async()=>{
