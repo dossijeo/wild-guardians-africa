@@ -63,6 +63,42 @@ test('loading an active raid restores distinct routes and reservations for eight
  }finally{session.dispose();}
 });
 
+test('a topology change after restoring concurrent raid routes preserves live leases',
+ {skip:!module&&'Build and select the experimental WASM first'},()=>{
+ const game=deserialize(gunzipSync(readFileSync(new URL(
+  './fixtures/sabana712-d6-native-multi-reservation.json.gz',import.meta.url))).toString());
+ const loaded=new Map(),session=createSpatialGameSession(module,game,{
+  loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+ try{
+  for(let z=-1;z<=2;z++)for(let x=1;x<=3;x++){
+   if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+   loaded.set(`${x},${z}`,session.core.chunkPayload());
+  }
+  const planner=createEventDrivenTaskPlanner(session);
+  assert.equal(planner.resetFromState(game).restoredAnimalRoutes,8);
+  const nav=createSpatialNavigationMovement(session,game);
+  const actors=game.raid.animals.filter(animal=>animal.targetId);
+  const saved=actors.map(animal=>({id:animal.id,targetId:animal.targetId,
+   reservation:animal.reservation,hitsRemaining:animal.hitsRemaining}));
+  const longRoute=actors.find(animal=>animal.path?.length>30);
+  assert(longRoute);
+  const point=longRoute.path[Math.floor(longRoute.path.length/2)];
+  assert(session.core.addWall(point.x,point.z,.3,.3)>0);
+  assert(planner.reconcileNavigationRevision(game,nav.version+1)>0,
+   'the new physical barrier invalidates at least one restored route');
+  planner.reconcileWorkerRoutes(game,{navVersion:nav.version+1});
+  for(const before of saved){
+   const animal=actors.find(item=>item.id===before.id);
+   assert.equal(animal.targetId,before.targetId);
+   assert.equal(animal.reservation,before.reservation);
+   assert.equal(game.raid.reservations[before.reservation],animal.id);
+   assert.equal(animal.hitsRemaining,before.hitsRemaining);
+  }
+  assert.equal(new Set(Object.values(game.raid.reservations)).size,8);
+  assert.doesNotThrow(()=>serialize(game));
+ }finally{session.dispose();}
+});
+
 test('a saved native animal route resumes movement with its original lease',
  {skip:!module&&'Build and select the experimental WASM first'},()=>{
  const game=deserialize(gunzipSync(readFileSync(new URL(
