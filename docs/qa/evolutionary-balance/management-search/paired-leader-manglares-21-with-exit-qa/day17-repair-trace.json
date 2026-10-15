@@ -1,0 +1,665 @@
+{
+  "sourceHash": "0129a4da3eb05593faf17226ee4f8e1dfb552103",
+  "scenario": {
+    "biome": "manglares",
+    "seed": 123,
+    "days": 17,
+    "strategy": "evolved",
+    "genes": {
+      "plantsPerWorker": 6,
+      "wageReserveDays": 1,
+      "seedReserve": 0,
+      "defenseCashFraction": 0.2,
+      "defenseStartDay": 2,
+      "repairHealthFraction": 0.8,
+      "magicIntervalSeconds": 5,
+      "growthShare": 0,
+      "plantingIntervalSeconds": 1,
+      "wallMaterial": "zarzas",
+      "magicPriority": "multiply",
+      "wallPolicy": "planned"
+    }
+  },
+  "status": "completed",
+  "completedNights": 17,
+  "day17": {
+    "day": 17,
+    "money": 914,
+    "living": 54,
+    "planted": 109,
+    "delivered": 100,
+    "destroyed": 70,
+    "staff": 20,
+    "magic": {
+      "growth": 0,
+      "multiply": 60,
+      "benefited": 60,
+      "ineffective": 0,
+      "multiplyIncome": 108,
+      "growthSecondsCompleted": 0
+    },
+    "income": 1214,
+    "seeds": 545,
+    "wages": 619,
+    "walls": 0,
+    "repairs": 10,
+    "reconciled": true,
+    "wallTime": {
+      "decisionMs": 7115.916500000807,
+      "gameTickMs": 8823.148100000282,
+      "presentationMs": 4.407099999138154
+    }
+  },
+  "samples": [
+    {
+      "day": 17,
+      "time": 0,
+      "balance": 874,
+      "living": 115,
+      "labourReserveFloor": 600,
+      "protectedCashFloor": 700,
+      "pending": 0,
+      "headroomFloorWithDuplicatePending": 174,
+      "headroomFloorWithoutDuplicatePending": 174,
+      "wallRuined": 13,
+      "wallDamaged": 2,
+      "repairTasks": 0,
+      "paidRepairs": 122,
+      "workerStatuses": {}
+    },
+    {
+      "day": 17,
+      "time": 10.999999999999977,
+      "balance": 274,
+      "living": 115,
+      "labourReserveFloor": 600,
+      "protectedCashFloor": 600,
+      "pending": 0,
+      "headroomFloorWithDuplicatePending": -326,
+      "headroomFloorWithoutDuplicatePending": -326,
+      "wallRuined": 13,
+      "wallDamaged": 2,
+      "repairTasks": 0,
+      "paidRepairs": 122,
+      "workerStatuses": {
+        "walking": 20
+      }
+    },
+    {
+      "day": 17,
+      "time": 20.000000000000014,
+      "balance": 274,
+      "living": 115,
+      "labourReserveFloor": 600,
+      "protectedCashFloor": 600,
+      "pending": 0,
+      "headroomFloorWithDuplicatePending": -326,
+      "headroomFloorWithoutDuplicatePending": -326,
+      "wallRuined": 13,
+      "wallDamaged": 2,
+      "repairTasks": 0,
+      "paidRepairs": 122,
+      "workerStatuses": {
+        "walking": 10,
+        "acting": 10
+      }
+    },
+    {
+      "day": 17,
+      "time": 30.000000000000156,
+      "balance": 303,
+      "living": 113,
+      "labourReserveFloor": 570,
+      "protectedCashFloor": 570,
+      "pending": 0,
+      "headroomFloorWithDuplicatePending": -267,
+      "headroomFloorWithoutDuplicatePending": -267,
+      "wallRuined": 13,
+      "wallDamaged": 2,
+      "repairTasks": 0,
+      "paidRepairs": 122,
+      "workerStatuses": {
+        "walking": 12,
+        "acting": 8
+      }
+    },
+    {
+      "day": 17,
+      "time": 40.0000000000003,
+      "balance": 303,
+      "living": 113,
+      "labourReserveFloor": 570,
+      "protectedCashFloor": 570,
+      "pending": 0,
+      "headroomFloorWithDuplicatePending": -267,
+      "headroomFloorWithoutDuplicatePending": -267,
+      "wallRuined": 13,
+      "wallDamaged": 2,
+      "repairTasks": 0,
+      "paidRepairs": 122,
+      "workerStatuses": {
+        "acting": 14,
+        "walking": 6
+      }
+    },
+    {
+      "day": 17,
+      "time": 50.00000000000044,
+      "balance": 303,
+      "living": 113,
+      "labourReserveFloor": 570,
+      "protectedCashFloor": 570,
+      "pending": 0,
+      "headroomFloorWithDuplicatePending": -267,
+      "headroomFloorWithoutDuplicatePending": -267,
+      "wallRuined": 13,
+      "wallDamaged": 2,
+      "repairTasks": 0,
+      "paidRepairs": 122,
+      "workerStatuses": {
+        "acting": 12,
+        "walking": 8
+      }
+    },
+    {
+      "day": 17,
+      "time": 60.00000000000058,
+      "balance": 303,
+      "living": 112,
+      "labourReserveFloor": 570,
+      "protectedCashFloor": 570,
+      "pending": 0,
+      "headroomFloorWithDuplicatePending": -267,
+      "headroomFloorWithoutDuplicatePending": -267,
+      "wallRuined": 13,
+      "wallDamaged": 2,
+      "repairTasks": 0,
+      "paidRepairs": 122,
+      "workerStatuses": {
+        "walking": 13,
+        "acting": 6,
+        "carrying": 1
+      }
+    },
+    {
+      "day": 17,
+      "time": 70.0000000000003,
+      "balance": 322,
+      "living": 107,
+      "labourReserveFloor": 540,
+      "protectedCashFloor": 540,
+      "pending": 0,
+      "headroomFloorWithDuplicatePending": -218,
+      "headroomFloorWithoutDuplicatePending": -218,
+      "wallRuined": 13,
+      "wallDamaged": 2,
+      "repairTasks": 0,
+      "paidRepairs": 122,
+      "workerStatuses": {
+        "walking": 10,
+        "carrying": 5,
+        "acting": 5
+      }
+    },
+    {
+      "day": 17,
+      "time": 80.99999999999967,
+      "balance": 431,
+      "living": 101,
+      "labourReserveFloor": 510,
+      "protectedCashFloor": 510,
+      "pending": 0,
+      "headroomFloorWithDuplicatePending": -79,
+      "headroomFloorWithoutDuplicatePending": -79,
+      "wallRuined": 13,
+      "wallDamaged": 2,
+      "repairTasks": 0,
+      "paidRepairs": 122,
+      "workerStatuses": {
+        "walking": 14,
+        "carrying": 4,
+        "acting": 2
+      }
+    },
+    {
+      "day": 17,
+      "time": 90.9999999999991,
+      "balance": 480,
+      "living": 101,
+      "labourReserveFloor": 510,
+      "protectedCashFloor": 510,
+      "pending": 0,
+      "headroomFloorWithDuplicatePending": -30,
+      "headroomFloorWithoutDuplicatePending": -30,
+      "wallRuined": 13,
+      "wallDamaged": 2,
+      "repairTasks": 0,
+      "paidRepairs": 122,
+      "workerStatuses": {
+        "acting": 6,
+        "carrying": 1,
+        "walking": 13
+      }
+    },
+    {
+      "day": 17,
+      "time": 100.99999999999854,
+      "balance": 539,
+      "living": 97,
+      "labourReserveFloor": 510,
+      "protectedCashFloor": 510,
+      "pending": 0,
+      "headroomFloorWithDuplicatePending": 29,
+      "headroomFloorWithoutDuplicatePending": 29,
+      "wallRuined": 13,
+      "wallDamaged": 2,
+      "repairTasks": 0,
+      "paidRepairs": 122,
+      "workerStatuses": {
+        "walking": 15,
+        "carrying": 1,
+        "acting": 4
+      }
+    },
+    {
+      "day": 17,
+      "time": 110.99999999999797,
+      "balance": 565,
+      "living": 92,
+      "labourReserveFloor": 480,
+      "protectedCashFloor": 480,
+      "pending": 0,
+      "headroomFloorWithDuplicatePending": 85,
+      "headroomFloorWithoutDuplicatePending": 85,
+      "wallRuined": 13,
+      "wallDamaged": 2,
+      "repairTasks": 0,
+      "paidRepairs": 122,
+      "workerStatuses": {
+        "walking": 14,
+        "acting": 2,
+        "carrying": 4
+      }
+    },
+    {
+      "day": 17,
+      "time": 120.9999999999974,
+      "balance": 610,
+      "living": 91,
+      "labourReserveFloor": 480,
+      "protectedCashFloor": 490,
+      "pending": 10,
+      "headroomFloorWithDuplicatePending": 110,
+      "headroomFloorWithoutDuplicatePending": 120,
+      "wallRuined": 13,
+      "wallDamaged": 2,
+      "repairTasks": 1,
+      "paidRepairs": 122,
+      "workerStatuses": {
+        "walking": 11,
+        "acting": 6,
+        "carrying": 3
+      }
+    },
+    {
+      "day": 17,
+      "time": 130.99999999999685,
+      "balance": 641,
+      "living": 93,
+      "labourReserveFloor": 480,
+      "protectedCashFloor": 513,
+      "pending": 10,
+      "headroomFloorWithDuplicatePending": 118,
+      "headroomFloorWithoutDuplicatePending": 128,
+      "wallRuined": 13,
+      "wallDamaged": 2,
+      "repairTasks": 1,
+      "paidRepairs": 122,
+      "workerStatuses": {
+        "walking": 14,
+        "carrying": 3,
+        "acting": 3
+      }
+    },
+    {
+      "day": 17,
+      "time": 140.99999999999628,
+      "balance": 626,
+      "living": 102,
+      "labourReserveFloor": 510,
+      "protectedCashFloor": 520,
+      "pending": 10,
+      "headroomFloorWithDuplicatePending": 96,
+      "headroomFloorWithoutDuplicatePending": 106,
+      "wallRuined": 13,
+      "wallDamaged": 2,
+      "repairTasks": 1,
+      "paidRepairs": 122,
+      "workerStatuses": {
+        "walking": 16,
+        "carrying": 1,
+        "acting": 3
+      }
+    },
+    {
+      "day": 17,
+      "time": 150.9999999999957,
+      "balance": 614,
+      "living": 103,
+      "labourReserveFloor": 540,
+      "protectedCashFloor": 550,
+      "pending": 10,
+      "headroomFloorWithDuplicatePending": 54,
+      "headroomFloorWithoutDuplicatePending": 64,
+      "wallRuined": 13,
+      "wallDamaged": 2,
+      "repairTasks": 1,
+      "paidRepairs": 122,
+      "workerStatuses": {
+        "acting": 4,
+        "walking": 12,
+        "carrying": 4
+      }
+    },
+    {
+      "day": 17,
+      "time": 160.99999999999514,
+      "balance": 631,
+      "living": 109,
+      "labourReserveFloor": 570,
+      "protectedCashFloor": 580,
+      "pending": 10,
+      "headroomFloorWithDuplicatePending": 41,
+      "headroomFloorWithoutDuplicatePending": 51,
+      "wallRuined": 13,
+      "wallDamaged": 2,
+      "repairTasks": 1,
+      "paidRepairs": 122,
+      "workerStatuses": {
+        "walking": 16,
+        "acting": 3,
+        "carrying": 1
+      }
+    },
+    {
+      "day": 17,
+      "time": 170.99999999999457,
+      "balance": 631,
+      "living": 111,
+      "labourReserveFloor": 570,
+      "protectedCashFloor": 580,
+      "pending": 10,
+      "headroomFloorWithDuplicatePending": 41,
+      "headroomFloorWithoutDuplicatePending": 51,
+      "wallRuined": 13,
+      "wallDamaged": 2,
+      "repairTasks": 1,
+      "paidRepairs": 122,
+      "workerStatuses": {
+        "walking": 14,
+        "carrying": 3,
+        "acting": 3
+      }
+    },
+    {
+      "day": 17,
+      "time": 180.999999999994,
+      "balance": 605,
+      "living": 118,
+      "labourReserveFloor": 600,
+      "protectedCashFloor": 600,
+      "pending": 0,
+      "headroomFloorWithDuplicatePending": 5,
+      "headroomFloorWithoutDuplicatePending": 5,
+      "wallRuined": 12,
+      "wallDamaged": 2,
+      "repairTasks": 0,
+      "paidRepairs": 123,
+      "workerStatuses": {
+        "acting": 7,
+        "walking": 10,
+        "carrying": 3
+      }
+    },
+    {
+      "day": 17,
+      "time": 190.99999999999343,
+      "balance": 614,
+      "living": 118,
+      "labourReserveFloor": 600,
+      "protectedCashFloor": 600,
+      "pending": 0,
+      "headroomFloorWithDuplicatePending": 14,
+      "headroomFloorWithoutDuplicatePending": 14,
+      "wallRuined": 12,
+      "wallDamaged": 2,
+      "repairTasks": 0,
+      "paidRepairs": 123,
+      "workerStatuses": {
+        "walking": 13,
+        "acting": 2,
+        "carrying": 5
+      }
+    },
+    {
+      "day": 17,
+      "time": 200.99999999999287,
+      "balance": 629,
+      "living": 119,
+      "labourReserveFloor": 600,
+      "protectedCashFloor": 600,
+      "pending": 0,
+      "headroomFloorWithDuplicatePending": 29,
+      "headroomFloorWithoutDuplicatePending": 29,
+      "wallRuined": 12,
+      "wallDamaged": 2,
+      "repairTasks": 0,
+      "paidRepairs": 123,
+      "workerStatuses": {
+        "acting": 9,
+        "walking": 6,
+        "carrying": 5
+      }
+    },
+    {
+      "day": 17,
+      "time": 210.9999999999923,
+      "balance": 654,
+      "living": 125,
+      "labourReserveFloor": 630,
+      "protectedCashFloor": 650,
+      "pending": 20,
+      "headroomFloorWithDuplicatePending": -16,
+      "headroomFloorWithoutDuplicatePending": 4,
+      "wallRuined": 12,
+      "wallDamaged": 2,
+      "repairTasks": 2,
+      "paidRepairs": 123,
+      "workerStatuses": {
+        "walking": 16,
+        "carrying": 1,
+        "acting": 4
+      }
+    },
+    {
+      "day": 17,
+      "time": 220.99999999999173,
+      "balance": 657,
+      "living": 126,
+      "labourReserveFloor": 630,
+      "protectedCashFloor": 650,
+      "pending": 20,
+      "headroomFloorWithDuplicatePending": -13,
+      "headroomFloorWithoutDuplicatePending": 7,
+      "wallRuined": 12,
+      "wallDamaged": 2,
+      "repairTasks": 2,
+      "paidRepairs": 123,
+      "workerStatuses": {
+        "walking": 10,
+        "acting": 9,
+        "carrying": 2
+      }
+    },
+    {
+      "day": 17,
+      "time": 230.99999999999116,
+      "balance": 666,
+      "living": 126,
+      "labourReserveFloor": 630,
+      "protectedCashFloor": 650,
+      "pending": 20,
+      "headroomFloorWithDuplicatePending": -4,
+      "headroomFloorWithoutDuplicatePending": 16,
+      "wallRuined": 12,
+      "wallDamaged": 2,
+      "repairTasks": 2,
+      "paidRepairs": 123,
+      "workerStatuses": {
+        "walking": 11,
+        "carrying": 5,
+        "acting": 5
+      }
+    },
+    {
+      "day": 17,
+      "time": 240.9999999999906,
+      "balance": 702,
+      "living": 125,
+      "labourReserveFloor": 630,
+      "protectedCashFloor": 660,
+      "pending": 30,
+      "headroomFloorWithDuplicatePending": 12,
+      "headroomFloorWithoutDuplicatePending": 42,
+      "wallRuined": 12,
+      "wallDamaged": 2,
+      "repairTasks": 3,
+      "paidRepairs": 123,
+      "workerStatuses": {
+        "walking": 14,
+        "carrying": 4,
+        "acting": 3
+      }
+    },
+    {
+      "day": 17,
+      "time": 250,
+      "balance": 694,
+      "living": 131,
+      "labourReserveFloor": 660,
+      "protectedCashFloor": 690,
+      "pending": 30,
+      "headroomFloorWithDuplicatePending": -26,
+      "headroomFloorWithoutDuplicatePending": 4,
+      "wallRuined": 12,
+      "wallDamaged": 2,
+      "repairTasks": 3,
+      "paidRepairs": 123,
+      "workerStatuses": {
+        "walking": 17,
+        "carrying": 2,
+        "acting": 3
+      }
+    },
+    {
+      "day": 17,
+      "time": 260.00000000000057,
+      "balance": 697,
+      "living": 130,
+      "labourReserveFloor": 660,
+      "protectedCashFloor": 690,
+      "pending": 30,
+      "headroomFloorWithDuplicatePending": -23,
+      "headroomFloorWithoutDuplicatePending": 7,
+      "wallRuined": 12,
+      "wallDamaged": 2,
+      "repairTasks": 3,
+      "paidRepairs": 123,
+      "workerStatuses": {
+        "acting": 6,
+        "walking": 11,
+        "carrying": 5
+      }
+    },
+    {
+      "day": 17,
+      "time": 270.00000000000284,
+      "balance": 707,
+      "living": 132,
+      "labourReserveFloor": 660,
+      "protectedCashFloor": 690,
+      "pending": 30,
+      "headroomFloorWithDuplicatePending": -13,
+      "headroomFloorWithoutDuplicatePending": 17,
+      "wallRuined": 12,
+      "wallDamaged": 2,
+      "repairTasks": 3,
+      "paidRepairs": 123,
+      "workerStatuses": {
+        "walking": 12,
+        "carrying": 6,
+        "acting": 4
+      }
+    },
+    {
+      "day": 17,
+      "time": 280.0000000000051,
+      "balance": 725,
+      "living": 138,
+      "labourReserveFloor": 690,
+      "protectedCashFloor": 720,
+      "pending": 30,
+      "headroomFloorWithDuplicatePending": -25,
+      "headroomFloorWithoutDuplicatePending": 5,
+      "wallRuined": 12,
+      "wallDamaged": 2,
+      "repairTasks": 3,
+      "paidRepairs": 123,
+      "workerStatuses": {
+        "walking": 19,
+        "carrying": 3,
+        "acting": 1
+      }
+    },
+    {
+      "day": 17,
+      "time": 290.0000000000074,
+      "balance": 781,
+      "living": 130,
+      "labourReserveFloor": 660,
+      "protectedCashFloor": 690,
+      "pending": 30,
+      "headroomFloorWithDuplicatePending": 61,
+      "headroomFloorWithoutDuplicatePending": 91,
+      "wallRuined": 12,
+      "wallDamaged": 2,
+      "repairTasks": 3,
+      "paidRepairs": 123,
+      "workerStatuses": {
+        "carrying": 6,
+        "acting": 4,
+        "walking": 13
+      }
+    },
+    {
+      "day": 17,
+      "time": 300,
+      "balance": 859,
+      "living": 126,
+      "labourReserveFloor": 630,
+      "protectedCashFloor": 688,
+      "pending": 30,
+      "headroomFloorWithDuplicatePending": 141,
+      "headroomFloorWithoutDuplicatePending": 171,
+      "wallRuined": 12,
+      "wallDamaged": 2,
+      "repairTasks": 3,
+      "paidRepairs": 123,
+      "workerStatuses": {
+        "returning": 15,
+        "carrying": 3,
+        "acting": 5
+      }
+    }
+  ]
+}
