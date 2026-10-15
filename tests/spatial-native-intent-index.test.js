@@ -4,6 +4,8 @@ import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
 import {deserialize} from '../src/persistence/snapshots.js';
 import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+import {canWaterFrom} from '../src/world/work-points.js';
 
 const path=process.env.WILD_ENGINE_NATIVE_ROUTE_WASM;
 const prototype=path?new WebAssembly.Module(readFileSync(path)):null;
@@ -44,8 +46,8 @@ test('incremental native task index plans, discards and commits one global assig
   const results=()=>{
    const count=wasm.nav_intent_plan_tasks();
    const flat=Array.from(new Float64Array(wasm.memory.buffer,
-     wasm.nav_intent_results_ptr(),count*6));
-   return Array.from({length:count},(_,index)=>flat.slice(index*6,index*6+6));
+     wasm.nav_intent_results_ptr(),count*8));
+   return Array.from({length:count},(_,index)=>flat.slice(index*8,index*8+8));
   };
   wasm.nav_intent_reset();
   assert.equal(write(1,initial),1);
@@ -84,5 +86,36 @@ test('incremental native task index plans, discards and commits one global assig
   assert.equal(wasm.nav_intent_commit(),0,'a target removal invalidates provisional leases');
   assert.deepEqual(results().map(item=>item[0]),[101],
    'a removed target cannot reappear from a cached result');
+
+  wasm.nav_intent_reset();
+  assert.equal(write(1,[row(1,1,1,1,origin.x,origin.z,1),
+   row(1,2,13,1,second.x,second.z,1),
+   row(1,3,103,1,1,0,0,13,3)]),1);
+  const water=results()[0];
+  assert.equal(water[2],1,'watering has a physical service point');
+  assert(Math.abs(Math.hypot(water[6]-second.x,water[7]-second.z)-.83)<1e-6);
+  assert(water[4]>0,'the service point includes a native route');
+  const nav=createSpatialNavigationMovement(session,game);
+  assert(canWaterFrom({x:water[6],z:water[7],radius:.28},
+   {x:second.x,z:second.z,species:'mijo'},nav),
+  'the native watering approach passes the game interaction rule');
+  assert.equal(write(2,[row(1,3,103,1,2,0,0,13,3)]),1);
+  assert.equal(wasm.nav_intent_plan_tasks(),-2,
+   'mismatched task/target geometry is an input error, not physical blockage');
+  assert.equal(wasm.nav_intent_commit(),0,'invalid metadata cannot commit an old proposal');
+
+  const wall=session.core.applyBarrierChanges([],[{
+   x:second.x,z:second.z,halfX:.4,halfZ:.4,passMask:0}]);
+  try{
+   session.actorRegions(origin,{worker:true});
+   wasm.nav_intent_reset();
+   assert.equal(write(1,[row(1,1,1,1,origin.x,origin.z,1),
+    row(1,2,14,3,second.x,second.z,1,0,0,1),
+    row(1,3,104,1,2,0,0,14,4)]),1);
+   const repair=results()[0];
+   assert.equal(repair[2],1,'repair finds an approach outside the physical wall');
+   assert(session.actorCanStand({x:repair[6],z:repair[7]},{worker:true}));
+   assert(repair[4]>0);
+  }finally{session.core.applyBarrierChanges(wall,[]);}
  }finally{session.dispose();}
 });

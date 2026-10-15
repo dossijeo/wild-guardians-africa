@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <cstdint>
 #include <unordered_map>
@@ -15,14 +16,20 @@ const float* spatial_world_route_ptr();
 int spatial_world_route_reason();
 uint32_t lazy_route_revision();
 int lazy_selected_context();
+float spatial_surface_anywhere(float,float);
+float spatial_fluid_surface_level();
+int spatial_world_biome();
 }
 
 namespace {
-constexpr int changeWidth=10,resultWidth=6,maxChangeBatch=4096;
+constexpr int changeWidth=10,resultWidth=8,maxChangeBatch=4096;
 constexpr double maxId=9007199254740991.0;
+constexpr double pi=3.14159265358979323846;
 struct Worker {uint64_t id,center;double x,z;bool eligible;double rank;};
-struct Target {uint64_t id;double x,z;bool active;};
-struct Task {uint64_t id,center,target,assigned;double created,rank;};
+// Target kind: 0 direct, 1 ordinary crop, 2 banana, 3 wall, 4 center.
+struct Target {uint64_t id;double x,z;bool active;int kind;double yaw,shape;};
+// Task kind: 0 direct, 1 water/initial, 2 repair.
+struct Task {uint64_t id,center,target,assigned;double created,rank;int kind;};
 struct Change {
   int op,kind;
   uint64_t id,center,target,assigned;
@@ -60,10 +67,56 @@ bool parse(const double* row,Change& change){
   change.assigned=uint64_t(row[6]);change.flag=row[6]!=0;
   change.target=uint64_t(row[7]);change.created=row[8];change.rank=row[9];
   if(change.kind==1)return change.center>0&&row[6]<=1;
-  if(change.kind==2)return row[6]<=1;
-  return change.center>0&&change.target>0;
+  if(change.kind==2)return change.center<=4&&row[6]<=1&&change.rank>=0;
+  return change.center>0&&change.target>0&&integer(row[4],true)&&row[4]<=2;
 }
 void clearProposal(IntentState& s){s.proposals.clear();s.proposalOpen=false;}
+struct Point {double x,z;};
+struct ServicePoints {
+  std::array<Point,16> values{};
+  int count=0;
+  void add(Point point){values[size_t(count++)]=point;}
+};
+bool waterHeight(const Target& target,Point point){
+  const double ground=spatial_surface_anywhere(float(point.x),float(point.z));
+  const double crop=spatial_surface_anywhere(float(target.x),float(target.z));
+  const double worker=spatial_world_biome()==5?
+    std::max(ground,double(spatial_fluid_surface_level())):ground;
+  return std::isfinite(worker)&&std::isfinite(crop)&&std::abs(worker-crop)<=.5;
+}
+ServicePoints servicePoints(const Worker& worker,const Target& target,int taskKind){
+  ServicePoints points;
+  if(taskKind==0){points.add({target.x,target.z});return points;}
+  const double angle=std::atan2(worker.x-target.x,worker.z-target.z);
+  if(taskKind==1){
+    if(target.kind!=1&&target.kind!=2)return points;
+    const double standOff=(target.kind==2?.65:.45)+.28+.1;
+    for(const int offset:{0,1,-1,2,-2,3,-3,4}){
+      const double yaw=angle+offset*pi/4;
+      const Point point={target.x+std::sin(yaw)*standOff,
+        target.z+std::cos(yaw)*standOff};
+      if(waterHeight(target,point))points.add(point);
+    }
+  }else if(taskKind==2&&target.kind==4){
+    for(int i=0;i<16;i++){
+      const double offset=i==0?0:std::ceil(double(i)/2)*(i%2?1:-1)*pi/8;
+      const double radius=target.shape+.28+.1;
+      points.add({target.x+std::sin(angle+offset)*radius,
+        target.z+std::cos(angle+offset)*radius});
+    }
+  }else if(taskKind==2&&target.kind==3){
+    const double width=1.09*target.shape+.28+.1,depth=.22+.28+.1;
+    const double c=std::cos(target.yaw),s=std::sin(target.yaw);
+    for(const Point local:std::array<Point,4>{{{0,depth},{0,-depth},{width,0},{-width,0}}})
+      points.add({target.x+local.x*c+local.z*s,
+        target.z-local.x*s+local.z*c});
+    std::stable_sort(points.values.begin(),points.values.begin()+points.count,[&](Point a,Point b){
+      return std::hypot(a.x-worker.x,a.z-worker.z)<
+        std::hypot(b.x-worker.x,b.z-worker.z);
+    });
+  }
+  return points;
+}
 }
 
 extern "C" {
@@ -98,10 +151,10 @@ int nav_intent_apply_changes(double sequence,int count){
         change.x,change.z,change.flag,change.rank});
     }else if(change.kind==2){
       s.targets.insert_or_assign(change.id,Target{change.id,change.x,
-        change.z,change.flag});
+        change.z,change.flag,int(change.center),change.created,change.rank});
     }else{
       s.tasks.insert_or_assign(change.id,Task{change.id,change.center,
-        change.target,change.assigned,change.created,change.rank});
+        change.target,change.assigned,change.created,change.rank,int(change.x)});
     }
   }
   s.sequence++;s.entityRevision++;clearProposal(s);return 1;
@@ -114,7 +167,7 @@ int nav_intent_task_count(){return int(state().tasks.size());}
 
 // All eligible direct tasks are planned together in global FIFO order. Rows:
 // task ID, worker ID, status (0 no candidate, 1 found, 2 blocked, 3 unknown),
-// point offset, point count, unknown cause. No lease changes until commit.
+// point offset, point count, unknown cause, approach X/Z. No lease changes until commit.
 int nav_intent_plan_tasks(){
   IntentState& s=state();
   s.results.clear();s.routes.clear();s.proposals.clear();
@@ -135,8 +188,12 @@ int nav_intent_plan_tasks(){
     const auto targetIt=s.targets.find(task->target);
     if(targetIt==s.targets.end()||!targetIt->second.active)continue;
     const Target& target=targetIt->second;
+    if(task->kind==1&&(target.kind!=1&&target.kind!=2)||
+       task->kind==2&&(target.kind!=3&&target.kind!=4)){
+      s.results.clear();s.routes.clear();clearProposal(s);return -2;
+    }
     const size_t at=s.results.size();
-    s.results.insert(s.results.end(),{double(task->id),0,0,0,0,0});
+    s.results.insert(s.results.end(),{double(task->id),0,0,0,0,0,0,0});
     workers.clear();
     for(const auto& item:s.workers){
       const Worker& worker=item.second;
@@ -152,17 +209,30 @@ int nav_intent_plan_tasks(){
     });
     bool unknown=false;int unknownReason=0;
     for(const Worker* worker:workers){
-      s.candidates++;s.routeQueries++;
-      const int count=spatial_world_route_cached(float(worker->x),float(worker->z),
-        float(target.x),float(target.z));
-      if(count<0){unknown=true;unknownReason=spatial_world_route_reason();continue;}
-      if(!count)continue;
-      s.results[at+1]=double(worker->id);s.results[at+2]=1;
-      s.results[at+3]=double(s.routes.size()/2);s.results[at+4]=count;
-      const float* path=spatial_world_route_ptr();
-      s.routes.insert(s.routes.end(),path,path+count*2);
-      s.proposals.push_back({task->id,worker->id});reserved.insert(worker->id);
-      break;
+      s.candidates++;
+      const ServicePoints points=servicePoints(*worker,target,task->kind);
+      for(int i=0;i<points.count;i++){
+        const Point point=points.values[size_t(i)];
+        s.routeQueries++;
+        const int count=spatial_world_route_cached(float(worker->x),float(worker->z),
+          float(point.x),float(point.z));
+        if(count<0){
+          unknown=true;unknownReason=spatial_world_route_reason();
+          // Watering's live policy defers the worker after an unresolved
+          // sector rather than probing every other point around that crop.
+          if(task->kind==1)break;
+          continue;
+        }
+        if(!count)continue;
+        s.results[at+1]=double(worker->id);s.results[at+2]=1;
+        s.results[at+3]=double(s.routes.size()/2);s.results[at+4]=count;
+        s.results[at+6]=point.x;s.results[at+7]=point.z;
+        const float* path=spatial_world_route_ptr();
+        s.routes.insert(s.routes.end(),path,path+count*2);
+        s.proposals.push_back({task->id,worker->id});reserved.insert(worker->id);
+        break;
+      }
+      if(s.results[at+2]==1)break;
     }
     if(s.results[at+2]!=1){
       s.results[at+2]=unknown?3:workers.empty()?0:2;
