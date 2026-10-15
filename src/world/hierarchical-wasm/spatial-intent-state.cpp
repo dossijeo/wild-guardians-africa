@@ -132,6 +132,9 @@ struct IntentState {
   // Transient mobile-body snapshot supplied once at an attack planning event.
   // It never becomes a topological cache or invalidates a committed route.
   std::vector<double> attackBlockers;
+  // JS retains a crop lease between committed strikes even after the native
+  // attack action has finished. Project those live leases for this request.
+  std::vector<double> attackReservedTargets;
   std::array<double,10> attackResult{};
   std::vector<double> intentChanges;
   std::array<double,10> intentResult{};
@@ -1436,14 +1439,22 @@ double* nav_intent_attack_blockers_ptr(int count){
   IntentState& s=state();s.attackBlockers.resize(size_t(count)*3);
   return s.attackBlockers.data();
 }
+double* nav_intent_attack_reserved_targets_ptr(int count){
+  if(count<0||count>100000)return nullptr;
+  IntentState& s=state();s.attackReservedTargets.resize(size_t(count));
+  return s.attackReservedTargets.data();
+}
 int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
-                                double radius,int cropsEligible,int blockerCount){
+                                double radius,int cropsEligible,int blockerCount,
+                                int reservedTargetCount){
   IntentState& s=state();s.attackResult.fill(0);
   if(!integer(actorId)||!coordinate(startX)||!coordinate(startZ)||
      !std::isfinite(radius)||radius<=0||radius>2||
      (cropsEligible!=0&&cropsEligible!=1)||
      blockerCount<0||blockerCount>100000||
      s.attackBlockers.size()!=size_t(blockerCount)*3||
+     reservedTargetCount<0||reservedTargetCount>100000||
+     s.attackReservedTargets.size()!=size_t(reservedTargetCount)||
      lazy_selected_context()==1)return -1;
   for(int i=0;i<blockerCount;i++){
     const size_t offset=size_t(i)*3;
@@ -1451,6 +1462,13 @@ int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
        !coordinate(s.attackBlockers[offset+1])||
        !std::isfinite(s.attackBlockers[offset+2])||
        s.attackBlockers[offset+2]<=0||s.attackBlockers[offset+2]>2)return -1;
+  }
+  std::unordered_set<uint64_t> transientLeases;
+  transientLeases.reserve(size_t(reservedTargetCount));
+  for(int i=0;i<reservedTargetCount;i++){
+    const double id=s.attackReservedTargets[size_t(i)];
+    if(!integer(id))return -1;
+    transientLeases.insert(uint64_t(id));
   }
   const uint64_t actor=uint64_t(actorId);
   if(s.activeIntents.count(actor))return -2;
@@ -1478,6 +1496,7 @@ int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
   int lastRegisterResult=std::numeric_limits<int>::min();
   uint64_t firstCandidateCrop=0;
   const auto leased=[&](uint64_t cropId){
+    if(transientLeases.count(cropId))return true;
     const auto owners=s.byTarget.find(cropId);
     if(owners==s.byTarget.end())return false;
     for(uint64_t owner:owners->second){

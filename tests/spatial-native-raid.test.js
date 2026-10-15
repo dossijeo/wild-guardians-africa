@@ -167,6 +167,15 @@ test('a native Sabana incursion spawns physically and advances through Game.tick
     'native crop selection must honor another animal’s future attack site');
     planner.cancelAttackIntent(probeAnimal.id);
     state.raid.animals.pop();
+    const leasedCrop={id:'animal-999997',status:'walking',
+      x:30,z:30,radius:.28,targetId:freePlan.target.id,
+      approach:{x:30,z:30}};
+    state.raid.animals.push(leasedCrop);
+    const leasedPlan=planner.planAttackCrop(state,probeAnimal);
+    assert.notEqual(leasedPlan?.target?.id,freePlan.target.id,
+      'a JS crop lease between strikes cannot be offered to another animal');
+    if(leasedPlan?.status==='found')planner.cancelAttackIntent(probeAnimal.id);
+    state.raid.animals.pop();
     planner.resetFromState(state);
     let stopWorld=planner.observeWorld(state),stopTasks=planner.observeTasks(state);
     const intentCalls={registered:0,committed:0,finished:0,

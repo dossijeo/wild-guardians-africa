@@ -96,7 +96,8 @@ export function createSpatialIntentBridge(session){
     'nav_intent_wall_opportunity_candidates',
     'nav_intent_wall_opportunity_candidates_ptr',
     'nav_intent_reconsider_wall_opportunity',
-    'nav_intent_attack_blockers_ptr','nav_intent_plan_attack_crop',
+    'nav_intent_attack_blockers_ptr','nav_intent_attack_reserved_targets_ptr',
+    'nav_intent_plan_attack_crop',
     'nav_intent_attack_result_ptr',
     'nav_intent_attack_action_active','nav_intent_restore_attack_action',
     'nav_intent_restore_attack_pending','nav_intent_restore_attack_site',
@@ -486,6 +487,10 @@ export function createSpatialIntentBridge(session){
       blockers.push({x:other.approach.x,z:other.approach.z,
         radius:(other.radius??.28)+.1});
     }
+    const reservedTargets=state.raid.animals.filter(other=>other!==animal&&
+      other.targetId?.startsWith('plant-')&&
+      !['gone','retreating','waiting'].includes(other.status))
+      .map(other=>numericId(other.targetId));
     const blockerPtr=wasm.nav_intent_attack_blockers_ptr(blockers.length);
     if(!blockerPtr&&blockers.length)
       throw Error('Native attack blocker allocation failed');
@@ -498,8 +503,14 @@ export function createSpatialIntentBridge(session){
         rows[offset+2]=blocker.radius??.28;
       }
     }
+    const reservedPtr=wasm.nav_intent_attack_reserved_targets_ptr(
+      reservedTargets.length);
+    if(!reservedPtr&&reservedTargets.length)
+      throw Error('Native attack target lease allocation failed');
+    if(reservedTargets.length)new Float64Array(wasm.memory.buffer,reservedPtr,
+      reservedTargets.length).set(reservedTargets);
     const status=wasm.nav_intent_plan_attack_crop(numericId(animal.id),
-      animal.x,animal.z,animal.radius,1,blockers.length);
+      animal.x,animal.z,animal.radius,1,blockers.length,reservedTargets.length);
     if(status<0)throw Error(`Native crop intention rejected: ${status}`);
     const values=new Float64Array(wasm.memory.buffer,
       wasm.nav_intent_attack_result_ptr(),10);
