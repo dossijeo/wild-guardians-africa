@@ -21,8 +21,8 @@ const numericId=id=>{
 };
 const lexicalRank=id=>Number(`0.${/-(\d+)$/.exec(id)[1]}`);
 const workerRow=(worker,state)=>[1,1,numericId(worker.id),
-  numericId(worker.centerId),worker.x,worker.z,
-  worker.status==='idle'&&!worker.taskId&&!worker.incapacitated&&
+  worker.centerId?numericId(worker.centerId):0,worker.x,worker.z,
+  !!worker.centerId&&worker.status==='idle'&&!worker.taskId&&!worker.incapacitated&&
     !contractExpired(worker,state)&&state.time<(profileEnd.get(worker.profile)??0)?1:0,
   0,0,lexicalRank(worker.id)];
 const targetRow=(entity,state)=>{

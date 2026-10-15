@@ -20,6 +20,8 @@ test('event-fed native intent bridge replays live state and only changes on expl
   './fixtures/desierto983-d15-partial-state.json.gz',import.meta.url))).toString());
  const worker=game.workers.find(w=>w.id==='worker-9263');
  worker.status='idle';worker.taskId=null;worker.contractDay=game.day;
+ game.workers.push({...worker,id:'worker-1000001',centerId:null,
+  status:'waiting',taskId:null});
  const plant=game.plants.filter(p=>p.alive&&p.centerId===worker.centerId)
   .sort((a,b)=>Math.hypot(a.x-worker.x,a.z-worker.z)-
     Math.hypot(b.x-worker.x,b.z-worker.z))[0];

@@ -134,7 +134,7 @@ bool parse(const double* row,Change& change){
   change.center=uint64_t(row[3]);change.x=row[4];change.z=row[5];
   change.assigned=uint64_t(row[6]);change.flag=row[6]!=0;
   change.target=uint64_t(row[7]);change.created=row[8];change.rank=row[9];
-  if(change.kind==1)return change.center>0&&row[6]<=1;
+  if(change.kind==1)return (change.center>0||row[6]==0)&&row[6]<=1;
   if(change.kind==2)return change.center<=4&&row[6]<=1&&change.rank>=0;
   if(change.kind==4)return (change.center==3||change.center==4)&&
     row[4]>=0&&row[5]>0&&row[4]<=row[5]&&row[6]<=2&&row[7]<=5;
