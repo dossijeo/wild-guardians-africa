@@ -45,7 +45,7 @@ export function syncNativeCampaignRaidView(state,nav,previousCenter){
  }
  return context;
 }
-export async function simulateNativeCampaign({days=100,strategy='good',labourPolicy='legacy',profile='olderFemale',mixed=true,middayHiring=false,plantsPerWorker=12,defend=false,reserveLabourGrowth=true,reserveMaintenance=true,burstPlanting=false,cameraEntry=true,defensePolicy='expanding',nativeEvidence=true,onDay,onTick,onDecision,openingFactory=createOpeningWorld,entryDriverFactory=nav=>new NativeCampaignEntryDriver(nav),reloadRaids=true,...world}={}){
+export async function simulateNativeCampaign({days=100,strategy='good',labourPolicy='legacy',profile='olderFemale',mixed=true,middayHiring=false,plantsPerWorker=12,defend=false,reserveLabourGrowth=true,reserveMaintenance=true,burstPlanting=false,cameraEntry=true,defensePolicy='expanding',nativeEvidence=true,decisionProfile=false,onDay,onTick,onDecision,openingFactory=createOpeningWorld,entryDriverFactory=nav=>new NativeCampaignEntryDriver(nav),reloadRaids=true,...world}={}){
  if(!Number.isSafeInteger(days)||days<1||days>180)throw Error('Native protocol permits1–180 days only');
  if(!Number.isSafeInteger(plantsPerWorker)||plantsPerWorker<1)throw new Error('Plants per worker must be a positive integer');
  const protocol=campaignProtocolForLabour(labourPolicy),q4=labourPolicy==='q4',labourHistory=[],labourReasons={};
@@ -54,7 +54,18 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
  const opening=await openingFactory(world),nav=opening.nav;let s=opening.s,sequence=0;
  const worker=PROFILES.find(p=>p.id===profile);if(!worker)throw new Error('Unknown worker profile');
  if(!['legacy','expanding'].includes(defensePolicy))throw Error('Unknown defense policy');
- const defense=defend?(defensePolicy==='expanding'?createNativeExpandingDefensePolicy({repairWalls:policy.repair,reserveMode:'none'}):createFarmDefensePolicy()):null;
+ let decisionPhases=null;
+ const measure=(kind,ms)=>{
+  if(!decisionPhases)return;
+  const row=decisionPhases[kind]??(decisionPhases[kind]={calls:0,ms:0});
+  row.calls++;row.ms+=ms;
+ };
+ const timed=(kind,fn)=>{
+  if(!decisionProfile)return fn();
+  const start=performance.now();
+  try{return fn();}finally{measure(kind,performance.now()-start);}
+ };
+ const defense=defend?(defensePolicy==='expanding'?createNativeExpandingDefensePolicy({repairWalls:policy.repair,reserveMode:'none',measure:decisionProfile?measure:null}):createFarmDefensePolicy()):null;
  const driver=entryDriverFactory(nav);let partialEvidence=()=>({});
  try {
  const evidence=nativeEvidence?createNativeCampaignEvidence(s):null,raidEvidence=createNativeRaidCampaignEvidence(s);
@@ -68,8 +79,8 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
  let financeStart=campaignFinanceCheckpoint(s);
  partialEvidence=()=>({currentFinance:campaignFinanceDelta(financeStart,s),daily:structuredClone(daily),nativeEvidence:evidence?.report(s)??null,raidEvidence:raidEvidence.report(s),labourHistory,labourReasons,defense:defense?.report(s)??null,expansion:expansion?.report()??null});
  const collect=()=>{for(const e of s.events)if(!seen.has(e.id)){seen.add(e.id);counts[e.type]=(counts[e.type]??0)+1;if(e.type==='CrateDelivered'){const q=s.ledger.entries['deliver:'+e.targetId];assert.ok(q&&q.d==='1'&&Number(q.n)>0);settledDeliveryIncome+=Number(q.n);}if(e.type==='HiringConfirmed'&&e.additional){additionalHiring.count+=e.count;additionalHiring.cost+=e.cost;}}};
- const plotSearch=createNativeCampaignPlots(nav,()=>s);
- const choosePlot=()=>{const p=plotSearch.choose();if(p&&!plots.some(q=>q.x===p.x&&q.z===p.z))plots.push(p);return p;};
+ const plotSearch=createNativeCampaignPlots(nav,()=>s,{measure:decisionProfile?measure:null});
+ const choosePlot=()=>{const p=timed('plot.choose',()=>plotSearch.choose());if(p&&!plots.some(q=>q.x===p.x&&q.z===p.z))plots.push(p);return p;};
  const nextSpecies=()=>mixed&&s.day>=10&&numberOf(s.ledger.balance)>1000?['mijo','girasol','sorgo','maiz','batata','algodon','yuca','platano'][plantedSequence%8]:'mijo';
  const labourReserve=(additional=0)=>q4?q4RecoveryReserve(s,worker.wage):policy.cashPolicy==='progressive-village'?Math.max(nextWages,Math.ceil((s.plants.filter(p=>p.alive).length+additional)/plantsPerWorker)*worker.wage):nextWages;
  const maintenanceReserve=()=>policy.repair?s.tasks.filter(t=>t.kind==='repair').reduce((n,t)=>{const c=s.structures.find(c=>c.id===t.targetId);return n+(c?Math.ceil(numberOf(Game.repairCost(c))):0);},0):0;
@@ -123,7 +134,7 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
   for(const c of (policy.repair?s.structures.filter(operational):[]))if(c.hp<(reserveMaintenance?600:540)&&!s.tasks.some(t=>t.kind==='repair'&&t.targetId===c.id)&&numberOf(s.ledger.balance)>=numberOf(Game.repairCost(c))+labourReserve()){const taskCount=s.tasks.length;Game.requestRepair(s,command('repair'),c.id);if(s.tasks.length>taskCount)actions++;}
   // Village savings are discretionary: building/maintaining physical protection
   // takes priority. Still retain wages and already requested native repairs.
-  if(defense)actions+=defense.act(s,nav,{command,reserve:labourReserve()+maintenanceReserve()});
+  if(defense)actions+=timed('defense.act',()=>defense.act(s,nav,{command,reserve:labourReserve()+maintenanceReserve()}));
   if(expansion)actions+=expansion.act(s,nav,{command,reserve:labourReserve()+maintenanceReserve(),villageSavings:savingsReserve()});
   const live=s.plants.filter(p=>p.alive);
   for(const kind of ['multiply','growth'])if(s.day>=(kind==='multiply'?5:3)&&s.cooldowns[kind]===0){
@@ -148,6 +159,7 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
  };
  hire();collect();
  while(s.day<=days&&!s.result){
+  decisionPhases=decisionProfile?{}:null;
   const day=s.day,start=s.elapsed,before=financeStart.balance,baseline={...counts},additionalBaseline={...additionalHiring},idle={budget:0,space:0,'shift-end':0,incursion:0,night:0},initialStaff=staff;
   let longestIdle=0,idleRun=0,actions=0,daylightSeconds=0,unoccupiedSeconds=0,
     decisionWallMs=0,tickWallMs=0,presentationWallMs=0;
@@ -192,6 +204,11 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
   const finance=campaignFinanceDelta(financeStart,s);
   const row={day,before,finance,daylightSeconds,unoccupiedSeconds,money:numberOf(s.ledger.balance),staff:initialStaff,wages:finance.wages,nextLabourReserve:labourReserve(),maintenanceReserve:maintenanceReserve(),pendingTasks:s.tasks.length,planted:(counts.CropPlaced??0)-(baseline.CropPlaced??0),delivered:(counts.CrateDelivered??0)-(baseline.CrateDelivered??0),destroyed:(counts.CropDestroyed??0)-(baseline.CropDestroyed??0),living:s.plants.filter(p=>p.alive).length,centerHp:s.structures.filter(operational).map(c=>c.hp),actions,longestIdle,idle,result:s.result,
     wallTime:{decisionMs:decisionWallMs,gameTickMs:tickWallMs,presentationMs:presentationWallMs}};
+  if(decisionProfile){
+   row.decisionPhases=decisionPhases;
+   row.decisionPhases.other={calls:0,ms:Math.max(0,decisionWallMs-
+    (decisionPhases['plot.choose']?.ms??0)-(decisionPhases['defense.act']?.ms??0))};
+  }
   row.additionalStaff=additionalHiring.count-additionalBaseline.count;row.additionalWages=additionalHiring.cost-additionalBaseline.cost;
   daily.push(row);onDay?.(row);
   if(s.result==='victory'&&s.day<=days){Game.continuePostgame(s);collect();}

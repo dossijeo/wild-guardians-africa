@@ -2,12 +2,15 @@ import {centerGeometry} from '../centers.js';
 import {contractExpired,PROFILES} from '../../simulation/workforce.js';
 import {repairCost} from '../../simulation/game.js';
 import {BALANCE} from '../../simulation/balance.js';
+import {ANIMAL_SPATIAL_PROFILES} from './spatial-movement-profiles.js';
 
 // Experimental event-fed bridge. Gameplay does not call it yet: it is used to
 // prove the native read model can be rebuilt after load and changed by deltas.
 const width=10,maxBatch=4096;
 const profileEnd=new Map(PROFILES.map(profile=>[profile.id,profile.end]));
 const materialCodes=new Map(BALANCE.walls.map((wall,index)=>[wall.id,index+1]));
+const cropCodes=new Map(BALANCE.crops.map((crop,index)=>[crop.id,index+1]));
+const cropValues=new Map(BALANCE.crops.map(crop=>[crop.id,crop.base_harvest_value]));
 const structureStatus={intact:0,collapsing:1,ruined:2};
 const numericId=id=>{
   const match=/-(\d+)$/.exec(id??'');
@@ -45,16 +48,23 @@ const structureMetaRow=structure=>{
   return [1,4,numericId(structure.id),structure.kind==='wall'?3:4,
     structure.hp,structure.maxHp,structureStatus[structure.status],material,0,0];
 };
+const cropMetaRow=plant=>{
+  const species=cropCodes.get(plant.species),value=cropValues.get(plant.species);
+  if(!species||!Number.isFinite(value))throw TypeError(`Unsupported crop: ${plant.id}`);
+  return [1,5,numericId(plant.id),species,value,0,0,0,0,0];
+};
 
 export function createSpatialIntentBridge(session){
   const wasm=session?.core?.wasm;
   for(const name of ['nav_intent_reset','nav_intent_changes_ptr',
     'nav_intent_apply_changes','nav_intent_plan_tasks','nav_intent_results_ptr',
     'nav_intent_discard','nav_intent_commit','nav_intent_damaged_structures',
-    'nav_intent_damaged_ptr'])
+    'nav_intent_damaged_ptr','nav_intent_crop_groups',
+    'nav_intent_crop_groups_ptr','nav_intent_crop_members_ptr'])
     if(typeof wasm?.[name]!=='function')throw TypeError(`Missing ${name}`);
   let sequence=0,initialized=false;
   const structuresById=new Map();
+  const cropsById=new Map();
   const apply=rows=>{
     if(!initialized)throw Error('Reset the native intent session first');
     for(let offset=0;offset<rows.length;offset+=maxBatch){
@@ -75,14 +85,18 @@ export function createSpatialIntentBridge(session){
         a.created-b.created||a.id.localeCompare(b.id));
       const rows=[...workers.map(worker=>workerRow(worker,state)),
         ...state.plants.filter(plant=>plant.alive).map(plant=>targetRow(plant,state)),
+        ...state.plants.filter(plant=>plant.alive).map(cropMetaRow),
         ...state.crates.filter(crate=>!crate.delivered).map(crate=>targetRow(crate,state)),
         ...state.structures.map(structure=>targetRow(structure,state)),
         ...state.structures.map(structure=>structureMetaRow(structure)),
         ...tasks.map(task=>taskRow(task))];
       apply(rows);
       structuresById.clear();
+      cropsById.clear();
       for(const structure of state.structures)
         structuresById.set(numericId(structure.id),{...structure});
+      for(const crop of state.plants)if(crop.alive)
+        cropsById.set(numericId(crop.id),crop.id);
     }
     catch(error){
       wasm.nav_intent_reset();sequence=0;initialized=false;
@@ -111,6 +125,8 @@ export function createSpatialIntentBridge(session){
       if(event.type==='target'&&!event.remove&&
         (event.entity.kind==='wall'||event.entity.kind==='center'))
         rows.push(structureMetaRow(event.entity));
+      if(event.type==='target'&&!event.remove&&'alive' in event.entity)
+        rows.push(cropMetaRow(event.entity));
     }
     try{
       const result=apply(rows);
@@ -120,6 +136,12 @@ export function createSpatialIntentBridge(session){
           if(event.remove)structuresById.delete(id);
           else if(event.entity.kind==='wall'||event.entity.kind==='center')
             structuresById.set(id,{...event.entity});
+        }
+        if(event.type==='target'){
+          const id=numericId(event.remove?event.id:event.entity.id);
+          if(event.remove||'alive' in event.entity&&!event.entity.alive)
+            cropsById.delete(id);
+          else if('alive' in event.entity)cropsById.set(id,event.entity.id);
         }
       }
       return result;
@@ -161,9 +183,44 @@ export function createSpatialIntentBridge(session){
         revision:data[offset+6],kind};
     });
   };
+  const getUnprotectedCropGroups=({includeProtected=false}={})=>{
+    if(!initialized)throw Error('Reset the native intent session first');
+    const groups=new Map();
+    const revisions=[];
+    for(const [species,profile] of Object.entries(ANIMAL_SPATIAL_PROFILES)){
+      session.actorSectorRevision({worker:false,species});
+      const count=wasm.nav_intent_crop_groups();
+      if(count<0)throw Error('Native crop group query failed');
+      const rows=Array.from(new Float64Array(wasm.memory.buffer,
+        wasm.nav_intent_crop_groups_ptr(),count*12));
+      const memberCount=rows.reduce((max,_,index)=>index%12===0?
+        Math.max(max,rows[index+9]+rows[index+10]):max,0);
+      const members=Array.from(new Float64Array(wasm.memory.buffer,
+        wasm.nav_intent_crop_members_ptr(),memberCount));
+      revisions.push({species,topology:wasm.nav_intent_topology_revision()});
+      for(let index=0;index<count;index++){
+        const at=index*12,id=rows[at],status=rows[at+8];
+        let group=groups.get(id);
+        if(!group){
+          const ids=members.slice(rows[at+9],rows[at+9]+rows[at+10]);
+          group={id:`crop:${cropsById.get(id)??id}`,cropIds:ids.map(item=>cropsById.get(item)??item),
+            value:rows[at+1],position:{x:rows[at+2],z:rows[at+3]},
+            bounds:{minX:rows[at+4],minZ:rows[at+5],maxX:rows[at+6],maxZ:rows[at+7]},
+            protection:'protected',profiles:{},revision:{crops:rows[at+11],topology:revisions}};
+          groups.set(id,group);
+        }
+        group.profiles[species]=status===1?'protected':status===0?'unprotected':'unknown';
+        if(status===0)group.protection='unprotected';
+        else if(status<0&&group.protection==='protected')group.protection='unknown';
+      }
+    }
+    return [...groups.values()].filter(group=>includeProtected||
+      group.protection!=='protected').sort((a,b)=>b.value-a.value||a.id.localeCompare(b.id));
+  };
   return {resetFromState,applyEvents,planTasks,
     getDamagedWalls:()=>getDamaged('wall'),
     getDamagedCenters:()=>getDamaged('center'),
+    getUnprotectedCropGroups,
     discard:()=>wasm.nav_intent_discard(),
     commit:()=>wasm.nav_intent_commit(),
     sequence:()=>sequence};
