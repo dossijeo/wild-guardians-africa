@@ -10,6 +10,7 @@ import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/sp
 import {createSpatialIntentBridge,createEventDrivenTaskPlanner} from '../src/world/hierarchical-wasm/spatial-intent-bridge.js';
 import {createCropEnclosurePlanner} from '../src/world/hierarchical-wasm/spatial-crop-enclosure-plan.js';
 import {villageLayout} from '../src/world/villages.js';
+import {rational,numberOf} from '../src/simulation/money.js';
 import * as Game from '../src/simulation/game.js';
 
 test('game event observers retain every committed event beyond the capped log and detach cleanly',()=>{
@@ -252,5 +253,15 @@ test('a center-adjacent crop uses valid animal attack sites to certify its enclo
   assert.equal(bridge.getUnprotectedCropGroups()[0].protection,'unprotected',
    'the speculative barrier must not certify the live world');
   assert.equal(serialize(game),before);
+  game.ledger.balance=rational(1000); // Explicit fixture credit for the paid-command check.
+  assert.equal(Game.buildWallChain(game,'group-center-ring','zarzas',points,nav,
+   {smooth:false,snap:false}),true);
+  assert.equal(numberOf(game.ledger.balance),650);
+  assert.equal(game.structures.filter(item=>item.kind==='wall').length,35);
+  bridge.applyCommittedEvents(game,[game.events.at(-1)]);
+  const paid=bridge.getUnprotectedCropGroups({includeProtected:true})
+   .find(item=>item.id===group.id);
+  assert.equal(paid.protection,'protected',JSON.stringify(paid.profiles));
+  assert(Object.values(paid.profiles).every(status=>status==='protected'));
  }finally{session.dispose();}
 });
