@@ -50,3 +50,10 @@ supervivencia equilibrada; la selección de objetivos tras entrar y las
 campañas completas siguen siendo verificaciones separadas. Tampoco sustituye
 una medición física en móviles. La rama permanece experimental para revisar
 el cambio de presión real que implica eliminar oleadas inactivas.
+
+Un [piloto posterior de 14 noches](raid-entry-reachability/campaign-desierto983/README.md)
+con políticas amurallada y sin murallas sobre la misma semilla confirma ese
+cambio de presión: ambos brazos terminan en derrota nativa durante el día 13;
+los muros interceptan impactos y reducen pérdidas, pero no sostienen la finca
+en esta política. La PR permanece experimental mientras se revisan recintos
+cerrados y más escenarios.
