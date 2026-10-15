@@ -1,0 +1,229 @@
+{
+  "stamp": {
+    "sourceHash": "2fde404925b74f0d72f558d8a7f12abf7ff854ac",
+    "moduleHashes": {
+      "tools/native-campaign-runner.mjs": "7a1c8dac4c793ea44ee7c21d34e98bbe840d836c46c44d10364f3e526b081b49",
+      "tools/native-expanding-defense-policy.mjs": "b649e7b65ba0dacb7b362e550f81b5c3e8edb98cba1ebd2a27ee566625ad4842",
+      "tools/evolutionary-balance/run-ga.mjs": "b6e28e28393bb4ccac2a7756ac17dc6346442dfcc4fd7b091c2c5dfdc1d56f2c",
+      "tools/evolutionary-balance/ga.mjs": "655da41f6ee35041b0b6b1c1bb92b93d148ac68ba8194339b7406bd7efe87f1e",
+      "tools/evolutionary-balance/policy-genes.mjs": "fa8dd7c82f4289bc1b016dd15cbf7b3fd66182e0b1d1ec963c0dc127a1d0edfd"
+    },
+    "worktreeDiffHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "implementationId": "712f0156ff37",
+    "runId": "4e49941aee82",
+    "geneSchemaVersion": "virtual-player-v3-service-side-policy",
+    "config": {
+      "rngSeed": 1407,
+      "generations": 2,
+      "population": 3,
+      "days": 14,
+      "train": [
+        {
+          "biome": "sabana",
+          "seed": 712
+        },
+        {
+          "biome": "gran-rio",
+          "seed": 2026
+        }
+      ],
+      "holdout": [
+        {
+          "biome": "manglares",
+          "seed": 123
+        }
+      ],
+      "baselines": [
+        "good-current-magic",
+        "good",
+        "expansive",
+        "bad",
+        "no-walls"
+      ],
+      "output": "docs/qa/evolutionary-balance/management-search/results-14-main-sync",
+      "requireBiomeHoldout": true,
+      "initialPopulation": [
+        {
+          "plantsPerWorker": 6,
+          "wageReserveDays": 1,
+          "seedReserve": 0,
+          "defenseCashFraction": 0.2,
+          "defenseStartDay": 2,
+          "repairHealthFraction": 0.8,
+          "magicIntervalSeconds": 5,
+          "growthShare": 0,
+          "plantingIntervalSeconds": 1,
+          "wallMaterial": "zarzas",
+          "magicPriority": "multiply",
+          "wallPolicy": "planned"
+        },
+        {
+          "plantsPerWorker": 8,
+          "wageReserveDays": 2,
+          "seedReserve": 50,
+          "defenseCashFraction": 0.35,
+          "defenseStartDay": 2,
+          "repairHealthFraction": 0.85,
+          "magicIntervalSeconds": 5,
+          "growthShare": 0.25,
+          "plantingIntervalSeconds": 2,
+          "wallMaterial": "zarzas",
+          "magicPriority": "multiply",
+          "wallPolicy": "planned"
+        },
+        {
+          "plantsPerWorker": 5,
+          "wageReserveDays": 1,
+          "seedReserve": 25,
+          "defenseCashFraction": 0.4,
+          "defenseStartDay": 1,
+          "repairHealthFraction": 0.9,
+          "magicIntervalSeconds": 5,
+          "growthShare": 0,
+          "plantingIntervalSeconds": 1,
+          "wallMaterial": "empalizada",
+          "magicPriority": "multiply",
+          "wallPolicy": "planned"
+        }
+      ],
+      "costStop": {
+        "maxDayGameTickMs": 120000,
+        "maxElapsedWallMs": 900000
+      }
+    },
+    "gameBalance": "unchanged",
+    "runKind": "native-Wild-Engine-campaign"
+  },
+  "pilotLeader": {
+    "id": "4419e5eb34a46b9f",
+    "genes": {
+      "plantsPerWorker": 6,
+      "wageReserveDays": 1,
+      "seedReserve": 0,
+      "defenseCashFraction": 0.2,
+      "defenseStartDay": 2,
+      "repairHealthFraction": 0.8,
+      "magicIntervalSeconds": 5,
+      "growthShare": 0,
+      "plantingIntervalSeconds": 1,
+      "wallMaterial": "zarzas",
+      "magicPriority": "multiply",
+      "wallPolicy": "planned"
+    },
+    "score": 14106.55,
+    "meanScore": 14125.025,
+    "cases": [
+      {
+        "biome": "sabana",
+        "seed": 712,
+        "score": 14106.55,
+        "scoreVersion": "terminal-defeat-v2",
+        "valid": true,
+        "completed": 14,
+        "productive": 1435,
+        "living": 90,
+        "cash": 631,
+        "result": null
+      },
+      {
+        "biome": "gran-rio",
+        "seed": 2026,
+        "score": 14143.5,
+        "scoreVersion": "terminal-defeat-v2",
+        "valid": true,
+        "completed": 14,
+        "productive": 1483,
+        "living": 126,
+        "cash": 1010,
+        "result": null
+      }
+    ]
+  },
+  "holdout": [
+    {
+      "strategy": "evolved",
+      "id": "4419e5eb34a46b9f",
+      "biome": "manglares",
+      "seed": 123,
+      "score": 14136.05,
+      "scoreVersion": "terminal-defeat-v2",
+      "valid": true,
+      "completed": 14,
+      "productive": 1540,
+      "living": 121,
+      "cash": 911,
+      "result": null
+    },
+    {
+      "strategy": "good-current-magic",
+      "id": "good-current-magic",
+      "biome": "manglares",
+      "seed": 123,
+      "score": 14131.85,
+      "scoreVersion": "terminal-defeat-v2",
+      "valid": true,
+      "completed": 14,
+      "productive": 1411,
+      "living": 120,
+      "cash": 837,
+      "result": null
+    },
+    {
+      "strategy": "good",
+      "id": "good",
+      "biome": "manglares",
+      "seed": 123,
+      "score": 14123.35,
+      "scoreVersion": "terminal-defeat-v2",
+      "valid": true,
+      "completed": 14,
+      "productive": 1401,
+      "living": 106,
+      "cash": 807,
+      "result": null
+    },
+    {
+      "strategy": "expansive",
+      "id": "expansive",
+      "biome": "manglares",
+      "seed": 123,
+      "score": 14070.2,
+      "scoreVersion": "terminal-defeat-v2",
+      "valid": true,
+      "completed": 14,
+      "productive": 1038,
+      "living": 23,
+      "cash": 574,
+      "result": null
+    },
+    {
+      "strategy": "bad",
+      "id": "bad",
+      "biome": "manglares",
+      "seed": 123,
+      "score": 12533.55,
+      "scoreVersion": "terminal-defeat-v2",
+      "valid": true,
+      "completed": 13,
+      "productive": 948,
+      "living": 1,
+      "cash": 61,
+      "result": "defeat"
+    },
+    {
+      "strategy": "no-walls",
+      "id": "no-walls",
+      "biome": "manglares",
+      "seed": 123,
+      "score": 12537,
+      "scoreVersion": "terminal-defeat-v2",
+      "valid": true,
+      "completed": 13,
+      "productive": 1036,
+      "living": 0,
+      "cash": 140,
+      "result": "defeat"
+    }
+  ],
+  "limits": "Short-horizon pilot ranking only; cash, production and defenses can trade off. No 100-night victory, competitive strategy or balance approval."
+}

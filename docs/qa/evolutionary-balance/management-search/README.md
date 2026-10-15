@@ -467,3 +467,31 @@ de −397. El ledger concilia. Dos semillas muestran la fragilidad de esta
 política en Manglares, pero no estiman todavía una probabilidad de derrota
 para los seis biomas ni para 100 noches. Informe:
 `results-14-post-intro/deb7ec2b4ed1-bad-manglares-24681357-14.json`.
+
+## Búsqueda sincronizada completa, Manglares/123
+
+La ejecución congelada `4e49941aee82` terminó todas sus reservas con el
+motor de fuente `2fde4049`, sin errores técnicos. Su fitness histórico
+`terminal-defeat-v2` de catorce noches **no** separa la producción posterior
+a la introducción; por ejemplo, clasificó `expansive` como válido pese a
+acabar con sólo 54⅓ cajas/día terminales, por debajo del umbral productivo
+preestablecido para `post-intro-v2`. Conservamos el ranking original como
+evidencia de la búsqueda, no como aprobación de una política.
+
+| Política | Noches | Resultado nativo | Cultivos vivos | Monedas | Pérdidas desde noche 6 | Cajas/día finales | Margen operativo final |
+|---|---:|---|---:|---:|---:|---:|---:|
+| `4419e5eb34a46b9f` | 14 | horizonte | 121 | 911 | 45 | 117⅓ | +186 |
+| `good-current-magic` | 14 | horizonte | 120 | 837 | 65 | 103⅔ | +185 |
+| `good` histórico | 14 | horizonte | 106 | 807 | 40 | 114⅓ | +184 |
+| `expansive` histórico | 14 | horizonte, producción colapsada | 23 | 574 | 162 | 54⅓ | +86 |
+| `bad` histórico | 13 | derrota | 1 | 61 | 356 | 19⅔ | −348 |
+| `no-walls` histórico | 13 | derrota | 0 | 140 | 369 | 26⅔ | −339 |
+
+Todos los ledgers diarios concilian. El margen es ingreso menos semillas,
+salarios y reparaciones en las tres jornadas finales; excluye nuevas
+murallas. El registro de `no-walls` documenta una derrota física/económica
+real después de 369 cultivos perdidos, no una supresión sintética ni un paro
+por coste computacional. `result-4e49941aee82.json`,
+`search-4e49941aee82.json` y los progresos originales se conservan en
+`results-14-main-sync/`. La cohorte no demuestra una probabilidad de victoria
+ni permite seleccionar aún balance militar de 100 noches.
