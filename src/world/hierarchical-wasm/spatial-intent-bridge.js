@@ -313,8 +313,10 @@ export function createSpatialIntentBridge(session){
   const routePoints=handle=>{
     const count=wasm.nav_intent_route_points(handle.session,handle.slot,handle.generation);
     if(count<0)return null;
-    return new Float32Array(wasm.memory.buffer,
-      wasm.nav_intent_route_ptr(handle.session,handle.slot,handle.generation),count*2);
+    // Movement may retain these points while WASM grows its memory. Copy once
+    // when an action changes; ordinary ticks keep using the same JS view.
+    return Float32Array.from(new Float32Array(wasm.memory.buffer,
+      wasm.nav_intent_route_ptr(handle.session,handle.slot,handle.generation),count*2));
   };
   // A committed world event is the only reason to reconsider live routes.
   // The caller projects affected actor positions in the same delta batch;
