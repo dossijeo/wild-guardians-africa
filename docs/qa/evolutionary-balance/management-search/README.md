@@ -78,6 +78,14 @@ atribuir todavía el colapso a una causa concreta: la secuencia combina daños,
 contratación y decisiones de gasto que requieren un análisis separado. El
 informe y el progreso nativos se conservan en `results-14-main-sync/`.
 
+Un tercer genoma exploratorio, `2db23cb3f5302cc9`, sufrió una **derrota nativa**
+en Sabana/712 durante el día 7: completó seis noches y terminó con cero
+cultivos y 37 monedas. El último ataque destruyó físicamente las dos plantas
+que quedaban al generarse la incursión; hubo diez animales, 11 impactos contra
+muralla y una estructura arruinada. Los siete registros diarios concilian con
+el ledger. El resultado se guarda íntegro en `results-14-main-sync/`, sin
+convertirlo en un fallo técnico ni proyectarlo a una tasa de derrota general.
+
 Esta cohorte usa Wild Engine y el balance de producción sin alterar, después de
 la mejora de navegación de PR #37. Código ejecutado: `7f358aad97287b40e300026306d26f05cc4e0c29`;
 el registro de siete noches guarda además SHA-256 de los módulos y del diff en
