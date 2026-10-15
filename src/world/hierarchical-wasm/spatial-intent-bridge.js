@@ -56,15 +56,17 @@ export function createSpatialIntentBridge(session){
   };
   const resetFromState=state=>{
     wasm.nav_intent_reset();sequence=0;initialized=true;
-    const workers=[...state.workers].sort((a,b)=>a.id.localeCompare(b.id));
-    const tasks=[...state.tasks].sort((a,b)=>
-      a.created-b.created||a.id.localeCompare(b.id));
-    const rows=[...workers.map(worker=>workerRow(worker,state)),
-      ...state.plants.filter(plant=>plant.alive).map(plant=>targetRow(plant,state)),
-      ...state.crates.filter(crate=>!crate.delivered).map(crate=>targetRow(crate,state)),
-      ...state.structures.map(structure=>targetRow(structure,state)),
-      ...tasks.map(task=>taskRow(task))];
-    try{apply(rows);}
+    try{
+      const workers=[...state.workers].sort((a,b)=>a.id.localeCompare(b.id));
+      const tasks=[...state.tasks].sort((a,b)=>
+        a.created-b.created||a.id.localeCompare(b.id));
+      const rows=[...workers.map(worker=>workerRow(worker,state)),
+        ...state.plants.filter(plant=>plant.alive).map(plant=>targetRow(plant,state)),
+        ...state.crates.filter(crate=>!crate.delivered).map(crate=>targetRow(crate,state)),
+        ...state.structures.map(structure=>targetRow(structure,state)),
+        ...tasks.map(task=>taskRow(task))];
+      apply(rows);
+    }
     catch(error){
       wasm.nav_intent_reset();sequence=0;initialized=false;
       throw error;
@@ -132,6 +134,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     else eligible.delete(id);
   };
   const resetFromState=state=>{
+    initialized=false;
     const result=bridge.resetFromState(state);
     eligible.clear();requests.clear();total=0;
     for(const worker of state.workers)setWorker(worker,state);
@@ -140,7 +143,16 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     return result;
   };
   const applyEvents=(state,events)=>{
-    const result=bridge.applyEvents(state,events);
+    let result;
+    try{result=bridge.applyEvents(state,events);}
+    catch(error){
+      // The bridge has rebuilt WASM from authoritative JS state. Rebuild this
+      // gate's eligibility view as well, so recovery cannot miss a wakeup.
+      eligible.clear();
+      for(const worker of state.workers)setWorker(worker,state);
+      dirty=true;nextRetry=Infinity;
+      throw error;
+    }
     for(const event of events)if(event.type==='worker'){
       if(event.remove)eligible.delete(numericId(event.id));
       else setWorker(event.entity,state);

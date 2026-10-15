@@ -85,12 +85,17 @@ test('event-fed native intent bridge replays live state and only changes on expl
   assert.equal(planner.metrics(10).perWorkerPerMinute[9263],1);
   assert.equal(wasm.nav_intent_route_queries(),routeQueries,
    'movement ticks never enter route planning');
+  assert.throws(()=>planner.applyEvents(game,[{type:'target',entity:{...plant,x:NaN}}]),
+   /rejected/);
+  assert.equal(planner.planIfNeeded(10.05)[0].status,1,
+   'rejected delta restores the gate and wakes a safe fresh plan');
+  planner.discard();
   plant.alive=false;
   planner.applyEvents(game,[{type:'target',entity:plant}]);
   assert.deepEqual(planner.planIfNeeded(10.1),[],
    'a committed target loss wakes planning once');
   assert.equal(planner.planIfNeeded(10.2),null);
-  assert.equal(planner.metrics(10.2).nativePlanningCalls,2);
+  assert.equal(planner.metrics(10.2).nativePlanningCalls,3);
  }finally{session.dispose();}
 });
 
