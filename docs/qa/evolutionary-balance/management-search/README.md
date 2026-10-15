@@ -46,6 +46,12 @@ escenario: economía diaria, cultivos, incursiones, política y defensa. Excluye
 únicamente las duraciones de `wallTime`, afectadas por la concurrencia de
 procesos. El hash obtenido prueba igualdad de **esos observables**, no de
 todos los estados serializados, que estos informes no contienen.
+El primer par Sabana/712 con el mismo genoma `4419e5eb34a46b9f` completó
+14/14 jornadas en ambos procesos. Los 14 registros diarios y las 14
+incursiones coinciden, así como economía, política y defensa: hash comparable
+`aa4258d9d18be8c6d16f5dec28bd24bf70a8891c98836b9084576f4aa2725b0f`.
+Los informes íntegros, sus hashes de fuente y el alcance de la comparación
+están en `parity-sabana712-14.json`.
 
 Esta cohorte usa Wild Engine y el balance de producción sin alterar, después de
 la mejora de navegación de PR #37. Código ejecutado: `7f358aad97287b40e300026306d26f05cc4e0c29`;
