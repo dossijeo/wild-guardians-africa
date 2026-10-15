@@ -507,6 +507,47 @@ ServicePoints servicePoints(const Worker& worker,const Target& target,int taskKi
   }
   return points;
 }
+struct ServiceRoute {
+  std::vector<float> points;
+  Point approach{};
+  bool unknown=false;
+  int unknownReason=0;
+  int queries=0;
+};
+// The first reachable side of a crop can require a long detour around a
+// building or wall while another side is directly accessible. Probe the
+// remaining service points only for a clearly circuitous route. This keeps
+// the usual one-query path and avoids making workers walk around an entire
+// enclosure to water a crop beside them.
+ServiceRoute findServiceRoute(const Worker& worker,const Target& target,int kind){
+  ServiceRoute best;
+  const ServicePoints points=servicePoints(worker,target,kind);
+  double bestLength=std::numeric_limits<double>::infinity();
+  for(int i=0;i<points.count;i++){
+    const Point point=points.values[size_t(i)];best.queries++;
+    const int count=spatial_world_route_cached(float(worker.x),float(worker.z),
+      float(point.x),float(point.z));
+    if(count<0){
+      best.unknown=true;best.unknownReason=spatial_world_route_reason();
+      if(kind==1&&best.points.empty())break;
+      continue;
+    }
+    if(!count)continue;
+    const float* path=spatial_world_route_ptr();
+    double length=0,fromX=worker.x,fromZ=worker.z;
+    for(int step=0;step<count;step++){
+      const double x=path[step*2],z=path[step*2+1];
+      length+=std::hypot(x-fromX,z-fromZ);fromX=x;fromZ=z;
+    }
+    if(length<bestLength){
+      bestLength=length;best.approach=point;
+      best.points.assign(path,path+count*2);
+    }
+    const double direct=std::hypot(worker.x-point.x,worker.z-point.z);
+    if(kind!=1||bestLength<=direct*1.5+2)break;
+  }
+  return best;
+}
 }
 
 extern "C" {
@@ -878,27 +919,17 @@ int nav_intent_plan_tasks(){
     bool unknown=false;int unknownReason=0;
     for(const Worker* worker:workers){
       s.candidates++;s.planningCallsByActor[worker->id]++;
-      const ServicePoints points=servicePoints(*worker,target,task->kind);
-      for(int i=0;i<points.count;i++){
-        const Point point=points.values[size_t(i)];
-        s.routeQueries++;
-        const int count=spatial_world_route_cached(float(worker->x),float(worker->z),
-          float(point.x),float(point.z));
-        if(count<0){
-          unknown=true;unknownReason=spatial_world_route_reason();
-          // Watering's live policy defers the worker after an unresolved
-          // sector rather than probing every other point around that crop.
-          if(task->kind==1)break;
-          continue;
-        }
-        if(!count)continue;
+      const ServiceRoute route=findServiceRoute(*worker,target,task->kind);
+      s.routeQueries+=route.queries;
+      unknown|=route.unknown;
+      if(route.unknown)unknownReason=route.unknownReason;
+      if(!route.points.empty()){
         s.results[at+1]=double(worker->id);s.results[at+2]=1;
-        s.results[at+3]=double(s.routes.size()/2);s.results[at+4]=count;
-        s.results[at+6]=point.x;s.results[at+7]=point.z;
-        const float* path=spatial_world_route_ptr();
-        s.routes.insert(s.routes.end(),path,path+count*2);
+        s.results[at+3]=double(s.routes.size()/2);
+        s.results[at+4]=double(route.points.size()/2);
+        s.results[at+6]=route.approach.x;s.results[at+7]=route.approach.z;
+        s.routes.insert(s.routes.end(),route.points.begin(),route.points.end());
         s.proposals.push_back({task->id,worker->id});reserved.insert(worker->id);
-        break;
       }
       if(s.results[at+2]==1)break;
     }
@@ -1119,26 +1150,22 @@ int nav_intent_replan_pending_routes(){
        task->second.assigned!=actor){
       releaseIntent(s,actor,PlanningState::Cancelled);continue;
     }
-    const ServicePoints points=servicePoints(worker->second,target->second,task->second.kind);
-    bool unknown=false;
-    for(int i=0;i<points.count;i++){
-      const Point point=points.values[size_t(i)];s.routeQueries++;
-      const int count=spatial_world_route_cached(float(worker->second.x),
-        float(worker->second.z),float(point.x),float(point.z));
-      if(count<0){unknown=true;if(task->second.kind==1)break;continue;}
-      if(!count)continue;
+    const ServiceRoute service=findServiceRoute(worker->second,target->second,
+      task->second.kind);
+    s.routeQueries+=service.queries;
+    if(!service.points.empty()){
       uint32_t slot=uint32_t(s.routeSlots.size());
       for(uint32_t j=0;j<s.routeSlots.size();j++)if(!s.routeSlots[j].active){slot=j;break;}
       if(slot==s.routeSlots.size())s.routeSlots.emplace_back();
-      RouteSlot& route=s.routeSlots[slot];const float* path=spatial_world_route_ptr();
-      route.points.assign(path,path+count*2);route.active=true;route.generation++;
+      RouteSlot& route=s.routeSlots[slot];
+      route.points=service.points;route.active=true;route.generation++;
       if(!route.generation)route.generation=1;
       intent.slot=slot;intent.generation=route.generation;
       intent.state=PlanningState::RouteActive;intent.topology=lazy_route_revision();
-      planned++;break;
+      planned++;
     }
     if(intent.state!=PlanningState::RouteActive){
-      intent.state=unknown?PlanningState::WaitingUnknown:PlanningState::WaitingBlocked;
+      intent.state=service.unknown?PlanningState::WaitingUnknown:PlanningState::WaitingBlocked;
       intent.topology=lazy_route_revision();
     }
   }

@@ -215,6 +215,20 @@ test('event-fed native intent bridge replays live state and only changes on expl
    'a real day task rebuild projects the same task roster without a scan');
   stopRebuild();
   plant.alive=true;worker.status='idle';worker.taskId=null;game.tasks=[task];
+  const priorStatuses=new Map(game.workers.map(item=>[item.id,item.status]));
+  for(const item of game.workers)item.status='acting';
+  planner.resetFromState(game);
+  assert.deepEqual(planner.planIfNeeded(0),[],
+    'a task cannot trigger a route search while no worker is eligible');
+  assert.equal(planner.metrics(0).nativePlanningCalls,0);
+  assert.equal(planner.planIfNeeded(.1),null,
+    'an unchanged roster does not retry an empty planning batch');
+  worker.status='idle';
+  planner.applyEvents(game,[{type:'worker',entity:worker}]);
+  assert.equal(planner.planIfNeeded(.2)[0].status,1,
+    'an eligibility event wakes the pending task');
+  planner.discard();
+  for(const item of game.workers)item.status=priorStatuses.get(item.id);
   planner.resetFromState(game);
   const stopWorld=planner.observeWorld(game);
   assert.equal(planner.planIfNeeded(0)[0].status,1);
@@ -542,8 +556,8 @@ test('native whole-queue assignments match JS on controlled real Desert and Cany
    [probe,path,String(workers),String(tasks),'--summary'],{
     env:process.env,encoding:'utf8',timeout:30000}));
   assert.equal(report.mismatches,0,`${fixture}: differing native assignment`);
-  assert.equal(report.jsCandidates,report.nativeQueries,
-   `${fixture}: unexpected candidate route-query count`);
+  assert(report.nativeQueries>0&&report.nativeQueries<=report.jsCandidates*8,
+   `${fixture}: native service-point search exceeded its bounded alternatives`);
   assert(report.jsCandidates>0);
  }
 });

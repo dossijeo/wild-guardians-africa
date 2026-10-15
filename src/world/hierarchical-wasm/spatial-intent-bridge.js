@@ -631,7 +631,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     if(pendingWorldEvents.length)flushWorldEvents();
     if(pendingTaskEvents.length)flushTaskEvents();
     if(!dirty&&simulatedSeconds<nextRetry)return null;
-    if(!session.core.wasm.nav_intent_task_count()){
+    if(!eligible.size||!session.core.wasm.nav_intent_task_count()){
       dirty=false;nextRetry=Infinity;lastPlan=[];lastPlanFacts=new Map();return lastPlan;
     }
     // Idle workers can move while awaiting a task. Refresh only changed

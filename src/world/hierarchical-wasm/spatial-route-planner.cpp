@@ -140,6 +140,9 @@ int spatial_world_route(float fromX,float fromZ,float toX,float toZ){
   int startCount=0,endCount=0;
   const auto starts=anchors(start,startCount),ends=anchors(end,endCount);
   bool unknown=false,startReachable=false,endReachable=false;
+  std::vector<float> bestRoute;
+  float bestLength=std::numeric_limits<float>::infinity();
+  const float acceptable=distance(start,end)*1.5f+2.f;
   for(int i=0;i<startCount;i++){
     const Anchor& from=starts[i];
     if(!spatial_walkable(from.x,from.z)||
@@ -167,8 +170,22 @@ int spatial_world_route(float fromX,float fromZ,float toX,float toZ){
       }
       if(!valid){out.points.clear();unknown=true;out.graphReason=11;continue;}
       if(distance(last({float(from.x),float(from.z)}),end)>1e-6f)append(end);
-      out.view=out.points.data();return int(out.points.size()/2);
+      float length=0;Point previous=start;
+      for(size_t at=0;at<out.points.size();at+=2){
+        const Point next{out.points[at],out.points[at+1]};
+        length+=distance(previous,next);previous=next;
+      }
+      if(length<bestLength){bestLength=length;bestRoute=out.points;}
+      if(bestLength<=acceptable){
+        out.points=std::move(bestRoute);out.view=out.points.data();
+        return int(out.points.size()/2);
+      }
+      out.points.clear();
     }
+  }
+  if(!bestRoute.empty()){
+    out.points=std::move(bestRoute);out.view=out.points.data();
+    return int(out.points.size()/2);
   }
   out.points.clear();
   if(unknown||!startReachable||!endReachable){
