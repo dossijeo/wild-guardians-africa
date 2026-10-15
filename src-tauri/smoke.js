@@ -11,7 +11,10 @@
   console.error = (...args) => {report.errors.push(args.map(String).join(' ')); consoleError.apply(console, args);};
   const fail = event => report.errors.push(event.message || String(event.reason));
   addEventListener('error', fail); addEventListener('unhandledrejection', fail);
-  const timeout = setTimeout(() => finish(new Error('Desktop smoke timed out')), 720000);
+  // The visibility fixture spends five minutes genuinely hidden after world
+  // readiness, so its outer CI watchdog must also cover the longer load.
+  const timeout = setTimeout(() => finish(new Error('Desktop smoke timed out')),
+    worldTimeoutMs === 420000 ? 960000 : 720000);
   let finished = false;
   let worldStartedAt = null;
   let worldReadyAt = null;

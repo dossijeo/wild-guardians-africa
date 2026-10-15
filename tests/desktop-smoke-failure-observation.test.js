@@ -38,8 +38,9 @@ test('CI functional tolerance is explicit and finite; local/default and malforme
  const workflow=await readFile(new URL('../.github/workflows/windows.yml',import.meta.url),'utf8');
  assert.match(workflow,/WG_DESKTOP_SMOKE_CI: '1'/);
  assert.match(workflow,/\$process\.WaitForExit\(540000\)[^\n]*WebView2 smoke timed out/);
- assert.match(workflow,/WaitForExit\(420000\)/);
- assert.match(workflow,/WaitForExit\(900000\)/);
+ assert.match(workflow,/\$process\.WaitForExit\(540000\)[^\n]*Menu exit/);
+ assert.match(workflow,/WaitForExit\(1080000\)/);
+ assert.match(source,/worldTimeoutMs === 420000 \? 960000 : 720000/);
 });
 
 test('failure report observes loading UI without converting it into readiness or masking failure', async () => {
