@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
 import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
+import {createEventDrivenTaskPlanner} from '../src/world/hierarchical-wasm/spatial-intent-bridge.js';
 import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
 import {nativeCameraPose} from '../src/rendering/terrain-camera.js';
 import {activeChunkRegion} from '../src/world/active-region.js';
@@ -97,6 +98,16 @@ test('a native Sabana incursion spawns physically and advances through Game.tick
     assert.notEqual(spawnRaid(state,plan,nav),false,
       'an animal needs a physically exterior resident entrance');
     assert.equal(state.raid?.animals.length,1);
+    const planner=createEventDrivenTaskPlanner(session);
+    planner.resetFromState(state);
+    const stopWorld=planner.observeWorld(state),stopTasks=planner.observeTasks(state);
+    const intentCalls={registered:0,committed:0,finished:0};
+    for(const [method,key] of [['registerAttackIntent','registered'],
+      ['markAttackActive','committed'],['finishAttackIntent','finished']]){
+      const native=planner[method];
+      planner[method]=(...args)=>{intentCalls[key]++;return native(...args);};
+    }
+    nav.intentTaskPlanner=planner;
     const animal=state.raid.animals[0],start={x:animal.x,z:animal.z},
       initialHits=animal.hitsRemaining;
     for(let i=0;i<150&&animal.status!=='gone';i++)Game.tick(state,.2,nav);
@@ -108,6 +119,10 @@ test('a native Sabana incursion spawns physically and advances through Game.tick
     assert(state.events.some(event=>event.type==='RaidEnded'));
     assert(animal.hitsRemaining<initialHits,
       'the native route should lead to a physical attack, not only a retreat');
+    assert(intentCalls.registered>=intentCalls.committed&&intentCalls.committed>0);
+    assert.equal(intentCalls.committed,intentCalls.finished,
+      'real native raid intentions finish once at each committed damage frame');
+    stopTasks();stopWorld();delete nav.intentTaskPlanner;
   }finally{session.dispose();}
 });
 

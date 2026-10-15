@@ -86,6 +86,9 @@ export function createSpatialIntentBridge(session){
     'nav_intent_route_points','nav_intent_route_ptr',
     'nav_intent_reconcile_topology','nav_intent_replan_pending_routes',
     'nav_intent_request_reroute',
+    'nav_intent_attack_route_input_ptr','nav_intent_register_attack',
+    'nav_intent_attack_action_active','nav_intent_attack_finished',
+    'nav_intent_attack_cancel',
     'nav_intent_action_active','nav_intent_finish',
     'nav_intent_actor_planning_calls','nav_intent_routes_ptr',
     'nav_intent_route_point_count'])
@@ -386,6 +389,27 @@ export function createSpatialIntentBridge(session){
     wasm.nav_intent_replan_pending_routes();
     return true;
   };
+  const registerAttackIntent=(state,animal,target,path)=>{
+    if(!initialized||!state.raid||animal.targetId!==target.id||
+      !animal.reservation||state.raid.reservations[animal.reservation]!==animal.id)
+      throw Error('Animal attack must be confirmed before native registration');
+    if(!Array.isArray(path)||path.length>4096||
+      path.some(point=>!Number.isFinite(point.x)||!Number.isFinite(point.z)))
+      throw TypeError('Expected a finite confirmed animal route');
+    session.actorSectorRevision({worker:false,species:animal.species});
+    if(path.length){
+      const ptr=wasm.nav_intent_attack_route_input_ptr(path.length);
+      if(!ptr)throw Error('Native attack route allocation failed');
+      const points=new Float32Array(wasm.memory.buffer,ptr,path.length*2);
+      for(let index=0;index<path.length;index++){
+        points[index*2]=path[index].x;points[index*2+1]=path[index].z;
+      }
+    }
+    const status=wasm.nav_intent_register_attack(numericId(animal.id),
+      numericId(target.id),animal.x,animal.z,path.length);
+    if(status!==1)throw Error(`Native attack intention rejected: ${status}`);
+    return true;
+  };
   return {resetFromState,applyEvents,applyCommittedEvents,planTasks,
     restoreAssignedTasks,proposalRoute,
     getDamagedWalls:()=>getDamaged('wall'),
@@ -393,6 +417,10 @@ export function createSpatialIntentBridge(session){
     getUnprotectedCropGroups,
     findPlantingSite,releasePlantingSite,
     intentChanges,routePoints,processEventBoundary,requestReroute,
+    registerAttackIntent,
+    markAttackActive:actorId=>wasm.nav_intent_attack_action_active(numericId(actorId))===1,
+    finishAttackIntent:actorId=>wasm.nav_intent_attack_finished(numericId(actorId)),
+    cancelAttackIntent:actorId=>wasm.nav_intent_attack_cancel(numericId(actorId))===1,
     reconcileTopology:()=>wasm.nav_intent_reconcile_topology(),
     replanPendingRoutes:()=>wasm.nav_intent_replan_pending_routes(),
     markActionActive:actorId=>wasm.nav_intent_action_active(numericId(actorId))===1,
@@ -738,6 +766,10 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     reconcileWorkerRoutes,planIfNeeded,
     hasPendingAt,metrics,
     commitTaskBatchToState,
+    registerAttackIntent:bridge.registerAttackIntent,
+    markAttackActive:bridge.markAttackActive,
+    finishAttackIntent:bridge.finishAttackIntent,
+    cancelAttackIntent:bridge.cancelAttackIntent,
     markActionActive:bridge.markActionActive,finishAction:bridge.finishAction,
     intentChanges:bridge.intentChanges,routePoints:bridge.routePoints,
     discard:bridge.discard,commit:bridge.commit,sequence:bridge.sequence};

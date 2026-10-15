@@ -347,7 +347,7 @@ export function spawnRaid(s,plan,nav,daytime=false) {
   const exposed=activeCrops(s.plants).filter(p=>p.alive);
   emit(s,wave?'RaidWaveSpawned':'RaidSpawned',{raidFacts:{id:s.raid.id,day:s.day,daytime,elapsed:s.elapsed,waveIndex:s.raid.waveIndex??0,pressureFacts:s.raid.pressureFacts??null,exposedLiving:exposed.length,exposedWounded:exposed.filter(p=>(p.attackHits??0)>0).length,actors:animals.map(a=>({id:a.id,species:a.species,hitsRemaining:a.hitsRemaining,...(a.damageProfile?{damageProfile:structuredClone(a.damageProfile)}:{}),spawn:{...a.spawn},exit:{...a.exit}}))}});return true;
 }
-function release(s,a) {if(a.reservation&&s.raid.reservations[a.reservation]===a.id){delete s.raid.reservations[a.reservation];s.raid.waitRevision=((s.raid.waitRevision??0)+1)>>>0;}a.reservation=null;a.targetId=null;a.path=null;a.approach=null;a.approachShieldId=null;}
+function release(s,a,nav) {nav?.intentTaskPlanner?.cancelAttackIntent(a.id);if(a.reservation&&s.raid.reservations[a.reservation]===a.id){delete s.raid.reservations[a.reservation];s.raid.waitRevision=((s.raid.waitRevision??0)+1)>>>0;}a.reservation=null;a.targetId=null;a.path=null;a.approach=null;a.approachShieldId=null;}
 export function reachableApproach(a,target,nav,shield=null,onUnknown=null,regionDecision=null){
   const focus=shield??target,r=shield?shield.radius+a.radius+.1:(target.kind==='wall'?1.2:.6)+a.radius;
   const angle=Math.atan2(a.x-focus.x,a.z-focus.z);
@@ -563,7 +563,7 @@ export function warmRaidApproaches(state,specs,entry,nav){
 }
 export function updateRaid(s,dt,nav) {
   if(!s.raid)return;
-  reconcileTargetReservations(s,release);
+  reconcileTargetReservations(s,(state,animal)=>release(state,animal,nav));
   updateWorkerEncounters(s,nav);
   observeWaitProgress(s);liveWaitQueue(s.raid);
   for(const a of s.raid.animals) {
@@ -606,18 +606,19 @@ export function updateRaid(s,dt,nav) {
             shield:shield?{id:shield.id,x:shield.x,z:shield.z,radius:shield.radius}:null}});
         }else emit(s,'AnimalLogicalMiss',{attackId:a.attackId,targetId:a.targetId,species:a.species,...(expiredBorder?{reason:'shield-expired'}:{})});
       }
-      a.status='walking';a.path=null;if(!target||target.alive===false||target.status&&target.status!=='intact')release(s,a);
+      nav.intentTaskPlanner?.finishAttackIntent(a.id);
+      a.status='walking';a.path=null;if(!target||target.alive===false||target.status&&target.status!=='intact')release(s,a,nav);
       // Finish the committed animation before spending another hit or retreating.
       continue;
     }
-    if(a.hitsRemaining<=0&&a.status!=='retreating'){release(s,a);leaveWait(s.raid,a);a.status='retreating';emit(s,'AnimalRetreating',{targetId:a.id,species:a.species,hitsRemaining:a.hitsRemaining,reason:'budget-exhausted'});}
+    if(a.hitsRemaining<=0&&a.status!=='retreating'){release(s,a,nav);leaveWait(s.raid,a);a.status='retreating';emit(s,'AnimalRetreating',{targetId:a.id,species:a.species,hitsRemaining:a.hitsRemaining,reason:'budget-exhausted'});}
     if(a.status==='retreating') {
       if(walkTo(s,a,{...(a.exit??a.spawn),id:`exit-${a.id}`},dt,nav,{speed:3.8,worker:false,expandRoute:true,routeVia:a.spawn}))a.status='gone';continue;
     }
     if(a.hitsRemaining<=0)continue;
     let target=raidTarget(s,a.targetId);
     if(!target) {
-      if(a.status!=='waiting')release(s,a);
+      if(a.status!=='waiting')release(s,a,nav);
       // Search independent targets before staging. Each waiting actor retries
       // its own bounded search; an unreachable queue head cannot block peers.
       if(a.status==='waiting'){
@@ -643,21 +644,27 @@ export function updateRaid(s,dt,nav) {
       target=selected.target;a.targetId=target.id;a.reservation=selected.reservation;s.raid.reservations[a.reservation]=a.id;s.raid.waitRevision=((s.raid.waitRevision??0)+1)>>>0;
       a.approach=selected.approach.point;a.approachShieldId=selected.shieldId;
       a.path=selected.approach.path;a.destinationId=a.approach.id;a.pathVersion=nav.version;
+      nav.intentTaskPlanner?.registerAttackIntent(s,a,target,a.path??[]);
     }
     const shield=spellAt(s,'shield',target);
     if(!a.approach||a.approachShieldId!==(shield?.id??null)||!reservedApproachClear(s,a,a.approach)||!actorSegmentClear(a.approach,a.approach,a,actorBlockers(s,a,false))) {
       const approach=reachableApproach(a,target,nav,shield);
-      if(!approach){emit(s,'AnimalRouteUnavailable',{targetId:a.id,species:a.species,phase:'approach'});release(s,a);a.status='walking';continue;}
+      if(!approach){emit(s,'AnimalRouteUnavailable',{targetId:a.id,species:a.species,phase:'approach'});release(s,a,nav);a.status='walking';continue;}
       a.approach=approach.point;a.approachShieldId=shield?.id??null;
       a.path=approach.path;a.destinationId=a.approach.id;a.pathVersion=nav.version;
+      nav.intentTaskPlanner?.registerAttackIntent(s,a,target,a.path??[]);
     }
     if(a.status!=='attacking') {
       if(walkTo(s,a,a.approach,dt,nav,{speed:a.status==='entering'?3.8:1.5,worker:false})) {
         a.heading=Math.atan2(target.x-a.x,target.z-a.z);
+        // A previous committed strike releases its native lease at the damage
+        // frame. Renew it only when this next strike actually begins.
+        nav.intentTaskPlanner?.registerAttackIntent(s,a,target,[]);
         a.status='attacking';a.hitApplied=false;a.attackId=`attack-${s.sequence++}`;
+        nav.intentTaskPlanner?.markAttackActive(a.id);
         const roll=nextRandom(s);a.animation=roll<.45?'Right_Hand_Sword_Slash':roll<.75?'Charged_Upward_Slash':roll<.9?'Weapon_Combo':'Weapon_Combo_2';
         a.attackDuration=ANIMAL_ACTIONS.animals[a.species].clips[a.animation].duration;a.attackRemaining=a.attackDuration;
-      } else if(!a.path){emit(s,'AnimalRouteUnavailable',{targetId:a.id,species:a.species,phase:'travel'});release(s,a);a.status='walking';}
+      } else if(!a.path){emit(s,'AnimalRouteUnavailable',{targetId:a.id,species:a.species,phase:'travel'});release(s,a,nav);a.status='walking';}
       else if(dist(a,s.structures.find(operational)??target)<25)a.status='walking';
     }
   }

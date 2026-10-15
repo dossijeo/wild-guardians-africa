@@ -78,6 +78,7 @@ struct ActiveIntent {
   uint64_t actor=0,task=0,target=0;
   PlanningState state=PlanningState::NeedsPlan;
   uint32_t slot=0,generation=0,topology=0;
+  bool animal=false,tacticalPending=false;
 };
 struct RouteSlot {std::vector<float> points;uint32_t generation=0;bool active=false;};
 struct Change {
@@ -106,6 +107,7 @@ struct IntentState {
   std::unordered_map<uint64_t,ActiveIntent> activeIntents;
   std::unordered_map<uint64_t,std::unordered_set<uint64_t>> byTarget,byTask;
   std::vector<RouteSlot> routeSlots;
+  std::vector<float> attackRouteInput;
   std::vector<double> intentChanges;
   std::array<double,10> intentResult{};
   uint32_t session=0;
@@ -215,6 +217,18 @@ void invalidateDependents(IntentState& s,const Change& change){
   for(uint64_t actor:actors){
     const auto active=s.activeIntents.find(actor);
     if(active==s.activeIntents.end())continue;
+    if(active->second.animal){
+      if(active->second.state==PlanningState::ActionActive){
+        // A committed strike resolves against its original target ID at the
+        // animation's damage frame. Its lease becomes stale, but the hit is
+        // never moved, refunded, or applied early by this invalidation.
+        active->second.tacticalPending=true;
+      }else{
+        releaseIntent(s,actor,PlanningState::Cancelled);
+        s.activeIntents.erase(actor);
+      }
+      continue;
+    }
     if(moved&&!invalid){
       ActiveIntent& intent=active->second;
       releaseRoute(s,intent);intent.state=PlanningState::NeedsPlan;
@@ -400,6 +414,7 @@ void nav_intent_reset(){
   if(!s.session)s.session=1;
   s.activeIntents.clear();s.byTarget.clear();s.byTask.clear();
   s.routeSlots.clear();s.intentChanges.clear();s.intentResult.fill(0);
+  s.attackRouteInput.clear();
   s.invalidations=0;
   s.planningCallsByActor.clear();
   s.workers.clear();s.targets.clear();s.tasks.clear();
@@ -918,6 +933,11 @@ int nav_intent_reconcile_topology(){
   std::sort(affected.begin(),affected.end());
   for(uint64_t actor:affected){
     ActiveIntent& intent=s.activeIntents.at(actor);
+    if(intent.animal){
+      releaseIntent(s,actor,PlanningState::Cancelled);
+      s.activeIntents.erase(actor);
+      continue;
+    }
     releaseRoute(s,intent);intent.state=PlanningState::NeedsPlan;
     intent.topology=revision;emitIntentChange(s,intent);s.invalidations++;
   }
@@ -928,7 +948,8 @@ int nav_intent_reconcile_topology(){
 int nav_intent_replan_pending_routes(){
   IntentState& s=state();std::vector<uint64_t> actors;
   for(const auto& item:s.activeIntents)
-    if(item.second.state==PlanningState::NeedsPlan)actors.push_back(item.first);
+    if(!item.second.animal&&item.second.state==PlanningState::NeedsPlan)
+      actors.push_back(item.first);
   std::sort(actors.begin(),actors.end());
   int planned=0;
   for(uint64_t actor:actors){
@@ -996,6 +1017,92 @@ int nav_intent_request_reroute(double actorId){
   releaseRoute(s,intent);intent.state=PlanningState::NeedsPlan;
   intent.topology=lazy_route_revision();
   emitIntentChange(s,intent);s.invalidations++;
+  return 1;
+}
+// Transitional animal-intent lease. The JS raid selector still supplies its
+// confirmed physical route; no native attack policy is inferred from it.
+float* nav_intent_attack_route_input_ptr(int count){
+  if(count<0||count>4096)return nullptr;
+  IntentState& s=state();s.attackRouteInput.resize(size_t(count)*2);
+  return s.attackRouteInput.data();
+}
+int nav_intent_register_attack(double actorId,double targetId,
+                               double startX,double startZ,int count){
+  if(!integer(actorId)||!integer(targetId)||!coordinate(startX)||
+     !coordinate(startZ)||count<0||count>4096)return -1;
+  IntentState& s=state();
+  if(s.attackRouteInput.size()<size_t(count)*2)return -1;
+  const uint64_t actor=uint64_t(actorId),targetIdValue=uint64_t(targetId);
+  const auto target=s.targets.find(targetIdValue);
+  if(target==s.targets.end()||!target->second.active)return -2;
+  float x=float(startX),z=float(startZ);
+  for(int i=0;i<count;i++){
+    const float nextX=s.attackRouteInput[size_t(i)*2],
+      nextZ=s.attackRouteInput[size_t(i)*2+1];
+    if(!std::isfinite(nextX)||!std::isfinite(nextZ)||
+       !coordinate(nextX)||!coordinate(nextZ))return -1;
+    if(!spatial_local_clear(x,z,nextX,nextZ))return -5;
+    x=nextX;z=nextZ;
+  }
+  const auto owners=s.byTarget.find(targetIdValue);
+  if(target->second.kind!=4&&owners!=s.byTarget.end())
+    for(uint64_t owner:owners->second){
+      const auto old=s.activeIntents.find(owner);
+      if(owner!=actor&&old!=s.activeIntents.end()&&old->second.animal)
+        return -3;
+    }
+  const auto prior=s.activeIntents.find(actor);
+  if(prior!=s.activeIntents.end()){
+    if(!prior->second.animal||prior->second.state==PlanningState::ActionActive)
+      return -4;
+    releaseIntent(s,actor,PlanningState::Cancelled);
+    s.activeIntents.erase(actor);
+  }
+  uint32_t slot=uint32_t(s.routeSlots.size());
+  for(uint32_t i=0;i<s.routeSlots.size();i++)if(!s.routeSlots[i].active){slot=i;break;}
+  if(slot==s.routeSlots.size())s.routeSlots.emplace_back();
+  RouteSlot& route=s.routeSlots[slot];
+  route.points.assign(s.attackRouteInput.begin(),
+    s.attackRouteInput.begin()+size_t(count)*2);
+  route.active=true;route.generation++;
+  if(!route.generation)route.generation=1;
+  ActiveIntent intent{actor,0,targetIdValue,PlanningState::RouteActive,
+    slot,route.generation,lazy_route_revision(),true,false};
+  s.activeIntents.insert_or_assign(actor,intent);
+  s.byTarget[targetIdValue].insert(actor);
+  emitIntentChange(s,intent);
+  return 1;
+}
+int nav_intent_attack_action_active(double actorId){
+  if(!integer(actorId))return 0;
+  IntentState& s=state();
+  const auto found=s.activeIntents.find(uint64_t(actorId));
+  if(found==s.activeIntents.end()||!found->second.animal||
+     found->second.state!=PlanningState::RouteActive)return 0;
+  releaseRoute(s,found->second);
+  found->second.state=PlanningState::ActionActive;
+  emitIntentChange(s,found->second);
+  return 1;
+}
+int nav_intent_attack_finished(double actorId){
+  if(!integer(actorId))return -1;
+  IntentState& s=state();const uint64_t actor=uint64_t(actorId);
+  const auto found=s.activeIntents.find(actor);
+  if(found==s.activeIntents.end()||!found->second.animal||
+     found->second.state!=PlanningState::ActionActive)return -1;
+  const int tactical=found->second.tacticalPending?1:0;
+  releaseIntent(s,actor,PlanningState::Cancelled);
+  s.activeIntents.erase(actor);
+  return tactical;
+}
+int nav_intent_attack_cancel(double actorId){
+  if(!integer(actorId))return 0;
+  IntentState& s=state();const uint64_t actor=uint64_t(actorId);
+  const auto found=s.activeIntents.find(actor);
+  if(found==s.activeIntents.end()||!found->second.animal||
+     found->second.state==PlanningState::ActionActive)return 0;
+  releaseIntent(s,actor,PlanningState::Cancelled);
+  s.activeIntents.erase(actor);
   return 1;
 }
 int nav_intent_action_active(double actorId){
