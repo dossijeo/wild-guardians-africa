@@ -64,6 +64,7 @@ La ampliación posterior compara además la prueba negativa de `workerPath` con 
 | `animal-route-clearance.js` | Prefijo físico barrido | Se añadió revisión de residencia; colisiones dinámicas siguen fuera de caché. |
 | `animal-exit-connectors.js` / `animal-footprint-connectors.js` / `animal-grid-exit-bridge.js` | Búsqueda de salida excepcional y su resultado fallido | Se añadió revisión de residencia: un sector vuelto a cargar puede ofrecer una salida válida. |
 | `worker-fractional-connector.js` | Intentos locales fallidos/en curso | Se añadió revisión de residencia. |
+| `worker-slope-recovery.js` / `animal-slope-recovery.js` | Fallos de recuperación excepcional en pendiente | La prueba negativa se reinicia tras un cambio de residencia; las colisiones físicas siguen comprobándose. |
 | `raid-entry-data.js` / `entrySelections` | Entrada exterior certificada | La clave ahora incluye residencia. |
 | `raids.js` `raidRegionDecisions` | Decisiones por grupo/región durante la incursión | Mantiene revisión de sectores y topología; depende de selección y presupuesto temporal de IA, no es una ruta nativa exacta. |
 | `raids.js` `cropTargetIndexes` y reservas | Agrupación agrícola y ocupación dinámica | No son cachés topológicas. |

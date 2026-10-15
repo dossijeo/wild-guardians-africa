@@ -46,7 +46,7 @@ function proof(nav,start,point,radius){
 export function animalSlopeRecoveryPath(nav,actor,end,radius){
  if(actor.status!=='retreating'||!nav.field||
    (nav.field.canyon?typeof nav.workerSurface!=='function':typeof nav.field.slope!=='function'))return null;
- const key=JSON.stringify([nav.version,actor.x,actor.z,end.x,end.z,radius]);
+ const key=JSON.stringify([nav.version,nav.residencyRevision??0,actor.x,actor.z,end.x,end.z,radius]);
  const prior=attempts.get(actor);if(prior?.nav===nav&&prior.key===key)return null;
  const reject=()=>{attempts.set(actor,{nav,key});return null;};
  const initial=footprintSlope(nav,actor,radius);

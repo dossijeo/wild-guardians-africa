@@ -68,6 +68,18 @@ test('a failed legacy recovery is memoized until geometry or origin changes',()=
  for(let i=0;i<100;i++)assert.equal(animalSlopeRecoveryPath(nav,actor,exit,actor.radius),null);
  assert.equal(calls,count);nav.version++;animalSlopeRecoveryPath(nav,actor,exit,actor.radius);assert.ok(calls>count);
 });
+
+test('a failed animal retreat recovery retries after sector residency changes',()=>{
+ let calls=0;const nav=world(()=>{calls++;return .505;}),actor=animal();
+ nav.residencyRevision=1;
+ assert.equal(animalSlopeRecoveryPath(nav,actor,exit,actor.radius),null);
+ const first=calls;
+ assert.equal(animalSlopeRecoveryPath(nav,actor,exit,actor.radius),null);
+ assert.equal(calls,first);
+ nav.residencyRevision++;
+ assert.equal(animalSlopeRecoveryPath(nav,actor,exit,actor.radius),null);
+ assert(calls>first);
+});
 test('an ordinary legal retreat does not rescan a recovery proof each frame',()=>{
  let calls=0;const nav=world(()=>{calls++;return .49;}),actor=animal();actor.path=[{x:.4,z:0}];
  animalSlopeRecoveryClear(actor,nav,actor,{x:.01,z:0},actor.radius);const count=calls;

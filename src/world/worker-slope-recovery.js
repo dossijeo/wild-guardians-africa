@@ -15,7 +15,9 @@ function slopeAt(nav,x,z){
 export function workerSlopeRecoveryPath(nav,start,end,radius=.28){
  if(!nav.field||!nav.testSegmentClear||!nav.workerMotionClear)return null;
  let memo=failed.get(nav);
- if(!memo||memo.version!==nav.version){memo={version:nav.version,keys:new Set()};failed.set(nav,memo);}
+ if(!memo||memo.version!==nav.version||memo.residencyRevision!==nav.residencyRevision){
+  memo={version:nav.version,residencyRevision:nav.residencyRevision,keys:new Set()};failed.set(nav,memo);
+ }
  const key=navigationPathKey(start,end,radius,null,true,16);
  if(memo.keys.has(key))return null;
  const reject=()=>{if(memo.keys.size>=4096)evictOldest(memo.keys);memo.keys.add(key);return null;};
