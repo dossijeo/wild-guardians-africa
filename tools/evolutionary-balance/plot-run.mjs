@@ -25,7 +25,7 @@ export function plotRun(folder){
    body+=`<polyline points="${points.join(' ')}" fill="none" stroke="${colors[i%colors.length]}" stroke-width="2"/>`;
   }
  }
- const legend=reports.map((r,i)=>`${r.strategy} ${r.biome}/${r.seed}${r.genes?' (GA)':''}`).join(' · ');
+ const legend=reports.map(r=>`${r.strategy} ${r.biome}/${r.seed}${r.genes?.wallPolicy?` (murallas: ${r.genes.wallPolicy})`:''}`).join(' · ');
  body+=`<text x="${left}" y="${height-12}" font-size="11" fill="#333">${xml(legend.slice(0,145))}</text>`;
  const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}">${body}</svg>`;
  writeFileSync(join(folder,'trajectories.svg'),svg);
