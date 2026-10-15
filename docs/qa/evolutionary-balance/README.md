@@ -85,12 +85,21 @@ si su contabilidad teórica se vuelve negativa. Nunca cuenta como simulación na
 ni como evidencia de supervivencia. No confunde daño estructural decimal con
 muertes agrícolas: los cultivos tienen 1 HP y ambas respuestas se ajustan por
 separado. Tampoco resta semillas de reposición dos veces.
-Con estos coeficientes la proyección teórica se declara inviable en el día 27;
-esa coincidencia aproximada con una derrota histórica **no valida** su mecanismo.
-[`sensitivity.json`](model-sabana-712/sensitivity.json) varía daño y siembra
-±25 %, exclusivamente para mostrar sensibilidad interna de este surrogate. Sus
-fechas de inviabilidad (20–38) no son predicciones de Wild Engine ni justifican
-valores militares finales.
+Con estos coeficientes la proyección teórica corregida se declara inviable
+en el día 15; la campaña histórica terminó tras 17 noches completas. Esa
+proximidad **no valida** el mecanismo. [`sensitivity.json`](model-sabana-712/sensitivity.json)
+varía daño y siembra ±25 %, exclusivamente para mostrar sensibilidad interna
+de este surrogate. Sus fechas de inviabilidad (13–18) no son predicciones
+de Wild Engine ni justifican valores militares finales.
+
+**Corrección de paridad del cribado:** la proyección anterior aplicaba la
+receta lineal de animales de v1 a informes de incursiones v3. Se conservaron
+sus salidas con sufijo `-pre-parity.json` y se regeneraron las canónicas con
+la receta v3 y su media móvil. La inviabilidad contable cambia del día 27
+al 15 y el barrido ±25 % queda entre los días 13 y 18; sigue sin ser una
+predicción nativa. [El contraste con dos campañas recientes](model-current-pressure/README.md)
+encuentra errores de 67,6–72,7 % en cultivos destruidos. No utilizar este
+surrogate para aprobar ni descartar valores militares.
 
 ## Búsqueda de política con balance fijo
 

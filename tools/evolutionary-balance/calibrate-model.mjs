@@ -5,6 +5,7 @@ import {resolve,join,relative} from 'node:path';
 import {createHash} from 'node:crypto';
 import {gunzipSync} from 'node:zlib';
 import {pathToFileURL} from 'node:url';
+import {raidPressureCandidateForVersion,updateRaidPressureMemory,raidPressureSummary} from '../../src/simulation/raid-pressure-budget.js';
 
 const div=(a,b)=>b>0?a/b:0;
 const mean=a=>div(a.reduce((n,x)=>n+x,0),a.length);
@@ -13,11 +14,13 @@ function facts(report){
  const raid=new Map((report.raidEvidence?.raids??[]).filter(x=>!x.daytime).map(x=>[x.day,x]));
  return (report.rows??[]).map((r,i)=>{
   const q=raid.get(r.day),prior=report.rows[i-1]?.living??r.living;
+  const finance=r.finance??r;
   return {day:r.day,priorLiving:prior,living:r.living,planted:r.planted,destroyed:r.destroyed,
    nonRaidPlantExit:Math.max(0,prior+r.planted-r.destroyed-r.living),
-   income:r.finance.income,wages:r.finance.wages,seeds:r.finance.seeds,
-   walls:r.finance.walls,repairs:r.finance.repairs,money:r.money,
+   income:finance.income,wages:finance.wages,seeds:finance.seeds,
+   walls:finance.walls,repairs:finance.repairs,money:r.money,
    attraction:q?.pressureFacts?.observedValue??null,animals:q?Object.values(q.species).reduce((n,s)=>n+s.generated,0):0,
+   raidPressureVersion:q?.pressureFacts?.candidateVersion??1,
    potential:q?.potentialAgriculturalHp??0,wallHpLost:q?.wallHpLost??0,
    livingAtSpawn:q?.exposedLivingAtSpawn??null,perimeterStatus:q?.wallHits>0?'wall-contact-observed':'not-certified'};
  });
@@ -29,6 +32,10 @@ export function calibrate(report){
  if(split<2)throw Error('Not enough completed days to calibrate and validate');
  const train=rows.slice(0,split),holdout=rows.slice(split);
  const raidTrain=train.filter(r=>r.attraction!==null&&r.day>5);
+ const pressureVersions=[...new Set(rows.filter(r=>r.attraction!==null&&r.day>5).map(r=>r.raidPressureVersion))];
+ if(pressureVersions.length>1)throw Error('Mixed raid pressure versions cannot share one projection');
+ const raidPressureVersion=pressureVersions[0]??1;
+ raidPressureCandidateForVersion(raidPressureVersion);
  const c={incomePerPriorPlant:div(sum(train,'income'),sum(train,'priorLiving')),
   wagesPerPriorPlant:div(sum(train,'wages'),sum(train,'priorLiving')),
   wagesToRaidAttraction:div(sum(raidTrain,'wages'),sum(raidTrain,'attraction')),
@@ -51,7 +58,7 @@ export function calibrate(report){
   error[key]={absolute:abs,weightedAbsoluteFraction:den?abs/den:null};
  }
  return {source:{biome:report.biome,seed:report.seed,strategy:report.strategy,status:report.status,
-  result:report.result,completedNights:report.completedNights,rows:rows.length},
+  result:report.result,completedNights:report.completedNights,rows:rows.length,raidPressureVersion},
   trainingDays:train.map(r=>r.day),validationDays:holdout.map(r=>r.day),coefficients:c,
   observability:{raidNightsInTraining:raidTrain.length,
    enclosureCoverageMeasured:false,breachTimingMeasured:false,
@@ -64,23 +71,24 @@ export function calibrate(report){
    'Income timing, crop mix and magic effects are pooled, so extrapolation to another policy or 100 nights is unsafe.']};
 }
 export function screenProjection(model,{days=100,damageMultiplier=1,plantingMultiplier=1}={}){
- const c=model.coefficients,rows=[];
- let cash=700,living=68;
+ const c=model.coefficients,rows=[],pressureConfig=raidPressureCandidateForVersion(model.source?.raidPressureVersion??1);
+ let cash=700,living=68,pressureMemory=null;
  for(let day=1;day<=days;day++){
   const income=living*c.incomePerPriorPlant,wages=living*c.wagesPerPriorPlant;
   const planted=Math.max(0,Math.min(c.meanPlantedPerDay*plantingMultiplier,
    Math.floor(Math.max(0,cash+income-wages)/(c.seedCostPerPlant||Infinity))));
   const seeds=planted*c.seedCostPerPlant;
   const attraction=living*c.attractionPerLivingPlantAtSpawn;
-  const pressure=Math.max(0,Math.min(1,0.45*(day-1)/99+0.55*Math.log1p(attraction/1000)/Math.log(26)));
-  const animals=day<=5?1:Math.round(4+30*pressure);
+  pressureMemory=updateRaidPressureMemory(pressureMemory,day,attraction,pressureConfig);
+  const {pressure,targetAnimals:animals,effectiveValue:effectiveAttraction}=
+   raidPressureSummary(day,attraction,pressureMemory,pressureConfig);
   const potential=animals*c.potentialPerAnimal;
   const destroyed=Math.min(living+planted,potential*c.agriculturalDamageEfficiency*damageMultiplier);
   const walls=c.meanWallSpend,repairs=animals*c.wallHpLostPerAnimal*c.wallRepairCoinsPerHp;
   cash+=income-wages-seeds-walls-repairs;
   const nonRaidPlantExit=Math.min(living+planted-destroyed,living*c.nonRaidPlantExitPerPriorPlant);
   living=Math.max(0,living+planted-destroyed-nonRaidPlantExit);
-  rows.push({day,cash,living,attraction,pressure,animals,potential,planted,destroyed,nonRaidPlantExit,
+  rows.push({day,cash,living,attraction,effectiveAttraction,pressure,animals,potential,planted,destroyed,nonRaidPlantExit,
    income,wages,seeds,walls,repairs,perimeter:'unresolved-assumption',
    status:cash<0?'accounting-infeasible':'screen-only'});
   if(cash<0)break;

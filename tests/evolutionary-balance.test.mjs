@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import {DEFAULT_GENES,validateGenes,preferredAgriculturalPower} from '../tools/evolutionary-balance/policy-genes.mjs';
 import {seededRandom,randomGenome,breed,scoreCampaign,genomeId} from '../tools/evolutionary-balance/ga.mjs';
 import {validateConfig,evaluateOne} from '../tools/evolutionary-balance/run-ga.mjs';
-import {calibrate} from '../tools/evolutionary-balance/calibrate-model.mjs';
+import {calibrate,screenProjection} from '../tools/evolutionary-balance/calibrate-model.mjs';
+import {RAID_PRESSURE_CANDIDATE,raidAnimalCount} from '../src/simulation/raid-pressure-budget.js';
 import {archiveGaReports} from '../tools/evolutionary-balance/archive-ga-reports.mjs';
 import {archiveProgress,restoreProgress} from '../tools/evolutionary-balance/archive-progress.mjs';
 import {mkdtempSync,writeFileSync,readFileSync,existsSync,rmSync} from 'node:fs';
@@ -93,6 +94,21 @@ test('calibration predicts from ledger outcomes without folding structural damag
  assert.equal(m.observability.defenseEffectIdentifiable,false);
  assert.ok(m.coefficients.wagesToRaidAttraction>0);
  assert.ok(m.holdoutPredictions.length>0);
+ assert.equal(m.source.raidPressureVersion,1);
+ const currentRaids=raids.map(r=>({...r,pressureFacts:{...r.pressureFacts,candidateVersion:3}}));
+ const currentRows=rows.map(({finance,...row})=>({...row,...finance}));
+ const current=calibrate({rows:currentRows,raidEvidence:{raids:currentRaids},
+  completedNights:9,result:'defeat',status:'completed'});
+ assert.equal(current.source.raidPressureVersion,3);
+ const projection=screenProjection(current,{days:12});
+ assert.ok(projection.rows.length>=6);
+ for(const row of projection.rows){
+  assert.equal(row.animals,raidAnimalCount(row.day,row.pressure,RAID_PRESSURE_CANDIDATE));
+  assert.ok(row.effectiveAttraction>=row.attraction);
+ }
+ assert.throws(()=>calibrate({rows:currentRows,raidEvidence:{raids:currentRaids.map((r,i)=>
+  i===7?{...r,pressureFacts:{...r.pressureFacts,candidateVersion:1}}:r)},
+  completedNights:9,result:'defeat',status:'completed'}),/Mixed raid pressure versions/);
 });
 test('desert pilot skips uncertain plots and still completes a paid native day', {timeout:60000}, async()=>{
  const report=await evaluateOne({biome:'desierto',seed:909},1,'evolved',
