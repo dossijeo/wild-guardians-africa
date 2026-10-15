@@ -33,6 +33,12 @@ El error es la suma de diferencias absolutas en la ventana de validación,
 dividida por el total real de cada variable. El cribado contable usa
 coeficientes medios y no sabe cuándo un perímetro queda abierto, qué
 cultivos quedan expuestos ni si la política puede financiar una reparación.
+El error no es un pequeño desajuste uniforme: en Sabana predice **3,5**
+cultivos destruidos en el día 15 frente a **42** reales; en Gran Cañón
+predice **15,8** y **19,5** en los días 12 y 13 frente a **cero** reales.
+La misma eficiencia media falla tanto al abrirse una defensa como cuando
+una incursión no llega a los cultivos. Cambiar un único multiplicador de
+daño no puede corregir ambos extremos.
 Por eso su horizonte de 81 días en Sabana **no predice supervivencia**: la
 campaña nativa perdió 42 y 57 plantas en las dos últimas incursiones. En
 Gran Cañón, la protección incompleta y el desplome agrícola tampoco son
