@@ -1365,7 +1365,11 @@ int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
   });
   const Anchor source=starts.front();
   bool unknown=false,eligible=false;
-  int regionQueries=0,routeQueries=0;
+  int regionQueries=0,routeQueries=0,preferredTrials=0,siteTrials=0;
+  int lastRouteCount=std::numeric_limits<int>::min();
+  int lastPreferredRouteCount=std::numeric_limits<int>::min();
+  int lastRegisterResult=std::numeric_limits<int>::min();
+  uint64_t firstCandidateCrop=0;
   const auto leased=[&](uint64_t cropId){
     const auto owners=s.byTarget.find(cropId);
     if(owners==s.byTarget.end())return false;
@@ -1408,11 +1412,14 @@ int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
     const auto tryPoint=[&](const Target& crop,float px,float pz){
       routeQueries++;
       const int count=spatial_world_route_cached(float(startX),float(startZ),px,pz);
+      lastRouteCount=count;
       if(count<0){unknown=true;return false;}
       if(!count)return false;
       const float* route=spatial_world_route_ptr();
       s.attackRouteInput.assign(route,route+size_t(count)*2);
-      if(nav_intent_register_attack(actorId,double(crop.id),startX,startZ,count)!=1)
+      lastRegisterResult=nav_intent_register_attack(actorId,double(crop.id),
+        startX,startZ,count);
+      if(lastRegisterResult!=1)
         return false;
       const ActiveIntent& intent=s.activeIntents.at(actor);
       s.attackResult={1,double(crop.id),double(px),double(pz),
@@ -1425,6 +1432,7 @@ int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
       if(!crop.active)continue;
       if(leased(crop.id))continue;
       if(attempted++>=16){unknown=true;break;}
+      if(!firstCandidateCrop)firstCandidateCrop=crop.id;
       if(preferredTried.insert(crop.id).second){
         const double angle=std::atan2(startX-crop.x,startZ-crop.z);
         const float px=float(crop.x+std::sin(angle)*(.6+radius));
@@ -1434,8 +1442,12 @@ int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
         // physically clear direct segment, when its rounded cell appears
         // disconnected beside a newly opened wall corner. Let the native
         // route planner validate this one preferred point itself.
-        if(tryPoint(crop,px,pz))return 1;
+        preferredTrials++;
+        const bool found=tryPoint(crop,px,pz);
+        lastPreferredRouteCount=lastRouteCount;
+        if(found)return 1;
       }
+      siteTrials++;
       if(tryPoint(crop,site->px,site->pz))return 1;
     }
     // A connected region with no successful local route is inconclusive,
@@ -1443,6 +1455,12 @@ int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
     if(!candidates.empty())unknown=true;
   }
   s.attackResult[0]=unknown?3:eligible?2:0;
+  s.attackResult[1]=double(firstCandidateCrop);
+  s.attackResult[2]=preferredTrials;
+  s.attackResult[3]=lastPreferredRouteCount;
+  s.attackResult[4]=siteTrials;
+  s.attackResult[5]=lastRouteCount;
+  s.attackResult[6]=lastRegisterResult;
   s.attackResult[8]=regionQueries;s.attackResult[9]=routeQueries;
   return int(s.attackResult[0]);
 }

@@ -454,7 +454,10 @@ export function createSpatialIntentBridge(session){
     const values=new Float64Array(wasm.memory.buffer,
       wasm.nav_intent_attack_result_ptr(),10);
     if(status!==1)return {status:status===3?'unknown':status===2?'blocked':'none',
-      regionQueries:values[8],routeQueries:values[9]};
+      regionQueries:values[8],routeQueries:values[9],
+      diagnostics:{firstCandidateCrop:values[1],preferredTrials:values[2],
+        lastPreferredRouteCount:values[3],siteTrials:values[4],
+        lastRouteCount:values[5],lastRegisterResult:values[6]}};
     const targetId=values[1],target=cropObjects.get(targetId);
     const routeHandle={session:values[4],slot:values[5],generation:values[6]};
     const coordinates=routePoints(routeHandle);

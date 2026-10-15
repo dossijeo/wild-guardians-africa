@@ -460,13 +460,15 @@ test('a confirmed enclosure breach reconsiders other wall attackers at an event 
       const nativeBreachPlans=[];
       planner.planAttackCrop=(...args)=>{
         const result=originalPlanAttackCrop(...args);
-        nativeBreachPlans.push(result?.status);
+        nativeBreachPlans.push(result&&{status:result.status,
+          regionQueries:result.regionQueries,routeQueries:result.routeQueries,
+          diagnostics:result.diagnostics});
         return result;
       };
       Game.tick(state,.25,nav);
       if(process.env.WILD_ENGINE_NATIVE_ROUTE_WASM)
-        assert(nativeBreachPlans.includes('found'),
-          `native crop planner should resolve the opened access: ${nativeBreachPlans}`);
+        assert(nativeBreachPlans.some(plan=>plan?.status==='found'),
+          `native crop planner should resolve the opened access: ${JSON.stringify(nativeBreachPlans)}`);
       const survivingWallAttackers=state.raid.animals.filter(animal=>
         state.structures.some(wall=>wall.id===priorTargets.get(animal.id)&&
           wall.status==='intact'));
