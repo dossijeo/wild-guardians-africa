@@ -24,6 +24,25 @@ esas pérdidas. La presión normalizada sí descendió al disminuir el valor
 agrícola, pero la cantidad de animales pasó de 8 a 14 entre las noches
 6 y 9 y todavía fue 13 cuando sólo quedaban seis plantas. Esto describe
 el comportamiento de la configuración actual; no se ajustó ningún parámetro.
+La causa concreta es `raidAnimalCount`: después de la introducción calcula
+`round(4 + 30 × √P)` y limita la subida inicial a 8, 10, 12 y 14 animales.
+La componente temporal de `P` sigue creciendo aunque la finca pierda valor;
+en la noche 14, incluso con valor agrícola cero, la fórmula todavía daría
+11 animales. El máximo entre valor actual y media móvil también amortigua
+las bajadas. La presión respondió a las pérdidas, pero esta receta de
+cantidad no puede reducir la oleada en la misma proporción. Corresponde
+evaluarla en la fase de balance, no modificarla en la PR de entradas.
+
+Se ejecutó también el control emparejado `no-walls`: conserva la misma
+semilla, producción, magias y parámetros militares; sólo omite la compra y
+reparación de murallas. Terminó en **derrota nativa el día 11** (10 noches
+superadas), frente al día 14 del brazo amurallado. Hasta el día 10 ambos
+brazos habían perdido 103 y 153 cultivos respectivamente desde la noche 6;
+el brazo con muros interceptó 35 golpes en ese intervalo. La defensa aporta
+una ventaja física medible, aunque esta política no logra sostener la finca
+en el cañón. Los informes y configuraciones de ambos brazos se conservan
+por separado; no se infiere una probabilidad de victoria a partir de una
+sola semilla.
 
 El jugador virtual pagó 31 módulos de zarzas (310 monedas) y reparaciones,
 pero sólo añadió un módulo en el día 7 y ninguno después. El plan registró
