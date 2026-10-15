@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
+import {createHash} from 'node:crypto';
 import {deserialize,serialize} from '../src/persistence/snapshots.js';
 import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
@@ -34,14 +35,20 @@ function simulate(candidatePolling){
     };
     const routeActor=session.routeActor;
     session.routeActor=(...args)=>{routes++;return routeActor(...args);};
-    for(let index=0;index<200&&!state.result;index++)tick(state,1,nav);
-    return {snapshot:serialize(state),candidates,deferred,routes};
+    const hashes=[];
+    for(let index=0;index<200&&!state.result;index++){
+      tick(state,1,nav);
+      hashes.push(createHash('sha256').update(serialize(state)).digest('hex'));
+    }
+    return {snapshot:serialize(state),hashes,candidates,deferred,routes};
   }finally{session.dispose();}
 }
 
 test('failed candidate routes wait for relevant changes without changing 200 ticks',()=>{
   const polling=simulate(true),waiting=simulate(false);
   assert.equal(waiting.snapshot,polling.snapshot);
+  assert.deepEqual(waiting.hashes,polling.hashes,
+    'a deferred candidate must preserve every observed gameplay tick');
   assert(waiting.candidates<polling.candidates/2,
     `candidate plans: ${polling.candidates} vs ${waiting.candidates}`);
   assert(waiting.routes<polling.routes/2,
