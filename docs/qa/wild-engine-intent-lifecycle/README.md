@@ -33,6 +33,8 @@ The same projection tracks the physical crate created by a harvest, its position
 
 The topology hook is currently conservative at whole-graph revision scope. Sector/portal inverse dependencies and committed-attack deferral are **not implemented**. The bridge is still experimental. No animal intention registry, native animal target selector, default live-worker handoff, or automatic end-to-end event dispatch is wired into gameplay yet. The caller must still attach and dispose observers and configure the native session. These are acceptance gaps, not validated features.
 
+For interactive QA on a fresh Sabana game, the development build can be opened with `?qa-spatial-world&qa-native-intents`. The spatial-world startup attaches the native task gate only after the world has loaded and removes its observers before world disposal. `wildGuardiansSpatialQa().nativeIntent` reports global native planning calls and requests per worker in the last simulated minute. The flag is deliberately unavailable in distribution builds and does not yet cover restored saves or other biomes.
+
 ## Reproduce the current focused checks
 
 With Emscripten configured, run `bash tools/build-spatial-savanna-wasm.sh`, then set `WILD_ENGINE_NATIVE_ROUTE_WASM=src/world/hierarchical-wasm/spatial-savanna.wasm` and execute:
