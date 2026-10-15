@@ -151,7 +151,28 @@ pagando 860 en muros y 642 en reparaciones. Esto no es un experimento causal
 de muros: cambian también la siembra, la magia y otras decisiones. Sí impide
 presentar la opción sin muros como óptima por mera supervivencia corta. El
 informe nativo sin muros se conserva en `results-14-main-sync/`; su pareja de
-Gran Río sigue en curso.
+Gran Río terminó también 14/14 noches: 34 cultivos vivos, 577 monedas,
+76 cajas/día en las tres jornadas finales, 392 cultivos destruidos desde la
+noche 6 y margen operativo terminal de −264 monedas. Todos los días concilian
+con el ledger. La puntuación `post-intro-v2` la excluye por producción
+colapsada; no equivale a derrota nativa ni permite atribuir causalidad a la
+ausencia de muros, pues otros genes también difieren.
+
+La siguiente mutación sin muros del segundo ensayo, `d131ef6cd76dc6ce`,
+terminó Sabana/712 con 40 plantas y 682 monedas. Su producción terminal fue
+84⅓ cajas/día, apenas por encima del umbral de 82⅙, pero su margen operativo
+terminal fue −411 monedas y sufrió 425 pérdidas agrícolas desde la noche 6.
+La incursión final destruyó 54 de las 94 plantas vivas al inicio del ataque.
+El ledger concilia en los catorce días. `post-intro-v2` todavía la considera
+elegible, lo que revela una limitación del **criterio de fitness**, no una
+defensa de ignorar murallas como diseño óptimo. El informe original se conserva
+en `results-14-post-intro/`; su pareja de Gran Río permanece en ejecución.
+Antes de seleccionar cualquier estrategia sin muros se necesita una ablación
+emparejada: mismos genes agrícolas, semilla, bioma, magia y balance, variando
+únicamente construcción/reparación de murallas y, por separado, Escudo. El
+runner `run-matched-defense.mjs` ya permite ese control; las campañas nativas
+históricas de Manglares/123 (`matched-defense-14/`) muestran ventaja defensiva
+con otra versión de fuente, pero no sustituyen la prueba de esta cohorte.
 
 Esta cohorte usa Wild Engine y el balance de producción sin alterar, después de
 la mejora de navegación de PR #37. Código ejecutado: `7f358aad97287b40e300026306d26f05cc4e0c29`;
