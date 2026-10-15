@@ -1,0 +1,223 @@
+{
+  "sourceHash": "12784ea0b6296e40e6c862fae2d6589295011222",
+  "day": 17,
+  "gapSummary": {
+    "bounds": [
+      72,
+      -18,
+      102,
+      18
+    ],
+    "wallCount": 78,
+    "radius": 0.85,
+    "missing": 12,
+    "barrierSlots": 12,
+    "passableSlots": 0,
+    "rows": [
+      {
+        "x": 99.04918032786885,
+        "z": -18,
+        "angle": 0,
+        "scaleX": 0.9926304707474782,
+        "walkableSamples": 0,
+        "totalSamples": 10
+      },
+      {
+        "x": 101.0655737704918,
+        "z": -17.85245901639344,
+        "angle": 0.15660187698201886,
+        "scaleX": 0.8678921970975201,
+        "walkableSamples": 0,
+        "totalSamples": 9
+      },
+      {
+        "x": 102,
+        "z": -16.622950819672127,
+        "angle": 1.5707963267948966,
+        "scaleX": 0.9926304707474782,
+        "walkableSamples": 0,
+        "totalSamples": 10
+      },
+      {
+        "x": 102,
+        "z": 5.016393442622956,
+        "angle": 1.5707963267948966,
+        "scaleX": 0.9926304707474782,
+        "walkableSamples": 0,
+        "totalSamples": 10
+      },
+      {
+        "x": 102,
+        "z": 7.180327868852462,
+        "angle": 1.5707963267948966,
+        "scaleX": 0.9926304707474815,
+        "walkableSamples": 0,
+        "totalSamples": 10
+      },
+      {
+        "x": 102,
+        "z": 9.344262295081972,
+        "angle": 1.5707963267948966,
+        "scaleX": 0.9926304707474815,
+        "walkableSamples": 0,
+        "totalSamples": 10
+      },
+      {
+        "x": 102,
+        "z": 11.508196721311482,
+        "angle": 1.5707963267948966,
+        "scaleX": 0.9926304707474815,
+        "walkableSamples": 0,
+        "totalSamples": 10
+      },
+      {
+        "x": 102,
+        "z": 15.836065573770497,
+        "angle": 1.5707963267948966,
+        "scaleX": 0.9926304707474782,
+        "walkableSamples": 0,
+        "totalSamples": 10
+      },
+      {
+        "x": 101.45901639344262,
+        "z": 17.459016393442624,
+        "angle": 2.3561944901923515,
+        "scaleX": 0.7018957370779413,
+        "walkableSamples": 0,
+        "totalSamples": 8
+      },
+      {
+        "x": 72,
+        "z": -1.770491803278702,
+        "angle": -1.5707963267948966,
+        "scaleX": 0.9926304707474782,
+        "walkableSamples": 0,
+        "totalSamples": 10
+      },
+      {
+        "x": 72,
+        "z": -3.9344262295082046,
+        "angle": -1.5707963267948966,
+        "scaleX": 0.9926304707474782,
+        "walkableSamples": 0,
+        "totalSamples": 10
+      },
+      {
+        "x": 72,
+        "z": -6.098360655737714,
+        "angle": -1.5707963267948966,
+        "scaleX": 0.9926304707474843,
+        "walkableSamples": 0,
+        "totalSamples": 10
+      }
+    ]
+  },
+  "route": {
+    "counts": {
+      "found": 1,
+      "blocked": 0,
+      "unknown": 5
+    },
+    "witness": {
+      "origin": {
+        "x": 135,
+        "z": -67.65
+      },
+      "crop": {
+        "id": "plant-13753",
+        "x": 99,
+        "z": -1.5
+      },
+      "routePoints": 128,
+      "crossing": 119,
+      "near": [
+        {
+          "x": 104,
+          "z": -7
+        },
+        {
+          "x": 104,
+          "z": -6
+        },
+        {
+          "x": 103,
+          "z": -6
+        },
+        {
+          "x": 102,
+          "z": -6
+        },
+        {
+          "x": 101,
+          "z": -6
+        },
+        {
+          "x": 100,
+          "z": -6
+        },
+        {
+          "x": 99,
+          "z": -6
+        }
+      ],
+      "walls": [
+        {
+          "id": "structure-1380",
+          "x": 102,
+          "z": -8.519999999999996,
+          "status": "intact",
+          "hp": 100,
+          "gate": false
+        },
+        {
+          "id": "structure-1443",
+          "x": 102,
+          "z": -6.359999999999999,
+          "status": "ruined",
+          "hp": 0,
+          "gate": false
+        },
+        {
+          "id": "structure-1444",
+          "x": 102,
+          "z": -4.199999999999999,
+          "status": "ruined",
+          "hp": 0,
+          "gate": false
+        },
+        {
+          "id": "structure-1445",
+          "x": 102,
+          "z": -2.039999999999996,
+          "status": "intact",
+          "hp": 100,
+          "gate": false
+        },
+        {
+          "id": "structure-6512",
+          "x": 102,
+          "z": -7.967213114754095,
+          "status": "ruined",
+          "hp": 0,
+          "gate": false
+        },
+        {
+          "id": "structure-6513",
+          "x": 102,
+          "z": -5.803278688524589,
+          "status": "ruined",
+          "hp": 0,
+          "gate": false
+        },
+        {
+          "id": "structure-6773",
+          "x": 102,
+          "z": -3.6393442622950793,
+          "status": "ruined",
+          "hp": 0,
+          "gate": false
+        }
+      ]
+    }
+  }
+}
