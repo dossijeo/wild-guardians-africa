@@ -407,7 +407,25 @@ test('opt-in Game.tick keeps one native task intention across ordinary movement 
   assert(worker.path?.length>0,
    'the event-driven native recovery returns a route without the legacy planner');
   const start={x:worker.x,z:worker.z};
-  for(let i=0;i<10;i++)tick(game,.1,nav);
+  // Drain the route-recovery notification at its event boundary before
+  // measuring movement with no pending native change.
+  planner.flushTaskEvents();
+  planner.reconcileWorkerRoutes(game,{navVersion:nav.version});
+  let reconciliations=0;
+  const reconcile=planner.reconcileWorkerRoutes;
+  planner.reconcileWorkerRoutes=(...args)=>{
+   if(worker.status==='walking')reconciliations++;
+   return reconcile(...args);
+  };
+  let walkingTicks=0;
+  for(let i=0;i<2;i++){
+   if(worker.status==='walking')walkingTicks++;
+   tick(game,.1,nav);
+  }
+  assert(walkingTicks>0);
+  assert.equal(reconciliations,0,
+   'ordinary route movement does not poll native intention changes');
+  for(let i=0;i<7;i++)tick(game,.1,nav);
   assert.equal(planner.metrics(game.elapsed).nativePlanningCalls,1,
    'ordinary movement does not rerun global task selection');
   assert(Math.hypot(worker.x-start.x,worker.z-start.z)>0,

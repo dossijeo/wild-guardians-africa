@@ -837,7 +837,7 @@ function reserveAvailableTasks(s,nav){
     topology:nav.version,sectors,retryAt:s.elapsed+ROUTE_RETRY_SECONDS});
 }
 function updateWorkers(s,dt,nav) {
-  if(nav.intentTaskPlanner){
+  if(nav.intentTaskPlanner?.needsReconciliation(nav.version)){
     nav.intentTaskPlanner.flushWorldEvents();
     nav.intentTaskPlanner.flushTaskEvents();
     nav.intentTaskPlanner.reconcileNavigationRevision(s,nav.version);

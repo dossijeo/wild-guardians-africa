@@ -571,7 +571,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
   let observedTaskState=null,stopTaskObserver=null,stopWorldObserver=null;
   let dirty=true,nextRetry=Infinity,lastTime=-Infinity,total=0,
     animalTotal=0,taskRouteQueries=0,taskCandidates=0,initialized=false;
-  let lastNavigationVersion=null;
+  let lastNavigationVersion=null,pendingNativeChanges=true;
   let lastPlan=null,lastPlanFacts=null,sourceState=null;
   const setWorker=(worker,state)=>{
     const id=numericId(worker.id);
@@ -602,6 +602,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     for(const worker of state.workers)setWorker(worker,state);
     dirty=true;nextRetry=Infinity;lastTime=-Infinity;
     lastNavigationVersion=null;
+    pendingNativeChanges=true;
     initialized=true;
     return {...result,...restored,...restoredAnimals};
   };
@@ -622,6 +623,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
       else setWorker(event.entity,state);
     }
     if(events.some(event=>event.type!=='structureDamage'))dirty=true;
+    pendingNativeChanges=true;
     return result;
   };
   const planIfNeeded=simulatedSeconds=>{
@@ -708,6 +710,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
       throw Error('Native task proposal became stale before commit');
     }
     const count=applyConfirmedTaskAssignments(state,assignments,navVersion);
+    pendingNativeChanges=true;
     for(const row of plan){
       const task=tasksByNumericId.get(row.taskId);
       if(task&&row.status!==1)task.blocked=row.status===2;
@@ -738,6 +741,15 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     return dirty||pendingTaskEvents.length>0||pendingWorldEvents.length>0||
       simulatedSeconds>=nextRetry;
   };
+  // The game advances movement every tick, but native intention changes are
+  // delivered only at a confirmed event or topology boundary. This cheap JS
+  // gate avoids asking WASM for an empty change list during ordinary travel.
+  const needsReconciliation=navVersion=>{
+    if(!initialized)throw Error('Reset the native intent session first');
+    if(!Number.isFinite(navVersion))throw TypeError('Expected a navigation revision');
+    return lastNavigationVersion!==navVersion||pendingNativeChanges||
+      pendingTaskEvents.length>0||pendingWorldEvents.length>0;
+  };
   const syncChangedPositions=all=>{
     if(!observedTaskState)return 0;
     const moved=[];
@@ -758,6 +770,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
         'RepairApplied'].includes(event.type));
     if(topologyChanged)syncChangedPositions(true);
     bridge.applyCommittedEvents(observedTaskState,events);
+    pendingNativeChanges=true;
     if(events.some(event=>event.type==='StructureRuined'||
       event.type==='WallRemoved')&&observedTaskState.raid){
       const structures=new Map(observedTaskState.structures.map(item=>
@@ -792,6 +805,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     session.actorSectorRevision({worker:true});
     const invalidated=session.core.wasm.nav_intent_reconcile_topology();
     if(invalidated)session.core.wasm.nav_intent_replan_pending_routes();
+    pendingNativeChanges=true;
     // Existing JS paths are the movement copy of native-pinned routes. A
     // changed graph revision has now been validated, including the routes
     // whose replacement or waiting state will be delivered below.
@@ -810,6 +824,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
   const reconcileWorkerRoutes=(state,{navVersion}={})=>{
     if(!Number.isFinite(navVersion))throw TypeError('Expected a navigation revision');
     const changes=bridge.intentChanges();
+    pendingNativeChanges=false;
     if(!changes.length)return changes;
     const latest=new Map();
     for(const change of changes)latest.set(change.actorId,change);
@@ -840,6 +855,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
           (!('status' in target)||target.status==='intact')&&
           animal.reservation&&state.raid.reservations[animal.reservation]===animal.id){
           const replacement=bridge.replanAttackRoute(animal);
+          pendingNativeChanges=true;
           recordAnimalPlan(animal,state.elapsed);
           animal.path=replacement.status==='found'?replacement.path:null;
           if(animal.path){
@@ -981,17 +997,21 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
   return {resetFromState,applyEvents,observeTasks,observeWorld,
     flushTaskEvents,flushWorldEvents,reconcileNavigationRevision,requestReroute,
     reconcileWorkerRoutes,planIfNeeded,
-    hasPendingAt,metrics,
+    hasPendingAt,needsReconciliation,metrics,
     commitTaskBatchToState,
     registerAttackIntent:(...args)=>{
       const result=bridge.registerAttackIntent(...args);
+      pendingNativeChanges=true;
       pendingAttackRoutes.delete(numericId(args[1].id));
       return result;
     },
     planAttackCrop:(state,animal)=>{
       if(state!==observedTaskState&&state!==sourceState)return null;
       const result=bridge.planAttackCrop(state,animal);
-      if(result!==null)recordAnimalPlan(animal,state.elapsed);
+      if(result!==null){
+        recordAnimalPlan(animal,state.elapsed);
+        if(result.status==='found')pendingNativeChanges=true;
+      }
       return result;
     },
     attackRoutePending:actorId=>pendingAttackRoutes.has(numericId(actorId)),
@@ -1001,17 +1021,34 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
       tacticalReconsiderations.clear();
       return actors;
     },
-    markAttackActive:bridge.markAttackActive,
+    markAttackActive:actorId=>{
+      const result=bridge.markAttackActive(actorId);
+      if(result)pendingNativeChanges=true;
+      return result;
+    },
     finishAttackIntent:actorId=>{
       pendingAttackRoutes.delete(numericId(actorId));
-      return bridge.finishAttackIntent(actorId);
+      const result=bridge.finishAttackIntent(actorId);
+      if(result)pendingNativeChanges=true;
+      return result;
     },
     cancelAttackIntent:actorId=>{
       pendingAttackRoutes.delete(numericId(actorId));
       tacticalReconsiderations.delete(actorId);
-      return bridge.cancelAttackIntent(actorId);
+      const result=bridge.cancelAttackIntent(actorId);
+      if(result)pendingNativeChanges=true;
+      return result;
     },
-    markActionActive:bridge.markActionActive,finishAction:bridge.finishAction,
+    markActionActive:actorId=>{
+      const result=bridge.markActionActive(actorId);
+      if(result)pendingNativeChanges=true;
+      return result;
+    },
+    finishAction:actorId=>{
+      const result=bridge.finishAction(actorId);
+      if(result)pendingNativeChanges=true;
+      return result;
+    },
     intentChanges:bridge.intentChanges,routePoints:bridge.routePoints,
     discard:bridge.discard,commit:bridge.commit,sequence:bridge.sequence};
 }
