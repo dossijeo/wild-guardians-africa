@@ -47,10 +47,28 @@ try{
   bridge.resetFromState(state);
   const nativeStart=performance.now();
   const native=bridge.planTasks();
+  const routeDiagnostics=process.argv.includes('--route-diagnostics');
+  const originByWorker=new Map(state.workers.map(worker=>[worker.id,worker]));
+  const routeLength=(origin,route)=>{
+    let length=0,previous=origin;
+    for(const point of route){
+      length+=Math.hypot(point.x-previous.x,point.z-previous.z);
+      previous=point;
+    }
+    return length;
+  };
+  const nativeRoutes=routeDiagnostics?new Map(native.filter(row=>row.status===1)
+    .map(row=>{
+      const workerId=`worker-${row.workerId}`;
+      return [`task-${row.taskId}`,{
+        workerId,length:routeLength(originByWorker.get(workerId),
+          bridge.proposalRoute(row))}];
+    })):null;
   const nativeMilliseconds=performance.now()-nativeStart;
   const nativeQueries=session.core.wasm.nav_intent_route_queries();
   bridge.discard();
   let jsCandidates=0;
+  const jsRoutes=new Map();
   const jsStart=performance.now();
   reserveTasks(state,(worker,task,target)=>{
     jsCandidates++;
@@ -59,6 +77,9 @@ try{
       if(task.kind==='initial'||task.kind==='water')return wateringRoute(worker,target,nav);
       return nav.workerPath(worker,target,.28,null);
     }catch(error){if(error instanceof SpatialChunkUnavailable)return null;throw error;}
+  },(worker,task,target,route)=>{
+    if(routeDiagnostics)jsRoutes.set(task.id,{workerId:worker.id,
+      length:routeLength(worker,Array.isArray(route)?route:route.path)});
   });
   const jsMilliseconds=performance.now()-jsStart;
   const selected=state.tasks.filter(task=>task.workerId).map(task=>({
@@ -74,6 +95,12 @@ try{
     selected,native:native.map(row=>({taskId:row.taskId,workerId:row.workerId,
       status:row.status,cause:row.cause})),
     mismatches:mismatchCount};
+  if(routeDiagnostics)report.routeComparisons=[...nativeRoutes].map(([taskId,nativeRoute])=>{
+    const js=jsRoutes.get(taskId);
+    return {taskId,workerId:nativeRoute.workerId,
+      nativeLength:nativeRoute.length,jsLength:js?.workerId===nativeRoute.workerId?
+        js.length:null};
+  });
   if(process.argv.includes('--summary'))delete report.native;
   if(process.argv.includes('--summary'))delete report.selected;
   console.log(JSON.stringify(report,null,2));

@@ -553,11 +553,17 @@ test('native whole-queue assignments match JS on controlled real Desert and Cany
   ['watering-gran-canon-saheliana-detour-10.json.gz',3,19]]){
   const path=fileURLToPath(new URL(`./fixtures/${fixture}`,import.meta.url));
   const report=JSON.parse(execFileSync(process.execPath,
-   [probe,path,String(workers),String(tasks),'--summary'],{
+   [probe,path,String(workers),String(tasks),'--summary','--route-diagnostics'],{
     env:process.env,encoding:'utf8',timeout:30000}));
   assert.equal(report.mismatches,0,`${fixture}: differing native assignment`);
   assert(report.nativeQueries>0&&report.nativeQueries<=report.jsCandidates*8,
    `${fixture}: native service-point search exceeded its bounded alternatives`);
   assert(report.jsCandidates>0);
+  if(fixture.startsWith('desierto')){
+   const corner=report.routeComparisons.find(row=>row.taskId==='task-10189');
+   assert(corner&&corner.jsLength!==null);
+   assert(corner.nativeLength<=corner.jsLength+1,
+    'native watering route must use a physically clear corner near the center');
+  }
  }
 });

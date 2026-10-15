@@ -116,6 +116,29 @@ Point last(Point fallback){
   const auto& points=result().points;
   return points.empty()?fallback:Point{points[points.size()-2],points.back()};
 }
+// A sector path can wrap a building through many grid cells even when one
+// validated corner joins the continuous endpoints. Test only the points on
+// that already discovered path, and only for a substantial detour.
+void shortenOneCorner(Point start,Point end){
+  WorldRoute& out=result();
+  const float direct=distance(start,end);
+  float original=0;Point previous=start;
+  for(size_t at=0;at<out.points.size();at+=2){
+    const Point next{out.points[at],out.points[at+1]};
+    original+=distance(previous,next);previous=next;
+  }
+  if(original<direct*1.5f||original-direct<2.f)return;
+  Point best{};float bestLength=original;
+  for(size_t at=0;at+2<out.points.size();at+=2){
+    const Point corner{out.points[at],out.points[at+1]};
+    const float length=distance(start,corner)+distance(corner,end);
+    if(length>=bestLength-0.01f||!clearWorld(start,corner)||
+       !clearWorld(corner,end))continue;
+    best=corner;bestLength=length;
+  }
+  if(bestLength<original-0.01f)
+    out.points={best.x,best.z,end.x,end.z};
+}
 }
 
 extern "C" {
@@ -170,6 +193,7 @@ int spatial_world_route(float fromX,float fromZ,float toX,float toZ){
       }
       if(!valid){out.points.clear();unknown=true;out.graphReason=11;continue;}
       if(distance(last({float(from.x),float(from.z)}),end)>1e-6f)append(end);
+      shortenOneCorner(start,end);
       float length=0;Point previous=start;
       for(size_t at=0;at<out.points.size();at+=2){
         const Point next{out.points[at],out.points[at+1]};
