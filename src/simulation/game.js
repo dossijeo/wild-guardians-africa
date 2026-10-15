@@ -719,6 +719,7 @@ function completeTask(s,w,t,target,nav) {
     }
     catch {notice(s,'La reparación se canceló: fondos insuficientes al llegar.',target.id);}
   }
+  nav.intentTaskPlanner?.finishAction(w.id);
   replaceTasks(s,s.tasks.filter(task=>task.id!==t.id));w.taskId=null;w.taskApproach=null;if(w.status!=='carrying')w.status='idle';w.path=null;
   notifyWorkerPlanningChange(s,w);
 }
@@ -749,6 +750,18 @@ function taskRouteWhenKnown(compute){
 const taskCandidateWaits=new WeakMap();
 function reserveAvailableTasks(s,nav){
   if(s.raid||s.time>=300)return;
+  if(nav.intentTaskPlanner){
+    const planner=nav.intentTaskPlanner;
+    if(!planner.hasPendingAt(s.elapsed))return;
+    planner.flushWorldEvents();planner.flushTaskEvents();
+    planner.reconcileWorkerRoutes(s,{navVersion:nav.version});
+    const plan=planner.planIfNeeded(s.elapsed);
+    if(plan!==null){
+      planner.commitTaskBatchToState(s,plan,{navVersion:nav.version});
+      planner.reconcileWorkerRoutes(s,{navVersion:nav.version});
+    }
+    return;
+  }
   const idle=s.workers.filter(w=>w.status==='idle'&&!w.taskId&&!w.incapacitated&&!contractExpired(w,s))
     .map(w=>`${w.id}:${w.centerId}`).join('|');
   const sectors=nav.spatialSectorRevision?.(.28,true)??0;
@@ -820,21 +833,28 @@ function reserveAvailableTasks(s,nav){
     topology:nav.version,sectors,retryAt:s.elapsed+ROUTE_RETRY_SECONDS});
 }
 function updateWorkers(s,dt,nav) {
+  if(nav.intentTaskPlanner){
+    nav.intentTaskPlanner.flushWorldEvents();
+    nav.intentTaskPlanner.flushTaskEvents();
+    nav.intentTaskPlanner.reconcileWorkerRoutes(s,{navVersion:nav.version});
+  }
   // Task removals/rebuilds replace the array; enqueues change its length.
   // Unchanged queues can reuse their index while reservation fields stay live.
   const findPlant=workerEntityLookup(()=>s.plants,{reuse:true,appendOnly:true}),findCrate=workerEntityLookup(()=>s.crates,{reuse:true,appendOnly:true}),findTask=workerEntityLookup(()=>s.tasks,{reuse:true});
   let idlePlants;
   const newArrivals=[];
+  const nativeTasks=!!nav.intentTaskPlanner;
   if(!s.raid&&s.time<300)for(const w of s.workers){
     if(w.status!=='arriving'||w.raidReturn||w.incapacitated||w.fallRemaining>0||contractExpired(w,s)||s.time>=profile(w).end)continue;
     if(!s.structures.some(c=>c.id===w.centerId&&operational(c)))continue;
-    w.status='idle';newArrivals.push(w);
+    if(!nativeTasks)w.status='idle';
+    newArrivals.push(w);
   }
   // New contracts reserve from their actual village position before any idle
   // motion. Returning raid survivors retain the existing arrival sequence.
   if(newArrivals.length){
     reserveAvailableTasks(s,nav);
-    for(const w of newArrivals)if(!w.taskId)w.status='arriving';
+    if(!nativeTasks)for(const w of newArrivals)if(!w.taskId)w.status='arriving';
   }
   // Small crews retain direct queries; amortize bookkeeping only in large farms.
   const urgency=s.workers.length>=64?createUrgencyPass(s):null;
@@ -899,7 +919,9 @@ function updateWorkers(s,dt,nav) {
         if(walkTo(s,w,destination,dt,nav,{motion:{urgent:(urgency?urgency.urgent(w):urgentWork(s,w))}})) {
           if(t.kind==='repair'){completeTask(s,w,t,target,nav);urgency?.invalidate();continue;}
           if(t.kind==='initial'||t.kind==='water')w.heading=Math.atan2(target.x-w.x,target.z-w.z);
-          w.status='acting';w.actionRemaining=(t.kind==='initial'?7.2:t.kind==='water'?3.4:t.kind==='harvest'?3.6:t.kind==='repair'?3.8:1)/p.speed;notifyWorkerPlanningChange(s,w);
+          w.status='acting';w.actionRemaining=(t.kind==='initial'?7.2:t.kind==='water'?3.4:t.kind==='harvest'?3.6:t.kind==='repair'?3.8:1)/p.speed;
+          nav.intentTaskPlanner?.markActionActive(w.id);
+          notifyWorkerPlanningChange(s,w);
         }else if(w.path===null){releaseTask(s,w);w.status='idle';notifyWorkerPlanningChange(s,w);}
       } else if(w.status==='acting') {
         if(t.kind==='repair'){completeTask(s,w,t,target,nav);urgency?.invalidate();continue;}

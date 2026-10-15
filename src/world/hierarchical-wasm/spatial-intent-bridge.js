@@ -25,7 +25,9 @@ const numericId=id=>{
 const lexicalRank=id=>Number(`0.${/-(\d+)$/.exec(id)[1]}`);
 const workerRow=(worker,state)=>[1,1,numericId(worker.id),
   worker.centerId?numericId(worker.centerId):0,worker.x,worker.z,
-  !!worker.centerId&&worker.status==='idle'&&!worker.taskId&&!worker.incapacitated&&
+  !!worker.centerId&&(worker.status==='idle'||
+    worker.status==='arriving'&&!worker.raidReturn)&&
+    !worker.taskId&&!worker.incapacitated&&
     !contractExpired(worker,state)&&state.time<(profileEnd.get(worker.profile)??0)?1:0,
   0,0,lexicalRank(worker.id)];
 const targetRow=(entity,state)=>{
@@ -519,11 +521,20 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
       if(task&&row.status!==1)task.blocked=row.status===2;
     }
     lastPlan=null;lastPlanFacts=null;
+    // Assignment notifications mirror the lease just committed in WASM.
+    // Project them now, without treating that echo as a second reason to plan.
+    flushTaskEvents();
+    if(!pendingWorldEvents.length)dirty=false;
     return count;
   };
   const metrics=simulatedSeconds=>({nativePlanningCalls:total,
     perWorkerPerMinute:Object.fromEntries([...requests].map(([id,times])=>
       [id,times.filter(time=>time>simulatedSeconds-60).length]))});
+  const hasPendingAt=simulatedSeconds=>{
+    if(!initialized)throw Error('Reset the native intent session first');
+    return dirty||pendingTaskEvents.length>0||pendingWorldEvents.length>0||
+      simulatedSeconds>=nextRetry;
+  };
   const syncChangedPositions=all=>{
     if(!observedTaskState)return 0;
     const moved=[];
@@ -609,8 +620,13 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     }
     const events=[...taskEvents,...[...workerEvents]
       .sort(([a],[b])=>numericId(a)-numericId(b)).map(([,event])=>event)];
+    const wasDirty=dirty;
+    const eligibilityChanged=events.some(event=>event.type==='worker'&&
+      eligible.has(numericId(event.remove?event.id:event.entity.id))!==
+      (!event.remove&&workerRow(event.entity,observedTaskState)[6]===1));
     pendingTaskEvents=[];
     applyEvents(observedTaskState,events);
+    if(!taskEvents.length&&!eligibilityChanged)dirty=wasDirty;
     return events.length;
   };
   const observeTasks=state=>{
@@ -619,7 +635,10 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     observedTaskState=state;
     const stop=observeTaskChanges(state,event=>{
       if(event.type==='worker'){
-        pendingTaskEvents.push({type:'worker',entity:event.worker});dirty=true;return;
+        pendingTaskEvents.push({type:'worker',entity:event.worker});
+        if(eligible.has(numericId(event.worker.id))!==
+          (workerRow(event.worker,state)[6]===1))dirty=true;
+        return;
       }
       if(event.type==='worker-removed'){
         pendingTaskEvents.push({type:'worker',remove:true,id:event.workerId});
@@ -664,8 +683,10 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     };
   };
   return {resetFromState,applyEvents,observeTasks,observeWorld,
-    flushTaskEvents,flushWorldEvents,reconcileWorkerRoutes,planIfNeeded,metrics,
+    flushTaskEvents,flushWorldEvents,reconcileWorkerRoutes,planIfNeeded,
+    hasPendingAt,metrics,
     commitTaskBatchToState,
+    markActionActive:bridge.markActionActive,finishAction:bridge.finishAction,
     intentChanges:bridge.intentChanges,routePoints:bridge.routePoints,
     discard:bridge.discard,commit:bridge.commit,sequence:bridge.sequence};
 }

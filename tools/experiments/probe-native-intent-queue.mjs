@@ -15,6 +15,10 @@ const fixture=process.argv[2]??'tests/fixtures/desierto983-d15-partial-state.jso
 const workerCount=Number(process.argv[3]??5);
 const taskCount=Number(process.argv[4]??30);
 const state=deserialize(gunzipSync(readFileSync(fixture)).toString());
+// The standalone JS control reserves only idle workers. In Game.tick the
+// arrival phase temporarily makes new contracts idle before reservation;
+// exclude other arriving workers here so both probes compare the same pool.
+for(const worker of state.workers)if(worker.status==='arriving')worker.status='waiting';
 for(const worker of state.workers.slice(0,workerCount)){
   const assigned=state.tasks.find(task=>task.id===worker.taskId);
   if(assigned)assigned.workerId=null;

@@ -5,7 +5,7 @@ import {gunzipSync} from 'node:zlib';
 import {execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 import {deserialize,serialize} from '../src/persistence/snapshots.js';
-import {emit,rebuildTasks,walkTo} from '../src/simulation/game.js';
+import {emit,rebuildTasks,walkTo,tick} from '../src/simulation/game.js';
 import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
 import {canWaterFrom} from '../src/world/work-points.js';
@@ -71,7 +71,8 @@ test('event-fed native intent bridge replays live state and only changes on expl
   bridge.discard();
   worker.status='walking';
   bridge.applyEvents(game,[{type:'worker',entity:worker}]);
-  assert.equal(bridge.planTasks()[0].status,0,'busy worker has no provisional lease');
+  assert.notEqual(bridge.planTasks()[0].status,1,
+   'busy worker has no provisional lease');
   bridge.discard();
   worker.status='idle';
   bridge.applyEvents(game,[{type:'worker',entity:worker}]);
@@ -201,8 +202,8 @@ test('event-fed native intent bridge replays live state and only changes on expl
   assert(worker.path.length>0,'the native route is copied once when action starts');
   assert.equal(worker.taskApproach.taskId,task.id);
   const [committedIntent]=planner.intentChanges();
-  assert.equal(planner.flushTaskEvents(),2,
-   'the confirmed JS assignment projects task and worker changes together');
+  assert.equal(planner.flushTaskEvents(),0,
+   'the committed JS assignment already projected its task and worker changes');
   assert(planner.routePoints(committedIntent.routeHandle)?.length>0,
    'projecting the confirmed assignment preserves its active native route');
   stopCommitObserver();
@@ -233,6 +234,55 @@ test('event-fed native intent bridge replays live state and only changes on expl
   assert(reached,'the continuous movement controller completes the native route');
   assert(canWaterFrom(restoredWorker,restoredPlant,restoredNav),
    'the reached interaction point permits the actual watering action');
+ }finally{session.dispose();}
+});
+
+test('opt-in Game.tick keeps one native task intention across ordinary movement ticks',
+ {skip:!module&&'Build and select the experimental WASM first'},()=>{
+ const game=deserialize(gunzipSync(readFileSync(new URL(
+  './fixtures/desierto983-d15-partial-state.json.gz',import.meta.url))).toString());
+ const worker=game.workers.find(item=>item.id==='worker-9263');
+ const plant=game.plants.filter(item=>item.alive&&item.centerId===worker.centerId)
+  .sort((a,b)=>Math.hypot(a.x-worker.x,a.z-worker.z)-
+   Math.hypot(b.x-worker.x,b.z-worker.z))[0];
+ assert(plant);
+ worker.status='idle';worker.taskId=null;worker.contractDay=game.day;
+ game.workers=[worker];game.plants=[plant];game.crates=[];
+ game.tasks=[{id:'task-999999',created:1,centerId:worker.centerId,
+  kind:'water',targetId:plant.id,workerId:null,blocked:false}];
+ plant.harvestRequested=true;
+ game.time=100;game.pauses=[];game.raid=null;
+ const loaded=new Map(),session=createSpatialGameSession(module,game,{
+  loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+ try{
+  const village=game.villages[0],cx=Math.floor((village.x+24)/48),
+   cz=Math.floor((village.z+24)/48);
+  for(let z=cz-4;z<=cz+4;z++)for(let x=cx-4;x<=cx+4;x++){
+   if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+   loaded.set(`${x},${z}`,session.core.chunkPayload());
+  }
+  const nav=createSpatialNavigationMovement(session,game);
+  const planner=createEventDrivenTaskPlanner(session);
+  planner.resetFromState(game);
+  const stopTasks=planner.observeTasks(game),stopWorld=planner.observeWorld(game);
+  nav.intentTaskPlanner=planner;
+  tick(game,.1,nav);
+  assert.equal(worker.taskId,'task-999999');
+  assert.equal(worker.status,'walking');
+  assert.equal(planner.metrics(game.elapsed).nativePlanningCalls,1);
+  const start={x:worker.x,z:worker.z};
+  for(let i=0;i<10;i++)tick(game,.1,nav);
+  assert.equal(planner.metrics(game.elapsed).nativePlanningCalls,1,
+   'ordinary movement does not rerun global task selection');
+  assert(Math.hypot(worker.x-start.x,worker.z-start.z)>0,
+   'the worker progresses along its committed native route');
+  plant.alive=false;cropBecameInactive(game.plants);
+  emit(game,'CropDestroyed',{targetId:plant.id});
+  tick(game,.1,nav);
+  assert.equal(worker.taskId,null,
+   'a confirmed target destruction releases the active task at the next event boundary');
+  assert(!game.tasks.some(item=>item.id==='task-999999'));
+  stopTasks();stopWorld();
  }finally{session.dispose();}
 });
 

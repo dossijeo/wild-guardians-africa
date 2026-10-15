@@ -16,7 +16,7 @@ function workerSnapshot(worker){
   return {id:worker.id,centerId:worker.centerId,x:worker.x,z:worker.z,
     status:worker.status,taskId:worker.taskId,
     incapacitated:worker.incapacitated,contractDay:worker.contractDay,
-    profile:worker.profile};
+    profile:worker.profile,raidReturn:worker.raidReturn};
 }
 export function notifyWorkerPlanningChange(state,worker){
   const listeners=taskObservers.get(state);
@@ -167,7 +167,8 @@ export function applyConfirmedTaskAssignments(state,assignments,navVersion,
     const {taskId,workerId,path,destination}=assignment;
     const task=tasks.get(taskId),worker=workers.get(workerId);
     if(!task||!worker||usedTasks.has(taskId)||usedWorkers.has(workerId)||
-      task.workerId||worker.taskId||worker.status!=='idle'||
+      task.workerId||worker.taskId||
+      !(worker.status==='idle'||worker.status==='arriving'&&!worker.raidReturn)||
       worker.incapacitated||contractExpired(worker,state)||
       worker.centerId!==task.centerId||!Array.isArray(path)||!path.length||
       path.some(point=>!Number.isFinite(point.x)||!Number.isFinite(point.z))||
