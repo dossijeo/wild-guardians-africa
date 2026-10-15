@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {reserveTasks} from '../src/simulation/tasks.js';
+import {reserveTasks,releaseTask,taskPlanningRevision} from '../src/simulation/tasks.js';
 import {contractExpired} from '../src/simulation/workforce.js';
 import {cancelIdle} from '../src/simulation/idle.js';
 function reference(state,canExecute){
@@ -13,6 +13,24 @@ function reference(state,canExecute){
  }
 }
 function state(){return {day:2,plants:[{id:'plot',x:0,z:0}],crates:[],structures:[],tasks:[{id:'task',created:1,targetId:'plot',centerId:'center',workerId:null,blocked:false}],workers:[1,2,3,4].map(i=>({id:'worker-'+i,x:i,z:0,centerId:'center',status:'idle',taskId:null,incapacitated:false,contractDay:2}))};}
+
+test('a released lease invalidates an otherwise unchanged task queue',()=>{
+ const s=state();assert.equal(taskPlanningRevision(s),0);
+ reserveTasks(s,()=>true);assert.equal(taskPlanningRevision(s),1);
+ const owner=s.workers.find(w=>w.taskId==='task');assert(owner);
+ releaseTask(s,owner);assert.equal(taskPlanningRevision(s),2);
+ owner.status='home';reserveTasks(s,()=>true);
+ assert.equal(s.tasks[0].workerId,'worker-2');
+});
+test('assignment passes the already validated route to its sole owner',()=>{
+ const s=state(),route=[{x:0,z:0}],assigned=[];
+ let searches=0;
+ reserveTasks(s,()=>{searches++;return route;},(worker,task,target,plan)=>{
+   assigned.push({worker:worker.id,task:task.id,target:target.id,plan});
+ });
+ assert.equal(searches,1);
+ assert.deepEqual(assigned,[{worker:'worker-1',task:'task',target:'plot',plan:route}]);
+});
 
 test('large historical farm keeps identical FIFO reservations for crops, loose crates and repairs',()=>{
  const s=state();

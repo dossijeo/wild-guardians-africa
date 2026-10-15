@@ -12,6 +12,18 @@ import {readFileSync} from 'node:fs';
 import {createOpeningWorld} from '../tools/check_opening.mjs';
 import {edgeDistance} from '../src/world/footprints.js';
 
+test('failed route planning waits for a relevant event or a slow recovery retry',()=>{
+ const state={elapsed:0},actor={id:'pending-animal',x:0,z:0,radius:.8,species:'hyena',status:'walking',hitsRemaining:2};
+ const target={id:'crop-1',x:8,z:0};let calls=0,sectors=1;
+ const nav={version:1,spatialSectorRevision:()=>sectors,path:()=>{calls++;return null;}};
+ for(let i=0;i<7;i++){state.elapsed=i;assert.equal(walkTo(state,actor,target,1,nav,{worker:false}),false);}
+ assert.equal(calls,1,'movement ticks must not repeat the same failed route');
+ state.elapsed=7;sectors++;walkTo(state,actor,target,1,nav,{worker:false});assert.equal(calls,2,'sector arrival wakes the unit');
+ state.elapsed=7.5;nav.version++;walkTo(state,actor,target,1,nav,{worker:false});assert.equal(calls,3,'topology change wakes the unit');
+ state.elapsed=15;walkTo(state,actor,target,1,nav,{worker:false});assert.equal(calls,3);
+ state.elapsed=15.6;walkTo(state,actor,target,1,nav,{worker:false});assert.equal(calls,4,'dynamic recovery remains bounded');
+});
+
 test('opposed animals route around each other when both short lookahead goals are occupied',()=>{
  const a={id:'outbound',x:94.1096081493741,z:14.519706064422435,radius:1.1,status:'retreating',hitsRemaining:0};
  const b={id:'inbound',x:95.98513086550021,z:17.985130865500206,radius:1.1,status:'walking',hitsRemaining:3};

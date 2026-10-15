@@ -255,7 +255,7 @@ export function createSpatialNavigationMovement(session,state){
     get version(){return session.topologySource.revision();},
     walkable,segmentClear,path,regionFor,regionConnected,enclosureFor,terrainValid,
     withWallPreview,withVillageEntryPreview,withCenterPreview,
-    spatialSectorRevision:radius=>session.actorSectorRevision(profile(radius,false,null)),
+    spatialSectorRevision:(radius,worker=false)=>session.actorSectorRevision(profile(radius,worker,null)),
     requestRaidConnectivity,
     approachPath:(start,end,radius)=>path(start,end,radius,null,false),
     propsAt,placement,wallPlacement,placementFootprint,

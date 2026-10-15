@@ -2,6 +2,7 @@ import {navigationPathKey} from '../world/raid-navigation-warmth.js';
 import {evictOldest} from '../world/fifo-eviction.js';
 const searches=new WeakMap();
 const MAX_ACTIVE=8,MAX_SLICES=4096;
+export function workerReturnRoutePending(nav,actor){return searches.get(nav)?.active.has(actor)??false;}
 // Returning people may need to leave the default 16-cell search corridor.
 // Wider bounds are not relaxed collision: use the same native worker view,
 // gate graph and swept edges. Keep at most eight resumable searches per world.

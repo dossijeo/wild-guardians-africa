@@ -23,6 +23,7 @@ const tests = [
   'village-expansion-price.test.js',
   'worker-wall-overlap-recovery.test.js',
   'worker-fractional-connector.test.js',
+  'spatial-task-event-planning.test.js',
   'game-juice.test.js',
   'desktop-exit.test.mjs',
   'menu-library-fullscreen.test.js',

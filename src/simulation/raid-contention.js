@@ -23,9 +23,10 @@ export function observeWaitProgress(state){
  const progress=state.raid.waitProgress;if(!progress)return;
  const budget=state.raid.animals.reduce((n,a)=>n+a.hitsRemaining,0);if(budget<progress.budget)progress.at=state.elapsed;progress.budget=budget;
 }
-export function waitEpoch(state,nav){
- // Lease revision and actual hit progress are constant-time signals. Native
- // topology changes are immediate; remaining eligibility/Shield changes are
- // retried at most one simulated second later, without scene fingerprints.
- return `${nav.version},${state.raid.waitRevision??0},${state.raid.waitProgress?.at??0}`;
+export function waitEpoch(state,nav,animal){
+  // Lease revision and actual hit progress are constant-time signals. Native
+  // topology and sector-residency changes wake a waiting actor immediately.
+  // Other dynamic eligibility changes use a slow recovery retry.
+  const sectors=nav.spatialSectorRevision?.(animal?.radius)??0;
+ return `${nav.version},${sectors},${state.raid.waitRevision??0},${state.raid.waitProgress?.at??0}`;
 }

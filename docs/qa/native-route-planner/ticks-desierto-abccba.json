@@ -1,0 +1,74 @@
+{
+  "fixture": "tests/fixtures/desierto983-d15-partial-state.json.gz",
+  "fixtureSha256": "9f4dd3846951204276e2cf1b45348767c29d128816ffb2d401dddc4b31c56fb6",
+  "wasmSha256": "53b2bd65530b0e9b3e920974184dc0e0450d25c8bd685492d26b1b803e1e75d8",
+  "count": 2,
+  "rows": [
+    {
+      "mode": "A",
+      "ticks": 2,
+      "totalMs": 1057.8721,
+      "routeMs": 343.7939000000115,
+      "routeCalls": 866,
+      "cacheHits": 0,
+      "cacheMisses": 0,
+      "memoryBytes": 15466496,
+      "stateSha256": "5fdf4e3a01f74dbc4be2b41a8213ca27a258b14f33bef7e723e2f8c101a6ba6d"
+    },
+    {
+      "mode": "B",
+      "ticks": 2,
+      "totalMs": 1040.3204999999998,
+      "routeMs": 343.04089999999815,
+      "routeCalls": 866,
+      "cacheHits": 0,
+      "cacheMisses": 0,
+      "memoryBytes": 15466496,
+      "stateSha256": "5fdf4e3a01f74dbc4be2b41a8213ca27a258b14f33bef7e723e2f8c101a6ba6d"
+    },
+    {
+      "mode": "C",
+      "ticks": 2,
+      "totalMs": 1011.5634000000027,
+      "routeMs": 328.13980000001175,
+      "routeCalls": 866,
+      "cacheHits": 0,
+      "cacheMisses": 866,
+      "memoryBytes": 15532032,
+      "stateSha256": "5fdf4e3a01f74dbc4be2b41a8213ca27a258b14f33bef7e723e2f8c101a6ba6d"
+    },
+    {
+      "mode": "C",
+      "ticks": 2,
+      "totalMs": 1076.8120999999992,
+      "routeMs": 359.3533000000225,
+      "routeCalls": 866,
+      "cacheHits": 0,
+      "cacheMisses": 866,
+      "memoryBytes": 15532032,
+      "stateSha256": "5fdf4e3a01f74dbc4be2b41a8213ca27a258b14f33bef7e723e2f8c101a6ba6d"
+    },
+    {
+      "mode": "B",
+      "ticks": 2,
+      "totalMs": 1065.2432000000008,
+      "routeMs": 344.17579999997906,
+      "routeCalls": 866,
+      "cacheHits": 0,
+      "cacheMisses": 0,
+      "memoryBytes": 15466496,
+      "stateSha256": "5fdf4e3a01f74dbc4be2b41a8213ca27a258b14f33bef7e723e2f8c101a6ba6d"
+    },
+    {
+      "mode": "A",
+      "ticks": 2,
+      "totalMs": 1008.8123000000014,
+      "routeMs": 340.82020000003104,
+      "routeCalls": 866,
+      "cacheHits": 0,
+      "cacheMisses": 0,
+      "memoryBytes": 15466496,
+      "stateSha256": "5fdf4e3a01f74dbc4be2b41a8213ca27a258b14f33bef7e723e2f8c101a6ba6d"
+    }
+  ]
+}

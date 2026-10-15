@@ -1,13 +1,17 @@
 import {contractExpired} from './workforce.js';
 import {cancelIdle} from './idle.js';
 
+const planningRevisions=new WeakMap();
+const changed=state=>planningRevisions.set(state,(planningRevisions.get(state)??0)+1);
+export const taskPlanningRevision=state=>planningRevisions.get(state)??0;
+
 export function enqueue(state,centerId,kind,targetId) {
   if(!centerId || state.tasks.some(t=>t.kind===kind&&t.targetId===targetId))return null;
   return appendTask(state,centerId,kind,targetId);
 }
 function appendTask(state,centerId,kind,targetId) {
   const t={id:`task-${state.nextId++}`,created:state.sequence++,centerId,kind,targetId,workerId:null,blocked:false};
-  state.tasks.push(t);return t;
+  state.tasks.push(t);changed(state);return t;
 }
 // Local to one synchronous append-only crop pass. Never retained across ticks,
 // worker completions, queue reconstruction, attacks or restored snapshots.
@@ -27,7 +31,7 @@ export function taskEnqueuer(state) {
     return appendTask(state,centerId,kind,targetId);
   };
 }
-export function reserveTasks(state,canExecute=()=>true) {
+export function reserveTasks(state,canExecute=()=>true,onAssigned=()=>{}) {
   if(!state.workers.some(w=>w.status==='idle'&&!w.taskId&&!w.incapacitated&&!contractExpired(w,state))) {
     // Busy workers cannot reserve. Preserve the existing missing-target rule,
     // while clearing stale blocked flags exactly as an empty candidate list did.
@@ -66,9 +70,11 @@ export function reserveTasks(state,canExecute=()=>true) {
     // A pending native graph query is not a physical proof that this task is
     // blocked. Retry on a later reservation pass as sectors become resident.
     let pending=false;
+    const plans=new Map();
     const reachable=w=>{
       const result=canExecute(w,t,target);
       if(result===null)pending=true;
+      if(result)plans.set(w,result);
       return Boolean(result);
     };
     // Reachability can require A*: test nearest candidates until one succeeds.
@@ -96,12 +102,12 @@ export function reserveTasks(state,canExecute=()=>true) {
       }
     }
     t.blocked=!worker && workers.length>0 && !pending;
-    if(worker) { cancelIdle(worker);t.workerId=worker.id;worker.taskId=t.id;worker.status='walking';workers.splice(workers.indexOf(worker),1); }
+    if(worker) { cancelIdle(worker);t.workerId=worker.id;worker.taskId=t.id;worker.status='walking';workers.splice(workers.indexOf(worker),1);changed(state);onAssigned(worker,t,target,plans.get(worker)); }
   }
 }
 export function releaseTask(state,worker) {
   const t=state.tasks.find(t=>t.id===worker.taskId);
-  if(t)t.workerId=null;
+  if(t){t.workerId=null;changed(state);}
   worker.taskId=null;
   worker.taskApproach=null;
 }
