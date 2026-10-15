@@ -235,6 +235,16 @@ ensayos de desarrollo previos y no cuenta como validación no vista. La 24681357
 sí pertenece a la reserva congelada de esta cohorte, pero un solo bioma y 14
 noches no acreditan supervivencia prolongada ni eficacia causal de muros.
 
+El control `good-current-magic` de Manglares/123 completó también 14/14 con
+el mismo balance y semilla: 120 cultivos, 837 monedas, 103⅔ cajas/día
+terminales, margen operativo terminal de +185 y 65 pérdidas desde la noche 6.
+Frente a él, `4419e5eb34a46b9f` conservó una planta más, 74 monedas más,
+entregó 13⅔ cajas/día adicionales y perdió 20 cultivos menos, pero pagó más
+semillas y salarios por su propia expansión. Ambos ledgers concilian. El
+control original se conserva en `results-14-main-sync/`; la diferencia en
+esta semilla de desarrollo no demuestra superioridad estadística ni
+supervivencia a 100 noches. El control de la semilla reservada sigue pendiente.
+
 Esta cohorte usa Wild Engine y el balance de producción sin alterar, después de
 la mejora de navegación de PR #37. Código ejecutado: `7f358aad97287b40e300026306d26f05cc4e0c29`;
 el registro de siete noches guarda además SHA-256 de los módulos y del diff en
