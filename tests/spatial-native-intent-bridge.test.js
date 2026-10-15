@@ -21,6 +21,9 @@ test('loading an active raid restores distinct routes and reservations for eight
  {skip:!module&&'Build and select the experimental WASM first'},()=>{
  const game=deserialize(gunzipSync(readFileSync(new URL(
   './fixtures/sabana712-d6-native-multi-reservation.json.gz',import.meta.url))).toString());
+ const uninterrupted=gunzipSync(readFileSync(new URL(
+  './fixtures/sabana712-d6-native-multi-reservation-after-raid.json.gz',
+  import.meta.url))).toString();
  const loaded=new Map(),session=createSpatialGameSession(module,game,{
   loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
  try{
@@ -70,7 +73,8 @@ test('loading an active raid restores distinct routes and reservations for eight
    assert.equal(new Set(hits.map(event=>event.attackId)).size,hits.length,
     'no committed attack applies its damage twice');
    assert.equal(game.events.filter(event=>event.type==='RaidEnded').length,1);
-   assert.doesNotThrow(()=>serialize(game));
+   assert.equal(serialize(game),uninterrupted,
+    'the restored raid matches the uninterrupted confirmed state exactly');
   }finally{stopTasks();stopWorld();}
  }finally{session.dispose();}
 });
@@ -133,7 +137,10 @@ test('a saved native animal route resumes movement with its original lease',
    const animal=game.raid.animals.find(item=>item.targetId);
    const {targetId,reservation,hitsRemaining,z}=animal;
    assert.equal(game.raid.reservations[reservation],animal.id);
-   for(let step=0;step<5;step++)tick(game,.1,nav);
+   for(let step=0;step<5;step++){
+    tick(game,.1,nav);
+    nav.serviceRaidConnectivityDemand?.();
+   }
    assert(animal.z<z-1.5,'the restored route advances physically');
    assert.equal(animal.targetId,targetId);
    assert.equal(animal.reservation,reservation);
