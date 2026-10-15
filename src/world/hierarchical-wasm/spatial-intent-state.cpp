@@ -898,11 +898,26 @@ int nav_intent_replan_pending_routes(){
       if(!route.generation)route.generation=1;
       intent.slot=slot;intent.generation=route.generation;
       intent.state=PlanningState::RouteActive;intent.topology=lazy_route_revision();
-      emitIntentChange(s,intent);planned++;break;
+      planned++;break;
     }
     if(intent.state!=PlanningState::RouteActive){
       intent.state=unknown?PlanningState::WaitingUnknown:PlanningState::WaitingBlocked;
-      intent.topology=lazy_route_revision();emitIntentChange(s,intent);
+      intent.topology=lazy_route_revision();
+    }
+  }
+  // One actor may materialize a sector used by a later query in this same
+  // deterministic batch. Bind all surviving proposals to the final graph
+  // revision; otherwise the next event boundary would replan an older actor
+  // merely because another actor loaded a sector afterwards.
+  const uint32_t finalRevision=lazy_route_revision();
+  for(uint64_t actor:actors){
+    const auto found=s.activeIntents.find(actor);
+    if(found!=s.activeIntents.end()&&
+       (found->second.state==PlanningState::RouteActive||
+        found->second.state==PlanningState::WaitingUnknown||
+        found->second.state==PlanningState::WaitingBlocked)){
+      found->second.topology=finalRevision;
+      emitIntentChange(s,found->second);
     }
   }
   return planned;
