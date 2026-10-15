@@ -114,6 +114,8 @@ A bounded diagnostic replay traced those four `unknown` results to two selection
 
 The corrected budget branch passed native CI run 38793905362. Its seven-night replay returned 42 native crop plans as `found`, four as `occupied`, and zero as `unknown` in Sabana/712. It again finished with 123 crops and 815 coins; the four mobile-occupancy rejections and corresponding JavaScript fallbacks remain, so migration of dynamic actor occupancy is unfinished. Total runner time was 136.9 s versus 139.3 s in the preceding run, an uncontrolled timing difference rather than a proven optimization. The report and binary/source hashes are archived.
 
+The native planner now receives a transient batch of mobile blocker discs only at the attack planning boundary. It tests candidate interaction points before route generation, while JavaScript retains its final movement-time collision check. Native CI run 38795093887 and the directed mobile-blocker regression passed. The seven-night Sabana/712 replay produced 42 native `found` plans, eight `occupied`, zero final JavaScript approach rejections, and no legacy fallback after a native result. Introductory/shield-unsupported cases still use JavaScript (16 selections). The run finished with 122 crops and 825 coins in 138.2 s, compared with 123/815 in 136.9 s before blocker batching. Different decisions and runtime noise prevent claiming a speed improvement; the change removes a demonstrated fallback path. The report and exact source/WASM hashes are archived.
+
 ## Next integration gates
 
 1. Publish confirmed task/worker/action events directly from the simulation without scanning every entity per tick. Apply native proposals atomically with JS task reservations and preserve all worker policy tie-breaks.
