@@ -1472,7 +1472,13 @@ int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
       const Target& crop=s.targets.at(site->crop);
       if(!crop.active)continue;
       if(leased(crop.id)){occupied=true;continue;}
-      if(attempted++>=16){unknown=true;break;}
+      if(attempted++>=16){
+        // The bounded local search has learned no new topology if every
+        // candidate was already leased by another active attacker.
+        if(groupRouteAttempted)unknown=true;
+        else occupied=true;
+        break;
+      }
       if(!firstCandidateCrop)firstCandidateCrop=crop.id;
       if(preferredTried.insert(crop.id).second){
         const double angle=std::atan2(startX-crop.x,startZ-crop.z);

@@ -415,6 +415,12 @@ export function targetFor(s,a,nav) {
       stats.nativeCropResults??={};
       stats.nativeCropResults[native.status]=
         (stats.nativeCropResults[native.status]??0)+1;
+      if(native.status==='unknown'){
+        stats.nativeUnknownDiagnostics??=[];
+        if(stats.nativeUnknownDiagnostics.length<16)
+          stats.nativeUnknownDiagnostics.push({actorId:a.id,
+            day:s.day,time:s.time,...native.diagnostics});
+      }
     }
     if(native?.status==='found'){
       const point=native.approach.point;
