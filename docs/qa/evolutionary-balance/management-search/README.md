@@ -194,7 +194,21 @@ coinciden exactamente con el informe `4419e5eb34a46b9f` de la ejecución
 exploratoria tras excluir `wallTime` y el nombre de estrategia. Esto verifica
 la equivalencia del brazo defendido, no la igualdad de estados serializados.
 La configuración y el informe nativo comprimido están en
-`matched-sabana712-14/`; los dos brazos sin murallas siguen pendientes.
+`matched-sabana712-14/`.
+
+El segundo brazo emparejado (`matched-no-walls-current-magic`) terminó también
+14/14 noches en Sabana/712, con los mismos genes agrícolas y Escudo. Frente al
+brazo con muros, conservó 44 en vez de 90 cultivos, perdió 379 en vez de 134
+desde la noche 6 y cerró con 619 en vez de 631 monedas. Entregó 80⅓ frente
+a 83 cajas/día de media terminal y su margen operativo terminal fue −236
+frente a +11. Los ingresos totales fueron 16.641 frente a 17.756 monedas;
+el brazo con muros había pagado 860 en construcción y 642 en reparaciones,
+mientras el control no gastó en esos conceptos. Ambos ledgers concilian.
+La diferencia observada es de 245 pérdidas agrícolas menos con muros en esta
+única semilla. La presión varió después de divergir el tamaño de las fincas,
+según la misma regla militar para ambos brazos; el resultado es una comparación
+de políticas completas, no una tasa física de interceptación aislada. El
+tercer brazo, sin muros ni Escudo, sigue en ejecución.
 
 El mismo genoma defendido `4419e5eb34a46b9f` completó también 14/14 noches
 en Manglares con dos semillas. Con la 123 terminó con 121 cultivos, 911
