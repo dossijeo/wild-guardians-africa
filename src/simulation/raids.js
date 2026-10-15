@@ -438,11 +438,15 @@ export function targetFor(s,a,nav) {
       }
       nav.intentTaskPlanner.cancelAttackIntent(a.id);
     }
-    // An unresolved native crop region is pending topology, not evidence that
-    // crops are blocked. Do not re-enter the old per-target selector and issue
-    // independent approach searches for the same unknown sector.
-    if(native?.status==='unknown'||native?.status==='occupied')
-      return {unknown:true};
+    // The native crop planner can leave interaction sites unresolved even
+    // when the graph certifies that a wall separates the raid from the farm.
+    // Ask the existing region/perimeter selector only for physical barriers;
+    // do not re-enter its per-crop approach search on an unknown crop region.
+    if(native?.status==='unknown'){
+      const barrier=targetForImpl(s,a,nav,stats,{structuresOnly:true});
+      return barrier?.target?barrier:{unknown:true};
+    }
+    if(native?.status==='occupied')return {unknown:true};
     const fallback=targetForImpl(s,a,nav,stats);
     if(stats){
       const reason=native?.status??'unsupported',
@@ -463,7 +467,7 @@ export function targetFor(s,a,nav) {
     }
   }
 }
-function targetForImpl(s,a,nav,stats){
+function targetForImpl(s,a,nav,stats,{structuresOnly=false}={}){
   let unknown=false;
   const sealedWallSides=new Map();
   const sealedCropRepresentatives=[];
@@ -527,6 +531,7 @@ function targetForImpl(s,a,nav,stats){
         }
         continue;
       }
+      if(structuresOnly)continue;
       const eligible=candidates.filter(p=>canAttackCrop(s,p)&&!targetReserved(s,a,p));
       if(!eligible.length)continue;
       eligible.sort((p,q)=>dist(a,p)-dist(a,q));

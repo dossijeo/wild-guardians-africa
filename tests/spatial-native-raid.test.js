@@ -9,7 +9,7 @@ import {nativeCameraPose} from '../src/rendering/terrain-camera.js';
 import {activeChunkRegion} from '../src/world/active-region.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {villageLayout} from '../src/world/villages.js';
-import {spawnRaid} from '../src/simulation/raids.js';
+import {spawnRaid,targetFor} from '../src/simulation/raids.js';
 import * as Game from '../src/simulation/game.js';
 import {syncNativeCampaignRaidView} from '../tools/native-campaign-runner.mjs';
 import {createNativeCampaignPlots} from '../tools/native-campaign-plots.mjs';
@@ -723,5 +723,32 @@ test('the saved day-nine traffic jam finishes without an emergency disappearance
       assert.equal(state.events.filter(event=>
         event.type==='AnimalRetreatExitAbandoned').length,oldAbandonCount);
     }finally{stopTasks();stopWorld();}
+  }finally{session.dispose();}
+});
+
+test('an unresolved native crop group can still expose a certified reachable enclosure wall',()=>{
+  const state=deserialize(gunzipSync(readFileSync(new URL(
+    './fixtures/sabana712-d10-native-unknown-enclosure.json.gz',import.meta.url))).toString());
+  const loaded=new Map(),session=createSpatialGameSession(module,state,{
+    loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+  try{
+    for(let z=-1;z<=1;z++)for(let x=1;x<=3;x++){
+      if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+      loaded.set(`${x},${z}`,session.core.chunkPayload());
+    }
+    const planner=createEventDrivenTaskPlanner(session);
+    planner.resetFromState(state);
+    const nav=createSpatialNavigationMovement(session,state);
+    nav.intentTaskPlanner=planner;
+    nav.raidSelectionStats={};
+    const animal=state.raid.animals[0];
+    const native=planner.planAttackCrop(state,animal);
+    assert.equal(native.status,'unknown');
+    assert.equal(native.routeQueries,0);
+    const selected=targetFor(state,animal,nav);
+    assert.equal(selected?.target?.kind,'wall');
+    assert.equal(selected.target.id,'structure-9100');
+    assert.equal(nav.raidSelectionStats.cropAttempts??0,0);
+    assert.ok(selected.approach.path?.length);
   }finally{session.dispose();}
 });
