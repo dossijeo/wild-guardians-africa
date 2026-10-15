@@ -1,10 +1,14 @@
 import {centerGeometry} from '../centers.js';
 import {contractExpired,PROFILES} from '../../simulation/workforce.js';
+import {repairCost} from '../../simulation/game.js';
+import {BALANCE} from '../../simulation/balance.js';
 
 // Experimental event-fed bridge. Gameplay does not call it yet: it is used to
 // prove the native read model can be rebuilt after load and changed by deltas.
 const width=10,maxBatch=4096;
 const profileEnd=new Map(PROFILES.map(profile=>[profile.id,profile.end]));
+const materialCodes=new Map(BALANCE.walls.map((wall,index)=>[wall.id,index+1]));
+const structureStatus={intact:0,collapsing:1,ruined:2};
 const numericId=id=>{
   const match=/-(\d+)$/.exec(id??'');
   if(!match||!Number.isSafeInteger(Number(match[1]))||Number(match[1])<1)
@@ -34,14 +38,23 @@ const taskRow=task=>[1,3,numericId(task.id),numericId(task.centerId),
   task.kind==='initial'||task.kind==='water'?1:task.kind==='repair'?2:0,
   0,task.workerId?numericId(task.workerId):0,numericId(task.targetId),
   task.created,lexicalRank(task.id)];
+const structureMetaRow=structure=>{
+  const material=structure.kind==='wall'?materialCodes.get(structure.material):0;
+  if(material===undefined||structureStatus[structure.status]===undefined)
+    throw TypeError(`Unsupported structure metadata: ${structure.id}`);
+  return [1,4,numericId(structure.id),structure.kind==='wall'?3:4,
+    structure.hp,structure.maxHp,structureStatus[structure.status],material,0,0];
+};
 
 export function createSpatialIntentBridge(session){
   const wasm=session?.core?.wasm;
   for(const name of ['nav_intent_reset','nav_intent_changes_ptr',
     'nav_intent_apply_changes','nav_intent_plan_tasks','nav_intent_results_ptr',
-    'nav_intent_discard','nav_intent_commit'])
+    'nav_intent_discard','nav_intent_commit','nav_intent_damaged_structures',
+    'nav_intent_damaged_ptr'])
     if(typeof wasm?.[name]!=='function')throw TypeError(`Missing ${name}`);
   let sequence=0,initialized=false;
+  const structuresById=new Map();
   const apply=rows=>{
     if(!initialized)throw Error('Reset the native intent session first');
     for(let offset=0;offset<rows.length;offset+=maxBatch){
@@ -64,8 +77,12 @@ export function createSpatialIntentBridge(session){
         ...state.plants.filter(plant=>plant.alive).map(plant=>targetRow(plant,state)),
         ...state.crates.filter(crate=>!crate.delivered).map(crate=>targetRow(crate,state)),
         ...state.structures.map(structure=>targetRow(structure,state)),
+        ...state.structures.map(structure=>structureMetaRow(structure)),
         ...tasks.map(task=>taskRow(task))];
       apply(rows);
+      structuresById.clear();
+      for(const structure of state.structures)
+        structuresById.set(numericId(structure.id),{...structure});
     }
     catch(error){
       wasm.nav_intent_reset();sequence=0;initialized=false;
@@ -85,12 +102,28 @@ export function createSpatialIntentBridge(session){
       else if(event.type==='target')rows.push(event.remove?
         [0,2,numericId(event.id),0,0,0,0,0,0,0]:
         targetRow(event.entity,state));
+      else if(event.type==='structureDamage')
+        rows.push(structureMetaRow(event.entity));
       else if(event.type==='task')rows.push(event.remove?
         [0,3,numericId(event.id),0,0,0,0,0,0,0]:
         taskRow(event.entity));
       else throw TypeError(`Unsupported intent event: ${event.type}`);
+      if(event.type==='target'&&!event.remove&&
+        (event.entity.kind==='wall'||event.entity.kind==='center'))
+        rows.push(structureMetaRow(event.entity));
     }
-    try{return apply(rows);}
+    try{
+      const result=apply(rows);
+      for(const event of events){
+        if(event.type==='structureDamage'||event.type==='target'){
+          const id=numericId(event.remove?event.id:event.entity.id);
+          if(event.remove)structuresById.delete(id);
+          else if(event.entity.kind==='wall'||event.entity.kind==='center')
+            structuresById.set(id,{...event.entity});
+        }
+      }
+      return result;
+    }
     catch(error){
       // A multi-batch event may have partially reached WASM. JS remains the
       // authority, so rebuild the derived read model before surfacing failure.
@@ -112,7 +145,25 @@ export function createSpatialIntentBridge(session){
         approach:{x:data[at+6],z:data[at+7]}};
     });
   };
+  const getDamaged=kind=>{
+    if(!initialized)throw Error('Reset the native intent session first');
+    if(kind!=='wall'&&kind!=='center')throw TypeError('Unknown structure kind');
+    const count=wasm.nav_intent_damaged_structures(kind==='wall'?3:4);
+    if(count<0)throw Error('Native damage query failed');
+    const data=new Float64Array(wasm.memory.buffer,wasm.nav_intent_damaged_ptr(),count*8);
+    return Array.from({length:count},(_,index)=>{
+      const offset=index*8,id=data[offset],structure=structuresById.get(id);
+      if(!structure)throw Error(`Missing authoritative structure ${id}`);
+      const cost=repairCost(structure),numerator=BigInt(cost.n),denominator=BigInt(cost.d);
+      return {id:structure.id,hp:data[offset+1],maxHp:data[offset+2],
+        damageRatio:data[offset+3],status:structure.status,material:structure.material??null,
+        cost,paidCoins:Number((numerator+denominator-1n)/denominator),
+        revision:data[offset+6],kind};
+    });
+  };
   return {resetFromState,applyEvents,planTasks,
+    getDamagedWalls:()=>getDamaged('wall'),
+    getDamagedCenters:()=>getDamaged('center'),
     discard:()=>wasm.nav_intent_discard(),
     commit:()=>wasm.nav_intent_commit(),
     sequence:()=>sequence};
@@ -157,7 +208,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
       if(event.remove)eligible.delete(numericId(event.id));
       else setWorker(event.entity,state);
     }
-    if(events.length)dirty=true;
+    if(events.some(event=>event.type!=='structureDamage'))dirty=true;
     return result;
   };
   const planIfNeeded=simulatedSeconds=>{
