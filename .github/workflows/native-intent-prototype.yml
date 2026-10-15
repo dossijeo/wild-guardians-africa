@@ -1,0 +1,42 @@
+name: Native intent prototype
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/native-intent-prototype.yml'
+      - 'src/world/hierarchical-wasm/**'
+      - 'tests/spatial-native-raid.test.js'
+      - 'tests/spatial-native-intent-bridge.test.js'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  native-intent:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      - name: Build candidate WASM with pinned Emscripten image
+        run: |
+          mkdir -p .cache
+          docker run --rm -v "$PWD:/src" -w /src \
+            -e SPATIAL_WASM_OUTPUT=.cache/native-breach-candidate.wasm \
+            emscripten/emsdk@sha256:77638e6c215a65f25a704c0c831d5c2463a8c0468a58c6cb82489dbe621dfa05 \
+            bash tools/build-spatial-savanna-wasm.sh
+      - name: Verify candidate against raid and intention fixtures
+        run: |
+          WILD_ENGINE_NATIVE_ROUTE_WASM="$PWD/.cache/native-breach-candidate.wasm" \
+            node --test tests/spatial-native-raid.test.js tests/spatial-native-intent-bridge.test.js
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: native-breach-candidate
+          path: .cache/native-breach-candidate.wasm
+          retention-days: 7

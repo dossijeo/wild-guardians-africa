@@ -14,8 +14,9 @@ import * as Game from '../src/simulation/game.js';
 import {syncNativeCampaignRaidView} from '../tools/native-campaign-runner.mjs';
 import {createNativeCampaignPlots} from '../tools/native-campaign-plots.mjs';
 
-const module=new WebAssembly.Module(readFileSync(new URL(
-  '../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+const module=new WebAssembly.Module(readFileSync(
+  process.env.WILD_ENGINE_NATIVE_ROUTE_WASM??new URL(
+    '../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
 const pack=JSON.parse(readFileSync(new URL('../public/content/villages.json',
   import.meta.url),'utf8'))[0];
 
@@ -455,7 +456,17 @@ test('a confirmed enclosure breach reconsiders other wall attackers at an event 
         Game.emit(state,'StructureRuined',{targetId:wall.id});
       }
       nav.setState(state);
+      const originalPlanAttackCrop=planner.planAttackCrop;
+      const nativeBreachPlans=[];
+      planner.planAttackCrop=(...args)=>{
+        const result=originalPlanAttackCrop(...args);
+        nativeBreachPlans.push(result?.status);
+        return result;
+      };
       Game.tick(state,.25,nav);
+      if(process.env.WILD_ENGINE_NATIVE_ROUTE_WASM)
+        assert(nativeBreachPlans.includes('found'),
+          `native crop planner should resolve the opened access: ${nativeBreachPlans}`);
       const survivingWallAttackers=state.raid.animals.filter(animal=>
         state.structures.some(wall=>wall.id===priorTargets.get(animal.id)&&
           wall.status==='intact'));

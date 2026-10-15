@@ -1429,13 +1429,12 @@ int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
         const double angle=std::atan2(startX-crop.x,startZ-crop.z);
         const float px=float(crop.x+std::sin(angle)*(.6+radius));
         const float pz=float(crop.z+std::cos(angle)*(.6+radius));
-        const int x=int(std::round(px)),z=int(std::round(pz));
-        if(spatial_local_clear(px,pz,float(x),float(z))){
-          regionQueries++;
-          const int connected=lazy_connected(source.x,source.z,x,z);
-          if(connected<0)unknown=true;
-          if(connected>0&&tryPoint(crop,px,pz))return 1;
-        }
+        // The group is already known to have a reachable interaction region.
+        // A fractional point may use another grid connector, or even a
+        // physically clear direct segment, when its rounded cell appears
+        // disconnected beside a newly opened wall corner. Let the native
+        // route planner validate this one preferred point itself.
+        if(tryPoint(crop,px,pz))return 1;
       }
       if(tryPoint(crop,site->px,site->pz))return 1;
     }
