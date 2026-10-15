@@ -89,13 +89,14 @@ export function createSpatialIntentBridge(session){
     'nav_intent_replan_pending_routes',
     'nav_intent_request_reroute',
     'nav_intent_attack_route_input_ptr','nav_intent_register_attack',
+    'nav_intent_register_attack_site',
     'nav_intent_track_wall_opportunities',
     'nav_intent_wall_opportunity_candidates',
     'nav_intent_wall_opportunity_candidates_ptr',
     'nav_intent_reconsider_wall_opportunity',
     'nav_intent_plan_attack_crop','nav_intent_attack_result_ptr',
     'nav_intent_attack_action_active','nav_intent_restore_attack_action',
-    'nav_intent_restore_attack_pending',
+    'nav_intent_restore_attack_pending','nav_intent_restore_attack_site',
     'nav_intent_attack_finished',
     'nav_intent_attack_cancel',
     'nav_intent_action_active','nav_intent_finish',
@@ -421,8 +422,12 @@ export function createSpatialIntentBridge(session){
         points[index*2]=path[index].x;points[index*2+1]=path[index].z;
       }
     }
-    const status=wasm.nav_intent_register_attack(numericId(animal.id),
-      numericId(target.id),animal.x,animal.z,path.length);
+    if(!animal.approach||!Number.isFinite(animal.approach.x)||
+       !Number.isFinite(animal.approach.z))
+      throw Error('Confirmed animal attack has no finite approach point');
+    const status=wasm.nav_intent_register_attack_site(numericId(animal.id),
+      numericId(target.id),animal.x,animal.z,path.length,
+      animal.approach.x,animal.approach.z,animal.radius??.28);
     if(status!==1)throw Error(`Native attack intention rejected: ${status}`);
     if(target.kind==='wall')
       wasm.nav_intent_track_wall_opportunities(numericId(animal.id),
@@ -506,6 +511,9 @@ export function createSpatialIntentBridge(session){
           numericId(animal.targetId),Number(!!animal.reservation&&
             state.raid.reservations[animal.reservation]===animal.id))!==1)
           throw Error(`Cannot restore committed animal attack ${animal.id}`);
+        if(animal.approach)wasm.nav_intent_restore_attack_site(
+          numericId(animal.id),animal.approach.x,animal.approach.z,
+          animal.radius??.28);
         if(target?.kind==='wall'&&target.status==='intact')
           wasm.nav_intent_track_wall_opportunities(numericId(animal.id),
             animal.x,animal.z,animal.radius);
@@ -519,6 +527,8 @@ export function createSpatialIntentBridge(session){
         if(wasm.nav_intent_restore_attack_pending(numericId(animal.id),
           numericId(animal.targetId),1)!==1)
           throw Error(`Cannot restore pending animal attack ${animal.id}`);
+        wasm.nav_intent_restore_attack_site(numericId(animal.id),
+          animal.approach.x,animal.approach.z,animal.radius??.28);
         const replacement=replanAttackRoute(animal);
         if(replacement.status==='unknown')pendingAttackRouteIds.push(animal.id);
         continue;
@@ -530,6 +540,9 @@ export function createSpatialIntentBridge(session){
         if(wasm.nav_intent_restore_attack_pending(numericId(animal.id),
           numericId(animal.targetId),1)!==1)
           throw Error(`Cannot restore stale animal route ${animal.id}`);
+        if(animal.approach)wasm.nav_intent_restore_attack_site(
+          numericId(animal.id),animal.approach.x,animal.approach.z,
+          animal.radius??.28);
         const replacement=replanAttackRoute(animal);
         if(replacement.status==='unknown')pendingAttackRouteIds.push(animal.id);
       }

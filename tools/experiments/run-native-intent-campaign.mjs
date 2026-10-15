@@ -13,12 +13,21 @@ if(!Number.isSafeInteger(days)||days<1||days>100||
   !Number.isSafeInteger(seed)||seed<0)throw RangeError('Invalid campaign arguments');
 if(!['intent','control'].includes(mode))throw RangeError('Unknown campaign mode');
 const path=resolve(out),started=performance.now(),rows=[];
-let latestState=null,dayWorkerSnapshot=[];
+let latestState=null,latestNav=null,dayWorkerSnapshot=[];
 const assignments=[],seenAssignments=new Set();
 const intentTiming={};
 let timedPlanner=null;
 mkdirSync(dirname(path),{recursive:true});
 const source=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
+const openingFactory=async (...args)=>{
+  const opening=await createSpatialCampaignOpening(...args);
+  opening.nav.raidSelectionStats={};
+  return opening;
+};
+const raidSelection=()=>{
+  const {groupVisits,...summary}=latestNav?.raidSelectionStats??{};
+  return structuredClone(summary);
+};
 const entryDriverFactory=nav=>({
   async advancePresentation(){
     if(nav.raidEntryFailure)throw Error('Native entry failed: '+
@@ -36,9 +45,9 @@ const parameters={days,biome,seed,strategy,nativeIntents:mode==='intent',
 try{
   const result=await simulateNativeCampaign({...parameters,
     culture:'mapungubwe',nativeEvidence:false,
-    openingFactory:createSpatialCampaignOpening,entryDriverFactory,
+    openingFactory,entryDriverFactory,
     onTick:(state,nav)=>{
-      latestState=state;nav.serviceRaidConnectivityDemand?.();
+      latestState=state;latestNav=nav;nav.serviceRaidConnectivityDemand?.();
       if(nav.intentTaskPlanner&&timedPlanner!==nav.intentTaskPlanner){
         timedPlanner=nav.intentTaskPlanner;
         for(const name of ['planIfNeeded','reconcileWorkerRoutes',
@@ -100,13 +109,15 @@ try{
           walls:row.finance.walls},
         result:row.result,wallTime:row.wallTime,
         nativeIntent:row.nativeIntent,
+        raidSelection:raidSelection(),
         intentTiming:JSON.parse(JSON.stringify(intentTiming))});
       console.log(JSON.stringify(rows.at(-1)));
     }});
   const report={status:'completed',source,parameters,assignments,intentTiming,
     elapsedSeconds:(performance.now()-started)/1000,
     completedNights:result.completedNights,result:result.result,
-    nativeIntent:result.nativeIntent,raidEvidence:result.raidEvidence,rows};
+    nativeIntent:result.nativeIntent,raidEvidence:result.raidEvidence,
+    raidSelection:raidSelection(),rows};
   writeFileSync(path,JSON.stringify(report,null,2)+'\n');
 }catch(error){
   const report={status:'error',source,parameters,assignments,intentTiming,

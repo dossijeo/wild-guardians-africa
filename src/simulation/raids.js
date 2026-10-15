@@ -418,19 +418,35 @@ export function targetFor(s,a,nav) {
     }
     if(native?.status==='found'){
       const point=native.approach.point;
-      if(canAttackCrop(s,native.target)&&
-        !targetReserved(s,a,native.target)&&
-        reservedApproachClear(s,a,point)&&
-        actorSegmentClear(point,point,a,actorBlockers(s,a,false))&&
-        nav.walkable(point.x,point.z,a.radius,null,false))
+      const rejected=!canAttackCrop(s,native.target)?'ineligible':
+        targetReserved(s,a,native.target)?'reserved-target':
+          !reservedApproachClear(s,a,point)?'reserved-approach':
+            !actorSegmentClear(point,point,a,actorBlockers(s,a,false))?'occupied-approach':
+              !nav.walkable(point.x,point.z,a.radius,null,false)?'physical-approach':null;
+      if(!rejected)
         return {...native,shieldId:null};
+      if(stats){
+        stats.nativeCropRejections??={};
+        stats.nativeCropRejections[rejected]=
+          (stats.nativeCropRejections[rejected]??0)+1;
+      }
       nav.intentTaskPlanner.cancelAttackIntent(a.id);
     }
     // An unresolved native crop region is pending topology, not evidence that
     // crops are blocked. Do not re-enter the old per-target selector and issue
     // independent approach searches for the same unknown sector.
     if(native?.status==='unknown')return {unknown:true};
-    return targetForImpl(s,a,nav,stats);
+    const fallback=targetForImpl(s,a,nav,stats);
+    if(stats){
+      const reason=native?.status??'unsupported',
+        result=fallback?.unknown?'unknown':fallback?.target?.kind??
+          (fallback?.target?'crop':'none');
+      stats.legacyFallbacks??={};stats.legacyFallbackResults??={};
+      stats.legacyFallbacks[reason]=(stats.legacyFallbacks[reason]??0)+1;
+      stats.legacyFallbackResults[result]=
+        (stats.legacyFallbackResults[result]??0)+1;
+    }
+    return fallback;
   }finally{
     if(stats)stats.selectionMs=(stats.selectionMs??0)+performance.now()-started;
     const scope=raidRegionDecisions.get(nav);

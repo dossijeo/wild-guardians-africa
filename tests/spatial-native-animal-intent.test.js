@@ -89,6 +89,12 @@ test('native animal leases preserve committed strikes and reject duplicate targe
       row(1,2,15,1,longEnd.x,longEnd.z,1)]),1);
     session.actorSectorRevision({worker:false,species:'hyena'});
     assert.equal(register(101,11),1);
+    assert.equal(wasm.nav_intent_restore_attack_site(101,end.x,end.z,.28),1);
+    assert.equal(wasm.nav_intent_register_attack_site(108,14,
+      origin.x,origin.z,route.points.length,end.x+.2,end.z,.28),-6,
+    'different crops cannot reserve overlapping attack approaches');
+    assert.equal(wasm.nav_intent_actor(108),0,
+      'rejected site leaves no native intention or target reservation');
     assert.equal(register(102,11),-3,
       'a second animal cannot lease the same crop');
     assert.equal(wasm.nav_intent_actor(101),1);

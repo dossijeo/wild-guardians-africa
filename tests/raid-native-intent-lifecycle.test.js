@@ -5,9 +5,21 @@ import {spawnRaid,targetFor,updateRaid} from '../src/simulation/raids.js';
 
 test('native unknown crop connectivity waits without falling into individual JS searches',()=>{
   const state={elapsed:0,raid:{},plants:[],structures:[],spells:[]};
-  const nav={intentTaskPlanner:{planAttackCrop:()=>({status:'unknown',
+  const nav={raidSelectionStats:{},intentTaskPlanner:{planAttackCrop:()=>({status:'unknown',
     regionQueries:1,routeQueries:0})}};
   assert.deepEqual(targetFor(state,{id:'animal-1'},nav),{unknown:true});
+  assert.equal(nav.raidSelectionStats.nativeCropResults.unknown,1);
+  assert.equal(nav.raidSelectionStats.legacyFallbacks,undefined,
+    'unknown connectivity must not enter the legacy selector');
+});
+
+test('raid instrumentation records why a conclusive native result still uses legacy selection',()=>{
+  const state={elapsed:0,raid:{},plants:[],structures:[],spells:[]};
+  const nav={raidSelectionStats:{},intentTaskPlanner:{planAttackCrop:()=>({status:'blocked',
+    regionQueries:1,routeQueries:0})}};
+  assert.equal(targetFor(state,{id:'animal-1'},nav),null);
+  assert.equal(nav.raidSelectionStats.legacyFallbacks.blocked,1);
+  assert.equal(nav.raidSelectionStats.legacyFallbackResults.none,1);
 });
 
 test('opt-in raid reports confirmed leases and committed damage frames once',()=>{

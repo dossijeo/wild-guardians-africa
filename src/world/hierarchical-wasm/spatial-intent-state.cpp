@@ -93,6 +93,8 @@ struct ActiveIntent {
   bool animal=false,tacticalPending=false,lease=true;
   int profile=1;
   float routeStartX=0,routeStartZ=0;
+  float approachX=0,approachZ=0,approachRadius=0;
+  bool approachKnown=false;
   std::vector<uint64_t> blockedCropGroups;
 };
 struct RouteSlot {std::vector<float> points;uint32_t generation=0;bool active=false;};
@@ -1265,6 +1267,29 @@ int nav_intent_register_attack(double actorId,double targetId,
   emitIntentChange(s,intent);
   return 1;
 }
+// An attack site is a dynamic lease, separate from the reusable geometric
+// route. Reject overlapping sites before replacing an existing intention.
+int nav_intent_register_attack_site(double actorId,double targetId,
+                                    double startX,double startZ,int count,
+                                    double approachX,double approachZ,
+                                    double radius){
+  if(!integer(actorId)||!coordinate(approachX)||!coordinate(approachZ)||
+     !std::isfinite(radius)||radius<=0||radius>2)return -1;
+  IntentState& s=state();
+  for(const auto& [owner,intent]:s.activeIntents){
+    if(owner==uint64_t(actorId)||!intent.animal||!intent.approachKnown||
+       intent.state==PlanningState::Cancelled)continue;
+    const double distance=std::hypot(double(intent.approachX)-approachX,
+                                     double(intent.approachZ)-approachZ);
+    if(distance<double(intent.approachRadius)+radius+0.1)return -6;
+  }
+  const int result=nav_intent_register_attack(actorId,targetId,startX,startZ,count);
+  if(result!=1)return result;
+  ActiveIntent& intent=s.activeIntents.at(uint64_t(actorId));
+  intent.approachX=float(approachX);intent.approachZ=float(approachZ);
+  intent.approachRadius=float(radius);intent.approachKnown=true;
+  return result;
+}
 // Capture only crop groups whose interaction regions were proven unreachable
 // when this wall intention began. A later topology event can then ask whether
 // the animal gained a new agricultural opportunity without probing crops on
@@ -1413,6 +1438,13 @@ int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
     int attempted=0;
     std::unordered_set<uint64_t> preferredTried;
     const auto tryPoint=[&](const Target& crop,float px,float pz){
+      for(const auto& [owner,intent]:s.activeIntents){
+        if(owner==actor||!intent.animal||!intent.approachKnown||
+           intent.state==PlanningState::Cancelled)continue;
+        if(std::hypot(double(intent.approachX)-px,
+                      double(intent.approachZ)-pz)<
+           double(intent.approachRadius)+radius+0.1)return false;
+      }
       routeQueries++;
       const int count=spatial_world_route_cached(float(startX),float(startZ),px,pz);
       lastRouteCount=count;
@@ -1420,8 +1452,8 @@ int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
       if(!count)return false;
       const float* route=spatial_world_route_ptr();
       s.attackRouteInput.assign(route,route+size_t(count)*2);
-      lastRegisterResult=nav_intent_register_attack(actorId,double(crop.id),
-        startX,startZ,count);
+      lastRegisterResult=nav_intent_register_attack_site(actorId,double(crop.id),
+        startX,startZ,count,px,pz,radius);
       if(lastRegisterResult!=1)
         return false;
       const ActiveIntent& intent=s.activeIntents.at(actor);
@@ -1517,6 +1549,20 @@ int nav_intent_restore_attack_pending(double actorId,double targetId,int hasLeas
   s.activeIntents.emplace(actor,intent);
   s.byTarget[id].insert(actor);
   emitIntentChange(s,intent);
+  return 1;
+}
+// Restore the already-confirmed JS approach lease after an action or pending
+// route is reconstructed; route handles themselves never survive a session.
+int nav_intent_restore_attack_site(double actorId,double approachX,
+                                   double approachZ,double radius){
+  if(!integer(actorId)||!coordinate(approachX)||!coordinate(approachZ)||
+     !std::isfinite(radius)||radius<=0||radius>2)return 0;
+  IntentState& s=state();
+  const auto found=s.activeIntents.find(uint64_t(actorId));
+  if(found==s.activeIntents.end()||!found->second.animal)return 0;
+  ActiveIntent& intent=found->second;
+  intent.approachX=float(approachX);intent.approachZ=float(approachZ);
+  intent.approachRadius=float(radius);intent.approachKnown=true;
   return 1;
 }
 int nav_intent_attack_finished(double actorId){
