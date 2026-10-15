@@ -1196,25 +1196,40 @@ int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
       return al!=ar?al<ar:a->region<b->region;
     });
     int attempted=0;
+    std::unordered_set<uint64_t> preferredTried;
+    const auto tryPoint=[&](const Target& crop,float px,float pz){
+      routeQueries++;
+      const int count=spatial_world_route_cached(float(startX),float(startZ),px,pz);
+      if(count<0){unknown=true;return false;}
+      if(!count)return false;
+      const float* route=spatial_world_route_ptr();
+      s.attackRouteInput.assign(route,route+size_t(count)*2);
+      if(nav_intent_register_attack(actorId,double(crop.id),startX,startZ,count)!=1)
+        return false;
+      const ActiveIntent& intent=s.activeIntents.at(actor);
+      s.attackResult={1,double(crop.id),double(px),double(pz),
+        double(s.session),double(intent.slot),double(intent.generation),
+        double(group.id),double(regionQueries),double(routeQueries)};
+      return true;
+    };
     for(const AttackSite* site:candidates){
       const Target& crop=s.targets.at(site->crop);
       if(!crop.active)continue;
       if(leased(crop.id))continue;
       if(attempted++>=16){unknown=true;break;}
-      routeQueries++;
-      const int count=spatial_world_route_cached(float(startX),float(startZ),
-                                                 site->px,site->pz);
-      if(count<0){unknown=true;continue;}
-      if(!count)continue;
-      const float* route=spatial_world_route_ptr();
-      s.attackRouteInput.assign(route,route+size_t(count)*2);
-      if(nav_intent_register_attack(actorId,double(crop.id),startX,startZ,count)!=1)
-        continue;
-      const ActiveIntent& intent=s.activeIntents.at(actor);
-      s.attackResult={1,double(crop.id),double(site->px),double(site->pz),
-        double(s.session),double(intent.slot),double(intent.generation),
-        double(group.id),double(regionQueries),double(routeQueries)};
-      return 1;
+      if(preferredTried.insert(crop.id).second){
+        const double angle=std::atan2(startX-crop.x,startZ-crop.z);
+        const float px=float(crop.x+std::sin(angle)*(.6+radius));
+        const float pz=float(crop.z+std::cos(angle)*(.6+radius));
+        const int x=int(std::round(px)),z=int(std::round(pz));
+        if(spatial_local_clear(px,pz,float(x),float(z))){
+          regionQueries++;
+          const int connected=lazy_connected(source.x,source.z,x,z);
+          if(connected<0)unknown=true;
+          if(connected>0&&tryPoint(crop,px,pz))return 1;
+        }
+      }
+      if(tryPoint(crop,site->px,site->pz))return 1;
     }
     // A connected region with no successful local route is inconclusive,
     // not proof that all other positions in that region are inaccessible.

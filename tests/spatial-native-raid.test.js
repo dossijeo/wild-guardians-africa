@@ -94,6 +94,13 @@ test('a native Sabana incursion spawns physically and advances through Game.tick
       if(nav.placement(x,z,.4).valid)crop={x,z};
     assert(crop);
     assert.equal(Game.plant(state,'raid-crop','mijo',crop.x,crop.z,nav),true);
+    let valuable;
+    for(let z=-14;z<=14&&!valuable;z+=2)for(let x=-14;x<=14&&!valuable;x+=2)
+      if(Math.hypot(x-crop.x,z-crop.z)>3&&nav.placement(x,z,.4).valid)
+        valuable={x,z};
+    assert(valuable);
+    assert.equal(Game.plant(state,'raid-valuable-crop','platano',
+      valuable.x,valuable.z,nav),true);
     state.day=6;state.time=310;
     const plan={at:310,group:['warthog'],done:false,introductory:false};
     assert.notEqual(spawnRaid(state,plan,nav),false,
@@ -108,8 +115,20 @@ test('a native Sabana incursion spawns physically and advances through Game.tick
     controlNav.setActiveBounds([-36,-36,36,36]);
     controlNav.setRaidView(nav.raidView.eye,nav.raidView.target);
     const controlAnimal=control.raid.animals[0];
-    for(let step=0;step<500&&controlAnimal.status!=='attacking';step++)
+    const pathDistance=(origin,path)=>{
+      let previous=origin,length=0;
+      for(const point of path??[]){
+        length+=Math.hypot(point.x-previous.x,point.z-previous.z);
+        previous=point;
+      }
+      return length;
+    };
+    let controlInitialPathLength;
+    for(let step=0;step<500&&controlAnimal.status!=='attacking';step++){
       Game.tick(control,.2,controlNav);
+      if(controlInitialPathLength===undefined&&controlAnimal.path?.length)
+        controlInitialPathLength=pathDistance(controlAnimal,controlAnimal.path);
+    }
     assert.equal(controlAnimal.status,'attacking',
       'the baseline raid must reach a comparable physical attack');
     const controlFirstAttackAt=control.elapsed;
@@ -118,11 +137,15 @@ test('a native Sabana incursion spawns physically and advances through Game.tick
     let stopWorld=planner.observeWorld(state),stopTasks=planner.observeTasks(state);
     const intentCalls={registered:0,committed:0,finished:0,
       nativeCropPlans:0,nativeCropFound:0};
+    let nativeInitialPathLength;
     const nativeCropPlan=planner.planAttackCrop;
     planner.planAttackCrop=(...args)=>{
       const result=nativeCropPlan(...args);
       intentCalls.nativeCropPlans++;
-      if(result?.status==='found')intentCalls.nativeCropFound++;
+      if(result?.status==='found'){
+        intentCalls.nativeCropFound++;
+        nativeInitialPathLength=pathDistance(args[1],result.approach.path);
+      }
       return result;
     };
     for(const [method,key] of [['registerAttackIntent','registered'],
@@ -137,14 +160,16 @@ test('a native Sabana incursion spawns physically and advances through Game.tick
     for(let i=0;i<500&&animal.status!=='gone';i++){
       Game.tick(state,.2,nav);
       if(!restoredCommittedStrike&&animal.status==='attacking'){
+        t.diagnostic(JSON.stringify({controlFirstAttackAt,
+          nativeFirstAttackAt:state.elapsed,
+          controlTargetId:controlAnimal.targetId,nativeTargetId:animal.targetId,
+          controlApproach:controlAnimal.approach,nativeApproach:animal.approach,
+          controlInitialPathLength,nativeInitialPathLength,
+          nativeCropPlans:intentCalls.nativeCropPlans}));
         assert.equal(animal.targetId,controlAnimal.targetId,
           'native crop selection preserves this fixture\'s highest-priority target');
         assert(state.elapsed<=controlFirstAttackAt+.2,
           'native crop planning must not delay the first physical strike');
-        t.diagnostic(JSON.stringify({controlFirstAttackAt,
-          nativeFirstAttackAt:state.elapsed,
-          controlTargetId:controlAnimal.targetId,nativeTargetId:animal.targetId,
-          nativeCropPlans:intentCalls.nativeCropPlans}));
         assert.equal(intentCalls.nativeCropPlans,1,
           'ordinary travel ticks never request another native crop plan');
         assert.equal(planner.metrics(state.elapsed).nativeAnimalPlans,1);
