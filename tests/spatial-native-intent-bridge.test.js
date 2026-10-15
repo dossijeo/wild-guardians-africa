@@ -119,9 +119,13 @@ test('event-fed native intent bridge replays live state and only changes on expl
   const beforeTasks=wasm.nav_intent_task_count();
   const freshTask=enqueue(game,worker.centerId,'harvest',plant.id);
   assert(freshTask);
+  assert.equal(wasm.nav_intent_task_count(),beforeTasks,
+   'confirmed task deltas wait for their deterministic event boundary');
+  assert.equal(planner.flushTaskEvents(),1);
   assert.equal(wasm.nav_intent_task_count(),beforeTasks+1,
    'task creation reaches the native index at the mutation boundary');
   replaceTasks(game,game.tasks.filter(item=>item.id!==freshTask.id));
+  assert.equal(planner.flushTaskEvents(),1);
   assert.equal(wasm.nav_intent_task_count(),beforeTasks,
    'task removal reaches the native index without polling');
   stopTaskEvents();

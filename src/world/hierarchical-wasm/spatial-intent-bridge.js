@@ -352,6 +352,8 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     throw RangeError('retrySeconds must be positive');
   const bridge=createSpatialIntentBridge(session);
   const eligible=new Set(),requests=new Map();
+  let pendingTaskEvents=[];
+  let observedTaskState=null,stopTaskObserver=null;
   let dirty=true,nextRetry=Infinity,lastTime=-Infinity,total=0,initialized=false;
   const setWorker=(worker,state)=>{
     const id=numericId(worker.id);
@@ -360,8 +362,11 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
   };
   const resetFromState=state=>{
     initialized=false;
+    if(stopTaskObserver&&observedTaskState!==state){
+      stopTaskObserver();stopTaskObserver=null;observedTaskState=null;
+    }
     const result=bridge.resetFromState(state);
-    eligible.clear();requests.clear();total=0;
+    eligible.clear();requests.clear();pendingTaskEvents=[];total=0;
     for(const worker of state.workers)setWorker(worker,state);
     dirty=true;nextRetry=Infinity;lastTime=-Infinity;
     initialized=true;
@@ -390,6 +395,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     if(!Number.isFinite(simulatedSeconds)||simulatedSeconds<lastTime)
       throw RangeError('Simulation time must be finite and monotonic');
     lastTime=simulatedSeconds;
+    if(pendingTaskEvents.length)flushTaskEvents();
     if(!dirty&&simulatedSeconds<nextRetry)return null;
     if(!session.core.wasm.nav_intent_task_count()){
       dirty=false;nextRetry=Infinity;return [];
@@ -414,16 +420,33 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
   const metrics=simulatedSeconds=>({nativePlanningCalls:total,
     perWorkerPerMinute:Object.fromEntries([...requests].map(([id,times])=>
       [id,times.filter(time=>time>simulatedSeconds-60).length]))});
-  const observeTasks=state=>observeTaskChanges(state,event=>{
+  const flushTaskEvents=()=>{
+    if(!pendingTaskEvents.length)return 0;
+    const events=pendingTaskEvents;
+    pendingTaskEvents=[];
+    applyEvents(observedTaskState,events);
+    return events.length;
+  };
+  const observeTasks=state=>{
     if(!initialized)throw Error('Reset the native intent session before observing tasks');
-    const nativeEvent=event.type==='removed'?
-      {type:'task',remove:true,id:event.taskId}:
-      {type:'task',entity:{id:event.taskId,centerId:event.centerId,
-        targetId:event.targetId,kind:event.kind,created:event.created,
-        workerId:event.workerId}};
-    applyEvents(state,event.worker?[nativeEvent,{type:'worker',entity:event.worker}]:
-      [nativeEvent]);
-  });
-  return {resetFromState,applyEvents,observeTasks,planIfNeeded,metrics,
+    if(stopTaskObserver)throw Error('A task observer is already attached');
+    observedTaskState=state;
+    const stop=observeTaskChanges(state,event=>{
+      const nativeEvent=event.type==='removed'?
+        {type:'task',remove:true,id:event.taskId}:
+        {type:'task',entity:{id:event.taskId,centerId:event.centerId,
+          targetId:event.targetId,kind:event.kind,created:event.created,
+          workerId:event.workerId}};
+      pendingTaskEvents.push(nativeEvent);
+      if(event.worker)pendingTaskEvents.push({type:'worker',entity:event.worker});
+      dirty=true;
+    });
+    stopTaskObserver=stop;
+    return ()=>{
+      if(stopTaskObserver!==stop)return;
+      stop();stopTaskObserver=null;observedTaskState=null;pendingTaskEvents=[];
+    };
+  };
+  return {resetFromState,applyEvents,observeTasks,flushTaskEvents,planIfNeeded,metrics,
     discard:bridge.discard,commit:bridge.commit,sequence:bridge.sequence};
 }
