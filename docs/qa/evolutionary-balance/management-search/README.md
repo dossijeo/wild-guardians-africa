@@ -134,8 +134,24 @@ La primera mutación del ensayo con evaluador `post-intro-v1`, genoma
 el evaluador versionado `post-intro-v2` la clasifica igualmente como
 `collapsed-production`. El margen operativo terminal fue −82 monedas en
 esas tres jornadas y todos los registros conciliaron con el ledger. Se
-conserva el informe original de `v1` en `results-14-post-intro/`; Gran Río
-del mismo genoma sigue en curso, por lo que aún no hay evaluación de pareja.
+conserva el informe original de `v1` en `results-14-post-intro/`. Gran Río
+del mismo genoma también completó 14/14 noches, pero terminó con 11 cultivos,
+281 monedas y 22⅓ cajas/día de media terminal. La última incursión destruyó
+25 cultivos. Había pagado 1.010 monedas en muros a lo largo de la partida;
+ese gasto no certifica que el perímetro permaneciera cerrado. Los catorce
+registros concilian con el ledger y ambos biomas quedan por debajo del umbral.
+
+Otra mutación de la cohorte exploratoria, `6fa5250807e4d560`, eligió
+`wallPolicy: none` en Sabana/712. Terminó viva tras 14 noches, con 38 plantas,
+625 monedas y 74 cajas/día de media terminal, pero 384 cultivos destruidos y
+un margen operativo terminal de −228 monedas. `post-intro-v2` la descarta por
+producción insuficiente. El genoma con muros `4419e5eb34a46b9f` en esa
+misma semilla acabó con 90 plantas, 631 monedas, 83 cajas/día y 134 pérdidas,
+pagando 860 en muros y 642 en reparaciones. Esto no es un experimento causal
+de muros: cambian también la siembra, la magia y otras decisiones. Sí impide
+presentar la opción sin muros como óptima por mera supervivencia corta. El
+informe nativo sin muros se conserva en `results-14-main-sync/`; su pareja de
+Gran Río sigue en curso.
 
 Esta cohorte usa Wild Engine y el balance de producción sin alterar, después de
 la mejora de navegación de PR #37. Código ejecutado: `7f358aad97287b40e300026306d26f05cc4e0c29`;
