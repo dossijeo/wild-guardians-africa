@@ -239,7 +239,7 @@ function nearFarmRaidEntry(s,specs,bounds,nav){
   if(!focus||!view)return null;
   const angle=Math.atan2(view.eye.x-view.target.x,view.eye.z-view.target.z);
   let cropBox=null;
-  for(const p of s.plants)if(p.alive&&(p.centerId===focus.id||dist(p,focus)<32)){
+  for(const p of activeCrops(s.plants))if(p.centerId===focus.id||dist(p,focus)<32){
     cropBox??={minX:Infinity,maxX:-Infinity,minZ:Infinity,maxZ:-Infinity};
     cropBox.minX=Math.min(cropBox.minX,p.x);cropBox.maxX=Math.max(cropBox.maxX,p.x);
     cropBox.minZ=Math.min(cropBox.minZ,p.z);cropBox.maxZ=Math.max(cropBox.maxZ,p.z);

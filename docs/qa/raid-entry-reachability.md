@@ -79,3 +79,10 @@ salida local transitable y conectividad Wild Engine demostrada hacia el
 acceso del centro para cada perfil físico. Es una prueba de entrada, no de
 eficacia militar ni de rendimiento sostenido; la preparación de la entrada
 en la aplicación usa el trabajador dedicado existente.
+
+La revisión del diff eliminó una exploración del historial completo de
+plantas en la búsqueda de entradas próximas. El encuadre de cultivos usa
+ahora `activeCrops`, cuyo índice conserva sólo las plantas vivas; las bajas
+históricas no incrementan ese recorrido. Tras el cambio pasaron las nueve
+pruebas focales de índice y entrada, los 186 contratos jugables y el replay
+congelado de Desierto mantuvo ocho de ocho entradas conectadas.
