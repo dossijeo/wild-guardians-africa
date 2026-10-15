@@ -1,36 +1,16 @@
 // Native campaign player policy only: paid new pieces/ordinary repair commands.
 import * as Game from '../src/simulation/game.js';
-import {centerFootprint,centerServicePoint} from '../src/world/centers.js';
-import {wallStroke,wallStrokeLine} from '../src/world/wall-layout.js';
-import {wallCollisionFrame} from '../src/world/wall-collision-frame.js';
+import {centerFootprint} from '../src/world/centers.js';
+import {wallStroke} from '../src/world/wall-layout.js';
 import {numberOf} from '../src/simulation/money.js';
 import {permission,operational,wallSpec} from '../src/simulation/rules.js';
 import {HIRING_RESERVE} from '../src/simulation/budget.js';
-export function createNativeExpandingDefensePolicy({startDay=2,material='zarzas',interval=30,repairWalls=true,repairFraction=0.8,reserveMode='none',serviceSide=false}={}){
+export function createNativeExpandingDefensePolicy({startDay=2,material='zarzas',interval=30,repairWalls=true,repairFraction=0.8,reserveMode='none'}={}){
  if(!['none','next-stroke'].includes(reserveMode))throw Error('Invalid defense reserve mode');
  if(!(repairFraction>0&&repairFraction<=1))throw Error('Invalid repair fraction');
  const cost=wallSpec(material).cost;let nextAttempt=0,capitalTarget=0,built=null,repairRequests=0;
  const history=[],owned=new Set();
  const reserve=s=>reserveMode==='next-stroke'&&s.day>=startDay?capitalTarget:0;
- function serviceSideStatus(s,nav,slot){
-  const centers=s.structures.filter(operational),
-    piece={kind:'wall',material,gate:false,baseScaleX:slot.scaleX,
-      x:slot.x,z:slot.z,yaw:-slot.angle},frame=wallCollisionFrame(piece),
-    offset=frame.depth+.28+.6;
-  let unknown=false;
-  for(const sign of [1,-1]){
-   const side={x:frame.x+Math.sin(frame.yaw)*offset*sign,
-     z:frame.z+Math.cos(frame.yaw)*offset*sign};
-   if(!nav.walkable(side.x,side.z,.28,null,true))continue;
-   for(const center of centers){
-    const source=centerServicePoint(center,s,.8),connected=
-      nav.regionConnected(source,side,.28,null,true);
-    if(connected===true)return 'reachable';
-    if(connected===null)unknown=true;
-   }
-  }
-  return unknown?'unknown':'blocked';
- }
  function act(s,nav,{command,reserve:protectedCash}){
   if(s.day<startDay||!permission(s,'wall')||s.raid||s.elapsed<nextAttempt)return 0;
   nextAttempt=s.elapsed+interval;
@@ -54,38 +34,6 @@ export function createNativeExpandingDefensePolicy({startDay=2,material='zarzas'
   capitalTarget=slots.length*cost;
   const row={day:s.day,time:s.time,elapsed:s.elapsed,bounds,expectedSlots:slots.length,availablePieces:maxPieces,paidPieces:0,paidCost:0,gaps:[]};
   if(!maxPieces){row.reason='budget';history.push(row);return 0;}
-  if(serviceSide){
-   row.policy='service-side';row.ids=[];row.gates=0;
-   for(const slot of slots){
-    if(row.paidPieces>=maxPieces){row.gaps.push({x:slot.x,z:slot.z,reason:'budget-limit'});continue;}
-    const status=serviceSideStatus(s,nav,slot);
-    if(status!=='reachable'){
-     row.gaps.push({x:slot.x,z:slot.z,reason:`service-side-${status}`});continue;
-    }
-    const stroke=wallStrokeLine([slot]),plan=Game.previewWallChain(s,material,stroke,nav,
-      {...options,maxPieces:1});
-    if(!plan.pieces.length){
-     const piece={kind:'wall',material,gate:false,baseScaleX:slot.scaleX,
-       x:slot.x,z:slot.z,yaw:-slot.angle},check=nav.wallPlacement(piece);
-     row.gaps.push({x:slot.x,z:slot.z,reason:check.valid?
-       'crop-overlap-or-native-omission':check.reason??'native-placement'});
-     continue;
-    }
-    if(plan.pieces.length!==1||Math.hypot(plan.pieces[0].x-slot.x,
-      plan.pieces[0].z-slot.z)>.01)throw Error('Service-side slot preview changed the wall geometry');
-    if(!Game.buildWallChain(s,command('wall'),material,stroke,nav,
-      {...options,maxPieces:1}))throw Error('Service-side paid wall was not committed');
-    const id=plan.pieces[0].id;
-    if(!s.structures.some(w=>w.id===id&&w.kind==='wall'))
-      throw Error('Preview ID does not name an actual paid wall');
-    owned.add(id);row.ids.push(id);row.paidPieces++;row.paidCost+=plan.cost;
-    row.gates+=plan.gates;
-   }
-   if(row.paidPieces){built={day:s.day,bounds,points,cost:row.paidCost,
-     pieces:row.paidPieces,expectedPieces:slots.length,ids:[...owned]};
-     history.push(row);return 1;}
-   row.reason='no-serviceable-legal-pieces';history.push(row);return 0;
-  }
   const plan=Game.previewWallChain(s,material,points,nav,{...options,maxPieces});
   const planned=new Set(plan.pieces.map(p=>`${p.x},${p.z}`));
   for(const slot of slots)if(!planned.has(`${slot.x},${slot.z}`)){
@@ -100,5 +48,5 @@ export function createNativeExpandingDefensePolicy({startDay=2,material='zarzas'
   }
   row.reason='no-new-legal-pieces';history.push(row);return 0;
  }
- return {reserve,act,report:s=>structuredClone({startDay,material,reserveMode,serviceSide,repairWalls,repairFraction,capitalTarget,built,history,repairRequests,paidCost:history.reduce((n,r)=>n+r.paidCost,0),paidPieces:history.reduce((n,r)=>n+r.paidPieces,0),scope:'Paid expanding native perimeters; actual interception not established by construction alone; repairs requested never counted as completion'})};
+ return {reserve,act,report:s=>structuredClone({startDay,material,reserveMode,repairWalls,repairFraction,capitalTarget,built,history,repairRequests,paidCost:history.reduce((n,r)=>n+r.paidCost,0),paidPieces:history.reduce((n,r)=>n+r.paidPieces,0),scope:'Paid expanding native perimeters; actual interception not established by construction alone; repairs requested never counted as completion'})};
 }

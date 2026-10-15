@@ -51,7 +51,6 @@ test('GA genes mutate reproducibly and remain inside policy bounds',()=>{
  assert.equal(genomeId(DEFAULT_GENES),genomeId({...DEFAULT_GENES}));
  assert.throws(()=>validateGenes({...DEFAULT_GENES,plantsPerWorker:1}));
  assert.equal(validateGenes({...DEFAULT_GENES,wallPolicy:'none'}).wallPolicy,'none');
- assert.equal(validateGenes({...DEFAULT_GENES,wallPolicy:'service-side'}).wallPolicy,'service-side');
  assert.notEqual(genomeId(DEFAULT_GENES),genomeId({...DEFAULT_GENES,wallPolicy:'none'}));
  assert.throws(()=>validateGenes({...DEFAULT_GENES,wallPolicy:'unknown'}));
 });

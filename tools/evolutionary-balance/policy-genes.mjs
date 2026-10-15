@@ -1,6 +1,6 @@
 // Experimental virtual-player decisions only. These values never change Game rules.
 // Historical v1 reports omit wallPolicy and retain their recorded IDs/source SHA.
-export const GENE_SCHEMA_VERSION='virtual-player-v3-service-side-policy';
+export const GENE_SCHEMA_VERSION='virtual-player-v2-wall-policy';
 export const GENE_SCHEMA=Object.freeze({
  plantsPerWorker:[4,16,1],wageReserveDays:[1,4,1],seedReserve:[0,250,5],
  defenseCashFraction:[0,0.7,0.05],defenseStartDay:[1,15,1],
@@ -9,7 +9,7 @@ export const GENE_SCHEMA=Object.freeze({
  plantingIntervalSeconds:[1,15,1],
 });
 export const MATERIALS=Object.freeze(['zarzas','empalizada','adobe','reforzado','piedra']);
-export const WALL_POLICIES=Object.freeze(['planned','service-side','none']);
+export const WALL_POLICIES=Object.freeze(['planned','none']);
 export const DEFAULT_GENES=Object.freeze({plantsPerWorker:6,wageReserveDays:1,seedReserve:0,
  defenseCashFraction:0.2,defenseStartDay:2,repairHealthFraction:0.8,
  magicIntervalSeconds:5,growthShare:0,plantingIntervalSeconds:1,wallMaterial:'zarzas',
