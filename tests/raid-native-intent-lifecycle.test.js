@@ -2,6 +2,25 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {fixture} from '../tools/probe-raid-reservation-saturation.mjs';
 import {spawnRaid,targetFor,updateRaid} from '../src/simulation/raids.js';
+import {tick} from '../src/simulation/game.js';
+
+test('native intention reconciliation precedes raid target selection in Game.tick',()=>{
+  const {s,nav}=fixture('mono');
+  assert(spawnRaid(s,{group:['warthog']},nav));
+  let reconciled=false,queries=0;
+  nav.intentTaskPlanner={
+    needsReconciliation:()=>!reconciled,
+    flushWorldEvents:()=>0,flushTaskEvents:()=>0,
+    reconcileNavigationRevision:()=>0,
+    reconcileWorkerRoutes:()=>{reconciled=true;},
+    planAttackCrop:()=>{queries++;assert(reconciled,
+      'raid selection must see native intention changes first');return null;},
+    registerAttackIntent:()=>true,cancelAttackIntent:()=>true
+  };
+  tick(s,.1,nav);
+  assert(reconciled);
+  assert(queries>0,'the raid controller advanced after reconciliation');
+});
 
 test('native unknown crop connectivity waits without falling into individual JS searches',()=>{
   const state={elapsed:0,raid:{},plants:[],structures:[],spells:[]};

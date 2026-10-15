@@ -836,13 +836,16 @@ function reserveAvailableTasks(s,nav){
       .map(w=>`${w.id}:${w.centerId}`).join('|'),
     topology:nav.version,sectors,retryAt:s.elapsed+ROUTE_RETRY_SECONDS});
 }
-function updateWorkers(s,dt,nav) {
+function reconcileNativeIntents(s,nav){
   if(nav.intentTaskPlanner?.needsReconciliation(nav.version)){
     nav.intentTaskPlanner.flushWorldEvents();
     nav.intentTaskPlanner.flushTaskEvents();
     nav.intentTaskPlanner.reconcileNavigationRevision(s,nav.version);
     nav.intentTaskPlanner.reconcileWorkerRoutes(s,{navVersion:nav.version});
   }
+}
+function updateWorkers(s,dt,nav) {
+  reconcileNativeIntents(s,nav);
   // Task removals/rebuilds replace the array; enqueues change its length.
   // Unchanged queues can reuse their index while reservation fields stay live.
   const findPlant=workerEntityLookup(()=>s.plants,{reuse:true,appendOnly:true}),findCrate=workerEntityLookup(()=>s.crates,{reuse:true,appendOnly:true}),findTask=workerEntityLookup(()=>s.tasks,{reuse:true});
@@ -1044,7 +1047,11 @@ export function tick(s,seconds,nav) {
     for(const a of s.spells)if(a.remaining<=1e-9&&a.targetPlantId!==undefined)emit(s,'AgriculturalSpellEnded',{spellId:a.id,kind:a.kind,targetPlantId:a.targetPlantId,growthSecondsAdded:a.growthSecondsAdded??0});
     s.spells=s.spells.filter(a=>a.remaining>1e-9);
     if(s.spells.filter(a=>a.kind==='shield').length!==shieldsBefore)nav.setState(s);
-    advanceGateLeaves(s,step);updateRaid(s,step,nav);updateWorkers(s,step,nav);
+    advanceGateLeaves(s,step);
+    // A restored or event-invalidated animal route must be published before
+    // the raid controller attempts physical movement in this interval.
+    reconcileNativeIntents(s,nav);
+    updateRaid(s,step,nav);updateWorkers(s,step,nav);
     // Arrival is an event at the end of this interval. Newly spawned animals
     // must not move for time that elapsed before they existed.
     prepareClockEvents(s,nav);
