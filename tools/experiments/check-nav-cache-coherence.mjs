@@ -199,5 +199,9 @@ try{
   }finally{reloaded.session.dispose();}
 }finally{session.dispose();}
 const out=process.argv[2]??'docs/qa/wild-engine-cache-benchmark/coherence.json';
-writeFileSync(out,JSON.stringify({fixture:'desierto983-d15',rows},null,2));
-console.log(JSON.stringify({out,rows},null,2));
+if(out==='--verify')console.log(JSON.stringify({fixture:'desierto983-d15',
+  stages:rows.map(row=>row.stage),discrepancies:0}));
+else{
+  writeFileSync(out,JSON.stringify({fixture:'desierto983-d15',rows},null,2));
+  console.log(JSON.stringify({out,rows},null,2));
+}

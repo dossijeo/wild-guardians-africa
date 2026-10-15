@@ -26,6 +26,7 @@ const tests = [
   'game-juice.test.js',
   'desktop-exit.test.mjs',
   'menu-library-fullscreen.test.js',
+  'nav-cache-coherence.test.js',
 ];
 
 const result = spawnSync(process.execPath, ['--test', ...tests.map((name) => `tests/${name}`)], {
