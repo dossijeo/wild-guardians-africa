@@ -1054,7 +1054,8 @@ bool activeRouteClear(const IntentState& s,const ActiveIntent& intent){
   if(!intent.animal&&worker==s.workers.end())return false;
   float x=intent.animal?intent.routeStartX:float(worker->second.x);
   float z=intent.animal?intent.routeStartZ:float(worker->second.z);
-  if(!spatial_local_clear(x,z,x,z))return false;
+  if(intent.routeCursor>route.points.size()/2||
+     !spatial_local_clear(x,z,x,z))return false;
   for(size_t i=size_t(intent.routeCursor)*2;i<route.points.size();i+=2){
     const float nextX=route.points[i],nextZ=route.points[i+1];
     // The local predicate accepts only short connector segments. World routes
@@ -1066,8 +1067,8 @@ bool activeRouteClear(const IntentState& s,const ActiveIntent& intent){
 }
 // JS movement consumes a suffix of the pinned native route. At a topology
 // event, accept that progress only when every remaining point exactly matches
-// the native suffix. An unmatched or stale JS path retains conservative full
-// route validation; ordinary movement ticks never call this entry point.
+// the native suffix. An unmatched JS path forces a conservative reroute at
+// this event boundary; ordinary movement ticks never call this entry point.
 float* nav_intent_route_progress_input_ptr(int count){
   if(count<0||count>4096)return nullptr;
   IntentState& s=state();s.routeProgressInput.resize(size_t(count)*2);
@@ -1082,16 +1083,20 @@ int nav_intent_route_progress(double actorId,double x,double z,int count){
   ActiveIntent& intent=found->second;
   if(intent.slot>=s.routeSlots.size())return 0;
   const RouteSlot& route=s.routeSlots[intent.slot];
-  if(!route.active||route.generation!=intent.generation||
-     route.points.size()%2||size_t(count)*2>route.points.size()||
-     s.routeProgressInput.size()!=size_t(count)*2)return 0;
+  if(!route.active||route.generation!=intent.generation)return 0;
+  const auto reject=[&](){
+    intent.routeCursor=uint32_t(route.points.size()/2+1);
+    return 0;
+  };
+  if(route.points.size()%2||size_t(count)*2>route.points.size()||
+     s.routeProgressInput.size()!=size_t(count)*2)return reject();
   const size_t cursor=route.points.size()/2-size_t(count);
-  if(cursor<intent.routeCursor)return 0;
+  if(cursor<intent.routeCursor)return reject();
   for(size_t i=0;i<size_t(count)*2;i++)
-    if(route.points[cursor*2+i]!=s.routeProgressInput[i])return 0;
+    if(route.points[cursor*2+i]!=s.routeProgressInput[i])return reject();
   if(!count&&route.points.size()>=2&&
      std::hypot(double(x)-route.points[route.points.size()-2],
-                double(z)-route.points.back())>.1)return 0;
+                double(z)-route.points.back())>.1)return reject();
   intent.routeCursor=uint32_t(cursor);
   if(intent.animal){intent.routeStartX=float(x);intent.routeStartZ=float(z);}
   return 1;

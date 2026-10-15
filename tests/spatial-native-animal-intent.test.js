@@ -188,6 +188,14 @@ test('native animal leases preserve committed strikes and reject duplicate targe
       wasm.nav_intent_actor_ptr(),10);
     assert.equal(restoredRoute[1],1);
     assert.equal(restoredRoute[3],12);
+    const wrongProgress=wasm.nav_intent_route_progress_input_ptr(1);
+    new Float32Array(wasm.memory.buffer,wrongProgress,2)
+      .set([end.x+100,end.z+100]);
+    assert.equal(wasm.nav_intent_route_progress(106,origin.x,origin.z,1),0);
+    assert(session.core.addWall(end.x+30,end.z+30,.3,.3)>0);
+    session.actorSectorRevision({worker:false,species:'hyena'});
+    assert.equal(wasm.nav_intent_reconcile_topology(),1,
+      'a JS path that is not a native suffix forces safe invalidation');
   }finally{session.dispose();}
 });
 
@@ -241,9 +249,6 @@ test('topology validation retains a verified remaining attack route when a wall 
     assert.equal(wasm.nav_intent_reconcile_topology(),0,
       'a wall behind the actor does not invalidate its verified route suffix');
     assert(wasm.nav_intent_route_points(...handle)>0);
-    new Float32Array(wasm.memory.buffer,progress,2).set([end.x+.5,end.z]);
-    assert.equal(wasm.nav_intent_route_progress(101,current.x,current.z,1),0,
-      'a changed JS path cannot advance the native route cursor');
     const ahead={x:current.x+(end.x-current.x)*.6,z:current.z};
     assert(session.core.addWall(ahead.x,ahead.z,.3,.3)>0);
     session.actorSectorRevision({worker:false,species:'hyena'});
