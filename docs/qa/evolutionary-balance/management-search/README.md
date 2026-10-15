@@ -166,7 +166,18 @@ La incursión final destruyó 54 de las 94 plantas vivas al inicio del ataque.
 El ledger concilia en los catorce días. `post-intro-v2` todavía la considera
 elegible, lo que revela una limitación del **criterio de fitness**, no una
 defensa de ignorar murallas como diseño óptimo. El informe original se conserva
-en `results-14-post-intro/`; su pareja de Gran Río permanece en ejecución.
+en `results-14-post-intro/`. La pareja Gran Río/2026 terminó también 14/14
+noches, con 28 plantas, 482 monedas y 68⅔ cajas/día de media terminal. Perdió
+399 cultivos desde la noche 6 y cerró las tres jornadas finales con margen
+operativo de −386 monedas.
+El último ataque destruyó 49 de las 77 plantas presentes al iniciarse; el
+ledger concilia todos los días. `post-intro-v2` la excluye por producción
+colapsada. Los 118 de reparaciones registradas corresponden a gastos reales
+del informe, pero el genoma no compró módulos de muralla; no se deben borrar
+esos gastos ni describir esta finca como carente de toda reparación. En este
+par de entrenamiento, la supervivencia del día 14 no aporta evidencia de una
+política sin murallas sostenible.
+
 Antes de seleccionar cualquier estrategia sin muros se necesita una ablación
 emparejada: mismos genes agrícolas, semilla, bioma, magia y balance, variando
 únicamente construcción/reparación de murallas y, por separado, Escudo. El
