@@ -643,3 +643,85 @@ test('animal damage ruins a saved enclosure wall without changing the restored r
     restoredSession?.dispose();session.dispose();
   }
 });
+
+test('a stalled retreat can phase past a mobile body occupying its exit',()=>{
+  const state=deserialize(gunzipSync(readFileSync(new URL(
+    './fixtures/sabana712-d9-native-stalled-raid.json.gz',import.meta.url))).toString());
+  const loaded=new Map(),session=createSpatialGameSession(module,state,{
+    loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+  try{
+    for(let z=-1;z<=2;z++)for(let x=1;x<=3;x++){
+      if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+      loaded.set(`${x},${z}`,session.core.chunkPayload());
+    }
+    const nav=createSpatialNavigationMovement(session,state);
+    const walking=state.raid.animals.find(item=>item.id==='animal-8736');
+    const walkingBefore={x:walking.x,z:walking.z};
+    walking.pathVersion=nav.version;
+    walking.mobileRecoveryDestinationId=walking.approach.id;
+    walking.mobileRecoveryVersion=nav.version;
+    assert(nav.segmentClear(walkingBefore,walking.path[0],walking.radius,null,false));
+    Game.walkTo(state,walking,walking.approach,.1,nav,{speed:1.5,
+      worker:false,externallyPlanned:true});
+    assert(state.events.some(event=>event.type==='ActorMobileCollisionRecovery'&&
+      event.actorId===walking.id),
+    'an occupied crop approach may phase mobile bodies while the attack gate stays authoritative');
+    assert(nav.segmentClear(walkingBefore,walking,walking.radius,null,false));
+    const animal=state.raid.animals.find(item=>item.id==='animal-8730');
+    assert.equal(animal.status,'retreating');
+    assert.equal(animal.hitsRemaining,0);
+    const exit={...animal.exit,id:`exit-${animal.id}`};
+    const before={x:animal.x,z:animal.z};
+    animal.pathVersion=nav.version;
+    animal.mobileRecoveryDestinationId=exit.id;
+    animal.mobileRecoveryVersion=nav.version;
+    const next=animal.path[0];
+    assert(nav.segmentClear(before,next,animal.radius,null,false),
+      'the remaining path has static clearance');
+    Game.walkTo(state,animal,exit,.1,nav,{speed:3.8,worker:false,
+      expandRoute:true,routeVia:animal.spawn});
+    assert(state.events.some(event=>event.type==='ActorMobileCollisionRecovery'&&
+      event.actorId===animal.id),
+    'a mobile body at the exit does not disable short-lived collision phasing');
+    assert(Math.hypot(animal.x-before.x,animal.z-before.z)>0);
+    assert(nav.segmentClear(before,animal,animal.radius,null,false),
+      'the phased step still respects static obstacles');
+    assert.equal(animal.hitsRemaining,0);
+  }finally{session.dispose();}
+});
+
+test('the saved day-nine traffic jam finishes without an emergency disappearance',()=>{
+  const state=deserialize(gunzipSync(readFileSync(new URL(
+    './fixtures/sabana712-d9-native-stalled-raid.json.gz',import.meta.url))).toString());
+  const loaded=new Map(),session=createSpatialGameSession(module,state,{
+    loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+  try{
+    for(let z=-1;z<=2;z++)for(let x=1;x<=3;x++){
+      if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+      loaded.set(`${x},${z}`,session.core.chunkPayload());
+    }
+    const planner=createEventDrivenTaskPlanner(session);
+    const restored=planner.resetFromState(state);
+    assert.equal(restored.restoredAnimalRoutes,1);
+    assert.equal(restored.invalidSavedAnimalRoutes,1);
+    const nav=createSpatialNavigationMovement(session,state);
+    const stopTasks=planner.observeTasks(state),stopWorld=planner.observeWorld(state);
+    nav.intentTaskPlanner=planner;
+    try{
+      const oldEndCount=state.events.filter(event=>event.type==='RaidEnded').length;
+      const oldAbandonCount=state.events.filter(event=>
+        event.type==='AnimalRetreatExitAbandoned').length;
+      let ticks=0;
+      while(state.raid&&ticks<500){
+        Game.tick(state,.1,nav);
+        nav.serviceRaidConnectivityDemand?.();
+        ticks++;
+      }
+      assert.equal(state.raid,null,'all animals resolve their actions or retreat');
+      assert.equal(state.events.filter(event=>event.type==='RaidEnded').length,
+        oldEndCount+1);
+      assert.equal(state.events.filter(event=>
+        event.type==='AnimalRetreatExitAbandoned').length,oldAbandonCount);
+    }finally{stopTasks();stopWorld();}
+  }finally{session.dispose();}
+});

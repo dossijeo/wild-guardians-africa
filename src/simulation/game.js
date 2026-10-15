@@ -657,7 +657,11 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
     const blockers=actorBlockers(s,w,worker);
     const staticClear=worker?nav.workerMotionClear?.(w,probe,w.radius??.28):
       nav.segmentClear?.(w,probe,w.radius??.28,ignore,false);
-    if(staticClear&&actorSegmentClear(destination,destination,w,blockers)&&
+    // An animal can phase around a mobile body occupying its destination;
+    // attack initiation still checks approach occupancy, and movement below
+    // continues to validate every static segment.
+    if(staticClear&&(!worker||
+      actorSegmentClear(destination,destination,w,blockers))&&
       !actorSegmentClear(w,probe,w,blockers)){
       w.mobilePhaseRemaining=3;w.dynamicStallSeconds=0;
       w.mobileRecoveryAttempts=(w.mobileRecoveryAttempts??0)+1;

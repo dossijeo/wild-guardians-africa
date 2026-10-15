@@ -1,9 +1,11 @@
-import {writeFileSync,mkdirSync} from 'node:fs';
+import {writeFileSync,mkdirSync,readFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
 import {dirname,resolve} from 'node:path';
 import {performance} from 'node:perf_hooks';
 import {execFileSync} from 'node:child_process';
 import {simulateNativeCampaign} from '../native-campaign-runner.mjs';
 import {createSpatialCampaignOpening} from './spatial-campaign-opening.mjs';
+import {serialize} from '../../src/persistence/snapshots.js';
 
 const [daysArg='7',biome='sabana',seedArg='712',strategy='good',
   out='docs/qa/wild-engine-intent-lifecycle/campaign-qa.json',mode='intent']=
@@ -14,11 +16,18 @@ if(!Number.isSafeInteger(days)||days<1||days>100||
 if(!['intent','control'].includes(mode))throw RangeError('Unknown campaign mode');
 const path=resolve(out),started=performance.now(),rows=[];
 let latestState=null,latestNav=null,dayWorkerSnapshot=[];
+const captureRaidDay=Number(process.env.WILD_ENGINE_CAPTURE_RAID_DAY??0);
+let capturedRaid=false;
 const assignments=[],seenAssignments=new Set();
 const intentTiming={};
 let timedPlanner=null;
 mkdirSync(dirname(path),{recursive:true});
 const source=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
+const sha256=path=>createHash('sha256').update(readFileSync(path)).digest('hex');
+const inputHashes={wasm:sha256(process.env.WILD_ENGINE_SPATIAL_SERVICES_WASM??
+  'src/world/hierarchical-wasm/spatial-savanna.wasm'),
+  game:sha256('src/simulation/game.js'),raids:sha256('src/simulation/raids.js'),
+  runner:sha256('tools/native-campaign-runner.mjs')};
 const openingFactory=async (...args)=>{
   const opening=await createSpatialCampaignOpening(...args);
   opening.nav.raidSelectionStats={};
@@ -48,6 +57,10 @@ try{
     openingFactory,entryDriverFactory,
     onTick:(state,nav)=>{
       latestState=state;latestNav=nav;nav.serviceRaidConnectivityDemand?.();
+      if(!capturedRaid&&captureRaidDay===state.day&&state.raid?.animals.length){
+        capturedRaid=true;
+        writeFileSync(path.replace(/\.json$/,`-day${state.day}-raid-state.json`),serialize(state));
+      }
       if(nav.intentTaskPlanner&&timedPlanner!==nav.intentTaskPlanner){
         timedPlanner=nav.intentTaskPlanner;
         for(const name of ['planIfNeeded','reconcileWorkerRoutes',
@@ -113,17 +126,22 @@ try{
         intentTiming:JSON.parse(JSON.stringify(intentTiming))});
       console.log(JSON.stringify(rows.at(-1)));
     }});
-  const report={status:'completed',source,parameters,assignments,intentTiming,
+  const report={status:'completed',source,inputHashes,parameters,assignments,intentTiming,
     elapsedSeconds:(performance.now()-started)/1000,
     completedNights:result.completedNights,result:result.result,
     nativeIntent:result.nativeIntent,raidEvidence:result.raidEvidence,
     raidSelection:raidSelection(),rows};
   writeFileSync(path,JSON.stringify(report,null,2)+'\n');
 }catch(error){
-  const report={status:'error',source,parameters,assignments,intentTiming,
-    elapsedSeconds:(performance.now()-started)/1000,
+  const partialState=error.nativeCampaignPartial?.state;
+  const partialStatePath=partialState?
+    (path.endsWith('.json')?path.slice(0,-5):path)+'-partial-state.json':null;
+  if(partialStatePath)writeFileSync(partialStatePath,partialState);
+  const report={status:'error',source,inputHashes,parameters,assignments,intentTiming,
+    elapsedSeconds:(performance.now()-started)/1000,partialStatePath,
     day:error.nativeCampaignPartial?.day,message:error.message,stack:error.stack,rows};
   writeFileSync(path,JSON.stringify(report,null,2)+'\n');
-  console.error(JSON.stringify({status:'error',day:report.day,message:report.message}));
+  console.error(JSON.stringify({status:'error',day:report.day,
+    message:report.message.slice(0,300),partialStatePath}));
   process.exitCode=1;
 }
