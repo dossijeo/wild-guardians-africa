@@ -243,7 +243,19 @@ entregó 13⅔ cajas/día adicionales y perdió 20 cultivos menos, pero pagó m�
 semillas y salarios por su propia expansión. Ambos ledgers concilian. El
 control original se conserva en `results-14-main-sync/`; la diferencia en
 esta semilla de desarrollo no demuestra superioridad estadística ni
-supervivencia a 100 noches. El control de la semilla reservada sigue pendiente.
+supervivencia a 100 noches.
+
+El control de la semilla reservada Manglares/24681357 terminó después 14/14:
+94 cultivos, 846 monedas, 99⅓ cajas/día terminales, margen operativo
+terminal de +223 y 65 pérdidas desde la noche 6. El genoma `4419…` tuvo 129
+cultivos, 861 monedas, 118 cajas/día, margen +72 y 15 pérdidas. Ambos
+ledgers concilian. La política evolucionada conservó 35 plantas más y perdió
+50 menos, pero su margen operativo terminal fue 151 monedas inferior por la
+expansión y los gastos correspondientes; no se debe presentar como ventaja
+en todas las métricas. Los informes de ambas políticas están en
+`results-14-post-intro/`. Esta es una reserva de una sola semilla y catorce
+noches; apoya continuar pruebas, no elegir aún una política definitiva ni
+modificar los parámetros militares.
 
 Esta cohorte usa Wild Engine y el balance de producción sin alterar, después de
 la mejora de navegación de PR #37. Código ejecutado: `7f358aad97287b40e300026306d26f05cc4e0c29`;
