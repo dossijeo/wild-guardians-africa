@@ -1049,7 +1049,9 @@ bool activeRouteClear(const IntentState& s,const ActiveIntent& intent){
   float z=intent.animal?intent.routeStartZ:float(worker->second.z);
   for(size_t i=0;i<route.points.size();i+=2){
     const float nextX=route.points[i],nextZ=route.points[i+1];
-    if(!spatial_local_clear(x,z,nextX,nextZ))return false;
+    // The local predicate accepts only short connector segments. World routes
+    // may contain validated shortcuts spanning several cells.
+    if(!spatial_world_segment_clear(x,z,nextX,nextZ))return false;
     x=nextX;z=nextZ;
   }
   return true;

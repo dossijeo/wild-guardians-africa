@@ -28,6 +28,31 @@ test('native animal leases preserve committed strikes and reject duplicate targe
       if(candidate.status==='found'&&candidate.points.length){origin=start;route=candidate;break;}
     }
     assert(route,'the fixture contains a physical hyena route');
+    let longRoute;
+    session.actorSectorRevision({worker:false,species:'hyena'});
+    const clearLongSegment=end=>{
+      const distance=Math.hypot(end.x-origin.x,end.z-origin.z);
+      if(distance<=1.5)return false;
+      const steps=Math.ceil(distance/1.25);
+      for(let index=0;index<steps;index++){
+        const from=index/steps,to=(index+1)/steps;
+        if(!session.core.wasm.spatial_local_clear(
+          origin.x+(end.x-origin.x)*from,origin.z+(end.z-origin.z)*from,
+          origin.x+(end.x-origin.x)*to,origin.z+(end.z-origin.z)*to))
+          return false;
+      }
+      return true;
+    };
+    for(let radius=3;radius<=15&&!longRoute;radius++)
+      for(const [dx,dz] of [[radius,0],[-radius,0],[0,radius],[0,-radius]]){
+        const candidate=session.routeActor(origin,
+          {x:origin.x+dx,z:origin.z+dz},{worker:false,species:'hyena'});
+        const end=candidate.points?.at(-1);
+        if(candidate.status==='found'&&end&&clearLongSegment(end)){
+          longRoute={points:[origin,end]};break;
+        }
+      }
+    assert(longRoute,'the fixture contains a validated long route segment');
     let detourRoute;
     for(let radius=7;radius<=12&&!detourRoute;radius++)
       for(const [dx,dz] of [[radius,0],[-radius,0],[0,radius],[0,-radius]]){
@@ -38,7 +63,8 @@ test('native animal leases preserve committed strikes and reject duplicate targe
         }
       }
     assert(detourRoute,'the fixture contains a longer route for event rerouting');
-    const wasm=session.core.wasm,end=route.points.at(-1);
+    const wasm=session.core.wasm,end=route.points.at(-1),
+      longEnd=longRoute.points.at(-1);
     const detourEnd=detourRoute.points.at(-1);
     const write=(sequence,rows)=>{
       const ptr=wasm.nav_intent_changes_ptr(rows.length);
@@ -59,7 +85,8 @@ test('native animal leases preserve committed strikes and reject duplicate targe
     assert.equal(write(1,[row(1,2,11,1,end.x,end.z,1),
       row(1,2,12,3,end.x+2,end.z,1),
       row(1,2,13,4,end.x+3,end.z,1),
-      row(1,2,14,1,detourEnd.x,detourEnd.z,1)]),1);
+      row(1,2,14,1,detourEnd.x,detourEnd.z,1),
+      row(1,2,15,1,longEnd.x,longEnd.z,1)]),1);
     session.actorSectorRevision({worker:false,species:'hyena'});
     assert.equal(register(101,11),1);
     assert.equal(register(102,11),-3,
@@ -69,11 +96,16 @@ test('native animal leases preserve committed strikes and reject duplicate targe
     const oldHandle=Array.from(active.slice(4,7));
     assert.equal(active[1],1);
     assert(wasm.nav_intent_route_points(...oldHandle)>0);
+    assert.equal(register(107,15,longRoute.points),1);
+    const longHandle=Array.from(new Float64Array(wasm.memory.buffer,
+      wasm.nav_intent_actor_ptr(),10).slice(4,7));
     assert(session.core.addWall(end.x+18,end.z+18,.3,.3)>0);
     session.actorSectorRevision({worker:true});
     assert.equal(wasm.nav_intent_reconcile_topology(),0,
       'a remote wall does not invalidate a physically clear animal route');
     assert(wasm.nav_intent_route_points(...oldHandle)>0);
+    assert(wasm.nav_intent_route_points(...longHandle)>0,
+      'an unrelated topology revision must keep a validated long shortcut');
     assert.equal(register(105,14,detourRoute.points),1);
     assert.equal(wasm.nav_intent_actor(105),1);
     const detourHandle=Array.from(new Float64Array(wasm.memory.buffer,

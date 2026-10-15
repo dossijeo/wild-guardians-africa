@@ -7,6 +7,7 @@ on:
       - 'src/world/hierarchical-wasm/**'
       - 'tests/spatial-native-raid.test.js'
       - 'tests/spatial-native-intent-bridge.test.js'
+      - 'tests/spatial-native-animal-intent.test.js'
   workflow_dispatch:
 
 permissions:
@@ -33,7 +34,7 @@ jobs:
       - name: Verify candidate against raid and intention fixtures
         run: |
           WILD_ENGINE_NATIVE_ROUTE_WASM="$PWD/.cache/native-breach-candidate.wasm" \
-            node --test tests/spatial-native-raid.test.js tests/spatial-native-intent-bridge.test.js
+            node --test tests/spatial-native-raid.test.js tests/spatial-native-intent-bridge.test.js tests/spatial-native-animal-intent.test.js
       - uses: actions/upload-artifact@v4
         if: success()
         with:
