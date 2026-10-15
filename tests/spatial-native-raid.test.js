@@ -552,3 +552,94 @@ test('a confirmed enclosure breach reconsiders other wall attackers at an event 
     }finally{stopTasks();stopWorld();delete nav.intentTaskPlanner;}
   }finally{stopRestoredTasks();stopRestoredWorld();restoredSession?.dispose();session.dispose();}
 });
+
+test('animal damage ruins a saved enclosure wall without changing the restored raid',async()=>{
+  const state=Game.newGame({seed:712,biome:'sabana',culture:'mapungubwe',
+    slotId:'spatial-real-breach-restore'});
+  state.villages[0].buildings=villageLayout(pack,0,0);
+  state.structures.push({id:'center-1',kind:'center',x:0,z:0,
+    culture:'mapungubwe',villageId:'village-1',status:'intact',hp:600,maxHp:600});
+  const jobs=new Map();
+  for(let cz=-1;cz<=1;cz++)for(let cx=-1;cx<=1;cx++)
+    jobs.set(`${cx},${cz}`,{cx,cz,score:Math.hypot(cx,cz)});
+  const loaded=new Map(),session=createSpatialGameSession(module,state,{
+    loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+  let restoredSession,stopWorld=()=>{},stopTasks=()=>{},
+    stopRestoredWorld=()=>{},stopRestoredTasks=()=>{};
+  try{
+    session.stream.plan(jobs);await session.stream.whenIdle();
+    const nav=createSpatialNavigationMovement(session,state);
+    nav.setActiveBounds([-36,-36,36,36]);
+    let ring,inside;
+    for(let z=-14;z<=14&&!ring;z+=4)for(let x=-14;x<=14&&!ring;x+=4){
+      const candidate=[[x,z],[x+8,z],[x+8,z+8],[x,z+8],[x,z]];
+      const crop={x:x+4,z:z+4};
+      if(!nav.placement(crop.x,crop.z,.4).valid)continue;
+      const plan=Game.previewWallChain(state,'zarzas',candidate,nav,
+        {smooth:false,snap:false});
+      if(plan.gates===1&&plan.pieces.length>=12){ring=candidate;inside=crop;}
+    }
+    assert(ring);
+    assert.equal(Game.plant(state,'fragile-ring-crop','mijo',inside.x,inside.z,nav),true);
+    assert.equal(Game.buildWallChain(state,'fragile-ring','zarzas',ring,nav,
+      {smooth:false,snap:false}),true);
+    const walls=state.structures.filter(item=>item.kind==='wall');
+    assert(walls.length>=12);
+    for(const wall of walls)wall.hp=Math.floor(wall.maxHp*.2)+1;
+    const planner=createEventDrivenTaskPlanner(session);
+    planner.resetFromState(state);
+    stopWorld=planner.observeWorld(state);stopTasks=planner.observeTasks(state);
+    nav.intentTaskPlanner=planner;
+    nav.setRaidView({x:ring[0][0]-7,z:ring[0][1]+4},inside);
+    state.day=6;state.time=310;
+    assert.notEqual(spawnRaid(state,{at:310,group:['warthog','warthog'],
+      done:false,introductory:false},nav),false);
+    for(let i=0;i<100;i++){
+      Game.tick(state,.25,nav);
+      if(state.raid?.animals.every(animal=>walls.some(wall=>
+        wall.id===animal.targetId)))break;
+    }
+    assert(state.raid?.animals.every(animal=>walls.some(wall=>
+      wall.id===animal.targetId)),'both animals target real walls before saving');
+    const saved=deserialize(serialize(state)),restoredLoaded=new Map();
+    restoredSession=createSpatialGameSession(module,saved,{
+      loaded:()=>restoredLoaded,
+      onData:data=>restoredLoaded.set(`${data.cx},${data.cz}`,data)});
+    restoredSession.stream.plan(jobs);await restoredSession.stream.whenIdle();
+    const restoredNav=createSpatialNavigationMovement(restoredSession,saved);
+    restoredNav.setActiveBounds([-36,-36,36,36]);
+    restoredNav.setRaidView(nav.raidView.eye,nav.raidView.target);
+    const restoredPlanner=createEventDrivenTaskPlanner(restoredSession);
+    assert.equal(restoredPlanner.resetFromState(saved).restoredAnimalRoutes,2);
+    stopRestoredWorld=restoredPlanner.observeWorld(saved);
+    stopRestoredTasks=restoredPlanner.observeTasks(saved);
+    restoredNav.intentTaskPlanner=restoredPlanner;
+    let ticks=0;
+    while(!state.events.some(event=>event.type==='StructureRuined')&&ticks<800){
+      Game.tick(state,.25,nav);
+      Game.tick(saved,.25,restoredNav);
+      ticks++;
+    }
+    assert(ticks<800,'an animal opens a real breach');
+    assert(state.events.some(event=>event.type==='StructureHit'&&
+      walls.some(wall=>wall.id===event.targetId)));
+    const ruined=state.events.filter(event=>event.type==='StructureRuined');
+    assert(ruined.length>0);
+    assert.deepEqual(saved.events.filter(event=>event.type==='StructureRuined'),ruined);
+    for(let i=0;i<8;i++){
+      Game.tick(state,.25,nav);
+      Game.tick(saved,.25,restoredNav);
+    }
+    const continuous=JSON.parse(serialize(state)),resumed=JSON.parse(serialize(saved));
+    for(const copy of [continuous,resumed])for(const animal of copy.raid?.animals??[]){
+      delete animal.pathVersion;
+      delete animal.mobileRecoveryVersion;
+      if(animal.raidWait)delete animal.raidWait.epoch;
+    }
+    assert.deepEqual(resumed,continuous,
+      'confirmed damage, breach and follow-up decisions survive save/load');
+  }finally{
+    stopRestoredTasks();stopRestoredWorld();stopTasks();stopWorld();
+    restoredSession?.dispose();session.dispose();
+  }
+});
