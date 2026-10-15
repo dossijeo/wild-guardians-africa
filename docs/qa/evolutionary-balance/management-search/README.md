@@ -443,3 +443,11 @@ umbral congelado de 82⅙ cajas/día. Esto es supervivencia física de 14 noches
 no una política solvente acreditada ni una derrota nativa. Usa la magia
 histórica y no debe confundirse con una prueba de expansión bajo la magia
 actual. Informe: `results-14-post-intro/deb7ec2b4ed1-expansive-manglares-24681357-14.json`.
+
+En la semilla de desarrollo Manglares/123, el mismo control `expansive`
+completó 14/14 noches con sólo 23 cultivos vivos, 574 monedas, 162 pérdidas
+desde la noche 6 y 54⅓ cajas/día terminales. Su margen operativo de los tres
+últimos días fue +86, pero la producción quedó igualmente por debajo del
+umbral congelado; no se declara estrategia sostenible. Las catorce filas
+concilian. Informe:
+`results-14-main-sync/712f0156ff37-expansive-manglares-123-14.json`.
