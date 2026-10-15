@@ -72,16 +72,19 @@ test('native crop groups share the game adjacency rule and invalidate only on cr
    referenceGroups(game.plants));
   assert.ok(after.every(group=>!group.cropIds.includes(plant.id)));
   const stop=bridge.observeCropProtection(()=>{});
-  bridge.publishCropProtectionChanges();
   const queryCount=bridge.cropProtectionMetrics().queries;
+  const late=[];
+  const stopLate=bridge.observeCropProtection(event=>late.push(event));
+  assert.equal(late[0]?.type,'crop-groups-updated');
+  assert.equal(bridge.cropProtectionMetrics().queries,queryCount,
+   'a late subscriber receives the native snapshot without reclassifying');
+  stopLate();
   plant.alive=true;
   bridge.applyCommittedEvents(game,[{type:'CropPlaced',targetId:plant.id}]);
-  bridge.publishCropProtectionChanges();
   assert.equal(bridge.cropProtectionMetrics().queries,queryCount+1,
-   'a new crop may expose a group and must be classified');
+   'a confirmed new crop automatically classifies and notifies its group');
   plant.alive=false;
   bridge.applyCommittedEvents(game,[{type:'CropPicked',targetId:plant.id}]);
-  bridge.publishCropProtectionChanges();
   assert.equal(bridge.cropProtectionMetrics().queries,queryCount+1,
    'harvest cannot open a wall or worsen protection');
   stop();
@@ -133,7 +136,8 @@ test('a paid closed wall ring protects the crop; removing a wall invalidates cer
   assert.equal(before[0].protection,'protected',JSON.stringify(before[0].profiles));
   const notices=[];
   const stopNotices=bridge.observeCropProtection(event=>notices.push(event));
-  bridge.publishCropProtectionChanges();notices.length=0;
+  notices.length=0;
+  const topologyEpoch=bridge.topologyEpoch();
   const wall=game.structures.find(item=>item.kind==='wall'&&!item.gate);
   const candidates=game.structures.filter(item=>item.kind==='wall'&&!item.gate)
    .sort((a,b)=>Math.hypot(a.x-wall.x,a.z-wall.z)-
@@ -148,12 +152,19 @@ test('a paid closed wall ring protects the crop; removing a wall invalidates cer
    'the native graph must first confirm a physical breach');
   bridge.applyCommittedEvents(game,game.events.filter(event=>
    event.type==='WallRemoved'&&removed.includes(event.targetId)));
-  bridge.publishCropProtectionChanges();
+  assert.ok(bridge.topologyEpoch()>topologyEpoch);
+  assert.ok(notices.some(event=>event.type==='funds-changed'&&event.delta>0),
+   'a confirmed wall refund also wakes the economic consumer');
   const after=bridge.getUnprotectedCropGroups({includeProtected:true});
   assert.notEqual(after[0].protection,'protected');
   assert.equal(notices.some(event=>event.type==='crop-group-unprotected'),
    after[0].protection==='unprotected',
    'Wild Engine only announces an exposed group when the native graph proves it');
+  assert.equal(notices.some(event=>event.type==='crop-topology-changed'),false,
+   'consumers receive the changed crop group, not a raw topology wake-up');
+  const delivered=notices.length;
+  bridge.applyCommittedEvents(game,[]);
+  assert.equal(notices.length,delivered,'ordinary ticks cannot replay the notice');
   stopNotices();
  }finally{session.dispose();}
 });
@@ -216,7 +227,8 @@ test('missing sectors cannot certify a proposed perimeter',
   const nav=createSpatialNavigationMovement(session,game);
   const group=bridge.getUnprotectedCropGroups()[0];
   assert(group);
-  assert.equal(group.protection,'unknown');
+  assert.notEqual(group.protection,'protected',
+   'an open resident frontier or missing sector cannot certify protection');
   const plan=createCropEnclosurePlanner(game,nav,bridge).planCropEnclosure(group.id);
   assert.notEqual(plan.status,'ready');
   assert.notEqual(plan.status,'protected');

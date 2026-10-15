@@ -1,0 +1,514 @@
+{
+  "source": "53c903087134e4babf28a3fe15373df484492926",
+  "sourceFiles": {
+    "tools/native-campaign-runner.mjs": "0543c898b97bd1fcb28ec94a1fac239adf612a99d59f507611f2713a60c343e7",
+    "tools/native-campaign-plots.mjs": "90594ef3875e28cb5dadb329ff71ab2a6f1212fb6849247649f93c30f39de68f",
+    "tools/native-expanding-defense-policy.mjs": "0bf9ff80b8ec0d3ea9cfc96ec06b47435f5c6b545a8f4cd462bf1569fa83f4b6",
+    "src/simulation/game.js": "84747a0a66eb163efc58b5c497860bafcfe19b289405ad614c23a9e56680e8c6",
+    "src/world/hierarchical-wasm/spatial-intent-bridge.js": "7d2f30f71796e5b23b3794e4d75d3f2925b2ea955a83bdfd73a5e69a2669a215",
+    "src/world/hierarchical-wasm/spatial-savanna.wasm": "bbe7e6e8bf66eb7b40a2b6d8b795ecdfbba52b90cb15d2d66c33be13282f419e"
+  },
+  "engine": "wild-engine",
+  "preparedQuotes": true,
+  "spatialAdvice": true,
+  "spatialSite": {
+    "found": 497,
+    "pending": 22,
+    "blocked": 0,
+    "no-space": 0,
+    "unknown": 103,
+    "legacyFallback": 0
+  },
+  "spatialAdviceInitMs": 2.4495999999999185,
+  "spatialSync": {
+    "calls": 2405,
+    "events": 6540,
+    "ms": 3488.0341999998413
+  },
+  "spatialProtection": {
+    "queries": 415,
+    "notifications": 26,
+    "queryMs": 4183.135099999863
+  },
+  "daysRequested": 7,
+  "completedNights": 7,
+  "result": null,
+  "biome": "sabana",
+  "seed": "712",
+  "strategy": "good",
+  "policy": {
+    "profile": "olderFemale",
+    "mixed": true,
+    "middayHiring": true,
+    "plantsPerWorker": 6,
+    "defend": true,
+    "cashPolicy": "progressive-village",
+    "reserveMaintenance": true,
+    "burstPlanting": false,
+    "cameraEntry": true,
+    "defensePolicy": "expanding"
+  },
+  "defense": {
+    "paidCost": 560,
+    "paidPieces": 56,
+    "repairRequests": 7,
+    "capitalTarget": 0,
+    "planReasons": {
+      "saving-for-complete-enclosure": 117,
+      "ready": 3,
+      "enclosure-topology-changed-before-purchase": 1
+    },
+    "firstPlans": [
+      {
+        "day": 2,
+        "time": 0,
+        "elapsed": 599.9999999999901,
+        "groupId": "crop:plant-106",
+        "planId": "crop:plant-106:zarzas:144:247.195.195.195.195:350",
+        "status": "ready",
+        "expectedSlots": 36,
+        "paidPieces": 0,
+        "paidCost": 0,
+        "gaps": [
+          {
+            "x": 97,
+            "z": 4.652777777777779,
+            "reason": "physical-obstacle"
+          }
+        ],
+        "bounds": [
+          78.5,
+          -10,
+          97,
+          10
+        ],
+        "reason": "saving-for-complete-enclosure",
+        "targetCost": 350
+      },
+      {
+        "day": 2,
+        "time": 15.99999999999996,
+        "elapsed": 615.9999999999937,
+        "groupId": "crop:plant-106",
+        "planId": "crop:plant-106:zarzas:144:247.195.195.195.195:350",
+        "status": "ready",
+        "expectedSlots": 36,
+        "paidPieces": 0,
+        "paidCost": 0,
+        "gaps": [
+          {
+            "x": 97,
+            "z": 4.652777777777779,
+            "reason": "physical-obstacle"
+          }
+        ],
+        "bounds": [
+          78.5,
+          -10,
+          97,
+          10
+        ],
+        "reason": "saving-for-complete-enclosure",
+        "targetCost": 350
+      },
+      {
+        "day": 2,
+        "time": 54.0000000000005,
+        "elapsed": 654.0000000000024,
+        "groupId": "crop:plant-106",
+        "planId": "crop:plant-106:zarzas:144:247.195.195.195.195:350",
+        "status": "ready",
+        "expectedSlots": 36,
+        "paidPieces": 0,
+        "paidCost": 0,
+        "gaps": [
+          {
+            "x": 97,
+            "z": 4.652777777777779,
+            "reason": "physical-obstacle"
+          }
+        ],
+        "bounds": [
+          78.5,
+          -10,
+          97,
+          10
+        ],
+        "reason": "saving-for-complete-enclosure",
+        "targetCost": 350
+      },
+      {
+        "day": 2,
+        "time": 58.000000000000554,
+        "elapsed": 658.0000000000033,
+        "groupId": "crop:plant-106",
+        "planId": "crop:plant-106:zarzas:144:247.195.195.195.195:350",
+        "status": "ready",
+        "expectedSlots": 36,
+        "paidPieces": 0,
+        "paidCost": 0,
+        "gaps": [
+          {
+            "x": 97,
+            "z": 4.652777777777779,
+            "reason": "physical-obstacle"
+          }
+        ],
+        "bounds": [
+          78.5,
+          -10,
+          97,
+          10
+        ],
+        "reason": "saving-for-complete-enclosure",
+        "targetCost": 350
+      }
+    ]
+  },
+  "daily": [
+    {
+      "day": 1,
+      "living": 67,
+      "planted": 109,
+      "delivered": 43,
+      "destroyed": 0,
+      "staff": 8,
+      "money": 383,
+      "finance": {
+        "opening": 700,
+        "closing": 383,
+        "income": 473,
+        "refunds": 0,
+        "wages": 240,
+        "seeds": 550,
+        "walls": 0,
+        "centers": 0,
+        "villages": 0,
+        "repairs": 0,
+        "otherCredits": 0,
+        "otherDebits": 0,
+        "net": -317,
+        "reconciliationDifference": 0
+      },
+      "wallTime": {
+        "decisionMs": 54.093599999998446,
+        "gameTickMs": 598.4630999999986,
+        "presentationMs": 1.0218999999973448
+      },
+      "phases": {
+        "plot.nativeSite": {
+          "calls": 109,
+          "ms": 13.742599999999811
+        },
+        "other": {
+          "calls": 0,
+          "ms": 54.093599999998446
+        }
+      }
+    },
+    {
+      "day": 2,
+      "living": 23,
+      "planted": 24,
+      "delivered": 68,
+      "destroyed": 0,
+      "staff": 12,
+      "money": 651,
+      "finance": {
+        "opening": 383,
+        "closing": 651,
+        "income": 748,
+        "refunds": 0,
+        "wages": 360,
+        "seeds": 120,
+        "walls": 0,
+        "centers": 0,
+        "villages": 0,
+        "repairs": 0,
+        "otherCredits": 0,
+        "otherDebits": 0,
+        "net": 268,
+        "reconciliationDifference": 0
+      },
+      "wallTime": {
+        "decisionMs": 6829.326299999986,
+        "gameTickMs": 672.4398999999976,
+        "presentationMs": 0.6890000000075815
+      },
+      "phases": {
+        "defense.nativeEnclosure": {
+          "calls": 1,
+          "ms": 6080
+        },
+        "defense.act": {
+          "calls": 60,
+          "ms": 6699.872399999998
+        },
+        "plot.nativeSite": {
+          "calls": 24,
+          "ms": 2.988500000001295
+        },
+        "other": {
+          "calls": 0,
+          "ms": 129.4538999999877
+        }
+      }
+    },
+    {
+      "day": 3,
+      "living": 45,
+      "planted": 60,
+      "delivered": 38,
+      "destroyed": 0,
+      "staff": 4,
+      "money": 299,
+      "finance": {
+        "opening": 651,
+        "closing": 299,
+        "income": 418,
+        "refunds": 0,
+        "wages": 120,
+        "seeds": 300,
+        "walls": 350,
+        "centers": 0,
+        "villages": 0,
+        "repairs": 0,
+        "otherCredits": 0,
+        "otherDebits": 0,
+        "net": -352,
+        "reconciliationDifference": 0
+      },
+      "wallTime": {
+        "decisionMs": 4890.210699999978,
+        "gameTickMs": 5584.3041000000085,
+        "presentationMs": 1.0531999999930122
+      },
+      "phases": {
+        "defense.previewWallChain": {
+          "calls": 1,
+          "ms": 4278.1491000000005
+        },
+        "defense.buildWallChain": {
+          "calls": 1,
+          "ms": 106.1854000000003
+        },
+        "defense.act": {
+          "calls": 35,
+          "ms": 4385.08450000001
+        },
+        "plot.nativeSite": {
+          "calls": 60,
+          "ms": 9.581399999995483
+        },
+        "other": {
+          "calls": 0,
+          "ms": 505.12619999996787
+        }
+      }
+    },
+    {
+      "day": 4,
+      "living": 46,
+      "planted": 70,
+      "delivered": 69,
+      "destroyed": 0,
+      "staff": 8,
+      "money": 458,
+      "finance": {
+        "opening": 299,
+        "closing": 458,
+        "income": 759,
+        "refunds": 0,
+        "wages": 250,
+        "seeds": 350,
+        "walls": 0,
+        "centers": 0,
+        "villages": 0,
+        "repairs": 0,
+        "otherCredits": 0,
+        "otherDebits": 0,
+        "net": 159,
+        "reconciliationDifference": 0
+      },
+      "wallTime": {
+        "decisionMs": 684.0238000000281,
+        "gameTickMs": 18436.1525,
+        "presentationMs": 1.1404000000475207
+      },
+      "phases": {
+        "defense.act": {
+          "calls": 57,
+          "ms": 0.6791999999986729
+        },
+        "plot.nativeSite": {
+          "calls": 70,
+          "ms": 11.283599999995204
+        },
+        "other": {
+          "calls": 0,
+          "ms": 683.3446000000295
+        }
+      }
+    },
+    {
+      "day": 5,
+      "living": 71,
+      "planted": 83,
+      "delivered": 58,
+      "destroyed": 0,
+      "staff": 8,
+      "money": 470,
+      "finance": {
+        "opening": 458,
+        "closing": 470,
+        "income": 747,
+        "refunds": 0,
+        "wages": 240,
+        "seeds": 415,
+        "walls": 80,
+        "centers": 0,
+        "villages": 0,
+        "repairs": 0,
+        "otherCredits": 0,
+        "otherDebits": 0,
+        "net": 12,
+        "reconciliationDifference": 0
+      },
+      "wallTime": {
+        "decisionMs": 38821.39780000005,
+        "gameTickMs": 10762.333600000085,
+        "presentationMs": 1.2873999999501393
+      },
+      "phases": {
+        "defense.act": {
+          "calls": 52,
+          "ms": 37733.15529999996
+        },
+        "plot.nativeSite": {
+          "calls": 86,
+          "ms": 15.017999999996391
+        },
+        "defense.nativeEnclosure": {
+          "calls": 1,
+          "ms": 19961.032900000006
+        },
+        "defense.previewWallChain": {
+          "calls": 1,
+          "ms": 17640.620200000005
+        },
+        "defense.buildWallChain": {
+          "calls": 1,
+          "ms": 130.74639999998908
+        },
+        "other": {
+          "calls": 0,
+          "ms": 1088.2425000000876
+        }
+      }
+    },
+    {
+      "day": 6,
+      "living": 80,
+      "planted": 88,
+      "delivered": 78,
+      "destroyed": 1,
+      "staff": 12,
+      "money": 586,
+      "finance": {
+        "opening": 470,
+        "closing": 586,
+        "income": 916,
+        "refunds": 0,
+        "wages": 360,
+        "seeds": 440,
+        "walls": 0,
+        "centers": 0,
+        "villages": 0,
+        "repairs": 0,
+        "otherCredits": 0,
+        "otherDebits": 0,
+        "net": 116,
+        "reconciliationDifference": 0
+      },
+      "wallTime": {
+        "decisionMs": 31099.3882999997,
+        "gameTickMs": 11290.834299999871,
+        "presentationMs": 1.427999999403255
+      },
+      "phases": {
+        "defense.act": {
+          "calls": 65,
+          "ms": 29815.96879999996
+        },
+        "plot.nativeSite": {
+          "calls": 100,
+          "ms": 18.604599999962375
+        },
+        "defense.nativeEnclosure": {
+          "calls": 1,
+          "ms": 29814.949099999998
+        },
+        "other": {
+          "calls": 0,
+          "ms": 1283.4194999997417
+        }
+      }
+    },
+    {
+      "day": 7,
+      "living": 39,
+      "planted": 62,
+      "delivered": 102,
+      "destroyed": 0,
+      "staff": 14,
+      "money": 949,
+      "finance": {
+        "opening": 586,
+        "closing": 949,
+        "income": 1275,
+        "refunds": 0,
+        "wages": 420,
+        "seeds": 310,
+        "walls": 130,
+        "centers": 0,
+        "villages": 0,
+        "repairs": 52,
+        "otherCredits": 0,
+        "otherDebits": 0,
+        "net": 363,
+        "reconciliationDifference": 0
+      },
+      "wallTime": {
+        "decisionMs": 4650.505200000131,
+        "gameTickMs": 17551.772000000114,
+        "presentationMs": 1.7910999997402541
+      },
+      "phases": {
+        "defense.act": {
+          "calls": 78,
+          "ms": 4008.080600000045
+        },
+        "plot.nativeSite": {
+          "calls": 172,
+          "ms": 23.16940000007162
+        },
+        "defense.nativeEnclosure": {
+          "calls": 1,
+          "ms": 3733.791499999992
+        },
+        "defense.previewWallChain": {
+          "calls": 1,
+          "ms": 234.0978999999934
+        },
+        "defense.buildWallChain": {
+          "calls": 1,
+          "ms": 32.39679999998771
+        },
+        "other": {
+          "calls": 0,
+          "ms": 642.4246000000858
+        }
+      }
+    }
+  ]
+}

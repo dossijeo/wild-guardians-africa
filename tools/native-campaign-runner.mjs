@@ -72,9 +72,6 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
    spatialSync.ms+=performance.now()-started;
    spatialEvents=[];
   }
-  // Sector/topology callbacks and confirmed crop deltas wake subscribers.
-  // With no relevant event this is a constant-time no-op, not a nav query.
-  advice.publishCropProtectionChanges();
  };
  const worker=PROFILES.find(p=>p.id===profile);if(!worker)throw new Error('Unknown worker profile');
  if(!['legacy','expanding'].includes(defensePolicy))throw Error('Unknown defense policy');

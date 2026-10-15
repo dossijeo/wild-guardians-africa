@@ -41,12 +41,12 @@ test('event-fed native intent bridge replays live state and only changes on expl
   assert.equal(initial.tasks,1);
   const notices=[];
   const stopProtection=bridge.observeCropProtection(event=>notices.push(event));
-  bridge.publishCropProtectionChanges();
   const initialNotices=notices.length;
-  for(let tick=0;tick<100;tick++)
-   assert.equal(bridge.publishCropProtectionChanges(),0);
+  const protectionQueries=bridge.cropProtectionMetrics().queries;
+  for(let tick=0;tick<100;tick++)bridge.syncActionBoundary(game);
   assert.equal(notices.length,initialNotices,
    'ordinary ticks never reclassify native crop protection');
+  assert.equal(bridge.cropProtectionMetrics().queries,protectionQueries);
   assert.equal(bridge.syncActionBoundary(game),0,
    'an unchanged action boundary sends no native delta');
   const originalX=worker.x,originalCreated=task.created;

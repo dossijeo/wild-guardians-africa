@@ -14,30 +14,42 @@ export function createNativeExpandingDefensePolicy({startDay=2,material='zarzas'
   try{return fn();}finally{measure(kind,performance.now()-start);}
  };
  const cost=wallSpec(material).cost;let nextAttempt=0,capitalTarget=0,built=null,repairRequests=0;
- let savedPlan=null;
+ let savedPlan=null,savingsCommitted=0;
  const nativeEvents=Boolean(spatialAdvice&&reserveMode==='full-enclosure');
- let needsPlan=nativeEvents,needsFunds=nativeEvents,needsRepair=nativeEvents;
+ let needsPlan=false,needsFunds=nativeEvents,needsRepair=nativeEvents;
+ let exposedGroups=new Map();
  const onProtectionEvent=event=>{
-  if(event.type==='crop-topology-changed'||event.type==='crop-protection-reset'){
-   if(['sector-resident','sector-unloaded'].includes(event.reason)&&savedPlan?.bounds){
-    const {cx,cz}=event.change,b=savedPlan.bounds;
-    if(cx*48+24<b.minX-12||cx*48-24>b.maxX+12||
-      cz*48+24<b.minZ-12||cz*48-24>b.maxZ+12)return;
-   }
-   savedPlan=null;needsPlan=true;needsRepair=true;
+  if(event.type==='crop-protection-reset'){
+   savedPlan=null;exposedGroups.clear();needsPlan=false;needsRepair=true;
+  }else if(event.type==='crop-groups-updated'){
+   exposedGroups=new Map(event.groups.filter(group=>group.protection==='unprotected')
+    .map(group=>[group.id,group]));
   }else if(event.type==='crop-group-unprotected'){
    if(!savedPlan)needsPlan=true;
   }else if(event.type==='crop-group-protected'){
-   if(savedPlan?.groupId===event.group.id){savedPlan=null;capitalTarget=0;needsPlan=true;}
-  }else if(event.type==='funds-changed')needsFunds=true;
+   if(savedPlan?.groupId===event.group.id){savedPlan=null;capitalTarget=0;needsPlan=exposedGroups.size>0;}
+  }else if(event.type==='funds-changed'){
+   if(savedPlan?.proposal.status==='ready'&&event.income>0)
+    savingsCommitted=Math.min(savedPlan.proposal.cost,
+      savingsCommitted+Math.floor(event.income*.5));
+   if(event.delta>0||event.income>0)needsFunds=true;
+  }
   else if(event.type==='structure-damaged')needsRepair=true;
   else if(event.type==='day-start'&&event.day>=startDay){
+   if(!savedPlan&&exposedGroups.size)needsPlan=true;
    needsRepair=true;
   }
  };
  let stopProtection=null;
  const history=[],owned=new Set();
- const reserve=s=>reserveMode!=='none'&&s.day>=startDay?capitalTarget:0;
+ const reserve=s=>{
+  if(reserveMode==='none'||s.day<startDay)return 0;
+  if(!nativeEvents)return capitalTarget;
+  // Earmark a share of settled deliveries. In distress, seeds outrank walls.
+  const living=s.plants.reduce((count,crop)=>count+Number(crop.alive),0);
+  if(living<Math.max(6,s.workers.length*2))return 0;
+  return Math.min(capitalTarget,savingsCommitted);
+ };
  const needsAction=s=>nativeEvents?s.day>=startDay&&
   (needsPlan||needsFunds||needsRepair):true;
  function act(s,nav,{command,reserve:protectedCash}){
@@ -66,12 +78,13 @@ export function createNativeExpandingDefensePolicy({startDay=2,material='zarzas'
    // plan. Crop turnover and ordinary ticks do not re-certify its perimeter.
    if(!savedPlan&&!replan)return 0;
    if(replan){
-    const group=timed('defense.nativeGroups',()=>
-      spatialAdvice.getUnprotectedCropGroups().find(item=>item.protection==='unprotected'));
+    const group=[...exposedGroups.values()].sort((a,b)=>
+     b.value-a.value||a.id.localeCompare(b.id))[0];
     if(!group){capitalTarget=0;return 0;}
     const proposal=timed('defense.nativeEnclosure',()=>
       createCropEnclosurePlanner(s,nav,spatialAdvice).planCropEnclosure(group.id,{material}));
-    savedPlan={groupId:group.id,bounds:group.bounds,proposal};
+    savedPlan={groupId:group.id,bounds:group.bounds,proposal,
+     topologyEpoch:spatialAdvice.topologyEpoch?.()};
    }
    let {groupId,proposal}=savedPlan;
    if(!replan&&proposal.status!=='ready')return 0;
@@ -90,35 +103,32 @@ export function createNativeExpandingDefensePolicy({startDay=2,material='zarzas'
     row.reason='saving-for-complete-enclosure';row.targetCost=proposal.cost;
     history.push(row);return 0;
    }
-   // A saved quote is only a savings target. Before paying, resolve today's
-   // live crop group and re-certify the complete perimeter against the graph.
-   const current=timed('defense.nativeGroups',()=>spatialAdvice.getUnprotectedCropGroups());
-   const group=current.find(candidate=>candidate.id===groupId)??current.find(candidate=>
-     candidate.bounds.minX<=savedPlan.bounds.maxX&&
-     candidate.bounds.maxX>=savedPlan.bounds.minX&&
-     candidate.bounds.minZ<=savedPlan.bounds.maxZ&&
-     candidate.bounds.maxZ>=savedPlan.bounds.minZ);
-   if(!group){savedPlan=null;capitalTarget=0;row.reason='group-no-longer-exposed';history.push(row);return 0;}
-   proposal=timed('defense.nativeEnclosure',()=>
-     createCropEnclosurePlanner(s,nav,spatialAdvice).planCropEnclosure(group.id,{material}));
-   savedPlan={groupId:group.id,bounds:group.bounds,proposal};
-   groupId=group.id;capitalTarget=proposal.status==='ready'?proposal.cost:0;
-   if(proposal.status!=='ready'||numberOf(s.ledger.balance)<protectedCash+pending+proposal.cost){
-    row.reason=proposal.status==='ready'?'saving-for-revised-enclosure':proposal.reason;
-    row.targetCost=proposal.cost??0;history.push(row);return 0;
+   if(savedPlan.topologyEpoch!==spatialAdvice.topologyEpoch?.()){
+    savedPlan=null;capitalTarget=0;needsPlan=true;
+    row.reason='enclosure-topology-changed-before-purchase';
+    history.push(row);return 0;
    }
+   // The planned plot remains useful after harvest. The native certificate
+   // persists while topology is unchanged; do not shrink the ring around
+   // whichever crops happen to remain on the purchase day.
    const options={smooth:false,snap:false};
    const quote=timed('defense.previewWallChain',()=>
      Game.previewWallChain(s,material,proposal.points,nav,options));
-   if(quote.cost!==proposal.cost||quote.pieces.length!==proposal.modules.length)
-     throw Error('The certified enclosure changed before purchase');
+   const shape=pieces=>pieces.map(piece=>[
+     piece.x,piece.z,piece.yaw,piece.baseScaleX,Boolean(piece.gate)]
+     .join(':')).sort().join('|');
+   if(quote.cost!==proposal.cost||shape(quote.pieces)!==shape(proposal.modules)){
+    savedPlan=null;capitalTarget=0;needsPlan=true;
+    row.reason='saved-enclosure-quote-changed';history.push(row);return 0;
+   }
    if(timed('defense.buildWallChain',()=>Game.buildWallChain(s,command('wall'),
      material,proposal.points,nav,{...options,...preparedQuotes?{preparedPlan:quote}:{}}))){
     row.paidPieces=quote.pieces.length;row.paidCost=quote.cost;
     row.ids=quote.pieces.map(piece=>piece.id);row.gates=quote.gates;
     for(const id of row.ids)owned.add(id);
     built={day:s.day,groupId,cost:quote.cost,pieces:quote.pieces.length,
-      ids:[...owned]};capitalTarget=0;savedPlan=null;history.push(row);return 1;
+      ids:[...owned]};capitalTarget=0;savingsCommitted=0;
+    savedPlan=null;history.push(row);return 1;
    }
    row.reason='complete-enclosure-purchase-rejected';history.push(row);return 0;
   }
@@ -148,5 +158,5 @@ export function createNativeExpandingDefensePolicy({startDay=2,material='zarzas'
   }
   row.reason='no-new-legal-pieces';history.push(row);return 0;
  }
- return {reserve,act,needsAction,dispose:()=>stopProtection?.(),report:s=>structuredClone({startDay,material,reserveMode,repairWalls,capitalTarget,built,history,repairRequests,paidCost:history.reduce((n,r)=>n+r.paidCost,0),paidPieces:history.reduce((n,r)=>n+r.paidPieces,0),scope:'Paid expanding native perimeters; actual interception not established by construction alone; repairs requested never counted as completion'})};
+ return {reserve,act,needsAction,dispose:()=>stopProtection?.(),report:s=>structuredClone({startDay,material,reserveMode,repairWalls,capitalTarget,savingsCommitted,built,history,repairRequests,paidCost:history.reduce((n,r)=>n+r.paidCost,0),paidPieces:history.reduce((n,r)=>n+r.paidPieces,0),scope:'Paid expanding native perimeters; actual interception not established by construction alone; repairs requested never counted as completion'})};
 }

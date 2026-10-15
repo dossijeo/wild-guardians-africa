@@ -1,6 +1,7 @@
 import {centerGeometry,centerServicePoint} from '../centers.js';
 import {contractExpired,PROFILES} from '../../simulation/workforce.js';
 import {repairCost} from '../../simulation/game.js';
+import {numberOf} from '../../simulation/money.js';
 import {BALANCE} from '../../simulation/balance.js';
 import {ANIMAL_SPATIAL_PROFILES} from './spatial-movement-profiles.js';
 
@@ -68,18 +69,22 @@ export function createSpatialIntentBridge(session){
     'nav_intent_find_planting_site','nav_intent_planting_site_ptr',
     'nav_intent_release_planting_site'])
     if(typeof wasm?.[name]!=='function')throw TypeError(`Missing ${name}`);
-  let sequence=0,initialized=false;
+  let sequence=0,initialized=false,observedBalance=0;
   const structuresById=new Map();
   const cropsById=new Map();
   const planningWorkers=new Map(),planningTasks=new Map();
   const protectionObservers=new Set();
   let observedProtection=new Map(),observedCropProtection=new Map(),
-    pendingProtection=false,protectionRevision=0;
+    lastProtectionGroups=new Map(),
+    pendingProtection=false,protectionRevision=0,topologyEpoch=0,
+    publishingProtection=false;
   const protectionMetrics={queries:0,notifications:0,queryMs:0};
   const publish=event=>{for(const observer of protectionObservers)observer(event);};
   const stopTopology=session.observeTopologyChanges?.(change=>{
-    pendingProtection=true;protectionRevision++;
-    publish({type:'crop-topology-changed',reason:change.type,change});
+    pendingProtection=true;protectionRevision++;topologyEpoch++;
+    // The consumer receives the resulting crop-group state, never a raw
+    // topology revision that would make it inspect the farm itself.
+    publishCropProtectionChanges();
   });
   const apply=rows=>{
     if(!initialized)throw Error('Reset the native intent session first');
@@ -118,9 +123,12 @@ export function createSpatialIntentBridge(session){
         structuresById.set(numericId(structure.id),{...structure});
       for(const crop of state.plants)if(crop.alive)
         cropsById.set(numericId(crop.id),crop.id);
+      observedBalance=numberOf(state.ledger.balance);
       observedProtection=new Map();observedCropProtection=new Map();
-      pendingProtection=true;protectionRevision++;
+      lastProtectionGroups=new Map();
+      pendingProtection=true;protectionRevision++;topologyEpoch++;
       publish({type:'crop-protection-reset',reason:'state-restored'});
+      publishCropProtectionChanges();
     }
     catch(error){
       wasm.nav_intent_reset();sequence=0;initialized=false;
@@ -257,12 +265,21 @@ export function createSpatialIntentBridge(session){
     }
     if(changes.length)applyEvents(state,changes);
     if(topologyChanged&&!stopTopology){
-      pendingProtection=true;protectionRevision++;
-      publish({type:'crop-topology-changed',reason:'committed-structure-change'});
+      pendingProtection=true;protectionRevision++;topologyEpoch++;
     }else if(cropChanged){pendingProtection=true;protectionRevision++;}
+    publishCropProtectionChanges();
     if(events.some(event=>event.type==='Dawn'))publish({type:'day-start',day:state.day});
-    if(events.some(event=>event.type==='CrateDelivered'))
-      publish({type:'funds-changed',balance:state.ledger.balance});
+    const deliveries=events.filter(event=>event.type==='CrateDelivered');
+    const income=deliveries.reduce((total,event)=>{
+        const settled=state.ledger.entries[`deliver:${event.targetId}`];
+        if(!settled)throw Error(`Missing settled delivery ${event.targetId}`);
+        return total+numberOf(settled);
+      },0);
+    const balance=numberOf(state.ledger.balance),delta=balance-observedBalance;
+    observedBalance=balance;
+    if(delta||income){
+      publish({type:'funds-changed',balance:state.ledger.balance,delta,income});
+    }
     if(events.some(event=>['StructureHit','StructureRuined','RepairApplied'].includes(event.type)))
       publish({type:'structure-damaged'});
     return changes.length;
@@ -337,16 +354,28 @@ export function createSpatialIntentBridge(session){
   const observeCropProtection=observer=>{
     if(typeof observer!=='function')throw TypeError('Expected crop protection observer');
     protectionObservers.add(observer);
+    try{
+      if(pendingProtection)publishCropProtectionChanges();
+      else{
+        const groups=[...lastProtectionGroups.values()];
+        observer({type:'crop-groups-updated',groups});
+        for(const group of groups)if(group.protection==='unprotected')
+          observer({type:'crop-group-unprotected',group});
+      }
+    }catch(error){protectionObservers.delete(observer);throw error;}
     return ()=>protectionObservers.delete(observer);
   };
   const publishCropProtectionChanges=()=>{
-    if(!pendingProtection||!protectionObservers.size)return 0;
+    if(!pendingProtection||!protectionObservers.size||publishingProtection)return 0;
+    publishingProtection=true;
+    try{
     const revision=protectionRevision;
     const started=performance.now();
     const current=new Map(getUnprotectedCropGroups({includeProtected:true})
       .map(group=>[group.id,group]));
     protectionMetrics.queries++;
     let emitted=0;
+    publish({type:'crop-groups-updated',groups:[...current.values()]});
     for(const [id,group] of current){
       // Native group IDs are represented by a member crop. Harvesting that
       // member can change the ID without changing the exposed field.
@@ -364,10 +393,12 @@ export function createSpatialIntentBridge(session){
     observedProtection=new Map([...current].map(([id,group])=>[id,group.protection]));
     observedCropProtection=new Map([...current.values()].flatMap(group=>
       group.cropIds.map(cropId=>[cropId,group.protection])));
+    lastProtectionGroups=current;
     pendingProtection=protectionRevision!==revision;
     protectionMetrics.notifications+=emitted;
     protectionMetrics.queryMs+=performance.now()-started;
     return emitted;
+    }finally{publishingProtection=false;}
   };
   const findPlantingSite=(centerId,{budget=64,reserve=true}={})=>{
     if(!initialized)throw Error('Reset the native intent session first');
@@ -398,7 +429,8 @@ export function createSpatialIntentBridge(session){
   const releasePlantingSite=(reservationId,{committed=false}={})=>
     wasm.nav_intent_release_planting_site(reservationId,committed?1:0)===1;
   return {resetFromState,applyEvents,applyCommittedEvents,syncActionBoundary,planTasks,
-    observeCropProtection,publishCropProtectionChanges,
+    observeCropProtection,
+    topologyEpoch:()=>topologyEpoch,
     cropProtectionMetrics:()=>({...protectionMetrics}),
     dispose:()=>{stopTopology?.();protectionObservers.clear();},
     getDamagedWalls:()=>getDamaged('wall'),

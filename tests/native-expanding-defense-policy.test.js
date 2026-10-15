@@ -28,29 +28,35 @@ test('native enclosure policy wakes on Wild Engine notices instead of rechecking
  const {s,nav,options}=fixture();
  let notify=null,groupQueries=0,damageQueries=0;
  const spatialAdvice={
-  observeCropProtection(callback){notify=callback;return ()=>{notify=null;};},
-  getUnprotectedCropGroups(){groupQueries++;return [];},
+  observeCropProtection(callback){notify=callback;callback({type:'crop-groups-updated',groups:[]});return ()=>{notify=null;};},
+  getUnprotectedCropGroups(){groupQueries++;throw Error('The bot must not poll crop groups');},
   getDamagedWalls(){damageQueries++;return [];}
  };
  const policy=createNativeExpandingDefensePolicy({reserveMode:'full-enclosure',
   spatialAdvice});
  assert.equal(policy.needsAction(s),true);
  assert.equal(policy.act(s,nav,options),0);
- assert.equal(groupQueries,1);
+ assert.equal(groupQueries,0);
  for(let i=0;i<100;i++){
   s.elapsed++;
   assert.equal(policy.needsAction(s),false);
  }
- assert.equal(groupQueries,1,'ordinary ticks perform no crop-group query');
+ assert.equal(groupQueries,0,'ordinary ticks perform no crop-group query');
  notify({type:'funds-changed'});
  assert.equal(policy.act(s,nav,options),0);
- assert.equal(groupQueries,1,'new money does not recompute an absent enclosure');
+ assert.equal(groupQueries,0,'new money does not recompute an absent enclosure');
+ notify({type:'crop-groups-updated',groups:[{id:'crop:plant-1',value:10,
+  protection:'unprotected'}]});
  notify({type:'crop-group-unprotected',group:{id:'crop:plant-1'}});
- assert.equal(policy.act(s,nav,options),0);
- assert.equal(groupQueries,2,'native exposure notice wakes the defense decision');
+ // This fixture uses a generic Navigation, so the native enclosure planner
+ // cannot certify a purchase; the event must still be the only wake-up.
+ assert.throws(()=>policy.act(s,nav,options));
+ assert.equal(groupQueries,0,'native exposure notice never causes a JS group query');
+ notify({type:'crop-groups-updated',groups:[]});
+ notify({type:'crop-protection-reset'});
  notify({type:'day-start',day:3});
  assert.equal(policy.act(s,nav,options),0);
- assert.equal(groupQueries,2,'day transition checks repairs but does not rebuild crop topology');
+ assert.equal(groupQueries,0,'day transition checks repairs but does not rebuild crop topology');
  assert(damageQueries>=4);
  policy.dispose();assert.equal(notify,null);
 });

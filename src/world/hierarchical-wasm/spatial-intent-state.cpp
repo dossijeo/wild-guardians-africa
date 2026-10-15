@@ -21,6 +21,7 @@ int lazy_selected_context();
 int lazy_weak_region(int,int);
 int lazy_enclosure(int,int);
 int spatial_local_clear(float,float,float,float);
+float spatial_selected_nav_radius();
 int spatial_crop_placement_valid(float,float);
 float spatial_surface_anywhere(float,float);
 float spatial_fluid_surface_level();
@@ -234,6 +235,25 @@ int cropProtection(const IntentState& s,const CropGroup& group){
       if(region<0)continue;
       found=true;
       if(lazy_enclosure(x,z)!=1)open=true;
+    }
+    if(!found&&!unknown){
+      // A crop may sit against a static obstacle, so its center has no
+      // traversable grid connector even though an animal could attack from
+      // its stand-off ring. Every successful native route to such an attack
+      // point uses one of its floor/ceil anchors. The expanded disc below
+      // includes all those anchors; scanning too many can only withhold a
+      // protection certificate, never invent one.
+      const double reach=.6+double(spatial_selected_nav_radius())+std::sqrt(2.0);
+      const int minX=int(std::floor(crop.x-reach)),maxX=int(std::ceil(crop.x+reach));
+      const int minZ=int(std::floor(crop.z-reach)),maxZ=int(std::ceil(crop.z+reach));
+      for(int x=minX;x<=maxX;x++)for(int z=minZ;z<=maxZ;z++){
+        if(std::hypot(double(x)-crop.x,double(z)-crop.z)>reach+1e-6)continue;
+        const int region=lazy_weak_region(x,z);
+        if(region==-1){unknown=true;continue;}
+        if(region<0)continue;
+        found=true;
+        if(lazy_enclosure(x,z)!=1)open=true;
+      }
     }
     if(!found)unknown=true;
   }
