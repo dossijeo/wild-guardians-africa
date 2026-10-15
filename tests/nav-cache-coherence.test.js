@@ -11,6 +11,6 @@ test('JavaScript and native navigation caches agree with fresh queries across to
   const result=JSON.parse(run.stdout);
   assert.equal(result.discrepancies,0);
   for(const stage of ['uncommitted-wall-preview','wall-preview-discarded',
-    'residency-remove-and-restore','native-portal-only-revision',
+    'residency-remove-and-restore','active-worker-route-residency','native-portal-only-revision',
     'save-load-new-session'])assert(result.stages.includes(stage),stage);
 });

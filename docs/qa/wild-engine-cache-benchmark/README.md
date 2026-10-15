@@ -71,6 +71,27 @@ coherencia diferencial pasan; se añadió el archivo de recuperación animal a
 excepcional heredada, no una
 migración de las cachés ordinarias a WASM.
 
+La auditoría de rutas activas halló otro estado reutilizado fuera de esas
+cachés: `pathVersion` de trabajadores y animales sólo registraba topología.
+Una unidad podía seguir una ruta anterior después de descargar un sector, sin
+solicitar otra al grafo. Ahora cada ruta nueva registra también la revisión de
+residencia; `walkTo` invalida la ruta si cambia y pide una nueva a Wild Engine.
+La misma regla se aplica a aproximaciones de tareas, incursiones y paseos
+ociosos. La propiedad de la sesión que planificó una ruta se guarda fuera del
+snapshot mediante una referencia débil: al cargar una partida, incluso una
+ruta con números de revisión coincidentes se recalcula. La prueba diferencial
+verifica también ese caso y descarga el sector de una
+puerta con una ruta activa, exige `SpatialChunkUnavailable` y comprueba que la
+ruta se reconstruye al recargarlo. Esta invalidación global de rutas tras
+cualquier cambio de residencia favorece la corrección; debe vigilarse su coste
+si el streaming de chunks se vuelve frecuente durante una jornada.
+
+Tras el cambio, la comparación nativa/JS no encontró discrepancias, la suite
+jugable pasó 209/209 casos y la build web terminó. Un replay AB/C de un solo
+tick por fixture conservó hashes idénticos entre brazos; su muestra es
+demasiado corta y variable para declarar ausencia de regresión de rendimiento
+sostenido. La PR permanece experimental hasta revisar ese coste en campañas.
+
 ## Inventario de responsabilidades
 
 | Estado JS | Función | Resultado |

@@ -124,6 +124,12 @@
       "residencyRevision": 13
     },
     {
+      "stage": "active-worker-route-residency",
+      "replanned": true,
+      "pathPoints": 5,
+      "residencyRevision": 13
+    },
+    {
       "stage": "native-portal-only-revision",
       "portalBefore": 1,
       "portalCached": 0,
@@ -136,7 +142,8 @@
       "stage": "save-load-new-session",
       "jsPath": "found",
       "freshPath": "found",
-      "nativeEntries": 1
+      "nativeEntries": 1,
+      "restoredRouteReplanned": true
     }
   ]
 }

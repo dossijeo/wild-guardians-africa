@@ -15,6 +15,7 @@ import {createRaidCompositionIndex} from './raid-composition-index.js';
 import {preparePressureNight,nextPressureWave} from './raid-pressure-plan.js';
 import {eligiblePendingRaidWavePlan} from '../world/raid-entry-data.js';
 import {emit,notice,walkTo,rebuildTasks,spellAt,dropCarriedCrate,recoverDisplacedWorkers} from './game.js';
+import {markRouteOwner} from './route-owner.js';
 import {contractExpired} from './workforce.js';
 import {cancelIdle} from './idle.js';
 import {releaseTask} from './tasks.js';
@@ -645,6 +646,8 @@ export function updateRaid(s,dt,nav) {
       target=selected.target;a.targetId=target.id;a.reservation=selected.reservation;s.raid.reservations[a.reservation]=a.id;s.raid.waitRevision=((s.raid.waitRevision??0)+1)>>>0;
       a.approach=selected.approach.point;a.approachShieldId=selected.shieldId;
       a.path=selected.approach.path;a.destinationId=a.approach.id;a.pathVersion=nav.version;
+      a.pathResidencyRevision=nav.residencyRevision??0;
+      markRouteOwner(a,nav);
     }
     const shield=spellAt(s,'shield',target);
     if(!a.approach||a.approachShieldId!==(shield?.id??null)||!reservedApproachClear(s,a,a.approach)||!actorSegmentClear(a.approach,a.approach,a,actorBlockers(s,a,false))) {
@@ -652,6 +655,8 @@ export function updateRaid(s,dt,nav) {
       if(!approach){emit(s,'AnimalRouteUnavailable',{targetId:a.id,species:a.species,phase:'approach'});release(s,a);a.status='walking';continue;}
       a.approach=approach.point;a.approachShieldId=shield?.id??null;
       a.path=approach.path;a.destinationId=a.approach.id;a.pathVersion=nav.version;
+      a.pathResidencyRevision=nav.residencyRevision??0;
+      markRouteOwner(a,nav);
     }
     if(a.status!=='attacking') {
       if(walkTo(s,a,a.approach,dt,nav,{speed:a.status==='entering'?3.8:1.5,worker:false})) {

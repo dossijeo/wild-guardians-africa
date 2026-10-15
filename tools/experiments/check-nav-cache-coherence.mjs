@@ -7,6 +7,7 @@ import {createSpatialNavigationMovement} from '../../src/world/hierarchical-wasm
 import {ANIMAL_SPATIAL_PROFILES} from '../../src/world/hierarchical-wasm/spatial-movement-profiles.js';
 import {gatePortalPoints} from '../../src/world/gate-passages.js';
 import {cachedWateringRoute} from '../../src/world/watering-route-cache.js';
+import {walkTo} from '../../src/simulation/game.js';
 
 const snapshot=gunzipSync(readFileSync(new URL(
   '../../tests/fixtures/desierto983-d15-partial-state.json.gz',import.meta.url))).toString();
@@ -142,6 +143,11 @@ try{
   // A production JS route cache once retained this gate crossing after the
   // gate's chunk was unloaded because its key contained topology, not residency.
   const worker={...start,radius:.28},plant={id:'gate-crossing',species:'mijo',...end};
+  const liveRoute=nav.workerPath(start,end),destination={id:'gate-crossing',...end};
+  assert(liveRoute?.length,'expected an initially valid worker route');
+  const walkingWorker={id:'cache-coherence-worker',status:'returning',...start,radius:.28,
+    path:liveRoute,destinationId:destination.id,pathVersion:nav.version,
+    pathResidencyRevision:nav.residencyRevision};
   let computations=0;
   const compute=()=>{
     computations++;
@@ -157,6 +163,9 @@ try{
   try{cachedWateringRoute(worker,plant,nav,compute);}
   catch(error){cachedUnknown=error.name==='SpatialChunkUnavailable';}
   assert(freshUnknown&&cachedUnknown,'JS cache must not hide an unloaded sector');
+  assert.throws(()=>walkTo(state,walkingWorker,destination,0,nav),
+    {name:'SpatialChunkUnavailable'},
+    'an active actor route must not hide an unloaded gate sector');
   const nativeMissing=session.routeActor(start,end,{worker:true});
   let workerMissing='blocked';
   try{workerMissing=nav.workerPath(start,end)?'found':'blocked';}
@@ -166,12 +175,16 @@ try{
   assert.equal(computations,2);
   session.core.addChunk(1,0);loaded.set('1,0',session.core.chunkPayload());
   assert(cachedWateringRoute(worker,plant,nav,compute));
+  assert.equal(walkTo(state,walkingWorker,destination,0,nav),false);
+  assert(walkingWorker.path?.length,'worker route was not rebuilt after residency returned');
   const nativeResident=session.routeActor(start,end,{worker:true});
   assert.equal(nav.workerPath(start,end)?'found':'blocked',nativeResident.status);
   assert.equal(computations,3);
   rows.push({stage:'js-watering-route-residency',freshUnknown,cachedUnknown,
     workerMissing,nativeMissing:nativeMissing.status,nativeResident:nativeResident.status,
     computations,topologyRevision:nav.version,residencyRevision:nav.residencyRevision});
+  rows.push({stage:'active-worker-route-residency',replanned:true,
+    pathPoints:walkingWorker.path.length,residencyRevision:walkingWorker.pathResidencyRevision});
 
   // Portal revisions must invalidate a native answer even when no sector is
   // rebuilt: sector-update counters alone are insufficient cache versions.
@@ -194,8 +207,16 @@ try{
     const freshNav=reloaded.nav,[a,b]=gatePortalPoints(reloadedState.structures.find(s=>s.id===gate.id),.28);
     const js=freshNav.workerPath(a,b),native=reloaded.session.routeActor(a,b,{worker:true});
     assert.equal(js?'found':'blocked',native.status);
+    const stale=[{x:999,z:999}],savedWorker=JSON.parse(JSON.stringify({
+      id:'restored-worker',status:'returning',...a,radius:.28,path:stale,
+      destinationId:'restored-gate',pathVersion:freshNav.version,
+      pathResidencyRevision:freshNav.residencyRevision}));
+    assert.equal(walkTo(reloadedState,savedWorker,{id:'restored-gate',...b},0,freshNav),false);
+    assert.notDeepEqual(savedWorker.path,stale,
+      'a serialized route must not be trusted by a new navigation session');
     rows.push({stage:'save-load-new-session',jsPath:js?'found':'blocked',freshPath:native.status,
-      nativeEntries:reloaded.session.core.wasm.nav_cache_total_entries()});
+      nativeEntries:reloaded.session.core.wasm.nav_cache_total_entries(),
+      restoredRouteReplanned:true});
   }finally{reloaded.session.dispose();}
 }finally{session.dispose();}
 const out=process.argv[2]??'docs/qa/wild-engine-cache-benchmark/coherence.json';
