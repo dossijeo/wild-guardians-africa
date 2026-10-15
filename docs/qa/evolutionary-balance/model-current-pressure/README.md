@@ -12,10 +12,12 @@ no modifican el juego ni los parámetros militares.
 
 El artefacto histórico de Sabana/712 en `../model-sabana-712/` corresponde
 también a v3. Se conservaron sus tres salidas previas con sufijo
-`-pre-parity.json` y se regeneraron las canónicas con la receta correcta.
-La antigua proyección contable se declaraba inviable en el día **27**;
-la corregida lo hace en el **15**. En el día 14, la antigua proyección
-indicaba 9 animales y la nueva 16. Ninguna de las dos cifras representa una
+`-pre-parity.json`, así como la versión posterior a esa corrección con sufijo
+`-pre-stock-correction.json`. La proyección antigua declaraba inviabilidad
+contable en el día **27**; con presión v3, en el **15**; y al excluir el
+censo inicial no observado de los coeficientes, en el **23**. En el día 14,
+la antigua proyección indicaba 9 animales y la nueva 16. Ninguna de esas
+cifras representa una
 campaña nativa; el informe de referencia terminó realmente tras 17 noches.
 
 Los dos informes nuevos proceden del piloto de entradas de incursión
@@ -28,8 +30,20 @@ daño agrícola; sus ingresos y gastos parciales siguen excluidos.
 
 | Bioma/semilla | Entrenamiento | Validación | Error ingresos | Error salarios | Error semillas | Error cultivos destruidos | Error reparaciones | Resultado nativo | Cribado contable |
 | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | --- | --- |
-| Sabana/712 | días 1–9 | días 10–15 | 8,0 % | 2,0 % | 2,7 % | **72,7 %** | 34,7 % | derrota día 16 | inviabilidad día 81 |
-| Gran Cañón/123 | días 1–7 | días 8–13 | 28,4 % | 17,5 % | 0,3 % | **67,6 %** | 72,9 % | derrota día 14 | inviabilidad día 11 |
+| Sabana/712 | días 1–9 | días 10–15 | 9,7 % | 3,8 % | 2,7 % | **72,7 %** | 34,7 % | derrota día 16 | sin inviabilidad contable hasta día 100 |
+| Gran Cañón/123 | días 1–7 | días 8–13 | 29,1 % | 15,5 % | 0,3 % | **67,6 %** | 72,9 % | derrota día 14 | inviabilidad día 17 |
+
+El informe no registra cuántas plantas había **antes** de la primera
+jornada: su primera fila ya es un censo al terminarla. La versión anterior
+reutilizaba ese censo final como inventario inicial al ajustar ingresos,
+salarios y salidas de plantas. Los coeficientes basados en inventario usan
+ahora sólo los días 2–9 o 2–7; semillas y gasto de murallas conservan la
+primera jornada. Las salidas anteriores de los tres casos quedan con el
+sufijo `-pre-stock-correction.json`. Este único cambio mueve el cribado de
+Sabana/712 desde inviabilidad teórica en el día **81** a no detectarla en
+100 días, aunque la partida nativa perdió en la noche **16**. La pantalla
+matemática usa además una apertura hipotética de 700 monedas y 68 plantas;
+no debe leerse como una predicción de la apertura real.
 
 Al incorporar únicamente el daño medido en la incursión terminal, el error
 agrícola de validación es **82,4 %** en Sabana (días 10–16) y **78,7 %** en
@@ -51,7 +65,7 @@ predice **15,8** y **19,5** en los días 12 y 13 frente a **cero** reales.
 La misma eficiencia media falla tanto al abrirse una defensa como cuando
 una incursión no llega a los cultivos. Cambiar un único multiplicador de
 daño no puede corregir ambos extremos.
-Por eso su horizonte de 81 días en Sabana **no predice supervivencia**: la
+Por eso su horizonte teórico de 100 días en Sabana **no predice supervivencia**: la
 campaña nativa perdió 42 y 57 plantas en las dos últimas incursiones. En
 Gran Cañón, la protección incompleta y el desplome agrícola tampoco son
 representables mediante una eficacia defensiva promedio.

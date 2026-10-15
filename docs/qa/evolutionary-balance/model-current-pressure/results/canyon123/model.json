@@ -20,6 +20,14 @@
     6,
     7
   ],
+  "stockCoefficientDays": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
   "validationDays": [
     8,
     9,
@@ -29,11 +37,11 @@
     13
   ],
   "coefficients": {
-    "incomePerPriorPlant": 10.27250608272506,
-    "wagesPerPriorPlant": 5.226277372262774,
+    "incomePerPriorPlant": 10.86723163841808,
+    "wagesPerPriorPlant": 5.353107344632768,
     "wagesToRaidAttraction": 0.43584784010315925,
     "seedCostPerPlant": 5.012658227848101,
-    "nonRaidPlantExitPerPriorPlant": 0.9124087591240876,
+    "nonRaidPlantExitPerPriorPlant": 0.827683615819209,
     "attractionPerLivingPlantAtSpawn": 11,
     "agriculturalDamageEfficiency": 0.4642857142857143,
     "potentialPerAnimal": 3.111111111111111,
@@ -51,12 +59,12 @@
   },
   "holdoutError": {
     "income": {
-      "absolute": 346.8150851581509,
-      "weightedAbsoluteFraction": 0.28404183878636435
+      "absolute": 355.141242937853,
+      "weightedAbsoluteFraction": 0.29086096882707047
     },
     "wages": {
-      "absolute": 135.39416058394158,
-      "weightedAbsoluteFraction": 0.17515415340742765
+      "absolute": 119.92090395480227,
+      "weightedAbsoluteFraction": 0.15513700382251264
     },
     "seeds": {
       "absolute": 1.7341772151898773,
@@ -82,8 +90,8 @@
         "repairs": 10
       },
       "predicted": {
-        "income": 523.8978102189781,
-        "wages": 266.54014598540147,
+        "income": 554.228813559322,
+        "wages": 273.00847457627117,
         "seeds": 220.55696202531647,
         "destroyed": 17.642857142857142,
         "repairs": 11.428571428571427
@@ -99,8 +107,8 @@
         "repairs": 3
       },
       "predicted": {
-        "income": 451.99026763990264,
-        "wages": 229.95620437956205,
+        "income": 478.1581920903955,
+        "wages": 235.5367231638418,
         "seeds": 260.65822784810126,
         "destroyed": 20.892857142857142,
         "repairs": 0
@@ -116,8 +124,8 @@
         "repairs": 114
       },
       "predicted": {
-        "income": 174.63260340632604,
-        "wages": 88.84671532846716,
+        "income": 184.74293785310735,
+        "wages": 91.00282485875707,
         "seeds": 75.18987341772151,
         "destroyed": 20.42857142857143,
         "repairs": 14.642857142857142
@@ -133,8 +141,8 @@
         "repairs": 28
       },
       "predicted": {
-        "income": 41.09002433090024,
-        "wages": 20.905109489051096,
+        "income": 43.46892655367232,
+        "wages": 21.412429378531073,
         "seeds": 80.20253164556962,
         "destroyed": 19.035714285714285,
         "repairs": 14.642857142857142
@@ -150,8 +158,8 @@
         "repairs": 10
       },
       "predicted": {
-        "income": 10.27250608272506,
-        "wages": 5.226277372262774,
+        "income": 10.86723163841808,
+        "wages": 5.353107344632768,
         "seeds": 30.075949367088608,
         "destroyed": 15.785714285714286,
         "repairs": 3.75
@@ -167,8 +175,8 @@
         "repairs": 7
       },
       "predicted": {
-        "income": 51.3625304136253,
-        "wages": 26.13138686131387,
+        "income": 54.336158192090394,
+        "wages": 26.76553672316384,
         "seeds": 20.050632911392405,
         "destroyed": 19.5,
         "repairs": 5
@@ -228,6 +236,7 @@
     "One-step prediction uses actual prior plants, purchases, raid potential and wall HP damage; it is not a stand-alone forecast.",
     "Crop destruction is not inferred from structural HP; separate physical outcomes are fitted.",
     "Wall-contact evidence is not proof of a closed enclosure; catastrophic breaches require spatial Wild Engine evaluation.",
+    "The first end-of-day row has no observed opening plant census and is excluded from stock-based coefficients.",
     "Income timing, crop mix and magic effects are pooled, so extrapolation to another policy or 100 nights is unsafe."
   ]
 }

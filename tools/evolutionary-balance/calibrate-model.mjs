@@ -13,11 +13,12 @@ const sum=(rows,key)=>rows.reduce((n,r)=>n+(r[key]??0),0);
 function facts(report){
  const raid=new Map((report.raidEvidence?.raids??[]).filter(x=>!x.daytime).map(x=>[x.day,x]));
  return (report.rows??[]).map((r,i)=>{
-  const q=raid.get(r.day),prior=report.rows[i-1]?.living??r.living;
+  // A daily row is an end-of-day census, not evidence of the opening stock.
+  const q=raid.get(r.day),prior=i>0?report.rows[i-1].living:null;
   const finance=r.finance??r;
   return {day:r.day,priorLiving:prior,living:r.living,planted:r.planted,destroyed:r.destroyed,
    raidDestroyed:q?.cropsDestroyed??null,raidEnded:q?.ended===true,
-   nonRaidPlantExit:Math.max(0,prior+r.planted-r.destroyed-r.living),
+   nonRaidPlantExit:prior===null?null:Math.max(0,prior+r.planted-r.destroyed-r.living),
    income:finance.income,wages:finance.wages,seeds:finance.seeds,
    walls:finance.walls,repairs:finance.repairs,money:r.money,
    attraction:q?.pressureFacts?.observedValue??null,animals:q?Object.values(q.species).reduce((n,s)=>n+s.generated,0):0,
@@ -33,16 +34,17 @@ export function calibrate(report){
  const split=Math.min(rows.length-2,Math.max(7,Math.floor(rows.length*0.6)));
  if(split<2)throw Error('Not enough completed days to calibrate and validate');
  const train=rows.slice(0,split),holdout=rows.slice(split);
+ const stockTrain=train.filter(r=>r.priorLiving!==null);
  const raidTrain=train.filter(r=>r.raidEnded&&r.attraction!==null&&r.day>5);
  const pressureVersions=[...new Set(rows.filter(r=>r.attraction!==null&&r.day>5).map(r=>r.raidPressureVersion))];
  if(pressureVersions.length>1)throw Error('Mixed raid pressure versions cannot share one projection');
  const raidPressureVersion=pressureVersions[0]??1;
  raidPressureCandidateForVersion(raidPressureVersion);
- const c={incomePerPriorPlant:div(sum(train,'income'),sum(train,'priorLiving')),
-  wagesPerPriorPlant:div(sum(train,'wages'),sum(train,'priorLiving')),
+ const c={incomePerPriorPlant:div(sum(stockTrain,'income'),sum(stockTrain,'priorLiving')),
+  wagesPerPriorPlant:div(sum(stockTrain,'wages'),sum(stockTrain,'priorLiving')),
   wagesToRaidAttraction:div(sum(raidTrain,'wages'),sum(raidTrain,'attraction')),
   seedCostPerPlant:div(sum(train,'seeds'),sum(train,'planted')),
-  nonRaidPlantExitPerPriorPlant:div(sum(train,'nonRaidPlantExit'),sum(train,'priorLiving')),
+  nonRaidPlantExitPerPriorPlant:div(sum(stockTrain,'nonRaidPlantExit'),sum(stockTrain,'priorLiving')),
   attractionPerLivingPlantAtSpawn:div(sum(raidTrain,'attraction'),sum(raidTrain,'livingAtSpawn')),
   agriculturalDamageEfficiency:div(sum(raidTrain,'raidDestroyed'),sum(raidTrain,'potential')),
   potentialPerAnimal:div(sum(raidTrain,'potential'),sum(raidTrain,'animals')),
@@ -71,7 +73,8 @@ export function calibrate(report){
   n+Math.abs(r.actualDestroyed-r.predictedDestroyed),0);
  return {source:{biome:report.biome,seed:report.seed,strategy:report.strategy,status:report.status,
   result:report.result,completedNights:report.completedNights,rows:rows.length,raidPressureVersion},
-  trainingDays:train.map(r=>r.day),validationDays:holdout.map(r=>r.day),coefficients:c,
+  trainingDays:train.map(r=>r.day),stockCoefficientDays:stockTrain.map(r=>r.day),
+  validationDays:holdout.map(r=>r.day),coefficients:c,
   observability:{raidNightsInTraining:raidTrain.length,
    enclosureCoverageMeasured:false,breachTimingMeasured:false,
    defenseEffectIdentifiable:false,reason:'Native report has wall contact/HP, but no certified crop membership or breach timing.'},
@@ -83,11 +86,13 @@ export function calibrate(report){
    'One-step prediction uses actual prior plants, purchases, raid potential and wall HP damage; it is not a stand-alone forecast.',
    'Crop destruction is not inferred from structural HP; separate physical outcomes are fitted.',
    'Wall-contact evidence is not proof of a closed enclosure; catastrophic breaches require spatial Wild Engine evaluation.',
+   'The first end-of-day row has no observed opening plant census and is excluded from stock-based coefficients.',
    'Income timing, crop mix and magic effects are pooled, so extrapolation to another policy or 100 nights is unsafe.']};
 }
 export function screenProjection(model,{days=100,damageMultiplier=1,plantingMultiplier=1}={}){
  const c=model.coefficients,rows=[],pressureConfig=raidPressureCandidateForVersion(model.source?.raidPressureVersion??1);
- let cash=700,living=68,pressureMemory=null;
+ const openingAssumption={cash:700,living:68};
+ let cash=openingAssumption.cash,living=openingAssumption.living,pressureMemory=null;
  for(let day=1;day<=days;day++){
   const income=living*c.incomePerPriorPlant,wages=living*c.wagesPerPriorPlant;
   const planted=Math.max(0,Math.min(c.meanPlantedPerDay*plantingMultiplier,
@@ -108,7 +113,7 @@ export function screenProjection(model,{days=100,damageMultiplier=1,plantingMult
    status:cash<0?'accounting-infeasible':'screen-only'});
   if(cash<0)break;
  }
- return {kind:'hypothetical-screen-not-native-campaign',requestedDays:days,
+ return {kind:'hypothetical-screen-not-native-campaign',openingAssumption,requestedDays:days,
   projectedDays:rows.length,accountingInfeasible:rows.at(-1)?.cash<0,rows};
 }
 export function exploratorySensitivity(model){

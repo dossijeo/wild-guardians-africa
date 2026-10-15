@@ -109,6 +109,7 @@ test('calibration predicts from ledger outcomes without folding structural damag
   completedNights:9,result:'defeat',status:'completed'});
  assert.equal(current.source.raidPressureVersion,3);
  const projection=screenProjection(current,{days:12});
+ assert.deepEqual(projection.openingAssumption,{cash:700,living:68});
  assert.ok(projection.rows.length>=6);
  for(const row of projection.rows){
   assert.equal(row.animals,raidAnimalCount(row.day,row.pressure,RAID_PRESSURE_CANDIDATE));
@@ -117,6 +118,17 @@ test('calibration predicts from ledger outcomes without folding structural damag
  assert.throws(()=>calibrate({rows:currentRows,raidEvidence:{raids:currentRaids.map((r,i)=>
   i===7?{...r,pressureFacts:{...r.pressureFacts,candidateVersion:1}}:r)},
   completedNights:9,result:'defeat',status:'completed'}),/Mixed raid pressure versions/);
+});
+test('opening end-of-day census is not reused as a fictitious opening plant stock',()=>{
+ const rows=Array.from({length:10},(_,i)=>({day:i+1,living:20,planted:4,destroyed:0,
+  income:i===0?1000:100,wages:40,seeds:20,walls:0,repairs:0}));
+ const raids=rows.map(r=>({day:r.day,daytime:false,ended:true,cropsDestroyed:0,
+  pressureFacts:{observedValue:100},species:{warthog:{generated:1}},
+  potentialAgriculturalHp:2,wallHpLost:0,exposedLivingAtSpawn:20}));
+ const model=calibrate({rows,raidEvidence:{raids},completedNights:10,result:null});
+ assert.deepEqual(model.stockCoefficientDays,[2,3,4,5,6,7]);
+ assert.equal(model.coefficients.incomePerPriorPlant,5);
+ assert.equal(model.coefficients.nonRaidPlantExitPerPriorPlant,0.2);
 });
 test('desert pilot skips uncertain plots and still completes a paid native day', {timeout:60000}, async()=>{
  const report=await evaluateOne({biome:'desierto',seed:909},1,'evolved',
