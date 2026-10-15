@@ -29,6 +29,38 @@ const [start,end]=gatePortalPoints(gate,.28),wasm=session.core.wasm;
 const gateWorker={...start,radius:.28},gatePlant={id:'gate-coherence',species:'mijo',...end};
 const gateRoute=()=>{const points=nav.path(start,end,.28,null,true);
   return points?{destination:end,path:points}:null;};
+const nativePairs=[[65,3,68,3],[65,3,10,3],[68,3,65,3],
+  [10,3,68,3],[65,3,65,5]];
+function compareNativeQueries(stage){
+  const discrepancies=[];
+  for(const profile of [{worker:true},{worker:false,species:'warthog'}]){
+    session.actorRegions(start,profile);
+    for(const [ax,az,bx,bz] of nativePairs){
+    const cachedConnected=wasm.nav_cached_connected(ax,az,bx,bz),
+      cachedReason=wasm.lazy_connected_reason();
+    const freshConnected=wasm.lazy_connected(ax,az,bx,bz),
+      freshReason=wasm.lazy_connected_reason();
+    if(cachedConnected!==freshConnected||cachedReason!==freshReason)
+      discrepancies.push({profile,query:'connected',ax,az,bx,bz,cachedConnected,
+        freshConnected,cachedReason,freshReason});
+    const cachedLength=wasm.nav_cached_route(ax,az,bx,bz),
+      cachedRoute=Array.from(new Int32Array(wasm.memory.buffer,
+        wasm.lazy_route_ptr(),Math.max(0,cachedLength)*2)),
+      cachedRouteReason=wasm.lazy_connected_reason();
+    const freshLength=wasm.lazy_route(ax,az,bx,bz),
+      freshRoute=Array.from(new Int32Array(wasm.memory.buffer,
+        wasm.lazy_route_ptr(),Math.max(0,freshLength)*2)),
+      freshRouteReason=wasm.lazy_connected_reason();
+    if(cachedLength!==freshLength||cachedRouteReason!==freshRouteReason||
+       cachedRoute.some((value,index)=>value!==freshRoute[index]))
+      discrepancies.push({profile,query:'route',ax,az,bx,bz,cachedLength,
+        freshLength,cachedRouteReason,freshRouteReason});
+    }
+  }
+  session.actorRegions(start,{worker:true});
+  assert.deepEqual(discrepancies,[],`stale native answer at ${stage}`);
+  return nativePairs.length*2;
+}
 function inspect(stage){
   const cachedPath=nav.workerPath(start,end),fresh=session.routeActor(start,end,{worker:true});
   const jsCached=cachedWateringRoute(gateWorker,gatePlant,nav,gateRoute);
@@ -47,7 +79,8 @@ function inspect(stage){
     animalJs,animalFresh,
     wasmCached:cachedConnected,wasmHit:hitConnected,wasmFresh:freshConnected,
     topologyRevision:session.topologySource.revision(),chunkRevision:session.core.chunkRevision(),
-    sectorRevision:wasm.lazy_sector_updates(),nativeHits:wasm.nav_cache_total_hits(),
+    sectorRevision:wasm.lazy_sector_updates(),nativePairs:compareNativeQueries(stage),
+    nativeHits:wasm.nav_cache_total_hits(),
     nativeMisses:wasm.nav_cache_total_misses()};
   assert.equal(row.jsPath,row.freshPath,`stale JavaScript route at ${stage}`);
   assert.equal(row.wasmCached,row.wasmFresh,`stale native connectivity at ${stage}`);
@@ -67,13 +100,16 @@ try{
   const before=wasm.nav_cached_connected(cross.ax,cross.az,cross.bx,cross.bz);
   assert.equal(before,wasm.lazy_connected(cross.ax,cross.az,cross.bx,cross.bz));
   assert(session.core.removeChunk(0,0));loaded.delete('0,0');
+  const absentPairs=compareNativeQueries('residency-removed');
   const absent=wasm.nav_cached_connected(cross.ax,cross.az,cross.bx,cross.bz);
   assert.equal(absent,wasm.lazy_connected(cross.ax,cross.az,cross.bx,cross.bz));
   assert.equal(absent,-1,'an unloaded endpoint is unknown, not blocked');
   session.core.addChunk(0,0);loaded.set('0,0',session.core.chunkPayload());
+  const restoredPairs=compareNativeQueries('residency-restored');
   const restored=wasm.nav_cached_connected(cross.ax,cross.az,cross.bx,cross.bz);
   assert.equal(restored,wasm.lazy_connected(cross.ax,cross.az,cross.bx,cross.bz));
   rows.push({stage:'residency-remove-and-restore',before,absent,restored,
+    absentPairs,restoredPairs,
     nativeHits:wasm.nav_cache_total_hits(),nativeMisses:wasm.nav_cache_total_misses()});
 
   // A production JS route cache once retained this gate crossing after the
@@ -118,10 +154,11 @@ try{
   const sectorAfter=wasm.lazy_sector_updates();
   const portalCached=wasm.nav_cached_connected(65,3,68,3);
   const portalFresh=wasm.lazy_connected(65,3,68,3);
+  const portalPairs=compareNativeQueries('native-portal-only-revision');
   assert.equal(sectorBefore,sectorAfter);
   assert.equal(portalCached,portalFresh,'native cache missed a portal-only revision');
   rows.push({stage:'native-portal-only-revision',portalBefore,portalCached,portalFresh,
-    sectorBefore,sectorAfter});
+    sectorBefore,sectorAfter,portalPairs});
 
   const reloadedState=deserialize(serialize(state)),reloaded=create(reloadedState);
   try{
