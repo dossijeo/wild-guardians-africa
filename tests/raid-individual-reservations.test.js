@@ -5,6 +5,7 @@ import {spawnRaid,updateRaid} from '../src/simulation/raids.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {Navigation} from '../src/world/navigation.js';
 import {reconcileTargetReservations,reservedApproachClear,targetReservationKey} from '../src/simulation/raid-target-reservations.js';
+import {activeCrops} from '../src/simulation/active-crops.js';
 import {RAID_WAIT_SECONDS} from '../src/simulation/raid-contention.js';
 function tick(s,nav,dt=.1){s.elapsed+=dt;updateRaid(s,dt,nav);}
 function start(layout='mono',count=12){const {s,nav}=fixture(layout);assert(spawnRaid(s,{group:Array(count).fill('warthog')},nav));updateRaid(s,0,nav);return {s,nav,raid:s.raid};}
@@ -62,6 +63,14 @@ test('destroying one reserved crop frees only that target and preserves other le
  const {s,nav,raid}=start('mono',5),owner=raid.animals[0],victim=s.plants.find(p=>p.id===owner.targetId),other=raid.animals[1],otherId=other.targetId;
  victim.alive=false;nav.setState(s);tick(s,nav,0);
  assert.notEqual(owner.targetId,victim.id);assert.equal(other.targetId,otherId);independent(s);finish(s,nav);
+});
+test('reservation reconciliation excludes historical crops when the live farm grows',()=>{
+ const {s}=start('mono',1);
+ const history={id:'plant-history',alive:false};
+ s.plants.push(history);activeCrops(s.plants);
+ Object.defineProperty(history,'id',{get(){throw Error('historical crop was enumerated');}});
+ s.plants.push({id:'plant-new',alive:true,x:200,z:200});
+ assert.doesNotThrow(()=>reconcileTargetReservations(s,()=>{}));
 });
 function saturated(){const {s,nav}=fixture('mono');s.plants=s.plants.slice(0,1);s.structures=[];nav.setState(s);assert(spawnRaid(s,{group:Array(12).fill('warthog')},nav));updateRaid(s,0,nav);return {s,nav,raid:s.raid};}
 test('actual saturation stages valid waiters and retires after no-progress bound without spending hits',()=>{

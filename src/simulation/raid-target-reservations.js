@@ -1,11 +1,13 @@
 // Connected groups remain valuation zones. Ownership belongs to one target,
 // or one physically separated approach for a large work center.
+import {activeCrops} from './active-crops.js';
 const active=a=>!['gone','retreating','waiting'].includes(a.status);
 const indices=new WeakMap();
 function targetIndex(state){
  const old=indices.get(state);
  if(old&&old.plants===state.plants&&old.plantLength===state.plants.length&&old.structures===state.structures&&old.structureLength===state.structures.length)return old.byId;
- const byId=new Map([...state.plants,...state.structures].map(t=>[t.id,t]));
+ const byId=new Map([...activeCrops(state.plants),...state.structures]
+  .map(t=>[t.id,t]));
  indices.set(state,{plants:state.plants,plantLength:state.plants.length,structures:state.structures,structureLength:state.structures.length,byId});return byId;
 }
 export function targetReservationKey(target,animal){
