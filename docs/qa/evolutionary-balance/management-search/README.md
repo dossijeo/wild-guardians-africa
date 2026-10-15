@@ -108,6 +108,13 @@ Estos dos informes muestran que el genoma combina fragilidad económica con
 exposición militar según el escenario. No demuestran por sí solos qué decisión
 concreta dejó incompleto un recinto ni justifican cambiar el balance.
 
+El segundo evaluador reprodujo también ambas derrotas del tercer genoma:
+los siete registros diarios y de incursión de Sabana y los diez de Gran Río
+coinciden con los resultados de la primera ejecución, salvo las duraciones
+concurrentes. `parity-defeated-genome-14.json` conserva los hashes y enlaces
+a los cuatro informes. El cambio de fitness no evitó, causó ni reinterpretó
+las derrotas nativas.
+
 El cuarto genoma exploratorio, `8a880102bbedf9b1`, completó 14/14 noches en
 Sabana/712, con 47 cultivos vivos y 374 monedas, pero sus tres jornadas
 finales entregaron 44⅓ cajas/día. También cae por debajo del umbral de
