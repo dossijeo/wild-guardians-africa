@@ -217,16 +217,16 @@ test('missing sectors cannot certify a proposed perimeter',
 });
 
 test('a center-adjacent crop uses valid animal attack sites to certify its enclosure',
- {skip:!module&&'Build and select the spatial-services WASM first'},()=>{
+ {skip:!module&&'Build and select the spatial-services WASM first'},async()=>{
  const game=deserialize(gunzipSync(readFileSync(new URL(
   './fixtures/sabana712-d2-enclosure-connectors.json.gz',import.meta.url))).toString());
  const loaded=new Map(),session=createSpatialGameSession(module,game,{
   loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
  try{
-  for(let z=-1;z<=1;z++)for(let x=1;x<=3;x++){
-   if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
-   loaded.set(`${x},${z}`,session.core.chunkPayload());
-  }
+  const jobs=new Map();
+  for(let z=-1;z<=1;z++)for(let x=1;x<=3;x++)
+   jobs.set(`${x},${z}`,{cx:x,cz:z,score:Math.hypot(x,z)});
+  session.stream.plan(jobs);await session.stream.whenIdle();
   const nav=createSpatialNavigationMovement(session,game);
   const bridge=createSpatialIntentBridge(session);bridge.resetFromState(game);
   const group=bridge.getUnprotectedCropGroups()[0];
