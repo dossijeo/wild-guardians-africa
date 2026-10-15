@@ -17,6 +17,41 @@ import {enqueue,notifyWorkerPlanningChange,replaceTasks} from '../src/simulation
 const binary=process.env.WILD_ENGINE_NATIVE_ROUTE_WASM;
 const module=binary?new WebAssembly.Module(readFileSync(binary)):null;
 
+test('a saved native animal route resumes movement with its original lease',
+ {skip:!module&&'Build and select the experimental WASM first'},()=>{
+ const game=deserialize(gunzipSync(readFileSync(new URL(
+  './fixtures/sabana712-d1-native-active-raid.json.gz',import.meta.url))).toString());
+ const loaded=new Map(),session=createSpatialGameSession(module,game,{
+  loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+ try{
+  for(let z=-1;z<=1;z++)for(let x=1;x<=3;x++){
+   if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+   loaded.set(`${x},${z}`,session.core.chunkPayload());
+  }
+  const planner=createEventDrivenTaskPlanner(session);
+  const restored=planner.resetFromState(game);
+  assert.equal(restored.restoredAnimalRoutes,1);
+  assert.equal(restored.invalidSavedAnimalRoutes,0);
+  const nav=createSpatialNavigationMovement(session,game);
+  const stopTasks=planner.observeTasks(game),stopWorld=planner.observeWorld(game);
+  nav.intentTaskPlanner=planner;
+  try{
+   const animal=game.raid.animals.find(item=>item.targetId);
+   const {targetId,reservation,hitsRemaining,z}=animal;
+   assert.equal(game.raid.reservations[reservation],animal.id);
+   for(let step=0;step<5;step++)tick(game,.1,nav);
+   assert(animal.z<z-1.5,'the restored route advances physically');
+   assert.equal(animal.targetId,targetId);
+   assert.equal(animal.reservation,reservation);
+   assert.equal(game.raid.reservations[reservation],animal.id);
+   assert.equal(animal.hitsRemaining,hitsRemaining);
+   assert.equal(planner.attackRoutePending(animal.id),false);
+   assert(animal.path?.length>0);
+   assert.doesNotThrow(()=>serialize(game));
+  }finally{stopTasks();stopWorld();}
+ }finally{session.dispose();}
+});
+
 test('restoring a committed animal strike uses the live target index, not crop history',
  {skip:!module&&'Build and select the experimental WASM first'},()=>{
  const game=deserialize(gunzipSync(readFileSync(new URL(
