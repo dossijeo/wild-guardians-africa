@@ -194,7 +194,19 @@ coinciden exactamente con el informe `4419e5eb34a46b9f` de la ejecución
 exploratoria tras excluir `wallTime` y el nombre de estrategia. Esto verifica
 la equivalencia del brazo defendido, no la igualdad de estados serializados.
 La configuración y el informe nativo comprimido están en
-`matched-sabana712-14/`; los dos brazos sin murallas siguen en ejecución.
+`matched-sabana712-14/`; los dos brazos sin murallas siguen pendientes.
+
+El mismo genoma defendido `4419e5eb34a46b9f` completó también 14/14 noches
+en Manglares con dos semillas. Con la 123 terminó con 121 cultivos, 911
+monedas, 117⅓ cajas/día de media terminal, margen operativo terminal de +186
+y 45 pérdidas desde la noche 6. Con la semilla reservada 24681357 terminó
+con 129 cultivos, 861 monedas, 118 cajas/día, margen operativo terminal de
++72 y 15 pérdidas. Ambos informes concilian con el ledger y conservan los
+mismos genes y reglas físicas; los originales están en `results-14-main-sync/`
+y `results-14-post-intro/`, respectivamente. La semilla 123 ya aparecía en
+ensayos de desarrollo previos y no cuenta como validación no vista. La 24681357
+sí pertenece a la reserva congelada de esta cohorte, pero un solo bioma y 14
+noches no acreditan supervivencia prolongada ni eficacia causal de muros.
 
 Esta cohorte usa Wild Engine y el balance de producción sin alterar, después de
 la mejora de navegación de PR #37. Código ejecutado: `7f358aad97287b40e300026306d26f05cc4e0c29`;
