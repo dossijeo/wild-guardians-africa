@@ -79,7 +79,7 @@ struct ActiveIntent {
   uint64_t actor=0,task=0,target=0;
   PlanningState state=PlanningState::NeedsPlan;
   uint32_t slot=0,generation=0,topology=0;
-  bool animal=false,tacticalPending=false;
+  bool animal=false,tacticalPending=false,lease=true;
   int profile=1;
   float routeStartX=0,routeStartZ=0;
 };
@@ -226,6 +226,7 @@ void invalidateDependents(IntentState& s,const Change& change){
         // animation's damage frame. Its lease becomes stale, but the hit is
         // never moved, refunded, or applied early by this invalidation.
         active->second.tacticalPending=true;
+        active->second.lease=false;
       }else{
         releaseIntent(s,actor,PlanningState::Cancelled);
         s.activeIntents.erase(actor);
@@ -1059,7 +1060,8 @@ int nav_intent_register_attack(double actorId,double targetId,
   if(target->second.kind!=4&&owners!=s.byTarget.end())
     for(uint64_t owner:owners->second){
       const auto old=s.activeIntents.find(owner);
-      if(owner!=actor&&old!=s.activeIntents.end()&&old->second.animal)
+      if(owner!=actor&&old!=s.activeIntents.end()&&old->second.animal&&
+         old->second.lease)
         return -3;
     }
   const auto prior=s.activeIntents.find(actor);
@@ -1095,6 +1097,22 @@ int nav_intent_attack_action_active(double actorId){
   releaseRoute(s,found->second);
   found->second.state=PlanningState::ActionActive;
   emitIntentChange(s,found->second);
+  return 1;
+}
+// A saved committed strike has no travel route to restore. Reconstruct only
+// its logical target; JS remains the authority for its remaining clip time,
+// spent hits, and the actual damage frame.
+int nav_intent_restore_attack_action(double actorId,double targetId,int hasLease){
+  if(!integer(actorId)||!integer(targetId)||hasLease<0||hasLease>1)return 0;
+  IntentState& s=state();const uint64_t actor=uint64_t(actorId);
+  if(s.activeIntents.count(actor))return 0;
+  ActiveIntent intent{actor,0,uint64_t(targetId),PlanningState::ActionActive,
+    0,0,lazy_route_revision(),true,false};
+  intent.profile=lazy_selected_context();
+  intent.lease=hasLease!=0;
+  s.activeIntents.emplace(actor,intent);
+  s.byTarget[intent.target].insert(actor);
+  emitIntentChange(s,intent);
   return 1;
 }
 int nav_intent_attack_finished(double actorId){

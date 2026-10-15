@@ -87,7 +87,8 @@ export function createSpatialIntentBridge(session){
     'nav_intent_reconcile_topology','nav_intent_replan_pending_routes',
     'nav_intent_request_reroute',
     'nav_intent_attack_route_input_ptr','nav_intent_register_attack',
-    'nav_intent_attack_action_active','nav_intent_attack_finished',
+    'nav_intent_attack_action_active','nav_intent_restore_attack_action',
+    'nav_intent_attack_finished',
     'nav_intent_attack_cancel',
     'nav_intent_action_active','nav_intent_finish',
     'nav_intent_actor_planning_calls','nav_intent_routes_ptr',
@@ -410,8 +411,36 @@ export function createSpatialIntentBridge(session){
     if(status!==1)throw Error(`Native attack intention rejected: ${status}`);
     return true;
   };
+  const restoreAttackIntents=state=>{
+    let committed=0,travelling=0,staleRoutes=0;
+    for(const animal of [...(state.raid?.animals??[])]
+      .sort((left,right)=>numericId(left.id)-numericId(right.id))){
+      if(!animal.targetId||['gone','retreating','waiting'].includes(animal.status))
+        continue;
+      session.actorSectorRevision({worker:false,species:animal.species});
+      if(animal.status==='attacking'){
+        if(wasm.nav_intent_restore_attack_action(numericId(animal.id),
+          numericId(animal.targetId),Number(!!animal.reservation&&
+            state.raid.reservations[animal.reservation]===animal.id))!==1)
+          throw Error(`Cannot restore committed animal attack ${animal.id}`);
+        committed++;continue;
+      }
+      const target=[...state.plants,...state.structures]
+        .find(item=>item.id===animal.targetId);
+      if(!target||!animal.reservation||
+        state.raid.reservations[animal.reservation]!==animal.id||
+        !Array.isArray(animal.path)||!animal.path.length)continue;
+      try{registerAttackIntent(state,animal,target,animal.path);travelling++;}
+      catch(error){
+        if(!/Native attack intention rejected: -5/.test(String(error)))throw error;
+        animal.path=null;staleRoutes++;
+      }
+    }
+    return {restoredAnimalAttacks:committed,restoredAnimalRoutes:travelling,
+      invalidSavedAnimalRoutes:staleRoutes};
+  };
   return {resetFromState,applyEvents,applyCommittedEvents,planTasks,
-    restoreAssignedTasks,proposalRoute,
+    restoreAssignedTasks,restoreAttackIntents,proposalRoute,
     getDamagedWalls:()=>getDamaged('wall'),
     getDamagedCenters:()=>getDamaged('center'),
     getUnprotectedCropGroups,
@@ -461,6 +490,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     }
     const result=bridge.resetFromState(state);
     const restored=bridge.restoreAssignedTasks(state);
+    const restoredAnimals=bridge.restoreAttackIntents(state);
     eligible.clear();projectedPositions.clear();requests.clear();
     pendingTaskEvents=[];pendingWorldEvents=[];total=0;
     lastPlan=null;lastPlanFacts=null;
@@ -468,7 +498,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     dirty=true;nextRetry=Infinity;lastTime=-Infinity;
     lastNavigationVersion=null;
     initialized=true;
-    return {...result,...restored};
+    return {...result,...restored,...restoredAnimals};
   };
   const applyEvents=(state,events)=>{
     lastPlan=null;lastPlanFacts=null;

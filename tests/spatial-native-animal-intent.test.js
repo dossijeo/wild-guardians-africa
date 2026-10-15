@@ -86,5 +86,17 @@ test('native animal leases preserve committed strikes and reject duplicate targe
       'an uncommitted route is cancelled when its target vanishes');
     assert.equal(wasm.nav_intent_attack_cancel(102),1);
     assert.equal(wasm.nav_intent_attack_cancel(103),1);
+    wasm.nav_intent_reset();
+    assert.equal(write(1,[row(1,2,12,1,end.x+3,end.z,1)]),1);
+    session.actorSectorRevision({worker:false,species:'hyena'});
+    assert.equal(wasm.nav_intent_restore_attack_action(102,12,0),1,
+      'a saved committed strike is restored without replaying travel');
+    assert.equal(wasm.nav_intent_actor(102),1);
+    assert.equal(new Float64Array(wasm.memory.buffer,
+      wasm.nav_intent_actor_ptr(),10)[1],2);
+    assert.equal(register(103,12),1,
+      'a committed strike whose JS lease was released does not block a new one');
+    assert.equal(wasm.nav_intent_attack_finished(102),0);
+    assert.equal(wasm.nav_intent_attack_finished(102),-1);
   }finally{session.dispose();}
 });

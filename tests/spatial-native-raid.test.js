@@ -7,7 +7,7 @@ import {createEventDrivenTaskPlanner} from '../src/world/hierarchical-wasm/spati
 import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
 import {nativeCameraPose} from '../src/rendering/terrain-camera.js';
 import {activeChunkRegion} from '../src/world/active-region.js';
-import {deserialize} from '../src/persistence/snapshots.js';
+import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {villageLayout} from '../src/world/villages.js';
 import {spawnRaid} from '../src/simulation/raids.js';
 import * as Game from '../src/simulation/game.js';
@@ -100,7 +100,7 @@ test('a native Sabana incursion spawns physically and advances through Game.tick
     assert.equal(state.raid?.animals.length,1);
     const planner=createEventDrivenTaskPlanner(session);
     planner.resetFromState(state);
-    const stopWorld=planner.observeWorld(state),stopTasks=planner.observeTasks(state);
+    let stopWorld=planner.observeWorld(state),stopTasks=planner.observeTasks(state);
     const intentCalls={registered:0,committed:0,finished:0};
     for(const [method,key] of [['registerAttackIntent','registered'],
       ['markAttackActive','committed'],['finishAttackIntent','finished']]){
@@ -110,7 +110,22 @@ test('a native Sabana incursion spawns physically and advances through Game.tick
     nav.intentTaskPlanner=planner;
     const animal=state.raid.animals[0],start={x:animal.x,z:animal.z},
       initialHits=animal.hitsRemaining;
-    for(let i=0;i<150&&animal.status!=='gone';i++)Game.tick(state,.2,nav);
+    let restoredCommittedStrike=false;
+    for(let i=0;i<150&&animal.status!=='gone';i++){
+      Game.tick(state,.2,nav);
+      if(!restoredCommittedStrike&&animal.status==='attacking'){
+        const saved=deserialize(serialize(state));
+        const committed=saved.raid.animals.find(item=>item.id===animal.id);
+        assert.equal(committed.attackId,animal.attackId);
+        assert.equal(committed.attackRemaining,animal.attackRemaining);
+        stopTasks();stopWorld();
+        const report=planner.resetFromState(state);
+        assert.equal(report.restoredAnimalAttacks,1);
+        stopWorld=planner.observeWorld(state);stopTasks=planner.observeTasks(state);
+        restoredCommittedStrike=true;
+      }
+    }
+    assert(restoredCommittedStrike,'the fixture must reach a committed strike');
     assert(Math.hypot(animal.x-start.x,animal.z-start.z)>1||animal.status==='gone',
       'the real raid should advance on native routes');
     for(let i=0;i<2000&&state.raid;i++)Game.tick(state,.25,nav);
