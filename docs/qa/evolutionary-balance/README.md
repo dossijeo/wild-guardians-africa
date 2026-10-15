@@ -11,6 +11,14 @@ terreno, rutas, ataques, daños, producción y ledger reales. No hay victoria de
 noches validada aquí. El documento adjunto *Balance V1* se conserva como candidato
 de trabajo; sus precios, HP y multiplicadores militares **no se aplican**.
 
+La pareja nativa más reciente, [Desierto/983 durante 21 noches tras la corrección
+de rutas de reparación](paired-repair-routes-21/README.md), completó ambos brazos
+con el mismo código y ledger conciliado: 149 cultivos y 965 monedas con murallas,
+frente a 70 y 718 sin ellas. Desde la noche 6 hubo 0 frente a 288 cultivos
+destruidos. Persisten 246 retiradas animales con golpes disponibles en el brazo
+defendido y cero reparaciones pagadas pese a 11 módulos arruinados. Esta pareja
+no valida todavía la política defensiva ni permite calibrar V1.
+
 | Material | Producción: precio / HP / puerta | V1 propuesto: precio / HP / puerta | Recomendación final |
 |---|---:|---:|---|
 | Zarzas | 10 / 100 / 60 | 10 / 100 / 75 | Pendiente |
