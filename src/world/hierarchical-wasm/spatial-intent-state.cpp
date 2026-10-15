@@ -2,6 +2,8 @@
 #include <array>
 #include <cmath>
 #include <cstdint>
+#include <queue>
+#include <set>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
@@ -16,6 +18,10 @@ const float* spatial_world_route_ptr();
 int spatial_world_route_reason();
 uint32_t lazy_route_revision();
 int lazy_selected_context();
+int lazy_weak_region(int,int);
+int lazy_enclosure(int,int);
+int spatial_local_clear(float,float,float,float);
+int spatial_crop_placement_valid(float,float);
 float spatial_surface_anywhere(float,float);
 float spatial_fluid_surface_level();
 int spatial_world_biome();
@@ -27,7 +33,41 @@ constexpr double maxId=9007199254740991.0;
 constexpr double pi=3.14159265358979323846;
 struct Worker {uint64_t id,center;double x,z;bool eligible;double rank;};
 // Target kind: 0 direct, 1 ordinary crop, 2 banana, 3 wall, 4 center.
-struct Target {uint64_t id;double x,z;bool active;int kind;double yaw,shape;};
+struct Target {
+  uint64_t id;double x,z;bool active;int kind;double yaw,shape;
+  double hp=0,maxHp=0;int status=0,material=0;bool damageKnown=false;
+  int cropSpecies=0;double cropValue=0;
+  double serviceX=0,serviceZ=0;bool serviceKnown=false;
+};
+struct PlantCandidate {int x,z;double distance2;};
+struct PlantOrder {
+  bool operator()(const PlantCandidate& a,const PlantCandidate& b)const{
+    if(a.distance2!=b.distance2)return a.distance2>b.distance2;
+    if(a.z!=b.z)return a.z>b.z;
+    return a.x>b.x;
+  }
+};
+struct PlantSearch {
+  std::priority_queue<PlantCandidate,std::vector<PlantCandidate>,PlantOrder> pending;
+  std::unordered_set<int64_t> visited;
+  double minX=0,minZ=0,maxX=0,maxZ=0;
+  uint32_t topology=0;
+  uint64_t centerRevision=0;
+  int validTerrain=0,blockedPaths=0;
+};
+struct PlantLease {uint64_t center;double x,z;uint32_t topology;};
+struct CropGroup {
+  uint64_t id;double value=0,x=0,z=0,minX=0,minZ=0,maxX=0,maxZ=0;
+  std::vector<uint64_t> crops;
+  std::unordered_map<int,std::pair<uint32_t,int>> protection;
+};
+struct DamageKey {double ratio;uint64_t id;};
+struct DamageOrder {
+  bool operator()(const DamageKey& a,const DamageKey& b)const{
+    if(a.ratio!=b.ratio)return a.ratio>b.ratio;
+    return a.id<b.id;
+  }
+};
 // Task kind: 0 direct, 1 water/initial, 2 repair.
 struct Task {uint64_t id,center,target,assigned;double created,rank;int kind;};
 struct Change {
@@ -40,10 +80,20 @@ struct IntentState {
   std::unordered_map<uint64_t,Worker> workers;
   std::unordered_map<uint64_t,Target> targets;
   std::unordered_map<uint64_t,Task> tasks;
+  std::set<DamageKey,DamageOrder> damagedWalls,damagedCenters;
+  std::vector<double> damagedResults;
+  std::vector<CropGroup> cropGroups;
+  std::vector<double> cropGroupRows,cropGroupMembers;
+  uint64_t cropRevision=0;bool cropGroupsDirty=true;
+  std::unordered_map<int64_t,std::vector<uint64_t>> cropCells;
+  std::unordered_map<uint64_t,PlantSearch> plantSearches;
+  std::unordered_map<uint64_t,PlantLease> plantLeases;
+  std::array<double,8> plantResult{};
+  uint64_t nextPlantLease=1,centerRevision=0;
   std::vector<double> changes,results;
   std::vector<float> routes;
   std::vector<std::pair<uint64_t,uint64_t>> proposals;
-  uint64_t sequence=0,entityRevision=0,plannedEntityRevision=0;
+  uint64_t sequence=0,entityRevision=0,damageRevision=0,plannedEntityRevision=0;
   uint32_t plannedGraphRevision=0;
   int plannedProfile=-1;
   uint64_t routeQueries=0,candidates=0;
@@ -56,7 +106,7 @@ bool integer(double value,bool allowZero=false){
 }
 bool coordinate(double value){return std::isfinite(value)&&std::abs(value)<2147483000.0;}
 bool parse(const double* row,Change& change){
-  if(!integer(row[0],true)||row[0]>1||!integer(row[1])||row[1]>3||
+  if(!integer(row[0],true)||row[0]>1||!integer(row[1])||row[1]>6||
     !integer(row[2]))return false;
   change.op=int(row[0]);change.kind=int(row[1]);change.id=uint64_t(row[2]);
   if(!change.op)return true;
@@ -68,9 +118,127 @@ bool parse(const double* row,Change& change){
   change.target=uint64_t(row[7]);change.created=row[8];change.rank=row[9];
   if(change.kind==1)return change.center>0&&row[6]<=1;
   if(change.kind==2)return change.center<=4&&row[6]<=1&&change.rank>=0;
+  if(change.kind==4)return (change.center==3||change.center==4)&&
+    row[4]>=0&&row[5]>0&&row[4]<=row[5]&&row[6]<=2&&row[7]<=5;
+  if(change.kind==5)return change.center>=1&&change.center<=8&&
+    change.x>=0&&row[6]==0&&row[7]==0;
+  if(change.kind==6)return change.center==4&&row[6]==0&&row[7]==0;
   return change.center>0&&change.target>0&&integer(row[4],true)&&row[4]<=2;
 }
 void clearProposal(IntentState& s){s.proposals.clear();s.proposalOpen=false;}
+bool damaged(const Target& target){
+  return target.damageKnown&&target.hp<target.maxHp&&
+    (target.kind==3||target.kind==4);
+}
+DamageKey damageKey(const Target& target){
+  return {(target.maxHp-target.hp)/target.maxHp,target.id};
+}
+void removeDamage(IntentState& s,const Target& target){
+  if(!damaged(target))return;
+  (target.kind==3?s.damagedWalls:s.damagedCenters).erase(damageKey(target));
+}
+void addDamage(IntentState& s,const Target& target){
+  if(!damaged(target))return;
+  (target.kind==3?s.damagedWalls:s.damagedCenters).insert(damageKey(target));
+}
+int64_t cropCell(int x,int z){
+  return int64_t((uint64_t(uint32_t(x))<<32)^uint32_t(z));
+}
+int64_t cropBucket(double x,double z){
+  return cropCell(int(std::floor(x/1.5)),int(std::floor(z/1.5)));
+}
+void removeCropCell(IntentState& s,const Target& target){
+  if(!target.active||(target.kind!=1&&target.kind!=2))return;
+  const int64_t key=cropBucket(target.x,target.z);
+  const auto found=s.cropCells.find(key);if(found==s.cropCells.end())return;
+  auto& ids=found->second;
+  ids.erase(std::remove(ids.begin(),ids.end(),target.id),ids.end());
+  if(ids.empty())s.cropCells.erase(found);
+}
+void addCropCell(IntentState& s,const Target& target){
+  if(target.active&&(target.kind==1||target.kind==2))
+    s.cropCells[cropBucket(target.x,target.z)].push_back(target.id);
+}
+bool cropOccupied(const IntentState& s,double x,double z){
+  const int cx=int(std::floor(x/1.5)),cz=int(std::floor(z/1.5));
+  for(int dz=-1;dz<=1;dz++)for(int dx=-1;dx<=1;dx++){
+    const auto found=s.cropCells.find(cropCell(cx+dx,cz+dz));
+    if(found==s.cropCells.end())continue;
+    for(uint64_t id:found->second){
+      const Target& crop=s.targets.at(id);
+      if(std::hypot(crop.x-x,crop.z-z)<1.1)return true;
+    }
+  }
+  for(const auto& entry:s.plantLeases)
+    if(std::hypot(entry.second.x-x,entry.second.z-z)<1.1)return true;
+  return false;
+}
+void rebuildCropGroups(IntentState& s){
+  if(!s.cropGroupsDirty)return;
+  s.cropGroups.clear();
+  std::vector<const Target*> crops;
+  for(const auto& entry:s.targets)if(entry.second.active&&
+    (entry.second.kind==1||entry.second.kind==2))crops.push_back(&entry.second);
+  std::sort(crops.begin(),crops.end(),[](const Target* a,const Target* b){return a->id<b->id;});
+  constexpr double reach=1.7;
+  std::unordered_map<int64_t,std::vector<size_t>> cells;
+  cells.reserve(crops.size()*2);
+  for(size_t i=0;i<crops.size();i++)cells[cropCell(int(std::floor(crops[i]->x/reach)),
+    int(std::floor(crops[i]->z/reach)))].push_back(i);
+  std::vector<uint8_t> seen(crops.size(),0);
+  for(size_t seed=0;seed<crops.size();seed++){
+    if(seen[seed])continue;
+    CropGroup group{};group.id=crops[seed]->id;
+    group.minX=group.maxX=crops[seed]->x;
+    group.minZ=group.maxZ=crops[seed]->z;
+    std::vector<size_t> queue{seed};seen[seed]=1;
+    for(size_t head=0;head<queue.size();head++){
+      const Target& crop=*crops[queue[head]];
+      group.crops.push_back(crop.id);group.value+=crop.cropValue;
+      group.x+=crop.x;group.z+=crop.z;
+      group.minX=std::min(group.minX,crop.x);group.minZ=std::min(group.minZ,crop.z);
+      group.maxX=std::max(group.maxX,crop.x);group.maxZ=std::max(group.maxZ,crop.z);
+      const int cx=int(std::floor(crop.x/reach)),cz=int(std::floor(crop.z/reach));
+      std::vector<size_t> near;
+      for(int dz=-2;dz<=2;dz++)for(int dx=-2;dx<=2;dx++){
+        const auto found=cells.find(cropCell(cx+dx,cz+dz));
+        if(found!=cells.end())near.insert(near.end(),found->second.begin(),found->second.end());
+      }
+      std::sort(near.begin(),near.end());
+      for(size_t next:near)if(!seen[next]&&
+        crops[next]->cropSpecies==crop.cropSpecies&&
+        std::hypot(crops[next]->x-crop.x,crops[next]->z-crop.z)<=reach){
+        seen[next]=1;queue.push_back(next);
+      }
+    }
+    group.x/=group.crops.size();group.z/=group.crops.size();
+    std::sort(group.crops.begin(),group.crops.end());
+    s.cropGroups.push_back(std::move(group));
+  }
+  std::sort(s.cropGroups.begin(),s.cropGroups.end(),[](const CropGroup& a,const CropGroup& b){
+    return a.value!=b.value?a.value>b.value:a.id<b.id;
+  });
+  s.cropGroupsDirty=false;
+}
+int cropProtection(const IntentState& s,const CropGroup& group){
+  bool open=false,unknown=false;
+  for(uint64_t id:group.crops){
+    const Target& crop=s.targets.at(id);
+    const int xs[2]={int(std::floor(crop.x)),int(std::ceil(crop.x))};
+    const int zs[2]={int(std::floor(crop.z)),int(std::ceil(crop.z))};
+    bool found=false;
+    for(int x:xs)for(int z:zs){
+      if(!spatial_local_clear(float(crop.x),float(crop.z),float(x),float(z)))continue;
+      const int region=lazy_weak_region(x,z);
+      if(region==-1){unknown=true;continue;}
+      if(region<0)continue;
+      found=true;
+      if(lazy_enclosure(x,z)!=1)open=true;
+    }
+    if(!found)unknown=true;
+  }
+  return open?0:unknown?-1:1;
+}
 struct Point {double x,z;};
 struct ServicePoints {
   std::array<Point,16> values{};
@@ -124,8 +292,14 @@ extern "C" {
 void nav_intent_reset(){
   IntentState& s=state();
   s.workers.clear();s.targets.clear();s.tasks.clear();
+  s.damagedWalls.clear();s.damagedCenters.clear();s.damagedResults.clear();
+  s.cropGroups.clear();s.cropGroupRows.clear();s.cropGroupMembers.clear();
+  s.cropRevision=0;s.cropGroupsDirty=true;
+  s.cropCells.clear();s.plantSearches.clear();s.plantLeases.clear();
+  s.plantResult.fill(0);s.nextPlantLease=1;s.centerRevision=0;
   s.changes.clear();s.results.clear();s.routes.clear();clearProposal(s);
-  s.sequence=0;s.entityRevision=0;s.routeQueries=0;s.candidates=0;
+  s.sequence=0;s.entityRevision=0;s.damageRevision=0;
+  s.routeQueries=0;s.candidates=0;
 }
 double* nav_intent_changes_ptr(int count){
   if(count<0||count>maxChangeBatch)return nullptr;
@@ -141,29 +315,257 @@ int nav_intent_apply_changes(double sequence,int count){
   std::vector<Change> parsed(static_cast<size_t>(count));
   for(int i=0;i<count;i++)
     if(!parse(s.changes.data()+size_t(i)*changeWidth,parsed[size_t(i)]))return 0;
+  std::unordered_map<uint64_t,int> touchedTargetKinds;
+  for(const Change& change:parsed){
+    if(change.kind==2)touchedTargetKinds[change.id]=change.op?int(change.center):0;
+    if((change.kind!=4&&change.kind!=5&&change.kind!=6)||!change.op)continue;
+    const auto pending=touchedTargetKinds.find(change.id);
+    const int current=pending!=touchedTargetKinds.end()?pending->second:
+      s.targets.count(change.id)?s.targets.at(change.id).kind:0;
+    if(change.kind==4&&current!=int(change.center))return 0;
+    if(change.kind==5&&current!=1&&current!=2)return 0;
+    if(change.kind==6&&current!=4)return 0;
+  }
+  bool planningChange=false,damageChange=false,cropChange=false,cropRemoved=false,centerChange=false;
+  for(const Change& change:parsed){
+    if(change.kind==2||change.kind==4)damageChange=true;
+    if(change.kind==5||change.kind==2&&
+      (change.op&&change.center<=2||
+       s.targets.count(change.id)&&s.targets.at(change.id).kind>=1&&
+       s.targets.at(change.id).kind<=2))cropChange=true;
+    if(change.kind==2&&s.targets.count(change.id)&&
+       s.targets.at(change.id).active&&
+       (s.targets.at(change.id).kind==1||s.targets.at(change.id).kind==2)&&
+       (!change.op||!change.flag||
+        s.targets.at(change.id).x!=change.x||s.targets.at(change.id).z!=change.z))cropRemoved=true;
+    if(change.kind==6||change.kind==2&&
+      (change.op&&change.center==4||
+       s.targets.count(change.id)&&s.targets.at(change.id).kind==4))centerChange=true;
+    if(change.kind==5||change.kind==6)continue;
+    if(change.kind!=4){planningChange=true;continue;}
+    if(!change.op){planningChange=true;continue;}
+    const auto found=s.targets.find(change.id);
+    if(found!=s.targets.end()&&found->second.damageKnown&&
+       found->second.status!=int(change.assigned))planningChange=true;
+  }
   for(const Change& change:parsed){
     if(!change.op){
       if(change.kind==1)s.workers.erase(change.id);
-      else if(change.kind==2)s.targets.erase(change.id);
-      else s.tasks.erase(change.id);
+      else if(change.kind==2){
+        const auto found=s.targets.find(change.id);
+        if(found!=s.targets.end()){
+          removeDamage(s,found->second);removeCropCell(s,found->second);
+          s.targets.erase(found);
+        }
+      }else if(change.kind==3)s.tasks.erase(change.id);
+      else if(const auto found=s.targets.find(change.id);found!=s.targets.end()){
+        removeDamage(s,found->second);found->second.damageKnown=false;
+      }
     }else if(change.kind==1){
       s.workers.insert_or_assign(change.id,Worker{change.id,change.center,
         change.x,change.z,change.flag,change.rank});
     }else if(change.kind==2){
-      s.targets.insert_or_assign(change.id,Target{change.id,change.x,
-        change.z,change.flag,int(change.center),change.created,change.rank});
+      auto found=s.targets.find(change.id);
+      if(found==s.targets.end()){
+        auto inserted=s.targets.insert_or_assign(change.id,
+          Target{change.id,change.x,change.z,change.flag,
+            int(change.center),change.created,change.rank});
+        addCropCell(s,inserted.first->second);
+      }else{
+        Target& target=found->second;
+        removeDamage(s,target);removeCropCell(s,target);
+        target.x=change.x;target.z=change.z;target.active=change.flag;
+        target.kind=int(change.center);target.yaw=change.created;target.shape=change.rank;
+        addDamage(s,target);addCropCell(s,target);
+      }
+    }else if(change.kind==4){
+      const auto found=s.targets.find(change.id);
+      if(found==s.targets.end()||found->second.kind!=int(change.center))continue;
+      Target& target=found->second;
+      removeDamage(s,target);
+      target.hp=change.x;target.maxHp=change.z;target.status=int(change.assigned);
+      target.material=int(change.target);target.damageKnown=true;
+      addDamage(s,target);
+    }else if(change.kind==5){
+      const auto found=s.targets.find(change.id);
+      if(found==s.targets.end()||found->second.kind>2)continue;
+      found->second.cropSpecies=int(change.center);
+      found->second.cropValue=change.x;
+    }else if(change.kind==6){
+      const auto found=s.targets.find(change.id);
+      if(found==s.targets.end()||found->second.kind!=4)continue;
+      found->second.serviceX=change.x;
+      found->second.serviceZ=change.z;
+      found->second.serviceKnown=true;
     }else{
       s.tasks.insert_or_assign(change.id,Task{change.id,change.center,
         change.target,change.assigned,change.created,change.rank,int(change.x)});
     }
   }
-  s.sequence++;s.entityRevision++;clearProposal(s);return 1;
+  s.sequence++;
+  if(damageChange)s.damageRevision++;
+  if(cropChange){s.cropRevision++;s.cropGroupsDirty=true;}
+  if(cropRemoved||centerChange){s.plantSearches.clear();s.centerRevision++;}
+  if(planningChange){s.entityRevision++;clearProposal(s);}
+  return 1;
 }
 double nav_intent_last_sequence(){return double(state().sequence);}
 double nav_intent_entity_revision(){return double(state().entityRevision);}
+double nav_intent_damage_revision(){return double(state().damageRevision);}
+double nav_intent_crop_revision(){return double(state().cropRevision);}
+double nav_intent_topology_revision(){return double(lazy_route_revision());}
 int nav_intent_worker_count(){return int(state().workers.size());}
 int nav_intent_target_count(){return int(state().targets.size());}
 int nav_intent_task_count(){return int(state().tasks.size());}
+// Sorted incrementally as structure HP events arrive. Queries copy only the
+// requested result rows; they never rescan live crops, walls or navigation.
+int nav_intent_damaged_structures(int kind){
+  IntentState& s=state();s.damagedResults.clear();
+  if(kind!=3&&kind!=4)return -1;
+  const auto& index=kind==3?s.damagedWalls:s.damagedCenters;
+  s.damagedResults.reserve(index.size()*8);
+  for(const DamageKey& key:index){
+    const auto found=s.targets.find(key.id);
+    if(found==s.targets.end())continue;
+    const Target& target=found->second;
+    s.damagedResults.insert(s.damagedResults.end(),{
+      double(target.id),target.hp,target.maxHp,key.ratio,double(target.status),
+      double(target.material),double(s.damageRevision),target.active?1.0:0.0});
+  }
+  return int(s.damagedResults.size()/8);
+}
+const double* nav_intent_damaged_ptr(){return state().damagedResults.data();}
+// The selected Wild Engine animal profile owns the protection verdict. Clients
+// combine verdicts across relevant species; -1 is never certified protected.
+int nav_intent_crop_groups(){
+  IntentState& s=state();rebuildCropGroups(s);
+  s.cropGroupRows.clear();s.cropGroupMembers.clear();
+  s.cropGroupRows.reserve(s.cropGroups.size()*12);
+  const int profile=lazy_selected_context();
+  const uint32_t revision=lazy_route_revision();
+  for(CropGroup& group:s.cropGroups){
+    auto status=group.protection.find(profile);
+    if(status==group.protection.end()||status->second.first!=revision){
+      const int result=cropProtection(s,group);
+      status=group.protection.insert_or_assign(profile,std::make_pair(revision,result)).first;
+    }
+    const size_t offset=s.cropGroupMembers.size();
+    for(uint64_t id:group.crops)s.cropGroupMembers.push_back(double(id));
+    s.cropGroupRows.insert(s.cropGroupRows.end(),{double(group.id),group.value,
+      group.x,group.z,group.minX,group.minZ,group.maxX,group.maxZ,
+      double(status->second.second),double(offset),double(group.crops.size()),
+      double(s.cropRevision)});
+  }
+  return int(s.cropGroups.size());
+}
+const double* nav_intent_crop_groups_ptr(){return state().cropGroupRows.data();}
+const double* nav_intent_crop_members_ptr(){return state().cropGroupMembers.data();}
+
+// A nearest-first lattice search over the currently resident farm window.
+// The heap and visited cells persist across bounded calls. All geometry and
+// bidirectional routes are checked by the authoritative native world.
+int nav_intent_find_planting_site(double centerId,double minX,double minZ,
+    double maxX,double maxZ,int budget,int reserve){
+  IntentState& s=state();s.plantResult.fill(0);
+  if(!integer(centerId)||!coordinate(minX)||!coordinate(minZ)||
+     !coordinate(maxX)||!coordinate(maxZ)||minX>maxX||minZ>maxZ||
+     budget<1||budget>4096||(reserve!=0&&reserve!=1))return -2;
+  const uint64_t id=uint64_t(centerId);
+  const auto found=s.targets.find(id);
+  if(found==s.targets.end()||found->second.kind!=4||
+     !found->second.active||!found->second.serviceKnown)return -2;
+  const Target& center=found->second;
+  const uint32_t revision=lazy_route_revision();
+  for(auto it=s.plantLeases.begin();it!=s.plantLeases.end();)
+    if(it->second.topology!=revision)it=s.plantLeases.erase(it);
+    else ++it;
+  PlantSearch& search=s.plantSearches[id];
+  if(search.visited.empty()||search.topology!=revision||
+     search.centerRevision!=s.centerRevision||
+     search.minX!=minX||search.minZ!=minZ||
+     search.maxX!=maxX||search.maxZ!=maxZ){
+    search=PlantSearch{};
+    search.minX=minX;search.minZ=minZ;search.maxX=maxX;search.maxZ=maxZ;
+    search.topology=revision;search.centerRevision=s.centerRevision;
+    const int loX=int(std::ceil(minX/1.5)),hiX=int(std::floor(maxX/1.5));
+    const int loZ=int(std::ceil(minZ/1.5)),hiZ=int(std::floor(maxZ/1.5));
+    if(loX>hiX||loZ>hiZ){s.plantResult[0]=0;return 0;}
+    // Workers enter and leave through the service point. Ordering sites from
+    // the building centroid can seed the far side first despite valid routes.
+    const int sx=std::clamp(int(std::round(center.serviceX/1.5)),loX,hiX);
+    const int sz=std::clamp(int(std::round(center.serviceZ/1.5)),loZ,hiZ);
+    const double dx=sx*1.5-center.serviceX,dz=sz*1.5-center.serviceZ;
+    search.pending.push({sx,sz,dx*dx+dz*dz});
+    search.visited.insert(cropCell(sx,sz));
+  }
+  const int loX=int(std::ceil(minX/1.5)),hiX=int(std::floor(maxX/1.5));
+  const int loZ=int(std::ceil(minZ/1.5)),hiZ=int(std::floor(maxZ/1.5));
+  int examined=0;
+  auto enqueue=[&](int x,int z){
+    if(x<loX||x>hiX||z<loZ||z>hiZ)return;
+    if(!search.visited.insert(cropCell(x,z)).second)return;
+    const double dx=x*1.5-center.serviceX,dz=z*1.5-center.serviceZ;
+    search.pending.push({x,z,dx*dx+dz*dz});
+  };
+  while(examined<budget&&!search.pending.empty()){
+    const PlantCandidate candidate=search.pending.top();search.pending.pop();
+    enqueue(candidate.x-1,candidate.z);enqueue(candidate.x+1,candidate.z);
+    enqueue(candidate.x,candidate.z-1);enqueue(candidate.x,candidate.z+1);
+    examined++;
+    const double x=candidate.x*1.5,z=candidate.z*1.5;
+    if(cropOccupied(s,x,z))continue;
+    const int placement=spatial_crop_placement_valid(float(x),float(z));
+    if(placement<0){
+      search.pending.push(candidate);
+      s.plantResult={-1,x,z,0,double(examined),double(s.cropRevision),
+        double(revision),1};
+      return -1;
+    }
+    if(!placement)continue;
+    search.validTerrain++;
+    const int outward=spatial_world_route_cached(float(center.serviceX),
+      float(center.serviceZ),float(x),float(z));
+    if(outward<0){
+      search.pending.push(candidate);
+      s.plantResult={-1,x,z,0,double(examined),double(s.cropRevision),
+        double(revision),2};
+      return -1;
+    }
+    if(!outward){search.blockedPaths++;continue;}
+    const int returning=spatial_world_route_cached(float(x),float(z),
+      float(center.serviceX),float(center.serviceZ));
+    if(returning<0){
+      search.pending.push(candidate);
+      s.plantResult={-1,x,z,0,double(examined),double(s.cropRevision),
+        double(revision),3};
+      return -1;
+    }
+    if(!returning){search.blockedPaths++;continue;}
+    uint64_t lease=0;
+    if(reserve){
+      lease=s.nextPlantLease++;
+      s.plantLeases.emplace(lease,PlantLease{id,x,z,revision});
+    }else search.pending.push(candidate);
+    s.plantResult={1,x,z,double(lease),double(examined),double(s.cropRevision),
+      double(revision),0};
+    return 1;
+  }
+  const int status=search.pending.empty()?(search.validTerrain&&search.blockedPaths?3:0):2;
+  s.plantResult={double(status),0,0,0,double(examined),double(s.cropRevision),
+    double(revision),double(search.blockedPaths)};
+  return status;
+}
+const double* nav_intent_planting_site_ptr(){return state().plantResult.data();}
+int nav_intent_release_planting_site(double reservationId,int committed){
+  if(!integer(reservationId)||(committed!=0&&committed!=1))return 0;
+  IntentState& s=state();
+  const auto found=s.plantLeases.find(uint64_t(reservationId));
+  if(found==s.plantLeases.end())return 0;
+  const uint64_t center=found->second.center;
+  s.plantLeases.erase(found);
+  if(!committed)s.plantSearches.erase(center);
+  return 1;
+}
 
 // All eligible direct tasks are planned together in global FIFO order. Rows:
 // task ID, worker ID, status (0 no candidate, 1 found, 2 blocked, 3 unknown),

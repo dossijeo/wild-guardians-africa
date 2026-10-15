@@ -1,10 +1,17 @@
-import {centerGeometry} from '../centers.js';
+import {centerGeometry,centerServicePoint} from '../centers.js';
 import {contractExpired,PROFILES} from '../../simulation/workforce.js';
+import {repairCost} from '../../simulation/game.js';
+import {BALANCE} from '../../simulation/balance.js';
+import {ANIMAL_SPATIAL_PROFILES} from './spatial-movement-profiles.js';
 
 // Experimental event-fed bridge. Gameplay does not call it yet: it is used to
 // prove the native read model can be rebuilt after load and changed by deltas.
 const width=10,maxBatch=4096;
 const profileEnd=new Map(PROFILES.map(profile=>[profile.id,profile.end]));
+const materialCodes=new Map(BALANCE.walls.map((wall,index)=>[wall.id,index+1]));
+const cropCodes=new Map(BALANCE.crops.map((crop,index)=>[crop.id,index+1]));
+const cropValues=new Map(BALANCE.crops.map(crop=>[crop.id,crop.base_harvest_value]));
+const structureStatus={intact:0,collapsing:1,ruined:2};
 const numericId=id=>{
   const match=/-(\d+)$/.exec(id??'');
   if(!match||!Number.isSafeInteger(Number(match[1]))||Number(match[1])<1)
@@ -34,14 +41,36 @@ const taskRow=task=>[1,3,numericId(task.id),numericId(task.centerId),
   task.kind==='initial'||task.kind==='water'?1:task.kind==='repair'?2:0,
   0,task.workerId?numericId(task.workerId):0,numericId(task.targetId),
   task.created,lexicalRank(task.id)];
+const structureMetaRow=structure=>{
+  const material=structure.kind==='wall'?materialCodes.get(structure.material):0;
+  if(material===undefined||structureStatus[structure.status]===undefined)
+    throw TypeError(`Unsupported structure metadata: ${structure.id}`);
+  return [1,4,numericId(structure.id),structure.kind==='wall'?3:4,
+    structure.hp,structure.maxHp,structureStatus[structure.status],material,0,0];
+};
+const cropMetaRow=plant=>{
+  const species=cropCodes.get(plant.species),value=cropValues.get(plant.species);
+  if(!species||!Number.isFinite(value))throw TypeError(`Unsupported crop: ${plant.id}`);
+  return [1,5,numericId(plant.id),species,value,0,0,0,0,0];
+};
+const centerAccessRow=(center,state)=>{
+  const point=centerServicePoint(center,state,.8);
+  return [1,6,numericId(center.id),4,point.x,point.z,0,0,0,0];
+};
 
 export function createSpatialIntentBridge(session){
   const wasm=session?.core?.wasm;
   for(const name of ['nav_intent_reset','nav_intent_changes_ptr',
     'nav_intent_apply_changes','nav_intent_plan_tasks','nav_intent_results_ptr',
-    'nav_intent_discard','nav_intent_commit'])
+    'nav_intent_discard','nav_intent_commit','nav_intent_damaged_structures',
+    'nav_intent_damaged_ptr','nav_intent_crop_groups',
+    'nav_intent_crop_groups_ptr','nav_intent_crop_members_ptr',
+    'nav_intent_find_planting_site','nav_intent_planting_site_ptr',
+    'nav_intent_release_planting_site'])
     if(typeof wasm?.[name]!=='function')throw TypeError(`Missing ${name}`);
   let sequence=0,initialized=false;
+  const structuresById=new Map();
+  const cropsById=new Map();
   const apply=rows=>{
     if(!initialized)throw Error('Reset the native intent session first');
     for(let offset=0;offset<rows.length;offset+=maxBatch){
@@ -62,10 +91,20 @@ export function createSpatialIntentBridge(session){
         a.created-b.created||a.id.localeCompare(b.id));
       const rows=[...workers.map(worker=>workerRow(worker,state)),
         ...state.plants.filter(plant=>plant.alive).map(plant=>targetRow(plant,state)),
+        ...state.plants.filter(plant=>plant.alive).map(cropMetaRow),
         ...state.crates.filter(crate=>!crate.delivered).map(crate=>targetRow(crate,state)),
         ...state.structures.map(structure=>targetRow(structure,state)),
+        ...state.structures.map(structure=>structureMetaRow(structure)),
+        ...state.structures.filter(item=>item.kind==='center')
+          .map(center=>centerAccessRow(center,state)),
         ...tasks.map(task=>taskRow(task))];
       apply(rows);
+      structuresById.clear();
+      cropsById.clear();
+      for(const structure of state.structures)
+        structuresById.set(numericId(structure.id),{...structure});
+      for(const crop of state.plants)if(crop.alive)
+        cropsById.set(numericId(crop.id),crop.id);
     }
     catch(error){
       wasm.nav_intent_reset();sequence=0;initialized=false;
@@ -85,18 +124,81 @@ export function createSpatialIntentBridge(session){
       else if(event.type==='target')rows.push(event.remove?
         [0,2,numericId(event.id),0,0,0,0,0,0,0]:
         targetRow(event.entity,state));
+      else if(event.type==='structureDamage')
+        rows.push(structureMetaRow(event.entity));
       else if(event.type==='task')rows.push(event.remove?
         [0,3,numericId(event.id),0,0,0,0,0,0,0]:
         taskRow(event.entity));
       else throw TypeError(`Unsupported intent event: ${event.type}`);
+      if(event.type==='target'&&!event.remove&&
+        (event.entity.kind==='wall'||event.entity.kind==='center'))
+        rows.push(structureMetaRow(event.entity));
+      if(event.type==='target'&&!event.remove&&event.entity.kind==='center')
+        rows.push(centerAccessRow(event.entity,state));
+      if(event.type==='target'&&!event.remove&&'alive' in event.entity)
+        rows.push(cropMetaRow(event.entity));
     }
-    try{return apply(rows);}
+    try{
+      const result=apply(rows);
+      for(const event of events){
+        if(event.type==='structureDamage'||event.type==='target'){
+          const id=numericId(event.remove?event.id:event.entity.id);
+          if(event.remove)structuresById.delete(id);
+          else if(event.entity.kind==='wall'||event.entity.kind==='center')
+            structuresById.set(id,{...event.entity});
+        }
+        if(event.type==='target'){
+          const id=numericId(event.remove?event.id:event.entity.id);
+          if(event.remove||'alive' in event.entity&&!event.entity.alive)
+            cropsById.delete(id);
+          else if('alive' in event.entity)cropsById.set(id,event.entity.id);
+        }
+      }
+      return result;
+    }
     catch(error){
       // A multi-batch event may have partially reached WASM. JS remains the
       // authority, so rebuild the derived read model before surfacing failure.
       resetFromState(state);
       throw error;
     }
+  };
+  // Translate only confirmed simulation events. A restored game uses
+  // resetFromState(); this incremental projection never owns game rules.
+  const applyCommittedEvents=(state,events)=>{
+    const changes=[];
+    let structures=null,plants=null;
+    const structureFor=id=>state.structures.at(-1)?.id===id?state.structures.at(-1):
+      (structures??=new Map(state.structures.map(item=>[item.id,item]))).get(id);
+    const plantFor=id=>state.plants.at(-1)?.id===id?state.plants.at(-1):
+      (plants??=new Map(state.plants.filter(item=>item.alive)
+        .map(item=>[item.id,item]))).get(id);
+    for(const event of events){
+      if(event.type==='CropPlaced'){
+        const entity=plantFor(event.targetId);
+        if(entity)changes.push({type:'target',entity});
+      }else if(event.type==='CropDestroyed'||event.type==='CropPicked')
+        changes.push({type:'target',remove:true,id:event.targetId});
+      else if(event.type==='PlacementCommitted'&&
+        (event.kind==='center'||event.kind==='wall')){
+        const entity=structureFor(event.targetId);
+        if(entity)changes.push({type:'target',entity});
+      }else if(event.type==='WallChainBuilt'){
+        const first=numericId(event.targetId),latest=state.structures.slice(-event.count);
+        for(let offset=0;offset<event.count;offset++){
+          const id=`structure-${first+offset}`;
+          const entity=latest[offset]?.id===id?latest[offset]:structureFor(id);
+          if(entity)changes.push({type:'target',entity});
+        }
+      }else if(event.type==='WallRemoved')
+        changes.push({type:'target',remove:true,id:event.targetId});
+      else if(['StructureHit','StructureRuined','RepairApplied'].includes(event.type)){
+        const entity=structureFor(event.targetId);
+        if(entity)changes.push({type:'structureDamage',entity});
+      }
+    }
+    if(changes.length)applyEvents(state,changes);
+    return changes.length;
   };
   const planTasks=()=>{
     if(!initialized)throw Error('Reset the native intent session first');
@@ -112,7 +214,89 @@ export function createSpatialIntentBridge(session){
         approach:{x:data[at+6],z:data[at+7]}};
     });
   };
-  return {resetFromState,applyEvents,planTasks,
+  const getDamaged=kind=>{
+    if(!initialized)throw Error('Reset the native intent session first');
+    if(kind!=='wall'&&kind!=='center')throw TypeError('Unknown structure kind');
+    const count=wasm.nav_intent_damaged_structures(kind==='wall'?3:4);
+    if(count<0)throw Error('Native damage query failed');
+    const data=new Float64Array(wasm.memory.buffer,wasm.nav_intent_damaged_ptr(),count*8);
+    return Array.from({length:count},(_,index)=>{
+      const offset=index*8,id=data[offset],structure=structuresById.get(id);
+      if(!structure)throw Error(`Missing authoritative structure ${id}`);
+      const cost=repairCost(structure),numerator=BigInt(cost.n),denominator=BigInt(cost.d);
+      return {id:structure.id,hp:data[offset+1],maxHp:data[offset+2],
+        damageRatio:data[offset+3],status:structure.status,material:structure.material??null,
+        cost,paidCoins:Number((numerator+denominator-1n)/denominator),
+        revision:data[offset+6],kind};
+    });
+  };
+  const getUnprotectedCropGroups=({includeProtected=false}={})=>{
+    if(!initialized)throw Error('Reset the native intent session first');
+    const groups=new Map();
+    const revisions=[];
+    for(const [species,profile] of Object.entries(ANIMAL_SPATIAL_PROFILES)){
+      session.actorSectorRevision({worker:false,species});
+      const count=wasm.nav_intent_crop_groups();
+      if(count<0)throw Error('Native crop group query failed');
+      const rows=Array.from(new Float64Array(wasm.memory.buffer,
+        wasm.nav_intent_crop_groups_ptr(),count*12));
+      const memberCount=rows.reduce((max,_,index)=>index%12===0?
+        Math.max(max,rows[index+9]+rows[index+10]):max,0);
+      const members=Array.from(new Float64Array(wasm.memory.buffer,
+        wasm.nav_intent_crop_members_ptr(),memberCount));
+      revisions.push({species,topology:wasm.nav_intent_topology_revision()});
+      for(let index=0;index<count;index++){
+        const at=index*12,id=rows[at],status=rows[at+8];
+        let group=groups.get(id);
+        if(!group){
+          const ids=members.slice(rows[at+9],rows[at+9]+rows[at+10]);
+          group={id:`crop:${cropsById.get(id)??id}`,cropIds:ids.map(item=>cropsById.get(item)??item),
+            value:rows[at+1],position:{x:rows[at+2],z:rows[at+3]},
+            bounds:{minX:rows[at+4],minZ:rows[at+5],maxX:rows[at+6],maxZ:rows[at+7]},
+            protection:'protected',profiles:{},revision:{crops:rows[at+11],topology:revisions}};
+          groups.set(id,group);
+        }
+        group.profiles[species]=status===1?'protected':status===0?'unprotected':'unknown';
+        if(status===0)group.protection='unprotected';
+        else if(status<0&&group.protection==='protected')group.protection='unknown';
+      }
+    }
+    return [...groups.values()].filter(group=>includeProtected||
+      group.protection!=='protected').sort((a,b)=>b.value-a.value||a.id.localeCompare(b.id));
+  };
+  const findPlantingSite=(centerId,{budget=64,reserve=true}={})=>{
+    if(!initialized)throw Error('Reset the native intent session first');
+    if(!Number.isInteger(budget)||budget<1||budget>4096)
+      throw RangeError('Plant search budget must be 1–4096');
+    const center=structuresById.get(numericId(centerId));
+    if(center?.kind!=='center'||center.status==='ruined')
+      throw TypeError(`Unknown operational center: ${centerId}`);
+    session.actorSectorRevision({worker:true});
+    const resident=[...session.stream.loaded().keys()].map(key=>key.split(',').map(Number))
+      .filter(([cx,cz])=>Number.isInteger(cx)&&Number.isInteger(cz));
+    if(!resident.length)return {status:'unknown',reason:'no-resident-sectors'};
+    const bounds=resident.reduce((b,[cx,cz])=>[
+      Math.min(b[0],cx*48-24),Math.min(b[1],cz*48-24),
+      Math.max(b[2],cx*48+24),Math.max(b[3],cz*48+24)],
+    [Infinity,Infinity,-Infinity,-Infinity]);
+    const status=wasm.nav_intent_find_planting_site(numericId(centerId),
+      ...bounds,budget,reserve?1:0);
+    if(status===-2)throw Error('Native planting-site query rejected');
+    const row=Array.from(new Float64Array(wasm.memory.buffer,
+      wasm.nav_intent_planting_site_ptr(),8));
+    return {status:status===1?'found':status===2?'pending':
+      status===3?'blocked':status===0?'no-space':'unknown',
+      point:status===1||status===-1?{x:row[1],z:row[2]}:null,
+      reservationId:row[3]||null,examined:row[4],
+      revision:{crops:row[5],topology:row[6]},reason:row[7],bounds};
+  };
+  const releasePlantingSite=(reservationId,{committed=false}={})=>
+    wasm.nav_intent_release_planting_site(reservationId,committed?1:0)===1;
+  return {resetFromState,applyEvents,applyCommittedEvents,planTasks,
+    getDamagedWalls:()=>getDamaged('wall'),
+    getDamagedCenters:()=>getDamaged('center'),
+    getUnprotectedCropGroups,
+    findPlantingSite,releasePlantingSite,
     discard:()=>wasm.nav_intent_discard(),
     commit:()=>wasm.nav_intent_commit(),
     sequence:()=>sequence};
@@ -157,7 +341,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
       if(event.remove)eligible.delete(numericId(event.id));
       else setWorker(event.entity,state);
     }
-    if(events.length)dirty=true;
+    if(events.some(event=>event.type!=='structureDamage'))dirty=true;
     return result;
   };
   const planIfNeeded=simulatedSeconds=>{

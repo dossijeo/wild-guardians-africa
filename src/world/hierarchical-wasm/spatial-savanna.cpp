@@ -1810,6 +1810,69 @@ int spatial_local_clear_except(float x,float z,float nx,float nz,int ignore0,int
 int spatial_local_clear(float x,float z,float nx,float nz){
   return spatial_local_clear_except(x,z,nx,nz,0,0,0,0);
 }
+// Crop placement advice is separate from movement passability: a worker may
+// cross an automatic gate, but a seed cannot be placed on that wall. -1 means
+// the resident prop/terrain data is missing; callers must not claim no space.
+int spatial_crop_placement_valid(float x,float z){
+  if(!navReady||!std::isfinite(x)||!std::isfinite(z))return -1;
+  const ChunkSpatialSample* sample=residentSample(x,z);
+  if(!sample)return -1;
+  constexpr double cropRadius=.4;
+  const auto surfaceAt=[&](double px,double pz){
+    const double ground=spatial_surface_anywhere(float(px),float(pz));
+    return worldBiome==5?std::max(ground,double(spatial_fluid_surface_level())):ground;
+  };
+  for(int i=0;i<5;i++){
+    const double px=x+(i==1?cropRadius:i==2?-cropRadius:0);
+    const double pz=z+(i==3?cropRadius:i==4?-cropRadius:0);
+    const double slope=std::hypot(surfaceAt(px+.8,pz)-surfaceAt(px-.8,pz),
+      surfaceAt(px,pz+.8)-surfaceAt(px,pz-.8))/1.6;
+    if(!std::isfinite(slope)||slope>.5||
+       spatial_fluid_level_anywhere(float(px),float(pz))!=0)return 0;
+  }
+  const int minCx=int(std::floor((x-4.4+24)/side));
+  const int maxCx=int(std::floor((x+4.4+24)/side));
+  const int minCz=int(std::floor((z-4.4+24)/side));
+  const int maxCz=int(std::floor((z+4.4+24)/side));
+  for(int cz=minCz;cz<=maxCz;cz++)for(int cx=minCx;cx<=maxCx;cx++){
+    const auto props=residentSolidProps().find(chunkKey(cx,cz));
+    if(props==residentSolidProps().end())return -1;
+    for(const Prop& prop:props->second)
+      if(std::hypot(double(x)-prop.x,double(z)-prop.z)<prop.radius+cropRadius)
+        return 0;
+  }
+  const int bx=int(std::floor(x/barrierBucketWidth));
+  const int bz=int(std::floor(z/barrierBucketWidth));
+  const auto key=barrierKey(bx,bz);
+  const auto& barriers=barrierIndex();
+  if(const auto bucket=barriers.buckets.find(key);bucket!=barriers.buckets.end())
+    for(int id:bucket->second){
+      const Barrier& wall=barriers.byId.at(id);
+      if(std::hypot(double(x)-wall.x,double(z)-wall.z)<1.1)return 0;
+    }
+  if(polygonRegistry){
+    const auto& polygons=*polygonRegistry;
+    if(const auto bucket=polygons.buckets.find(key);bucket!=polygons.buckets.end())
+      for(int id:bucket->second){
+        const PolygonObstacle& polygon=polygons.byId.at(id);
+        if(x<polygon.minX-cropRadius||x>polygon.maxX+cropRadius||
+           z<polygon.minZ-cropRadius||z>polygon.maxZ+cropRadius)continue;
+        bool inside=false;
+        double nearest=std::numeric_limits<double>::infinity();
+        const int count=int(polygon.xy.size()/2);
+        for(int i=0,j=count-1;i<count;j=i++){
+          const double ax=polygon.xy[i*2],az=polygon.xy[i*2+1];
+          const double bx=polygon.xy[j*2],bz=polygon.xy[j*2+1];
+          if((az>z)!=(bz>z)&&x<(bx-ax)*(z-az)/(bz-az)+ax)inside=!inside;
+          const double dx=bx-ax,dz=bz-az,length=dx*dx+dz*dz;
+          const double t=length?std::clamp(((x-ax)*dx+(z-az)*dz)/length,0.0,1.0):0;
+          nearest=std::min(nearest,std::hypot(x-ax-dx*t,z-az-dz*t));
+        }
+        if(inside||nearest<cropRadius)return 0;
+      }
+  }
+  return 1;
+}
 // One JS->WASM call classifies many actor/crop positions. Each output row is
 // [unknown, component0..3]; -1 denotes an unused component slot. Keep every
 // reachable anchor: a fractional position may straddle two components.

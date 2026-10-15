@@ -1,0 +1,1058 @@
+{
+  "source": "5e0803f7ffc049774f48fe668a0c224bcd9bc946",
+  "sourceFiles": {
+    "tools/native-campaign-runner.mjs": "71b3abc56f13e4437f7280e35314767bb6e6987470d5d7eb24a9bc02c0d7596a",
+    "tools/native-campaign-plots.mjs": "90594ef3875e28cb5dadb329ff71ab2a6f1212fb6849247649f93c30f39de68f",
+    "tools/native-expanding-defense-policy.mjs": "f33ee4101d267609b146cafad4971052c4e5471ca1de4a075dbdde31755cff2b",
+    "src/simulation/game.js": "5d497f393fef501b8b23e8e518a31c04e2265eeccfa4a08a648f15e6d5b0ae02",
+    "src/world/hierarchical-wasm/spatial-intent-bridge.js": "3d51d96039500c968793742942974b9cd525955e674853c2f12125f895112e36",
+    "src/world/hierarchical-wasm/spatial-savanna.wasm": "d9d16b81301074d92620f549125784a7ad3121063ad98b8c08f359dffa3dc987"
+  },
+  "engine": "wild-engine",
+  "preparedQuotes": true,
+  "spatialAdvice": false,
+  "spatialSite": null,
+  "spatialAdviceInitMs": 0,
+  "spatialSync": null,
+  "daysRequested": 14,
+  "completedNights": 14,
+  "result": null,
+  "biome": "sabana",
+  "seed": "712",
+  "strategy": "good",
+  "policy": {
+    "profile": "olderFemale",
+    "mixed": true,
+    "middayHiring": true,
+    "plantsPerWorker": 6,
+    "defend": true,
+    "cashPolicy": "progressive-village",
+    "reserveMaintenance": true,
+    "burstPlanting": false,
+    "cameraEntry": true,
+    "defensePolicy": "expanding"
+  },
+  "defense": {
+    "paidCost": 620,
+    "paidPieces": 62,
+    "repairRequests": 103
+  },
+  "daily": [
+    {
+      "day": 1,
+      "living": 68,
+      "planted": 110,
+      "delivered": 43,
+      "destroyed": 0,
+      "staff": 8,
+      "money": 378,
+      "finance": {
+        "opening": 700,
+        "closing": 378,
+        "income": 473,
+        "refunds": 0,
+        "wages": 240,
+        "seeds": 555,
+        "walls": 0,
+        "centers": 0,
+        "villages": 0,
+        "repairs": 0,
+        "otherCredits": 0,
+        "otherDebits": 0,
+        "net": -322,
+        "reconciliationDifference": 0
+      },
+      "wallTime": {
+        "decisionMs": 3968.7982999999967,
+        "gameTickMs": 550.6442000000045,
+        "presentationMs": 1.2238000000047577
+      },
+      "phases": {
+        "defense.act": {
+          "calls": 300,
+          "ms": 2.279500000000553
+        },
+        "plot.focus": {
+          "calls": 110,
+          "ms": 3891.1321
+        },
+        "plot.placement": {
+          "calls": 125,
+          "ms": 14.360500000000002
+        },
+        "plot.outwardPath": {
+          "calls": 110,
+          "ms": 9.268600000001925
+        },
+        "plot.returnPath": {
+          "calls": 110,
+          "ms": 3.6729999999979555
+        },
+        "plot.choose": {
+          "calls": 110,
+          "ms": 3925.996099999997
+        },
+        "other": {
+          "calls": 0,
+          "ms": 40.52269999999908
+        }
+      }
+    },
+    {
+      "day": 2,
+      "living": 68,
+      "planted": 72,
+      "delivered": 72,
+      "destroyed": 0,
+      "staff": 12,
+      "money": 410,
+      "finance": {
+        "opening": 378,
+        "closing": 410,
+        "income": 792,
+        "refunds": 0,
+        "wages": 360,
+        "seeds": 360,
+        "walls": 40,
+        "centers": 0,
+        "villages": 0,
+        "repairs": 0,
+        "otherCredits": 0,
+        "otherDebits": 0,
+        "net": 32,
+        "reconciliationDifference": 0
+      },
+      "wallTime": {
+        "decisionMs": 2789.4562000000014,
+        "gameTickMs": 1251.466000000013,
+        "presentationMs": 0.6608000000087486
+      },
+      "phases": {
+        "defense.wallStroke": {
+          "calls": 10,
+          "ms": 1.7816000000020722
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 102.69180000000233
+        },
+        "plot.focus": {
+          "calls": 72,
+          "ms": 2632.828999999998
+        },
+        "plot.placement": {
+          "calls": 72,
+          "ms": 9.400099999998929
+        },
+        "plot.outwardPath": {
+          "calls": 72,
+          "ms": 9.510399999994661
+        },
+        "plot.returnPath": {
+          "calls": 72,
+          "ms": 2.283300000009149
+        },
+        "plot.choose": {
+          "calls": 72,
+          "ms": 2658.2478999999994
+        },
+        "defense.previewWallChain": {
+          "calls": 3,
+          "ms": 71.5590000000011
+        },
+        "defense.wallPlacement": {
+          "calls": 142,
+          "ms": 14.570600000017293
+        },
+        "defense.buildWallChain": {
+          "calls": 3,
+          "ms": 11.282199999999648
+        },
+        "other": {
+          "calls": 0,
+          "ms": 28.516499999999724
+        }
+      }
+    },
+    {
+      "day": 3,
+      "living": 65,
+      "planted": 91,
+      "delivered": 94,
+      "destroyed": 0,
+      "staff": 12,
+      "money": 515,
+      "finance": {
+        "opening": 410,
+        "closing": 515,
+        "income": 1034,
+        "refunds": 0,
+        "wages": 364,
+        "seeds": 455,
+        "walls": 110,
+        "centers": 0,
+        "villages": 0,
+        "repairs": 0,
+        "otherCredits": 0,
+        "otherDebits": 0,
+        "net": 105,
+        "reconciliationDifference": 0
+      },
+      "wallTime": {
+        "decisionMs": 15406.172899999989,
+        "gameTickMs": 12283.215500000035,
+        "presentationMs": 1.0217000000247936
+      },
+      "phases": {
+        "defense.wallStroke": {
+          "calls": 10,
+          "ms": 0.9829000000008818
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 12131.798600000036
+        },
+        "plot.focus": {
+          "calls": 91,
+          "ms": 3115.7971999999772
+        },
+        "plot.placement": {
+          "calls": 91,
+          "ms": 15.917099999980564
+        },
+        "plot.outwardPath": {
+          "calls": 91,
+          "ms": 9.988100000018676
+        },
+        "plot.returnPath": {
+          "calls": 91,
+          "ms": 2.7065000000166037
+        },
+        "plot.choose": {
+          "calls": 91,
+          "ms": 3150.273200000018
+        },
+        "defense.previewWallChain": {
+          "calls": 4,
+          "ms": 12056.800400000004
+        },
+        "defense.wallPlacement": {
+          "calls": 149,
+          "ms": 8.094200000005003
+        },
+        "defense.buildWallChain": {
+          "calls": 4,
+          "ms": 61.88690000000133
+        },
+        "other": {
+          "calls": 0,
+          "ms": 124.10109999993438
+        }
+      }
+    },
+    {
+      "day": 4,
+      "living": 72,
+      "planted": 96,
+      "delivered": 89,
+      "destroyed": 0,
+      "staff": 11,
+      "money": 554,
+      "finance": {
+        "opening": 515,
+        "closing": 554,
+        "income": 979,
+        "refunds": 0,
+        "wages": 330,
+        "seeds": 480,
+        "walls": 130,
+        "centers": 0,
+        "villages": 0,
+        "repairs": 0,
+        "otherCredits": 0,
+        "otherDebits": 0,
+        "net": 39,
+        "reconciliationDifference": 0
+      },
+      "wallTime": {
+        "decisionMs": 11616.018299999894,
+        "gameTickMs": 10976.648200000047,
+        "presentationMs": 0.9901000000463682
+      },
+      "phases": {
+        "defense.wallStroke": {
+          "calls": 10,
+          "ms": 1.3403999999864027
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 8080.34070000003
+        },
+        "plot.focus": {
+          "calls": 96,
+          "ms": 3321.4792999999627
+        },
+        "plot.placement": {
+          "calls": 96,
+          "ms": 21.081800000021758
+        },
+        "plot.outwardPath": {
+          "calls": 96,
+          "ms": 9.627900000028603
+        },
+        "plot.returnPath": {
+          "calls": 96,
+          "ms": 3.2721000000237837
+        },
+        "plot.choose": {
+          "calls": 96,
+          "ms": 3362.8551000000225
+        },
+        "defense.previewWallChain": {
+          "calls": 5,
+          "ms": 8007.756999999998
+        },
+        "defense.wallPlacement": {
+          "calls": 126,
+          "ms": 9.597299999943061
+        },
+        "defense.buildWallChain": {
+          "calls": 5,
+          "ms": 57.89079999999376
+        },
+        "other": {
+          "calls": 0,
+          "ms": 172.82249999984197
+        }
+      }
+    },
+    {
+      "day": 5,
+      "living": 84,
+      "planted": 95,
+      "delivered": 83,
+      "destroyed": 0,
+      "staff": 12,
+      "money": 657,
+      "finance": {
+        "opening": 554,
+        "closing": 657,
+        "income": 1028,
+        "refunds": 0,
+        "wages": 360,
+        "seeds": 475,
+        "walls": 90,
+        "centers": 0,
+        "villages": 0,
+        "repairs": 0,
+        "otherCredits": 0,
+        "otherDebits": 0,
+        "net": 103,
+        "reconciliationDifference": 0
+      },
+      "wallTime": {
+        "decisionMs": 3976.356400000004,
+        "gameTickMs": 8045.210300000093,
+        "presentationMs": 0.9771999998920364
+      },
+      "phases": {
+        "defense.wallStroke": {
+          "calls": 10,
+          "ms": 1.5837000000174157
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 417.58109999998123
+        },
+        "defense.previewWallChain": {
+          "calls": 8,
+          "ms": 335.07579999999143
+        },
+        "defense.wallPlacement": {
+          "calls": 129,
+          "ms": 11.976300000023912
+        },
+        "defense.buildWallChain": {
+          "calls": 6,
+          "ms": 65.35399999996298
+        },
+        "plot.focus": {
+          "calls": 95,
+          "ms": 3304.9814999999508
+        },
+        "plot.placement": {
+          "calls": 98,
+          "ms": 24.019499999922118
+        },
+        "plot.outwardPath": {
+          "calls": 95,
+          "ms": 6.9055000000371365
+        },
+        "plot.returnPath": {
+          "calls": 95,
+          "ms": 3.0153999999456573
+        },
+        "plot.choose": {
+          "calls": 95,
+          "ms": 3346.612800000017
+        },
+        "other": {
+          "calls": 0,
+          "ms": 212.16250000000582
+        }
+      }
+    },
+    {
+      "day": 6,
+      "living": 95,
+      "planted": 101,
+      "delivered": 90,
+      "destroyed": 0,
+      "staff": 14,
+      "money": 776,
+      "finance": {
+        "opening": 657,
+        "closing": 776,
+        "income": 1044,
+        "refunds": 0,
+        "wages": 420,
+        "seeds": 505,
+        "walls": 0,
+        "centers": 0,
+        "villages": 0,
+        "repairs": 0,
+        "otherCredits": 0,
+        "otherDebits": 0,
+        "net": 119,
+        "reconciliationDifference": 0
+      },
+      "wallTime": {
+        "decisionMs": 3745.0565999999235,
+        "gameTickMs": 8314.11989999999,
+        "presentationMs": 1.3602000002283603
+      },
+      "phases": {
+        "defense.wallStroke": {
+          "calls": 10,
+          "ms": 1.4903000000340398
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 21.41429999996035
+        },
+        "plot.focus": {
+          "calls": 101,
+          "ms": 3458.113399999944
+        },
+        "plot.placement": {
+          "calls": 101,
+          "ms": 27.75800000008894
+        },
+        "plot.outwardPath": {
+          "calls": 101,
+          "ms": 7.999199999962002
+        },
+        "plot.returnPath": {
+          "calls": 101,
+          "ms": 3.443800000080955
+        },
+        "plot.choose": {
+          "calls": 101,
+          "ms": 3504.4074999999575
+        },
+        "defense.previewWallChain": {
+          "calls": 6,
+          "ms": 8.76830000001064
+        },
+        "defense.wallPlacement": {
+          "calls": 78,
+          "ms": 7.524200000014389
+        },
+        "other": {
+          "calls": 0,
+          "ms": 219.23480000000563
+        }
+      }
+    },
+    {
+      "day": 7,
+      "living": 113,
+      "planted": 100,
+      "delivered": 82,
+      "destroyed": 0,
+      "staff": 16,
+      "money": 708,
+      "finance": {
+        "opening": 776,
+        "closing": 708,
+        "income": 972,
+        "refunds": 0,
+        "wages": 480,
+        "seeds": 500,
+        "walls": 0,
+        "centers": 0,
+        "villages": 0,
+        "repairs": 60,
+        "otherCredits": 0,
+        "otherDebits": 0,
+        "net": -68,
+        "reconciliationDifference": 0
+      },
+      "wallTime": {
+        "decisionMs": 3773.6174000002356,
+        "gameTickMs": 11829.546100000036,
+        "presentationMs": 1.1782000002276618
+      },
+      "phases": {
+        "defense.wallStroke": {
+          "calls": 10,
+          "ms": 1.1290000000299187
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 24.869499999986147
+        },
+        "plot.focus": {
+          "calls": 100,
+          "ms": 3464.916299999968
+        },
+        "plot.placement": {
+          "calls": 100,
+          "ms": 25.275799999915762
+        },
+        "plot.outwardPath": {
+          "calls": 100,
+          "ms": 7.526000000041677
+        },
+        "plot.returnPath": {
+          "calls": 100,
+          "ms": 3.5002000001695706
+        },
+        "plot.choose": {
+          "calls": 100,
+          "ms": 3509.456300000107
+        },
+        "defense.previewWallChain": {
+          "calls": 5,
+          "ms": 8.161700000011479
+        },
+        "defense.wallPlacement": {
+          "calls": 65,
+          "ms": 7.081800000087242
+        },
+        "other": {
+          "calls": 0,
+          "ms": 239.29160000014235
+        }
+      }
+    },
+    {
+      "day": 8,
+      "living": 138,
+      "planted": 139,
+      "delivered": 113,
+      "destroyed": 1,
+      "staff": 19,
+      "money": 722,
+      "finance": {
+        "opening": 708,
+        "closing": 722,
+        "income": 1361,
+        "refunds": 0,
+        "wages": 570,
+        "seeds": 695,
+        "walls": 10,
+        "centers": 0,
+        "villages": 0,
+        "repairs": 72,
+        "otherCredits": 0,
+        "otherDebits": 0,
+        "net": 14,
+        "reconciliationDifference": 0
+      },
+      "wallTime": {
+        "decisionMs": 5264.868699999875,
+        "gameTickMs": 13501.72679999983,
+        "presentationMs": 1.329200000196579
+      },
+      "phases": {
+        "defense.wallStroke": {
+          "calls": 10,
+          "ms": 1.4003000000084285
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 75.70330000015383
+        },
+        "plot.focus": {
+          "calls": 139,
+          "ms": 4817.264899999907
+        },
+        "plot.placement": {
+          "calls": 140,
+          "ms": 35.41539999996894
+        },
+        "plot.outwardPath": {
+          "calls": 139,
+          "ms": 10.913300000116578
+        },
+        "plot.returnPath": {
+          "calls": 139,
+          "ms": 4.59359999994922
+        },
+        "plot.choose": {
+          "calls": 139,
+          "ms": 4879.210500000088
+        },
+        "defense.previewWallChain": {
+          "calls": 3,
+          "ms": 50.06030000001192
+        },
+        "defense.wallPlacement": {
+          "calls": 86,
+          "ms": 8.058300000062445
+        },
+        "defense.buildWallChain": {
+          "calls": 1,
+          "ms": 6.331600000004983
+        },
+        "other": {
+          "calls": 0,
+          "ms": 309.9548999996332
+        }
+      }
+    },
+    {
+      "day": 9,
+      "living": 128,
+      "planted": 126,
+      "delivered": 135,
+      "destroyed": 1,
+      "staff": 23,
+      "money": 857,
+      "finance": {
+        "opening": 722,
+        "closing": 857,
+        "income": 1605,
+        "refunds": 0,
+        "wages": 695,
+        "seeds": 630,
+        "walls": 50,
+        "centers": 0,
+        "villages": 0,
+        "repairs": 95,
+        "otherCredits": 0,
+        "otherDebits": 0,
+        "net": 135,
+        "reconciliationDifference": 0
+      },
+      "wallTime": {
+        "decisionMs": 4896.365799999854,
+        "gameTickMs": 14765.977900000027,
+        "presentationMs": 0.9982000002055429
+      },
+      "phases": {
+        "defense.wallStroke": {
+          "calls": 10,
+          "ms": 1.5995000000402797
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 86.21140000017476
+        },
+        "plot.focus": {
+          "calls": 126,
+          "ms": 4368.681900000083
+        },
+        "plot.placement": {
+          "calls": 127,
+          "ms": 31.22260000015376
+        },
+        "plot.outwardPath": {
+          "calls": 126,
+          "ms": 11.410499999881722
+        },
+        "plot.returnPath": {
+          "calls": 126,
+          "ms": 4.06630000018049
+        },
+        "plot.choose": {
+          "calls": 126,
+          "ms": 4424.673500000237
+        },
+        "defense.previewWallChain": {
+          "calls": 1,
+          "ms": 54.892299999977695
+        },
+        "defense.wallPlacement": {
+          "calls": 55,
+          "ms": 4.846000000048662
+        },
+        "defense.buildWallChain": {
+          "calls": 1,
+          "ms": 12.275599999993574
+        },
+        "other": {
+          "calls": 0,
+          "ms": 385.48089999944204
+        }
+      }
+    },
+    {
+      "day": 10,
+      "living": 123,
+      "planted": 127,
+      "delivered": 124,
+      "destroyed": 8,
+      "staff": 22,
+      "money": 950,
+      "finance": {
+        "opening": 857,
+        "closing": 950,
+        "income": 1485,
+        "refunds": 0,
+        "wages": 673,
+        "seeds": 635,
+        "walls": 0,
+        "centers": 0,
+        "villages": 0,
+        "repairs": 84,
+        "otherCredits": 0,
+        "otherDebits": 0,
+        "net": 93,
+        "reconciliationDifference": 0
+      },
+      "wallTime": {
+        "decisionMs": 5103.584899999783,
+        "gameTickMs": 13603.959400000196,
+        "presentationMs": 1.0557999998272862
+      },
+      "phases": {
+        "defense.wallStroke": {
+          "calls": 10,
+          "ms": 2.080000000074506
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 17.90429999982007
+        },
+        "plot.focus": {
+          "calls": 127,
+          "ms": 4529.516499999823
+        },
+        "plot.placement": {
+          "calls": 127,
+          "ms": 34.00790000020061
+        },
+        "plot.outwardPath": {
+          "calls": 127,
+          "ms": 10.344499999948312
+        },
+        "plot.returnPath": {
+          "calls": 127,
+          "ms": 4.336899999994785
+        },
+        "plot.choose": {
+          "calls": 127,
+          "ms": 4588.345999999903
+        },
+        "other": {
+          "calls": 0,
+          "ms": 497.33460000006016
+        }
+      }
+    },
+    {
+      "day": 11,
+      "living": 120,
+      "planted": 109,
+      "delivered": 106,
+      "destroyed": 6,
+      "staff": 21,
+      "money": 902,
+      "finance": {
+        "opening": 950,
+        "closing": 902,
+        "income": 1271,
+        "refunds": 0,
+        "wages": 630,
+        "seeds": 545,
+        "walls": 20,
+        "centers": 0,
+        "villages": 0,
+        "repairs": 124,
+        "otherCredits": 0,
+        "otherDebits": 0,
+        "net": -48,
+        "reconciliationDifference": 0
+      },
+      "wallTime": {
+        "decisionMs": 4367.628199999803,
+        "gameTickMs": 13260.149800000392,
+        "presentationMs": 1.1527999999525491
+      },
+      "phases": {
+        "defense.wallStroke": {
+          "calls": 10,
+          "ms": 3.4316000000108033
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 75.6970999998739
+        },
+        "plot.focus": {
+          "calls": 109,
+          "ms": 3762.2015999997966
+        },
+        "plot.placement": {
+          "calls": 109,
+          "ms": 30.374999999825377
+        },
+        "plot.outwardPath": {
+          "calls": 109,
+          "ms": 10.106999999814434
+        },
+        "plot.returnPath": {
+          "calls": 109,
+          "ms": 3.7404999998398125
+        },
+        "plot.choose": {
+          "calls": 109,
+          "ms": 3814.2433000001183
+        },
+        "defense.previewWallChain": {
+          "calls": 1,
+          "ms": 43.90590000001248
+        },
+        "defense.wallPlacement": {
+          "calls": 53,
+          "ms": 6.4561000000394415
+        },
+        "defense.buildWallChain": {
+          "calls": 1,
+          "ms": 8.118799999996554
+        },
+        "other": {
+          "calls": 0,
+          "ms": 477.6877999998105
+        }
+      }
+    },
+    {
+      "day": 12,
+      "living": 126,
+      "planted": 130,
+      "delivered": 107,
+      "destroyed": 17,
+      "staff": 20,
+      "money": 762,
+      "finance": {
+        "opening": 902,
+        "closing": 762,
+        "income": 1290,
+        "refunds": 0,
+        "wages": 600,
+        "seeds": 650,
+        "walls": 70,
+        "centers": 0,
+        "villages": 0,
+        "repairs": 110,
+        "otherCredits": 0,
+        "otherDebits": 0,
+        "net": -140,
+        "reconciliationDifference": 0
+      },
+      "wallTime": {
+        "decisionMs": 28873.795300000376,
+        "gameTickMs": 15109.71190000014,
+        "presentationMs": 1.9226000003691297
+      },
+      "phases": {
+        "defense.wallStroke": {
+          "calls": 10,
+          "ms": 2.9890000000596046
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 23817.740199999767
+        },
+        "plot.focus": {
+          "calls": 130,
+          "ms": 4452.840600000141
+        },
+        "plot.placement": {
+          "calls": 130,
+          "ms": 38.60309999983292
+        },
+        "plot.outwardPath": {
+          "calls": 130,
+          "ms": 12.872999999875901
+        },
+        "plot.returnPath": {
+          "calls": 130,
+          "ms": 4.326800000038929
+        },
+        "plot.choose": {
+          "calls": 130,
+          "ms": 4518.115600000077
+        },
+        "defense.previewWallChain": {
+          "calls": 4,
+          "ms": 23680.785200000013
+        },
+        "defense.wallPlacement": {
+          "calls": 196,
+          "ms": 20.74920000010752
+        },
+        "defense.buildWallChain": {
+          "calls": 4,
+          "ms": 99.03299999999581
+        },
+        "other": {
+          "calls": 0,
+          "ms": 537.9395000005316
+        }
+      }
+    },
+    {
+      "day": 13,
+      "living": 130,
+      "planted": 127,
+      "delivered": 113,
+      "destroyed": 10,
+      "staff": 21,
+      "money": 970,
+      "finance": {
+        "opening": 762,
+        "closing": 970,
+        "income": 1564,
+        "refunds": 0,
+        "wages": 630,
+        "seeds": 635,
+        "walls": 0,
+        "centers": 0,
+        "villages": 0,
+        "repairs": 91,
+        "otherCredits": 0,
+        "otherDebits": 0,
+        "net": 208,
+        "reconciliationDifference": 0
+      },
+      "wallTime": {
+        "decisionMs": 5131.552700000029,
+        "gameTickMs": 13728.599800000258,
+        "presentationMs": 1.522199999919394
+      },
+      "phases": {
+        "defense.wallStroke": {
+          "calls": 10,
+          "ms": 2.652299999987008
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 21.01609999933862
+        },
+        "plot.focus": {
+          "calls": 127,
+          "ms": 4418.437000000064
+        },
+        "plot.placement": {
+          "calls": 127,
+          "ms": 39.556700000190176
+        },
+        "plot.outwardPath": {
+          "calls": 127,
+          "ms": 10.09290000036708
+        },
+        "plot.returnPath": {
+          "calls": 127,
+          "ms": 4.542099999642232
+        },
+        "plot.choose": {
+          "calls": 127,
+          "ms": 4483.75389999972
+        },
+        "other": {
+          "calls": 0,
+          "ms": 626.7827000009711
+        }
+      }
+    },
+    {
+      "day": 14,
+      "living": 110,
+      "planted": 123,
+      "delivered": 124,
+      "destroyed": 19,
+      "staff": 22,
+      "money": 958,
+      "finance": {
+        "opening": 970,
+        "closing": 958,
+        "income": 1507,
+        "refunds": 0,
+        "wages": 665,
+        "seeds": 615,
+        "walls": 100,
+        "centers": 0,
+        "villages": 0,
+        "repairs": 139,
+        "otherCredits": 0,
+        "otherDebits": 0,
+        "net": -12,
+        "reconciliationDifference": 0
+      },
+      "wallTime": {
+        "decisionMs": 28870.974299998605,
+        "gameTickMs": 13818.421599999943,
+        "presentationMs": 1.1358000001055188
+      },
+      "phases": {
+        "defense.wallStroke": {
+          "calls": 10,
+          "ms": 3.8119999999180436
+        },
+        "defense.act": {
+          "calls": 300,
+          "ms": 23904.20220000029
+        },
+        "plot.focus": {
+          "calls": 123,
+          "ms": 4248.910800000071
+        },
+        "plot.placement": {
+          "calls": 123,
+          "ms": 39.38479999935953
+        },
+        "plot.outwardPath": {
+          "calls": 123,
+          "ms": 10.072699999494944
+        },
+        "plot.returnPath": {
+          "calls": 123,
+          "ms": 3.942000000097323
+        },
+        "plot.choose": {
+          "calls": 123,
+          "ms": 4312.321199999598
+        },
+        "defense.previewWallChain": {
+          "calls": 3,
+          "ms": 23780.221099999966
+        },
+        "defense.wallPlacement": {
+          "calls": 111,
+          "ms": 21.82549999980256
+        },
+        "defense.buildWallChain": {
+          "calls": 3,
+          "ms": 80.68550000002142
+        },
+        "other": {
+          "calls": 0,
+          "ms": 654.4508999987156
+        }
+      }
+    }
+  ]
+}

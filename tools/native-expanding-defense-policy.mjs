@@ -5,8 +5,13 @@ import {wallStroke} from '../src/world/wall-layout.js';
 import {numberOf} from '../src/simulation/money.js';
 import {permission,operational,wallSpec} from '../src/simulation/rules.js';
 import {HIRING_RESERVE} from '../src/simulation/budget.js';
-export function createNativeExpandingDefensePolicy({startDay=2,material='zarzas',interval=30,repairWalls=true,reserveMode='none'}={}){
+export function createNativeExpandingDefensePolicy({startDay=2,material='zarzas',interval=30,repairWalls=true,reserveMode='none',measure=null,preparedQuotes=true,spatialAdvice=null}={}){
  if(!['none','next-stroke'].includes(reserveMode))throw Error('Invalid defense reserve mode');
+ const timed=(kind,fn)=>{
+  if(!measure)return fn();
+  const start=performance.now();
+  try{return fn();}finally{measure(kind,performance.now()-start);}
+ };
  const cost=wallSpec(material).cost;let nextAttempt=0,capitalTarget=0,built=null,repairRequests=0;
  const history=[],owned=new Set();
  const reserve=s=>reserveMode==='next-stroke'&&s.day>=startDay?capitalTarget:0;
@@ -17,7 +22,10 @@ export function createNativeExpandingDefensePolicy({startDay=2,material='zarzas'
   protectedCash=Math.max(protectedCash,HIRING_RESERVE);
   let pending=s.tasks.filter(t=>t.kind==='repair').reduce((n,t)=>{const p=s.structures.find(p=>p.id===t.targetId);return n+(p?Math.ceil(numberOf(Game.repairCost(p))):0);},0);
   // Request native repairs, but do not count uncompleted requests as useful work.
-  for(const wall of s.structures)if(repairWalls&&owned.has(wall.id)&&['intact','ruined'].includes(wall.status)&&wall.hp<wall.maxHp*.8&&!s.tasks.some(t=>t.kind==='repair'&&t.targetId===wall.id)){
+  const damaged=spatialAdvice?spatialAdvice.getDamagedWalls()
+   .sort((a,b)=>Number(a.id.split('-').at(-1))-Number(b.id.split('-').at(-1)))
+   .map(item=>s.structures.find(wall=>wall.id===item.id)).filter(Boolean):s.structures;
+  for(const wall of damaged)if(repairWalls&&owned.has(wall.id)&&['intact','ruined'].includes(wall.status)&&wall.hp<wall.maxHp*.8&&!s.tasks.some(t=>t.kind==='repair'&&t.targetId===wall.id)){
    const payment=Math.ceil(numberOf(Game.repairCost(wall)));
    if(numberOf(s.ledger.balance)>=protectedCash+pending+payment){Game.requestRepair(s,command('repair'),wall.id);repairRequests++;pending+=payment;}
   }
@@ -29,18 +37,18 @@ export function createNativeExpandingDefensePolicy({startDay=2,material='zarzas'
   const previous=history.at(-1)?.bounds;
   const bounds=previous?[Math.min(previous[0],next[0]),Math.min(previous[1],next[1]),Math.max(previous[2],next[2]),Math.max(previous[3],next[3])]:next;
   const [x0,z0,x1,z1]=bounds,points=[[x0,z0],[x1,z0],[x1,z1],[x0,z1],[x0,z0]],options={smooth:false,snap:false};
-  const slots=wallStroke(points,s.structures,options),funds=Math.max(0,numberOf(s.ledger.balance)-protectedCash-pending),maxPieces=Math.floor(funds/cost);
+  const slots=timed('defense.wallStroke',()=>wallStroke(points,s.structures,options)),funds=Math.max(0,numberOf(s.ledger.balance)-protectedCash-pending),maxPieces=Math.floor(funds/cost);
   capitalTarget=slots.length*cost;
   const row={day:s.day,time:s.time,elapsed:s.elapsed,bounds,expectedSlots:slots.length,availablePieces:maxPieces,paidPieces:0,paidCost:0,gaps:[]};
   if(!maxPieces){row.reason='budget';history.push(row);return 0;}
-  const plan=Game.previewWallChain(s,material,points,nav,{...options,maxPieces});
+  const plan=timed('defense.previewWallChain',()=>Game.previewWallChain(s,material,points,nav,{...options,maxPieces}));
   const planned=new Set(plan.pieces.map(p=>`${p.x},${p.z}`));
   for(const slot of slots)if(!planned.has(`${slot.x},${slot.z}`)){
    const piece={kind:'wall',material,gate:false,baseScaleX:slot.scaleX,x:slot.x,z:slot.z,yaw:-slot.angle};
-   const check=nav.wallPlacement(piece);
+   const check=timed('defense.wallPlacement',()=>nav.wallPlacement(piece));
    row.gaps.push({x:slot.x,z:slot.z,reason:!check.valid?check.reason??'native-placement':plan.pieces.length>=maxPieces?'budget-limit':'crop-overlap-or-native-omission'});
   }
-  if(plan.pieces.length&&Game.buildWallChain(s,command('wall'),material,points,nav,{...options,maxPieces})){
+  if(plan.pieces.length&&timed('defense.buildWallChain',()=>Game.buildWallChain(s,command('wall'),material,points,nav,{...options,maxPieces,...preparedQuotes?{preparedPlan:plan}:{}}))){
    row.paidPieces=plan.pieces.length;row.paidCost=plan.cost;row.ids=plan.pieces.map(p=>p.id);row.gates=plan.gates;
    for(const id of row.ids){if(!s.structures.some(w=>w.id===id&&w.kind==='wall'))throw Error('Preview ID does not name an actual paid wall');owned.add(id);}
    built={day:s.day,bounds,points,cost:plan.cost,pieces:plan.pieces.length,expectedPieces:slots.length,ids:[...owned]};history.push(row);return 1;
