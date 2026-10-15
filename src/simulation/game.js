@@ -22,7 +22,7 @@ import {spellUnlocked,permission,operational,cropSpec,wallSpec,structureHealth,d
 import {createPlant,advancePlant,waterPlant,isMature,contiguousGroup} from './crops.js';
 import {activeCrops,cropBecameInactive} from './active-crops.js';
 import {workerEntityLookup} from './worker-entity-lookup.js';
-import {enqueue,taskEnqueuer,reserveTasks,releaseTask,taskPlanningRevision} from './tasks.js';
+import {enqueue,taskEnqueuer,reserveTasks,releaseTask,replaceTasks,taskPlanningRevision} from './tasks.js';
 import {planNight,updateRaid,spawnRaid,planDay} from './raids.js';
 import {wallStroke,wallLayout,wallStrokeLine} from '../world/wall-layout.js';
 import {selectEvent,applyEvent} from './events.js';
@@ -327,7 +327,7 @@ export function removeWall(s,id,targetId,nav) {
     const target=s.structures.find(e=>e.id===targetId&&e.kind==='wall');if(!target)throw new Error('No existe esa defensa');
     const tasks=new Set(s.tasks.filter(t=>t.targetId===targetId).map(t=>t.id));
     for(const worker of s.workers.filter(w=>tasks.has(w.taskId))){releaseTask(s,worker);worker.path=null;worker.status='idle';}
-    s.tasks=s.tasks.filter(t=>t.targetId!==targetId);s.structures=s.structures.filter(e=>e.id!==targetId);nav.setState(s);
+    replaceTasks(s,s.tasks.filter(t=>t.targetId!==targetId));s.structures=s.structures.filter(e=>e.id!==targetId);nav.setState(s);
     const refund=wallRefund(target);transact(s.ledger,id,refund);
     // Removal opens the graph: never call ensureAutomaticGates here or on reload.
     emit(s,'WallRemoved',{targetId,refund:numberOf(refund)});
@@ -406,7 +406,7 @@ function queueMatureHarvest(s,p,queue) {
 }
 export function rebuildTasks(s) {
   const committed=new Set(s.workers.filter(w=>contractExpired(w,s)&&w.status==='acting').map(w=>w.taskId));
-  s.tasks=s.tasks.filter(t=>committed.has(t.id));
+  replaceTasks(s,s.tasks.filter(t=>committed.has(t.id)));
   for(const w of s.workers){
     cancelIdle(w);
     if(committed.has(w.taskId)&&s.tasks.some(t=>t.id===w.taskId&&t.workerId===w.id))continue;
@@ -711,7 +711,7 @@ function completeTask(s,w,t,target,nav) {
     }
     catch {notice(s,'La reparación se canceló: fondos insuficientes al llegar.',target.id);}
   }
-  s.tasks=s.tasks.filter(task=>task.id!==t.id);w.taskId=null;w.taskApproach=null;if(w.status!=='carrying')w.status='idle';w.path=null;
+  replaceTasks(s,s.tasks.filter(task=>task.id!==t.id));w.taskId=null;w.taskApproach=null;if(w.status!=='carrying')w.status='idle';w.path=null;
 }
 export function idleFarmAnchor(s,worker,center,livingCandidates=null){
   let planted=null,live=null,plantedDistance=Infinity,liveDistance=Infinity;
@@ -867,7 +867,7 @@ function updateWorkers(s,dt,nav) {
         continue;
       }
       const target=findPlant(t.targetId)??findCrate(t.targetId)??s.structures.find(e=>e.id===t.targetId);
-      if(!target || ('alive' in target&&!target.alive)) {s.tasks=s.tasks.filter(q=>q.id!==t.id);w.taskId=null;w.status='idle';w.path=null;continue;}
+      if(!target || ('alive' in target&&!target.alive)) {replaceTasks(s,s.tasks.filter(q=>q.id!==t.id));w.taskId=null;w.status='idle';w.path=null;continue;}
       if(w.status==='walking') {
         let destination=target;
         if(t.kind==='repair'){

@@ -8,6 +8,7 @@ import {deserialize} from '../src/persistence/snapshots.js';
 import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
 import {createSpatialIntentBridge,createEventDrivenTaskPlanner} from
  '../src/world/hierarchical-wasm/spatial-intent-bridge.js';
+import {enqueue,replaceTasks} from '../src/simulation/tasks.js';
 
 const binary=process.env.WILD_ENGINE_NATIVE_ROUTE_WASM;
 const module=binary?new WebAssembly.Module(readFileSync(binary)):null;
@@ -114,6 +115,16 @@ test('event-fed native intent bridge replays live state and only changes on expl
    'a committed target loss wakes planning once');
   assert.equal(planner.planIfNeeded(10.2),null);
   assert.equal(planner.metrics(10.2).nativePlanningCalls,3);
+  const stopTaskEvents=planner.observeTasks(game);
+  const beforeTasks=wasm.nav_intent_task_count();
+  const freshTask=enqueue(game,worker.centerId,'harvest',plant.id);
+  assert(freshTask);
+  assert.equal(wasm.nav_intent_task_count(),beforeTasks+1,
+   'task creation reaches the native index at the mutation boundary');
+  replaceTasks(game,game.tasks.filter(item=>item.id!==freshTask.id));
+  assert.equal(wasm.nav_intent_task_count(),beforeTasks,
+   'task removal reaches the native index without polling');
+  stopTaskEvents();
  }finally{session.dispose();}
 });
 

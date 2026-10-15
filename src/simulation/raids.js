@@ -17,7 +17,7 @@ import {eligiblePendingRaidWavePlan} from '../world/raid-entry-data.js';
 import {emit,notice,walkTo,rebuildTasks,spellAt,dropCarriedCrate,recoverDisplacedWorkers} from './game.js';
 import {contractExpired} from './workforce.js';
 import {cancelIdle} from './idle.js';
-import {releaseTask} from './tasks.js';
+import {releaseTask,replaceTasks} from './tasks.js';
 import {rational,compare} from './money.js';
 import {updateWorkerEncounters} from './encounters.js';
 import {ANIMAL_ACTIONS} from './animal-actions-data.js';
@@ -341,7 +341,7 @@ export function spawnRaid(s,plan,nav,daytime=false) {
     if(w.crateId)dropCarriedCrate(s,w);
     if(w.status!=='home')w.status='fleeing';
   }
-  s.tasks=s.tasks.filter(t=>t.kind!=='repair');
+  replaceTasks(s,s.tasks.filter(t=>t.kind!=='repair'));
   if(!wave)notice(s,RAID_NOTICE_TEXT,animals[0].id);
   const exposed=activeCrops(s.plants).filter(p=>p.alive);
   emit(s,wave?'RaidWaveSpawned':'RaidSpawned',{raidFacts:{id:s.raid.id,day:s.day,daytime,elapsed:s.elapsed,waveIndex:s.raid.waveIndex??0,pressureFacts:s.raid.pressureFacts??null,exposedLiving:exposed.length,exposedWounded:exposed.filter(p=>(p.attackHits??0)>0).length,actors:animals.map(a=>({id:a.id,species:a.species,hitsRemaining:a.hitsRemaining,...(a.damageProfile?{damageProfile:structuredClone(a.damageProfile)}:{}),spawn:{...a.spawn},exit:{...a.exit}}))}});return true;

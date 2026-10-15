@@ -3,6 +3,7 @@ import {contractExpired,PROFILES} from '../../simulation/workforce.js';
 import {repairCost} from '../../simulation/game.js';
 import {BALANCE} from '../../simulation/balance.js';
 import {ANIMAL_SPATIAL_PROFILES} from './spatial-movement-profiles.js';
+import {observeTaskChanges} from '../../simulation/tasks.js';
 
 // Experimental event-fed bridge. Gameplay does not call it yet: it is used to
 // prove the native read model can be rebuilt after load and changed by deltas.
@@ -413,6 +414,16 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
   const metrics=simulatedSeconds=>({nativePlanningCalls:total,
     perWorkerPerMinute:Object.fromEntries([...requests].map(([id,times])=>
       [id,times.filter(time=>time>simulatedSeconds-60).length]))});
-  return {resetFromState,applyEvents,planIfNeeded,metrics,
+  const observeTasks=state=>observeTaskChanges(state,event=>{
+    if(!initialized)throw Error('Reset the native intent session before observing tasks');
+    const nativeEvent=event.type==='removed'?
+      {type:'task',remove:true,id:event.taskId}:
+      {type:'task',entity:{id:event.taskId,centerId:event.centerId,
+        targetId:event.targetId,kind:event.kind,created:event.created,
+        workerId:event.workerId}};
+    applyEvents(state,event.worker?[nativeEvent,{type:'worker',entity:event.worker}]:
+      [nativeEvent]);
+  });
+  return {resetFromState,applyEvents,observeTasks,planIfNeeded,metrics,
     discard:bridge.discard,commit:bridge.commit,sequence:bridge.sequence};
 }

@@ -2,8 +2,35 @@ import {contractExpired} from './workforce.js';
 import {cancelIdle} from './idle.js';
 
 const planningRevisions=new WeakMap();
+const taskObservers=new WeakMap();
 const changed=state=>planningRevisions.set(state,(planningRevisions.get(state)??0)+1);
 export const taskPlanningRevision=state=>planningRevisions.get(state)??0;
+export function observeTaskChanges(state,callback){
+  if(typeof callback!=='function')throw new TypeError('Expected a task-change listener');
+  let listeners=taskObservers.get(state);
+  if(!listeners){listeners=new Set();taskObservers.set(state,listeners);}
+  listeners.add(callback);
+  return ()=>listeners.delete(callback);
+}
+function taskChange(state,type,task,worker=null){
+  const listeners=taskObservers.get(state);
+  if(!listeners?.size)return;
+  const event={type,taskId:task.id,centerId:task.centerId,
+    targetId:task.targetId,kind:task.kind,created:task.created,
+    workerId:task.workerId??null,worker:worker?{
+      id:worker.id,centerId:worker.centerId,x:worker.x,z:worker.z,
+      status:worker.status,taskId:worker.taskId,incapacitated:worker.incapacitated,
+      contractDay:worker.contractDay,profile:worker.profile}:null};
+  for(const callback of listeners)callback(event);
+}
+export function replaceTasks(state,next){
+  const listening=taskObservers.get(state)?.size;
+  const retained=listening?new Set(next.map(task=>task.id)):null;
+  const removed=listening?state.tasks.filter(task=>!retained.has(task.id)):[];
+  state.tasks=next;
+  for(const task of removed)taskChange(state,'removed',task);
+  return next;
+}
 
 export function enqueue(state,centerId,kind,targetId) {
   if(!centerId || state.tasks.some(t=>t.kind===kind&&t.targetId===targetId))return null;
@@ -11,7 +38,7 @@ export function enqueue(state,centerId,kind,targetId) {
 }
 function appendTask(state,centerId,kind,targetId) {
   const t={id:`task-${state.nextId++}`,created:state.sequence++,centerId,kind,targetId,workerId:null,blocked:false};
-  state.tasks.push(t);changed(state);return t;
+  state.tasks.push(t);changed(state);taskChange(state,'created',t);return t;
 }
 // Local to one synchronous append-only crop pass. Never retained across ticks,
 // worker completions, queue reconstruction, attacks or restored snapshots.
@@ -102,12 +129,12 @@ export function reserveTasks(state,canExecute=()=>true,onAssigned=()=>{}) {
       }
     }
     t.blocked=!worker && workers.length>0 && !pending;
-    if(worker) { cancelIdle(worker);t.workerId=worker.id;worker.taskId=t.id;worker.status='walking';workers.splice(workers.indexOf(worker),1);changed(state);onAssigned(worker,t,target,plans.get(worker)); }
+    if(worker) { cancelIdle(worker);t.workerId=worker.id;worker.taskId=t.id;worker.status='walking';workers.splice(workers.indexOf(worker),1);changed(state);taskChange(state,'assigned',t,worker);onAssigned(worker,t,target,plans.get(worker)); }
   }
 }
 export function releaseTask(state,worker) {
   const t=state.tasks.find(t=>t.id===worker.taskId);
-  if(t){t.workerId=null;changed(state);}
   worker.taskId=null;
   worker.taskApproach=null;
+  if(t){t.workerId=null;changed(state);taskChange(state,'released',t,worker);}
 }

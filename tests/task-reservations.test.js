@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {reserveTasks,releaseTask,taskPlanningRevision} from '../src/simulation/tasks.js';
+import {enqueue,observeTaskChanges,replaceTasks,reserveTasks,releaseTask,taskPlanningRevision} from '../src/simulation/tasks.js';
 import {contractExpired} from '../src/simulation/workforce.js';
 import {cancelIdle} from '../src/simulation/idle.js';
 function reference(state,canExecute){
@@ -13,6 +13,27 @@ function reference(state,canExecute){
  }
 }
 function state(){return {day:2,plants:[{id:'plot',x:0,z:0}],crates:[],structures:[],tasks:[{id:'task',created:1,targetId:'plot',centerId:'center',workerId:null,blocked:false}],workers:[1,2,3,4].map(i=>({id:'worker-'+i,x:i,z:0,centerId:'center',status:'idle',taskId:null,incapacitated:false,contractDay:2}))};}
+
+test('task mutation events describe confirmed changes without polling the queue',()=>{
+ const s=state(),events=[],stop=observeTaskChanges(s,event=>events.push(event));
+ reserveTasks(s,()=>true);
+ const owner=s.workers.find(worker=>worker.taskId==='task');
+ assert.equal(events.length,1);
+ assert.deepEqual([events[0].type,events[0].taskId,events[0].workerId],
+  ['assigned','task',owner.id]);
+ assert.equal(events[0].worker.id,owner.id);
+ assert.equal(events[0].worker.status,'walking');
+ releaseTask(s,owner);
+ assert.equal(events.at(-1).type,'released');
+ replaceTasks(s,[]);
+ assert.equal(events.at(-1).type,'removed');
+ assert.equal(events.length,3);
+ s.nextId=1;s.sequence=2;
+ enqueue(s,'center','water','plot');
+ assert.equal(events.at(-1).type,'created');
+ stop();replaceTasks(s,[]);
+ assert.equal(events.length,4,'unsubscribed observers receive no later mutations');
+});
 
 test('a released lease invalidates an otherwise unchanged task queue',()=>{
  const s=state();assert.equal(taskPlanningRevision(s),0);
