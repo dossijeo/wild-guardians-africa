@@ -13,7 +13,9 @@ const output=process.argv[3]??'.cache/spatial-player-decisions-baseline.json';
 const engine=process.argv[4]??'legacy';
 const preparedQuotes=process.argv[5]!=='recompute';
 const spatialAdvice=process.argv[6]==='advice';
+const seed=Number(process.argv[7]??712);
 if(!Number.isSafeInteger(days)||days<1||days>100)throw Error('Invalid days');
+if(!Number.isSafeInteger(seed)||seed<1)throw Error('Invalid seed');
 if(!['legacy','wild-engine'].includes(engine))throw Error('Unknown campaign engine');
 const source=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
 const files=['tools/native-campaign-runner.mjs','tools/native-campaign-plots.mjs',
@@ -36,23 +38,27 @@ try{
      report(){return {mode:'same-session-native-entry'};},async dispose(){}
    }),onTick:(_state,nav)=>nav.serviceRaidConnectivityDemand?.()
   }:{};
- const result=await simulateNativeCampaign({days,seed:712,biome:'sabana',
+ const result=await simulateNativeCampaign({days,seed,biome:'sabana',
   culture:'mapungubwe',strategy:'good',decisionProfile:true,nativeEvidence:false,
   preparedWallQuotes:preparedQuotes,spatialAdvice,...native,
   onDay:row=>{
+   const {entries,...finance}=row.finance;
    const item={day:row.day,living:row.living,planted:row.planted,
-    money:row.money,wallTime:row.wallTime,phases:row.decisionPhases};
+    delivered:row.delivered,destroyed:row.destroyed,staff:row.staff,
+    money:row.money,finance,wallTime:row.wallTime,phases:row.decisionPhases};
    daily.push(item);console.log(JSON.stringify(item));
   }});
  const report={source,sourceFiles,engine,preparedQuotes,spatialAdvice,
   spatialSite:result.spatialSite,spatialAdviceInitMs:result.spatialAdviceInitMs,
   spatialSync:result.spatialSync,daysRequested:days,completedNights:result.completedNights,
   result:result.result,biome:result.biome,seed:result.seed,strategy:result.strategy,
-  policy:result.policy,daily};
+  policy:result.policy,defense:{paidCost:result.defense?.paidCost,
+   paidPieces:result.defense?.paidPieces,repairRequests:result.defense?.repairRequests},
+  daily};
  mkdirSync(dirname(output),{recursive:true});writeFileSync(output,JSON.stringify(report,null,2));
 }catch(error){
  mkdirSync(dirname(output),{recursive:true});
- writeFileSync(output,JSON.stringify({source,sourceFiles,engine,preparedQuotes,spatialAdvice,daysRequested:days,daily,
+ writeFileSync(output,JSON.stringify({source,sourceFiles,engine,preparedQuotes,spatialAdvice,seed,daysRequested:days,daily,
   error:error.message,partialDay:error.nativeCampaignPartial?.day},null,2));
  throw error;
 }
