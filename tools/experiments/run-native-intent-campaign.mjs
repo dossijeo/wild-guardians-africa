@@ -19,6 +19,7 @@ let latestState=null,latestNav=null,dayWorkerSnapshot=[];
 const captureRaidDay=Number(process.env.WILD_ENGINE_CAPTURE_RAID_DAY??0);
 const spatialAdvice=process.env.WILD_ENGINE_SPATIAL_ADVICE==='1';
 const defensePolicy=process.env.WILD_ENGINE_DEFENSE_POLICY??'legacy';
+const decisionProfile=process.env.WILD_ENGINE_DECISION_PROFILE==='1';
 let capturedRaid=false;
 const assignments=[],seenAssignments=new Set();
 const intentTiming={};
@@ -52,7 +53,7 @@ const entryDriverFactory=nav=>({
   async dispose(){}
 });
 const parameters={days,biome,seed,strategy,nativeIntents:mode==='intent',
-  spatialAdvice,defensePolicy,reloadRaids:false};
+  spatialAdvice,defensePolicy,decisionProfile,reloadRaids:false};
 try{
   const result=await simulateNativeCampaign({...parameters,
     culture:'mapungubwe',nativeEvidence:false,
@@ -125,6 +126,7 @@ try{
           seeds:row.finance.seeds,repairs:row.finance.repairs,
           walls:row.finance.walls},
         result:row.result,wallTime:row.wallTime,
+        ...(decisionProfile?{decisionPhases:row.decisionPhases}:{}),
         nativeIntent:row.nativeIntent,
         raidSelection:raidSelection(),
         intentTiming:JSON.parse(JSON.stringify(intentTiming))});
