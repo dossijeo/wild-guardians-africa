@@ -434,3 +434,12 @@ con 129/861, 15 pérdidas, 118 cajas/día y margen +72. La divergencia entre
 semillas confirma que el brazo histórico no debe reemplazar al control de
 magias actuales ni justificar una selección por una sola reserva. Informe:
 `results-14-post-intro/deb7ec2b4ed1-good-manglares-24681357-14.json`.
+
+El control histórico `expansive` en Manglares/24681357 también completó 14/14
+noches, pero terminó con 83 cultivos, 313 monedas, 147 pérdidas desde la noche
+6, 46⅔ cajas/día terminales y margen operativo de −118. El ledger concilia;
+`post-intro-v2` lo clasifica como producción colapsada por quedar bajo el
+umbral congelado de 82⅙ cajas/día. Esto es supervivencia física de 14 noches,
+no una política solvente acreditada ni una derrota nativa. Usa la magia
+histórica y no debe confundirse con una prueba de expansión bajo la magia
+actual. Informe: `results-14-post-intro/deb7ec2b4ed1-expansive-manglares-24681357-14.json`.
