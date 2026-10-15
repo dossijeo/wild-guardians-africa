@@ -19,6 +19,7 @@ extern "C" {
 int spatial_world_route_cached(float,float,float,float);
 const float* spatial_world_route_ptr();
 int spatial_world_route_reason();
+int spatial_world_segment_clear(float,float,float,float);
 uint32_t lazy_route_revision();
 int lazy_selected_context();
 int spatial_select_nav_profile_index(int);
@@ -1227,7 +1228,7 @@ int nav_intent_register_attack(double actorId,double targetId,
       nextZ=s.attackRouteInput[size_t(i)*2+1];
     if(!std::isfinite(nextX)||!std::isfinite(nextZ)||
        !coordinate(nextX)||!coordinate(nextZ))return -1;
-    if(!spatial_local_clear(x,z,nextX,nextZ))return -5;
+    if(!spatial_world_segment_clear(x,z,nextX,nextZ))return -5;
     x=nextX;z=nextZ;
   }
   const auto owners=s.byTarget.find(targetIdValue);

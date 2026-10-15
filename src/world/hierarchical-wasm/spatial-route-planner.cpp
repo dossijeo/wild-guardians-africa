@@ -142,6 +142,13 @@ void shortenOneCorner(Point start,Point end){
 }
 
 extern "C" {
+// Route handles may contain a physically validated long shortcut. Validate
+// that segment with the same bounded continuous sweep used when creating it;
+// spatial_local_clear alone is intentionally limited to short connectors.
+int spatial_world_segment_clear(float fromX,float fromZ,float toX,float toZ){
+  const Point from{fromX,fromZ},to{toX,toZ};
+  return finite(from)&&finite(to)&&clearWorld(from,to)?1:0;
+}
 // One call per confirmed gate; connector search stays in the spatial authority.
 int spatial_add_gate_portal(float fromX,float fromZ,float toX,float toZ){
   const Point from{fromX,fromZ},to{toX,toZ};
