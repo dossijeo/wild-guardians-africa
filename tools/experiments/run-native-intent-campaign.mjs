@@ -110,6 +110,8 @@ try{
       const counts=(items,key)=>Object.fromEntries([...new Set(items.map(key))]
         .sort().map(value=>[value,items.filter(item=>key(item)===value).length]));
       rows.push({day:row.day,living:row.living,money:row.money,
+        stateSha256:latestState?createHash('sha256').update(
+          serialize(latestState)).digest('hex'):null,
         staff:row.staff,planted:row.planted,delivered:row.delivered,
         destroyed:row.destroyed,pendingTasks:row.pendingTasks,
         workerStatuses:counts(dayWorkerSnapshot,item=>item.status),
@@ -129,6 +131,15 @@ try{
   const report={status:'completed',source,inputHashes,parameters,assignments,intentTiming,
     elapsedSeconds:(performance.now()-started)/1000,
     completedNights:result.completedNights,result:result.result,
+    terminal:latestState?{
+      day:latestState.day,time:latestState.time,result:latestState.result,
+      livingCrops:latestState.plants.filter(plant=>plant.alive).length,
+      operationalCenters:latestState.structures.filter(item=>
+        item.kind==='center'&&item.status==='intact'&&item.hp>0).length,
+      lastMessage:latestState.messages.at(-1)?.text??null,
+      lastEvent:latestState.events.at(-1)?.type??null,
+      stateSha256:createHash('sha256').update(serialize(latestState)).digest('hex')
+    }:null,
     nativeIntent:result.nativeIntent,raidEvidence:result.raidEvidence,
     raidSelection:raidSelection(),rows};
   writeFileSync(path,JSON.stringify(report,null,2)+'\n');
