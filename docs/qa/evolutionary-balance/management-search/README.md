@@ -86,6 +86,17 @@ muralla y una estructura arruinada. Los siete registros diarios concilian con
 el ledger. El resultado se guarda íntegro en `results-14-main-sync/`, sin
 convertirlo en un fallo técnico ni proyectarlo a una tasa de derrota general.
 
+El mismo genoma terminó derrotado en Gran Río/2026 en el registro del día 10,
+con diez noches contabilizadas, cero cultivos y 15 monedas. Allí **ninguna
+incursión destruyó cultivos** en los diez registros: el censo se agotó sin
+atribuirlo a daño agrícola militar. Gastó 580 monedas en muros durante los
+cinco días introductorios y 1.000 en muros a lo largo de la partida, frente a
+690 en semillas; pagó además 942 en salarios y 143 en reparaciones. En Sabana
+los ataques sí destruyeron diez cultivos, mientras el bot pagó 940 en muros.
+Estos dos informes muestran que el genoma combina fragilidad económica con
+exposición militar según el escenario. No demuestran por sí solos qué decisión
+concreta dejó incompleto un recinto ni justifican cambiar el balance.
+
 Esta cohorte usa Wild Engine y el balance de producción sin alterar, después de
 la mejora de navegación de PR #37. Código ejecutado: `7f358aad97287b40e300026306d26f05cc4e0c29`;
 el registro de siete noches guarda además SHA-256 de los módulos y del diff en
