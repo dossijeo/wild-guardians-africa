@@ -716,7 +716,15 @@ function reserveAvailableTasks(s,nav){
     const route=taskRouteWhenKnown(()=>t.kind==='repair'?repairRoute(w,target,nav):
       t.kind==='initial'||t.kind==='water'?wateringRoute(w,target,nav):
         (nav.workerPath?nav.workerPath(w,target,.28,null):nav.path(w,target,.28,null,true)));
-    return route===undefined?null:!!route;
+    return route===undefined?null:route;
+  },(w,t,target,route)=>{
+    if(nav.forceRouteRebuild)return;
+    const interaction=t.kind==='repair'||t.kind==='initial'||t.kind==='water';
+    const destination=interaction?route.destination:target;
+    w.path=interaction?route.path:route;
+    if(interaction)w.taskApproach={taskId:t.id,destination};
+    w.destinationId=destination.id;
+    w.pathVersion=nav.version;
   });
   taskPlanWaits.set(s,{tasks:s.tasks,length:s.tasks.length,
     taskRevision:taskPlanningRevision(s),
@@ -786,6 +794,7 @@ function updateWorkers(s,dt,nav) {
         let destination=target;
         if(t.kind==='repair'){
           if(w.taskApproach?.taskId!==t.id||w.path===null){
+            nav.planningObserver?.({kind:'assignedRouteRebuild',actorId:w.id,elapsed:s.elapsed,taskId:t.id});
             const route=taskRouteWhenKnown(()=>repairRoute(w,target,nav));
             if(!route){releaseTask(s,w);w.status='idle';continue;}
             w.taskApproach={taskId:t.id,destination:route.destination};w.path=route.path;w.destinationId=route.destination.id;w.pathVersion=nav.version;
@@ -793,6 +802,7 @@ function updateWorkers(s,dt,nav) {
           destination=w.taskApproach.destination;
         }else if(t.kind==='initial'||t.kind==='water'){
           if(w.taskApproach?.taskId!==t.id||w.path===null||w.pathVersion!==nav.version){
+            nav.planningObserver?.({kind:'assignedRouteRebuild',actorId:w.id,elapsed:s.elapsed,taskId:t.id});
             const route=taskRouteWhenKnown(()=>wateringRoute(w,target,nav));
             if(!route){releaseTask(s,w);w.status='idle';continue;}
             w.taskApproach={taskId:t.id,destination:route.destination};w.path=route.path;w.destinationId=route.destination.id;w.pathVersion=nav.version;

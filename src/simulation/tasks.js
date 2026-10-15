@@ -31,7 +31,7 @@ export function taskEnqueuer(state) {
     return appendTask(state,centerId,kind,targetId);
   };
 }
-export function reserveTasks(state,canExecute=()=>true) {
+export function reserveTasks(state,canExecute=()=>true,onAssigned=()=>{}) {
   if(!state.workers.some(w=>w.status==='idle'&&!w.taskId&&!w.incapacitated&&!contractExpired(w,state))) {
     // Busy workers cannot reserve. Preserve the existing missing-target rule,
     // while clearing stale blocked flags exactly as an empty candidate list did.
@@ -70,9 +70,11 @@ export function reserveTasks(state,canExecute=()=>true) {
     // A pending native graph query is not a physical proof that this task is
     // blocked. Retry on a later reservation pass as sectors become resident.
     let pending=false;
+    const plans=new Map();
     const reachable=w=>{
       const result=canExecute(w,t,target);
       if(result===null)pending=true;
+      if(result)plans.set(w,result);
       return Boolean(result);
     };
     // Reachability can require A*: test nearest candidates until one succeeds.
@@ -100,7 +102,7 @@ export function reserveTasks(state,canExecute=()=>true) {
       }
     }
     t.blocked=!worker && workers.length>0 && !pending;
-    if(worker) { cancelIdle(worker);t.workerId=worker.id;worker.taskId=t.id;worker.status='walking';workers.splice(workers.indexOf(worker),1);changed(state); }
+    if(worker) { cancelIdle(worker);t.workerId=worker.id;worker.taskId=t.id;worker.status='walking';workers.splice(workers.indexOf(worker),1);changed(state);onAssigned(worker,t,target,plans.get(worker)); }
   }
 }
 export function releaseTask(state,worker) {

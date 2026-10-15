@@ -22,6 +22,15 @@ test('a released lease invalidates an otherwise unchanged task queue',()=>{
  owner.status='home';reserveTasks(s,()=>true);
  assert.equal(s.tasks[0].workerId,'worker-2');
 });
+test('assignment passes the already validated route to its sole owner',()=>{
+ const s=state(),route=[{x:0,z:0}],assigned=[];
+ let searches=0;
+ reserveTasks(s,()=>{searches++;return route;},(worker,task,target,plan)=>{
+   assigned.push({worker:worker.id,task:task.id,target:target.id,plan});
+ });
+ assert.equal(searches,1);
+ assert.deepEqual(assigned,[{worker:'worker-1',task:'task',target:'plot',plan:route}]);
+});
 
 test('large historical farm keeps identical FIFO reservations for crops, loose crates and repairs',()=>{
  const s=state();

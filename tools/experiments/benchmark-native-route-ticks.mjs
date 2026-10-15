@@ -14,6 +14,7 @@ if(!Number.isSafeInteger(count)||count<1||count>200)throw Error('Expected 1–20
 const requestedMode=process.argv[4];
 if(requestedMode&&!['A','B','C'].includes(requestedMode))throw Error('Expected A, B or C mode');
 const pollingControl=process.argv[5]==='polling';
+const legacyHandoff=process.argv[5]==='legacy';
 const source=readFileSync(fixture);
 const json=fixture.endsWith('.gz')?gunzipSync(source).toString():source.toString();
 const binary=readFileSync(process.env.WILD_ENGINE_NATIVE_ROUTE_WASM??'.cache/native-route-prototype.wasm');
@@ -54,6 +55,7 @@ for(const mode of requestedMode?[requestedMode]:['A','B','C','C','B','A']){
     };
     const nav=createSpatialNavigationMovement(session,state);
     nav.forcePlanningPoll=pollingControl;
+    nav.forceRouteRebuild=legacyHandoff;
     const planning={taskPasses:0,byKind:{},byActor:new Map(),byAction:new Map()};
     nav.planningObserver=event=>{
       planning.byKind[event.kind]=(planning.byKind[event.kind]??0)+1;
@@ -99,6 +101,6 @@ for(const mode of requestedMode?[requestedMode]:['A','B','C','C','B','A']){
 const report={fixture,fixtureSha256:sha(source),wasmSha256:sha(binary),count,rows};
 const label=fixture.split(/[\\/]/).at(-1).replace(/\.(json|gz)/g,'')
   .replace(/^spatial-/,'').slice(0,64);
-const out=`docs/qa/native-route-planner/ticks-${label}-${requestedMode?.toLowerCase()??'abccba'}${pollingControl?'-polling':''}.json`;
+const out=`docs/qa/native-route-planner/ticks-${label}-${requestedMode?.toLowerCase()??'abccba'}${pollingControl?'-polling':legacyHandoff?'-legacy':''}.json`;
 writeFileSync(out,JSON.stringify(report,null,2));
 console.log(out);
