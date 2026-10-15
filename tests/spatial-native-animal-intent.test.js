@@ -136,5 +136,19 @@ test('native animal leases preserve committed strikes and reject duplicate targe
       'a committed strike whose JS lease was released does not block a new one');
     assert.equal(wasm.nav_intent_attack_finished(102),0);
     assert.equal(wasm.nav_intent_attack_finished(102),-1);
+    assert.equal(wasm.nav_intent_attack_cancel(103),1);
+    wasm.nav_intent_reset();
+    assert.equal(write(1,[row(1,2,12,1,end.x,end.z,1)]),1);
+    session.actorSectorRevision({worker:false,species:'hyena'});
+    assert.equal(wasm.nav_intent_restore_attack_pending(106,12,1),1);
+    assert.equal(register(107,12),-3,
+      'a restored pending route retains the saved exclusive lease');
+    assert.equal(wasm.nav_intent_replan_attack_route(106,origin.x,origin.z,
+      end.x,end.z),1);
+    assert.equal(wasm.nav_intent_actor(106),1);
+    const restoredRoute=new Float64Array(wasm.memory.buffer,
+      wasm.nav_intent_actor_ptr(),10);
+    assert.equal(restoredRoute[1],1);
+    assert.equal(restoredRoute[3],12);
   }finally{session.dispose();}
 });

@@ -91,6 +91,7 @@ export function createSpatialIntentBridge(session){
     'nav_intent_attack_route_input_ptr','nav_intent_register_attack',
     'nav_intent_plan_attack_crop','nav_intent_attack_result_ptr',
     'nav_intent_attack_action_active','nav_intent_restore_attack_action',
+    'nav_intent_restore_attack_pending',
     'nav_intent_attack_finished',
     'nav_intent_attack_cancel',
     'nav_intent_action_active','nav_intent_finish',
@@ -471,6 +472,7 @@ export function createSpatialIntentBridge(session){
   };
   const restoreAttackIntents=state=>{
     let committed=0,travelling=0,staleRoutes=0;
+    const pendingAttackRouteIds=[];
     for(const animal of [...(state.raid?.animals??[])]
       .sort((left,right)=>numericId(left.id)-numericId(right.id))){
       if(!animal.targetId||['gone','retreating','waiting'].includes(animal.status))
@@ -486,16 +488,29 @@ export function createSpatialIntentBridge(session){
       const target=[...state.plants,...state.structures]
         .find(item=>item.id===animal.targetId);
       if(!target||!animal.reservation||
-        state.raid.reservations[animal.reservation]!==animal.id||
-        !Array.isArray(animal.path)||!animal.path.length)continue;
+        state.raid.reservations[animal.reservation]!==animal.id)continue;
+      if(!Array.isArray(animal.path)||!animal.path.length){
+        if(!animal.approach)continue;
+        if(wasm.nav_intent_restore_attack_pending(numericId(animal.id),
+          numericId(animal.targetId),1)!==1)
+          throw Error(`Cannot restore pending animal attack ${animal.id}`);
+        const replacement=replanAttackRoute(animal);
+        if(replacement.status==='unknown')pendingAttackRouteIds.push(animal.id);
+        continue;
+      }
       try{registerAttackIntent(state,animal,target,animal.path);travelling++;}
       catch(error){
         if(!/Native attack intention rejected: -5/.test(String(error)))throw error;
         animal.path=null;staleRoutes++;
+        if(wasm.nav_intent_restore_attack_pending(numericId(animal.id),
+          numericId(animal.targetId),1)!==1)
+          throw Error(`Cannot restore stale animal route ${animal.id}`);
+        const replacement=replanAttackRoute(animal);
+        if(replacement.status==='unknown')pendingAttackRouteIds.push(animal.id);
       }
     }
     return {restoredAnimalAttacks:committed,restoredAnimalRoutes:travelling,
-      invalidSavedAnimalRoutes:staleRoutes};
+      invalidSavedAnimalRoutes:staleRoutes,pendingAttackRouteIds};
   };
   return {resetFromState,applyEvents,applyCommittedEvents,planTasks,
     restoreAssignedTasks,restoreAttackIntents,proposalRoute,
@@ -554,6 +569,8 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     eligible.clear();projectedPositions.clear();pendingAttackRoutes.clear();
     requests.clear();
     animalRequests.clear();
+    for(const id of restoredAnimals.pendingAttackRouteIds)
+      pendingAttackRoutes.set(numericId(id),'unknown');
     pendingTaskEvents=[];pendingWorldEvents=[];total=0;animalTotal=0;
     lastPlan=null;lastPlanFacts=null;
     for(const worker of state.workers)setWorker(worker,state);
@@ -756,6 +773,18 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     const targetFor=taskTargetLookup(state);
     for(const change of latest.values()){
       const animal=animals.get(change.actorId);
+      if(animal&&change.state===1&&animal.status!=='attacking'&&
+        !animal.path&&animal.targetId&&
+        numericId(animal.targetId)===change.targetId){
+        const coordinates=bridge.routePoints(change.routeHandle);
+        if(!coordinates||coordinates.length<2||coordinates.length%2)
+          throw Error('Restored animal intention has no native route');
+        animal.path=Array.from({length:coordinates.length/2},(_,index)=>({
+          x:coordinates[index*2],z:coordinates[index*2+1]}));
+        animal.destinationId=animal.approach.id;
+        animal.pathVersion=navVersion;
+        pendingAttackRoutes.delete(change.actorId);
+      }
       if(animal&&change.state===0&&animal.status!=='attacking'&&
         animal.targetId&&numericId(animal.targetId)===change.targetId){
         const target=targetFor(animal.targetId);

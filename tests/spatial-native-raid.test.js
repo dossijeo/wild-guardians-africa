@@ -238,6 +238,7 @@ test('an opt-in raider keeps its crop lease when a new wall only invalidates its
     culture:'mapungubwe',villageId:'village-1',status:'intact',hp:600,maxHp:600});
   const loaded=new Map(),session=createSpatialGameSession(module,state,{
     loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+  let restoredSession;
   try{
     const jobs=new Map();
     for(let cz=-1;cz<=1;cz++)for(let cx=-1;cx<=1;cx++)
@@ -264,7 +265,8 @@ test('an opt-in raider keeps its crop lease when a new wall only invalidates its
     const targetId=animal.targetId,reservation=animal.reservation;
     const oldVersion=nav.version;
     const wallPoint=animal.path[Math.floor(animal.path.length/2)];
-    assert(session.core.addWall(wallPoint.x,wallPoint.z,.3,.3)>0);
+    const blockingRouteWall=session.core.addWall(wallPoint.x,wallPoint.z,.3,.3);
+    assert(blockingRouteWall>0);
     assert(planner.reconcileNavigationRevision(state,oldVersion+1)>0);
     planner.reconcileWorkerRoutes(state,{navVersion:oldVersion+1});
     assert.equal(animal.targetId,targetId);
@@ -294,8 +296,25 @@ test('an opt-in raider keeps its crop lease when a new wall only invalidates its
     assert.equal(planner.attackRoutePending(animal.id),false);
     assert(animal.path?.length>0);
     assert.equal(animal.targetId,targetId);
+    assert.equal(session.core.removeBarrier(blockingRouteWall),1);
+    animal.path=null;
+    const saved=deserialize(serialize(state)),restoredLoaded=new Map();
+    restoredSession=createSpatialGameSession(module,saved,{
+      loaded:()=>restoredLoaded,
+      onData:data=>restoredLoaded.set(`${data.cx},${data.cz}`,data)});
+    restoredSession.stream.plan(jobs);await restoredSession.stream.whenIdle();
+    const restoredNav=createSpatialNavigationMovement(restoredSession,saved);
+    const restoredPlanner=createEventDrivenTaskPlanner(restoredSession);
+    const report=restoredPlanner.resetFromState(saved);
+    assert.equal(report.restoredAnimalRoutes,0);
+    restoredPlanner.reconcileWorkerRoutes(saved,{navVersion:restoredNav.version});
+    const restoredAnimal=saved.raid.animals[0];
+    assert.equal(restoredAnimal.targetId,targetId);
+    assert.equal(saved.raid.reservations[reservation],restoredAnimal.id);
+    assert(restoredAnimal.path?.length>0,
+      'a saved pending attack restores its native lease and obtains one fresh route');
     stopTasks();stopWorld();delete nav.intentTaskPlanner;
-  }finally{session.dispose();}
+  }finally{restoredSession?.dispose();session.dispose();}
 });
 
 for(const count of [1,5])test(`${count} native raiders attack an accessible wall instead of crossing a closed crop enclosure`,async()=>{

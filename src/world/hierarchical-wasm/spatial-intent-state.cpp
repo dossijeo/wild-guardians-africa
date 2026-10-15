@@ -1311,6 +1311,29 @@ int nav_intent_restore_attack_action(double actorId,double targetId,int hasLease
   emitIntentChange(s,intent);
   return 1;
 }
+// Saved travel with no usable path keeps its logical target and lease. The
+// current session will issue one fresh route request from the restored pose.
+int nav_intent_restore_attack_pending(double actorId,double targetId,int hasLease){
+  if(!integer(actorId)||!integer(targetId)||hasLease<0||hasLease>1)return 0;
+  IntentState& s=state();const uint64_t actor=uint64_t(actorId),id=uint64_t(targetId);
+  if(s.activeIntents.count(actor))return 0;
+  const auto target=s.targets.find(id);
+  if(target==s.targets.end()||!target->second.active)return 0;
+  const auto owners=s.byTarget.find(id);
+  if(hasLease&&target->second.kind!=4&&owners!=s.byTarget.end())
+    for(uint64_t owner:owners->second){
+      const auto active=s.activeIntents.find(owner);
+      if(active!=s.activeIntents.end()&&active->second.animal&&
+         active->second.lease)return 0;
+    }
+  ActiveIntent intent{actor,0,id,PlanningState::NeedsPlan,
+    0,0,lazy_route_revision(),true,false};
+  intent.profile=lazy_selected_context();intent.lease=hasLease!=0;
+  s.activeIntents.emplace(actor,intent);
+  s.byTarget[id].insert(actor);
+  emitIntentChange(s,intent);
+  return 1;
+}
 int nav_intent_attack_finished(double actorId){
   if(!integer(actorId))return -1;
   IntentState& s=state();const uint64_t actor=uint64_t(actorId);
