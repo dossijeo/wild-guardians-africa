@@ -983,14 +983,59 @@ int nav_intent_reconcile_topology(){
   for(const auto& [actor,revision]:affected){
     ActiveIntent& intent=s.activeIntents.at(actor);
     if(intent.animal){
-      releaseIntent(s,actor,PlanningState::Cancelled);
-      s.activeIntents.erase(actor);
+      // A wall can invalidate the travel route without invalidating the
+      // target or its exclusive lease. The caller supplies the animal's live
+      // position at this event boundary for a same-target native reroute.
+      releaseRoute(s,intent);intent.state=PlanningState::NeedsPlan;
+      intent.topology=revision;emitIntentChange(s,intent);s.invalidations++;
       continue;
     }
     releaseRoute(s,intent);intent.state=PlanningState::NeedsPlan;
     intent.topology=revision;emitIntentChange(s,intent);s.invalidations++;
   }
   return int(affected.size());
+}
+// Replan an invalidated animal route from its confirmed continuous position.
+// A failed route to one interaction point cannot certify the target blocked:
+// another side may remain reachable, so keep the lease and report unknown.
+int nav_intent_replan_attack_route(double actorId,double startX,double startZ,
+                                   double approachX,double approachZ){
+  if(!integer(actorId)||!coordinate(startX)||!coordinate(startZ)||
+     !coordinate(approachX)||!coordinate(approachZ))return -1;
+  IntentState& s=state();const uint64_t actor=uint64_t(actorId);
+  const auto found=s.activeIntents.find(actor);
+  if(found==s.activeIntents.end()||!found->second.animal||
+     found->second.state!=PlanningState::NeedsPlan)return -2;
+  ActiveIntent& intent=found->second;
+  const auto target=s.targets.find(intent.target);
+  if(target==s.targets.end()||!target->second.active){
+    releaseIntent(s,actor,PlanningState::Cancelled);
+    s.activeIntents.erase(actor);return -3;
+  }
+  s.planningCallsByActor[actor]++;
+  const int count=spatial_world_route_cached(float(startX),float(startZ),
+    float(approachX),float(approachZ));
+  if(count<=0){
+    intent.state=PlanningState::WaitingUnknown;
+    intent.topology=lazy_route_revision();
+    emitIntentChange(s,intent);
+    return 3;
+  }
+  uint32_t slot=uint32_t(s.routeSlots.size());
+  for(uint32_t i=0;i<s.routeSlots.size();i++)
+    if(!s.routeSlots[i].active){slot=i;break;}
+  if(slot==s.routeSlots.size())s.routeSlots.emplace_back();
+  RouteSlot& route=s.routeSlots[slot];
+  const float* points=spatial_world_route_ptr();
+  route.points.assign(points,points+size_t(count)*2);
+  route.active=true;route.generation++;
+  if(!route.generation)route.generation=1;
+  intent.slot=slot;intent.generation=route.generation;
+  intent.state=PlanningState::RouteActive;
+  intent.topology=lazy_route_revision();
+  intent.routeStartX=float(startX);intent.routeStartZ=float(startZ);
+  emitIntentChange(s,intent);
+  return 1;
 }
 // Called at an event boundary after the JS authority projects current actor
 // positions. The target and reservation survive a route-only invalidation.

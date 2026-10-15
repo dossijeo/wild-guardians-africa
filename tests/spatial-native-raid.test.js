@@ -230,6 +230,74 @@ test('a native Sabana incursion spawns physically and advances through Game.tick
   }finally{restoredSession?.dispose();controlSession?.dispose();session.dispose();}
 });
 
+test('an opt-in raider keeps its crop lease when a new wall only invalidates its route',async()=>{
+  const state=Game.newGame({seed:712,biome:'sabana',culture:'mapungubwe',
+    slotId:'spatial-native-reroute'});
+  state.villages[0].buildings=villageLayout(pack,0,0);
+  state.structures.push({id:'center-1',kind:'center',x:0,z:0,
+    culture:'mapungubwe',villageId:'village-1',status:'intact',hp:600,maxHp:600});
+  const loaded=new Map(),session=createSpatialGameSession(module,state,{
+    loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+  try{
+    const jobs=new Map();
+    for(let cz=-1;cz<=1;cz++)for(let cx=-1;cx<=1;cx++)
+      jobs.set(`${cx},${cz}`,{cx,cz,score:Math.hypot(cx,cz)});
+    session.stream.plan(jobs);await session.stream.whenIdle();
+    const nav=createSpatialNavigationMovement(session,state);
+    nav.setActiveBounds([-36,-36,36,36]);
+    nav.setRaidView({x:12,z:12},{x:0,z:0});
+    let crop;
+    for(let z=-14;z<=14&&!crop;z+=2)for(let x=-14;x<=14&&!crop;x+=2)
+      if(nav.placement(x,z,.4).valid)crop={x,z};
+    assert(crop);
+    assert.equal(Game.plant(state,'reroute-crop','mijo',crop.x,crop.z,nav),true);
+    state.day=6;state.time=310;
+    assert.notEqual(spawnRaid(state,{at:310,group:['warthog'],
+      done:false,introductory:false},nav),false);
+    const planner=createEventDrivenTaskPlanner(session);
+    planner.resetFromState(state);
+    const stopWorld=planner.observeWorld(state),stopTasks=planner.observeTasks(state);
+    nav.intentTaskPlanner=planner;
+    const animal=state.raid.animals[0];
+    Game.tick(state,.2,nav);
+    assert(animal.path?.length>4,'the native crop plan has a route to obstruct');
+    const targetId=animal.targetId,reservation=animal.reservation;
+    const oldVersion=nav.version;
+    const wallPoint=animal.path[Math.floor(animal.path.length/2)];
+    assert(session.core.addWall(wallPoint.x,wallPoint.z,.3,.3)>0);
+    assert(planner.reconcileNavigationRevision(state,oldVersion+1)>0);
+    planner.reconcileWorkerRoutes(state,{navVersion:oldVersion+1});
+    assert.equal(animal.targetId,targetId);
+    assert.equal(animal.reservation,reservation);
+    assert.equal(state.raid.reservations[reservation],animal.id);
+    assert(animal.path?.length>0,'Wild Engine supplies the replacement route');
+    assert.equal(planner.attackRoutePending(animal.id),false);
+    assert.equal(planner.metrics(state.elapsed).nativeAnimalPlans,2,
+      'one target plan and one event-triggered route replacement');
+    const blockedApproach=session.core.addWall(animal.approach.x,
+      animal.approach.z,.3,.3);
+    assert(blockedApproach>0);
+    assert(planner.reconcileNavigationRevision(state,oldVersion+2)>0);
+    planner.reconcileWorkerRoutes(state,{navVersion:oldVersion+2});
+    assert.equal(planner.attackRoutePending(animal.id),true,
+      'one unavailable interaction point remains unknown, not a lost target');
+    assert.equal(animal.targetId,targetId);
+    assert.equal(state.raid.reservations[reservation],animal.id);
+    const pendingPlans=planner.metrics(state.elapsed).nativeAnimalPlans;
+    for(let tick=0;tick<10;tick++)
+      planner.reconcileWorkerRoutes(state,{navVersion:oldVersion+2});
+    assert.equal(planner.metrics(state.elapsed).nativeAnimalPlans,pendingPlans,
+      'an unresolved route does not replan on ordinary ticks');
+    assert.equal(session.core.removeBarrier(blockedApproach),1);
+    assert(planner.reconcileNavigationRevision(state,oldVersion+3)>0);
+    planner.reconcileWorkerRoutes(state,{navVersion:oldVersion+3});
+    assert.equal(planner.attackRoutePending(animal.id),false);
+    assert(animal.path?.length>0);
+    assert.equal(animal.targetId,targetId);
+    stopTasks();stopWorld();delete nav.intentTaskPlanner;
+  }finally{session.dispose();}
+});
+
 for(const count of [1,5])test(`${count} native raiders attack an accessible wall instead of crossing a closed crop enclosure`,async()=>{
   const state=Game.newGame({seed:712,biome:'sabana',culture:'mapungubwe',
     slotId:'spatial-walled-raid'});

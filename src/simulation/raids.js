@@ -673,6 +673,10 @@ export function updateRaid(s,dt,nav) {
       a.path=selected.approach.path;a.destinationId=a.approach.id;a.pathVersion=nav.version;
       if(!selected.native)nav.intentTaskPlanner?.registerAttackIntent(s,a,target,a.path??[]);
     }
+    // A confirmed topological event may leave the same native attack target
+    // pending while sectors resolve. Ordinary travel ticks do not replace its
+    // lease or run the old per-crop approach search.
+    if(nav.intentTaskPlanner?.attackRoutePending?.(a.id))continue;
     const shield=spellAt(s,'shield',target);
     if(!a.approach||a.approachShieldId!==(shield?.id??null)||!reservedApproachClear(s,a,a.approach)||!actorSegmentClear(a.approach,a.approach,a,actorBlockers(s,a,false))) {
       const approach=reachableApproach(a,target,nav,shield);

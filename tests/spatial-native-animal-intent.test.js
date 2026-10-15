@@ -28,7 +28,18 @@ test('native animal leases preserve committed strikes and reject duplicate targe
       if(candidate.status==='found'&&candidate.points.length){origin=start;route=candidate;break;}
     }
     assert(route,'the fixture contains a physical hyena route');
+    let detourRoute;
+    for(let radius=7;radius<=12&&!detourRoute;radius++)
+      for(const [dx,dz] of [[radius,0],[-radius,0],[0,radius],[0,-radius]]){
+        const candidate=session.routeActor(origin,
+          {x:origin.x+dx,z:origin.z+dz},{worker:false,species:'hyena'});
+        if(candidate.status==='found'&&candidate.points.length>3){
+          detourRoute=candidate;break;
+        }
+      }
+    assert(detourRoute,'the fixture contains a longer route for event rerouting');
     const wasm=session.core.wasm,end=route.points.at(-1);
+    const detourEnd=detourRoute.points.at(-1);
     const write=(sequence,rows)=>{
       const ptr=wasm.nav_intent_changes_ptr(rows.length);
       new Float64Array(wasm.memory.buffer,ptr,rows.length*10).set(rows.flat());
@@ -47,7 +58,8 @@ test('native animal leases preserve committed strikes and reject duplicate targe
     wasm.nav_intent_reset();
     assert.equal(write(1,[row(1,2,11,1,end.x,end.z,1),
       row(1,2,12,3,end.x+2,end.z,1),
-      row(1,2,13,4,end.x+3,end.z,1)]),1);
+      row(1,2,13,4,end.x+3,end.z,1),
+      row(1,2,14,1,detourEnd.x,detourEnd.z,1)]),1);
     session.actorSectorRevision({worker:false,species:'hyena'});
     assert.equal(register(101,11),1);
     assert.equal(register(102,11),-3,
@@ -62,6 +74,32 @@ test('native animal leases preserve committed strikes and reject duplicate targe
     assert.equal(wasm.nav_intent_reconcile_topology(),0,
       'a remote wall does not invalidate a physically clear animal route');
     assert(wasm.nav_intent_route_points(...oldHandle)>0);
+    assert.equal(register(105,14,detourRoute.points),1);
+    assert.equal(wasm.nav_intent_actor(105),1);
+    const detourHandle=Array.from(new Float64Array(wasm.memory.buffer,
+      wasm.nav_intent_actor_ptr(),10).slice(4,7));
+    const blockedPoint=detourRoute.points[Math.floor(detourRoute.points.length/2)];
+    assert(session.core.addWall(blockedPoint.x,blockedPoint.z,.3,.3)>0);
+    session.actorSectorRevision({worker:false,species:'hyena'});
+    assert(wasm.nav_intent_reconcile_topology()>0,
+      'a wall on the active route triggers one event-boundary invalidation');
+    assert.equal(wasm.nav_intent_actor(105),1);
+    const invalidated=new Float64Array(wasm.memory.buffer,
+      wasm.nav_intent_actor_ptr(),10);
+    assert.equal(invalidated[1],0,'the same attack intention needs a route');
+    assert.equal(invalidated[3],14,'the target and lease survive route loss');
+    assert.equal(wasm.nav_intent_route_points(...detourHandle),-1);
+    assert.equal(register(106,14),-3,
+      'an invalidated route does not release the exclusive crop lease');
+    assert.equal(wasm.nav_intent_replan_attack_route(105,origin.x,origin.z,
+      detourEnd.x,detourEnd.z),1,'the native engine finds another route');
+    assert.equal(wasm.nav_intent_actor(105),1);
+    const replanned=new Float64Array(wasm.memory.buffer,
+      wasm.nav_intent_actor_ptr(),10);
+    assert.equal(replanned[1],1);
+    assert.equal(replanned[3],14);
+    assert(wasm.nav_intent_route_points(...Array.from(replanned.slice(4,7)))>0);
+    assert.equal(wasm.nav_intent_attack_cancel(105),1);
     assert.equal(register(102,13),1);
     assert.equal(register(103,13),1,
       'a center permits separate animal approaches');
