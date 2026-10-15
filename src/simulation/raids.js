@@ -435,7 +435,8 @@ export function targetFor(s,a,nav) {
     // An unresolved native crop region is pending topology, not evidence that
     // crops are blocked. Do not re-enter the old per-target selector and issue
     // independent approach searches for the same unknown sector.
-    if(native?.status==='unknown')return {unknown:true};
+    if(native?.status==='unknown'||native?.status==='occupied')
+      return {unknown:true};
     const fallback=targetForImpl(s,a,nav,stats);
     if(stats){
       const reason=native?.status??'unsupported',

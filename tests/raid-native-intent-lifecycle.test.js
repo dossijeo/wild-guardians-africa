@@ -13,6 +13,15 @@ test('native unknown crop connectivity waits without falling into individual JS 
     'unknown connectivity must not enter the legacy selector');
 });
 
+test('native occupied crop approaches wait for lease changes without claiming blocked topology',()=>{
+  const state={elapsed:0,raid:{},plants:[],structures:[],spells:[]};
+  const nav={raidSelectionStats:{},intentTaskPlanner:{planAttackCrop:()=>({
+    status:'occupied',regionQueries:1,routeQueries:0})}};
+  assert.deepEqual(targetFor(state,{id:'animal-1'},nav),{unknown:true});
+  assert.equal(nav.raidSelectionStats.nativeCropResults.occupied,1);
+  assert.equal(nav.raidSelectionStats.legacyFallbacks,undefined);
+});
+
 test('raid instrumentation records why a conclusive native result still uses legacy selection',()=>{
   const state={elapsed:0,raid:{},plants:[],structures:[],spells:[]};
   const nav={raidSelectionStats:{},intentTaskPlanner:{planAttackCrop:()=>({status:'blocked',

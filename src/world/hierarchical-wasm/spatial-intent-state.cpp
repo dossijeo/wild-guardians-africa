@@ -1392,7 +1392,7 @@ int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
     return a.x!=b.x?a.x<b.x:a.z<b.z;
   });
   const Anchor source=starts.front();
-  bool unknown=false,eligible=false;
+  bool unknown=false,eligible=false,occupied=false;
   int regionQueries=0,routeQueries=0,preferredTrials=0,siteTrials=0;
   int lastRouteCount=std::numeric_limits<int>::min();
   int lastPreferredRouteCount=std::numeric_limits<int>::min();
@@ -1409,8 +1409,10 @@ int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
     return false;
   };
   for(CropGroup& group:s.cropGroups){
-    for(uint64_t cropId:group.crops)if(s.targets.at(cropId).active&&
-      !leased(cropId)){eligible=true;break;}
+    for(uint64_t cropId:group.crops)if(s.targets.at(cropId).active){
+      if(leased(cropId))occupied=true;
+      else eligible=true;
+    }
     const AttackSiteCache& cache=attackSitesFor(s,group,float(radius));
     std::unordered_set<uint64_t> located;
     std::vector<const AttackSite*> candidates;
@@ -1436,6 +1438,7 @@ int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
       return al!=ar?al<ar:a->region<b->region;
     });
     int attempted=0;
+    bool groupRouteAttempted=false;
     std::unordered_set<uint64_t> preferredTried;
     const auto tryPoint=[&](const Target& crop,float px,float pz){
       for(const auto& [owner,intent]:s.activeIntents){
@@ -1443,8 +1446,11 @@ int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
            intent.state==PlanningState::Cancelled)continue;
         if(std::hypot(double(intent.approachX)-px,
                       double(intent.approachZ)-pz)<
-           double(intent.approachRadius)+radius+0.1)return false;
+           double(intent.approachRadius)+radius+0.1){
+          occupied=true;return false;
+        }
       }
+      groupRouteAttempted=true;
       routeQueries++;
       const int count=spatial_world_route_cached(float(startX),float(startZ),px,pz);
       lastRouteCount=count;
@@ -1465,7 +1471,7 @@ int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
     for(const AttackSite* site:candidates){
       const Target& crop=s.targets.at(site->crop);
       if(!crop.active)continue;
-      if(leased(crop.id))continue;
+      if(leased(crop.id)){occupied=true;continue;}
       if(attempted++>=16){unknown=true;break;}
       if(!firstCandidateCrop)firstCandidateCrop=crop.id;
       if(preferredTried.insert(crop.id).second){
@@ -1487,9 +1493,11 @@ int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
     }
     // A connected region with no successful local route is inconclusive,
     // not proof that all other positions in that region are inaccessible.
-    if(!candidates.empty())unknown=true;
+    if(!candidates.empty()&&groupRouteAttempted)unknown=true;
   }
-  s.attackResult[0]=unknown?3:eligible?2:0;
+  // A temporarily leased approach is an occupancy wait, never proof that
+  // a sector is missing or that the crop group is physically sealed.
+  s.attackResult[0]=unknown?3:occupied?4:eligible?2:0;
   s.attackResult[1]=double(firstCandidateCrop);
   s.attackResult[2]=preferredTrials;
   s.attackResult[3]=lastPreferredRouteCount;
