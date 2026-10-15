@@ -2,6 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
+import {execFileSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
 import {deserialize} from '../src/persistence/snapshots.js';
 import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
 import {createSpatialIntentBridge,createEventDrivenTaskPlanner} from
@@ -134,4 +136,22 @@ test('unknown service routes wait for a sector event or low-frequency retry',
   planner.discard();
   assert.equal(planner.metrics(8.1).nativePlanningCalls,3);
  }finally{session.dispose();}
+});
+
+test('native whole-queue assignments match JS on controlled real Desert and Canyon states',
+ {skip:!module&&'Build and select the experimental WASM first'},()=>{
+ const probe=fileURLToPath(new URL('../tools/experiments/probe-native-intent-queue.mjs',
+  import.meta.url));
+ for(const [fixture,workers,tasks] of [
+  ['desierto983-d15-partial-state.json.gz',15,115],
+  ['watering-gran-canon-saheliana-detour-10.json.gz',3,19]]){
+  const path=fileURLToPath(new URL(`./fixtures/${fixture}`,import.meta.url));
+  const report=JSON.parse(execFileSync(process.execPath,
+   [probe,path,String(workers),String(tasks),'--summary'],{
+    env:process.env,encoding:'utf8',timeout:30000}));
+  assert.equal(report.mismatches,0,`${fixture}: differing native assignment`);
+  assert.equal(report.jsCandidates,report.nativeQueries,
+   `${fixture}: unexpected candidate route-query count`);
+  assert(report.jsCandidates>0);
+ }
 });
