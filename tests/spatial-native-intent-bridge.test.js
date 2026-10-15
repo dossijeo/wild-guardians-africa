@@ -17,6 +17,56 @@ import {enqueue,notifyWorkerPlanningChange,replaceTasks} from '../src/simulation
 const binary=process.env.WILD_ENGINE_NATIVE_ROUTE_WASM;
 const module=binary?new WebAssembly.Module(readFileSync(binary)):null;
 
+test('a confirmed ruin cancels travelling animal leases but defers committed strikes',
+ {skip:!module&&'Build and select the experimental WASM first'},()=>{
+ const game=deserialize(gunzipSync(readFileSync(new URL(
+  './fixtures/desierto983-d15-partial-state.json.gz',import.meta.url))).toString());
+ const walls=game.structures.filter(item=>item.kind==='wall'&&item.status==='intact');
+ assert(walls.length>=2);
+ const loaded=new Map(),session=createSpatialGameSession(module,game,{
+  loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+ try{
+  for(const wall of walls.slice(0,2)){
+   const cx=Math.floor((wall.x+24)/48),cz=Math.floor((wall.z+24)/48);
+   for(let z=cz-1;z<=cz+1;z++)for(let x=cx-1;x<=cx+1;x++){
+    if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+    loaded.set(`${x},${z}`,session.core.chunkPayload());
+   }
+  }
+  const nav=createSpatialNavigationMovement(session,game);
+  const planner=createEventDrivenTaskPlanner(session);
+  planner.resetFromState(game);
+  const stop=planner.observeWorld(game),wasm=session.core.wasm;
+  session.actorSectorRevision({worker:false,species:'hyena'});
+  const actor=900001,wall=walls[0],wallId=Number(wall.id.split('-').at(-1));
+  assert.equal(wasm.nav_intent_register_attack(actor,wallId,
+   wall.x+3,wall.z+3,0),1);
+  wall.status='ruined';wall.hp=0;nav.setState(game);
+  emit(game,'StructureRuined',{targetId:wall.id});
+  assert.equal(planner.flushWorldEvents(),1);
+  assert.equal(wasm.nav_intent_actor(actor),0,
+   'a confirmed ruin releases an uncommitted wall intention');
+  session.actorSectorRevision({worker:false,species:'hyena'});
+  assert.equal(wasm.nav_intent_register_attack(actor+1,wallId,
+   wall.x+3,wall.z+3,0),-2,
+   'the ruined structure remains indexed but cannot receive a new attack');
+  const committed=walls[1],committedId=Number(committed.id.split('-').at(-1));
+  assert.equal(wasm.nav_intent_register_attack(actor+2,committedId,
+   committed.x+3,committed.z+3,0),1);
+  assert.equal(wasm.nav_intent_attack_action_active(actor+2),1);
+  committed.status='ruined';committed.hp=0;nav.setState(game);
+  emit(game,'StructureRuined',{targetId:committed.id});
+  assert.equal(planner.flushWorldEvents(),1);
+  assert.equal(wasm.nav_intent_actor(actor+2),1);
+  assert.equal(new Float64Array(wasm.memory.buffer,
+   wasm.nav_intent_actor_ptr(),10)[1],2,
+   'the committed clip keeps its original logical damage frame');
+  assert.equal(wasm.nav_intent_attack_finished(actor+2),1);
+  assert.equal(wasm.nav_intent_attack_finished(actor+2),-1);
+  stop();
+ }finally{session.dispose();}
+});
+
 test('event-fed native intent bridge replays live state and only changes on explicit deltas',
  {skip:!module&&'Build and select the experimental WASM first'},()=>{
  const game=deserialize(gunzipSync(readFileSync(new URL(

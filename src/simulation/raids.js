@@ -590,6 +590,10 @@ export function updateRaid(s,dt,nav) {
   // intention; a target destroyed by the previous step cannot be selected
   // from a stale native group snapshot.
   nav.intentTaskPlanner?.flushWorldEvents?.();
+  const tactical=new Set(nav.intentTaskPlanner?.drainTacticalReconsiderations?.()??[]);
+  if(tactical.size)for(const animal of s.raid.animals)
+    if(tactical.has(animal.id)&&animal.status!=='attacking'&&animal.targetId)
+      release(s,animal,nav);
   reconcileTargetReservations(s,(state,animal)=>release(state,animal,nav));
   updateWorkerEncounters(s,nav);
   observeWaitProgress(s);liveWaitQueue(s.raid);
@@ -633,8 +637,10 @@ export function updateRaid(s,dt,nav) {
             shield:shield?{id:shield.id,x:shield.x,z:shield.z,radius:shield.radius}:null}});
         }else emit(s,'AnimalLogicalMiss',{attackId:a.attackId,targetId:a.targetId,species:a.species,...(expiredBorder?{reason:'shield-expired'}:{})});
       }
-      nav.intentTaskPlanner?.finishAttackIntent(a.id);
-      a.status='walking';a.path=null;if(!target||target.alive===false||target.status&&target.status!=='intact')release(s,a,nav);
+      const reconsider=nav.intentTaskPlanner?.finishAttackIntent(a.id);
+      a.status='walking';a.path=null;
+      if(reconsider>0||!target||target.alive===false||
+        target.status&&target.status!=='intact')release(s,a,nav);
       // Finish the committed animation before spending another hit or retreating.
       continue;
     }

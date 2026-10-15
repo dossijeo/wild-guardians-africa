@@ -2,6 +2,7 @@
 #include <array>
 #include <cmath>
 #include <cstdint>
+#include <limits>
 #include <map>
 #include <queue>
 #include <set>
@@ -91,6 +92,7 @@ struct ActiveIntent {
   bool animal=false,tacticalPending=false,lease=true;
   int profile=1;
   float routeStartX=0,routeStartZ=0;
+  std::vector<uint64_t> blockedCropGroups;
 };
 struct RouteSlot {std::vector<float> points;uint32_t generation=0;bool active=false;};
 struct Change {
@@ -205,6 +207,28 @@ void invalidateDependents(IntentState& s,const Change& change){
         s.activeIntents.erase(change.id);
         const auto task=s.tasks.find(taskId);
         if(task!=s.tasks.end()&&task->second.assigned==change.id)task->second.assigned=0;
+      }
+    }
+    return;
+  }
+  if(change.kind==4&&change.op&&change.assigned!=0){
+    const auto target=s.targets.find(change.id);
+    if(target==s.targets.end()||!target->second.damageKnown||
+       target->second.status!=0)return;
+    const auto owners=s.byTarget.find(change.id);
+    if(owners==s.byTarget.end())return;
+    std::vector<uint64_t> actors(owners->second.begin(),owners->second.end());
+    std::sort(actors.begin(),actors.end());
+    for(uint64_t actor:actors){
+      const auto active=s.activeIntents.find(actor);
+      if(active==s.activeIntents.end()||!active->second.animal)continue;
+      if(active->second.state==PlanningState::ActionActive){
+        // A committed clip completes at its original logical damage frame.
+        active->second.tacticalPending=true;
+        active->second.lease=false;
+      }else{
+        releaseIntent(s,actor,PlanningState::Cancelled);
+        s.activeIntents.erase(actor);
       }
     }
     return;
@@ -398,6 +422,34 @@ const AttackSiteCache& attackSitesFor(IntentState& s,CropGroup& group,float radi
     }
   }
   return cache;
+}
+bool attackSourceAnchor(double startX,double startZ,int& outX,int& outZ){
+  double best=std::numeric_limits<double>::infinity();
+  bool found=false;
+  for(int x:{int(std::floor(startX)),int(std::ceil(startX))})
+    for(int z:{int(std::floor(startZ)),int(std::ceil(startZ))}){
+      const double distance=std::hypot(startX-x,startZ-z);
+      if(distance>=best||
+         !spatial_local_clear(float(startX),float(startZ),float(x),float(z))||
+         lazy_weak_region(x,z)<0)continue;
+      best=distance;outX=x;outZ=z;found=true;
+    }
+  return found;
+}
+// A single connectivity verdict represents the crop group's interaction
+// regions. Missing sectors remain unknown; only all-proven-disconnected is
+// a certified blocked group.
+int attackGroupAccess(IntentState& s,CropGroup& group,float radius,int x,int z){
+  const AttackSiteCache& sites=attackSitesFor(s,group,radius);
+  if(sites.byRegion.empty())return -1;
+  bool unknown=false;
+  for(const auto& [region,candidates]:sites.byRegion){
+    const AttackSite& first=candidates.front();
+    const int connected=lazy_connected(x,z,first.x,first.z);
+    if(connected>0)return 1;
+    if(connected<0)unknown=true;
+  }
+  return unknown?-1:0;
 }
 struct Point {double x,z;};
 struct ServicePoints {
@@ -1128,7 +1180,9 @@ int nav_intent_register_attack(double actorId,double targetId,
   if(s.attackRouteInput.size()<size_t(count)*2)return -1;
   const uint64_t actor=uint64_t(actorId),targetIdValue=uint64_t(targetId);
   const auto target=s.targets.find(targetIdValue);
-  if(target==s.targets.end()||!target->second.active)return -2;
+  if(target==s.targets.end()||!target->second.active||
+     target->second.kind>=3&&target->second.damageKnown&&
+     target->second.status!=0)return -2;
   float x=float(startX),z=float(startZ);
   for(int i=0;i<count;i++){
     const float nextX=s.attackRouteInput[size_t(i)*2],
@@ -1169,6 +1223,55 @@ int nav_intent_register_attack(double actorId,double targetId,
   s.byTarget[targetIdValue].insert(actor);
   emitIntentChange(s,intent);
   return 1;
+}
+// Capture only crop groups whose interaction regions were proven unreachable
+// when this wall intention began. A later topology event can then ask whether
+// the animal gained a new agricultural opportunity without probing crops on
+// ordinary ticks or treating unknown sectors as a sealed enclosure.
+int nav_intent_track_wall_opportunities(double actorId,double startX,
+                                        double startZ,double radius){
+  if(!integer(actorId)||!coordinate(startX)||!coordinate(startZ)||
+     !std::isfinite(radius)||radius<=0||radius>2)return -1;
+  IntentState& s=state();const auto found=s.activeIntents.find(uint64_t(actorId));
+  if(found==s.activeIntents.end()||!found->second.animal||
+     found->second.profile!=lazy_selected_context())return -2;
+  const auto target=s.targets.find(found->second.target);
+  if(target==s.targets.end()||target->second.kind!=3)return -2;
+  int x=0,z=0;
+  if(!attackSourceAnchor(startX,startZ,x,z))return -1;
+  rebuildCropGroups(s);
+  ActiveIntent& intent=found->second;
+  intent.blockedCropGroups.clear();
+  for(CropGroup& group:s.cropGroups)
+    if(attackGroupAccess(s,group,float(radius),x,z)==0)
+      intent.blockedCropGroups.push_back(group.id);
+  return int(intent.blockedCropGroups.size());
+}
+// Called only after a confirmed barrier/topology event. A newly reachable
+// group is a reason to reconsider a wall target; this is not a crop route or
+// a speculative change to the active reservation.
+int nav_intent_reconsider_wall_opportunity(double actorId,double startX,
+                                           double startZ,double radius){
+  if(!integer(actorId)||!coordinate(startX)||!coordinate(startZ)||
+     !std::isfinite(radius)||radius<=0||radius>2)return -1;
+  IntentState& s=state();const auto found=s.activeIntents.find(uint64_t(actorId));
+  if(found==s.activeIntents.end()||!found->second.animal||
+     found->second.profile!=lazy_selected_context())return -2;
+  ActiveIntent& intent=found->second;
+  if(intent.tacticalPending)return 1;
+  if(intent.blockedCropGroups.empty())return 0;
+  int x=0,z=0;
+  if(!attackSourceAnchor(startX,startZ,x,z))return -1;
+  rebuildCropGroups(s);
+  for(CropGroup& group:s.cropGroups)
+    if(std::find(intent.blockedCropGroups.begin(),
+                 intent.blockedCropGroups.end(),group.id)!=
+       intent.blockedCropGroups.end()&&
+       attackGroupAccess(s,group,float(radius),x,z)==1){
+      intent.tacticalPending=true;
+      return 1;
+    }
+  return 0;
 }
 // One event-triggered crop intention: group value -> reachable interaction
 // region -> individual crop -> native route and lease. No tick-time polling or
@@ -1318,7 +1421,9 @@ int nav_intent_restore_attack_pending(double actorId,double targetId,int hasLeas
   IntentState& s=state();const uint64_t actor=uint64_t(actorId),id=uint64_t(targetId);
   if(s.activeIntents.count(actor))return 0;
   const auto target=s.targets.find(id);
-  if(target==s.targets.end()||!target->second.active)return 0;
+  if(target==s.targets.end()||!target->second.active||
+     target->second.kind>=3&&target->second.damageKnown&&
+     target->second.status!=0)return 0;
   const auto owners=s.byTarget.find(id);
   if(hasLease&&target->second.kind!=4&&owners!=s.byTarget.end())
     for(uint64_t owner:owners->second){

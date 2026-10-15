@@ -382,3 +382,86 @@ for(const count of [1,5])test(`${count} native raiders attack an accessible wall
     }
   }finally{session.dispose();}
 });
+
+test('a confirmed enclosure breach reconsiders other wall attackers at an event boundary',async()=>{
+  const state=Game.newGame({seed:712,biome:'sabana',culture:'mapungubwe',
+    slotId:'spatial-breach-reconsideration'});
+  state.villages[0].buildings=villageLayout(pack,0,0);
+  state.structures.push({id:'center-1',kind:'center',x:0,z:0,culture:'mapungubwe',
+    villageId:'village-1',status:'intact',hp:600,maxHp:600});
+  const loaded=new Map(),session=createSpatialGameSession(module,state,{
+    loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+  try{
+    const jobs=new Map();
+    for(let cz=-1;cz<=1;cz++)for(let cx=-1;cx<=1;cx++)
+      jobs.set(`${cx},${cz}`,{cx,cz,score:Math.hypot(cx,cz)});
+    session.stream.plan(jobs);await session.stream.whenIdle();
+    const nav=createSpatialNavigationMovement(session,state);
+    nav.setActiveBounds([-36,-36,36,36]);
+    let ring,inside;
+    for(let z=-14;z<=14&&!ring;z+=4)for(let x=-14;x<=14&&!ring;x+=4){
+      const candidate=[[x,z],[x+8,z],[x+8,z+8],[x,z+8],[x,z]];
+      const crop={x:x+4,z:z+4};
+      if(!nav.placement(crop.x,crop.z,.4).valid)continue;
+      const plan=Game.previewWallChain(state,'zarzas',candidate,nav,
+        {smooth:false,snap:false});
+      if(plan.gates===1&&plan.pieces.length>=12){ring=candidate;inside=crop;}
+    }
+    assert(ring);
+    assert.equal(Game.plant(state,'protected-crop','mijo',inside.x,inside.z,nav),true);
+    assert.equal(Game.buildWallChain(state,'protected-ring','zarzas',ring,nav,
+      {smooth:false,snap:false}),true);
+    const planner=createEventDrivenTaskPlanner(session);
+    planner.resetFromState(state);
+    const stopWorld=planner.observeWorld(state),stopTasks=planner.observeTasks(state);
+    nav.intentTaskPlanner=planner;
+    try{
+      nav.setRaidView({x:ring[0][0]-7,z:ring[0][1]+4},inside);
+      state.day=6;state.time=310;
+      assert.notEqual(spawnRaid(state,{at:310,group:['warthog','warthog'],
+        done:false,introductory:false},nav),false);
+      let attackers=[];
+      for(let i=0;i<100;i++){
+        Game.tick(state,.25,nav);
+        attackers=state.raid?.animals.filter(animal=>
+          state.structures.some(wall=>wall.id===animal.targetId&&
+            wall.kind==='wall'))??[];
+        if(attackers.length===2)break;
+      }
+      assert.equal(attackers.length,2,'both animals should target the closed enclosure');
+      const wasm=session.core.wasm;
+      for(const animal of attackers){
+        session.actorSectorRevision({worker:false,species:animal.species});
+        assert(wasm.nav_intent_track_wall_opportunities(
+          Number(animal.id.split('-').at(-1)),animal.x,animal.z,
+          animal.radius)>0,'the native intent should remember a blocked crop group');
+      }
+      const priorTargets=new Map(attackers.map(animal=>[animal.id,animal.targetId]));
+      const walls=state.structures.filter(wall=>wall.kind==='wall'&&
+        wall.status==='intact');
+      const breach=walls.filter(wall=>
+        ![...priorTargets.values()].includes(wall.id));
+      assert(breach.length>=2);
+      for(const wall of breach){
+        wall.status='ruined';wall.hp=0;
+        Game.emit(state,'StructureRuined',{targetId:wall.id});
+      }
+      nav.setState(state);
+      Game.tick(state,.25,nav);
+      const survivingWallAttackers=state.raid.animals.filter(animal=>
+        state.structures.some(wall=>wall.id===priorTargets.get(animal.id)&&
+          wall.status==='intact'));
+      assert(survivingWallAttackers.length>0,
+        'the scenario must retain an unaffected wall target');
+      assert(survivingWallAttackers.some(animal=>
+        state.plants.some(crop=>crop.id===animal.targetId)),
+      `an attacker of a different wall must reconsider the opened enclosure: ${
+        JSON.stringify(state.raid.animals.map(animal=>({id:animal.id,
+          before:priorTargets.get(animal.id),after:animal.targetId,
+          status:animal.status})))}`);
+      assert.equal(new Set(Object.values(state.raid.reservations)).size,
+        Object.values(state.raid.reservations).length,
+        'reconsideration must not duplicate animal reservations');
+    }finally{stopTasks();stopWorld();delete nav.intentTaskPlanner;}
+  }finally{session.dispose();}
+});
