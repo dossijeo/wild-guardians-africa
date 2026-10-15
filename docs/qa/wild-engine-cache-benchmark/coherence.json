@@ -103,14 +103,23 @@
       "missesAfterDiscardedQuery": 145
     },
     {
+      "stage": "js-portal-only-preview",
+      "fresh": "blocked",
+      "js": "blocked",
+      "committedRevision": 7,
+      "previewRevision": 7,
+      "committedResidency": 9,
+      "previewResidency": 9
+    },
+    {
       "stage": "residency-remove-and-restore",
       "before": 0,
       "absent": -1,
       "restored": 0,
       "absentPairs": 10,
       "restoredPairs": 10,
-      "nativeHits": 41,
-      "nativeMisses": 185
+      "nativeHits": 47,
+      "nativeMisses": 192
     },
     {
       "stage": "js-watering-route-residency",
@@ -137,6 +146,13 @@
       "sectorBefore": 324,
       "sectorAfter": 324,
       "portalPairs": 10
+    },
+    {
+      "stage": "js-negative-portal-preview",
+      "fresh": "found",
+      "js": "found",
+      "topologyRevision": 7,
+      "residencyRevision": 13
     },
     {
       "stage": "save-load-new-session",

@@ -9,7 +9,7 @@ const same=(a,b)=>a.length===b.length&&a.every((v,i)=>v===b[i]);
 const copy=route=>route?{...route,destination:{...route.destination},path:route.path.map(p=>({...p}))}:null;
 export function cachedWateringRoute(worker,plant,nav,compute){
  const radius=worker.radius??.28;
- if(!Number.isSafeInteger(nav.version)||nav.version<1||!nav.state||
+ if(nav.graphPreviewActive||!Number.isSafeInteger(nav.version)||nav.version<1||!nav.state||
     ![worker.x,worker.z,plant.x,plant.z,radius].every(Number.isFinite))return compute(worker,plant,nav);
  const epoch=[compute,...context(nav)];let cache=worlds.get(nav);
  if(!cache||!same(cache.epoch,epoch)){cache={epoch,entries:new Map(),points:0};worlds.set(nav,cache);}

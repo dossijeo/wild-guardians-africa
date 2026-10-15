@@ -78,7 +78,7 @@ export function createSpatialGameSession(module,state,streamOptions){
   let workerPortalRevision=-1,workerPortalChunkRevision=-1,
     workerPortalTerrainRevision=-1,workerPortalCenterRevision=-1,
     workerPortalPropRevision=-1;
-  let activeWallPreview=null;
+  let activeWallPreview=null,villagePreviewDepth=0;
   function installWorkerPortals(extra=[]){
     const gates=new Map(state.structures.filter(s=>s.kind==='wall'&&s.gate)
       .map(s=>[s.id,s]));
@@ -218,7 +218,8 @@ export function createSpatialGameSession(module,state,streamOptions){
       throw TypeError('Expected provisional village buildings and a callback');
     const ids=addSpatialVillageBuildings(core,{id:'entry-preview',buildings:
       buildings.map((building,index)=>({...building,key:`entry-preview-${index}`}))});
-    try{return inspect();}finally{removeSpatialVillageBuildings(core,ids);}
+    villagePreviewDepth++;
+    try{return inspect();}finally{villagePreviewDepth--;removeSpatialVillageBuildings(core,ids);}
   }
   // Only settlements change the far relief. Walls, crop turnover, shield HP and
   // removed props leave its mesh intact, so they must not queue new horizons.
@@ -231,6 +232,7 @@ export function createSpatialGameSession(module,state,streamOptions){
     streamOptions.loaded(),props.suppressed,x,z,radius,
     key=>chunkRevisions.get(key)??0);
   return {core,field,stream,horizonSource,topologySource,suppressed:props.suppressed,syncState,
+    graphPreviewActive:()=>activeWallPreview!==null||villagePreviewDepth>0,
     routeActor,actorConnectivity,actorSectorRevision,actorRegions,actorEnclosure,actorRegionsBatch,actorCanStand,actorStepClear,
     actorStepClearExceptWalls,
     queryPropsAt,withWallPreview,withVillageEntryPreview,

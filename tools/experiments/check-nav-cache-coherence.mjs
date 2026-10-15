@@ -123,6 +123,29 @@ try{
   rows.push({stage:'wall-preview-discarded',pairs:pairsAfterDiscard,
     confirmed,afterPreview,missesBeforeDiscardedQuery,missesAfterDiscardedQuery});
 
+  // A portal-only preview changes the C++ graph without changing the
+  // committed topology or resident chunks. Compare a warmed JS route with a
+  // fresh native answer while that provisional graph is active.
+  const previewWorker={...start,radius:.28},previewPlant={id:'preview-gate',species:'mijo',...end};
+  const previewCompute=()=>{const path=nav.path(start,end,.28,null,true);
+    return path?{destination:end,path}:null;};
+  assert(cachedWateringRoute(previewWorker,previewPlant,nav,previewCompute));
+  const committedRevision=nav.version,committedResidency=nav.residencyRevision;
+  gate.gate=false;
+  try{
+    session.withWallPreview([],[],()=>{
+      const fresh=session.routeActor(start,end,{worker:true});
+      const js=cachedWateringRoute(previewWorker,previewPlant,nav,previewCompute);
+      rows.push({stage:'js-portal-only-preview',fresh:fresh.status,
+        js:js?'found':'blocked',committedRevision,previewRevision:nav.version,
+        committedResidency,previewResidency:nav.residencyRevision});
+      assert.equal(js?'found':'blocked',fresh.status,
+        'JS route cache hid a provisional native portal update');
+    },true);
+  }finally{gate.gate=true;}
+  assert.equal(nav.version,committedRevision);
+  assert.equal(nav.residencyRevision,committedResidency);
+
   session.actorRegions(start,{worker:true});
   const cross={ax:65,az:3,bx:10,bz:3};
   const before=wasm.nav_cached_connected(cross.ax,cross.az,cross.bx,cross.bz);
@@ -199,6 +222,21 @@ try{
   assert.equal(portalCached,portalFresh,'native cache missed a portal-only revision');
   rows.push({stage:'native-portal-only-revision',portalBefore,portalCached,portalFresh,
     sectorBefore,sectorAfter,portalPairs});
+
+  // The production workerPath adapter also retains native `blocked` answers.
+  // Reopen this portal only inside a preview, without changing either JS
+  // epoch, and require the adapter to see the new native route.
+  assert.equal(nav.workerPath(start,end),null);
+  session.withWallPreview([],[],()=>{
+    const fresh=session.routeActor(start,end,{worker:true});
+    const js=nav.workerPath(start,end);
+    assert.equal(fresh.status,'found');
+    assert.equal(js?'found':'blocked',fresh.status,
+      'JS negative worker route hid a provisional native portal update');
+    rows.push({stage:'js-negative-portal-preview',fresh:fresh.status,
+      js:js?'found':'blocked',topologyRevision:nav.version,
+      residencyRevision:nav.residencyRevision});
+  },true);
 
   const reloadedState=deserialize(serialize(state)),reloaded=create(reloadedState);
   try{
