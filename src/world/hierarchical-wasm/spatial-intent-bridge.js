@@ -570,7 +570,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
   let pendingWorldEvents=[];
   let observedTaskState=null,stopTaskObserver=null,stopWorldObserver=null;
   let dirty=true,nextRetry=Infinity,lastTime=-Infinity,total=0,
-    animalTotal=0,initialized=false;
+    animalTotal=0,taskRouteQueries=0,taskCandidates=0,initialized=false;
   let lastNavigationVersion=null;
   let lastPlan=null,lastPlanFacts=null,sourceState=null;
   const setWorker=(worker,state)=>{
@@ -596,7 +596,8 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     animalRequests.clear();
     for(const id of restoredAnimals.pendingAttackRouteIds)
       pendingAttackRoutes.set(numericId(id),'unknown');
-    pendingTaskEvents=[];pendingWorldEvents=[];total=0;animalTotal=0;
+    pendingTaskEvents=[];pendingWorldEvents=[];
+    total=0;animalTotal=0;taskRouteQueries=0;taskCandidates=0;
     lastPlan=null;lastPlanFacts=null;
     for(const worker of state.workers)setWorker(worker,state);
     dirty=true;nextRetry=Infinity;lastTime=-Infinity;
@@ -641,6 +642,8 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     const before=new Map([...eligible].map(id=>
       [id,session.core.wasm.nav_intent_actor_planning_calls(id)]));
     const result=bridge.planTasks();
+    taskRouteQueries+=session.core.wasm.nav_intent_route_queries();
+    taskCandidates+=session.core.wasm.nav_intent_candidate_count();
     lastPlan=result;
     const state=observedTaskState??sourceState;
     const tasks=new Map(state.tasks.map(task=>[numericId(task.id),task]));
@@ -717,6 +720,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     return count;
   };
   const metrics=simulatedSeconds=>({nativePlanningCalls:total,
+    nativeTaskRouteQueries:taskRouteQueries,nativeTaskCandidates:taskCandidates,
     perWorkerPerMinute:Object.fromEntries([...requests].map(([id,times])=>
       [id,times.filter(time=>time>simulatedSeconds-60).length])),
     nativeAnimalPlans:animalTotal,

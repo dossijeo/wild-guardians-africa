@@ -170,6 +170,8 @@ test('event-fed native intent bridge replays live state and only changes on expl
    'ordinary ticks and route movement do not replan');
   assert.equal(planner.metrics(10).nativePlanningCalls,1);
   assert.equal(planner.metrics(10).perWorkerPerMinute[9263],1);
+  assert.equal(planner.metrics(10).nativeTaskRouteQueries,routeQueries);
+  assert(planner.metrics(10).nativeTaskCandidates>0);
   assert.equal(wasm.nav_intent_route_queries(),routeQueries,
    'movement ticks never enter route planning');
   assert.throws(()=>planner.applyEvents(game,[{type:'target',entity:{...plant,x:NaN}}]),
@@ -221,6 +223,7 @@ test('event-fed native intent bridge replays live state and only changes on expl
   assert.deepEqual(planner.planIfNeeded(0),[],
     'a task cannot trigger a route search while no worker is eligible');
   assert.equal(planner.metrics(0).nativePlanningCalls,0);
+  assert.equal(planner.metrics(0).nativeTaskRouteQueries,0);
   assert.equal(planner.planIfNeeded(.1),null,
     'an unchanged roster does not retry an empty planning batch');
   worker.status='idle';
