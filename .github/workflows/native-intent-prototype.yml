@@ -11,8 +11,10 @@ on:
       - 'tests/spatial-native-crop-groups.test.js'
       - 'tests/spatial-native-intent-advice.test.js'
       - 'tests/native-expanding-defense-policy.test.js'
+      - 'tests/native-certified-enclosure-policy.test.js'
       - 'tools/native-campaign-runner.mjs'
       - 'tools/native-expanding-defense-policy.mjs'
+      - 'tools/native-certified-enclosure-policy.mjs'
   workflow_dispatch:
 
 permissions:
@@ -40,7 +42,7 @@ jobs:
         run: |
           WILD_ENGINE_NATIVE_ROUTE_WASM="$PWD/.cache/native-breach-candidate.wasm" \
           WILD_ENGINE_SPATIAL_SERVICES_WASM="$PWD/.cache/native-breach-candidate.wasm" \
-            node --test tests/spatial-native-raid.test.js tests/spatial-native-intent-bridge.test.js tests/spatial-native-animal-intent.test.js tests/spatial-native-crop-groups.test.js tests/spatial-native-intent-advice.test.js tests/native-expanding-defense-policy.test.js
+            node --test tests/spatial-native-raid.test.js tests/spatial-native-intent-bridge.test.js tests/spatial-native-animal-intent.test.js tests/spatial-native-crop-groups.test.js tests/spatial-native-intent-advice.test.js tests/native-expanding-defense-policy.test.js tests/native-certified-enclosure-policy.test.js
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
