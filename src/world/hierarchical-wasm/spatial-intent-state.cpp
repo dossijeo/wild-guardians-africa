@@ -110,6 +110,7 @@ struct IntentState {
   std::array<double,10> intentResult{};
   uint32_t session=0;
   uint64_t invalidations=0;
+  std::unordered_map<uint64_t,uint64_t> planningCallsByActor;
   uint64_t sequence=0,entityRevision=0,damageRevision=0,plannedEntityRevision=0;
   uint32_t plannedGraphRevision=0;
   int plannedProfile=-1;
@@ -370,6 +371,7 @@ void nav_intent_reset(){
   s.activeIntents.clear();s.byTarget.clear();s.byTask.clear();
   s.routeSlots.clear();s.intentChanges.clear();s.intentResult.fill(0);
   s.invalidations=0;
+  s.planningCallsByActor.clear();
   s.workers.clear();s.targets.clear();s.tasks.clear();
   s.damagedWalls.clear();s.damagedCenters.clear();s.damagedResults.clear();
   s.cropGroups.clear();s.cropGroupRows.clear();s.cropGroupMembers.clear();
@@ -691,7 +693,7 @@ int nav_intent_plan_tasks(){
     });
     bool unknown=false;int unknownReason=0;
     for(const Worker* worker:workers){
-      s.candidates++;
+      s.candidates++;s.planningCallsByActor[worker->id]++;
       const ServicePoints points=servicePoints(*worker,target,task->kind);
       for(int i=0;i<points.count;i++){
         const Point point=points.values[size_t(i)];
@@ -779,6 +781,11 @@ int nav_intent_change_count(){return int(state().intentChanges.size()/8);}
 const double* nav_intent_change_ptr(){return state().intentChanges.data();}
 void nav_intent_clear_changes(){state().intentChanges.clear();}
 double nav_intent_invalidation_count(){return double(state().invalidations);}
+double nav_intent_actor_planning_calls(double actorId){
+  if(!integer(actorId))return 0;
+  const auto found=state().planningCallsByActor.find(uint64_t(actorId));
+  return found==state().planningCallsByActor.end()?0:double(found->second);
+}
 int nav_intent_actor(double actorId){
   IntentState& s=state();s.intentResult.fill(0);
   if(!integer(actorId))return 0;
@@ -795,15 +802,20 @@ const double* nav_intent_actor_ptr(){return state().intentResult.data();}
 int nav_intent_route_points(double session,double slot,double generation){
   const IntentState& s=state();
   if(!integer(session)||!integer(slot,true)||!integer(generation)||
-    uint32_t(session)!=s.session||slot>=s.routeSlots.size())return -1;
+    session!=double(s.session)||slot>=s.routeSlots.size()||
+    generation>double(UINT32_MAX))return -1;
   const RouteSlot& route=s.routeSlots[size_t(slot)];
   return route.active&&route.generation==uint32_t(generation)?
     int(route.points.size()/2):-1;
 }
-const float* nav_intent_route_ptr(double slot){
+const float* nav_intent_route_ptr(double session,double slot,double generation){
   const IntentState& s=state();
-  return integer(slot,true)&&slot<s.routeSlots.size()?
-    s.routeSlots[size_t(slot)].points.data():nullptr;
+  if(!integer(session)||session!=double(s.session)||!integer(slot,true)||
+     slot>=s.routeSlots.size()||!integer(generation)||
+     generation>double(UINT32_MAX))return nullptr;
+  const RouteSlot& route=s.routeSlots[size_t(slot)];
+  return route.active&&route.generation==uint32_t(generation)?
+    route.points.data():nullptr;
 }
 // Topology updates originate in Wild Engine. This explicit boundary is a
 // conservative first stage; sector dependency indexing follows separately.

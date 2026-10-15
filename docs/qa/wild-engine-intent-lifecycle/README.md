@@ -22,6 +22,7 @@ The event-gated planner in `spatial-intent-bridge.js` is exercised in tests, but
 - A topology event can invalidate active route handles while retaining the original task and target. At the event boundary, a dedicated call replans those same targets from projected current worker positions. `unknown` and `blocked` remain separate states.
 - Explicit action-start and finish transitions are available. Normal reads of an active intention do not invoke pathfinding.
 - Session reset invalidates old handles. The bridge exposes change draining and bounded point access without reconstructing all routes on each ordinary tick.
+- The bridge has an event-boundary entry point that applies confirmed entity deltas, reconciles a topology event and reroutes affected same-task intentions. Native metrics count actual candidate evaluations by actor, not every idle worker present during a batch.
 
 The topology hook is currently conservative at whole-graph revision scope. Sector/portal inverse dependencies and committed-attack deferral are **not implemented**. The bridge is still experimental. No animal intention registry, native animal target selector, live-worker handoff, or automatic end-to-end event dispatch is wired into gameplay yet. A committed crop deletion makes a worker eligible for the next global planning batch, but JavaScript must still apply that batch transactionally. These are acceptance gaps, not validated features.
 

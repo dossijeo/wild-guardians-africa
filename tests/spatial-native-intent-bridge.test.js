@@ -83,8 +83,9 @@ test('event-fed native intent bridge replays live state and only changes on expl
   assert.deepEqual(bridge.intentChanges(),[],
    'draining an event batch cannot repeat an old assignment');
   plant.alive=false;
-  bridge.applyEvents(game,[{type:'target',entity:plant}]);
-  const [invalidated]=bridge.intentChanges();
+  const boundary=bridge.processEventBoundary(game,[{type:'target',entity:plant}]);
+  assert.equal(boundary.invalidated,0);
+  const [invalidated]=boundary.changes;
   assert.equal(invalidated.actorId,9263);
   assert.equal(invalidated.state,0);
   assert.equal(bridge.routePoints(assigned.routeHandle),null);

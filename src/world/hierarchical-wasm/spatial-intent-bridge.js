@@ -70,7 +70,8 @@ export function createSpatialIntentBridge(session){
     'nav_intent_change_ptr','nav_intent_clear_changes',
     'nav_intent_route_points','nav_intent_route_ptr',
     'nav_intent_reconcile_topology','nav_intent_replan_pending_routes',
-    'nav_intent_action_active','nav_intent_finish'])
+    'nav_intent_action_active','nav_intent_finish',
+    'nav_intent_actor_planning_calls'])
     if(typeof wasm?.[name]!=='function')throw TypeError(`Missing ${name}`);
   let sequence=0,initialized=false;
   const structuresById=new Map();
@@ -313,14 +314,23 @@ export function createSpatialIntentBridge(session){
     const count=wasm.nav_intent_route_points(handle.session,handle.slot,handle.generation);
     if(count<0)return null;
     return new Float32Array(wasm.memory.buffer,
-      wasm.nav_intent_route_ptr(handle.slot),count*2);
+      wasm.nav_intent_route_ptr(handle.session,handle.slot,handle.generation),count*2);
+  };
+  // A committed world event is the only reason to reconsider live routes.
+  // The caller projects affected actor positions in the same delta batch;
+  // normal movement reads routePoints() without entering the planner.
+  const processEventBoundary=(state,events,{topologyChanged=false}={})=>{
+    applyEvents(state,events);
+    const invalidated=topologyChanged?wasm.nav_intent_reconcile_topology():0;
+    const rerouted=invalidated?wasm.nav_intent_replan_pending_routes():0;
+    return {invalidated,rerouted,changes:intentChanges()};
   };
   return {resetFromState,applyEvents,applyCommittedEvents,planTasks,
     getDamagedWalls:()=>getDamaged('wall'),
     getDamagedCenters:()=>getDamaged('center'),
     getUnprotectedCropGroups,
     findPlantingSite,releasePlantingSite,
-    intentChanges,routePoints,
+    intentChanges,routePoints,processEventBoundary,
     reconcileTopology:()=>wasm.nav_intent_reconcile_topology(),
     replanPendingRoutes:()=>wasm.nav_intent_replan_pending_routes(),
     markActionActive:actorId=>wasm.nav_intent_action_active(numericId(actorId))===1,
@@ -381,15 +391,19 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     if(!session.core.wasm.nav_intent_task_count()){
       dirty=false;nextRetry=Infinity;return [];
     }
+    const before=new Map([...eligible].map(id=>
+      [id,session.core.wasm.nav_intent_actor_planning_calls(id)]));
     const result=bridge.planTasks();
     dirty=false;
     nextRetry=result.some(row=>row.status===2||row.status===3)?
       simulatedSeconds+retrySeconds:Infinity;
     total++;
     for(const id of eligible){
+      const count=session.core.wasm.nav_intent_actor_planning_calls(id)-before.get(id);
+      if(!count)continue;
       let times=requests.get(id);
       if(!times)requests.set(id,times=[]);
-      times.push(simulatedSeconds);
+      for(let index=0;index<count;index++)times.push(simulatedSeconds);
       while(times.length&&times[0]<=simulatedSeconds-60)times.shift();
     }
     return result;
