@@ -63,3 +63,20 @@ test('native crop-site classification is conservative across all six biomes',
   }finally{session.dispose();}
  }
 });
+
+test('a site near a chunk edge remains unknown until neighboring prop data is resident',
+ {skip:!module&&'Build and select the spatial-services WASM first'},async()=>{
+ const game=Game.newGame({seed:712,biome:'sabana',culture:'mapungubwe',slotId:'crop-site-edge'});
+ game.villages[0].buildings=villageLayout(pack,0,0);
+ const loaded=new Map(),session=createSpatialGameSession(module,game,{
+  loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+ try{
+  session.stream.plan(new Map([['0,0',{cx:0,cz:0,score:0}]]));
+  await session.stream.whenIdle();
+  assert.equal(session.core.wasm.spatial_crop_placement_valid(22.5,0),-1);
+  const jobs=new Map([['0,0',{cx:0,cz:0,score:0}],
+   ['1,0',{cx:1,cz:0,score:1}]]);
+  session.stream.plan(jobs);await session.stream.whenIdle();
+  assert.notEqual(session.core.wasm.spatial_crop_placement_valid(22.5,0),-1);
+ }finally{session.dispose();}
+});

@@ -1817,20 +1817,30 @@ int spatial_crop_placement_valid(float x,float z){
   if(!navReady||!std::isfinite(x)||!std::isfinite(z))return -1;
   const ChunkSpatialSample* sample=residentSample(x,z);
   if(!sample)return -1;
-  const ScopedTerrainSample context(x,z);
   constexpr double cropRadius=.4;
-  if(!terrainValid(x,z,cropRadius,true))return 0;
+  const auto surfaceAt=[&](double px,double pz){
+    const double ground=spatial_surface_anywhere(float(px),float(pz));
+    return worldBiome==5?std::max(ground,double(spatial_fluid_surface_level())):ground;
+  };
   for(int i=0;i<5;i++){
     const double px=x+(i==1?cropRadius:i==2?-cropRadius:0);
     const double pz=z+(i==3?cropRadius:i==4?-cropRadius:0);
-    if(fluid(px,pz))return 0;
+    const double slope=std::hypot(surfaceAt(px+.8,pz)-surfaceAt(px-.8,pz),
+      surfaceAt(px,pz+.8)-surfaceAt(px,pz-.8))/1.6;
+    if(!std::isfinite(slope)||slope>.5||
+       spatial_fluid_level_anywhere(float(px),float(pz))!=0)return 0;
   }
-  const int cx=int(std::floor((x+24)/side)),cz=int(std::floor((z+24)/side));
-  const auto props=residentSolidProps().find(chunkKey(cx,cz));
-  if(props==residentSolidProps().end())return -1;
-  for(const Prop& prop:props->second)
-    if(std::hypot(double(x)-prop.x,double(z)-prop.z)<prop.radius+cropRadius)
-      return 0;
+  const int minCx=int(std::floor((x-4.4+24)/side));
+  const int maxCx=int(std::floor((x+4.4+24)/side));
+  const int minCz=int(std::floor((z-4.4+24)/side));
+  const int maxCz=int(std::floor((z+4.4+24)/side));
+  for(int cz=minCz;cz<=maxCz;cz++)for(int cx=minCx;cx<=maxCx;cx++){
+    const auto props=residentSolidProps().find(chunkKey(cx,cz));
+    if(props==residentSolidProps().end())return -1;
+    for(const Prop& prop:props->second)
+      if(std::hypot(double(x)-prop.x,double(z)-prop.z)<prop.radius+cropRadius)
+        return 0;
+  }
   const int bx=int(std::floor(x/barrierBucketWidth));
   const int bz=int(std::floor(z/barrierBucketWidth));
   const auto key=barrierKey(bx,bz);
