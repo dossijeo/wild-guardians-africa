@@ -78,6 +78,17 @@ atribuir todavía el colapso a una causa concreta: la secuencia combina daños,
 contratación y decisiones de gasto que requieren un análisis separado. El
 informe y el progreso nativos se conservan en `results-14-main-sync/`.
 
+La ejecución independiente con evaluador `post-intro-v1` completó después
+ambos escenarios del mismo genoma. Su economía, cultivos, política, defensa,
+14 jornadas y 14 incursiones coinciden con los informes del evaluador antiguo
+en cada bioma tras excluir `wallTime`: hashes comparables
+`216f3fbf29317c2c91f25209699b6efdddf516b1d323aad9ab93ee3de5919e93`
+para Sabana y
+`bae7800bd5b15e9258ac634764400e24e5422dce37af30d0836cf96661bed51d`
+para Gran Río. `post-intro-v1` y `v2` lo clasifican como
+`collapsed-production` en ambos casos. La evidencia está en
+`parity-collapsed-genome-14.json`; no compara estados serializados íntegros.
+
 Un tercer genoma exploratorio, `2db23cb3f5302cc9`, sufrió una **derrota nativa**
 en Sabana/712 durante el día 7: completó seis noches y terminó con cero
 cultivos y 37 monedas. El último ataque destruyó físicamente las dos plantas

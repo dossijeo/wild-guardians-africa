@@ -1,0 +1,43 @@
+{
+  "genomeId": "f4967cb9f88e23dd",
+  "leftSourceHash": "2fde404925b74f0d72f558d8a7f12abf7ff854ac",
+  "rightSourceHash": "68ffb4a5abf827b147883a20525c71f0d1890c1b",
+  "leftFitnessVersion": "terminal-defeat-v2",
+  "rightFitnessVersion": "post-intro-v1",
+  "minimumTerminalDeliveryPerDay": 82.16666666666667,
+  "cases": [
+    {
+      "biome": "sabana",
+      "seed": 712,
+      "leftReport": "results-14-main-sync/712f0156ff37-f4967cb9f88e23dd-sabana-712-14.json",
+      "rightReport": "results-14-post-intro/deb7ec2b4ed1-f4967cb9f88e23dd-sabana-712-14.json",
+      "comparison": {
+        "equal": true,
+        "leftHash": "216f3fbf29317c2c91f25209699b6efdddf516b1d323aad9ab93ee3de5919e93",
+        "rightHash": "216f3fbf29317c2c91f25209699b6efdddf516b1d323aad9ab93ee3de5919e93",
+        "mismatchedSections": [],
+        "comparedRows": 14,
+        "comparedRaids": 14
+      },
+      "terminalDeliveryPerDay": 23.666666666666668,
+      "postIntroEligibility": "collapsed-production"
+    },
+    {
+      "biome": "gran-rio",
+      "seed": 2026,
+      "leftReport": "results-14-main-sync/712f0156ff37-f4967cb9f88e23dd-gran-rio-2026-14.json",
+      "rightReport": "results-14-post-intro/deb7ec2b4ed1-f4967cb9f88e23dd-gran-rio-2026-14.json",
+      "comparison": {
+        "equal": true,
+        "leftHash": "bae7800bd5b15e9258ac634764400e24e5422dce37af30d0836cf96661bed51d",
+        "rightHash": "bae7800bd5b15e9258ac634764400e24e5422dce37af30d0836cf96661bed51d",
+        "mismatchedSections": [],
+        "comparedRows": 14,
+        "comparedRaids": 14
+      },
+      "terminalDeliveryPerDay": 10,
+      "postIntroEligibility": "collapsed-production"
+    }
+  ],
+  "scope": "Complete native GA outcome fields excluding concurrent wallTime; not a serialized-state identity claim."
+}
