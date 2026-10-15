@@ -41,6 +41,7 @@ test('a confirmed ruin cancels travelling animal leases but defers committed str
   const actor=900001,wall=walls[0],wallId=Number(wall.id.split('-').at(-1));
   assert.equal(wasm.nav_intent_register_attack(actor,wallId,
    wall.x+3,wall.z+3,0),1);
+  const beforeHpRepair=planner.metrics(0).nativeTopologyReconciliations;
   const originalRevision=session.actorSectorRevision.bind(session);
   let revisionChecks=0;
   session.actorSectorRevision=(...args)=>{
@@ -56,11 +57,13 @@ test('a confirmed ruin cancels travelling animal leases but defers committed str
   assert.equal(planner.flushWorldEvents(),1);
   assert.equal(revisionChecks,0,
    'an HP-only repair does not wake topology or route reconciliation');
+  assert.equal(planner.metrics(0).nativeTopologyReconciliations,beforeHpRepair);
   assert.equal(wasm.nav_intent_actor(actor),1);
   wall.status='ruined';wall.hp=0;nav.setState(game);
   emit(game,'StructureRuined',{targetId:wall.id});
   assert.equal(planner.flushWorldEvents(),1);
   assert(revisionChecks>0,'a ruin still wakes topology reconciliation');
+  assert(planner.metrics(0).nativeTopologyReconciliations>beforeHpRepair);
   assert.equal(wasm.nav_intent_actor(actor),0,
    'a confirmed ruin releases an uncommitted wall intention');
   session.actorSectorRevision({worker:false,species:'hyena'});
@@ -193,8 +196,9 @@ test('event-fed native intent bridge replays live state and only changes on expl
   for(let tick=1;tick<=100;tick++)assert.equal(planner.planIfNeeded(tick/10),null,
    'ordinary ticks and route movement do not replan');
   assert.equal(planner.metrics(10).nativePlanningCalls,1);
-  assert.equal(planner.metrics(10).nativeInvalidations,
+  assert.equal(planner.metrics(10).nativeLifecycleInvalidations,
    wasm.nav_intent_invalidation_count());
+  assert.equal(planner.metrics(10).nativeTopologyRouteInvalidations,0);
   assert.equal(planner.metrics(10).perWorkerPerMinute[9263],1);
   assert.equal(planner.metrics(10).nativeTaskRouteQueries,routeQueries);
   assert(planner.metrics(10).nativeTaskCandidates>0);

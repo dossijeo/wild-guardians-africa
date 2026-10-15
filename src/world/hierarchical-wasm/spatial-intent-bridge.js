@@ -574,6 +574,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
   let observedTaskState=null,stopTaskObserver=null,stopWorldObserver=null;
   let dirty=true,nextRetry=Infinity,lastTime=-Infinity,total=0,
     animalTotal=0,taskRouteQueries=0,taskCandidates=0,initialized=false;
+  let topologyReconciliations=0,topologyRouteInvalidations=0;
   let lastNavigationVersion=null,pendingNativeChanges=true;
   let lastPlan=null,lastPlanFacts=null,sourceState=null;
   const setWorker=(worker,state)=>{
@@ -601,6 +602,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
       pendingAttackRoutes.set(numericId(id),'unknown');
     pendingTaskEvents=[];pendingWorldEvents=[];
     total=0;animalTotal=0;taskRouteQueries=0;taskCandidates=0;
+    topologyReconciliations=0;topologyRouteInvalidations=0;
     lastPlan=null;lastPlanFacts=null;
     for(const worker of state.workers)setWorker(worker,state);
     dirty=true;nextRetry=Infinity;lastTime=-Infinity;
@@ -726,7 +728,9 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     return count;
   };
   const metrics=simulatedSeconds=>({nativePlanningCalls:total,
-    nativeInvalidations:session.core.wasm.nav_intent_invalidation_count(),
+    nativeLifecycleInvalidations:session.core.wasm.nav_intent_invalidation_count(),
+    nativeTopologyReconciliations:topologyReconciliations,
+    nativeTopologyRouteInvalidations:topologyRouteInvalidations,
     nativeTaskRouteQueries:taskRouteQueries,nativeTaskCandidates:taskCandidates,
     perWorkerPerMinute:Object.fromEntries([...requests].map(([id,times])=>
       [id,times.filter(time=>time>simulatedSeconds-60).length])),
@@ -766,6 +770,13 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     if(moved.length)applyEvents(observedTaskState,moved);
     return moved.length;
   };
+  const reconcileTopology=()=>{
+    topologyReconciliations++;
+    const invalidated=session.core.wasm.nav_intent_reconcile_topology();
+    topologyRouteInvalidations+=invalidated;
+    if(invalidated)session.core.wasm.nav_intent_replan_pending_routes();
+    return invalidated;
+  };
   const flushWorldEvents=()=>{
     if(!pendingWorldEvents.length)return 0;
     const events=pendingWorldEvents;pendingWorldEvents=[];
@@ -793,8 +804,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     }
     if(topologyChanged){
       session.actorSectorRevision({worker:true});
-      const invalidated=session.core.wasm.nav_intent_reconcile_topology();
-      if(invalidated)session.core.wasm.nav_intent_replan_pending_routes();
+      reconcileTopology();
     }
     if(events.some(event=>event.type==='CrateDropped'))
       session.core.wasm.nav_intent_replan_pending_routes();
@@ -808,8 +818,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     lastNavigationVersion=version;
     syncChangedPositions(true);
     session.actorSectorRevision({worker:true});
-    const invalidated=session.core.wasm.nav_intent_reconcile_topology();
-    if(invalidated)session.core.wasm.nav_intent_replan_pending_routes();
+    const invalidated=reconcileTopology();
     pendingNativeChanges=true;
     // Existing JS paths are the movement copy of native-pinned routes. A
     // changed graph revision has now been validated, including the routes

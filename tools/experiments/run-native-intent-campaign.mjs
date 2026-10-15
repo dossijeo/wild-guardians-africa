@@ -106,7 +106,7 @@ try{
   const report={status:'completed',source,parameters,assignments,intentTiming,
     elapsedSeconds:(performance.now()-started)/1000,
     completedNights:result.completedNights,result:result.result,
-    nativeIntent:result.nativeIntent,rows};
+    nativeIntent:result.nativeIntent,raidEvidence:result.raidEvidence,rows};
   writeFileSync(path,JSON.stringify(report,null,2)+'\n');
 }catch(error){
   const report={status:'error',source,parameters,assignments,intentTiming,
