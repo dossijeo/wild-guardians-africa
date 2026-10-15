@@ -369,6 +369,7 @@ export function createSpatialIntentBridge(session){
     wasm.nav_intent_release_planting_site(reservationId,committed?1:0)===1;
   const intentChanges=()=>{
     const count=wasm.nav_intent_change_count();
+    if(!count)return [];
     const data=Array.from(new Float64Array(wasm.memory.buffer,
       wasm.nav_intent_change_ptr(),count*8));
     wasm.nav_intent_clear_changes();
@@ -805,6 +806,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
   const reconcileWorkerRoutes=(state,{navVersion}={})=>{
     if(!Number.isFinite(navVersion))throw TypeError('Expected a navigation revision');
     const changes=bridge.intentChanges();
+    if(!changes.length)return changes;
     const latest=new Map();
     for(const change of changes)latest.set(change.actorId,change);
     const workers=new Map(state.workers.map(worker=>[numericId(worker.id),worker]));

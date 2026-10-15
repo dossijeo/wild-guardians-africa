@@ -485,6 +485,14 @@ test('a moved crate reroutes the same worker task at the confirmed event boundar
   assert.equal(planner.flushWorldEvents(),1);
   const changes=planner.reconcileWorkerRoutes(game,{navVersion:nav.version});
   assert.equal(changes.at(-1).state,1,'the same intention receives a new route');
+  const unchanged=Object.create(game);
+  for(const field of ['workers','tasks','plants','crates','structures','raid'])
+    Object.defineProperty(unchanged,field,{get(){
+      throw Error(`idle reconciliation read ${field}`);
+    }});
+  assert.deepEqual(planner.reconcileWorkerRoutes(unchanged,
+    {navVersion:nav.version}),[],
+  'ordinary ticks must not enumerate entities without native intent changes');
   assert.equal(worker.taskId,task.id);
   assert.equal(task.workerId,worker.id);
   assert.equal(worker.status,'walking');
