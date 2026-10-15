@@ -42,8 +42,9 @@ jobs:
           WILD_ENGINE_SPATIAL_SERVICES_WASM="$PWD/.cache/native-breach-candidate.wasm" \
             node --test tests/spatial-native-raid.test.js tests/spatial-native-intent-bridge.test.js tests/spatial-native-animal-intent.test.js tests/spatial-native-crop-groups.test.js tests/spatial-native-intent-advice.test.js tests/native-expanding-defense-policy.test.js
       - uses: actions/upload-artifact@v4
-        if: success()
+        if: ${{ !cancelled() }}
         with:
           name: native-breach-candidate
           path: .cache/native-breach-candidate.wasm
+          if-no-files-found: ignore
           retention-days: 7
