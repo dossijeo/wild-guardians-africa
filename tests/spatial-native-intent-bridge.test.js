@@ -41,9 +41,26 @@ test('a confirmed ruin cancels travelling animal leases but defers committed str
   const actor=900001,wall=walls[0],wallId=Number(wall.id.split('-').at(-1));
   assert.equal(wasm.nav_intent_register_attack(actor,wallId,
    wall.x+3,wall.z+3,0),1);
+  const originalRevision=session.actorSectorRevision.bind(session);
+  let revisionChecks=0;
+  session.actorSectorRevision=(...args)=>{
+    revisionChecks++;return originalRevision(...args);
+  };
+  const repairNavigationVersion=nav.version;
+  wall.hp=wall.maxHp;nav.setState(game);
+  assert.equal(nav.version,repairNavigationVersion,
+   'repairing HP on an intact wall does not alter the physical graph');
+  emit(game,'RepairApplied',{targetId:wall.id,
+    repair:{previousStatus:'intact',previousHp:wall.maxHp-1,
+      restoredHp:wall.maxHp}});
+  assert.equal(planner.flushWorldEvents(),1);
+  assert.equal(revisionChecks,0,
+   'an HP-only repair does not wake topology or route reconciliation');
+  assert.equal(wasm.nav_intent_actor(actor),1);
   wall.status='ruined';wall.hp=0;nav.setState(game);
   emit(game,'StructureRuined',{targetId:wall.id});
   assert.equal(planner.flushWorldEvents(),1);
+  assert(revisionChecks>0,'a ruin still wakes topology reconciliation');
   assert.equal(wasm.nav_intent_actor(actor),0,
    'a confirmed ruin releases an uncommitted wall intention');
   session.actorSectorRevision({worker:false,species:'hyena'});
@@ -63,6 +80,13 @@ test('a confirmed ruin cancels travelling animal leases but defers committed str
    'the committed clip keeps its original logical damage frame');
   assert.equal(wasm.nav_intent_attack_finished(actor+2),1);
   assert.equal(wasm.nav_intent_attack_finished(actor+2),-1);
+  const beforeRebuild=revisionChecks;
+  wall.status='intact';wall.hp=wall.maxHp;nav.setState(game);
+  emit(game,'RepairApplied',{targetId:wall.id,
+    repair:{previousStatus:'ruined',previousHp:0,restoredHp:wall.maxHp}});
+  assert.equal(planner.flushWorldEvents(),1);
+  assert(revisionChecks>beforeRebuild,
+   'rebuilding a ruined wall still wakes topology reconciliation');
   stop();
  }finally{session.dispose();}
 });

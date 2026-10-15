@@ -770,8 +770,9 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     if(!pendingWorldEvents.length)return 0;
     const events=pendingWorldEvents;pendingWorldEvents=[];
     const topologyChanged=events.some(event=>
-      ['WallRemoved','WallChainBuilt','StructureRuined','PlacementCommitted',
-        'RepairApplied'].includes(event.type));
+      ['WallRemoved','WallChainBuilt','StructureRuined','PlacementCommitted']
+        .includes(event.type)||event.type==='RepairApplied'&&
+        event.repair?.previousStatus!=='intact');
     if(topologyChanged)syncChangedPositions(true);
     bridge.applyCommittedEvents(observedTaskState,events);
     pendingNativeChanges=true;

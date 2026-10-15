@@ -96,6 +96,8 @@ The topology reconciler contained another source of unnecessary replanning: it c
 
 A seven-night repeat with that binary and the same Sabana/712 policy completed with 119 living crops, 829 coins, 118 day-7 deliveries, 2,036 native task batches, 61 animal plans, 2,672 task-route queries, 77.4 s accumulated `Game.tick` and 135.5 s total runner time. The prior binary had 123 crops, 769 coins, the same day-7 delivery count and task-batch count, 2,659 task-route queries, 83.1 s `Game.tick` and 142.6 s total. The farms diverged from day 4 (94 versus 93 living crops), so this is evidence of a stable seven-night run and changed workload, **not** an isolated speedup estimate. Both raw reports remain in the archive. Future daily reports now expose Wild Engine's cumulative native invalidation count alongside planning calls, allowing topology fixes to be measured directly.
 
+HP-only repairs of an intact wall previously entered the same native topology-reconciliation path as reconstruction. The confirmed `RepairApplied` event now wakes physical reconciliation only when its `previousStatus` was not `intact` (including old events that lack this metadata, conservatively). A focused test verifies that an intact-wall repair leaves the graph revision and route-reconciliation call count unchanged, whereas ruin and reconstruction still trigger reconciliation. Structure damage and economic repair facts remain projected to the native entity index.
+
 ## Next integration gates
 
 1. Publish confirmed task/worker/action events directly from the simulation without scanning every entity per tick. Apply native proposals atomically with JS task reservations and preserve all worker policy tie-breaks.
