@@ -53,6 +53,13 @@ incursiones coinciden, así como economía, política y defensa: hash comparable
 Los informes íntegros, sus hashes de fuente y el alcance de la comparación
 están en `parity-sabana712-14.json`.
 
+Otro genoma de la ejecución exploratoria, `f4967cb9f88e23dd`, también alcanzó
+14/14 noches en Sabana/712, pero terminó con 26 plantas, 315 monedas y
+23⅔ cajas/día en las tres jornadas finales. El umbral congelado de 82⅙ lo
+clasifica como **producción colapsada**, no como derrota nativa. Su informe y
+progreso originales se conservan; este resultado no autoriza a seleccionar la
+política ni a alterar la presión militar.
+
 Esta cohorte usa Wild Engine y el balance de producción sin alterar, después de
 la mejora de navegación de PR #37. Código ejecutado: `7f358aad97287b40e300026306d26f05cc4e0c29`;
 el registro de siete noches guarda además SHA-256 de los módulos y del diff en
