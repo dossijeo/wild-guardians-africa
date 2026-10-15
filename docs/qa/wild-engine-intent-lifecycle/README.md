@@ -108,6 +108,8 @@ A selector profile of the identical seven-night Sabana/712 run exposed the next 
 
 An initial native approach-site lease implementation completed the same seven-night seed using the candidate WASM from CI run 38791732538. The 17 JavaScript rejections for overlapping reservations fell to zero; four candidates were still rejected by the live mobile-occupancy check. Four native crop queries reported unresolved results after available sites were occupied. This prompted a separate `occupied` outcome in the subsequent source revision, so lack of a free dynamic lease cannot be confused with missing topology or a physically blocked region. The first candidate ended with 123 live crops and 815 coins, versus 119 and 829 in the earlier selector profile; the trajectories differ and these results are not a speed comparison. Total runner times were 139.6 s and 135.4 s, respectively. The new trace and exact binary hash are archived.
 
+The follow-up `occupied` revision passed native CI run 38792688845 and web validation. A second seven-night replay completed with the same final crop and coin counts, zero reservation-overlap rejections, four live-body occupancy rejections, and four remaining native `unknown` results. Thus the new outcome is defined and tested but did not reclassify those four cases; they still require investigation before claiming all inconclusive queries are explained. Total runtime was 139.3 s. The exact replay, source commit and WASM hash are preserved in the trace archive.
+
 ## Next integration gates
 
 1. Publish confirmed task/worker/action events directly from the simulation without scanning every entity per tick. Apply native proposals atomically with JS task reservations and preserve all worker policy tie-breaks.
