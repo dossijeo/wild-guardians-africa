@@ -880,7 +880,7 @@ int nav_intent_finish(double actorId){
   releaseIntent(s,actor,PlanningState::Cancelled);
   s.activeIntents.erase(actor);
   const auto task=s.tasks.find(taskId);
-  if(task!=s.tasks.end()&&task->second.assigned==actor)task->second.assigned=0;
+  if(task!=s.tasks.end()&&task->second.assigned==actor)s.tasks.erase(task);
   const auto worker=s.workers.find(actor);
   if(worker!=s.workers.end())worker->second.eligible=true;
   s.entityRevision++;

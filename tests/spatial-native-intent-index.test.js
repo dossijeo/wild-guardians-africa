@@ -105,6 +105,11 @@ test('incremental native task index plans, discards and commits one global assig
   assert.equal(wasm.nav_intent_replan_pending_routes(),2);
   assert.equal(wasm.nav_intent_actor(2),1);
   assert.equal(new Float64Array(wasm.memory.buffer,wasm.nav_intent_actor_ptr(),10)[1],1);
+  assert.equal(wasm.nav_intent_action_active(2),1);
+  assert.equal(wasm.nav_intent_finish(2),1);
+  assert.equal(wasm.nav_intent_actor(2),0);
+  assert.equal(wasm.nav_intent_task_count(),1,
+   'a completed task is removed rather than being reserved a second time');
 
   wasm.nav_intent_reset();
   assert.equal(wasm.nav_intent_route_points(handleSession,handleSlot,handleGeneration),-1,
