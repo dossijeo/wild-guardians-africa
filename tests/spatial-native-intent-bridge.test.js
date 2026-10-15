@@ -1,0 +1,132 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {gunzipSync} from 'node:zlib';
+import {deserialize} from '../src/persistence/snapshots.js';
+import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
+import {createSpatialIntentBridge,createEventDrivenTaskPlanner} from
+ '../src/world/hierarchical-wasm/spatial-intent-bridge.js';
+
+const binary=process.env.WILD_ENGINE_NATIVE_ROUTE_WASM;
+const module=binary?new WebAssembly.Module(readFileSync(binary)):null;
+
+test('event-fed native intent bridge replays live state and only changes on explicit deltas',
+ {skip:!module&&'Build and select the experimental WASM first'},()=>{
+ const game=deserialize(gunzipSync(readFileSync(new URL(
+  './fixtures/desierto983-d15-partial-state.json.gz',import.meta.url))).toString());
+ const worker=game.workers.find(w=>w.id==='worker-9263');
+ worker.status='idle';worker.taskId=null;worker.contractDay=game.day;
+ const plant=game.plants.filter(p=>p.alive&&p.centerId===worker.centerId)
+  .sort((a,b)=>Math.hypot(a.x-worker.x,a.z-worker.z)-
+    Math.hypot(b.x-worker.x,b.z-worker.z))[0];
+ const task={id:'task-999999',created:1,centerId:worker.centerId,kind:'water',
+  targetId:plant.id,workerId:null,blocked:false};
+ game.tasks=[task];
+ const loaded=new Map(),session=createSpatialGameSession(module,game,{
+  loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+ try{
+  const village=game.villages[0],cx=Math.floor((village.x+24)/48),
+   cz=Math.floor((village.z+24)/48);
+  for(let z=cz-4;z<=cz+4;z++)for(let x=cx-4;x<=cx+4;x++){
+   if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+   loaded.set(`${x},${z}`,session.core.chunkPayload());
+  }
+  const bridge=createSpatialIntentBridge(session),wasm=session.core.wasm;
+  const initial=bridge.resetFromState(game);
+  assert.equal(initial.workers,game.workers.length);
+  assert.equal(initial.targets,game.plants.filter(p=>p.alive).length+
+   game.crates.filter(c=>!c.delivered).length+game.structures.length);
+  assert.equal(initial.tasks,1);
+  const first=bridge.planTasks();
+  assert.equal(first.length,1);
+  assert.equal(first[0].taskId,999999);
+  assert.equal(first[0].workerId,9263);
+  assert.equal(first[0].status,1);
+  bridge.discard();
+
+  assert.throws(()=>bridge.applyEvents(game,[{type:'target',entity:{...plant,x:NaN}}]),
+   /rejected/, 'invalid deltas must not leave a partial native read model');
+  assert.deepEqual(bridge.planTasks(),first,'failed delta rebuilds from live state');
+  bridge.discard();
+
+  plant.alive=false;
+  bridge.applyEvents(game,[{type:'target',entity:plant}]);
+  assert.equal(bridge.planTasks().length,0,'destroyed crop is no longer eligible');
+  bridge.discard();
+  bridge.applyEvents(game,[{type:'task',remove:true,id:task.id}]);
+  assert.equal(wasm.nav_intent_task_count(),0);
+
+  plant.alive=true;
+  bridge.applyEvents(game,[{type:'target',entity:plant},{type:'task',entity:task}]);
+  assert.equal(bridge.planTasks()[0].status,1);
+  bridge.discard();
+  worker.status='walking';
+  bridge.applyEvents(game,[{type:'worker',entity:worker}]);
+  assert.equal(bridge.planTasks()[0].status,0,'busy worker has no provisional lease');
+  bridge.discard();
+  worker.status='idle';
+  bridge.applyEvents(game,[{type:'worker',entity:worker}]);
+  assert.deepEqual(bridge.planTasks(),first,'event replay restores the same plan');
+  bridge.discard();
+  assert.equal(bridge.resetFromState(game).sequence,1,
+   'reload rebuilds the native read model from live entities');
+  assert.deepEqual(bridge.planTasks(),first);
+  bridge.discard();
+
+  const planner=createEventDrivenTaskPlanner(session);
+  assert.throws(()=>planner.planIfNeeded(0),/Reset/);
+  planner.resetFromState(game);
+  assert.equal(planner.planIfNeeded(0)[0].status,1);
+  const routeQueries=wasm.nav_intent_route_queries();
+  planner.discard();
+  for(let tick=1;tick<=100;tick++)assert.equal(planner.planIfNeeded(tick/10),null,
+   'ordinary ticks and route movement do not replan');
+  assert.equal(planner.metrics(10).nativePlanningCalls,1);
+  assert.equal(planner.metrics(10).perWorkerPerMinute[9263],1);
+  assert.equal(wasm.nav_intent_route_queries(),routeQueries,
+   'movement ticks never enter route planning');
+  plant.alive=false;
+  planner.applyEvents(game,[{type:'target',entity:plant}]);
+  assert.deepEqual(planner.planIfNeeded(10.1),[],
+   'a committed target loss wakes planning once');
+  assert.equal(planner.planIfNeeded(10.2),null);
+  assert.equal(planner.metrics(10.2).nativePlanningCalls,2);
+ }finally{session.dispose();}
+});
+
+test('unknown service routes wait for a sector event or low-frequency retry',
+ {skip:!module&&'Build and select the experimental WASM first'},()=>{
+ const game=deserialize(gunzipSync(readFileSync(new URL(
+  './fixtures/watering-gran-canon-saheliana-detour-10.json.gz',import.meta.url))).toString());
+ const worker=game.workers.find(w=>w.id==='worker-16');
+ const previous=game.tasks.find(t=>t.id===worker.taskId);
+ if(previous)previous.workerId=null;
+ worker.taskId=null;worker.status='idle';worker.contractDay=game.day;
+ const loaded=new Map(),session=createSpatialGameSession(module,game,{
+  loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+ try{
+  const village=game.villages[0],cx=Math.floor((village.x+24)/48),
+   cz=Math.floor((village.z+24)/48);
+  for(let z=cz-4;z<=cz+4;z++)for(let x=cx-4;x<=cx+4;x++){
+   if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+   loaded.set(`${x},${z}`,session.core.chunkPayload());
+  }
+  const planner=createEventDrivenTaskPlanner(session);
+  planner.resetFromState(game);
+  const initial=planner.planIfNeeded(0);
+  assert(initial.some(row=>row.status===3),'unresolved sector remains unknown');
+  const routeQueries=session.core.wasm.nav_intent_route_queries();
+  planner.discard();
+  for(let second=1;second<8;second++)assert.equal(planner.planIfNeeded(second),null);
+  assert.equal(planner.metrics(7).nativePlanningCalls,1);
+  assert.equal(session.core.wasm.nav_intent_route_queries(),routeQueries);
+  assert(planner.planIfNeeded(8).length>0,'bounded recovery retry is allowed');
+  planner.discard();
+  assert.equal(planner.metrics(8).nativePlanningCalls,2);
+  const task=game.tasks.find(t=>!t.workerId);
+  planner.applyEvents(game,[{type:'task',entity:task}]);
+  assert(planner.planIfNeeded(8.1).length>0,'relevant event wakes the queue');
+  planner.discard();
+  assert.equal(planner.metrics(8.1).nativePlanningCalls,3);
+ }finally{session.dispose();}
+});
