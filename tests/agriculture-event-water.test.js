@@ -39,14 +39,16 @@ test('successful manual or magical water clears season, but a request without du
   }
 });
 
-test('Growth consumes season once; a saved later checkpoint freezes at its original tolerance',()=>{
+test('diluted Growth preserves the watering checkpoint and its season penalty across reload',()=>{
   let s=farm();Game.plant(s,'seed','platano',6,0,nav);const p=s.plants[0];waterPlant(p);
   p.growth=94;season(s,.3);Game.cast(s,'growth','growth',p.x,p.z,nav);
-  const coins=JSON.stringify(s.ledger);Game.tick(s,1,nav);assert.equal(p.water[1].status,'magic');
-  s=deserialize(serialize(s));const restored=s.plants[0];assert.equal(restored.toleranceBonus,0);
-  Game.tick(s,29,nav);close(restored.growth,139);assert.equal(s.spells.length,0);
-  Game.tick(s,100,nav);close(restored.growth,213.75);close(restored.water[2].wait,23.75);
-  assert.equal(restored.water[2].status,'due');assert.equal(restored.alive,true);
+  const coins=JSON.stringify(s.ledger);Game.tick(s,1,nav);
+  assert.equal(p.water[1].status,'due');assert.equal(p.toleranceBonus,.3);
+  const before=JSON.stringify(p);
+  s=deserialize(serialize(s));const restored=s.plants[0];assert.equal(JSON.stringify(restored),before);
+  Game.tick(s,29,nav);assert.equal(s.spells.length,0);
+  assert.equal(restored.water[1].status,'due');assert.equal(restored.water[2].status,'future');
+  assert.equal(restored.alive,true);
   assert.equal(s.tasks.filter(t=>t.kind==='water'&&t.targetId===restored.id).length,1);
   assert.equal(JSON.stringify(s.ledger),coins);close(s.cooldowns.growth,0);
 });
