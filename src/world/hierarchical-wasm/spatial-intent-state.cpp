@@ -946,6 +946,23 @@ int nav_intent_replan_pending_routes(){
   }
   return planned;
 }
+// An exceptional movement failure is an explicit event, not a tick poll.
+// Keep the task and target; the caller projects the actor's current position
+// before requesting this same-intention route replacement.
+int nav_intent_request_reroute(double actorId){
+  if(!integer(actorId))return 0;
+  IntentState& s=state();
+  const auto found=s.activeIntents.find(uint64_t(actorId));
+  if(found==s.activeIntents.end()||
+     (found->second.state!=PlanningState::RouteActive&&
+      found->second.state!=PlanningState::WaitingUnknown&&
+      found->second.state!=PlanningState::WaitingBlocked))return 0;
+  ActiveIntent& intent=found->second;
+  releaseRoute(s,intent);intent.state=PlanningState::NeedsPlan;
+  intent.topology=lazy_route_revision();
+  emitIntentChange(s,intent);s.invalidations++;
+  return 1;
+}
 int nav_intent_action_active(double actorId){
   if(!integer(actorId))return 0;
   IntentState& s=state();const auto it=s.activeIntents.find(uint64_t(actorId));

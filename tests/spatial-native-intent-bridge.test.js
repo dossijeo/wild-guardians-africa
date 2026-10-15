@@ -281,6 +281,23 @@ test('opt-in Game.tick keeps one native task intention across ordinary movement 
   assert.equal(worker.taskId,'task-999999');
   assert.equal(worker.status,'walking');
   assert.equal(planner.metrics(game.elapsed).nativePlanningCalls,1);
+  const nativeActorId=Number(worker.id.split('-').at(-1));
+  const plannedBefore=session.core.wasm.nav_intent_actor_planning_calls(nativeActorId);
+  const priorVersion=nav.version;
+  assert(session.core.addWall(worker.x+25,worker.z+25,.35,.35)>0);
+  Object.defineProperty(nav,'version',{configurable:true,get:()=>priorVersion+1});
+  nav.workerPath=()=>{throw Error('native task movement entered the legacy route planner');};
+  tick(game,.1,nav);
+  assert.equal(session.core.wasm.nav_intent_actor_planning_calls(nativeActorId),plannedBefore,
+   'a remote topology event keeps the assigned route without replanning the actor');
+  worker.path=null;
+  tick(game,.1,nav);
+  assert(['walking','waiting-task'].includes(worker.status),
+   'an exceptional lost route keeps its task during native same-task recovery');
+  tick(game,.1,nav);
+  assert.equal(worker.taskId,'task-999999');
+  assert(worker.path?.length>0,
+   'the event-driven native recovery returns a route without the legacy planner');
   const start={x:worker.x,z:worker.z};
   for(let i=0;i<10;i++)tick(game,.1,nav);
   assert.equal(planner.metrics(game.elapsed).nativePlanningCalls,1,

@@ -84,6 +84,7 @@ export function createSpatialIntentBridge(session){
     'nav_intent_change_ptr','nav_intent_clear_changes',
     'nav_intent_route_points','nav_intent_route_ptr',
     'nav_intent_reconcile_topology','nav_intent_replan_pending_routes',
+    'nav_intent_request_reroute',
     'nav_intent_action_active','nav_intent_finish',
     'nav_intent_actor_planning_calls','nav_intent_routes_ptr',
     'nav_intent_route_point_count'])
@@ -364,12 +365,18 @@ export function createSpatialIntentBridge(session){
     const rerouted=invalidated?wasm.nav_intent_replan_pending_routes():0;
     return {invalidated,rerouted,changes:intentChanges()};
   };
+  const requestReroute=actorId=>{
+    session.actorSectorRevision({worker:true});
+    if(wasm.nav_intent_request_reroute(numericId(actorId))!==1)return false;
+    wasm.nav_intent_replan_pending_routes();
+    return true;
+  };
   return {resetFromState,applyEvents,applyCommittedEvents,planTasks,proposalRoute,
     getDamagedWalls:()=>getDamaged('wall'),
     getDamagedCenters:()=>getDamaged('center'),
     getUnprotectedCropGroups,
     findPlantingSite,releasePlantingSite,
-    intentChanges,routePoints,processEventBoundary,
+    intentChanges,routePoints,processEventBoundary,requestReroute,
     reconcileTopology:()=>wasm.nav_intent_reconcile_topology(),
     replanPendingRoutes:()=>wasm.nav_intent_replan_pending_routes(),
     markActionActive:actorId=>wasm.nav_intent_action_active(numericId(actorId))===1,
@@ -392,6 +399,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
   let pendingWorldEvents=[];
   let observedTaskState=null,stopTaskObserver=null,stopWorldObserver=null;
   let dirty=true,nextRetry=Infinity,lastTime=-Infinity,total=0,initialized=false;
+  let lastNavigationVersion=null;
   let lastPlan=null,lastPlanFacts=null,sourceState=null;
   const setWorker=(worker,state)=>{
     const id=numericId(worker.id);
@@ -413,6 +421,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     lastPlan=null;lastPlanFacts=null;
     for(const worker of state.workers)setWorker(worker,state);
     dirty=true;nextRetry=Infinity;lastTime=-Infinity;
+    lastNavigationVersion=null;
     initialized=true;
     return result;
   };
@@ -565,6 +574,29 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
       session.core.wasm.nav_intent_replan_pending_routes();
     return events.length;
   };
+  // A revision is an event, not a reason to poll paths on every tick. The
+  // native graph decides whether each pinned route remains physically valid.
+  const reconcileNavigationRevision=(state,version)=>{
+    if(!Number.isFinite(version))throw TypeError('Expected a navigation revision');
+    if(lastNavigationVersion===version)return 0;
+    lastNavigationVersion=version;
+    syncChangedPositions(true);
+    session.actorSectorRevision({worker:true});
+    const invalidated=session.core.wasm.nav_intent_reconcile_topology();
+    if(invalidated)session.core.wasm.nav_intent_replan_pending_routes();
+    // Existing JS paths are the movement copy of native-pinned routes. A
+    // changed graph revision has now been validated, including the routes
+    // whose replacement or waiting state will be delivered below.
+    for(const worker of state.workers)if(worker.taskId&&worker.path&&
+      worker.status==='walking')worker.pathVersion=version;
+    return invalidated;
+  };
+  const requestReroute=(state,worker)=>{
+    const wasDirty=dirty;
+    applyEvents(state,[{type:'worker',entity:worker}]);
+    dirty=wasDirty;
+    return bridge.requestReroute(worker.id);
+  };
   const reconcileWorkerRoutes=(state,{navVersion}={})=>{
     if(!Number.isFinite(navVersion))throw TypeError('Expected a navigation revision');
     const changes=bridge.intentChanges();
@@ -685,7 +717,8 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     };
   };
   return {resetFromState,applyEvents,observeTasks,observeWorld,
-    flushTaskEvents,flushWorldEvents,reconcileWorkerRoutes,planIfNeeded,
+    flushTaskEvents,flushWorldEvents,reconcileNavigationRevision,requestReroute,
+    reconcileWorkerRoutes,planIfNeeded,
     hasPendingAt,metrics,
     commitTaskBatchToState,
     markActionActive:bridge.markActionActive,finishAction:bridge.finishAction,

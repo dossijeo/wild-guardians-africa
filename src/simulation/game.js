@@ -537,7 +537,7 @@ export function cast(s,id,kind,x,z,nav,targetPlantId) {
     emit(s,'SpellActivated',{kind,x,z,targetPlantId:target?.id,benefited:area.power?.benefited??false,power:area.power??null,duration:spec.duration_seconds});
   });
 }
-export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignore=null,worker=true,motion=null,expandRoute=false,routeVia=null}={}) {
+export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignore=null,worker=true,motion=null,expandRoute=false,routeVia=null,externallyPlanned=false}={}) {
   const previous={x:w.x,z:w.z};
   if(worker)w.running=false;
   if(w.exitRouteRecovery&&
@@ -567,6 +567,10 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
     w.mobileProgressAt=s.elapsed;
   }
   if(w.wallEscape&&w.pathVersion!==nav.version)delete w.wallEscape;
+  // An intention-owned route is reconsidered only at a confirmed navigation
+  // event boundary. Movement must not silently invoke the legacy planner.
+  if(externallyPlanned&&(!w.path||w.destinationId!==destination.id||
+    w.pathVersion!==nav.version))return false;
   if(!w.path||w.destinationId!==destination.id||w.pathVersion!==nav.version) {
     const sectors=nav.spatialSectorRevision?.(w.radius??.28,worker)??0;
     const epoch=`${destination.id}:${destination.x}:${destination.z}:${nav.version}:${sectors}:${worker?'worker':w.species??'animal'}`;
@@ -836,6 +840,7 @@ function updateWorkers(s,dt,nav) {
   if(nav.intentTaskPlanner){
     nav.intentTaskPlanner.flushWorldEvents();
     nav.intentTaskPlanner.flushTaskEvents();
+    nav.intentTaskPlanner.reconcileNavigationRevision(s,nav.version);
     nav.intentTaskPlanner.reconcileWorkerRoutes(s,{navVersion:nav.version});
   }
   // Task removals/rebuilds replace the array; enqueues change its length.
@@ -901,6 +906,10 @@ function updateWorkers(s,dt,nav) {
         let destination=target;
         if(t.kind==='repair'){
           if(w.taskApproach?.taskId!==t.id||w.path===null){
+            if(nativeTasks){
+              nav.intentTaskPlanner.requestReroute(s,w);
+              w.status='waiting-task';notifyWorkerPlanningChange(s,w);continue;
+            }
             nav.planningObserver?.({kind:'assignedRouteRebuild',actorId:w.id,elapsed:s.elapsed,taskId:t.id});
             const route=taskRouteWhenKnown(()=>repairRoute(w,target,nav));
             if(!route){releaseTask(s,w);w.status='idle';notifyWorkerPlanningChange(s,w);continue;}
@@ -909,6 +918,11 @@ function updateWorkers(s,dt,nav) {
           destination=w.taskApproach.destination;
         }else if(t.kind==='initial'||t.kind==='water'){
           if(w.taskApproach?.taskId!==t.id||w.path===null||w.pathVersion!==nav.version){
+            if(nativeTasks&&w.pathVersion!==nav.version&&w.path)continue;
+            if(nativeTasks){
+              nav.intentTaskPlanner.requestReroute(s,w);
+              w.status='waiting-task';notifyWorkerPlanningChange(s,w);continue;
+            }
             nav.planningObserver?.({kind:'assignedRouteRebuild',actorId:w.id,elapsed:s.elapsed,taskId:t.id});
             const route=taskRouteWhenKnown(()=>wateringRoute(w,target,nav));
             if(!route){releaseTask(s,w);w.status='idle';notifyWorkerPlanningChange(s,w);continue;}
@@ -916,13 +930,20 @@ function updateWorkers(s,dt,nav) {
           }
           destination=w.taskApproach.destination;
         }
-        if(walkTo(s,w,destination,dt,nav,{motion:{urgent:(urgency?urgency.urgent(w):urgentWork(s,w))}})) {
+        if(walkTo(s,w,destination,dt,nav,{externallyPlanned:nativeTasks,
+          motion:{urgent:(urgency?urgency.urgent(w):urgentWork(s,w))}})) {
           if(t.kind==='repair'){completeTask(s,w,t,target,nav);urgency?.invalidate();continue;}
           if(t.kind==='initial'||t.kind==='water')w.heading=Math.atan2(target.x-w.x,target.z-w.z);
           w.status='acting';w.actionRemaining=(t.kind==='initial'?7.2:t.kind==='water'?3.4:t.kind==='harvest'?3.6:t.kind==='repair'?3.8:1)/p.speed;
           nav.intentTaskPlanner?.markActionActive(w.id);
           notifyWorkerPlanningChange(s,w);
-        }else if(w.path===null){releaseTask(s,w);w.status='idle';notifyWorkerPlanningChange(s,w);}
+        }else if(w.path===null){
+          if(nativeTasks){
+            nav.intentTaskPlanner.requestReroute(s,w);
+            w.status='waiting-task';notifyWorkerPlanningChange(s,w);
+          }
+          else {releaseTask(s,w);w.status='idle';notifyWorkerPlanningChange(s,w);}
+        }
       } else if(w.status==='acting') {
         if(t.kind==='repair'){completeTask(s,w,t,target,nav);urgency?.invalidate();continue;}
         w.actionRemaining-=dt;if(w.actionRemaining<=0)completeTask(s,w,t,target,nav);
