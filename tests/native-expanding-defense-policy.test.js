@@ -23,3 +23,34 @@ test('failed/unaffordable strokes and uncompleted repair requests are not counte
  assert.equal(policy.act(s,nav,options),0);assert.ok(s.tasks.some(t=>t.kind==='repair'&&t.targetId===wall.id));assert.equal(policy.report(s).repairRequests,1);
  s.elapsed+=31;s.ledger.balance=rational(30);assert.equal(policy.act(s,nav,options),0);assert.equal(policy.report(s).history.at(-1).reason,'budget');
 });
+
+test('native enclosure policy wakes on Wild Engine notices instead of rechecking every tick',()=>{
+ const {s,nav,options}=fixture();
+ let notify=null,groupQueries=0,damageQueries=0;
+ const spatialAdvice={
+  observeCropProtection(callback){notify=callback;return ()=>{notify=null;};},
+  getUnprotectedCropGroups(){groupQueries++;return [];},
+  getDamagedWalls(){damageQueries++;return [];}
+ };
+ const policy=createNativeExpandingDefensePolicy({reserveMode:'full-enclosure',
+  spatialAdvice});
+ assert.equal(policy.needsAction(s),true);
+ assert.equal(policy.act(s,nav,options),0);
+ assert.equal(groupQueries,1);
+ for(let i=0;i<100;i++){
+  s.elapsed++;
+  assert.equal(policy.needsAction(s),false);
+ }
+ assert.equal(groupQueries,1,'ordinary ticks perform no crop-group query');
+ notify({type:'funds-changed'});
+ assert.equal(policy.act(s,nav,options),0);
+ assert.equal(groupQueries,1,'new money does not recompute an absent enclosure');
+ notify({type:'crop-group-unprotected',group:{id:'crop:plant-1'}});
+ assert.equal(policy.act(s,nav,options),0);
+ assert.equal(groupQueries,2,'native exposure notice wakes the defense decision');
+ notify({type:'day-start',day:3});
+ assert.equal(policy.act(s,nav,options),0);
+ assert.equal(groupQueries,2,'day transition checks repairs but does not rebuild crop topology');
+ assert(damageQueries>=4);
+ policy.dispose();assert.equal(notify,null);
+});

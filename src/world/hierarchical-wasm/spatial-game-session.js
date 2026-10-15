@@ -29,6 +29,10 @@ export function createSpatialGameSession(module,state,streamOptions){
   const villages=new Map();
   const chunkRevisions=new Map();
   let terrainRevision=0;
+  const topologyObservers=new Set();
+  const notifyTopology=change=>{
+    for(const observer of topologyObservers)observer(change);
+  };
   let stream=null;
   function installVillage(village,gameState,initial=false){
     if(village?.id==null||villages.has(village.id)||!Array.isArray(village.buildings))
@@ -117,16 +121,26 @@ export function createSpatialGameSession(module,state,streamOptions){
     onData:data=>{
       data.terrainRevision=chunkRevisions.get(`${data.cx},${data.cz}`)??0;
       streamOptions.onData(data);
+      notifyTopology({type:'sector-resident',cx:data.cx,cz:data.cz});
     }});
+  const releaseChunk=stream.releaseChunk;
+  stream.releaseChunk=(cx,cz)=>{
+    const result=releaseChunk(cx,cz);
+    notifyTopology({type:'sector-unloaded',cx,cz});
+    return result;
+  };
   function syncState(next){
     if(next.seed!==state.seed||next.biome!==state.biome)
       throw TypeError('A spatial session cannot change seed or biome');
     // A founded village can clear props that were present at preview time.
     // Register its paid suppressions before the settlement regenerates those
     // chunks, so the native prop identity is still available to remove.
+    const before=terrainRevision+walls.revision()+centers.revision()+props.revision();
     const propChanges=props.sync(next.suppressed);
     for(const village of next.villages)if(!villages.has(village.id))installVillage(village,next);
     walls.sync(next.structures);centers.sync(next);shields.sync(next.spells);
+    const after=terrainRevision+walls.revision()+centers.revision()+props.revision();
+    if(after!==before)notifyTopology({type:'topology-changed',revision:after});
     return {suppressed:props.suppressed,removedProps:propChanges.added};
   }
   function routeActor(start,end,{worker=true,species='warthog'}={}){
@@ -238,8 +252,13 @@ export function createSpatialGameSession(module,state,streamOptions){
     streamOptions.loaded(),props.suppressed,x,z,radius,
     key=>chunkRevisions.get(key)??0);
   return {core,field,stream,horizonSource,topologySource,suppressed:props.suppressed,syncState,
+    observeTopologyChanges:observer=>{
+      if(typeof observer!=='function')throw TypeError('Expected topology observer');
+      topologyObservers.add(observer);
+      return ()=>topologyObservers.delete(observer);
+    },
     routeActor,routeActorNative,routeActorNativeBatch,actorConnectivity,actorSectorRevision,actorRegions,actorEnclosure,actorRegionsBatch,actorCanStand,actorStepClear,
     actorStepClearExceptWalls,
     queryPropsAt,withWallPreview,withVillageEntryPreview,
-    dispose:()=>stream.dispose()};
+    dispose:()=>{topologyObservers.clear();stream.dispose();}};
 }

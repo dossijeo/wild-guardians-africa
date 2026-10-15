@@ -71,6 +71,20 @@ test('native crop groups share the game adjacency rule and invalidate only on cr
   assert.deepEqual(after.map(group=>group.cropIds.slice().sort().join(',')).sort(),
    referenceGroups(game.plants));
   assert.ok(after.every(group=>!group.cropIds.includes(plant.id)));
+  const stop=bridge.observeCropProtection(()=>{});
+  bridge.publishCropProtectionChanges();
+  const queryCount=bridge.cropProtectionMetrics().queries;
+  plant.alive=true;
+  bridge.applyCommittedEvents(game,[{type:'CropPlaced',targetId:plant.id}]);
+  bridge.publishCropProtectionChanges();
+  assert.equal(bridge.cropProtectionMetrics().queries,queryCount+1,
+   'a new crop may expose a group and must be classified');
+  plant.alive=false;
+  bridge.applyCommittedEvents(game,[{type:'CropPicked',targetId:plant.id}]);
+  bridge.publishCropProtectionChanges();
+  assert.equal(bridge.cropProtectionMetrics().queries,queryCount+1,
+   'harvest cannot open a wall or worsen protection');
+  stop();
   bridge.resetFromState(deserialize(serialize(game)));
   assert.deepEqual(bridge.getUnprotectedCropGroups({includeProtected:true}).map(group=>group.cropIds),
    after.map(group=>group.cropIds));
@@ -117,6 +131,9 @@ test('a paid closed wall ring protects the crop; removing a wall invalidates cer
   const before=bridge.getUnprotectedCropGroups({includeProtected:true});
   assert.equal(before.length,1);
   assert.equal(before[0].protection,'protected',JSON.stringify(before[0].profiles));
+  const notices=[];
+  const stopNotices=bridge.observeCropProtection(event=>notices.push(event));
+  bridge.publishCropProtectionChanges();notices.length=0;
   const wall=game.structures.find(item=>item.kind==='wall'&&!item.gate);
   const candidates=game.structures.filter(item=>item.kind==='wall'&&!item.gate)
    .sort((a,b)=>Math.hypot(a.x-wall.x,a.z-wall.z)-
@@ -131,8 +148,13 @@ test('a paid closed wall ring protects the crop; removing a wall invalidates cer
    'the native graph must first confirm a physical breach');
   bridge.applyCommittedEvents(game,game.events.filter(event=>
    event.type==='WallRemoved'&&removed.includes(event.targetId)));
+  bridge.publishCropProtectionChanges();
   const after=bridge.getUnprotectedCropGroups({includeProtected:true});
   assert.notEqual(after[0].protection,'protected');
+  assert.equal(notices.some(event=>event.type==='crop-group-unprotected'),
+   after[0].protection==='unprotected',
+   'Wild Engine only announces an exposed group when the native graph proves it');
+  stopNotices();
  }finally{session.dispose();}
 });
 

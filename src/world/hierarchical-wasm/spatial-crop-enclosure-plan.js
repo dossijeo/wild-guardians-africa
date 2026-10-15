@@ -44,6 +44,9 @@ export function createCropEnclosurePlanner(state,nav,bridge){
         .find(candidate=>candidate.id===groupId);
       if(!group)return {status:'blocked',reason:'group-changed'};
       if(group.protection==='protected')return {status:'protected',groupId,revision:group.revision};
+      if(group.protection==='unknown')
+        return {status:'unknown',reason:'group-connectivity-pending',groupId,
+          revision:group.revision};
       const plans=[];
       for(const margin of marginSteps){
         const candidate=resultFor(group,material,margin);
