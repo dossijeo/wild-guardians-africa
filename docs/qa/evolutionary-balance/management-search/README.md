@@ -459,3 +459,11 @@ entregaron 19⅔ cajas/día y dejaron margen operativo de −348. Todas sus fila
 económicas concilian. Esta derrota no es un paro computacional ni un criterio
 de fitness que haya terminado artificialmente la partida. Informe:
 `results-14-main-sync/712f0156ff37-bad-manglares-123-14.json`.
+
+La reserva Manglares/24681357 confirmó otra **derrota nativa** de `bad` al
+amanecer del día 14: 13 noches completadas, cero cultivos vivos, 264 monedas,
+360 pérdidas desde la noche 6, 31⅓ cajas/día terminales y margen operativo
+de −397. El ledger concilia. Dos semillas muestran la fragilidad de esta
+política en Manglares, pero no estiman todavía una probabilidad de derrota
+para los seis biomas ni para 100 noches. Informe:
+`results-14-post-intro/deb7ec2b4ed1-bad-manglares-24681357-14.json`.
