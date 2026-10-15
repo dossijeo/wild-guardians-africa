@@ -127,6 +127,9 @@ struct IntentState {
   std::vector<double> wallOpportunityActors;
   std::vector<RouteSlot> routeSlots;
   std::vector<float> attackRouteInput;
+  // Transient mobile-body snapshot supplied once at an attack planning event.
+  // It never becomes a topological cache or invalidates a committed route.
+  std::vector<double> attackBlockers;
   std::array<double,10> attackResult{};
   std::vector<double> intentChanges;
   std::array<double,10> intentResult{};
@@ -1366,13 +1369,27 @@ int nav_intent_reconsider_wall_opportunity(double actorId,double startX,
 // per-crop graph searches are needed for a sealed group. Ambiguous geometry
 // returns unknown so the established selector can handle it during migration.
 const double* nav_intent_attack_result_ptr(){return state().attackResult.data();}
+double* nav_intent_attack_blockers_ptr(int count){
+  if(count<0||count>100000)return nullptr;
+  IntentState& s=state();s.attackBlockers.resize(size_t(count)*3);
+  return s.attackBlockers.data();
+}
 int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
-                                double radius,int cropsEligible){
+                                double radius,int cropsEligible,int blockerCount){
   IntentState& s=state();s.attackResult.fill(0);
   if(!integer(actorId)||!coordinate(startX)||!coordinate(startZ)||
      !std::isfinite(radius)||radius<=0||radius>2||
      (cropsEligible!=0&&cropsEligible!=1)||
+     blockerCount<0||blockerCount>100000||
+     s.attackBlockers.size()!=size_t(blockerCount)*3||
      lazy_selected_context()==1)return -1;
+  for(int i=0;i<blockerCount;i++){
+    const size_t offset=size_t(i)*3;
+    if(!coordinate(s.attackBlockers[offset])||
+       !coordinate(s.attackBlockers[offset+1])||
+       !std::isfinite(s.attackBlockers[offset+2])||
+       s.attackBlockers[offset+2]<=0||s.attackBlockers[offset+2]>2)return -1;
+  }
   const uint64_t actor=uint64_t(actorId);
   if(s.activeIntents.count(actor))return -2;
   s.planningCallsByActor[actor]++;
@@ -1441,6 +1458,14 @@ int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
     bool groupRouteAttempted=false;
     std::unordered_set<uint64_t> preferredTried;
     const auto tryPoint=[&](const Target& crop,float px,float pz){
+      for(int i=0;i<blockerCount;i++){
+        const size_t offset=size_t(i)*3;
+        if(std::hypot(s.attackBlockers[offset]-double(px),
+                      s.attackBlockers[offset+1]-double(pz))<
+           radius+s.attackBlockers[offset+2]-1e-8){
+          occupied=true;return false;
+        }
+      }
       for(const auto& [owner,intent]:s.activeIntents){
         if(owner==actor||!intent.animal||!intent.approachKnown||
            intent.state==PlanningState::Cancelled)continue;

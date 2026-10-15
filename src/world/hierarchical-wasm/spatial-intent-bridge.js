@@ -6,6 +6,7 @@ import {activeCrops} from '../../simulation/active-crops.js';
 import {workerEntityLookup} from '../../simulation/worker-entity-lookup.js';
 import {ANIMAL_SPATIAL_PROFILES} from './spatial-movement-profiles.js';
 import {targetReservationKey} from '../../simulation/raid-target-reservations.js';
+import {actorBlockers} from '../../simulation/actor-motion.js';
 import {applyConfirmedTaskAssignments,notifyWorkerPlanningChange,
   observeTaskChanges,releaseTask,replaceTasks} from '../../simulation/tasks.js';
 
@@ -94,7 +95,8 @@ export function createSpatialIntentBridge(session){
     'nav_intent_wall_opportunity_candidates',
     'nav_intent_wall_opportunity_candidates_ptr',
     'nav_intent_reconsider_wall_opportunity',
-    'nav_intent_plan_attack_crop','nav_intent_attack_result_ptr',
+    'nav_intent_attack_blockers_ptr','nav_intent_plan_attack_crop',
+    'nav_intent_attack_result_ptr',
     'nav_intent_attack_action_active','nav_intent_restore_attack_action',
     'nav_intent_restore_attack_pending','nav_intent_restore_attack_site',
     'nav_intent_attack_finished',
@@ -453,8 +455,21 @@ export function createSpatialIntentBridge(session){
       state.spells.some(spell=>spell.kind==='shield'&&spell.remaining>0))
       return null;
     session.actorSectorRevision({worker:false,species:animal.species});
+    const blockers=actorBlockers(state,animal,false);
+    const blockerPtr=wasm.nav_intent_attack_blockers_ptr(blockers.length);
+    if(!blockerPtr&&blockers.length)
+      throw Error('Native attack blocker allocation failed');
+    if(blockers.length){
+      const rows=new Float64Array(wasm.memory.buffer,blockerPtr,
+        blockers.length*3);
+      for(let index=0;index<blockers.length;index++){
+        const blocker=blockers[index],offset=index*3;
+        rows[offset]=blocker.x;rows[offset+1]=blocker.z;
+        rows[offset+2]=blocker.radius??.28;
+      }
+    }
     const status=wasm.nav_intent_plan_attack_crop(numericId(animal.id),
-      animal.x,animal.z,animal.radius,1);
+      animal.x,animal.z,animal.radius,1,blockers.length);
     if(status<0)throw Error(`Native crop intention rejected: ${status}`);
     const values=new Float64Array(wasm.memory.buffer,
       wasm.nav_intent_attack_result_ptr(),10);

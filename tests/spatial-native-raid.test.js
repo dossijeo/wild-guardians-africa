@@ -135,6 +135,25 @@ test('a native Sabana incursion spawns physically and advances through Game.tick
     const controlFirstAttackAt=control.elapsed;
     const planner=createEventDrivenTaskPlanner(session);
     planner.resetFromState(state);
+    const probeAnimal=state.raid.animals[0];
+    const freePlan=planner.planAttackCrop(state,probeAnimal);
+    assert.equal(freePlan?.status,'found');
+    planner.cancelAttackIntent(probeAnimal.id);
+    const mobileBlocker={id:'animal-999999',status:'waiting',
+      x:freePlan.approach.point.x,z:freePlan.approach.point.z,radius:.28};
+    state.raid.animals.push(mobileBlocker);
+    const busyPlan=planner.planAttackCrop(state,probeAnimal);
+    assert.notEqual(busyPlan?.status,'unknown',
+      'mobile occupancy must not become unknown topology');
+    if(busyPlan?.status==='found'){
+      assert(Math.hypot(busyPlan.approach.point.x-mobileBlocker.x,
+        busyPlan.approach.point.z-mobileBlocker.z)>=
+        (probeAnimal.radius??.28)+mobileBlocker.radius-1e-8,
+      'the native planner must choose another physically free site');
+      planner.cancelAttackIntent(probeAnimal.id);
+    }
+    state.raid.animals.pop();
+    planner.resetFromState(state);
     let stopWorld=planner.observeWorld(state),stopTasks=planner.observeTasks(state);
     const intentCalls={registered:0,committed:0,finished:0,
       nativeCropPlans:0,nativeCropFound:0};
