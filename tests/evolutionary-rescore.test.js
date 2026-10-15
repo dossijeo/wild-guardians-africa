@@ -11,9 +11,10 @@ import {rescoreFrozenSearch} from '../tools/evolutionary-balance/rescore-post-in
 test('frozen search rescore detects changed native reports and historical scores',()=>{
  const folder=mkdtempSync(join(tmpdir(),'wild-guardians-rescore-'));
  try{
-  const genes=DEFAULT_GENES,id=genomeId(genes),scenario={biome:'sabana',seed:712};
+  const genes=DEFAULT_GENES,id=genomeId(genes),scenario={biome:'sabana',seed:712},
+   reserve={biome:'manglares',seed:123};
   const config={fitnessVersion:'post-intro-v1',days:14,population:1,
-   train:[scenario],minimumTerminalDeliveryPerDay:1};
+   train:[scenario],holdout:[reserve],minimumTerminalDeliveryPerDay:1};
   const report={status:'completed',...scenario,days:14,strategy:'evolved',
    completedNights:14,result:null,
    rows:Array.from({length:14},(_,i)=>({day:i+1,delivered:100,living:20,
@@ -26,10 +27,23 @@ test('frozen search rescore detects changed native reports and historical scores
    generations:[{generation:0,ranked:[{id,genes,
     cases:[{...scenario,score:score.score,valid:score.valid}]}]}]};
   writeFileSync(reportPath,JSON.stringify(report));
+  const holdoutReport={...report,...reserve};
+  const holdoutPath=join(folder,`test-${id}-manglares-123-14.json`);
+  writeFileSync(holdoutPath,JSON.stringify(holdoutReport));
+  const resultPath=join(folder,'result-test.json');
+  const result={stamp:search.stamp,pilotLeader:{id,genes},
+   holdout:[{strategy:'evolved',id,...reserve,score:score.score,valid:score.valid}]};
+  writeFileSync(resultPath,JSON.stringify(result));
   writeFileSync(searchPath,JSON.stringify(search));
   const clean=rescoreFrozenSearch(searchPath);
   assert.equal(clean.generations[0].rankUnchanged,true);
-  assert.equal(clean.reports.length,1);
+  assert.equal(clean.reports.length,2);
+  assert.equal(clean.holdout.leaderUnchanged,true);
+  result.holdout[0].score++;
+  writeFileSync(resultPath,JSON.stringify(result));
+  assert.throws(()=>rescoreFrozenSearch(searchPath),/Historical holdout score mismatch/);
+  result.holdout[0].score--;
+  writeFileSync(resultPath,JSON.stringify(result));
   search.generations[0].ranked[0].cases[0].score++;
   writeFileSync(searchPath,JSON.stringify(search));
   assert.throws(()=>rescoreFrozenSearch(searchPath),/Historical score mismatch/);
