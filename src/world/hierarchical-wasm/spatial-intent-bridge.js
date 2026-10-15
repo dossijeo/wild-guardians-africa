@@ -1,4 +1,4 @@
-import {centerGeometry} from '../centers.js';
+import {centerGeometry,centerServicePoint} from '../centers.js';
 import {contractExpired,PROFILES} from '../../simulation/workforce.js';
 import {repairCost} from '../../simulation/game.js';
 import {BALANCE} from '../../simulation/balance.js';
@@ -53,6 +53,10 @@ const cropMetaRow=plant=>{
   if(!species||!Number.isFinite(value))throw TypeError(`Unsupported crop: ${plant.id}`);
   return [1,5,numericId(plant.id),species,value,0,0,0,0,0];
 };
+const centerAccessRow=(center,state)=>{
+  const point=centerServicePoint(center,state,.8);
+  return [1,6,numericId(center.id),4,point.x,point.z,0,0,0,0];
+};
 
 export function createSpatialIntentBridge(session){
   const wasm=session?.core?.wasm;
@@ -60,7 +64,9 @@ export function createSpatialIntentBridge(session){
     'nav_intent_apply_changes','nav_intent_plan_tasks','nav_intent_results_ptr',
     'nav_intent_discard','nav_intent_commit','nav_intent_damaged_structures',
     'nav_intent_damaged_ptr','nav_intent_crop_groups',
-    'nav_intent_crop_groups_ptr','nav_intent_crop_members_ptr'])
+    'nav_intent_crop_groups_ptr','nav_intent_crop_members_ptr',
+    'nav_intent_find_planting_site','nav_intent_planting_site_ptr',
+    'nav_intent_release_planting_site'])
     if(typeof wasm?.[name]!=='function')throw TypeError(`Missing ${name}`);
   let sequence=0,initialized=false;
   const structuresById=new Map();
@@ -89,6 +95,8 @@ export function createSpatialIntentBridge(session){
         ...state.crates.filter(crate=>!crate.delivered).map(crate=>targetRow(crate,state)),
         ...state.structures.map(structure=>targetRow(structure,state)),
         ...state.structures.map(structure=>structureMetaRow(structure)),
+        ...state.structures.filter(item=>item.kind==='center')
+          .map(center=>centerAccessRow(center,state)),
         ...tasks.map(task=>taskRow(task))];
       apply(rows);
       structuresById.clear();
@@ -125,6 +133,8 @@ export function createSpatialIntentBridge(session){
       if(event.type==='target'&&!event.remove&&
         (event.entity.kind==='wall'||event.entity.kind==='center'))
         rows.push(structureMetaRow(event.entity));
+      if(event.type==='target'&&!event.remove&&event.entity.kind==='center')
+        rows.push(centerAccessRow(event.entity,state));
       if(event.type==='target'&&!event.remove&&'alive' in event.entity)
         rows.push(cropMetaRow(event.entity));
     }
@@ -217,10 +227,39 @@ export function createSpatialIntentBridge(session){
     return [...groups.values()].filter(group=>includeProtected||
       group.protection!=='protected').sort((a,b)=>b.value-a.value||a.id.localeCompare(b.id));
   };
+  const findPlantingSite=(centerId,{budget=64,reserve=true}={})=>{
+    if(!initialized)throw Error('Reset the native intent session first');
+    if(!Number.isInteger(budget)||budget<1||budget>4096)
+      throw RangeError('Plant search budget must be 1–4096');
+    const center=structuresById.get(numericId(centerId));
+    if(center?.kind!=='center'||center.status==='ruined')
+      throw TypeError(`Unknown operational center: ${centerId}`);
+    session.actorSectorRevision({worker:true});
+    const resident=[...session.stream.loaded().keys()].map(key=>key.split(',').map(Number))
+      .filter(([cx,cz])=>Number.isInteger(cx)&&Number.isInteger(cz));
+    if(!resident.length)return {status:'unknown',reason:'no-resident-sectors'};
+    const bounds=resident.reduce((b,[cx,cz])=>[
+      Math.min(b[0],cx*48-24),Math.min(b[1],cz*48-24),
+      Math.max(b[2],cx*48+24),Math.max(b[3],cz*48+24)],
+    [Infinity,Infinity,-Infinity,-Infinity]);
+    const status=wasm.nav_intent_find_planting_site(numericId(centerId),
+      ...bounds,budget,reserve?1:0);
+    if(status===-2)throw Error('Native planting-site query rejected');
+    const row=Array.from(new Float64Array(wasm.memory.buffer,
+      wasm.nav_intent_planting_site_ptr(),8));
+    return {status:status===1?'found':status===2?'pending':
+      status===3?'blocked':status===0?'no-space':'unknown',
+      point:status===1||status===-1?{x:row[1],z:row[2]}:null,
+      reservationId:row[3]||null,examined:row[4],
+      revision:{crops:row[5],topology:row[6]},reason:row[7],bounds};
+  };
+  const releasePlantingSite=(reservationId,{committed=false}={})=>
+    wasm.nav_intent_release_planting_site(reservationId,committed?1:0)===1;
   return {resetFromState,applyEvents,planTasks,
     getDamagedWalls:()=>getDamaged('wall'),
     getDamagedCenters:()=>getDamaged('center'),
     getUnprotectedCropGroups,
+    findPlantingSite,releasePlantingSite,
     discard:()=>wasm.nav_intent_discard(),
     commit:()=>wasm.nav_intent_commit(),
     sequence:()=>sequence};
