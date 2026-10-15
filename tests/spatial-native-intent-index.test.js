@@ -87,16 +87,22 @@ test('incremental native task index plans, discards and commits one global assig
    'a released route handle cannot be reused');
   assert.equal(wasm.nav_intent_actor(2),1,'unaffected worker keeps its intention');
   assert.equal(wasm.nav_intent_invalidation_count(),1);
+  assert.equal(write(3,[row(0,3,102),
+   row(1,2,13,0,origin.x,origin.z,1),
+   row(1,3,103,1,0,0,0,13,3,3)]),1);
+  assert.deepEqual(results().map(item=>[item[0],item[1],item[2]]),
+   [[103,1,1]],'the released worker can join the next global FIFO task batch');
+  assert.equal(wasm.nav_intent_commit(),1);
   const barrier=session.core.applyBarrierChanges([],[{
    x:origin.x+5,z:origin.z+5,halfX:.35,halfZ:.35,passMask:0}]);
   try{
-   assert.equal(wasm.nav_intent_reconcile_topology(),1);
+   assert.equal(wasm.nav_intent_reconcile_topology(),2);
    assert.equal(wasm.nav_intent_actor(2),1);
    const pending=new Float64Array(wasm.memory.buffer,wasm.nav_intent_actor_ptr(),10);
    assert.deepEqual([pending[1],pending[2],pending[3]],[0,101,12],
     'a physical invalidation retains the worker task and target');
   }finally{session.core.applyBarrierChanges(barrier,[]);}
-  assert.equal(wasm.nav_intent_replan_pending_routes(),1);
+  assert.equal(wasm.nav_intent_replan_pending_routes(),2);
   assert.equal(wasm.nav_intent_actor(2),1);
   assert.equal(new Float64Array(wasm.memory.buffer,wasm.nav_intent_actor_ptr(),10)[1],1);
 
