@@ -71,3 +71,11 @@ contra murallas, ningún impacto agrícola y finalización normal. El test
 observa los eventos en cada tick porque el anillo de eventos descarta los
 antiguos: inspeccionar sólo su contenido final había producido inicialmente
 un falso diagnóstico de ausencia de golpes.
+
+Otra regresión prepara una finca con ocho cultivos y solicita una formación
+mixta de 16 animales en los seis biomas con el núcleo espacial nativo. En
+todos se obtiene la formación completa, con posiciones exteriores, separadas,
+salida local transitable y conectividad Wild Engine demostrada hacia el
+acceso del centro para cada perfil físico. Es una prueba de entrada, no de
+eficacia militar ni de rendimiento sostenido; la preparación de la entrada
+en la aplicación usa el trabajador dedicado existente.
