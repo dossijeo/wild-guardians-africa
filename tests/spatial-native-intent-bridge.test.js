@@ -439,6 +439,11 @@ test('event-fed native intent bridge replays live state and only changes on expl
    wasm.nav_intent_invalidation_count());
   assert.equal(planner.metrics(10).nativeTopologyRouteInvalidations,0);
   assert.equal(planner.metrics(10).perWorkerPerMinute[9263],1);
+  assert.equal(planner.metrics(61).perWorkerPerMinute[9263],0,
+   'the rolling minute expires even when no new planning occurs');
+  assert.equal(planner.metrics(61).workerPlansByActor[9263],1,
+   'the session total remains visible in end-of-day reports');
+  assert.equal(planner.metrics(61).workerPeakPlansPerMinute[9263],1);
   assert.equal(planner.metrics(10).nativeTaskRouteQueries,routeQueries);
   assert(planner.metrics(10).nativeTaskCandidates>0);
   assert.equal(wasm.nav_intent_route_queries(),routeQueries,

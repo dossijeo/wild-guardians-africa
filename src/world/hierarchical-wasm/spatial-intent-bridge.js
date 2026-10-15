@@ -620,6 +620,8 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     throw RangeError('retrySeconds must be positive');
   const bridge=createSpatialIntentBridge(session);
   const eligible=new Set(),requests=new Map(),animalRequests=new Map(),
+    workerPlanCounts=new Map(),animalPlanCounts=new Map(),
+    workerPeakPerMinute=new Map(),animalPeakPerMinute=new Map(),
     projectedPositions=new Map(),pendingAttackRoutes=new Map(),
     tacticalReconsiderations=new Set(),cropProtectionListeners=new Set();
   let cropProtectionSnapshot=null;
@@ -650,8 +652,9 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     const restoredAnimals=bridge.restoreAttackIntents(state);
     eligible.clear();projectedPositions.clear();pendingAttackRoutes.clear();
     tacticalReconsiderations.clear();
-    requests.clear();
-    animalRequests.clear();
+    requests.clear();animalRequests.clear();
+    workerPlanCounts.clear();animalPlanCounts.clear();
+    workerPeakPerMinute.clear();animalPeakPerMinute.clear();
     for(const id of restoredAnimals.pendingAttackRouteIds)
       pendingAttackRoutes.set(numericId(id),'unknown');
     pendingTaskEvents=[];pendingWorldEvents=[];
@@ -767,6 +770,8 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
       if(!times)requests.set(id,times=[]);
       for(let index=0;index<count;index++)times.push(simulatedSeconds);
       while(times.length&&times[0]<=simulatedSeconds-60)times.shift();
+      workerPlanCounts.set(id,(workerPlanCounts.get(id)??0)+count);
+      workerPeakPerMinute.set(id,Math.max(workerPeakPerMinute.get(id)??0,times.length));
     }
     return result;
   };
@@ -826,15 +831,21 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     nativeTaskRouteQueries:taskRouteQueries,nativeTaskCandidates:taskCandidates,
     perWorkerPerMinute:Object.fromEntries([...requests].map(([id,times])=>
       [id,times.filter(time=>time>simulatedSeconds-60).length])),
+    workerPlansByActor:Object.fromEntries(workerPlanCounts),
+    workerPeakPlansPerMinute:Object.fromEntries(workerPeakPerMinute),
     nativeAnimalPlans:animalTotal,
     perAnimalPerMinute:Object.fromEntries([...animalRequests].map(([id,times])=>
-      [id,times.filter(time=>time>simulatedSeconds-60).length]))});
+      [id,times.filter(time=>time>simulatedSeconds-60).length])),
+    animalPlansByActor:Object.fromEntries(animalPlanCounts),
+    animalPeakPlansPerMinute:Object.fromEntries(animalPeakPerMinute)});
   const recordAnimalPlan=(animal,elapsed)=>{
     animalTotal++;
     const id=numericId(animal.id),times=animalRequests.get(id)??[];
     times.push(elapsed);
     while(times.length&&times[0]<=elapsed-60)times.shift();
     animalRequests.set(id,times);
+    animalPlanCounts.set(id,(animalPlanCounts.get(id)??0)+1);
+    animalPeakPerMinute.set(id,Math.max(animalPeakPerMinute.get(id)??0,times.length));
   };
   const hasPendingAt=simulatedSeconds=>{
     if(!initialized)throw Error('Reset the native intent session first');
