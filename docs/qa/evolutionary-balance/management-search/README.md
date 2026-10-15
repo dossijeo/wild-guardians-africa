@@ -17,6 +17,16 @@ las cinco noches introductorias o una explotación casi inactiva determinen
 silenciosamente el ganador. No se alteró la campaña ya iniciada, sus genes ni
 el balance de producción; su hash de fuente distingue ambos evaluadores.
 
+`protocol-14-post-intro.json` congela el siguiente ensayo con el cuartil
+inferior **82⅙ cajas/día** de los seis controles nativos de desarrollo
+documentados en `post-intro-pilot-14/README.md` (también incluye las granjas
+sin muros). Sus semillas de entrenamiento Sabana/712 y Gran Río/2026 difieren
+de las usadas para fijar ese umbral; Manglares/24681357 queda reservado como
+bioma y semilla no utilizados en aquella cohorte. El umbral clasifica
+elegibilidad competitiva, nunca altera ingresos, cultivos ni resultados
+nativos. Los gastos pagados y las entregas reales seguirán visibles también
+para cualquier candidato excluido por baja producción.
+
 Esta cohorte usa Wild Engine y el balance de producción sin alterar, después de
 la mejora de navegación de PR #37. Código ejecutado: `7f358aad97287b40e300026306d26f05cc4e0c29`;
 el registro de siete noches guarda además SHA-256 de los módulos y del diff en
