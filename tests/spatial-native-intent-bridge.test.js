@@ -5,10 +5,11 @@ import {gunzipSync} from 'node:zlib';
 import {execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 import {deserialize} from '../src/persistence/snapshots.js';
+import {rebuildTasks} from '../src/simulation/game.js';
 import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
 import {createSpatialIntentBridge,createEventDrivenTaskPlanner} from
  '../src/world/hierarchical-wasm/spatial-intent-bridge.js';
-import {enqueue,replaceTasks} from '../src/simulation/tasks.js';
+import {enqueue,notifyWorkerPlanningChange,replaceTasks} from '../src/simulation/tasks.js';
 
 const binary=process.env.WILD_ENGINE_NATIVE_ROUTE_WASM;
 const module=binary?new WebAssembly.Module(readFileSync(binary)):null;
@@ -128,7 +129,24 @@ test('event-fed native intent bridge replays live state and only changes on expl
   assert.equal(planner.flushTaskEvents(),1);
   assert.equal(wasm.nav_intent_task_count(),beforeTasks,
    'task removal reaches the native index without polling');
+  worker.status='returning';notifyWorkerPlanningChange(game,worker);
+  worker.status='idle';notifyWorkerPlanningChange(game,worker);
+  assert.equal(planner.flushTaskEvents(),1,
+   'several confirmed changes to one worker use one native row per boundary');
   stopTaskEvents();
+  planner.resetFromState(game);
+  const stopRebuild=planner.observeTasks(game);
+  const beforePosition=wasm.nav_intent_entity_revision();
+  worker.x+=0.1;
+  planner.planIfNeeded(0);
+  assert(wasm.nav_intent_entity_revision()>beforePosition,
+   'an idle worker moving before a new action is projected at the planning boundary');
+  planner.discard();
+  rebuildTasks(game);
+  assert(planner.flushTaskEvents()>0);
+  assert.equal(wasm.nav_intent_task_count(),game.tasks.length,
+   'a real day task rebuild projects the same task roster without a scan');
+  stopRebuild();
  }finally{session.dispose();}
 });
 

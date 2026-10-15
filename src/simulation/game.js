@@ -22,7 +22,8 @@ import {spellUnlocked,permission,operational,cropSpec,wallSpec,structureHealth,d
 import {createPlant,advancePlant,waterPlant,isMature,contiguousGroup} from './crops.js';
 import {activeCrops,cropBecameInactive} from './active-crops.js';
 import {workerEntityLookup} from './worker-entity-lookup.js';
-import {enqueue,taskEnqueuer,reserveTasks,releaseTask,replaceTasks,taskPlanningRevision} from './tasks.js';
+import {enqueue,taskEnqueuer,reserveTasks,releaseTask,replaceTasks,
+  notifyWorkerPlanningChange,notifyWorkerPlanningRoster,taskPlanningRevision} from './tasks.js';
 import {planNight,updateRaid,spawnRaid,planDay} from './raids.js';
 import {wallStroke,wallLayout,wallStrokeLine} from '../world/wall-layout.js';
 import {selectEvent,applyEvent} from './events.js';
@@ -326,7 +327,7 @@ export function removeWall(s,id,targetId,nav) {
   return commit(s,id,'wall',()=>{
     const target=s.structures.find(e=>e.id===targetId&&e.kind==='wall');if(!target)throw new Error('No existe esa defensa');
     const tasks=new Set(s.tasks.filter(t=>t.targetId===targetId).map(t=>t.id));
-    for(const worker of s.workers.filter(w=>tasks.has(w.taskId))){releaseTask(s,worker);worker.path=null;worker.status='idle';}
+    for(const worker of s.workers.filter(w=>tasks.has(w.taskId))){releaseTask(s,worker);worker.path=null;worker.status='idle';notifyWorkerPlanningChange(s,worker);}
     replaceTasks(s,s.tasks.filter(t=>t.targetId!==targetId));s.structures=s.structures.filter(e=>e.id!==targetId);nav.setState(s);
     const refund=wallRefund(target);transact(s.ledger,id,refund);
     // Removal opens the graph: never call ensureAutomaticGates here or on reload.
@@ -367,6 +368,7 @@ function addHiredWorker(s,profileId,centerId,usedPeople){
   if(!person){person={id:`person-${s.nextId++}`,profile:profileId,recoveryUntil:0};s.people.push(person);}usedPeople.add(person.id);
   const entry=village.entry??village;
   s.workers.push({id:`worker-${s.nextId++}`,personId:person.id,profile:profileId,contractDay:s.day,centerId:centerId??null,villageId:village.id,x:entry.x,z:entry.z,status:center?'arriving':'waiting',taskId:null,crateId:null,path:null,hits:0,incapacitated:false,recovering:s.day<=person.recoveryUntil,runRemaining:dailyRunMetres(),actionRemaining:0});
+  notifyWorkerPlanningChange(s,s.workers.at(-1));
 }
 export function hireAdditional(s,id,selection,centerId){
   if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
@@ -388,7 +390,10 @@ export function hire(s,id,selection) {
   const centers=s.structures.filter(operational).map(c=>({...c,plants:s.plants.filter(p=>p.alive&&p.centerId===c.id).length}));
   const total=Object.values(selection).reduce((a,b)=>a+b,0),quotas=allocateWorkers(centers,total),assigned=distributeProfiles(quotas,selection);
   for(const w of s.workers)w.contractDay??=s.hiringPaidDay??s.day-1;
+  const previousWorkers=s.workers;
   s.workers=s.workers.filter(w=>contractExpired(w,s)&&w.status!=='home');
+  notifyWorkerPlanningRoster(s,previousWorkers,s.workers);
+  for(const worker of s.workers)notifyWorkerPlanningChange(s,worker);
   const usedPeople=new Set(s.workers.map(w=>w.personId));
   const add=(profileId,centerId)=>{
     addHiredWorker(s,profileId,centerId,usedPeople);
@@ -410,7 +415,9 @@ export function rebuildTasks(s) {
   for(const w of s.workers){
     cancelIdle(w);
     if(committed.has(w.taskId)&&s.tasks.some(t=>t.id===w.taskId&&t.workerId===w.id))continue;
+    const previousTask=w.taskId,previousStatus=w.status;
     w.taskId=null;w.taskApproach=null;if(['walking','acting'].includes(w.status))w.status='idle';
+    if(previousTask!==w.taskId||previousStatus!==w.status)notifyWorkerPlanningChange(s,w);
   }
   for(const p of s.plants.filter(p=>p.alive)) {
     if(!s.structures.some(c=>c.id===p.centerId&&operational(c)))continue;
@@ -443,6 +450,7 @@ export function recoverDisplacedWorkers(s) {
         .sort((a,b)=>(quotas[b.id]-counts[b.id])-(quotas[a.id]-counts[a.id])||a.created-b.created||a.id.localeCompare(b.id))[0];
       if(!destination)continue;
       cancelIdle(w);releaseTask(s,w);w.centerId=destination.id;w.status='arriving';w.raidReturn=true;w.path=null;
+      notifyWorkerPlanningChange(s,w);
       delete w.displacedDay;counts[destination.id]++;
       emit(s,'WorkerReassigned',{targetId:w.id,centerId:destination.id});
     }
@@ -679,7 +687,7 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
 }
 function completeTask(s,w,t,target,nav) {
   if(t.kind==='initial'||t.kind==='water') {
-    if(!canWaterFrom(w,target,nav)){releaseTask(s,w);w.status='idle';w.path=null;return;}
+    if(!canWaterFrom(w,target,nav)){releaseTask(s,w);w.status='idle';w.path=null;notifyWorkerPlanningChange(s,w);return;}
     if(target.alive){waterPlant(target);emit(s,'WaterSatisfied',{workerId:w.id,targetId:target.id});}
   } else if(t.kind==='harvest') {
     if(isMature(target)&&target.harvestRequested) {
@@ -712,6 +720,7 @@ function completeTask(s,w,t,target,nav) {
     catch {notice(s,'La reparación se canceló: fondos insuficientes al llegar.',target.id);}
   }
   replaceTasks(s,s.tasks.filter(task=>task.id!==t.id));w.taskId=null;w.taskApproach=null;if(w.status!=='carrying')w.status='idle';w.path=null;
+  notifyWorkerPlanningChange(s,w);
 }
 export function idleFarmAnchor(s,worker,center,livingCandidates=null){
   let planted=null,live=null,plantedDistance=Infinity,liveDistance=Infinity;
@@ -835,18 +844,18 @@ function updateWorkers(s,dt,nav) {
       const p=profile(w),center=s.structures.find(c=>c.id===w.centerId),village=s.villages.find(v=>v.id===w.villageId);
       if(['fleeing','returning','incapacitated'].includes(w.status)) {
         const reached=walkTo(s,w,{...(village.entry??village),id:`home-${village.id}`},dt,nav,{motion:{flight:w.incapacitated||w.status==='fleeing',slow:w.incapacitated}});
-        if(reached)w.status='home';continue;
+        if(reached){w.status='home';notifyWorkerPlanningChange(s,w);}continue;
       }
       if(w.status==='home')continue;
       if(w.status==='waiting'&&!center&&!s.raid&&!contractExpired(w,s)&&s.time<p.end){updateIdle(w,{...(village.entry??village),id:village.id},dt,nav,s.seed,s.structures);continue;}
       if(w.status!=='idle')cancelIdle(w);
-      if(!center||!operational(center)) {if(center&&!contractExpired(w,s)&&s.time<p.end)w.displacedDay??=s.day;cancelIdle(w);releaseTask(s,w);if(w.crateId)dropCarriedCrate(s,w);w.status='returning';w.path=null;continue;}
+      if(!center||!operational(center)) {if(center&&!contractExpired(w,s)&&s.time<p.end)w.displacedDay??=s.day;cancelIdle(w);releaseTask(s,w);if(w.crateId)dropCarriedCrate(s,w);w.status='returning';w.path=null;notifyWorkerPlanningChange(s,w);continue;}
       const ended=contractExpired(w,s)||s.time>=p.end;
-      if(ended&&!['acting','carrying'].includes(w.status)) {cancelIdle(w);releaseTask(s,w);w.status='returning';w.path=null;continue;}
-      if(w.status==='arriving') {if(walkTo(s,w,{...center,...centerServicePoint(center,s,.8),id:`arrival-${center.id}`},dt,nav,{motion:{urgent:!w.raidReturn&&(urgency?urgency.urgent(w):urgentWork(s,w))}})){w.status='idle';w.raidReturn=false;}continue;}
+      if(ended&&!['acting','carrying'].includes(w.status)) {cancelIdle(w);releaseTask(s,w);w.status='returning';w.path=null;notifyWorkerPlanningChange(s,w);continue;}
+      if(w.status==='arriving') {if(walkTo(s,w,{...center,...centerServicePoint(center,s,.8),id:`arrival-${center.id}`},dt,nav,{motion:{urgent:!w.raidReturn&&(urgency?urgency.urgent(w):urgentWork(s,w))}})){w.status='idle';w.raidReturn=false;notifyWorkerPlanningChange(s,w);}continue;}
       if(w.status==='carrying') {
         const crate=findCrate(w.crateId);
-        if(!crate){w.crateId=null;w.status='idle';continue;}
+        if(!crate){w.crateId=null;w.status='idle';notifyWorkerPlanningChange(s,w);continue;}
         if(w.deliveryApproach?.crateId!==crate.id||w.deliveryApproach?.centerId!==center.id||!Number.isFinite(w.deliveryApproach?.x)||!Number.isFinite(w.deliveryApproach?.z)){
           const source=findPlant(crate.sourcePlantId)??crate;
           w.deliveryApproach={...centerDeliveryPoint(center,source,s),crateId:crate.id,centerId:center.id};w.path=null;
@@ -854,27 +863,27 @@ function updateWorkers(s,dt,nav) {
         const delivered=walkTo(s,w,{...w.deliveryApproach,id:`delivery-${center.id}-${crate.id}`},dt,nav,{motion:{carrying:true}});
         crate.x=w.x;crate.z=w.z;
         if(delivered) {
-          const extraIncome=settleMultiplyPower(s,crate);transact(s.ledger,`deliver:${crate.id}`,add(crate.value,extraIncome));crate.multiplyIncome=extraIncome;crate.delivered=true;crate.carrierId=null;w.crateId=null;w.deliveryApproach=null;w.status=ended?'returning':'idle';w.path=null;emit(s,'CrateDelivered',{workerId:w.id,targetId:crate.id,multiplyIncome:crate.multiplyIncome});
+          const extraIncome=settleMultiplyPower(s,crate);transact(s.ledger,`deliver:${crate.id}`,add(crate.value,extraIncome));crate.multiplyIncome=extraIncome;crate.delivered=true;crate.carrierId=null;w.crateId=null;w.deliveryApproach=null;w.status=ended?'returning':'idle';w.path=null;notifyWorkerPlanningChange(s,w);emit(s,'CrateDelivered',{workerId:w.id,targetId:crate.id,multiplyIncome:crate.multiplyIncome});
           if(s.tutorial.step==='observe'||s.tutorial.step==='harvest'){s.tutorial.step='done';if(!s.tutorial.basicSkipped)emit(s,'TutorialCompleted',{workerId:w.id,targetId:crate.id});}
         }
         continue;
       }
       const t=findTask(w.taskId);
       if(!t) {
-        if(w.status!=='idle')w.status='idle';
+        if(w.status!=='idle'){w.status='idle';notifyWorkerPlanningChange(s,w);}
         if(s.tasks.some(task=>task.centerId===w.centerId&&!task.workerId))cancelIdle(w);
         else {idlePlants??=s.plants.filter(p=>p.alive);updateIdle(w,idleFarmAnchor(s,w,center,idlePlants),dt,nav,s.seed,s.structures);}
         continue;
       }
       const target=findPlant(t.targetId)??findCrate(t.targetId)??s.structures.find(e=>e.id===t.targetId);
-      if(!target || ('alive' in target&&!target.alive)) {replaceTasks(s,s.tasks.filter(q=>q.id!==t.id));w.taskId=null;w.status='idle';w.path=null;continue;}
+      if(!target || ('alive' in target&&!target.alive)) {replaceTasks(s,s.tasks.filter(q=>q.id!==t.id));w.taskId=null;w.status='idle';w.path=null;notifyWorkerPlanningChange(s,w);continue;}
       if(w.status==='walking') {
         let destination=target;
         if(t.kind==='repair'){
           if(w.taskApproach?.taskId!==t.id||w.path===null){
             nav.planningObserver?.({kind:'assignedRouteRebuild',actorId:w.id,elapsed:s.elapsed,taskId:t.id});
             const route=taskRouteWhenKnown(()=>repairRoute(w,target,nav));
-            if(!route){releaseTask(s,w);w.status='idle';continue;}
+            if(!route){releaseTask(s,w);w.status='idle';notifyWorkerPlanningChange(s,w);continue;}
             w.taskApproach={taskId:t.id,destination:route.destination};w.path=route.path;w.destinationId=route.destination.id;w.pathVersion=nav.version;
           }
           destination=w.taskApproach.destination;
@@ -882,7 +891,7 @@ function updateWorkers(s,dt,nav) {
           if(w.taskApproach?.taskId!==t.id||w.path===null||w.pathVersion!==nav.version){
             nav.planningObserver?.({kind:'assignedRouteRebuild',actorId:w.id,elapsed:s.elapsed,taskId:t.id});
             const route=taskRouteWhenKnown(()=>wateringRoute(w,target,nav));
-            if(!route){releaseTask(s,w);w.status='idle';continue;}
+            if(!route){releaseTask(s,w);w.status='idle';notifyWorkerPlanningChange(s,w);continue;}
             w.taskApproach={taskId:t.id,destination:route.destination};w.path=route.path;w.destinationId=route.destination.id;w.pathVersion=nav.version;
           }
           destination=w.taskApproach.destination;
@@ -890,8 +899,8 @@ function updateWorkers(s,dt,nav) {
         if(walkTo(s,w,destination,dt,nav,{motion:{urgent:(urgency?urgency.urgent(w):urgentWork(s,w))}})) {
           if(t.kind==='repair'){completeTask(s,w,t,target,nav);urgency?.invalidate();continue;}
           if(t.kind==='initial'||t.kind==='water')w.heading=Math.atan2(target.x-w.x,target.z-w.z);
-          w.status='acting';w.actionRemaining=(t.kind==='initial'?7.2:t.kind==='water'?3.4:t.kind==='harvest'?3.6:t.kind==='repair'?3.8:1)/p.speed;
-        }else if(w.path===null){releaseTask(s,w);w.status='idle';}
+          w.status='acting';w.actionRemaining=(t.kind==='initial'?7.2:t.kind==='water'?3.4:t.kind==='harvest'?3.6:t.kind==='repair'?3.8:1)/p.speed;notifyWorkerPlanningChange(s,w);
+        }else if(w.path===null){releaseTask(s,w);w.status='idle';notifyWorkerPlanningChange(s,w);}
       } else if(w.status==='acting') {
         if(t.kind==='repair'){completeTask(s,w,t,target,nav);urgency?.invalidate();continue;}
         w.actionRemaining-=dt;if(w.actionRemaining<=0)completeTask(s,w,t,target,nav);
@@ -903,11 +912,14 @@ function updateWorkers(s,dt,nav) {
 function closeNight(s) {
   s.completedNights++;s.time=0;s.day++;
   s.tutorial.shownToday={day:s.day,ids:[]};
+  const previousWorkers=s.workers;
   s.workers=s.workers.filter(w=>w.status!=='home');
+  notifyWorkerPlanningRoster(s,previousWorkers,s.workers);
   for(const w of s.workers){
     w.contractDay??=s.day-1;w.runRemaining=dailyRunMetres();w.running=false;
     w.recovering=s.day<=(s.people.find(p=>p.id===w.personId)?.recoveryUntil??0);
-    if(!['acting','carrying','fleeing','returning','incapacitated'].includes(w.status)){releaseTask(s,w);w.status='returning';w.path=null;}
+    if(!['acting','carrying','fleeing','returning','incapacitated'].includes(w.status)){releaseTask(s,w);w.status='returning';w.path=null;notifyWorkerPlanningChange(s,w);}
+    else notifyWorkerPlanningChange(s,w);
   }
   applyEvent(s);s.eventPlan=null;s.nightPlan=null;
   if(compare(s.ledger.balance,rational(dawnMinimum(s)))<0){s.result='defeat';notice(s,'El sol vuelve, pero el poblado no puede costear otra jornada.');emit(s,'GameOver');return;}

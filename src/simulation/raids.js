@@ -17,7 +17,7 @@ import {eligiblePendingRaidWavePlan} from '../world/raid-entry-data.js';
 import {emit,notice,walkTo,rebuildTasks,spellAt,dropCarriedCrate,recoverDisplacedWorkers} from './game.js';
 import {contractExpired} from './workforce.js';
 import {cancelIdle} from './idle.js';
-import {releaseTask,replaceTasks} from './tasks.js';
+import {releaseTask,replaceTasks,notifyWorkerPlanningChange} from './tasks.js';
 import {rational,compare} from './money.js';
 import {updateWorkerEncounters} from './encounters.js';
 import {ANIMAL_ACTIONS} from './animal-actions-data.js';
@@ -340,6 +340,7 @@ export function spawnRaid(s,plan,nav,daytime=false) {
     releaseTask(s,w);w.path=null;w.hits=0;
     if(w.crateId)dropCarriedCrate(s,w);
     if(w.status!=='home')w.status='fleeing';
+    notifyWorkerPlanningChange(s,w);
   }
   replaceTasks(s,s.tasks.filter(t=>t.kind!=='repair'));
   if(!wave)notice(s,RAID_NOTICE_TEXT,animals[0].id);
@@ -670,6 +671,7 @@ export function updateRaid(s,dt,nav) {
       const center=s.structures.find(c=>c.id===w.centerId&&operational(c));
       if(center){w.status='arriving';w.raidReturn=true;w.path=null;}
       else {w.displacedDay=s.day;w.status='returning';w.path=null;}
+      notifyWorkerPlanningChange(s,w);
     }
     recoverDisplacedWorkers(s);
     rebuildTasks(s);

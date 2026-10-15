@@ -351,7 +351,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
   if(!Number.isFinite(retrySeconds)||retrySeconds<=0)
     throw RangeError('retrySeconds must be positive');
   const bridge=createSpatialIntentBridge(session);
-  const eligible=new Set(),requests=new Map();
+  const eligible=new Set(),requests=new Map(),projectedPositions=new Map();
   let pendingTaskEvents=[];
   let observedTaskState=null,stopTaskObserver=null;
   let dirty=true,nextRetry=Infinity,lastTime=-Infinity,total=0,initialized=false;
@@ -359,6 +359,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     const id=numericId(worker.id);
     if(workerRow(worker,state)[6])eligible.add(id);
     else eligible.delete(id);
+    projectedPositions.set(id,[worker.x,worker.z]);
   };
   const resetFromState=state=>{
     initialized=false;
@@ -366,7 +367,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
       stopTaskObserver();stopTaskObserver=null;observedTaskState=null;
     }
     const result=bridge.resetFromState(state);
-    eligible.clear();requests.clear();pendingTaskEvents=[];total=0;
+    eligible.clear();projectedPositions.clear();requests.clear();pendingTaskEvents=[];total=0;
     for(const worker of state.workers)setWorker(worker,state);
     dirty=true;nextRetry=Infinity;lastTime=-Infinity;
     initialized=true;
@@ -378,13 +379,13 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     catch(error){
       // The bridge has rebuilt WASM from authoritative JS state. Rebuild this
       // gate's eligibility view as well, so recovery cannot miss a wakeup.
-      eligible.clear();
+      eligible.clear();projectedPositions.clear();
       for(const worker of state.workers)setWorker(worker,state);
       dirty=true;nextRetry=Infinity;
       throw error;
     }
     for(const event of events)if(event.type==='worker'){
-      if(event.remove)eligible.delete(numericId(event.id));
+      if(event.remove){eligible.delete(numericId(event.id));projectedPositions.delete(numericId(event.id));}
       else setWorker(event.entity,state);
     }
     if(events.some(event=>event.type!=='structureDamage'))dirty=true;
@@ -399,6 +400,19 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     if(!dirty&&simulatedSeconds<nextRetry)return null;
     if(!session.core.wasm.nav_intent_task_count()){
       dirty=false;nextRetry=Infinity;return [];
+    }
+    // Idle workers can move while awaiting a task. Refresh only changed
+    // positions at an actual planning boundary; movement ticks do not query
+    // native navigation or rebuild the worker roster.
+    if(observedTaskState){
+      const moved=[];
+      for(const worker of observedTaskState.workers){
+        const id=numericId(worker.id),position=projectedPositions.get(id);
+        if(eligible.has(id)&&position&&
+          (position[0]!==worker.x||position[1]!==worker.z))
+          moved.push({type:'worker',entity:worker});
+      }
+      if(moved.length)applyEvents(observedTaskState,moved);
     }
     const before=new Map([...eligible].map(id=>
       [id,session.core.wasm.nav_intent_actor_planning_calls(id)]));
@@ -422,7 +436,15 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
       [id,times.filter(time=>time>simulatedSeconds-60).length]))});
   const flushTaskEvents=()=>{
     if(!pendingTaskEvents.length)return 0;
-    const events=pendingTaskEvents;
+    const workerEvents=new Map(),taskEvents=[];
+    for(const event of pendingTaskEvents){
+      if(event.type==='worker'){
+        const id=event.remove?event.id:event.entity.id;
+        workerEvents.set(id,event);
+      }else taskEvents.push(event);
+    }
+    const events=[...taskEvents,...[...workerEvents]
+      .sort(([a],[b])=>numericId(a)-numericId(b)).map(([,event])=>event)];
     pendingTaskEvents=[];
     applyEvents(observedTaskState,events);
     return events.length;
@@ -432,6 +454,13 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     if(stopTaskObserver)throw Error('A task observer is already attached');
     observedTaskState=state;
     const stop=observeTaskChanges(state,event=>{
+      if(event.type==='worker'){
+        pendingTaskEvents.push({type:'worker',entity:event.worker});dirty=true;return;
+      }
+      if(event.type==='worker-removed'){
+        pendingTaskEvents.push({type:'worker',remove:true,id:event.workerId});
+        dirty=true;return;
+      }
       const nativeEvent=event.type==='removed'?
         {type:'task',remove:true,id:event.taskId}:
         {type:'task',entity:{id:event.taskId,centerId:event.centerId,

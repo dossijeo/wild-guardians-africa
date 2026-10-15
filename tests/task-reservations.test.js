@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {enqueue,observeTaskChanges,replaceTasks,reserveTasks,releaseTask,taskPlanningRevision} from '../src/simulation/tasks.js';
+import {enqueue,observeTaskChanges,replaceTasks,reserveTasks,releaseTask,
+ notifyWorkerPlanningChange,notifyWorkerPlanningRoster,taskPlanningRevision} from '../src/simulation/tasks.js';
 import {contractExpired} from '../src/simulation/workforce.js';
 import {cancelIdle} from '../src/simulation/idle.js';
 function reference(state,canExecute){
@@ -31,8 +32,18 @@ test('task mutation events describe confirmed changes without polling the queue'
  s.nextId=1;s.sequence=2;
  enqueue(s,'center','water','plot');
  assert.equal(events.at(-1).type,'created');
+ const snapshot=owner.status;
+ notifyWorkerPlanningChange(s,owner);
+ owner.status='returning';
+ assert.equal(events.at(-1).worker.status,snapshot,
+  'worker events keep the confirmed status at the mutation boundary');
+ notifyWorkerPlanningChange(s,owner);
+ assert.equal(events.at(-1).worker.status,'returning');
+ notifyWorkerPlanningRoster(s,s.workers,s.workers.filter(item=>item!==owner));
+ assert.deepEqual([events.at(-1).type,events.at(-1).workerId],
+  ['worker-removed',owner.id]);
  stop();replaceTasks(s,[]);
- assert.equal(events.length,4,'unsubscribed observers receive no later mutations');
+ assert.equal(events.length,7,'unsubscribed observers receive no later mutations');
 });
 
 test('a released lease invalidates an otherwise unchanged task queue',()=>{

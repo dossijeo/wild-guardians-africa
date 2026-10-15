@@ -12,15 +12,37 @@ export function observeTaskChanges(state,callback){
   listeners.add(callback);
   return ()=>listeners.delete(callback);
 }
+function workerSnapshot(worker){
+  return {id:worker.id,centerId:worker.centerId,x:worker.x,z:worker.z,
+    status:worker.status,taskId:worker.taskId,
+    incapacitated:worker.incapacitated,contractDay:worker.contractDay,
+    profile:worker.profile};
+}
+export function notifyWorkerPlanningChange(state,worker){
+  const listeners=taskObservers.get(state);
+  if(!listeners?.size)return;
+  const event={type:'worker',worker:workerSnapshot(worker)};
+  for(const callback of listeners)callback(event);
+}
+export function notifyWorkerPlanningRemoval(state,workerId){
+  const listeners=taskObservers.get(state);
+  if(!listeners?.size)return;
+  const event={type:'worker-removed',workerId};
+  for(const callback of listeners)callback(event);
+}
+export function notifyWorkerPlanningRoster(state,previous,current){
+  if(!taskObservers.get(state)?.size)return;
+  const retained=new Set(current.map(worker=>worker.id));
+  for(const worker of previous)
+    if(!retained.has(worker.id))notifyWorkerPlanningRemoval(state,worker.id);
+}
 function taskChange(state,type,task,worker=null){
   const listeners=taskObservers.get(state);
   if(!listeners?.size)return;
   const event={type,taskId:task.id,centerId:task.centerId,
     targetId:task.targetId,kind:task.kind,created:task.created,
-    workerId:task.workerId??null,worker:worker?{
-      id:worker.id,centerId:worker.centerId,x:worker.x,z:worker.z,
-      status:worker.status,taskId:worker.taskId,incapacitated:worker.incapacitated,
-      contractDay:worker.contractDay,profile:worker.profile}:null};
+    workerId:task.workerId??null,
+    worker:worker?workerSnapshot(worker):null};
   for(const callback of listeners)callback(event);
 }
 export function replaceTasks(state,next){
