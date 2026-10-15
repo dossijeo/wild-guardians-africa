@@ -95,6 +95,33 @@ try{
   session.syncState(state);inspect('wall-removed-breach');
   state.structures.push(gate);session.syncState(state);inspect('wall-restored');
 
+  // Placement previews temporarily edit the native graph without committing a
+  // structure to the game state. Cached native answers must follow that graph
+  // and return to the confirmed answer when the preview is discarded.
+  const confirmed=session.actorConnectivity(start,end,{worker:true});
+  const previewWall={...gate,id:'cache-preview-wall',gate:false};
+  const missesBeforePreview=wasm.nav_cache_total_misses();
+  session.withWallPreview([previewWall],[],()=>{
+    const pairs=compareNativeQueries('uncommitted-wall-preview');
+    const misses=wasm.nav_cache_total_misses();
+    assert(misses>missesBeforePreview,
+      'preview topology must invalidate previously cached native answers');
+    const cached=session.core.wasm.nav_cached_connected(65,3,68,3);
+    const fresh=session.core.wasm.lazy_connected(65,3,68,3);
+    assert.equal(cached,fresh,'native cache hid a preview barrier');
+    rows.push({stage:'uncommitted-wall-preview',pairs,cached,fresh,
+      missesBeforePreview,misses});
+  });
+  const afterPreview=session.actorConnectivity(start,end,{worker:true});
+  assert.equal(afterPreview,confirmed,'preview changed the confirmed graph');
+  const missesBeforeDiscardedQuery=wasm.nav_cache_total_misses();
+  const pairsAfterDiscard=compareNativeQueries('wall-preview-discarded');
+  const missesAfterDiscardedQuery=wasm.nav_cache_total_misses();
+  assert(missesAfterDiscardedQuery>missesBeforeDiscardedQuery,
+    'discarding a preview must invalidate preview-only native answers');
+  rows.push({stage:'wall-preview-discarded',pairs:pairsAfterDiscard,
+    confirmed,afterPreview,missesBeforeDiscardedQuery,missesAfterDiscardedQuery});
+
   session.actorRegions(start,{worker:true});
   const cross={ax:65,az:3,bx:10,bz:3};
   const before=wasm.nav_cached_connected(cross.ax,cross.az,cross.bx,cross.bz);

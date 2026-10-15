@@ -87,14 +87,30 @@
       "nativeMisses": 105
     },
     {
+      "stage": "uncommitted-wall-preview",
+      "pairs": 10,
+      "cached": 1,
+      "fresh": 1,
+      "missesBeforePreview": 105,
+      "misses": 125
+    },
+    {
+      "stage": "wall-preview-discarded",
+      "pairs": 10,
+      "confirmed": "possible",
+      "afterPreview": "possible",
+      "missesBeforeDiscardedQuery": 126,
+      "missesAfterDiscardedQuery": 145
+    },
+    {
       "stage": "residency-remove-and-restore",
       "before": 0,
       "absent": -1,
       "restored": 0,
       "absentPairs": 10,
       "restoredPairs": 10,
-      "nativeHits": 38,
-      "nativeMisses": 145
+      "nativeHits": 41,
+      "nativeMisses": 185
     },
     {
       "stage": "js-watering-route-residency",
@@ -112,8 +128,8 @@
       "portalBefore": 1,
       "portalCached": 0,
       "portalFresh": 0,
-      "sectorBefore": 320,
-      "sectorAfter": 320,
+      "sectorBefore": 324,
+      "sectorAfter": 324,
       "portalPairs": 10
     },
     {
