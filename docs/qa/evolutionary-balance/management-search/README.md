@@ -53,6 +53,15 @@ incursiones coinciden, así como economía, política y defensa: hash comparable
 Los informes íntegros, sus hashes de fuente y el alcance de la comparación
 están en `parity-sabana712-14.json`.
 
+El segundo par del mismo genoma, Gran Río/2026, también completó 14/14 noches
+en ambos procesos. Coinciden los 14 registros diarios y las 14 incursiones,
+incluidas economía, política y defensa, con hash comparable
+`cf360f31b71e6bd892100b17f143343031868408267ad60a0dcbd8d0700f7ac0`.
+Al final conserva 126 cultivos y 1.010 monedas; esto sólo acredita
+supervivencia del horizonte corto. Los informes nativos y la comparación están
+en `parity-gran-rio2026-14.json`. Ninguno de los dos pares constituye una
+victoria de 100 noches ni valida el ranking de fitness antiguo.
+
 Otro genoma de la ejecución exploratoria, `f4967cb9f88e23dd`, también alcanzó
 14/14 noches en Sabana/712, pero terminó con 26 plantas, 315 monedas y
 23⅔ cajas/día en las tres jornadas finales. El umbral congelado de 82⅙ lo
