@@ -4,6 +4,7 @@ import * as Game from '../src/simulation/game.js';
 import {Navigation} from '../src/world/navigation.js';
 import {rational,numberOf} from '../src/simulation/money.js';
 import {createNativeExpandingDefensePolicy} from '../tools/native-expanding-defense-policy.mjs';
+import {defenseCashProtection} from '../tools/native-campaign-runner.mjs';
 function fixture(){
  const s=Game.newGame({seed:712,slotId:'paid-policy'});s.day=2;s.time=100;s.elapsed=700;s.initialPreparation=false;
  // Explicit paid-command fixture credit, not a new-game economic result.
@@ -22,6 +23,21 @@ test('failed/unaffordable strokes and uncompleted repair requests are not counte
  const {s,nav,options,policy}=fixture();assert.equal(policy.act(s,nav,options),1);const wall=s.structures.find(w=>w.kind==='wall');wall.hp=50;nav.setState(s);s.elapsed+=31;
  assert.equal(policy.act(s,nav,options),0);assert.ok(s.tasks.some(t=>t.kind==='repair'&&t.targetId===wall.id));assert.equal(policy.report(s).repairRequests,1);
  s.elapsed+=31;s.ledger.balance=rational(30);assert.equal(policy.act(s,nav,options),0);assert.equal(policy.report(s).history.at(-1).reason,'budget');
+});
+test('pending repairs are reserved exactly once while another paid repair remains affordable',()=>{
+ const {s,nav,policy}=fixture();
+ assert.equal(policy.act(s,nav,{command:kind=>`first-${kind}`,reserve:100}),1);
+ const [first,second]=s.structures.filter(w=>w.kind==='wall');
+ assert.ok(first&&second);
+ first.hp=50;second.hp=50;nav.setState(s);
+ Game.requestRepair(s,'preexisting-repair',first.id);
+ s.ledger.balance=rational(612);s.elapsed+=31;
+ const reserve=defenseCashProtection({balance:612,labourReserve:600,defenseCashFraction:.2});
+ assert.equal(reserve,600);
+ policy.act(s,nav,{command:kind=>`next-${kind}`,reserve});
+ assert.equal(s.tasks.filter(t=>t.kind==='repair').length,2);
+ assert.equal(policy.report(s).repairRequests,1);
+ assert.equal(numberOf(s.ledger.balance),612); // Requesting never charges early.
 });
 test('service-side candidate buys only walls with a native worker-side connection',()=>{
  const {s,nav,options}=fixture(),cash=numberOf(s.ledger.balance);

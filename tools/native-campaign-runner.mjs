@@ -29,6 +29,14 @@ import {q4DawnPlan,q4AdditionalPlan,q4RecoveryReserve} from './native-q4-labour-
 import {validateGenes,preferredAgriculturalPower} from './evolutionary-balance/policy-genes.mjs';
 
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
+// Defense policies add the cost of pending repairs themselves. Keep this
+// protected cash independent so the same queued repair is never reserved twice.
+export function defenseCashProtection({balance,labourReserve,defenseCashFraction=1}){
+ if(!Number.isFinite(balance)||balance<0||!Number.isFinite(labourReserve)||labourReserve<0||
+   !Number.isFinite(defenseCashFraction)||defenseCashFraction<0||defenseCashFraction>1)
+  throw Error('Invalid defense cash protection');
+ return Math.max(labourReserve,Math.ceil(balance*(1-defenseCashFraction)));
+}
 export function syncNativeCampaignRaidView(state,nav,previousCenter){
  const center=state.structures.find(operational);
  if(!center)return null;
@@ -127,7 +135,9 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
   for(const c of (policy.repair?s.structures.filter(operational):[]))if(c.hp<(reserveMaintenance?600:540)&&!s.tasks.some(t=>t.kind==='repair'&&t.targetId===c.id)&&numberOf(s.ledger.balance)>=numberOf(Game.repairCost(c))+labourReserve()){const taskCount=s.tasks.length;Game.requestRepair(s,command('repair'),c.id);if(s.tasks.length>taskCount)actions++;}
   // Village savings are discretionary: building/maintaining physical protection
   // takes priority. Still retain wages and already requested native repairs.
-  if(defense)actions+=defense.act(s,nav,{command,reserve:Math.max(labourReserve()+maintenanceReserve(),genes?Math.ceil(numberOf(s.ledger.balance)*(1-genes.defenseCashFraction)):0)});
+  if(defense)actions+=defense.act(s,nav,{command,reserve:defenseCashProtection({
+   balance:numberOf(s.ledger.balance),labourReserve:labourReserve(),
+   defenseCashFraction:genes?.defenseCashFraction??1})});
   if(expansion)actions+=expansion.act(s,nav,{command,reserve:labourReserve()+maintenanceReserve(),villageSavings:savingsReserve()});
   const live=s.plants.filter(p=>p.alive);
   if(genes||currentMagicRules){
