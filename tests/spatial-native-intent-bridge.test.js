@@ -9,6 +9,7 @@ import {emit,rebuildTasks,walkTo} from '../src/simulation/game.js';
 import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
 import {canWaterFrom} from '../src/world/work-points.js';
+import {cropBecameInactive} from '../src/simulation/active-crops.js';
 import {createSpatialIntentBridge,createEventDrivenTaskPlanner} from
  '../src/world/hierarchical-wasm/spatial-intent-bridge.js';
 import {enqueue,notifyWorkerPlanningChange,replaceTasks} from '../src/simulation/tasks.js';
@@ -269,6 +270,86 @@ test('unknown service routes wait for a sector event or low-frequency retry',
   assert(planner.planIfNeeded(8.1).length>0,'relevant event wakes the queue');
   planner.discard();
   assert.equal(planner.metrics(8.1).nativePlanningCalls,3);
+ }finally{session.dispose();}
+});
+
+test('a moved crate reroutes the same worker task at the confirmed event boundary',
+ {skip:!module&&'Build and select the experimental WASM first'},()=>{
+ const game=deserialize(gunzipSync(readFileSync(new URL(
+  './fixtures/desierto983-d15-partial-state.json.gz',import.meta.url))).toString());
+ const worker=game.workers.find(item=>item.id==='worker-9263');
+ worker.status='idle';worker.taskId=null;worker.contractDay=game.day;
+ const crate={id:'crate-1000003',x:worker.x,z:worker.z,delivered:false};
+ const task={id:'task-999998',created:1,centerId:worker.centerId,
+  kind:'crate',targetId:crate.id,workerId:null,blocked:false};
+ game.crates.push(crate);game.tasks=[task];
+ const loaded=new Map(),session=createSpatialGameSession(module,game,{
+  loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+ try{
+  const village=game.villages[0],cx=Math.floor((village.x+24)/48),
+   cz=Math.floor((village.z+24)/48);
+  for(let z=cz-4;z<=cz+4;z++)for(let x=cx-4;x<=cx+4;x++){
+   if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+   loaded.set(`${x},${z}`,session.core.chunkPayload());
+  }
+  const places=[];
+  for(const [dx,dz] of [[.5,0],[-.5,0],[0,.5],[0,-.5],[1,0],[-1,0]]){
+   const point={x:worker.x+dx,z:worker.z+dz};
+   if(session.actorCanStand(point,{worker:true})&&
+     session.routeActor(worker,point,{worker:true}).status==='found')
+    places.push(point);
+  }
+  assert(places.length>=2,'the fixture has two distinct reachable crate sites');
+  Object.assign(crate,places[0]);
+  const nav=createSpatialNavigationMovement(session,game);
+  const planner=createEventDrivenTaskPlanner(session);
+  planner.resetFromState(game);
+  const stopTasks=planner.observeTasks(game),stopWorld=planner.observeWorld(game);
+  const plan=planner.planIfNeeded(0);
+  assert.equal(plan[0].status,1);
+  assert.equal(planner.commitTaskBatchToState(game,plan,{navVersion:nav.version}),1);
+  planner.flushTaskEvents();
+  const [initial]=planner.intentChanges();
+  assert(initial.routeHandle);
+  Object.assign(crate,places[1]);
+  emit(game,'CrateDropped',{targetId:crate.id});
+  assert.equal(planner.flushWorldEvents(),1);
+  const changes=planner.reconcileWorkerRoutes(game,{navVersion:nav.version});
+  assert.equal(changes.at(-1).state,1,'the same intention receives a new route');
+  assert.equal(worker.taskId,task.id);
+  assert.equal(task.workerId,worker.id);
+  assert.equal(worker.status,'walking');
+  assert.equal(planner.routePoints(initial.routeHandle),null,
+   'the outdated handle was invalidated');
+  assert(Math.hypot(worker.path.at(-1).x-crate.x,
+   worker.path.at(-1).z-crate.z)<.01);
+  assert.equal(planner.metrics(0).nativePlanningCalls,1,
+   'the crate event reroutes without another global task-selection pass');
+  crate.delivered=true;
+  emit(game,'CrateDelivered',{workerId:worker.id,targetId:crate.id});
+  planner.flushWorldEvents();
+  planner.reconcileWorkerRoutes(game,{navVersion:nav.version});
+  assert.equal(worker.taskId,null,'a delivered target releases its worker');
+  assert.equal(worker.status,'idle');
+  assert(!game.tasks.some(item=>item.id===task.id),
+   'the obsolete task is removed at the same confirmed event boundary');
+  planner.flushTaskEvents();
+  const plant=game.plants.filter(item=>item.alive&&item.centerId===worker.centerId)
+   .sort((a,b)=>Math.hypot(a.x-worker.x,a.z-worker.z)-
+     Math.hypot(b.x-worker.x,b.z-worker.z))[0];
+  const watering=enqueue(game,worker.centerId,'water',plant.id);
+  assert(watering);
+  const nextPlan=planner.planIfNeeded(1);
+  assert(nextPlan.some(row=>row.status===1&&row.taskId===Number(watering.id.split('-').at(-1))));
+  planner.commitTaskBatchToState(game,nextPlan,{navVersion:nav.version});
+  planner.flushTaskEvents();planner.intentChanges();
+  plant.alive=false;cropBecameInactive(game.plants);
+  emit(game,'CropDestroyed',{targetId:plant.id});
+  planner.flushWorldEvents();
+  planner.reconcileWorkerRoutes(game,{navVersion:nav.version});
+  assert.equal(worker.taskId,null,'a destroyed crop releases its assigned worker');
+  assert(!game.tasks.some(item=>item.id===watering.id));
+  stopTasks();stopWorld();
  }finally{session.dispose();}
 });
 

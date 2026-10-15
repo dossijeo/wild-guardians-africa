@@ -5,7 +5,8 @@ import {BALANCE} from '../../simulation/balance.js';
 import {activeCrops} from '../../simulation/active-crops.js';
 import {workerEntityLookup} from '../../simulation/worker-entity-lookup.js';
 import {ANIMAL_SPATIAL_PROFILES} from './spatial-movement-profiles.js';
-import {applyConfirmedTaskAssignments,observeTaskChanges} from '../../simulation/tasks.js';
+import {applyConfirmedTaskAssignments,notifyWorkerPlanningChange,
+  observeTaskChanges,releaseTask,replaceTasks} from '../../simulation/tasks.js';
 
 // Experimental event-fed bridge. Gameplay does not call it yet: it is used to
 // prove the native read model can be rebuilt after load and changed by deltas.
@@ -547,7 +548,55 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
       const invalidated=session.core.wasm.nav_intent_reconcile_topology();
       if(invalidated)session.core.wasm.nav_intent_replan_pending_routes();
     }
+    if(events.some(event=>event.type==='CrateDropped'))
+      session.core.wasm.nav_intent_replan_pending_routes();
     return events.length;
+  };
+  const reconcileWorkerRoutes=(state,{navVersion}={})=>{
+    if(!Number.isFinite(navVersion))throw TypeError('Expected a navigation revision');
+    const changes=bridge.intentChanges();
+    const latest=new Map();
+    for(const change of changes)latest.set(change.actorId,change);
+    const workers=new Map(state.workers.map(worker=>[numericId(worker.id),worker]));
+    const tasks=new Map(state.tasks.map(task=>[numericId(task.id),task]));
+    const targetFor=taskTargetLookup(state);
+    for(const change of latest.values()){
+      const worker=workers.get(change.actorId);
+      if(!worker||!worker.taskId||numericId(worker.taskId)!==change.taskId)continue;
+      const task=tasks.get(change.taskId);
+      if(change.state===1){
+        const coordinates=bridge.routePoints(change.routeHandle);
+        if(!coordinates||coordinates.length<2||coordinates.length%2)
+          throw Error('Native active intention has no valid route');
+        const path=Array.from({length:coordinates.length/2},(_,index)=>
+          ({x:coordinates[index*2],z:coordinates[index*2+1]}));
+        const endpoint=path.at(-1),target=task&&targetFor(task.targetId);
+        if(!target)throw Error('Native reroute lost its JS task target');
+        const interaction=['repair','initial','water'].includes(task.kind);
+        const destination=interaction?{
+          id:`native-point-${task.id}`,x:endpoint.x,z:endpoint.z}:target;
+        worker.path=path;worker.destinationId=destination.id;
+        worker.pathVersion=navVersion;
+        worker.taskApproach=interaction?{taskId:task.id,destination}:null;
+        if(worker.status==='waiting-task'){
+          worker.status='walking';notifyWorkerPlanningChange(state,worker);
+        }
+      }else if(change.state===0||change.state===3||change.state===4){
+        const target=task&&targetFor(task.targetId);
+        if(!task||!target||'alive' in target&&!target.alive||target.delivered){
+          releaseTask(state,worker);worker.status='idle';worker.path=null;
+          notifyWorkerPlanningChange(state,worker);
+          if(task)replaceTasks(state,state.tasks.filter(item=>item.id!==task.id));
+        }else{
+          worker.path=null;worker.status='waiting-task';
+          notifyWorkerPlanningChange(state,worker);
+        }
+      }else if(change.state===5){
+        releaseTask(state,worker);worker.status='idle';worker.path=null;
+        notifyWorkerPlanningChange(state,worker);
+      }
+    }
+    return changes;
   };
   const flushTaskEvents=()=>{
     if(!pendingTaskEvents.length)return 0;
@@ -615,7 +664,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     };
   };
   return {resetFromState,applyEvents,observeTasks,observeWorld,
-    flushTaskEvents,flushWorldEvents,planIfNeeded,metrics,
+    flushTaskEvents,flushWorldEvents,reconcileWorkerRoutes,planIfNeeded,metrics,
     commitTaskBatchToState,
     intentChanges:bridge.intentChanges,routePoints:bridge.routePoints,
     discard:bridge.discard,commit:bridge.commit,sequence:bridge.sequence};
