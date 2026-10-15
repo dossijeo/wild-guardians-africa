@@ -19,6 +19,17 @@ export function repairRoute(worker,target,nav){
   }
   for(const [index,point] of points.entries()){
     const destination={...point,id:`repair-point-${target.id}-${index}`};
+    // Native actorCanStand returns false for an unloaded chunk too. Verify
+    // residency before treating a failed stand check as physical rejection.
+    // Unknown residency remains pending rather than becoming a blocked task.
+    try{
+      if(nav.residencyRevision!==undefined)nav.propsAt(point.x,point.z,radius);
+      if(nav.walkable?.(point.x,point.z,radius,null,true)===false)continue;
+    }catch(error){
+      if(error?.name!=='SpatialChunkUnavailable')throw error;
+      unresolved??=error;
+      continue;
+    }
     let path;
     try{path=nav.path(worker,destination,radius,null,true);}
     catch(error){

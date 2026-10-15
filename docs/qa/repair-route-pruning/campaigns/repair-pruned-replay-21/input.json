@@ -1,0 +1,38 @@
+{
+  "days": 21,
+  "scenarios": [
+    {
+      "biome": "manglares",
+      "seed": 764
+    },
+    {
+      "biome": "desierto",
+      "seed": 983
+    }
+  ],
+  "genomes": {
+    "default-walls": {},
+    "default-no-walls": {
+      "wallPolicy": "none"
+    }
+  },
+  "caseSelection": [
+    {
+      "name": "default-walls",
+      "biome": "desierto",
+      "seed": 983
+    }
+  ],
+  "raidProbeSnapshotDays": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ],
+  "minimumTerminalDeliveryPerDay": 82.16666666666667,
+  "maxDayGameTickMs": 60000,
+  "maxElapsedWallMs": 900000,
+  "output": "docs/qa/evolutionary-balance/repair-pruned-replay-21/results"
+}

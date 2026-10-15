@@ -1,0 +1,170 @@
+{
+  "stamp": {
+    "sourceHash": "a06ded8cf63b3980190df987eda04a3e5566febd",
+    "geneSchemaVersion": "virtual-player-v2-wall-policy",
+    "moduleHashes": {
+      "tools/native-campaign-runner.mjs": "cb3ece0a6c29fbf3e2f70fd30094ad18cb804135beb59d7c3ffd4db1fb2aa4dd",
+      "tools/evolutionary-balance/run-ga.mjs": "b6e28e28393bb4ccac2a7756ac17dc6346442dfcc4fd7b091c2c5dfdc1d56f2c",
+      "tools/evolutionary-balance/run-post-intro-pilot.mjs": "38a953c1884af58baa423500de192aebdf191be50f99b5d1c12d0668fa14f9a3",
+      "tools/evolutionary-balance/post-intro-fitness.mjs": "6b5ff70302dc203907164b64cb598e53b69a5ab2e5424af4c77036db7b2e4f7c",
+      "tools/evolutionary-balance/policy-genes.mjs": "61c6e840b1f9d110817040d034095a1134d183626fe6ac3324aeda932f5a8866"
+    },
+    "config": {
+      "days": 21,
+      "maxDayGameTickMs": 60000,
+      "maxElapsedWallMs": 900000,
+      "minimumTerminalDeliveryPerDay": 82.16666666666667,
+      "scenarios": [
+        {
+          "biome": "manglares",
+          "seed": 764
+        },
+        {
+          "biome": "desierto",
+          "seed": 983
+        }
+      ],
+      "genomes": {
+        "default-walls": {
+          "plantsPerWorker": 6,
+          "wageReserveDays": 1,
+          "seedReserve": 0,
+          "defenseCashFraction": 0.2,
+          "defenseStartDay": 2,
+          "repairHealthFraction": 0.8,
+          "magicIntervalSeconds": 5,
+          "growthShare": 0,
+          "plantingIntervalSeconds": 1,
+          "wallMaterial": "zarzas",
+          "magicPriority": "multiply",
+          "wallPolicy": "planned"
+        },
+        "default-no-walls": {
+          "plantsPerWorker": 6,
+          "wageReserveDays": 1,
+          "seedReserve": 0,
+          "defenseCashFraction": 0.2,
+          "defenseStartDay": 2,
+          "repairHealthFraction": 0.8,
+          "magicIntervalSeconds": 5,
+          "growthShare": 0,
+          "plantingIntervalSeconds": 1,
+          "wallMaterial": "zarzas",
+          "magicPriority": "multiply",
+          "wallPolicy": "none"
+        }
+      },
+      "caseSelection": [
+        {
+          "name": "default-walls",
+          "biome": "desierto",
+          "seed": 983
+        }
+      ],
+      "raidProbeSnapshotDays": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "output": "docs/qa/evolutionary-balance/repair-pruned-replay-21/results"
+    },
+    "balance": "production unchanged",
+    "purpose": "post-intro native policy pilot"
+  },
+  "cases": [
+    {
+      "name": "default-walls",
+      "biome": "desierto",
+      "seed": 983,
+      "stop": "horizon-survivor",
+      "completedNights": 21,
+      "result": null,
+      "finalCash": 965,
+      "finalLiving": 149,
+      "delivered": 2099,
+      "destroyed": 3,
+      "fitness": {
+        "score": 21194.20966992097,
+        "valid": true,
+        "scoreVersion": "post-intro-v1",
+        "completed": 21,
+        "metrics": {
+          "firstPressureDay": 6,
+          "window": 3,
+          "pressureDays": 16,
+          "delivered": 1777,
+          "destroyed": 0,
+          "attraction": 25039,
+          "opening": {
+            "days": 3,
+            "delivered": 239,
+            "living": 115,
+            "income": 2949,
+            "seeds": 1425,
+            "wages": 1371,
+            "repairs": 0,
+            "walls": 20,
+            "operating": 153
+          },
+          "terminal": {
+            "days": 3,
+            "delivered": 368,
+            "living": 149,
+            "cash": 965,
+            "income": 4569,
+            "seeds": 2196,
+            "wages": 2422,
+            "repairs": 0,
+            "walls": 40,
+            "operating": -49
+          },
+          "deliveryRetention": 1.5397489539748954,
+          "terminalDeliveryPerDay": 122.66666666666667,
+          "productiveAtEnd": true
+        },
+        "cropLossFraction": 0,
+        "minimumTerminalDeliveryPerDay": 82.16666666666667,
+        "result": null,
+        "nativeResult": null,
+        "competitiveEligible": true
+      },
+      "metrics": {
+        "firstPressureDay": 6,
+        "window": 3,
+        "pressureDays": 16,
+        "delivered": 1777,
+        "destroyed": 0,
+        "attraction": 25039,
+        "opening": {
+          "days": 3,
+          "delivered": 239,
+          "living": 115,
+          "income": 2949,
+          "seeds": 1425,
+          "wages": 1371,
+          "repairs": 0,
+          "walls": 20,
+          "operating": 153
+        },
+        "terminal": {
+          "days": 3,
+          "delivered": 368,
+          "living": 149,
+          "cash": 965,
+          "income": 4569,
+          "seeds": 2196,
+          "wages": 2422,
+          "repairs": 0,
+          "walls": 40,
+          "operating": -49
+        },
+        "deliveryRetention": 1.5397489539748954,
+        "terminalDeliveryPerDay": 122.66666666666667,
+        "productiveAtEnd": true
+      }
+    }
+  ]
+}

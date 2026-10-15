@@ -40,6 +40,35 @@ test('repair remains pending only after all service points are checked',()=>{
   assert.equal(attempts,4);
 });
 
+test('repair avoids routes to non-standable endpoints without resolving unknown as blocked',()=>{
+  const worker={x:0,z:0},target={id:'wall-a',kind:'wall',x:4,z:0,yaw:0};
+  const queried=[];
+  const nav={
+    walkable:(x,z)=>z>0,
+    path(_from,to){
+      queried.push(to);
+      throw new SpatialChunkUnavailable(worker,to,[]);
+    }
+  };
+  assert.throws(()=>repairRoute(worker,target,nav),SpatialChunkUnavailable);
+  assert.equal(queried.length,1);
+  assert(queried[0].z>0);
+});
+
+test('an unloaded service point remains unknown even when the stand check would fail',()=>{
+  const worker={x:0,z:0},target={id:'wall-a',kind:'wall',x:4,z:0,yaw:0};
+  let paths=0,proofs=0;
+  const nav={residencyRevision:2,
+    propsAt(_x,_z,radius){assert.equal(radius,.28);proofs++;
+      throw new SpatialChunkUnavailable(worker,target,[]);},
+    walkable:()=>false,
+    path(){paths++;return null;}
+  };
+  assert.throws(()=>repairRoute(worker,target,nav),SpatialChunkUnavailable);
+  assert.equal(proofs,4);
+  assert.equal(paths,0);
+});
+
 test('unresolved native repair routes defer tasks without hiding a working automatic gate',()=>{
   const state=deserialize(frozen),loaded=new Map();
   const session=createSpatialGameSession(module,state,{
