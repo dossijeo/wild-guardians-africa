@@ -163,7 +163,40 @@ test('event-fed native intent bridge replays live state and only changes on expl
   assert.equal(cancelled.actorId,9263,
    'a confirmed crop event invalidates its native intention at the event boundary');
   assert.equal(planner.routePoints(active.routeHandle),null);
+  const beforeCrate=wasm.nav_intent_target_count();
+  const crate={id:'crate-1000003',x:worker.x,z:worker.z,delivered:false};
+  game.crates.push(crate);
+  emit(game,'CropPicked',{workerId:worker.id,targetId:plant.id,crateId:crate.id});
+  planner.flushWorldEvents();
+  assert.equal(wasm.nav_intent_target_count(),beforeCrate+1,
+   'the physical harvest crate becomes a native target');
+  crate.delivered=true;
+  emit(game,'CrateDelivered',{workerId:worker.id,targetId:crate.id});
+  planner.flushWorldEvents();
+  assert.equal(wasm.nav_intent_target_count(),beforeCrate,
+   'confirmed delivery removes the crate target');
   stopWorld();
+  plant.alive=true;worker.status='idle';worker.taskId=null;game.tasks=[task];
+  planner.resetFromState(game);
+  const nativePlan=planner.planIfNeeded(0);
+  assert.throws(()=>planner.commitTaskBatchToState(game,nativePlan,{navVersion:NaN}),
+   /current planning batch/);
+  assert.equal(task.workerId,null,'a rejected commit leaves the JS lease untouched');
+  const originalTarget=task.targetId;
+  task.targetId='plant-1000002';
+  assert.throws(()=>planner.commitTaskBatchToState(game,nativePlan,{navVersion:1}),
+   /target changed|inputs changed/,
+   'a task changed without a projected delta cannot receive the stale native route');
+  assert.equal(task.workerId,null);
+  task.targetId=originalTarget;
+  assert.equal(planner.commitTaskBatchToState(game,nativePlan,{navVersion:1}),1);
+  assert.equal(task.workerId,worker.id);
+  assert.equal(worker.taskId,task.id);
+  assert.equal(worker.status,'walking');
+  assert(worker.path.length>0,'the native route is copied once when action starts');
+  assert.equal(worker.taskApproach.taskId,task.id);
+  assert.throws(()=>planner.commitTaskBatchToState(game,nativePlan,{navVersion:1}),
+   /current planning batch/,'the same native proposal cannot be committed twice');
  }finally{session.dispose();}
 });
 

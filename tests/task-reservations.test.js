@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {enqueue,observeTaskChanges,replaceTasks,reserveTasks,releaseTask,
+import {applyConfirmedTaskAssignments,enqueue,observeTaskChanges,replaceTasks,reserveTasks,releaseTask,
  notifyWorkerPlanningChange,notifyWorkerPlanningRoster,taskPlanningRevision} from '../src/simulation/tasks.js';
 import {contractExpired} from '../src/simulation/workforce.js';
 import {cancelIdle} from '../src/simulation/idle.js';
@@ -62,6 +62,31 @@ test('assignment passes the already validated route to its sole owner',()=>{
  });
  assert.equal(searches,1);
  assert.deepEqual(assigned,[{worker:'worker-1',task:'task',target:'plot',plan:route}]);
+});
+
+test('confirmed native assignments validate the whole batch before publishing leases',()=>{
+ const s=state();
+ s.plants.push({id:'plot-2',x:5,z:0});
+ s.tasks.push({id:'task-2',created:2,targetId:'plot-2',centerId:'center',
+  workerId:null,blocked:false});
+ const first={taskId:'task',workerId:'worker-1',path:[{x:0,z:0}],
+  destination:{id:'native-point-task',x:0,z:0}};
+ const second={taskId:'task-2',workerId:'worker-2',path:[{x:5,z:0}],
+  destination:{id:'native-point-task-2',x:5,z:0}};
+ assert.throws(()=>applyConfirmedTaskAssignments(s,[first,{...second,workerId:'worker-1'}],5),
+  /Stale or invalid/);
+ assert(s.tasks.every(task=>!task.workerId));
+ assert(s.workers.every(worker=>!worker.taskId));
+ const snapshots=[];
+ const stop=observeTaskChanges(s,event=>{
+  if(event.type==='assigned')snapshots.push(s.tasks.map(task=>task.workerId));
+ });
+ assert.equal(applyConfirmedTaskAssignments(s,[first,second],5),2);
+ assert.deepEqual(snapshots,[['worker-1','worker-2'],['worker-1','worker-2']],
+  'observers see the complete committed assignment batch');
+ assert.deepEqual(s.workers.slice(0,2).map(worker=>worker.path),
+  [[{x:0,z:0}],[{x:5,z:0}]]);
+ stop();
 });
 
 test('large historical farm keeps identical FIFO reservations for crops, loose crates and repairs',()=>{

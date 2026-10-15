@@ -2,8 +2,10 @@ import {centerGeometry,centerServicePoint} from '../centers.js';
 import {contractExpired,PROFILES} from '../../simulation/workforce.js';
 import {observeGameEvents,repairCost} from '../../simulation/game.js';
 import {BALANCE} from '../../simulation/balance.js';
+import {activeCrops} from '../../simulation/active-crops.js';
+import {workerEntityLookup} from '../../simulation/worker-entity-lookup.js';
 import {ANIMAL_SPATIAL_PROFILES} from './spatial-movement-profiles.js';
-import {observeTaskChanges} from '../../simulation/tasks.js';
+import {applyConfirmedTaskAssignments,observeTaskChanges} from '../../simulation/tasks.js';
 
 // Experimental event-fed bridge. Gameplay does not call it yet: it is used to
 // prove the native read model can be rebuilt after load and changed by deltas.
@@ -58,6 +60,14 @@ const centerAccessRow=(center,state)=>{
   const point=centerServicePoint(center,state,.8);
   return [1,6,numericId(center.id),4,point.x,point.z,0,0,0,0];
 };
+const taskTargetLookup=state=>{
+  const plant=workerEntityLookup(()=>activeCrops(state.plants),
+    {reuse:true,appendOnly:true});
+  const crate=workerEntityLookup(()=>state.crates,{reuse:true,appendOnly:true});
+  const structure=workerEntityLookup(()=>state.structures,{reuse:true});
+  return id=>id.startsWith('plant-')?plant(id):
+    id.startsWith('crate-')?crate(id):structure(id);
+};
 
 export function createSpatialIntentBridge(session){
   const wasm=session?.core?.wasm;
@@ -72,7 +82,8 @@ export function createSpatialIntentBridge(session){
     'nav_intent_route_points','nav_intent_route_ptr',
     'nav_intent_reconcile_topology','nav_intent_replan_pending_routes',
     'nav_intent_action_active','nav_intent_finish',
-    'nav_intent_actor_planning_calls'])
+    'nav_intent_actor_planning_calls','nav_intent_routes_ptr',
+    'nav_intent_route_point_count'])
     if(typeof wasm?.[name]!=='function')throw TypeError(`Missing ${name}`);
   let sequence=0,initialized=false;
   const structuresById=new Map();
@@ -173,17 +184,28 @@ export function createSpatialIntentBridge(session){
   // resetFromState(); this incremental projection never owns game rules.
   const applyCommittedEvents=(state,events)=>{
     const changes=[];
-    let structures=null,plants=null;
+    let structures=null,plants=null,crates=null;
     const structureFor=id=>state.structures.at(-1)?.id===id?state.structures.at(-1):
       (structures??=new Map(state.structures.map(item=>[item.id,item]))).get(id);
     const plantFor=id=>state.plants.at(-1)?.id===id?state.plants.at(-1):
       (plants??=new Map(state.plants.filter(item=>item.alive)
         .map(item=>[item.id,item]))).get(id);
+    const crateFor=id=>state.crates.at(-1)?.id===id?state.crates.at(-1):
+      (crates??=new Map(state.crates.map(item=>[item.id,item]))).get(id);
     for(const event of events){
       if(event.type==='CropPlaced'){
         const entity=plantFor(event.targetId);
         if(entity)changes.push({type:'target',entity});
-      }else if(event.type==='CropDestroyed'||event.type==='CropPicked')
+      }else if(event.type==='CropDestroyed'||event.type==='CropPicked'){
+        changes.push({type:'target',remove:true,id:event.targetId});
+        if(event.type==='CropPicked'&&event.crateId){
+          const crate=crateFor(event.crateId);
+          if(crate&&!crate.delivered)changes.push({type:'target',entity:crate});
+        }
+      }else if(event.type==='CrateDropped'){
+        const crate=crateFor(event.targetId);
+        if(crate&&!crate.delivered)changes.push({type:'target',entity:crate});
+      }else if(event.type==='CrateDelivered')
         changes.push({type:'target',remove:true,id:event.targetId});
       else if(event.type==='PlacementCommitted'&&
         (event.kind==='center'||event.kind==='wall')){
@@ -219,6 +241,16 @@ export function createSpatialIntentBridge(session){
         routeOffset:data[at+3],routeCount:data[at+4],cause:data[at+5],
         approach:{x:data[at+6],z:data[at+7]}};
     });
+  };
+  const proposalRoute=row=>{
+    const {routeOffset,routeCount}=row,total=wasm.nav_intent_route_point_count();
+    if(!Number.isInteger(routeOffset)||!Number.isInteger(routeCount)||routeCount<1||
+      routeOffset<0||routeOffset+routeCount>total)
+      throw Error('Invalid native task route range');
+    const points=new Float32Array(wasm.memory.buffer,
+      wasm.nav_intent_routes_ptr()+routeOffset*8,routeCount*2);
+    return Array.from({length:routeCount},(_,index)=>
+      ({x:points[index*2],z:points[index*2+1]}));
   };
   const getDamaged=kind=>{
     if(!initialized)throw Error('Reset the native intent session first');
@@ -328,7 +360,7 @@ export function createSpatialIntentBridge(session){
     const rerouted=invalidated?wasm.nav_intent_replan_pending_routes():0;
     return {invalidated,rerouted,changes:intentChanges()};
   };
-  return {resetFromState,applyEvents,applyCommittedEvents,planTasks,
+  return {resetFromState,applyEvents,applyCommittedEvents,planTasks,proposalRoute,
     getDamagedWalls:()=>getDamaged('wall'),
     getDamagedCenters:()=>getDamaged('center'),
     getUnprotectedCropGroups,
@@ -356,6 +388,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
   let pendingWorldEvents=[];
   let observedTaskState=null,stopTaskObserver=null,stopWorldObserver=null;
   let dirty=true,nextRetry=Infinity,lastTime=-Infinity,total=0,initialized=false;
+  let lastPlan=null,lastPlanFacts=null,sourceState=null;
   const setWorker=(worker,state)=>{
     const id=numericId(worker.id);
     if(workerRow(worker,state)[6])eligible.add(id);
@@ -364,6 +397,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
   };
   const resetFromState=state=>{
     initialized=false;
+    sourceState=state;
     if(observedTaskState!==state){
       stopTaskObserver?.();stopTaskObserver=null;
       stopWorldObserver?.();stopWorldObserver=null;
@@ -372,12 +406,14 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     const result=bridge.resetFromState(state);
     eligible.clear();projectedPositions.clear();requests.clear();
     pendingTaskEvents=[];pendingWorldEvents=[];total=0;
+    lastPlan=null;lastPlanFacts=null;
     for(const worker of state.workers)setWorker(worker,state);
     dirty=true;nextRetry=Infinity;lastTime=-Infinity;
     initialized=true;
     return result;
   };
   const applyEvents=(state,events)=>{
+    lastPlan=null;lastPlanFacts=null;
     let result;
     try{result=bridge.applyEvents(state,events);}
     catch(error){
@@ -404,7 +440,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     if(pendingTaskEvents.length)flushTaskEvents();
     if(!dirty&&simulatedSeconds<nextRetry)return null;
     if(!session.core.wasm.nav_intent_task_count()){
-      dirty=false;nextRetry=Infinity;return [];
+      dirty=false;nextRetry=Infinity;lastPlan=[];lastPlanFacts=new Map();return lastPlan;
     }
     // Idle workers can move while awaiting a task. Refresh only changed
     // positions at an actual planning boundary; movement ticks do not query
@@ -413,6 +449,19 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     const before=new Map([...eligible].map(id=>
       [id,session.core.wasm.nav_intent_actor_planning_calls(id)]));
     const result=bridge.planTasks();
+    lastPlan=result;
+    const state=observedTaskState??sourceState;
+    const tasks=new Map(state.tasks.map(task=>[numericId(task.id),task]));
+    const workers=new Map(state.workers.map(worker=>[numericId(worker.id),worker]));
+    const targetFor=taskTargetLookup(state);
+    lastPlanFacts=new Map(result.filter(row=>row.status===1).map(row=>{
+      const task=tasks.get(row.taskId),worker=workers.get(row.workerId);
+      const target=task&&targetFor(task.targetId);
+      if(!task||!worker||!target)throw Error('Native task proposal has no JS counterpart');
+      return [task.id,{workerId:worker.id,targetId:task.targetId,
+        centerId:task.centerId,kind:task.kind,
+        workerX:worker.x,workerZ:worker.z,targetX:target.x,targetZ:target.z}];
+    }));
     dirty=false;
     nextRetry=result.some(row=>row.status===2||row.status===3)?
       simulatedSeconds+retrySeconds:Infinity;
@@ -426,6 +475,50 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
       while(times.length&&times[0]<=simulatedSeconds-60)times.shift();
     }
     return result;
+  };
+  const commitTaskBatchToState=(state,plan,{navVersion}={})=>{
+    if(plan!==lastPlan||!Number.isFinite(navVersion))
+      throw Error('Native proposal is not the current planning batch');
+    if(pendingTaskEvents.length||pendingWorldEvents.length)
+      throw Error('Confirmed events must be processed before committing a proposal');
+    const tasksByNumericId=new Map(state.tasks.map(task=>[numericId(task.id),task]));
+    const workersByNumericId=new Map(state.workers.map(worker=>[numericId(worker.id),worker]));
+    const targetFor=taskTargetLookup(state);
+    const assignments=[];
+    for(const row of plan){
+      if(row.status!==1)continue;
+      const task=tasksByNumericId.get(row.taskId),worker=workersByNumericId.get(row.workerId);
+      const target=task&&targetFor(task.targetId);
+      if(!task||!worker||!target||'alive' in target&&!target.alive)
+        throw Error('Native proposal target changed before commit');
+      const fact=lastPlanFacts.get(task.id);
+      if(!fact||fact.workerId!==worker.id||fact.targetId!==task.targetId||
+        fact.centerId!==task.centerId||fact.kind!==task.kind||
+        fact.workerX!==worker.x||fact.workerZ!==worker.z||
+        fact.targetX!==target.x||fact.targetZ!==target.z||
+        workerRow(worker,state)[6]!==1)
+        throw Error('Native proposal inputs changed before commit');
+      const path=bridge.proposalRoute(row);
+      const interaction=['repair','initial','water'].includes(task.kind);
+      const destination=interaction?{
+        id:`native-point-${task.id}`,x:row.approach.x,z:row.approach.z}:target;
+      assignments.push({taskId:task.id,workerId:worker.id,path,destination});
+    }
+    // Validate the JS side before committing WASM. A stale native revision
+    // rejects the whole lease; no JS task or worker has changed yet.
+    applyConfirmedTaskAssignments(state,assignments,navVersion,{validateOnly:true});
+    const committed=bridge.commit();
+    if(committed!==assignments.length){
+      lastPlan=null;bridge.resetFromState(state);
+      throw Error('Native task proposal became stale before commit');
+    }
+    const count=applyConfirmedTaskAssignments(state,assignments,navVersion);
+    for(const row of plan){
+      const task=tasksByNumericId.get(row.taskId);
+      if(task&&row.status!==1)task.blocked=row.status===2;
+    }
+    lastPlan=null;lastPlanFacts=null;
+    return count;
   };
   const metrics=simulatedSeconds=>({nativePlanningCalls:total,
     perWorkerPerMinute:Object.fromEntries([...requests].map(([id,times])=>
@@ -506,6 +599,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
       throw Error('World and task observers must share one game state');
     observedTaskState=state;
     const relevant=new Set(['CropPlaced','CropDestroyed','CropPicked',
+      'CrateDropped','CrateDelivered',
       'PlacementCommitted','WallChainBuilt','WallRemoved','StructureHit',
       'StructureRuined','RepairApplied']);
     const stop=observeGameEvents(state,event=>{
@@ -522,6 +616,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
   };
   return {resetFromState,applyEvents,observeTasks,observeWorld,
     flushTaskEvents,flushWorldEvents,planIfNeeded,metrics,
+    commitTaskBatchToState,
     intentChanges:bridge.intentChanges,routePoints:bridge.routePoints,
     discard:bridge.discard,commit:bridge.commit,sequence:bridge.sequence};
 }

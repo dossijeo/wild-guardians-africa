@@ -154,6 +154,44 @@ export function reserveTasks(state,canExecute=()=>true,onAssigned=()=>{}) {
     if(worker) { cancelIdle(worker);t.workerId=worker.id;worker.taskId=t.id;worker.status='walking';workers.splice(workers.indexOf(worker),1);changed(state);taskChange(state,'assigned',t,worker);onAssigned(worker,t,target,plans.get(worker)); }
   }
 }
+// Apply one already validated native global proposal. The caller must commit
+// the corresponding native lease first; this function never selects targets or
+// computes routes. Check the entire batch before changing any JS assignment.
+export function applyConfirmedTaskAssignments(state,assignments,navVersion,
+  {validateOnly=false}={}){
+  if(!Number.isFinite(navVersion))throw TypeError('Expected a navigation revision');
+  const tasks=new Map(state.tasks.map(task=>[task.id,task]));
+  const workers=new Map(state.workers.map(worker=>[worker.id,worker]));
+  const usedTasks=new Set(),usedWorkers=new Set();
+  for(const assignment of assignments){
+    const {taskId,workerId,path,destination}=assignment;
+    const task=tasks.get(taskId),worker=workers.get(workerId);
+    if(!task||!worker||usedTasks.has(taskId)||usedWorkers.has(workerId)||
+      task.workerId||worker.taskId||worker.status!=='idle'||
+      worker.incapacitated||contractExpired(worker,state)||
+      worker.centerId!==task.centerId||!Array.isArray(path)||!path.length||
+      path.some(point=>!Number.isFinite(point.x)||!Number.isFinite(point.z))||
+      !destination||typeof destination.id!=='string'||
+      !Number.isFinite(destination.x)||!Number.isFinite(destination.z))
+      throw Error('Stale or invalid native task assignment');
+    usedTasks.add(taskId);usedWorkers.add(workerId);
+  }
+  if(validateOnly)return assignments.length;
+  for(const {taskId,workerId,path,destination} of assignments){
+    const task=tasks.get(taskId),worker=workers.get(workerId);
+    cancelIdle(worker);
+    task.workerId=worker.id;task.blocked=false;
+    worker.taskId=task.id;worker.status='walking';worker.path=path;
+    worker.destinationId=destination.id;worker.pathVersion=navVersion;
+    if(['repair','initial','water'].includes(task.kind))
+      worker.taskApproach={taskId:task.id,destination};
+    else worker.taskApproach=null;
+    changed(state);
+  }
+  for(const {taskId,workerId} of assignments)
+    taskChange(state,'assigned',tasks.get(taskId),workers.get(workerId));
+  return assignments.length;
+}
 export function releaseTask(state,worker) {
   const t=state.tasks.find(t=>t.id===worker.taskId);
   worker.taskId=null;
