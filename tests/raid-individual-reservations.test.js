@@ -4,7 +4,7 @@ import {fixture,probe} from '../tools/probe-raid-reservation-saturation.mjs';
 import {spawnRaid,updateRaid} from '../src/simulation/raids.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {Navigation} from '../src/world/navigation.js';
-import {reservedApproachClear,targetReservationKey} from '../src/simulation/raid-target-reservations.js';
+import {reconcileTargetReservations,reservedApproachClear,targetReservationKey} from '../src/simulation/raid-target-reservations.js';
 import {RAID_WAIT_SECONDS} from '../src/simulation/raid-contention.js';
 function tick(s,nav,dt=.1){s.elapsed+=dt;updateRaid(s,dt,nav);}
 function start(layout='mono',count=12){const {s,nav}=fixture(layout);assert(spawnRaid(s,{group:Array(count).fill('warthog')},nav));updateRaid(s,0,nav);return {s,nav,raid:s.raid};}
@@ -25,6 +25,31 @@ for(const count of [1,2,5,12])test(`100 connected mijo plants allow independent 
 test('centers permit physically independent simultaneous approach claims',()=>{
  const {s}=start('center-only');independent(s);assert(s.raid.animals.filter(a=>a.targetId).length>1);
  assert.equal(new Set(s.raid.animals.filter(a=>a.targetId).map(a=>a.targetId)).size,1);
+});
+test('a conflicting lease cannot erase a strike already committed to its damage frame',()=>{
+ const {s,nav,raid}=start('center-only',2),[first,second]=raid.animals;
+ assert.equal(first.targetId,second.targetId);
+ second.approach={...first.approach};second.status='attacking';
+ second.attackRemaining=.45;second.attackId='attack-committed-qa';
+ second.animation='Right_Hand_Sword_Slash';second.hitApplied=false;
+ const targetId=second.targetId,budget=second.hitsRemaining;
+ reconcileTargetReservations(s,(state,animal)=>{
+  animal.targetId=null;animal.reservation=null;animal.path=null;animal.approach=null;
+ });
+ assert.equal(second.status,'attacking');
+ assert.equal(second.attackRemaining,.45);
+ assert.equal(second.attackId,'attack-committed-qa');
+ assert.equal(second.targetId,targetId);
+ assert.equal(second.hitsRemaining,budget);
+ assert.equal(second.reservation,null,'a conflicting claim is released until the clip ends');
+ assert.equal(raid.reservations[first.reservation],first.id);
+ tick(s,nav,.44);
+ assert.equal(second.hitsRemaining,budget);
+ assert(!s.events.some(event=>event.attackId==='attack-committed-qa'));
+ tick(s,nav,.01);
+ assert.equal(second.hitsRemaining,budget-1);
+ assert.equal(s.events.filter(event=>event.attackId==='attack-committed-qa'&&
+  ['AnimalLogicalHit','AnimalLogicalMiss'].includes(event.type)).length,1);
 });
 test('individual claims and native RNG replay exactly after a save/reload',()=>{
  const {s,nav}=start();for(let i=0;i<30;i++)tick(s,nav);

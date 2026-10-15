@@ -33,6 +33,10 @@ export function reconcileTargetReservations(state,release){
   }
   const key=targetReservationKey(target,a);
   if(claimed.has(key)||a.approach&&approaches.some(other=>Math.hypot(a.approach.x-other.approach.x,a.approach.z-other.approach.z)<(a.radius??.28)+(other.radius??.28)+.1)){
+   // A collision or stale lease discovered after the attack animation starts
+   // cannot cancel its committed damage frame. Drop the duplicate claim and
+   // let the existing clip resolve against its original target before retargeting.
+   if(a.status==='attacking'){a.reservation=null;continue;}
    release(state,a);a.status='walking';a.attackRemaining=0;a.attackId=null;a.hitApplied=false;continue;
   }
   claimed.add(key);a.reservation=key;owners[key]=a.id;if(a.approach)approaches.push(a);
