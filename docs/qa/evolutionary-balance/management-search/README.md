@@ -17,7 +17,7 @@ las cinco noches introductorias o una explotación casi inactiva determinen
 silenciosamente el ganador. No se alteró la campaña ya iniciada, sus genes ni
 el balance de producción; su hash de fuente distingue ambos evaluadores.
 
-`protocol-14-post-intro.json` congela el siguiente ensayo con el cuartil
+`protocol-14-post-intro.json` congeló un segundo ensayo con el cuartil
 inferior **82⅙ cajas/día** de los seis controles nativos de desarrollo
 documentados en `post-intro-pilot-14/README.md` (también incluye las granjas
 sin muros). Sus semillas de entrenamiento Sabana/712 y Gran Río/2026 difieren
@@ -26,6 +26,19 @@ bioma y semilla no utilizados en aquella cohorte. El umbral clasifica
 elegibilidad competitiva, nunca altera ingresos, cultivos ni resultados
 nativos. Los gastos pagados y las entregas reales seguirán visibles también
 para cualquier candidato excluido por baja producción.
+
+Durante ese segundo ensayo se descubrió un contraejemplo del evaluador
+`post-intro-v1`: sus términos secundarios podían variar más de 500 puntos y
+colocar una derrota terminal por encima de una partida aún viva con las mismas
+14 noches contabilizadas. Se conserva `v1` para interpretar las ejecuciones
+ya iniciadas y se crea `post-intro-v2`, que aumenta **sólo en el fitness** la
+penalización terminal total a 800 puntos. La amplitud máxima de los términos
+secundarios es 650 puntos; así una derrota no supera a una superviviente del
+mismo horizonte. `protocol-14-post-intro-v2.json` congela los mismos genes,
+semillas, umbral y reglas físicas para una búsqueda posterior. No se lanzará
+mientras las dos cohortes anteriores sigan ejecutándose; sus rankings son
+exploratorios y deberán evaluarse con el criterio versionado antes de elegir
+una política.
 
 Esta cohorte usa Wild Engine y el balance de producción sin alterar, después de
 la mejora de navegación de PR #37. Código ejecutado: `7f358aad97287b40e300026306d26f05cc4e0c29`;

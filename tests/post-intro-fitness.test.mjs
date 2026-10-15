@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
-import {postIntroMetrics,scorePostIntro} from '../tools/evolutionary-balance/post-intro-fitness.mjs';
+import {postIntroMetrics,scorePostIntro,scorePostIntroV2} from '../tools/evolutionary-balance/post-intro-fitness.mjs';
 import {validatePilotConfig} from '../tools/evolutionary-balance/run-post-intro-pilot.mjs';
 
 const mangroves=arm=>JSON.parse(gunzipSync(readFileSync(new URL(
@@ -39,6 +39,23 @@ test('post-intro fitness distinguishes native defeat, technical censor and colla
  assert.equal(scorePostIntro({...survivor,status:'error',name:'CampaignCostStop'},14).reason,'computational-cost-stop');
  assert.equal(scorePostIntro({...survivor,completedNights:7,result:null},14).reason,'truncated');
  assert.throws(()=>scorePostIntro(survivor,7),/14 nights/);
+});
+
+test('v2 always ranks a live horizon survivor above a terminal defeat at that horizon',()=>{
+ const row=(day,delivered,income,seeds,wages,destroyed)=>({day,delivered,
+  income,seeds,wages,repairs:0,destroyed,living:30,money:500});
+ const weak={status:'completed',completedNights:14,result:null,
+  rows:Array.from({length:14},(_,i)=>i<3?row(i+1,100,100,0,0,0):
+   i>=11?row(i+1,1,0,300,0,30):row(i+1,10,20,0,0,0)),
+  raid:Array.from({length:9},(_,i)=>({day:i+6,livingAtSpawn:30}))};
+ const strongDefeat={...weak,result:'defeat',
+  rows:Array.from({length:14},(_,i)=>row(i+1,1000,2000,0,0,0))};
+ assert(scorePostIntro(strongDefeat,14).score>scorePostIntro(weak,14).score,
+  'the historical v1 counterexample must remain visible');
+ const survivorScore=scorePostIntroV2(weak,14),defeatScore=scorePostIntroV2(strongDefeat,14);
+ assert.equal(survivorScore.scoreVersion,'post-intro-v2');
+ assert.equal(defeatScore.scoreVersion,'post-intro-v2');
+ assert(survivorScore.score>defeatScore.score);
 });
 
 test('post-intro pilot requires distinct paired native scenarios and frozen legal genes',()=>{

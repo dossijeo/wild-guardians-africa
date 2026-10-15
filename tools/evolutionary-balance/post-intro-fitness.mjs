@@ -59,3 +59,13 @@ export function scorePostIntro(report,targetDays,{minimumTerminalDeliveryPerDay=
   minimumTerminalDeliveryPerDay,result:report.result,nativeResult:report.result,
   competitiveEligible:eligible?(minimumTerminalDeliveryPerDay===null?null:true):false};
 }
+
+// Keep v1 immutable for historical runs. Its 500-point terminal penalty was
+// smaller than the possible spread of secondary terms, so a defeated farm
+// could outrank a live horizon survivor. V2 restores that ordering without
+// changing campaign outcomes or any other score component.
+export function scorePostIntroV2(report,targetDays,options={}){
+ const prior=scorePostIntro(report,targetDays,options);
+ return {...prior,scoreVersion:'post-intro-v2',
+  score:prior.valid&&report.result==='defeat'?prior.score-300:prior.score};
+}

@@ -8,7 +8,7 @@ import {simulateNativeCampaign} from '../native-campaign-runner.mjs';
 import {createSpatialCampaignOpening} from '../experiments/spatial-campaign-opening.mjs';
 import {DEFAULT_GENES,GENE_SCHEMA_VERSION,validateGenes} from './policy-genes.mjs';
 import {breed,genomeId,randomGenome,scoreCampaign,seededRandom} from './ga.mjs';
-import {scorePostIntro} from './post-intro-fitness.mjs';
+import {scorePostIntroV2} from './post-intro-fitness.mjs';
 import {matchedDefenseControl} from './matched-defense-controls.mjs';
 
 const DEFAULT_CONFIG={rngSeed:712,generations:2,population:4,days:7,
@@ -21,8 +21,8 @@ export function validateConfig(raw){
  if(c.days>100||c.population<2||c.population>100||c.generations>100)throw Error('Unsafe GA budget');
  c.fitnessVersion??='terminal-defeat-v2';
  if(c.days>=14){
-  if(c.fitnessVersion!=='post-intro-v1')
-   throw Error('Campaigns of 14+ nights require explicit post-intro-v1 fitness');
+  if(c.fitnessVersion!=='post-intro-v2')
+   throw Error('Campaigns of 14+ nights require explicit post-intro-v2 fitness');
   if(!Number.isFinite(c.minimumTerminalDeliveryPerDay)||
      c.minimumTerminalDeliveryPerDay<=0||
      typeof c.deliveryFloorSource!=='string'||!c.deliveryFloorSource.trim())
@@ -54,8 +54,8 @@ export function validateConfig(raw){
  return c;
 }
 export function scoreSearchReport(report,config){
- if(config.fitnessVersion==='post-intro-v1')
-  return scorePostIntro(report,config.days,
+ if(config.fitnessVersion==='post-intro-v2')
+  return scorePostIntroV2(report,config.days,
    {minimumTerminalDeliveryPerDay:config.minimumTerminalDeliveryPerDay});
  if(config.fitnessVersion==='terminal-defeat-v2')return scoreCampaign(report,config.days);
  throw Error('Unknown frozen fitness version');
