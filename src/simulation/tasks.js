@@ -1,13 +1,17 @@
 import {contractExpired} from './workforce.js';
 import {cancelIdle} from './idle.js';
 
+const planningRevisions=new WeakMap();
+const changed=state=>planningRevisions.set(state,(planningRevisions.get(state)??0)+1);
+export const taskPlanningRevision=state=>planningRevisions.get(state)??0;
+
 export function enqueue(state,centerId,kind,targetId) {
   if(!centerId || state.tasks.some(t=>t.kind===kind&&t.targetId===targetId))return null;
   return appendTask(state,centerId,kind,targetId);
 }
 function appendTask(state,centerId,kind,targetId) {
   const t={id:`task-${state.nextId++}`,created:state.sequence++,centerId,kind,targetId,workerId:null,blocked:false};
-  state.tasks.push(t);return t;
+  state.tasks.push(t);changed(state);return t;
 }
 // Local to one synchronous append-only crop pass. Never retained across ticks,
 // worker completions, queue reconstruction, attacks or restored snapshots.
@@ -96,12 +100,12 @@ export function reserveTasks(state,canExecute=()=>true) {
       }
     }
     t.blocked=!worker && workers.length>0 && !pending;
-    if(worker) { cancelIdle(worker);t.workerId=worker.id;worker.taskId=t.id;worker.status='walking';workers.splice(workers.indexOf(worker),1); }
+    if(worker) { cancelIdle(worker);t.workerId=worker.id;worker.taskId=t.id;worker.status='walking';workers.splice(workers.indexOf(worker),1);changed(state); }
   }
 }
 export function releaseTask(state,worker) {
   const t=state.tasks.find(t=>t.id===worker.taskId);
-  if(t)t.workerId=null;
+  if(t){t.workerId=null;changed(state);}
   worker.taskId=null;
   worker.taskApproach=null;
 }

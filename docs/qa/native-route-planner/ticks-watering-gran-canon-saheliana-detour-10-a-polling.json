@@ -7,8 +7,8 @@
     {
       "mode": "A",
       "ticks": 20,
-      "totalMs": 138.0985999999998,
-      "routeMs": 6.71570000000338,
+      "totalMs": 138.21029999999837,
+      "routeMs": 5.7096000000042295,
       "routeCalls": 151,
       "cacheHits": 0,
       "cacheMisses": 0,
@@ -19,6 +19,33 @@
           "taskPass": 200,
           "taskCandidate": 4878
         },
+        "planningRequestsPerActorMinute": [
+          {
+            "actorId": "worker-16",
+            "requests": 3128,
+            "perMinute": 9384.000000000533
+          },
+          {
+            "actorId": "worker-12",
+            "requests": 1735,
+            "perMinute": 5205.000000000296
+          },
+          {
+            "actorId": "worker-8",
+            "requests": 5,
+            "perMinute": 15.000000000000853
+          },
+          {
+            "actorId": "worker-6",
+            "requests": 5,
+            "perMinute": 15.000000000000853
+          },
+          {
+            "actorId": "worker-10",
+            "requests": 5,
+            "perMinute": 15.000000000000853
+          }
+        ],
         "maxActorCount": {
           "taskCandidate": 3128
         },

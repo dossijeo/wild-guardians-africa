@@ -22,7 +22,7 @@ import {spellUnlocked,permission,operational,cropSpec,wallSpec,structureHealth,d
 import {createPlant,advancePlant,waterPlant,isMature,contiguousGroup} from './crops.js';
 import {activeCrops,cropBecameInactive} from './active-crops.js';
 import {workerEntityLookup} from './worker-entity-lookup.js';
-import {enqueue,taskEnqueuer,reserveTasks,releaseTask} from './tasks.js';
+import {enqueue,taskEnqueuer,reserveTasks,releaseTask,taskPlanningRevision} from './tasks.js';
 import {planNight,updateRaid,spawnRaid,planDay} from './raids.js';
 import {wallStroke,wallLayout,wallStrokeLine} from '../world/wall-layout.js';
 import {selectEvent,applyEvent} from './events.js';
@@ -703,7 +703,8 @@ function reserveAvailableTasks(s,nav){
     .map(w=>`${w.id}:${w.centerId}`).join('|');
   const sectors=nav.spatialSectorRevision?.(.28,true)??0;
   const wait=taskPlanWaits.get(s);
-  if(!nav.forcePlanningPoll&&wait&&wait.tasks===s.tasks&&wait.length===s.tasks.length&&wait.idle===idle&&
+  if(!nav.forcePlanningPoll&&wait&&wait.tasks===s.tasks&&wait.length===s.tasks.length&&
+    wait.taskRevision===taskPlanningRevision(s)&&wait.idle===idle&&
     wait.topology===nav.version&&wait.sectors===sectors&&s.elapsed<wait.retryAt){
     nav.planningObserver?.({kind:'taskDeferred',actorId:null,elapsed:s.elapsed});
     return;
@@ -718,6 +719,7 @@ function reserveAvailableTasks(s,nav){
     return route===undefined?null:!!route;
   });
   taskPlanWaits.set(s,{tasks:s.tasks,length:s.tasks.length,
+    taskRevision:taskPlanningRevision(s),
     idle:s.workers.filter(w=>w.status==='idle'&&!w.taskId&&!w.incapacitated&&!contractExpired(w,s))
       .map(w=>`${w.id}:${w.centerId}`).join('|'),
     topology:nav.version,sectors,retryAt:s.elapsed+ROUTE_RETRY_SECONDS});
