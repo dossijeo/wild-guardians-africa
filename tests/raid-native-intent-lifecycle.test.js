@@ -1,7 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {fixture} from '../tools/probe-raid-reservation-saturation.mjs';
-import {spawnRaid,updateRaid} from '../src/simulation/raids.js';
+import {spawnRaid,targetFor,updateRaid} from '../src/simulation/raids.js';
+
+test('native unknown crop connectivity waits without falling into individual JS searches',()=>{
+  const state={elapsed:0,raid:{},plants:[],structures:[],spells:[]};
+  const nav={intentTaskPlanner:{planAttackCrop:()=>({status:'unknown',
+    regionQueries:1,routeQueries:0})}};
+  assert.deepEqual(targetFor(state,{id:'animal-1'},nav),{unknown:true});
+});
 
 test('opt-in raid reports confirmed leases and committed damage frames once',()=>{
   const {s,nav}=fixture('mono');

@@ -426,6 +426,10 @@ export function targetFor(s,a,nav) {
         return {...native,shieldId:null};
       nav.intentTaskPlanner.cancelAttackIntent(a.id);
     }
+    // An unresolved native crop region is pending topology, not evidence that
+    // crops are blocked. Do not re-enter the old per-target selector and issue
+    // independent approach searches for the same unknown sector.
+    if(native?.status==='unknown')return {unknown:true};
     return targetForImpl(s,a,nav,stats);
   }finally{
     if(stats)stats.selectionMs=(stats.selectionMs??0)+performance.now()-started;
