@@ -33,8 +33,10 @@ const raidRegionDecisions=new WeakMap();
 const RAID_REGION_QUERIES_PER_TICK=16,RAID_REGION_RETRY_SECONDS=4;
 function regionDecisionScope(s,nav){
   let scope=raidRegionDecisions.get(nav);
-  if(!scope||scope.raid!==s.raid||scope.topology!==nav.version){
-    scope={raid:s.raid,topology:nav.version,decisions:new Map(),tick:-1,queries:0};
+  if(!scope||scope.raid!==s.raid||scope.topology!==nav.version||
+     scope.residency!==nav.residencyRevision){
+    scope={raid:s.raid,topology:nav.version,residency:nav.residencyRevision,
+      decisions:new Map(),tick:-1,queries:0};
     raidRegionDecisions.set(nav,scope);
   }
   if(scope.tick!==s.elapsed){scope.tick=s.elapsed;scope.queries=0;}
@@ -426,7 +428,8 @@ function targetForImpl(s,a,nav,stats){
   for(const group of groups){
     if(stats){stats.groups=(stats.groups??0)+1;stats.groupVisits??={};stats.groupVisits[group.id]=(stats.groupVisits[group.id]??0)+1;}
     const profile=String(a.radius),entry=group.regions.get(profile);
-    let byRegion=entry?.version===nav.version&&entry?.sectors===sectorRevision?
+    let byRegion=entry?.version===nav.version&&
+      entry?.residency===nav.residencyRevision&&entry?.sectors===sectorRevision?
       entry.byRegion:null;
     if(!byRegion){
       byRegion=new Map();
@@ -435,7 +438,8 @@ function targetForImpl(s,a,nav,stats){
         if(!byRegion.has(key))byRegion.set(key,[]);
         byRegion.get(key).push(p);
       }
-      group.regions.set(profile,{version:nav.version,sectors:sectorRevision,byRegion});
+      group.regions.set(profile,{version:nav.version,
+        residency:nav.residencyRevision,sectors:sectorRevision,byRegion});
     }
     for(const [regionKey,candidates] of byRegion){
       if(stats)stats.regions=(stats.regions??0)+1;

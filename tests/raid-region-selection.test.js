@@ -11,7 +11,7 @@ function fixture(){
   const state={plants,structures:[],spells:[],workers:[],elapsed:0,
     raid:{animals:[animal],reservations:{},waitRevision:0}};
   let connectivity=null,sectors=0,queries=0,routes=0;
-  const nav={state,version:1,raidSelectionStats:{},
+  const nav={state,version:1,residencyRevision:0,raidSelectionStats:{},
     regionFor:point=>({key:point===animal?'origin':'crop',ids:[1]}),
     spatialSectorRevision:()=>sectors,
     regionConnected:()=>{queries++;return connectivity;},
@@ -22,6 +22,29 @@ function fixture(){
     setConnectivity:value=>{connectivity=value;},advanceSector:()=>{sectors++;},
     queries:()=>queries,routes:()=>routes};
 }
+
+test('raid region decisions follow native chunk residency even without a sector update',()=>{
+  const f=fixture();f.setConnectivity(true);
+  assert.equal(targetFor(f.state,f.animal,f.nav)?.target.id,f.plants[0].id);
+  const residentQueries=f.queries();
+  f.setConnectivity(null);f.nav.residencyRevision++;
+  assert.deepEqual(targetFor(f.state,f.animal,f.nav),{unknown:true});
+  assert(f.queries()>residentQueries,'the unloaded region must be queried again');
+  f.setConnectivity(true);f.nav.residencyRevision++;
+  assert.equal(targetFor(f.state,f.animal,f.nav)?.target.id,f.plants[0].id);
+});
+
+test('crop-to-region membership follows residency without a topology change',()=>{
+  const f=fixture();f.setConnectivity(false);
+  let destination='resident-region';
+  f.nav.regionFor=point=>({key:point===f.animal?'origin':destination,ids:[1]});
+  assert.equal(targetFor(f.state,f.animal,f.nav),null);
+  const originalQueries=f.queries();
+  destination='reloaded-region';f.setConnectivity(true);
+  f.nav.residencyRevision++;
+  assert.equal(targetFor(f.state,f.animal,f.nav)?.target.id,f.plants[0].id);
+  assert(f.queries()>originalQueries);
+});
 
 test('a native blocked service region skips detailed routes without hiding a reachable alternative',()=>{
   const animal={id:'animal',x:0,z:0,radius:1.1};

@@ -55,6 +55,8 @@ La prueba diferencial [`coherence.json`](coherence.json) ejecuta puerta automát
 
 La ampliación posterior compara además la prueba negativa de `workerPath` con `routeActor` al descargar el sector de la puerta: ambos devuelven `unknown`; al volver a cargarlo, ambos encuentran ruta. La conectividad animal JS y nativa coincide en las cinco etapas de puerta/muralla, aunque ese par concreto permanece `unknown` por su perfil y no sirve para demostrar un ataque. Se comprobó que los conectores excepcionales de retirada (`animal-exit-connectors.js`, `animal-footprint-connectors.js` y `animal-grid-exit-bridge.js`) guardaban su progreso o fracaso usando sólo `nav.version`. Ahora incorporan `residencyRevision`; las pruebas repiten una búsqueda agotada tras descargar/cargar sectores sin alterar la topología. Esto elimina otra forma de conservar una respuesta negativa obsoleta.
 
+La auditoría adicional de incursiones encontró la misma dependencia implícita en `raidRegionDecisions` y en la asociación cultivo→región de `raids.js`: ambas comparaban topología y actualizaciones de sectores, pero no la revisión de residencia. El contador de sectores mide reconstrucciones de componentes y no sustituye la revisión de chunks; una descarga puede volver desconocida una región antes de que se reconstruya un componente. Ahora las dos memorias se invalidan al cambiar `nav.residencyRevision`. Dos regresiones dirigidas mantienen deliberadamente constantes la topología y la revisión de sectores mientras la respuesta nativa simulada pasa de accesible a `unknown` y vuelve a accesible, y mientras cambia la región asignada al grupo. El selector consulta de nuevo y no usa la antigua certificación. Las 65 pruebas focales de rutas, puertas, recuperación y selección pasan, la prueba diferencial con WASM real pasa y la build web termina. Esto verifica la invalidación, pero no demuestra que todo el selector de incursiones esté libre de errores durante una campaña larga.
+
 ## Inventario de responsabilidades
 
 | Estado JS | Función | Resultado |
@@ -66,7 +68,7 @@ La ampliación posterior compara además la prueba negativa de `workerPath` con 
 | `worker-fractional-connector.js` | Intentos locales fallidos/en curso | Se añadió revisión de residencia. |
 | `worker-slope-recovery.js` / `animal-slope-recovery.js` | Fallos de recuperación excepcional en pendiente | La prueba negativa se reinicia tras un cambio de residencia; las colisiones físicas siguen comprobándose. |
 | `raid-entry-data.js` / `entrySelections` | Entrada exterior certificada | La clave ahora incluye residencia. |
-| `raids.js` `raidRegionDecisions` | Decisiones por grupo/región durante la incursión | Mantiene revisión de sectores y topología; depende de selección y presupuesto temporal de IA, no es una ruta nativa exacta. |
+| `raids.js` `raidRegionDecisions` y pertenencia cultivo→región | Decisiones por grupo/región durante la incursión | Ahora mantienen topología, residencia y revisión de sectores; las regresiones evitan que una certificación JS sobreviva a una descarga/carga de chunks. |
 | `raids.js` `cropTargetIndexes` y reservas | Agrupación agrícola y ocupación dinámica | No son cachés topológicas. |
 | `gate-passages.js`, `building-route-shortcut.js` | Geometría derivada de objetos | No certifican conectividad; las rutas propuestas se validan físicamente. |
 | `worker-return-route.js`, `raid-navigation-warmth.js` | Recuperación/navegador JS heredado | No son el planificador ordinario de Wild Engine; se conservaron como fallback legacy. |
