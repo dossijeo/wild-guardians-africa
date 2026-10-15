@@ -6,7 +6,7 @@ const reaches=[.5,1,2,4,8,16],angles=16,budget=8,maxSlices=2048;
 export function animalGridExitBridge(actor,end,nav){
  if(actor.status!=='retreating'||!nav.findPathSteps)return {pending:false,path:null};
  const radius=actor.radius??.28;
- const key=JSON.stringify([nav.version??0,actor.x,actor.z,end.x,end.z,radius]);
+ const key=JSON.stringify([nav.version??0,nav.residencyRevision??0,actor.x,actor.z,end.x,end.z,radius]);
  let a=attempts.get(actor);
  if(!a||a.key!==key||a.nav!==nav||a.field!==nav.field||a.obstacles!==nav.obstacles||a.walkable!==nav.walkable||a.segmentClear!==nav.segmentClear||a.findPathSteps!==nav.findPathSteps){
   a={key,nav,field:nav.field,obstacles:nav.obstacles,walkable:nav.walkable,segmentClear:nav.segmentClear,findPathSteps:nav.findPathSteps,next:0};attempts.set(actor,a);
