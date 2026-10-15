@@ -2,8 +2,10 @@
 #include <array>
 #include <cmath>
 #include <cstdint>
+#include <map>
 #include <queue>
 #include <set>
+#include <tuple>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
@@ -21,6 +23,7 @@ int lazy_selected_context();
 int spatial_select_nav_profile_index(int);
 int lazy_weak_region(int,int);
 int lazy_enclosure(int,int);
+int lazy_connected(int,int,int,int);
 int spatial_local_clear(float,float,float,float);
 int spatial_crop_placement_valid(float,float);
 float spatial_surface_anywhere(float,float);
@@ -57,10 +60,16 @@ struct PlantSearch {
   int validTerrain=0,blockedPaths=0;
 };
 struct PlantLease {uint64_t center;double x,z;uint32_t topology;};
+struct AttackSite {uint64_t crop;int region,x,z;float px,pz;};
+struct AttackSiteCache {
+  uint32_t topology=0;float radius=0;
+  std::map<int,std::vector<AttackSite>> byRegion;
+};
 struct CropGroup {
   uint64_t id;double value=0,x=0,z=0,minX=0,minZ=0,maxX=0,maxZ=0;
   std::vector<uint64_t> crops;
   std::unordered_map<int,std::pair<uint32_t,int>> protection;
+  std::unordered_map<int,AttackSiteCache> attackSites;
 };
 struct DamageKey {double ratio;uint64_t id;};
 struct DamageOrder {
@@ -111,6 +120,7 @@ struct IntentState {
   std::unordered_map<uint64_t,std::unordered_set<uint64_t>> byTarget,byTask;
   std::vector<RouteSlot> routeSlots;
   std::vector<float> attackRouteInput;
+  std::array<double,10> attackResult{};
   std::vector<double> intentChanges;
   std::array<double,10> intentResult{};
   uint32_t session=0;
@@ -361,6 +371,33 @@ int cropProtection(const IntentState& s,const CropGroup& group){
     if(!found)unknown=true;
   }
   return open?0:unknown?-1:1;
+}
+// The crop-group index is already maintained for spatial advice. Attach one
+// species-specific set of interaction regions to each group, rebuilding it
+// only when that profile's topology or collision radius changes. Sites on
+// different sides of a narrow barrier remain separate, even for one crop.
+const AttackSiteCache& attackSitesFor(IntentState& s,CropGroup& group,float radius){
+  const int profile=lazy_selected_context();
+  const uint32_t topology=lazy_route_revision();
+  AttackSiteCache& cache=group.attackSites[profile];
+  if(cache.topology==topology&&cache.radius==radius)return cache;
+  cache.topology=topology;cache.radius=radius;cache.byRegion.clear();
+  constexpr int directions=12;
+  for(uint64_t id:group.crops){
+    const Target& crop=s.targets.at(id);
+    std::set<std::tuple<int,int,int>> seen;
+    for(int sample=0;sample<directions;sample++){
+      const double angle=2*pi*sample/directions;
+      const float px=float(crop.x+std::sin(angle)*(.6+radius));
+      const float pz=float(crop.z+std::cos(angle)*(.6+radius));
+      const int x=int(std::round(px)),z=int(std::round(pz));
+      if(!spatial_local_clear(px,pz,float(x),float(z)))continue;
+      const int region=lazy_weak_region(x,z);
+      if(region<0||!seen.emplace(region,x,z).second)continue;
+      cache.byRegion[region].push_back({id,region,x,z,px,pz});
+    }
+  }
+  return cache;
 }
 struct Point {double x,z;};
 struct ServicePoints {
@@ -1087,6 +1124,105 @@ int nav_intent_register_attack(double actorId,double targetId,
   s.byTarget[targetIdValue].insert(actor);
   emitIntentChange(s,intent);
   return 1;
+}
+// One event-triggered crop intention: group value -> reachable interaction
+// region -> individual crop -> native route and lease. No tick-time polling or
+// per-crop graph searches are needed for a sealed group. Ambiguous geometry
+// returns unknown so the established selector can handle it during migration.
+const double* nav_intent_attack_result_ptr(){return state().attackResult.data();}
+int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
+                                double radius,int cropsEligible){
+  IntentState& s=state();s.attackResult.fill(0);
+  if(!integer(actorId)||!coordinate(startX)||!coordinate(startZ)||
+     !std::isfinite(radius)||radius<=0||radius>2||
+     (cropsEligible!=0&&cropsEligible!=1)||
+     lazy_selected_context()==1)return -1;
+  const uint64_t actor=uint64_t(actorId);
+  if(s.activeIntents.count(actor))return -2;
+  s.planningCallsByActor[actor]++;
+  if(!cropsEligible)return 0;
+  rebuildCropGroups(s);
+  if(s.cropGroups.empty())return 0;
+  struct Anchor {int x,z;double distance;};
+  std::vector<Anchor> starts;
+  for(int x:{int(std::floor(startX)),int(std::ceil(startX))})
+    for(int z:{int(std::floor(startZ)),int(std::ceil(startZ))})
+      if(spatial_local_clear(float(startX),float(startZ),float(x),float(z))&&
+         lazy_weak_region(x,z)>=0)
+        starts.push_back({x,z,std::hypot(startX-x,startZ-z)});
+  if(starts.empty()){s.attackResult[0]=3;return 3;}
+  std::sort(starts.begin(),starts.end(),[](const Anchor& a,const Anchor& b){
+    if(a.distance!=b.distance)return a.distance<b.distance;
+    return a.x!=b.x?a.x<b.x:a.z<b.z;
+  });
+  const Anchor source=starts.front();
+  bool unknown=false,eligible=false;
+  int regionQueries=0,routeQueries=0;
+  const auto leased=[&](uint64_t cropId){
+    const auto owners=s.byTarget.find(cropId);
+    if(owners==s.byTarget.end())return false;
+    for(uint64_t owner:owners->second){
+      const auto active=s.activeIntents.find(owner);
+      if(active!=s.activeIntents.end()&&active->second.animal&&
+         active->second.lease)return true;
+    }
+    return false;
+  };
+  for(CropGroup& group:s.cropGroups){
+    for(uint64_t cropId:group.crops)if(s.targets.at(cropId).active&&
+      !leased(cropId)){eligible=true;break;}
+    const AttackSiteCache& cache=attackSitesFor(s,group,float(radius));
+    std::unordered_set<uint64_t> located;
+    std::vector<const AttackSite*> candidates;
+    for(const auto& [region,sites]:cache.byRegion){
+      for(const AttackSite& site:sites)located.insert(site.crop);
+      const AttackSite& first=sites.front();
+      regionQueries++;
+      const int connected=lazy_connected(source.x,source.z,first.x,first.z);
+      if(connected<0){unknown=true;continue;}
+      if(!connected)continue;
+      for(const AttackSite& site:sites)candidates.push_back(&site);
+    }
+    if(located.size()<group.crops.size())unknown=true;
+    std::sort(candidates.begin(),candidates.end(),[&](const AttackSite* a,
+                                                       const AttackSite* b){
+      const Target& left=s.targets.at(a->crop),&right=s.targets.at(b->crop);
+      const double dl=std::hypot(left.x-startX,left.z-startZ);
+      const double dr=std::hypot(right.x-startX,right.z-startZ);
+      if(dl!=dr)return dl<dr;
+      if(a->crop!=b->crop)return a->crop<b->crop;
+      const double al=std::hypot(a->px-startX,a->pz-startZ);
+      const double ar=std::hypot(b->px-startX,b->pz-startZ);
+      return al!=ar?al<ar:a->region<b->region;
+    });
+    int attempted=0;
+    for(const AttackSite* site:candidates){
+      const Target& crop=s.targets.at(site->crop);
+      if(!crop.active)continue;
+      if(leased(crop.id))continue;
+      if(attempted++>=16){unknown=true;break;}
+      routeQueries++;
+      const int count=spatial_world_route_cached(float(startX),float(startZ),
+                                                 site->px,site->pz);
+      if(count<0){unknown=true;continue;}
+      if(!count)continue;
+      const float* route=spatial_world_route_ptr();
+      s.attackRouteInput.assign(route,route+size_t(count)*2);
+      if(nav_intent_register_attack(actorId,double(crop.id),startX,startZ,count)!=1)
+        continue;
+      const ActiveIntent& intent=s.activeIntents.at(actor);
+      s.attackResult={1,double(crop.id),double(site->px),double(site->pz),
+        double(s.session),double(intent.slot),double(intent.generation),
+        double(group.id),double(regionQueries),double(routeQueries)};
+      return 1;
+    }
+    // A connected region with no successful local route is inconclusive,
+    // not proof that all other positions in that region are inaccessible.
+    if(!candidates.empty())unknown=true;
+  }
+  s.attackResult[0]=unknown?3:eligible?2:0;
+  s.attackResult[8]=regionQueries;s.attackResult[9]=routeQueries;
+  return int(s.attackResult[0]);
 }
 int nav_intent_attack_action_active(double actorId){
   if(!integer(actorId))return 0;

@@ -404,7 +404,30 @@ export function targetFor(s,a,nav) {
   const stats=nav.raidSelectionStats;
   const started=stats?performance.now():0;
   if(stats)stats.selections=(stats.selections??0)+1;
-  try{return targetForImpl(s,a,nav,stats);}finally{
+  try{
+    const native=nav.intentTaskPlanner?.planAttackCrop?.(s,a);
+    if(native&&stats){
+      stats.nativeCropPlans=(stats.nativeCropPlans??0)+1;
+      stats.nativeCropRegionQueries=(stats.nativeCropRegionQueries??0)+
+        (native.regionQueries??0);
+      stats.nativeCropRouteQueries=(stats.nativeCropRouteQueries??0)+
+        (native.routeQueries??0);
+      stats.nativeCropResults??={};
+      stats.nativeCropResults[native.status]=
+        (stats.nativeCropResults[native.status]??0)+1;
+    }
+    if(native?.status==='found'){
+      const point=native.approach.point;
+      if(canAttackCrop(s,native.target)&&
+        !targetReserved(s,a,native.target)&&
+        reservedApproachClear(s,a,point)&&
+        actorSegmentClear(point,point,a,actorBlockers(s,a,false))&&
+        nav.walkable(point.x,point.z,a.radius,null,false))
+        return {...native,shieldId:null};
+      nav.intentTaskPlanner.cancelAttackIntent(a.id);
+    }
+    return targetForImpl(s,a,nav,stats);
+  }finally{
     if(stats)stats.selectionMs=(stats.selectionMs??0)+performance.now()-started;
     const scope=raidRegionDecisions.get(nav);
     if(stats&&scope){
@@ -563,6 +586,10 @@ export function warmRaidApproaches(state,specs,entry,nav){
 }
 export function updateRaid(s,dt,nav) {
   if(!s.raid)return;
+  // Resolve confirmed crop and barrier changes before the next attack
+  // intention; a target destroyed by the previous step cannot be selected
+  // from a stale native group snapshot.
+  nav.intentTaskPlanner?.flushWorldEvents?.();
   reconcileTargetReservations(s,(state,animal)=>release(state,animal,nav));
   updateWorkerEncounters(s,nav);
   observeWaitProgress(s);liveWaitQueue(s.raid);
@@ -644,7 +671,7 @@ export function updateRaid(s,dt,nav) {
       target=selected.target;a.targetId=target.id;a.reservation=selected.reservation;s.raid.reservations[a.reservation]=a.id;s.raid.waitRevision=((s.raid.waitRevision??0)+1)>>>0;
       a.approach=selected.approach.point;a.approachShieldId=selected.shieldId;
       a.path=selected.approach.path;a.destinationId=a.approach.id;a.pathVersion=nav.version;
-      nav.intentTaskPlanner?.registerAttackIntent(s,a,target,a.path??[]);
+      if(!selected.native)nav.intentTaskPlanner?.registerAttackIntent(s,a,target,a.path??[]);
     }
     const shield=spellAt(s,'shield',target);
     if(!a.approach||a.approachShieldId!==(shield?.id??null)||!reservedApproachClear(s,a,a.approach)||!actorSegmentClear(a.approach,a.approach,a,actorBlockers(s,a,false))) {

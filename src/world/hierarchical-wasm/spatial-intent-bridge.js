@@ -5,6 +5,7 @@ import {BALANCE} from '../../simulation/balance.js';
 import {activeCrops} from '../../simulation/active-crops.js';
 import {workerEntityLookup} from '../../simulation/worker-entity-lookup.js';
 import {ANIMAL_SPATIAL_PROFILES} from './spatial-movement-profiles.js';
+import {targetReservationKey} from '../../simulation/raid-target-reservations.js';
 import {applyConfirmedTaskAssignments,notifyWorkerPlanningChange,
   observeTaskChanges,releaseTask,replaceTasks} from '../../simulation/tasks.js';
 
@@ -87,6 +88,7 @@ export function createSpatialIntentBridge(session){
     'nav_intent_reconcile_topology','nav_intent_replan_pending_routes',
     'nav_intent_request_reroute',
     'nav_intent_attack_route_input_ptr','nav_intent_register_attack',
+    'nav_intent_plan_attack_crop','nav_intent_attack_result_ptr',
     'nav_intent_attack_action_active','nav_intent_restore_attack_action',
     'nav_intent_attack_finished',
     'nav_intent_attack_cancel',
@@ -97,6 +99,7 @@ export function createSpatialIntentBridge(session){
   let sequence=0,initialized=false;
   const structuresById=new Map();
   const cropsById=new Map();
+  const cropObjects=new Map();
   const apply=rows=>{
     if(!initialized)throw Error('Reset the native intent session first');
     for(let offset=0;offset<rows.length;offset+=maxBatch){
@@ -127,10 +130,13 @@ export function createSpatialIntentBridge(session){
       apply(rows);
       structuresById.clear();
       cropsById.clear();
+      cropObjects.clear();
       for(const structure of state.structures)
         structuresById.set(numericId(structure.id),{...structure});
-      for(const crop of state.plants)if(crop.alive)
+      for(const crop of state.plants)if(crop.alive){
         cropsById.set(numericId(crop.id),crop.id);
+        cropObjects.set(numericId(crop.id),crop);
+      }
     }
     catch(error){
       wasm.nav_intent_reset();sequence=0;initialized=false;
@@ -175,9 +181,11 @@ export function createSpatialIntentBridge(session){
         }
         if(event.type==='target'){
           const id=numericId(event.remove?event.id:event.entity.id);
-          if(event.remove||'alive' in event.entity&&!event.entity.alive)
-            cropsById.delete(id);
-          else if('alive' in event.entity)cropsById.set(id,event.entity.id);
+          if(event.remove||'alive' in event.entity&&!event.entity.alive){
+            cropsById.delete(id);cropObjects.delete(id);
+          }else if('alive' in event.entity){
+            cropsById.set(id,event.entity.id);cropObjects.set(id,event.entity);
+          }
         }
       }
       return result;
@@ -411,6 +419,37 @@ export function createSpatialIntentBridge(session){
     if(status!==1)throw Error(`Native attack intention rejected: ${status}`);
     return true;
   };
+  const planAttackCrop=(state,animal)=>{
+    if(!initialized||!state.raid)throw Error('No native raid intention session');
+    // Shield borders and introductory crop quotas alter interaction geometry
+    // and eligibility. Keep those cases on the established selector until the
+    // corresponding confirmed facts are projected into the native index.
+    if(state.raid.introCropLimit!==undefined||
+      state.spells.some(spell=>spell.kind==='shield'&&spell.remaining>0))
+      return null;
+    session.actorSectorRevision({worker:false,species:animal.species});
+    const status=wasm.nav_intent_plan_attack_crop(numericId(animal.id),
+      animal.x,animal.z,animal.radius,1);
+    if(status<0)throw Error(`Native crop intention rejected: ${status}`);
+    const values=new Float64Array(wasm.memory.buffer,
+      wasm.nav_intent_attack_result_ptr(),10);
+    if(status!==1)return {status:status===3?'unknown':status===2?'blocked':'none',
+      regionQueries:values[8],routeQueries:values[9]};
+    const targetId=values[1],target=cropObjects.get(targetId);
+    const routeHandle={session:values[4],slot:values[5],generation:values[6]};
+    const coordinates=routePoints(routeHandle);
+    if(!target||!coordinates||coordinates.length<2||coordinates.length%2){
+      wasm.nav_intent_attack_cancel(numericId(animal.id));
+      throw Error('Native crop intention has no confirmed JS target or route');
+    }
+    return {status:'found',target,reservation:targetReservationKey(target,animal),
+      approach:{point:{id:`native-approach-${target.id}`,
+        x:values[2],z:values[3]},path:Array.from(
+        {length:coordinates.length/2},(_,index)=>({
+          x:coordinates[index*2],z:coordinates[index*2+1]}))},
+      native:true,routeHandle,groupId:values[7],
+      regionQueries:values[8],routeQueries:values[9]};
+  };
   const restoreAttackIntents=state=>{
     let committed=0,travelling=0,staleRoutes=0;
     for(const animal of [...(state.raid?.animals??[])]
@@ -446,7 +485,7 @@ export function createSpatialIntentBridge(session){
     getUnprotectedCropGroups,
     findPlantingSite,releasePlantingSite,
     intentChanges,routePoints,processEventBoundary,requestReroute,
-    registerAttackIntent,
+    registerAttackIntent,planAttackCrop,
     markAttackActive:actorId=>wasm.nav_intent_attack_action_active(numericId(actorId))===1,
     finishAttackIntent:actorId=>wasm.nav_intent_attack_finished(numericId(actorId)),
     cancelAttackIntent:actorId=>wasm.nav_intent_attack_cancel(numericId(actorId))===1,
@@ -467,11 +506,13 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
   if(!Number.isFinite(retrySeconds)||retrySeconds<=0)
     throw RangeError('retrySeconds must be positive');
   const bridge=createSpatialIntentBridge(session);
-  const eligible=new Set(),requests=new Map(),projectedPositions=new Map();
+  const eligible=new Set(),requests=new Map(),animalRequests=new Map(),
+    projectedPositions=new Map();
   let pendingTaskEvents=[];
   let pendingWorldEvents=[];
   let observedTaskState=null,stopTaskObserver=null,stopWorldObserver=null;
-  let dirty=true,nextRetry=Infinity,lastTime=-Infinity,total=0,initialized=false;
+  let dirty=true,nextRetry=Infinity,lastTime=-Infinity,total=0,
+    animalTotal=0,initialized=false;
   let lastNavigationVersion=null;
   let lastPlan=null,lastPlanFacts=null,sourceState=null;
   const setWorker=(worker,state)=>{
@@ -492,7 +533,8 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     const restored=bridge.restoreAssignedTasks(state);
     const restoredAnimals=bridge.restoreAttackIntents(state);
     eligible.clear();projectedPositions.clear();requests.clear();
-    pendingTaskEvents=[];pendingWorldEvents=[];total=0;
+    animalRequests.clear();
+    pendingTaskEvents=[];pendingWorldEvents=[];total=0;animalTotal=0;
     lastPlan=null;lastPlanFacts=null;
     for(const worker of state.workers)setWorker(worker,state);
     dirty=true;nextRetry=Infinity;lastTime=-Infinity;
@@ -614,6 +656,9 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
   };
   const metrics=simulatedSeconds=>({nativePlanningCalls:total,
     perWorkerPerMinute:Object.fromEntries([...requests].map(([id,times])=>
+      [id,times.filter(time=>time>simulatedSeconds-60).length])),
+    nativeAnimalPlans:animalTotal,
+    perAnimalPerMinute:Object.fromEntries([...animalRequests].map(([id,times])=>
       [id,times.filter(time=>time>simulatedSeconds-60).length]))});
   const hasPendingAt=simulatedSeconds=>{
     if(!initialized)throw Error('Reset the native intent session first');
@@ -817,6 +862,18 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     hasPendingAt,metrics,
     commitTaskBatchToState,
     registerAttackIntent:bridge.registerAttackIntent,
+    planAttackCrop:(state,animal)=>{
+      if(state!==observedTaskState&&state!==sourceState)return null;
+      const result=bridge.planAttackCrop(state,animal);
+      if(result!==null){
+        animalTotal++;
+        const id=numericId(animal.id),times=animalRequests.get(id)??[];
+        times.push(state.elapsed);
+        while(times.length&&times[0]<=state.elapsed-60)times.shift();
+        animalRequests.set(id,times);
+      }
+      return result;
+    },
     markAttackActive:bridge.markAttackActive,
     finishAttackIntent:bridge.finishAttackIntent,
     cancelAttackIntent:bridge.cancelAttackIntent,
