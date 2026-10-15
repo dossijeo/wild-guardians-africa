@@ -74,6 +74,10 @@ La prueba diferencial nativa ampliada compara **resultado, código de causa y ru
 | `raids.js` `cropTargetIndexes` y reservas | Agrupación agrícola y ocupación dinámica | No son cachés topológicas. |
 | `gate-passages.js`, `building-route-shortcut.js` | Geometría derivada de objetos | No certifican conectividad; las rutas propuestas se validan físicamente. |
 | `worker-return-route.js`, `raid-navigation-warmth.js` | Recuperación/navegador JS heredado | No son el planificador ordinario de Wild Engine; se conservaron como fallback legacy. |
+| `fractional-walkability-cache.js`, `animal-segment-clearance.js`, `worker-route-clearance.js`, `actor-motion.js`, `hiring-route-preparer.js` | Pruebas de terreno y desvíos del navegador JS heredado | El adaptador espacial no ofrece las API que activan esas cachés; no certifican la conectividad de Wild Engine. Su validez depende de `nav.version` en el navegador heredado. |
+| `raid-exterior-connectivity.js`, `raid-exterior-detour.js` | Certificados y respuestas parciales de preparación de una entrada exterior | Los mapas se crean y descartan dentro de una única evaluación de formación, sin persistir entre ticks. La ruta del desvío se valida con `walkable` y `segmentClear` antes de escogerla. |
+| `raid-contention.js` | Cola de espera y revisión de ocupación dinámica | No conserva rutas ni certificados; combina revisión topológica, reservas y progreso, con reintento periódico para cambios dinámicos. |
+| `raid-agricultural-impact.js` | Índice espacial de plantas vivas y sólidos para impactos | Índice de daño físico, no de rutas; descarta plantas retiradas y reconstruye los sólidos tras cambios de topología o identidad de estructuras. |
 | `spatial-game-session.js` portales | Proyección del estado confirmado al grafo | Ya compara muros, centros, props, terreno y residencia; se probó una mutación exclusiva de portal. |
 
 ## Límites
