@@ -15,6 +15,8 @@ if(!['intent','control'].includes(mode))throw RangeError('Unknown campaign mode'
 const path=resolve(out),started=performance.now(),rows=[];
 let latestState=null,dayWorkerSnapshot=[];
 const assignments=[],seenAssignments=new Set();
+const intentTiming={};
+let timedPlanner=null;
 mkdirSync(dirname(path),{recursive:true});
 const source=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
 const entryDriverFactory=nav=>({
@@ -37,6 +39,23 @@ try{
     openingFactory:createSpatialCampaignOpening,entryDriverFactory,
     onTick:(state,nav)=>{
       latestState=state;nav.serviceRaidConnectivityDemand?.();
+      if(nav.intentTaskPlanner&&timedPlanner!==nav.intentTaskPlanner){
+        timedPlanner=nav.intentTaskPlanner;
+        for(const name of ['planIfNeeded','reconcileWorkerRoutes',
+          'reconcileNavigationRevision','flushTaskEvents','flushWorldEvents']){
+          const original=timedPlanner[name];
+          if(typeof original!=='function')continue;
+          intentTiming[name]={calls:0,milliseconds:0};
+          timedPlanner[name]=(...args)=>{
+            const began=performance.now();
+            try{return original(...args);}
+            finally{
+              intentTiming[name].calls++;
+              intentTiming[name].milliseconds+=performance.now()-began;
+            }
+          };
+        }
+      }
       for(const worker of state.workers){
         if(!worker.taskId||!worker.path?.length)continue;
         const key=`${worker.id}:${worker.taskId}`;
@@ -80,16 +99,17 @@ try{
           seeds:row.finance.seeds,repairs:row.finance.repairs,
           walls:row.finance.walls},
         result:row.result,wallTime:row.wallTime,
-        nativeIntent:row.nativeIntent});
+        nativeIntent:row.nativeIntent,
+        intentTiming:JSON.parse(JSON.stringify(intentTiming))});
       console.log(JSON.stringify(rows.at(-1)));
     }});
-  const report={status:'completed',source,parameters,assignments,
+  const report={status:'completed',source,parameters,assignments,intentTiming,
     elapsedSeconds:(performance.now()-started)/1000,
     completedNights:result.completedNights,result:result.result,
     nativeIntent:result.nativeIntent,rows};
   writeFileSync(path,JSON.stringify(report,null,2)+'\n');
 }catch(error){
-  const report={status:'error',source,parameters,assignments,
+  const report={status:'error',source,parameters,assignments,intentTiming,
     elapsedSeconds:(performance.now()-started)/1000,
     day:error.nativeCampaignPartial?.day,message:error.message,stack:error.stack,rows};
   writeFileSync(path,JSON.stringify(report,null,2)+'\n');
