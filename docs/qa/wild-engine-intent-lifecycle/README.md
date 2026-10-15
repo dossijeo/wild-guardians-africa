@@ -112,6 +112,8 @@ The follow-up `occupied` revision passed native CI run 38792688845 and web valid
 
 A bounded diagnostic replay traced those four `unknown` results to two selection moments repeated on the next tick. Each examined 16 candidate sites without making any route query or registration attempt: `lastRouteCount` and `lastRegisterResult` remained at their untouched sentinel values. The candidate-budget branch was setting `unknown` even though every site had been skipped due to an existing approach lease. The source now reports dynamic `occupied` when that budget expires before any route attempt; native CI and a final replay are still required for this specific correction. The diagnostic trace is archived.
 
+The corrected budget branch passed native CI run 38793905362. Its seven-night replay returned 42 native crop plans as `found`, four as `occupied`, and zero as `unknown` in Sabana/712. It again finished with 123 crops and 815 coins; the four mobile-occupancy rejections and corresponding JavaScript fallbacks remain, so migration of dynamic actor occupancy is unfinished. Total runner time was 136.9 s versus 139.3 s in the preceding run, an uncontrolled timing difference rather than a proven optimization. The report and binary/source hashes are archived.
+
 ## Next integration gates
 
 1. Publish confirmed task/worker/action events directly from the simulation without scanning every entity per tick. Apply native proposals atomically with JS task reservations and preserve all worker policy tie-breaks.
