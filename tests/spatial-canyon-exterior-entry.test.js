@@ -5,8 +5,8 @@ import {deserialize} from '../src/persistence/snapshots.js';
 import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
 import {ANIMAL_SPATIAL_PROFILES} from '../src/world/hierarchical-wasm/spatial-movement-profiles.js';
-import {chooseRaidEntry,reachableApproach} from '../src/simulation/raids.js';
-import {raidWallEnvelope} from '../src/simulation/raid-exterior-entry.js';
+import {chooseRaidEntry,reachableApproach,spawnRaid,updateRaid} from '../src/simulation/raids.js';
+import {raidWallEnvelope,exteriorRaidWitness} from '../src/simulation/raid-exterior-entry.js';
 import {ANIMAL_ACTIONS} from '../src/simulation/animal-actions-data.js';
 import {createSpatialCampaignOpening} from '../tools/experiments/spatial-campaign-opening.mjs';
 import {rational} from '../src/simulation/money.js';
@@ -61,6 +61,7 @@ test('a full mixed Canyon wave keeps a physical bank entry beside a closed farm'
     assert.equal(Game.buildWallChain(state,'mixed-entry-ring','zarzas',
       [[x0,z0],[x1,z0],[x1,z1],[x0,z1],[x0,z0]],nav,
       {smooth:false,snap:false}),true);
+    assert.equal(state.structures.filter(structure=>structure.kind==='wall').length,40);
     let planted=0;
     for(let dz=-54;dz<=54&&planted<40;dz+=2)
       for(let dx=-54;dx<=54&&planted<40;dx+=2){
@@ -88,5 +89,26 @@ test('a full mixed Canyon wave keeps a physical bank entry beside a closed farm'
           point.z-entry.entries[j].z)>radius+specs[j].radius+1);
       }
     }
+    const before=new Set(state.events.map(event=>event.id));
+    assert.equal(spawnRaid(state,{group:Array(16).fill('warthog')},nav),true);
+    assert.equal(state.raid.animals.length,16);
+    const envelope=raidWallEnvelope(state,nav);
+    for(const animal of state.raid.animals)
+      assert(exteriorRaidWitness(animal.spawn,animal.radius,envelope,nav));
+    let wallHits=0,cropHits=0;
+    // The event ring is bounded. Observe each tick so that early wall hits
+    // cannot disappear before the final assertion.
+    for(let i=0;i<2400&&state.raid;i++){
+      state.elapsed+=.1;updateRaid(state,.1,nav);
+      for(const event of state.events)if(!before.has(event.id)){
+        before.add(event.id);
+        if(event.type==='StructureHit'&&
+          state.structures.find(structure=>structure.id===event.targetId)?.kind==='wall')wallHits++;
+        if(event.type==='CropHit')cropHits++;
+      }
+    }
+    assert.equal(state.raid,null,'the closed-farm raid must finish');
+    assert(wallHits>0,'the wave must attack a physical wall');
+    assert.equal(cropHits,0,'intact closure must keep crops protected');
   }finally{session.dispose();}
 });

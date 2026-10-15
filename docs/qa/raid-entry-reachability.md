@@ -63,3 +63,11 @@ la finca amurallada completó 14 noches con 33 bajas agrícolas desde la 6,
 mientras el control sin murallas perdió 268 cultivos y cayó durante el día 12.
 Los dos resultados, incluido el negativo de Desierto, se conservan sin
 seleccionar sólo la semilla favorable.
+
+La regresión de Gran Cañón construye un recinto de 40 módulos, coloca 40
+cultivos y lanza una oleada completa de 16 facóqueros con Wild Engine. Los
+16 nacen físicamente fuera; durante la incursión se registran 24 impactos
+contra murallas, ningún impacto agrícola y finalización normal. El test
+observa los eventos en cada tick porque el anillo de eventos descarta los
+antiguos: inspeccionar sólo su contenido final había producido inicialmente
+un falso diagnóstico de ausencia de golpes.
