@@ -185,6 +185,17 @@ runner `run-matched-defense.mjs` ya permite ese control; las campañas nativas
 históricas de Manglares/123 (`matched-defense-14/`) muestran ventaja defensiva
 con otra versión de fuente, pero no sustituyen la prueba de esta cohorte.
 
+El primer brazo de la ablación nueva (`matched-walls-current-magic`,
+Sabana/712) terminó 14/14 noches sin error, con ledger conciliado en todos los
+días: 90 cultivos vivos, 631 monedas, 83 cajas/día de media terminal,
+134 cultivos destruidos desde la noche 6, 860 monedas en muros y 642 en
+reparaciones. Sus observables diarios, incursiones, genes, política y defensa
+coinciden exactamente con el informe `4419e5eb34a46b9f` de la ejecución
+exploratoria tras excluir `wallTime` y el nombre de estrategia. Esto verifica
+la equivalencia del brazo defendido, no la igualdad de estados serializados.
+La configuración y el informe nativo comprimido están en
+`matched-sabana712-14/`; los dos brazos sin murallas siguen en ejecución.
+
 Esta cohorte usa Wild Engine y el balance de producción sin alterar, después de
 la mejora de navegación de PR #37. Código ejecutado: `7f358aad97287b40e300026306d26f05cc4e0c29`;
 el registro de siete noches guarda además SHA-256 de los módulos y del diff en
