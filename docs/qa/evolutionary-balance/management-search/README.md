@@ -108,6 +108,14 @@ Estos dos informes muestran que el genoma combina fragilidad económica con
 exposición militar según el escenario. No demuestran por sí solos qué decisión
 concreta dejó incompleto un recinto ni justifican cambiar el balance.
 
+El cuarto genoma exploratorio, `8a880102bbedf9b1`, completó 14/14 noches en
+Sabana/712, con 47 cultivos vivos y 374 monedas, pero sus tres jornadas
+finales entregaron 44⅓ cajas/día. También cae por debajo del umbral de
+82⅙ fijado antes del ensayo. El ledger concilia en los catorce registros.
+La partida de Gran Río del mismo genoma sigue en curso; esta observación
+aislada no lo convierte en líder de gestión ni en política viable para 100
+noches. Se conserva su informe nativo en `results-14-main-sync/`.
+
 Esta cohorte usa Wild Engine y el balance de producción sin alterar, después de
 la mejora de navegación de PR #37. Código ejecutado: `7f358aad97287b40e300026306d26f05cc4e0c29`;
 el registro de siete noches guarda además SHA-256 de los módulos y del diff en
