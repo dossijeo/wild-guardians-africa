@@ -5,7 +5,7 @@ import {gunzipSync} from 'node:zlib';
 import {execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 import {deserialize} from '../src/persistence/snapshots.js';
-import {rebuildTasks} from '../src/simulation/game.js';
+import {emit,rebuildTasks} from '../src/simulation/game.js';
 import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
 import {createSpatialIntentBridge,createEventDrivenTaskPlanner} from
  '../src/world/hierarchical-wasm/spatial-intent-bridge.js';
@@ -149,6 +149,21 @@ test('event-fed native intent bridge replays live state and only changes on expl
   assert.equal(wasm.nav_intent_task_count(),game.tasks.length,
    'a real day task rebuild projects the same task roster without a scan');
   stopRebuild();
+  plant.alive=true;worker.status='idle';worker.taskId=null;game.tasks=[task];
+  planner.resetFromState(game);
+  const stopWorld=planner.observeWorld(game);
+  assert.equal(planner.planIfNeeded(0)[0].status,1);
+  assert.equal(planner.commit(),1);
+  const [active]=planner.intentChanges();
+  assert(active.routeHandle);
+  plant.alive=false;
+  emit(game,'CropDestroyed',{targetId:plant.id});
+  assert.equal(planner.flushWorldEvents(),1);
+  const [cancelled]=planner.intentChanges();
+  assert.equal(cancelled.actorId,9263,
+   'a confirmed crop event invalidates its native intention at the event boundary');
+  assert.equal(planner.routePoints(active.routeHandle),null);
+  stopWorld();
  }finally{session.dispose();}
 });
 

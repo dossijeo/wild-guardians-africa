@@ -1,6 +1,6 @@
 import {centerGeometry,centerServicePoint} from '../centers.js';
 import {contractExpired,PROFILES} from '../../simulation/workforce.js';
-import {repairCost} from '../../simulation/game.js';
+import {observeGameEvents,repairCost} from '../../simulation/game.js';
 import {BALANCE} from '../../simulation/balance.js';
 import {ANIMAL_SPATIAL_PROFILES} from './spatial-movement-profiles.js';
 import {observeTaskChanges} from '../../simulation/tasks.js';
@@ -353,7 +353,8 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
   const bridge=createSpatialIntentBridge(session);
   const eligible=new Set(),requests=new Map(),projectedPositions=new Map();
   let pendingTaskEvents=[];
-  let observedTaskState=null,stopTaskObserver=null;
+  let pendingWorldEvents=[];
+  let observedTaskState=null,stopTaskObserver=null,stopWorldObserver=null;
   let dirty=true,nextRetry=Infinity,lastTime=-Infinity,total=0,initialized=false;
   const setWorker=(worker,state)=>{
     const id=numericId(worker.id);
@@ -363,11 +364,14 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
   };
   const resetFromState=state=>{
     initialized=false;
-    if(stopTaskObserver&&observedTaskState!==state){
-      stopTaskObserver();stopTaskObserver=null;observedTaskState=null;
+    if(observedTaskState!==state){
+      stopTaskObserver?.();stopTaskObserver=null;
+      stopWorldObserver?.();stopWorldObserver=null;
+      observedTaskState=null;
     }
     const result=bridge.resetFromState(state);
-    eligible.clear();projectedPositions.clear();requests.clear();pendingTaskEvents=[];total=0;
+    eligible.clear();projectedPositions.clear();requests.clear();
+    pendingTaskEvents=[];pendingWorldEvents=[];total=0;
     for(const worker of state.workers)setWorker(worker,state);
     dirty=true;nextRetry=Infinity;lastTime=-Infinity;
     initialized=true;
@@ -396,6 +400,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     if(!Number.isFinite(simulatedSeconds)||simulatedSeconds<lastTime)
       throw RangeError('Simulation time must be finite and monotonic');
     lastTime=simulatedSeconds;
+    if(pendingWorldEvents.length)flushWorldEvents();
     if(pendingTaskEvents.length)flushTaskEvents();
     if(!dirty&&simulatedSeconds<nextRetry)return null;
     if(!session.core.wasm.nav_intent_task_count()){
@@ -404,16 +409,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     // Idle workers can move while awaiting a task. Refresh only changed
     // positions at an actual planning boundary; movement ticks do not query
     // native navigation or rebuild the worker roster.
-    if(observedTaskState){
-      const moved=[];
-      for(const worker of observedTaskState.workers){
-        const id=numericId(worker.id),position=projectedPositions.get(id);
-        if(eligible.has(id)&&position&&
-          (position[0]!==worker.x||position[1]!==worker.z))
-          moved.push({type:'worker',entity:worker});
-      }
-      if(moved.length)applyEvents(observedTaskState,moved);
-    }
+    syncChangedPositions(false);
     const before=new Map([...eligible].map(id=>
       [id,session.core.wasm.nav_intent_actor_planning_calls(id)]));
     const result=bridge.planTasks();
@@ -434,6 +430,32 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
   const metrics=simulatedSeconds=>({nativePlanningCalls:total,
     perWorkerPerMinute:Object.fromEntries([...requests].map(([id,times])=>
       [id,times.filter(time=>time>simulatedSeconds-60).length]))});
+  const syncChangedPositions=all=>{
+    if(!observedTaskState)return 0;
+    const moved=[];
+    for(const worker of observedTaskState.workers){
+      const id=numericId(worker.id),position=projectedPositions.get(id);
+      if(position&&(all||eligible.has(id))&&
+        (position[0]!==worker.x||position[1]!==worker.z))
+        moved.push({type:'worker',entity:worker});
+    }
+    if(moved.length)applyEvents(observedTaskState,moved);
+    return moved.length;
+  };
+  const flushWorldEvents=()=>{
+    if(!pendingWorldEvents.length)return 0;
+    const events=pendingWorldEvents;pendingWorldEvents=[];
+    const topologyChanged=events.some(event=>
+      ['WallRemoved','WallChainBuilt','StructureRuined','PlacementCommitted',
+        'RepairApplied'].includes(event.type));
+    if(topologyChanged)syncChangedPositions(true);
+    bridge.applyCommittedEvents(observedTaskState,events);
+    if(topologyChanged){
+      const invalidated=session.core.wasm.nav_intent_reconcile_topology();
+      if(invalidated)session.core.wasm.nav_intent_replan_pending_routes();
+    }
+    return events.length;
+  };
   const flushTaskEvents=()=>{
     if(!pendingTaskEvents.length)return 0;
     const workerEvents=new Map(),taskEvents=[];
@@ -473,9 +495,33 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     stopTaskObserver=stop;
     return ()=>{
       if(stopTaskObserver!==stop)return;
-      stop();stopTaskObserver=null;observedTaskState=null;pendingTaskEvents=[];
+      stop();stopTaskObserver=null;pendingTaskEvents=[];
+      if(!stopWorldObserver)observedTaskState=null;
     };
   };
-  return {resetFromState,applyEvents,observeTasks,flushTaskEvents,planIfNeeded,metrics,
+  const observeWorld=state=>{
+    if(!initialized)throw Error('Reset the native intent session before observing events');
+    if(stopWorldObserver)throw Error('A world event observer is already attached');
+    if(observedTaskState&&observedTaskState!==state)
+      throw Error('World and task observers must share one game state');
+    observedTaskState=state;
+    const relevant=new Set(['CropPlaced','CropDestroyed','CropPicked',
+      'PlacementCommitted','WallChainBuilt','WallRemoved','StructureHit',
+      'StructureRuined','RepairApplied']);
+    const stop=observeGameEvents(state,event=>{
+      if(!relevant.has(event.type))return;
+      pendingWorldEvents.push(event);
+      if(event.type!=='StructureHit')dirty=true;
+    });
+    stopWorldObserver=stop;
+    return ()=>{
+      if(stopWorldObserver!==stop)return;
+      stop();stopWorldObserver=null;pendingWorldEvents=[];
+      if(!stopTaskObserver)observedTaskState=null;
+    };
+  };
+  return {resetFromState,applyEvents,observeTasks,observeWorld,
+    flushTaskEvents,flushWorldEvents,planIfNeeded,metrics,
+    intentChanges:bridge.intentChanges,routePoints:bridge.routePoints,
     discard:bridge.discard,commit:bridge.commit,sequence:bridge.sequence};
 }
