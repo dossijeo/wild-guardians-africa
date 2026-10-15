@@ -118,10 +118,15 @@ las derrotas nativas.
 El cuarto genoma exploratorio, `8a880102bbedf9b1`, completó 14/14 noches en
 Sabana/712, con 47 cultivos vivos y 374 monedas, pero sus tres jornadas
 finales entregaron 44⅓ cajas/día. También cae por debajo del umbral de
-82⅙ fijado antes del ensayo. El ledger concilia en los catorce registros.
-La partida de Gran Río del mismo genoma sigue en curso; esta observación
-aislada no lo convierte en líder de gestión ni en política viable para 100
-noches. Se conserva su informe nativo en `results-14-main-sync/`.
+82⅙ fijado antes del ensayo. Gran Río/2026 también terminó 14/14, con 76
+cultivos y 454 monedas, pero sólo 59 cajas/día de media terminal. En los
+tres últimos días el margen operativo, antes de nuevos muros, fue negativo:
+−240 monedas en Sabana y −241 en Gran Río. Ambos informes concilian con el
+ledger y `post-intro-v2` los clasifica como `collapsed-production`, no como
+derrotas nativas. El día 14 de Gran Río consumió 11,35 s de `Game.tick`,
+por debajo del corte de 120 s/día, pero la trayectoria de coste debe revisarse
+antes de ampliar a campañas largas. Los informes y progresos se conservan en
+`results-14-main-sync/`.
 
 Esta cohorte usa Wild Engine y el balance de producción sin alterar, después de
 la mejora de navegación de PR #37. Código ejecutado: `7f358aad97287b40e300026306d26f05cc4e0c29`;
