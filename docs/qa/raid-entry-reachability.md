@@ -57,3 +57,9 @@ cambio de presión: ambos brazos terminan en derrota nativa durante el día 13;
 los muros interceptan impactos y reducen pérdidas, pero no sostienen la finca
 en esta política. La PR permanece experimental mientras se revisan recintos
 cerrados y más escenarios.
+
+En un [segundo piloto Sabana/712](raid-entry-reachability/campaign-sabana712/README.md),
+la finca amurallada completó 14 noches con 33 bajas agrícolas desde la 6,
+mientras el control sin murallas perdió 268 cultivos y cayó durante el día 12.
+Los dos resultados, incluido el negativo de Desierto, se conservan sin
+seleccionar sólo la semilla favorable.
