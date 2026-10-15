@@ -44,6 +44,7 @@ struct Target {
   double hp=0,maxHp=0;int status=0,material=0;bool damageKnown=false;
   int cropSpecies=0;double cropValue=0;
   double serviceX=0,serviceZ=0;bool serviceKnown=false;
+  double wallDepthScale=1;
 };
 struct PlantCandidate {int x,z;double distance2;};
 struct PlantOrder {
@@ -526,7 +527,8 @@ ServicePoints servicePoints(const Worker& worker,const Target& target,int taskKi
         target.z+std::cos(angle+offset)*radius});
     }
   }else if(taskKind==2&&target.kind==3){
-    const double width=1.09*target.shape+.28+.1,depth=.22+.28+.1;
+    const double width=1.09*target.shape+.28+.1,
+      depth=.22*target.wallDepthScale+.28+.1;
     const double c=std::cos(target.yaw),s=std::sin(target.yaw);
     for(const Point local:std::array<Point,4>{{{0,depth},{0,-depth},{width,0},{-width,0}}})
       points.add({target.x+local.x*c+local.z*s,
@@ -673,12 +675,17 @@ int nav_intent_apply_changes(double sequence,int count){
         auto inserted=s.targets.insert_or_assign(change.id,
           Target{change.id,change.x,change.z,change.flag,
             int(change.center),change.created,change.rank});
+        if(int(change.center)==3)
+          inserted.first->second.wallDepthScale=change.target?
+            double(change.target)/100:1;
         addCropCell(s,inserted.first->second);
       }else{
         Target& target=found->second;
         removeDamage(s,target);removeCropCell(s,target);
         target.x=change.x;target.z=change.z;target.active=change.flag;
         target.kind=int(change.center);target.yaw=change.created;target.shape=change.rank;
+        if(target.kind==3)target.wallDepthScale=change.target?
+          double(change.target)/100:1;
         addDamage(s,target);addCropCell(s,target);
       }
     }else if(change.kind==4){

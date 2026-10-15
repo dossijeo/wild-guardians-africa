@@ -190,6 +190,24 @@ test('incremental native task index plans, discards and commits one global assig
    assert(repair[4]>0);
   }finally{session.core.applyBarrierChanges(wall,[]);}
 
+  const gateScale=1.4,gateBase=.4,gateYaw=Math.PI/2;
+  const gate=session.core.applyBarrierChanges([],[{
+   x:second.x,z:second.z,halfX:1.09*gateBase*gateScale,
+   halfZ:.22*gateScale,yaw:gateYaw,passMask:0}]);
+  try{
+   session.actorRegions(origin,{worker:true});
+   wasm.nav_intent_reset();
+   assert.equal(write(1,[row(1,1,1,1,origin.x,origin.z,1),
+    row(1,2,15,3,second.x,second.z,1,140,gateYaw,gateBase*gateScale),
+    row(1,3,105,1,2,0,0,15,4)]),1);
+   const repair=results()[0];
+   assert.equal(repair[2],1,'gate repair has a physical service route');
+   const expectedX=second.x-(.22*gateScale+.28+.1);
+   assert(Math.abs(repair[6]-expectedX)<1e-4,
+    'native repair uses the gate depth as well as its scaled wall width');
+   assert(session.actorCanStand({x:repair[6],z:repair[7]},{worker:true}));
+  }finally{session.core.applyBarrierChanges(gate,[]);}
+
   wasm.nav_intent_reset();
   assert.equal(write(1,initial),1);
   assert.equal(results().length,2);

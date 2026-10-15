@@ -7,6 +7,7 @@ import {workerEntityLookup} from '../../simulation/worker-entity-lookup.js';
 import {ANIMAL_SPATIAL_PROFILES} from './spatial-movement-profiles.js';
 import {targetReservationKey} from '../../simulation/raid-target-reservations.js';
 import {actorBlockers} from '../../simulation/actor-motion.js';
+import {wallCollisionFrame} from '../wall-collision-frame.js';
 import {applyConfirmedTaskAssignments,notifyWorkerPlanningChange,
   observeTaskChanges,releaseTask,replaceTasks} from '../../simulation/tasks.js';
 
@@ -36,9 +37,9 @@ const targetRow=(entity,state)=>{
   if('alive' in entity)return [1,2,numericId(entity.id),
     entity.species==='platano'?2:1,entity.x,entity.z,entity.alive?1:0,0,0,0];
   if(entity.kind==='wall'){
-    const scale=entity.gate?(entity.material==='reforzado'?1.6:
-      ['adobe','piedra'].includes(entity.material)?1.4:1):1;
-    return [1,2,numericId(entity.id),3,entity.x,entity.z,1,0,entity.yaw??0,scale];
+    const frame=wallCollisionFrame(entity);
+    return [1,2,numericId(entity.id),3,entity.x,entity.z,1,
+      Math.round(frame.depth/.22*100),frame.yaw,frame.width/1.09];
   }
   if(entity.kind==='center')return [1,2,numericId(entity.id),4,
     entity.x,entity.z,1,0,entity.yaw??0,centerGeometry(entity,state).radius];
