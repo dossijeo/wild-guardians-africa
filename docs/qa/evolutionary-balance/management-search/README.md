@@ -495,3 +495,47 @@ por coste computacional. `result-4e49941aee82.json`,
 `search-4e49941aee82.json` y los progresos originales se conservan en
 `results-14-main-sync/`. La cohorte no demuestra una probabilidad de victoria
 ni permite seleccionar aún balance militar de 100 noches.
+
+## Búsqueda posintroductoria completa, reserva independiente
+
+La ejecución nativa congelada `7dc683338c58` (`deb7ec2b4ed1`, fuente
+`68ffb4a5abf827b147883a20525c71f0d1890c1b`) terminó dos generaciones
+en Sabana/712 y Gran Río/2026 y evaluó el líder y cinco controles en la
+reserva independiente Manglares/24681357. Se conservan los 16 informes
+originales, sus progresos, `result-7dc683338c58.json` y
+`search-7dc683338c58.json` en `results-14-post-intro/`. Los movimientos
+económicos diarios concilian con sus ledgers.
+
+| Política | Noches | Resultado nativo | Cultivos vivos | Monedas | Pérdidas desde noche 6 | Cajas/día finales | Margen operativo final |
+|---|---:|---|---:|---:|---:|---:|---:|
+| `4419e5eb34a46b9f` | 14 | horizonte | 129 | 861 | 15 | 118 | +72 |
+| `good-current-magic` | 14 | horizonte | 94 | 846 | 65 | 99⅓ | +223 |
+| `good` histórico | 14 | horizonte | 99 | 782 | 102 | 87 | −41 |
+| `expansive` histórico | 14 | horizonte, producción colapsada | 83 | 313 | 147 | 46⅔ | −118 |
+| `bad` histórico | 13 | **derrota nativa** | 0 | 264 | 360 | 31⅓ | −397 |
+| `no-walls` histórico | 14 | horizonte, producción colapsada | 21 | 211 | 344 | 38⅔ | −385 |
+
+El margen operativo final suma ingresos menos semillas, salarios y
+reparaciones de las tres últimas jornadas; no incluye inversión en nuevos
+tramos de muralla. El genoma evolucionado sufrió menos pérdidas y mantuvo más
+cultivos en esta reserva, pero `good-current-magic` conservó un margen final
+mayor (+223 frente a +72). No se puede declarar una superioridad económica
+general con una única reserva ni extrapolar estas catorce noches a la victoria
+de la noche 100. `good`, `expansive`, `bad` y `no-walls` son políticas históricas
+con su antigua selección de magia; se conservan como controles diagnósticos,
+no como equivalentes exactos de `good-current-magic`.
+
+Esta ejecución se inició con `post-intro-v1`. Su penalización por derrota
+terminal era menor que la amplitud máxima de los términos secundarios. La
+corrección `post-intro-v2` aumenta esa penalización sin alterar ningún
+informe nativo. El recálculo verificó el hash, identidad, semilla, bioma,
+estado, ledger y puntuación original de los 16 informes antes de aplicar la
+nueva fórmula. Ambas generaciones conservaron exactamente su orden y el
+líder `4419e5eb34a46b9f` no cambió. En la reserva, sólo la puntuación de
+`bad` disminuyó 300 puntos; su derrota nativa y todos los demás resultados
+permanecen iguales. El registro reproducible está en
+`rescore-post-intro-v2-final.json`; la prueba
+`tests/evolutionary-rescore.test.js` rechaza informes o puntuaciones
+manipulados. La siguiente comparación deberá usar `post-intro-v2` desde el
+inicio y extender pilotos con políticas congeladas antes de aceptar una
+estrategia para balance militar.

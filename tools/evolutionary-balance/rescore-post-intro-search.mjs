@@ -1,6 +1,6 @@
 // Re-score frozen native campaigns without replaying or modifying them.
 import {readFileSync,writeFileSync,existsSync} from 'node:fs';
-import {resolve,dirname,join} from 'node:path';
+import {resolve,relative,dirname,join} from 'node:path';
 import {createHash} from 'node:crypto';
 import {pathToFileURL} from 'node:url';
 import {scorePostIntro,scorePostIntroV2} from './post-intro-fitness.mjs';
@@ -79,7 +79,8 @@ export function rescoreFrozenSearch(searchPath){
   holdout={resultSha256:digest(bytes),oldLeader,revisedLeader,
    leaderUnchanged:oldLeader===revisedLeader,rows};
  }
- return {kind:'post-intro-v1-to-v2-offline-rescore',sourceSearch:path,
+ return {kind:'post-intro-v1-to-v2-offline-rescore',
+  sourceSearch:relative(process.cwd(),path).replaceAll('\\','/'),
   sourceSearchSha256:digest(searchBytes),sourceStamp:stamp,
   scoring:'post-intro-v2; native reports unchanged',
   generations:rescored,holdout,reports:[...reports.values()]};
