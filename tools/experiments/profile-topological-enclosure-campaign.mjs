@@ -251,10 +251,17 @@ function inspect(state,nav){
           wasm.spatial_static_object_clearance(x,z,2)):undefined;
         if(staticBoundary?.status==='unknown'&&staticBoundary.edge){
           const [ox,oz,ix,iz]=staticBoundary.edge;
-          staticBoundary.nativeCrossingAtCellCenters=
+          const tx=-(iz-oz),tz=ix-ox;
+          staticBoundary.nativeCrossings=
             Object.fromEntries(['warthog','hyena','buffalo','lion','rhino']
-              .map(species=>[species,opening.session.actorStepClear(
-                {x:ox,z:oz},{x:ix,z:iz},{worker:false,species})]));
+              .map(species=>[species,[-.4,-.2,0,.2,.4].map(offset=>{
+                const start={x:ox+tx*offset,z:oz+tz*offset};
+                const end={x:ix+tx*offset,z:iz+tz*offset};
+                const options={worker:false,species};
+                return {offset,outside:opening.session.actorCanStand(start,options),
+                  inside:opening.session.actorCanStand(end,options),
+                  crossing:opening.session.actorStepClear(start,end,options)};
+              })]));
         }
         return {
         group:bridge.getUnprotectedCropGroups({includeProtected:true})

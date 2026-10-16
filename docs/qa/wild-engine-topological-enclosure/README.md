@@ -398,10 +398,12 @@ test, rather than a larger set of crossing samples.
 The Sabana proposal remains **unknown**. The first unproved segment runs
 between grid cells `(74,-11)` and `(74,-10)`; its boundary endpoints are
 `(73.5,-10.5)` and `(74.5,-10.5)`, with static-solid clearances 0.78 and
-1.28 m. The latter exceeds the smallest animal radius of 0.85 m. The native
-physical step between the two cell centres is blocked for all five species,
-but this single step does not establish continuous closure along the whole
-one-metre segment. The new proof therefore correctly declines to certify the
+1.28 m. The latter exceeds the smallest animal radius of 0.85 m. Five native
+crossing probes along that segment fail for all five species, but in every
+probe the sampled outside starting point is already unstandable. These are
+not witnesses that the intervening boundary itself is covered by an obstacle;
+they may simply begin inside a wall, prop or forbidden terrain. The new proof
+therefore correctly declines to certify the
 candidate. The raw details, including the same serialized state hash, are in
 `sabana-cut-terminals-d3.json`. This audit is QA-only and is not part of the
 normal planner's cost.
