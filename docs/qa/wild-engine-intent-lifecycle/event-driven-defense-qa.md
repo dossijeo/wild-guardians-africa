@@ -53,7 +53,10 @@ acceptance result or evidence of 100-night sustainability.
 The remaining architectural gap is the JavaScript rectangle used to propose
 the wall stroke. Its conservative slot-price threshold can defer a purchase
 longer than the exact native-certified cost when natural obstacles substitute
-for modules. Replace that proposal with the native incremental enclosure
-service before claiming optimal defensive spending. Income and world events
+for modules. The existing enclosure service uses native certification but
+still proposes a JavaScript rectangle; its speculative preview took 6.6 s
+for a 66-crop group in the [day-3 profile](enclosure-preview-profile.md).
+It should not replace the bot's routine decision path until the full preview
+cost is removed or reduced. Income and world events
 now wake the experimental policy; the periodic mode remains only for
 comparison and non-intent campaigns.
