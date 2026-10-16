@@ -333,6 +333,23 @@ daily state hashes and timings, is `sabana14-native-home.json.gz`. This is
 evidence of sustained technical progress, not a controlled speed comparison
 or a balance acceptance result.
 
+A follow-up 30-night request on source `3d0f60f1` matched all 14 daily
+serialized-state hashes in that pilot, then reached a **real GameOver at the
+day-20 dawn after 19 completed nights**. The last center remained operational,
+but no crops remained and the balance was 32 coins; the game reported that
+the village could not afford another day. Crops fell from 59 on day 15 to
+16 on day 16 and zero after day 17. All 19 raid receipts were verified with
+zero observer issues or lost coverage. Native home routing found 291 of 307
+requests; 16 took the bounded JavaScript fallback, first appearing during
+day 17 after wall construction. The report does not classify those 16 route
+failures or prove that no worker was briefly trapped, so further return-path
+diagnosis remains open. The last daily worker samples had different worker
+IDs and no persisting returnee, but are insufficient for a full physical
+route audit. The complete negative run is preserved as
+`sabana30-native-home-defeat.json.gz`. Neither wall-sale proceeds nor an
+economic warning was used to stop the run; this was the game's actual loss
+rule. It is not a 30-night completion or evidence of acceptable balance.
+
 This is an opt-in stage. It does not yet establish long-campaign stability,
 full native ownership of worker tasks or animal target policy, or successful
 native home routes in every biome. The bounded JavaScript recovery remains
