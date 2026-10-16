@@ -145,3 +145,17 @@ symptom in this second biome; it does not establish 14-night survival or
 acceptable balance. The report records substantial crop losses after the
 introductory nights and partial defensive investment, which belong in the
 separate policy/balance analysis rather than a navigation fix.
+
+## Additional biome and payment regression
+
+`tests/spatial-repair-access.test.js` now also constructs a legal wall,
+plants and hires through ordinary game commands on seed 123 in Manglares,
+Gran Río, Desierto and Volcanes. Each test ruins that wall, verifies a native
+worker-home route, previews its repair without an unnecessary automatic
+gate, completes the real repair task, checks the exact `repairCost` debit,
+and verifies the route both immediately and after save/load. All four cases
+passed with the checked-in WASM, alongside the existing Sabana closure and
+Gran Cañón repair cases (6/6, 13.05 s on the final run). Another 18 adjacent
+repair, gate and worker-route tests passed. These four isolated walls exercise
+terrain, accounting and persistence across the remaining biomes; they do
+not simulate a complex enclosed farm or a sustained campaign there.

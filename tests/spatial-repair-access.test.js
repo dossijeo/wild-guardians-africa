@@ -4,13 +4,15 @@ import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
 import {deserialize,serialize} from '../src/persistence/snapshots.js';
 import {numberOf} from '../src/simulation/money.js';
-import {planRepairAccess,repairCost,requestRepair,tick} from '../src/simulation/game.js';
+import {hire,openInitialHiring,placeStructure,planRepairAccess,plant,
+  repairCost,requestRepair,tick} from '../src/simulation/game.js';
 import {createSpatialGameSession} from
   '../src/world/hierarchical-wasm/spatial-game-session.js';
 import {createSpatialNavigationMovement} from
   '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
 import {createSpatialIntentBridge} from
   '../src/world/hierarchical-wasm/spatial-intent-bridge.js';
+import {createOpeningWorld} from '../tools/check_opening.mjs';
 
 const binary=process.env.WILD_ENGINE_NATIVE_ROUTE_WASM;
 const module=binary?new WebAssembly.Module(readFileSync(binary)):null;
@@ -138,3 +140,65 @@ test('Gran Cañón repairs retain existing worker routes without unnecessary gat
     assert.equal(game.structures.filter(piece=>piece.gate).length,beforeGates);
   }finally{session.dispose();}
 });
+
+for(const biome of ['manglares','gran-rio','desierto','volcanes'])
+  test(`${biome}: a paid repair keeps native worker access without an unnecessary gate`,
+    {skip:!module&&'Build and select the experimental WASM first'},async()=>{
+      const {s:game,nav:placement}=createOpeningWorld({seed:123,biome,
+        slotId:`repair-access-${biome}`});
+      const center=game.structures[0];
+      let built=false;
+      for(let d=8;d<=25&&!built;d+=2)
+        for(const [dx,dz] of [[d,0],[-d,0],[0,d],[0,-d],[d,d],[-d,-d]]){
+          const x=center.x+dx,z=center.z+dz;
+          if(!placement.wallPlacement({kind:'wall',material:'zarzas',gate:false,
+            x,z,yaw:0}).valid)continue;
+          if(placeStructure(game,'qa-wall',{kind:'wall',material:'zarzas',
+            x,z,yaw:0},placement)){built=true;break;}
+        }
+      assert(built,'the fixture must construct a legal wall on real terrain');
+      let planted=false;
+      for(let d=5;d<=18&&!planted;d+=1.5)
+        for(const [dx,dz] of [[d,4],[-d,4],[d,-4],[-d,-4]]){
+          const x=center.x+dx,z=center.z+dz;
+          if(!placement.placement(x,z,.4).valid)continue;
+          planted=!!plant(game,'qa-seed','mijo',x,z,placement);
+          if(planted)break;
+        }
+      assert(planted,'the fixture must plant legally before hiring');
+      openInitialHiring(game);
+      hire(game,'qa-hire',{olderFemale:1});
+      assert.equal(game.workers.length,1);
+      const target=game.structures.find(piece=>piece.kind==='wall');
+      assert(target&&!target.gate);
+      target.status='ruined';target.hp=0;
+      const {session,nav}=await open(game);
+      try{
+        const worker=game.workers[0],home=game.villages[0].entry;
+        assert.equal(session.routeActorNative(worker,home,
+          {worker:true,cached:false}).status,'found');
+        const plan=planRepairAccess(game,target,nav);
+        assert.equal(plan.status,'safe');
+        assert.equal(plan.updates.length,0);
+        const beforeMoney=numberOf(game.ledger.balance);
+        const expectedCost=numberOf(repairCost(target));
+        requestRepair(game,'qa-repair',target.id);
+        const task=game.tasks.find(item=>item.kind==='repair'&&
+          item.targetId===target.id);
+        assert(task);
+        worker.status='acting';worker.taskId=task.id;worker.actionRemaining=0;
+        tick(game,.1,nav);
+        assert.equal(target.status,'intact');
+        assert.equal(numberOf(game.ledger.balance),beforeMoney-expectedCost);
+        assert.equal(game.structures.filter(piece=>piece.autoGate).length,0);
+        assert.equal(session.routeActorNative(worker,home,
+          {worker:true,cached:false}).status,'found');
+        const restored=deserialize(serialize(game));
+        const reopened=await open(restored);
+        try{
+          assert.equal(reopened.session.routeActorNative(restored.workers[0],
+            restored.villages[0].entry,
+            {worker:true,cached:false}).status,'found');
+        }finally{reopened.session.dispose();}
+      }finally{session.dispose();}
+    });
