@@ -875,6 +875,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
   const applyEvents=(state,events)=>{
     lastPlan=null;lastPlanFacts=null;
     let result;
+    const previousChanges=session.core.wasm.nav_intent_change_count();
     try{result=bridge.applyEvents(state,events);}
     catch(error){
       // The bridge has rebuilt WASM from authoritative JS state. Rebuild this
@@ -888,8 +889,11 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
       if(event.remove){eligible.delete(numericId(event.id));projectedPositions.delete(numericId(event.id));}
       else setWorker(event.entity,state);
     }
-    if(events.some(event=>event.type!=='structureDamage'))dirty=true;
-    pendingNativeChanges=true;
+    const planningChanged=events.some(event=>event.type!=='structureDamage');
+    if(planningChanged)dirty=true;
+    if(planningChanged||
+      session.core.wasm.nav_intent_change_count()>previousChanges)
+      pendingNativeChanges=true;
     const topology=events.some(event=>event.type==='target'&&!event.remove&&
       (event.entity.kind==='wall'||event.entity.kind==='center'));
     const crops=events.some(event=>event.type==='target'&&
@@ -1092,8 +1096,11 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
         .includes(event.type)||event.type==='RepairApplied'&&
         event.repair?.previousStatus!=='intact');
     if(topologyChanged)syncChangedPositions(true);
+    const previousChanges=session.core.wasm.nav_intent_change_count();
     bridge.applyCommittedEvents(observedTaskState,events);
-    pendingNativeChanges=true;
+    if(events.some(event=>event.type!=='StructureHit')||
+      session.core.wasm.nav_intent_change_count()>previousChanges)
+      pendingNativeChanges=true;
     if(events.some(event=>event.type==='StructureRuined'||
       event.type==='WallRemoved')&&observedTaskState.raid){
       const structures=new Map(observedTaskState.structures.map(item=>

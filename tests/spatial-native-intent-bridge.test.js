@@ -42,6 +42,35 @@ test('the intent bridge projects a scaled gate using the physical wall frame',()
   'the full base width and gate scale reach native service routing');
 });
 
+test('an HP-only structure hit updates damage advice without waking route reconciliation',
+ {skip:!module&&'Build and select the experimental WASM first'},()=>{
+ const game=deserialize(gunzipSync(readFileSync(new URL(
+  './fixtures/desierto983-d15-partial-state.json.gz',import.meta.url))).toString());
+ const loaded=new Map(),session=createSpatialGameSession(module,game,{
+  loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+ try{
+  const planner=createEventDrivenTaskPlanner(session);
+  planner.resetFromState(game);
+  const stop=planner.observeWorld(game);
+  try{
+   const nav=createSpatialNavigationMovement(session,game);
+   planner.reconcileNavigationRevision(game,nav.version);
+   planner.reconcileWorkerRoutes(game,{navVersion:nav.version});
+   assert.equal(planner.needsReconciliation(nav.version),false);
+   const wall=game.structures.find(item=>item.kind==='wall'&&
+    item.status==='intact'&&item.hp>1);
+   assert(wall);
+   wall.hp--;
+   emit(game,'StructureHit',{targetId:wall.id});
+   assert.equal(planner.flushWorldEvents(),1);
+   assert.equal(planner.needsReconciliation(nav.version),false,
+    'damage without a collision change does not wake route reconciliation');
+   assert(planner.getDamagedWalls().some(item=>item.id===wall.id),
+    'the native repair index still receives the confirmed HP update');
+  }finally{stop();}
+ }finally{session.dispose();}
+});
+
 test('loading an active raid restores distinct routes and reservations for eight animals',
  {skip:!module&&'Build and select the experimental WASM first'},()=>{
  const game=deserialize(gunzipSync(readFileSync(new URL(
@@ -356,6 +385,20 @@ test('a confirmed ruin cancels travelling animal leases but defers committed str
   assert.equal(planner.flushWorldEvents(),1);
   assert(revisionChecks>beforeRebuild,
    'rebuilding a ruined wall still wakes topology reconciliation');
+  planner.reconcileNavigationRevision(game,nav.version);
+  planner.reconcileWorkerRoutes(game,{navVersion:nav.version});
+  session.actorSectorRevision({worker:false,species:'hyena'});
+  assert.equal(wasm.nav_intent_register_attack(actor+3,wallId,
+   wall.x+3,wall.z+3,0),1);
+  planner.reconcileWorkerRoutes(game,{navVersion:nav.version});
+  assert.equal(planner.needsReconciliation(nav.version),false);
+  wall.status='collapsing';wall.hp=1;
+  emit(game,'StructureHit',{targetId:wall.id});
+  assert.equal(planner.flushWorldEvents(),1);
+  assert.equal(wasm.nav_intent_actor(actor+3),0,
+   'crossing the collapse threshold cancels an uncommitted wall attack');
+  assert.equal(planner.needsReconciliation(nav.version),true,
+   'a hit that emits an intention change must wake the JS consumer');
   stop();
  }finally{session.dispose();}
 });

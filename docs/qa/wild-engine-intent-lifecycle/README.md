@@ -460,3 +460,11 @@ between planning and commit, without weakening the physical route check.
 2. Track sector/portal dependencies so a local topology change invalidates only routes and tactical decisions that can be affected. Defer changes to attacks whose damage frame is already committed.
 3. Move animal target, reservation and retreat planning to the same native authority with differential policy tests; retire the replaced JavaScript selector.
 4. Verify save/load, speculative previews, sector residency, prolonged campaign determinism and physical validity. Benchmark planning calls per actor/minute, navigation time and `Game.tick` before declaring the polling removed.
+
+An HP-only `StructureHit` now updates the native damage index without waking
+route reconciliation. The event bridge compares native intention-change counts
+before and after applying the damage: a hit that crosses into the collapsing
+state still wakes the consumer and releases an uncommitted wall attack. Focused
+tests cover both boundaries and the one-night shared-index integration test
+passes. This removes a redundant event response; no campaign-wide speedup is
+claimed from this isolated change.
