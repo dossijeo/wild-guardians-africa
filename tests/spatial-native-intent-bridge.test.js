@@ -18,6 +18,49 @@ import {wallCollisionFrame} from '../src/world/wall-collision-frame.js';
 const binary=process.env.WILD_ENGINE_NATIVE_ROUTE_WASM;
 const module=binary?new WebAssembly.Module(readFileSync(binary)):null;
 
+test('a saved exhausted buffalo uses a physically clear continuous exit instead of a blocked grid bend',
+ {skip:!module&&'Build and select the experimental WASM first'},()=>{
+ const game=deserialize(gunzipSync(readFileSync(new URL(
+  '../docs/qa/wild-engine-intent-lifecycle/service-sites-sabana712/old-partial-state.json.gz',
+  import.meta.url))).toString());
+ const loaded=new Map(),session=createSpatialGameSession(module,game,{
+  loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+ try{
+  for(let z=-1;z<=2;z++)for(let x=1;x<=4;x++){
+   if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+   loaded.set(`${x},${z}`,session.core.chunkPayload());
+  }
+  const planner=createEventDrivenTaskPlanner(session);
+  planner.resetFromState(game);
+  const nav=createSpatialNavigationMovement(session,game);
+  nav.intentTaskPlanner=planner;
+  const stopTasks=planner.observeTasks(game),stopWorld=planner.observeWorld(game);
+  try{
+   const animal=game.raid.animals.find(item=>item.id==='animal-12273');
+   assert.equal(animal.status,'retreating');
+   assert.equal(animal.hitsRemaining,0);
+   assert.equal(animal.path,null);
+   assert(nav.segmentClear(animal,animal.exit,animal.radius,null,false));
+   const before={x:animal.x,z:animal.z};
+   const damage=game.events.filter(event=>event.type==='AnimalLogicalHit').length;
+   for(let step=0;step<100&&game.raid;step++){
+    const prior={x:animal.x,z:animal.z};
+    tick(game,.1,nav);
+    const moved=Math.hypot(animal.x-prior.x,animal.z-prior.z);
+    assert(moved<=.38+1e-8,'Retreat respects the original speed');
+    assert(nav.segmentClear(prior,animal,animal.radius,null,false),
+     'Every actual movement segment remains physically clear');
+   }
+   assert(Math.hypot(animal.x-before.x,animal.z-before.z)>1);
+   assert.equal(game.raid,null,'The recorded real incursion finishes');
+   assert.equal(animal.status,'gone');
+   assert.deepEqual({x:animal.x,z:animal.z},animal.exit);
+   assert.equal(game.events.filter(event=>event.type==='AnimalLogicalHit').length,
+    damage,'Retreat does not produce extra damage');
+  }finally{stopWorld();stopTasks();}
+ }finally{session.dispose();}
+});
+
 test('the intent bridge projects a scaled gate using the physical wall frame',()=>{
  const memory={buffer:new ArrayBuffer(2048)},batches=[];
  const wasm=new Proxy({memory,

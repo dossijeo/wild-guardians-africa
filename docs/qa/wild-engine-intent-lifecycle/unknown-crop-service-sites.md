@@ -20,3 +20,5 @@ Additional daytime states were probed with the corrected WASM: Gran Cañón day 
 The [paired Gran Cañón/123 campaign](service-sites-canyon123/README.md) diverged from the first day. The corrected WASM reached day nine with more crops and cash, but lost the last center one night earlier after more valid day-ten center hits. This single-seed result is a survival caveat, not an invalid-route finding or a matched speed result.
 
 A second [paired Sabana/712 campaign](service-sites-sabana712/README.md) also diverged from day one. The corrected WASM completed 14 nights with 14 verified raids and no observer issues. The previous WASM stopped at a technical error in the day-13 raid: one exhausted buffalo remained in retreat with no route. The divergent states do not prove that the service-site correction fixes that separate retreat condition; the failure snapshot is preserved for reproduction.
+
+The saved buffalo failure has since been reproduced with either WASM binary and corrected in the JavaScript retreat movement path using its physically clear continuous exit. A directed regression passes; the prior campaign reports remain unchanged historical evidence.

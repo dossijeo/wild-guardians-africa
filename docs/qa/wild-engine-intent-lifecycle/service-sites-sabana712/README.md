@@ -11,6 +11,10 @@ The corrected run verified all 14 raids with zero observer issues and ended at t
 
 This probe cannot establish that the crop-service-site change directly fixes the buffalo retreat: the campaigns diverged from day 1 and produced different world states. It does show that the candidate survives this seed and horizon without a reported raid problem, whereas the previous binary exposes a separate retreat failure in its trajectory. The old partial state is retained for a directed reproduction of that failure. Do not present the 248.63-versus-233.28-second elapsed times as a speed comparison because one run stopped early.
 
+## Directed retreat follow-up
+
+Restoring the old partial state reproduced the stationary buffalo with either WASM binary. Its position and exit were both walkable, and the full continuous swept segment to its saved exit was clear. A grid route nevertheless led first to a local bend that the movement controller rejected, causing a fresh route request on every tick. The movement code now accepts the already validated straight exit for an exhausted retreat before asking for a grid route; every actual movement step still passes the existing native static and mobile clearance checks. The saved-state regression verifies original speed, no new logical hit, arrival at the exact exit, and a completed raid. The 17 native-intent bridge tests, 196 playable tests, and web build passed with this JavaScript correction and the candidate WASM. This is a directed reproduction, **not** a replay of the full old campaign from day one under the new code.
+
 The Gran Cañón/123 paired run remains negative survival evidence for the same change: see [its report](../service-sites-canyon123/README.md). Together, these two seeds support continued technical validation, not a general survival claim or a merge of draft PR #53.
 
 Reproduction command, changing only `WILD_ENGINE_SPATIAL_SERVICES_WASM` and `WILD_ENGINE_NATIVE_ROUTE_WASM` to one of the archived CI binaries:
