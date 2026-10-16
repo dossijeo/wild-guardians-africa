@@ -156,3 +156,25 @@ respectively. Exact outputs and WASM hashes are in
 native candidate lookup. It does not establish a reduction in `Game.tick`,
 overall raid cost or campaign wall time; those require live planner adoption
 and sustained campaign comparisons.
+
+### Opt-in wall attack proposal
+
+Source `88a5d5c3` adds a native wall proposal that sorts certified first-wall
+crossings, checks transient mobile and target reservations, finds a native
+route to a physical attack side, and confirms a route handle plus attack-site
+lease in one call. This API is not called by live `targetFor()` yet. Pinned
+native-intent [run 38829917674](https://github.com/dossijeo/wild-guardians-africa/actions/runs/38829917674)
+and web validation passed; candidate WASM SHA-256 is
+`85f1fe70b60d4180ea7cb672b5fc9de2f8070336a1b69d4c0b3895c9ae4ba299`.
+The closed-ring fixture obtains one wall proposal and cancels its lease before
+the ordinary raid continues. On the frozen day-ten fixture, the native
+proposal chose `structure-9100` with one route query; its waypoints passed
+the JS physical segment checks. A synthetic concurrent JS-held lease of that
+wall then prevented the native proposal from selecting it again. The bridge
+now exposes this operation and projects live wall leases along with crop
+leases, while the existing selector
+remains authoritative. The entire native raid suite (10/10) and web build
+passed locally with this candidate. These fixtures do not establish policy
+equivalence or campaign performance across species and biomes; the proposal
+needs differential tests for natural barriers, multiple access sides, shields,
+simultaneous reservations and committed attack animations before activation.

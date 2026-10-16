@@ -848,6 +848,29 @@ test('an unresolved native crop group can still expose a certified reachable enc
     const count=session.core.wasm.nav_intent_wall_portals(animal.radius);
     const rows=new Float64Array(session.core.wasm.memory.buffer,
       session.core.wasm.nav_intent_wall_portals_ptr(),count*5);
+    const wallProposal=planner.planAttackWall(state,animal);
+    assert.equal(wallProposal.status,'found');
+    assert.equal(wallProposal.target.id,'structure-9100',
+      'the native wall proposal matches the frozen policy target');
+    assert(wallProposal.approach.path.length>0);
+    let previous=animal;
+    for(const next of wallProposal.approach.path){
+      assert(nav.segmentClear(previous,next,animal.radius,null,false));
+      previous=next;
+    }
+    assert.equal(planner.cancelAttackIntent(animal.id),true);
+    const externalLease={...animal,id:'animal-999999',x:999,z:999,
+      targetId:wallProposal.target.id,approach:wallProposal.approach.point,
+      status:'walking'};
+    state.raid.animals.push(externalLease);
+    try{
+      const alternate=planner.planAttackWall(state,animal);
+      if(alternate?.status==='found'){
+        assert.notEqual(alternate.target.id,wallProposal.target.id,
+          'a JS-held wall lease excludes that target from native selection');
+        assert.equal(planner.cancelAttackIntent(animal.id),true);
+      }
+    }finally{state.raid.animals.pop();}
     const groupCount=session.core.wasm.nav_intent_crop_groups(animal.radius);
     const groupRows=Array.from(new Float64Array(session.core.wasm.memory.buffer,
       session.core.wasm.nav_intent_crop_groups_ptr(),groupCount*12));

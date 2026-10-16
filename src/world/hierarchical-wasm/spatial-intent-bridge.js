@@ -100,6 +100,7 @@ export function createSpatialIntentBridge(session){
     'nav_intent_attack_blockers_ptr','nav_intent_attack_reserved_targets_ptr',
     'nav_intent_plan_attack_crop',
     'nav_intent_attack_result_ptr',
+    'nav_intent_plan_attack_wall','nav_intent_wall_attack_result_ptr',
     'nav_intent_attack_action_active','nav_intent_restore_attack_action',
     'nav_intent_restore_attack_pending','nav_intent_restore_attack_site',
     'nav_intent_attack_finished',
@@ -469,8 +470,7 @@ export function createSpatialIntentBridge(session){
     return count?Array.from(new Float64Array(wasm.memory.buffer,
       wasm.nav_intent_wall_opportunity_candidates_ptr(),count)):[];
   };
-  const planAttackCrop=(state,animal)=>{
-    if(!initialized||!state.raid)throw Error('No native raid intention session');
+  const prepareAttackTransients=(state,animal)=>{
     // Shield borders and introductory crop quotas alter interaction geometry
     // and eligibility. Keep those cases on the established selector until the
     // corresponding confirmed facts are projected into the native index.
@@ -489,7 +489,7 @@ export function createSpatialIntentBridge(session){
         radius:(other.radius??.28)+.1});
     }
     const reservedTargets=state.raid.animals.filter(other=>other!==animal&&
-      other.targetId?.startsWith('plant-')&&
+      other.targetId&&!other.targetId.startsWith('center-')&&
       !['gone','retreating','waiting'].includes(other.status))
       .map(other=>numericId(other.targetId));
     const blockerPtr=wasm.nav_intent_attack_blockers_ptr(blockers.length);
@@ -510,8 +510,15 @@ export function createSpatialIntentBridge(session){
       throw Error('Native attack target lease allocation failed');
     if(reservedTargets.length)new Float64Array(wasm.memory.buffer,reservedPtr,
       reservedTargets.length).set(reservedTargets);
+    return {blockerCount:blockers.length,reservedTargetCount:reservedTargets.length};
+  };
+  const planAttackCrop=(state,animal)=>{
+    if(!initialized||!state.raid)throw Error('No native raid intention session');
+    const transient=prepareAttackTransients(state,animal);
+    if(!transient)return null;
     const status=wasm.nav_intent_plan_attack_crop(numericId(animal.id),
-      animal.x,animal.z,animal.radius,1,blockers.length,reservedTargets.length);
+      animal.x,animal.z,animal.radius,1,transient.blockerCount,
+      transient.reservedTargetCount);
     if(status<0)throw Error(`Native crop intention rejected: ${status}`);
     const values=new Float64Array(wasm.memory.buffer,
       wasm.nav_intent_attack_result_ptr(),10);
@@ -535,6 +542,34 @@ export function createSpatialIntentBridge(session){
           x:coordinates[index*2],z:coordinates[index*2+1]}))},
       native:true,routeHandle,groupId:values[7],
       regionQueries:values[8],routeQueries:values[9]};
+  };
+  const planAttackWall=(state,animal)=>{
+    if(!initialized||!state.raid)throw Error('No native raid intention session');
+    if(!prepareAttackTransients(state,animal))return null;
+    const status=wasm.nav_intent_plan_attack_wall(numericId(animal.id),
+      animal.x,animal.z,animal.radius);
+    if(status<0)throw Error(`Native wall intention rejected: ${status}`);
+    const values=new Float64Array(wasm.memory.buffer,
+      wasm.nav_intent_wall_attack_result_ptr(),10);
+    if(status!==1)return {status:status===3?'unknown':
+      status===4?'occupied':status===2?'blocked':'none',
+      candidatesExamined:values[8],routeQueries:values[9]};
+    const target=state.structures.find(structure=>
+      numericId(structure.id)===values[1]&&structure.kind==='wall'&&
+      structure.status==='intact');
+    const routeHandle={session:values[4],slot:values[5],generation:values[6]};
+    const coordinates=routePoints(routeHandle);
+    if(!target||!coordinates||coordinates.length<2||coordinates.length%2){
+      wasm.nav_intent_attack_cancel(numericId(animal.id));
+      throw Error('Native wall intention has no confirmed JS target or route');
+    }
+    return {status:'found',target,reservation:targetReservationKey(target,animal),
+      approach:{point:{id:`native-approach-${target.id}`,
+        x:values[2],z:values[3]},path:Array.from(
+        {length:coordinates.length/2},(_,index)=>({
+          x:coordinates[index*2],z:coordinates[index*2+1]}))},
+      native:true,routeHandle,groupId:values[7],
+      candidatesExamined:values[8],routeQueries:values[9]};
   };
   const replanAttackRoute=animal=>{
     if(!animal.approach)throw Error('Animal has no confirmed attack approach');
@@ -618,7 +653,7 @@ export function createSpatialIntentBridge(session){
     getUnprotectedCropGroups,
     findPlantingSite,releasePlantingSite,
     intentChanges,routePoints,projectRouteProgress,processEventBoundary,requestReroute,
-    registerAttackIntent,planAttackCrop,replanAttackRoute,
+    registerAttackIntent,planAttackCrop,planAttackWall,replanAttackRoute,
     reconsiderWallOpportunity,wallOpportunityCandidates,
     markAttackActive:actorId=>wasm.nav_intent_attack_action_active(numericId(actorId))===1,
     finishAttackIntent:actorId=>wasm.nav_intent_attack_finished(numericId(actorId)),
@@ -1166,6 +1201,16 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
       // another target; never let the native index lag its JS authority here.
       if(pendingWorldEvents.length)flushWorldEvents();
       const result=bridge.planAttackCrop(state,animal);
+      if(result!==null){
+        recordAnimalPlan(animal,state.elapsed);
+        if(result.status==='found')pendingNativeChanges=true;
+      }
+      return result;
+    },
+    planAttackWall:(state,animal)=>{
+      if(state!==observedTaskState&&state!==sourceState)return null;
+      if(pendingWorldEvents.length)flushWorldEvents();
+      const result=bridge.planAttackWall(state,animal);
       if(result!==null){
         recordAnimalPlan(animal,state.elapsed);
         if(result.status==='found')pendingNativeChanges=true;
