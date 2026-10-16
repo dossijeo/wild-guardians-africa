@@ -11,7 +11,7 @@
 // navigation graph used by actors. An absent cell is unknown, never a wall.
 namespace enclosure_cut {
 struct CutEdge {int outsideX,outsideZ,insideX,insideZ;};
-struct Result {int status=0,flow=0,cells=0;std::vector<CutEdge> edges;};
+struct Result {int status=0,flow=0,cells=0;std::vector<CutEdge> edges,boundary;};
 struct Edge {int to,reverse,capacity;};
 inline Result find(int minX,int minZ,int maxX,int maxZ,
     const std::vector<int32_t>& seeds,int padding,
@@ -113,6 +113,16 @@ inline Result find(int minX,int minZ,int maxX,int maxZ,
       if(reachable[at]==reachable[next]||step(x,z,nx,nz)<=0)continue;
       if(reachable[at])result.edges.push_back({nx,nz,x,z});
       else result.edges.push_back({x,z,nx,nz});
+    }
+    if(!reachable[at])continue;
+    for(const auto& [dx,dz]:{std::pair{1,0},std::pair{-1,0},
+        std::pair{0,1},std::pair{0,-1}}){
+      const int nx=x+dx,nz=z+dz;
+      if(nx<minX||nx>=maxX||nz<minZ||nz>=maxZ){
+        result.status=-1;result.boundary.clear();return result;
+      }
+      if(!pass[index(nx,nz)]||!reachable[index(nx,nz)])
+        result.boundary.push_back({nx,nz,x,z});
     }
   }
   result.status=1;return result;

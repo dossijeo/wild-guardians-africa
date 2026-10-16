@@ -8,6 +8,7 @@ import {createSpatialCampaignOpening} from './spatial-campaign-opening.mjs';
 import {createSpatialIntentBridge} from '../../src/world/hierarchical-wasm/spatial-intent-bridge.js';
 import {createCropEnclosurePlanner} from '../../src/world/hierarchical-wasm/spatial-crop-enclosure-plan.js';
 import {approximateCutModules,cropClearanceHull,inspectSelfClosedQuote,
+  inspectStaticCutBoundary,
   placedEnclosureJunctions} from '../../src/world/hierarchical-wasm/spatial-topological-enclosure-prototype.js';
 import {wallSpec} from '../../src/simulation/rules.js';
 import {wallCollisionPolygon} from '../../src/world/wall-collision-frame.js';
@@ -120,6 +121,10 @@ function inspect(state,nav){
     const topologicalMs=performance.now()-started;
     const edges=count>=0?Array.from(new Int32Array(wasm.memory.buffer,
       wasm.lazy_local_crop_cut_ptr(),count*4)):[];
+    const boundaryCount=cutOnly&&count>=0?
+      wasm.lazy_local_crop_cut_boundary_count():0;
+    const boundary=boundaryCount?Array.from(new Int32Array(wasm.memory.buffer,
+      wasm.lazy_local_crop_cut_boundary_ptr(),boundaryCount*4)):[];
     const flow=wasm.lazy_local_crop_cut_flow(),cells=wasm.lazy_local_crop_cut_cells();
     const convertStarted=performance.now();
     const shape=count>=0?approximateCutModules(edges,state.structures,'zarzas',
@@ -241,12 +246,24 @@ function inspect(state,nav){
         return bySpecies;
       };
       const beforeCutCrossings=cutOnly?crossingProbe():undefined;
-      const preview=nav.withWallPreview(quote.previewPieces,quote.suppressed,()=>({
+      const preview=nav.withWallPreview(quote.previewPieces,quote.suppressed,()=>{
+        const staticBoundary=cutOnly?inspectStaticCutBoundary(boundary,(x,z)=>
+          wasm.spatial_static_object_clearance(x,z,2)):undefined;
+        if(staticBoundary?.status==='unknown'&&staticBoundary.edge){
+          const [ox,oz,ix,iz]=staticBoundary.edge;
+          staticBoundary.nativeCrossingAtCellCenters=
+            Object.fromEntries(['warthog','hyena','buffalo','lion','rhino']
+              .map(species=>[species,opening.session.actorStepClear(
+                {x:ox,z:oz},{x:ix,z:iz},{worker:false,species})]));
+        }
+        return {
         group:bridge.getUnprotectedCropGroups({includeProtected:true})
           .find(item=>item.id===group.id),
         workerAccess:cutOnly?workerAccess():undefined,
         gridProbe:cutOnly?gridProbe():undefined,
-        cutCrossings:cutOnly?crossingProbe():undefined}),true);
+        staticBoundary,
+        cutCrossings:cutOnly?crossingProbe():undefined};
+      },true);
       const groupAfter=preview.group;
       validationMs=performance.now()-validateStarted;
       physical={status:groupAfter?.protection??'unknown',
@@ -261,6 +278,7 @@ function inspect(state,nav){
         workerAccess:cutOnly?{before:beforeWorkerAccess,
           after:preview.workerAccess}:undefined,
         gridProbe:preview.gridProbe,
+        staticBoundary:preview.staticBoundary,
         cutCrossings:cutOnly?{before:beforeCutCrossings,
           after:preview.cutCrossings}:undefined,
         blockedPieces:quote.blockedPieces.length,
@@ -268,6 +286,7 @@ function inspect(state,nav){
     }
     return {status:count===-1?'unknown':count===-2?'unsupported':'proposed',
       box,topologicalMs,conversionMs,validationMs,cutEdges:count,
+      boundarySegments:cutOnly?boundaryCount:undefined,
       flow,cells,
       strokes:shape?.strokes.length,estimatedModules:shape?.slots.length,
       estimatedCost:shape?.estimatedCost,ambiguous:shape?.ambiguous.length,

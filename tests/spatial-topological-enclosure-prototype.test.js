@@ -4,7 +4,8 @@ import {readFileSync} from 'node:fs';
 import {deserialize,serialize} from '../src/persistence/snapshots.js';
 import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
 import {cropClearanceHull,cutEdgesToStrokes,enclosureJunctions,inspectNaturalJunctions,
-  inspectPlacedNaturalJunctions,inspectSelfClosedQuote,junctionBlocksSmallestAnimal,
+  inspectPlacedNaturalJunctions,inspectSelfClosedQuote,
+  inspectStaticCutBoundary,junctionBlocksSmallestAnimal,
   placedEnclosureJunctions,
   SMALLEST_ANIMAL_RADIUS,stitchTwoCutStrokes} from '../src/world/hierarchical-wasm/spatial-topological-enclosure-prototype.js';
 import {villageLayout} from '../src/world/villages.js';
@@ -61,6 +62,21 @@ test('natural joins inspect only exposed wall ends and require a continuous obst
     .status,'open');
   assert.equal(inspectNaturalJunctions(strokes,()=>NaN,true).status,'unknown');
   assert.equal(inspectNaturalJunctions(strokes,()=>0,true).status,'joined');
+});
+
+test('static cut certificate bounds unsampled gaps and refuses uncertainty',()=>{
+  const edge=[1,0,0,0];
+  const blocked=inspectStaticCutBoundary(edge,(_x,z)=>Math.abs(z),
+    {radius:.85});
+  assert.equal(blocked.status,'blocked-by-static-solids');
+  assert.ok(blocked.queries>2,'A coarse endpoint-only test is insufficient');
+  assert.equal(inspectStaticCutBoundary(edge,(_x,z)=>Math.abs(z)+.5,
+    {radius:.85}).status,'unknown');
+  assert.equal(inspectStaticCutBoundary(edge,()=>NaN).status,'unknown');
+  assert.equal(inspectStaticCutBoundary([],()=>0).status,'unknown');
+  assert.equal(inspectStaticCutBoundary(edge,()=>.8,
+    {radius:.85,maxQueries:2}).status,'unknown');
+  assert.throws(()=>inspectStaticCutBoundary([0,0,3,0],()=>0),/adjacent/);
 });
 
 test('a placed free-form wall loop needs a gate and no omitted modules',()=>{
@@ -218,11 +234,15 @@ test('native five-profile cut is read-only, deterministic and reports missing se
         const pointer=wasm.lazy_cut_seeds_ptr(1);
         new Int32Array(wasm.memory.buffer,pointer,2).set([x,z]);
         const count=wasm.lazy_local_crop_cut(x-12,z-12,x+13,z+13,1,2);
+        const boundaryCount=count>=0?wasm.lazy_local_crop_cut_boundary_count():0;
         return {count,edges:count>=0?Array.from(new Int32Array(wasm.memory.buffer,
-          wasm.lazy_local_crop_cut_ptr(),count*4)):[]};
+          wasm.lazy_local_crop_cut_ptr(),count*4)):[],
+        boundary:boundaryCount?Array.from(new Int32Array(wasm.memory.buffer,
+          wasm.lazy_local_crop_cut_boundary_ptr(),boundaryCount*4)):[]};
       };
       const first=query(-13,-13),again=query(-13,-13);
       assert.ok(first.count>0);
+      assert.ok(first.boundary.length>first.edges.length);
       assert.deepEqual(again,first);
       assert.equal(wasm.lazy_sector_updates(),updates);
       assert.equal(session.topologySource.revision(),topology);

@@ -381,6 +381,39 @@ produce a false join. The open-arc inspector now conservatively returns
 re-evaluated against the post-build geometry without counting the new wall as
 its own supporting obstacle.
 
+## Continuous boundary audit (experimental)
+
+The native cut now exposes the full boundary of its crop-side grid component,
+including the portions touching impassable cells, rather than only the 21
+connections selected for new wall modules. The frozen Sabana state has 144
+one-metre boundary segments. A read-only QA certificate examines the quoted
+preview with Wild Engine's point-to-static-solid clearance. For each segment,
+the 1-Lipschitz property of distance to solids bounds the maximum clearance
+between sampled endpoints; uncertain segments are bisected, with fixed depth
+and query budgets. Only a boundary covered throughout by static solids at the
+smallest animal radius may pass. Terrain-supported segments, missing geometry
+and exhausted budgets remain `unknown`. This is a conservative continuous
+test, rather than a larger set of crossing samples.
+
+The Sabana proposal remains **unknown**. The first unproved segment runs
+between grid cells `(74,-11)` and `(74,-10)`; its boundary endpoints are
+`(73.5,-10.5)` and `(74.5,-10.5)`, with static-solid clearances 0.78 and
+1.28 m. The latter exceeds the smallest animal radius of 0.85 m. The native
+physical step between the two cell centres is blocked for all five species,
+but this single step does not establish continuous closure along the whole
+one-metre segment. The new proof therefore correctly declines to certify the
+candidate. The raw details, including the same serialized state hash, are in
+`sabana-cut-terminals-d3.json`. This audit is QA-only and is not part of the
+normal planner's cost.
+
+This also explains why checking only the four exposed wall ends is insufficient
+for this candidate: a mixed wall/building/terrain closure needs evidence that
+the intervening obstacle chain stays impassable. A self-closing wall face with
+a valid automatic worker gate can use a cheaper structural certificate; only
+mixed joins and unsupported intervals need this focused audit. The hybrid
+convex-hull/min-cut selection remains disconnected from normal play until a
+physically certified and worker-accessible candidate is available.
+
 ## Adoption boundary
 
 If this approach continues, turn the multi-stroke quote into a validated

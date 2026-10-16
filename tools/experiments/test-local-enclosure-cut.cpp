@@ -23,11 +23,17 @@ int main(){
   assert(weighted.status==1&&weighted.flow>=int(weighted.edges.size()));
   assert(first.flow==int(first.edges.size()));
   assert(first.edges.size()==repeat.edges.size());
+  assert(first.boundary.size()>first.edges.size());
+  assert(first.boundary.size()==repeat.boundary.size());
   for(size_t i=0;i<first.edges.size();i++){
     const auto& a=first.edges[i],&b=repeat.edges[i];
     assert(a.outsideX==b.outsideX&&a.outsideZ==b.outsideZ&&
       a.insideX==b.insideX&&a.insideZ==b.insideZ);
     assert(cell(a.outsideX,a.outsideZ)&&cell(a.insideX,a.insideZ));
+    assert(std::any_of(first.boundary.begin(),first.boundary.end(),
+      [&](const enclosure_cut::CutEdge& edge){return edge.outsideX==a.outsideX&&
+        edge.outsideZ==a.outsideZ&&edge.insideX==a.insideX&&
+        edge.insideZ==a.insideZ;}));
   }
   const auto unknown=[&](int x,int z){return x==8&&z==8?-1:cell(x,z);};
   assert(enclosure_cut::find(0,0,side,side,crops,2,unknown,step).status==-1);

@@ -87,6 +87,53 @@ export function junctionBlocksSmallestAnimal(clearSpan){
   return clearSpan<SMALLEST_ANIMAL_RADIUS*2;
 }
 
+// A closed cut boundary is a geometric separator. Prove that every point of
+// its line segments is inside an animal-solid footprint using the 1-Lipschitz
+// bound of distance-to-solids: between two samples d0/d1, the distance can
+// never exceed (d0+d1+segmentLength)/2. This deliberately ignores terrain;
+// a water/cliff-supported boundary remains unknown until it has its own proof.
+export function inspectStaticCutBoundary(values,clearance,{radius=
+  SMALLEST_ANIMAL_RADIUS,maxQueries=10000,maxDepth=12}={}){
+  if(!Array.isArray(values)||values.length%4||typeof clearance!=='function'||
+    !(radius>1e-4)||!Number.isInteger(maxQueries)||maxQueries<1||
+    !Number.isInteger(maxDepth)||maxDepth<0)
+    throw TypeError('Expected cut boundary quartets and a native clearance query');
+  if(!values.length)return {status:'unknown',reason:'empty-boundary',
+    segments:0,queries:0};
+  const safeRadius=radius-1e-4,samples=new Map();
+  const distance=point=>{
+    const key=point.join(',');
+    if(samples.has(key))return samples.get(key);
+    if(samples.size>=maxQueries)return NaN;
+    const value=clearance(point[0],point[1]);
+    samples.set(key,value);
+    return value;
+  };
+  const covered=(a,b,depth)=>{
+    const first=distance(a),last=distance(b);
+    if(!Number.isFinite(first)||!Number.isFinite(last)||
+      first<0||last<0||first>=safeRadius||last>=safeRadius)return false;
+    const length=Math.hypot(a[0]-b[0],a[1]-b[1]);
+    if((first+last+length)*.5<safeRadius)return true;
+    if(depth>=maxDepth)return false;
+    const middle=[(a[0]+b[0])*.5,(a[1]+b[1])*.5];
+    return covered(a,middle,depth+1)&&covered(middle,b,depth+1);
+  };
+  for(let i=0;i<values.length;i+=4){
+    const [ox,oz,ix,iz]=values.slice(i,i+4);
+    if(![ox,oz,ix,iz].every(Number.isInteger)||
+      Math.abs(ox-ix)+Math.abs(oz-iz)!==1)
+      throw TypeError('Expected adjacent integer cut cells');
+    const ends=ox!==ix?[[ox/2+ix/2,iz-.5],[ox/2+ix/2,iz+.5]]:
+      [[ix-.5,oz/2+iz/2],[ix+.5,oz/2+iz/2]];
+    if(!covered(...ends,0))return {status:'unknown',segment:i/4,
+      edge:[ox,oz,ix,iz],endpoints:ends,
+      endpointClearances:ends.map(distance),queries:samples.size};
+  }
+  return {status:'blocked-by-static-solids',segments:values.length/4,
+    queries:samples.size};
+}
+
 // One native surface-to-surface measurement per exposed wall end, never one
 // per crop or animal. The obstacle between the ends must independently be
 // known to stay impassable; a small endpoint gap cannot certify an unknown

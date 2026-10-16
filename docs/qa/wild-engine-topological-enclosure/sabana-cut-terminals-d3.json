@@ -2,13 +2,13 @@
   "biome": "sabana",
   "seed": 712,
   "day": 3,
-  "source": "a21f2b76509fa1057f031db5311cac7e5962b0f96b399060df860aa48ff41e1d",
-  "wasmSha256": "e9d7440ca2529376b8da4971c2cbed4e4225bb4c6c9e9740f106f99cc460247c",
-  "elapsedSeconds": 8.392132300000002,
+  "source": "33b5033174455cb2eec708110aa4785e8ccff542ef19e4e773d0de395a0c5a02",
+  "wasmSha256": "0d0b51639909d3ba0c0dfc52dcb7791218258d5aa2881464fa62604c40b185cf",
+  "elapsedSeconds": 8.297580400000001,
   "campaignTiming": {
     "ticks": 1041,
-    "decisionMs": 4202.940500000003,
-    "gameTickMs": 2836.3256999999967
+    "decisionMs": 4213.43690000001,
+    "gameTickMs": 2830.428999999991
   },
   "sample": {
     "stateHash": "7b7033894dee269d4bf04cb074f1372ef2f84ef280446150cd5f2e2331cb6966",
@@ -27,7 +27,7 @@
     "rows": [
       {
         "name": "cut",
-        "ms": 209.2554,
+        "ms": 217.8752999999997,
         "status": "proposed",
         "box": [
           69,
@@ -35,10 +35,11 @@
           108,
           21
         ],
-        "topologicalMs": 5.3047999999998865,
-        "conversionMs": 1.4902000000001863,
-        "validationMs": 199.88200000000143,
+        "topologicalMs": 5.071200000000317,
+        "conversionMs": 1.537400000001071,
+        "validationMs": 208.4278000000013,
         "cutEdges": 21,
+        "boundarySegments": 144,
         "flow": 21,
         "cells": 1206,
         "strokes": 2,
@@ -551,6 +552,38 @@
                   "noPhysicalAnchor": 14
                 }
               }
+            }
+          },
+          "staticBoundary": {
+            "status": "unknown",
+            "segment": 2,
+            "edge": [
+              74,
+              -11,
+              74,
+              -10
+            ],
+            "endpoints": [
+              [
+                73.5,
+                -10.5
+              ],
+              [
+                74.5,
+                -10.5
+              ]
+            ],
+            "endpointClearances": [
+              0.7799999713897705,
+              1.2799999713897705
+            ],
+            "queries": 5,
+            "nativeCrossingAtCellCenters": {
+              "warthog": false,
+              "hyena": false,
+              "buffalo": false,
+              "lion": false,
+              "rhino": false
             }
           },
           "cutCrossings": {

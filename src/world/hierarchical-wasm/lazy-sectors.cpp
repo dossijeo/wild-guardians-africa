@@ -29,7 +29,7 @@ struct Context {
   std::vector<uint32_t> visited;
   uint32_t visitGeneration=0;
   std::vector<int32_t> previousNode,localParent,routePoints;
-  std::vector<int32_t> cutSeeds,cutEdges;
+  std::vector<int32_t> cutSeeds,cutEdges,cutBoundary;
   int cutFlow=0,cutCells=0;
   std::vector<Arc> previousArc,arcChain;
   std::vector<Portal> portals;
@@ -66,6 +66,7 @@ Context& active(){
 #define routePoints (active().routePoints)
 #define cutSeeds (active().cutSeeds)
 #define cutEdges (active().cutEdges)
+#define cutBoundary (active().cutBoundary)
 #define previousArc (active().previousArc)
 #define arcChain (active().arcChain)
 #define portals (active().portals)
@@ -390,7 +391,7 @@ int32_t* lazy_cut_seeds_ptr(int count){
   cutSeeds.resize(size_t(count)*2);return cutSeeds.data();
 }
 int lazy_local_crop_cut(int minX,int minZ,int maxX,int maxZ,int seedCount,int padding){
-  cutEdges.clear();active().cutFlow=active().cutCells=0;
+  cutEdges.clear();cutBoundary.clear();active().cutFlow=active().cutCells=0;
   if(seedCount<1||size_t(seedCount)*2!=cutSeeds.size())return -2;
   constexpr int profiles[]={0,2,3,4,5};
   for(int profile:profiles)if(!contexts[profile]||
@@ -441,9 +442,14 @@ int lazy_local_crop_cut(int minX,int minZ,int maxX,int maxZ,int seedCount,int pa
   active().cutFlow=result.flow;active().cutCells=result.cells;
   for(const auto& edge:result.edges)cutEdges.insert(cutEdges.end(),
     {edge.outsideX,edge.outsideZ,edge.insideX,edge.insideZ});
+  if(result.status>0)for(const auto& edge:result.boundary)
+    cutBoundary.insert(cutBoundary.end(),
+      {edge.outsideX,edge.outsideZ,edge.insideX,edge.insideZ});
   return result.status<0?result.status:int(result.edges.size());
 }
 const int32_t* lazy_local_crop_cut_ptr(){return cutEdges.data();}
+const int32_t* lazy_local_crop_cut_boundary_ptr(){return cutBoundary.data();}
+int lazy_local_crop_cut_boundary_count(){return int(cutBoundary.size()/4);}
 int lazy_local_crop_cut_flow(){return active().cutFlow;}
 int lazy_local_crop_cut_cells(){return active().cutCells;}
 #define sectors (active().sectors)
