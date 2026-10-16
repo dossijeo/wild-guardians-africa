@@ -5,25 +5,34 @@ import {wallStroke} from '../src/world/wall-layout.js';
 import {numberOf} from '../src/simulation/money.js';
 import {permission,operational,wallSpec} from '../src/simulation/rules.js';
 import {HIRING_RESERVE} from '../src/simulation/budget.js';
-export function createNativeExpandingDefensePolicy({startDay=2,material='zarzas',interval=30,repairWalls=true,reserveMode='none',measure=null,preparedQuotes=true,spatialAdvice=null}={}){
+export function createNativeExpandingDefensePolicy({startDay=2,material='zarzas',interval=30,eventDriven=false,repairWalls=true,reserveMode='none',measure=null,preparedQuotes=true,spatialAdvice=null}={}){
  if(!['none','next-stroke'].includes(reserveMode))throw Error('Invalid defense reserve mode');
  const timed=(kind,fn)=>{
   if(!measure)return fn();
   const start=performance.now();
   try{return fn();}finally{measure(kind,performance.now()-start);}
  };
- const cost=wallSpec(material).cost;let nextAttempt=0,capitalTarget=0,built=null,repairRequests=0;
- const history=[],owned=new Set();let protectionWakes=0;
+ const cost=wallSpec(material).cost;let nextAttempt=0,capitalTarget=0,built=null,repairRequests=0,dirty=true;
+ const history=[],owned=new Set();let protectionWakes=0,eventWakes=0;
  const reserve=s=>reserveMode==='next-stroke'&&s.day>=startDay?capitalTarget:0;
+ const wakeEvents=new Set(['CrateDelivered','CropPlaced','CropDestroyed','CropPicked',
+  'PlacementCommitted','WallChainBuilt','WallRemoved','StructureHit',
+  'StructureRuined','RepairApplied']);
+ const onWorldEvent=event=>{
+  if(!eventDriven||!wakeEvents.has(event.type))return;
+  dirty=true;eventWakes++;
+ };
  const onCropProtectionChanged=change=>{
   if(change.protection!=='unprotected'||change.previous==='unprotected')return;
   // The native graph has certified a breach or a new exposed crop group.
   // Retry on the next ordinary decision boundary.
-  nextAttempt=0;protectionWakes++;
+  if(eventDriven)dirty=true;else nextAttempt=0;
+  protectionWakes++;
  };
  function act(s,nav,{command,reserve:protectedCash}){
-  if(s.day<startDay||!permission(s,'wall')||s.raid||s.elapsed<nextAttempt)return 0;
-  nextAttempt=s.elapsed+interval;
+  if(s.day<startDay||!permission(s,'wall')||s.raid||
+    (eventDriven?!dirty:s.elapsed<nextAttempt))return 0;
+  if(eventDriven)dirty=false;else nextAttempt=s.elapsed+interval;
   if(!Number.isFinite(protectedCash)||protectedCash<0)throw Error('Invalid protected cash');
   protectedCash=Math.max(protectedCash,HIRING_RESERVE);
   let pending=s.tasks.filter(t=>t.kind==='repair').reduce((n,t)=>{const p=s.structures.find(p=>p.id===t.targetId);return n+(p?Math.ceil(numberOf(Game.repairCost(p))):0);},0);
@@ -61,5 +70,5 @@ export function createNativeExpandingDefensePolicy({startDay=2,material='zarzas'
   }
   row.reason='no-new-legal-pieces';history.push(row);return 0;
  }
- return {reserve,act,onCropProtectionChanged,report:s=>structuredClone({startDay,material,reserveMode,repairWalls,capitalTarget,built,history,repairRequests,protectionWakes,paidCost:history.reduce((n,r)=>n+r.paidCost,0),paidPieces:history.reduce((n,r)=>n+r.paidPieces,0),scope:'Paid expanding native perimeters; actual interception not established by construction alone; repairs requested never counted as completion'})};
+ return {reserve,act,onWorldEvent,onCropProtectionChanged,report:s=>structuredClone({startDay,material,reserveMode,repairWalls,eventDriven,capitalTarget,built,history,repairRequests,protectionWakes,eventWakes,paidCost:history.reduce((n,r)=>n+r.paidCost,0),paidPieces:history.reduce((n,r)=>n+r.paidPieces,0),scope:'Paid expanding native perimeters; actual interception not established by construction alone; repairs requested never counted as completion'})};
 }

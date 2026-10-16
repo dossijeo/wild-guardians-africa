@@ -4,12 +4,12 @@ import * as Game from '../src/simulation/game.js';
 import {Navigation} from '../src/world/navigation.js';
 import {rational,numberOf} from '../src/simulation/money.js';
 import {createNativeExpandingDefensePolicy} from '../tools/native-expanding-defense-policy.mjs';
-function fixture(){
+function fixture(policyOptions){
  const s=Game.newGame({seed:712,slotId:'paid-policy'});s.day=2;s.time=100;s.elapsed=700;s.initialPreparation=false;
  // Explicit paid-command fixture credit, not a new-game economic result.
  s.ledger.balance=rational(20000);const nav=new Navigation(712,'sabana');nav.field={canyon:false,riverLevel:0,surface:()=>0,slope:()=>0,fluidInside:()=>false};nav.propsAt=()=>[];nav.setState(s);
  Game.placeStructure(s,'center',{x:-15,z:0},nav);s.plants=[{id:'crop',species:'mijo',alive:true,x:3,z:0}];nav.setState(s);
- let id=0;return {s,nav,options:{command:k=>'policy-'+k+'-'+id++,reserve:100},policy:createNativeExpandingDefensePolicy()};
+ let id=0;return {s,nav,options:{command:k=>'policy-'+k+'-'+id++,reserve:100},policy:createNativeExpandingDefensePolicy(policyOptions)};
 }
 test('expanding native paid enclosure changes bounds and charges actual new pieces, no free/repriced fixture walls',()=>{
  const {s,nav,options,policy}=fixture(),cash=numberOf(s.ledger.balance);assert.equal(policy.act(s,nav,options),1);const first=policy.report(s);
@@ -41,4 +41,26 @@ test('a certified protection loss wakes the defense policy before its periodic i
  assert.equal(policy.report(s).history.length,afterBreach+1,
   'a newly planted exposed group wakes defense immediately');
  assert.equal(policy.report(s).protectionWakes,2);
+});
+test('event-driven defense sleeps without relevant changes and wakes on income or damage',()=>{
+ const {s,nav,options,policy}=fixture({eventDriven:true});
+ assert.equal(policy.act(s,nav,options),1);
+ const first=policy.report(s).history.length;
+ s.elapsed+=300;
+ assert.equal(policy.act(s,nav,options),0);
+ assert.equal(policy.report(s).history.length,first,
+  'elapsed time alone must not trigger another spatial plan');
+ policy.onWorldEvent({type:'CrateDelivered'});
+ policy.act(s,nav,options);
+ assert.equal(policy.report(s).history.length,first+1);
+ const second=policy.report(s).history.length;
+ policy.onWorldEvent({type:'CrateDropped'});
+ assert.equal(policy.act(s,nav,options),0);
+ assert.equal(policy.report(s).history.length,second);
+ const wall=s.structures.find(item=>item.kind==='wall');
+ wall.hp=50;nav.setState(s);
+ policy.onWorldEvent({type:'StructureHit',targetId:wall.id});
+ policy.act(s,nav,options);
+ assert.ok(s.tasks.some(task=>task.kind==='repair'&&task.targetId===wall.id));
+ assert.equal(policy.report(s).repairRequests,1);
 });

@@ -534,3 +534,13 @@ removals still avoid that query in that case. The experimental defense policy
 wakes on this new-group event as well as on a certified breach. Its broader
 periodic expansion logic remains to be replaced, so this is a targeted
 event-delivery improvement rather than a fully event-driven economic policy.
+
+The experimental native-intent campaign now runs its expanding defense
+policy with an event gate. It evaluates the existing paid repair/build
+decisions initially and then only after a confirmed income, crop, wall,
+structure-damage or repair event, or a native crop-protection notification.
+Elapsed simulation time alone does not request another perimeter preview.
+The legacy comparison mode retains its 30-second interval. This change
+affects when the existing policy considers spending; it does not replace
+its JavaScript perimeter design or partial-stroke purchase rule. A native
+full-enclosure plan and economic saving policy remain separate work.
