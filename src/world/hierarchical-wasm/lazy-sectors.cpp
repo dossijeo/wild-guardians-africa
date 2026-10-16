@@ -7,6 +7,7 @@
 
 extern "C" float spatial_static_object_clearance(float,float,float);
 extern "C" float spatial_min_animal_radius();
+extern "C" float spatial_fluid_level(float,float);
 
 // Sparse sector/route proof. Unknown sectors are never classified as blocked.
 // The movement engine remains responsible for physical motion.
@@ -420,8 +421,23 @@ bool cutFaceCoveredBySolid(int x,int z,int nx,int nz,float radius){
   };
   return covered(covered,ax,az,bx,bz,first,last,0);
 }
+// A face wholly covered by fluid cannot host a wall centered on that face.
+// This is a conservative proposal hint, not a replacement for wallPlacement:
+// resampled modules can extend beyond a one-metre face and need a final quote.
+int cutFaceFullyFluid(int x,int z,int nx,int nz){
+  const float midX=(x+nx)*.5f,midZ=(z+nz)*.5f;
+  for(int i=0;i<=8;i++)for(const float offset:{-.22f,0.f,.22f}){
+    const float along=float(i)/8.f-.5f;
+    const float px=x!=nx?midX+offset:midX+along;
+    const float pz=x!=nx?midZ+along:midZ+offset;
+    const float fluid=spatial_fluid_level(px,pz);
+    if(!std::isfinite(fluid))return -1;
+    if(fluid<=0)return 0;
+  }
+  return 1;
+}
 int runLocalCropCut(int minX,int minZ,int maxX,int maxZ,int seedCount,
-    int padding,float conservativeRadius){
+    int padding,float conservativeRadius,bool respectFluidPlacement=false){
   cutEdges.clear();cutBoundary.clear();active().cutFlow=active().cutCells=0;
   if(seedCount<1||size_t(seedCount)*2!=cutSeeds.size())return -2;
   constexpr int profiles[]={0,2,3,4,5};
@@ -451,8 +467,15 @@ int runLocalCropCut(int minX,int minZ,int maxX,int maxZ,int seedCount,
     return any;
   };
   const auto step=[&](int x,int z,int nx,int nz){
-    if(conservativeRadius>0)
-      return cutFaceCoveredBySolid(x,z,nx,nz,conservativeRadius)?0:1;
+    if(conservativeRadius>0){
+      if(cutFaceCoveredBySolid(x,z,nx,nz,conservativeRadius))return 0;
+      if(respectFluidPlacement){
+        const int fluid=cutFaceFullyFluid(x,z,nx,nz);
+        if(fluid<0)return -1;
+        if(fluid>0)return 10000;
+      }
+      return 1;
+    }
     const int direction=nx>x?0:nx<x?1:nz>z?2:3;
     int any=0;
     for(int profile:profiles){
@@ -490,6 +513,13 @@ int lazy_local_crop_cut_conservative(int minX,int minZ,int maxX,int maxZ,
   if(!(smallestRadius>0)||!std::isfinite(smallestRadius))return -1;
   return runLocalCropCut(minX,minZ,maxX,maxZ,seedCount,padding,
     smallestRadius);
+}
+int lazy_local_crop_cut_conservative_buildable(int minX,int minZ,int maxX,
+    int maxZ,int seedCount,int padding){
+  const float smallestRadius=spatial_min_animal_radius();
+  if(!(smallestRadius>0)||!std::isfinite(smallestRadius))return -1;
+  return runLocalCropCut(minX,minZ,maxX,maxZ,seedCount,padding,
+    smallestRadius,true);
 }
 const int32_t* lazy_local_crop_cut_ptr(){return cutEdges.data();}
 const int32_t* lazy_local_crop_cut_boundary_ptr(){return cutBoundary.data();}

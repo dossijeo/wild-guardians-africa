@@ -21,6 +21,26 @@ int main(){
   const auto weighted=enclosure_cut::find(0,0,side,side,crops,2,
     [](int,int){return 1;},[](int x,int,int nx,int){return x==nx?1:3;});
   assert(weighted.status==1&&weighted.flow>=int(weighted.edges.size()));
+  const auto forbidden=enclosure_cut::find(0,0,side,side,crops,2,
+    [](int,int){return 1;},[](int,int,int,int){return 10000;});
+  assert(forbidden.status==-1&&forbidden.edges.empty());
+  const auto detourEdge=plain.edges.front();
+  const auto detour=enclosure_cut::find(0,0,side,side,crops,2,
+    [](int,int){return 1;},[&](int x,int z,int nx,int nz){
+      const bool same=(x==detourEdge.outsideX&&z==detourEdge.outsideZ&&
+        nx==detourEdge.insideX&&nz==detourEdge.insideZ)||
+        (nx==detourEdge.outsideX&&nz==detourEdge.outsideZ&&
+        x==detourEdge.insideX&&z==detourEdge.insideZ);
+      return same?10000:1;
+    });
+  assert(detour.status==1&&detour.flow<10000);
+  assert(std::none_of(detour.edges.begin(),detour.edges.end(),
+    [&](const enclosure_cut::CutEdge& edge){
+      return edge.outsideX==detourEdge.outsideX&&
+        edge.outsideZ==detourEdge.outsideZ&&
+        edge.insideX==detourEdge.insideX&&
+        edge.insideZ==detourEdge.insideZ;
+    }));
   assert(first.flow==int(first.edges.size()));
   assert(first.edges.size()==repeat.edges.size());
   assert(first.boundary.size()>first.edges.size());

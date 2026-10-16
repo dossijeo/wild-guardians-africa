@@ -16,6 +16,10 @@ const wasmPath=process.argv[2]??'src/world/hierarchical-wasm/spatial-savanna.was
 const biome=process.argv[3]??'sabana';
 const siteMode=process.argv[4]??'corner';
 const conservativeCut=process.argv.includes('--conservative-cut');
+const constructionAwareCut=process.argv.includes('--construction-aware-cut');
+const compareConstructionCut=process.argv.includes('--compare-construction-cut');
+if((constructionAwareCut||compareConstructionCut)&&!conservativeCut)
+  throw Error('Construction-aware cut requires --conservative-cut');
 const padding=Number(process.argv[7]??2);
 if(!Number.isInteger(padding)||padding<0||padding>8)throw RangeError('Invalid crop padding');
 const connectorLimit=Number(process.argv[8]??8);
@@ -97,7 +101,7 @@ try{
       return {status:'unknown'};
     }
   };
-  const cut=()=>{
+  const cut=(constructionAware=constructionAwareCut)=>{
     const cutStart=performance.now();
     for(const species of ['warthog','hyena','buffalo','lion','rhino'])
       session.actorRegionsBatch([site],{worker:false,species});
@@ -106,9 +110,10 @@ try{
     const margin=cutMargin,minX=Math.floor(site.x-margin),
       minZ=Math.floor(site.z-margin);
     const maxX=Math.ceil(site.x+margin)+1,maxZ=Math.ceil(site.z+margin)+1;
-    const result=conservativeCut?wasm.lazy_local_crop_cut_conservative(
-      minX,minZ,maxX,maxZ,1,padding):wasm.lazy_local_crop_cut(
-      minX,minZ,maxX,maxZ,1,padding);
+    const result=conservativeCut?
+      (constructionAware?wasm.lazy_local_crop_cut_conservative_buildable:
+        wasm.lazy_local_crop_cut_conservative)(minX,minZ,maxX,maxZ,1,padding):
+      wasm.lazy_local_crop_cut(minX,minZ,maxX,maxZ,1,padding);
     const edges=result>=0?Array.from(new Int32Array(wasm.memory.buffer,
       wasm.lazy_local_crop_cut_ptr(),result*4)):[];
     const boundaryCount=conservativeCut&&result>=0?
@@ -184,9 +189,11 @@ try{
       memoryBytes:wasm.memory.buffer.byteLength}));
   }else{
     const rows=[];
-    for(const name of ['old','cut','cut','old']){
+    for(const name of (compareConstructionCut?
+      ['plain','aware','aware','plain']:['old','cut','cut','old'])){
       const before={...instrumentation},updates=wasm.lazy_sector_updates();
-      const start=performance.now(),result=name==='old'?old():cut();
+      const start=performance.now(),result=name==='old'?old():
+        cut(compareConstructionCut?name==='aware':constructionAwareCut);
       rows.push({name,ms:performance.now()-start,
         status:result.status,
         modules:Array.isArray(result.modules)?result.modules.length:result.modules,
@@ -216,7 +223,7 @@ try{
     }
     console.log(JSON.stringify({kind:'ABBA',biome,site,padding,connectorLimit,
       cutMargin,
-      conservativeCut,rows,
+      conservativeCut,constructionAwareCut,compareConstructionCut,rows,
       memoryBytes:wasm.memory.buffer.byteLength}));
   }
 }finally{session.dispose();}

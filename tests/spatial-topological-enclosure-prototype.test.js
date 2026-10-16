@@ -393,5 +393,13 @@ test('Gran Cañón cut cannot certify a closure with omitted fluid modules',
       assert.deepEqual(inspectSelfClosedQuote(quote,state.structures,[site]),
         {status:'open',reason:'omitted-module'});
       assert.equal(serialize(state),before,'The rejected quote is read-only');
+      new Int32Array(wasm.memory.buffer,wasm.lazy_cut_seeds_ptr(1),2)
+        .set([site.x,site.z]);
+      assert.equal(wasm.lazy_local_crop_cut_conservative_buildable(
+        -14,-20,11,5,1,2),-1,
+      'A cut requiring a fully flooded face is unresolved, not a cheap wall');
+      assert.ok(wasm.lazy_local_crop_cut_flow()>=10000);
+      assert.equal(serialize(state),before,
+        'The construction-aware graph query also leaves the game unchanged');
     }finally{session.dispose();}
   });

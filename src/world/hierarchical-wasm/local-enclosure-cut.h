@@ -33,6 +33,9 @@ inline Result find(int minX,int minZ,int maxX,int maxZ,
   }
   std::vector<std::vector<Edge>> graph(count+2);
   constexpr int inf=1000000000;
+  // A forbidden cut face remains traversable to animals. It must therefore
+  // stay in the graph, but a proposal that needs to block it is unresolved.
+  constexpr int forbiddenCutCost=10000;
   const auto add=[&](int a,int b,int capacity){
     const int ai=int(graph[a].size()),bi=int(graph[b].size());
     graph[a].push_back({b,bi,capacity});graph[b].push_back({a,ai,0});
@@ -46,7 +49,7 @@ inline Result find(int minX,int minZ,int maxX,int maxZ,
       if(nx>=maxX||nz>=maxZ||!pass[index(nx,nz)])continue;
       const int traversable=step(x,z,nx,nz);
       if(traversable<0){result.status=-1;return result;}
-      if(traversable>10000){result.status=-2;return result;}
+      if(traversable>forbiddenCutCost){result.status=-2;return result;}
       if(traversable){add(at,index(nx,nz),traversable);
         add(index(nx,nz),at,traversable);}
     }
@@ -93,7 +96,7 @@ inline Result find(int minX,int minZ,int maxX,int maxZ,
   while(levels()){
     std::fill(cursor.begin(),cursor.end(),0);
     for(int pushed;(pushed=augment(source,inf))>0;)result.flow+=pushed;
-    if(result.flow>=inf){result.status=-2;return result;}
+    if(result.flow>=forbiddenCutCost){result.status=-1;return result;}
   }
   // The source side contains the crop. Every crossing is a proposed barrier.
   std::vector<uint8_t> reachable(count+2,0);std::queue<int> queue;
