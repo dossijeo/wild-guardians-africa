@@ -691,7 +691,7 @@ test('event-fed native intent bridge replays live state and only changes on expl
  }finally{session.dispose();}
 });
 
-test('delivered crates and healed structures cannot acquire stale native task leases',
+test('stale targets or topology cannot acquire native task leases',
  {skip:!module&&'Build and select the experimental WASM first'},()=>{
  const game=deserialize(gunzipSync(readFileSync(new URL(
   './fixtures/desierto983-d15-partial-state.json.gz',import.meta.url))).toString());
@@ -744,6 +744,21 @@ test('delivered crates and healed structures cannot acquire stale native task le
   assert.equal(repair.workerId,null);
   assert.equal(worker.taskId,null);
   planner.discard();
+  crate.delivered=false;game.crates=[crate];game.tasks=[task];
+  planner.resetFromState(game);
+  const topologyPlan=planner.planIfNeeded(2);
+  assert(topologyPlan.some(row=>row.status===1&&row.taskId===1000004));
+  const wall=game.structures.find(item=>item.kind==='wall'&&
+   item.status==='intact');
+  assert(wall);
+  wall.status='ruined';wall.hp=0;
+  session.syncState(game);
+  assert.throws(()=>planner.commitTaskBatchToState(game,topologyPlan,
+   {navVersion:nav.version}),/became stale/,
+   'a changed native graph rejects the complete proposal before any JS lease');
+  assert.equal(task.workerId,null);
+  assert.equal(worker.taskId,null);
+  assert.equal(session.core.wasm.nav_intent_actor(9263),0);
  }finally{session.dispose();}
 });
 

@@ -373,6 +373,10 @@ case fails against the prior guard and passes with the new one. All 15 focused
 native-intent bridge tests and the web build pass. This protects an exceptional
 stale-proposal boundary; it does not by itself complete the atomic handoff
 across every worker action.
+The same fixture also mutates and synchronizes a confirmed wall after a valid
+native proposal. The native graph revision rejects the entire stale batch;
+neither side acquires a worker/task lease. This covers a real topology change
+between planning and commit, without weakening the physical route check.
 
 1. Confirmed task and worker changes already reach the opt-in planner through simulation observers, and unchanged movement ticks do not request another task plan. Complete the atomic native-proposal/JavaScript-reservation handoff and differential checks for the remaining worker policy tie-breaks; retire the transitional JavaScript decisions only after those checks pass.
 2. Track sector/portal dependencies so a local topology change invalidates only routes and tactical decisions that can be affected. Defer changes to attacks whose damage frame is already committed.
