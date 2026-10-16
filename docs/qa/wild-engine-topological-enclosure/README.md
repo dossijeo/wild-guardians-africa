@@ -595,15 +595,18 @@ five-species midpoint scan found no crossing, and all 66 crops retained
 outbound and return worker routes. The game's group verdict still remained
 `unknown` for four species because its crop-coordinate connector could not
 anchor some plants. The counts are 9/66 warthog, 7/66 hyena, 9/66 buffalo,
-0/66 lion and 15/66 rhino. A separate pass found a sealed, standable
-neighboring cell for all 66 crops under every species profile; no sampled
-attack position was classified exterior or unknown. This isolates the native
-group verdict to the exact-coordinate anchor rule, rather than a measured
-open crossing, but does not justify overriding `unknown`: 2–13 crops lie
+0/66 lion and 15/66 rhino. A focused repeat of the same state found that
+every crop without an anchor also fails the native standability test at its
+exact center for that species; there were **zero** standable crop centers
+without an anchor. A separate pass found a sealed, standable neighboring cell
+for all 66 crops under every profile; no sampled attack position was
+classified exterior or unknown. Thus the group verdict reflects the physical
+inability to occupy some crop centers, not merely grid rounding. It does not
+justify overriding `unknown`: 2–13 crops lie
 within attack reach of the boundary depending on species, and the sampled
 attack ring is not a continuous proof of exterior line-of-attack exclusion.
-The evidence is in
-`sabana-construction-aware-d3-physical.json`. These checks establish a strong
+The evidence is in `sabana-construction-aware-d3-physical.json` and the
+compact repeat `sabana-crop-anchor-probe-d3.json`. These checks establish a strong
 physical witness for this candidate, but do not yet prove the complete
 exterior attack envelope or justify switching the normal planner.
 

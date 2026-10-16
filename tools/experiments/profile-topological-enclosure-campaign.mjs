@@ -232,7 +232,8 @@ function inspect(state,nav){
           }
           const crops={sealedNeighborhood:0,uncertifiedNeighborhood:0,
             noPassableCell:0,anchoredSealed:0,anchoredUncertified:0,
-            noPhysicalAnchor:0};
+            noPhysicalAnchor:0,centerStandable:0,
+            noAnchorCenterStandable:0};
           const attackRing={cropsWithoutCenterAnchor:0,
             cropsNearBoundary:0,
             standableSealed:0,standableOpen:0,standableUnknown:0,
@@ -243,6 +244,9 @@ function inspect(state,nav){
             let sealed=false,uncertified=false,anchoredSealed=false,
               anchoredUncertified=false;
             const target=cropTargets[index];
+            const centerStandable=opening.session.actorCanStand(target,
+              {worker:false,species});
+            if(centerStandable)crops.centerStandable++;
             let nearest=Infinity;
             for(let edge=0;edge<boundary.length;edge+=4){
               const [ox,oz,ix,iz]=boundary.slice(edge,edge+4);
@@ -274,6 +278,7 @@ function inspect(state,nav){
             crops[anchoredUncertified?'anchoredUncertified':anchoredSealed?
               'anchoredSealed':'noPhysicalAnchor']++;
             const noAnchor=!anchoredSealed&&!anchoredUncertified;
+            if(noAnchor&&centerStandable)crops.noAnchorCenterStandable++;
             const radius=.6+ANIMAL_SPATIAL_PROFILES[species].radius;
             if(noAnchor)attackRing.cropsWithoutCenterAnchor++;
             if(nearest<=radius)attackRing.cropsNearBoundary++;
