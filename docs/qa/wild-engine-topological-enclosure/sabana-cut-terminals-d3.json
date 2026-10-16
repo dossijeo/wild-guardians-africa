@@ -4,11 +4,11 @@
   "day": 3,
   "source": "a21f2b76509fa1057f031db5311cac7e5962b0f96b399060df860aa48ff41e1d",
   "wasmSha256": "e9d7440ca2529376b8da4971c2cbed4e4225bb4c6c9e9740f106f99cc460247c",
-  "elapsedSeconds": 8.267313099999999,
+  "elapsedSeconds": 8.9995416,
   "campaignTiming": {
     "ticks": 1041,
-    "decisionMs": 4173.243,
-    "gameTickMs": 2828.795899999999
+    "decisionMs": 4772.34579999999,
+    "gameTickMs": 2916.5223000000015
   },
   "sample": {
     "stateHash": "7b7033894dee269d4bf04cb074f1372ef2f84ef280446150cd5f2e2331cb6966",
@@ -27,7 +27,7 @@
     "rows": [
       {
         "name": "cut",
-        "ms": 187.01789999999892,
+        "ms": 183.75420000000122,
         "status": "proposed",
         "box": [
           69,
@@ -35,9 +35,9 @@
           108,
           21
         ],
-        "topologicalMs": 5.066199999999299,
-        "conversionMs": 1.2338999999992666,
-        "validationMs": 177.17169999999896,
+        "topologicalMs": 5.173399999999674,
+        "conversionMs": 1.052799999999479,
+        "validationMs": 174.5676000000003,
         "cutEdges": 21,
         "flow": 21,
         "cells": 1206,
@@ -549,6 +549,147 @@
                   "anchoredUncertified": 0,
                   "noPhysicalAnchor": 14
                 }
+              }
+            }
+          },
+          "cutCrossings": {
+            "before": {
+              "warthog": {
+                "tested": 105,
+                "clear": 100,
+                "examples": [
+                  {
+                    "edge": 0,
+                    "offset": -0.4
+                  },
+                  {
+                    "edge": 0,
+                    "offset": -0.2
+                  },
+                  {
+                    "edge": 0,
+                    "offset": 0
+                  },
+                  {
+                    "edge": 0,
+                    "offset": 0.2
+                  }
+                ]
+              },
+              "hyena": {
+                "tested": 105,
+                "clear": 102,
+                "examples": [
+                  {
+                    "edge": 0,
+                    "offset": -0.4
+                  },
+                  {
+                    "edge": 0,
+                    "offset": -0.2
+                  },
+                  {
+                    "edge": 0,
+                    "offset": 0
+                  },
+                  {
+                    "edge": 0,
+                    "offset": 0.2
+                  }
+                ]
+              },
+              "buffalo": {
+                "tested": 105,
+                "clear": 101,
+                "examples": [
+                  {
+                    "edge": 0,
+                    "offset": -0.4
+                  },
+                  {
+                    "edge": 0,
+                    "offset": -0.2
+                  },
+                  {
+                    "edge": 0,
+                    "offset": 0
+                  },
+                  {
+                    "edge": 0,
+                    "offset": 0.2
+                  }
+                ]
+              },
+              "lion": {
+                "tested": 105,
+                "clear": 102,
+                "examples": [
+                  {
+                    "edge": 0,
+                    "offset": -0.4
+                  },
+                  {
+                    "edge": 0,
+                    "offset": -0.2
+                  },
+                  {
+                    "edge": 0,
+                    "offset": 0
+                  },
+                  {
+                    "edge": 0,
+                    "offset": 0.2
+                  }
+                ]
+              },
+              "rhino": {
+                "tested": 105,
+                "clear": 92,
+                "examples": [
+                  {
+                    "edge": 0,
+                    "offset": -0.2
+                  },
+                  {
+                    "edge": 0,
+                    "offset": 0
+                  },
+                  {
+                    "edge": 2,
+                    "offset": -0.2
+                  },
+                  {
+                    "edge": 2,
+                    "offset": 0
+                  }
+                ]
+              }
+            },
+            "after": {
+              "warthog": {
+                "tested": 105,
+                "clear": 0,
+                "examples": []
+              },
+              "hyena": {
+                "tested": 105,
+                "clear": 0,
+                "examples": []
+              },
+              "buffalo": {
+                "tested": 105,
+                "clear": 0,
+                "examples": []
+              },
+              "lion": {
+                "tested": 105,
+                "clear": 0,
+                "examples": []
+              },
+              "rhino": {
+                "tested": 105,
+                "clear": 0,
+                "examples": []
               }
             }
           },

@@ -361,6 +361,19 @@ the conservative `unknown` and justify a focused closure/interaction test
 before changing production classification. They do not establish all-species
 protection or a campaign saving.
 
+The same preview also ran a deliberately **QA-only** continuous-motion probe
+across each of the 21 proposed cut edges. Five positions per edge were tested
+for every animal species using Wild Engine's ordinary physical step check.
+Before the proposed walls, the numbers of passable crossings out of 105 were
+100/102/101/102/92 (warthog/hyena/buffalo/lion/rhino). With the 11 modules in
+the preview, every profile returned **0/105 passable crossings**. This
+before/after control shows that the proposed modules block the sampled open
+frontier rather than merely coinciding with an already impassable line. The
+525 after-proposal probes are diagnostic work, not part of the proposed fast
+planner. Samples cannot prove that no continuous corner route exists between
+them, nor certify every natural obstacle chain or worker interaction. The
+candidate therefore remains experimental despite this strong local evidence.
+
 ## Adoption boundary
 
 If this approach continues, turn the multi-stroke quote into a validated

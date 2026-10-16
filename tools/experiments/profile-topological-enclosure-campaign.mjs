@@ -219,11 +219,34 @@ function inspect(state,nav){
         }
         return {center:[sx,sz],bySpecies};
       };
+      const crossingProbe=()=>{
+        const bySpecies={};
+        for(const species of ['warthog','hyena','buffalo','lion','rhino']){
+          let clear=0;
+          const examples=[];
+          for(let i=0;i<edges.length;i+=4){
+            const [ox,oz,ix,iz]=edges.slice(i,i+4);
+            const tx=-(iz-oz),tz=ix-ox;
+            for(const offset of [-.4,-.2,0,.2,.4]){
+              const start={x:ox+tx*offset,z:oz+tz*offset};
+              const end={x:ix+tx*offset,z:iz+tz*offset};
+              if(!opening.session.actorStepClear(start,end,
+                {worker:false,species}))continue;
+              clear++;
+              if(examples.length<4)examples.push({edge:i/4,offset});
+            }
+          }
+          bySpecies[species]={tested:count*5,clear,examples};
+        }
+        return bySpecies;
+      };
+      const beforeCutCrossings=cutOnly?crossingProbe():undefined;
       const preview=nav.withWallPreview(quote.previewPieces,quote.suppressed,()=>({
         group:bridge.getUnprotectedCropGroups({includeProtected:true})
           .find(item=>item.id===group.id),
         workerAccess:cutOnly?workerAccess():undefined,
-        gridProbe:cutOnly?gridProbe():undefined}),true);
+        gridProbe:cutOnly?gridProbe():undefined,
+        cutCrossings:cutOnly?crossingProbe():undefined}),true);
       const groupAfter=preview.group;
       validationMs=performance.now()-validateStarted;
       physical={status:groupAfter?.protection??'unknown',
@@ -237,6 +260,8 @@ function inspect(state,nav){
         workerAccess:cutOnly?{before:beforeWorkerAccess,
           after:preview.workerAccess}:undefined,
         gridProbe:preview.gridProbe,
+        cutCrossings:cutOnly?{before:beforeCutCrossings,
+          after:preview.cutCrossings}:undefined,
         blockedPieces:quote.blockedPieces.length,
         blockedCrops:quote.blockedCrops.length};
     }
