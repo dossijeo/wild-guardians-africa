@@ -218,3 +218,27 @@ sample, not a statistical balance result or proof across biomes. Raw reports:
 `campaign-14-native-wall.json.gz` and `campaign-14-wall-control.json.gz`
 in this QA directory; each contains the full original JSON report, including
 source/input hashes, per-day states, raid evidence and negative outcomes.
+
+### Gran Cañón cross-biome control (negative result)
+
+With the same clean source and WASM binary, Gran Cañón/123 `good` was run for
+up to fourteen nights in both modes. Native wall selection suffered a real
+economic defeat at dawn of day twelve after eleven completed nights, with
+zero living crops, one operational center and 32 liquid coins. The control
+survived twelve nights and lost at dawn of day thirteen, also with zero
+living crops and one center, retaining 21 coins. Both raid reports were
+`verified`; neither result is a simulator failure. The native variant took
+203.03 seconds and 7.18 seconds in raid selection, while the control took
+196.14 and 7.38 seconds respectively. The new mode is thus neither faster
+overall nor more survivable in this paired canyon run.
+
+The crop planner returned `unknown` 795 times with native wall selection and
+790 times without it. The wall proposal itself returned `unknown` 795 times
+and only `found` six times. Most `unknown` diagnostics had no first crop
+candidate and no interaction-site trial, indicating that the unresolved
+connectivity predates wall-route selection. Repeating a wall proposal on the
+same unresolved state is redundant; `unknown` must not be treated as proof
+of a closed, attackable perimeter. Investigate sector-residency and event
+invalidation before considering default activation. The opt-in remains off.
+Full unedited reports are `campaign-14-canyon123-native-wall.json.gz` and
+`campaign-14-canyon123-wall-control.json.gz` in this directory.
