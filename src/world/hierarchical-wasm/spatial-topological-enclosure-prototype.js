@@ -236,9 +236,15 @@ export function inspectSelfClosedQuote(quote,existingWalls,cropPoints){
   for(const face of boundaryFaces(layout)){
     const polygon=face.polygon.map(([x,z])=>({x,z}));
     if(!cropPoints.every(point=>containsPoint(polygon,point.x,point.z)))continue;
+    // Every straight animal-to-crop ray from outside must cross this face.
+    // Certify that the whole crossing lies in the *combat* wall footprints,
+    // including automatic gates, before calling the loop attack-opaque.
+    if(!polygon.every((a,i)=>wallOccludesBoundaryFace(a,
+      polygon[(i+1)%polygon.length],walls)))
+      return {status:'unknown',reason:'attack-open-wall-face'};
     const gates=face.ids.filter(id=>walls.some(p=>p.id===id&&p.gate&&p.autoGate));
-    return gates.length?{status:'closed-wall-loop',gates}:
-      {status:'closed-without-gate'};
+    return gates.length?{status:'closed-wall-loop',gates,attackOccluded:true}:
+      {status:'closed-without-gate',attackOccluded:true};
   }
   return {status:'open',reason:'no-wall-face'};
 }

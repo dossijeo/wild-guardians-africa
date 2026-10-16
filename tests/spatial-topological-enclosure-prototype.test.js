@@ -110,12 +110,13 @@ test('a placed free-form wall loop needs a gate and no omitted modules',()=>{
   const walls=[piece('a',0,2,0,true),piece('b',2,0,-Math.PI/2),
     piece('c',0,-2,0),piece('d',-2,0,-Math.PI/2)];
   const quote={pieces:walls,previewPieces:walls,blockedPieces:[],blockedCrops:[]};
-  assert.equal(inspectSelfClosedQuote(quote,[],[{x:0,z:0}]).status,
-    'closed-wall-loop');
+  assert.deepEqual(inspectSelfClosedQuote(quote,[],[{x:0,z:0}]),
+    {status:'closed-wall-loop',gates:['a'],attackOccluded:true});
   assert.equal(inspectSelfClosedQuote({...quote,blockedPieces:[walls[0]]},[],
     [{x:0,z:0}]).status,'open');
-  assert.equal(inspectSelfClosedQuote({...quote,previewPieces:walls.map(p=>
-    ({...p,gate:false}))},[],[{x:0,z:0}]).status,'closed-without-gate');
+  assert.deepEqual(inspectSelfClosedQuote({...quote,previewPieces:walls.map(p=>
+    ({...p,gate:false}))},[],[{x:0,z:0}]),
+    {status:'closed-without-gate',attackOccluded:true});
   assert.equal(inspectSelfClosedQuote({...quote,previewPieces:walls.map((p,i)=>
     i===0?{...p,autoGate:false}:p)},[],[{x:0,z:0}]).status,
   'closed-without-gate');
@@ -126,6 +127,23 @@ test('a placed free-form wall loop needs a gate and no omitted modules',()=>{
   [walls[0],walls[1],walls[3]],[{x:0,z:0}]).status,'closed-wall-loop');
   assert.equal(inspectSelfClosedQuote({...quote,previewPieces:walls.map((p,i)=>
     i===1?{...p,status:'ruined'}:p)},[],[{x:0,z:0}]).status,'open');
+});
+
+test('a snapped logical wall face cannot certify an attack ray through a physical seam',()=>{
+  const piece=(id,x,z,yaw,length,gate=false)=>({id,kind:'wall',
+    material:'zarzas',hp:100,status:'intact',baseScaleX:length/2.18,
+    x,z,yaw,gate,autoGate:gate});
+  const walls=[piece('top-left',-1.02,2,0,1.96),
+    piece('top-right',1.02,2,0,1.96),
+    piece('right',2,0,-Math.PI/2,4),piece('bottom',0,-2,0,4,true),
+    piece('left',-2,0,-Math.PI/2,4)];
+  const quote={pieces:walls,previewPieces:walls,blockedPieces:[],
+    blockedCrops:[]};
+  assert.equal(agriculturalRayClear({structures:walls},
+    {obstacles:walls,version:1},{x:0,z:3},{x:0,z:0}),true,
+  'The current combat ray can pass the snapped seam');
+  assert.deepEqual(inspectSelfClosedQuote(quote,[],[{x:0,z:0}]),
+    {status:'unknown',reason:'attack-open-wall-face'});
 });
 
 test('two wall strokes quote and purchase atomically with one automatic gate',()=>{

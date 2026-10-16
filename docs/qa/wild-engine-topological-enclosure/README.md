@@ -741,6 +741,18 @@ boundary-face interval test now checks which segments are entirely covered
 by the union of existing and quoted walls' combat rectangles, including
 adjacent modules. It certifies 23 of the 122 Manglares preview faces as
 wall-opaque.
+For a self-closed wall loop, the prototype now applies that same interval
+test **once to the placed loop face**, before reporting `closed-wall-loop`.
+Every straight ray from an exterior animal to an enclosed crop must cross
+the face; if every face edge is covered by the combat wall rectangles, the
+wall blocks direct and peripheral attack rays regardless of attack radius.
+The automatic gate is included because its closed footprint occludes the
+animal's ray. This adds no per-animal or per-crop ray enumeration. A directed
+counterexample has a 0.08 m seam between two collinear pieces: the logical
+face joins their endpoints under its 0.10 m snap tolerance, but the combat
+rectangles leave a point-ray gap. The prototype reports `unknown` rather
+than treating that visual loop as attack-opaque. This test establishes a
+possible ray channel, not an actual damaging strike by a standable animal.
 For the other 99, a crop-to-face distance is only a **potential contact**
 test, not evidence of an actual attack: an animal must also stand outside,
 face a living central crop, have a clear ray and apply the normal attack
