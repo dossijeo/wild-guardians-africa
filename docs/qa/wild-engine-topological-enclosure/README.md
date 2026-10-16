@@ -471,18 +471,17 @@ the continuous attack envelope is certified against the physical barrier.
 The frozen state, five profiles and counts are in
 `sabana-attack-reach-d3.json`.
 
-The combat path makes this distinction substantive. `reachableApproach()`
-tests whether the animal can reach a position at crop attack standoff.
-Post-introduction attacks carrying a `damageProfile` subsequently call
-`resolveAgriculturalImpact()`, which rejects a crop hit when
-`agriculturalRayClear()` finds a wall or other static blocker. Introductory
-and legacy attacks without that profile follow a separate crop-hit branch
-without this ray check. Therefore a standable exterior attack point could
-damage a nearby interior crop in that branch without crossing the wall.
-The 128-point Sabana audit found no such exterior point; it does **not** prove
-that every closed wall automatically protects a close crop under all attack
-profiles. The planner must keep its protection verdict conservative until
-the attack envelope and both combat branches are validated together.
+The combat path makes this distinction substantive. PR #63, now in `main`,
+requires an unobstructed crop attack segment both when selecting an approach
+and when the committed hit lands. Post-introduction attacks carrying a
+`damageProfile` use `resolveAgriculturalImpact()`; introductory and legacy
+attacks now also use `agriculturalRayClear()` before applying crop damage.
+The regression covers an intact wall, a saved committed attack and a new hit
+after the wall becomes ruined. This closes the identified combat bypass; it
+does not turn the 128 sampled attack positions into a continuous certificate
+that every exterior point is disconnected from every crop. The planner must
+keep its protection verdict conservative until the full physical attack
+envelope and worker access are validated for its proposed enclosure.
 
 An old/conservative/conservative/old comparison on that same state and final
 candidate WASM recorded native cut times of 6.79/1.61 ms versus 8.73/7.72 ms,
