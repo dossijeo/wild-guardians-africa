@@ -46,3 +46,19 @@ trajectory solely to military or economic balance. The next fix must make a
 topology-restoring repair preserve worker access or create a physically valid
 automatic gate, with a directed replay of these snapshots. It must not add a
 wall-sale recovery rule or grant movement through static barriers.
+
+## Experimental repair correction
+
+The branch now previews a ruined wall's restored collision before payment.
+It preserves any confirmed worker-to-village and center-to-village routes;
+when the repair would close them, it tests existing wall modules as gate
+hosts against the same native graph. The successful proposal is applied in
+the ordinary repair transaction. If no valid gate can preserve access, the
+repair is not charged or committed. A frozen-state test exercises the real
+repair task and confirms that a north-side module becomes an automatic gate,
+the repaired east-side module regains its usual wall HP, all three workers
+have native routes home, the normal 10-coin repair debit occurs once, and
+save/load preserves the result. The preview restores confirmed geometry,
+money and an existing route handle before the repair commits. This is a
+directed correction; a sustained campaign and multi-biome tests remain
+necessary before closing the defect.

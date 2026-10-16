@@ -220,6 +220,27 @@ export function createSpatialGameSession(module,state,streamOptions){
       if(parentRemoved)parent.ids=core.applyBarrierChanges([],parent.barriers);
     }
   }
+  // A repair can restore a solid wall and close a previously open passage.
+  // Evaluate the complete provisional wall set in one synchronous transaction;
+  // the installed mirror and worker portals are restored before returning.
+  function withWallStatePreview(structures,inspect){
+    if(!Array.isArray(structures)||typeof inspect!=='function'||activeWallPreview)
+      throw TypeError('Expected an isolated wall-state preview');
+    const original=state.structures;
+    activeWallPreview={ids:[],barriers:[],suppressed:[...props.suppressed],
+      proposed:structures.filter(wall=>wall.kind==='wall'),refreshPortals:true};
+    try{
+      walls.sync(structures);
+      selectProfile(WORKER_SPATIAL_PROFILE);
+      installWorkerPortals(activeWallPreview.proposed);
+      return inspect();
+    }finally{
+      activeWallPreview=null;
+      walls.sync(original);
+      selectProfile(WORKER_SPATIAL_PROFILE);
+      installWorkerPortals([]);
+    }
+  }
   function withVillageEntryPreview(buildings,inspect){
     if(!Array.isArray(buildings)||typeof inspect!=='function')
       throw TypeError('Expected provisional village buildings and a callback');
@@ -240,6 +261,6 @@ export function createSpatialGameSession(module,state,streamOptions){
   return {core,field,stream,horizonSource,topologySource,suppressed:props.suppressed,syncState,
     routeActor,routeActorNative,routeActorNativeBatch,actorConnectivity,actorSectorRevision,actorRegions,actorEnclosure,actorRegionsBatch,actorCanStand,actorStepClear,
     actorStepClearExceptWalls,
-    queryPropsAt,withWallPreview,withVillageEntryPreview,
+    queryPropsAt,withWallPreview,withWallStatePreview,withVillageEntryPreview,
     dispose:()=>stream.dispose()};
 }

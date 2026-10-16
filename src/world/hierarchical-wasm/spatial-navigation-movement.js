@@ -247,6 +247,12 @@ export function createSpatialNavigationMovement(session,state){
   };
   const withWallPreview=(walls,suppressed,inspect,refreshPortals=false)=>
     session.withWallPreview(walls,suppressed,()=>inspect({walkable,segmentClear,path}),refreshPortals);
+  const withWallStatePreview=(structures,inspect)=>
+    session.withWallStatePreview(structures,()=>inspect({
+      route:(start,end)=>session.routeActorNative(start,end,
+        {worker:true,cached:false})}));
+  const workerPhysicalRoute=(start,end)=>session.routeActorNative(start,end,
+    {worker:true,cached:false});
   const withVillageEntryPreview=(buildings,inspect)=>
     session.withVillageEntryPreview(buildings,inspect);
   const withCenterPreview=(building,suppressed,inspect)=>
@@ -284,7 +290,8 @@ export function createSpatialNavigationMovement(session,state){
     },
     get version(){return session.topologySource.revision();},
     walkable,segmentClear,path,regionFor,regionConnected,enclosureFor,terrainValid,
-    withWallPreview,withVillageEntryPreview,withCenterPreview,
+    withWallPreview,withWallStatePreview,workerPhysicalRoute,
+    withVillageEntryPreview,withCenterPreview,
     spatialSectorRevision:(radius,worker=false)=>session.actorSectorRevision(profile(radius,worker,null)),
     requestRaidConnectivity,requestRaidFrontier,
     approachPath:(start,end,radius)=>path(start,end,radius,null,false),

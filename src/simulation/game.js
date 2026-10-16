@@ -25,7 +25,7 @@ import {workerEntityLookup} from './worker-entity-lookup.js';
 import {enqueue,taskEnqueuer,reserveTasks,releaseTask,replaceTasks,
   notifyWorkerPlanningChange,notifyWorkerPlanningRoster,taskPlanningRevision} from './tasks.js';
 import {planNight,updateRaid,spawnRaid,planDay} from './raids.js';
-import {wallStroke,wallLayout,wallStrokeLine} from '../world/wall-layout.js';
+import {wallStroke,wallLayout,wallStrokeLine,gateScale} from '../world/wall-layout.js';
 import {selectEvent,applyEvent} from './events.js';
 import {villageLayout,findVillageEntry,nearestVillageRoute} from '../world/villages.js';
 import {LOCOMOTION as L} from './locomotion-calibration.js';
@@ -693,6 +693,74 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
   if(routeClearance?.blocked()){w.path=null;return false;}
   return w.path.length===0;
 }
+// A ruined wall regains collision when repaired. Check that this topological
+// change does not seal workers or a center away from its village. Candidate
+// gates are previewed against the same native wall mirror used by movement;
+// no payment or confirmed intention changes during these synchronous probes.
+export function planRepairAccess(s,target,nav){
+  if(target.kind!=='wall'||target.status!=='ruined'||
+    !nav.withWallStatePreview||!nav.workerPhysicalRoute)
+    return {status:'safe',updates:[]};
+  const villages=new Map(s.villages.map(v=>[v.id,v]));
+  const witnesses=[];
+  for(const center of s.structures.filter(operational)){
+    const village=villages.get(center.villageId);
+    if(village)witnesses.push([centerServicePoint(center,s,.8),village.entry??village]);
+  }
+  for(const worker of s.workers)if(worker.status!=='home'){
+    const village=villages.get(worker.villageId);
+    if(village)witnesses.push([worker,village.entry??village]);
+  }
+  const routes=witnesses.map(([from,to])=>nav.workerPhysicalRoute(from,to));
+  if(routes.some(route=>route.status==='unknown'))return {status:'unknown',updates:[]};
+  const connected=witnesses.filter((_,index)=>routes[index].status==='found');
+  if(!connected.length)return {status:'safe',updates:[]};
+  const repaired={...target,status:'intact',hp:target.maxHp};
+  const byId=new Map([[target.id,repaired]]);
+  const structures=()=>s.structures.map(piece=>byId.get(piece.id)??piece);
+  const checks=()=>nav.withWallStatePreview(structures(),({route})=>
+    connected.map(([from,to])=>route(from,to).status));
+  let statuses=checks();
+  if(statuses.every(status=>status==='found'))return {status:'safe',updates:[]};
+  const living=activeCrops(s.plants),points=routes.flatMap(route=>
+    route.status==='found'?route.points:[]);
+  const candidates=s.structures.filter(piece=>piece.kind==='wall'&&
+    !piece.gate&&(piece.status==='intact'&&piece.hp>0||piece.id===target.id));
+  const scores=new Map(candidates.map(wall=>{
+    let minimum=Infinity;
+    for(const point of points)minimum=Math.min(minimum,dist(point,wall));
+    return [wall.id,minimum];
+  }));
+  candidates.sort((a,b)=>{
+    return scores.get(a.id)-scores.get(b.id)||a.created-b.created;
+  });
+  const used=new Set();
+  while(statuses.some(status=>status!=='found')){
+    let best=null,bestStatuses=null,bestFound=statuses.filter(x=>x==='found').length;
+    for(const original of candidates){
+      if(used.has(original.id))continue;
+      const wall=byId.get(original.id)??original;
+      const scale=gateScale(wall.material),c=Math.cos(wall.yaw??0),
+        sn=Math.sin(wall.yaw??0);
+      if(living.some(plant=>Math.abs((plant.x-wall.x)*c-
+        (plant.z-wall.z)*sn)<1.09*(wall.baseScaleX??1)*scale+.4&&
+        Math.abs((plant.x-wall.x)*sn+(plant.z-wall.z)*c)<.22*scale+.4))
+        continue;
+      const maxHp=wall.maxHp*.6;
+      const gate={...wall,gate:true,autoGate:true,maxHp,
+        hp:wall.hp/wall.maxHp*maxHp};
+      byId.set(wall.id,gate);
+      const trial=checks(),found=trial.filter(x=>x==='found').length;
+      byId.delete(wall.id);
+      if(original.id===target.id)byId.set(target.id,repaired);
+      if(found>bestFound){best=gate;bestStatuses=trial;bestFound=found;
+        if(found===connected.length)break;}
+    }
+    if(!best)return {status:statuses.includes('unknown')?'unknown':'blocked',updates:[]};
+    byId.set(best.id,best);used.add(best.id);statuses=bestStatuses;
+  }
+  return {status:'safe',updates:[...byId.values()]};
+}
 function completeTask(s,w,t,target,nav) {
   if(t.kind==='initial'||t.kind==='water') {
     if(!canWaterFrom(w,target,nav)){releaseTask(s,w);w.status='idle';w.path=null;notifyWorkerPlanningChange(s,w);return;}
@@ -710,11 +778,19 @@ function completeTask(s,w,t,target,nav) {
   } else if(t.kind==='crate') {target.carrierId=w.id;w.crateId=target.id;target.centerId=w.centerId;w.status='carrying';w.path=null;}
   else if(t.kind==='repair') {
     try {
+      const access=planRepairAccess(s,target,nav);
+      if(access.status!=='safe')throw new Error(access.status==='unknown'?
+        'La reparación espera información del terreno para conservar el acceso.':
+        'La reparación cerraría el acceso de los trabajadores sin una puerta válida.');
       ensurePurchaseBudget(s,repairCost(target));
       const paymentId=`repair:${t.id}`,previousHp=target.hp,previousStatus=target.status;
       if(transact(s.ledger,paymentId,negate(repairCost(target)))){
         const visual=target.kind==='wall'?wallVisualAt(target,s.elapsed):null;
         delete target.wallPresentation;target.hp=target.maxHp;target.status='intact';target.collapseRemaining=0;
+        for(const update of access.updates){
+          const piece=s.structures.find(item=>item.id===update.id);
+          if(piece)Object.assign(piece,update);
+        }
         if(visual!==null)recordWallPresentation(target,visual,s.elapsed);
         if(target.kind==='center'&&nav.syncCenterRepair)nav.syncCenterRepair(s,target,previousStatus);else nav.setState(s);
         // Read the settled ledger debit: proportional repair prices may be
@@ -725,7 +801,12 @@ function completeTask(s,w,t,target,nav) {
         if(target.kind==='center'){recoverDisplacedWorkers(s);enqueueLooseCrates(s);}
       }
     }
-    catch {notice(s,'La reparación se canceló: fondos insuficientes al llegar.',target.id);}
+    catch(error){
+      if(error.code==='hiring-reserve')
+        notice(s,'La reparación se canceló: fondos insuficientes al llegar.',target.id);
+      else if(error.message?.startsWith('La reparación'))notice(s,error.message,target.id);
+      else throw error;
+    }
   }
   nav.intentTaskPlanner?.finishAction(w.id);
   replaceTasks(s,s.tasks.filter(task=>task.id!==t.id));w.taskId=null;w.taskApproach=null;if(w.status!=='carrying')w.status='idle';w.path=null;
