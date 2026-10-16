@@ -331,12 +331,15 @@ assertions; they have not been hidden or rewritten in this performance branch.
 
 ## Next isolated measurements
 
-1. Symbolize or instrument the hot WASM functions, then profile sector
-   rebuild, BFS clears, portal scans and route-slot scans separately.
-2. Benchmark generation stamping as one isolated candidate against the
-   unchanged binary on frozen navigation inputs; compare exact states and
-   `found`/`blocked`/`unknown` results.
-3. Measure portal cardinality and topology-change frequency before adding
-   an inverse index; measure route-slot scan lengths before adding a free list.
-4. Expand linear-memory traces to restored games and large legal farms,
+Generation stamping and the 16 MiB startup setting were merged separately
+in #56 and #55. The portal inverse-index audit (#57), route-slot free list and
+connector-verdict reuse did not justify adoption. The path-free repair proof
+remains stacked on native-intent #53; its directed benchmark is not a campaign
+speed measurement.
+
+1. Measure the path-free repair proof in a sustained campaign with actual
+   repair attempts, separating its contribution from the rest of `Game.tick`.
+2. Profile the remaining physical-clearance calls after the path-free proof;
+   do not assume a shared graph BFS is the dominant cost on the repair case.
+3. Expand linear-memory traces to restored games and large legal farms,
    recording actual entities and sectors alongside committed pages.
