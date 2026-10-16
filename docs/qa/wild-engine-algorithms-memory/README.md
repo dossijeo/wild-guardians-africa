@@ -193,6 +193,31 @@ full 14-night campaign becomes faster; it still outgrows 16 MiB and remains
 dependent on `ALLOW_MEMORY_GROWTH=1`. The `SPATIAL_INITIAL_MEMORY` override
 keeps 4, 32 and 64 MiB reproducible for later comparisons.
 
+## Functional and packaging checks for activation
+
+The web build succeeds and packages the 16 MiB WASM with SHA-256
+`d12355b1a636f1a856abd1cd6b3b6ff6177162b0ada5a7828df036802227b9d2`.
+Web-asset validation passes. The native-intent and validation CI jobs pass;
+the Windows job was still running at the time of this report.
+
+The full local suite was run with both compiled variants on the same source.
+The 4 MiB run had 4,416 tests, 4,342 passes, 32 failures and 42 skips.
+The first 16 MiB run had 4,340 passes and 34 failures. All 32 failures from
+the 4 MiB run also appeared with 16 MiB. The only additional failures were
+two prototype tests asserting the historical literal `4194304` bytes after
+small navigation workloads; they did not report route or simulation changes.
+Those tests now capture their instance's initial memory size and assert that
+the workload causes **no growth**, preserving the intended test on both
+variants. The affected prototype file passes all 59 tests with 16 MiB.
+The complete suite has not been rerun after this test-only correction; the
+two archived full TAP logs, the focused passing log and the 4 MiB physical
+raid reproduction retain the exact results. In particular, the previously
+failing dense-raid reload test reports the same barrier-crossing failure
+with both binaries, so it remains a separate engine issue, not evidence for
+or against 16 MiB. Other shared failures include old 100-night victory
+expectations and unrelated balance/UI assertions; they have not been hidden
+or rewritten in this performance branch.
+
 ## Next isolated measurements
 
 1. Symbolize or instrument the hot WASM functions, then profile sector

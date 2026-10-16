@@ -1427,6 +1427,7 @@ test('an unloaded middle chunk leaves distant connectivity unknown',()=>{
 });
 test('a turning four-chunk viewport reuses sectors and restores routes after revisiting',()=>{
   const core=createSpatialSavannaPrototype(module),resident=new Set(['0,0']);
+  const initialMemoryBytes=core.metrics().memoryBytes;
   core.generate(17,0,0);core.buildNavigation(1.1,false);
   const path=[[0,0],[1,0],[1,1],[0,1],[0,0]];
   for(const [cx,cz] of path){
@@ -1446,10 +1447,11 @@ test('a turning four-chunk viewport reuses sectors and restores routes after rev
     }
     assert(checked,'each viewport should expose at least one traversable seam');
   }
-  assert.equal(core.metrics().memoryBytes,4194304);
+  assert.equal(core.metrics().memoryBytes,initialMemoryBytes);
 });
 test('worker and animal graphs survive profile switches and local topology edits',()=>{
   const core=createSpatialSavannaPrototype(module);
+  const initialMemoryBytes=core.metrics().memoryBytes;
   core.generate(712,0,0);core.addChunk(1,0);
   assert.equal(core.buildNavigation(.28,true),32);
   assert.equal(core.buildNavigation(1.1,false),32);
@@ -1492,5 +1494,5 @@ test('worker and animal graphs survive profile switches and local topology edits
     assert.equal(core.selectNavigation(worker),32);
     validRoute(core,crossing.start,core.route(crossing.start,crossing.end));
   }
-  assert.equal(core.metrics().memoryBytes,4194304);
+  assert.equal(core.metrics().memoryBytes,initialMemoryBytes);
 });
