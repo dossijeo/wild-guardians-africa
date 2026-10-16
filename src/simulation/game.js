@@ -596,6 +596,12 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
       w.path=animalExitConnector(w,destination,nav);
       if(!w.path)return abandonExhaustedExit();
       delete w.exitRouteRecovery;
+    }else if(!worker&&expandRoute&&w.status==='retreating'&&
+      nav.walkable?.(destination.x,destination.z,w.radius??.28,ignore,false)&&
+      nav.segmentClear?.(w,destination,w.radius??.28,ignore,false)){
+      // The confirmed straight exit is already a complete route. A grid
+      // waypoint can be less usable than this continuous swept segment.
+      w.path=[{x:destination.x,z:destination.z}];
     }else w.path=worker&&nav.workerPath?nav.workerPath(w,destination,w.radius??.28,ignore):nav.path(w,destination,w.radius??.28,ignore,worker);
     w.destinationId=destination.id;
     // The local search corridor is not a physical enclosure. Exhausted animals
