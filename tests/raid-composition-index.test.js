@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {BALANCE as B} from '../src/simulation/balance.js';
-import {compositions,nextRandom,randomInt,threatTier,attraction} from '../src/simulation/rules.js';
+import {compositions,nextRandom,attraction} from '../src/simulation/rules.js';
 import {createRaidCompositionIndex} from '../src/simulation/raid-composition-index.js';
 import {planNight} from '../src/simulation/raids.js';
 import {estimateNativeHorde} from '../tools/estimate-native-horde-budgets.mjs';
@@ -14,13 +14,23 @@ test('every rank matches native enumeration, including species subsets and order
   for(let rank=0;rank<original.length;rank++)assert.deepEqual(index.at(rank),original[rank]);
  }
 });
-test('night plans keep the original group, timing and final RNG state',()=>{
+test('night plans keep timing, physical cohorts and RNG stable across retries',()=>{
  for(const seed of [1,712,123,2026,4294967295])for(const count of [0,10,50,100,300]){
   const state={rng:seed,day:6,postgame:false,plants:Array.from({length:count},()=>({alive:true,species:'mijo'}))};
-  const expected=structuredClone(state),at=323+nextRandom(expected)*225,tier=threatTier(attraction(expected.plants));
-  const budget=randomInt(expected,tier.threat_min,tier.threat_max),groups=compositions(budget,tier.unlocked_species);
-  const group=groups[randomInt(expected,0,groups.length-1)];
-  planNight(state);assert.deepEqual(state.nightPlan,{at,attraction:attraction(expected.plants),group,done:false});assert.equal(state.rng,expected.rng);
+  const firstDraw=structuredClone(state),at=323+nextRandom(firstDraw)*225;
+  const repeat=structuredClone(state);
+  planNight(state);planNight(repeat);
+  assert.equal(state.nightPlan.at,at);
+  assert.equal(state.nightPlan.attraction,attraction(state.plants));
+  assert.deepEqual(state.nightPlan.group,state.nightPlan.actors.map(actor=>actor.species));
+  assert.deepEqual(state.nightPlan.waves[0],state.nightPlan.actors);
+  assert(state.nightPlan.waves.flat().every(actor=>actor.hits>0));
+  assert(state.nightPlan.waves.every(wave=>wave.length>0&&wave.length<=16));
+  assert.deepEqual({plan:state.nightPlan,memory:state.raidPressureMemory,rng:state.rng},
+   {plan:repeat.nightPlan,memory:repeat.raidPressureMemory,rng:repeat.rng});
+  const committed=structuredClone({plan:state.nightPlan,memory:state.raidPressureMemory,rng:state.rng});
+  planNight(state);
+  assert.deepEqual({plan:state.nightPlan,memory:state.raidPressureMemory,rng:state.rng},committed);
  }
 });
 test('large budgets preserve exact counts without retaining all group arrays',()=>{
