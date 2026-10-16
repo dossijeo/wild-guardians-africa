@@ -468,3 +468,20 @@ state still wakes the consumer and releases an uncommitted wall attack. Focused
 tests cover both boundaries and the one-night shared-index integration test
 passes. This removes a redundant event response; no campaign-wide speedup is
 claimed from this isolated change.
+
+The opt-in native wall selector has a paired seven-night Manglares/712 check
+on source `c5a21ff5` and WASM SHA-256
+`d757c2197f98fded1cb42b7759154f1bd95a532504da9539c2e8ade17a9f47b6`.
+The two runs use the same strategy, spatial advice, expanding defense policy
+and input hashes; only `nativeWallPlans` differs. Their day-1 through day-5
+serialized hashes match. On days 6–7, the native-wall variant obtained 19
+native wall proposals from 19 blocked crop proposals and made no blocked
+legacy fallback. The other variant made 68 blocked fallbacks to JavaScript.
+Both completed seven nights with verified raid evidence and no observer issue.
+The native-wall run ended with 128 live crops and 708 coins; the comparison
+ended with 131 crops and 663 coins. One extra crop was destroyed in the
+native-wall run on day 6. Total times were 128.44 and 127.71 seconds, but
+the campaigns diverged on day 6, so this does not isolate speed. The complete
+reports are `manglares7-native-wall-recheck.json.gz` and
+`manglares7-legacy-wall-recheck.json.gz`. A longer campaign and more biomes
+are still required before enabling native wall selection by default.
