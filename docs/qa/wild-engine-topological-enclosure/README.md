@@ -755,6 +755,15 @@ current and future crop layouts, not grounds to declare the enclosure
 protected. Full per-profile counts and nearest faces are in
 `manglares-attack-boundary-d3.json`.
 
+A directed follow-up tested the two water-backed faces near `plant-1281`
+more closely. It sampled 1,848 exterior-side points at 0.05 m offsets;
+127 were within the rhino's 2.20 m contact distance. None was standable
+under the native rhino profile, so none could initiate a clear agricultural
+ray. This removes the apparent hit from the sampled positions but is still
+not a continuous certificate for every sub-grid exterior point. The
+frozen-state result is `manglares-rhino-contact-d3.json`. The experimental
+planner keeps its conservative `unknown` verdict.
+
 ### Local construction and destruction regression
 
 The focused WASM test now encloses a known resident seed with four native

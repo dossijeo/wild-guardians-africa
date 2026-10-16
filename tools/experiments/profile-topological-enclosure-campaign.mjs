@@ -479,7 +479,46 @@ function inspect(state,nav){
             exposed.push({edge:edge/4,cells:[ox,oz,ix,iz],
               naturalKind:wasm.lazy_cut_face_natural(ox,oz,ix,iz),...nearest});
           }
+          const rhinoContact={sampled:0,withinContact:0,standable:0,
+            clearRay:0,examples:[]};
+          const rhinoRadius=radii.rhino;
+          const attackState={...state,
+            structures:[...state.structures,...quote.previewPieces]};
+          const attackNav={...nav,
+            obstacles:[...nav.obstacles,...quote.previewPieces]};
+          for(const face of exposed.filter(item=>item.naturalKind===2&&
+            item.distance<=rhinoRadius+1e-8)){
+            const [ox,oz,ix,iz]=face.cells;
+            const ends=ox!==ix?[[ox/2+ix/2,iz-.5],[ox/2+ix/2,iz+.5]]:
+              [[ix-.5,oz/2+iz/2],[ix+.5,oz/2+iz/2]];
+            for(const crop of cropTargets){
+              if(edgeDistance({x:ends[0][0],z:ends[0][1]},
+                {x:ends[1][0],z:ends[1][1]},crop.x,crop.z)>rhinoRadius)continue;
+              for(let along=0;along<=20;along++)for(let step=1;step<=44;step++){
+                if(rhinoContact.sampled>=5000)break;
+                const t=along/20,distance=step*.05;
+                const point={x:ends[0][0]+(ends[1][0]-ends[0][0])*t+
+                  (ox-ix)*distance,
+                z:ends[0][1]+(ends[1][1]-ends[0][1])*t+
+                  (oz-iz)*distance};
+                rhinoContact.sampled++;
+                if(Math.hypot(point.x-crop.x,point.z-crop.z)>rhinoRadius)continue;
+                rhinoContact.withinContact++;
+                if(!opening.session.actorCanStand(point,
+                  {worker:false,species:'rhino'}))continue;
+                rhinoContact.standable++;
+                if(!agriculturalRayClear(attackState,attackNav,point,crop))continue;
+                rhinoContact.clearRay++;
+                if(rhinoContact.examples.length<8)
+                  rhinoContact.examples.push({edge:face.edge,cropId:crop.id,
+                    point,distance:Math.hypot(point.x-crop.x,point.z-crop.z),
+                    walkable:nav.walkable(point.x,point.z,
+                      ANIMAL_SPATIAL_PROFILES.rhino.radius,null,false)});
+              }
+            }
+          }
           return {wallCovered,notProvenOpaque:exposed.length,
+            rhinoWaterContact:rhinoContact,
             bySpecies:Object.fromEntries(Object.entries(radii).map(
               ([species,radius])=>[species,{
                 contactRadius:radius,
