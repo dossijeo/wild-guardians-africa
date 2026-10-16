@@ -242,3 +242,27 @@ of a closed, attackable perimeter. Investigate sector-residency and event
 invalidation before considering default activation. The opt-in remains off.
 Full unedited reports are `campaign-14-canyon123-native-wall.json.gz` and
 `campaign-14-canyon123-wall-control.json.gz` in this directory.
+
+### Unknown wait invalidation, same-code canyon pair
+
+Commit `90d1ad63` distinguishes an animal waiting for unknown connectivity
+from one waiting on dynamic target contention. A reservation release or
+ordinary hit no longer wakes the former; a navigation/topology or sector
+revision still does, with a low-frequency eight-second recovery retry. The
+waiting reason survives save/load. The targeted contention and native raid
+suites passed locally (30/30), as did the web build.
+
+On Gran Cañón/123, the opt-in native-wall mode's crop-plan `unknown` results
+fell from 795 in the pre-change run to 172, while regional `unknown` counts
+fell from 7,352 to 3,710. The run completed twelve nights before a real
+economic defeat at dawn of day thirteen, with zero crops, one center and 19
+liquid coins; raid evidence remained verified. It took 206.93 seconds,
+versus 203.03 seconds for the shorter eleven-night pre-change run, so this
+does not prove an overall speed gain. On the same new code, the control
+without native wall selection also completed twelve nights before dawn-day-
+thirteen economic defeat, ending with 28 coins and taking 211.25 seconds.
+Raid-selection time was 6.79 seconds in both modes. The opt-in remains off:
+the improved wait semantics reduce redundant questions, but the native wall
+choice still lacks a demonstrated sustained campaign advantage in Canyon.
+The complete new-code pair is in `campaign-14-canyon123-unknown-event-wait.json.gz`
+and `campaign-14-canyon123-unknown-event-wait-control.json.gz`.
