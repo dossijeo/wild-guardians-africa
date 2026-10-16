@@ -153,7 +153,12 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
  const maintenanceReserve=()=>policy.repair?s.tasks.filter(t=>t.kind==='repair').reduce((n,t)=>{const c=s.structures.find(c=>c.id===t.targetId);return n+(c?Math.ceil(numberOf(Game.repairCost(c))):0);},0):0;
  const savingsReserve=(additional=0)=>Math.min(villageSavingsFromTotals(policy,settledDeliveryIncome,expansion?.paidVillageCoins()??0),Math.max(0,numberOf(s.ledger.balance)-labourReserve(additional)-maintenanceReserve()-cropSpec(nextSpecies()).plant_cost));
  const plant=()=>{
-  const species=nextSpecies();if(numberOf(s.ledger.balance)<labourReserve(1)+maintenanceReserve()+(defense?.reserve(s)??0)+savingsReserve(1)+cropSpec(species).plant_cost)return false;
+  const species=nextSpecies(),living=s.plants.filter(p=>p.alive).length;
+  // Replacing the crop base that supports the current payroll precedes
+  // discretionary wall savings. Above that base, the defense target reserves
+  // the surplus without imposing a maximum farm size.
+  const defenseSavings=living<staff*plantsPerWorker?0:defense?.reserve(s)??0;
+  if(numberOf(s.ledger.balance)<labourReserve(1)+maintenanceReserve()+defenseSavings+savingsReserve(1)+cropSpec(species).plant_cost)return false;
   const p=choosePlot();if(!p)return false;
   let planted=false;
   try{planted=Game.plant(s,command('plant'),species,p.x,p.z,nav);}

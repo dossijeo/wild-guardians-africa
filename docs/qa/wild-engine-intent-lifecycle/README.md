@@ -559,3 +559,10 @@ in the bot's cash reserve before it plants again. Otherwise the bot kept
 buying seeds with the same surplus and never accumulated enough for a
 complete stroke. This is a deliberate economic-policy change in the
 experimental virtual player; prices and game rules remain unchanged.
+The first five-night probe revealed a degenerate interaction: reserving the
+entire stroke before replacing harvested plants left zero living crops on
+day 2 while wages continued. The runner now gives replacement planting up
+to the current staff's ordinary crop workload priority over discretionary
+wall savings. Above that workload, it still reserves the defensive target.
+This is a spending priority, not a plant-count cap; further expansion remains
+legal whenever the other reserves are funded.
