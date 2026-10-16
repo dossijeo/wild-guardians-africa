@@ -14,6 +14,16 @@ function populated(){
  return {s,nav};
 }
 
+test('wall quotes ignore dead crop geometry while preserving the same plan',()=>{
+ const {s,nav}=populated();
+ const before=Game.quoteWallChain(s,'zarzas',perimeter,nav,options);
+ s.plants.push({id:'plant-history',centerId:s.structures[0].id,alive:false,
+  get x(){throw Error('Historical crop x was read');},
+  get z(){throw Error('Historical crop z was read');}});
+ const after=Game.quoteWallChain(s,'zarzas',perimeter,nav,options);
+ assert.deepEqual(after,before);
+});
+
 test('a wall stroke leaves its closing piece unbuilt if no gate is physically valid',()=>{
  const {s,nav}=populated(),placement=nav.wallPlacement.bind(nav);
  const withGate=Game.quoteWallChain(s,'zarzas',perimeter,nav,options);
