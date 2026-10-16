@@ -1706,7 +1706,14 @@ int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
       const AttackSite& first=sites.front();
       regionQueries++;
       const int connected=lazy_connected(source.x,source.z,first.x,first.z);
-      if(connected<0){unknown=true;unknownCauses|=2;continue;}
+      if(connected<0){
+        unknown=true;unknownCauses|=2;
+        // Preserve every native connectivity reason encountered across groups.
+        // Reasons are 0..10; bits 8..18 are reserved for this diagnostic.
+        const int reason=lazy_connected_reason();
+        if(reason>=0&&reason<=10)unknownCauses|=1<<(8+reason);
+        continue;
+      }
       if(!connected)continue;
       for(const AttackSite& site:sites)candidates.push_back(&site);
     }

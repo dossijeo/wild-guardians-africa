@@ -33,6 +33,7 @@ const raidRegionDecisions=new WeakMap();
 const RAID_REGION_QUERIES_PER_TICK=16,RAID_REGION_RETRY_SECONDS=4;
 const NATIVE_UNKNOWN_CAUSES=['source-connector','region-connectivity',
   'crop-sites','route','bounded-local-search'];
+const NATIVE_REGION_UNKNOWN_REASONS=[0,1,2,8,10];
 function regionDecisionScope(s,nav){
   let scope=raidRegionDecisions.get(nav);
   if(!scope||scope.raid!==s.raid||scope.topology!==nav.version){
@@ -422,6 +423,12 @@ export function targetFor(s,a,nav) {
         const mask=native.diagnostics?.unknownCauseMask??0;
         for(let bit=0;bit<NATIVE_UNKNOWN_CAUSES.length;bit++)if(mask&(1<<bit)){
           const cause=NATIVE_UNKNOWN_CAUSES[bit];
+          stats.nativeUnknownCauses[cause]=
+            (stats.nativeUnknownCauses[cause]??0)+1;
+        }
+        for(const reason of NATIVE_REGION_UNKNOWN_REASONS)
+          if(mask&(1<<(8+reason))){
+          const cause=`region-reason-${reason}`;
           stats.nativeUnknownCauses[cause]=
             (stats.nativeUnknownCauses[cause]??0)+1;
         }
