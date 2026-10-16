@@ -229,10 +229,33 @@ function inspect(state,nav){
           const crops={sealedNeighborhood:0,uncertifiedNeighborhood:0,
             noPassableCell:0,anchoredSealed:0,anchoredUncertified:0,
             noPhysicalAnchor:0};
+          const attackRing={cropsWithoutCenterAnchor:0,
+            cropsNearBoundary:0,
+            standableSealed:0,standableOpen:0,standableUnknown:0,
+            noStandablePoint:0,openExamples:[]};
+          const cropBoundary={withinAttackReach:0,minimumDistance:Infinity,
+            nearestExamples:[]};
           for(const [index,[cx,cz]] of cropPoints.entries()){
             let sealed=false,uncertified=false,anchoredSealed=false,
               anchoredUncertified=false;
             const target=cropTargets[index];
+            let nearest=Infinity;
+            for(let edge=0;edge<boundary.length;edge+=4){
+              const [ox,oz,ix,iz]=boundary.slice(edge,edge+4);
+              const vertical=ox!==ix;
+              const fixed=vertical?(ox+ix)/2:(oz+iz)/2;
+              const low=(vertical?iz:ix)-.5,high=low+1;
+              const along=vertical?target.z:target.x;
+              nearest=Math.min(nearest,Math.hypot(
+                (vertical?target.x:target.z)-fixed,
+                Math.max(low-along,0,along-high)));
+            }
+            cropBoundary.minimumDistance=Math.min(cropBoundary.minimumDistance,nearest);
+            if(nearest<=.6+ANIMAL_SPATIAL_PROFILES[species].radius){
+              cropBoundary.withinAttackReach++;
+              if(cropBoundary.nearestExamples.length<8)
+                cropBoundary.nearestExamples.push({cropId:target.id,distance:nearest});
+            }
             for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){
               const result=wasm.lazy_enclosure(cx+dx,cz+dz);
               if(result===1)sealed=true;
@@ -246,8 +269,31 @@ function inspect(state,nav){
               'sealedNeighborhood':'noPassableCell']++;
             crops[anchoredUncertified?'anchoredUncertified':anchoredSealed?
               'anchoredSealed':'noPhysicalAnchor']++;
+            const noAnchor=!anchoredSealed&&!anchoredUncertified;
+            const radius=.6+ANIMAL_SPATIAL_PROFILES[species].radius;
+            if(noAnchor)attackRing.cropsWithoutCenterAnchor++;
+            if(nearest<=radius)attackRing.cropsNearBoundary++;
+            if(noAnchor||nearest<=radius){
+              let standable=false;
+              for(let sample=0;sample<16;sample++){
+                const angle=sample*Math.PI/8;
+                const point={x:target.x+Math.sin(angle)*radius,
+                  z:target.z+Math.cos(angle)*radius};
+                if(!opening.session.actorCanStand(point,{worker:false,species}))continue;
+                standable=true;
+                const enclosure=opening.session.actorEnclosure(point,
+                  {worker:false,species});
+                if(enclosure.status==='sealed')attackRing.standableSealed++;
+                else if(enclosure.status==='open-frontier'){
+                  attackRing.standableOpen++;
+                  if(attackRing.openExamples.length<8)
+                    attackRing.openExamples.push({cropId:target.id,point});
+                }else attackRing.standableUnknown++;
+              }
+              if(!standable)attackRing.noStandablePoint++;
+            }
           }
-          bySpecies[species]={firstCropCells:counts,crops};
+          bySpecies[species]={firstCropCells:counts,crops,attackRing,cropBoundary};
         }
         return {center:[sx,sz],bySpecies};
       };

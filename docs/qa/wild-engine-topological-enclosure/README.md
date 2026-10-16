@@ -454,14 +454,32 @@ cannot anchor some plants; it reports `protected` for lions. Therefore this
 prototype is not yet wired into the bot or described as fully game-accepted.
 The raw diagnostic is `sabana-cut-conservative-d3.json`.
 
+An additional attack-reach audit explains why the unknown verdict must not
+simply be promoted to protected. Depending on animal profile, 0–15 of the 66
+crops lack a valid connector from the exact crop coordinate to a nearby graph
+cell. Sampling 16 possible attack positions for those crops and for crops
+close to the proposed boundary found **no** standable position classified as
+open or unknown; every standable sample belonged to a sealed component.
+However, **2–13 crops** lie within that species' normal attack standoff
+distance of the abstract boundary, with a closest distance of 1.12 m.
+Those discrete samples cannot exclude a narrow exterior attack position
+between samples, or prove that every such position is connected to the raid
+exterior. The lion classifier's `protected` result also needs this separate
+attack-reach check: two lion targets are close to the boundary even though
+their centre connectors work. Keep full protection acceptance pending until
+the continuous attack envelope is certified against the physical barrier.
+The frozen state, five profiles and counts are in
+`sabana-attack-reach-d3.json`.
+
 An old/conservative/conservative/old comparison on that same state and final
 candidate WASM recorded native cut times of 6.79/1.61 ms versus 8.73/7.72 ms,
 respectively. The physical quote/preview costs were 129–161 ms versus
 176–179 ms. This is a measured cost for the stronger abstraction, not an
 overall campaign speedup. The four-arm data are in
-`sabana-cut-conservative-abba-d3.json`. The output still needs tests with
-automatic doors, multiple centres, sector streaming, construction/destruction
-events and other biomes before it can replace the current advisor.
+`sabana-cut-conservative-abba-d3.json`. Targeted wall-event, restore and
+streaming regressions appear below; automatic doors, multiple centres, broader
+residency patterns and real checkpoints in other biomes still need validation
+before this can replace the current advisor.
 
 The existing six-biome *single-crop synthetic* workload was then rerun with
 the conservative variant, using the original sites and the same candidate
