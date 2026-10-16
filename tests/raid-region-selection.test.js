@@ -76,6 +76,28 @@ test('an unresolved crop region remains pending without enumerating its hundred 
   assert.equal(f.nav.raidSelectionStats.cropAttempts??0,0);
 });
 
+test('a native missing-sector frontier displaces the heuristic crop-ring demand',()=>{
+  const f=fixture(),frontier={x:-18,z:-30};
+  let exact=0,heuristic=0;
+  f.nav.intentTaskPlanner={planAttackCrop:()=>({status:'unknown',frontier})};
+  f.nav.requestRaidFrontier=point=>{assert.deepEqual(point,frontier);exact++;return true;};
+  f.nav.requestRaidConnectivity=()=>{heuristic++;return true;};
+  assert.deepEqual(targetFor(f.state,f.animal,f.nav),{unknown:true});
+  assert.equal(exact,1);
+  assert.equal(heuristic,0);
+  assert.equal(f.routes(),0);
+});
+
+test('an unknown native result without a frontier retains bounded heuristic demand',()=>{
+  const f=fixture();
+  let heuristic=0;
+  f.nav.intentTaskPlanner={planAttackCrop:()=>({status:'unknown'})};
+  f.nav.requestRaidConnectivity=()=>{heuristic++;return true;};
+  assert.deepEqual(targetFor(f.state,f.animal,f.nav),{unknown:true});
+  assert.equal(heuristic,1);
+  assert.equal(f.routes(),0);
+});
+
 test('unloaded crop components stay grouped instead of becoming one query per plant',()=>{
   const f=fixture();f.nav.regionFor=()=>null;
   assert.deepEqual(targetFor(f.state,f.animal,f.nav),{unknown:true});
