@@ -273,10 +273,67 @@ a confirmed wall on one of its waypoints, and checks that Wild Engine
 invalidates the old route handle and marks the same retreat intention as
 needing a new route without acquiring an attack lease. Removing the wall
 allows a fresh native route and a distinct handle. All four native animal
-intention tests pass locally against the pinned candidate WASM. Worker return
-routes already retain a successful path during ordinary movement, but their
-planning and exceptional fallback still run through the JavaScript adapter;
-they have not been claimed as migrated to native intention ownership.
+intention tests pass locally against the pinned candidate WASM.
+
+## Opt-in native worker home route stage
+
+The experimental planner now pins a task-free native route from a worker's
+confirmed flight or return transition to that worker's existing village
+entry. Movement retains the route without requesting another native plan.
+Confirmed topology changes validate the remaining route; an affected route
+is replaced from the worker's live position. `blocked`, `unknown`, or an
+unavailable native intention hands control to the existing bounded JavaScript
+return recovery, without changing speed, collisions, gates, staffing or
+contract rules. Saved remaining routes are validated against native static
+collisions before a new session-scoped handle is issued.
+
+CI run `38842499135` built and passed the candidate WASM (SHA-256
+`ff719cfebd15fe0aa11a4ed85abc2912f35527e84e635699429489660a1fd8e7`).
+The focused native suite passed locally with 63 tests. A later directed
+save/load fixture also passed: a worker continuing a native home route after
+restoration reached the same serialized state as uninterrupted movement, with
+no additional native plan. The ordinary return-route and actor-motion tests
+passed 33/33; the web build passed with the bundled candidate.
+A directed native test also builds a wall on a restored home-route endpoint,
+confirms that its old handle becomes invalid, removes the wall and obtains a
+new physical route.
+
+Two continuous Sabana/712 seven-night technical pilots using the new binary
+matched every daily hash, terminal state and raid receipt. The instrumented
+run (source `d406b9e8`) took 104.45 s, completed all seven raids with verified
+coverage and no observer issues, and ended with 118 living crops, 642 coins
+and one operational center. It made 103 native home-route requests; all 103
+found routes, none used the fallback, and no route was restored because the
+pilot did not reload. The first run took 102.52 s. Compared with the previous
+native-retreat-only pilot, the first six daily hashes matched; night seven
+diverged to 118 rather than 121 crops. This is a legitimate navigation
+trajectory difference, not evidence of a balance or speed improvement.
+The full instrumented report is archived as `sabana7-native-home.json.gz`.
+
+A Gran Cañón/123 seven-night pilot on the same WASM and source completed in
+151.67 s. All seven daily hashes matched the earlier native-retreat-only
+Canyon run. The seven raid receipts were verified with no issues or lost
+coverage; the terminal state had 44 living crops, 330 coins and one
+operational center. Wild Engine found all 85 requested worker-home routes,
+with zero JavaScript fallbacks in this sample. The complete report is
+`canyon7-native-home.json.gz`. This covers a difficult early terrain case,
+but does not certify every Canyon access or longer campaigns.
+
+The sustained Sabana/712 pilot on source `d406b9e8` completed all 14
+requested nights in 323.13 s with 51 living crops, 567 coins, one operational
+center and no game-over result. Its first seven daily state hashes match the
+instrumented seven-night pilot. All 14 raid receipts had verified coverage,
+no observer issues and no lost coverage. It requested 249 native worker-home
+routes; all 249 were found, with no JavaScript fallback or restore in this
+continuous run. The full report, including exact source and binary hashes,
+daily state hashes and timings, is `sabana14-native-home.json.gz`. This is
+evidence of sustained technical progress, not a controlled speed comparison
+or a balance acceptance result.
+
+This is an opt-in stage. It does not yet establish long-campaign stability,
+full native ownership of worker tasks or animal target policy, or successful
+native home routes in every biome. The bounded JavaScript recovery remains
+necessary for unresolved or exceptional return paths.
 
 ## Next integration gates
 
