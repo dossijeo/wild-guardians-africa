@@ -592,3 +592,7 @@ all resident chunks on each such restore. See
 [`manglares-day10-quote-profile.md`](manglares-day10-quote-profile.md) for
 the raw profile, attribution and differential checks required before a
 localized C++ update can replace that global rebuild.
+
+The [reservation reconciliation regression](reservation-reconciliation-regression.md)
+records a legacy direct-mutation failure found while auditing the stacked
+branches, its targeted fix, and the remaining full-suite triage boundary.

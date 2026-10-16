@@ -34,16 +34,33 @@ const reservationReconciliation=new WeakMap();
 const RESERVATION_TARGET_EVENTS=new Set(['CropDestroyed','CropPicked',
   'StructureHit','StructureRuined','WallRemoved']);
 function reconcileRaidReservationsOnChange(s,nav){
+  // Legacy callers can still replace an animal's target directly without
+  // emitting an event. Detect a stale lease, but preserve the reservation
+  // object on an unchanged tick. Native intentions use confirmed events.
+  const staleLegacyLease=!nav.intentTaskPlanner&&s.raid.animals.some(animal=>
+    animal.targetId&&animal.status!=='attacking'&&
+    (!animal.reservation||s.raid.reservations[animal.reservation]!==animal.id));
   let entry=reservationReconciliation.get(s);
   if(!entry){
-    entry={raid:null,nav:null,navVersion:null,dirty:true};
+    // A versioned save already contains committed claims in their original
+    // insertion order. Rebuilding them on the first post-load tick changes
+    // the serialized state even when ownership is identical.
+    const restored=s.raid.targetReservationVersion===2&&
+      s.raid.animals.every(animal=>{
+        if(!animal.targetId||animal.status==='attacking')return true;
+        const target=raidTarget(s,animal.targetId);
+        return !!target&&animal.reservation===targetReservationKey(target,animal)&&
+          s.raid.reservations[animal.reservation]===animal.id;
+      });
+    entry={raid:restored?s.raid:null,nav:restored?nav:null,
+      navVersion:restored?nav.version:null,dirty:!restored};
     observeGameEvents(s,event=>{
       if(RESERVATION_TARGET_EVENTS.has(event.type))entry.dirty=true;
     });
     reservationReconciliation.set(s,entry);
   }
   if(entry.raid===s.raid&&entry.nav===nav&&entry.navVersion===nav.version&&
-    !entry.dirty&&s.raid.targetReservationVersion===2)return;
+    !entry.dirty&&!staleLegacyLease&&s.raid.targetReservationVersion===2)return;
   reconcileTargetReservations(s,(state,animal)=>release(state,animal,nav));
   entry.raid=s.raid;entry.nav=nav;entry.navVersion=nav.version;entry.dirty=false;
 }
