@@ -62,3 +62,21 @@ save/load preserves the result. The preview restores confirmed geometry,
 money and an existing route handle before the repair commits. This is a
 directed correction; a sustained campaign and multi-biome tests remain
 necessary before closing the defect.
+
+## Sustained replay after correction
+
+A Sabana/712 replay on source `b1e2a89d` completed 19 verified raids and
+reached an economic defeat at the dawn of day 20. The preserved report is
+`sabana20-repair-gate-fix.json.gz`. All 288 native worker-home requests found
+a route: zero JS fallbacks, versus 16 blocked fallbacks in the previous run.
+The state first diverged on day 17, as expected after changing how ruined
+walls are repaired.
+
+One center remained operational at defeat; no crops were alive and 32 coins
+remained. The existing dawn minimum was 35 coins (30 hiring reserve plus the
+cheapest 5-coin seed). This was not a last-center-destroyed defeat. The
+decision to exclude potential proceeds from selling walls remains unchanged.
+The replay took 422 seconds versus 394 seconds for the preceding run. Because
+the physical trajectories diverged, this does not isolate the cost of the
+repair check or establish a performance regression. Multi-biome validation
+and cost profiling remain necessary before closing the defect.
