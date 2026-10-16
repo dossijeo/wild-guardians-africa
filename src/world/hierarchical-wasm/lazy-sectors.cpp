@@ -1,8 +1,12 @@
 #include <algorithm>
+#include <cmath>
 #include <cstdint>
 #include <unordered_map>
 #include <vector>
 #include "local-enclosure-cut.h"
+
+extern "C" float spatial_static_object_clearance(float,float,float);
+extern "C" float spatial_min_animal_radius();
 
 // Sparse sector/route proof. Unknown sectors are never classified as blocked.
 // The movement engine remains responsible for physical motion.
@@ -390,7 +394,34 @@ int32_t* lazy_cut_seeds_ptr(int count){
   if(count<1||count>256)return nullptr;
   cutSeeds.resize(size_t(count)*2);return cutSeeds.data();
 }
-int lazy_local_crop_cut(int minX,int minZ,int maxX,int maxZ,int seedCount,int padding){
+bool cutFaceCoveredBySolid(int x,int z,int nx,int nz,float radius){
+  const float safe=radius-.0001f;
+  if(!(safe>0)||!std::isfinite(safe))return false;
+  const float middleX=(x+nx)*.5f,middleZ=(z+nz)*.5f;
+  const float ax=x!=nx?middleX:middleX-.5f;
+  const float az=x!=nx?middleZ-.5f:middleZ;
+  const float bx=x!=nx?middleX:middleX+.5f;
+  const float bz=x!=nx?middleZ+.5f:middleZ;
+  const auto clearance=[&](float px,float pz){
+    return spatial_static_object_clearance(px,pz,radius+1);
+  };
+  const float first=clearance(ax,az),last=clearance(bx,bz);
+  const auto covered=[&](auto&& self,float px,float pz,float qx,float qz,
+      float a,float b,int depth)->bool{
+    if(!std::isfinite(a)||!std::isfinite(b)||a<0||b<0||
+        a>=safe||b>=safe)return false;
+    const float length=std::hypot(qx-px,qz-pz);
+    if((a+b+length)*.5f<safe)return true;
+    if(depth>=12)return false;
+    const float mx=(px+qx)*.5f,mz=(pz+qz)*.5f;
+    const float mid=clearance(mx,mz);
+    return self(self,px,pz,mx,mz,a,mid,depth+1)&&
+      self(self,mx,mz,qx,qz,mid,b,depth+1);
+  };
+  return covered(covered,ax,az,bx,bz,first,last,0);
+}
+int runLocalCropCut(int minX,int minZ,int maxX,int maxZ,int seedCount,
+    int padding,float conservativeRadius){
   cutEdges.clear();cutBoundary.clear();active().cutFlow=active().cutCells=0;
   if(seedCount<1||size_t(seedCount)*2!=cutSeeds.size())return -2;
   constexpr int profiles[]={0,2,3,4,5};
@@ -416,9 +447,12 @@ int lazy_local_crop_cut(int minX,int minZ,int maxX,int maxZ,int seedCount,int pa
       if(result<0)return -1;
       any|=result;
     }
+    if(conservativeRadius>0)return 1;
     return any;
   };
   const auto step=[&](int x,int z,int nx,int nz){
+    if(conservativeRadius>0)
+      return cutFaceCoveredBySolid(x,z,nx,nz,conservativeRadius)?0:1;
     const int direction=nx>x?0:nx<x?1:nz>z?2:3;
     int any=0;
     for(int profile:profiles){
@@ -446,6 +480,16 @@ int lazy_local_crop_cut(int minX,int minZ,int maxX,int maxZ,int seedCount,int pa
     cutBoundary.insert(cutBoundary.end(),
       {edge.outsideX,edge.outsideZ,edge.insideX,edge.insideZ});
   return result.status<0?result.status:int(result.edges.size());
+}
+int lazy_local_crop_cut(int minX,int minZ,int maxX,int maxZ,int seedCount,int padding){
+  return runLocalCropCut(minX,minZ,maxX,maxZ,seedCount,padding,0);
+}
+int lazy_local_crop_cut_conservative(int minX,int minZ,int maxX,int maxZ,
+    int seedCount,int padding){
+  const float smallestRadius=spatial_min_animal_radius();
+  if(!(smallestRadius>0)||!std::isfinite(smallestRadius))return -1;
+  return runLocalCropCut(minX,minZ,maxX,maxZ,seedCount,padding,
+    smallestRadius);
 }
 const int32_t* lazy_local_crop_cut_ptr(){return cutEdges.data();}
 const int32_t* lazy_local_crop_cut_boundary_ptr(){return cutBoundary.data();}

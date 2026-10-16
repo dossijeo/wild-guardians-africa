@@ -427,6 +427,42 @@ has already been established as continuous. The minimum cut itself remains
 viable as a search strategy, but this particular 1 m connectivity graph is not
 yet a sufficient physical certificate.
 
+### Conservative face-graph prototype
+
+An isolated `lazy_local_crop_cut_conservative` variant keeps the same local
+min-cut but no longer equates an unstandable cell centre with a completely
+blocked square. Every resident square is provisionally open. An adjacency is
+removed only if the native distance to animal-solid geometry proves the
+*entire shared face* forbidden to the smallest animal. It uses the same
+1-Lipschitz bound and bounded subdivision as the QA certificate. Natural
+terrain without such a proof stays open in this graph; this may overbuild but
+cannot claim a water/cliff closure that it has not demonstrated. Missing
+resident sectors still return `unknown`. This is an optional experimental
+entry point, not the distributed navigation graph or production advisor.
+
+On the identical Sabana/712 day-3 serialized state, the variant finds 27
+crossings and quotes 14 placeable modules for **140 coins**, with no omitted
+pieces and no suppressed static object. Its quoted preview gives a continuous
+static-solid certificate for **all 142 segments** of the crop-side boundary;
+the separate native movement spot-check found **0 locally passable midpoints**
+for each of the five species. All 66 crops were reachable from their work
+centre in both directions in this preview. These are stronger, distinct tests:
+the continuous clearance bound, rather than the midpoint samples, establishes
+that particular boundary condition. The game's existing group classifier
+still says `unknown` for four species because its crop-coordinate connector
+cannot anchor some plants; it reports `protected` for lions. Therefore this
+prototype is not yet wired into the bot or described as fully game-accepted.
+The raw diagnostic is `sabana-cut-conservative-d3.json`.
+
+An old/conservative/conservative/old comparison on that same state and final
+candidate WASM recorded native cut times of 6.79/1.61 ms versus 8.73/7.72 ms,
+respectively. The physical quote/preview costs were 129–161 ms versus
+176–179 ms. This is a measured cost for the stronger abstraction, not an
+overall campaign speedup. The four-arm data are in
+`sabana-cut-conservative-abba-d3.json`. The output still needs tests with
+automatic doors, multiple centres, sector streaming, construction/destruction
+events and other biomes before it can replace the current advisor.
+
 This also explains why checking only the four exposed wall ends is insufficient
 for this candidate: a mixed wall/building/terrain closure needs evidence that
 the intervening obstacle chain stays impassable. A self-closing wall face with

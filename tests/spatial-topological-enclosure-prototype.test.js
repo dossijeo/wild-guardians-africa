@@ -230,10 +230,12 @@ test('native five-profile cut is read-only, deterministic and reports missing se
       assert.ok(Number.isNaN(wasm.spatial_static_object_clearance(500,500,4)));
       assert.ok(Number.isNaN(wasm.spatial_static_object_clearance(clearX,clearZ,9)));
       const stateBefore=serialize(state),updates=wasm.lazy_sector_updates();
-      const query=(x,z)=>{
+      const query=(x,z,conservative=false)=>{
         const pointer=wasm.lazy_cut_seeds_ptr(1);
         new Int32Array(wasm.memory.buffer,pointer,2).set([x,z]);
-        const count=wasm.lazy_local_crop_cut(x-12,z-12,x+13,z+13,1,2);
+        const count=conservative?wasm.lazy_local_crop_cut_conservative(
+          x-12,z-12,x+13,z+13,1,2):
+          wasm.lazy_local_crop_cut(x-12,z-12,x+13,z+13,1,2);
         const boundaryCount=count>=0?wasm.lazy_local_crop_cut_boundary_count():0;
         return {count,edges:count>=0?Array.from(new Int32Array(wasm.memory.buffer,
           wasm.lazy_local_crop_cut_ptr(),count*4)):[],
@@ -244,9 +246,14 @@ test('native five-profile cut is read-only, deterministic and reports missing se
       assert.ok(first.count>0);
       assert.ok(first.boundary.length>first.edges.length);
       assert.deepEqual(again,first);
+      const conservative=query(-13,-13,true);
+      assert.ok(conservative.count>0);
+      assert.deepEqual(query(-13,-13,true),conservative);
+      assert.ok(conservative.boundary.length>=conservative.edges.length);
       assert.equal(wasm.lazy_sector_updates(),updates);
       assert.equal(session.topologySource.revision(),topology);
       assert.equal(serialize(state),stateBefore);
       assert.equal(query(500,500).count,-1);
+      assert.equal(query(500,500,true).count,-1);
     }finally{session.dispose();}
   });

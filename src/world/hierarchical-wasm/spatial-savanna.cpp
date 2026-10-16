@@ -1554,6 +1554,17 @@ int spatial_select_nav_profile_index(int index){
   selectProfile(index);
   return navReady?lazy_loaded_sectors():0;
 }
+float spatial_min_animal_radius(){
+  saveProfile();
+  float radius=std::numeric_limits<float>::infinity();
+  for(const int profile:{0,2,3,4,5}){
+    if(!navProfiles[profile]||!navProfiles[profile]->ready||
+        !(navProfiles[profile]->radius>0))
+      return std::numeric_limits<float>::quiet_NaN();
+    radius=std::min(radius,navProfiles[profile]->radius);
+  }
+  return radius;
+}
 int spatial_select_nav_profile(int worker){
   return spatial_select_nav_profile_index(worker?1:0);
 }

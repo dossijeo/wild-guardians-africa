@@ -20,6 +20,8 @@ const biome=process.argv[2]??'sabana',day=Number(process.argv[3]??3);
 const output=process.argv[4]??`.cache/topological-${biome}-d${day}.json`;
 const breach=process.argv[5]==='breach';
 const cutOnly=process.argv.includes('--cut-only');
+const conservativeCut=process.argv.includes('--conservative-cut');
+const compareCut=process.argv.includes('--compare-cut');
 if(!Number.isInteger(day)||day<1||day>30)throw RangeError('Invalid target day');
 const wasmPath=process.env.WILD_ENGINE_SPATIAL_SERVICES_WASM??
   'src/world/hierarchical-wasm/spatial-savanna.wasm';
@@ -102,7 +104,7 @@ function inspect(state,nav){
       gaps:quote.blockedPieces.length+quote.blockedCrops.length,
       gates:quote.gates,geometryMs,quoteMs,validationMs};
   };
-  const cut=()=>{
+  const cut=(useConservative=conservativeCut)=>{
     if(typeof wasm.lazy_local_crop_cut!=='function')return {status:'not-built'};
     const cropTargets=group.cropIds.map(id=>state.plants.find(item=>item.id===id))
       .filter(Boolean);
@@ -118,7 +120,9 @@ function inspect(state,nav){
     const box=[Math.floor(b.minX-margin),Math.floor(b.minZ-margin),
       Math.ceil(b.maxX+margin)+1,Math.ceil(b.maxZ+margin)+1];
     const started=performance.now();
-    const count=wasm.lazy_local_crop_cut(...box,cropPoints.length,2);
+    const count=useConservative?wasm.lazy_local_crop_cut_conservative(...box,
+      cropPoints.length,2):wasm.lazy_local_crop_cut(...box,
+      cropPoints.length,2);
     const topologicalMs=performance.now()-started;
     const edges=count>=0?Array.from(new Int32Array(wasm.memory.buffer,
       wasm.lazy_local_crop_cut_ptr(),count*4)):[];
@@ -178,17 +182,39 @@ function inspect(state,nav){
       const workerTargets=cutOnly?[...new Map(state.plants.filter(item=>
         item.alive&&group.cropIds.includes(item.id)).map(item=>
         [item.centerId,item])).values()]:[];
-      const workerAccess=()=>workerTargets.map(crop=>{
+      const workerAccess=(targets=workerTargets)=>targets.map(crop=>{
         const center=state.structures.find(item=>item.id===crop.centerId);
         const village=state.villages.find(item=>item.id===center?.villageId);
-        if(!village)return {centerId:crop.centerId,status:'unknown'};
-        try{return {centerId:crop.centerId,status:nav.path(
+        if(!village)return {cropId:crop.id,centerId:crop.centerId,
+          status:'unknown'};
+        try{return {cropId:crop.id,centerId:crop.centerId,status:nav.path(
           village.entry??village,crop,.28,null,true)?'reachable':'blocked'};}
         catch(error){
           if(error.name!=='SpatialChunkUnavailable')throw error;
-          return {centerId:crop.centerId,status:'unknown'};
+          return {cropId:crop.id,centerId:crop.centerId,status:'unknown'};
         }
       });
+      const workerAccessAll=()=>{
+        const rows=workerAccess(cropTargets);
+        const counts={reachable:0,blocked:0,unknown:0};
+        for(const row of rows)counts[row.status]++;
+        const returns={reachable:0,blocked:0,unknown:0};
+        const returnFailures=[];
+        for(const crop of cropTargets){
+          const center=state.structures.find(item=>item.id===crop.centerId);
+          const village=state.villages.find(item=>item.id===center?.villageId);
+          let status='unknown';
+          if(village)try{status=nav.path(crop,village.entry??village,
+            .28,null,true)?'reachable':'blocked';}
+          catch(error){if(error.name!=='SpatialChunkUnavailable')throw error;}
+          returns[status]++;
+          if(status!=='reachable'&&returnFailures.length<8)
+            returnFailures.push({cropId:crop.id,status});
+        }
+        return {outbound:counts,return:returns,
+          examples:rows.filter(row=>row.status!=='reachable').slice(0,8),
+          returnFailures};
+      };
       const beforeWorkerAccess=cutOnly?workerAccess():undefined;
       const gridProbe=()=>{
         const [sx,sz]=cropPoints[0],bySpecies={};
@@ -304,6 +330,7 @@ function inspect(state,nav){
         group:bridge.getUnprotectedCropGroups({includeProtected:true})
           .find(item=>item.id===group.id),
         workerAccess:cutOnly?workerAccess():undefined,
+        workerAccessAll:cutOnly&&useConservative?workerAccessAll():undefined,
         gridProbe:cutOnly?gridProbe():undefined,
         staticBoundary,
         boundaryGapScan:cutOnly?boundaryGapScan():undefined,
@@ -325,6 +352,7 @@ function inspect(state,nav){
         placedJunctions,
         workerAccess:cutOnly?{before:beforeWorkerAccess,
           after:preview.workerAccess}:undefined,
+        workerAccessAll:preview.workerAccessAll,
         gridProbe:preview.gridProbe,
         staticBoundary:preview.staticBoundary,
         boundaryGapScan:preview.boundaryGapScan,
@@ -334,6 +362,7 @@ function inspect(state,nav){
         blockedCrops:quote.blockedCrops.length};
     }
     return {status:count===-1?'unknown':count===-2?'unsupported':'proposed',
+      conservativeCut:useConservative,
       box,topologicalMs,conversionMs,validationMs,cutEdges:count,
       boundarySegments:cutOnly?boundaryCount:undefined,
       flow,cells,
@@ -355,9 +384,12 @@ function inspect(state,nav){
     return total+wasm.lazy_sector_updates();
   };
   const rows=[];
-  for(const name of (cutOnly?['cut']:['old','hull','cut','cut','hull','old'])){
+  for(const name of (compareCut?['cut','cut-conservative',
+    'cut-conservative','cut']:cutOnly?['cut']:
+    ['old','hull','cut','cut','hull','old'])){
     const before={...calls},beforeUpdates=updates();
-    const started=performance.now(),result=name==='old'?old():name==='hull'?hull():cut();
+    const started=performance.now(),result=name==='old'?old():
+      name==='hull'?hull():cut(name==='cut-conservative'||conservativeCut);
     rows.push({name,ms:performance.now()-started,...(name==='old'?{
       status:result.status,modules:result.modules?.length,cost:result.cost,
       gaps:result.gaps?.length}:result),
