@@ -693,6 +693,19 @@ lie fully on water/lava at `(100.5,-9.5)`, `(98.5,-9.5)`, `(96.5,-9.5)`,
 stretch or prove that the water itself closes it; simply omitting the pieces
 is insufficient.
 
+The native cut intentionally does not count water as a certified barrier.
+In conservative mode it treats each resident cell as potentially passable
+unless a continuous static solid covers its face. In buildable mode it gives
+a high cost to faces whose sampled footprint is wholly wet, seeks a legal
+detour and returns `unknown` when none is found in the window.
+`terrainValid()` disallows fluid for animal profiles, but the 9-by-3 samples
+in `cutFaceFullyFluid()` establish sampled wetness, not continuous coverage
+of a face and its joins. Promoting those samples to a closure certificate
+could falsely protect a crop through a narrow dry gap. A water-backed
+closure needs a conservative continuous wetness bound from the native
+generator or a physically validated local interval; until then this
+candidate must remain `unknown`.
+
 ### Local construction and destruction regression
 
 The focused WASM test now encloses a known resident seed with four native

@@ -424,6 +424,8 @@ bool cutFaceCoveredBySolid(int x,int z,int nx,int nz,float radius){
 // A face wholly covered by fluid cannot host a wall centered on that face.
 // This is a conservative proposal hint, not a replacement for wallPlacement:
 // resampled modules can extend beyond a one-metre face and need a final quote.
+// These finite wetness samples must never certify water as an impassable
+// closure. A narrow dry gap between samples could remain traversable.
 int cutFaceFullyFluid(int x,int z,int nx,int nz){
   const float midX=(x+nx)*.5f,midZ=(z+nz)*.5f;
   for(int i=0;i<=8;i++)for(const float offset:{-.22f,0.f,.22f}){
