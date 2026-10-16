@@ -258,6 +258,13 @@ test('native five-profile cut is deterministic and responds to local solid chang
       assert.equal(serialize(state),stateBefore);
       assert.equal(query(500,500).count,-1);
       assert.equal(query(500,500,'conservative').count,-1);
+      assert.equal(session.stream.releaseChunk(-1,-1),1);
+      loaded.delete('-1,-1');
+      assert.equal(query(-13,-13,'conservative').count,-1,
+        'A missing crop-side sector cannot certify an enclosure');
+      session.stream.plan(jobs);await session.stream.whenIdle();
+      assert.deepEqual(query(-13,-13,'conservative'),conservative,
+        'Reloading the same sector must restore the deterministic cut');
       const ring=[
         wasm.spatial_add_barrier(-13,-17,5,.4,0),
         wasm.spatial_add_barrier(-13,-9,5,.4,0),
@@ -269,6 +276,13 @@ test('native five-profile cut is deterministic and responds to local solid chang
         const closed=query(-13,-13,'conservative');
         assert.ok(closed.count<conservative.count,
           'A new solid enclosure must reduce the proposed cut');
+        assert.equal(session.stream.releaseChunk(-1,-1),1);
+        loaded.delete('-1,-1');
+        assert.equal(query(-13,-13,'conservative').count,-1,
+          'A closed loop cannot remain certified across a missing seed sector');
+        session.stream.plan(jobs);await session.stream.whenIdle();
+        assert.deepEqual(query(-13,-13,'conservative'),closed,
+          'The same loop must reappear after its sector is restored');
         assert.equal(wasm.spatial_remove_barrier(ring[1]),1);
         ring[1]=0;
         const opened=query(-13,-13,'conservative');

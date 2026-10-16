@@ -529,8 +529,11 @@ reopens the cut. This tests the confirmed game-to-WASM wall mirror rather than
 only direct native barrier insertion. Serializing that built state and creating
 a fresh spatial session reconstructs the same zero-edge local cut. It is a
 local graph response, not a certificate that every crop in that compound is
-protected. Unloading and reloading sectors during the same session remain
-untested.
+protected. In the same-session Sabana test, unloading the seed's resident
+sector changes the cut result to `unknown` both before and after adding a
+closed solid loop; reloading that sector restores the exact corresponding
+edge and boundary lists. This covers one targeted residency transition, not
+all patterns of sector eviction or partially resident contours.
 
 This also explains why checking only the four exposed wall ends is insufficient
 for this candidate: a mixed wall/building/terrain closure needs evidence that
