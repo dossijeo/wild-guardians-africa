@@ -15,8 +15,7 @@ import * as Game from '../../src/simulation/game.js';
 const wasmPath=process.argv[2]??'src/world/hierarchical-wasm/spatial-savanna.wasm';
 const biome=process.argv[3]??'sabana';
 const siteMode=process.argv[4]??'corner';
-const weightedCut=process.argv.includes('--weighted-cut');
-const conservativeCut=weightedCut||process.argv.includes('--conservative-cut');
+const conservativeCut=process.argv.includes('--conservative-cut');
 const padding=Number(process.argv[7]??2);
 if(!Number.isInteger(padding)||padding<0||padding>8)throw RangeError('Invalid crop padding');
 const connectorLimit=Number(process.argv[8]??8);
@@ -107,9 +106,7 @@ try{
     const margin=cutMargin,minX=Math.floor(site.x-margin),
       minZ=Math.floor(site.z-margin);
     const maxX=Math.ceil(site.x+margin)+1,maxZ=Math.ceil(site.z+margin)+1;
-    const result=weightedCut?wasm.lazy_local_crop_cut_weighted(
-      minX,minZ,maxX,maxZ,1,padding):conservativeCut?
-      wasm.lazy_local_crop_cut_conservative(
+    const result=conservativeCut?wasm.lazy_local_crop_cut_conservative(
       minX,minZ,maxX,maxZ,1,padding):wasm.lazy_local_crop_cut(
       minX,minZ,maxX,maxZ,1,padding);
     const edges=result>=0?Array.from(new Int32Array(wasm.memory.buffer,
@@ -160,7 +157,7 @@ try{
     return {status:result<0?result===-1?'unknown':'invalid':
       quote&&(quote.blockedPieces.length||quote.blockedCrops.length)?
         'partial':'proposed',
-      conservativeCut,weightedCut,cutEdges:result,flow,cells,edges,cutMs,convertMs,validationMs,
+      conservativeCut,cutEdges:result,flow,cells,edges,cutMs,convertMs,validationMs,
       boundarySegments:conservativeCut?boundaryCount:undefined,staticBoundary,
       workerRoutesBefore,workerRoutes,
       strokes:shape?.strokes.length,estimatedModules:shape?.slots.length,
@@ -195,7 +192,6 @@ try{
         modules:Array.isArray(result.modules)?result.modules.length:result.modules,
         cost:result.cost,
         conservativeCut:result.conservativeCut,
-        weightedCut:result.weightedCut,
         cutEdges:result.cutEdges,flow:result.flow,cells:result.cells,
         boundarySegments:result.boundarySegments,
         staticBoundary:result.staticBoundary,
@@ -220,7 +216,7 @@ try{
     }
     console.log(JSON.stringify({kind:'ABBA',biome,site,padding,connectorLimit,
       cutMargin,
-      conservativeCut,weightedCut,rows,
+      conservativeCut,rows,
       memoryBytes:wasm.memory.buffer.byteLength}));
   }
 }finally{session.dispose();}

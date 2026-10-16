@@ -506,6 +506,8 @@ The graph must distinguish naturally impassable terrain from traversable but
 unbuildable terrain and choose constructible wall placements when turning a
 cut into modules. Merely making an illegal face expensive cannot guarantee a
 legal cut when the local topology still requires crossing such faces.
+The weighted function was removed from the active prototype after this
+measurement; its exact source remains in commit `46169800` for reproduction.
 
 This also explains why checking only the four exposed wall ends is insufficient
 for this candidate: a mixed wall/building/terrain closure needs evidence that

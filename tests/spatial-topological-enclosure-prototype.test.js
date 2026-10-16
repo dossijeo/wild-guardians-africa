@@ -233,9 +233,7 @@ test('native five-profile cut is read-only, deterministic and reports missing se
       const query=(x,z,variant='old')=>{
         const pointer=wasm.lazy_cut_seeds_ptr(1);
         new Int32Array(wasm.memory.buffer,pointer,2).set([x,z]);
-        const count=variant==='weighted'?wasm.lazy_local_crop_cut_weighted(
-          x-12,z-12,x+13,z+13,1,2):
-          variant==='conservative'?wasm.lazy_local_crop_cut_conservative(
+        const count=variant==='conservative'?wasm.lazy_local_crop_cut_conservative(
             x-12,z-12,x+13,z+13,1,2):
           wasm.lazy_local_crop_cut(x-12,z-12,x+13,z+13,1,2);
         const boundaryCount=count>=0?wasm.lazy_local_crop_cut_boundary_count():0;
@@ -252,14 +250,10 @@ test('native five-profile cut is read-only, deterministic and reports missing se
       assert.ok(conservative.count>0);
       assert.deepEqual(query(-13,-13,'conservative'),conservative);
       assert.ok(conservative.boundary.length>=conservative.edges.length);
-      const weighted=query(-13,-13,'weighted');
-      assert.ok(weighted.count>0);
-      assert.deepEqual(query(-13,-13,'weighted'),weighted);
       assert.equal(wasm.lazy_sector_updates(),updates);
       assert.equal(session.topologySource.revision(),topology);
       assert.equal(serialize(state),stateBefore);
       assert.equal(query(500,500).count,-1);
       assert.equal(query(500,500,'conservative').count,-1);
-      assert.equal(query(500,500,'weighted').count,-1);
     }finally{session.dispose();}
   });
