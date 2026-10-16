@@ -117,3 +117,19 @@ route planner. We did not replace the physical route proof with it: doing so
 without cross-algorithm certification could miss a valid access. The next
 optimization should remove or share native route work while preserving that
 proof, not weaken the worker-access invariant.
+
+## Gran Cañón sustained replay
+
+A 14-night request on Gran Cañón/123 used source `b5284852`, the pinned WASM
+above, `good` policy, native spatial advice and expanding defenses. It ended
+in a real dawn defeat on day 14 after 13 completed nights, with one
+operational center, zero live crops and 32 coins; the 35-coin empty-farm
+minimum was not met. All 13 raid receipts were verified with zero observer
+issues. All 107 native worker-home requests found routes and none fell back
+to JS. The full report, including daily finance, hashes, raids and defense
+history, is `canyon14-repair-gate-b5284852.json.gz`. The run took 220.28 s.
+It confirms that the repaired-access path did not recreate the trapped-worker
+symptom in this second biome; it does not establish 14-night survival or
+acceptable balance. The report records substantial crop losses after the
+introductory nights and partial defensive investment, which belong in the
+separate policy/balance analysis rather than a navigation fix.
