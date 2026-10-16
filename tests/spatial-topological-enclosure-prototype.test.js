@@ -3,9 +3,10 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
 import {deserialize,serialize} from '../src/persistence/snapshots.js';
+import {createPlant} from '../src/simulation/crops.js';
 import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
-import {cropClearanceHull,cutEdgesToStrokes,enclosureJunctions,inspectNaturalJunctions,
+import {approximateCutModules,cropClearanceHull,cutEdgesToStrokes,enclosureJunctions,inspectNaturalJunctions,
   inspectPlacedNaturalJunctions,inspectSelfClosedQuote,
   inspectStaticCutBoundary,junctionBlocksSmallestAnimal,
   placedEnclosureJunctions,
@@ -351,5 +352,46 @@ test('native cut observes a paid wall stroke and its removal',
       assert.ok(reopened,'Removing the paid stroke must eventually reopen the cut');
       assert.deepEqual(cut(),before,
         'After removing all five walls the original graph proposal is restored');
+    }finally{session.dispose();}
+  });
+
+test('Gran Cañón cut cannot certify a closure with omitted fluid modules',
+  {skip:!module&&'Build the experimental Wild Engine WASM first'},async()=>{
+    const state=Game.newGame({seed:712,biome:'gran-canon',culture:'mapungubwe',
+      slotId:'topological-fluid-gap-test'});
+    state.villages[0].buildings=villageLayout(pack,0,0);
+    state.structures.push({id:'center-1',kind:'center',x:0,z:0,
+      culture:'mapungubwe',villageId:'village-1',status:'intact',
+      hp:600,maxHp:600});
+    const site={x:-2,z:-8};
+    state.plants.push(createPlant('fluid-gap-crop','mijo',site.x,site.z,
+      'center-1'));
+    const loaded=new Map(),session=createSpatialGameSession(module,state,{
+      loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+    try{
+      const jobs=new Map();
+      for(let z=-1;z<=1;z++)for(let x=-1;x<=1;x++)jobs.set(`${x},${z}`,
+        {cx:x,cz:z,score:Math.hypot(x,z)});
+      session.stream.plan(jobs);await session.stream.whenIdle();
+      const nav=createSpatialNavigationMovement(session,state);
+      for(const species of ['warthog','hyena','buffalo','lion','rhino'])
+        session.actorRegionsBatch([site],{worker:false,species});
+      const wasm=session.core.wasm,before=serialize(state);
+      new Int32Array(wasm.memory.buffer,wasm.lazy_cut_seeds_ptr(1),2)
+        .set([site.x,site.z]);
+      const count=wasm.lazy_local_crop_cut_conservative(-14,-20,11,5,1,2);
+      assert.ok(count>0,'Expected a candidate cut, not a certified enclosure');
+      const edges=Array.from(new Int32Array(wasm.memory.buffer,
+        wasm.lazy_local_crop_cut_ptr(),count*4));
+      const candidate=approximateCutModules(edges,state.structures,'zarzas',10);
+      assert.equal(candidate.strokes.length,3);
+      const quote=Game.quoteWallChain(state,'zarzas',candidate.strokes,nav,
+        {smooth:false,snap:false});
+      assert.deepEqual(quote.blockedPieces.map(p=>[p.x,p.z]),
+        [[-4.5,-5.5],[-4.5,-7.5]]);
+      assert.ok(quote.blockedPieces.every(p=>nav.wallPlacement(p).fluid));
+      assert.deepEqual(inspectSelfClosedQuote(quote,state.structures,[site]),
+        {status:'open',reason:'omitted-module'});
+      assert.equal(serialize(state),before,'The rejected quote is read-only');
     }finally{session.dispose();}
   });

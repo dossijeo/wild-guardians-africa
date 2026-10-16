@@ -538,6 +538,13 @@ cut into modules. Merely making an illegal face expensive cannot guarantee a
 legal cut when the local topology still requires crossing such faces.
 The weighted function was removed from the active prototype after this
 measurement; its exact source remains in commit `46169800` for reproduction.
+The fixed Gran Cañón/712 site `(-2,-8)` is now a native WASM regression: the
+conservative cut produces a three-stroke candidate, but the normal quote
+omits the modules at `(-4.5,-5.5)` and `(-4.5,-7.5)` because both lie on
+water/lava. The structural inspector returns `open/omitted-module`, and the
+read-only query leaves the serialized game unchanged. This protects the
+failure classification while constructibility is incorporated into cut
+selection; it does not claim a replacement legal contour.
 
 ### Local construction and destruction regression
 
