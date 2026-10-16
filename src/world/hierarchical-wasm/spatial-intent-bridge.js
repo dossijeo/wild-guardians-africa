@@ -92,6 +92,7 @@ export function createSpatialIntentBridge(session){
     'nav_intent_replan_pending_routes',
     'nav_intent_request_reroute',
     'nav_intent_attack_route_input_ptr','nav_intent_register_attack',
+    'nav_intent_plan_retreat',
     'nav_intent_register_attack_site',
     'nav_intent_track_wall_opportunities',
     'nav_intent_wall_opportunity_candidates',
@@ -591,6 +592,26 @@ export function createSpatialIntentBridge(session){
       {length:points.length/2},(_,index)=>({
         x:points[index*2],z:points[index*2+1]}))};
   };
+  const planRetreatRoute=animal=>{
+    const exit=animal.exit??animal.spawn;
+    if(!exit)throw Error('Animal has no confirmed retreat exit');
+    session.actorSectorRevision({worker:false,species:animal.species});
+    const status=wasm.nav_intent_plan_retreat(numericId(animal.id),
+      animal.x,animal.z,exit.x,exit.z);
+    if(status===0||status===3)
+      return {status:status===3?'unknown':'blocked'};
+    if(status!==1)throw Error(`Native retreat route rejected: ${status}`);
+    if(wasm.nav_intent_actor(numericId(animal.id))!==1)
+      throw Error('Native retreat route lost its active intention');
+    const values=new Float64Array(wasm.memory.buffer,wasm.nav_intent_actor_ptr(),10);
+    const routeHandle={session:values[4],slot:values[5],generation:values[6]};
+    const points=routePoints(routeHandle);
+    if(!points||points.length<2||points.length%2)
+      throw Error('Native retreat route has no usable points');
+    return {status:'found',routeHandle,path:Array.from(
+      {length:points.length/2},(_,index)=>({
+        x:points[index*2],z:points[index*2+1]}))};
+  };
   const restoreAttackIntents=state=>{
     let committed=0,travelling=0,staleRoutes=0;
     const pendingAttackRouteIds=[];
@@ -656,6 +677,7 @@ export function createSpatialIntentBridge(session){
     findPlantingSite,releasePlantingSite,
     intentChanges,routePoints,projectRouteProgress,processEventBoundary,requestReroute,
     registerAttackIntent,planAttackCrop,planAttackWall,replanAttackRoute,
+    planRetreatRoute,
     reconsiderWallOpportunity,wallOpportunityCandidates,
     markAttackActive:actorId=>wasm.nav_intent_attack_action_active(numericId(actorId))===1,
     finishAttackIntent:actorId=>wasm.nav_intent_attack_finished(numericId(actorId)),
@@ -681,7 +703,8 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     workerPlanCounts=new Map(),animalPlanCounts=new Map(),
     workerPeakPerMinute=new Map(),animalPeakPerMinute=new Map(),
     projectedPositions=new Map(),pendingAttackRoutes=new Map(),
-    tacticalReconsiderations=new Set(),cropProtectionListeners=new Set();
+    tacticalReconsiderations=new Set(),retreatRoutes=new Set(),
+    cropProtectionListeners=new Set();
   let cropProtectionSnapshot=null;
   let pendingTaskEvents=[];
   let pendingWorldEvents=[];
@@ -709,6 +732,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     const restored=bridge.restoreAssignedTasks(state);
     const restoredAnimals=bridge.restoreAttackIntents(state);
     eligible.clear();projectedPositions.clear();pendingAttackRoutes.clear();
+    retreatRoutes.clear();
     tacticalReconsiderations.clear();
     requests.clear();animalRequests.clear();
     workerPlanCounts.clear();animalPlanCounts.clear();
@@ -994,8 +1018,10 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     // whose replacement or waiting state will be delivered below.
     for(const worker of state.workers)if(worker.taskId&&worker.path&&
       worker.status==='walking')worker.pathVersion=version;
-    for(const animal of state.raid?.animals??[])if(animal.targetId&&
-      animal.path&&animal.status!=='attacking')animal.pathVersion=version;
+    for(const animal of state.raid?.animals??[])
+      if(animal.path&&animal.status!=='attacking'&&
+        (animal.targetId||retreatRoutes.has(numericId(animal.id))))
+        animal.pathVersion=version;
     publishCropProtectionChanges();
     return invalidated;
   };
@@ -1019,6 +1045,23 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     const targetFor=taskTargetLookup(state);
     for(const change of latest.values()){
       const animal=animals.get(change.actorId);
+      if(animal?.status==='retreating'&&retreatRoutes.has(change.actorId)){
+        if(change.state===0){
+          const replacement=bridge.planRetreatRoute(animal);
+          recordAnimalPlan(animal,state.elapsed);
+          if(replacement.status==='found'){
+            animal.path=replacement.path;
+            animal.destinationId=`exit-${animal.id}`;
+            animal.pathVersion=navVersion;
+            pendingNativeChanges=true;
+          }else{
+            retreatRoutes.delete(change.actorId);
+            animal.path=null;
+          }
+        }
+        if(change.state===5)retreatRoutes.delete(change.actorId);
+        continue;
+      }
       if(animal&&change.state===1&&animal.status!=='attacking'&&
         !animal.path&&animal.targetId&&
         numericId(animal.targetId)===change.targetId){
@@ -1219,6 +1262,23 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
       }
       return result;
     },
+    planRetreatRoute:(state,animal)=>{
+      if(state!==observedTaskState&&state!==sourceState)return null;
+      if(pendingWorldEvents.length)flushWorldEvents();
+      const result=bridge.planRetreatRoute(animal);
+      recordAnimalPlan(animal,state.elapsed);
+      if(result.status==='found'){
+        retreatRoutes.add(numericId(animal.id));pendingNativeChanges=true;
+      }else retreatRoutes.delete(numericId(animal.id));
+      return result;
+    },
+    retreatRouteActive:actorId=>retreatRoutes.has(numericId(actorId)),
+    finishRetreatIntent:actorId=>{
+      retreatRoutes.delete(numericId(actorId));
+      const result=bridge.cancelAttackIntent(actorId);
+      if(result)pendingNativeChanges=true;
+      return result;
+    },
     attackRoutePending:actorId=>pendingAttackRoutes.has(numericId(actorId)),
     drainTacticalReconsiderations:()=>{
       const actors=[...tacticalReconsiderations]
@@ -1239,6 +1299,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     },
     cancelAttackIntent:actorId=>{
       pendingAttackRoutes.delete(numericId(actorId));
+      retreatRoutes.delete(numericId(actorId));
       tacticalReconsiderations.delete(actorId);
       const result=bridge.cancelAttackIntent(actorId);
       if(result)pendingNativeChanges=true;

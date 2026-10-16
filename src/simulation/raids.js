@@ -353,6 +353,15 @@ export function spawnRaid(s,plan,nav,daytime=false) {
   emit(s,wave?'RaidWaveSpawned':'RaidSpawned',{raidFacts:{id:s.raid.id,day:s.day,daytime,elapsed:s.elapsed,waveIndex:s.raid.waveIndex??0,pressureFacts:s.raid.pressureFacts??null,exposedLiving:exposed.length,exposedWounded:exposed.filter(p=>(p.attackHits??0)>0).length,actors:animals.map(a=>({id:a.id,species:a.species,hitsRemaining:a.hitsRemaining,...(a.damageProfile?{damageProfile:structuredClone(a.damageProfile)}:{}),spawn:{...a.spawn},exit:{...a.exit}}))}});return true;
 }
 function release(s,a,nav) {nav?.intentTaskPlanner?.cancelAttackIntent(a.id);if(a.reservation&&s.raid.reservations[a.reservation]===a.id){delete s.raid.reservations[a.reservation];s.raid.waitRevision=((s.raid.waitRevision??0)+1)>>>0;}a.reservation=null;a.targetId=null;a.path=null;a.approach=null;a.approachShieldId=null;}
+function beginRetreat(s,a,nav,reason){
+  leaveWait(s.raid,a);a.status='retreating';
+  emit(s,'AnimalRetreating',{targetId:a.id,species:a.species,
+    hitsRemaining:a.hitsRemaining,reason});
+  const route=nav.intentTaskPlanner?.planRetreatRoute?.(s,a);
+  if(route?.status==='found'){
+    a.path=route.path;a.destinationId=`exit-${a.id}`;a.pathVersion=nav.version;
+  }
+}
 export function reachableApproach(a,target,nav,shield=null,onUnknown=null,regionDecision=null){
   const focus=shield??target,r=shield?shield.radius+a.radius+.1:(target.kind==='wall'?1.2:.6)+a.radius;
   const angle=Math.atan2(a.x-focus.x,a.z-focus.z);
@@ -741,9 +750,17 @@ export function updateRaid(s,dt,nav) {
       // Finish the committed animation before spending another hit or retreating.
       continue;
     }
-    if(a.hitsRemaining<=0&&a.status!=='retreating'){release(s,a,nav);leaveWait(s.raid,a);a.status='retreating';emit(s,'AnimalRetreating',{targetId:a.id,species:a.species,hitsRemaining:a.hitsRemaining,reason:'budget-exhausted'});}
+    if(a.hitsRemaining<=0&&a.status!=='retreating'){
+      release(s,a,nav);beginRetreat(s,a,nav,'budget-exhausted');
+    }
     if(a.status==='retreating') {
-      if(walkTo(s,a,{...(a.exit??a.spawn),id:`exit-${a.id}`},dt,nav,{speed:3.8,worker:false,expandRoute:true,routeVia:a.spawn}))a.status='gone';continue;
+      const native=nav.intentTaskPlanner?.retreatRouteActive?.(a.id)??false;
+      if(walkTo(s,a,{...(a.exit??a.spawn),id:`exit-${a.id}`},dt,nav,
+        {speed:3.8,worker:false,expandRoute:true,routeVia:a.spawn,
+          externallyPlanned:native})){
+        a.status='gone';nav.intentTaskPlanner?.finishRetreatIntent?.(a.id);
+      }else if(native&&!a.path)nav.intentTaskPlanner?.finishRetreatIntent?.(a.id);
+      continue;
     }
     if(a.hitsRemaining<=0)continue;
     let target=raidTarget(s,a.targetId);
@@ -754,7 +771,7 @@ export function updateRaid(s,dt,nav) {
       if(a.status==='waiting'){
         const wait=a.raidWait,progress=s.raid.waitProgress;
         if(s.elapsed-Math.max(wait.since,progress?.at??wait.since)>=RAID_WAIT_SECONDS||!nav.walkable(a.spawn.x,a.spawn.z,a.radius,null,false)){
-          leaveWait(s.raid,a);a.status='retreating';emit(s,'AnimalRetreating',{targetId:a.id,species:a.species,hitsRemaining:a.hitsRemaining,reason:'waiting-expired-or-stage-blocked'});continue;
+          beginRetreat(s,a,nav,'waiting-expired-or-stage-blocked');continue;
         }
         if(dist(a,a.spawn)>.08&&(a.path||s.elapsed>=wait.moveRetryAt)){
           walkTo(s,a,{...a.spawn,id:'wait-'+a.id},dt,nav,{speed:1.5,worker:false});if(!a.path)wait.moveRetryAt=s.elapsed+1;
@@ -773,7 +790,7 @@ export function updateRaid(s,dt,nav) {
         }
         else if(occupiedEligibleGroup(s,a,p=>canAttackCrop(s,p)))
           enqueueWait(s,a,'contention');
-        else {leaveWait(s.raid,a);a.status='retreating';emit(s,'AnimalRetreating',{targetId:a.id,species:a.species,hitsRemaining:a.hitsRemaining,reason:'no-reachable-unleased-target'});}
+        else beginRetreat(s,a,nav,'no-reachable-unleased-target');
         continue;
       }
       if(a.status==='waiting')a.status='entering';leaveWait(s.raid,a);

@@ -4,11 +4,50 @@ import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
 import {deserialize} from '../src/persistence/snapshots.js';
 import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
+import {createSpatialIntentBridge} from '../src/world/hierarchical-wasm/spatial-intent-bridge.js';
 
 const binary=process.env.WILD_ENGINE_NATIVE_ROUTE_WASM;
 const module=binary?new WebAssembly.Module(readFileSync(binary)):null;
 const row=(op,kind,id,targetKind=0,x=0,z=0,active=0)=>
   [op,kind,id,targetKind,x,z,active,0,0,0];
+
+test('native retreat owns one physical route until completion without an attack lease',
+ {skip:!module&&'Build and select the experimental WASM first'},()=>{
+  const game=deserialize(gunzipSync(readFileSync(new URL(
+    './fixtures/desierto983-d15-partial-state.json.gz',import.meta.url))).toString());
+  const loaded=new Map(),session=createSpatialGameSession(module,game,{
+    loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+  try{
+    for(let z=-1;z<=1;z++)for(let x=-1;x<=1;x++){
+      if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+      loaded.set(`${x},${z}`,session.core.chunkPayload());
+    }
+    let start,end;
+    for(let z=-10;z<=10&&!end;z++)for(let x=-10;x<=10;x++){
+      const from={x:x+.2,z:z+.2},to={x:x+1.2,z:z+.2};
+      if(session.routeActor(from,to,{worker:false,species:'hyena'}).status==='found'){
+        start=from;end=to;break;
+      }
+    }
+    assert(end,'fixture needs a physically reachable exit');
+    const bridge=createSpatialIntentBridge(session);
+    bridge.resetFromState(game);
+    const actor={id:'animal-900001',species:'hyena',...start,exit:end};
+    const result=bridge.planRetreatRoute(actor);
+    assert.equal(result.status,'found');
+    assert(result.path.length>0);
+    assert(Math.hypot(result.path.at(-1).x-end.x,
+      result.path.at(-1).z-end.z)<.01);
+    assert.deepEqual(bridge.routePoints(result.routeHandle),
+      Float32Array.from(result.path.flatMap(point=>[point.x,point.z])));
+    assert.equal(session.core.wasm.nav_intent_actor(900001),1);
+    const record=new Float64Array(session.core.wasm.memory.buffer,
+      session.core.wasm.nav_intent_actor_ptr(),10);
+    assert.equal(record[3],0,'retreat has no target lease');
+    assert(bridge.cancelAttackIntent(actor.id));
+    assert.equal(bridge.routePoints(result.routeHandle),null);
+  }finally{session.dispose();}
+});
 
 test('native animal leases preserve committed strikes and reject duplicate targets',
  {skip:!module&&'Build and select the experimental WASM first'},()=>{

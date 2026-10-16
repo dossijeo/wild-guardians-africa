@@ -99,7 +99,7 @@ struct ActiveIntent {
   uint64_t actor=0,task=0,target=0;
   PlanningState state=PlanningState::NeedsPlan;
   uint32_t slot=0,generation=0,topology=0;
-  bool animal=false,tacticalPending=false,lease=true;
+  bool animal=false,tacticalPending=false,lease=true,retreat=false;
   int profile=1;
   float routeStartX=0,routeStartZ=0;
   uint32_t routeCursor=0;
@@ -1514,6 +1514,45 @@ int nav_intent_register_attack(double actorId,double targetId,
   intent.routeStartX=float(startX);intent.routeStartZ=float(startZ);
   s.activeIntents.insert_or_assign(actor,intent);
   s.byTarget[targetIdValue].insert(actor);
+  emitIntentChange(s,intent);
+  return 1;
+}
+// The raid controller has already committed the retreat transition. Pin a
+// physical route to its confirmed exit without acquiring an attack lease.
+// A missing or unresolved route leaves JS's existing exit recovery available.
+int nav_intent_plan_retreat(double actorId,double startX,double startZ,
+                            double exitX,double exitZ){
+  if(!integer(actorId)||!coordinate(startX)||!coordinate(startZ)||
+     !coordinate(exitX)||!coordinate(exitZ))return -1;
+  IntentState& s=state();const uint64_t actor=uint64_t(actorId);
+  const auto prior=s.activeIntents.find(actor);
+  if(prior!=s.activeIntents.end()){
+    if(!prior->second.animal||prior->second.state==PlanningState::ActionActive)
+      return -2;
+    releaseIntent(s,actor,PlanningState::Cancelled);
+    s.activeIntents.erase(actor);
+  }
+  s.planningCallsByActor[actor]++;
+  const int count=spatial_world_route_cached(float(startX),float(startZ),
+    float(exitX),float(exitZ));
+  if(count<=0)return count<0?3:0;
+  uint32_t slot=uint32_t(s.routeSlots.size());
+  for(uint32_t i=0;i<s.routeSlots.size();i++)
+    if(!s.routeSlots[i].active){slot=i;break;}
+  if(slot==s.routeSlots.size())s.routeSlots.emplace_back();
+  RouteSlot& route=s.routeSlots[slot];
+  const float* points=spatial_world_route_ptr();
+  route.points.assign(points,points+size_t(count)*2);
+  route.active=true;route.generation++;
+  if(!route.generation)route.generation=1;
+  ActiveIntent intent{actor,0,0,PlanningState::RouteActive,
+    slot,route.generation,lazy_route_revision(),true,false};
+  intent.retreat=true;intent.lease=false;
+  intent.profile=lazy_selected_context();
+  intent.routeStartX=float(startX);intent.routeStartZ=float(startZ);
+  intent.approachX=float(exitX);intent.approachZ=float(exitZ);
+  intent.approachKnown=true;
+  s.activeIntents.insert_or_assign(actor,intent);
   emitIntentChange(s,intent);
   return 1;
 }
