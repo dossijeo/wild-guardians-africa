@@ -209,9 +209,13 @@ small navigation workloads; they did not report route or simulation changes.
 Those tests now capture their instance's initial memory size and assert that
 the workload causes **no growth**, preserving the intended test on both
 variants. The affected prototype file passes all 59 tests with 16 MiB.
-The complete suite has not been rerun after this test-only correction; the
-two archived full TAP logs, the focused passing log and the 4 MiB physical
-raid reproduction retain the exact historical results. The dense-raid reload
+The complete suite was rerun after the test correction and base-branch sync:
+4,416 tests, 4,343 passes, 31 failures and 42 skips
+(`npm-test-16mib-final.tap.gz`). Comparing failed test names against the
+archived 4 MiB run finds no new failures; the only failure removed is the
+dense-raid reload assertion corrected in the base branch. The earlier full
+TAP logs, focused passing log and 4 MiB physical raid reproduction remain
+archived as historical evidence. The dense-raid reload
 failure was subsequently traced to the test checking a straight chord across
 a two-leg turn. The updated base branch checks both real movement legs and
 passes all four terminal scenarios; this branch re-ran those four scenarios
