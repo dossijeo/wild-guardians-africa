@@ -759,6 +759,27 @@ test('stale targets or topology cannot acquire native task leases',
   assert.equal(task.workerId,null);
   assert.equal(worker.taskId,null);
   assert.equal(session.core.wasm.nav_intent_actor(9263),0);
+  const secondWorker={...worker,id:'worker-1000020',taskId:null,
+   status:'idle',path:null,contractDay:game.day};
+  const secondCrate={...crate,id:'crate-1000006',delivered:false};
+  const secondTask={...task,id:'task-1000007',created:3,
+   targetId:secondCrate.id,workerId:null,blocked:false};
+  game.workers=[worker,secondWorker];game.crates=[crate,secondCrate];
+  game.tasks=[task,secondTask];
+  planner.resetFromState(game);
+  const batch=planner.planIfNeeded(3);
+  assert.equal(batch.filter(row=>row.status===1).length,2,
+   'both workers receive provisional native assignments');
+  secondCrate.delivered=true;
+  assert.throws(()=>planner.commitTaskBatchToState(game,batch,
+   {navVersion:nav.version}),/target changed/,
+  'one stale target rejects the complete assignment batch');
+  for(const current of [task,secondTask])assert.equal(current.workerId,null);
+  for(const current of [worker,secondWorker]){
+   assert.equal(current.taskId,null);
+   assert.equal(session.core.wasm.nav_intent_actor(Number(current.id.split('-').at(-1))),0,
+    'no provisional native route survives the rejected batch');
+  }
  }finally{session.dispose();}
 });
 
