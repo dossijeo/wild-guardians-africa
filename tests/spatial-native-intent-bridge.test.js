@@ -46,9 +46,6 @@ test('loading an active raid restores distinct routes and reservations for eight
  {skip:!module&&'Build and select the experimental WASM first'},()=>{
  const game=deserialize(gunzipSync(readFileSync(new URL(
   './fixtures/sabana712-d6-native-multi-reservation.json.gz',import.meta.url))).toString());
- const uninterrupted=gunzipSync(readFileSync(new URL(
-  './fixtures/sabana712-d6-native-multi-reservation-after-raid.json.gz',
-  import.meta.url))).toString();
  const loaded=new Map(),session=createSpatialGameSession(module,game,{
   loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
  try{
@@ -98,10 +95,49 @@ test('loading an active raid restores distinct routes and reservations for eight
    assert.equal(new Set(hits.map(event=>event.attackId)).size,hits.length,
     'no committed attack applies its damage twice');
    assert.equal(game.events.filter(event=>event.type==='RaidEnded').length,1);
-   assert.equal(serialize(game),uninterrupted,
-    'the restored raid matches the uninterrupted confirmed state exactly');
+   // Retreat routing is intentionally allowed to differ from the historical
+   // navigator. The active leases, physical completion and one committed hit
+   // per attack are the invariants for this older frozen fixture.
   }finally{stopTasks();stopWorld();}
  }finally{session.dispose();}
+});
+
+test('saving during a retreat restores its physical route and deterministic raid finish',
+ {skip:!module&&'Build and select the experimental WASM first'},()=>{
+ const initial=gunzipSync(readFileSync(new URL(
+  './fixtures/sabana712-d9-native-stalled-raid.json.gz',import.meta.url))).toString();
+ const open=game=>{
+  const loaded=new Map(),session=createSpatialGameSession(module,game,{
+   loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+  for(let z=-1;z<=2;z++)for(let x=1;x<=3;x++){
+   if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+   loaded.set(`${x},${z}`,session.core.chunkPayload());
+  }
+  const planner=createEventDrivenTaskPlanner(session),restored=planner.resetFromState(game);
+  const nav=createSpatialNavigationMovement(session,game);
+  const stopTasks=planner.observeTasks(game),stopWorld=planner.observeWorld(game);
+  nav.intentTaskPlanner=planner;
+  return {game,session,planner,restored,nav,
+   close:()=>{stopTasks();stopWorld();session.dispose();}};
+ };
+ const continuous=open(deserialize(initial));
+ let resumed;
+ try{
+  assert(continuous.restored.restoredRetreatRouteIds.includes('animal-8730'));
+  for(let step=0;step<2;step++)tick(continuous.game,.05,continuous.nav);
+  const retreating=continuous.game.raid.animals.find(a=>a.id==='animal-8730');
+  assert.equal(retreating.status,'retreating');
+  assert(continuous.planner.retreatRouteActive(retreating.id));
+  resumed=open(deserialize(serialize(continuous.game)));
+  assert(resumed.restored.restoredRetreatRouteIds.includes(retreating.id));
+  for(const run of [continuous,resumed]){
+   let steps=0;
+   while(run.game.raid&&steps<500){tick(run.game,.1,run.nav);steps++;}
+   assert.equal(run.game.raid,null,'retreating animals must leave the raid');
+  }
+  assert.equal(serialize(resumed.game),serialize(continuous.game),
+   'restoring a native retreat preserves confirmed state in the same version');
+ }finally{resumed?.close();continuous.close();}
 });
 
 test('a topology change after restoring concurrent raid routes preserves live leases',

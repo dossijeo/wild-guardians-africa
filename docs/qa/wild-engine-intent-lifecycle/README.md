@@ -194,6 +194,32 @@ A sustained 14-night Sabana/712 replay on source `2e03bc7d` and that WASM comple
 
 The full daily report, exact hashes and an initial failed invocation are preserved in `campaign-differential-traces.zip`. The failed invocation supplied the test-specific WASM environment variable to a runner that reads `WILD_ENGINE_SPATIAL_SERVICES_WASM`; it stopped before simulation. It is not a campaign defeat or a navigation failure. The successful invocation used the exact CI artifact. Longer multi-biome campaigns and physically audited routes remain acceptance work for this experimental PR.
 
+## Opt-in native retreat route stage
+
+At the confirmed transition to `retreating`, the opt-in planner now asks Wild
+Engine for a physical route to that animal's existing exit. A successful
+route is pinned by a session-scoped handle without acquiring any crop or wall
+lease. Ordinary movement ticks consume the route without replanning.
+Topology reconciliation retains a still-valid route or requests one
+replacement from the animal's current position. An unresolved or physically
+invalid native route hands control to the existing bounded exit recovery; it
+does not change movement speed, hit budget, damage or exit position.
+
+A saved retreat route is restored from its remaining points only after the
+native static collision checks accept every segment. The new session creates
+a fresh handle; stale handles remain invalid. A directed test saves during a
+real retreat and compares its final serialized state with a continuous run
+under the same source and seed. The historical whole-raid fixture is no
+longer required to reproduce the prior navigator's exact terminal snapshot:
+route differences are allowed, while its eight distinct reservations, 24
+unique committed hits and physical raid completion remain checked. The
+focused native suite passed locally (60/60) with the compiled WASM SHA-256
+`da81cbf89e937dc947aaf646235a593840e4807342aa655a57f397047a00cf15`;
+the web build passed. The earlier CI failure on source `54c7ecc2` is retained
+as a negative result: its only failing test was that historical exact-state
+assertion. This is an opt-in retreat stage, not complete native ownership of
+animal target selection, worker return routes or every emergency exit path.
+
 ## Next integration gates
 
 1. Publish confirmed task/worker/action events directly from the simulation without scanning every entity per tick. Apply native proposals atomically with JS task reservations and preserve all worker policy tie-breaks.
