@@ -566,3 +566,5 @@ to the current staff's ordinary crop workload priority over discretionary
 wall savings. Above that workload, it still reserves the defensive target.
 This is a spending priority, not a plant-count cap; further expansion remains
 legal whenever the other reserves are funded.
+The paired runs, failed intermediate variants and seven-night follow-up are
+recorded in `event-driven-defense-qa.md` with their raw JSON reports.
