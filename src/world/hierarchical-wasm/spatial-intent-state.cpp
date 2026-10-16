@@ -140,6 +140,7 @@ struct IntentState {
   // Experimental wall-side graph for comparing native enclosure choices with
   // the current raid selector. Each directed row is wall, from, to, x, z.
   std::vector<double> wallPortalRows;
+  std::vector<double> perimeterRows;
   std::vector<double> intentChanges;
   std::array<double,10> intentResult{};
   uint32_t session=0;
@@ -606,6 +607,7 @@ void nav_intent_reset(){
   s.plantResult.fill(0);s.nextPlantLease=1;s.centerRevision=0;
   s.changes.clear();s.results.clear();s.routes.clear();clearProposal(s);
   s.wallPortalRows.clear();
+  s.perimeterRows.clear();
   s.sequence=0;s.entityRevision=0;s.damageRevision=0;
   s.routeQueries=0;s.candidates=0;
 }
@@ -660,6 +662,88 @@ int nav_intent_wall_portals(double radius){
   return int(s.wallPortalRows.size()/5);
 }
 const double* nav_intent_wall_portals_ptr(){return state().wallPortalRows.data();}
+// Return only the first wall crossing from the animal's weak region toward a
+// sealed crop group. This is a read-only candidate query; the physical route,
+// approach lease and target priority still need validation before adoption.
+// 1 = candidates, 0 = already inside, -1 = unresolved, -2 = invalid request.
+int nav_intent_perimeter_walls(double startX,double startZ,double radius,
+                               double groupId){
+  IntentState& s=state();s.perimeterRows.clear();
+  if(!coordinate(startX)||!coordinate(startZ)||
+     !std::isfinite(radius)||radius<=0||radius>2||!integer(groupId)||
+     lazy_selected_context()==1)return -2;
+  rebuildCropGroups(s);
+  auto group=std::find_if(s.cropGroups.begin(),s.cropGroups.end(),
+    [groupId](const CropGroup& value){return value.id==uint64_t(groupId);});
+  if(group==s.cropGroups.end())return -2;
+  std::set<int> origins;
+  for(int x:{int(std::floor(startX)),int(std::ceil(startX))})
+    for(int z:{int(std::floor(startZ)),int(std::ceil(startZ))}){
+      if(!spatial_local_clear(float(startX),float(startZ),float(x),float(z)))
+        continue;
+      const int region=lazy_weak_region(x,z);
+      if(region>=0)origins.insert(region);
+    }
+  if(origins.empty())return -1;
+  const AttackSiteCache& sites=attackSitesFor(s,*group,float(radius));
+  if(sites.byRegion.empty())return -1;
+  std::set<int> destinations;
+  for(const auto& [region,points]:sites.byRegion){
+    const AttackSite& first=points.front();
+    if(lazy_enclosure(first.x,first.z)!=1)return -1;
+    if(origins.count(region))return 0;
+    destinations.insert(region);
+  }
+  const int count=nav_intent_wall_portals(radius);
+  if(count<0)return -2;
+  std::map<int,std::vector<std::array<double,5>>> graph;
+  for(int index=0;index<count;index++){
+    const size_t offset=size_t(index)*5;
+    std::array<double,5> edge{};
+    std::copy_n(s.wallPortalRows.begin()+offset,5,edge.begin());
+    graph[int(edge[1])].push_back(edge);
+  }
+  std::map<int,int> distance;
+  std::queue<int> pending;
+  for(int region:destinations){distance[region]=0;pending.push(region);}
+  while(!pending.empty()){
+    const int region=pending.front();pending.pop();
+    for(const auto& edge:graph[region]){
+      const int next=int(edge[2]);
+      if(distance.count(next))continue;
+      distance[next]=distance[region]+1;pending.push(next);
+    }
+  }
+  int best=std::numeric_limits<int>::max();
+  for(int region:origins){
+    const auto found=distance.find(region);
+    if(found!=distance.end())best=std::min(best,found->second);
+  }
+  if(best==std::numeric_limits<int>::max())return -1;
+  for(int region:origins){
+    const auto found=distance.find(region);
+    if(found==distance.end()||found->second!=best)continue;
+    for(const auto& edge:graph[region])
+      if(distance.count(int(edge[2]))&&distance[int(edge[2])]==best-1)
+        s.perimeterRows.insert(s.perimeterRows.end(),
+          {edge[0],edge[3],edge[4]});
+  }
+  std::vector<std::array<double,3>> unique;
+  for(size_t index=0;index<s.perimeterRows.size();index+=3)
+    unique.push_back({s.perimeterRows[index],s.perimeterRows[index+1],
+      s.perimeterRows[index+2]});
+  std::sort(unique.begin(),unique.end(),[](const auto& a,const auto& b){
+    return a[0]!=b[0]?a[0]<b[0]:a[1]!=b[1]?a[1]<b[1]:a[2]<b[2];
+  });
+  unique.erase(std::unique(unique.begin(),unique.end(),[](const auto& a,
+    const auto& b){return a[0]==b[0];}),unique.end());
+  s.perimeterRows.clear();
+  for(const auto& row:unique)s.perimeterRows.insert(s.perimeterRows.end(),
+    row.begin(),row.end());
+  return s.perimeterRows.empty()?-1:1;
+}
+int nav_intent_perimeter_wall_count(){return int(state().perimeterRows.size()/3);}
+const double* nav_intent_perimeter_walls_ptr(){return state().perimeterRows.data();}
 double* nav_intent_changes_ptr(int count){
   if(count<0||count>maxChangeBatch)return nullptr;
   IntentState& s=state();s.changes.resize(size_t(count)*changeWidth);

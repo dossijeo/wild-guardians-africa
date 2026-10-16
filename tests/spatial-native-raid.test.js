@@ -417,6 +417,18 @@ for(const count of [1,5])test(`${count} native raiders attack an accessible wall
         assert.notEqual(rows[offset+1],rows[offset+2]);
         assert(Number.isFinite(rows[offset+3])&&Number.isFinite(rows[offset+4]));
       }
+      const cropId=Number(state.plants.find(plant=>plant.alive).id.split('-').at(-1));
+      assert.equal(wasm.nav_intent_perimeter_walls(
+        state.raid.animals[0].x,state.raid.animals[0].z,
+        state.raid.animals[0].radius,cropId),1,
+      'the native region graph finds a wall crossing toward the sealed crop');
+      const perimeterCount=wasm.nav_intent_perimeter_wall_count();
+      assert(perimeterCount>0);
+      const perimeterRows=new Float64Array(wasm.memory.buffer,
+        wasm.nav_intent_perimeter_walls_ptr(),perimeterCount*3);
+      const perimeterIds=new Set([...Array(perimeterCount).keys()].map(
+        index=>perimeterRows[index*3]));
+      assert([...perimeterIds].every(id=>nativeWallIds.has(id)));
       assert.equal(session.core.removeChunk(0,0),1);
       session.actorSectorRevision({worker:false,species:state.raid.animals[0].species});
       assert.equal(wasm.nav_intent_wall_portals(state.raid.animals[0].radius),0,
