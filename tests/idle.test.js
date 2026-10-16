@@ -74,12 +74,15 @@ test('A waiting employee returns physically at shift end and does not prolong th
   Game.tick(s,20,nav);assert.equal(w.status,'home');assert.equal(w.x,0);assert.equal(w.z,0);
 });
 
-test('Receiving queued work prevents even one extra ambient step',()=>{
+test('Receiving queued work assigns its route without even one extra ambient step',()=>{
   const s=Game.newGame({seed:712,slotId:'idle-task'});Game.resume(s,'intro');Game.placeStructure(s,'center',{x:0,z:0},nav);
   Game.pause(s,'hiring');Game.hire(s,'hire',{olderMale:1});Game.tick(s,8,nav);const w=s.workers[0];
   while(w.idleState?.mode!=='walk')Game.tick(s,.1,nav);
   Game.plant(s,'plant','mijo',6,1,nav);const position={x:w.x,z:w.z};Game.tick(s,.1,nav);
-  assert.equal(w.status,'walking');assert.equal(w.idleState,null);assert.equal(w.path,null);assert.deepEqual({x:w.x,z:w.z},position);
+  assert.equal(w.status,'walking');assert.equal(w.idleState,null);
+  assert.ok(Array.isArray(w.path)&&w.path.length>0);
+  assert.ok(w.path.every(point=>Number.isFinite(point.x)&&Number.isFinite(point.z)));
+  assert.deepEqual({x:w.x,z:w.z},position);
 });
 
 test('Ambient paths stay inside the local radius and original terrain/building footprints',()=>{
