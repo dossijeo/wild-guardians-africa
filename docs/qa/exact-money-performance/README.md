@@ -75,6 +75,39 @@ rows, reports and terminal states. The first pair requested 14 nights but
 ended at night 11; the reverse pair requested 11 nights. Both sets observed
 the same 11 nights.
 
+## Compatibility with the native intent planner
+
+A separate local integration checkout combined PR #53, PR #54 and this PR;
+the control checkout contained the same #53/#54 code without this PR. The
+control source was `556d99f24ae3a99a31f2624f79075a655615984e`, and the
+candidate merge source was `7945f27d352940fc9c03acc897fc998d128ffd56`.
+The runtime diff adds only the exact-money implementation; both checkouts
+used the same WASM SHA-256
+`110ccb71c8785687e747d855b9264f23abf680074b61c6b4c5fa688806607414`.
+This QA does not merge #53 or #54 into this independent PR.
+
+Both runs used Manglares/712, the `good` strategy, native intents, spatial
+advice and expanding defense, without raid reloads. They completed seven
+nights with **identical serialized state hashes after every night**. The
+terminal hash was
+`962f175d435ec54016a64e088aca84a14d8b6a2ac3be1be9201170387649c684`;
+both ended with 131 living crops, 663 coins and verified raid observations.
+
+| Single sequential pair | Control (#53/#54) | Candidate (+ exact money) |
+| --- | ---: | ---: |
+| Accumulated `Game.tick` | 94.16 s | 44.32 s |
+| Bot decisions | 30.75 s | 30.01 s |
+| Elapsed campaign | 133.29 s | 82.40 s |
+
+The two full reports are preserved in `intent-stack-control.json.gz` and
+`intent-stack-candidate.json.gz`; decompression reproduces raw SHA-256
+`30f19e362048e5d0b87beb7a607752401b7c6cd45f2ca3a4e263ad4996687710`
+and `1dd949a7719093f13913d09fffc4d8b6130bd952c9115a2079fe019216383675`,
+respectively. This one-pair compatibility check demonstrates identical game
+state on the combined stack, but is not an ABBA performance estimate or
+long-campaign validation. The independent four-run comparison above is the
+stronger timing evidence.
+
 ## Memory and remaining checks
 
 The paired 100,000-operation cheap-fraction stress test is an unfavorable
