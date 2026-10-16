@@ -80,10 +80,14 @@ the same 11 nights.
 The paired 100,000-operation cheap-fraction stress test is an unfavorable
 case for the `WeakSet`: median 148.53 ms candidate versus 71.17 ms control.
 Post-GC retained heap rose about 197 KiB versus 62 KiB; sampled RSS above
-start was about 6.31 MB versus 6.05 MB. Results and all eight process samples
-are in `memory-abba.json`. This measures a short isolated Node process, not
-the game's maximum resident memory, mobile browser latency or a long farm.
-Weak entries are collectible; the in-memory tracking cost still needs longer
-observation. The Windows packaging CI check was pending at the time of this
-report. Keep the PR in draft until that check and any broader-platform review
-complete; do not infer a universal campaign speedup from one biome and seed.
+start was about 6.31 MB versus 6.05 MB. Repeating the same ABBA comparison
+with **one million** operations gave 1,366 versus 623 ms, 198 versus 63 KiB
+post-GC heap growth and 6.36 versus 6.13 MB sampled peak RSS above start.
+The retained candidate overhead remained roughly 135 KiB as the operation
+count increased tenfold; this specific workload did not show accumulating
+`WeakSet` memory. All process samples are in `memory-abba.json` and
+`memory-abba-million.json`. These are isolated Node processes, not a measure
+of maximum game memory, mobile browser latency or a long farm. The Windows
+packaging CI check was still running at the time of this report. Keep the PR
+in draft until that check and any broader-platform review complete; do not
+infer a universal campaign speedup from one biome and seed.
