@@ -515,3 +515,14 @@ longer rebuild the lease map; a directed event test, 193 playable tests and
 12 native raid tests pass. Native animal target selection and the remaining
 legacy fallbacks are still separate acceptance gaps, so this does not claim
 complete replacement of the JavaScript planner.
+
+The crop-protection observer now follows surviving crop membership when the
+native group ID changes. A paid, physically closed ring with two adjacent
+crops reproduced a lost notification: destroying the lowest-ID crop and
+opening a wall breach in the same event batch changed the group's ID, so an
+ID-only comparison emitted nothing. The observer now compares the old and
+new groups through surviving crop IDs and reports the certified
+`protected` to `unprotected` transition once. The regression failed before
+the fix and passed afterward; the native suite passed 74/74, playable tests
+196/196, and the web build passed. This fixes event delivery, not the
+remaining periodic decisions of the defense policy.
