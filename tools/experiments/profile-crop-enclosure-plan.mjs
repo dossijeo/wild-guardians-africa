@@ -28,11 +28,23 @@ const inspect=()=>{
   if(!group){sample={status:'no-unprotected-group',groupMs,groups:groups.length};return;}
   const originalPreview=latestNav.withWallPreview;
   const originalPlacement=latestNav.wallPlacement;
-  let previewMs=0,previewDepth=0,placementMs=0,placementCalls=0;
+  const originalGroups=bridge.getUnprotectedCropGroups;
+  let previewMs=0,previewDepth=0,previewInspectMs=0,
+    nestedPreviewMs=0,nestedPreviewCalls=0,
+    placementMs=0,placementCalls=0;
+  let groupQueryMs=0,groupQueryCalls=0;
   latestNav.withWallPreview=function(...args){
     const outer=previewDepth++===0,start=performance.now();
+    const inspect=args[2];
+    args[2]=function(...inner){
+      const inspectStart=performance.now();
+      try{return inspect.apply(this,inner);}
+      finally{if(outer)previewInspectMs+=performance.now()-inspectStart;}
+    };
     try{return originalPreview.apply(this,args);}
-    finally{previewDepth--;if(outer)previewMs+=performance.now()-start;}
+    finally{previewDepth--;
+      if(outer)previewMs+=performance.now()-start;
+      else{nestedPreviewCalls++;nestedPreviewMs+=performance.now()-start;}}
   };
   latestNav.wallPlacement=function(...args){
     placementCalls++;
@@ -40,16 +52,25 @@ const inspect=()=>{
     try{return originalPlacement.apply(this,args);}
     finally{placementMs+=performance.now()-start;}
   };
+  bridge.getUnprotectedCropGroups=function(...args){
+    groupQueryCalls++;
+    const start=performance.now();
+    try{return originalGroups.apply(this,args);}
+    finally{groupQueryMs+=performance.now()-start;}
+  };
   const planStart=performance.now();
   let plan;
   try{plan=createCropEnclosurePlanner(latestState,latestNav,bridge)
     .planCropEnclosure(group.id);}
   finally{latestNav.withWallPreview=originalPreview;
-    latestNav.wallPlacement=originalPlacement;}
+    latestNav.wallPlacement=originalPlacement;
+    bridge.getUnprotectedCropGroups=originalGroups;}
   const planMs=performance.now()-planStart;
   sample={status:plan.status,reason:plan.reason,groupId:group.id,
     groupCrops:group.cropIds.length,groups:groups.length,groupMs,
     planMs,previewMs,placementMs,placementCalls,
+    groupQueryMs,groupQueryCalls,previewInspectMs,nestedPreviewMs,nestedPreviewCalls,
+    previewMutationMs:previewMs-previewInspectMs,
     quoteAndOtherMs:planMs-previewMs,proposedModules:plan.modules?.length??0,
     proposedCost:plan.cost??null,gaps:plan.gaps?.length??0};
 };
