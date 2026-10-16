@@ -100,3 +100,18 @@ two Gran Cañón walls took 11.3/5.7/6.1 ms and 12.1/6.1/6.7 ms. These are
 single-process directed timings, not mobile or sustained campaign results.
 The roughly half-second closure case is a cost to reduce before accepting
 the repair path broadly.
+
+A follow-up profile on the same Sabana fixture (three iterations) measured
+486.8/483.5/483.2 ms, with **four wall-state previews and 20 uncached native
+route requests per iteration**. About 438 ms per iteration was inside those
+route requests; wall-preview time is inclusive of its route requests. A cold
+four-query native batch took 223 ms, comparable to 224 ms for sequential
+queries, while later identical batch queries hit a warm native cache. Simply
+switching to batching would not remove the repeated cold work after topology
+changes. The lightweight graph connectivity query took roughly 1 ms for the
+four witnesses and reported `blocked` for three provisional layouts, but its
+JS connector check is only a conservative possibility filter for the native
+route planner. We did not replace the physical route proof with it: doing so
+without cross-algorithm certification could miss a valid access. The next
+optimization should remove or share native route work while preserving that
+proof, not weaken the worker-access invariant.
