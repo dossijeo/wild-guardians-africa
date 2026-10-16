@@ -693,18 +693,46 @@ lie fully on water/lava at `(100.5,-9.5)`, `(98.5,-9.5)`, `(96.5,-9.5)`,
 stretch or prove that the water itself closes it; simply omitting the pieces
 is insufficient.
 
-The native cut intentionally does not count water as a certified barrier.
-In conservative mode it treats each resident cell as potentially passable
-unless a continuous static solid covers its face. In buildable mode it gives
-a high cost to faces whose sampled footprint is wholly wet, seeks a legal
-detour and returns `unknown` when none is found in the window.
+The first native cut intentionally did not count water as a certified
+barrier. In conservative mode it treated each resident cell as potentially
+passable unless a continuous static solid covered its face. In buildable
+mode it gave a high cost to faces whose sampled footprint was wholly wet.
 `terrainValid()` disallows fluid for animal profiles, but the 9-by-3 samples
-in `cutFaceFullyFluid()` establish sampled wetness, not continuous coverage
-of a face and its joins. Promoting those samples to a closure certificate
-could falsely protect a crop through a narrow dry gap. A water-backed
-closure needs a conservative continuous wetness bound from the native
-generator or a physically validated local interval; until then this
-candidate must remain `unknown`.
+in `cutFaceFullyFluid()` establish sampled wetness, not continuous coverage;
+promoting those samples to a closure certificate could falsely protect a
+crop through a narrow dry gap.
+
+An experimental **Manglares-only** proof now bounds the native
+`wetlandMask()` along each candidate one-metre face. Its value-noise
+interpolation has derivative at most 1.5 per input coordinate; propagating
+the channel frequencies and `blend()` slopes bounds the steepest wetland
+channel by 0.72 per metre. Each settlement clearing contributes at most
+0.25 per metre. The implementation uses the looser global bound
+`1 + 0.25 * settlementCount`, subdivides a face only when needed, and
+accepts it as water-covered only when its midpoint exceeds the 0.61 wetness
+threshold by more than the bound times half its length plus a floating-point
+margin. A dry or unloaded sample remains uncertified. The proof reads the
+same resident native generator used by movement, without generating a new
+chunk or altering the world. Other biomes retain the conservative behavior.
+
+On the same Manglares/712 day-3 state, this reduced the cut from 45 to 35
+edges and removed all five unbuildable water modules: the authoritative
+quote placed 19/19 for 190 coins with one automatic gate. The native
+boundary query classified all 122 preview faces: 108 covered continuously
+by static solids, 14 by the wetland proof, zero unknown. All 66 crops
+retained worker paths out and back. The five animal profiles had zero
+sampled crossings of the preview boundary. A separate attack probe found
+one exterior clear ray at about 5.1–5.3 m for four species, but none within
+direct reach or supporting a peripheral strike on the living crop layout;
+this remains sampling, not a continuous attack certificate. The game's
+group classifier still reports `unknown` for four profiles and the old
+static-only junction inspector reports `unknown` when vegetation is
+suppressed. The native boundary proof covers the preview geometry, but this
+does **not** make the general planner or crop-group classification ready for
+production. Frozen inputs, WASM hash and counts are in
+`manglares-wetland-proof-d3.json`. A native regression verifies a proven wet
+face, a wet midpoint without proof, invalidation when a settlement clears
+the water, and invalidation when its chunk unloads.
 
 ### Local construction and destruction regression
 

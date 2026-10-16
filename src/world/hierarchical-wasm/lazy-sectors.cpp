@@ -8,6 +8,8 @@
 extern "C" float spatial_static_object_clearance(float,float,float);
 extern "C" float spatial_min_animal_radius();
 extern "C" float spatial_fluid_level(float,float);
+extern "C" float spatial_wetland_mask_resident(float,float);
+extern "C" float spatial_wetland_mask_lipschitz();
 
 // Sparse sector/route proof. Unknown sectors are never classified as blocked.
 // The movement engine remains responsible for physical motion.
@@ -421,6 +423,37 @@ bool cutFaceCoveredBySolid(int x,int z,int nx,int nz,float radius){
   };
   return covered(covered,ax,az,bx,bz,first,last,0);
 }
+bool cutFaceCoveredByWetland(int x,int z,int nx,int nz){
+  const float slope=spatial_wetland_mask_lipschitz();
+  if(!(slope>0)||!std::isfinite(slope))return false;
+  const float mx=(x+nx)*.5f,mz=(z+nz)*.5f;
+  const float ax=x!=nx?mx:mx-.5f,az=x!=nx?mz-.5f:mz;
+  const float bx=x!=nx?mx:mx+.5f,bz=x!=nx?mz+.5f:mz;
+  const auto wet=[&](float px,float pz){
+    return spatial_wetland_mask_resident(px,pz);
+  };
+  const auto covered=[&](auto&& self,float px,float pz,float qx,float qz,
+      int depth)->bool{
+    const float cx=(px+qx)*.5f,cz=(pz+qz)*.5f;
+    const float mask=wet(cx,cz);
+    if(!std::isfinite(mask))return false;
+    // The mask is globally Lipschitz-bounded for this biome. At any point
+    // on the subsegment it can fall by at most slope * half its length.
+    const float halfLength=std::hypot(qx-px,qz-pz)*.5f;
+    if(mask>.6101f+slope*halfLength)return true;
+    if(depth>=12||mask+.0001f<=.61f)return false;
+    return self(self,px,pz,cx,cz,depth+1)&&
+      self(self,cx,cz,qx,qz,depth+1);
+  };
+  return covered(covered,ax,az,bx,bz,0);
+}
+int cutFaceNatural(int x,int z,int nx,int nz,float radius){
+  if(cutFaceCoveredBySolid(x,z,nx,nz,radius))return 1;
+  const float fluid=spatial_fluid_level((x+nx)*.5f,(z+nz)*.5f);
+  if(!std::isfinite(fluid))return -1;
+  if(fluid>0&&cutFaceCoveredByWetland(x,z,nx,nz))return 2;
+  return 0;
+}
 // A face wholly covered by fluid cannot host a wall centered on that face.
 // This is a conservative proposal hint, not a replacement for wallPlacement:
 // resampled modules can extend beyond a one-metre face and need a final quote.
@@ -470,7 +503,9 @@ int runLocalCropCut(int minX,int minZ,int maxX,int maxZ,int seedCount,
   };
   const auto step=[&](int x,int z,int nx,int nz){
     if(conservativeRadius>0){
-      if(cutFaceCoveredBySolid(x,z,nx,nz,conservativeRadius))return 0;
+      const int natural=cutFaceNatural(x,z,nx,nz,conservativeRadius);
+      if(natural<0)return -1;
+      if(natural>0)return 0;
       if(respectFluidPlacement){
         const int fluid=cutFaceFullyFluid(x,z,nx,nz);
         if(fluid<0)return -1;
@@ -522,6 +557,12 @@ int lazy_local_crop_cut_conservative_buildable(int minX,int minZ,int maxX,
   if(!(smallestRadius>0)||!std::isfinite(smallestRadius))return -1;
   return runLocalCropCut(minX,minZ,maxX,maxZ,seedCount,padding,
     smallestRadius,true);
+}
+int lazy_cut_face_natural(int x,int z,int nx,int nz){
+  if(std::abs(x-nx)+std::abs(z-nz)!=1)return -1;
+  const float radius=spatial_min_animal_radius();
+  if(!(radius>0)||!std::isfinite(radius))return -1;
+  return cutFaceNatural(x,z,nx,nz,radius);
 }
 const int32_t* lazy_local_crop_cut_ptr(){return cutEdges.data();}
 const int32_t* lazy_local_crop_cut_boundary_ptr(){return cutBoundary.data();}

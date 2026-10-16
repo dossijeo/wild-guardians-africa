@@ -297,6 +297,50 @@ test('native five-profile cut is deterministic and responds to local solid chang
     }finally{session.dispose();}
   });
 
+test('native wetland face proof requires residency and rejects uncertain shores',
+  {skip:!module&&'Build the experimental Wild Engine WASM first'},async()=>{
+    const state=Game.newGame({seed:712,biome:'manglares',culture:'mapungubwe',
+      slotId:'wetland-face-test'});
+    state.villages[0].buildings=villageLayout(pack,0,0);
+    const loaded=new Map(),session=createSpatialGameSession(module,state,{
+      loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+    try{
+      const jobs=new Map();
+      for(let z=-1;z<=1;z++)for(let x=1;x<=2;x++)jobs.set(`${x},${z}`,
+        {cx:x,cz:z,score:Math.hypot(x-2,z)});
+      session.stream.plan(jobs);await session.stream.whenIdle();
+      for(const species of ['warthog','hyena','buffalo','lion','rhino'])
+        session.actorRegionsBatch([{x:94,z:-10}],{worker:false,species});
+      const wasm=session.core.wasm;
+      assert.equal(typeof wasm.lazy_cut_face_natural,'function');
+      const wet=[],uncertifiedWet=[];
+      for(let z=-13;z<=-7;z++)for(let x=91;x<=102;x++){
+        for(const face of [[x,z,x+1,z],[x,z,x,z+1]]){
+          const kind=wasm.lazy_cut_face_natural(...face);
+          if(kind===2)wet.push(face);
+          else if(kind===0&&wasm.spatial_fluid_level(
+            (face[0]+face[2])*.5,(face[1]+face[3])*.5)>0)
+            uncertifiedWet.push(face);
+        }
+      }
+      assert.ok(wet.length>0,'Expected a continuously wet Manglares face');
+      assert.ok(uncertifiedWet.length>0,
+        'A wet midpoint alone must not certify a dry-gap-prone face');
+      assert.equal(wasm.lazy_cut_face_natural(500,500,501,500),-1,
+        'Unloaded space cannot certify a natural boundary');
+      const first=wet[0];
+      assert.equal(wasm.lazy_cut_face_natural(...first),2);
+      const midpoint={x:(first[0]+first[2])*.5,z:(first[1]+first[3])*.5};
+      assert.ok(wasm.spatial_add_settlement(midpoint.x,midpoint.z,2,2)>=0);
+      assert.equal(wasm.lazy_cut_face_natural(...first),0,
+        'A new settlement clearing the wetland invalidates its face proof');
+      assert.equal(session.stream.releaseChunk(2,0),1);
+      loaded.delete('2,0');
+      assert.equal(wasm.lazy_cut_face_natural(...first),-1,
+        'A wetland proof expires when its spatial chunk is unloaded');
+    }finally{session.dispose();}
+  });
+
 test('native cut observes a paid wall stroke and its removal',
   {skip:!module&&'Build the experimental Wild Engine WASM first'},async()=>{
     const state=deserialize(gunzipSync(readFileSync(new URL(

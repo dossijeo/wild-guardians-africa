@@ -455,6 +455,25 @@ function inspect(state,nav){
       };
       const beforeCutCrossings=cutOnly?crossingProbe():undefined;
       const preview=nav.withWallPreview(quote.previewPieces,quote.suppressed,()=>{
+        const naturalBoundary=cutOnly?(()=>{
+          const counts={solid:0,wetland:0,unknown:0},uncovered=[],
+            wetlandExamples=[];
+          for(let edge=0;edge<boundary.length;edge+=4){
+            const cells=boundary.slice(edge,edge+4);
+            const kind=wasm.lazy_cut_face_natural(...cells);
+            if(kind===1)counts.solid++;
+            else if(kind===2){
+              counts.wetland++;
+              if(wetlandExamples.length<8)wetlandExamples.push(cells);
+            }
+            else{
+              counts.unknown++;
+              if(uncovered.length<8)uncovered.push({edge:edge/4,cells,kind});
+            }
+          }
+          return {status:counts.unknown?'unknown':'blocked-by-native-natural',
+            ...counts,wetlandExamples,uncovered};
+        })():undefined;
         const staticBoundary=cutOnly?inspectStaticCutBoundary(boundary,(x,z)=>
           wasm.spatial_static_object_clearance(x,z,2)):undefined;
         if(staticBoundary?.status==='unknown'&&staticBoundary.edge){
@@ -494,11 +513,12 @@ function inspect(state,nav){
         workerAccess:cutOnly?workerAccess():undefined,
         workerAccessAll:cutOnly&&useConservative?workerAccessAll():undefined,
         gridProbe:cutOnly?gridProbe():undefined,
+        naturalBoundary,
         staticBoundary,
         placedNaturalJunctions:cutOnly&&placedJunctionSpans?
           inspectPlacedNaturalJunctions(quote,junction=>
             placedJunctionSpans.get(`${junction.strokeIndex}:${junction.end}`),
-          staticBoundary?.status==='blocked-by-static-solids'):undefined,
+          naturalBoundary?.status==='blocked-by-native-natural'):undefined,
         boundaryGapScan:cutOnly?boundaryGapScan():undefined,
         cutCrossings:cutOnly?crossingProbe():undefined};
       },true);
@@ -520,6 +540,7 @@ function inspect(state,nav){
           after:preview.workerAccess}:undefined,
         workerAccessAll:preview.workerAccessAll,
         gridProbe:preview.gridProbe,
+        naturalBoundary:preview.naturalBoundary,
         staticBoundary:preview.staticBoundary,
         placedNaturalJunctions:preview.placedNaturalJunctions,
         boundaryGapScan:preview.boundaryGapScan,
@@ -528,6 +549,8 @@ function inspect(state,nav){
         blockedPieces:quote.blockedPieces.length,
         blockedPieceDetails:cutOnly?quote.blockedPieces.map(piece=>({
           x:piece.x,z:piece.z,
+          wetlandMask:wasm.spatial_world_biome()===4?
+            wasm.spatial_wetland_mask_anywhere(piece.x,piece.z):undefined,
           ...nav.wallPlacement(piece)})):undefined,
         blockedCrops:quote.blockedCrops.length};
     }

@@ -1411,6 +1411,17 @@ float spatial_wetland_mask_anywhere(float x,float z){
   const ScopedTerrainSample context(x,z);
   return float(wetlandMask(x,z));
 }
+float spatial_wetland_mask_resident(float x,float z){
+  if(!chunkRasters||worldBiome!=4||!std::isfinite(x)||!std::isfinite(z)||
+      !residentSample(x,z))return std::numeric_limits<float>::quiet_NaN();
+  return float(wetlandMask(x,z));
+}
+float spatial_wetland_mask_lipschitz(){
+  if(worldBiome!=4)return std::numeric_limits<float>::quiet_NaN();
+  // noise() has slope <= 1.5 per coordinate. The steepest channel in
+  // wetlandMask() is < 0.72 per metre; each settlement clearing adds <= .25.
+  return float(1.0+.25*settlements.size());
+}
 float* spatial_ground_color_input_ptr(int count){
   if(count<=0||count>50000)return nullptr;
   groundQueryInput.resize(size_t(count)*2);
