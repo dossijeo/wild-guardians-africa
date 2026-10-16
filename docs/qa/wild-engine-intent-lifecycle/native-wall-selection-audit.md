@@ -70,3 +70,29 @@ removed rather than left as a competing planner.
   choices, reservations, damage timing, rejected plans, native/JS calls,
   `Game.tick`, memory and terminal outcomes. Different valid routes are
   acceptable; invalid physical movement or changed combat rules are not.
+
+## Wall-side graph prototype (source `314c5f9e`)
+
+The first native prototype projects each confirmed intact or collapsing wall
+into directed weak-region edges for the selected animal profile. It reuses the
+projected wall width, depth and yaw and the native short physical connectors.
+Sides with missing resident-sector data are omitted as unknown; an omitted
+edge is **not** a certificate that no wall is attackable. This diagnostic API
+does not select a target, reserve an approach, or change raid behavior. It is
+intentionally rebuilt per query until the differential tests establish the
+correct invalidation boundary for an incremental native index.
+
+The pinned Emscripten CI build and native-intent suite passed for this commit
+([run 38827830760](https://github.com/dossijeo/wild-guardians-africa/actions/runs/38827830760));
+the web validation also passed
+([run 38827830634](https://github.com/dossijeo/wild-guardians-africa/actions/runs/38827830634)).
+The candidate WASM SHA-256 is
+`01da4880bfca294eb3cd2735d30cf3adf2fd7cbd3a14f41eca0ae22d9841474a`.
+On that exact binary, the focused closed-ring test found native wall-side
+edges with distinct regions and then completed the one- and five-animal raids
+against real walls. The frozen day-ten `unknown`-crop fixture also retained
+its reachable wall selection. These tests prove the prototype exposes some
+valid edges; they do **not** yet prove that it covers every eligible wall or
+improves campaign runtime. The next step is an AB comparison of native and JS
+candidate sets, including breaching, natural obstacles and missing sectors,
+before wiring native wall selection into the confirmed attack planner.
