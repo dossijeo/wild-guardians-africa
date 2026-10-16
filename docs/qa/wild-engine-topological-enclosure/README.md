@@ -546,6 +546,33 @@ read-only query leaves the serialized game unchanged. This protects the
 failure classification while constructibility is incorporated into cut
 selection; it does not claim a replacement legal contour.
 
+### Experimental construction-aware cut
+
+A separate, read-only native query now marks a one-metre face as unsuitable
+for a proposed wall when its length and depth samples are all fluid. Animals
+can still traverse that face; the graph assigns it a prohibitive cut cost
+instead of deleting the connection. If the least-cost local cut still needs
+one, the result is `unknown`, never a cheap or certified enclosure. The
+original conservative cut and its result remain unchanged. This sampling is
+only a proposal filter: real wall modules span more than one graph face, so
+`wallPlacement()` and the normal quote remain the authority for a candidate
+that survives the filter.
+
+On the frozen Gran Cañón/712 site, an in-process plain/aware/aware/plain
+comparison on the same WASM changed the invalid partial quote to `unknown`.
+The two warm full-query times were 4.43 ms for aware and 23.58 ms for plain;
+aware made **zero** placement or topology-preview calls, while plain made 13
+and 2 respectively. Native cut time itself rose from 2.53 to 4.27 ms because
+of fluid samples. These figures describe this microbenchmark, not a campaign
+speedup or a found legal contour. Six other center-site probes across the
+biomes retained the same cut and `proposed` status; their warm native cut
+times were roughly 1.7–2.4 ms plain and 1.8–2.4 ms aware, with 16 MiB linear
+memory in all cases. They share similar simple geometry and cannot establish
+behavior on complex farms. The source commit, WASM SHA-256 and all ABBA rows
+are in `construction-aware-cut-abba.jsonl`. Native synthetic tests cover a
+detour around one forbidden face and an unresolved cut when all faces are
+forbidden; the Gran Cañón WASM regression checks the real fluid case.
+
 ### Local construction and destruction regression
 
 The focused WASM test now encloses a known resident seed with four native
