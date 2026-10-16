@@ -31,6 +31,8 @@ const dist=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z),entrySelections=new WeakMap();
 const cropTargetIndexes=new WeakMap();
 const raidRegionDecisions=new WeakMap();
 const RAID_REGION_QUERIES_PER_TICK=16,RAID_REGION_RETRY_SECONDS=4;
+const NATIVE_UNKNOWN_CAUSES=['source-connector','region-connectivity',
+  'crop-sites','route','bounded-local-search'];
 function regionDecisionScope(s,nav){
   let scope=raidRegionDecisions.get(nav);
   if(!scope||scope.raid!==s.raid||scope.topology!==nav.version){
@@ -416,6 +418,13 @@ export function targetFor(s,a,nav) {
       stats.nativeCropResults[native.status]=
         (stats.nativeCropResults[native.status]??0)+1;
       if(native.status==='unknown'){
+        stats.nativeUnknownCauses??={};
+        const mask=native.diagnostics?.unknownCauseMask??0;
+        for(let bit=0;bit<NATIVE_UNKNOWN_CAUSES.length;bit++)if(mask&(1<<bit)){
+          const cause=NATIVE_UNKNOWN_CAUSES[bit];
+          stats.nativeUnknownCauses[cause]=
+            (stats.nativeUnknownCauses[cause]??0)+1;
+        }
         stats.nativeUnknownDiagnostics??=[];
         if(stats.nativeUnknownDiagnostics.length<16)
           stats.nativeUnknownDiagnostics.push({actorId:a.id,

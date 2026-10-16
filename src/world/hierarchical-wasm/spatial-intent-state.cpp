@@ -1664,13 +1664,19 @@ int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
       if(spatial_local_clear(float(startX),float(startZ),float(x),float(z))&&
          lazy_weak_region(x,z)>=0)
         starts.push_back({x,z,std::hypot(startX-x,startZ-z)});
-  if(starts.empty()){s.attackResult[0]=3;return 3;}
+  if(starts.empty()){
+    s.attackResult[0]=3;s.attackResult[7]=1;return 3;
+  }
   std::sort(starts.begin(),starts.end(),[](const Anchor& a,const Anchor& b){
     if(a.distance!=b.distance)return a.distance<b.distance;
     return a.x!=b.x?a.x<b.x:a.z<b.z;
   });
   const Anchor source=starts.front();
   bool unknown=false,eligible=false,occupied=false;
+  // Diagnostic bits only; they do not change the planner's tri-state result.
+  // 1 source connector, 2 region connectivity, 4 crop sites, 8 route,
+  // 16 connected candidates whose bounded local search did not finish.
+  int unknownCauses=0;
   int regionQueries=0,routeQueries=0,preferredTrials=0,siteTrials=0;
   int lastRouteCount=std::numeric_limits<int>::min();
   int lastPreferredRouteCount=std::numeric_limits<int>::min();
@@ -1700,11 +1706,13 @@ int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
       const AttackSite& first=sites.front();
       regionQueries++;
       const int connected=lazy_connected(source.x,source.z,first.x,first.z);
-      if(connected<0){unknown=true;continue;}
+      if(connected<0){unknown=true;unknownCauses|=2;continue;}
       if(!connected)continue;
       for(const AttackSite& site:sites)candidates.push_back(&site);
     }
-    if(located.size()<group.crops.size())unknown=true;
+    if(located.size()<group.crops.size()){
+      unknown=true;unknownCauses|=4;
+    }
     std::sort(candidates.begin(),candidates.end(),[&](const AttackSite* a,
                                                        const AttackSite* b){
       const Target& left=s.targets.at(a->crop),&right=s.targets.at(b->crop);
@@ -1741,7 +1749,7 @@ int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
       routeQueries++;
       const int count=spatial_world_route_cached(float(startX),float(startZ),px,pz);
       lastRouteCount=count;
-      if(count<0){unknown=true;return false;}
+      if(count<0){unknown=true;unknownCauses|=8;return false;}
       if(!count)return false;
       const float* route=spatial_world_route_ptr();
       s.attackRouteInput.assign(route,route+size_t(count)*2);
@@ -1762,7 +1770,7 @@ int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
       if(attempted++>=16){
         // The bounded local search has learned no new topology if every
         // candidate was already leased by another active attacker.
-        if(groupRouteAttempted)unknown=true;
+        if(groupRouteAttempted){unknown=true;unknownCauses|=16;}
         else occupied=true;
         break;
       }
@@ -1786,7 +1794,9 @@ int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
     }
     // A connected region with no successful local route is inconclusive,
     // not proof that all other positions in that region are inaccessible.
-    if(!candidates.empty()&&groupRouteAttempted)unknown=true;
+    if(!candidates.empty()&&groupRouteAttempted){
+      unknown=true;unknownCauses|=16;
+    }
   }
   // A temporarily leased approach is an occupancy wait, never proof that
   // a sector is missing or that the crop group is physically sealed.
@@ -1797,6 +1807,7 @@ int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
   s.attackResult[4]=siteTrials;
   s.attackResult[5]=lastRouteCount;
   s.attackResult[6]=lastRegisterResult;
+  s.attackResult[7]=unknownCauses;
   s.attackResult[8]=regionQueries;s.attackResult[9]=routeQueries;
   return int(s.attackResult[0]);
 }

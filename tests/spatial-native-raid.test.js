@@ -848,6 +848,8 @@ test('an unresolved native crop group can still expose a certified reachable enc
     const animal=state.raid.animals[0];
     const native=planner.planAttackCrop(state,animal);
     assert.equal(native.status,'unknown');
+    assert(native.diagnostics.unknownCauseMask>0,
+      'an inconclusive native crop plan reports its diagnostic cause');
     assert.equal(native.routeQueries,0);
     session.actorSectorRevision({worker:false,species:animal.species});
     const count=session.core.wasm.nav_intent_wall_portals(animal.radius);

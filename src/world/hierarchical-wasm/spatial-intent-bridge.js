@@ -527,7 +527,8 @@ export function createSpatialIntentBridge(session){
       regionQueries:values[8],routeQueries:values[9],
       diagnostics:{firstCandidateCrop:values[1],preferredTrials:values[2],
         lastPreferredRouteCount:values[3],siteTrials:values[4],
-        lastRouteCount:values[5],lastRegisterResult:values[6]}};
+        lastRouteCount:values[5],lastRegisterResult:values[6],
+        unknownCauseMask:values[7]}};
     const targetId=values[1],target=cropObjects.get(targetId);
     const routeHandle={session:values[4],slot:values[5],generation:values[6]};
     const coordinates=routePoints(routeHandle);
