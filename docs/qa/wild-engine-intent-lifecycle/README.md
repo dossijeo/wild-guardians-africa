@@ -407,8 +407,22 @@ The control used the shield border and spent both hits against it at seconds
 before parking a pending route. A one-night Manglares regression verifies
 that the native animal attacks the active shield and destroys no crops; the
 other native raid and shield suites pass. A new sustained native campaign is
-in progress and must be assessed independently before claiming the campaign
-divergence has been resolved.
+recorded in `manglares14-intent-shield-fix.json.gz`. It completed all 14
+nights, with 14 verified raids, zero observer issues and all 271 worker-home
+routes found natively. Its first five raids spent all their hits on the
+active shield (2, 3, 4, 4 and 5 contacts) and destroyed no crops, removing
+the reproduced premature-expiry defect. At day 15 it had 120 living crops,
+812 coins and one operational center. This is comparable to, but not
+identical with, the control's 115 crops and 759 coins. The fixed run took
+402.52 seconds (300.60 seconds `Game.tick`, 75.57 seconds bot decisions),
+while the control took 304.61 seconds (235.68 and 44.05). The campaigns
+still diverge in their task assignments, farms and later raids, so the
+timing difference cannot be assigned wholly to the native planner; it is
+also **not evidence of a sustained speed improvement**. Exact daily hashes,
+timings, raid receipts, parameters and source-file hashes are in the three
+retained reports. The fixed run used the unchanged WASM SHA-256 above and
+`raids.js` SHA-256
+`d0c9a0cf942cd7baef75053ba96a83a772c652e1c4a78d122765037ad432aced`.
 
 The JS/native task handoff now rejects two additional stale targets at the
 last pre-commit boundary: a crate marked delivered and a structure already
