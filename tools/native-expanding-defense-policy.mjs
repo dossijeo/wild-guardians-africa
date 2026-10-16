@@ -69,12 +69,14 @@ export function createNativeExpandingDefensePolicy({startDay=2,material='zarzas'
   const row={day:s.day,time:s.time,elapsed:s.elapsed,bounds,expectedSlots:slots.length,availablePieces:maxPieces,paidPieces:0,paidCost:0,gaps:[]};
   if(!slots.length){noLegalPieces=true;waitForFunds=0;row.reason='no-new-legal-pieces';history.push(row);return 0;}
   if(funds<capitalTarget){noLegalPieces=false;waitForFunds=protectedCash+pending+capitalTarget;row.reason='budget';history.push(row);return 0;}
-  const quote=timed('defense.quoteWallChain',()=>Game.quoteWallChain(s,material,points,nav,options));
-  capitalTarget=quote.cost;
-  if(!quote.pieces.length){noLegalPieces=true;waitForFunds=0;row.reason='no-new-legal-pieces';history.push(row);return 0;}
-  if(funds<quote.cost){noLegalPieces=false;waitForFunds=protectedCash+pending+quote.cost;row.reason='budget';history.push(row);return 0;}
+  // quoteWallChain already returns the complete, read-only prepared plan.
+  // previewWallChain calls it again before checking cash, so using both would
+  // repeat the same physical enclosure and automatic-door validation.
+  const plan=timed('defense.quoteWallChain',()=>Game.quoteWallChain(s,material,points,nav,options));
+  capitalTarget=plan.cost;
+  if(!plan.pieces.length){noLegalPieces=true;waitForFunds=0;row.reason='no-new-legal-pieces';history.push(row);return 0;}
+  if(funds<plan.cost){noLegalPieces=false;waitForFunds=protectedCash+pending+plan.cost;row.reason='budget';history.push(row);return 0;}
   noLegalPieces=false;waitForFunds=0;
-  const plan=timed('defense.previewWallChain',()=>Game.previewWallChain(s,material,points,nav,options));
   const planned=new Set(plan.pieces.map(p=>`${p.x},${p.z}`));
   for(const slot of slots)if(!planned.has(`${slot.x},${slot.z}`)){
    const piece={kind:'wall',material,gate:false,baseScaleX:slot.scaleX,x:slot.x,z:slot.z,yaw:-slot.angle};
