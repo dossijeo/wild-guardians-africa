@@ -402,6 +402,18 @@ for(const count of [1,5])test(`${count} native raiders attack an accessible wall
     if(count===1){
       const planner=createEventDrivenTaskPlanner(session);
       planner.resetFromState(state);
+      session.actorSectorRevision({worker:false,species:state.raid.animals[0].species});
+      const wasm=session.core.wasm;
+      const portalCount=wasm.nav_intent_wall_portals(state.raid.animals[0].radius);
+      assert(portalCount>0,'the native region graph exposes wall-side portals');
+      const rows=new Float64Array(wasm.memory.buffer,
+        wasm.nav_intent_wall_portals_ptr(),portalCount*5);
+      const wallIds=new Set(walls.map(wall=>Number(wall.id.split('-').at(-1))));
+      for(let offset=0;offset<rows.length;offset+=5){
+        assert(wallIds.has(rows[offset]));
+        assert.notEqual(rows[offset+1],rows[offset+2]);
+        assert(Number.isFinite(rows[offset+3])&&Number.isFinite(rows[offset+4]));
+      }
       stopWorld=planner.observeWorld(state);stopTasks=planner.observeTasks(state);
       const planCrop=planner.planAttackCrop;
       planner.planAttackCrop=(...args)=>{

@@ -137,6 +137,9 @@ struct IntentState {
   // attack action has finished. Project those live leases for this request.
   std::vector<double> attackReservedTargets;
   std::array<double,10> attackResult{};
+  // Experimental wall-side graph for comparing native enclosure choices with
+  // the current raid selector. Each directed row is wall, from, to, x, z.
+  std::vector<double> wallPortalRows;
   std::vector<double> intentChanges;
   std::array<double,10> intentResult{};
   uint32_t session=0;
@@ -602,9 +605,61 @@ void nav_intent_reset(){
   s.cropCells.clear();s.plantSearches.clear();s.plantLeases.clear();
   s.plantResult.fill(0);s.nextPlantLease=1;s.centerRevision=0;
   s.changes.clear();s.results.clear();s.routes.clear();clearProposal(s);
+  s.wallPortalRows.clear();
   s.sequence=0;s.entityRevision=0;s.damageRevision=0;
   s.routeQueries=0;s.candidates=0;
 }
+// Diagnostic prototype: project physical wall faces into the same weak-region
+// graph used for crop enclosure classification. No target is selected and no
+// reservation or intention is changed here. A missing sector leaves the edge
+// unknown, never a certified wall separating two regions.
+int nav_intent_wall_portals(double radius){
+  IntentState& s=state();s.wallPortalRows.clear();
+  if(!std::isfinite(radius)||radius<=0||radius>2||
+     lazy_selected_context()==1)return -1;
+  std::vector<const Target*> walls;
+  for(const auto& [id,target]:s.targets)
+    if(target.kind==3&&target.active&&target.status!=2)
+      walls.push_back(&target);
+  std::sort(walls.begin(),walls.end(),[](const Target* a,const Target* b){
+    return a->id<b->id;
+  });
+  const auto regions=[](double x,double z){
+    std::set<int> ids;bool unknown=false;
+    for(int ax:{int(std::floor(x)),int(std::ceil(x))})
+      for(int az:{int(std::floor(z)),int(std::ceil(z))}){
+        if(!spatial_local_clear(float(x),float(z),float(ax),float(az)))continue;
+        const int id=lazy_weak_region(ax,az);
+        if(id==-1)unknown=true;
+        else if(id>=0)ids.insert(id);
+      }
+    return std::pair<std::set<int>,bool>{std::move(ids),unknown};
+  };
+  for(const Target* wall:walls){
+    const double c=std::cos(wall->yaw),sn=std::sin(wall->yaw);
+    const double width=1.09*wall->shape;
+    const double offset=.22*wall->wallDepthScale+radius+.6;
+    for(double along:{0.0,-.6,.6}){
+      const double cx=wall->x+c*width*along;
+      const double cz=wall->z-sn*width*along;
+      const double ax=cx+sn*offset,az=cz+c*offset;
+      const double bx=cx-sn*offset,bz=cz-c*offset;
+      const auto a=regions(ax,az),b=regions(bx,bz);
+      if(a.second||b.second||a.first.empty()||b.first.empty())continue;
+      bool distinct=false;
+      for(int from:a.first)for(int to:b.first)if(from!=to){
+        s.wallPortalRows.insert(s.wallPortalRows.end(),
+          {double(wall->id),double(from),double(to),ax,az});
+        s.wallPortalRows.insert(s.wallPortalRows.end(),
+          {double(wall->id),double(to),double(from),bx,bz});
+        distinct=true;
+      }
+      if(distinct)break;
+    }
+  }
+  return int(s.wallPortalRows.size()/5);
+}
+const double* nav_intent_wall_portals_ptr(){return state().wallPortalRows.data();}
 double* nav_intent_changes_ptr(int count){
   if(count<0||count>maxChangeBatch)return nullptr;
   IntentState& s=state();s.changes.resize(size_t(count)*changeWidth);
