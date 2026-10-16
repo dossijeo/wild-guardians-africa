@@ -11,6 +11,7 @@ const tests = [
   'canyon-natural-defense.test.js',
   'crop-impact-health.test.js',
   'manual-magic-activity.test.js',
+  'money-rational-add.test.js',
   'raid-agricultural-impact.test.js',
   'raid-contention-turns.test.js',
   'raid-desert-deadlock.test.js',
