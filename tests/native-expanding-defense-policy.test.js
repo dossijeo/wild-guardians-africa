@@ -94,6 +94,10 @@ test('event-driven defense waits for the whole stroke before quoting and spendin
  s.ledger.balance=rational(target);
  policy.onWorldEvent({type:'CrateDelivered'},s);
  assert.equal(policy.act(s,nav,options),1);
+ assert.equal(phases.filter(kind=>kind==='defense.quoteWallChain').length,quotes+1,
+  'an affordable stroke performs one full physical quote');
+ assert.equal(phases.filter(kind=>kind==='defense.previewWallChain').length,0,
+  'the prepared quote must not be recomputed as a preview');
  assert.ok(policy.report(s).history.at(-1).paidCost>0);
  assert.ok(policy.report(s).history.at(-1).paidCost<=target-options.reserve,
   'the complete incremental quote is paid at once');

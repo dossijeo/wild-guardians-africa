@@ -568,3 +568,12 @@ This is a spending priority, not a plant-count cap; further expansion remains
 legal whenever the other reserves are funded.
 The paired runs, failed intermediate variants and seven-night follow-up are
 recorded in `event-driven-defense-qa.md` with their raw JSON reports.
+
+A later 14-night Sabana/712 comparison found that the experimental defense
+policy quoted the same affordable wall stroke twice. Reusing the first
+prepared physical quote preserved all 14 daily state hashes and reduced
+accumulated bot decision time from 60.61 to 44.55 seconds in the paired runs.
+The exact configuration, reports, per-night data and limitations are in
+[`single-quote-campaign.md`](single-quote-campaign.md). This policy-only
+change remains on the native-intent branch; it does not advance PR #54 or
+enable the opt-in planner by default.
