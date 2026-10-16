@@ -135,14 +135,24 @@ export function createSpatialNavigationMovement(session,state){
     return view.raidConnectivityDemand;
   };
   const requestRaidFrontier=point=>{
-    if(!Number.isFinite(point?.x)||!Number.isFinite(point?.z))return false;
+    const record=reason=>{
+      if(view.raidSelectionStats){
+        const counts=view.raidSelectionStats.nativeFrontierDemand??={};
+        counts[reason]=(counts[reason]??0)+1;
+      }
+      return reason==='queued';
+    };
+    if(!Number.isFinite(point?.x)||!Number.isFinite(point?.z))
+      return record('invalid');
     const demand=raidDemand();
-    if(!demand||demand.size>=16)return false;
+    if(!demand)return record('no-raid');
     const cx=Math.floor((point.x+24)/48),cz=Math.floor((point.z+24)/48);
     const key=`${cx},${cz}`;
-    if(session.stream?.loaded?.()?.has(key)||demand.has(key))return false;
+    if(session.stream?.loaded?.()?.has(key))return record('resident');
+    if(demand.has(key))return record('already-requested');
+    if(demand.size>=16)return record('budget');
     demand.add(key);
-    return true;
+    return record('queued');
   };
   const requestRaidConnectivity=(start,end,radius)=>{
     const demand=raidDemand();

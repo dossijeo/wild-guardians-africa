@@ -435,7 +435,8 @@ export function targetFor(s,a,nav) {
         stats.nativeUnknownDiagnostics??=[];
         if(stats.nativeUnknownDiagnostics.length<16)
           stats.nativeUnknownDiagnostics.push({actorId:a.id,
-            day:s.day,time:s.time,...native.diagnostics});
+            day:s.day,time:s.time,frontier:native.frontier,
+            ...native.diagnostics});
       }
     }
     if(native?.status==='found'){
