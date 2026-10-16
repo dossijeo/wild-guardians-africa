@@ -15,12 +15,16 @@ import * as Game from '../../src/simulation/game.js';
 const wasmPath=process.argv[2]??'src/world/hierarchical-wasm/spatial-savanna.wasm';
 const biome=process.argv[3]??'sabana';
 const siteMode=process.argv[4]??'corner';
-const conservativeCut=process.argv.includes('--conservative-cut');
+const weightedCut=process.argv.includes('--weighted-cut');
+const conservativeCut=weightedCut||process.argv.includes('--conservative-cut');
 const padding=Number(process.argv[7]??2);
 if(!Number.isInteger(padding)||padding<0||padding>8)throw RangeError('Invalid crop padding');
 const connectorLimit=Number(process.argv[8]??8);
 if(!Number.isFinite(connectorLimit)||connectorLimit<0||connectorLimit>24)
   throw RangeError('Invalid diagnostic connector limit');
+const cutMargin=Number(process.env.WILD_ENGINE_CUT_MARGIN??12);
+if(!Number.isInteger(cutMargin)||cutMargin<8||cutMargin>28)
+  throw RangeError('Invalid diagnostic cut margin');
 const module=new WebAssembly.Module(readFileSync(wasmPath));
 // Ubuntu's Emscripten 3.1.5 emits an unused WASI exit import in standalone
 // builds. Keep the compatibility shim inside this benchmark process only.
@@ -100,9 +104,12 @@ try{
       session.actorRegionsBatch([site],{worker:false,species});
     const pointer=wasm.lazy_cut_seeds_ptr(1);
     new Int32Array(wasm.memory.buffer,pointer,2).set([Math.round(site.x),Math.round(site.z)]);
-    const margin=12,minX=Math.floor(site.x-margin),minZ=Math.floor(site.z-margin);
+    const margin=cutMargin,minX=Math.floor(site.x-margin),
+      minZ=Math.floor(site.z-margin);
     const maxX=Math.ceil(site.x+margin)+1,maxZ=Math.ceil(site.z+margin)+1;
-    const result=conservativeCut?wasm.lazy_local_crop_cut_conservative(
+    const result=weightedCut?wasm.lazy_local_crop_cut_weighted(
+      minX,minZ,maxX,maxZ,1,padding):conservativeCut?
+      wasm.lazy_local_crop_cut_conservative(
       minX,minZ,maxX,maxZ,1,padding):wasm.lazy_local_crop_cut(
       minX,minZ,maxX,maxZ,1,padding);
     const edges=result>=0?Array.from(new Int32Array(wasm.memory.buffer,
@@ -153,7 +160,7 @@ try{
     return {status:result<0?result===-1?'unknown':'invalid':
       quote&&(quote.blockedPieces.length||quote.blockedCrops.length)?
         'partial':'proposed',
-      conservativeCut,cutEdges:result,flow,cells,edges,cutMs,convertMs,validationMs,
+      conservativeCut,weightedCut,cutEdges:result,flow,cells,edges,cutMs,convertMs,validationMs,
       boundarySegments:conservativeCut?boundaryCount:undefined,staticBoundary,
       workerRoutesBefore,workerRoutes,
       strokes:shape?.strokes.length,estimatedModules:shape?.slots.length,
@@ -188,6 +195,7 @@ try{
         modules:Array.isArray(result.modules)?result.modules.length:result.modules,
         cost:result.cost,
         conservativeCut:result.conservativeCut,
+        weightedCut:result.weightedCut,
         cutEdges:result.cutEdges,flow:result.flow,cells:result.cells,
         boundarySegments:result.boundarySegments,
         staticBoundary:result.staticBoundary,
@@ -211,7 +219,8 @@ try{
         sectorUpdates:wasm.lazy_sector_updates()-updates});
     }
     console.log(JSON.stringify({kind:'ABBA',biome,site,padding,connectorLimit,
-      conservativeCut,rows,
+      cutMargin,
+      conservativeCut,weightedCut,rows,
       memoryBytes:wasm.memory.buffer.byteLength}));
   }
 }finally{session.dispose();}

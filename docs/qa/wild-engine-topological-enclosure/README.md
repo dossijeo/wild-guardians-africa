@@ -486,6 +486,27 @@ real Sabana/712 day-3 checkpoint above is the separate positive 66-crop
 round-trip access test. Other real checkpoints and dynamic changes remain
 pending.
 
+### Negative result: fluid-weighted graph cut
+
+An isolated weighted variant gave faces covered by water or lava a capacity
+of 1000 rather than 1. The face classifier used Wild Engine's resident fluid
+level at 15 points along and across the face; the normal build quote remained
+the final legality check. On Gran Cañón/712 at the same fixed crop site, the
+weighted cut moved some edges and reduced omitted wall modules from two to
+one, but did **not** produce a legal enclosure. At local box margins of 12,
+20 and 28 m, it returned the same 9-edge cut with flow 2007, quoted 5 modules
+and omitted one over water/lava; the static boundary stayed `unknown`.
+The unweighted conservative variant returned the same 8-edge cut at all three
+margins, quoted 3 modules and omitted two. The larger boxes added work without
+removing the construction failure. The six raw measurements, source-file and
+experimental WASM hashes are in `canyon-fluid-weighted-margin.json`.
+
+This is evidence against retaining a simple fluid penalty as the solution.
+The graph must distinguish naturally impassable terrain from traversable but
+unbuildable terrain and choose constructible wall placements when turning a
+cut into modules. Merely making an illegal face expensive cannot guarantee a
+legal cut when the local topology still requires crossing such faces.
+
 This also explains why checking only the four exposed wall ends is insufficient
 for this candidate: a mixed wall/building/terrain closure needs evidence that
 the intervening obstacle chain stays impassable. A self-closing wall face with
