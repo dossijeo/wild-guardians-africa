@@ -714,20 +714,17 @@ function completeTask(s,w,t,target,nav) {
   s.tasks=s.tasks.filter(task=>task.id!==t.id);w.taskId=null;w.taskApproach=null;if(w.status!=='carrying')w.status='idle';w.path=null;
 }
 export function idleFarmAnchor(s,worker,center,livingCandidates=null){
-  let planted=null,live=null,plantedDistance=Infinity,liveDistance=Infinity;
+  let live=null,liveDistance=Infinity;
   // The worker pass supplies one shared living subset. Recheck object life as
-  // earlier workers can harvest during that same pass. Fall back to the exact
-  // original historical scan when this center no longer has living crops.
-  const candidates=livingCandidates?.some(p=>p.centerId===worker.centerId&&p.alive)?livingCandidates:s.plants;
+  // earlier workers can harvest during that same pass. Historical crops never
+  // choose an idle destination or trigger a scan of the save's crop history.
+  const candidates=livingCandidates??activeCrops(s.plants);
   for(const plant of candidates){
-    if(plant.centerId!==worker.centerId)continue;
+    if(plant.centerId!==worker.centerId||!plant.alive)continue;
     const distance=dist(plant,worker);
-    if(distance<plantedDistance||distance===plantedDistance&&plant.id.localeCompare(planted.id)<0){planted=plant;plantedDistance=distance;}
-    if(plant.alive&&(distance<liveDistance||distance===liveDistance&&plant.id.localeCompare(live.id)<0)){live=plant;liveDistance=distance;}
+    if(distance<liveDistance||distance===liveDistance&&plant.id.localeCompare(live.id)<0){live=plant;liveDistance=distance;}
   }
-  const plant=live??planted;
-  // Keep the cultivated area as the idle anchor after its last harvest too.
-  if(plant)return {...plant,id:'farm-'+plant.id,idleRadius:3};
+  if(live)return {...live,id:'farm-'+live.id,idleRadius:3};
   return {...center,...centerServicePoint(center,s,.8),id:'farm-'+center.id,idleRadius:2};
 }
 function taskRouteWhenKnown(compute){
@@ -863,7 +860,7 @@ function updateWorkers(s,dt,nav) {
       if(!t) {
         if(w.status!=='idle')w.status='idle';
         if(s.tasks.some(task=>task.centerId===w.centerId&&!task.workerId))cancelIdle(w);
-        else {idlePlants??=s.plants.filter(p=>p.alive);updateIdle(w,idleFarmAnchor(s,w,center,idlePlants),dt,nav,s.seed,s.structures);}
+        else {idlePlants??=activeCrops(s.plants);updateIdle(w,idleFarmAnchor(s,w,center,idlePlants),dt,nav,s.seed,s.structures);}
         continue;
       }
       const target=findPlant(t.targetId)??findCrate(t.targetId)??s.structures.find(e=>e.id===t.targetId);
