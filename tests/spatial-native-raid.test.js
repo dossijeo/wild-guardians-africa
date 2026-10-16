@@ -12,13 +12,39 @@ import {villageLayout} from '../src/world/villages.js';
 import {spawnRaid,targetFor} from '../src/simulation/raids.js';
 import * as Game from '../src/simulation/game.js';
 import {syncNativeCampaignRaidView} from '../tools/native-campaign-runner.mjs';
+import {simulateNativeCampaign} from '../tools/native-campaign-runner.mjs';
 import {createNativeCampaignPlots} from '../tools/native-campaign-plots.mjs';
+import {createSpatialCampaignOpening} from '../tools/experiments/spatial-campaign-opening.mjs';
 
 const module=new WebAssembly.Module(readFileSync(
   process.env.WILD_ENGINE_NATIVE_ROUTE_WASM??new URL(
     '../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
 const pack=JSON.parse(readFileSync(new URL('../public/content/villages.json',
   import.meta.url),'utf8'))[0];
+
+test('a native raid approaches an active shield border before waiting on its old route',async()=>{
+  let sawShieldApproach=false;
+  const result=await simulateNativeCampaign({days:1,seed:712,
+    biome:'manglares',culture:'mapungubwe',strategy:'good',nativeIntents:true,
+    spatialAdvice:true,defensePolicy:'expanding',reloadRaids:false,
+    nativeEvidence:false,openingFactory:createSpatialCampaignOpening,
+    entryDriverFactory:()=>({async advancePresentation(){},
+      async waitForEntry(){},report(){return {};},async dispose(){}}),
+    onTick:state=>{
+      const animal=state.raid?.animals[0];
+      const shield=state.spells.find(spell=>spell.kind==='shield'&&
+        spell.remaining>0);
+      if(shield&&animal?.approachShieldId===shield.id&&
+        animal.status==='attacking')sawShieldApproach=true;
+    }});
+  const raid=result.raidEvidence.raids[0];
+  assert.equal(result.completedNights,1);
+  assert.equal(result.raidEvidence.status,'verified');
+  assert(sawShieldApproach,
+    'a pending native crop route must be replaced by the new shield-border route');
+  assert.equal(raid.shieldContacts,2);
+  assert.equal(raid.cropsDestroyed,0);
+});
 
 test('Volcanes day-10 raid uses the replacement center for the headless camera',()=>{
   const artifact=JSON.parse(gunzipSync(readFileSync(new URL(

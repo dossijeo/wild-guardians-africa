@@ -383,6 +383,33 @@ multi-biome stability of the opt-in path, but does not establish complete
 native ownership of animal decisions or a sustained speedup over a matched
 control. There was no A/B control run for Manglares in this experiment.
 
+A subsequent matched-control request has now completed the same 14 nights with
+the same source, WASM, seed, biome, strategy, spatial advice and expanding
+defense policy, but without native intentions. Its full original report is
+`manglares14-control-expanding.json.gz`. The control took 304.61 seconds
+(235.68 seconds `Game.tick`, 44.05 seconds bot decisions), versus 388.67
+seconds (307.87 and 52.67) for the first native-intent run. Both raid
+observers verified 14 incursions. Their serialized states first differed on
+day one; the control ended with 115 living crops and 759 coins, while native
+intent ended with 80 crops and 573 coins. These are **different physical
+campaigns**, so their timing delta is not an isolated planner benchmark.
+
+The first divergence exposed an actual integration defect, not merely a
+different route. The paired one-night snapshots and full original reports
+are retained in `manglares1-shield-diagnosis.zip`. Both variants cast a
+20-second Shield at the same crop when the first warthog approached. On the
+native path, adding the shield invalidated the pinned route to the crop.
+`updateRaid` returned early on `attackRoutePending` before it could switch
+the animal to the valid shield-border approach. The animal stood still until
+the shield expired, then destroyed two crops at elapsed seconds 432 and 437.
+The control used the shield border and spent both hits against it at seconds
+409 and 414. The raid controller now checks for a changed shield approach
+before parking a pending route. A one-night Manglares regression verifies
+that the native animal attacks the active shield and destroys no crops; the
+other native raid and shield suites pass. A new sustained native campaign is
+in progress and must be assessed independently before claiming the campaign
+divergence has been resolved.
+
 The JS/native task handoff now rejects two additional stale targets at the
 last pre-commit boundary: a crate marked delivered and a structure already
 fully repaired. A frozen Desert fixture produces valid native proposals,
