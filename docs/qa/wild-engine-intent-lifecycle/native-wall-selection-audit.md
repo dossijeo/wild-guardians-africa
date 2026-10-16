@@ -329,3 +329,17 @@ budget prevents unbounded exploration of an open procedural world; raising
 it without evidence could spend more time and memory yet leave the answer
 unknown. A future targeted test should record both components' frontier
 sectors and which additions actually change the native connectivity result.
+
+An additional QA-only attribution run on source `7786c7e2` recorded the
+sectors actually loaded by the native campaign runner. The same seven daily
+hashes and verified raid coverage were reproduced. On day six, the first
+ten loads were native frontier requests: `(0,-1)`, `(-1,-1)`, `(0,-2)`,
+`(-1,-2)`, `(0,-3)`, `(-1,-3)`, `(0,-4)`, `(-1,-4)`, `(0,-5)` and `(0,-6)`.
+Six subsequent loads came from the older heuristic demand, filling the
+16-sector raid budget. The crop-plan `unknown` count remained 155. This
+proves that the requested frontiers were serviced; the native component
+continued to expose another missing sector rather than certifying a crop
+route or closed enclosure. Raising the budget would continue a potentially
+long outward exploration and has no demonstrated benefit. The full trace,
+including every loaded key and heuristic request through day seven, is
+`canyon7-raid-demand-attributed.json.gz`. No combat or economic rule changed.
