@@ -526,6 +526,9 @@ function inspect(state,nav){
         cutCrossings:cutOnly?{before:beforeCutCrossings,
           after:preview.cutCrossings}:undefined,
         blockedPieces:quote.blockedPieces.length,
+        blockedPieceDetails:cutOnly?quote.blockedPieces.map(piece=>({
+          x:piece.x,z:piece.z,
+          ...nav.wallPlacement(piece)})):undefined,
         blockedCrops:quote.blockedCrops.length};
     }
     return {status:count===-1?'unknown':count===-2?'unsupported':'proposed',

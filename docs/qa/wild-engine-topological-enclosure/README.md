@@ -673,6 +673,26 @@ Gran Río/712 day 3 also selected its correct native biome code (2), but the
 farm layout, sampled terrain heights and enclosure geometry matched Sabana
 at this seed. It is not counted as an independent shape validation.
 
+Manglares/712 day 3 is a separate real-campaign negative case (native biome
+code 4, 66 crops). The conservative local cut proposed 45 edges in five arcs,
+converted to 24 modules. The authoritative quote placed only 19 modules for
+190 coins and omitted five, so its structural result is `open` with reason
+`omitted-module`; the complete proposal cannot be bought or certified.
+The construction-aware cut returned `unknown` for both tested windows instead
+of presenting the partial quote as a valid closure. All 66 crops retained
+worker routes in the partial preview, and 225 sampled boundary crossings per
+species became zero after placing its quoted modules, but those samples do not
+repair the five omissions or prove the whole perimeter. One exterior clear
+attack ray was sampled for each of four species; none corresponded to a
+demonstrated peripheral strike on the living crops. The frozen state hash,
+counts and statuses are in `manglares-real-d3.json`. This is evidence that
+conversion to legal modules remains a separate constraint from a cheap graph
+cut. A second run queried `wallPlacement()` for each rejected module: all five
+lie fully on water/lava at `(100.5,-9.5)`, `(98.5,-9.5)`, `(96.5,-9.5)`,
+`(94.5,-9.5)` and `(93.5,-10.5)`. A future contour must avoid that fluid
+stretch or prove that the water itself closes it; simply omitting the pieces
+is insufficient.
+
 ### Local construction and destruction regression
 
 The focused WASM test now encloses a known resident seed with four native
