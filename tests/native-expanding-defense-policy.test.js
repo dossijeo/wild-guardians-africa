@@ -35,4 +35,10 @@ test('a certified protection loss wakes the defense policy before its periodic i
  policy.act(s,nav,options);
  assert.equal(policy.report(s).history.length,before+1);
  assert.equal(policy.report(s).protectionWakes,1);
+ const afterBreach=policy.report(s).history.length;
+ policy.onCropProtectionChanged({previous:null,protection:'unprotected'});
+ policy.act(s,nav,options);
+ assert.equal(policy.report(s).history.length,afterBreach+1,
+  'a newly planted exposed group wakes defense immediately');
+ assert.equal(policy.report(s).protectionWakes,2);
 });

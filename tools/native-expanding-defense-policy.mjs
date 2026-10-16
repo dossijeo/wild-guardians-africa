@@ -16,9 +16,9 @@ export function createNativeExpandingDefensePolicy({startDay=2,material='zarzas'
  const history=[],owned=new Set();let protectionWakes=0;
  const reserve=s=>reserveMode==='next-stroke'&&s.day>=startDay?capitalTarget:0;
  const onCropProtectionChanged=change=>{
-  if(change.previous!=='protected'||change.protection!=='unprotected')return;
-  // The native graph has certified a real breach. Retry on the next ordinary
-  // decision boundary instead of waiting for the periodic expansion interval.
+  if(change.protection!=='unprotected'||change.previous==='unprotected')return;
+  // The native graph has certified a breach or a new exposed crop group.
+  // Retry on the next ordinary decision boundary.
   nextAttempt=0;protectionWakes++;
  };
  function act(s,nav,{command,reserve:protectedCash}){
