@@ -14,8 +14,9 @@ export function occupiedEligibleGroup(state,animal,eligible){
  for(const t of state.structures)if(t.status==='intact'&&t.hp>0)targets.add(t.id);
  return state.raid.animals.some(a=>a!==animal&&!['gone','retreating','waiting'].includes(a.status)&&targets.has(a.targetId));
 }
-export function enqueueWait(state,animal){
+export function enqueueWait(state,animal,reason='contention'){
  animal.status='waiting';animal.raidWait??={since:state.elapsed,retryAt:state.elapsed,moveRetryAt:state.elapsed,epoch:null};
+ animal.raidWait.reason=reason;
  const queue=liveWaitQueue(state.raid);if(!queue.includes(animal.id))queue.push(animal.id);
  state.raid.waitProgress??={at:state.elapsed,budget:state.raid.animals.reduce((n,a)=>n+a.hitsRemaining,0)};
 }
@@ -29,5 +30,7 @@ export function waitEpoch(state,nav,animal){
   // topology and sector-residency changes wake a waiting actor immediately.
   // Other dynamic eligibility changes use a slow recovery retry.
   const sectors=nav.spatialSectorRevision?.(animal?.radius)??0;
+ if(animal?.raidWait?.reason==='unknown')
+   return `${nav.version},${sectors}`;
  return `${nav.version},${sectors},${state.raid.waitRevision??0},${state.raid.waitProgress?.at??0}`;
 }

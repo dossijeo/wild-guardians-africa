@@ -737,7 +737,13 @@ export function updateRaid(s,dt,nav) {
       const selected=targetFor(s,a,nav);
       if(!selected||selected.unknown){
         emit(s,'AnimalTargetUnavailable',{targetId:a.id,species:a.species,hitsRemaining:a.hitsRemaining});
-        if(selected?.unknown||occupiedEligibleGroup(s,a,p=>canAttackCrop(s,p)))enqueueWait(s,a);
+        if(selected?.unknown){
+          enqueueWait(s,a,'unknown');
+          a.raidWait.epoch=waitEpoch(s,nav,a);
+          a.raidWait.retryAt=s.elapsed+8;
+        }
+        else if(occupiedEligibleGroup(s,a,p=>canAttackCrop(s,p)))
+          enqueueWait(s,a,'contention');
         else {leaveWait(s.raid,a);a.status='retreating';emit(s,'AnimalRetreating',{targetId:a.id,species:a.species,hitsRemaining:a.hitsRemaining,reason:'no-reachable-unleased-target'});}
         continue;
       }
