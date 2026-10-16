@@ -1,0 +1,368 @@
+{
+  "source": {
+    "commit": "3361c06a55350d58922034f79cdea517da8a3563",
+    "wasmPath": "src/world/hierarchical-wasm/spatial-savanna.wasm",
+    "wasmSha256": "ff719cfebd15fe0aa11a4ed85abc2912f35527e84e635699429489660a1fd8e7",
+    "runnerSha256": "32cff2274bc93dcff1d49f6c663793deddad9afefb60ed24663786718fa3e42f"
+  },
+  "biome": "desierto",
+  "seed": 712,
+  "preGrowMiB": 0,
+  "description": "Synthetic sequential spatial workload. Explicit pre-growth is not an Emscripten INITIAL_MEMORY build. Linear memory is committed capacity, not C++ live heap or RSS.",
+  "rows": [
+    {
+      "chunks": 1,
+      "samples": [
+        {
+          "phase": "instantiated",
+          "milliseconds": null,
+          "linearBytes": 4194304,
+          "chunks": 0,
+          "sectors": 0,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "first-chunk",
+          "milliseconds": 7.1673000000000116,
+          "linearBytes": 4194304,
+          "chunks": 1,
+          "sectors": 0,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "chunks-loaded",
+          "milliseconds": 0.008399999999994634,
+          "linearBytes": 4194304,
+          "chunks": 1,
+          "sectors": 0,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "animal-navigation-built",
+          "milliseconds": 43.22330000000001,
+          "linearBytes": 4194304,
+          "chunks": 1,
+          "sectors": 16,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "worker-navigation-built",
+          "milliseconds": 22.024599999999992,
+          "linearBytes": 4194304,
+          "chunks": 1,
+          "sectors": 16,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "hundred-routes",
+          "milliseconds": 26.896199999999993,
+          "linearBytes": 4194304,
+          "chunks": 1,
+          "sectors": 16,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "wall-added-removed",
+          "milliseconds": 4.715000000000003,
+          "linearBytes": 4194304,
+          "chunks": 1,
+          "sectors": 16,
+          "growthNotifications": 0
+        }
+      ],
+      "growth": []
+    },
+    {
+      "chunks": 9,
+      "samples": [
+        {
+          "phase": "instantiated",
+          "milliseconds": null,
+          "linearBytes": 4194304,
+          "chunks": 0,
+          "sectors": 0,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "first-chunk",
+          "milliseconds": 1.8021999999999991,
+          "linearBytes": 4194304,
+          "chunks": 1,
+          "sectors": 0,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "chunks-loaded",
+          "milliseconds": 14.298200000000008,
+          "linearBytes": 4194304,
+          "chunks": 9,
+          "sectors": 0,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "animal-navigation-built",
+          "milliseconds": 120.56480000000002,
+          "linearBytes": 4194304,
+          "chunks": 9,
+          "sectors": 144,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "worker-navigation-built",
+          "milliseconds": 110.3057,
+          "linearBytes": 4194304,
+          "chunks": 9,
+          "sectors": 144,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "hundred-routes",
+          "milliseconds": 65.51800000000003,
+          "linearBytes": 4194304,
+          "chunks": 9,
+          "sectors": 144,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "wall-added-removed",
+          "milliseconds": 3.813699999999983,
+          "linearBytes": 4194304,
+          "chunks": 9,
+          "sectors": 144,
+          "growthNotifications": 0
+        }
+      ],
+      "growth": []
+    },
+    {
+      "chunks": 25,
+      "samples": [
+        {
+          "phase": "instantiated",
+          "milliseconds": null,
+          "linearBytes": 4194304,
+          "chunks": 0,
+          "sectors": 0,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "first-chunk",
+          "milliseconds": 1.6411000000000513,
+          "linearBytes": 4194304,
+          "chunks": 1,
+          "sectors": 0,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "chunks-loaded",
+          "milliseconds": 40.00020000000006,
+          "linearBytes": 4194304,
+          "chunks": 25,
+          "sectors": 0,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "animal-navigation-built",
+          "milliseconds": 309.28560000000004,
+          "linearBytes": 4194304,
+          "chunks": 25,
+          "sectors": 400,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "worker-navigation-built",
+          "milliseconds": 294.78430000000003,
+          "linearBytes": 4194304,
+          "chunks": 25,
+          "sectors": 400,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "hundred-routes",
+          "milliseconds": 59.29769999999985,
+          "linearBytes": 5242880,
+          "chunks": 25,
+          "sectors": 400,
+          "growthNotifications": 2
+        },
+        {
+          "phase": "wall-added-removed",
+          "milliseconds": 3.6506000000001677,
+          "linearBytes": 5242880,
+          "chunks": 25,
+          "sectors": 400,
+          "growthNotifications": 2
+        }
+      ],
+      "growth": [
+        {
+          "milliseconds": 647.3839000000002,
+          "bytes": 4325376
+        },
+        {
+          "milliseconds": 647.4798,
+          "bytes": 5242880
+        }
+      ]
+    },
+    {
+      "chunks": 49,
+      "samples": [
+        {
+          "phase": "instantiated",
+          "milliseconds": null,
+          "linearBytes": 4194304,
+          "chunks": 0,
+          "sectors": 0,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "first-chunk",
+          "milliseconds": 1.613399999999956,
+          "linearBytes": 4194304,
+          "chunks": 1,
+          "sectors": 0,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "chunks-loaded",
+          "milliseconds": 74.51800000000003,
+          "linearBytes": 4194304,
+          "chunks": 49,
+          "sectors": 0,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "animal-navigation-built",
+          "milliseconds": 568.4927,
+          "linearBytes": 4194304,
+          "chunks": 49,
+          "sectors": 784,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "worker-navigation-built",
+          "milliseconds": 595.5525000000002,
+          "linearBytes": 5373952,
+          "chunks": 49,
+          "sectors": 784,
+          "growthNotifications": 18
+        },
+        {
+          "phase": "hundred-routes",
+          "milliseconds": 58.32459999999992,
+          "linearBytes": 10092544,
+          "chunks": 49,
+          "sectors": 784,
+          "growthNotifications": 24
+        },
+        {
+          "phase": "wall-added-removed",
+          "milliseconds": 3.2440999999998894,
+          "linearBytes": 10092544,
+          "chunks": 49,
+          "sectors": 784,
+          "growthNotifications": 24
+        }
+      ],
+      "growth": [
+        {
+          "milliseconds": 887.5545,
+          "bytes": 4259840
+        },
+        {
+          "milliseconds": 910.1068000000002,
+          "bytes": 4325376
+        },
+        {
+          "milliseconds": 921.2990000000002,
+          "bytes": 4390912
+        },
+        {
+          "milliseconds": 943.7519,
+          "bytes": 4456448
+        },
+        {
+          "milliseconds": 967.6396000000002,
+          "bytes": 4521984
+        },
+        {
+          "milliseconds": 979.5699000000002,
+          "bytes": 4587520
+        },
+        {
+          "milliseconds": 1002.2875999999999,
+          "bytes": 4653056
+        },
+        {
+          "milliseconds": 1023.5998999999999,
+          "bytes": 4718592
+        },
+        {
+          "milliseconds": 1039.3189,
+          "bytes": 4784128
+        },
+        {
+          "milliseconds": 1063.4889,
+          "bytes": 4849664
+        },
+        {
+          "milliseconds": 1090.1589999999999,
+          "bytes": 4915200
+        },
+        {
+          "milliseconds": 1105.8675,
+          "bytes": 4980736
+        },
+        {
+          "milliseconds": 1140.9683000000002,
+          "bytes": 5046272
+        },
+        {
+          "milliseconds": 1165.6551000000002,
+          "bytes": 5111808
+        },
+        {
+          "milliseconds": 1179.7438,
+          "bytes": 5177344
+        },
+        {
+          "milliseconds": 1204.7059000000002,
+          "bytes": 5242880
+        },
+        {
+          "milliseconds": 1226.6628000000003,
+          "bytes": 5308416
+        },
+        {
+          "milliseconds": 1239.5529,
+          "bytes": 5373952
+        },
+        {
+          "milliseconds": 1240.6522000000002,
+          "bytes": 5439488
+        },
+        {
+          "milliseconds": 1240.6884000000002,
+          "bytes": 5898240
+        },
+        {
+          "milliseconds": 1240.8053000000002,
+          "bytes": 7733248
+        },
+        {
+          "milliseconds": 1242.0691,
+          "bytes": 7864320
+        },
+        {
+          "milliseconds": 1242.1059000000002,
+          "bytes": 8257536
+        },
+        {
+          "milliseconds": 1242.2237000000002,
+          "bytes": 10092544
+        }
+      ]
+    }
+  ]
+}
