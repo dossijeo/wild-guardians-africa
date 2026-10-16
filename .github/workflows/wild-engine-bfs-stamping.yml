@@ -24,15 +24,18 @@ jobs:
           node-version: '20'
           cache: npm
       - run: npm ci
-      - name: Build baseline and candidate from identical sources
+      - name: Build baseline and candidate with their matching exports
         run: |
           cp src/world/hierarchical-wasm/lazy-sectors.cpp /tmp/lazy-sectors-candidate.cpp
+          cp tools/build-spatial-savanna-wasm.sh /tmp/build-spatial-candidate.sh
           git show origin/main:src/world/hierarchical-wasm/lazy-sectors.cpp > src/world/hierarchical-wasm/lazy-sectors.cpp
+          git show origin/main:tools/build-spatial-savanna-wasm.sh > tools/build-spatial-savanna-wasm.sh
           docker run --rm -v "$PWD:/src" -w /src \
             -e SPATIAL_WASM_OUTPUT=/src/bfs-baseline.wasm \
             emscripten/emsdk@sha256:77638e6c215a65f25a704c0c831d5c2463a8c0468a58c6cb82489dbe621dfa05 \
             bash tools/build-spatial-savanna-wasm.sh
           cp /tmp/lazy-sectors-candidate.cpp src/world/hierarchical-wasm/lazy-sectors.cpp
+          cp /tmp/build-spatial-candidate.sh tools/build-spatial-savanna-wasm.sh
           docker run --rm -v "$PWD:/src" -w /src \
             -e SPATIAL_WASM_OUTPUT=/src/bfs-candidate.wasm \
             emscripten/emsdk@sha256:77638e6c215a65f25a704c0c831d5c2463a8c0468a58c6cb82489dbe621dfa05 \

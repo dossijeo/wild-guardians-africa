@@ -116,8 +116,9 @@ It also requires an independent witness that the natural barrier between
 those ends is continuously impassable. A self-closing wall face requires an
 actual automatic gate; a manually flagged gate does not satisfy this shortcut.
 
-The current `quoteWallChain` API accepts one stroke, so it cannot yet validate
-or buy a disconnected multi-stroke cut as one atomic enclosure. A proposal
+The experimental `quoteWallChain` API now accepts several strokes as one
+atomic quote/purchase and places a door only after seeing the combined plan.
+This does not itself certify that natural joins close the enclosure. A proposal
 could also split crop seeds into separate islands; deciding whether that is
 acceptable belongs to the plan contract, not to the flow solver.
 
@@ -261,7 +262,7 @@ the playable game.
 
 No worker-gate or all-species equivalence claim has been made for the proposed
 cut. Exact-proposal physical equivalence, repaired walls, nested enclosures,
-worker isolation, multi-stroke purchase, sector streaming and a sustained
+worker isolation, natural-join certification, sector streaming and a sustained
 campaign performance comparison remain open. The prototype is intentionally
 disconnected from the virtual player's decisions, so `Game.tick` and campaign
 results cannot be credited with its microbenchmark speed. The full baseline
@@ -291,9 +292,29 @@ actual price warrants looking for a cheaper alternative. The final decision
 must compare buildable, worker-accessible, physically certified proposals;
 the cut's 110-coin estimate cannot yet be counted as savings.
 
+## Atomic multi-arc quotation
+
+The game quote now accepts a list of wall strokes, deduplicates repeated
+modules and prices/places automatic gates for the combined proposal. It is
+unused by normal gameplay. Tests cover an all-wall ring built from two arcs
+and a two-arc closure against a building; both preserve one gate and worker
+access, and the paid transaction survives save/reload.
+
+On the identical 66-crop Sabana/712 day-3 state, quoting the **raw two-arc
+cut** produced 11 placeable modules at an actual price of 110 coins in
+142–151 ms including preview. No module or crop was omitted. However, the
+automatic gate planner found **zero gates** and the native protection result
+was `unknown` for four profiles (`protected` only for lion). The open arcs and
+their four joins still need a physical barrier-continuity witness. This is a
+real quote, **not a certified or purchasable protected enclosure**. The raw
+ABCCBA-style run is saved in `sabana-multiarc-d3.json`; it retains the prior
+negative hull and baseline results. The earlier 110-coin estimate is now
+confirmed as the module quote for this candidate, but not as an achievable
+defensive saving.
+
 ## Adoption boundary
 
-If this approach continues, first turn multiple cut strokes into one validated
+If this approach continues, turn the multi-stroke quote into a validated
 plan with stable module IDs, a module-chain closure check, focused terminal
 clearances against native solids and a worker-access witness. Compare the
 resulting certificate with the game's five-profile physical preview on the

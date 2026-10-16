@@ -1,0 +1,194 @@
+{
+  "biome": "sabana",
+  "seed": 712,
+  "day": 3,
+  "source": "a21f2b76509fa1057f031db5311cac7e5962b0f96b399060df860aa48ff41e1d",
+  "wasmSha256": "25c80656d8d8682c2833aec5687810d095d395202007a769701d76227cd38998",
+  "elapsedSeconds": 57.4518105,
+  "campaignTiming": {
+    "ticks": 1041,
+    "decisionMs": 4297.46669999999,
+    "gameTickMs": 2914.625599999992
+  },
+  "sample": {
+    "stateHash": "7b7033894dee269d4bf04cb074f1372ef2f84ef280446150cd5f2e2331cb6966",
+    "living": 66,
+    "status": "measured",
+    "groupId": "crop:plant-1109",
+    "cropCount": 66,
+    "groupBounds": {
+      "minX": 81,
+      "minZ": -7.5,
+      "maxX": 94.5,
+      "maxZ": 7.5
+    },
+    "removedWalls": [],
+    "rows": [
+      {
+        "name": "old",
+        "ms": 24616.821899999995,
+        "status": "unknown",
+        "modules": 35,
+        "cost": 350,
+        "gaps": 1,
+        "calls": {
+          "path": 38,
+          "wallPlacement": 334,
+          "withWallPreview": 17
+        },
+        "sectorUpdates": 37728
+      },
+      {
+        "name": "hull",
+        "ms": 342.06900000000314,
+        "status": "open",
+        "protection": "unverified",
+        "vertices": 13,
+        "modules": 29,
+        "cost": 290,
+        "gaps": 1,
+        "gates": 1,
+        "geometryMs": 1.1032999999952153,
+        "quoteMs": 339.9008000000031,
+        "validationMs": 0,
+        "calls": {
+          "path": 13,
+          "wallPlacement": 90,
+          "withWallPreview": 4
+        },
+        "sectorUpdates": 720
+      },
+      {
+        "name": "cut",
+        "ms": 151.32430000000022,
+        "status": "proposed",
+        "box": [
+          69,
+          -20,
+          108,
+          21
+        ],
+        "topologicalMs": 5.71310000000085,
+        "conversionMs": 1.5319000000017695,
+        "validationMs": 141.27260000000388,
+        "cutEdges": 21,
+        "flow": 21,
+        "cells": 1206,
+        "strokes": 2,
+        "estimatedModules": 11,
+        "estimatedCost": 110,
+        "ambiguous": 0,
+        "junctions": 4,
+        "multiArc": true,
+        "physical": {
+          "status": "unknown",
+          "profiles": {
+            "warthog": "unknown",
+            "hyena": "unknown",
+            "buffalo": "unknown",
+            "lion": "protected",
+            "rhino": "unknown"
+          },
+          "modules": 11,
+          "cost": 110,
+          "gates": 0,
+          "structural": {
+            "status": "open",
+            "reason": "no-wall-face"
+          },
+          "blockedPieces": 0,
+          "blockedCrops": 0
+        },
+        "calls": {
+          "path": 12,
+          "wallPlacement": 33,
+          "withWallPreview": 3
+        },
+        "sectorUpdates": 288
+      },
+      {
+        "name": "cut",
+        "ms": 142.2036999999982,
+        "status": "proposed",
+        "box": [
+          69,
+          -20,
+          108,
+          21
+        ],
+        "topologicalMs": 1.5596999999979744,
+        "conversionMs": 0.3017000000036205,
+        "validationMs": 139.1536999999953,
+        "cutEdges": 21,
+        "flow": 21,
+        "cells": 1206,
+        "strokes": 2,
+        "estimatedModules": 11,
+        "estimatedCost": 110,
+        "ambiguous": 0,
+        "junctions": 4,
+        "multiArc": true,
+        "physical": {
+          "status": "unknown",
+          "profiles": {
+            "warthog": "unknown",
+            "hyena": "unknown",
+            "buffalo": "unknown",
+            "lion": "protected",
+            "rhino": "unknown"
+          },
+          "modules": 11,
+          "cost": 110,
+          "gates": 0,
+          "structural": {
+            "status": "open",
+            "reason": "no-wall-face"
+          },
+          "blockedPieces": 0,
+          "blockedCrops": 0
+        },
+        "calls": {
+          "path": 12,
+          "wallPlacement": 33,
+          "withWallPreview": 3
+        },
+        "sectorUpdates": 288
+      },
+      {
+        "name": "hull",
+        "ms": 331.5708999999988,
+        "status": "open",
+        "protection": "unverified",
+        "vertices": 13,
+        "modules": 29,
+        "cost": 290,
+        "gaps": 1,
+        "gates": 1,
+        "geometryMs": 1.034800000001269,
+        "quoteMs": 329.9331999999995,
+        "validationMs": 0,
+        "calls": {
+          "path": 13,
+          "wallPlacement": 90,
+          "withWallPreview": 4
+        },
+        "sectorUpdates": 720
+      },
+      {
+        "name": "old",
+        "ms": 23517.903699999995,
+        "status": "unknown",
+        "modules": 35,
+        "cost": 350,
+        "gaps": 1,
+        "calls": {
+          "path": 38,
+          "wallPlacement": 334,
+          "withWallPreview": 17
+        },
+        "sectorUpdates": 37728
+      }
+    ],
+    "memoryBytes": 16777216
+  }
+}

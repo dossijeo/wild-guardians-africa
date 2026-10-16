@@ -7,8 +7,7 @@ import {simulateNativeCampaign} from '../native-campaign-runner.mjs';
 import {createSpatialCampaignOpening} from './spatial-campaign-opening.mjs';
 import {createSpatialIntentBridge} from '../../src/world/hierarchical-wasm/spatial-intent-bridge.js';
 import {createCropEnclosurePlanner} from '../../src/world/hierarchical-wasm/spatial-crop-enclosure-plan.js';
-import {approximateCutModules,cropClearanceHull,inspectSelfClosedQuote,
-  stitchTwoCutStrokes} from '../../src/world/hierarchical-wasm/spatial-topological-enclosure-prototype.js';
+import {approximateCutModules,cropClearanceHull,inspectSelfClosedQuote} from '../../src/world/hierarchical-wasm/spatial-topological-enclosure-prototype.js';
 import {wallSpec} from '../../src/simulation/rules.js';
 import * as Game from '../../src/simulation/game.js';
 
@@ -121,12 +120,11 @@ function inspect(state,nav){
     const shape=count>=0?approximateCutModules(edges,state.structures,'zarzas',
       wallSpec('zarzas').cost):null;
     const conversionMs=performance.now()-convertStarted;
-    const stitched=shape&&!shape.ambiguous.length?
-      stitchTwoCutStrokes(shape.strokes):null;
+    const proposal=shape&&!shape.ambiguous.length?shape.strokes:null;
     let validationMs=0,physical=null;
-    if(stitched){
+    if(proposal){
       const validateStarted=performance.now();
-      const quote=Game.quoteWallChain(state,'zarzas',stitched,nav,
+      const quote=Game.quoteWallChain(state,'zarzas',proposal,nav,
         {smooth:false,snap:false});
       const groupAfter=nav.withWallPreview(quote.previewPieces,quote.suppressed,()=>
         bridge.getUnprotectedCropGroups({includeProtected:true})
@@ -134,7 +132,11 @@ function inspect(state,nav){
       validationMs=performance.now()-validateStarted;
       physical={status:groupAfter?.protection??'unknown',
         profiles:groupAfter?.profiles,modules:quote.pieces.length,
-        cost:quote.cost,gaps:quote.blockedPieces.length+quote.blockedCrops.length};
+        cost:quote.cost,gates:quote.gates,
+        structural:inspectSelfClosedQuote(quote,state.structures,
+          cropPoints.map(([x,z])=>({x,z}))),
+        blockedPieces:quote.blockedPieces.length,
+        blockedCrops:quote.blockedCrops.length};
     }
     return {status:count===-1?'unknown':count===-2?'unsupported':'proposed',
       box,topologicalMs,conversionMs,validationMs,cutEdges:count,
@@ -142,7 +144,7 @@ function inspect(state,nav){
       strokes:shape?.strokes.length,estimatedModules:shape?.slots.length,
       estimatedCost:shape?.estimatedCost,ambiguous:shape?.ambiguous.length,
       junctions:shape?.junctions.length,
-      stitched:!!stitched&&shape.strokes.length>1,physical};
+      multiArc:proposal?.length>1,physical};
   };
   const updates=()=>{
     let total=0;
