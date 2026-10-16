@@ -71,7 +71,7 @@ test('event-driven defense sleeps without relevant changes and wakes on income o
 });
 test('event-driven defense waits for the whole stroke before quoting and spending',()=>{
  const phases=[];
- const {s,nav,options,policy}=fixture({eventDriven:true,
+ const {s,nav,options,policy}=fixture({eventDriven:true,reserveMode:'next-stroke',
   measure:kind=>phases.push(kind)});
  assert.equal(policy.act(s,nav,options),1);
  s.plants.push({id:'future-crop',species:'mijo',alive:true,x:18,z:0});
@@ -81,6 +81,8 @@ test('event-driven defense waits for the whole stroke before quoting and spendin
  const waiting=policy.report(s),target=waiting.waitForFunds;
  assert.equal(waiting.history.at(-1).reason,'budget');
  assert.ok(target>30);
+ assert.equal(policy.reserve(s),waiting.capitalTarget,
+  'agricultural spending must preserve the wall savings target');
  const quotes=phases.filter(kind=>kind==='defense.quoteWallChain').length;
  s.ledger.balance=rational(target-1);
  policy.onWorldEvent({type:'CrateDelivered'},s);

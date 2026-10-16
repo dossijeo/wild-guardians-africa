@@ -105,7 +105,7 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
   const start=performance.now();
   try{return fn();}finally{measure(kind,performance.now()-start);}
  };
- const defense=defend?(defensePolicy==='expanding'?createNativeExpandingDefensePolicy({repairWalls:policy.repair,reserveMode:'none',eventDriven:defenseEventDriven,measure:decisionProfile?measure:null,preparedQuotes:preparedWallQuotes,spatialAdvice:advice}):createFarmDefensePolicy()):null;
+ const defense=defend?(defensePolicy==='expanding'?createNativeExpandingDefensePolicy({repairWalls:policy.repair,reserveMode:defenseEventDriven?'next-stroke':'none',eventDriven:defenseEventDriven,measure:decisionProfile?measure:null,preparedQuotes:preparedWallQuotes,spatialAdvice:advice}):createFarmDefensePolicy()):null;
  const observeDefenseEvents=()=>defenseEventDriven&&defense?.onWorldEvent?
   Game.observeGameEvents(s,event=>defense.onWorldEvent(event,s)):null;
  let stopDefenseEvents=observeDefenseEvents();

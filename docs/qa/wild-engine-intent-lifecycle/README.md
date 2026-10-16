@@ -554,3 +554,8 @@ slots as a conservative savings threshold and defers the full geometry and
 door quote until it can afford that threshold. Obstacles may make the final
 quote cheaper, so this can save more than strictly necessary; it avoids
 repeating an expensive speculative quote on every small income event.
+In the native-intent campaign, the event-driven defense target is included
+in the bot's cash reserve before it plants again. Otherwise the bot kept
+buying seeds with the same surplus and never accumulated enough for a
+complete stroke. This is a deliberate economic-policy change in the
+experimental virtual player; prices and game rules remain unchanged.
