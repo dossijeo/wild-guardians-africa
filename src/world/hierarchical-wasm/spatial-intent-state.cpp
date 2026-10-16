@@ -1556,6 +1556,51 @@ int nav_intent_plan_retreat(double actorId,double startX,double startZ,
   emitIntentChange(s,intent);
   return 1;
 }
+// Restore a saved continuous route verbatim when its remaining points are
+// still physically valid. Handles from the previous session are never reused.
+int nav_intent_restore_retreat(double actorId,double startX,double startZ,
+                               double exitX,double exitZ,int count){
+  if(!integer(actorId)||!coordinate(startX)||!coordinate(startZ)||
+     !coordinate(exitX)||!coordinate(exitZ)||count<=0||count>4096)return -1;
+  IntentState& s=state();
+  if(s.attackRouteInput.size()<size_t(count)*2)return -1;
+  float x=float(startX),z=float(startZ);
+  for(int i=0;i<count;i++){
+    const float nextX=s.attackRouteInput[size_t(i)*2],
+      nextZ=s.attackRouteInput[size_t(i)*2+1];
+    if(!coordinate(nextX)||!coordinate(nextZ)||
+       !spatial_world_segment_clear(x,z,nextX,nextZ))return 0;
+    x=nextX;z=nextZ;
+  }
+  if(std::hypot(double(x)-exitX,double(z)-exitZ)>.1)return 0;
+  const uint64_t actor=uint64_t(actorId);
+  const auto prior=s.activeIntents.find(actor);
+  if(prior!=s.activeIntents.end()){
+    if(!prior->second.animal||prior->second.state==PlanningState::ActionActive)
+      return -2;
+    releaseIntent(s,actor,PlanningState::Cancelled);
+    s.activeIntents.erase(actor);
+  }
+  uint32_t slot=uint32_t(s.routeSlots.size());
+  for(uint32_t i=0;i<s.routeSlots.size();i++)
+    if(!s.routeSlots[i].active){slot=i;break;}
+  if(slot==s.routeSlots.size())s.routeSlots.emplace_back();
+  RouteSlot& route=s.routeSlots[slot];
+  route.points.assign(s.attackRouteInput.begin(),
+    s.attackRouteInput.begin()+size_t(count)*2);
+  route.active=true;route.generation++;
+  if(!route.generation)route.generation=1;
+  ActiveIntent intent{actor,0,0,PlanningState::RouteActive,
+    slot,route.generation,lazy_route_revision(),true,false};
+  intent.retreat=true;intent.lease=false;
+  intent.profile=lazy_selected_context();
+  intent.routeStartX=float(startX);intent.routeStartZ=float(startZ);
+  intent.approachX=float(exitX);intent.approachZ=float(exitZ);
+  intent.approachKnown=true;
+  s.activeIntents.insert_or_assign(actor,intent);
+  emitIntentChange(s,intent);
+  return 1;
+}
 // An attack site is a dynamic lease, separate from the reusable geometric
 // route. Reject overlapping sites before replacing an existing intention.
 int nav_intent_register_attack_site(double actorId,double targetId,

@@ -92,7 +92,7 @@ export function createSpatialIntentBridge(session){
     'nav_intent_replan_pending_routes',
     'nav_intent_request_reroute',
     'nav_intent_attack_route_input_ptr','nav_intent_register_attack',
-    'nav_intent_plan_retreat',
+    'nav_intent_plan_retreat','nav_intent_restore_retreat',
     'nav_intent_register_attack_site',
     'nav_intent_track_wall_opportunities',
     'nav_intent_wall_opportunity_candidates',
@@ -669,8 +669,33 @@ export function createSpatialIntentBridge(session){
     return {restoredAnimalAttacks:committed,restoredAnimalRoutes:travelling,
       invalidSavedAnimalRoutes:staleRoutes,pendingAttackRouteIds};
   };
+  const restoreRetreatIntents=state=>{
+    const restoredRetreatRouteIds=[];
+    let invalidSavedRetreatRoutes=0;
+    for(const animal of [...(state.raid?.animals??[])]
+      .filter(item=>item.status==='retreating'&&item.path?.length)
+      .sort((left,right)=>numericId(left.id)-numericId(right.id))){
+      const exit=animal.exit??animal.spawn;
+      if(!exit||animal.path.length>4096){invalidSavedRetreatRoutes++;continue;}
+      session.actorSectorRevision({worker:false,species:animal.species});
+      const pointer=wasm.nav_intent_attack_route_input_ptr(animal.path.length);
+      if(!pointer){invalidSavedRetreatRoutes++;continue;}
+      const input=new Float32Array(wasm.memory.buffer,pointer,
+        animal.path.length*2);
+      for(let index=0;index<animal.path.length;index++){
+        input[index*2]=animal.path[index].x;
+        input[index*2+1]=animal.path[index].z;
+      }
+      const status=wasm.nav_intent_restore_retreat(numericId(animal.id),
+        animal.x,animal.z,exit.x,exit.z,animal.path.length);
+      if(status===1)restoredRetreatRouteIds.push(animal.id);
+      else invalidSavedRetreatRoutes++;
+    }
+    return {restoredRetreatRouteIds,invalidSavedRetreatRoutes};
+  };
   return {resetFromState,applyEvents,applyCommittedEvents,planTasks,
-    restoreAssignedTasks,restoreAttackIntents,proposalRoute,
+    restoreAssignedTasks,restoreAttackIntents,restoreRetreatIntents,
+    proposalRoute,
     getDamagedWalls:()=>getDamaged('wall'),
     getDamagedCenters:()=>getDamaged('center'),
     getUnprotectedCropGroups,
@@ -731,8 +756,11 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     const result=bridge.resetFromState(state);
     const restored=bridge.restoreAssignedTasks(state);
     const restoredAnimals=bridge.restoreAttackIntents(state);
+    const restoredRetreats=bridge.restoreRetreatIntents(state);
     eligible.clear();projectedPositions.clear();pendingAttackRoutes.clear();
     retreatRoutes.clear();
+    for(const id of restoredRetreats.restoredRetreatRouteIds)
+      retreatRoutes.add(numericId(id));
     tacticalReconsiderations.clear();
     requests.clear();animalRequests.clear();
     workerPlanCounts.clear();animalPlanCounts.clear();
@@ -752,7 +780,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
       bridge.getUnprotectedCropGroups({includeProtected:true})
         .map(group=>[group.id,group]));
     else cropProtectionSnapshot=null;
-    return {...result,...restored,...restoredAnimals};
+    return {...result,...restored,...restoredAnimals,...restoredRetreats};
   };
   const publishCropProtectionChanges=({cropOnly=false}={})=>{
     if(!cropProtectionListeners.size)return;

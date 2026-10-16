@@ -46,6 +46,20 @@ test('native retreat owns one physical route until completion without an attack 
     assert.equal(record[3],0,'retreat has no target lease');
     assert(bridge.cancelAttackIntent(actor.id));
     assert.equal(bridge.routePoints(result.routeHandle),null);
+    bridge.resetFromState(game);
+    const pointer=session.core.wasm.nav_intent_attack_route_input_ptr(
+      result.path.length);
+    const saved=new Float32Array(session.core.wasm.memory.buffer,pointer,
+      result.path.length*2);
+    for(let index=0;index<result.path.length;index++){
+      saved[index*2]=result.path[index].x;
+      saved[index*2+1]=result.path[index].z;
+    }
+    assert.equal(session.core.wasm.nav_intent_restore_retreat(900001,
+      start.x,start.z,end.x,end.z,result.path.length),1);
+    assert.equal(bridge.routePoints(result.routeHandle),null,
+      'a route handle from the previous session must stay invalid');
+    assert.equal(session.core.wasm.nav_intent_actor(900001),1);
   }finally{session.dispose();}
 });
 
