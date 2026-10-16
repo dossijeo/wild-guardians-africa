@@ -33,6 +33,18 @@ a valuable optimization at these sizes. The benchmark and handle regression
 remain to evaluate future changes. A local Emscripten 6.0.12 installation
 reproduced the candidate's exact WASM hash and the same 25 passing tests.
 
+The next candidate is shared exploration for multiple route destinations,
+based on the frozen Sabana day-17 repair fixture. Repeating its repair-access
+preview three times with the unchanged baseline measured 487.6/484.4/500.5 ms,
+60 native route queries total (20 per preview), and 1,335.0 ms inside those
+route calls across the three previews. The summed route-call time exceeds
+top-level preview time because the benchmark also times witness queries
+separately. A cold four-query batch was 214.6 ms versus 230.2 ms sequentially;
+an identical warm batch was 0.16 ms. This confirms that batching JS↔WASM
+crossings alone does not remove cold graph work after provisional topology
+changes. Any multi-destination prototype must retain the physical route proof
+and preserve preview isolation.
+
 This branch starts at `3361c06a`, the current experimental native-intent
 branch, without changing gameplay. It is separate from PR #53. Its initial
 baselines used the 4 MiB production binary; the later 16 MiB activation is
