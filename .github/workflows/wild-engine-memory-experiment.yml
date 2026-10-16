@@ -1,0 +1,51 @@
+name: Wild Engine memory experiment
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/wild-engine-memory-experiment.yml'
+      - 'tools/build-spatial-savanna-wasm.sh'
+      - 'tools/experiments/benchmark-wild-engine-linear-memory.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  initial-memory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        initial_mib: [4, 16, 32, 64]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Build identical source with selected initial memory
+        run: |
+          mkdir -p .cache/wild-engine-memory
+          memory_bytes=$(( ${{ matrix.initial_mib }} * 1024 * 1024 ))
+          docker run --rm -v "$PWD:/src" -w /src \
+            -e SPATIAL_WASM_OUTPUT=.cache/wild-engine-memory/engine.wasm \
+            -e SPATIAL_INITIAL_MEMORY="$memory_bytes" \
+            emscripten/emsdk@sha256:77638e6c215a65f25a704c0c831d5c2463a8c0468a58c6cb82489dbe621dfa05 \
+            bash tools/build-spatial-savanna-wasm.sh
+      - name: Repeat frozen workload in all biomes
+        run: |
+          for biome in sabana desierto gran-rio volcanes manglares gran-canon; do
+            for run in 1 2 3; do
+              node tools/experiments/benchmark-wild-engine-linear-memory.mjs \
+                .cache/wild-engine-memory/engine.wasm \
+                ".cache/wild-engine-memory/${biome}-${run}.json" 0 "$biome" 712 > /dev/null
+            done
+          done
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: wild-engine-memory-${{ matrix.initial_mib }}mib
+          path: .cache/wild-engine-memory/
+          if-no-files-found: error
+          retention-days: 14

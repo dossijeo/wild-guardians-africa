@@ -1,0 +1,211 @@
+diff --git a/src/world/hierarchical-wasm/lazy-sectors.cpp b/src/world/hierarchical-wasm/lazy-sectors.cpp
+index dd85fafe..b04368fb 100644
+--- a/src/world/hierarchical-wasm/lazy-sectors.cpp
++++ b/src/world/hierarchical-wasm/lazy-sectors.cpp
+@@ -40,6 +40,8 @@ struct Context {
+   std::vector<int32_t> weakRegion;
+   std::vector<uint8_t> weakRegionOpen;
+   bool weakDirty=true;
++  uint64_t profileRouteCalls=0,profileBfsNodes=0,profileBfsArcs=0;
++  uint64_t profileLocalCalls=0,profileLocalNodes=0;
+ };
+ // Standalone no-entry WASM does not run global C++ constructors. Construct
+ // each profile on first use instead of relying on zeroed vector internals.
+@@ -217,11 +219,13 @@ void appendPoint(const Sector& sector,int cell){
+   routePoints.push_back(sector.sz*sectorSize+cell/sectorSize);
+ }
+ bool localPath(const Sector& sector,int from,int to){
++  active().profileLocalCalls++;
+   if(from==to)return true;
+   if(from<0||to<0||sector.component[from]<0||sector.component[from]!=sector.component[to])return false;
+   localParent.assign(sectorSize*sectorSize,-1);
+   queueBuffer.clear();queueBuffer.push_back(from);localParent[from]=from;
+   for(size_t q=0;q<queueBuffer.size();q++){
++    active().profileLocalNodes++;
+     const int at=queueBuffer[q];if(at==to)break;
+     const int x=at%sectorSize,z=at/sectorSize;
+     for(int d=0;d<4;d++){
+@@ -401,6 +405,7 @@ int lazy_weak_region(int worldX,int worldZ){
+ }
+ // -1: unloaded/uncertain; 0: known impossible; positive: coordinate pairs.
+ int lazy_route(int fromX,int fromZ,int toX,int toZ){
++  active().profileRouteCalls++;
+   routePoints.clear();
+   connectivityReason=0;
+   if(!sectorSize){connectivityReason=1;return -1;}
+@@ -422,10 +427,12 @@ int lazy_route(int fromX,int fromZ,int toX,int toZ){
+   queueBuffer.clear();queueBuffer.push_back(source);visited[source]=1;
+   bool unknown=false;
+   for(size_t q=0;q<queueBuffer.size()&&!visited[target];q++){
++    active().profileBfsNodes++;
+     const int32_t node=queueBuffer[q],sectorId=node/stride,local=node%stride;
+     const Sector& sector=*byId[sectorId];
+     if(sector.unknown[local])unknown=true;
+     for(const Arc& arc:sector.edges[local]){
++      active().profileBfsArcs++;
+       if(visited[arc.to])continue;
+       visited[arc.to]=1;previousNode[arc.to]=node;previousArc[arc.to]=arc;
+       queueBuffer.push_back(arc.to);
+@@ -458,4 +465,14 @@ int32_t* lazy_route_ptr(){return routePoints.data();}
+ int lazy_loaded_sectors(){return sectors?static_cast<int>(sectors->size()):0;}
+ int lazy_sector_slots(){return static_cast<int>(byId.size());}
+ int lazy_sector_updates(){return updates;}
++void lazy_route_profile_reset(){
++  active().profileRouteCalls=0;active().profileBfsNodes=0;
++  active().profileBfsArcs=0;active().profileLocalCalls=0;
++  active().profileLocalNodes=0;
++}
++double lazy_route_profile_calls(){return double(active().profileRouteCalls);}
++double lazy_route_profile_bfs_nodes(){return double(active().profileBfsNodes);}
++double lazy_route_profile_bfs_arcs(){return double(active().profileBfsArcs);}
++double lazy_route_profile_local_calls(){return double(active().profileLocalCalls);}
++double lazy_route_profile_local_nodes(){return double(active().profileLocalNodes);}
+ }
+diff --git a/src/world/hierarchical-wasm/spatial-savanna.cpp b/src/world/hierarchical-wasm/spatial-savanna.cpp
+index afc13c28..5b9b76f5 100644
+--- a/src/world/hierarchical-wasm/spatial-savanna.cpp
++++ b/src/world/hierarchical-wasm/spatial-savanna.cpp
+@@ -34,6 +34,9 @@ constexpr int side=48,grid=49,sector=12;
+ constexpr int pad=4,latticeSpan=grid+pad*2;
+ constexpr int propBucketWidth=8,propBucketSide=8;
+ constexpr double maxIndexedRadius=2.0;
++uint64_t profileClearCalls=0,profileClearSamples=0;
++uint64_t profileRasterRejects=0,profileTerrainRejects=0;
++uint64_t profilePropRejects=0,profileBarrierRejects=0;
+ constexpr double pi=3.14159265358979323846;
+ struct Prop {float x,z,y,radius,scale,yaw;int32_t slot,group,gx,gz;};
+ static_assert(sizeof(Prop)==40);
+@@ -1793,23 +1796,45 @@ int spatial_edge(int x,int z,int nx,int nz){return std::abs(x-nx)+std::abs(z-nz)
+ // The same terrain, prop and barrier predicates used to rasterize navigation
+ // validate the actual swept segment. Longer routes belong to the sector graph.
+ int spatial_local_clear_except(float x,float z,float nx,float nz,int ignore0,int ignore1,int ignore2,int ignore3){
++  profileClearCalls++;
+   if(!navReady||!std::isfinite(x)||!std::isfinite(z)||!std::isfinite(nx)||!std::isfinite(nz))return 0;
+   const int ignored[]={ignore0,ignore1,ignore2,ignore3};
+   const double distance=std::hypot(double(nx)-x,double(nz)-z);
+   if(distance>1.5)return 0;
+   const int steps=std::max(1,int(std::ceil(distance/.2)));
+   for(int i=0;i<=steps;i++){
++    profileClearSamples++;
+     const double t=double(i)/steps,px=x+(nx-x)*t,pz=z+(nz-z)*t;
+     const int cx=int(std::floor((px+24)/side)),cz=int(std::floor((pz+24)/side));
+-    if(!rasterAt(int(std::round(px)),int(std::round(pz)))||
+-       !terrainValid(px,pz,radiusNow,workerNow)||residentPropBlocked(px,pz,cx,cz)||
+-       !barrierClear(px,pz,ignored,4))return 0;
++    if(!rasterAt(int(std::round(px)),int(std::round(pz)))){
++      profileRasterRejects++;return 0;
++    }
++    if(!terrainValid(px,pz,radiusNow,workerNow)){
++      profileTerrainRejects++;return 0;
++    }
++    if(residentPropBlocked(px,pz,cx,cz)){
++      profilePropRejects++;return 0;
++    }
++    if(!barrierClear(px,pz,ignored,4)){
++      profileBarrierRejects++;return 0;
++    }
+   }
+   return 1;
+ }
+ int spatial_local_clear(float x,float z,float nx,float nz){
+   return spatial_local_clear_except(x,z,nx,nz,0,0,0,0);
+ }
++void spatial_clear_profile_reset(){
++  profileClearCalls=profileClearSamples=0;
++  profileRasterRejects=profileTerrainRejects=0;
++  profilePropRejects=profileBarrierRejects=0;
++}
++double spatial_clear_profile_calls(){return double(profileClearCalls);}
++double spatial_clear_profile_samples(){return double(profileClearSamples);}
++double spatial_clear_profile_raster_rejects(){return double(profileRasterRejects);}
++double spatial_clear_profile_terrain_rejects(){return double(profileTerrainRejects);}
++double spatial_clear_profile_prop_rejects(){return double(profilePropRejects);}
++double spatial_clear_profile_barrier_rejects(){return double(profileBarrierRejects);}
+ // Crop placement advice is separate from movement passability: a worker may
+ // cross an automatic gate, but a seed cannot be placed on that wall. -1 means
+ // the resident prop/terrain data is missing; callers must not claim no space.
+diff --git a/tools/build-spatial-savanna-wasm.sh b/tools/build-spatial-savanna-wasm.sh
+index 921a1dd0..aca14cf2 100644
+--- a/tools/build-spatial-savanna-wasm.sh
++++ b/tools/build-spatial-savanna-wasm.sh
+@@ -8,5 +8,5 @@ if ! [[ "$initial_memory" =~ ^[0-9]+$ ]] || (( initial_memory < 4194304 || initi
+ fi
+ em++ src/world/hierarchical-wasm/spatial-savanna.cpp src/world/hierarchical-wasm/lazy-sectors.cpp src/world/hierarchical-wasm/spatial-route-planner.cpp src/world/hierarchical-wasm/spatial-action-planner.cpp src/world/hierarchical-wasm/spatial-intent-state.cpp -std=c++17 -O3 \
+   -s STANDALONE_WASM=1 -s ALLOW_MEMORY_GROWTH=1 -s INITIAL_MEMORY="$initial_memory" \
+-  -s 'EXPORTED_FUNCTIONS=["_lazy_connected_reason","_lazy_connected_frontier_valid","_lazy_connected_frontier_x","_lazy_connected_frontier_z","_lazy_enclosure","_lazy_weak_region","_spatial_local_clear_except","_spatial_generate","_spatial_generate_biome","_spatial_add_chunk","_spatial_select_chunk","_spatial_remove_chunk","_spatial_chunk_count","_spatial_resident_prop_count","_spatial_resident_visible_prop_count","_spatial_changed_chunk_count","_spatial_changed_chunks_ptr","_spatial_set_settlement","_spatial_add_settlement","_spatial_remove_prop","_spatial_removed_prop_count","_spatial_removed_prop_state_ptr","_spatial_removed_prop_restore_ptr","_spatial_restore_removed_props","_spatial_sector_slots","_spatial_surface","_spatial_surface_anywhere","_spatial_fluid_level","_spatial_fluid_level_anywhere","_spatial_water_shore_anywhere","_spatial_river_center","_spatial_river_edge","_spatial_river_level","_spatial_fluid_surface_level","_spatial_wetland_mask_anywhere","_spatial_ground_color_input_ptr","_spatial_ground_color_batch","_spatial_ground_color_result_ptr","_spatial_build_horizon","_spatial_horizon_terrain_ptr","_spatial_horizon_water_count","_spatial_horizon_water_ptr","_spatial_heights_ptr","_spatial_colors_ptr","_spatial_water_ptr","_spatial_ground_mask_ptr","_spatial_water_levels_ptr","_spatial_water_triangles_ptr","_spatial_water_vertex_count","_spatial_props_ptr","_spatial_prop_count","_spatial_halo_prop_count","_spatial_build_nav","_spatial_build_nav_profile","_spatial_select_nav_profile","_spatial_select_nav_profile_index","_spatial_add_wall","_spatial_remove_wall","_spatial_add_barrier","_spatial_add_oriented_barrier","_spatial_barrier_batch_ptr","_spatial_barrier_batch_ids_ptr","_spatial_add_barriers_batch","_spatial_barrier_removal_ptr","_spatial_apply_barrier_batch","_spatial_world_seed","_spatial_world_biome","_spatial_next_barrier_id","_spatial_settlement_state_count","_spatial_settlement_state_ptr","_spatial_barrier_state_count","_spatial_barrier_state_ptr","_spatial_barrier_restore_ptr","_spatial_restore_barriers","_spatial_remove_barrier","_spatial_polygon_input_ptr","_spatial_add_polygon","_spatial_remove_polygon","_spatial_next_polygon_id","_spatial_polygon_state_count","_spatial_polygon_state_ptr","_spatial_polygon_restore_ptr","_spatial_restore_polygons","_spatial_set_barrier_passability","_spatial_walkable","_spatial_edge","_spatial_local_clear","_spatial_crop_placement_valid","_spatial_prop_blocked","_spatial_region_batch_input_ptr","_spatial_region_batch_output_ptr","_spatial_region_batch","_lazy_component","_lazy_connected","_lazy_route","_lazy_route_ptr","_lazy_loaded_sectors","_lazy_sector_updates","_lazy_clear_portals","_lazy_add_portal","_lazy_commit_portals","_lazy_add_portal_world","_spatial_world_route","_spatial_world_route_ptr","_spatial_world_route_reason","_spatial_world_route_graph_reason","_spatial_world_route_cached","_spatial_route_cache_hits","_spatial_route_cache_misses","_spatial_route_cache_evictions","_spatial_route_cache_reset_metrics","_spatial_route_batch_input_ptr","_spatial_world_route_batch","_spatial_route_batch_rows_ptr","_spatial_route_batch_points_ptr","_spatial_route_batch_point_count","_spatial_add_gate_portal","_nav_task_workers_ptr","_nav_task_targets_ptr","_nav_task_tasks_ptr","_nav_plan_tasks_shadow","_nav_task_result_ptr","_nav_task_route_ptr","_nav_task_route_point_count","_nav_intent_reset","_nav_intent_changes_ptr","_nav_intent_apply_changes","_nav_intent_last_sequence","_nav_intent_entity_revision","_nav_intent_topology_revision","_nav_intent_damage_revision","_nav_intent_worker_count","_nav_intent_target_count","_nav_intent_task_count","_nav_intent_restore_assigned_tasks","_nav_intent_plan_tasks","_nav_intent_results_ptr","_nav_intent_routes_ptr","_nav_intent_route_point_count","_nav_intent_route_queries","_nav_intent_candidate_count","_nav_intent_discard","_nav_intent_commit","_nav_intent_change_count","_nav_intent_change_ptr","_nav_intent_clear_changes","_nav_intent_invalidation_count","_nav_intent_actor_planning_calls","_nav_intent_actor","_nav_intent_actor_ptr","_nav_intent_route_points","_nav_intent_route_ptr","_nav_intent_route_progress_input_ptr","_nav_intent_route_progress","_nav_intent_reconcile_topology","_nav_intent_replan_attack_route","_nav_intent_replan_pending_routes","_nav_intent_request_reroute","_nav_intent_attack_route_input_ptr","_nav_intent_register_attack","_nav_intent_plan_retreat","_nav_intent_restore_retreat","_nav_intent_plan_home","_nav_intent_restore_home","_nav_intent_cancel_home","_nav_intent_register_attack_site","_nav_intent_track_wall_opportunities","_nav_intent_wall_opportunity_candidates","_nav_intent_wall_opportunity_candidates_ptr","_nav_intent_reconsider_wall_opportunity","_nav_intent_attack_blockers_ptr","_nav_intent_attack_reserved_targets_ptr","_nav_intent_plan_attack_crop","_nav_intent_attack_result_ptr","_nav_intent_plan_attack_wall","_nav_intent_wall_attack_result_ptr","_nav_intent_wall_portals","_nav_intent_wall_portals_ptr","_nav_intent_wall_portal_builds","_nav_intent_perimeter_walls","_nav_intent_perimeter_wall_count","_nav_intent_perimeter_walls_ptr","_nav_intent_attack_action_active","_nav_intent_restore_attack_action","_nav_intent_restore_attack_pending","_nav_intent_restore_attack_site","_nav_intent_attack_finished","_nav_intent_attack_cancel","_nav_intent_action_active","_nav_intent_finish","_nav_intent_damaged_structures","_nav_intent_damaged_ptr","_nav_intent_crop_revision","_nav_intent_crop_groups","_nav_intent_crop_groups_ptr","_nav_intent_crop_members_ptr","_nav_intent_find_planting_site","_nav_intent_planting_site_ptr","_nav_intent_release_planting_site"]' \
++  -s 'EXPORTED_FUNCTIONS=["_lazy_connected_reason","_lazy_connected_frontier_valid","_lazy_connected_frontier_x","_lazy_connected_frontier_z","_lazy_enclosure","_lazy_weak_region","_spatial_local_clear_except","_spatial_generate","_spatial_generate_biome","_spatial_add_chunk","_spatial_select_chunk","_spatial_remove_chunk","_spatial_chunk_count","_spatial_resident_prop_count","_spatial_resident_visible_prop_count","_spatial_changed_chunk_count","_spatial_changed_chunks_ptr","_spatial_set_settlement","_spatial_add_settlement","_spatial_remove_prop","_spatial_removed_prop_count","_spatial_removed_prop_state_ptr","_spatial_removed_prop_restore_ptr","_spatial_restore_removed_props","_spatial_sector_slots","_spatial_surface","_spatial_surface_anywhere","_spatial_fluid_level","_spatial_fluid_level_anywhere","_spatial_water_shore_anywhere","_spatial_river_center","_spatial_river_edge","_spatial_river_level","_spatial_fluid_surface_level","_spatial_wetland_mask_anywhere","_spatial_ground_color_input_ptr","_spatial_ground_color_batch","_spatial_ground_color_result_ptr","_spatial_build_horizon","_spatial_horizon_terrain_ptr","_spatial_horizon_water_count","_spatial_horizon_water_ptr","_spatial_heights_ptr","_spatial_colors_ptr","_spatial_water_ptr","_spatial_ground_mask_ptr","_spatial_water_levels_ptr","_spatial_water_triangles_ptr","_spatial_water_vertex_count","_spatial_props_ptr","_spatial_prop_count","_spatial_halo_prop_count","_spatial_build_nav","_spatial_build_nav_profile","_spatial_select_nav_profile","_spatial_select_nav_profile_index","_spatial_add_wall","_spatial_remove_wall","_spatial_add_barrier","_spatial_add_oriented_barrier","_spatial_barrier_batch_ptr","_spatial_barrier_batch_ids_ptr","_spatial_add_barriers_batch","_spatial_barrier_removal_ptr","_spatial_apply_barrier_batch","_spatial_world_seed","_spatial_world_biome","_spatial_next_barrier_id","_spatial_settlement_state_count","_spatial_settlement_state_ptr","_spatial_barrier_state_count","_spatial_barrier_state_ptr","_spatial_barrier_restore_ptr","_spatial_restore_barriers","_spatial_remove_barrier","_spatial_polygon_input_ptr","_spatial_add_polygon","_spatial_remove_polygon","_spatial_next_polygon_id","_spatial_polygon_state_count","_spatial_polygon_state_ptr","_spatial_polygon_restore_ptr","_spatial_restore_polygons","_spatial_set_barrier_passability","_spatial_walkable","_spatial_edge","_spatial_local_clear","_spatial_crop_placement_valid","_spatial_prop_blocked","_spatial_region_batch_input_ptr","_spatial_region_batch_output_ptr","_spatial_region_batch","_lazy_component","_lazy_connected","_lazy_route","_lazy_route_ptr","_lazy_loaded_sectors","_lazy_sector_updates","_lazy_clear_portals","_lazy_add_portal","_lazy_commit_portals","_lazy_add_portal_world","_spatial_world_route","_spatial_world_route_ptr","_spatial_world_route_reason","_spatial_world_route_graph_reason","_spatial_world_route_cached","_spatial_route_cache_hits","_spatial_route_cache_misses","_spatial_route_cache_evictions","_spatial_route_cache_reset_metrics","_spatial_route_batch_input_ptr","_spatial_world_route_batch","_spatial_route_batch_rows_ptr","_spatial_route_batch_points_ptr","_spatial_route_batch_point_count","_spatial_add_gate_portal","_nav_task_workers_ptr","_nav_task_targets_ptr","_nav_task_tasks_ptr","_nav_plan_tasks_shadow","_nav_task_result_ptr","_nav_task_route_ptr","_nav_task_route_point_count","_nav_intent_reset","_nav_intent_changes_ptr","_nav_intent_apply_changes","_nav_intent_last_sequence","_nav_intent_entity_revision","_nav_intent_topology_revision","_nav_intent_damage_revision","_nav_intent_worker_count","_nav_intent_target_count","_nav_intent_task_count","_nav_intent_restore_assigned_tasks","_nav_intent_plan_tasks","_nav_intent_results_ptr","_nav_intent_routes_ptr","_nav_intent_route_point_count","_nav_intent_route_queries","_nav_intent_candidate_count","_nav_intent_discard","_nav_intent_commit","_nav_intent_change_count","_nav_intent_change_ptr","_nav_intent_clear_changes","_nav_intent_invalidation_count","_nav_intent_actor_planning_calls","_nav_intent_actor","_nav_intent_actor_ptr","_nav_intent_route_points","_nav_intent_route_ptr","_nav_intent_route_progress_input_ptr","_nav_intent_route_progress","_nav_intent_reconcile_topology","_nav_intent_replan_attack_route","_nav_intent_replan_pending_routes","_nav_intent_request_reroute","_nav_intent_attack_route_input_ptr","_nav_intent_register_attack","_nav_intent_plan_retreat","_nav_intent_restore_retreat","_nav_intent_plan_home","_nav_intent_restore_home","_nav_intent_cancel_home","_nav_intent_register_attack_site","_nav_intent_track_wall_opportunities","_nav_intent_wall_opportunity_candidates","_nav_intent_wall_opportunity_candidates_ptr","_nav_intent_reconsider_wall_opportunity","_nav_intent_attack_blockers_ptr","_nav_intent_attack_reserved_targets_ptr","_nav_intent_plan_attack_crop","_nav_intent_attack_result_ptr","_nav_intent_plan_attack_wall","_nav_intent_wall_attack_result_ptr","_nav_intent_wall_portals","_nav_intent_wall_portals_ptr","_nav_intent_wall_portal_builds","_nav_intent_perimeter_walls","_nav_intent_perimeter_wall_count","_nav_intent_perimeter_walls_ptr","_nav_intent_attack_action_active","_nav_intent_restore_attack_action","_nav_intent_restore_attack_pending","_nav_intent_restore_attack_site","_nav_intent_attack_finished","_nav_intent_attack_cancel","_nav_intent_action_active","_nav_intent_finish","_nav_intent_damaged_structures","_nav_intent_damaged_ptr","_nav_intent_crop_revision","_nav_intent_crop_groups","_nav_intent_crop_groups_ptr","_nav_intent_crop_members_ptr","_nav_intent_find_planting_site","_nav_intent_planting_site_ptr","_nav_intent_release_planting_site","_lazy_route_profile_reset","_lazy_route_profile_calls","_lazy_route_profile_bfs_nodes","_lazy_route_profile_bfs_arcs","_lazy_route_profile_local_calls","_lazy_route_profile_local_nodes","_spatial_clear_profile_reset","_spatial_clear_profile_calls","_spatial_clear_profile_samples","_spatial_clear_profile_raster_rejects","_spatial_clear_profile_terrain_rejects","_spatial_clear_profile_prop_rejects","_spatial_clear_profile_barrier_rejects"]' \
+   -Wl,--no-entry -o "${SPATIAL_WASM_OUTPUT:-src/world/hierarchical-wasm/spatial-savanna.wasm}"
+diff --git a/tools/experiments/benchmark-repair-access.mjs b/tools/experiments/benchmark-repair-access.mjs
+index 77f09ed5..aedd3e11 100644
+--- a/tools/experiments/benchmark-repair-access.mjs
++++ b/tools/experiments/benchmark-repair-access.mjs
+@@ -111,11 +111,49 @@ try{
+       return value;
+     });}finally{previewMs+=performance.now()-start;}
+   };
++  const profile=session.core.wasm;
++  const phaseStats={select:{calls:0,clearCalls:0,ms:0},
++    portals:{calls:0,clearCalls:0,ms:0}};
++  for(const [method,key] of [['selectNavigationProfile','select'],
++    ['setWorkerGatePortals','portals']]){
++    const original=session.core[method];
++    session.core[method]=(...args)=>{
++      const before=profile.spatial_clear_profile_calls(),started=performance.now();
++      try{return original(...args);}finally{
++        const row=phaseStats[key];row.calls++;
++        row.clearCalls+=profile.spatial_clear_profile_calls()-before;
++        row.ms+=performance.now()-started;
++      }
++    };
++  }
++  const snapshot=()=>({
++    calls:profile.spatial_clear_profile_calls(),
++    samples:profile.spatial_clear_profile_samples(),
++    bfsNodes:profile.lazy_route_profile_bfs_nodes(),
++    localNodes:profile.lazy_route_profile_local_nodes()});
++  const routeOnly={calls:0,samples:0,bfsNodes:0,localNodes:0};
++  const routeBreakdown=[];
+   nav.workerPhysicalRoute=(start,end)=>{
+     routeCalls++;
+     const routeStart=performance.now();
+-    try{return physicalRoute(start,end);}finally{routeMs+=performance.now()-routeStart;}
++    const before=snapshot();
++    try{return physicalRoute(start,end);}finally{
++      routeMs+=performance.now()-routeStart;
++      const after=snapshot();
++      for(const key of Object.keys(routeOnly))routeOnly[key]+=after[key]-before[key];
++      routeBreakdown.push({start:[start.x,start.z],end:[end.x,end.z],
++        ms:performance.now()-routeStart,
++        clearCalls:after.calls-before.calls,
++        clearSamples:after.samples-before.samples,
++        bfsNodes:after.bfsNodes-before.bfsNodes,
++        localNodes:after.localNodes-before.localNodes});
++    }
+   };
++  profile.lazy_route_profile_reset();
++  profile.spatial_clear_profile_reset();
++  for(const row of Object.values(phaseStats)){
++    row.calls=0;row.clearCalls=0;row.ms=0;
++  }
+   let plan;
+   for(let i=0;i<iterations;i++){
+     const start=performance.now();
+@@ -127,6 +165,18 @@ try{
+       .map(piece=>({id:piece.id,x:piece.x,z:piece.z})),
+     timingsMs:timings,meanMs:timings.reduce((a,b)=>a+b,0)/timings.length,
+     previewCalls,routeCalls,previewMs,routeMs,routeTiming,previewBatch,
++    routeProfile:{calls:profile.lazy_route_profile_calls(),
++      bfsNodes:profile.lazy_route_profile_bfs_nodes(),
++      bfsArcs:profile.lazy_route_profile_bfs_arcs(),
++      localCalls:profile.lazy_route_profile_local_calls(),
++      localNodes:profile.lazy_route_profile_local_nodes()},
++    routeOnly,routeBreakdown,phaseStats,
++    clearanceProfile:{calls:profile.spatial_clear_profile_calls(),
++      samples:profile.spatial_clear_profile_samples(),
++      rasterRejects:profile.spatial_clear_profile_raster_rejects(),
++      terrainRejects:profile.spatial_clear_profile_terrain_rejects(),
++      propRejects:profile.spatial_clear_profile_prop_rejects(),
++      barrierRejects:profile.spatial_clear_profile_barrier_rejects()},
+     wallCount:game.structures.filter(piece=>piece.kind==='wall').length,
+     workerCount:game.workers.length}));
+ }finally{session.dispose();}

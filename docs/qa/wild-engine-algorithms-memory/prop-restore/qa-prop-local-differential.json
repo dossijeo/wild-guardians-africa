@@ -1,0 +1,482 @@
+{
+  "status": "exact-match",
+  "seed": 712,
+  "biomes": [
+    "sabana",
+    "desierto",
+    "gran-rio",
+    "volcanes",
+    "manglares",
+    "gran-canon"
+  ],
+  "chunks": [
+    [
+      0,
+      0
+    ],
+    [
+      1,
+      0
+    ],
+    [
+      0,
+      1
+    ],
+    [
+      -1,
+      0
+    ]
+  ],
+  "profiles": [
+    {
+      "index": 1,
+      "radius": 0.28,
+      "worker": true
+    },
+    {
+      "index": 2,
+      "radius": 0.9,
+      "worker": false
+    },
+    {
+      "index": 5,
+      "radius": 1.55,
+      "worker": false
+    }
+  ],
+  "controlSha256": "110ccb71c8785687e747d855b9264f23abf680074b61c6b4c5fa688806607414",
+  "candidateSha256": "3597c9d91095a1e5736b12af705c15237d1bcdb4e711bd72948c2fb6c0d58b6b",
+  "stagesPerBiome": 7,
+  "changedRecords": 36,
+  "comparisons": 71190,
+  "restoreMs": {
+    "control": [
+      {
+        "biome": "sabana",
+        "stage": 0,
+        "ms": 156.11459999999994
+      },
+      {
+        "biome": "sabana",
+        "stage": 1,
+        "ms": 169.53269999999998
+      },
+      {
+        "biome": "sabana",
+        "stage": 2,
+        "ms": 176.29089999999985
+      },
+      {
+        "biome": "sabana",
+        "stage": 3,
+        "ms": 147.3825999999999
+      },
+      {
+        "biome": "sabana",
+        "stage": 4,
+        "ms": 156.72489999999993
+      },
+      {
+        "biome": "sabana",
+        "stage": 5,
+        "ms": 148.96820000000002
+      },
+      {
+        "biome": "sabana",
+        "stage": 6,
+        "ms": 150.5648000000001
+      },
+      {
+        "biome": "desierto",
+        "stage": 0,
+        "ms": 132.21059999999989
+      },
+      {
+        "biome": "desierto",
+        "stage": 1,
+        "ms": 141.32549999999992
+      },
+      {
+        "biome": "desierto",
+        "stage": 2,
+        "ms": 143.47890000000007
+      },
+      {
+        "biome": "desierto",
+        "stage": 3,
+        "ms": 148.83159999999998
+      },
+      {
+        "biome": "desierto",
+        "stage": 4,
+        "ms": 130.47820000000002
+      },
+      {
+        "biome": "desierto",
+        "stage": 5,
+        "ms": 160.0969
+      },
+      {
+        "biome": "desierto",
+        "stage": 6,
+        "ms": 135.91449999999986
+      },
+      {
+        "biome": "gran-rio",
+        "stage": 0,
+        "ms": 159.97460000000046
+      },
+      {
+        "biome": "gran-rio",
+        "stage": 1,
+        "ms": 169.4472999999998
+      },
+      {
+        "biome": "gran-rio",
+        "stage": 2,
+        "ms": 156.26879999999983
+      },
+      {
+        "biome": "gran-rio",
+        "stage": 3,
+        "ms": 151.76969999999983
+      },
+      {
+        "biome": "gran-rio",
+        "stage": 4,
+        "ms": 151.47869999999966
+      },
+      {
+        "biome": "gran-rio",
+        "stage": 5,
+        "ms": 160.64469999999983
+      },
+      {
+        "biome": "gran-rio",
+        "stage": 6,
+        "ms": 146.41049999999996
+      },
+      {
+        "biome": "volcanes",
+        "stage": 0,
+        "ms": 158.2464
+      },
+      {
+        "biome": "volcanes",
+        "stage": 1,
+        "ms": 142.33280000000013
+      },
+      {
+        "biome": "volcanes",
+        "stage": 2,
+        "ms": 149.33759999999984
+      },
+      {
+        "biome": "volcanes",
+        "stage": 3,
+        "ms": 154.5640999999996
+      },
+      {
+        "biome": "volcanes",
+        "stage": 4,
+        "ms": 166.41859999999997
+      },
+      {
+        "biome": "volcanes",
+        "stage": 5,
+        "ms": 160.96799999999985
+      },
+      {
+        "biome": "volcanes",
+        "stage": 6,
+        "ms": 144.42550000000028
+      },
+      {
+        "biome": "manglares",
+        "stage": 0,
+        "ms": 212.88320000000022
+      },
+      {
+        "biome": "manglares",
+        "stage": 1,
+        "ms": 227.5607
+      },
+      {
+        "biome": "manglares",
+        "stage": 2,
+        "ms": 235.4940999999999
+      },
+      {
+        "biome": "manglares",
+        "stage": 3,
+        "ms": 226.4239000000016
+      },
+      {
+        "biome": "manglares",
+        "stage": 4,
+        "ms": 280.59749999999985
+      },
+      {
+        "biome": "manglares",
+        "stage": 5,
+        "ms": 248.6288999999997
+      },
+      {
+        "biome": "manglares",
+        "stage": 6,
+        "ms": 226.40909999999894
+      },
+      {
+        "biome": "gran-canon",
+        "stage": 0,
+        "ms": 145.6094000000012
+      },
+      {
+        "biome": "gran-canon",
+        "stage": 1,
+        "ms": 147.3827000000001
+      },
+      {
+        "biome": "gran-canon",
+        "stage": 2,
+        "ms": 132.90790000000015
+      },
+      {
+        "biome": "gran-canon",
+        "stage": 3,
+        "ms": 139.47260000000097
+      },
+      {
+        "biome": "gran-canon",
+        "stage": 4,
+        "ms": 131.0577000000012
+      },
+      {
+        "biome": "gran-canon",
+        "stage": 5,
+        "ms": 138.32970000000023
+      },
+      {
+        "biome": "gran-canon",
+        "stage": 6,
+        "ms": 130.94700000000012
+      }
+    ],
+    "candidate": [
+      {
+        "biome": "sabana",
+        "stage": 0,
+        "ms": 0.2277000000000271
+      },
+      {
+        "biome": "sabana",
+        "stage": 1,
+        "ms": 78.33269999999993
+      },
+      {
+        "biome": "sabana",
+        "stage": 2,
+        "ms": 39.66229999999996
+      },
+      {
+        "biome": "sabana",
+        "stage": 3,
+        "ms": 72.19800000000009
+      },
+      {
+        "biome": "sabana",
+        "stage": 4,
+        "ms": 43.659400000000005
+      },
+      {
+        "biome": "sabana",
+        "stage": 5,
+        "ms": 75.45939999999996
+      },
+      {
+        "biome": "sabana",
+        "stage": 6,
+        "ms": 85.1777999999997
+      },
+      {
+        "biome": "desierto",
+        "stage": 0,
+        "ms": 0.008299999999962893
+      },
+      {
+        "biome": "desierto",
+        "stage": 1,
+        "ms": 69.33550000000014
+      },
+      {
+        "biome": "desierto",
+        "stage": 2,
+        "ms": 38.92459999999983
+      },
+      {
+        "biome": "desierto",
+        "stage": 3,
+        "ms": 87.23310000000038
+      },
+      {
+        "biome": "desierto",
+        "stage": 4,
+        "ms": 32.127300000000105
+      },
+      {
+        "biome": "desierto",
+        "stage": 5,
+        "ms": 76.25979999999981
+      },
+      {
+        "biome": "desierto",
+        "stage": 6,
+        "ms": 83.21129999999994
+      },
+      {
+        "biome": "gran-rio",
+        "stage": 0,
+        "ms": 0.013299999999617285
+      },
+      {
+        "biome": "gran-rio",
+        "stage": 1,
+        "ms": 91.4957000000004
+      },
+      {
+        "biome": "gran-rio",
+        "stage": 2,
+        "ms": 39.210799999999836
+      },
+      {
+        "biome": "gran-rio",
+        "stage": 3,
+        "ms": 88.3743000000004
+      },
+      {
+        "biome": "gran-rio",
+        "stage": 4,
+        "ms": 41.584899999999834
+      },
+      {
+        "biome": "gran-rio",
+        "stage": 5,
+        "ms": 72.94599999999991
+      },
+      {
+        "biome": "gran-rio",
+        "stage": 6,
+        "ms": 79.69809999999961
+      },
+      {
+        "biome": "volcanes",
+        "stage": 0,
+        "ms": 0.01040000000011787
+      },
+      {
+        "biome": "volcanes",
+        "stage": 1,
+        "ms": 77.98009999999977
+      },
+      {
+        "biome": "volcanes",
+        "stage": 2,
+        "ms": 41.401600000000144
+      },
+      {
+        "biome": "volcanes",
+        "stage": 3,
+        "ms": 77.21790000000055
+      },
+      {
+        "biome": "volcanes",
+        "stage": 4,
+        "ms": 39.34820000000036
+      },
+      {
+        "biome": "volcanes",
+        "stage": 5,
+        "ms": 75.96090000000004
+      },
+      {
+        "biome": "volcanes",
+        "stage": 6,
+        "ms": 75.03650000000016
+      },
+      {
+        "biome": "manglares",
+        "stage": 0,
+        "ms": 0.008800000001428998
+      },
+      {
+        "biome": "manglares",
+        "stage": 1,
+        "ms": 106.73530000000028
+      },
+      {
+        "biome": "manglares",
+        "stage": 2,
+        "ms": 56.39889999999832
+      },
+      {
+        "biome": "manglares",
+        "stage": 3,
+        "ms": 132.2394000000004
+      },
+      {
+        "biome": "manglares",
+        "stage": 4,
+        "ms": 65.45919999999933
+      },
+      {
+        "biome": "manglares",
+        "stage": 5,
+        "ms": 146.85039999999935
+      },
+      {
+        "biome": "manglares",
+        "stage": 6,
+        "ms": 126.8770999999997
+      },
+      {
+        "biome": "gran-canon",
+        "stage": 0,
+        "ms": 0.010200000000622822
+      },
+      {
+        "biome": "gran-canon",
+        "stage": 1,
+        "ms": 72.4424999999992
+      },
+      {
+        "biome": "gran-canon",
+        "stage": 2,
+        "ms": 43.39300000000003
+      },
+      {
+        "biome": "gran-canon",
+        "stage": 3,
+        "ms": 72.89959999999883
+      },
+      {
+        "biome": "gran-canon",
+        "stage": 4,
+        "ms": 44.83179999999993
+      },
+      {
+        "biome": "gran-canon",
+        "stage": 5,
+        "ms": 80.54409999999916
+      },
+      {
+        "biome": "gran-canon",
+        "stage": 6,
+        "ms": 87.66469999999936
+      }
+    ],
+    "controlTotal": 6893.906600000003,
+    "candidateTotal": 2618.4508999999966,
+    "controlMedian": 151.76969999999983,
+    "candidateMedian": 72.89959999999883
+  }
+}

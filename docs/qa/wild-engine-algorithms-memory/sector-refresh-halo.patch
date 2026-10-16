@@ -1,0 +1,42 @@
+diff --git a/src/world/hierarchical-wasm/spatial-savanna.cpp b/src/world/hierarchical-wasm/spatial-savanna.cpp
+index afc13c28..8b17b55b 100644
+--- a/src/world/hierarchical-wasm/spatial-savanna.cpp
++++ b/src/world/hierarchical-wasm/spatial-savanna.cpp
+@@ -726,21 +726,31 @@ bool edge(int x,int z,int nx,int nz){
+ void refreshSector(int sx,int sz){
+   uint8_t* pass=lazy_pass_ptr(),*steps=lazy_steps_ptr(),*inbound=lazy_inbound_ptr();
+   constexpr int dx[4]={1,-1,0,0},dz[4]={0,0,1,-1};
++  constexpr int halo=sector+2;
++  std::array<uint8_t,halo*halo> walkableHalo{};
++  for(int lz=-1;lz<=sector;lz++)for(int lx=-1;lx<=sector;lx++)
++    walkableHalo[(lz+1)*halo+lx+1]=walkable(sx*sector+lx,sz*sector+lz);
++  const auto allowed=[&](int lx,int lz){
++    return walkableHalo[(lz+1)*halo+lx+1]!=0;
++  };
+   for(int lz=0;lz<sector;lz++)for(int lx=0;lx<sector;lx++){
+     const int i=lz*sector+lx,x=sx*sector+lx,z=sz*sector+lz;
+-    pass[i]=walkable(x,z);steps[i]=inbound[i]=0;
++    pass[i]=allowed(lx,lz);steps[i]=inbound[i]=0;
+     if(!pass[i])continue;
++    const ChunkRaster* chunk=rasterAt(x,z);
++    const int at=rasterIndex(*chunk,x,z);
+     for(int d=0;d<4;d++){
+       const int nx=x+dx[d],nz=z+dz[d];
+-      if(!rasterAt(nx,nz)){
+-        const ChunkRaster* chunk=rasterAt(x,z);
+-        const int at=rasterIndex(*chunk,x,z);
++      const ChunkRaster* neighbor=rasterAt(nx,nz);
++      if(!neighbor){
+         if((chunk->steps[at]&(1<<d))&&wallEdgeClear(x,z,nx,nz))steps[i]|=1<<d;
+         if((chunk->inbound[at]&(1<<d))&&wallEdgeClear(nx,nz,x,z))inbound[i]|=1<<d;
+         continue;
+       }
+-      if(edge(x,z,nx,nz))steps[i]|=1<<d;
+-      if(edge(nx,nz,x,z))inbound[i]|=1<<d;
++      if(!allowed(lx+dx[d],lz+dz[d]))continue;
++      if((chunk->steps[at]&(1<<d))&&wallEdgeClear(x,z,nx,nz))steps[i]|=1<<d;
++      if((neighbor->steps[rasterIndex(*neighbor,nx,nz)]&(1<<(d^1)))&&
++         wallEdgeClear(nx,nz,x,z))inbound[i]|=1<<d;
+     }
+   }
+   lazy_commit_sector(sx,sz);

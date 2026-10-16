@@ -1,0 +1,292 @@
+{
+  "source": {
+    "commit": "3361c06a55350d58922034f79cdea517da8a3563",
+    "wasmPath": "src/world/hierarchical-wasm/spatial-savanna.wasm",
+    "wasmSha256": "ff719cfebd15fe0aa11a4ed85abc2912f35527e84e635699429489660a1fd8e7",
+    "runnerSha256": "2e9a42ea073b9f907b1c2c298c0e16ce5969f45036d80dcb50f262a3b1b83be8"
+  },
+  "preGrowMiB": 16,
+  "description": "Synthetic sequential spatial workload. Explicit pre-growth is not an Emscripten INITIAL_MEMORY build. Linear memory is committed capacity, not C++ live heap or RSS.",
+  "rows": [
+    {
+      "chunks": 1,
+      "samples": [
+        {
+          "phase": "instantiated",
+          "milliseconds": null,
+          "linearBytes": 4194304,
+          "chunks": 0,
+          "sectors": 0,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "explicit-pre-growth",
+          "milliseconds": 0.03839999999999577,
+          "linearBytes": 16777216,
+          "chunks": 0,
+          "sectors": 0,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "first-chunk",
+          "milliseconds": 8.403400000000005,
+          "linearBytes": 16777216,
+          "chunks": 1,
+          "sectors": 0,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "chunks-loaded",
+          "milliseconds": 0.009900000000001796,
+          "linearBytes": 16777216,
+          "chunks": 1,
+          "sectors": 0,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "animal-navigation-built",
+          "milliseconds": 36.692400000000006,
+          "linearBytes": 16777216,
+          "chunks": 1,
+          "sectors": 16,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "worker-navigation-built",
+          "milliseconds": 19.146500000000003,
+          "linearBytes": 16777216,
+          "chunks": 1,
+          "sectors": 16,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "hundred-routes",
+          "milliseconds": 19.157700000000006,
+          "linearBytes": 16777216,
+          "chunks": 1,
+          "sectors": 16,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "wall-added-removed",
+          "milliseconds": 4.753399999999999,
+          "linearBytes": 16777216,
+          "chunks": 1,
+          "sectors": 16,
+          "growthNotifications": 0
+        }
+      ],
+      "growth": []
+    },
+    {
+      "chunks": 9,
+      "samples": [
+        {
+          "phase": "instantiated",
+          "milliseconds": null,
+          "linearBytes": 4194304,
+          "chunks": 0,
+          "sectors": 0,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "explicit-pre-growth",
+          "milliseconds": 0.0648999999999944,
+          "linearBytes": 16777216,
+          "chunks": 0,
+          "sectors": 0,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "first-chunk",
+          "milliseconds": 2.2398000000000025,
+          "linearBytes": 16777216,
+          "chunks": 1,
+          "sectors": 0,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "chunks-loaded",
+          "milliseconds": 10.67949999999999,
+          "linearBytes": 16777216,
+          "chunks": 9,
+          "sectors": 0,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "animal-navigation-built",
+          "milliseconds": 120.18249999999998,
+          "linearBytes": 16777216,
+          "chunks": 9,
+          "sectors": 144,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "worker-navigation-built",
+          "milliseconds": 120.47359999999998,
+          "linearBytes": 16777216,
+          "chunks": 9,
+          "sectors": 144,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "hundred-routes",
+          "milliseconds": 45.07620000000003,
+          "linearBytes": 16777216,
+          "chunks": 9,
+          "sectors": 144,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "wall-added-removed",
+          "milliseconds": 4.115000000000009,
+          "linearBytes": 16777216,
+          "chunks": 9,
+          "sectors": 144,
+          "growthNotifications": 0
+        }
+      ],
+      "growth": []
+    },
+    {
+      "chunks": 25,
+      "samples": [
+        {
+          "phase": "instantiated",
+          "milliseconds": null,
+          "linearBytes": 4194304,
+          "chunks": 0,
+          "sectors": 0,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "explicit-pre-growth",
+          "milliseconds": 0.35079999999999245,
+          "linearBytes": 16777216,
+          "chunks": 0,
+          "sectors": 0,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "first-chunk",
+          "milliseconds": 1.7510000000000332,
+          "linearBytes": 16777216,
+          "chunks": 1,
+          "sectors": 0,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "chunks-loaded",
+          "milliseconds": 33.89029999999997,
+          "linearBytes": 16777216,
+          "chunks": 25,
+          "sectors": 0,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "animal-navigation-built",
+          "milliseconds": 345.07630000000006,
+          "linearBytes": 16777216,
+          "chunks": 25,
+          "sectors": 400,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "worker-navigation-built",
+          "milliseconds": 364.9675,
+          "linearBytes": 16777216,
+          "chunks": 25,
+          "sectors": 400,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "hundred-routes",
+          "milliseconds": 37.941299999999956,
+          "linearBytes": 16777216,
+          "chunks": 25,
+          "sectors": 400,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "wall-added-removed",
+          "milliseconds": 3.024400000000014,
+          "linearBytes": 16777216,
+          "chunks": 25,
+          "sectors": 400,
+          "growthNotifications": 0
+        }
+      ],
+      "growth": []
+    },
+    {
+      "chunks": 49,
+      "samples": [
+        {
+          "phase": "instantiated",
+          "milliseconds": null,
+          "linearBytes": 4194304,
+          "chunks": 0,
+          "sectors": 0,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "explicit-pre-growth",
+          "milliseconds": 0.036599999999907595,
+          "linearBytes": 16777216,
+          "chunks": 0,
+          "sectors": 0,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "first-chunk",
+          "milliseconds": 1.6570999999999003,
+          "linearBytes": 16777216,
+          "chunks": 1,
+          "sectors": 0,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "chunks-loaded",
+          "milliseconds": 64.1051,
+          "linearBytes": 16777216,
+          "chunks": 49,
+          "sectors": 0,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "animal-navigation-built",
+          "milliseconds": 678.0700999999999,
+          "linearBytes": 16777216,
+          "chunks": 49,
+          "sectors": 784,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "worker-navigation-built",
+          "milliseconds": 667.2020999999997,
+          "linearBytes": 16777216,
+          "chunks": 49,
+          "sectors": 784,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "hundred-routes",
+          "milliseconds": 41.58269999999993,
+          "linearBytes": 16777216,
+          "chunks": 49,
+          "sectors": 784,
+          "growthNotifications": 0
+        },
+        {
+          "phase": "wall-added-removed",
+          "milliseconds": 2.779899999999998,
+          "linearBytes": 16777216,
+          "chunks": 49,
+          "sectors": 784,
+          "growthNotifications": 0
+        }
+      ],
+      "growth": []
+    }
+  ]
+}

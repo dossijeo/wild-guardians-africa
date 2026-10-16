@@ -44,7 +44,11 @@ test('native world planner matches fractional connectors and automatic gate rout
   for(const [start,destination,options] of queries){
    const reference=session.routeActor(start,destination,options);
    const native=session.core.routeWorldNative(start,destination);
+   const status=session.routeActorNativeStatus(start,destination,options);
    assert.equal(native.status,reference.status,JSON.stringify({start,destination,options}));
+   assert.equal(status.status,native.status,
+     'the path-free access proof must agree with the full native route');
+   if(status.status==='unknown')assert.equal(status.reason,native.reason);
    tally[native.status]++;
    if(native.status!=='found'){
     if(native.status==='unknown')assert.equal(native.reason,reference.reason);
@@ -101,6 +105,7 @@ test('native route cache follows local wall changes and sector residence',
   try{
    const fresh=session.routeActor(a,b,{worker:true});
    const cached=session.routeActorNative(a,b,opts);
+   assert.equal(session.routeActorNativeStatus(a,b,opts).status,cached.status);
    sameRoute(cached,fresh);
    assert.notDeepEqual(cached,first,'new barrier changes the route');
   }finally{session.core.applyBarrierChanges(ids,[]);}
@@ -109,8 +114,13 @@ test('native route cache follows local wall changes and sector residence',
   const cx=Math.floor((village.x+24)/48),cz=Math.floor((village.z+24)/48);
   session.core.removeChunk(cx,cz);
   const afterUnload=session.routeActorNative(a,b,opts);
+  assert.equal(session.routeActorNativeStatus(a,b,opts).status,afterUnload.status);
+  if(afterUnload.status==='unknown')
+    assert.equal(session.routeActorNativeStatus(a,b,opts).reason,afterUnload.reason);
   sameRoute(afterUnload,session.routeActor(a,b,{worker:true}));
   session.core.addChunk(cx,cz);
+  assert.equal(session.routeActorNativeStatus(a,b,opts).status,
+    session.routeActorNative(a,b,opts).status);
   sameRoute(session.routeActorNative(a,b,opts),session.routeActor(a,b,{worker:true}));
   const gates=state.structures.filter(s=>s.gate&&s.status!=='ruined');
   const misses=session.core.wasm.spatial_route_cache_misses();

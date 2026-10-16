@@ -1,0 +1,135 @@
+{
+  "snapshot": "docs/qa/wild-engine-intent-lifecycle/sabana17-wall-capture-day17-raid-state.json.gz",
+  "targetId": "structure-11838",
+  "iterations": 3,
+  "status": "safe",
+  "gates": [
+    {
+      "id": "structure-14374",
+      "x": 89.01639344262294,
+      "z": 18
+    }
+  ],
+  "timingsMs": [
+    268.5842,
+    255.1994000000002,
+    263.28070000000025
+  ],
+  "meanMs": 262.3547666666668,
+  "previewCalls": 12,
+  "routeCalls": 60,
+  "previewMs": 122.74579999999969,
+  "routeMs": 654.1184000000021,
+  "routeTiming": {
+    "sequentialMs": [
+      240.96800000000007,
+      214.99360000000001,
+      214.9773
+    ],
+    "batchMs": [
+      218.4556,
+      0.33730000000014115,
+      0.29719999999997526
+    ],
+    "connectivityMs": [
+      0.7533000000000811,
+      0.23090000000001965,
+      0.2053000000000793
+    ],
+    "batchMatches": true,
+    "routeStatuses": [
+      "found",
+      "found",
+      "found",
+      "found"
+    ],
+    "connectivityStatuses": [
+      "possible",
+      "possible",
+      "possible",
+      "possible"
+    ]
+  },
+  "previewBatch": {
+    "calls": 0,
+    "ms": 0,
+    "mismatches": 0,
+    "examples": [],
+    "connectivity": [
+      [
+        "blocked",
+        "blocked",
+        "blocked",
+        "blocked"
+      ],
+      [
+        "blocked",
+        "blocked",
+        "blocked",
+        "blocked"
+      ],
+      [
+        "blocked",
+        "blocked",
+        "blocked",
+        "blocked"
+      ],
+      [
+        "possible",
+        "possible",
+        "possible",
+        "possible"
+      ],
+      [
+        "blocked",
+        "blocked",
+        "blocked",
+        "blocked"
+      ],
+      [
+        "blocked",
+        "blocked",
+        "blocked",
+        "blocked"
+      ],
+      [
+        "blocked",
+        "blocked",
+        "blocked",
+        "blocked"
+      ],
+      [
+        "possible",
+        "possible",
+        "possible",
+        "possible"
+      ],
+      [
+        "blocked",
+        "blocked",
+        "blocked",
+        "blocked"
+      ],
+      [
+        "blocked",
+        "blocked",
+        "blocked",
+        "blocked"
+      ],
+      [
+        "blocked",
+        "blocked",
+        "blocked",
+        "blocked"
+      ],
+      [
+        "possible",
+        "possible",
+        "possible",
+        "possible"
+      ]
+    ]
+  },
+  "wallCount": 86,
+  "workerCount": 3
+}

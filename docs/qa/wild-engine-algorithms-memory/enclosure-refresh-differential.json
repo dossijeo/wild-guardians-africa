@@ -1,0 +1,37 @@
+{
+  "baselineSha256": "110ccb71c8785687e747d855b9264f23abf680074b61c6b4c5fa688806607414",
+  "candidateSha256": "991f9f85a3d756dc108db354c5e795671fd645290b586da097454699f742df9a",
+  "biomes": [
+    "sabana",
+    "desierto",
+    "gran-rio",
+    "volcanes",
+    "manglares",
+    "gran-canon"
+  ],
+  "seed": 712,
+  "profiles": [
+    {
+      "index": 1,
+      "radius": 0.28,
+      "worker": true
+    },
+    {
+      "index": 2,
+      "radius": 0.9,
+      "worker": false
+    },
+    {
+      "index": 5,
+      "radius": 1.55,
+      "worker": false
+    }
+  ],
+  "stages": [
+    "open",
+    "walled",
+    "restored"
+  ],
+  "queries": 324,
+  "status": "exact-match"
+}

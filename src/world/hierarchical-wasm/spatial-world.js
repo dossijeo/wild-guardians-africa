@@ -117,6 +117,26 @@ export function createSpatialWorld(module){
       points[points.length-1]={x:end.x,z:end.z};
     return {status:'found',points};
   }
+  // Access proofs need the same native physical search but no route points or
+  // optional shortening. Keep unknown distinct from a certified blockage.
+  function routeWorldNativeStatus(start,end){
+    if(![start?.x,start?.z,end?.x,end?.z].every(Number.isFinite))
+      throw RangeError('World routes require finite coordinates');
+    if(!navigationBuilt)
+      return {status:'unknown',reason:'unavailable'};
+    if(typeof wasm.spatial_world_route_status!=='function'){
+      const route=routeWorldNative(start,end);
+      return {status:route.status,...(route.reason?{reason:route.reason}:{})};
+    }
+    const result=wasm.spatial_world_route_status(start.x,start.z,end.x,end.z);
+    countReason('route');
+    if(result<0){
+      const reason={1:'start-connector',2:'end-connector',3:'native-graph',
+        4:'invalid-coordinate'}[wasm.spatial_world_route_reason()]??'native-graph';
+      return {status:'unknown',reason};
+    }
+    return {status:result?'found':'blocked'};
+  }
   function routeWorldNativeBatch(queries){
     if(!Array.isArray(queries)||queries.length>4096||queries.some(q=>
       ![q.start?.x,q.start?.z,q.end?.x,q.end?.z].every(Number.isFinite)))
@@ -244,7 +264,7 @@ export function createSpatialWorld(module){
     enclosureAt:point=>navigationBuilt?wasm.lazy_enclosure(point.x,point.z):-1,
     heights,colors,water,groundMask,waterLevels,waterTriangles,props,instances,chunkPayload,changedChunks,route,connected,componentAt,
     routeWorld:(start,end)=>navigationBuilt?spatialWorldRoute(wasm,route,start,end):{status:'unknown',points:[]},
-    routeWorldNative,
+    routeWorldNative,routeWorldNativeStatus,
     routeWorldNativeBatch,
     chunkRevision:()=>chunkRevision,
     connectedWorld:(start,end)=>navigationBuilt?spatialWorldConnectivity(wasm,connected,start,end):'unknown',

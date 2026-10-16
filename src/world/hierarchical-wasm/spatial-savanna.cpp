@@ -34,6 +34,12 @@ constexpr int side=48,grid=49,sector=12;
 constexpr int pad=4,latticeSpan=grid+pad*2;
 constexpr int propBucketWidth=8,propBucketSide=8;
 constexpr double maxIndexedRadius=2.0;
+constexpr double savannaPropSpacing[6]={13.5,7,2.8,9,10,32};
+constexpr double desertPropSpacing[6]={19,11,4.6,15,23,54};
+constexpr double canyonPropSpacing[6]={13,5.2,3.5,9,19,31};
+// The largest generated prop is below 15 world units after its scale is
+// applied. A conservative bound also covers halo collision and visual owners.
+constexpr double maxGeneratedPropRadius=16.0;
 constexpr double pi=3.14159265358979323846;
 struct Prop {float x,z,y,radius,scale,yaw;int32_t slot,group,gx,gz;};
 static_assert(sizeof(Prop)==40);
@@ -842,9 +848,6 @@ void populateChunk(int cx,int cz,bool visual=true){
   buildGroundMask(cx,cz);
   buildWaterMesh(cx,cz);
   }
-  constexpr double savannaSpacing[6]={13.5,7,2.8,9,10,32};
-  constexpr double desertSpacing[6]={19,11,4.6,15,23,54};
-  constexpr double canyonSpacing[6]={13,5.2,3.5,9,19,31};
   constexpr double savannaDensity[6]={.53,.51,.72,.30,.28,.63};
   constexpr double desertDensity[6]={.30,.22,.035,.17,.10,.12};
   constexpr double riverDensity[6]={.62,.63,.64,.28,.26,.57};
@@ -860,7 +863,7 @@ void populateChunk(int cx,int cz,bool visual=true){
   constexpr float desertRadii[20]={3.6568f,2.4170f,2.3057f,2.4988f,.8174f,.7033f,.7061f,.6348f,.5378f,.6449f,1.4225f,2.2645f,1.05f,1.7903f,1.9822f,.85f,1.35f,5.2349f,5.9548f,2.4f};
   constexpr float canyonRadii[20]={4.2725f,2.9148f,11.9575f,8.5710f,11.2582f,.7518f,.9655f,.5382f,.6040f,.5602f,1.7548f,3.4760f,1.2f,1.8f,1.45f,.9f,1.2369f,1.3973f,6.1408f,3.25f};
   for(int type=0;type<6;type++){
-    const double cell=worldBiome==1?desertSpacing[type]:worldBiome==5?canyonSpacing[type]:savannaSpacing[type];
+    const double cell=worldBiome==1?desertPropSpacing[type]:worldBiome==5?canyonPropSpacing[type]:savannaPropSpacing[type];
     // A neighbor owns and renders a prop whose footprint crosses our edge.
     // Generate its collision record from the same global cells, without
     // duplicating the visible instance in this chunk.
@@ -1055,9 +1058,21 @@ void refreshPolygon(const PolygonObstacle& polygon){
   }
   selectProfile(previous);
 }
-void refreshRemovedPropChunks(const Prop* changed){
+void refreshRemovedPropChunks(const Prop* changed,
+                              const std::vector<PropKey>* changedKeys=nullptr){
   const int selectedX=chunkX,selectedZ=chunkZ,previous=activeProfile;
   std::vector<std::pair<int,int>> affected;
+  std::vector<std::pair<double,double>> changedPositions;
+  if(changedKeys){
+    changedPositions.reserve(changedKeys->size());
+    for(const PropKey& key:*changedKeys){
+      const double cell=worldBiome==1?desertPropSpacing[key.group]:
+        worldBiome==5?canyonPropSpacing[key.group]:savannaPropSpacing[key.group];
+      changedPositions.emplace_back(
+        (double(key.gx)+.14+unit(cellHash(key.gx,key.gz,310+key.group))*.72)*cell,
+        (double(key.gz)+.14+unit(cellHash(key.gx,key.gz,311+key.group))*.72)*cell);
+    }
+  }
   for(const auto& [cx,cz]:loadedChunks){
     const int firstX=cx*side-24,firstZ=cz*side-24;
     if(changed&&(
@@ -1065,6 +1080,14 @@ void refreshRemovedPropChunks(const Prop* changed){
       changed->x-changed->radius-maxIndexedRadius>=firstX+side||
       changed->z+changed->radius+maxIndexedRadius<firstZ||
       changed->z-changed->radius-maxIndexedRadius>=firstZ+side))continue;
+    if(changedKeys){
+      const double reach=maxGeneratedPropRadius+maxIndexedRadius;
+      bool touches=false;
+      for(const auto& [x,z]:changedPositions)
+        if(x+reach>=firstX&&x-reach<firstX+side&&
+           z+reach>=firstZ&&z-reach<firstZ+side){touches=true;break;}
+      if(!touches)continue;
+    }
     affected.emplace_back(cx,cz);
   }
   for(int profile=0;profile<navigationProfiles;profile++){
@@ -1344,8 +1367,13 @@ int spatial_restore_removed_props(int count){
     const PropKey key={removedPropState[i*3],removedPropState[i*3+1],removedPropState[i*3+2]};
     if(key.group<0||key.group>5||!replacement.insert(key).second)return 0;
   }
+  std::vector<PropKey> changed;
+  changed.reserve(replacement.size()+removedProps().size());
+  for(const PropKey& key:replacement)if(!removedProps().count(key))changed.push_back(key);
+  for(const PropKey& key:removedProps())if(!replacement.count(key))changed.push_back(key);
+  if(changed.empty())return 1;
   removedProps().swap(replacement);
-  refreshRemovedPropChunks(nullptr);
+  refreshRemovedPropChunks(nullptr,&changed);
   return 1;
 }
 int spatial_sector_slots(){return lazy_sector_slots();}

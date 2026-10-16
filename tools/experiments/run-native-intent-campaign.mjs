@@ -26,7 +26,23 @@ const defenseGate=process.env.WILD_ENGINE_DEFENSE_GATE;
 if(defenseGate&&!['event','periodic'].includes(defenseGate))
   throw RangeError('Unknown defense event gate');
 const decisionProfile=process.env.WILD_ENGINE_DECISION_PROFILE==='1';
+const memoryProfile=process.env.WILD_ENGINE_MEMORY_PROFILE==='1';
 let capturedRaid=false;
+let latestSession=null,nextMemorySampleAt=0,lastMemoryBytes=null;
+const memoryTrace={sampleIntervalSeconds:5,opening:null,observedChanges:[],days:[]};
+const memorySample=state=>{
+  if(!memoryProfile||!latestSession)return null;
+  const metrics=latestSession.core.metrics(),bytes=metrics.memoryBytes;
+  const sample={day:state.day,time:state.time,elapsed:state.elapsed,
+    linearBytes:bytes,loadedChunks:metrics.loadedChunks,
+    livingCrops:state.plants.filter(plant=>plant.alive).length,
+    workers:state.workers.length,animals:state.raid?.animals.length??0,
+    walls:state.structures.filter(item=>item.kind==='wall'&&item.status!=='ruined').length};
+  if(lastMemoryBytes!==null&&bytes!==lastMemoryBytes)
+    memoryTrace.observedChanges.push({...sample,previousBytes:lastMemoryBytes});
+  lastMemoryBytes=bytes;
+  return sample;
+};
 let capturedOccupiedFallback=false;
 const assignments=[],seenAssignments=new Set();
 const intentTiming={};
@@ -40,6 +56,8 @@ const inputHashes={wasm:sha256(process.env.WILD_ENGINE_SPATIAL_SERVICES_WASM??
   runner:sha256('tools/native-campaign-runner.mjs')};
 const openingFactory=async (...args)=>{
   const opening=await createSpatialCampaignOpening(...args);
+  latestSession=opening.session;
+  if(memoryProfile)memoryTrace.opening=memorySample(opening.state);
   opening.nav.raidSelectionStats={};
   return opening;
 };
@@ -62,13 +80,16 @@ const entryDriverFactory=nav=>({
 const parameters={days,biome,seed,strategy,nativeIntents:mode!=='control',
   nativeWallPlans:mode==='intent-wall',
   ...(defenseGate?{defenseEventDriven:defenseGate==='event'}:{}),
-  spatialAdvice,defensePolicy,decisionProfile,reloadRaids:false};
+  spatialAdvice,defensePolicy,decisionProfile,memoryProfile,reloadRaids:false};
 try{
   const result=await simulateNativeCampaign({...parameters,
     culture:'mapungubwe',nativeEvidence:false,
     openingFactory,entryDriverFactory,
     onTick:(state,nav)=>{
       latestState=state;latestNav=nav;nav.serviceRaidConnectivityDemand?.();
+      if(memoryProfile&&state.elapsed>=nextMemorySampleAt){
+        memorySample(state);nextMemorySampleAt=state.elapsed+memoryTrace.sampleIntervalSeconds;
+      }
       if(captureOccupiedFallback&&!capturedOccupiedFallback&&
         nav.raidSelectionStats?.occupiedWallFallbackSamples?.length){
         capturedOccupiedFallback=true;
@@ -125,6 +146,7 @@ try{
         });
     },
     onDay:row=>{
+      if(memoryProfile&&latestState)memoryTrace.days.push(memorySample(latestState));
       if(row.day===captureDayEnd&&latestState)
         writeFileSync(path.replace(/\.json$/,`-day${row.day}-end-state.json`),
           serialize(latestState));
@@ -151,6 +173,7 @@ try{
       console.log(JSON.stringify(rows.at(-1)));
     }});
   const report={status:'completed',source,inputHashes,parameters,assignments,intentTiming,
+    ...(memoryProfile?{memoryTrace}:{}),
     elapsedSeconds:(performance.now()-started)/1000,
     completedNights:result.completedNights,result:result.result,
     terminal:latestState?{
@@ -174,6 +197,7 @@ try{
     (path.endsWith('.json')?path.slice(0,-5):path)+'-partial-state.json':null;
   if(partialStatePath)writeFileSync(partialStatePath,partialState);
   const report={status:'error',source,inputHashes,parameters,assignments,intentTiming,
+    ...(memoryProfile?{memoryTrace}:{}),
     elapsedSeconds:(performance.now()-started)/1000,partialStatePath,
     day:error.nativeCampaignPartial?.day,message:error.message,stack:error.stack,rows};
   writeFileSync(path,JSON.stringify(report,null,2)+'\n');

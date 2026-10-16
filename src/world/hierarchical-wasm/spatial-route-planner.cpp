@@ -160,11 +160,13 @@ int spatial_add_gate_portal(float fromX,float fromZ,float toX,float toZ){
 }
 // >0 number of world-space points; 0 blocked; -1 unknown. The route buffer is
 // valid until the next route call or a memory-growing topology operation.
-int spatial_world_route(float fromX,float fromZ,float toX,float toZ){
+int spatial_world_route_impl(float fromX,float fromZ,float toX,float toZ,
+                             bool statusOnly){
   WorldRoute& out=result();out.points.clear();out.view=nullptr;out.reason=0;out.graphReason=0;
   const Point start{fromX,fromZ},end{toX,toZ};
   if(!finite(start)||!finite(end)){out.reason=4;return -1;}
   if(spatial_local_clear(fromX,fromZ,toX,toZ)){
+    if(statusOnly)return 1;
     append(end);out.view=out.points.data();return 1;
   }
   int startCount=0,endCount=0;
@@ -199,6 +201,10 @@ int spatial_world_route(float fromX,float fromZ,float toX,float toZ){
         }else append({float(route[k*2]),float(route[k*2+1])});
       }
       if(!valid){out.points.clear();unknown=true;out.graphReason=11;continue;}
+      // Repair previews only need a physical-access proof. The graph route,
+      // local sectors, connectors and portal crossings were all validated;
+      // optional path shortening has no bearing on reachability.
+      if(statusOnly){out.points.clear();return 1;}
       if(distance(last({float(from.x),float(from.z)}),end)>1e-6f)append(end);
       shortenOneCorner(start,end);
       float length=0;Point previous=start;
@@ -224,6 +230,12 @@ int spatial_world_route(float fromX,float fromZ,float toX,float toZ){
     return -1;
   }
   return 0;
+}
+int spatial_world_route(float fromX,float fromZ,float toX,float toZ){
+  return spatial_world_route_impl(fromX,fromZ,toX,toZ,false);
+}
+int spatial_world_route_status(float fromX,float fromZ,float toX,float toZ){
+  return spatial_world_route_impl(fromX,fromZ,toX,toZ,true);
 }
 const float* spatial_world_route_ptr(){return result().view;}
 // 1 start connector, 2 end connector, 3 graph, 4 invalid coordinates.
