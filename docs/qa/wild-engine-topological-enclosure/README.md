@@ -587,6 +587,17 @@ slowdown or speedup. The full report, including the identical state hash,
 worker context, query counts and 16 MiB memory size, is in
 `sabana-construction-aware-d3.json`. This variant is useful for declining an
 invalid fluid cut early; it has not made the topological planner adoptable.
+The same 66-crop checkpoint was also rerun with the QA-only continuous
+boundary and worker-route audit enabled for all four ABBA rows. Both cut
+variants produced the same 142-segment boundary: Wild Engine's continuous
+static-solid test covered it with 195 clearance samples, the local
+five-species midpoint scan found no crossing, and all 66 crops retained
+outbound and return worker routes. The game's group verdict still remained
+`unknown` for four species because its crop-coordinate connector could not
+anchor some plants. The evidence is in
+`sabana-construction-aware-d3-physical.json`. These checks establish a strong
+physical witness for this candidate, but do not yet prove the complete
+exterior attack envelope or justify switching the normal planner.
 
 ### Local construction and destruction regression
 
