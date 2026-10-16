@@ -596,3 +596,5 @@ localized C++ update can replace that global rebuild.
 The [reservation reconciliation regression](reservation-reconciliation-regression.md)
 records a legacy direct-mutation failure found while auditing the stacked
 branches, its targeted fix, and the remaining full-suite triage boundary.
+The [full-suite baseline comparison](full-suite-baseline-triage.md) checks
+the other 31 failure names and their causes against current `main`.

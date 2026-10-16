@@ -16,4 +16,5 @@ changed the exact serialized state. Invalid restored claims still rebuild.
 `raid-individual-reservations.test.js` cover the direct legacy mutation,
 unchanged-tick identity, target destruction, and save/reload replay. This
 repair does not address the other failures observed in the stacked branch's
-full repository suite; those require independent triage before integration.
+full repository suite. Their comparison against current `main` is in
+[`full-suite-baseline-triage.md`](full-suite-baseline-triage.md).
