@@ -576,7 +576,8 @@ ServiceRoute findServiceRoute(const Worker& worker,const Target& target,int kind
       float(point.x),float(point.z));
     if(count<0){
       best.unknown=true;best.unknownReason=spatial_world_route_reason();
-      if(kind==1&&best.points.empty())break;
+      // An unresolved route to one side of a crop does not prove the other
+      // bounded interaction sites are unresolved too.
       continue;
     }
     if(!count)continue;
