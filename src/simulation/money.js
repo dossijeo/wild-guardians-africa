@@ -1,11 +1,17 @@
 import {notifySettlement} from './settlement-observers.js';
 // Rational intermediates preserve exact repair/modifier calculations; settlement rounds to whole coins.
 const gcd = (a,b) => b ? gcd(b,a%b) : a;
+const canonicalRationals=new WeakSet();
+function canonical(n,d){
+  const value={n:String(n),d:String(d)};
+  canonicalRationals.add(value);
+  return value;
+}
 export function rational(n, d=1n) {
   n=BigInt(n); d=BigInt(d);
   if(d<=0n) throw new Error('Denominador monetario inválido');
   const g=gcd(n<0n?-n:n,d);
-  return {n:String(n/g),d:String(d/g)};
+  return canonical(n/g,d/g);
 }
 export const numberOf = v => Number(v.n)/Number(v.d);
 // Convert the persisted Number's decimal representation without rounding HP to
@@ -18,8 +24,25 @@ export function rationalNumber(value) {
   const numerator=BigInt(whole+fraction);
   return shift>=0?rational(numerator*10n**BigInt(shift)):rational(numerator,10n**BigInt(-shift));
 }
-export function add(a,b) { return rational(BigInt(a.n)*BigInt(b.d)+BigInt(b.n)*BigInt(a.d),BigInt(a.d)*BigInt(b.d)); }
-export function negate(a) { return {...a,n:String(-BigInt(a.n))}; }
+export function add(a,b) {
+  // Saved data can contain equivalent but non-reduced fractions. Reduce that
+  // first result normally; subsequent results are known canonical in memory.
+  if(!canonicalRationals.has(a)||!canonicalRationals.has(b))
+    return rational(BigInt(a.n)*BigInt(b.d)+BigInt(b.n)*BigInt(a.d),
+      BigInt(a.d)*BigInt(b.d));
+  const an=BigInt(a.n),ad=BigInt(a.d),bn=BigInt(b.n),bd=BigInt(b.d);
+  // For reduced inputs, any common factor after addition divides the shared
+  // denominator. Avoid a full GCD over growing account numerators each tick.
+  const common=gcd(ad,bd);
+  const numerator=an*(bd/common)+bn*(ad/common);
+  const divisor=gcd(numerator<0n?-numerator:numerator,common);
+  return canonical(numerator/divisor,(ad/common)*bd/divisor);
+}
+export function negate(a) {
+  const value={...a,n:String(-BigInt(a.n))};
+  if(canonicalRationals.has(a))canonicalRationals.add(value);
+  return value;
+}
 export function multiply(a,n,d=1) { return rational(BigInt(a.n)*BigInt(n),BigInt(a.d)*BigInt(d)); }
 export function compare(a,b) { const diff=BigInt(a.n)*BigInt(b.d)-BigInt(b.n)*BigInt(a.d); return diff<0n?-1:diff>0n?1:0; }
 export function transact(ledger,id,delta) {
