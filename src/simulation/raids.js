@@ -357,7 +357,7 @@ export function reachableApproach(a,target,nav,shield=null,onUnknown=null,region
     if(nav.state?.raid&&!reservedApproachClear(nav.state,a,point))continue;
     if(nav.state&&!actorSegmentClear(point,point,a,actorBlockers(nav.state,a,false)))continue;
     if(!nav.walkable(point.x,point.z,a.radius,null,false))continue;
-    if(target.alive&&!shield&&nav.state&&!agriculturalRayClear(nav.state,nav,point,target))continue;
+    if(target.alive&&!shield&&nav.state&&!agriculturalRayClear(nav.state,nav,point,target,a.radius))continue;
     // The native region graph can prove that this service point is on the
     // opposite side of a barrier. Only ask for a detailed route when the
     // regions might connect; unknown connectivity still gets a full search.
@@ -583,7 +583,7 @@ export function updateRaid(s,dt,nav) {
           let agriculturalImpact=null;
           if('alive' in target&&a.damageProfile)agriculturalImpact=resolveAgriculturalImpact(s,a,target,nav);
           const legacyCropOccluded='alive' in target&&!a.damageProfile&&!shield&&
-            !agriculturalRayClear(s,nav,a,target);
+            !agriculturalRayClear(s,nav,a,target,a.radius);
           if(!shield){
             if('alive' in target){
               if(agriculturalImpact){
