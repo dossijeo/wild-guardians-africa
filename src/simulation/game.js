@@ -875,8 +875,22 @@ function updateWorkers(s,dt,nav) {
       if(w.fallRemaining>0&&!w.incapacitated){w.fallRemaining=Math.max(0,w.fallRemaining-dt);continue;}
       const p=profile(w),center=s.structures.find(c=>c.id===w.centerId),village=s.villages.find(v=>v.id===w.villageId);
       if(['fleeing','returning','incapacitated'].includes(w.status)) {
-        const reached=walkTo(s,w,{...(village.entry??village),id:`home-${village.id}`},dt,nav,{motion:{flight:w.incapacitated||w.status==='fleeing',slow:w.incapacitated}});
-        if(reached){w.status='home';notifyWorkerPlanningChange(s,w);}continue;
+        const home={...(village.entry??village),id:`home-${village.id}`};
+        const nativeHome=nav.intentTaskPlanner?.planHomeRoute?.(s,w,home,nav.version);
+        if(nativeHome?.status==='found'){
+          w.path=nativeHome.path;w.destinationId=home.id;
+          w.pathVersion=nav.version;
+        }else if(nav.intentTaskPlanner?.homeRouteActive?.(w.id)&&w.path)
+          w.pathVersion=nav.version;
+        const native=nav.intentTaskPlanner?.homeRouteActive?.(w.id)??false;
+        const reached=walkTo(s,w,home,dt,nav,{
+          motion:{flight:w.incapacitated||w.status==='fleeing',slow:w.incapacitated},
+          externallyPlanned:native});
+        if(reached){
+          nav.intentTaskPlanner?.finishHomeIntent?.(w.id);
+          w.status='home';notifyWorkerPlanningChange(s,w);
+        }else if(native&&!w.path)nav.intentTaskPlanner?.finishHomeIntent?.(w.id);
+        continue;
       }
       if(w.status==='home')continue;
       if(w.status==='waiting'&&!center&&!s.raid&&!contractExpired(w,s)&&s.time<p.end){updateIdle(w,{...(village.entry??village),id:village.id},dt,nav,s.seed,s.structures);continue;}

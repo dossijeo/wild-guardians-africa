@@ -99,7 +99,7 @@ struct ActiveIntent {
   uint64_t actor=0,task=0,target=0;
   PlanningState state=PlanningState::NeedsPlan;
   uint32_t slot=0,generation=0,topology=0;
-  bool animal=false,tacticalPending=false,lease=true,retreat=false;
+  bool animal=false,tacticalPending=false,lease=true,retreat=false,home=false;
   int profile=1;
   float routeStartX=0,routeStartZ=0;
   uint32_t routeCursor=0;
@@ -1390,7 +1390,8 @@ int nav_intent_replan_attack_route(double actorId,double startX,double startZ,
 int nav_intent_replan_pending_routes(){
   IntentState& s=state();std::vector<uint64_t> actors;
   for(const auto& item:s.activeIntents)
-    if(!item.second.animal&&item.second.state==PlanningState::NeedsPlan)
+    if(!item.second.animal&&!item.second.home&&
+       item.second.state==PlanningState::NeedsPlan)
       actors.push_back(item.first);
   std::sort(actors.begin(),actors.end());
   int planned=0;
@@ -1599,6 +1600,79 @@ int nav_intent_restore_retreat(double actorId,double startX,double startZ,
   intent.approachKnown=true;
   s.activeIntents.insert_or_assign(actor,intent);
   emitIntentChange(s,intent);
+  return 1;
+}
+// A worker's confirmed return/flight to its village is a route-only
+// intention. It does not claim a task or make the worker eligible for one.
+// The caller may supply a saved remaining suffix, which is accepted only
+// after every segment passes the current native static collision check.
+int workerHomeRoute(double actorId,double startX,double startZ,
+                    double homeX,double homeZ,int savedCount){
+  if(!integer(actorId)||!coordinate(startX)||!coordinate(startZ)||
+     !coordinate(homeX)||!coordinate(homeZ)||savedCount<0||savedCount>4096)
+    return -1;
+  IntentState& s=state();const uint64_t actor=uint64_t(actorId);
+  if(s.workers.find(actor)==s.workers.end())return -2;
+  if(savedCount){
+    if(s.attackRouteInput.size()<size_t(savedCount)*2)return -1;
+    float x=float(startX),z=float(startZ);
+    for(int i=0;i<savedCount;i++){
+      const float nextX=s.attackRouteInput[size_t(i)*2],
+        nextZ=s.attackRouteInput[size_t(i)*2+1];
+      if(!coordinate(nextX)||!coordinate(nextZ)||
+         !spatial_world_segment_clear(x,z,nextX,nextZ))return 0;
+      x=nextX;z=nextZ;
+    }
+    if(std::hypot(double(x)-homeX,double(z)-homeZ)>.1)return 0;
+  }
+  const auto prior=s.activeIntents.find(actor);
+  if(prior!=s.activeIntents.end()){
+    if(prior->second.animal||prior->second.state==PlanningState::ActionActive)
+      return -2;
+    releaseIntent(s,actor,PlanningState::Cancelled);
+    s.activeIntents.erase(actor);
+  }
+  if(!savedCount)s.planningCallsByActor[actor]++;
+  const int count=savedCount?savedCount:spatial_world_route_cached(
+    float(startX),float(startZ),float(homeX),float(homeZ));
+  if(count<=0)return count<0?3:0;
+  uint32_t slot=uint32_t(s.routeSlots.size());
+  for(uint32_t i=0;i<s.routeSlots.size();i++)
+    if(!s.routeSlots[i].active){slot=i;break;}
+  if(slot==s.routeSlots.size())s.routeSlots.emplace_back();
+  RouteSlot& route=s.routeSlots[slot];
+  const float* points=savedCount?s.attackRouteInput.data():
+    spatial_world_route_ptr();
+  route.points.assign(points,points+size_t(count)*2);
+  route.active=true;route.generation++;
+  if(!route.generation)route.generation=1;
+  ActiveIntent intent{actor,0,0,PlanningState::RouteActive,
+    slot,route.generation,lazy_route_revision(),false,false};
+  intent.home=true;intent.lease=false;
+  intent.profile=lazy_selected_context();
+  intent.routeStartX=float(startX);intent.routeStartZ=float(startZ);
+  intent.approachX=float(homeX);intent.approachZ=float(homeZ);
+  intent.approachKnown=true;
+  s.activeIntents.insert_or_assign(actor,intent);
+  emitIntentChange(s,intent);
+  return 1;
+}
+int nav_intent_plan_home(double actorId,double startX,double startZ,
+                         double homeX,double homeZ){
+  return workerHomeRoute(actorId,startX,startZ,homeX,homeZ,0);
+}
+int nav_intent_restore_home(double actorId,double startX,double startZ,
+                            double homeX,double homeZ,int count){
+  if(count<=0)return -1;
+  return workerHomeRoute(actorId,startX,startZ,homeX,homeZ,count);
+}
+int nav_intent_cancel_home(double actorId){
+  if(!integer(actorId))return 0;
+  IntentState& s=state();const uint64_t actor=uint64_t(actorId);
+  const auto found=s.activeIntents.find(actor);
+  if(found==s.activeIntents.end()||!found->second.home)return 0;
+  releaseIntent(s,actor,PlanningState::Cancelled);
+  s.activeIntents.erase(actor);
   return 1;
 }
 // An attack site is a dynamic lease, separate from the reusable geometric

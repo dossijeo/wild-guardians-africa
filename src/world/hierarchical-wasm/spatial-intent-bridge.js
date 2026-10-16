@@ -93,6 +93,8 @@ export function createSpatialIntentBridge(session){
     'nav_intent_request_reroute',
     'nav_intent_attack_route_input_ptr','nav_intent_register_attack',
     'nav_intent_plan_retreat','nav_intent_restore_retreat',
+    'nav_intent_plan_home','nav_intent_restore_home',
+    'nav_intent_cancel_home',
     'nav_intent_register_attack_site',
     'nav_intent_track_wall_opportunities',
     'nav_intent_wall_opportunity_candidates',
@@ -612,6 +614,24 @@ export function createSpatialIntentBridge(session){
       {length:points.length/2},(_,index)=>({
         x:points[index*2],z:points[index*2+1]}))};
   };
+  const planHomeRoute=(worker,home)=>{
+    session.actorSectorRevision({worker:true});
+    const status=wasm.nav_intent_plan_home(numericId(worker.id),
+      worker.x,worker.z,home.x,home.z);
+    if(status===0||status===3)
+      return {status:status===3?'unknown':'blocked'};
+    if(status!==1)throw Error(`Native home route rejected: ${status}`);
+    if(wasm.nav_intent_actor(numericId(worker.id))!==1)
+      throw Error('Native home route lost its active intention');
+    const values=new Float64Array(wasm.memory.buffer,wasm.nav_intent_actor_ptr(),10);
+    const routeHandle={session:values[4],slot:values[5],generation:values[6]};
+    const points=routePoints(routeHandle);
+    if(!points||points.length<2||points.length%2)
+      throw Error('Native home route has no usable points');
+    return {status:'found',routeHandle,path:Array.from(
+      {length:points.length/2},(_,index)=>({
+        x:points[index*2],z:points[index*2+1]}))};
+  };
   const restoreAttackIntents=state=>{
     let committed=0,travelling=0,staleRoutes=0;
     const pendingAttackRouteIds=[];
@@ -693,8 +713,35 @@ export function createSpatialIntentBridge(session){
     }
     return {restoredRetreatRouteIds,invalidSavedRetreatRoutes};
   };
+  const restoreHomeIntents=state=>{
+    const restoredHomeRouteIds=[];
+    let invalidSavedHomeRoutes=0;
+    const villages=new Map(state.villages.map(village=>[village.id,village]));
+    for(const worker of [...state.workers]
+      .filter(item=>['returning','fleeing','incapacitated'].includes(item.status)&&
+        item.path?.length)
+      .sort((left,right)=>numericId(left.id)-numericId(right.id))){
+      const village=villages.get(worker.villageId),home=village?.entry??village;
+      if(!home||worker.path.length>4096){invalidSavedHomeRoutes++;continue;}
+      session.actorSectorRevision({worker:true});
+      const pointer=wasm.nav_intent_attack_route_input_ptr(worker.path.length);
+      if(!pointer){invalidSavedHomeRoutes++;continue;}
+      const input=new Float32Array(wasm.memory.buffer,pointer,
+        worker.path.length*2);
+      for(let index=0;index<worker.path.length;index++){
+        input[index*2]=worker.path[index].x;
+        input[index*2+1]=worker.path[index].z;
+      }
+      const status=wasm.nav_intent_restore_home(numericId(worker.id),
+        worker.x,worker.z,home.x,home.z,worker.path.length);
+      if(status===1)restoredHomeRouteIds.push(worker.id);
+      else invalidSavedHomeRoutes++;
+    }
+    return {restoredHomeRouteIds,invalidSavedHomeRoutes};
+  };
   return {resetFromState,applyEvents,applyCommittedEvents,planTasks,
     restoreAssignedTasks,restoreAttackIntents,restoreRetreatIntents,
+    restoreHomeIntents,
     proposalRoute,
     getDamagedWalls:()=>getDamaged('wall'),
     getDamagedCenters:()=>getDamaged('center'),
@@ -702,7 +749,8 @@ export function createSpatialIntentBridge(session){
     findPlantingSite,releasePlantingSite,
     intentChanges,routePoints,projectRouteProgress,processEventBoundary,requestReroute,
     registerAttackIntent,planAttackCrop,planAttackWall,replanAttackRoute,
-    planRetreatRoute,
+    planRetreatRoute,planHomeRoute,
+    cancelHomeIntent:actorId=>wasm.nav_intent_cancel_home(numericId(actorId))===1,
     reconsiderWallOpportunity,wallOpportunityCandidates,
     markAttackActive:actorId=>wasm.nav_intent_attack_action_active(numericId(actorId))===1,
     finishAttackIntent:actorId=>wasm.nav_intent_attack_finished(numericId(actorId)),
@@ -729,6 +777,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     workerPeakPerMinute=new Map(),animalPeakPerMinute=new Map(),
     projectedPositions=new Map(),pendingAttackRoutes=new Map(),
     tacticalReconsiderations=new Set(),retreatRoutes=new Set(),
+    homeRoutes=new Set(),homeAttempts=new Map(),
     cropProtectionListeners=new Set();
   let cropProtectionSnapshot=null;
   let pendingTaskEvents=[];
@@ -757,10 +806,14 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     const restored=bridge.restoreAssignedTasks(state);
     const restoredAnimals=bridge.restoreAttackIntents(state);
     const restoredRetreats=bridge.restoreRetreatIntents(state);
+    const restoredHomes=bridge.restoreHomeIntents(state);
     eligible.clear();projectedPositions.clear();pendingAttackRoutes.clear();
     retreatRoutes.clear();
+    homeRoutes.clear();homeAttempts.clear();
     for(const id of restoredRetreats.restoredRetreatRouteIds)
       retreatRoutes.add(numericId(id));
+    for(const id of restoredHomes.restoredHomeRouteIds)
+      homeRoutes.add(numericId(id));
     tacticalReconsiderations.clear();
     requests.clear();animalRequests.clear();
     workerPlanCounts.clear();animalPlanCounts.clear();
@@ -780,7 +833,8 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
       bridge.getUnprotectedCropGroups({includeProtected:true})
         .map(group=>[group.id,group]));
     else cropProtectionSnapshot=null;
-    return {...result,...restored,...restoredAnimals,...restoredRetreats};
+    return {...result,...restored,...restoredAnimals,...restoredRetreats,
+      ...restoredHomes};
   };
   const publishCropProtectionChanges=({cropOnly=false}={})=>{
     if(!cropProtectionListeners.size)return;
@@ -957,6 +1011,14 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     animalPlanCounts.set(id,(animalPlanCounts.get(id)??0)+1);
     animalPeakPerMinute.set(id,Math.max(animalPeakPerMinute.get(id)??0,times.length));
   };
+  const recordWorkerRoutePlan=(worker,elapsed)=>{
+    const id=numericId(worker.id),times=requests.get(id)??[];
+    times.push(elapsed);
+    while(times.length&&times[0]<=elapsed-60)times.shift();
+    requests.set(id,times);
+    workerPlanCounts.set(id,(workerPlanCounts.get(id)??0)+1);
+    workerPeakPerMinute.set(id,Math.max(workerPeakPerMinute.get(id)??0,times.length));
+  };
   const hasPendingAt=simulatedSeconds=>{
     if(!initialized)throw Error('Reset the native intent session first');
     return dirty||pendingTaskEvents.length>0||pendingWorldEvents.length>0||
@@ -1044,8 +1106,9 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     // Existing JS paths are the movement copy of native-pinned routes. A
     // changed graph revision has now been validated, including the routes
     // whose replacement or waiting state will be delivered below.
-    for(const worker of state.workers)if(worker.taskId&&worker.path&&
-      worker.status==='walking')worker.pathVersion=version;
+    for(const worker of state.workers)if(worker.path&&
+      (worker.taskId&&worker.status==='walking'||
+       homeRoutes.has(numericId(worker.id))))worker.pathVersion=version;
     for(const animal of state.raid?.animals??[])
       if(animal.path&&animal.status!=='attacking'&&
         (animal.targetId||retreatRoutes.has(numericId(animal.id))))
@@ -1069,9 +1132,33 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     const workers=new Map(state.workers.map(worker=>[numericId(worker.id),worker]));
     const animals=new Map((state.raid?.animals??[])
       .map(animal=>[numericId(animal.id),animal]));
+    const villages=new Map(state.villages.map(village=>[village.id,village]));
     const tasks=new Map(state.tasks.map(task=>[numericId(task.id),task]));
     const targetFor=taskTargetLookup(state);
     for(const change of latest.values()){
+      const worker=workers.get(change.actorId);
+      if(worker&&homeRoutes.has(change.actorId)&&
+        ['returning','fleeing','incapacitated'].includes(worker.status)){
+        if(change.state===0){
+          const village=villages.get(worker.villageId);
+          const home=village?.entry??village;
+          if(!home)throw Error(`Worker ${worker.id} has no return village`);
+          const replacement=bridge.planHomeRoute(worker,home);
+          recordWorkerRoutePlan(worker,state.elapsed);
+          if(replacement.status==='found'){
+            worker.path=replacement.path;
+            worker.destinationId=`home-${village.id}`;
+            worker.pathVersion=navVersion;
+            pendingNativeChanges=true;
+          }else{
+            homeRoutes.delete(change.actorId);
+            homeAttempts.set(change.actorId,navVersion);
+            worker.path=null;
+          }
+        }
+        if(change.state===5)homeRoutes.delete(change.actorId);
+        continue;
+      }
       const animal=animals.get(change.actorId);
       if(animal?.status==='retreating'&&retreatRoutes.has(change.actorId)){
         if(change.state===0){
@@ -1139,7 +1226,6 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
           animal.approach=null;animal.approachShieldId=null;
         }
       }
-      const worker=workers.get(change.actorId);
       if(!worker||!worker.taskId||numericId(worker.taskId)!==change.taskId)continue;
       const task=tasks.get(change.taskId);
       if(change.state===1){
@@ -1298,6 +1384,29 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
       if(result.status==='found'){
         retreatRoutes.add(numericId(animal.id));pendingNativeChanges=true;
       }else retreatRoutes.delete(numericId(animal.id));
+      return result;
+    },
+    planHomeRoute:(state,worker,home,navVersion)=>{
+      if(state!==observedTaskState&&state!==sourceState)return null;
+      const id=numericId(worker.id);
+      if(homeRoutes.has(id))return {status:'active'};
+      if(homeAttempts.get(id)===navVersion)return {status:'fallback'};
+      if(pendingWorldEvents.length)flushWorldEvents();
+      if(pendingTaskEvents.length)flushTaskEvents();
+      const result=bridge.planHomeRoute(worker,home);
+      recordWorkerRoutePlan(worker,state.elapsed);
+      homeAttempts.set(id,navVersion);
+      if(result.status==='found'){
+        homeRoutes.add(id);pendingNativeChanges=true;
+      }
+      return result;
+    },
+    homeRouteActive:actorId=>homeRoutes.has(numericId(actorId)),
+    finishHomeIntent:actorId=>{
+      const id=numericId(actorId);
+      homeRoutes.delete(id);homeAttempts.delete(id);
+      const result=bridge.cancelHomeIntent(actorId);
+      if(result)pendingNativeChanges=true;
       return result;
     },
     retreatRouteActive:actorId=>retreatRoutes.has(numericId(actorId)),
