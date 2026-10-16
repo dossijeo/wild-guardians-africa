@@ -267,6 +267,30 @@ disconnected from the virtual player's decisions, so `Game.tick` and campaign
 results cannot be credited with its microbenchmark speed. The full baseline
 construction and physical rules remain available and unchanged.
 
+## Convex-hull-first experiment
+
+`cropClearanceHull` builds a cheap convex candidate from the crop coordinates
+and a 2.5 m square clearance around each crop. It does not inspect terrain or
+claim a physical closure. The same read-only Sabana/712 day-3 checkpoint
+(`7b7033894dee269d4bf04cb074f1372ef2f84ef280446150cd5f2e2331cb6966`,
+66 living crops) was evaluated in old/hull/cut/cut/hull/old order; raw results
+are in `sabana-hull-vs-cut-d3.json`.
+
+| Candidate | Time | Modules / price | Physical result |
+| --- | ---: | ---: | --- |
+| Existing rectangular advice | 23.71 / 24.08 s | 35 / 350 coins | `unknown`, one omitted piece |
+| Convex hull + normal quote | 310 / 319 ms | 29 / 290 coins | Open wall face, one omitted piece; not certified |
+| Local native cut | 8.54 / 4.19 ms | 11 / 110 coins **estimated** | Two arcs, four joins; no buildable quote or certificate |
+
+The hull is a useful first candidate but fails in this obstacle case. Running
+min-cut only after a placement failure would also miss cases where a valid
+convex ring is unnecessarily expensive because existing walls or natural
+barriers could replace modules. A future hybrid should first quote the hull,
+then consult the local cut when the hull is physically incomplete **or** its
+actual price warrants looking for a cheaper alternative. The final decision
+must compare buildable, worker-accessible, physically certified proposals;
+the cut's 110-coin estimate cannot yet be counted as savings.
+
 ## Adoption boundary
 
 If this approach continues, first turn multiple cut strokes into one validated

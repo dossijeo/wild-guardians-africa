@@ -3,11 +3,24 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {serialize} from '../src/persistence/snapshots.js';
 import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
-import {cutEdgesToStrokes,enclosureJunctions,inspectNaturalJunctions,
+import {cropClearanceHull,cutEdgesToStrokes,enclosureJunctions,inspectNaturalJunctions,
   inspectSelfClosedQuote,junctionBlocksSmallestAnimal,
   SMALLEST_ANIMAL_RADIUS,stitchTwoCutStrokes} from '../src/world/hierarchical-wasm/spatial-topological-enclosure-prototype.js';
 import {villageLayout} from '../src/world/villages.js';
+import {containsPoint} from '../src/world/footprints.js';
 import * as Game from '../src/simulation/game.js';
+
+test('clearance hull yields a closed free-form candidate around every crop',()=>{
+  const crops=[{x:0,z:0},{x:8,z:0},{x:8,z:7},{x:2,z:4}];
+  const hull=cropClearanceHull(crops,2);
+  assert.deepEqual(hull[0],hull.at(-1));
+  assert.ok(hull.length>5);
+  const polygon=hull.map(([x,z])=>({x,z}));
+  for(const crop of crops)for(const dx of [-2,2])for(const dz of [-2,2])
+    assert.equal(containsPoint(polygon,crop.x+dx*.99,crop.z+dz*.99),true);
+  assert.equal(cropClearanceHull([{x:1,z:2}],2).length,5);
+  assert.throws(()=>cropClearanceHull(crops,0),/clearance/);
+});
 
 test('native cut edges form an arbitrary world contour without assuming a rectangle',()=>{
   const cells=[[1,1],[2,1],[3,1],[1,2],[1,3]];

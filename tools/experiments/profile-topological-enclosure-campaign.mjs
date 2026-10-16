@@ -7,7 +7,8 @@ import {simulateNativeCampaign} from '../native-campaign-runner.mjs';
 import {createSpatialCampaignOpening} from './spatial-campaign-opening.mjs';
 import {createSpatialIntentBridge} from '../../src/world/hierarchical-wasm/spatial-intent-bridge.js';
 import {createCropEnclosurePlanner} from '../../src/world/hierarchical-wasm/spatial-crop-enclosure-plan.js';
-import {approximateCutModules,stitchTwoCutStrokes} from '../../src/world/hierarchical-wasm/spatial-topological-enclosure-prototype.js';
+import {approximateCutModules,cropClearanceHull,inspectSelfClosedQuote,
+  stitchTwoCutStrokes} from '../../src/world/hierarchical-wasm/spatial-topological-enclosure-prototype.js';
 import {wallSpec} from '../../src/simulation/rules.js';
 import * as Game from '../../src/simulation/game.js';
 
@@ -72,6 +73,30 @@ function inspect(state,nav){
   }
   const old=()=>createCropEnclosurePlanner(state,nav,bridge)
     .planCropEnclosure(group.id);
+  const hull=()=>{
+    const points=group.cropIds.map(id=>state.plants.find(item=>item.id===id))
+      .filter(item=>item?.alive).map(({x,z})=>({x,z}));
+    const geometryStart=performance.now();
+    const contour=cropClearanceHull(points,2.5);
+    const geometryMs=performance.now()-geometryStart;
+    const quoteStart=performance.now();
+    const quote=Game.quoteWallChain(state,'zarzas',contour,nav,
+      {smooth:false,snap:false});
+    const quoteMs=performance.now()-quoteStart;
+    const structural=inspectSelfClosedQuote(quote,state.structures,points);
+    let protection='unverified',validationMs=0;
+    if(structural.status==='closed-wall-loop'){
+      const start=performance.now();
+      protection=nav.withWallPreview(quote.previewPieces,quote.suppressed,()=>
+        bridge.getUnprotectedCropGroups({includeProtected:true})
+          .find(item=>item.id===group.id)?.protection??'unknown',true);
+      validationMs=performance.now()-start;
+    }
+    return {status:structural.status,protection,vertices:contour.length-1,
+      modules:quote.pieces.length,cost:quote.cost,
+      gaps:quote.blockedPieces.length+quote.blockedCrops.length,
+      gates:quote.gates,geometryMs,quoteMs,validationMs};
+  };
   const cut=()=>{
     if(typeof wasm.lazy_local_crop_cut!=='function')return {status:'not-built'};
     const cropPoints=group.cropIds.map(id=>state.plants.find(item=>item.id===id))
@@ -129,9 +154,9 @@ function inspect(state,nav){
     return total+wasm.lazy_sector_updates();
   };
   const rows=[];
-  for(const name of ['old','cut','cut','old']){
+  for(const name of ['old','hull','cut','cut','hull','old']){
     const before={...calls},beforeUpdates=updates();
-    const started=performance.now(),result=name==='old'?old():cut();
+    const started=performance.now(),result=name==='old'?old():name==='hull'?hull():cut();
     rows.push({name,ms:performance.now()-started,...(name==='old'?{
       status:result.status,modules:result.modules?.length,cost:result.cost,
       gaps:result.gaps?.length}:result),

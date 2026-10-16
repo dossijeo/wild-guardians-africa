@@ -6,6 +6,30 @@ import {ANIMAL_SPATIAL_PROFILES} from './spatial-movement-profiles.js';
 export const SMALLEST_ANIMAL_RADIUS=Math.min(...Object.values(
   ANIMAL_SPATIAL_PROFILES).map(profile=>profile.radius));
 
+// Fast geometry-only candidate. Taking the hull of square crop clearances
+// avoids a fragile offset/miter calculation and encloses every crop with the
+// requested margin. Physical placement, doors and price remain separate.
+export function cropClearanceHull(points,margin){
+  if(!Array.isArray(points)||!points.length||!Number.isFinite(margin)||margin<=0||
+    points.some(p=>!Number.isFinite(p?.x)||!Number.isFinite(p?.z)))
+    throw TypeError('Expected crop positions and a positive clearance');
+  const corners=points.flatMap(({x,z})=>[[-margin,-margin],[-margin,margin],
+    [margin,-margin],[margin,margin]].map(([dx,dz])=>[x+dx,z+dz]));
+  corners.sort((a,b)=>a[0]-b[0]||a[1]-b[1]);
+  const cross=(a,b,c)=>(b[0]-a[0])*(c[1]-a[1])-
+    (b[1]-a[1])*(c[0]-a[0]);
+  const chain=list=>{
+    const out=[];
+    for(const point of list){
+      while(out.length>1&&cross(out.at(-2),out.at(-1),point)<=0)out.pop();
+      out.push(point);
+    }
+    return out.slice(0,-1);
+  };
+  const hull=[...chain(corners),...chain([...corners].reverse())];
+  return [...hull,hull[0]];
+}
+
 // A self-closing stroke needs no natural-barrier contact check. Open arcs only
 // require examination where their physical modules meet a pre-existing solid.
 // This classifies the work; it does not mistake a grid edge for a solid join.

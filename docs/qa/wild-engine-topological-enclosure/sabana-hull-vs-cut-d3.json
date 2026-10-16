@@ -1,0 +1,158 @@
+{
+  "biome": "sabana",
+  "seed": 712,
+  "day": 3,
+  "source": "a21f2b76509fa1057f031db5311cac7e5962b0f96b399060df860aa48ff41e1d",
+  "wasmSha256": "25c80656d8d8682c2833aec5687810d095d395202007a769701d76227cd38998",
+  "elapsedSeconds": 57.3682201,
+  "campaignTiming": {
+    "ticks": 1041,
+    "decisionMs": 5015.724100000009,
+    "gameTickMs": 2833.2926999999922
+  },
+  "sample": {
+    "stateHash": "7b7033894dee269d4bf04cb074f1372ef2f84ef280446150cd5f2e2331cb6966",
+    "living": 66,
+    "status": "measured",
+    "groupId": "crop:plant-1109",
+    "cropCount": 66,
+    "groupBounds": {
+      "minX": 81,
+      "minZ": -7.5,
+      "maxX": 94.5,
+      "maxZ": 7.5
+    },
+    "removedWalls": [],
+    "rows": [
+      {
+        "name": "old",
+        "ms": 23705.763799999997,
+        "status": "unknown",
+        "modules": 35,
+        "cost": 350,
+        "gaps": 1,
+        "calls": {
+          "path": 38,
+          "wallPlacement": 334,
+          "withWallPreview": 17
+        },
+        "sectorUpdates": 37728
+      },
+      {
+        "name": "hull",
+        "ms": 309.7346000000034,
+        "status": "open",
+        "protection": "unverified",
+        "vertices": 13,
+        "modules": 29,
+        "cost": 290,
+        "gaps": 1,
+        "gates": 1,
+        "geometryMs": 0.9311000000016065,
+        "quoteMs": 307.8249999999971,
+        "validationMs": 0,
+        "calls": {
+          "path": 13,
+          "wallPlacement": 90,
+          "withWallPreview": 4
+        },
+        "sectorUpdates": 720
+      },
+      {
+        "name": "cut",
+        "ms": 8.535100000000966,
+        "status": "proposed",
+        "box": [
+          69,
+          -20,
+          108,
+          21
+        ],
+        "topologicalMs": 5.340799999998126,
+        "conversionMs": 1.3042999999961467,
+        "validationMs": 0,
+        "cutEdges": 21,
+        "flow": 21,
+        "cells": 1206,
+        "strokes": 2,
+        "estimatedModules": 11,
+        "estimatedCost": 110,
+        "ambiguous": 0,
+        "junctions": 4,
+        "stitched": false,
+        "physical": null,
+        "calls": {
+          "path": 0,
+          "wallPlacement": 0,
+          "withWallPreview": 0
+        },
+        "sectorUpdates": 0
+      },
+      {
+        "name": "cut",
+        "ms": 4.193999999995867,
+        "status": "proposed",
+        "box": [
+          69,
+          -20,
+          108,
+          21
+        ],
+        "topologicalMs": 3.168599999997241,
+        "conversionMs": 0.4293000000034226,
+        "validationMs": 0,
+        "cutEdges": 21,
+        "flow": 21,
+        "cells": 1206,
+        "strokes": 2,
+        "estimatedModules": 11,
+        "estimatedCost": 110,
+        "ambiguous": 0,
+        "junctions": 4,
+        "stitched": false,
+        "physical": null,
+        "calls": {
+          "path": 0,
+          "wallPlacement": 0,
+          "withWallPreview": 0
+        },
+        "sectorUpdates": 0
+      },
+      {
+        "name": "hull",
+        "ms": 319.10980000000563,
+        "status": "open",
+        "protection": "unverified",
+        "vertices": 13,
+        "modules": 29,
+        "cost": 290,
+        "gaps": 1,
+        "gates": 1,
+        "geometryMs": 1.049299999998766,
+        "quoteMs": 317.77410000000236,
+        "validationMs": 0,
+        "calls": {
+          "path": 13,
+          "wallPlacement": 90,
+          "withWallPreview": 4
+        },
+        "sectorUpdates": 720
+      },
+      {
+        "name": "old",
+        "ms": 24081.2598,
+        "status": "unknown",
+        "modules": 35,
+        "cost": 350,
+        "gaps": 1,
+        "calls": {
+          "path": 38,
+          "wallPlacement": 334,
+          "withWallPreview": 17
+        },
+        "sectorUpdates": 37728
+      }
+    ],
+    "memoryBytes": 16777216
+  }
+}
