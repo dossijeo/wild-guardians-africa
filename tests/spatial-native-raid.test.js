@@ -405,8 +405,14 @@ for(const count of [1,5])test(`${count} native raiders attack an accessible wall
       planner.resetFromState(state);
       session.actorSectorRevision({worker:false,species:state.raid.animals[0].species});
       const wasm=session.core.wasm;
+      const initialBuilds=wasm.nav_intent_wall_portal_builds();
       const portalCount=wasm.nav_intent_wall_portals(state.raid.animals[0].radius);
       assert(portalCount>0,'the native region graph exposes wall-side portals');
+      assert.equal(wasm.nav_intent_wall_portal_builds(),initialBuilds+1);
+      assert.equal(wasm.nav_intent_wall_portals(state.raid.animals[0].radius),
+        portalCount);
+      assert.equal(wasm.nav_intent_wall_portal_builds(),initialBuilds+1,
+        'unchanged topology reuses the profile-specific wall graph');
       const rows=new Float64Array(wasm.memory.buffer,
         wasm.nav_intent_wall_portals_ptr(),portalCount*5);
       const wallIds=new Set(walls.map(wall=>Number(wall.id.split('-').at(-1))));
@@ -433,10 +439,12 @@ for(const count of [1,5])test(`${count} native raiders attack an accessible wall
       session.actorSectorRevision({worker:false,species:state.raid.animals[0].species});
       assert.equal(wasm.nav_intent_wall_portals(state.raid.animals[0].radius),0,
         'unloaded sectors cannot certify a wall-side portal');
+      assert.equal(wasm.nav_intent_wall_portal_builds(),initialBuilds+2);
       assert(session.core.addChunk(0,0)>0);
       session.actorSectorRevision({worker:false,species:state.raid.animals[0].species});
       assert(wasm.nav_intent_wall_portals(state.raid.animals[0].radius)>0,
         'the portal graph recovers when the sector becomes resident again');
+      assert.equal(wasm.nav_intent_wall_portal_builds(),initialBuilds+3);
       stopWorld=planner.observeWorld(state);stopTasks=planner.observeTasks(state);
       const planCrop=planner.planAttackCrop;
       planner.planAttackCrop=(...args)=>{

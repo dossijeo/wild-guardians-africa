@@ -68,6 +68,10 @@ struct AttackSiteCache {
   uint32_t topology=0;float radius=0;
   std::map<int,std::vector<AttackSite>> byRegion;
 };
+struct WallPortalCache {
+  uint32_t topology=0;uint64_t walls=0;double radius=0;bool built=false;
+  std::vector<double> rows;
+};
 struct CropGroup {
   uint64_t id;double value=0,x=0,z=0,minX=0,minZ=0,maxX=0,maxZ=0;
   std::vector<uint64_t> crops;
@@ -139,7 +143,8 @@ struct IntentState {
   std::array<double,10> attackResult{};
   // Experimental wall-side graph for comparing native enclosure choices with
   // the current raid selector. Each directed row is wall, from, to, x, z.
-  std::vector<double> wallPortalRows;
+  std::unordered_map<int,WallPortalCache> wallPortalCaches;
+  uint64_t wallRevision=0,wallPortalBuilds=0;
   std::vector<double> perimeterRows;
   std::vector<double> intentChanges;
   std::array<double,10> intentResult{};
@@ -606,7 +611,7 @@ void nav_intent_reset(){
   s.cropCells.clear();s.plantSearches.clear();s.plantLeases.clear();
   s.plantResult.fill(0);s.nextPlantLease=1;s.centerRevision=0;
   s.changes.clear();s.results.clear();s.routes.clear();clearProposal(s);
-  s.wallPortalRows.clear();
+  s.wallPortalCaches.clear();s.wallRevision=0;s.wallPortalBuilds=0;
   s.perimeterRows.clear();
   s.sequence=0;s.entityRevision=0;s.damageRevision=0;
   s.routeQueries=0;s.candidates=0;
@@ -616,9 +621,15 @@ void nav_intent_reset(){
 // reservation or intention is changed here. A missing sector leaves the edge
 // unknown, never a certified wall separating two regions.
 int nav_intent_wall_portals(double radius){
-  IntentState& s=state();s.wallPortalRows.clear();
+  IntentState& s=state();
   if(!std::isfinite(radius)||radius<=0||radius>2||
      lazy_selected_context()==1)return -1;
+  WallPortalCache& cache=s.wallPortalCaches[lazy_selected_context()];
+  if(cache.built&&cache.topology==lazy_route_revision()&&
+     cache.walls==s.wallRevision&&cache.radius==radius)
+    return int(cache.rows.size()/5);
+  cache.rows.clear();cache.built=false;
+  s.wallPortalBuilds++;
   std::vector<const Target*> walls;
   for(const auto& [id,target]:s.targets)
     if(target.kind==3&&target.active&&target.status!=2)
@@ -650,18 +661,24 @@ int nav_intent_wall_portals(double radius){
       if(a.second||b.second||a.first.empty()||b.first.empty())continue;
       bool distinct=false;
       for(int from:a.first)for(int to:b.first)if(from!=to){
-        s.wallPortalRows.insert(s.wallPortalRows.end(),
+        cache.rows.insert(cache.rows.end(),
           {double(wall->id),double(from),double(to),ax,az});
-        s.wallPortalRows.insert(s.wallPortalRows.end(),
+        cache.rows.insert(cache.rows.end(),
           {double(wall->id),double(to),double(from),bx,bz});
         distinct=true;
       }
       if(distinct)break;
     }
   }
-  return int(s.wallPortalRows.size()/5);
+  cache.topology=lazy_route_revision();cache.walls=s.wallRevision;
+  cache.radius=radius;cache.built=true;
+  return int(cache.rows.size()/5);
 }
-const double* nav_intent_wall_portals_ptr(){return state().wallPortalRows.data();}
+const double* nav_intent_wall_portals_ptr(){
+  const auto found=state().wallPortalCaches.find(lazy_selected_context());
+  return found==state().wallPortalCaches.end()?nullptr:found->second.rows.data();
+}
+double nav_intent_wall_portal_builds(){return double(state().wallPortalBuilds);}
 // Return only the first wall crossing from the animal's weak region toward a
 // sealed crop group. This is a read-only candidate query; the physical route,
 // approach lease and target priority still need validation before adoption.
@@ -696,11 +713,12 @@ int nav_intent_perimeter_walls(double startX,double startZ,double radius,
   }
   const int count=nav_intent_wall_portals(radius);
   if(count<0)return -2;
+  const auto& portals=s.wallPortalCaches.at(lazy_selected_context()).rows;
   std::map<int,std::vector<std::array<double,5>>> graph;
   for(int index=0;index<count;index++){
     const size_t offset=size_t(index)*5;
     std::array<double,5> edge{};
-    std::copy_n(s.wallPortalRows.begin()+offset,5,edge.begin());
+    std::copy_n(portals.begin()+offset,5,edge.begin());
     graph[int(edge[1])].push_back(edge);
   }
   std::map<int,int> distance;
@@ -769,9 +787,19 @@ int nav_intent_apply_changes(double sequence,int count){
     if(change.kind==5&&current!=1&&current!=2)return 0;
     if(change.kind==6&&current!=4)return 0;
   }
-  bool planningChange=false,damageChange=false,cropChange=false,cropRemoved=false,centerChange=false;
+  bool planningChange=false,damageChange=false,cropChange=false,cropRemoved=false,
+    centerChange=false,wallChange=false;
   for(const Change& change:parsed){
     if(change.kind==2||change.kind==4)damageChange=true;
+    if(change.kind==2&&
+       (change.op&&change.center==3||
+        s.targets.count(change.id)&&s.targets.at(change.id).kind==3))
+      wallChange=true;
+    if(change.kind==4&&s.targets.count(change.id)&&
+       s.targets.at(change.id).kind==3&&
+       (!change.op||!s.targets.at(change.id).damageKnown||
+        s.targets.at(change.id).status!=int(change.assigned)))
+      wallChange=true;
     if(change.kind==5||change.kind==2&&
       (change.op&&change.center<=2||
        s.targets.count(change.id)&&s.targets.at(change.id).kind>=1&&
@@ -791,6 +819,7 @@ int nav_intent_apply_changes(double sequence,int count){
     if(found!=s.targets.end()&&found->second.damageKnown&&
        found->second.status!=int(change.assigned))planningChange=true;
   }
+  if(wallChange)s.wallRevision++;
   for(const Change& change:parsed){
     invalidateDependents(s,change);
     if(!change.op){
