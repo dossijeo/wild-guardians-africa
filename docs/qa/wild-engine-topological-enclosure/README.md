@@ -347,6 +347,20 @@ routes were not checked. In particular, four animal profiles still report
 barrier or certify the whole enclosure. The extra QA probes make this cut-only
 run unsuitable for timing comparisons.
 
+A further read-only probe of the candidate preview examined a 3×3 grid around
+all 66 crop positions in each of the five animal profiles. Every crop had at
+least one cell whose native component was sealed; none of these neighborhoods
+had an uncertified cell. The existing `cropProtection()` classifier nevertheless
+reported `unknown` for four profiles because its direct physical connector
+from the *exact crop coordinate* to a nearby cell failed on some crops. With
+the wider 3×3 diagnostic, the counts without any physical connector were 10
+(warthog), 7 (hyena), 9 (buffalo), 0 (lion) and 14 (rhino). A sealed neighbor
+does not prove that the crop itself is physically enclosed, nor does an absent
+connector prove an exterior route exists. These results localize the cause of
+the conservative `unknown` and justify a focused closure/interaction test
+before changing production classification. They do not establish all-species
+protection or a campaign saving.
+
 ## Adoption boundary
 
 If this approach continues, turn the multi-stroke quote into a validated

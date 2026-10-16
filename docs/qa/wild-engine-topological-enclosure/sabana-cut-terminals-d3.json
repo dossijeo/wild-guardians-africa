@@ -4,11 +4,11 @@
   "day": 3,
   "source": "a21f2b76509fa1057f031db5311cac7e5962b0f96b399060df860aa48ff41e1d",
   "wasmSha256": "e9d7440ca2529376b8da4971c2cbed4e4225bb4c6c9e9740f106f99cc460247c",
-  "elapsedSeconds": 8.4230043,
+  "elapsedSeconds": 8.267313099999999,
   "campaignTiming": {
     "ticks": 1041,
-    "decisionMs": 4324.308499999991,
-    "gameTickMs": 2803.121299999997
+    "decisionMs": 4173.243,
+    "gameTickMs": 2828.795899999999
   },
   "sample": {
     "stateHash": "7b7033894dee269d4bf04cb074f1372ef2f84ef280446150cd5f2e2331cb6966",
@@ -27,7 +27,7 @@
     "rows": [
       {
         "name": "cut",
-        "ms": 181.0025999999998,
+        "ms": 187.01789999999892,
         "status": "proposed",
         "box": [
           69,
@@ -35,9 +35,9 @@
           108,
           21
         ],
-        "topologicalMs": 5.0680000000011205,
-        "conversionMs": 1.3827000000001135,
-        "validationMs": 171.72119999999995,
+        "topologicalMs": 5.066199999999299,
+        "conversionMs": 1.2338999999992666,
+        "validationMs": 177.17169999999896,
         "cutEdges": 21,
         "flow": 21,
         "cells": 1206,
@@ -463,6 +463,94 @@
                 "status": "reachable"
               }
             ]
+          },
+          "gridProbe": {
+            "center": [
+              90,
+              -1
+            ],
+            "bySpecies": {
+              "warthog": {
+                "firstCropCells": {
+                  "sealed": 38,
+                  "uncertified": 0,
+                  "blocked": 11,
+                  "unexpected": 0
+                },
+                "crops": {
+                  "sealedNeighborhood": 66,
+                  "uncertifiedNeighborhood": 0,
+                  "noPassableCell": 0,
+                  "anchoredSealed": 56,
+                  "anchoredUncertified": 0,
+                  "noPhysicalAnchor": 10
+                }
+              },
+              "hyena": {
+                "firstCropCells": {
+                  "sealed": 39,
+                  "uncertified": 0,
+                  "blocked": 10,
+                  "unexpected": 0
+                },
+                "crops": {
+                  "sealedNeighborhood": 66,
+                  "uncertifiedNeighborhood": 0,
+                  "noPassableCell": 0,
+                  "anchoredSealed": 59,
+                  "anchoredUncertified": 0,
+                  "noPhysicalAnchor": 7
+                }
+              },
+              "buffalo": {
+                "firstCropCells": {
+                  "sealed": 38,
+                  "uncertified": 0,
+                  "blocked": 11,
+                  "unexpected": 0
+                },
+                "crops": {
+                  "sealedNeighborhood": 66,
+                  "uncertifiedNeighborhood": 0,
+                  "noPassableCell": 0,
+                  "anchoredSealed": 57,
+                  "anchoredUncertified": 0,
+                  "noPhysicalAnchor": 9
+                }
+              },
+              "lion": {
+                "firstCropCells": {
+                  "sealed": 41,
+                  "uncertified": 0,
+                  "blocked": 8,
+                  "unexpected": 0
+                },
+                "crops": {
+                  "sealedNeighborhood": 66,
+                  "uncertifiedNeighborhood": 0,
+                  "noPassableCell": 0,
+                  "anchoredSealed": 66,
+                  "anchoredUncertified": 0,
+                  "noPhysicalAnchor": 0
+                }
+              },
+              "rhino": {
+                "firstCropCells": {
+                  "sealed": 37,
+                  "uncertified": 0,
+                  "blocked": 12,
+                  "unexpected": 0
+                },
+                "crops": {
+                  "sealedNeighborhood": 66,
+                  "uncertifiedNeighborhood": 0,
+                  "noPassableCell": 0,
+                  "anchoredSealed": 52,
+                  "anchoredUncertified": 0,
+                  "noPhysicalAnchor": 14
+                }
+              }
+            }
           },
           "blockedPieces": 0,
           "blockedCrops": 0

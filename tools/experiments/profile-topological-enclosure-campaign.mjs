@@ -102,8 +102,9 @@ function inspect(state,nav){
   };
   const cut=()=>{
     if(typeof wasm.lazy_local_crop_cut!=='function')return {status:'not-built'};
-    const cropPoints=group.cropIds.map(id=>state.plants.find(item=>item.id===id))
-      .filter(Boolean).map(item=>[Math.round(item.x),Math.round(item.z)]);
+    const cropTargets=group.cropIds.map(id=>state.plants.find(item=>item.id===id))
+      .filter(Boolean);
+    const cropPoints=cropTargets.map(item=>[Math.round(item.x),Math.round(item.z)]);
     for(const species of ['warthog','hyena','buffalo','lion','rhino'])
       opening.session.actorRegionsBatch([cropPoints[0]&&{
         x:cropPoints[0][0],z:cropPoints[0][1]}],{worker:false,species});
@@ -183,10 +184,46 @@ function inspect(state,nav){
         }
       });
       const beforeWorkerAccess=cutOnly?workerAccess():undefined;
+      const gridProbe=()=>{
+        const [sx,sz]=cropPoints[0],bySpecies={};
+        for(const species of ['warthog','hyena','buffalo','lion','rhino']){
+          opening.session.actorSectorRevision({worker:false,species});
+          const counts={sealed:0,uncertified:0,blocked:0,unexpected:0};
+          for(let dz=-3;dz<=3;dz++)for(let dx=-3;dx<=3;dx++){
+            const result=wasm.lazy_enclosure(sx+dx,sz+dz);
+            counts[result===1?'sealed':result===0?'blocked':
+              result===-1?'uncertified':'unexpected']++;
+          }
+          const crops={sealedNeighborhood:0,uncertifiedNeighborhood:0,
+            noPassableCell:0,anchoredSealed:0,anchoredUncertified:0,
+            noPhysicalAnchor:0};
+          for(const [index,[cx,cz]] of cropPoints.entries()){
+            let sealed=false,uncertified=false,anchoredSealed=false,
+              anchoredUncertified=false;
+            const target=cropTargets[index];
+            for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){
+              const result=wasm.lazy_enclosure(cx+dx,cz+dz);
+              if(result===1)sealed=true;
+              if(result===-1)uncertified=true;
+              if(!wasm.spatial_local_clear(target.x,target.z,
+                cx+dx,cz+dz))continue;
+              if(result===1)anchoredSealed=true;
+              if(result===-1)anchoredUncertified=true;
+            }
+            crops[uncertified?'uncertifiedNeighborhood':sealed?
+              'sealedNeighborhood':'noPassableCell']++;
+            crops[anchoredUncertified?'anchoredUncertified':anchoredSealed?
+              'anchoredSealed':'noPhysicalAnchor']++;
+          }
+          bySpecies[species]={firstCropCells:counts,crops};
+        }
+        return {center:[sx,sz],bySpecies};
+      };
       const preview=nav.withWallPreview(quote.previewPieces,quote.suppressed,()=>({
         group:bridge.getUnprotectedCropGroups({includeProtected:true})
           .find(item=>item.id===group.id),
-        workerAccess:cutOnly?workerAccess():undefined}),true);
+        workerAccess:cutOnly?workerAccess():undefined,
+        gridProbe:cutOnly?gridProbe():undefined}),true);
       const groupAfter=preview.group;
       validationMs=performance.now()-validateStarted;
       physical={status:groupAfter?.protection??'unknown',
@@ -199,6 +236,7 @@ function inspect(state,nav){
         placedJunctions,
         workerAccess:cutOnly?{before:beforeWorkerAccess,
           after:preview.workerAccess}:undefined,
+        gridProbe:preview.gridProbe,
         blockedPieces:quote.blockedPieces.length,
         blockedCrops:quote.blockedCrops.length};
     }
