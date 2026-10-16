@@ -424,6 +424,24 @@ retained reports. The fixed run used the unchanged WASM SHA-256 above and
 `raids.js` SHA-256
 `d0c9a0cf942cd7baef75053ba96a83a772c652e1c4a78d122765037ad432aced`.
 
+The same corrected native-intent configuration was then requested for **30
+continuous Manglares/712 nights** on source `37828632`, with the same WASM and
+simulation-file hashes. It completed all 30 nights without a technical stop
+or game defeat. The first 14 daily serialized-state hashes match the
+preceding 14-night corrected run exactly. All 30 raids were verified with no
+observer issue or lost coverage; all 563 native worker-home requests found
+routes, with zero JavaScript fallback. The day-31 dawn had one operational
+center, 17 living crops and 513 coins. The severe late agricultural losses
+are real game outcomes, not synthetic stops or proof of acceptable balance.
+The run took 1,277.56 seconds, including 1,088.43 seconds in `Game.tick` and
+116.09 seconds in bot decisions. `Game.tick` reached 98.16 seconds on day 20
+and 112.32 seconds on day 23, then dropped below 47 seconds on days 24–30;
+this is not a monotonic slowdown, but those spikes require targeted profiling
+before claiming sustained performance is satisfactory. The complete daily
+metrics, raid receipts, source hashes and negative observations are retained
+in `manglares30-intent-shield-fix.json.gz`. This one seed and biome does not
+establish 60/100-night stability or physical correctness in every scenario.
+
 The JS/native task handoff now rejects two additional stale targets at the
 last pre-commit boundary: a crate marked delivered and a structure already
 fully repaired. A frozen Desert fixture produces valid native proposals,
