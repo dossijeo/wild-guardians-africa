@@ -399,6 +399,7 @@ for(const count of [1,5])test(`${count} native raiders attack an accessible wall
       introductory:false},nav),false);
     assert.equal(state.raid.animals.length,count);
     let stopWorld,stopTasks,nativeCropStatus=[],routeRefreshDuringAttack=0;
+    let nativeWallIds;
     if(count===1){
       const planner=createEventDrivenTaskPlanner(session);
       planner.resetFromState(state);
@@ -409,8 +410,10 @@ for(const count of [1,5])test(`${count} native raiders attack an accessible wall
       const rows=new Float64Array(wasm.memory.buffer,
         wasm.nav_intent_wall_portals_ptr(),portalCount*5);
       const wallIds=new Set(walls.map(wall=>Number(wall.id.split('-').at(-1))));
+      nativeWallIds=new Set();
       for(let offset=0;offset<rows.length;offset+=5){
         assert(wallIds.has(rows[offset]));
+        nativeWallIds.add(rows[offset]);
         assert.notEqual(rows[offset+1],rows[offset+2]);
         assert(Number.isFinite(rows[offset+3])&&Number.isFinite(rows[offset+4]));
       }
@@ -437,6 +440,9 @@ for(const count of [1,5])test(`${count} native raiders attack an accessible wall
       walls.some(wall=>wall.id===event.targetId)),
     'the animal should damage a real wall rather than cross the closed perimeter');
     if(count===1){
+      assert(state.events.some(event=>event.type==='StructureHit'&&
+        nativeWallIds.has(Number(event.targetId?.split('-').at(-1)))),
+      'the native portal graph nominates a wall the raider can actually hit');
       assert(nativeCropStatus.length>0);
       assert(nativeCropStatus.every(status=>status!=='found'),
         'a closed crop enclosure must not produce a native crop route');
@@ -783,9 +789,16 @@ test('an unresolved native crop group can still expose a certified reachable enc
     const native=planner.planAttackCrop(state,animal);
     assert.equal(native.status,'unknown');
     assert.equal(native.routeQueries,0);
+    session.actorSectorRevision({worker:false,species:animal.species});
+    const count=session.core.wasm.nav_intent_wall_portals(animal.radius);
+    const rows=new Float64Array(session.core.wasm.memory.buffer,
+      session.core.wasm.nav_intent_wall_portals_ptr(),count*5);
     const selected=targetFor(state,animal,nav);
     assert.equal(selected?.target?.kind,'wall');
     assert.equal(selected.target.id,'structure-9100');
+    assert([...Array(count).keys()].some(index=>
+      rows[index*5]===Number(selected.target.id.split('-').at(-1))),
+    'the native portal graph exposes the wall selected by the current raid policy');
     assert.equal(nav.raidSelectionStats.cropAttempts??0,0);
     assert.ok(selected.approach.path?.length);
   }finally{session.dispose();}

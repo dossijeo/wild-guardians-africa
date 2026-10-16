@@ -96,3 +96,10 @@ valid edges; they do **not** yet prove that it covers every eligible wall or
 improves campaign runtime. The next step is an AB comparison of native and JS
 candidate sets, including breaching, natural obstacles and missing sectors,
 before wiring native wall selection into the confirmed attack planner.
+
+An additional local differential check on that same candidate now asserts
+that at least one wall actually hit in the closed-ring raid occurs in the
+native portal rows, and that the frozen day-ten selector's `structure-9100`
+also occurs there. Both checks passed. This is candidate inclusion for two
+fixtures, not full candidate-set equivalence; the live raid still uses the JS
+selector and its physical approach route.
