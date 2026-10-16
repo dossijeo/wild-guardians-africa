@@ -18,6 +18,7 @@ if(!['intent','intent-wall','control'].includes(mode))
 const path=resolve(out),started=performance.now(),rows=[];
 let latestState=null,latestNav=null,dayWorkerSnapshot=[];
 const captureRaidDay=Number(process.env.WILD_ENGINE_CAPTURE_RAID_DAY??0);
+const captureDayEnd=Number(process.env.WILD_ENGINE_CAPTURE_DAY_END??0);
 const spatialAdvice=process.env.WILD_ENGINE_SPATIAL_ADVICE==='1';
 const defensePolicy=process.env.WILD_ENGINE_DEFENSE_POLICY??'legacy';
 const decisionProfile=process.env.WILD_ENGINE_DECISION_PROFILE==='1';
@@ -112,6 +113,9 @@ try{
         });
     },
     onDay:row=>{
+      if(row.day===captureDayEnd&&latestState)
+        writeFileSync(path.replace(/\.json$/,`-day${row.day}-end-state.json`),
+          serialize(latestState));
       const counts=(items,key)=>Object.fromEntries([...new Set(items.map(key))]
         .sort().map(value=>[value,items.filter(item=>key(item)===value).length]));
       rows.push({day:row.day,living:row.living,money:row.money,
