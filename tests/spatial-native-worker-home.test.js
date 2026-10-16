@@ -175,6 +175,13 @@ test('a confirmed wall invalidates a worker home route and reopening replans it'
       assert.equal(planner.homeRouteActive(worker.id),false);
       assert.equal(worker.path,null);
       assert.equal(planner.metrics(game.elapsed).nativeHomePlanFallbacks,1);
+      const failureMetrics=planner.metrics(game.elapsed);
+      assert.equal(Object.values(failureMetrics.nativeHomeFallbacksByStatus)
+        .reduce((sum,value)=>sum+value,0),1);
+      assert.equal(failureMetrics.nativeHomeFallbackSamples[0].workerId,
+        worker.id);
+      assert(['blocked','unknown','unavailable'].includes(
+        failureMetrics.nativeHomeFallbackSamples[0].status));
       assert(session.core.removeWall(wallId)>0);
       planner.reconcileNavigationRevision(game,nav.version+2);
       assert.equal(planner.planHomeRoute(game,worker,home,nav.version+2).status,

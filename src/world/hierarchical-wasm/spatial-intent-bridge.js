@@ -788,6 +788,8 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     animalTotal=0,taskRouteQueries=0,taskCandidates=0,initialized=false;
   let homePlanAttempts=0,homePlanFound=0,homePlanFallbacks=0,
     homeRoutesRestored=0;
+  const homeFallbacksByStatus={blocked:0,unknown:0,unavailable:0};
+  const homeFallbackSamples=[];
   let topologyReconciliations=0,topologyRouteInvalidations=0;
   let lastNavigationVersion=null,pendingNativeChanges=true;
   let lastPlan=null,lastPlanFacts=null,sourceState=null;
@@ -1001,6 +1003,8 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     nativeHomePlanAttempts:homePlanAttempts,
     nativeHomePlansFound:homePlanFound,
     nativeHomePlanFallbacks:homePlanFallbacks,
+    nativeHomeFallbacksByStatus:{...homeFallbacksByStatus},
+    nativeHomeFallbackSamples:homeFallbackSamples.map(sample=>({...sample})),
     nativeHomeRoutesRestored:homeRoutesRestored,
     perWorkerPerMinute:Object.fromEntries([...requests].map(([id,times])=>
       [id,times.filter(time=>time>simulatedSeconds-60).length])),
@@ -1032,7 +1036,15 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     recordWorkerRoutePlan(worker,elapsed);
     homePlanAttempts++;
     if(result.status==='found')homePlanFound++;
-    else homePlanFallbacks++;
+    else{
+      homePlanFallbacks++;
+      if(result.status in homeFallbacksByStatus)
+        homeFallbacksByStatus[result.status]++;
+      if(homeFallbackSamples.length<32)homeFallbackSamples.push({
+        day:sourceState?.day??null,time:sourceState?.time??null,
+        workerId:worker.id,status:result.status,
+        x:worker.x,z:worker.z,villageId:worker.villageId});
+    }
   };
   const hasPendingAt=simulatedSeconds=>{
     if(!initialized)throw Error('Reset the native intent session first');
