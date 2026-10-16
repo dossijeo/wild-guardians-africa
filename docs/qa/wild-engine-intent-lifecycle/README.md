@@ -341,11 +341,12 @@ the village could not afford another day. Crops fell from 59 on day 15 to
 16 on day 16 and zero after day 17. All 19 raid receipts were verified with
 zero observer issues or lost coverage. Native home routing found 291 of 307
 requests; 16 took the bounded JavaScript fallback, first appearing during
-day 17 after wall construction. The report does not classify those 16 route
-failures or prove that no worker was briefly trapped, so further return-path
-diagnosis remains open. The last daily worker samples had different worker
-IDs and no persisting returnee, but are insufficient for a full physical
-route audit. The complete negative run is preserved as
+day 17 after wall construction. A subsequent exact-hash diagnostic replay
+classified all 16 as `blocked`. Frozen-state tests found that old ruined
+walls regained collision after the new construction and isolated workers
+without an automatic gate; see `worker-repair-access-audit.md`. This is a
+physical access defect and limits interpretation of the campaign's balance.
+The complete negative run is preserved as
 `sabana30-native-home-defeat.json.gz`. Neither wall-sale proceeds nor an
 economic warning was used to stop the run; this was the game's actual loss
 rule. It is not a 30-night completion or evidence of acceptable balance.
