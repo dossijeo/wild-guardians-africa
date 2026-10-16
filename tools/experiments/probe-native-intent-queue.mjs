@@ -2,6 +2,7 @@ import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
 import {deserialize} from '../../src/persistence/snapshots.js';
 import {reserveTasks} from '../../src/simulation/tasks.js';
+import {PROFILES} from '../../src/simulation/workforce.js';
 import {wateringRoute,repairRoute} from '../../src/world/work-points.js';
 import {createSpatialGameSession} from '../../src/world/hierarchical-wasm/spatial-game-session.js';
 import {createSpatialNavigationMovement,SpatialChunkUnavailable} from
@@ -15,6 +16,10 @@ const fixture=process.argv[2]??'tests/fixtures/desierto983-d15-partial-state.jso
 const workerCount=Number(process.argv[3]??5);
 const taskCount=Number(process.argv[4]??30);
 const state=deserialize(gunzipSync(readFileSync(fixture)).toString());
+const shiftEnd=new Map(PROFILES.map(profile=>[profile.id,profile.end]));
+if(state.raid||state.time>=300||state.workers.slice(0,workerCount).some(worker=>
+  state.time>=(shiftEnd.get(worker.profile)??0)))
+  throw Error('Queue differential requires a daytime state with eligible worker shifts');
 // The standalone JS control reserves only idle workers. In Game.tick the
 // arrival phase temporarily makes new contracts idle before reservation;
 // exclude other arriving workers here so both probes compare the same pool.
@@ -60,9 +65,14 @@ try{
   const nativeRoutes=routeDiagnostics?new Map(native.filter(row=>row.status===1)
     .map(row=>{
       const workerId=`worker-${row.workerId}`;
+      const origin=originByWorker.get(workerId),path=bridge.proposalRoute(row);
+      let previous=origin,physical=true;
+      for(const point of path){
+        if(!nav.segmentClear(previous,point,.28,null,true)){physical=false;break;}
+        previous=point;
+      }
       return [`task-${row.taskId}`,{
-        workerId,length:routeLength(originByWorker.get(workerId),
-          bridge.proposalRoute(row))}];
+        workerId,length:routeLength(origin,path),physical}];
     })):null;
   const nativeMilliseconds=performance.now()-nativeStart;
   const nativeQueries=session.core.wasm.nav_intent_route_queries();
@@ -97,7 +107,7 @@ try{
     mismatches:mismatchCount};
   if(routeDiagnostics)report.routeComparisons=[...nativeRoutes].map(([taskId,nativeRoute])=>{
     const js=jsRoutes.get(taskId);
-    return {taskId,workerId:nativeRoute.workerId,
+    return {taskId,workerId:nativeRoute.workerId,nativePhysical:nativeRoute.physical,
       nativeLength:nativeRoute.length,jsLength:js?.workerId===nativeRoute.workerId?
         js.length:null};
   });
