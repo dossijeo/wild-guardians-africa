@@ -111,3 +111,24 @@ central chunk is removed, no wall-side portal is certified; reloading that
 chunk restores the rows and the raid still completes. These checks cover
 invalidations at the diagnostic query boundary, not an incremental cached
 portal index or every combination of natural barriers and wall materials.
+
+## Region-to-crop perimeter candidate query
+
+Source `21019962` adds a second read-only native query. Given the animal's
+continuous position, movement radius and an indexed crop-group ID, it uses
+the existing interaction-region index and wall-side graph to return the
+first wall crossings on a shortest sequence of region edges toward a sealed
+group. A group with unresolved residency returns `unknown`; a group already
+in the animal's region returns `inside`. It does not commit a reservation or
+run a route to the proposed attack side. This keeps target selection unchanged
+while the geometry and priority rules are compared.
+
+Pinned Emscripten [run 38828677286](https://github.com/dossijeo/wild-guardians-africa/actions/runs/38828677286)
+passed with candidate SHA-256
+`5ed63cbf457846ef93554cd65c483ef80de5d9929201c98c0ac3fb5ffe6210ad`.
+On the frozen Sabana day-ten state, both native crop groups returned perimeter
+candidates, including `structure-9100`, the wall chosen by the existing
+selector. The query returned many walls of the same enclosure. The next
+planner stage must validate physical reachability and existing military
+priority before choosing one; this candidate inclusion alone does not prove
+that every returned side is reachable, or that native selection is faster.

@@ -736,7 +736,7 @@ int nav_intent_perimeter_walls(double startX,double startZ,double radius,
     return a[0]!=b[0]?a[0]<b[0]:a[1]!=b[1]?a[1]<b[1]:a[2]<b[2];
   });
   unique.erase(std::unique(unique.begin(),unique.end(),[](const auto& a,
-    const auto& b){return a[0]==b[0];}),unique.end());
+    const auto& b){return a==b;}),unique.end());
   s.perimeterRows.clear();
   for(const auto& row:unique)s.perimeterRows.insert(s.perimeterRows.end(),
     row.begin(),row.end());

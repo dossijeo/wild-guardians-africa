@@ -829,12 +829,29 @@ test('an unresolved native crop group can still expose a certified reachable enc
     const count=session.core.wasm.nav_intent_wall_portals(animal.radius);
     const rows=new Float64Array(session.core.wasm.memory.buffer,
       session.core.wasm.nav_intent_wall_portals_ptr(),count*5);
+    const groupCount=session.core.wasm.nav_intent_crop_groups(animal.radius);
+    const groupRows=Array.from(new Float64Array(session.core.wasm.memory.buffer,
+      session.core.wasm.nav_intent_crop_groups_ptr(),groupCount*12));
+    const perimeterCandidates=[];
+    for(let index=0;index<groupCount;index++){
+      const id=groupRows[index*12];
+      const status=session.core.wasm.nav_intent_perimeter_walls(
+        animal.x,animal.z,animal.radius,id);
+      const found=session.core.wasm.nav_intent_perimeter_wall_count();
+      const candidates=Array.from(new Float64Array(session.core.wasm.memory.buffer,
+        session.core.wasm.nav_intent_perimeter_walls_ptr(),found*3));
+      if(status===1)perimeterCandidates.push(...[...Array(found).keys()].map(
+        row=>candidates[row*3]));
+    }
     const selected=targetFor(state,animal,nav);
     assert.equal(selected?.target?.kind,'wall');
     assert.equal(selected.target.id,'structure-9100');
     assert([...Array(count).keys()].some(index=>
       rows[index*5]===Number(selected.target.id.split('-').at(-1))),
     'the native portal graph exposes the wall selected by the current raid policy');
+    assert(perimeterCandidates.includes(
+      Number(selected.target.id.split('-').at(-1))),
+    'the native region-to-crop query includes the reachable wall selected by the raid');
     assert.equal(nav.raidSelectionStats.cropAttempts??0,0);
     assert.ok(selected.approach.path?.length);
   }finally{session.dispose();}
