@@ -541,6 +541,8 @@ decisions initially and then only after a confirmed income, crop, wall,
 structure-damage or repair event, or a native crop-protection notification.
 Elapsed simulation time alone does not request another perimeter preview.
 The legacy comparison mode retains its 30-second interval. This change
-affects when the existing policy considers spending; it does not replace
-its JavaScript perimeter design or partial-stroke purchase rule. A native
-full-enclosure plan and economic saving policy remain separate work.
+also quotes the full incremental wall stroke before spending: an
+unaffordable enclosure remains a savings target, and smaller deliveries do
+not repeatedly quote the same geometry. It does not yet replace the
+JavaScript rectangle with a native certified enclosure plan; physical
+protection must still be verified separately from purchasing a stroke.

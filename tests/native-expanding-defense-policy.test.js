@@ -21,7 +21,12 @@ test('expanding native paid enclosure changes bounds and charges actual new piec
 test('failed/unaffordable strokes and uncompleted repair requests are not counted as useful build actions',()=>{
  const {s,nav,options,policy}=fixture();assert.equal(policy.act(s,nav,options),1);const wall=s.structures.find(w=>w.kind==='wall');wall.hp=50;nav.setState(s);s.elapsed+=31;
  assert.equal(policy.act(s,nav,options),0);assert.ok(s.tasks.some(t=>t.kind==='repair'&&t.targetId===wall.id));assert.equal(policy.report(s).repairRequests,1);
- s.elapsed+=31;s.ledger.balance=rational(30);assert.equal(policy.act(s,nav,options),0);assert.equal(policy.report(s).history.at(-1).reason,'budget');
+ s.plants.push({id:'new-budget-crop',species:'mijo',alive:true,x:18,z:0});
+ s.elapsed+=31;s.ledger.balance=rational(30);nav.setState(s);
+ assert.equal(policy.act(s,nav,options),0);
+ assert.equal(policy.report(s).history.at(-1).reason,'budget');
+ assert.equal(policy.report(s).history.at(-1).paidPieces,0,
+  'the policy saves for the complete quoted enclosure');
 });
 test('a certified protection loss wakes the defense policy before its periodic interval',()=>{
  const {s,nav,options,policy}=fixture();
@@ -50,7 +55,7 @@ test('event-driven defense sleeps without relevant changes and wakes on income o
  assert.equal(policy.act(s,nav,options),0);
  assert.equal(policy.report(s).history.length,first,
   'elapsed time alone must not trigger another spatial plan');
- policy.onWorldEvent({type:'CrateDelivered'});
+ policy.onWorldEvent({type:'CrateDelivered'},s);
  policy.act(s,nav,options);
  assert.equal(policy.report(s).history.length,first+1);
  const second=policy.report(s).history.length;
@@ -63,4 +68,25 @@ test('event-driven defense sleeps without relevant changes and wakes on income o
  policy.act(s,nav,options);
  assert.ok(s.tasks.some(task=>task.kind==='repair'&&task.targetId===wall.id));
  assert.equal(policy.report(s).repairRequests,1);
+});
+test('event-driven defense waits for the whole quoted enclosure before spending',()=>{
+ const {s,nav,options,policy}=fixture({eventDriven:true});
+ assert.equal(policy.act(s,nav,options),1);
+ s.plants.push({id:'future-crop',species:'mijo',alive:true,x:18,z:0});
+ s.ledger.balance=rational(30);nav.setState(s);
+ policy.onWorldEvent({type:'CropPlaced',targetId:'future-crop'},s);
+ assert.equal(policy.act(s,nav,options),0);
+ const waiting=policy.report(s),target=waiting.waitForFunds;
+ assert.equal(waiting.history.at(-1).reason,'budget');
+ assert.ok(target>30);
+ s.ledger.balance=rational(target-1);
+ policy.onWorldEvent({type:'CrateDelivered'},s);
+ assert.equal(policy.act(s,nav,options),0);
+ assert.equal(policy.report(s).history.length,waiting.history.length,
+  'subthreshold deliveries do not repeat the same geometry quote');
+ s.ledger.balance=rational(target);
+ policy.onWorldEvent({type:'CrateDelivered'},s);
+ assert.equal(policy.act(s,nav,options),1);
+ assert.equal(policy.report(s).history.at(-1).paidCost,
+  target-options.reserve,'the complete incremental quote is paid at once');
 });
