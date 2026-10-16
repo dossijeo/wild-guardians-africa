@@ -317,3 +317,15 @@ and `canyon7-targeted-frontier-no-heuristic.json.gz`. This technical pilot
 does not establish a performance or balance improvement. Further work must
 inspect which requested sectors actually resolve the graph frontier before
 expanding the residency budget or changing attack decisions.
+
+The code-level cause is narrower than a generic missing route. In
+`lazy_connected`, reason 8 is returned only after the source search reaches
+an unloaded outbound frontier and `targetSealed` fails because the target's
+weak component also touches an unloaded frontier. Reason 10 denotes the
+separate case in which source and target belong to the same weak region.
+Thus these 155 reason-8 results cannot be certified as a closed crop
+enclosure by merely observing a wall nearby. The finite raid residency
+budget prevents unbounded exploration of an open procedural world; raising
+it without evidence could spend more time and memory yet leave the answer
+unknown. A future targeted test should record both components' frontier
+sectors and which additions actually change the native connectivity result.
