@@ -1047,6 +1047,8 @@ test('native whole-queue assignments match JS on controlled real Desert and Cany
    [probe,path,String(workers),String(tasks),'--summary','--route-diagnostics'],{
     env:process.env,encoding:'utf8',timeout:30000}));
   assert.equal(report.mismatches,0,`${fixture}: differing native assignment`);
+  assert(report.routeComparisons.every(row=>row.nativePhysical),
+   `${fixture}: native task route crosses a static physical barrier`);
   assert(report.nativeQueries>0&&report.nativeQueries<=report.jsCandidates*8,
    `${fixture}: native service-point search exceeded its bounded alternatives`);
   assert(report.jsCandidates>0);

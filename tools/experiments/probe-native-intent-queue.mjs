@@ -60,9 +60,14 @@ try{
   const nativeRoutes=routeDiagnostics?new Map(native.filter(row=>row.status===1)
     .map(row=>{
       const workerId=`worker-${row.workerId}`;
+      const origin=originByWorker.get(workerId),path=bridge.proposalRoute(row);
+      let previous=origin,physical=true;
+      for(const point of path){
+        if(!nav.segmentClear(previous,point,.28,null,true)){physical=false;break;}
+        previous=point;
+      }
       return [`task-${row.taskId}`,{
-        workerId,length:routeLength(originByWorker.get(workerId),
-          bridge.proposalRoute(row))}];
+        workerId,length:routeLength(origin,path),physical}];
     })):null;
   const nativeMilliseconds=performance.now()-nativeStart;
   const nativeQueries=session.core.wasm.nav_intent_route_queries();
@@ -97,7 +102,7 @@ try{
     mismatches:mismatchCount};
   if(routeDiagnostics)report.routeComparisons=[...nativeRoutes].map(([taskId,nativeRoute])=>{
     const js=jsRoutes.get(taskId);
-    return {taskId,workerId:nativeRoute.workerId,
+    return {taskId,workerId:nativeRoute.workerId,nativePhysical:nativeRoute.physical,
       nativeLength:nativeRoute.length,jsLength:js?.workerId===nativeRoute.workerId?
         js.length:null};
   });

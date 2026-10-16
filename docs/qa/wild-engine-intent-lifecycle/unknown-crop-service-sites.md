@@ -6,6 +6,8 @@ The planner now continues through the remaining bounded sites after an inconclus
 
 The previous WASM was downloaded from native-intent CI run `38934441241`; the candidate WASM was compiled by CI run `38935854645`. The expanded test fails against the previous binary with two differing assignments and passes against the candidate. The candidate's full native-intent CI job passed. `npm run test:playable` passed 196/196 locally. The probe preloads the same nine-by-nine chunk area around the village in both variants.
 
+The differential probe also checks each leg of every selected native worker route against `nav.segmentClear` with the worker profile. All selected routes in both frozen states passed this physical check with the corrected WASM. This checks static clearance of the planned legs; it does not establish a complete campaign outcome.
+
 | Frozen fixture | Previous native queries / mismatches | Candidate native queries / mismatches | ABBA native planning milliseconds, previous / candidate / candidate / previous |
 | --- | ---: | ---: | --- |
 | Gran Cañón watering, 6 workers, 19 tasks | 44 / 2 | 212 / 0 | 16.39 / 11.85 / 9.84 / 10.49 |
