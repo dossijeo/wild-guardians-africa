@@ -4,6 +4,7 @@ import {fixture,probe} from '../tools/probe-raid-reservation-saturation.mjs';
 import {spawnRaid,updateRaid} from '../src/simulation/raids.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {Navigation} from '../src/world/navigation.js';
+import {emit} from '../src/simulation/game.js';
 import {reconcileTargetReservations,reservedApproachClear,targetReservationKey} from '../src/simulation/raid-target-reservations.js';
 import {activeCrops} from '../src/simulation/active-crops.js';
 import {RAID_WAIT_SECONDS} from '../src/simulation/raid-contention.js';
@@ -86,6 +87,20 @@ test('destroying one reserved crop frees only that target and preserves other le
  const {s,nav,raid}=start('mono',5),owner=raid.animals[0],victim=s.plants.find(p=>p.id===owner.targetId),other=raid.animals[1],otherId=other.targetId;
  victim.alive=false;nav.setState(s);tick(s,nav,0);
  assert.notEqual(owner.targetId,victim.id);assert.equal(other.targetId,otherId);independent(s);finish(s,nav);
+});
+test('reservation reconciliation sleeps on unchanged ticks and wakes on confirmed target loss',()=>{
+ const {s,nav,raid}=start('mono',2),owner=raid.animals[0],other=raid.animals[1];
+ const victim=s.plants.find(p=>p.id===owner.targetId),otherId=other.targetId;
+ const claims=raid.reservations;
+ tick(s,nav,0);
+ assert.equal(raid.reservations,claims,'an unchanged tick must not rebuild claims');
+ victim.alive=false;
+ emit(s,'CropDestroyed',{cropId:victim.id});
+ tick(s,nav,0);
+ assert.notEqual(raid.reservations,claims,'confirmed target loss wakes reconciliation');
+ assert.notEqual(owner.targetId,victim.id);
+ assert.equal(other.targetId,otherId);
+ assert.equal(raid.reservations[other.reservation],other.id);
 });
 test('reservation reconciliation excludes historical crops when the live farm grows',()=>{
  const {s}=start('mono',1);

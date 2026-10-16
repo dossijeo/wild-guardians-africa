@@ -14,7 +14,7 @@ import {nextRandom,randomInt,attraction,threatTier,animalSpec,operational,hitStr
 import {createRaidCompositionIndex} from './raid-composition-index.js';
 import {preparePressureNight,nextPressureWave} from './raid-pressure-plan.js';
 import {eligiblePendingRaidWavePlan} from '../world/raid-entry-data.js';
-import {emit,notice,walkTo,rebuildTasks,spellAt,dropCarriedCrate,recoverDisplacedWorkers} from './game.js';
+import {emit,notice,observeGameEvents,walkTo,rebuildTasks,spellAt,dropCarriedCrate,recoverDisplacedWorkers} from './game.js';
 import {contractExpired} from './workforce.js';
 import {cancelIdle} from './idle.js';
 import {releaseTask,replaceTasks,notifyWorkerPlanningChange} from './tasks.js';
@@ -30,6 +30,23 @@ import {applyCropImpact,cropImpactDamage,CROP_HIT_POINTS} from './crop-impact-he
 const dist=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z),entrySelections=new WeakMap();
 const cropTargetIndexes=new WeakMap();
 const raidRegionDecisions=new WeakMap();
+const reservationReconciliation=new WeakMap();
+const RESERVATION_TARGET_EVENTS=new Set(['CropDestroyed','CropPicked',
+  'StructureHit','StructureRuined','WallRemoved']);
+function reconcileRaidReservationsOnChange(s,nav){
+  let entry=reservationReconciliation.get(s);
+  if(!entry){
+    entry={raid:null,nav:null,navVersion:null,dirty:true};
+    observeGameEvents(s,event=>{
+      if(RESERVATION_TARGET_EVENTS.has(event.type))entry.dirty=true;
+    });
+    reservationReconciliation.set(s,entry);
+  }
+  if(entry.raid===s.raid&&entry.nav===nav&&entry.navVersion===nav.version&&
+    !entry.dirty&&s.raid.targetReservationVersion===2)return;
+  reconcileTargetReservations(s,(state,animal)=>release(state,animal,nav));
+  entry.raid=s.raid;entry.nav=nav;entry.navVersion=nav.version;entry.dirty=false;
+}
 const RAID_REGION_QUERIES_PER_TICK=16,RAID_REGION_RETRY_SECONDS=4;
 const NATIVE_UNKNOWN_CAUSES=['source-connector','region-connectivity',
   'crop-sites','route','bounded-local-search'];
@@ -705,7 +722,7 @@ export function updateRaid(s,dt,nav) {
   if(tactical.size)for(const animal of s.raid.animals)
     if(tactical.has(animal.id)&&animal.status!=='attacking'&&animal.targetId)
       release(s,animal,nav);
-  reconcileTargetReservations(s,(state,animal)=>release(state,animal,nav));
+  reconcileRaidReservationsOnChange(s,nav);
   updateWorkerEncounters(s,nav);
   observeWaitProgress(s);liveWaitQueue(s.raid);
   for(const a of s.raid.animals) {
