@@ -463,6 +463,25 @@ overall campaign speedup. The four-arm data are in
 automatic doors, multiple centres, sector streaming, construction/destruction
 events and other biomes before it can replace the current advisor.
 
+The existing six-biome *single-crop synthetic* workload was then rerun with
+the conservative variant, using the original sites and the same candidate
+binary. Sabana, Manglares, Gran Río, Volcanes and Desierto each quoted 9
+modules/90 coins with no omitted piece, and their 1 m crop-side boundaries
+passed the static-solid certificate. These corner sites have similar local
+geometry, so five successes are not five independent complex farm shapes.
+Gran Cañón produced three arcs, quoted only 3 modules while omitting 2, and
+its boundary remained `unknown`; that is a **failed proposal**, not a 30-coin
+enclosure. The raw old/cut/cut/old runs are retained in
+`six-biomes-conservative.jsonl`.
+
+This synthetic workload cannot prove worker access: its worker route from the
+village to the test crop is already unavailable **before** the preview in all
+six cases, and remains so afterwards. It is useful for comparing physical
+frontiers and quote legality, not for accepting a worker-safe enclosure. The
+real Sabana/712 day-3 checkpoint above is the separate positive 66-crop
+round-trip access test. Other real checkpoints and dynamic changes remain
+pending.
+
 This also explains why checking only the four exposed wall ends is insufficient
 for this candidate: a mixed wall/building/terrain closure needs evidence that
 the intervening obstacle chain stays impassable. A self-closing wall face with

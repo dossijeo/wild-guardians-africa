@@ -6,6 +6,7 @@ import {createSpatialNavigationMovement} from '../../src/world/hierarchical-wasm
 import {createSpatialIntentBridge} from '../../src/world/hierarchical-wasm/spatial-intent-bridge.js';
 import {createCropEnclosurePlanner} from '../../src/world/hierarchical-wasm/spatial-crop-enclosure-plan.js';
 import {approximateCutModules,cutEdgesToStrokes,inspectSelfClosedQuote,
+  inspectStaticCutBoundary,
   stitchTwoCutStrokes} from '../../src/world/hierarchical-wasm/spatial-topological-enclosure-prototype.js';
 import {villageLayout} from '../../src/world/villages.js';
 import {wallSpec} from '../../src/simulation/rules.js';
@@ -14,6 +15,7 @@ import * as Game from '../../src/simulation/game.js';
 const wasmPath=process.argv[2]??'src/world/hierarchical-wasm/spatial-savanna.wasm';
 const biome=process.argv[3]??'sabana';
 const siteMode=process.argv[4]??'corner';
+const conservativeCut=process.argv.includes('--conservative-cut');
 const padding=Number(process.argv[7]??2);
 if(!Number.isInteger(padding)||padding<0||padding>8)throw RangeError('Invalid crop padding');
 const connectorLimit=Number(process.argv[8]??8);
@@ -83,6 +85,15 @@ try{
     };
   }
   const old=()=>planner.planCropEnclosure(group.id);
+  const workerRouteStatus=()=>{
+    const entry=state.villages[0].entry??state.villages[0];
+    try{return {outbound:!!nav.path(entry,site,.28,null,true),
+      return:!!nav.path(site,entry,.28,null,true)};}
+    catch(error){
+      if(error.name!=='SpatialChunkUnavailable')throw error;
+      return {status:'unknown'};
+    }
+  };
   const cut=()=>{
     const cutStart=performance.now();
     for(const species of ['warthog','hyena','buffalo','lion','rhino'])
@@ -90,25 +101,40 @@ try{
     const pointer=wasm.lazy_cut_seeds_ptr(1);
     new Int32Array(wasm.memory.buffer,pointer,2).set([Math.round(site.x),Math.round(site.z)]);
     const margin=12,minX=Math.floor(site.x-margin),minZ=Math.floor(site.z-margin);
-    const result=wasm.lazy_local_crop_cut(minX,minZ,
-      Math.ceil(site.x+margin)+1,Math.ceil(site.z+margin)+1,1,padding);
+    const maxX=Math.ceil(site.x+margin)+1,maxZ=Math.ceil(site.z+margin)+1;
+    const result=conservativeCut?wasm.lazy_local_crop_cut_conservative(
+      minX,minZ,maxX,maxZ,1,padding):wasm.lazy_local_crop_cut(
+      minX,minZ,maxX,maxZ,1,padding);
     const edges=result>=0?Array.from(new Int32Array(wasm.memory.buffer,
       wasm.lazy_local_crop_cut_ptr(),result*4)):[];
+    const boundaryCount=conservativeCut&&result>=0?
+      wasm.lazy_local_crop_cut_boundary_count():0;
+    const boundary=boundaryCount?Array.from(new Int32Array(wasm.memory.buffer,
+      wasm.lazy_local_crop_cut_boundary_ptr(),boundaryCount*4)):[];
     const flow=wasm.lazy_local_crop_cut_flow(),cells=wasm.lazy_local_crop_cut_cells();
     const cutMs=performance.now()-cutStart;
     const convertStart=performance.now();
     const shape=result>=0?approximateCutModules(edges,state.structures,'zarzas',
       wallSpec('zarzas').cost):null;
     const stitched=shape&&!shape.ambiguous.length?
-      stitchTwoCutStrokes(shape.strokes,connectorLimit):null;
+      conservativeCut?shape.strokes:
+        stitchTwoCutStrokes(shape.strokes,connectorLimit):null;
     const convertMs=performance.now()-convertStart;
-    let quote=null,certification=null,structural=null,rhinoProbe=null,validationMs=0;
+    let quote=null,certification=null,structural=null,rhinoProbe=null,
+      workerRoutes=null,
+      staticBoundary=null,validationMs=0;
+    const workerRoutesBefore=conservativeCut?workerRouteStatus():null;
     if(stitched){
       const validateStart=performance.now();
       quote=Game.quoteWallChain(state,'zarzas',stitched,nav,
         {smooth:false,snap:false});
       structural=inspectSelfClosedQuote(quote,state.structures,[site]);
       certification=nav.withWallPreview(quote.previewPieces,quote.suppressed,()=>{
+        if(conservativeCut)staticBoundary=quote.suppressed.length?
+          {status:'unknown',reason:'suppressed-static-obstacle'}:
+          inspectStaticCutBoundary(boundary,(x,z)=>
+            wasm.spatial_static_object_clearance(x,z,2));
+        if(conservativeCut)workerRoutes=workerRouteStatus();
         const assessed=bridge.getUnprotectedCropGroups({includeProtected:true})
           .find(item=>item.id===group.id);
         if(process.env.WILD_ENGINE_CUT_PROBE==='1'){
@@ -125,11 +151,13 @@ try{
       validationMs=performance.now()-validateStart;
     }
     return {status:result<0?result===-1?'unknown':'invalid':'proposed',
-      cutEdges:result,flow,cells,edges,cutMs,convertMs,validationMs,
+      conservativeCut,cutEdges:result,flow,cells,edges,cutMs,convertMs,validationMs,
+      boundarySegments:conservativeCut?boundaryCount:undefined,staticBoundary,
+      workerRoutesBefore,workerRoutes,
       strokes:shape?.strokes.length,estimatedModules:shape?.slots.length,
       estimatedCost:shape?.estimatedCost,ambiguous:shape?.ambiguous.length,
       junctions:shape?.junctions.length,
-      stitched:!!stitched&&shape.strokes.length>1,
+      stitched:!!stitched&&!conservativeCut&&shape.strokes.length>1,
       strokeSummary:shape?.strokes.map(points=>({count:points.length,
         start:points[0],end:points.at(-1)})),
       modules:quote?.pieces.length,cost:quote?.cost,
@@ -155,7 +183,12 @@ try{
         status:result.status,
         modules:Array.isArray(result.modules)?result.modules.length:result.modules,
         cost:result.cost,
+        conservativeCut:result.conservativeCut,
         cutEdges:result.cutEdges,flow:result.flow,cells:result.cells,
+        boundarySegments:result.boundarySegments,
+        staticBoundary:result.staticBoundary,
+        workerRoutes:result.workerRoutes,
+        workerRoutesBefore:result.workerRoutesBefore,
         cutMs:result.cutMs,convertMs:result.convertMs,
         validationMs:result.validationMs,strokes:result.strokes,
         estimatedModules:result.estimatedModules,
@@ -172,7 +205,8 @@ try{
           [key,instrumentation[key]-before[key]])),
         sectorUpdates:wasm.lazy_sector_updates()-updates});
     }
-    console.log(JSON.stringify({kind:'ABBA',biome,site,padding,connectorLimit,rows,
+    console.log(JSON.stringify({kind:'ABBA',biome,site,padding,connectorLimit,
+      conservativeCut,rows,
       memoryBytes:wasm.memory.buffer.byteLength}));
   }
 }finally{session.dispose();}
