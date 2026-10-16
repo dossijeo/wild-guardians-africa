@@ -22,6 +22,9 @@ const breach=process.argv[5]==='breach';
 const cutOnly=process.argv.includes('--cut-only');
 const conservativeCut=process.argv.includes('--conservative-cut');
 const compareCut=process.argv.includes('--compare-cut');
+const compareConstructionCut=process.argv.includes('--compare-construction-cut');
+if(compareConstructionCut&&!conservativeCut)
+  throw Error('Construction comparison requires --conservative-cut');
 if(!Number.isInteger(day)||day<1||day>30)throw RangeError('Invalid target day');
 const wasmPath=process.env.WILD_ENGINE_SPATIAL_SERVICES_WASM??
   'src/world/hierarchical-wasm/spatial-savanna.wasm';
@@ -104,7 +107,7 @@ function inspect(state,nav){
       gaps:quote.blockedPieces.length+quote.blockedCrops.length,
       gates:quote.gates,geometryMs,quoteMs,validationMs};
   };
-  const cut=(useConservative=conservativeCut)=>{
+  const cut=(useConservative=conservativeCut,constructionAware=false)=>{
     if(typeof wasm.lazy_local_crop_cut!=='function')return {status:'not-built'};
     const cropTargets=group.cropIds.map(id=>state.plants.find(item=>item.id===id))
       .filter(Boolean);
@@ -120,9 +123,10 @@ function inspect(state,nav){
     const box=[Math.floor(b.minX-margin),Math.floor(b.minZ-margin),
       Math.ceil(b.maxX+margin)+1,Math.ceil(b.maxZ+margin)+1];
     const started=performance.now();
-    const count=useConservative?wasm.lazy_local_crop_cut_conservative(...box,
-      cropPoints.length,2):wasm.lazy_local_crop_cut(...box,
-      cropPoints.length,2);
+    const count=useConservative?
+      (constructionAware?wasm.lazy_local_crop_cut_conservative_buildable:
+        wasm.lazy_local_crop_cut_conservative)(...box,cropPoints.length,2):
+      wasm.lazy_local_crop_cut(...box,cropPoints.length,2);
     const topologicalMs=performance.now()-started;
     const edges=count>=0?Array.from(new Int32Array(wasm.memory.buffer,
       wasm.lazy_local_crop_cut_ptr(),count*4)):[];
@@ -408,7 +412,7 @@ function inspect(state,nav){
         blockedCrops:quote.blockedCrops.length};
     }
     return {status:count===-1?'unknown':count===-2?'unsupported':'proposed',
-      conservativeCut:useConservative,
+      conservativeCut:useConservative,constructionAware,
       box,topologicalMs,conversionMs,validationMs,cutEdges:count,
       boundarySegments:cutOnly?boundaryCount:undefined,
       flow,cells,
@@ -430,12 +434,15 @@ function inspect(state,nav){
     return total+wasm.lazy_sector_updates();
   };
   const rows=[];
-  for(const name of (compareCut?['cut','cut-conservative',
+  for(const name of (compareConstructionCut?['cut-conservative',
+    'cut-buildable','cut-buildable','cut-conservative']:
+    compareCut?['cut','cut-conservative',
     'cut-conservative','cut']:cutOnly?['cut']:
     ['old','hull','cut','cut','hull','old'])){
     const before={...calls},beforeUpdates=updates();
     const started=performance.now(),result=name==='old'?old():
-      name==='hull'?hull():cut(name==='cut-conservative'||conservativeCut);
+      name==='hull'?hull():cut(name==='cut-conservative'||
+        name==='cut-buildable'||conservativeCut,name==='cut-buildable');
     rows.push({name,ms:performance.now()-started,...(name==='old'?{
       status:result.status,modules:result.modules?.length,cost:result.cost,
       gaps:result.gaps?.length}:result),

@@ -572,6 +572,21 @@ behavior on complex farms. The source commit, WASM SHA-256 and all ABBA rows
 are in `construction-aware-cut-abba.jsonl`. Native synthetic tests cover a
 detour around one forbidden face and an unresolved cut when all faces are
 forbidden; the Gran Cañón WASM regression checks the real fluid case.
+Expanding that same canyon box from 12 to 20 and 28 m still returned
+`unknown` with the construction-aware query, versus the same invalid partial
+proposal from the plain cut. Larger boxes did not reveal a legal detour;
+their native query cost increased. The exact three ABBA reports are in
+`construction-aware-canyon-margins.json`.
+
+The real Sabana/712 day-3 checkpoint with 66 living crops retained the same
+27-edge, 14-quoted-module proposal under both queries. No piece was omitted,
+but the physical group result remained `unknown` and the three open arcs did
+not gain a gate. Warm complete decision times were 206.39 ms plain and
+214.82 ms construction-aware; one run is insufficient to claim a systematic
+slowdown or speedup. The full report, including the identical state hash,
+worker context, query counts and 16 MiB memory size, is in
+`sabana-construction-aware-d3.json`. This variant is useful for declining an
+invalid fluid cut early; it has not made the topological planner adoptable.
 
 ### Local construction and destruction regression
 
