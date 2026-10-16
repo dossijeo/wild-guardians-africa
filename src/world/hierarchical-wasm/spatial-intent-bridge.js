@@ -843,9 +843,9 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     return {...result,...restored,...restoredAnimals,...restoredRetreats,
       ...restoredHomes};
   };
-  const publishCropProtectionChanges=({cropOnly=false}={})=>{
+  const publishCropProtectionChanges=({cropOnly=false,cropAdded=false}={})=>{
     if(!cropProtectionListeners.size)return;
-    if(cropOnly&&!Array.from(cropProtectionSnapshot?.values()??[])
+    if(cropOnly&&!cropAdded&&!Array.from(cropProtectionSnapshot?.values()??[])
       .some(group=>group.protection==='protected'))return;
     const next=new Map(bridge.getUnprotectedCropGroups({includeProtected:true})
       .map(group=>[group.id,group]));
@@ -871,9 +871,10 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
           old=ancestors.find(ancestor=>ancestor.protection==='protected')??old;
         old??=ancestors[0];
       }
-      if(!old||old.protection===group.protection)continue;
+      if((!old&&group.protection!=='unprotected')||
+          old?.protection===group.protection)continue;
       const change={type:'CropGroupProtectionChanged',groupId:id,
-        previous:old.protection,protection:group.protection,group};
+        previous:old?.protection??null,protection:group.protection,group};
       for(const listener of cropProtectionListeners)listener(change);
     }
   };
@@ -915,7 +916,9 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
       (event.entity.kind==='wall'||event.entity.kind==='center'));
     const crops=events.some(event=>event.type==='target'&&
       (event.remove||'alive' in event.entity));
-    if(topology||crops)publishCropProtectionChanges({cropOnly:!topology});
+    if(topology||crops)publishCropProtectionChanges({cropOnly:!topology,
+      cropAdded:events.some(event=>event.type==='target'&&!event.remove&&
+        event.entity.id?.startsWith('plant-'))});
     return result;
   };
   const planIfNeeded=simulatedSeconds=>{
@@ -1143,7 +1146,8 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     const cropChanged=events.some(event=>
       ['CropPlaced','CropDestroyed','CropPicked'].includes(event.type));
     if(topologyChanged||cropChanged)
-      publishCropProtectionChanges({cropOnly:!topologyChanged});
+      publishCropProtectionChanges({cropOnly:!topologyChanged,
+        cropAdded:events.some(event=>event.type==='CropPlaced')});
     return events.length;
   };
   // A revision is an event, not a reason to poll paths on every tick. The

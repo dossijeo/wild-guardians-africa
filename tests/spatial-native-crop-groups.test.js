@@ -163,6 +163,22 @@ test('a paid closed wall ring protects the crop; removing a wall invalidates cer
    previous:'protected',protection:after[0].protection}]);
   planner.flushWorldEvents();
   assert.equal(changes.length,1,'an unchanged topology cannot repeat the notification');
+  let outside;
+  for(let z=-12;z<=12&&!outside;z+=2)
+   for(let x=-12;x<=12&&!outside;x+=2)
+    if(Math.hypot(x-inside.x,z-inside.z)>10&&nav.placement(x,z,.4).valid)
+     outside={x,z};
+  assert(outside,'a legal new agricultural group must be available');
+  assert.equal(Game.plant(game,'new-exposed-crop','mijo',outside.x,outside.z,nav),true);
+  planner.flushWorldEvents();
+  const added=planner.getUnprotectedCropGroups({includeProtected:true})
+   .find(group=>group.cropIds.includes(game.events.at(-1).targetId));
+  assert.equal(added.protection,'unprotected');
+  assert.deepEqual(changes.at(-1)&&{groupId:changes.at(-1).groupId,
+   previous:changes.at(-1).previous,protection:changes.at(-1).protection},
+   {groupId:added.id,previous:null,protection:'unprotected'});
+  planner.flushWorldEvents();
+  assert.equal(changes.length,2,'the new group is notified only once');
   stopProtection();stopWorld();
  }finally{session.dispose();}
 });

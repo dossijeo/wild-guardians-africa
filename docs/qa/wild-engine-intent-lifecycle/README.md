@@ -526,3 +526,11 @@ new groups through surviving crop IDs and reports the certified
 the fix and passed afterward; the native suite passed 74/74, playable tests
 196/196, and the web build passed. This fixes event delivery, not the
 remaining periodic decisions of the defense policy.
+
+The same observer also reports a newly planted, physically unprotected crop
+group once, with `previous: null`. Crop additions now request a native
+protection snapshot even when no older group was protected; ordinary crop
+removals still avoid that query in that case. The experimental defense policy
+wakes on this new-group event as well as on a certified breach. Its broader
+periodic expansion logic remains to be replaced, so this is a targeted
+event-delivery improvement rather than a fully event-driven economic policy.
