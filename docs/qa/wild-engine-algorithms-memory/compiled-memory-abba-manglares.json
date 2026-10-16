@@ -1,0 +1,706 @@
+{
+  "biome": "manglares",
+  "seed": 712,
+  "chunks": 49,
+  "repetitions": 2,
+  "runnerSha256": "e0bd6abf7b8b8dc498fe27112bb22ac3a36bf9e913c914c0f7c47b208d72b0ab",
+  "description": "Sequential ABBA comparison of compiled binaries on the same host. Synthetic workload, not a campaign.",
+  "runs": [
+    {
+      "mib": 4,
+      "candidate": 16,
+      "cycle": 0,
+      "source": {
+        "commit": "b0ce9429514a9feaa19e1e337fe736c26362ee84",
+        "wasmPath": "C:\\Users\\PC\\source\\repos\\wild-guardians-engine-algorithms\\.cache\\wild-engine-memory-ci\\wild-engine-memory-4mib\\engine.wasm",
+        "wasmSha256": "ff719cfebd15fe0aa11a4ed85abc2912f35527e84e635699429489660a1fd8e7",
+        "runnerSha256": "c269b1e6227c6fdb0b8a1279eaad7633d77f706217409584bfd1a5c77200e970"
+      },
+      "milliseconds": 2068.6662000000006,
+      "instantiatedBytes": 4194304,
+      "finalBytes": 14221312,
+      "growthNotifications": 52,
+      "outcomes": {
+        "found": 40,
+        "blocked": 0,
+        "unknown": 60
+      },
+      "routeSha256": "e70b815d86a5e332000294f8dbef80ce128ab0533d86863c465a6dd9a26a283f",
+      "phaseMilliseconds": {
+        "first-chunk": 2.125099999999975,
+        "chunks-loaded": 112.80809999999997,
+        "animal-navigation-built": 889.4536,
+        "worker-navigation-built": 1050.2105000000001,
+        "hundred-routes": 12.0320999999999,
+        "wall-added-removed": 2.036800000000312
+      }
+    },
+    {
+      "mib": 16,
+      "candidate": 16,
+      "cycle": 0,
+      "source": {
+        "commit": "b0ce9429514a9feaa19e1e337fe736c26362ee84",
+        "wasmPath": "C:\\Users\\PC\\source\\repos\\wild-guardians-engine-algorithms\\.cache\\wild-engine-memory-ci\\wild-engine-memory-16mib\\engine.wasm",
+        "wasmSha256": "d12355b1a636f1a856abd1cd6b3b6ff6177162b0ada5a7828df036802227b9d2",
+        "runnerSha256": "c269b1e6227c6fdb0b8a1279eaad7633d77f706217409584bfd1a5c77200e970"
+      },
+      "milliseconds": 1999.7266000000004,
+      "instantiatedBytes": 16777216,
+      "finalBytes": 16777216,
+      "growthNotifications": 0,
+      "outcomes": {
+        "found": 40,
+        "blocked": 0,
+        "unknown": 60
+      },
+      "routeSha256": "e70b815d86a5e332000294f8dbef80ce128ab0533d86863c465a6dd9a26a283f",
+      "phaseMilliseconds": {
+        "first-chunk": 2.879699999999957,
+        "chunks-loaded": 105.10889999999995,
+        "animal-navigation-built": 904.9658999999999,
+        "worker-navigation-built": 973.9014000000002,
+        "hundred-routes": 10.338400000000092,
+        "wall-added-removed": 2.532300000000305
+      }
+    },
+    {
+      "mib": 16,
+      "candidate": 16,
+      "cycle": 0,
+      "source": {
+        "commit": "b0ce9429514a9feaa19e1e337fe736c26362ee84",
+        "wasmPath": "C:\\Users\\PC\\source\\repos\\wild-guardians-engine-algorithms\\.cache\\wild-engine-memory-ci\\wild-engine-memory-16mib\\engine.wasm",
+        "wasmSha256": "d12355b1a636f1a856abd1cd6b3b6ff6177162b0ada5a7828df036802227b9d2",
+        "runnerSha256": "c269b1e6227c6fdb0b8a1279eaad7633d77f706217409584bfd1a5c77200e970"
+      },
+      "milliseconds": 2000.4632999999997,
+      "instantiatedBytes": 16777216,
+      "finalBytes": 16777216,
+      "growthNotifications": 0,
+      "outcomes": {
+        "found": 40,
+        "blocked": 0,
+        "unknown": 60
+      },
+      "routeSha256": "e70b815d86a5e332000294f8dbef80ce128ab0533d86863c465a6dd9a26a283f",
+      "phaseMilliseconds": {
+        "first-chunk": 2.6540999999999713,
+        "chunks-loaded": 101.3895,
+        "animal-navigation-built": 943.8401000000001,
+        "worker-navigation-built": 941.4591,
+        "hundred-routes": 8.162899999999809,
+        "wall-added-removed": 2.9575999999997293
+      }
+    },
+    {
+      "mib": 4,
+      "candidate": 16,
+      "cycle": 0,
+      "source": {
+        "commit": "b0ce9429514a9feaa19e1e337fe736c26362ee84",
+        "wasmPath": "C:\\Users\\PC\\source\\repos\\wild-guardians-engine-algorithms\\.cache\\wild-engine-memory-ci\\wild-engine-memory-4mib\\engine.wasm",
+        "wasmSha256": "ff719cfebd15fe0aa11a4ed85abc2912f35527e84e635699429489660a1fd8e7",
+        "runnerSha256": "c269b1e6227c6fdb0b8a1279eaad7633d77f706217409584bfd1a5c77200e970"
+      },
+      "milliseconds": 2125.5968999999996,
+      "instantiatedBytes": 4194304,
+      "finalBytes": 14221312,
+      "growthNotifications": 52,
+      "outcomes": {
+        "found": 40,
+        "blocked": 0,
+        "unknown": 60
+      },
+      "routeSha256": "e70b815d86a5e332000294f8dbef80ce128ab0533d86863c465a6dd9a26a283f",
+      "phaseMilliseconds": {
+        "first-chunk": 2.3660999999999603,
+        "chunks-loaded": 109.58349999999996,
+        "animal-navigation-built": 960.498,
+        "worker-navigation-built": 1042.9225999999999,
+        "hundred-routes": 8.057399999999689,
+        "wall-added-removed": 2.169300000000021
+      }
+    },
+    {
+      "mib": 4,
+      "candidate": 16,
+      "cycle": 1,
+      "source": {
+        "commit": "b0ce9429514a9feaa19e1e337fe736c26362ee84",
+        "wasmPath": "C:\\Users\\PC\\source\\repos\\wild-guardians-engine-algorithms\\.cache\\wild-engine-memory-ci\\wild-engine-memory-4mib\\engine.wasm",
+        "wasmSha256": "ff719cfebd15fe0aa11a4ed85abc2912f35527e84e635699429489660a1fd8e7",
+        "runnerSha256": "c269b1e6227c6fdb0b8a1279eaad7633d77f706217409584bfd1a5c77200e970"
+      },
+      "milliseconds": 2149.9711,
+      "instantiatedBytes": 4194304,
+      "finalBytes": 14221312,
+      "growthNotifications": 52,
+      "outcomes": {
+        "found": 40,
+        "blocked": 0,
+        "unknown": 60
+      },
+      "routeSha256": "e70b815d86a5e332000294f8dbef80ce128ab0533d86863c465a6dd9a26a283f",
+      "phaseMilliseconds": {
+        "first-chunk": 2.5471000000000004,
+        "chunks-loaded": 117.87689999999998,
+        "animal-navigation-built": 999.6688999999999,
+        "worker-navigation-built": 1017.7820000000002,
+        "hundred-routes": 9.390100000000075,
+        "wall-added-removed": 2.7061000000003332
+      }
+    },
+    {
+      "mib": 16,
+      "candidate": 16,
+      "cycle": 1,
+      "source": {
+        "commit": "b0ce9429514a9feaa19e1e337fe736c26362ee84",
+        "wasmPath": "C:\\Users\\PC\\source\\repos\\wild-guardians-engine-algorithms\\.cache\\wild-engine-memory-ci\\wild-engine-memory-16mib\\engine.wasm",
+        "wasmSha256": "d12355b1a636f1a856abd1cd6b3b6ff6177162b0ada5a7828df036802227b9d2",
+        "runnerSha256": "c269b1e6227c6fdb0b8a1279eaad7633d77f706217409584bfd1a5c77200e970"
+      },
+      "milliseconds": 2039.8678999999997,
+      "instantiatedBytes": 16777216,
+      "finalBytes": 16777216,
+      "growthNotifications": 0,
+      "outcomes": {
+        "found": 40,
+        "blocked": 0,
+        "unknown": 60
+      },
+      "routeSha256": "e70b815d86a5e332000294f8dbef80ce128ab0533d86863c465a6dd9a26a283f",
+      "phaseMilliseconds": {
+        "first-chunk": 2.618299999999863,
+        "chunks-loaded": 119.41740000000004,
+        "animal-navigation-built": 951.6264000000001,
+        "worker-navigation-built": 956.3071,
+        "hundred-routes": 7.688799999999901,
+        "wall-added-removed": 2.209899999999834
+      }
+    },
+    {
+      "mib": 16,
+      "candidate": 16,
+      "cycle": 1,
+      "source": {
+        "commit": "b0ce9429514a9feaa19e1e337fe736c26362ee84",
+        "wasmPath": "C:\\Users\\PC\\source\\repos\\wild-guardians-engine-algorithms\\.cache\\wild-engine-memory-ci\\wild-engine-memory-16mib\\engine.wasm",
+        "wasmSha256": "d12355b1a636f1a856abd1cd6b3b6ff6177162b0ada5a7828df036802227b9d2",
+        "runnerSha256": "c269b1e6227c6fdb0b8a1279eaad7633d77f706217409584bfd1a5c77200e970"
+      },
+      "milliseconds": 2139.6206999999995,
+      "instantiatedBytes": 16777216,
+      "finalBytes": 16777216,
+      "growthNotifications": 0,
+      "outcomes": {
+        "found": 40,
+        "blocked": 0,
+        "unknown": 60
+      },
+      "routeSha256": "e70b815d86a5e332000294f8dbef80ce128ab0533d86863c465a6dd9a26a283f",
+      "phaseMilliseconds": {
+        "first-chunk": 2.3643999999999323,
+        "chunks-loaded": 111.7074,
+        "animal-navigation-built": 971.1186,
+        "worker-navigation-built": 1040.7853999999998,
+        "hundred-routes": 10.246599999999944,
+        "wall-added-removed": 3.3982999999998356
+      }
+    },
+    {
+      "mib": 4,
+      "candidate": 16,
+      "cycle": 1,
+      "source": {
+        "commit": "b0ce9429514a9feaa19e1e337fe736c26362ee84",
+        "wasmPath": "C:\\Users\\PC\\source\\repos\\wild-guardians-engine-algorithms\\.cache\\wild-engine-memory-ci\\wild-engine-memory-4mib\\engine.wasm",
+        "wasmSha256": "ff719cfebd15fe0aa11a4ed85abc2912f35527e84e635699429489660a1fd8e7",
+        "runnerSha256": "c269b1e6227c6fdb0b8a1279eaad7633d77f706217409584bfd1a5c77200e970"
+      },
+      "milliseconds": 2163.6148999999996,
+      "instantiatedBytes": 4194304,
+      "finalBytes": 14221312,
+      "growthNotifications": 52,
+      "outcomes": {
+        "found": 40,
+        "blocked": 0,
+        "unknown": 60
+      },
+      "routeSha256": "e70b815d86a5e332000294f8dbef80ce128ab0533d86863c465a6dd9a26a283f",
+      "phaseMilliseconds": {
+        "first-chunk": 2.691100000000006,
+        "chunks-loaded": 120.85750000000007,
+        "animal-navigation-built": 988.4712,
+        "worker-navigation-built": 1037.2997999999998,
+        "hundred-routes": 10.391499999999724,
+        "wall-added-removed": 3.9038000000000466
+      }
+    },
+    {
+      "mib": 4,
+      "candidate": 32,
+      "cycle": 0,
+      "source": {
+        "commit": "b0ce9429514a9feaa19e1e337fe736c26362ee84",
+        "wasmPath": "C:\\Users\\PC\\source\\repos\\wild-guardians-engine-algorithms\\.cache\\wild-engine-memory-ci\\wild-engine-memory-4mib\\engine.wasm",
+        "wasmSha256": "ff719cfebd15fe0aa11a4ed85abc2912f35527e84e635699429489660a1fd8e7",
+        "runnerSha256": "c269b1e6227c6fdb0b8a1279eaad7633d77f706217409584bfd1a5c77200e970"
+      },
+      "milliseconds": 2051.4243,
+      "instantiatedBytes": 4194304,
+      "finalBytes": 14221312,
+      "growthNotifications": 52,
+      "outcomes": {
+        "found": 40,
+        "blocked": 0,
+        "unknown": 60
+      },
+      "routeSha256": "e70b815d86a5e332000294f8dbef80ce128ab0533d86863c465a6dd9a26a283f",
+      "phaseMilliseconds": {
+        "first-chunk": 2.1984999999999673,
+        "chunks-loaded": 112.14319999999998,
+        "animal-navigation-built": 926.2089999999998,
+        "worker-navigation-built": 1000.4560000000001,
+        "hundred-routes": 8.288900000000012,
+        "wall-added-removed": 2.128700000000208
+      }
+    },
+    {
+      "mib": 32,
+      "candidate": 32,
+      "cycle": 0,
+      "source": {
+        "commit": "b0ce9429514a9feaa19e1e337fe736c26362ee84",
+        "wasmPath": "C:\\Users\\PC\\source\\repos\\wild-guardians-engine-algorithms\\.cache\\wild-engine-memory-ci\\wild-engine-memory-32mib\\engine.wasm",
+        "wasmSha256": "cd616d28674d294c2a71778ee9efc9a49acf249c061c18bee3e5e8c5961db21b",
+        "runnerSha256": "c269b1e6227c6fdb0b8a1279eaad7633d77f706217409584bfd1a5c77200e970"
+      },
+      "milliseconds": 2142.9681000000005,
+      "instantiatedBytes": 33554432,
+      "finalBytes": 33554432,
+      "growthNotifications": 0,
+      "outcomes": {
+        "found": 40,
+        "blocked": 0,
+        "unknown": 60
+      },
+      "routeSha256": "e70b815d86a5e332000294f8dbef80ce128ab0533d86863c465a6dd9a26a283f",
+      "phaseMilliseconds": {
+        "first-chunk": 3.066100000000006,
+        "chunks-loaded": 109.5288999999998,
+        "animal-navigation-built": 903.9918,
+        "worker-navigation-built": 1116.0199000000002,
+        "hundred-routes": 7.987100000000282,
+        "wall-added-removed": 2.3742999999999483
+      }
+    },
+    {
+      "mib": 32,
+      "candidate": 32,
+      "cycle": 0,
+      "source": {
+        "commit": "b0ce9429514a9feaa19e1e337fe736c26362ee84",
+        "wasmPath": "C:\\Users\\PC\\source\\repos\\wild-guardians-engine-algorithms\\.cache\\wild-engine-memory-ci\\wild-engine-memory-32mib\\engine.wasm",
+        "wasmSha256": "cd616d28674d294c2a71778ee9efc9a49acf249c061c18bee3e5e8c5961db21b",
+        "runnerSha256": "c269b1e6227c6fdb0b8a1279eaad7633d77f706217409584bfd1a5c77200e970"
+      },
+      "milliseconds": 2014.6855,
+      "instantiatedBytes": 33554432,
+      "finalBytes": 33554432,
+      "growthNotifications": 0,
+      "outcomes": {
+        "found": 40,
+        "blocked": 0,
+        "unknown": 60
+      },
+      "routeSha256": "e70b815d86a5e332000294f8dbef80ce128ab0533d86863c465a6dd9a26a283f",
+      "phaseMilliseconds": {
+        "first-chunk": 2.355000000000018,
+        "chunks-loaded": 112.77379999999994,
+        "animal-navigation-built": 927.9301,
+        "worker-navigation-built": 961.0527999999999,
+        "hundred-routes": 7.049600000000282,
+        "wall-added-removed": 3.524199999999837
+      }
+    },
+    {
+      "mib": 4,
+      "candidate": 32,
+      "cycle": 0,
+      "source": {
+        "commit": "b0ce9429514a9feaa19e1e337fe736c26362ee84",
+        "wasmPath": "C:\\Users\\PC\\source\\repos\\wild-guardians-engine-algorithms\\.cache\\wild-engine-memory-ci\\wild-engine-memory-4mib\\engine.wasm",
+        "wasmSha256": "ff719cfebd15fe0aa11a4ed85abc2912f35527e84e635699429489660a1fd8e7",
+        "runnerSha256": "c269b1e6227c6fdb0b8a1279eaad7633d77f706217409584bfd1a5c77200e970"
+      },
+      "milliseconds": 1990.8377000000003,
+      "instantiatedBytes": 4194304,
+      "finalBytes": 14221312,
+      "growthNotifications": 52,
+      "outcomes": {
+        "found": 40,
+        "blocked": 0,
+        "unknown": 60
+      },
+      "routeSha256": "e70b815d86a5e332000294f8dbef80ce128ab0533d86863c465a6dd9a26a283f",
+      "phaseMilliseconds": {
+        "first-chunk": 2.215800000000172,
+        "chunks-loaded": 112.00650000000019,
+        "animal-navigation-built": 930.2955,
+        "worker-navigation-built": 934.7343999999998,
+        "hundred-routes": 9.078399999999874,
+        "wall-added-removed": 2.507100000000264
+      }
+    },
+    {
+      "mib": 4,
+      "candidate": 32,
+      "cycle": 1,
+      "source": {
+        "commit": "b0ce9429514a9feaa19e1e337fe736c26362ee84",
+        "wasmPath": "C:\\Users\\PC\\source\\repos\\wild-guardians-engine-algorithms\\.cache\\wild-engine-memory-ci\\wild-engine-memory-4mib\\engine.wasm",
+        "wasmSha256": "ff719cfebd15fe0aa11a4ed85abc2912f35527e84e635699429489660a1fd8e7",
+        "runnerSha256": "c269b1e6227c6fdb0b8a1279eaad7633d77f706217409584bfd1a5c77200e970"
+      },
+      "milliseconds": 2063.3338000000003,
+      "instantiatedBytes": 4194304,
+      "finalBytes": 14221312,
+      "growthNotifications": 52,
+      "outcomes": {
+        "found": 40,
+        "blocked": 0,
+        "unknown": 60
+      },
+      "routeSha256": "e70b815d86a5e332000294f8dbef80ce128ab0533d86863c465a6dd9a26a283f",
+      "phaseMilliseconds": {
+        "first-chunk": 2.5610999999998967,
+        "chunks-loaded": 116.68970000000013,
+        "animal-navigation-built": 952.9952000000001,
+        "worker-navigation-built": 978.2750000000001,
+        "hundred-routes": 10.68690000000015,
+        "wall-added-removed": 2.1259000000000015
+      }
+    },
+    {
+      "mib": 32,
+      "candidate": 32,
+      "cycle": 1,
+      "source": {
+        "commit": "b0ce9429514a9feaa19e1e337fe736c26362ee84",
+        "wasmPath": "C:\\Users\\PC\\source\\repos\\wild-guardians-engine-algorithms\\.cache\\wild-engine-memory-ci\\wild-engine-memory-32mib\\engine.wasm",
+        "wasmSha256": "cd616d28674d294c2a71778ee9efc9a49acf249c061c18bee3e5e8c5961db21b",
+        "runnerSha256": "c269b1e6227c6fdb0b8a1279eaad7633d77f706217409584bfd1a5c77200e970"
+      },
+      "milliseconds": 2013.0790999999995,
+      "instantiatedBytes": 33554432,
+      "finalBytes": 33554432,
+      "growthNotifications": 0,
+      "outcomes": {
+        "found": 40,
+        "blocked": 0,
+        "unknown": 60
+      },
+      "routeSha256": "e70b815d86a5e332000294f8dbef80ce128ab0533d86863c465a6dd9a26a283f",
+      "phaseMilliseconds": {
+        "first-chunk": 2.4235000000001037,
+        "chunks-loaded": 120.14920000000006,
+        "animal-navigation-built": 910.2635999999998,
+        "worker-navigation-built": 969.4413999999997,
+        "hundred-routes": 8.147199999999884,
+        "wall-added-removed": 2.654199999999946
+      }
+    },
+    {
+      "mib": 32,
+      "candidate": 32,
+      "cycle": 1,
+      "source": {
+        "commit": "b0ce9429514a9feaa19e1e337fe736c26362ee84",
+        "wasmPath": "C:\\Users\\PC\\source\\repos\\wild-guardians-engine-algorithms\\.cache\\wild-engine-memory-ci\\wild-engine-memory-32mib\\engine.wasm",
+        "wasmSha256": "cd616d28674d294c2a71778ee9efc9a49acf249c061c18bee3e5e8c5961db21b",
+        "runnerSha256": "c269b1e6227c6fdb0b8a1279eaad7633d77f706217409584bfd1a5c77200e970"
+      },
+      "milliseconds": 2006.3880999999994,
+      "instantiatedBytes": 33554432,
+      "finalBytes": 33554432,
+      "growthNotifications": 0,
+      "outcomes": {
+        "found": 40,
+        "blocked": 0,
+        "unknown": 60
+      },
+      "routeSha256": "e70b815d86a5e332000294f8dbef80ce128ab0533d86863c465a6dd9a26a283f",
+      "phaseMilliseconds": {
+        "first-chunk": 2.695799999999963,
+        "chunks-loaded": 105.78399999999988,
+        "animal-navigation-built": 917.6522999999997,
+        "worker-navigation-built": 970.3478999999998,
+        "hundred-routes": 7.614700000000084,
+        "wall-added-removed": 2.2934000000000196
+      }
+    },
+    {
+      "mib": 4,
+      "candidate": 32,
+      "cycle": 1,
+      "source": {
+        "commit": "b0ce9429514a9feaa19e1e337fe736c26362ee84",
+        "wasmPath": "C:\\Users\\PC\\source\\repos\\wild-guardians-engine-algorithms\\.cache\\wild-engine-memory-ci\\wild-engine-memory-4mib\\engine.wasm",
+        "wasmSha256": "ff719cfebd15fe0aa11a4ed85abc2912f35527e84e635699429489660a1fd8e7",
+        "runnerSha256": "c269b1e6227c6fdb0b8a1279eaad7633d77f706217409584bfd1a5c77200e970"
+      },
+      "milliseconds": 2034.1984999999995,
+      "instantiatedBytes": 4194304,
+      "finalBytes": 14221312,
+      "growthNotifications": 52,
+      "outcomes": {
+        "found": 40,
+        "blocked": 0,
+        "unknown": 60
+      },
+      "routeSha256": "e70b815d86a5e332000294f8dbef80ce128ab0533d86863c465a6dd9a26a283f",
+      "phaseMilliseconds": {
+        "first-chunk": 2.431100000000015,
+        "chunks-loaded": 127.5018,
+        "animal-navigation-built": 929.0046999999997,
+        "worker-navigation-built": 963.0760999999998,
+        "hundred-routes": 10.027599999999893,
+        "wall-added-removed": 2.1572000000001026
+      }
+    },
+    {
+      "mib": 4,
+      "candidate": 64,
+      "cycle": 0,
+      "source": {
+        "commit": "b0ce9429514a9feaa19e1e337fe736c26362ee84",
+        "wasmPath": "C:\\Users\\PC\\source\\repos\\wild-guardians-engine-algorithms\\.cache\\wild-engine-memory-ci\\wild-engine-memory-4mib\\engine.wasm",
+        "wasmSha256": "ff719cfebd15fe0aa11a4ed85abc2912f35527e84e635699429489660a1fd8e7",
+        "runnerSha256": "c269b1e6227c6fdb0b8a1279eaad7633d77f706217409584bfd1a5c77200e970"
+      },
+      "milliseconds": 2007.0592000000004,
+      "instantiatedBytes": 4194304,
+      "finalBytes": 14221312,
+      "growthNotifications": 52,
+      "outcomes": {
+        "found": 40,
+        "blocked": 0,
+        "unknown": 60
+      },
+      "routeSha256": "e70b815d86a5e332000294f8dbef80ce128ab0533d86863c465a6dd9a26a283f",
+      "phaseMilliseconds": {
+        "first-chunk": 2.797900000000027,
+        "chunks-loaded": 109.51030000000014,
+        "animal-navigation-built": 925.7338999999997,
+        "worker-navigation-built": 956.6315000000004,
+        "hundred-routes": 9.856400000000122,
+        "wall-added-removed": 2.529199999999946
+      }
+    },
+    {
+      "mib": 64,
+      "candidate": 64,
+      "cycle": 0,
+      "source": {
+        "commit": "b0ce9429514a9feaa19e1e337fe736c26362ee84",
+        "wasmPath": "C:\\Users\\PC\\source\\repos\\wild-guardians-engine-algorithms\\.cache\\wild-engine-memory-ci\\wild-engine-memory-64mib\\engine.wasm",
+        "wasmSha256": "54a9d1d4dc94f6ca831d3032eac238c96701ed6d8d92d6211d2d24fa86d6c0e4",
+        "runnerSha256": "c269b1e6227c6fdb0b8a1279eaad7633d77f706217409584bfd1a5c77200e970"
+      },
+      "milliseconds": 2119.7192999999993,
+      "instantiatedBytes": 67108864,
+      "finalBytes": 67108864,
+      "growthNotifications": 0,
+      "outcomes": {
+        "found": 40,
+        "blocked": 0,
+        "unknown": 60
+      },
+      "routeSha256": "e70b815d86a5e332000294f8dbef80ce128ab0533d86863c465a6dd9a26a283f",
+      "phaseMilliseconds": {
+        "first-chunk": 2.6567999999999756,
+        "chunks-loaded": 126.41719999999987,
+        "animal-navigation-built": 959.9940999999999,
+        "worker-navigation-built": 1017.9270999999999,
+        "hundred-routes": 10.423600000000079,
+        "wall-added-removed": 2.300499999999829
+      }
+    },
+    {
+      "mib": 64,
+      "candidate": 64,
+      "cycle": 0,
+      "source": {
+        "commit": "b0ce9429514a9feaa19e1e337fe736c26362ee84",
+        "wasmPath": "C:\\Users\\PC\\source\\repos\\wild-guardians-engine-algorithms\\.cache\\wild-engine-memory-ci\\wild-engine-memory-64mib\\engine.wasm",
+        "wasmSha256": "54a9d1d4dc94f6ca831d3032eac238c96701ed6d8d92d6211d2d24fa86d6c0e4",
+        "runnerSha256": "c269b1e6227c6fdb0b8a1279eaad7633d77f706217409584bfd1a5c77200e970"
+      },
+      "milliseconds": 2057.4900000000007,
+      "instantiatedBytes": 67108864,
+      "finalBytes": 67108864,
+      "growthNotifications": 0,
+      "outcomes": {
+        "found": 40,
+        "blocked": 0,
+        "unknown": 60
+      },
+      "routeSha256": "e70b815d86a5e332000294f8dbef80ce128ab0533d86863c465a6dd9a26a283f",
+      "phaseMilliseconds": {
+        "first-chunk": 2.394999999999982,
+        "chunks-loaded": 105.8081000000002,
+        "animal-navigation-built": 930.8154000000002,
+        "worker-navigation-built": 1007.1505000000002,
+        "hundred-routes": 8.802200000000084,
+        "wall-added-removed": 2.5187999999998283
+      }
+    },
+    {
+      "mib": 4,
+      "candidate": 64,
+      "cycle": 0,
+      "source": {
+        "commit": "b0ce9429514a9feaa19e1e337fe736c26362ee84",
+        "wasmPath": "C:\\Users\\PC\\source\\repos\\wild-guardians-engine-algorithms\\.cache\\wild-engine-memory-ci\\wild-engine-memory-4mib\\engine.wasm",
+        "wasmSha256": "ff719cfebd15fe0aa11a4ed85abc2912f35527e84e635699429489660a1fd8e7",
+        "runnerSha256": "c269b1e6227c6fdb0b8a1279eaad7633d77f706217409584bfd1a5c77200e970"
+      },
+      "milliseconds": 2024.5795999999996,
+      "instantiatedBytes": 4194304,
+      "finalBytes": 14221312,
+      "growthNotifications": 52,
+      "outcomes": {
+        "found": 40,
+        "blocked": 0,
+        "unknown": 60
+      },
+      "routeSha256": "e70b815d86a5e332000294f8dbef80ce128ab0533d86863c465a6dd9a26a283f",
+      "phaseMilliseconds": {
+        "first-chunk": 2.7739000000001397,
+        "chunks-loaded": 122.47219999999993,
+        "animal-navigation-built": 912.9010999999998,
+        "worker-navigation-built": 976.7493,
+        "hundred-routes": 7.619299999999839,
+        "wall-added-removed": 2.063799999999901
+      }
+    },
+    {
+      "mib": 4,
+      "candidate": 64,
+      "cycle": 1,
+      "source": {
+        "commit": "b0ce9429514a9feaa19e1e337fe736c26362ee84",
+        "wasmPath": "C:\\Users\\PC\\source\\repos\\wild-guardians-engine-algorithms\\.cache\\wild-engine-memory-ci\\wild-engine-memory-4mib\\engine.wasm",
+        "wasmSha256": "ff719cfebd15fe0aa11a4ed85abc2912f35527e84e635699429489660a1fd8e7",
+        "runnerSha256": "c269b1e6227c6fdb0b8a1279eaad7633d77f706217409584bfd1a5c77200e970"
+      },
+      "milliseconds": 2207.3358,
+      "instantiatedBytes": 4194304,
+      "finalBytes": 14221312,
+      "growthNotifications": 52,
+      "outcomes": {
+        "found": 40,
+        "blocked": 0,
+        "unknown": 60
+      },
+      "routeSha256": "e70b815d86a5e332000294f8dbef80ce128ab0533d86863c465a6dd9a26a283f",
+      "phaseMilliseconds": {
+        "first-chunk": 2.5622000000000753,
+        "chunks-loaded": 112.64809999999989,
+        "animal-navigation-built": 994.0060999999998,
+        "worker-navigation-built": 1084.1993000000002,
+        "hundred-routes": 11.305499999999938,
+        "wall-added-removed": 2.614599999999882
+      }
+    },
+    {
+      "mib": 64,
+      "candidate": 64,
+      "cycle": 1,
+      "source": {
+        "commit": "b0ce9429514a9feaa19e1e337fe736c26362ee84",
+        "wasmPath": "C:\\Users\\PC\\source\\repos\\wild-guardians-engine-algorithms\\.cache\\wild-engine-memory-ci\\wild-engine-memory-64mib\\engine.wasm",
+        "wasmSha256": "54a9d1d4dc94f6ca831d3032eac238c96701ed6d8d92d6211d2d24fa86d6c0e4",
+        "runnerSha256": "c269b1e6227c6fdb0b8a1279eaad7633d77f706217409584bfd1a5c77200e970"
+      },
+      "milliseconds": 2334.1538000000005,
+      "instantiatedBytes": 67108864,
+      "finalBytes": 67108864,
+      "growthNotifications": 0,
+      "outcomes": {
+        "found": 40,
+        "blocked": 0,
+        "unknown": 60
+      },
+      "routeSha256": "e70b815d86a5e332000294f8dbef80ce128ab0533d86863c465a6dd9a26a283f",
+      "phaseMilliseconds": {
+        "first-chunk": 3.3101999999998952,
+        "chunks-loaded": 148.36850000000004,
+        "animal-navigation-built": 1023.3876000000002,
+        "worker-navigation-built": 1147.9487,
+        "hundred-routes": 8.038800000000265,
+        "wall-added-removed": 3.099999999999909
+      }
+    },
+    {
+      "mib": 64,
+      "candidate": 64,
+      "cycle": 1,
+      "source": {
+        "commit": "b0ce9429514a9feaa19e1e337fe736c26362ee84",
+        "wasmPath": "C:\\Users\\PC\\source\\repos\\wild-guardians-engine-algorithms\\.cache\\wild-engine-memory-ci\\wild-engine-memory-64mib\\engine.wasm",
+        "wasmSha256": "54a9d1d4dc94f6ca831d3032eac238c96701ed6d8d92d6211d2d24fa86d6c0e4",
+        "runnerSha256": "c269b1e6227c6fdb0b8a1279eaad7633d77f706217409584bfd1a5c77200e970"
+      },
+      "milliseconds": 2065.062,
+      "instantiatedBytes": 67108864,
+      "finalBytes": 67108864,
+      "growthNotifications": 0,
+      "outcomes": {
+        "found": 40,
+        "blocked": 0,
+        "unknown": 60
+      },
+      "routeSha256": "e70b815d86a5e332000294f8dbef80ce128ab0533d86863c465a6dd9a26a283f",
+      "phaseMilliseconds": {
+        "first-chunk": 3.9781000000000404,
+        "chunks-loaded": 112.75530000000003,
+        "animal-navigation-built": 919.4519,
+        "worker-navigation-built": 1018.8218999999999,
+        "hundred-routes": 7.695499999999811,
+        "wall-added-removed": 2.3593000000000757
+      }
+    },
+    {
+      "mib": 4,
+      "candidate": 64,
+      "cycle": 1,
+      "source": {
+        "commit": "b0ce9429514a9feaa19e1e337fe736c26362ee84",
+        "wasmPath": "C:\\Users\\PC\\source\\repos\\wild-guardians-engine-algorithms\\.cache\\wild-engine-memory-ci\\wild-engine-memory-4mib\\engine.wasm",
+        "wasmSha256": "ff719cfebd15fe0aa11a4ed85abc2912f35527e84e635699429489660a1fd8e7",
+        "runnerSha256": "c269b1e6227c6fdb0b8a1279eaad7633d77f706217409584bfd1a5c77200e970"
+      },
+      "milliseconds": 2080.7515000000003,
+      "instantiatedBytes": 4194304,
+      "finalBytes": 14221312,
+      "growthNotifications": 52,
+      "outcomes": {
+        "found": 40,
+        "blocked": 0,
+        "unknown": 60
+      },
+      "routeSha256": "e70b815d86a5e332000294f8dbef80ce128ab0533d86863c465a6dd9a26a283f",
+      "phaseMilliseconds": {
+        "first-chunk": 2.4295999999999367,
+        "chunks-loaded": 115.31229999999982,
+        "animal-navigation-built": 928.4145000000003,
+        "worker-navigation-built": 1023.538,
+        "hundred-routes": 8.700199999999768,
+        "wall-added-removed": 2.3569000000002234
+      }
+    }
+  ]
+}

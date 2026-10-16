@@ -114,6 +114,20 @@ The opening sample was 4 MiB and four size changes were observed. The next
 campaign must extend this trace beyond the presentation nights and compare
 source-identical uninstrumented timing.
 
+`manglares14-memory.json.gz` now contains that sustained sample: Mangroves,
+seed 712, good policy, expanding defense, native intent, 14 completed nights.
+It includes all daily game-state hashes and entity counts. All 14 state hashes
+match the previously retained uninstrumented run. The sampled linear-memory
+capacity rose from 4 MiB at opening to 18.875 MiB, with 15 observed size
+changes; the last observed change was during day 9. It remained at 18.875 MiB
+through the end of this run. Committed capacity crossed 16 MiB during day 7,
+so a 16 MiB initial allocation would still grow in this particular legal
+campaign. The instrumented run took 409.27 seconds against 402.52 seconds in
+an earlier uninstrumented run (1.7% difference); these were not an alternating
+A/B timing experiment, so the difference cannot be assigned to sampling or
+memory growth. The sampled changes are not necessarily every native
+`memory.grow` call and cannot reveal a pause's cause at frame resolution.
+
 `tools/build-spatial-savanna-wasm.sh` now accepts an optional
 `SPATIAL_INITIAL_MEMORY` byte value; omitting it preserves the shipped 4 MiB
 setting. The experimental workflow builds the same C++ source with true
@@ -122,6 +136,29 @@ synthetic workload three times per biome. Its artifacts include the binaries
 and full reports. Results from that workflow must be reviewed before drawing
 any conclusion about the compiled setting; the local pre-growth experiment
 above answers a narrower question.
+
+The pinned Emscripten CI workflow has now built all four true variants. Its
+4 MiB binary has the shipped SHA-256 above; the 16, 32 and 64 MiB binaries
+have SHA-256 `d12355b1a636f1a856abd1cd6b3b6ff6177162b0ada5a7828df036802227b9d2`,
+`cd616d28674d294c2a71778ee9efc9a49acf249c061c18bee3e5e8c5961db21b`
+and `54a9d1d4dc94f6ca831d3032eac238c96701ed6d8d92d6211d2d24fa86d6c0e4`.
+For the frozen 49-chunk workload, all 72 biome/repetition/variant reports
+agree on route-result hashes. The 4 MiB variant ended between 9.625 and
+13.5625 MiB depending on biome and observed 24–52 growth notifications per
+run; the larger variants reported zero. The GitHub jobs ran concurrently on
+different runners, so their elapsed times are **not comparable**. The
+downloaded raw CI artifacts are available on workflow run `38859620212`;
+`benchmark-wild-engine-initial-memory-abba.mjs` repeats the compiled variants
+sequentially on one host to obtain an interpretable timing comparison.
+`compiled-memory-abba-manglares.json` contains two ABBA cycles per alternative
+using the same frozen 49-chunk Mangrove workload and identical route hashes.
+Paired candidate/control time ratios were 0.954 and 0.969 for 16 MiB, 1.029
+and 0.981 for 32 MiB, and 1.036 and 1.026 for 64 MiB. A lower ratio is
+faster. The 16 MiB result is a modest, repeatable synthetic improvement on
+this host; it does **not** establish faster real campaigns or prove that
+memory growth caused the full difference. The 32 and 64 MiB results do not
+justify their larger initial capacity. A 16 MiB campaign comparison is in
+progress before recommending any production-default change.
 
 ## Next isolated measurements
 
