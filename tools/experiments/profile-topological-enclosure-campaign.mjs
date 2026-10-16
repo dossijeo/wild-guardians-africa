@@ -3,6 +3,8 @@ import {dirname} from 'node:path';
 import {createHash} from 'node:crypto';
 import {performance} from 'node:perf_hooks';
 import {serialize} from '../../src/persistence/snapshots.js';
+import {AGRICULTURAL_PROFILE_LIMITS,agriculturalRayClear} from
+  '../../src/simulation/raid-agricultural-impact.js';
 import {simulateNativeCampaign} from '../native-campaign-runner.mjs';
 import {createSpatialCampaignOpening} from './spatial-campaign-opening.mjs';
 import {createSpatialIntentBridge} from '../../src/world/hierarchical-wasm/spatial-intent-bridge.js';
@@ -23,6 +25,7 @@ const cutOnly=process.argv.includes('--cut-only');
 const conservativeCut=process.argv.includes('--conservative-cut');
 const compareCut=process.argv.includes('--compare-cut');
 const compareConstructionCut=process.argv.includes('--compare-construction-cut');
+const attackEnvelopeProbe=process.argv.includes('--attack-envelope');
 if(compareConstructionCut&&!conservativeCut)
   throw Error('Construction comparison requires --conservative-cut');
 if(!Number.isInteger(day)||day<1||day>30)throw RangeError('Invalid target day');
@@ -238,6 +241,9 @@ function inspect(state,nav){
             cropsNearBoundary:0,
             standableSealed:0,standableOpen:0,standableUnknown:0,
             noStandablePoint:0,openExamples:[]};
+          const attackEnvelope={testedCrops:0,openStandable:0,
+            openClearRay:0,openBlockedRay:0,unknownStandable:0,
+            directReachClear:0,minimumClearRayDistance:null,clearExamples:[]};
           const cropBoundary={withinAttackReach:0,minimumDistance:Infinity,
             nearestExamples:[]};
           for(const [index,[cx,cz]] of cropPoints.entries()){
@@ -301,8 +307,41 @@ function inspect(state,nav){
               }
               if(!standable)attackRing.noStandablePoint++;
             }
+            const maxReach=radius+AGRICULTURAL_PROFILE_LIMITS.attackRadius;
+            if(attackEnvelopeProbe&&nearest<=maxReach){
+              attackEnvelope.testedCrops++;
+              for(const distance of [radius,radius+.5,radius+1,radius+2,
+                maxReach]){
+                if(distance>maxReach)continue;
+                for(let sample=0;sample<64;sample++){
+                  const angle=sample*Math.PI/32;
+                  const point={x:target.x+Math.sin(angle)*distance,
+                    z:target.z+Math.cos(angle)*distance};
+                  if(!opening.session.actorCanStand(point,
+                    {worker:false,species}))continue;
+                  const enclosure=opening.session.actorEnclosure(point,
+                    {worker:false,species});
+                  if(enclosure.status!=='open-frontier'){
+                    if(enclosure.status!=='sealed')attackEnvelope.unknownStandable++;
+                    continue;
+                  }
+                  attackEnvelope.openStandable++;
+                  if(agriculturalRayClear(state,nav,point,target)){
+                    attackEnvelope.openClearRay++;
+                    if(distance<=radius+1e-8)attackEnvelope.directReachClear++;
+                    attackEnvelope.minimumClearRayDistance=Math.min(
+                      attackEnvelope.minimumClearRayDistance??Infinity,distance);
+                    if(attackEnvelope.clearExamples.length<8)
+                      attackEnvelope.clearExamples.push({cropId:target.id,point,
+                        distance});
+                  }else attackEnvelope.openBlockedRay++;
+                }
+              }
+            }
           }
-          bySpecies[species]={firstCropCells:counts,crops,attackRing,cropBoundary};
+          bySpecies[species]={firstCropCells:counts,crops,attackRing,
+            attackEnvelope:attackEnvelopeProbe?attackEnvelope:undefined,
+            cropBoundary};
         }
         return {center:[sx,sz],bySpecies};
       };

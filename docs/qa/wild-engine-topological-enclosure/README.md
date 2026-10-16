@@ -610,6 +610,20 @@ compact repeat `sabana-crop-anchor-probe-d3.json`. These checks establish a stro
 physical witness for this candidate, but do not yet prove the complete
 exterior attack envelope or justify switching the normal planner.
 
+A separate opt-in attack-envelope probe used the same frozen state and the
+game's crop-impact ray predicate. Across 64 angles at five distances per
+near-boundary crop, every species had **zero** exterior, standable, clear-ray
+samples within its direct crop-contact distance. Farther away, within the
+maximum *possible* peripheral-impact horizon, clear rays did exist (minimum
+sampled distance from a crop: 3.45–4.15 m across species). These are not
+demonstrated hits: peripheral damage requires another eligible crop to receive
+a valid committed central strike and satisfy the game's directional and
+distance rules. The distinction matters for future farm expansion and for
+mixed natural barriers, which the current agricultural ray predicate does
+not treat identically to wall footprints. The sampled result is diagnostic,
+not a continuous certificate. See `sabana-attack-envelope-d3.json`; rerun
+with `--attack-envelope` on the campaign profile command.
+
 ### Local construction and destruction regression
 
 The focused WASM test now encloses a known resident seed with four native
