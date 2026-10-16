@@ -691,6 +691,62 @@ test('event-fed native intent bridge replays live state and only changes on expl
  }finally{session.dispose();}
 });
 
+test('delivered crates and healed structures cannot acquire stale native task leases',
+ {skip:!module&&'Build and select the experimental WASM first'},()=>{
+ const game=deserialize(gunzipSync(readFileSync(new URL(
+  './fixtures/desierto983-d15-partial-state.json.gz',import.meta.url))).toString());
+ const worker=game.workers.find(item=>item.id==='worker-9263');
+ const plant=game.plants.filter(item=>item.alive&&item.centerId===worker.centerId)
+  .sort((a,b)=>Math.hypot(a.x-worker.x,a.z-worker.z)-
+   Math.hypot(b.x-worker.x,b.z-worker.z))[0];
+ assert(plant);
+ const crate={id:'crate-1000003',x:plant.x,z:plant.z,delivered:false,
+  centerId:worker.centerId,carrierId:null};
+ worker.status='idle';worker.taskId=null;worker.contractDay=game.day;
+ game.workers=[worker];game.plants=[];game.crates=[crate];
+ const task={id:'task-1000004',created:1,centerId:worker.centerId,
+  kind:'crate',targetId:crate.id,workerId:null,blocked:false};
+ game.tasks=[task];game.time=100;game.pauses=[];game.raid=null;
+ const loaded=new Map(),session=createSpatialGameSession(module,game,{
+  loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+ try{
+  const village=game.villages[0],cx=Math.floor((village.x+24)/48),
+   cz=Math.floor((village.z+24)/48);
+  for(let z=cz-4;z<=cz+4;z++)for(let x=cx-4;x<=cx+4;x++){
+   if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+   loaded.set(`${x},${z}`,session.core.chunkPayload());
+  }
+  const planner=createEventDrivenTaskPlanner(session);
+  planner.resetFromState(game);
+  const nav=createSpatialNavigationMovement(session,game);
+  const plan=planner.planIfNeeded(0);
+  assert(plan.some(row=>row.status===1&&row.taskId===1000004));
+  crate.delivered=true;
+  assert.throws(()=>planner.commitTaskBatchToState(game,plan,
+   {navVersion:nav.version}),/target changed/);
+  assert.equal(task.workerId,null);
+  assert.equal(worker.taskId,null);
+  assert.equal(session.core.wasm.nav_intent_actor(9263),0,
+   'a rejected stale crate must not pin a native route or reservation');
+  planner.discard();
+  const center=game.structures.find(item=>item.id===worker.centerId);
+  assert(center);
+  center.hp=center.maxHp-10;game.crates=[];
+  const repair={id:'task-1000005',created:2,centerId:center.id,
+   kind:'repair',targetId:center.id,workerId:null,blocked:false};
+  game.tasks=[repair];
+  planner.resetFromState(game);
+  const repairPlan=planner.planIfNeeded(1);
+  assert(repairPlan.some(row=>row.status===1&&row.taskId===1000005));
+  center.hp=center.maxHp;
+  assert.throws(()=>planner.commitTaskBatchToState(game,repairPlan,
+   {navVersion:nav.version}),/target changed/);
+  assert.equal(repair.workerId,null);
+  assert.equal(worker.taskId,null);
+  planner.discard();
+ }finally{session.dispose();}
+});
+
 test('opt-in Game.tick keeps one native task intention across ordinary movement ticks',
  {skip:!module&&'Build and select the experimental WASM first'},()=>{
  const game=deserialize(gunzipSync(readFileSync(new URL(

@@ -959,7 +959,9 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
       if(row.status!==1)continue;
       const task=tasksByNumericId.get(row.taskId),worker=workersByNumericId.get(row.workerId);
       const target=task&&targetFor(task.targetId);
-      if(!task||!worker||!target||'alive' in target&&!target.alive)
+      if(!task||!worker||!target||'alive' in target&&!target.alive||
+        'delivered' in target&&target.delivered||
+        task.kind==='repair'&&target.hp>=target.maxHp)
         throw Error('Native proposal target changed before commit');
       const fact=lastPlanFacts.get(task.id);
       if(!fact||fact.workerId!==worker.id||fact.targetId!==task.targetId||
