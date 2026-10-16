@@ -619,8 +619,10 @@ near-boundary crop, every species had **zero** exterior, standable, clear-ray
 samples within its direct crop-contact distance. At the outermost possible
 peripheral-impact horizon, there was one clear-ray sample each for warthog,
 hyena, buffalo and lion, and none for rhino. These are not demonstrated hits:
-peripheral damage requires another eligible crop to receive a valid committed
-central strike and satisfy the directional and distance rules. The distinction
+the probe searched all 66 living crops for a central target satisfying
+contact distance, direction and all three agricultural rays, and found **zero**
+at those exterior samples. A future plantation could add such a target, and
+the angular sample is not a continuous proof. The distinction
 matters for future farm expansion and for mixed natural barriers, which the
 current agricultural ray predicate does not treat identically to wall
 footprints. The sampled result is diagnostic, not a continuous certificate.

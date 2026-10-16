@@ -252,6 +252,7 @@ function inspect(state,nav){
             openClearRay:0,openBlockedRay:0,unknownStandable:0,
             directReachClear:0,minimumClearRayDistance:null,
             clearRayCrossesSolidProp:0,propQueryUnknown:0,
+            potentialPeripheralCenters:0,peripheralExamples:[],
             clearExamples:[],propExamples:[]};
           const cropBoundary={withinAttackReach:0,minimumDistance:Infinity,
             nearestExamples:[]};
@@ -340,6 +341,26 @@ function inspect(state,nav){
                     if(distance<=radius+1e-8)attackEnvelope.directReachClear++;
                     attackEnvelope.minimumClearRayDistance=Math.min(
                       attackEnvelope.minimumClearRayDistance??Infinity,distance);
+                    const central=state.plants.find(other=>{
+                      if(!other.alive||other.id===target.id)return false;
+                      const ax=other.x-point.x,az=other.z-point.z;
+                      const bx=target.x-other.x,bz=target.z-other.z;
+                      const centralDistance=Math.hypot(ax,az);
+                      const peripheralDistance=Math.hypot(bx,bz);
+                      return centralDistance<=radius+1e-8&&
+                        peripheralDistance<=AGRICULTURAL_PROFILE_LIMITS.attackRadius&&
+                        (centralDistance<=1e-8||peripheralDistance<=1e-8||
+                          (ax*bx+az*bz)/(centralDistance*peripheralDistance)>=
+                            Math.SQRT1_2-1e-8)&&
+                        agriculturalRayClear(attackState,attackNav,point,other)&&
+                        agriculturalRayClear(attackState,attackNav,other,target);
+                    });
+                    if(central){
+                      attackEnvelope.potentialPeripheralCenters++;
+                      if(attackEnvelope.peripheralExamples.length<8)
+                        attackEnvelope.peripheralExamples.push({cropId:target.id,
+                          centralId:central.id,point,distance});
+                    }
                     try{
                       const midX=(point.x+target.x)/2,midZ=(point.z+target.z)/2;
                       const crossing=nav.propsAt(midX,midZ,distance/2+4).find(prop=>
