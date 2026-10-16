@@ -152,11 +152,16 @@ def main():
             report['stageReady'] = ready
             time.sleep(3)
             report['before'] = observation(page)
+            page.events.clear()
             browser.call('Target.activateTarget', {'targetId': background_id})
             time.sleep(1)
             report['hiddenStart'] = observation(page)
             time.sleep(args.seconds)
             report['hiddenEnd'] = observation(page)
+            report['hiddenNavigationEvents'] = [event['method'] for event in page.events
+                                                if event.get('method') == 'Runtime.executionContextsCleared'
+                                                or event.get('method') == 'Page.frameNavigated'
+                                                and 'parentId' not in event.get('params', {}).get('frame', {})]
             browser.call('Target.activateTarget', {'targetId': game_id})
             report['restored'] = observation(page)
             time.sleep(2.5)
@@ -168,6 +173,7 @@ def main():
                 'actualHidden': report['hiddenStart']['hidden'] and report['hiddenEnd']['hidden'] and not report['before']['hidden'] and not report['restored']['hidden'],
                 'hiddenPausePresent': 'hidden' in report['hiddenStart']['pauses'] and 'hidden' in report['hiddenEnd']['pauses'],
                 'stateUnchangedWhileHidden': report['hiddenStart']['stateSha256WithoutHiddenPause'] == report['hiddenEnd']['stateSha256WithoutHiddenPause'],
+                'noNavigationWhileHidden': not report['hiddenNavigationEvents'],
                 'noOfflineCatchup': report['restoredAfter2_5s']['elapsed'] - report['hiddenEnd']['elapsed'] < 5,
                 'hiddenPauseRemoved': 'hidden' not in report['restoredAfter2_5s']['pauses'],
                 'noPageExceptions': not report['pageExceptions'],

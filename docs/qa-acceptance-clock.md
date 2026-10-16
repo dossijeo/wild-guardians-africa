@@ -23,7 +23,7 @@ El avance real corta ahora en los límites del reloj y en los ataques programado
 
 Los casos existentes de `tests/game.test.js` comprueban la incursión que atraviesa amanecer y la prioridad de derrota en la noche 100. Se revisó además el orden de `closeNight`: evento agrícola, comprobación económica y después victoria/contratación. QA-010–013 y QA-016 quedan acreditados para este comportamiento de la simulación integrada.
 
-QA-009 sigue parcial: falta medir explícitamente el crecimiento de una planta atendida a lo largo del día/noche completo. QA-014 sigue parcial: la [prueba web de pestaña real](qa/browser-visibility/README.md) ya demuestra ocultación, restauración y ausencia de avance acumulado; falta aceptación en teléfono físico. QA-015 sigue parcial: se comprobó el gran paso hasta contratación, pero falta su variante de checkpoint y continuación con cobro.
+QA-009 sigue parcial: falta medir explícitamente el crecimiento de una planta atendida a lo largo del día/noche completo. QA-014 sigue parcial: la [prueba web de pestaña real](qa/browser-visibility/README.md) demuestra el comportamiento en una repetición corta con perfil aislado; la repetición larga sin interferencia de Vite y la aceptación en teléfono físico están pendientes. QA-015 sigue parcial: se comprobó el gran paso hasta contratación, pero falta su variante de checkpoint y continuación con cobro.
 
 ## Resultados
 
