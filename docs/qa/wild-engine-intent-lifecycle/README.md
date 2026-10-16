@@ -598,3 +598,8 @@ records a legacy direct-mutation failure found while auditing the stacked
 branches, its targeted fix, and the remaining full-suite triage boundary.
 The [full-suite baseline comparison](full-suite-baseline-triage.md) checks
 the other 31 failure names and their causes against current `main`.
+
+The [full-roster crop service-site differential](unknown-crop-service-sites.md)
+records a real Gran Cañón task assignment missed when one inconclusive
+interaction point suppressed the remaining bounded alternatives. It includes
+the failing old-WASM replay, passing corrected-WASM replay and ABBA timings.
