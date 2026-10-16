@@ -114,6 +114,15 @@ The opening sample was 4 MiB and four size changes were observed. The next
 campaign must extend this trace beyond the presentation nights and compare
 source-identical uninstrumented timing.
 
+`tools/build-spatial-savanna-wasm.sh` now accepts an optional
+`SPATIAL_INITIAL_MEMORY` byte value; omitting it preserves the shipped 4 MiB
+setting. The experimental workflow builds the same C++ source with true
+4/16/32/64 MiB initial memories in a pinned Emscripten image and repeats the
+synthetic workload three times per biome. Its artifacts include the binaries
+and full reports. Results from that workflow must be reviewed before drawing
+any conclusion about the compiled setting; the local pre-growth experiment
+above answers a narrower question.
+
 ## Next isolated measurements
 
 1. Symbolize or instrument the hot WASM functions, then profile sector

@@ -59,16 +59,21 @@ for(const side of sizes){
   wasm.spatial_build_nav_profile(1,.28,1);
   sample('worker-navigation-built',phaseStart);
   phaseStart=performance.now();
+  const routeHash=createHash('sha256'),outcomes={found:0,blocked:0,unknown:0};
   for(let i=0;i<100;i++){
     wasm.spatial_select_nav_profile_index(i%2);
-    wasm.spatial_world_route(-12+(i%10)*2,-8,10-(i%10),8);
+    const count=wasm.spatial_world_route(-12+(i%10)*2,-8,10-(i%10),8);
+    outcomes[count>0?'found':count===0?'blocked':'unknown']++;
+    routeHash.update(`${count}:${wasm.spatial_world_route_reason()}:`);
+    if(count>0)routeHash.update(Buffer.from(wasm.memory.buffer,
+      wasm.spatial_world_route_ptr(),count*8));
   }
   sample('hundred-routes',phaseStart);
   phaseStart=performance.now();
   const wall=wasm.spatial_add_wall(2,0,1,.3);
   if(wall>0)wasm.spatial_remove_wall(wall);
   sample('wall-added-removed',phaseStart);
-  rows.push({chunks:side*side,samples,growth});
+  rows.push({chunks:side*side,samples,growth,outcomes,routeSha256:routeHash.digest('hex')});
 }
 const report={source,biome,seed,preGrowMiB,
   description:'Synthetic sequential spatial workload. Explicit pre-growth is not an Emscripten INITIAL_MEMORY build. Linear memory is committed capacity, not C++ live heap or RSS.',rows};
