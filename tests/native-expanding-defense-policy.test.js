@@ -69,8 +69,10 @@ test('event-driven defense sleeps without relevant changes and wakes on income o
  assert.ok(s.tasks.some(task=>task.kind==='repair'&&task.targetId===wall.id));
  assert.equal(policy.report(s).repairRequests,1);
 });
-test('event-driven defense waits for the whole quoted enclosure before spending',()=>{
- const {s,nav,options,policy}=fixture({eventDriven:true});
+test('event-driven defense waits for the whole stroke before quoting and spending',()=>{
+ const phases=[];
+ const {s,nav,options,policy}=fixture({eventDriven:true,
+  measure:kind=>phases.push(kind)});
  assert.equal(policy.act(s,nav,options),1);
  s.plants.push({id:'future-crop',species:'mijo',alive:true,x:18,z:0});
  s.ledger.balance=rational(30);nav.setState(s);
@@ -79,14 +81,18 @@ test('event-driven defense waits for the whole quoted enclosure before spending'
  const waiting=policy.report(s),target=waiting.waitForFunds;
  assert.equal(waiting.history.at(-1).reason,'budget');
  assert.ok(target>30);
+ const quotes=phases.filter(kind=>kind==='defense.quoteWallChain').length;
  s.ledger.balance=rational(target-1);
  policy.onWorldEvent({type:'CrateDelivered'},s);
  assert.equal(policy.act(s,nav,options),0);
  assert.equal(policy.report(s).history.length,waiting.history.length,
   'subthreshold deliveries do not repeat the same geometry quote');
+ assert.equal(phases.filter(kind=>kind==='defense.quoteWallChain').length,quotes,
+  'affordability is checked before the expensive full geometry quote');
  s.ledger.balance=rational(target);
  policy.onWorldEvent({type:'CrateDelivered'},s);
  assert.equal(policy.act(s,nav,options),1);
- assert.equal(policy.report(s).history.at(-1).paidCost,
-  target-options.reserve,'the complete incremental quote is paid at once');
+ assert.ok(policy.report(s).history.at(-1).paidCost>0);
+ assert.ok(policy.report(s).history.at(-1).paidCost<=target-options.reserve,
+  'the complete incremental quote is paid at once');
 });

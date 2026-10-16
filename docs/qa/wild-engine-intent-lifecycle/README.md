@@ -546,3 +546,11 @@ unaffordable enclosure remains a savings target, and smaller deliveries do
 not repeatedly quote the same geometry. It does not yet replace the
 JavaScript rectangle with a native certified enclosure plan; physical
 protection must still be verified separately from purchasing a stroke.
+
+Profiling a three-night Sabana/712 run exposed a cost in this transitional
+policy: three full `quoteWallChain` calls consumed about 14.5 seconds of
+defense decision time. The policy now uses the price of the missing stroke
+slots as a conservative savings threshold and defers the full geometry and
+door quote until it can afford that threshold. Obstacles may make the final
+quote cheaper, so this can save more than strictly necessary; it avoids
+repeating an expensive speculative quote on every small income event.

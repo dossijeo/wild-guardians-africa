@@ -63,9 +63,14 @@ export function createNativeExpandingDefensePolicy({startDay=2,material='zarzas'
   const bounds=previous?[Math.min(previous[0],next[0]),Math.min(previous[1],next[1]),Math.max(previous[2],next[2]),Math.max(previous[3],next[3])]:next;
   const [x0,z0,x1,z1]=bounds,points=[[x0,z0],[x1,z0],[x1,z1],[x0,z1],[x0,z0]],options={smooth:false,snap:false};
   const slots=timed('defense.wallStroke',()=>wallStroke(points,s.structures,options)),funds=Math.max(0,numberOf(s.ledger.balance)-protectedCash-pending),maxPieces=Math.floor(funds/cost);
+  // Slots already omit constructed pieces. Their full price is a safe
+  // affordability gate before the expensive worker-door/geometry quote.
+  capitalTarget=slots.length*cost;
+  const row={day:s.day,time:s.time,elapsed:s.elapsed,bounds,expectedSlots:slots.length,availablePieces:maxPieces,paidPieces:0,paidCost:0,gaps:[]};
+  if(!slots.length){noLegalPieces=true;waitForFunds=0;row.reason='no-new-legal-pieces';history.push(row);return 0;}
+  if(funds<capitalTarget){noLegalPieces=false;waitForFunds=protectedCash+pending+capitalTarget;row.reason='budget';history.push(row);return 0;}
   const quote=timed('defense.quoteWallChain',()=>Game.quoteWallChain(s,material,points,nav,options));
   capitalTarget=quote.cost;
-  const row={day:s.day,time:s.time,elapsed:s.elapsed,bounds,expectedSlots:slots.length,availablePieces:maxPieces,paidPieces:0,paidCost:0,gaps:[]};
   if(!quote.pieces.length){noLegalPieces=true;waitForFunds=0;row.reason='no-new-legal-pieces';history.push(row);return 0;}
   if(funds<quote.cost){noLegalPieces=false;waitForFunds=protectedCash+pending+quote.cost;row.reason='budget';history.push(row);return 0;}
   noLegalPieces=false;waitForFunds=0;
