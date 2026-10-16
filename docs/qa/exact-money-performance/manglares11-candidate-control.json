@@ -1,0 +1,130 @@
+{
+  "parameters": {
+    "days": 14,
+    "seed": 712,
+    "strategy": "good",
+    "biome": "manglares",
+    "culture": "mapungubwe",
+    "labourPolicy": "legacy"
+  },
+  "candidate": {
+    "result": "observed-native-defeat",
+    "nights": 11,
+    "stateHash": "0affee6c7c52b711668d59af90543ab318a81d1f39f90b9e6006b34c1773698f",
+    "gitHead": "800665ce36c2e247f86f1ce06ebf6033bcbf42d9",
+    "moneySourceHash": "28b4f21c6fc897e2d2efdde6cc24e21e22f8ebbb3fe2adc2d2bf0e51694ccb0c",
+    "startedAt": "2026-10-16T11:54:12.041Z",
+    "finishedAt": "2026-10-16T11:56:45.612Z"
+  },
+  "control": {
+    "result": "observed-native-defeat",
+    "nights": 11,
+    "stateHash": "0affee6c7c52b711668d59af90543ab318a81d1f39f90b9e6006b34c1773698f",
+    "gitHead": "ceef8c825c826a8b2e4585e7fd994835643886fc",
+    "moneySourceHash": "17d50a3f28b7db202a9a80b57a53d4f312ad35593191bacff0e47f823e15708d",
+    "startedAt": "2026-10-16T11:57:01.083Z",
+    "finishedAt": "2026-10-16T12:00:28.547Z"
+  },
+  "sameFinalState": true,
+  "sourceHashDifferences": [
+    "src/simulation/money.js"
+  ],
+  "sharedDays": 11,
+  "allDailySimulationFactsEqual": true,
+  "totals": {
+    "candidateTickMs": 146035.74000000002,
+    "controlTickMs": 200310.61760000067,
+    "candidateDecisionMs": 4649.183300000321,
+    "controlDecisionMs": 4358.676000000914
+  },
+  "daily": [
+    {
+      "day": 1,
+      "simulationEqual": true,
+      "candidateTickMs": 1028.244300000001,
+      "controlTickMs": 1332.2903000000006,
+      "candidateDecisionMs": 452.0516999999991,
+      "controlDecisionMs": 530.9987000000051
+    },
+    {
+      "day": 2,
+      "simulationEqual": true,
+      "candidateTickMs": 2234.295700000008,
+      "controlTickMs": 2235.8392999999933,
+      "candidateDecisionMs": 211.88339999999653,
+      "controlDecisionMs": 224.26889999999457
+    },
+    {
+      "day": 3,
+      "simulationEqual": true,
+      "candidateTickMs": 3573.87899999997,
+      "controlTickMs": 13635.58530000001,
+      "candidateDecisionMs": 385.26890000000367,
+      "controlDecisionMs": 379.8818999999867
+    },
+    {
+      "day": 4,
+      "simulationEqual": true,
+      "candidateTickMs": 4517.501999999991,
+      "controlTickMs": 16891.200299999982,
+      "candidateDecisionMs": 628.1284999999734,
+      "controlDecisionMs": 633.9362000000801
+    },
+    {
+      "day": 5,
+      "simulationEqual": true,
+      "candidateTickMs": 4356.928600000043,
+      "controlTickMs": 9844.827700000038,
+      "candidateDecisionMs": 550.5858000000062,
+      "controlDecisionMs": 505.7679000000644
+    },
+    {
+      "day": 6,
+      "simulationEqual": true,
+      "candidateTickMs": 7419.512200000023,
+      "controlTickMs": 17587.61250000001,
+      "candidateDecisionMs": 600.2834999999795,
+      "controlDecisionMs": 611.9928000001164
+    },
+    {
+      "day": 7,
+      "simulationEqual": true,
+      "candidateTickMs": 7098.10720000006,
+      "controlTickMs": 13556.52480000029,
+      "candidateDecisionMs": 400.2457000000031,
+      "controlDecisionMs": 375.6722000002628
+    },
+    {
+      "day": 8,
+      "simulationEqual": true,
+      "candidateTickMs": 19743.61020000006,
+      "controlTickMs": 21509.59580000023,
+      "candidateDecisionMs": 728.6053000000029,
+      "controlDecisionMs": 507.5405000000028
+    },
+    {
+      "day": 9,
+      "simulationEqual": true,
+      "candidateTickMs": 24540.41690000004,
+      "controlTickMs": 29998.043900000135,
+      "candidateDecisionMs": 538.4303000001019,
+      "controlDecisionMs": 448.8086999998486
+    },
+    {
+      "day": 10,
+      "simulationEqual": true,
+      "candidateTickMs": 62659.66700000006,
+      "controlTickMs": 64627.28740000015,
+      "candidateDecisionMs": 77.01659999991534,
+      "controlDecisionMs": 70.769700000179
+    },
+    {
+      "day": 11,
+      "simulationEqual": true,
+      "candidateTickMs": 8863.576899999782,
+      "controlTickMs": 9091.810299999808,
+      "candidateDecisionMs": 76.68360000033863,
+      "controlDecisionMs": 69.03850000037346
+    }
+  ]
+}

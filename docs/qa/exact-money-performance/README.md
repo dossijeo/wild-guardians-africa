@@ -46,6 +46,44 @@ SHA-256 is
 The focused money and agricultural-power tests pass 15/15, including signed
 and non-reduced inputs, an exact saved growth operand, and a serialization
 boundary. The release-gate suite passes 191/191 with the new tests included,
-and the web build passes. The microbenchmark demonstrates a hot-operation improvement, not yet
-the total effect on `Game.tick`, a sustained campaign, memory use or mobile
-latency. Those remain acceptance checks before integration.
+and the web build passes.
+
+## Matched native campaign
+
+Two sequential candidate/control and control/candidate pairs used the same
+Manglares/712/Mapungubwe `good` policy, legacy labour policy and current
+mainline Wild Engine. Each campaign ended in the **same legitimate defeat at
+night 11**. All daily simulation facts excluding wall-clock measurements and
+the final serialized state are identical. The final state SHA-256 in all four
+runs is `0affee6c7c52b711668d59af90543ab318a81d1f39f90b9e6006b34c1773698f`.
+The provenance inventory reports exactly one runtime source difference:
+`src/simulation/money.js`. A real defeat is not a completed 14-night horizon
+or a technical stop.
+
+| Run order | Control `Game.tick` | Candidate `Game.tick` | Reduction |
+| --- | ---: | ---: | ---: |
+| Candidate then control | 200.31 s | 146.04 s | 27.1% |
+| Control then candidate | 198.72 s | 140.34 s | 29.4% |
+
+Bot decision time did not improve: 4.36/4.20 s control against 4.65/4.43 s
+candidate. The performance claim is confined to `Game.tick` in this matched
+Manglares seed and workload. `manglares11-candidate-control.json` and
+`manglares11-control-candidate.json` contain daily measurements, source
+identities and state hashes. The four `candidate-*.json.gz` and
+`control-*.json.gz` files retain complete source manifests, receipts, daily
+rows, reports and terminal states. The first pair requested 14 nights but
+ended at night 11; the reverse pair requested 11 nights. Both sets observed
+the same 11 nights.
+
+## Memory and remaining checks
+
+The paired 100,000-operation cheap-fraction stress test is an unfavorable
+case for the `WeakSet`: median 148.53 ms candidate versus 71.17 ms control.
+Post-GC retained heap rose about 197 KiB versus 62 KiB; sampled RSS above
+start was about 6.31 MB versus 6.05 MB. Results and all eight process samples
+are in `memory-abba.json`. This measures a short isolated Node process, not
+the game's maximum resident memory, mobile browser latency or a long farm.
+Weak entries are collectible; the in-memory tracking cost still needs longer
+observation. The Windows packaging CI check was pending at the time of this
+report. Keep the PR in draft until that check and any broader-platform review
+complete; do not infer a universal campaign speedup from one biome and seed.

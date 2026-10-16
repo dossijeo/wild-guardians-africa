@@ -1,0 +1,130 @@
+{
+  "parameters": {
+    "days": 11,
+    "seed": 712,
+    "strategy": "good",
+    "biome": "manglares",
+    "culture": "mapungubwe",
+    "labourPolicy": "legacy"
+  },
+  "candidate": {
+    "result": "observed-native-defeat",
+    "nights": 11,
+    "stateHash": "0affee6c7c52b711668d59af90543ab318a81d1f39f90b9e6006b34c1773698f",
+    "gitHead": "800665ce36c2e247f86f1ce06ebf6033bcbf42d9",
+    "moneySourceHash": "28b4f21c6fc897e2d2efdde6cc24e21e22f8ebbb3fe2adc2d2bf0e51694ccb0c",
+    "startedAt": "2026-10-16T12:04:44.596Z",
+    "finishedAt": "2026-10-16T12:07:12.161Z"
+  },
+  "control": {
+    "result": "observed-native-defeat",
+    "nights": 11,
+    "stateHash": "0affee6c7c52b711668d59af90543ab318a81d1f39f90b9e6006b34c1773698f",
+    "gitHead": "ceef8c825c826a8b2e4585e7fd994835643886fc",
+    "moneySourceHash": "17d50a3f28b7db202a9a80b57a53d4f312ad35593191bacff0e47f823e15708d",
+    "startedAt": "2026-10-16T12:01:09.413Z",
+    "finishedAt": "2026-10-16T12:04:35.017Z"
+  },
+  "sameFinalState": true,
+  "sourceHashDifferences": [
+    "src/simulation/money.js"
+  ],
+  "sharedDays": 11,
+  "allDailySimulationFactsEqual": true,
+  "totals": {
+    "candidateTickMs": 140342.20949999907,
+    "controlTickMs": 198717.0410000005,
+    "candidateDecisionMs": 4426.1872000001,
+    "controlDecisionMs": 4198.3366000005535
+  },
+  "daily": [
+    {
+      "day": 1,
+      "simulationEqual": true,
+      "candidateTickMs": 1005.8109999999954,
+      "controlTickMs": 1007.8995999999966,
+      "candidateDecisionMs": 460.30290000000014,
+      "controlDecisionMs": 453.6626000000001
+    },
+    {
+      "day": 2,
+      "simulationEqual": true,
+      "candidateTickMs": 2201.155500000004,
+      "controlTickMs": 2162.6078999999972,
+      "candidateDecisionMs": 216.60799999999654,
+      "controlDecisionMs": 205.99879999999393
+    },
+    {
+      "day": 3,
+      "simulationEqual": true,
+      "candidateTickMs": 3573.2865999999913,
+      "controlTickMs": 13821.106800000014,
+      "candidateDecisionMs": 411.2306999999855,
+      "controlDecisionMs": 366.99579999999514
+    },
+    {
+      "day": 4,
+      "simulationEqual": true,
+      "candidateTickMs": 4402.066599999998,
+      "controlTickMs": 16805.3656,
+      "candidateDecisionMs": 632.6015000000152,
+      "controlDecisionMs": 627.0184000000118
+    },
+    {
+      "day": 5,
+      "simulationEqual": true,
+      "candidateTickMs": 4394.530200000017,
+      "controlTickMs": 10230.888399999996,
+      "candidateDecisionMs": 514.5032000000174,
+      "controlDecisionMs": 478.6755000000776
+    },
+    {
+      "day": 6,
+      "simulationEqual": true,
+      "candidateTickMs": 7420.53220000002,
+      "controlTickMs": 16588.215700000008,
+      "candidateDecisionMs": 613.6067999999468,
+      "controlDecisionMs": 575.5167999999321
+    },
+    {
+      "day": 7,
+      "simulationEqual": true,
+      "candidateTickMs": 7201.878499999944,
+      "controlTickMs": 13210.736800000072,
+      "candidateDecisionMs": 388.12499999998545,
+      "controlDecisionMs": 380.3145999999906
+    },
+    {
+      "day": 8,
+      "simulationEqual": true,
+      "candidateTickMs": 15423.705099999948,
+      "controlTickMs": 21340.470299999797,
+      "candidateDecisionMs": 569.3237000000372,
+      "controlDecisionMs": 522.6179999999586
+    },
+    {
+      "day": 9,
+      "simulationEqual": true,
+      "candidateTickMs": 22160.15439999997,
+      "controlTickMs": 29204.78470000009,
+      "candidateDecisionMs": 458.2364000000671,
+      "controlDecisionMs": 440.63079999995534
+    },
+    {
+      "day": 10,
+      "simulationEqual": true,
+      "candidateTickMs": 63356.72989999977,
+      "controlTickMs": 65266.03450000033,
+      "candidateDecisionMs": 87.71919999991951,
+      "controlDecisionMs": 78.48830000021553
+    },
+    {
+      "day": 11,
+      "simulationEqual": true,
+      "candidateTickMs": 9202.35949999941,
+      "controlTickMs": 9078.9307000002,
+      "candidateDecisionMs": 73.92980000012903,
+      "controlDecisionMs": 68.41700000042329
+    }
+  ]
+}
