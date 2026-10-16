@@ -86,11 +86,12 @@ export function commit(s,id,action,operation) {
 }
 export function previewCenter(s,{x,z,yaw=0},nav) {
   const candidates=[],cultures=new Map();let failure=null,buildable=false;
+  const living=activeCrops(s.plants);
   const villages=[...s.villages].sort((a,b)=>dist(a,{x,z})-dist(b,{x,z})||a.id.localeCompare(b.id));
   for(const village of villages){
     const culture=village.culture??s.culture;
     if(!cultures.has(culture)){
-      const resolved=resolveFluidPlacement(nav,(px,pz)=>[centerFootprint({kind:'center',x:px,z:pz,yaw,culture},s)],x,z,footprint=>s.plants.some(p=>p.alive&&footprintDistance(footprint.footprint,p.x,p.z)<.4)?{valid:false,reason:'Un cultivo ocupa este terreno'}:null);
+      const resolved=resolveFluidPlacement(nav,(px,pz)=>[centerFootprint({kind:'center',x:px,z:pz,yaw,culture},s)],x,z,footprint=>living.some(p=>p.alive&&footprintDistance(footprint.footprint,p.x,p.z)<.4)?{valid:false,reason:'Un cultivo ocupa este terreno'}:null);
       const footprint=resolved.shapes[0],candidate={kind:'center',x:resolved.x,z:resolved.z,yaw,culture};
       const check=resolved.checks[0];
       cultures.set(culture,{candidate,footprint,check});
@@ -154,6 +155,7 @@ export function wallRefund(target){
 }
 function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
   if(!newPieces.length)return [];
+  const living=activeCrops(s.plants);
   const newIds=new Set(newPieces.map(p=>p.created));
   const layout=wallLayout([...s.structures,...newPieces],Object.fromEntries(B.walls.map(w=>[w.id,w.hp])));
   const originals=new Map([...s.structures,...newPieces].map(p=>[p.created,p]));
@@ -178,9 +180,13 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
   const interior=nav.withWallPreview?null:nav.forBuildingPlacement(newPieces[0]??s.structures[0]);
   if(interior){interior.obstacles=[...nav.obstacles.filter(o=>o.kind!=='wall'),...[...s.structures,...newPieces].filter(p=>p.kind==='wall'&&p.status!=='ruined')];interior.suppressed=suppressedForGates;}
   const omitted=blockedPieces.map(piece=>{const h=piece.baseScaleX*2.18/2,dx=Math.cos(piece.yaw)*h,dz=-Math.sin(piece.yaw)*h;return [[piece.x-dx,piece.z-dz],[piece.x+dx,piece.z+dz]];});
+  const cropsByCenter=new Map();
+  for(const crop of living)if(crop.alive){
+    const plants=cropsByCenter.get(crop.centerId)??[];plants.push(crop);cropsByCenter.set(crop.centerId,plants);
+  }
   const targets=s.structures.filter(operational).map(center=>{
-    const plants=s.plants.filter(q=>q.alive&&q.centerId===center.id),target=plants.length?{x:plants.reduce((sum,q)=>sum+q.x,0)/plants.length,z:plants.reduce((sum,q)=>sum+q.z,0)/plants.length}:centerServicePoint(center,s,.8);
-    return target;
+    const plants=cropsByCenter.get(center.id)??[];
+    return plants.length?{x:plants.reduce((sum,q)=>sum+q.x,0)/plants.length,z:plants.reduce((sum,q)=>sum+q.z,0)/plants.length}:centerServicePoint(center,s,.8);
   }),scores=new Map();let approachRoutes;
   const loadApproachRoutes=()=>targets.flatMap(target=>s.villages.map(v=>{
     const entry=v.entry??v,path=nav.path(entry,target,.28,null,true);
@@ -260,7 +266,8 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
 export function quoteWallChain(s,material,points,nav,options={}) {
   if(!permission(s,'wall'))throw new Error('Esta acción no está disponible ahora');
   const spec=wallSpec(material),slots=wallStroke(points,s.structures,{...options,maxPieces:Infinity});
-  const cropOverlap=piece=>{const c=Math.cos(piece.yaw),sn=Math.sin(piece.yaw),scale=piece.gate?(piece.material==='reforzado'?1.6:['adobe','piedra'].includes(piece.material)?1.4:1):1;return s.plants.some(p=>p.alive&&Math.abs((p.x-piece.x)*c-(p.z-piece.z)*sn)<1.09*(piece.baseScaleX??1)*scale+.4&&Math.abs((p.x-piece.x)*sn+(p.z-piece.z)*c)<.22*scale+.4);};
+  const living=activeCrops(s.plants);
+  const cropOverlap=piece=>{const c=Math.cos(piece.yaw),sn=Math.sin(piece.yaw),scale=piece.gate?(piece.material==='reforzado'?1.6:['adobe','piedra'].includes(piece.material)?1.4:1):1;return living.some(p=>p.alive&&Math.abs((p.x-piece.x)*c-(p.z-piece.z)*sn)<1.09*(piece.baseScaleX??1)*scale+.4&&Math.abs((p.x-piece.x)*sn+(p.z-piece.z)*c)<.22*scale+.4);};
   const blockedPieces=[],blockedCrops=[];
   const newPieces=slots.map(slot=>({kind:'wall',material,gate:false,baseScaleX:slot.scaleX,x:slot.x,z:slot.z,yaw:-slot.angle,maxHp:spec.hp,hp:spec.hp,status:'intact',cost:spec.cost,collapseRemaining:0,villageId:nearest(s.villages,{x:slot.x,z:slot.z})?.id})).filter(piece=>{if(!nav.wallPlacement(piece).valid){blockedPieces.push(piece);return false;}if(cropOverlap(piece)){blockedCrops.push(piece);return false;}return true;}).slice(0,Math.max(0,Math.floor(options.maxPieces??Infinity)));
   newPieces.forEach((piece,i)=>Object.assign(piece,{id:`structure-${s.nextId+i}`,created:s.sequence+i}));
@@ -337,7 +344,7 @@ export function removeWall(s,id,targetId,nav) {
 export function plant(s,id,species,x,z,nav) {
   const check=nav.placement(x,z,.4);
   if(!check.valid)throw new Error(check.reason);
-  if(s.plants.some(p=>p.alive&&dist(p,{x,z})<1.1))throw new Error('Necesitas separar las plantas');
+  if(activeCrops(s.plants).some(p=>p.alive&&dist(p,{x,z})<1.1))throw new Error('Necesitas separar las plantas');
   const center=nearest(s.structures.filter(operational),{x,z});
   return commit(s,id,'plant',()=>{
     ensurePurchaseBudget(s,cropSpec(species).plant_cost);transact(s.ledger,id,rational(-cropSpec(species).plant_cost));
@@ -351,9 +358,9 @@ export function plant(s,id,species,x,z,nav) {
   });
 }
 export function harvest(s,id,plantId) {
-  const p=s.plants.find(p=>p.id===plantId&&isMature(p));if(!p)throw new Error('Este cultivo todavía no está maduro');
+  const living=activeCrops(s.plants),p=living.find(p=>p.id===plantId&&isMature(p));if(!p)throw new Error('Este cultivo todavía no está maduro');
   return commit(s,id,'harvest',()=>{
-    const group=contiguousGroup(s.plants,p).filter(isMature);
+    const group=contiguousGroup(living,p).filter(isMature);
     group.sort((a,b)=>{
       const ca=s.structures.find(c=>c.id===a.centerId),cb=s.structures.find(c=>c.id===b.centerId);
       return (ca?dist(a,ca):Infinity)-(cb?dist(b,cb):Infinity)||a.id.localeCompare(b.id);
@@ -387,7 +394,8 @@ export function hire(s,id,selection) {
   if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
   if(!s.pauses.includes('hiring'))throw new Error('La contratación no está abierta');
   const cost=hiringCost(selection);transact(s.ledger,id,rational(-cost));
-  const centers=s.structures.filter(operational).map(c=>({...c,plants:s.plants.filter(p=>p.alive&&p.centerId===c.id).length}));
+  const living=activeCrops(s.plants);
+  const centers=s.structures.filter(operational).map(c=>({...c,plants:living.filter(p=>p.alive&&p.centerId===c.id).length}));
   const total=Object.values(selection).reduce((a,b)=>a+b,0),quotas=allocateWorkers(centers,total),assigned=distributeProfiles(quotas,selection);
   for(const w of s.workers)w.contractDay??=s.hiringPaidDay??s.day-1;
   const previousWorkers=s.workers;
@@ -403,7 +411,7 @@ export function hire(s,id,selection) {
   s.commandIds.push(id);s.hiringSelection={...selection};s.hiringPaidDay=s.day;s.initialPreparation=false;resume(s,'hiring');rebuildTasks(s);planDay(s);
   if(s.tutorial.step==='hire')s.tutorial.step='observe';emit(s,'HiringConfirmed',{count:total,cost});
 }
-export function openInitialHiring(s) {if(s.structures.some(operational)&&s.plants.some(p=>p.alive)&&s.hiringPaidDay!==s.day)pause(s,'hiring');}
+export function openInitialHiring(s) {if(s.structures.some(operational)&&activeCrops(s.plants).some(p=>p.alive)&&s.hiringPaidDay!==s.day)pause(s,'hiring');}
 function queueMatureHarvest(s,p,queue) {
   if(!isMature(p))return;
   if(!p.harvestRequested){p.harvestRequested=true;emit(s,'HarvestRequested',{targetId:p.id,count:1,automatic:true});}
@@ -419,7 +427,8 @@ export function rebuildTasks(s) {
     w.taskId=null;w.taskApproach=null;if(['walking','acting'].includes(w.status))w.status='idle';
     if(previousTask!==w.taskId||previousStatus!==w.status)notifyWorkerPlanningChange(s,w);
   }
-  for(const p of s.plants.filter(p=>p.alive)) {
+  for(const p of activeCrops(s.plants)) {
+    if(!p.alive)continue;
     if(!s.structures.some(c=>c.id===p.centerId&&operational(c)))continue;
     if(p.water[0].status==='due')enqueue(s,p.centerId,'initial',p.id);
     else if(p.water.some(w=>w.status==='due'))enqueue(s,p.centerId,'water',p.id);
@@ -431,6 +440,7 @@ export function rebuildTasks(s) {
 // vacancies; workers of surviving centers keep their existing assignments.
 export function recoverDisplacedWorkers(s) {
   if(s.raid)return;
+  const living=activeCrops(s.plants);
   const available=w=>!w.incapacitated&&!contractExpired(w,s)&&s.time<profile(w).end;
   for(const w of s.workers){
     const lost=w.centerId&&!s.structures.some(c=>c.id===w.centerId&&operational(c));
@@ -438,7 +448,7 @@ export function recoverDisplacedWorkers(s) {
   }
   for(const village of s.villages){
     const centers=s.structures.filter(c=>operational(c)&&c.villageId===village.id)
-      .map(c=>({...c,plants:s.plants.filter(p=>p.alive&&p.centerId===c.id).length}));
+      .map(c=>({...c,plants:living.filter(p=>p.alive&&p.centerId===c.id).length}));
     const pool=s.workers.filter(w=>w.villageId===village.id&&available(w)&&
       (w.displacedDay===s.day||!w.centerId&&w.status==='waiting'));
     if(!pool.length||!centers.length)continue;
@@ -493,7 +503,7 @@ export function spellAt(s,id,p) {
   return a?.remaining>0?a:index.areas.find(a=>a.kind===id&&a.remaining>0&&dist(a,p)<=a.radius);
 }
 function markMultiplyTargets(s,area){
-  for(const p of s.plants)if(p.alive&&(area.targetPlantId!==undefined?p.id===area.targetPlantId:dist(area,p)<=area.radius))p.multiplyHarvest=true;
+  for(const p of activeCrops(s.plants))if(p.alive&&(area.targetPlantId!==undefined?p.id===area.targetPlantId:dist(area,p)<=area.radius))p.multiplyHarvest=true;
   area.exposureApplied=true;
 }
 export function previewSpell(s,kind,x,z,nav,targetPlantId) {
@@ -505,7 +515,7 @@ export function previewSpell(s,kind,x,z,nav,targetPlantId) {
 }
 function agriculturalTarget(s,kind,x,z,targetPlantId){
   if(kind==='shield')return null;
-  const p=s.plants.find(p=>p.alive&&(targetPlantId!==undefined?p.id===targetPlantId:p.x===x&&p.z===z));
+  const p=activeCrops(s.plants).find(p=>p.alive&&(targetPlantId!==undefined?p.id===targetPlantId:p.x===x&&p.z===z));
   if(!p||p.x!==x||p.z!==z)throw new Error('Selecciona una planta para aplicar esta magia');
   if(kind==='growth'&&isMature(p))throw new Error('Esta planta ya está madura');
   return p;
@@ -813,20 +823,17 @@ function completeTask(s,w,t,target,nav) {
   notifyWorkerPlanningChange(s,w);
 }
 export function idleFarmAnchor(s,worker,center,livingCandidates=null){
-  let planted=null,live=null,plantedDistance=Infinity,liveDistance=Infinity;
+  let live=null,liveDistance=Infinity;
   // The worker pass supplies one shared living subset. Recheck object life as
-  // earlier workers can harvest during that same pass. Fall back to the exact
-  // original historical scan when this center no longer has living crops.
-  const candidates=livingCandidates?.some(p=>p.centerId===worker.centerId&&p.alive)?livingCandidates:s.plants;
+  // earlier workers can harvest during that same pass. Historical crops never
+  // choose an idle destination or trigger a scan of the save's crop history.
+  const candidates=livingCandidates??activeCrops(s.plants);
   for(const plant of candidates){
-    if(plant.centerId!==worker.centerId)continue;
+    if(plant.centerId!==worker.centerId||!plant.alive)continue;
     const distance=dist(plant,worker);
-    if(distance<plantedDistance||distance===plantedDistance&&plant.id.localeCompare(planted.id)<0){planted=plant;plantedDistance=distance;}
-    if(plant.alive&&(distance<liveDistance||distance===liveDistance&&plant.id.localeCompare(live.id)<0)){live=plant;liveDistance=distance;}
+    if(distance<liveDistance||distance===liveDistance&&plant.id.localeCompare(live.id)<0){live=plant;liveDistance=distance;}
   }
-  const plant=live??planted;
-  // Keep the cultivated area as the idle anchor after its last harvest too.
-  if(plant)return {...plant,id:'farm-'+plant.id,idleRadius:3};
+  if(live)return {...live,id:'farm-'+live.id,idleRadius:3};
   return {...center,...centerServicePoint(center,s,.8),id:'farm-'+center.id,idleRadius:2};
 }
 function taskRouteWhenKnown(compute){
@@ -999,7 +1006,7 @@ function updateWorkers(s,dt,nav) {
       if(!t) {
         if(w.status!=='idle'){w.status='idle';notifyWorkerPlanningChange(s,w);}
         if(s.tasks.some(task=>task.centerId===w.centerId&&!task.workerId))cancelIdle(w);
-        else {idlePlants??=s.plants.filter(p=>p.alive);updateIdle(w,idleFarmAnchor(s,w,center,idlePlants),dt,nav,s.seed,s.structures);}
+        else {idlePlants??=activeCrops(s.plants);updateIdle(w,idleFarmAnchor(s,w,center,idlePlants),dt,nav,s.seed,s.structures);}
         continue;
       }
       const target=findPlant(t.targetId)??findCrate(t.targetId)??s.structures.find(e=>e.id===t.targetId);
@@ -1069,7 +1076,7 @@ function closeNight(s) {
   applyEvent(s);s.eventPlan=null;s.nightPlan=null;
   if(compare(s.ledger.balance,rational(dawnMinimum(s)))<0){s.result='defeat';notice(s,'El sol vuelve, pero el poblado no puede costear otra jornada.');emit(s,'GameOver');return;}
   if(s.completedNights>=100&&!s.postgame){s.result='victory';emit(s,'CampaignWon');return;}
-  for(const plant of s.plants.filter(p=>p.alive))plant.centerId=nearest(s.structures.filter(operational),plant)?.id??null;
+  for(const plant of activeCrops(s.plants))if(plant.alive)plant.centerId=nearest(s.structures.filter(operational),plant)?.id??null;
   s.hiringPaidDay=null;rebuildTasks(s);pause(s,'hiring');emit(s,'Dawn');
 }
 export function continuePostgame(s) {if(s.result!=='victory')return;s.result=null;s.postgame=true;s.nightPlan=null;s.dayPlan=null;pause(s,'hiring');emit(s,'PostgameStarted');}

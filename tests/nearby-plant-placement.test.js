@@ -5,6 +5,7 @@ import {plantNearTouch} from '../src/app/plant-placement.js';
 import {LoadingPlants} from '../src/rendering/loading-plants.js';
 import * as Game from '../src/simulation/game.js';
 import {numberOf} from '../src/simulation/money.js';
+import {activeCrops} from '../src/simulation/active-crops.js';
 
 test('valid exact touches retain precision, dead plants do not displace them',()=>{
  const p={x:.123,z:.456};assert.deepEqual(nearbyPlantPlacement(p.x,p.z,{plants:[{...p,alive:false}]}),p);
@@ -39,6 +40,21 @@ test('gameplay relocation performs one native charge and one FIFO insertion, not
  assert.equal(s.plants.length,2);assert.equal(numberOf(s.ledger.balance),balance-5);assert.equal(s.tasks.length,count+1);
  assert.ok(Math.hypot(s.plants[1].x,s.plants[1].z)<=PLANT_TOUCH_RADIUS);
  const before=JSON.stringify(s);assert.equal(plantNearTouch(s,'touch','mijo',{x:8,z:8},nav),false);assert.equal(JSON.stringify(s),before);
+});
+test('repeat planting gestures do not revisit historical crop records',()=>{
+ const nav={placement:()=>({valid:true,suppress:[]}),setState(){},path:(_a,b)=>[{x:b.x,z:b.z}]};
+ const s=Game.newGame({seed:712,slotId:'nearby-history'});
+ Game.placeStructure(s,'center',{x:8,z:0},nav);Game.plant(s,'first','mijo',0,0,nav);
+ let historicalReads=0;
+ const old={id:'plant-history',centerId:s.structures[0].id,
+  get alive(){historicalReads++;return false;},
+  get x(){throw Error('Historical crop x was read');},
+  get z(){throw Error('Historical crop z was read');}};
+ s.plants.push(old);activeCrops(s.plants);historicalReads=0;
+ plantNearTouch(s,'touch-history','mijo',{x:0,z:0},nav);
+ assert.equal(historicalReads,0);
+ assert.ok(s.plants.includes(old));
+ assert.ok(Math.hypot(s.plants.at(-1).x,s.plants.at(-1).z)<=PLANT_TOUCH_RADIUS);
 });
 test('no local valid point preserves native rejection and does not charge or enqueue',()=>{
  const nav={placement:()=>({valid:true}),setState(){},path:(_a,b)=>[{x:b.x,z:b.z}]};

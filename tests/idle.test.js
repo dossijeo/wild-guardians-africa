@@ -74,12 +74,15 @@ test('A waiting employee returns physically at shift end and does not prolong th
   Game.tick(s,20,nav);assert.equal(w.status,'home');assert.equal(w.x,0);assert.equal(w.z,0);
 });
 
-test('Receiving queued work prevents even one extra ambient step',()=>{
+test('Receiving queued work assigns its route without even one extra ambient step',()=>{
   const s=Game.newGame({seed:712,slotId:'idle-task'});Game.resume(s,'intro');Game.placeStructure(s,'center',{x:0,z:0},nav);
   Game.pause(s,'hiring');Game.hire(s,'hire',{olderMale:1});Game.tick(s,8,nav);const w=s.workers[0];
   while(w.idleState?.mode!=='walk')Game.tick(s,.1,nav);
   Game.plant(s,'plant','mijo',6,1,nav);const position={x:w.x,z:w.z};Game.tick(s,.1,nav);
-  assert.equal(w.status,'walking');assert.equal(w.idleState,null);assert.equal(w.path,null);assert.deepEqual({x:w.x,z:w.z},position);
+  assert.equal(w.status,'walking');assert.equal(w.idleState,null);
+  assert.ok(Array.isArray(w.path)&&w.path.length>0);
+  assert.ok(w.path.every(point=>Number.isFinite(point.x)&&Number.isFinite(point.z)));
+  assert.deepEqual({x:w.x,z:w.z},position);
 });
 
 test('Ambient paths stay inside the local radius and original terrain/building footprints',()=>{
@@ -94,14 +97,15 @@ test('Ambient paths stay inside the local radius and original terrain/building f
 });
 
 
-test('after the final paid harvest the idle worker returns to the cultivated area, with physical paths and identical saved replay',()=>{
+test('after the final paid harvest the idle worker uses the live center, with physical paths and identical saved replay',()=>{
  const s=Game.newGame({seed:712,slotId:'idle-after-harvest'});Game.resume(s,'intro');
  const flat=state=>{const n=new Navigation(712,'sabana',{});n.field={blocked:()=>false,slope:()=>0,surface:()=>0};n.propsAt=()=>[];n.setState(state);return n;};
  const world=flat(s);Game.placeStructure(s,'center',{x:-12,z:0},world);Game.plant(s,'seed','mijo',8,4,world);Game.openInitialHiring(s);Game.hire(s,'wage',{olderFemale:1});s.tutorial.step='done';s.dayPlan={done:true};s.nightPlan={done:true};
  for(let i=0;i<3000&&!s.crates.some(c=>c.delivered);i++)Game.tick(s,.1,world);
- assert.equal(s.crates.filter(c=>c.delivered).length,1);assert.equal(s.plants[0].alive,false);const w=s.workers[0],plant=s.plants[0],allowance=w.runRemaining;
- Game.tick(s,.1,world);assert.equal(w.idleState.anchorId,'farm-'+plant.id);
+ assert.equal(s.crates.filter(c=>c.delivered).length,1);assert.equal(s.plants[0].alive,false);const w=s.workers[0],center=s.structures.find(c=>c.kind==='center'),allowance=w.runRemaining;
+ Game.tick(s,.1,world);assert.equal(w.idleState.anchorId,'farm-'+center.id);
+ const anchor=Game.idleFarmAnchor(s,w,center);
  const loaded=deserialize(serialize(s)),fresh=flat(loaded),rng=s.rng,end=Math.min(s.time+65,285);let settled=0;
- while(s.time<end){const before={x:w.x,z:w.z};Game.tick(s,.1,world);Game.tick(loaded,.1,fresh);assert.equal(serialize(s),serialize(loaded));assert.ok(world.segmentClear(before,w,.28,null,true));assert.equal(w.running,false);assert.equal(w.runRemaining,allowance);if(end-s.time<20){assert.ok(Math.hypot(w.x-plant.x,w.z-plant.z)<=3+1e-8);settled++;}}
+ while(s.time<end){const before={x:w.x,z:w.z};Game.tick(s,.1,world);Game.tick(loaded,.1,fresh);assert.equal(serialize(s),serialize(loaded));assert.ok(world.segmentClear(before,w,.28,null,true));assert.equal(w.running,false);assert.equal(w.runRemaining,allowance);if(end-s.time<20){assert.ok(Math.hypot(w.x-anchor.x,w.z-anchor.z)<=anchor.idleRadius+1e-8);settled++;}}
  assert.ok(settled>100);assert.equal(s.rng,rng);assert.equal(s.events.filter(e=>e.type==='CrateDelivered').length,1);
 });
