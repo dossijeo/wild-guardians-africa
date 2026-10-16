@@ -53,7 +53,7 @@ export async function createSpatialCampaignOpening({seed=712,biome='sabana',
       raidOnlyChunks.add(key);
       if(nav.raidSelectionStats){
         const samples=nav.raidSelectionStats.raidDemandLoaded??=[];
-        if(samples.length<32)samples.push({day:state.day,time:state.time,key});
+        if(samples.length<128)samples.push({day:state.day,time:state.time,key});
       }
       return true;
     };

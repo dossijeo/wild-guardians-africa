@@ -169,7 +169,12 @@ export function createSpatialNavigationMovement(session,state){
     for(const {cx,cz} of candidates){
       const key=`${cx},${cz}`;
       if(loaded?.has(key)||demand.has(key))continue;
-      demand.add(key);return true;
+      demand.add(key);
+      if(view.raidSelectionStats){
+        const samples=view.raidSelectionStats.heuristicDemandQueued??=[];
+        if(samples.length<128)samples.push({day:state.day,time:state.time,key});
+      }
+      return true;
     }
     return false;
   };
