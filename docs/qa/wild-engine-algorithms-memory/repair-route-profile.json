@@ -1,0 +1,180 @@
+{
+  "snapshot": "docs/qa/wild-engine-intent-lifecycle/sabana17-wall-capture-day17-raid-state.json.gz",
+  "targetId": "structure-11838",
+  "iterations": 1,
+  "status": "safe",
+  "gates": [
+    {
+      "id": "structure-14374",
+      "x": 89.01639344262294,
+      "z": 18
+    }
+  ],
+  "timingsMs": [
+    489.4299000000001
+  ],
+  "meanMs": 489.4299000000001,
+  "previewCalls": 4,
+  "routeCalls": 20,
+  "previewMs": 263.92390000000046,
+  "routeMs": 443.1047999999996,
+  "routeTiming": {
+    "sequentialMs": [
+      228.85660000000007,
+      220.67129999999997,
+      233.89210000000003
+    ],
+    "batchMs": [
+      226.8641,
+      0.13990000000012515,
+      0.4519999999999982
+    ],
+    "connectivityMs": [
+      0.9044999999998709,
+      0.18509999999992033,
+      0.34130000000004657
+    ],
+    "batchMatches": true,
+    "routeStatuses": [
+      "found",
+      "found",
+      "found",
+      "found"
+    ],
+    "connectivityStatuses": [
+      "possible",
+      "possible",
+      "possible",
+      "possible"
+    ]
+  },
+  "previewBatch": {
+    "calls": 0,
+    "ms": 0,
+    "mismatches": 0,
+    "examples": [],
+    "connectivity": [
+      [
+        "blocked",
+        "blocked",
+        "blocked",
+        "blocked"
+      ],
+      [
+        "blocked",
+        "blocked",
+        "blocked",
+        "blocked"
+      ],
+      [
+        "blocked",
+        "blocked",
+        "blocked",
+        "blocked"
+      ],
+      [
+        "possible",
+        "possible",
+        "possible",
+        "possible"
+      ]
+    ]
+  },
+  "routeProfile": {
+    "calls": 55,
+    "bfsNodes": 990,
+    "bfsArcs": 20482,
+    "localCalls": 172,
+    "localNodes": 13116
+  },
+  "routeOnly": {
+    "calls": 13578,
+    "samples": 101626,
+    "bfsNodes": 418,
+    "localNodes": 6910
+  },
+  "routeBreakdown": [
+    {
+      "start": [
+        87.95499901771545,
+        0
+      ],
+      "end": [
+        60,
+        0
+      ],
+      "ms": 11.714799999999968,
+      "clearCalls": 792,
+      "clearSamples": 5809,
+      "bfsNodes": 38,
+      "localNodes": 512
+    },
+    {
+      "start": [
+        88,
+        -0.6084082048370183
+      ],
+      "end": [
+        60,
+        0
+      ],
+      "ms": 33.95479999999998,
+      "clearCalls": 2074,
+      "clearSamples": 15430,
+      "bfsNodes": 76,
+      "localNodes": 1166
+    },
+    {
+      "start": [
+        86.68798065185547,
+        -3.730881690979004
+      ],
+      "end": [
+        60,
+        0
+      ],
+      "ms": 82.25099999999998,
+      "clearCalls": 5247,
+      "clearSamples": 39221,
+      "bfsNodes": 152,
+      "localNodes": 2616
+    },
+    {
+      "start": [
+        88.45635986328125,
+        -3.6711483001708984
+      ],
+      "end": [
+        60,
+        0
+      ],
+      "ms": 90.16149999999993,
+      "clearCalls": 5465,
+      "clearSamples": 41166,
+      "bfsNodes": 152,
+      "localNodes": 2616
+    }
+  ],
+  "phaseStats": {
+    "select": {
+      "calls": 44,
+      "clearCalls": 0,
+      "ms": 0.08639999999968495
+    },
+    "portals": {
+      "calls": 16,
+      "clearCalls": 54,
+      "ms": 8.98280000000068
+    }
+  },
+  "clearanceProfile": {
+    "calls": 26802,
+    "samples": 200025,
+    "rasterRejects": 0,
+    "terrainRejects": 0,
+    "propRejects": 247,
+    "barrierRejects": 2167
+  },
+  "wallCount": 86,
+  "workerCount": 3
+}

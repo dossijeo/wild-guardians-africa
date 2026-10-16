@@ -1,0 +1,60 @@
+{
+  "snapshot": "docs/qa/hierarchical-navigation/spatial-virtual-gran-canon-14-farm-bank-seed123-state.json",
+  "targetId": "structure-549",
+  "iterations": 3,
+  "status": "safe",
+  "gates": [],
+  "timingsMs": [
+    8.361800000000017,
+    6.171299999999974,
+    5.79970000000003
+  ],
+  "meanMs": 6.777600000000007,
+  "previewCalls": 3,
+  "routeCalls": 6,
+  "previewMs": 19.244599999999878,
+  "routeMs": 0.8308000000000675,
+  "routeTiming": {
+    "sequentialMs": [
+      3.785699999999906,
+      0.14239999999995234,
+      0.13389999999992597
+    ],
+    "batchMs": [
+      1.2071999999999434,
+      0.03700000000003456,
+      0.04800000000000182
+    ],
+    "connectivityMs": [
+      0.6083999999999605,
+      0.07779999999991105,
+      0.22479999999995925
+    ],
+    "batchMatches": true,
+    "routeStatuses": [
+      "found"
+    ],
+    "connectivityStatuses": [
+      "possible"
+    ]
+  },
+  "previewBatch": {
+    "calls": 0,
+    "ms": 0,
+    "mismatches": 0,
+    "examples": [],
+    "connectivity": [
+      [
+        "possible"
+      ],
+      [
+        "possible"
+      ],
+      [
+        "possible"
+      ]
+    ]
+  },
+  "wallCount": 21,
+  "workerCount": 7
+}

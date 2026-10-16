@@ -64,6 +64,47 @@ file. The difference is below run-to-run variation, so the connector change
 was removed. The expensive work is the repeated graph searches, not these
 local connector checks.
 
+### Path-free repair access proof (experimental candidate)
+
+Profiling the same frozen Sabana day-17 repair found that three previews made
+165 discrete `lazy_route` calls, visiting 2,970 graph nodes and 61,446 graph
+arcs, but executed 80,406 continuous clearance calls (600,075 samples).
+The profile was compiled from baseline `435df67c` with the temporary patch
+`route-profile-instrumentation.patch`; the raw `repair-route-profile.json`
+retains counts and the selected gate. These counters include both initial
+routes and speculative wall layouts. They show why sharing graph BFS alone
+would not address the dominant work in this checkpoint.
+
+`spatial_world_route_status` now uses the same native connectors, graph,
+sector-local paths and portal validation as the full planner, but returns
+after proving a route exists. It skips the optional `shortenOneCorner` search
+and does not materialize route points for repair previews that only inspect
+`found`/`blocked`/`unknown`. Initial routes whose points guide gate selection
+still use the full planner. An older WASM binary falls back to that same full
+native planner rather than falsely returning `unknown`. The new binary is
+89 bytes larger (458,403 versus 458,314 bytes) and introduces no persistent
+route cache or gameplay rule change.
+
+The frozen Sabana snapshot was run baseline/candidate/candidate/baseline on
+one Windows host, three repair evaluations per process. The baseline WASM
+SHA-256 was `d12355b1a636f1a856abd1cd6b3b6ff6177162b0ada5a7828df036802227b9d2`;
+the candidate was `b7bacfaf9214af3545f7b8550436576d5c7442e27d254085ab9463efeaecd7e6`.
+
+| Scenario | Baseline median | Candidate median | Outcome |
+| --- | ---: | ---: | --- |
+| Sabana day 17, closing repair | 474.41 ms | 266.76 ms | 43.8% faster; same `safe` result and gate |
+| Gran Cañón day 7, open repair | 6.35 ms | 6.91 ms | Same `safe` result, no gate; sub-millisecond variation |
+
+All arms used the same 60 native route requests in Sabana and six in Gran
+Cañón. The eight raw ABBA reports are retained as `repair-status-*.json`.
+The status query matched the full native result on 24 queries in each of four
+frozen biomes (96 total), plus directed closed-wall, gate, topology-change and
+unloaded-sector cases. Six repair regressions, native-intent tests (38 targeted
+tests overall), web build, asset validation and web-package checks passed.
+This is a directed repair-path improvement; no sustained-campaign or overall
+`Game.tick` speedup is claimed yet. PR #54 remains stacked on unfinished
+native-intent PR #53 and is not ready for automatic merge.
+
 This branch starts at `3361c06a`, the current experimental native-intent
 branch, without changing gameplay. It is separate from PR #53. Its initial
 baselines used the 4 MiB production binary; the later 16 MiB activation is
