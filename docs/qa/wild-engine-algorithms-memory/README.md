@@ -45,6 +45,25 @@ crossings alone does not remove cold graph work after provisional topology
 changes. Any multi-destination prototype must retain the physical route proof
 and preserve preview isolation.
 
+### Connector-validation reuse (rejected)
+
+As a smaller prerequisite, a prototype retained each destination connector's
+`spatial_walkable` and `spatial_local_clear` verdict for one
+`spatial_world_route` request instead of repeating it for each start anchor.
+It added no persistent cache and preserved the ordered candidate search.
+The candidate WASM SHA-256 was
+`157f6b441c1cc56ba9ccc1deac7c1799ca9ed45b0e5b800e04d979b1f53daeaf`.
+
+The same frozen Sabana day-17 repair snapshot ran baseline/candidate/
+candidate/baseline on this Windows host, three access evaluations per arm.
+Medians were 491.92/493.32/474.60/474.41 ms respectively; the combined
+baseline and candidate medians were 483.17 and 483.96 ms. All arms returned
+the same `safe` result, selected the same automatic gate and issued 20 native
+route queries per evaluation. Four raw reports are retained alongside this
+file. The difference is below run-to-run variation, so the connector change
+was removed. The expensive work is the repeated graph searches, not these
+local connector checks.
+
 This branch starts at `3361c06a`, the current experimental native-intent
 branch, without changing gameplay. It is separate from PR #53. Its initial
 baselines used the 4 MiB production binary; the later 16 MiB activation is
