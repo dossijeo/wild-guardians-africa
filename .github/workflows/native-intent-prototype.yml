@@ -6,11 +6,13 @@ on:
       - '.github/workflows/native-intent-prototype.yml'
       - 'src/world/hierarchical-wasm/**'
       - 'src/simulation/raids.js'
+      - 'src/simulation/game.js'
       - 'tests/raid-region-selection.test.js'
       - 'tests/spatial-native-raid.test.js'
       - 'tests/spatial-native-intent-bridge.test.js'
       - 'tests/spatial-native-intent-index.test.js'
       - 'tests/spatial-native-animal-intent.test.js'
+      - 'tests/spatial-native-worker-home.test.js'
       - 'tests/spatial-native-crop-groups.test.js'
       - 'tests/spatial-native-intent-advice.test.js'
       - 'tests/native-expanding-defense-policy.test.js'
@@ -43,7 +45,7 @@ jobs:
         run: |
           WILD_ENGINE_NATIVE_ROUTE_WASM="$PWD/.cache/native-breach-candidate.wasm" \
           WILD_ENGINE_SPATIAL_SERVICES_WASM="$PWD/.cache/native-breach-candidate.wasm" \
-            node --test tests/raid-region-selection.test.js tests/spatial-native-raid.test.js tests/spatial-native-frontier.test.js tests/spatial-native-intent-bridge.test.js tests/spatial-native-intent-index.test.js tests/spatial-native-animal-intent.test.js tests/spatial-native-crop-groups.test.js tests/spatial-native-intent-advice.test.js tests/native-expanding-defense-policy.test.js
+            node --test tests/raid-region-selection.test.js tests/spatial-native-raid.test.js tests/spatial-native-frontier.test.js tests/spatial-native-intent-bridge.test.js tests/spatial-native-intent-index.test.js tests/spatial-native-animal-intent.test.js tests/spatial-native-worker-home.test.js tests/spatial-native-crop-groups.test.js tests/spatial-native-intent-advice.test.js tests/native-expanding-defense-policy.test.js
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
