@@ -296,7 +296,10 @@ no additional native plan. The ordinary return-route and actor-motion tests
 passed 33/33; the web build passed with the bundled candidate.
 A directed native test also builds a wall on a restored home-route endpoint,
 confirms that its old handle becomes invalid, removes the wall and obtains a
-new physical route.
+new physical route. A planner-level test now covers the event boundary too:
+the wall invalidates the worker's active home route, the blocked replacement
+hands off to bounded JavaScript recovery, and removing the wall permits a new
+native plan. All three focused home-route tests pass with the pinned WASM.
 
 Two continuous Sabana/712 seven-night technical pilots using the new binary
 matched every daily hash, terminal state and raid receipt. The instrumented

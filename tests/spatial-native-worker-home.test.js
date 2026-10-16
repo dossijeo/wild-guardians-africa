@@ -133,3 +133,53 @@ test('saving during worker flight restores native home routes without new plans'
       before,'restored workers keep their home routes during ordinary movement');
   }finally{resumed?.close();continuous.close();}
 });
+
+test('a confirmed wall invalidates a worker home route and reopening replans it',
+ {skip:!module&&'Build and select the experimental WASM first'},()=>{
+  const game=deserialize(gunzipSync(readFileSync(new URL(
+    './fixtures/desierto983-d15-partial-state.json.gz',import.meta.url))).toString());
+  game.workers=game.workers.slice(0,1);
+  game.raid=null;
+  const loaded=new Map(),session=createSpatialGameSession(module,game,{
+    loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+  try{
+    for(let z=-1;z<=1;z++)for(let x=-1;x<=1;x++){
+      if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+      loaded.set(`${x},${z}`,session.core.chunkPayload());
+    }
+    let start,home;
+    for(let z=-10;z<=10&&!home;z++)for(let x=-10;x<=10;x++){
+      const from={x:x+.2,z:z+.2},to={x:x+2.2,z:z+.2};
+      if(session.routeActor(from,to,{worker:true}).status==='found'){
+        start=from;home=to;break;
+      }
+    }
+    assert(home,'fixture needs a reachable worker home');
+    const worker=game.workers[0];
+    Object.assign(worker,start,{status:'fleeing',taskId:null});
+    game.villages[0].entry=home;
+    const planner=createEventDrivenTaskPlanner(session);
+    planner.resetFromState(game);
+    const nav=createSpatialNavigationMovement(session,game);
+    const stopTasks=planner.observeTasks(game),stopWorld=planner.observeWorld(game);
+    try{
+      const planned=planner.planHomeRoute(game,worker,home,nav.version);
+      assert.equal(planned.status,'found');
+      worker.path=planned.path;
+      worker.destinationId=`home-${worker.villageId}`;
+      worker.pathVersion=nav.version;
+      const wallId=session.core.addWall(home.x,home.z,.4,.4);
+      assert(wallId>0);
+      assert(planner.reconcileNavigationRevision(game,nav.version+1)>0);
+      planner.reconcileWorkerRoutes(game,{navVersion:nav.version+1});
+      assert.equal(planner.homeRouteActive(worker.id),false);
+      assert.equal(worker.path,null);
+      assert.equal(planner.metrics(game.elapsed).nativeHomePlanFallbacks,1);
+      assert(session.core.removeWall(wallId)>0);
+      planner.reconcileNavigationRevision(game,nav.version+2);
+      assert.equal(planner.planHomeRoute(game,worker,home,nav.version+2).status,
+        'found');
+      assert(planner.homeRouteActive(worker.id));
+    }finally{stopTasks();stopWorld();}
+  }finally{session.dispose();}
+});
