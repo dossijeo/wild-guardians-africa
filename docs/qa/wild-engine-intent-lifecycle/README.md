@@ -242,6 +242,19 @@ The complete daily report and hashes are preserved in
 `sabana14-native-retreat.json.gz` (source `762f8da3`, WASM SHA-256
 `da81cbf89e937dc947aaf646235a593840e4807342aa655a57f397047a00cf15`).
 
+Gran Cañón/123 was replayed twice for seven nights under the same opt-in
+configuration on source `8eefdcaa` and the same WASM. Every corresponding
+daily serialized-state hash, terminal record and full raid observer report
+matched exactly. The runs took 149.89 s and 149.37 s. Both ended at day-eight
+dawn with one operational center, 44 living crops, 330 coins and no game-over
+result. All seven incursions were verified with no observer issues or lost
+coverage; 47 crops were destroyed across them. Every recorded animal
+retirement was due to exhausted attack budget. Both complete reports are
+preserved as `canyon7-native-retreat.json.gz` and
+`canyon7-native-retreat-repeat.json.gz`. This is a deterministic early-campaign
+check in difficult terrain, not a proof that unknown-connectivity cases or
+longer Canyon campaigns are resolved.
+
 ## Next integration gates
 
 1. Publish confirmed task/worker/action events directly from the simulation without scanning every entity per tick. Apply native proposals atomically with JS task reservations and preserve all worker policy tie-breaks.
