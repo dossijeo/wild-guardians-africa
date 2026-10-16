@@ -15,6 +15,15 @@ This probe cannot establish that the crop-service-site change directly fixes the
 
 Restoring the old partial state reproduced the stationary buffalo with either WASM binary. Its position and exit were both walkable, and the full continuous swept segment to its saved exit was clear. A grid route nevertheless led first to a local bend that the movement controller rejected, causing a fresh route request on every tick. The movement code now accepts the already validated straight exit for an exhausted retreat before asking for a grid route; every actual movement step still passes the existing native static and mobile clearance checks. The saved-state regression verifies original speed, no new logical hit, arrival at the exact exit, and a completed raid. The 17 native-intent bridge tests, 196 playable tests, and web build passed with this JavaScript correction and the candidate WASM. This is a directed reproduction, **not** a replay of the full old campaign from day one under the new code.
 
+That full day-one replay was subsequently completed with both WASM binaries under the **same corrected JavaScript source**. Game, raid, and runner hashes match across this second pair; only the WASM hash differs. Both completed 14 nights and verified all 14 raids with zero observer issues.
+
+| WASM after retreat correction | Day-14 living crops | Day-14 coins | Elapsed |
+| --- | ---: | ---: | ---: |
+| Previous | 10 | 408 | 248.74 s |
+| Alternate crop service sites | 16 | 295 | 245.66 s |
+
+The previous binary now passes the technical day-13 boundary. The alternate has more living crops but 113 fewer liquid coins at the end. The daily state hashes diverge from day one, so these figures are **mixed campaign outcomes**, not equivalent-state timing or proof of a superior strategy. The 3.08-second elapsed difference is one paired observation and too small to claim a sustained speed gain. Raw corrected-source reports: [previous](old-retreatfix.json.gz) and [alternate](alt-retreatfix.json.gz).
+
 The Gran Cañón/123 paired run remains negative survival evidence for the same change: see [its report](../service-sites-canyon123/README.md). Together, these two seeds support continued technical validation, not a general survival claim or a merge of draft PR #53.
 
 Reproduction command, changing only `WILD_ENGINE_SPATIAL_SERVICES_WASM` and `WILD_ENGINE_NATIVE_ROUTE_WASM` to one of the archived CI binaries:
