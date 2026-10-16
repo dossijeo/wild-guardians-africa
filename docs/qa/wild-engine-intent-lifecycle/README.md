@@ -584,3 +584,11 @@ two necessary wall quotes on day ten and a separate 108-second `Game.tick`
 day twelve. The full report and the limits of this single-run evidence are
 in [`manglares14-event-defense.md`](manglares14-event-defense.md). These
 costs are unresolved acceptance gaps for the opt-in planner.
+
+The current-source CPU reproduction matched the first ten Manglares daily
+state hashes and located 96.3% of the sampled day-ten wall-quote stack
+under restoration of suppressed natural props. The code currently refreshes
+all resident chunks on each such restore. See
+[`manglares-day10-quote-profile.md`](manglares-day10-quote-profile.md) for
+the raw profile, attribution and differential checks required before a
+localized C++ update can replace that global rebuild.
