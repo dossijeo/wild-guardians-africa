@@ -268,6 +268,16 @@ target. The complete report is `canyon14-native-retreat.json.gz` (source
 through a genuine terminal transition in this scenario, not balance or
 general long-campaign acceptance.
 
+A directed retreat-topology regression now creates a physical route, places
+a confirmed wall on one of its waypoints, and checks that Wild Engine
+invalidates the old route handle and marks the same retreat intention as
+needing a new route without acquiring an attack lease. Removing the wall
+allows a fresh native route and a distinct handle. All four native animal
+intention tests pass locally against the pinned candidate WASM. Worker return
+routes already retain a successful path during ordinary movement, but their
+planning and exceptional fallback still run through the JavaScript adapter;
+they have not been claimed as migrated to native intention ownership.
+
 ## Next integration gates
 
 1. Publish confirmed task/worker/action events directly from the simulation without scanning every entity per tick. Apply native proposals atomically with JS task reservations and preserve all worker policy tie-breaks.

@@ -63,6 +63,53 @@ test('native retreat owns one physical route until completion without an attack 
   }finally{session.dispose();}
 });
 
+test('a confirmed wall invalidates a pinned retreat route and its old handle',
+ {skip:!module&&'Build and select the experimental WASM first'},()=>{
+  const game=deserialize(gunzipSync(readFileSync(new URL(
+    './fixtures/desierto983-d15-partial-state.json.gz',import.meta.url))).toString());
+  const loaded=new Map(),session=createSpatialGameSession(module,game,{
+    loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+  try{
+    for(let z=-1;z<=1;z++)for(let x=-1;x<=1;x++){
+      if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+      loaded.set(`${x},${z}`,session.core.chunkPayload());
+    }
+    let origin,route;
+    for(let z=-10;z<=10&&!route;z++)for(let x=-10;x<=10&&!route;x++){
+      const from={x:x+.2,z:z+.2};
+      for(const [dx,dz] of [[8,0],[-8,0],[0,8],[0,-8]]){
+        const candidate=session.routeActor(from,
+          {x:from.x+dx,z:from.z+dz},{worker:false,species:'hyena'});
+        if(candidate.status==='found'&&candidate.points.length>3){
+          origin=from;route=candidate;break;
+        }
+      }
+    }
+    assert(route,'fixture needs a retreat route with a nonterminal waypoint');
+    const exit=route.points.at(-1),bridge=createSpatialIntentBridge(session);
+    bridge.resetFromState(game);
+    const actor={id:'animal-900002',species:'hyena',...origin,exit};
+    const first=bridge.planRetreatRoute(actor);
+    assert.equal(first.status,'found');
+    const waypoint=first.path[Math.floor(first.path.length/2)];
+    const wallId=session.core.addWall(waypoint.x,waypoint.z,.3,.3);
+    assert(wallId>0);
+    session.actorSectorRevision({worker:false,species:'hyena'});
+    assert(session.core.wasm.nav_intent_reconcile_topology()>0);
+    assert.equal(bridge.routePoints(first.routeHandle),null,
+      'the pre-wall handle must not expose a stale route');
+    assert.equal(session.core.wasm.nav_intent_actor(900002),1);
+    const waiting=new Float64Array(session.core.wasm.memory.buffer,
+      session.core.wasm.nav_intent_actor_ptr(),10);
+    assert.equal(waiting[1],0,'the retreat needs a new physical route');
+    assert.equal(waiting[3],0,'no attack target or lease is acquired');
+    assert(session.core.removeWall(wallId)>0);
+    const replacement=bridge.planRetreatRoute(actor);
+    assert.equal(replacement.status,'found');
+    assert.notDeepEqual(replacement.routeHandle,first.routeHandle);
+  }finally{session.dispose();}
+});
+
 test('native animal leases preserve committed strikes and reject duplicate targets',
  {skip:!module&&'Build and select the experimental WASM first'},()=>{
   const game=deserialize(gunzipSync(readFileSync(new URL(
