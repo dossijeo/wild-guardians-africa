@@ -201,3 +201,20 @@ are retained under `.cache/native-intent-38799294071/` and were generated
 from working-tree code immediately before its commit; the report's `source`
 field is the prior clean HEAD, while `inputHashes` preserve the key source
 contents. Clean-source fourteen-night campaigns are the next comparison.
+
+The clean-source Sabana/712 `good` paired fourteen-night run completed both
+variants without a technical failure, and both raid reports are `verified`.
+With native wall selection enabled, the campaign took 279.42 seconds, spent
+11.34 seconds in raid target selection, and ended with 80 living crops and
+573 coins. The otherwise identical control took 300.26 seconds, spent 13.91
+seconds in selection, and ended with 20 living crops and 723 coins. The
+native path recorded 220 wall proposals (`found` 144, `occupied` 76). Both
+campaigns had identical end-of-day hashes through day five, then diverged
+under real night-six pressure. Night seven favored the control by one crop;
+subsequent attack and defensive trajectories favored the native selector in
+this seed. Different terminal cash reflects these divergent trajectories and
+does not by itself prove a better economy. These are one paired full-run
+sample, not a statistical balance result or proof across biomes. Raw reports:
+`campaign-14-native-wall.json.gz` and `campaign-14-wall-control.json.gz`
+in this QA directory; each contains the full original JSON report, including
+source/input hashes, per-day states, raid evidence and negative outcomes.
