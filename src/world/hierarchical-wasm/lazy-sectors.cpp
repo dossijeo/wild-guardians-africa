@@ -31,7 +31,8 @@ struct Context {
   std::vector<Sector*> byId;
   std::vector<int> freeIds;
   std::vector<int32_t> queueBuffer;
-  std::vector<uint8_t> visited;
+  std::vector<uint32_t> visited;
+  uint32_t visitGeneration=0;
   std::vector<int32_t> previousNode,localParent,routePoints;
   std::vector<Arc> previousArc,arcChain;
   std::vector<Portal> portals;
@@ -62,6 +63,7 @@ Context& active(){
 #define freeIds (active().freeIds)
 #define queueBuffer (active().queueBuffer)
 #define visited (active().visited)
+#define visitGeneration (active().visitGeneration)
 #define previousNode (active().previousNode)
 #define localParent (active().localParent)
 #define routePoints (active().routePoints)
@@ -84,6 +86,14 @@ uint64_t key(int sx,int sz){return (static_cast<uint64_t>(static_cast<uint32_t>(
 Sector* get(int sx,int sz){const auto it=sectors->find(key(sx,sz));return it==sectors->end()?nullptr:&it->second;}
 int floorDiv(int n,int d){return n>=0?n/d:-((-n+d-1)/d);}
 int cellIndex(int x,int z){return z*sectorSize+x;}
+uint32_t beginVisit(int maxNodes){
+  visited.resize(maxNodes,0);
+  if(++visitGeneration==0){
+    std::fill(visited.begin(),visited.end(),0);
+    visitGeneration=1;
+  }
+  return visitGeneration;
+}
 void flood(Sector& sector){
   const int n=sectorSize*sectorSize;
   sector.component.assign(n,-1);sector.components=0;
@@ -348,7 +358,8 @@ int lazy_connected(int fromX,int fromZ,int toX,int toZ){
   if(source<0||target<0){connectivityReason=3;return 0;}
   if(source==target){connectivityReason=4;return 1;}
   const int maxNodes=static_cast<int>(byId.size())*sectorSize*sectorSize;
-  visited.assign(maxNodes,0);queueBuffer.clear();queueBuffer.push_back(source);visited[source]=1;
+  const uint32_t generation=beginVisit(maxNodes);
+  queueBuffer.clear();queueBuffer.push_back(source);visited[source]=generation;
   bool unknown=false;
   int64_t bestFrontierDistance=std::numeric_limits<int64_t>::max();
   for(size_t q=0;q<queueBuffer.size();q++){
@@ -372,7 +383,7 @@ int lazy_connected(int fromX,int fromZ,int toX,int toZ){
     for(const Arc& arc:sector.edges[local]){
       const int32_t next=arc.to;
       if(next==target){connectivityReason=5;return 1;}
-      if(!visited[next]){visited[next]=1;queueBuffer.push_back(next);}
+      if(visited[next]!=generation){visited[next]=generation;queueBuffer.push_back(next);}
     }
   }
   if(!unknown){connectivityReason=6;return 0;}
@@ -418,20 +429,21 @@ int lazy_route(int fromX,int fromZ,int toX,int toZ){
     return found?static_cast<int>(routePoints.size()/2):-1;
   }
   const int maxNodes=static_cast<int>(byId.size())*stride;
-  visited.assign(maxNodes,0);previousNode.assign(maxNodes,-1);previousArc.resize(maxNodes);
-  queueBuffer.clear();queueBuffer.push_back(source);visited[source]=1;
+  const uint32_t generation=beginVisit(maxNodes);
+  previousNode.resize(maxNodes);previousArc.resize(maxNodes);
+  queueBuffer.clear();queueBuffer.push_back(source);visited[source]=generation;
   bool unknown=false;
-  for(size_t q=0;q<queueBuffer.size()&&!visited[target];q++){
+  for(size_t q=0;q<queueBuffer.size()&&visited[target]!=generation;q++){
     const int32_t node=queueBuffer[q],sectorId=node/stride,local=node%stride;
     const Sector& sector=*byId[sectorId];
     if(sector.unknown[local])unknown=true;
     for(const Arc& arc:sector.edges[local]){
-      if(visited[arc.to])continue;
-      visited[arc.to]=1;previousNode[arc.to]=node;previousArc[arc.to]=arc;
+      if(visited[arc.to]==generation)continue;
+      visited[arc.to]=generation;previousNode[arc.to]=node;previousArc[arc.to]=arc;
       queueBuffer.push_back(arc.to);
     }
   }
-  if(!visited[target]){
+  if(visited[target]!=generation){
     if(!unknown){connectivityReason=6;return 0;}
     if(targetSealed(source,target)){connectivityReason=7;return 0;}
     connectivityReason=weakFailure==1?10:8;return -1;

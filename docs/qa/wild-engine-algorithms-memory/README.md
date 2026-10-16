@@ -95,6 +95,18 @@ the candidate was `b7bacfaf9214af3545f7b8550436576d5c7442e27d254085ab9463efeaecd
 | Sabana day 17, closing repair | 474.41 ms | 266.76 ms | 43.8% faster; same `safe` result and gate |
 | Gran Cañón day 7, open repair | 6.35 ms | 6.91 ms | Same `safe` result, no gate; sub-millisecond variation |
 
+After rebasing on intent-lifecycle `395850a4`, which includes the 16 MiB
+startup and generation-stamped graph searches from main, the same Sabana
+snapshot was repeated in ABBA order. The new baseline WASM SHA-256 was
+`d757c2197f98fded1cb42b7759154f1bd95a532504da9539c2e8ade17a9f47b6`;
+the status-only candidate was
+`110ccb71c8785687e747d855b9264f23abf680074b61c6b4c5fa688806607414`.
+Mean per-process medians were 489.84 ms versus 271.90 ms (44.5% faster).
+All four arms still reported `safe`, selected gate `structure-14374`, and
+issued 60 route requests. The raw reports are `repair-status-rebased-*.json`.
+This confirms the directed gain survives the base update; it still does not
+measure a complete campaign.
+
 All arms used the same 60 native route requests in Sabana and six in Gran
 Cañón. The eight raw ABBA reports are retained as `repair-status-*.json`.
 The status query matched the full native result on 24 queries in each of four

@@ -1,0 +1,64 @@
+name: Wild Engine BFS stamping experiment
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/wild-engine-bfs-stamping.yml'
+      - 'src/world/hierarchical-wasm/lazy-sectors.cpp'
+      - 'tools/experiments/benchmark-wild-engine-bfs.mjs'
+
+permissions:
+  contents: read
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      - name: Build baseline and candidate from identical sources
+        run: |
+          cp src/world/hierarchical-wasm/lazy-sectors.cpp /tmp/lazy-sectors-candidate.cpp
+          git show origin/main:src/world/hierarchical-wasm/lazy-sectors.cpp > src/world/hierarchical-wasm/lazy-sectors.cpp
+          docker run --rm -v "$PWD:/src" -w /src \
+            -e SPATIAL_WASM_OUTPUT=/src/bfs-baseline.wasm \
+            emscripten/emsdk@sha256:77638e6c215a65f25a704c0c831d5c2463a8c0468a58c6cb82489dbe621dfa05 \
+            bash tools/build-spatial-savanna-wasm.sh
+          cp /tmp/lazy-sectors-candidate.cpp src/world/hierarchical-wasm/lazy-sectors.cpp
+          docker run --rm -v "$PWD:/src" -w /src \
+            -e SPATIAL_WASM_OUTPUT=/src/bfs-candidate.wasm \
+            emscripten/emsdk@sha256:77638e6c215a65f25a704c0c831d5c2463a8c0468a58c6cb82489dbe621dfa05 \
+            bash tools/build-spatial-savanna-wasm.sh
+          sha256sum bfs-baseline.wasm bfs-candidate.wasm
+      - name: Check candidate contracts
+        run: |
+          cp bfs-candidate.wasm src/world/hierarchical-wasm/spatial-savanna.wasm
+          node --test tests/spatial-savanna-prototype.test.js
+          npm run test:playable
+      - name: Alternate direct-graph benchmark order
+        run: |
+          mkdir -p bfs-reports
+          for biome in sabana manglares desierto gran-canon gran-rio volcanes; do
+            for variant in baseline candidate candidate baseline; do
+              n=$(find bfs-reports -name "$biome-$variant-*.json" | wc -l)
+              node tools/experiments/benchmark-wild-engine-bfs.mjs \
+                "bfs-$variant.wasm" "bfs-reports/$biome-$variant-$n.json" "$biome" animal > /dev/null
+            done
+          done
+          node tools/experiments/compare-wild-engine-bfs.mjs bfs-reports
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wild-engine-bfs-stamping-comparison
+          path: |
+            bfs-baseline.wasm
+            bfs-candidate.wasm
+            bfs-reports
+          retention-days: 14
