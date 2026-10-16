@@ -360,3 +360,11 @@ speed measurement.
    do not assume a shared graph BFS is the dominant cost on the repair case.
 3. Expand linear-memory traces to restored games and large legal farms,
    recording actual entities and sectors alongside committed pages.
+# Localized suppressed-prop restore
+
+The current native-intent day-ten Manglares profile exposed repeated global
+chunk rebuilds while speculative wall gates restore suppressed natural
+props. A localized C++ restore candidate, exact six-biome differential
+checks, an ABBA enclosure preview and a matched ten-night campaign are
+documented in [`prop-restore/README.md`](prop-restore/README.md). The
+candidate remains part of this stacked draft; PR #54 is not merged.
