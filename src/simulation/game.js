@@ -267,8 +267,9 @@ export function quoteWallChain(s,material,points,nav,options={}) {
   // A multi-arc enclosure is one atomic quote: gate selection must see every
   // proposed module before deciding whether the combined boundary is closed.
   const strokes=Array.isArray(points[0]?.[0])?points:[points];
-  const spec=wallSpec(material),sampled=strokes.flatMap(stroke=>
+  const spec=wallSpec(material),strokeSlots=strokes.map(stroke=>
     wallStroke(stroke,s.structures,{...options,maxPieces:Infinity}));
+  const sampled=strokeSlots.flat();
   const slots=strokes.length===1?sampled:[];
   if(strokes.length>1)for(const slot of sampled)if(!slots.some(other=>
     Math.hypot(other.x-slot.x,other.z-slot.z)<.35&&
@@ -293,7 +294,9 @@ export function quoteWallChain(s,material,points,nav,options={}) {
   }
   const cost=spec.cost*newPieces.length;
   const plan={pieces:newPieces,previewPieces:checks,updates,suppressed:[...suppressed],cost,gates:updates.length,
-    expectedSlots:slots,blockedPieces,blockedCrops};
+    expectedSlots:slots,strokeSlots,strokeClosed:strokes.map(stroke=>
+      stroke.length>=3&&Math.hypot(stroke[0][0]-stroke.at(-1)[0],
+        stroke[0][1]-stroke.at(-1)[1])<1e-6),blockedPieces,blockedCrops};
   preparedWallQuotes.set(plan,{state:s,nav,material,points:JSON.stringify(points),
     smooth:options.smooth??true,snap:options.snap??true,
     maxPieces:options.maxPieces??Infinity,sequence:s.sequence,nextId:s.nextId,

@@ -1,4 +1,4 @@
-import {wallStroke} from '../wall-layout.js';
+import {WALL_UNIT,gateScale,wallStroke} from '../wall-layout.js';
 import {boundaryFaces} from '../boundary-faces.js';
 import {containsPoint} from '../footprints.js';
 import {ANIMAL_SPATIAL_PROFILES} from './spatial-movement-profiles.js';
@@ -45,6 +45,40 @@ export function enclosureJunctions(strokes){
   return junctions;
 }
 
+// A cut describes ideal line ends. Clearance must instead be measured from
+// the outer end of each module that survives the game's placement quote.
+// Missing end modules make the physical join unprovable, even if a grid edge
+// or the ideal stroke endpoint happened to touch a natural obstacle.
+export function placedEnclosureJunctions(quote){
+  if(!Array.isArray(quote?.strokeSlots)||!Array.isArray(quote?.previewPieces))
+    return {status:'unknown',reason:'missing-placement-geometry',junctions:[]};
+  if(quote.blockedPieces?.length||quote.blockedCrops?.length)
+    return {status:'unknown',reason:'omitted-module',junctions:[]};
+  if(quote.strokeClosed?.some(Boolean))
+    return {status:'unknown',reason:'use-wall-face-check',junctions:[]};
+  const pieces=quote.previewPieces.filter(piece=>piece.kind==='wall'&&
+    piece.hp>0&&piece.status!=='ruined'&&piece.status!=='collapsing');
+  const match=slot=>pieces.find(piece=>
+    Math.hypot(piece.x-slot.x,piece.z-slot.z)<1e-5&&
+    Math.abs(Math.sin((piece.yaw??0)+slot.angle))<1e-5&&
+    Math.abs((piece.baseScaleX??1)-slot.scaleX)<1e-5);
+  const junctions=[];
+  for(const [strokeIndex,slots] of quote.strokeSlots.entries()){
+    if(!slots.length)return {status:'unknown',reason:'empty-stroke',junctions};
+    const first=slots[0],last=slots.at(-1);
+    const a=match(first),b=match(last);
+    if(!a||!b)return {status:'unknown',reason:'missing-end-module',junctions};
+    for(const [end,piece,sign] of [['start',a,-1],['finish',b,1]]){
+      const half=(piece.baseScaleX??1)*(piece.gate?gateScale(piece.material):1)*
+        WALL_UNIT*.5;
+      junctions.push({strokeIndex,end,pieceId:piece.id,
+        point:[piece.x+sign*Math.cos(piece.yaw??0)*half,
+          piece.z-sign*Math.sin(piece.yaw??0)*half]});
+    }
+  }
+  return {status:'ready',junctions};
+}
+
 // For a measured clear span between the *physical* wall and obstacle surfaces,
 // a circle of the smallest species cannot pass if the span is below its
 // diameter. Unknown geometry must remain unknown; equality is ambiguous.
@@ -57,9 +91,8 @@ export function junctionBlocksSmallestAnimal(clearSpan){
 // per crop or animal. The obstacle between the ends must independently be
 // known to stay impassable; a small endpoint gap cannot certify an unknown
 // river, cliff or unloaded sector.
-export function inspectNaturalJunctions(strokes,measureClearSpan,barrierContinuous){
+function inspectJunctions(junctions,measureClearSpan,barrierContinuous){
   if(typeof measureClearSpan!=='function')throw TypeError('Expected a native clearance query');
-  const junctions=enclosureJunctions(strokes);
   if(!junctions.length)return {status:'unknown',reason:'no-natural-junctions',
     junctions:0,spans:[]};
   const spans=[];
@@ -75,6 +108,19 @@ export function inspectNaturalJunctions(strokes,measureClearSpan,barrierContinuo
     junctionBlocksSmallestAnimal(span)!==true))
     return {status:'unknown',junctions:spans.length,spans};
   return {status:'joined',junctions:spans.length,spans};
+}
+
+export function inspectNaturalJunctions(strokes,measureClearSpan,barrierContinuous){
+  return inspectJunctions(enclosureJunctions(strokes),measureClearSpan,
+    barrierContinuous);
+}
+
+export function inspectPlacedNaturalJunctions(quote,measureClearSpan,
+  barrierContinuous){
+  const placed=placedEnclosureJunctions(quote);
+  if(placed.status!=='ready')return {status:'unknown',reason:placed.reason,
+    junctions:placed.junctions.length,spans:[]};
+  return inspectJunctions(placed.junctions,measureClearSpan,barrierContinuous);
 }
 
 // Cheap structural proof for the simple case: the *placed* wall pieces form

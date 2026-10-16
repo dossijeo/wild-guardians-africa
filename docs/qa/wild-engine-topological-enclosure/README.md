@@ -314,7 +314,12 @@ defensive saving.
 
 A cut-only rerun on the same serialized-state hash records the exact contour,
 four exposed terminal coordinates and the placed-module positions in
-`sabana-cut-terminals-d3.json`. One contour is only the 1 m segment at
+`sabana-cut-terminals-d3.json`. The quote now carries per-stroke module slots,
+so a junction inspector derives its terminal coordinates from the **placed
+modules** and refuses missing pieces instead of trusting the ideal grid line.
+This does not establish obstacle continuity or a worker entrance. On this
+checkpoint the four placed endpoints happen to equal the ideal endpoints.
+One contour is only the 1 m segment at
 `(72.5, -10.5)`–`(72.5, -9.5)`; the other runs from `(75.5, 5.5)` to
 `(90.5, 10.5)`. Both are open arcs. Counting the 11 quoted modules is therefore
 not a closure test: the unbuilt intervals must be accounted for by continuous,

@@ -4,7 +4,8 @@ import {readFileSync} from 'node:fs';
 import {deserialize,serialize} from '../src/persistence/snapshots.js';
 import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
 import {cropClearanceHull,cutEdgesToStrokes,enclosureJunctions,inspectNaturalJunctions,
-  inspectSelfClosedQuote,junctionBlocksSmallestAnimal,
+  inspectPlacedNaturalJunctions,inspectSelfClosedQuote,junctionBlocksSmallestAnimal,
+  placedEnclosureJunctions,
   SMALLEST_ANIMAL_RADIUS,stitchTwoCutStrokes} from '../src/world/hierarchical-wasm/spatial-topological-enclosure-prototype.js';
 import {villageLayout} from '../src/world/villages.js';
 import {containsPoint} from '../src/world/footprints.js';
@@ -102,6 +103,7 @@ test('two wall strokes quote and purchase atomically with one automatic gate',()
   assert.equal(duplicate.cost,quote.cost);
   assert.equal(quote.blockedPieces.length+quote.blockedCrops.length,0);
   assert.equal(quote.gates,1);
+  assert.equal(placedEnclosureJunctions(quote).junctions.length,4);
   assert.equal(inspectSelfClosedQuote(quote,state.structures,[{x:4,z:4}]).status,
     'closed-wall-loop');
   assert.equal(Game.buildWallChain(state,'two-strokes','zarzas',strokes,nav,
@@ -109,6 +111,30 @@ test('two wall strokes quote and purchase atomically with one automatic gate',()
   assert.equal(state.structures.filter(item=>item.autoGate).length,1);
   assert.equal(state.ledger.entries['two-strokes'].n,String(-quote.cost));
   assert.equal(serialize(deserialize(serialize(state))),serialize(state));
+});
+
+test('natural-join checks use placed module ends and refuse missing pieces',()=>{
+  const state=Game.newGame({seed:712});
+  const nav=new Navigation(712,'sabana',{});
+  nav.field={blocked:()=>false,slope:()=>0,surface:()=>0};
+  nav.propsAt=()=>[];
+  Game.placeStructure(state,'center',{x:-10,z:-10},nav);
+  const strokes=[[[0,0],[4,0]],[[4,8],[0,8]]];
+  const quote=Game.quoteWallChain(state,'zarzas',strokes,nav,
+    {smooth:false,snap:false});
+  const placed=placedEnclosureJunctions(quote);
+  assert.equal(placed.status,'ready');
+  assert.equal(placed.junctions.length,4);
+  assert.deepEqual(placed.junctions.map(item=>item.point),
+    [[0,0],[4,0],[4,8],[0,8]]);
+  let calls=0;
+  const result=inspectPlacedNaturalJunctions(quote,()=>{calls++;return .3;},true);
+  assert.equal(result.status,'joined');
+  assert.equal(calls,4);
+  assert.equal(placedEnclosureJunctions({...quote,
+    previewPieces:quote.previewPieces.slice(1)}).reason,'missing-end-module');
+  assert.equal(inspectPlacedNaturalJunctions({...quote,
+    blockedPieces:[quote.pieces[0]]},()=>0,true).reason,'omitted-module');
 });
 
 test('separate arcs beside a building keep one gate and worker access',()=>{

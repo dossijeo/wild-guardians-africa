@@ -4,11 +4,11 @@
   "day": 3,
   "source": "a21f2b76509fa1057f031db5311cac7e5962b0f96b399060df860aa48ff41e1d",
   "wasmSha256": "25c80656d8d8682c2833aec5687810d095d395202007a769701d76227cd38998",
-  "elapsedSeconds": 8.1612134,
+  "elapsedSeconds": 8.2491622,
   "campaignTiming": {
     "ticks": 1041,
-    "decisionMs": 4156.472999999996,
-    "gameTickMs": 2785.6537000000008
+    "decisionMs": 4210.251400000001,
+    "gameTickMs": 2786.803700000002
   },
   "sample": {
     "stateHash": "7b7033894dee269d4bf04cb074f1372ef2f84ef280446150cd5f2e2331cb6966",
@@ -26,7 +26,7 @@
     "rows": [
       {
         "name": "cut",
-        "ms": 150.32070000000022,
+        "ms": 195.88630000000012,
         "status": "proposed",
         "box": [
           69,
@@ -34,9 +34,9 @@
           108,
           21
         ],
-        "topologicalMs": 5.229800000000978,
-        "conversionMs": 1.3149000000012165,
-        "validationMs": 140.48439999999937,
+        "topologicalMs": 5.027599999999438,
+        "conversionMs": 1.1107999999985623,
+        "validationMs": 186.0707999999995,
         "cutEdges": 21,
         "flow": 21,
         "cells": 1206,
@@ -261,6 +261,47 @@
           "structural": {
             "status": "open",
             "reason": "no-wall-face"
+          },
+          "placedJunctions": {
+            "status": "ready",
+            "junctions": [
+              {
+                "strokeIndex": 0,
+                "end": "start",
+                "pieceId": "structure-1502",
+                "point": [
+                  72.5,
+                  -10.5
+                ]
+              },
+              {
+                "strokeIndex": 0,
+                "end": "finish",
+                "pieceId": "structure-1502",
+                "point": [
+                  72.5,
+                  -9.5
+                ]
+              },
+              {
+                "strokeIndex": 1,
+                "end": "start",
+                "pieceId": "structure-1503",
+                "point": [
+                  75.5,
+                  5.5
+                ]
+              },
+              {
+                "strokeIndex": 1,
+                "end": "finish",
+                "pieceId": "structure-1512",
+                "point": [
+                  90.5,
+                  10.5
+                ]
+              }
+            ]
           },
           "blockedPieces": 0,
           "blockedCrops": 0

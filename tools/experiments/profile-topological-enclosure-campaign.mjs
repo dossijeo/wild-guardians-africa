@@ -7,7 +7,8 @@ import {simulateNativeCampaign} from '../native-campaign-runner.mjs';
 import {createSpatialCampaignOpening} from './spatial-campaign-opening.mjs';
 import {createSpatialIntentBridge} from '../../src/world/hierarchical-wasm/spatial-intent-bridge.js';
 import {createCropEnclosurePlanner} from '../../src/world/hierarchical-wasm/spatial-crop-enclosure-plan.js';
-import {approximateCutModules,cropClearanceHull,inspectSelfClosedQuote} from '../../src/world/hierarchical-wasm/spatial-topological-enclosure-prototype.js';
+import {approximateCutModules,cropClearanceHull,inspectSelfClosedQuote,
+  placedEnclosureJunctions} from '../../src/world/hierarchical-wasm/spatial-topological-enclosure-prototype.js';
 import {wallSpec} from '../../src/simulation/rules.js';
 import * as Game from '../../src/simulation/game.js';
 
@@ -138,6 +139,7 @@ function inspect(state,nav){
           ({x,z,yaw,baseScaleX})):undefined,
         structural:inspectSelfClosedQuote(quote,state.structures,
           cropPoints.map(([x,z])=>({x,z}))),
+        placedJunctions:cutOnly?placedEnclosureJunctions(quote):undefined,
         blockedPieces:quote.blockedPieces.length,
         blockedCrops:quote.blockedCrops.length};
     }
