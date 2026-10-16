@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {topologyFixture} from '../tools/probe-raid-entry-topology.mjs';import {fixture} from '../tools/probe-raid-reservation-saturation.mjs';import {createPlant} from '../src/simulation/crops.js';import {resolveAgriculturalImpact,agriculturalQueryStats,invalidateAgriculturalIndex,agriculturalRayClear,validDamageProfile} from '../src/simulation/raid-agricultural-impact.js';import {serialize,deserialize} from '../src/persistence/snapshots.js';import {spawnRaid,updateRaid} from '../src/simulation/raids.js';
+import {topologyFixture} from '../tools/probe-raid-entry-topology.mjs';import {fixture} from '../tools/probe-raid-reservation-saturation.mjs';import {createPlant} from '../src/simulation/crops.js';import {resolveAgriculturalImpact,agriculturalQueryStats,invalidateAgriculturalIndex,agriculturalRayClear,validDamageProfile} from '../src/simulation/raid-agricultural-impact.js';import {serialize,deserialize} from '../src/persistence/snapshots.js';import {reachableApproach,spawnRaid,updateRaid} from '../src/simulation/raids.js';
 const profile={cropDamage:1,structureDamage:25,attackRadius:3,areaCap:7,peripheralWeight:.5};
 function scene(points=[[40,0],[40,1],[40,-1],[41,1],[43,0]]){const {s,nav}=fixture('mono');s.plants=points.map(([x,z],i)=>createPlant('p'+i,'mijo',x,z,'center'));const a={id:'animal',species:'warthog',x:40,z:-1.7,radius:1.1,heading:0,spawn:{x:40,z:-1.7},exit:{x:40,z:-4.7},status:'attacking',hitsRemaining:4,attackId:'attack-1',damageProfile:{...profile}};s.raid={animals:[a],reservations:{},id:'qa'};nav.setState(s);assert(nav.walkable(a.x,a.z,a.radius,null,false));return {s,nav,a,target:s.plants[0]};}
 test('central full damage, frontal90-degree periphery half damage and maximum radius are physical',()=>{const {s,nav,a,target}=scene(),fact=resolveAgriculturalImpact(s,a,target,nav);assert.deepEqual(fact.hits.map(h=>[h.targetId,h.damage,h.central]),[['p0',1,true],['p1',.5,false],['p3',.5,false]]);assert.equal(s.plants[2].attackHits,undefined);assert.equal(s.plants[4].attackHits,undefined);});
@@ -8,6 +8,54 @@ test('a radius-zero or damage-zero profile never manufactures peripheral hits or
 test('area cap prioritizes the central plant then nearest legal physical candidates',()=>{const {s,nav,a,target}=scene([[40,0],[40,.8],[40,1.6],[40,2.4]]);a.damageProfile.areaCap=2;assert.deepEqual(resolveAgriculturalImpact(s,a,target,nav).hits.map(h=>h.targetId),['p0','p1']);});
 for(const gate of [false,true])test(`native wall footprint occludes peripheral impacts, including animal-blocking gate=${gate}`,()=>{const {s,nav,a,target}=scene([[40,0],[40,2]]);s.structures.push({id:'wall',kind:'wall',x:40,z:1,yaw:0,material:'adobe',gate,hp:100,maxHp:100,status:'intact'});nav.setState(s);assert.equal(agriculturalRayClear(s,nav,target,s.plants[1]),false);assert.deepEqual(resolveAgriculturalImpact(s,a,target,nav).hits.map(h=>h.targetId),['p0']);});
 test('a wall between actor and impact prevents a central hit rather than producing splash behind it',()=>{const {s,nav,a,target}=scene();s.structures.push({id:'wall',kind:'wall',x:40,z:-.35,yaw:0,material:'zarzas',hp:100,maxHp:100,status:'intact'});nav.setState(s);assert.equal(resolveAgriculturalImpact(s,a,target,nav).blocked,'contact');assert(s.plants.every(p=>p.alive&&p.attackHits===undefined));});
+test('an introductory crop strike cannot pass through an intact wall',()=>{
+ const {s,nav,a,target}=scene([[40,0]]);
+ delete a.damageProfile;
+ Object.assign(a,{targetId:target.id,reservation:`crop:${target.id}`,
+  attackDuration:1,attackRemaining:.1,animation:'Right_Hand_Sword_Slash',
+  hitApplied:false});
+ s.raid.reservations[a.reservation]=a.id;
+ const wall={id:'intro-wall',kind:'wall',x:40,z:-.35,yaw:0,
+  material:'zarzas',hp:100,maxHp:100,status:'intact'};
+ s.structures.push(wall);
+ nav.setState(s);
+ assert.equal(agriculturalRayClear(s,nav,a,target),false);
+ const reloaded=deserialize(serialize(s));
+ nav.setState(reloaded);updateRaid(reloaded,.1,nav);
+ assert.equal(reloaded.plants[0].attackHits,undefined);
+ nav.setState(s);
+ updateRaid(s,.1,nav);
+ assert.deepEqual({cropHits:reloaded.plants[0].attackHits,
+  budget:reloaded.raid.animals[0].hitsRemaining,
+  misses:reloaded.events.filter(e=>e.type==='AnimalLogicalMiss').length,
+  damage:reloaded.events.filter(e=>e.type==='CropHit').length},
+ {cropHits:target.attackHits,budget:a.hitsRemaining,
+  misses:s.events.filter(e=>e.type==='AnimalLogicalMiss').length,
+  damage:s.events.filter(e=>e.type==='CropHit').length},
+ 'Saving during a committed blocked attack preserves its physical outcome');
+ assert.equal(target.attackHits,undefined);
+ assert.equal(a.hitsRemaining,3);
+ assert.equal(s.events.filter(e=>e.type==='CropHit').length,0);
+ assert.equal(s.events.filter(e=>e.type==='AnimalLogicalMiss').length,1);
+ wall.status='ruined';nav.setState(s);
+ Object.assign(a,{status:'attacking',attackId:'attack-after-ruin',
+  attackRemaining:.1,hitApplied:false});
+ updateRaid(s,.1,nav);
+ assert.equal(target.attackHits,1);
+ assert.equal(s.events.filter(e=>e.type==='CropHit').length,1);
+ assert.equal(s.events.filter(e=>e.type==='AnimalLogicalHit').length,1);
+});
+test('crop approach selection rejects a reachable position whose attack ray crosses a wall',()=>{
+ const {s,nav,a,target}=scene([[40,0]]);
+ s.structures.push({id:'approach-wall',kind:'wall',x:40,z:-.35,yaw:0,
+  material:'zarzas',hp:100,maxHp:100,status:'intact'});
+ nav.setState(s);
+ const outsideOnly={state:s,obstacles:nav.obstacles,version:nav.version,
+  walkable:(x,z)=>Math.abs(x-40)<.01&&z<0,
+  approachPath:(_actor,point)=>[point]};
+ assert.equal(agriculturalRayClear(s,outsideOnly,a,target),false);
+ assert.equal(reachableApproach(a,target,outsideOnly),null);
+});
 test('a native centre footprint blocks rays and is re-evaluated after removal',()=>{const {s,nav}=scene();const c=s.structures[0];assert.equal(agriculturalRayClear(s,nav,{x:c.x-20,z:c.z},{x:c.x+20,z:c.z}),false);c.status='ruined';assert(agriculturalRayClear(s,nav,{x:c.x-20,z:c.z},{x:c.x+20,z:c.z}));});
 test('Shield protects each peripheral plant and blocks a crossing ray outside its endpoint',()=>{const {s,nav,a,target}=scene([[40,0],[40,2],[41,2]]);s.spells=[{id:'shield',kind:'shield',x:40,z:1.5,radius:.4,remaining:10}];nav.setState(s);const fact=resolveAgriculturalImpact(s,a,target,nav);assert.deepEqual(fact.hits.map(h=>h.targetId),['p0','p2']);assert.equal(s.plants[1].attackHits,undefined);});
 test('a shielded central target consumes no crop HP',()=>{const {s,nav,a,target}=scene();s.spells=[{id:'shield',kind:'shield',x:40,z:0,radius:.4,remaining:10}];nav.setState(s);assert.equal(resolveAgriculturalImpact(s,a,target,nav).blocked,'shield');assert.equal(target.attackHits,undefined);});
