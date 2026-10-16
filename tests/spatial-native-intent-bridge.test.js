@@ -33,6 +33,10 @@ test('a saved exhausted buffalo uses a physically clear continuous exit instead 
   const planner=createEventDrivenTaskPlanner(session);
   planner.resetFromState(game);
   const nav=createSpatialNavigationMovement(session,game);
+  let routeRefreshes=0;
+  nav.planningObserver=event=>{
+   if(event.actorId==='animal-12273'&&event.kind==='routeRefresh')routeRefreshes++;
+  };
   nav.intentTaskPlanner=planner;
   const stopTasks=planner.observeTasks(game),stopWorld=planner.observeWorld(game);
   try{
@@ -55,6 +59,8 @@ test('a saved exhausted buffalo uses a physically clear continuous exit instead 
    assert.equal(game.raid,null,'The recorded real incursion finishes');
    assert.equal(animal.status,'gone');
    assert.deepEqual({x:animal.x,z:animal.z},animal.exit);
+   assert.equal(routeRefreshes,1,
+    'The saved retreat keeps its validated route across ordinary movement ticks');
    assert.equal(game.events.filter(event=>event.type==='AnimalLogicalHit').length,
     damage,'Retreat does not produce extra damage');
   }finally{stopWorld();stopTasks();}

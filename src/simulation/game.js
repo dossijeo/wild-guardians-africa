@@ -42,6 +42,10 @@ import {advanceGateLeaves,waitForGate} from './gates.js';
 // attempt, then waits for topology/residency or a bounded dynamic retry.
 const routePlanWaits=new WeakMap();
 const ROUTE_RETRY_SECONDS=8;
+const routeEpoch=(nav,actor,destination,worker)=>{
+  const sectors=nav.spatialSectorRevision?.(actor.radius??.28,worker)??0;
+  return `${destination.id}:${destination.x}:${destination.z}:${nav.version}:${sectors}:${worker?'worker':actor.species??'animal'}`;
+};
 const taskPlanWaits=new WeakMap();
 const preparedWallQuotes=new WeakMap();
 const eventObservers=new WeakMap();
@@ -582,8 +586,7 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
   if(externallyPlanned&&(!w.path||w.destinationId!==destination.id||
     w.pathVersion!==nav.version))return false;
   if(!w.path||w.destinationId!==destination.id||w.pathVersion!==nav.version) {
-    const sectors=nav.spatialSectorRevision?.(w.radius??.28,worker)??0;
-    const epoch=`${destination.id}:${destination.x}:${destination.z}:${nav.version}:${sectors}:${worker?'worker':w.species??'animal'}`;
+    const epoch=routeEpoch(nav,w,destination,worker);
     const wait=routePlanWaits.get(w);
     const pendingSearch=!!w.exitRouteRecovery||!!w.exitConnectorSearch&&!w.exitConnectorSearch.exhausted||
       worker&&(workerReturnRoutePending(nav,w)||workerFractionalConnectorPending(nav,w));
@@ -591,18 +594,23 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
       nav.planningObserver?.({kind:'routeDeferred',actorId:w.id,elapsed:s.elapsed,destinationId:destination.id});
       return abandonExhaustedExit();
     }
-    nav.planningObserver?.({kind:'routeRefresh',actorId:w.id,elapsed:s.elapsed,destinationId:destination.id});
     if(w.exitRouteRecovery){
+      nav.planningObserver?.({kind:'routeRecoveryStep',actorId:w.id,
+        elapsed:s.elapsed,destinationId:destination.id});
       w.path=animalExitConnector(w,destination,nav);
       if(!w.path)return abandonExhaustedExit();
       delete w.exitRouteRecovery;
-    }else if(!worker&&expandRoute&&w.status==='retreating'&&
-      nav.walkable?.(destination.x,destination.z,w.radius??.28,ignore,false)&&
-      nav.segmentClear?.(w,destination,w.radius??.28,ignore,false)){
-      // The confirmed straight exit is already a complete route. A grid
-      // waypoint can be less usable than this continuous swept segment.
-      w.path=[{x:destination.x,z:destination.z}];
-    }else w.path=worker&&nav.workerPath?nav.workerPath(w,destination,w.radius??.28,ignore):nav.path(w,destination,w.radius??.28,ignore,worker);
+    }else{
+      nav.planningObserver?.({kind:worker&&pendingSearch?'routeRecoveryStep':'routeRefresh',
+        actorId:w.id,elapsed:s.elapsed,destinationId:destination.id});
+      if(!worker&&expandRoute&&w.status==='retreating'&&
+        nav.walkable?.(destination.x,destination.z,w.radius??.28,ignore,false)&&
+        nav.segmentClear?.(w,destination,w.radius??.28,ignore,false)){
+        // The confirmed straight exit is already a complete route. A grid
+        // waypoint can be less usable than this continuous swept segment.
+        w.path=[{x:destination.x,z:destination.z}];
+      }else w.path=worker&&nav.workerPath?nav.workerPath(w,destination,w.radius??.28,ignore):nav.path(w,destination,w.radius??.28,ignore,worker);
+    }
     w.destinationId=destination.id;
     // The local search corridor is not a physical enclosure. Exhausted animals
     // can need a wider detour to reach the same exit they entered through.
@@ -633,7 +641,6 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
     }
     w.pathVersion=nav.version;
     if(!w.path){routePlanWaits.set(w,{epoch,retryAt:s.elapsed+ROUTE_RETRY_SECONDS});return abandonExhaustedExit();}
-    routePlanWaits.delete(w);
   }
   if(worker&&waitForGate(w,s.structures))return false;
   if(!worker&&w.wallEscape){
@@ -706,7 +713,23 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
     w.mobileProgressDistance=remaining;
     w.mobileProgressAt=s.elapsed;
   }
-  if(routeClearance?.blocked()){w.path=null;return false;}
+  if(routeClearance?.blocked()){
+    w.path=null;
+    const epoch=routeEpoch(nav,w,destination,worker);
+    const previousWait=routePlanWaits.get(w);
+    // Retry once at the next movement boundary. If the same physical route
+    // fails again without a topology/residency change, do not replan per tick.
+    if(!worker&&expandRoute&&previousWait?.epoch===epoch){
+      w.exitRouteRecovery={destinationId:destination.id,version:nav.version,
+        startedAt:s.elapsed};
+      emit(s,'AnimalExitRouteRecovery',{actorId:w.id,x:w.x,z:w.z,
+        exitId:destination.id,reason:'repeated-static-connector'});
+    }
+    routePlanWaits.set(w,{epoch,retryAt:previousWait?.epoch===epoch?
+      s.elapsed+ROUTE_RETRY_SECONDS:s.elapsed});
+    return false;
+  }
+  routePlanWaits.delete(w);
   return w.path.length===0;
 }
 // A ruined wall regains collision when repaired. Check that this topological
