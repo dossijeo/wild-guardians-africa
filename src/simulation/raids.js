@@ -1,5 +1,5 @@
 import {canyonRaidFormation} from './canyon-raid-formation.js';
-import {resolveAgriculturalImpact,validDamageProfile} from './raid-agricultural-impact.js';
+import {agriculturalRayClear,resolveAgriculturalImpact,validDamageProfile} from './raid-agricultural-impact.js';
 import {liveWaitQueue,occupiedEligibleGroup,enqueueWait,leaveWait,observeWaitProgress,waitEpoch,RAID_WAIT_SECONDS} from './raid-contention.js';
 import {raidEntryChunks,includeRaidBounds} from '../world/raid-entry-residency.js';
 import {raidEntryKey} from '../world/raid-entry-data.js';
@@ -357,6 +357,7 @@ export function reachableApproach(a,target,nav,shield=null,onUnknown=null,region
     if(nav.state?.raid&&!reservedApproachClear(nav.state,a,point))continue;
     if(nav.state&&!actorSegmentClear(point,point,a,actorBlockers(nav.state,a,false)))continue;
     if(!nav.walkable(point.x,point.z,a.radius,null,false))continue;
+    if(target.alive&&!shield&&nav.state&&!agriculturalRayClear(nav.state,nav,point,target))continue;
     // The native region graph can prove that this service point is on the
     // opposite side of a barrier. Only ask for a detailed route when the
     // regions might connect; unknown connectivity still gets a full search.
@@ -581,11 +582,13 @@ export function updateRaid(s,dt,nav) {
         if(target&&!expiredBorder){
           let agriculturalImpact=null;
           if('alive' in target&&a.damageProfile)agriculturalImpact=resolveAgriculturalImpact(s,a,target,nav);
+          const legacyCropOccluded='alive' in target&&!a.damageProfile&&!shield&&
+            !agriculturalRayClear(s,nav,a,target);
           if(!shield){
             if('alive' in target){
               if(agriculturalImpact){
                 for(const hit of agriculturalImpact.hits){emit(s,'CropHit',{...hit,hits:hit.after});if(hit.destroyed){emit(s,'CropDestroyed',{targetId:hit.targetId,attackId:a.attackId,animalId:a.id});}}
-              }else {
+              }else if(!legacyCropOccluded){
                 const hit=applyCropImpact(s,target,1);
                 if(hit){emit(s,'CropHit',{targetId:target.id,...hit,hits:hit.after});if(hit.destroyed)emit(s,'CropDestroyed',{targetId:target.id});}
               }
@@ -600,7 +603,7 @@ export function updateRaid(s,dt,nav) {
           }
           // A presentation snapshot is a fact about this completed hit, never
           // another damage command. It survives target movement, raid end/save.
-          emit(s,agriculturalImpact?.blocked&&!shield?'AnimalLogicalMiss':'AnimalLogicalHit',{attackId:a.attackId,targetId:target.id,species:a.species,...(agriculturalImpact?{agriculturalImpact}:{}),presentation:{elapsed:s.elapsed,...(agriculturalImpact?{agriculturalImpact}:{}),
+          emit(s,(agriculturalImpact?.blocked||legacyCropOccluded)&&!shield?'AnimalLogicalMiss':'AnimalLogicalHit',{attackId:a.attackId,targetId:target.id,species:a.species,...(legacyCropOccluded?{reason:'occluded'}:{}),...(agriculturalImpact?{agriculturalImpact}:{}),presentation:{elapsed:s.elapsed,...(agriculturalImpact?{agriculturalImpact}:{}),
             animal:{x:a.x,z:a.z,heading:a.heading},target:{x:target.x,z:target.z,kind:target.kind,...(target.kind==='center'?{culture:centerCulture(target,s),yaw:target.yaw}:{}),...(target.kind==='wall'?{material:target.material,gate:target.gate,yaw:target.yaw,baseScaleX:target.baseScaleX}:{})},
             shield:shield?{id:shield.id,x:shield.x,z:shield.z,radius:shield.radius}:null}});
         }else emit(s,'AnimalLogicalMiss',{attackId:a.attackId,targetId:a.targetId,species:a.species,...(expiredBorder?{reason:'shield-expired'}:{})});
