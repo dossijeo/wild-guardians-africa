@@ -255,6 +255,19 @@ preserved as `canyon7-native-retreat.json.gz` and
 check in difficult terrain, not a proof that unknown-connectivity cases or
 longer Canyon campaigns are resolved.
 
+A continuous 14-night request from the same Gran Cañón/123 configuration
+matched the seven-night prefix and then reached an actual economic defeat at
+day-14 dawn, after 13 completed nights (217.97 s). The terminal state had 32
+coins, no living crops and one operational center. With no surviving crop or
+undelivered crate, `dawnMinimum` is 35 coins; hypothetical resale of walls is
+not part of the defeat rule. The observer verified all 13 raids with zero
+issues or coverage loss. The raids destroyed 123 crops in total; the recorded
+retirement reasons were exhausted hit budget and no reachable unleased
+target. The complete report is `canyon14-native-retreat.json.gz` (source
+`82ab62c7`, same WASM SHA-256). This validates the native-retreat integration
+through a genuine terminal transition in this scenario, not balance or
+general long-campaign acceptance.
+
 ## Next integration gates
 
 1. Publish confirmed task/worker/action events directly from the simulation without scanning every entity per tick. Apply native proposals atomically with JS task reservations and preserve all worker policy tie-breaks.
