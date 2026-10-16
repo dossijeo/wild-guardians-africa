@@ -118,6 +118,18 @@ without cross-algorithm certification could miss a valid access. The next
 optimization should remove or share native route work while preserving that
 proof, not weaken the worker-access invariant.
 
+An attempted local shortcut checked every segment of each existing native
+route against the provisional worker collision map, then planned globally
+only if a segment failed. It avoided **zero** of the 20 route requests in
+the Sabana closure fixture; three iterations took 480.2/499.3/528.5 ms,
+versus 486.8/483.5/483.2 ms before the shortcut. The directed paid-repair
+tests still passed, but this did not improve the costly case. The prototype
+was removed before commit. Native route waypoints cannot presently be
+treated as a reusable straight-segment clearance certificate. A future
+optimization needs an explicit native route-validity primitive or shared
+path calculation, validated across portals and terrain, rather than inferring
+validity from the returned waypoint array.
+
 ## Gran Cañón sustained replay
 
 A 14-night request on Gran Cañón/123 used source `b5284852`, the pinned WASM
