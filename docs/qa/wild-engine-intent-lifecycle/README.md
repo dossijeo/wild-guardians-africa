@@ -500,3 +500,15 @@ JavaScript fallback cannot yet be removed. The complete per-night hashes,
 finance, physical raid evidence and selector counters are retained in
 `manglares14-native-wall-recheck.json.gz`. There is no matched 14-night
 control on this exact source, so no campaign speed comparison is claimed.
+
+The frozen day-11 occupied-wall regression and the rejected, slower native
+alternative-site prototype are documented in `native-wall-occupied-fallback.md`.
+The existing fallback remains a correctness requirement until a native wall
+site planner passes both physical and sustained-campaign checks. A separate
+reservation regression verifies that destroying a crop after an attack
+animation begins releases its lease, preserves another animal's lease and
+records exactly one miss at the committed damage frame. The focused suite
+passes 14/14 and `test:playable` passes 192/192 locally. Reservation
+reconciliation still scans active animals each raid tick; the native
+event-driven planner is therefore not yet a complete replacement for that
+legacy bookkeeping path.

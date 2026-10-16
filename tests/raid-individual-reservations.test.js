@@ -52,6 +52,29 @@ test('a conflicting lease cannot erase a strike already committed to its damage 
  assert.equal(s.events.filter(event=>event.attackId==='attack-committed-qa'&&
   ['AnimalLogicalHit','AnimalLogicalMiss'].includes(event.type)).length,1);
 });
+test('a destroyed reserved crop releases its lease without redirecting a committed strike',()=>{
+ const {s,nav,raid}=start('mono',2),attacker=raid.animals[0],other=raid.animals[1];
+ const crop=s.plants.find(p=>p.id===attacker.targetId),otherTarget=other.targetId;
+ assert(crop&&crop.alive);
+ const budget=attacker.hitsRemaining,attackId='attack-destroyed-crop-qa';
+ attacker.status='attacking';attacker.animation='Right_Hand_Sword_Slash';
+ attacker.attackDuration=.5;attacker.attackRemaining=.5;
+ attacker.attackId=attackId;attacker.hitApplied=false;
+ crop.alive=false;
+ reconcileTargetReservations(s,(state,animal)=>{
+  animal.targetId=null;animal.reservation=null;animal.path=null;animal.approach=null;
+ });
+ assert.equal(attacker.targetId,crop.id,'the committed clip keeps its original target');
+ assert.equal(attacker.reservation,null,'the destroyed target no longer owns a lease');
+ assert.equal(other.targetId,otherTarget,'unrelated targets stay reserved');
+ tick(s,nav,.49);
+ assert.equal(attacker.hitsRemaining,budget);
+ tick(s,nav,.01);
+ assert.equal(attacker.hitsRemaining,budget-1);
+ assert.equal(s.events.filter(event=>event.attackId===attackId&&event.type==='AnimalLogicalMiss').length,1);
+ assert.equal(s.events.filter(event=>event.attackId===attackId&&event.type==='AnimalLogicalHit').length,0);
+ assert.equal(s.raid.reservations[other.reservation],other.id);
+});
 test('individual claims and native RNG replay exactly after a save/reload',()=>{
  const {s,nav}=start();for(let i=0;i<30;i++)tick(s,nav);
  const copy=deserialize(serialize(s)),fresh=new Navigation(copy.seed,copy.biome,{});
