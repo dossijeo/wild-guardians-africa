@@ -10,11 +10,13 @@ import {approximateCutModules,cropClearanceHull,cutEdgesToStrokes,enclosureJunct
   inspectPlacedNaturalJunctions,inspectSelfClosedQuote,
   inspectStaticCutBoundary,junctionBlocksSmallestAnimal,
   placedEnclosureJunctions,
-  SMALLEST_ANIMAL_RADIUS,stitchTwoCutStrokes} from '../src/world/hierarchical-wasm/spatial-topological-enclosure-prototype.js';
+  SMALLEST_ANIMAL_RADIUS,stitchTwoCutStrokes,
+  wallOccludesBoundaryFace} from '../src/world/hierarchical-wasm/spatial-topological-enclosure-prototype.js';
 import {villageLayout} from '../src/world/villages.js';
 import {containsPoint} from '../src/world/footprints.js';
 import {Navigation} from '../src/world/navigation.js';
 import {rational} from '../src/simulation/money.js';
+import {agriculturalRayClear} from '../src/simulation/raid-agricultural-impact.js';
 import * as Game from '../src/simulation/game.js';
 
 test('clearance hull yields a closed free-form candidate around every crop',()=>{
@@ -51,6 +53,25 @@ test('native cut edges form an arbitrary world contour without assuming a rectan
   assert.equal(junctionBlocksSmallestAnimal(SMALLEST_ANIMAL_RADIUS*2-.01),true);
   assert.equal(junctionBlocksSmallestAnimal(SMALLEST_ANIMAL_RADIUS*2),false);
   assert.equal(junctionBlocksSmallestAnimal(NaN),null);
+});
+
+test('adjacent wall footprints occlude a whole attack face but a gap does not',()=>{
+  const wall=(x,z=0,yaw=0)=>({id:`wall-${x}-${z}-${yaw}`,kind:'wall',material:'zarzas',
+    status:'intact',x,z,yaw,baseScaleX:1});
+  const a={x:-1,z:0},b={x:3,z:0};
+  assert.equal(wallOccludesBoundaryFace(a,b,[wall(0),wall(2.18)]),true);
+  const walls=[wall(0),wall(2.18)],state={structures:walls};
+  const nav={version:0,obstacles:walls};
+  for(let i=0;i<=16;i++){
+    const x=a.x+(b.x-a.x)*i/16;
+    assert.equal(agriculturalRayClear(state,nav,{x,z:-1},{x,z:1}),false);
+  }
+  assert.equal(wallOccludesBoundaryFace(a,b,[wall(0),wall(2.4)]),false);
+  assert.equal(wallOccludesBoundaryFace(a,b,[wall(0),
+    {...wall(2.18),status:'ruined'}]),false);
+  assert.equal(wallOccludesBoundaryFace({x:0,z:-.6},{x:0,z:.6},[
+    wall(0,0,Math.PI/2)]),true);
+  assert.equal(wallOccludesBoundaryFace(a,b,[{kind:'tree',x:1,z:0}]),false);
 });
 
 test('natural joins inspect only exposed wall ends and require a continuous obstacle',()=>{

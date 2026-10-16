@@ -1,0 +1,688 @@
+{
+  "biome": "manglares",
+  "seed": 712,
+  "day": 3,
+  "stateHash": "2101aebec0eb90376fba9d4e1145851b23b0588dab929f46b3acf2e948d5db30",
+  "wasmSha256": "112ebcc80bb789f3d0496f793e36309a790540060ec977de40705980c62ac160",
+  "boundarySegments": 122,
+  "certifiedWallOpaqueFaces": 23,
+  "facesNotProvenOpaque": 99,
+  "nativeNaturalBoundary": {
+    "status": "blocked-by-native-natural",
+    "solid": 108,
+    "wetland": 14,
+    "unknown": 0,
+    "wetlandExamples": [
+      [
+        93,
+        -11,
+        92,
+        -11
+      ],
+      [
+        93,
+        -10,
+        92,
+        -10
+      ],
+      [
+        93,
+        -9,
+        92,
+        -9
+      ],
+      [
+        93,
+        -8,
+        92,
+        -8
+      ],
+      [
+        97,
+        -8,
+        98,
+        -8
+      ],
+      [
+        98,
+        -9,
+        98,
+        -8
+      ],
+      [
+        99,
+        -9,
+        99,
+        -8
+      ],
+      [
+        100,
+        -9,
+        100,
+        -8
+      ]
+    ],
+    "uncovered": []
+  },
+  "bySpecies": {
+    "warthog": {
+      "contactRadius": 1.75,
+      "nearbyFaces": 23,
+      "nearbyWetlandFaces": 0,
+      "nearbySolidFaces": 23,
+      "examples": [
+        {
+          "edge": 54,
+          "cells": [
+            79,
+            -2,
+            79,
+            -3
+          ],
+          "naturalKind": 1,
+          "cropId": "plant-1380",
+          "distance": 1.5811388300841898
+        },
+        {
+          "edge": 56,
+          "cells": [
+            79,
+            -2,
+            80,
+            -2
+          ],
+          "naturalKind": 1,
+          "cropId": "plant-1380",
+          "distance": 1.5811388300841898
+        },
+        {
+          "edge": 57,
+          "cells": [
+            80,
+            -1,
+            80,
+            -2
+          ],
+          "naturalKind": 1,
+          "cropId": "plant-1380",
+          "distance": 1.5811388300841898
+        },
+        {
+          "edge": 58,
+          "cells": [
+            82,
+            -1,
+            82,
+            -2
+          ],
+          "naturalKind": 1,
+          "cropId": "plant-1237",
+          "distance": 1.5
+        },
+        {
+          "edge": 59,
+          "cells": [
+            85,
+            -1,
+            85,
+            -2
+          ],
+          "naturalKind": 1,
+          "cropId": "plant-1150",
+          "distance": 1.5
+        },
+        {
+          "edge": 61,
+          "cells": [
+            82,
+            -1,
+            81,
+            -1
+          ],
+          "naturalKind": 1,
+          "cropId": "plant-1380",
+          "distance": 1.5811388300841898
+        },
+        {
+          "edge": 62,
+          "cells": [
+            80,
+            -1,
+            81,
+            -1
+          ],
+          "naturalKind": 1,
+          "cropId": "plant-1380",
+          "distance": 1.5811388300841898
+        },
+        {
+          "edge": 64,
+          "cells": [
+            82,
+            -1,
+            83,
+            -1
+          ],
+          "naturalKind": 1,
+          "cropId": "plant-1237",
+          "distance": 1.5
+        }
+      ]
+    },
+    "hyena": {
+      "contactRadius": 1.55,
+      "nearbyFaces": 12,
+      "nearbyWetlandFaces": 0,
+      "nearbySolidFaces": 12,
+      "examples": [
+        {
+          "edge": 58,
+          "cells": [
+            82,
+            -1,
+            82,
+            -2
+          ],
+          "naturalKind": 1,
+          "cropId": "plant-1237",
+          "distance": 1.5
+        },
+        {
+          "edge": 59,
+          "cells": [
+            85,
+            -1,
+            85,
+            -2
+          ],
+          "naturalKind": 1,
+          "cropId": "plant-1150",
+          "distance": 1.5
+        },
+        {
+          "edge": 64,
+          "cells": [
+            82,
+            -1,
+            83,
+            -1
+          ],
+          "naturalKind": 1,
+          "cropId": "plant-1237",
+          "distance": 1.5
+        },
+        {
+          "edge": 68,
+          "cells": [
+            85,
+            -1,
+            86,
+            -1
+          ],
+          "naturalKind": 1,
+          "cropId": "plant-1150",
+          "distance": 1.5
+        },
+        {
+          "edge": 73,
+          "cells": [
+            82,
+            1,
+            83,
+            1
+          ],
+          "naturalKind": 1,
+          "cropId": "plant-1244",
+          "distance": 1.5
+        },
+        {
+          "edge": 77,
+          "cells": [
+            85,
+            1,
+            86,
+            1
+          ],
+          "naturalKind": 1,
+          "cropId": "plant-1153",
+          "distance": 1.5
+        },
+        {
+          "edge": 80,
+          "cells": [
+            81,
+            2,
+            82,
+            2
+          ],
+          "naturalKind": 1,
+          "cropId": "plant-1244",
+          "distance": 1.118033988749895
+        },
+        {
+          "edge": 81,
+          "cells": [
+            82,
+            1,
+            82,
+            2
+          ],
+          "naturalKind": 1,
+          "cropId": "plant-1244",
+          "distance": 1.5
+        }
+      ]
+    },
+    "buffalo": {
+      "contactRadius": 1.62,
+      "nearbyFaces": 23,
+      "nearbyWetlandFaces": 0,
+      "nearbySolidFaces": 23,
+      "examples": [
+        {
+          "edge": 54,
+          "cells": [
+            79,
+            -2,
+            79,
+            -3
+          ],
+          "naturalKind": 1,
+          "cropId": "plant-1380",
+          "distance": 1.5811388300841898
+        },
+        {
+          "edge": 56,
+          "cells": [
+            79,
+            -2,
+            80,
+            -2
+          ],
+          "naturalKind": 1,
+          "cropId": "plant-1380",
+          "distance": 1.5811388300841898
+        },
+        {
+          "edge": 57,
+          "cells": [
+            80,
+            -1,
+            80,
+            -2
+          ],
+          "naturalKind": 1,
+          "cropId": "plant-1380",
+          "distance": 1.5811388300841898
+        },
+        {
+          "edge": 58,
+          "cells": [
+            82,
+            -1,
+            82,
+            -2
+          ],
+          "naturalKind": 1,
+          "cropId": "plant-1237",
+          "distance": 1.5
+        },
+        {
+          "edge": 59,
+          "cells": [
+            85,
+            -1,
+            85,
+            -2
+          ],
+          "naturalKind": 1,
+          "cropId": "plant-1150",
+          "distance": 1.5
+        },
+        {
+          "edge": 61,
+          "cells": [
+            82,
+            -1,
+            81,
+            -1
+          ],
+          "naturalKind": 1,
+          "cropId": "plant-1380",
+          "distance": 1.5811388300841898
+        },
+        {
+          "edge": 62,
+          "cells": [
+            80,
+            -1,
+            81,
+            -1
+          ],
+          "naturalKind": 1,
+          "cropId": "plant-1380",
+          "distance": 1.5811388300841898
+        },
+        {
+          "edge": 64,
+          "cells": [
+            82,
+            -1,
+            83,
+            -1
+          ],
+          "naturalKind": 1,
+          "cropId": "plant-1237",
+          "distance": 1.5
+        }
+      ]
+    },
+    "lion": {
+      "contactRadius": 1.5,
+      "nearbyFaces": 12,
+      "nearbyWetlandFaces": 0,
+      "nearbySolidFaces": 12,
+      "examples": [
+        {
+          "edge": 58,
+          "cells": [
+            82,
+            -1,
+            82,
+            -2
+          ],
+          "naturalKind": 1,
+          "cropId": "plant-1237",
+          "distance": 1.5
+        },
+        {
+          "edge": 59,
+          "cells": [
+            85,
+            -1,
+            85,
+            -2
+          ],
+          "naturalKind": 1,
+          "cropId": "plant-1150",
+          "distance": 1.5
+        },
+        {
+          "edge": 64,
+          "cells": [
+            82,
+            -1,
+            83,
+            -1
+          ],
+          "naturalKind": 1,
+          "cropId": "plant-1237",
+          "distance": 1.5
+        },
+        {
+          "edge": 68,
+          "cells": [
+            85,
+            -1,
+            86,
+            -1
+          ],
+          "naturalKind": 1,
+          "cropId": "plant-1150",
+          "distance": 1.5
+        },
+        {
+          "edge": 73,
+          "cells": [
+            82,
+            1,
+            83,
+            1
+          ],
+          "naturalKind": 1,
+          "cropId": "plant-1244",
+          "distance": 1.5
+        },
+        {
+          "edge": 77,
+          "cells": [
+            85,
+            1,
+            86,
+            1
+          ],
+          "naturalKind": 1,
+          "cropId": "plant-1153",
+          "distance": 1.5
+        },
+        {
+          "edge": 80,
+          "cells": [
+            81,
+            2,
+            82,
+            2
+          ],
+          "naturalKind": 1,
+          "cropId": "plant-1244",
+          "distance": 1.118033988749895
+        },
+        {
+          "edge": 81,
+          "cells": [
+            82,
+            1,
+            82,
+            2
+          ],
+          "naturalKind": 1,
+          "cropId": "plant-1244",
+          "distance": 1.5
+        }
+      ]
+    },
+    "rhino": {
+      "contactRadius": 2.2,
+      "nearbyFaces": 33,
+      "nearbyWetlandFaces": 2,
+      "nearbySolidFaces": 31,
+      "examples": [
+        {
+          "edge": 27,
+          "cells": [
+            93,
+            -8,
+            92,
+            -8
+          ],
+          "naturalKind": 2,
+          "cropId": "plant-1281",
+          "distance": 1.8027756377319948
+        },
+        {
+          "edge": 35,
+          "cells": [
+            93,
+            -8,
+            93,
+            -7
+          ],
+          "naturalKind": 2,
+          "cropId": "plant-1281",
+          "distance": 1.8027756377319948
+        },
+        {
+          "edge": 54,
+          "cells": [
+            79,
+            -2,
+            79,
+            -3
+          ],
+          "naturalKind": 1,
+          "cropId": "plant-1380",
+          "distance": 1.5811388300841898
+        },
+        {
+          "edge": 56,
+          "cells": [
+            79,
+            -2,
+            80,
+            -2
+          ],
+          "naturalKind": 1,
+          "cropId": "plant-1380",
+          "distance": 1.5811388300841898
+        },
+        {
+          "edge": 57,
+          "cells": [
+            80,
+            -1,
+            80,
+            -2
+          ],
+          "naturalKind": 1,
+          "cropId": "plant-1380",
+          "distance": 1.5811388300841898
+        },
+        {
+          "edge": 58,
+          "cells": [
+            82,
+            -1,
+            82,
+            -2
+          ],
+          "naturalKind": 1,
+          "cropId": "plant-1237",
+          "distance": 1.5
+        },
+        {
+          "edge": 59,
+          "cells": [
+            85,
+            -1,
+            85,
+            -2
+          ],
+          "naturalKind": 1,
+          "cropId": "plant-1150",
+          "distance": 1.5
+        },
+        {
+          "edge": 61,
+          "cells": [
+            82,
+            -1,
+            81,
+            -1
+          ],
+          "naturalKind": 1,
+          "cropId": "plant-1380",
+          "distance": 1.5811388300841898
+        }
+      ]
+    }
+  },
+  "nearestExamples": [
+    {
+      "edge": 80,
+      "cells": [
+        81,
+        2,
+        82,
+        2
+      ],
+      "naturalKind": 1,
+      "cropId": "plant-1244",
+      "distance": 1.118033988749895
+    },
+    {
+      "edge": 85,
+      "cells": [
+        81,
+        2,
+        81,
+        3
+      ],
+      "naturalKind": 1,
+      "cropId": "plant-1244",
+      "distance": 1.118033988749895
+    },
+    {
+      "edge": 90,
+      "cells": [
+        81,
+        6,
+        81,
+        5
+      ],
+      "naturalKind": 1,
+      "cropId": "plant-1368",
+      "distance": 1.4142135623730951
+    },
+    {
+      "edge": 92,
+      "cells": [
+        81,
+        6,
+        82,
+        6
+      ],
+      "naturalKind": 1,
+      "cropId": "plant-1368",
+      "distance": 1.4142135623730951
+    },
+    {
+      "edge": 58,
+      "cells": [
+        82,
+        -1,
+        82,
+        -2
+      ],
+      "naturalKind": 1,
+      "cropId": "plant-1237",
+      "distance": 1.5
+    },
+    {
+      "edge": 59,
+      "cells": [
+        85,
+        -1,
+        85,
+        -2
+      ],
+      "naturalKind": 1,
+      "cropId": "plant-1150",
+      "distance": 1.5
+    },
+    {
+      "edge": 64,
+      "cells": [
+        82,
+        -1,
+        83,
+        -1
+      ],
+      "naturalKind": 1,
+      "cropId": "plant-1237",
+      "distance": 1.5
+    },
+    {
+      "edge": 68,
+      "cells": [
+        85,
+        -1,
+        86,
+        -1
+      ],
+      "naturalKind": 1,
+      "cropId": "plant-1150",
+      "distance": 1.5
+    }
+  ],
+  "note": "Potential contact by distance is not a demonstrated attack: exterior standability, facing and the actual agricultural ray remain necessary. Existing centers/houses are conservatively counted as non-wall-opaque."
+}

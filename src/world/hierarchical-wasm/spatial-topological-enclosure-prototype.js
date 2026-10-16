@@ -1,10 +1,49 @@
 import {WALL_UNIT,gateScale,wallStroke} from '../wall-layout.js';
 import {boundaryFaces} from '../boundary-faces.js';
 import {containsPoint} from '../footprints.js';
+import {wallCollisionFrame} from '../wall-collision-frame.js';
 import {ANIMAL_SPATIAL_PROFILES} from './spatial-movement-profiles.js';
 
 export const SMALLEST_ANIMAL_RADIUS=Math.min(...Object.values(
   ANIMAL_SPATIAL_PROFILES).map(profile=>profile.radius));
+
+// A crop attack ray crossing this face must hit a wall if the entire face is
+// covered by the union of the same oriented rectangles used by combat.
+// Missing a sliver stays uncertified; water and props do not occlude crop
+// attacks in the current combat predicate.
+export function wallOccludesBoundaryFace(a,b,walls){
+  if(![a?.x,a?.z,b?.x,b?.z].every(Number.isFinite)||!Array.isArray(walls))
+    throw TypeError('Expected a finite face and wall list');
+  const intervals=[];
+  for(const wall of walls){
+    if(wall?.kind!=='wall'||wall.status==='ruined')continue;
+    const frame=wallCollisionFrame(wall),c=frame.c,s=frame.s;
+    const ax=a.x-frame.x,az=a.z-frame.z,bx=b.x-frame.x,bz=b.z-frame.z;
+    const axes=[[ax*c-az*s,bx*c-bz*s,frame.width],
+      [ax*s+az*c,bx*s+bz*c,frame.depth]];
+    let low=0,high=1;
+    for(const [first,last,half] of axes){
+      const delta=last-first;
+      if(Math.abs(delta)<1e-12){
+        if(Math.abs(first)>half){low=1;high=0;break;}
+      }else{
+        const t0=(-half-first)/delta,t1=(half-first)/delta;
+        low=Math.max(low,Math.min(t0,t1));
+        high=Math.min(high,Math.max(t0,t1));
+        if(low>high)break;
+      }
+    }
+    if(low<=high)intervals.push([low,high]);
+  }
+  intervals.sort((a,b)=>a[0]-b[0]||b[1]-a[1]);
+  let covered=0;
+  for(const [low,high] of intervals){
+    if(low>covered+1e-10)return false;
+    covered=Math.max(covered,high);
+    if(covered>=1-1e-10)return true;
+  }
+  return false;
+}
 
 // Fast geometry-only candidate. Taking the hull of square crop clearances
 // avoids a fragile offset/miter calculation and encloses every crop with the

@@ -734,6 +734,27 @@ production. Frozen inputs, WASM hash and counts are in
 face, a wet midpoint without proof, invalidation when a settlement clears
 the water, and invalidation when its chunk unloads.
 
+The attack requirement remains separate from movement closure. In the
+current combat code `agriculturalRayClear()` occludes intact walls, centers
+and houses; it samples fluid only for Gran Cañón. An exact, read-only
+boundary-face interval test now checks which segments are entirely covered
+by the union of existing and quoted walls' combat rectangles, including
+adjacent modules. It certifies 23 of the 122 Manglares preview faces as
+wall-opaque.
+For the other 99, a crop-to-face distance is only a **potential contact**
+test, not evidence of an actual attack: an animal must also stand outside,
+face a living central crop, have a clear ray and apply the normal attack
+timing. The probe finds zero water-backed faces within contact range for
+warthog, hyena, buffalo and lion. Two water-backed faces lie 1.80 m from
+`plant-1281`, within the rhino's 2.20 m contact range. Other nearby faces
+are backed by static solids but not proved opaque by the wall-only test;
+some could be trees or rocks, which the current agricultural ray does not
+occlude. The previous angular probe found no demonstrated exterior rhino
+hit in this frozen layout. This remains an acceptance gap for both the
+current and future crop layouts, not grounds to declare the enclosure
+protected. Full per-profile counts and nearest faces are in
+`manglares-attack-boundary-d3.json`.
+
 ### Local construction and destruction regression
 
 The focused WASM test now encloses a known resident seed with four native

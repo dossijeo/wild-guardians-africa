@@ -11,7 +11,7 @@ import {createSpatialIntentBridge} from '../../src/world/hierarchical-wasm/spati
 import {createCropEnclosurePlanner} from '../../src/world/hierarchical-wasm/spatial-crop-enclosure-plan.js';
 import {approximateCutModules,cropClearanceHull,inspectSelfClosedQuote,
   inspectPlacedNaturalJunctions,inspectStaticCutBoundary,
-  placedEnclosureJunctions} from '../../src/world/hierarchical-wasm/spatial-topological-enclosure-prototype.js';
+  placedEnclosureJunctions,wallOccludesBoundaryFace} from '../../src/world/hierarchical-wasm/spatial-topological-enclosure-prototype.js';
 import {wallSpec} from '../../src/simulation/rules.js';
 import {wallCollisionPolygon} from '../../src/world/wall-collision-frame.js';
 import {edgeDistance,footprintDistance} from '../../src/world/footprints.js';
@@ -455,6 +455,42 @@ function inspect(state,nav){
       };
       const beforeCutCrossings=cutOnly?crossingProbe():undefined;
       const preview=nav.withWallPreview(quote.previewPieces,quote.suppressed,()=>{
+        const attackBoundary=cutOnly?(()=>{
+          const walls=[...state.structures,...quote.previewPieces];
+          const exposed=[],radii=Object.fromEntries(
+            Object.entries(ANIMAL_SPATIAL_PROFILES).map(([species,profile])=>
+              [species,profile.radius+.65]));
+          let wallCovered=0;
+          for(let edge=0;edge<boundary.length;edge+=4){
+            const [ox,oz,ix,iz]=boundary.slice(edge,edge+4);
+            const ends=ox!==ix?[[ox/2+ix/2,iz-.5],[ox/2+ix/2,iz+.5]]:
+              [[ix-.5,oz/2+iz/2],[ix+.5,oz/2+iz/2]];
+            if(wallOccludesBoundaryFace(
+              {x:ends[0][0],z:ends[0][1]},
+              {x:ends[1][0],z:ends[1][1]},walls)){
+              wallCovered++;continue;
+            }
+            let nearest={cropId:null,distance:Infinity};
+            for(const crop of cropTargets){
+              const distance=edgeDistance({x:ends[0][0],z:ends[0][1]},
+                {x:ends[1][0],z:ends[1][1]},crop.x,crop.z);
+              if(distance<nearest.distance)nearest={cropId:crop.id,distance};
+            }
+            exposed.push({edge:edge/4,cells:[ox,oz,ix,iz],
+              naturalKind:wasm.lazy_cut_face_natural(ox,oz,ix,iz),...nearest});
+          }
+          return {wallCovered,notProvenOpaque:exposed.length,
+            bySpecies:Object.fromEntries(Object.entries(radii).map(
+              ([species,radius])=>[species,{
+                contactRadius:radius,
+                nearbyFaces:exposed.filter(face=>face.distance<=radius+1e-8).length,
+                nearbyWetlandFaces:exposed.filter(face=>face.naturalKind===2&&
+                  face.distance<=radius+1e-8).length,
+                nearbySolidFaces:exposed.filter(face=>face.naturalKind===1&&
+                  face.distance<=radius+1e-8).length,
+                examples:exposed.filter(face=>face.distance<=radius+1e-8).slice(0,8)}])),
+            nearest:exposed.slice().sort((a,b)=>a.distance-b.distance).slice(0,8)};
+        })():undefined;
         const naturalBoundary=cutOnly?(()=>{
           const counts={solid:0,wetland:0,unknown:0},uncovered=[],
             wetlandExamples=[];
@@ -513,6 +549,7 @@ function inspect(state,nav){
         workerAccess:cutOnly?workerAccess():undefined,
         workerAccessAll:cutOnly&&useConservative?workerAccessAll():undefined,
         gridProbe:cutOnly?gridProbe():undefined,
+        attackBoundary,
         naturalBoundary,
         staticBoundary,
         placedNaturalJunctions:cutOnly&&placedJunctionSpans?
@@ -540,6 +577,7 @@ function inspect(state,nav){
           after:preview.workerAccess}:undefined,
         workerAccessAll:preview.workerAccessAll,
         gridProbe:preview.gridProbe,
+        attackBoundary:preview.attackBoundary,
         naturalBoundary:preview.naturalBoundary,
         staticBoundary:preview.staticBoundary,
         placedNaturalJunctions:preview.placedNaturalJunctions,
