@@ -182,6 +182,35 @@ test('native five-profile cut is read-only, deterministic and reports missing se
       for(const species of ['warthog','hyena','buffalo','lion','rhino'])
         session.actorRegionsBatch([{x:-13,z:-13}],{worker:false,species});
       const wasm=session.core.wasm,topology=session.topologySource.revision();
+      assert.equal(typeof wasm.spatial_static_object_clearance,'function');
+      let clearanceSite=null;
+      for(let z=-12;z<=12&&!clearanceSite;z+=3)for(let x=-12;x<=12;x+=3){
+        const distance=wasm.spatial_static_object_clearance(x,z,4);
+        if(distance>1.5)clearanceSite={x,z,distance};
+      }
+      assert.ok(clearanceSite,'Expected a resident point away from solid props');
+      const {x:clearX,z:clearZ,distance:clearBefore}=clearanceSite;
+      const passable=wasm.spatial_add_oriented_barrier(clearX,clearZ,1,.22,0,2);
+      assert.equal(wasm.spatial_static_object_clearance(clearX,clearZ,4),
+        clearBefore,'Animal-passable barriers do not count as solids');
+      assert.equal(wasm.spatial_remove_barrier(passable),1);
+      const solid=wasm.spatial_add_oriented_barrier(clearX,clearZ,1,.22,0,0);
+      assert.equal(wasm.spatial_static_object_clearance(clearX,clearZ,4),0);
+      assert.equal(wasm.spatial_remove_barrier(solid),1);
+      assert.equal(wasm.spatial_static_object_clearance(clearX,clearZ,4),
+        clearBefore);
+      const polygonPointer=wasm.spatial_polygon_input_ptr(4);
+      new Float32Array(wasm.memory.buffer,polygonPointer,8).set([
+        clearX-.5,clearZ-.5,clearX+.5,clearZ-.5,
+        clearX+.5,clearZ+.5,clearX-.5,clearZ+.5]);
+      const polygon=wasm.spatial_add_polygon(4,0);
+      assert.ok(polygon>0);
+      assert.equal(wasm.spatial_static_object_clearance(clearX,clearZ,4),0);
+      assert.equal(wasm.spatial_remove_polygon(polygon),1);
+      assert.equal(wasm.spatial_static_object_clearance(clearX,clearZ,4),
+        clearBefore);
+      assert.ok(Number.isNaN(wasm.spatial_static_object_clearance(500,500,4)));
+      assert.ok(Number.isNaN(wasm.spatial_static_object_clearance(clearX,clearZ,9)));
       const stateBefore=serialize(state),updates=wasm.lazy_sector_updates();
       const query=(x,z)=>{
         const pointer=wasm.lazy_cut_seeds_ptr(1);

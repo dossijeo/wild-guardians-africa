@@ -3,12 +3,12 @@
   "seed": 712,
   "day": 3,
   "source": "a21f2b76509fa1057f031db5311cac7e5962b0f96b399060df860aa48ff41e1d",
-  "wasmSha256": "25c80656d8d8682c2833aec5687810d095d395202007a769701d76227cd38998",
-  "elapsedSeconds": 8.374647500000002,
+  "wasmSha256": "e9d7440ca2529376b8da4971c2cbed4e4225bb4c6c9e9740f106f99cc460247c",
+  "elapsedSeconds": 8.4230043,
   "campaignTiming": {
     "ticks": 1041,
-    "decisionMs": 4231.511900000006,
-    "gameTickMs": 2840.466000000008
+    "decisionMs": 4324.308499999991,
+    "gameTickMs": 2803.121299999997
   },
   "sample": {
     "stateHash": "7b7033894dee269d4bf04cb074f1372ef2f84ef280446150cd5f2e2331cb6966",
@@ -27,7 +27,7 @@
     "rows": [
       {
         "name": "cut",
-        "ms": 188.28960000000006,
+        "ms": 181.0025999999998,
         "status": "proposed",
         "box": [
           69,
@@ -35,9 +35,9 @@
           108,
           21
         ],
-        "topologicalMs": 5.654600000001665,
-        "conversionMs": 1.518000000000029,
-        "validationMs": 178.18429999999898,
+        "topologicalMs": 5.0680000000011205,
+        "conversionMs": 1.3827000000001135,
+        "validationMs": 171.72119999999995,
         "cutEdges": 21,
         "flow": 21,
         "cells": 1206,
@@ -117,7 +117,8 @@
               }
             ],
             "terrainValid": true,
-            "nearestTerrainBlock": null
+            "nearestTerrainBlock": null,
+            "nativeObjectClearance": 1.2799999713897705
           },
           {
             "point": [
@@ -155,7 +156,8 @@
               }
             ],
             "terrainValid": true,
-            "nearestTerrainBlock": null
+            "nearestTerrainBlock": null,
+            "nativeObjectClearance": 1.297548770904541
           },
           {
             "point": [
@@ -173,7 +175,8 @@
               }
             ],
             "terrainValid": true,
-            "nearestTerrainBlock": null
+            "nearestTerrainBlock": null,
+            "nativeObjectClearance": 0.9635283946990967
           },
           {
             "point": [
@@ -219,7 +222,8 @@
               }
             ],
             "terrainValid": true,
-            "nearestTerrainBlock": null
+            "nearestTerrainBlock": null,
+            "nativeObjectClearance": 1.4589030742645264
           }
         ],
         "contours": [

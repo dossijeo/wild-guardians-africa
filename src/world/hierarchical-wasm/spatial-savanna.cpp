@@ -1907,4 +1907,64 @@ int spatial_region_batch(int count){
   return count;
 }
 int spatial_prop_blocked(float x,float z){return propBlocked(x,z);}
+// Read-only exact clearance to the existing animal-solid object surfaces.
+// The resident prop list includes a halo; barriers and polygons use the same
+// indexed geometry as movement. Terrain/water is deliberately excluded, so a
+// distant-object answer never certifies a natural-border join on its own.
+float spatial_static_object_clearance(float x,float z,float limit){
+  if(!std::isfinite(x)||!std::isfinite(z)||!std::isfinite(limit)||
+     limit<=0||limit>8)return std::numeric_limits<float>::quiet_NaN();
+  int cx=0,cz=0;
+  if(!residentSample(x,z,&cx,&cz))return std::numeric_limits<float>::quiet_NaN();
+  const auto props=residentSolidProps().find(chunkKey(cx,cz));
+  if(props==residentSolidProps().end())return std::numeric_limits<float>::quiet_NaN();
+  double best=double(limit)+1;
+  for(const Prop& prop:props->second){
+    const double distance=std::max(0.0,std::hypot(double(x)-prop.x,
+      double(z)-prop.z)-prop.radius);
+    best=std::min(best,distance);
+  }
+  const int bx0=int(std::floor((x-limit)/barrierBucketWidth));
+  const int bx1=int(std::floor((x+limit)/barrierBucketWidth));
+  const int bz0=int(std::floor((z-limit)/barrierBucketWidth));
+  const int bz1=int(std::floor((z+limit)/barrierBucketWidth));
+  std::unordered_set<int> seenBarriers,seenPolygons;
+  const auto& barriers=barrierIndex();
+  for(int bz=bz0;bz<=bz1;bz++)for(int bx=bx0;bx<=bx1;bx++){
+    const auto key=barrierKey(bx,bz);
+    if(const auto bucket=barriers.buckets.find(key);bucket!=barriers.buckets.end())
+      for(const int id:bucket->second){
+        if(!seenBarriers.insert(id).second)continue;
+        const Barrier& solid=barriers.byId.at(id);
+        if(solid.passMask&2)continue;
+        const double dx=x-solid.x,dz=z-solid.z;
+        const double u=dx*solid.c-dz*solid.s;
+        const double v=dx*solid.s+dz*solid.c;
+        best=std::min(best,std::hypot(std::max(0.0,std::abs(u)-solid.halfX),
+          std::max(0.0,std::abs(v)-solid.halfZ)));
+      }
+    if(!polygonRegistry)continue;
+    const auto& polygons=*polygonRegistry;
+    if(const auto bucket=polygons.buckets.find(key);bucket!=polygons.buckets.end())
+      for(const int id:bucket->second){
+        if(!seenPolygons.insert(id).second)continue;
+        const PolygonObstacle& solid=polygons.byId.at(id);
+        if(solid.passMask&2||x<solid.minX-limit||x>solid.maxX+limit||
+           z<solid.minZ-limit||z>solid.maxZ+limit)continue;
+        bool inside=false;
+        double nearest=std::numeric_limits<double>::infinity();
+        const int count=int(solid.xy.size()/2);
+        for(int i=0,j=count-1;i<count;j=i++){
+          const double ax=solid.xy[i*2],az=solid.xy[i*2+1];
+          const double ex=solid.xy[j*2],ez=solid.xy[j*2+1];
+          if((az>z)!=(ez>z)&&x<(ex-ax)*(z-az)/(ez-az)+ax)inside=!inside;
+          const double dx=ex-ax,dz=ez-az,length=dx*dx+dz*dz;
+          const double t=length?std::clamp(((x-ax)*dx+(z-az)*dz)/length,0.0,1.0):0;
+          nearest=std::min(nearest,std::hypot(x-ax-dx*t,z-az-dz*t));
+        }
+        best=std::min(best,inside?0.0:nearest);
+      }
+  }
+  return float(std::min(best,double(limit)+1));
+}
 }

@@ -158,7 +158,8 @@ function inspect(state,nav){
       }
       return {point,props,obstacles,
         terrainValid:nav.terrainValid(x,z,.85,false),
-        nearestTerrainBlock:terrainBlocks.length?Math.min(...terrainBlocks):null};
+        nearestTerrainBlock:terrainBlocks.length?Math.min(...terrainBlocks):null,
+        nativeObjectClearance:wasm.spatial_static_object_clearance?.(x,z,4)};
     });
     let validationMs=0,physical=null,terminalContext;
     if(proposal){
