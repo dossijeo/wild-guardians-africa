@@ -473,9 +473,11 @@ export function targetFor(s,a,nav) {
         if(queued)stats.nativeFrontierQueued=(stats.nativeFrontierQueued??0)+1;
       }
     }
+    let nativeWallStatus='not-requested';
     if(nav.intentTaskPlanner?.nativeWallSelectionEnabled&&
       (native?.status==='blocked'||native?.status==='unknown')){
       const wall=nav.intentTaskPlanner.planAttackWall(s,a);
+      nativeWallStatus=wall?.status??'unavailable';
       if(stats&&wall){
         stats.nativeWallPlans=(stats.nativeWallPlans??0)+1;
         stats.nativeWallRouteQueries=(stats.nativeWallRouteQueries??0)+
@@ -520,6 +522,17 @@ export function targetFor(s,a,nav) {
       stats.legacyFallbacks[reason]=(stats.legacyFallbacks[reason]??0)+1;
       stats.legacyFallbackResults[result]=
         (stats.legacyFallbackResults[result]??0)+1;
+      stats.legacyFallbackMatrix??={};
+      const key=`${reason}/${nativeWallStatus}`;
+      const outcomes=stats.legacyFallbackMatrix[key]??={};
+      outcomes[result]=(outcomes[result]??0)+1;
+      if(nativeWallStatus==='occupied'&&fallback?.target){
+        const samples=stats.occupiedWallFallbackSamples??=[];
+        if(samples.length<8)samples.push({day:s.day,time:s.time,
+          actorId:a.id,species:a.species,x:a.x,z:a.z,
+          targetId:fallback.target.id,targetKind:fallback.target.kind,
+          result});
+      }
     }
     return fallback;
   }finally{
