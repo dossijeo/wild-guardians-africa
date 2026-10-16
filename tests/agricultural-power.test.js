@@ -7,6 +7,17 @@ import {createPlant,waterPlant,advancePlant} from '../src/simulation/crops.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {cropSpec} from '../src/simulation/rules.js';
 const state=()=>({day:1,plants:[],crates:[],spells:[]});
+test('Growth ticks after exact entitlement exhaustion preserve the entire account',()=>{
+ const s=state(),plant={id:'spent',alive:true};s.plants.push(plant);
+ const power=commitAgriculturalPower(s,plant,'growth',11);
+ const spell={kind:'growth',targetPlantId:plant.id,remaining:30,power};s.spells.push(spell);
+ consumeGrowthPower(s,spell,30);
+ assert.equal(compare(power.consumed,power.amount),0);
+ const before=JSON.stringify(s);
+ for(let i=0;i<100;i++)consumeGrowthPower(s,spell,.05);
+ assert.equal(JSON.stringify(s),before);
+ validateAgriculturalPower(s);
+});
 test('200 distinct applications retain measurable declining marginal power without exceeding either budget',()=>{
  for(const [kind,reference,budget] of [['growth',15,180],['multiply',11,132]]){
   const s=state();let prior=Infinity;

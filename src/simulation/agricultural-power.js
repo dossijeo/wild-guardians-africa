@@ -35,6 +35,10 @@ export function commitAgriculturalPower(s,p,kind,baseHarvest){
 }
 export function consumeGrowthPower(s,spell,extra){
   if(!spell.power||extra<=0)return;
+  // A spell can keep running after its exact entitlement has been consumed.
+  // Further ticks cannot change either account, so skip large rational sums.
+  if(spell.power.consumed?.n===spell.power.amount.n&&
+    spell.power.consumed.d===spell.power.amount.d)return;
   const a=row(s,spell.power.day).growth;
   // Growth integration uses floating seconds. Preserve exact accounting of that
   // measurement and cap cumulative consumption at the committed entitlement.
