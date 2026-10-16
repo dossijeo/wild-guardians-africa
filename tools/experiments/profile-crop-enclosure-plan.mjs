@@ -26,12 +26,31 @@ const inspect=()=>{
   const groupMs=performance.now()-groupStart;
   const group=groups.find(item=>item.protection==='unprotected');
   if(!group){sample={status:'no-unprotected-group',groupMs,groups:groups.length};return;}
+  const originalPreview=latestNav.withWallPreview;
+  const originalPlacement=latestNav.wallPlacement;
+  let previewMs=0,placementMs=0,placementCalls=0;
+  latestNav.withWallPreview=function(...args){
+    const start=performance.now();
+    try{return originalPreview.apply(this,args);}
+    finally{previewMs+=performance.now()-start;}
+  };
+  latestNav.wallPlacement=function(...args){
+    placementCalls++;
+    const start=performance.now();
+    try{return originalPlacement.apply(this,args);}
+    finally{placementMs+=performance.now()-start;}
+  };
   const planStart=performance.now();
-  const plan=createCropEnclosurePlanner(latestState,latestNav,bridge)
-    .planCropEnclosure(group.id);
+  let plan;
+  try{plan=createCropEnclosurePlanner(latestState,latestNav,bridge)
+    .planCropEnclosure(group.id);}
+  finally{latestNav.withWallPreview=originalPreview;
+    latestNav.wallPlacement=originalPlacement;}
+  const planMs=performance.now()-planStart;
   sample={status:plan.status,reason:plan.reason,groupId:group.id,
     groupCrops:group.cropIds.length,groups:groups.length,groupMs,
-    planMs:performance.now()-planStart,proposedModules:plan.modules?.length??0,
+    planMs,previewMs,placementMs,placementCalls,
+    quoteAndOtherMs:planMs-previewMs,proposedModules:plan.modules?.length??0,
     proposedCost:plan.cost??null,gaps:plan.gaps?.length??0};
 };
 const result=await simulateNativeCampaign({days:3,biome:'sabana',seed:712,
