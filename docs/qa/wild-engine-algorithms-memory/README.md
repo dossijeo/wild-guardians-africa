@@ -1,8 +1,9 @@
 # Wild Engine algorithm and linear-memory audit — first baseline
 
 This branch starts at `3361c06a`, the current experimental native-intent
-branch, without changing gameplay or the production WASM binary. It is
-separate from PR #53. The experiment is not yet a recommendation to merge.
+branch, without changing gameplay. It is separate from PR #53. Its initial
+baselines used the 4 MiB production binary; the later 16 MiB activation is
+recorded below. The experiment is not yet a recommendation to merge.
 
 ## Effective code and candidate checks
 
@@ -98,11 +99,10 @@ node tools/experiments/benchmark-wild-engine-linear-memory.mjs src/world/hierarc
 ```
 
 The fourth argument is optional explicit pre-growth in MiB; the fifth and
-sixth select biome and seed (defaults: `sabana`, `712`). The next phase
-needs true Emscripten builds at alternative initial sizes, platform memory
-checks, representative saved games, C++ heap/capacity instrumentation, and
-end-to-end campaign timing. The standalone experiment must not change the
-production default before those comparisons pass.
+sixth select biome and seed (defaults: `sabana`, `712`). The subsequent
+compiled variants and 14-night campaign are described below. Platform memory
+checks, representative restored games and C++ heap/capacity instrumentation
+remain open; linear capacity alone does not answer those questions.
 
 `run-native-intent-campaign.mjs` now accepts the optional
 `WILD_ENGINE_MEMORY_PROFILE=1` QA flag. It samples committed linear bytes no
@@ -120,7 +120,8 @@ It includes all daily game-state hashes and entity counts. All 14 state hashes
 match the previously retained uninstrumented run. The sampled linear-memory
 capacity rose from 4 MiB at opening to 18.875 MiB, with 15 observed size
 changes; the last observed change was during day 9. It remained at 18.875 MiB
-through the end of this run. Committed capacity crossed 16 MiB during day 7,
+through the end of this run. Committed capacity crossed 16 MiB late on day 6
+(the following day-end sample is labeled day 7),
 so a 16 MiB initial allocation would still grow in this particular legal
 campaign. The instrumented run took 409.27 seconds against 402.52 seconds in
 an earlier uninstrumented run (1.7% difference); these were not an alternating
@@ -128,9 +129,8 @@ A/B timing experiment, so the difference cannot be assigned to sampling or
 memory growth. The sampled changes are not necessarily every native
 `memory.grow` call and cannot reveal a pause's cause at frame resolution.
 
-`tools/build-spatial-savanna-wasm.sh` now accepts an optional
-`SPATIAL_INITIAL_MEMORY` byte value; omitting it preserves the shipped 4 MiB
-setting. The experimental workflow builds the same C++ source with true
+`tools/build-spatial-savanna-wasm.sh` accepts an optional
+`SPATIAL_INITIAL_MEMORY` byte value. The experimental workflow builds the same C++ source with true
 4/16/32/64 MiB initial memories in a pinned Emscripten image and repeats the
 synthetic workload three times per biome. Its artifacts include the binaries
 and full reports. Results from that workflow must be reviewed before drawing
@@ -157,8 +157,41 @@ and 0.981 for 32 MiB, and 1.036 and 1.026 for 64 MiB. A lower ratio is
 faster. The 16 MiB result is a modest, repeatable synthetic improvement on
 this host; it does **not** establish faster real campaigns or prove that
 memory growth caused the full difference. The 32 and 64 MiB results do not
-justify their larger initial capacity. A 16 MiB campaign comparison is in
-progress before recommending any production-default change.
+justify their larger initial capacity.
+
+That comparison has now completed: `manglares14-16mib.json.gz` records 14
+legal campaign nights on the compiled 16 MiB binary. All 14 daily game-state
+hashes match both the 4 MiB instrumented run and the earlier uninstrumented
+reference. Total elapsed time was 405.47 seconds versus 402.52 seconds for
+the earlier 4 MiB reference, a 0.7% increase. Per-day `Game.tick` ratios
+vary on both sides of 1. This is one sequential campaign on each variant,
+not a sufficiently repeated campaign A/B result. It shows no reproducible
+end-to-end speed gain by itself. The 16 MiB build remains a useful capacity
+candidate for smaller and medium scenes; its capacity would still grow in
+this 14-night Mangrove campaign.
+
+`bfs-baseline-sabana-animal.json` and `bfs-baseline-manglares-animal.json`
+freeze 100 direct graph-query pairs each and preserve results and route
+hashes. In warm rounds, 100 connectivity queries took about 2.6–5.5 ms and
+100 complete `lazy_route` queries about 5.9–12.6 ms, depending on biome and
+round. Many requests are `unknown` because the synthetic sample lies near
+resident boundaries. The measured cost of the whole query set is small next
+to the real campaign's hundreds of seconds; generation stamping may still
+help at higher query counts, but these measurements do not justify changing
+production code yet. A workload-specific profile must first attribute the
+large unnamed WASM function to a concrete algorithm.
+
+## Activation decision
+
+After reviewing these results, the project owner elected to use 16 MiB as
+the initial capacity because it removes growth in the tested small/medium
+synthetic worlds and has no measured material campaign regression. The
+build-script default and checked-in WASM binary in this **experimental
+branch** are therefore updated to 16 MiB. Main remains unchanged pending
+review of the stacked PRs. This is a capacity choice, not a claim that the
+full 14-night campaign becomes faster; it still outgrows 16 MiB and remains
+dependent on `ALLOW_MEMORY_GROWTH=1`. The `SPATIAL_INITIAL_MEMORY` override
+keeps 4, 32 and 64 MiB reproducible for later comparisons.
 
 ## Next isolated measurements
 

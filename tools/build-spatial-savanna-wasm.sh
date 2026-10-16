@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 cd "$(dirname "$0")/.."
-initial_memory="${SPATIAL_INITIAL_MEMORY:-4194304}"
+initial_memory="${SPATIAL_INITIAL_MEMORY:-16777216}"
 if ! [[ "$initial_memory" =~ ^[0-9]+$ ]] || (( initial_memory < 4194304 || initial_memory % 65536 != 0 )); then
   echo 'SPATIAL_INITIAL_MEMORY must be at least 4194304 and a multiple of 65536 bytes' >&2
   exit 2
