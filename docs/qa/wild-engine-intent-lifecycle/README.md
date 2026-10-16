@@ -364,7 +364,7 @@ necessary for unresolved or exceptional return paths.
 
 ## Next integration gates
 
-1. Publish confirmed task/worker/action events directly from the simulation without scanning every entity per tick. Apply native proposals atomically with JS task reservations and preserve all worker policy tie-breaks.
+1. Confirmed task and worker changes already reach the opt-in planner through simulation observers, and unchanged movement ticks do not request another task plan. Complete the atomic native-proposal/JavaScript-reservation handoff and differential checks for the remaining worker policy tie-breaks; retire the transitional JavaScript decisions only after those checks pass.
 2. Track sector/portal dependencies so a local topology change invalidates only routes and tactical decisions that can be affected. Defer changes to attacks whose damage frame is already committed.
 3. Move animal target, reservation and retreat planning to the same native authority with differential policy tests; retire the replaced JavaScript selector.
 4. Verify save/load, speculative previews, sector residency, prolonged campaign determinism and physical validity. Benchmark planning calls per actor/minute, navigation time and `Game.tick` before declaring the polling removed.
