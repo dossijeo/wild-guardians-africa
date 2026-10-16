@@ -457,7 +457,7 @@ The raw diagnostic is `sabana-cut-conservative-d3.json`.
 An additional attack-reach audit explains why the unknown verdict must not
 simply be promoted to protected. Depending on animal profile, 0–15 of the 66
 crops lack a valid connector from the exact crop coordinate to a nearby graph
-cell. Sampling 16 possible attack positions for those crops and for crops
+cell. Sampling 128 possible attack positions for those crops and for crops
 close to the proposed boundary found **no** standable position classified as
 open or unknown; every standable sample belonged to a sealed component.
 However, **2–13 crops** lie within that species' normal attack standoff
@@ -470,6 +470,19 @@ their centre connectors work. Keep full protection acceptance pending until
 the continuous attack envelope is certified against the physical barrier.
 The frozen state, five profiles and counts are in
 `sabana-attack-reach-d3.json`.
+
+The combat path makes this distinction substantive. `reachableApproach()`
+tests whether the animal can reach a position at crop attack standoff.
+Post-introduction attacks carrying a `damageProfile` subsequently call
+`resolveAgriculturalImpact()`, which rejects a crop hit when
+`agriculturalRayClear()` finds a wall or other static blocker. Introductory
+and legacy attacks without that profile follow a separate crop-hit branch
+without this ray check. Therefore a standable exterior attack point could
+damage a nearby interior crop in that branch without crossing the wall.
+The 128-point Sabana audit found no such exterior point; it does **not** prove
+that every closed wall automatically protects a close crop under all attack
+profiles. The planner must keep its protection verdict conservative until
+the attack envelope and both combat branches are validated together.
 
 An old/conservative/conservative/old comparison on that same state and final
 candidate WASM recorded native cut times of 6.79/1.61 ms versus 8.73/7.72 ms,

@@ -275,8 +275,8 @@ function inspect(state,nav){
             if(nearest<=radius)attackRing.cropsNearBoundary++;
             if(noAnchor||nearest<=radius){
               let standable=false;
-              for(let sample=0;sample<16;sample++){
-                const angle=sample*Math.PI/8;
+              for(let sample=0;sample<128;sample++){
+                const angle=sample*Math.PI/64;
                 const point={x:target.x+Math.sin(angle)*radius,
                   z:target.z+Math.cos(angle)*radius};
                 if(!opening.session.actorCanStand(point,{worker:false,species}))continue;
