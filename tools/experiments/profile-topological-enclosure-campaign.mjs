@@ -10,7 +10,7 @@ import {createSpatialCampaignOpening} from './spatial-campaign-opening.mjs';
 import {createSpatialIntentBridge} from '../../src/world/hierarchical-wasm/spatial-intent-bridge.js';
 import {createCropEnclosurePlanner} from '../../src/world/hierarchical-wasm/spatial-crop-enclosure-plan.js';
 import {approximateCutModules,cropClearanceHull,inspectSelfClosedQuote,
-  inspectStaticCutBoundary,
+  inspectPlacedNaturalJunctions,inspectStaticCutBoundary,
   placedEnclosureJunctions} from '../../src/world/hierarchical-wasm/spatial-topological-enclosure-prototype.js';
 import {wallSpec} from '../../src/simulation/rules.js';
 import {wallCollisionPolygon} from '../../src/world/wall-collision-frame.js';
@@ -185,6 +185,11 @@ function inspect(state,nav){
       const quote=Game.quoteWallChain(state,'zarzas',proposal,nav,
         {smooth:false,snap:false});
       const placedJunctions=cutOnly?placedEnclosureJunctions(quote):undefined;
+      const placedJunctionSpans=cutOnly&&placedJunctions.status==='ready'?
+        new Map(placedJunctions.junctions.map(junction=>[
+          `${junction.strokeIndex}:${junction.end}`,
+          wasm.spatial_static_object_clearance(junction.point[0],
+            junction.point[1],4)])):undefined;
       terminalContext=cutOnly?terminalContextFor(placedJunctions.junctions):undefined;
       const workerTargets=cutOnly?[...new Map(state.plants.filter(item=>
         item.alive&&group.cropIds.includes(item.id)).map(item=>
@@ -473,6 +478,10 @@ function inspect(state,nav){
         workerAccessAll:cutOnly&&useConservative?workerAccessAll():undefined,
         gridProbe:cutOnly?gridProbe():undefined,
         staticBoundary,
+        placedNaturalJunctions:cutOnly&&placedJunctionSpans?
+          inspectPlacedNaturalJunctions(quote,junction=>
+            placedJunctionSpans.get(`${junction.strokeIndex}:${junction.end}`),
+          staticBoundary?.status==='blocked-by-static-solids'):undefined,
         boundaryGapScan:cutOnly?boundaryGapScan():undefined,
         cutCrossings:cutOnly?crossingProbe():undefined};
       },true);
@@ -495,6 +504,7 @@ function inspect(state,nav){
         workerAccessAll:preview.workerAccessAll,
         gridProbe:preview.gridProbe,
         staticBoundary:preview.staticBoundary,
+        placedNaturalJunctions:preview.placedNaturalJunctions,
         boundaryGapScan:preview.boundaryGapScan,
         cutCrossings:cutOnly?{before:beforeCutCrossings,
           after:preview.cutCrossings}:undefined,

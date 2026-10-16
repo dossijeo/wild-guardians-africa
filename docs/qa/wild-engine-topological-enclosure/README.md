@@ -610,6 +610,17 @@ compact repeat `sabana-crop-anchor-probe-d3.json`. These checks establish a stro
 physical witness for this candidate, but do not yet prove the complete
 exterior attack envelope or justify switching the normal planner.
 
+The simpler mixed-join certificate was then applied to the **placed** ends
+of the three open wall arcs, using native animal-solid clearance against the
+confirmed world *before* the preview adds its own walls. All six exposed
+ends measured 0.28–0.75 m to an existing solid, below the smallest animal's
+1.70 m diameter. Combined with the continuously covered 142-segment cut
+boundary, `inspectPlacedNaturalJunctions()` returned `joined` for both cut
+variants in all four ABBA rows. This is a movement-closure witness for this
+specific quote, not a replacement for the game's crop-group verdict, which
+remains `unknown`. The six measurements, 66 outbound/return worker routes
+and identical state hash are in `sabana-placed-junction-d3.json`.
+
 A separate opt-in attack-envelope probe used the same frozen state and the
 game's crop-impact ray predicate. The probe must mirror the quoted walls into
 the JavaScript impact obstacle list while the native topology is previewed;

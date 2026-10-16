@@ -1,0 +1,42 @@
+{
+  "source": "2ba864211ca434f663bf857f85370fb38a183d6a0645ee80276abf27070949d0",
+  "wasmSha256": "3d8185e86c8aae1e2ce241c19008fc588a34313edadd4754aa2125e2866f6252",
+  "stateHash": "7b7033894dee269d4bf04cb074f1372ef2f84ef280446150cd5f2e2331cb6966",
+  "crops": 66,
+  "groupVerdict": "unknown",
+  "placedJunctions": {
+    "status": "joined",
+    "junctions": 6,
+    "spans": [
+      0.2800000011920929,
+      0.5675666332244873,
+      0.5294803380966187,
+      0.5980701446533203,
+      0.3765754699707031,
+      0.7539218664169312
+    ]
+  },
+  "staticBoundary": {
+    "status": "blocked-by-static-solids",
+    "segments": 142,
+    "queries": 195
+  },
+  "workerAccess": {
+    "outbound": {
+      "reachable": 66,
+      "blocked": 0,
+      "unknown": 0
+    },
+    "return": {
+      "reachable": 66,
+      "blocked": 0,
+      "unknown": 0
+    },
+    "examples": [],
+    "returnFailures": []
+  },
+  "cutEdges": 27,
+  "quotedModules": 14,
+  "quotedCost": 140,
+  "gates": 0
+}
