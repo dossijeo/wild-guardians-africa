@@ -136,7 +136,6 @@ struct IntentState {
   std::unordered_map<uint64_t,std::unordered_set<uint64_t>> byBlockedCropGroup;
   std::vector<double> wallOpportunityActors;
   std::vector<RouteSlot> routeSlots;
-  std::vector<uint32_t> freeRouteSlots;
   std::vector<float> attackRouteInput;
   std::vector<float> routeProgressInput;
   // Transient mobile-body snapshot supplied once at an attack planning event.
@@ -202,20 +201,9 @@ void releaseRoute(IntentState& s,ActiveIntent& intent){
     RouteSlot& route=s.routeSlots[intent.slot];
     if(route.active&&route.generation==intent.generation){
       route.active=false;route.points.clear();route.generation++;
-      s.freeRouteSlots.push_back(intent.slot);
     }
   }
   intent.slot=0;intent.generation=0;
-}
-uint32_t acquireRouteSlot(IntentState& s){
-  if(!s.freeRouteSlots.empty()){
-    const uint32_t slot=s.freeRouteSlots.back();
-    s.freeRouteSlots.pop_back();
-    return slot;
-  }
-  const uint32_t slot=uint32_t(s.routeSlots.size());
-  s.routeSlots.emplace_back();
-  return slot;
 }
 void releaseIntent(IntentState& s,uint64_t actor,PlanningState next){
   const auto found=s.activeIntents.find(actor);
@@ -617,8 +605,7 @@ void nav_intent_reset(){
   if(!s.session)s.session=1;
   s.activeIntents.clear();s.byTarget.clear();s.byTask.clear();
   s.byBlockedCropGroup.clear();s.wallOpportunityActors.clear();
-  s.routeSlots.clear();s.freeRouteSlots.clear();
-  s.intentChanges.clear();s.intentResult.fill(0);
+  s.routeSlots.clear();s.intentChanges.clear();s.intentResult.fill(0);
   s.attackRouteInput.clear();s.attackBlockers.clear();
   s.attackReservedTargets.clear();s.attackResult.fill(0);
   s.wallAttackResult.fill(0);
@@ -1199,7 +1186,9 @@ int nav_intent_commit(){
     if(offset+count>s.routes.size())continue;
     const auto existing=s.activeIntents.find(workerId);
     if(existing!=s.activeIntents.end())releaseIntent(s,workerId,PlanningState::Cancelled);
-    const uint32_t slot=acquireRouteSlot(s);
+    uint32_t slot=uint32_t(s.routeSlots.size());
+    for(uint32_t i=0;i<s.routeSlots.size();i++)if(!s.routeSlots[i].active){slot=i;break;}
+    if(slot==s.routeSlots.size())s.routeSlots.emplace_back();
     RouteSlot& route=s.routeSlots[slot];
     route.points.assign(s.routes.begin()+offset,s.routes.begin()+offset+count);
     route.active=true;route.generation++;
@@ -1379,7 +1368,10 @@ int nav_intent_replan_attack_route(double actorId,double startX,double startZ,
     emitIntentChange(s,intent);
     return 3;
   }
-  const uint32_t slot=acquireRouteSlot(s);
+  uint32_t slot=uint32_t(s.routeSlots.size());
+  for(uint32_t i=0;i<s.routeSlots.size();i++)
+    if(!s.routeSlots[i].active){slot=i;break;}
+  if(slot==s.routeSlots.size())s.routeSlots.emplace_back();
   RouteSlot& route=s.routeSlots[slot];
   const float* points=spatial_world_route_ptr();
   route.points.assign(points,points+size_t(count)*2);
@@ -1417,7 +1409,9 @@ int nav_intent_replan_pending_routes(){
       task->second.kind);
     s.routeQueries+=service.queries;
     if(!service.points.empty()){
-      const uint32_t slot=acquireRouteSlot(s);
+      uint32_t slot=uint32_t(s.routeSlots.size());
+      for(uint32_t j=0;j<s.routeSlots.size();j++)if(!s.routeSlots[j].active){slot=j;break;}
+      if(slot==s.routeSlots.size())s.routeSlots.emplace_back();
       RouteSlot& route=s.routeSlots[slot];
       route.points=service.points;route.active=true;route.generation++;
       if(!route.generation)route.generation=1;
@@ -1507,7 +1501,9 @@ int nav_intent_register_attack(double actorId,double targetId,
     releaseIntent(s,actor,PlanningState::Cancelled);
     s.activeIntents.erase(actor);
   }
-  const uint32_t slot=acquireRouteSlot(s);
+  uint32_t slot=uint32_t(s.routeSlots.size());
+  for(uint32_t i=0;i<s.routeSlots.size();i++)if(!s.routeSlots[i].active){slot=i;break;}
+  if(slot==s.routeSlots.size())s.routeSlots.emplace_back();
   RouteSlot& route=s.routeSlots[slot];
   route.points.assign(s.attackRouteInput.begin(),
     s.attackRouteInput.begin()+size_t(count)*2);
@@ -1541,7 +1537,10 @@ int nav_intent_plan_retreat(double actorId,double startX,double startZ,
   const int count=spatial_world_route_cached(float(startX),float(startZ),
     float(exitX),float(exitZ));
   if(count<=0)return count<0?3:0;
-  const uint32_t slot=acquireRouteSlot(s);
+  uint32_t slot=uint32_t(s.routeSlots.size());
+  for(uint32_t i=0;i<s.routeSlots.size();i++)
+    if(!s.routeSlots[i].active){slot=i;break;}
+  if(slot==s.routeSlots.size())s.routeSlots.emplace_back();
   RouteSlot& route=s.routeSlots[slot];
   const float* points=spatial_world_route_ptr();
   route.points.assign(points,points+size_t(count)*2);
@@ -1583,7 +1582,10 @@ int nav_intent_restore_retreat(double actorId,double startX,double startZ,
     releaseIntent(s,actor,PlanningState::Cancelled);
     s.activeIntents.erase(actor);
   }
-  const uint32_t slot=acquireRouteSlot(s);
+  uint32_t slot=uint32_t(s.routeSlots.size());
+  for(uint32_t i=0;i<s.routeSlots.size();i++)
+    if(!s.routeSlots[i].active){slot=i;break;}
+  if(slot==s.routeSlots.size())s.routeSlots.emplace_back();
   RouteSlot& route=s.routeSlots[slot];
   route.points.assign(s.attackRouteInput.begin(),
     s.attackRouteInput.begin()+size_t(count)*2);
@@ -1634,7 +1636,10 @@ int workerHomeRoute(double actorId,double startX,double startZ,
   const int count=savedCount?savedCount:spatial_world_route_cached(
     float(startX),float(startZ),float(homeX),float(homeZ));
   if(count<=0)return count<0?3:0;
-  const uint32_t slot=acquireRouteSlot(s);
+  uint32_t slot=uint32_t(s.routeSlots.size());
+  for(uint32_t i=0;i<s.routeSlots.size();i++)
+    if(!s.routeSlots[i].active){slot=i;break;}
+  if(slot==s.routeSlots.size())s.routeSlots.emplace_back();
   RouteSlot& route=s.routeSlots[slot];
   const float* points=savedCount?s.attackRouteInput.data():
     spatial_world_route_ptr();

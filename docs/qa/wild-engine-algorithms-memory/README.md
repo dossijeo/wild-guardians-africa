@@ -1,5 +1,38 @@
 # Wild Engine algorithm and linear-memory audit — first baseline
 
+## Route-slot free-list experiment (rejected)
+
+The native intent code on this experimental branch scanned `routeSlots` at
+seven acquisition sites. A prototype replaced those scans with one LIFO free
+list, preserving handle generations and clearing the list on session reset.
+The candidate compiled and passed 25 native intent tests, including a new
+regression that reuses a released slot without reviving its old handle.
+
+The frozen Desert day-15 route-slot benchmark creates and cancels synthetic
+actors using a physically valid saved route. It includes intent bookkeeping,
+segment validation and JS↔WASM calls, so it measures the whole operation
+rather than claiming to isolate the scan. The same source checkout was built
+with and without the free list using pinned Emscripten 6.0.12, then run in
+ABBA order on one CI host ([run 38878468478](https://github.com/dossijeo/wild-guardians-africa/actions/runs/38878468478)).
+The 16 MiB baseline WASM SHA-256 was `d12355b1a636f1a856abd1cd6b3b6ff6177162b0ada5a7828df036802227b9d2`;
+the candidate was `0bcd51ff6691bd2194301982d89c16d979bbf63d1f79b52e38adf488afcabda3`.
+
+| Concurrent routes | Baseline acquisition median | Free-list median | Difference |
+| ---: | ---: | ---: | ---: |
+| 10 | 0.093 ms | 0.092 ms | −1.0% |
+| 50 | 0.384 ms | 0.402 ms | +4.5% |
+| 150 | 1.119 ms | 1.298 ms | +15.9% |
+| 300 | 2.215 ms | 2.177 ms | −1.7% |
+| 600 | 4.452 ms | 4.453 ms | +0.0% |
+
+Each median excludes the first wave and uses six samples from the two runs of
+each variant; the four raw JSON reports are retained alongside this file.
+The candidate has no reproducible end-to-end benefit and is **not adopted**.
+This does not prove that slot scans are free, only that replacing them is not
+a valuable optimization at these sizes. The benchmark and handle regression
+remain to evaluate future changes. A local Emscripten 6.0.12 installation
+reproduced the candidate's exact WASM hash and the same 25 passing tests.
+
 This branch starts at `3361c06a`, the current experimental native-intent
 branch, without changing gameplay. It is separate from PR #53. Its initial
 baselines used the 4 MiB production binary; the later 16 MiB activation is

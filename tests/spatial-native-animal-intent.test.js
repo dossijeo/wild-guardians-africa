@@ -46,6 +46,12 @@ test('native retreat owns one physical route until completion without an attack 
     assert.equal(record[3],0,'retreat has no target lease');
     assert(bridge.cancelAttackIntent(actor.id));
     assert.equal(bridge.routePoints(result.routeHandle),null);
+    const replacement=bridge.planRetreatRoute(actor);
+    assert.equal(replacement.status,'found');
+    assert.notDeepEqual(replacement.routeHandle,result.routeHandle);
+    assert.equal(bridge.routePoints(result.routeHandle),null,
+      'a released route handle must stay invalid after its slot is reused');
+    assert(bridge.routePoints(replacement.routeHandle)?.length>0);
     bridge.resetFromState(game);
     const pointer=session.core.wasm.nav_intent_attack_route_input_ptr(
       result.path.length);

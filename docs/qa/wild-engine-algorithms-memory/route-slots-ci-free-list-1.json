@@ -1,0 +1,159 @@
+{
+  "source": {
+    "commit": "23929288683c656014f318fcac41b8281c21c44e",
+    "wasmSha256": "0bcd51ff6691bd2194301982d89c16d979bbf63d1f79b52e38adf488afcabda3",
+    "runnerSha256": "2faa982e63a980951229947fce48f6033b2c2c9ed375febd50e5a547cea48011",
+    "fixtureSha256": "a4ce4f042c6c153d13f92623ee6622456f42ba7da9bc17ec0f8deac01d559423"
+  },
+  "start": {
+    "x": 7.2,
+    "z": -9.8
+  },
+  "end": {
+    "x": 8.2,
+    "z": -9.8
+  },
+  "measurements": [
+    {
+      "count": 10,
+      "wave": 0,
+      "acquireMs": 0.3073830000000157,
+      "releaseMs": 0.06692099999997936,
+      "committedBytes": 16777216
+    },
+    {
+      "count": 10,
+      "wave": 1,
+      "acquireMs": 0.0926600000000235,
+      "releaseMs": 0.0016630000000077416,
+      "committedBytes": 16777216
+    },
+    {
+      "count": 10,
+      "wave": 2,
+      "acquireMs": 0.09318000000001803,
+      "releaseMs": 0.0016319999999723223,
+      "committedBytes": 16777216
+    },
+    {
+      "count": 10,
+      "wave": 3,
+      "acquireMs": 0.07397099999997181,
+      "releaseMs": 0.0017330000000015389,
+      "committedBytes": 16777216
+    },
+    {
+      "count": 50,
+      "wave": 0,
+      "acquireMs": 0.3745040000000017,
+      "releaseMs": 0.07976999999999634,
+      "committedBytes": 16777216
+    },
+    {
+      "count": 50,
+      "wave": 1,
+      "acquireMs": 0.455867000000012,
+      "releaseMs": 0.008251999999970394,
+      "committedBytes": 16777216
+    },
+    {
+      "count": 50,
+      "wave": 2,
+      "acquireMs": 0.549998999999957,
+      "releaseMs": 0.00791199999997616,
+      "committedBytes": 16777216
+    },
+    {
+      "count": 50,
+      "wave": 3,
+      "acquireMs": 0.4330730000000358,
+      "releaseMs": 0.005468000000007578,
+      "committedBytes": 16777216
+    },
+    {
+      "count": 150,
+      "wave": 0,
+      "acquireMs": 1.1795479999999543,
+      "releaseMs": 0.03026500000004262,
+      "committedBytes": 16777216
+    },
+    {
+      "count": 150,
+      "wave": 1,
+      "acquireMs": 1.3037649999999985,
+      "releaseMs": 0.014221000000020467,
+      "committedBytes": 16777216
+    },
+    {
+      "count": 150,
+      "wave": 2,
+      "acquireMs": 1.2374960000000215,
+      "releaseMs": 0.017516999999998006,
+      "committedBytes": 16777216
+    },
+    {
+      "count": 150,
+      "wave": 3,
+      "acquireMs": 1.2913770000000113,
+      "releaseMs": 0.027371000000016465,
+      "committedBytes": 16777216
+    },
+    {
+      "count": 300,
+      "wave": 0,
+      "acquireMs": 2.806730000000016,
+      "releaseMs": 0.10509799999999814,
+      "committedBytes": 16777216
+    },
+    {
+      "count": 300,
+      "wave": 1,
+      "acquireMs": 2.1823290000000384,
+      "releaseMs": 0.021321999999997843,
+      "committedBytes": 16777216
+    },
+    {
+      "count": 300,
+      "wave": 2,
+      "acquireMs": 2.335579999999993,
+      "releaseMs": 0.02209299999998393,
+      "committedBytes": 16777216
+    },
+    {
+      "count": 300,
+      "wave": 3,
+      "acquireMs": 2.2496510000000285,
+      "releaseMs": 0.021952999999996337,
+      "committedBytes": 16777216
+    },
+    {
+      "count": 600,
+      "wave": 0,
+      "acquireMs": 4.573783999999989,
+      "releaseMs": 0.09749699999997574,
+      "committedBytes": 16777216
+    },
+    {
+      "count": 600,
+      "wave": 1,
+      "acquireMs": 4.527925000000039,
+      "releaseMs": 0.040441000000043914,
+      "committedBytes": 16777216
+    },
+    {
+      "count": 600,
+      "wave": 2,
+      "acquireMs": 4.470127999999988,
+      "releaseMs": 0.03803800000002866,
+      "committedBytes": 16777216
+    },
+    {
+      "count": 600,
+      "wave": 3,
+      "acquireMs": 4.435895000000016,
+      "releaseMs": 0.037576000000001386,
+      "committedBytes": 16777216
+    }
+  ],
+  "note": "Legal saved route segments; synthetic actors isolate slot churn. Times include native intent bookkeeping and JS-WASM calls, not campaign navigation."
+}
