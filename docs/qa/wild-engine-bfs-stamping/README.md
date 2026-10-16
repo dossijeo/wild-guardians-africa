@@ -44,8 +44,9 @@ approach calls; mean total time was 619.44 ms baseline and 585.21 ms
 candidate (5.5% less). Each of the four replays per checkpoint ended with the
 same state hash and identical call counts. These short, instrumented replays
 show a promising but workload-dependent improvement; they do not prove a
-sustained campaign gain or memory safety at extreme scale. The PR remains
-experimental pending broader review.
+sustained campaign gain or memory safety at extreme scale. The project owner
+approved adopting this measured gain without requiring a full campaign for
+this isolated optimization.
 
 After copying the exact CI candidate artifact into the worktree, the local
 spatial prototype suite passed 59/59 and the playable suite passed 188/188.
