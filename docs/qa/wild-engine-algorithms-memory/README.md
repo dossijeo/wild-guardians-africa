@@ -1,5 +1,10 @@
 # Wild Engine algorithm and linear-memory audit — first baseline
 
+The later [sector-refresh walkability prototype](sector-refresh-halo.md) preserves
+324 differential route and connectivity results, but its noisy ABBA sample does
+not establish a whole-campaign gain. The candidate remains a patch, not the
+checked-in engine binary.
+
 ## Route-slot free-list experiment (rejected)
 
 The native intent code on this experimental branch scanned `routeSlots` at
