@@ -293,3 +293,27 @@ change should target that frontier and measure whether it resolves the
 pending connectivity without indiscriminate terrain expansion. Original
 reports: `canyon7-unknown-causes.json.gz` and
 `canyon7-unknown-region-reasons.json.gz`.
+
+### Targeted open-frontier pilot
+
+The native component graph now returns an exact missing-sector frontier for
+inconclusive connectivity. Commit `b21f01d6` also prevents the old crop-line
+and crop-ring demand from competing with that frontier during the
+structures-only fallback. The candidate WASM SHA-256 was
+`8876412833485617e188b37a0b2e634e51457863ab1147aff0fa2f5ef2e0feec`.
+The directed native frontier and raid tests passed (36/36), the web build
+passed, and the seven-night Gran Cañón/123 pilot had verified raid coverage
+without observer issues. All seven daily serialized hashes matched the prior
+pilot, so this change did not alter the observed physical or economic outcome.
+
+The result remains negative for connectivity resolution: native crop-plan
+`unknown` stayed at 155. Exact frontier requests queued rose from 1 to 10;
+the 155 offers were classified as 10 queued, 61 already requested and 84
+over the existing 16-chunk raid budget, compared with 1, 21 and 133 before
+the suppression. The frontier signal is being used more often, but the
+budget still saturates and the same inconclusive queries persist. The two
+full reports are retained as `canyon7-frontier-rejection-reasons.json.gz`
+and `canyon7-targeted-frontier-no-heuristic.json.gz`. This technical pilot
+does not establish a performance or balance improvement. Further work must
+inspect which requested sectors actually resolve the graph frontier before
+expanding the residency budget or changing attack decisions.
