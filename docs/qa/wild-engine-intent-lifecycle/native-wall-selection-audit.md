@@ -178,3 +178,26 @@ passed locally with this candidate. These fixtures do not establish policy
 equivalence or campaign performance across species and biomes; the proposal
 needs differential tests for natural barriers, multiple access sides, shields,
 simultaneous reservations and committed attack animations before activation.
+
+### Live opt-in technical pilot
+
+The native wall proposal is now available behind `nativeWallPlans` for raid
+selection when the native crop plan is `blocked` or `unknown`. The default
+remains off while the sustained comparison runs. The opt-in path rejects
+reserved targets, reserved or occupied attack sites and physically invalid
+sites before accepting the native lease, and cancels rejected proposals.
+
+A same-seed Sabana/712 `good` comparison completed seven nights in both
+modes with verified raid evidence and no technical failure. Both modes had
+identical serialized state hashes through day five. The opt-in mode made 22
+native wall proposals from night six onward, all `found`, and spent 670 ms
+in raid target selection versus 1098 ms for the control. Total elapsed time
+was approximately 100 seconds in both modes. On night seven it lost eight
+crops versus seven in the control and ended with 118 versus 119 living crops;
+both ended with 642 coins. Night-seven attacks differed (21 versus 23 wall
+hits) as navigation and target choices diverged. This is a technical smoke
+test, not evidence of better balance or sustained performance. The reports
+are retained under `.cache/native-intent-38799294071/` and were generated
+from working-tree code immediately before its commit; the report's `source`
+field is the prior clean HEAD, while `inputHashes` preserve the key source
+contents. Clean-source fourteen-night campaigns are the next comparison.

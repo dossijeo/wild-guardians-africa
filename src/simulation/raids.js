@@ -438,6 +438,34 @@ export function targetFor(s,a,nav) {
       }
       nav.intentTaskPlanner.cancelAttackIntent(a.id);
     }
+    if(nav.intentTaskPlanner?.nativeWallSelectionEnabled&&
+      (native?.status==='blocked'||native?.status==='unknown')){
+      const wall=nav.intentTaskPlanner.planAttackWall(s,a);
+      if(stats&&wall){
+        stats.nativeWallPlans=(stats.nativeWallPlans??0)+1;
+        stats.nativeWallRouteQueries=(stats.nativeWallRouteQueries??0)+
+          (wall.routeQueries??0);
+        stats.nativeWallResults??={};
+        stats.nativeWallResults[wall.status]=
+          (stats.nativeWallResults[wall.status]??0)+1;
+      }
+      if(wall?.status==='found'){
+        const point=wall.approach.point;
+        const rejected=targetReserved(s,a,wall.target)?'reserved-target':
+          !reservedApproachClear(s,a,point)?'reserved-approach':
+            !actorSegmentClear(point,point,a,actorBlockers(s,a,false))?
+              'occupied-approach':
+              !nav.walkable(point.x,point.z,a.radius,null,false)?
+                'physical-approach':null;
+        if(!rejected)return {...wall,shieldId:null};
+        nav.intentTaskPlanner.cancelAttackIntent(a.id);
+        if(stats){
+          stats.nativeWallRejections??={};
+          stats.nativeWallRejections[rejected]=
+            (stats.nativeWallRejections[rejected]??0)+1;
+        }
+      }
+    }
     // The native crop planner can leave interaction sites unresolved even
     // when the graph certifies that a wall separates the raid from the farm.
     // Ask the existing region/perimeter selector only for physical barriers;

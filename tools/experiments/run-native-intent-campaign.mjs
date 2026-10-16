@@ -13,7 +13,8 @@ const [daysArg='7',biome='sabana',seedArg='712',strategy='good',
 const days=Number(daysArg),seed=Number(seedArg);
 if(!Number.isSafeInteger(days)||days<1||days>100||
   !Number.isSafeInteger(seed)||seed<0)throw RangeError('Invalid campaign arguments');
-if(!['intent','control'].includes(mode))throw RangeError('Unknown campaign mode');
+if(!['intent','intent-wall','control'].includes(mode))
+  throw RangeError('Unknown campaign mode');
 const path=resolve(out),started=performance.now(),rows=[];
 let latestState=null,latestNav=null,dayWorkerSnapshot=[];
 const captureRaidDay=Number(process.env.WILD_ENGINE_CAPTURE_RAID_DAY??0);
@@ -52,7 +53,8 @@ const entryDriverFactory=nav=>({
   report(){return {mode:'continuous-native-entry'};},
   async dispose(){}
 });
-const parameters={days,biome,seed,strategy,nativeIntents:mode==='intent',
+const parameters={days,biome,seed,strategy,nativeIntents:mode!=='control',
+  nativeWallPlans:mode==='intent-wall',
   spatialAdvice,defensePolicy,decisionProfile,reloadRaids:false};
 try{
   const result=await simulateNativeCampaign({...parameters,

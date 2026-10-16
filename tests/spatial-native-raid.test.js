@@ -403,6 +403,8 @@ for(const count of [1,5])test(`${count} native raiders attack an accessible wall
     if(count===1){
       const planner=createEventDrivenTaskPlanner(session);
       planner.resetFromState(state);
+      planner.nativeWallSelectionEnabled=true;
+      nav.raidSelectionStats={};
       session.actorSectorRevision({worker:false,species:state.raid.animals[0].species});
       const wasm=session.core.wasm;
       const initialBuilds=wasm.nav_intent_wall_portal_builds();
@@ -487,6 +489,8 @@ for(const count of [1,5])test(`${count} native raiders attack an accessible wall
         'a closed crop enclosure must not produce a native crop route');
       assert.equal(routeRefreshDuringAttack,0,
         'an active wall intention must not invoke the legacy route planner');
+      assert((nav.raidSelectionStats.nativeWallResults?.found??0)>0,
+        'the opt-in raid uses a native wall proposal against the closed ring');
       stopTasks();stopWorld();delete nav.intentTaskPlanner;
     }
   }finally{session.dispose();}
@@ -837,6 +841,7 @@ test('an unresolved native crop group can still expose a certified reachable enc
     }
     const planner=createEventDrivenTaskPlanner(session);
     planner.resetFromState(state);
+    planner.nativeWallSelectionEnabled=true;
     const nav=createSpatialNavigationMovement(session,state);
     nav.intentTaskPlanner=planner;
     nav.raidSelectionStats={};
@@ -888,6 +893,7 @@ test('an unresolved native crop group can still expose a certified reachable enc
     const selected=targetFor(state,animal,nav);
     assert.equal(selected?.target?.kind,'wall');
     assert.equal(selected.target.id,'structure-9100');
+    assert.equal(selected.native,true);
     assert([...Array(count).keys()].some(index=>
       rows[index*5]===Number(selected.target.id.split('-').at(-1))),
     'the native portal graph exposes the wall selected by the current raid policy');

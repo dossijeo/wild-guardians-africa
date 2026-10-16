@@ -46,12 +46,13 @@ export function syncNativeCampaignRaidView(state,nav,previousCenter){
  }
  return context;
 }
-export async function simulateNativeCampaign({days=100,strategy='good',labourPolicy='legacy',profile='olderFemale',mixed=true,middayHiring=false,plantsPerWorker=12,defend=false,reserveLabourGrowth=true,reserveMaintenance=true,burstPlanting=false,cameraEntry=true,defensePolicy='expanding',nativeEvidence=true,decisionProfile=false,preparedWallQuotes=true,spatialAdvice=null,nativeIntents=false,onDay,onTick,onDecision,openingFactory=createOpeningWorld,entryDriverFactory=nav=>new NativeCampaignEntryDriver(nav),reloadRaids=true,...world}={}){
+export async function simulateNativeCampaign({days=100,strategy='good',labourPolicy='legacy',profile='olderFemale',mixed=true,middayHiring=false,plantsPerWorker=12,defend=false,reserveLabourGrowth=true,reserveMaintenance=true,burstPlanting=false,cameraEntry=true,defensePolicy='expanding',nativeEvidence=true,decisionProfile=false,preparedWallQuotes=true,spatialAdvice=null,nativeIntents=false,nativeWallPlans=false,onDay,onTick,onDecision,openingFactory=createOpeningWorld,entryDriverFactory=nav=>new NativeCampaignEntryDriver(nav),reloadRaids=true,...world}={}){
  if(!Number.isSafeInteger(days)||days<1||days>180)throw Error('Native protocol permits1–180 days only');
  if(!Number.isSafeInteger(plantsPerWorker)||plantsPerWorker<1)throw new Error('Plants per worker must be a positive integer');
  const protocol=campaignProtocolForLabour(labourPolicy),q4=labourPolicy==='q4',labourHistory=[],labourReasons={};
  const policy=nativeCampaignStrategy(strategy);defend=policy.defend;middayHiring=policy.middayHiring;plantsPerWorker=6;
  if(typeof Game.nightEntryPending!=='function')throw Error('Native pending entry handshake is not integrated; no campaign started');
+ if(nativeWallPlans&&!nativeIntents)throw Error('Native wall plans require native intentions');
  const opening=await openingFactory(world),nav=opening.nav;let s=opening.s,sequence=0;
  const useSpatialAdvice=spatialAdvice??Boolean(opening.session);
  if(useSpatialAdvice&&!opening.session)throw Error('Spatial advice requires a Wild Engine session');
@@ -61,6 +62,7 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
  }
  const intentPlanner=nativeIntents?createEventDrivenTaskPlanner(opening.session):null;
  intentPlanner?.resetFromState(s);
+ if(intentPlanner)intentPlanner.nativeWallSelectionEnabled=nativeWallPlans;
  const stopIntentTasks=intentPlanner?.observeTasks(s),
   stopIntentWorld=intentPlanner?.observeWorld(s);
  if(intentPlanner)nav.intentTaskPlanner=intentPlanner;
@@ -288,6 +290,6 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
  }
  const idleRuns=daily.map(r=>r.longestIdle).sort((a,b)=>a-b),unoccupied=daily.reduce((n,r)=>n+r.unoccupiedSeconds,0),daylight=daily.reduce((n,r)=>n+r.daylightSeconds,0);
  const activity={daylightSeconds:daylight,unoccupiedSeconds:unoccupied,unoccupiedFraction:daylight?unoccupied/daylight:null,longestIdle:Math.max(...idleRuns),p90LongestIdle:idleRuns[Math.ceil(idleRuns.length*.9)-1]};
- return {protocol,strategy,labourPolicy,labourHistory,labourReasons,raidEvidence:raidEvidence.report(s),entryTransport:driver.report(),peaceAfter100:true,expansion:expansion?.report()??null,plotSearch:plotSearch.report(),spatialSite:advice?spatialSite:null,spatialAdviceInitMs,spatialSync:advice?spatialSync:null,protectionEvents,nativeIntent:intentPlanner?.metrics(s.elapsed)??null,...(evidence?{nativeEvidence:evidence.report(s)}:{}),biome:s.biome,culture:s.culture,seed:s.seed,policy:{profile,mixed,middayHiring,plantsPerWorker,defend,cashPolicy:policy.cashPolicy,reserveMaintenance,burstPlanting,cameraEntry,defensePolicy},defense:defense?.report(s)??null,additionalHiring,result:s.result,completedNights:s.completedNights,money:numberOf(s.ledger.balance),maximumLiving,plots:plots.length,reloads,counts,activity,daily,state:s,nav};
+ return {protocol,strategy,labourPolicy,labourHistory,labourReasons,raidEvidence:raidEvidence.report(s),entryTransport:driver.report(),peaceAfter100:true,expansion:expansion?.report()??null,plotSearch:plotSearch.report(),spatialSite:advice?spatialSite:null,spatialAdviceInitMs,spatialSync:advice?spatialSync:null,protectionEvents,nativeIntent:intentPlanner?.metrics(s.elapsed)??null,...(evidence?{nativeEvidence:evidence.report(s)}:{}),biome:s.biome,culture:s.culture,seed:s.seed,policy:{profile,mixed,middayHiring,plantsPerWorker,defend,cashPolicy:policy.cashPolicy,reserveMaintenance,burstPlanting,cameraEntry,defensePolicy,nativeWallPlans},defense:defense?.report(s)??null,additionalHiring,result:s.result,completedNights:s.completedNights,money:numberOf(s.ledger.balance),maximumLiving,plots:plots.length,reloads,counts,activity,daily,state:s,nav};
  } catch(error){let receipts;try{receipts=partialEvidence();}catch(e){receipts={evidenceError:e.message};}error.nativeCampaignPartial={strategy,seed:s.seed,day:s.day,time:s.time,result:s.result,state:serialize(s),entryTransport:driver.report(),receipts};throw error;} finally {stopProtectionEvents?.();stopIntentTasks?.();stopIntentWorld?.();if(intentPlanner)delete nav.intentTaskPlanner;stopSpatialEvents?.();await driver.dispose();await opening.dispose?.();}
 }
