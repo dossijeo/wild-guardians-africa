@@ -26,6 +26,7 @@ int spatial_select_nav_profile_index(int);
 int lazy_weak_region(int,int);
 int lazy_enclosure(int,int);
 int lazy_connected(int,int,int,int);
+int lazy_connected_reason();
 int spatial_local_clear(float,float,float,float);
 int spatial_crop_placement_valid(float,float);
 float spatial_surface_anywhere(float,float);
