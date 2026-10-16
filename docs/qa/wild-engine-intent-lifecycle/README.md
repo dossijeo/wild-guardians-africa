@@ -515,21 +515,3 @@ longer rebuild the lease map; a directed event test, 193 playable tests and
 12 native raid tests pass. Native animal target selection and the remaining
 legacy fallbacks are still separate acceptance gaps, so this does not claim
 complete replacement of the JavaScript planner.
-
-A previously completed continuous Manglares/712 `good` run on source
-`3361c06a55350d58922034f79cdea517da8a3563` and WASM SHA-256
-`ff719cfebd15fe0aa11a4ed85abc2912f35527e84e635699429489660a1fd8e7`
-has now been archived as `manglares24-profile.json.gz` with its sampled
-`manglares24-intent.cpuprofile.gz`. It used native intentions, spatial advice,
-the expanding defense policy and the JavaScript wall selector. It completed
-24 nights without a technical stop; all 24 raid observers reported verified
-coverage and zero issues. The day-25 dawn had 104 living crops, 751 coins and
-one operational center. Elapsed time was 1,539.79 s, including 1,307 s in
-`Game.tick` and 152 s in bot decisions. The native planner reported 7,449
-worker planning calls, 3,009 animal planning calls and 585 topology
-reconciliations. The transitional raid selector still recorded 2,128 blocked
-fallbacks to JavaScript, while days 20 and 23 each spent over 140 s in
-`Game.tick`. These are diagnostic observations, not a matched performance
-comparison. This run predates the subsequent raid reservation event gate and
-the separate exact-money optimization; it cannot validate those revisions or
-establish 30- or 100-night stability.
