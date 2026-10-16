@@ -28,11 +28,11 @@ const inspect=()=>{
   if(!group){sample={status:'no-unprotected-group',groupMs,groups:groups.length};return;}
   const originalPreview=latestNav.withWallPreview;
   const originalPlacement=latestNav.wallPlacement;
-  let previewMs=0,placementMs=0,placementCalls=0;
+  let previewMs=0,previewDepth=0,placementMs=0,placementCalls=0;
   latestNav.withWallPreview=function(...args){
-    const start=performance.now();
+    const outer=previewDepth++===0,start=performance.now();
     try{return originalPreview.apply(this,args);}
-    finally{previewMs+=performance.now()-start;}
+    finally{previewDepth--;if(outer)previewMs+=performance.now()-start;}
   };
   latestNav.wallPlacement=function(...args){
     placementCalls++;
