@@ -88,7 +88,9 @@ seed-123/day-7 state. Its two ruined walls (`structure-549` and
 `structure-862`) can be restored without closing the currently reachable
 worker routes. The plan returns no gate in either case; native preview of
 each restored wall confirms those routes remain found, and the game state
-is not changed by the preview. Both directed tests passed with WASM SHA-256
+is not changed by the preview. The test also executes a normal paid repair
+of `structure-549`, checks the exact debit and confirms that no unnecessary
+gate is added. Both directed tests passed with WASM SHA-256
 `ff719cfebd15fe0aa11a4ed85abc2912f35527e84e635699429489660a1fd8e7`.
 This second case checks that the fix does not add gratuitous gates; it is
 not a Gran Cañón gate-closure scenario.

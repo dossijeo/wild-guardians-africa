@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
 import {deserialize,serialize} from '../src/persistence/snapshots.js';
 import {numberOf} from '../src/simulation/money.js';
-import {planRepairAccess,requestRepair,tick} from '../src/simulation/game.js';
+import {planRepairAccess,repairCost,requestRepair,tick} from '../src/simulation/game.js';
 import {createSpatialGameSession} from
   '../src/world/hierarchical-wasm/spatial-game-session.js';
 import {createSpatialNavigationMovement} from
@@ -99,7 +99,9 @@ test('repairing the last physical gap creates a worker-access gate before paymen
 
 test('Gran Cañón repairs retain existing worker routes without unnecessary gates',
  {skip:!module&&'Build and select the experimental WASM first'},async()=>{
-  const game=deserialize(canyonSnapshot),{session,nav}=await open(game);
+  const game=deserialize(canyonSnapshot);
+  game.raid=null;game.time=100;game.pauses=[];
+  const {session,nav}=await open(game);
   try{
     const home=game.villages[0].entry;
     for(const id of ['structure-549','structure-862']){
@@ -119,5 +121,20 @@ test('Gran Cañón repairs retain existing worker routes without unnecessary gat
             {worker:true,cached:false}).status,'found');
       });
     }
+    const target=game.structures.find(piece=>piece.id==='structure-549');
+    const beforeMoney=numberOf(game.ledger.balance);
+    const expectedCost=numberOf(repairCost(target));
+    const beforeGates=game.structures.filter(piece=>piece.gate).length;
+    requestRepair(game,'qa-canyon-repair-549',target.id);
+    const task=game.tasks.find(item=>item.kind==='repair'&&
+      item.targetId===target.id);
+    assert(task);
+    const worker=game.workers.find(item=>item.centerId===task.centerId);
+    assert(worker);
+    worker.status='acting';worker.taskId=task.id;worker.actionRemaining=0;
+    tick(game,.1,nav);
+    assert.equal(target.status,'intact');
+    assert.equal(numberOf(game.ledger.balance),beforeMoney-expectedCost);
+    assert.equal(game.structures.filter(piece=>piece.gate).length,beforeGates);
   }finally{session.dispose();}
 });
