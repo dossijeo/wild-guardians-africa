@@ -534,3 +534,37 @@ removals still avoid that query in that case. The experimental defense policy
 wakes on this new-group event as well as on a certified breach. Its broader
 periodic expansion logic remains to be replaced, so this is a targeted
 event-delivery improvement rather than a fully event-driven economic policy.
+
+The experimental native-intent campaign now runs its expanding defense
+policy with an event gate. It evaluates the existing paid repair/build
+decisions initially and then only after a confirmed income, crop, wall,
+structure-damage or repair event, or a native crop-protection notification.
+Elapsed simulation time alone does not request another perimeter preview.
+The legacy comparison mode retains its 30-second interval. This change
+also quotes the full incremental wall stroke before spending: an
+unaffordable enclosure remains a savings target, and smaller deliveries do
+not repeatedly quote the same geometry. It does not yet replace the
+JavaScript rectangle with a native certified enclosure plan; physical
+protection must still be verified separately from purchasing a stroke.
+
+Profiling a three-night Sabana/712 run exposed a cost in this transitional
+policy: three full `quoteWallChain` calls consumed about 14.5 seconds of
+defense decision time. The policy now uses the price of the missing stroke
+slots as a conservative savings threshold and defers the full geometry and
+door quote until it can afford that threshold. Obstacles may make the final
+quote cheaper, so this can save more than strictly necessary; it avoids
+repeating an expensive speculative quote on every small income event.
+In the native-intent campaign, the event-driven defense target is included
+in the bot's cash reserve before it plants again. Otherwise the bot kept
+buying seeds with the same surplus and never accumulated enough for a
+complete stroke. This is a deliberate economic-policy change in the
+experimental virtual player; prices and game rules remain unchanged.
+The first five-night probe revealed a degenerate interaction: reserving the
+entire stroke before replacing harvested plants left zero living crops on
+day 2 while wages continued. The runner now gives replacement planting up
+to the current staff's ordinary crop workload priority over discretionary
+wall savings. Above that workload, it still reserves the defensive target.
+This is a spending priority, not a plant-count cap; further expansion remains
+legal whenever the other reserves are funded.
+The paired runs, failed intermediate variants and seven-night follow-up are
+recorded in `event-driven-defense-qa.md` with their raw JSON reports.

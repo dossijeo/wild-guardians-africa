@@ -22,6 +22,9 @@ const captureDayEnd=Number(process.env.WILD_ENGINE_CAPTURE_DAY_END??0);
 const captureOccupiedFallback=process.env.WILD_ENGINE_CAPTURE_OCCUPIED_FALLBACK==='1';
 const spatialAdvice=process.env.WILD_ENGINE_SPATIAL_ADVICE==='1';
 const defensePolicy=process.env.WILD_ENGINE_DEFENSE_POLICY??'legacy';
+const defenseGate=process.env.WILD_ENGINE_DEFENSE_GATE;
+if(defenseGate&&!['event','periodic'].includes(defenseGate))
+  throw RangeError('Unknown defense event gate');
 const decisionProfile=process.env.WILD_ENGINE_DECISION_PROFILE==='1';
 const memoryProfile=process.env.WILD_ENGINE_MEMORY_PROFILE==='1';
 let capturedRaid=false;
@@ -76,6 +79,7 @@ const entryDriverFactory=nav=>({
 });
 const parameters={days,biome,seed,strategy,nativeIntents:mode!=='control',
   nativeWallPlans:mode==='intent-wall',
+  ...(defenseGate?{defenseEventDriven:defenseGate==='event'}:{}),
   spatialAdvice,defensePolicy,decisionProfile,memoryProfile,reloadRaids:false};
 try{
   const result=await simulateNativeCampaign({...parameters,
