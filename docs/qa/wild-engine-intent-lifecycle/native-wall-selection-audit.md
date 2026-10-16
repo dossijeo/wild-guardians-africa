@@ -1,0 +1,72 @@
+# Native wall-target selection: measured migration boundary
+
+The experimental intent planner already selects and leases accessible crops in
+Wild Engine. When its crop result is `blocked` or `unknown`, `raids.js` still
+uses `targetForImpl()` for wall selection. This is a transitional responsibility,
+not yet native ownership of the animal's full attack intention.
+
+## Frozen baseline
+
+The archived `campaign-14-transient-leases.json` replay (Sabana/712, source
+`2e03bc7d`, WASM SHA-256
+`2d4d5031487245a2930a630f2a3b200d48cb389722435ef78033861c007c51ba`)
+recorded 2,151 target selections and 19.141 s in selection. Native crop planning
+returned 1,227 `blocked`, 181 `found`, 159 `occupied` and one `unknown`; the
+transitional selector ran 1,227 blocked and 583 unsupported fallbacks. It built
+the JavaScript wall-portal graph 224 times (2.138 s) and produced 1,519
+fallback `unknown` outcomes. These counts establish a sustained cost and a
+remaining ownership split; they do not prove that every fallback was redundant
+or that moving the same loops to C++ would be faster.
+
+## Existing authority and missing step
+
+`spatial-intent-state.cpp` already maintains live crop groups, species-specific
+attack sites, live wall targets, and native intention dependencies. The lazy
+sector graph supplies weak-region IDs, sealed-enclosure status, connectivity,
+and route planning under the selected movement profile. The JavaScript selector
+still samples each wall's two sides, builds a graph of wall edges between weak
+regions, follows that graph toward a protected crop region, and checks a final
+reachable attack position. This wall-to-region association has not yet been
+stored in the native read model.
+
+The native target projection previously omitted `baseScaleX` and gate depth.
+Commit `3ef66bd7` now derives width and depth from `wallCollisionFrame()` and
+projects both into the read model. A directed repair-route regression checks a
+rotated scaled gate. This is a physical-geometry prerequisite; it does not move
+wall target selection into WASM.
+
+## Native integration contract
+
+The next implementation should derive wall-side region edges from the same
+confirmed wall targets and lazy-sector topology. Index them by movement profile
+and relevant topology revision, recomputing on wall/gate/breach or resident-sector
+changes, never on an ordinary hit that leaves collision unchanged. For each
+blocked crop group, it should distinguish a wall-separated reachable attack
+side from a purely natural barrier. An `unknown` crop or wall-side region must
+remain pending; it cannot justify an attack or a negative cache entry.
+
+The native planner must preserve the game's crop-first priority, eligible
+structure alternatives, target leases, attack-site leases, deterministic
+tie-breaks, and committed damage frames. A found wall proposal needs the wall
+ID, a physically valid approach, a reservation and a pinned route in one
+revision-checked operation. JavaScript should execute the confirmed attack and
+animation, without rebuilding a per-crop or per-wall search. Existing
+`targetForImpl()` remains a transitional reference until these properties and
+sustained campaign costs are verified, then its replaced logic should be
+removed rather than left as a competing planner.
+
+## Required differential fixtures
+
+- Sabana day-ten unresolved crop group that currently exposes wall
+  `structure-9100`: `unknown` must not be silently converted to `blocked`.
+- Closed rings with one and five animals, plus a newly opened breach that
+  causes a tactical change only after the committed strike frame.
+- Natural-only barriers, mixed rock/river/wall perimeters and multiple wall
+  access sides: do not nominate a wall without a reachable physical attack
+  position or hide an alternative passage.
+- Rotated and scaled gates, ruined modules, sector unload/reload, and save/load
+  during a leased attack.
+- Frozen 14-night replay and longer multi-biome campaigns: compare target
+  choices, reservations, damage timing, rejected plans, native/JS calls,
+  `Game.tick`, memory and terminal outcomes. Different valid routes are
+  acceptable; invalid physical movement or changed combat rules are not.

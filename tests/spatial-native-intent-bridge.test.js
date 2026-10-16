@@ -13,9 +13,34 @@ import {cropBecameInactive} from '../src/simulation/active-crops.js';
 import {createSpatialIntentBridge,createEventDrivenTaskPlanner} from
  '../src/world/hierarchical-wasm/spatial-intent-bridge.js';
 import {enqueue,notifyWorkerPlanningChange,replaceTasks} from '../src/simulation/tasks.js';
+import {wallCollisionFrame} from '../src/world/wall-collision-frame.js';
 
 const binary=process.env.WILD_ENGINE_NATIVE_ROUTE_WASM;
 const module=binary?new WebAssembly.Module(readFileSync(binary)):null;
+
+test('the intent bridge projects a scaled gate using the physical wall frame',()=>{
+ const memory={buffer:new ArrayBuffer(2048)},batches=[];
+ const wasm=new Proxy({memory,
+  nav_intent_changes_ptr:()=>8,
+  nav_intent_apply_changes:(sequence,count)=>{
+   const values=new Float64Array(memory.buffer,8,count*10);
+   batches.push({sequence,rows:Array.from({length:count},(_,index)=>
+     Array.from(values.slice(index*10,index*10+10)))});
+   return 1;
+  }},{get:(target,key)=>key in target?target[key]:()=>0});
+ const state={workers:[],tasks:[],plants:[],crates:[],structures:[{
+  id:'structure-9100',kind:'wall',material:'adobe',status:'intact',
+  x:2,z:3,yaw:.3,gate:true,baseScaleX:.8,hp:80,maxHp:100}]};
+ const bridge=createSpatialIntentBridge({core:{wasm}});
+ bridge.resetFromState(state);
+ const wall=state.structures[0],frame=wallCollisionFrame(wall);
+ const row=batches[0].rows.find(item=>item[1]===2);
+ assert.equal(row[2],9100);
+ assert.equal(row[7],140,'the gate depth scale reaches the native read model');
+ assert.equal(row[8],frame.yaw);
+ assert(Math.abs(row[9]-frame.width/1.09)<1e-12,
+  'the full base width and gate scale reach native service routing');
+});
 
 test('loading an active raid restores distinct routes and reservations for eight animals',
  {skip:!module&&'Build and select the experimental WASM first'},()=>{
