@@ -495,7 +495,7 @@ int runLocalCropCut(int minX,int minZ,int maxX,int maxZ,int seedCount,
   // The cut prototype does not currently model arbitrary animal portals.
   for(int profile:profiles)if(!contexts[profile]->portals.empty())return -1;
   const auto result=enclosure_cut::find(minX,minZ,maxX,maxZ,cutSeeds,padding,
-      cell,step);
+      cell,step,respectFluidPlacement?10000:0);
   active().cutFlow=result.flow;active().cutCells=result.cells;
   for(const auto& edge:result.edges)cutEdges.insert(cutEdges.end(),
     {edge.outsideX,edge.outsideZ,edge.insideX,edge.insideZ});

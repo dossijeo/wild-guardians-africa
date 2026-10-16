@@ -16,7 +16,8 @@ struct Edge {int to,reverse,capacity;};
 inline Result find(int minX,int minZ,int maxX,int maxZ,
     const std::vector<int32_t>& seeds,int padding,
     const std::function<int(int,int)>& cell,
-    const std::function<int(int,int,int,int)>& step){
+    const std::function<int(int,int,int,int)>& step,
+    int unresolvedCutCost=0){
   Result result;
   const int64_t width=int64_t(maxX)-minX,height=int64_t(maxZ)-minZ;
   if(width<3||height<3||width*height>4096||seeds.empty()||
@@ -96,7 +97,9 @@ inline Result find(int minX,int minZ,int maxX,int maxZ,
   while(levels()){
     std::fill(cursor.begin(),cursor.end(),0);
     for(int pushed;(pushed=augment(source,inf))>0;)result.flow+=pushed;
-    if(result.flow>=forbiddenCutCost){result.status=-1;return result;}
+    if(unresolvedCutCost&&result.flow>=unresolvedCutCost){
+      result.status=-1;return result;
+    }
   }
   // The source side contains the crop. Every crossing is a proposed barrier.
   std::vector<uint8_t> reachable(count+2,0);std::queue<int> queue;
