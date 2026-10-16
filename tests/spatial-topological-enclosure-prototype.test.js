@@ -185,7 +185,7 @@ if(module&&WebAssembly.Module.imports(module).some(item=>item.module==='wasi_sna
   WebAssembly.Instance=function(mod,imports){return new Instance(mod,{
     ...imports,wasi_snapshot_preview1:{proc_exit(code){throw Error(`WASM exited: ${code}`);}}});};
 }
-test('native five-profile cut is read-only, deterministic and reports missing sectors',
+test('native five-profile cut is deterministic and responds to local solid changes',
   {skip:!module&&'Build the experimental Wild Engine WASM first'},async()=>{
     const state=Game.newGame({seed:712,biome:'sabana',culture:'mapungubwe',
       slotId:'topological-cut-test'});
@@ -255,5 +255,26 @@ test('native five-profile cut is read-only, deterministic and reports missing se
       assert.equal(serialize(state),stateBefore);
       assert.equal(query(500,500).count,-1);
       assert.equal(query(500,500,'conservative').count,-1);
+      const ring=[
+        wasm.spatial_add_barrier(-13,-17,5,.4,0),
+        wasm.spatial_add_barrier(-13,-9,5,.4,0),
+        wasm.spatial_add_barrier(-17,-13,.4,5,0),
+        wasm.spatial_add_barrier(-9,-13,.4,5,0)
+      ];
+      assert.ok(ring.every(id=>id>0));
+      try{
+        const closed=query(-13,-13,'conservative');
+        assert.ok(closed.count<conservative.count,
+          'A new solid enclosure must reduce the proposed cut');
+        assert.equal(wasm.spatial_remove_barrier(ring[1]),1);
+        ring[1]=0;
+        const opened=query(-13,-13,'conservative');
+        assert.ok(opened.count>closed.count,
+          'A destroyed wall must reopen a topological cut');
+      }finally{
+        for(const id of ring)if(id)assert.equal(wasm.spatial_remove_barrier(id),1);
+      }
+      assert.deepEqual(query(-13,-13,'conservative'),conservative,
+        'Removing the enclosure must restore the original cut without stale state');
     }finally{session.dispose();}
   });

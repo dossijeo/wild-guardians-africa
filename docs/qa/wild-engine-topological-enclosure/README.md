@@ -509,6 +509,17 @@ legal cut when the local topology still requires crossing such faces.
 The weighted function was removed from the active prototype after this
 measurement; its exact source remains in commit `46169800` for reproduction.
 
+### Local construction and destruction regression
+
+The focused WASM test now encloses a known resident seed with four native
+solid barrier segments. The conservative cut shrinks when the loop closes,
+grows when one segment is removed, and returns exactly to its original edge
+and boundary lists after the remaining segments are removed. These queries
+run against the same session and do not mutate the serialized game state.
+This demonstrates that the prototype reads current native obstacles rather
+than returning a stale cut for this local sequence. It does **not** yet test
+the full game construction event path, sector unload/reload or save/restore.
+
 This also explains why checking only the four exposed wall ends is insufficient
 for this candidate: a mixed wall/building/terrain closure needs evidence that
 the intervening obstacle chain stays impassable. A self-closing wall face with
