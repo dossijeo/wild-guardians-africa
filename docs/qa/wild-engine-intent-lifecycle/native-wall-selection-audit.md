@@ -103,3 +103,11 @@ native portal rows, and that the frozen day-ten selector's `structure-9100`
 also occurs there. Both checks passed. This is candidate inclusion for two
 fixtures, not full candidate-set equivalence; the live raid still uses the JS
 selector and its physical approach route.
+
+The same candidate passed two topology-transition checks locally. After a
+confirmed wall ruin, the ruined wall IDs disappear from the native portal
+rows while the other wall attacker can reconsider the breach. When the
+central chunk is removed, no wall-side portal is certified; reloading that
+chunk restores the rows and the raid still completes. These checks cover
+invalidations at the diagnostic query boundary, not an incremental cached
+portal index or every combination of natural barriers and wall materials.

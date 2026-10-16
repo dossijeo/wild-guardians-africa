@@ -417,6 +417,14 @@ for(const count of [1,5])test(`${count} native raiders attack an accessible wall
         assert.notEqual(rows[offset+1],rows[offset+2]);
         assert(Number.isFinite(rows[offset+3])&&Number.isFinite(rows[offset+4]));
       }
+      assert.equal(session.core.removeChunk(0,0),1);
+      session.actorSectorRevision({worker:false,species:state.raid.animals[0].species});
+      assert.equal(wasm.nav_intent_wall_portals(state.raid.animals[0].radius),0,
+        'unloaded sectors cannot certify a wall-side portal');
+      assert(session.core.addChunk(0,0)>0);
+      session.actorSectorRevision({worker:false,species:state.raid.animals[0].species});
+      assert(wasm.nav_intent_wall_portals(state.raid.animals[0].radius)>0,
+        'the portal graph recovers when the sector becomes resident again');
       stopWorld=planner.observeWorld(state);stopTasks=planner.observeTasks(state);
       const planCrop=planner.planAttackCrop;
       planner.planAttackCrop=(...args)=>{
@@ -501,6 +509,14 @@ test('a confirmed enclosure breach reconsiders other wall attackers at an event 
       }
       assert.equal(attackers.length,2,'both animals should target the closed enclosure');
       const wasm=session.core.wasm;
+      session.actorSectorRevision({worker:false,species:attackers[0].species});
+      const beforePortals=wasm.nav_intent_wall_portals(attackers[0].radius);
+      const beforeRows=new Float64Array(wasm.memory.buffer,
+        wasm.nav_intent_wall_portals_ptr(),beforePortals*5);
+      const beforePortalIds=new Set([...Array(beforePortals).keys()].map(
+        index=>beforeRows[index*5]));
+      assert([...attackers].some(animal=>beforePortalIds.has(
+        Number(animal.targetId.split('-').at(-1)))));
       for(const animal of attackers){
         session.actorSectorRevision({worker:false,species:animal.species});
         assert(wasm.nav_intent_track_wall_opportunities(
@@ -549,6 +565,14 @@ test('a confirmed enclosure breach reconsiders other wall attackers at an event 
       };
       Game.tick(state,.25,nav);
       Game.tick(saved,.25,restoredNav);
+      session.actorSectorRevision({worker:false,species:attackers[0].species});
+      const afterPortals=wasm.nav_intent_wall_portals(attackers[0].radius);
+      const afterRows=new Float64Array(wasm.memory.buffer,
+        wasm.nav_intent_wall_portals_ptr(),afterPortals*5);
+      const ruinedIds=new Set(breach.map(wall=>Number(wall.id.split('-').at(-1))));
+      for(let index=0;index<afterPortals;index++)
+        assert(!ruinedIds.has(afterRows[index*5]),
+          'a ruined wall cannot remain a native attackable portal');
       if(process.env.WILD_ENGINE_NATIVE_ROUTE_WASM)
         assert(nativeBreachPlans.some(plan=>plan?.status==='found'),
           `native crop planner should resolve the opened access: ${JSON.stringify(nativeBreachPlans)}`);
