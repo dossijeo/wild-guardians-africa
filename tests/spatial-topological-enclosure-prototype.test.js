@@ -1,0 +1,95 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {serialize} from '../src/persistence/snapshots.js';
+import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
+import {cutEdgesToStrokes,enclosureJunctions,inspectSelfClosedQuote,junctionBlocksSmallestAnimal,
+  SMALLEST_ANIMAL_RADIUS,stitchTwoCutStrokes} from '../src/world/hierarchical-wasm/spatial-topological-enclosure-prototype.js';
+import {villageLayout} from '../src/world/villages.js';
+import * as Game from '../src/simulation/game.js';
+
+test('native cut edges form an arbitrary world contour without assuming a rectangle',()=>{
+  const cells=[[1,1],[2,1],[3,1],[1,2],[1,3]];
+  const inside=new Set(cells.map(([x,z])=>`${x},${z}`)),edges=[];
+  for(const [x,z] of cells)for(const [dx,dz] of [[1,0],[-1,0],[0,1],[0,-1]])
+    if(!inside.has(`${x+dx},${z+dz}`))edges.push(x+dx,z+dz,x,z);
+  const shape=cutEdgesToStrokes(edges);
+  assert.equal(shape.ambiguous.length,0);
+  assert.equal(shape.strokes.length,1);
+  assert.deepEqual(shape.strokes[0][0],shape.strokes[0].at(-1));
+  assert.ok(new Set(shape.strokes[0].map(point=>point[0])).size>2);
+  assert.ok(new Set(shape.strokes[0].map(point=>point[1])).size>2);
+  assert.equal(enclosureJunctions(shape.strokes).length,0);
+  assert.throws(()=>cutEdgesToStrokes([0,0,4,4]),/nonlocal/);
+  const stitched=stitchTwoCutStrokes([[[0,0],[1,0]],[[2,0],[3,0]]]);
+  assert.deepEqual(stitched[0],stitched.at(-1));
+  assert.equal(stitchTwoCutStrokes([[[0,0],[1,0]],[[30,0],[31,0]]]),null);
+  const junctions=enclosureJunctions([[[0,0],[1,0]],[[2,0],[3,0]]]);
+  assert.equal(junctions.length,4);
+  assert.deepEqual(junctions.map(item=>item.end),['start','finish','start','finish']);
+  assert.equal(junctionBlocksSmallestAnimal(SMALLEST_ANIMAL_RADIUS*2-.01),true);
+  assert.equal(junctionBlocksSmallestAnimal(SMALLEST_ANIMAL_RADIUS*2),false);
+  assert.equal(junctionBlocksSmallestAnimal(NaN),null);
+});
+
+test('a placed free-form wall loop needs a gate and no omitted modules',()=>{
+  const piece=(id,x,z,yaw,gate=false)=>({id,kind:'wall',material:'zarzas',
+    hp:100,status:'intact',baseScaleX:4/2.18,x,z,yaw,gate});
+  const walls=[piece('a',0,2,0,true),piece('b',2,0,-Math.PI/2),
+    piece('c',0,-2,0),piece('d',-2,0,-Math.PI/2)];
+  const quote={pieces:walls,previewPieces:walls,blockedPieces:[],blockedCrops:[]};
+  assert.equal(inspectSelfClosedQuote(quote,[],[{x:0,z:0}]).status,
+    'closed-wall-loop');
+  assert.equal(inspectSelfClosedQuote({...quote,blockedPieces:[walls[0]]},[],
+    [{x:0,z:0}]).status,'open');
+  assert.equal(inspectSelfClosedQuote({...quote,previewPieces:walls.map(p=>
+    ({...p,gate:false}))},[],[{x:0,z:0}]).status,'closed-without-gate');
+  assert.equal(inspectSelfClosedQuote({...quote,previewPieces:walls.slice(1)},[],
+    [{x:0,z:0}]).status,'open');
+  assert.equal(inspectSelfClosedQuote({pieces:[walls[2]],
+    previewPieces:[walls[2]],blockedPieces:[],blockedCrops:[]},
+  [walls[0],walls[1],walls[3]],[{x:0,z:0}]).status,'closed-wall-loop');
+  assert.equal(inspectSelfClosedQuote({...quote,previewPieces:walls.map((p,i)=>
+    i===1?{...p,status:'ruined'}:p)},[],[{x:0,z:0}]).status,'open');
+});
+
+const path=process.env.WILD_ENGINE_TOPOLOGICAL_CUT_WASM;
+const module=path?new WebAssembly.Module(readFileSync(path)):null;
+const pack=JSON.parse(readFileSync(new URL('../public/content/villages.json',import.meta.url),'utf8'))[0];
+if(module&&WebAssembly.Module.imports(module).some(item=>item.module==='wasi_snapshot_preview1')){
+  const Instance=WebAssembly.Instance;
+  WebAssembly.Instance=function(mod,imports){return new Instance(mod,{
+    ...imports,wasi_snapshot_preview1:{proc_exit(code){throw Error(`WASM exited: ${code}`);}}});};
+}
+test('native five-profile cut is read-only, deterministic and reports missing sectors',
+  {skip:!module&&'Build the experimental Wild Engine WASM first'},async()=>{
+    const state=Game.newGame({seed:712,biome:'sabana',culture:'mapungubwe',
+      slotId:'topological-cut-test'});
+    state.villages[0].buildings=villageLayout(pack,0,0);
+    const loaded=new Map(),session=createSpatialGameSession(module,state,{
+      loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+    try{
+      const jobs=new Map();
+      for(let z=-1;z<=1;z++)for(let x=-1;x<=1;x++)jobs.set(`${x},${z}`,
+        {cx:x,cz:z,score:Math.hypot(x,z)});
+      session.stream.plan(jobs);await session.stream.whenIdle();
+      for(const species of ['warthog','hyena','buffalo','lion','rhino'])
+        session.actorRegionsBatch([{x:-13,z:-13}],{worker:false,species});
+      const wasm=session.core.wasm,topology=session.topologySource.revision();
+      const stateBefore=serialize(state),updates=wasm.lazy_sector_updates();
+      const query=(x,z)=>{
+        const pointer=wasm.lazy_cut_seeds_ptr(1);
+        new Int32Array(wasm.memory.buffer,pointer,2).set([x,z]);
+        const count=wasm.lazy_local_crop_cut(x-12,z-12,x+13,z+13,1,2);
+        return {count,edges:count>=0?Array.from(new Int32Array(wasm.memory.buffer,
+          wasm.lazy_local_crop_cut_ptr(),count*4)):[]};
+      };
+      const first=query(-13,-13),again=query(-13,-13);
+      assert.ok(first.count>0);
+      assert.deepEqual(again,first);
+      assert.equal(wasm.lazy_sector_updates(),updates);
+      assert.equal(session.topologySource.revision(),topology);
+      assert.equal(serialize(state),stateBefore);
+      assert.equal(query(500,500).count,-1);
+    }finally{session.dispose();}
+  });

@@ -1,0 +1,280 @@
+# Wild Engine: local topological enclosure cut (experimental)
+
+**Status:** isolated read-only prototype; the game and virtual player still use
+the existing planner. Do not merge this as a replacement for enclosure advice.
+The prototype has not yet demonstrated a complete buildable, worker-accessible
+enclosure on the real campaign sample.
+
+## Scope and provenance
+
+The branch starts from `main` commit `dec9a946a56fdfcfb4145c42907bc6e9577213ff`.
+The checked-in baseline WASM SHA-256 is
+`7817ebadc3dfa4c4d32f6197b5c4eb53468ad5f7f23293d72b902c23a7707095`.
+Experiments use one Windows host (Intel i7-11800H, 8 cores/16 threads, 64 GiB
+RAM) and the same single-threaded game rules. The candidate is compiled to an
+ignored `.cache` file; the checked-in production WASM is untouched. The first
+development build used Ubuntu Emscripten 3.1.5 and emitted an extra WASI exit
+import. It was useful for testing, but cross-toolchain timing and binary-size
+comparisons are not adoption evidence. The final comparison uses the project's
+locally installed Emscripten 6.0.12.
+
+## Current work, classified
+
+| Operation | Current location | Purpose | Needed when? |
+| --- | --- | --- | --- |
+| Group living crops and assess existing protection | `spatial-intent-state.cpp`, `spatial-crop-enclosure-plan.js` | Select a region to defend | Before topological search |
+| Generate up to three rectangular strokes | `spatial-crop-enclosure-plan.js`; expanding bot has another persistent rectangular envelope | Discover a candidate boundary | Replaceable hypothesis |
+| Resample a stroke and omit existing walls | `wall-layout.js` | Convert geometry to physical modules | After a cut exists |
+| `wallPlacement`, crop overlap, wall material and cost | `quoteWallChain` | Constructible pieces and exact price | Final candidate only |
+| `boundaryFaces`, virtual natural obstacles, gate host tests | `planNewWallGates`, `boundary-gates.js`, `boundary-faces.js` | Door placement and playable rooms | Final candidate only |
+| Village/center/worker route witnesses and gate portals | `planNewWallGates` | Preserve worker access | Final candidate only |
+| `withWallPreview` add/remove barriers and props, rebuild affected sectors, optionally refresh portals, then restore | `spatial-game-session.js` | Validate a hypothetical construction | Final candidate only |
+| Five-profile crop certificate | `spatial-intent-state.cpp` | Prove physical protection or report unknown | Final candidate only |
+| Prepared quote, budget, purchase, state update and event | `previewWallChain`/`buildWallChain` | Execute a legal command | Actual purchase only |
+
+The ordinary expanding bot calls `wallStroke`, `previewWallChain` and then
+`buildWallChain` with a prepared quote. The separate enclosure-advice service
+quotes and previews up to three margin sizes. `quoteWallChain` can recursively
+retry with fewer modules when it cannot place a necessary gate. Its gate planner
+may perform nested wall previews and worker routes. These operations are valid
+for **verification** but premature when the only question is which accessible
+connections lie between an agricultural group and the exterior.
+
+## Topological question and available data
+
+The graph question is: find a local set of animal-traversable connections whose
+removal separates the crop seeds from the exterior boundary. This asks for a
+closure **within a chosen local search box**, not a globally cheapest enclosure
+anywhere in an unbounded world. A fixed-boundary query would be cheaper still,
+but would retain the virtual player's rectangular geometry. The prototype uses
+a rectangular *search window* only; the cut inside it can have any contour and
+can terminate against natural barriers or existing walls.
+
+`lazy-sectors.cpp` already has per-profile passable cells, directed movement
+steps, sector components, graph edges, worker portals, weak regions and explicit
+unknown frontiers. `spatial-savanna.cpp` constructs those cells and steps from
+the authoritative terrain, props and solid barriers. The native crop index
+provides group IDs, membership, value, bounds and protection by animal profile.
+No JavaScript terrain grid is built for the prototype.
+
+The C++ query uses a conservative union of the five animal movement graphs.
+An edge traversable by any species is eligible for the cut. This can propose
+unnecessary barriers when a path would require switching species halfway, but
+cannot omit an actual species-specific path for that reason. Any absent sector
+in the search window returns `unknown`; animal portals are also currently
+`unknown`, since the prototype does not include their nonlocal edges. It does
+not infer `blocked` from `unknown`.
+
+## Prototype algorithm and its limits
+
+`local-enclosure-cut.h` builds a flow network over a bounded local cell set.
+Crop cells and a configurable two-cell no-cut buffer connect to the source;
+passable cells on the search-window boundary connect to the sink. Traversable
+steps have nonnegative cut weights; missing or naturally blocked steps have no
+edge. Dinic max-flow/min-cut yields open steps to cover. The current native
+adapter uses unit weight, approximating wall length, and returns only edge
+coordinates and counts. Existing barriers need no new module because they are
+already absent from the movement graph. The query only reads native sector
+data: **no provisional barrier, sector rebuild, route lookup, money or entity
+change** occurs. Capacity is capped at 4,096 local cells and 256 seed points
+for this prototype. Memory is O(V+E); general-capacity Dinic has worst-case
+O(V²E), so the measured local cost is more useful than a promise of constant
+time. For substantially larger groups, the local window must be tiled or the
+algorithm revised, rather than silently reporting closure.
+
+The JavaScript conversion prototype maps cut edges to arbitrary polylines and
+uses the game's `wallStroke` to estimate module count and price. It does **not**
+claim those modules are buildable. The discrete cut can become separate wall
+strokes where a natural obstacle supplies the missing boundary. Modules are
+2.18 m units, while the cut is on 1 m cell steps; resampling and corner joins
+can leave continuous physical gaps. The current full quote, gate selection,
+five-profile preview, worker access check and ordinary purchase are retained
+as reference validators for this disconnected experiment.
+
+The intended **cheap certification path** distinguishes two cases. When the
+*placed modules*, including existing walls, form a continuous self-closing
+boundary around the crop group and the normal gate planner places a valid
+automatic worker door, the wall and door collision rules already exclude the
+animals; do not ask the five animal profiles to rediscover the same closure
+by full paths. A closed *drawn stroke* alone is insufficient: omitted modules,
+ruins and corner separations must be checked in the placed module chain. When
+an open arc terminates at a building or natural barrier, check each exposed
+terminal junction against the native solid boundary. For a measured free span
+between physical surfaces, the span must be strictly less than the diameter
+of the smallest animal footprint (currently 0.85 m radius, so 1.70 m). A
+two-arc enclosure normally has four such checks. The topological cut also
+has to establish that the intervening natural boundary stays impassable;
+checking two endpoints cannot turn an unknown river or missing sector into a
+certificate. This preserves arbitrary enclosure geometry without repeated
+global path searches. The prototype records terminal junctions and the
+clearance rule, but Wild Engine does not yet expose the exact native
+solid-surface clearance witness needed to certify those joins. They remain
+`unknown` until that focused query and the worker gate/access check exist.
+
+The current `quoteWallChain` API accepts one stroke, so it cannot yet validate
+or buy a disconnected multi-stroke cut as one atomic enclosure. A proposal
+could also split crop seeds into separate islands; deciding whether that is
+acceptable belongs to the plan contract, not to the flow solver.
+
+The cut is therefore a plausible **first phase**, not a complete alternative
+planner. Min-cut is useful for discovering low-length open frontiers, but unit
+edge weight is not the same as minimum legal wall-module cost. Placement and
+gate penalties must be calibrated only after a contour is demonstrably
+convertible. No second spatial authority or speculative overlay has been
+introduced. If an overlay is needed for final proof, it should represent only
+the selected cut's locally blocked steps and remain read-only; the normal
+construction validator still decides whether the modules physically realize
+it.
+
+## Measured evidence
+
+The reproducible controlled fixture creates one placement-valid crop on
+Sabana/712 with a resident 3×3 chunk area. It is a spatial microbenchmark,
+not a legal campaign victory or a physically accepted new enclosure. The
+recorded ABBA order is old/cut/cut/old in one process. The full raw reports are
+in `six-biomes-final.jsonl` and can be regenerated with
+`node tools/experiments/benchmark-topological-enclosure.mjs <candidate.wasm> <biome>`.
+
+| Biome | Existing plan, first run | Native cut alone | Converted candidate total | Existing modules | Estimated cut modules | Candidate certification |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| Sabana | 110.3 ms | 2.3 ms | 16.7 ms | 10 | 9 | Four terminal contacts; not checked |
+| Manglares | 134.3 ms | 3.3 ms | 119.2 ms | 10 | 10 | Open placed modules; native result unknown |
+| Gran Río | 109.0 ms | 3.0 ms | 18.2 ms | 10 | 9 | Four terminal contacts; not checked |
+| Volcanes | 103.1 ms | 3.0 ms | 14.6 ms | 10 | 9 | Four terminal contacts; not checked |
+| Gran Cañón | 337.1 ms | 1.7 ms | 2.7 ms | 7 | 0 | Existing plan unknown; no cut closure claimed |
+| Desierto | 122.8 ms | 3.5 ms | 102.7 ms | 10 | 10 | Open placed modules; native result unknown |
+
+These six rows use the pinned Emscripten 6.0.12 compiler. The earlier 3.1.5
+measurements, including negative results, remain in
+`six-biomes-emscripten-3.1.5.jsonl`; the earlier pinned-toolchain probe is
+`six-biomes-emscripten-6.0.12.jsonl`. The same-process old/cut comparisons are
+diagnostic only, and their
+"candidate total" values are **not equivalent work** when multi-stroke
+validation is missing. In a second Sabana site with one stroke, the same
+10 estimated modules cost 100 coins, the accepted rectangular quote also cost
+100, but the cut's preview protected four species and returned `unknown` for
+the rhinoceros. This is a concrete reason not to promote a cheap abstract cut
+to a certified enclosure.
+
+A further diagnostic joined the two Sabana arcs across gaps as long as 12 m
+and passed the resulting single stroke through the existing quote and
+five-profile preview. The rectangular plan was `ready` at 10 modules / 100
+coins. The joined cut produced a **continuous placed wall face with one
+automatic gate and no omitted modules**, but required 15 modules / 150 coins
+and 120–124 ms. The native crop certificate reported four species protected
+and the rhinoceros `unknown`. A targeted native probe in
+`sabana-stitch-rhino-probe.json` found `standable=false`,
+`localClear=0`, `gridWalkable=0` and `weakRegion=-2` at the crop for that
+species. `cropProtection()` therefore finds no valid local connector and
+returns `unknown`; the result is not evidence of a hole in the wall. The
+probe can be repeated with `WILD_ENGINE_CUT_PROBE=1` on the benchmark command
+and is off for timing runs. The structural face/gate
+check resolves the self-closing-wall case without repeating five animal path
+queries, but a valid worker entry and the exact semantics of damaged pieces
+still need regression coverage. The raw current report is
+`sabana-stitch-12m-final.json`; the older `sabana-stitch-12m.json` is retained.
+The example is also a concrete counterexample to treating a shortest grid cut
+plus naïve arc stitching as a cheaper *built* enclosure. The default prototype
+restricts stitching to shorter gaps and does not label unvalidated arcs as
+closed.
+
+The historical #54 report measured a 35-module/66-crop Sabana/712 day-3 quote
+at 6.4–6.6 seconds on a different source and WASM. It is useful context, **not
+an A/B baseline** for this branch. This branch reproduces the day-3 workload
+and records both arms on the same state in separate reports. The current-main
+state hash is `7b7033894dee269d4bf04cb074f1372ef2f84ef280446150cd5f2e2331cb6966`;
+it held one 66-crop group. The checked-in binary and the candidate compiled
+with Emscripten 6.0.12 reached the **same state hash**. The measured ABBA
+sequence was:
+
+| Arm | Existing enclosure service | Native cut + contour estimate | Physical status |
+| --- | ---: | ---: | --- |
+| Stock WASM, old 1 / old 2 | 30,463 / 29,860 ms | Not built | `unknown`, 35 modules, 350 coins, one gap |
+| Candidate WASM, old 1 / old 2 | 29,010 / 29,565 ms | — | Same `unknown`, 35 modules, 350 coins, one gap |
+| Candidate WASM, cut 1 / cut 2 | — | 9.43 / 4.95 ms total; native cut 5.96 / 3.67 ms | 21 crossings, two strokes, four terminal contacts, 11 **estimated** modules, 110 **estimated** coins; no physical certificate |
+
+Each existing-service call made 334 wall-placement checks, 38 path calls and
+17 speculative previews. Across the six navigation profiles, those previews
+caused 37,728 sector updates. The cut made zero wall-placement checks, paths,
+previews or sector updates. This isolates the redundant *search* cost, but
+the 11-module candidate has not been shown to protect the 66 crops. It cannot
+be compared with a legal 35-module build on cost, survival or full bot time.
+The full reports are `sabana712-day3-stock.json` and
+`sabana712-day3-candidate.json`. Sampling stopped at the day-3 decision point
+after the ABBA probe; neither report claims a completed three-night campaign.
+The candidate binary is 361,379 bytes versus 349,774 bytes for the checked-in
+binary (3.3% larger); no production binary was replaced.
+
+The requested Manglares/712 day-10 run reached the checkpoint with 124 live
+crops, but the only group was `unknown`, not demonstrably unprotected or
+protected. No valid enclosure quote was made at that checkpoint. A follow-up
+attempt to create a controlled breach found no certified protected group from
+which to select a perimeter wall and made no game change. Both runs are kept
+in `manglares712-day10-unknown.json` and
+`manglares712-day10-breach-attempt.json`. Neither is
+presented as a speed comparison. The older #54 Manglares timing used a
+different source/state and cannot fill this gap.
+
+Reproduce the native tests and query benchmark from a Linux shell with the
+project's Emscripten 6.0.12 installation (or its pinned CI image):
+
+```sh
+source /opt/emsdk/emsdk_env.sh
+mkdir -p .cache
+SPATIAL_WASM_OUTPUT=.cache/topological-cut.wasm bash tools/build-spatial-savanna-wasm.sh
+g++ -std=c++17 -O2 tools/experiments/test-local-enclosure-cut.cpp -o .cache/test-local-enclosure-cut
+.cache/test-local-enclosure-cut
+WILD_ENGINE_TOPOLOGICAL_CUT_WASM=.cache/topological-cut.wasm node --test tests/spatial-topological-enclosure-prototype.test.js
+node tools/experiments/benchmark-topological-enclosure.mjs .cache/topological-cut.wasm sabana
+WILD_ENGINE_SPATIAL_SERVICES_WASM=.cache/topological-cut.wasm node tools/experiments/profile-topological-enclosure-campaign.mjs sabana 3 .cache/sabana-day3.json
+```
+
+The last command runs the normal game until the day-3 daylight checkpoint,
+profiles a read-only ABBA decision and then stops. It does not commit a wall
+or continue the campaign after modifying the native QA index. The browser
+build and playable game still reference the checked-in baseline WASM.
+
+## Correctness and validation status
+
+The native C++ test covers an irregular multi-seed crop group, a natural
+barrier that reduces the cut, weighted steps, determinism and unknown cells.
+The Node test verifies non-rectangular contour conversion and that repeated
+five-profile queries leave game state, topology revision and sector-update
+count unchanged; querying missing sectors returns `unknown`. The six-biome
+probe checks the physically authoritative final certificate where the cut
+becomes one stroke. Negative results are retained above.
+
+The final candidate WASM passed 13 focused Node tests covering crop groups,
+paid closed rings, destruction, automatic doors, worker return, read-only cut
+queries and the structural closure check. The standalone C++ cut test passed,
+as did the web build. A full `npm test` run was started, reached at least 910
+passing cases including several 300-night postgame probes, and was stopped to
+avoid spending further time on unrelated long-running QA. It is **not**
+reported as a passing full suite. The production web build continues to
+package the existing checked-in WASM, since this prototype is not wired into
+the playable game.
+
+No worker-gate or all-species equivalence claim has been made for the proposed
+cut. Exact-proposal physical equivalence, repaired walls, nested enclosures,
+worker isolation, multi-stroke purchase, sector streaming and a sustained
+campaign performance comparison remain open. The prototype is intentionally
+disconnected from the virtual player's decisions, so `Game.tick` and campaign
+results cannot be credited with its microbenchmark speed. The full baseline
+construction and physical rules remain available and unchanged.
+
+## Adoption boundary
+
+If this approach continues, first turn multiple cut strokes into one validated
+plan with stable module IDs, a module-chain closure check, focused terminal
+clearances against native solids and a worker-access witness. Compare the
+resulting certificate with the game's five-profile physical preview on the
+**same** proposal during validation; the expensive preview need not remain in
+ordinary planning after agreement is established. Only then compare full
+decision time, module count, actual cost and campaign outcomes against the
+existing planner. The old rectangular proposal
+may remain a fallback for regions the new local cut cannot handle, but neither
+should be called protected before physical validation. No production code is
+deleted by this experiment. After adoption, rectangular margin search and the
+repeated provisional previews used solely to *discover* a boundary would be
+the main candidates for removal; final quote/build, automatic gates and
+physics must stay.

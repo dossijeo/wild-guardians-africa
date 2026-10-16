@@ -2,6 +2,7 @@
 #include <cstdint>
 #include <unordered_map>
 #include <vector>
+#include "local-enclosure-cut.h"
 
 // Sparse sector/route proof. Unknown sectors are never classified as blocked.
 // The movement engine remains responsible for physical motion.
@@ -28,6 +29,8 @@ struct Context {
   std::vector<uint32_t> visited;
   uint32_t visitGeneration=0;
   std::vector<int32_t> previousNode,localParent,routePoints;
+  std::vector<int32_t> cutSeeds,cutEdges;
+  int cutFlow=0,cutCells=0;
   std::vector<Arc> previousArc,arcChain;
   std::vector<Portal> portals;
   std::vector<int32_t> weakHead,weakTo,weakNext;
@@ -61,6 +64,8 @@ Context& active(){
 #define previousNode (active().previousNode)
 #define localParent (active().localParent)
 #define routePoints (active().routePoints)
+#define cutSeeds (active().cutSeeds)
+#define cutEdges (active().cutEdges)
 #define previousArc (active().previousArc)
 #define arcChain (active().arcChain)
 #define portals (active().portals)
@@ -374,6 +379,76 @@ int lazy_weak_region(int worldX,int worldZ){
   if(weakDirty)rebuildWeakGraph();
   return weakRegion[node];
 }
+// The five animal profiles form a conservative union graph. An edge traversed
+// by any species must be closed. Mixing profiles can overestimate a route, but
+// cannot certify an opening as closed. Missing resident sectors stay unknown.
+#undef sectors
+#undef sectorSize
+#undef portals
+int32_t* lazy_cut_seeds_ptr(int count){
+  if(count<1||count>256)return nullptr;
+  cutSeeds.resize(size_t(count)*2);return cutSeeds.data();
+}
+int lazy_local_crop_cut(int minX,int minZ,int maxX,int maxZ,int seedCount,int padding){
+  cutEdges.clear();active().cutFlow=active().cutCells=0;
+  if(seedCount<1||size_t(seedCount)*2!=cutSeeds.size())return -2;
+  constexpr int profiles[]={0,2,3,4,5};
+  for(int profile:profiles)if(!contexts[profile]||
+      !contexts[profile]->sectors||
+      contexts[profile]->sectorSize!=active().sectorSize)return -1;
+  const auto cellFor=[&](const Context& context,int x,int z)->const Sector*{
+    const int sx=floorDiv(x,context.sectorSize),sz=floorDiv(z,context.sectorSize);
+    const auto it=context.sectors->find(key(sx,sz));
+    return it==context.sectors->end()?nullptr:&it->second;
+  };
+  const auto sample=[&](const Context& context,int x,int z)->int{
+    const Sector* sector=cellFor(context,x,z);
+    if(!sector)return -1;
+    const int local=cellIndex(x-sector->sx*context.sectorSize,
+      z-sector->sz*context.sectorSize);
+    return sector->pass[local]?1:0;
+  };
+  const auto cell=[&](int x,int z){
+    int any=0;
+    for(int profile:profiles){
+      const int result=sample(*contexts[profile],x,z);
+      if(result<0)return -1;
+      any|=result;
+    }
+    return any;
+  };
+  const auto step=[&](int x,int z,int nx,int nz){
+    const int direction=nx>x?0:nx<x?1:nz>z?2:3;
+    int any=0;
+    for(int profile:profiles){
+      const Context& context=*contexts[profile];
+      const Sector* first=cellFor(context,x,z),*last=cellFor(context,nx,nz);
+      if(!first||!last)return -1;
+      const int a=cellIndex(x-first->sx*context.sectorSize,
+        z-first->sz*context.sectorSize);
+      const int b=cellIndex(nx-last->sx*context.sectorSize,
+        nz-last->sz*context.sectorSize);
+      if(first->pass[a]&&last->pass[b]&&
+          ((first->steps[a]&(1<<direction))||
+           (last->steps[b]&(1<<(direction^1)))))any=1;
+    }
+    return any;
+  };
+  // The cut prototype does not currently model arbitrary animal portals.
+  for(int profile:profiles)if(!contexts[profile]->portals.empty())return -1;
+  const auto result=enclosure_cut::find(minX,minZ,maxX,maxZ,cutSeeds,padding,
+      cell,step);
+  active().cutFlow=result.flow;active().cutCells=result.cells;
+  for(const auto& edge:result.edges)cutEdges.insert(cutEdges.end(),
+    {edge.outsideX,edge.outsideZ,edge.insideX,edge.insideZ});
+  return result.status<0?result.status:int(result.edges.size());
+}
+const int32_t* lazy_local_crop_cut_ptr(){return cutEdges.data();}
+int lazy_local_crop_cut_flow(){return active().cutFlow;}
+int lazy_local_crop_cut_cells(){return active().cutCells;}
+#define sectors (active().sectors)
+#define sectorSize (active().sectorSize)
+#define portals (active().portals)
 // -1: unloaded/uncertain; 0: known impossible; positive: coordinate pairs.
 int lazy_route(int fromX,int fromZ,int toX,int toZ){
   routePoints.clear();
