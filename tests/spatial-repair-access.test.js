@@ -54,6 +54,19 @@ test('repairing the last physical gap creates a worker-access gate before paymen
     for(const worker of workers)
       assert.equal(session.routeActorNative(worker,home,
         {worker:true,cached:false}).status,'found');
+    const repairedPreview={...target,status:'intact',hp:target.maxHp};
+    session.withWallStatePreview(game.structures.map(piece=>
+      piece.id===target.id?repairedPreview:piece),()=>{
+      let blocked=0;
+      for(const worker of workers){
+        const full=session.routeActorNative(worker,home,{worker:true,cached:false});
+        const status=session.routeActorNativeStatus(worker,home,{worker:true});
+        assert.equal(status.status,full.status);
+        if(status.status==='unknown')assert.equal(status.reason,full.reason);
+        if(status.status==='blocked')blocked++;
+      }
+      assert(blocked>0,'the unmodified repair really closes worker access');
+    });
     const bridge=createSpatialIntentBridge(session);
     bridge.resetFromState(game);
     const pinned=bridge.planHomeRoute(workers[0],home);

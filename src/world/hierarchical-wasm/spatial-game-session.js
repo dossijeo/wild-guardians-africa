@@ -137,6 +137,10 @@ export function createSpatialGameSession(module,state,streamOptions){
     actorProfile({worker,species});
     return core.routeWorldNative(start,end,{cached});
   }
+  function routeActorNativeStatus(start,end,{worker=true,species='warthog'}={}){
+    actorProfile({worker,species});
+    return core.routeWorldNativeStatus(start,end);
+  }
   function routeActorNativeBatch(queries,{worker=true,species='warthog'}={}){
     actorProfile({worker,species});
     return core.routeWorldNativeBatch(queries);
@@ -259,7 +263,7 @@ export function createSpatialGameSession(module,state,streamOptions){
     streamOptions.loaded(),props.suppressed,x,z,radius,
     key=>chunkRevisions.get(key)??0);
   return {core,field,stream,horizonSource,topologySource,suppressed:props.suppressed,syncState,
-    routeActor,routeActorNative,routeActorNativeBatch,actorConnectivity,actorSectorRevision,actorRegions,actorEnclosure,actorRegionsBatch,actorCanStand,actorStepClear,
+    routeActor,routeActorNative,routeActorNativeStatus,routeActorNativeBatch,actorConnectivity,actorSectorRevision,actorRegions,actorEnclosure,actorRegionsBatch,actorCanStand,actorStepClear,
     actorStepClearExceptWalls,
     queryPropsAt,withWallPreview,withWallStatePreview,withVillageEntryPreview,
     dispose:()=>stream.dispose()};
