@@ -4,9 +4,11 @@ Se ejecutó Wild Guardians en Chrome 155 mediante Vite, con dos pestañas reales
 
 **Corrección de aislamiento:** en las primeras ejecuciones, el perfil temporal de Chrome estaba dentro del proyecto. Vite observó archivos de ese perfil y registró recargas. Se conservan los informes iniciales como evidencia histórica, pero no se usan por sí solos para cerrar la aceptación. Las repeticiones usan un perfil fuera del repositorio y exigen que durante el ocultamiento no haya eventos `Page.frameNavigated` ni `Runtime.executionContextsCleared`.
 
-El script reproducible es [`tools/experiments/qa-browser-visibility.py`](../../../tools/experiments/qa-browser-visibility.py). Utiliza `websocket-client` de Python y un Chrome arrancado con un perfil de QA **fuera del árbol servido por Vite**, distinto del perfil normal, `--headless=new`, `--remote-debugging-port=9225` y `--remote-allow-origins=*`. Con Vite en `http://127.0.0.1:5179`, ejecutar:
+El script reproducible es [`tools/experiments/qa-browser-visibility.py`](../../../tools/experiments/qa-browser-visibility.py). Utiliza `websocket-client` de Python y un Chrome arrancado con un perfil de QA **fuera del árbol servido por Vite**, distinto del perfil normal, `--headless=new`, `--remote-debugging-port=9225` y `--remote-allow-origins=*`. Ejecutar estos comandos en terminales separadas y en este orden:
 
 ```text
+& 'C:\Program Files\Google\Chrome\Application\chrome.exe' --headless=new --remote-debugging-port=9225 --remote-allow-origins=* --user-data-dir="$env:TEMP\wg-chrome-qa-visibility-9225" --no-first-run --no-default-browser-check about:blank
+npm run dev -- --port 5179 --strictPort
 python tools/experiments/qa-browser-visibility.py --cdp http://127.0.0.1:9225 --fixture docs/qa/recalled-hiring/confirmed-snapshot.json --seconds 300 --out docs/qa/browser-visibility/recalled-hiring-chrome-isolated-300s.json
 ```
 
@@ -20,4 +22,6 @@ Las nueve pruebas dirigidas de reloj, pausa, restauración nativa y delta de fra
 
 La repetición corta con perfil aislado [`recalled-hiring-chrome-isolated-2s.json`](recalled-hiring-chrome-isolated-2s.json) pasó los siete controles, incluida la ausencia de navegación durante el ocultamiento.
 
-**Límites:** Chrome headless prueba una pestaña web real, pero no un teléfono físico ni todos los navegadores móviles. La repetición de cinco minutos con perfil aislado sigue en curso; los informes iniciales tienen la interferencia de Vite descrita arriba. QA-014 sigue parcial.
+La repetición larga con perfil aislado, [`recalled-hiring-chrome-isolated-300s.json`](recalled-hiring-chrome-isolated-300s.json), pasó también los siete controles. Registró **300,008 s** realmente ocultos, sin eventos de navegación ni excepciones JavaScript. El estado completo mantuvo el SHA-256 `9f20daffdebefa84e323d49bde5659c220a56b094581d132e295ffffcf8a007a` y `elapsed=603,1591` de principio a fin; permanecieron iguales el saldo de 45, el crecimiento/agua/daño del cultivo y la posición/tarea del trabajador. A los 2,5 s visibles tras restaurar, `elapsed=605,6786` y el trabajador había reanudado su desplazamiento. No se acumularon los cinco minutos ocultos.
+
+**Límites:** Chrome headless prueba una pestaña web real, pero no un teléfono físico ni todos los navegadores móviles. Los informes iniciales tienen la interferencia de Vite descrita arriba; la repetición aislada resuelve ese problema para Chrome. QA-014 sigue parcial hasta cubrir la aceptación física en teléfono.
