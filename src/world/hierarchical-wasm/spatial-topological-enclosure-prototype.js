@@ -29,9 +29,34 @@ export function junctionBlocksSmallestAnimal(clearSpan){
   return clearSpan<SMALLEST_ANIMAL_RADIUS*2;
 }
 
+// One native surface-to-surface measurement per exposed wall end, never one
+// per crop or animal. The obstacle between the ends must independently be
+// known to stay impassable; a small endpoint gap cannot certify an unknown
+// river, cliff or unloaded sector.
+export function inspectNaturalJunctions(strokes,measureClearSpan,barrierContinuous){
+  if(typeof measureClearSpan!=='function')throw TypeError('Expected a native clearance query');
+  const junctions=enclosureJunctions(strokes);
+  if(!junctions.length)return {status:'unknown',reason:'no-natural-junctions',
+    junctions:0,spans:[]};
+  const spans=[];
+  for(const junction of junctions){
+    const span=measureClearSpan(junction);
+    spans.push(span);
+    if(junctionBlocksSmallestAnimal(span)===false)
+      return {status:'open',junctions:spans.length,spans};
+  }
+  if(barrierContinuous===false)return {status:'open',reason:'natural-barrier-gap',
+    junctions:spans.length,spans};
+  if(barrierContinuous!==true||spans.some(span=>
+    junctionBlocksSmallestAnimal(span)!==true))
+    return {status:'unknown',junctions:spans.length,spans};
+  return {status:'joined',junctions:spans.length,spans};
+}
+
 // Cheap structural proof for the simple case: the *placed* wall pieces form
-// one closed face around every requested crop and that face has a real gate.
-// The ordinary quote is responsible for gate placement and worker access.
+// one closed face around every requested crop and that face has an automatic
+// worker gate. The ordinary quote is responsible for gate placement and worker
+// access; this does not certify an arbitrary pre-existing manual opening.
 // Natural-barrier joins are deliberately excluded until native clearance is
 // measured at their exposed terminals.
 export function inspectSelfClosedQuote(quote,existingWalls,cropPoints){
@@ -51,7 +76,7 @@ export function inspectSelfClosedQuote(quote,existingWalls,cropPoints){
   for(const face of boundaryFaces(layout)){
     const polygon=face.polygon.map(([x,z])=>({x,z}));
     if(!cropPoints.every(point=>containsPoint(polygon,point.x,point.z)))continue;
-    const gates=face.ids.filter(id=>walls.some(p=>p.id===id&&p.gate));
+    const gates=face.ids.filter(id=>walls.some(p=>p.id===id&&p.gate&&p.autoGate));
     return gates.length?{status:'closed-wall-loop',gates}:
       {status:'closed-without-gate'};
   }

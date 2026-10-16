@@ -110,6 +110,11 @@ global path searches. The prototype records terminal junctions and the
 clearance rule, but Wild Engine does not yet expose the exact native
 solid-surface clearance witness needed to certify those joins. They remain
 `unknown` until that focused query and the worker gate/access check exist.
+The read-only junction inspector invokes a supplied measurement exactly once
+per exposed wall end: two checks for one open arc or four for two open arcs.
+It also requires an independent witness that the natural barrier between
+those ends is continuously impassable. A self-closing wall face requires an
+actual automatic gate; a manually flagged gate does not satisfy this shortcut.
 
 The current `quoteWallChain` API accepts one stroke, so it cannot yet validate
 or buy a disconnected multi-stroke cut as one atomic enclosure. A proposal

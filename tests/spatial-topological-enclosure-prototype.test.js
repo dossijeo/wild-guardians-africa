@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {serialize} from '../src/persistence/snapshots.js';
 import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
-import {cutEdgesToStrokes,enclosureJunctions,inspectSelfClosedQuote,junctionBlocksSmallestAnimal,
+import {cutEdgesToStrokes,enclosureJunctions,inspectNaturalJunctions,
+  inspectSelfClosedQuote,junctionBlocksSmallestAnimal,
   SMALLEST_ANIMAL_RADIUS,stitchTwoCutStrokes} from '../src/world/hierarchical-wasm/spatial-topological-enclosure-prototype.js';
 import {villageLayout} from '../src/world/villages.js';
 import * as Game from '../src/simulation/game.js';
@@ -32,9 +33,24 @@ test('native cut edges form an arbitrary world contour without assuming a rectan
   assert.equal(junctionBlocksSmallestAnimal(NaN),null);
 });
 
+test('natural joins inspect only exposed wall ends and require a continuous obstacle',()=>{
+  const strokes=[[[0,0],[1,0]],[[2,0],[3,0]]];
+  let calls=0;
+  const narrow=()=>{calls++;return SMALLEST_ANIMAL_RADIUS*2-.01;};
+  assert.equal(inspectNaturalJunctions(strokes,narrow,true).status,'joined');
+  assert.equal(calls,4);
+  assert.equal(inspectNaturalJunctions([strokes[0]],narrow,true).junctions,2);
+  assert.equal(inspectNaturalJunctions(strokes,narrow,null).status,'unknown');
+  assert.equal(inspectNaturalJunctions(strokes,narrow,false).status,'open');
+  assert.equal(inspectNaturalJunctions(strokes,()=>SMALLEST_ANIMAL_RADIUS*2,true)
+    .status,'open');
+  assert.equal(inspectNaturalJunctions(strokes,()=>NaN,true).status,'unknown');
+  assert.equal(inspectNaturalJunctions(strokes,()=>0,true).status,'joined');
+});
+
 test('a placed free-form wall loop needs a gate and no omitted modules',()=>{
   const piece=(id,x,z,yaw,gate=false)=>({id,kind:'wall',material:'zarzas',
-    hp:100,status:'intact',baseScaleX:4/2.18,x,z,yaw,gate});
+    hp:100,status:'intact',baseScaleX:4/2.18,x,z,yaw,gate,autoGate:gate});
   const walls=[piece('a',0,2,0,true),piece('b',2,0,-Math.PI/2),
     piece('c',0,-2,0),piece('d',-2,0,-Math.PI/2)];
   const quote={pieces:walls,previewPieces:walls,blockedPieces:[],blockedCrops:[]};
@@ -44,6 +60,9 @@ test('a placed free-form wall loop needs a gate and no omitted modules',()=>{
     [{x:0,z:0}]).status,'open');
   assert.equal(inspectSelfClosedQuote({...quote,previewPieces:walls.map(p=>
     ({...p,gate:false}))},[],[{x:0,z:0}]).status,'closed-without-gate');
+  assert.equal(inspectSelfClosedQuote({...quote,previewPieces:walls.map((p,i)=>
+    i===0?{...p,autoGate:false}:p)},[],[{x:0,z:0}]).status,
+  'closed-without-gate');
   assert.equal(inspectSelfClosedQuote({...quote,previewPieces:walls.slice(1)},[],
     [{x:0,z:0}]).status,'open');
   assert.equal(inspectSelfClosedQuote({pieces:[walls[2]],
