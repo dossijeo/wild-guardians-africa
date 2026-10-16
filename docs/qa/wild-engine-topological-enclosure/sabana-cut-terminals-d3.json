@@ -4,11 +4,11 @@
   "day": 3,
   "source": "a21f2b76509fa1057f031db5311cac7e5962b0f96b399060df860aa48ff41e1d",
   "wasmSha256": "25c80656d8d8682c2833aec5687810d095d395202007a769701d76227cd38998",
-  "elapsedSeconds": 8.2491622,
+  "elapsedSeconds": 8.374647500000002,
   "campaignTiming": {
     "ticks": 1041,
-    "decisionMs": 4210.251400000001,
-    "gameTickMs": 2786.803700000002
+    "decisionMs": 4231.511900000006,
+    "gameTickMs": 2840.466000000008
   },
   "sample": {
     "stateHash": "7b7033894dee269d4bf04cb074f1372ef2f84ef280446150cd5f2e2331cb6966",
@@ -23,10 +23,11 @@
       "maxZ": 7.5
     },
     "removedWalls": [],
+    "existingGates": [],
     "rows": [
       {
         "name": "cut",
-        "ms": 195.88630000000012,
+        "ms": 188.28960000000006,
         "status": "proposed",
         "box": [
           69,
@@ -34,9 +35,9 @@
           108,
           21
         ],
-        "topologicalMs": 5.027599999999438,
-        "conversionMs": 1.1107999999985623,
-        "validationMs": 186.0707999999995,
+        "topologicalMs": 5.654600000001665,
+        "conversionMs": 1.518000000000029,
+        "validationMs": 178.18429999999898,
         "cutEdges": 21,
         "flow": 21,
         "cells": 1206,
@@ -77,6 +78,148 @@
               90.5,
               10.5
             ]
+          }
+        ],
+        "terminalContext": [
+          {
+            "point": [
+              72.5,
+              -10.5
+            ],
+            "props": [],
+            "obstacles": [
+              {
+                "id": "structure-807",
+                "kind": "wall",
+                "x": 73.08,
+                "z": -12,
+                "radius": 0.7,
+                "gate": false,
+                "status": "intact",
+                "pointToSurface": 1.2799999999999994
+              },
+              {
+                "id": "structure-841",
+                "kind": "wall",
+                "x": 75.24,
+                "z": -12,
+                "radius": 0.7,
+                "gate": false,
+                "status": "intact",
+                "pointToSurface": 2.09618701455762
+              },
+              {
+                "kind": "Edificio",
+                "x": 69.57596063613892,
+                "z": -3.593527913093567,
+                "radius": 6.745043520000262,
+                "pointToSurface": 2.2373925289129075
+              }
+            ],
+            "terrainValid": true,
+            "nearestTerrainBlock": null
+          },
+          {
+            "point": [
+              72.5,
+              -9.5
+            ],
+            "props": [],
+            "obstacles": [
+              {
+                "kind": "Edificio",
+                "x": 69.57596063613892,
+                "z": -3.593527913093567,
+                "radius": 6.745043520000262,
+                "pointToSurface": 1.2975479725215888
+              },
+              {
+                "id": "structure-807",
+                "kind": "wall",
+                "x": 73.08,
+                "z": -12,
+                "radius": 0.7,
+                "gate": false,
+                "status": "intact",
+                "pointToSurface": 2.2799999999999994
+              },
+              {
+                "id": "structure-841",
+                "kind": "wall",
+                "x": 75.24,
+                "z": -12,
+                "radius": 0.7,
+                "gate": false,
+                "status": "intact",
+                "pointToSurface": 2.820283673675396
+              }
+            ],
+            "terrainValid": true,
+            "nearestTerrainBlock": null
+          },
+          {
+            "point": [
+              75.5,
+              5.5
+            ],
+            "props": [],
+            "obstacles": [
+              {
+                "kind": "Estructura",
+                "x": 74.25968885421753,
+                "z": 3.85088849067688,
+                "radius": 1.2800342800623632,
+                "pointToSurface": 0.9635284009659948
+              }
+            ],
+            "terrainValid": true,
+            "nearestTerrainBlock": null
+          },
+          {
+            "point": [
+              90.5,
+              10.5
+            ],
+            "props": [
+              {
+                "x": 97.31031799316406,
+                "z": 12.31293773651123,
+                "radius": 1.3213688135147095,
+                "slot": 12,
+                "clearSpan": 5.72612537977702
+              },
+              {
+                "x": 99.82867431640625,
+                "z": 4.899447441101074,
+                "radius": 2.648141384124756,
+                "slot": 1,
+                "clearSpan": 8.232591746807504
+              }
+            ],
+            "obstacles": [
+              {
+                "id": "structure-1399",
+                "kind": "wall",
+                "x": 92.28,
+                "z": 12,
+                "radius": 0.7,
+                "gate": false,
+                "status": "intact",
+                "pointToSurface": 1.4589036979869514
+              },
+              {
+                "id": "structure-1398",
+                "kind": "wall",
+                "x": 94.44,
+                "z": 12,
+                "radius": 0.7,
+                "gate": false,
+                "status": "intact",
+                "pointToSurface": 3.1333687941255937
+              }
+            ],
+            "terrainValid": true,
+            "nearestTerrainBlock": null
           }
         ],
         "contours": [
@@ -303,11 +446,25 @@
               }
             ]
           },
+          "workerAccess": {
+            "before": [
+              {
+                "centerId": "structure-2",
+                "status": "reachable"
+              }
+            ],
+            "after": [
+              {
+                "centerId": "structure-2",
+                "status": "reachable"
+              }
+            ]
+          },
           "blockedPieces": 0,
           "blockedCrops": 0
         },
         "calls": {
-          "path": 12,
+          "path": 14,
           "wallPlacement": 33,
           "withWallPreview": 3
         },

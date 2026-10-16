@@ -10,6 +10,8 @@ import {createCropEnclosurePlanner} from '../../src/world/hierarchical-wasm/spat
 import {approximateCutModules,cropClearanceHull,inspectSelfClosedQuote,
   placedEnclosureJunctions} from '../../src/world/hierarchical-wasm/spatial-topological-enclosure-prototype.js';
 import {wallSpec} from '../../src/simulation/rules.js';
+import {wallCollisionPolygon} from '../../src/world/wall-collision-frame.js';
+import {footprintDistance} from '../../src/world/footprints.js';
 import * as Game from '../../src/simulation/game.js';
 
 const biome=process.argv[2]??'sabana',day=Number(process.argv[3]??3);
@@ -123,14 +125,68 @@ function inspect(state,nav){
       wallSpec('zarzas').cost):null;
     const conversionMs=performance.now()-convertStarted;
     const proposal=shape&&!shape.ambiguous.length?shape.strokes:null;
-    let validationMs=0,physical=null;
+    const terminalContextFor=junctions=>junctions.map(({point})=>{
+      const [x,z]=point;
+      let props;
+      try{props=nav.propsAt(x,z,4).filter(p=>p.slot<4||
+        p.slot>=10&&p.slot<=12||p.slot>=18).map(p=>({
+        x:p.x,z:p.z,radius:p.radius,slot:p.slot,
+        clearSpan:Math.hypot(p.x-x,p.z-z)-(p.radius??1.5)}))
+        .sort((a,b)=>a.clearSpan-b.clearSpan).slice(0,3);}
+      catch(error){
+        if(error.name!=='SpatialChunkUnavailable')throw error;
+        props='unknown';
+      }
+      const obstacles=nav.obstacles.filter(o=>
+        Math.hypot(o.x-x,o.z-z)<(o.radius??3)+4)
+        .map(o=>({id:o.id,kind:o.kind,x:o.x,z:o.z,radius:o.radius,
+          gate:o.gate,status:o.status,
+          pointToSurface:o.kind==='wall'?
+            footprintDistance(wallCollisionPolygon(o,0),x,z):o.footprint?
+              footprintDistance(o.footprint,x,z):
+              Math.max(0,Math.hypot(o.x-x,o.z-z)-(o.radius??0))}))
+        .sort((a,b)=>a.pointToSurface-b.pointToSurface);
+      const terrainBlocks=[];
+      for(let i=0;i<16;i++){
+        const angle=i*Math.PI/8;
+        for(let distance=.25;distance<=3;distance+=.25){
+          if(!nav.terrainValid(x+Math.cos(angle)*distance,
+            z+Math.sin(angle)*distance,.85,false)){
+            terrainBlocks.push(distance);break;
+          }
+        }
+      }
+      return {point,props,obstacles,
+        terrainValid:nav.terrainValid(x,z,.85,false),
+        nearestTerrainBlock:terrainBlocks.length?Math.min(...terrainBlocks):null};
+    });
+    let validationMs=0,physical=null,terminalContext;
     if(proposal){
       const validateStarted=performance.now();
       const quote=Game.quoteWallChain(state,'zarzas',proposal,nav,
         {smooth:false,snap:false});
-      const groupAfter=nav.withWallPreview(quote.previewPieces,quote.suppressed,()=>
-        bridge.getUnprotectedCropGroups({includeProtected:true})
-          .find(item=>item.id===group.id),true);
+      const placedJunctions=cutOnly?placedEnclosureJunctions(quote):undefined;
+      terminalContext=cutOnly?terminalContextFor(placedJunctions.junctions):undefined;
+      const workerTargets=cutOnly?[...new Map(state.plants.filter(item=>
+        item.alive&&group.cropIds.includes(item.id)).map(item=>
+        [item.centerId,item])).values()]:[];
+      const workerAccess=()=>workerTargets.map(crop=>{
+        const center=state.structures.find(item=>item.id===crop.centerId);
+        const village=state.villages.find(item=>item.id===center?.villageId);
+        if(!village)return {centerId:crop.centerId,status:'unknown'};
+        try{return {centerId:crop.centerId,status:nav.path(
+          village.entry??village,crop,.28,null,true)?'reachable':'blocked'};}
+        catch(error){
+          if(error.name!=='SpatialChunkUnavailable')throw error;
+          return {centerId:crop.centerId,status:'unknown'};
+        }
+      });
+      const beforeWorkerAccess=cutOnly?workerAccess():undefined;
+      const preview=nav.withWallPreview(quote.previewPieces,quote.suppressed,()=>({
+        group:bridge.getUnprotectedCropGroups({includeProtected:true})
+          .find(item=>item.id===group.id),
+        workerAccess:cutOnly?workerAccess():undefined}),true);
+      const groupAfter=preview.group;
       validationMs=performance.now()-validateStarted;
       physical={status:groupAfter?.protection??'unknown',
         profiles:groupAfter?.profiles,modules:quote.pieces.length,
@@ -139,7 +195,9 @@ function inspect(state,nav){
           ({x,z,yaw,baseScaleX})):undefined,
         structural:inspectSelfClosedQuote(quote,state.structures,
           cropPoints.map(([x,z])=>({x,z}))),
-        placedJunctions:cutOnly?placedEnclosureJunctions(quote):undefined,
+        placedJunctions,
+        workerAccess:cutOnly?{before:beforeWorkerAccess,
+          after:preview.workerAccess}:undefined,
         blockedPieces:quote.blockedPieces.length,
         blockedCrops:quote.blockedCrops.length};
     }
@@ -150,6 +208,7 @@ function inspect(state,nav){
       estimatedCost:shape?.estimatedCost,ambiguous:shape?.ambiguous.length,
       junctions:shape?.junctions.length,
       terminals:shape?.junctions.map(({strokeIndex,end,point})=>({strokeIndex,end,point})),
+      terminalContext,
       contours:cutOnly?shape?.strokes:undefined,
       multiArc:proposal?.length>1,physical};
   };
@@ -173,7 +232,11 @@ function inspect(state,nav){
       sectorUpdates:updates()-beforeUpdates});
   }
   return {status:'measured',groupId:group.id,cropCount:group.cropIds.length,
-    groupBounds:group.bounds,removedWalls:removed,rows,
+    groupBounds:group.bounds,removedWalls:removed,
+    existingGates:cutOnly?state.structures.filter(item=>item.kind==='wall'&&
+      item.gate&&item.status!=='ruined').map(item=>({id:item.id,x:item.x,
+        z:item.z,autoGate:item.autoGate})):undefined,
+    rows,
     memoryBytes:wasm.memory.buffer.byteLength};
 }
 const started=performance.now();

@@ -326,7 +326,21 @@ not a closure test: the unbuilt intervals must be accounted for by continuous,
 impassable terrain or structures, and the combined proposal must still provide
 a worker gate or another proven worker access. The cut-only mode
 (`--cut-only`) removes the older advice arms from the diagnostic run; its
-152.9 ms is not an AB/BA comparison and is not cited as a speedup.
+elapsed time is not an AB/BA comparison and is not cited as a speedup.
+
+The diagnostic now also reports nearby existing solids, terrain probes and a
+worker route for one representative crop from its center. The four endpoint
+distances to the nearest existing wall/building footprint are **1.28, 1.30,
+0.96 and 1.46 m**, below the 1.70 m smallest-animal diameter. These are
+conservative point-to-surface distances from the placed wall ends, not native
+surface-to-surface certificates. No terrain obstruction was observed within
+the 3 m radial sample and there was no existing gate in this state. The sampled
+worker route was reachable both before and during the wall preview, so an
+automatic gate is not automatically necessary for that route. Other crops and
+routes were not checked. In particular, four animal profiles still report
+`unknown`; endpoint proximity cannot establish continuity of the *intervening*
+barrier or certify the whole enclosure. The extra QA probes make this cut-only
+run unsuitable for timing comparisons.
 
 ## Adoption boundary
 
