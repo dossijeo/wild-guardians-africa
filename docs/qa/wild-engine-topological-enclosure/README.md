@@ -526,8 +526,11 @@ navigation adapter. The local native cut at `(70,-12)` has six proposed edges
 before the paid five-module stroke, zero after construction, and exactly its
 original edge list after all five modules are removed. At least one removal
 reopens the cut. This tests the confirmed game-to-WASM wall mirror rather than
-only direct native barrier insertion. It is a local graph response, not a
-certificate that every crop in that compound is protected.
+only direct native barrier insertion. Serializing that built state and creating
+a fresh spatial session reconstructs the same zero-edge local cut. It is a
+local graph response, not a certificate that every crop in that compound is
+protected. Unloading and reloading sectors during the same session remain
+untested.
 
 This also explains why checking only the four exposed wall ends is insufficient
 for this candidate: a mixed wall/building/terrain closure needs evidence that

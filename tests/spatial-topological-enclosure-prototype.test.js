@@ -313,6 +313,19 @@ test('native cut observes a paid wall stroke and its removal',
       assert.ok(Game.buildWallChain(state,'cut-real-build','zarzas',stroke,nav,options));
       const after=cut();
       assert.equal(after.count,0,'The paid stroke closes this local graph cut');
+      const restored=deserialize(serialize(state)),reloadedChunks=new Map();
+      const reloaded=createSpatialGameSession(module,restored,{
+        loaded:()=>reloadedChunks,
+        onData:data=>reloadedChunks.set(`${data.cx},${data.cz}`,data)});
+      try{
+        reloaded.stream.plan(desired);await reloaded.stream.whenIdle();
+        for(const species of ['warthog','hyena','buffalo','lion','rhino'])
+          reloaded.actorRegionsBatch([{x:70,z:-12}],{worker:false,species});
+        const fresh=reloaded.core.wasm;
+        new Int32Array(fresh.memory.buffer,fresh.lazy_cut_seeds_ptr(1),2).set([70,-12]);
+        assert.equal(fresh.lazy_local_crop_cut_conservative(54,-30,96,12,1,2),
+          after.count,'A restored session must reconstruct the closed graph');
+      }finally{reloaded.dispose();}
       const created=state.structures.filter(item=>item.kind==='wall'&&
         item.created>=27114);
       assert.equal(created.length,5);
