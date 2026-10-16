@@ -1041,7 +1041,7 @@ test('native whole-queue assignments match JS on controlled real Desert and Cany
   import.meta.url));
  for(const [fixture,workers,tasks] of [
   ['desierto983-d15-partial-state.json.gz',15,115],
-  ['watering-gran-canon-saheliana-detour-10.json.gz',3,19]]){
+  ['watering-gran-canon-saheliana-detour-10.json.gz',6,19]]){
   const path=fileURLToPath(new URL(`./fixtures/${fixture}`,import.meta.url));
   const report=JSON.parse(execFileSync(process.execPath,
    [probe,path,String(workers),String(tasks),'--summary','--route-diagnostics'],{
