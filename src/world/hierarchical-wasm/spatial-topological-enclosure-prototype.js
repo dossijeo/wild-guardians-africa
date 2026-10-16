@@ -117,6 +117,10 @@ export function inspectNaturalJunctions(strokes,measureClearSpan,barrierContinuo
 
 export function inspectPlacedNaturalJunctions(quote,measureClearSpan,
   barrierContinuous){
+  // The clearance callback reads the confirmed world. A quote that removes
+  // any static object could remove the very obstacle supporting an open arc.
+  if(quote?.suppressed?.length)return {status:'unknown',
+    reason:'suppressed-static-obstacle',junctions:0,spans:[]};
   const placed=placedEnclosureJunctions(quote);
   if(placed.status!=='ready')return {status:'unknown',reason:placed.reason,
     junctions:placed.junctions.length,spans:[]};

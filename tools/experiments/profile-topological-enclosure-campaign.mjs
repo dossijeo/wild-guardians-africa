@@ -252,6 +252,7 @@ function inspect(state,nav){
       physical={status:groupAfter?.protection??'unknown',
         profiles:groupAfter?.profiles,modules:quote.pieces.length,
         cost:quote.cost,gates:quote.gates,
+        suppressed:cutOnly?quote.suppressed:undefined,
         placedPieces:cutOnly?quote.pieces.map(({x,z,yaw,baseScaleX})=>
           ({x,z,yaw,baseScaleX})):undefined,
         structural:inspectSelfClosedQuote(quote,state.structures,

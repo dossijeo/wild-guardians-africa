@@ -374,6 +374,13 @@ planner. Samples cannot prove that no continuous corner route exists between
 them, nor certify every natural obstacle chain or worker interaction. The
 candidate therefore remains experimental despite this strong local evidence.
 
+The quoted Sabana plan suppresses **no existing object**. This matters because
+measuring a wall end against an obstacle that the build itself removes would
+produce a false join. The open-arc inspector now conservatively returns
+`unknown` for any quote with suppressed static objects until clearance can be
+re-evaluated against the post-build geometry without counting the new wall as
+its own supporting obstacle.
+
 ## Adoption boundary
 
 If this approach continues, turn the multi-stroke quote into a validated

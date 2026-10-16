@@ -4,11 +4,11 @@
   "day": 3,
   "source": "a21f2b76509fa1057f031db5311cac7e5962b0f96b399060df860aa48ff41e1d",
   "wasmSha256": "e9d7440ca2529376b8da4971c2cbed4e4225bb4c6c9e9740f106f99cc460247c",
-  "elapsedSeconds": 8.9995416,
+  "elapsedSeconds": 8.392132300000002,
   "campaignTiming": {
     "ticks": 1041,
-    "decisionMs": 4772.34579999999,
-    "gameTickMs": 2916.5223000000015
+    "decisionMs": 4202.940500000003,
+    "gameTickMs": 2836.3256999999967
   },
   "sample": {
     "stateHash": "7b7033894dee269d4bf04cb074f1372ef2f84ef280446150cd5f2e2331cb6966",
@@ -27,7 +27,7 @@
     "rows": [
       {
         "name": "cut",
-        "ms": 183.75420000000122,
+        "ms": 209.2554,
         "status": "proposed",
         "box": [
           69,
@@ -35,9 +35,9 @@
           108,
           21
         ],
-        "topologicalMs": 5.173399999999674,
-        "conversionMs": 1.052799999999479,
-        "validationMs": 174.5676000000003,
+        "topologicalMs": 5.3047999999998865,
+        "conversionMs": 1.4902000000001863,
+        "validationMs": 199.88200000000143,
         "cutEdges": 21,
         "flow": 21,
         "cells": 1206,
@@ -337,6 +337,7 @@
           "modules": 11,
           "cost": 110,
           "gates": 0,
+          "suppressed": [],
           "placedPieces": [
             {
               "x": 72.5,

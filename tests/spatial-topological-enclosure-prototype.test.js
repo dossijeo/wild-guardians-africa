@@ -135,6 +135,8 @@ test('natural-join checks use placed module ends and refuse missing pieces',()=>
     previewPieces:quote.previewPieces.slice(1)}).reason,'missing-end-module');
   assert.equal(inspectPlacedNaturalJunctions({...quote,
     blockedPieces:[quote.pieces[0]]},()=>0,true).reason,'omitted-module');
+  assert.equal(inspectPlacedNaturalJunctions({...quote,
+    suppressed:[42]},()=>0,true).reason,'suppressed-static-obstacle');
 });
 
 test('separate arcs beside a building keep one gate and worker access',()=>{
