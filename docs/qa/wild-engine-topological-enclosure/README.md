@@ -395,18 +395,37 @@ smallest animal radius may pass. Terrain-supported segments, missing geometry
 and exhausted budgets remain `unknown`. This is a conservative continuous
 test, rather than a larger set of crossing samples.
 
-The Sabana proposal remains **unknown**. The first unproved segment runs
+The Sabana proposal remains **unknown** as an actual enclosure. The first
+unproved segment runs
 between grid cells `(74,-11)` and `(74,-10)`; its boundary endpoints are
 `(73.5,-10.5)` and `(74.5,-10.5)`, with static-solid clearances 0.78 and
 1.28 m. The latter exceeds the smallest animal radius of 0.85 m. Five native
 crossing probes along that segment fail for all five species, but in every
 probe the sampled outside starting point is already unstandable. These are
 not witnesses that the intervening boundary itself is covered by an obstacle;
-they may simply begin inside a wall, prop or forbidden terrain. The new proof
-therefore correctly declines to certify the
-candidate. The raw details, including the same serialized state hash, are in
+they begin within the expanded footprint of an existing wall. Shorter native
+steps placed directly across the abstract boundary **do** cross that segment
+for hyenas, buffalo and lions. Scanning all 144 boundary segments at their
+midpoints finds 49 locally passable segments for hyenas, 44 for buffalo and 53
+for lions; warthogs and rhinos have zero in this sampled scan. This disproves
+the claim that the cut's entire crop-side grid boundary is physically blocked.
+It does not by itself prove a complete exterior-to-crop route, because a locally
+passable segment might lie in an isolated exterior pocket. The proposed 11
+modules therefore cannot be treated as a certified enclosure or a demonstrated
+110-coin defensive saving. The raw details, including the same serialized state hash, are in
 `sabana-cut-terminals-d3.json`. This audit is QA-only and is not part of the
 normal planner's cost.
+
+The counterexample is caused by a one-metre cell whose centre is unstandable
+within the radius of an existing wall while part of the cell face is passable.
+The discrete min-cut treats the whole cell as a barrier. A later prototype must
+use a conservative physical abstraction: refine the local grid near mixed
+joins or mark cells/edges as open whenever a passable part is possible, then
+convert the resulting frontier to modules and validate it. Checking only the
+two or four arc endpoints is sound only if the intervening wall/obstacle chain
+has already been established as continuous. The minimum cut itself remains
+viable as a search strategy, but this particular 1 m connectivity graph is not
+yet a sufficient physical certificate.
 
 This also explains why checking only the four exposed wall ends is insufficient
 for this candidate: a mixed wall/building/terrain closure needs evidence that

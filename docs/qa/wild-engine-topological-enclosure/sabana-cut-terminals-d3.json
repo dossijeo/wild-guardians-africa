@@ -4,11 +4,11 @@
   "day": 3,
   "source": "33b5033174455cb2eec708110aa4785e8ccff542ef19e4e773d0de395a0c5a02",
   "wasmSha256": "0d0b51639909d3ba0c0dfc52dcb7791218258d5aa2881464fa62604c40b185cf",
-  "elapsedSeconds": 8.8650855,
+  "elapsedSeconds": 8.421458299999998,
   "campaignTiming": {
     "ticks": 1041,
-    "decisionMs": 4442.136700000002,
-    "gameTickMs": 2952.7759000000106
+    "decisionMs": 4160.054,
+    "gameTickMs": 2869.7019000000028
   },
   "sample": {
     "stateHash": "7b7033894dee269d4bf04cb074f1372ef2f84ef280446150cd5f2e2331cb6966",
@@ -27,7 +27,7 @@
     "rows": [
       {
         "name": "cut",
-        "ms": 213.6885000000002,
+        "ms": 231.76560000000063,
         "status": "proposed",
         "box": [
           69,
@@ -35,9 +35,9 @@
           108,
           21
         ],
-        "topologicalMs": 4.928599999999278,
-        "conversionMs": 1.2445999999999913,
-        "validationMs": 204.63030000000072,
+        "topologicalMs": 6.124099999999089,
+        "conversionMs": 1.7620999999999185,
+        "validationMs": 220.91029999999955,
         "cutEdges": 21,
         "boundarySegments": 144,
         "flow": 21,
@@ -328,6 +328,7 @@
         "multiArc": true,
         "physical": {
           "status": "unknown",
+          "frontierStatus": "locally-open",
           "profiles": {
             "warthog": "unknown",
             "hyena": "unknown",
@@ -583,30 +584,40 @@
                 {
                   "offset": -0.4,
                   "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
                   "inside": true,
                   "crossing": false
                 },
                 {
                   "offset": -0.2,
                   "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
                   "inside": true,
                   "crossing": false
                 },
                 {
                   "offset": 0,
                   "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
                   "inside": true,
                   "crossing": false
                 },
                 {
                   "offset": 0.2,
                   "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
                   "inside": false,
                   "crossing": false
                 },
                 {
                   "offset": 0.4,
                   "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
                   "inside": false,
                   "crossing": false
                 }
@@ -615,30 +626,40 @@
                 {
                   "offset": -0.4,
                   "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
                   "inside": true,
                   "crossing": false
                 },
                 {
                   "offset": -0.2,
                   "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
                   "inside": true,
                   "crossing": false
                 },
                 {
                   "offset": 0,
                   "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
                   "inside": true,
                   "crossing": false
                 },
                 {
                   "offset": 0.2,
                   "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
                   "inside": true,
                   "crossing": false
                 },
                 {
                   "offset": 0.4,
                   "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
                   "inside": false,
                   "crossing": false
                 }
@@ -647,30 +668,40 @@
                 {
                   "offset": -0.4,
                   "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
                   "inside": true,
                   "crossing": false
                 },
                 {
                   "offset": -0.2,
                   "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
                   "inside": true,
                   "crossing": false
                 },
                 {
                   "offset": 0,
                   "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
                   "inside": true,
                   "crossing": false
                 },
                 {
                   "offset": 0.2,
                   "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
                   "inside": true,
                   "crossing": false
                 },
                 {
                   "offset": 0.4,
                   "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
                   "inside": false,
                   "crossing": false
                 }
@@ -679,13 +710,99 @@
                 {
                   "offset": -0.4,
                   "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
                   "inside": true,
                   "crossing": false
                 },
                 {
                   "offset": -0.2,
                   "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
                   "inside": true,
+                  "crossing": false
+                },
+                {
+                  "offset": 0,
+                  "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
+                  "inside": true,
+                  "crossing": false
+                },
+                {
+                  "offset": 0.2,
+                  "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
+                  "inside": true,
+                  "crossing": false
+                },
+                {
+                  "offset": 0.4,
+                  "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
+                  "inside": true,
+                  "crossing": false
+                }
+              ],
+              "rhino": [
+                {
+                  "offset": -0.4,
+                  "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
+                  "inside": true,
+                  "crossing": false
+                },
+                {
+                  "offset": -0.2,
+                  "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
+                  "inside": false,
+                  "crossing": false
+                },
+                {
+                  "offset": 0,
+                  "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
+                  "inside": false,
+                  "crossing": false
+                },
+                {
+                  "offset": 0.2,
+                  "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
+                  "inside": false,
+                  "crossing": false
+                },
+                {
+                  "offset": 0.4,
+                  "outside": false,
+                  "outsideTerrain": true,
+                  "outsideStaticClearance": 0.7799999713897705,
+                  "inside": false,
+                  "crossing": false
+                }
+              ]
+            },
+            "shortBoundaryCrossings": {
+              "warthog": [
+                {
+                  "offset": -0.4,
+                  "outside": false,
+                  "inside": false,
+                  "crossing": false
+                },
+                {
+                  "offset": -0.2,
+                  "outside": false,
+                  "inside": false,
                   "crossing": false
                 },
                 {
@@ -707,11 +824,107 @@
                   "crossing": false
                 }
               ],
+              "hyena": [
+                {
+                  "offset": -0.4,
+                  "outside": false,
+                  "inside": false,
+                  "crossing": false
+                },
+                {
+                  "offset": -0.2,
+                  "outside": true,
+                  "inside": true,
+                  "crossing": true
+                },
+                {
+                  "offset": 0,
+                  "outside": true,
+                  "inside": true,
+                  "crossing": true
+                },
+                {
+                  "offset": 0.2,
+                  "outside": true,
+                  "inside": true,
+                  "crossing": true
+                },
+                {
+                  "offset": 0.4,
+                  "outside": true,
+                  "inside": true,
+                  "crossing": true
+                }
+              ],
+              "buffalo": [
+                {
+                  "offset": -0.4,
+                  "outside": false,
+                  "inside": false,
+                  "crossing": false
+                },
+                {
+                  "offset": -0.2,
+                  "outside": true,
+                  "inside": true,
+                  "crossing": true
+                },
+                {
+                  "offset": 0,
+                  "outside": true,
+                  "inside": true,
+                  "crossing": true
+                },
+                {
+                  "offset": 0.2,
+                  "outside": true,
+                  "inside": true,
+                  "crossing": true
+                },
+                {
+                  "offset": 0.4,
+                  "outside": true,
+                  "inside": true,
+                  "crossing": true
+                }
+              ],
+              "lion": [
+                {
+                  "offset": -0.4,
+                  "outside": true,
+                  "inside": true,
+                  "crossing": true
+                },
+                {
+                  "offset": -0.2,
+                  "outside": true,
+                  "inside": true,
+                  "crossing": true
+                },
+                {
+                  "offset": 0,
+                  "outside": true,
+                  "inside": true,
+                  "crossing": true
+                },
+                {
+                  "offset": 0.2,
+                  "outside": true,
+                  "inside": true,
+                  "crossing": true
+                },
+                {
+                  "offset": 0.4,
+                  "outside": true,
+                  "inside": true,
+                  "crossing": true
+                }
+              ],
               "rhino": [
                 {
                   "offset": -0.4,
                   "outside": false,
-                  "inside": true,
+                  "inside": false,
                   "crossing": false
                 },
                 {
@@ -735,10 +948,364 @@
                 {
                   "offset": 0.4,
                   "outside": false,
-                  "inside": false,
+                  "inside": true,
                   "crossing": false
                 }
               ]
+            }
+          },
+          "boundaryGapScan": {
+            "warthog": {
+              "tested": 144,
+              "open": 0,
+              "examples": []
+            },
+            "hyena": {
+              "tested": 144,
+              "open": 49,
+              "examples": [
+                {
+                  "segment": 2,
+                  "edge": [
+                    74,
+                    -11,
+                    74,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 3,
+                  "edge": [
+                    75,
+                    -11,
+                    75,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 4,
+                  "edge": [
+                    76,
+                    -11,
+                    76,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 5,
+                  "edge": [
+                    77,
+                    -11,
+                    77,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 6,
+                  "edge": [
+                    78,
+                    -11,
+                    78,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 7,
+                  "edge": [
+                    79,
+                    -11,
+                    79,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 8,
+                  "edge": [
+                    80,
+                    -11,
+                    80,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 9,
+                  "edge": [
+                    81,
+                    -11,
+                    81,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 10,
+                  "edge": [
+                    82,
+                    -11,
+                    82,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 11,
+                  "edge": [
+                    83,
+                    -11,
+                    83,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 12,
+                  "edge": [
+                    84,
+                    -11,
+                    84,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 13,
+                  "edge": [
+                    85,
+                    -11,
+                    85,
+                    -10
+                  ]
+                }
+              ]
+            },
+            "buffalo": {
+              "tested": 144,
+              "open": 44,
+              "examples": [
+                {
+                  "segment": 2,
+                  "edge": [
+                    74,
+                    -11,
+                    74,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 3,
+                  "edge": [
+                    75,
+                    -11,
+                    75,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 4,
+                  "edge": [
+                    76,
+                    -11,
+                    76,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 5,
+                  "edge": [
+                    77,
+                    -11,
+                    77,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 6,
+                  "edge": [
+                    78,
+                    -11,
+                    78,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 7,
+                  "edge": [
+                    79,
+                    -11,
+                    79,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 8,
+                  "edge": [
+                    80,
+                    -11,
+                    80,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 9,
+                  "edge": [
+                    81,
+                    -11,
+                    81,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 10,
+                  "edge": [
+                    82,
+                    -11,
+                    82,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 11,
+                  "edge": [
+                    83,
+                    -11,
+                    83,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 12,
+                  "edge": [
+                    84,
+                    -11,
+                    84,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 13,
+                  "edge": [
+                    85,
+                    -11,
+                    85,
+                    -10
+                  ]
+                }
+              ]
+            },
+            "lion": {
+              "tested": 144,
+              "open": 53,
+              "examples": [
+                {
+                  "segment": 2,
+                  "edge": [
+                    74,
+                    -11,
+                    74,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 3,
+                  "edge": [
+                    75,
+                    -11,
+                    75,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 4,
+                  "edge": [
+                    76,
+                    -11,
+                    76,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 5,
+                  "edge": [
+                    77,
+                    -11,
+                    77,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 6,
+                  "edge": [
+                    78,
+                    -11,
+                    78,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 7,
+                  "edge": [
+                    79,
+                    -11,
+                    79,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 8,
+                  "edge": [
+                    80,
+                    -11,
+                    80,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 9,
+                  "edge": [
+                    81,
+                    -11,
+                    81,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 10,
+                  "edge": [
+                    82,
+                    -11,
+                    82,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 11,
+                  "edge": [
+                    83,
+                    -11,
+                    83,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 12,
+                  "edge": [
+                    84,
+                    -11,
+                    84,
+                    -10
+                  ]
+                },
+                {
+                  "segment": 13,
+                  "edge": [
+                    85,
+                    -11,
+                    85,
+                    -10
+                  ]
+                }
+              ]
+            },
+            "rhino": {
+              "tested": 144,
+              "open": 0,
+              "examples": []
             }
           },
           "cutCrossings": {

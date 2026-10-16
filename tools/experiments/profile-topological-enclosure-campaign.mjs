@@ -13,6 +13,7 @@ import {approximateCutModules,cropClearanceHull,inspectSelfClosedQuote,
 import {wallSpec} from '../../src/simulation/rules.js';
 import {wallCollisionPolygon} from '../../src/world/wall-collision-frame.js';
 import {footprintDistance} from '../../src/world/footprints.js';
+import {ANIMAL_SPATIAL_PROFILES} from '../../src/world/hierarchical-wasm/spatial-movement-profiles.js';
 import * as Game from '../../src/simulation/game.js';
 
 const biome=process.argv[2]??'sabana',day=Number(process.argv[3]??3);
@@ -245,6 +246,25 @@ function inspect(state,nav){
         }
         return bySpecies;
       };
+      const boundaryGapScan=()=>{
+        const bySpecies={};
+        for(const species of ['warthog','hyena','buffalo','lion','rhino']){
+          let open=0;
+          const examples=[];
+          for(let i=0;i<boundary.length;i+=4){
+            const [ox,oz,ix,iz]=boundary.slice(i,i+4);
+            const x=(ox+ix)/2,z=(oz+iz)/2;
+            const start={x:x+(ox-ix)*.3,z:z+(oz-iz)*.3};
+            const end={x:x+(ix-ox)*.3,z:z+(iz-oz)*.3};
+            if(!opening.session.actorStepClear(start,end,
+              {worker:false,species}))continue;
+            open++;
+            if(examples.length<12)examples.push({segment:i/4,edge:[ox,oz,ix,iz]});
+          }
+          bySpecies[species]={tested:boundaryCount,open,examples};
+        }
+        return bySpecies;
+      };
       const beforeCutCrossings=cutOnly?crossingProbe():undefined;
       const preview=nav.withWallPreview(quote.previewPieces,quote.suppressed,()=>{
         const staticBoundary=cutOnly?inspectStaticCutBoundary(boundary,(x,z)=>
@@ -259,6 +279,23 @@ function inspect(state,nav){
                 const end={x:ix+tx*offset,z:iz+tz*offset};
                 const options={worker:false,species};
                 return {offset,outside:opening.session.actorCanStand(start,options),
+                  outsideTerrain:nav.terrainValid(start.x,start.z,
+                    ANIMAL_SPATIAL_PROFILES[species].radius,false),
+                  outsideStaticClearance:wasm.spatial_static_object_clearance(
+                    start.x,start.z,2),
+                  inside:opening.session.actorCanStand(end,options),
+                  crossing:opening.session.actorStepClear(start,end,options)};
+              })]));
+          const [[ax,az],[bx,bz]]=staticBoundary.endpoints;
+          staticBoundary.shortBoundaryCrossings=
+            Object.fromEntries(['warthog','hyena','buffalo','lion','rhino']
+              .map(species=>[species,[-.4,-.2,0,.2,.4].map(offset=>{
+                const x=(ax+bx)/2+(bx-ax)*offset;
+                const z=(az+bz)/2+(bz-az)*offset;
+                const start={x:x+(ox-ix)*.3,z:z+(oz-iz)*.3};
+                const end={x:x+(ix-ox)*.3,z:z+(iz-oz)*.3};
+                const options={worker:false,species};
+                return {offset,outside:opening.session.actorCanStand(start,options),
                   inside:opening.session.actorCanStand(end,options),
                   crossing:opening.session.actorStepClear(start,end,options)};
               })]));
@@ -269,11 +306,15 @@ function inspect(state,nav){
         workerAccess:cutOnly?workerAccess():undefined,
         gridProbe:cutOnly?gridProbe():undefined,
         staticBoundary,
+        boundaryGapScan:cutOnly?boundaryGapScan():undefined,
         cutCrossings:cutOnly?crossingProbe():undefined};
       },true);
       const groupAfter=preview.group;
       validationMs=performance.now()-validateStarted;
       physical={status:groupAfter?.protection??'unknown',
+        frontierStatus:preview.boundaryGapScan&&Object.values(
+          preview.boundaryGapScan).some(result=>result.open>0)?
+          'locally-open':'unverified',
         profiles:groupAfter?.profiles,modules:quote.pieces.length,
         cost:quote.cost,gates:quote.gates,
         suppressed:cutOnly?quote.suppressed:undefined,
@@ -286,6 +327,7 @@ function inspect(state,nav){
           after:preview.workerAccess}:undefined,
         gridProbe:preview.gridProbe,
         staticBoundary:preview.staticBoundary,
+        boundaryGapScan:preview.boundaryGapScan,
         cutCrossings:cutOnly?{before:beforeCutCrossings,
           after:preview.cutCrossings}:undefined,
         blockedPieces:quote.blockedPieces.length,
