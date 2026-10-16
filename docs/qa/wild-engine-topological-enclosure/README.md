@@ -656,6 +656,19 @@ anchor) does **not** generalize. The physical and attack evidence is retained
 in `desierto-real-d3.json`; it does not certify every continuous attack
 position or justify changing the game classifier without a native fix.
 
+The exact-anchor probe identifies the counterexample precisely. Crop
+`plant-1154` at `(91.5, -3)` is standable for warthog and buffalo, and
+`plant-1267` at `(91.5, -6)` is standable for warthog. For each, the nearby
+integer cells that are standable and classified sealed fail the native
+`spatial_local_clear` connector from the crop center. The closer integer
+cells are physically unstandable. Sampling all integer candidates within
+the native 1.5 m connector radius found no usable anchor. This shows a
+continuous-position/grid-interface limit, not evidence that the crop can be
+reached from outside, and does not justify inferring `protected`. The
+coordinates, cell states and connector results are preserved in
+`desierto-anchor-grid-d3.json`; rerun the campaign probe with
+`--cut-only --conservative-cut --compare-construction-cut` to regenerate it.
+
 Gran Río/712 day 3 also selected its correct native biome code (2), but the
 farm layout, sampled terrain heights and enclosure geometry matched Sabana
 at this seed. It is not counted as an independent shape validation.

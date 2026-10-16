@@ -248,7 +248,8 @@ function inspect(state,nav){
           const crops={sealedNeighborhood:0,uncertifiedNeighborhood:0,
             noPassableCell:0,anchoredSealed:0,anchoredUncertified:0,
             noPhysicalAnchor:0,centerStandable:0,
-            noAnchorCenterStandable:0};
+            noAnchorCenterStandable:0,
+            standableNoAnchorExamples:[]};
           const attackRing={cropsWithoutCenterAnchor:0,
             cropsNearBoundary:0,
             standableSealed:0,standableOpen:0,standableUnknown:0,
@@ -299,7 +300,23 @@ function inspect(state,nav){
             crops[anchoredUncertified?'anchoredUncertified':anchoredSealed?
               'anchoredSealed':'noPhysicalAnchor']++;
             const noAnchor=!anchoredSealed&&!anchoredUncertified;
-            if(noAnchor&&centerStandable)crops.noAnchorCenterStandable++;
+            if(noAnchor&&centerStandable){
+              crops.noAnchorCenterStandable++;
+              if(crops.standableNoAnchorExamples.length<4){
+                const nearby=[];
+                for(let dz=-2;dz<=2;dz++)for(let dx=-2;dx<=2;dx++){
+                  const x=cx+dx,z=cz+dz;
+                  if(Math.hypot(x-target.x,z-target.z)>1.51)continue;
+                  nearby.push({x,z,enclosure:wasm.lazy_enclosure(x,z),
+                    standable:opening.session.actorCanStand({x,z},
+                      {worker:false,species}),
+                    localClear:Boolean(wasm.spatial_local_clear(
+                      target.x,target.z,x,z))});
+                }
+                crops.standableNoAnchorExamples.push({cropId:target.id,
+                  x:target.x,z:target.z,nearby});
+              }
+            }
             const radius=.6+ANIMAL_SPATIAL_PROFILES[species].radius;
             if(noAnchor)attackRing.cropsWithoutCenterAnchor++;
             if(nearest<=radius)attackRing.cropsNearBoundary++;
