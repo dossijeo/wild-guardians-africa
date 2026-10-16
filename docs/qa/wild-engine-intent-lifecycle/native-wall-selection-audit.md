@@ -132,3 +132,27 @@ selector. The query returned many walls of the same enclosure. The next
 planner stage must validate physical reachability and existing military
 priority before choosing one; this candidate inclusion alone does not prove
 that every returned side is reachable, or that native selection is faster.
+
+### Portal-graph reuse benchmark
+
+The first native perimeter query rebuilt all wall-side edges for every crop
+group. Source `2d742303` now retains these edges by movement profile, radius,
+native topology revision and confirmed wall revision. Ordinary crop changes
+do not invalidate them. A wall construction/removal or status change, and a
+sector unload/reload, do. The directed ring test checks one build, a repeated
+cache hit, and rebuilds after unload and reload. The pinned native-intent
+[run 38829308432](https://github.com/dossijeo/wild-guardians-africa/actions/runs/38829308432)
+passed; its candidate SHA-256 is
+`c554dde437af31f2196352986ad5f5684300e69f416ac723dcce5346ca044a8b`.
+
+An ABBA microbenchmark on the same frozen day-ten state, with 100 warm
+two-group queries in each fresh Node.js process, returned 60 candidates in
+both versions. Median warm time was 7.45/7.96 ms without graph reuse and
+0.125/0.125 ms with reuse; the cached version built the portal graph once
+per run. First-query times were 20.15/22.18 ms and 17.31/17.64 ms,
+respectively. Exact outputs and WASM hashes are in
+`native-wall-perimeter-abba.json`; the executable benchmark is
+`tools/experiments/benchmark-native-wall-perimeter.mjs`. This measures only
+native candidate lookup. It does not establish a reduction in `Game.tick`,
+overall raid cost or campaign wall time; those require live planner adoption
+and sustained campaign comparisons.
