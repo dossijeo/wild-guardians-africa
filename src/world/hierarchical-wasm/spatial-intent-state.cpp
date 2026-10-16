@@ -27,6 +27,9 @@ int lazy_weak_region(int,int);
 int lazy_enclosure(int,int);
 int lazy_connected(int,int,int,int);
 int lazy_connected_reason();
+int lazy_connected_frontier_valid();
+int lazy_connected_frontier_x();
+int lazy_connected_frontier_z();
 int spatial_local_clear(float,float,float,float);
 int spatial_crop_placement_valid(float,float);
 float spatial_surface_anywhere(float,float);
@@ -141,7 +144,7 @@ struct IntentState {
   // JS retains a crop lease between committed strikes even after the native
   // attack action has finished. Project those live leases for this request.
   std::vector<double> attackReservedTargets;
-  std::array<double,10> attackResult{};
+  std::array<double,13> attackResult{};
   std::array<double,10> wallAttackResult{};
   // Experimental wall-side graph for comparing native enclosure choices with
   // the current raid selector. Each directed row is wall, from, to, x, z.
@@ -1713,6 +1716,12 @@ int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
         // Reasons are 0..10; bits 8..18 are reserved for this diagnostic.
         const int reason=lazy_connected_reason();
         if(reason>=0&&reason<=10)unknownCauses|=1<<(8+reason);
+        if(reason==8&&!s.attackResult[12]&&
+           lazy_connected_frontier_valid()){
+          s.attackResult[10]=lazy_connected_frontier_x();
+          s.attackResult[11]=lazy_connected_frontier_z();
+          s.attackResult[12]=1;
+        }
         continue;
       }
       if(!connected)continue;

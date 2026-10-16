@@ -521,9 +521,10 @@ export function createSpatialIntentBridge(session){
       transient.reservedTargetCount);
     if(status<0)throw Error(`Native crop intention rejected: ${status}`);
     const values=new Float64Array(wasm.memory.buffer,
-      wasm.nav_intent_attack_result_ptr(),10);
+      wasm.nav_intent_attack_result_ptr(),13);
     if(status!==1)return {status:status===3?'unknown':
       status===4?'occupied':status===2?'blocked':'none',
+      frontier:values[12]===1?{x:values[10],z:values[11]}:null,
       regionQueries:values[8],routeQueries:values[9],
       diagnostics:{firstCandidateCrop:values[1],preferredTrials:values[2],
         lastPreferredRouteCount:values[3],siteTrials:values[4],

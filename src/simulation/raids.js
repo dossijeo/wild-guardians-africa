@@ -454,6 +454,13 @@ export function targetFor(s,a,nav) {
       }
       nav.intentTaskPlanner.cancelAttackIntent(a.id);
     }
+    if(native?.status==='unknown'&&native.frontier){
+      const queued=nav.requestRaidFrontier?.(native.frontier)??false;
+      if(stats){
+        stats.nativeFrontierOffers=(stats.nativeFrontierOffers??0)+1;
+        if(queued)stats.nativeFrontierQueued=(stats.nativeFrontierQueued??0)+1;
+      }
+    }
     if(nav.intentTaskPlanner?.nativeWallSelectionEnabled&&
       (native?.status==='blocked'||native?.status==='unknown')){
       const wall=nav.intentTaskPlanner.planAttackWall(s,a);

@@ -126,12 +126,27 @@ export function createSpatialNavigationMovement(session,state){
     return session.actorEnclosure(point,profile(radius,false,null));
   };
   let raidDemandEpoch=null;
-  const requestRaidConnectivity=(start,end,radius)=>{
+  const raidDemand=()=>{
     const raid=state.raid;
-    if(!raid)return false;
-    if(raidDemandEpoch!==raid){raidDemandEpoch=raid;view.raidConnectivityDemand=new Set();}
-    const demand=view.raidConnectivityDemand;
-    if(demand.size>=16)return false;
+    if(!raid)return null;
+    if(raidDemandEpoch!==raid){
+      raidDemandEpoch=raid;view.raidConnectivityDemand=new Set();
+    }
+    return view.raidConnectivityDemand;
+  };
+  const requestRaidFrontier=point=>{
+    if(!Number.isFinite(point?.x)||!Number.isFinite(point?.z))return false;
+    const demand=raidDemand();
+    if(!demand||demand.size>=16)return false;
+    const cx=Math.floor((point.x+24)/48),cz=Math.floor((point.z+24)/48);
+    const key=`${cx},${cz}`;
+    if(session.stream?.loaded?.()?.has(key)||demand.has(key))return false;
+    demand.add(key);
+    return true;
+  };
+  const requestRaidConnectivity=(start,end,radius)=>{
+    const demand=raidDemand();
+    if(!demand||demand.size>=16)return false;
     const chunk=point=>({cx:Math.floor((point.x+24)/48),cz:Math.floor((point.z+24)/48)});
     const from=chunk(start),to=chunk(end),candidates=[];
     const steps=Math.max(Math.abs(to.cx-from.cx),Math.abs(to.cz-from.cz),1);
@@ -256,7 +271,7 @@ export function createSpatialNavigationMovement(session,state){
     walkable,segmentClear,path,regionFor,regionConnected,enclosureFor,terrainValid,
     withWallPreview,withVillageEntryPreview,withCenterPreview,
     spatialSectorRevision:(radius,worker=false)=>session.actorSectorRevision(profile(radius,worker,null)),
-    requestRaidConnectivity,
+    requestRaidConnectivity,requestRaidFrontier,
     approachPath:(start,end,radius)=>path(start,end,radius,null,false),
     propsAt,placement,wallPlacement,placementFootprint,
     workerSurface,actorSurface,
