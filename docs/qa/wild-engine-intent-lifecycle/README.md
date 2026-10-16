@@ -346,8 +346,12 @@ classified all 16 as `blocked`. Frozen-state tests found that old ruined
 walls regained collision after the new construction and isolated workers
 without an automatic gate; see `worker-repair-access-audit.md`. The branch
 now has a directed repair-time gate proposal and a frozen-state transaction
-test, but the correction still needs a sustained campaign replay. The old
-physical access defect limits interpretation of this campaign's balance.
+test. Subsequent Sabana/712 and Gran Cañón/123 sustained replays found all
+288 and 107 native worker-home routes respectively, with zero fallback;
+both ended in genuine economic defeats after 19 and 13 completed nights.
+Their exact reports and the remaining repair-planning cost are documented
+in `worker-repair-access-audit.md`. The old physical access defect limits
+interpretation of the original campaign's balance.
 The complete negative run is preserved as
 `sabana30-native-home-defeat.json.gz`. Neither wall-sale proceeds nor an
 economic warning was used to stop the run; this was the game's actual loss
