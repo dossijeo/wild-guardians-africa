@@ -14,6 +14,7 @@ import * as Game from '../../src/simulation/game.js';
 const biome=process.argv[2]??'sabana',day=Number(process.argv[3]??3);
 const output=process.argv[4]??`.cache/topological-${biome}-d${day}.json`;
 const breach=process.argv[5]==='breach';
+const cutOnly=process.argv.includes('--cut-only');
 if(!Number.isInteger(day)||day<1||day>30)throw RangeError('Invalid target day');
 const wasmPath=process.env.WILD_ENGINE_SPATIAL_SERVICES_WASM??
   'src/world/hierarchical-wasm/spatial-savanna.wasm';
@@ -133,6 +134,8 @@ function inspect(state,nav){
       physical={status:groupAfter?.protection??'unknown',
         profiles:groupAfter?.profiles,modules:quote.pieces.length,
         cost:quote.cost,gates:quote.gates,
+        placedPieces:cutOnly?quote.pieces.map(({x,z,yaw,baseScaleX})=>
+          ({x,z,yaw,baseScaleX})):undefined,
         structural:inspectSelfClosedQuote(quote,state.structures,
           cropPoints.map(([x,z])=>({x,z}))),
         blockedPieces:quote.blockedPieces.length,
@@ -144,6 +147,8 @@ function inspect(state,nav){
       strokes:shape?.strokes.length,estimatedModules:shape?.slots.length,
       estimatedCost:shape?.estimatedCost,ambiguous:shape?.ambiguous.length,
       junctions:shape?.junctions.length,
+      terminals:shape?.junctions.map(({strokeIndex,end,point})=>({strokeIndex,end,point})),
+      contours:cutOnly?shape?.strokes:undefined,
       multiArc:proposal?.length>1,physical};
   };
   const updates=()=>{
@@ -156,7 +161,7 @@ function inspect(state,nav){
     return total+wasm.lazy_sector_updates();
   };
   const rows=[];
-  for(const name of ['old','hull','cut','cut','hull','old']){
+  for(const name of (cutOnly?['cut']:['old','hull','cut','cut','hull','old'])){
     const before={...calls},beforeUpdates=updates();
     const started=performance.now(),result=name==='old'?old():name==='hull'?hull():cut();
     rows.push({name,ms:performance.now()-started,...(name==='old'?{

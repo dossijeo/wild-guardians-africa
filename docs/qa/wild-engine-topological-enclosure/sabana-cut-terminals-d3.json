@@ -1,0 +1,278 @@
+{
+  "biome": "sabana",
+  "seed": 712,
+  "day": 3,
+  "source": "a21f2b76509fa1057f031db5311cac7e5962b0f96b399060df860aa48ff41e1d",
+  "wasmSha256": "25c80656d8d8682c2833aec5687810d095d395202007a769701d76227cd38998",
+  "elapsedSeconds": 8.1612134,
+  "campaignTiming": {
+    "ticks": 1041,
+    "decisionMs": 4156.472999999996,
+    "gameTickMs": 2785.6537000000008
+  },
+  "sample": {
+    "stateHash": "7b7033894dee269d4bf04cb074f1372ef2f84ef280446150cd5f2e2331cb6966",
+    "living": 66,
+    "status": "measured",
+    "groupId": "crop:plant-1109",
+    "cropCount": 66,
+    "groupBounds": {
+      "minX": 81,
+      "minZ": -7.5,
+      "maxX": 94.5,
+      "maxZ": 7.5
+    },
+    "removedWalls": [],
+    "rows": [
+      {
+        "name": "cut",
+        "ms": 150.32070000000022,
+        "status": "proposed",
+        "box": [
+          69,
+          -20,
+          108,
+          21
+        ],
+        "topologicalMs": 5.229800000000978,
+        "conversionMs": 1.3149000000012165,
+        "validationMs": 140.48439999999937,
+        "cutEdges": 21,
+        "flow": 21,
+        "cells": 1206,
+        "strokes": 2,
+        "estimatedModules": 11,
+        "estimatedCost": 110,
+        "ambiguous": 0,
+        "junctions": 4,
+        "terminals": [
+          {
+            "strokeIndex": 0,
+            "end": "start",
+            "point": [
+              72.5,
+              -10.5
+            ]
+          },
+          {
+            "strokeIndex": 0,
+            "end": "finish",
+            "point": [
+              72.5,
+              -9.5
+            ]
+          },
+          {
+            "strokeIndex": 1,
+            "end": "start",
+            "point": [
+              75.5,
+              5.5
+            ]
+          },
+          {
+            "strokeIndex": 1,
+            "end": "finish",
+            "point": [
+              90.5,
+              10.5
+            ]
+          }
+        ],
+        "contours": [
+          [
+            [
+              72.5,
+              -10.5
+            ],
+            [
+              72.5,
+              -9.5
+            ]
+          ],
+          [
+            [
+              75.5,
+              5.5
+            ],
+            [
+              76.5,
+              5.5
+            ],
+            [
+              77.5,
+              5.5
+            ],
+            [
+              78.5,
+              5.5
+            ],
+            [
+              79.5,
+              5.5
+            ],
+            [
+              80.5,
+              5.5
+            ],
+            [
+              81.5,
+              5.5
+            ],
+            [
+              81.5,
+              6.5
+            ],
+            [
+              82.5,
+              6.5
+            ],
+            [
+              82.5,
+              7.5
+            ],
+            [
+              83.5,
+              7.5
+            ],
+            [
+              83.5,
+              8.5
+            ],
+            [
+              84.5,
+              8.5
+            ],
+            [
+              85.5,
+              8.5
+            ],
+            [
+              85.5,
+              9.5
+            ],
+            [
+              86.5,
+              9.5
+            ],
+            [
+              86.5,
+              10.5
+            ],
+            [
+              87.5,
+              10.5
+            ],
+            [
+              88.5,
+              10.5
+            ],
+            [
+              89.5,
+              10.5
+            ],
+            [
+              90.5,
+              10.5
+            ]
+          ]
+        ],
+        "multiArc": true,
+        "physical": {
+          "status": "unknown",
+          "profiles": {
+            "warthog": "unknown",
+            "hyena": "unknown",
+            "buffalo": "unknown",
+            "lion": "protected",
+            "rhino": "unknown"
+          },
+          "modules": 11,
+          "cost": 110,
+          "gates": 0,
+          "placedPieces": [
+            {
+              "x": 72.5,
+              "z": -10,
+              "yaw": -1.5707963267948966,
+              "baseScaleX": 0.4587155963302752
+            },
+            {
+              "x": 76.5,
+              "z": 5.5,
+              "yaw": 0,
+              "baseScaleX": 0.9174311926605504
+            },
+            {
+              "x": 78.5,
+              "z": 5.5,
+              "yaw": 0,
+              "baseScaleX": 0.9174311926605504
+            },
+            {
+              "x": 80.5,
+              "z": 5.5,
+              "yaw": 0,
+              "baseScaleX": 0.9174311926605504
+            },
+            {
+              "x": 82,
+              "z": 6,
+              "yaw": -0.7853981633974483,
+              "baseScaleX": 0.6487218176023372
+            },
+            {
+              "x": 83,
+              "z": 7,
+              "yaw": -0.7853981633974483,
+              "baseScaleX": 0.6487218176023372
+            },
+            {
+              "x": 84,
+              "z": 8,
+              "yaw": -0.7853981633974483,
+              "baseScaleX": 0.6487218176023372
+            },
+            {
+              "x": 85,
+              "z": 9,
+              "yaw": -0.7853981633974483,
+              "baseScaleX": 0.6487218176023372
+            },
+            {
+              "x": 86,
+              "z": 10,
+              "yaw": -0.7853981633974483,
+              "baseScaleX": 0.6487218176023372
+            },
+            {
+              "x": 87.5,
+              "z": 10.5,
+              "yaw": 0,
+              "baseScaleX": 0.9174311926605504
+            },
+            {
+              "x": 89.5,
+              "z": 10.5,
+              "yaw": 0,
+              "baseScaleX": 0.9174311926605504
+            }
+          ],
+          "structural": {
+            "status": "open",
+            "reason": "no-wall-face"
+          },
+          "blockedPieces": 0,
+          "blockedCrops": 0
+        },
+        "calls": {
+          "path": 12,
+          "wallPlacement": 33,
+          "withWallPreview": 3
+        },
+        "sectorUpdates": 288
+      }
+    ],
+    "memoryBytes": 16777216
+  }
+}

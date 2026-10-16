@@ -312,6 +312,17 @@ negative hull and baseline results. The earlier 110-coin estimate is now
 confirmed as the module quote for this candidate, but not as an achievable
 defensive saving.
 
+A cut-only rerun on the same serialized-state hash records the exact contour,
+four exposed terminal coordinates and the placed-module positions in
+`sabana-cut-terminals-d3.json`. One contour is only the 1 m segment at
+`(72.5, -10.5)`–`(72.5, -9.5)`; the other runs from `(75.5, 5.5)` to
+`(90.5, 10.5)`. Both are open arcs. Counting the 11 quoted modules is therefore
+not a closure test: the unbuilt intervals must be accounted for by continuous,
+impassable terrain or structures, and the combined proposal must still provide
+a worker gate or another proven worker access. The cut-only mode
+(`--cut-only`) removes the older advice arms from the diagnostic run; its
+152.9 ms is not an AB/BA comparison and is not cited as a speedup.
+
 ## Adoption boundary
 
 If this approach continues, turn the multi-stroke quote into a validated
