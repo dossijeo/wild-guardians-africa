@@ -1,8 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
+import {gunzipSync} from 'node:zlib';
 import {deserialize,serialize} from '../src/persistence/snapshots.js';
 import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
 import {cropClearanceHull,cutEdgesToStrokes,enclosureJunctions,inspectNaturalJunctions,
   inspectPlacedNaturalJunctions,inspectSelfClosedQuote,
   inspectStaticCutBoundary,junctionBlocksSmallestAnimal,
@@ -11,6 +13,7 @@ import {cropClearanceHull,cutEdgesToStrokes,enclosureJunctions,inspectNaturalJun
 import {villageLayout} from '../src/world/villages.js';
 import {containsPoint} from '../src/world/footprints.js';
 import {Navigation} from '../src/world/navigation.js';
+import {rational} from '../src/simulation/money.js';
 import * as Game from '../src/simulation/game.js';
 
 test('clearance hull yields a closed free-form candidate around every crop',()=>{
@@ -276,5 +279,50 @@ test('native five-profile cut is deterministic and responds to local solid chang
       }
       assert.deepEqual(query(-13,-13,'conservative'),conservative,
         'Removing the enclosure must restore the original cut without stale state');
+    }finally{session.dispose();}
+  });
+
+test('native cut observes a paid wall stroke and its removal',
+  {skip:!module&&'Build the experimental Wild Engine WASM first'},async()=>{
+    const state=deserialize(gunzipSync(readFileSync(new URL(
+      './fixtures/desierto983-d15-partial-state.json.gz',import.meta.url))).toString());
+    state.structures=state.structures.filter(item=>
+      !(item.kind==='wall'&&item.created>=27114));
+    state.ledger.balance=rational(10000);
+    const loaded=new Map(),session=createSpatialGameSession(module,state,{
+      loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+    try{
+      const desired=new Map();
+      for(let z=-2;z<=2;z++)for(let x=-1;x<=3;x++)desired.set(`${x},${z}`,
+        {cx:x,cz:z,score:Math.abs(x-1)+Math.abs(z)});
+      session.stream.plan(desired);await session.stream.whenIdle();
+      const nav=createSpatialNavigationMovement(session,state);
+      nav.setActiveBounds([-72,-120,168,120]);
+      for(const species of ['warthog','hyena','buffalo','lion','rhino'])
+        session.actorRegionsBatch([{x:70,z:-12}],{worker:false,species});
+      const wasm=session.core.wasm;
+      const cut=()=>{
+        new Int32Array(wasm.memory.buffer,wasm.lazy_cut_seeds_ptr(1),2).set([70,-12]);
+        const count=wasm.lazy_local_crop_cut_conservative(54,-30,96,12,1,2);
+        return count<0?{count}: {count,edges:Array.from(new Int32Array(
+          wasm.memory.buffer,wasm.lazy_local_crop_cut_ptr(),count*4))};
+      };
+      const before=cut();
+      assert.ok(before.count>0);
+      const stroke=[[66,-7.18],[66,-18]],options={smooth:false,snap:false};
+      assert.ok(Game.buildWallChain(state,'cut-real-build','zarzas',stroke,nav,options));
+      const after=cut();
+      assert.equal(after.count,0,'The paid stroke closes this local graph cut');
+      const created=state.structures.filter(item=>item.kind==='wall'&&
+        item.created>=27114);
+      assert.equal(created.length,5);
+      let reopened=false;
+      for(const [index,wall] of created.entries()){
+        assert.ok(Game.removeWall(state,`cut-real-remove-${index}`,wall.id,nav));
+        if(cut().count>0)reopened=true;
+      }
+      assert.ok(reopened,'Removing the paid stroke must eventually reopen the cut');
+      assert.deepEqual(cut(),before,
+        'After removing all five walls the original graph proposal is restored');
     }finally{session.dispose();}
   });

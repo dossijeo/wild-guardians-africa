@@ -520,6 +520,15 @@ This demonstrates that the prototype reads current native obstacles rather
 than returning a stale cut for this local sequence. It does **not** yet test
 the full game construction event path, sector unload/reload or save/restore.
 
+A second regression uses the frozen Desierto/983 day-15 state and the actual
+`Game.buildWallChain()`/`Game.removeWall()` commands through the spatial
+navigation adapter. The local native cut at `(70,-12)` has six proposed edges
+before the paid five-module stroke, zero after construction, and exactly its
+original edge list after all five modules are removed. At least one removal
+reopens the cut. This tests the confirmed game-to-WASM wall mirror rather than
+only direct native barrier insertion. It is a local graph response, not a
+certificate that every crop in that compound is protected.
+
 This also explains why checking only the four exposed wall ends is insufficient
 for this candidate: a mixed wall/building/terrain closure needs evidence that
 the intervening obstacle chain stays impassable. A self-closing wall face with
