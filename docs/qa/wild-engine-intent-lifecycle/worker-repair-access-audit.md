@@ -80,3 +80,23 @@ The replay took 422 seconds versus 394 seconds for the preceding run. Because
 the physical trajectories diverged, this does not isolate the cost of the
 repair check or establish a performance regression. Multi-biome validation
 and cost profiling remain necessary before closing the defect.
+
+## Second-biome regression and directed cost
+
+`tests/spatial-repair-access.test.js` now also loads the frozen Gran Cañón
+seed-123/day-7 state. Its two ruined walls (`structure-549` and
+`structure-862`) can be restored without closing the currently reachable
+worker routes. The plan returns no gate in either case; native preview of
+each restored wall confirms those routes remain found, and the game state
+is not changed by the preview. Both directed tests passed with WASM SHA-256
+`ff719cfebd15fe0aa11a4ed85abc2912f35527e84e635699429489660a1fd8e7`.
+This second case checks that the fix does not add gratuitous gates; it is
+not a Gran Cañón gate-closure scenario.
+
+The reproducible `tools/experiments/benchmark-repair-access.mjs` times the
+access plan separately from streaming and session setup. On this host, three
+Sabana day-17 runs requiring one gate took 494.7, 475.8 and 477.5 ms. The
+two Gran Cañón walls took 11.3/5.7/6.1 ms and 12.1/6.1/6.7 ms. These are
+single-process directed timings, not mobile or sustained campaign results.
+The roughly half-second closure case is a cost to reduce before accepting
+the repair path broadly.

@@ -17,13 +17,22 @@ const module=binary?new WebAssembly.Module(readFileSync(binary)):null;
 const snapshot=gunzipSync(readFileSync(new URL(
   '../docs/qa/wild-engine-intent-lifecycle/sabana17-wall-capture-day17-raid-state.json.gz',
   import.meta.url))).toString();
+const canyonSnapshot=readFileSync(new URL(
+  '../docs/qa/hierarchical-navigation/spatial-virtual-gran-canon-14-farm-bank-seed123-state.json',
+  import.meta.url),'utf8');
 
 async function open(game){
   const loaded=new Map(),session=createSpatialGameSession(module,game,{
     loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
   const desired=new Map();
-  for(let z=-2;z<=2;z++)for(let x=0;x<=4;x++)
-    desired.set(`${x},${z}`,{cx:x,cz:z,score:0});
+  const points=[...game.structures.filter(piece=>piece.kind==='wall'||piece.kind==='center'),
+    ...game.workers,...game.villages.map(village=>village.entry??village)];
+  const chunk=value=>Math.floor((value+24)/48),margin=48;
+  for(let z=chunk(Math.min(...points.map(point=>point.z))-margin);
+    z<=chunk(Math.max(...points.map(point=>point.z))+margin);z++)
+    for(let x=chunk(Math.min(...points.map(point=>point.x))-margin);
+      x<=chunk(Math.max(...points.map(point=>point.x))+margin);x++)
+      desired.set(`${x},${z}`,{cx:x,cz:z,score:0});
   session.stream.plan(desired);
   await session.stream.whenIdle();
   return {session,nav:createSpatialNavigationMovement(session,game)};
@@ -85,5 +94,30 @@ test('repairing the last physical gap creates a worker-access gate before paymen
           {worker:true,cached:false}).status,'found');
       }
     }finally{reopened.session.dispose();}
+  }finally{session.dispose();}
+});
+
+test('Gran Cañón repairs retain existing worker routes without unnecessary gates',
+ {skip:!module&&'Build and select the experimental WASM first'},async()=>{
+  const game=deserialize(canyonSnapshot),{session,nav}=await open(game);
+  try{
+    const home=game.villages[0].entry;
+    for(const id of ['structure-549','structure-862']){
+      const target=game.structures.find(piece=>piece.id===id);
+      assert.equal(target.status,'ruined');
+      const before=game.workers.filter(worker=>worker.status!=='home'&&
+        session.routeActorNative(worker,home,{worker:true,cached:false}).status==='found');
+      const plan=planRepairAccess(game,target,nav);
+      assert.equal(plan.status,'safe');
+      assert.equal(plan.updates.length,0,'the repair must not create an unneeded gate');
+      assert.equal(target.status,'ruined','the preview must not mutate the game');
+      const restored={...target,status:'intact',hp:target.maxHp};
+      const simulated=game.structures.map(piece=>piece.id===id?restored:piece);
+      session.withWallStatePreview(simulated,()=>{
+        for(const worker of before)
+          assert.equal(session.routeActorNative(worker,home,
+            {worker:true,cached:false}).status,'found');
+      });
+    }
   }finally{session.dispose();}
 });
