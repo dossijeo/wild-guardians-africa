@@ -14,7 +14,7 @@ import {approximateCutModules,cropClearanceHull,inspectSelfClosedQuote,
   placedEnclosureJunctions} from '../../src/world/hierarchical-wasm/spatial-topological-enclosure-prototype.js';
 import {wallSpec} from '../../src/simulation/rules.js';
 import {wallCollisionPolygon} from '../../src/world/wall-collision-frame.js';
-import {footprintDistance} from '../../src/world/footprints.js';
+import {edgeDistance,footprintDistance} from '../../src/world/footprints.js';
 import {ANIMAL_SPATIAL_PROFILES} from '../../src/world/hierarchical-wasm/spatial-movement-profiles.js';
 import * as Game from '../../src/simulation/game.js';
 
@@ -225,6 +225,13 @@ function inspect(state,nav){
       const beforeWorkerAccess=cutOnly?workerAccess():undefined;
       const gridProbe=()=>{
         const [sx,sz]=cropPoints[0],bySpecies={};
+        // The native preview contains the quoted barriers, but the live JS
+        // obstacle list does not. Mirror only the quoted structures for this
+        // read-only agricultural ray probe; otherwise it tests the old farm.
+        const attackState={...state,
+          structures:[...state.structures,...quote.previewPieces]};
+        const attackNav={...nav,
+          obstacles:[...nav.obstacles,...quote.previewPieces]};
         for(const species of ['warthog','hyena','buffalo','lion','rhino']){
           opening.session.actorSectorRevision({worker:false,species});
           const counts={sealed:0,uncertified:0,blocked:0,unexpected:0};
@@ -243,7 +250,9 @@ function inspect(state,nav){
             noStandablePoint:0,openExamples:[]};
           const attackEnvelope={testedCrops:0,openStandable:0,
             openClearRay:0,openBlockedRay:0,unknownStandable:0,
-            directReachClear:0,minimumClearRayDistance:null,clearExamples:[]};
+            directReachClear:0,minimumClearRayDistance:null,
+            clearRayCrossesSolidProp:0,propQueryUnknown:0,
+            clearExamples:[],propExamples:[]};
           const cropBoundary={withinAttackReach:0,minimumDistance:Infinity,
             nearestExamples:[]};
           for(const [index,[cx,cz]] of cropPoints.entries()){
@@ -326,11 +335,27 @@ function inspect(state,nav){
                     continue;
                   }
                   attackEnvelope.openStandable++;
-                  if(agriculturalRayClear(state,nav,point,target)){
+                  if(agriculturalRayClear(attackState,attackNav,point,target)){
                     attackEnvelope.openClearRay++;
                     if(distance<=radius+1e-8)attackEnvelope.directReachClear++;
                     attackEnvelope.minimumClearRayDistance=Math.min(
                       attackEnvelope.minimumClearRayDistance??Infinity,distance);
+                    try{
+                      const midX=(point.x+target.x)/2,midZ=(point.z+target.z)/2;
+                      const crossing=nav.propsAt(midX,midZ,distance/2+4).find(prop=>
+                        (prop.slot<4||prop.slot>=10&&prop.slot<=12||
+                          prop.slot>=18)&&edgeDistance(point,target,
+                          prop.x,prop.z)<(prop.radius??1.5));
+                      if(crossing){
+                        attackEnvelope.clearRayCrossesSolidProp++;
+                        if(attackEnvelope.propExamples.length<8)
+                          attackEnvelope.propExamples.push({cropId:target.id,
+                            point,distance,propId:crossing.id,slot:crossing.slot});
+                      }
+                    }catch(error){
+                      if(error.name!=='SpatialChunkUnavailable')throw error;
+                      attackEnvelope.propQueryUnknown++;
+                    }
                     if(attackEnvelope.clearExamples.length<8)
                       attackEnvelope.clearExamples.push({cropId:target.id,point,
                         distance});
