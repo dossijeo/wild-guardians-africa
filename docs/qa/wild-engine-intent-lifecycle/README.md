@@ -577,3 +577,10 @@ The exact configuration, reports, per-night data and limitations are in
 [`single-quote-campaign.md`](single-quote-campaign.md). This policy-only
 change remains on the native-intent branch; it does not advance PR #54 or
 enable the opt-in planner by default.
+
+A subsequent 14-night Manglares/712 run on the same code completed with all
+raids verified and no technical stop, but exposed a 147.53-second cost for
+two necessary wall quotes on day ten and a separate 108-second `Game.tick`
+day twelve. The full report and the limits of this single-run evidence are
+in [`manglares14-event-defense.md`](manglares14-event-defense.md). These
+costs are unresolved acceptance gaps for the opt-in planner.
