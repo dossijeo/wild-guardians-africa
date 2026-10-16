@@ -115,8 +115,19 @@ test('a paid closed wall ring protects the crop; removing a wall invalidates cer
   assert(inside);
   assert.equal(Game.plant(game,'group-crop','mijo',inside.x,inside.z,nav),true);
   bridge.applyCommittedEvents(game,[game.events.at(-1)]);
+  let neighbor;
+  for(let dz=-1.5;dz<=1.5&&!neighbor;dz+=.3)
+   for(let dx=-1.5;dx<=1.5&&!neighbor;dx+=.3){
+    const distance=Math.hypot(dx,dz),x=inside.x+dx,z=inside.z+dz;
+    if(distance>1.1&&distance<1.7&&nav.placement(x,z,.4).valid)
+     neighbor={x,z};
+   }
+  assert(neighbor,'a second legal crop must share the protected group');
+  assert.equal(Game.plant(game,'group-crop-2','mijo',neighbor.x,neighbor.z,nav),true);
+  bridge.applyCommittedEvents(game,[game.events.at(-1)]);
   const before=bridge.getUnprotectedCropGroups({includeProtected:true});
   assert.equal(before.length,1);
+  assert.equal(before[0].cropIds.length,2);
   assert.equal(before[0].protection,'protected',JSON.stringify(before[0].profiles));
   const planner=createEventDrivenTaskPlanner(session);planner.resetFromState(game);
   const stopWorld=planner.observeWorld(game),changes=[];
@@ -131,6 +142,8 @@ test('a paid closed wall ring protects the crop; removing a wall invalidates cer
   const candidates=game.structures.filter(item=>item.kind==='wall'&&!item.gate)
    .sort((a,b)=>Math.hypot(a.x-wall.x,a.z-wall.z)-
     Math.hypot(b.x-wall.x,b.z-wall.z));
+  game.plants.find(plant=>plant.id===before[0].cropIds[0]).alive=false;
+  Game.emit(game,'CropDestroyed',{targetId:before[0].cropIds[0]});
   const removed=[];
   for(const candidate of candidates){
    assert.equal(Game.removeWall(game,`group-breach-${removed.length}`,candidate.id,nav),true);
@@ -143,8 +156,10 @@ test('a paid closed wall ring protects the crop; removing a wall invalidates cer
   planner.flushWorldEvents();
   const after=planner.getUnprotectedCropGroups({includeProtected:true});
   assert.notEqual(after[0].protection,'protected');
+  assert.notEqual(after[0].id,before[0].id,
+   'the destroyed anchor changes the native group identity');
   assert.deepEqual(changes.map(change=>({groupId:change.groupId,
-   previous:change.previous,protection:change.protection})),[{groupId:before[0].id,
+   previous:change.previous,protection:change.protection})),[{groupId:after[0].id,
    previous:'protected',protection:after[0].protection}]);
   planner.flushWorldEvents();
   assert.equal(changes.length,1,'an unchanged topology cannot repeat the notification');

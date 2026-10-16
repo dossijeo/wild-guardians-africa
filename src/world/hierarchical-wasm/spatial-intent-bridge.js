@@ -852,8 +852,25 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     const previous=cropProtectionSnapshot;
     cropProtectionSnapshot=next;
     if(!previous)return;
+    // A native group's ID is its lowest crop ID. Harvesting that crop can
+    // change the ID in the same event batch that opens a wall breach. Follow
+    // surviving members so the protection transition is still delivered.
+    let priorByCrop;
+    if([...next.keys()].some(id=>!previous.has(id))||
+       [...previous.keys()].some(id=>!next.has(id))){
+      priorByCrop=new Map();
+      for(const group of previous.values())
+        for(const cropId of group.cropIds)priorByCrop.set(cropId,group);
+    }
     for(const [id,group] of next){
-      const old=previous.get(id);
+      let old=previous.get(id);
+      if(priorByCrop){
+        const ancestors=group.cropIds.map(cropId=>priorByCrop.get(cropId))
+          .filter(Boolean);
+        if(group.protection!=='protected')
+          old=ancestors.find(ancestor=>ancestor.protection==='protected')??old;
+        old??=ancestors[0];
+      }
       if(!old||old.protection===group.protection)continue;
       const change={type:'CropGroupProtectionChanged',groupId:id,
         previous:old.protection,protection:group.protection,group};
