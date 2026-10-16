@@ -13,6 +13,8 @@ El primer registro, [`sabana-712-chrome-300s.json`](sabana-712-chrome-300s.json)
 
 La partida guardada [`confirmed-snapshot.json`](../recalled-hiring/confirmed-snapshot.json) contiene un cultivo vivo y un trabajador en camino a una tarea. La comprobación corta [`recalled-hiring-chrome-2s-details.json`](recalled-hiring-chrome-2s-details.json) muestra que mientras la pestaña estuvo oculta no cambiaron crecimiento, agua, daño del cultivo, posición ni tarea del trabajador. Tras restaurar, el trabajador volvió a avanzar. En esa ejecución no se registraron excepciones JavaScript de página.
 
+La comprobación larga del mismo guardado, [`recalled-hiring-chrome-300s.json`](recalled-hiring-chrome-300s.json), registra **300,007 s** ocultos. Su estado completo conservó el SHA-256 `0a1b1a72359317a3f61ee41c3ae1cb0c8ba342e2b3a30ad56231ece3a636e2ec` de principio a fin: `elapsed=603,154`, saldo 45, un cultivo vivo, un trabajador y diez eventos. A los 2,5 s de restaurar, `elapsed=605,665`; los cinco minutos ocultos no se sumaron. El informe registra SHA-256 del código de la aplicación y del script de QA utilizado.
+
 Las nueve pruebas dirigidas de reloj, pausa, restauración nativa y delta de frame pasaron. `npm run build` pasó, y se comprobó que `wildGuardiansVisibilityQa` no aparece en `dist/assets`.
 
-**Límites:** Chrome headless prueba una pestaña web real, pero no un teléfono físico ni todos los navegadores móviles. La partida nueva no contiene cultivos ni trabajadores; la partida guardada añade ese caso. La prueba de cinco minutos de la partida guardada y la aceptación física en teléfono se registran por separado. QA-014 sigue parcial hasta cubrir esa aceptación.
+**Límites:** Chrome headless prueba una pestaña web real, pero no un teléfono físico ni todos los navegadores móviles. La partida nueva no contiene cultivos ni trabajadores; la partida guardada añade ese caso. QA-014 sigue parcial hasta cubrir la aceptación física en teléfono.
