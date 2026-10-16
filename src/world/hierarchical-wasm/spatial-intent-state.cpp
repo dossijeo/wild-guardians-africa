@@ -141,6 +141,7 @@ struct IntentState {
   // attack action has finished. Project those live leases for this request.
   std::vector<double> attackReservedTargets;
   std::array<double,10> attackResult{};
+  std::array<double,10> wallAttackResult{};
   // Experimental wall-side graph for comparing native enclosure choices with
   // the current raid selector. Each directed row is wall, from, to, x, z.
   std::unordered_map<int,WallPortalCache> wallPortalCaches;
@@ -601,7 +602,9 @@ void nav_intent_reset(){
   s.activeIntents.clear();s.byTarget.clear();s.byTask.clear();
   s.byBlockedCropGroup.clear();s.wallOpportunityActors.clear();
   s.routeSlots.clear();s.intentChanges.clear();s.intentResult.fill(0);
-  s.attackRouteInput.clear();
+  s.attackRouteInput.clear();s.attackBlockers.clear();
+  s.attackReservedTargets.clear();s.attackResult.fill(0);
+  s.wallAttackResult.fill(0);
   s.invalidations=0;
   s.planningCallsByActor.clear();
   s.workers.clear();s.targets.clear();s.tasks.clear();
@@ -1609,6 +1612,9 @@ int nav_intent_reconsider_wall_opportunity(double actorId,double startX,
 // per-crop graph searches are needed for a sealed group. Ambiguous geometry
 // returns unknown so the established selector can handle it during migration.
 const double* nav_intent_attack_result_ptr(){return state().attackResult.data();}
+const double* nav_intent_wall_attack_result_ptr(){
+  return state().wallAttackResult.data();
+}
 double* nav_intent_attack_blockers_ptr(int count){
   if(count<0||count>100000)return nullptr;
   IntentState& s=state();s.attackBlockers.resize(size_t(count)*3);
@@ -1793,6 +1799,80 @@ int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
   s.attackResult[6]=lastRegisterResult;
   s.attackResult[8]=regionQueries;s.attackResult[9]=routeQueries;
   return int(s.attackResult[0]);
+}
+// Experimental complete wall proposal. Crop groups nominate only first
+// crossings of certified enclosures; the native route and attack-site lease
+// then confirm one physically reachable, unreserved wall in the same call.
+// This is opt-in until its priorities and campaign outcomes are compared.
+int nav_intent_plan_attack_wall(double actorId,double startX,double startZ,
+                                double radius){
+  IntentState& s=state();s.wallAttackResult.fill(0);
+  if(!integer(actorId)||!coordinate(startX)||!coordinate(startZ)||
+     !std::isfinite(radius)||radius<=0||radius>2||
+     lazy_selected_context()==1)return -1;
+  if(s.activeIntents.count(uint64_t(actorId)))return -2;
+  s.planningCallsByActor[uint64_t(actorId)]++;
+  rebuildCropGroups(s);
+  struct Candidate {uint64_t id,group;double x,z,distance;};
+  std::vector<Candidate> candidates;
+  bool unknown=false,occupied=false;
+  for(CropGroup& group:s.cropGroups){
+    const int status=nav_intent_perimeter_walls(startX,startZ,radius,
+      double(group.id));
+    if(status<0){unknown=true;continue;}
+    if(status!=1)continue;
+    for(size_t index=0;index<s.perimeterRows.size();index+=3){
+      const uint64_t id=uint64_t(s.perimeterRows[index]);
+      const auto wall=s.targets.find(id);
+      if(wall==s.targets.end()||!wall->second.active||
+         wall->second.kind!=3||wall->second.status!=0)continue;
+      candidates.push_back({id,group.id,s.perimeterRows[index+1],
+        s.perimeterRows[index+2],std::hypot(wall->second.x-startX,
+        wall->second.z-startZ)});
+    }
+  }
+  std::sort(candidates.begin(),candidates.end(),[](const Candidate& a,
+    const Candidate& b){
+    if(a.distance!=b.distance)return a.distance<b.distance;
+    if(a.id!=b.id)return a.id<b.id;
+    if(a.x!=b.x)return a.x<b.x;
+    return a.z<b.z;
+  });
+  std::set<uint64_t> transientLeases;
+  for(double id:s.attackReservedTargets)
+    if(integer(id))transientLeases.insert(uint64_t(id));
+  int examined=0,routes=0;
+  for(const Candidate& candidate:candidates){
+    examined++;
+    if(transientLeases.count(candidate.id)){occupied=true;continue;}
+    bool blocked=false;
+    for(size_t index=0;index+2<s.attackBlockers.size();index+=3)
+      if(std::hypot(candidate.x-s.attackBlockers[index],
+                    candidate.z-s.attackBlockers[index+1])<
+         radius+s.attackBlockers[index+2]-1e-8){
+        blocked=true;break;
+      }
+    if(blocked){occupied=true;continue;}
+    routes++;
+    const int count=spatial_world_route_cached(float(startX),float(startZ),
+      float(candidate.x),float(candidate.z));
+    if(count<0||count>4096){unknown=true;continue;}
+    if(!count)continue;
+    const float* route=spatial_world_route_ptr();
+    s.attackRouteInput.assign(route,route+size_t(count)*2);
+    const int committed=nav_intent_register_attack_site(actorId,
+      double(candidate.id),startX,startZ,count,candidate.x,candidate.z,radius);
+    if(committed==-3||committed==-6){occupied=true;continue;}
+    if(committed!=1){unknown=true;continue;}
+    const ActiveIntent& intent=s.activeIntents.at(uint64_t(actorId));
+    s.wallAttackResult={1,double(candidate.id),candidate.x,candidate.z,
+      double(s.session),double(intent.slot),double(intent.generation),
+      double(candidate.group),double(examined),double(routes)};
+    return 1;
+  }
+  s.wallAttackResult[0]=unknown?3:occupied?4:candidates.empty()?0:2;
+  s.wallAttackResult[8]=examined;s.wallAttackResult[9]=routes;
+  return int(s.wallAttackResult[0]);
 }
 int nav_intent_attack_action_active(double actorId){
   if(!integer(actorId))return 0;

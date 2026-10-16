@@ -435,6 +435,17 @@ for(const count of [1,5])test(`${count} native raiders attack an accessible wall
       const perimeterIds=new Set([...Array(perimeterCount).keys()].map(
         index=>perimeterRows[index*3]));
       assert([...perimeterIds].every(id=>nativeWallIds.has(id)));
+      assert.equal(wasm.nav_intent_plan_attack_wall(
+        Number(state.raid.animals[0].id.split('-').at(-1)),
+        state.raid.animals[0].x,state.raid.animals[0].z,
+        state.raid.animals[0].radius),1,
+      'a certified perimeter yields one native wall, route and lease');
+      const proposal=new Float64Array(wasm.memory.buffer,
+        wasm.nav_intent_wall_attack_result_ptr(),10);
+      assert(wallIds.has(proposal[1]));
+      assert(wasm.nav_intent_route_points(...proposal.slice(4,7))>0);
+      assert.equal(wasm.nav_intent_attack_cancel(
+        Number(state.raid.animals[0].id.split('-').at(-1))),1);
       assert.equal(session.core.removeChunk(0,0),1);
       session.actorSectorRevision({worker:false,species:state.raid.animals[0].species});
       assert.equal(wasm.nav_intent_wall_portals(state.raid.animals[0].radius),0,
