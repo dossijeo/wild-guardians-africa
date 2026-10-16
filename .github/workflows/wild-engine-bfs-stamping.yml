@@ -1,12 +1,11 @@
 name: Wild Engine BFS stamping experiment
 
+# Historical A/B experiment for PR #56. Later branches can add native API
+# exports to lazy-sectors.cpp, so mixing their linker inputs with origin/main
+# is not a valid automatic comparison.
+
 on:
   workflow_dispatch:
-  pull_request:
-    paths:
-      - '.github/workflows/wild-engine-bfs-stamping.yml'
-      - 'src/world/hierarchical-wasm/lazy-sectors.cpp'
-      - 'tools/experiments/benchmark-wild-engine-bfs.mjs'
 
 permissions:
   contents: read
