@@ -364,6 +364,25 @@ necessary for unresolved or exceptional return paths.
 
 ## Next integration gates
 
+A first continuous Manglares/712 `good` run with the opt-in native intentions,
+shared spatial advice and expanding paid-wall policy completed all 14 requested
+nights on source `ff4bc4db` and WASM SHA-256
+`ff719cfebd15fe0aa11a4ed85abc2912f35527e84e635699429489660a1fd8e7`.
+The unabridged report is `manglares14-intent-expanding.json.gz`; it records the
+exact parameters, source hashes, daily states, raid receipts and timings. All
+14 raids were verified with no observer issues. All 203 native worker-home
+requests found routes without a JavaScript fallback. At the day-15 dawn the
+farm had 80 living crops, 573 coins and one operational center; this is a
+14-night technical completion, not evidence of 100-night balance. The run
+took 388.67 seconds, including 307.87 seconds in `Game.tick` and 52.67
+seconds in bot decisions. The day-13 raid destroyed 63 crops without a
+technical stop. Native animal crop planning still reported 751 blocked and
+71 occupied proposals, while the transitional raid selector recorded 452
+unsupported and 751 blocked legacy fallbacks. Therefore this run supports
+multi-biome stability of the opt-in path, but does not establish complete
+native ownership of animal decisions or a sustained speedup over a matched
+control. There was no A/B control run for Manglares in this experiment.
+
 The JS/native task handoff now rejects two additional stale targets at the
 last pre-commit boundary: a crate marked delivered and a structure already
 fully repaired. A frozen Desert fixture produces valid native proposals,
