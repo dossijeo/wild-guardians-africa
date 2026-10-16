@@ -571,6 +571,10 @@ try{
           !state.raid){
         const snapshot=serialize(state);
         sample={stateHash:sha256(snapshot),living:state.plants.filter(p=>p.alive).length,
+          observedBiome:state.biome,
+          nativeBiomeCode:opening.session.core.wasm.spatial_world_biome(),
+          terrainSamples:[[0,0],[24,0],[0,24],[24,24]].map(([x,z])=>
+            nav.field.surface(x,z)),
           ...inspect(state,nav)};
         throw end;
       }

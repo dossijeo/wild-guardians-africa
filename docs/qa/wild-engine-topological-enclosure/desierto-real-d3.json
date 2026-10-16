@@ -1,0 +1,231 @@
+{
+  "biome": "desierto",
+  "seed": 712,
+  "day": 3,
+  "source": "2ba864211ca434f663bf857f85370fb38a183d6a0645ee80276abf27070949d0",
+  "wasmSha256": "3d8185e86c8aae1e2ce241c19008fc588a34313edadd4754aa2125e2866f6252",
+  "stateHash": "afcea5d362aac2496bf10ef733351d938c3b4c024dcac7080f9790d4363e4ae4",
+  "observedBiome": "desierto",
+  "nativeBiomeCode": 1,
+  "terrainSamples": [
+    8.012818336486816,
+    14.86878776550293,
+    5.872770309448242,
+    12.724453926086426
+  ],
+  "living": 66,
+  "groupId": "crop:plant-1062",
+  "cropCount": 66,
+  "cutEdges": 53,
+  "strokes": 4,
+  "quotedModules": 26,
+  "quotedCost": 260,
+  "gates": 0,
+  "blockedPieces": 0,
+  "blockedCrops": 0,
+  "groupVerdict": "unknown",
+  "profiles": {
+    "warthog": "unknown",
+    "hyena": "unknown",
+    "buffalo": "unknown",
+    "lion": "unknown",
+    "rhino": "unknown"
+  },
+  "placedJunctions": {
+    "status": "joined",
+    "junctions": 8,
+    "spans": [
+      0.8287340402603149,
+      0.3763505220413208,
+      0.2800000011920929,
+      0.5675666332244873,
+      0.47715121507644653,
+      0.41217830777168274,
+      0.6440529227256775,
+      0.4732443392276764
+    ]
+  },
+  "staticBoundary": {
+    "status": "blocked-by-static-solids",
+    "segments": 138,
+    "queries": 153
+  },
+  "boundaryGapScan": {
+    "warthog": {
+      "tested": 138,
+      "open": 0,
+      "examples": []
+    },
+    "hyena": {
+      "tested": 138,
+      "open": 0,
+      "examples": []
+    },
+    "buffalo": {
+      "tested": 138,
+      "open": 0,
+      "examples": []
+    },
+    "lion": {
+      "tested": 138,
+      "open": 0,
+      "examples": []
+    },
+    "rhino": {
+      "tested": 138,
+      "open": 0,
+      "examples": []
+    }
+  },
+  "workerAccess": {
+    "outbound": {
+      "reachable": 66,
+      "blocked": 0,
+      "unknown": 0
+    },
+    "return": {
+      "reachable": 66,
+      "blocked": 0,
+      "unknown": 0
+    },
+    "examples": [],
+    "returnFailures": []
+  },
+  "bySpecies": {
+    "warthog": {
+      "cropAnchors": {
+        "sealedNeighborhood": 66,
+        "uncertifiedNeighborhood": 0,
+        "noPassableCell": 0,
+        "anchoredSealed": 53,
+        "anchoredUncertified": 0,
+        "noPhysicalAnchor": 13,
+        "centerStandable": 55,
+        "noAnchorCenterStandable": 2
+      },
+      "attackEnvelope": {
+        "testedCrops": 62,
+        "openStandable": 387,
+        "openClearRay": 0,
+        "openBlockedRay": 387,
+        "unknownStandable": 225,
+        "directReachClear": 0,
+        "minimumClearRayDistance": null,
+        "clearRayCrossesSolidProp": 0,
+        "propQueryUnknown": 0,
+        "potentialPeripheralCenters": 0,
+        "peripheralExamples": [],
+        "clearExamples": [],
+        "propExamples": []
+      }
+    },
+    "hyena": {
+      "cropAnchors": {
+        "sealedNeighborhood": 66,
+        "uncertifiedNeighborhood": 0,
+        "noPassableCell": 0,
+        "anchoredSealed": 53,
+        "anchoredUncertified": 0,
+        "noPhysicalAnchor": 13,
+        "centerStandable": 53,
+        "noAnchorCenterStandable": 0
+      },
+      "attackEnvelope": {
+        "testedCrops": 61,
+        "openStandable": 396,
+        "openClearRay": 0,
+        "openBlockedRay": 396,
+        "unknownStandable": 197,
+        "directReachClear": 0,
+        "minimumClearRayDistance": null,
+        "clearRayCrossesSolidProp": 0,
+        "propQueryUnknown": 0,
+        "potentialPeripheralCenters": 0,
+        "peripheralExamples": [],
+        "clearExamples": [],
+        "propExamples": []
+      }
+    },
+    "buffalo": {
+      "cropAnchors": {
+        "sealedNeighborhood": 65,
+        "uncertifiedNeighborhood": 0,
+        "noPassableCell": 1,
+        "anchoredSealed": 52,
+        "anchoredUncertified": 0,
+        "noPhysicalAnchor": 14,
+        "centerStandable": 53,
+        "noAnchorCenterStandable": 1
+      },
+      "attackEnvelope": {
+        "testedCrops": 61,
+        "openStandable": 394,
+        "openClearRay": 0,
+        "openBlockedRay": 394,
+        "unknownStandable": 242,
+        "directReachClear": 0,
+        "minimumClearRayDistance": null,
+        "clearRayCrossesSolidProp": 0,
+        "propQueryUnknown": 0,
+        "potentialPeripheralCenters": 0,
+        "peripheralExamples": [],
+        "clearExamples": [],
+        "propExamples": []
+      }
+    },
+    "lion": {
+      "cropAnchors": {
+        "sealedNeighborhood": 66,
+        "uncertifiedNeighborhood": 0,
+        "noPassableCell": 0,
+        "anchoredSealed": 61,
+        "anchoredUncertified": 0,
+        "noPhysicalAnchor": 5,
+        "centerStandable": 61,
+        "noAnchorCenterStandable": 0
+      },
+      "attackEnvelope": {
+        "testedCrops": 60,
+        "openStandable": 397,
+        "openClearRay": 0,
+        "openBlockedRay": 397,
+        "unknownStandable": 217,
+        "directReachClear": 0,
+        "minimumClearRayDistance": null,
+        "clearRayCrossesSolidProp": 0,
+        "propQueryUnknown": 0,
+        "potentialPeripheralCenters": 0,
+        "peripheralExamples": [],
+        "clearExamples": [],
+        "propExamples": []
+      }
+    },
+    "rhino": {
+      "cropAnchors": {
+        "sealedNeighborhood": 66,
+        "uncertifiedNeighborhood": 0,
+        "noPassableCell": 0,
+        "anchoredSealed": 52,
+        "anchoredUncertified": 0,
+        "noPhysicalAnchor": 14,
+        "centerStandable": 52,
+        "noAnchorCenterStandable": 0
+      },
+      "attackEnvelope": {
+        "testedCrops": 66,
+        "openStandable": 357,
+        "openClearRay": 0,
+        "openBlockedRay": 357,
+        "unknownStandable": 0,
+        "directReachClear": 0,
+        "minimumClearRayDistance": null,
+        "clearRayCrossesSolidProp": 0,
+        "propQueryUnknown": 0,
+        "potentialPeripheralCenters": 0,
+        "peripheralExamples": [],
+        "clearExamples": [],
+        "propExamples": []
+      }
+    }
+  }
+}

@@ -640,6 +640,26 @@ footprints. The sampled result is diagnostic, not a continuous certificate.
 See `sabana-attack-envelope-d3.json`; rerun with `--attack-envelope` on the
 campaign profile command.
 
+The same real-campaign protocol was repeated on Desierto/712 day 3. The
+WASM reported biome code 1 and terrain heights distinct from Sabana, so this
+is a separate physical layout. Its 66-crop group produced a 53-edge,
+four-arc cut, quoted as 26 legal modules/260 coins with no omissions. All
+138 boundary segments passed the continuous static-solid check; the eight
+**placed** arc ends measured 0.28–0.83 m to existing solids and returned
+`joined`. All 66 crops retained outbound and return worker routes. The
+optional attack-envelope probe found zero clear exterior rays at its sampled
+positions for every species, including the peripheral horizon. Nevertheless,
+the game's five group profiles all returned `unknown`. For warthog, two crop
+centers were standable yet had no valid exact-coordinate grid connector; for
+buffalo, one did. Thus the Sabana explanation (unstandable center implies no
+anchor) does **not** generalize. The physical and attack evidence is retained
+in `desierto-real-d3.json`; it does not certify every continuous attack
+position or justify changing the game classifier without a native fix.
+
+Gran Río/712 day 3 also selected its correct native biome code (2), but the
+farm layout, sampled terrain heights and enclosure geometry matched Sabana
+at this seed. It is not counted as an independent shape validation.
+
 ### Local construction and destruction regression
 
 The focused WASM test now encloses a known resident seed with four native
