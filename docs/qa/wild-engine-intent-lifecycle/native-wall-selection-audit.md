@@ -266,3 +266,30 @@ the improved wait semantics reduce redundant questions, but the native wall
 choice still lacks a demonstrated sustained campaign advantage in Canyon.
 The complete new-code pair is in `campaign-14-canyon123-unknown-event-wait.json.gz`
 and `campaign-14-canyon123-unknown-event-wait-control.json.gz`.
+
+### Exact cause of the remaining canyon `unknown` results
+
+Commits `d5d97713` and `37ab4ada` add diagnostic-only cause bits to the
+native crop-plan result. `a8824179` records the existing `lazy_connected`
+reason code as well. Native-intent CI on `a8824179` first failed to compile
+because the external function declaration was missing; `37ab4ada` corrected
+that declaration and pinned [run 38834901850](https://github.com/dossijeo/wild-guardians-africa/actions/runs/38834901850)
+passed the compiled native fixtures. The tested WASM SHA-256 is
+`90494cd4be16d5a90fa3a2286f029de52aee6835fe91a5ca53d676d2e4d57f71`.
+
+Two otherwise identical seven-night Gran Cañón/123 technical pilots used the
+same seed, policy and simulation rules. Both completed with verified raid
+evidence and identical end-of-day serialized hashes for all seven days. All
+155 native crop-plan `unknown` results were due to region connectivity; the
+more detailed build classified all 155 as `lazy_connected_reason=8`, meaning
+the source-reachable component has an open frontier to sectors not resident
+and the target is not certified sealed. No result in this sample was caused
+by a missing source connector, absent crop interaction site or local route
+failure. These are genuinely inconclusive queries, not blocked routes. The
+existing raid residency demand requests up to sixteen chunks using a line
+between the animal and crop plus rings around the crop; it does not yet use
+the actual open frontier reported by the native component graph. A later
+change should target that frontier and measure whether it resolves the
+pending connectivity without indiscriminate terrain expansion. Original
+reports: `canyon7-unknown-causes.json.gz` and
+`canyon7-unknown-region-reasons.json.gz`.
