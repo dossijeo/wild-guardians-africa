@@ -220,6 +220,28 @@ as a negative result: its only failing test was that historical exact-state
 assertion. This is an opt-in retreat stage, not complete native ownership of
 animal target selection, worker return routes or every emergency exit path.
 
+A continuous Sabana/712 `good` technical pilot on source `762f8da3` and that
+same WASM completed seven nights in 101.66 s. The raid observer verified all
+seven incursions with no issues or coverage loss; the final state had 121
+living crops, 642 coins and no game-over result. The exact daily hashes,
+native planning counters, finance and raid receipts are preserved in
+`sabana7-native-retreat.json.gz`. This verifies the first two pressure nights
+and exit completion in a real campaign, but does not establish sustained
+14-night performance or a balance conclusion.
+
+The same source, WASM and configuration completed a continuous 14-night
+Sabana/712 run in 338.98 s. Its first seven daily state hashes match the
+seven-night pilot. All 14 raid receipts were verified without observer issues
+or lost coverage; all animals retired after exhausting their attack budgets.
+At day-15 dawn the game had one operational center, 84 living crops and 684
+coins, with no game-over result. The 14 raids destroyed 116 crops in total,
+including 33 on night 14. This is technical survival through the sample, not
+evidence that the economic or military balance is acceptable or that the
+native route stage improves sustained runtime against a matched control.
+The complete daily report and hashes are preserved in
+`sabana14-native-retreat.json.gz` (source `762f8da3`, WASM SHA-256
+`da81cbf89e937dc947aaf646235a593840e4807342aa655a57f397047a00cf15`).
+
 ## Next integration gates
 
 1. Publish confirmed task/worker/action events directly from the simulation without scanning every entity per tick. Apply native proposals atomically with JS task reservations and preserve all worker policy tie-breaks.
