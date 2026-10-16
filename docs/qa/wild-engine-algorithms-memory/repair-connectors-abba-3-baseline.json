@@ -1,1 +1,135 @@
-{"snapshot":"docs/qa/wild-engine-intent-lifecycle/sabana17-wall-capture-day17-raid-state.json.gz","targetId":"structure-11838","iterations":3,"status":"safe","gates":[{"id":"structure-14374","x":89.01639344262294,"z":18}],"timingsMs":[467.90419999999995,488.2833999999998,474.4079999999999],"meanMs":476.8651999999999,"previewCalls":12,"routeCalls":60,"previewMs":745.4522000000002,"routeMs":1299.591299999998,"routeTiming":{"sequentialMs":[224.7341,221.1724999999999,209.43229999999994],"batchMs":[223.48670000000004,0.12380000000007385,0.3650000000000091],"connectivityMs":[0.8743999999999232,0.1776999999999589,0.2379000000000815],"batchMatches":true,"routeStatuses":["found","found","found","found"],"connectivityStatuses":["possible","possible","possible","possible"]},"previewBatch":{"calls":0,"ms":0,"mismatches":0,"examples":[],"connectivity":[["blocked","blocked","blocked","blocked"],["blocked","blocked","blocked","blocked"],["blocked","blocked","blocked","blocked"],["possible","possible","possible","possible"],["blocked","blocked","blocked","blocked"],["blocked","blocked","blocked","blocked"],["blocked","blocked","blocked","blocked"],["possible","possible","possible","possible"],["blocked","blocked","blocked","blocked"],["blocked","blocked","blocked","blocked"],["blocked","blocked","blocked","blocked"],["possible","possible","possible","possible"]]},"wallCount":86,"workerCount":3}
+{
+  "snapshot": "docs/qa/wild-engine-intent-lifecycle/sabana17-wall-capture-day17-raid-state.json.gz",
+  "targetId": "structure-11838",
+  "iterations": 3,
+  "status": "safe",
+  "gates": [
+    {
+      "id": "structure-14374",
+      "x": 89.01639344262294,
+      "z": 18
+    }
+  ],
+  "timingsMs": [
+    467.90419999999995,
+    488.2833999999998,
+    474.4079999999999
+  ],
+  "meanMs": 476.8651999999999,
+  "previewCalls": 12,
+  "routeCalls": 60,
+  "previewMs": 745.4522000000002,
+  "routeMs": 1299.591299999998,
+  "routeTiming": {
+    "sequentialMs": [
+      224.7341,
+      221.1724999999999,
+      209.43229999999994
+    ],
+    "batchMs": [
+      223.48670000000004,
+      0.12380000000007385,
+      0.3650000000000091
+    ],
+    "connectivityMs": [
+      0.8743999999999232,
+      0.1776999999999589,
+      0.2379000000000815
+    ],
+    "batchMatches": true,
+    "routeStatuses": [
+      "found",
+      "found",
+      "found",
+      "found"
+    ],
+    "connectivityStatuses": [
+      "possible",
+      "possible",
+      "possible",
+      "possible"
+    ]
+  },
+  "previewBatch": {
+    "calls": 0,
+    "ms": 0,
+    "mismatches": 0,
+    "examples": [],
+    "connectivity": [
+      [
+        "blocked",
+        "blocked",
+        "blocked",
+        "blocked"
+      ],
+      [
+        "blocked",
+        "blocked",
+        "blocked",
+        "blocked"
+      ],
+      [
+        "blocked",
+        "blocked",
+        "blocked",
+        "blocked"
+      ],
+      [
+        "possible",
+        "possible",
+        "possible",
+        "possible"
+      ],
+      [
+        "blocked",
+        "blocked",
+        "blocked",
+        "blocked"
+      ],
+      [
+        "blocked",
+        "blocked",
+        "blocked",
+        "blocked"
+      ],
+      [
+        "blocked",
+        "blocked",
+        "blocked",
+        "blocked"
+      ],
+      [
+        "possible",
+        "possible",
+        "possible",
+        "possible"
+      ],
+      [
+        "blocked",
+        "blocked",
+        "blocked",
+        "blocked"
+      ],
+      [
+        "blocked",
+        "blocked",
+        "blocked",
+        "blocked"
+      ],
+      [
+        "blocked",
+        "blocked",
+        "blocked",
+        "blocked"
+      ],
+      [
+        "possible",
+        "possible",
+        "possible",
+        "possible"
+      ]
+    ]
+  },
+  "wallCount": 86,
+  "workerCount": 3
+}
