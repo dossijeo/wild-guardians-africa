@@ -470,7 +470,11 @@ modules/90 coins with no omitted piece, and their 1 m crop-side boundaries
 passed the static-solid certificate. These corner sites have similar local
 geometry, so five successes are not five independent complex farm shapes.
 Gran Cañón produced three arcs, quoted only 3 modules while omitting 2, and
-its boundary remained `unknown`; that is a **failed proposal**, not a 30-coin
+its boundary remained `unknown`; both omitted pieces tried to build over
+water/lava at `(-4.5,-5.5)` and `(-4.5,-7.5)`. This is a concrete requirement
+for the next iteration: traversable but unbuildable terrain faces must not be
+priced like ordinary wall positions, while provably impassable natural faces
+can contribute to the closure. This is a **failed proposal**, not a 30-coin
 enclosure. The raw old/cut/cut/old runs are retained in
 `six-biomes-conservative.jsonl`.
 

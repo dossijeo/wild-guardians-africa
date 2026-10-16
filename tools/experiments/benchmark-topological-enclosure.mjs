@@ -150,7 +150,9 @@ try{
       },true);
       validationMs=performance.now()-validateStart;
     }
-    return {status:result<0?result===-1?'unknown':'invalid':'proposed',
+    return {status:result<0?result===-1?'unknown':'invalid':
+      quote&&(quote.blockedPieces.length||quote.blockedCrops.length)?
+        'partial':'proposed',
       conservativeCut,cutEdges:result,flow,cells,edges,cutMs,convertMs,validationMs,
       boundarySegments:conservativeCut?boundaryCount:undefined,staticBoundary,
       workerRoutesBefore,workerRoutes,
@@ -162,6 +164,8 @@ try{
         start:points[0],end:points.at(-1)})),
       modules:quote?.pieces.length,cost:quote?.cost,
       blockedPieces:quote?.blockedPieces.length,blockedCrops:quote?.blockedCrops.length,
+      blockedPieceDetails:conservativeCut?quote?.blockedPieces.map(piece=>({
+        x:piece.x,z:piece.z,reason:nav.wallPlacement(piece).reason})):undefined,
       certification:certification?.protection,
       structural,
       rhinoProbe,
@@ -200,6 +204,7 @@ try{
         structural:result.structural,
         rhinoProbe:result.rhinoProbe,
         profiles:result.profiles,blockedPieces:result.blockedPieces,
+        blockedPieceDetails:result.blockedPieceDetails,
         blockedCrops:result.blockedCrops,strokePoints:result.strokePoints,
         calls:Object.fromEntries(Object.keys(before).map(key=>
           [key,instrumentation[key]-before[key]])),
