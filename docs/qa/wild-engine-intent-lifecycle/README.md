@@ -485,3 +485,18 @@ the campaigns diverged on day 6, so this does not isolate speed. The complete
 reports are `manglares7-native-wall-recheck.json.gz` and
 `manglares7-legacy-wall-recheck.json.gz`. A longer campaign and more biomes
 are still required before enabling native wall selection by default.
+
+The same native-wall candidate then completed **14 continuous Manglares/712
+nights** on the same WASM and game-policy files. All 14 raid observers were
+verified, with no loss of coverage or technical stop. The day-15 dawn had
+133 living crops, 726 coins and one operational center. The 14-night run took
+432.92 seconds; day-13 `Game.tick` reached 56.99 seconds, so sustained
+performance is not yet established. Of 377 blocked native crop proposals,
+228 native wall proposals found a route and 149 reported `occupied`. The
+transitional selector still made 149 blocked fallbacks. This identifies
+dynamic wall-site contention as the next integration boundary; returning
+`occupied` must not be treated as a permanently blocked enclosure, and the
+JavaScript fallback cannot yet be removed. The complete per-night hashes,
+finance, physical raid evidence and selector counters are retained in
+`manglares14-native-wall-recheck.json.gz`. There is no matched 14-night
+control on this exact source, so no campaign speed comparison is claimed.
