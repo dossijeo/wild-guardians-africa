@@ -43,7 +43,8 @@ function regionDecisionScope(s,nav){
   if(scope.tick!==s.elapsed){scope.tick=s.elapsed;scope.queries=0;}
   return scope;
 }
-function cropRegionDecision(s,a,nav,group,regionKey,candidates,scope,origin,sectors){
+function cropRegionDecision(s,a,nav,group,regionKey,candidates,scope,origin,
+  sectors,requestDemand=true){
   const destination=regionKey.startsWith('unknown:')?`${group.id}:${regionKey}`:regionKey;
   const key=`${a.radius}:${origin}:${destination}`;
   const old=scope.decisions.get(key);
@@ -63,7 +64,8 @@ function cropRegionDecision(s,a,nav,group,regionKey,candidates,scope,origin,sect
   const status=result===true?'accessible':result===false?'blocked':'unknown';
   if(scope.decisions.size>=2048)scope.decisions.delete(scope.decisions.keys().next().value);
   scope.decisions.set(key,{status,at:s.elapsed,sectors});
-  if(status==='unknown')nav.requestRaidConnectivity?.(a,candidates[0],a.radius);
+  if(status==='unknown'&&requestDemand)
+    nav.requestRaidConnectivity?.(a,candidates[0],a.radius);
   return status;
 }
 function enclosedCropRegion(nav,scope,group,regionKey,candidates,radius,sectors){
@@ -495,7 +497,8 @@ export function targetFor(s,a,nav) {
     // Ask the existing region/perimeter selector only for physical barriers;
     // do not re-enter its per-crop approach search on an unknown crop region.
     if(native?.status==='unknown'){
-      const barrier=targetForImpl(s,a,nav,stats,{structuresOnly:true});
+      const barrier=targetForImpl(s,a,nav,stats,{structuresOnly:true,
+        skipConnectivityDemand:!!native.frontier});
       return barrier?.target?barrier:{unknown:true};
     }
     if(native?.status==='occupied')return {unknown:true};
@@ -519,7 +522,8 @@ export function targetFor(s,a,nav) {
     }
   }
 }
-function targetForImpl(s,a,nav,stats,{structuresOnly=false}={}){
+function targetForImpl(s,a,nav,stats,
+  {structuresOnly=false,skipConnectivityDemand=false}={}){
   let unknown=false;
   const sealedWallSides=new Map();
   const sealedCropRepresentatives=[];
@@ -549,7 +553,8 @@ function targetForImpl(s,a,nav,stats,{structuresOnly=false}={}){
     for(const [regionKey,candidates] of byRegion){
       if(stats)stats.regions=(stats.regions??0)+1;
       // One abstract connectivity query represents all crops in this region.
-      const status=scope?cropRegionDecision(s,a,nav,group,regionKey,candidates,scope,origin,sectorRevision):
+      const status=scope?cropRegionDecision(s,a,nav,group,regionKey,candidates,
+        scope,origin,sectorRevision,!skipConnectivityDemand):
         nav.regionConnected?.(a,candidates[0],a.radius,null,false)===false?'blocked':'accessible';
       if(stats)stats[status]=(stats[status]??0)+1;
       if(status==='unknown'||status==='blocked'){
