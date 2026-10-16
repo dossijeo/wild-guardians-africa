@@ -618,6 +618,7 @@ export function createSpatialIntentBridge(session){
     session.actorSectorRevision({worker:true});
     const status=wasm.nav_intent_plan_home(numericId(worker.id),
       worker.x,worker.z,home.x,home.z);
+    if(status===-2)return {status:'unavailable'};
     if(status===0||status===3)
       return {status:status===3?'unknown':'blocked'};
     if(status!==1)throw Error(`Native home route rejected: ${status}`);
@@ -785,6 +786,8 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
   let observedTaskState=null,stopTaskObserver=null,stopWorldObserver=null;
   let dirty=true,nextRetry=Infinity,lastTime=-Infinity,total=0,
     animalTotal=0,taskRouteQueries=0,taskCandidates=0,initialized=false;
+  let homePlanAttempts=0,homePlanFound=0,homePlanFallbacks=0,
+    homeRoutesRestored=0;
   let topologyReconciliations=0,topologyRouteInvalidations=0;
   let lastNavigationVersion=null,pendingNativeChanges=true;
   let lastPlan=null,lastPlanFacts=null,sourceState=null;
@@ -807,6 +810,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     const restoredAnimals=bridge.restoreAttackIntents(state);
     const restoredRetreats=bridge.restoreRetreatIntents(state);
     const restoredHomes=bridge.restoreHomeIntents(state);
+    homeRoutesRestored=restoredHomes.restoredHomeRouteIds.length;
     eligible.clear();projectedPositions.clear();pendingAttackRoutes.clear();
     retreatRoutes.clear();
     homeRoutes.clear();homeAttempts.clear();
@@ -822,6 +826,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
       pendingAttackRoutes.set(numericId(id),'unknown');
     pendingTaskEvents=[];pendingWorldEvents=[];
     total=0;animalTotal=0;taskRouteQueries=0;taskCandidates=0;
+    homePlanAttempts=0;homePlanFound=0;homePlanFallbacks=0;
     topologyReconciliations=0;topologyRouteInvalidations=0;
     lastPlan=null;lastPlanFacts=null;
     for(const worker of state.workers)setWorker(worker,state);
@@ -993,6 +998,10 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     nativeTopologyReconciliations:topologyReconciliations,
     nativeTopologyRouteInvalidations:topologyRouteInvalidations,
     nativeTaskRouteQueries:taskRouteQueries,nativeTaskCandidates:taskCandidates,
+    nativeHomePlanAttempts:homePlanAttempts,
+    nativeHomePlansFound:homePlanFound,
+    nativeHomePlanFallbacks:homePlanFallbacks,
+    nativeHomeRoutesRestored:homeRoutesRestored,
     perWorkerPerMinute:Object.fromEntries([...requests].map(([id,times])=>
       [id,times.filter(time=>time>simulatedSeconds-60).length])),
     workerPlansByActor:Object.fromEntries(workerPlanCounts),
@@ -1018,6 +1027,12 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     requests.set(id,times);
     workerPlanCounts.set(id,(workerPlanCounts.get(id)??0)+1);
     workerPeakPerMinute.set(id,Math.max(workerPeakPerMinute.get(id)??0,times.length));
+  };
+  const recordHomePlan=(worker,elapsed,result)=>{
+    recordWorkerRoutePlan(worker,elapsed);
+    homePlanAttempts++;
+    if(result.status==='found')homePlanFound++;
+    else homePlanFallbacks++;
   };
   const hasPendingAt=simulatedSeconds=>{
     if(!initialized)throw Error('Reset the native intent session first');
@@ -1144,7 +1159,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
           const home=village?.entry??village;
           if(!home)throw Error(`Worker ${worker.id} has no return village`);
           const replacement=bridge.planHomeRoute(worker,home);
-          recordWorkerRoutePlan(worker,state.elapsed);
+          recordHomePlan(worker,state.elapsed,replacement);
           if(replacement.status==='found'){
             worker.path=replacement.path;
             worker.destinationId=`home-${village.id}`;
@@ -1394,7 +1409,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
       if(pendingWorldEvents.length)flushWorldEvents();
       if(pendingTaskEvents.length)flushTaskEvents();
       const result=bridge.planHomeRoute(worker,home);
-      recordWorkerRoutePlan(worker,state.elapsed);
+      recordHomePlan(worker,state.elapsed,result);
       homeAttempts.set(id,navVersion);
       if(result.status==='found'){
         homeRoutes.add(id);pendingNativeChanges=true;
