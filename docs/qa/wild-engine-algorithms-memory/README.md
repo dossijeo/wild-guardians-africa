@@ -211,12 +211,14 @@ the workload causes **no growth**, preserving the intended test on both
 variants. The affected prototype file passes all 59 tests with 16 MiB.
 The complete suite has not been rerun after this test-only correction; the
 two archived full TAP logs, the focused passing log and the 4 MiB physical
-raid reproduction retain the exact results. In particular, the previously
-failing dense-raid reload test reports the same barrier-crossing failure
-with both binaries, so it remains a separate engine issue, not evidence for
-or against 16 MiB. Other shared failures include old 100-night victory
-expectations and unrelated balance/UI assertions; they have not been hidden
-or rewritten in this performance branch.
+raid reproduction retain the exact historical results. The dense-raid reload
+failure was subsequently traced to the test checking a straight chord across
+a two-leg turn. The updated base branch checks both real movement legs and
+passes all four terminal scenarios; this branch re-ran those four scenarios
+and the 59 spatial prototype tests after synchronizing with the base. No
+engine movement or collision code changed for that finding. Other shared
+failures include old 100-night victory expectations and unrelated balance/UI
+assertions; they have not been hidden or rewritten in this performance branch.
 
 ## Next isolated measurements
 
