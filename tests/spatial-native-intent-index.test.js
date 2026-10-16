@@ -6,6 +6,7 @@ import {deserialize} from '../src/persistence/snapshots.js';
 import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
 import {canWaterFrom} from '../src/world/work-points.js';
+import {reserveTasks} from '../src/simulation/tasks.js';
 
 const path=process.env.WILD_ENGINE_NATIVE_ROUTE_WASM;
 const prototype=path?new WebAssembly.Module(readFileSync(path)):null;
@@ -218,5 +219,30 @@ test('incremental native task index plans, discards and commits one global assig
    'simultaneous target and task removal coalesce one actor invalidation');
   assert.equal(wasm.nav_intent_actor(1),0);
   assert.equal(wasm.nav_intent_actor(2),1);
+
+  // Compare the committed game's ordering rule against the native batch.
+  // IDs are deliberately inserted out of order and share creation time and
+  // distance, so neither insertion order nor numeric ID order may decide.
+  const tiedWorkers=[11,2,10],tiedTasks=[2,11,10],tiedTargets=[21,22,23];
+  const virtual={day:1,workers:tiedWorkers.map(id=>({id:`worker-${id}`,
+   centerId:'center-1',status:'idle',taskId:null,x:origin.x,z:origin.z})),
+   plants:[],structures:[],crates:tiedTargets.map(id=>({id:`crate-${id}`,
+    x:origin.x,z:origin.z,delivered:false})),
+   tasks:tiedTasks.map((id,index)=>({id:`task-${id}`,centerId:'center-1',
+    targetId:`crate-${tiedTargets[index]}`,kind:'crate',created:1,
+    workerId:null,blocked:false}))};
+  reserveTasks(virtual,()=>true);
+  const expected=new Map(virtual.tasks.map(task=>
+   [Number(task.id.slice(5)),Number(task.workerId.slice(7))]));
+  wasm.nav_intent_reset();
+  const ties=[...tiedWorkers.map(id=>row(1,1,id,1,origin.x,origin.z,1,0,0,
+   Number(`0.${id}`))),...tiedTargets.map(id=>
+   row(1,2,id,0,origin.x,origin.z,1)),
+  ...tiedTasks.map((id,index)=>row(1,3,id,1,0,0,0,tiedTargets[index],1,
+   Number(`0.${id}`)))];
+  assert.equal(write(1,ties),1);
+  const actual=new Map(results().map(item=>[item[0],item[1]]));
+  assert.deepEqual(actual,expected,
+   'native FIFO and nearest-worker tie breaks match the game policy');
  }finally{session.dispose();}
 });

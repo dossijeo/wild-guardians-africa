@@ -932,3 +932,45 @@ test('an unresolved native crop group can still expose a certified reachable enc
     assert.ok(selected.approach.path?.length);
   }finally{session.dispose();}
 });
+
+test('an occupied native wall site retains a reachable alternate attack',()=>{
+  const state=deserialize(gunzipSync(readFileSync(new URL(
+    '../docs/qa/wild-engine-intent-lifecycle/manglares14-wall-occupied-diagnostic-occupied-fallback-state.json.gz',
+    import.meta.url))).toString());
+  const animal=state.raid.animals.find(item=>item.id==='animal-11004');
+  assert(animal);
+  if(animal.reservation&&state.raid.reservations[animal.reservation]===animal.id)
+    delete state.raid.reservations[animal.reservation];
+  Object.assign(animal,{x:98.74289374036213,z:46.025268250158,
+    status:'waiting',targetId:null,reservation:null,path:null,approach:null});
+  const loaded=new Map(),session=createSpatialGameSession(module,state,{
+    loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+  try{
+    const village=state.villages[0],cx=Math.floor((village.x+24)/48),
+      cz=Math.floor((village.z+24)/48);
+    for(let z=cz-4;z<=cz+4;z++)for(let x=cx-4;x<=cx+4;x++){
+      if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+      loaded.set(`${x},${z}`,session.core.chunkPayload());
+    }
+    const planner=createEventDrivenTaskPlanner(session);
+    planner.resetFromState(state);
+    planner.nativeWallSelectionEnabled=true;
+    const nav=createSpatialNavigationMovement(session,state);
+    nav.intentTaskPlanner=planner;
+    nav.raidSelectionStats={};
+    const selected=targetFor(state,animal,nav);
+    assert.equal(nav.raidSelectionStats.nativeCropResults.blocked,1);
+    assert.equal(nav.raidSelectionStats.nativeWallResults.occupied,1);
+    assert.equal(selected?.target?.id,'structure-1588',
+      'an occupied native site is not a blocked physical perimeter');
+    assert.equal(selected.native??false,false);
+    assert.equal(nav.raidSelectionStats.legacyFallbackMatrix
+      ['blocked/occupied'].wall,1);
+    assert(selected.approach.path.length>0);
+    let previous=animal;
+    for(const next of selected.approach.path){
+      assert(nav.segmentClear(previous,next,animal.radius,null,false));
+      previous=next;
+    }
+  }finally{session.dispose();}
+});

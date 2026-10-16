@@ -78,7 +78,7 @@ The opt-in campaign runner also confirmed that an idle event boundary with no el
 
 A two-night timing probe of the final one-corner binary observed 470 distinct worker assignments and 511 native planning batches. Those batches examined 513 eligible worker/task candidates and issued 570 route queries, close to one per completed assignment; they did not enumerate every crop per worker per tick. `planIfNeeded` was entered 1,344 times at relevant event boundaries, including cheap no-op wakes, rather than at every one of roughly 12,000 worker-update ticks. Its accumulated time was 1.379 s of 2.650 s in `Game.tick`. Empty intention reconciliation was called 14,308 times but cost only 35 ms in aggregate. This isolates the remaining worker-side cost in actual per-action global task planning, not the no-change poll gate. An experimental early exit after every eligible worker had a proposal gave 1.374 s of planning time versus 1.379 s, identical campaign outcomes and 511 batches; it was discarded. The original timing and query-count reports are retained in the evidence archive.
 
-The per-tick raid reservation reconciliation previously rebuilt its target-ID map from the full historical crop array whenever the farm gained a plant. It now uses the existing live-crop index, so old harvested or destroyed plants are absent from this raid read model. A regression test appends a new crop after indexing a dead historical entry whose ID cannot be read; reconciliation succeeds while preserving active leases. This is independent of the opt-in native selector and does not change target eligibility or military rules.
+The per-tick raid reservation reconciliation previously rebuilt its target-ID map from the full historical crop array whenever the farm gained a plant. It now uses the existing live-crop index, so old harvested or destroyed plants are absent from this raid read model. A regression test appends a new crop after indexing a dead historical entry whose ID cannot be read; reconciliation succeeds while preserving active leases. Reconciliation now runs on initial raid observation, a confirmed target or structure event, a navigation revision, a new raid, or a legacy reservation version. Ordinary unchanged movement ticks retain the existing claim map. A directed test checks both the no-change case and immediate release after `CropDestroyed`; the save/reload and committed-strike tests continue to pass. This is independent of the opt-in native selector and does not change target eligibility or military rules.
 
 The raid contention check now also uses the live-crop index. When native crop selection returns `unknown`, the opt-in selector returns a pending result instead of falling through to the older per-crop approach search. The existing waiting state retries at its bounded interval or on a navigation revision; `unknown` is never certified as `blocked`. A deterministic unit test checks that an unresolved native result does not call the old selector. The paired seven-night Sabana/712 reports (`live-reservations` before this change and `unknown-waits` after it) both completed: living crops changed **105 → 103**, money **865 → 847**, and accumulated `Game.tick` time **72.5 s → 72.0 s**. This single seed does not establish a sustained speedup; it records the behavioral difference and confirms no stuck raid in this run. The opt-in path remains experimental.
 
@@ -460,3 +460,58 @@ between planning and commit, without weakening the physical route check.
 2. Track sector/portal dependencies so a local topology change invalidates only routes and tactical decisions that can be affected. Defer changes to attacks whose damage frame is already committed.
 3. Move animal target, reservation and retreat planning to the same native authority with differential policy tests; retire the replaced JavaScript selector.
 4. Verify save/load, speculative previews, sector residency, prolonged campaign determinism and physical validity. Benchmark planning calls per actor/minute, navigation time and `Game.tick` before declaring the polling removed.
+
+An HP-only `StructureHit` now updates the native damage index without waking
+route reconciliation. The event bridge compares native intention-change counts
+before and after applying the damage: a hit that crosses into the collapsing
+state still wakes the consumer and releases an uncommitted wall attack. Focused
+tests cover both boundaries and the one-night shared-index integration test
+passes. This removes a redundant event response; no campaign-wide speedup is
+claimed from this isolated change.
+
+The opt-in native wall selector has a paired seven-night Manglares/712 check
+on source `c5a21ff5` and WASM SHA-256
+`d757c2197f98fded1cb42b7759154f1bd95a532504da9539c2e8ade17a9f47b6`.
+The two runs use the same strategy, spatial advice, expanding defense policy
+and input hashes; only `nativeWallPlans` differs. Their day-1 through day-5
+serialized hashes match. On days 6–7, the native-wall variant obtained 19
+native wall proposals from 19 blocked crop proposals and made no blocked
+legacy fallback. The other variant made 68 blocked fallbacks to JavaScript.
+Both completed seven nights with verified raid evidence and no observer issue.
+The native-wall run ended with 128 live crops and 708 coins; the comparison
+ended with 131 crops and 663 coins. One extra crop was destroyed in the
+native-wall run on day 6. Total times were 128.44 and 127.71 seconds, but
+the campaigns diverged on day 6, so this does not isolate speed. The complete
+reports are `manglares7-native-wall-recheck.json.gz` and
+`manglares7-legacy-wall-recheck.json.gz`. A longer campaign and more biomes
+are still required before enabling native wall selection by default.
+
+The same native-wall candidate then completed **14 continuous Manglares/712
+nights** on the same WASM and game-policy files. All 14 raid observers were
+verified, with no loss of coverage or technical stop. The day-15 dawn had
+133 living crops, 726 coins and one operational center. The 14-night run took
+432.92 seconds; day-13 `Game.tick` reached 56.99 seconds, so sustained
+performance is not yet established. Of 377 blocked native crop proposals,
+228 native wall proposals found a route and 149 reported `occupied`. The
+transitional selector still made 149 blocked fallbacks. This identifies
+dynamic wall-site contention as the next integration boundary; returning
+`occupied` must not be treated as a permanently blocked enclosure, and the
+JavaScript fallback cannot yet be removed. The complete per-night hashes,
+finance, physical raid evidence and selector counters are retained in
+`manglares14-native-wall-recheck.json.gz`. There is no matched 14-night
+control on this exact source, so no campaign speed comparison is claimed.
+
+The frozen day-11 occupied-wall regression and the rejected, slower native
+alternative-site prototype are documented in `native-wall-occupied-fallback.md`.
+The existing fallback remains a correctness requirement until a native wall
+site planner passes both physical and sustained-campaign checks. A separate
+reservation regression verifies that destroying a crop after an attack
+animation begins releases its lease, preserves another animal's lease and
+records exactly one miss at the committed damage frame. The focused suite
+passes 14/14 and `test:playable` passes 192/192 locally. Reservation
+reconciliation has since moved to confirmed target and structure events,
+navigation revisions, new raids and save migration. Unchanged raid ticks no
+longer rebuild the lease map; a directed event test, 193 playable tests and
+12 native raid tests pass. Native animal target selection and the remaining
+legacy fallbacks are still separate acceptance gaps, so this does not claim
+complete replacement of the JavaScript planner.

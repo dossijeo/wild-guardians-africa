@@ -4,6 +4,7 @@ import {fixture,probe} from '../tools/probe-raid-reservation-saturation.mjs';
 import {spawnRaid,updateRaid} from '../src/simulation/raids.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {Navigation} from '../src/world/navigation.js';
+import {emit} from '../src/simulation/game.js';
 import {reconcileTargetReservations,reservedApproachClear,targetReservationKey} from '../src/simulation/raid-target-reservations.js';
 import {activeCrops} from '../src/simulation/active-crops.js';
 import {RAID_WAIT_SECONDS} from '../src/simulation/raid-contention.js';
@@ -52,6 +53,29 @@ test('a conflicting lease cannot erase a strike already committed to its damage 
  assert.equal(s.events.filter(event=>event.attackId==='attack-committed-qa'&&
   ['AnimalLogicalHit','AnimalLogicalMiss'].includes(event.type)).length,1);
 });
+test('a destroyed reserved crop releases its lease without redirecting a committed strike',()=>{
+ const {s,nav,raid}=start('mono',2),attacker=raid.animals[0],other=raid.animals[1];
+ const crop=s.plants.find(p=>p.id===attacker.targetId),otherTarget=other.targetId;
+ assert(crop&&crop.alive);
+ const budget=attacker.hitsRemaining,attackId='attack-destroyed-crop-qa';
+ attacker.status='attacking';attacker.animation='Right_Hand_Sword_Slash';
+ attacker.attackDuration=.5;attacker.attackRemaining=.5;
+ attacker.attackId=attackId;attacker.hitApplied=false;
+ crop.alive=false;
+ reconcileTargetReservations(s,(state,animal)=>{
+  animal.targetId=null;animal.reservation=null;animal.path=null;animal.approach=null;
+ });
+ assert.equal(attacker.targetId,crop.id,'the committed clip keeps its original target');
+ assert.equal(attacker.reservation,null,'the destroyed target no longer owns a lease');
+ assert.equal(other.targetId,otherTarget,'unrelated targets stay reserved');
+ tick(s,nav,.49);
+ assert.equal(attacker.hitsRemaining,budget);
+ tick(s,nav,.01);
+ assert.equal(attacker.hitsRemaining,budget-1);
+ assert.equal(s.events.filter(event=>event.attackId===attackId&&event.type==='AnimalLogicalMiss').length,1);
+ assert.equal(s.events.filter(event=>event.attackId===attackId&&event.type==='AnimalLogicalHit').length,0);
+ assert.equal(s.raid.reservations[other.reservation],other.id);
+});
 test('individual claims and native RNG replay exactly after a save/reload',()=>{
  const {s,nav}=start();for(let i=0;i<30;i++)tick(s,nav);
  const copy=deserialize(serialize(s)),fresh=new Navigation(copy.seed,copy.biome,{});
@@ -63,6 +87,20 @@ test('destroying one reserved crop frees only that target and preserves other le
  const {s,nav,raid}=start('mono',5),owner=raid.animals[0],victim=s.plants.find(p=>p.id===owner.targetId),other=raid.animals[1],otherId=other.targetId;
  victim.alive=false;nav.setState(s);tick(s,nav,0);
  assert.notEqual(owner.targetId,victim.id);assert.equal(other.targetId,otherId);independent(s);finish(s,nav);
+});
+test('reservation reconciliation sleeps on unchanged ticks and wakes on confirmed target loss',()=>{
+ const {s,nav,raid}=start('mono',2),owner=raid.animals[0],other=raid.animals[1];
+ const victim=s.plants.find(p=>p.id===owner.targetId),otherId=other.targetId;
+ const claims=raid.reservations;
+ tick(s,nav,0);
+ assert.equal(raid.reservations,claims,'an unchanged tick must not rebuild claims');
+ victim.alive=false;
+ emit(s,'CropDestroyed',{cropId:victim.id});
+ tick(s,nav,0);
+ assert.notEqual(raid.reservations,claims,'confirmed target loss wakes reconciliation');
+ assert.notEqual(owner.targetId,victim.id);
+ assert.equal(other.targetId,otherId);
+ assert.equal(raid.reservations[other.reservation],other.id);
 });
 test('reservation reconciliation excludes historical crops when the live farm grows',()=>{
  const {s}=start('mono',1);

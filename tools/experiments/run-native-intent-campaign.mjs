@@ -19,6 +19,7 @@ const path=resolve(out),started=performance.now(),rows=[];
 let latestState=null,latestNav=null,dayWorkerSnapshot=[];
 const captureRaidDay=Number(process.env.WILD_ENGINE_CAPTURE_RAID_DAY??0);
 const captureDayEnd=Number(process.env.WILD_ENGINE_CAPTURE_DAY_END??0);
+const captureOccupiedFallback=process.env.WILD_ENGINE_CAPTURE_OCCUPIED_FALLBACK==='1';
 const spatialAdvice=process.env.WILD_ENGINE_SPATIAL_ADVICE==='1';
 const defensePolicy=process.env.WILD_ENGINE_DEFENSE_POLICY??'legacy';
 const decisionProfile=process.env.WILD_ENGINE_DECISION_PROFILE==='1';
@@ -39,6 +40,7 @@ const memorySample=state=>{
   lastMemoryBytes=bytes;
   return sample;
 };
+let capturedOccupiedFallback=false;
 const assignments=[],seenAssignments=new Set();
 const intentTiming={};
 let timedPlanner=null;
@@ -83,6 +85,12 @@ try{
       latestState=state;latestNav=nav;nav.serviceRaidConnectivityDemand?.();
       if(memoryProfile&&state.elapsed>=nextMemorySampleAt){
         memorySample(state);nextMemorySampleAt=state.elapsed+memoryTrace.sampleIntervalSeconds;
+      }
+      if(captureOccupiedFallback&&!capturedOccupiedFallback&&
+        nav.raidSelectionStats?.occupiedWallFallbackSamples?.length){
+        capturedOccupiedFallback=true;
+        writeFileSync(path.replace(/\.json$/,'-occupied-fallback-state.json'),
+          serialize(state));
       }
       if(!capturedRaid&&captureRaidDay===state.day&&state.raid?.animals.length){
         capturedRaid=true;
