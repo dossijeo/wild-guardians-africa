@@ -106,6 +106,37 @@ The report gzip SHA-256 values are `d6d900f48cbb648b0fba5b07326c4144268f2b9c11e6
 table was changed. Cross-biome checks and later horizons remain
 necessary before recommending a balance candidate.
 
+## Thirty-night exploratory wall-cost pair, Sabana/712
+
+With V1 military pressure held fixed, source commit `d48858fa` and the same
+expanding `good` bot, the current wall table was compared with the exploratory
+cheaper, stronger table. Both completed 30 real nights with verified raids and
+zero issues. The current-table replay reproduced all 30 daily state hashes of
+the earlier V1 run exactly. The pairs used the same Wild Engine binary and
+game code; CPU times are descriptive because they ran simultaneously.
+
+| Wall table | Live crops | Coins | Crop losses, nights 6–30 | Modules bought | Build cost | Repairs |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Current | 89 | 641 | 522 | 86 | 860 | 1,125 |
+| Exploratory | 132 | 892 | 495 | 86 | 688 | 1,010 |
+
+The bot used thorn walls exclusively. Thus this comparison tests the change
+from 10 coins/100 HP (75 gate HP) to 8 coins/120 HP (90 gate HP), not the
+higher four materials. The exploratory arm initially held less cash at night
+14 (941 versus 1,047) while retaining more crops, then led on both measures
+by night 21. Its higher final cash is a coupled consequence of lower defense
+spending, farm survival and later income; it is not a direct 172-coin price
+saving. One seed and a 30-night horizon do not establish late-game fairness or
+a production recommendation. A fresh 100-night exploratory run is underway.
+
+The paired [nightly ledger](current-v1-sabana712-wall-cost-30-nightly.csv)
+and full [current](current-v1-standard-sabana712-30.json.gz) and
+[exploratory](current-v1-affordable-sabana712-30.json.gz) reports retain the
+physical and economic trajectories. Their gzip SHA-256 values are
+`fa6c20225de3de4d32b0f60dbdfbb7eaf4ccdc5e1c0269c36fb08415272d5e00`
+and `023471d95010f29ec1f7dc2f77818f61c8efe717763836759220564bce8c6a6e`,
+respectively.
+
 ## Held-out Sabana seed 123
 
 The same current-main pair completed 14 nights on seed 123 with the same bot
