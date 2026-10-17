@@ -899,3 +899,40 @@ in the inventory. Regenerating the inventory changed source hash and line
 references without changing audio assignments or bytes; the three directed
 catalogue tests then passed. The active-farm failures remain open and are
 not counted as a successful full suite.
+
+### Sabana/712 day-3 construction-aware comparison (2026-10-17)
+
+The frozen day-3 state contains 66 live crops. Both runs used state hash
+`7b7033894dee269d4bf04cb074f1372ef2f84ef280446150cd5f2e2331cb6966`,
+source hash `76c817600998541363c921574f8759a99e5d6cefe3d850044af0dfbf244f1cc5`,
+and WASM SHA-256 `0255e71a4322356064c28bcb1a707f32f37b1aa7fef412b84b3897ea92ff01ca`.
+The raw [old/hull/cut ABBA result](sabana712-day3-current-2026-10-17.json)
+and [conservative/buildable ABBA result](sabana712-day3-construction-compare-2026-10-17.json)
+are retained separately; campaign startup time is excluded from the enclosure
+query timings.
+
+| Candidate | Query time in ABBA order | Quoted modules / cost | Physical result |
+| --- | ---: | ---: | --- |
+| Existing rectangular planner | 28,510.7 / 28,122.3 ms | 35 / 350 | `unknown` |
+| Convex hull candidate | 423.0 / 403.0 ms | 29 / 290 | `open` |
+| Local cut | 166.6 / 170.4 ms | 11 / 110 | `unknown` |
+| Conservative cut | 272.0 / 226.8 ms | 14 / 140 | `unknown` |
+| Construction-aware conservative cut | 221.2 / 238.9 ms | 14 / 140 | `unknown` |
+
+The conservative and construction-aware cuts selected the same 27 graph
+edges, converted them into three separate wall strokes, and yielded six
+exposed terminals. Their physical quote placed all 14 proposed modules but
+no worker gate. The wall-face check reported `open/no-wall-face`; native
+protection remained `unknown` for warthog, hyena, buffalo and rhino and
+`protected` only for lion. The unconstrained cut likewise produced two open
+strokes, no gate and no enclosure certificate. The current conversion treats
+each open arc as a wall stroke. A separate directed audit above established
+native **movement** continuity and short physical terminal spans for this
+same conservative cut, but this ABBA command does not run that audit, and
+neither result certifies an attack-opaque agricultural enclosure. Thus the
+lower timings measure **proposal generation**, not a faster valid defense.
+Construction awareness did not resolve this remaining gap, so the prototype
+must remain disconnected from ordinary bot construction. The next experiment
+should certify attack occlusion along the natural intervals and verify an
+actual worker access/gate plan before comparing effective defense cost or
+campaign outcomes.
