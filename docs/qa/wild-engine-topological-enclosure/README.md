@@ -936,3 +936,18 @@ must remain disconnected from ordinary bot construction. The next experiment
 should certify attack occlusion along the natural intervals and verify an
 actual worker access/gate plan before comparing effective defense cost or
 campaign outcomes.
+
+The same state and binary were also run with `--conservative-cut --cut-only
+--attack-envelope`; the raw [attack-envelope probe](sabana712-day3-attack-envelope-current-2026-10-17.json)
+retains every counter and example. The quoted proposal kept all 66 worker
+outbound and return routes reachable. At the five sampled distances and 64
+angles per crop, warthog, hyena, buffalo and lion each had one exterior
+standable point with a clear **zero-width ray** to `plant-1380`; rhino had
+none. Those four points were 5.09–5.34 m from the crop, beyond direct contact,
+and the probe found no eligible central crop for a peripheral hit from them.
+The 135 sampled rays crossing quoted wall faces per species were all blocked
+after placement. These observations do not prove that every continuous
+position along the natural intervals is safe, or that no other peripheral
+center exists. A clear ray alone is not an executed attack, and a sample with
+no hit is not a certificate of attack occlusion. The group's physical result
+therefore remains `unknown`.
