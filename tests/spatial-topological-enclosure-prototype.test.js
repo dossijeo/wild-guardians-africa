@@ -17,6 +17,7 @@ import {containsPoint} from '../src/world/footprints.js';
 import {Navigation} from '../src/world/navigation.js';
 import {rational} from '../src/simulation/money.js';
 import {agriculturalRayClear} from '../src/simulation/raid-agricultural-impact.js';
+import {ANIMAL_SPATIAL_PROFILES} from '../src/world/hierarchical-wasm/spatial-movement-profiles.js';
 import * as Game from '../src/simulation/game.js';
 
 test('clearance hull yields a closed free-form candidate around every crop',()=>{
@@ -178,6 +179,10 @@ test('two wall strokes quote and purchase atomically with one automatic gate',()
   assert.equal(Game.buildWallChain(state,'two-strokes','zarzas',strokes,nav,
     {smooth:false,snap:false,preparedPlan:quote}),true);
   assert.equal(state.structures.filter(item=>item.autoGate).length,1);
+  nav.setState(state);
+  for(const [species,profile] of Object.entries(ANIMAL_SPATIAL_PROFILES))
+    assert.equal(agriculturalRayClear(state,nav,{x:4,z:-.65},{x:4,z:.65},
+      profile.radius),false,`${species} cannot hit through the paid wall loop`);
   assert.equal(state.ledger.entries['two-strokes'].n,String(-quote.cost));
   assert.equal(serialize(deserialize(serialize(state))),serialize(state));
 });

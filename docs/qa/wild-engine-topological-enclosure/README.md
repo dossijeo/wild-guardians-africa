@@ -799,6 +799,13 @@ prototype remains disconnected from normal construction and bot decisions;
 this change does not claim a full-game enclosure certificate or sustained
 campaign benchmark.
 
+After synchronizing with the production wall-attack fix, a paid two-stroke
+loop with its automatic gate was also checked against the production crop-hit
+ray for all five animal movement radii. From 0.65 m outside to 0.65 m inside
+the wall, every profile is occluded. This ties the simple wall-loop certificate
+to the current combat predicate; it does not certify mixed natural joins or
+replace an actual raid replay.
+
 ### Local construction and destruction regression
 
 The focused WASM test now encloses a known resident seed with four native
