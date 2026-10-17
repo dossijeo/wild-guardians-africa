@@ -142,6 +142,14 @@ export function createNativeTopologicalDefensePolicy({session,advice,material='z
       if(plan.status!=='ready'||!plan.modules?.length){
         capitalTarget=0;waitForFunds=0;history.push(row);return repairs;
       }
+      // A confirmed ruin already has an ordinary paid repair path. Waiting
+      // for that task avoids buying a second wall while the first is still
+      // repairable; the repair event wakes enclosure planning again.
+      if(repairWalls&&plan.preparedPlan?.repairableRuins?.length){
+        row.reason='repair-ruined-modules-first';
+        row.repairableRuins=plan.preparedPlan.repairableRuins;
+        capitalTarget=0;waitForFunds=0;history.push(row);return repairs;
+      }
       capitalTarget=plan.cost;
       const available=numberOf(state.ledger.balance)-
         Math.max(HIRING_RESERVE,protectedCash??0);

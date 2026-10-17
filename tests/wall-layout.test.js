@@ -50,6 +50,7 @@ test('rebuilding a ruined module removes its stale repair target atomically',()=
   const quote=Game.quoteWallChain(state,'zarzas',stroke,nav,
     {smooth:false,snap:false});
   assert.equal(quote.pieces.length,1);
+  assert.deepEqual(quote.repairableRuins,[ruin.id]);
   assert.ok(Game.buildWallChain(state,'replacement-wall','zarzas',stroke,nav,
     {smooth:false,snap:false,preparedPlan:quote}));
   assert.equal(state.structures.filter(item=>item.kind==='wall').length,1);

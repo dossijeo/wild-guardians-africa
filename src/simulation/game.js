@@ -154,10 +154,13 @@ export function placeStructure(s,id,{kind='center',material='zarzas',gate=false,
   });
 }
 export function wallCapacity(s,material){return Math.max(0,Math.floor((numberOf(s.ledger.balance)-HIRING_RESERVE)/wallSpec(material).cost));}
-function replaceCoincidentRuins(s,pieces){
-  const ruins=s.structures.filter(old=>old.kind==='wall'&&old.status==='ruined'&&
+function coincidentRuins(s,pieces){
+  return s.structures.filter(old=>old.kind==='wall'&&old.status==='ruined'&&
     pieces.some(piece=>Math.hypot(old.x-piece.x,old.z-piece.z)<.35&&
       Math.abs(Math.sin((old.yaw??0)-(piece.yaw??0)))<.18));
+}
+function replaceCoincidentRuins(s,pieces){
+  const ruins=coincidentRuins(s,pieces);
   if(!ruins.length)return [];
   const ids=new Set(ruins.map(ruin=>ruin.id));
   const tasks=new Set(s.tasks.filter(task=>ids.has(task.targetId))
@@ -451,6 +454,7 @@ export function quoteWallChain(s,material,points,nav,options={}) {
   }
   const cost=spec.cost*newPieces.length;
   const plan={pieces:newPieces,previewPieces:checks,updates,suppressed:[...suppressed],cost,gates:updates.length,
+    repairableRuins:coincidentRuins(s,newPieces).map(ruin=>ruin.id),
     expectedSlots:slots,strokeSlots,strokeClosed:strokes.map(stroke=>
       stroke.length>=3&&Math.hypot(stroke[0][0]-stroke.at(-1)[0],
         stroke[0][1]-stroke.at(-1)[1])<1e-6),blockedPieces,blockedCrops};
