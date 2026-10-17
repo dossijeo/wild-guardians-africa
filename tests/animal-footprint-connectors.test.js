@@ -16,7 +16,7 @@ test('in-place selected footprint edits invalidate the failed geometry proof',()
 
 test('a wall ring introduced during recovery invalidates the pending proof and cannot be crossed',()=>{const n=world(),a=actor();assert.equal(animalFootprintConnector(a,end,n),null);const ring=[{x:5.05,z:-8,yaw:0},{x:5.05,z:-4,yaw:0},{x:3.05,z:-6,yaw:Math.PI/2},{x:7.05,z:-6,yaw:Math.PI/2}];n.obstacles.push(...ring.map((wall,i)=>({...wall,id:`wall${i}`,kind:'wall',baseScaleX:3})));assert(n.walkable(a.x,a.z,a.radius,null,false),'The origin itself stays valid');n.version++;assert.equal(finish(a,end,n),null);});
 
-test('exhausted physical exit search releases only a retreating animal with no attacks left',()=>{
+test('exhausted physical exit search releases a committed retreat even with unused hits',()=>{
  const n=world(),a={...actor(),hitsRemaining:0};
  n.obstacles[1].footprint=rectangle(-10,-8,-1.6,0);
  for(let i=0;i<2600&&!a.exitConnectorSearch?.exhausted;i++)
@@ -33,8 +33,14 @@ test('exhausted physical exit search releases only a retreating animal with no a
   exitConnectorSearch:{key:JSON.stringify([n.version,5.05,-6,end.x,end.z,1]),next:192,exhausted:true},
   exitRouteRecovery:{destinationId:'exit-retreat',version:n.version,startedAt:0}};
  assert.equal(walkTo(s,armed,{...end,id:'exit-retreat'},1,n,
+  {worker:false,expandRoute:true}),true);
+ assert(s.events.some(e=>e.type==='AnimalRetreatExitAbandoned'&&
+  e.actorId===armed.id&&e.hitsRemaining===1));
+ assert.equal(armed.x,5.05);assert.equal(armed.z,-6);
+ const attacking={...armed,status:'attacking',path:null,
+  exitConnectorSearch:{key:JSON.stringify([n.version,5.05,-6,end.x,end.z,1]),next:192,exhausted:true}};
+ assert.equal(walkTo(s,attacking,{...end,id:'exit-retreat'},1,n,
   {worker:false,expandRoute:true}),false);
- assert.equal(s.events.filter(e=>e.type==='AnimalRetreatExitAbandoned').length,1);
  const pending={...actor(),hitsRemaining:0,
   exitRouteRecovery:{destinationId:'exit-retreat',version:1,startedAt:0}};
  const unknown={version:1,walkable:()=>false,segmentClear:()=>false};
