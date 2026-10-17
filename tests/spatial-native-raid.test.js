@@ -854,6 +854,40 @@ test('a retreat waits for unknown sectors and retries without treating them as b
   }finally{session.dispose();}
 });
 
+test('a waiting raider parks its return-to-spawn move when sectors are unknown',()=>{
+  const state=deserialize(gunzipSync(readFileSync(new URL(
+    './fixtures/sabana712-d9-native-stalled-raid.json.gz',import.meta.url))).toString());
+  const loaded=new Map(),session=createSpatialGameSession(module,state,{
+    loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+  try{
+    for(let z=-1;z<=2;z++)for(let x=1;x<=3;x++){
+      if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+      loaded.set(`${x},${z}`,session.core.chunkPayload());
+    }
+    const nav=createSpatialNavigationMovement(session,state);
+    const animal=state.raid.animals.find(item=>item.id==='animal-8732');
+    assert(animal);state.raid.animals=[animal];
+    animal.status='waiting';animal.targetId=null;animal.path=null;animal.hitsRemaining=2;
+    assert(nav.walkable(animal.spawn.x,animal.spawn.z,animal.radius,null,false),
+      'frozen spawn remains a usable staging point');
+    animal.raidWait={since:state.elapsed,retryAt:state.elapsed+8,
+      moveRetryAt:state.elapsed,epoch:null,reason:'unknown'};
+    let routes=0,demand=0;
+    nav.path=(start,end)=>{routes++;throw new SpatialChunkUnavailable(start,end,[{cx:4,cz:1}]);};
+    nav.requestRaidFrontier=()=>{demand++;return true;};
+    nav.requestRaidConnectivity=()=>{demand++;return true;};
+    const position={x:animal.x,z:animal.z},hits=animal.hitsRemaining;
+    updateRaid(state,.1,nav);
+    assert.equal(routes,1,JSON.stringify({status:animal.status,
+      wait:animal.raidWait,spawn:animal.spawn,position:{x:animal.x,z:animal.z}}));
+    assert.equal(demand,2);
+    assert.equal(animal.status,'waiting');assert.equal(animal.hitsRemaining,hits);
+    assert.deepEqual({x:animal.x,z:animal.z},position);
+    assert.equal(animal.raidWait.moveRetryAt,state.elapsed+1,
+      'the optional staging move is retried no sooner than one second later');
+  }finally{session.dispose();}
+});
+
 test('a stalled retreat can phase past a mobile body occupying its exit',()=>{
   const state=deserialize(gunzipSync(readFileSync(new URL(
     './fixtures/sabana712-d9-native-stalled-raid.json.gz',import.meta.url))).toString());

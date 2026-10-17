@@ -396,6 +396,11 @@ function beginRetreat(s,a,nav,reason){
     a.path=route.path;a.destinationId=`exit-${a.id}`;a.pathVersion=nav.version;
   }
 }
+function requestUnknownRaidTerrain(nav,error,start,end,radius){
+  for(const {cx,cz} of error.missing??[])
+    nav.requestRaidFrontier?.({x:cx*48,z:cz*48});
+  nav.requestRaidConnectivity?.(start,end,radius);
+}
 export function reachableApproach(a,target,nav,shield=null,onUnknown=null,regionDecision=null){
   const focus=shield??target,r=shield?shield.radius+a.radius+.1:(target.kind==='wall'?1.2:.6)+a.radius;
   const angle=Math.atan2(a.x-focus.x,a.z-focus.z);
@@ -831,9 +836,7 @@ export function updateRaid(s,dt,nav) {
         if(error?.name!=='SpatialChunkUnavailable')throw error;
         // Missing terrain is pending, not a blocked exit. Ask the existing
         // raid residency service to load it before retrying the same retreat.
-        for(const {cx,cz} of error.missing??[])
-          nav.requestRaidFrontier?.({x:cx*48,z:cz*48});
-        nav.requestRaidConnectivity?.(a,exit,a.radius);
+        requestUnknownRaidTerrain(nav,error,a,exit,a.radius);
         a.retreatRouteUnknown={retryAt:s.elapsed+1,topology:nav.version};
       }
       continue;
@@ -850,7 +853,17 @@ export function updateRaid(s,dt,nav) {
           beginRetreat(s,a,nav,'waiting-expired-or-stage-blocked');continue;
         }
         if(dist(a,a.spawn)>.08&&(a.path||s.elapsed>=wait.moveRetryAt)){
-          walkTo(s,a,{...a.spawn,id:'wait-'+a.id},dt,nav,{speed:1.5,worker:false});if(!a.path)wait.moveRetryAt=s.elapsed+1;
+          try{
+            walkTo(s,a,{...a.spawn,id:'wait-'+a.id},dt,nav,{speed:1.5,worker:false});
+            if(!a.path)wait.moveRetryAt=s.elapsed+1;
+          }catch(error){
+            if(error?.name!=='SpatialChunkUnavailable')throw error;
+            // Staging is optional while the requested sectors load; keep the
+            // waiting animal and its remaining attack budget unchanged.
+            requestUnknownRaidTerrain(nav,error,a,a.spawn,a.radius);
+            a.path=null;wait.moveRetryAt=s.elapsed+1;
+            continue;
+          }
         }
         const epoch=waitEpoch(s,nav,a);
         if(wait.epoch===epoch&&s.elapsed<wait.retryAt)continue;
