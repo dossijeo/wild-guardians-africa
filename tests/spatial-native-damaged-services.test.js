@@ -123,6 +123,12 @@ test('structure condition events are deduplicated and reset cleanly on restore',
   stopWorld=planner.observeWorld(restored);
   emit(restored,'StructureHit',{targetId:wall.id});planner.flushWorldEvents();
   assert.equal(changes.length,count,'restore must not replay old notifications');
+  const restoredWall=restored.structures.find(item=>item.id===wall.id);
+  assert.equal(restoredWall.defenseEnclosureId,'enclosure:test');
+  restoredWall.hp=restoredWall.maxHp*.7;
+  emit(restored,'StructureHit',{targetId:wall.id});planner.flushWorldEvents();
+  assert.equal(changes.length,count+1);
+  assert.equal(changes.at(-1).enclosureId,'enclosure:test');
   stopCondition();stopWorld();
  }finally{session.dispose();}
 });
