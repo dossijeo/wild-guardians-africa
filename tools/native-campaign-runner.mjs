@@ -113,7 +113,7 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
   const start=performance.now();
   try{return fn();}finally{measure(kind,performance.now()-start);}
  };
- const defense=defend?(defensePolicy==='expanding'?createNativeExpandingDefensePolicy({repairWalls:policy.repair,reserveMode:defenseEventDriven?'next-stroke':'none',eventDriven:defenseEventDriven,measure:decisionProfile?measure:null,preparedQuotes:preparedWallQuotes,spatialAdvice:advice}):defensePolicy==='topological'?createNativeTopologicalDefensePolicy({session:opening.session,advice,measure:decisionProfile?measure:null}):createFarmDefensePolicy()):null;
+ const defense=defend?(defensePolicy==='expanding'?createNativeExpandingDefensePolicy({repairWalls:policy.repair,reserveMode:defenseEventDriven?'next-stroke':'none',eventDriven:defenseEventDriven,measure:decisionProfile?measure:null,preparedQuotes:preparedWallQuotes,spatialAdvice:advice}):defensePolicy==='topological'?createNativeTopologicalDefensePolicy({session:opening.session,advice,repairWalls:policy.repair,repairCenters:policy.repair,centerRepairThreshold:reserveMaintenance?600:540,measure:decisionProfile?measure:null}):createFarmDefensePolicy()):null;
  const observeDefenseEvents=()=>(defenseEventDriven||defensePolicy==='topological')&&defense?.onWorldEvent?
   Game.observeGameEvents(s,event=>defense.onWorldEvent(event,s)):null;
  let stopDefenseEvents=observeDefenseEvents();
@@ -124,6 +124,9 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
     previous:change.previous,protection:change.protection});
    defense?.onCropProtectionChanged?.(change);
   }):null;
+ const stopStructureEvents=intentPlanner&&defense?.onStructureConditionChanged?
+  intentPlanner.observeStructureCondition(change=>
+   defense.onStructureConditionChanged(change)):null;
  const driver=entryDriverFactory(nav);let partialEvidence=()=>({});
  try {
  const evidence=nativeEvidence?createNativeCampaignEvidence(s):null,raidEvidence=createNativeRaidCampaignEvidence(s);
@@ -215,14 +218,15 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
    }
   }
   // Request repairs before reinvesting, preserving their real FIFO position.
-  const damagedCenters=policy.repair?(advice?advice.getDamagedCenters()
+  const damagedCenters=policy.repair&&defensePolicy!=='topological'?(advice?advice.getDamagedCenters()
    .sort((a,b)=>Number(a.id.split('-').at(-1))-Number(b.id.split('-').at(-1)))
    .map(item=>s.structures.find(center=>center.id===item.id)).filter(operational):
    s.structures.filter(operational)):[];
   for(const c of damagedCenters)if(c.hp<(reserveMaintenance?600:540)&&!s.tasks.some(t=>t.kind==='repair'&&t.targetId===c.id)&&numberOf(s.ledger.balance)>=numberOf(Game.repairCost(c))+labourReserve()){const taskCount=s.tasks.length;Game.requestRepair(s,command('repair'),c.id);if(s.tasks.length>taskCount)actions++;}
   // Village savings are discretionary: building/maintaining physical protection
   // takes priority. Still retain wages and already requested native repairs.
-  if(defense)actions+=timed('defense.act',()=>defense.act(s,nav,{command,reserve:labourReserve()+maintenanceReserve()}));
+  if(defense)actions+=timed('defense.act',()=>defense.act(s,nav,{command,
+   reserve:labourReserve()+maintenanceReserve(),centerReserve:labourReserve()}));
   syncAdvice();
   if(expansion)actions+=expansion.act(s,nav,{command,reserve:labourReserve()+maintenanceReserve(),villageSavings:savingsReserve()});
   const live=s.plants.filter(p=>p.alive);
@@ -307,5 +311,5 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
  const idleRuns=daily.map(r=>r.longestIdle).sort((a,b)=>a-b),unoccupied=daily.reduce((n,r)=>n+r.unoccupiedSeconds,0),daylight=daily.reduce((n,r)=>n+r.daylightSeconds,0);
  const activity={daylightSeconds:daylight,unoccupiedSeconds:unoccupied,unoccupiedFraction:daylight?unoccupied/daylight:null,longestIdle:Math.max(...idleRuns),p90LongestIdle:idleRuns[Math.ceil(idleRuns.length*.9)-1]};
  return {protocol,strategy,labourPolicy,labourHistory,labourReasons,raidEvidence:raidEvidence.report(s),entryTransport:driver.report(),peaceAfter100:true,expansion:expansion?.report()??null,plotSearch:plotSearch.report(),spatialSite:advice?spatialSite:null,spatialAdviceInitMs,spatialSync:advice?spatialSync:null,protectionEvents,nativeIntent:intentPlanner?.metrics(s.elapsed)??null,...(evidence?{nativeEvidence:evidence.report(s)}:{}),biome:s.biome,culture:s.culture,seed:s.seed,policy:{profile,mixed,middayHiring,plantsPerWorker,defend,wallSpendingEnabled,cashPolicy:policy.cashPolicy,reserveMaintenance,burstPlanting,cameraEntry,defensePolicy,defenseEventDriven,nativeWallPlans},defense:defense?.report(s)??null,additionalHiring,result:s.result,completedNights:s.completedNights,money:numberOf(s.ledger.balance),maximumLiving,plots:plots.length,reloads,counts,activity,daily,state:s,nav};
- } catch(error){let receipts;try{receipts=partialEvidence();}catch(e){receipts={evidenceError:e.message};}error.nativeCampaignPartial={strategy,seed:s.seed,day:s.day,time:s.time,result:s.result,state:serialize(s),entryTransport:driver.report(),navigation:{authority:nav.navigationAuthority??'legacy',version:nav.version,bounds:nav.activeBounds,view:nav.raidView,entryFailure:nav.raidEntryFailure??null,residentChunks:opening.session?.stream?.loaded?.()?.size??null},receipts};throw error;} finally {stopProtectionEvents?.();stopIntentTasks?.();stopIntentWorld?.();stopDefenseEvents?.();if(intentPlanner)delete nav.intentTaskPlanner;stopSpatialEvents?.();await driver.dispose();await opening.dispose?.();}
+ } catch(error){let receipts;try{receipts=partialEvidence();}catch(e){receipts={evidenceError:e.message};}error.nativeCampaignPartial={strategy,seed:s.seed,day:s.day,time:s.time,result:s.result,state:serialize(s),entryTransport:driver.report(),navigation:{authority:nav.navigationAuthority??'legacy',version:nav.version,bounds:nav.activeBounds,view:nav.raidView,entryFailure:nav.raidEntryFailure??null,residentChunks:opening.session?.stream?.loaded?.()?.size??null},receipts};throw error;} finally {stopStructureEvents?.();stopProtectionEvents?.();stopIntentTasks?.();stopIntentWorld?.();stopDefenseEvents?.();if(intentPlanner)delete nav.intentTaskPlanner;stopSpatialEvents?.();await driver.dispose();await opening.dispose?.();}
 }
