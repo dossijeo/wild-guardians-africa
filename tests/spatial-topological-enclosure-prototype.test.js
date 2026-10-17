@@ -6,7 +6,7 @@ import {deserialize,serialize} from '../src/persistence/snapshots.js';
 import {createPlant} from '../src/simulation/crops.js';
 import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
-import {approximateCutModules,cropClearanceHull,cutEdgesToStrokes,enclosureJunctions,inspectNaturalJunctions,
+import {approximateCutModules,cropClearanceHull,cutEdgesToStrokes,enclosureJunctions,inspectAttackReachFromBoundary,inspectNaturalJunctions,
   inspectPlacedNaturalJunctions,inspectSelfClosedQuote,
   inspectStaticCutBoundary,junctionBlocksSmallestAnimal,
   placedEnclosureJunctions,
@@ -73,6 +73,21 @@ test('adjacent wall footprints occlude a whole attack face but a gap does not',(
   assert.equal(wallOccludesBoundaryFace({x:0,z:-.6},{x:0,z:.6},[
     wall(0,0,Math.PI/2)]),true);
   assert.equal(wallOccludesBoundaryFace(a,b,[{kind:'tree',x:1,z:0}]),false);
+});
+
+test('a mixed cut is attack-safe only when every near face is covered by wall geometry',()=>{
+  const near=[3,0,4,0],far=[9,0,10,0],crop=[{x:0,z:0}],reach=5;
+  const wall={id:'join',kind:'wall',material:'zarzas',status:'intact',
+    x:3.5,z:0,yaw:Math.PI/2,baseScaleX:1};
+  assert.equal(inspectAttackReachFromBoundary([...near,...far],[],crop,reach).status,
+    'unknown','a movement-blocking natural face within strike reach is insufficient');
+  assert.deepEqual(inspectAttackReachFromBoundary([...near,...far],[wall],crop,reach),
+    {status:'boundary-attack-safe',faces:2,wallFaces:1,distantFaces:1,maxReach:reach});
+  assert.equal(inspectAttackReachFromBoundary([...near,...far],
+    [{...wall,status:'ruined'}],crop,reach).status,'unknown');
+  assert.equal(inspectAttackReachFromBoundary(far,[],[{x:4.5,z:0}],reach).status,
+    'unknown','a face exactly at maximum reach cannot be certified');
+  assert.equal(inspectAttackReachFromBoundary([],[],crop,reach).status,'unknown');
 });
 
 test('natural joins inspect only exposed wall ends and require a continuous obstacle',()=>{

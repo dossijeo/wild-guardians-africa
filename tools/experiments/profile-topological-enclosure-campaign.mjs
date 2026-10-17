@@ -9,7 +9,7 @@ import {simulateNativeCampaign} from '../native-campaign-runner.mjs';
 import {createSpatialCampaignOpening} from './spatial-campaign-opening.mjs';
 import {createSpatialIntentBridge} from '../../src/world/hierarchical-wasm/spatial-intent-bridge.js';
 import {createCropEnclosurePlanner} from '../../src/world/hierarchical-wasm/spatial-crop-enclosure-plan.js';
-import {approximateCutModules,cropClearanceHull,inspectSelfClosedQuote,
+import {approximateCutModules,cropClearanceHull,inspectAttackReachFromBoundary,inspectSelfClosedQuote,
   inspectPlacedNaturalJunctions,inspectStaticCutBoundary,
   placedEnclosureJunctions,wallOccludesBoundaryFace} from '../../src/world/hierarchical-wasm/spatial-topological-enclosure-prototype.js';
 import {wallSpec} from '../../src/simulation/rules.js';
@@ -591,6 +591,10 @@ function inspect(state,nav){
         workerAccessAll:cutOnly&&useConservative?workerAccessAll():undefined,
         gridProbe:cutOnly?gridProbe():undefined,
         attackBoundary,
+        attackReach:cutOnly?inspectAttackReachFromBoundary(boundary,
+          [...state.structures,...quote.previewPieces],cropTargets,
+          Math.max(...Object.values(ANIMAL_SPATIAL_PROFILES).map(p=>p.radius))+
+          .65+AGRICULTURAL_PROFILE_LIMITS.attackRadius):undefined,
         naturalBoundary,
         staticBoundary,
         placedNaturalJunctions:cutOnly&&placedJunctionSpans?
@@ -619,6 +623,7 @@ function inspect(state,nav){
         workerAccessAll:preview.workerAccessAll,
         gridProbe:preview.gridProbe,
         attackBoundary:preview.attackBoundary,
+        attackReach:preview.attackReach,
         naturalBoundary:preview.naturalBoundary,
         staticBoundary:preview.staticBoundary,
         placedNaturalJunctions:preview.placedNaturalJunctions,
