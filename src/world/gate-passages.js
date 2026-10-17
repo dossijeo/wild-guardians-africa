@@ -21,9 +21,10 @@ export function gateSwingPolygon(entity){
   const [hx,hz]=leaf.hinge,radius=Math.max(...nativeGateLeafFootprints[entity.material].map(([x,z])=>Math.hypot(x-hx,z-hz)))/Math.cos(Math.PI/24);
   const scale=gateScale(entity),sx=scale*(entity.baseScaleX??1),c=Math.cos(entity.yaw??0),s=Math.sin(entity.yaw??0);
   const polygon=Array.from({length:24},(_,i)=>{const angle=i*Math.PI/12,x=(hx+Math.cos(angle)*radius)*sx,z=(hz+Math.sin(angle)*radius)*scale;return {x:entity.x+x*c+z*s,z:entity.z-x*s+z*c};});
-  swingCache.set(entity,{key,polygon});return polygon;
+  const triggerRadius=Math.max(3.2,...polygon.map(p=>Math.hypot(p.x-entity.x,p.z-entity.z)+1.2));
+  swingCache.set(entity,{key,polygon,triggerRadius});return polygon;
 }
-export function gateTriggerRadius(entity){return Math.max(3.2,...gateSwingPolygon(entity).map(p=>Math.hypot(p.x-entity.x,p.z-entity.z)+1.2));}
+export function gateTriggerRadius(entity){gateSwingPolygon(entity);return swingCache.get(entity).triggerRadius;}
 export function routeHitsGateArea(worker,polygon,maxDistance=4){
   if(!worker.path?.length||!polygon)return false;
   let previous=worker,remaining=maxDistance;
