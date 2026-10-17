@@ -316,3 +316,28 @@ wall purchases do not certify a closed enclosure here, so this is evidence
 of a balance/strategy interaction rather than proof that the military
 pressure alone is too high. The terminal victory is fragile and should not
 be treated as acceptable final difficulty without further trials.
+
+## Exploratory thorn-wall cost and HP, Desierto/712
+
+A second biome used the same V1 military pressure, seed 712, expanding bot
+and 14-night horizon. The standard thorn wall (10 coins, 100 HP; gate 75 HP)
+ended with 77 living crops and 644 coins. The exploratory 8-coin, 120-HP
+wall (gate 90 HP) ended with 107 crops and 1,065 coins. Actual crop losses
+on nights 6–14 were 51 and 3, respectively. Both arms paid for 99 modules;
+the purchase totals were 990 and 792 coins. Each completed all 14 raids with
+`raidEvidence.status=verified`, no coverage loss and no issues. The
+[nightly paired ledger](current-v1-desierto712-wall-pair-14-nightly.csv) and
+compressed [standard](current-v1-standard-desierto712-14.json.gz) and
+[exploratory](current-v1-affordable-desierto712-14.json.gz) reports retain
+the parameters, hashes and raid receipts.
+
+The exploratory arm first stopped technically on night 11 because a
+retreating animal requested a route through an unloaded sector. PR #101 made
+that unknown route wait for the existing residency service; a full replay
+then completed 14 nights. The first ten day-end hashes of the replay match
+the interrupted exploratory run exactly. The standard arm ran before this
+engine repair and the exploratory replay after it, so this is a gameplay
+signal, not a strict same-binary speed comparison. Their wall-clock times
+must not be compared because other campaigns ran concurrently. The large
+night-14 difference warrants independent seeds and longer horizons before
+any production wall change.
