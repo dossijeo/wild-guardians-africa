@@ -320,7 +320,7 @@ be treated as acceptable final difficulty without further trials.
 ## Exploratory thorn-wall cost and HP, Desierto/712
 
 A second biome used the same V1 military pressure, seed 712, expanding bot
-and 14-night horizon. The standard thorn wall (10 coins, 100 HP; gate 75 HP)
+and 14-night horizon. The standard thorn wall (10 coins, 100 HP; gate 60 HP)
 ended with 77 living crops and 644 coins. The exploratory 8-coin, 120-HP
 wall (gate 90 HP) ended with 107 crops and 1,065 coins. Actual crop losses
 on nights 6–14 were 51 and 3, respectively. Both arms paid for 99 modules;
