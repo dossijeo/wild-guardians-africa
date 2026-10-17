@@ -95,14 +95,31 @@ WorldRoute& result(){static WorldRoute* value=new WorldRoute();return *value;}
 bool finite(Point p){return std::isfinite(p.x)&&std::isfinite(p.z)&&
   std::abs(double(p.x))<2147483000&&std::abs(double(p.z))<2147483000;}
 float distance(Point a,Point b){return std::hypot(a.x-b.x,a.z-b.z);}
-std::array<Anchor,4> anchors(Point point,int& count){
+std::array<Anchor,9> anchors(Point point,int& count){
   const int xs[2]={int(std::floor(point.x)),int(std::ceil(point.x))};
   const int zs[2]={int(std::floor(point.z)),int(std::ceil(point.z))};
-  std::array<Anchor,4> rows{};count=0;
+  std::array<Anchor,9> rows{};count=0;
   for(int xi=0;xi<2;xi++)for(int zi=0;zi<2;zi++){
     if((xi&&xs[xi]==xs[0])||(zi&&zs[zi]==zs[0]))continue;
     const Point anchor{float(xs[xi]),float(zs[zi])};
     rows[count++]={xs[xi],zs[zi],distance(point,anchor)};
+  }
+  bool hasConnector=false;
+  for(int i=0;i<count;i++)if(spatial_walkable(rows[i].x,rows[i].z)&&
+    spatial_local_clear(point.x,point.z,float(rows[i].x),float(rows[i].z))){
+    hasConnector=true;break;
+  }
+  // A continuous position can be legal while its four floor/ceil cells are
+  // occupied by a nearby wall. Only then examine the adjacent ring; normal
+  // routes retain the original connector set and cost.
+  if(!hasConnector){
+    const int cx=int(std::floor(point.x+0.5f)),cz=int(std::floor(point.z+0.5f));
+    for(int dz=-1;dz<=1;dz++)for(int dx=-1;dx<=1;dx++){
+      const int x=cx+dx,z=cz+dz;
+      bool present=false;
+      for(int i=0;i<count;i++)if(rows[i].x==x&&rows[i].z==z){present=true;break;}
+      if(!present)rows[count++]={x,z,distance(point,{float(x),float(z)})};
+    }
   }
   std::sort(rows.begin(),rows.begin()+count,[](const Anchor& a,const Anchor& b){
     if(a.distance!=b.distance)return a.distance<b.distance;

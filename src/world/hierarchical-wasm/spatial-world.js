@@ -8,7 +8,12 @@ import {gatePortalPoints} from '../gate-passages.js';
 // Synchronous world authority. The same WASM instance answers spatial queries
 // and supplies visual buffers; rendering remains the caller's responsibility.
 export function createSpatialWorld(module){
-  const wasm=new WebAssembly.Instance(module,{env:{emscripten_notify_memory_growth(){}}}).exports;
+  const wasm=new WebAssembly.Instance(module,{
+    env:{emscripten_notify_memory_growth(){}},
+    // Current Emscripten standalone builds may import this even though the
+    // game never exits the spatial module. Older binaries omit the import.
+    wasi_snapshot_preview1:{proc_exit(code){throw Error(`Wild Engine exited: ${code}`);}}
+  }).exports;
   let chunk=null,navigationBuilt=false,chunks=[],generated=false,chunkRevision=0;
   let workerPortalRoutes=[];
   let diagnoseConnectivity=false;

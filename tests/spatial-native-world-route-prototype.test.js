@@ -6,6 +6,7 @@ import {deserialize} from '../src/persistence/snapshots.js';
 import {gatePortalPoints} from '../src/world/gate-passages.js';
 import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+import {createSpatialIntentBridge} from '../src/world/hierarchical-wasm/spatial-intent-bridge.js';
 import {reserveTasks} from '../src/simulation/tasks.js';
 
 const prototype=process.env.WILD_ENGINE_NATIVE_ROUTE_WASM;
@@ -14,6 +15,40 @@ const binary=prototype??new URL(
 const module=new WebAssembly.Module(readFileSync(binary));
 const state=deserialize(gunzipSync(readFileSync(new URL(
   './fixtures/desierto983-d15-partial-state.json.gz',import.meta.url))).toString());
+
+test('a legal worker beside a wall finds an adjacent connector instead of retrying every crop',
+ {skip:!prototype&&'Build and select the experimental WASM first'},async()=>{
+ const snapshot=deserialize(gunzipSync(readFileSync(new URL(
+   './fixtures/sabana712-day12-worker-connector.json.gz',import.meta.url))).toString());
+ const loaded=new Map(),session=createSpatialGameSession(module,snapshot,{
+   loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+ try{
+   const points=[...snapshot.structures.filter(item=>item.kind==='wall'||item.kind==='center'),
+     ...snapshot.workers,...snapshot.villages.map(village=>village.entry??village)];
+   const chunk=value=>Math.floor((value+24)/48),desired=new Map();
+   for(let z=chunk(Math.min(...points.map(point=>point.z))-48);
+     z<=chunk(Math.max(...points.map(point=>point.z))+48);z++)
+     for(let x=chunk(Math.min(...points.map(point=>point.x))-48);
+       x<=chunk(Math.max(...points.map(point=>point.x))+48);x++)
+       desired.set(`${x},${z}`,{cx:x,cz:z,score:0});
+   session.stream.plan(desired);await session.stream.whenIdle();
+   const worker=snapshot.workers.find(item=>item.id==='worker-11648');
+   const home=snapshot.villages[0].entry;
+   assert(session.actorCanStand(worker,{worker:true}));
+   const route=session.routeActorNative(worker,home,{worker:true,cached:false});
+   assert.equal(route.status,'found');
+   let previous=worker;
+   for(const point of route.points){
+     assert(session.actorStepClear(previous,point,{worker:true}));
+     previous=point;
+   }
+   const bridge=createSpatialIntentBridge(session);
+   bridge.resetFromState(snapshot);
+   const plan=bridge.planTasks();
+   assert(plan.some(row=>row.status===1));
+   assert(session.core.wasm.nav_intent_route_queries()<10);
+ }finally{session.dispose();}
+});
 
 test('native world planner matches fractional connectors and automatic gate routes',
  {skip:!prototype&&'Build and select the experimental WASM first'},()=>{
