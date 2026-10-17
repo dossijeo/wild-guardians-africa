@@ -603,3 +603,8 @@ The [full-roster crop service-site differential](unknown-crop-service-sites.md)
 records a real Gran Cañón task assignment missed when one inconclusive
 interaction point suppressed the remaining bounded alternatives. It includes
 the failing old-WASM replay, passing corrected-WASM replay and ABBA timings.
+
+The [deferred wall and worker-flight integration](deferred-wall-and-flight-integration.md)
+records a matched ten-night wall-quote comparison, the frozen fractional
+flight-route defect, its physical recovery test and a completed fourteen-night
+Manglares replay.
