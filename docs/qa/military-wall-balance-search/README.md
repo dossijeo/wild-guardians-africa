@@ -341,3 +341,25 @@ signal, not a strict same-binary speed comparison. Their wall-clock times
 must not be compared because other campaigns ran concurrently. The large
 night-14 difference warrants independent seeds and longer horizons before
 any production wall change.
+
+## Held-out 100-night completion, Sabana/123
+
+A fresh V1-pressure run with the unchanged expanding bot and current wall
+specs completed all 100 nights on seed 123. `CampaignWon` occurred at dawn
+of day 101 with six living crops, 122 coins, one worker and one operational
+center. All 100 raid reports have `status=verified`, zero issues and no
+coverage loss. The terminal state SHA-256 is
+`0ea559a6d02728520f1feebbbb9cae9412d62aaa910c5ad30a86947b7dc715ae`.
+The [nightly ledger](current-main-v1-pressure-sabana123-100-nightly.csv) and
+compressed [full report](current-main-v1-pressure-sabana123-100.json.gz)
+retain the actual trajectory. This run incorporated the separately merged
+retreat and crop-connector fixes from PRs #99 and #100. Earlier attempts
+stopped technically at nights 27 and 37; their first 26 and 36 daily state
+hashes, respectively, matched the repaired replay. Neither interruption was
+counted as a gameplay defeat.
+
+Two Sabana seeds have now reached 100 nights under V1 pressure, but both
+victories were precarious (16 crops/217 coins on seed 712 and six crops/122
+coins on seed 123). This evidence supports continued cross-biome and
+multi-seed testing; it does not establish a reasonable survival probability
+or justify promoting V1 pressure to production.
