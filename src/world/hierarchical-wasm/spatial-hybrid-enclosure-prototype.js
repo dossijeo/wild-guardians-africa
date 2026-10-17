@@ -10,6 +10,32 @@ const SPECIES=['warthog','hyena','buffalo','lion','rhino'];
 const MAX_ATTACK_REACH=Math.max(...Object.values(ANIMAL_SPATIAL_PROFILES)
   .map(profile=>profile.radius))+.65+AGRICULTURAL_PROFILE_LIMITS.attackRadius;
 
+// Keep the native answer for faces that prevent certification. Code 0 is a
+// known open face; a negative code cannot establish whether a barrier exists.
+// Neither may be promoted to a closed face. Capture only a few coordinates so
+// a failed proposal is diagnosable without retaining its entire boundary.
+export function classifyCutBoundaryFaces(boundary,wasm,cachedKinds=null){
+  const faceCounts={solid:0,wetland:0,river:0,cliff:0,unknown:0};
+  const unprovedFaces={open:0,undetermined:0,other:0,samples:[]};
+  for(let i=0;i<boundary.length;i+=4){
+    const code=cachedKinds?cachedKinds[i/4]:wasm.lazy_cut_face_natural(
+      boundary[i],boundary[i+1],boundary[i+2],boundary[i+3]);
+    if(code===1)faceCounts.solid++;
+    else if(code===2)faceCounts.wetland++;
+    else if(code===3)faceCounts.river++;
+    else if(code===4)faceCounts.cliff++;
+    else{
+      faceCounts.unknown++;
+      if(code===0)unprovedFaces.open++;
+      else if(code<0)unprovedFaces.undetermined++;
+      else unprovedFaces.other++;
+      if(unprovedFaces.samples.length<8)
+        unprovedFaces.samples.push({edge:boundary.slice(i,i+4),code});
+    }
+  }
+  return {faceCounts,unprovedFaces};
+}
+
 // An exterior hit ray must cross the cut boundary. A face fully covered by a
 // real wall footprint already blocks that ray; other faces require enough
 // clearance for both central contact and peripheral agricultural damage.
@@ -92,14 +118,8 @@ export function proposeHybridEnclosure({state,nav,session,crops,material='zarzas
   }));
   const before=routeWitness();
   if(count===0){
-    const faceCounts={solid:0,wetland:0,river:0,cliff:0,unknown:0};
-    for(const face of natural){
-      if(face.kind===1)faceCounts.solid++;
-      else if(face.kind===2)faceCounts.wetland++;
-      else if(face.kind===3)faceCounts.river++;
-      else if(face.kind===4)faceCounts.cliff++;
-      else faceCounts.unknown++;
-    }
+    const {faceCounts,unprovedFaces}=classifyCutBoundaryFaces(boundary,wasm,
+      natural.map(face=>face.kind));
     const workerSafe=crops.every((_,index)=>before.some(row=>
       row[index]===true));
     if(boundaryCount>0&&!faceCounts.unknown&&attackMargin>0&&workerSafe)
@@ -110,7 +130,7 @@ export function proposeHybridEnclosure({state,nav,session,crops,material='zarzas
       faceCounts.unknown?'movement-unproved':
         !(attackMargin>0)?'attack-reach-unproved':'worker-access-unproved',
     attempts:[{kind:'existing-closure',status:'unknown',
-      movementFaces:faceCounts,attackMargin,workerSafe}],box};
+      movementFaces:faceCounts,unprovedFaces,attackMargin,workerSafe}],box};
   }
   const candidates=[];
   if(count>0&&!cut.ambiguous.length)
@@ -143,16 +163,8 @@ export function proposeHybridEnclosure({state,nav,session,crops,material='zarzas
     }
     let proof;
     try{proof=nav.withWallPreview(quote.previewPieces,quote.suppressed,()=>{
-      const faceCounts={solid:0,wetland:0,river:0,cliff:0,unknown:0};
-      if(candidate.boundary)for(let i=0;i<candidate.boundary.length;i+=4){
-        const code=wasm.lazy_cut_face_natural(
-          ...candidate.boundary.slice(i,i+4));
-        if(code===1)faceCounts.solid++;
-        else if(code===2)faceCounts.wetland++;
-        else if(code===3)faceCounts.river++;
-        else if(code===4)faceCounts.cliff++;
-        else faceCounts.unknown++;
-      }
+      const {faceCounts,unprovedFaces}=classifyCutBoundaryFaces(
+        candidate.boundary??[],wasm);
       const wallLoop=candidate.boundary?null:
         inspectSelfClosedQuote(quote,state.structures,crops);
       const exposedAttackMargin=candidate.boundary?
@@ -161,7 +173,8 @@ export function proposeHybridEnclosure({state,nav,session,crops,material='zarzas
       return {movement:candidate.boundary?
         faceCounts.unknown===0&&candidate.boundary.length>0:
         wallLoop.status==='closed-wall-loop',
-      wallLoop,faceCounts,exposedAttackMargin,workers:routeWitness()};
+      wallLoop,faceCounts,unprovedFaces,exposedAttackMargin,
+      workers:routeWitness()};
     },true);}
     catch(error){
       if(error.name==='SpatialChunkUnavailable'){
@@ -183,7 +196,9 @@ export function proposeHybridEnclosure({state,nav,session,crops,material='zarzas
       !workerSafe?'worker-access-unproved':
         !attackSafe?'attack-reach-unproved':null;
     attempts.push({...result,status,reason,
-      movementFaces:proof.faceCounts,attackMargin,
+      movementFaces:proof.faceCounts,
+      ...(proof.faceCounts.unknown?{unprovedFaces:proof.unprovedFaces}:{}),
+      attackMargin,
       exposedAttackMargin:proof.exposedAttackMargin,
       workerRoutesBefore:before,workerRoutesAfter:proof.workers});
     if(status==='protected')return {status,

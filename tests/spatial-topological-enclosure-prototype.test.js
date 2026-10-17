@@ -6,7 +6,8 @@ import {deserialize,serialize} from '../src/persistence/snapshots.js';
 import {createPlant} from '../src/simulation/crops.js';
 import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
-import {proposeHybridEnclosure} from '../src/world/hierarchical-wasm/spatial-hybrid-enclosure-prototype.js';
+import {classifyCutBoundaryFaces,proposeHybridEnclosure} from
+  '../src/world/hierarchical-wasm/spatial-hybrid-enclosure-prototype.js';
 import {createCropEnclosurePlanner} from '../src/world/hierarchical-wasm/spatial-crop-enclosure-plan.js';
 import {createNativeTopologicalDefensePolicy} from '../tools/native-topological-defense-policy.mjs';
 import {approximateCutModules,cropClearanceHull,cutEdgesToStrokes,enclosureJunctions,inspectNaturalJunctions,
@@ -23,6 +24,22 @@ import {rational} from '../src/simulation/money.js';
 import {agriculturalRayClear,AGRICULTURAL_PROFILE_LIMITS} from '../src/simulation/raid-agricultural-impact.js';
 import {ANIMAL_SPATIAL_PROFILES} from '../src/world/hierarchical-wasm/spatial-movement-profiles.js';
 import * as Game from '../src/simulation/game.js';
+
+test('cut diagnostics distinguish a known opening from unavailable geometry',()=>{
+  const boundary=[0,0,1,0,1,0,2,0,2,0,3,0,3,0,4,0];
+  const codes=[1,0,-1,3];
+  let calls=0;
+  const wasm={lazy_cut_face_natural:()=>codes[calls++]};
+  const result=classifyCutBoundaryFaces(boundary,wasm);
+  assert.equal(calls,4);
+  assert.deepEqual(result.faceCounts,
+    {solid:1,wetland:0,river:1,cliff:0,unknown:2});
+  assert.deepEqual(result.unprovedFaces,{open:1,undetermined:1,other:0,
+    samples:[{edge:[1,0,2,0],code:0},{edge:[2,0,3,0],code:-1}]});
+  assert.deepEqual(classifyCutBoundaryFaces(boundary,wasm,codes),result,
+    'Cached classifications must not repeat native calls');
+  assert.equal(calls,4);
+});
 
 test('clearance hull yields a closed free-form candidate around every crop',()=>{
   const crops=[{x:0,z:0},{x:8,z:0},{x:8,z:7},{x:2,z:4}];
