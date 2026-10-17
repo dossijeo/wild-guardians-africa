@@ -41,6 +41,6 @@ test('task reservation reuses blocked proofs and does not poll on the next tick'
   assert(baseline.firstTickRoutes>0,'the fixture must exercise route planning');
   assert.equal(baseline.secondTickRoutes,0,'unchanged tasks must not be replanned');
   assert.equal(cached.secondTickRoutes,0,'cached tasks must not poll the navigator');
-  assert(cached.nativeRoutes<baseline.nativeRoutes,
+  assert(cached.nativeRoutes<=baseline.nativeRoutes*.9,
     `native route calls: ${baseline.nativeRoutes} vs ${cached.nativeRoutes}`);
 });

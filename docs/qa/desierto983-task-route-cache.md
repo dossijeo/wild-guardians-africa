@@ -23,9 +23,10 @@ sin `workerPath` y 866 con él; en el segundo, ninguna en ambas variantes. Las
 866 consultas restantes son pares de coordenadas distintos y devuelven
 `blocked`. Por eso el requisito histórico de reducir las llamadas un 75 % ya
 no mide el ahorro de polling entre ticks y falla pese a que el estado
-serializado sigue siendo idéntico. La regresión ahora exige una reducción
-real de consultas en el primer tick, cero replanteamientos durante el segundo
-y la misma simulación. Se conserva arriba el benchmark ABBA original, que
+serializado sigue siendo idéntico. La regresión ahora exige al menos un 10 %
+menos de consultas que la variante sin caché, cero replanteamientos durante
+el segundo tick y el mismo estado serializado. Se conserva arriba el
+benchmark ABBA original, que
 corresponde a una arquitectura anterior y no debe citarse como rendimiento
 actual.
 
