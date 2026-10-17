@@ -32,6 +32,8 @@ the bot can identify work centers potentially affected by an exposed group.
 This association does not certify that an animal can physically hit a center;
 the native crop-group status is authoritative for the crops. A ruin or wall
 removal wakes enclosure planning; HP-only damage does not rebuild navigation.
+The event distinguishes a ruined work center from a wall breach; both wake
+maintenance, while only the wall is described as opening a defensive gap.
 The repair command retains the game's payment, worker-access and automatic
 door checks.
 

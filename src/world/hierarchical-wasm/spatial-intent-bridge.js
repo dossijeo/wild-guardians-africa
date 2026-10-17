@@ -943,7 +943,8 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
       else structureConditionSnapshot.delete(id);
       if(before?.hp===after?.hp&&before?.status===after?.status)continue;
       const kind=!after?'removed':after.status==='ruined'&&
-        before?.status!=='ruined'?'breach':after.hp>(before?.hp??after.maxHp)?
+        before?.status!=='ruined'?(after.kind==='wall'?'breach':'ruined'):
+        after.hp>(before?.hp??after.maxHp)?
         'repaired':'damaged';
       const change={type:'StructureConditionChanged',change:kind,
         structureId:id,kind:after?.kind??before.kind,

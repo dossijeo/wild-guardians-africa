@@ -150,6 +150,11 @@ test('structure condition events are deduplicated and reset cleanly on restore',
   assert.equal(changes.at(-1).kind,'center');
   assert.equal(changes.at(-1).severity,'severe');
   assert.equal(changes.at(-1).hp,center.hp);
+  center.hp=0;center.status='ruined';
+  emit(restored,'StructureRuined',{targetId:center.id});planner.flushWorldEvents();
+  assert.equal(changes.at(-1).change,'ruined',
+   'a collapsed work center is not misreported as a wall breach');
+  assert.equal(changes.at(-1).kind,'center');
   const beforeRemoval=changes.length;
   restored.structures=restored.structures.filter(item=>item.id!==wall.id);
   emit(restored,'WallRemoved',{targetId:wall.id});planner.flushWorldEvents();

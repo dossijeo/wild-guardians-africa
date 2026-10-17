@@ -93,11 +93,11 @@ export function createNativeTopologicalDefensePolicy({session,advice,material='z
     },
     onStructureConditionChanged(change){
       conditionNotifications++;
-      if(change.change==='breach'||change.change==='removed')dirty=true;
+      if(['breach','ruined','removed'].includes(change.change))dirty=true;
       if(change.change==='repaired'){
         repairDirty=true;return;
       }
-      if(change.change!=='damaged'&&change.change!=='breach')return;
+      if(!['damaged','breach','ruined'].includes(change.change))return;
       if(change.kind==='center'&&repairCenters&&
         change.hp<centerRepairThreshold||change.kind==='wall'&&repairWalls&&
         (change.status==='ruined'||change.hp<change.maxHp*.8))
