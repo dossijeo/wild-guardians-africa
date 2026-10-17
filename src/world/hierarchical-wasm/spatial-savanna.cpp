@@ -1077,14 +1077,20 @@ void refreshRemovedPropChunks(const Prop* changed){
       changed->z-changed->radius-maxIndexedRadius>=firstZ+side))continue;
     affected.emplace_back(cx,cz);
   }
-  for(int profile=0;profile<navigationProfiles;profile++){
-    selectProfile(profile);
-    if(!navReady)continue;
-    for(const auto& [cx,cz]:affected){
-      populateChunk(cx,cz,false);
+  // The generated relief and props do not depend on the movement profile.
+  // Populate each affected chunk once, then update its per-profile raster.
+  for(const auto& [cx,cz]:affected){
+    populateChunk(cx,cz,false);
+    for(int profile=0;profile<navigationProfiles;profile++){
+      selectProfile(profile);
+      if(!navReady)continue;
       if(changed)patchActiveRaster(*changed);
       else buildActiveRaster();
     }
+  }
+  for(int profile=0;profile<navigationProfiles;profile++){
+    selectProfile(profile);
+    if(!navReady)continue;
     if(changed){
       const double reach=changed->radius+radiusNow+2;
       refreshRect(int(std::floor(changed->x-reach)),int(std::floor(changed->z-reach)),
@@ -1097,7 +1103,8 @@ void refreshRemovedPropChunks(const Prop* changed){
     }
   }
   selectProfile(previous);
-  if(!loadedChunks.empty())populateChunk(selectedX,selectedZ);
+  if(!loadedChunks.empty()&&(chunkX!=selectedX||chunkZ!=selectedZ))
+    populateChunk(selectedX,selectedZ);
 }
 void refreshRemovedPropChunksBatch(const std::vector<Prop>& changed){
   if(changed.empty())return;
@@ -1115,15 +1122,19 @@ void refreshRemovedPropChunksBatch(const std::vector<Prop>& changed){
     affected.emplace_back(cx,cz);
   }
   std::sort(affected.begin(),affected.end());
+  // All removals are already committed. Generate each changed chunk once;
+  // only its raster and sector graph vary with the unit profile.
+  for(const auto& [cx,cz]:affected){
+    populateChunk(cx,cz,false);
+    for(int profile=0;profile<navigationProfiles;profile++){
+      selectProfile(profile);
+      if(!navReady)continue;
+      for(const Prop& prop:changed)patchActiveRaster(prop);
+    }
+  }
   for(int profile=0;profile<navigationProfiles;profile++){
     selectProfile(profile);
     if(!navReady)continue;
-    // All removals are already committed. Rebuild each affected chunk once,
-    // then patch the union of changed footprints in its final occupancy.
-    for(const auto& [cx,cz]:affected){
-      populateChunk(cx,cz,false);
-      for(const Prop& prop:changed)patchActiveRaster(prop);
-    }
     std::unordered_set<uint64_t> sectors;
     for(const Prop& prop:changed){
       const double reach=prop.radius+radiusNow+2;
@@ -1136,7 +1147,8 @@ void refreshRemovedPropChunksBatch(const std::vector<Prop>& changed){
     for(uint64_t key:ordered)refreshSector(int(int32_t(key>>32)),int(int32_t(key)));
   }
   selectProfile(previous);
-  if(!loadedChunks.empty())populateChunk(selectedX,selectedZ);
+  if(!loadedChunks.empty()&&(chunkX!=selectedX||chunkZ!=selectedZ))
+    populateChunk(selectedX,selectedZ);
 }
 void flushBarrierBatch(){
   const float maxRadius=maxBuiltRadius();

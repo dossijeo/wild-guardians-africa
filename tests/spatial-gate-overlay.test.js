@@ -70,14 +70,14 @@ for(const biome of ['sabana','gran-rio','manglares','volcanes','desierto','gran-
     }finally{session.dispose();}
   });
 
-test('a 20-prop hypothetical removal restores every mobility profile',async()=>{
+for(const count of [20,65])test(`a ${count}-prop hypothetical removal restores every mobility profile`,async()=>{
   const {nav,session,loaded}=await createSpatialCampaignOpening({biome:'sabana'});
   try{
     const props=[...loaded.values()].flatMap(chunk=>chunk.instances.flat())
       .filter(item=>/^spatial:[0-5]:/.test(item.id)&&
         (item.slot<4||item.slot>=10&&item.slot<=12||item.slot>=18))
-      .slice(0,20);
-    assert.equal(props.length,20,'fixture needs 20 solid resident props');
+      .slice(0,count);
+    assert.equal(props.length,count,`fixture needs ${count} solid resident props`);
     const profiles=[true,...Object.keys(ANIMAL_SPATIAL_PROFILES)];
     const occupancy=()=>profiles.map(profile=>props.map(prop=>
       session.actorCanStand({x:prop.x,z:prop.z},profile===true?
