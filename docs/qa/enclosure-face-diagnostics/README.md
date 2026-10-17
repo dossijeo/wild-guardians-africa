@@ -199,6 +199,20 @@ cash balance is higher, while attack workload differs. This single seed does
 not establish general superiority; it does establish that the safety fix need
 not force the poor 30-night economic trajectory seen in the initial replay.
 
+## Manglares cross-biome check
+
+The [repair-first Manglares/712 replay](manglares712-repair-first-14.json.gz)
+also completed 14 nights without recorded physical or technical issues.
+Against the [established maintenance control](../topological-defense-repair-events/topological-repair-new-manglares712-14.json.gz),
+both had 5 raid crop losses, 173 wall hits, 43 paid wall modules costing 430,
+and 54 repair requests costing 288. The variant finished with 127 living crops
+and 895 coins versus 123 and 915. Nightly state hashes agree through day 13
+and diverge on day 14. Measured bot-decision time was 28.55 versus 26.26 s,
+and `Game.tick` time was 124.31 versus 112.96 s. This single, order-unbalanced
+campaign timing cannot establish a performance regression; no speed claim is
+made from it. It does show that the new repair decision did not alter the
+wall-purchase or repair workload in this biome.
+
 This branch remains experimental. The frozen probe establishes a specific
 physically buildable seam, and the 72-night run establishes one sustained
 campaign outcome. It does not justify changing military balance.
