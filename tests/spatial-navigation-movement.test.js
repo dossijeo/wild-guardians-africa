@@ -387,6 +387,13 @@ test('ordinary wall placement previews its enclosure on the native world and res
     const prop=[...loaded.values()].flatMap(chunk=>chunk.instances.flat())[0];
     assert(prop);
     const beforeProps=session.core.snapshot().removedProps;
+    const beforeSectors=session.core.wasm.lazy_sector_updates();
+    session.withWallPreview([],[prop.id],()=>{
+      assert.equal(session.core.wasm.spatial_removed_prop_count(),1);
+    });
+    assert.deepEqual(session.core.snapshot().removedProps,beforeProps);
+    assert(session.core.wasm.lazy_sector_updates()-beforeSectors<100,
+      'restoring one resident prop must update local sectors, not every resident sector');
     assert.throws(()=>session.withWallPreview([wall],[prop.id],()=>
       session.withWallPreview([{...wall,gate:true}],[prop.id],()=>{
         throw Error('intentional nested preview failure');

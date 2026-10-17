@@ -99,6 +99,15 @@ std::unordered_map<uint64_t,std::vector<Prop>>& residentVisibleProps(){
   return *residentVisiblePropRegistry;
 }
 std::unordered_set<PropKey,PropKeyHash>* removedPropRegistry=nullptr;
+// Geometry retained only for a prop that was resident when suppressed. This
+// lets a preview restore that exact local footprint without rebuilding every
+// loaded sector. Settlement regeneration clears these witnesses.
+std::unordered_map<PropKey,Prop,PropKeyHash>* removedPropGeometryRegistry=nullptr;
+std::unordered_map<PropKey,Prop,PropKeyHash>& removedPropGeometry(){
+  if(!removedPropGeometryRegistry)
+    removedPropGeometryRegistry=new std::unordered_map<PropKey,Prop,PropKeyHash>();
+  return *removedPropGeometryRegistry;
+}
 std::vector<int32_t> removedPropState;
 std::unordered_set<PropKey,PropKeyHash>& removedProps(){
   if(!removedPropRegistry)removedPropRegistry=new std::unordered_set<PropKey,PropKeyHash>();
@@ -1009,6 +1018,7 @@ Settlement makeSettlement(double x,double z,double hx,double hz){
   return {true,x,z,sorted[2],hx,hz,clear,clear+6,clear+13};
 }
 void refreshSettlementChunks(const std::vector<Settlement>& changed){
+  removedPropGeometry().clear();
   const int selectedX=chunkX,selectedZ=chunkZ,previous=activeProfile;
   changedSettlementChunks.clear();
   bool touched=false;
@@ -1208,7 +1218,7 @@ int spatial_generate_biome(uint32_t seed,int biome,int cx,int cz){
   if(biome<0||biome>5)return -1;
   worldSeed=seed;worldBiome=biome;barrierIndex().byId.clear();barrierIndex().buckets.clear();
   polygonIndex().byId.clear();polygonIndex().buckets.clear();polygonInput.clear();polygonState.clear();nextPolygonId=1;
-  removedProps().clear();removedPropState.clear();
+  removedProps().clear();removedPropState.clear();removedPropGeometry().clear();
   batchingBarriers=false;deferredBarrierRefresh.clear();barrierBatch.clear();barrierBatchIds.clear();barrierRemovalIds.clear();
   barrierState.clear();settlementState.clear();
   settlements.clear();nearbySettlements.clear();changedSettlementChunks.clear();
@@ -1312,6 +1322,7 @@ int spatial_remove_prop(int group,int gx,int gz){
   }
   if(!found)return 0;
   const Prop changed=*found;
+  removedPropGeometry().insert_or_assign({group,gx,gz},changed);
   removedProps().insert({group,gx,gz});
   refreshRemovedPropChunks(&changed);
   return 1;
@@ -1344,8 +1355,41 @@ int spatial_restore_removed_props(int count){
     const PropKey key={removedPropState[i*3],removedPropState[i*3+1],removedPropState[i*3+2]};
     if(key.group<0||key.group>5||!replacement.insert(key).second)return 0;
   }
+  if(replacement==removedProps())return 1;
+  std::vector<Prop> changed;
+  std::vector<PropKey> restored;
+  bool local=true;
+  const auto visible=[](const PropKey& key)->const Prop*{
+    for(const auto& [chunk,props]:residentVisibleProps()){
+      const auto found=std::find_if(props.begin(),props.end(),[&](const Prop& prop){
+        return prop.group==key.group&&prop.gx==key.gx&&prop.gz==key.gz;
+      });
+      if(found!=props.end())return &*found;
+    }
+    return nullptr;
+  };
+  for(const PropKey& key:replacement)if(!removedProps().count(key)){
+    if(const Prop* prop=visible(key)){
+      changed.push_back(*prop);
+      removedPropGeometry().insert_or_assign(key,*prop);
+    }else local=false;
+  }
+  for(const PropKey& key:removedProps())if(!replacement.count(key)){
+    const auto found=removedPropGeometry().find(key);
+    if(found!=removedPropGeometry().end())changed.push_back(found->second);
+    else local=false;
+    restored.push_back(key);
+  }
   removedProps().swap(replacement);
-  refreshRemovedPropChunks(nullptr);
+  if(local&&changed.size()<=16){
+    std::sort(changed.begin(),changed.end(),[](const Prop& a,const Prop& b){
+      if(a.group!=b.group)return a.group<b.group;
+      if(a.gx!=b.gx)return a.gx<b.gx;
+      return a.gz<b.gz;
+    });
+    for(const Prop& prop:changed)refreshRemovedPropChunks(&prop);
+  }else refreshRemovedPropChunks(nullptr);
+  for(const PropKey& key:restored)removedPropGeometry().erase(key);
   return 1;
 }
 int spatial_sector_slots(){return lazy_sector_slots();}

@@ -186,25 +186,14 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
   const targets=s.structures.filter(operational).map(center=>{
     const plants=cropsByCenter.get(center.id)??[];
     return plants.length?{x:plants.reduce((sum,q)=>sum+q.x,0)/plants.length,z:plants.reduce((sum,q)=>sum+q.z,0)/plants.length}:centerServicePoint(center,s,.8);
-  }),scores=new Map();let approachRoutes;
-  const loadApproachRoutes=()=>targets.flatMap(target=>s.villages.map(v=>{
-    const entry=v.entry??v,path=nav.path(entry,target,.28,null,true);
-    return {entry,target,path:path?[entry,...path]:null};
-  }));
-  const routeDistance=(p,route)=>Math.min(...route.slice(1).map((b,i)=>{
-    const a=route[i],dx=b.x-a.x,dz=b.z-a.z,length=dx*dx+dz*dz;
-    const t=length?Math.max(0,Math.min(1,((p.x-a.x)*dx+(p.z-a.z)*dz)/length)):0;
-    return Math.hypot(p.x-a.x-t*dx,p.z-a.z-t*dz);
-  }));
+  }),scores=new Map();
   const rank=(p,face)=>{
     if(face.ids.some(id=>id>0&&!newIds.has(id)))return -p.id;
-    // Reuse existing shortest navigation routes, including buildings and cliffs.
-    // Computed only for a fresh enclosure; incremental edits always prefer the
-    // last new module rather than relocating an older wall.
-    approachRoutes??=nav.withWallPreview?
-      nav.withWallPreview([],[...suppressedForGates],loadApproachRoutes):
-      loadApproachRoutes();
-    if(!scores.has(p.id))scores.set(p.id,Math.min(...approachRoutes.map(({entry,target,path})=>(path?routeDistance(p,path):0)*1e6+dist(entry,p)+dist(p,target))));
+    // Ranking a possible door does not require a route to every work center.
+    // The selected gate and all existing worker routes receive physical checks
+    // below, before the quote can become a paid construction.
+    if(!scores.has(p.id))scores.set(p.id,Math.min(...targets.flatMap(target=>
+      s.villages.map(v=>dist(v.entry??v,p)+dist(p,target)))));
     return scores.get(p.id);
   };
   let unhosted=false,unhostedWorker=false;
