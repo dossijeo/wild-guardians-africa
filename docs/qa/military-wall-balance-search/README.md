@@ -633,11 +633,12 @@ the crop groups it evaluated. Most general-cut attempts reported
 `movement-unproved` with two or three boundary faces not certified as physical
 barriers. A 72-night diagnostic replay in [PR #105](https://github.com/dossijeo/wild-guardians-africa/pull/105)
 matched every baseline daily state hash. All 74 rejected proposals with face
-details contained native-open faces (`0`), with no unavailable (`-1`) face.
-On nights 70–72, three adjacent open faces recur between `x=104` and `105`
+details contained faces whose continuous blockage was not certified (`0`),
+with no unavailable (`-1`) face. Code `0` does not prove animal passage.
+On nights 70–72, three adjacent uncertified faces recur between `x=104` and `105`
 at `z=-1`, `0` and `1`. The artificial-hull alternatives omitted modules
-because of physical placement conflicts. The proposed cut therefore has an
-unclosed boundary; a legal layout covering it and preserving worker access
+because of physical placement conflicts. The proposed cut therefore lacks
+a continuous closure certificate; a legal layout covering it and preserving worker access
 has not yet been demonstrated. The raid report does not prove that animals
 crossed these exact faces. This planner limitation means the defeat cannot
 be attributed to military pressure alone. An `unknown` closure must not be
