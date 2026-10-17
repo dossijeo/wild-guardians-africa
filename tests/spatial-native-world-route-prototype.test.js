@@ -8,6 +8,7 @@ import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-g
 import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
 import {createSpatialIntentBridge} from '../src/world/hierarchical-wasm/spatial-intent-bridge.js';
 import {reserveTasks} from '../src/simulation/tasks.js';
+import {reachableApproach} from '../src/simulation/raids.js';
 
 const prototype=process.env.WILD_ENGINE_NATIVE_ROUTE_WASM;
 const binary=prototype??new URL(
@@ -15,6 +16,34 @@ const binary=prototype??new URL(
 const module=new WebAssembly.Module(readFileSync(binary));
 const state=deserialize(gunzipSync(readFileSync(new URL(
   './fixtures/desierto983-d15-partial-state.json.gz',import.meta.url))).toString());
+
+test('a day-37 fractional crop approach never commits an unswept connector',()=>{
+ const snapshot=JSON.parse(gunzipSync(readFileSync(new URL(
+  './fixtures/sabana123-d37-attack-connector.json.gz',import.meta.url))).toString());
+ const loaded=new Map(),session=createSpatialGameSession(module,snapshot,{
+  loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+ try{
+  for(let z=-2;z<=2;z++)for(let x=-1;x<=5;x++){
+   if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+   loaded.set(`${x},${z}`,session.core.chunkPayload());
+  }
+  const nav=createSpatialNavigationMovement(session,snapshot);
+  nav.intentTaskPlanner={};
+  const animal=snapshot.raid.animals.find(item=>item.id==='animal-48837');
+  const crop=snapshot.plants.find(item=>item.id===animal.targetId);
+  assert(animal&&crop);
+  assert(nav.path(animal,animal.approach,animal.radius,null,false)?.length,
+   'the frozen state must exercise a real fractional route candidate');
+  const selected=reachableApproach(animal,crop,nav);
+  if(selected){
+   let previous=animal;
+   for(const point of selected.path){
+    assert(nav.segmentClear(previous,point,animal.radius,null,false));
+    previous=point;
+   }
+  }
+ }finally{session.dispose();}
+});
 
 test('a legal worker beside a wall finds an adjacent connector instead of retrying every crop',
  {skip:!prototype&&'Build and select the experimental WASM first'},async()=>{
