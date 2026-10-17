@@ -3,7 +3,7 @@ import {agriculturalRayClear,resolveAgriculturalImpact,validDamageProfile} from 
 import {liveWaitQueue,occupiedEligibleGroup,enqueueWait,leaveWait,observeWaitProgress,waitEpoch,RAID_WAIT_SECONDS} from './raid-contention.js';
 import {raidEntryChunks,includeRaidBounds} from '../world/raid-entry-residency.js';
 import {raidEntryKey} from '../world/raid-entry-data.js';
-import {exteriorRaidEntry} from './raid-exterior-entry.js';
+import {exteriorRaidEntry,raidWallEnvelope,exteriorRaidWitness} from './raid-exterior-entry.js';
 import {createCropGrouping} from './crop-components.js';
 import {activeCrops} from './active-crops.js';
 import {RAID_NOTICE_TEXT} from './raid-notice.js';
@@ -176,7 +176,7 @@ export function planNight(s) {
   s.nightPlan=prepared.plan;s.raidPressureMemory=prepared.memory;s.rng=prepared.rng;
 }
 export function planDay(s) {s.dayPlan={at:(115+nextRandom(s)*420)/2.4,done:false};}
-export function cameraRaidEntry(s,specs,bounds,nav,view=nav.raidView,maxSearches=2){
+export function cameraRaidEntry(s,specs,bounds,nav,view=nav.raidView,maxSearches=2,accept=null){
   if(!view)return null;
   const dx=view.eye.x-view.target.x,dz=view.eye.z-view.target.z,length=Math.hypot(dx,dz);if(length<1e-6)return null;
   const bx=dx/length,bz=dz/length,spacing=Math.max(...specs.map(v=>v.radius))*2+1.1;
@@ -207,6 +207,7 @@ export function cameraRaidEntry(s,specs,bounds,nav,view=nav.raidView,maxSearches
         if(!nav.walkable(point.x,point.z,radius,null,false)||!nav.walkable(exit.x,exit.z,radius,null,false))continue;
         if(points.some((p,j)=>dist(p,point)<=specs[j].radius+radius+1))continue;
         if(nav.segmentClear?!nav.segmentClear(point,exit,radius,null,false):!nav.path(point,exit,radius,null,false))continue;
+        if(accept&&!accept(point,exit,radius))continue;
         const targets=[...centers,...walls].sort((a,b)=>dist(a,point)-dist(b,point)).slice(0,2);
         let reachable=!targets.length;
         for(const target of targets){
@@ -237,16 +238,77 @@ function nearFarmRaidEntry(s,specs,bounds,nav){
   const focus=s.structures.find(operational),view=nav.raidView;
   if(!focus||!view)return null;
   const angle=Math.atan2(view.eye.x-view.target.x,view.eye.z-view.target.z);
+  let cropBox=null;
+  for(const p of activeCrops(s.plants))if(p.centerId===focus.id||dist(p,focus)<32){
+    cropBox??={minX:Infinity,maxX:-Infinity,minZ:Infinity,maxZ:-Infinity};
+    cropBox.minX=Math.min(cropBox.minX,p.x);cropBox.maxX=Math.max(cropBox.maxX,p.x);
+    cropBox.minZ=Math.min(cropBox.minZ,p.z);cropBox.maxZ=Math.max(cropBox.maxZ,p.z);
+  }
+  const outsideCrops=(p,r)=>!cropBox||p.x<cropBox.minX-r-1||
+    p.x>cropBox.maxX+r+1||p.z<cropBox.minZ-r-1||p.z>cropBox.maxZ+r+1;
   // A dune or river can disconnect the entire rear of the camera. Try clear
   // approaches around the farm before falling back to a distant map edge.
   // These candidates require direct native reachability; no repeated A* here.
   const offsets=[0];for(let i=1;i<8;i++)offsets.push(-i*Math.PI/8,i*Math.PI/8);offsets.push(Math.PI);
-  for(const offset of offsets){
+  for(const offset of specs.length<=4?offsets:[]){
     const heading=angle+offset,eye={x:focus.x+Math.sin(heading)*8,z:focus.z+Math.cos(heading)*8};
-    const entry=cameraRaidEntry(s,specs,bounds,nav,{eye,target:focus},0);
+    const local=Object.assign(Object.create(nav),{raidView:{eye,target:focus}});
+    const entry=cameraRaidEntry(s,specs,bounds,local,local.raidView,0,(p,exit,r)=>
+      outsideCrops(p,r)&&outsideCrops(exit,r));
     if(entry)return entry;
   }
-  return null;
+  // Large waves can use several connected approaches instead of one cramped
+  // camera anchor. A cheap native region query certifies access to the center
+  // or an attackable wall; ordinary routing and collisions still move actors.
+  const box=raidWallEnvelope(s,nav),entries=[],exits=[];
+  const walls=s.structures.filter(w=>w.kind==='wall'&&w.hp>0&&w.status!=='collapsing')
+    .map(w=>({wall:w,frame:wallCollisionFrame(w)}));
+  const reachable=(point,radius)=>{
+    const center=centerDeliveryPoint(focus,point,s,radius+.5);
+    if(nav.walkable(center.x,center.z,radius,null,false)&&
+      nav.regionConnected(point,center,radius,null,false)===true)return true;
+    const nearest=[];
+    for(const item of walls){
+      const distance=dist(point,item.wall),at=nearest.findIndex(x=>distance<x.distance);
+      if(at>=0)nearest.splice(at,0,{...item,distance});
+      else if(nearest.length<8)nearest.push({...item,distance});
+      if(nearest.length>8)nearest.pop();
+    }
+    for(const {frame} of nearest){
+      const nx=Math.sin(frame.yaw),nz=Math.cos(frame.yaw),sign=
+        (point.x-frame.x)*nx+(point.z-frame.z)*nz>=0?1:-1;
+      const side={x:frame.x+nx*sign*(frame.depth+radius+.6),
+        z:frame.z+nz*sign*(frame.depth+radius+.6)};
+      if(nav.walkable(side.x,side.z,radius,null,false)&&
+        nav.regionConnected(point,side,radius,null,false)===true)return true;
+    }
+    return false;
+  };
+  const samples=[];
+  const cropReach=cropBox?Math.max(focus.x-cropBox.minX,cropBox.maxX-focus.x,
+    focus.z-cropBox.minZ,cropBox.maxZ-focus.z)+Math.max(...specs.map(x=>x.radius))+3:0;
+  const firstRange=Math.max(18,cropReach);
+  for(let ring=0;ring<6;ring++)for(let i=0;i<32;i++)
+    samples.push({range:firstRange+ring*4,heading:angle+i*Math.PI/16});
+  for(const spec of specs){
+    let chosen=null;
+    for(const {range,heading} of samples){
+      const ray={x:Math.sin(heading),z:Math.cos(heading)};
+      const point={x:focus.x+ray.x*range,z:focus.z+ray.z*range};
+      const exit={x:point.x+ray.x*3,z:point.z+ray.z*3};
+      if([point,exit].some(p=>p.x-spec.radius<bounds[0]||p.z-spec.radius<bounds[1]||
+        p.x+spec.radius>bounds[2]||p.z+spec.radius>bounds[3]||
+        !outsideCrops(p,spec.radius)||!nav.walkable(p.x,p.z,spec.radius,null,false)||
+        !exteriorRaidWitness(p,spec.radius,box,nav)))continue;
+      if(entries.some((p,j)=>dist(p,point)<=specs[j].radius+spec.radius+1)||
+        !nav.segmentClear(point,exit,spec.radius,null,false)||
+        !reachable(point,spec.radius))continue;
+      chosen={point,exit};break;
+    }
+    if(!chosen)return null;
+    entries.push(chosen.point);exits.push(chosen.exit);
+  }
+  return {entries,exits};
 }
 function baseRaidEntry(s,specs,bounds,preferredSide,nav){
   const focus=s.structures.find(operational)??s.villages[0];

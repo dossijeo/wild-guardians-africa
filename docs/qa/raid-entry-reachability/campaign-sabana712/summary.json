@@ -1,0 +1,272 @@
+{
+  "stamp": {
+    "sourceHash": "d9110380d22057ff480a02475bdc5db1e2826873",
+    "geneSchemaVersion": "virtual-player-v3-service-side-policy",
+    "moduleHashes": {
+      "tools/native-campaign-runner.mjs": "7a1c8dac4c793ea44ee7c21d34e98bbe840d836c46c44d10364f3e526b081b49",
+      "tools/evolutionary-balance/run-ga.mjs": "b6e28e28393bb4ccac2a7756ac17dc6346442dfcc4fd7b091c2c5dfdc1d56f2c",
+      "tools/evolutionary-balance/run-post-intro-pilot.mjs": "38a953c1884af58baa423500de192aebdf191be50f99b5d1c12d0668fa14f9a3",
+      "tools/evolutionary-balance/post-intro-fitness.mjs": "6b5ff70302dc203907164b64cb598e53b69a5ab2e5424af4c77036db7b2e4f7c",
+      "tools/evolutionary-balance/policy-genes.mjs": "fa8dd7c82f4289bc1b016dd15cbf7b3fd66182e0b1d1ec963c0dc127a1d0edfd"
+    },
+    "config": {
+      "days": 14,
+      "maxDayGameTickMs": 60000,
+      "maxElapsedWallMs": 1200000,
+      "minimumTerminalDeliveryPerDay": null,
+      "output": ".cache/raid-entry-sabana712-14",
+      "scenarios": [
+        {
+          "seed": 983,
+          "biome": "desierto"
+        },
+        {
+          "seed": 712,
+          "biome": "sabana"
+        }
+      ],
+      "genomes": {
+        "service-side": {
+          "plantsPerWorker": 6,
+          "wageReserveDays": 1,
+          "seedReserve": 0,
+          "defenseCashFraction": 0.2,
+          "defenseStartDay": 2,
+          "repairHealthFraction": 0.8,
+          "magicIntervalSeconds": 5,
+          "growthShare": 0,
+          "plantingIntervalSeconds": 1,
+          "wallMaterial": "zarzas",
+          "magicPriority": "multiply",
+          "wallPolicy": "service-side"
+        },
+        "planned": {
+          "plantsPerWorker": 6,
+          "wageReserveDays": 1,
+          "seedReserve": 0,
+          "defenseCashFraction": 0.2,
+          "defenseStartDay": 2,
+          "repairHealthFraction": 0.8,
+          "magicIntervalSeconds": 5,
+          "growthShare": 0,
+          "plantingIntervalSeconds": 1,
+          "wallMaterial": "zarzas",
+          "magicPriority": "multiply",
+          "wallPolicy": "planned"
+        },
+        "no-walls": {
+          "plantsPerWorker": 6,
+          "wageReserveDays": 1,
+          "seedReserve": 0,
+          "defenseCashFraction": 0.2,
+          "defenseStartDay": 2,
+          "repairHealthFraction": 0.8,
+          "magicIntervalSeconds": 5,
+          "growthShare": 0,
+          "plantingIntervalSeconds": 1,
+          "wallMaterial": "zarzas",
+          "magicPriority": "multiply",
+          "wallPolicy": "none"
+        }
+      },
+      "caseSelection": [
+        {
+          "name": "service-side",
+          "seed": 712,
+          "biome": "sabana"
+        },
+        {
+          "name": "no-walls",
+          "seed": 712,
+          "biome": "sabana"
+        }
+      ]
+    },
+    "balance": "production unchanged",
+    "purpose": "post-intro native policy pilot"
+  },
+  "cases": [
+    {
+      "name": "service-side",
+      "biome": "sabana",
+      "seed": 712,
+      "stop": "horizon-survivor",
+      "completedNights": 14,
+      "result": null,
+      "finalCash": 867,
+      "finalLiving": 127,
+      "delivered": 1476,
+      "destroyed": 33,
+      "fitness": {
+        "score": 14194.000005442089,
+        "valid": true,
+        "scoreVersion": "post-intro-v1",
+        "completed": 14,
+        "metrics": {
+          "firstPressureDay": 6,
+          "window": 3,
+          "pressureDays": 9,
+          "delivered": 1085,
+          "destroyed": 33,
+          "attraction": 13376,
+          "opening": {
+            "days": 3,
+            "delivered": 306,
+            "living": 140,
+            "income": 3688,
+            "seeds": 1785,
+            "wages": 1737,
+            "repairs": 130,
+            "walls": 20,
+            "operating": 36
+          },
+          "terminal": {
+            "days": 3,
+            "delivered": 380,
+            "living": 127,
+            "cash": 867,
+            "income": 4510,
+            "seeds": 1920,
+            "wages": 2115,
+            "repairs": 351,
+            "walls": 140,
+            "operating": 124
+          },
+          "deliveryRetention": 1.2418300653594772,
+          "terminalDeliveryPerDay": 126.66666666666667,
+          "productiveAtEnd": true
+        },
+        "cropLossFraction": 0.027477102414654453,
+        "minimumTerminalDeliveryPerDay": null,
+        "result": null,
+        "nativeResult": null,
+        "competitiveEligible": null
+      },
+      "metrics": {
+        "firstPressureDay": 6,
+        "window": 3,
+        "pressureDays": 9,
+        "delivered": 1085,
+        "destroyed": 33,
+        "attraction": 13376,
+        "opening": {
+          "days": 3,
+          "delivered": 306,
+          "living": 140,
+          "income": 3688,
+          "seeds": 1785,
+          "wages": 1737,
+          "repairs": 130,
+          "walls": 20,
+          "operating": 36
+        },
+        "terminal": {
+          "days": 3,
+          "delivered": 380,
+          "living": 127,
+          "cash": 867,
+          "income": 4510,
+          "seeds": 1920,
+          "wages": 2115,
+          "repairs": 351,
+          "walls": 140,
+          "operating": 124
+        },
+        "deliveryRetention": 1.2418300653594772,
+        "terminalDeliveryPerDay": 126.66666666666667,
+        "productiveAtEnd": true
+      }
+    },
+    {
+      "name": "no-walls",
+      "biome": "sabana",
+      "seed": 712,
+      "stop": "native-defeat",
+      "completedNights": 11,
+      "result": "defeat",
+      "finalCash": 780,
+      "finalLiving": 94,
+      "delivered": 1245,
+      "destroyed": 268,
+      "fitness": {
+        "score": 10550.805719818793,
+        "valid": true,
+        "scoreVersion": "post-intro-v1",
+        "completed": 11,
+        "metrics": {
+          "firstPressureDay": 6,
+          "window": 3,
+          "pressureDays": 7,
+          "delivered": 788,
+          "destroyed": 268,
+          "attraction": 10813,
+          "opening": {
+            "days": 3,
+            "delivered": 357,
+            "living": 107,
+            "income": 4248,
+            "seeds": 2215,
+            "wages": 2010,
+            "repairs": 0,
+            "walls": 0,
+            "operating": 23
+          },
+          "terminal": {
+            "days": 3,
+            "delivered": 321,
+            "living": 94,
+            "cash": 780,
+            "income": 3854,
+            "seeds": 2200,
+            "wages": 1944,
+            "repairs": 0,
+            "walls": 0,
+            "operating": -290
+          },
+          "deliveryRetention": 0.8991596638655462,
+          "terminalDeliveryPerDay": 107,
+          "productiveAtEnd": true
+        },
+        "cropLossFraction": 0.2757201646090535,
+        "minimumTerminalDeliveryPerDay": null,
+        "result": "defeat",
+        "nativeResult": "defeat",
+        "competitiveEligible": null
+      },
+      "metrics": {
+        "firstPressureDay": 6,
+        "window": 3,
+        "pressureDays": 7,
+        "delivered": 788,
+        "destroyed": 268,
+        "attraction": 10813,
+        "opening": {
+          "days": 3,
+          "delivered": 357,
+          "living": 107,
+          "income": 4248,
+          "seeds": 2215,
+          "wages": 2010,
+          "repairs": 0,
+          "walls": 0,
+          "operating": 23
+        },
+        "terminal": {
+          "days": 3,
+          "delivered": 321,
+          "living": 94,
+          "cash": 780,
+          "income": 3854,
+          "seeds": 2200,
+          "wages": 1944,
+          "repairs": 0,
+          "walls": 0,
+          "operating": -290
+        },
+        "deliveryRetention": 0.8991596638655462,
+        "terminalDeliveryPerDay": 107,
+        "productiveAtEnd": true
+      }
+    }
+  ]
+}
