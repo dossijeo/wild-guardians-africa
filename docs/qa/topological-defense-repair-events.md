@@ -103,6 +103,21 @@ The same V1 candidate and topological policy completed 14 verified raids in Saba
 
 The new policy retained more cash and prevented most raid losses, but had fewer living crops at this particular dawn. On day 14 it delivered 169 harvests and planted 67 crops, compared with 96 and 121 respectively in the previous arm; the smaller living stock follows this different harvest/replant cycle rather than raid destruction that night. This can still matter for subsequent pressure and income, so it requires a longer campaign. The two runs generated slightly different animal counts because attraction changed. `Game.tick` itself was slower in the new trajectory; the bot decision time fell enough that their combined measured time was lower. Neither timing is an isolated algorithmic A/B benchmark. The Sabana result therefore supports maintenance effectiveness but does not establish a general crop-count or engine-speed advantage.
 
+## Sustained Gran Cañón / 712 check
+
+The same frozen V1 setup was extended to 30 nights, running the two arms sequentially on the same host. Both reached day 31 without a terminal result, with all 30 raids verified and zero evidence issues. The previous runner eventually spent 218 coins on center repairs; it still requested no wall repairs. The new policy requested 175 ordinary wall-repair tasks.
+
+| Measure | Previous policy | Event-driven maintenance |
+| --- | ---: | ---: |
+| Living crops / cash at day-31 dawn | 35 / 295 | 55 / 950 |
+| Raid crop losses, nights 6–30 | 326 | 33 |
+| Animals, nights 6–30 | 198 | 240 |
+| Wall purchases / all repair spending | 250 / 218 | 190 / 1,200 |
+| Total income | 14,081 | 18,251 |
+| Bot decision time / `Game.tick` time | 26.65 / 95.37 s | 24.40 / 119.98 s |
+
+The new policy still incurred real agricultural losses on nights 19, 21, 22, 24 and 26. Its higher attraction generated more animals, and its larger surviving farm made `Game.tick` slower. These are campaign outcomes with different workloads, not an equivalent-state navigation benchmark. The reports are [previous](topological-defense-repair-events/topological-repair-baseline-gran-canon712-30.json.gz), [new](topological-defense-repair-events/topological-repair-new-gran-canon712-30.json.gz) and [new repeat](topological-defense-repair-events/topological-repair-new-repeat-gran-canon712-30.json.gz). The two new runs had identical hashes at all 30 dawns and at the terminal state, with 175 repair requests in each and no evidence issues. The 30-night result supports sustained technical stability and a stronger outcome for this seed, but cannot establish survival probability across biomes and seeds.
+
 ## Validation and limits
 
 Directed tests cover HP thresholds, duplicate event suppression, gate identity,
