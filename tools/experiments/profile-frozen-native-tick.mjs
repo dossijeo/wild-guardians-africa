@@ -29,10 +29,11 @@ try{
       x<=chunk(Math.max(...points.map(point=>point.x))+margin);x++)
       desired.set(`${x},${z}`,{cx:x,cz:z,score:0});
   session.stream.plan(desired);await session.stream.whenIdle();
-  const nav=createSpatialNavigationMovement(session,state),planner=createEventDrivenTaskPlanner(session);
-  planner.resetFromState(state);const stopTasks=planner.observeTasks(state),stopWorld=planner.observeWorld(state);
-  const timed=['planIfNeeded','flushWorldEvents','flushTaskEvents','reconcileNavigationRevision','reconcileWorkerRoutes','planHomeRoute'];
+  const timed=['nativeTaskBatch','planIfNeeded','flushWorldEvents','flushTaskEvents','reconcileNavigationRevision','reconcileWorkerRoutes','planHomeRoute'];
   const timing=Object.fromEntries(timed.map(name=>[name,0]));
+  const nav=createSpatialNavigationMovement(session,state),planner=createEventDrivenTaskPlanner(session,{
+    onDiagnosticTiming:(name,ms)=>{timing[name]+=ms;}});
+  planner.resetFromState(state);const stopTasks=planner.observeTasks(state),stopWorld=planner.observeWorld(state);
   for(const name of timed){
     const original=planner[name];
     if(typeof original!=='function')continue;

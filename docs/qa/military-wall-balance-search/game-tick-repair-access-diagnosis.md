@@ -94,6 +94,22 @@ tests/fixtures/sabana712-day15-worker-routes.json.gz 120` and the same command
 with `--prune-history`. The raw timing captures remain local; no balance or
 physical rule was changed.
 
+Timed wrappers around the existing planner entry points on the same frozen
+state account for 2,309.6 ms inside `planIfNeeded()` out of 3,054.1 ms of
+`Game.tick` (75.6%). Every one of the eight ticks above 100 ms spent at least
+most of its time there; the 644.8 ms peak spent 639 ms in that method. World
+event flushing and worker-route reconciliation together accounted for less
+than 35 ms.
+
+An optional diagnostic timing hook around `bridge.planTasks()` resolves that
+split. On a third 120-second continuation it measured 2,288.7 ms in the
+native task batch, 2,299.0 ms in all of `planIfNeeded()`, and 3,043.7 ms in
+`Game.tick`. Thus 99.6% of the planner time and 75.2% of tick time occurred
+inside native batch planning, including its sector synchronization and route
+queries. At the 646.7 ms peak tick, native batch planning took 643 ms. This
+does **not** yet attribute that time to a particular C++ route operation;
+`nav_intent_plan_tasks()` may evaluate multiple service points for each task.
+
 ## VFX check
 
 The native campaign runner does not create a Three.js renderer, so its `Game.tick` delays cannot be caused by GPU draw calls or scene objects. `AgricultureVfx.update()` removes expired effects, and `NativeVfx.dispose()` detaches the group and disposes its geometry and materials. A regression test creates 48 simultaneous agricultural spell effects and verifies that the manager, library, and scene return to zero instances after expiry. Each effect already uses instanced sprite and rigid geometry. Batching **across separate spells** is a distinct render optimization; it needs frame-time and draw-call measurement in the interactive client before changing shaders and effect timing.

@@ -769,7 +769,7 @@ export function createSpatialIntentBridge(session){
 // deliver committed deltas at action boundaries; ordinary movement never
 // invokes the native planner. A pending physical result gets one bounded
 // recovery retry in case a dynamic obstruction produced no reliable event.
-export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
+export function createEventDrivenTaskPlanner(session,{retrySeconds=8,onDiagnosticTiming=null}={}){
   if(!Number.isFinite(retrySeconds)||retrySeconds<=0)
     throw RangeError('retrySeconds must be positive');
   const bridge=createSpatialIntentBridge(session);
@@ -938,7 +938,9 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     syncChangedPositions(false);
     const before=new Map([...eligible].map(id=>
       [id,session.core.wasm.nav_intent_actor_planning_calls(id)]));
+    const planStarted=onDiagnosticTiming?performance.now():0;
     const result=bridge.planTasks();
+    if(onDiagnosticTiming)onDiagnosticTiming('nativeTaskBatch',performance.now()-planStarted);
     taskRouteQueries+=session.core.wasm.nav_intent_route_queries();
     taskCandidates+=session.core.wasm.nav_intent_candidate_count();
     lastPlan=result;
