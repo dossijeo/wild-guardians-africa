@@ -1,0 +1,33 @@
+{
+  "sourceHash": "6c394c620048958cccb47623f99d4f2c689ba2a8",
+  "moduleHashes": {
+    "tools/evolutionary-balance/run-paired.mjs": "9b3d5333856453d1e11ea72f238907e7560190f5a8ee7bb7f6805b29593e4f4c",
+    "tools/evolutionary-balance/run-ga.mjs": "397dd70954c3fab768afb5c95654ac4c02bb6235680ce2a9eac190a7bac21db4",
+    "tools/native-campaign-runner.mjs": "8d5c83ec5341e352fb09961afa95aef7c9282f577fa3e708d85cada3ac54057c",
+    "tools/native-expanding-defense-policy.mjs": "b649e7b65ba0dacb7b362e550f81b5c3e8edb98cba1ebd2a27ee566625ad4842"
+  },
+  "days": 21,
+  "biome": "manglares",
+  "seeds": [
+    123
+  ],
+  "genes": {
+    "plantsPerWorker": 6,
+    "wageReserveDays": 1,
+    "seedReserve": 0,
+    "defenseCashFraction": 0.2,
+    "defenseStartDay": 2,
+    "repairHealthFraction": 0.8,
+    "magicIntervalSeconds": 5,
+    "growthShare": 0,
+    "plantingIntervalSeconds": 1,
+    "wallMaterial": "zarzas",
+    "magicPriority": "multiply",
+    "wallPolicy": "planned"
+  },
+  "controls": [
+    "evolved",
+    "good-current-magic"
+  ],
+  "balance": "production unchanged"
+}
