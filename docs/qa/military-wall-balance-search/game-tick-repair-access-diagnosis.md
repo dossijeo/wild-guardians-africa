@@ -65,6 +65,18 @@ can remain indefinitely. The new geometry regression checks cache refresh
 after placement, yaw, scale and material changes; worker gate and closure
 tests also pass.
 
+A subsequent real V1-pressure Sabana/712 campaign completed 14 nights with
+verified physical raid evidence and zero observer issues. Comparing its first
+12 days with the prior route-connector-fixed run, **every daily serialized
+state hash and cumulative native task-route count matched**. On that identical
+trajectory, cumulative `Game.tick` time was 123.4 s before the gate change and
+108.5 s after it (12.1% lower). This is evidence of sustained benefit through
+day 12 on one machine and campaign; it does not establish the same gain for
+other biomes or a 100-night run. Days 13–14 of the new run took 22.2 and 17.3 s
+respectively, finishing with 115 living crops, 868 coins and no terminal result.
+The full new report is archived as
+[`diagnostic-gate-radius-sabana712-14.json.gz`](diagnostic-gate-radius-sabana712-14.json.gz).
+
 ## VFX check
 
 The native campaign runner does not create a Three.js renderer, so its `Game.tick` delays cannot be caused by GPU draw calls or scene objects. `AgricultureVfx.update()` removes expired effects, and `NativeVfx.dispose()` detaches the group and disposes its geometry and materials. A regression test creates 48 simultaneous agricultural spell effects and verifies that the manager, library, and scene return to zero instances after expiry. Each effect already uses instanced sprite and rigid geometry. Batching **across separate spells** is a distinct render optimization; it needs frame-time and draw-call measurement in the interactive client before changing shaders and effect timing.
