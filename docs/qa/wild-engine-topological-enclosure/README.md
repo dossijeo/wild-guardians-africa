@@ -810,6 +810,15 @@ structural loop certificate and an attack ray through that breach in the same
 game state. This checks the transition from intact to open rather than only
 comparing two hand-authored wall lists.
 
+A separate local mixed-join fixture closes three sides with paid wall arcs and
+the fourth with a village building. The automatic gate preserves the worker's
+outbound and return paths; all five animal profiles have no route from the
+building side and their crop-hit rays are occluded. Removing that building from
+the fixture and rebuilding `Navigation` restores a warthog route and attack
+ray. This checks one concrete wall/building geometry and a state refresh, not
+arbitrary natural-obstacle continuity or a confirmed in-game destruction
+event.
+
 ### Local construction and destruction regression
 
 The focused WASM test now encloses a known resident seed with four native

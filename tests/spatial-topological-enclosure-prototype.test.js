@@ -244,6 +244,21 @@ test('separate arcs beside a building keep one gate and worker access',()=>{
   assert.equal(state.structures.filter(item=>item.autoGate).length,1);
   assert.ok(nav.path(state.villages[0].entry,state.plants[0],.28,null,true));
   assert.ok(nav.path(state.plants[0],state.villages[0].entry,.28,null,true));
+  const outside={x:12.65,z:4};
+  for(const [species,profile] of Object.entries(ANIMAL_SPATIAL_PROFILES)){
+    assert.equal(nav.path(outside,state.plants[0],profile.radius,null,false),null,
+      `${species} cannot enter through the building or wall joins`);
+    assert.equal(agriculturalRayClear(state,nav,outside,state.plants[0],
+      profile.radius),false,`${species} cannot hit through the building`);
+  }
+  state.villages[0].buildings=[];
+  nav.setState(state);
+  assert.ok(nav.path(outside,state.plants[0],
+    ANIMAL_SPATIAL_PROFILES.warthog.radius,null,false),
+  'removing the building opens the mixed perimeter');
+  assert.equal(agriculturalRayClear(state,nav,outside,state.plants[0],
+    ANIMAL_SPATIAL_PROFILES.warthog.radius),true,
+  'the former building no longer occludes a crop attack');
 });
 
 const path=process.env.WILD_ENGINE_TOPOLOGICAL_CUT_WASM;
