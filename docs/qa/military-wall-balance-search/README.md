@@ -51,4 +51,39 @@ production without that recipe rejects version 4 rather than silently treating
 it as the current pressure or as a blocked raid. The branch does not change the
 production save format.
 
-Results and a recommendation will be added after the matched campaign runs.
+## First matched result: Sabana/712, 14 nights
+
+All five arms completed 14 nights with verified physical raid evidence and no
+observer issue. Agricultural losses below are measured from nights 6–14. The
+denominator sums living crops exposed at each actual raid spawn, rather than
+assuming a fixed plantation size.
+
+| Candidate | Crops at dawn 15 | Cash | Wall spend | Animals, nights 6–14 | Crops destroyed | Weighted loss |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Control | 51 | 370 | 860 | 126 | 162 | 18.45% |
+| V1 pressure | 139 | 873 | 860 | 95 | 77 | 6.60% |
+| V1 pressure + V1 walls | 139 | 873 | 860 | 95 | 77 | 6.60% |
+| Affordable walls | 105 | 592 | 688 | 128 | 160 | 14.56% |
+| V1 pressure + affordable walls | 133 | 795 | 688 | 92 | 27 | 2.27% |
+
+The V1 wall table did not produce a measurable outcome difference from V1
+pressure alone in this run. The bot bought only thorn walls, whose module cost
+and body HP are unchanged in V1. Affordable walls caused a legitimate purchase
+one day earlier (day 3 instead of day 4), so their campaign trajectory differs
+even before military pressure starts. The combined arm's lower crop loss does
+not automatically make it the better overall economy: it ended with less cash
+and fewer crops than V1 pressure alone.
+
+The control reproduced the previously frozen 14-night result: 51 crops, 370
+coins, 86 paid thorn pieces, and 162 post-introduction crop losses. The first
+five days match economically and militarily between control and V1 pressure;
+serialized hashes differ because the experimental pressure plan records its
+recipe provenance. This is a 14-night observation on one seed, not evidence of
+100-night viability. Continue with sustained runs and additional biomes before
+recommending production parameters.
+
+The per-night finance and raid ledger is
+[`sabana712-14-nightly.csv`](sabana712-14-nightly.csv). Full source reports are
+stored as `*.json.gz` alongside this file and can be expanded with gzip. To
+regenerate the table from expanded reports, run
+`node tools/experiments/summarize-balance-candidates.mjs output.csv report.json ...`.
