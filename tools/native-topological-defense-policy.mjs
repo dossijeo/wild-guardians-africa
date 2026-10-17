@@ -133,7 +133,8 @@ export function createNativeTopologicalDefensePolicy({session,advice,material='z
         attempts:plan.attempts?.map(item=>({kind:item.kind,status:item.status,
           reason:item.reason,modules:item.modules,cost:item.cost,
           gaps:item.gaps,expectedSlots:item.expectedSlots,
-          movementFaces:item.movementFaces,attackMargin:item.attackMargin,
+          movementFaces:item.movementFaces,unprovedFaces:item.unprovedFaces,
+          attackMargin:item.attackMargin,
           exposedAttackMargin:item.exposedAttackMargin}))};
       if(plan.status!=='ready'||!plan.modules?.length){
         capitalTarget=0;waitForFunds=0;history.push(row);return repairs;
