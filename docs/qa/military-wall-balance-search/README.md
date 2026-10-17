@@ -526,3 +526,28 @@ also prevents recommending a production price change from these two seeds.
 The full reports are [standard](heldout-standard-gran-canon123-30.json.gz),
 [price only](heldout-cheap-gran-canon123-30.json.gz) and
 [durability only](heldout-tough-gran-canon123-30.json.gz).
+
+## Event-driven maintenance with V1 pressure: Gran Cañón/712, 60 nights
+
+After the structure-condition events and autonomous repair policy from PR #104
+landed in `main`, the unchanged V1 military candidate and standard wall table
+were run with the topological bot for 60 real nights (source `7c2c3ab1`). The
+first 30 nightly state hashes exactly match the earlier archived PR #104
+30-night run. Raid evidence is verified, with zero issues and no missing raid
+coverage. The game had neither won nor lost at night 60: it had 49 living
+crops, 636 coins and one operational center. This is survival to 60 nights,
+not evidence of a 100-night victory.
+
+From night 6 onward, 594 animals attacked and 39 crops were destroyed. The
+bot executed 585 repair requests, spending 3,885 coins on repairs, while wall
+purchases cost 330 coins. Its accumulated decision time was 52.3 seconds and
+`Game.tick` time 257.9 seconds. The measured `Game.tick` cost was 4.21, 3.99,
+4.01 and 4.68 seconds on nights 14, 30, 45 and 60, respectively; this run
+does not show runaway per-night tick growth. The compressed [full
+report](current-main-repair-v1-topological-gran-canon712-60.json.gz) retains
+the per-night economy, decisions, raids, hashes and timings.
+
+This is one seed and biome under experimental V1 pressure. It does not rank
+wall-cost candidates or establish a general survival probability. The next
+step is a 100-night continuation from the same frozen inputs, followed by
+cross-biome and held-out-seed comparisons before any balance integration.
