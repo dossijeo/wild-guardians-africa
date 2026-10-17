@@ -68,9 +68,11 @@ Before this branch's stroke fix, quoting the stroke from `(104.5,-1.5)` to
 `(104.5,1.5)` returned zero modules: JavaScript deduplicated against the two
 ruins even though they no longer block movement. After excluding nonblocking
 ruins from stroke deduplication, the same quote returns two physically legal
-modules costing 20 coins. In a read-only preview, those modules certify all
-three local faces (`[0,0,0]` becomes `[1,1,1]`). This proves that this *local*
-seam is constructible. It does not prove that the entire enclosure is closed,
+modules costing 20 coins. Both a read-only preview and a paid build on an
+isolated copy of the frozen state change the three local face results from
+`[0,0,0]` to `[1,1,1]`. The paid build removes both old ruins and retains two
+new modules. This proves that this *local* seam is constructible. It does not
+prove that the entire enclosure is closed,
 that workers retain access, or that crops cannot be attacked from other sides.
 On confirmation, a newly paid module replaces a coincident ruined module in
 the same transaction. The old ruin and any pending repair task are removed,
