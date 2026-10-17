@@ -144,4 +144,22 @@ rates. Both arms used the same expanding defense policy; this comparison
 does not evaluate the opt-in topological planner. Report gzip SHA-256:
 `6081e15f8c4c273aa377fc763ea756436c67ef866e31b61a394aad81728cbcf0`
 (control), `bb44825495d9802029596d24ae7f50ebac414ea01b3ede230156065285801ec8`
-(V1). Desierto, Gran Río, Volcanes and later horizons remain untested here.
+(V1). Gran Río, Volcanes and later horizons remain untested here.
+
+## Desierto seed 712: economic warning
+
+Both arms completed 14 nights with an operational center and verified raids.
+The control ended with 46 crops, 1,085 coins and 86 crop losses; V1 ended with
+77 crops, **644 coins** and 51 losses. V1's lower cash is material: it spent
+990 coins on 99 thorn-wall modules versus the control's 440 coins on 44
+modules. The unchanged virtual player bought 53 modules and then another two
+on day 14, but its rectangular quote still reported tree/rock, building and
+crop gaps. Those purchases cannot be counted as a certified closed enclosure.
+V1's higher retained crop count changed the bot's subsequent investment
+opportunities; this is a coupled gameplay outcome, not an isolated wall-price
+effect. It could leave the player less solvent despite fewer agricultural
+losses. [Nightly data](current-main-desierto712-14-nightly.csv) and full reports
+are retained; gzip SHA-256 values are
+`1cde26a26cd1097b975328430d991479f1aa8184bd75e6bd8d5233e79c4b1819`
+(control) and `cb3d2c0e041fa86ccc18ebfb5deea1fdcff40e770e298e9e6240bec89df59d62`
+(V1). This result prevents a blanket claim that V1 is economically better.
