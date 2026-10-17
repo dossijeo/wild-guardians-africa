@@ -649,7 +649,8 @@ test('Gran Cañón natural corridor closes around planted crops and rejects unce
           protection:'unprotected',
           bounds:{minX:-25,minZ:45,maxX:-19,maxZ:61},
           revision:{crops:1,topology:[]}};
-        const advice={getUnprotectedCropGroups:()=>[group]};
+        const advice={getUnprotectedCropGroups:()=>[group],
+          getDamagedWalls:()=>[],getDamagedCenters:()=>[]};
         const integrated=createCropEnclosurePlanner(state,nav,advice,session)
           .planCropEnclosure(group.id,{method:'topological'});
         assert.equal(integrated.status,'ready');

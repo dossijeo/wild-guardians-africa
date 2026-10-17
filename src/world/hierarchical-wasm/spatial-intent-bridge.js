@@ -311,6 +311,9 @@ export function createSpatialIntentBridge(session){
       const cost=repairCost(structure),numerator=BigInt(cost.n),denominator=BigInt(cost.d);
       return {id:structure.id,hp:data[offset+1],maxHp:data[offset+2],
         damageRatio:data[offset+3],status:structure.status,material:structure.material??null,
+        gate:!!structure.gate,
+        enclosureId:structure.defenseEnclosureId??null,
+        plannedGroupId:structure.defenseGroupId??null,
         cost,paidCoins:Number((numerator+denominator-1n)/denominator),
         revision:data[offset+6],kind};
     });
@@ -746,6 +749,7 @@ export function createSpatialIntentBridge(session){
     proposalRoute,
     getDamagedWalls:()=>getDamaged('wall'),
     getDamagedCenters:()=>getDamaged('center'),
+    structureFor:id=>structuresById.get(numericId(id))??null,
     getUnprotectedCropGroups,
     findPlantingSite,releasePlantingSite,
     intentChanges,routePoints,projectRouteProgress,processEventBoundary,requestReroute,
@@ -765,6 +769,19 @@ export function createSpatialIntentBridge(session){
     sequence:()=>sequence};
 }
 
+function structureCondition(structure){
+  const hp=structure.hp,maxHp=structure.maxHp;
+  const damage=maxHp>0?Math.max(0,1-hp/maxHp):0;
+  const severity=structure.status==='ruined'?'breach':
+    structure.status==='collapsing'||damage>=.8?'critical':
+    damage>=.5?'severe':damage>=.2?'repairable':
+    damage>0?'minor':'healthy';
+  return {hp,maxHp,status:structure.status,kind:structure.kind,
+    gate:!!structure.gate,severity,
+    enclosureId:structure.defenseEnclosureId??null,
+    plannedGroupId:structure.defenseGroupId??null};
+}
+
 // Experimental action-level gate for the global worker task queue. Callers
 // deliver committed deltas at action boundaries; ordinary movement never
 // invokes the native planner. A pending physical result gets one bounded
@@ -779,8 +796,9 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     projectedPositions=new Map(),pendingAttackRoutes=new Map(),
     tacticalReconsiderations=new Set(),retreatRoutes=new Set(),
     homeRoutes=new Set(),homeAttempts=new Map(),
-    cropProtectionListeners=new Set();
+    cropProtectionListeners=new Set(),structureConditionListeners=new Set();
   let cropProtectionSnapshot=null;
+  let structureConditionSnapshot=null;
   let pendingTaskEvents=[];
   let pendingWorldEvents=[];
   let observedTaskState=null,stopTaskObserver=null,stopWorldObserver=null;
@@ -840,6 +858,8 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
       bridge.getUnprotectedCropGroups({includeProtected:true})
         .map(group=>[group.id,group]));
     else cropProtectionSnapshot=null;
+    structureConditionSnapshot=structureConditionListeners.size?
+      new Map(state.structures.map(item=>[item.id,structureCondition(item)])):null;
     return {...result,...restored,...restoredAnimals,...restoredRetreats,
       ...restoredHomes};
   };
@@ -888,6 +908,63 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     return ()=>{
       cropProtectionListeners.delete(listener);
       if(!cropProtectionListeners.size)cropProtectionSnapshot=null;
+    };
+  };
+  const publishStructureConditionChanges=events=>{
+    if(!structureConditionListeners.size)return;
+    const ids=new Set(events.filter(event=>
+      ['StructureHit','StructureRuined','RepairApplied','WallRemoved']
+        .includes(event.type)).map(event=>event.targetId));
+    for(const event of events){
+      if(event.type==='PlacementCommitted'&&
+        (event.kind==='wall'||event.kind==='center')&&
+        !ids.has(event.targetId)){
+        const entity=bridge.structureFor(event.targetId);
+        if(entity)structureConditionSnapshot.set(entity.id,structureCondition(entity));
+      }else if(event.type==='WallChainBuilt'){
+        const first=numericId(event.targetId);
+        for(let offset=0;offset<event.count;offset++){
+          const id=`structure-${first+offset}`;
+          if(ids.has(id))continue;
+          const entity=bridge.structureFor(id);
+          if(entity)structureConditionSnapshot.set(id,structureCondition(entity));
+        }
+      }
+    }
+    for(const id of [...ids].sort((a,b)=>numericId(a)-numericId(b))){
+      const before=structureConditionSnapshot.get(id)??null;
+      const current=bridge.structureFor(id);
+      const after=current?structureCondition(current):null;
+      if(!before&&!after)continue;
+      if(after)structureConditionSnapshot.set(id,after);
+      else structureConditionSnapshot.delete(id);
+      if(before?.hp===after?.hp&&before?.status===after?.status)continue;
+      const kind=!after?'removed':after.status==='ruined'&&
+        before?.status!=='ruined'?'breach':after.hp>(before?.hp??after.maxHp)?
+        'repaired':'damaged';
+      const change={type:'StructureConditionChanged',change:kind,
+        structureId:id,kind:after?.kind??before.kind,
+        gate:after?.gate??before.gate,enclosureId:after?.enclosureId??
+          before?.enclosureId??null,plannedGroupId:after?.plannedGroupId??
+          before?.plannedGroupId??null,
+        hp:after?.hp??0,maxHp:after?.maxHp??before.maxHp,
+        previousHp:before?.hp??null,status:after?.status??'removed',
+        previousStatus:before?.status??null,
+        severity:after?.severity??'breach',
+        thresholdCrossed:before?.severity!==after?.severity};
+      for(const listener of structureConditionListeners)listener(change);
+    }
+  };
+  const observeStructureCondition=listener=>{
+    if(!initialized)throw Error('Reset the native intent session before observing structures');
+    if(typeof listener!=='function')throw TypeError('Expected a structure condition listener');
+    if(!structureConditionListeners.size)structureConditionSnapshot=new Map(
+      (observedTaskState??sourceState).structures.map(item=>
+        [item.id,structureCondition(item)]));
+    structureConditionListeners.add(listener);
+    return ()=>{
+      structureConditionListeners.delete(listener);
+      if(!structureConditionListeners.size)structureConditionSnapshot=null;
     };
   };
   const applyEvents=(state,events)=>{
@@ -1118,6 +1195,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     if(topologyChanged)syncChangedPositions(true);
     const previousChanges=session.core.wasm.nav_intent_change_count();
     bridge.applyCommittedEvents(observedTaskState,events);
+    publishStructureConditionChanges(events);
     if(events.some(event=>event.type!=='StructureHit')||
       session.core.wasm.nav_intent_change_count()>previousChanges)
       pendingNativeChanges=true;
@@ -1393,7 +1471,8 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     };
   };
   return {resetFromState,applyEvents,observeTasks,observeWorld,
-    observeCropProtection,getUnprotectedCropGroups:bridge.getUnprotectedCropGroups,
+    observeCropProtection,observeStructureCondition,
+    getUnprotectedCropGroups:bridge.getUnprotectedCropGroups,
     getDamagedWalls:()=>{flushWorldEvents();return bridge.getDamagedWalls();},
     getDamagedCenters:()=>{flushWorldEvents();return bridge.getDamagedCenters();},
     findPlantingSite:(...args)=>{
