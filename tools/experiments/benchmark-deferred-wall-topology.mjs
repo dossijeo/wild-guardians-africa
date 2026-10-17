@@ -117,6 +117,38 @@ async function run(arm){
     const physicalRestored=physicalSignature();
     if(JSON.stringify(physicalRestored)!==JSON.stringify(physicalBefore))
       throw Error('Prop preview did not restore physical occupancy');
+    for(const key of Object.keys(counts)){counts[key]=0;ms[key]=0;}
+    const cluster=[...loaded.values()].flatMap(chunk=>chunk.instances.flat())
+      .filter(item=>item.id?.startsWith('spatial:')&&
+        (item.slot<4||item.slot>=10&&item.slot<=12||item.slot>=18)&&
+        Math.hypot(item.x-prop.x,item.z-prop.z)<32)
+      .slice(0,8);
+    if(cluster.length<2)throw Error('No multi-prop cluster to benchmark');
+    const clusterIds=cluster.map(item=>item.id);
+    const clusterPhysical=()=>[true,...Object.keys(ANIMAL_SPATIAL_PROFILES)]
+      .map(profile=>cluster.map(item=>session.actorCanStand({x:item.x,z:item.z},
+        profile===true?{worker:true}:{worker:false,species:profile})));
+    const clusterBefore=clusterPhysical(),clusterTimes=[];
+    const clusterSectorBefore=session.core.wasm.lazy_sector_updates();
+    let clusterSuppressed;
+    for(let i=0;i<8;i++){
+      const start=performance.now();
+      session.withWallPreview([],clusterIds,()=>{
+        if(session.core.wasm.spatial_removed_prop_count()!==cluster.length)
+          throw Error('Cluster suppression was not applied');
+        if(i===0)clusterSuppressed=clusterPhysical();
+      });
+      clusterTimes.push(performance.now()-start);
+      if(session.core.wasm.spatial_removed_prop_count()!==0)
+        throw Error('Cluster suppression leaked into confirmed state');
+    }
+    const clusterRestored=clusterPhysical();
+    if(JSON.stringify(clusterRestored)!==JSON.stringify(clusterBefore))
+      throw Error('Cluster preview did not restore physical occupancy');
+    const clusterPreview={count:cluster.length,times:clusterTimes,
+      medianMs:percentile(clusterTimes,.5),p95Ms:percentile(clusterTimes,.95),
+      sectorUpdates:session.core.wasm.lazy_sector_updates()-clusterSectorBefore,
+      counts:{...counts},ms:{...ms},clusterBefore,clusterSuppressed,clusterRestored};
     // The intervening hypothetical prop edits advance the native topology
     // revision, so acquire a fresh prepared quote before timing only commit.
     lastPlan=game.previewWallChain(state,'zarzas',stroke,nav,options);
@@ -136,6 +168,7 @@ async function run(arm){
       propPreview:{id:prop.id,times:propTimes,
         medianMs:percentile(propTimes,.5),p95Ms:percentile(propTimes,.95),
         physicalBefore,physicalSuppressed,physicalRestored,...propCounters},
+      clusterPreview,
       memoryBytes:session.core.wasm.memory.buffer.byteLength};
   }finally{session.dispose();}
 }
@@ -147,7 +180,9 @@ try{
       `${row.wallCounters.counts.path} paths, `+
       `${row.wallCounters.sectorUpdates} wall updates; `+
       `prop=${row.propPreview.medianMs.toFixed(2)} ms / `+
-      `${row.propPreview.sectorUpdates} updates`);
+      `${row.propPreview.sectorUpdates} updates; `+
+      `cluster=${row.clusterPreview.medianMs.toFixed(2)} ms / `+
+      `${row.clusterPreview.sectorUpdates} updates`);
   }
   if(rows.some(row=>row.quote.pieces!==rows[0].quote.pieces||
     row.quote.gates!==rows[0].quote.gates||row.quote.cost!==rows[0].quote.cost))
@@ -157,6 +192,9 @@ try{
   if(rows.some(row=>JSON.stringify(row.propPreview.physicalSuppressed)!==
     JSON.stringify(rows[0].propPreview.physicalSuppressed)))
     throw Error('Baseline and candidate disagree on suppressed-prop occupancy');
+  if(rows.some(row=>JSON.stringify(row.clusterPreview.clusterSuppressed)!==
+    JSON.stringify(rows[0].clusterPreview.clusterSuppressed)))
+    throw Error('Baseline and candidate disagree on clustered-prop occupancy');
   const report={kind:'ABBA',scenario:'Sabana/712, eight repeated 15-piece gate previews',
     baselineRef:baselineRef??null,stateHash,wasmSha256:hashes,stroke,rows};
   writeFileSync(reportPath,JSON.stringify(report,null,2)+'\n');

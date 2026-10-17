@@ -1099,6 +1099,45 @@ void refreshRemovedPropChunks(const Prop* changed){
   selectProfile(previous);
   if(!loadedChunks.empty())populateChunk(selectedX,selectedZ);
 }
+void refreshRemovedPropChunksBatch(const std::vector<Prop>& changed){
+  if(changed.empty())return;
+  if(changed.size()==1){refreshRemovedPropChunks(&changed.front());return;}
+  const int selectedX=chunkX,selectedZ=chunkZ,previous=activeProfile;
+  std::vector<std::pair<int,int>> affected;
+  for(const auto& [cx,cz]:loadedChunks){
+    const int firstX=cx*side-24,firstZ=cz*side-24;
+    if(std::none_of(changed.begin(),changed.end(),[&](const Prop& prop){
+      return prop.x+prop.radius+maxIndexedRadius>=firstX&&
+        prop.x-prop.radius-maxIndexedRadius<firstX+side&&
+        prop.z+prop.radius+maxIndexedRadius>=firstZ&&
+        prop.z-prop.radius-maxIndexedRadius<firstZ+side;
+    }))continue;
+    affected.emplace_back(cx,cz);
+  }
+  std::sort(affected.begin(),affected.end());
+  for(int profile=0;profile<navigationProfiles;profile++){
+    selectProfile(profile);
+    if(!navReady)continue;
+    // All removals are already committed. Rebuild each affected chunk once,
+    // then patch the union of changed footprints in its final occupancy.
+    for(const auto& [cx,cz]:affected){
+      populateChunk(cx,cz,false);
+      for(const Prop& prop:changed)patchActiveRaster(prop);
+    }
+    std::unordered_set<uint64_t> sectors;
+    for(const Prop& prop:changed){
+      const double reach=prop.radius+radiusNow+2;
+      forEachRectSector(int(std::floor(prop.x-reach)),int(std::floor(prop.z-reach)),
+        int(std::ceil(prop.x+reach)),int(std::ceil(prop.z+reach)),
+        [&](int sx,int sz){sectors.insert(chunkKey(sx,sz));});
+    }
+    std::vector<uint64_t> ordered(sectors.begin(),sectors.end());
+    std::sort(ordered.begin(),ordered.end());
+    for(uint64_t key:ordered)refreshSector(int(int32_t(key>>32)),int(int32_t(key)));
+  }
+  selectProfile(previous);
+  if(!loadedChunks.empty())populateChunk(selectedX,selectedZ);
+}
 void flushBarrierBatch(){
   const float maxRadius=maxBuiltRadius();
   const int r=int(std::ceil(maxRadius))+1,previous=activeProfile;
@@ -1387,7 +1426,7 @@ int spatial_restore_removed_props(int count){
       if(a.gx!=b.gx)return a.gx<b.gx;
       return a.gz<b.gz;
     });
-    for(const Prop& prop:changed)refreshRemovedPropChunks(&prop);
+    refreshRemovedPropChunksBatch(changed);
   }else refreshRemovedPropChunks(nullptr);
   for(const PropKey& key:restored)removedPropGeometry().erase(key);
   return 1;
