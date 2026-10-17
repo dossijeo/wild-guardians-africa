@@ -194,8 +194,7 @@ crop losses in every biome. It also retained more cash in five of six;
 Desierto is the exception because the virtual player bought substantially
 more still-incomplete wall pieces. Gran Cañón control ended in night 11, so
 its final counts have a shorter exposure horizon. All 12 raid reports are
-verified with zero technical issues. This is one seed per biome and no arm
-has demonstrated a 100-night victory. Sabana's heavy late losses and
+verified with zero technical issues. This is one seed per biome. Sabana's heavy late losses and
 Desierto's lower liquidity warn against adopting these parameters now.
 
 ## Sixty-night Sabana continuation
@@ -215,3 +214,25 @@ compressed full report (gzip SHA-256
 are retained. Crop count declined from 89 at night 30 to 46 at night 60,
 despite continued replanting. This result supports a 100-night trial but
 does not yet demonstrate victory or economic sustainability to that horizon.
+
+## First authentic 100-night victory, Sabana/712
+
+V1 pressure requested 100 nights from a fresh start on source commit
+`b8fb422336d8806c40a18217599364692f75fb0e` and completed all 100.
+The terminal event is `CampaignWon` at dawn of day 101, with 16 living crops,
+217 coins and one operational center. All 100 raid reports verified with zero
+issues and no coverage loss. The first 60 day-end state hashes match the
+separate 60-night run exactly. The final serialized-state SHA-256 is
+`3633b2484d989ae112478bf6b261c7204ba4a695f1bfb16c8cdf2b726c62784c`.
+
+There were 1,958 cumulative crop losses. The arm spent 860 coins on 86
+thorn-wall modules; cumulative Game.tick was 732.0 s and virtual-player
+decisions 273.2 s in a 1,137.2 s wall-clock run. This was a narrow victory,
+not a healthy end state: night 96 left only eight crops, and the final ten
+nights ended with 16. The [nightly ledger](current-main-v1-pressure-sabana712-100-nightly.csv)
+and compressed [full report](current-main-v1-pressure-sabana712-100.json.gz)
+preserve the trajectory and all raid receipts; report gzip SHA-256 is
+`f715dfe004d3a49fcc5d78341311e48b612fa8e175fe0466f71ac9f0f6d1b1c1`.
+One seed proves that the current engine and fixed defended bot can reach a
+real 100-night victory under this experimental military recipe. It does not
+estimate win probability or justify changing the production balance yet.
