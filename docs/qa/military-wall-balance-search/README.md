@@ -503,3 +503,26 @@ raid and input hash. The ledger also contains per-night `Game.tick` and bot
 decision time. Those wall times were measured with the three CPU-heavy runs
 concurrent and with different campaign trajectories; they are evidence of
 computational cost, not an isolated speed comparison between wall specs.
+
+## Held-out Gran Cañón/123: 30-night single-lever check
+
+The V1 pressure candidate and established expanding `good` bot were held
+fixed on source `243c4452`; only the thorn-wall price or durability changed.
+Each arm completed 30 real nights with verified raid evidence and zero
+issues. This seed was not used for the Desierto/712 cost comparison above.
+
+| Thorn specification | Living crops | Coins | Raid crop losses, nights 6–30 | Animals | Wall purchases | Repairs |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Standard: 10 coins, 100 HP, gate 60 HP | 74 | 510 | 174 | 226 | 790 | 616 |
+| Price only: 8 coins, 100 HP, gate 60 HP | 104 | 823 | 63 | 247 | 704 | 323 |
+| Durability only: 10 coins, 120 HP, gate 90 HP | 66 | 955 | 124 | 229 | 790 | 612 |
+
+The price-only arm finished with more crops and cash than the other two
+despite facing more animals; it also spent less on repairs. The durability
+arm retained the most cash but fewer crops than standard. Farm growth changed
+the later raid sizes, so these are complete policy outcomes rather than
+equal-workload estimates of wall efficiency. The distinct Desierto/712 result
+also prevents recommending a production price change from these two seeds.
+The full reports are [standard](heldout-standard-gran-canon123-30.json.gz),
+[price only](heldout-cheap-gran-canon123-30.json.gz) and
+[durability only](heldout-tough-gran-canon123-30.json.gz).
