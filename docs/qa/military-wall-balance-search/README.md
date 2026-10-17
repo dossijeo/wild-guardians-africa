@@ -144,7 +144,7 @@ rates. Both arms used the same expanding defense policy; this comparison
 does not evaluate the opt-in topological planner. Report gzip SHA-256:
 `6081e15f8c4c273aa377fc763ea756436c67ef866e31b61a394aad81728cbcf0`
 (control), `bb44825495d9802029596d24ae7f50ebac414ea01b3ede230156065285801ec8`
-(V1). Gran Río, Volcanes and later horizons remain untested here.
+(V1). Later horizons remain untested in this biome.
 
 ## Desierto seed 712: economic warning
 
@@ -163,3 +163,37 @@ are retained; gzip SHA-256 values are
 `1cde26a26cd1097b975328430d991479f1aa8184bd75e6bd8d5233e79c4b1819`
 (control) and `cb3d2c0e041fa86ccc18ebfb5deea1fdcff40e770e298e9e6240bec89df59d62`
 (V1). This result prevents a blanket claim that V1 is economically better.
+
+## Gran Río seed 712
+
+Both arms completed 14 nights with the same 86 paid wall modules and verified
+raid reports. The control retained 20 crops and 299 coins after 206 crop
+losses; V1 retained 150 crops and 1,203 coins after 52 losses. The
+[nightly ledger](current-main-gran-rio712-14-nightly.csv) shows the progression.
+Report gzip SHA-256: `d40657cf5284d49517bd9495c37ebd6ce535c89acab35dfaf919c87b3e968ddf`
+(control), `c0a64355761f56b83d754e258778a668afffb5fb0deef93af01bef143c0e3f78`
+(V1). These simultaneous runs are functional balance comparisons; their
+wall-clock timings are not used to claim an engine speedup because the
+processes shared CPU resources.
+
+## Volcanes seed 712 and six-biome view
+
+The final 14-night pair also completed with verified raids and no technical
+issues. Volcanes control ended with 28 crops, 596 coins and 180 crop losses;
+V1 ended with 150 crops, 1,136 coins and 58 losses. Both paid for 86 wall
+modules. The [nightly ledger](current-main-volcanes712-14-nightly.csv) and
+full reports have gzip SHA-256 values
+`850eec02d1af9e21c87d6b51f4563d493f8cf5a1ae411eddb4974bff8805fac8`
+(control) and `d6febe4928f4a06ad0b3c8bdae328c43356218e869ab0f3028a4d32d79282a04`
+(V1). These processes also ran simultaneously, so their wall-clock times are
+not compared.
+
+The [six-biome summary](current-main-six-biomes-712-summary.csv) collects the
+12 real 14-night requests at seed 712. V1 retained more crops and reduced
+crop losses in every biome. It also retained more cash in five of six;
+Desierto is the exception because the virtual player bought substantially
+more still-incomplete wall pieces. Gran Cañón control ended in night 11, so
+its final counts have a shorter exposure horizon. All 12 raid reports are
+verified with zero technical issues. This is one seed per biome and no arm
+has demonstrated a 100-night victory. The V1 30-night Sabana run's rising
+losses remain the main warning against adopting these parameters now.
