@@ -548,6 +548,33 @@ report](current-main-repair-v1-topological-gran-canon712-60.json.gz) retains
 the per-night economy, decisions, raids, hashes and timings.
 
 This is one seed and biome under experimental V1 pressure. It does not rank
-wall-cost candidates or establish a general survival probability. The next
-step is a 100-night continuation from the same frozen inputs, followed by
-cross-biome and held-out-seed comparisons before any balance integration.
+wall-cost candidates or establish a general survival probability. Its
+100-night continuation is recorded below.
+
+## Same-input 100-night attempt: economic defeat after night 82
+
+The 100-night request used the same Gran Cañón/712, V1 pressure, standard
+walls and topological maintenance policy. Its first 60 nightly serialized
+state hashes exactly match the archived 60-night report. It ended in an
+authentic economic defeat after night 82, with zero living crops, 22 coins,
+one operational center and one worker. It did not reach night 100. All 82
+raids have verified physical evidence with zero issues and no coverage loss;
+this result is not a navigation stop.
+
+| Nights | Crops at end | Cash at end | Raid crop losses | Animals | Income | Wages | Seeds | Repairs |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 6–30 | 55 | 950 | 33 | 240 | 15,882 | 6,868 | 7,223 | 1,200 |
+| 31–60 | 49 | 636 | 6 | 354 | 16,739 | 7,985 | 6,243 | 2,685 |
+| 61–70 | 29 | 202 | 63 | 105 | 3,944 | 2,010 | 1,620 | 668 |
+| 71–82 | 0 | 22 | 49 | 109 | 2,214 | 1,002 | 835 | 437 |
+
+The decisive decline starts after night 60: 112 crops were destroyed in raids
+over nights 61–82, versus six over nights 31–60. Income and workforce then
+contracted. The bot continued to repair, but by night 82 a proposed
+11-module enclosure cost 110 coins and it was saving for a complete purchase
+with only 22 coins left. This is an observed economic and military feedback
+loop; the report does not isolate whether changing wall prices, pressure, or
+the bot's allocation would prevent it. The compressed [full
+report](current-main-repair-v1-topological-gran-canon712-100.json.gz)
+contains every nightly state hash, decision, raid receipt and timing. Further
+held-out seeds and biomes are required before any balance recommendation.
