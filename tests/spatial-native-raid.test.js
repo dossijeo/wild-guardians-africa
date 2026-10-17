@@ -9,7 +9,9 @@ import {nativeCameraPose} from '../src/rendering/terrain-camera.js';
 import {activeChunkRegion} from '../src/world/active-region.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {villageLayout} from '../src/world/villages.js';
-import {spawnRaid,targetFor} from '../src/simulation/raids.js';
+import {spawnRaid,targetFor,chooseRaidEntry} from '../src/simulation/raids.js';
+import {animalSpec,randomInt} from '../src/simulation/rules.js';
+import {ANIMAL_ACTIONS} from '../src/simulation/animal-actions-data.js';
 import * as Game from '../src/simulation/game.js';
 import {syncNativeCampaignRaidView} from '../tools/native-campaign-runner.mjs';
 import {simulateNativeCampaign} from '../tools/native-campaign-runner.mjs';
@@ -46,6 +48,44 @@ test('a native raid approaches an active shield border before waiting on its old
   assert.equal(raid.cropsDestroyed,0);
 });
 
+test('frozen canyon day-nine cohort becomes enterable when the camera region is resident',()=>{
+  const root=new URL('../docs/qa/enclosure-balance-comparison/',import.meta.url);
+  const state=deserialize(gunzipSync(readFileSync(new URL(
+    'day9-partial-state.json.gz',root))).toString());
+  const receipt=JSON.parse(gunzipSync(readFileSync(new URL(
+    'day9-navdebug.json.gz',root))));
+  const narrow=receipt.arms[0].partial.navigation.bounds;
+  const loaded=new Map(),session=createSpatialGameSession(module,state,{
+    loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+  try{
+    const nav=createSpatialNavigationMovement(session,state);
+    const context=syncNativeCampaignRaidView(state,nav,null);
+    const load=bounds=>{
+      for(let z=Math.floor((bounds[1]+24)/48);
+        z<=Math.floor((bounds[3]+23.999)/48);z++)
+        for(let x=Math.floor((bounds[0]+24)/48);
+          x<=Math.floor((bounds[2]+23.999)/48);x++){
+          if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+          loaded.set(`${x},${z}`,session.core.chunkPayload());
+        }
+    };
+    const group=state.nightPlan.group,specs=group.map(id=>({
+      spec:animalSpec(id),
+      radius:ANIMAL_ACTIONS.animals[id].presentation.footprint.radius}));
+    const side=randomInt({rng:state.rng},0,3),before=serialize(state);
+    load(narrow);nav.setActiveBounds(narrow);
+    assert.equal(loaded.size,9);
+    assert.equal(chooseRaidEntry(state,specs,narrow,side,nav),null);
+    syncNativeCampaignRaidView(state,nav,context);
+    assert.deepEqual(nav.activeBounds,context.bounds);
+    load(context.bounds);
+    assert.equal(loaded.size,25);
+    const entry=chooseRaidEntry(state,specs,context.bounds,side,nav);
+    assert.equal(entry?.entries.length,14);
+    assert.equal(serialize(state),before);
+  }finally{session.dispose();}
+});
+
 test('Volcanes day-10 raid uses the replacement center for the headless camera',()=>{
   const artifact=JSON.parse(gunzipSync(readFileSync(new URL(
     './fixtures/volcanes-907-day10-native-entry.json.gz',import.meta.url))));
@@ -66,6 +106,12 @@ test('Volcanes day-10 raid uses the replacement center for the headless camera',
     const nav=createSpatialNavigationMovement(session,state);
     const currentCenter=syncNativeCampaignRaidView(state,nav,null);
     assert.equal(currentCenter.key,`${center.id}:83:0`);
+    const cameraBounds=[...nav.activeBounds];
+    nav.setActiveBounds([cameraBounds[0]+48,cameraBounds[1]+48,
+      cameraBounds[2]-48,cameraBounds[3]-48]);
+    syncNativeCampaignRaidView(state,nav,currentCenter);
+    assert.deepEqual(nav.activeBounds,cameraBounds,
+      'An already-correct raid view must still widen an undersized resident region');
     // Plot search can focus a previously explored parcel without replacing
     // the operational center. Use its real focus path to overwrite raidView.
     const placement=nav.placement,path=nav.path;

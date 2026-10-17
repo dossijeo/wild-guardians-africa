@@ -17,7 +17,7 @@ export class RaidEntryPreparer {
   receive(data){
     if(this.disposed||data.token!==this.pending?.token)return;
     this.pending=null;
-    if(data.error){this.disable();return;}
+    if(data.error){this.cooperativeError=data.error;this.disable();return;}
     const plan=activeRaidEntryPlan(this.state);
     if(data.key!==raidEntryKey(this.state,this.nav,plan?.group)){this.stats.obsolete++;return;}
     this.ready=data;this.nav.pendingRaidEntry=data.entry?{entry:data.entry,radii:plan.group.map(id=>ANIMAL_ACTIONS.animals[id].presentation.footprint.radius),contextKey:raidEntryContextKey(this.state,this.nav,plan.group)}:null;this.stats.accepted++;
