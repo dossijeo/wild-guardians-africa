@@ -20,6 +20,20 @@ test('an animal cannot hit a crop through a wall seam narrower than its body',()
  assert.equal(agriculturalRayClear(s,nav,target,s.plants[1],a.radius),true,
   'the formerly protected crop becomes exposed when the barrier is ruined');
 });
+test('a wall-to-building seam narrower than the animal blocks crop splash',()=>{
+ const {s,nav,a,target}=scene([[40,0],[40,2]]);
+ s.structures.push({id:'left-wall',kind:'wall',x:38.98,z:1,yaw:0,material:'zarzas',
+  baseScaleX:1.96/2.18,hp:100,maxHp:100,status:'intact'});
+ s.villages.push({id:'seam-village',x:60,z:0,buildings:[{key:'seam-house',kind:'Edificio',x:41.02,z:1,
+  footprint:[{x:40.04,z:.78},{x:42,z:.78},{x:42,z:1.22},{x:40.04,z:1.22}]}]});
+ nav.setState(s);
+ assert.equal(agriculturalRayClear(s,nav,target,s.plants[1]),true,'the thin ray passes through the seam');
+ assert.equal(agriculturalRayClear(s,nav,target,s.plants[1],a.radius),false);
+ assert.deepEqual(resolveAgriculturalImpact(s,a,target,nav).hits.map(h=>h.targetId),['p0']);
+ s.structures.at(-1).status='ruined';nav.setState(s);
+ assert.equal(agriculturalRayClear(s,nav,target,s.plants[1],a.radius),true,
+  'the building does not keep an already ruined wall opaque');
+});
 test('a wide wall opening remains attackable for an animal that can fit through it',()=>{
  const {s,nav,a,target}=scene([[40,0],[40,2]]);
  const piece=(id,x)=>({id,kind:'wall',x,z:1,yaw:0,material:'zarzas',
