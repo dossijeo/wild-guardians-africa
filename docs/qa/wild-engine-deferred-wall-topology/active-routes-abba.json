@@ -1,6 +1,7 @@
 {
   "kind": "ABBA",
-  "scenario": "Desert/983, 20 valid retained worker routes after a legal remote 20-wall transaction",
+  "scenario": "Desert/983, 20 valid retained worker routes after a legal remote 20-wall transaction (walkTo)",
+  "tickMode": false,
   "baselineRef": "415c23a5",
   "sourceSha256": {
     "baseline": "4bf135d2a743216077469e92e2cbbd9c424696d634587cfacabf89b830ec6e56",
@@ -8,13 +9,13 @@
   },
   "wasmSha256": "fd4aec8e44b9d0632d7192db71b2b1a799cc2ad3e2c69bea462311ee968c40f3",
   "medianByArm": {
-    "baseline": 1.0072999999993044,
-    "candidate": 0.7010999999997694
+    "baseline": 1.4727999999995518,
+    "candidate": 0.4535000000000764
   },
   "rows": [
     {
       "arm": "baseline",
-      "ms": 1.4729999999999563,
+      "ms": 1.5593999999998687,
       "paths": 20,
       "segments": 0,
       "refreshes": 20,
@@ -127,7 +128,7 @@
     },
     {
       "arm": "candidate",
-      "ms": 1.1714999999999236,
+      "ms": 1.4905000000003383,
       "paths": 0,
       "segments": 0,
       "refreshes": 0,
@@ -240,7 +241,7 @@
     },
     {
       "arm": "candidate",
-      "ms": 0.7010999999997694,
+      "ms": 0.4535000000000764,
       "paths": 0,
       "segments": 0,
       "refreshes": 0,
@@ -353,7 +354,7 @@
     },
     {
       "arm": "baseline",
-      "ms": 1.0072999999993044,
+      "ms": 1.4727999999995518,
       "paths": 20,
       "segments": 0,
       "refreshes": 20,

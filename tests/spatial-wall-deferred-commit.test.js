@@ -6,6 +6,7 @@ import {rational} from '../src/simulation/money.js';
 import {centerServicePoint} from '../src/world/centers.js';
 import {wallCollisionBounds} from '../src/world/wall-collision-frame.js';
 import {createSpatialCampaignOpening} from '../tools/experiments/spatial-campaign-opening.mjs';
+import {createSpatialWallMirror} from '../src/world/hierarchical-wasm/spatial-wall-mirror.js';
 import {clearNavigation} from './clear-navigation.js';
 
 test('a topological revision retains a physically clear active route',()=>{
@@ -71,6 +72,19 @@ test('a restored route from another session cannot use this wall journal',()=>{
   Game.walkTo(state,actor,destination,.1,nav);
   assert.equal(certificates,0,'foreign routes have no trusted dependency stamp');
   assert.equal(routes,1,'a new session must establish its own physical route');
+});
+
+test('an expired wall-change history cannot certify an old route',()=>{
+  let nextId=1;
+  const core={applyBarrierChanges:(_removed,added)=>added.map(()=>nextId++)};
+  const mirror=createSpatialWallMirror(core);
+  const far=[{x:0,z:100},{x:10,z:100}];
+  for(let i=0;i<65;i++)mirror.sync([{id:'wall-1',kind:'wall',
+    material:'zarzas',status:'intact',x:i*3,z:0,yaw:0,baseScaleX:1}]);
+  assert.equal(mirror.routeUnaffectedSince(0,far,.28),false);
+  assert.equal(mirror.routeUnaffectedSince(64,far,.28),true);
+  assert.equal(mirror.routeUnaffectedSince(64,
+    [{x:191,z:0},{x:193,z:0}],.28),false);
 });
 
 test('a paid 20-wall transaction changes topology without planning actor routes',async()=>{

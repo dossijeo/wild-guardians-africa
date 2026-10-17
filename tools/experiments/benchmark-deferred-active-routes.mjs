@@ -7,6 +7,7 @@ import {createSpatialCampaignOpening} from './spatial-campaign-opening.mjs';
 import * as currentGame from '../../src/simulation/game.js';
 
 const [reportPath,baselineRef]=process.argv.slice(2);
+const tickMode=process.env.WALL_BENCH_TICK==='1';
 if(!reportPath||!baselineRef)throw Error(
   'Usage: node benchmark-deferred-active-routes.mjs report.json baseline-git-ref');
 const source=execFileSync('git',['show',`${baselineRef}:src/simulation/game.js`],
@@ -30,7 +31,8 @@ async function run(arm){
     state.ledger.balance=rational(10000);
     const center=start.site.center,village=state.villages[0];
     nav.setActiveBounds([center.x-96,center.z-96,center.x+96,center.z+96]);
-    const destination={id:'return-home',...(village.entry??village)};
+    const destination={...(village.entry??village),id:`home-${village.id}`};
+    const workCenter=state.structures.find(item=>item.kind==='center');
     const workers=[];
     for(let dz=-18;dz<=18&&workers.length<20;dz+=3)
       for(let dx=-18;dx<=18&&workers.length<20;dx+=3){
@@ -40,7 +42,9 @@ async function run(arm){
         try{path=nav.path(from,destination,.28,null,true);}
         catch(error){if(error.name==='SpatialChunkUnavailable')continue;throw error;}
         if(!path?.length)continue;
-        workers.push({id:`worker-${workers.length}`,x:from.x,z:from.z,
+        workers.push({id:`worker-${workers.length}`,personId:`person-${workers.length}`,
+          profile:'olderFemale',contractDay:state.day,centerId:workCenter.id,
+          villageId:village.id,x:from.x,z:from.z,
           radius:.28,status:'returning',path,destinationId:destination.id,
           pathVersion:nav.version});
       }
@@ -69,7 +73,8 @@ async function run(arm){
     nav.segmentClear=(...args)=>{segments++;return originalSegment(...args);};
     nav.planningObserver=event=>{if(event.kind==='routeRefresh')refreshes++;};
     const started=performance.now();
-    for(const worker of workers)game.walkTo(state,worker,destination,.05,nav);
+    if(tickMode)game.tick(state,.05,nav);
+    else for(const worker of workers)game.walkTo(state,worker,destination,.05,nav);
     const ms=performance.now()-started;
     return {arm,ms,paths,segments,refreshes,version:nav.version,
       positions:workers.map(worker=>[worker.x,worker.z]),
@@ -87,7 +92,8 @@ try{
   if(rows.some(row=>JSON.stringify(row.positions)!==JSON.stringify(rows[0].positions)))
     throw Error('The actors moved to different positions in equivalent work');
   writeFileSync(reportPath,JSON.stringify({kind:'ABBA',scenario:'Desert/983, 20 valid retained '+
-    'worker routes after a legal remote 20-wall transaction',baselineRef,
+    `worker routes after a legal remote 20-wall transaction (${tickMode?'Game.tick':'walkTo'})`,
+    tickMode,baselineRef,
     sourceSha256:{baseline:sha(source),candidate:sha(readFileSync(new URL(
       '../../src/simulation/game.js',import.meta.url)))},
     wasmSha256:sha(readFileSync(new URL('../../src/world/hierarchical-wasm/spatial-savanna.wasm',
