@@ -110,6 +110,17 @@ queries. At the 646.7 ms peak tick, native batch planning took 643 ms. This
 does **not** yet attribute that time to a particular C++ route operation;
 `nav_intent_plan_tasks()` may evaluate multiple service points for each task.
 
+The native exact-coordinate route cache reported 243 misses and zero hits in
+this window: workers move between planning requests. A small prototype
+precomputed the physical validity of start and destination grid connectors
+once per route instead of repeating the destination checks for each start
+connector. With unchanged active-state hashes and 243 misses in every arm,
+B/A/A/B `Game.tick` times were 3,244.7 / 3,229.4 / 3,108.4 / 3,045.7 ms
+(B = prototype). The medians differ by less than 1%, with order noise larger
+than the apparent gain. The prototype was discarded. This supports focusing
+on the repeated graph searches across connector and service-point alternatives,
+not polishing inexpensive connector predicates.
+
 ## VFX check
 
 The native campaign runner does not create a Three.js renderer, so its `Game.tick` delays cannot be caused by GPU draw calls or scene objects. `AgricultureVfx.update()` removes expired effects, and `NativeVfx.dispose()` detaches the group and disposes its geometry and materials. A regression test creates 48 simultaneous agricultural spell effects and verifies that the manager, library, and scene return to zero instances after expiry. Each effect already uses instanced sprite and rigid geometry. Batching **across separate spells** is a distinct render optimization; it needs frame-time and draw-call measurement in the interactive client before changing shaders and effect timing.

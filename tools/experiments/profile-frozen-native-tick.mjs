@@ -51,6 +51,8 @@ try{
       console.log(JSON.stringify({second,day:state.day,time:state.time,ms,pruneHistory,
         workers:state.workers.length,plants:state.plants.length,crates:state.crates.length,animals:state.raid?.animals.length??0,
         taskQueries:metrics.nativeTaskRouteQueries,planningCalls:metrics.nativePlanningCalls,
+        routeCacheHits:Number(session.core.wasm.spatial_route_cache_hits()),
+        routeCacheMisses:Number(session.core.wasm.spatial_route_cache_misses()),
         timingMs:{...timing}}));
     }
     const active={day:state.day,time:state.time,elapsed:state.elapsed,nextId:state.nextId,
