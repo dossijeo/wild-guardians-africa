@@ -1,12 +1,14 @@
 import {createHash} from 'node:crypto';
 import {readFileSync,writeFileSync} from 'node:fs';
+import {gzipSync} from 'node:zlib';
 import {simulateNativeCampaign} from '../native-campaign-runner.mjs';
 import {createSpatialCampaignOpening} from './spatial-campaign-opening.mjs';
 
-const [biome='gran-canon',daysText='14',seedText='712',output]=
+const [biome='gran-canon',daysText='14',seedText='712',output,only]=
   process.argv.slice(2);
 const days=Number(daysText),seed=Number(seedText);
 if(!Number.isInteger(days)||days<6||days>100||!Number.isInteger(seed)||
+  (only&&only!=='expanding'&&only!=='topological')||
   !output)throw TypeError('Usage: compare-enclosure-defense-campaigns.mjs BIOME DAYS SEED OUTPUT');
 const sha256=bytes=>createHash('sha256').update(bytes).digest('hex');
 const wasmPath=process.env.WILD_ENGINE_SPATIAL_SERVICES_WASM??
@@ -14,7 +16,7 @@ const wasmPath=process.env.WILD_ENGINE_SPATIAL_SERVICES_WASM??
 const evidence={biome,days,seed,
   sourceSha256:sha256(readFileSync(new URL('../native-campaign-runner.mjs',
     import.meta.url))),wasmSha256:sha256(readFileSync(wasmPath)),arms:[]};
-for(const defensePolicy of ['expanding','topological']){
+for(const defensePolicy of only?[only]:['expanding','topological']){
   const started=performance.now(),rows=[];
   try{
     const report=await simulateNativeCampaign({days,seed,biome,
@@ -42,11 +44,17 @@ for(const defensePolicy of ['expanding','topological']){
       raidEvidenceIssues:report.raidEvidence?.issues});
   }catch(error){
     const partial=error.nativeCampaignPartial;
+    const partialStatePath=partial?.state?
+      `${output}.${defensePolicy}.partial-state.json.gz`:null;
+    if(partialStatePath)writeFileSync(partialStatePath,
+      gzipSync(Buffer.from(partial.state)));
     evidence.arms.push({defensePolicy,status:'error',
       elapsedMs:performance.now()-started,message:error.message,stack:error.stack,
       rows,partial:partial?{day:partial.day,time:partial.time,
         result:partial.result,entryTransport:partial.entryTransport,
-        completedDailyRows:partial.receipts?.daily?.length}:null});
+        completedDailyRows:partial.receipts?.daily?.length,
+        stateSha256:partial.state?sha256(partial.state):null,
+        partialStatePath}:null});
   }
   writeFileSync(output,JSON.stringify(evidence,null,2)+'\n');
 }
