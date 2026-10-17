@@ -20,6 +20,7 @@ import {cancelIdle} from './idle.js';
 import {releaseTask,replaceTasks,notifyWorkerPlanningChange} from './tasks.js';
 import {rational,compare} from './money.js';
 import {updateWorkerEncounters} from './encounters.js';
+import {animalExitConnector} from './animal-exit-connectors.js';
 import {ANIMAL_ACTIONS} from './animal-actions-data.js';
 import {actorBlockers,actorSegmentClear} from './actor-motion.js';
 import {activeChunkRegion,validActiveBounds} from '../world/active-region.js';
@@ -400,6 +401,14 @@ function requestUnknownRaidTerrain(nav,error,start,end,radius){
   for(const {cx,cz} of error.missing??[])
     nav.requestRaidFrontier?.({x:cx*48,z:cz*48});
   nav.requestRaidConnectivity?.(start,end,radius);
+}
+function finishUnknownRetreat(s,a,nav,reason){
+  emit(s,'AnimalRetreatExitAbandoned',{actorId:a.id,x:a.x,z:a.z,
+    elapsed:s.elapsed,reason,hitsRemaining:a.hitsRemaining??0,
+    seconds:s.elapsed-(a.retreatRouteUnknown?.since??s.elapsed)});
+  a.status='gone';a.path=null;
+  delete a.retreatRouteUnknown;delete a.exitConnectorSearch;
+  nav.intentTaskPlanner?.finishRetreatIntent?.(a.id);
 }
 export function reachableApproach(a,target,nav,shield=null,onUnknown=null,regionDecision=null){
   const focus=shield??target,r=shield?shield.radius+a.radius+.1:(target.kind==='wall'?1.2:.6)+a.radius;
@@ -823,8 +832,26 @@ export function updateRaid(s,dt,nav) {
     if(a.status==='retreating') {
       const native=nav.intentTaskPlanner?.retreatRouteActive?.(a.id)??false;
       const exit={...(a.exit??a.spawn),id:`exit-${a.id}`};
-      if(a.retreatRouteUnknown&&s.elapsed<a.retreatRouteUnknown.retryAt&&
-        nav.version===a.retreatRouteUnknown.topology)continue;
+      const pending=a.retreatRouteUnknown,
+        sectors=nav.spatialSectorRevision?.(a.radius,false)??0;
+      if(pending&&s.elapsed<pending.retryAt&&
+        nav.version===pending.topology&&sectors===pending.sectors){
+        if(pending.physicalFallback){
+          const route=animalExitConnector(a,exit,nav);
+          if(route){
+            a.path=route;a.destinationId=exit.id;a.pathVersion=nav.version;
+            delete a.retreatRouteUnknown;
+          }else{
+            if(a.exitConnectorSearch?.exhausted&&s.elapsed-pending.since>=90)
+              finishUnknownRetreat(s,a,nav,'unknown-route-bounded-search-exhausted');
+            continue;
+          }
+        }else{
+          if(s.elapsed-pending.since>=1500)
+            finishUnknownRetreat(s,a,nav,'unknown-residency-timeout');
+          continue;
+        }
+      }
       try{
         if(walkTo(s,a,exit,dt,nav,
           {speed:3.8,worker:false,expandRoute:true,routeVia:a.spawn,
@@ -837,7 +864,15 @@ export function updateRaid(s,dt,nav) {
         // Missing terrain is pending, not a blocked exit. Ask the existing
         // raid residency service to load it before retrying the same retreat.
         requestUnknownRaidTerrain(nav,error,a,exit,a.radius);
-        a.retreatRouteUnknown={retryAt:s.elapsed+1,topology:nav.version};
+        const previous=a.retreatRouteUnknown,
+          stable=previous?.topology===nav.version&&previous.sectors===sectors;
+        if(!stable)delete a.exitConnectorSearch;
+        const physicalFallback=!error.missing?.length&&
+          error.details?.routeReason==='native-graph'&&
+          error.details?.startRegions?.unknown===false&&
+          error.details?.endRegions?.unknown===false;
+        a.retreatRouteUnknown={retryAt:s.elapsed+1,topology:nav.version,
+          sectors,since:stable?previous.since:s.elapsed,physicalFallback};
       }
       continue;
     }
