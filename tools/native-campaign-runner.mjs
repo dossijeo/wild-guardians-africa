@@ -8,6 +8,7 @@ import {cropSpec,permission,operational} from '../src/simulation/rules.js';
 import {numberOf} from '../src/simulation/money.js';
 import {PROFILES,hiringCost} from '../src/simulation/workforce.js';
 import {isMature} from '../src/simulation/crops.js';
+import {activeCrops} from '../src/simulation/active-crops.js';
 import {activeChunkRegion} from '../src/world/active-region.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {nativeCameraPose} from '../src/rendering/terrain-camera.js';
@@ -122,8 +123,12 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
  const labourReserve=(additional=0)=>q4?q4RecoveryReserve(s,worker.wage):policy.cashPolicy==='progressive-village'?Math.max(nextWages,Math.ceil((s.plants.filter(p=>p.alive).length+additional)/plantsPerWorker)*worker.wage):nextWages;
  const maintenanceReserve=()=>policy.repair?s.tasks.filter(t=>t.kind==='repair').reduce((n,t)=>{const c=s.structures.find(c=>c.id===t.targetId);return n+(c?Math.ceil(numberOf(Game.repairCost(c))):0);},0):0;
  const savingsReserve=(additional=0)=>Math.min(villageSavingsFromTotals(policy,settledDeliveryIncome,expansion?.paidVillageCoins()??0),Math.max(0,numberOf(s.ledger.balance)-labourReserve(additional)-maintenanceReserve()-cropSpec(nextSpecies()).plant_cost));
+ // After a military wipeout, rebuild one worker's productive stock before
+ // reserving cash for optional repairs, defenses, or village expansion.
+ const recoveringCrops=()=>s.day>=6&&activeCrops(s.plants).length<plantsPerWorker;
  const plant=()=>{
-  const species=nextSpecies();if(numberOf(s.ledger.balance)<labourReserve(1)+maintenanceReserve()+(defense?.reserve(s)??0)+savingsReserve(1)+cropSpec(species).plant_cost)return false;
+  const species=nextSpecies(),discretionaryReserve=recoveringCrops()?0:maintenanceReserve()+(defense?.reserve(s)??0)+savingsReserve(1);
+  if(numberOf(s.ledger.balance)<labourReserve(1)+discretionaryReserve+cropSpec(species).plant_cost)return false;
   const p=choosePlot();if(!p)return false;
   let planted=false;
   try{planted=Game.plant(s,command('plant'),species,p.x,p.z,nav);}
@@ -171,7 +176,10 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
     }
    }
   }
-  // Request repairs before reinvesting, preserving their real FIFO position.
+  let recoveryPlanted=false;
+  if(recoveringCrops()&&s.time<worker.end-20&&plant()){actions++;recoveryPlanted=true;}
+  // Ordinarily request repairs before reinvesting; recovery seeding above takes
+  // precedence when too few crops remain to support one worker.
   const damagedCenters=policy.repair?(advice?advice.getDamagedCenters()
    .sort((a,b)=>Number(a.id.split('-').at(-1))-Number(b.id.split('-').at(-1)))
    .map(item=>s.structures.find(center=>center.id===item.id)).filter(operational):
@@ -188,7 +196,7 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
    const point=bestMagicPoint(kind,eligible);if(point&&cast(kind,point))actions++;
   }
   // Replant as money arrives. No fixed plot or plant-count limit.
-  if(s.time<worker.end-20){if(burstPlanting){while(plant())actions++;}else if(plant())actions++;}
+  if(s.time<worker.end-20&&!recoveryPlanted){if(burstPlanting){while(plant())actions++;}else if(plant())actions++;}
   return {actions,reason:actions?'active':s.time>=worker.end-20?'shift-end':plotSearch.reason()==='space'?'space':plotSearch.reason()==='searching'?'navigation':'budget'};
  };
  // The mandatory first seed opens hiring normally. Staff is paid immediately.
