@@ -10,6 +10,9 @@ import {villageLayout} from '../../src/world/villages.js';
 import * as Game from '../../src/simulation/game.js';
 
 const [baselinePath,candidatePath,reportPath,baselineRef]=process.argv.slice(2);
+const clusterCount=Number(process.env.PROP_CLUSTER_COUNT??8);
+if(!Number.isInteger(clusterCount)||clusterCount<2||clusterCount>64)
+  throw Error('PROP_CLUSTER_COUNT must be an integer from 2 to 64');
 if(!baselinePath||!candidatePath||!reportPath)throw Error(
   'Usage: node benchmark-deferred-wall-topology.mjs baseline.wasm candidate.wasm report.json [baseline-git-ref]');
 const baselineSource=baselineRef?execFileSync('git',['show',
@@ -118,12 +121,14 @@ async function run(arm){
     if(JSON.stringify(physicalRestored)!==JSON.stringify(physicalBefore))
       throw Error('Prop preview did not restore physical occupancy');
     for(const key of Object.keys(counts)){counts[key]=0;ms[key]=0;}
-    const cluster=[...loaded.values()].flatMap(chunk=>chunk.instances.flat())
-      .filter(item=>item.id?.startsWith('spatial:')&&
-        (item.slot<4||item.slot>=10&&item.slot<=12||item.slot>=18)&&
-        Math.hypot(item.x-prop.x,item.z-prop.z)<32)
-      .slice(0,8);
-    if(cluster.length<2)throw Error('No multi-prop cluster to benchmark');
+    const eligible=[...loaded.values()].flatMap(chunk=>chunk.instances.flat())
+      .filter(item=>/^spatial:[0-5]:/.test(item.id)&&
+        (item.slot<4||item.slot>=10&&item.slot<=12||item.slot>=18));
+    const cluster=clusterCount===8?
+      eligible.filter(item=>Math.hypot(item.x-prop.x,item.z-prop.z)<32).slice(0,8):
+      eligible.sort((a,b)=>Math.hypot(a.x-prop.x,a.z-prop.z)-
+        Math.hypot(b.x-prop.x,b.z-prop.z)).slice(0,clusterCount);
+    if(cluster.length<clusterCount)throw Error('Not enough solid props to benchmark');
     const clusterIds=cluster.map(item=>item.id);
     const clusterPhysical=()=>[true,...Object.keys(ANIMAL_SPATIAL_PROFILES)]
       .map(profile=>cluster.map(item=>session.actorCanStand({x:item.x,z:item.z},
@@ -196,6 +201,6 @@ try{
     JSON.stringify(rows[0].clusterPreview.clusterSuppressed)))
     throw Error('Baseline and candidate disagree on clustered-prop occupancy');
   const report={kind:'ABBA',scenario:'Sabana/712, eight repeated 15-piece gate previews',
-    baselineRef:baselineRef??null,stateHash,wasmSha256:hashes,stroke,rows};
+    clusterCount,baselineRef:baselineRef??null,stateHash,wasmSha256:hashes,stroke,rows};
   writeFileSync(reportPath,JSON.stringify(report,null,2)+'\n');
 }finally{if(baselineSource)unlinkSync(baselineModuleUrl);}

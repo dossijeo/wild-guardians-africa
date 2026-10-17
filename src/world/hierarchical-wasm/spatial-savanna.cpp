@@ -1420,7 +1420,7 @@ int spatial_restore_removed_props(int count){
     restored.push_back(key);
   }
   removedProps().swap(replacement);
-  if(local&&changed.size()<=16){
+  if(local&&changed.size()<=64){
     std::sort(changed.begin(),changed.end(),[](const Prop& a,const Prop& b){
       if(a.group!=b.group)return a.group<b.group;
       if(a.gx!=b.gx)return a.gx<b.gx;
