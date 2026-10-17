@@ -608,3 +608,42 @@ a minimal farm. One victory and one defeat do not establish a win rate or
 justify changing production pressure, wall prices or damage. They do show
 that the event-driven repair integration survives a complete campaign and
 that V1 balance still needs cross-biome and multi-seed evaluation.
+
+## Cross-biome topological maintenance: Sabana/712
+
+The same V1 candidate and standard walls were requested for 100 nights with
+the event-driven topological bot in Sabana. The first 14 nightly serialized
+state hashes and all `inputHashes` match the archived PR #104 maintenance
+run. This campaign ended in an authentic economic defeat after night 76, with
+zero crops, 32 coins and one operational center. All 76 raid receipts are
+verified, with zero issues and no coverage loss. The bot made 824 repair
+requests and paid 5,480 coins in repairs; wall purchases cost 990 coins.
+
+| Nights | Crops at end | Cash at end | Raid crop losses | Animals | Income | Wages | Seeds | Repairs |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 6–30 | 112 | 958 | 379 | 304 | 34,501 | 15,360 | 17,036 | 1,550 |
+| 31–60 | 76 | 542 | 535 | 423 | 36,528 | 16,424 | 17,676 | 2,714 |
+| 61–67 | 101 | 582 | 24 | 97 | 7,095 | 3,084 | 3,110 | 781 |
+| 68–76 | 0 | 32 | 177 | 101 | 3,570 | 1,655 | 1,780 | 435 |
+
+The last collapse is concentrated in nights 68–72. Raids destroyed 32, 6,
+49, 42 and 40 crops respectively. On nights 70–72 there were zero wall hits,
+while the bot's enclosure adviser returned only `no-certified-proposal` for
+the crop groups it evaluated. Most general-cut attempts reported
+`movement-unproved` with two or three unclassified boundary faces; the
+artificial-hull alternatives omitted modules because of physical placement
+conflicts. This is a planner/certification limitation visible in the evidence,
+not proof that changing military pressure alone would save this trajectory.
+An `unknown` closure must not be treated as protected or built speculatively.
+The next investigation should identify those few boundary faces and determine
+whether a legal, physically certified local closure exists.
+
+`Game.tick` accumulated 672.6 seconds and bot decisions 290.0 seconds. The
+largest single `Game.tick` day was night 19 at 14.6 seconds; these figures
+include the changing farm workload and are not an isolated speed comparison.
+The compressed [full report](current-main-repair-v1-topological-sabana712-100.json.gz)
+and combined [nightly ledger](current-main-repair-v1-topological-nightly.csv)
+retain the three event-driven topological campaigns, including hashes, raid
+losses, economy and measured times. With one narrow 100-night victory and two
+authentic defeats across these three runs, neither V1 pressure nor the
+current topological policy is validated for production balance.
