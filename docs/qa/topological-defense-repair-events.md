@@ -103,6 +103,21 @@ The same V1 candidate and topological policy completed 14 verified raids in Saba
 
 The new policy retained more cash and prevented most raid losses, but had fewer living crops at this particular dawn. On day 14 it delivered 169 harvests and planted 67 crops, compared with 96 and 121 respectively in the previous arm; the smaller living stock follows this different harvest/replant cycle rather than raid destruction that night. This can still matter for subsequent pressure and income, so it requires a longer campaign. The two runs generated slightly different animal counts because attraction changed. `Game.tick` itself was slower in the new trajectory; the bot decision time fell enough that their combined measured time was lower. Neither timing is an isolated algorithmic A/B benchmark. The Sabana result therefore supports maintenance effectiveness but does not establish a general crop-count or engine-speed advantage.
 
+## Manglares / 712 check
+
+The same V1 candidate and topological policy completed 14 verified nights in Manglares in both arms, with zero evidence issues. The new arm built a legal 43-module general-cut enclosure and requested 54 ordinary wall repairs. Full reports are [previous](topological-defense-repair-events/topological-repair-baseline-manglares712-14.json.gz) and [new](topological-defense-repair-events/topological-repair-new-manglares712-14.json.gz).
+
+| Measure | Previous policy | Event-driven maintenance |
+| --- | ---: | ---: |
+| Living crops / cash at day-15 dawn | 110 / 990 | 123 / 915 |
+| Raid crop losses, nights 6–14 | 96 | 5 |
+| Animals, nights 6–14 | 84 | 86 |
+| Wall purchases / repair spending | 920 / 0 | 430 / 288 |
+| Total income | 15,625 | 15,285 |
+| Bot decision time / `Game.tick` time | 35.44 / 120.89 s | 26.26 / 112.96 s |
+
+The new policy preserved more crops while finishing with 75 fewer coins and slightly lower total income. It spent less on replacing walls, but maintenance still has an economic cost. The arms diverged after repair and are not identical workloads; the lower measured times cannot be attributed solely to the event bridge. This check exercises the mangrove terrain but does not by itself prove that a particular river edge was used as a certified perimeter.
+
 ## Sustained Gran Cañón / 712 check
 
 The same frozen V1 setup was extended to 30 nights, running the two arms sequentially on the same host. Both reached day 31 without a terminal result, with all 30 raids verified and zero evidence issues. The previous runner eventually spent 218 coins on center repairs; it still requested no wall repairs. The new policy requested 175 ordinary wall-repair tasks.
