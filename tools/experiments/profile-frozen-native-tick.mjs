@@ -16,7 +16,8 @@ const bytes=readFileSync(file),state=deserialize((file.endsWith('.gz')?gunzipSyn
 // removed before constructing the native projection. Never write this state.
 const pruneHistory=process.argv.includes('--prune-history');
 if(pruneHistory){state.plants=state.plants.filter(plant=>plant.alive);state.crates=state.crates.filter(crate=>!crate.delivered);}
-const module=new WebAssembly.Module(readFileSync(new URL('../../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+const module=new WebAssembly.Module(readFileSync(process.env.WILD_ENGINE_SPATIAL_SERVICES_WASM??
+  new URL('../../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
 const loaded=new Map(),session=createSpatialGameSession(module,state,{
   loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
 try{
