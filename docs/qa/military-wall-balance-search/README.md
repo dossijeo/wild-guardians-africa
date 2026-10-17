@@ -82,8 +82,28 @@ recipe provenance. This is a 14-night observation on one seed, not evidence of
 100-night viability. Continue with sustained runs and additional biomes before
 recommending production parameters.
 
+## Second biome: Manglares/712, 14 nights
+
+Both arms completed with no raid-observer issue. The existing pressure control
+lost 47 of 1,038 exposed crops (4.53%) and ended with 89 crops, 847 coins and
+960 coins spent on walls. V1 pressure lost 27 of 1,153 exposed crops (2.34%),
+ending with 158 crops and 1,035 coins at the same wall spend. Thus the control
+was already much closer to the initial agricultural-loss target in Manglares
+than in Sabana. The V1 result is promising, but two biomes and one seed each
+cannot establish an appropriate universal military curve.
+
+The extra surviving crops also exposed a severe runtime cost: V1 Manglares had
+one `Game.tick` day of 354 seconds, whereas the control's worst day was 52
+seconds. Sabana's sustained V1 runs likewise recorded days of hundreds of
+seconds after night 14. These runs did advance without physical-audit errors;
+they are not yet evidence that 100-night campaigns can be evaluated at a
+practical throughput. Wall-clock performance and physical correctness remain
+separate acceptance dimensions.
+
 The per-night finance and raid ledger is
 [`sabana712-14-nightly.csv`](sabana712-14-nightly.csv). Full source reports are
 stored as `*.json.gz` alongside this file and can be expanded with gzip. To
 regenerate the table from expanded reports, run
 `node tools/experiments/summarize-balance-candidates.mjs output.csv report.json ...`.
+The corresponding Manglares ledger is
+[`manglares712-14-nightly.csv`](manglares712-14-nightly.csv).
