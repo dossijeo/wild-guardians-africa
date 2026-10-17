@@ -295,8 +295,13 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
       entry:village.entry??village,
       centers:s.structures.filter(center=>operational(center)&&
         center.villageId===village.id).map(center=>centerServicePoint(center,s,.8)),
+      // A fleeing worker with no route is already in recovery. Treating an
+      // inconclusive pre-existing return as an access lost by this proposal
+      // can prevent every legal wall purchase, even when the worker is
+      // outside the proposed enclosure. Active routes are still protected.
       workers:s.workers.filter(worker=>worker.status!=='home'&&
-        worker.villageId===village.id)
+        worker.villageId===village.id&&
+        !(worker.status==='fleeing'&&!worker.path))
     }));
     const obligations=[];
     let unresolvedAccess=false;

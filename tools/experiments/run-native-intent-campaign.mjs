@@ -19,6 +19,8 @@ const path=resolve(out),started=performance.now(),rows=[];
 let latestState=null,latestNav=null,dayWorkerSnapshot=[];
 const captureRaidDay=Number(process.env.WILD_ENGINE_CAPTURE_RAID_DAY??0);
 const captureDayEnd=Number(process.env.WILD_ENGINE_CAPTURE_DAY_END??0);
+const captureStateDay=Number(process.env.WILD_ENGINE_CAPTURE_STATE_DAY??0);
+const captureStateTime=Number(process.env.WILD_ENGINE_CAPTURE_STATE_TIME??0);
 const captureOccupiedFallback=process.env.WILD_ENGINE_CAPTURE_OCCUPIED_FALLBACK==='1';
 const spatialAdvice=process.env.WILD_ENGINE_SPATIAL_ADVICE==='1';
 const defensePolicy=process.env.WILD_ENGINE_DEFENSE_POLICY??'legacy';
@@ -27,6 +29,7 @@ if(defenseGate&&!['event','periodic'].includes(defenseGate))
   throw RangeError('Unknown defense event gate');
 const decisionProfile=process.env.WILD_ENGINE_DECISION_PROFILE==='1';
 let capturedRaid=false;
+let capturedState=false;
 let capturedOccupiedFallback=false;
 const assignments=[],seenAssignments=new Set();
 const intentTiming={};
@@ -69,6 +72,12 @@ try{
     openingFactory,entryDriverFactory,
     onTick:(state,nav)=>{
       latestState=state;latestNav=nav;nav.serviceRaidConnectivityDemand?.();
+      if(!capturedState&&captureStateDay===state.day&&
+        state.time>=captureStateTime){
+        capturedState=true;
+        writeFileSync(path.replace(/\.json$/,`-day${state.day}-time${Math.floor(state.time)}-state.json`),
+          serialize(state));
+      }
       if(captureOccupiedFallback&&!capturedOccupiedFallback&&
         nav.raidSelectionStats?.occupiedWallFallbackSamples?.length){
         capturedOccupiedFallback=true;
