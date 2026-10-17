@@ -856,3 +856,16 @@ deleted by this experiment. After adoption, rectangular margin search and the
 repeated provisional previews used solely to *discover* a boundary would be
 the main candidates for removal; final quote/build, automatic gates and
 physics must stay.
+
+### Full-suite check after the current-main merge
+
+`npm test` ran 4,396 cases on this experimental branch: 4,369 passed, four
+failed and 23 were skipped. Two failures were the unchanged active-farm
+100-night victory expectations already reproduced on current `main`; both
+farms now lose their only center on day eight. The other two failures were
+stale generated SFX catalogue references: the experimental multi-stroke
+quotation adds 11 lines to `game.js`, shifting the source locations recorded
+in the inventory. Regenerating the inventory changed source hash and line
+references without changing audio assignments or bytes; the three directed
+catalogue tests then passed. The active-farm failures remain open and are
+not counted as a successful full suite.
