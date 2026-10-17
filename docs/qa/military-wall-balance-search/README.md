@@ -111,11 +111,39 @@ agricultural losses among 1,228 exposed crops. Wall spending was 900 versus
 720 coins. Both raid observers verified all incursions without issue. A zero
 loss outcome on one seed does not prove that the candidate makes the game
 trivial, but it prevents treating its Sabana/712 loss rate of 2.27% as a
-universal estimate. The V1-pressure-only arm is being run on this same seed to
-separate military and wall effects. A moderate-pressure candidate holds the
+universal estimate. The V1-pressure-only arm separates military and wall
+effects. A moderate-pressure candidate holds the
 wall table and hit/structure factors constant while increasing only the animal
 count factor from `0.35 + 0.60u` to `0.45 + 0.52u`; its matched 14-night arms
 will test whether this restores meaningful pressure without losing solvency.
+
+V1 military pressure **without** cheaper walls also completed Sabana/123 with
+159 crops and 1,066 coins. It lost 23 of 1,150 exposed crops (2.00%) and paid
+900 coins for walls. Thus both V1 arms performed far better than the control
+on this seed; affordable walls eliminated the remaining crop losses during
+these nine post-introduction incursions. This is a strong seed-specific
+protection result, not a universal loss forecast.
+
+## Sustained result: Sabana/712, V1 pressure, 30 nights
+
+The V1-pressure arm with **current** wall prices completed 30 real nights and
+did not reach a victory or defeat terminal state. At dawn of day 31, it had 84
+living crops, 1,465 coins and an operational center. The raid observer verified
+all incursions, with no coverage loss or issue. This proves survival to night
+30 for this one seed; it does not prove future solvency or a 100-night victory.
+
+| Nights | Destroyed | Exposed at spawn | Weighted loss | Animals |
+| --- | ---: | ---: | ---: | ---: |
+| 6–14 | 77 | 1,167 | 6.60% | 95 |
+| 15–21 | 200 | 1,117 | 17.91% | 106 |
+| 22–30 | 263 | 1,316 | 19.98% | 137 |
+
+The later loss rate is incompatible with treating the early V1 results as a
+sustainable 2–4% agricultural balance. The 30-night run took 3,072 wall-clock
+seconds, including a 453-second `Game.tick` day. These costs make direct
+100-night sweeps impractical until the sustained `Game.tick` bottleneck is
+understood. The candidate with affordable walls is still running and must be
+compared before attributing the later losses to military pressure alone.
 
 The per-night finance and raid ledger is
 [`sabana712-14-nightly.csv`](sabana712-14-nightly.csv). Full source reports are
@@ -126,3 +154,5 @@ The corresponding Manglares ledger is
 [`manglares712-14-nightly.csv`](manglares712-14-nightly.csv).
 The independent-seed ledger is
 [`sabana123-14-nightly.csv`](sabana123-14-nightly.csv).
+The sustained V1 ledger is
+[`sabana712-v1-pressure-30-nightly.csv`](sabana712-v1-pressure-30-nightly.csv).
