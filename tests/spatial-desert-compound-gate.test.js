@@ -46,9 +46,10 @@ test('closing an incremental compound perimeter adds a usable third gate',async(
     const stroke=[[66,-7.18],[66,-18]],options={smooth:false,snap:false};
     const frozen=serialize(state);
     const originalPreview=session.withWallPreview,originalRoute=session.routeActor;
-    let insidePreview=0,previewRoutes=0;
+    let insidePreview=0,previewRoutes=0,previews=0;
     session.withWallPreview=(walls,suppress,inspect,refresh)=>
       originalPreview(walls,suppress,()=>{
+        previews++;
         insidePreview++;
         try{return inspect();}finally{insidePreview--;}
       },refresh);
@@ -58,15 +59,9 @@ test('closing an incremental compound perimeter adds a usable third gate',async(
     };
     const plan=Game.quoteWallChain(state,'zarzas',stroke,nav,options);
     session.withWallPreview=originalPreview;session.routeActor=originalRoute;
-    assert(previewRoutes>0,'an affected worker route still receives a full physical check');
+    assert.equal(previewRoutes,0,'wall quotes must not plan worker routes');
+    assert.equal(previews,0,'wall quotes must not mutate provisional topology');
     assert.equal(serialize(state),frozen,'the quote must leave state unchanged');
-    const localOverlay=nav.wallLocalOverlay;
-    nav.wallLocalOverlay=()=>null;
-    const fullPreviewPlan=Game.quoteWallChain(state,'zarzas',stroke,nav,options);
-    nav.wallLocalOverlay=localOverlay;
-    assert.deepEqual({pieces:plan.pieces,gates:plan.gates,cost:plan.cost},
-      {pieces:fullPreviewPlan.pieces,gates:fullPreviewPlan.gates,
-        cost:fullPreviewPlan.cost},'read-only and full-preview planning agree');
     assert.equal(plan.pieces.length,5);
     assert.equal(plan.gates,1);
     assert.equal(plan.cost,50);
@@ -117,7 +112,8 @@ test('an unhostable extra gate leaves the closing module unbuilt and charges onl
     assert.equal(plan.gates,0);
     assert.equal(plan.cost,30);
     const balance=numberOf(state.ledger.balance);
-    assert(Game.buildWallChain(state,'blocked-extra-gate','zarzas',stroke,nav,options));
+    assert(Game.buildWallChain(state,'blocked-extra-gate','zarzas',stroke,nav,
+      {...options,preparedPlan:plan}));
     assert.equal(balance-numberOf(state.ledger.balance),30);
     assert.equal(state.structures.filter(s=>s.kind==='wall').length,115);
     assert(workers.every(w=>nav.path(w,state.villages[0].entry,.28,null,true)));

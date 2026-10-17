@@ -266,6 +266,7 @@ export function createSpatialNavigationMovement(session,state){
     walkable,segmentClear,path,regionFor,regionConnected,enclosureFor,terrainValid,
     withWallPreview,gateOverlayClear:session.gateOverlayClear,
     wallLocalOverlay:session.wallLocalOverlay,
+    wallWorkerReachability:session.wallWorkerReachability,
     withVillageEntryPreview,withCenterPreview,
     spatialSectorRevision:(radius,worker=false)=>session.actorSectorRevision(profile(radius,worker,null)),
     requestRaidConnectivity,

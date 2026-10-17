@@ -27,6 +27,9 @@ int32_t* lazy_route_ptr();
 int lazy_loaded_sectors();
 int lazy_sector_slots();
 int lazy_sector_updates();
+int lazy_portal_count();
+int lazy_portal_world_points(int encoded,float* out);
+int lazy_grid_edge(int x,int z,int nx,int nz);
 }
 
 namespace {
@@ -1909,21 +1912,60 @@ int spatial_local_clear(float x,float z,float nx,float nz){
 // Existing barriers named in the removal buffer are ignored and proposed
 // barriers are tested without changing occupancy, sectors or graph revisions.
 // -1 means the query is unavailable and the caller must use its full proof.
-int spatial_overlay_local_clear(float x,float z,float nx,float nz,int removeCount,int addCount){
-  if(!navReady||!std::isfinite(x)||!std::isfinite(z)||!std::isfinite(nx)||!std::isfinite(nz)||
-     removeCount<0||removeCount>4||addCount<0||addCount>128||
-     barrierRemovalIds.size()<size_t(removeCount)||barrierBatch.size()<size_t(addCount)*6)
-    return -1;
-  for(int i=0;i<removeCount;i++)if(!barrierIndex().byId.count(barrierRemovalIds[i]))return -1;
-  std::array<Barrier,128> proposed;
+std::vector<int32_t> overlayRemovedProps;
+int32_t* spatial_overlay_prop_ptr(int count){
+  if(count<0||count>128)return nullptr;
+  overlayRemovedProps.resize(size_t(count)*3);
+  return overlayRemovedProps.data();
+}
+bool overlayPropBlocked(double x,double z,int cx,int cz,int propCount){
+  if(!propCount)return residentPropBlocked(x,z,cx,cz);
+  const auto& resident=residentSolidProps();
+  const auto found=resident.find(chunkKey(cx,cz));
+  if(found==resident.end())return true;
+  for(const Prop& p:found->second){
+    bool removed=false;
+    for(int i=0;i<propCount;i++)if(p.group==overlayRemovedProps[i*3]&&
+       p.gx==overlayRemovedProps[i*3+1]&&p.gz==overlayRemovedProps[i*3+2]){
+      removed=true;break;
+    }
+    if(removed)continue;
+    const double dx=p.x-x,dz=p.z-z,r=p.radius+radiusNow;
+    if(dx*dx+dz*dz<r*r)return true;
+  }
+  return false;
+}
+bool prepareOverlayBarriers(int addCount,std::array<Barrier,128>& proposed){
   for(int i=0;i<addCount;i++){
     const float* b=barrierBatch.data()+i*6;
     if(!std::isfinite(b[0])||!std::isfinite(b[1])||!std::isfinite(b[2])||
        !std::isfinite(b[3])||!std::isfinite(b[4])||!std::isfinite(b[5])||
-       b[2]<=0||b[3]<=0||b[5]<0||b[5]>3||std::floor(b[5])!=b[5])return -1;
+       b[2]<=0||b[3]<=0||b[5]<0||b[5]>3||std::floor(b[5])!=b[5])return false;
     proposed[i]={0,b[0],b[1],b[2],b[3],b[4],float(std::cos(b[4])),
       float(std::sin(b[4])),uint8_t(b[5])};
   }
+  return true;
+}
+using OverlayBarrierBuckets=std::unordered_map<uint64_t,std::vector<int>>;
+static OverlayBarrierBuckets indexOverlayBarriers(const std::array<Barrier,128>& proposed,int count){
+  OverlayBarrierBuckets buckets;
+  buckets.reserve(size_t(count)*3);
+  for(int i=0;i<count;i++){
+    const Barrier& barrier=proposed[i];
+    const float extentX=barrierExtentX(barrier),extentZ=barrierExtentZ(barrier);
+    const int minX=int(std::floor((barrier.x-extentX-maxIndexedRadius)/barrierBucketWidth));
+    const int maxX=int(std::floor((barrier.x+extentX+maxIndexedRadius)/barrierBucketWidth));
+    const int minZ=int(std::floor((barrier.z-extentZ-maxIndexedRadius)/barrierBucketWidth));
+    const int maxZ=int(std::floor((barrier.z+extentZ+maxIndexedRadius)/barrierBucketWidth));
+    for(int bz=minZ;bz<=maxZ;bz++)for(int bx=minX;bx<=maxX;bx++)
+      buckets[barrierKey(bx,bz)].push_back(i);
+  }
+  return buckets;
+}
+int overlaySegmentClear(float x,float z,float nx,float nz,int removeCount,int addCount,
+  int propCount,const std::array<Barrier,128>& proposed,
+  const OverlayBarrierBuckets& proposedBuckets){
+  if(!std::isfinite(x)||!std::isfinite(z)||!std::isfinite(nx)||!std::isfinite(nz))return -1;
   const double distance=std::hypot(double(nx)-x,double(nz)-z);
   if(distance>32)return -1;
   const int segments=std::max(1,int(std::ceil(distance/1.25)));
@@ -1938,18 +1980,204 @@ int spatial_overlay_local_clear(float x,float z,float nx,float nz,int removeCoun
       const double t=double(i)/steps,px=ax+(bx-ax)*t,pz=az+(bz-az)*t;
       const int cx=int(std::floor((px+24)/side)),cz=int(std::floor((pz+24)/side));
       if(!rasterAt(int(std::round(px)),int(std::round(pz))))return -1;
-      if(!terrainValid(px,pz,radiusNow,workerNow)||residentPropBlocked(px,pz,cx,cz)||
+      if(!terrainValid(px,pz,radiusNow,workerNow)||overlayPropBlocked(px,pz,cx,cz,propCount)||
          !barrierClear(px,pz,barrierRemovalIds.data(),removeCount))return 0;
-      for(int j=0;j<addCount;j++){
-        const Barrier& b=proposed[j];
-        if(b.passMask&profileBit)continue;
-        const double dx=px-b.x,dz=pz-b.z;
-        if(std::abs(dx*b.c-dz*b.s)<b.halfX+radiusNow&&
-           std::abs(dx*b.s+dz*b.c)<b.halfZ+radiusNow)return 0;
-      }
+      const int bucketX=int(std::floor(px/barrierBucketWidth));
+      const int bucketZ=int(std::floor(pz/barrierBucketWidth));
+      if(const auto candidates=proposedBuckets.find(barrierKey(bucketX,bucketZ));
+         candidates!=proposedBuckets.end())
+        for(const int j:candidates->second){
+          const Barrier& b=proposed[j];
+          if(b.passMask&profileBit)continue;
+          const double dx=px-b.x,dz=pz-b.z;
+          if(std::abs(dx*b.c-dz*b.s)<b.halfX+radiusNow&&
+             std::abs(dx*b.s+dz*b.c)<b.halfZ+radiusNow)return 0;
+        }
     }
   }
   return 1;
+}
+int spatial_overlay_local_clear(float x,float z,float nx,float nz,int removeCount,int addCount,
+  int propCount){
+  if(!navReady||removeCount<0||removeCount>4||addCount<0||addCount>128||
+     propCount<0||propCount>128||overlayRemovedProps.size()<size_t(propCount)*3||
+     barrierRemovalIds.size()<size_t(removeCount)||barrierBatch.size()<size_t(addCount)*6)
+    return -1;
+  for(int i=0;i<removeCount;i++)if(!barrierIndex().byId.count(barrierRemovalIds[i]))return -1;
+  std::array<Barrier,128> proposed;
+  if(!prepareOverlayBarriers(addCount,proposed))return -1;
+  const auto buckets=indexOverlayBarriers(proposed,addCount);
+  return overlaySegmentClear(x,z,nx,nz,removeCount,addCount,propCount,proposed,buckets);
+}
+// Positive-only reachability proof for several worker witnesses of one
+// village. The confirmed sector graph and barrier index are never modified.
+// An unresolved target remains -1 (unknown), including a bounded search that
+// exhausts its local window; callers must never interpret it as blocked.
+std::vector<float> overlayReachInput;
+std::vector<float> overlayReachPortals;
+std::vector<int32_t> overlayReachOutput;
+float* spatial_overlay_reach_input_ptr(int count){
+  if(count<1||count>256)return nullptr;
+  overlayReachInput.resize(size_t(count)*2);
+  return overlayReachInput.data();
+}
+int32_t* spatial_overlay_reach_result_ptr(){return overlayReachOutput.data();}
+float* spatial_overlay_reach_portal_ptr(int count){
+  if(count<0||count>128)return nullptr;
+  overlayReachPortals.resize(size_t(count)*4);
+  return overlayReachPortals.data();
+}
+int spatial_overlay_reach_batch(float x,float z,int count,int removeCount,
+  int addCount,int propCount,int portalCount,int reverse,int margin){
+  if(!navReady||!std::isfinite(x)||!std::isfinite(z)||count<1||count>256||
+     overlayReachInput.size()<size_t(count)*2||removeCount<0||removeCount>4||
+     addCount<0||addCount>128||propCount<0||propCount>128||
+     portalCount<0||portalCount>128||
+     overlayReachPortals.size()<size_t(portalCount)*4||
+     (reverse!=0&&reverse!=1)||margin<0||margin>48)
+    return -1;
+  std::array<Barrier,128> proposed;
+  if(barrierRemovalIds.size()<size_t(removeCount)||
+     barrierBatch.size()<size_t(addCount)*6||
+     overlayRemovedProps.size()<size_t(propCount)*3||
+     !prepareOverlayBarriers(addCount,proposed))return -1;
+  for(int i=0;i<removeCount;i++)if(!barrierIndex().byId.count(barrierRemovalIds[i]))return -1;
+  const auto buckets=indexOverlayBarriers(proposed,addCount);
+  std::vector<Prop> removedFootprints;
+  if(propCount){
+    for(const auto& [key,props]:residentSolidProps())for(const Prop& prop:props)
+      for(int i=0;i<propCount;i++)if(prop.group==overlayRemovedProps[i*3]&&
+        prop.gx==overlayRemovedProps[i*3+1]&&prop.gz==overlayRemovedProps[i*3+2]){
+        removedFootprints.push_back(prop);break;
+      }
+  }
+  const auto probe=[&](float ax,float az,float bx,float bz){
+    return overlaySegmentClear(ax,az,bx,bz,removeCount,addCount,propCount,proposed,buckets);
+  };
+  const auto gridEdge=[&](int ax,int az,int bx,int bz){
+    const auto nearby=[&](int px,int pz){
+      return buckets.count(barrierKey(int(std::floor(double(px)/barrierBucketWidth)),
+        int(std::floor(double(pz)/barrierBucketWidth))))!=0;
+    };
+    bool changed=removeCount>0||nearby(ax,az)||nearby(bx,bz);
+    if(!changed)for(const Prop& prop:removedFootprints){
+      const double reach=prop.radius+radiusNow+2;
+      if(std::hypot(double(ax)-prop.x,double(az)-prop.z)<reach||
+         std::hypot(double(bx)-prop.x,double(bz)-prop.z)<reach){changed=true;break;}
+    }
+    if(!changed)return lazy_grid_edge(ax,az,bx,bz);
+    return probe(float(ax),float(az),float(bx),float(bz));
+  };
+  overlayReachOutput.assign(size_t(count),-1);
+  double minX=x,maxX=x,minZ=z,maxZ=z;
+  for(int i=0;i<count;i++){
+    const float tx=overlayReachInput[i*2],tz=overlayReachInput[i*2+1];
+    if(!std::isfinite(tx)||!std::isfinite(tz))return -1;
+    minX=std::min(minX,double(tx));maxX=std::max(maxX,double(tx));
+    minZ=std::min(minZ,double(tz));maxZ=std::max(maxZ,double(tz));
+  }
+  const int loX=int(std::floor(minX))-margin,hiX=int(std::ceil(maxX))+margin;
+  const int loZ=int(std::floor(minZ))-margin,hiZ=int(std::ceil(maxZ))+margin;
+  const int width=hiX-loX+1,height=hiZ-loZ+1;
+  if(width<1||height<1||width>256||height>256||
+     uint64_t(width)*height>65536)return -1;
+  const auto index=[&](int px,int pz){return (pz-loZ)*width+px-loX;};
+  std::unordered_map<int,std::vector<int>> targetsByCell;
+  for(int i=0;i<count;i++){
+    const float tx=overlayReachInput[i*2],tz=overlayReachInput[i*2+1];
+    for(int cz=int(std::floor(tz))-1;cz<=int(std::ceil(tz))+1;cz++)
+      for(int cx=int(std::floor(tx))-1;cx<=int(std::ceil(tx))+1;cx++){
+        if(cx<loX||cx>hiX||cz<loZ||cz>hiZ||
+           std::hypot(double(cx)-tx,double(cz)-tz)>1.5)continue;
+        targetsByCell[index(cx,cz)].push_back(i);
+      }
+  }
+  struct Crossing {float fromX,fromZ,toX,toZ;};
+  std::vector<Crossing> crossings;
+  std::unordered_map<int,std::vector<int>> crossingsByCell;
+  const int nativePortalCount=lazy_portal_count();
+  for(int id=0;id<nativePortalCount+portalCount;id++)for(int direction=0;direction<2;direction++){
+    float points[4];
+    if(id<nativePortalCount){
+      if(!lazy_portal_world_points(id*2+direction,points))continue;
+    }else{
+      const float* proposed=overlayReachPortals.data()+(id-nativePortalCount)*4;
+      for(int j=0;j<4;j++)points[j]=proposed[j];
+      if(direction){std::swap(points[0],points[2]);std::swap(points[1],points[3]);}
+    }
+    if(!std::isfinite(points[0])||!std::isfinite(points[1])||
+       !std::isfinite(points[2])||!std::isfinite(points[3]))return -1;
+    if(reverse){std::swap(points[0],points[2]);std::swap(points[1],points[3]);}
+    const int crossing=int(crossings.size());
+    crossings.push_back({points[0],points[1],points[2],points[3]});
+    for(int cz=int(std::floor(points[1]))-1;cz<=int(std::ceil(points[1]))+1;cz++)
+      for(int cx=int(std::floor(points[0]))-1;cx<=int(std::ceil(points[0]))+1;cx++){
+        if(cx<loX||cx>hiX||cz<loZ||cz>hiZ||
+           std::hypot(double(cx)-points[0],double(cz)-points[1])>1.5)continue;
+        crossingsByCell[index(cx,cz)].push_back(crossing);
+      }
+  }
+  std::vector<uint8_t> seen(size_t(width)*height,0);
+  std::vector<int> queue;
+  queue.reserve(std::min(width*height,8192));
+  for(int cz=int(std::floor(z))-1;cz<=int(std::ceil(z))+1;cz++)
+    for(int cx=int(std::floor(x))-1;cx<=int(std::ceil(x))+1;cx++){
+      if(cx<loX||cx>hiX||cz<loZ||cz>hiZ||
+         std::hypot(double(cx)-x,double(cz)-z)>1.5)continue;
+      const int cell=index(cx,cz);
+      if(seen[cell])continue;
+      const int clear=reverse?
+        probe(float(cx),float(cz),x,z):
+        probe(x,z,float(cx),float(cz));
+      if(clear==1){seen[cell]=1;queue.push_back(cell);}
+    }
+  int found=0;
+  constexpr int dx[4]={1,-1,0,0},dz[4]={0,0,1,-1};
+  for(size_t head=0;head<queue.size()&&head<50000&&found<count;head++){
+    const int cell=queue[head],cx=loX+cell%width,cz=loZ+cell/width;
+    if(const auto it=targetsByCell.find(cell);it!=targetsByCell.end())
+      for(const int target:it->second){
+        if(overlayReachOutput[target]==1)continue;
+        const float tx=overlayReachInput[target*2],tz=overlayReachInput[target*2+1];
+        const int clear=reverse?
+          probe(tx,tz,float(cx),float(cz)):
+          probe(float(cx),float(cz),tx,tz);
+        if(clear==1){overlayReachOutput[target]=1;found++;}
+      }
+    if(const auto it=crossingsByCell.find(cell);it!=crossingsByCell.end())
+      for(const int crossingId:it->second){
+        const Crossing& crossing=crossings[crossingId];
+        const int entry=reverse?
+          probe(crossing.fromX,crossing.fromZ,float(cx),float(cz)):
+          probe(float(cx),float(cz),crossing.fromX,crossing.fromZ);
+        if(entry!=1)continue;
+        const int through=reverse?
+          probe(crossing.toX,crossing.toZ,crossing.fromX,crossing.fromZ):
+          probe(crossing.fromX,crossing.fromZ,crossing.toX,crossing.toZ);
+        if(through!=1)continue;
+        for(int pz=int(std::floor(crossing.toZ))-1;pz<=int(std::ceil(crossing.toZ))+1;pz++)
+          for(int px=int(std::floor(crossing.toX))-1;px<=int(std::ceil(crossing.toX))+1;px++){
+            if(px<loX||px>hiX||pz<loZ||pz>hiZ||
+               std::hypot(double(px)-crossing.toX,double(pz)-crossing.toZ)>1.5)continue;
+            const int destination=index(px,pz);
+            if(seen[destination])continue;
+            const int exit=reverse?
+              probe(float(px),float(pz),crossing.toX,crossing.toZ):
+              probe(crossing.toX,crossing.toZ,float(px),float(pz));
+            if(exit==1){seen[destination]=1;queue.push_back(destination);}
+          }
+      }
+    for(int d=0;d<4;d++){
+      const int nx=cx+dx[d],nz=cz+dz[d];
+      if(nx<loX||nx>hiX||nz<loZ||nz>hiZ)continue;
+      const int next=index(nx,nz);
+      if(seen[next])continue;
+      const int clear=reverse?
+        gridEdge(nx,nz,cx,cz):gridEdge(cx,cz,nx,nz);
+      if(clear==1){seen[next]=1;queue.push_back(next);}
+    }
+  }
+  return found;
 }
 // Crop placement advice is separate from movement passability: a worker may
 // cross an automatic gate, but a seed cannot be placed on that wall. -1 means

@@ -190,6 +190,11 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
     const candidate={...original,gate:true},check=nav.wallPlacement(candidate);
     if(!check.valid||cropOverlap(candidate))return false;
     const points=gatePortalPoints(candidate);if(points.length!==2)return false;
+    if(nav.wallWorkerReachability){
+      const overlay=localOverlay??nav.wallLocalOverlay?.(newPieces,
+        [...suppressedForGates,...check.suppress??[]]);
+      return overlay?.gateClear(candidate,points)===true;
+    }
     if(nav.withWallPreview){
       if(localOverlay){
         if((check.suppress??[]).some(id=>!nav.suppressed.has(id)))throw overlayUnavailable;
@@ -222,9 +227,8 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
   }),scores=new Map();
   const rank=(p,face)=>{
     if(face.ids.some(id=>id>0&&!newIds.has(id)))return -p.id;
-    // Ranking a possible door does not require a route to every work center.
-    // The selected gate and all existing worker routes receive physical checks
-    // below, before the quote can become a paid construction.
+    // Rank plausible doors geometrically; the native read-only overlay below
+    // certifies actual worker access before the quote can be purchased.
     if(!scores.has(p.id))scores.set(p.id,Math.min(...targets.flatMap(target=>
       s.villages.map(v=>dist(v.entry??v,p)+dist(p,target)))));
     return scores.get(p.id);
@@ -235,7 +239,23 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
     const polygon=face.polygon.map(([x,z])=>({x,z}));
     if(s.workers.some(w=>w.status!=='home'&&containsPoint(polygon,w.x,w.z)))unhostedWorker=true;
   });
-  if(nav.withWallPreview){
+  if(nav.wallWorkerReachability){
+    localOverlay=nav.wallLocalOverlay?.(newPieces,[...suppressedForGates]);
+    if(!localOverlay)unhostedWorker=true;
+    else{
+      try{
+        ensure((x,z)=>{
+          const clear=localOverlay.walkable(x,z);
+          if(clear===null)throw overlayUnavailable;
+          return clear;
+        });
+      }catch(error){
+        if(error!==overlayUnavailable)throw error;
+        unhostedWorker=true;
+      }
+      localOverlay=null;
+    }
+  }else if(nav.withWallPreview){
     localOverlay=nav.wallLocalOverlay?.(newPieces,[...suppressedForGates]);
     let localComplete=false;
     if(localOverlay){
@@ -261,7 +281,62 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
   }else ensure((x,z)=>interior.walkable(x,z,.28,null,true));
   const converted=layout.pieces.filter(p=>newIds.has(p.id)&&p.autoGate&&!s.structures.some(e=>e.id===p.entityId&&e.autoGate));
   const updates=converted.map(p=>({id:p.entityId,gate:true,autoGate:true,maxHp:p.maxHp,hp:p.hp})).filter(update=>{const piece=[...s.structures,...newPieces].find(p=>p.id===update.id),candidate={...piece,...update};return nav.wallPlacement(candidate).valid&&!cropOverlap(candidate);});
-  if(nav.withWallPreview){
+  if(nav.wallWorkerReachability){
+    // One shared native connectivity query per village and direction replaces
+    // the old route-before/route-after loop over every worker and center.
+    // A positive answer is a physical certificate; unknown never proves a
+    // blocked route or an available escape.
+    const witnesses=s.villages.map(village=>({
+      entry:village.entry??village,
+      centers:s.structures.filter(center=>operational(center)&&
+        center.villageId===village.id).map(center=>centerServicePoint(center,s,.8)),
+      workers:s.workers.filter(worker=>worker.status!=='home'&&
+        worker.villageId===village.id)
+    }));
+    const obligations=[];
+    let unresolvedAccess=false;
+    for(const {entry,centers,workers} of witnesses){
+      // Legacy/synthetic layouts can place a service center over the village
+      // entry itself. No worker route can start or end on that blocked point.
+      if(!nav.walkable(entry.x,entry.z,.28,null,true))continue;
+      for(const [targets,reverse] of [[centers,false],[workers,true]]){
+        if(!targets.length)continue;
+        const before=nav.wallWorkerReachability(entry,targets,[],[],reverse);
+        if(!before){unresolvedAccess=true;continue;}
+        const required=[];
+        for(let i=0;i<targets.length;i++){
+          if(before[i]==='found')required.push(targets[i]);
+          else if(before[i]==='unknown'&&
+            nav.walkable(targets[i].x,targets[i].z,.28,null,true))
+            unresolvedAccess=true;
+        }
+        if(required.length)obligations.push({entry,targets:required,reverse});
+      }
+    }
+    const proposed=()=>newPieces.map(piece=>({...piece,...updates.find(u=>u.id===piece.id)}));
+    const preservesAccess=()=>!unresolvedAccess&&obligations.every(
+      ({entry,targets,reverse})=>{
+        const after=nav.wallWorkerReachability(entry,targets,proposed(),
+          [...suppressedForGates],reverse);
+        return after?.every(value=>value==='found')===true;
+      });
+    if(!unhostedWorker&&!preservesAccess()){
+      let restored=false;
+      for(const piece of newPieces){
+        if(piece.gate||updates.some(u=>u.id===piece.id))continue;
+        const candidate={...piece,gate:true,autoGate:true,
+          maxHp:layout.settings.hp[piece.material]*.6,
+          hp:piece.hp/piece.maxHp*layout.settings.hp[piece.material]*.6};
+        if(!nav.wallPlacement(candidate).valid||cropOverlap(candidate)||
+          !canHostCandidate(layout.pieces.find(p=>p.id===piece.created)))continue;
+        updates.push({id:piece.id,gate:true,autoGate:true,
+          maxHp:candidate.maxHp,hp:candidate.hp});
+        if(preservesAccess()){restored=true;break;}
+        updates.pop();
+      }
+      if(!restored)unhostedWorker=true;
+    }
+  }else if(nav.withWallPreview){
     // A single new module can close a passage against rocks, buildings or a
     // canyon edge without completing a wall-only face. Preserve existing
     // worker/center routes for every paid stroke, including gradual edits.
@@ -324,7 +399,9 @@ export function quoteWallChain(s,material,points,nav,options={}) {
   if(gatePlan.unhostedWorker||gatePlan.unhosted&&!gatePlan.length){
     // The closing module remains unbuilt; the player can later edit the
     // stroke without trapping a worker in a room that has no usable door.
-    return quoteWallChain(s,material,points,nav,{...options,maxPieces:newPieces.length-1});
+    return quoteWallChain(s,material,points,nav,{...options,
+      _requestedMaxPieces:options._requestedMaxPieces??options.maxPieces??Infinity,
+      maxPieces:newPieces.length-1});
   }
   const updates=gatePlan;
   for(const piece of newPieces){const update=updates.find(p=>p.id===piece.id);if(update)Object.assign(piece,update);}
@@ -338,7 +415,8 @@ export function quoteWallChain(s,material,points,nav,options={}) {
     expectedSlots:slots,blockedPieces,blockedCrops};
   preparedWallQuotes.set(plan,{state:s,nav,material,points:JSON.stringify(points),
     smooth:options.smooth??true,snap:options.snap??true,
-    maxPieces:options.maxPieces??Infinity,sequence:s.sequence,nextId:s.nextId,
+    maxPieces:options._requestedMaxPieces??options.maxPieces??Infinity,
+    sequence:s.sequence,nextId:s.nextId,
     elapsed:s.elapsed,version:nav.version,structureCount:s.structures.length,
     plantCount:s.plants.length,workerCount:s.workers.length,
     quote:structuredClone(plan)});

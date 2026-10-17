@@ -198,6 +198,32 @@ test('a paid 20-wall transaction changes topology without planning actor routes'
   }finally{session.dispose();}
 });
 
+test('quoting fourteen legal modules performs no route search or topology transaction',async()=>{
+  const {state,nav,session,start}=await createSpatialCampaignOpening({
+    seed:983,biome:'desierto'});
+  try{
+    const center=start.site.center;
+    const stroke=[[center.x-30,center.z-30],[center.x+12,center.z-30]];
+    let routes=0,previews=0;
+    const originalRoute=session.routeActor,originalPreview=session.withWallPreview;
+    session.routeActor=(...args)=>{routes++;return originalRoute(...args);};
+    session.withWallPreview=(...args)=>{previews++;return originalPreview(...args);};
+    const sectors=session.core.wasm.lazy_sector_updates();
+    const before=serialize(state);
+    const quote=Game.quoteWallChain(state,'zarzas',stroke,nav,
+      {smooth:false,snap:false,maxPieces:14});
+    assert.equal(quote.pieces.length,14);
+    assert.equal(routes,0);
+    assert.equal(previews,0);
+    assert.equal(session.core.wasm.lazy_sector_updates(),sectors);
+    assert.equal(serialize(state),before);
+    assert.deepEqual(session.wallWorkerReachability(
+      {x:10000,z:10000},[{x:10001,z:10000}]),['unknown'],
+    'missing resident sectors must never certify a blocked or open route');
+    assert.equal(session.core.wasm.lazy_sector_updates(),sectors);
+  }finally{session.dispose();}
+});
+
 test('a new native wall replans a crossing worker route before movement',async()=>{
   const {state,nav,session,start}=await createSpatialCampaignOpening({
     seed:983,biome:'desierto'});

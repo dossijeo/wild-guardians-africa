@@ -111,6 +111,7 @@ async function run(arm){
     if(scenario==='flat20'&&(shape.pieces!==20||shape.blocked!==0||shape.suppressed!==0))
       throw Error('Expected exactly 20 legal walls on cleared flat terrain');
     const quoteCounts={...counts},sectorUpdates=session.core.wasm.lazy_sector_updates()-before;
+    if(process.env.WALL_BENCH_DIAG==='1')console.error(JSON.stringify({arm,shape,quoteCounts,sectorUpdates}));
     for(const key of Object.keys(counts))counts[key]=0;
     const buildBefore=session.core.wasm.lazy_sector_updates(),started=performance.now();
     if(!game.buildWallChain(state,'flat20-build','zarzas',stroke,nav,
@@ -147,7 +148,8 @@ try{
     console.error(`${arm}: ${row.medianMs.toFixed(2)} ms, `+
       `${row.quoteCounts.preview} previews, ${row.sectorUpdates} sector updates`);
   }
-  const fallback=scenario==='canyon'?await run('candidateFallback'):null;
+  const fallback=scenario==='canyon'&&process.env.WALL_BENCH_SKIP_FALLBACK!=='1'?
+    await run('candidateFallback'):null;
   const baselineCandidateEquivalent=rows.every(row=>
     JSON.stringify(row.shape)===JSON.stringify(rows[0].shape)&&
     row.build.finalStateHash===rows[0].build.finalStateHash);

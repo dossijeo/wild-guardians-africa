@@ -37,7 +37,7 @@ for(const biome of ['sabana','gran-rio','manglares','volcanes','desierto','gran-
       });
       assert(compared>0,'fixture must compare at least one gate candidate');
       const local=session.wallLocalOverlay(solid,quote.suppressed);
-      if(quote.suppressed.every(id=>nav.suppressed.has(id))){
+      {
         assert(local,'resident wall hypothesis should support a local overlay');
         const probes=solid.slice(0,4).flatMap(piece=>[
           {x:piece.x,z:piece.z},{x:piece.x+1.5,z:piece.z+1.5}]);
@@ -66,7 +66,7 @@ for(const biome of ['sabana','gran-rio','manglares','volcanes','desierto','gran-
           if(++readOnlyCompared===4)break;
         }
         assert(readOnlyCompared>0,'fixture must compare the whole-stroke overlay');
-      }else assert.equal(local,null,'prop removal must use the full preview');
+      }
     }finally{session.dispose();}
   });
 

@@ -319,6 +319,21 @@ int lazy_portal_world_points(int encoded,float* out){
   }
   return 1;
 }
+int lazy_portal_count(){return static_cast<int>(portals.size());}
+// Confirmed one-metre edge, including the selected profile's direction.
+// -1 denotes absent sectors, never a certified physical blockage.
+int lazy_grid_edge(int x,int z,int nx,int nz){
+  int direction=-1;
+  for(int d=0;d<4;d++)if(nx==x+dx[d]&&nz==z+dz[d]){direction=d;break;}
+  if(direction<0||!sectorSize)return -1;
+  const Sector* from=get(floorDiv(x,sectorSize),floorDiv(z,sectorSize));
+  const Sector* to=get(floorDiv(nx,sectorSize),floorDiv(nz,sectorSize));
+  if(!from||!to)return -1;
+  const int first=cellIndex(x-from->sx*sectorSize,z-from->sz*sectorSize);
+  const int last=cellIndex(nx-to->sx*sectorSize,nz-to->sz*sectorSize);
+  return from->pass[first]&&to->pass[last]&&
+    (from->steps[first]&(1<<direction))?1:0;
+}
 int lazy_commit_portals(){
   for(Sector* sector:byId)if(sector)rebuildEdges(*sector);
   weakDirty=true;

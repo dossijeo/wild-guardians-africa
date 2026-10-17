@@ -362,7 +362,7 @@ test('real wall purchase and removal update the same rendered native collision w
   }finally{session.dispose();}
 });
 
-test('ordinary wall placement previews its enclosure on the native world and restores temporary topology',async()=>{
+test('ordinary wall placement leaves QA previews isolated and commits only confirmed topology',async()=>{
   const state=Game.newGame({seed:712,biome:'sabana',culture:'mapungubwe',slotId:'spatial-gate-preview'});
   state.villages[0].buildings=villageLayout(pack,0,0);
   state.structures.push({id:'center-1',kind:'center',x:0,z:0,culture:'mapungubwe',
@@ -402,7 +402,11 @@ test('ordinary wall placement previews its enclosure on the native world and res
       'a failed preview must restore native prop suppression');
     assert.equal(nav.segmentClear(a,b,.28,null,true),true,
       'a failed nested preview must restore the original topology');
+    const originalPreview=session.withWallPreview;
+    let purchasePreviews=0;
+    session.withWallPreview=(...args)=>{purchasePreviews++;return originalPreview(...args);};
     assert.equal(Game.placeStructure(state,'native-ordinary-wall',wall,nav),true);
+    assert.equal(purchasePreviews,0,'a paid wall must not evaluate speculative routes');
     assert.equal(state.structures.length,2);
     assert.equal(nav.segmentClear(a,b,.28,null,true),false);
     assert.equal(Game.removeWall(state,'native-ordinary-wall-remove',state.structures.at(-1).id,nav),true);

@@ -18,6 +18,21 @@ export function createSpatialWorld(module){
     const code=wasm.lazy_connected_reason();
     connectivityReasons[kind][code]=(connectivityReasons[kind][code]??0)+1;
   };
+  const stageOverlayProps=ids=>{
+    if(!Array.isArray(ids)||ids.length>128)throw TypeError('Invalid proposed prop removals');
+    const records=ids.map(id=>{
+      const match=/^spatial:([0-5]):(-?\d+):(-?\d+)$/.exec(id);
+      if(!match)throw TypeError(`Invalid spatial prop ID: ${id}`);
+      return match.slice(1).map(Number);
+    });
+    const pointer=wasm.spatial_overlay_prop_ptr(records.length);
+    if(records.length&&!pointer)throw Error('Could not allocate prop overlay');
+    if(records.length){
+      const values=new Int32Array(wasm.memory.buffer,pointer,records.length*3);
+      records.forEach((record,i)=>values.set(record,i*3));
+    }
+    return records.length;
+  };
   const heights=()=>new Float32Array(wasm.memory.buffer,wasm.spatial_heights_ptr(),49*49);
   const colors=()=>new Float32Array(wasm.memory.buffer,wasm.spatial_colors_ptr(),49*49*3);
   const water=()=>new Uint8Array(wasm.memory.buffer,wasm.spatial_water_ptr(),48*48);
@@ -252,7 +267,7 @@ export function createSpatialWorld(module){
     enclosureWorld:point=>navigationBuilt?spatialWorldEnclosure(wasm,point):{ids:[],status:'unknown'},
     componentsWorldBatch,setWorkerGatePortals,
     localClear:(start,end)=>Boolean(wasm.spatial_local_clear(start.x,start.z,end.x,end.z)),
-    overlayLocalClear:(start,end,removeIds,barriers)=>{
+    overlayLocalClear:(start,end,removeIds,barriers,propIds=[])=>{
       if(!Array.isArray(removeIds)||removeIds.length>4||
         removeIds.some(id=>!Number.isSafeInteger(id)||id<=0)||
         !Array.isArray(barriers)||barriers.length>128)
@@ -268,9 +283,45 @@ export function createSpatialWorld(module){
       }
       if(removals)new Int32Array(wasm.memory.buffer,removals,removeIds.length)
         .set(removeIds);
+      const propCount=stageOverlayProps(propIds);
       const result=wasm.spatial_overlay_local_clear(start.x,start.z,end.x,end.z,
-        removeIds.length,barriers.length);
+        removeIds.length,barriers.length,propCount);
       return result<0?null:Boolean(result);
+    },
+    overlayReachBatch:(origin,targets,removeIds,barriers,
+      {reverse=false,margin=16,portals=[],propIds=[]}={})=>{
+      if(!Array.isArray(targets)||targets.length<1||targets.length>256||
+        !Array.isArray(removeIds)||removeIds.length>4||
+        removeIds.some(id=>!Number.isSafeInteger(id)||id<=0)||
+        !Array.isArray(barriers)||barriers.length>128||
+        !Array.isArray(portals)||portals.length>128)
+        throw TypeError('Invalid read-only reachability batch');
+      const additions=barriers.length?wasm.spatial_barrier_batch_ptr(barriers.length):0;
+      const removals=removeIds.length?wasm.spatial_barrier_removal_ptr(removeIds.length):0;
+      const input=wasm.spatial_overlay_reach_input_ptr(targets.length);
+      const portalInput=wasm.spatial_overlay_reach_portal_ptr(portals.length);
+      if(!input||portals.length&&!portalInput||
+        barriers.length&&!additions||removeIds.length&&!removals)
+        throw Error('Could not allocate read-only reachability batch');
+      if(additions){
+        const values=new Float32Array(wasm.memory.buffer,additions,barriers.length*6);
+        barriers.forEach((barrier,i)=>values.set([barrier.x,barrier.z,barrier.halfX,
+          barrier.halfZ,barrier.yaw??0,barrier.passMask??0],i*6));
+      }
+      if(removals)new Int32Array(wasm.memory.buffer,removals,removeIds.length).set(removeIds);
+      const propCount=stageOverlayProps(propIds);
+      const inputValues=new Float32Array(wasm.memory.buffer,input,targets.length*2);
+      targets.forEach((target,i)=>inputValues.set([target.x,target.z],i*2));
+      if(portals.length){
+        const portalValues=new Float32Array(wasm.memory.buffer,portalInput,portals.length*4);
+        portals.forEach(([a,b],i)=>portalValues.set([a.x,a.z,b.x,b.z],i*4));
+      }
+      const found=wasm.spatial_overlay_reach_batch(origin.x,origin.z,targets.length,
+        removeIds.length,barriers.length,propCount,portals.length,reverse?1:0,margin);
+      if(found<0)return null;
+      const output=wasm.spatial_overlay_reach_result_ptr();
+      return [...new Int32Array(wasm.memory.buffer,output,targets.length)]
+        .map(value=>value===1?'found':'unknown');
     },
     localClearExcept:(start,end,ids)=>{
       if(!Array.isArray(ids)||ids.length<1||ids.length>4||
