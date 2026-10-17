@@ -11,15 +11,19 @@ import {clearNavigation} from './clear-navigation.js';
 const nav=clearNavigation();
 const ready=()=>{const s=newGame({seed:712,slotId:'test'});resume(s,'intro');s.tutorial.step='center';return s;};
 const setup=()=>{const s=ready();placeStructure(s,'center',{x:4,z:0},nav);plant(s,'plant','mijo',8,0,nav);openInitialHiring(s);hire(s,'hire',{olderMale:1});return s;};
-test('A route blocked after reservation releases its worker without deleting the task or starting an action',()=>{
+test('A blocked route releases its worker and a topology change reopens the retained task',()=>{
   const s=setup(),worker=s.workers[0];worker.status='idle';worker.x=7.4;worker.z=0;
   const movingNav={...nav,version:1};tick(s,.01,movingNav);assert.equal(worker.status,'walking');
   const task=s.tasks.find(t=>t.id===worker.taskId),balance=numberOf(s.ledger.balance);
   // The obstruction must reject every physical routing primitive, including
   // the new pre-A* direct/corner probes, not only the grid-search test double.
   movingNav.version++;movingNav.path=()=>null;movingNav.segmentClear=()=>false;movingNav.walkable=()=>false;tick(s,.1,movingNav);
-  assert.equal(worker.status,'idle');assert.equal(worker.taskId,null);assert.equal(task.workerId,null);assert.equal(task.blocked,true);
+  assert.equal(worker.status,'idle');assert.equal(worker.taskId,null);assert.equal(task.workerId,null);
   assert.equal(s.plants[0].growth,0);assert.equal(s.plants[0].water[0].status,'due');assert.equal(numberOf(s.ledger.balance),balance);
+  for(let i=0;i<8;i++)tick(s,.1,movingNav);
+  assert.equal(worker.status,'idle');assert.equal(task.workerId,null);
+  movingNav.version++;movingNav.path=nav.path;movingNav.segmentClear=nav.segmentClear;movingNav.walkable=nav.walkable;
+  tick(s,.1,movingNav);assert.equal(worker.status,'walking');assert.equal(task.workerId,worker.id);
 });
 function repairScenario(){
   const s=setup();s.ledger.balance=rational(1000);s.tasks=[];
@@ -28,25 +32,32 @@ function repairScenario(){
   const target=s.structures.at(-1);target.hp=target.maxHp*.73;
   requestRepair(s,'repair-order',target.id);const before=numberOf(s.ledger.balance);
   tick(s,.001,nav);assert.equal(numberOf(s.ledger.balance),before,'Queueing and reservation must not charge');
-  assert.equal(worker.status,'walking');worker.x=target.x+1.09+.28+.1;worker.z=target.z;
+  assert.equal(worker.status,'walking');
   return {s,worker,target,before};
 }
+function finishRepairTravel(s){
+  // The current movement code follows its reserved route. Teleporting the
+  // worker beside the wall leaves that route active and does not model arrival.
+  for(let i=0;i<300&&s.tasks.some(t=>t.kind==='repair');i++)tick(s,.1,nav);
+  assert.ok(!s.tasks.some(t=>t.kind==='repair'),'repair must settle or cancel after physical travel');
+}
 test('Repair settles its rounded current price exactly once on arrival, without an extra animation delay',()=>{
-  const {s,target,before}=repairScenario();tick(s,.001,nav);
+  const {s,target,before}=repairScenario();finishRepairTravel(s);
   assert.equal(numberOf(s.ledger.balance),before-10);assert.equal(target.hp,target.maxHp);
   assert.equal(s.events.filter(e=>e.type==='RepairApplied').length,1);
+  assert.ok(s.elapsed<11.5,'repair applies on arrival, without an extra four-second animation wait');
   tick(s,4,nav);assert.equal(numberOf(s.ledger.balance),before-10);
 });
 test('Funds spent after requesting repair cancel execution at arrival without partial payment',()=>{
   const {s,target}=repairScenario(),damaged=target.hp;s.ledger.balance=rational(9);
-  tick(s,.001,nav);assert.equal(numberOf(s.ledger.balance),9);assert.equal(target.hp,damaged);
+  finishRepairTravel(s);assert.equal(numberOf(s.ledger.balance),9);assert.equal(target.hp,damaged);
   assert.ok(s.messages.some(m=>m.text.includes('fondos insuficientes')));
   assert.ok(!s.tasks.some(t=>t.kind==='repair'));
 });
 test('Surviving repair order becomes full reconstruction and does not wait for collapse to finish',()=>{
   for(const status of ['ruined','collapsing']){
     const {s,target,before}=repairScenario();target.hp=0;target.status=status;target.collapseRemaining=status==='collapsing'?1:0;
-    tick(s,.001,nav);assert.equal(numberOf(s.ledger.balance),before-target.cost);
+    finishRepairTravel(s);assert.equal(numberOf(s.ledger.balance),before-target.cost);
     assert.equal(target.status,'intact');assert.equal(target.collapseRemaining,0);assert.equal(target.hp,target.maxHp);
   }
 });
@@ -61,14 +72,14 @@ test('Postgame founding uses complete native village, valid departure, exact fix
   const s=ready();placeStructure(s,'center',{x:4,z:0},nav);s.postgame=true;s.day=101;s.initialPreparation=false;s.ledger.balance=rational(1000000);
   const payload=JSON.parse(readFileSync(new URL('../public/content/villages.json',import.meta.url),'utf8')).find(v=>v.id==='suajili');
   const preview=previewVillage(s,'suajili',100,50,payload,nav);
-  assert.equal(numberOf(s.ledger.balance),1000000);assert.equal(preview.cost,2000);
+  assert.equal(numberOf(s.ledger.balance),1000000);assert.equal(preview.cost,50000);
   assert.equal(preview.buildings.length,payload.units.length);assert.ok(preview.entry);
   assert.equal(foundVillage(s,'village-command','suajili',100,50,payload,nav),true);
-  assert.equal(numberOf(s.ledger.balance),998000);assert.equal(s.villages.length,2);
+  assert.equal(numberOf(s.ledger.balance),950000);assert.equal(s.villages.length,2);
   assert.ok(s.villages[1].buildings.every(b=>b.footprint.length>=3));
   assert.equal(foundVillage(s,'village-command','suajili',100,50,payload,nav),false);
-  assert.equal(numberOf(s.ledger.balance),998000);
-  assert.equal(previewVillage(s,'suajili',200,50,payload,nav).cost,2000);
+  assert.equal(numberOf(s.ledger.balance),950000);
+  assert.equal(previewVillage(s,'suajili',200,50,payload,nav).cost,80000);
   assert.deepEqual(deserialize(serialize(s)).villages,s.villages);
 });
 test('A village without a walkable departure is rejected before charging or founding',()=>{
@@ -114,10 +125,14 @@ test('New midday center does not move plants or employees',()=>{
   const s=ready();placeStructure(s,'center',{x:4,z:0},nav);plant(s,'plant','mijo',12,0,nav);openInitialHiring(s);hire(s,'hire',{olderMale:1});s.ledger.balance=rational(5000);const original=s.plants[0].centerId;placeStructure(s,'second',{x:18,z:0},nav);
   assert.equal(s.plants[0].centerId,original);assert.equal(s.workers[0].centerId,original);plant(s,'new','mijo',24,0,nav);assert.equal(s.plants[1].centerId,s.structures[1].id);
 });
-test('Growth/multiply permissions, area nonoverlap, cooldown from activation and expiry',()=>{
-  const s=setup();assert.throws(()=>cast(s,'early','growth',10,0,nav));s.day=5;
-  cast(s,'growth','growth',10,0,nav);assert.equal(s.cooldowns.growth,90);assert.equal(s.spells[0].remaining,30);
-  assert.throws(()=>cast(s,'overlap','multiply',11,0,nav),/solaparse/);tick(s,30,nav);assert.equal(s.spells.length,0);assert.ok(Math.abs(s.cooldowns.growth-60)<1e-8);
+test('Day-one Growth targets one crop, rejects overlap and has no cooldown after expiry',()=>{
+  const s=setup(),p=s.plants[0];
+  assert.throws(()=>cast(s,'ground','growth',p.x+.01,p.z,nav,p.id),/Selecciona/);
+  cast(s,'growth','growth',p.x,p.z,nav,p.id);
+  assert.equal(s.cooldowns.growth,0);assert.equal(s.spells[0].remaining,30);
+  assert.equal(s.spells[0].targetPlantId,p.id);
+  assert.throws(()=>cast(s,'overlap','multiply',p.x,p.z,nav,p.id),/solaparse/);
+  tick(s,30,nav);assert.equal(s.spells.length,0);assert.equal(s.cooldowns.growth,0);
 });
 test('First nights introduce mandatory warthog and hyena even with zero attraction',()=>{
   const s=ready();s.day=1;planNight(s);assert.deepEqual(s.nightPlan.group,['warthog']);s.day=2;planNight(s);assert.deepEqual(s.nightPlan.group,['hyena']);

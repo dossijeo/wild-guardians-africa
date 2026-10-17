@@ -5,6 +5,7 @@ import {BASIC_MESSAGES,BASIC_STEPS,TUTORIAL_MESSAGES,TUTORIAL_IDS,DEFENSES_FOLLO
 import {REPEATABLE_MAGIC_IDS,shieldReminderKey,usefulPeacefulMagic,recordMagicReminder} from './magic-reminders.js';
 import {dailyTutorialMessages,tutorialMessageShownToday,recordTutorialMessageToday} from './daily-messages.js';
 const known=new Set(TUTORIAL_IDS),reason='tutorial-reading';
+const agriculturalLessons=new Set(['magic.growth','magic.multiply','reminder.growth','reminder.multiply']);
 const delivered=s=>s.crates.some(c=>c.delivered)||s.events.some(e=>e.type==='CrateDelivered');
 function readingActionCompleted(s,id){
   if(['magic.growth','magic.multiply'].includes(id)){
@@ -65,6 +66,13 @@ export class TutorialController {
     if(t.reading&&readingActionCompleted(s,t.reading)){
       this.recordSeen(t.reading);t.reading=null;this.lastPresentation=null;
     }
+    const finishBasicFirst=!t.basicSkipped&&t.step==='done'&&delivered(s)&&!t.seen.includes('basic.complete');
+    const harvestBeforeMagic=s.day===1&&!s.raid&&!t.basicSkipped&&t.step==='harvest'&&agriculturalLessons.has(t.reading);
+    if(t.reading&&((!s.raid&&finishBasicFirst&&t.reading!=='basic.complete')||
+      harvestBeforeMagic||(s.raid&&agriculturalLessons.has(t.reading)))){
+      if(!t.pending.includes(t.reading))t.pending.unshift(t.reading);
+      t.reading=null;this.lastPresentation=null;
+    }
     const enqueue=(id,condition,localOnly=false)=>{
       if(condition&&!t.pending.includes(id)&&t.reading!==id&&!(localOnly?t.seen.includes(id):this.seen(id,globalSeen)))t.pending.push(id);
     };
@@ -115,7 +123,8 @@ export class TutorialController {
       else {
         const urgent=s.raid&&['mechanic.first-raid','magic.shield'].find(id=>t.pending.includes(id));
         const expansion=s.postgame&&t.pending.includes('world.expansion')?'world.expansion':null;
-        t.reading=urgentShield||urgent||expansion||t.pending.shift()||null;
+        const next=t.pending.findIndex(id=>!s.raid||!agriculturalLessons.has(id));
+        t.reading=urgentShield||urgent||expansion||(next<0?null:t.pending.splice(next,1)[0]);
       }
     }
     if(t.reading){t.pending=t.pending.filter(id=>id!==t.reading);recordMagicReminder(s,t.reading);this.presentationAge=0;this.presentationKey=null;emit(s,'TutorialMessageStarted',{messageId:t.reading});}
@@ -159,7 +168,7 @@ export class TutorialController {
     const message=this.currentPresentation();
     if(message&&!message.reading&&this.state.tutorial.dismissed?.includes(message.id+':'+(message.variant??'')))return null;
     if(message){
-      if(tutorialMessageShownToday(this.state,message.id)&&!message.reading&&this.lastPresentation?.id!==message.id)return null;
+      if(tutorialMessageShownToday(this.state,message.id)&&!message.reading&&message.variant!=='delivery'&&this.lastPresentation?.id!==message.id)return null;
       if(record)recordTutorialMessageToday(this.state,message.id);
     }
     if(record)this.lastPresentation=message;
@@ -168,6 +177,8 @@ export class TutorialController {
   currentPresentation(){
     const s=this.state,t=s.tutorial;
     if(s.pauses.some(p=>['menu','hiring','hidden','context-lost'].includes(p)))return null;
+    if(!s.result&&s.day===1&&!s.raid&&!t.basicSkipped&&t.step==='harvest'&&s.crates.some(c=>!c.delivered)&&!s.plants.some(p=>p.alive&&isMature(p)))
+      return {id:'basic.harvest',variant:'delivery',gesture:'idle',text:'Paciencia: la cosecha aún tiene camino. La caja va al centro; cobrarás al entregarla. Si queda en el suelo, no pierde su valor: esperará a que tu equipo vuelva por ella.',blocking:false};
     if(t.reading){
       const id=t.reading,afterRaid=s.day>1||!!s.raid||!!(s.nightPlan?.done&&s.nightPlan.group?.length);
       return {id,...TUTORIAL_MESSAGES[id],...(id==='mechanic.defenses'&&afterRaid?{...DEFENSES_FOLLOWUP,variant:'after-raid'}:{}),blocking:false,reading:true,canSkip:id==='basic.introduction'&&this.profile.basicCompleted};
@@ -175,7 +186,6 @@ export class TutorialController {
     if(s.result==='victory')return {id:'campaign.liberation',...TUTORIAL_MESSAGES['campaign.liberation'],blocking:false,result:true};
     if(s.result==='defeat')return {id:'result.defeat',gesture:'warning',text:s.messages.at(-1)?.text??'Faltan recursos para alimentar otro mañana.',blocking:false,result:true};
     if(s.day===1&&!t.basicSkipped&&t.step!=='done'){
-      if(t.step==='harvest'&&s.crates.some(c=>!c.delivered)&&!s.plants.some(p=>p.alive&&isMature(p)))return {id:'basic.harvest',variant:'delivery',gesture:'idle',text:'Paciencia: la cosecha aún tiene camino. La caja va al centro; cobrarás al entregarla. Si queda en el suelo, no pierde su valor: esperará a que tu equipo vuelva por ella.',blocking:false};
       return {id:BASIC_MESSAGES[t.step],...TUTORIAL_MESSAGES[BASIC_MESSAGES[t.step]],blocking:false};
     }
     return null;
