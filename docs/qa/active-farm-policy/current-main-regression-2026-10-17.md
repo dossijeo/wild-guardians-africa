@@ -45,3 +45,8 @@ The command emits one JSON object per day and one final object for each strategy
 | `no-walls` | 14 | Still active | 0 | 132 | 573 | 378 | 0 | 45.4 s |
 
 `good` ordered walls in 30 transactions and repaired 108 structures. `no-walls` still had an intact center and 132 coins at the horizon, so zero crops is **not** a recorded defeat. The two named policies also differ in decisions beyond buying walls, and their farm size, workforce and resulting simulation workload diverge. This comparison establishes that a legal defended policy can survive the pressure after introductory nights 1–5 in this one seed; it neither isolates the causal benefit of walls nor demonstrates a 100-night victory, cross-biome balance, or a navigation speedup. The old fixed-plot 100-night victory assertions remain failing and unchanged.
+
+A [separate 11-night CPU profile](current-main-good11-cpu-profile-2026-10-17.md)
+locates the current JavaScript target-selection and task-accessibility cost.
+Its sample counts are diagnostic, not a performance comparison against the
+experimental native intention planner.

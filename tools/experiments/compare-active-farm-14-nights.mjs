@@ -1,9 +1,15 @@
 import {simulateNativeCampaign} from '../native-campaign-runner.mjs';
 
-const strategies=['good','no-walls'];
+const days=process.argv[2]===undefined?14:Number(process.argv[2]);
+const allowed=['good','no-walls'];
+const selected=process.argv[3];
+if(!Number.isSafeInteger(days)||days<1||days>180||
+ (selected&&!allowed.includes(selected))||process.argv.length>4)
+ throw new Error('Usage: node compare-active-farm-14-nights.mjs [days] [good|no-walls]');
+const strategies=selected?[selected]:allowed;
 for(const strategy of strategies){
  const result=await simulateNativeCampaign({
-  days:14,strategy,seed:712,biome:'sabana',culture:'mapungubwe',
+  days,strategy,seed:712,biome:'sabana',culture:'mapungubwe',
   onDay:day=>console.log(JSON.stringify({type:'day',strategy,day:day.day,
    result:day.result,living:day.living,money:day.money,centerHp:day.centerHp,
    planted:day.planted,destroyed:day.destroyed,
