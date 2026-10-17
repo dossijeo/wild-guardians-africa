@@ -195,5 +195,23 @@ Desierto is the exception because the virtual player bought substantially
 more still-incomplete wall pieces. Gran Cañón control ended in night 11, so
 its final counts have a shorter exposure horizon. All 12 raid reports are
 verified with zero technical issues. This is one seed per biome and no arm
-has demonstrated a 100-night victory. The V1 30-night Sabana run's rising
-losses remain the main warning against adopting these parameters now.
+has demonstrated a 100-night victory. Sabana's heavy late losses and
+Desierto's lower liquidity warn against adopting these parameters now.
+
+## Sixty-night Sabana continuation
+
+The same V1-pressure configuration requested 60 nights from a fresh start
+and completed all 60 without a technical stop or game-over. Its first 30
+day-end state hashes exactly match the earlier 30-night run. It ended with
+46 crops, 604 coins and one operational center, after 1,345 cumulative crop
+losses. The loss counts were 296 on nights 31–40, 304 on nights 41–50 and
+223 on nights 51–60. All 60 raid reports verified with zero issues and no
+coverage loss. Cumulative Game.tick was 544.2 s and virtual-player decisions
+164.8 s; the run took 776.5 s. These are descriptive totals from the single
+run, not an algorithmic speed comparison. The
+[nightly ledger](current-main-v1-pressure-sabana712-60-nightly.csv) and
+compressed full report (gzip SHA-256
+`9ec6b6cde18a5617053dabd12fa87e309dd9f0e158b5bab439ff9c6972f16da6`)
+are retained. Crop count declined from 89 at night 30 to 46 at night 60,
+despite continued replanting. This result supports a 100-night trial but
+does not yet demonstrate victory or economic sustainability to that horizon.
