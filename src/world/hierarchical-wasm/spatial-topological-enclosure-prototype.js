@@ -44,44 +44,6 @@ export function wallOccludesBoundaryFace(a,b,walls){
   return false;
 }
 
-// Sufficient attack test for an already closed, resident cut boundary. A crop
-// can only be hit from the exterior if some exterior actor is within direct
-// contact plus the maximum peripheral radius of its crop center. Every such
-// actor-to-crop segment crosses the boundary. A face covered by wall collision
-// geometry blocks that segment; an uncovered face farther than the complete
-// attack horizon cannot support a hit. This does not certify that the boundary
-// is closed or that workers retain access; callers must prove those separately.
-export function inspectAttackReachFromBoundary(values,walls,crops,maxReach){
-  if(!Array.isArray(values)||values.length%4||!Array.isArray(walls)||
-    !Array.isArray(crops)||!(maxReach>0)||!Number.isFinite(maxReach))
-    throw TypeError('Expected cut boundary, walls, crops and maximum attack reach');
-  if(!values.length||!crops.length)return {status:'unknown',reason:'empty-boundary-or-crops'};
-  if(crops.some(p=>!Number.isFinite(p?.x)||!Number.isFinite(p?.z)))
-    throw TypeError('Expected finite crop positions');
-  let wallFaces=0,distantFaces=0;
-  for(let i=0;i<values.length;i+=4){
-    const [ox,oz,ix,iz]=values.slice(i,i+4);
-    if(![ox,oz,ix,iz].every(Number.isInteger)||
-      Math.abs(ox-ix)+Math.abs(oz-iz)!==1)
-      throw TypeError('Expected adjacent integer cut cells');
-    const ends=ox!==ix?[{x:(ox+ix)/2,z:iz-.5},{x:(ox+ix)/2,z:iz+.5}]:
-      [{x:ix-.5,z:(oz+iz)/2},{x:ix+.5,z:(oz+iz)/2}];
-    if(wallOccludesBoundaryFace(...ends,walls)){wallFaces++;continue;}
-    const [a,b]=ends,dx=b.x-a.x,dz=b.z-a.z,length=dx*dx+dz*dz;
-    let nearest=Infinity;
-    for(const p of crops){
-      const t=Math.max(0,Math.min(1,((p.x-a.x)*dx+(p.z-a.z)*dz)/length));
-      nearest=Math.min(nearest,Math.hypot(p.x-a.x-t*dx,p.z-a.z-t*dz));
-      if(nearest<=maxReach+1e-8)break;
-    }
-    if(nearest<=maxReach+1e-8)return {status:'unknown',reason:'natural-face-within-attack-reach',
-      face:i/4,nearest,maxReach,wallFaces,distantFaces};
-    distantFaces++;
-  }
-  return {status:'boundary-attack-safe',faces:values.length/4,
-    wallFaces,distantFaces,maxReach};
-}
-
 // Fast geometry-only candidate. Taking the hull of square crop clearances
 // avoids a fragile offset/miter calculation and encloses every crop with the
 // requested margin. Physical placement, doors and price remain separate.

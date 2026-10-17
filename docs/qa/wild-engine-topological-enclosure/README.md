@@ -951,20 +951,3 @@ position along the natural intervals is safe, or that no other peripheral
 center exists. A clear ray alone is not an executed attack, and a sample with
 no hit is not a certificate of attack occlusion. The group's physical result
 therefore remains `unknown`.
-
-An experimental **sufficient reach bound** now checks every resident cut
-face against the quoted wall footprints. For an uncovered natural face it
-measures the exact shortest distance from each crop center to that face. The
-worst allowed agricultural hit horizon is largest animal radius (1.55 m),
-direct contact padding (0.65 m), and maximum peripheral radius (3.640001 m),
-or 5.840001 m in total. If every non-wall face lies strictly farther away,
-the boundary is safe from crop hits *provided a separate test has already
-proved it is a closed, resident separator*. It does not infer that rocks,
-trees or wetland water absorb attacks. The function is diagnostic and is not
-connected to the bot or the normal protection classifier.
-
-On the same frozen Sabana state, this bound remains `unknown`: face 10 is
-uncovered and 5.700877 m from a crop, inside the 5.840001 m horizon. One
-earlier face was wall-covered and nine were far enough, but one uncertain face
-is sufficient to refuse certification. This identifies a narrow physical
-question for future evaluation instead of repeating rays across all crops.
