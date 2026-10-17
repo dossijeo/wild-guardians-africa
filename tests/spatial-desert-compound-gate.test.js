@@ -45,7 +45,20 @@ test('closing an incremental compound perimeter adds a usable third gate',async(
       'all 42 routes exist before the last paid stroke');
     const stroke=[[66,-7.18],[66,-18]],options={smooth:false,snap:false};
     const frozen=serialize(state);
+    const originalPreview=session.withWallPreview,originalRoute=session.routeActor;
+    let insidePreview=0,previewRoutes=0;
+    session.withWallPreview=(walls,suppress,inspect,refresh)=>
+      originalPreview(walls,suppress,()=>{
+        insidePreview++;
+        try{return inspect();}finally{insidePreview--;}
+      },refresh);
+    session.routeActor=(...args)=>{
+      if(insidePreview)previewRoutes++;
+      return originalRoute(...args);
+    };
     const plan=Game.quoteWallChain(state,'zarzas',stroke,nav,options);
+    session.withWallPreview=originalPreview;session.routeActor=originalRoute;
+    assert(previewRoutes>0,'an affected worker route still receives a full physical check');
     assert.equal(serialize(state),frozen,'the quote must leave state unchanged');
     const localOverlay=nav.wallLocalOverlay;
     nav.wallLocalOverlay=()=>null;

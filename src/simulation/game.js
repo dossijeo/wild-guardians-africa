@@ -9,6 +9,7 @@ import {resolveFluidPlacement} from '../world/fluid-placement.js';
 import {ensurePurchaseBudget,HIRING_RESERVE} from './budget.js';
 import {ensureBoundaryGates} from '../world/boundary-gates.js';
 import {gatePortalPoints} from '../world/gate-passages.js';
+import {wallCollisionBounds} from '../world/wall-collision-frame.js';
 import {containsPoint,footprintDistance} from '../world/footprints.js';
 import {centerCulture,centerFootprint,centerServicePoint,centerDeliveryPoint} from '../world/centers.js';
 import {actorBlockers,actorSegmentClear,prepareActorMotion} from './actor-motion.js';
@@ -152,6 +153,24 @@ export function wallRefund(target){
   const amount=multiply(rational(target.cost),BigInt(health.n)*BigInt(maximum.d),BigInt(health.d)*BigInt(maximum.n));
   return rational((BigInt(amount.n)+BigInt(amount.d)-1n)/BigInt(amount.d));
 }
+// A previously valid path remains valid after building a wall when each of its
+// physical segments misses the wall's expanded collision bounds. This broad
+// phase may request an unnecessary full proof, but never certifies a route
+// close to a new barrier. Removed props and opened gates cannot block it.
+function routeClearOfNewWalls(start,route,end,walls){
+  if(!Array.isArray(route))return false;
+  const points=[start,...route,end];
+  for(const wall of walls){
+    const [minX,minZ,maxX,maxZ]=wallCollisionBounds(wall,.30);
+    for(let i=1;i<points.length;i++){
+      const a=points[i-1],b=points[i];
+      if(![a?.x,a?.z,b?.x,b?.z].every(Number.isFinite))return false;
+      if(Math.max(a.x,b.x)>=minX&&Math.min(a.x,b.x)<=maxX&&
+         Math.max(a.z,b.z)>=minZ&&Math.min(a.z,b.z)<=maxZ)return false;
+    }
+  }
+  return true;
+}
 function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
   if(!newPieces.length)return [];
   const living=activeCrops(s.plants);
@@ -253,13 +272,20 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
       if(village)witnesses.push([worker,village.entry??village]);
     }
     const known=(routes,a,b)=>{
-      try{return !!routes.path(a,b,.28,null,true);}
+      try{return routes.path(a,b,.28,null,true);}
       catch(error){if(error.name==='SpatialChunkUnavailable')return null;throw error;}
     };
-    const reachable=witnesses.filter(([a,b])=>known(nav,a,b)===true);
+    const reachable=witnesses.map(([a,b])=>({a,b,route:known(nav,a,b)}))
+      .filter(({route})=>Array.isArray(route));
     const proposed=()=>newPieces.map(piece=>({...piece,...updates.find(u=>u.id===piece.id)}));
-    const preserved=()=>nav.withWallPreview(proposed(),[...suppressedForGates],draft=>
-      reachable.every(([a,b])=>known(draft,a,b)===true),true);
+    const preserved=()=>{
+      const walls=proposed();
+      const affected=reachable.filter(({a,b,route})=>
+        !routeClearOfNewWalls(a,route,b,walls));
+      if(!affected.length)return true;
+      return nav.withWallPreview(walls,[...suppressedForGates],draft=>
+        affected.every(({a,b})=>Boolean(known(draft,a,b))),true);
+    };
     if(reachable.length&&!preserved()){
       let routesPreserved=false;
       for(const piece of newPieces){
