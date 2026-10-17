@@ -3,17 +3,42 @@ import {AGRICULTURAL_PROFILE_LIMITS} from
   '../../simulation/raid-agricultural-impact.js';
 import {ANIMAL_SPATIAL_PROFILES} from './spatial-movement-profiles.js';
 import {approximateCutModules,cropClearanceHull,identifyNaturalCorridor,
-  inspectSelfClosedQuote} from './spatial-topological-enclosure-prototype.js';
+  inspectSelfClosedQuote,wallOccludesBoundaryFace} from
+  './spatial-topological-enclosure-prototype.js';
 
 const SPECIES=['warthog','hyena','buffalo','lion','rhino'];
 const MAX_ATTACK_REACH=Math.max(...Object.values(ANIMAL_SPATIAL_PROFILES)
   .map(profile=>profile.radius))+.65+AGRICULTURAL_PROFILE_LIMITS.attackRadius;
 
-// Disconnected experimental planner. All spatial decisions use the native cut
+// An exterior hit ray must cross the cut boundary. A face fully covered by a
+// real wall footprint already blocks that ray; other faces require enough
+// clearance for both central contact and peripheral agricultural damage.
+function attackMarginAcrossOpenFaces(crops,boundary,walls,wasm){
+  let best=Infinity;
+  for(let i=0;i<boundary.length;i+=4){
+    const [ox,oz,ix,iz]=boundary.slice(i,i+4);
+    const kind=wasm.lazy_cut_face_natural(ox,oz,ix,iz);
+    if(kind<0)return NaN;
+    const mx=(ox+ix)/2,mz=(oz+iz)/2;
+    const a=ox!==ix?{x:mx,z:mz-.5}:{x:mx-.5,z:mz};
+    const b=ox!==ix?{x:mx,z:mz+.5}:{x:mx+.5,z:mz};
+    if(wallOccludesBoundaryFace(a,b,walls))continue;
+    for(const crop of crops){
+      const dx=b.x-a.x,dz=b.z-a.z;
+      const t=Math.max(0,Math.min(1,((crop.x-a.x)*dx+
+        (crop.z-a.z)*dz)/(dx*dx+dz*dz)));
+      best=Math.min(best,Math.hypot(crop.x-a.x-t*dx,crop.z-a.z-t*dz));
+    }
+  }
+  return best-MAX_ATTACK_REACH;
+}
+
+// Opt-in enclosure planner. All spatial decisions use the native cut
 // and native continuous face proof; the game quote remains the authority for
 // legal modules, doors and exact price. Nothing is purchased or reserved.
 export function proposeHybridEnclosure({state,nav,session,crops,material='zarzas',
-  workerOrigins=state.villages.map(v=>v.entry??v),margin=12,padding=2}){
+  workerOrigins=state.villages.map(v=>v.entry??v),margin=12,
+  padding=Math.ceil(MAX_ATTACK_REACH)+2}){
   if(!Array.isArray(crops)||!crops.length||crops.length>256||
     crops.some(p=>!Number.isFinite(p?.x)||!Number.isFinite(p?.z))||
     !Array.isArray(workerOrigins)||!workerOrigins.length)
@@ -66,6 +91,27 @@ export function proposeHybridEnclosure({state,nav,session,crops,material='zarzas
       throw error;}
   }));
   const before=routeWitness();
+  if(count===0){
+    const faceCounts={solid:0,wetland:0,river:0,cliff:0,unknown:0};
+    for(const face of natural){
+      if(face.kind===1)faceCounts.solid++;
+      else if(face.kind===2)faceCounts.wetland++;
+      else if(face.kind===3)faceCounts.river++;
+      else if(face.kind===4)faceCounts.cliff++;
+      else faceCounts.unknown++;
+    }
+    const workerSafe=crops.every((_,index)=>before.some(row=>
+      row[index]===true));
+    if(boundaryCount>0&&!faceCounts.unknown&&attackMargin>0&&workerSafe)
+      return {status:'protected',chosen:{kind:'existing-closure',
+        cost:0,modules:0,gates:0,movementFaces:faceCounts,attackMargin},
+      attempts:[],box};
+    return {status:'unknown',reason:!boundaryCount?'empty-boundary':
+      faceCounts.unknown?'movement-unproved':
+        !(attackMargin>0)?'attack-reach-unproved':'worker-access-unproved',
+    attempts:[{kind:'existing-closure',status:'unknown',
+      movementFaces:faceCounts,attackMargin,workerSafe}],box};
+  }
   const candidates=[];
   if(count>0&&!cut.ambiguous.length)
     candidates.push({kind:corridor?.kind??'general-cut',
@@ -88,7 +134,11 @@ export function proposeHybridEnclosure({state,nav,session,crops,material='zarzas
       cost:quote.cost,gates:quote.gates};
     if(quote.blockedPieces.length||quote.blockedCrops.length||
       quote.expectedSlots.length!==quote.pieces.length){
-      attempts.push({...result,status:'open',reason:'omitted-module'});
+      attempts.push({...result,status:'open',reason:'omitted-module',
+        gaps:[...quote.blockedPieces.map(piece=>({x:piece.x,z:piece.z,
+          reason:nav.wallPlacement(piece).reason??'physical-obstacle'})),
+        ...quote.blockedCrops.map(piece=>({x:piece.x,z:piece.z,
+          reason:'crop-overlap'}))],expectedSlots:quote.expectedSlots.length});
       continue;
     }
     let proof;
@@ -105,10 +155,13 @@ export function proposeHybridEnclosure({state,nav,session,crops,material='zarzas
       }
       const wallLoop=candidate.boundary?null:
         inspectSelfClosedQuote(quote,state.structures,crops);
+      const exposedAttackMargin=candidate.boundary?
+        attackMarginAcrossOpenFaces(crops,candidate.boundary,
+          [...state.structures,...quote.previewPieces],wasm):NaN;
       return {movement:candidate.boundary?
         faceCounts.unknown===0&&candidate.boundary.length>0:
         wallLoop.status==='closed-wall-loop',
-      wallLoop,faceCounts,workers:routeWitness()};
+      wallLoop,faceCounts,exposedAttackMargin,workers:routeWitness()};
     },true);}
     catch(error){
       if(error.name==='SpatialChunkUnavailable'){
@@ -121,7 +174,8 @@ export function proposeHybridEnclosure({state,nav,session,crops,material='zarzas
       before.some((row,i)=>row[j]===true&&proof.workers[i][j]===true))&&
       before.every((row,i)=>row.every((value,j)=>
         value!==true||proof.workers[i][j]===true));
-    const attackSafe=candidate.boundary?attackMargin>0:
+    const attackSafe=candidate.boundary?
+      proof.exposedAttackMargin>0:
       proof.wallLoop?.attackOccluded===true;
     const status=proof.movement&&workerSafe&&attackSafe?
       'protected':'unknown';
@@ -130,8 +184,11 @@ export function proposeHybridEnclosure({state,nav,session,crops,material='zarzas
         !attackSafe?'attack-reach-unproved':null;
     attempts.push({...result,status,reason,
       movementFaces:proof.faceCounts,attackMargin,
+      exposedAttackMargin:proof.exposedAttackMargin,
       workerRoutesBefore:before,workerRoutesAfter:proof.workers});
-    if(status==='protected')return {status,chosen:attempts.at(-1),attempts,box};
+    if(status==='protected')return {status,
+      chosen:{...attempts.at(-1),strokes:candidate.strokes,
+        preparedPlan:quote},attempts,box};
   }
   return {status:'unknown',reason:'no-certified-proposal',attempts,box};
 }

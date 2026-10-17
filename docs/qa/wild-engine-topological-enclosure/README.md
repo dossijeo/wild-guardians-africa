@@ -1072,3 +1072,48 @@ uses crop-center connectors and may return `unknown` even where this
 site-specific boundary proof succeeds; no production classification or bot
 behavior was changed. Keep PR #62 isolated and draft until those guarantees
 and a sustained game comparison exist.
+
+## Opt-in campaign integration (2026-10-17)
+
+The topological proposal is now available to the native campaign runner with
+`defensePolicy: 'topological'`. This is an explicit policy choice; the normal
+game and the existing expanding bot remain unchanged. The bot buys a complete
+certified quote in one transaction when its cash reserve permits it, and
+receives crop and topology events instead of querying every tick. Unknown or
+partially buildable proposals are never purchased. The physical quote still
+decides legal modules, automatic doors and exact cost.
+
+The original cut placed the boundary only 1 m from some real crops in the
+Gran Cañón/712 campaign. That proved movement closure but could not prove
+protection from peripheral agricultural damage. Using a local cut padding of
+`ceil(maximum species body radius + central reach + peripheral reach) + 2`
+instead produced a legal 12-module quote. The nearest crop-to-boundary
+distance was 6.708 m, leaving a positive 0.868 m conservative attack margin.
+After buying these 12 modules for 120 coins on day 3, the native cut required
+zero further edges. Its 160 boundary faces were all continuously proved by
+walls, river or cliff; worker routes remained available. The planner now
+reports `existing-closure` even where the older crop-center classifier says
+`unknown` because it cannot connect to the crop center. This does not turn
+an unresolved native face into a certificate: missing sectors, unproved faces,
+insufficient attack margin or missing worker access still return `unknown`.
+
+Reproduce the campaign with:
+
+```powershell
+$env:WILD_ENGINE_SPATIAL_SERVICES_WASM=(Resolve-Path 'src/world/hierarchical-wasm/spatial-savanna.wasm').Path
+node tools/experiments/run-topological-defense-campaign.mjs gran-canon 7 712 .cache/topological-canyon-7.json
+```
+
+This seven-night run completed in 55.5 s on the current host. The bot bought
+12 modules atomically on day 3. Decision time was 0.53–1.13 s per day over
+days 2–7; after construction 13 subsequent decisions recognized the existing
+closure without buying redundant modules. The night-6 raid struck walls 21 times, ruining three
+modules. Night 7 ruined another and destroyed 23 crops; those losses occurred
+after real breaches and are balance evidence, not proof of an attack through
+an intact wall. The policy does not yet repair those breaches, so it is not a
+replacement for the established defensive strategy. It is suitable as an
+explicit experimental arm in balance comparisons. The directed test covers
+atomic purchase, native natural faces, access, sector unloading, paid breach,
+reconstruction and save/load; 21 focused native tests and all 204 playable
+tests pass. Wider biome and sustained campaign comparisons remain necessary
+before making this policy the default bot behavior.

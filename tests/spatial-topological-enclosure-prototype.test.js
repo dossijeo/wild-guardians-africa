@@ -7,6 +7,8 @@ import {createPlant} from '../src/simulation/crops.js';
 import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
 import {proposeHybridEnclosure} from '../src/world/hierarchical-wasm/spatial-hybrid-enclosure-prototype.js';
+import {createCropEnclosurePlanner} from '../src/world/hierarchical-wasm/spatial-crop-enclosure-plan.js';
+import {createNativeTopologicalDefensePolicy} from '../tools/native-topological-defense-policy.mjs';
 import {approximateCutModules,cropClearanceHull,cutEdgesToStrokes,enclosureJunctions,inspectNaturalJunctions,
   identifyNaturalCorridor,
   inspectPlacedNaturalJunctions,inspectSelfClosedQuote,
@@ -641,6 +643,47 @@ test('Gran Cañón natural corridor closes around planted crops and rejects unce
           crops:corridorSeeds});
         assert.equal(hybrid.status,'protected',JSON.stringify(hybrid));
         assert.equal(hybrid.chosen.kind,'natural-corridor');
+        const cropIds=state.plants.filter(plant=>corridorSeeds.some(seed=>
+          Math.hypot(plant.x-seed.x,plant.z-seed.z)<.01)).map(plant=>plant.id);
+        const group={id:'crop:canyon-corridor',cropIds,
+          protection:'unprotected',
+          bounds:{minX:-25,minZ:45,maxX:-19,maxZ:61},
+          revision:{crops:1,topology:[]}};
+        const advice={getUnprotectedCropGroups:()=>[group]};
+        const integrated=createCropEnclosurePlanner(state,nav,advice,session)
+          .planCropEnclosure(group.id,{method:'topological'});
+        assert.equal(integrated.status,'ready');
+        assert.equal(integrated.kind,'natural-corridor');
+        assert.equal(integrated.cost,integrated.modules.length*10);
+        assert.ok(integrated.cost>0&&integrated.cost<=140);
+        const policyState=deserialize(serialize(state));
+        const policyChunks=new Map();
+        const policySession=createSpatialGameSession(module,policyState,{
+          loaded:()=>policyChunks,onData:data=>
+            policyChunks.set(`${data.cx},${data.cz}`,data)});
+        try{
+          policySession.stream.plan(jobs);await policySession.stream.whenIdle();
+          const policyNav=createSpatialNavigationMovement(policySession,policyState);
+          const policy=createNativeTopologicalDefensePolicy({session:policySession,
+            advice,startDay:1,minimumReplanSeconds:0});
+          policyState.ledger.balance=rational(100);
+          assert.equal(policy.act(policyState,policyNav,{
+            command:()=> 'canyon-policy-wall',reserve:0}),0);
+          assert.equal(policy.report().history.at(-1).reason,
+            'saving-for-complete-enclosure');
+          assert.equal(policyState.structures.filter(item=>item.kind==='wall').length,0,
+            'An unaffordable complete enclosure must not buy a fragment');
+          policyState.ledger.balance=rational(500);
+          policy.onWorldEvent({type:'CrateDelivered'},policyState);
+          assert.equal(policy.act(policyState,policyNav,{
+            command:()=> 'canyon-policy-wall',reserve:0}),1);
+          assert.equal(policy.report().history.at(-1).kind,'natural-corridor');
+          assert.equal(policyState.structures.filter(item=>item.kind==='wall').length,
+            integrated.modules.length);
+          assert.equal(policy.act(policyState,policyNav,{
+            command:()=> 'ignored',reserve:0}),0,
+            'No world event means no new enclosure planning');
+        }finally{policySession.dispose();}
         assert.ok(workerRoutesBefore.every(p=>p.outbound&&p.return));
         const riverFace=naturalFaces.find(face=>face.kind===3&&
           Math.abs((face.edge[0]+face.edge[2])/2+24)>2&&
@@ -660,6 +703,21 @@ test('Gran Cañón natural corridor closes around planted crops and rejects unce
         const paid=state.structures.filter(p=>p.kind==='wall'&&
           corridorQuote.pieces.some(q=>Math.hypot(p.x-q.x,p.z-q.z)<.01));
         assert.equal(paid.length,14);
+        const paidPlan=createCropEnclosurePlanner(state,nav,advice,session)
+          .planCropEnclosure(group.id,{method:'topological'});
+        assert.ok(['ready','protected'].includes(paidPlan.status),
+          JSON.stringify(paidPlan));
+        if(paidPlan.status==='ready'){
+          assert.ok(paidPlan.modules.length<=2,
+            'Only the clearance gap may need additional modules');
+          assert.ok(Game.buildWallChain(state,'canyon-clearance-paid',
+            'zarzas',paidPlan.points,nav,{smooth:false,snap:false,
+              preparedPlan:paidPlan.preparedPlan}));
+        }
+        const closedPlan=createCropEnclosurePlanner(state,nav,advice,session)
+          .planCropEnclosure(group.id,{method:'topological'});
+        assert.equal(closedPlan.status,'protected',JSON.stringify(closedPlan));
+        assert.equal(closedPlan.kind,'existing-closure');
         assert.ok(corridorBoundary.every((_,i)=>i%4!==0||
           wasm.lazy_cut_face_natural(...corridorBoundary.slice(i,i+4))>0));
         const restored=deserialize(serialize(state));
