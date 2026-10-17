@@ -827,6 +827,15 @@ resident-boundary certificate and legal wall junctions before claiming the
 whole enclosure is protected. Rocks and trees are not made attack-opaque by
 this river test.
 
+`lazy_cut_face_natural()` classifies native faces as static-solid or wetland
+barriers to **movement**. Neither result alone certifies protection from crop
+damage. In particular, the Manglares wetland certificate and the Gran Cañón
+river hit predicate are different mechanisms: `agriculturalRayClear()` checks
+fluid crossings for the canyon, while a wetland face in another biome cannot
+inherit that result. A mixed enclosure must retain `unknown` for agricultural
+protection until its relevant exterior attack rays are also ruled out, along
+with continuous movement closure, legal module joins and worker access.
+
 ### Local construction and destruction regression
 
 The focused WASM test now encloses a known resident seed with four native

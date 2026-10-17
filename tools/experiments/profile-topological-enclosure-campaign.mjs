@@ -546,6 +546,8 @@ function inspect(state,nav){
               if(uncovered.length<8)uncovered.push({edge:edge/4,cells,kind});
             }
           }
+          // This is a movement boundary only. In particular, a Manglares
+          // wetland face does not inherit the canyon river crop-hit predicate.
           return {status:counts.unknown?'unknown':'blocked-by-native-natural',
             ...counts,wetlandExamples,uncovered};
         })():undefined;
