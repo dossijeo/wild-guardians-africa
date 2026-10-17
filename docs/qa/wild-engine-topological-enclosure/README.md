@@ -805,6 +805,10 @@ ray for all five animal movement radii. From 0.65 m outside to 0.65 m inside
 the wall, every profile is occluded. This ties the simple wall-loop certificate
 to the current combat predicate; it does not certify mixed natural joins or
 replace an actual raid replay.
+Removing a paid bottom module through `Game.removeWall()` then opens both the
+structural loop certificate and an attack ray through that breach in the same
+game state. This checks the transition from intact to open rather than only
+comparing two hand-authored wall lists.
 
 ### Local construction and destruction regression
 

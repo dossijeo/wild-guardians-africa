@@ -185,6 +185,17 @@ test('two wall strokes quote and purchase atomically with one automatic gate',()
       profile.radius),false,`${species} cannot hit through the paid wall loop`);
   assert.equal(state.ledger.entries['two-strokes'].n,String(-quote.cost));
   assert.equal(serialize(deserialize(serialize(state))),serialize(state));
+  const bottom=state.structures.filter(item=>item.kind==='wall'&&
+    Math.abs(item.z)<.1).sort((a,b)=>Math.abs(a.x-4)-Math.abs(b.x-4))[0];
+  assert.ok(bottom,'the purchased loop has a removable bottom module');
+  assert.equal(Game.removeWall(state,'two-strokes-breach',bottom.id,nav),true);
+  nav.setState(state);
+  assert.equal(inspectSelfClosedQuote({pieces:state.structures,
+    previewPieces:state.structures,blockedPieces:[],blockedCrops:[]},[],
+  [{x:4,z:4}]).status,'open');
+  assert.equal(agriculturalRayClear(state,nav,
+    {x:bottom.x,z:-.65},{x:bottom.x,z:.65},SMALLEST_ANIMAL_RADIUS),true,
+  'removing the module opens a physical attack ray through the breach');
 });
 
 test('natural-join checks use placed module ends and refuse missing pieces',()=>{
