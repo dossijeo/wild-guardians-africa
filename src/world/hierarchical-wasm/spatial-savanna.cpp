@@ -1854,17 +1854,17 @@ int spatial_local_clear_except(float x,float z,float nx,float nz,int ignore0,int
 int spatial_local_clear(float x,float z,float nx,float nz){
   return spatial_local_clear_except(x,z,nx,nz,0,0,0,0);
 }
-// Read-only local physical query for a hypothetical gate. Existing barriers
-// named in the removal buffer are ignored and proposed barriers in the batch
-// buffer are tested without changing occupancy, sectors or graph revisions.
+// Read-only local physical query for a hypothetical wall stroke or gate.
+// Existing barriers named in the removal buffer are ignored and proposed
+// barriers are tested without changing occupancy, sectors or graph revisions.
 // -1 means the query is unavailable and the caller must use its full proof.
 int spatial_overlay_local_clear(float x,float z,float nx,float nz,int removeCount,int addCount){
   if(!navReady||!std::isfinite(x)||!std::isfinite(z)||!std::isfinite(nx)||!std::isfinite(nz)||
-     removeCount<0||removeCount>4||addCount<0||addCount>4||
+     removeCount<0||removeCount>4||addCount<0||addCount>128||
      barrierRemovalIds.size()<size_t(removeCount)||barrierBatch.size()<size_t(addCount)*6)
     return -1;
   for(int i=0;i<removeCount;i++)if(!barrierIndex().byId.count(barrierRemovalIds[i]))return -1;
-  Barrier proposed[4];
+  std::array<Barrier,128> proposed;
   for(int i=0;i<addCount;i++){
     const float* b=barrierBatch.data()+i*6;
     if(!std::isfinite(b[0])||!std::isfinite(b[1])||!std::isfinite(b[2])||

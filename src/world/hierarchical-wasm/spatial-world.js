@@ -255,8 +255,8 @@ export function createSpatialWorld(module){
     overlayLocalClear:(start,end,removeIds,barriers)=>{
       if(!Array.isArray(removeIds)||removeIds.length>4||
         removeIds.some(id=>!Number.isSafeInteger(id)||id<=0)||
-        !Array.isArray(barriers)||barriers.length>4)
-        throw TypeError('Expected at most four removed and proposed barriers');
+        !Array.isArray(barriers)||barriers.length>128)
+        throw TypeError('Expected at most four removed and 128 proposed barriers');
       const additions=barriers.length?wasm.spatial_barrier_batch_ptr(barriers.length):0;
       const removals=removeIds.length?wasm.spatial_barrier_removal_ptr(removeIds.length):0;
       if(barriers.length&&!additions||removeIds.length&&!removals)

@@ -35,5 +35,36 @@ for(const biome of ['sabana','gran-rio','manglares','volcanes','desierto','gran-
         }
       });
       assert(compared>0,'fixture must compare at least one gate candidate');
+      const local=session.wallLocalOverlay(solid,quote.suppressed);
+      if(quote.suppressed.every(id=>nav.suppressed.has(id))){
+        assert(local,'resident wall hypothesis should support a local overlay');
+        const probes=solid.slice(0,4).flatMap(piece=>[
+          {x:piece.x,z:piece.z},{x:piece.x+1.5,z:piece.z+1.5}]);
+        const beforeProbes=session.core.wasm.lazy_sector_updates();
+        const localProbes=probes.map(point=>local.walkable(point.x,point.z));
+        assert.equal(local.walkable(10000,10000),null,
+          'nonresident space must remain unknown');
+        assert.equal(session.core.wasm.lazy_sector_updates(),beforeProbes);
+        const physicalProbes=nav.withWallPreview(solid,quote.suppressed,draft=>
+          probes.map(point=>draft.walkable(point.x,point.z,.28,null,true)));
+        for(let i=0;i<probes.length;i++)if(localProbes[i]!==null)
+          assert.equal(localProbes[i],physicalProbes[i],`room probe ${i}`);
+        let readOnlyCompared=0;
+        for(const piece of solid){
+          const gate={...piece,gate:true},ports=gatePortalPoints(gate);
+          if(ports.length!==2)continue;
+          const before=session.core.wasm.lazy_sector_updates();
+          const readOnly=local.gateClear(gate,ports);
+          assert.equal(session.core.wasm.lazy_sector_updates(),before);
+          if(readOnly===null)continue;
+          const proposed=solid.map(item=>item.id===piece.id?gate:item);
+          const physical=nav.withWallPreview(proposed,quote.suppressed,draft=>
+            ports.every(port=>draft.walkable(port.x,port.z,.28,null,true))&&
+            draft.segmentClear(ports[0],ports[1],.28,null,true));
+          assert.equal(readOnly,physical,`whole-stroke candidate ${piece.id}`);
+          if(++readOnlyCompared===4)break;
+        }
+        assert(readOnlyCompared>0,'fixture must compare the whole-stroke overlay');
+      }else assert.equal(local,null,'prop removal must use the full preview');
     }finally{session.dispose();}
   });

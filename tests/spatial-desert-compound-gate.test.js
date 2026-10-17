@@ -47,6 +47,13 @@ test('closing an incremental compound perimeter adds a usable third gate',async(
     const frozen=serialize(state);
     const plan=Game.quoteWallChain(state,'zarzas',stroke,nav,options);
     assert.equal(serialize(state),frozen,'the quote must leave state unchanged');
+    const localOverlay=nav.wallLocalOverlay;
+    nav.wallLocalOverlay=()=>null;
+    const fullPreviewPlan=Game.quoteWallChain(state,'zarzas',stroke,nav,options);
+    nav.wallLocalOverlay=localOverlay;
+    assert.deepEqual({pieces:plan.pieces,gates:plan.gates,cost:plan.cost},
+      {pieces:fullPreviewPlan.pieces,gates:fullPreviewPlan.gates,
+        cost:fullPreviewPlan.cost},'read-only and full-preview planning agree');
     assert.equal(plan.pieces.length,5);
     assert.equal(plan.gates,1);
     assert.equal(plan.cost,50);

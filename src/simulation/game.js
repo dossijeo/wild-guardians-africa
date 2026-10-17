@@ -156,16 +156,25 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
   if(!newPieces.length)return [];
   const living=activeCrops(s.plants);
   const newIds=new Set(newPieces.map(p=>p.created));
-  const layout=wallLayout([...s.structures,...newPieces],Object.fromEntries(B.walls.map(w=>[w.id,w.hp])));
+  const wallSettings=Object.fromEntries(B.walls.map(w=>[w.id,w.hp]));
+  let layout=wallLayout([...s.structures,...newPieces],wallSettings);
   const originals=new Map([...s.structures,...newPieces].map(p=>[p.created,p]));
   const suppressedForGates=new Set(nav.suppressed);
   for(const piece of newPieces)for(const id of nav.wallPlacement(piece).suppress??[])suppressedForGates.add(id);
+  const overlayUnavailable=Symbol('local wall overlay unavailable');
+  let localOverlay=null;
   const canHostCandidate=p=>{
     const original=originals.get(p.id);if(!original)return false;
     const candidate={...original,gate:true},check=nav.wallPlacement(candidate);
     if(!check.valid||cropOverlap(candidate))return false;
     const points=gatePortalPoints(candidate);if(points.length!==2)return false;
     if(nav.withWallPreview){
+      if(localOverlay){
+        if((check.suppress??[]).some(id=>!nav.suppressed.has(id)))throw overlayUnavailable;
+        const clear=localOverlay.gateClear(candidate,points);
+        if(clear===null)throw overlayUnavailable;
+        return clear;
+      }
       const local=nav.gateOverlayClear?.(candidate,points,check.suppress??[]);
       if(local!==null&&local!==undefined)return local;
       const proposed=newPieces.map(piece=>piece.created===p.id?candidate:piece);
@@ -205,10 +214,28 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
     if(s.workers.some(w=>w.status!=='home'&&containsPoint(polygon,w.x,w.z)))unhostedWorker=true;
   });
   if(nav.withWallPreview){
-    // One draft serves every room probe. Candidate doors replace that draft
-    // only while the host check runs, then restore it before the next probe.
-    nav.withWallPreview(newPieces,[...suppressedForGates],draft=>
-      ensure((x,z)=>draft.walkable(x,z,.28,null,true)));
+    localOverlay=nav.wallLocalOverlay?.(newPieces,[...suppressedForGates]);
+    let localComplete=false;
+    if(localOverlay){
+      try{
+        ensure((x,z)=>{
+          const clear=localOverlay.walkable(x,z);
+          if(clear===null)throw overlayUnavailable;
+          return clear;
+        });
+        localComplete=true;
+      }catch(error){
+        if(error!==overlayUnavailable)throw error;
+        // Discard temporary gate choices before the full-preview fallback.
+        layout=wallLayout([...s.structures,...newPieces],wallSettings);
+        unhosted=false;unhostedWorker=false;
+      }
+      localOverlay=null;
+    }
+    if(!localComplete){
+      nav.withWallPreview(newPieces,[...suppressedForGates],draft=>
+        ensure((x,z)=>draft.walkable(x,z,.28,null,true)));
+    }
   }else ensure((x,z)=>interior.walkable(x,z,.28,null,true));
   const converted=layout.pieces.filter(p=>newIds.has(p.id)&&p.autoGate&&!s.structures.some(e=>e.id===p.entityId&&e.autoGate));
   const updates=converted.map(p=>({id:p.entityId,gate:true,autoGate:true,maxHp:p.maxHp,hp:p.hp})).filter(update=>{const piece=[...s.structures,...newPieces].find(p=>p.id===update.id),candidate={...piece,...update};return nav.wallPlacement(candidate).valid&&!cropOverlap(candidate);});

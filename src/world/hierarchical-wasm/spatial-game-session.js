@@ -236,6 +236,33 @@ export function createSpatialGameSession(module,state,streamOptions){
     return core.overlayLocalClear(points[0],points[1],ids,
       spatialStructureBarriers(candidate));
   }
+  // Short-lived read-only wall hypothesis for local room and gate probes.
+  // It never changes the confirmed graph; unknown residency or prop removal
+  // sends the caller back to the full construction preview.
+  function wallLocalOverlay(proposed,suppress){
+    if(activeWallPreview||typeof core.wasm.spatial_overlay_local_clear!=='function'||
+      !Array.isArray(proposed)||!Array.isArray(suppress)||
+      suppress.some(id=>!props.suppressed.has(id)))return null;
+    const pieces=proposed.map(wall=>spatialStructureBarriers(wall));
+    const all=pieces.flat();
+    if(all.length>128)return null;
+    const clear=(a,b,barriers)=>{
+      selectProfile(WORKER_SPATIAL_PROFILE);
+      return core.overlayLocalClear(a,b,[],barriers);
+    };
+    return {
+      walkable:(x,z)=>clear({x,z},{x,z},all),
+      gateClear:(candidate,points)=>{
+        if(points?.length!==2)return null;
+        const index=proposed.findIndex(wall=>wall.id===candidate.id);
+        if(index<0)return null;
+        const replacement=spatialStructureBarriers(candidate);
+        const barriers=pieces.flatMap((parts,i)=>i===index?replacement:parts);
+        if(barriers.length>128)return null;
+        return clear(points[0],points[1],barriers);
+      }
+    };
+  }
   function withVillageEntryPreview(buildings,inspect){
     if(!Array.isArray(buildings)||typeof inspect!=='function')
       throw TypeError('Expected provisional village buildings and a callback');
@@ -256,6 +283,6 @@ export function createSpatialGameSession(module,state,streamOptions){
   return {core,field,stream,horizonSource,topologySource,suppressed:props.suppressed,syncState,
     routeActor,routeActorNative,routeActorNativeBatch,actorConnectivity,actorSectorRevision,actorRegions,actorEnclosure,actorRegionsBatch,actorCanStand,actorStepClear,
     actorStepClearExceptWalls,
-    queryPropsAt,withWallPreview,gateOverlayClear,withVillageEntryPreview,
+    queryPropsAt,withWallPreview,gateOverlayClear,wallLocalOverlay,withVillageEntryPreview,
     dispose:()=>stream.dispose()};
 }

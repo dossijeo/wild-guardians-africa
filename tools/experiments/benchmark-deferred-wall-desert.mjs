@@ -56,7 +56,8 @@ async function run(arm){
     const nav=createSpatialNavigationMovement(session,state);
     nav.setActiveBounds([-72,-120,168,120]);
     game.quoteWallChain(state,'zarzas',stroke,nav,options);
-    const counts={path:0,preview:0,overlay:0,barriers:0,restoreProps:0};
+    const counts={path:0,preview:0,overlay:0,wallLocalOverlay:0,
+      localProbes:0,barriers:0,restoreProps:0};
     const operationMs=Object.fromEntries(Object.keys(counts).map(key=>[key,0]));
     const wrap=(owner,name,key)=>{
       const original=owner[name];owner[name]=(...args)=>{
@@ -67,6 +68,8 @@ async function run(arm){
     };
     wrap(nav,'path','path');wrap(session,'withWallPreview','preview');
     wrap(nav,'gateOverlayClear','overlay');
+    wrap(nav,'wallLocalOverlay','wallLocalOverlay');
+    wrap(session.core,'overlayLocalClear','localProbes');
     wrap(session.core,'applyBarrierChanges','barriers');
     wrap(session.core,'restoreRemovedProps','restoreProps');
     const frozen=serialize(state),sectorBefore=session.core.wasm.lazy_sector_updates();
