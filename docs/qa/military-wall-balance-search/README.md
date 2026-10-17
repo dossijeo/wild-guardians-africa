@@ -100,6 +100,19 @@ they are not yet evidence that 100-night campaigns can be evaluated at a
 practical throughput. Wall-clock performance and physical correctness remain
 separate acceptance dimensions.
 
+## Held-out seed: Sabana/123, 14 nights
+
+The independent seed again favors the candidate economically, but also exposes
+a difficulty risk. The current-balance control completed with 92 crops, 846
+coins and 84 losses among 1,006 crops exposed from nights 6–14 (8.35%). V1
+pressure plus affordable walls completed with 161 crops, 939 coins and **zero**
+agricultural losses among 1,228 exposed crops. Wall spending was 900 versus
+720 coins. Both raid observers verified all incursions without issue. A zero
+loss outcome on one seed does not prove that the candidate makes the game
+trivial, but it prevents treating its Sabana/712 loss rate of 2.27% as a
+universal estimate. The V1-pressure-only arm is being run on this same seed to
+separate military and wall effects.
+
 The per-night finance and raid ledger is
 [`sabana712-14-nightly.csv`](sabana712-14-nightly.csv). Full source reports are
 stored as `*.json.gz` alongside this file and can be expanded with gzip. To
@@ -107,3 +120,5 @@ regenerate the table from expanded reports, run
 `node tools/experiments/summarize-balance-candidates.mjs output.csv report.json ...`.
 The corresponding Manglares ledger is
 [`manglares712-14-nightly.csv`](manglares712-14-nightly.csv).
+The independent-seed ledger is
+[`sabana123-14-nightly.csv`](sabana123-14-nightly.csv).
