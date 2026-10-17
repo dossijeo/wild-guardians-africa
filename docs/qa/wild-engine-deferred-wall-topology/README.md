@@ -52,8 +52,27 @@ node tools/experiments/benchmark-deferred-wall-topology.mjs baseline.wasm src/wo
 
 La restauración de props residentes mejora aproximadamente 32–35 veces en esta carga. La propuesta de anillo evita las rutas anticipadas de **ordenación** y las transacciones anidadas para probar puertas, pero conserva las rutas de garantía de acceso. No extrapolar esta prueba a campañas completas. Memoria lineal: 16 MiB en todas las rondas. La construcción pagada tomó 12–15 ms en estas rondas; no hay muestras suficientes para una comparación estadística de esa etapa.
 
+### Estado congelado de Desierto con trabajadores activos
+
+`desert-abba.json` reproduce Desierto/983, día 15, con 42 trabajadores llegando o huyendo. Compara cuatro cotizaciones por ronda de un trazado de cinco módulos, sin mutar el estado, y después ejecuta una compra con la cotización preparada. El script conserva los SHA-256 del código JS y los dos binarios. Ejecutar:
+
+```sh
+node tools/experiments/benchmark-deferred-wall-desert.mjs baseline.wasm src/world/hierarchical-wasm/spatial-savanna.wasm desert-report.json ca212cd964cef246bcd81f485c8a25a6a2e2a6e4
+```
+
+| Variante | Mediana por cotización, ms | p95, ms | Rutas / 4 | Previews / 4 | Updates de sector / 4 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Base A1 | 49,03 | 53,69 | 172 | 24 | 96 |
+| Candidata B1 | 35,24 | 39,16 | 172 | 20 | 80 |
+| Candidata B2 | 36,51 | 39,59 | 172 | 20 | 80 |
+| Base A2 | 48,39 | 59,52 | 172 | 24 | 96 |
+
+La rama elimina una segunda comprobación del mismo plan ya declarado fallido: si todas las puertas alternativas fallan y se revierten, repetir `preserved()` no puede aportar información nueva. Esta supresión ahorra una preview y cuatro actualizaciones de sector por cotización en este escenario. La compra resultó idéntica en ambas variantes: cinco módulos, una puerta en la misma posición, precio 50, cero rutas al construir y mismo SHA-256 del estado serializado. La carga lineal fue 16 MiB. **Persisten 43 búsquedas por cotización** para certificar accesos laborales previamente existentes; estas búsquedas dominan este caso y no deben eliminarse sin una prueba física equivalente.
+
+Se probó como variante descartada sustituir cada ruta con una comprobación directa de segmento cuando este era transitable. Redujo las búsquedas de 172 a 92, pero la mediana candidata subió aproximadamente de 31–34 a 36–39 ms en las rondas próximas: la comprobación física consumía el ahorro. Se revirtió. Los tiempos de las rondas con solo cuatro muestras cada una son orientativos; los recuentos de operaciones y la igualdad funcional son los resultados más sólidos.
+
 ## Corrección y trabajo restante
 
-Pasaron 102 pruebas dirigidas de puertas automáticas, trabajadores dentro/fuera, ruta cortada por murallas, recintos parciales, barreras naturales, reparaciones, persistencia de props suprimidos y previsualizaciones anidadas. Se añadió una comparación directa entre overlay y previsualización anterior de cada puerta viable de un anillo y seis pruebas equivalentes en los seis biomas; todas pasan. La consulta overlay deja el contador de reconstrucción de sectores intacto. También pasó `npm run build` con el binario actual. La suite completa llegó a 910 pruebas antes de detenerse por campañas de larga duración; las dos fallas observadas fueron las conocidas de `active-farm.test.js` (derrota en vez de victoria en dos granjas de 100 noches). Ese simulador no construye murallas y no ejercita estos cambios. La suite completa no está validada en esta rama.
+Pasaron 102 pruebas dirigidas de puertas automáticas, trabajadores dentro/fuera, ruta cortada por murallas, recintos parciales, barreras naturales, reparaciones, persistencia de props suprimidos y previsualizaciones anidadas. Se añadió una comparación directa entre overlay y previsualización anterior de cada puerta viable de un anillo y seis pruebas equivalentes en los seis biomas; todas pasan. La consulta overlay deja el contador de reconstrucción de sectores intacto. Tras el ajuste de Desierto pasaron de nuevo 33 pruebas focalizadas de puertas, trabajadores y barreras naturales. También pasó `npm run build` con el binario actual. La suite completa llegó a 910 pruebas antes de detenerse por campañas de larga duración; las dos fallas observadas fueron las conocidas de `active-farm.test.js` (derrota en vez de victoria en dos granjas de 100 noches). Ese simulador no construye murallas y no ejercita estos cambios. La suite completa no está validada en esta rama.
 
 Esto **no completa** la arquitectura solicitada. El overlay solo resuelve la prueba física **local de la puerta**. `withWallPreview` aún muta temporalmente la topología confirmada para estudiar el recinto y validar accesos: hace falta un overlay topológico de solo lectura para esas consultas, con revisiones independientes. El paso siguiente es sustituir las pruebas de conectividad que no necesitan rutas completas por consultas topológicas conservadoras y dejar las rutas físicas para la certificación final cuando la conectividad no baste. Después deben compararse los estados congelados de Gran Cañón, reparaciones, sectores ausentes y propuestas repetidas, además de medir `Game.tick` y campañas. No debe integrarse en `main` antes de esas pruebas.

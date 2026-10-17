@@ -234,6 +234,7 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
     const preserved=()=>nav.withWallPreview(proposed(),[...suppressedForGates],draft=>
       reachable.every(([a,b])=>known(draft,a,b)===true),true);
     if(reachable.length&&!preserved()){
+      let routesPreserved=false;
       for(const piece of newPieces){
         if(piece.gate||updates.some(u=>u.id===piece.id))continue;
         const candidate={...piece,gate:true,autoGate:true,
@@ -243,10 +244,12 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
           !canHostCandidate(layout.pieces.find(p=>p.id===piece.created)))continue;
         const update={id:piece.id,gate:true,autoGate:true,maxHp:candidate.maxHp,hp:candidate.hp};
         updates.push(update);
-        if(preserved())break;
+        if(preserved()){routesPreserved=true;break;}
         updates.pop();
       }
-      if(!preserved())unhostedWorker=true;
+      // Every failed candidate was rolled back to the already-failed plan.
+      // Rechecking that same plan would rebuild its draft and repeat routes.
+      if(!routesPreserved)unhostedWorker=true;
     }
   }
   return Object.assign(updates,{unhosted,unhostedWorker});
