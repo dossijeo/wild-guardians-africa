@@ -9,6 +9,7 @@ import {createSpatialPropMirror} from './spatial-prop-mirror.js';
 import {queryResidentSpatialProps} from './spatial-prop-query.js';
 import {addSpatialVillageBuildings,removeSpatialVillageBuildings} from './spatial-village-bridge.js';
 import {spatialStructureBarriers} from './spatial-wall-bridge.js';
+import {gatePortalPoints} from '../gate-passages.js';
 import {WORKER_SPATIAL_PROFILE,ANIMAL_SPATIAL_PROFILES} from './spatial-movement-profiles.js';
 import {BIOME_IDS} from '../biome-ids.js';
 
@@ -241,6 +242,61 @@ export function createSpatialGameSession(module,state,streamOptions){
       installWorkerPortals([]);
     }
   }
+  function gateOverlayClear(candidate,points,extraSuppress=[]){
+    const parent=activeWallPreview;
+    if(!parent||typeof core.wasm.spatial_overlay_local_clear!=='function'||
+      points?.length!==2||!Array.isArray(extraSuppress)||
+      extraSuppress.some(id=>!parent.suppressed.includes(id)))return null;
+    const index=parent.proposed.findIndex(wall=>wall.id===candidate.id);
+    if(index<0)return null;
+    let offset=0;
+    for(let i=0;i<index;i++)offset+=spatialStructureBarriers(parent.proposed[i]).length;
+    const count=spatialStructureBarriers(parent.proposed[index]).length;
+    const ids=parent.ids.slice(offset,offset+count);
+    if(ids.length!==count)return null;
+    selectProfile(WORKER_SPATIAL_PROFILE);
+    return core.overlayLocalClear(points[0],points[1],ids,
+      spatialStructureBarriers(candidate));
+  }
+  // Short-lived read-only wall hypothesis for local room and gate probes.
+  // It never changes the confirmed graph; unknown residency or prop removal
+  // sends the caller back to the full construction preview.
+  function wallLocalOverlay(proposed,suppress){
+    if(activeWallPreview||typeof core.wasm.spatial_overlay_local_clear!=='function'||
+      !Array.isArray(proposed)||!Array.isArray(suppress))return null;
+    const pieces=proposed.map(wall=>spatialStructureBarriers(wall));
+    const all=pieces.flat();
+    if(all.length>128)return null;
+    const additionalSuppress=suppress.filter(id=>!props.suppressed.has(id));
+    const clear=(a,b,barriers)=>{
+      selectProfile(WORKER_SPATIAL_PROFILE);
+      return core.overlayLocalClear(a,b,[],barriers,additionalSuppress);
+    };
+    return {
+      walkable:(x,z)=>clear({x,z},{x,z},all),
+      gateClear:(candidate,points)=>{
+        if(points?.length!==2)return null;
+        const index=proposed.findIndex(wall=>wall.id===candidate.id);
+        if(index<0)return null;
+        const replacement=spatialStructureBarriers(candidate);
+        const barriers=pieces.flatMap((parts,i)=>i===index?replacement:parts);
+        if(barriers.length>128)return null;
+        return clear(points[0],points[1],barriers);
+      }
+    };
+  }
+  function wallWorkerReachability(origin,targets,proposed=[],suppress=[],reverse=false){
+    if(activeWallPreview||!Array.isArray(proposed)||!Array.isArray(suppress)||
+      typeof core.wasm.spatial_overlay_reach_batch!=='function')return null;
+    const barriers=proposed.flatMap(spatialStructureBarriers);
+    if(barriers.length>128)return null;
+    const portals=proposed.filter(wall=>wall.gate).map(gatePortalPoints)
+      .filter(points=>points.length===2);
+    selectProfile(WORKER_SPATIAL_PROFILE);
+    return core.overlayReachBatch(origin,targets,[],barriers,
+      {reverse,margin:48,portals,
+        propIds:suppress.filter(id=>!props.suppressed.has(id))});
+  }
   function withVillageEntryPreview(buildings,inspect){
     if(!Array.isArray(buildings)||typeof inspect!=='function')
       throw TypeError('Expected provisional village buildings and a callback');
@@ -255,12 +311,23 @@ export function createSpatialGameSession(module,state,streamOptions){
   // Crop turnover and structure HP updates keep the same component IDs.
   const topologySource={revision:()=>terrainRevision+walls.revision()+
     centers.revision()+shields.revision()+props.revision()};
+  const routeStamp=()=>({wall:walls.revision(),
+    other:terrainRevision+centers.revision()+shields.revision()+props.revision(),
+    chunks:core.chunkRevision()});
+  const routeUnaffectedByWalls=(stamp,points,radius)=>{
+    if(!stamp)return false;
+    const now=routeStamp();
+    return stamp.other===now.other&&stamp.chunks===now.chunks&&
+      walls.routeUnaffectedSince(stamp.wall,points,radius);
+  };
   const queryPropsAt=(x,z,radius)=>queryResidentSpatialProps(
     streamOptions.loaded(),props.suppressed,x,z,radius,
     key=>chunkRevisions.get(key)??0);
-  return {core,field,stream,horizonSource,topologySource,suppressed:props.suppressed,syncState,
+  return {core,field,stream,horizonSource,topologySource,routeStamp,
+    routeUnaffectedByWalls,suppressed:props.suppressed,syncState,
     routeActor,routeActorNative,routeActorNativeBatch,actorConnectivity,actorSectorRevision,actorRegions,actorEnclosure,actorRegionsBatch,actorCanStand,actorStepClear,
     actorStepClearExceptWalls,
-    queryPropsAt,withWallPreview,withWallStatePreview,withVillageEntryPreview,
+    queryPropsAt,withWallPreview,withWallStatePreview,gateOverlayClear,
+    wallLocalOverlay,wallWorkerReachability,withVillageEntryPreview,
     dispose:()=>stream.dispose()};
 }

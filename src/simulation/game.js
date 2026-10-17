@@ -9,6 +9,7 @@ import {resolveFluidPlacement} from '../world/fluid-placement.js';
 import {ensurePurchaseBudget,HIRING_RESERVE} from './budget.js';
 import {ensureBoundaryGates} from '../world/boundary-gates.js';
 import {gatePortalPoints} from '../world/gate-passages.js';
+import {wallCollisionBounds} from '../world/wall-collision-frame.js';
 import {containsPoint,footprintDistance} from '../world/footprints.js';
 import {centerCulture,centerFootprint,centerServicePoint,centerDeliveryPoint} from '../world/centers.js';
 import {actorBlockers,actorSegmentClear,prepareActorMotion} from './actor-motion.js';
@@ -41,6 +42,9 @@ import {advanceGateLeaves,waitForGate} from './gates.js';
 // on every movement tick. Kept outside saves: a restored actor gets one fresh
 // attempt, then waits for topology/residency or a bounded dynamic retry.
 const routePlanWaits=new WeakMap();
+// Dependency stamps are session-local; restored actors take the normal route
+// planning path until this navigator has observed their current route.
+const activeRouteStamps=new WeakMap();
 const ROUTE_RETRY_SECONDS=8;
 const routeEpoch=(nav,actor,destination,worker)=>{
   const sectors=nav.spatialSectorRevision?.(actor.radius??.28,worker)??0;
@@ -157,20 +161,54 @@ export function wallRefund(target){
   const amount=multiply(rational(target.cost),BigInt(health.n)*BigInt(maximum.d),BigInt(health.d)*BigInt(maximum.n));
   return rational((BigInt(amount.n)+BigInt(amount.d)-1n)/BigInt(amount.d));
 }
+// A previously valid path remains valid after building a wall when each of its
+// physical segments misses the wall's expanded collision bounds. This broad
+// phase may request an unnecessary full proof, but never certifies a route
+// close to a new barrier. Removed props and opened gates cannot block it.
+function routeClearOfNewWalls(start,route,end,walls){
+  if(!Array.isArray(route))return false;
+  const points=[start,...route,end];
+  for(const wall of walls){
+    const [minX,minZ,maxX,maxZ]=wallCollisionBounds(wall,.30);
+    for(let i=1;i<points.length;i++){
+      const a=points[i-1],b=points[i];
+      if(![a?.x,a?.z,b?.x,b?.z].every(Number.isFinite))return false;
+      if(Math.max(a.x,b.x)>=minX&&Math.min(a.x,b.x)<=maxX&&
+         Math.max(a.z,b.z)>=minZ&&Math.min(a.z,b.z)<=maxZ)return false;
+    }
+  }
+  return true;
+}
 function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
   if(!newPieces.length)return [];
   const living=activeCrops(s.plants);
   const newIds=new Set(newPieces.map(p=>p.created));
-  const layout=wallLayout([...s.structures,...newPieces],Object.fromEntries(B.walls.map(w=>[w.id,w.hp])));
+  const wallSettings=Object.fromEntries(B.walls.map(w=>[w.id,w.hp]));
+  let layout=wallLayout([...s.structures,...newPieces],wallSettings);
   const originals=new Map([...s.structures,...newPieces].map(p=>[p.created,p]));
   const suppressedForGates=new Set(nav.suppressed);
   for(const piece of newPieces)for(const id of nav.wallPlacement(piece).suppress??[])suppressedForGates.add(id);
+  const overlayUnavailable=Symbol('local wall overlay unavailable');
+  let localOverlay=null;
   const canHostCandidate=p=>{
     const original=originals.get(p.id);if(!original)return false;
     const candidate={...original,gate:true},check=nav.wallPlacement(candidate);
     if(!check.valid||cropOverlap(candidate))return false;
     const points=gatePortalPoints(candidate);if(points.length!==2)return false;
+    if(nav.wallWorkerReachability){
+      const overlay=localOverlay??nav.wallLocalOverlay?.(newPieces,
+        [...suppressedForGates,...check.suppress??[]]);
+      return overlay?.gateClear(candidate,points)===true;
+    }
     if(nav.withWallPreview){
+      if(localOverlay){
+        if((check.suppress??[]).some(id=>!nav.suppressed.has(id)))throw overlayUnavailable;
+        const clear=localOverlay.gateClear(candidate,points);
+        if(clear===null)throw overlayUnavailable;
+        return clear;
+      }
+      const local=nav.gateOverlayClear?.(candidate,points,check.suppress??[]);
+      if(local!==null&&local!==undefined)return local;
       const proposed=newPieces.map(piece=>piece.created===p.id?candidate:piece);
       return nav.withWallPreview(proposed,[...suppressedForGates,...check.suppress??[]],draft=>
         points.every(point=>draft.walkable(point.x,point.z,.28,null,true))&&
@@ -191,25 +229,13 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
   const targets=s.structures.filter(operational).map(center=>{
     const plants=cropsByCenter.get(center.id)??[];
     return plants.length?{x:plants.reduce((sum,q)=>sum+q.x,0)/plants.length,z:plants.reduce((sum,q)=>sum+q.z,0)/plants.length}:centerServicePoint(center,s,.8);
-  }),scores=new Map();let approachRoutes;
-  const loadApproachRoutes=()=>targets.flatMap(target=>s.villages.map(v=>{
-    const entry=v.entry??v,path=nav.path(entry,target,.28,null,true);
-    return {entry,target,path:path?[entry,...path]:null};
-  }));
-  const routeDistance=(p,route)=>Math.min(...route.slice(1).map((b,i)=>{
-    const a=route[i],dx=b.x-a.x,dz=b.z-a.z,length=dx*dx+dz*dz;
-    const t=length?Math.max(0,Math.min(1,((p.x-a.x)*dx+(p.z-a.z)*dz)/length)):0;
-    return Math.hypot(p.x-a.x-t*dx,p.z-a.z-t*dz);
-  }));
+  }),scores=new Map();
   const rank=(p,face)=>{
     if(face.ids.some(id=>id>0&&!newIds.has(id)))return -p.id;
-    // Reuse existing shortest navigation routes, including buildings and cliffs.
-    // Computed only for a fresh enclosure; incremental edits always prefer the
-    // last new module rather than relocating an older wall.
-    approachRoutes??=nav.withWallPreview?
-      nav.withWallPreview([],[...suppressedForGates],loadApproachRoutes):
-      loadApproachRoutes();
-    if(!scores.has(p.id))scores.set(p.id,Math.min(...approachRoutes.map(({entry,target,path})=>(path?routeDistance(p,path):0)*1e6+dist(entry,p)+dist(p,target))));
+    // Rank plausible doors geometrically; the native read-only overlay below
+    // certifies actual worker access before the quote can be purchased.
+    if(!scores.has(p.id))scores.set(p.id,Math.min(...targets.flatMap(target=>
+      s.villages.map(v=>dist(v.entry??v,p)+dist(p,target)))));
     return scores.get(p.id);
   };
   let unhosted=false,unhostedWorker=false;
@@ -218,15 +244,104 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
     const polygon=face.polygon.map(([x,z])=>({x,z}));
     if(s.workers.some(w=>w.status!=='home'&&containsPoint(polygon,w.x,w.z)))unhostedWorker=true;
   });
-  if(nav.withWallPreview){
-    // One draft serves every room probe. Candidate doors replace that draft
-    // only while the host check runs, then restore it before the next probe.
-    nav.withWallPreview(newPieces,[...suppressedForGates],draft=>
-      ensure((x,z)=>draft.walkable(x,z,.28,null,true)));
+  if(nav.wallWorkerReachability){
+    localOverlay=nav.wallLocalOverlay?.(newPieces,[...suppressedForGates]);
+    if(!localOverlay)unhostedWorker=true;
+    else{
+      try{
+        ensure((x,z)=>{
+          const clear=localOverlay.walkable(x,z);
+          if(clear===null)throw overlayUnavailable;
+          return clear;
+        });
+      }catch(error){
+        if(error!==overlayUnavailable)throw error;
+        unhostedWorker=true;
+      }
+      localOverlay=null;
+    }
+  }else if(nav.withWallPreview){
+    localOverlay=nav.wallLocalOverlay?.(newPieces,[...suppressedForGates]);
+    let localComplete=false;
+    if(localOverlay){
+      try{
+        ensure((x,z)=>{
+          const clear=localOverlay.walkable(x,z);
+          if(clear===null)throw overlayUnavailable;
+          return clear;
+        });
+        localComplete=true;
+      }catch(error){
+        if(error!==overlayUnavailable)throw error;
+        // Discard temporary gate choices before the full-preview fallback.
+        layout=wallLayout([...s.structures,...newPieces],wallSettings);
+        unhosted=false;unhostedWorker=false;
+      }
+      localOverlay=null;
+    }
+    if(!localComplete){
+      nav.withWallPreview(newPieces,[...suppressedForGates],draft=>
+        ensure((x,z)=>draft.walkable(x,z,.28,null,true)));
+    }
   }else ensure((x,z)=>interior.walkable(x,z,.28,null,true));
   const converted=layout.pieces.filter(p=>newIds.has(p.id)&&p.autoGate&&!s.structures.some(e=>e.id===p.entityId&&e.autoGate));
   const updates=converted.map(p=>({id:p.entityId,gate:true,autoGate:true,maxHp:p.maxHp,hp:p.hp})).filter(update=>{const piece=[...s.structures,...newPieces].find(p=>p.id===update.id),candidate={...piece,...update};return nav.wallPlacement(candidate).valid&&!cropOverlap(candidate);});
-  if(nav.withWallPreview){
+  if(nav.wallWorkerReachability){
+    // One shared native connectivity query per village and direction replaces
+    // the old route-before/route-after loop over every worker and center.
+    // A positive answer is a physical certificate; unknown never proves a
+    // blocked route or an available escape.
+    const witnesses=s.villages.map(village=>({
+      entry:village.entry??village,
+      centers:s.structures.filter(center=>operational(center)&&
+        center.villageId===village.id).map(center=>centerServicePoint(center,s,.8)),
+      workers:s.workers.filter(worker=>worker.status!=='home'&&
+        worker.villageId===village.id)
+    }));
+    const obligations=[];
+    let unresolvedAccess=false;
+    for(const {entry,centers,workers} of witnesses){
+      // Legacy/synthetic layouts can place a service center over the village
+      // entry itself. No worker route can start or end on that blocked point.
+      if(!nav.walkable(entry.x,entry.z,.28,null,true))continue;
+      for(const [targets,reverse] of [[centers,false],[workers,true]]){
+        if(!targets.length)continue;
+        const before=nav.wallWorkerReachability(entry,targets,[],[],reverse);
+        if(!before){unresolvedAccess=true;continue;}
+        const required=[];
+        for(let i=0;i<targets.length;i++){
+          if(before[i]==='found')required.push(targets[i]);
+          else if(before[i]==='unknown'&&
+            nav.walkable(targets[i].x,targets[i].z,.28,null,true))
+            unresolvedAccess=true;
+        }
+        if(required.length)obligations.push({entry,targets:required,reverse});
+      }
+    }
+    const proposed=()=>newPieces.map(piece=>({...piece,...updates.find(u=>u.id===piece.id)}));
+    const preservesAccess=()=>!unresolvedAccess&&obligations.every(
+      ({entry,targets,reverse})=>{
+        const after=nav.wallWorkerReachability(entry,targets,proposed(),
+          [...suppressedForGates],reverse);
+        return after?.every(value=>value==='found')===true;
+      });
+    if(!unhostedWorker&&!preservesAccess()){
+      let restored=false;
+      for(const piece of newPieces){
+        if(piece.gate||updates.some(u=>u.id===piece.id))continue;
+        const candidate={...piece,gate:true,autoGate:true,
+          maxHp:layout.settings.hp[piece.material]*.6,
+          hp:piece.hp/piece.maxHp*layout.settings.hp[piece.material]*.6};
+        if(!nav.wallPlacement(candidate).valid||cropOverlap(candidate)||
+          !canHostCandidate(layout.pieces.find(p=>p.id===piece.created)))continue;
+        updates.push({id:piece.id,gate:true,autoGate:true,
+          maxHp:candidate.maxHp,hp:candidate.hp});
+        if(preservesAccess()){restored=true;break;}
+        updates.pop();
+      }
+      if(!restored)unhostedWorker=true;
+    }
+  }else if(nav.withWallPreview){
     // A single new module can close a passage against rocks, buildings or a
     // canyon edge without completing a wall-only face. Preserve existing
     // worker/center routes for every paid stroke, including gradual edits.
@@ -240,14 +355,22 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
       if(village)witnesses.push([worker,village.entry??village]);
     }
     const known=(routes,a,b)=>{
-      try{return !!routes.path(a,b,.28,null,true);}
+      try{return routes.path(a,b,.28,null,true);}
       catch(error){if(error.name==='SpatialChunkUnavailable')return null;throw error;}
     };
-    const reachable=witnesses.filter(([a,b])=>known(nav,a,b)===true);
+    const reachable=witnesses.map(([a,b])=>({a,b,route:known(nav,a,b)}))
+      .filter(({route})=>Array.isArray(route));
     const proposed=()=>newPieces.map(piece=>({...piece,...updates.find(u=>u.id===piece.id)}));
-    const preserved=()=>nav.withWallPreview(proposed(),[...suppressedForGates],draft=>
-      reachable.every(([a,b])=>known(draft,a,b)===true),true);
+    const preserved=()=>{
+      const walls=proposed();
+      const affected=reachable.filter(({a,b,route})=>
+        !routeClearOfNewWalls(a,route,b,walls));
+      if(!affected.length)return true;
+      return nav.withWallPreview(walls,[...suppressedForGates],draft=>
+        affected.every(({a,b})=>Boolean(known(draft,a,b))),true);
+    };
     if(reachable.length&&!preserved()){
+      let routesPreserved=false;
       for(const piece of newPieces){
         if(piece.gate||updates.some(u=>u.id===piece.id))continue;
         const candidate={...piece,gate:true,autoGate:true,
@@ -257,10 +380,12 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
           !canHostCandidate(layout.pieces.find(p=>p.id===piece.created)))continue;
         const update={id:piece.id,gate:true,autoGate:true,maxHp:candidate.maxHp,hp:candidate.hp};
         updates.push(update);
-        if(preserved())break;
+        if(preserved()){routesPreserved=true;break;}
         updates.pop();
       }
-      if(!preserved())unhostedWorker=true;
+      // Every failed candidate was rolled back to the already-failed plan.
+      // Rechecking that same plan would rebuild its draft and repeat routes.
+      if(!routesPreserved)unhostedWorker=true;
     }
   }
   return Object.assign(updates,{unhosted,unhostedWorker});
@@ -279,7 +404,9 @@ export function quoteWallChain(s,material,points,nav,options={}) {
   if(gatePlan.unhostedWorker||gatePlan.unhosted&&!gatePlan.length){
     // The closing module remains unbuilt; the player can later edit the
     // stroke without trapping a worker in a room that has no usable door.
-    return quoteWallChain(s,material,points,nav,{...options,maxPieces:newPieces.length-1});
+    return quoteWallChain(s,material,points,nav,{...options,
+      _requestedMaxPieces:options._requestedMaxPieces??options.maxPieces??Infinity,
+      maxPieces:newPieces.length-1});
   }
   const updates=gatePlan;
   for(const piece of newPieces){const update=updates.find(p=>p.id===piece.id);if(update)Object.assign(piece,update);}
@@ -293,7 +420,8 @@ export function quoteWallChain(s,material,points,nav,options={}) {
     expectedSlots:slots,blockedPieces,blockedCrops};
   preparedWallQuotes.set(plan,{state:s,nav,material,points:JSON.stringify(points),
     smooth:options.smooth??true,snap:options.snap??true,
-    maxPieces:options.maxPieces??Infinity,sequence:s.sequence,nextId:s.nextId,
+    maxPieces:options._requestedMaxPieces??options.maxPieces??Infinity,
+    sequence:s.sequence,nextId:s.nextId,
     elapsed:s.elapsed,version:nav.version,structureCount:s.structures.length,
     plantCount:s.plants.length,workerCount:s.workers.length,
     quote:structuredClone(plan)});
@@ -551,6 +679,22 @@ export function cast(s,id,kind,x,z,nav,targetPlantId) {
     emit(s,'SpellActivated',{kind,x,z,targetPlantId:target?.id,benefited:area.power?.benefited??false,power:area.power??null,duration:spec.duration_seconds});
   });
 }
+function retainRouteAfterWallChange(w,destination,nav){
+  const stamp=activeRouteStamps.get(w);
+  if(w.path&&w.pathVersion===nav.version&&nav.routeStamp&&
+    nav.ownsRoute?.(w.path)===true&&
+    (stamp?.path!==w.path||stamp?.nav!==nav||stamp?.version!==nav.version))
+    activeRouteStamps.set(w,{path:w.path,nav,version:nav.version,
+      spatial:nav.routeStamp()});
+  if(w.path&&w.pathVersion!==nav.version&&!w.wallEscape&&
+    w.destinationId===destination.id&&stamp?.path===w.path&&
+    stamp.nav===nav&&stamp.version===w.pathVersion&&
+    nav.routeUnaffectedByWalls?.(stamp.spatial,[w,...w.path],w.radius??.28)){
+    w.pathVersion=nav.version;
+    activeRouteStamps.set(w,{path:w.path,nav,version:nav.version,
+      spatial:nav.routeStamp()});
+  }
+}
 export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignore=null,worker=true,motion=null,expandRoute=false,routeVia=null,externallyPlanned=false}={}) {
   const previous={x:w.x,z:w.z};
   if(worker)w.running=false;
@@ -580,6 +724,7 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
     w.mobileProgressDistance=dist(w,destination);
     w.mobileProgressAt=s.elapsed;
   }
+  retainRouteAfterWallChange(w,destination,nav);
   if(w.wallEscape&&w.pathVersion!==nav.version)delete w.wallEscape;
   // An intention-owned route is reconsidered only at a confirmed navigation
   // event boundary. Movement must not silently invoke the legacy planner.
@@ -640,6 +785,9 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
       if(!w.path)w.path=workerReturnRoute(nav,w,destination,w.radius??.28);
     }
     w.pathVersion=nav.version;
+    if(w.path&&nav.routeStamp)activeRouteStamps.set(w,
+      {path:w.path,nav,version:nav.version,spatial:nav.routeStamp()});
+    else activeRouteStamps.delete(w);
     if(!w.path){routePlanWaits.set(w,{epoch,retryAt:s.elapsed+ROUTE_RETRY_SECONDS});return abandonExhaustedExit();}
   }
   if(worker&&waitForGate(w,s.structures))return false;
@@ -1055,6 +1203,9 @@ function updateWorkers(s,dt,nav) {
           }
           destination=w.taskApproach.destination;
         }else if(t.kind==='initial'||t.kind==='water'){
+          if(w.taskApproach?.taskId===t.id&&w.path&&
+            w.pathVersion!==nav.version)
+            retainRouteAfterWallChange(w,w.taskApproach.destination,nav);
           if(w.taskApproach?.taskId!==t.id||w.path===null||w.pathVersion!==nav.version){
             if(nativeTasks&&w.pathVersion!==nav.version&&w.path)continue;
             if(nativeTasks){
