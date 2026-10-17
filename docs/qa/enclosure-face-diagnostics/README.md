@@ -74,10 +74,13 @@ seam is constructible. It does not prove that the entire enclosure is closed,
 that workers retain access, or that crops cannot be attacked from other sides.
 
 The crop group currently near these walls has ID `crop:plant-77666`, whereas
-the wall metadata stores older group IDs. The repair policy sorts by those old
-IDs' remembered values and then by wall ID. It can therefore rank old ruins
-ahead of a new breach. This is a separate strategic prioritization problem;
-the stroke correction alone does not claim to solve it. The experimental
+the wall metadata stores older group IDs. The repair policy formerly sorted by
+those old IDs' remembered values and then by wall ID, allowing old ruins to
+outrank a fresh breach. It now prioritizes confirmed breach events in their
+deterministic event order, with the most recent first, without retaining stale
+crop-group valuations. The bot still decides whether its cash reserve permits
+each ordinary repair request. This prioritization has a directed regression,
+but its effect on an entire campaign is not yet measured. The experimental
 planner must still pass full closure and worker-access certification before
 buying a proposed enclosure.
 
@@ -90,7 +93,9 @@ buying a proposed enclosure.
 - The replay preserved all 72 serialized-state hashes and verified all raids.
 - A wall-stroke regression verifies that a ruined module cannot hide a buildable
   slot while an intact module still prevents a duplicate.
+- A policy regression verifies that a recent breach receives repair priority
+  over an old ruin even when its agricultural group ID changed after replanting.
 
 This branch remains experimental. The frozen probe establishes a specific
 physically buildable seam; a full campaign comparison and repair-priority
-correction remain before adopting the planner change or adjusting balance.
+outcome check remain before adopting the planner change or adjusting balance.
