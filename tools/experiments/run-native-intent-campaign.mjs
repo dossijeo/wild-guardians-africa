@@ -23,6 +23,10 @@ const captureStateDay=Number(process.env.WILD_ENGINE_CAPTURE_STATE_DAY??0);
 const captureStateTime=Number(process.env.WILD_ENGINE_CAPTURE_STATE_TIME??0);
 const captureOccupiedFallback=process.env.WILD_ENGINE_CAPTURE_OCCUPIED_FALLBACK==='1';
 const spatialAdvice=process.env.WILD_ENGINE_SPATIAL_ADVICE==='1';
+const wallSpendingFlag=process.env.WILD_ENGINE_WALL_SPENDING;
+if(wallSpendingFlag&&!['0','1'].includes(wallSpendingFlag))
+  throw RangeError('WILD_ENGINE_WALL_SPENDING must be 0 or 1');
+const wallSpendingEnabled=wallSpendingFlag!=='0';
 const defensePolicy=process.env.WILD_ENGINE_DEFENSE_POLICY??'legacy';
 const defenseGate=process.env.WILD_ENGINE_DEFENSE_GATE;
 if(defenseGate&&!['event','periodic'].includes(defenseGate))
@@ -63,6 +67,7 @@ const entryDriverFactory=nav=>({
   async dispose(){}
 });
 const parameters={days,biome,seed,strategy,nativeIntents:mode!=='control',
+  wallSpendingEnabled,
   nativeWallPlans:mode==='intent-wall',
   ...(defenseGate?{defenseEventDriven:defenseGate==='event'}:{}),
   spatialAdvice,defensePolicy,decisionProfile,reloadRaids:false};

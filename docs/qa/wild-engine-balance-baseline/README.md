@@ -45,3 +45,8 @@ other strategies and seeds on this exact integrated engine before changing
 damage, pressure or economy. Total runner time was 256.76 s, of which
 `Game.tick` accounted for 195.74 s and bot decisions 30.53 s; these are
 one-run measurements, not a comparative speed claim.
+
+A [matched wall-spending control](matched-wall-control.md) now compares this
+`good` policy with the same hiring, center repairs, cash rules and expansion
+but no wall purchases. In Sabana/712 it lost after night 16 instead of night
+20; this is one-seed policy evidence, not a cross-biome balance conclusion.
