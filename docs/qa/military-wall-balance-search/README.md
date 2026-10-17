@@ -630,13 +630,16 @@ The last collapse is concentrated in nights 68–72. Raids destroyed 32, 6,
 49, 42 and 40 crops respectively. On nights 70–72 there were zero wall hits,
 while the bot's enclosure adviser returned only `no-certified-proposal` for
 the crop groups it evaluated. Most general-cut attempts reported
-`movement-unproved` with two or three unclassified boundary faces; the
+`movement-unproved` with two or three boundary faces not certified as physical
+barriers; the current aggregate counter does not distinguish a traversable
+face (native code `0`) from unavailable geometry (native code `-1`). The
 artificial-hull alternatives omitted modules because of physical placement
 conflicts. This is a planner/certification limitation visible in the evidence,
 not proof that changing military pressure alone would save this trajectory.
 An `unknown` closure must not be treated as protected or built speculatively.
-The next investigation should identify those few boundary faces and determine
-whether a legal, physically certified local closure exists.
+next investigation should identify those few boundary faces, preserve their
+native classification and determine whether a legal, physically certified
+local closure exists.
 
 `Game.tick` accumulated 672.6 seconds and bot decisions 290.0 seconds. The
 largest single `Game.tick` day was night 19 at 14.6 seconds; these figures
