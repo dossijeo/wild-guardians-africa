@@ -464,3 +464,38 @@ rhino in retreat held an unresolved graph route. Its partial state was
 frozen; PR #103 reused the existing bounded physical connector and verified
 the resulting path against native static collisions. The replay completed
 30 nights. The interrupted run is not counted as a balance defeat.
+
+## Same-code 60-night continuation, Desierto/712
+
+Three arms extended the same Desierto/712 experiment to 60 nights on source
+commit `a1860f35`. The V1 military recipe, expanding bot, seed, WASM and
+`game.js`/`raids.js`/runner hashes match. The day-30 serialized-state hash in
+each 60-night report exactly matches its archived 30-night run. All three
+completed 60 real raids with `raidEvidence.status=verified`, zero issues and
+no coverage loss. None won or lost by night 60.
+
+| Thorn specification | Crops at night 60 | Cash | Crop losses, nights 6–60 | Modules bought | Wall purchases | Repairs |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Standard: 10 coins, 100 HP, gate 60 HP | 51 | 695 | 674 | 99 | 990 | 5,286 |
+| Price only: 8 coins, 100 HP, gate 60 HP | 81 | 642 | 420 | 99 | 792 | 4,187 |
+| Durability only: 10 coins, 120 HP, gate 90 HP | 116 | 681 | 453 | 99 | 990 | 5,086 |
+
+From nights 31–60 alone, raid crop losses were 423, 251 and 367 respectively.
+The durability-only arm has the most living crops at this horizon, but its
+losses in this later period exceed the price-only arm. The price-only arm
+retains more crops than standard with 53 fewer coins; neither single-lever
+arm dominates every metric. All three bought the same 99 modules, so the
+additional surviving crops did not come from purchasing more wall pieces.
+Their planting, repair and raid trajectories still diverged, and one seed
+cannot establish a general recommendation or a probability of surviving 100
+nights. The first five nights introduce animals; losses are reported from
+night 6 onward for the sustained-pressure comparison.
+
+The [nightly ledger](pareto-desierto712-60-nightly.csv) and compressed full
+reports for [standard](pareto-standard-desierto712-60.json.gz),
+[price only](pareto-cheap-desierto712-60.json.gz) and
+[durability only](pareto-tough-desierto712-60.json.gz) preserve every action,
+raid and input hash. The ledger also contains per-night `Game.tick` and bot
+decision time. Those wall times were measured with the three CPU-heavy runs
+concurrent and with different campaign trajectories; they are evidence of
+computational cost, not an isolated speed comparison between wall specs.
