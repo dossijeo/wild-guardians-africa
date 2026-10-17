@@ -1686,7 +1686,10 @@ int nav_intent_register_attack_site(double actorId,double targetId,
      !std::isfinite(radius)||radius<=0||radius>2)return -1;
   IntentState& s=state();
   for(const auto& [owner,intent]:s.activeIntents){
-    if(owner==uint64_t(actorId)||!intent.animal||!intent.approachKnown||
+    // A retreat route records its exit as an approach coordinate, but has no
+    // attack-site lease. Only committed attack leases exclude another site.
+    if(owner==uint64_t(actorId)||!intent.animal||!intent.lease||
+       !intent.approachKnown||
        intent.state==PlanningState::Cancelled)continue;
     const double distance=std::hypot(double(intent.approachX)-approachX,
                                      double(intent.approachZ)-approachZ);
