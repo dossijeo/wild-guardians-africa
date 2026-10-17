@@ -14,7 +14,13 @@ node tools/experiments/run-balance-candidate.mjs tools/experiments/balance-candi
 
 The same command accepts any candidate JSON, a night horizon up to 100, biome,
 and seed. Each campaign uses Wild Engine, native intentions, spatial advice,
-event-driven expanding defense, and the existing `good` strategy. The report
+event-driven expanding defense, and the existing `good` strategy by default.
+Pass `topological` as a sixth argument to compare the integrated opt-in
+topological enclosure policy from PR #62; use `expanding` for an explicit
+control. Compare those policies with the same candidate, seed and biome before
+attributing a balance outcome to military parameters. The topological policy
+does not yet repair breached walls, so differences in longer campaigns include
+that deliberate policy gap and cannot isolate enclosure geometry alone. The report
 records candidate and source hashes, per-night state hashes, crops, cash,
 financial flows, raids, defense purchases, physical raid evidence and timings.
 A reported victory requires actually completing night 100; a requested horizon
@@ -145,6 +151,38 @@ does not evaluate the opt-in topological planner. Report gzip SHA-256:
 `6081e15f8c4c273aa377fc763ea756436c67ef866e31b61a394aad81728cbcf0`
 (control), `bb44825495d9802029596d24ae7f50ebac414ea01b3ede230156065285801ec8`
 (V1). Later horizons remain untested in this biome.
+
+### Effect of the integrated topological defense option
+
+After PR #62 was merged, the same V1 pressure recipe, Gran Cañón/712 opening,
+`good` player and source commit `6c6898ac` were replayed for 14 nights with
+only `defensePolicy` changed. The 7-night topological run reproduced the first
+seven daily state hashes of its 14-night run. Both 14-night raid ledgers are
+verified with zero issues.
+
+| Defense policy | Nights | Live crops | Coins | Crop losses, nights 6–14 | New wall modules / cost | Repairs paid |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Expanding rectangle | 14 | 54 | 941 | 2 | 34 / 340 | 236 |
+| Topological closure | 14 | 34 | 1,013 | 59 | 21 / 210 | 0 |
+
+The topological bot bought its initial certified 12-module closure for 120
+coins on day 3, then paid for nine more modules after subsequent changes and
+breaches. It spent less and retained 72 more coins, but lost 20 more crops at
+the horizon. Losses concentrated on nights 8–11 and 14. The topological policy
+currently buys new certified closures but does not repair damaged wall HP;
+the expanding policy spent 236 coins on repairs. This is a comparison of two
+complete policies, **not** an isolated geometry or military-pressure effect.
+It shows why integrating the topology service cannot by itself justify a
+balance recommendation or replacing the established defending bot.
+
+The paired [nightly ledger](current-main-v1-pressure-gran-canon712-defense-policies-14-nightly.csv)
+and full [expanding](current-main-v1-pressure-expanding-gran-canon712-14.json.gz)
+and [topological](current-main-v1-pressure-topological-gran-canon712-14.json.gz)
+reports preserve purchases, attacks and hashes. Their gzip SHA-256 values are
+`be05fdb5fee231dabbacedd92fd228e11a4cd92806a9be667f8ca402f40a43e6`
+and `43c56a6afd989f8bea1e2829242fb5938979014bcd46a84c37564a67a407c382`,
+respectively. The expanding arm's 14 daily state hashes also match its earlier
+run exactly, despite the intervening retreat-cleanup engine fix.
 
 ## Desierto seed 712: economic warning
 

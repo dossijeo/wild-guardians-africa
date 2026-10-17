@@ -4,7 +4,7 @@ import {gunzipSync} from 'node:zlib';
 
 const [output,...inputs]=process.argv.slice(2);
 if(!output||!inputs.length)throw Error('Usage: node summarize-balance-candidates.mjs output.csv report.json ...');
-const fields=['candidate','biome','seed','night','crops','cash','workers','income','wages','seeds','newWalls','repairs','animals','cropsExposed','cropsDestroyed','lossRatePct','wallHpLost','gameTickMs','decisionMs','verifiedRaid'];
+const fields=['candidate','defensePolicy','biome','seed','night','crops','cash','workers','income','wages','seeds','newWalls','repairs','animals','cropsExposed','cropsDestroyed','lossRatePct','wallHpLost','gameTickMs','decisionMs','verifiedRaid'];
 const lines=[fields.join(',')];
 for(const input of inputs){
  const bytes=readFileSync(resolve(input));
@@ -21,7 +21,9 @@ for(const input of inputs){
  }
  for(const row of report.rows){
   const raid=raids.get(row.day)??{animals:0,cropsExposed:0,cropsDestroyed:0,wallHpLost:0};
-  const data={candidate:report.balanceCandidate.id,biome:report.parameters.biome,
+  const data={candidate:report.balanceCandidate.id,
+   defensePolicy:report.balanceCandidate.defensePolicy??report.parameters.defensePolicy,
+   biome:report.parameters.biome,
    seed:report.parameters.seed,night:row.day,crops:row.living,cash:row.money,
    workers:row.staff,income:row.finance.income,wages:row.finance.wages,
    seeds:row.finance.seeds,newWalls:row.finance.walls,repairs:row.finance.repairs,
