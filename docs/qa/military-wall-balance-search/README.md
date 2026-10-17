@@ -236,3 +236,14 @@ preserve the trajectory and all raid receipts; report gzip SHA-256 is
 One seed proves that the current engine and fixed defended bot can reach a
 real 100-night victory under this experimental military recipe. It does not
 estimate win probability or justify changing the production balance yet.
+
+Weighted by living crops at each raid spawn, agricultural destruction was
+7.96% in nights 6–14, 19.98% in nights 15–30, 22.89% in nights 31–60,
+24.19% in nights 61–80 and 38.52% in nights 81–100. These are ratios of
+actual crops destroyed to actual exposed crops summed within each interval,
+not a proportional transformation of structural damage. They are far above
+the provisional 2–4% nightly target for a well-defended farm. The bot's
+wall purchases do not certify a closed enclosure here, so this is evidence
+of a balance/strategy interaction rather than proof that the military
+pressure alone is too high. The terminal victory is fragile and should not
+be treated as acceptable final difficulty without further trials.
