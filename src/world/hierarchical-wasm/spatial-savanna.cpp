@@ -391,6 +391,28 @@ double latticeHeight(int x,int z){
 double surface(double x,double z){
   const int ix=int(std::floor(x)),iz=int(std::floor(z));
   const double fx=x-ix,fz=z-iz;
+  // All four interpolation corners normally belong to the same generated
+  // lattice (including its halo). Resolve that lattice once instead of doing
+  // a resident-chunk lookup for each corner during every swept route sample.
+  const std::vector<double>* heights=&lattice;
+  int lx=ix-(chunkX*side-24)+pad,lz=iz-(chunkZ*side-24)+pad;
+  if(heights->empty()||lx<0||lz<0||lx+1>=latticeSpan||lz+1>=latticeSpan){
+    int cx=0,cz=0;
+    const ChunkSpatialSample* resident=residentSample(x,z,&cx,&cz);
+    if(resident){
+      heights=&resident->lattice;
+      lx=ix-(cx*side-24)+pad;lz=iz-(cz*side-24)+pad;
+    }
+  }
+  if(!heights->empty()&&lx>=0&&lz>=0&&
+     lx+1<latticeSpan&&lz+1<latticeSpan){
+    const double a=(*heights)[lz*latticeSpan+lx];
+    const double b=(*heights)[lz*latticeSpan+lx+1];
+    const double d=(*heights)[(lz+1)*latticeSpan+lx];
+    const double c=(*heights)[(lz+1)*latticeSpan+lx+1];
+    if(fx+fz<=1)return a+(b-a)*fx+(d-a)*fz;
+    return c+(d-c)*(1-fx)+(b-c)*(1-fz);
+  }
   if(fx+fz<=1){const double a=latticeHeight(ix,iz);return a+(latticeHeight(ix+1,iz)-a)*fx+(latticeHeight(ix,iz+1)-a)*fz;}
   const double c=latticeHeight(ix+1,iz+1);
   return c+(latticeHeight(ix,iz+1)-c)*(1-fx)+(latticeHeight(ix+1,iz)-c)*(1-fz);
