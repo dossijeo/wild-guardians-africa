@@ -35,6 +35,8 @@ test('A ruined wall no longer hides a physically open stroke slot',()=>{
   assert.equal(wallStroke(stroke,[wall],{smooth:false,snap:false}).length,1);
   assert.equal(wallStroke(stroke,[{...wall,hp:100,status:'intact'}],
     {smooth:false,snap:false}).length,0);
+  assert.equal(wallStroke(stroke,[{...wall,status:'collapsing'}],
+    {smooth:false,snap:false}).length,0);
 });
 test('Enclosure graph and deterministic gates match source including crossings and T junctions',()=>{
   const paths=[square,[...square,[8,4],[0,4]],[[0,0],[8,0],[8,8]],[[0,0],[8,8],[0,8],[8,0],[0,0]]];

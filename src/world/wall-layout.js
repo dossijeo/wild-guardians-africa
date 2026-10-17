@@ -15,7 +15,7 @@ export function wallStroke(input,structures,{smooth=true,snap=true,maxPieces=Inf
   const layout=wallLayout(structures,{});
   if(snap){points[0]=layout.snap(points[0]);points[points.length-1]=closed?points[0].slice():layout.snap(points.at(-1));}
   if(closed)points[points.length-1]=points[0].slice();
-  return resample(points).filter(slot=>!layout.pieces.some(p=>p.hp>0&&!p.collapse&&Math.hypot(p.x-slot.x,p.z-slot.z)<.35&&Math.abs(Math.sin(p.angle-slot.angle))<.18)).slice(0,Math.max(0,Math.floor(maxPieces)));
+  return resample(points).filter(slot=>!layout.pieces.some(p=>(p.hp>0||p.collapse)&&Math.hypot(p.x-slot.x,p.z-slot.z)<.35&&Math.abs(Math.sin(p.angle-slot.angle))<.18)).slice(0,Math.max(0,Math.floor(maxPieces)));
 }
 
 export function wallStrokeLine(slots){
