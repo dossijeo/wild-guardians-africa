@@ -578,3 +578,33 @@ the bot's allocation would prevent it. The compressed [full
 report](current-main-repair-v1-topological-gran-canon712-100.json.gz)
 contains every nightly state hash, decision, raid receipt and timing. Further
 held-out seeds and biomes are required before any balance recommendation.
+
+## Held-out Gran Cañón/123: narrow 100-night victory
+
+The same V1 candidate, standard wall table and event-driven topological bot
+were run with seed 123 for a requested 100 nights. The `inputHashes` match the
+712 run; the later source commit changed only documentation. This campaign
+reached `CampaignWon` after 100 real nights with six living crops, 55 coins,
+one worker and one operational center. All 100 raid receipts are verified,
+with zero issues and no coverage loss. The compressed [full
+report](current-main-repair-v1-topological-gran-canon123-100.json.gz) retains
+the daily state hashes, economy, actions, raid outcomes and timings.
+
+| Nights | Crops at end | Cash at end | Raid crop losses | Animals | Income | Wages | Seeds | Repairs |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 6–30 | 102 | 1,017 | 18 | 274 | 26,860 | 14,209 | 11,531 | 326 |
+| 31–60 | 97 | 530 | 219 | 435 | 33,407 | 16,956 | 15,027 | 1,811 |
+| 61–80 | 18 | 100 | 170 | 207 | 6,450 | 3,196 | 2,760 | 874 |
+| 81–100 | 6 | 55 | 68 | 199 | 4,412 | 1,713 | 1,700 | 1,044 |
+
+The bot made 628 repair requests and spent 4,055 coins on repairs across the
+campaign. Seed 123 grew a much larger farm than 712 early on and therefore
+produced substantially different workloads and raid trajectories. Its
+`Game.tick` accumulated 816.1 seconds, versus 322.6 seconds for the 82-night
+712 run; the largest single day was night 61 at 28.3 seconds. These figures
+are observed simulation costs, not an isolated engine-speed comparison. Both
+seeds suffered severe late agricultural losses, and the victory retained only
+a minimal farm. One victory and one defeat do not establish a win rate or
+justify changing production pressure, wall prices or damage. They do show
+that the event-driven repair integration survives a complete campaign and
+that V1 balance still needs cross-biome and multi-seed evaluation.
