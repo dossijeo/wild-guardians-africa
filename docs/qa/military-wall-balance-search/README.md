@@ -29,6 +29,7 @@ Candidate arms:
 | `v1-combined.json` | Attached V1 | Attached V1 |
 | `affordable-walls.json` | Current | Exploratory cheaper, stronger table |
 | `v1-pressure-affordable-walls.json` | Attached V1 | Exploratory table |
+| `moderate-pressure-affordable-walls.json` | More animals than V1; same hit and structural factors | Exploratory table |
 
 The attached V1 leaves thorn wall (`zarzas`) cost and body HP unchanged, although
 the current bot builds that material exclusively. Thus V1 wall-only effects for
@@ -111,7 +112,10 @@ agricultural losses among 1,228 exposed crops. Wall spending was 900 versus
 loss outcome on one seed does not prove that the candidate makes the game
 trivial, but it prevents treating its Sabana/712 loss rate of 2.27% as a
 universal estimate. The V1-pressure-only arm is being run on this same seed to
-separate military and wall effects.
+separate military and wall effects. A moderate-pressure candidate holds the
+wall table and hit/structure factors constant while increasing only the animal
+count factor from `0.35 + 0.60u` to `0.45 + 0.52u`; its matched 14-night arms
+will test whether this restores meaningful pressure without losing solvency.
 
 The per-night finance and raid ledger is
 [`sabana712-14-nightly.csv`](sabana712-14-nightly.csv). Full source reports are
