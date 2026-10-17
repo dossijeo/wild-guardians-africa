@@ -30,3 +30,14 @@ them into one draw call would require per-instance effect data and a visual
 comparison in WebGL. That change is not justified by a headless `Game.tick`
 profile. Measure browser draw submissions and GPU/frame time with many
 simultaneous spells before changing the effect shader contract.
+
+The reproducible WebGL submission fixture is
+`tests/browser/spell-vfx-load.html`. In Chrome headless with SwiftShader,
+ABBA lots of 0/48/48/0 simultaneous agriculture spells yielded 0/144/144/0
+draw calls, 0/144/144/0 renderer geometries and no WebGL errors. This confirms
+three submissions per effect and complete geometry cleanup. The fixture uses a
+white atlas texel for submission accounting; it is **not** a pixel comparison.
+Chrome's virtual-time run returned zero-valued CPU timings, so those timings
+are deliberately excluded from the conclusion. Cross-effect batching has a
+measurable draw-call opportunity, but still needs a real-clock GPU/frame
+comparison and shader/visual validation before adoption.
