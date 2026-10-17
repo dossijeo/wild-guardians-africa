@@ -5,19 +5,44 @@ import {wallStroke} from '../src/world/wall-layout.js';
 import {numberOf} from '../src/simulation/money.js';
 import {permission,operational,wallSpec} from '../src/simulation/rules.js';
 import {HIRING_RESERVE} from '../src/simulation/budget.js';
-export function createNativeExpandingDefensePolicy({startDay=2,material='zarzas',interval=30,repairWalls=true,reserveMode='none',measure=null,preparedQuotes=true,spatialAdvice=null}={}){
+export function createNativeExpandingDefensePolicy({startDay=2,material='zarzas',interval=30,eventDriven=false,repairWalls=true,reserveMode='none',measure=null,preparedQuotes=true,spatialAdvice=null}={}){
  if(!['none','next-stroke'].includes(reserveMode))throw Error('Invalid defense reserve mode');
  const timed=(kind,fn)=>{
   if(!measure)return fn();
   const start=performance.now();
   try{return fn();}finally{measure(kind,performance.now()-start);}
  };
- const cost=wallSpec(material).cost;let nextAttempt=0,capitalTarget=0,built=null,repairRequests=0;
- const history=[],owned=new Set();
+ const cost=wallSpec(material).cost;let nextAttempt=0,capitalTarget=0,built=null,repairRequests=0,dirty=true,waitForFunds=0,noLegalPieces=false;
+ const history=[],owned=new Set();let protectionWakes=0,eventWakes=0;
  const reserve=s=>reserveMode==='next-stroke'&&s.day>=startDay?capitalTarget:0;
+ const wakeEvents=new Set(['CrateDelivered','CropPlaced','CropDestroyed',
+  'PlacementCommitted','WallChainBuilt','WallRemoved','StructureHit',
+  'StructureRuined','RepairApplied']);
+ const onWorldEvent=(event,state)=>{
+  if(!eventDriven||!wakeEvents.has(event.type))return;
+  if(event.type==='CrateDelivered'&&
+    (noLegalPieces||waitForFunds&&numberOf(state.ledger.balance)<waitForFunds))return;
+  if(event.type==='CropPlaced'){
+    const crop=state.plants.at(-1)?.id===event.targetId?state.plants.at(-1):
+      state.plants.find(item=>item.id===event.targetId);
+    const bounds=history.at(-1)?.bounds;
+    if(bounds&&crop&&crop.x>=bounds[0]&&crop.z>=bounds[1]&&
+      crop.x<=bounds[2]&&crop.z<=bounds[3])return;
+  }
+  if(event.type==='StructureHit'&&!owned.has(event.targetId))return;
+  dirty=true;eventWakes++;
+ };
+ const onCropProtectionChanged=change=>{
+  if(change.protection!=='unprotected'||change.previous==='unprotected')return;
+  // The native graph has certified a breach or a new exposed crop group.
+  // Retry on the next ordinary decision boundary.
+  if(eventDriven)dirty=true;else nextAttempt=0;
+  protectionWakes++;
+ };
  function act(s,nav,{command,reserve:protectedCash}){
-  if(s.day<startDay||!permission(s,'wall')||s.raid||s.elapsed<nextAttempt)return 0;
-  nextAttempt=s.elapsed+interval;
+  if(s.day<startDay||!permission(s,'wall')||s.raid||
+    (eventDriven?!dirty:s.elapsed<nextAttempt))return 0;
+  if(eventDriven)dirty=false;else nextAttempt=s.elapsed+interval;
   if(!Number.isFinite(protectedCash)||protectedCash<0)throw Error('Invalid protected cash');
   protectedCash=Math.max(protectedCash,HIRING_RESERVE);
   let pending=s.tasks.filter(t=>t.kind==='repair').reduce((n,t)=>{const p=s.structures.find(p=>p.id===t.targetId);return n+(p?Math.ceil(numberOf(Game.repairCost(p))):0);},0);
@@ -38,22 +63,32 @@ export function createNativeExpandingDefensePolicy({startDay=2,material='zarzas'
   const bounds=previous?[Math.min(previous[0],next[0]),Math.min(previous[1],next[1]),Math.max(previous[2],next[2]),Math.max(previous[3],next[3])]:next;
   const [x0,z0,x1,z1]=bounds,points=[[x0,z0],[x1,z0],[x1,z1],[x0,z1],[x0,z0]],options={smooth:false,snap:false};
   const slots=timed('defense.wallStroke',()=>wallStroke(points,s.structures,options)),funds=Math.max(0,numberOf(s.ledger.balance)-protectedCash-pending),maxPieces=Math.floor(funds/cost);
+  // Slots already omit constructed pieces. Their full price is a safe
+  // affordability gate before the expensive worker-door/geometry quote.
   capitalTarget=slots.length*cost;
   const row={day:s.day,time:s.time,elapsed:s.elapsed,bounds,expectedSlots:slots.length,availablePieces:maxPieces,paidPieces:0,paidCost:0,gaps:[]};
-  if(!maxPieces){row.reason='budget';history.push(row);return 0;}
-  const plan=timed('defense.previewWallChain',()=>Game.previewWallChain(s,material,points,nav,{...options,maxPieces}));
+  if(!slots.length){noLegalPieces=true;waitForFunds=0;row.reason='no-new-legal-pieces';history.push(row);return 0;}
+  if(funds<capitalTarget){noLegalPieces=false;waitForFunds=protectedCash+pending+capitalTarget;row.reason='budget';history.push(row);return 0;}
+  // quoteWallChain already returns the complete, read-only prepared plan.
+  // previewWallChain calls it again before checking cash, so using both would
+  // repeat the same physical enclosure and automatic-door validation.
+  const plan=timed('defense.quoteWallChain',()=>Game.quoteWallChain(s,material,points,nav,options));
+  capitalTarget=plan.cost;
+  if(!plan.pieces.length){noLegalPieces=true;waitForFunds=0;row.reason='no-new-legal-pieces';history.push(row);return 0;}
+  if(funds<plan.cost){noLegalPieces=false;waitForFunds=protectedCash+pending+plan.cost;row.reason='budget';history.push(row);return 0;}
+  noLegalPieces=false;waitForFunds=0;
   const planned=new Set(plan.pieces.map(p=>`${p.x},${p.z}`));
   for(const slot of slots)if(!planned.has(`${slot.x},${slot.z}`)){
    const piece={kind:'wall',material,gate:false,baseScaleX:slot.scaleX,x:slot.x,z:slot.z,yaw:-slot.angle};
    const check=timed('defense.wallPlacement',()=>nav.wallPlacement(piece));
-   row.gaps.push({x:slot.x,z:slot.z,reason:!check.valid?check.reason??'native-placement':plan.pieces.length>=maxPieces?'budget-limit':'crop-overlap-or-native-omission'});
+   row.gaps.push({x:slot.x,z:slot.z,reason:!check.valid?check.reason??'native-placement':'crop-overlap-or-native-omission'});
   }
-  if(plan.pieces.length&&timed('defense.buildWallChain',()=>Game.buildWallChain(s,command('wall'),material,points,nav,{...options,maxPieces,...preparedQuotes?{preparedPlan:plan}:{}}))){
+  if(plan.pieces.length&&timed('defense.buildWallChain',()=>Game.buildWallChain(s,command('wall'),material,points,nav,{...options,...preparedQuotes?{preparedPlan:plan}:{}}))){
    row.paidPieces=plan.pieces.length;row.paidCost=plan.cost;row.ids=plan.pieces.map(p=>p.id);row.gates=plan.gates;
    for(const id of row.ids){if(!s.structures.some(w=>w.id===id&&w.kind==='wall'))throw Error('Preview ID does not name an actual paid wall');owned.add(id);}
    built={day:s.day,bounds,points,cost:plan.cost,pieces:plan.pieces.length,expectedPieces:slots.length,ids:[...owned]};history.push(row);return 1;
   }
   row.reason='no-new-legal-pieces';history.push(row);return 0;
  }
- return {reserve,act,report:s=>structuredClone({startDay,material,reserveMode,repairWalls,capitalTarget,built,history,repairRequests,paidCost:history.reduce((n,r)=>n+r.paidCost,0),paidPieces:history.reduce((n,r)=>n+r.paidPieces,0),scope:'Paid expanding native perimeters; actual interception not established by construction alone; repairs requested never counted as completion'})};
+ return {reserve,act,onWorldEvent,onCropProtectionChanged,report:s=>structuredClone({startDay,material,reserveMode,repairWalls,eventDriven,capitalTarget,waitForFunds,built,history,repairRequests,protectionWakes,eventWakes,paidCost:history.reduce((n,r)=>n+r.paidCost,0),paidPieces:history.reduce((n,r)=>n+r.paidPieces,0),scope:'Paid expanding native perimeters; actual interception not established by construction alone; repairs requested never counted as completion'})};
 }

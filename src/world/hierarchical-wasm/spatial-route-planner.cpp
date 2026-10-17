@@ -116,9 +116,39 @@ Point last(Point fallback){
   const auto& points=result().points;
   return points.empty()?fallback:Point{points[points.size()-2],points.back()};
 }
+// A sector path can wrap a building through many grid cells even when one
+// validated corner joins the continuous endpoints. Test only the points on
+// that already discovered path, and only for a substantial detour.
+void shortenOneCorner(Point start,Point end){
+  WorldRoute& out=result();
+  const float direct=distance(start,end);
+  float original=0;Point previous=start;
+  for(size_t at=0;at<out.points.size();at+=2){
+    const Point next{out.points[at],out.points[at+1]};
+    original+=distance(previous,next);previous=next;
+  }
+  if(original<direct*1.5f||original-direct<2.f)return;
+  Point best{};float bestLength=original;
+  for(size_t at=0;at+2<out.points.size();at+=2){
+    const Point corner{out.points[at],out.points[at+1]};
+    const float length=distance(start,corner)+distance(corner,end);
+    if(length>=bestLength-0.01f||!clearWorld(start,corner)||
+       !clearWorld(corner,end))continue;
+    best=corner;bestLength=length;
+  }
+  if(bestLength<original-0.01f)
+    out.points={best.x,best.z,end.x,end.z};
+}
 }
 
 extern "C" {
+// Route handles may contain a physically validated long shortcut. Validate
+// that segment with the same bounded continuous sweep used when creating it;
+// spatial_local_clear alone is intentionally limited to short connectors.
+int spatial_world_segment_clear(float fromX,float fromZ,float toX,float toZ){
+  const Point from{fromX,fromZ},to{toX,toZ};
+  return finite(from)&&finite(to)&&clearWorld(from,to)?1:0;
+}
 // One call per confirmed gate; connector search stays in the spatial authority.
 int spatial_add_gate_portal(float fromX,float fromZ,float toX,float toZ){
   const Point from{fromX,fromZ},to{toX,toZ};
@@ -140,6 +170,9 @@ int spatial_world_route(float fromX,float fromZ,float toX,float toZ){
   int startCount=0,endCount=0;
   const auto starts=anchors(start,startCount),ends=anchors(end,endCount);
   bool unknown=false,startReachable=false,endReachable=false;
+  std::vector<float> bestRoute;
+  float bestLength=std::numeric_limits<float>::infinity();
+  const float acceptable=distance(start,end)*1.5f+2.f;
   for(int i=0;i<startCount;i++){
     const Anchor& from=starts[i];
     if(!spatial_walkable(from.x,from.z)||
@@ -167,8 +200,23 @@ int spatial_world_route(float fromX,float fromZ,float toX,float toZ){
       }
       if(!valid){out.points.clear();unknown=true;out.graphReason=11;continue;}
       if(distance(last({float(from.x),float(from.z)}),end)>1e-6f)append(end);
-      out.view=out.points.data();return int(out.points.size()/2);
+      shortenOneCorner(start,end);
+      float length=0;Point previous=start;
+      for(size_t at=0;at<out.points.size();at+=2){
+        const Point next{out.points[at],out.points[at+1]};
+        length+=distance(previous,next);previous=next;
+      }
+      if(length<bestLength){bestLength=length;bestRoute=out.points;}
+      if(bestLength<=acceptable){
+        out.points=std::move(bestRoute);out.view=out.points.data();
+        return int(out.points.size()/2);
+      }
+      out.points.clear();
     }
+  }
+  if(!bestRoute.empty()){
+    out.points=std::move(bestRoute);out.view=out.points.data();
+    return int(out.points.size()/2);
   }
   out.points.clear();
   if(unknown||!startReachable||!endReachable){

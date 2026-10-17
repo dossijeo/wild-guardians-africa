@@ -60,6 +60,9 @@ export function createSpatialNavigationMovement(session,state){
     return true;
   };
   let failedWorkerEpoch='',failedWorkerRoutes=new Set();
+  // Route provenance is ephemeral: a saved route from another WASM session
+  // must not inherit this session's wall-change certificate by coincidence.
+  const nativeRoutes=new WeakSet();
   const path=(start,end,radius=.28,ignore=null,worker=true,cacheBlocked=false)=>{
     validate(start,end);
     const options=profile(radius,worker,ignore);
@@ -104,7 +107,11 @@ export function createSpatialNavigationMovement(session,state){
         startProps:session.queryPropsAt?.(start.x,start.z,1.5).status,
         endProps:session.queryPropsAt?.(end.x,end.z,1.5).status});
     }
-    return result.status==='found'?result.points:null;
+    if(result.status==='found'){
+      if(Array.isArray(result.points))nativeRoutes.add(result.points);
+      return result.points;
+    }
+    return null;
   };
   const regionFor=(point,radius=.28,ignore=null,worker=true)=>{
     if(!finitePoint(point))throw TypeError('Expected a finite actor position');
@@ -126,12 +133,37 @@ export function createSpatialNavigationMovement(session,state){
     return session.actorEnclosure(point,profile(radius,false,null));
   };
   let raidDemandEpoch=null;
-  const requestRaidConnectivity=(start,end,radius)=>{
+  const raidDemand=()=>{
     const raid=state.raid;
-    if(!raid)return false;
-    if(raidDemandEpoch!==raid){raidDemandEpoch=raid;view.raidConnectivityDemand=new Set();}
-    const demand=view.raidConnectivityDemand;
-    if(demand.size>=16)return false;
+    if(!raid)return null;
+    if(raidDemandEpoch!==raid){
+      raidDemandEpoch=raid;view.raidConnectivityDemand=new Set();
+    }
+    return view.raidConnectivityDemand;
+  };
+  const requestRaidFrontier=point=>{
+    const record=reason=>{
+      if(view.raidSelectionStats){
+        const counts=view.raidSelectionStats.nativeFrontierDemand??={};
+        counts[reason]=(counts[reason]??0)+1;
+      }
+      return reason==='queued';
+    };
+    if(!Number.isFinite(point?.x)||!Number.isFinite(point?.z))
+      return record('invalid');
+    const demand=raidDemand();
+    if(!demand)return record('no-raid');
+    const cx=Math.floor((point.x+24)/48),cz=Math.floor((point.z+24)/48);
+    const key=`${cx},${cz}`;
+    if(session.stream?.loaded?.()?.has(key))return record('resident');
+    if(demand.has(key))return record('already-requested');
+    if(demand.size>=16)return record('budget');
+    demand.add(key);
+    return record('queued');
+  };
+  const requestRaidConnectivity=(start,end,radius)=>{
+    const demand=raidDemand();
+    if(!demand||demand.size>=16)return false;
     const chunk=point=>({cx:Math.floor((point.x+24)/48),cz:Math.floor((point.z+24)/48)});
     const from=chunk(start),to=chunk(end),candidates=[];
     const steps=Math.max(Math.abs(to.cx-from.cx),Math.abs(to.cz-from.cz),1);
@@ -144,7 +176,12 @@ export function createSpatialNavigationMovement(session,state){
     for(const {cx,cz} of candidates){
       const key=`${cx},${cz}`;
       if(loaded?.has(key)||demand.has(key))continue;
-      demand.add(key);return true;
+      demand.add(key);
+      if(view.raidSelectionStats){
+        const samples=view.raidSelectionStats.heuristicDemandQueued??=[];
+        if(samples.length<128)samples.push({day:state.day,time:state.time,key});
+      }
+      return true;
     }
     return false;
   };
@@ -217,6 +254,12 @@ export function createSpatialNavigationMovement(session,state){
   };
   const withWallPreview=(walls,suppressed,inspect,refreshPortals=false)=>
     session.withWallPreview(walls,suppressed,()=>inspect({walkable,segmentClear,path}),refreshPortals);
+  const withWallStatePreview=(structures,inspect)=>
+    session.withWallStatePreview(structures,()=>inspect({
+      route:(start,end)=>session.routeActorNative(start,end,
+        {worker:true,cached:false})}));
+  const workerPhysicalRoute=(start,end)=>session.routeActorNative(start,end,
+    {worker:true,cached:false});
   const withVillageEntryPreview=(buildings,inspect)=>
     session.withVillageEntryPreview(buildings,inspect);
   const withCenterPreview=(building,suppressed,inspect)=>
@@ -253,10 +296,17 @@ export function createSpatialNavigationMovement(session,state){
       return obstacleList;
     },
     get version(){return session.topologySource.revision();},
+    routeStamp:session.routeStamp,
+    routeUnaffectedByWalls:session.routeUnaffectedByWalls,
+    ownsRoute:route=>Array.isArray(route)&&nativeRoutes.has(route),
     walkable,segmentClear,path,regionFor,regionConnected,enclosureFor,terrainValid,
-    withWallPreview,withVillageEntryPreview,withCenterPreview,
+    withWallPreview,withWallStatePreview,workerPhysicalRoute,
+    gateOverlayClear:session.gateOverlayClear,
+    wallLocalOverlay:session.wallLocalOverlay,
+    wallWorkerReachability:session.wallWorkerReachability,
+    withVillageEntryPreview,withCenterPreview,
     spatialSectorRevision:(radius,worker=false)=>session.actorSectorRevision(profile(radius,worker,null)),
-    requestRaidConnectivity,
+    requestRaidConnectivity,requestRaidFrontier,
     approachPath:(start,end,radius)=>path(start,end,radius,null,false),
     propsAt,placement,wallPlacement,placementFootprint,
     workerSurface,actorSurface,

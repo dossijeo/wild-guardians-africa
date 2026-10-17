@@ -1,0 +1,950 @@
+{
+  "kind": "ABBA",
+  "scenario": "Sabana/712, eight repeated 15-piece gate previews",
+  "baselineRef": "ca212cd964cef246bcd81f485c8a25a6a2e2a6e4",
+  "stateHash": "ad8beaa866a0f17240ca9a676690427aff04341e7fccac6ddae78e7708a6c8d6",
+  "wasmSha256": {
+    "baseline": "7817ebadc3dfa4c4d32f6197b5c4eb53468ad5f7f23293d72b902c23a7707095",
+    "candidate": "40651bd23c30879601c1f410159b3341d6937f701faf1c5e916414ae440616f6"
+  },
+  "stroke": [
+    [
+      -14,
+      -14
+    ],
+    [
+      -6,
+      -14
+    ],
+    [
+      -6,
+      -6
+    ],
+    [
+      -14,
+      -6
+    ],
+    [
+      -14,
+      -14
+    ]
+  ],
+  "rows": [
+    {
+      "arm": "baseline",
+      "quote": {
+        "pieces": 15,
+        "gates": 1,
+        "blocked": 0,
+        "cost": 150,
+        "gatePositions": [
+          [
+            -6,
+            -8.133333333333333,
+            -1.5707963267948966
+          ]
+        ]
+      },
+      "medianMs": 32.201200000000085,
+      "p95Ms": 33.81009999999992,
+      "times": [
+        30.59800000000007,
+        32.201200000000085,
+        32.06200000000001,
+        33.179700000000025,
+        33.81009999999992,
+        33.42430000000002,
+        33.18790000000001,
+        31.67840000000001
+      ],
+      "build": {
+        "ms": 13.060100000000602,
+        "counts": {
+          "path": 0,
+          "wallPlacement": 0,
+          "preview": 0,
+          "restoreProps": 0,
+          "barriers": 1
+        },
+        "operationMs": {
+          "path": 0,
+          "wallPlacement": 0,
+          "preview": 0,
+          "restoreProps": 0,
+          "barriers": 11.326600000000326
+        },
+        "sectorUpdates": 4,
+        "pieces": 15
+      },
+      "finalStateHash": "3b2cfd6f987bbd471f965c73cc12c05c917e495853901c388a7fb3cde5ea0435",
+      "sectorUpdates": 256,
+      "wallCounters": {
+        "counts": {
+          "path": 16,
+          "wallPlacement": 384,
+          "preview": 24,
+          "restoreProps": 0,
+          "barriers": 64
+        },
+        "ms": {
+          "path": 0.6808000000002039,
+          "wallPlacement": 15.450400000001196,
+          "preview": 411.0079999999998,
+          "restoreProps": 0,
+          "barriers": 222.98649999999998
+        },
+        "sectorUpdates": 256
+      },
+      "propPreview": {
+        "id": "spatial:3:2:2",
+        "times": [
+          1726.3547000000003,
+          1869.2645999999995,
+          1790.6369000000004,
+          1766.330899999999,
+          1834.121000000001,
+          1783.776899999999,
+          1828.6656999999996,
+          1818.3077999999987
+        ],
+        "medianMs": 1790.6369000000004,
+        "p95Ms": 1869.2645999999995,
+        "physicalBefore": [
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ]
+        ],
+        "physicalSuppressed": [
+          [
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          [
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          [
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          [
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          [
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          [
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        ],
+        "physicalRestored": [
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ]
+        ],
+        "counts": {
+          "path": 0,
+          "wallPlacement": 0,
+          "preview": 8,
+          "restoreProps": 16,
+          "barriers": 0
+        },
+        "ms": {
+          "path": 0,
+          "wallPlacement": 0,
+          "preview": 14417.3149,
+          "restoreProps": 14415.993799999997,
+          "barriers": 0
+        },
+        "sectorUpdates": 3840
+      },
+      "memoryBytes": 16777216
+    },
+    {
+      "arm": "candidate",
+      "quote": {
+        "pieces": 15,
+        "gates": 1,
+        "blocked": 0,
+        "cost": 150,
+        "gatePositions": [
+          [
+            -6,
+            -8.133333333333333,
+            -1.5707963267948966
+          ]
+        ]
+      },
+      "medianMs": 14.347000000001572,
+      "p95Ms": 20.156299999998737,
+      "times": [
+        20.156299999998737,
+        19.038000000000466,
+        11.614899999996851,
+        15.712499999997817,
+        15.651099999999133,
+        13.501500000002125,
+        14.347000000001572,
+        11.330900000000838
+      ],
+      "build": {
+        "ms": 13.331100000003062,
+        "counts": {
+          "path": 0,
+          "wallPlacement": 0,
+          "preview": 0,
+          "restoreProps": 0,
+          "barriers": 1
+        },
+        "operationMs": {
+          "path": 0,
+          "wallPlacement": 0,
+          "preview": 0,
+          "restoreProps": 0,
+          "barriers": 11.549699999999575
+        },
+        "sectorUpdates": 4,
+        "pieces": 15
+      },
+      "finalStateHash": "3b2cfd6f987bbd471f965c73cc12c05c917e495853901c388a7fb3cde5ea0435",
+      "sectorUpdates": 64,
+      "wallCounters": {
+        "counts": {
+          "path": 8,
+          "wallPlacement": 384,
+          "preview": 8,
+          "restoreProps": 0,
+          "barriers": 16
+        },
+        "ms": {
+          "path": 0.5670000000027358,
+          "wallPlacement": 16.09469999994326,
+          "preview": 100.50300000000061,
+          "restoreProps": 0,
+          "barriers": 79.93470000000161
+        },
+        "sectorUpdates": 64
+      },
+      "propPreview": {
+        "id": "spatial:3:2:2",
+        "times": [
+          60.335299999998824,
+          50.838299999999435,
+          51.57770000000164,
+          62.984199999998964,
+          54.515699999999924,
+          55.36149999999907,
+          54.98199999999997,
+          54.542099999998754
+        ],
+        "medianMs": 54.542099999998754,
+        "p95Ms": 62.984199999998964,
+        "physicalBefore": [
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ]
+        ],
+        "physicalSuppressed": [
+          [
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          [
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          [
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          [
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          [
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          [
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        ],
+        "physicalRestored": [
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ]
+        ],
+        "counts": {
+          "path": 0,
+          "wallPlacement": 0,
+          "preview": 8,
+          "restoreProps": 16,
+          "barriers": 0
+        },
+        "ms": {
+          "path": 0,
+          "wallPlacement": 0,
+          "preview": 444.97070000000167,
+          "restoreProps": 443.9601000000039,
+          "barriers": 0
+        },
+        "sectorUpdates": 64
+      },
+      "memoryBytes": 16777216
+    },
+    {
+      "arm": "candidate",
+      "quote": {
+        "pieces": 15,
+        "gates": 1,
+        "blocked": 0,
+        "cost": 150,
+        "gatePositions": [
+          [
+            -6,
+            -8.133333333333333,
+            -1.5707963267948966
+          ]
+        ]
+      },
+      "medianMs": 11.48949999999968,
+      "p95Ms": 13.800100000000384,
+      "times": [
+        13.468600000000151,
+        11.48949999999968,
+        10.480199999998149,
+        13.800100000000384,
+        9.842499999998836,
+        12.036499999998341,
+        11.076599999996688,
+        12.365200000000186
+      ],
+      "build": {
+        "ms": 13.3579000000027,
+        "counts": {
+          "path": 0,
+          "wallPlacement": 0,
+          "preview": 0,
+          "restoreProps": 0,
+          "barriers": 1
+        },
+        "operationMs": {
+          "path": 0,
+          "wallPlacement": 0,
+          "preview": 0,
+          "restoreProps": 0,
+          "barriers": 12.308299999996962
+        },
+        "sectorUpdates": 4,
+        "pieces": 15
+      },
+      "finalStateHash": "3b2cfd6f987bbd471f965c73cc12c05c917e495853901c388a7fb3cde5ea0435",
+      "sectorUpdates": 64,
+      "wallCounters": {
+        "counts": {
+          "path": 8,
+          "wallPlacement": 384,
+          "preview": 8,
+          "restoreProps": 0,
+          "barriers": 16
+        },
+        "ms": {
+          "path": 0.40420000000085565,
+          "wallPlacement": 11.939000000038504,
+          "preview": 79.53730000001087,
+          "restoreProps": 0,
+          "barriers": 65.83910000000105
+        },
+        "sectorUpdates": 64
+      },
+      "propPreview": {
+        "id": "spatial:3:2:2",
+        "times": [
+          53.69470000000001,
+          67.61859999999797,
+          56.46209999999701,
+          51.36659999999756,
+          50.44919999999911,
+          49.61170000000129,
+          57.073199999998906,
+          49.87380000000121
+        ],
+        "medianMs": 51.36659999999756,
+        "p95Ms": 67.61859999999797,
+        "physicalBefore": [
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ]
+        ],
+        "physicalSuppressed": [
+          [
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          [
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          [
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          [
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          [
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          [
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        ],
+        "physicalRestored": [
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ]
+        ],
+        "counts": {
+          "path": 0,
+          "wallPlacement": 0,
+          "preview": 8,
+          "restoreProps": 16,
+          "barriers": 0
+        },
+        "ms": {
+          "path": 0,
+          "wallPlacement": 0,
+          "preview": 435.9935000000005,
+          "restoreProps": 435.43830000000526,
+          "barriers": 0
+        },
+        "sectorUpdates": 64
+      },
+      "memoryBytes": 16777216
+    },
+    {
+      "arm": "baseline",
+      "quote": {
+        "pieces": 15,
+        "gates": 1,
+        "blocked": 0,
+        "cost": 150,
+        "gatePositions": [
+          [
+            -6,
+            -8.133333333333333,
+            -1.5707963267948966
+          ]
+        ]
+      },
+      "medianMs": 38.531699999999546,
+      "p95Ms": 43.98899999999776,
+      "times": [
+        35.49609999999666,
+        40.89090000000215,
+        41.02890000000116,
+        33.9207000000024,
+        31.217399999997724,
+        43.98899999999776,
+        38.531699999999546,
+        41.4442999999992
+      ],
+      "build": {
+        "ms": 13.083800000000338,
+        "counts": {
+          "path": 0,
+          "wallPlacement": 0,
+          "preview": 0,
+          "restoreProps": 0,
+          "barriers": 1
+        },
+        "operationMs": {
+          "path": 0,
+          "wallPlacement": 0,
+          "preview": 0,
+          "restoreProps": 0,
+          "barriers": 12.639100000000326
+        },
+        "sectorUpdates": 4,
+        "pieces": 15
+      },
+      "finalStateHash": "3b2cfd6f987bbd471f965c73cc12c05c917e495853901c388a7fb3cde5ea0435",
+      "sectorUpdates": 256,
+      "wallCounters": {
+        "counts": {
+          "path": 16,
+          "wallPlacement": 384,
+          "preview": 24,
+          "restoreProps": 0,
+          "barriers": 64
+        },
+        "ms": {
+          "path": 0.7671000000009371,
+          "wallPlacement": 14.641599999988102,
+          "preview": 492.3751000000084,
+          "restoreProps": 0,
+          "barriers": 271.6748999999909
+        },
+        "sectorUpdates": 256
+      },
+      "propPreview": {
+        "id": "spatial:3:2:2",
+        "times": [
+          1827.744999999999,
+          1773.3833999999988,
+          1899.9426000000021,
+          1850.2662000000018,
+          1866.3087000000014,
+          1909.7736000000004,
+          1792.7593000000015,
+          1873.1098000000056
+        ],
+        "medianMs": 1850.2662000000018,
+        "p95Ms": 1909.7736000000004,
+        "physicalBefore": [
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ]
+        ],
+        "physicalSuppressed": [
+          [
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          [
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          [
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          [
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          [
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          [
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        ],
+        "physicalRestored": [
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false
+          ]
+        ],
+        "counts": {
+          "path": 0,
+          "wallPlacement": 0,
+          "preview": 8,
+          "restoreProps": 16,
+          "barriers": 0
+        },
+        "ms": {
+          "path": 0,
+          "wallPlacement": 0,
+          "preview": 14793.124699999997,
+          "restoreProps": 14792.497500000005,
+          "barriers": 0
+        },
+        "sectorUpdates": 3840
+      },
+      "memoryBytes": 16777216
+    }
+  ]
+}

@@ -46,13 +46,12 @@ export function workerFractionalConnector(nav,actor,end,radius=.28){
   for(const [body,row] of memo.active)if(body.path?.length||body.x!==row.x||body.z!==row.z||!['fleeing','returning','incapacitated'].includes(body.status)||Array.isArray(nav.state?.workers)&&!nav.state.workers.includes(body))memo.active.delete(body);
   if(memo.active.size>=MAX_ACTIVE)return null;
   const view=nav.workerNavigationView?.(actor,radius,null)??nav;
-  let ordinary=false;
   if(view.walkable(actor.x,actor.z,radius,null,true)&&view.walkable(end.x,end.z,radius,null,true)){
-   for(let dz=-1;dz<=1&&!ordinary;dz++)for(let dx=-1;dx<=1;dx++){
-    const grid={x:Math.round(actor.x)+dx,z:Math.round(actor.z)+dz};
-    if(view.walkable(grid.x,grid.z,radius,null,true)&&view.segmentClear(actor,grid,radius,null,true)){ordinary=true;break;}
-   }
-   if(!ordinary){attempt={key,x:actor.x,z:actor.z,slices:0,iterator:search(view,{...actor},end,radius)};memo.active.set(actor,attempt);}
+   // Ordinary route planning already failed. A reachable nearby grid cell
+   // may still belong to a disconnected component, so inspect this bounded
+   // local patch for another physically connected exit.
+   attempt={key,x:actor.x,z:actor.z,slices:0,iterator:search(view,{...actor},end,radius)};
+   memo.active.set(actor,attempt);
   }
   if(!attempt){if(memo.failed.size>=256)evictOldest(memo.failed);memo.failed.set(key,true);return null;}
  }

@@ -51,6 +51,10 @@ export async function createSpatialCampaignOpening({seed=712,biome='sabana',
         throw Error(`Native campaign could not resolve raid chunk ${key}`);
       loaded.set(key,session.core.chunkPayload());
       raidOnlyChunks.add(key);
+      if(nav.raidSelectionStats){
+        const samples=nav.raidSelectionStats.raidDemandLoaded??=[];
+        if(samples.length<128)samples.push({day:state.day,time:state.time,key});
+      }
       return true;
     };
     const setActiveBounds=nav.setActiveBounds;

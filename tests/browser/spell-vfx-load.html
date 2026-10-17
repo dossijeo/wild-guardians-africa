@@ -1,0 +1,41 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>QA VFX de magias simultáneas</title>
+<style>body{font:14px system-ui;background:#151922;color:#eee}pre{white-space:pre-wrap}</style>
+<h1>VFX de magias simultáneas</h1><pre id="report">Preparando WebGL…</pre>
+<script type="module">
+import * as THREE from 'three';
+import {AgricultureVfx} from '../../src/rendering/agriculture-vfx.js';
+import {VfxLibrary} from '../../src/rendering/vfx.js';
+import {BuildingDestructionPass} from '../../src/rendering/buildings.js';
+
+const report=document.querySelector('#report'),errors=[];
+window.addEventListener('error',event=>errors.push(String(event.error??event.message)));
+window.addEventListener('unhandledrejection',event=>errors.push(String(event.reason)));
+const summary=values=>{const sorted=[...values].sort((a,b)=>a-b);return {median:sorted[Math.floor(sorted.length/2)],p95:sorted[Math.ceil(sorted.length*.95)-1]};};
+let stage='renderer';try{
+  const renderer=new THREE.WebGLRenderer({antialias:false,powerPreference:'high-performance'});
+  renderer.setSize(800,450,false);renderer.info.autoReset=false;document.body.append(renderer.domElement);
+  stage='catalog';const catalog=await (await fetch('/content/vfx.json')).json();
+  // A white texel is sufficient for submission timing; the atlas shader and
+  // all particle geometry still run, without an external image decode.
+  const texture=new THREE.DataTexture(new Uint8Array([255,255,255,255]),1,1);texture.needsUpdate=true;
+  stage='pipeline';const pipeline=new BuildingDestructionPass(renderer),library=new VfxLibrary(catalog,texture),scene=new THREE.Scene();
+  const manager=new AgricultureVfx(library,pipeline,scene,()=>0);
+  const camera=new THREE.PerspectiveCamera(45,800/450,.1,200);
+  camera.position.set(0,45,65);camera.lookAt(0,0,0);camera.updateMatrixWorld();
+  const spells=Array.from({length:48},(_,i)=>({id:`spell-${i}`,kind:i%2?'growth':'multiply',x:(i%8-3.5)*8,z:(Math.floor(i/8)-2.5)*8,radius:2,remaining:i%2?27:12}));
+  const lots=[];
+  for(const count of [0,48,48,0]){stage=`lot ${count}`;
+    manager.update({time:100,spells:spells.slice(0,count)});
+    for(let i=0;i<8;i++){manager.prepare(camera);renderer.info.reset();renderer.render(scene,camera);}
+    const cpu=[],calls=[],triangles=[];
+    for(let i=0;i<40;i++){
+      const start=performance.now();manager.prepare(camera);renderer.info.reset();renderer.render(scene,camera);
+      cpu.push(performance.now()-start);calls.push(renderer.info.render.calls);triangles.push(renderer.info.render.triangles);
+    }
+    lots.push({effects:count,cpuMs:summary(cpu),drawCalls:summary(calls),triangles:summary(triangles),instances:library.instances.size,sceneObjects:scene.children.length,memory:{...renderer.info.memory}});
+  }
+  const result={done:true,lots,errors,webglError:renderer.getContext().getError(),renderer:renderer.capabilities.isWebGL2?'webgl2':'webgl1'};
+  manager.dispose();library.dispose();pipeline.dispose();texture.dispose();renderer.dispose();renderer.forceContextLoss();
+  report.textContent=JSON.stringify(result,null,2);document.documentElement.dataset.done='true';
+}catch(error){report.textContent=`${stage}: ${String(error?.stack??error)}`;document.documentElement.dataset.done='failed';}
+</script>

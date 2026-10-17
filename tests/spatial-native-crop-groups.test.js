@@ -7,9 +7,10 @@ import {createCropGrouping} from '../src/simulation/crop-components.js';
 import {createPlant} from '../src/simulation/crops.js';
 import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
-import {createSpatialIntentBridge} from '../src/world/hierarchical-wasm/spatial-intent-bridge.js';
+import {createSpatialIntentBridge,createEventDrivenTaskPlanner} from '../src/world/hierarchical-wasm/spatial-intent-bridge.js';
 import {createCropEnclosurePlanner} from '../src/world/hierarchical-wasm/spatial-crop-enclosure-plan.js';
 import {villageLayout} from '../src/world/villages.js';
+import {rational,numberOf} from '../src/simulation/money.js';
 import * as Game from '../src/simulation/game.js';
 
 test('game event observers retain every committed event beyond the capped log and detach cleanly',()=>{
@@ -114,13 +115,35 @@ test('a paid closed wall ring protects the crop; removing a wall invalidates cer
   assert(inside);
   assert.equal(Game.plant(game,'group-crop','mijo',inside.x,inside.z,nav),true);
   bridge.applyCommittedEvents(game,[game.events.at(-1)]);
+  let neighbor;
+  for(let dz=-1.5;dz<=1.5&&!neighbor;dz+=.3)
+   for(let dx=-1.5;dx<=1.5&&!neighbor;dx+=.3){
+    const distance=Math.hypot(dx,dz),x=inside.x+dx,z=inside.z+dz;
+    if(distance>1.1&&distance<1.7&&nav.placement(x,z,.4).valid)
+     neighbor={x,z};
+   }
+  assert(neighbor,'a second legal crop must share the protected group');
+  assert.equal(Game.plant(game,'group-crop-2','mijo',neighbor.x,neighbor.z,nav),true);
+  bridge.applyCommittedEvents(game,[game.events.at(-1)]);
   const before=bridge.getUnprotectedCropGroups({includeProtected:true});
   assert.equal(before.length,1);
+  assert.equal(before[0].cropIds.length,2);
   assert.equal(before[0].protection,'protected',JSON.stringify(before[0].profiles));
+  const planner=createEventDrivenTaskPlanner(session);planner.resetFromState(game);
+  const stopWorld=planner.observeWorld(game),changes=[];
+  const stopProtection=planner.observeCropProtection(change=>changes.push(change));
+  assert.equal(planner.getUnprotectedCropGroups({includeProtected:true})[0].protection,
+   'protected');
   const wall=game.structures.find(item=>item.kind==='wall'&&!item.gate);
+  wall.hp-=1;
+  Game.emit(game,'StructureHit',{targetId:wall.id});
+  planner.flushWorldEvents();
+  assert.equal(changes.length,0,'HP loss without a topology change is not a breach');
   const candidates=game.structures.filter(item=>item.kind==='wall'&&!item.gate)
    .sort((a,b)=>Math.hypot(a.x-wall.x,a.z-wall.z)-
     Math.hypot(b.x-wall.x,b.z-wall.z));
+  game.plants.find(plant=>plant.id===before[0].cropIds[0]).alive=false;
+  Game.emit(game,'CropDestroyed',{targetId:before[0].cropIds[0]});
   const removed=[];
   for(const candidate of candidates){
    assert.equal(Game.removeWall(game,`group-breach-${removed.length}`,candidate.id,nav),true);
@@ -129,10 +152,34 @@ test('a paid closed wall ring protects the crop; removing a wall invalidates cer
   }
   assert.notEqual(nav.enclosureFor(inside,1.1).status,'sealed',
    'the native graph must first confirm a physical breach');
-  bridge.applyCommittedEvents(game,game.events.filter(event=>
-   event.type==='WallRemoved'&&removed.includes(event.targetId)));
-  const after=bridge.getUnprotectedCropGroups({includeProtected:true});
+  assert.equal(changes.length,0,'confirmed wall events wait for the event boundary');
+  planner.flushWorldEvents();
+  const after=planner.getUnprotectedCropGroups({includeProtected:true});
   assert.notEqual(after[0].protection,'protected');
+  assert.notEqual(after[0].id,before[0].id,
+   'the destroyed anchor changes the native group identity');
+  assert.deepEqual(changes.map(change=>({groupId:change.groupId,
+   previous:change.previous,protection:change.protection})),[{groupId:after[0].id,
+   previous:'protected',protection:after[0].protection}]);
+  planner.flushWorldEvents();
+  assert.equal(changes.length,1,'an unchanged topology cannot repeat the notification');
+  let outside;
+  for(let z=-12;z<=12&&!outside;z+=2)
+   for(let x=-12;x<=12&&!outside;x+=2)
+    if(Math.hypot(x-inside.x,z-inside.z)>10&&nav.placement(x,z,.4).valid)
+     outside={x,z};
+  assert(outside,'a legal new agricultural group must be available');
+  assert.equal(Game.plant(game,'new-exposed-crop','mijo',outside.x,outside.z,nav),true);
+  planner.flushWorldEvents();
+  const added=planner.getUnprotectedCropGroups({includeProtected:true})
+   .find(group=>group.cropIds.includes(game.events.at(-1).targetId));
+  assert.equal(added.protection,'unprotected');
+  assert.deepEqual(changes.at(-1)&&{groupId:changes.at(-1).groupId,
+   previous:changes.at(-1).previous,protection:changes.at(-1).protection},
+   {groupId:added.id,previous:null,protection:'unprotected'});
+  planner.flushWorldEvents();
+  assert.equal(changes.length,2,'the new group is notified only once');
+  stopProtection();stopWorld();
  }finally{session.dispose();}
 });
 
@@ -198,5 +245,54 @@ test('missing sectors cannot certify a proposed perimeter',
   const plan=createCropEnclosurePlanner(game,nav,bridge).planCropEnclosure(group.id);
   assert.notEqual(plan.status,'ready');
   assert.notEqual(plan.status,'protected');
+ }finally{session.dispose();}
+});
+
+test('a center-adjacent crop uses valid animal attack sites to certify its enclosure',
+ {skip:!module&&'Build and select the spatial-services WASM first'},async()=>{
+ const game=deserialize(gunzipSync(readFileSync(new URL(
+  './fixtures/sabana712-d2-enclosure-connectors.json.gz',import.meta.url))).toString());
+ const loaded=new Map(),session=createSpatialGameSession(module,game,{
+  loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+ try{
+  const jobs=new Map();
+  for(let z=-1;z<=1;z++)for(let x=1;x<=3;x++)
+   jobs.set(`${x},${z}`,{cx:x,cz:z,score:Math.hypot(x,z)});
+  session.stream.plan(jobs);await session.stream.whenIdle();
+  const nav=createSpatialNavigationMovement(session,game);
+  const bridge=createSpatialIntentBridge(session);bridge.resetFromState(game);
+  const group=bridge.getUnprotectedCropGroups()[0];
+  assert.equal(group.id,'crop:plant-106');
+  assert.equal(group.cropIds.length,68);
+  assert.equal(group.protection,'unprotected');
+  const b=group.bounds,margin=2.5;
+  const points=[[b.minX-margin,b.minZ-margin],[b.maxX+margin,b.minZ-margin],
+   [b.maxX+margin,b.maxZ+margin],[b.minX-margin,b.maxZ+margin],
+   [b.minX-margin,b.minZ-margin]];
+  const before=serialize(game);
+  const quote=Game.quoteWallChain(game,'zarzas',points,nav,
+   {smooth:false,snap:false});
+  assert.equal(quote.expectedSlots.length,36);
+  assert.equal(quote.pieces.length,35);
+  assert.equal(quote.blockedPieces.length,1,
+   'one physical obstacle substitutes for a wall module');
+  const after=nav.withWallPreview(quote.previewPieces,quote.suppressed,()=>
+   bridge.getUnprotectedCropGroups({includeProtected:true})
+    .find(item=>item.id===group.id),true);
+  assert.equal(after.protection,'protected',JSON.stringify(after.profiles));
+  assert(Object.values(after.profiles).every(status=>status==='protected'));
+  assert.equal(bridge.getUnprotectedCropGroups()[0].protection,'unprotected',
+   'the speculative barrier must not certify the live world');
+  assert.equal(serialize(game),before);
+  game.ledger.balance=rational(1000); // Explicit fixture credit for the paid-command check.
+  assert.equal(Game.buildWallChain(game,'group-center-ring','zarzas',points,nav,
+   {smooth:false,snap:false}),true);
+  assert.equal(numberOf(game.ledger.balance),650);
+  assert.equal(game.structures.filter(item=>item.kind==='wall').length,35);
+  bridge.applyCommittedEvents(game,[game.events.at(-1)]);
+  const paid=bridge.getUnprotectedCropGroups({includeProtected:true})
+   .find(item=>item.id===group.id);
+  assert.equal(paid.protection,'protected',JSON.stringify(paid.profiles));
+  assert(Object.values(paid.profiles).every(status=>status==='protected'));
  }finally{session.dispose();}
 });

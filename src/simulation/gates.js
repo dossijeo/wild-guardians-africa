@@ -3,13 +3,14 @@ import {gateLeafFootprint,gateSwingPolygon,gateTriggerRadius,routeHitsGateArea} 
 import {footprintDistance} from '../world/footprints.js';
 // Integration timing: the source lab supplies geometry, not an opening clock.
 export const GATE_MOVE_SECONDS=.6;
-const nearby=(worker,gate)=>worker.status!=='home'&&Math.hypot(worker.x-gate.x,worker.z-gate.z)<=gateTriggerRadius(gate);
+const nearby=(worker,gate,radius)=>worker.status!=='home'&&Math.hypot(worker.x-gate.x,worker.z-gate.z)<=radius;
 export function waitForGate(worker,gates=[]){
   if(worker.gateWaiting)worker.gateWaiting=false;
   if(!worker.path?.length)return false;
   for(const gate of gates){
-    if(!gate.gate||!nativeGateLeaves[gate.material]||gate.status==='ruined'||!nearby(worker,gate))continue;
-    const ahead=Math.max(4,gateTriggerRadius(gate)+1),crossing=routeHitsGateArea(worker,gateLeafFootprint(gate),ahead),opening=gate.gateOpen??0;
+    if(!gate.gate||!nativeGateLeaves[gate.material]||gate.status==='ruined')continue;
+    const radius=gateTriggerRadius(gate);if(!nearby(worker,gate,radius))continue;
+    const ahead=Math.max(4,radius+1),crossing=routeHitsGateArea(worker,gateLeafFootprint(gate),ahead),opening=gate.gateOpen??0;
     if(crossing&&(gate.status!=='intact'||opening<1)||opening>0&&opening<1&&routeHitsGateArea(worker,gateSwingPolygon(gate),ahead)){worker.gateWaiting=true;worker.running=false;return true;}
   }
   return false;
@@ -22,9 +23,9 @@ export function advanceGateLeaves(state,seconds){
     if(!gate.gate||!nativeGateLeaves[gate.material])continue;
     if(gate.status==='ruined'){gate.gateOpen=0;continue;}
     if(gate.status!=='intact')continue;
-    const area=gateSwingPolygon(gate),workers=state.workers.filter(w=>nearby(w,gate));
+    const area=gateSwingPolygon(gate),radius=gateTriggerRadius(gate),workers=state.workers.filter(w=>nearby(w,gate,radius));
     const occupied=workers.some(w=>footprintDistance(area,w.x,w.z)<(w.radius??.28));
-    const requested=workers.some(w=>routeHitsGateArea(w,gateLeafFootprint(gate),gateTriggerRadius(gate)+1));
+    const requested=workers.some(w=>routeHitsGateArea(w,gateLeafFootprint(gate),radius+1));
     // Legacy saves may already have a worker inside a formerly invisible gate.
     const before=gate.gateOpen??(occupied?1:0);
     gate.gateOpen=requested||occupied?Math.min(1,before+seconds/GATE_MOVE_SECONDS):Math.max(0,before-seconds/GATE_MOVE_SECONDS);

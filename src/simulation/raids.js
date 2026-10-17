@@ -14,10 +14,10 @@ import {nextRandom,randomInt,attraction,threatTier,animalSpec,operational,hitStr
 import {createRaidCompositionIndex} from './raid-composition-index.js';
 import {preparePressureNight,nextPressureWave} from './raid-pressure-plan.js';
 import {eligiblePendingRaidWavePlan} from '../world/raid-entry-data.js';
-import {emit,notice,walkTo,rebuildTasks,spellAt,dropCarriedCrate,recoverDisplacedWorkers} from './game.js';
+import {emit,notice,observeGameEvents,walkTo,rebuildTasks,spellAt,dropCarriedCrate,recoverDisplacedWorkers} from './game.js';
 import {contractExpired} from './workforce.js';
 import {cancelIdle} from './idle.js';
-import {releaseTask} from './tasks.js';
+import {releaseTask,replaceTasks,notifyWorkerPlanningChange} from './tasks.js';
 import {rational,compare} from './money.js';
 import {updateWorkerEncounters} from './encounters.js';
 import {ANIMAL_ACTIONS} from './animal-actions-data.js';
@@ -30,7 +30,44 @@ import {applyCropImpact,cropImpactDamage,CROP_HIT_POINTS} from './crop-impact-he
 const dist=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z),entrySelections=new WeakMap();
 const cropTargetIndexes=new WeakMap();
 const raidRegionDecisions=new WeakMap();
+const reservationReconciliation=new WeakMap();
+const RESERVATION_TARGET_EVENTS=new Set(['CropDestroyed','CropPicked',
+  'StructureHit','StructureRuined','WallRemoved']);
+function reconcileRaidReservationsOnChange(s,nav){
+  // Legacy callers can still replace an animal's target directly without
+  // emitting an event. Detect a stale lease, but preserve the reservation
+  // object on an unchanged tick. Native intentions use confirmed events.
+  const staleLegacyLease=!nav.intentTaskPlanner&&s.raid.animals.some(animal=>
+    animal.targetId&&animal.status!=='attacking'&&
+    (!animal.reservation||s.raid.reservations[animal.reservation]!==animal.id));
+  let entry=reservationReconciliation.get(s);
+  if(!entry){
+    // A versioned save already contains committed claims in their original
+    // insertion order. Rebuilding them on the first post-load tick changes
+    // the serialized state even when ownership is identical.
+    const restored=s.raid.targetReservationVersion===2&&
+      s.raid.animals.every(animal=>{
+        if(!animal.targetId||animal.status==='attacking')return true;
+        const target=raidTarget(s,animal.targetId);
+        return !!target&&animal.reservation===targetReservationKey(target,animal)&&
+          s.raid.reservations[animal.reservation]===animal.id;
+      });
+    entry={raid:restored?s.raid:null,nav:restored?nav:null,
+      navVersion:restored?nav.version:null,dirty:!restored};
+    observeGameEvents(s,event=>{
+      if(RESERVATION_TARGET_EVENTS.has(event.type))entry.dirty=true;
+    });
+    reservationReconciliation.set(s,entry);
+  }
+  if(entry.raid===s.raid&&entry.nav===nav&&entry.navVersion===nav.version&&
+    !entry.dirty&&!staleLegacyLease&&s.raid.targetReservationVersion===2)return;
+  reconcileTargetReservations(s,(state,animal)=>release(state,animal,nav));
+  entry.raid=s.raid;entry.nav=nav;entry.navVersion=nav.version;entry.dirty=false;
+}
 const RAID_REGION_QUERIES_PER_TICK=16,RAID_REGION_RETRY_SECONDS=4;
+const NATIVE_UNKNOWN_CAUSES=['source-connector','region-connectivity',
+  'crop-sites','route','bounded-local-search'];
+const NATIVE_REGION_UNKNOWN_REASONS=[0,1,2,8,10];
 function regionDecisionScope(s,nav){
   let scope=raidRegionDecisions.get(nav);
   if(!scope||scope.raid!==s.raid||scope.topology!==nav.version){
@@ -40,7 +77,8 @@ function regionDecisionScope(s,nav){
   if(scope.tick!==s.elapsed){scope.tick=s.elapsed;scope.queries=0;}
   return scope;
 }
-function cropRegionDecision(s,a,nav,group,regionKey,candidates,scope,origin,sectors){
+function cropRegionDecision(s,a,nav,group,regionKey,candidates,scope,origin,
+  sectors,requestDemand=true){
   const destination=regionKey.startsWith('unknown:')?`${group.id}:${regionKey}`:regionKey;
   const key=`${a.radius}:${origin}:${destination}`;
   const old=scope.decisions.get(key);
@@ -60,7 +98,8 @@ function cropRegionDecision(s,a,nav,group,regionKey,candidates,scope,origin,sect
   const status=result===true?'accessible':result===false?'blocked':'unknown';
   if(scope.decisions.size>=2048)scope.decisions.delete(scope.decisions.keys().next().value);
   scope.decisions.set(key,{status,at:s.elapsed,sectors});
-  if(status==='unknown')nav.requestRaidConnectivity?.(a,candidates[0],a.radius);
+  if(status==='unknown'&&requestDemand)
+    nav.requestRaidConnectivity?.(a,candidates[0],a.radius);
   return status;
 }
 function enclosedCropRegion(nav,scope,group,regionKey,candidates,radius,sectors){
@@ -340,13 +379,23 @@ export function spawnRaid(s,plan,nav,daytime=false) {
     releaseTask(s,w);w.path=null;w.hits=0;
     if(w.crateId)dropCarriedCrate(s,w);
     if(w.status!=='home')w.status='fleeing';
+    notifyWorkerPlanningChange(s,w);
   }
-  s.tasks=s.tasks.filter(t=>t.kind!=='repair');
+  replaceTasks(s,s.tasks.filter(t=>t.kind!=='repair'));
   if(!wave)notice(s,RAID_NOTICE_TEXT,animals[0].id);
   const exposed=activeCrops(s.plants).filter(p=>p.alive);
   emit(s,wave?'RaidWaveSpawned':'RaidSpawned',{raidFacts:{id:s.raid.id,day:s.day,daytime,elapsed:s.elapsed,waveIndex:s.raid.waveIndex??0,pressureFacts:s.raid.pressureFacts??null,exposedLiving:exposed.length,exposedWounded:exposed.filter(p=>(p.attackHits??0)>0).length,actors:animals.map(a=>({id:a.id,species:a.species,hitsRemaining:a.hitsRemaining,...(a.damageProfile?{damageProfile:structuredClone(a.damageProfile)}:{}),spawn:{...a.spawn},exit:{...a.exit}}))}});return true;
 }
-function release(s,a) {if(a.reservation&&s.raid.reservations[a.reservation]===a.id){delete s.raid.reservations[a.reservation];s.raid.waitRevision=((s.raid.waitRevision??0)+1)>>>0;}a.reservation=null;a.targetId=null;a.path=null;a.approach=null;a.approachShieldId=null;}
+function release(s,a,nav) {nav?.intentTaskPlanner?.cancelAttackIntent(a.id);if(a.reservation&&s.raid.reservations[a.reservation]===a.id){delete s.raid.reservations[a.reservation];s.raid.waitRevision=((s.raid.waitRevision??0)+1)>>>0;}a.reservation=null;a.targetId=null;a.path=null;a.approach=null;a.approachShieldId=null;}
+function beginRetreat(s,a,nav,reason){
+  leaveWait(s.raid,a);a.status='retreating';
+  emit(s,'AnimalRetreating',{targetId:a.id,species:a.species,
+    hitsRemaining:a.hitsRemaining,reason});
+  const route=nav.intentTaskPlanner?.planRetreatRoute?.(s,a);
+  if(route?.status==='found'){
+    a.path=route.path;a.destinationId=`exit-${a.id}`;a.pathVersion=nav.version;
+  }
+}
 export function reachableApproach(a,target,nav,shield=null,onUnknown=null,regionDecision=null){
   const focus=shield??target,r=shield?shield.radius+a.radius+.1:(target.kind==='wall'?1.2:.6)+a.radius;
   const angle=Math.atan2(a.x-focus.x,a.z-focus.z);
@@ -404,7 +453,124 @@ export function targetFor(s,a,nav) {
   const stats=nav.raidSelectionStats;
   const started=stats?performance.now():0;
   if(stats)stats.selections=(stats.selections??0)+1;
-  try{return targetForImpl(s,a,nav,stats);}finally{
+  try{
+    const native=nav.intentTaskPlanner?.planAttackCrop?.(s,a);
+    if(native&&stats){
+      stats.nativeCropPlans=(stats.nativeCropPlans??0)+1;
+      stats.nativeCropRegionQueries=(stats.nativeCropRegionQueries??0)+
+        (native.regionQueries??0);
+      stats.nativeCropRouteQueries=(stats.nativeCropRouteQueries??0)+
+        (native.routeQueries??0);
+      stats.nativeCropResults??={};
+      stats.nativeCropResults[native.status]=
+        (stats.nativeCropResults[native.status]??0)+1;
+      if(native.status==='unknown'){
+        stats.nativeUnknownCauses??={};
+        const mask=native.diagnostics?.unknownCauseMask??0;
+        for(let bit=0;bit<NATIVE_UNKNOWN_CAUSES.length;bit++)if(mask&(1<<bit)){
+          const cause=NATIVE_UNKNOWN_CAUSES[bit];
+          stats.nativeUnknownCauses[cause]=
+            (stats.nativeUnknownCauses[cause]??0)+1;
+        }
+        for(const reason of NATIVE_REGION_UNKNOWN_REASONS)
+          if(mask&(1<<(8+reason))){
+          const cause=`region-reason-${reason}`;
+          stats.nativeUnknownCauses[cause]=
+            (stats.nativeUnknownCauses[cause]??0)+1;
+        }
+        stats.nativeUnknownDiagnostics??=[];
+        if(stats.nativeUnknownDiagnostics.length<16)
+          stats.nativeUnknownDiagnostics.push({actorId:a.id,
+            day:s.day,time:s.time,frontier:native.frontier,
+            ...native.diagnostics});
+      }
+    }
+    if(native?.status==='found'){
+      const point=native.approach.point;
+      const rejected=!canAttackCrop(s,native.target)?'ineligible':
+        targetReserved(s,a,native.target)?'reserved-target':
+          !reservedApproachClear(s,a,point)?'reserved-approach':
+            !actorSegmentClear(point,point,a,actorBlockers(s,a,false))?'occupied-approach':
+              !nav.walkable(point.x,point.z,a.radius,null,false)?'physical-approach':null;
+      if(!rejected)
+        return {...native,shieldId:null};
+      if(stats){
+        stats.nativeCropRejections??={};
+        stats.nativeCropRejections[rejected]=
+          (stats.nativeCropRejections[rejected]??0)+1;
+      }
+      nav.intentTaskPlanner.cancelAttackIntent(a.id);
+    }
+    if(native?.status==='unknown'&&native.frontier){
+      const queued=nav.requestRaidFrontier?.(native.frontier)??false;
+      if(stats){
+        stats.nativeFrontierOffers=(stats.nativeFrontierOffers??0)+1;
+        if(queued)stats.nativeFrontierQueued=(stats.nativeFrontierQueued??0)+1;
+      }
+    }
+    let nativeWallStatus='not-requested';
+    if(nav.intentTaskPlanner?.nativeWallSelectionEnabled&&
+      (native?.status==='blocked'||native?.status==='unknown')){
+      const wall=nav.intentTaskPlanner.planAttackWall(s,a);
+      nativeWallStatus=wall?.status??'unavailable';
+      if(stats&&wall){
+        stats.nativeWallPlans=(stats.nativeWallPlans??0)+1;
+        stats.nativeWallRouteQueries=(stats.nativeWallRouteQueries??0)+
+          (wall.routeQueries??0);
+        stats.nativeWallResults??={};
+        stats.nativeWallResults[wall.status]=
+          (stats.nativeWallResults[wall.status]??0)+1;
+      }
+      if(wall?.status==='found'){
+        const point=wall.approach.point;
+        const rejected=targetReserved(s,a,wall.target)?'reserved-target':
+          !reservedApproachClear(s,a,point)?'reserved-approach':
+            !actorSegmentClear(point,point,a,actorBlockers(s,a,false))?
+              'occupied-approach':
+              !nav.walkable(point.x,point.z,a.radius,null,false)?
+                'physical-approach':null;
+        if(!rejected)return {...wall,shieldId:null};
+        nav.intentTaskPlanner.cancelAttackIntent(a.id);
+        if(stats){
+          stats.nativeWallRejections??={};
+          stats.nativeWallRejections[rejected]=
+            (stats.nativeWallRejections[rejected]??0)+1;
+        }
+      }
+    }
+    // The native crop planner can leave interaction sites unresolved even
+    // when the graph certifies that a wall separates the raid from the farm.
+    // Ask the existing region/perimeter selector only for physical barriers;
+    // do not re-enter its per-crop approach search on an unknown crop region.
+    if(native?.status==='unknown'){
+      const barrier=targetForImpl(s,a,nav,stats,{structuresOnly:true,
+        skipConnectivityDemand:!!native.frontier});
+      return barrier?.target?barrier:{unknown:true};
+    }
+    if(native?.status==='occupied')return {unknown:true};
+    const fallback=targetForImpl(s,a,nav,stats);
+    if(stats){
+      const reason=native?.status??'unsupported',
+        result=fallback?.unknown?'unknown':fallback?.target?.kind??
+          (fallback?.target?'crop':'none');
+      stats.legacyFallbacks??={};stats.legacyFallbackResults??={};
+      stats.legacyFallbacks[reason]=(stats.legacyFallbacks[reason]??0)+1;
+      stats.legacyFallbackResults[result]=
+        (stats.legacyFallbackResults[result]??0)+1;
+      stats.legacyFallbackMatrix??={};
+      const key=`${reason}/${nativeWallStatus}`;
+      const outcomes=stats.legacyFallbackMatrix[key]??={};
+      outcomes[result]=(outcomes[result]??0)+1;
+      if(nativeWallStatus==='occupied'&&fallback?.target){
+        const samples=stats.occupiedWallFallbackSamples??=[];
+        if(samples.length<8)samples.push({day:s.day,time:s.time,
+          actorId:a.id,species:a.species,x:a.x,z:a.z,
+          targetId:fallback.target.id,targetKind:fallback.target.kind,
+          result});
+      }
+    }
+    return fallback;
+  }finally{
     if(stats)stats.selectionMs=(stats.selectionMs??0)+performance.now()-started;
     const scope=raidRegionDecisions.get(nav);
     if(stats&&scope){
@@ -413,7 +579,8 @@ export function targetFor(s,a,nav) {
     }
   }
 }
-function targetForImpl(s,a,nav,stats){
+function targetForImpl(s,a,nav,stats,
+  {structuresOnly=false,skipConnectivityDemand=false}={}){
   let unknown=false;
   const sealedWallSides=new Map();
   const sealedCropRepresentatives=[];
@@ -443,7 +610,8 @@ function targetForImpl(s,a,nav,stats){
     for(const [regionKey,candidates] of byRegion){
       if(stats)stats.regions=(stats.regions??0)+1;
       // One abstract connectivity query represents all crops in this region.
-      const status=scope?cropRegionDecision(s,a,nav,group,regionKey,candidates,scope,origin,sectorRevision):
+      const status=scope?cropRegionDecision(s,a,nav,group,regionKey,candidates,
+        scope,origin,sectorRevision,!skipConnectivityDemand):
         nav.regionConnected?.(a,candidates[0],a.radius,null,false)===false?'blocked':'accessible';
       if(stats)stats[status]=(stats[status]??0)+1;
       if(status==='unknown'||status==='blocked'){
@@ -477,6 +645,7 @@ function targetForImpl(s,a,nav,stats){
         }
         continue;
       }
+      if(structuresOnly)continue;
       const eligible=candidates.filter(p=>canAttackCrop(s,p)&&!targetReserved(s,a,p));
       if(!eligible.length)continue;
       eligible.sort((p,q)=>dist(a,p)-dist(a,q));
@@ -563,7 +732,15 @@ export function warmRaidApproaches(state,specs,entry,nav){
 }
 export function updateRaid(s,dt,nav) {
   if(!s.raid)return;
-  reconcileTargetReservations(s,release);
+  // Resolve confirmed crop and barrier changes before the next attack
+  // intention; a target destroyed by the previous step cannot be selected
+  // from a stale native group snapshot.
+  nav.intentTaskPlanner?.flushWorldEvents?.();
+  const tactical=new Set(nav.intentTaskPlanner?.drainTacticalReconsiderations?.()??[]);
+  if(tactical.size)for(const animal of s.raid.animals)
+    if(tactical.has(animal.id)&&animal.status!=='attacking'&&animal.targetId)
+      release(s,animal,nav);
+  reconcileRaidReservationsOnChange(s,nav);
   updateWorkerEncounters(s,nav);
   observeWaitProgress(s);liveWaitQueue(s.raid);
   for(const a of s.raid.animals) {
@@ -608,24 +785,43 @@ export function updateRaid(s,dt,nav) {
             shield:shield?{id:shield.id,x:shield.x,z:shield.z,radius:shield.radius}:null}});
         }else emit(s,'AnimalLogicalMiss',{attackId:a.attackId,targetId:a.targetId,species:a.species,...(expiredBorder?{reason:'shield-expired'}:{})});
       }
-      a.status='walking';a.path=null;if(!target||target.alive===false||target.status&&target.status!=='intact')release(s,a);
+      const reconsider=nav.intentTaskPlanner?.finishAttackIntent(a.id);
+      a.status='walking';a.path=null;
+      if(reconsider>0||!target||target.alive===false||
+        target.status&&target.status!=='intact')release(s,a,nav);
+      else if(nav.intentTaskPlanner&&a.approach){
+        if(dist(a,a.approach)>.1)release(s,a,nav);
+        else {
+          // The next strike is a new action at the same validated position.
+          // Keep an empty movement path instead of asking for another route.
+          a.path=[];a.destinationId=a.approach.id;a.pathVersion=nav.version;
+        }
+      }
       // Finish the committed animation before spending another hit or retreating.
       continue;
     }
-    if(a.hitsRemaining<=0&&a.status!=='retreating'){release(s,a);leaveWait(s.raid,a);a.status='retreating';emit(s,'AnimalRetreating',{targetId:a.id,species:a.species,hitsRemaining:a.hitsRemaining,reason:'budget-exhausted'});}
+    if(a.hitsRemaining<=0&&a.status!=='retreating'){
+      release(s,a,nav);beginRetreat(s,a,nav,'budget-exhausted');
+    }
     if(a.status==='retreating') {
-      if(walkTo(s,a,{...(a.exit??a.spawn),id:`exit-${a.id}`},dt,nav,{speed:3.8,worker:false,expandRoute:true,routeVia:a.spawn}))a.status='gone';continue;
+      const native=nav.intentTaskPlanner?.retreatRouteActive?.(a.id)??false;
+      if(walkTo(s,a,{...(a.exit??a.spawn),id:`exit-${a.id}`},dt,nav,
+        {speed:3.8,worker:false,expandRoute:true,routeVia:a.spawn,
+          externallyPlanned:native})){
+        a.status='gone';nav.intentTaskPlanner?.finishRetreatIntent?.(a.id);
+      }else if(native&&!a.path)nav.intentTaskPlanner?.finishRetreatIntent?.(a.id);
+      continue;
     }
     if(a.hitsRemaining<=0)continue;
     let target=raidTarget(s,a.targetId);
     if(!target) {
-      if(a.status!=='waiting')release(s,a);
+      if(a.status!=='waiting')release(s,a,nav);
       // Search independent targets before staging. Each waiting actor retries
       // its own bounded search; an unreachable queue head cannot block peers.
       if(a.status==='waiting'){
         const wait=a.raidWait,progress=s.raid.waitProgress;
         if(s.elapsed-Math.max(wait.since,progress?.at??wait.since)>=RAID_WAIT_SECONDS||!nav.walkable(a.spawn.x,a.spawn.z,a.radius,null,false)){
-          leaveWait(s.raid,a);a.status='retreating';emit(s,'AnimalRetreating',{targetId:a.id,species:a.species,hitsRemaining:a.hitsRemaining,reason:'waiting-expired-or-stage-blocked'});continue;
+          beginRetreat(s,a,nav,'waiting-expired-or-stage-blocked');continue;
         }
         if(dist(a,a.spawn)>.08&&(a.path||s.elapsed>=wait.moveRetryAt)){
           walkTo(s,a,{...a.spawn,id:'wait-'+a.id},dt,nav,{speed:1.5,worker:false});if(!a.path)wait.moveRetryAt=s.elapsed+1;
@@ -637,29 +833,66 @@ export function updateRaid(s,dt,nav) {
       const selected=targetFor(s,a,nav);
       if(!selected||selected.unknown){
         emit(s,'AnimalTargetUnavailable',{targetId:a.id,species:a.species,hitsRemaining:a.hitsRemaining});
-        if(selected?.unknown||occupiedEligibleGroup(s,a,p=>canAttackCrop(s,p)))enqueueWait(s,a);
-        else {leaveWait(s.raid,a);a.status='retreating';emit(s,'AnimalRetreating',{targetId:a.id,species:a.species,hitsRemaining:a.hitsRemaining,reason:'no-reachable-unleased-target'});}
+        if(selected?.unknown){
+          enqueueWait(s,a,'unknown');
+          a.raidWait.epoch=waitEpoch(s,nav,a);
+          a.raidWait.retryAt=s.elapsed+8;
+        }
+        else if(occupiedEligibleGroup(s,a,p=>canAttackCrop(s,p)))
+          enqueueWait(s,a,'contention');
+        else beginRetreat(s,a,nav,'no-reachable-unleased-target');
         continue;
       }
       if(a.status==='waiting')a.status='entering';leaveWait(s.raid,a);
       target=selected.target;a.targetId=target.id;a.reservation=selected.reservation;s.raid.reservations[a.reservation]=a.id;s.raid.waitRevision=((s.raid.waitRevision??0)+1)>>>0;
       a.approach=selected.approach.point;a.approachShieldId=selected.shieldId;
       a.path=selected.approach.path;a.destinationId=a.approach.id;a.pathVersion=nav.version;
+      if(!selected.native)nav.intentTaskPlanner?.registerAttackIntent(s,a,target,a.path??[]);
     }
+    // A confirmed topological event may leave the same native attack target
+    // pending while sectors resolve. Ordinary travel ticks do not replace its
+    // lease or run the old per-crop approach search.
     const shield=spellAt(s,'shield',target);
-    if(!a.approach||a.approachShieldId!==(shield?.id??null)||!reservedApproachClear(s,a,a.approach)||!actorSegmentClear(a.approach,a.approach,a,actorBlockers(s,a,false))) {
+    const approachChanged=!a.approach||a.approachShieldId!==(shield?.id??null);
+    // A new shield can invalidate the old crop route while creating a valid
+    // interaction point at its border. Re-evaluate that point before parking
+    // an otherwise pending native route until the shield expires.
+    if(nav.intentTaskPlanner?.attackRoutePending?.(a.id)&&!approachChanged)
+      continue;
+    const legacyApproachBlocked=!nav.intentTaskPlanner&&a.approach&&
+      (!reservedApproachClear(s,a,a.approach)||
+       !actorSegmentClear(a.approach,a.approach,a,actorBlockers(s,a,false)));
+    if(approachChanged||legacyApproachBlocked) {
       const approach=reachableApproach(a,target,nav,shield);
-      if(!approach){emit(s,'AnimalRouteUnavailable',{targetId:a.id,species:a.species,phase:'approach'});release(s,a);a.status='walking';continue;}
+      if(!approach){emit(s,'AnimalRouteUnavailable',{targetId:a.id,species:a.species,phase:'approach'});release(s,a,nav);a.status='walking';continue;}
       a.approach=approach.point;a.approachShieldId=shield?.id??null;
       a.path=approach.path;a.destinationId=a.approach.id;a.pathVersion=nav.version;
+      nav.intentTaskPlanner?.registerAttackIntent(s,a,target,a.path??[]);
     }
     if(a.status!=='attacking') {
-      if(walkTo(s,a,a.approach,dt,nav,{speed:a.status==='entering'?3.8:1.5,worker:false})) {
+      if(walkTo(s,a,a.approach,dt,nav,{speed:a.status==='entering'?3.8:1.5,
+        worker:false,externallyPlanned:!!nav.intentTaskPlanner})) {
+        if(nav.intentTaskPlanner&&(!reservedApproachClear(s,a,a.approach)||
+          !actorSegmentClear(a.approach,a.approach,a,actorBlockers(s,a,false))))
+          continue;
         a.heading=Math.atan2(target.x-a.x,target.z-a.z);
+        // A previous committed strike releases its native lease at the damage
+        // frame. Renew it only when this next strike actually begins.
+        nav.intentTaskPlanner?.registerAttackIntent(s,a,target,[]);
         a.status='attacking';a.hitApplied=false;a.attackId=`attack-${s.sequence++}`;
+        nav.intentTaskPlanner?.markAttackActive(a.id);
         const roll=nextRandom(s);a.animation=roll<.45?'Right_Hand_Sword_Slash':roll<.75?'Charged_Upward_Slash':roll<.9?'Weapon_Combo':'Weapon_Combo_2';
         a.attackDuration=ANIMAL_ACTIONS.animals[a.species].clips[a.animation].duration;a.attackRemaining=a.attackDuration;
-      } else if(!a.path){emit(s,'AnimalRouteUnavailable',{targetId:a.id,species:a.species,phase:'travel'});release(s,a);a.status='walking';}
+      } else if(!a.path){
+        emit(s,'AnimalRouteUnavailable',{targetId:a.id,species:a.species,phase:'travel'});
+        release(s,a,nav);
+        if(nav.intentTaskPlanner){
+          enqueueWait(s,a);
+          a.raidWait.epoch=waitEpoch(s,nav,a);
+          a.raidWait.retryAt=s.elapsed+8;
+        }
+        else a.status='walking';
+      }
       else if(dist(a,s.structures.find(operational)??target)<25)a.status='walking';
     }
   }
@@ -673,6 +906,7 @@ export function updateRaid(s,dt,nav) {
       const center=s.structures.find(c=>c.id===w.centerId&&operational(c));
       if(center){w.status='arriving';w.raidReturn=true;w.path=null;}
       else {w.displacedDay=s.day;w.status='returning';w.path=null;}
+      notifyWorkerPlanningChange(s,w);
     }
     recoverDisplacedWorkers(s);
     rebuildTasks(s);
