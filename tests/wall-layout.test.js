@@ -26,6 +26,16 @@ test('Module sampling preserves original straight, curved and closed paths',()=>
   assert.equal(wallStroke([[0,0],[8,0]],[],{smooth:false}).length,4);
   assert.throws(()=>wallStroke([[NaN,0],[8,0]],[]),/inválido/);
 });
+test('A ruined wall no longer hides a physically open stroke slot',()=>{
+  const stroke=[[0,0],[2.18,0]],slot=wallStroke(stroke,[],
+    {smooth:false,snap:false})[0];
+  const wall={kind:'wall',id:'old',created:1,material:'zarzas',
+    x:slot.x,z:slot.z,yaw:-slot.angle,baseScaleX:slot.scaleX,
+    maxHp:100,hp:0,status:'ruined'};
+  assert.equal(wallStroke(stroke,[wall],{smooth:false,snap:false}).length,1);
+  assert.equal(wallStroke(stroke,[{...wall,hp:100,status:'intact'}],
+    {smooth:false,snap:false}).length,0);
+});
 test('Enclosure graph and deterministic gates match source including crossings and T junctions',()=>{
   const paths=[square,[...square,[8,4],[0,4]],[[0,0],[8,0],[8,8]],[[0,0],[8,8],[0,8],[8,0],[0,0]]];
   for(const path of paths){

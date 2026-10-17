@@ -54,6 +54,33 @@ must move around them; it must re-run placement, worker access and attack
 certification on the resulting proposal. Reclassifying code `0` as a barrier
 would be physically wrong.
 
+## Frozen day-70 seam probe
+
+A second replay captured the state at the start of Sabana/712 day 70. Its first
+70 nightly state hashes matched the archived campaign. The three faces above
+coincide with two ruined, zero-HP wall modules (`structure-78280` and
+`structure-78281`) centred at `(104.5,-0.75)` and `(104.5,0.75)`. Wild Engine
+correctly reports no certified barrier there. The native damaged-wall service
+reports both ruins with a 10-coin repair cost each. Neither had a pending
+repair task at the captured instant.
+
+Before this branch's stroke fix, quoting the stroke from `(104.5,-1.5)` to
+`(104.5,1.5)` returned zero modules: JavaScript deduplicated against the two
+ruins even though they no longer block movement. After excluding nonblocking
+ruins from stroke deduplication, the same quote returns two physically legal
+modules costing 20 coins. In a read-only preview, those modules certify all
+three local faces (`[0,0,0]` becomes `[1,1,1]`). This proves that this *local*
+seam is constructible. It does not prove that the entire enclosure is closed,
+that workers retain access, or that crops cannot be attacked from other sides.
+
+The crop group currently near these walls has ID `crop:plant-77666`, whereas
+the wall metadata stores older group IDs. The repair policy sorts by those old
+IDs' remembered values and then by wall ID. It can therefore rank old ruins
+ahead of a new breach. This is a separate strategic prioritization problem;
+the stroke correction alone does not claim to solve it. The experimental
+planner must still pass full closure and worker-access certification before
+buying a proposed enclosure.
+
 ## Verification
 
 - Native cut/enclosure test file: 16/16 passed with the current WASM, including
@@ -61,7 +88,9 @@ would be physically wrong.
 - Playable suite: 204/204 passed.
 - `verify:balance` and `verify:plan` passed.
 - The replay preserved all 72 serialized-state hashes and verified all raids.
+- A wall-stroke regression verifies that a ruined module cannot hide a buildable
+  slot while an intact module still prevents a duplicate.
 
-This is diagnostic groundwork for a physical planner correction. It does
-not by itself make the late Sabana enclosure constructible or justify a
-balance change.
+This branch remains experimental. The frozen probe establishes a specific
+physically buildable seam; a full campaign comparison and repair-priority
+correction remain before adopting the planner change or adjusting balance.
