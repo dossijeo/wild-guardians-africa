@@ -97,5 +97,21 @@ The report gzip SHA-256 values are `d6d900f48cbb648b0fba5b07326c4144268f2b9c11e6
 (14-night V1) and `1b13044a31777ba87b38cfd10a324b64e5da3e53970483d587858c8380d82546`
 (30-night V1), and `04e156b0d877f231eb7f327fb8f7636292185c903268c76b70877f784e8d1c83`
 (21-night control from a 30-night request). No production pressure or wall
-table was changed. Held-out biome/seed checks and later horizons remain
+table was changed. Cross-biome checks and later horizons remain
 necessary before recommending a balance candidate.
+
+## Held-out Sabana seed 123
+
+The same current-main pair completed 14 nights on seed 123 with the same bot
+configuration. The control retained 101 crops and 715 coins after 153 crops
+were destroyed; V1 pressure retained 149 crops and 975 coins after 22 were
+destroyed. Both had one operational center and verified raid evidence with
+zero issues. The control paid for 63 thorn-wall modules and V1 paid for 90;
+that difference follows from the divergent farm trajectories under the
+unchanged economic policy, so wall spending is not held constant here. The
+[nightly ledger](current-main-sabana123-14-nightly.csv) and compressed full
+reports preserve the comparison. Their gzip SHA-256 values are
+`3a6b253ded94e9eb1061f04a50c742424d66ff84b5bbb674e34d867886bb02a9`
+(control) and `36b9e06554133ac9a8994e716eecda097055c06b01e21eac3906b538552f4576`
+(V1). Two Sabana seeds support continued evaluation, not adoption across six
+biomes or a 100-night viability claim.
