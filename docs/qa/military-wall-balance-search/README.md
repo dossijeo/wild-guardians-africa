@@ -115,3 +115,16 @@ reports preserve the comparison. Their gzip SHA-256 values are
 (control) and `36b9e06554133ac9a8994e716eecda097055c06b01e21eac3906b538552f4576`
 (V1). Two Sabana seeds support continued evaluation, not adoption across six
 biomes or a 100-night viability claim.
+
+## Manglares seed 712
+
+Both arms completed 14 nights with verified raids and zero technical issues.
+The control retained 71 crops and 1,029 coins after 68 crop losses; V1 pressure
+retained 145 crops and 1,152 coins after 24 losses. Both paid for 96 thorn-wall
+modules, so this particular comparison does not include a wall-spending
+difference. The [nightly ledger](current-main-manglares712-14-nightly.csv) and
+full reports retain the physical and economic details. Report gzip SHA-256:
+`7518fd195b8f55758f51fed693ec26a3001eb885709e603fa593744df6f0209f`
+(control) and `ed6ae491ab23fdb639d0acf5512325c96d7db08adcf28764adb678f1ea7e6f18`
+(V1). This supports a second biome at the 14-night horizon but does not cover
+Gran Cañón, Desierto, Gran Río or Volcanes, nor later military escalation.
