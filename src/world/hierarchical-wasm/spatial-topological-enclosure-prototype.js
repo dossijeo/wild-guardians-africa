@@ -83,6 +83,52 @@ export function enclosureJunctions(strokes){
   return junctions;
 }
 
+// Recognize a two-transect candidate discovered by the native cut. This is a
+// topology label, not a protection certificate: the final quote, every
+// boundary face, attack reach and worker access are checked separately.
+// `naturalFaces` contains the native cut-face classification before preview.
+export function identifyNaturalCorridor(strokes,naturalFaces){
+  if(strokes.length!==2||!Array.isArray(naturalFaces))return null;
+  const distanceToFace=(point,[ox,oz,ix,iz])=>{
+    const mx=(ox+ix)/2,mz=(oz+iz)/2;
+    const a=ox!==ix?[mx,mz-.5]:[mx-.5,mz];
+    const b=ox!==ix?[mx,mz+.5]:[mx+.5,mz];
+    const dx=b[0]-a[0],dz=b[1]-a[1];
+    const t=Math.max(0,Math.min(1,((point[0]-a[0])*dx+
+      (point[1]-a[1])*dz)/(dx*dx+dz*dz)));
+    return Math.hypot(point[0]-a[0]-t*dx,point[1]-a[1]-t*dz);
+  };
+  const ends=[];
+  for(const stroke of strokes){
+    if(stroke.length<2||Math.hypot(stroke[0][0]-stroke.at(-1)[0],
+      stroke[0][1]-stroke.at(-1)[1])<1e-6)return null;
+    const attached=[stroke[0],stroke.at(-1)].map(point=>{
+      const near=naturalFaces.filter(face=>face.kind>0&&
+        distanceToFace(point,face.edge)<.76)
+        .sort((a,b)=>distanceToFace(point,a.edge)-
+          distanceToFace(point,b.edge)||a.kind-b.kind)[0];
+      return near?.kind===2||near?.kind===3?'fluid':
+        near?.kind===1||near?.kind===4?'solid':null;
+    });
+    if(!attached[0]||!attached[1]||attached[0]===attached[1])return null;
+    ends.push(attached);
+  }
+  if([...ends[0]].sort().join(',')!==[...ends[1]].sort().join(','))return null;
+  const mid=stroke=>[(stroke[0][0]+stroke.at(-1)[0])/2,
+    (stroke[0][1]+stroke.at(-1)[1])/2];
+  const a=mid(strokes[0]),b=mid(strokes[1]);
+  const axis=[b[0]-a[0],b[1]-a[1]],length=Math.hypot(...axis);
+  if(length<2)return null;
+  for(const stroke of strokes){
+    const delta=[stroke.at(-1)[0]-stroke[0][0],
+      stroke.at(-1)[1]-stroke[0][1]],width=Math.hypot(...delta);
+    if(width<1||Math.abs(delta[0]*axis[0]+delta[1]*axis[1])>
+      width*length*.55)return null;
+  }
+  return {kind:'natural-corridor',barriers:[...ends[0]].sort(),
+    transects:2,axis:[axis[0]/length,axis[1]/length]};
+}
+
 // A cut describes ideal line ends. Clearance must instead be measured from
 // the outer end of each module that survives the game's placement quote.
 // Missing end modules make the physical join unprovable, even if a grid edge

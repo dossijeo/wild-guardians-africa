@@ -1,0 +1,245 @@
+{
+  "kind": "ABBA",
+  "seed": 712,
+  "biome": "gran-canon",
+  "cropSites": [
+    [
+      -19,
+      45
+    ],
+    [
+      -22,
+      53
+    ],
+    [
+      -25,
+      61
+    ]
+  ],
+  "bounds": [
+    -48,
+    35,
+    -5,
+    70
+  ],
+  "sourceHash": "62d22f5e036c97ad3ed07c84ac3161c2bf9b02a830b5c040046d64e8f37f3c55",
+  "wasmSha256": {
+    "baseline": "0255e71a4322356064c28bcb1a707f32f37b1aa7fef412b84b3897ea92ff01ca",
+    "candidate": "5c26b33b31d66a7ca3490d174c050390fe6de7d53afe3f53700042a3c8e20388"
+  },
+  "rows": [
+    {
+      "arm": "baseline",
+      "loadMs": 416.45790000000005,
+      "cutMs": 13.957599999999957,
+      "convertMs": 13.756800000000112,
+      "quoteMs": 52722.217599999996,
+      "validateMs": 2204.7425000000003,
+      "count": 60,
+      "cells": 0,
+      "strokes": 3,
+      "corridor": null,
+      "modules": 9,
+      "cost": 90,
+      "omitted": 0,
+      "gates": 0,
+      "faces": {
+        "solid": 20,
+        "wetland": 0,
+        "river": 0,
+        "cliff": 0,
+        "unproved": 40
+      },
+      "attackMargin": null,
+      "workerBefore": [
+        {
+          "out": true,
+          "back": true
+        },
+        {
+          "out": true,
+          "back": true
+        },
+        {
+          "out": true,
+          "back": true
+        }
+      ],
+      "workerAfter": [
+        {
+          "out": true,
+          "back": true
+        },
+        {
+          "out": true,
+          "back": true
+        },
+        {
+          "out": true,
+          "back": true
+        }
+      ],
+      "memoryBytes": 16777216
+    },
+    {
+      "arm": "candidate",
+      "loadMs": 419.10729999999603,
+      "cutMs": 38.69060000000172,
+      "convertMs": 2.4927000000025146,
+      "quoteMs": 2390.2123999999967,
+      "validateMs": 2395.008999999998,
+      "count": 28,
+      "cells": 0,
+      "strokes": 2,
+      "corridor": "natural-corridor",
+      "modules": 14,
+      "cost": 140,
+      "omitted": 0,
+      "gates": 0,
+      "faces": {
+        "solid": 33,
+        "wetland": 0,
+        "river": 44,
+        "cliff": 41,
+        "unproved": 0
+      },
+      "attackMargin": 0.659998893737793,
+      "workerBefore": [
+        {
+          "out": true,
+          "back": true
+        },
+        {
+          "out": true,
+          "back": true
+        },
+        {
+          "out": true,
+          "back": true
+        }
+      ],
+      "workerAfter": [
+        {
+          "out": true,
+          "back": true
+        },
+        {
+          "out": true,
+          "back": true
+        },
+        {
+          "out": true,
+          "back": true
+        }
+      ],
+      "memoryBytes": 16777216
+    },
+    {
+      "arm": "candidate",
+      "loadMs": 423.02040000000125,
+      "cutMs": 29.266700000000128,
+      "convertMs": 0.6035999999949127,
+      "quoteMs": 2301.941300000006,
+      "validateMs": 2374.138300000006,
+      "count": 28,
+      "cells": 0,
+      "strokes": 2,
+      "corridor": "natural-corridor",
+      "modules": 14,
+      "cost": 140,
+      "omitted": 0,
+      "gates": 0,
+      "faces": {
+        "solid": 33,
+        "wetland": 0,
+        "river": 44,
+        "cliff": 41,
+        "unproved": 0
+      },
+      "attackMargin": 0.659998893737793,
+      "workerBefore": [
+        {
+          "out": true,
+          "back": true
+        },
+        {
+          "out": true,
+          "back": true
+        },
+        {
+          "out": true,
+          "back": true
+        }
+      ],
+      "workerAfter": [
+        {
+          "out": true,
+          "back": true
+        },
+        {
+          "out": true,
+          "back": true
+        },
+        {
+          "out": true,
+          "back": true
+        }
+      ],
+      "memoryBytes": 16777216
+    },
+    {
+      "arm": "baseline",
+      "loadMs": 465.9527999999991,
+      "cutMs": 12.904199999989942,
+      "convertMs": 0.5478000000002794,
+      "quoteMs": 54482.72660000001,
+      "validateMs": 2312.067900000009,
+      "count": 60,
+      "cells": 0,
+      "strokes": 3,
+      "corridor": null,
+      "modules": 9,
+      "cost": 90,
+      "omitted": 0,
+      "gates": 0,
+      "faces": {
+        "solid": 20,
+        "wetland": 0,
+        "river": 0,
+        "cliff": 0,
+        "unproved": 40
+      },
+      "attackMargin": null,
+      "workerBefore": [
+        {
+          "out": true,
+          "back": true
+        },
+        {
+          "out": true,
+          "back": true
+        },
+        {
+          "out": true,
+          "back": true
+        }
+      ],
+      "workerAfter": [
+        {
+          "out": true,
+          "back": true
+        },
+        {
+          "out": true,
+          "back": true
+        },
+        {
+          "out": true,
+          "back": true
+        }
+      ],
+      "memoryBytes": 16777216
+    }
+  ],
+  "note": "Three legally planted live crops and the computed initial-village entry (0,4). Workers have routes before and after both quotes. Baseline and candidate are not equivalent protected plans."
+}

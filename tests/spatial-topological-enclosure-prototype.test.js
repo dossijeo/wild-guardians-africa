@@ -6,17 +6,19 @@ import {deserialize,serialize} from '../src/persistence/snapshots.js';
 import {createPlant} from '../src/simulation/crops.js';
 import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+import {proposeHybridEnclosure} from '../src/world/hierarchical-wasm/spatial-hybrid-enclosure-prototype.js';
 import {approximateCutModules,cropClearanceHull,cutEdgesToStrokes,enclosureJunctions,inspectNaturalJunctions,
+  identifyNaturalCorridor,
   inspectPlacedNaturalJunctions,inspectSelfClosedQuote,
   inspectStaticCutBoundary,junctionBlocksSmallestAnimal,
   placedEnclosureJunctions,
   SMALLEST_ANIMAL_RADIUS,stitchTwoCutStrokes,
   wallOccludesBoundaryFace} from '../src/world/hierarchical-wasm/spatial-topological-enclosure-prototype.js';
-import {villageLayout} from '../src/world/villages.js';
+import {findVillageEntry,villageLayout} from '../src/world/villages.js';
 import {containsPoint} from '../src/world/footprints.js';
 import {Navigation} from '../src/world/navigation.js';
 import {rational} from '../src/simulation/money.js';
-import {agriculturalRayClear} from '../src/simulation/raid-agricultural-impact.js';
+import {agriculturalRayClear,AGRICULTURAL_PROFILE_LIMITS} from '../src/simulation/raid-agricultural-impact.js';
 import {ANIMAL_SPATIAL_PROFILES} from '../src/world/hierarchical-wasm/spatial-movement-profiles.js';
 import * as Game from '../src/simulation/game.js';
 
@@ -491,7 +493,7 @@ test('native cut observes a paid wall stroke and its removal',
     }finally{session.dispose();}
   });
 
-test('Gran Cañón cut cannot certify a closure with omitted fluid modules',
+test('Gran Cañón natural corridor closes around planted crops and rejects uncertain protection',
   {skip:!module&&'Build the experimental Wild Engine WASM first'},async()=>{
     const state=Game.newGame({seed:712,biome:'gran-canon',culture:'mapungubwe',
       slotId:'topological-fluid-gap-test'});
@@ -512,7 +514,7 @@ test('Gran Cañón cut cannot certify a closure with omitted fluid modules',
       const nav=createSpatialNavigationMovement(session,state);
       for(const species of ['warthog','hyena','buffalo','lion','rhino'])
         session.actorRegionsBatch([site],{worker:false,species});
-      const wasm=session.core.wasm,before=serialize(state);
+      const wasm=session.core.wasm;let before=serialize(state);
       new Int32Array(wasm.memory.buffer,wasm.lazy_cut_seeds_ptr(1),2)
         .set([site.x,site.z]);
       const count=wasm.lazy_local_crop_cut_conservative(-14,-20,11,5,1,2);
@@ -520,22 +522,175 @@ test('Gran Cañón cut cannot certify a closure with omitted fluid modules',
       const edges=Array.from(new Int32Array(wasm.memory.buffer,
         wasm.lazy_local_crop_cut_ptr(),count*4));
       const candidate=approximateCutModules(edges,state.structures,'zarzas',10);
-      assert.equal(candidate.strokes.length,3);
+      assert.equal(candidate.strokes.length,1);
       const quote=Game.quoteWallChain(state,'zarzas',candidate.strokes,nav,
         {smooth:false,snap:false});
-      assert.deepEqual(quote.blockedPieces.map(p=>[p.x,p.z]),
-        [[-4.5,-5.5],[-4.5,-7.5]]);
-      assert.ok(quote.blockedPieces.every(p=>nav.wallPlacement(p).fluid));
+      assert.equal(quote.blockedPieces.length,0);
       assert.deepEqual(inspectSelfClosedQuote(quote,state.structures,[site]),
-        {status:'open',reason:'omitted-module'});
+        {status:'open',reason:'no-wall-face'});
       assert.equal(serialize(state),before,'The rejected quote is read-only');
       new Int32Array(wasm.memory.buffer,wasm.lazy_cut_seeds_ptr(1),2)
         .set([site.x,site.z]);
       assert.equal(wasm.lazy_local_crop_cut_conservative_buildable(
-        -14,-20,11,5,1,2),-1,
-      'A cut requiring a fully flooded face is unresolved, not a cheap wall');
-      assert.ok(wasm.lazy_local_crop_cut_flow()>=10000);
-      assert.equal(serialize(state),before,
-        'The construction-aware graph query also leaves the game unchanged');
+        -14,-20,11,5,1,2),count);
+      const natural={river:[],cliff:[]};
+      for(let z=-20;z<5;z++)for(let x=-14;x<11;x++){
+        const code=wasm.lazy_cut_face_natural(x,z,x+1,z);
+        if(code===3&&natural.river.length<4)natural.river.push([x,z]);
+        if(code===4&&natural.cliff.length<4)natural.cliff.push([x,z]);
+      }
+      assert.ok(natural.river.length>0,'The real resident river must have proved faces');
+      assert.ok(natural.cliff.length>0,JSON.stringify(natural));
+      const originalEntry=findVillageEntry(nav,state.villages[0].buildings,0,0);
+      assert.ok(originalEntry);
+      state.villages[0].entry=originalEntry;
+      before=serialize(state);
+      const corridorSeeds=[];
+      for(const targetZ of [45,53,61]){
+        const options=[];
+        for(let z=targetZ-2;z<=targetZ+2;z++){
+          const river=wasm.spatial_river_center(z);
+          for(let x=Math.floor(river+7);x<=Math.ceil(river+19);x++)
+            if(nav.placement(x,z,.4).valid)options.push({x,z,
+              bankDistance:Math.abs(x-(river+13))});
+        }
+        options.sort((a,b)=>Math.abs(a.z-targetZ)-Math.abs(b.z-targetZ)||
+          a.bankDistance-b.bankDistance);
+        if(options.length)corridorSeeds.push(options[0]);
+      }
+      assert.equal(corridorSeeds.length,3,
+        'The real canyon terrain must offer three legal crop positions');
+      {
+        for(let x=-1;x<=1;x++)jobs.set(`${x},2`,
+          {cx:x,cz:2,score:Math.hypot(x,2)});
+        session.stream.plan(jobs);await session.stream.whenIdle();
+        for(const [index,seed] of corridorSeeds.entries())
+          assert.ok(Game.plant(state,`canyon-corridor-plant-${index}`,
+            'mijo',seed.x,seed.z,nav));
+        before=serialize(state);
+        const regionPoints=[];
+        for(let z=32;z<=68;z+=8)for(let x=-60;x<=20;x+=8)
+          regionPoints.push({x,z});
+        for(const species of ['warthog','hyena','buffalo','lion','rhino'])
+          session.actorRegionsBatch(regionPoints,{worker:false,species});
+        new Int32Array(wasm.memory.buffer,wasm.lazy_cut_seeds_ptr(3),6)
+          .set(corridorSeeds.flatMap(p=>[p.x,p.z]));
+        const corridorCount=wasm.lazy_local_crop_cut_conservative_buildable(
+          -48,35,-5,70,3,2);
+        const corridorEdges=corridorCount>=0?Array.from(new Int32Array(
+          wasm.memory.buffer,wasm.lazy_local_crop_cut_ptr(),corridorCount*4)):[];
+        const faceCount=wasm.lazy_local_crop_cut_boundary_count();
+        const corridorBoundary=Array.from(new Int32Array(wasm.memory.buffer,
+          wasm.lazy_local_crop_cut_boundary_ptr(),faceCount*4));
+        const naturalFaces=[];
+        for(let i=0;i<corridorBoundary.length;i+=4){
+          const edge=corridorBoundary.slice(i,i+4);
+          naturalFaces.push({edge,kind:wasm.lazy_cut_face_natural(...edge)});
+        }
+        const attackBuffer=wasm.lazy_cut_attack_points_ptr(corridorSeeds.length);
+        new Float32Array(wasm.memory.buffer,attackBuffer,corridorSeeds.length*2)
+          .set(corridorSeeds.flatMap(p=>[p.x,p.z]));
+        const reach=Math.max(...Object.values(ANIMAL_SPATIAL_PROFILES)
+          .map(p=>p.radius))+.65+AGRICULTURAL_PROFILE_LIMITS.attackRadius;
+        const attackMargin=wasm.lazy_cut_attack_margin(corridorSeeds.length,reach);
+        new Float32Array(wasm.memory.buffer,attackBuffer,2).set([-21.5,67.5]);
+        assert.ok(wasm.lazy_cut_attack_margin(corridorSeeds.length,reach)<0,
+          'A crop near the perimeter must not inherit the safe certificate');
+        new Float32Array(wasm.memory.buffer,attackBuffer,corridorSeeds.length*2)
+          .set(corridorSeeds.flatMap(p=>[p.x,p.z]));
+        const corridorShape=corridorEdges.length?
+          approximateCutModules(corridorEdges,state.structures,'zarzas',10):null;
+        const corridorKind=corridorShape&&identifyNaturalCorridor(
+          corridorShape.strokes,naturalFaces);
+        const corridorQuote=corridorShape&&
+          !corridorShape.ambiguous.length?Game.quoteWallChain(state,'zarzas',
+            corridorShape.strokes,nav,{smooth:false,snap:false}):null;
+        const workerRoutesBefore=corridorSeeds.map(p=>({
+          outbound:!!nav.path(originalEntry,p,.28,null,true),
+          return:!!nav.path(p,originalEntry,.28,null,true)}));
+        const physical=corridorQuote?nav.withWallPreview(
+          corridorQuote.previewPieces,corridorQuote.suppressed,()=>{
+            const counts={solid:0,wetland:0,river:0,cliff:0,unproved:0};
+            for(let i=0;i<corridorBoundary.length;i+=4){
+              const code=wasm.lazy_cut_face_natural(...corridorBoundary.slice(i,i+4));
+              if(code===1)counts.solid++;else if(code===2)counts.wetland++;
+              else if(code===3)counts.river++;else if(code===4)counts.cliff++;
+              else counts.unproved++;
+            }
+            return {faces:counts,workerRoutes:corridorSeeds.map(p=>({
+              outbound:!!nav.path(originalEntry,p,.28,null,true),
+              return:!!nav.path(p,originalEntry,.28,null,true)}))};
+          },true):null;
+        assert.equal(corridorCount,28);
+        assert.equal(corridorKind?.kind,'natural-corridor');
+        assert.deepEqual(corridorKind.barriers,['fluid','solid']);
+        assert.equal(corridorShape.strokes.length,2);
+        assert.equal(corridorQuote.pieces.length,14);
+        assert.equal(corridorQuote.cost,140);
+        assert.equal(corridorQuote.blockedPieces.length,0);
+        assert.equal(corridorQuote.blockedCrops.length,0);
+        assert.equal(corridorQuote.gates,0,
+          'Do not add a gate when workers already have a physical crossing');
+        assert.ok(physical.faces.river>0&&physical.faces.cliff>0);
+        assert.equal(physical.faces.unproved,0,
+          'Every boundary face needs a continuous native movement witness');
+        assert.ok(attackMargin>0,
+          'No exterior central or peripheral hit reaches these crop sites');
+        assert.ok(physical.workerRoutes.every(p=>p.outbound&&p.return));
+        const hybrid=proposeHybridEnclosure({state,nav,session,
+          crops:corridorSeeds});
+        assert.equal(hybrid.status,'protected',JSON.stringify(hybrid));
+        assert.equal(hybrid.chosen.kind,'natural-corridor');
+        assert.ok(workerRoutesBefore.every(p=>p.outbound&&p.return));
+        const riverFace=naturalFaces.find(face=>face.kind===3&&
+          Math.abs((face.edge[0]+face.edge[2])/2+24)>2&&
+          Math.abs((face.edge[1]+face.edge[3])/2-24)>2);
+        assert.ok(riverFace);
+        const cx=Math.floor(((riverFace.edge[0]+riverFace.edge[2])/2+24)/48);
+        const cz=Math.floor(((riverFace.edge[1]+riverFace.edge[3])/2+24)/48);
+        assert.equal(session.stream.releaseChunk(cx,cz),1);
+        loaded.delete(`${cx},${cz}`);
+        assert.equal(wasm.lazy_cut_face_natural(...riverFace.edge),-1,
+          'Unloading the supporting sector must invalidate the proof');
+        session.stream.plan(jobs);await session.stream.whenIdle();
+        assert.equal(wasm.lazy_cut_face_natural(...riverFace.edge),3);
+        assert.equal(serialize(state),before);
+        assert.ok(Game.buildWallChain(state,'canyon-corridor-paid',
+          'zarzas',corridorShape.strokes,nav,{smooth:false,snap:false}));
+        const paid=state.structures.filter(p=>p.kind==='wall'&&
+          corridorQuote.pieces.some(q=>Math.hypot(p.x-q.x,p.z-q.z)<.01));
+        assert.equal(paid.length,14);
+        assert.ok(corridorBoundary.every((_,i)=>i%4!==0||
+          wasm.lazy_cut_face_natural(...corridorBoundary.slice(i,i+4))>0));
+        const restored=deserialize(serialize(state));
+        const reloadChunks=new Map(),reloaded=createSpatialGameSession(module,
+          restored,{loaded:()=>reloadChunks,onData:data=>
+            reloadChunks.set(`${data.cx},${data.cz}`,data)});
+        try{
+          reloaded.stream.plan(jobs);await reloaded.stream.whenIdle();
+          for(const species of ['warthog','hyena','buffalo','lion','rhino'])
+            reloaded.actorRegionsBatch(regionPoints,{worker:false,species});
+          assert.ok(corridorBoundary.every((_,i)=>i%4!==0||
+            reloaded.core.wasm.lazy_cut_face_natural(
+              ...corridorBoundary.slice(i,i+4))>0));
+        }finally{reloaded.dispose();}
+        const removed=paid.find(p=>Math.abs(p.z-67.5)<1&&
+          Math.abs(p.x+28)<3)??paid[0];
+        assert.ok(Game.removeWall(state,'canyon-corridor-breach',
+          removed.id,nav));
+        assert.ok(corridorBoundary.some((_,i)=>i%4===0&&
+          wasm.lazy_cut_face_natural(...corridorBoundary.slice(i,i+4))===0),
+        'A paid wall removal must invalidate the physical boundary');
+        const rebuild=Game.quoteWallChain(state,'zarzas',
+          corridorShape.strokes,nav,{smooth:false,snap:false});
+        assert.equal(rebuild.pieces.length,1,
+          'Reconstruction should reuse the other thirteen paid modules');
+        assert.ok(Game.buildWallChain(state,'canyon-corridor-rebuild',
+          'zarzas',corridorShape.strokes,nav,{smooth:false,snap:false,
+            preparedPlan:rebuild}));
+        assert.ok(corridorBoundary.every((_,i)=>i%4!==0||
+          wasm.lazy_cut_face_natural(...corridorBoundary.slice(i,i+4))>0),
+        'Rebuilding the missing module restores the physical closure');
+      }
     }finally{session.dispose();}
   });

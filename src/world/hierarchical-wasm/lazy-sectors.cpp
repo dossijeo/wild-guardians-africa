@@ -10,6 +10,8 @@ extern "C" float spatial_min_animal_radius();
 extern "C" float spatial_fluid_level(float,float);
 extern "C" float spatial_wetland_mask_resident(float,float);
 extern "C" float spatial_wetland_mask_lipschitz();
+extern "C" int spatial_canyon_river_face(int,int,int,int);
+extern "C" int spatial_canyon_cliff_face(int,int,int,int);
 
 // Sparse sector/route proof. Unknown sectors are never classified as blocked.
 // The movement engine remains responsible for physical motion.
@@ -37,6 +39,7 @@ struct Context {
   uint32_t visitGeneration=0;
   std::vector<int32_t> previousNode,localParent,routePoints;
   std::vector<int32_t> cutSeeds,cutEdges,cutBoundary;
+  std::vector<float> cutAttackPoints;
   int cutFlow=0,cutCells=0;
   std::vector<Arc> previousArc,arcChain;
   std::vector<Portal> portals;
@@ -74,6 +77,7 @@ Context& active(){
 #define cutSeeds (active().cutSeeds)
 #define cutEdges (active().cutEdges)
 #define cutBoundary (active().cutBoundary)
+#define cutAttackPoints (active().cutAttackPoints)
 #define previousArc (active().previousArc)
 #define arcChain (active().arcChain)
 #define portals (active().portals)
@@ -449,6 +453,12 @@ bool cutFaceCoveredByWetland(int x,int z,int nx,int nz){
 }
 int cutFaceNatural(int x,int z,int nx,int nz,float radius){
   if(cutFaceCoveredBySolid(x,z,nx,nz,radius))return 1;
+  const int river=spatial_canyon_river_face(x,z,nx,nz);
+  if(river<0)return -1;
+  if(river>0)return 3;
+  const int cliff=spatial_canyon_cliff_face(x,z,nx,nz);
+  if(cliff<0)return -1;
+  if(cliff>0)return 4;
   const float fluid=spatial_fluid_level((x+nx)*.5f,(z+nz)*.5f);
   if(!std::isfinite(fluid))return -1;
   if(fluid>0&&cutFaceCoveredByWetland(x,z,nx,nz))return 2;
@@ -567,6 +577,38 @@ int lazy_cut_face_natural(int x,int z,int nx,int nz){
 const int32_t* lazy_local_crop_cut_ptr(){return cutEdges.data();}
 const int32_t* lazy_local_crop_cut_boundary_ptr(){return cutBoundary.data();}
 int lazy_local_crop_cut_boundary_count(){return int(cutBoundary.size()/4);}
+float* lazy_cut_attack_points_ptr(int count){
+  if(count<1||count>256)return nullptr;
+  cutAttackPoints.resize(size_t(count)*2);
+  return cutAttackPoints.data();
+}
+// A sufficient, continuous attack certificate independent of angular samples:
+// if every crop lies farther than the largest legal body-contact-plus-splash
+// reach from every face of a movement-closed boundary, no exterior attacker
+// can deliver either a central or peripheral hit. Return the minimum margin;
+// a nonpositive value means unknown, not an actual successful attack.
+float lazy_cut_attack_margin(int count,float maximumReach){
+  if(count<1||size_t(count)*2!=cutAttackPoints.size()||
+     !(maximumReach>0)||!std::isfinite(maximumReach)||cutBoundary.empty())
+    return std::nanf("");
+  double best=1e30;
+  for(int i=0;i<count;i++){
+    const double px=cutAttackPoints[size_t(i)*2];
+    const double pz=cutAttackPoints[size_t(i)*2+1];
+    if(!std::isfinite(px)||!std::isfinite(pz))return std::nanf("");
+    for(size_t j=0;j<cutBoundary.size();j+=4){
+      const int ox=cutBoundary[j],oz=cutBoundary[j+1];
+      const int ix=cutBoundary[j+2],iz=cutBoundary[j+3];
+      const double mx=(ox+ix)*.5,mz=(oz+iz)*.5;
+      const double ax=ox!=ix?mx:mx-.5,az=ox!=ix?mz-.5:mz;
+      const double bx=ox!=ix?mx:mx+.5,bz=ox!=ix?mz+.5:mz;
+      const double dx=bx-ax,dz=bz-az,length=dx*dx+dz*dz;
+      const double t=std::clamp(((px-ax)*dx+(pz-az)*dz)/length,0.0,1.0);
+      best=std::min(best,std::hypot(px-ax-t*dx,pz-az-t*dz));
+    }
+  }
+  return float(best-maximumReach);
+}
 int lazy_local_crop_cut_flow(){return active().cutFlow;}
 int lazy_local_crop_cut_cells(){return active().cutCells;}
 #define sectors (active().sectors)

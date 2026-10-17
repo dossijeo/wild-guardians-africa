@@ -1422,6 +1422,64 @@ float spatial_wetland_mask_lipschitz(){
   // wetlandMask() is < 0.72 per metre; each settlement clearing adds <= .25.
   return float(1.0+.25*settlements.size());
 }
+// Certify an entire one-metre cut face from the same continuous terrain used
+// by movement. The river bound uses the analytic maximum derivative of
+// riverX() (0.48 m/m) and canyonWaterHalf() (0.0243 m/m). The height test is
+// exact for the piecewise-linear terrain mesh: each triangle is a convex
+// combination of its lattice vertices. A wet midpoint alone is not proof.
+int spatial_canyon_river_face(int x,int z,int nx,int nz){
+  if(worldBiome!=5||std::abs(x-nx)+std::abs(z-nz)!=1)return 0;
+  const double mx=(x+nx)*.5,mz=(z+nz)*.5;
+  const double ax=x!=nx?mx:mx-.5,az=x!=nx?mz-.5:mz;
+  const double bx=x!=nx?mx:mx+.5,bz=x!=nx?mz+.5:mz;
+  if(!residentSample(ax,az)||!residentSample(bx,bz)||
+     !residentSample(mx,mz))return -1;
+  const double lateral=std::abs(mx-riverX(mz));
+  if(lateral+.5*1.01>=mainRiverReach(mz)-.5*.0243-.02)return 0;
+  const int minX=int(std::floor(std::min(ax,bx)));
+  const int maxX=int(std::ceil(std::max(ax,bx)));
+  const int minZ=int(std::floor(std::min(az,bz)));
+  const int maxZ=int(std::ceil(std::max(az,bz)));
+  for(int zz=minZ;zz<=maxZ;zz++)for(int xx=minX;xx<=maxX;xx++){
+    if(!residentSample(xx,zz)||latticeHeight(xx,zz)>=3.274)return 0;
+  }
+  return 1;
+}
+// A cliff is certified only where the *whole* face fails the real terrain
+// slope predicate. Bound surface variation from the actual resident lattice
+// triangles, then bisect uncertain intervals. This is a local proof, not a
+// grid-centre or finite angular sample.
+int spatial_canyon_cliff_face(int x,int z,int nx,int nz){
+  if(worldBiome!=5||std::abs(x-nx)+std::abs(z-nz)!=1)return 0;
+  const double mx=(x+nx)*.5,mz=(z+nz)*.5;
+  const double ax=x!=nx?mx:mx-.5,az=x!=nx?mz-.5:mz;
+  const double bx=x!=nx?mx:mx+.5,bz=x!=nx?mz+.5:mz;
+  if(!residentSample(ax,az)||!residentSample(bx,bz))return -1;
+  const int minX=int(std::floor(std::min(ax,bx)-.8))-1;
+  const int maxX=int(std::ceil(std::max(ax,bx)+.8))+1;
+  const int minZ=int(std::floor(std::min(az,bz)-.8))-1;
+  const int maxZ=int(std::ceil(std::max(az,bz)+.8))+1;
+  double gradient=0;
+  for(int zz=minZ;zz<maxZ;zz++)for(int xx=minX;xx<maxX;xx++){
+    if(!residentSample(xx,zz)||!residentSample(xx+1,zz+1))return -1;
+    const double a=latticeHeight(xx,zz),b=latticeHeight(xx+1,zz);
+    const double c=latticeHeight(xx,zz+1),d=latticeHeight(xx+1,zz+1);
+    gradient=std::max({gradient,std::hypot(b-a,c-a),
+      std::hypot(d-c,d-b)});
+  }
+  const auto blocked=[&](auto&& self,double px,double pz,double qx,
+      double qz,int depth)->bool{
+    const double cx=(px+qx)*.5,cz=(pz+qz)*.5;
+    const double half=std::hypot(qx-px,qz-pz)*.5;
+    const double sx=std::abs(surface(cx+.8,cz)-surface(cx-.8,cz));
+    const double sz=std::abs(surface(cx,cz+.8)-surface(cx,cz-.8));
+    if(std::max(sx,sz)>.8001+2*gradient*half)return true;
+    if(depth>=12)return false;
+    return self(self,px,pz,cx,cz,depth+1)&&
+      self(self,cx,cz,qx,qz,depth+1);
+  };
+  return blocked(blocked,ax,az,bx,bz,0)?1:0;
+}
 float* spatial_ground_color_input_ptr(int count){
   if(count<=0||count>50000)return nullptr;
   groundQueryInput.resize(size_t(count)*2);

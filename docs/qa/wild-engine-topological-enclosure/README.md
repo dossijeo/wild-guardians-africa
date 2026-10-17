@@ -975,3 +975,100 @@ audits remain. A useful replacement would have to reason about exterior
 standable contact and the real crop-hit predicate without enumerating every
 crop/angle during ordinary planning. No protection claim or bot integration
 follows from this result.
+
+## Continuous canyon corridor prototype (2026-10-17)
+
+The experimental native cut now recognizes two additional **continuous**
+terrain barriers in Gran Cañón. A river face is certified only when the whole
+face lies inside the analytically bounded river channel and every vertex of
+the piecewise-linear ground mesh beneath it is below the actual fluid
+threshold. A cliff face is certified only when the actual terrain-slope
+predicate fails throughout the face; the bound uses the resident mesh's
+triangle gradients and subdivides an uncertain interval. Both queries return
+`unknown` when the required terrain is not resident. They use the terrain
+generator and movement rules already owned by Wild Engine; no visual canyon
+wall or wet midpoint is treated as a collision. The existing conservative
+union of all five animal profiles still supplies the cut graph.
+
+The isolated hybrid adviser first tries the native construction-aware cut,
+labels two transverse strokes between continuously proved fluid and solid
+barrier chains as a natural corridor, and then requests the normal atomic
+module/door quote. For its selected candidate it checks *every face* of the
+crop-side movement boundary under the preview, a native continuous upper
+bound on exterior attack reach, and worker paths before and after the quote.
+If the cut cannot be certified, it tries one artificial convex hull with the
+same final quote and closed-wall-loop checks. It does not purchase anything,
+is not called by the game or virtual player, and returns `unknown` whenever a
+required witness is missing. The attack-distance condition is sufficient, not
+necessary: every crop must be farther from the complete closed boundary than
+the largest animal body radius plus 0.65 m contact allowance plus the maximum
+legal 3.640001 m peripheral radius. It makes no sampled-ray claim and leaves
+near-boundary Sabana and Manglares crops unresolved. Future crop planting must
+rerun this check; a certificate is not valid for new positions automatically.
+
+On the actual procedural Gran Cañón/712 terrain, the prior single-crop site
+`(-2,-8)` is **not** a two-ended agricultural corridor. The new graph proposes
+one placeable module instead of two modules in water, but the crop and worker
+access remain `unknown`; the adviser does not force a two-wall answer there.
+
+A separate reproducible **controlled terrain fixture** plants three real crops
+at legal positions `(-19,45)`, `(-22,53)` and `(-25,61)` on the same river bank. The
+native cut finds transverse strokes at `z=35.5` and `z=67.5`, respectively
+joining the river side to the cliff/solid side. The ordinary quote prices 14
+real placeable bramble modules at 140 coins with no omitted piece. Under the
+quote preview, all 118 boundary faces are continuously certified: 33 by
+static solid geometry, 44 by river and 41 by slope. The minimum crop-to-face
+attack margin is **+0.66 m** beyond the maximum central-plus-peripheral reach.
+The existing initial village's **computed entry** `(0,4)` has routes to and
+from all three sites before and after placement; therefore the game adds no
+needless gate. The village centre `(0,0)` is occupied by a building and was
+an invalid earlier route probe. With the real entry recorded in the state,
+the hybrid adviser returns `protected` for this exact physical arrangement.
+These living crop entities still lack assigned workers and a completed
+campaign work cycle. Thus this proves physical access paths, not a complete
+operational farming day.
+
+The directed test pays for all 14 modules through `Game.buildWallChain`, then
+checks the native physical boundary after construction and after a fresh
+save/load session. Removing a central module through `Game.removeWall` opens
+the proved boundary. Quoting the same two strokes again proposes only the
+missing module; paying for it restores the proof. Removing a resident river
+sector makes its natural face `unknown`; reloading that sector restores the
+same witness. A crop moved onto the boundary fails the native attack-distance
+certificate. These are real construction and topology transitions on a
+controlled state, but no simulated raid or worker-task cycle for crops planted
+at these sites has yet been run.
+
+The reproducible ABBA probe is
+`node tools/experiments/benchmark-canyon-corridor.mjs <baseline.wasm> <candidate.wasm> <report.json>`.
+Raw results, state hash, binary hashes and per-arm memory are in
+[`canyon-corridor-abba-2026-10-17.json`](canyon-corridor-abba-2026-10-17.json).
+Both binaries used Emscripten 6.0.12 and 16 MiB committed linear memory;
+the candidate is 370,629 bytes versus 368,098 bytes for the baseline.
+
+| Arm | Cut | Quote | Preview proof | Cut edges | Quoted modules | Continuous boundary |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| Baseline A | 13.96 ms | 52.72 s | 2.20 s | 60 | 9 | 40 unproved faces |
+| Candidate B | 38.69 ms | 2.39 s | 2.40 s | 28 | 14 | 0 unproved faces |
+| Candidate B | 29.27 ms | 2.30 s | 2.37 s | 28 | 14 | 0 unproved faces |
+| Baseline A | 12.90 ms | 54.48 s | 2.31 s | 60 | 9 | 40 unproved faces |
+
+The candidate's native cut is **slower** because continuous canyon proof costs
+real work. Its quote is much quicker because the selected contour is
+constructible and does not provoke the baseline's repeated door/placement
+search. The baseline nine-module candidate is not a certified enclosure;
+therefore these numbers cannot be advertised as a speedup between equivalent
+protected farms, nor as a `Game.tick` or campaign improvement. The fixture
+has real crop entities at those positions during the ABBA probe; it measures
+spatial planning for a planted state, not a balance run.
+
+The remaining adoption blockers are specific: work-centre task cycles and a
+raid must be tested with the corridor; close-to-boundary crops need
+an attack certificate that distinguishes exterior standable positions from
+buried natural faces, and the general cut/hull alternatives need the same
+positive proof across the other biomes, nested or partial walls, multiple
+farms and changing sectors. The current `cropProtection()` classifier still
+uses crop-center connectors and may return `unknown` even where this
+site-specific boundary proof succeeds; no production classification or bot
+behavior was changed. Keep PR #62 isolated and draft until those guarantees
+and a sustained game comparison exist.
