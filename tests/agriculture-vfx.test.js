@@ -17,6 +17,10 @@ test('Concurrent agriculture spells release all scene objects and native instanc
  const g=graphics(),spells=Array.from({length:48},(_,i)=>({id:`spell-${i}`,kind:i%2?'growth':'multiply',x:(i%8)*4,z:Math.floor(i/8)*4,radius:2,remaining:5}));
  try{
   g.manager.update({time:100,spells});assert.equal(g.manager.effects.size,48);assert.equal(g.library.instances.size,48);assert.equal(g.scene.children.length,48);
+  for(const effect of g.manager.effects.values()){
+   assert(effect.sprites.geometry.isInstancedBufferGeometry);
+   assert([...effect.rigids.values()].every(mesh=>mesh.geometry.isInstancedBufferGeometry));
+  }
   g.manager.update({time:100,spells:[]});assert.equal(g.manager.effects.size,0);assert.equal(g.library.instances.size,0);assert.equal(g.scene.children.length,0);
  }finally{g.dispose();}
 });

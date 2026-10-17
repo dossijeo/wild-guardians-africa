@@ -22,6 +22,8 @@ const snapshot=gunzipSync(readFileSync(new URL(
 const canyonSnapshot=readFileSync(new URL(
   '../docs/qa/hierarchical-navigation/spatial-virtual-gran-canon-14-farm-bank-seed123-state.json',
   import.meta.url),'utf8');
+const overlapSnapshot=gunzipSync(readFileSync(new URL(
+  './fixtures/sabana712-day15-repair-overlap.json.gz',import.meta.url))).toString();
 
 async function open(game){
   const loaded=new Map(),session=createSpatialGameSession(module,game,{
@@ -39,6 +41,23 @@ async function open(game){
   await session.stream.whenIdle();
   return {session,nav:createSpatialNavigationMovement(session,game)};
 }
+
+test('Sabana day 15: occupied repair footprints defer without speculative routes',
+ {skip:!module&&'Build and select the experimental WASM first'},async()=>{
+  const game=deserialize(overlapSnapshot),{session,nav}=await open(game);
+  try{
+    let routes=0,previews=0;
+    const physical=nav.workerPhysicalRoute,preview=nav.withWallStatePreview;
+    nav.workerPhysicalRoute=(...args)=>{routes++;return physical(...args);};
+    nav.withWallStatePreview=(...args)=>{previews++;return preview(...args);};
+    for(const id of ['structure-2327','structure-11377']){
+      const target=game.structures.find(piece=>piece.id===id);
+      assert.equal(target.status,'ruined');
+      assert.equal(planRepairAccess(game,target,nav).status,'blocked');
+    }
+    assert.equal(routes,0);assert.equal(previews,0);
+  }finally{session.dispose();}
+});
 
 test('repairing the last physical gap creates a worker-access gate before payment',
  {skip:!module&&'Build and select the experimental WASM first'},async()=>{
@@ -106,14 +125,21 @@ test('Gran Cañón repairs retain existing worker routes without unnecessary gat
   const {session,nav}=await open(game);
   try{
     const home=game.villages[0].entry;
+    let legacyRoutes=0,legacyPreviews=0;
+    const oldRoute=nav.workerPhysicalRoute,oldPreview=nav.withWallStatePreview;
+    nav.workerPhysicalRoute=(...args)=>{legacyRoutes++;return oldRoute(...args);};
+    nav.withWallStatePreview=(...args)=>{legacyPreviews++;return oldPreview(...args);};
     for(const id of ['structure-549','structure-862']){
       const target=game.structures.find(piece=>piece.id===id);
       assert.equal(target.status,'ruined');
       const before=game.workers.filter(worker=>worker.status!=='home'&&
         session.routeActorNative(worker,home,{worker:true,cached:false}).status==='found');
+      legacyRoutes=0;legacyPreviews=0;
       const plan=planRepairAccess(game,target,nav);
       assert.equal(plan.status,'safe');
       assert.equal(plan.updates.length,0,'the repair must not create an unneeded gate');
+      assert.equal(legacyRoutes,0,'native connectivity should avoid speculative worker routes');
+      assert.equal(legacyPreviews,0,'native connectivity should avoid provisional wall swaps');
       assert.equal(target.status,'ruined','the preview must not mutate the game');
       const restored={...target,status:'intact',hp:target.maxHp};
       const simulated=game.structures.map(piece=>piece.id===id?restored:piece);
@@ -200,5 +226,31 @@ for(const biome of ['manglares','gran-rio','desierto','volcanes'])
             restored.villages[0].entry,
             {worker:true,cached:false}).status,'found');
         }finally{reopened.session.dispose();}
+        if(biome==='manglares'){
+          target.status='ruined';target.hp=0;nav.setState(game);
+          const repaired={...target,status:'intact',hp:target.maxHp};
+          const before=nav.wallLocalOverlay([],[]),solid=nav.wallLocalOverlay([repaired],[]),
+            gate=nav.wallLocalOverlay([{...repaired,gate:true,autoGate:true}],[]);
+          const occupiedPoint=[-.95,-.85,-.75,.75,.85,.95].map(dx=>({x:target.x+dx,z:target.z}))
+            .find(point=>before.walkable(point.x,point.z)===true&&
+              solid.walkable(point.x,point.z)===false&&
+              gate.walkable(point.x,point.z)===false);
+          assert(occupiedPoint,'fixture needs a physically blocked gate-post position');
+          worker.x=occupiedPoint.x;worker.z=occupiedPoint.z;worker.status='idle';
+          assert.equal(session.routeActorNative(worker,home,
+            {worker:true,cached:false}).status,'found');
+          let routes=0,previews=0;
+          const physical=nav.workerPhysicalRoute,preview=nav.withWallStatePreview;
+          nav.workerPhysicalRoute=(...args)=>{routes++;return physical(...args);};
+          nav.withWallStatePreview=(...args)=>{previews++;return preview(...args);};
+          const occupied=planRepairAccess(game,target,nav);
+          assert.equal(occupied.status,'blocked',
+            'a worker inside the restored wall footprint must move first');
+          assert.equal(routes,0);assert.equal(previews,0);
+          worker.x=home.x;worker.z=home.z;
+          const unoccupied=planRepairAccess(game,target,nav);
+          assert.equal(unoccupied.status,'safe',
+            'the deferred repair should become legal after the worker leaves');
+        }
       }finally{session.dispose();}
     });
