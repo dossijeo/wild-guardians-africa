@@ -169,9 +169,35 @@ The current policy therefore treats `repairableRuins` returned by the ordinary
 wall quote as a reason to wait for its already enabled paid repair workflow.
 The repair-completion event wakes enclosure planning again. A human can still
 choose to replace a ruin immediately with a paid module; the confirmed build
-retires the old ruin and cancels any stale repair task. A new 30-night run of
-this narrower economic decision is pending; the negative first variant is
-preserved rather than erased.
+retires the old ruin and cancels any stale repair task. The negative first
+variant remains archived rather than erased.
+
+The [repair-first 30-night replay](canyon712-repair-first-30.json.gz) completed
+all 30 Gran Cañón/712 nights with no recorded physical or technical issue.
+The replay used the same V1 pressure candidate, seed, topological policy and
+WASM as the established maintenance control. Both arms followed legal actions,
+but diverged in farm and raid workload; campaign times are not isolated
+algorithm benchmarks.
+
+| Measure after night 30 | Established control | Repair-first variant |
+| --- | ---: | ---: |
+| Living crops | 55 | 54 |
+| Coins | 950 | 1,015 |
+| Raid crop losses from night 6 | 33 | 26 |
+| Wall modules purchased | 19 | 20 |
+| Wall purchase cost | 190 | 200 |
+| Repair requests | 175 | 149 |
+| Repair spend | 1,200 | 991 |
+| Animals generated | 245 | 223 |
+| Wall hits | 561 | 490 |
+| Bot decision wall time | 24.40 s | 22.17 s |
+| `Game.tick` wall time | 119.98 s | 115.75 s |
+
+The repair-first decision removed the repeated replacement spending observed
+in the first variant. Its crop survival is comparable to the control and its
+cash balance is higher, while attack workload differs. This single seed does
+not establish general superiority; it does establish that the safety fix need
+not force the poor 30-night economic trajectory seen in the initial replay.
 
 This branch remains experimental. The frozen probe establishes a specific
 physically buildable seam, and the 72-night run establishes one sustained
