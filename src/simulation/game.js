@@ -589,6 +589,22 @@ export function cast(s,id,kind,x,z,nav,targetPlantId) {
     emit(s,'SpellActivated',{kind,x,z,targetPlantId:target?.id,benefited:area.power?.benefited??false,power:area.power??null,duration:spec.duration_seconds});
   });
 }
+function retainRouteAfterWallChange(w,destination,nav){
+  const stamp=activeRouteStamps.get(w);
+  if(w.path&&w.pathVersion===nav.version&&nav.routeStamp&&
+    nav.ownsRoute?.(w.path)===true&&
+    (stamp?.path!==w.path||stamp?.nav!==nav||stamp?.version!==nav.version))
+    activeRouteStamps.set(w,{path:w.path,nav,version:nav.version,
+      spatial:nav.routeStamp()});
+  if(w.path&&w.pathVersion!==nav.version&&!w.wallEscape&&
+    w.destinationId===destination.id&&stamp?.path===w.path&&
+    stamp.nav===nav&&stamp.version===w.pathVersion&&
+    nav.routeUnaffectedByWalls?.(stamp.spatial,[w,...w.path],w.radius??.28)){
+    w.pathVersion=nav.version;
+    activeRouteStamps.set(w,{path:w.path,nav,version:nav.version,
+      spatial:nav.routeStamp()});
+  }
+}
 export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignore=null,worker=true,motion=null,expandRoute=false,routeVia=null}={}) {
   const previous={x:w.x,z:w.z};
   if(worker)w.running=false;
@@ -618,20 +634,7 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
     w.mobileProgressDistance=dist(w,destination);
     w.mobileProgressAt=s.elapsed;
   }
-  const stamp=activeRouteStamps.get(w);
-  if(w.path&&w.pathVersion===nav.version&&nav.routeStamp&&
-    nav.ownsRoute?.(w.path)===true&&
-    (stamp?.path!==w.path||stamp?.nav!==nav||stamp?.version!==nav.version))
-    activeRouteStamps.set(w,{path:w.path,nav,version:nav.version,
-      spatial:nav.routeStamp()});
-  if(w.path&&w.pathVersion!==nav.version&&!w.wallEscape&&
-    w.destinationId===destination.id&&stamp?.path===w.path&&
-    stamp.nav===nav&&stamp.version===w.pathVersion&&
-    nav.routeUnaffectedByWalls?.(stamp.spatial,[w,...w.path],w.radius??.28)){
-    w.pathVersion=nav.version;
-    activeRouteStamps.set(w,{path:w.path,nav,version:nav.version,
-      spatial:nav.routeStamp()});
-  }
+  retainRouteAfterWallChange(w,destination,nav);
   if(w.wallEscape&&w.pathVersion!==nav.version)delete w.wallEscape;
   if(!w.path||w.destinationId!==destination.id||w.pathVersion!==nav.version) {
     const sectors=nav.spatialSectorRevision?.(w.radius??.28,worker)??0;
@@ -953,6 +956,9 @@ function updateWorkers(s,dt,nav) {
           }
           destination=w.taskApproach.destination;
         }else if(t.kind==='initial'||t.kind==='water'){
+          if(w.taskApproach?.taskId===t.id&&w.path&&
+            w.pathVersion!==nav.version)
+            retainRouteAfterWallChange(w,w.taskApproach.destination,nav);
           if(w.taskApproach?.taskId!==t.id||w.path===null||w.pathVersion!==nav.version){
             nav.planningObserver?.({kind:'assignedRouteRebuild',actorId:w.id,elapsed:s.elapsed,taskId:t.id});
             const route=taskRouteWhenKnown(()=>wateringRoute(w,target,nav));

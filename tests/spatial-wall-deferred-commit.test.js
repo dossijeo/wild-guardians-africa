@@ -74,6 +74,42 @@ test('a restored route from another session cannot use this wall journal',()=>{
   assert.equal(routes,1,'a new session must establish its own physical route');
 });
 
+test('a distant wall change does not rebuild a reserved watering approach',()=>{
+  const state=Game.newGame({seed:712,slotId:'reserved-water-route'});
+  const base=clearNavigation();
+  Game.resume(state,'intro');state.tutorial.step='center';
+  Game.placeStructure(state,'center',{x:4,z:0},base);
+  Game.plant(state,'plant','mijo',8,0,base);
+  Game.openInitialHiring(state);
+  Game.hire(state,'hire',{olderMale:1});
+  const worker=state.workers[0];worker.status='idle';worker.x=7.4;worker.z=0;
+  let routes=0,rebuilds=0;
+  const nav={...base,version:1,
+    path:(...args)=>{routes++;return base.path(...args);},
+    ownsRoute:path=>path===worker.path,
+    routeStamp:()=>({wall:nav.version}),
+    routeUnaffectedByWalls:()=>true,
+    planningObserver:event=>{
+      if(event.kind==='assignedRouteRebuild')rebuilds++;
+    }};
+  Game.tick(state,.01,nav);
+  assert.equal(worker.status,'walking');
+  assert.equal(worker.taskApproach?.taskId,worker.taskId);
+  Game.tick(state,.01,nav);
+  const path=worker.path,beforeRoutes=routes,beforeRebuilds=rebuilds;
+  nav.version++;
+  Game.tick(state,.01,nav);
+  assert.equal(rebuilds,beforeRebuilds);
+  assert.equal(routes,beforeRoutes);
+  assert.equal(worker.path,path);
+  assert.equal(worker.pathVersion,nav.version);
+  nav.version++;
+  nav.routeUnaffectedByWalls=()=>false;
+  Game.tick(state,.01,nav);
+  assert.equal(rebuilds,beforeRebuilds+1,
+    'a potentially affected approach must still be rebuilt before movement');
+});
+
 test('an expired wall-change history cannot certify an old route',()=>{
   let nextId=1;
   const core={applyBarrierChanges:(_removed,added)=>added.map(()=>nextId++)};
