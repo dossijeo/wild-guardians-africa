@@ -66,6 +66,7 @@ assuming a fixed plantation size.
 | V1 pressure + V1 walls | 139 | 873 | 860 | 95 | 77 | 6.60% |
 | Affordable walls | 105 | 592 | 688 | 128 | 160 | 14.56% |
 | V1 pressure + affordable walls | 133 | 795 | 688 | 92 | 27 | 2.27% |
+| Moderate pressure + affordable walls | 129 | 883 | 688 | 99 | 37 | 3.10% |
 
 The V1 wall table did not produce a measurable outcome difference from V1
 pressure alone in this run. The bot bought only thorn walls, whose module cost
@@ -115,7 +116,13 @@ universal estimate. The V1-pressure-only arm separates military and wall
 effects. A moderate-pressure candidate holds the
 wall table and hit/structure factors constant while increasing only the animal
 count factor from `0.35 + 0.60u` to `0.45 + 0.52u`; its matched 14-night arms
-will test whether this restores meaningful pressure without losing solvency.
+test whether this restores meaningful pressure without losing solvency. Both
+arms completed: Sabana/712 lost 37 of 1,192 exposed crops (3.10%), ending
+with 129 crops and 883 coins; Sabana/123 lost 4 of 1,255 (0.32%), ending with
+163 crops and 973 coins. Both observers verified all raids with zero issues.
+The moderate setting increases losses in both seeds compared with the V1
+combined arm, but the substantial seed variation remains. A sustained
+30-night Sabana/712 run is in progress.
 
 V1 military pressure **without** cheaper walls also completed Sabana/123 with
 159 crops and 1,066 coins. It lost 23 of 1,150 exposed crops (2.00%) and paid
