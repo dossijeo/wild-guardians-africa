@@ -388,7 +388,7 @@ export function spawnRaid(s,plan,nav,daytime=false) {
 }
 function release(s,a,nav) {nav?.intentTaskPlanner?.cancelAttackIntent(a.id);if(a.reservation&&s.raid.reservations[a.reservation]===a.id){delete s.raid.reservations[a.reservation];s.raid.waitRevision=((s.raid.waitRevision??0)+1)>>>0;}a.reservation=null;a.targetId=null;a.path=null;a.approach=null;a.approachShieldId=null;}
 function beginRetreat(s,a,nav,reason){
-  leaveWait(s.raid,a);a.status='retreating';
+  leaveWait(s.raid,a);a.status='retreating';delete a.retreatRouteUnknown;
   emit(s,'AnimalRetreating',{targetId:a.id,species:a.species,
     hitsRemaining:a.hitsRemaining,reason});
   const route=nav.intentTaskPlanner?.planRetreatRoute?.(s,a);
@@ -817,11 +817,25 @@ export function updateRaid(s,dt,nav) {
     }
     if(a.status==='retreating') {
       const native=nav.intentTaskPlanner?.retreatRouteActive?.(a.id)??false;
-      if(walkTo(s,a,{...(a.exit??a.spawn),id:`exit-${a.id}`},dt,nav,
-        {speed:3.8,worker:false,expandRoute:true,routeVia:a.spawn,
-          externallyPlanned:native})){
-        a.status='gone';nav.intentTaskPlanner?.finishRetreatIntent?.(a.id);
-      }else if(native&&!a.path)nav.intentTaskPlanner?.finishRetreatIntent?.(a.id);
+      const exit={...(a.exit??a.spawn),id:`exit-${a.id}`};
+      if(a.retreatRouteUnknown&&s.elapsed<a.retreatRouteUnknown.retryAt&&
+        nav.version===a.retreatRouteUnknown.topology)continue;
+      try{
+        if(walkTo(s,a,exit,dt,nav,
+          {speed:3.8,worker:false,expandRoute:true,routeVia:a.spawn,
+            externallyPlanned:native})){
+          a.status='gone';nav.intentTaskPlanner?.finishRetreatIntent?.(a.id);
+        }else if(native&&!a.path)nav.intentTaskPlanner?.finishRetreatIntent?.(a.id);
+        delete a.retreatRouteUnknown;
+      }catch(error){
+        if(error?.name!=='SpatialChunkUnavailable')throw error;
+        // Missing terrain is pending, not a blocked exit. Ask the existing
+        // raid residency service to load it before retrying the same retreat.
+        for(const {cx,cz} of error.missing??[])
+          nav.requestRaidFrontier?.({x:cx*48,z:cz*48});
+        nav.requestRaidConnectivity?.(a,exit,a.radius);
+        a.retreatRouteUnknown={retryAt:s.elapsed+1,topology:nav.version};
+      }
       continue;
     }
     if(a.hitsRemaining<=0)continue;
