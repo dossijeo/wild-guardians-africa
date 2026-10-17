@@ -63,6 +63,50 @@ test('native retreat owns one physical route until completion without an attack 
   }finally{session.dispose();}
 });
 
+test('a retreat exit does not reserve an attack site for another animal',
+ {skip:!module&&'Build and select the experimental WASM first'},()=>{
+  const game=deserialize(gunzipSync(readFileSync(new URL(
+    './fixtures/desierto983-d15-partial-state.json.gz',import.meta.url))).toString());
+  const loaded=new Map(),session=createSpatialGameSession(module,game,{
+    loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+  try{
+    for(let z=-1;z<=1;z++)for(let x=-1;x<=1;x++){
+      if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+      loaded.set(`${x},${z}`,session.core.chunkPayload());
+    }
+    let origin,route;
+    for(let z=-10;z<=10&&!route;z++)for(let x=-10;x<=10&&!route;x++){
+      const start={x:x+.2,z:z+.2},end={x:x+1.2,z:z+.2};
+      const candidate=session.routeActor(start,end,{worker:false,species:'hyena'});
+      if(candidate.status==='found'&&candidate.points.length){
+        origin=start;route=candidate;
+      }
+    }
+    assert(route);
+    const wasm=session.core.wasm,exit=route.points.at(-1);
+    wasm.nav_intent_reset();
+    const rows=[row(1,2,900004,1,exit.x,exit.z,1),
+      row(1,2,900006,1,exit.x+.2,exit.z,1)];
+    const changes=wasm.nav_intent_changes_ptr(rows.length);
+    new Float64Array(wasm.memory.buffer,changes,rows.length*10).set(rows.flat());
+    assert.equal(wasm.nav_intent_apply_changes(1,rows.length),1);
+    session.actorSectorRevision({worker:false,species:'hyena'});
+    assert.equal(wasm.nav_intent_plan_retreat(900003,
+      origin.x,origin.z,exit.x,exit.z),1);
+    const input=wasm.nav_intent_attack_route_input_ptr(route.points.length);
+    new Float32Array(wasm.memory.buffer,input,route.points.length*2)
+      .set(route.points.flatMap(point=>[point.x,point.z]));
+    assert.equal(wasm.nav_intent_register_attack_site(900005,900004,
+      origin.x,origin.z,route.points.length,exit.x,exit.z,.28),1,
+    'the retreat destination is not an attack-site lease');
+    assert.equal(wasm.nav_intent_register_attack_site(900007,900006,
+      origin.x,origin.z,route.points.length,exit.x+.2,exit.z,.28),-6,
+    'an active attack site still excludes another incompatible attacker');
+    assert.equal(wasm.nav_intent_actor(900003),1,
+      'the retreat route remains active after another animal reserves a site');
+  }finally{session.dispose();}
+});
+
 test('a confirmed wall invalidates a pinned retreat route and its old handle',
  {skip:!module&&'Build and select the experimental WASM first'},()=>{
   const game=deserialize(gunzipSync(readFileSync(new URL(
