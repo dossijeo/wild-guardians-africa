@@ -32,7 +32,7 @@ Para itch.io: `npm run package:itch` genera `test-results/wild-guardians-itch.zi
 
 Los recorridos de la boquilla se preparan con `node tools/prepare_watering_emitters.mjs` desde los cuatro GLB originales. El runtime lee `content/watering-emitters.json` y solo interpola, para evitar muestrear otro rig al contratar. Las pruebas comprueban su procedencia y alineación contra las animaciones originales; el verificador del paquete comprueba que los datos llegan intactos a `dist`.
 
-GitHub Actions ejecuta estas comprobaciones al subir a `main` y permite una ejecución manual. Los cambios se registran con conventional commits y se suben directamente a `main`.
+GitHub Actions ejecuta los verificadores, `npm run test:playable`, la compilación y el paquete al subir a `main`, y permite una ejecución manual. `npm test` ejecuta la suite completa; siguen fallando [dos expectativas históricas de victoria](docs/qa/active-farm-policy/current-main-regression-2026-10-17.md) y [la expectativa de ahorro de rutas bloqueadas](docs/qa/worker-service-route-reuse/README.md), por lo que el gate provisional no equivale a aprobar esa suite. Los cambios se registran con conventional commits y se suben mediante PR a `main`.
 
 La versión de Windows usa Tauri 2 y el mismo juego compilado. `npm run desktop:dev` inicia el desarrollo y `npm run desktop:build` genera EXE e instalador NSIS. El workflow `Build Windows desktop` compila y ejecuta una prueba en WebView2; el artefacto `wild-guardians-itch.zip` se descarga directamente sin otro ZIP dentro. [Prerrequisitos, artefactos y alcance de las pruebas](docs/WINDOWS_BUILD.md).
 
