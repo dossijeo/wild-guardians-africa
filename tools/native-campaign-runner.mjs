@@ -41,8 +41,14 @@ export function syncNativeCampaignRaidView(state,nav,previousCenter){
   context={key,eye,bounds:activeChunkRegion(eye).bounds};
  }
  const view=nav.raidView;
- if(view?.eye?.x!==context.eye.x||view?.eye?.z!==context.eye.z||view?.target?.x!==center.x||view?.target?.z!==center.z){
-  nav.setRaidView(context.eye,center);
+ const viewChanged=view?.eye?.x!==context.eye.x||view?.eye?.z!==context.eye.z||
+  view?.target?.x!==center.x||view?.target?.z!==center.z;
+ const bounds=nav.activeBounds;
+ const coversCamera=bounds?.length===4&&bounds[0]<=context.bounds[0]&&
+  bounds[1]<=context.bounds[1]&&bounds[2]>=context.bounds[2]&&
+  bounds[3]>=context.bounds[3];
+ if(viewChanged)nav.setRaidView(context.eye,center);
+ if(viewChanged||!coversCamera){
   nav.setActiveBounds(context.bounds);
  }
  return context;
@@ -301,5 +307,5 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
  const idleRuns=daily.map(r=>r.longestIdle).sort((a,b)=>a-b),unoccupied=daily.reduce((n,r)=>n+r.unoccupiedSeconds,0),daylight=daily.reduce((n,r)=>n+r.daylightSeconds,0);
  const activity={daylightSeconds:daylight,unoccupiedSeconds:unoccupied,unoccupiedFraction:daylight?unoccupied/daylight:null,longestIdle:Math.max(...idleRuns),p90LongestIdle:idleRuns[Math.ceil(idleRuns.length*.9)-1]};
  return {protocol,strategy,labourPolicy,labourHistory,labourReasons,raidEvidence:raidEvidence.report(s),entryTransport:driver.report(),peaceAfter100:true,expansion:expansion?.report()??null,plotSearch:plotSearch.report(),spatialSite:advice?spatialSite:null,spatialAdviceInitMs,spatialSync:advice?spatialSync:null,protectionEvents,nativeIntent:intentPlanner?.metrics(s.elapsed)??null,...(evidence?{nativeEvidence:evidence.report(s)}:{}),biome:s.biome,culture:s.culture,seed:s.seed,policy:{profile,mixed,middayHiring,plantsPerWorker,defend,cashPolicy:policy.cashPolicy,reserveMaintenance,burstPlanting,cameraEntry,defensePolicy,defenseEventDriven,nativeWallPlans},defense:defense?.report(s)??null,additionalHiring,result:s.result,completedNights:s.completedNights,money:numberOf(s.ledger.balance),maximumLiving,plots:plots.length,reloads,counts,activity,daily,state:s,nav};
- } catch(error){let receipts;try{receipts=partialEvidence();}catch(e){receipts={evidenceError:e.message};}error.nativeCampaignPartial={strategy,seed:s.seed,day:s.day,time:s.time,result:s.result,state:serialize(s),entryTransport:driver.report(),receipts};throw error;} finally {stopProtectionEvents?.();stopIntentTasks?.();stopIntentWorld?.();stopDefenseEvents?.();if(intentPlanner)delete nav.intentTaskPlanner;stopSpatialEvents?.();await driver.dispose();await opening.dispose?.();}
+ } catch(error){let receipts;try{receipts=partialEvidence();}catch(e){receipts={evidenceError:e.message};}error.nativeCampaignPartial={strategy,seed:s.seed,day:s.day,time:s.time,result:s.result,state:serialize(s),entryTransport:driver.report(),navigation:{authority:nav.navigationAuthority??'legacy',version:nav.version,bounds:nav.activeBounds,view:nav.raidView,entryFailure:nav.raidEntryFailure??null,residentChunks:opening.session?.stream?.loaded?.()?.size??null},receipts};throw error;} finally {stopProtectionEvents?.();stopIntentTasks?.();stopIntentWorld?.();stopDefenseEvents?.();if(intentPlanner)delete nav.intentTaskPlanner;stopSpatialEvents?.();await driver.dispose();await opening.dispose?.();}
 }

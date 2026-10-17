@@ -277,6 +277,7 @@ export function createSpatialNavigationMovement(session,state){
   let obstacleVersion=-1,obstacleStructures=null,obstacleVillages=null,
     obstacleList=null;
   const view={field:session.field,config,chunk,suppressed:session.suppressed,state,
+    navigationAuthority:'wild-engine',
     get obstacles(){
       // The geometry is unchanged between topology revisions. A stable source
       // identity lets worker service-point and collision indexes reuse their

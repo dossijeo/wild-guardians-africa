@@ -52,6 +52,7 @@ for(const defensePolicy of only?[only]:['expanding','topological']){
       elapsedMs:performance.now()-started,message:error.message,stack:error.stack,
       rows,partial:partial?{day:partial.day,time:partial.time,
         result:partial.result,entryTransport:partial.entryTransport,
+        navigation:partial.navigation,
         completedDailyRows:partial.receipts?.daily?.length,
         stateSha256:partial.state?sha256(partial.state):null,
         partialStatePath}:null});

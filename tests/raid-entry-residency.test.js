@@ -21,3 +21,29 @@ test('headless driver waits for the same retained daytime owner instead of the n
  const ready=await driver.waitForEntry(s);assert(ready.entry);assert.deepEqual(driver.waits[0].group,['warthog']);
  assert.deepEqual(driver.contexts[0].group,['warthog']);assert.equal(serialize(s),before);await driver.dispose();
 });
+
+test('headless Wild Engine entry uses native synchronous selection without a legacy terrain worker',async()=>{
+ const {s}=topologyFixture('closed');let serviced=0,workers=0;
+ const nav={navigationAuthority:'wild-engine',
+  serviceRaidConnectivityDemand(){serviced++;}};
+ const before=serialize(s),driver=new NativeCampaignEntryDriver(nav,{
+  createWorker(){workers++;throw Error('legacy worker must not start');}});
+ await driver.advancePresentation(s);
+ assert.equal(await driver.waitForEntry(s),null);
+ assert.equal(workers,0);assert.equal(serviced,1);
+ assert.equal(driver.report().mode,'native-spatial-synchronous');
+ assert.equal(serialize(s),before);
+ await driver.dispose();
+});
+
+test('legacy preparation reports worker computation errors immediately',async()=>{
+ const {s,nav}=topologyFixture('closed');s.nightPlan={at:500,group:['warthog'],done:false};
+ const worker={closed:Promise.resolve(),postMessage(request){
+  queueMicrotask(()=>this.onmessage({data:{key:request.key,
+   token:request.token,error:'missing terrain profile'}}));},terminate(){}};
+ const driver=new NativeCampaignEntryDriver(nav,{createWorker:()=>worker,
+  maxWaitMilliseconds:1000});
+ await assert.rejects(driver.waitForEntry(s),/missing terrain profile/);
+ assert.equal(driver.report().preparer.failed,1);
+ await driver.dispose();
+});
