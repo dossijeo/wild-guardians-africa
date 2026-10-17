@@ -363,3 +363,29 @@ victories were precarious (16 crops/217 coins on seed 712 and six crops/122
 coins on seed 123). This evidence supports continued cross-biome and
 multi-seed testing; it does not establish a reasonable survival probability
 or justify promoting V1 pressure to production.
+
+## Longer exploratory wall-spec trials
+
+The 8-coin/120-HP thorn-wall candidate also completed a real 100-night
+Sabana/712 campaign under V1 pressure and the fixed expanding bot. It ended
+with 18 crops and 257 coins, against 16 crops and 217 coins for the current
+10-coin/100-HP wall. Both bought 86 modules (688 versus 860 coins), and both
+had 100 verified raids with zero issues. The exploratory arm suffered 2,042
+crop losses against 1,958 in the standard-wall arm. The small terminal
+improvement therefore did not come from uniformly better agricultural
+protection. The [nightly ledger](current-v1-affordable-sabana712-100-nightly.csv)
+and compressed [full report](current-v1-affordable-sabana712-100.json.gz)
+retain the actual run. The runs used slightly different engine revisions
+because technical raid-path fixes were merged between them; wall-clock time
+is not a controlled speed comparison.
+
+On the independent Sabana/123 seed, a 30-night exploratory arm ended with
+142 crops and 1,072 coins, versus 156 crops and 1,158 coins at the same
+point of the standard-wall 100-night run. Agricultural losses through night
+30 were 189 versus 356; both bought 90 modules, costing 720 versus 900
+coins. Fewer crop losses did not translate into a better terminal crop or
+cash count because the full campaign trajectory and bot actions diverged.
+Its [nightly ledger](current-v1-affordable-sabana123-30-nightly.csv) and
+compressed [report](current-v1-affordable-sabana123-30.json.gz) preserve the
+evidence. The candidate should remain experimental; these two seeds do not
+support a monotonic or universal benefit.
