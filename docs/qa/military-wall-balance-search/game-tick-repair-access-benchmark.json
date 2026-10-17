@@ -1,0 +1,481 @@
+{
+  "previous": {
+    "source": "3db3904430cad2d4e24c3647d931b94af2bcf8d0",
+    "sourceHashes": {
+      "wasm": "0e91794a9ba549bde8d84d1b0c3ad39c8f0366b79a83213112d8ad3442aeedf6",
+      "game": "dd208d87dcc297adb2cb7a598557977cb0db2ec9a9b9ac63f343cec16ef7ccb7",
+      "raids": "c66a0747895c442883f70ee52ec08cb196fd5606abb3438a037d6d6b859a14a6",
+      "runner": "f5201e6de633f35dce0e3bcdd8b93ef3533b2f41ecf540cbc7c242cceac0698e"
+    },
+    "candidate": "v1-pressure",
+    "candidateSha256": "5d574c54f7e3046b95e6adf1294a4309bf64f13d65270d95808ef177f210fdb8",
+    "days": [
+      {
+        "day": 1,
+        "gameTickMs": 1101.0757000000017,
+        "decisionMs": 1188.2472999999954,
+        "aliveCrops": 70,
+        "workers": 8,
+        "nativeTaskRouteQueries": 225,
+        "nativeTaskCandidates": 188,
+        "stateSha256": "ecc8acf559531ac9bd6fe2b6d0dbe56815dd2bff4dc00191d471732161b86493"
+      },
+      {
+        "day": 2,
+        "gameTickMs": 3801.7308999999987,
+        "decisionMs": 1062.6675999999998,
+        "aliveCrops": 61,
+        "workers": 12,
+        "nativeTaskRouteQueries": 601,
+        "nativeTaskCandidates": 480,
+        "stateSha256": "2afbcbd022d417f91fc5ff939b4bad736323d605811dc88eddf7b46e265623ba"
+      },
+      {
+        "day": 3,
+        "gameTickMs": 4466.772199999987,
+        "decisionMs": 1242.8417000000172,
+        "aliveCrops": 58,
+        "workers": 11,
+        "nativeTaskRouteQueries": 938,
+        "nativeTaskCandidates": 752,
+        "stateSha256": "ec63bf769bf781002b1729a5e9b245f8442b5a127e427bb3cc3a88564eb8e844"
+      },
+      {
+        "day": 4,
+        "gameTickMs": 4492.890299999972,
+        "decisionMs": 1737.7042999999903,
+        "aliveCrops": 77,
+        "workers": 10,
+        "nativeTaskRouteQueries": 1229,
+        "nativeTaskCandidates": 996,
+        "stateSha256": "0430d577a8a137a3071b67724792d4983690be7afef549e18fcf901051e2fee9"
+      },
+      {
+        "day": 5,
+        "gameTickMs": 7950.88140000002,
+        "decisionMs": 2064.831399999981,
+        "aliveCrops": 87,
+        "workers": 13,
+        "nativeTaskRouteQueries": 1592,
+        "nativeTaskCandidates": 1296,
+        "stateSha256": "d6e8b643b1318b9fd2fb924ba28d6670807b92b9dfd3d470299ae8348524faed"
+      },
+      {
+        "day": 6,
+        "gameTickMs": 11630.300900000057,
+        "decisionMs": 2062.3266999999723,
+        "aliveCrops": 95,
+        "workers": 15,
+        "nativeTaskRouteQueries": 2009,
+        "nativeTaskCandidates": 1602,
+        "stateSha256": "0814119ce47ac8eacfb928ee7f647d4abf594b117d99c84599db42dae36cb72b"
+      },
+      {
+        "day": 7,
+        "gameTickMs": 12569.404600000053,
+        "decisionMs": 3208.1029000000417,
+        "aliveCrops": 122,
+        "workers": 16,
+        "nativeTaskRouteQueries": 2403,
+        "nativeTaskCandidates": 1919,
+        "stateSha256": "c6c7bf766aef7465dbe4dc8a83df422e3461fc7360efd3bd7d384e8d96394296"
+      },
+      {
+        "day": 8,
+        "gameTickMs": 16843.548400000007,
+        "decisionMs": 5564.2785000003205,
+        "aliveCrops": 153,
+        "workers": 21,
+        "nativeTaskRouteQueries": 2926,
+        "nativeTaskCandidates": 2326,
+        "stateSha256": "b82f7d07acff667b1ce5b7bb37c4aaf7bee7d3f3d38424f65e286d1a72ba067c"
+      },
+      {
+        "day": 9,
+        "gameTickMs": 19260.30079999994,
+        "decisionMs": 4395.816700000127,
+        "aliveCrops": 131,
+        "workers": 26,
+        "nativeTaskRouteQueries": 3502,
+        "nativeTaskCandidates": 2777,
+        "stateSha256": "1c008ff32ac48f9e9c9fc9a5a98ee8f970fdc441d2643ffeaccaf76ed39277a0"
+      },
+      {
+        "day": 10,
+        "gameTickMs": 26195.901000000158,
+        "decisionMs": 4933.5038999996905,
+        "aliveCrops": 108,
+        "workers": 22,
+        "nativeTaskRouteQueries": 4077,
+        "nativeTaskCandidates": 3209,
+        "stateSha256": "ff99dd639c3d12d0e84b1b456ec2fcc106a4832627a9bc2a61b9cc01513a2a79"
+      },
+      {
+        "day": 11,
+        "gameTickMs": 19385.984800000268,
+        "decisionMs": 3885.6962000002095,
+        "aliveCrops": 85,
+        "workers": 18,
+        "nativeTaskRouteQueries": 4531,
+        "nativeTaskCandidates": 3574,
+        "stateSha256": "bc4b09edfcbffc6b02d9ca4f2eda109f1292083cc4619799b9bbe85d5e9a6dda"
+      },
+      {
+        "day": 12,
+        "gameTickMs": 32660.346500000218,
+        "decisionMs": 4589.284899999853,
+        "aliveCrops": 121,
+        "workers": 15,
+        "nativeTaskRouteQueries": 4833,
+        "nativeTaskCandidates": 3808,
+        "stateSha256": "35771be09a88508c2e57d9e6b60e5023f1fc1d5870ea8c68d6af62fe3ac01558"
+      },
+      {
+        "day": 13,
+        "gameTickMs": 40703.35449999961,
+        "decisionMs": 4797.621800000197,
+        "aliveCrops": 136,
+        "workers": 21,
+        "nativeTaskRouteQueries": 5330,
+        "nativeTaskCandidates": 4156,
+        "stateSha256": "d6638622c35bf4c76c0ed6f18bc4ca1b241239fe7c63b99590d53ff20cb2f177"
+      },
+      {
+        "day": 14,
+        "gameTickMs": 50081.319799999124,
+        "decisionMs": 6946.3643000005395,
+        "aliveCrops": 139,
+        "workers": 23,
+        "nativeTaskRouteQueries": 6603,
+        "nativeTaskCandidates": 4713,
+        "stateSha256": "a2165304b9305326651dfd59592c84c16ac17c6e50868b813cc34617fe89b8d0"
+      },
+      {
+        "day": 15,
+        "gameTickMs": 343630.9287000018,
+        "decisionMs": 6440.341000000131,
+        "aliveCrops": 131,
+        "workers": 24,
+        "nativeTaskRouteQueries": 7234,
+        "nativeTaskCandidates": 5136,
+        "stateSha256": "4819b77900fd073e1789ad66f5c7eda34ba93ea6973ae89e6ee1d0bf69f5ab39"
+      },
+      {
+        "day": 16,
+        "gameTickMs": 50988.48190000036,
+        "decisionMs": 6369.244600000675,
+        "aliveCrops": 119,
+        "workers": 22,
+        "nativeTaskRouteQueries": 7856,
+        "nativeTaskCandidates": 5537,
+        "stateSha256": "b20f43d502dd267412313337c6aa3a1160c701655800a64b77fe4eaf171a043f"
+      }
+    ]
+  },
+  "fixed": {
+    "source": "244b0d52cebca174dc8e273c4c413727c9842e86",
+    "sourceHashes": {
+      "wasm": "0e91794a9ba549bde8d84d1b0c3ad39c8f0366b79a83213112d8ad3442aeedf6",
+      "game": "c3c22222cf2b77d52395a24c2f7b08ae3bdb9a624402fe8f128b517ca1d8431f",
+      "raids": "c66a0747895c442883f70ee52ec08cb196fd5606abb3438a037d6d6b859a14a6",
+      "runner": "1886930811aa053eab3b07a7baff3cf47bb2e200183d6b595efb4e1a8f4795b6"
+    },
+    "candidate": "v1-pressure",
+    "candidateSha256": "5d574c54f7e3046b95e6adf1294a4309bf64f13d65270d95808ef177f210fdb8",
+    "days": [
+      {
+        "day": 1,
+        "gameTickMs": 1017.541800000005,
+        "decisionMs": 1067.2222000000033,
+        "aliveCrops": 70,
+        "workers": 8,
+        "nativeTaskRouteQueries": 225,
+        "nativeTaskCandidates": 188,
+        "stateSha256": "ecc8acf559531ac9bd6fe2b6d0dbe56815dd2bff4dc00191d471732161b86493"
+      },
+      {
+        "day": 2,
+        "gameTickMs": 3229.49929999999,
+        "decisionMs": 915.7373999999995,
+        "aliveCrops": 61,
+        "workers": 12,
+        "nativeTaskRouteQueries": 601,
+        "nativeTaskCandidates": 480,
+        "stateSha256": "2afbcbd022d417f91fc5ff939b4bad736323d605811dc88eddf7b46e265623ba"
+      },
+      {
+        "day": 3,
+        "gameTickMs": 4561.8152000000155,
+        "decisionMs": 1320.5438999999978,
+        "aliveCrops": 58,
+        "workers": 11,
+        "nativeTaskRouteQueries": 938,
+        "nativeTaskCandidates": 752,
+        "stateSha256": "ec63bf769bf781002b1729a5e9b245f8442b5a127e427bb3cc3a88564eb8e844"
+      },
+      {
+        "day": 4,
+        "gameTickMs": 4761.137900000025,
+        "decisionMs": 1931.856900000037,
+        "aliveCrops": 77,
+        "workers": 10,
+        "nativeTaskRouteQueries": 1229,
+        "nativeTaskCandidates": 996,
+        "stateSha256": "0430d577a8a137a3071b67724792d4983690be7afef549e18fcf901051e2fee9"
+      },
+      {
+        "day": 5,
+        "gameTickMs": 8206.906599999988,
+        "decisionMs": 2154.219700000005,
+        "aliveCrops": 87,
+        "workers": 13,
+        "nativeTaskRouteQueries": 1592,
+        "nativeTaskCandidates": 1296,
+        "stateSha256": "d6e8b643b1318b9fd2fb924ba28d6670807b92b9dfd3d470299ae8348524faed"
+      },
+      {
+        "day": 6,
+        "gameTickMs": 11799.578399999973,
+        "decisionMs": 2122.941100000058,
+        "aliveCrops": 95,
+        "workers": 15,
+        "nativeTaskRouteQueries": 2009,
+        "nativeTaskCandidates": 1602,
+        "stateSha256": "0814119ce47ac8eacfb928ee7f647d4abf594b117d99c84599db42dae36cb72b"
+      },
+      {
+        "day": 7,
+        "gameTickMs": 10259.503499999926,
+        "decisionMs": 2688.475399999974,
+        "aliveCrops": 122,
+        "workers": 16,
+        "nativeTaskRouteQueries": 2403,
+        "nativeTaskCandidates": 1919,
+        "stateSha256": "c6c7bf766aef7465dbe4dc8a83df422e3461fc7360efd3bd7d384e8d96394296"
+      },
+      {
+        "day": 8,
+        "gameTickMs": 13402.57679999982,
+        "decisionMs": 4343.865000000063,
+        "aliveCrops": 153,
+        "workers": 21,
+        "nativeTaskRouteQueries": 2926,
+        "nativeTaskCandidates": 2326,
+        "stateSha256": "b82f7d07acff667b1ce5b7bb37c4aaf7bee7d3f3d38424f65e286d1a72ba067c"
+      },
+      {
+        "day": 9,
+        "gameTickMs": 15548.49359999974,
+        "decisionMs": 3484.6829999999463,
+        "aliveCrops": 131,
+        "workers": 26,
+        "nativeTaskRouteQueries": 3502,
+        "nativeTaskCandidates": 2777,
+        "stateSha256": "1c008ff32ac48f9e9c9fc9a5a98ee8f970fdc441d2643ffeaccaf76ed39277a0"
+      },
+      {
+        "day": 10,
+        "gameTickMs": 14462.345899999927,
+        "decisionMs": 3749.4547000000457,
+        "aliveCrops": 109,
+        "workers": 22,
+        "nativeTaskRouteQueries": 4104,
+        "nativeTaskCandidates": 3205,
+        "stateSha256": "5a3520b0eb2852a19a1adc531c40dacf0c30b137807e56f8484c4eb94fcda40a"
+      },
+      {
+        "day": 11,
+        "gameTickMs": 14730.022699999958,
+        "decisionMs": 3375.349800000142,
+        "aliveCrops": 93,
+        "workers": 19,
+        "nativeTaskRouteQueries": 4582,
+        "nativeTaskCandidates": 3588,
+        "stateSha256": "cb55bc91efa9707cda191dd34f5ab27ff168ece929556761072fa888bb7fa9b3"
+      },
+      {
+        "day": 12,
+        "gameTickMs": 20457.627499999537,
+        "decisionMs": 4279.121800000052,
+        "aliveCrops": 134,
+        "workers": 16,
+        "nativeTaskRouteQueries": 204073,
+        "nativeTaskCandidates": 32304,
+        "stateSha256": "a12e20fe199d6dfee8e78f56538e521efbef8c611012704b70df567d5535ac8a"
+      },
+      {
+        "day": 13,
+        "gameTickMs": 22981.205200000317,
+        "decisionMs": 3198.4926999996824,
+        "aliveCrops": 128,
+        "workers": 23,
+        "nativeTaskRouteQueries": 204647,
+        "nativeTaskCandidates": 32680,
+        "stateSha256": "876255d9aa533130f92d948e0c4705b59a38466399418a41d954b28e85ffd14b"
+      },
+      {
+        "day": 14,
+        "gameTickMs": 23171.651199999644,
+        "decisionMs": 3569.311900000059,
+        "aliveCrops": 99,
+        "workers": 22,
+        "nativeTaskRouteQueries": 205630,
+        "nativeTaskCandidates": 33154,
+        "stateSha256": "f8d4583b4bc7067213bfdf25bc477c9440209fd978cfe6796ee94ae168c80cc9"
+      },
+      {
+        "day": 15,
+        "gameTickMs": 15879.876899999828,
+        "decisionMs": 2949.393100000045,
+        "aliveCrops": 110,
+        "workers": 17,
+        "nativeTaskRouteQueries": 206279,
+        "nativeTaskCandidates": 33511,
+        "stateSha256": "c81ec1919cf884a4016f40af8e70736cdf9b6ea6ee605df4b8ee09899767fa7d"
+      },
+      {
+        "day": 16,
+        "gameTickMs": 18458.798100000015,
+        "decisionMs": 4245.919700000028,
+        "aliveCrops": 131,
+        "workers": 19,
+        "nativeTaskRouteQueries": 207603,
+        "nativeTaskCandidates": 34067,
+        "stateSha256": "358186a072fde74a41f71e3ca50f43eeac2330dd53876a0c1918a898a7d72810"
+      }
+    ]
+  },
+  "connectorFixed": {
+    "source": "244b0d52cebca174dc8e273c4c413727c9842e86",
+    "sourceHashes": {
+      "wasm": "1dd9f4e386e8f5c03edcafc43615e23ca3a76d4417678a84f57969add74e5454",
+      "game": "c3c22222cf2b77d52395a24c2f7b08ae3bdb9a624402fe8f128b517ca1d8431f",
+      "raids": "c66a0747895c442883f70ee52ec08cb196fd5606abb3438a037d6d6b859a14a6",
+      "runner": "f5201e6de633f35dce0e3bcdd8b93ef3533b2f41ecf540cbc7c242cceac0698e"
+    },
+    "candidate": "v1-pressure",
+    "candidateSha256": "5d574c54f7e3046b95e6adf1294a4309bf64f13d65270d95808ef177f210fdb8",
+    "days": [
+      {
+        "day": 1,
+        "gameTickMs": 994.9721999999958,
+        "decisionMs": 985.2148000000009,
+        "aliveCrops": 70,
+        "workers": 8,
+        "nativeTaskRouteQueries": 225,
+        "nativeTaskCandidates": 188,
+        "stateSha256": "ecc8acf559531ac9bd6fe2b6d0dbe56815dd2bff4dc00191d471732161b86493"
+      },
+      {
+        "day": 2,
+        "gameTickMs": 3048.1976000000004,
+        "decisionMs": 855.9898000000039,
+        "aliveCrops": 61,
+        "workers": 12,
+        "nativeTaskRouteQueries": 601,
+        "nativeTaskCandidates": 480,
+        "stateSha256": "2afbcbd022d417f91fc5ff939b4bad736323d605811dc88eddf7b46e265623ba"
+      },
+      {
+        "day": 3,
+        "gameTickMs": 4300.069200000025,
+        "decisionMs": 1213.3718999999955,
+        "aliveCrops": 58,
+        "workers": 11,
+        "nativeTaskRouteQueries": 938,
+        "nativeTaskCandidates": 752,
+        "stateSha256": "ec63bf769bf781002b1729a5e9b245f8442b5a127e427bb3cc3a88564eb8e844"
+      },
+      {
+        "day": 4,
+        "gameTickMs": 7548.757900000026,
+        "decisionMs": 3279.9595000000536,
+        "aliveCrops": 77,
+        "workers": 10,
+        "nativeTaskRouteQueries": 1229,
+        "nativeTaskCandidates": 996,
+        "stateSha256": "0430d577a8a137a3071b67724792d4983690be7afef549e18fcf901051e2fee9"
+      },
+      {
+        "day": 5,
+        "gameTickMs": 10380.735100000009,
+        "decisionMs": 2772.524800000014,
+        "aliveCrops": 87,
+        "workers": 13,
+        "nativeTaskRouteQueries": 1592,
+        "nativeTaskCandidates": 1296,
+        "stateSha256": "d6e8b643b1318b9fd2fb924ba28d6670807b92b9dfd3d470299ae8348524faed"
+      },
+      {
+        "day": 6,
+        "gameTickMs": 12026.967599999858,
+        "decisionMs": 2144.5177999998414,
+        "aliveCrops": 95,
+        "workers": 15,
+        "nativeTaskRouteQueries": 2009,
+        "nativeTaskCandidates": 1602,
+        "stateSha256": "0814119ce47ac8eacfb928ee7f647d4abf594b117d99c84599db42dae36cb72b"
+      },
+      {
+        "day": 7,
+        "gameTickMs": 10165.790699999889,
+        "decisionMs": 2496.5831999999864,
+        "aliveCrops": 122,
+        "workers": 16,
+        "nativeTaskRouteQueries": 2403,
+        "nativeTaskCandidates": 1919,
+        "stateSha256": "c6c7bf766aef7465dbe4dc8a83df422e3461fc7360efd3bd7d384e8d96394296"
+      },
+      {
+        "day": 8,
+        "gameTickMs": 13775.857299999901,
+        "decisionMs": 4396.401599999997,
+        "aliveCrops": 153,
+        "workers": 21,
+        "nativeTaskRouteQueries": 2926,
+        "nativeTaskCandidates": 2326,
+        "stateSha256": "b82f7d07acff667b1ce5b7bb37c4aaf7bee7d3f3d38424f65e286d1a72ba067c"
+      },
+      {
+        "day": 9,
+        "gameTickMs": 14089.439699999944,
+        "decisionMs": 3228.0007000000187,
+        "aliveCrops": 131,
+        "workers": 26,
+        "nativeTaskRouteQueries": 3502,
+        "nativeTaskCandidates": 2777,
+        "stateSha256": "1c008ff32ac48f9e9c9fc9a5a98ee8f970fdc441d2643ffeaccaf76ed39277a0"
+      },
+      {
+        "day": 10,
+        "gameTickMs": 13814.93090000005,
+        "decisionMs": 3622.744900000078,
+        "aliveCrops": 109,
+        "workers": 22,
+        "nativeTaskRouteQueries": 4104,
+        "nativeTaskCandidates": 3205,
+        "stateSha256": "5a3520b0eb2852a19a1adc531c40dacf0c30b137807e56f8484c4eb94fcda40a"
+      },
+      {
+        "day": 11,
+        "gameTickMs": 13409.416200000065,
+        "decisionMs": 3116.8953000002366,
+        "aliveCrops": 93,
+        "workers": 19,
+        "nativeTaskRouteQueries": 4582,
+        "nativeTaskCandidates": 3588,
+        "stateSha256": "cb55bc91efa9707cda191dd34f5ab27ff168ece929556761072fa888bb7fa9b3"
+      },
+      {
+        "day": 12,
+        "gameTickMs": 19869.85079999984,
+        "decisionMs": 4240.607300000149,
+        "aliveCrops": 138,
+        "workers": 16,
+        "nativeTaskRouteQueries": 4902,
+        "nativeTaskCandidates": 3827,
+        "stateSha256": "fab9afd15faf107791749780d058c9c6972615b6a505fdb0ae52f6a19dfd2491"
+      }
+    ]
+  }
+}

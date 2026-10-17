@@ -889,10 +889,76 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
 // change does not seal workers or a center away from its village. Candidate
 // gates are previewed against the same native wall mirror used by movement;
 // no payment or confirmed intention changes during these synchronous probes.
+function nativeRepairAccess(s,target,nav){
+  if(!nav.wallWorkerReachability)return null;
+  const obligations=[];
+  for(const village of s.villages){
+    const entry=village.entry??village;
+    const targets=[...s.structures.filter(center=>operational(center)&&
+      center.villageId===village.id).map(center=>centerServicePoint(center,s,.8)),
+      ...s.workers.filter(worker=>worker.status!=='home'&&
+        worker.villageId===village.id)];
+    if(!targets.length)continue;
+    const before=nav.wallWorkerReachability(entry,targets,[],[],true);
+    if(!before)return null;
+    const required=[];
+    for(let i=0;i<targets.length;i++){
+      if(before[i]==='found'){required.push(targets[i]);continue;}
+      // Only inconclusive witnesses need an ordinary route. A known blocked
+      // worker was already isolated before this repair and is not a new loss.
+      const physical=nav.workerPhysicalRoute(targets[i],entry);
+      if(physical.status==='unknown')return null;
+      if(physical.status==='found')required.push(targets[i]);
+    }
+    if(required.length)obligations.push({entry,targets:required});
+  }
+  if(!obligations.length)return {status:'safe',updates:[]};
+  const repaired={...target,status:'intact',hp:target.maxHp};
+  if(nav.wallLocalOverlay){
+    const before=nav.wallLocalOverlay([],[]),wall=nav.wallLocalOverlay([repaired],[]);
+    const gate=nav.wallLocalOverlay([{...repaired,gate:true,autoGate:true}],[]);
+    if(before&&wall&&gate){
+      let wallBlocks=false,gateBlocks=false;
+      for(const {targets} of obligations)for(const point of targets){
+        if(before.walkable(point.x,point.z)!==true)continue;
+        wallBlocks ||= wall.walkable(point.x,point.z)===false;
+        gateBlocks ||= gate.walkable(point.x,point.z)===false;
+      }
+      // Changing a different wall cannot make an occupied position inside
+      // this repaired wall or its own gate physically valid. Defer repair.
+      if(wallBlocks&&gateBlocks)return {status:'blocked',updates:[]};
+    }
+  }
+  const reaches=(proposed,removed=[])=>obligations.every(({entry,targets})=>
+    nav.wallWorkerReachability(entry,targets,proposed,[],true,removed)
+      ?.every(status=>status==='found')===true);
+  if(reaches([repaired]))return {status:'safe',updates:[]};
+  const living=activeCrops(s.plants);
+  const candidates=s.structures.filter(piece=>piece.kind==='wall'&&!piece.gate&&
+    (piece.status==='intact'&&piece.hp>0||piece.id===target.id));
+  candidates.sort((a,b)=>dist(a,target)-dist(b,target)||a.created-b.created);
+  for(const wall of candidates){
+    const scale=gateScale(wall.material),c=Math.cos(wall.yaw??0),
+      sn=Math.sin(wall.yaw??0);
+    if(living.some(plant=>Math.abs((plant.x-wall.x)*c-
+      (plant.z-wall.z)*sn)<1.09*(wall.baseScaleX??1)*scale+.4&&
+      Math.abs((plant.x-wall.x)*sn+(plant.z-wall.z)*c)<.22*scale+.4))
+      continue;
+    const base=wall.id===target.id?repaired:wall,maxHp=base.maxHp*.6;
+    const gate={...base,gate:true,autoGate:true,maxHp,
+      hp:base.hp/base.maxHp*maxHp};
+    const proposed=wall.id===target.id?[gate]:[repaired,gate];
+    if(reaches(proposed,wall.id===target.id?[]:[wall.id]))
+      return {status:'safe',updates:wall.id===target.id?[gate]:[repaired,gate]};
+  }
+  return null;
+}
 export function planRepairAccess(s,target,nav){
   if(target.kind!=='wall'||target.status!=='ruined'||
     !nav.withWallStatePreview||!nav.workerPhysicalRoute)
     return {status:'safe',updates:[]};
+  const native=nativeRepairAccess(s,target,nav);
+  if(native)return native;
   const villages=new Map(s.villages.map(v=>[v.id,v]));
   const witnesses=[];
   for(const center of s.structures.filter(operational)){

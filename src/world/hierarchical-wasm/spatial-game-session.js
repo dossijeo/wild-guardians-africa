@@ -285,15 +285,19 @@ export function createSpatialGameSession(module,state,streamOptions){
       }
     };
   }
-  function wallWorkerReachability(origin,targets,proposed=[],suppress=[],reverse=false){
+  function wallWorkerReachability(origin,targets,proposed=[],suppress=[],reverse=false,
+    removedWallIds=[]){
     if(activeWallPreview||!Array.isArray(proposed)||!Array.isArray(suppress)||
+      !Array.isArray(removedWallIds)||
       typeof core.wasm.spatial_overlay_reach_batch!=='function')return null;
     const barriers=proposed.flatMap(spatialStructureBarriers);
     if(barriers.length>128)return null;
+    const removeIds=removedWallIds.flatMap(id=>walls.barrierIds(id));
+    if(removeIds.length>4)return null;
     const portals=proposed.filter(wall=>wall.gate).map(gatePortalPoints)
       .filter(points=>points.length===2);
     selectProfile(WORKER_SPATIAL_PROFILE);
-    return core.overlayReachBatch(origin,targets,[],barriers,
+    return core.overlayReachBatch(origin,targets,removeIds,barriers,
       {reverse,margin:48,portals,
         propIds:suppress.filter(id=>!props.suppressed.has(id))});
   }

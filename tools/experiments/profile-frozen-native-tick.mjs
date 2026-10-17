@@ -29,10 +29,11 @@ try{
       x<=chunk(Math.max(...points.map(point=>point.x))+margin);x++)
       desired.set(`${x},${z}`,{cx:x,cz:z,score:0});
   session.stream.plan(desired);await session.stream.whenIdle();
-  const nav=createSpatialNavigationMovement(session,state),planner=createEventDrivenTaskPlanner(session);
-  planner.resetFromState(state);const stopTasks=planner.observeTasks(state),stopWorld=planner.observeWorld(state);
-  const timed=['planIfNeeded','flushWorldEvents','flushTaskEvents','reconcileNavigationRevision','reconcileWorkerRoutes','planHomeRoute'];
+  const timed=['nativeTaskBatch','planIfNeeded','flushWorldEvents','flushTaskEvents','reconcileNavigationRevision','reconcileWorkerRoutes','planHomeRoute'];
   const timing=Object.fromEntries(timed.map(name=>[name,0]));
+  const nav=createSpatialNavigationMovement(session,state),planner=createEventDrivenTaskPlanner(session,{
+    onDiagnosticTiming:(name,ms)=>{timing[name]+=ms;}});
+  planner.resetFromState(state);const stopTasks=planner.observeTasks(state),stopWorld=planner.observeWorld(state);
   for(const name of timed){
     const original=planner[name];
     if(typeof original!=='function')continue;
@@ -50,6 +51,8 @@ try{
       console.log(JSON.stringify({second,day:state.day,time:state.time,ms,pruneHistory,
         workers:state.workers.length,plants:state.plants.length,crates:state.crates.length,animals:state.raid?.animals.length??0,
         taskQueries:metrics.nativeTaskRouteQueries,planningCalls:metrics.nativePlanningCalls,
+        routeCacheHits:Number(session.core.wasm.spatial_route_cache_hits()),
+        routeCacheMisses:Number(session.core.wasm.spatial_route_cache_misses()),
         timingMs:{...timing}}));
     }
     const active={day:state.day,time:state.time,elapsed:state.elapsed,nextId:state.nextId,

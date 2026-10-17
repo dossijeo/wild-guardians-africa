@@ -12,12 +12,23 @@ import {rational} from '../src/simulation/money.js';
 const catalog=JSON.parse(fs.readFileSync(new URL('../public/content/vfx.json',import.meta.url)));
 const nav={placement:()=>({valid:true}),setState(){},terrainValid:()=>true,walkable:()=>true,path:(_a,b)=>[{x:b.x,z:b.z}]};
 function graphics(){const pipeline=new BuildingDestructionPass({shadowMap:{enabled:false},getDrawingBufferSize:v=>v.set(800,600)}),library=new VfxLibrary(catalog,new THREE.Texture({width:4096,height:2048})),scene=new THREE.Scene(),manager=new AgricultureVfx(library,pipeline,scene,(x,z)=>x*.04+z*.03);return {manager,library,scene,dispose(){manager.dispose();library.dispose();pipeline.dispose();}};}
-
-test('Concurrent agriculture spells release all scene objects and native instances when they expire',()=>{
- const g=graphics(),spells=Array.from({length:48},(_,i)=>({id:`spell-${i}`,kind:i%2?'growth':'multiply',x:(i%8)*4,z:Math.floor(i/8)*4,radius:2,remaining:5}));
+test('many simultaneous agricultural VFX release every scene instance when spells expire',()=>{
+ const g=graphics();
  try{
-  g.manager.update({time:100,spells});assert.equal(g.manager.effects.size,48);assert.equal(g.library.instances.size,48);assert.equal(g.scene.children.length,48);
-  g.manager.update({time:100,spells:[]});assert.equal(g.manager.effects.size,0);assert.equal(g.library.instances.size,0);assert.equal(g.scene.children.length,0);
+  const spells=Array.from({length:48},(_,i)=>({id:`spell-${i}`,kind:i%2?'growth':'multiply',
+   x:i%8,z:Math.floor(i/8),radius:.79,remaining:5}));
+  g.manager.update({time:100,spells});
+  assert.equal(g.manager.effects.size,48);
+  assert.equal(g.library.instances.size,48);
+  assert.equal(g.scene.children.length,48);
+  for(const effect of g.manager.effects.values()){
+   assert(effect.sprites.geometry.isInstancedBufferGeometry);
+   assert([...effect.rigids.values()].every(mesh=>mesh.geometry.isInstancedBufferGeometry));
+  }
+  g.manager.update({time:105,spells:[]});
+  assert.equal(g.manager.effects.size,0);
+  assert.equal(g.library.instances.size,0);
+  assert.equal(g.scene.children.length,0);
  }finally{g.dispose();}
 });
 for(const [kind,duration,cooldown] of [['growth',30,0],['multiply',15,0]])test(`${kind}: native blessing lasts its approved simulated duration without hearts, extra gameplay or lost reload phase`,()=>{
