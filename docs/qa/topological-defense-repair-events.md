@@ -87,6 +87,22 @@ not an isolated microbenchmark of the bridge.
 
 The complete reports are archived as [previous run](topological-defense-repair-events/topological-repair-baseline-gran-canon712-14.json.gz), [previous repeat](topological-defense-repair-events/topological-repair-baseline-repeat-gran-canon712-14.json.gz), [new run](topological-defense-repair-events/topological-repair-new-gran-canon712-14.json.gz), and [new repeat](topological-defense-repair-events/topological-repair-new-repeat-gran-canon712-14.json.gz). Each archive was checked against its original report byte for byte. The candidate is `tools/experiments/balance-candidates/v1-pressure.json` from the separate balance branch; it is applied only by that branch's QA runner, not by this experimental change. Reproduce each arm with `node tools/experiments/run-balance-candidate.mjs tools/experiments/balance-candidates/v1-pressure.json 14 gran-canon 712 output.json topological` on the recorded source revisions. The `source`, `inputHashes`, `balanceCandidate` and nightly hashes in each report identify the exact inputs and results.
 
+## Additional Sabana / 712 check
+
+The same V1 candidate and topological policy completed 14 verified raids in Sabana in each arm, with zero evidence issues. These are [previous](topological-defense-repair-events/topological-repair-baseline-sabana712-14.json.gz) and [new](topological-defense-repair-events/topological-repair-new-sabana712-14.json.gz) full reports; their archives were also verified against the source bytes.
+
+| Measure | Previous policy | Event-driven maintenance |
+| --- | ---: | ---: |
+| Raid crop losses, nights 6–14 | 126 | 10 |
+| Animals, nights 6–14 | 85 | 87 |
+| Repair requests / coins spent | 0 / 0 | 61 / 348 |
+| Wall purchase cost | 850 | 530 |
+| Harvest deliveries / income | 1,410 / 16,583 | 1,457 / 17,150 |
+| Cash / living crops at day-15 dawn | 991 / 106 | 1,299 / 69 |
+| Bot decision time / `Game.tick` time | 55.49 / 106.70 s | 30.58 / 117.58 s |
+
+The new policy retained more cash and prevented most raid losses, but had fewer living crops at this particular dawn. A living-crop snapshot is sensitive to harvest/replant timing after the trajectories diverge, and the two runs generated slightly different animal counts because attraction changed. `Game.tick` itself was slower in the new trajectory; the bot decision time fell enough that their combined measured time was lower. Neither timing is an isolated algorithmic A/B benchmark. The Sabana result therefore supports maintenance effectiveness but does not establish a general crop-count or engine-speed advantage.
+
 ## Validation and limits
 
 Directed tests cover HP thresholds, duplicate event suppression, breach and
