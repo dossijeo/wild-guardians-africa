@@ -28,14 +28,19 @@ function simulate(cache){
     const routeActor=session.routeActor;
     session.routeActor=(...args)=>{nativeRoutes++;return routeActor(...args);};
     Game.tick(state,1,nav);
+    const firstTickRoutes=nativeRoutes;
     Game.tick(state,1,nav);
-    return {state:serialize(state),nativeRoutes};
+    return {state:serialize(state),nativeRoutes,
+      firstTickRoutes,secondTickRoutes:nativeRoutes-firstTickRoutes};
   }finally{session.dispose();}
 }
 
-test('task reservation reuses worker blocked proofs without changing the simulation',()=>{
+test('task reservation reuses blocked proofs and does not poll on the next tick',()=>{
   const baseline=simulate(false),cached=simulate(true);
   assert.equal(cached.state,baseline.state);
-  assert(cached.nativeRoutes<baseline.nativeRoutes/4,
+  assert(baseline.firstTickRoutes>0,'the fixture must exercise route planning');
+  assert.equal(baseline.secondTickRoutes,0,'unchanged tasks must not be replanned');
+  assert.equal(cached.secondTickRoutes,0,'cached tasks must not poll the navigator');
+  assert(cached.nativeRoutes<baseline.nativeRoutes,
     `native route calls: ${baseline.nativeRoutes} vs ${cached.nativeRoutes}`);
 });
