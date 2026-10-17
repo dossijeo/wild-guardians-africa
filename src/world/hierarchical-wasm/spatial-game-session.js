@@ -277,10 +277,20 @@ export function createSpatialGameSession(module,state,streamOptions){
   // Crop turnover and structure HP updates keep the same component IDs.
   const topologySource={revision:()=>terrainRevision+walls.revision()+
     centers.revision()+shields.revision()+props.revision()};
+  const routeStamp=()=>({wall:walls.revision(),
+    other:terrainRevision+centers.revision()+shields.revision()+props.revision(),
+    chunks:core.chunkRevision()});
+  const routeUnaffectedByWalls=(stamp,points,radius)=>{
+    if(!stamp)return false;
+    const now=routeStamp();
+    return stamp.other===now.other&&stamp.chunks===now.chunks&&
+      walls.routeUnaffectedSince(stamp.wall,points,radius);
+  };
   const queryPropsAt=(x,z,radius)=>queryResidentSpatialProps(
     streamOptions.loaded(),props.suppressed,x,z,radius,
     key=>chunkRevisions.get(key)??0);
-  return {core,field,stream,horizonSource,topologySource,suppressed:props.suppressed,syncState,
+  return {core,field,stream,horizonSource,topologySource,routeStamp,
+    routeUnaffectedByWalls,suppressed:props.suppressed,syncState,
     routeActor,routeActorNative,routeActorNativeBatch,actorConnectivity,actorSectorRevision,actorRegions,actorEnclosure,actorRegionsBatch,actorCanStand,actorStepClear,
     actorStepClearExceptWalls,
     queryPropsAt,withWallPreview,gateOverlayClear,wallLocalOverlay,withVillageEntryPreview,

@@ -60,6 +60,9 @@ export function createSpatialNavigationMovement(session,state){
     return true;
   };
   let failedWorkerEpoch='',failedWorkerRoutes=new Set();
+  // Route provenance is ephemeral: a saved route from another WASM session
+  // must not inherit this session's wall-change certificate by coincidence.
+  const nativeRoutes=new WeakSet();
   const path=(start,end,radius=.28,ignore=null,worker=true,cacheBlocked=false)=>{
     validate(start,end);
     const options=profile(radius,worker,ignore);
@@ -104,7 +107,11 @@ export function createSpatialNavigationMovement(session,state){
         startProps:session.queryPropsAt?.(start.x,start.z,1.5).status,
         endProps:session.queryPropsAt?.(end.x,end.z,1.5).status});
     }
-    return result.status==='found'?result.points:null;
+    if(result.status==='found'){
+      if(Array.isArray(result.points))nativeRoutes.add(result.points);
+      return result.points;
+    }
+    return null;
   };
   const regionFor=(point,radius=.28,ignore=null,worker=true)=>{
     if(!finitePoint(point))throw TypeError('Expected a finite actor position');
@@ -253,6 +260,9 @@ export function createSpatialNavigationMovement(session,state){
       return obstacleList;
     },
     get version(){return session.topologySource.revision();},
+    routeStamp:session.routeStamp,
+    routeUnaffectedByWalls:session.routeUnaffectedByWalls,
+    ownsRoute:route=>Array.isArray(route)&&nativeRoutes.has(route),
     walkable,segmentClear,path,regionFor,regionConnected,enclosureFor,terrainValid,
     withWallPreview,gateOverlayClear:session.gateOverlayClear,
     wallLocalOverlay:session.wallLocalOverlay,

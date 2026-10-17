@@ -41,6 +41,9 @@ import {advanceGateLeaves,waitForGate} from './gates.js';
 // on every movement tick. Kept outside saves: a restored actor gets one fresh
 // attempt, then waits for topology/residency or a bounded dynamic retry.
 const routePlanWaits=new WeakMap();
+// Dependency stamps are session-local; restored actors take the normal route
+// planning path until this navigator has observed their current route.
+const activeRouteStamps=new WeakMap();
 const ROUTE_RETRY_SECONDS=8;
 const taskPlanWaits=new WeakMap();
 const preparedWallQuotes=new WeakMap();
@@ -615,6 +618,20 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
     w.mobileProgressDistance=dist(w,destination);
     w.mobileProgressAt=s.elapsed;
   }
+  const stamp=activeRouteStamps.get(w);
+  if(w.path&&w.pathVersion===nav.version&&nav.routeStamp&&
+    nav.ownsRoute?.(w.path)===true&&
+    (stamp?.path!==w.path||stamp?.nav!==nav||stamp?.version!==nav.version))
+    activeRouteStamps.set(w,{path:w.path,nav,version:nav.version,
+      spatial:nav.routeStamp()});
+  if(w.path&&w.pathVersion!==nav.version&&!w.wallEscape&&
+    w.destinationId===destination.id&&stamp?.path===w.path&&
+    stamp.nav===nav&&stamp.version===w.pathVersion&&
+    nav.routeUnaffectedByWalls?.(stamp.spatial,[w,...w.path],w.radius??.28)){
+    w.pathVersion=nav.version;
+    activeRouteStamps.set(w,{path:w.path,nav,version:nav.version,
+      spatial:nav.routeStamp()});
+  }
   if(w.wallEscape&&w.pathVersion!==nav.version)delete w.wallEscape;
   if(!w.path||w.destinationId!==destination.id||w.pathVersion!==nav.version) {
     const sectors=nav.spatialSectorRevision?.(w.radius??.28,worker)??0;
@@ -661,6 +678,9 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
       if(!w.path)w.path=workerReturnRoute(nav,w,destination,w.radius??.28);
     }
     w.pathVersion=nav.version;
+    if(w.path&&nav.routeStamp)activeRouteStamps.set(w,
+      {path:w.path,nav,version:nav.version,spatial:nav.routeStamp()});
+    else activeRouteStamps.delete(w);
     if(!w.path){routePlanWaits.set(w,{epoch,retryAt:s.elapsed+ROUTE_RETRY_SECONDS});return abandonExhaustedExit();}
     routePlanWaits.delete(w);
   }
