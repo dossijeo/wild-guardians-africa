@@ -77,6 +77,23 @@ respectively, finishing with 115 living crops, 868 coins and no terminal result.
 The full new report is archived as
 [`diagnostic-gate-radius-sabana712-14.json.gz`](diagnostic-gate-radius-sabana712-14.json.gz).
 
+A second historical-entity check used the frozen Sabana/712 day-15 state at
+time 150 ([fixture](../../../tests/fixtures/sabana712-day15-worker-routes.json.gz)),
+with 1,646 plant records, 1,453 crates and 24 workers. Two
+separate-process 120-second continuations, intact versus pruning dead plants
+and delivered crates before session creation, ended with the same active-state
+hash (`42ec582c962fa6614c825a1cc96dc50ced8648ac42c6d1bf708d5bf7f2b21b67`)
+and 212 native task-route queries. Their `Game.tick` sums were 2,981.2 and
+2,979.2 ms. This again fails to support retired records as the cause of slow
+ticks in the tested window. Eight one-second ticks exceeded 100 ms and
+accounted for 68.5% of its tick time; the largest was 634.8 ms. The native
+task-route counter increased by eight during that tick, but this correlation
+does not isolate the expensive native function. Reproduce both arms with
+`node tools/experiments/profile-frozen-native-tick.mjs
+tests/fixtures/sabana712-day15-worker-routes.json.gz 120` and the same command
+with `--prune-history`. The raw timing captures remain local; no balance or
+physical rule was changed.
+
 ## VFX check
 
 The native campaign runner does not create a Three.js renderer, so its `Game.tick` delays cannot be caused by GPU draw calls or scene objects. `AgricultureVfx.update()` removes expired effects, and `NativeVfx.dispose()` detaches the group and disposes its geometry and materials. A regression test creates 48 simultaneous agricultural spell effects and verifies that the manager, library, and scene return to zero instances after expiry. Each effect already uses instanced sprite and rigid geometry. Batching **across separate spells** is a distinct render optimization; it needs frame-time and draw-call measurement in the interactive client before changing shaders and effect timing.
