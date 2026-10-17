@@ -399,7 +399,16 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
 // preview/build still enforce available cash and the native hiring reserve.
 export function quoteWallChain(s,material,points,nav,options={}) {
   if(!permission(s,'wall'))throw new Error('Esta acción no está disponible ahora');
-  const spec=wallSpec(material),slots=wallStroke(points,s.structures,{...options,maxPieces:Infinity});
+  // A multi-arc enclosure is one atomic quote: gate selection must see every
+  // proposed module before deciding whether the combined boundary is closed.
+  const strokes=Array.isArray(points[0]?.[0])?points:[points];
+  const spec=wallSpec(material),strokeSlots=strokes.map(stroke=>
+    wallStroke(stroke,s.structures,{...options,maxPieces:Infinity}));
+  const sampled=strokeSlots.flat();
+  const slots=strokes.length===1?sampled:[];
+  if(strokes.length>1)for(const slot of sampled)if(!slots.some(other=>
+    Math.hypot(other.x-slot.x,other.z-slot.z)<.35&&
+    Math.abs(Math.sin(other.angle-slot.angle))<.18))slots.push(slot);
   const living=activeCrops(s.plants);
   const cropOverlap=piece=>{const c=Math.cos(piece.yaw),sn=Math.sin(piece.yaw),scale=piece.gate?(piece.material==='reforzado'?1.6:['adobe','piedra'].includes(piece.material)?1.4:1):1;return living.some(p=>p.alive&&Math.abs((p.x-piece.x)*c-(p.z-piece.z)*sn)<1.09*(piece.baseScaleX??1)*scale+.4&&Math.abs((p.x-piece.x)*sn+(p.z-piece.z)*c)<.22*scale+.4);};
   const blockedPieces=[],blockedCrops=[];
@@ -422,7 +431,9 @@ export function quoteWallChain(s,material,points,nav,options={}) {
   }
   const cost=spec.cost*newPieces.length;
   const plan={pieces:newPieces,previewPieces:checks,updates,suppressed:[...suppressed],cost,gates:updates.length,
-    expectedSlots:slots,blockedPieces,blockedCrops};
+    expectedSlots:slots,strokeSlots,strokeClosed:strokes.map(stroke=>
+      stroke.length>=3&&Math.hypot(stroke[0][0]-stroke.at(-1)[0],
+        stroke[0][1]-stroke.at(-1)[1])<1e-6),blockedPieces,blockedCrops};
   preparedWallQuotes.set(plan,{state:s,nav,material,points:JSON.stringify(points),
     smooth:options.smooth??true,snap:options.snap??true,
     maxPieces:options._requestedMaxPieces??options.maxPieces??Infinity,

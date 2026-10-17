@@ -1,0 +1,1868 @@
+{
+  "biome": "sabana",
+  "seed": 712,
+  "day": 3,
+  "source": "76c817600998541363c921574f8759a99e5d6cefe3d850044af0dfbf244f1cc5",
+  "wasmSha256": "0255e71a4322356064c28bcb1a707f32f37b1aa7fef412b84b3897ea92ff01ca",
+  "elapsedSeconds": 14.6121286,
+  "campaignTiming": {
+    "ticks": 1041,
+    "decisionMs": 5222.865000000011,
+    "gameTickMs": 3132.0029000000045
+  },
+  "sample": {
+    "stateHash": "7b7033894dee269d4bf04cb074f1372ef2f84ef280446150cd5f2e2331cb6966",
+    "living": 66,
+    "observedBiome": "sabana",
+    "nativeBiomeCode": 0,
+    "terrainSamples": [
+      3.6572799682617188,
+      5.200215816497803,
+      4.165669918060303,
+      5.89849328994751
+    ],
+    "status": "measured",
+    "groupId": "crop:plant-1109",
+    "cropCount": 66,
+    "groupBounds": {
+      "minX": 81,
+      "minZ": -7.5,
+      "maxX": 94.5,
+      "maxZ": 7.5
+    },
+    "removedWalls": [],
+    "existingGates": [],
+    "rows": [
+      {
+        "name": "cut",
+        "ms": 4752.054700000001,
+        "status": "proposed",
+        "conservativeCut": true,
+        "constructionAware": false,
+        "box": [
+          69,
+          -20,
+          108,
+          21
+        ],
+        "topologicalMs": 14.904599999999846,
+        "conversionMs": 1.3341999999993277,
+        "validationMs": 4732.259099999999,
+        "cutEdges": 27,
+        "boundarySegments": 142,
+        "flow": 27,
+        "cells": 1599,
+        "strokes": 3,
+        "estimatedModules": 14,
+        "estimatedCost": 140,
+        "ambiguous": 0,
+        "junctions": 6,
+        "terminals": [
+          {
+            "strokeIndex": 0,
+            "end": "start",
+            "point": [
+              72.5,
+              -11.5
+            ]
+          },
+          {
+            "strokeIndex": 0,
+            "end": "finish",
+            "point": [
+              72.5,
+              -8.5
+            ]
+          },
+          {
+            "strokeIndex": 1,
+            "end": "start",
+            "point": [
+              73.5,
+              -2.5
+            ]
+          },
+          {
+            "strokeIndex": 1,
+            "end": "finish",
+            "point": [
+              78.5,
+              -2.5
+            ]
+          },
+          {
+            "strokeIndex": 2,
+            "end": "start",
+            "point": [
+              80.5,
+              2.5
+            ]
+          },
+          {
+            "strokeIndex": 2,
+            "end": "finish",
+            "point": [
+              90.5,
+              11.5
+            ]
+          }
+        ],
+        "terminalContext": [
+          {
+            "point": [
+              72.5,
+              -11.5
+            ],
+            "props": [],
+            "obstacles": [
+              {
+                "id": "structure-807",
+                "kind": "wall",
+                "x": 73.08,
+                "z": -12,
+                "radius": 0.7,
+                "gate": false,
+                "status": "intact",
+                "pointToSurface": 0.27999999999999936
+              },
+              {
+                "id": "structure-841",
+                "kind": "wall",
+                "x": 75.24,
+                "z": -12,
+                "radius": 0.7,
+                "gate": false,
+                "status": "intact",
+                "pointToSurface": 1.6834488409215138
+              },
+              {
+                "kind": "Edificio",
+                "x": 69.57596063613892,
+                "z": -3.593527913093567,
+                "radius": 6.745043520000262,
+                "pointToSurface": 3.207756906685139
+              }
+            ],
+            "terrainValid": true,
+            "nearestTerrainBlock": null,
+            "nativeObjectClearance": 0.2800000011920929
+          },
+          {
+            "point": [
+              72.5,
+              -8.5
+            ],
+            "props": [],
+            "obstacles": [
+              {
+                "kind": "Edificio",
+                "x": 69.57596063613892,
+                "z": -3.593527913093567,
+                "radius": 6.745043520000262,
+                "pointToSurface": 0.5675685012814535
+              },
+              {
+                "id": "structure-807",
+                "kind": "wall",
+                "x": 73.08,
+                "z": -12,
+                "radius": 0.7,
+                "gate": false,
+                "status": "intact",
+                "pointToSurface": 3.2799999999999994
+              },
+              {
+                "id": "structure-841",
+                "kind": "wall",
+                "x": 75.24,
+                "z": -12,
+                "radius": 0.7,
+                "gate": false,
+                "status": "intact",
+                "pointToSurface": 3.676139279189512
+              }
+            ],
+            "terrainValid": true,
+            "nearestTerrainBlock": null,
+            "nativeObjectClearance": 0.5675666332244873
+          },
+          {
+            "point": [
+              73.5,
+              -2.5
+            ],
+            "props": [],
+            "obstacles": [
+              {
+                "kind": "Edificio",
+                "x": 69.57596063613892,
+                "z": -3.593527913093567,
+                "radius": 6.745043520000262,
+                "pointToSurface": 0.5294801137025517
+              }
+            ],
+            "terrainValid": true,
+            "nearestTerrainBlock": null,
+            "nativeObjectClearance": 0.5294803380966187
+          },
+          {
+            "point": [
+              78.5,
+              -2.5
+            ],
+            "props": [],
+            "obstacles": [
+              {
+                "id": "structure-2",
+                "kind": "center",
+                "x": 83,
+                "z": 0,
+                "radius": 4.609913858297798,
+                "gate": false,
+                "status": "intact",
+                "pointToSurface": 0.5980695300375242
+              },
+              {
+                "kind": "Edificio",
+                "x": 69.57596063613892,
+                "z": -3.593527913093567,
+                "radius": 6.745043520000262,
+                "pointToSurface": 5.47676961629006
+              }
+            ],
+            "terrainValid": true,
+            "nearestTerrainBlock": null,
+            "nativeObjectClearance": 0.5980701446533203
+          },
+          {
+            "point": [
+              80.5,
+              2.5
+            ],
+            "props": [],
+            "obstacles": [
+              {
+                "id": "structure-2",
+                "kind": "center",
+                "x": 83,
+                "z": 0,
+                "radius": 4.609913858297798,
+                "gate": false,
+                "status": "intact",
+                "pointToSurface": 0.376575476751357
+              }
+            ],
+            "terrainValid": true,
+            "nearestTerrainBlock": null,
+            "nativeObjectClearance": 0.3765754699707031
+          },
+          {
+            "point": [
+              90.5,
+              11.5
+            ],
+            "props": [
+              {
+                "x": 97.31031799316406,
+                "z": 12.31293773651123,
+                "radius": 1.3213688135147095,
+                "slot": 12,
+                "clearSpan": 5.537297159650785
+              },
+              {
+                "x": 99.82867431640625,
+                "z": 4.899447441101074,
+                "radius": 2.648141384124756,
+                "slot": 1,
+                "clearSpan": 8.779520607042326
+              }
+            ],
+            "obstacles": [
+              {
+                "id": "structure-1399",
+                "kind": "wall",
+                "x": 92.28,
+                "z": 12,
+                "radius": 0.7,
+                "gate": false,
+                "status": "intact",
+                "pointToSurface": 0.753923072998833
+              },
+              {
+                "id": "structure-1398",
+                "kind": "wall",
+                "x": 94.44,
+                "z": 12,
+                "radius": 0.7,
+                "gate": false,
+                "status": "intact",
+                "pointToSurface": 2.8736736070751108
+              }
+            ],
+            "terrainValid": true,
+            "nearestTerrainBlock": null,
+            "nativeObjectClearance": 0.7539218664169312
+          }
+        ],
+        "contours": [
+          [
+            [
+              72.5,
+              -11.5
+            ],
+            [
+              72.5,
+              -10.5
+            ],
+            [
+              72.5,
+              -9.5
+            ],
+            [
+              72.5,
+              -8.5
+            ]
+          ],
+          [
+            [
+              73.5,
+              -2.5
+            ],
+            [
+              74.5,
+              -2.5
+            ],
+            [
+              75.5,
+              -2.5
+            ],
+            [
+              76.5,
+              -2.5
+            ],
+            [
+              77.5,
+              -2.5
+            ],
+            [
+              78.5,
+              -2.5
+            ]
+          ],
+          [
+            [
+              80.5,
+              2.5
+            ],
+            [
+              80.5,
+              3.5
+            ],
+            [
+              80.5,
+              4.5
+            ],
+            [
+              80.5,
+              5.5
+            ],
+            [
+              81.5,
+              5.5
+            ],
+            [
+              81.5,
+              6.5
+            ],
+            [
+              82.5,
+              6.5
+            ],
+            [
+              82.5,
+              7.5
+            ],
+            [
+              83.5,
+              7.5
+            ],
+            [
+              83.5,
+              8.5
+            ],
+            [
+              84.5,
+              8.5
+            ],
+            [
+              85.5,
+              8.5
+            ],
+            [
+              85.5,
+              9.5
+            ],
+            [
+              86.5,
+              9.5
+            ],
+            [
+              86.5,
+              10.5
+            ],
+            [
+              87.5,
+              10.5
+            ],
+            [
+              88.5,
+              10.5
+            ],
+            [
+              89.5,
+              10.5
+            ],
+            [
+              90.5,
+              10.5
+            ],
+            [
+              90.5,
+              11.5
+            ]
+          ]
+        ],
+        "multiArc": true,
+        "physical": {
+          "status": "unknown",
+          "frontierStatus": "unverified",
+          "profiles": {
+            "warthog": "unknown",
+            "hyena": "unknown",
+            "buffalo": "unknown",
+            "lion": "protected",
+            "rhino": "unknown"
+          },
+          "modules": 14,
+          "cost": 140,
+          "gates": 0,
+          "suppressed": [],
+          "placedPieces": [
+            {
+              "x": 72.5,
+              "z": -10.75,
+              "yaw": -1.5707963267948966,
+              "baseScaleX": 0.6880733944954128
+            },
+            {
+              "x": 72.5,
+              "z": -9.25,
+              "yaw": -1.5707963267948966,
+              "baseScaleX": 0.6880733944954128
+            },
+            {
+              "x": 74.33333333333334,
+              "z": -2.5,
+              "yaw": 0,
+              "baseScaleX": 0.7645259938837942
+            },
+            {
+              "x": 76,
+              "z": -2.5,
+              "yaw": 0,
+              "baseScaleX": 0.7645259938837876
+            },
+            {
+              "x": 77.66666666666666,
+              "z": -2.5,
+              "yaw": 0,
+              "baseScaleX": 0.7645259938837942
+            },
+            {
+              "x": 80.5,
+              "z": 3.5555555555555554,
+              "yaw": -1.5707963267948966,
+              "baseScaleX": 0.968399592252803
+            },
+            {
+              "x": 81,
+              "z": 5.166666666666666,
+              "yaw": -0.8379812250083899,
+              "baseScaleX": 0.6857096863951939
+            },
+            {
+              "x": 82,
+              "z": 6.277777777777778,
+              "yaw": -0.8379812250083907,
+              "baseScaleX": 0.6857096863951946
+            },
+            {
+              "x": 83,
+              "z": 7.388888888888889,
+              "yaw": -0.8379812250083899,
+              "baseScaleX": 0.6857096863951939
+            },
+            {
+              "x": 84.27777777777777,
+              "z": 8.222222222222221,
+              "yaw": -0.3430239404207059,
+              "baseScaleX": 0.7576997322792252
+            },
+            {
+              "x": 85.61111111111111,
+              "z": 9,
+              "yaw": -0.7328151017864988,
+              "baseScaleX": 0.6857096863952
+            },
+            {
+              "x": 86.72222222222223,
+              "z": 10,
+              "yaw": -0.7328151017865052,
+              "baseScaleX": 0.6857096863951953
+            },
+            {
+              "x": 88.33333333333334,
+              "z": 10.5,
+              "yaw": 0,
+              "baseScaleX": 0.9683995922527981
+            },
+            {
+              "x": 89.94444444444444,
+              "z": 11,
+              "yaw": -0.7328151017865052,
+              "baseScaleX": 0.6857096863951953
+            }
+          ],
+          "structural": {
+            "status": "open",
+            "reason": "no-wall-face"
+          },
+          "placedJunctions": {
+            "status": "ready",
+            "junctions": [
+              {
+                "strokeIndex": 0,
+                "end": "start",
+                "pieceId": "structure-1502",
+                "point": [
+                  72.5,
+                  -11.5
+                ]
+              },
+              {
+                "strokeIndex": 0,
+                "end": "finish",
+                "pieceId": "structure-1503",
+                "point": [
+                  72.5,
+                  -8.5
+                ]
+              },
+              {
+                "strokeIndex": 1,
+                "end": "start",
+                "pieceId": "structure-1504",
+                "point": [
+                  73.5,
+                  -2.5
+                ]
+              },
+              {
+                "strokeIndex": 1,
+                "end": "finish",
+                "pieceId": "structure-1506",
+                "point": [
+                  78.5,
+                  -2.5
+                ]
+              },
+              {
+                "strokeIndex": 2,
+                "end": "start",
+                "pieceId": "structure-1507",
+                "point": [
+                  80.5,
+                  2.5
+                ]
+              },
+              {
+                "strokeIndex": 2,
+                "end": "finish",
+                "pieceId": "structure-1515",
+                "point": [
+                  90.5,
+                  11.5
+                ]
+              }
+            ]
+          },
+          "workerAccess": {
+            "before": [
+              {
+                "cropId": "plant-1497",
+                "centerId": "structure-2",
+                "status": "reachable"
+              }
+            ],
+            "after": [
+              {
+                "cropId": "plant-1497",
+                "centerId": "structure-2",
+                "status": "reachable"
+              }
+            ]
+          },
+          "workerAccessAll": {
+            "outbound": {
+              "reachable": 66,
+              "blocked": 0,
+              "unknown": 0
+            },
+            "return": {
+              "reachable": 66,
+              "blocked": 0,
+              "unknown": 0
+            },
+            "examples": [],
+            "returnFailures": []
+          },
+          "gridProbe": {
+            "center": [
+              90,
+              -1
+            ],
+            "bySpecies": {
+              "warthog": {
+                "firstCropCells": {
+                  "sealed": 38,
+                  "uncertified": 0,
+                  "blocked": 11,
+                  "unexpected": 0
+                },
+                "crops": {
+                  "sealedNeighborhood": 66,
+                  "uncertifiedNeighborhood": 0,
+                  "noPassableCell": 0,
+                  "anchoredSealed": 57,
+                  "anchoredUncertified": 0,
+                  "noPhysicalAnchor": 9,
+                  "centerStandable": 57,
+                  "noAnchorCenterStandable": 0,
+                  "standableNoAnchorExamples": []
+                },
+                "attackRing": {
+                  "cropsWithoutCenterAnchor": 9,
+                  "cropsNearBoundary": 9,
+                  "standableSealed": 634,
+                  "standableOpen": 0,
+                  "standableUnknown": 0,
+                  "noStandablePoint": 0,
+                  "openExamples": []
+                },
+                "attackEnvelope": {
+                  "testedCrops": 58,
+                  "openStandable": 214,
+                  "openClearRay": 1,
+                  "openBlockedRay": 213,
+                  "unknownStandable": 0,
+                  "directReachClear": 0,
+                  "minimumClearRayDistance": 5.340001,
+                  "clearRayCrossesSolidProp": 0,
+                  "propQueryUnknown": 0,
+                  "potentialPeripheralCenters": 0,
+                  "peripheralExamples": [],
+                  "clearExamples": [
+                    {
+                      "cropId": "plant-1380",
+                      "point": {
+                        "x": 76.0664823725102,
+                        "z": -0.956470088486987
+                      },
+                      "distance": 5.340001
+                    }
+                  ],
+                  "propExamples": []
+                },
+                "cropBoundary": {
+                  "withinAttackReach": 9,
+                  "minimumDistance": 1.118033988749895,
+                  "nearestExamples": [
+                    {
+                      "cropId": "plant-1150",
+                      "distance": 1.5
+                    },
+                    {
+                      "cropId": "plant-1153",
+                      "distance": 1.5
+                    },
+                    {
+                      "cropId": "plant-1185",
+                      "distance": 1.5811388300841898
+                    },
+                    {
+                      "cropId": "plant-1190",
+                      "distance": 1.5811388300841898
+                    },
+                    {
+                      "cropId": "plant-1237",
+                      "distance": 1.5
+                    },
+                    {
+                      "cropId": "plant-1244",
+                      "distance": 1.118033988749895
+                    },
+                    {
+                      "cropId": "plant-1303",
+                      "distance": 1.5811388300841898
+                    },
+                    {
+                      "cropId": "plant-1368",
+                      "distance": 1.4142135623730951
+                    }
+                  ]
+                }
+              },
+              "hyena": {
+                "firstCropCells": {
+                  "sealed": 39,
+                  "uncertified": 0,
+                  "blocked": 10,
+                  "unexpected": 0
+                },
+                "crops": {
+                  "sealedNeighborhood": 66,
+                  "uncertifiedNeighborhood": 0,
+                  "noPassableCell": 0,
+                  "anchoredSealed": 59,
+                  "anchoredUncertified": 0,
+                  "noPhysicalAnchor": 7,
+                  "centerStandable": 59,
+                  "noAnchorCenterStandable": 0,
+                  "standableNoAnchorExamples": []
+                },
+                "attackRing": {
+                  "cropsWithoutCenterAnchor": 7,
+                  "cropsNearBoundary": 5,
+                  "standableSealed": 485,
+                  "standableOpen": 0,
+                  "standableUnknown": 0,
+                  "noStandablePoint": 0,
+                  "openExamples": []
+                },
+                "attackEnvelope": {
+                  "testedCrops": 54,
+                  "openStandable": 225,
+                  "openClearRay": 1,
+                  "openBlockedRay": 224,
+                  "unknownStandable": 0,
+                  "directReachClear": 0,
+                  "minimumClearRayDistance": 5.140001,
+                  "clearRayCrossesSolidProp": 0,
+                  "propQueryUnknown": 0,
+                  "potentialPeripheralCenters": 0,
+                  "peripheralExamples": [],
+                  "clearExamples": [
+                    {
+                      "cropId": "plant-1380",
+                      "point": {
+                        "x": 76.25125827901246,
+                        "z": -1.0330067749600051
+                      },
+                      "distance": 5.140001
+                    }
+                  ],
+                  "propExamples": []
+                },
+                "cropBoundary": {
+                  "withinAttackReach": 5,
+                  "minimumDistance": 1.118033988749895,
+                  "nearestExamples": [
+                    {
+                      "cropId": "plant-1150",
+                      "distance": 1.5
+                    },
+                    {
+                      "cropId": "plant-1153",
+                      "distance": 1.5
+                    },
+                    {
+                      "cropId": "plant-1237",
+                      "distance": 1.5
+                    },
+                    {
+                      "cropId": "plant-1244",
+                      "distance": 1.118033988749895
+                    },
+                    {
+                      "cropId": "plant-1368",
+                      "distance": 1.4142135623730951
+                    }
+                  ]
+                }
+              },
+              "buffalo": {
+                "firstCropCells": {
+                  "sealed": 38,
+                  "uncertified": 0,
+                  "blocked": 11,
+                  "unexpected": 0
+                },
+                "crops": {
+                  "sealedNeighborhood": 66,
+                  "uncertifiedNeighborhood": 0,
+                  "noPassableCell": 0,
+                  "anchoredSealed": 57,
+                  "anchoredUncertified": 0,
+                  "noPhysicalAnchor": 9,
+                  "centerStandable": 57,
+                  "noAnchorCenterStandable": 0,
+                  "standableNoAnchorExamples": []
+                },
+                "attackRing": {
+                  "cropsWithoutCenterAnchor": 9,
+                  "cropsNearBoundary": 5,
+                  "standableSealed": 604,
+                  "standableOpen": 0,
+                  "standableUnknown": 0,
+                  "noStandablePoint": 0,
+                  "openExamples": []
+                },
+                "attackEnvelope": {
+                  "testedCrops": 55,
+                  "openStandable": 222,
+                  "openClearRay": 1,
+                  "openBlockedRay": 221,
+                  "unknownStandable": 0,
+                  "directReachClear": 0,
+                  "minimumClearRayDistance": 5.210001,
+                  "clearRayCrossesSolidProp": 0,
+                  "propQueryUnknown": 0,
+                  "potentialPeripheralCenters": 0,
+                  "peripheralExamples": [],
+                  "clearExamples": [
+                    {
+                      "cropId": "plant-1380",
+                      "point": {
+                        "x": 76.18658671173667,
+                        "z": -1.0062189346944488
+                      },
+                      "distance": 5.210001
+                    }
+                  ],
+                  "propExamples": []
+                },
+                "cropBoundary": {
+                  "withinAttackReach": 5,
+                  "minimumDistance": 1.118033988749895,
+                  "nearestExamples": [
+                    {
+                      "cropId": "plant-1150",
+                      "distance": 1.5
+                    },
+                    {
+                      "cropId": "plant-1153",
+                      "distance": 1.5
+                    },
+                    {
+                      "cropId": "plant-1237",
+                      "distance": 1.5
+                    },
+                    {
+                      "cropId": "plant-1244",
+                      "distance": 1.118033988749895
+                    },
+                    {
+                      "cropId": "plant-1368",
+                      "distance": 1.4142135623730951
+                    }
+                  ]
+                }
+              },
+              "lion": {
+                "firstCropCells": {
+                  "sealed": 41,
+                  "uncertified": 0,
+                  "blocked": 8,
+                  "unexpected": 0
+                },
+                "crops": {
+                  "sealedNeighborhood": 66,
+                  "uncertifiedNeighborhood": 0,
+                  "noPassableCell": 0,
+                  "anchoredSealed": 66,
+                  "anchoredUncertified": 0,
+                  "noPhysicalAnchor": 0,
+                  "centerStandable": 66,
+                  "noAnchorCenterStandable": 0,
+                  "standableNoAnchorExamples": []
+                },
+                "attackRing": {
+                  "cropsWithoutCenterAnchor": 0,
+                  "cropsNearBoundary": 2,
+                  "standableSealed": 118,
+                  "standableOpen": 0,
+                  "standableUnknown": 0,
+                  "noStandablePoint": 0,
+                  "openExamples": []
+                },
+                "attackEnvelope": {
+                  "testedCrops": 52,
+                  "openStandable": 228,
+                  "openClearRay": 1,
+                  "openBlockedRay": 227,
+                  "unknownStandable": 0,
+                  "directReachClear": 0,
+                  "minimumClearRayDistance": 5.090001,
+                  "clearRayCrossesSolidProp": 0,
+                  "propQueryUnknown": 0,
+                  "potentialPeripheralCenters": 0,
+                  "peripheralExamples": [],
+                  "clearExamples": [
+                    {
+                      "cropId": "plant-1380",
+                      "point": {
+                        "x": 76.29745225563802,
+                        "z": -1.0521409465782594
+                      },
+                      "distance": 5.090001
+                    }
+                  ],
+                  "propExamples": []
+                },
+                "cropBoundary": {
+                  "withinAttackReach": 2,
+                  "minimumDistance": 1.118033988749895,
+                  "nearestExamples": [
+                    {
+                      "cropId": "plant-1244",
+                      "distance": 1.118033988749895
+                    },
+                    {
+                      "cropId": "plant-1368",
+                      "distance": 1.4142135623730951
+                    }
+                  ]
+                }
+              },
+              "rhino": {
+                "firstCropCells": {
+                  "sealed": 37,
+                  "uncertified": 0,
+                  "blocked": 12,
+                  "unexpected": 0
+                },
+                "crops": {
+                  "sealedNeighborhood": 66,
+                  "uncertifiedNeighborhood": 0,
+                  "noPassableCell": 0,
+                  "anchoredSealed": 51,
+                  "anchoredUncertified": 0,
+                  "noPhysicalAnchor": 15,
+                  "centerStandable": 51,
+                  "noAnchorCenterStandable": 0,
+                  "standableNoAnchorExamples": []
+                },
+                "attackRing": {
+                  "cropsWithoutCenterAnchor": 15,
+                  "cropsNearBoundary": 13,
+                  "standableSealed": 792,
+                  "standableOpen": 0,
+                  "standableUnknown": 0,
+                  "noStandablePoint": 0,
+                  "openExamples": []
+                },
+                "attackEnvelope": {
+                  "testedCrops": 64,
+                  "openStandable": 194,
+                  "openClearRay": 0,
+                  "openBlockedRay": 194,
+                  "unknownStandable": 0,
+                  "directReachClear": 0,
+                  "minimumClearRayDistance": null,
+                  "clearRayCrossesSolidProp": 0,
+                  "propQueryUnknown": 0,
+                  "potentialPeripheralCenters": 0,
+                  "peripheralExamples": [],
+                  "clearExamples": [],
+                  "propExamples": []
+                },
+                "cropBoundary": {
+                  "withinAttackReach": 13,
+                  "minimumDistance": 1.118033988749895,
+                  "nearestExamples": [
+                    {
+                      "cropId": "plant-1125",
+                      "distance": 2.121320343559643
+                    },
+                    {
+                      "cropId": "plant-1129",
+                      "distance": 2.121320343559643
+                    },
+                    {
+                      "cropId": "plant-1150",
+                      "distance": 1.5
+                    },
+                    {
+                      "cropId": "plant-1153",
+                      "distance": 1.5
+                    },
+                    {
+                      "cropId": "plant-1185",
+                      "distance": 1.5811388300841898
+                    },
+                    {
+                      "cropId": "plant-1190",
+                      "distance": 1.5811388300841898
+                    },
+                    {
+                      "cropId": "plant-1237",
+                      "distance": 1.5
+                    },
+                    {
+                      "cropId": "plant-1244",
+                      "distance": 1.118033988749895
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "attackBoundary": {
+            "wallCovered": 12,
+            "notProvenOpaque": 130,
+            "rhinoWaterContact": {
+              "sampled": 0,
+              "withinContact": 0,
+              "standable": 0,
+              "clearRay": 0,
+              "examples": []
+            },
+            "bySpecies": {
+              "warthog": {
+                "contactRadius": 1.75,
+                "nearbyFaces": 23,
+                "nearbyWetlandFaces": 0,
+                "nearbySolidFaces": 23,
+                "examples": [
+                  {
+                    "edge": 54,
+                    "cells": [
+                      79,
+                      -2,
+                      79,
+                      -3
+                    ],
+                    "naturalKind": 1,
+                    "cropId": "plant-1380",
+                    "distance": 1.5811388300841898
+                  },
+                  {
+                    "edge": 57,
+                    "cells": [
+                      79,
+                      -2,
+                      80,
+                      -2
+                    ],
+                    "naturalKind": 1,
+                    "cropId": "plant-1380",
+                    "distance": 1.5811388300841898
+                  },
+                  {
+                    "edge": 58,
+                    "cells": [
+                      80,
+                      -1,
+                      80,
+                      -2
+                    ],
+                    "naturalKind": 1,
+                    "cropId": "plant-1380",
+                    "distance": 1.5811388300841898
+                  },
+                  {
+                    "edge": 59,
+                    "cells": [
+                      82,
+                      -1,
+                      82,
+                      -2
+                    ],
+                    "naturalKind": 1,
+                    "cropId": "plant-1237",
+                    "distance": 1.5
+                  },
+                  {
+                    "edge": 60,
+                    "cells": [
+                      85,
+                      -1,
+                      85,
+                      -2
+                    ],
+                    "naturalKind": 1,
+                    "cropId": "plant-1150",
+                    "distance": 1.5
+                  },
+                  {
+                    "edge": 62,
+                    "cells": [
+                      82,
+                      -1,
+                      81,
+                      -1
+                    ],
+                    "naturalKind": 1,
+                    "cropId": "plant-1380",
+                    "distance": 1.5811388300841898
+                  },
+                  {
+                    "edge": 63,
+                    "cells": [
+                      80,
+                      -1,
+                      81,
+                      -1
+                    ],
+                    "naturalKind": 1,
+                    "cropId": "plant-1380",
+                    "distance": 1.5811388300841898
+                  },
+                  {
+                    "edge": 65,
+                    "cells": [
+                      82,
+                      -1,
+                      83,
+                      -1
+                    ],
+                    "naturalKind": 1,
+                    "cropId": "plant-1237",
+                    "distance": 1.5
+                  }
+                ]
+              },
+              "hyena": {
+                "contactRadius": 1.55,
+                "nearbyFaces": 12,
+                "nearbyWetlandFaces": 0,
+                "nearbySolidFaces": 12,
+                "examples": [
+                  {
+                    "edge": 59,
+                    "cells": [
+                      82,
+                      -1,
+                      82,
+                      -2
+                    ],
+                    "naturalKind": 1,
+                    "cropId": "plant-1237",
+                    "distance": 1.5
+                  },
+                  {
+                    "edge": 60,
+                    "cells": [
+                      85,
+                      -1,
+                      85,
+                      -2
+                    ],
+                    "naturalKind": 1,
+                    "cropId": "plant-1150",
+                    "distance": 1.5
+                  },
+                  {
+                    "edge": 65,
+                    "cells": [
+                      82,
+                      -1,
+                      83,
+                      -1
+                    ],
+                    "naturalKind": 1,
+                    "cropId": "plant-1237",
+                    "distance": 1.5
+                  },
+                  {
+                    "edge": 69,
+                    "cells": [
+                      85,
+                      -1,
+                      86,
+                      -1
+                    ],
+                    "naturalKind": 1,
+                    "cropId": "plant-1150",
+                    "distance": 1.5
+                  },
+                  {
+                    "edge": 77,
+                    "cells": [
+                      82,
+                      1,
+                      83,
+                      1
+                    ],
+                    "naturalKind": 1,
+                    "cropId": "plant-1244",
+                    "distance": 1.5
+                  },
+                  {
+                    "edge": 81,
+                    "cells": [
+                      85,
+                      1,
+                      86,
+                      1
+                    ],
+                    "naturalKind": 1,
+                    "cropId": "plant-1153",
+                    "distance": 1.5
+                  },
+                  {
+                    "edge": 85,
+                    "cells": [
+                      81,
+                      2,
+                      82,
+                      2
+                    ],
+                    "naturalKind": 1,
+                    "cropId": "plant-1244",
+                    "distance": 1.118033988749895
+                  },
+                  {
+                    "edge": 86,
+                    "cells": [
+                      82,
+                      1,
+                      82,
+                      2
+                    ],
+                    "naturalKind": 1,
+                    "cropId": "plant-1244",
+                    "distance": 1.5
+                  }
+                ]
+              },
+              "buffalo": {
+                "contactRadius": 1.62,
+                "nearbyFaces": 23,
+                "nearbyWetlandFaces": 0,
+                "nearbySolidFaces": 23,
+                "examples": [
+                  {
+                    "edge": 54,
+                    "cells": [
+                      79,
+                      -2,
+                      79,
+                      -3
+                    ],
+                    "naturalKind": 1,
+                    "cropId": "plant-1380",
+                    "distance": 1.5811388300841898
+                  },
+                  {
+                    "edge": 57,
+                    "cells": [
+                      79,
+                      -2,
+                      80,
+                      -2
+                    ],
+                    "naturalKind": 1,
+                    "cropId": "plant-1380",
+                    "distance": 1.5811388300841898
+                  },
+                  {
+                    "edge": 58,
+                    "cells": [
+                      80,
+                      -1,
+                      80,
+                      -2
+                    ],
+                    "naturalKind": 1,
+                    "cropId": "plant-1380",
+                    "distance": 1.5811388300841898
+                  },
+                  {
+                    "edge": 59,
+                    "cells": [
+                      82,
+                      -1,
+                      82,
+                      -2
+                    ],
+                    "naturalKind": 1,
+                    "cropId": "plant-1237",
+                    "distance": 1.5
+                  },
+                  {
+                    "edge": 60,
+                    "cells": [
+                      85,
+                      -1,
+                      85,
+                      -2
+                    ],
+                    "naturalKind": 1,
+                    "cropId": "plant-1150",
+                    "distance": 1.5
+                  },
+                  {
+                    "edge": 62,
+                    "cells": [
+                      82,
+                      -1,
+                      81,
+                      -1
+                    ],
+                    "naturalKind": 1,
+                    "cropId": "plant-1380",
+                    "distance": 1.5811388300841898
+                  },
+                  {
+                    "edge": 63,
+                    "cells": [
+                      80,
+                      -1,
+                      81,
+                      -1
+                    ],
+                    "naturalKind": 1,
+                    "cropId": "plant-1380",
+                    "distance": 1.5811388300841898
+                  },
+                  {
+                    "edge": 65,
+                    "cells": [
+                      82,
+                      -1,
+                      83,
+                      -1
+                    ],
+                    "naturalKind": 1,
+                    "cropId": "plant-1237",
+                    "distance": 1.5
+                  }
+                ]
+              },
+              "lion": {
+                "contactRadius": 1.5,
+                "nearbyFaces": 12,
+                "nearbyWetlandFaces": 0,
+                "nearbySolidFaces": 12,
+                "examples": [
+                  {
+                    "edge": 59,
+                    "cells": [
+                      82,
+                      -1,
+                      82,
+                      -2
+                    ],
+                    "naturalKind": 1,
+                    "cropId": "plant-1237",
+                    "distance": 1.5
+                  },
+                  {
+                    "edge": 60,
+                    "cells": [
+                      85,
+                      -1,
+                      85,
+                      -2
+                    ],
+                    "naturalKind": 1,
+                    "cropId": "plant-1150",
+                    "distance": 1.5
+                  },
+                  {
+                    "edge": 65,
+                    "cells": [
+                      82,
+                      -1,
+                      83,
+                      -1
+                    ],
+                    "naturalKind": 1,
+                    "cropId": "plant-1237",
+                    "distance": 1.5
+                  },
+                  {
+                    "edge": 69,
+                    "cells": [
+                      85,
+                      -1,
+                      86,
+                      -1
+                    ],
+                    "naturalKind": 1,
+                    "cropId": "plant-1150",
+                    "distance": 1.5
+                  },
+                  {
+                    "edge": 77,
+                    "cells": [
+                      82,
+                      1,
+                      83,
+                      1
+                    ],
+                    "naturalKind": 1,
+                    "cropId": "plant-1244",
+                    "distance": 1.5
+                  },
+                  {
+                    "edge": 81,
+                    "cells": [
+                      85,
+                      1,
+                      86,
+                      1
+                    ],
+                    "naturalKind": 1,
+                    "cropId": "plant-1153",
+                    "distance": 1.5
+                  },
+                  {
+                    "edge": 85,
+                    "cells": [
+                      81,
+                      2,
+                      82,
+                      2
+                    ],
+                    "naturalKind": 1,
+                    "cropId": "plant-1244",
+                    "distance": 1.118033988749895
+                  },
+                  {
+                    "edge": 86,
+                    "cells": [
+                      82,
+                      1,
+                      82,
+                      2
+                    ],
+                    "naturalKind": 1,
+                    "cropId": "plant-1244",
+                    "distance": 1.5
+                  }
+                ]
+              },
+              "rhino": {
+                "contactRadius": 2.2,
+                "nearbyFaces": 31,
+                "nearbyWetlandFaces": 0,
+                "nearbySolidFaces": 31,
+                "examples": [
+                  {
+                    "edge": 54,
+                    "cells": [
+                      79,
+                      -2,
+                      79,
+                      -3
+                    ],
+                    "naturalKind": 1,
+                    "cropId": "plant-1380",
+                    "distance": 1.5811388300841898
+                  },
+                  {
+                    "edge": 57,
+                    "cells": [
+                      79,
+                      -2,
+                      80,
+                      -2
+                    ],
+                    "naturalKind": 1,
+                    "cropId": "plant-1380",
+                    "distance": 1.5811388300841898
+                  },
+                  {
+                    "edge": 58,
+                    "cells": [
+                      80,
+                      -1,
+                      80,
+                      -2
+                    ],
+                    "naturalKind": 1,
+                    "cropId": "plant-1380",
+                    "distance": 1.5811388300841898
+                  },
+                  {
+                    "edge": 59,
+                    "cells": [
+                      82,
+                      -1,
+                      82,
+                      -2
+                    ],
+                    "naturalKind": 1,
+                    "cropId": "plant-1237",
+                    "distance": 1.5
+                  },
+                  {
+                    "edge": 60,
+                    "cells": [
+                      85,
+                      -1,
+                      85,
+                      -2
+                    ],
+                    "naturalKind": 1,
+                    "cropId": "plant-1150",
+                    "distance": 1.5
+                  },
+                  {
+                    "edge": 62,
+                    "cells": [
+                      82,
+                      -1,
+                      81,
+                      -1
+                    ],
+                    "naturalKind": 1,
+                    "cropId": "plant-1380",
+                    "distance": 1.5811388300841898
+                  },
+                  {
+                    "edge": 63,
+                    "cells": [
+                      80,
+                      -1,
+                      81,
+                      -1
+                    ],
+                    "naturalKind": 1,
+                    "cropId": "plant-1380",
+                    "distance": 1.5811388300841898
+                  },
+                  {
+                    "edge": 65,
+                    "cells": [
+                      82,
+                      -1,
+                      83,
+                      -1
+                    ],
+                    "naturalKind": 1,
+                    "cropId": "plant-1237",
+                    "distance": 1.5
+                  }
+                ]
+              }
+            },
+            "nearest": [
+              {
+                "edge": 85,
+                "cells": [
+                  81,
+                  2,
+                  82,
+                  2
+                ],
+                "naturalKind": 1,
+                "cropId": "plant-1244",
+                "distance": 1.118033988749895
+              },
+              {
+                "edge": 95,
+                "cells": [
+                  81,
+                  2,
+                  81,
+                  3
+                ],
+                "naturalKind": 1,
+                "cropId": "plant-1244",
+                "distance": 1.118033988749895
+              },
+              {
+                "edge": 101,
+                "cells": [
+                  81,
+                  6,
+                  81,
+                  5
+                ],
+                "naturalKind": 1,
+                "cropId": "plant-1368",
+                "distance": 1.4142135623730951
+              },
+              {
+                "edge": 103,
+                "cells": [
+                  81,
+                  6,
+                  82,
+                  6
+                ],
+                "naturalKind": 1,
+                "cropId": "plant-1368",
+                "distance": 1.4142135623730951
+              },
+              {
+                "edge": 59,
+                "cells": [
+                  82,
+                  -1,
+                  82,
+                  -2
+                ],
+                "naturalKind": 1,
+                "cropId": "plant-1237",
+                "distance": 1.5
+              },
+              {
+                "edge": 60,
+                "cells": [
+                  85,
+                  -1,
+                  85,
+                  -2
+                ],
+                "naturalKind": 1,
+                "cropId": "plant-1150",
+                "distance": 1.5
+              },
+              {
+                "edge": 65,
+                "cells": [
+                  82,
+                  -1,
+                  83,
+                  -1
+                ],
+                "naturalKind": 1,
+                "cropId": "plant-1237",
+                "distance": 1.5
+              },
+              {
+                "edge": 69,
+                "cells": [
+                  85,
+                  -1,
+                  86,
+                  -1
+                ],
+                "naturalKind": 1,
+                "cropId": "plant-1150",
+                "distance": 1.5
+              }
+            ]
+          },
+          "naturalBoundary": {
+            "status": "blocked-by-native-natural",
+            "solid": 142,
+            "wetland": 0,
+            "unknown": 0,
+            "wetlandExamples": [],
+            "uncovered": []
+          },
+          "staticBoundary": {
+            "status": "blocked-by-static-solids",
+            "segments": 142,
+            "queries": 195
+          },
+          "placedNaturalJunctions": {
+            "status": "joined",
+            "junctions": 6,
+            "spans": [
+              0.2800000011920929,
+              0.5675666332244873,
+              0.5294803380966187,
+              0.5980701446533203,
+              0.3765754699707031,
+              0.7539218664169312
+            ]
+          },
+          "boundaryGapScan": {
+            "warthog": {
+              "tested": 142,
+              "open": 0,
+              "examples": []
+            },
+            "hyena": {
+              "tested": 142,
+              "open": 0,
+              "examples": []
+            },
+            "buffalo": {
+              "tested": 142,
+              "open": 0,
+              "examples": []
+            },
+            "lion": {
+              "tested": 142,
+              "open": 0,
+              "examples": []
+            },
+            "rhino": {
+              "tested": 142,
+              "open": 0,
+              "examples": []
+            }
+          },
+          "cutCrossings": {
+            "before": {
+              "warthog": {
+                "tested": 135,
+                "clear": 109,
+                "examples": [
+                  {
+                    "edge": 0,
+                    "offset": 0.4
+                  },
+                  {
+                    "edge": 1,
+                    "offset": -0.4
+                  },
+                  {
+                    "edge": 1,
+                    "offset": -0.2
+                  },
+                  {
+                    "edge": 1,
+                    "offset": 0
+                  }
+                ]
+              },
+              "hyena": {
+                "tested": 135,
+                "clear": 116,
+                "examples": [
+                  {
+                    "edge": 0,
+                    "offset": 0.2
+                  },
+                  {
+                    "edge": 0,
+                    "offset": 0.4
+                  },
+                  {
+                    "edge": 1,
+                    "offset": -0.4
+                  },
+                  {
+                    "edge": 1,
+                    "offset": -0.2
+                  }
+                ]
+              },
+              "buffalo": {
+                "tested": 135,
+                "clear": 115,
+                "examples": [
+                  {
+                    "edge": 0,
+                    "offset": 0.2
+                  },
+                  {
+                    "edge": 0,
+                    "offset": 0.4
+                  },
+                  {
+                    "edge": 1,
+                    "offset": -0.4
+                  },
+                  {
+                    "edge": 1,
+                    "offset": -0.2
+                  }
+                ]
+              },
+              "lion": {
+                "tested": 135,
+                "clear": 119,
+                "examples": [
+                  {
+                    "edge": 0,
+                    "offset": 0.2
+                  },
+                  {
+                    "edge": 0,
+                    "offset": 0.4
+                  },
+                  {
+                    "edge": 1,
+                    "offset": -0.4
+                  },
+                  {
+                    "edge": 1,
+                    "offset": -0.2
+                  }
+                ]
+              },
+              "rhino": {
+                "tested": 135,
+                "clear": 96,
+                "examples": [
+                  {
+                    "edge": 1,
+                    "offset": -0.2
+                  },
+                  {
+                    "edge": 1,
+                    "offset": 0
+                  },
+                  {
+                    "edge": 4,
+                    "offset": -0.4
+                  },
+                  {
+                    "edge": 4,
+                    "offset": -0.2
+                  }
+                ]
+              }
+            },
+            "after": {
+              "warthog": {
+                "tested": 135,
+                "clear": 0,
+                "examples": []
+              },
+              "hyena": {
+                "tested": 135,
+                "clear": 0,
+                "examples": []
+              },
+              "buffalo": {
+                "tested": 135,
+                "clear": 0,
+                "examples": []
+              },
+              "lion": {
+                "tested": 135,
+                "clear": 0,
+                "examples": []
+              },
+              "rhino": {
+                "tested": 135,
+                "clear": 0,
+                "examples": []
+              }
+            }
+          },
+          "blockedPieces": 0,
+          "blockedPieceDetails": [],
+          "blockedCrops": 0
+        },
+        "calls": {
+          "path": 146,
+          "wallPlacement": 42,
+          "withWallPreview": 3
+        },
+        "sectorUpdates": 360
+      }
+    ],
+    "memoryBytes": 16777216
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "biome": "sabana",
+  "seed": 712,
+  "day": 3,
+  "source": "a21f2b76509fa1057f031db5311cac7e5962b0f96b399060df860aa48ff41e1d",
+  "wasmSha256": "7817ebadc3dfa4c4d32f6197b5c4eb53468ad5f7f23293d72b902c23a7707095",
+  "elapsedSeconds": 69.6405199,
+  "sample": {
+    "stateHash": "7b7033894dee269d4bf04cb074f1372ef2f84ef280446150cd5f2e2331cb6966",
+    "living": 66,
+    "status": "measured",
+    "groupId": "crop:plant-1109",
+    "cropCount": 66,
+    "groupBounds": {
+      "minX": 81,
+      "minZ": -7.5,
+      "maxX": 94.5,
+      "maxZ": 7.5
+    },
+    "rows": [
+      {
+        "name": "old",
+        "ms": 30462.9475,
+        "status": "unknown",
+        "modules": 35,
+        "cost": 350,
+        "gaps": 1,
+        "calls": {
+          "path": 38,
+          "wallPlacement": 334,
+          "withWallPreview": 17
+        },
+        "sectorUpdates": 37728
+      },
+      {
+        "name": "cut",
+        "ms": 0.29980000000068685,
+        "status": "not-built",
+        "calls": {
+          "path": 0,
+          "wallPlacement": 0,
+          "withWallPreview": 0
+        },
+        "sectorUpdates": 0
+      },
+      {
+        "name": "cut",
+        "ms": 0.004600000000209548,
+        "status": "not-built",
+        "calls": {
+          "path": 0,
+          "wallPlacement": 0,
+          "withWallPreview": 0
+        },
+        "sectorUpdates": 0
+      },
+      {
+        "name": "old",
+        "ms": 29860.214399999997,
+        "status": "unknown",
+        "modules": 35,
+        "cost": 350,
+        "gaps": 1,
+        "calls": {
+          "path": 38,
+          "wallPlacement": 334,
+          "withWallPreview": 17
+        },
+        "sectorUpdates": 37728
+      }
+    ],
+    "memoryBytes": 16777216
+  }
+}

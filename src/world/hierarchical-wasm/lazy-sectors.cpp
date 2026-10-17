@@ -1,10 +1,20 @@
 #include <algorithm>
+#include <cmath>
 #include <cstdint>
 #include <cstdlib>
 #include <limits>
 #include <unordered_map>
 #include <utility>
 #include <vector>
+#include "local-enclosure-cut.h"
+
+extern "C" float spatial_static_object_clearance(float,float,float);
+extern "C" float spatial_min_animal_radius();
+extern "C" float spatial_fluid_level(float,float);
+extern "C" float spatial_wetland_mask_resident(float,float);
+extern "C" float spatial_wetland_mask_lipschitz();
+extern "C" int spatial_canyon_river_face(int,int,int,int);
+extern "C" int spatial_canyon_cliff_face(int,int,int,int);
 
 // Sparse sector/route proof. Unknown sectors are never classified as blocked.
 // The movement engine remains responsible for physical motion.
@@ -34,6 +44,9 @@ struct Context {
   std::vector<uint32_t> visited;
   uint32_t visitGeneration=0;
   std::vector<int32_t> previousNode,localParent,routePoints;
+  std::vector<int32_t> cutSeeds,cutEdges,cutBoundary;
+  std::vector<float> cutAttackPoints;
+  int cutFlow=0,cutCells=0;
   std::vector<Arc> previousArc,arcChain;
   std::vector<Portal> portals;
   std::vector<int32_t> weakHead,weakTo,weakNext;
@@ -67,6 +80,10 @@ Context& active(){
 #define previousNode (active().previousNode)
 #define localParent (active().localParent)
 #define routePoints (active().routePoints)
+#define cutSeeds (active().cutSeeds)
+#define cutEdges (active().cutEdges)
+#define cutBoundary (active().cutBoundary)
+#define cutAttackPoints (active().cutAttackPoints)
 #define previousArc (active().previousArc)
 #define arcChain (active().arcChain)
 #define portals (active().portals)
@@ -425,6 +442,229 @@ int lazy_weak_region(int worldX,int worldZ){
   if(weakDirty)rebuildWeakGraph();
   return weakRegion[node];
 }
+// The five animal profiles form a conservative union graph. An edge traversed
+// by any species must be closed. Mixing profiles can overestimate a route, but
+// cannot certify an opening as closed. Missing resident sectors stay unknown.
+#undef sectors
+#undef sectorSize
+#undef portals
+int32_t* lazy_cut_seeds_ptr(int count){
+  if(count<1||count>256)return nullptr;
+  cutSeeds.resize(size_t(count)*2);return cutSeeds.data();
+}
+bool cutFaceCoveredBySolid(int x,int z,int nx,int nz,float radius){
+  const float safe=radius-.0001f;
+  if(!(safe>0)||!std::isfinite(safe))return false;
+  const float middleX=(x+nx)*.5f,middleZ=(z+nz)*.5f;
+  const float ax=x!=nx?middleX:middleX-.5f;
+  const float az=x!=nx?middleZ-.5f:middleZ;
+  const float bx=x!=nx?middleX:middleX+.5f;
+  const float bz=x!=nx?middleZ+.5f:middleZ;
+  const auto clearance=[&](float px,float pz){
+    return spatial_static_object_clearance(px,pz,radius+1);
+  };
+  const float first=clearance(ax,az),last=clearance(bx,bz);
+  const auto covered=[&](auto&& self,float px,float pz,float qx,float qz,
+      float a,float b,int depth)->bool{
+    if(!std::isfinite(a)||!std::isfinite(b)||a<0||b<0||
+        a>=safe||b>=safe)return false;
+    const float length=std::hypot(qx-px,qz-pz);
+    if((a+b+length)*.5f<safe)return true;
+    if(depth>=12)return false;
+    const float mx=(px+qx)*.5f,mz=(pz+qz)*.5f;
+    const float mid=clearance(mx,mz);
+    return self(self,px,pz,mx,mz,a,mid,depth+1)&&
+      self(self,mx,mz,qx,qz,mid,b,depth+1);
+  };
+  return covered(covered,ax,az,bx,bz,first,last,0);
+}
+bool cutFaceCoveredByWetland(int x,int z,int nx,int nz){
+  const float slope=spatial_wetland_mask_lipschitz();
+  if(!(slope>0)||!std::isfinite(slope))return false;
+  const float mx=(x+nx)*.5f,mz=(z+nz)*.5f;
+  const float ax=x!=nx?mx:mx-.5f,az=x!=nx?mz-.5f:mz;
+  const float bx=x!=nx?mx:mx+.5f,bz=x!=nx?mz+.5f:mz;
+  const auto wet=[&](float px,float pz){
+    return spatial_wetland_mask_resident(px,pz);
+  };
+  const auto covered=[&](auto&& self,float px,float pz,float qx,float qz,
+      int depth)->bool{
+    const float cx=(px+qx)*.5f,cz=(pz+qz)*.5f;
+    const float mask=wet(cx,cz);
+    if(!std::isfinite(mask))return false;
+    // The mask is globally Lipschitz-bounded for this biome. At any point
+    // on the subsegment it can fall by at most slope * half its length.
+    const float halfLength=std::hypot(qx-px,qz-pz)*.5f;
+    if(mask>.6101f+slope*halfLength)return true;
+    if(depth>=12||mask+.0001f<=.61f)return false;
+    return self(self,px,pz,cx,cz,depth+1)&&
+      self(self,cx,cz,qx,qz,depth+1);
+  };
+  return covered(covered,ax,az,bx,bz,0);
+}
+int cutFaceNatural(int x,int z,int nx,int nz,float radius){
+  if(cutFaceCoveredBySolid(x,z,nx,nz,radius))return 1;
+  const int river=spatial_canyon_river_face(x,z,nx,nz);
+  if(river<0)return -1;
+  if(river>0)return 3;
+  const int cliff=spatial_canyon_cliff_face(x,z,nx,nz);
+  if(cliff<0)return -1;
+  if(cliff>0)return 4;
+  const float fluid=spatial_fluid_level((x+nx)*.5f,(z+nz)*.5f);
+  if(!std::isfinite(fluid))return -1;
+  if(fluid>0&&cutFaceCoveredByWetland(x,z,nx,nz))return 2;
+  return 0;
+}
+// A face wholly covered by fluid cannot host a wall centered on that face.
+// This is a conservative proposal hint, not a replacement for wallPlacement:
+// resampled modules can extend beyond a one-metre face and need a final quote.
+// These finite wetness samples must never certify water as an impassable
+// closure. A narrow dry gap between samples could remain traversable.
+int cutFaceFullyFluid(int x,int z,int nx,int nz){
+  const float midX=(x+nx)*.5f,midZ=(z+nz)*.5f;
+  for(int i=0;i<=8;i++)for(const float offset:{-.22f,0.f,.22f}){
+    const float along=float(i)/8.f-.5f;
+    const float px=x!=nx?midX+offset:midX+along;
+    const float pz=x!=nx?midZ+along:midZ+offset;
+    const float fluid=spatial_fluid_level(px,pz);
+    if(!std::isfinite(fluid))return -1;
+    if(fluid<=0)return 0;
+  }
+  return 1;
+}
+int runLocalCropCut(int minX,int minZ,int maxX,int maxZ,int seedCount,
+    int padding,float conservativeRadius,bool respectFluidPlacement=false){
+  cutEdges.clear();cutBoundary.clear();active().cutFlow=active().cutCells=0;
+  if(seedCount<1||size_t(seedCount)*2!=cutSeeds.size())return -2;
+  constexpr int profiles[]={0,2,3,4,5};
+  for(int profile:profiles)if(!contexts[profile]||
+      !contexts[profile]->sectors||
+      contexts[profile]->sectorSize!=active().sectorSize)return -1;
+  const auto cellFor=[&](const Context& context,int x,int z)->const Sector*{
+    const int sx=floorDiv(x,context.sectorSize),sz=floorDiv(z,context.sectorSize);
+    const auto it=context.sectors->find(key(sx,sz));
+    return it==context.sectors->end()?nullptr:&it->second;
+  };
+  const auto sample=[&](const Context& context,int x,int z)->int{
+    const Sector* sector=cellFor(context,x,z);
+    if(!sector)return -1;
+    const int local=cellIndex(x-sector->sx*context.sectorSize,
+      z-sector->sz*context.sectorSize);
+    return sector->pass[local]?1:0;
+  };
+  const auto cell=[&](int x,int z){
+    int any=0;
+    for(int profile:profiles){
+      const int result=sample(*contexts[profile],x,z);
+      if(result<0)return -1;
+      any|=result;
+    }
+    if(conservativeRadius>0)return 1;
+    return any;
+  };
+  const auto step=[&](int x,int z,int nx,int nz){
+    if(conservativeRadius>0){
+      const int natural=cutFaceNatural(x,z,nx,nz,conservativeRadius);
+      if(natural<0)return -1;
+      if(natural>0)return 0;
+      if(respectFluidPlacement){
+        const int fluid=cutFaceFullyFluid(x,z,nx,nz);
+        if(fluid<0)return -1;
+        if(fluid>0)return 10000;
+      }
+      return 1;
+    }
+    const int direction=nx>x?0:nx<x?1:nz>z?2:3;
+    int any=0;
+    for(int profile:profiles){
+      const Context& context=*contexts[profile];
+      const Sector* first=cellFor(context,x,z),*last=cellFor(context,nx,nz);
+      if(!first||!last)return -1;
+      const int a=cellIndex(x-first->sx*context.sectorSize,
+        z-first->sz*context.sectorSize);
+      const int b=cellIndex(nx-last->sx*context.sectorSize,
+        nz-last->sz*context.sectorSize);
+      if(first->pass[a]&&last->pass[b]&&
+          ((first->steps[a]&(1<<direction))||
+           (last->steps[b]&(1<<(direction^1)))))any=1;
+    }
+    return any;
+  };
+  // The cut prototype does not currently model arbitrary animal portals.
+  for(int profile:profiles)if(!contexts[profile]->portals.empty())return -1;
+  const auto result=enclosure_cut::find(minX,minZ,maxX,maxZ,cutSeeds,padding,
+      cell,step,respectFluidPlacement?10000:0);
+  active().cutFlow=result.flow;active().cutCells=result.cells;
+  for(const auto& edge:result.edges)cutEdges.insert(cutEdges.end(),
+    {edge.outsideX,edge.outsideZ,edge.insideX,edge.insideZ});
+  if(result.status>0)for(const auto& edge:result.boundary)
+    cutBoundary.insert(cutBoundary.end(),
+      {edge.outsideX,edge.outsideZ,edge.insideX,edge.insideZ});
+  return result.status<0?result.status:int(result.edges.size());
+}
+int lazy_local_crop_cut(int minX,int minZ,int maxX,int maxZ,int seedCount,int padding){
+  return runLocalCropCut(minX,minZ,maxX,maxZ,seedCount,padding,0);
+}
+int lazy_local_crop_cut_conservative(int minX,int minZ,int maxX,int maxZ,
+    int seedCount,int padding){
+  const float smallestRadius=spatial_min_animal_radius();
+  if(!(smallestRadius>0)||!std::isfinite(smallestRadius))return -1;
+  return runLocalCropCut(minX,minZ,maxX,maxZ,seedCount,padding,
+    smallestRadius);
+}
+int lazy_local_crop_cut_conservative_buildable(int minX,int minZ,int maxX,
+    int maxZ,int seedCount,int padding){
+  const float smallestRadius=spatial_min_animal_radius();
+  if(!(smallestRadius>0)||!std::isfinite(smallestRadius))return -1;
+  return runLocalCropCut(minX,minZ,maxX,maxZ,seedCount,padding,
+    smallestRadius,true);
+}
+int lazy_cut_face_natural(int x,int z,int nx,int nz){
+  if(std::abs(x-nx)+std::abs(z-nz)!=1)return -1;
+  const float radius=spatial_min_animal_radius();
+  if(!(radius>0)||!std::isfinite(radius))return -1;
+  return cutFaceNatural(x,z,nx,nz,radius);
+}
+const int32_t* lazy_local_crop_cut_ptr(){return cutEdges.data();}
+const int32_t* lazy_local_crop_cut_boundary_ptr(){return cutBoundary.data();}
+int lazy_local_crop_cut_boundary_count(){return int(cutBoundary.size()/4);}
+float* lazy_cut_attack_points_ptr(int count){
+  if(count<1||count>256)return nullptr;
+  cutAttackPoints.resize(size_t(count)*2);
+  return cutAttackPoints.data();
+}
+// A sufficient, continuous attack certificate independent of angular samples:
+// if every crop lies farther than the largest legal body-contact-plus-splash
+// reach from every face of a movement-closed boundary, no exterior attacker
+// can deliver either a central or peripheral hit. Return the minimum margin;
+// a nonpositive value means unknown, not an actual successful attack.
+float lazy_cut_attack_margin(int count,float maximumReach){
+  if(count<1||size_t(count)*2!=cutAttackPoints.size()||
+     !(maximumReach>0)||!std::isfinite(maximumReach)||cutBoundary.empty())
+    return std::nanf("");
+  double best=1e30;
+  for(int i=0;i<count;i++){
+    const double px=cutAttackPoints[size_t(i)*2];
+    const double pz=cutAttackPoints[size_t(i)*2+1];
+    if(!std::isfinite(px)||!std::isfinite(pz))return std::nanf("");
+    for(size_t j=0;j<cutBoundary.size();j+=4){
+      const int ox=cutBoundary[j],oz=cutBoundary[j+1];
+      const int ix=cutBoundary[j+2],iz=cutBoundary[j+3];
+      const double mx=(ox+ix)*.5,mz=(oz+iz)*.5;
+      const double ax=ox!=ix?mx:mx-.5,az=ox!=ix?mz-.5:mz;
+      const double bx=ox!=ix?mx:mx+.5,bz=ox!=ix?mz+.5:mz;
+      const double dx=bx-ax,dz=bz-az,length=dx*dx+dz*dz;
+      const double t=std::clamp(((px-ax)*dx+(pz-az)*dz)/length,0.0,1.0);
+      best=std::min(best,std::hypot(px-ax-t*dx,pz-az-t*dz));
+    }
+  }
+  return float(best-maximumReach);
+}
+int lazy_local_crop_cut_flow(){return active().cutFlow;}
+int lazy_local_crop_cut_cells(){return active().cutCells;}
+#define sectors (active().sectors)
+#define sectorSize (active().sectorSize)
+#define portals (active().portals)
 // -1: unloaded/uncertain; 0: known impossible; positive: coordinate pairs.
 int lazy_route(int fromX,int fromZ,int toX,int toZ){
   routePoints.clear();

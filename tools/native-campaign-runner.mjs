@@ -16,6 +16,7 @@ import {mkdirSync,writeFileSync} from 'node:fs';
 import {intensiveRunProvenance} from './intensive-run-provenance.mjs';
 import {createFarmDefensePolicy} from './farm-defense-policy.mjs';
 import {createNativeExpandingDefensePolicy} from './native-expanding-defense-policy.mjs';
+import {createNativeTopologicalDefensePolicy} from './native-topological-defense-policy.mjs';
 import {createNativeCampaignEvidence} from './native-campaign-evidence.mjs';
 import {createNativeRaidCampaignEvidence} from './native-raid-campaign-evidence.mjs';
 import {NativeCampaignEntryDriver} from './native-campaign-entry-driver.mjs';
@@ -93,7 +94,8 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
   spatialEvents=[];
  };
  const worker=PROFILES.find(p=>p.id===profile);if(!worker)throw new Error('Unknown worker profile');
- if(!['legacy','expanding'].includes(defensePolicy))throw Error('Unknown defense policy');
+ if(!['legacy','expanding','topological'].includes(defensePolicy))
+  throw Error('Unknown defense policy');
  let decisionPhases=null;
  const measure=(kind,ms)=>{
   if(!decisionPhases)return;
@@ -105,8 +107,8 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
   const start=performance.now();
   try{return fn();}finally{measure(kind,performance.now()-start);}
  };
- const defense=defend?(defensePolicy==='expanding'?createNativeExpandingDefensePolicy({repairWalls:policy.repair,reserveMode:defenseEventDriven?'next-stroke':'none',eventDriven:defenseEventDriven,measure:decisionProfile?measure:null,preparedQuotes:preparedWallQuotes,spatialAdvice:advice}):createFarmDefensePolicy()):null;
- const observeDefenseEvents=()=>defenseEventDriven&&defense?.onWorldEvent?
+ const defense=defend?(defensePolicy==='expanding'?createNativeExpandingDefensePolicy({repairWalls:policy.repair,reserveMode:defenseEventDriven?'next-stroke':'none',eventDriven:defenseEventDriven,measure:decisionProfile?measure:null,preparedQuotes:preparedWallQuotes,spatialAdvice:advice}):defensePolicy==='topological'?createNativeTopologicalDefensePolicy({session:opening.session,advice,measure:decisionProfile?measure:null}):createFarmDefensePolicy()):null;
+ const observeDefenseEvents=()=>(defenseEventDriven||defensePolicy==='topological')&&defense?.onWorldEvent?
   Game.observeGameEvents(s,event=>defense.onWorldEvent(event,s)):null;
  let stopDefenseEvents=observeDefenseEvents();
  const protectionEvents=[];

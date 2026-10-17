@@ -1,0 +1,118 @@
+{
+  "biome": "sabana",
+  "seed": 712,
+  "day": 3,
+  "source": "a21f2b76509fa1057f031db5311cac7e5962b0f96b399060df860aa48ff41e1d",
+  "wasmSha256": "41fe4034db77b987d1c5d002542fd027f5ffb9cc31a047f6b91789407809ee70",
+  "elapsedSeconds": 68.3364545,
+  "campaignTiming": {
+    "ticks": 1041,
+    "decisionMs": 5418.311799999995,
+    "gameTickMs": 3059.4930999999965
+  },
+  "sample": {
+    "stateHash": "7b7033894dee269d4bf04cb074f1372ef2f84ef280446150cd5f2e2331cb6966",
+    "living": 66,
+    "status": "measured",
+    "groupId": "crop:plant-1109",
+    "cropCount": 66,
+    "groupBounds": {
+      "minX": 81,
+      "minZ": -7.5,
+      "maxX": 94.5,
+      "maxZ": 7.5
+    },
+    "removedWalls": [],
+    "rows": [
+      {
+        "name": "old",
+        "ms": 29010.480300000003,
+        "status": "unknown",
+        "modules": 35,
+        "cost": 350,
+        "gaps": 1,
+        "calls": {
+          "path": 38,
+          "wallPlacement": 334,
+          "withWallPreview": 17
+        },
+        "sectorUpdates": 37728
+      },
+      {
+        "name": "cut",
+        "ms": 9.42659999999887,
+        "status": "proposed",
+        "box": [
+          69,
+          -20,
+          108,
+          21
+        ],
+        "topologicalMs": 5.958899999997811,
+        "conversionMs": 1.642200000002049,
+        "validationMs": 0,
+        "cutEdges": 21,
+        "flow": 21,
+        "cells": 1206,
+        "strokes": 2,
+        "estimatedModules": 11,
+        "estimatedCost": 110,
+        "ambiguous": 0,
+        "junctions": 4,
+        "stitched": false,
+        "physical": null,
+        "calls": {
+          "path": 0,
+          "wallPlacement": 0,
+          "withWallPreview": 0
+        },
+        "sectorUpdates": 0
+      },
+      {
+        "name": "cut",
+        "ms": 4.948199999998906,
+        "status": "proposed",
+        "box": [
+          69,
+          -20,
+          108,
+          21
+        ],
+        "topologicalMs": 3.670799999999872,
+        "conversionMs": 0.414600000003702,
+        "validationMs": 0,
+        "cutEdges": 21,
+        "flow": 21,
+        "cells": 1206,
+        "strokes": 2,
+        "estimatedModules": 11,
+        "estimatedCost": 110,
+        "ambiguous": 0,
+        "junctions": 4,
+        "stitched": false,
+        "physical": null,
+        "calls": {
+          "path": 0,
+          "wallPlacement": 0,
+          "withWallPreview": 0
+        },
+        "sectorUpdates": 0
+      },
+      {
+        "name": "old",
+        "ms": 29564.592099999994,
+        "status": "unknown",
+        "modules": 35,
+        "cost": 350,
+        "gaps": 1,
+        "calls": {
+          "path": 38,
+          "wallPlacement": 334,
+          "withWallPreview": 17
+        },
+        "sectorUpdates": 37728
+      }
+    ],
+    "memoryBytes": 16777216
+  }
+}
