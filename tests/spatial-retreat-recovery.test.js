@@ -71,6 +71,7 @@ test('an exhausted exit search survives save/load and remains an audited retreat
   assert.equal(Game.walkTo(restored,retreat,destination,1,nav,
     {worker:false,expandRoute:true}),true);
   assert(restored.events.some(e=>e.type==='AnimalRetreatExitAbandoned'&&
-    e.actorId===animal.id&&e.reason==='bounded-search-exhausted'));
+    e.actorId===animal.id&&e.reason==='bounded-search-exhausted'&&
+    e.hitsRemaining===0));
   assert.equal(retreat.x,animal.x);assert.equal(retreat.z,animal.z);
 });

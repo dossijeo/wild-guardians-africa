@@ -720,10 +720,11 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
   const abandonExhaustedExit=()=>{
     const exhausted=w.exitConnectorSearch?.exhausted===true,
       timedOut=w.exitRouteRecovery&&s.elapsed-w.exitRouteRecovery.startedAt>=1500;
-    if(worker||!expandRoute||w.status!=='retreating'||w.hitsRemaining>0||
+    if(worker||!expandRoute||w.status!=='retreating'||
       (!exhausted&&!timedOut))return false;
     emit(s,'AnimalRetreatExitAbandoned',{actorId:w.id,x:w.x,z:w.z,elapsed:s.elapsed,
       reason:exhausted?'bounded-search-exhausted':'recovery-timeout',
+      hitsRemaining:w.hitsRemaining??0,
       seconds:s.elapsed-(w.exitRouteRecovery?.startedAt??s.elapsed)});
     delete w.exitConnectorSearch;delete w.exitRouteRecovery;w.path=null;
     return true;
