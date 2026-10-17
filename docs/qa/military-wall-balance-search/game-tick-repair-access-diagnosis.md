@@ -31,6 +31,40 @@ The older Emscripten compiler available on this host emits an otherwise unused W
 
 None of these timings validates balance or proves a 100-night victory.
 
+## Gate work and historical entities
+
+The frozen day-12 snapshot contains 1,282 crop records, of which 118 are
+alive, and 1,150 delivered crates. A diagnostic-only variant dropped the dead
+crops and delivered crates before creating the native projection. After 30
+simulated seconds the active-state SHA-256 was identical
+(`50de2cd1f6e566e57c29f2297a20abd09b6c43abfb56549137a79375e5b94d6e`).
+In separate-process A/B/B/A runs, the tick totals were 364.7/393.9/357.1/381.2
+ms, respectively (A = intact history, B = pruned). This sample does not show
+a consistent tick improvement from pruning; it does show unnecessary saved
+history. Do not infer that historical records are the main cause of slow ticks
+from their count alone.
+
+A CPU profile of the same frozen state over 120 simulated seconds instead
+identified repeated gate-swing calculations in `gateTriggerRadius()` and
+`advanceGateLeaves()`. Each gate's 24-point sweep was already cached, yet
+every worker/gate proximity query remapped all 24 vertices and computed their
+distances. The trigger radius is now cached with the sweep and reused once per
+gate per leaf update. Position, orientation, scale and material changes retain
+the existing geometry key, so they recompute the polygon and radius together.
+
+Using `tools/experiments/profile-frozen-native-tick.mjs` on
+`tests/fixtures/sabana712-day12-worker-connector.json.gz`, four unprofiled
+120-second runs produced 979.1/978.2 ms with the change, 1,172.5/1,166.5 ms
+with the original code, and 983.6/973.6 ms after restoring the change. The
+median of the two original runs is 1,169.5 ms versus 978.3 ms for the four
+changed runs, about 16% less `Game.tick` time **for this gate-heavy frozen
+window**. All six runs ended with the same active-state SHA-256
+(`84018e72787d6b47838e25872c4cfdf8c9cfaf2a6e96376cc8697afbb497b77b`).
+This is neither a whole-campaign speedup nor evidence that historical arrays
+can remain indefinitely. The new geometry regression checks cache refresh
+after placement, yaw, scale and material changes; worker gate and closure
+tests also pass.
+
 ## VFX check
 
 The native campaign runner does not create a Three.js renderer, so its `Game.tick` delays cannot be caused by GPU draw calls or scene objects. `AgricultureVfx.update()` removes expired effects, and `NativeVfx.dispose()` detaches the group and disposes its geometry and materials. A regression test creates 48 simultaneous agricultural spell effects and verifies that the manager, library, and scene return to zero instances after expiry. Each effect already uses instanced sprite and rigid geometry. Batching **across separate spells** is a distinct render optimization; it needs frame-time and draw-call measurement in the interactive client before changing shaders and effect timing.
