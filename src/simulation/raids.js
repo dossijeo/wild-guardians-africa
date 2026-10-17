@@ -435,6 +435,18 @@ export function reachableApproach(a,target,nav,shield=null,onUnknown=null,region
       onUnknown?.();
       continue;
     }
+    // Native attack leases certify the swept route after selection. Reject a
+    // connector here if the continuous movement predicate disagrees with the
+    // discrete route, so one stale or borderline connector cannot abort a raid.
+    if(path&&nav.intentTaskPlanner){
+      let previous=a;
+      for(const next of path){
+        if(!nav.segmentClear(previous,next,a.radius,null,false)){
+          path=null;break;
+        }
+        previous=next;
+      }
+    }
     if(path)return {point,path};
   }
   return null;
