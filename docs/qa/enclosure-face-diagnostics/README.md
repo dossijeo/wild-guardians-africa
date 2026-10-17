@@ -104,6 +104,49 @@ buying a proposed enclosure.
 - A policy regression verifies that a recent breach receives repair priority
   over an old ruin even when its agricultural group ID changed after replanting.
 
+## Sustained campaign comparison
+
+The combined experimental code was replayed for 72 real nights with the same
+Sabana/712 seed, topological bot and V1 military-pressure candidate. The frozen
+control and the [new full report](sabana712-face-priority-safe-72.json.gz) carry
+the same WASM (`b1c0f180…`), raids (`5b6b2113…`), runner (`7834ce5b…`) and
+candidate SHA-256. The game, wall-stroke and bot-policy files differ exactly as
+described above. Both arms completed 72 verified raids with zero recorded
+physical/technical issues. The first nightly state-hash divergence is day 14,
+so the later trajectories are strategic comparisons, not identical-workload
+timings.
+
+| Measure after night 72 | Control | Combined variant |
+| --- | ---: | ---: |
+| Living crops | 4 | 24 |
+| Coins | 308 | 307 |
+| Crop deaths from night 6 | 1,107 | 1,032 |
+| Crop deaths, nights 70–72 | 131 | 43 |
+| Wall hits, nights 70–72 | 0 | 56 |
+| Animals generated across 72 raids | 896 | 839 |
+| Wall purchase cost | 810 | 1,100 |
+| Repair spend | 5,361 | 4,304 |
+| Bot decision wall time | 276.33 s | 231.90 s |
+| `Game.tick` wall time | 645.68 s | 652.05 s |
+| Total experiment wall time | 1,005.75 s | 962.48 s |
+
+The variant built certified general-cut enclosures on days 7, 23, 26, 35, 36
+and 46. Each purchased proposal passed the existing movement, worker-access
+and attack-occlusion checks before payment. This is evidence that the bot could
+buy complete enclosures on this trajectory; it does not prove every crop stayed
+protected at every later topology revision. The late wall contacts and lower
+crop losses are consistent with useful defenses. The candidate also earned
+less income (73,577 versus 86,067) and faced fewer animals after its farm
+became smaller. Those workload differences prevent interpreting the wall-time
+figures as an isolated speedup or attributing the campaign outcome to one of
+the three code changes separately.
+
+The combined variant is therefore a plausible functional improvement in this
+seed, with a materially different agricultural and spending trajectory.
+Independent seeds/biomes, a dedicated same-workload timing comparison and a
+longer horizon are still needed before making a general balance or performance
+claim.
+
 This branch remains experimental. The frozen probe establishes a specific
-physically buildable seam; a full campaign comparison and repair-priority
-outcome check remain before adopting the planner change or adjusting balance.
+physically buildable seam, and the 72-night run establishes one sustained
+campaign outcome. It does not justify changing military balance.
