@@ -220,6 +220,22 @@ export function createSpatialGameSession(module,state,streamOptions){
       if(parentRemoved)parent.ids=core.applyBarrierChanges([],parent.barriers);
     }
   }
+  function gateOverlayClear(candidate,points,extraSuppress=[]){
+    const parent=activeWallPreview;
+    if(!parent||typeof core.wasm.spatial_overlay_local_clear!=='function'||
+      points?.length!==2||!Array.isArray(extraSuppress)||
+      extraSuppress.some(id=>!parent.suppressed.includes(id)))return null;
+    const index=parent.proposed.findIndex(wall=>wall.id===candidate.id);
+    if(index<0)return null;
+    let offset=0;
+    for(let i=0;i<index;i++)offset+=spatialStructureBarriers(parent.proposed[i]).length;
+    const count=spatialStructureBarriers(parent.proposed[index]).length;
+    const ids=parent.ids.slice(offset,offset+count);
+    if(ids.length!==count)return null;
+    selectProfile(WORKER_SPATIAL_PROFILE);
+    return core.overlayLocalClear(points[0],points[1],ids,
+      spatialStructureBarriers(candidate));
+  }
   function withVillageEntryPreview(buildings,inspect){
     if(!Array.isArray(buildings)||typeof inspect!=='function')
       throw TypeError('Expected provisional village buildings and a callback');
@@ -240,6 +256,6 @@ export function createSpatialGameSession(module,state,streamOptions){
   return {core,field,stream,horizonSource,topologySource,suppressed:props.suppressed,syncState,
     routeActor,routeActorNative,routeActorNativeBatch,actorConnectivity,actorSectorRevision,actorRegions,actorEnclosure,actorRegionsBatch,actorCanStand,actorStepClear,
     actorStepClearExceptWalls,
-    queryPropsAt,withWallPreview,withVillageEntryPreview,
+    queryPropsAt,withWallPreview,gateOverlayClear,withVillageEntryPreview,
     dispose:()=>stream.dispose()};
 }

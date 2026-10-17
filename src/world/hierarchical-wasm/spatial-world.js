@@ -252,6 +252,26 @@ export function createSpatialWorld(module){
     enclosureWorld:point=>navigationBuilt?spatialWorldEnclosure(wasm,point):{ids:[],status:'unknown'},
     componentsWorldBatch,setWorkerGatePortals,
     localClear:(start,end)=>Boolean(wasm.spatial_local_clear(start.x,start.z,end.x,end.z)),
+    overlayLocalClear:(start,end,removeIds,barriers)=>{
+      if(!Array.isArray(removeIds)||removeIds.length>4||
+        removeIds.some(id=>!Number.isSafeInteger(id)||id<=0)||
+        !Array.isArray(barriers)||barriers.length>4)
+        throw TypeError('Expected at most four removed and proposed barriers');
+      const additions=barriers.length?wasm.spatial_barrier_batch_ptr(barriers.length):0;
+      const removals=removeIds.length?wasm.spatial_barrier_removal_ptr(removeIds.length):0;
+      if(barriers.length&&!additions||removeIds.length&&!removals)
+        throw Error('Could not allocate read-only barrier overlay');
+      if(additions){
+        const values=new Float32Array(wasm.memory.buffer,additions,barriers.length*6);
+        barriers.forEach((barrier,i)=>values.set([barrier.x,barrier.z,barrier.halfX,
+          barrier.halfZ,barrier.yaw??0,barrier.passMask??0],i*6));
+      }
+      if(removals)new Int32Array(wasm.memory.buffer,removals,removeIds.length)
+        .set(removeIds);
+      const result=wasm.spatial_overlay_local_clear(start.x,start.z,end.x,end.z,
+        removeIds.length,barriers.length);
+      return result<0?null:Boolean(result);
+    },
     localClearExcept:(start,end,ids)=>{
       if(!Array.isArray(ids)||ids.length<1||ids.length>4||
         ids.some(id=>!Number.isSafeInteger(id)||id<=0))

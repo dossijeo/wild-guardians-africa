@@ -430,10 +430,28 @@ test('a native wall ring creates an automatic door that a worker can cross',asyn
       if(candidate.gates===1&&candidate.pieces.length>=12){points=ring;plan=candidate;}
     }
     assert(points,'native terrain should admit a closed wall ring');
+    const {gatePortalPoints}=await import('../src/world/gate-passages.js');
+    const solid=plan.pieces.map(piece=>({...piece,gate:false,autoGate:false}));
+    nav.withWallPreview(solid,plan.suppressed,()=>{
+      for(const piece of solid){
+        const candidate={...piece,gate:true};
+        const ports=gatePortalPoints(candidate);
+        if(ports.length!==2)continue;
+        const before=session.core.wasm.lazy_sector_updates();
+        const overlay=nav.gateOverlayClear(candidate,ports);
+        assert.equal(session.core.wasm.lazy_sector_updates(),before,
+          'a read-only gate overlay must never rebuild confirmed sectors');
+        assert.equal(typeof overlay,'boolean',`overlay unavailable at ${piece.x},${piece.z}`);
+        const replacement=solid.map(wall=>wall.id===piece.id?candidate:wall);
+        const physical=nav.withWallPreview(replacement,plan.suppressed,draft=>
+          ports.every(port=>draft.walkable(port.x,port.z,.28,null,true))&&
+          draft.segmentClear(ports[0],ports[1],.28,null,true));
+        assert.equal(overlay,physical,`gate overlay differs at ${piece.x},${piece.z}`);
+      }
+    });
     assert.equal(Game.buildWallChain(state,'native-ring','zarzas',points,nav,{smooth:false,snap:false}),true);
     const gate=state.structures.find(item=>item.autoGate);
     assert(gate,'the real purchase must create an automatic gate');
-    const {gatePortalPoints}=await import('../src/world/gate-passages.js');
     const [a,b]=gatePortalPoints(gate);
     assert(a&&b);
     assert(nav.path(a,b,.28,null,true),JSON.stringify({points,gate,a,b,

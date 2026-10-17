@@ -1854,6 +1854,52 @@ int spatial_local_clear_except(float x,float z,float nx,float nz,int ignore0,int
 int spatial_local_clear(float x,float z,float nx,float nz){
   return spatial_local_clear_except(x,z,nx,nz,0,0,0,0);
 }
+// Read-only local physical query for a hypothetical gate. Existing barriers
+// named in the removal buffer are ignored and proposed barriers in the batch
+// buffer are tested without changing occupancy, sectors or graph revisions.
+// -1 means the query is unavailable and the caller must use its full proof.
+int spatial_overlay_local_clear(float x,float z,float nx,float nz,int removeCount,int addCount){
+  if(!navReady||!std::isfinite(x)||!std::isfinite(z)||!std::isfinite(nx)||!std::isfinite(nz)||
+     removeCount<0||removeCount>4||addCount<0||addCount>4||
+     barrierRemovalIds.size()<size_t(removeCount)||barrierBatch.size()<size_t(addCount)*6)
+    return -1;
+  for(int i=0;i<removeCount;i++)if(!barrierIndex().byId.count(barrierRemovalIds[i]))return -1;
+  Barrier proposed[4];
+  for(int i=0;i<addCount;i++){
+    const float* b=barrierBatch.data()+i*6;
+    if(!std::isfinite(b[0])||!std::isfinite(b[1])||!std::isfinite(b[2])||
+       !std::isfinite(b[3])||!std::isfinite(b[4])||!std::isfinite(b[5])||
+       b[2]<=0||b[3]<=0||b[5]<0||b[5]>3||std::floor(b[5])!=b[5])return -1;
+    proposed[i]={0,b[0],b[1],b[2],b[3],b[4],float(std::cos(b[4])),
+      float(std::sin(b[4])),uint8_t(b[5])};
+  }
+  const double distance=std::hypot(double(nx)-x,double(nz)-z);
+  if(distance>32)return -1;
+  const int segments=std::max(1,int(std::ceil(distance/1.25)));
+  const uint8_t profileBit=workerNow?1:2;
+  for(int segment=0;segment<segments;segment++){
+    const double ax=x+(nx-x)*double(segment)/segments,
+      az=z+(nz-z)*double(segment)/segments;
+    const double bx=x+(nx-x)*double(segment+1)/segments,
+      bz=z+(nz-z)*double(segment+1)/segments;
+    const int steps=std::max(1,int(std::ceil(std::hypot(bx-ax,bz-az)/.2)));
+    for(int i=0;i<=steps;i++){
+      const double t=double(i)/steps,px=ax+(bx-ax)*t,pz=az+(bz-az)*t;
+      const int cx=int(std::floor((px+24)/side)),cz=int(std::floor((pz+24)/side));
+      if(!rasterAt(int(std::round(px)),int(std::round(pz))))return -1;
+      if(!terrainValid(px,pz,radiusNow,workerNow)||residentPropBlocked(px,pz,cx,cz)||
+         !barrierClear(px,pz,barrierRemovalIds.data(),removeCount))return 0;
+      for(int j=0;j<addCount;j++){
+        const Barrier& b=proposed[j];
+        if(b.passMask&profileBit)continue;
+        const double dx=px-b.x,dz=pz-b.z;
+        if(std::abs(dx*b.c-dz*b.s)<b.halfX+radiusNow&&
+           std::abs(dx*b.s+dz*b.c)<b.halfZ+radiusNow)return 0;
+      }
+    }
+  }
+  return 1;
+}
 // Crop placement advice is separate from movement passability: a worker may
 // cross an automatic gate, but a seed cannot be placed on that wall. -1 means
 // the resident prop/terrain data is missing; callers must not claim no space.

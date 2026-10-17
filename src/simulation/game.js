@@ -166,6 +166,8 @@ function planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap){
     if(!check.valid||cropOverlap(candidate))return false;
     const points=gatePortalPoints(candidate);if(points.length!==2)return false;
     if(nav.withWallPreview){
+      const local=nav.gateOverlayClear?.(candidate,points,check.suppress??[]);
+      if(local!==null&&local!==undefined)return local;
       const proposed=newPieces.map(piece=>piece.created===p.id?candidate:piece);
       return nav.withWallPreview(proposed,[...suppressedForGates,...check.suppress??[]],draft=>
         points.every(point=>draft.walkable(point.x,point.z,.28,null,true))&&
