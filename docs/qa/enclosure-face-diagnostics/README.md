@@ -147,6 +147,32 @@ Independent seeds/biomes, a dedicated same-workload timing comparison and a
 longer horizon are still needed before making a general balance or performance
 claim.
 
+## Gran Cañón: avoid buying a wall already scheduled for repair
+
+The first combined variant above also completed the requested Gran Cañón/712
+V1 check. At 14 nights it had 53 crops, 1,004 coins and zero crop losses from
+night 6, versus 53 crops, 1,031 coins and zero losses for the established
+event-driven maintenance policy. The [full 14-night report](canyon712-face-priority-safe-14.json.gz)
+retains the hashes and repair records.
+
+At 30 nights the [first combined variant](canyon712-face-priority-safe-30.json.gz)
+ended with 47 crops and 801 coins, versus 55 crops and 950 coins in the
+[established maintenance run](../topological-defense-repair-events/topological-repair-new-gran-canon712-30.json.gz).
+It lost fewer crops to raids (17 versus 33) but bought 51 wall modules rather
+than 19, spending 510 rather than 190 coins. The first variant repeatedly
+paid for small certified enclosures on days 9–29 while ordinary repair tasks
+could restore ruined modules. Thus the local stroke correction was physically
+valid, but allowing the bot to replace repairable ruins immediately was a poor
+economic choice in this scenario. Neither campaign had a technical issue.
+
+The current policy therefore treats `repairableRuins` returned by the ordinary
+wall quote as a reason to wait for its already enabled paid repair workflow.
+The repair-completion event wakes enclosure planning again. A human can still
+choose to replace a ruin immediately with a paid module; the confirmed build
+retires the old ruin and cancels any stale repair task. A new 30-night run of
+this narrower economic decision is pending; the negative first variant is
+preserved rather than erased.
+
 This branch remains experimental. The frozen probe establishes a specific
 physically buildable seam, and the 72-night run establishes one sustained
 campaign outcome. It does not justify changing military balance.
