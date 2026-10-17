@@ -1,0 +1,710 @@
+{
+  "kind": "ABBA",
+  "scenario": "Desert/983: 20 legal flat-terrain walls",
+  "baselineRef": "ca212cd964cef246bcd81f485c8a25a6a2e2a6e4",
+  "stateHash": "408f04122c7dba4284e09474408bb2f0ce092ef89270f34dad2dbf0dd0709e09",
+  "wasmSha256": {
+    "baseline": "7817ebadc3dfa4c4d32f6197b5c4eb53468ad5f7f23293d72b902c23a7707095",
+    "candidate": "6e8294da7a97673f7ec121536dfe533292e0bbe9150bc4f47c9b9ab3812d7c7a"
+  },
+  "sourceSha256": {
+    "baseline": "72b1a16ed6947407d61dcfa911820adadc3511cbd579a6b41c54e611fcf7e75b",
+    "candidate": "4bf135d2a743216077469e92e2cbbd9c424696d634587cfacabf89b830ec6e56"
+  },
+  "stroke": [
+    [
+      53,
+      -30
+    ],
+    [
+      95,
+      -30
+    ]
+  ],
+  "repetitions": 8,
+  "rows": [
+    {
+      "arm": "baseline",
+      "shape": {
+        "pieces": 20,
+        "blocked": 0,
+        "gates": 0,
+        "cost": 200,
+        "suppressed": 0,
+        "modules": [
+          [
+            54.05,
+            -30,
+            0,
+            false
+          ],
+          [
+            56.15,
+            -30,
+            0,
+            false
+          ],
+          [
+            58.25,
+            -30,
+            0,
+            false
+          ],
+          [
+            60.35,
+            -30,
+            0,
+            false
+          ],
+          [
+            62.45,
+            -30,
+            0,
+            false
+          ],
+          [
+            64.55,
+            -30,
+            0,
+            false
+          ],
+          [
+            66.64999999999999,
+            -30,
+            0,
+            false
+          ],
+          [
+            68.75,
+            -30,
+            0,
+            false
+          ],
+          [
+            70.85,
+            -30,
+            0,
+            false
+          ],
+          [
+            72.95,
+            -30,
+            0,
+            false
+          ],
+          [
+            75.05000000000001,
+            -30,
+            0,
+            false
+          ],
+          [
+            77.15,
+            -30,
+            0,
+            false
+          ],
+          [
+            79.25,
+            -30,
+            0,
+            false
+          ],
+          [
+            81.35,
+            -30,
+            0,
+            false
+          ],
+          [
+            83.44999999999999,
+            -30,
+            0,
+            false
+          ],
+          [
+            85.55,
+            -30,
+            0,
+            false
+          ],
+          [
+            87.65,
+            -30,
+            0,
+            false
+          ],
+          [
+            89.75000000000001,
+            -30,
+            0,
+            false
+          ],
+          [
+            91.85000000000001,
+            -30,
+            0,
+            false
+          ],
+          [
+            93.95,
+            -30,
+            0,
+            false
+          ]
+        ]
+      },
+      "times": [
+        21.579100000000153,
+        19.603500000000167,
+        24.05619999999999,
+        19.298000000000002,
+        19.66210000000001,
+        18.11180000000013,
+        16.06580000000008,
+        18.423900000000003
+      ],
+      "medianMs": 19.298000000000002,
+      "p95Ms": 24.05619999999999,
+      "quoteCounts": {
+        "path": 8,
+        "preview": 16,
+        "wallLocalOverlay": 0,
+        "localProbes": 0,
+        "barriers": 32
+      },
+      "sectorUpdates": 160,
+      "physical": {
+        "serviceRouteBefore": true,
+        "serviceRoute": true,
+        "gateAccess": []
+      },
+      "build": {
+        "ms": 5.27150000000006,
+        "counts": {
+          "path": 0,
+          "preview": 0,
+          "wallLocalOverlay": 0,
+          "localProbes": 0,
+          "barriers": 1
+        },
+        "sectorUpdates": 5,
+        "finalStateHash": "307f256add1753f227ab6c3e41b039a7042542dab30dcac67ff59a41322f3b76"
+      },
+      "linearMemoryBytes": 16777216
+    },
+    {
+      "arm": "candidate",
+      "shape": {
+        "pieces": 20,
+        "blocked": 0,
+        "gates": 0,
+        "cost": 200,
+        "suppressed": 0,
+        "modules": [
+          [
+            54.05,
+            -30,
+            0,
+            false
+          ],
+          [
+            56.15,
+            -30,
+            0,
+            false
+          ],
+          [
+            58.25,
+            -30,
+            0,
+            false
+          ],
+          [
+            60.35,
+            -30,
+            0,
+            false
+          ],
+          [
+            62.45,
+            -30,
+            0,
+            false
+          ],
+          [
+            64.55,
+            -30,
+            0,
+            false
+          ],
+          [
+            66.64999999999999,
+            -30,
+            0,
+            false
+          ],
+          [
+            68.75,
+            -30,
+            0,
+            false
+          ],
+          [
+            70.85,
+            -30,
+            0,
+            false
+          ],
+          [
+            72.95,
+            -30,
+            0,
+            false
+          ],
+          [
+            75.05000000000001,
+            -30,
+            0,
+            false
+          ],
+          [
+            77.15,
+            -30,
+            0,
+            false
+          ],
+          [
+            79.25,
+            -30,
+            0,
+            false
+          ],
+          [
+            81.35,
+            -30,
+            0,
+            false
+          ],
+          [
+            83.44999999999999,
+            -30,
+            0,
+            false
+          ],
+          [
+            85.55,
+            -30,
+            0,
+            false
+          ],
+          [
+            87.65,
+            -30,
+            0,
+            false
+          ],
+          [
+            89.75000000000001,
+            -30,
+            0,
+            false
+          ],
+          [
+            91.85000000000001,
+            -30,
+            0,
+            false
+          ],
+          [
+            93.95,
+            -30,
+            0,
+            false
+          ]
+        ]
+      },
+      "times": [
+        6.130899999999656,
+        5.582899999999881,
+        4.503600000000006,
+        9.57089999999971,
+        7.260199999999713,
+        3.854399999999714,
+        3.99350000000004,
+        2.885399999999663
+      ],
+      "medianMs": 4.503600000000006,
+      "p95Ms": 9.57089999999971,
+      "quoteCounts": {
+        "path": 8,
+        "preview": 0,
+        "wallLocalOverlay": 8,
+        "localProbes": 0,
+        "barriers": 0
+      },
+      "sectorUpdates": 0,
+      "physical": {
+        "serviceRouteBefore": true,
+        "serviceRoute": true,
+        "gateAccess": []
+      },
+      "build": {
+        "ms": 6.812399999999798,
+        "counts": {
+          "path": 0,
+          "preview": 0,
+          "wallLocalOverlay": 0,
+          "localProbes": 0,
+          "barriers": 1
+        },
+        "sectorUpdates": 5,
+        "finalStateHash": "307f256add1753f227ab6c3e41b039a7042542dab30dcac67ff59a41322f3b76"
+      },
+      "linearMemoryBytes": 16777216
+    },
+    {
+      "arm": "candidate",
+      "shape": {
+        "pieces": 20,
+        "blocked": 0,
+        "gates": 0,
+        "cost": 200,
+        "suppressed": 0,
+        "modules": [
+          [
+            54.05,
+            -30,
+            0,
+            false
+          ],
+          [
+            56.15,
+            -30,
+            0,
+            false
+          ],
+          [
+            58.25,
+            -30,
+            0,
+            false
+          ],
+          [
+            60.35,
+            -30,
+            0,
+            false
+          ],
+          [
+            62.45,
+            -30,
+            0,
+            false
+          ],
+          [
+            64.55,
+            -30,
+            0,
+            false
+          ],
+          [
+            66.64999999999999,
+            -30,
+            0,
+            false
+          ],
+          [
+            68.75,
+            -30,
+            0,
+            false
+          ],
+          [
+            70.85,
+            -30,
+            0,
+            false
+          ],
+          [
+            72.95,
+            -30,
+            0,
+            false
+          ],
+          [
+            75.05000000000001,
+            -30,
+            0,
+            false
+          ],
+          [
+            77.15,
+            -30,
+            0,
+            false
+          ],
+          [
+            79.25,
+            -30,
+            0,
+            false
+          ],
+          [
+            81.35,
+            -30,
+            0,
+            false
+          ],
+          [
+            83.44999999999999,
+            -30,
+            0,
+            false
+          ],
+          [
+            85.55,
+            -30,
+            0,
+            false
+          ],
+          [
+            87.65,
+            -30,
+            0,
+            false
+          ],
+          [
+            89.75000000000001,
+            -30,
+            0,
+            false
+          ],
+          [
+            91.85000000000001,
+            -30,
+            0,
+            false
+          ],
+          [
+            93.95,
+            -30,
+            0,
+            false
+          ]
+        ]
+      },
+      "times": [
+        5.545300000000225,
+        5.400700000000143,
+        5.257399999999961,
+        4.941200000000208,
+        4.474700000000212,
+        4.775700000000143,
+        1.8238999999998668,
+        2.775699999999688
+      ],
+      "medianMs": 4.775700000000143,
+      "p95Ms": 5.545300000000225,
+      "quoteCounts": {
+        "path": 8,
+        "preview": 0,
+        "wallLocalOverlay": 8,
+        "localProbes": 0,
+        "barriers": 0
+      },
+      "sectorUpdates": 0,
+      "physical": {
+        "serviceRouteBefore": true,
+        "serviceRoute": true,
+        "gateAccess": []
+      },
+      "build": {
+        "ms": 5.20049999999992,
+        "counts": {
+          "path": 0,
+          "preview": 0,
+          "wallLocalOverlay": 0,
+          "localProbes": 0,
+          "barriers": 1
+        },
+        "sectorUpdates": 5,
+        "finalStateHash": "307f256add1753f227ab6c3e41b039a7042542dab30dcac67ff59a41322f3b76"
+      },
+      "linearMemoryBytes": 16777216
+    },
+    {
+      "arm": "baseline",
+      "shape": {
+        "pieces": 20,
+        "blocked": 0,
+        "gates": 0,
+        "cost": 200,
+        "suppressed": 0,
+        "modules": [
+          [
+            54.05,
+            -30,
+            0,
+            false
+          ],
+          [
+            56.15,
+            -30,
+            0,
+            false
+          ],
+          [
+            58.25,
+            -30,
+            0,
+            false
+          ],
+          [
+            60.35,
+            -30,
+            0,
+            false
+          ],
+          [
+            62.45,
+            -30,
+            0,
+            false
+          ],
+          [
+            64.55,
+            -30,
+            0,
+            false
+          ],
+          [
+            66.64999999999999,
+            -30,
+            0,
+            false
+          ],
+          [
+            68.75,
+            -30,
+            0,
+            false
+          ],
+          [
+            70.85,
+            -30,
+            0,
+            false
+          ],
+          [
+            72.95,
+            -30,
+            0,
+            false
+          ],
+          [
+            75.05000000000001,
+            -30,
+            0,
+            false
+          ],
+          [
+            77.15,
+            -30,
+            0,
+            false
+          ],
+          [
+            79.25,
+            -30,
+            0,
+            false
+          ],
+          [
+            81.35,
+            -30,
+            0,
+            false
+          ],
+          [
+            83.44999999999999,
+            -30,
+            0,
+            false
+          ],
+          [
+            85.55,
+            -30,
+            0,
+            false
+          ],
+          [
+            87.65,
+            -30,
+            0,
+            false
+          ],
+          [
+            89.75000000000001,
+            -30,
+            0,
+            false
+          ],
+          [
+            91.85000000000001,
+            -30,
+            0,
+            false
+          ],
+          [
+            93.95,
+            -30,
+            0,
+            false
+          ]
+        ]
+      },
+      "times": [
+        20.946100000000115,
+        19.61319999999978,
+        23.249899999999798,
+        20.5634,
+        22.764499999999316,
+        20.49120000000039,
+        18.150300000000243,
+        19.564399999999296
+      ],
+      "medianMs": 20.49120000000039,
+      "p95Ms": 23.249899999999798,
+      "quoteCounts": {
+        "path": 8,
+        "preview": 16,
+        "wallLocalOverlay": 0,
+        "localProbes": 0,
+        "barriers": 32
+      },
+      "sectorUpdates": 160,
+      "physical": {
+        "serviceRouteBefore": true,
+        "serviceRoute": true,
+        "gateAccess": []
+      },
+      "build": {
+        "ms": 4.326799999999821,
+        "counts": {
+          "path": 0,
+          "preview": 0,
+          "wallLocalOverlay": 0,
+          "localProbes": 0,
+          "barriers": 1
+        },
+        "sectorUpdates": 5,
+        "finalStateHash": "307f256add1753f227ab6c3e41b039a7042542dab30dcac67ff59a41322f3b76"
+      },
+      "linearMemoryBytes": 16777216
+    }
+  ],
+  "fallback": null,
+  "baselineCandidateEquivalent": true,
+  "overlayEquivalent": true
+}

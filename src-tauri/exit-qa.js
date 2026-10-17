@@ -5,7 +5,7 @@
  const invoke=(command,args)=>window.__TAURI_INTERNALS__.invoke(command,args),wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
  const report={ok:false,errors:[],checks:{}};
  addEventListener('error',e=>report.errors.push(e.message));addEventListener('unhandledrejection',e=>report.errors.push(String(e.reason)));
- const until=async(predicate,budgetMs=300000)=>{const end=performance.now()+budgetMs;while(!predicate()){if(performance.now()>end)throw Error('Exit QA condition timed out');await wait(100);}};
+ const until=async(phase,predicate,budgetMs=300000)=>{report.phase=phase;const end=performance.now()+budgetMs;while(!predicate()){if(performance.now()>end)throw Error('Exit QA condition timed out: '+phase);await wait(100);}};
  try{
   const {stage,fixture}=await invoke('desktop_exit_qa_config');report.stage=stage;
   if(!fixture.slotId.startsWith('qa-desktop-exit-'))throw Error('Unsafe QA slot');
@@ -15,13 +15,13 @@
   };
   if(stage==='create')localStorage.setItem('wild-guardians:slot:'+fixture.slotId,fixture.snapshot);
   else {const committed=await read();if(!committed)throw Error('Previous process save missing');report.checks.previous=JSON.parse(committed);}
-  await until(()=>document.querySelector('#native-menu'));
+  await until('main menu',()=>document.querySelector('#native-menu'));
   let menu=document.querySelector('#native-menu');
   const send=data=>dispatchEvent(new MessageEvent('message',{origin:location.origin,source:menu.contentWindow,data:{type:'wild-guardians:menu',...data}}));
   send({action:'settings-change',settings:{quality:'muy_baja',sfx:0,music:0}});send({action:'load-slot',slotId:fixture.slotId});
-  await until(()=>document.querySelector('#stage')?.getAttribute('aria-busy')==='false',420000);
-  document.querySelector('#menuButton').click();await until(()=>document.querySelector('#exit'));
-  document.querySelector('#exit').click();await until(()=>document.querySelector('#native-menu'));
+  await until('restored world readiness',()=>document.querySelector('#stage')?.getAttribute('aria-busy')==='false',420000);
+  document.querySelector('#menuButton').click();await until('pause menu',()=>document.querySelector('#exit'));
+  document.querySelector('#exit').click();await until('return to main menu',()=>document.querySelector('#native-menu'));
   const committed=JSON.parse(await read());report.checks.committed=committed;
   if(committed.slotId!==fixture.slotId)throw Error('Wrong committed slot');
   if(stage==='restore'){
@@ -33,8 +33,8 @@
    // ready gate and opening the pause menu. They are recorded, not falsified.
    report.checks.restartRestored=true;
   }
-  menu=document.querySelector('#native-menu');await until(()=>menu.contentDocument?.querySelector('#loading')?.style.display==='none'&&menu.contentDocument.querySelector('#hot-exit'));
-  menu.contentDocument.querySelector('#hot-exit').click();await until(()=>menu.contentDocument?.querySelector('#exit-action')&&!menu.contentDocument.querySelector('#panelstage').inert);
+  menu=document.querySelector('#native-menu');await until('menu loading',()=>menu.contentDocument?.querySelector('#loading')?.style.display==='none'&&menu.contentDocument.querySelector('#hot-exit'));
+  menu.contentDocument.querySelector('#hot-exit').click();await until('exit action',()=>menu.contentDocument?.querySelector('#exit-action')&&!menu.contentDocument.querySelector('#panelstage').inert);
   report.ok=report.errors.length===0;report.checks.exitButtonFound=true;
   await invoke('desktop_exit_qa_report',{report});
   menu.contentDocument.querySelector('#exit-action').click();

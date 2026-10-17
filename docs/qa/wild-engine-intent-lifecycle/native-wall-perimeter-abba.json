@@ -1,0 +1,13 @@
+{
+  "fixture": "tests/fixtures/sabana712-d10-native-unknown-enclosure.json.gz",
+  "benchmark": "tools/experiments/benchmark-native-wall-perimeter.mjs",
+  "runtime": "Node.js v20.11.0 on Windows",
+  "order": "ABBA",
+  "note": "Cold process per run; each run measures one first query and 100 subsequent two-group queries. This is a microbenchmark, not Game.tick or campaign timing.",
+  "runs": [
+    {"variant": "A", "source": "21019962", "wasmSha256": "5ed63cbf457846ef93554cd65c483ef80de5d9929201c98c0ac3fb5ffe6210ad", "groups": 2, "candidates": 60, "firstMs": 20.1495, "medianMs": 7.4484, "p95Ms": 9.1529, "totalWarmMs": 756.4395},
+    {"variant": "B", "source": "2d742303", "wasmSha256": "c554dde437af31f2196352986ad5f5684300e69f416ac723dcce5346ca044a8b", "groups": 2, "candidates": 60, "firstMs": 17.3114, "medianMs": 0.1255, "p95Ms": 0.1679, "totalWarmMs": 13.9813, "portalBuilds": 1},
+    {"variant": "B", "source": "2d742303", "wasmSha256": "c554dde437af31f2196352986ad5f5684300e69f416ac723dcce5346ca044a8b", "groups": 2, "candidates": 60, "firstMs": 17.6434, "medianMs": 0.1247, "p95Ms": 0.2485, "totalWarmMs": 13.954, "portalBuilds": 1},
+    {"variant": "A", "source": "21019962", "wasmSha256": "5ed63cbf457846ef93554cd65c483ef80de5d9929201c98c0ac3fb5ffe6210ad", "groups": 2, "candidates": 60, "firstMs": 22.1765, "medianMs": 7.9567, "p95Ms": 9.8938, "totalWarmMs": 803.566}
+  ]
+}

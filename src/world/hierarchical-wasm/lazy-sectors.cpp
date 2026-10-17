@@ -1,6 +1,9 @@
 #include <algorithm>
 #include <cstdint>
+#include <cstdlib>
+#include <limits>
 #include <unordered_map>
+#include <utility>
 #include <vector>
 
 // Sparse sector/route proof. Unknown sectors are never classified as blocked.
@@ -15,11 +18,14 @@ struct Sector {
   std::vector<int16_t> component;
   std::vector<std::vector<Arc>> edges;
   std::vector<uint8_t> unknown,weakUnknown;
+  std::vector<std::vector<std::pair<int,int>>> frontiers;
 };
 struct Context {
   int sectorSize=0,updates=0;
   uint32_t routeRevision=1;
   int connectivityReason=0,weakFailure=0;
+  int frontierX=0,frontierZ=0;
+  bool frontierValid=false;
   std::vector<uint8_t> stagedPass,stagedSteps,stagedInbound;
   std::unordered_map<uint64_t,Sector>* sectors=nullptr;
   std::vector<Sector*> byId;
@@ -73,6 +79,9 @@ Context& active(){
 #define weakDirty (active().weakDirty)
 #define connectivityReason (active().connectivityReason)
 #define weakFailure (active().weakFailure)
+#define frontierX (active().frontierX)
+#define frontierZ (active().frontierZ)
+#define frontierValid (active().frontierValid)
 uint64_t key(int sx,int sz){return (static_cast<uint64_t>(static_cast<uint32_t>(sx))<<32)|static_cast<uint32_t>(sz);}
 Sector* get(int sx,int sz){const auto it=sectors->find(key(sx,sz));return it==sectors->end()?nullptr:&it->second;}
 int floorDiv(int n,int d){return n>=0?n/d:-((-n+d-1)/d);}
@@ -108,6 +117,7 @@ void flood(Sector& sector){
 void rebuildEdges(Sector& sector){
   sector.edges.assign(sector.components,{});sector.unknown.assign(sector.components,0);
   sector.weakUnknown.assign(sector.components,0);
+  sector.frontiers.assign(sector.components,{});
   for(int z=0;z<sectorSize;z++)for(int x=0;x<sectorSize;x++){
     const int at=cellIndex(x,z),component=sector.component[at];
     if(component<0)continue;
@@ -120,7 +130,10 @@ void rebuildEdges(Sector& sector){
       const int neighborZ=sector.sz+(nz<0?-1:nz>=sectorSize?1:0);
       const Sector* neighbor=get(neighborX,neighborZ);
       if(!neighbor){
-        if(outbound)sector.unknown[component]=1;
+        if(outbound){
+          sector.unknown[component]=1;
+          sector.frontiers[component].push_back({neighborX,neighborZ});
+        }
         sector.weakUnknown[component]=1;continue;
       }
       if(!outbound)continue;
@@ -147,6 +160,11 @@ void rebuildEdges(Sector& sector){
       const int32_t node=targetSector->id*sectorSize*sectorSize+toComponent;
       sector.edges[fromComponent].push_back({node,fromCell,toCell,static_cast<int>(id)*2+direction});
     }
+  }
+  for(auto& componentFrontiers:sector.frontiers){
+    std::sort(componentFrontiers.begin(),componentFrontiers.end());
+    componentFrontiers.erase(std::unique(componentFrontiers.begin(),
+      componentFrontiers.end()),componentFrontiers.end());
   }
 }
 void rebuildWeakGraph(){
@@ -319,6 +337,21 @@ int lazy_portal_world_points(int encoded,float* out){
   }
   return 1;
 }
+int lazy_portal_count(){return static_cast<int>(portals.size());}
+// Confirmed one-metre edge, including the selected profile's direction.
+// -1 denotes absent sectors, never a certified physical blockage.
+int lazy_grid_edge(int x,int z,int nx,int nz){
+  int direction=-1;
+  for(int d=0;d<4;d++)if(nx==x+dx[d]&&nz==z+dz[d]){direction=d;break;}
+  if(direction<0||!sectorSize)return -1;
+  const Sector* from=get(floorDiv(x,sectorSize),floorDiv(z,sectorSize));
+  const Sector* to=get(floorDiv(nx,sectorSize),floorDiv(nz,sectorSize));
+  if(!from||!to)return -1;
+  const int first=cellIndex(x-from->sx*sectorSize,z-from->sz*sectorSize);
+  const int last=cellIndex(nx-to->sx*sectorSize,nz-to->sz*sectorSize);
+  return from->pass[first]&&to->pass[last]&&
+    (from->steps[first]&(1<<direction))?1:0;
+}
 int lazy_commit_portals(){
   for(Sector* sector:byId)if(sector)rebuildEdges(*sector);
   weakDirty=true;
@@ -333,7 +366,7 @@ int lazy_component(int worldX,int worldZ){
 // 1 connected in the component graph (a local directed route may still fail),
 // 0 certified disconnected, -1 unknown because required sectors are unloaded.
 int lazy_connected(int fromX,int fromZ,int toX,int toZ){
-  connectivityReason=0;
+  connectivityReason=0;frontierValid=false;
   if(!sectorSize){connectivityReason=1;return -1;}
   const int32_t source=nodeAt(fromX,fromZ),target=nodeAt(toX,toZ);
   if(source==-1||target==-1){connectivityReason=2;return -1;}
@@ -343,10 +376,25 @@ int lazy_connected(int fromX,int fromZ,int toX,int toZ){
   const uint32_t generation=beginVisit(maxNodes);
   queueBuffer.clear();queueBuffer.push_back(source);visited[source]=generation;
   bool unknown=false;
+  int64_t bestFrontierDistance=std::numeric_limits<int64_t>::max();
   for(size_t q=0;q<queueBuffer.size();q++){
     const int32_t node=queueBuffer[q],sectorId=node/(sectorSize*sectorSize),local=node%(sectorSize*sectorSize);
     const Sector& sector=*byId[sectorId];
-    if(sector.unknown[local])unknown=true;
+    if(sector.unknown[local]){
+      unknown=true;
+      for(const auto& [sx,sz]:sector.frontiers[local]){
+        const int64_t x=int64_t(sx)*sectorSize+sectorSize/2;
+        const int64_t z=int64_t(sz)*sectorSize+sectorSize/2;
+        const int64_t distance=std::abs(x-toX)+std::abs(z-toZ);
+        if(distance<bestFrontierDistance||
+           (distance==bestFrontierDistance&&
+            (!frontierValid||sx<frontierX||
+             (sx==frontierX&&sz<frontierZ)))){
+          bestFrontierDistance=distance;
+          frontierX=sx;frontierZ=sz;frontierValid=true;
+        }
+      }
+    }
     for(const Arc& arc:sector.edges[local]){
       const int32_t next=arc.to;
       if(next==target){connectivityReason=5;return 1;}
@@ -361,6 +409,9 @@ int lazy_connected(int fromX,int fromZ,int toX,int toZ){
 // 4 same component, 5 reachable, 6 disconnected with no open source frontier,
 // 7 certified sealed target, 8 open frontier, 10 weakly connected source.
 int lazy_connected_reason(){return connectivityReason;}
+int lazy_connected_frontier_valid(){return frontierValid?1:0;}
+int lazy_connected_frontier_x(){return frontierX*sectorSize+sectorSize/2;}
+int lazy_connected_frontier_z(){return frontierZ*sectorSize+sectorSize/2;}
 // 1 sealed weak component, -1 open/missing frontier, 0 blocked cell.
 int lazy_enclosure(int worldX,int worldZ){
   return sectorSize?enclosureAt(nodeAt(worldX,worldZ)):-1;

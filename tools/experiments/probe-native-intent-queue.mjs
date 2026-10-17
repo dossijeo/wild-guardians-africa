@@ -2,6 +2,7 @@ import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
 import {deserialize} from '../../src/persistence/snapshots.js';
 import {reserveTasks} from '../../src/simulation/tasks.js';
+import {PROFILES} from '../../src/simulation/workforce.js';
 import {wateringRoute,repairRoute} from '../../src/world/work-points.js';
 import {createSpatialGameSession} from '../../src/world/hierarchical-wasm/spatial-game-session.js';
 import {createSpatialNavigationMovement,SpatialChunkUnavailable} from
@@ -15,6 +16,14 @@ const fixture=process.argv[2]??'tests/fixtures/desierto983-d15-partial-state.jso
 const workerCount=Number(process.argv[3]??5);
 const taskCount=Number(process.argv[4]??30);
 const state=deserialize(gunzipSync(readFileSync(fixture)).toString());
+const shiftEnd=new Map(PROFILES.map(profile=>[profile.id,profile.end]));
+if(state.raid||state.time>=300||state.workers.slice(0,workerCount).some(worker=>
+  state.time>=(shiftEnd.get(worker.profile)??0)))
+  throw Error('Queue differential requires a daytime state with eligible worker shifts');
+// The standalone JS control reserves only idle workers. In Game.tick the
+// arrival phase temporarily makes new contracts idle before reservation;
+// exclude other arriving workers here so both probes compare the same pool.
+for(const worker of state.workers)if(worker.status==='arriving')worker.status='waiting';
 for(const worker of state.workers.slice(0,workerCount)){
   const assigned=state.tasks.find(task=>task.id===worker.taskId);
   if(assigned)assigned.workerId=null;
@@ -43,10 +52,33 @@ try{
   bridge.resetFromState(state);
   const nativeStart=performance.now();
   const native=bridge.planTasks();
+  const routeDiagnostics=process.argv.includes('--route-diagnostics');
+  const originByWorker=new Map(state.workers.map(worker=>[worker.id,worker]));
+  const routeLength=(origin,route)=>{
+    let length=0,previous=origin;
+    for(const point of route){
+      length+=Math.hypot(point.x-previous.x,point.z-previous.z);
+      previous=point;
+    }
+    return length;
+  };
+  const nativeRoutes=routeDiagnostics?new Map(native.filter(row=>row.status===1)
+    .map(row=>{
+      const workerId=`worker-${row.workerId}`;
+      const origin=originByWorker.get(workerId),path=bridge.proposalRoute(row);
+      let previous=origin,physical=true;
+      for(const point of path){
+        if(!nav.segmentClear(previous,point,.28,null,true)){physical=false;break;}
+        previous=point;
+      }
+      return [`task-${row.taskId}`,{
+        workerId,length:routeLength(origin,path),physical}];
+    })):null;
   const nativeMilliseconds=performance.now()-nativeStart;
   const nativeQueries=session.core.wasm.nav_intent_route_queries();
   bridge.discard();
   let jsCandidates=0;
+  const jsRoutes=new Map();
   const jsStart=performance.now();
   reserveTasks(state,(worker,task,target)=>{
     jsCandidates++;
@@ -55,6 +87,9 @@ try{
       if(task.kind==='initial'||task.kind==='water')return wateringRoute(worker,target,nav);
       return nav.workerPath(worker,target,.28,null);
     }catch(error){if(error instanceof SpatialChunkUnavailable)return null;throw error;}
+  },(worker,task,target,route)=>{
+    if(routeDiagnostics)jsRoutes.set(task.id,{workerId:worker.id,
+      length:routeLength(worker,Array.isArray(route)?route:route.path)});
   });
   const jsMilliseconds=performance.now()-jsStart;
   const selected=state.tasks.filter(task=>task.workerId).map(task=>({
@@ -70,6 +105,12 @@ try{
     selected,native:native.map(row=>({taskId:row.taskId,workerId:row.workerId,
       status:row.status,cause:row.cause})),
     mismatches:mismatchCount};
+  if(routeDiagnostics)report.routeComparisons=[...nativeRoutes].map(([taskId,nativeRoute])=>{
+    const js=jsRoutes.get(taskId);
+    return {taskId,workerId:nativeRoute.workerId,nativePhysical:nativeRoute.physical,
+      nativeLength:nativeRoute.length,jsLength:js?.workerId===nativeRoute.workerId?
+        js.length:null};
+  });
   if(process.argv.includes('--summary'))delete report.native;
   if(process.argv.includes('--summary'))delete report.selected;
   console.log(JSON.stringify(report,null,2));

@@ -1,12 +1,11 @@
 name: Wild Engine BFS stamping experiment
 
+# Historical A/B experiment for PR #56. Later branches can add native API
+# exports to lazy-sectors.cpp, so mixing their linker inputs with origin/main
+# is not a valid automatic comparison.
+
 on:
   workflow_dispatch:
-  pull_request:
-    paths:
-      - '.github/workflows/wild-engine-bfs-stamping.yml'
-      - 'src/world/hierarchical-wasm/lazy-sectors.cpp'
-      - 'tools/experiments/benchmark-wild-engine-bfs.mjs'
 
 permissions:
   contents: read
@@ -23,8 +22,27 @@ jobs:
         with:
           node-version: '20'
           cache: npm
+      - name: Check whether the BFS-only comparison is applicable
+        id: scope
+        run: |
+          # This experiment swaps only lazy-sectors.cpp. A change to another
+          # native translation unit or the build contract makes the baseline
+          # incompatible and the comparison meaningless.
+          if git diff --quiet origin/main...HEAD -- \
+            src/world/hierarchical-wasm/spatial-savanna.cpp \
+            src/world/hierarchical-wasm/spatial-route-planner.cpp \
+            src/world/hierarchical-wasm/spatial-action-planner.cpp \
+            src/world/hierarchical-wasm/spatial-intent-state.cpp \
+            tools/build-spatial-savanna-wasm.sh; then
+            echo 'run=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'run=false' >> "$GITHUB_OUTPUT"
+            echo 'BFS-only comparison skipped: other native sources or exports changed.'
+          fi
       - run: npm ci
+        if: steps.scope.outputs.run == 'true'
       - name: Build baseline and candidate from identical sources
+        if: steps.scope.outputs.run == 'true'
         run: |
           cp src/world/hierarchical-wasm/lazy-sectors.cpp /tmp/lazy-sectors-candidate.cpp
           git show origin/main:src/world/hierarchical-wasm/lazy-sectors.cpp > src/world/hierarchical-wasm/lazy-sectors.cpp
@@ -39,11 +57,13 @@ jobs:
             bash tools/build-spatial-savanna-wasm.sh
           sha256sum bfs-baseline.wasm bfs-candidate.wasm
       - name: Check candidate contracts
+        if: steps.scope.outputs.run == 'true'
         run: |
           cp bfs-candidate.wasm src/world/hierarchical-wasm/spatial-savanna.wasm
           node --test tests/spatial-savanna-prototype.test.js
           npm run test:playable
       - name: Alternate direct-graph benchmark order
+        if: steps.scope.outputs.run == 'true'
         run: |
           mkdir -p bfs-reports
           for biome in sabana manglares desierto gran-canon gran-rio volcanes; do
@@ -55,6 +75,7 @@ jobs:
           done
           node tools/experiments/compare-wild-engine-bfs.mjs bfs-reports
       - uses: actions/upload-artifact@v4
+        if: steps.scope.outputs.run == 'true'
         with:
           name: wild-engine-bfs-stamping-comparison
           path: |

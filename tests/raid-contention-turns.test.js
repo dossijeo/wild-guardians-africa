@@ -74,3 +74,20 @@ test('waiting target selection wakes when its native sector residence changes',(
  sectorRevision++;
  assert.notEqual(waitEpoch(s,nav,animal),before);
 });
+
+test('unknown connectivity waits for topology or sector changes, not unrelated hits and leases',()=>{
+ const {s,nav}=start('saturated');let sectorRevision=2;
+ nav.spatialSectorRevision=()=>sectorRevision;
+ const animal=s.raid.animals.find(a=>a.status==='waiting');assert(animal);
+ animal.raidWait.reason='unknown';
+ const before=waitEpoch(s,nav,animal);
+ assert.doesNotThrow(()=>serialize(s));
+ s.raid.waitRevision++;
+ s.raid.waitProgress.at++;
+ assert.equal(waitEpoch(s,nav,animal),before);
+ sectorRevision++;
+ assert.notEqual(waitEpoch(s,nav,animal),before);
+ const resident=waitEpoch(s,nav,animal);
+ nav.version++;
+ assert.notEqual(waitEpoch(s,nav,animal),resident);
+});
