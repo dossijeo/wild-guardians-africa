@@ -72,6 +72,10 @@ modules costing 20 coins. In a read-only preview, those modules certify all
 three local faces (`[0,0,0]` becomes `[1,1,1]`). This proves that this *local*
 seam is constructible. It does not prove that the entire enclosure is closed,
 that workers retain access, or that crops cannot be attacked from other sides.
+On confirmation, a newly paid module replaces a coincident ruined module in
+the same transaction. The old ruin and any pending repair task are removed,
+with zero refund. This prevents a later repair from creating two overlapping
+solid walls. The same rule applies to single-module purchases.
 
 The crop group currently near these walls has ID `crop:plant-77666`, whereas
 the wall metadata stores older group IDs. The repair policy formerly sorted by
@@ -93,6 +97,8 @@ buying a proposed enclosure.
 - The replay preserved all 72 serialized-state hashes and verified all raids.
 - A wall-stroke regression verifies that a ruined module cannot hide a buildable
   slot while an intact module still prevents a duplicate.
+- Replacement tests cover both chain and single-wall purchases, a pending
+  repair task, exact payment, removal events, and serialization.
 - A policy regression verifies that a recent breach receives repair priority
   over an old ruin even when its agricultural group ID changed after replanting.
 
