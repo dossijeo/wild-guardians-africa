@@ -29,6 +29,19 @@ test('native damaged lists update by HP event without rebuilding topology',
   assert.equal(bridge.getDamagedWalls()[0].enclosureId,'enclosure:fixture');
   assert.equal(bridge.getDamagedWalls()[0].plannedGroupId,'crop:fixture');
   assert.deepEqual(bridge.getDamagedCenters().map(item=>item.id),[center.id]);
+  const checkCenterAssociations=()=>{
+   const cropCenters=new Map(game.plants.filter(item=>item.alive)
+    .map(item=>[item.id,item.centerId]));
+   for(const group of bridge.getUnprotectedCropGroups({includeProtected:true}))
+    assert.deepEqual(group.associatedCenterIds,[...new Set(group.cropIds
+     .map(id=>cropCenters.get(id)).filter(Boolean))].sort(),
+     'physical crop-group advice identifies potentially affected work centers');
+  };
+  checkCenterAssociations();
+  const harvested=game.plants.find(item=>item.alive);
+  harvested.alive=false;
+  bridge.applyEvents(game,[{type:'target',remove:true,id:harvested.id}]);
+  checkCenterAssociations();
   assert.deepEqual(bridge.getDamagedWalls()[0].cost,repairCost(first));
   assert.equal(bridge.getDamagedWalls()[0].paidCoins,Math.ceil(first.cost*.5));
   const topology=wasm.nav_intent_topology_revision();

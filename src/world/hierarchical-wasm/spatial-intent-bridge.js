@@ -338,7 +338,10 @@ export function createSpatialIntentBridge(session){
         let group=groups.get(id);
         if(!group){
           const ids=members.slice(rows[at+9],rows[at+9]+rows[at+10]);
+          const centerIds=[...new Set(ids.map(item=>cropObjects.get(item)?.centerId)
+            .filter(Boolean))].sort();
           group={id:`crop:${cropsById.get(id)??id}`,cropIds:ids.map(item=>cropsById.get(item)??item),
+            associatedCenterIds:centerIds,
             value:rows[at+1],position:{x:rows[at+2],z:rows[at+3]},
             bounds:{minX:rows[at+4],minZ:rows[at+5],maxX:rows[at+6],maxZ:rows[at+7]},
             protection:'protected',profiles:{},revision:{crops:rows[at+11],topology:revisions}};

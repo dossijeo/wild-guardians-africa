@@ -26,7 +26,11 @@ maximum HP, previous HP/status, damage band, and enclosure/plan-group IDs
 when the bot built that wall from a certified plan. Those IDs are attribution
 metadata, not a claim that the enclosure remains closed. Current physical
 protection and potentially exposed crop IDs remain available on demand from
-Wild Engine's existing `getUnprotectedCropGroups()` service. A ruin or wall
+Wild Engine's existing `getUnprotectedCropGroups()` service. Each returned
+group now also lists `associatedCenterIds` from its live crop membership, so
+the bot can identify work centers potentially affected by an exposed group.
+This association does not certify that an animal can physically hit a center;
+the native crop-group status is authoritative for the crops. A ruin or wall
 removal wakes enclosure planning; HP-only damage does not rebuild navigation.
 The repair command retains the game's payment, worker-access and automatic
 door checks.
