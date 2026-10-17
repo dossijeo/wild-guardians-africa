@@ -1,6 +1,6 @@
 # Topología diferida de murallas: overlay local experimental
 
-Rama: `codex/wild-engine-deferred-wall-topology`, creada desde `ca212cd964cef246bcd81f485c8a25a6a2e2a6e4`. No cambia economía, daño ni física. El binario WASM de referencia tiene SHA-256 `7817ebadc3dfa4c4d32f6197b5c4eb53468ad5f7f23293d72b902c23a7707095`; el candidato actual, `6e8294da7a97673f7ec121536dfe533292e0bbe9150bc4f47c9b9ab3812d7c7a`. El primer candidato, archivado en `full-abba.json`, tenía SHA-256 `40651bd23c30879601c1f410159b3341d6937f701faf1c5e916414ae440616f6`.
+Rama: `codex/wild-engine-deferred-wall-topology`, creada desde `ca212cd964cef246bcd81f485c8a25a6a2e2a6e4`. No cambia economía, daño ni física. El binario WASM de referencia tiene SHA-256 `7817ebadc3dfa4c4d32f6197b5c4eb53468ad5f7f23293d72b902c23a7707095`; el candidato actual, `ee33a5a56dcb57454e43c13c30f23b1d287f2c077c41a796a6e633d6f28857be`. El candidato previo a la agrupación de props, usado como base en `batch-props-abba.json`, tenía SHA-256 `6e8294da7a97673f7ec121536dfe533292e0bbe9150bc4f47c9b9ab3812d7c7a`. El primer candidato, archivado en `full-abba.json`, tenía SHA-256 `40651bd23c30879601c1f410159b3341d6937f701faf1c5e916414ae440616f6`.
 
 ## Auditoría del flujo efectivo
 
