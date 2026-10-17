@@ -101,12 +101,13 @@ The same V1 candidate and topological policy completed 14 verified raids in Saba
 | Cash / living crops at day-15 dawn | 991 / 106 | 1,299 / 69 |
 | Bot decision time / `Game.tick` time | 55.49 / 106.70 s | 30.58 / 117.58 s |
 
-The new policy retained more cash and prevented most raid losses, but had fewer living crops at this particular dawn. A living-crop snapshot is sensitive to harvest/replant timing after the trajectories diverge, and the two runs generated slightly different animal counts because attraction changed. `Game.tick` itself was slower in the new trajectory; the bot decision time fell enough that their combined measured time was lower. Neither timing is an isolated algorithmic A/B benchmark. The Sabana result therefore supports maintenance effectiveness but does not establish a general crop-count or engine-speed advantage.
+The new policy retained more cash and prevented most raid losses, but had fewer living crops at this particular dawn. On day 14 it delivered 169 harvests and planted 67 crops, compared with 96 and 121 respectively in the previous arm; the smaller living stock follows this different harvest/replant cycle rather than raid destruction that night. This can still matter for subsequent pressure and income, so it requires a longer campaign. The two runs generated slightly different animal counts because attraction changed. `Game.tick` itself was slower in the new trajectory; the bot decision time fell enough that their combined measured time was lower. Neither timing is an isolated algorithmic A/B benchmark. The Sabana result therefore supports maintenance effectiveness but does not establish a general crop-count or engine-speed advantage.
 
 ## Validation and limits
 
-Directed tests cover HP thresholds, duplicate event suppression, breach and
-repair notifications, center priority, cash waiting, task deduplication,
+Directed tests cover HP thresholds, duplicate event suppression, gate identity,
+center damage, wall removal, breach and repair notifications, center priority,
+cash waiting, task deduplication,
 unchanged topology revisions on HP-only damage, and save/restore without
 replayed notifications. The topological corridor test retains its physical
 closure and paid-build checks. Campaign evidence uses real incursions,

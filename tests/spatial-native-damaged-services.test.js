@@ -87,6 +87,7 @@ test('HP-only events do not wake the event-driven action planner',
 test('structure condition events are deduplicated and reset cleanly on restore',
  {skip:!module&&'Build and select the spatial-services WASM first'},()=>{
  const game=load(),wall=game.structures.find(item=>item.kind==='wall');
+ wall.gate=true;
  wall.defenseEnclosureId='enclosure:test';
  wall.defenseGroupId='crop:test';
  const session=createSpatialGameSession(module,game,{loaded:()=>new Map()});
@@ -128,6 +129,20 @@ test('structure condition events are deduplicated and reset cleanly on restore',
   restoredWall.hp=restoredWall.maxHp*.7;
   emit(restored,'StructureHit',{targetId:wall.id});planner.flushWorldEvents();
   assert.equal(changes.length,count+1);
+  assert.equal(changes.at(-1).enclosureId,'enclosure:test');
+  assert.equal(changes.at(-1).gate,true,'automatic gates retain their identity');
+  const center=restored.structures.find(item=>item.kind==='center');
+  center.hp=center.maxHp*.4;
+  emit(restored,'StructureHit',{targetId:center.id});planner.flushWorldEvents();
+  assert.equal(changes.at(-1).kind,'center');
+  assert.equal(changes.at(-1).severity,'severe');
+  assert.equal(changes.at(-1).hp,center.hp);
+  const beforeRemoval=changes.length;
+  restored.structures=restored.structures.filter(item=>item.id!==wall.id);
+  emit(restored,'WallRemoved',{targetId:wall.id});planner.flushWorldEvents();
+  assert.equal(changes.length,beforeRemoval+1);
+  assert.equal(changes.at(-1).change,'removed');
+  assert.equal(changes.at(-1).structureId,wall.id);
   assert.equal(changes.at(-1).enclosureId,'enclosure:test');
   stopCondition();stopWorld();
  }finally{session.dispose();}
