@@ -42,6 +42,18 @@ test('All 18 Three.js VFX preserve native solid, ribbon and sprite uploads befor
   library.dispose();pipeline.dispose();
 });
 
+test('Sprite instances reuse their GPU upload buffer and update only live particles',()=>{
+  const {library,pipeline,camera}=setup(),fx=library.create('heal',pipeline,{agricultureMode:'growth'});
+  fx.seek(3);const storage=fx.spriteBuffer.array;fx.prepare(camera);
+  const live=fx.sprites.geometry.instanceCount;
+  assert.ok(live>0);assert.equal(fx.spriteBuffer.array,storage);
+  assert.deepEqual(fx.spriteBuffer.updateRanges.map(r=>[r.start,r.count]),[[0,live*25]]);
+  fx.seek(4);fx.prepare(camera);
+  assert.equal(fx.spriteBuffer.array,storage);
+  assert.deepEqual(fx.spriteBuffer.updateRanges.map(r=>[r.start,r.count]),[[0,fx.sprites.geometry.instanceCount*25]]);
+  library.dispose();pipeline.dispose();
+});
+
 test('Atlas upload preserves original flipped rows, linear sampling, straight alpha and shared ownership',()=>{
   const {library,pipeline}=setup();assert.equal(library.texture.image,texture.image);assert.notEqual(library.texture,texture);assert.equal(texture.flipY,false);assert.equal(library.texture.flipY,true);assert.equal(library.texture.colorSpace,THREE.NoColorSpace);assert.equal(library.texture.generateMipmaps,false);assert.equal(library.texture.minFilter,THREE.LinearFilter);
   const fx=library.create('water',pipeline);assert.equal(fx.sprites.material.blending,THREE.NormalBlending);assert.equal(fx.sprites.material.premultipliedAlpha,false);assert.equal(fx.sprites.material.depthTest,true);assert.equal(fx.sprites.material.depthWrite,false);assert.equal(fx.uniforms.uDepth.value,pipeline.smokeDepth.depthTexture);assert.ok(fx.sprites.renderOrder>fx.ribbons.renderOrder,'Native geometry draws before its sprites');
