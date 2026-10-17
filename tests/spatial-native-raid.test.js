@@ -854,6 +854,37 @@ test('a retreat waits for unknown sectors and retries without treating them as b
   }finally{session.dispose();}
 });
 
+test('a frozen rhino retreat uses a physically clear exit when its graph route stays unknown',()=>{
+  const state=JSON.parse(gunzipSync(readFileSync(new URL(
+    './fixtures/desierto712-d25-unknown-retreat.json.gz',import.meta.url))));
+  const loaded=new Map(),session=createSpatialGameSession(module,state,{
+    loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+  try{
+    for(let z=-5;z<=7;z++)for(let x=-2;x<=7;x++){
+      if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+      loaded.set(`${x},${z}`,session.core.chunkPayload());
+    }
+    const nav=createSpatialNavigationMovement(session,state);
+    const animal=state.raid.animals.find(a=>a.id==='animal-27866');
+    assert(animal);state.raid.animals=[animal];
+    const oldHits=animal.hitsRemaining,oldPosition={x:animal.x,z:animal.z};
+    assert.throws(()=>nav.path(animal,animal.exit,animal.radius,null,false),
+      SpatialChunkUnavailable);
+    let route=null,ticks=0;
+    while(animal.status==='retreating'&&!route&&ticks<800){
+      state.elapsed+=.1;updateRaid(state,.1,nav);ticks++;
+      if(animal.path?.length)route=[{x:animal.x,z:animal.z},...animal.path];
+    }
+    assert(route,'the bounded connector finds the frozen animal a route');
+    for(let i=1;i<route.length;i++)assert(nav.segmentClear(route[i-1],route[i],
+      animal.radius,null,false),'every exit segment retains native static clearance');
+    assert.equal(animal.hitsRemaining,oldHits);
+    assert.notDeepEqual({x:animal.x,z:animal.z},oldPosition);
+    assert(!state.events.some(e=>e.type==='AnimalRetreatExitAbandoned'&&
+      e.actorId===animal.id));
+  }finally{session.dispose();}
+});
+
 test('a waiting raider parks its return-to-spawn move when sectors are unknown',()=>{
   const state=deserialize(gunzipSync(readFileSync(new URL(
     './fixtures/sabana712-d9-native-stalled-raid.json.gz',import.meta.url))).toString());
