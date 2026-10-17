@@ -28,3 +28,20 @@ node --input-type=module -e 'import {simulateActiveFarm} from "./tools/check_act
 | `2f7b186a` | Defeat, day 8 | 0 | Ruined | 215 |
 
 Both spawned eight raids. The new rules in `2f3a43dc` include area crop impacts, progressive horde pressure, and multiple waves from night 6; the old planner selected an ordinary budgeted group. This comparison proves that the historical victory assertion no longer describes the current rules and that the divergence was present by night 8. It does **not** isolate one rule within the large integration commit, prove a navigation defect, or show whether a defended policy can survive. Keep the failing assertions visible until the balance lab supplies a separately validated replacement acceptance scenario.
+
+## Current-main native 14-night comparison
+
+At `4743dda8f553ac65184e3534a0ecb517143bbc22` (Node 20.11.0), the unmodified native campaign runner completed two legal Sabana/712, Mapungubwe campaigns through night 14. The reproducible command is:
+
+```sh
+node tools/experiments/compare-active-farm-14-nights.mjs
+```
+
+The command emits one JSON object per day and one final object for each strategy. Frozen outputs from separate runs of the same two strategies are [good](main-4743dda8-good-14-nights.jsonl) and [no-walls](main-4743dda8-no-walls-14-nights.jsonl). The script runs them sequentially; time measurements are descriptive, not an ABBA performance comparison.
+
+| Strategy | Completed nights | Result at horizon | Living crops | Coins | Center HP | Cumulative crop deaths | Wall pieces ordered | Sum of `Game.tick` wall time |
+| --- | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `good` | 14 | Still active | 94 | 607 | 600 | 5 | 94 | 184.5 s |
+| `no-walls` | 14 | Still active | 0 | 132 | 573 | 378 | 0 | 45.4 s |
+
+`good` ordered walls in 30 transactions and repaired 108 structures. `no-walls` still had an intact center and 132 coins at the horizon, so zero crops is **not** a recorded defeat. The two named policies also differ in decisions beyond buying walls, and their farm size, workforce and resulting simulation workload diverge. This comparison establishes that a legal defended policy can survive the pressure after introductory nights 1–5 in this one seed; it neither isolates the causal benefit of walls nor demonstrates a 100-night victory, cross-biome balance, or a navigation speedup. The old fixed-plot 100-night victory assertions remain failing and unchanged.
