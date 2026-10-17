@@ -157,6 +157,18 @@ test('a sub-body seam in a closed wall loop blocks committed crop hits',()=>{
     previewPieces:wide},[],[{x:0,z:0}]).status,'open');
 });
 
+test('a canyon river blocks the crop-hit ray across a natural barrier',()=>{
+  const state=Game.newGame({seed:712,biome:'gran-canon'});
+  const nav=new Navigation(712,'gran-canon',{});
+  nav.field={canyon:true,riverLevel:0,surface:()=>0,slope:()=>0,
+    fluidInside:(x,z)=>Math.abs(x)<.3,
+    waterInfo:(x,z)=>({inside:Math.abs(x)<.3,level:0})};
+  nav.propsAt=()=>[];
+  nav.setState(state);
+  assert.equal(agriculturalRayClear(state,nav,{x:-.65,z:0},
+    {x:.65,z:0},SMALLEST_ANIMAL_RADIUS),false);
+});
+
 test('two wall strokes quote and purchase atomically with one automatic gate',()=>{
   const state=Game.newGame({seed:712});
   const nav=new Navigation(712,'sabana',{});

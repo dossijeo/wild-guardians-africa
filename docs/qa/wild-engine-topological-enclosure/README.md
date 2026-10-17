@@ -819,6 +819,14 @@ ray. This checks one concrete wall/building geometry and a state refresh, not
 arbitrary natural-obstacle continuity or a confirmed in-game destruction
 event.
 
+The crop-hit predicate also rejects a short ray crossing a Gran Cañón river;
+the directed natural-barrier test confirms this separately from the wall and
+building cases. A river-backed candidate may therefore be attack-opaque where
+that fluid crossing is proved, but the local cut still needs a continuous
+resident-boundary certificate and legal wall junctions before claiming the
+whole enclosure is protected. Rocks and trees are not made attack-opaque by
+this river test.
+
 ### Local construction and destruction regression
 
 The focused WASM test now encloses a known resident seed with four native

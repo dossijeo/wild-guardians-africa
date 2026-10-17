@@ -9,7 +9,7 @@ export const SMALLEST_ANIMAL_RADIUS=Math.min(...Object.values(
 
 // Zero-width diagnostic for wall coverage of a boundary face. A point ray
 // can pass a sub-body seam even when an animal's committed crop hit cannot.
-// Water and props do not occlude crop attacks in the current combat predicate.
+// Canyon fluid occludes crop-hit rays separately; ordinary props do not.
 export function wallOccludesBoundaryFace(a,b,walls){
   if(![a?.x,a?.z,b?.x,b?.z].every(Number.isFinite)||!Array.isArray(walls))
     throw TypeError('Expected a finite face and wall list');
