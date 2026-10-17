@@ -951,3 +951,27 @@ position along the natural intervals is safe, or that no other peripheral
 center exists. A clear ray alone is not an executed attack, and a sample with
 no hit is not a certificate of attack occlusion. The group's physical result
 therefore remains `unknown`.
+
+### Rejected attack-reach bound (2026-10-17)
+
+I prototyped a sufficient but deliberately pessimistic test: each face of
+the closed movement boundary had to be covered by quoted wall collision
+geometry or farther than the maximum possible direct-plus-peripheral hit
+range (5.840001 m) from every crop. On the same frozen Sabana/712 day-3
+state, it classified 12 of 142 faces as wall-covered, 56 as far enough, and
+**74 as too close to certify**. The closest such face was 1.118 m from a crop.
+The first uncertain face was a native static solid and could accept a short
+wall piece, but adding that hypothetical piece still left 73 uncertain faces.
+The [retained negative result](sabana712-attack-reach-bound-negative-2026-10-17.json)
+includes the state/source/WASM hashes, first and next face, placement result,
+and worker-access counts.
+
+This bound cannot distinguish an exterior position from a face buried inside
+a natural solid. Its 74 warnings therefore do **not** imply 74 attackable
+openings or 74 required modules. Building over all of them would undo the
+purpose of the topology-first planner. The experimental function and its QA
+hook were reverted after this measurement; the original movement and attack
+audits remain. A useful replacement would have to reason about exterior
+standable contact and the real crop-hit predicate without enumerating every
+crop/angle during ordinary planning. No protection claim or bot integration
+follows from this result.

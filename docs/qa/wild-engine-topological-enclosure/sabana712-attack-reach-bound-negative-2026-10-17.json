@@ -1,0 +1,72 @@
+{
+  "biome": "sabana",
+  "seed": 712,
+  "day": 3,
+  "source": "76c817600998541363c921574f8759a99e5d6cefe3d850044af0dfbf244f1cc5",
+  "wasmSha256": "0255e71a4322356064c28bcb1a707f32f37b1aa7fef412b84b3897ea92ff01ca",
+  "stateHash": "7b7033894dee269d4bf04cb074f1372ef2f84ef280446150cd5f2e2331cb6966",
+  "living": 66,
+  "scope": "Diagnostic only; overconservative attack-reach bound removed from prototype after this negative result",
+  "maxReach": 5.840001,
+  "boundaryFaces": 142,
+  "wallCoveredFaces": 12,
+  "distantFaces": 56,
+  "nearNaturalFaces": 74,
+  "nearestDistance": 1.118033988749895,
+  "firstNearFace": {
+    "face": 10,
+    "edge": [
+      82,
+      -12,
+      82,
+      -11
+    ],
+    "nearestCropId": "plant-1300",
+    "nearest": 5.70087712549569
+  },
+  "lastNearFace": {
+    "face": 132,
+    "edge": [
+      93,
+      12,
+      93,
+      11
+    ],
+    "nearestCropId": "plant-1284",
+    "nearest": 5.590169943749474
+  },
+  "firstFaceNativeKind": 1,
+  "firstFaceWallPlacement": {
+    "valid": true,
+    "suppress": []
+  },
+  "afterOneHypotheticalPatch": {
+    "remainingNearFaces": 73,
+    "nextFace": {
+      "face": 11,
+      "edge": [
+        83,
+        -12,
+        83,
+        -11
+      ],
+      "nearestCropId": "plant-1340",
+      "nearest": 5.315072906367325
+    }
+  },
+  "physicalProtection": "unknown",
+  "workerAccess": {
+    "outbound": {
+      "reachable": 66,
+      "blocked": 0,
+      "unknown": 0
+    },
+    "return": {
+      "reachable": 66,
+      "blocked": 0,
+      "unknown": 0
+    },
+    "examples": [],
+    "returnFailures": []
+  }
+}
