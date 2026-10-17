@@ -1,11 +1,12 @@
-# Enclosure cut boundary: open face versus unavailable geometry
+# Enclosure cut boundary: uncertified face versus unavailable geometry
 
 The V1-pressure, topological-bot Sabana/712 campaign in experimental balance
 PR #98 lost its crops after night 68. Its enclosure adviser returned
 `movement-unproved` for cuts with two or three faces previously aggregated as
-`unknown`. The native `lazy_cut_face_natural` contract distinguishes a known
-unblocked face (`0`) from an undetermined face (`-1`); the JavaScript counter
-had merged them. This branch records the native code and coordinates for up
+`unknown`. The native `lazy_cut_face_natural` contract distinguishes a face
+whose continuous blockage is not certified (`0`) from an undetermined face
+(`-1`); the JavaScript counter had merged them. Code `0` does not by itself
+prove animal passage. This branch records the native code and coordinates for up
 to eight unproved faces in a failed proposal. It does not change protection,
 construction, spending or movement decisions.
 
@@ -25,13 +26,15 @@ serialized-state hashes **exactly matched** the archived pre-diagnostic
 Sabana/712 campaign. WASM, game, raids and runner input hashes also match.
 The compressed [full replay report](sabana712-enclosure-face-replay-72.json.gz)
 preserves source and candidate hashes, the daily ledger and the new face
-diagnostics. The baseline report is retained in
+diagnostics. That archived replay uses the original diagnostic field name
+`open` for code `0`; the current code calls it `uncertified` to avoid
+implying proven traversability. The baseline report is retained in
 [PR #98](https://github.com/dossijeo/wild-guardians-africa/blob/codex/current-balance-candidate/docs/qa/military-wall-balance-search/current-main-repair-v1-topological-sabana712-100.json.gz).
 
 Across 74 failed proposal attempts with face details through night 72, the
-counter recorded 186 appearances of known open faces and **zero** negative
+counter recorded 186 appearances of uncertified code-`0` faces and **zero** negative
 or otherwise unclassified codes. These are repeated observations, not 186
-distinct holes. On nights 70–72, the same three adjacent native-open faces
+distinct holes. On nights 70–72, the same three adjacent uncertified faces
 recurred between `x=104` and `x=105`, at `z=-1`, `0` and `1`. The native code
 for each was `0`. The bot therefore did not have a certified enclosure; its
 refusal to construct or label that candidate protected was correct. Raids
@@ -46,7 +49,7 @@ non-passable cells. `cutFaceNatural` subsequently rejects a boundary face
 unless a real solid, wetland, river or cliff covers it continuously. This
 explains the kind of discrepancy observed without treating grid occupancy as
 a physical certificate. The next change should determine whether these
-specific open faces can be closed by legal wall modules or whether the cut
+specific uncertified faces can be closed by legal wall modules or whether the cut
 must move around them; it must re-run placement, worker access and attack
 certification on the resulting proposal. Reclassifying code `0` as a barrier
 would be physically wrong.

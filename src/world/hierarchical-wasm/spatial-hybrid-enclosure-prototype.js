@@ -10,13 +10,14 @@ const SPECIES=['warthog','hyena','buffalo','lion','rhino'];
 const MAX_ATTACK_REACH=Math.max(...Object.values(ANIMAL_SPATIAL_PROFILES)
   .map(profile=>profile.radius))+.65+AGRICULTURAL_PROFILE_LIMITS.attackRadius;
 
-// Keep the native answer for faces that prevent certification. Code 0 is a
-// known open face; a negative code cannot establish whether a barrier exists.
-// Neither may be promoted to a closed face. Capture only a few coordinates so
+// Keep the native answer for faces that prevent certification. Code 0 means
+// continuous blockage was not proven; it does not prove animal passage.
+// A negative code cannot establish whether a barrier exists. Neither may be
+// promoted to a closed face. Capture only a few coordinates so
 // a failed proposal is diagnosable without retaining its entire boundary.
 export function classifyCutBoundaryFaces(boundary,wasm,cachedKinds=null){
   const faceCounts={solid:0,wetland:0,river:0,cliff:0,unknown:0};
-  const unprovedFaces={open:0,undetermined:0,other:0,samples:[]};
+  const unprovedFaces={uncertified:0,undetermined:0,other:0,samples:[]};
   for(let i=0;i<boundary.length;i+=4){
     const code=cachedKinds?cachedKinds[i/4]:wasm.lazy_cut_face_natural(
       boundary[i],boundary[i+1],boundary[i+2],boundary[i+3]);
@@ -26,7 +27,7 @@ export function classifyCutBoundaryFaces(boundary,wasm,cachedKinds=null){
     else if(code===4)faceCounts.cliff++;
     else{
       faceCounts.unknown++;
-      if(code===0)unprovedFaces.open++;
+      if(code===0)unprovedFaces.uncertified++;
       else if(code<0)unprovedFaces.undetermined++;
       else unprovedFaces.other++;
       if(unprovedFaces.samples.length<8)

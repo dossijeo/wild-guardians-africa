@@ -25,7 +25,7 @@ import {agriculturalRayClear,AGRICULTURAL_PROFILE_LIMITS} from '../src/simulatio
 import {ANIMAL_SPATIAL_PROFILES} from '../src/world/hierarchical-wasm/spatial-movement-profiles.js';
 import * as Game from '../src/simulation/game.js';
 
-test('cut diagnostics distinguish a known opening from unavailable geometry',()=>{
+test('cut diagnostics distinguish uncertified blockage from unavailable geometry',()=>{
   const boundary=[0,0,1,0,1,0,2,0,2,0,3,0,3,0,4,0];
   const codes=[1,0,-1,3];
   let calls=0;
@@ -34,7 +34,7 @@ test('cut diagnostics distinguish a known opening from unavailable geometry',()=
   assert.equal(calls,4);
   assert.deepEqual(result.faceCounts,
     {solid:1,wetland:0,river:1,cliff:0,unknown:2});
-  assert.deepEqual(result.unprovedFaces,{open:1,undetermined:1,other:0,
+  assert.deepEqual(result.unprovedFaces,{uncertified:1,undetermined:1,other:0,
     samples:[{edge:[1,0,2,0],code:0},{edge:[2,0,3,0],code:-1}]});
   assert.deepEqual(classifyCutBoundaryFaces(boundary,wasm,codes),result,
     'Cached classifications must not repeat native calls');
