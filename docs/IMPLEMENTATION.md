@@ -10,7 +10,7 @@ Fuente normativa: [Plan Maestro 2.0](plan/Wild_Guardians_Plan_Maestro_Definitivo
 - Menú de producción: adaptación del diorama original `Wild_Guardians_Africa_Menu_V2_8_CORREGIDO_Balafons_Call.html`, conservando renderer, recorridos, iluminación, logo y música. Generador: `tools/prepare_menu.py`.
 - HUD de producción: artwork, disposición adaptable, retratos y marco de contratación de `Wild_Guardians_HUD_Lab_Contratacion_Diaria.html`. Generador: `tools/prepare_hud.py`. La simulación de demostración no se utiliza como motor del juego.
 - Los 159 casos recibidos se auditan individualmente en [el registro de aceptación](qa/acceptance-progress.json); no se contabilizan automáticamente como pruebas ejecutadas. Los informes enlazados delimitan qué acredita cada ensayo y qué sigue pendiente.
-- Los commits y pushes se realizan directamente en `main`, por preferencia explícita del usuario. No utilizar ramas de transferencia ni commits sin cambios de archivos.
+- Históricamente se hicieron commits y pushes directos a `main`. Las instrucciones posteriores del usuario exigen ramas aisladas y PR para los trabajos experimentales, con fusión únicamente cuando corresponda. Los commits siguen la convención acordada y se suben progresivamente; no crear commits sin cambios de archivos.
 - Incidencia de biblioteca corregida: el visor de cultivos espera `assetData` comprimido con gzip; el empaquetador había entregado el GLB descomprimido. El cargador restaura el envoltorio gzip. Comprobación en navegador: finaliza la carga y muestra las ocho plantas de ejemplo en la parcela original.
 
 ## Contratos pendientes
