@@ -87,6 +87,10 @@ const screenWakeLock=new GameScreenWakeLock();screenWakeLock.setActive(true);
 let juice=null;
 let campaignCinema=null;
 let selector,thumbnails,state=null,nav=null,world=null,tool=null,selection=null,screen='menu',lastFrame=0,starting=false,raidLoading=null,lastUI=0,villageCatalog=null,pendingVillage=null;
+if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-visibility'))globalThis.wildGuardiansVisibilityQa=()=>({
+  hidden:document.hidden,screen,snapshot:state?JSON.stringify(state):null,
+  frameAt:lastFrame,observedAt:performance.now()
+});
 let preparedLoading=null,loadingDiorama=null,loadingProgress=null,loadingCinema=null,loadingMature=null,loadingDiagnostic=null,loadingGeneration=0,loadingAudio=null,loadingOverlay=null,loadingTransfers=null;
 function prepareLoadingScene(){
   preloadScreenOverlays();

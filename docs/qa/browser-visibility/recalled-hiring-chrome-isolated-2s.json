@@ -1,0 +1,243 @@
+{
+  "schema": 1,
+  "gameUrl": "http://127.0.0.1:5179/?qa-seed=712&qa-visibility",
+  "hiddenDurationRequestedSeconds": 2.0,
+  "browser": "Chrome/155.0.8059.84",
+  "sourceCommit": "39b2be75cf4d648836a678e564285432f4479185",
+  "qaSourceSha256": {
+    "src/app/main.js": "1207d0d1c09652354b061047f9538ee065781407a6caaae63693d5e4a4ca9573",
+    "tools/experiments/qa-browser-visibility.py": "ee8f7ec98e77ad570e91fdac69a3a24960d891cdec60c863ed1855315389afab"
+  },
+  "fixture": {
+    "path": "docs/qa/recalled-hiring/confirmed-snapshot.json",
+    "slotId": "qa-recalled-hiring"
+  },
+  "stageReady": true,
+  "before": {
+    "hidden": false,
+    "screen": "game",
+    "frameAt": 25937.9,
+    "observedAt": 25996.599999904633,
+    "day": 2,
+    "time": 0.5919000000953676,
+    "elapsed": 600.591900000095,
+    "pauses": [],
+    "balance": {
+      "n": "45",
+      "d": "1"
+    },
+    "livingCrops": 1,
+    "workers": 1,
+    "events": 10,
+    "firstLivingCrop": {
+      "id": "plant-3",
+      "growth": 140,
+      "water": [
+        {
+          "at": 0,
+          "status": "manual",
+          "wait": 0
+        },
+        {
+          "at": 70,
+          "status": "manual",
+          "wait": 0
+        }
+      ],
+      "attackHits": null
+    },
+    "firstWorker": {
+      "id": "worker-11",
+      "x": 200.1029993106532,
+      "z": 35,
+      "status": "walking",
+      "taskId": "task-12"
+    },
+    "stateSha256WithoutHiddenPause": "753e09c477a20aeaa213f854df4be816b52af0a4bc251132a1509c5f4ec70af0"
+  },
+  "hiddenStart": {
+    "hidden": true,
+    "screen": "game",
+    "frameAt": 25987.8,
+    "observedAt": 27025,
+    "day": 2,
+    "time": 0.6418000000953654,
+    "elapsed": 600.641800000095,
+    "pauses": [
+      "hidden"
+    ],
+    "balance": {
+      "n": "45",
+      "d": "1"
+    },
+    "livingCrops": 1,
+    "workers": 1,
+    "events": 10,
+    "firstLivingCrop": {
+      "id": "plant-3",
+      "growth": 140,
+      "water": [
+        {
+          "at": 0,
+          "status": "manual",
+          "wait": 0
+        },
+        {
+          "at": 70,
+          "status": "manual",
+          "wait": 0
+        }
+      ],
+      "attackHits": null
+    },
+    "firstWorker": {
+      "id": "worker-11",
+      "x": 200.1568913106532,
+      "z": 35,
+      "status": "walking",
+      "taskId": "task-12"
+    },
+    "stateSha256WithoutHiddenPause": "326e15a321b5e151dd24d55e2f8e3c0536d17c9550e0fddf0b4ac38b90ab5cd8"
+  },
+  "hiddenEnd": {
+    "hidden": true,
+    "screen": "game",
+    "frameAt": 25987.8,
+    "observedAt": 29032.299999952316,
+    "day": 2,
+    "time": 0.6418000000953654,
+    "elapsed": 600.641800000095,
+    "pauses": [
+      "hidden"
+    ],
+    "balance": {
+      "n": "45",
+      "d": "1"
+    },
+    "livingCrops": 1,
+    "workers": 1,
+    "events": 10,
+    "firstLivingCrop": {
+      "id": "plant-3",
+      "growth": 140,
+      "water": [
+        {
+          "at": 0,
+          "status": "manual",
+          "wait": 0
+        },
+        {
+          "at": 70,
+          "status": "manual",
+          "wait": 0
+        }
+      ],
+      "attackHits": null
+    },
+    "firstWorker": {
+      "id": "worker-11",
+      "x": 200.1568913106532,
+      "z": 35,
+      "status": "walking",
+      "taskId": "task-12"
+    },
+    "stateSha256WithoutHiddenPause": "326e15a321b5e151dd24d55e2f8e3c0536d17c9550e0fddf0b4ac38b90ab5cd8"
+  },
+  "hiddenNavigationEvents": [],
+  "restored": {
+    "hidden": false,
+    "screen": "game",
+    "frameAt": 29047.4,
+    "observedAt": 29077.299999952316,
+    "day": 2,
+    "time": 0.6437000000953669,
+    "elapsed": 600.643700000095,
+    "pauses": [],
+    "balance": {
+      "n": "45",
+      "d": "1"
+    },
+    "livingCrops": 1,
+    "workers": 1,
+    "events": 10,
+    "firstLivingCrop": {
+      "id": "plant-3",
+      "growth": 140,
+      "water": [
+        {
+          "at": 0,
+          "status": "manual",
+          "wait": 0
+        },
+        {
+          "at": 70,
+          "status": "manual",
+          "wait": 0
+        }
+      ],
+      "attackHits": null
+    },
+    "firstWorker": {
+      "id": "worker-11",
+      "x": 200.1589433106532,
+      "z": 35,
+      "status": "walking",
+      "taskId": "task-12"
+    },
+    "stateSha256WithoutHiddenPause": "1c31f40619a8b1c6a38814881911ecb4cd62f3cce4a737334318c5044babc242"
+  },
+  "restoredAfter2_5s": {
+    "hidden": false,
+    "screen": "game",
+    "frameAt": 31575,
+    "observedAt": 31591.199999809265,
+    "day": 2,
+    "time": 3.171300000095367,
+    "elapsed": 603.1713000000931,
+    "pauses": [],
+    "balance": {
+      "n": "45",
+      "d": "1"
+    },
+    "livingCrops": 1,
+    "workers": 1,
+    "events": 10,
+    "firstLivingCrop": {
+      "id": "plant-3",
+      "growth": 140,
+      "water": [
+        {
+          "at": 0,
+          "status": "manual",
+          "wait": 0
+        },
+        {
+          "at": 70,
+          "status": "manual",
+          "wait": 0
+        }
+      ],
+      "attackHits": null
+    },
+    "firstWorker": {
+      "id": "worker-11",
+      "x": 202.88875131065365,
+      "z": 35,
+      "status": "walking",
+      "taskId": "task-12"
+    },
+    "stateSha256WithoutHiddenPause": "0945dad1356341306f209aa68d8ede349f8b302c130f0fe95612985746fadf9b"
+  },
+  "hiddenDurationObservedSeconds": 2.0072999999523162,
+  "pageExceptions": [],
+  "checks": {
+    "actualHidden": true,
+    "hiddenPausePresent": true,
+    "stateUnchangedWhileHidden": true,
+    "noNavigationWhileHidden": true,
+    "noOfflineCatchup": true,
+    "hiddenPauseRemoved": true,
+    "noPageExceptions": true
+  },
+  "ok": true
+}
