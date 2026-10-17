@@ -72,20 +72,30 @@ Both farms remained active with an operational center. The V1 arm still lost
 different farm sizes and workload make those values unsuitable as an isolated
 engine speed comparison.
 
-The V1-pressure arm also completed 30 genuine nights on the same current-main
-code: 89 living crops, 641 coins, one operational center, 86 paid thorn-wall
-modules, 522 cumulative crop losses, and verified raid evidence with zero
-issues. The losses increased from 90 on nights 6–14 to 195 on nights 15–21 and
-237 on nights 22–30. Cumulative Game.tick was 259.4 s and virtual-player
-decisions 65.2 s; the run took 349.9 s wall time. This is survival at the
-30-night horizon, **not** a 100-night victory or evidence that late losses are
-sustainable. The night-by-night [14-night](current-main-sabana712-14-nightly.csv)
-and [30-night](current-main-v1-pressure-sabana712-30-nightly.csv) ledgers and
-compressed full reports are checked in for inspection.
+The two 30-night requests used the same current-main code. Each arm reproduced
+all 14 of its own shorter run's day-end state hashes exactly.
+
+| Arm | Actual completed nights | Terminal state | Crops | Coins | Crop losses after night 5 | Raid evidence |
+| --- | ---: | --- | ---: | ---: | ---: | --- |
+| Current control | 21 | Economic defeat at dawn of day 22 | 0 | 27 | 285 | Verified, zero issues |
+| V1 military pressure | 30 | Still active at horizon | 89 | 641 | 522 | Verified, zero issues |
+
+The control still had an operational center; loss of agricultural production
+and cash caused its real defeat. The V1 arm retained an operational center and
+86 paid thorn-wall modules. Its losses increased from 90 on nights 6–14 to
+195 on nights 15–21 and 237 on nights 22–30. Cumulative Game.tick was 259.4 s
+and virtual-player decisions 65.2 s for the 30-night arm; the run took 349.9 s
+wall time. This is survival at the 30-night horizon, **not** a 100-night
+victory or evidence that late losses are sustainable. The night-by-night
+[14-night](current-main-sabana712-14-nightly.csv) and
+[30-night](current-main-sabana712-30-nightly.csv) ledgers and compressed full
+reports are checked in for inspection. Cumulative losses across unequal
+horizons must not be compared as an isolated damage rate.
 
 The report gzip SHA-256 values are `d6d900f48cbb648b0fba5b07326c4144268f2b9c11e6bb73797af7ff98c21f51`
 (14-night control), `0d016356f88d0d5d8f84fb26a330d526776d5d9403f387cfe9a117dd90a08984`
 (14-night V1) and `1b13044a31777ba87b38cfd10a324b64e5da3e53970483d587858c8380d82546`
-(30-night V1). No production pressure or wall table was changed. Held-out
-biome/seed checks and later horizons remain necessary before recommending a
-balance candidate.
+(30-night V1), and `04e156b0d877f231eb7f327fb8f7636292185c903268c76b70877f784e8d1c83`
+(21-night control from a 30-night request). No production pressure or wall
+table was changed. Held-out biome/seed checks and later horizons remain
+necessary before recommending a balance candidate.
