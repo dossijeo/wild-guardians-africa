@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as Game from '../src/simulation/game.js';
 import {gatePortalPoints} from '../src/world/gate-passages.js';
+import {ANIMAL_SPATIAL_PROFILES} from '../src/world/hierarchical-wasm/spatial-movement-profiles.js';
 import {createSpatialCampaignOpening} from '../tools/experiments/spatial-campaign-opening.mjs';
 
 for(const biome of ['sabana','gran-rio','manglares','volcanes','desierto','gran-canon'])
@@ -68,3 +69,27 @@ for(const biome of ['sabana','gran-rio','manglares','volcanes','desierto','gran-
       }else assert.equal(local,null,'prop removal must use the full preview');
     }finally{session.dispose();}
   });
+
+test('batched hypothetical prop removals restore every mobility profile',async()=>{
+  const {nav,session,loaded}=await createSpatialCampaignOpening({biome:'sabana'});
+  try{
+    const props=[...loaded.values()].flatMap(chunk=>chunk.instances.flat())
+      .filter(item=>item.id?.startsWith('spatial:')&&
+        (item.slot<4||item.slot>=10&&item.slot<=12||item.slot>=18))
+      .slice(0,8);
+    assert.equal(props.length,8,'fixture needs eight solid resident props');
+    const profiles=[true,...Object.keys(ANIMAL_SPATIAL_PROFILES)];
+    const occupancy=()=>profiles.map(profile=>props.map(prop=>
+      session.actorCanStand({x:prop.x,z:prop.z},profile===true?
+        {worker:true}:{worker:false,species:profile})));
+    const before=occupancy();
+    nav.withWallPreview([],props.map(prop=>prop.id),()=>{
+      assert.equal(session.core.wasm.spatial_removed_prop_count(),props.length);
+      assert.notDeepEqual(occupancy(),before,
+        'at least one profile must see the removed obstruction');
+    });
+    assert.equal(session.core.wasm.spatial_removed_prop_count(),0);
+    assert.deepEqual(occupancy(),before,
+      'restoration must not leave a stale raster or sector graph');
+  }finally{session.dispose();}
+});
