@@ -154,9 +154,13 @@ compared before attributing the later losses to military pressure alone.
 
 The per-night finance and raid ledger is
 [`sabana712-14-nightly.csv`](sabana712-14-nightly.csv). Full source reports are
-stored as `*.json.gz` alongside this file and can be expanded with gzip. To
-regenerate the table from expanded reports, run
-`node tools/experiments/summarize-balance-candidates.mjs output.csv report.json ...`.
+stored as `*.json.gz` alongside this file. To regenerate the table directly
+from compressed or expanded reports, run
+`node tools/experiments/summarize-balance-candidates.mjs output.csv report.json.gz ...`.
+The nightly CSVs include the observed crops exposed at raid spawn, the
+corresponding agricultural loss percentage, and separate `Game.tick` and
+virtual-player decision times. This keeps late-night physical losses and
+runtime growth visible instead of relying only on end-of-campaign totals.
 The corresponding Manglares ledger is
 [`manglares712-14-nightly.csv`](manglares712-14-nightly.csv).
 The independent-seed ledger is
