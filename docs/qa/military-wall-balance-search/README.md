@@ -18,9 +18,10 @@ event-driven expanding defense, and the existing `good` strategy by default.
 Pass `topological` as a sixth argument to compare the integrated opt-in
 topological enclosure policy from PR #62; use `expanding` for an explicit
 control. Compare those policies with the same candidate, seed and biome before
-attributing a balance outcome to military parameters. The topological policy
-does not yet repair breached walls, so differences in longer campaigns include
-that deliberate policy gap and cannot isolate enclosure geometry alone. The report
+attributing a balance outcome to military parameters. Since PR #104, the
+topological policy requests ordinary paid wall and center repairs in response
+to structure events. Archived topological runs made before that merge still
+reflect the earlier policy without wall maintenance. The report
 records candidate and source hashes, per-night state hashes, crops, cash,
 financial flows, raids, defense purchases, physical raid evidence and timings.
 A reported victory requires actually completing night 100; a requested horizon
@@ -196,15 +197,18 @@ verified with zero issues.
 | Expanding rectangle | 14 | 54 | 941 | 2 | 34 / 340 | 236 |
 | Topological closure | 14 | 34 | 1,013 | 59 | 21 / 210 | 0 |
 
-The topological bot bought its initial certified 12-module closure for 120
-coins on day 3, then paid for nine more modules after subsequent changes and
+At source commit `6c6898ac`, before PR #104, the topological bot bought its
+initial certified 12-module closure for 120 coins on day 3, then paid for
+nine more modules after subsequent changes and
 breaches. It spent less and retained 72 more coins, but lost 20 more crops at
 the horizon. Losses concentrated on nights 8–11 and 14. The topological policy
-currently buys new certified closures but does not repair damaged wall HP;
+bought new certified closures but did not repair damaged wall HP;
 the expanding policy spent 236 coins on repairs. This is a comparison of two
 complete policies, **not** an isolated geometry or military-pressure effect.
 It shows why integrating the topology service cannot by itself justify a
 balance recommendation or replacing the established defending bot.
+The later [event-driven maintenance comparison](../topological-defense-repair-events.md)
+isolates that policy addition under the same seed and pressure candidate.
 
 The paired [nightly ledger](current-main-v1-pressure-gran-canon712-defense-policies-14-nightly.csv)
 and full [expanding](current-main-v1-pressure-expanding-gran-canon712-14.json.gz)
