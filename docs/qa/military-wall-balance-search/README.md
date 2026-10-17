@@ -389,3 +389,35 @@ Its [nightly ledger](current-v1-affordable-sabana123-30-nightly.csv) and
 compressed [report](current-v1-affordable-sabana123-30.json.gz) preserve the
 evidence. The candidate should remain experimental; these two seeds do not
 support a monotonic or universal benefit.
+
+## Same-code price × durability ablation, Desierto/712
+
+To separate the two wall levers, four 14-night arms used the same source
+commit `dbe91d00`, identical WASM and input hashes, V1 military recipe,
+seed, expanding bot and fixed game rules. All paid for 99 thorn modules and
+completed 14 verified raids without issues. The higher-material candidate
+table is identical across the three experimental arms; the bot selected
+only thorn walls. The variables below are therefore the effective thorn
+price and HP (including gate HP):
+
+| Thorn specification | Crops at night 14 | Cash | Crop losses, nights 6–14 | Wall purchase cost |
+| --- | ---: | ---: | ---: | ---: |
+| Standard: 10 coins, 100 HP, gate 60 HP | 77 | 644 | 51 | 990 |
+| Price only: 8 coins, 100 HP, gate 60 HP | 164 | 1,004 | 9 | 792 |
+| Durability only: 10 coins, 120 HP, gate 90 HP | 165 | 852 | 7 | 990 |
+| Both: 8 coins, 120 HP, gate 90 HP | 107 | 1,065 | 3 | 792 |
+
+Both single-lever changes produced many more surviving crops than standard
+walls on this seed. Combining them had the most cash and fewest raid crop
+losses, yet fewer terminal crops than either single-lever arm. The game and
+bot are path-dependent: changes to early purchases, staffing, planting and
+raid encounters alter later opportunities. This interaction makes an
+additive extrapolation from the two single-lever results unsound. The
+[four-arm nightly ledger](factorial-desierto712-14-nightly.csv) and compressed
+[standard](factorial-standard-desierto712-14.json.gz),
+[price-only](factorial-cheap-desierto712-14.json.gz),
+[durability-only](factorial-tough-desierto712-14.json.gz), and
+[combined](factorial-cheap-tough-desierto712-14.json.gz) reports preserve
+every campaign and its input hashes. One seed and 14 nights cannot rank
+the candidates for production; the first five introductory raids also
+limit what this horizon says about sustained military pressure.
