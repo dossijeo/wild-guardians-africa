@@ -413,6 +413,10 @@ losses, yet fewer terminal crops than either single-lever arm. The game and
 bot are path-dependent: changes to early purchases, staffing, planting and
 raid encounters alter later opportunities. This interaction makes an
 additive extrapolation from the two single-lever results unsound. The
+second wall purchase occurred on day 14 with standard specs, day 11 with
+price-only, day 12 with durability-only and day 11 with both changes.
+Earlier investment is one concrete mechanism behind divergent exposure;
+purchase timing alone does not certify that each enclosure was closed. The
 [four-arm nightly ledger](factorial-desierto712-14-nightly.csv) and compressed
 [standard](factorial-standard-desierto712-14.json.gz),
 [price-only](factorial-cheap-desierto712-14.json.gz),
@@ -421,3 +425,42 @@ additive extrapolation from the two single-lever results unsound. The
 every campaign and its input hashes. One seed and 14 nights cannot rank
 the candidates for production; the first five introductory raids also
 limit what this horizon says about sustained military pressure.
+
+## Same-code 30-night price × durability ablation, Desierto/712
+
+The four Desierto arms were rerun from a fresh state for 30 nights on source
+commit `68a53c3c` after the physical retreat connector fix in PR #103. The
+WASM, `game.js`, `raids.js`, runner, seed, V1 pressure and expanding bot
+hashes match across all four reports. Each completed 30 real raids with
+`raidEvidence.status=verified`, zero issues and no coverage loss. The older
+14-night runs used the preceding retreat behavior and must not be spliced
+onto these 30-night trajectories.
+
+| Thorn specification | Crops at night 30 | Cash | Crop losses, nights 6–30 | Modules bought | Wall purchase cost |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Standard: 10 coins, 100 HP, gate 60 HP | 123 | 1,014 | 251 | 99 | 990 |
+| Price only: 8 coins, 100 HP, gate 60 HP | 106 | 1,021 | 169 | 99 | 792 |
+| Durability only: 10 coins, 120 HP, gate 90 HP | 125 | 761 | 86 | 99 | 990 |
+| Both: 8 coins, 120 HP, gate 90 HP | 63 | 707 | 324 | 127 | 1,016 |
+
+At this horizon the combined candidate is worse than standard on terminal
+crops, cash and agricultural losses. It bought 28 additional modules on day
+29, while the other arms stopped at 99; its seed spending was also about
+5,600 coins above standard. These are observed changes in the fixed bot's
+investment trajectory, not proof that stronger, cheaper walls are physically
+weaker. The price-only candidate preserves roughly the same cash with fewer
+raid crop losses but fewer terminal crops. Durability-only sharply reduces
+raid losses while ending with less cash. No single arm is justified as a
+production recommendation from one seed. The
+[nightly ledger](factorial-desierto712-30-nightly.csv) and compressed
+[standard](factorial-standard-desierto712-30.json.gz),
+[price-only](factorial-cheap-desierto712-30.json.gz),
+[durability-only](factorial-tough-desierto712-30.json.gz), and
+[combined](factorial-cheap-tough-desierto712-30.json.gz) reports contain the
+complete economic and physical evidence.
+
+The first price-only 30-night attempt ended technically on day 25 when a
+rhino in retreat held an unresolved graph route. Its partial state was
+frozen; PR #103 reused the existing bounded physical connector and verified
+the resulting path against native static collisions. The replay completed
+30 nights. The interrupted run is not counted as a balance defeat.
