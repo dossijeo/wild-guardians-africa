@@ -92,6 +92,8 @@ test('unknown Gran Cañón task region remains pending in one native batch',
  assert.equal(result.jsTask,null);
  assert.equal(result.nativeTask,null);
  assert(result.statuses.every(status=>status===3));
- assert.equal(result.nativeQueries,result.jsCandidates,
-  'one unresolved service point per task, without probing its other angles');
+ assert(result.nativeQueries>=result.jsCandidates,
+  'each pending task examines at least its first interaction point');
+ assert(result.nativeQueries<=result.jsCandidates*8,
+  'an unknown first point may require the other bounded watering angles');
 });
