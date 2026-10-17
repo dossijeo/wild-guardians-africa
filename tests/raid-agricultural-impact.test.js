@@ -7,6 +7,27 @@ test('sector follows current contact heading and rejects a backward or remote co
 test('a radius-zero or damage-zero profile never manufactures peripheral hits or mandatory deaths',()=>{const {s,nav,a,target}=scene();a.damageProfile.attackRadius=0;assert.equal(resolveAgriculturalImpact(s,a,target,nav).hits.length,1);a.attackId='attack-2';a.damageProfile.cropDamage=0;assert.equal(resolveAgriculturalImpact(s,a,target,nav).hits.length,0);assert.equal(target.alive,false);assert(s.plants.slice(1).every(p=>p.alive));});
 test('area cap prioritizes the central plant then nearest legal physical candidates',()=>{const {s,nav,a,target}=scene([[40,0],[40,.8],[40,1.6],[40,2.4]]);a.damageProfile.areaCap=2;assert.deepEqual(resolveAgriculturalImpact(s,a,target,nav).hits.map(h=>h.targetId),['p0','p1']);});
 for(const gate of [false,true])test(`native wall footprint occludes peripheral impacts, including animal-blocking gate=${gate}`,()=>{const {s,nav,a,target}=scene([[40,0],[40,2]]);s.structures.push({id:'wall',kind:'wall',x:40,z:1,yaw:0,material:'adobe',gate,hp:100,maxHp:100,status:'intact'});nav.setState(s);assert.equal(agriculturalRayClear(s,nav,target,s.plants[1]),false);assert.deepEqual(resolveAgriculturalImpact(s,a,target,nav).hits.map(h=>h.targetId),['p0']);});
+test('a committed raid attack damages only crops on its side of a wall until the wall is ruined',()=>{
+ const {s,nav,a,target}=scene([[40,0],[40,2]]),behind=s.plants[1];
+ const wall={id:'splash-wall',kind:'wall',x:40,z:1,yaw:0,material:'adobe',hp:100,maxHp:100,status:'intact'};
+ s.structures.push(wall);
+ Object.assign(a,{targetId:target.id,reservation:`crop:${target.id}`,attackDuration:1,attackRemaining:.1,
+  animation:'Right_Hand_Sword_Slash',hitApplied:false});
+ s.raid.reservations[a.reservation]=a.id;nav.setState(s);
+ updateRaid(s,.1,nav);
+ assert.equal(target.attackHits,1);
+ assert.equal(behind.attackHits,undefined);
+ assert.deepEqual(s.events.filter(e=>e.type==='CropHit').map(e=>e.targetId),[target.id]);
+ wall.status='ruined';
+ const replacement=createPlant('replacement','mijo',target.x,target.z,'center');s.plants.push(replacement);
+ delete s.raid.reservations[a.reservation];
+ Object.assign(a,{status:'attacking',targetId:replacement.id,reservation:`crop:${replacement.id}`,
+  attackId:'attack-after-wall-ruin',attackRemaining:.1,hitApplied:false});
+ s.raid.reservations[a.reservation]=a.id;nav.setState(s);
+ updateRaid(s,.1,nav);
+ assert.equal(behind.attackHits,.5);
+ assert.deepEqual(s.events.filter(e=>e.type==='CropHit').map(e=>e.targetId),[target.id,replacement.id,behind.id]);
+});
 test('an animal cannot hit a crop through a wall seam narrower than its body',()=>{
  const {s,nav,a,target}=scene([[40,0],[40,2]]);
  const piece=(id,x,length)=>({id,kind:'wall',x,z:1,yaw:0,material:'zarzas',
