@@ -126,5 +126,22 @@ difference. The [nightly ledger](current-main-manglares712-14-nightly.csv) and
 full reports retain the physical and economic details. Report gzip SHA-256:
 `7518fd195b8f55758f51fed693ec26a3001eb885709e603fa593744df6f0209f`
 (control) and `ed6ae491ab23fdb639d0acf5512325c96d7db08adcf28764adb678f1ea7e6f18`
-(V1). This supports a second biome at the 14-night horizon but does not cover
-Gran Cañón, Desierto, Gran Río or Volcanes, nor later military escalation.
+(V1). This supports a second biome at the 14-night horizon; further biomes
+and later military escalation still require separate evidence.
+
+## Gran Cañón seed 712
+
+The control completed 10 nights and lost its sole center during night 11. It
+ended with four living crops and 181 coins, below the cost of founding a new
+center; this is a real military/economic defeat, not a technical stop. The V1
+pressure arm completed all 14 requested nights with 54 living crops, 941 coins
+and an operational center. Crop losses were 91 in the control's partial
+11-night horizon and two in V1's 14-night horizon. Both paid for 34 thorn-wall
+modules and both full raid reports verified with zero issues. These are
+different exposure horizons, so the loss totals should be read with the
+[nightly ledger](current-main-gran-canon712-14-nightly.csv), not as matched
+rates. Both arms used the same expanding defense policy; this comparison
+does not evaluate the opt-in topological planner. Report gzip SHA-256:
+`6081e15f8c4c273aa377fc763ea756436c67ef866e31b61a394aad81728cbcf0`
+(control), `bb44825495d9802029596d24ae7f50ebac414ea01b3ede230156065285801ec8`
+(V1). Desierto, Gran Río, Volcanes and later horizons remain untested here.
