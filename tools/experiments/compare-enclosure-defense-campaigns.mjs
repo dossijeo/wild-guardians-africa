@@ -41,9 +41,12 @@ for(const defensePolicy of ['expanding','topological']){
       raidEvidenceStatus:report.raidEvidence?.status,
       raidEvidenceIssues:report.raidEvidence?.issues});
   }catch(error){
+    const partial=error.nativeCampaignPartial;
     evidence.arms.push({defensePolicy,status:'error',
       elapsedMs:performance.now()-started,message:error.message,stack:error.stack,
-      rows});
+      rows,partial:partial?{day:partial.day,time:partial.time,
+        result:partial.result,entryTransport:partial.entryTransport,
+        completedDailyRows:partial.receipts?.daily?.length}:null});
   }
   writeFileSync(output,JSON.stringify(evidence,null,2)+'\n');
 }
