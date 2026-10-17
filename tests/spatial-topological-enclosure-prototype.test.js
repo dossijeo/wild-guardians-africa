@@ -129,7 +129,9 @@ test('a placed free-form wall loop needs a gate and no omitted modules',()=>{
     i===1?{...p,status:'ruined'}:p)},[],[{x:0,z:0}]).status,'open');
 });
 
-test('a snapped logical wall face cannot certify an attack ray through a physical seam',()=>{
+test('a sub-body seam in a closed wall loop blocks committed crop hits',()=>{
+  assert.ok(SMALLEST_ANIMAL_RADIUS*2>.2,
+    'The smallest animal must exceed the maximum snapped endpoint separation');
   const piece=(id,x,z,yaw,length,gate=false)=>({id,kind:'wall',
     material:'zarzas',hp:100,status:'intact',baseScaleX:length/2.18,
     x,z,yaw,gate,autoGate:gate});
@@ -141,9 +143,17 @@ test('a snapped logical wall face cannot certify an attack ray through a physica
     blockedCrops:[]};
   assert.equal(agriculturalRayClear({structures:walls},
     {obstacles:walls,version:1},{x:0,z:3},{x:0,z:0}),true,
-  'The current combat ray can pass the snapped seam');
+  'A point ray can pass the snapped seam');
+  assert.equal(agriculturalRayClear({structures:walls},
+    {obstacles:walls,version:1},{x:0,z:3},{x:0,z:0},
+    SMALLEST_ANIMAL_RADIUS),false,
+  'The smallest animal cannot apply a crop hit through the seam');
   assert.deepEqual(inspectSelfClosedQuote(quote,[],[{x:0,z:0}]),
-    {status:'unknown',reason:'attack-open-wall-face'});
+    {status:'closed-wall-loop',gates:['bottom'],attackOccluded:true});
+  const wide=[piece('top-left',-1.15,2,0,1.7),
+    piece('top-right',1.15,2,0,1.7),...walls.slice(2)];
+  assert.equal(inspectSelfClosedQuote({...quote,pieces:wide,
+    previewPieces:wide},[],[{x:0,z:0}]).status,'open');
 });
 
 test('two wall strokes quote and purchase atomically with one automatic gate',()=>{

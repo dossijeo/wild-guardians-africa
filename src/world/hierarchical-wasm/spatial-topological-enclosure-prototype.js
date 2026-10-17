@@ -7,10 +7,9 @@ import {ANIMAL_SPATIAL_PROFILES} from './spatial-movement-profiles.js';
 export const SMALLEST_ANIMAL_RADIUS=Math.min(...Object.values(
   ANIMAL_SPATIAL_PROFILES).map(profile=>profile.radius));
 
-// A crop attack ray crossing this face must hit a wall if the entire face is
-// covered by the union of the same oriented rectangles used by combat.
-// Missing a sliver stays uncertified; water and props do not occlude crop
-// attacks in the current combat predicate.
+// Zero-width diagnostic for wall coverage of a boundary face. A point ray
+// can pass a sub-body seam even when an animal's committed crop hit cannot.
+// Water and props do not occlude crop attacks in the current combat predicate.
 export function wallOccludesBoundaryFace(a,b,walls){
   if(![a?.x,a?.z,b?.x,b?.z].every(Number.isFinite)||!Array.isArray(walls))
     throw TypeError('Expected a finite face and wall list');
@@ -236,12 +235,11 @@ export function inspectSelfClosedQuote(quote,existingWalls,cropPoints){
   for(const face of boundaryFaces(layout)){
     const polygon=face.polygon.map(([x,z])=>({x,z}));
     if(!cropPoints.every(point=>containsPoint(polygon,point.x,point.z)))continue;
-    // Every straight animal-to-crop ray from outside must cross this face.
-    // Certify that the whole crossing lies in the *combat* wall footprints,
-    // including automatic gates, before calling the loop attack-opaque.
-    if(!polygon.every((a,i)=>wallOccludesBoundaryFace(a,
-      polygon[(i+1)%polygon.length],walls)))
-      return {status:'unknown',reason:'attack-open-wall-face'};
+    // boundaryFaces snaps centerline endpoints within 0.10 m of a shared
+    // node. Even two snapped ends differ by less than 0.20 m, below the
+    // smallest animal diameter. Committed crop hits use that body radius
+    // in agriculturalRayClear, so a point-ray seam cannot damage a crop.
+    // Natural joins are checked separately.
     const gates=face.ids.filter(id=>walls.some(p=>p.id===id&&p.gate&&p.autoGate));
     return gates.length?{status:'closed-wall-loop',gates,attackOccluded:true}:
       {status:'closed-without-gate',attackOccluded:true};

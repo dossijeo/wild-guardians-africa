@@ -741,16 +741,16 @@ boundary-face interval test now checks which segments are entirely covered
 by the union of existing and quoted walls' combat rectangles, including
 adjacent modules. It certifies 23 of the 122 Manglares preview faces as
 wall-opaque.
-For a self-closed wall loop, the prototype now applies that same interval
-test **once to the placed loop face**, before reporting `closed-wall-loop`.
+In the earlier self-closed wall-loop prototype, that same interval test was
+applied **once to the placed loop face**, before reporting `closed-wall-loop`.
 Every straight ray from an exterior animal to an enclosed crop must cross
 the face; if every face edge is covered by the combat wall rectangles, the
-wall blocks direct and peripheral attack rays regardless of attack radius.
+wall blocks even zero-width direct and peripheral attack rays.
 The automatic gate is included because its closed footprint occludes the
 animal's ray. This adds no per-animal or per-crop ray enumeration. A directed
 counterexample has a 0.08 m seam between two collinear pieces: the logical
 face joins their endpoints under its 0.10 m snap tolerance, but the combat
-rectangles leave a point-ray gap. The prototype reports `unknown` rather
+rectangles leave a point-ray gap. That prototype reported `unknown` rather
 than treating that visual loop as attack-opaque. This test establishes a
 possible ray channel, not an actual damaging strike by a standable animal.
 For the other 99, a crop-to-face distance is only a **potential contact**
@@ -775,6 +775,29 @@ ray. This removes the apparent hit from the sampled positions but is still
 not a continuous certificate for every sub-grid exterior point. The
 frozen-state result is `manglares-rhino-contact-d3.json`. The experimental
 planner keeps its conservative `unknown` verdict.
+
+### 2026-10-17: wall seams and committed crop attacks
+
+The preceding point-ray seam result is retained as historical negative
+evidence. Since that test, production combat has been corrected to call
+`agriculturalRayClear()` with the attacking animal's body radius for central
+and peripheral crop hits. A zero-width ray can still pass the 0.08 m seam,
+but the smallest animal cannot deliver a hit through it. The experimental
+self-closed-loop certificate now uses the snapped wall-face topology rather
+than requiring every point of that face to be covered by a combat rectangle.
+The face builder snaps endpoints within 0.10 m of a shared node; even two
+snapped ends are separated by less than 0.20 m, below the smallest animal
+diameter. A wider gap does not form a closed face. The automatic worker gate
+remains part of the wall loop and blocks animal attacks while closed.
+
+This shortcut applies only to a loop made entirely of intact wall modules.
+Mixed joins against buildings, trees, water or terrain retain their separate
+physical checks and `unknown` result when those checks cannot certify a
+closure. The focused test verifies the point-ray counterexample, the
+body-radius hit predicate, loop certification and a wider open gap. The
+prototype remains disconnected from normal construction and bot decisions;
+this change does not claim a full-game enclosure certificate or sustained
+campaign benchmark.
 
 ### Local construction and destruction regression
 
