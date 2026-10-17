@@ -96,6 +96,8 @@ La rama elimina una segunda comprobación del mismo plan ya declarado fallido: s
 
 Se probó como variante descartada sustituir cada ruta con una comprobación directa de segmento cuando este era transitable. Redujo las búsquedas de 172 a 92, pero la mediana candidata subió aproximadamente de 31–34 a 36–39 ms en las rondas próximas: la comprobación física consumía el ahorro. Se revirtió. Los tiempos de las rondas con solo cuatro muestras cada una son orientativos; los recuentos de operaciones y la igualdad funcional son los resultados más sólidos.
 
+`desert-retained-routes-abba.json` registra otro descarte: reutilizar en la cotización la ruta nativa de regreso de cada trabajador, si ya estaba activa y apuntaba a su poblado. En este estado congelado no se cumplió esa condición para los 42 trabajadores: ambas variantes hicieron **172 consultas de ruta y 64 actualizaciones de sector** por ronda. Las medianas A/B/B/A fueron 38,17 / 32,46 / 33,00 / 30,97 ms, sin una reducción de trabajo que permita atribuir la diferencia al cambio. Se retiró esa rama de código; el JSON conserva hashes y entradas para reproducir el resultado negativo.
+
 `desert-abba-local-overlay.json` repite el estado con la consulta local de trazado. Medianas A/B/B/A: **51,37 / 31,98 / 32,34 / 46,92 ms**. Las cuatro cotizaciones pasan de 24 a 16 previews, de 48 a 32 transacciones de barrera y de 96 a 64 actualizaciones de sector. Conservan las 172 rutas de auditoría de acceso, la misma puerta, precio 50 y el mismo hash tras construir. La mejora es real en este estado, pero la mayoría de previews restantes obedecen a la certificación laboral.
 
 ### Construcción sencilla de 20 módulos

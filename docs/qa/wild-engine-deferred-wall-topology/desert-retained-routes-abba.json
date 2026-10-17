@@ -1,0 +1,258 @@
+{
+  "kind": "ABBA",
+  "scenario": "Desert/983 day 15; 42 active workers",
+  "baselineRef": "580ef75c",
+  "stateHash": "1019a25ce3922a3af5c2020e724e35240a159486281cd8a19ce27470fced4356",
+  "sourceSha256": {
+    "baseline": "b37500492a86df58f863ce449d8deb91c8ae8533bba03e7125fd49ff1d37e9b0",
+    "candidate": "18d8b175a3f8facc75043d16455e67f16ca7fc8d57608a4cd8dd4d66ccb30d65"
+  },
+  "wasmSha256": {
+    "baseline": "fd4aec8e44b9d0632d7192db71b2b1a799cc2ad3e2c69bea462311ee968c40f3",
+    "candidate": "fd4aec8e44b9d0632d7192db71b2b1a799cc2ad3e2c69bea462311ee968c40f3"
+  },
+  "stroke": [
+    [
+      66,
+      -7.18
+    ],
+    [
+      66,
+      -18
+    ]
+  ],
+  "rows": [
+    {
+      "arm": "baseline",
+      "shape": {
+        "pieces": 5,
+        "gates": 1,
+        "cost": 50,
+        "gatePositions": [
+          [
+            66,
+            -10.425999999999998,
+            1.5707963267948966
+          ]
+        ],
+        "blocked": 0
+      },
+      "times": [
+        38.17059999999992,
+        39.88190000000009,
+        33.14570000000003,
+        38.4384
+      ],
+      "medianMs": 38.17059999999992,
+      "p95Ms": 39.88190000000009,
+      "quoteCounts": {
+        "path": 172,
+        "preview": 16,
+        "overlay": 8,
+        "wallLocalOverlay": 4,
+        "localProbes": 12,
+        "barriers": 32,
+        "restoreProps": 0
+      },
+      "quoteOperationMs": {
+        "path": 3.839799999999741,
+        "preview": 97.24169999999981,
+        "overlay": 0.023000000000138243,
+        "wallLocalOverlay": 0.17640000000028522,
+        "localProbes": 0.410000000000764,
+        "barriers": 58.565099999999575,
+        "restoreProps": 0
+      },
+      "quoteSectorUpdates": 64,
+      "build": {
+        "ms": 3.5784000000001015,
+        "counts": {
+          "path": 0,
+          "preview": 0,
+          "overlay": 0,
+          "wallLocalOverlay": 0,
+          "localProbes": 0,
+          "barriers": 1,
+          "restoreProps": 0
+        },
+        "sectorUpdates": 2,
+        "finalStateHash": "781fe857141d09cbea8841f6eb614694f1a309eadc1fda2d24321f1e50ca5864"
+      },
+      "linearMemoryBytes": 16777216
+    },
+    {
+      "arm": "candidate",
+      "shape": {
+        "pieces": 5,
+        "gates": 1,
+        "cost": 50,
+        "gatePositions": [
+          [
+            66,
+            -10.425999999999998,
+            1.5707963267948966
+          ]
+        ],
+        "blocked": 0
+      },
+      "times": [
+        33.55510000000004,
+        31.227600000000166,
+        32.46090000000004,
+        33.66859999999997
+      ],
+      "medianMs": 32.46090000000004,
+      "p95Ms": 33.66859999999997,
+      "quoteCounts": {
+        "path": 172,
+        "preview": 16,
+        "overlay": 8,
+        "wallLocalOverlay": 4,
+        "localProbes": 12,
+        "barriers": 32,
+        "restoreProps": 0
+      },
+      "quoteOperationMs": {
+        "path": 4.550200000000132,
+        "preview": 90.78470000000107,
+        "overlay": 0.015699999999469583,
+        "wallLocalOverlay": 0.14629999999988286,
+        "localProbes": 0.2509000000004562,
+        "barriers": 56.52750000000151,
+        "restoreProps": 0
+      },
+      "quoteSectorUpdates": 64,
+      "build": {
+        "ms": 2.4039999999999964,
+        "counts": {
+          "path": 0,
+          "preview": 0,
+          "overlay": 0,
+          "wallLocalOverlay": 0,
+          "localProbes": 0,
+          "barriers": 1,
+          "restoreProps": 0
+        },
+        "sectorUpdates": 2,
+        "finalStateHash": "781fe857141d09cbea8841f6eb614694f1a309eadc1fda2d24321f1e50ca5864"
+      },
+      "linearMemoryBytes": 16777216
+    },
+    {
+      "arm": "candidate",
+      "shape": {
+        "pieces": 5,
+        "gates": 1,
+        "cost": 50,
+        "gatePositions": [
+          [
+            66,
+            -10.425999999999998,
+            1.5707963267948966
+          ]
+        ],
+        "blocked": 0
+      },
+      "times": [
+        37.679099999999835,
+        33.004199999999855,
+        32.509700000000066,
+        33.1871000000001
+      ],
+      "medianMs": 33.004199999999855,
+      "p95Ms": 37.679099999999835,
+      "quoteCounts": {
+        "path": 172,
+        "preview": 16,
+        "overlay": 8,
+        "wallLocalOverlay": 4,
+        "localProbes": 12,
+        "barriers": 32,
+        "restoreProps": 0
+      },
+      "quoteOperationMs": {
+        "path": 3.5301999999987856,
+        "preview": 97.79189999999971,
+        "overlay": 0.02080000000069049,
+        "wallLocalOverlay": 0.1033000000006723,
+        "localProbes": 0.16949999999860665,
+        "barriers": 59.51249999999936,
+        "restoreProps": 0
+      },
+      "quoteSectorUpdates": 64,
+      "build": {
+        "ms": 3.1992999999997664,
+        "counts": {
+          "path": 0,
+          "preview": 0,
+          "overlay": 0,
+          "wallLocalOverlay": 0,
+          "localProbes": 0,
+          "barriers": 1,
+          "restoreProps": 0
+        },
+        "sectorUpdates": 2,
+        "finalStateHash": "781fe857141d09cbea8841f6eb614694f1a309eadc1fda2d24321f1e50ca5864"
+      },
+      "linearMemoryBytes": 16777216
+    },
+    {
+      "arm": "baseline",
+      "shape": {
+        "pieces": 5,
+        "gates": 1,
+        "cost": 50,
+        "gatePositions": [
+          [
+            66,
+            -10.425999999999998,
+            1.5707963267948966
+          ]
+        ],
+        "blocked": 0
+      },
+      "times": [
+        27.25969999999961,
+        36.38429999999971,
+        30.96519999999964,
+        42.990499999999884
+      ],
+      "medianMs": 30.96519999999964,
+      "p95Ms": 42.990499999999884,
+      "quoteCounts": {
+        "path": 172,
+        "preview": 16,
+        "overlay": 8,
+        "wallLocalOverlay": 4,
+        "localProbes": 12,
+        "barriers": 32,
+        "restoreProps": 0
+      },
+      "quoteOperationMs": {
+        "path": 4.360899999994217,
+        "preview": 100.39739999999983,
+        "overlay": 0.014699999999720603,
+        "wallLocalOverlay": 0.1522000000013577,
+        "localProbes": 0.19209999999930005,
+        "barriers": 59.55699999999888,
+        "restoreProps": 0
+      },
+      "quoteSectorUpdates": 64,
+      "build": {
+        "ms": 4.516099999999824,
+        "counts": {
+          "path": 0,
+          "preview": 0,
+          "overlay": 0,
+          "wallLocalOverlay": 0,
+          "localProbes": 0,
+          "barriers": 1,
+          "restoreProps": 0
+        },
+        "sectorUpdates": 2,
+        "finalStateHash": "781fe857141d09cbea8841f6eb614694f1a309eadc1fda2d24321f1e50ca5864"
+      },
+      "linearMemoryBytes": 16777216
+    }
+  ]
+}
