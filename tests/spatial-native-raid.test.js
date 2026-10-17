@@ -4,12 +4,12 @@ import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
 import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
 import {createEventDrivenTaskPlanner} from '../src/world/hierarchical-wasm/spatial-intent-bridge.js';
-import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+import {createSpatialNavigationMovement,SpatialChunkUnavailable} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
 import {nativeCameraPose} from '../src/rendering/terrain-camera.js';
 import {activeChunkRegion} from '../src/world/active-region.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {villageLayout} from '../src/world/villages.js';
-import {spawnRaid,targetFor,chooseRaidEntry} from '../src/simulation/raids.js';
+import {spawnRaid,targetFor,chooseRaidEntry,updateRaid} from '../src/simulation/raids.js';
 import {animalSpec,randomInt} from '../src/simulation/rules.js';
 import {ANIMAL_ACTIONS} from '../src/simulation/animal-actions-data.js';
 import * as Game from '../src/simulation/game.js';
@@ -817,6 +817,41 @@ test('animal damage ruins a saved enclosure wall without changing the restored r
     stopRestoredTasks();stopRestoredWorld();stopTasks();stopWorld();
     restoredSession?.dispose();session.dispose();
   }
+});
+
+test('a retreat waits for unknown sectors and retries without treating them as blocked',()=>{
+  const state=deserialize(gunzipSync(readFileSync(new URL(
+    './fixtures/sabana712-d9-native-stalled-raid.json.gz',import.meta.url))).toString());
+  const loaded=new Map(),session=createSpatialGameSession(module,state,{
+    loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+  try{
+    for(let z=-1;z<=2;z++)for(let x=1;x<=3;x++){
+      if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+      loaded.set(`${x},${z}`,session.core.chunkPayload());
+    }
+    const nav=createSpatialNavigationMovement(session,state);
+    const animal=state.raid.animals.find(item=>item.status==='retreating');
+    assert(animal);
+    state.raid.animals=[animal];animal.path=null;
+    const oldPath=nav.path,oldClear=nav.segmentClear;
+    let calls=0,demand=0;
+    nav.segmentClear=()=>false;
+    nav.path=(start,end)=>{calls++;throw new SpatialChunkUnavailable(start,end,[{cx:4,cz:1}]);};
+    nav.requestRaidFrontier=()=>{demand++;return true;};
+    nav.requestRaidConnectivity=()=>{demand++;return true;};
+    const position={x:animal.x,z:animal.z};
+    updateRaid(state,.1,nav);
+    assert.equal(calls,1);
+    assert.equal(demand,2);
+    assert.equal(animal.status,'retreating');
+    assert.deepEqual({x:animal.x,z:animal.z},position);
+    state.elapsed+=.5;updateRaid(state,.1,nav);
+    assert.equal(calls,1,'the unresolved route is not polled every tick');
+    state.elapsed+=.6;nav.path=oldPath;nav.segmentClear=oldClear;
+    updateRaid(state,.1,nav);
+    assert.equal(animal.retreatRouteUnknown,undefined);
+    assert.equal(animal.status,'retreating');
+  }finally{session.dispose();}
 });
 
 test('a stalled retreat can phase past a mobile body occupying its exit',()=>{
