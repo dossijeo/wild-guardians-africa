@@ -1,5 +1,7 @@
 # Estrategia del diagnóstico de campaña activa
 
+**Estado actual:** las victorias de 100 noches descritas abajo son evidencia histórica. La prueba falla en `main` al perder el centro en la noche 8; véase [la reproducción del 17 de octubre de 2026](current-main-regression-2026-10-17.md).
+
 La estrategia anterior reservaba el escudo para cultivos mientras el centro conservaba más de la mitad de su vida. En el terreno actual, Sabana/Mapungubwe/712 con una mujer mayor perdió el último centro en la noche 17, con 810 monedas; ninguna reparación había terminado. La derrota es válida conforme a las reglas del juego.
 
 El diagnóstico ahora intenta proteger primero un centro amenazado, sin omitir la validación de terreno, cooldown, solapamiento de áreas ni volumen del animal. Se mantiene el fallback a cultivos cuando ese lanzamiento no es posible. No cambia la elección de objetivos de las bestias, el balance económico, el orden FIFO de los trabajadores ni el resultado de la partida.
