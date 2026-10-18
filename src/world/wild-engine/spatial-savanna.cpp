@@ -725,6 +725,51 @@ bool barrierClear(double x,double z,const int* ignored=nullptr,int ignoredCount=
   }
   return true;
 }
+// The grid samples wall edges every 0.2 m. A diagonal module can intersect
+// the swept centre line only between those samples, even though both grid
+// endpoints are clear. Test the exact segment against the same expanded
+// rectangles used by barrierClear, so planning and continuous motion agree.
+bool wallSegmentClear(double x,double z,double nx,double nz,
+  const int* ignored=nullptr,int ignoredCount=0){
+  const uint8_t profileBit=workerNow?1:2;
+  const auto& index=barrierIndex();
+  const int minBx=int(std::floor(std::min(x,nx)/barrierBucketWidth));
+  const int maxBx=int(std::floor(std::max(x,nx)/barrierBucketWidth));
+  const int minBz=int(std::floor(std::min(z,nz)/barrierBucketWidth));
+  const int maxBz=int(std::floor(std::max(z,nz)/barrierBucketWidth));
+  for(int bz=minBz;bz<=maxBz;bz++)for(int bx=minBx;bx<=maxBx;bx++){
+    const auto bucket=index.buckets.find(barrierKey(bx,bz));
+    if(bucket==index.buckets.end())continue;
+    for(const int id:bucket->second){
+      if(ignored&&std::find(ignored,ignored+ignoredCount,id)!=ignored+ignoredCount)continue;
+      const Barrier& wall=index.byId.at(id);
+      if(wall.passMask&profileBit)continue;
+      const double dx=x-wall.x,dz=z-wall.z,ex=nx-wall.x,ez=nz-wall.z;
+      const double a[2]={dx*wall.c-dz*wall.s,dx*wall.s+dz*wall.c};
+      const double b[2]={ex*wall.c-ez*wall.s,ex*wall.s+ez*wall.c};
+      const double half[2]={wall.halfX+radiusNow,wall.halfZ+radiusNow};
+      double entry=0,exit=1;
+      bool possible=true;
+      for(int axis=0;axis<2;axis++){
+        const double delta=b[axis]-a[axis];
+        if(std::abs(delta)<1e-12){
+          if(std::abs(a[axis])>=half[axis]){possible=false;break;}
+          continue;
+        }
+        const double t0=(-half[axis]-a[axis])/delta;
+        const double t1=(half[axis]-a[axis])/delta;
+        entry=std::max(entry,std::min(t0,t1));
+        exit=std::min(exit,std::max(t0,t1));
+      }
+      if(possible&&entry<=exit){
+        const double t=(entry+exit)*.5;
+        if(std::abs(a[0]+(b[0]-a[0])*t)<half[0]&&
+           std::abs(a[1]+(b[1]-a[1])*t)<half[1])return false;
+      }
+    }
+  }
+  return true;
+}
 bool walkable(int x,int z){
   const ChunkRaster* chunk=rasterAt(x,z);
   return chunk&&chunk->pass[rasterIndex(*chunk,x,z)]&&barrierClear(x,z);
@@ -744,6 +789,7 @@ bool terrainPropEdge(int x,int z,int nx,int nz){
   return terrainPropWalkable(x,z)&&terrainPropWalkable(nx,nz)&&terrainPropSegment(x,z,nx,nz);
 }
 bool wallEdgeClear(int x,int z,int nx,int nz){
+  if(!wallSegmentClear(x,z,nx,nz))return false;
   if(!barrierClear(x,z)||!barrierClear(nx,nz))return false;
   for(int i=1;i<5;i++){
     const double t=i/5.0;
@@ -2000,6 +2046,7 @@ int spatial_local_clear_except(float x,float z,float nx,float nz,int ignore0,int
   const int ignored[]={ignore0,ignore1,ignore2,ignore3};
   const double distance=std::hypot(double(nx)-x,double(nz)-z);
   if(distance>1.5)return 0;
+  if(!wallSegmentClear(x,z,nx,nz,ignored,4))return 0;
   const int steps=std::max(1,int(std::ceil(distance/.2)));
   for(int i=0;i<=steps;i++){
     const double t=double(i)/steps,px=x+(nx-x)*t,pz=z+(nz-z)*t;

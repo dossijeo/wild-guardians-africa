@@ -32,9 +32,12 @@ test('a day-37 fractional crop approach never commits an unswept connector',()=>
   const animal=snapshot.raid.animals.find(item=>item.id==='animal-48837');
   const crop=snapshot.plants.find(item=>item.id===animal.targetId);
   assert(animal&&crop);
-  assert(nav.path(animal,animal.approach,animal.radius,null,false)?.length,
-   'the frozen state must exercise a real fractional route candidate');
+  // The old 0.2 m edge samples returned a route through a narrow wall pocket.
+  // A corrected graph may now reject that candidate before approach search.
+  const candidate=nav.path(animal,animal.approach,animal.radius,null,false);
   const selected=reachableApproach(animal,crop,nav);
+  if(!candidate&&!selected)
+   assert.equal(nav.segmentClear(animal,animal.path[0],animal.radius,null,false),false);
   if(selected){
    let previous=animal;
    for(const point of selected.path){

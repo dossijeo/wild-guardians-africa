@@ -39,3 +39,31 @@ for diversification. The previous duplicate 100-night victory assertions were
 therefore testing an obsolete strategy outcome, not the current spell,
 navigation or ledger behavior. A separate 100-night defended run is required
 before asserting a current-version victory.
+
+## Route rejection and the former night-45 stall
+
+The earlier 100-night attempt stopped on night 45 because a buffalo repeatedly
+received a route across a diagonal wall edge. The discrete graph accepted its
+two grid endpoints, but the continuous movement check rejected a fractional
+landing between the old 0.2 m samples. That was a technical navigation loop,
+not an economic or military defeat. Wild Engine now checks oriented wall
+segments continuously and lets the movement layer reject a directed grid edge
+for its movement profile when a static step still fails.
+
+The frozen night-45 state now routes the buffalo around the wall near x=115
+instead of through the rejected edge near x=109. A fresh Sabana/123 campaign
+with the same military pressure, player policy and native intentions completed
+46/46 verified raids without an unfinished-incursion guard. It remained active
+with 135 crops and 990 coins; night 45 itself took 8.86 s of `Game.tick`.
+The full 46-night run took 575.9 s wall time, including 442.6 s of `Game.tick`
+and 105.0 s of player decisions. Its engine binary SHA-256 is
+`674bdf018817e1fa75e5181525faa3f516b90b9072af844fdc08e64fdcbf6b9c`.
+The complete per-night evidence is in
+[`sabana123-topological-46-route-rejection.json`](sabana123-topological-46-route-rejection.json).
+It is a new physical trajectory and its hashes need not match the earlier
+14/30-night reports. It does not establish a 100-night victory.
+
+The regression suite passed 4,464 tests, with 60 skipped, and the production
+web build completed. Directed tests cover wall intersections missed by grid
+sampling, native alternative routes for a worker and a buffalo, and movement
+reporting of a rejected static landing.

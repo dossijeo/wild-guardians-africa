@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <limits>
 #include <unordered_map>
+#include <unordered_set>
 #include <utility>
 #include <vector>
 #include "local-enclosure-cut.h"
@@ -22,6 +23,17 @@ namespace {
 constexpr int dx[4]={1,-1,0,0},dz[4]={0,0,1,-1};
 struct Arc {int32_t to,fromCell,toCell,portal=-1;};
 struct Portal {int fromX,fromZ,toX,toZ;float fromWorldX,fromWorldZ,toWorldX,toWorldZ;};
+struct RejectedEdge {int x,z,nx,nz;
+  bool operator==(const RejectedEdge& other)const{
+    return x==other.x&&z==other.z&&nx==other.nx&&nz==other.nz;
+  }
+};
+struct RejectedEdgeHash {size_t operator()(const RejectedEdge& edge)const{
+  uint64_t value=uint32_t(edge.x);
+  value=(value*0x9e3779b185ebca87ULL)^uint32_t(edge.z);
+  value=(value*0x9e3779b185ebca87ULL)^uint32_t(edge.nx);
+  return size_t((value*0x9e3779b185ebca87ULL)^uint32_t(edge.nz));
+}};
 struct Sector {
   int sx,sz,id,components=0;
   std::vector<uint8_t> pass,steps,inbound;
@@ -49,6 +61,7 @@ struct Context {
   int cutFlow=0,cutCells=0;
   std::vector<Arc> previousArc,arcChain;
   std::vector<Portal> portals;
+  std::unordered_set<RejectedEdge,RejectedEdgeHash> rejectedRouteEdges;
   std::vector<int32_t> weakHead,weakTo,weakNext;
   std::vector<uint8_t> weakOpen;
   std::vector<int32_t> weakRegion;
@@ -87,6 +100,7 @@ Context& active(){
 #define previousArc (active().previousArc)
 #define arcChain (active().arcChain)
 #define portals (active().portals)
+#define rejectedRouteEdges (active().rejectedRouteEdges)
 #define weakHead (active().weakHead)
 #define weakTo (active().weakTo)
 #define weakNext (active().weakNext)
@@ -102,6 +116,15 @@ Context& active(){
 uint64_t key(int sx,int sz){return (static_cast<uint64_t>(static_cast<uint32_t>(sx))<<32)|static_cast<uint32_t>(sz);}
 Sector* get(int sx,int sz){const auto it=sectors->find(key(sx,sz));return it==sectors->end()?nullptr:&it->second;}
 int floorDiv(int n,int d){return n>=0?n/d:-((-n+d-1)/d);}
+void clearRejectedInSector(int sx,int sz){
+  for(auto it=rejectedRouteEdges.begin();it!=rejectedRouteEdges.end();){
+    const RejectedEdge& edge=*it;
+    if((floorDiv(edge.x,sectorSize)==sx&&floorDiv(edge.z,sectorSize)==sz)||
+      (floorDiv(edge.nx,sectorSize)==sx&&floorDiv(edge.nz,sectorSize)==sz))
+      it=rejectedRouteEdges.erase(it);
+    else ++it;
+  }
+}
 int cellIndex(int x,int z){return z*sectorSize+x;}
 uint32_t beginVisit(int maxNodes){
   visited.resize(maxNodes,0);
@@ -255,6 +278,8 @@ bool localPath(const Sector& sector,int from,int to){
       if(!(sector.steps[at]&(1<<d)))continue;
       const int nx=x+dx[d],nz=z+dz[d];
       if(nx<0||nz<0||nx>=sectorSize||nz>=sectorSize)continue;
+      if(rejectedRouteEdges.count({sector.sx*sectorSize+x,sector.sz*sectorSize+z,
+        sector.sx*sectorSize+nx,sector.sz*sectorSize+nz}))continue;
       const int next=cellIndex(nx,nz);
       if(localParent[next]>=0||sector.component[next]!=sector.component[from])continue;
       localParent[next]=at;queueBuffer.push_back(next);
@@ -274,10 +299,21 @@ int lazy_select_context(int profile){
 }
 int lazy_selected_context(){return selectedContext;}
 uint32_t lazy_route_revision(){return active().routeRevision;}
+// A physical movement rejection is a route-search overlay, not a change to
+// confirmed world topology. It is scoped to the current movement profile and
+// cleared when that profile's graph changes. A cached route cannot hide it.
+int lazy_reject_route_edge(int x,int z,int nx,int nz){
+  if(std::abs(x-nx)+std::abs(z-nz)!=1||!sectorSize)return -1;
+  if(rejectedRouteEdges.size()>=256)return -2;
+  if(!rejectedRouteEdges.insert({x,z,nx,nz}).second)return 0;
+  active().routeRevision++;
+  return 1;
+}
 int lazy_init(int size){
   if(size<2||size>32)return 0;
   sectorSize=size;updates=0;
   active().routeRevision++;
+  rejectedRouteEdges.clear();
   if(!sectors)sectors=new std::unordered_map<uint64_t,Sector>();else sectors->clear();
   byId.clear();freeIds.clear();
   stagedPass.assign(size*size,0);stagedSteps.assign(size*size,0);
@@ -300,6 +336,7 @@ int lazy_commit_sector(int sx,int sz){
   sector.pass=stagedPass;sector.steps=stagedSteps;sector.inbound=stagedInbound;
   flood(sector);updates++;
   active().routeRevision++;
+  clearRejectedInSector(sx,sz);
   rebuildEdges(sector);
   for(int d=0;d<4;d++)if(Sector* neighbor=get(sx+dx[d],sz+dz[d]))rebuildEdges(*neighbor);
   for(const Portal& portal:portals){
@@ -326,6 +363,7 @@ int lazy_remove_sector(int sx,int sz){
   }
   weakDirty=true;updates++;
   active().routeRevision++;
+  clearRejectedInSector(sx,sz);
   return 1;
 }
 void lazy_clear_portals(){portals.clear();}
@@ -373,6 +411,7 @@ int lazy_commit_portals(){
   for(Sector* sector:byId)if(sector)rebuildEdges(*sector);
   weakDirty=true;
   active().routeRevision++;
+  rejectedRouteEdges.clear();
   return static_cast<int>(portals.size());
 }
 // Sector-local component identity. Callers must discard it after topology
@@ -728,6 +767,13 @@ int lazy_route(int fromX,int fromZ,int toX,int toZ){
     const Sector& sector=*byId[sectorId];
     if(sector.unknown[local])unknown=true;
     for(const Arc& arc:sector.edges[local]){
+      if(arc.portal<0){
+        const Sector& next=*byId[arc.to/stride];
+        if(rejectedRouteEdges.count({sector.sx*sectorSize+arc.fromCell%sectorSize,
+          sector.sz*sectorSize+arc.fromCell/sectorSize,
+          next.sx*sectorSize+arc.toCell%sectorSize,
+          next.sz*sectorSize+arc.toCell/sectorSize}))continue;
+      }
       if(visited[arc.to]==generation)continue;
       visited[arc.to]=generation;previousNode[arc.to]=node;previousArc[arc.to]=arc;
       queueBuffer.push_back(arc.to);

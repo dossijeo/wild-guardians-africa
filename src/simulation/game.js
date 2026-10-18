@@ -945,6 +945,8 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
   if(w.exitRouteRecovery&&Number.isFinite(w.exitRouteRecovery.x)&&
     dist(w,w.exitRouteRecovery)>=.75)delete w.exitRouteRecovery;
   if(routeClearance?.blocked()){
+    const failed=routeClearance.blockedSegment?.();
+    if(failed)nav.rejectRouteSegment?.(failed.start,failed.end,w.radius??.28,worker);
     w.path=null;
     if(!worker&&expandRoute&&w.status==='retreating'){
       const prior=w.retreatStaticRouteFailure,
