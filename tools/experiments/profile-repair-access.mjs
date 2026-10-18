@@ -3,8 +3,8 @@ import {gunzipSync} from 'node:zlib';
 import {performance} from 'node:perf_hooks';
 import {deserialize} from '../../src/persistence/snapshots.js';
 import {cast,hire,planRepairAccess,tick} from '../../src/simulation/game.js';
-import {createSpatialGameSession} from '../../src/world/hierarchical-wasm/spatial-game-session.js';
-import {createSpatialNavigationMovement} from '../../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+import {createSpatialGameSession} from '../../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../../src/world/wild-engine/spatial-navigation-movement.js';
 import {centerServicePoint} from '../../src/world/centers.js';
 import {applyBalanceCandidate} from './balance-candidate.mjs';
 
@@ -20,7 +20,7 @@ if(candidateIndex>=0){
 const snapshot=readFileSync(stateFile);
 const state=deserialize((stateFile.endsWith('.gz')?gunzipSync(snapshot):snapshot).toString());
 const module=new WebAssembly.Module(readFileSync(new URL(
-  '../../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+  '../../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 const loaded=new Map();
 const session=createSpatialGameSession(module,state,{
   loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});

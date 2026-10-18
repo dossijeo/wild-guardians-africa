@@ -2,11 +2,11 @@ import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
 import {dirname} from 'node:path';
 import {Navigation} from '../../src/world/navigation.js';
 import {groundColor} from '../../src/rendering/terrain-source.js';
-import {createSpatialSavannaPrototype} from '../../src/world/hierarchical-wasm/spatial-savanna-adapter.js';
+import {createSpatialSavannaPrototype} from '../../src/world/wild-engine/spatial-savanna-adapter.js';
 
 const output=process.argv[2]??'docs/qa/hierarchical-navigation/spatial-savanna-ground-measurements.json';
 const profile=JSON.parse(readFileSync('public/content/biome-savanna.json','utf8')).profile;
-const module=new WebAssembly.Module(readFileSync('src/world/hierarchical-wasm/spatial-savanna.wasm'));
+const module=new WebAssembly.Module(readFileSync('src/world/wild-engine/spatial-savanna.wasm'));
 function summary(values){
   const sorted=[...values].sort((a,b)=>a-b),mean=values.reduce((a,b)=>a+b,0)/values.length;
   return {min:sorted[0],p5:sorted[Math.floor(sorted.length*.05)],median:sorted[Math.floor(sorted.length*.5)],

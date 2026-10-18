@@ -5,10 +5,10 @@ import {gunzipSync} from 'node:zlib';
 import {deserialize,serialize} from '../src/persistence/snapshots.js';
 import {createCropGrouping} from '../src/simulation/crop-components.js';
 import {createPlant} from '../src/simulation/crops.js';
-import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
-import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
-import {createSpatialIntentBridge,createEventDrivenTaskPlanner} from '../src/world/hierarchical-wasm/spatial-intent-bridge.js';
-import {createCropEnclosurePlanner} from '../src/world/hierarchical-wasm/spatial-crop-enclosure-plan.js';
+import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../src/world/wild-engine/spatial-navigation-movement.js';
+import {createSpatialIntentBridge,createEventDrivenTaskPlanner} from '../src/world/wild-engine/spatial-intent-bridge.js';
+import {createCropEnclosurePlanner} from '../src/world/wild-engine/spatial-crop-enclosure-plan.js';
 import {villageLayout} from '../src/world/villages.js';
 import {rational,numberOf} from '../src/simulation/money.js';
 import * as Game from '../src/simulation/game.js';
@@ -206,7 +206,13 @@ test('enclosure advice quotes real wall modules and never certifies an incomplet
   const group=bridge.getUnprotectedCropGroups()[0];
   assert(group);
   const planner=createCropEnclosurePlanner(game,nav,bridge);
+  const previewRevision=()=>{session.actorCanStand({x:0,z:0},{worker:true});return {stamp:session.routeStamp(),
+    route:session.core.wasm.lazy_route_revision(),
+    sectors:session.core.wasm.lazy_sector_updates()};};
+  const beforePreview=previewRevision();
   const plan=planner.planCropEnclosure(group.id);
+  assert.deepEqual(previewRevision(),beforePreview,
+    'Rectangular advice must not mutate confirmed native topology');
   assert.equal(plan.groupId,group.id);
   assert.equal(plan.status,'ready',JSON.stringify({status:plan.status,reason:plan.reason,
    cost:plan.cost,modules:plan.modules?.length,gaps:plan.gaps?.length}));
@@ -276,9 +282,12 @@ test('a center-adjacent crop uses valid animal attack sites to certify its enclo
   assert.equal(quote.pieces.length,35);
   assert.equal(quote.blockedPieces.length,1,
    'one physical obstacle substitutes for a wall module');
-  const after=nav.withWallPreview(quote.previewPieces,quote.suppressed,()=>
-   bridge.getUnprotectedCropGroups({includeProtected:true})
-    .find(item=>item.id===group.id),true);
+  const after=nav.withWallPreview(quote.previewPieces,quote.suppressed,()=>{
+   const draft=createSpatialIntentBridge(session);
+   draft.resetFromState(game);
+   return draft.getUnprotectedCropGroups({includeProtected:true})
+    .find(item=>item.id===group.id);
+  },true);
   assert.equal(after.protection,'protected',JSON.stringify(after.profiles));
   assert(Object.values(after.profiles).every(status=>status==='protected'));
   assert.equal(bridge.getUnprotectedCropGroups()[0].protection,'unprotected',

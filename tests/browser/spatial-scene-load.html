@@ -5,10 +5,10 @@
 </head><body><canvas id="world"></canvas><div id="status">Preparando mundo WASM…</div><script type="module">
 import * as Game from '../../src/simulation/game.js';
 import {WorldScene} from '../../src/rendering/scene.js';
-import {findSpatialStart} from '../../src/world/hierarchical-wasm/spatial-initial-site.js';
-import {createSpatialGameSession} from '../../src/world/hierarchical-wasm/spatial-game-session.js';
-import {createSpatialNavigationMovement} from '../../src/world/hierarchical-wasm/spatial-navigation-movement.js';
-import wasmUrl from '../../src/world/hierarchical-wasm/spatial-savanna.wasm?url';
+import {findSpatialStart} from '../../src/world/wild-engine/spatial-initial-site.js';
+import {createSpatialGameSession} from '../../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../../src/world/wild-engine/spatial-navigation-movement.js';
+import wasmUrl from '../../src/world/wild-engine/spatial-savanna.wasm?url';
 
 const query=new URLSearchParams(location.search);
 const biome=['sabana','gran-canon','desierto'].includes(query.get('biome'))?

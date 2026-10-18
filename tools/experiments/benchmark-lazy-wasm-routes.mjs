@@ -3,7 +3,7 @@ import {dirname} from 'node:path';
 import {gunzipSync} from 'node:zlib';
 import {performance} from 'node:perf_hooks';
 import {Navigation,BIOME_IDS} from '../../src/world/navigation.js';
-import {createLazySectorProbe} from '../../src/world/hierarchical-wasm/lazy-sectors-adapter.js';
+import {createLazySectorProbe} from '../../src/world/wild-engine/lazy-sectors-adapter.js';
 
 const [input,output]=process.argv.slice(2);
 if(!input||!output)throw Error('Usage: benchmark-lazy-wasm-routes.mjs state.json.gz report.json');
@@ -33,7 +33,7 @@ for(const actor of selected){
     if(end&&!(start.x===end.x&&start.z===end.z))requests.push({start,end,kind:'crop'});
   }
 }
-const bytes=readFileSync('src/world/hierarchical-wasm/lazy-sectors.wasm');
+const bytes=readFileSync('src/world/wild-engine/lazy-sectors.wasm');
 const core=await createLazySectorProbe(bytes,nav,{radius,worker:false,sectorSize:12});
 const t0=performance.now();
 for(const point of [...selected,...crops])core.ensureSector(Math.floor(Math.round(point.x)/12),Math.floor(Math.round(point.z)/12));

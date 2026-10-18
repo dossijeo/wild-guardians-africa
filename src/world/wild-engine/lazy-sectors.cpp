@@ -515,6 +515,17 @@ int cutFaceNatural(int x,int z,int nx,int nz,float radius){
   if(fluid>0&&cutFaceCoveredByWetland(x,z,nx,nz))return 2;
   return 0;
 }
+int cutFaceNaturalWithoutSolid(int x,int z,int nx,int nz){
+  const int river=spatial_canyon_river_face(x,z,nx,nz);
+  if(river<0)return -1;
+  if(river>0)return 3;
+  const int cliff=spatial_canyon_cliff_face(x,z,nx,nz);
+  if(cliff<0)return -1;
+  if(cliff>0)return 4;
+  const float fluid=spatial_fluid_level((x+nx)*.5f,(z+nz)*.5f);
+  if(!std::isfinite(fluid))return -1;
+  return fluid>0&&cutFaceCoveredByWetland(x,z,nx,nz)?2:0;
+}
 // A face wholly covered by fluid cannot host a wall centered on that face.
 // This is a conservative proposal hint, not a replacement for wallPlacement:
 // resampled modules can extend beyond a one-metre face and need a final quote.
@@ -532,8 +543,14 @@ int cutFaceFullyFluid(int x,int z,int nx,int nz){
   }
   return 1;
 }
+std::vector<uint8_t> overlayCutMask;
+uint8_t* lazy_overlay_cut_mask_ptr(int count){
+  if(count<1||count>8192)return nullptr;
+  overlayCutMask.resize(size_t(count));return overlayCutMask.data();
+}
 int runLocalCropCut(int minX,int minZ,int maxX,int maxZ,int seedCount,
-    int padding,float conservativeRadius,bool respectFluidPlacement=false){
+    int padding,float conservativeRadius,bool respectFluidPlacement=false,
+    bool useOverlay=false){
   cutEdges.clear();cutBoundary.clear();active().cutFlow=active().cutCells=0;
   if(seedCount<1||size_t(seedCount)*2!=cutSeeds.size())return -2;
   constexpr int profiles[]={0,2,3,4,5};
@@ -564,7 +581,15 @@ int runLocalCropCut(int minX,int minZ,int maxX,int maxZ,int seedCount,
   };
   const auto step=[&](int x,int z,int nx,int nz){
     if(conservativeRadius>0){
-      const int natural=cutFaceNatural(x,z,nx,nz,conservativeRadius);
+      int natural;
+      if(useOverlay){
+        const int width=maxX-minX,height=maxZ-minZ;
+        const int right=(width-1)*height;
+        const int index=x!=nx?(z-minZ)*(width-1)+std::min(x,nx)-minX:
+          right+(std::min(z,nz)-minZ)*width+x-minX;
+        if(index<0||index>=int(overlayCutMask.size()))return -1;
+        natural=overlayCutMask[index]?1:cutFaceNaturalWithoutSolid(x,z,nx,nz);
+      }else natural=cutFaceNatural(x,z,nx,nz,conservativeRadius);
       if(natural<0)return -1;
       if(natural>0)return 0;
       if(respectFluidPlacement){
@@ -618,6 +643,16 @@ int lazy_local_crop_cut_conservative_buildable(int minX,int minZ,int maxX,
   if(!(smallestRadius>0)||!std::isfinite(smallestRadius))return -1;
   return runLocalCropCut(minX,minZ,maxX,maxZ,seedCount,padding,
     smallestRadius,true);
+}
+int lazy_local_crop_cut_overlay_buildable(int minX,int minZ,int maxX,
+    int maxZ,int seedCount,int padding){
+  const int width=maxX-minX,height=maxZ-minZ;
+  if(width<2||height<2||uint64_t(width)*height>4096||
+    overlayCutMask.size()!=size_t((width-1)*height+width*(height-1)))return -2;
+  const float smallestRadius=spatial_min_animal_radius();
+  if(!(smallestRadius>0)||!std::isfinite(smallestRadius))return -1;
+  return runLocalCropCut(minX,minZ,maxX,maxZ,seedCount,padding,
+    smallestRadius,true,true);
 }
 int lazy_cut_face_natural(int x,int z,int nx,int nz){
   if(std::abs(x-nx)+std::abs(z-nz)!=1)return -1;

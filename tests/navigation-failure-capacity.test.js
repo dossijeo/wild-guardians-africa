@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {createLazySectorProbeSync} from '../src/world/hierarchical-wasm/lazy-sectors-adapter.js';
+import {createLazySectorProbeSync} from '../src/world/wild-engine/lazy-sectors-adapter.js';
 
-const module=new WebAssembly.Module(readFileSync(new URL('../src/world/hierarchical-wasm/lazy-sectors.wasm',import.meta.url)));
+const module=new WebAssembly.Module(readFileSync(new URL('../src/world/wild-engine/lazy-sectors.wasm',import.meta.url)));
 function fixture(){
   const blocked=new Set();for(let z=0;z<24;z++)blocked.add(`11,${z}`);
   const walkable=(x,z)=>x>=0&&x<24&&z>=0&&z<24&&!blocked.has(`${x},${z}`);

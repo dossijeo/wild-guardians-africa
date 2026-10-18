@@ -2,9 +2,9 @@ import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
 import {deserialize} from '../../src/persistence/snapshots.js';
 import {createSpatialGameSession} from
-  '../../src/world/hierarchical-wasm/spatial-game-session.js';
+  '../../src/world/wild-engine/spatial-game-session.js';
 import {createSpatialNavigationMovement} from
-  '../../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+  '../../src/world/wild-engine/spatial-navigation-movement.js';
 import {syncNativeCampaignRaidView} from '../native-campaign-runner.mjs';
 import {chooseRaidEntry} from '../../src/simulation/raids.js';
 import {animalSpec,randomInt} from '../../src/simulation/rules.js';
@@ -16,7 +16,7 @@ const receiptPath=process.argv[3];
 const state=deserialize(gunzipSync(readFileSync(path)).toString());
 const wasm=new WebAssembly.Module(readFileSync(
   process.env.WILD_ENGINE_SPATIAL_SERVICES_WASM??
-  'src/world/hierarchical-wasm/spatial-savanna.wasm'));
+  'src/world/wild-engine/spatial-savanna.wasm'));
 const loaded=new Map(),session=createSpatialGameSession(wasm,state,{
   loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
 try{

@@ -2,9 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
-import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
-import {createEventDrivenTaskPlanner} from '../src/world/hierarchical-wasm/spatial-intent-bridge.js';
-import {createSpatialNavigationMovement,SpatialChunkUnavailable} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
+import {createEventDrivenTaskPlanner} from '../src/world/wild-engine/spatial-intent-bridge.js';
+import {createSpatialNavigationMovement,SpatialChunkUnavailable} from '../src/world/wild-engine/spatial-navigation-movement.js';
 import {nativeCameraPose} from '../src/rendering/terrain-camera.js';
 import {activeChunkRegion} from '../src/world/active-region.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
@@ -20,7 +20,7 @@ import {createSpatialCampaignOpening} from '../tools/experiments/spatial-campaig
 
 const module=new WebAssembly.Module(readFileSync(
   process.env.WILD_ENGINE_NATIVE_ROUTE_WASM??new URL(
-    '../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+    '../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 const pack=JSON.parse(readFileSync(new URL('../public/content/villages.json',
   import.meta.url),'utf8'))[0];
 

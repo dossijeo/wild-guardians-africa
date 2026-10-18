@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {queryResidentSpatialProps} from '../src/world/hierarchical-wasm/spatial-prop-query.js';
+import {queryResidentSpatialProps} from '../src/world/wild-engine/spatial-prop-query.js';
 
 test('resident spatial prop queries never treat an unloaded or JS-generated chunk as empty',()=>{
   const prop={id:'spatial:0:1:2',slot:0,x:2,z:3,radius:1};

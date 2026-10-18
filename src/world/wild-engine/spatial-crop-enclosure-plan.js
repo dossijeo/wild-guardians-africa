@@ -1,11 +1,12 @@
 import {quoteWallChain} from '../../simulation/game.js';
 import {proposeHybridEnclosure} from './spatial-hybrid-enclosure-prototype.js';
+import {inspectSelfClosedQuote} from './spatial-topological-enclosure-prototype.js';
 
 // Game-specific planning service over Wild Engine's crop groups and topology.
 // A quote never changes the game. The preview is certified against the native
 // animal graph, including doors, natural barriers and resident-sector gaps.
 export function createCropEnclosurePlanner(state,nav,bridge,session=null){
-  if(!state||!nav?.withWallPreview||!bridge?.getUnprotectedCropGroups)
+  if(!state||!nav?.wallWorkerReachability||!bridge?.getUnprotectedCropGroups)
     throw TypeError('A live game, Wild Engine navigation and crop index are required');
   const marginSteps=[2.5,4.5,7];
   const resultFor=(group,material,margin)=>{
@@ -20,19 +21,31 @@ export function createCropEnclosurePlanner(state,nav,bridge,session=null){
     const gaps=[...quote.blockedPieces.map(piece=>({x:piece.x,z:piece.z,reason:'physical-obstacle'})),
       ...quote.blockedCrops.map(piece=>({x:piece.x,z:piece.z,reason:'crop'}))];
     if(!quote.pieces.length)return {status:'blocked',reason:'no-placeable-modules',points,gaps};
-    let after;
-    try{
-      after=nav.withWallPreview(quote.previewPieces,quote.suppressed,()=>
-        bridge.getUnprotectedCropGroups({includeProtected:true})
-          .find(candidate=>candidate.id===group.id),true);
-    }catch(error){
-      if(error.name!=='SpatialChunkUnavailable')throw error;
-      return {status:'unknown',reason:'missing-sector',points,gaps};
-    }
-    const status=after?.protection==='protected'?'ready':
-      after?.protection==='unknown'||!after?'unknown':'partial';
+    // A speculative quote cannot be synchronized into the confirmed graph.
+    // The placed wall loop certifies a continuous animal barrier; a native
+    // positive-only overlay certifies worker access through its gate. Natural
+    // joins without a complete physical proof remain unknown.
+    const crops=state.plants.filter(crop=>crop.alive&&
+      group.cropIds.includes(crop.id));
+    const loop=inspectSelfClosedQuote(quote,state.structures,crops);
+    const replaced=quote.previewPieces.filter(piece=>state.structures.some(
+      existing=>existing.id===piece.id&&existing.kind==='wall'&&
+        existing.status!=='ruined')).map(piece=>piece.id);
+    const access=state.villages.every(village=>{
+      const entry=village.entry??village;
+      // Legacy layouts may place their nominal village coordinate inside a
+      // building. The ordinary construction quote has no access obligation
+      // from such a non-occupiable origin either.
+      if(!nav.walkable(entry.x,entry.z,.28,null,true))return true;
+      const out=nav.wallWorkerReachability(entry,crops,
+        quote.previewPieces,quote.suppressed,false,replaced);
+      const back=nav.wallWorkerReachability(entry,crops,
+        quote.previewPieces,quote.suppressed,true,replaced);
+      return crops.every((_,i)=>out?.[i]==='found'&&back?.[i]==='found');
+    });
+    const status=loop.status==='closed-wall-loop'&&access?'ready':'unknown';
     return {status,reason:status==='ready'?null:
-      status==='unknown'?'uncertified-topology':'open-boundary',
+      !access?'worker-access-unproved':'uncertified-topology',
       points,gaps,modules:quote.pieces,cost:quote.cost,
       gates:quote.gates,previewPieces:quote.previewPieces,
       suppressed:quote.suppressed,updates:quote.updates,

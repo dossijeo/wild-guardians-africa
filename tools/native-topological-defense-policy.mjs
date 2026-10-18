@@ -1,6 +1,6 @@
 import * as Game from '../src/simulation/game.js';
 import {createCropEnclosurePlanner} from
-  '../src/world/hierarchical-wasm/spatial-crop-enclosure-plan.js';
+  '../src/world/wild-engine/spatial-crop-enclosure-plan.js';
 import {numberOf} from '../src/simulation/money.js';
 import {operational,permission} from '../src/simulation/rules.js';
 import {HIRING_RESERVE} from '../src/simulation/budget.js';

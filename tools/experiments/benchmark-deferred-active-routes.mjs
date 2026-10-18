@@ -96,7 +96,7 @@ try{
     tickMode,baselineRef,
     sourceSha256:{baseline:sha(source),candidate:sha(readFileSync(new URL(
       '../../src/simulation/game.js',import.meta.url)))},
-    wasmSha256:sha(readFileSync(new URL('../../src/world/hierarchical-wasm/spatial-savanna.wasm',
+    wasmSha256:sha(readFileSync(new URL('../../src/world/wild-engine/spatial-savanna.wasm',
       import.meta.url))),medianByArm:Object.fromEntries(['baseline','candidate'].map(arm=>
       [arm,percentile(rows.filter(row=>row.arm===arm).map(row=>row.ms),.5)])),rows},null,2)+'\n');
 }finally{unlinkSync(temporary);}

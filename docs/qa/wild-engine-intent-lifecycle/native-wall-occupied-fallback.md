@@ -11,7 +11,7 @@ The native perimeter graph **does contain wall 1588**. Its one exposed approach 
 Reproduce with the checked-in WASM build:
 
 ```powershell
-$env:WILD_ENGINE_NATIVE_ROUTE_WASM='src/world/hierarchical-wasm/spatial-savanna.wasm'
+$env:WILD_ENGINE_NATIVE_ROUTE_WASM='src/world/wild-engine/spatial-savanna.wasm'
 node tools/experiments/probe-native-wall-occupied.mjs docs/qa/wild-engine-intent-lifecycle/manglares14-wall-occupied-diagnostic-occupied-fallback-state.json.gz animal-11004 98.74289374036213 46.025268250158
 ```
 

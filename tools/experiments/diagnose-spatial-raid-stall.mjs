@@ -1,7 +1,7 @@
 import {readFileSync,writeFileSync} from 'node:fs';
 import {deserialize} from '../../src/persistence/snapshots.js';
-import {createSpatialGameSession} from '../../src/world/hierarchical-wasm/spatial-game-session.js';
-import {createSpatialNavigationMovement} from '../../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+import {createSpatialGameSession} from '../../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../../src/world/wild-engine/spatial-navigation-movement.js';
 import {actorBlockers,actorSegmentClear} from '../../src/simulation/actor-motion.js';
 import {containsPoint} from '../../src/world/footprints.js';
 import {wallCollisionPolygon} from '../../src/world/wall-collision-frame.js';
@@ -10,7 +10,7 @@ const input=process.argv[2];
 if(!input)throw Error('Usage: diagnose-spatial-raid-stall <saved-state.json>');
 const state=deserialize(readFileSync(input,'utf8'));
 const wasm=new WebAssembly.Module(readFileSync(new URL(
-  '../../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+  '../../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 const loaded=new Map(),session=createSpatialGameSession(wasm,state,{
   loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)
 });

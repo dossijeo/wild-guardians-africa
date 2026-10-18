@@ -1,11 +1,11 @@
 import {readFileSync,writeFileSync} from 'node:fs';
 import {performance} from 'node:perf_hooks';
-import {createSpatialWorld} from '../src/world/hierarchical-wasm/spatial-world.js';
+import {createSpatialWorld} from '../src/world/wild-engine/spatial-world.js';
 import {activeChunkRegion} from '../src/world/active-region.js';
 import {buildSpatialHorizonData} from '../src/rendering/spatial-horizon-data.js';
 import {makeCanyonHorizon,makeDesertHorizon} from '../src/rendering/horizon-source.js';
 
-const wasm=new WebAssembly.Module(readFileSync(new URL('../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+const wasm=new WebAssembly.Module(readFileSync(new URL('../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 const report={kind:'isolated-horizon-cpu-abba',note:'The existing JS generator uses a different world; spatial-js and native use the same C++ world. Excludes GPU upload, browser worker, and gameplay frames.',cases:[]};
 for(const biome of ['canyons','desert']){
   const seed=712,config={seed:String(seed),biome,relief:1,river:true};

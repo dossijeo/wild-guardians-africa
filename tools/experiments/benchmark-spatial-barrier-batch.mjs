@@ -1,8 +1,8 @@
 import {readFileSync,writeFileSync} from 'node:fs';
 import {performance} from 'node:perf_hooks';
-import {createSpatialSavannaPrototype} from '../../src/world/hierarchical-wasm/spatial-savanna-adapter.js';
+import {createSpatialSavannaPrototype} from '../../src/world/wild-engine/spatial-savanna-adapter.js';
 
-const module=new WebAssembly.Module(readFileSync(new URL('../../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+const module=new WebAssembly.Module(readFileSync(new URL('../../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 const chain=Array.from({length:40},(_,i)=>({x:-20+i,z:0,halfX:.49,halfZ:.45,passMask:0}));
 const rows=[];
 for(const seed of [712,28,123])for(const mode of ['single','batch','batch','single']){

@@ -5,8 +5,8 @@ import {gunzipSync} from 'node:zlib';
 import {deserialize} from '../src/persistence/snapshots.js';
 import {reserveTasks} from '../src/simulation/tasks.js';
 import {wateringRoute} from '../src/world/work-points.js';
-import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
-import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../src/world/wild-engine/spatial-navigation-movement.js';
 
 const binary=process.env.WILD_ENGINE_NATIVE_ROUTE_WASM;
 const module=binary?new WebAssembly.Module(readFileSync(binary)):null;

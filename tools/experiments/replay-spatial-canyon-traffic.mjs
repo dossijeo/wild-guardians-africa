@@ -3,15 +3,15 @@ import {performance} from 'node:perf_hooks';
 import assert from 'node:assert/strict';
 import {deserialize} from '../../src/persistence/snapshots.js';
 import {updateRaid} from '../../src/simulation/raids.js';
-import {createSpatialGameSession} from '../../src/world/hierarchical-wasm/spatial-game-session.js';
-import {createSpatialNavigationMovement} from '../../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+import {createSpatialGameSession} from '../../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../../src/world/wild-engine/spatial-navigation-movement.js';
 import {actorBlockers,actorSegmentClear} from '../../src/simulation/actor-motion.js';
 
 const input=process.argv[2],output=process.argv[3];
 if(!input||!output)throw Error('Usage: replay-spatial-canyon-traffic <state.json> <report.json>');
 const state=deserialize(readFileSync(input,'utf8'));
 const binary=new WebAssembly.Module(readFileSync(new URL(
-  '../../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+  '../../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 const loaded=new Map(),session=createSpatialGameSession(binary,state,{
   loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)
 });

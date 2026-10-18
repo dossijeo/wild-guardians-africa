@@ -1,10 +1,10 @@
 import {readFileSync,writeFileSync} from 'node:fs';
 import {performance} from 'node:perf_hooks';
-import {createSpatialWorld} from '../../src/world/hierarchical-wasm/spatial-world.js';
-import {addSpatialVillageBuildings} from '../../src/world/hierarchical-wasm/spatial-village-bridge.js';
+import {createSpatialWorld} from '../../src/world/wild-engine/spatial-world.js';
+import {addSpatialVillageBuildings} from '../../src/world/wild-engine/spatial-village-bridge.js';
 import {villageLayout} from '../../src/world/villages.js';
 
-const module=new WebAssembly.Module(readFileSync('src/world/hierarchical-wasm/spatial-savanna.wasm'));
+const module=new WebAssembly.Module(readFileSync('src/world/wild-engine/spatial-savanna.wasm'));
 const villages=JSON.parse(readFileSync('public/content/villages.json'));
 const rows=[];
 for(const seed of [712,28,123])for(const payload of villages)

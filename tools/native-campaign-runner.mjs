@@ -23,7 +23,7 @@ import {NativeCampaignEntryDriver} from './native-campaign-entry-driver.mjs';
 import {nativeCampaignStrategy,affordableOpening,villageSavingsFromTotals,campaignProtocolForLabour,NATIVE_CAMPAIGN_PROTOCOL} from './native-campaign-protocol.mjs';
 import {createNativeCampaignPlots} from './native-campaign-plots.mjs';
 import {createNativeCampaignExpansion} from './native-campaign-expansion.mjs';
-import {createSpatialIntentBridge,createEventDrivenTaskPlanner} from '../src/world/hierarchical-wasm/spatial-intent-bridge.js';
+import {createSpatialIntentBridge,createEventDrivenTaskPlanner} from '../src/world/wild-engine/spatial-intent-bridge.js';
 
 import {campaignFinanceCheckpoint,campaignFinanceDelta} from './native-campaign-finance.mjs';
 

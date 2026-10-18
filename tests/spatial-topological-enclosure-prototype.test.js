@@ -4,12 +4,12 @@ import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
 import {deserialize,serialize} from '../src/persistence/snapshots.js';
 import {createPlant} from '../src/simulation/crops.js';
-import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
-import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
-import {createSpatialIntentBridge} from '../src/world/hierarchical-wasm/spatial-intent-bridge.js';
+import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../src/world/wild-engine/spatial-navigation-movement.js';
+import {createSpatialIntentBridge} from '../src/world/wild-engine/spatial-intent-bridge.js';
 import {classifyCutBoundaryFaces,cutQuoteOmissionReason,proposeHybridEnclosure} from
-  '../src/world/hierarchical-wasm/spatial-hybrid-enclosure-prototype.js';
-import {createCropEnclosurePlanner} from '../src/world/hierarchical-wasm/spatial-crop-enclosure-plan.js';
+  '../src/world/wild-engine/spatial-hybrid-enclosure-prototype.js';
+import {createCropEnclosurePlanner} from '../src/world/wild-engine/spatial-crop-enclosure-plan.js';
 import {createNativeTopologicalDefensePolicy} from '../tools/native-topological-defense-policy.mjs';
 import {approximateCutModules,cropClearanceHull,cutEdgesToStrokes,enclosureJunctions,inspectNaturalJunctions,
   identifyNaturalCorridor,
@@ -17,13 +17,13 @@ import {approximateCutModules,cropClearanceHull,cutEdgesToStrokes,enclosureJunct
   inspectStaticCutBoundary,junctionBlocksSmallestAnimal,
   placedEnclosureJunctions,
   SMALLEST_ANIMAL_RADIUS,stitchTwoCutStrokes,
-  wallOccludesBoundaryFace} from '../src/world/hierarchical-wasm/spatial-topological-enclosure-prototype.js';
+  wallOccludesBoundaryFace} from '../src/world/wild-engine/spatial-topological-enclosure-prototype.js';
 import {findVillageEntry,villageLayout} from '../src/world/villages.js';
 import {containsPoint} from '../src/world/footprints.js';
 import {Navigation} from '../src/world/navigation.js';
 import {rational} from '../src/simulation/money.js';
 import {agriculturalRayClear,AGRICULTURAL_PROFILE_LIMITS} from '../src/simulation/raid-agricultural-impact.js';
-import {ANIMAL_SPATIAL_PROFILES} from '../src/world/hierarchical-wasm/spatial-movement-profiles.js';
+import {ANIMAL_SPATIAL_PROFILES} from '../src/world/wild-engine/spatial-movement-profiles.js';
 import * as Game from '../src/simulation/game.js';
 
 test('cut diagnostics distinguish uncertified blockage from unavailable geometry',()=>{
@@ -340,8 +340,24 @@ test('day-80 cut detours around a rock only after renewed physical certification
       const group=bridge.getUnprotectedCropGroups()[0];
       assert.equal(group.cropIds.length,52);
       const nav=createSpatialNavigationMovement(session,state);
+      for(const species of ['warthog','hyena','buffalo','lion','rhino'])
+        session.actorRegionsBatch([{x:0,z:0}],{worker:false,species});
+      session.actorRegionsBatch([{x:0,z:0}],{worker:true});
+      const revisions=()=>{
+        const wasm=session.core.wasm;
+        const values=[];
+        for(let i=0;i<6;i++){
+          session.core.selectNavigationProfile(i);
+          values.push(wasm.lazy_route_revision());
+        }
+        return {stamp:session.routeStamp(),sectors:wasm.lazy_sector_updates(),
+          routes:values};
+      };
+      const beforePlan=revisions();
       const plan=createCropEnclosurePlanner(state,nav,bridge,session)
         .planCropEnclosure(group.id,{material:'zarzas',method:'topological'});
+      assert.deepEqual(revisions(),beforePlan,
+        'A detached wall detour must leave every confirmed navigation profile unchanged');
       assert.equal(plan.status,'ready',JSON.stringify(plan.attempts));
       assert.equal(plan.kind,'general-cut-local-detour');
       assert.equal(plan.modules.length,6);
@@ -702,8 +718,10 @@ test('Gran Cañón natural corridor closes around planted crops and rejects unce
         const physical=corridorQuote?nav.withWallPreview(
           corridorQuote.previewPieces,corridorQuote.suppressed,()=>{
             const counts={solid:0,wetland:0,river:0,cliff:0,unproved:0};
+            const previewWasm=session.core.wasm;
             for(let i=0;i<corridorBoundary.length;i+=4){
-              const code=wasm.lazy_cut_face_natural(...corridorBoundary.slice(i,i+4));
+              const code=previewWasm.lazy_cut_face_natural(
+                ...corridorBoundary.slice(i,i+4));
               if(code===1)counts.solid++;else if(code===2)counts.wetland++;
               else if(code===3)counts.river++;else if(code===4)counts.cliff++;
               else counts.unproved++;

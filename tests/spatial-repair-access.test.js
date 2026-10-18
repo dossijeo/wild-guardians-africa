@@ -7,11 +7,11 @@ import {numberOf} from '../src/simulation/money.js';
 import {hire,openInitialHiring,placeStructure,planRepairAccess,plant,
   repairCost,requestRepair,tick} from '../src/simulation/game.js';
 import {createSpatialGameSession} from
-  '../src/world/hierarchical-wasm/spatial-game-session.js';
+  '../src/world/wild-engine/spatial-game-session.js';
 import {createSpatialNavigationMovement} from
-  '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+  '../src/world/wild-engine/spatial-navigation-movement.js';
 import {createSpatialIntentBridge} from
-  '../src/world/hierarchical-wasm/spatial-intent-bridge.js';
+  '../src/world/wild-engine/spatial-intent-bridge.js';
 import {createOpeningWorld} from '../tools/check_opening.mjs';
 
 const binary=process.env.WILD_ENGINE_NATIVE_ROUTE_WASM;
@@ -24,6 +24,9 @@ const canyonSnapshot=readFileSync(new URL(
   import.meta.url),'utf8');
 const overlapSnapshot=gunzipSync(readFileSync(new URL(
   './fixtures/sabana712-day15-repair-overlap.json.gz',import.meta.url))).toString();
+const day83Snapshot=gunzipSync(readFileSync(new URL(
+  './fixtures/sabana123-day83-repair-near-gate-unknown.json.gz',
+  import.meta.url))).toString();
 
 async function open(game){
   const loaded=new Map(),session=createSpatialGameSession(module,game,{
@@ -41,6 +44,69 @@ async function open(game){
   await session.stream.whenIdle();
   return {session,nav:createSpatialNavigationMovement(session,game)};
 }
+
+test('Sabana/123 day 83: repeated repair hypotheses leave confirmed revisions and routes intact',
+ {skip:!module&&'Build and select the experimental WASM first'},async()=>{
+  const game=deserialize(day83Snapshot),{session,nav}=await open(game);
+  try{
+    const target=game.structures.find(piece=>piece.id==='structure-1655');
+    assert(target&&target.status==='ruined');
+    const repaired={...target,status:'intact',hp:target.maxHp};
+    const hypothetical=game.structures.map(piece=>piece.id===target.id?repaired:piece);
+    const home=game.villages[0].entry??game.villages[0];
+    const actor=game.workers.find(worker=>worker.status!=='home');
+    const route=()=>session.routeActorNative(actor,home,{worker:true,cached:false}).status;
+    const beforeRoute=route(),beforeStamp=session.routeStamp();
+    const beforeSectors=session.core.wasm.lazy_sector_updates();
+    const beforeSave=serialize(game);
+    for(let i=0;i<100;i++){
+      session.withWallStatePreview(hypothetical,({route:probe})=>{
+        assert(['found','unknown'].includes(probe(actor,home).status));
+      });
+      assert.deepEqual(session.routeStamp(),beforeStamp);
+    }
+    const confirmed=session.core;
+    for(let i=0;i<100;i++){
+      nav.withWallPreview([repaired],[],draft=>
+        draft.walkable(repaired.x,repaired.z,.28,null,true),true);
+      assert.equal(session.core,confirmed);
+      assert.deepEqual(session.routeStamp(),beforeStamp);
+    }
+    assert.equal(session.core.wasm.lazy_sector_updates(),beforeSectors);
+    let statePreviews=0;
+    const originalPreview=nav.withWallStatePreview;
+    nav.withWallStatePreview=(...args)=>{
+      statePreviews++;
+      return originalPreview(...args);
+    };
+    const access=planRepairAccess(game,target,nav);
+    assert.equal(access.status,'unknown');
+    assert.equal(statePreviews,0,
+      'an inconclusive worker at the gate must not spawn alternative wall swaps');
+    assert.equal(session.core.wasm.lazy_sector_updates(),beforeSectors);
+    assert.deepEqual(session.routeStamp(),beforeStamp,
+      'the real repair quotation must also leave confirmed revisions intact');
+    assert.equal(route(),beforeRoute);
+    assert.equal(serialize(game),beforeSave);
+    const restored=deserialize(serialize(game));
+    const reopened=await open(restored);
+    try{
+      assert.equal(reopened.session.routeActorNative(
+        restored.workers.find(worker=>worker.id===actor.id),home,
+        {worker:true,cached:false}).status,beforeRoute);
+      for(let i=0;i<10;i++){
+        session.withWallStatePreview(hypothetical,({route:probe})=>
+          probe(actor,home));
+        nav.withWallPreview([repaired],[],draft=>
+          draft.walkable(repaired.x,repaired.z,.28,null,true),true);
+        tick(game,.1,nav);
+        tick(restored,.1,reopened.nav);
+        assert.equal(serialize(game),serialize(restored),
+          `a hypothetical repair must not change confirmed tick ${i}`);
+      }
+    }finally{reopened.session.dispose();}
+  }finally{session.dispose();}
+});
 
 test('Sabana day 15: occupied repair footprints defer without speculative routes',
  {skip:!module&&'Build and select the experimental WASM first'},async()=>{
@@ -143,10 +209,9 @@ test('Gran Cañón repairs retain existing worker routes without unnecessary gat
       assert.equal(target.status,'ruined','the preview must not mutate the game');
       const restored={...target,status:'intact',hp:target.maxHp};
       const simulated=game.structures.map(piece=>piece.id===id?restored:piece);
-      session.withWallStatePreview(simulated,()=>{
+      session.withWallStatePreview(simulated,({route})=>{
         for(const worker of before)
-          assert.equal(session.routeActorNative(worker,home,
-            {worker:true,cached:false}).status,'found');
+          assert.equal(route(worker,home).status,'found');
       });
     }
     const target=game.structures.find(piece=>piece.id==='structure-549');

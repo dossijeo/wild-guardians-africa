@@ -2,12 +2,12 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {performance} from 'node:perf_hooks';
-import {createSpatialWorld} from '../src/world/hierarchical-wasm/spatial-world.js';
+import {createSpatialWorld} from '../src/world/wild-engine/spatial-world.js';
 import {activeChunkRegion} from '../src/world/active-region.js';
 import {buildSpatialHorizonData} from '../src/rendering/spatial-horizon-data.js';
-import {validateSpatialTerrainState} from '../src/world/hierarchical-wasm/spatial-state.js';
+import {validateSpatialTerrainState} from '../src/world/wild-engine/spatial-state.js';
 
-const module=new WebAssembly.Module(readFileSync(new URL('../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+const module=new WebAssembly.Module(readFileSync(new URL('../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 const profile=id=>JSON.parse(readFileSync(new URL(`../public/content/biome-${id}.json`,import.meta.url))).profile;
 
 test('horizon state carries terrain changes but excludes attack and construction topology',()=>{

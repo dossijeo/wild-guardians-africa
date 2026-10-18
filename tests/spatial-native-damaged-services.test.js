@@ -4,9 +4,9 @@ import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
 import {deserialize,serialize} from '../src/persistence/snapshots.js';
 import {emit,repairCost} from '../src/simulation/game.js';
-import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
+import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
 import {createSpatialIntentBridge,createEventDrivenTaskPlanner} from
- '../src/world/hierarchical-wasm/spatial-intent-bridge.js';
+ '../src/world/wild-engine/spatial-intent-bridge.js';
 
 const binary=process.env.WILD_ENGINE_SPATIAL_SERVICES_WASM;
 const module=binary?new WebAssembly.Module(readFileSync(binary)):null;

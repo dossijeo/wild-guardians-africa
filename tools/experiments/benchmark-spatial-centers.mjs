@@ -1,10 +1,10 @@
 import {readFileSync,writeFileSync} from 'node:fs';
 import {performance} from 'node:perf_hooks';
-import {createSpatialWorld} from '../../src/world/hierarchical-wasm/spatial-world.js';
-import {addSpatialCenter,removeSpatialCenter} from '../../src/world/hierarchical-wasm/spatial-center-bridge.js';
+import {createSpatialWorld} from '../../src/world/wild-engine/spatial-world.js';
+import {addSpatialCenter,removeSpatialCenter} from '../../src/world/wild-engine/spatial-center-bridge.js';
 import {centerFootprint} from '../../src/world/centers.js';
 
-const module=new WebAssembly.Module(readFileSync('src/world/hierarchical-wasm/spatial-savanna.wasm'));
+const module=new WebAssembly.Module(readFileSync('src/world/wild-engine/spatial-savanna.wasm'));
 const rows=[];
 for(const seed of [712,28,123])for(const culture of ['mapungubwe','saheliana','suajili','musgum','etiope']){
   const core=createSpatialWorld(module);

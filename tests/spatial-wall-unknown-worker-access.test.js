@@ -3,15 +3,15 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
 import {deserialize,serialize} from '../src/persistence/snapshots.js';
-import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
-import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../src/world/wild-engine/spatial-navigation-movement.js';
 import {quoteWallChain,walkTo} from '../src/simulation/game.js';
 
 test('a pre-existing pathless fleeing worker does not veto a legal farm gate',async()=>{
   const state=deserialize(gunzipSync(readFileSync(new URL(
     './fixtures/manglares712-d10-pathless-fleeing.json.gz',import.meta.url))).toString());
   const binary=new WebAssembly.Module(readFileSync(new URL(
-    '../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+    '../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
   const loaded=new Map();
   const session=createSpatialGameSession(binary,state,
     {loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
@@ -51,7 +51,7 @@ test('a pathless fleeing worker reconnects locally and reaches the village',asyn
   const state=deserialize(gunzipSync(readFileSync(new URL(
     './fixtures/manglares712-d10-pathless-fleeing.json.gz',import.meta.url))).toString());
   const binary=new WebAssembly.Module(readFileSync(new URL(
-    '../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+    '../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
   const loaded=new Map();
   const session=createSpatialGameSession(binary,state,
     {loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});

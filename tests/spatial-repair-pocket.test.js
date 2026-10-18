@@ -2,8 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {deserialize} from '../src/persistence/snapshots.js';
-import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
-import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../src/world/wild-engine/spatial-navigation-movement.js';
 
 const root=new URL('../docs/qa/hierarchical-navigation/',import.meta.url);
 const report=JSON.parse(readFileSync(new URL(
@@ -11,7 +11,7 @@ const report=JSON.parse(readFileSync(new URL(
 const snapshot=readFileSync(new URL(
   'spatial-virtual-sabana-11-diagnostic-v2-state.json',root),'utf8');
 const module=new WebAssembly.Module(readFileSync(new URL(
-  '../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+  '../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 
 test('a resident wall-side repair pocket is a failed approach, not a missing chunk',async()=>{
   const state=deserialize(snapshot),loaded=new Map();

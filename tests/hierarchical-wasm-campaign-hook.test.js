@@ -6,7 +6,7 @@ import {fixture} from '../tools/probe-raid-reservation-saturation.mjs';
 import {installSparseWasmCampaignHook} from '../tools/experiments/sparse-wasm-campaign-hook.mjs';
 import {createHierarchicalNavigationAdapter} from '../src/world/hierarchical-navigation-adapter.js';
 
-const module=new WebAssembly.Module(readFileSync(new URL('../src/world/hierarchical-wasm/lazy-sectors.wasm',import.meta.url)));
+const module=new WebAssembly.Module(readFileSync(new URL('../src/world/wild-engine/lazy-sectors.wasm',import.meta.url)));
 
 test('QA hybrid preserves native gate validity and restores Navigation methods',()=>{
   const previous=Navigation.prototype.path;

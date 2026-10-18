@@ -1100,7 +1100,7 @@ insufficient attack margin or missing worker access still return `unknown`.
 Reproduce the campaign with:
 
 ```powershell
-$env:WILD_ENGINE_SPATIAL_SERVICES_WASM=(Resolve-Path 'src/world/hierarchical-wasm/spatial-savanna.wasm').Path
+$env:WILD_ENGINE_SPATIAL_SERVICES_WASM=(Resolve-Path 'src/world/wild-engine/spatial-savanna.wasm').Path
 node tools/experiments/run-topological-defense-campaign.mjs gran-canon 7 712 .cache/topological-canyon-7.json
 ```
 

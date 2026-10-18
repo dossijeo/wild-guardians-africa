@@ -21,12 +21,12 @@ if(!['legacy','wild-engine'].includes(engine))throw Error('Unknown campaign engi
 const source=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
 const files=['tools/native-campaign-runner.mjs','tools/native-campaign-plots.mjs',
  'tools/native-expanding-defense-policy.mjs','src/simulation/game.js',
- 'src/world/hierarchical-wasm/spatial-intent-bridge.js'];
+ 'src/world/wild-engine/spatial-intent-bridge.js'];
 const sourceFiles=Object.fromEntries(files.map(file=>[file,
  createHash('sha256').update(readFileSync(file)).digest('hex')]));
 if(engine==='wild-engine'){
  const binary=process.env.WILD_ENGINE_SPATIAL_SERVICES_WASM??
-  'src/world/hierarchical-wasm/spatial-savanna.wasm';
+  'src/world/wild-engine/spatial-savanna.wasm';
  sourceFiles[binary]=createHash('sha256').update(readFileSync(binary)).digest('hex');
 }
 const daily=[];

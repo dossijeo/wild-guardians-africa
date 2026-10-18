@@ -1,10 +1,10 @@
 import {readFileSync,writeFileSync} from 'node:fs';
 import {performance} from 'node:perf_hooks';
 import {isDeepStrictEqual} from 'node:util';
-import {createSpatialWorld} from '../../src/world/hierarchical-wasm/spatial-world.js';
+import {createSpatialWorld} from '../../src/world/wild-engine/spatial-world.js';
 
 const module=new WebAssembly.Module(readFileSync(new URL(
-  '../../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+  '../../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 const core=createSpatialWorld(module);
 core.generate(712,0,0,'savanna');
 core.setSettlement(0,0,7,6);

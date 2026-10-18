@@ -1,11 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {createSpatialWorld} from '../src/world/hierarchical-wasm/spatial-world.js';
-import {createSpatialTerrainView} from '../src/world/hierarchical-wasm/spatial-terrain-view.js';
+import {createSpatialWorld} from '../src/world/wild-engine/spatial-world.js';
+import {createSpatialTerrainView} from '../src/world/wild-engine/spatial-terrain-view.js';
 
 const module=new WebAssembly.Module(readFileSync(new URL(
-  '../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+  '../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 
 for(const biome of ['savanna','desert','grand_river','volcanoes','mangrove','canyons'])
   test(`${biome} terrain queries share the native chunk and navigation world`,()=>{

@@ -1,7 +1,7 @@
 import {readFileSync,writeFileSync} from 'node:fs';
 import {performance} from 'node:perf_hooks';
 import * as Game from '../../src/simulation/game.js';
-import {probeSpatialStart} from '../../src/world/hierarchical-wasm/spatial-initial-site.js';
+import {probeSpatialStart} from '../../src/world/wild-engine/spatial-initial-site.js';
 
 const output=process.argv[2]??
   'docs/qa/hierarchical-navigation/spatial-initial-site-cost.json';
@@ -9,7 +9,7 @@ const chunkMargin=Number(process.argv[3]??20);
 if(!Number.isFinite(chunkMargin)||chunkMargin<0)
   throw RangeError('Expected a nonnegative chunk margin');
 const module=new WebAssembly.Module(readFileSync(
-  'src/world/hierarchical-wasm/spatial-savanna.wasm'));
+  'src/world/wild-engine/spatial-savanna.wasm'));
 const payload=JSON.parse(readFileSync('public/content/villages.json','utf8'))[0];
 const state=Game.newGame({seed:712,biome:'gran-canon',
   culture:'mapungubwe',slotId:'native-start-benchmark'});

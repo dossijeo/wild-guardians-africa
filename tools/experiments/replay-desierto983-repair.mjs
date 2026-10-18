@@ -1,8 +1,8 @@
 import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
 import {deserialize} from '../../src/persistence/snapshots.js';
-import {createSpatialGameSession} from '../../src/world/hierarchical-wasm/spatial-game-session.js';
-import {createSpatialNavigationMovement} from '../../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+import {createSpatialGameSession} from '../../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../../src/world/wild-engine/spatial-navigation-movement.js';
 import {repairRoute} from '../../src/world/work-points.js';
 import {gatePortalPoints} from '../../src/world/gate-passages.js';
 import {tick} from '../../src/simulation/game.js';
@@ -12,7 +12,7 @@ import {wallStroke} from '../../src/world/wall-layout.js';
 const state=deserialize(JSON.parse(gunzipSync(readFileSync(new URL(
   '../../tests/fixtures/desierto983-pr42-d7-repair.json.gz',import.meta.url)))));
 const module=new WebAssembly.Module(readFileSync(new URL(
-  '../../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+  '../../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 const loaded=new Map(),session=createSpatialGameSession(module,state,{
   loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
 try{

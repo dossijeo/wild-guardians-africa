@@ -6,7 +6,7 @@ import {BIOME_IDS,SPATIAL_BIOME_CODES} from '../../src/world/biome-ids.js';
 
 // Same fixed queries for baseline and candidate binaries. Calls the linked
 // C++ graph directly to isolate traversal/array-clearing cost from JS routing.
-const wasmPath=process.argv[2]??'src/world/hierarchical-wasm/spatial-savanna.wasm';
+const wasmPath=process.argv[2]??'src/world/wild-engine/spatial-savanna.wasm';
 const output=process.argv[3],biome=process.argv[4]??'sabana';
 const profile=process.argv[5]??'animal';
 const code=SPATIAL_BIOME_CODES[BIOME_IDS[biome]??biome];
