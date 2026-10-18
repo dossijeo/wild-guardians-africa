@@ -14,7 +14,11 @@ const nav={placement:()=>({valid:true}),setState(){},terrainValid:()=>true,walka
 function graphics(){const pipeline=new BuildingDestructionPass({shadowMap:{enabled:false},getDrawingBufferSize:v=>v.set(800,600)}),library=new VfxLibrary(catalog,new THREE.Texture({width:4096,height:2048})),scene=new THREE.Scene(),manager=new AgricultureVfx(library,pipeline,scene,(x,z)=>x*.04+z*.03);return {manager,library,scene,dispose(){manager.dispose();library.dispose();pipeline.dispose();}};}
 
 test('Concurrent agriculture spells release all scene objects and native instances when they expire',()=>{
- const g=graphics(),spells=Array.from({length:48},(_,i)=>({id:`spell-${i}`,kind:i%2?'growth':'multiply',x:(i%8)*4,z:Math.floor(i/8)*4,radius:2,remaining:5}));
+ const g=graphics(),spells=Array.from({length:48},(_,i)=>{
+  const kind=i%2?'growth':'multiply';
+  return {id:`spell-${i}`,kind,targetPlantId:`crop-${i}`,x:(i%8)*4,z:Math.floor(i/8)*4,
+    radius:Game.spellRadius(kind),remaining:5};
+ });
  try{
   g.manager.update({time:100,spells});assert.equal(g.manager.effects.size,48);assert.equal(g.library.instances.size,48);assert.equal(g.scene.children.length,48);
   for(const effect of g.manager.effects.values()){
@@ -28,7 +32,9 @@ test('Concurrent single-crop spells use the main scene depth buffer without requ
  const g=graphics(),camera=new THREE.PerspectiveCamera(60,4/3,.1,600);
  try{
   camera.position.set(0,5,10);camera.lookAt(0,0,0);
-  const spells=Array.from({length:20},(_,index)=>({id:`growth-depth-${index}`,kind:'growth',x:index%5,z:Math.floor(index/5),radius:Game.spellRadius('growth'),remaining:28}));
+  const spells=Array.from({length:20},(_,index)=>({id:`growth-depth-${index}`,kind:'growth',
+   targetPlantId:`crop-${index}`,x:index%5,z:Math.floor(index/5),
+   radius:Game.spellRadius('growth'),remaining:28}));
   g.manager.update({time:100,spells});
   assert.equal(g.manager.prepare(camera),false);
   assert.equal(g.manager.effects.size,20);
