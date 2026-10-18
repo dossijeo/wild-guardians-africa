@@ -3,6 +3,8 @@ import {PreciseTap} from '../ui/precise-tap.js';
 import {startInitialFarRegion} from './initial-far-region.js';
 import {LoadingSyncQueue} from './loading-sync-queue.js';
 import {initialCropCapacity} from './initial-crop-capacity.js';
+import {activeCrops} from '../simulation/active-crops.js';
+import {activeCrates} from '../simulation/active-crates.js';
 import {loadingSyncWitness,loadingAwaitWitness} from './loading-sync-witness.js';
 import {waitGpuFrame} from '../../tools/experiments/wait-gpu-frame.js';
 import {waitGpuPreparation} from '../../tools/experiments/wait-gpu-preparation.js';
@@ -548,11 +550,11 @@ export class WorldScene {
     this.prepareUpcomingAnimalRigs(s);
     const desired=new Set();
     for(const v of s.villages){desired.add(v.id);if(!this.objects.has(v.id)){const mesh=this.villageMesh(v);this.objects.set(v.id,mesh);this.scene.add(mesh);this.cameraVolumesDirty=true;this.cameraDirtyEntities?.set(v.id,v);}}
-    const visiblePlants=s.plants.filter(p=>p.alive&&Math.hypot(p.x-this.controls.target.x,p.z-this.controls.target.z)<140);
+    const visiblePlants=activeCrops(s.plants).filter(p=>Math.hypot(p.x-this.controls.target.x,p.z-this.controls.target.z)<140);
     if(visiblePlants.length>this.cropBatch.capacity)loadingSyncWitness(this.onLoadingSpan,'sync-crop-resize',()=>{this.cropBatch.dispose();this.cropBatch=createCropBatch(this.scene,this.renderer,this.cropGltf,this.cropBridgeData,2**Math.ceil(Math.log2(visiblePlants.length)));});
     if(this.onLoadingSpan)loadingSyncWitness(this.onLoadingSpan,'sync-crop-update',()=>this.cropBatch.update(visiblePlants,s.elapsed,(x,z)=>this.nav.field.surface(x,z),this.renderOrigin,this.nav.field));
     else this.cropBatch.update(visiblePlants,s.elapsed,(x,z)=>this.nav.field.surface(x,z),this.renderOrigin,this.nav.field);
-    for(const e of [...s.structures,...s.crates.filter(c=>!c.delivered),...s.workers,...(s.raid?.animals.filter(a=>a.status!=='gone')??[]),...s.spells]) {
+    for(const e of [...s.structures,...activeCrates(s.crates),...s.workers,...(s.raid?.animals.filter(a=>a.status!=='gone')??[]),...s.spells]) {
       desired.add(e.id);let mesh=this.objects.get(e.id);
       if(!mesh) {
         if(e.kind==='center')mesh=this.centerMesh(e);
@@ -593,7 +595,7 @@ export class WorldScene {
     const hits=this.raycaster.intersectObjects([...this.objects.values()],true);
     let entityId=null;for(const hit of hits){let object=hit.object;while(object&&!object.userData.entityId)object=object.parent;if(object){entityId=object.userData.entityId;break;}}
     let closest=hits[0]?.distance??Infinity;const point=new THREE.Vector3(),box=new THREE.Box3();
-    for(const plant of this.state.plants.filter(p=>p.alive)) {
+    for(const plant of activeCrops(this.state.plants)) {
       const y=this.nav.field.surface(plant.x,plant.z),sample=this.cropBatch.sample(plant.species,plant.growth),radius=plant.species==='platano'?.65:.45;
       box.min.set(plant.x-radius,y,plant.z-radius);box.max.set(plant.x+radius,y+Math.max(.16,sample.height),plant.z+radius);
       if(this.raycaster.ray.intersectBox(box,point)){const distance=point.distanceTo(this.raycaster.ray.origin);if(distance<closest){closest=distance;entityId=plant.id;}}
