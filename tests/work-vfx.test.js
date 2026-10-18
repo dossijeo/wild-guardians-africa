@@ -100,3 +100,18 @@ test('Work manager attaches the worker emitter to the actual native water effect
   const state={time:0,elapsed:0,tasks:[{id:'water-task',kind:'water',targetId:'plant'}],plants:[{id:'plant',x:8,z:4}],structures:[],workers:[{id:'worker',profile:'olderMale',status:'acting',taskId:'water-task',actionRemaining:2.9}]};
   manager.update(state);const effect=[...manager.effects.values()][0];assert.ok(calls.length>0);assert.ok(calls.every(c=>c.id==='worker'&&c.effect===effect));assert.ok(effect.native.rigids.length>0);assert.ok(effect.native.rigids.every(r=>Math.abs(r.p[0])<.05&&r.p[1]>1));manager.dispose();
 });
+
+test('Watering never requests scene-depth capture while its native sprites have no soft fade',()=>{
+  const {manager,library,pipeline,scene}=graphics();
+  const state={time:0,elapsed:0,tasks:[{id:'water-task',kind:'water',targetId:'plant'}],plants:[{id:'plant',x:8,z:4}],structures:[],workers:[{id:'worker',profile:'olderMale',status:'acting',taskId:'water-task',actionRemaining:2.9}]};
+  manager.update(state);const effect=[...manager.effects.values()][0],camera=new THREE.PerspectiveCamera(43,800/600,.1,600);
+  camera.position.set(8,4,8);camera.lookAt(8,0,4);camera.updateMatrixWorld();
+  let spriteFrames=0;
+  for(let frame=0;frame<=129;frame++){
+    effect.seek(frame/30);const sprites=effect.native.sprites();if(sprites.length)spriteFrames++;
+    assert.ok(sprites.every(sprite=>!sprite.soft),`Watering gained a soft particle at frame ${frame}`);
+    assert.equal(effect.prepare(camera,scene),false,`Watering captured depth at frame ${frame}`);
+  }
+  assert.ok(spriteFrames>0,'The test must include the visible water rings');
+  assert.equal(effect.softParticleDepth,false);manager.dispose();library.dispose();pipeline.dispose();
+});
