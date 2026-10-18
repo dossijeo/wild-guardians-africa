@@ -40,13 +40,18 @@ en este host dio, para 1.500 cultivos:
 | Crecimiento | 0,49–0,68 | 48,33–58,07 |
 | Multiplicar | 0,29–0,32 | 41,53–42,73 |
 
-El aumento de crecimiento en esta carga es medible, pero no representa por sí
-solo una ralentización visual grande. **Pendiente antes de concluir la
+La primera pasada sugiere un coste adicional de crecimiento, pero la segunda
+es dispersa y ninguna representa por sí sola una ralentización visual grande.
+**Pendiente antes de concluir la
 investigación:** medir en el juego interactivo latencia del clic, tiempo de
 `Game.tick`, CPU de sincronización/renderizado, tiempo de fotograma GPU y vida
 de los VFX al lanzar crecimiento y multiplicar con fincas pequeñas, medianas
 y grandes. Comprobar también que los efectos terminados desaparecen. No
 atribuir a navegación un coste de VFX sin separar ambas mediciones.
+El [registro JSON](crop-spells-sabana712.json) conserva una segunda pasada
+después de actualizar la rama con `main`; la dispersión entre brazos es grande
+por JIT/GC y confirma que estas cifras son exploratorias, no un criterio de
+aceptación ni una estimación de p95 interactivo.
 
 ## Retirada de código anterior
 
