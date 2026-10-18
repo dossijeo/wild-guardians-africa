@@ -757,6 +757,18 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
     delete w.exitConnectorSearch;delete w.exitRouteRecovery;w.path=null;
     return true;
   };
+  const recoverExitRoute=reason=>{
+    // Keep one recovery episode across connector attempts. A newly proposed
+    // route can fail at the same static edge on the next tick; resetting the
+    // deadline there would allow an exhausted raid to run indefinitely.
+    if(w.exitRouteRecovery?.destinationId===destination.id&&
+      w.exitRouteRecovery.version===nav.version)return;
+    w.exitRouteRecovery={destinationId:destination.id,version:nav.version,
+      startedAt:s.elapsed,x:w.x,z:w.z};
+    emit(s,'AnimalExitRouteRecovery',{actorId:w.id,x:w.x,z:w.z,
+      exitId:destination.id,reason});
+  };
+  if(w.exitRouteRecovery&&!w.path&&abandonExhaustedExit())return true;
   if(w.mobileRecoveryDestinationId!==destination.id||
     w.mobileRecoveryVersion!==nav.version){
     w.mobileRecoveryDestinationId=destination.id;
@@ -787,9 +799,16 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
     if(w.exitRouteRecovery){
       nav.planningObserver?.({kind:'routeRecoveryStep',actorId:w.id,
         elapsed:s.elapsed,destinationId:destination.id});
-      w.path=animalExitConnector(w,destination,nav);
+      // A prior connector may have failed at a fractional landing even when
+      // the current position has a valid route around it. Retry the native
+      // planner once per recovery episode, then use the bounded physical
+      // connector if that route is unavailable or rejected again.
+      if(!w.exitRouteRecovery.normalRetryDone){
+        w.path=nav.path?.(w,destination,w.radius??.28,ignore,worker)??null;
+        w.exitRouteRecovery.normalRetryDone=true;
+      }
+      if(!w.path)w.path=animalExitConnector(w,destination,nav);
       if(!w.path)return abandonExhaustedExit();
-      delete w.exitRouteRecovery;
     }else{
       nav.planningObserver?.({kind:worker&&pendingSearch?'routeRecoveryStep':'routeRefresh',
         actorId:w.id,elapsed:s.elapsed,destinationId:destination.id});
@@ -858,10 +877,7 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
   if(!worker&&expandRoute&&next&&s.elapsed-w.mobileProgressAt>=12&&
     nav.segmentClear?.(w,next,w.radius??.28,ignore,false)===false){
     w.path=null;
-    w.exitRouteRecovery={destinationId:destination.id,version:nav.version,
-      startedAt:s.elapsed};
-    emit(s,'AnimalExitRouteRecovery',{actorId:w.id,x:w.x,z:w.z,
-      exitId:destination.id,reason:'stale-static-connector'});
+    recoverExitRoute('stale-static-connector');
     return false;
   }
   const probe=next&&distanceToNext>1e-8?{
@@ -906,6 +922,8 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
     w.mobileProgressDistance=remaining;
     w.mobileProgressAt=s.elapsed;
   }
+  if(w.exitRouteRecovery&&Number.isFinite(w.exitRouteRecovery.x)&&
+    dist(w,w.exitRouteRecovery)>=.75)delete w.exitRouteRecovery;
   if(routeClearance?.blocked()){
     w.path=null;
     const epoch=routeEpoch(nav,w,destination,worker);
@@ -913,17 +931,16 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
     // Retry once at the next movement boundary. If the same physical route
     // fails again without a topology/residency change, do not replan per tick.
     if(!worker&&expandRoute&&previousWait?.epoch===epoch){
-      w.exitRouteRecovery={destinationId:destination.id,version:nav.version,
-        startedAt:s.elapsed};
-      emit(s,'AnimalExitRouteRecovery',{actorId:w.id,x:w.x,z:w.z,
-        exitId:destination.id,reason:'repeated-static-connector'});
+      recoverExitRoute('repeated-static-connector');
     }
     routePlanWaits.set(w,{epoch,retryAt:previousWait?.epoch===epoch?
       s.elapsed+ROUTE_RETRY_SECONDS:s.elapsed});
     return false;
   }
   routePlanWaits.delete(w);
-  return w.path.length===0;
+  const arrived=w.path.length===0;
+  if(arrived)delete w.exitRouteRecovery;
+  return arrived;
 }
 // A ruined wall regains collision when repaired. Check that this topological
 // change does not seal workers or a center away from its village. Candidate
