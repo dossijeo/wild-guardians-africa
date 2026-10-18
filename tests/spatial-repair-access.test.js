@@ -14,7 +14,6 @@ import {createSpatialIntentBridge} from
   '../src/world/hierarchical-wasm/spatial-intent-bridge.js';
 import {createOpeningWorld} from '../tools/check_opening.mjs';
 import {centerServicePoint} from '../src/world/centers.js';
-import {applyBalanceCandidate} from '../tools/experiments/balance-candidate.mjs';
 
 const binary=process.env.WILD_ENGINE_NATIVE_ROUTE_WASM;
 const module=binary?new WebAssembly.Module(readFileSync(binary)):null;
@@ -261,9 +260,9 @@ for(const biome of ['manglares','gran-rio','desierto','volcanes'])
 
 test('a worker beside a ruined gate defers an inconclusive repair without speculative previews',
  {skip:!module&&'Build and select the experimental WASM first'},async()=>{
-  applyBalanceCandidate(JSON.parse(readFileSync(new URL(
-    '../tools/experiments/balance-candidates/v1-pressure.json',import.meta.url))));
-  const game=deserialize(nearGateUnknownSnapshot),target=game.structures.find(
+  // The spatial repair query does not inspect the saved experimental pressure
+  // plan; use the exact serialized geometry without registering balance V1.
+  const game=JSON.parse(nearGateUnknownSnapshot),target=game.structures.find(
     piece=>piece.id==='structure-1655');
   const {session,nav}=await open(game);
   try{
