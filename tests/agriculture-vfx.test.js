@@ -35,6 +35,8 @@ test('Concurrent single-crop spells use the main scene depth buffer without requ
   for(const effect of g.manager.effects.values()){
    assert.equal(effect.softParticleDepth,false);
    assert.equal(effect.uniforms.uSoftParticleDepth.value,false);
+   assert.equal(effect.localLights.length,0);
+   assert.ok(effect.native.lights.colors.some(color=>color.some(channel=>channel>0)));
    assert.equal(effect.sprites.material.depthTest,true);
    assert.ok(effect.sprites.geometry.instanceCount>0);
   }

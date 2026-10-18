@@ -73,3 +73,20 @@ A second browser fixture sets `WG_QA_REAL_CAST=1`. It constructs the work center
 | 20 | 5 s | Multiply | 78.9 ms | 58.2 ms | 60 → 0 |
 
 The `Game.cast` results confirm that the earlier manually constructed spells matched the actual renderer input: each has `targetPlantId`, radius `0.65`, and the expected duration. The absolute GPU values vary across runs and differ slightly because this fixture also draws a work center. The main-depth path still leaves a measurable spell cost above the unspelled scene; it removes the redundant scene render, not all particle rendering work. The effect count returns to zero after clearing the test arms. For reproduction, add `WG_QA_REAL_CAST=1` to the command above. The committed `chrome-real-command-*.json` files record the full samples and renderer identity.
+
+## World point lights with concurrent single-crop spells
+
+Each agricultural effect previously added two Three.js point lights to the whole scene. With 20 simultaneous spells this yielded 40 global lights, although the effect's own rigid and sprite shaders already receive the two native light colors and positions. The new agricultural VFX omit only those Three.js lights; other effect compositions retain them. The native particles, spell simulation, crop lighting from the sun, and effect lifetimes are unchanged.
+
+Headed hardware Chrome on Intel UHD/D3D11, Sabana/712, 1,500 synthetic crops, 20 real `Game.cast` commands on distinct crops at age 5 seconds. The same build switches between the former lights (`WG_QA_FORCE_AGRICULTURE_LIGHTS=1`) and the candidate. Each of the ABBA runs measured 60 RAF frames per arm and 45 settled GPU samples. All results completed without browser errors; the full reports are `chrome-world-lights-abba-0.json` through `-3.json`.
+
+| Run | World lights | Control GPU | Growth GPU | Multiply GPU | Growth frame interval |
+| ---: | --- | ---: | ---: | ---: | ---: |
+| 0 | on | 29.41 ms | 53.41 ms | 52.81 ms | 66.5 ms |
+| 1 | off | 32.79 ms | 51.27 ms | 50.95 ms | 66.5 ms |
+| 2 | off | 33.49 ms | 51.99 ms | 48.25 ms | 66.4 ms |
+| 3 | on | 32.86 ms | 53.46 ms | 52.85 ms | 66.5 ms |
+
+The daytime GPU benefit for 20 effects is about 2–5 ms in absolute spell frames, with baseline variation across runs. The measured frame interval did not improve; it is frame-paced on this device, so this is a GPU-headroom result rather than proof of higher FPS. A single-spell diagnostic showed little difference, which is expected when only two lights are involved. At render time 400 (night presentation after valid daytime casts), a focused comparison measured growth 58.50 → 52.26 ms GPU and multiply 63.10 → 53.32 ms; these two night runs are diagnostic, not an ABBA estimate. Their reports are `chrome-world-lights-night-on.json` and `chrome-world-lights-night-off.json`.
+
+The focused night images [former lights](world-lights-night-on.webp) and [without world lights](world-lights-night-off.webp) are visually close. Across the full 1280×800 image, the per-channel mean absolute difference was below 0.006/255; these screenshots come from separate deterministic page loads, so that number is a coarse comparison, not a guarantee of pixel identity. The original lights remain available to the benchmark with `WG_QA_FORCE_AGRICULTURE_LIGHTS=1`; production uses the lower-cost path. This does not establish performance on other GPUs or with a legally grown 1,500-crop farm.

@@ -5,14 +5,14 @@ export function agricultureVfxPlans(state){
   return state.spells.filter(s=>['growth','multiply'].includes(s.kind)&&s.remaining>0).map(s=>({key:s.id,kind:s.kind,x:s.x,z:s.z,scale:s.radius/.79,duration:durations[s.kind],time:Math.max(0,durations[s.kind]-s.remaining)}));
 }
 export class AgricultureVfx {
-  constructor(library,pipeline,scene,surface){this.library=library;this.pipeline=pipeline;this.scene=scene;this.surface=surface;this.effects=new Map();}
+  constructor(library,pipeline,scene,surface){this.library=library;this.pipeline=pipeline;this.scene=scene;this.surface=surface;this.effects=new Map();this.worldLights=false;}
   update(state){
     const desired=new Set(),environment=vfxEnvironment(state.time>=300?1:0);
     for(const plan of agricultureVfxPlans(state)){
       desired.add(plan.key);let effect=this.effects.get(plan.key);
       // The main scene depth buffer already occludes farm particles behind crops,
       // rocks and terrain. A soft-intersection texture would redraw the whole farm.
-      if(!effect){effect=this.library.create('heal',this.pipeline,{worldSurface:this.surface,agricultureMode:plan.kind,agricultureDuration:plan.duration,softParticleDepth:false});this.effects.set(plan.key,effect);this.scene.add(effect);}
+      if(!effect){effect=this.library.create('heal',this.pipeline,{worldSurface:this.surface,agricultureMode:plan.kind,agricultureDuration:plan.duration,softParticleDepth:false,worldLights:this.worldLights});this.effects.set(plan.key,effect);this.scene.add(effect);}
       effect.position.set(plan.x,this.surface(plan.x,plan.z),plan.z);effect.scale.set(plan.scale,1,plan.scale);effect.environment=environment;
       if(plan.time<effect.native.time-1e-8||effect.native.time===0)effect.seek(plan.time);else effect.advance(Math.max(0,plan.time-effect.native.time));
     }
