@@ -2,6 +2,7 @@ import {writeFileSync,mkdirSync,readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {dirname,resolve} from 'node:path';
 import {performance} from 'node:perf_hooks';
+import {Session as InspectorSession} from 'node:inspector';
 import {execFileSync} from 'node:child_process';
 import {simulateNativeCampaign} from '../native-campaign-runner.mjs';
 import {createSpatialCampaignOpening} from './spatial-campaign-opening.mjs';
@@ -21,6 +22,7 @@ const captureRaidDay=Number(process.env.WILD_ENGINE_CAPTURE_RAID_DAY??0);
 const captureDayEnd=Number(process.env.WILD_ENGINE_CAPTURE_DAY_END??0);
 const captureStateDay=Number(process.env.WILD_ENGINE_CAPTURE_STATE_DAY??0);
 const captureStateTime=Number(process.env.WILD_ENGINE_CAPTURE_STATE_TIME??0);
+const cpuProfileDay=Number(process.env.WILD_ENGINE_CPU_PROFILE_DAY??0);
 const captureOccupiedFallback=process.env.WILD_ENGINE_CAPTURE_OCCUPIED_FALLBACK==='1';
 const spatialAdvice=process.env.WILD_ENGINE_SPATIAL_ADVICE==='1';
 const wallSpendingFlag=process.env.WILD_ENGINE_WALL_SPENDING;
@@ -35,6 +37,7 @@ const decisionProfile=process.env.WILD_ENGINE_DECISION_PROFILE==='1';
 let capturedRaid=false;
 let capturedState=false;
 let capturedOccupiedFallback=false;
+let cpuProfiler=null,cpuProfileFinished=Promise.resolve();
 const assignments=[],seenAssignments=new Set();
 const intentTiming={};
 let timedPlanner=null;
@@ -77,6 +80,10 @@ try{
     openingFactory,entryDriverFactory,
     onTick:(state,nav)=>{
       latestState=state;latestNav=nav;nav.serviceRaidConnectivityDemand?.();
+      if(cpuProfileDay===state.day&&!cpuProfiler){
+        cpuProfiler=new InspectorSession();cpuProfiler.connect();
+        cpuProfiler.post('Profiler.enable');cpuProfiler.post('Profiler.start');
+      }
       if(!capturedState&&captureStateDay===state.day&&
         state.time>=captureStateTime){
         capturedState=true;
@@ -139,6 +146,17 @@ try{
         });
     },
     onDay:row=>{
+      if(cpuProfiler&&row.day===cpuProfileDay){
+        const profiler=cpuProfiler;cpuProfiler=null;
+        cpuProfileFinished=new Promise((resolveProfile,rejectProfile)=>
+          profiler.post('Profiler.stop',(error,result)=>{
+            profiler.disconnect();
+            if(error)return rejectProfile(error);
+            writeFileSync(path.replace(/\.json$/,`-day${row.day}.cpuprofile`),
+              JSON.stringify(result.profile));
+            resolveProfile();
+          }));
+      }
       if(row.day===captureDayEnd&&latestState)
         writeFileSync(path.replace(/\.json$/,`-day${row.day}-end-state.json`),
           serialize(latestState));
@@ -182,6 +200,7 @@ try{
     nativeIntent:result.nativeIntent,raidEvidence:result.raidEvidence,
     raidSelection:raidSelection(),rows};
   writeFileSync(path,JSON.stringify(report,null,2)+'\n');
+  await cpuProfileFinished;
 }catch(error){
   const partialState=error.nativeCampaignPartial?.state;
   const partialStatePath=partialState?

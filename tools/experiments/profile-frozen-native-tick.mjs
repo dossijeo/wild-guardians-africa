@@ -7,10 +7,21 @@ import {tick} from '../../src/simulation/game.js';
 import {createSpatialGameSession} from '../../src/world/hierarchical-wasm/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../../src/world/hierarchical-wasm/spatial-navigation-movement.js';
 import {createEventDrivenTaskPlanner} from '../../src/world/hierarchical-wasm/spatial-intent-bridge.js';
+import {applyBalanceCandidate} from './balance-candidate.mjs';
 
 const file=process.argv[2],seconds=Number(process.argv[3]??10);
 if(!file||!Number.isInteger(seconds)||seconds<1||seconds>600)
-  throw Error('Usage: node profile-frozen-native-tick.mjs state.json[.gz] seconds');
+  throw Error('Usage: node profile-frozen-native-tick.mjs state.json[.gz] seconds [--dt 0.1] [--candidate candidate.json] [--prune-history]');
+const dtIndex=process.argv.indexOf('--dt');
+const dt=dtIndex<0?1:Number(process.argv[dtIndex+1]);
+if(!Number.isFinite(dt)||dt<=0||dt>1||!Number.isInteger(1/dt))
+  throw Error('--dt must divide one simulated second');
+const candidateIndex=process.argv.indexOf('--candidate');
+if(candidateIndex>=0){
+  const candidateFile=process.argv[candidateIndex+1];
+  if(!candidateFile)throw Error('Missing --candidate file');
+  applyBalanceCandidate(JSON.parse(readFileSync(candidateFile,'utf8')));
+}
 const bytes=readFileSync(file),state=deserialize((file.endsWith('.gz')?gunzipSync(bytes):bytes).toString());
 // Diagnostic A/B only: compare the same active world with retired entities
 // removed before constructing the native projection. Never write this state.
@@ -46,7 +57,8 @@ try{
   try{
     for(let second=1;second<=seconds;second++){
       for(const name of timed)timing[name]=0;
-      const beforeElapsed=state.elapsed,start=performance.now();tick(state,1,nav);
+      const beforeElapsed=state.elapsed,start=performance.now();
+      for(let step=0;step<Math.round(1/dt);step++)tick(state,dt,nav);
       if(state.elapsed<=beforeElapsed)throw Error(`Frozen tick did not advance at second ${second}: ${JSON.stringify({day:state.day,time:state.time,pauses:state.pauses,result:state.result})}`);
       const ms=performance.now()-start,metrics=planner.metrics(state.elapsed);
       console.log(JSON.stringify({second,day:state.day,time:state.time,ms,pruneHistory,
