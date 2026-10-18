@@ -759,7 +759,8 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
     delete w.exitRouteRecovery;
   const abandonExhaustedExit=()=>{
     const exhausted=w.exitConnectorSearch?.exhausted===true,
-      timedOut=w.exitRouteRecovery&&s.elapsed-w.exitRouteRecovery.startedAt>=1500;
+      timedOut=w.exitRouteRecovery&&s.elapsed-w.exitRouteRecovery.startedAt>=
+        (w.exitRouteRecovery.reason==='no-exit-progress'?300:1500);
     if(worker||!expandRoute||w.status!=='retreating'||
       (!exhausted&&!timedOut))return false;
     emit(s,'AnimalRetreatExitAbandoned',{actorId:w.id,x:w.x,z:w.z,elapsed:s.elapsed,
@@ -776,7 +777,7 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
     if(w.exitRouteRecovery?.destinationId===destination.id&&
       w.exitRouteRecovery.version===nav.version)return;
     w.exitRouteRecovery={destinationId:destination.id,version:nav.version,
-      startedAt:s.elapsed,x:w.x,z:w.z};
+      startedAt:s.elapsed,x:w.x,z:w.z,reason};
     emit(s,'AnimalExitRouteRecovery',{actorId:w.id,x:w.x,z:w.z,
       exitId:destination.id,reason});
   };
@@ -788,6 +789,7 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
     w.mobileRecoveryAttempts=0;
     w.mobileProgressDistance=dist(w,destination);
     w.mobileProgressAt=s.elapsed;
+    delete w.retreatStaticRouteFailure;
   }
   if(!Number.isFinite(w.mobileProgressDistance)||!Number.isFinite(w.mobileProgressAt)){
     w.mobileProgressDistance=dist(w,destination);
@@ -933,11 +935,25 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
   if(remaining<=w.mobileProgressDistance-.75){
     w.mobileProgressDistance=remaining;
     w.mobileProgressAt=s.elapsed;
+    delete w.retreatStaticRouteFailure;
   }
   if(w.exitRouteRecovery&&Number.isFinite(w.exitRouteRecovery.x)&&
     dist(w,w.exitRouteRecovery)>=.75)delete w.exitRouteRecovery;
   if(routeClearance?.blocked()){
     w.path=null;
+    if(!worker&&expandRoute&&w.status==='retreating'){
+      const prior=w.retreatStaticRouteFailure,
+        repeated=prior?.destinationId===destination.id&&
+          prior.version===nav.version&&Math.hypot(w.x-prior.x,w.z-prior.z)<.1;
+      w.retreatStaticRouteFailure={destinationId:destination.id,
+        version:nav.version,x:w.x,z:w.z,count:repeated?
+          Math.min(3,prior.count+1):1};
+      // An invalid route that alternates between two near-identical points
+      // can move a few centimetres forever. Only repeated *static* rejection
+      // without destination progress invokes the bounded exit recovery.
+      if(w.retreatStaticRouteFailure.count>=2&&
+        s.elapsed-w.mobileProgressAt>=12)recoverExitRoute('no-exit-progress');
+    }
     const epoch=routeEpoch(nav,w,destination,worker);
     const previousWait=routePlanWaits.get(w);
     // Retry once at the next movement boundary. If the same physical route

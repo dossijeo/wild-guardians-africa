@@ -106,8 +106,17 @@ defense, native intents) reached day 11 and stopped with `status: error`:
 are in `docs/qa/preview-isolation-sabana123-v1.json` and the associated
 `-partial-state.json`. This is a technical incomplete-incursion result, not
 a balance defeat or evidence about day 83. Its relationship to preview
-isolation remains unproven; investigate it before claiming sustained
-campaign validation. Do not merge until sustained simulation and reproduction have
+isolation remains unproven. The saved actor repeatedly alternated between
+two positions 0.027 m apart: its next static connector was rejected, then
+the route was recreated without destination progress. Counting repeated
+static rejections in that same local pocket now starts the existing bounded
+retreat recovery. The frozen regression verifies that the buffalo reaches
+its real exit on physically checked steps, without controlled disappearance,
+extra hits or damage. A broader analytic wall-sweep prototype exposed a
+separate discrepancy between sampled graph connectors and continuous wall
+clearance, but changed older retreat fixtures; it was discarded pending a
+dedicated movement/graph correction. The complete campaign still needs a
+fresh committed-code run. Do not merge until sustained simulation and reproduction have
 been reviewed. The source tree is now `src/world/wild-engine/`; the rename was
 separate from the behavioral change and all 204 playable tests, 51 directed
 wall/enclosure tests, and the WASM/Vite builds pass after it.

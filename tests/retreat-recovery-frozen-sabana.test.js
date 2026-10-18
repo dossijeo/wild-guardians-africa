@@ -5,6 +5,7 @@ import {gunzipSync} from 'node:zlib';
 import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../src/world/wild-engine/spatial-navigation-movement.js';
 import {walkTo} from '../src/simulation/game.js';
+import {deserialize,serialize} from '../src/persistence/snapshots.js';
 
 const fixture=new URL('../docs/qa/retreat-recovery-episode/sabana712-v1-cheap-thorn-day34-partial-state.json.gz',import.meta.url);
 const wasm=new WebAssembly.Module(readFileSync(new URL(
@@ -49,5 +50,45 @@ test('day-34 exhausted animal recovers a native route around a false direct conn
   assert.equal(actor.exitRouteRecovery,undefined);
   assert(!state.events.some(e=>e.type==='AnimalRetreatExitAbandoned'&&
    e.actorId===actor.id));
+ }finally{session.dispose();}
+});
+
+test('day-11 buffalo oscillating at a static connector enters bounded retreat recovery',()=>{
+ const state=deserialize(readFileSync(new URL(
+  '../docs/qa/preview-isolation-sabana123-v1-partial-state.json',import.meta.url),'utf8'));
+ const actor=state.raid.animals.find(item=>item.id==='animal-9092');
+ assert(actor&&actor.status==='retreating'&&actor.hitsRemaining===0);
+ const loaded=new Map(),session=createSpatialGameSession(wasm,state,{
+  loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+ try{
+  const cx=Math.floor((actor.x+24)/48),cz=Math.floor((actor.z+24)/48);
+  for(let z=cz-2;z<=cz+2;z++)for(let x=cx-2;x<=cx+2;x++){
+   if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+   loaded.set(`${x},${z}`,session.core.chunkPayload());
+  }
+  const nav=createSpatialNavigationMovement(session,state),
+   destination={...actor.exit,id:`exit-${actor.id}`};
+  actor.pathVersion=nav.version;actor.mobileRecoveryVersion=nav.version;
+  for(let i=0;i<8&&!actor.exitRouteRecovery;i++){
+   state.elapsed+=.1;
+   assert.equal(walkTo(state,actor,destination,.1,nav,
+    {speed:3.8,worker:false,expandRoute:true,routeVia:actor.spawn}),false);
+  }
+  assert.equal(actor.exitRouteRecovery?.reason,'no-exit-progress');
+  assert.equal(deserialize(serialize(state)).raid.animals.find(item=>item.id===actor.id)
+   .exitRouteRecovery.reason,'no-exit-progress');
+  let done=false;
+  for(let i=0;i<1000&&!done;i++){
+   const before={x:actor.x,z:actor.z};state.elapsed+=.1;
+   done=walkTo(state,actor,destination,.1,nav,
+    {speed:3.8,worker:false,expandRoute:true,routeVia:actor.spawn});
+   assert(nav.segmentClear(before,actor,actor.radius,null,false));
+   assert(Math.hypot(actor.x-before.x,actor.z-before.z)<=.38+1e-8);
+  }
+  assert(done,'the exhausted buffalo must physically reach its exit');
+  const abandoned=state.events.find(event=>event.type==='AnimalRetreatExitAbandoned'&&
+   event.actorId===actor.id);
+  assert.equal(abandoned,undefined,'the frozen buffalo should find a physical exit');
+  assert(Math.hypot(actor.x-destination.x,actor.z-destination.z)<1e-6);
  }finally{session.dispose();}
 });
