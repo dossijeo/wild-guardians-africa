@@ -17,11 +17,13 @@ import {intensiveRunProvenance} from './intensive-run-provenance.mjs';
 import {createFarmDefensePolicy} from './farm-defense-policy.mjs';
 import {createNativeExpandingDefensePolicy} from './native-expanding-defense-policy.mjs';
 import {createNativeCampaignEvidence} from './native-campaign-evidence.mjs';
+import {createCampaignLifecycleAccounting} from './campaign-lifecycle-accounting.mjs';
 
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 export function simulateIntensiveFarm({days=100,profile='olderFemale',mixed=false,middayHiring=false,plantsPerWorker=12,defend=false,reserveLabourGrowth=true,reserveMaintenance=true,burstPlanting=false,cameraEntry=true,defensePolicy='legacy',nativeEvidence=false,onDay,onTick,onDecision,...world}={}){
  if(!Number.isSafeInteger(plantsPerWorker)||plantsPerWorker<1)throw new Error('Plants per worker must be a positive integer');
  const opening=createOpeningWorld(world),nav=opening.nav;let s=opening.s,sequence=0;
+ const lifecycle=createCampaignLifecycleAccounting();let stopLifecycle=Game.observeGameEvents(s,event=>lifecycle.observe(event,s));
  const worker=PROFILES.find(p=>p.id===profile);if(!worker)throw new Error('Unknown worker profile');
  if(!['legacy','expanding'].includes(defensePolicy))throw Error('Unknown defense policy');
  const defense=defend?(defensePolicy==='expanding'?createNativeExpandingDefensePolicy():createFarmDefensePolicy()):null;
@@ -36,7 +38,7 @@ export function simulateIntensiveFarm({days=100,profile='olderFemale',mixed=fals
  candidates.sort((a,b)=>distance(a,origin)-distance(b,origin)||a.z-b.z||a.x-b.x);
  const plots=[];let candidateIndex=0,nextWages=worker.wage,staff=1,plantedSequence=0;
  const daily=[],counts={},seen=new Set(),savedRaids=new Set(),additionalHiring={count:0,cost:0};let maximumLiving=0,reloads=0;
- const collect=()=>{for(const e of s.events)if(!seen.has(e.id)){seen.add(e.id);counts[e.type]=(counts[e.type]??0)+1;if(e.type==='HiringConfirmed'&&e.additional){additionalHiring.count+=e.count;additionalHiring.cost+=e.cost;}}};
+ const collect=()=>{for(const e of s.events)if(!seen.has(e.id)){seen.add(e.id);counts[e.type]=(counts[e.type]??0)+1;if(e.type==='CrateDelivered'){const charge=s.ledger.entries['deliver:'+e.targetId];assert.ok(charge&&charge.d==='1'&&BigInt(charge.n)>0n);}if(e.type==='HiringConfirmed'&&e.additional){additionalHiring.count+=e.count;additionalHiring.cost+=e.cost;}}};
  const choosePlot=()=>{
   const occupied=new Set(s.plants.filter(p=>p.alive).map(p=>`${p.x},${p.z}`));
   const old=plots.find(p=>!occupied.has(`${p.x},${p.z}`));if(old)return old;
@@ -131,7 +133,7 @@ export function simulateIntensiveFarm({days=100,profile='olderFemale',mixed=fals
     pendingTasks:s.tasks.length}));
    if(!decision.actions){idle[decision.reason]=(idle[decision.reason]??0)+dt;if(s.time<300&&!s.raid){idleRun+=dt;longestIdle=Math.max(longestIdle,idleRun);}}else idleRun=0;
    Game.tick(s,dt,nav);collect();evidence?.observe(s);onTick?.(s,nav);
-   if(s.raid&&!savedRaids.has(s.raid.id)){savedRaids.add(s.raid.id);s=deserialize(serialize(s));nav.setState(s);reloads++;}
+   if(s.raid&&!savedRaids.has(s.raid.id)){savedRaids.add(s.raid.id);stopLifecycle();s=deserialize(serialize(s));nav.setState(s);stopLifecycle=Game.observeGameEvents(s,event=>lifecycle.observe(event,s));reloads++;}
    if(s.elapsed-start>2400)throw new Error(`Unfinished real incursion on day ${day}: ${JSON.stringify(s.raid)}`);
   }
   const row={day,before,money:numberOf(s.ledger.balance),staff:initialStaff,wages:initialStaff*worker.wage,nextLabourReserve:labourReserve(),maintenanceReserve:maintenanceReserve(),pendingTasks:s.tasks.length,planted:(counts.CropPlaced??0)-(baseline.CropPlaced??0),delivered:(counts.CrateDelivered??0)-(baseline.CrateDelivered??0),destroyed:(counts.CropDestroyed??0)-(baseline.CropDestroyed??0),living:s.plants.filter(p=>p.alive).length,centerHp:s.structures.filter(operational).map(c=>c.hp),actions,longestIdle,idle,result:s.result};
@@ -141,29 +143,43 @@ export function simulateIntensiveFarm({days=100,profile='olderFemale',mixed=fals
  }
  const idleRuns=daily.map(r=>r.longestIdle).sort((a,b)=>a-b),unoccupied=daily.reduce((n,r)=>n+r.idle.budget+r.idle.space+r.idle['shift-end'],0);
  const activity={daylightSeconds:daily.length*300,unoccupiedSeconds:unoccupied,unoccupiedFraction:unoccupied/(daily.length*300),longestIdle:Math.max(...idleRuns),p90LongestIdle:idleRuns[Math.ceil(idleRuns.length*.9)-1]};
- return {...(evidence?{nativeEvidence:evidence.report(s)}:{}),biome:s.biome,culture:s.culture,seed:s.seed,policy:{profile,mixed,middayHiring,plantsPerWorker,defend,reserveLabourGrowth,reserveMaintenance,burstPlanting,cameraEntry,defensePolicy},defense:defense?.report(s)??null,additionalHiring,result:s.result,completedNights:s.completedNights,money:numberOf(s.ledger.balance),maximumLiving,plots:plots.length,reloads,counts,activity,daily,state:s,nav};
+ stopLifecycle();
+ return {...(evidence?{nativeEvidence:evidence.report(s)}:{}),biome:s.biome,culture:s.culture,seed:s.seed,policy:{profile,mixed,middayHiring,plantsPerWorker,defend,reserveLabourGrowth,reserveMaintenance,burstPlanting,cameraEntry,defensePolicy},defense:defense?.report(s)??null,additionalHiring,result:s.result,completedNights:s.completedNights,money:numberOf(s.ledger.balance),maximumLiving,plots:plots.length,reloads,counts,activity,daily,lifecycle:lifecycle.report(s),state:s,nav};
 }
 export function auditIntensiveFarm(report,{victory=false}={}){
  const s=report.state,plants=new Map(s.plants.map(p=>[p.id,p]));let balance=1500n;
  for(const entry of Object.values(s.ledger.entries)){assert.equal(entry.d,'1');balance+=BigInt(entry.n);}
  assert.equal(s.ledger.balance.n,String(balance));assert.equal(s.ledger.balance.d,'1');
- assert.equal(s.plants.length,Object.keys(s.ledger.entries).filter(id=>id.startsWith('intensive-plant-')).length);
+ const purchased=Object.keys(s.ledger.entries).filter(id=>id.startsWith('intensive-plant-')).length;
+ const delivered=Object.keys(s.ledger.entries).filter(id=>id.startsWith('deliver:')).length;
+ if(!report.lifecycle){
+  assert.equal(s.plants.length,purchased);
+  const picked=new Set();
+  for(const crate of s.crates){
+   const p=plants.get(crate.sourcePlantId);assert.ok(p&&!p.alive&&!picked.has(p.id));picked.add(p.id);
+   assert.equal(crate.species,p.species);assert.ok(p.growth>=cropSpec(p.species).growth_seconds);
+   assert.ok(p.water.every(w=>['manual','magic'].includes(w.status)));
+   const charge=s.ledger.entries['deliver:'+crate.id];
+   if(crate.delivered){assert.ok(charge);const settled=add(crate.value,crate.multiplyIncome??rational(0));
+    assert.equal(charge.n,String((BigInt(settled.n)+BigInt(settled.d)-1n)/BigInt(settled.d)));assert.equal(crate.carrierId,null);}
+   else assert.equal(charge,undefined);
+  }
+  assert.equal(report.counts.CrateDelivered??0,s.crates.filter(c=>c.delivered).length);
+  assert.equal(report.counts.CropPicked??0,s.crates.length);
+ }else{
+ assert.equal(purchased,report.counts.CropPlaced??0);
+ assert.equal(purchased,s.plants.filter(p=>p.alive).length+(report.counts.CropPicked??0)+(report.counts.CropDestroyed??0));
+ assert.equal(delivered,report.counts.CrateDelivered??0);
+ assert.equal(report.counts.CropPicked??0,delivered+s.crates.length);
  const picked=new Set();
  for(const crate of s.crates){
   const p=plants.get(crate.sourcePlantId);assert.ok(p&&!p.alive&&!picked.has(p.id));picked.add(p.id);
   assert.equal(crate.species,p.species);assert.ok(p.growth>=cropSpec(p.species).growth_seconds);
   assert.ok(p.water.every(w=>['manual','magic'].includes(w.status)));
   const charge=s.ledger.entries['deliver:'+crate.id];
-  if(crate.delivered){
-   assert.ok(charge);
-   const settled=add(crate.value,crate.multiplyIncome??rational(0));
-   assert.equal(charge.n,String((BigInt(settled.n)+BigInt(settled.d)-1n)/BigInt(settled.d)));
-   assert.equal(crate.carrierId,null);
-  }
-  else assert.equal(charge,undefined);
+  assert.equal(crate.delivered,false);assert.equal(charge,undefined);
  }
- assert.equal(report.counts.CrateDelivered??0,s.crates.filter(c=>c.delivered).length);
- assert.equal(report.counts.CropPicked??0,s.crates.length);
+ }
  assert.equal(serialize(deserialize(serialize(s))),serialize(s));
  if(victory){assert.equal(s.result,'victory');assert.equal(s.completedNights,100);assert.equal(s.day,101);assert.equal(s.raid,null);assert.equal(report.counts.CampaignWon,1);assert.equal(report.counts.GameOver??0,0);}
  return true;

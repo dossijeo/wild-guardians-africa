@@ -25,7 +25,7 @@ export function simulateActiveFarm({days=100,startDay=5,profile='olderMale',repa
   const seen=new Set(),counts={},daily=[],activeRaids=new Set(),deliveries={},magic={};let diversified=false;
   const collect=()=>{for(const e of s.events)if(!seen.has(e.id)){
     seen.add(e.id);counts[e.type]=(counts[e.type]??0)+1;
-    if(e.type==='CrateDelivered'){const crate=s.crates.find(c=>c.id===e.targetId);deliveries[crate.species]=(deliveries[crate.species]??0)+1;}
+    if(e.type==='CrateDelivered'){const species=e.species??s.crates.find(c=>c.id===e.targetId)?.species;if(species)deliveries[species]=(deliveries[species]??0)+1;}
     if(e.type==='SpellActivated')magic[e.kind]=(magic[e.kind]??0)+1;
   }};
   const canCast=(kind,p)=>permission(s,kind)&&s.cooldowns[kind]===0&&nav.terrainValid(p.x,p.z,.2)&&

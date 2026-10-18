@@ -9,8 +9,9 @@ import {intensiveActivityAcceptance} from './intensive-activity-acceptance.mjs';
 
 export function summarizeIntensiveFarm(report){
   auditIntensiveFarm(report,{victory:report.result==='victory'});
-  const state=report.state,bySpecies={},picked=new Set(state.crates.map(crate=>crate.sourcePlantId));
+  const state=report.state,bySpecies=report.lifecycle?.bySpecies?structuredClone(report.lifecycle.bySpecies):{},picked=new Set(state.crates.map(crate=>crate.sourcePlantId));
   const species=id=>bySpecies[id]??=({planted:0,living:0,picked:0,destroyed:0,lostBeforeFirstWater:0,lostWithPendingWater:0,delivered:0,inTransit:0,income:'0',seedCosts:'0',livingSeedCosts:'0',pickedSeedCosts:'0',destroyedSeedCosts:'0'});
+  if(!report.lifecycle){
   for(const plant of state.plants){
     const row=species(plant.species),cost=BigInt(cropSpec(plant.species).plant_cost);row.planted++;
     row.seedCosts=String(BigInt(row.seedCosts)+cost);
@@ -22,6 +23,7 @@ export function summarizeIntensiveFarm(report){
     const row=species(crate.species);
     if(crate.delivered){row.delivered++;row.income=String(BigInt(row.income)+BigInt(state.ledger.entries['deliver:'+crate.id].n));}
     else row.inTransit++;
+  }
   }
   const days=report.daily.length,daylight=days*300;
   const idle=Object.fromEntries(['budget','space','shift-end','incursion','night'].map(reason=>[reason,report.daily.reduce((total,row)=>total+(row.idle[reason]??0),0)]));

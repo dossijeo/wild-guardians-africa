@@ -24,6 +24,7 @@ import {spellUnlocked,permission,operational,cropSpec,wallSpec,structureHealth,d
 import {createPlant,advancePlant,waterPlant,isMature,contiguousGroup} from './crops.js';
 import {activeCrops,cropBecameInactive} from './active-crops.js';
 import {activeCrates,crateBecameInactive} from './active-crates.js';
+import {retireFarmHistory} from './retire-farm-history.js';
 import {workerEntityLookup} from './worker-entity-lookup.js';
 import {enqueue,taskEnqueuer,reserveTasks,releaseTask,replaceTasks,
   notifyWorkerPlanningChange,notifyWorkerPlanningRoster,taskPlanningRevision} from './tasks.js';
@@ -1359,7 +1360,8 @@ function updateWorkers(s,dt,nav) {
         const delivered=walkTo(s,w,{...w.deliveryApproach,id:`delivery-${center.id}-${crate.id}`},dt,nav,{motion:{carrying:true}});
         crate.x=w.x;crate.z=w.z;
         if(delivered) {
-          const extraIncome=settleMultiplyPower(s,crate);transact(s.ledger,`deliver:${crate.id}`,add(crate.value,extraIncome));crate.multiplyIncome=extraIncome;crate.delivered=true;crateBecameInactive(s.crates);crate.carrierId=null;w.crateId=null;w.deliveryApproach=null;w.status=ended?'returning':'idle';w.path=null;notifyWorkerPlanningChange(s,w);emit(s,'CrateDelivered',{workerId:w.id,targetId:crate.id,multiplyIncome:crate.multiplyIncome});
+          const extraIncome=settleMultiplyPower(s,crate);transact(s.ledger,`deliver:${crate.id}`,add(crate.value,extraIncome));crate.multiplyIncome=extraIncome;crate.delivered=true;crateBecameInactive(s.crates);crate.carrierId=null;w.crateId=null;w.deliveryApproach=null;w.status=ended?'returning':'idle';w.path=null;notifyWorkerPlanningChange(s,w);emit(s,'CrateDelivered',{workerId:w.id,targetId:crate.id,species:crate.species,multiplyIncome:crate.multiplyIncome});
+          s.tutorial.harvestCompleted=true;
           if(s.tutorial.step==='observe'||s.tutorial.step==='harvest'){s.tutorial.step='done';if(!s.tutorial.basicSkipped)emit(s,'TutorialCompleted',{workerId:w.id,targetId:crate.id});}
         }
         continue;
@@ -1428,6 +1430,7 @@ function updateWorkers(s,dt,nav) {
 }
 function closeNight(s) {
   s.completedNights++;s.time=0;s.day++;
+  retireFarmHistory(s);
   s.tutorial.shownToday={day:s.day,ids:[]};
   const previousWorkers=s.workers;
   s.workers=s.workers.filter(w=>w.status!=='home');
