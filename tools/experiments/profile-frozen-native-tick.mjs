@@ -9,7 +9,7 @@ import {createSpatialNavigationMovement} from '../../src/world/hierarchical-wasm
 import {createEventDrivenTaskPlanner} from '../../src/world/hierarchical-wasm/spatial-intent-bridge.js';
 
 const file=process.argv[2],seconds=Number(process.argv[3]??10);
-if(!file||!Number.isInteger(seconds)||seconds<1||seconds>120)
+if(!file||!Number.isInteger(seconds)||seconds<1||seconds>600)
   throw Error('Usage: node profile-frozen-native-tick.mjs state.json[.gz] seconds');
 const bytes=readFileSync(file),state=deserialize((file.endsWith('.gz')?gunzipSync(bytes):bytes).toString());
 // Diagnostic A/B only: compare the same active world with retired entities
@@ -46,7 +46,8 @@ try{
   try{
     for(let second=1;second<=seconds;second++){
       for(const name of timed)timing[name]=0;
-      const start=performance.now();tick(state,1,nav);
+      const beforeElapsed=state.elapsed,start=performance.now();tick(state,1,nav);
+      if(state.elapsed<=beforeElapsed)throw Error(`Frozen tick did not advance at second ${second}: ${JSON.stringify({day:state.day,time:state.time,pauses:state.pauses,result:state.result})}`);
       const ms=performance.now()-start,metrics=planner.metrics(state.elapsed);
       console.log(JSON.stringify({second,day:state.day,time:state.time,ms,pruneHistory,
         workers:state.workers.length,plants:state.plants.length,crates:state.crates.length,animals:state.raid?.animals.length??0,
