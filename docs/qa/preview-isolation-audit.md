@@ -97,9 +97,7 @@ gate and enclosure regression suite passes with the hypothesis instance.
 ## Integration status
 
 This branch remains experimental. The known speculative revision leaks and
-directed physical regressions are addressed. The full Sabana/123 V1 campaign,
-multi-village center-ranking comparison, and broader performance comparison
-are pending. A committed-code Sabana/123 V1 run (`f7ad3969`, topological
+directed physical regressions are addressed. A committed-code Sabana/123 V1 run (`f7ad3969`, topological
 defense, native intents) reached day 11 and stopped with `status: error`:
 15 animals had gone, but one buffalo with no hits remaining remained in
 `retreating` at approximately (77, 6.18). Its partial state and per-day rows
@@ -144,8 +142,13 @@ in this fixture without building route arrays or changing confirmed state.
 This is the cost of the BFS path first discovered by the overlay, not a
 guarantee of the globally shortest continuous route when portals have
 different lengths. Ordinary reachability requests skip the extra cost
-buffer. Do not merge until sustained runtime cost with this addition has
-been checked.
+buffer. The 14-night replay at `86c104eb` completed with all 14 day-end
+serialized hashes equal to the previous run. Its `Game.tick` total was
+93.76 s versus 94.95 s; bot decisions took 16.91 s versus 17.53 s.
+These are single runs, so the small time differences are not a measured
+speedup. The replay establishes no sustained regression in this scenario;
+its source and WASM hashes and nightly metrics are in
+`docs/qa/preview-isolation-sabana123-v1-access-cost.json.gz`.
 The source tree is now `src/world/wild-engine/`; the rename was
 separate from the behavioral change and all 204 playable tests, 51 directed
 wall/enclosure tests, and the WASM/Vite builds pass after it.
