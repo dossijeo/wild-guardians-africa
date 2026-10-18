@@ -959,7 +959,13 @@ The standard V1 control likewise lost economically, but after night 99.
 | Animals, nights 91–97 | 84 | 70 |
 
 The candidate's advantage at night 70 had vanished by night 80. Its 11
-animals on night 95 destroyed 44 crops, leaving only three alive. The fixed
+animals on night 95 destroyed 44 crops, leaving only three alive; they hit
+walls six times. The control had the same 11-animal species composition on
+that night, but hit walls 36 times and destroyed no crops. This is evidence
+of different physical exposure and defense state, not a direct proportional
+effect of the count multiplier. Between days 85 and 95 the candidate bot
+recorded 24 `unknown/no-certified-proposal` enclosure attempts and no new
+wall purchase; those unknowns were not treated as protected. The fixed
 topological bot then bought a **paid 22-module enclosure for 220 coins on day
 96**, which ended with only two crops and 33 coins. The control did not
 make that late purchase. This is a legal strategic interaction with the same
