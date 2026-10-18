@@ -72,6 +72,7 @@ import '../ui/tutorial.css';
 
 const app=document.querySelector('#app'),saves=new BrowserSaveRepository(localStorage);
 const guidanceQa=import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-guidance');
+const cropSpellFrameQa=import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-crop-spell-frame');
 const gameplayGpuQa=import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading-gpu-gameplay')?installLoadingGameplayGpuQa(document):null;
 const progressQa=import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')?installLoadingProgressQa(document,{throttleReady:!new URLSearchParams(location.search).has('qa-loading-unthrottled'),gpu:new URLSearchParams(location.search).has('qa-loading-gpu')}):null;
 // Hints come only from already-validated slot listings. The decoded save remains
@@ -239,7 +240,8 @@ async function startGame(loaded=null,{slotId,preview}={}) {
       nativeChunks:[...world.chunks.values()].filter(group=>group.userData.spatialAuthority==='spatial-wasm').length,
       totalChunks:world.chunks.size,
       loadedChunks:spatialSession.core.metrics().loadedChunks,
-      nativeIntent:nav.intentTaskPlanner?.metrics(state.elapsed)??null});
+      nativeIntent:nav.intentTaskPlanner?.metrics(state.elapsed)??null,
+      ...(cropSpellFrameQa?{state,world,gpu:gameplayGpuQa}: {})});
     for(const village of state.villages.slice(1)){const data=villages.find(v=>v.id===(village.culture==='saheliana'?'saheliano':village.culture));await world.ensureVillage(village.culture,data);assertLoading();world.objects.delete(village.id);}
     await world.loadReady(prepareInitialFarWorld(world,{afterRender:()=>{assertLoading();loadingDiorama.render(0,loadingProgress.value);}}));assertLoading();
     await loadingDiorama.freezeForCinematic();assertLoading();
@@ -533,7 +535,7 @@ function updateRaidLoading(){
   document.querySelector('#stage').append(raidLoading);
 }
 function frame(now) {
-  requestAnimationFrame(frame);if(preparedLoading?.world.loadingCpuBudget)preparedLoading.world.loadingPresentationEpoch=(preparedLoading.world.loadingPresentationEpoch??0)+1;if(screen==='loading'&&world?.loadingCpuBudget)world.loadingPresentationEpoch=(world.loadingPresentationEpoch??0)+1;const dt=frameDelta(now,lastFrame);lastFrame=now;
+  requestAnimationFrame(frame);if(cropSpellFrameQa&&globalThis.__wildSpellFrameManual)return;if(preparedLoading?.world.loadingCpuBudget)preparedLoading.world.loadingPresentationEpoch=(preparedLoading.world.loadingPresentationEpoch??0)+1;if(screen==='loading'&&world?.loadingCpuBudget)world.loadingPresentationEpoch=(world.loadingPresentationEpoch??0)+1;const dt=frameDelta(now,lastFrame);lastFrame=now;
   if(screen==='loading'&&loadingDiorama?.prepared){
     progressQa?.frame(now);
     try{

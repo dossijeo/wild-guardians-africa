@@ -1,0 +1,781 @@
+{
+  "kind": "synthetic-interactive-frame-qa",
+  "seed": 712,
+  "biome": "sabana",
+  "counts": [
+    100,
+    500,
+    1500
+  ],
+  "arms": [
+    "control",
+    "growth",
+    "multiply",
+    "control-after"
+  ],
+  "gpuEnabled": true,
+  "mode": "raf",
+  "browserName": "chrome",
+  "webglRenderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "note": "Synthetic plants in the real Wild Engine browser renderer. Simulation is paused; RAF, crop synchronization and VFX run. GPU timings require EXT_disjoint_timer_query_webgl2. Not a legal campaign or an uninstrumented frame-rate benchmark.",
+  "errors": [],
+  "complete": true,
+  "results": [
+    {
+      "count": 100,
+      "kind": "control",
+      "frames": 60,
+      "truncated": false,
+      "elapsedMs": 1327.1000000005588,
+      "interval": {
+        "count": 49,
+        "median": 16.700000000000728,
+        "p95": 33.29999999999927,
+        "max": 33.600000000000364
+      },
+      "firstIntervals": [
+        16.600000000000364,
+        16.69999999999891,
+        16.600000000000364,
+        16.700000000000728,
+        83,
+        16.69999999999891,
+        16.700000000000728,
+        16.600000000000364
+      ],
+      "render": {
+        "count": 50,
+        "median": 3.3999999994412065,
+        "p95": 4,
+        "max": 4.5
+      },
+      "sync": {
+        "count": 50,
+        "median": 0.09999999962747097,
+        "p95": 0.20000000018626451,
+        "max": 0.2999999998137355
+      },
+      "vfxUpdate": {
+        "count": 50,
+        "median": 0,
+        "p95": 0,
+        "max": 0.09999999962747097
+      },
+      "vfxPrepare": {
+        "count": 50,
+        "median": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "gpu": {
+        "supported": true,
+        "reason": null,
+        "elapsed": {
+          "count": 45,
+          "median": 17.717603,
+          "p95": 20.788228,
+          "max": 22.327395
+        }
+      },
+      "activeEffects": 0,
+      "nativeVfxInstances": 0,
+      "rendererMemory": {
+        "geometries": 186,
+        "textures": 65
+      }
+    },
+    {
+      "count": 100,
+      "kind": "growth",
+      "frames": 60,
+      "truncated": false,
+      "elapsedMs": 4662.799999999814,
+      "interval": {
+        "count": 49,
+        "median": 33.29999999999927,
+        "p95": 50,
+        "max": 66.40000000000146
+      },
+      "firstIntervals": [
+        2444.2999999999993,
+        16.700000000000728,
+        16.599999999998545,
+        33.29999999999927,
+        166.29999999999927,
+        16.5,
+        49.900000000001455,
+        50
+      ],
+      "render": {
+        "count": 50,
+        "median": 5.3999999994412065,
+        "p95": 7.800000000745058,
+        "max": 10.600000000558794
+      },
+      "sync": {
+        "count": 50,
+        "median": 0.09999999962747097,
+        "p95": 0.20000000018626451,
+        "max": 0.20000000018626451
+      },
+      "vfxUpdate": {
+        "count": 50,
+        "median": 0,
+        "p95": 0.10000000055879354,
+        "max": 0.10000000055879354
+      },
+      "vfxPrepare": {
+        "count": 50,
+        "median": 0.09999999962747097,
+        "p95": 0.10000000055879354,
+        "max": 0.20000000018626451
+      },
+      "gpu": {
+        "supported": true,
+        "reason": null,
+        "elapsed": {
+          "count": 45,
+          "median": 30.35552,
+          "p95": 44.620572,
+          "max": 49.217916
+        }
+      },
+      "activeEffects": 1,
+      "nativeVfxInstances": 1,
+      "rendererMemory": {
+        "geometries": 189,
+        "textures": 65
+      }
+    },
+    {
+      "count": 100,
+      "kind": "multiply",
+      "frames": 60,
+      "truncated": false,
+      "elapsedMs": 1998.0999999996275,
+      "interval": {
+        "count": 49,
+        "median": 33.29999999999927,
+        "p95": 49.900000000001455,
+        "max": 50
+      },
+      "firstIntervals": [
+        33.400000000001455,
+        33.20000000000073,
+        33.20000000000073,
+        33.19999999999709,
+        33.30000000000291,
+        33.29999999999927,
+        33.29999999999927,
+        33.20000000000073
+      ],
+      "render": {
+        "count": 50,
+        "median": 5,
+        "p95": 6.5,
+        "max": 7.5
+      },
+      "sync": {
+        "count": 50,
+        "median": 0.09999999962747097,
+        "p95": 0.20000000018626451,
+        "max": 0.2999999998137355
+      },
+      "vfxUpdate": {
+        "count": 50,
+        "median": 0,
+        "p95": 0.09999999962747097,
+        "max": 0.10000000055879354
+      },
+      "vfxPrepare": {
+        "count": 50,
+        "median": 0.09999999962747097,
+        "p95": 0.10000000055879354,
+        "max": 0.10000000055879354
+      },
+      "gpu": {
+        "supported": true,
+        "reason": null,
+        "elapsed": {
+          "count": 45,
+          "median": 30.18729,
+          "p95": 31.981874,
+          "max": 33.529322
+        }
+      },
+      "activeEffects": 1,
+      "nativeVfxInstances": 1,
+      "rendererMemory": {
+        "geometries": 189,
+        "textures": 65
+      }
+    },
+    {
+      "count": 100,
+      "kind": "control-after",
+      "frames": 60,
+      "truncated": false,
+      "elapsedMs": 1362.199999999255,
+      "interval": {
+        "count": 49,
+        "median": 16.700000000000728,
+        "p95": 33.39999999999782,
+        "max": 33.400000000001455
+      },
+      "firstIntervals": [
+        33.39999999999782,
+        33.400000000001455,
+        33.099999999998545,
+        33.29999999999927,
+        33.20000000000073,
+        16.600000000002183,
+        16.799999999999272,
+        16.599999999998545
+      ],
+      "render": {
+        "count": 50,
+        "median": 3.2999999998137355,
+        "p95": 4.6000000005587935,
+        "max": 5.2000000001862645
+      },
+      "sync": {
+        "count": 50,
+        "median": 0.09999999962747097,
+        "p95": 0.19999999925494194,
+        "max": 0.20000000018626451
+      },
+      "vfxUpdate": {
+        "count": 50,
+        "median": 0,
+        "p95": 0.09999999962747097,
+        "max": 0.10000000055879354
+      },
+      "vfxPrepare": {
+        "count": 50,
+        "median": 0,
+        "p95": 0,
+        "max": 0.09999999962747097
+      },
+      "gpu": {
+        "supported": true,
+        "reason": null,
+        "elapsed": {
+          "count": 45,
+          "median": 18.017603,
+          "p95": 20.797031,
+          "max": 21.786822
+        }
+      },
+      "activeEffects": 0,
+      "nativeVfxInstances": 0,
+      "rendererMemory": {
+        "geometries": 186,
+        "textures": 65
+      }
+    },
+    {
+      "count": 500,
+      "kind": "control",
+      "frames": 60,
+      "truncated": false,
+      "elapsedMs": 1506.1000000005588,
+      "interval": {
+        "count": 49,
+        "median": 33.099999999998545,
+        "p95": 33.400000000001455,
+        "max": 33.400000000001455
+      },
+      "firstIntervals": [
+        33.29999999999927,
+        16.5,
+        33.30000000000291,
+        33.39999999999782,
+        16.600000000002183,
+        33.19999999999709,
+        16.600000000002183,
+        33.29999999999927
+      ],
+      "render": {
+        "count": 50,
+        "median": 3.3999999994412065,
+        "p95": 3.900000000372529,
+        "max": 4.2000000001862645
+      },
+      "sync": {
+        "count": 50,
+        "median": 0.19999999925494194,
+        "p95": 0.2999999998137355,
+        "max": 0.40000000037252903
+      },
+      "vfxUpdate": {
+        "count": 50,
+        "median": 0,
+        "p95": 0.09999999962747097,
+        "max": 0.10000000055879354
+      },
+      "vfxPrepare": {
+        "count": 50,
+        "median": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "gpu": {
+        "supported": true,
+        "reason": null,
+        "elapsed": {
+          "count": 45,
+          "median": 21.765364,
+          "p95": 23.243749,
+          "max": 26.3488
+        }
+      },
+      "activeEffects": 0,
+      "nativeVfxInstances": 0,
+      "rendererMemory": {
+        "geometries": 186,
+        "textures": 65
+      }
+    },
+    {
+      "count": 500,
+      "kind": "growth",
+      "frames": 60,
+      "truncated": false,
+      "elapsedMs": 2726,
+      "interval": {
+        "count": 49,
+        "median": 49.89999999999782,
+        "p95": 66.59999999999854,
+        "max": 83
+      },
+      "firstIntervals": [
+        99.59999999999854,
+        16.80000000000291,
+        16.69999999999709,
+        16.5,
+        49.80000000000291,
+        16.599999999998545,
+        33.400000000001455,
+        99.59999999999854
+      ],
+      "render": {
+        "count": 50,
+        "median": 5.199999999254942,
+        "p95": 6.900000000372529,
+        "max": 8
+      },
+      "sync": {
+        "count": 50,
+        "median": 0.20000000018626451,
+        "p95": 0.2999999998137355,
+        "max": 0.40000000037252903
+      },
+      "vfxUpdate": {
+        "count": 50,
+        "median": 0,
+        "p95": 0.09999999962747097,
+        "max": 0.10000000055879354
+      },
+      "vfxPrepare": {
+        "count": 50,
+        "median": 0.09999999962747097,
+        "p95": 0.10000000055879354,
+        "max": 0.20000000018626451
+      },
+      "gpu": {
+        "supported": true,
+        "reason": null,
+        "elapsed": {
+          "count": 45,
+          "median": 42.87828,
+          "p95": 51.880468,
+          "max": 54.672551
+        }
+      },
+      "activeEffects": 1,
+      "nativeVfxInstances": 1,
+      "rendererMemory": {
+        "geometries": 189,
+        "textures": 65
+      }
+    },
+    {
+      "count": 500,
+      "kind": "multiply",
+      "frames": 60,
+      "truncated": false,
+      "elapsedMs": 2817.800000000745,
+      "interval": {
+        "count": 49,
+        "median": 49.89999999999782,
+        "p95": 50.5,
+        "max": 83.40000000000146
+      },
+      "firstIntervals": [
+        49.89999999999782,
+        49.70000000000073,
+        50,
+        33.29999999999927,
+        49.900000000001455,
+        49.79999999999927,
+        49.900000000001455,
+        49.89999999999782
+      ],
+      "render": {
+        "count": 50,
+        "median": 5.099999999627471,
+        "p95": 5.7999999998137355,
+        "max": 7.900000000372529
+      },
+      "sync": {
+        "count": 50,
+        "median": 0.19999999925494194,
+        "p95": 0.2999999998137355,
+        "max": 0.40000000037252903
+      },
+      "vfxUpdate": {
+        "count": 50,
+        "median": 0,
+        "p95": 0.09999999962747097,
+        "max": 0.10000000055879354
+      },
+      "vfxPrepare": {
+        "count": 50,
+        "median": 0,
+        "p95": 0.20000000018626451,
+        "max": 0.20000000018626451
+      },
+      "gpu": {
+        "supported": true,
+        "reason": null,
+        "elapsed": {
+          "count": 45,
+          "median": 43.090728,
+          "p95": 48.101718,
+          "max": 48.955207
+        }
+      },
+      "activeEffects": 1,
+      "nativeVfxInstances": 1,
+      "rendererMemory": {
+        "geometries": 189,
+        "textures": 65
+      }
+    },
+    {
+      "count": 500,
+      "kind": "control-after",
+      "frames": 60,
+      "truncated": false,
+      "elapsedMs": 1589.3999999994412,
+      "interval": {
+        "count": 49,
+        "median": 17,
+        "p95": 33.400000000001455,
+        "max": 33.599999999998545
+      },
+      "firstIntervals": [
+        50,
+        49.79999999999927,
+        33.10000000000218,
+        49.89999999999782,
+        50,
+        16.700000000000728,
+        16.5,
+        33.29999999999927
+      ],
+      "render": {
+        "count": 50,
+        "median": 3.1000000005587935,
+        "p95": 3.5,
+        "max": 4.2000000001862645
+      },
+      "sync": {
+        "count": 50,
+        "median": 0.19999999925494194,
+        "p95": 0.20000000018626451,
+        "max": 0.2999999998137355
+      },
+      "vfxUpdate": {
+        "count": 50,
+        "median": 0,
+        "p95": 0.09999999962747097,
+        "max": 0.10000000055879354
+      },
+      "vfxPrepare": {
+        "count": 50,
+        "median": 0,
+        "p95": 0,
+        "max": 0.10000000055879354
+      },
+      "gpu": {
+        "supported": true,
+        "reason": null,
+        "elapsed": {
+          "count": 45,
+          "median": 21.244999,
+          "p95": 23.759999,
+          "max": 25.827343
+        }
+      },
+      "activeEffects": 0,
+      "nativeVfxInstances": 0,
+      "rendererMemory": {
+        "geometries": 186,
+        "textures": 65
+      }
+    },
+    {
+      "count": 1500,
+      "kind": "control",
+      "frames": 60,
+      "truncated": false,
+      "elapsedMs": 2270.5,
+      "interval": {
+        "count": 49,
+        "median": 33.400000000001455,
+        "p95": 49.900000000001455,
+        "max": 66.59999999999854
+      },
+      "firstIntervals": [
+        33.200000000004366,
+        49.89999999999418,
+        33.200000000004366,
+        33.400000000001455,
+        49.89999999999418,
+        33.200000000004366,
+        33.299999999995634,
+        33.200000000004366
+      ],
+      "render": {
+        "count": 50,
+        "median": 3.7000000001862645,
+        "p95": 5,
+        "max": 5.7999999998137355
+      },
+      "sync": {
+        "count": 50,
+        "median": 0.2999999998137355,
+        "p95": 0.40000000037252903,
+        "max": 0.900000000372529
+      },
+      "vfxUpdate": {
+        "count": 50,
+        "median": 0,
+        "p95": 0,
+        "max": 0.10000000055879354
+      },
+      "vfxPrepare": {
+        "count": 50,
+        "median": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "gpu": {
+        "supported": true,
+        "reason": null,
+        "elapsed": {
+          "count": 45,
+          "median": 34.864635,
+          "p95": 38.667343,
+          "max": 40.803228
+        }
+      },
+      "activeEffects": 0,
+      "nativeVfxInstances": 0,
+      "rendererMemory": {
+        "geometries": 186,
+        "textures": 65
+      }
+    },
+    {
+      "count": 1500,
+      "kind": "growth",
+      "frames": 60,
+      "truncated": false,
+      "elapsedMs": 4497.5,
+      "interval": {
+        "count": 49,
+        "median": 83.09999999999854,
+        "p95": 83.30000000000291,
+        "max": 100
+      },
+      "firstIntervals": [
+        149.8000000000029,
+        16.69999999999709,
+        49.700000000004366,
+        16.799999999995634,
+        99.59999999999854,
+        16.700000000004366,
+        83.40000000000146,
+        82.89999999999418
+      ],
+      "render": {
+        "count": 50,
+        "median": 5.2999999998137355,
+        "p95": 5.7000000001862645,
+        "max": 7.2999999998137355
+      },
+      "sync": {
+        "count": 50,
+        "median": 0.30000000074505806,
+        "p95": 0.5,
+        "max": 0.599999999627471
+      },
+      "vfxUpdate": {
+        "count": 50,
+        "median": 0,
+        "p95": 0.10000000055879354,
+        "max": 0.10000000055879354
+      },
+      "vfxPrepare": {
+        "count": 50,
+        "median": 0.09999999962747097,
+        "p95": 0.10000000055879354,
+        "max": 0.10000000055879354
+      },
+      "gpu": {
+        "supported": true,
+        "reason": null,
+        "elapsed": {
+          "count": 45,
+          "median": 72.579478,
+          "p95": 81.637863,
+          "max": 86.954633
+        }
+      },
+      "activeEffects": 1,
+      "nativeVfxInstances": 1,
+      "rendererMemory": {
+        "geometries": 189,
+        "textures": 65
+      }
+    },
+    {
+      "count": 1500,
+      "kind": "multiply",
+      "frames": 60,
+      "truncated": false,
+      "elapsedMs": 4560.800000000745,
+      "interval": {
+        "count": 49,
+        "median": 83.09999999999854,
+        "p95": 83.20000000000437,
+        "max": 83.40000000000146
+      },
+      "firstIntervals": [
+        83.20000000000437,
+        66.59999999999854,
+        83.09999999999854,
+        66.5,
+        83.09999999999854,
+        83.30000000000291,
+        66.40000000000146,
+        66.59999999999854
+      ],
+      "render": {
+        "count": 50,
+        "median": 5.1000000005587935,
+        "p95": 5.599999999627471,
+        "max": 6.2000000001862645
+      },
+      "sync": {
+        "count": 50,
+        "median": 0.39999999944120646,
+        "p95": 0.5,
+        "max": 0.7000000001862645
+      },
+      "vfxUpdate": {
+        "count": 50,
+        "median": 0,
+        "p95": 0.10000000055879354,
+        "max": 0.10000000055879354
+      },
+      "vfxPrepare": {
+        "count": 50,
+        "median": 0.09999999962747097,
+        "p95": 0.10000000055879354,
+        "max": 0.20000000018626451
+      },
+      "gpu": {
+        "supported": true,
+        "reason": null,
+        "elapsed": {
+          "count": 45,
+          "median": 71.685884,
+          "p95": 81.422551,
+          "max": 82.706822
+        }
+      },
+      "activeEffects": 1,
+      "nativeVfxInstances": 1,
+      "rendererMemory": {
+        "geometries": 189,
+        "textures": 65
+      }
+    },
+    {
+      "count": 1500,
+      "kind": "control-after",
+      "frames": 60,
+      "truncated": false,
+      "elapsedMs": 2433.2999999998137,
+      "interval": {
+        "count": 49,
+        "median": 33.30000000000291,
+        "p95": 50,
+        "max": 50.099999999998545
+      },
+      "firstIntervals": [
+        66.59999999999854,
+        83,
+        66.60000000000582,
+        66.39999999999418,
+        66.5,
+        33.30000000000291,
+        33.30000000000291,
+        33.39999999999418
+      ],
+      "render": {
+        "count": 50,
+        "median": 3.6000000005587935,
+        "p95": 4.1000000005587935,
+        "max": 4.2999999998137355
+      },
+      "sync": {
+        "count": 50,
+        "median": 0.30000000074505806,
+        "p95": 0.5,
+        "max": 0.599999999627471
+      },
+      "vfxUpdate": {
+        "count": 50,
+        "median": 0,
+        "p95": 0,
+        "max": 0.09999999962747097
+      },
+      "vfxPrepare": {
+        "count": 50,
+        "median": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "gpu": {
+        "supported": true,
+        "reason": null,
+        "elapsed": {
+          "count": 45,
+          "median": 33.009479,
+          "p95": 40.156197,
+          "max": 42.136666
+        }
+      },
+      "activeEffects": 0,
+      "nativeVfxInstances": 0,
+      "rendererMemory": {
+        "geometries": 186,
+        "textures": 65
+      }
+    }
+  ]
+}
