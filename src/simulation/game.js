@@ -110,10 +110,22 @@ export function previewCenter(s,{x,z,yaw=0},nav) {
     const inspect=routes=>{
       // A route snapped out of a new footprint is not a valid departure:
       // workers must still be able to stand at the actual village entry.
-      if(nav.withCenterPreview&&routes.walkable(entry.x,entry.z,.28,null,true)===false)return;
-      const outbound=routes.path(entry,departure,.28,null,true),inbound=outbound&&routes.path(departure,entry,.28,null,true);
-      if(!inbound)return;
-      const routeLength=inbound.reduce((length,p,i)=>length+dist(p,i?inbound[i-1]:departure),0);
+      let routeLength;
+      if(nav.withCenterPreview){
+        if(routes.walkable(entry.x,entry.z,.28,null,true)!==true||
+          routes.reachable(entry,departure)!=='found'||
+          routes.reachable(departure,entry)!=='found')return;
+        // The overlay proves a physical route in both directions. A direct
+        // distance is only the economic tie-break between eligible villages;
+        // no actor will follow it as a path.
+        routeLength=dist(departure,entry);
+      }else{
+        const outbound=routes.path(entry,departure,.28,null,true),
+          inbound=outbound&&routes.path(departure,entry,.28,null,true);
+        if(!inbound)return;
+        routeLength=inbound.reduce((length,p,i)=>
+          length+dist(p,i?inbound[i-1]:departure),0);
+      }
       candidates.push({...candidate,footprint,suppress:check.suppress??[],villageId:village.id,routeLength,valid:true,cost:B.work_center.cost});
     };
     if(nav.withCenterPreview)nav.withCenterPreview(footprint,check.suppress??[],inspect);

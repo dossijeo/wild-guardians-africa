@@ -261,8 +261,10 @@ export function createSpatialNavigationMovement(session,state){
   const withVillageEntryPreview=(buildings,inspect)=>
     session.withVillageEntryPreview(buildings,inspect);
   const withCenterPreview=(building,suppressed,inspect)=>
-    session.withWallPreview([],suppressed,()=>
-      session.withVillageEntryPreview([building],()=>inspect({walkable,path})));
+    session.withVillageEntryPreview([building],draft=>inspect({
+      walkable:(x,z)=>draft.walkable({x,z}),
+      reachable:draft.reachable
+    }),suppressed);
   const terrainValid=(x,z,radius=.28,worker=false)=>{
     for(const [dx,dz] of [[0,0],[radius,0],[-radius,0],[0,radius],[0,-radius]]){
       const px=x+dx,pz=z+dz;

@@ -52,10 +52,15 @@ export function canyonVillageLayout(payload,field,z) {
   return {buildings:layout,endZ:Math.max(...rows)};
 }
 export function findVillageEntry(nav,layout,x,z,destination=null,additionalObstacles=[]) {
-  const search=()=>{
+  const search=preview=>{
     for(let radius=0;radius<=20;radius+=2)for(let angle=0;angle<(radius?16:1);angle++){
       const point={x:x+Math.cos(angle/16*Math.PI*2)*radius,z:z+Math.sin(angle/16*Math.PI*2)*radius};
-      if(nav.walkable(point.x,point.z,.28,null,true)&&(!destination||nav.path(point,destination,.28,null,true)))return point;
+      const free=preview?preview.walkable(point):nav.walkable(point.x,point.z,.28,null,true);
+      if(free!==true)continue;
+      const connected=!destination||(
+        preview?preview.reachable(point,destination)==='found':
+          nav.path(point,destination,.28,null,true));
+      if(connected)return point;
     }
     return null;
   };

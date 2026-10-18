@@ -685,6 +685,21 @@ bool terrainPropWalkable(int x,int z){
   if(!terrainValid(x,z,radiusNow,workerNow))return false;
   return !propBlocked(x,z);
 }
+bool polygonBlocks(const PolygonObstacle& p,double x,double z,uint8_t profileBit){
+  if(p.passMask&profileBit||x<p.minX-radiusNow||x>p.maxX+radiusNow||
+     z<p.minZ-radiusNow||z>p.maxZ+radiusNow)return false;
+  bool inside=false;
+  double nearest=std::numeric_limits<double>::infinity();
+  const int count=int(p.xy.size()/2);
+  for(int i=0,j=count-1;i<count;j=i++){
+    const double ax=p.xy[i*2],az=p.xy[i*2+1],bx=p.xy[j*2],bz=p.xy[j*2+1];
+    if((az>z)!=(bz>z)&&x<(bx-ax)*(z-az)/(bz-az)+ax)inside=!inside;
+    const double dx=bx-ax,dz=bz-az,length=dx*dx+dz*dz;
+    const double t=length?std::clamp(((x-ax)*dx+(z-az)*dz)/length,0.0,1.0):0;
+    nearest=std::min(nearest,std::hypot(x-ax-dx*t,z-az-dz*t));
+  }
+  return inside||nearest<radiusNow;
+}
 bool barrierClear(double x,double z,const int* ignored=nullptr,int ignoredCount=0){
   const uint8_t profileBit=workerNow?1:2;
   const int bx=int(std::floor(x/barrierBucketWidth)),bz=int(std::floor(z/barrierBucketWidth));
@@ -705,19 +720,7 @@ bool barrierClear(double x,double z,const int* ignored=nullptr,int ignoredCount=
     if(const auto bucket=polygons.buckets.find(key);bucket!=polygons.buckets.end())
     for(const int id:bucket->second){
       const PolygonObstacle& p=polygons.byId.at(id);
-      if(p.passMask&profileBit||x<p.minX-radiusNow||x>p.maxX+radiusNow||
-         z<p.minZ-radiusNow||z>p.maxZ+radiusNow)continue;
-      bool inside=false;
-      double nearest=std::numeric_limits<double>::infinity();
-      const int count=int(p.xy.size()/2);
-      for(int i=0,j=count-1;i<count;j=i++){
-        const double ax=p.xy[i*2],az=p.xy[i*2+1],bx=p.xy[j*2],bz=p.xy[j*2+1];
-        if((az>z)!=(bz>z)&&x<(bx-ax)*(z-az)/(bz-az)+ax)inside=!inside;
-        const double dx=bx-ax,dz=bz-az,length=dx*dx+dz*dz;
-        const double t=length?std::clamp(((x-ax)*dx+(z-az)*dz)/length,0.0,1.0):0;
-        nearest=std::min(nearest,std::hypot(x-ax-dx*t,z-az-dz*t));
-      }
-      if(inside||nearest<radiusNow)return false;
+      if(polygonBlocks(p,x,z,profileBit))return false;
     }
   }
   return true;
@@ -2015,6 +2018,42 @@ int spatial_local_clear(float x,float z,float nx,float nz){
 // barriers are tested without changing occupancy, sectors or graph revisions.
 // -1 means the query is unavailable and the caller must use its full proof.
 std::vector<int32_t> overlayRemovedProps;
+constexpr int overlayPolygonStride=2+maxPolygonVertices*2;
+std::vector<float> overlayPolygonInput;
+float* spatial_overlay_polygon_ptr(int count){
+  if(count<0||count>32)return nullptr;
+  overlayPolygonInput.resize(size_t(count)*overlayPolygonStride);
+  return overlayPolygonInput.data();
+}
+bool prepareOverlayPolygons(int count,std::vector<PolygonObstacle>& polygons){
+  if(count<0||count>32||overlayPolygonInput.size()<size_t(count)*overlayPolygonStride)
+    return false;
+  polygons.clear();polygons.reserve(count);
+  for(int i=0;i<count;i++){
+    const float* input=overlayPolygonInput.data()+i*overlayPolygonStride;
+    if(!std::isfinite(input[0])||!std::isfinite(input[1]))return false;
+    const int vertices=int(input[0]),mask=int(input[1]);
+    if(
+       vertices<3||vertices>maxPolygonVertices||input[0]!=vertices||
+       mask<0||mask>3||input[1]!=mask)return false;
+    PolygonObstacle polygon{};
+    polygon.passMask=uint8_t(mask);
+    polygon.minX=polygon.minZ=std::numeric_limits<float>::infinity();
+    polygon.maxX=polygon.maxZ=-std::numeric_limits<float>::infinity();
+    polygon.xy.reserve(size_t(vertices)*2);
+    for(int j=0;j<vertices;j++){
+      const float x=input[2+j*2],z=input[3+j*2];
+      if(!std::isfinite(x)||!std::isfinite(z))return false;
+      polygon.xy.push_back(x);polygon.xy.push_back(z);
+      polygon.minX=std::min(polygon.minX,x);
+      polygon.minZ=std::min(polygon.minZ,z);
+      polygon.maxX=std::max(polygon.maxX,x);
+      polygon.maxZ=std::max(polygon.maxZ,z);
+    }
+    polygons.push_back(std::move(polygon));
+  }
+  return true;
+}
 int32_t* spatial_overlay_prop_ptr(int count){
   if(count<0||count>128)return nullptr;
   overlayRemovedProps.resize(size_t(count)*3);
@@ -2066,6 +2105,7 @@ static OverlayBarrierBuckets indexOverlayBarriers(const std::array<Barrier,128>&
 }
 int overlaySegmentClear(float x,float z,float nx,float nz,int removeCount,int addCount,
   int propCount,const std::array<Barrier,128>& proposed,
+  const std::vector<PolygonObstacle>& overlayPolygons,
   const OverlayBarrierBuckets& proposedBuckets){
   if(!std::isfinite(x)||!std::isfinite(z)||!std::isfinite(nx)||!std::isfinite(nz))return -1;
   const double distance=std::hypot(double(nx)-x,double(nz)-z);
@@ -2084,6 +2124,8 @@ int overlaySegmentClear(float x,float z,float nx,float nz,int removeCount,int ad
       if(!rasterAt(int(std::round(px)),int(std::round(pz))))return -1;
       if(!terrainValid(px,pz,radiusNow,workerNow)||overlayPropBlocked(px,pz,cx,cz,propCount)||
          !barrierClear(px,pz,barrierRemovalIds.data(),removeCount))return 0;
+      for(const auto& polygon:overlayPolygons)
+        if(polygonBlocks(polygon,px,pz,profileBit))return 0;
       const int bucketX=int(std::floor(px/barrierBucketWidth));
       const int bucketZ=int(std::floor(pz/barrierBucketWidth));
       if(const auto candidates=proposedBuckets.find(barrierKey(bucketX,bucketZ));
@@ -2100,16 +2142,19 @@ int overlaySegmentClear(float x,float z,float nx,float nz,int removeCount,int ad
   return 1;
 }
 int spatial_overlay_local_clear(float x,float z,float nx,float nz,int removeCount,int addCount,
-  int propCount){
+  int propCount,int polygonCount){
   if(!navReady||removeCount<0||removeCount>4||addCount<0||addCount>128||
      propCount<0||propCount>128||overlayRemovedProps.size()<size_t(propCount)*3||
      barrierRemovalIds.size()<size_t(removeCount)||barrierBatch.size()<size_t(addCount)*6)
     return -1;
   for(int i=0;i<removeCount;i++)if(!barrierIndex().byId.count(barrierRemovalIds[i]))return -1;
   std::array<Barrier,128> proposed;
-  if(!prepareOverlayBarriers(addCount,proposed))return -1;
+  std::vector<PolygonObstacle> polygons;
+  if(!prepareOverlayBarriers(addCount,proposed)||
+     !prepareOverlayPolygons(polygonCount,polygons))return -1;
   const auto buckets=indexOverlayBarriers(proposed,addCount);
-  return overlaySegmentClear(x,z,nx,nz,removeCount,addCount,propCount,proposed,buckets);
+  return overlaySegmentClear(x,z,nx,nz,removeCount,addCount,propCount,
+    proposed,polygons,buckets);
 }
 // Positive-only reachability proof for several worker witnesses of one
 // village. The confirmed sector graph and barrier index are never modified.
@@ -2130,7 +2175,7 @@ float* spatial_overlay_reach_portal_ptr(int count){
   return overlayReachPortals.data();
 }
 int spatial_overlay_reach_batch(float x,float z,int count,int removeCount,
-  int addCount,int propCount,int portalCount,int reverse,int margin){
+  int addCount,int propCount,int portalCount,int reverse,int margin,int polygonCount){
   if(!navReady||!std::isfinite(x)||!std::isfinite(z)||count<1||count>256||
      overlayReachInput.size()<size_t(count)*2||removeCount<0||removeCount>4||
      addCount<0||addCount>128||propCount<0||propCount>128||
@@ -2139,10 +2184,12 @@ int spatial_overlay_reach_batch(float x,float z,int count,int removeCount,
      (reverse!=0&&reverse!=1)||margin<0||margin>48)
     return -1;
   std::array<Barrier,128> proposed;
+  std::vector<PolygonObstacle> polygons;
   if(barrierRemovalIds.size()<size_t(removeCount)||
      barrierBatch.size()<size_t(addCount)*6||
      overlayRemovedProps.size()<size_t(propCount)*3||
-     !prepareOverlayBarriers(addCount,proposed))return -1;
+     !prepareOverlayBarriers(addCount,proposed)||
+     !prepareOverlayPolygons(polygonCount,polygons))return -1;
   for(int i=0;i<removeCount;i++)if(!barrierIndex().byId.count(barrierRemovalIds[i]))return -1;
   const auto buckets=indexOverlayBarriers(proposed,addCount);
   std::vector<Prop> removedFootprints;
@@ -2154,7 +2201,8 @@ int spatial_overlay_reach_batch(float x,float z,int count,int removeCount,
       }
   }
   const auto probe=[&](float ax,float az,float bx,float bz){
-    return overlaySegmentClear(ax,az,bx,bz,removeCount,addCount,propCount,proposed,buckets);
+    return overlaySegmentClear(ax,az,bx,bz,removeCount,addCount,propCount,
+      proposed,polygons,buckets);
   };
   const auto gridEdge=[&](int ax,int az,int bx,int bz){
     const auto nearby=[&](int px,int pz){
@@ -2162,6 +2210,11 @@ int spatial_overlay_reach_batch(float x,float z,int count,int removeCount,
         int(std::floor(double(pz)/barrierBucketWidth))))!=0;
     };
     bool changed=removeCount>0||nearby(ax,az)||nearby(bx,bz);
+    if(!changed)for(const auto& polygon:polygons)
+      if(std::max(ax,bx)>=polygon.minX-radiusNow&&
+         std::min(ax,bx)<=polygon.maxX+radiusNow&&
+         std::max(az,bz)>=polygon.minZ-radiusNow&&
+         std::min(az,bz)<=polygon.maxZ+radiusNow){changed=true;break;}
     if(!changed)for(const Prop& prop:removedFootprints){
       const double reach=prop.radius+radiusNow+2;
       if(std::hypot(double(ax)-prop.x,double(az)-prop.z)<reach||

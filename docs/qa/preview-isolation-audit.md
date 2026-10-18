@@ -33,15 +33,33 @@ test also interleaves more hypotheses with ten ticks of two restored copies;
 their serialized states remain equal at every tick. The repair, gate-overlay,
 and deferred-wall suites pass (24 tests).
 
-## Remaining speculative mutation paths
+## Read-only building previews
 
-This first correction does **not** yet establish the contract for all previews:
+The native overlay now accepts temporary building polygons and uses the same
+point-in-polygon and clearance calculation as confirmed polygons. Village
+entry and center-placement quotes use it without inserting polygons or
+temporarily suppressing props in the confirmed world. A directed differential
+test compares provisional polygon occupancy with the same polygon actually
+installed in a separate test step. One hundred building probes plus a center
+quote leave the native route revision, sector-update count, and JS topology
+stamp unchanged. Unknown reachability does not approve a center.
+
+Center quotes previously ranked eligible villages by the length of the route
+found during the speculative mutation. The overlay currently proves
+bidirectional access but does not return route length; the quote uses direct
+distance only to rank villages whose access is certified. This can select a
+different village when several are eligible. It never supplies that distance
+as an actor route. Before integration, compare center purchases and economics
+on multi-village fixtures or add a native route-cost result if this ranking
+change is material.
+
+## Remaining speculative mutation path
+
+These corrections do **not** yet establish the contract for all previews:
 
 | Service | Current speculative behavior | Required separation |
 | --- | --- | --- |
 | `withWallPreview()` | Adds/removes native barriers, restores removed props, and optionally rebuilds worker portals in the confirmed instance. Nested calls repeat that work. | A native query context/overlay for the wall, prop and portal hypothesis, including enclosure certification and any requested routes. |
-| `withVillageEntryPreview()` | Adds and removes native building polygons. | Read-only polygon/occupancy overlay for the entry query. |
-| `withCenterPreview()` | Nests the two services above. | Compose the wall/prop and building overlays without confirmed mutations. |
 
 A simple one-wall `withWallPreview()` probe in a Sabana opening left the JS wall
 stamp unchanged but advanced `lazy_sector_updates()` from 204 to 212. This
@@ -62,6 +80,7 @@ unproven.
 ## Integration status
 
 This branch is experimental. The day-83 source of the 116 confirmed wall
-revisions is addressed, but the general preview contract, longer interleaved
+revisions and the building-preview mutation are addressed, but the general
+wall-preview contract, longer interleaved
 simulation, and full Sabana/123 V1 campaign have not yet passed. Do not merge
 until those checks and physical access/protection regressions are complete.

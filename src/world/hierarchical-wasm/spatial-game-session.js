@@ -7,7 +7,7 @@ import {createSpatialCenterMirror} from './spatial-center-mirror.js';
 import {createSpatialShieldMirror} from './spatial-shield-mirror.js';
 import {createSpatialPropMirror} from './spatial-prop-mirror.js';
 import {queryResidentSpatialProps} from './spatial-prop-query.js';
-import {addSpatialVillageBuildings,removeSpatialVillageBuildings} from './spatial-village-bridge.js';
+import {addSpatialVillageBuildings} from './spatial-village-bridge.js';
 import {spatialStructureBarriers} from './spatial-wall-bridge.js';
 import {gatePortalPoints} from '../gate-passages.js';
 import {WORKER_SPATIAL_PROFILE,ANIMAL_SPATIAL_PROFILES} from './spatial-movement-profiles.js';
@@ -323,12 +323,19 @@ export function createSpatialGameSession(module,state,streamOptions){
       {reverse,margin:48,portals,
         propIds:suppress.filter(id=>!props.suppressed.has(id))});
   }
-  function withVillageEntryPreview(buildings,inspect){
+  function withVillageEntryPreview(buildings,inspect,suppress=[]){
     if(!Array.isArray(buildings)||typeof inspect!=='function')
       throw TypeError('Expected provisional village buildings and a callback');
-    const ids=addSpatialVillageBuildings(core,{id:'entry-preview',buildings:
-      buildings.map((building,index)=>({...building,key:`entry-preview-${index}`}))});
-    try{return inspect();}finally{removeSpatialVillageBuildings(core,ids);}
+    const polygons=buildings.filter(building=>building.kind!=='Zona común');
+    if(polygons.some(building=>!Array.isArray(building.footprint)))
+      throw TypeError('Provisional village buildings need physical footprints');
+    const propIds=suppress.filter(id=>!props.suppressed.has(id));
+    selectProfile(WORKER_SPATIAL_PROFILE);
+    return inspect({
+      walkable:point=>core.overlayLocalClear(point,point,[],[],propIds,polygons),
+      reachable:(start,end)=>core.overlayReachBatch(start,[end],[],[],
+        {margin:48,polygons,propIds})?.[0]??'unknown'
+    });
   }
   // Only settlements change the far relief. Walls, crop turnover, shield HP and
   // removed props leave its mesh intact, so they must not queue new horizons.
