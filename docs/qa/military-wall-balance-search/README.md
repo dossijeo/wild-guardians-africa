@@ -669,5 +669,37 @@ attack trajectory, not an isolated performance benchmark or proof of a
 retain the unsuccessful first Gran Cañón 30-night variant as well as the
 repair-first correction: the latter ended with 54 crops and 1,015 coins,
 compared with 55 and 950 for the established control, with zero issues in
-both. A fresh Sabana/712 100-night request on the merged source is still
-required before updating the balance conclusion above.
+both.
+
+The [repair-first Sabana/712 request](current-main-repair-first-v1-topological-sabana712-100.json.gz)
+then ran for all 100 real nights using the V1 pressure candidate, unchanged
+WASM/raids/runner and the PR #105 game and policy files. Its report records
+the exact input hashes; it was launched from the isolated replay checkout
+before the later PR #106 worker-exit proof and QA-manifest changes were merged.
+The first nightly state-hash divergence from the old 76-night control is day
+14. This is a different farm and raid workload, not a same-trajectory speed
+benchmark.
+
+| Nights | Crops at end | Cash at end | Raid crop losses | Animals | Wall hits | Income | Wages | Seeds | Repairs |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 6–30 | 84 | 977 | 420 | 323 | 704 | 37,113 | 15,887 | 18,849 | 1,803 |
+| 31–60 | 81 | 497 | 618 | 400 | 786 | 31,538 | 14,141 | 15,805 | 2,042 |
+| 61–76 | 49 | 579 | 186 | 212 | 530 | 13,337 | 5,717 | 6,075 | 1,443 |
+| 77–90 | 27 | 342 | 176 | 183 | 468 | 8,608 | 3,573 | 3,945 | 1,327 |
+| 91–100 | 0 | 30 | 71 | 114 | 289 | 3,364 | 1,398 | 1,455 | 823 |
+
+The campaign bought 58 wall modules for 580 coins and requested 1,217 paid
+repairs, spending 7,438 coins. Its 100 raid receipts are verified, with zero
+issues and no coverage loss. It passed the old control's defeat horizon: at
+night 76 it still had 49 crops and 579 coins, whereas the control had none
+and 32 coins. However, after night 100 the morning economic-loss check
+produced `GameOver` on day 101 with zero crops, 30 coins and one operational
+center. **This is an authentic defeat, not a 100-night victory or a technical
+failure.** The bot spent 106 enclosure decisions waiting for repairable ruins
+and purchased only three certified proposals (53 modules on day 7, three on
+day 57, two on day 72). These counts motivate a policy/balance investigation;
+they do not by themselves prove that deferral was wrong or that military
+pressure alone caused the late collapse. `Game.tick` accumulated 1,089.15 s
+and bot decisions 408.11 s over 100 nights, versus 672.65 and 289.97 s over
+76 nights in the smaller, earlier-ending control. Do not interpret those
+different-horizon totals as an algorithm slowdown or speedup.
