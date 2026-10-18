@@ -59,6 +59,22 @@ export function createSpatialNavigationMovement(session,state){
     }
     return true;
   };
+  const rejectRouteSegment=(start,end,radius=.28,worker=true)=>{
+    validate(start,end);
+    if(Math.hypot(end.x-start.x,end.z-start.z)>1.5)return false;
+    session.actorSectorRevision(profile(radius,worker,null));
+    const toX=Math.round(end.x),toZ=Math.round(end.z);
+    let fromX=Math.round(start.x),fromZ=Math.round(start.z);
+    if(fromX===toX&&fromZ===toZ&&
+      Math.hypot(end.x-toX,end.z-toZ)<1e-4){
+      if(Math.abs(start.x-end.x)>Math.abs(start.z-end.z)*4)
+        fromX=toX+Math.sign(start.x-end.x);
+      else if(Math.abs(start.z-end.z)>Math.abs(start.x-end.x)*4)
+        fromZ=toZ+Math.sign(start.z-end.z);
+    }
+    if(Math.abs(fromX-toX)+Math.abs(fromZ-toZ)!==1)return false;
+    return session.core.wasm.lazy_reject_route_edge(fromX,fromZ,toX,toZ)===1;
+  };
   let failedWorkerEpoch='',failedWorkerRoutes=new Set();
   // Route provenance is ephemeral: a saved route from another WASM session
   // must not inherit this session's wall-change certificate by coincidence.
@@ -301,7 +317,7 @@ export function createSpatialNavigationMovement(session,state){
     routeStamp:session.routeStamp,
     routeUnaffectedByWalls:session.routeUnaffectedByWalls,
     ownsRoute:route=>Array.isArray(route)&&nativeRoutes.has(route),
-    walkable,segmentClear,path,regionFor,regionConnected,enclosureFor,terrainValid,
+    walkable,segmentClear,rejectRouteSegment,path,regionFor,regionConnected,enclosureFor,terrainValid,
     withWallPreview,withWallStatePreview,workerPhysicalRoute,
     gateOverlayClear:session.gateOverlayClear,
     wallLocalOverlay:session.wallLocalOverlay,

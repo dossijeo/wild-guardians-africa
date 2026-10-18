@@ -7,21 +7,23 @@ const verified=new WeakMap();
 // terrain/prop sampling on every tiny movement step or scanning remote bends.
 export function animalRouteClearance(actor,nav,{radius,ignore,escapeProps=false},dynamicClear){
  let blocked=false;
+ let failedSegment=null;
+ const reject=(start,end)=>{blocked=true;failedSegment={start:{x:start.x,z:start.z},end:{x:end.x,z:end.z}};verified.delete(actor);return false;};
  const clear=(start,end)=>{
   if(dynamicClear&&!dynamicClear(start,end))return false;
-  if(!actorFluidClear(nav,end,radius)){blocked=true;verified.delete(actor);return false;}
+  if(!actorFluidClear(nav,end,radius))return reject(start,end);
   if(escapeProps&&animalSlopeRecoveryClear(actor,nav,start,end,radius))return true;
   // A sampled prefix does not prove that the actual footprint landing is on
   // a legal slope or outside a prop/wall edge. Keep the native point check
   // even when reusing that prefix: a fractional landing can fall between
   // samples of the longer connector to its integer waypoint.
-  if(nav.terrainValid&&!nav.terrainValid(end.x,end.z,radius,false)){blocked=true;verified.delete(actor);return false;}
+  if(nav.terrainValid&&!nav.terrainValid(end.x,end.z,radius,false))return reject(start,end);
   // An actor restored already overlapping a prop must be able to walk out.
   // The legacy swept escape check permits only monotonically increasing
   // clearance from that prop and still rejects walls, new props and terrain.
   if(nav.walkable&&!nav.walkable(end.x,end.z,radius,ignore,false)&&
     !(escapeProps&&nav.testSegmentClear?.(start,end,radius,ignore,false,true))){
-   blocked=true;verified.delete(actor);return false;
+   return reject(start,end);
   }
   const point=actor.path[0];if(!point)return true;
   const cached=verified.get(actor);
@@ -39,10 +41,10 @@ export function animalRouteClearance(actor,nav,{radius,ignore,escapeProps=false}
    // local body detour may replace this connector before the actor reaches it.
    // Still verify the complete movement requested by this step before moving.
    if(!valid){boundary={x:end.x,z:end.z};valid=safe(boundary);}
-   if(!valid){blocked=true;verified.delete(actor);return false;}
+   if(!valid)return reject(start,end);
   }else boundary=cached.boundary;
   verified.set(actor,{nav,version:nav.version,path:actor.path,point,px:point.x,pz:point.z,x:end.x,z:end.z,radius,ignore,escapeProps,boundary});
   return true;
  };
- return {clear,blocked:()=>blocked};
+ return {clear,blocked:()=>blocked,blockedSegment:()=>failedSegment};
 }

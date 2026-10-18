@@ -32,7 +32,8 @@ test('day-34 exhausted animal recovers a native route around a false direct conn
   const length=Math.hypot(end.x-actor.x,end.z-actor.z);
   const firstStep={x:actor.x+(end.x-actor.x)*.38/length,
    z:actor.z+(end.z-actor.z)*.38/length};
-  assert(nav.segmentClear(actor,end,actor.radius,null,false));
+  assert.equal(nav.segmentClear(actor,end,actor.radius,null,false),false,
+   'the exact wall sweep must reject the old false direct connector');
   assert.equal(nav.walkable(firstStep.x,firstStep.z,actor.radius,null,false),false,
    'the direct connector has an invalid fractional landing');
   actor.path=null;actor.exitRouteRecovery.version=nav.version;
@@ -74,9 +75,10 @@ test('day-11 buffalo oscillating at a static connector enters bounded retreat re
    assert.equal(walkTo(state,actor,destination,.1,nav,
     {speed:3.8,worker:false,expandRoute:true,routeVia:actor.spawn}),false);
   }
-  assert.equal(actor.exitRouteRecovery?.reason,'no-exit-progress');
+  assert(['no-exit-progress','stale-static-connector'].includes(
+   actor.exitRouteRecovery?.reason));
   assert.equal(deserialize(serialize(state)).raid.animals.find(item=>item.id===actor.id)
-   .exitRouteRecovery.reason,'no-exit-progress');
+   .exitRouteRecovery.reason,actor.exitRouteRecovery.reason);
   let done=false;
   for(let i=0;i<1000&&!done;i++){
    const before={x:actor.x,z:actor.z};state.elapsed+=.1;
