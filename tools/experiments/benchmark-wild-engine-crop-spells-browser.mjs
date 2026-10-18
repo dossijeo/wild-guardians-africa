@@ -15,6 +15,7 @@ if(!Number.isSafeInteger(spellCount)||spellCount<1||counts.some(count=>spellCoun
 const spellAge=Number(process.env.WG_QA_SPELL_AGE??1);
 if(!Number.isFinite(spellAge)||spellAge<0||spellAge>=15)
   throw Error('WG_QA_SPELL_AGE must be between 0 and 15 seconds');
+const realCast=process.env.WG_QA_REAL_CAST==='1';
 const arms=(process.env.WG_QA_ARMS??'control,growth,multiply,control-after').split(',');
 if(arms.length!==4||arms[0]!=='control'||arms[3]!=='control-after'||
   !['growth','multiply'].includes(arms[1])||!['growth','multiply'].includes(arms[2])||arms[1]===arms[2])
@@ -60,12 +61,18 @@ try{
   });
   if(!ready.world||!ready.authority||errors.length)throw Error(JSON.stringify({ready,errors}));
 
-  await page.evaluate(({mode,disableAgricultureLights,forceSoftDepth})=>{
+  await page.evaluate(async({mode,disableAgricultureLights,forceSoftDepth,realCast})=>{
     const {state,world,gpu}=globalThis.wildGuardiansSpatialQa();
     if(!state||!world)throw Error('Spell frame QA hook unavailable');
     if(mode==='direct')globalThis.__wildSpellFrameManual=true;
-    state.pauses=['qa-spell-frame'];
     state.time=100;
+    if(realCast&&!state.structures.some(structure=>structure.kind==='center'&&structure.status==='intact')){
+      const {placeStructure}=await import('/src/simulation/game.js');
+      state.pauses=[];
+      if(placeStructure(state,'spell-frame-work-center',state.villages[0].center,world.nav)!==true)
+        throw Error('Could not legally build the work center for real spell commands');
+    }
+    state.pauses=['qa-spell-frame'];
     state.spells=[];
     const wrap=(owner,name,key)=>{
       const original=owner[name];
@@ -98,11 +105,11 @@ try{
         return depth;
       };
     }
-  },{mode,disableAgricultureLights,forceSoftDepth});
+  },{mode,disableAgricultureLights,forceSoftDepth,realCast});
 
   const report={kind:'synthetic-interactive-frame-qa',seed:712,biome:'sabana',
-    counts,spellCount,spellAge,arms,gpuEnabled,mode,browserName,disableAgricultureLights,forceSoftDepth,webglRenderer:ready.webglRenderer,
-    note:'Synthetic plants in the real Wild Engine browser renderer. Each agricultural spell targets exactly one living plant and uses Game.spellRadius. Simulation is paused; RAF, crop synchronization and VFX run. GPU timings require EXT_disjoint_timer_query_webgl2. Not a legal campaign or an uninstrumented frame-rate benchmark.',
+    counts,spellCount,spellAge,realCast,arms,gpuEnabled,mode,browserName,disableAgricultureLights,forceSoftDepth,webglRenderer:ready.webglRenderer,
+    note:'Synthetic plants in the real Wild Engine browser renderer. Each agricultural spell targets exactly one living plant. WG_QA_REAL_CAST=1 invokes Game.cast with a temporary QA-only unpause; otherwise it constructs equivalent spell state. RAF, crop synchronization and VFX run while simulation is paused. GPU timings require EXT_disjoint_timer_query_webgl2. Not a legal campaign or an uninstrumented frame-rate benchmark.',
     errors,complete:false,results:[]};
   for(const count of counts){
     await page.evaluate(async({count,mode,focusSpell})=>{
@@ -125,16 +132,40 @@ try{
       if(world.cropBatch.capacity<count)throw Error('Crop batch did not reach fixture capacity');
     },{count,mode,focusSpell});
     for(const kind of arms){
-      const result=await page.evaluate(async({count,kind,mode,spellCount,spellAge})=>{
+      const result=await page.evaluate(async({count,kind,mode,spellCount,spellAge,realCast})=>{
         const {state,world,gpu}=globalThis.wildGuardiansSpatialQa();
-        const {spellRadius}=await import('/src/simulation/game.js');
+        const {spellRadius,cast}=await import('/src/simulation/game.js');
         const columns=Math.min(40,Math.max(Math.ceil(spellCount/Math.ceil(count/40)),Math.ceil(Math.sqrt(spellCount))));
-        state.spells=kind==='control'||kind==='control-after'?[]:
-          Array.from({length:spellCount},(_,index)=>{
-            const target=state.plants[(index%columns)+Math.floor(index/columns)*40];
-            return {id:`spell-frame-${count}-${kind}-${index}`,kind,x:target.x,z:target.z,
-              targetPlantId:target.id,radius:spellRadius(kind),remaining:(kind==='growth'?30:15)-spellAge};
-          });
+        const targets=Array.from({length:spellCount},(_,index)=>
+          state.plants[(index%columns)+Math.floor(index/columns)*40]);
+        state.spells=[];
+        if(kind!=='control'&&kind!=='control-after'){
+          if(realCast){
+            const pauses=state.pauses;
+            state.pauses=[];
+            try{
+              for(const [index,target] of targets.entries()){
+                try{cast(state,`spell-frame-${count}-${kind}-${index}`,kind,
+                  target.x,target.z,world.nav,target.id);}
+                catch(error){throw Error(`${error.message}; cast fixture ${JSON.stringify({
+                  day:state.day,time:state.time,raid:!!state.raid,result:state.result,
+                  pauses:state.pauses,centers:state.structures.filter(s=>s.kind==='center')
+                    .map(s=>({status:s.status,kind:s.kind}))})}`);}
+              }
+            }finally{state.pauses=pauses;}
+            for(const spell of state.spells)spell.remaining-=spellAge;
+          }else state.spells=targets.map((target,index)=>({
+            id:`spell-frame-${count}-${kind}-${index}`,kind,x:target.x,z:target.z,
+            targetPlantId:target.id,radius:spellRadius(kind),remaining:(kind==='growth'?30:15)-spellAge
+          }));
+          if(state.spells.length!==spellCount||state.spells.some((spell,index)=>
+            spell.targetPlantId!==targets[index].id||spell.radius!==spellRadius(kind)))
+            throw Error('Agricultural spell fixture does not match single-crop targeting');
+        }
+        const spellFixture={count:state.spells.length,
+          first:state.spells[0]?{
+            kind:state.spells[0].kind,radius:state.spells[0].radius,
+            targetPlantId:state.spells[0].targetPlantId,remaining:state.spells[0].remaining}:null};
         gpu?.reset();
         const capture={renderMs:[],syncMs:[],vfxUpdateMs:[],vfxPrepareMs:[],depthCaptureMs:[]};
         globalThis.__spellFrameCapture=capture;
@@ -155,7 +186,7 @@ try{
           return {count:sorted.length,median:sorted[Math.floor(sorted.length/2)],
             p95:sorted[Math.floor((sorted.length-1)*.95)],max:sorted.at(-1)};
         };
-        return {count,kind,frames:frameAts.length,truncated:frameAts.length<targetFrames,
+        return {count,kind,spellFixture,frames:frameAts.length,truncated:frameAts.length<targetFrames,
           elapsedMs:performance.now()-started,
           interval:stats(intervals.slice(10)),firstIntervals:intervals.slice(0,8),
           render:stats(capture.renderMs.slice(10)),sync:stats(capture.syncMs.slice(10)),
@@ -168,7 +199,7 @@ try{
           activeEffects:world.agricultureVfx.effects.size,
           nativeVfxInstances:world.vfxLibrary.instances.size,
           rendererMemory:{...world.renderer.info.memory}};
-      },{count,kind,mode,spellCount,spellAge});
+      },{count,kind,mode,spellCount,spellAge,realCast});
       report.results.push(result);
       if(screenshotDir&&(!screenshotKind||screenshotKind===kind))
         await page.screenshot({path:`${screenshotDir}/${count}-${kind}.png`});
