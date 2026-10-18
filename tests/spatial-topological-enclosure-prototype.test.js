@@ -6,7 +6,8 @@ import {deserialize,serialize} from '../src/persistence/snapshots.js';
 import {createPlant} from '../src/simulation/crops.js';
 import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
-import {classifyCutBoundaryFaces,proposeHybridEnclosure} from
+import {createSpatialIntentBridge} from '../src/world/hierarchical-wasm/spatial-intent-bridge.js';
+import {classifyCutBoundaryFaces,cutQuoteOmissionReason,proposeHybridEnclosure} from
   '../src/world/hierarchical-wasm/spatial-hybrid-enclosure-prototype.js';
 import {createCropEnclosurePlanner} from '../src/world/hierarchical-wasm/spatial-crop-enclosure-plan.js';
 import {createNativeTopologicalDefensePolicy} from '../tools/native-topological-defense-policy.mjs';
@@ -39,6 +40,17 @@ test('cut diagnostics distinguish uncertified blockage from unavailable geometry
   assert.deepEqual(classifyCutBoundaryFaces(boundary,wasm,codes),result,
     'Cached classifications must not repeat native calls');
   assert.equal(calls,4);
+});
+
+test('a physically blocked cut slot reaches certification, but crops and unaccounted slots do not',()=>{
+  const quote={expectedSlots:[{},{}],pieces:[{}],blockedPieces:[{}],
+    blockedCrops:[]};
+  assert.equal(cutQuoteOmissionReason(quote,{nativeBoundary:true}),null);
+  assert.equal(cutQuoteOmissionReason(quote),'omitted-module');
+  assert.equal(cutQuoteOmissionReason({...quote,blockedPieces:[],
+    blockedCrops:[{}]}),'crop-overlap');
+  assert.equal(cutQuoteOmissionReason({...quote,blockedPieces:[],
+    blockedCrops:[]}), 'unaccounted-module');
 });
 
 test('clearance hull yields a closed free-form candidate around every crop',()=>{
@@ -302,6 +314,49 @@ if(module&&WebAssembly.Module.imports(module).some(item=>item.module==='wasi_sna
   WebAssembly.Instance=function(mod,imports){return new Instance(mod,{
     ...imports,wasi_snapshot_preview1:{proc_exit(code){throw Error(`WASM exited: ${code}`);}}});};
 }
+test('day-80 cut detours around a rock only after renewed physical certification',
+  {skip:!module&&'Build the experimental Wild Engine WASM first'},async()=>{
+    const state=deserialize(gunzipSync(readFileSync(new URL(
+      './fixtures/sabana712-d80-cut-obstacle-state.json.gz',import.meta.url)))
+      .toString());
+    assert.equal(state.day,80);
+    assert.ok(state.pauses.includes('hiring'));
+    Game.hire(state,'obstacle-regression-hire',{olderFemale:5});
+    const loaded=new Map(),session=createSpatialGameSession(module,state,{
+      loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+    try{
+      const points=[...state.plants.filter(plant=>plant.alive),
+        ...state.structures,...state.villages.map(v=>v.entry??v)];
+      const chunk=value=>Math.floor((value+24)/48);
+      const desired=new Map();
+      for(let cz=chunk(Math.min(...points.map(p=>p.z))-48);
+        cz<=chunk(Math.max(...points.map(p=>p.z))+48);cz++)
+        for(let cx=chunk(Math.min(...points.map(p=>p.x))-48);
+          cx<=chunk(Math.max(...points.map(p=>p.x))+48);cx++)
+          desired.set(`${cx},${cz}`,{cx,cz,score:0});
+      session.stream.plan(desired);await session.stream.whenIdle();
+      const bridge=createSpatialIntentBridge(session);
+      bridge.resetFromState(state);
+      const group=bridge.getUnprotectedCropGroups()[0];
+      assert.equal(group.cropIds.length,52);
+      const nav=createSpatialNavigationMovement(session,state);
+      const plan=createCropEnclosurePlanner(state,nav,bridge,session)
+        .planCropEnclosure(group.id,{material:'zarzas',method:'topological'});
+      assert.equal(plan.status,'ready',JSON.stringify(plan.attempts));
+      assert.equal(plan.kind,'general-cut-local-detour');
+      assert.equal(plan.modules.length,6);
+      assert.equal(plan.cost,60);
+      assert.equal(plan.proof.movementFaces.unknown,0);
+      assert.ok(plan.proof.exposedAttackMargin>0);
+      assert.ok(plan.proof.workerRoutesAfter.every(row=>row.every(Boolean)));
+      assert.ok(Game.buildWallChain(state,'obstacle-regression-build','zarzas',
+        plan.points,nav,{smooth:false,snap:false,
+          preparedPlan:plan.preparedPlan}));
+      bridge.resetFromState(state);
+      assert.equal(bridge.getUnprotectedCropGroups({includeProtected:true})
+        .find(item=>item.id===group.id)?.protection,'protected');
+    }finally{session.dispose();}
+  });
 test('native five-profile cut is deterministic and responds to local solid changes',
   {skip:!module&&'Build the experimental Wild Engine WASM first'},async()=>{
     const state=Game.newGame({seed:712,biome:'sabana',culture:'mapungubwe',
