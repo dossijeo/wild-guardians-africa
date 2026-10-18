@@ -3,7 +3,7 @@
 // not the final navigation architecture.
 import {Navigation} from '../../src/world/navigation.js';
 import {createHierarchicalNavigationAdapter} from '../../src/world/hierarchical-navigation-adapter.js';
-import {createLazySectorProbeSync} from '../../src/world/hierarchical-wasm/lazy-sectors-adapter.js';
+import {createLazySectorProbeSync} from '../../src/world/wild-engine/lazy-sectors-adapter.js';
 
 export function installSparseWasmCampaignHook(module){
   const original={path:Navigation.prototype.path,regionFor:Navigation.prototype.regionFor,

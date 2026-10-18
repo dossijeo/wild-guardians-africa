@@ -1,9 +1,9 @@
 import {readFileSync,writeFileSync} from 'node:fs';
 import {performance} from 'node:perf_hooks';
-import {createSpatialGameSession} from '../../src/world/hierarchical-wasm/spatial-game-session.js';
+import {createSpatialGameSession} from '../../src/world/wild-engine/spatial-game-session.js';
 import {villageLayout} from '../../src/world/villages.js';
 
-const bytes=readFileSync('src/world/hierarchical-wasm/spatial-savanna.wasm');
+const bytes=readFileSync('src/world/wild-engine/spatial-savanna.wasm');
 const pack=JSON.parse(readFileSync('public/content/villages.json','utf8'))[0];
 const state={seed:'712',biome:'sabana',villages:[{id:'village-1',x:0,z:0,
   buildings:villageLayout(pack,0,0)}],structures:[{id:'center-1',kind:'center',

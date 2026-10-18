@@ -6,12 +6,12 @@ import {spawnRaid} from '../src/simulation/raids.js';
 import {rational} from '../src/simulation/money.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {createSpatialCampaignOpening} from '../tools/experiments/spatial-campaign-opening.mjs';
-import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
-import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../src/world/wild-engine/spatial-navigation-movement.js';
 import {gatePortalPoints} from '../src/world/gate-passages.js';
 
 const module=new WebAssembly.Module(readFileSync(new URL(
-  '../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+  '../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 
 // A synthetic night-100 state tests the terminal pipeline on the real C++
 // spatial world. It is not evidence that a virtual-player campaign survived.
@@ -149,13 +149,22 @@ for(const withWalls of [false,true])test(
     for(let i=0;i<2400&&state.raid&&!state.result;i++){
       const actors=state.raid.animals;
       const previous=actors.map(actor=>({x:actor.x,z:actor.z}));
+      const previousPaths=actors.map(actor=>actor.path?.slice()??[]);
       Game.tick(state,.25,nav);
       nav.serviceRaidConnectivityDemand?.();
       for(const [index,actor] of actors.entries()){
         if(Math.hypot(actor.x-previous[index].x,actor.z-previous[index].z)<1e-8)
           continue;
-        assert(nav.segmentClear(previous[index],actor,actor.radius,null,false),
-          `saved ${actor.species} crossed a static barrier after reload`);
+        // A single tick may finish a waypoint and turn toward the next one.
+        // Validate the segments actually traversed, not the chord across the
+        // turn, which can cut a wall corner despite both legs being clear.
+        const oldPath=previousPaths[index],remaining=actor.path??[];
+        const retained=remaining.length?oldPath.indexOf(remaining[0]):-1;
+        const consumed=retained>=0?oldPath.slice(0,retained):[];
+        const travelled=[previous[index],...consumed,actor];
+        for(let leg=1;leg<travelled.length;leg++)
+          assert(nav.segmentClear(travelled[leg-1],travelled[leg],actor.radius,null,false),
+            `saved ${actor.species} crossed a static barrier after reload (leg ${leg})`);
       }
     }
     assert.equal(state.raid,null,'the reloaded raid must finish');

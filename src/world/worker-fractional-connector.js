@@ -1,6 +1,7 @@
 import {navigationPathKey} from './raid-navigation-warmth.js';
 import {evictOldest} from './fifo-eviction.js';
 const worlds=new WeakMap(),STEP=.25,LIMIT=12,MAX_ACTIVE=8;
+export function workerFractionalConnectorPending(nav,actor){return worlds.get(nav)?.active.has(actor)??false;}
 const offsets=[[1,0],[-1,0],[0,1],[0,-1],[1,1],[-1,1],[1,-1],[-1,-1]];
 // A valid fractional position can have no swept connection to the metre grid.
 // Search only a 3 m local patch, then rejoin ordinary worker navigation.
@@ -18,7 +19,8 @@ function* search(nav,actor,end,radius){
    // across ticks and never substitutes a JavaScript pathfinder.
    let tail;
    if(nav.findPathSteps)tail=yield*nav.findPathSteps(grid,end,radius,null,true,16,{yieldEvery:4});
-   else{yield;tail=nav.path(grid,end,radius,null,true);}
+   else{yield;tail=nav.workerPath?nav.workerPath(grid,end,radius,null):
+     nav.path(grid,end,radius,null,true);}
    if(tail){const prefix=[];for(let node=head;node>0;node=queue[node].parent)prefix.push({x:queue[node].x,z:queue[node].z});prefix.reverse();const route=[...prefix,grid,...tail];return nav.smoothPathSteps?yield*nav.smoothPathSteps(actor,route,radius,null,true):route;}
   }
   for(const [dx,dz] of offsets){
@@ -45,13 +47,12 @@ export function workerFractionalConnector(nav,actor,end,radius=.28){
   for(const [body,row] of memo.active)if(body.path?.length||body.x!==row.x||body.z!==row.z||!['fleeing','returning','incapacitated'].includes(body.status)||Array.isArray(nav.state?.workers)&&!nav.state.workers.includes(body))memo.active.delete(body);
   if(memo.active.size>=MAX_ACTIVE)return null;
   const view=nav.workerNavigationView?.(actor,radius,null)??nav;
-  let ordinary=false;
   if(view.walkable(actor.x,actor.z,radius,null,true)&&view.walkable(end.x,end.z,radius,null,true)){
-   for(let dz=-1;dz<=1&&!ordinary;dz++)for(let dx=-1;dx<=1;dx++){
-    const grid={x:Math.round(actor.x)+dx,z:Math.round(actor.z)+dz};
-    if(view.walkable(grid.x,grid.z,radius,null,true)&&view.segmentClear(actor,grid,radius,null,true)){ordinary=true;break;}
-   }
-   if(!ordinary){attempt={key,x:actor.x,z:actor.z,slices:0,iterator:search(view,{...actor},end,radius)};memo.active.set(actor,attempt);}
+   // Ordinary route planning already failed. A reachable nearby grid cell
+   // may still belong to a disconnected component, so inspect this bounded
+   // local patch for another physically connected exit.
+   attempt={key,x:actor.x,z:actor.z,slices:0,iterator:search(view,{...actor},end,radius)};
+   memo.active.set(actor,attempt);
   }
   if(!attempt){if(memo.failed.size>=256)evictOldest(memo.failed);memo.failed.set(key,true);return null;}
  }

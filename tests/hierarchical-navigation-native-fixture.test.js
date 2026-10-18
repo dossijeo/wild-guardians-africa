@@ -5,7 +5,7 @@ import {createHierarchicalNavigationAdapter} from '../src/world/hierarchical-nav
 import {createHierarchicalWasmNavigator,createHierarchicalWasmNavigatorSync} from '../src/world/hierarchical-wasm-adapter.js';
 import {readFileSync} from 'node:fs';
 
-const wasm=readFileSync(new URL('../src/world/hierarchical-wasm/core.wasm',import.meta.url));
+const wasm=readFileSync(new URL('../src/world/wild-engine/core.wasm',import.meta.url));
 
 test('new sector graph respects a native closed wall and its physical breach',()=>{
   const {s,nav}=fixture('closed-walls'),adapter=createHierarchicalNavigationAdapter(nav);

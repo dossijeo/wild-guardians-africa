@@ -3,8 +3,8 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
 import {deserialize,serialize} from '../src/persistence/snapshots.js';
-import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
-import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../src/world/wild-engine/spatial-navigation-movement.js';
 import {centerServicePoint} from '../src/world/centers.js';
 import {gatePortalPoints} from '../src/world/gate-passages.js';
 import {wallStroke,wallStrokeLine} from '../src/world/wall-layout.js';
@@ -12,7 +12,7 @@ import {rational,numberOf} from '../src/simulation/money.js';
 import * as Game from '../src/simulation/game.js';
 
 const module=new WebAssembly.Module(readFileSync(new URL(
-  '../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+  '../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 const snapshot=gunzipSync(readFileSync(new URL(
   './fixtures/desierto983-d15-partial-state.json.gz',import.meta.url))).toString();
 
@@ -45,7 +45,22 @@ test('closing an incremental compound perimeter adds a usable third gate',async(
       'all 42 routes exist before the last paid stroke');
     const stroke=[[66,-7.18],[66,-18]],options={smooth:false,snap:false};
     const frozen=serialize(state);
+    const originalPreview=session.withWallPreview,originalRoute=session.routeActor;
+    let insidePreview=0,previewRoutes=0,previews=0;
+    session.withWallPreview=(walls,suppress,inspect,refresh)=>
+      originalPreview(walls,suppress,()=>{
+        previews++;
+        insidePreview++;
+        try{return inspect();}finally{insidePreview--;}
+      },refresh);
+    session.routeActor=(...args)=>{
+      if(insidePreview)previewRoutes++;
+      return originalRoute(...args);
+    };
     const plan=Game.quoteWallChain(state,'zarzas',stroke,nav,options);
+    session.withWallPreview=originalPreview;session.routeActor=originalRoute;
+    assert.equal(previewRoutes,0,'wall quotes must not plan worker routes');
+    assert.equal(previews,0,'wall quotes must not mutate provisional topology');
     assert.equal(serialize(state),frozen,'the quote must leave state unchanged');
     assert.equal(plan.pieces.length,5);
     assert.equal(plan.gates,1);
@@ -97,7 +112,8 @@ test('an unhostable extra gate leaves the closing module unbuilt and charges onl
     assert.equal(plan.gates,0);
     assert.equal(plan.cost,30);
     const balance=numberOf(state.ledger.balance);
-    assert(Game.buildWallChain(state,'blocked-extra-gate','zarzas',stroke,nav,options));
+    assert(Game.buildWallChain(state,'blocked-extra-gate','zarzas',stroke,nav,
+      {...options,preparedPlan:plan}));
     assert.equal(balance-numberOf(state.ledger.balance),30);
     assert.equal(state.structures.filter(s=>s.kind==='wall').length,115);
     assert(workers.every(w=>nav.path(w,state.villages[0].entry,.28,null,true)));

@@ -1,9 +1,9 @@
 import {readFileSync,writeFileSync} from 'node:fs';
 import {performance} from 'node:perf_hooks';
-import {createSpatialSavannaPrototype} from '../../src/world/hierarchical-wasm/spatial-savanna-adapter.js';
-import {ANIMAL_SPATIAL_PROFILES,WORKER_SPATIAL_PROFILE} from '../../src/world/hierarchical-wasm/spatial-movement-profiles.js';
+import {createSpatialSavannaPrototype} from '../../src/world/wild-engine/spatial-savanna-adapter.js';
+import {ANIMAL_SPATIAL_PROFILES,WORKER_SPATIAL_PROFILE} from '../../src/world/wild-engine/spatial-movement-profiles.js';
 
-const module=new WebAssembly.Module(readFileSync('src/world/hierarchical-wasm/spatial-savanna.wasm'));
+const module=new WebAssembly.Module(readFileSync('src/world/wild-engine/spatial-savanna.wasm'));
 const output=process.argv[2]??'docs/qa/hierarchical-navigation/spatial-species-profiles-abba.json';
 const profiles=Object.values(ANIMAL_SPATIAL_PROFILES);
 const time=fn=>{const start=performance.now(),value=fn();return {ms:performance.now()-start,value};};

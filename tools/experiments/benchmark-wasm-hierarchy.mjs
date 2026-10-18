@@ -10,7 +10,7 @@ const [input,output]=process.argv.slice(2);
 if(!input||!output)throw Error('Usage: benchmark-wasm-hierarchy.mjs state.json.gz report.json');
 const saved=JSON.parse(gunzipSync(readFileSync(input)).toString('utf8'));
 const biome=BIOME_IDS[saved.biome],profile=JSON.parse(readFileSync(`public/content/biome-${biome}.json`,'utf8')).profile;
-const wasm=readFileSync('src/world/hierarchical-wasm/core.wasm');
+const wasm=readFileSync('src/world/wild-engine/core.wasm');
 const compilationStart=performance.now(),module=new WebAssembly.Module(wasm),moduleCompilationMs=performance.now()-compilationStart;
 const active=(saved.raid?.animals??[]).filter(a=>a.status!=='gone');
 const radius=active[0]?.radius??1.1,actors=active.filter(a=>a.radius===radius).slice(0,6);

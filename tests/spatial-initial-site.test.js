@@ -2,12 +2,12 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import * as Game from '../src/simulation/game.js';
-import {probeSpatialStart,findSpatialStart} from '../src/world/hierarchical-wasm/spatial-initial-site.js';
-import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
+import {probeSpatialStart,findSpatialStart} from '../src/world/wild-engine/spatial-initial-site.js';
+import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
 import {centerFootprint} from '../src/world/centers.js';
 
 const module=new WebAssembly.Module(readFileSync(new URL(
-  '../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+  '../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 const packs=JSON.parse(readFileSync(new URL('../public/content/villages.json',import.meta.url),'utf8'));
 
 test('native Sabana start probe checks buildings, entry and twelve routed farm sites',async()=>{

@@ -1,0 +1,56 @@
+name: Native intent prototype
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/native-intent-prototype.yml'
+      - 'src/world/wild-engine/**'
+      - 'src/simulation/raids.js'
+      - 'src/simulation/game.js'
+      - 'tests/raid-region-selection.test.js'
+      - 'tests/spatial-native-raid.test.js'
+      - 'tests/spatial-native-intent-bridge.test.js'
+      - 'tests/spatial-native-intent-index.test.js'
+      - 'tests/spatial-native-animal-intent.test.js'
+      - 'tests/spatial-native-worker-home.test.js'
+      - 'tests/spatial-repair-access.test.js'
+      - 'tests/spatial-native-crop-groups.test.js'
+      - 'tests/spatial-native-intent-advice.test.js'
+      - 'tests/native-expanding-defense-policy.test.js'
+      - 'tools/native-campaign-runner.mjs'
+      - 'tools/native-expanding-defense-policy.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  native-intent:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      - name: Build candidate WASM with pinned Emscripten image
+        run: |
+          mkdir -p .cache
+          docker run --rm -v "$PWD:/src" -w /src \
+            -e SPATIAL_WASM_OUTPUT=.cache/native-breach-candidate.wasm \
+            emscripten/emsdk@sha256:77638e6c215a65f25a704c0c831d5c2463a8c0468a58c6cb82489dbe621dfa05 \
+            bash tools/build-spatial-savanna-wasm.sh
+      - name: Verify candidate against raid and intention fixtures
+        run: |
+          WILD_ENGINE_NATIVE_ROUTE_WASM="$PWD/.cache/native-breach-candidate.wasm" \
+          WILD_ENGINE_SPATIAL_SERVICES_WASM="$PWD/.cache/native-breach-candidate.wasm" \
+            node --test tests/raid-region-selection.test.js tests/spatial-native-raid.test.js tests/spatial-native-frontier.test.js tests/spatial-native-intent-bridge.test.js tests/spatial-native-intent-index.test.js tests/spatial-native-animal-intent.test.js tests/spatial-native-worker-home.test.js tests/spatial-repair-access.test.js tests/spatial-native-crop-groups.test.js tests/spatial-native-intent-advice.test.js tests/native-expanding-defense-policy.test.js
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: native-breach-candidate
+          path: .cache/native-breach-candidate.wasm
+          if-no-files-found: ignore
+          retention-days: 7

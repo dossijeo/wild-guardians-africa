@@ -10,7 +10,7 @@ export function validRaidContention(state){
   const wait=a.raidWait;
   if(a.status==='waiting'&&(!wait||!queue?.includes(a.id)))return false;
   if(wait!==undefined){
-   if(a.status!=='waiting'||!wait||!Number.isFinite(wait.since)||wait.since<0||wait.since>state.elapsed||!Number.isFinite(wait.retryAt)||wait.retryAt<wait.since||wait.retryAt>state.elapsed+1.000001||!Number.isFinite(wait.moveRetryAt)||wait.moveRetryAt<wait.since||wait.moveRetryAt>state.elapsed+1.000001||wait.epoch!==null&&(typeof wait.epoch!=='string'||wait.epoch.length>96))return false;
+   if(a.status!=='waiting'||!wait||!Number.isFinite(wait.since)||wait.since<0||wait.since>state.elapsed||!Number.isFinite(wait.retryAt)||wait.retryAt<wait.since||wait.retryAt>state.elapsed+8.000001||!Number.isFinite(wait.moveRetryAt)||wait.moveRetryAt<wait.since||wait.moveRetryAt>state.elapsed+1.000001||wait.epoch!==null&&(typeof wait.epoch!=='string'||wait.epoch.length>96)||wait.reason!==undefined&&!['unknown','contention'].includes(wait.reason))return false;
   }
  }
  return true;

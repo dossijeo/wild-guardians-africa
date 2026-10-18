@@ -62,6 +62,21 @@ for(const culture of Game.CULTURES)test(`QA-131: ${culture} dawn checks operatio
  }
 });
 
+test('dawn defeat uses spendable coins, not hypothetical resale of surviving walls',()=>{
+ const {s,nav}=farm();
+ assert.equal(Game.buildWallChain(s,'surviving-walls','zarzas',[[25,8],[35,8]],nav,
+  {smooth:false,snap:false}),true);
+ assert.ok(s.structures.some(structure=>structure.kind==='wall'&&structure.status==='intact'));
+ destroy(s,nav);
+ s.ledger.balance=rational(80);s.time=599.9;s.nightPlan={done:true};
+ s.dayPlan={done:true};s.eventPlan=null;
+ assert.equal(dawnMinimum(s),835);
+ Game.tick(s,.1,nav);
+ assert.equal(s.result,'defeat');assert.equal(numberOf(s.ledger.balance),80);
+ assert.equal(s.events.filter(event=>event.type==='GameOver').length,1);
+ assert.ok(s.structures.some(structure=>structure.kind==='wall'&&structure.status==='intact'));
+});
+
 for(const culture of Game.CULTURES)test(`QA-130: ${culture} 830 permits a new center while reserving wages after an explicit raid at a daylight clock has physically ended`,()=>{
  const {s,nav}=farm(culture);s.time=100;s.dayPlan={done:true};s.ledger.balance=rational(830);
  hitStructure(s.structures[0],300,s.elapsed);assert.equal(s.structures[0].status,'intact');

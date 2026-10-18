@@ -1,26 +1,26 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {createSpatialSavannaPrototype} from '../src/world/hierarchical-wasm/spatial-savanna-adapter.js';
+import {createSpatialSavannaPrototype} from '../src/world/wild-engine/spatial-savanna-adapter.js';
 import {nativeTerrainBuffer} from '../src/rendering/terrain-geometry.js';
 import {nativeWaterBuffer} from '../src/rendering/water-geometry.js';
 import {chunkTransferables} from '../src/rendering/chunk-data.js';
-import {SpatialSurfaceView} from '../src/world/hierarchical-wasm/spatial-surface-view.js';
-import {ANIMAL_SPATIAL_PROFILES} from '../src/world/hierarchical-wasm/spatial-movement-profiles.js';
-import {createSpatialWorld} from '../src/world/hierarchical-wasm/spatial-world.js';
+import {SpatialSurfaceView} from '../src/world/wild-engine/spatial-surface-view.js';
+import {ANIMAL_SPATIAL_PROFILES} from '../src/world/wild-engine/spatial-movement-profiles.js';
+import {createSpatialWorld} from '../src/world/wild-engine/spatial-world.js';
 import {addSpatialWall,addSpatialWallsBatch,addSpatialGate,addSpatialStructuresBatch,
-  removeSpatialStructure,spatialGateBarriers} from '../src/world/hierarchical-wasm/spatial-wall-bridge.js';
-import {createSpatialWallMirror} from '../src/world/hierarchical-wasm/spatial-wall-mirror.js';
-import {addSpatialCenter,removeSpatialCenter} from '../src/world/hierarchical-wasm/spatial-center-bridge.js';
-import {createSpatialCenterMirror} from '../src/world/hierarchical-wasm/spatial-center-mirror.js';
-import {addSpatialVillageBuildings,removeSpatialVillageBuildings} from '../src/world/hierarchical-wasm/spatial-village-bridge.js';
-import {createSpatialShieldMirror,spatialShieldFootprint} from '../src/world/hierarchical-wasm/spatial-shield-mirror.js';
+  removeSpatialStructure,spatialGateBarriers} from '../src/world/wild-engine/spatial-wall-bridge.js';
+import {createSpatialWallMirror} from '../src/world/wild-engine/spatial-wall-mirror.js';
+import {addSpatialCenter,removeSpatialCenter} from '../src/world/wild-engine/spatial-center-bridge.js';
+import {createSpatialCenterMirror} from '../src/world/wild-engine/spatial-center-mirror.js';
+import {addSpatialVillageBuildings,removeSpatialVillageBuildings} from '../src/world/wild-engine/spatial-village-bridge.js';
+import {createSpatialShieldMirror,spatialShieldFootprint} from '../src/world/wild-engine/spatial-shield-mirror.js';
 import {centerFootprint} from '../src/world/centers.js';
 import {villageLayout} from '../src/world/villages.js';
 import {footprintDistance} from '../src/world/footprints.js';
 import {wallCollisionFrame} from '../src/world/wall-collision-frame.js';
 
-const module=new WebAssembly.Module(readFileSync(new URL('../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+const module=new WebAssembly.Module(readFileSync(new URL('../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 function validRoute(core,start,result){
   assert.equal(result.status,'found');
   let point=start;
@@ -1427,6 +1427,7 @@ test('an unloaded middle chunk leaves distant connectivity unknown',()=>{
 });
 test('a turning four-chunk viewport reuses sectors and restores routes after revisiting',()=>{
   const core=createSpatialSavannaPrototype(module),resident=new Set(['0,0']);
+  const initialMemoryBytes=core.metrics().memoryBytes;
   core.generate(17,0,0);core.buildNavigation(1.1,false);
   const path=[[0,0],[1,0],[1,1],[0,1],[0,0]];
   for(const [cx,cz] of path){
@@ -1446,10 +1447,11 @@ test('a turning four-chunk viewport reuses sectors and restores routes after rev
     }
     assert(checked,'each viewport should expose at least one traversable seam');
   }
-  assert.equal(core.metrics().memoryBytes,4194304);
+  assert.equal(core.metrics().memoryBytes,initialMemoryBytes);
 });
 test('worker and animal graphs survive profile switches and local topology edits',()=>{
   const core=createSpatialSavannaPrototype(module);
+  const initialMemoryBytes=core.metrics().memoryBytes;
   core.generate(712,0,0);core.addChunk(1,0);
   assert.equal(core.buildNavigation(.28,true),32);
   assert.equal(core.buildNavigation(1.1,false),32);
@@ -1492,5 +1494,5 @@ test('worker and animal graphs survive profile switches and local topology edits
     assert.equal(core.selectNavigation(worker),32);
     validRoute(core,crossing.start,core.route(crossing.start,crossing.end));
   }
-  assert.equal(core.metrics().memoryBytes,4194304);
+  assert.equal(core.metrics().memoryBytes,initialMemoryBytes);
 });

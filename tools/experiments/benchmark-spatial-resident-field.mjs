@@ -1,10 +1,10 @@
 import {readFileSync,writeFileSync} from 'node:fs';
 import {execFileSync} from 'node:child_process';
 import {performance} from 'node:perf_hooks';
-import {createSpatialWorld} from '../../src/world/hierarchical-wasm/spatial-world.js';
+import {createSpatialWorld} from '../../src/world/wild-engine/spatial-world.js';
 
-const before=new WebAssembly.Module(execFileSync('git',['show','0578f168:src/world/hierarchical-wasm/spatial-savanna.wasm'],{maxBuffer:8*1024*1024}));
-const after=new WebAssembly.Module(readFileSync('src/world/hierarchical-wasm/spatial-savanna.wasm'));
+const before=new WebAssembly.Module(execFileSync('git',['show','0578f168:src/world/wild-engine/spatial-savanna.wasm'],{maxBuffer:8*1024*1024}));
+const after=new WebAssembly.Module(readFileSync('src/world/wild-engine/spatial-savanna.wasm'));
 const output=process.argv[2]??'docs/qa/hierarchical-navigation/spatial-resident-field-abba.json';
 function run(module,version){
   const core=createSpatialWorld(module),times=[];

@@ -1,13 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
-import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../src/world/wild-engine/spatial-navigation-movement.js';
 import {animalWallOverlapRecovery} from '../src/world/worker-wall-overlap-recovery.js';
 import {walkTo} from '../src/simulation/game.js';
 
 const wasm=new WebAssembly.Module(readFileSync(new URL(
-  '../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+  '../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 const fixture=JSON.parse(readFileSync(new URL(
   './fixtures/spatial-animal-wall-overlap.json',import.meta.url),'utf8'));
 

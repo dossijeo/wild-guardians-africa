@@ -2,10 +2,10 @@ import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {dirname} from 'node:path';
 import {performance} from 'node:perf_hooks';
-import {createSpatialSavannaPrototype} from '../../src/world/hierarchical-wasm/spatial-savanna-adapter.js';
+import {createSpatialSavannaPrototype} from '../../src/world/wild-engine/spatial-savanna-adapter.js';
 
 const output=process.argv[2]??'docs/qa/hierarchical-navigation/spatial-settlement-scale.json';
-const module=new WebAssembly.Module(readFileSync('src/world/hierarchical-wasm/spatial-savanna.wasm'));
+const module=new WebAssembly.Module(readFileSync('src/world/wild-engine/spatial-savanna.wasm'));
 const rows=[];
 for(const count of [0,50,250,250,50,0]){
   const core=createSpatialSavannaPrototype(module);

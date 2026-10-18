@@ -1,0 +1,442 @@
+{
+  "biome": "sabana",
+  "seed": 712,
+  "day": 3,
+  "source": "76c817600998541363c921574f8759a99e5d6cefe3d850044af0dfbf244f1cc5",
+  "wasmSha256": "0255e71a4322356064c28bcb1a707f32f37b1aa7fef412b84b3897ea92ff01ca",
+  "elapsedSeconds": 11.2718098,
+  "campaignTiming": {
+    "ticks": 1041,
+    "decisionMs": 5776.611199999983,
+    "gameTickMs": 3089.6997999999758
+  },
+  "sample": {
+    "stateHash": "7b7033894dee269d4bf04cb074f1372ef2f84ef280446150cd5f2e2331cb6966",
+    "living": 66,
+    "observedBiome": "sabana",
+    "nativeBiomeCode": 0,
+    "terrainSamples": [
+      3.6572799682617188,
+      5.200215816497803,
+      4.165669918060303,
+      5.89849328994751
+    ],
+    "status": "measured",
+    "groupId": "crop:plant-1109",
+    "cropCount": 66,
+    "groupBounds": {
+      "minX": 81,
+      "minZ": -7.5,
+      "maxX": 94.5,
+      "maxZ": 7.5
+    },
+    "removedWalls": [],
+    "rows": [
+      {
+        "name": "cut-conservative",
+        "ms": 272.02070000000094,
+        "status": "proposed",
+        "conservativeCut": true,
+        "constructionAware": false,
+        "box": [
+          69,
+          -20,
+          108,
+          21
+        ],
+        "topologicalMs": 13.904900000001362,
+        "conversionMs": 1.1318999999984953,
+        "validationMs": 253.84100000000035,
+        "cutEdges": 27,
+        "flow": 27,
+        "cells": 1599,
+        "strokes": 3,
+        "estimatedModules": 14,
+        "estimatedCost": 140,
+        "ambiguous": 0,
+        "junctions": 6,
+        "terminals": [
+          {
+            "strokeIndex": 0,
+            "end": "start",
+            "point": [
+              72.5,
+              -11.5
+            ]
+          },
+          {
+            "strokeIndex": 0,
+            "end": "finish",
+            "point": [
+              72.5,
+              -8.5
+            ]
+          },
+          {
+            "strokeIndex": 1,
+            "end": "start",
+            "point": [
+              73.5,
+              -2.5
+            ]
+          },
+          {
+            "strokeIndex": 1,
+            "end": "finish",
+            "point": [
+              78.5,
+              -2.5
+            ]
+          },
+          {
+            "strokeIndex": 2,
+            "end": "start",
+            "point": [
+              80.5,
+              2.5
+            ]
+          },
+          {
+            "strokeIndex": 2,
+            "end": "finish",
+            "point": [
+              90.5,
+              11.5
+            ]
+          }
+        ],
+        "multiArc": true,
+        "physical": {
+          "status": "unknown",
+          "frontierStatus": "unverified",
+          "profiles": {
+            "warthog": "unknown",
+            "hyena": "unknown",
+            "buffalo": "unknown",
+            "lion": "protected",
+            "rhino": "unknown"
+          },
+          "modules": 14,
+          "cost": 140,
+          "gates": 0,
+          "structural": {
+            "status": "open",
+            "reason": "no-wall-face"
+          },
+          "blockedPieces": 0,
+          "blockedCrops": 0
+        },
+        "calls": {
+          "path": 12,
+          "wallPlacement": 42,
+          "withWallPreview": 3
+        },
+        "sectorUpdates": 360
+      },
+      {
+        "name": "cut-buildable",
+        "ms": 221.15669999999955,
+        "status": "proposed",
+        "conservativeCut": true,
+        "constructionAware": true,
+        "box": [
+          69,
+          -20,
+          108,
+          21
+        ],
+        "topologicalMs": 8.087800000001153,
+        "conversionMs": 0.5835999999999331,
+        "validationMs": 211.28670000000056,
+        "cutEdges": 27,
+        "flow": 27,
+        "cells": 1599,
+        "strokes": 3,
+        "estimatedModules": 14,
+        "estimatedCost": 140,
+        "ambiguous": 0,
+        "junctions": 6,
+        "terminals": [
+          {
+            "strokeIndex": 0,
+            "end": "start",
+            "point": [
+              72.5,
+              -11.5
+            ]
+          },
+          {
+            "strokeIndex": 0,
+            "end": "finish",
+            "point": [
+              72.5,
+              -8.5
+            ]
+          },
+          {
+            "strokeIndex": 1,
+            "end": "start",
+            "point": [
+              73.5,
+              -2.5
+            ]
+          },
+          {
+            "strokeIndex": 1,
+            "end": "finish",
+            "point": [
+              78.5,
+              -2.5
+            ]
+          },
+          {
+            "strokeIndex": 2,
+            "end": "start",
+            "point": [
+              80.5,
+              2.5
+            ]
+          },
+          {
+            "strokeIndex": 2,
+            "end": "finish",
+            "point": [
+              90.5,
+              11.5
+            ]
+          }
+        ],
+        "multiArc": true,
+        "physical": {
+          "status": "unknown",
+          "frontierStatus": "unverified",
+          "profiles": {
+            "warthog": "unknown",
+            "hyena": "unknown",
+            "buffalo": "unknown",
+            "lion": "protected",
+            "rhino": "unknown"
+          },
+          "modules": 14,
+          "cost": 140,
+          "gates": 0,
+          "structural": {
+            "status": "open",
+            "reason": "no-wall-face"
+          },
+          "blockedPieces": 0,
+          "blockedCrops": 0
+        },
+        "calls": {
+          "path": 12,
+          "wallPlacement": 42,
+          "withWallPreview": 3
+        },
+        "sectorUpdates": 360
+      },
+      {
+        "name": "cut-buildable",
+        "ms": 238.8819999999996,
+        "status": "proposed",
+        "conservativeCut": true,
+        "constructionAware": true,
+        "box": [
+          69,
+          -20,
+          108,
+          21
+        ],
+        "topologicalMs": 13.365999999999985,
+        "conversionMs": 0.7409000000006927,
+        "validationMs": 223.53870000000097,
+        "cutEdges": 27,
+        "flow": 27,
+        "cells": 1599,
+        "strokes": 3,
+        "estimatedModules": 14,
+        "estimatedCost": 140,
+        "ambiguous": 0,
+        "junctions": 6,
+        "terminals": [
+          {
+            "strokeIndex": 0,
+            "end": "start",
+            "point": [
+              72.5,
+              -11.5
+            ]
+          },
+          {
+            "strokeIndex": 0,
+            "end": "finish",
+            "point": [
+              72.5,
+              -8.5
+            ]
+          },
+          {
+            "strokeIndex": 1,
+            "end": "start",
+            "point": [
+              73.5,
+              -2.5
+            ]
+          },
+          {
+            "strokeIndex": 1,
+            "end": "finish",
+            "point": [
+              78.5,
+              -2.5
+            ]
+          },
+          {
+            "strokeIndex": 2,
+            "end": "start",
+            "point": [
+              80.5,
+              2.5
+            ]
+          },
+          {
+            "strokeIndex": 2,
+            "end": "finish",
+            "point": [
+              90.5,
+              11.5
+            ]
+          }
+        ],
+        "multiArc": true,
+        "physical": {
+          "status": "unknown",
+          "frontierStatus": "unverified",
+          "profiles": {
+            "warthog": "unknown",
+            "hyena": "unknown",
+            "buffalo": "unknown",
+            "lion": "protected",
+            "rhino": "unknown"
+          },
+          "modules": 14,
+          "cost": 140,
+          "gates": 0,
+          "structural": {
+            "status": "open",
+            "reason": "no-wall-face"
+          },
+          "blockedPieces": 0,
+          "blockedCrops": 0
+        },
+        "calls": {
+          "path": 12,
+          "wallPlacement": 42,
+          "withWallPreview": 3
+        },
+        "sectorUpdates": 360
+      },
+      {
+        "name": "cut-conservative",
+        "ms": 226.80589999999938,
+        "status": "proposed",
+        "conservativeCut": true,
+        "constructionAware": false,
+        "box": [
+          69,
+          -20,
+          108,
+          21
+        ],
+        "topologicalMs": 6.280699999999342,
+        "conversionMs": 0.34279999999853317,
+        "validationMs": 219.08699999999953,
+        "cutEdges": 27,
+        "flow": 27,
+        "cells": 1599,
+        "strokes": 3,
+        "estimatedModules": 14,
+        "estimatedCost": 140,
+        "ambiguous": 0,
+        "junctions": 6,
+        "terminals": [
+          {
+            "strokeIndex": 0,
+            "end": "start",
+            "point": [
+              72.5,
+              -11.5
+            ]
+          },
+          {
+            "strokeIndex": 0,
+            "end": "finish",
+            "point": [
+              72.5,
+              -8.5
+            ]
+          },
+          {
+            "strokeIndex": 1,
+            "end": "start",
+            "point": [
+              73.5,
+              -2.5
+            ]
+          },
+          {
+            "strokeIndex": 1,
+            "end": "finish",
+            "point": [
+              78.5,
+              -2.5
+            ]
+          },
+          {
+            "strokeIndex": 2,
+            "end": "start",
+            "point": [
+              80.5,
+              2.5
+            ]
+          },
+          {
+            "strokeIndex": 2,
+            "end": "finish",
+            "point": [
+              90.5,
+              11.5
+            ]
+          }
+        ],
+        "multiArc": true,
+        "physical": {
+          "status": "unknown",
+          "frontierStatus": "unverified",
+          "profiles": {
+            "warthog": "unknown",
+            "hyena": "unknown",
+            "buffalo": "unknown",
+            "lion": "protected",
+            "rhino": "unknown"
+          },
+          "modules": 14,
+          "cost": 140,
+          "gates": 0,
+          "structural": {
+            "status": "open",
+            "reason": "no-wall-face"
+          },
+          "blockedPieces": 0,
+          "blockedCrops": 0
+        },
+        "calls": {
+          "path": 12,
+          "wallPlacement": 42,
+          "withWallPreview": 3
+        },
+        "sectorUpdates": 360
+      }
+    ],
+    "memoryBytes": 16777216
+  }
+}

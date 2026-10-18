@@ -1,0 +1,245 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {gunzipSync} from 'node:zlib';
+import {deserialize} from '../src/persistence/snapshots.js';
+import {gatePortalPoints} from '../src/world/gate-passages.js';
+import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../src/world/wild-engine/spatial-navigation-movement.js';
+import {createSpatialIntentBridge} from '../src/world/wild-engine/spatial-intent-bridge.js';
+import {reserveTasks} from '../src/simulation/tasks.js';
+import {reachableApproach} from '../src/simulation/raids.js';
+
+const prototype=process.env.WILD_ENGINE_NATIVE_ROUTE_WASM;
+const binary=prototype??new URL(
+  '../src/world/wild-engine/spatial-savanna.wasm',import.meta.url);
+const module=new WebAssembly.Module(readFileSync(binary));
+const state=deserialize(gunzipSync(readFileSync(new URL(
+  './fixtures/desierto983-d15-partial-state.json.gz',import.meta.url))).toString());
+
+test('a day-37 fractional crop approach never commits an unswept connector',()=>{
+ const snapshot=JSON.parse(gunzipSync(readFileSync(new URL(
+  './fixtures/sabana123-d37-attack-connector.json.gz',import.meta.url))).toString());
+ const loaded=new Map(),session=createSpatialGameSession(module,snapshot,{
+  loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+ try{
+  for(let z=-2;z<=2;z++)for(let x=-1;x<=5;x++){
+   if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+   loaded.set(`${x},${z}`,session.core.chunkPayload());
+  }
+  const nav=createSpatialNavigationMovement(session,snapshot);
+  nav.intentTaskPlanner={};
+  const animal=snapshot.raid.animals.find(item=>item.id==='animal-48837');
+  const crop=snapshot.plants.find(item=>item.id===animal.targetId);
+  assert(animal&&crop);
+  assert(nav.path(animal,animal.approach,animal.radius,null,false)?.length,
+   'the frozen state must exercise a real fractional route candidate');
+  const selected=reachableApproach(animal,crop,nav);
+  if(selected){
+   let previous=animal;
+   for(const point of selected.path){
+    assert(nav.segmentClear(previous,point,animal.radius,null,false));
+    previous=point;
+   }
+  }
+ }finally{session.dispose();}
+});
+
+test('a legal worker beside a wall finds an adjacent connector instead of retrying every crop',
+ {skip:!prototype&&'Build and select the experimental WASM first'},async()=>{
+ const snapshot=deserialize(gunzipSync(readFileSync(new URL(
+   './fixtures/sabana712-day12-worker-connector.json.gz',import.meta.url))).toString());
+ const loaded=new Map(),session=createSpatialGameSession(module,snapshot,{
+   loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+ try{
+   const points=[...snapshot.structures.filter(item=>item.kind==='wall'||item.kind==='center'),
+     ...snapshot.workers,...snapshot.villages.map(village=>village.entry??village)];
+   const chunk=value=>Math.floor((value+24)/48),desired=new Map();
+   for(let z=chunk(Math.min(...points.map(point=>point.z))-48);
+     z<=chunk(Math.max(...points.map(point=>point.z))+48);z++)
+     for(let x=chunk(Math.min(...points.map(point=>point.x))-48);
+       x<=chunk(Math.max(...points.map(point=>point.x))+48);x++)
+       desired.set(`${x},${z}`,{cx:x,cz:z,score:0});
+   session.stream.plan(desired);await session.stream.whenIdle();
+   const worker=snapshot.workers.find(item=>item.id==='worker-11648');
+   const home=snapshot.villages[0].entry;
+   assert(session.actorCanStand(worker,{worker:true}));
+   const route=session.routeActorNative(worker,home,{worker:true,cached:false});
+   assert.equal(route.status,'found');
+   let previous=worker;
+   for(const point of route.points){
+     assert(session.actorStepClear(previous,point,{worker:true}));
+     previous=point;
+   }
+   const bridge=createSpatialIntentBridge(session);
+   bridge.resetFromState(snapshot);
+   const plan=bridge.planTasks();
+   assert(plan.some(row=>row.status===1));
+   assert(session.core.wasm.nav_intent_route_queries()<10);
+ }finally{session.dispose();}
+});
+
+test('native world planner matches fractional connectors and automatic gate routes',
+ {skip:!prototype&&'Build and select the experimental WASM first'},()=>{
+ const loaded=new Map(),session=createSpatialGameSession(module,state,{
+  loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+ try{
+  assert.equal(typeof session.core.wasm.spatial_world_route,'function');
+  for(let z=-1;z<=1;z++)for(let x=0;x<=2;x++){
+   if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+   loaded.set(`${x},${z}`,session.core.chunkPayload());
+  }
+  const nav=createSpatialNavigationMovement(session,state);
+  nav.setActiveBounds([-24,-72,120,72]);
+  const gates=state.structures.filter(s=>s.gate&&s.status!=='ruined').slice(0,3);
+  assert(gates.length>0);
+  const queries=[];
+  for(const gate of gates){
+   const [a,b]=gatePortalPoints(gate,.28);
+   queries.push([a,b,{worker:true}],[b,a,{worker:true}],
+    [a,b,{worker:false,species:'warthog'}]);
+  }
+  const crops=state.plants.filter(p=>p.alive).slice(0,8);
+  for(let i=0;i<crops.length-1;i++){
+   queries.push([crops[i],crops[i+1],{worker:true}]);
+   queries.push([crops[i],crops[i+1],{worker:false,species:'hyena'}]);
+  }
+  const tally={found:0,blocked:0,unknown:0};
+  for(const [start,destination,options] of queries){
+   const reference=session.routeActor(start,destination,options);
+   const native=session.core.routeWorldNative(start,destination);
+   assert.equal(native.status,reference.status,JSON.stringify({start,destination,options}));
+   tally[native.status]++;
+   if(native.status!=='found'){
+    if(native.status==='unknown')assert.equal(native.reason,reference.reason);
+    continue;
+   }
+   assert(native.points.length>0);
+   const end=native.points.at(-1);
+   assert(Math.hypot(end.x-destination.x,end.z-destination.z)<1e-4);
+   // Gate crossings are represented as explicit portal segments. The ordinary
+   // localClear predicate rejects those until the gate movement rule is used.
+  }
+  assert(tally.found>0);
+  assert(tally.blocked+tally.unknown>0);
+ }finally{session.dispose();}
+});
+
+test('native route cache follows local wall changes and sector residence',
+ {skip:!prototype&&'Build and select the experimental WASM first'},()=>{
+ const sameRoute=(a,b)=>{
+  assert.equal(a.status,b.status);
+  assert.equal(a.reason,b.reason);
+  assert.equal(a.points.length,b.points.length);
+  for(let i=0;i<a.points.length;i++){
+   assert(Math.abs(a.points[i].x-b.points[i].x)<1e-4);
+   assert(Math.abs(a.points[i].z-b.points[i].z)<1e-4);
+  }
+ };
+ const loaded=new Map(),session=createSpatialGameSession(module,state,{
+  loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+ try{
+  assert.equal(typeof session.core.wasm.spatial_world_route_cached,'function');
+  for(let z=-1;z<=1;z++)for(let x=0;x<=2;x++){
+   if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+   loaded.set(`${x},${z}`,session.core.chunkPayload());
+  }
+  const opts={worker:true,cached:true};
+  let selected=null;
+  const center=state.villages[0];
+  for(let dz=-12;dz<=12&&!selected;dz++)for(let dx=-12;dx<=12;dx++){
+   const a={x:Math.floor(center.x)+dx+.2,z:Math.floor(center.z)+dz+.2};
+   const b={x:a.x+1,z:a.z};
+   const route=session.routeActor(a,b,{worker:true});
+   if(route.status==='found'&&route.points.length===1){selected=[a,b];break;}
+  }
+  assert(selected,'fixture has a direct fractional worker segment');
+  const [a,b]=selected;
+  const first=session.routeActorNative(a,b,opts);
+  const hit=session.routeActorNative(a,b,opts);
+  assert.deepEqual(hit,first);
+  const beforeHits=session.core.wasm.spatial_route_cache_hits();
+  assert(beforeHits>0);
+  const ids=session.core.applyBarrierChanges([],[{x:(a.x+b.x)/2,z:(a.z+b.z)/2,
+   halfX:.4,halfZ:.4,passMask:0}]);
+  try{
+   const fresh=session.routeActor(a,b,{worker:true});
+   const cached=session.routeActorNative(a,b,opts);
+   sameRoute(cached,fresh);
+   assert.notDeepEqual(cached,first,'new barrier changes the route');
+  }finally{session.core.applyBarrierChanges(ids,[]);}
+  assert.deepEqual(session.routeActorNative(a,b,opts),first);
+  const village=state.villages[0];
+  const cx=Math.floor((village.x+24)/48),cz=Math.floor((village.z+24)/48);
+  session.core.removeChunk(cx,cz);
+  const afterUnload=session.routeActorNative(a,b,opts);
+  sameRoute(afterUnload,session.routeActor(a,b,{worker:true}));
+  session.core.addChunk(cx,cz);
+  sameRoute(session.routeActorNative(a,b,opts),session.routeActor(a,b,{worker:true}));
+  const gates=state.structures.filter(s=>s.gate&&s.status!=='ruined');
+  const misses=session.core.wasm.spatial_route_cache_misses();
+  session.core.setWorkerGatePortals([]);
+  sameRoute(session.routeActorNative(a,b,opts),session.routeActor(a,b,{worker:true}));
+  assert(session.core.wasm.spatial_route_cache_misses()>misses,
+   'a portal-only revision invalidates the native route');
+  session.core.setWorkerGatePortals(gates);
+  sameRoute(session.routeActorNative(a,b,opts),session.routeActor(a,b,{worker:true}));
+ }finally{session.dispose();}
+});
+
+test('shadow native batch preserves global task order and nearest-worker assignment',
+ {skip:!prototype&&'Build and select the experimental WASM first'},()=>{
+ const loaded=new Map(),session=createSpatialGameSession(module,state,{
+  loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+ try{
+  for(let z=-1;z<=1;z++)for(let x=0;x<=2;x++){
+   if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+   loaded.set(`${x},${z}`,session.core.chunkPayload());
+  }
+  const center=state.villages[0];
+  let first;
+  for(let dz=-12;dz<=12&&!first;dz++)for(let dx=-12;dx<=12;dx++){
+   const p={x:Math.floor(center.x)+dx+.2,z:Math.floor(center.z)+dz+.2};
+   const q={x:p.x+1,z:p.z};
+   if(session.routeActor(p,q,{worker:true}).status==='found'){first=p;break;}
+  }
+  assert(first);
+  const second={x:first.x+1,z:first.z};
+  const virtual={day:1,workers:[
+   {id:'worker-2',centerId:'center-1',status:'idle',x:second.x,z:second.z},
+   {id:'worker-1',centerId:'center-1',status:'idle',x:first.x,z:first.z}],
+   plants:[{id:'plant-1',x:first.x,z:first.z},
+    {id:'plant-2',x:second.x,z:second.z}],crates:[],structures:[],
+   tasks:[{id:'task-2',centerId:'center-1',targetId:'plant-1',kind:'water',
+    created:2,workerId:null,blocked:false},
+   {id:'task-1',centerId:'center-1',targetId:'plant-2',kind:'water',
+    created:1,workerId:null,blocked:false}]};
+  reserveTasks(virtual,(worker,_task,target)=>
+   session.routeActor(worker,target,{worker:true}).status==='found');
+  session.actorRegions(first,{worker:true});
+  const wasm=session.core.wasm;
+  const workers=new Float64Array(wasm.memory.buffer,wasm.nav_task_workers_ptr(2),12);
+  workers.set([2,1,second.x,second.z,1,2,1,1,first.x,first.z,1,1]);
+  const targets=new Float64Array(wasm.memory.buffer,wasm.nav_task_targets_ptr(2),6);
+  targets.set([1,first.x,first.z,2,second.x,second.z]);
+  const tasks=new Float64Array(wasm.memory.buffer,wasm.nav_task_tasks_ptr(2),12);
+  tasks.set([2,1,1,2,0,2,1,1,2,1,0,1]);
+  assert.equal(wasm.nav_plan_tasks_shadow(2,2,2),2);
+  const output=new Int32Array(wasm.memory.buffer,wasm.nav_task_result_ptr(),12);
+  const assigned=new Map([[2,output[1]],[1,output[7]]]);
+  assert.equal(assigned.get(2),virtual.tasks[0].workerId==='worker-2'?2:1);
+  assert.equal(assigned.get(1),virtual.tasks[1].workerId==='worker-2'?2:1);
+  assert.equal(output[2],1);assert.equal(output[8],1);
+  assert(wasm.nav_task_route_point_count()>0);
+  const snapshot=Array.from(output);
+  assert.equal(wasm.nav_plan_tasks_shadow(2,2,2),2);
+  assert.deepEqual(Array.from(new Int32Array(wasm.memory.buffer,
+   wasm.nav_task_result_ptr(),12)),snapshot,'shadow planning does not retain leases');
+  const changed=new Float64Array(wasm.memory.buffer,wasm.nav_task_targets_ptr(2),6);
+  changed[4]=1000000;
+  assert.equal(wasm.nav_plan_tasks_shadow(2,2,2),2);
+  const pending=new Int32Array(wasm.memory.buffer,wasm.nav_task_result_ptr(),12);
+  assert.equal(pending[8],3,'unresident target remains pending, not blocked');
+  assert.equal(pending[2],1,'other task can still be assigned');
+ }finally{session.dispose();}
+});

@@ -1,19 +1,19 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
-import {createSpatialNavigationMovement,SpatialChunkUnavailable} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
-import {createSpatialPlacement} from '../src/world/hierarchical-wasm/spatial-placement.js';
+import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement,SpatialChunkUnavailable} from '../src/world/wild-engine/spatial-navigation-movement.js';
+import {createSpatialPlacement} from '../src/world/wild-engine/spatial-placement.js';
 import {targetFor} from '../src/simulation/raids.js';
-import {ANIMAL_SPATIAL_PROFILES} from '../src/world/hierarchical-wasm/spatial-movement-profiles.js';
-import {findSpatialStart} from '../src/world/hierarchical-wasm/spatial-initial-site.js';
+import {ANIMAL_SPATIAL_PROFILES} from '../src/world/wild-engine/spatial-movement-profiles.js';
+import {findSpatialStart} from '../src/world/wild-engine/spatial-initial-site.js';
 import {villageLayout} from '../src/world/villages.js';
 import * as Game from '../src/simulation/game.js';
 import {numberOf} from '../src/simulation/money.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 
 const module=new WebAssembly.Module(readFileSync(new URL(
-  '../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+  '../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 const pack=JSON.parse(readFileSync(new URL('../public/content/villages.json',import.meta.url),'utf8'))[0];
 
 test('raid connectivity requests sparse bounded chunks and clears pins for a new raid',()=>{
@@ -362,7 +362,7 @@ test('real wall purchase and removal update the same rendered native collision w
   }finally{session.dispose();}
 });
 
-test('ordinary wall placement previews its enclosure on the native world and restores temporary topology',async()=>{
+test('ordinary wall placement leaves QA previews isolated and commits only confirmed topology',async()=>{
   const state=Game.newGame({seed:712,biome:'sabana',culture:'mapungubwe',slotId:'spatial-gate-preview'});
   state.villages[0].buildings=villageLayout(pack,0,0);
   state.structures.push({id:'center-1',kind:'center',x:0,z:0,culture:'mapungubwe',
@@ -387,6 +387,13 @@ test('ordinary wall placement previews its enclosure on the native world and res
     const prop=[...loaded.values()].flatMap(chunk=>chunk.instances.flat())[0];
     assert(prop);
     const beforeProps=session.core.snapshot().removedProps;
+    const beforeSectors=session.core.wasm.lazy_sector_updates();
+    session.withWallPreview([],[prop.id],()=>{
+      assert.equal(session.core.wasm.spatial_removed_prop_count(),1);
+    });
+    assert.deepEqual(session.core.snapshot().removedProps,beforeProps);
+    assert(session.core.wasm.lazy_sector_updates()-beforeSectors<100,
+      'restoring one resident prop must update local sectors, not every resident sector');
     assert.throws(()=>session.withWallPreview([wall],[prop.id],()=>
       session.withWallPreview([{...wall,gate:true}],[prop.id],()=>{
         throw Error('intentional nested preview failure');
@@ -395,7 +402,11 @@ test('ordinary wall placement previews its enclosure on the native world and res
       'a failed preview must restore native prop suppression');
     assert.equal(nav.segmentClear(a,b,.28,null,true),true,
       'a failed nested preview must restore the original topology');
+    const originalPreview=session.withWallPreview;
+    let purchasePreviews=0;
+    session.withWallPreview=(...args)=>{purchasePreviews++;return originalPreview(...args);};
     assert.equal(Game.placeStructure(state,'native-ordinary-wall',wall,nav),true);
+    assert.equal(purchasePreviews,0,'a paid wall must not evaluate speculative routes');
     assert.equal(state.structures.length,2);
     assert.equal(nav.segmentClear(a,b,.28,null,true),false);
     assert.equal(Game.removeWall(state,'native-ordinary-wall-remove',state.structures.at(-1).id,nav),true);
@@ -423,10 +434,28 @@ test('a native wall ring creates an automatic door that a worker can cross',asyn
       if(candidate.gates===1&&candidate.pieces.length>=12){points=ring;plan=candidate;}
     }
     assert(points,'native terrain should admit a closed wall ring');
+    const {gatePortalPoints}=await import('../src/world/gate-passages.js');
+    const solid=plan.pieces.map(piece=>({...piece,gate:false,autoGate:false}));
+    nav.withWallPreview(solid,plan.suppressed,()=>{
+      for(const piece of solid){
+        const candidate={...piece,gate:true};
+        const ports=gatePortalPoints(candidate);
+        if(ports.length!==2)continue;
+        const before=session.core.wasm.lazy_sector_updates();
+        const overlay=nav.gateOverlayClear(candidate,ports);
+        assert.equal(session.core.wasm.lazy_sector_updates(),before,
+          'a read-only gate overlay must never rebuild confirmed sectors');
+        assert.equal(typeof overlay,'boolean',`overlay unavailable at ${piece.x},${piece.z}`);
+        const replacement=solid.map(wall=>wall.id===piece.id?candidate:wall);
+        const physical=nav.withWallPreview(replacement,plan.suppressed,draft=>
+          ports.every(port=>draft.walkable(port.x,port.z,.28,null,true))&&
+          draft.segmentClear(ports[0],ports[1],.28,null,true));
+        assert.equal(overlay,physical,`gate overlay differs at ${piece.x},${piece.z}`);
+      }
+    });
     assert.equal(Game.buildWallChain(state,'native-ring','zarzas',points,nav,{smooth:false,snap:false}),true);
     const gate=state.structures.find(item=>item.autoGate);
     assert(gate,'the real purchase must create an automatic gate');
-    const {gatePortalPoints}=await import('../src/world/gate-passages.js');
     const [a,b]=gatePortalPoints(gate);
     assert(a&&b);
     assert(nav.path(a,b,.28,null,true),JSON.stringify({points,gate,a,b,

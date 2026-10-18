@@ -1,13 +1,13 @@
 import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
 import {dirname} from 'node:path';
 import {performance} from 'node:perf_hooks';
-import {createSpatialSavannaPrototype} from '../../src/world/hierarchical-wasm/spatial-savanna-adapter.js';
+import {createSpatialSavannaPrototype} from '../../src/world/wild-engine/spatial-savanna-adapter.js';
 import {nativeTerrainBuffer} from '../../src/rendering/terrain-geometry.js';
 import {nativeWaterBuffer} from '../../src/rendering/water-geometry.js';
 import {chunkTransferables} from '../../src/rendering/chunk-data.js';
 
 const output=process.argv[2]??'docs/qa/hierarchical-navigation/spatial-chunk-payload.json';
-const module=new WebAssembly.Module(readFileSync(process.env.WG_QA_WASM_PATH??'src/world/hierarchical-wasm/spatial-savanna.wasm'));
+const module=new WebAssembly.Module(readFileSync(process.env.WG_QA_WASM_PATH??'src/world/wild-engine/spatial-savanna.wasm'));
 const timed=fn=>{const start=performance.now(),value=fn();return {ms:performance.now()-start,value};};
 const rows=[];
 for(const seed of [712,28,28,712,712,28,28,712]){

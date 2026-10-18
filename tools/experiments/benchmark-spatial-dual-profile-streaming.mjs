@@ -1,10 +1,10 @@
 import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
 import {dirname} from 'node:path';
 import {performance} from 'node:perf_hooks';
-import {createSpatialSavannaPrototype} from '../../src/world/hierarchical-wasm/spatial-savanna-adapter.js';
+import {createSpatialSavannaPrototype} from '../../src/world/wild-engine/spatial-savanna-adapter.js';
 
 const output=process.argv[2]??'docs/qa/hierarchical-navigation/spatial-dual-profile-streaming.json';
-const module=new WebAssembly.Module(readFileSync('src/world/hierarchical-wasm/spatial-savanna.wasm'));
+const module=new WebAssembly.Module(readFileSync('src/world/wild-engine/spatial-savanna.wasm'));
 const profiles=[{name:'animal-only',worker:false},{name:'worker-and-animal',worker:true}];
 function measure({name,worker}){
   const core=createSpatialSavannaPrototype(module);

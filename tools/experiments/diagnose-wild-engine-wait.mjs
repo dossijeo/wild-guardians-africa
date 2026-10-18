@@ -1,8 +1,8 @@
 import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
 import {deserialize} from '../../src/persistence/snapshots.js';
-import {createSpatialGameSession} from '../../src/world/hierarchical-wasm/spatial-game-session.js';
-import {createSpatialNavigationMovement} from '../../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+import {createSpatialGameSession} from '../../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../../src/world/wild-engine/spatial-navigation-movement.js';
 import {reachableApproach,targetFor} from '../../src/simulation/raids.js';
 
 const input=process.argv[2];
@@ -13,7 +13,7 @@ const state=deserialize(capture.snapshot),actor=state.raid?.animals.find(
   candidate=>candidate.id===capture.actorId);
 if(!actor)throw Error('Captured actor is absent');
 const wasm=new WebAssembly.Module(readFileSync(new URL(
-  '../../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+  '../../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 const loaded=new Map(),session=createSpatialGameSession(wasm,state,{
   loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
 try{

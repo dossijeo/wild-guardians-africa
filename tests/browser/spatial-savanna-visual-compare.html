@@ -10,11 +10,11 @@ import {TerrainField} from '../../src/world/terrain.js';
 import {buildNativeChunk} from '../../src/rendering/chunk-data.js';
 import {nativeTerrainBuffer} from '../../src/rendering/terrain-geometry.js';
 import {nativeAssetWater,nativeWaterBuffer} from '../../src/rendering/water-geometry.js';
-import {createSpatialSavannaPrototype} from '../../src/world/hierarchical-wasm/spatial-savanna-adapter.js';
+import {createSpatialSavannaPrototype} from '../../src/world/wild-engine/spatial-savanna-adapter.js';
 import {BiomeGround} from '../../src/rendering/biome-ground.js';
 import {AfricanToon,paintedWaterMaterial} from '../../src/rendering/african-toon.js';
 import {nativeGroundMaterial} from '../../src/rendering/render-quality.js';
-import wasmUrl from '../../src/world/hierarchical-wasm/spatial-savanna.wasm?url';
+import wasmUrl from '../../src/world/wild-engine/spatial-savanna.wasm?url';
 
 const status=document.querySelector('#status'),scenes=[];
 const parameters=new URLSearchParams(location.search),gameGround=parameters.get('ground')==='game';

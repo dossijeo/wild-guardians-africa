@@ -2,10 +2,10 @@ import {readFileSync,writeFileSync} from 'node:fs';
 import {performance} from 'node:perf_hooks';
 import {Navigation} from '../../src/world/navigation.js';
 import {NativeChunkStream} from '../../src/rendering/chunk-stream.js';
-import {createSpatialWorld} from '../../src/world/hierarchical-wasm/spatial-world.js';
-import {createSpatialChunkStream} from '../../src/world/hierarchical-wasm/spatial-chunk-stream.js';
+import {createSpatialWorld} from '../../src/world/wild-engine/spatial-world.js';
+import {createSpatialChunkStream} from '../../src/world/wild-engine/spatial-chunk-stream.js';
 
-const bytes=readFileSync('src/world/hierarchical-wasm/spatial-savanna.wasm');
+const bytes=readFileSync('src/world/wild-engine/spatial-savanna.wasm');
 const profile=JSON.parse(readFileSync('public/content/biome-savanna.json','utf8')).profile;
 const config={seed:'712',biome:'savanna',relief:1,density:1,river:true,n:1,cx:0,cz:0,layers:Array(6).fill(true)};
 const jobs=new Map([['0,0',{cx:0,cz:0,score:0}],['1,0',{cx:1,cz:0,score:1}]]);

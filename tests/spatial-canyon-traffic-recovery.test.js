@@ -3,11 +3,11 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {deserialize} from '../src/persistence/snapshots.js';
 import {updateRaid} from '../src/simulation/raids.js';
-import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
-import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../src/world/wild-engine/spatial-navigation-movement.js';
 
 const binary=new WebAssembly.Module(readFileSync(new URL(
-  '../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+  '../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 const snapshot=readFileSync(new URL(
   '../docs/qa/hierarchical-navigation/spatial-virtual-gran-canon-14-farm-bank-seed123-state.json',
   import.meta.url),'utf8');

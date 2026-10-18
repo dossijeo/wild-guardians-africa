@@ -3,8 +3,8 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
 import {deserialize} from '../src/persistence/snapshots.js';
-import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
-import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../src/world/wild-engine/spatial-navigation-movement.js';
 import {animalNativeExitBridge} from '../src/simulation/animal-native-exit-bridge.js';
 import {walkTo} from '../src/simulation/game.js';
 
@@ -15,7 +15,7 @@ test('a native exit bridge joins a physical fractional pocket to the shared rout
  assert.equal(actor.status,'retreating');assert.equal(actor.hitsRemaining,3);
  assert.equal(actor.exitConnectorSearch.exhausted,true);
  const wasm=new WebAssembly.Module(readFileSync(new URL(
-  '../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+  '../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
  const loaded=new Map(),session=createSpatialGameSession(wasm,state,{
   loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
  try{
@@ -32,10 +32,17 @@ test('a native exit bridge joins a physical fractional pocket to the shared rout
   const profile={worker:false,species:actor.species};
   assert.equal(session.routeActor(actor,actor.exit,profile).status,'unknown');
   const destination={...actor.exit,id:`exit-${actor.id}`};
-  for(let i=0;i<24&&!actor.path;i++)walkTo(state,actor,destination,0,nav,
+  // This frozen search was already exhausted. Adapt only its revision to the
+  // current native graph; the bridge rechecks every new physical segment.
+  actor.exitConnectorSearch.key=JSON.stringify([nav.version,actor.x,actor.z,
+    destination.x,destination.z,actor.radius]);
+  for(let i=0;i<32&&!actor.path;i++)walkTo(state,actor,destination,0,nav,
    {speed:3.8,worker:false,expandRoute:true,routeVia:actor.spawn});
   const path=actor.path;
   assert(path?.length>1,'bounded local probes should reach the native graph');
+  assert.equal(state.events.some(event=>event.type==='AnimalRetreatExitAbandoned'&&
+    event.actorId===actor.id),false,
+  'a pending physical bridge must not remove an animal with hits remaining');
   assert.equal(actor.exitConnectorSearch,undefined);
   assert(Math.hypot(path[0].x-actor.x,path[0].z-actor.z)<=.5+1e-8);
   const last=path.at(-1);assert(Math.hypot(last.x-actor.exit.x,last.z-actor.exit.z)<1e-8);

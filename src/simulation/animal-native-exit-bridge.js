@@ -5,14 +5,24 @@
 const attempts=new WeakMap();
 const reaches=[.5,1,2,4,8,16],angles=16,samples=reaches.length*angles;
 const probesPerTick=8,routesPerTick=2;
+const bridgeKey=(actor,end,nav)=>JSON.stringify([nav.version,nav.residencyRevision,
+ actor.x,actor.z,end.x,end.z,actor.radius??.28]);
+
+export function animalNativeExitBridgePending(actor,end,nav){
+ if(actor.status!=='retreating'||!actor.exitConnectorSearch?.exhausted||
+   !nav.spatialSectorRevision||!nav.walkable||!nav.segmentClear||!nav.path)
+  return false;
+ const attempt=attempts.get(actor);
+ return !attempt||attempt.nav!==nav||attempt.key!==bridgeKey(actor,end,nav)||
+   Boolean(attempt.route||attempt.next<samples);
+}
 
 export function animalNativeExitBridge(actor,end,nav){
  if(actor.status!=='retreating'||!nav.spatialSectorRevision||
    !nav.walkable||!nav.segmentClear||!nav.path)
   return {pending:false,path:null};
  const radius=actor.radius??.28;
- const key=JSON.stringify([nav.version,nav.residencyRevision,
-   actor.x,actor.z,end.x,end.z,radius]);
+ const key=bridgeKey(actor,end,nav);
  let attempt=attempts.get(actor);
  if(!attempt||attempt.nav!==nav||attempt.key!==key){
   attempt={nav,key,next:0};attempts.set(actor,attempt);

@@ -3,15 +3,15 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
 import {deserialize} from '../src/persistence/snapshots.js';
-import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
+import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
 import {createSpatialNavigationMovement,SpatialChunkUnavailable} from
-  '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+  '../src/world/wild-engine/spatial-navigation-movement.js';
 import {gatePortalPoints} from '../src/world/gate-passages.js';
 import {repairRoute} from '../src/world/work-points.js';
 import {tick} from '../src/simulation/game.js';
 
 const module=new WebAssembly.Module(readFileSync(new URL(
-  '../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+  '../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 const frozen=JSON.parse(gunzipSync(readFileSync(new URL(
   './fixtures/desierto983-pr42-d7-repair.json.gz',import.meta.url))));
 

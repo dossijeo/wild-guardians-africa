@@ -1,12 +1,13 @@
 import {readFileSync} from 'node:fs';
 import * as Game from '../../src/simulation/game.js';
-import {findSpatialStart} from '../../src/world/hierarchical-wasm/spatial-initial-site.js';
-import {createSpatialGameSession} from '../../src/world/hierarchical-wasm/spatial-game-session.js';
-import {createSpatialNavigationMovement} from '../../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+import {findSpatialStart} from '../../src/world/wild-engine/spatial-initial-site.js';
+import {createSpatialGameSession} from '../../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../../src/world/wild-engine/spatial-navigation-movement.js';
 import {nativeCameraPose} from '../../src/rendering/terrain-camera.js';
 
-const wasm=new WebAssembly.Module(readFileSync(new URL(
-  '../../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+const wasm=new WebAssembly.Module(readFileSync(
+  process.env.WILD_ENGINE_SPATIAL_SERVICES_WASM??new URL(
+    '../../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 const villages=JSON.parse(readFileSync(new URL(
   '../../public/content/villages.json',import.meta.url),'utf8'));
 const chunkAt=value=>Math.floor((value+24)/48);
@@ -50,6 +51,10 @@ export async function createSpatialCampaignOpening({seed=712,biome='sabana',
         throw Error(`Native campaign could not resolve raid chunk ${key}`);
       loaded.set(key,session.core.chunkPayload());
       raidOnlyChunks.add(key);
+      if(nav.raidSelectionStats){
+        const samples=nav.raidSelectionStats.raidDemandLoaded??=[];
+        if(samples.length<128)samples.push({day:state.day,time:state.time,key});
+      }
       return true;
     };
     const setActiveBounds=nav.setActiveBounds;

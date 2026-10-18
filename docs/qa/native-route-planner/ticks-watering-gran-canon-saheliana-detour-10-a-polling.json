@@ -1,0 +1,131 @@
+{
+  "fixture": "tests/fixtures/watering-gran-canon-saheliana-detour-10.json.gz",
+  "fixtureSha256": "4036a5cb5818d1cff20ad58088aad3da601163f4b17106b594abd40579418c5c",
+  "wasmSha256": "275044aa697eaa87de5917ce36dadf636d2ab700ef454c36828faa5cb7bfb4c5",
+  "count": 20,
+  "rows": [
+    {
+      "mode": "A",
+      "ticks": 20,
+      "totalMs": 138.21029999999837,
+      "routeMs": 5.7096000000042295,
+      "routeCalls": 151,
+      "cacheHits": 0,
+      "cacheMisses": 0,
+      "memoryBytes": 12648448,
+      "planning": {
+        "simulatedSeconds": 19.999999999998863,
+        "byKind": {
+          "taskPass": 200,
+          "taskCandidate": 4878
+        },
+        "planningRequestsPerActorMinute": [
+          {
+            "actorId": "worker-16",
+            "requests": 3128,
+            "perMinute": 9384.000000000533
+          },
+          {
+            "actorId": "worker-12",
+            "requests": 1735,
+            "perMinute": 5205.000000000296
+          },
+          {
+            "actorId": "worker-8",
+            "requests": 5,
+            "perMinute": 15.000000000000853
+          },
+          {
+            "actorId": "worker-6",
+            "requests": 5,
+            "perMinute": 15.000000000000853
+          },
+          {
+            "actorId": "worker-10",
+            "requests": 5,
+            "perMinute": 15.000000000000853
+          }
+        ],
+        "maxActorCount": {
+          "taskCandidate": 3128
+        },
+        "topActors": [
+          {
+            "actorId": "worker-16",
+            "counts": {
+              "taskCandidate": 3128
+            }
+          },
+          {
+            "actorId": "worker-12",
+            "counts": {
+              "taskCandidate": 1735
+            }
+          },
+          {
+            "actorId": "worker-8",
+            "counts": {
+              "taskCandidate": 5
+            }
+          },
+          {
+            "actorId": "worker-6",
+            "counts": {
+              "taskCandidate": 5
+            }
+          },
+          {
+            "actorId": "worker-10",
+            "counts": {
+              "taskCandidate": 5
+            }
+          }
+        ],
+        "repeatedSameAction": [
+          [
+            "taskCandidate:worker-16:task-91",
+            180
+          ],
+          [
+            "taskCandidate:worker-16:task-119",
+            180
+          ],
+          [
+            "taskCandidate:worker-16:task-120",
+            180
+          ],
+          [
+            "taskCandidate:worker-16:task-121",
+            180
+          ],
+          [
+            "taskCandidate:worker-16:task-122",
+            180
+          ],
+          [
+            "taskCandidate:worker-16:task-123",
+            180
+          ],
+          [
+            "taskCandidate:worker-16:task-124",
+            180
+          ],
+          [
+            "taskCandidate:worker-16:task-125",
+            180
+          ],
+          [
+            "taskCandidate:worker-16:task-126",
+            180
+          ],
+          [
+            "taskCandidate:worker-16:task-127",
+            180
+          ]
+        ]
+      },
+      "stateSha256": "a44860c16d87423f7bb14d31838a15e0a5bbcb26a366f0bf269ea91cd1e4b3ff",
+      "firstDifference": null
+    }
+  ]
+}

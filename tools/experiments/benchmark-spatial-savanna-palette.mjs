@@ -2,11 +2,11 @@ import {execFileSync} from 'node:child_process';
 import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
 import {dirname} from 'node:path';
 import {performance} from 'node:perf_hooks';
-import {createSpatialSavannaPrototype} from '../../src/world/hierarchical-wasm/spatial-savanna-adapter.js';
+import {createSpatialSavannaPrototype} from '../../src/world/wild-engine/spatial-savanna-adapter.js';
 
 const output=process.argv[2]??'docs/qa/hierarchical-navigation/spatial-savanna-palette-benchmark.json';
 const source=process.env.WG_QA_BASELINE_COMMIT??'6f3796c6';
-const binary='src/world/hierarchical-wasm/spatial-savanna.wasm';
+const binary='src/world/wild-engine/spatial-savanna.wasm';
 const modules={before:new WebAssembly.Module(execFileSync('git',['show',`${source}:${binary}`])),
   after:new WebAssembly.Module(readFileSync(binary))};
 function run(which){

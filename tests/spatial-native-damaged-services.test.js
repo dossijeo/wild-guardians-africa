@@ -1,0 +1,167 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {gunzipSync} from 'node:zlib';
+import {deserialize,serialize} from '../src/persistence/snapshots.js';
+import {emit,repairCost} from '../src/simulation/game.js';
+import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialIntentBridge,createEventDrivenTaskPlanner} from
+ '../src/world/wild-engine/spatial-intent-bridge.js';
+
+const binary=process.env.WILD_ENGINE_SPATIAL_SERVICES_WASM;
+const module=binary?new WebAssembly.Module(readFileSync(binary)):null;
+const load=()=>deserialize(gunzipSync(readFileSync(new URL(
+ './fixtures/desierto983-d15-partial-state.json.gz',import.meta.url))).toString());
+
+test('native damaged lists update by HP event without rebuilding topology',
+ {skip:!module&&'Build and select the spatial-services WASM first'},()=>{
+ const game=load(),walls=game.structures.filter(item=>item.kind==='wall');
+ const [first,second]=walls,center=game.structures.find(item=>item.kind==='center');
+ first.defenseEnclosureId='enclosure:fixture';
+ first.defenseGroupId='crop:fixture';
+ first.hp=first.maxHp*.5;second.hp=second.maxHp*.75;
+ center.hp=center.maxHp*.9;
+ const session=createSpatialGameSession(module,game,{loaded:()=>new Map()});
+ try{
+  const bridge=createSpatialIntentBridge(session),wasm=session.core.wasm;
+  bridge.resetFromState(game);
+  assert.deepEqual(bridge.getDamagedWalls().map(item=>item.id),[first.id,second.id]);
+  assert.equal(bridge.getDamagedWalls()[0].enclosureId,'enclosure:fixture');
+  assert.equal(bridge.getDamagedWalls()[0].plannedGroupId,'crop:fixture');
+  assert.deepEqual(bridge.getDamagedCenters().map(item=>item.id),[center.id]);
+  const checkCenterAssociations=()=>{
+   const cropCenters=new Map(game.plants.filter(item=>item.alive)
+    .map(item=>[item.id,item.centerId]));
+   for(const group of bridge.getUnprotectedCropGroups({includeProtected:true}))
+    assert.deepEqual(group.associatedCenterIds,[...new Set(group.cropIds
+     .map(id=>cropCenters.get(id)).filter(Boolean))].sort(),
+     'physical crop-group advice identifies potentially affected work centers');
+  };
+  checkCenterAssociations();
+  const harvested=game.plants.find(item=>item.alive);
+  harvested.alive=false;
+  bridge.applyEvents(game,[{type:'target',remove:true,id:harvested.id}]);
+  checkCenterAssociations();
+  assert.deepEqual(bridge.getDamagedWalls()[0].cost,repairCost(first));
+  assert.equal(bridge.getDamagedWalls()[0].paidCoins,Math.ceil(first.cost*.5));
+  const topology=wasm.nav_intent_topology_revision();
+  const actionRevision=wasm.nav_intent_entity_revision();
+  const damageRevision=wasm.nav_intent_damage_revision();
+
+  second.hp=second.maxHp*.2;
+  bridge.applyEvents(game,[{type:'structureDamage',entity:second}]);
+  assert.deepEqual(bridge.getDamagedWalls().map(item=>item.id),[second.id,first.id]);
+  assert.equal(wasm.nav_intent_topology_revision(),topology,'HP-only changes do not touch paths');
+  assert.equal(wasm.nav_intent_entity_revision(),actionRevision,
+   'HP-only changes do not invalidate an unrelated action plan');
+  assert.equal(wasm.nav_intent_damage_revision(),damageRevision+1);
+  first.hp=first.maxHp;
+  bridge.applyEvents(game,[{type:'structureDamage',entity:first}]);
+  assert.deepEqual(bridge.getDamagedWalls().map(item=>item.id),[second.id]);
+
+  second.hp=0;second.status='ruined';
+  bridge.applyEvents(game,[{type:'structureDamage',entity:second}]);
+  assert.equal(bridge.getDamagedWalls()[0].paidCoins,second.cost,
+   'ruined modules quote complete replacement');
+  assert.equal(bridge.getDamagedWalls()[0].status,'ruined');
+  const forged={...second,hp:second.maxHp+1};
+  assert.throws(()=>bridge.applyEvents(game,[{type:'structureDamage',entity:forged}]),
+   /rejected/);
+  assert.equal(bridge.getDamagedWalls()[0].hp,0,
+   'rejected event restores authoritative damage state');
+
+  game.structures=game.structures.filter(item=>item.id!==second.id);
+  bridge.applyEvents(game,[{type:'target',remove:true,id:second.id}]);
+  assert.deepEqual(bridge.getDamagedWalls(),[]);
+  assert.equal(wasm.nav_intent_topology_revision(),topology);
+  const restored=deserialize(serialize(game));
+  bridge.resetFromState(restored);
+  assert.deepEqual(bridge.getDamagedWalls(),[]);
+  assert.deepEqual(bridge.getDamagedCenters().map(item=>item.id),[center.id]);
+ }finally{session.dispose();}
+});
+
+test('HP-only events do not wake the event-driven action planner',
+ {skip:!module&&'Build and select the spatial-services WASM first'},()=>{
+ const game=load(),wall=game.structures.find(item=>item.kind==='wall');
+ const session=createSpatialGameSession(module,game,{loaded:()=>new Map()});
+ try{
+  const planner=createEventDrivenTaskPlanner(session);
+  planner.resetFromState(game);
+  planner.planIfNeeded(0);planner.discard();
+  const before=planner.metrics(0).nativePlanningCalls;
+  wall.hp=wall.maxHp*.8;
+  planner.applyEvents(game,[{type:'structureDamage',entity:wall}]);
+  assert.equal(planner.planIfNeeded(1),null);
+  assert.equal(planner.metrics(1).nativePlanningCalls,before);
+ }finally{session.dispose();}
+});
+
+test('structure condition events are deduplicated and reset cleanly on restore',
+ {skip:!module&&'Build and select the spatial-services WASM first'},()=>{
+ const game=load(),wall=game.structures.find(item=>item.kind==='wall');
+ wall.gate=true;
+ wall.defenseEnclosureId='enclosure:test';
+ wall.defenseGroupId='crop:test';
+ const session=createSpatialGameSession(module,game,{loaded:()=>new Map()});
+ try{
+  const planner=createEventDrivenTaskPlanner(session),changes=[];
+  planner.resetFromState(game);
+  let stopWorld=planner.observeWorld(game);
+  const stopCondition=planner.observeStructureCondition(change=>changes.push(change));
+  const originalRevision=session.core.wasm.nav_intent_topology_revision();
+  wall.hp=wall.maxHp*.9;
+  emit(game,'StructureHit',{targetId:wall.id});planner.flushWorldEvents();
+  assert.equal(changes.length,1);
+  assert.deepEqual({change:changes[0].change,hp:changes[0].hp,
+   enclosureId:changes[0].enclosureId,plannedGroupId:changes[0].plannedGroupId},
+  {change:'damaged',hp:wall.hp,enclosureId:'enclosure:test',
+   plannedGroupId:'crop:test'});
+  emit(game,'StructureHit',{targetId:wall.id});planner.flushWorldEvents();
+  assert.equal(changes.length,1,'the same HP must not notify twice');
+  wall.hp=wall.maxHp*.7;
+  emit(game,'StructureHit',{targetId:wall.id});planner.flushWorldEvents();
+  assert.equal(changes.at(-1).severity,'repairable');
+  assert.equal(changes.at(-1).thresholdCrossed,true);
+  assert.equal(session.core.wasm.nav_intent_topology_revision(),originalRevision,
+   'damage notifications cannot rebuild navigation');
+  wall.hp=0;wall.status='ruined';
+  emit(game,'StructureRuined',{targetId:wall.id});planner.flushWorldEvents();
+  assert.equal(changes.at(-1).change,'breach');
+  wall.hp=wall.maxHp;wall.status='intact';
+  emit(game,'RepairApplied',{targetId:wall.id,
+   repair:{previousStatus:'ruined'}});planner.flushWorldEvents();
+  assert.equal(changes.at(-1).change,'repaired');
+  const restored=deserialize(serialize(game)),count=changes.length;
+  stopWorld();planner.resetFromState(restored);
+  stopWorld=planner.observeWorld(restored);
+  emit(restored,'StructureHit',{targetId:wall.id});planner.flushWorldEvents();
+  assert.equal(changes.length,count,'restore must not replay old notifications');
+  const restoredWall=restored.structures.find(item=>item.id===wall.id);
+  assert.equal(restoredWall.defenseEnclosureId,'enclosure:test');
+  restoredWall.hp=restoredWall.maxHp*.7;
+  emit(restored,'StructureHit',{targetId:wall.id});planner.flushWorldEvents();
+  assert.equal(changes.length,count+1);
+  assert.equal(changes.at(-1).enclosureId,'enclosure:test');
+  assert.equal(changes.at(-1).gate,true,'automatic gates retain their identity');
+  const center=restored.structures.find(item=>item.kind==='center');
+  center.hp=center.maxHp*.4;
+  emit(restored,'StructureHit',{targetId:center.id});planner.flushWorldEvents();
+  assert.equal(changes.at(-1).kind,'center');
+  assert.equal(changes.at(-1).severity,'severe');
+  assert.equal(changes.at(-1).hp,center.hp);
+  center.hp=0;center.status='ruined';
+  emit(restored,'StructureRuined',{targetId:center.id});planner.flushWorldEvents();
+  assert.equal(changes.at(-1).change,'ruined',
+   'a collapsed work center is not misreported as a wall breach');
+  assert.equal(changes.at(-1).kind,'center');
+  const beforeRemoval=changes.length;
+  restored.structures=restored.structures.filter(item=>item.id!==wall.id);
+  emit(restored,'WallRemoved',{targetId:wall.id});planner.flushWorldEvents();
+  assert.equal(changes.length,beforeRemoval+1);
+  assert.equal(changes.at(-1).change,'removed');
+  assert.equal(changes.at(-1).structureId,wall.id);
+  assert.equal(changes.at(-1).enclosureId,'enclosure:test');
+  stopCondition();stopWorld();
+ }finally{session.dispose();}
+});

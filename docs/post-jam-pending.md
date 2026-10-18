@@ -3,9 +3,8 @@
 ## Pulido de usabilidad — implementado y validado, 11 de octubre
 
 Cámara contextual, layouts móviles de los cuatro labs y salida nativa Windows
-están implementados y validados en `feature/post-jam-usability-polish`. La
-entrega se integra mediante su PR; al incorporar este commit a `main`, estas
-implementaciones quedan entregadas sin alterar balance ni campañas.
+se desarrollaron y validaron en `feature/post-jam-usability-polish` y ya están
+incorporados a `main`, sin alterar balance ni campañas.
 
 Cámara conserva giro, desplazamiento, inclinación y sobrevuelo, con volúmenes
 finitos e invalidación incremental. Biblioteca supera capturas reales en Chrome
@@ -22,7 +21,20 @@ destrucciones múltiples en 1000 piezas. Los checks de la PR cierran la integrac
 Android físico no se ha ejecutado; no se confunde emulación de Chrome con esa
 aceptación. Las entradas anteriores se conservan como historial.
 
-## Feedback de guardado y salida Windows — pendiente, sin desplazar balance
+## Feedback de guardado y salida Windows — implementados; aceptación adicional pendiente
+
+Estado actual comprobado el 17 de octubre: `src/app/save-game.js` anuncia el
+guardado manual solo después de que la escritura termine correctamente y comunica
+el error si falla. `src/app/desktop-exit.js` espera ese guardado, agrupa clics
+simultáneos y solo entonces invoca el comando nativo `exit_application`; la
+versión web no intenta cerrar la pestaña. Las pruebas dirigidas
+`tests/save-game.test.js`, `tests/game-juice.test.js` y
+`tests/desktop-exit.test.mjs` pasan 15/15. La prueba del ejecutable empaquetado
+consta en [QA de usabilidad](qa/post-jam-usability-polish/README.md). El estado
+de integración y la aceptación física deben leerse en esas evidencias, no en
+las instrucciones antiguas que se conservan a continuación.
+
+### Solicitud original del 10 de octubre (histórica)
 
 Solicitud del10 de octubre:
 

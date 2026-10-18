@@ -2,13 +2,13 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
-import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
-import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../src/world/wild-engine/spatial-navigation-movement.js';
 import {deserialize,serialize} from '../src/persistence/snapshots.js';
 import * as Game from '../src/simulation/game.js';
 
 const wasm=new WebAssembly.Module(readFileSync(new URL(
-  '../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+  '../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 const snapshot=gunzipSync(readFileSync(new URL(
   '../docs/qa/hierarchical-navigation/spatial-sabana-seed123-enclosure-30nights-state.json.gz',
   import.meta.url))).toString();
@@ -83,6 +83,7 @@ test('an exhausted exit search survives save/load and remains an audited retreat
   assert.equal(Game.walkTo(restored,retreat,destination,1,nav,
     {worker:false,expandRoute:true}),true);
   assert(restored.events.some(e=>e.type==='AnimalRetreatExitAbandoned'&&
-    e.actorId===animal.id&&e.reason==='bounded-search-exhausted'));
+    e.actorId===animal.id&&e.reason==='bounded-search-exhausted'&&
+    e.hitsRemaining===0));
   assert.equal(retreat.x,animal.x);assert.equal(retreat.z,animal.z);
 });

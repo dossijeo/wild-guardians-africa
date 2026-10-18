@@ -9,7 +9,7 @@ const days=Number(daysArg),seed=Number(seedArg),started=performance.now(),rows=[
 if(!Number.isInteger(days)||days<1||days>100||!Number.isInteger(seed))throw Error('Invalid campaign parameters');
 const path=resolve(out);mkdirSync(resolve(path,'..'),{recursive:true});
 const hook=probeArg==='--wasm-probe'?
-  installSparseWasmCampaignHook(new WebAssembly.Module(readFileSync('src/world/hierarchical-wasm/lazy-sectors.wasm'))):null;
+  installSparseWasmCampaignHook(new WebAssembly.Module(readFileSync('src/world/wild-engine/lazy-sectors.wasm'))):null;
 try{
   const result=await simulateNativeCampaign({days,biome,seed,strategy,culture:'mapungubwe',nativeEvidence:false,
     onDay:row=>{rows.push(row);if(hook)navigationByDay.push({day:row.day,...hook.metrics()});

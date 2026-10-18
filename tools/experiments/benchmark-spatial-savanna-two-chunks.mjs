@@ -3,13 +3,13 @@ import {dirname} from 'node:path';
 import {performance} from 'node:perf_hooks';
 import {Navigation} from '../../src/world/navigation.js';
 import {buildNativeChunk} from '../../src/rendering/chunk-data.js';
-import {createLazySectorProbeSync} from '../../src/world/hierarchical-wasm/lazy-sectors-adapter.js';
-import {createSpatialSavannaPrototype} from '../../src/world/hierarchical-wasm/spatial-savanna-adapter.js';
+import {createLazySectorProbeSync} from '../../src/world/wild-engine/lazy-sectors-adapter.js';
+import {createSpatialSavannaPrototype} from '../../src/world/wild-engine/spatial-savanna-adapter.js';
 
 const output=process.argv[2]??'docs/qa/hierarchical-navigation/spatial-savanna-two-chunks.json';
 const profile=JSON.parse(readFileSync('public/content/biome-savanna.json','utf8')).profile;
-const oldModule=new WebAssembly.Module(readFileSync('src/world/hierarchical-wasm/lazy-sectors.wasm'));
-const newModule=new WebAssembly.Module(readFileSync('src/world/hierarchical-wasm/spatial-savanna.wasm'));
+const oldModule=new WebAssembly.Module(readFileSync('src/world/wild-engine/lazy-sectors.wasm'));
+const newModule=new WebAssembly.Module(readFileSync('src/world/wild-engine/spatial-savanna.wasm'));
 const timed=fn=>{const at=performance.now(),result=fn();return {ms:performance.now()-at,result};};
 const use=geometry=>{const bytes=geometry.getAttribute('position').array.byteLength+geometry.index.array.byteLength;geometry.dispose();return bytes;};
 

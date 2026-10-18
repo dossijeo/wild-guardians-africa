@@ -10,17 +10,21 @@ import {enqueue,reserveTasks,releaseTask} from '../src/simulation/tasks.js';
 import {serialize,deserialize,SaveRepository} from '../src/persistence/snapshots.js';
 import {newGame} from '../src/simulation/game.js';
 
-test('Original balance preserves unrelated values with explicit player revisions and post-jam harvest margins',()=>{
+test('Generated balance preserves canonical values apart from approved player revisions',()=>{
  const original=JSON.parse(fs.readFileSync(new URL('../content/balance/balance_confirmado.json',import.meta.url),'utf8'));
- const harvest={mijo:11,girasol:36,sorgo:13,maiz:17,batata:23,algodon:178,yuca:32,platano:267};
- original.crops.forEach(c=>{c.base_harvest_value=harvest[c.id];});
- original.initial_money=1500;
- Object.assign(original.postgame.additional_village_cost,{formula:'2000',fixed_cost:2000});
+ const revisions=JSON.parse(fs.readFileSync(new URL('../content/balance/player_revisions.json',import.meta.url),'utf8'));
+ original.crops.forEach(c=>{c.base_harvest_value=revisions.crop_harvest_values[c.id]??c.base_harvest_value;});
+ original.initial_money=revisions.initial_money;
+ Object.assign(original.workers,revisions.workers);
+ original.raids.crop_hit_points=revisions.crop_hit_points;
+ for(const spell of original.spells)Object.assign(spell,revisions.agricultural_magic[spell.id]??{});
+ const variant=revisions.additional_village_cost.variant,ratio={moderate:'1.4',proposed:'1.6',demanding:'1.8'}[variant];
+ original.postgame.additional_village_cost={formula:`round1000(50000 * ${ratio}^(n-2))`,min_n:2,
+  initial_village_ordinal:1,variant,rounding:'nearest thousand, half upward, exact integer fractions'};
  original.raids.max_animals=null;
- original.animals.forEach((a,i)=>{a.structure_hit_damage=[20,25,35,40,60][i];a.max_per_raid=null;});
- original.workers.older_wage=30;original.workers.young_wage=40;
- const boundaries=[0,100,300,800,2000];
- original.threat_tiers.forEach((t,i)=>{t.attraction_min=boundaries[i];t.attraction_max_exclusive=boundaries[i+1]??null;t.night_attack_probability=1;});
+ original.animals.forEach(a=>{a.structure_hit_damage=revisions.structure_hit_damage[a.id];a.max_per_raid=null;});
+ const boundaries=revisions.night_attraction_boundaries;
+ original.threat_tiers.forEach((t,i)=>{t.attraction_min=boundaries[i];t.attraction_max_exclusive=boundaries[i+1]??null;t.night_attack_probability=revisions.night_attack_probability;});
  assert.deepEqual(BALANCE,original);
 });
 test('Ledger rounds an exact repair fraction upward only at settlement',()=>{
@@ -111,9 +115,10 @@ test('Permission matrix handles stacked pauses, night, raid and center recovery'
   s.structures=[{kind:'center',status:'intact'}];assert.ok(permission(s,'plant'));s.time=300;assert.ok(!permission(s,'center'));assert.ok(permission(s,'shield'));
   s.pauses=['hiring','hidden'];assert.ok(!permission(s,'shield'));s.pauses.pop();assert.ok(!permission(s,'shield'));s.pauses=[];s.time=0;s.raid={};assert.ok(!permission(s,'plant'));
 });
-test('Economic dawn thresholds and fixed unlimited village costs',()=>{
+test('Economic dawn thresholds and approved progressive village costs',()=>{
   const s={structures:[],plants:[],crates:[]};assert.equal(dawnMinimum(s),835);s.crates=[{}];assert.equal(dawnMinimum(s),830);s.structures=[{kind:'center',status:'intact'}];assert.equal(dawnMinimum(s),30);s.crates=[];assert.equal(dawnMinimum(s),35);
-  for(const [n,cost] of [[2,2000],[3,2000],[10,2000],[50,2000],[100,2000]])assert.equal(villageCost(n),cost);
+  for(const [n,cost] of [[2,50000],[3,80000],[4,128000],[5,205000],[10,2147000]])assert.equal(villageCost(n),cost);
+  assert.equal(typeof villageCost(100),'bigint');assert.ok(villageCost(100)>BigInt(villageCost(50)));
 });
 const snapshot=()=>newGame({seed:123,slotId:'one'});
 class Storage {

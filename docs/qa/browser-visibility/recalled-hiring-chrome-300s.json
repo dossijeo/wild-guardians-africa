@@ -1,0 +1,119 @@
+{
+  "schema": 1,
+  "gameUrl": "http://127.0.0.1:5179/?qa-seed=712&qa-visibility",
+  "hiddenDurationRequestedSeconds": 300.0,
+  "browser": "Chrome/155.0.8059.84",
+  "sourceCommit": "d6e016625cab3d66c6243a4fac0eb1042a12435b",
+  "qaSourceSha256": {
+    "src/app/main.js": "1207d0d1c09652354b061047f9538ee065781407a6caaae63693d5e4a4ca9573",
+    "tools/experiments/qa-browser-visibility.py": "334ff1021f54edfa77815dbe2a9b03821fbdc05be626891b22100e02d1d88f18"
+  },
+  "fixture": {
+    "path": "docs/qa/recalled-hiring/confirmed-snapshot.json",
+    "slotId": "qa-recalled-hiring"
+  },
+  "stageReady": true,
+  "before": {
+    "hidden": false,
+    "screen": "game",
+    "frameAt": 17439.8,
+    "observedAt": 17458.200000047684,
+    "day": 2,
+    "time": 3.153999999952316,
+    "elapsed": 603.1539999999503,
+    "pauses": [],
+    "balance": {
+      "n": "45",
+      "d": "1"
+    },
+    "livingCrops": 1,
+    "workers": 1,
+    "events": 10,
+    "stateSha256WithoutHiddenPause": "0a1b1a72359317a3f61ee41c3ae1cb0c8ba342e2b3a30ad56231ece3a636e2ec"
+  },
+  "hiddenStart": {
+    "hidden": true,
+    "screen": "game",
+    "frameAt": 17439.8,
+    "observedAt": 18479.700000047684,
+    "day": 2,
+    "time": 3.153999999952316,
+    "elapsed": 603.1539999999503,
+    "pauses": [
+      "hidden"
+    ],
+    "balance": {
+      "n": "45",
+      "d": "1"
+    },
+    "livingCrops": 1,
+    "workers": 1,
+    "events": 10,
+    "stateSha256WithoutHiddenPause": "0a1b1a72359317a3f61ee41c3ae1cb0c8ba342e2b3a30ad56231ece3a636e2ec"
+  },
+  "hiddenEnd": {
+    "hidden": true,
+    "screen": "game",
+    "frameAt": 17439.8,
+    "observedAt": 318486.30000019073,
+    "day": 2,
+    "time": 3.153999999952316,
+    "elapsed": 603.1539999999503,
+    "pauses": [
+      "hidden"
+    ],
+    "balance": {
+      "n": "45",
+      "d": "1"
+    },
+    "livingCrops": 1,
+    "workers": 1,
+    "events": 10,
+    "stateSha256WithoutHiddenPause": "0a1b1a72359317a3f61ee41c3ae1cb0c8ba342e2b3a30ad56231ece3a636e2ec"
+  },
+  "restored": {
+    "hidden": false,
+    "screen": "game",
+    "frameAt": 318498.5,
+    "observedAt": 318541.90000009537,
+    "day": 2,
+    "time": 3.153999999952316,
+    "elapsed": 603.1539999999503,
+    "pauses": [],
+    "balance": {
+      "n": "45",
+      "d": "1"
+    },
+    "livingCrops": 1,
+    "workers": 1,
+    "events": 10,
+    "stateSha256WithoutHiddenPause": "4896f8ceaffddcfd8ce41fbf0654ee79fcb0d7caf2362a3d343854e4cbb5f29a"
+  },
+  "restoredAfter2_5s": {
+    "hidden": false,
+    "screen": "game",
+    "frameAt": 321009.4,
+    "observedAt": 321053.90000009537,
+    "day": 2,
+    "time": 5.664899999952317,
+    "elapsed": 605.6648999999491,
+    "pauses": [],
+    "balance": {
+      "n": "45",
+      "d": "1"
+    },
+    "livingCrops": 1,
+    "workers": 1,
+    "events": 10,
+    "stateSha256WithoutHiddenPause": "c1a5a227fdcdbd1100648232058b4315427d3982d66a884a6631b5b372039ab1"
+  },
+  "hiddenDurationObservedSeconds": 300.00660000014307,
+  "checks": {
+    "actualHidden": true,
+    "hiddenPausePresent": true,
+    "stateUnchangedWhileHidden": true,
+    "noOfflineCatchup": true,
+    "hiddenPauseRemoved": true
+  },
+  "ok": true
+}

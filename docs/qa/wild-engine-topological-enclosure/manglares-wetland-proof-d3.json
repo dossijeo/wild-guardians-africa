@@ -1,0 +1,85 @@
+{
+  "biome": "manglares",
+  "seed": 712,
+  "day": 3,
+  "stateHash": "2101aebec0eb90376fba9d4e1145851b23b0588dab929f46b3acf2e948d5db30",
+  "wasmSha256": "112ebcc80bb789f3d0496f793e36309a790540060ec977de40705980c62ac160",
+  "cropCount": 66,
+  "conservativeCut": {
+    "edges": 35,
+    "arcs": 4,
+    "modules": 19,
+    "omitted": 0,
+    "cost": 190,
+    "gates": 1,
+    "boundarySegments": 122,
+    "naturalBoundary": {
+      "status": "blocked-by-native-natural",
+      "solid": 108,
+      "wetland": 14,
+      "unknown": 0,
+      "uncovered": []
+    },
+    "staticBoundaryStatus": "unknown",
+    "structural": {
+      "status": "open",
+      "reason": "no-wall-face"
+    },
+    "placedJunctions": {
+      "status": "unknown",
+      "reason": "suppressed-static-obstacle",
+      "junctions": 0,
+      "spans": []
+    },
+    "workerOutbound": 66,
+    "workerReturn": 66,
+    "profiles": [
+      {
+        "species": "warthog",
+        "group": "unknown",
+        "sampledExteriorClearRays": 1,
+        "sampledDirectReachClear": 0,
+        "sampledPeripheralCenters": 0,
+        "postQuoteCrossings": 0
+      },
+      {
+        "species": "hyena",
+        "group": "unknown",
+        "sampledExteriorClearRays": 1,
+        "sampledDirectReachClear": 0,
+        "sampledPeripheralCenters": 0,
+        "postQuoteCrossings": 0
+      },
+      {
+        "species": "buffalo",
+        "group": "unknown",
+        "sampledExteriorClearRays": 1,
+        "sampledDirectReachClear": 0,
+        "sampledPeripheralCenters": 0,
+        "postQuoteCrossings": 0
+      },
+      {
+        "species": "lion",
+        "group": "protected",
+        "sampledExteriorClearRays": 1,
+        "sampledDirectReachClear": 0,
+        "sampledPeripheralCenters": 0,
+        "postQuoteCrossings": 0
+      },
+      {
+        "species": "rhino",
+        "group": "unknown",
+        "sampledExteriorClearRays": 0,
+        "sampledDirectReachClear": 0,
+        "sampledPeripheralCenters": 0,
+        "postQuoteCrossings": 0
+      }
+    ]
+  },
+  "timing": {
+    "topologicalMs": 15.53519999999844,
+    "conversionMs": 2.045400000000882,
+    "validationMs": 21174.305099999998,
+    "sampleElapsedSeconds": 98.1541463
+  }
+}

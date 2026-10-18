@@ -1,0 +1,969 @@
+{
+  "sourceCommit": "6f734396aa05757c27a57f5b1eab6cf41cfa6eae",
+  "wasmSha256": "3d8185e86c8aae1e2ce241c19008fc588a34313edadd4754aa2125e2866f6252",
+  "biome": "gran-canon",
+  "seed": 712,
+  "site": {
+    "x": -2,
+    "z": -8
+  },
+  "margins": [
+    {
+      "kind": "ABBA",
+      "biome": "gran-canon",
+      "site": {
+        "x": -2,
+        "z": -8
+      },
+      "padding": 2,
+      "connectorLimit": 8,
+      "cutMargin": 12,
+      "conservativeCut": true,
+      "constructionAwareCut": false,
+      "compareConstructionCut": true,
+      "rows": [
+        {
+          "name": "plain",
+          "ms": 55.72339999999997,
+          "status": "partial",
+          "modules": 3,
+          "cost": 30,
+          "conservativeCut": true,
+          "cutEdges": 8,
+          "flow": 8,
+          "cells": 625,
+          "boundarySegments": 36,
+          "staticBoundary": {
+            "status": "unknown",
+            "segment": 7,
+            "edge": [
+              -5,
+              -8,
+              -4,
+              -8
+            ],
+            "endpoints": [
+              [
+                -4.5,
+                -8.5
+              ],
+              [
+                -4.5,
+                -7.5
+              ]
+            ],
+            "endpointClearances": [
+              0.7670398354530334,
+              1.7631210088729858
+            ],
+            "queries": 11
+          },
+          "workerRoutes": {
+            "outbound": false,
+            "return": false
+          },
+          "workerRoutesBefore": {
+            "outbound": false,
+            "return": false
+          },
+          "cutMs": 6.439100000000053,
+          "convertMs": 14.971000000000004,
+          "validationMs": 32.55780000000004,
+          "strokes": 3,
+          "estimatedModules": 5,
+          "estimatedCost": 50,
+          "ambiguous": 0,
+          "junctions": 6,
+          "stitched": false,
+          "strokeSummary": [
+            {
+              "count": 7,
+              "start": [
+                -4.5,
+                -2.5
+              ],
+              "end": [
+                -4.5,
+                -8.5
+              ]
+            },
+            {
+              "count": 2,
+              "start": [
+                4.5,
+                -2.5
+              ],
+              "end": [
+                5.5,
+                -2.5
+              ]
+            },
+            {
+              "count": 2,
+              "start": [
+                4.5,
+                -8.5
+              ],
+              "end": [
+                5.5,
+                -8.5
+              ]
+            }
+          ],
+          "certification": "unknown",
+          "structural": {
+            "status": "open",
+            "reason": "omitted-module"
+          },
+          "rhinoProbe": null,
+          "profiles": {
+            "warthog": "unknown",
+            "hyena": "protected",
+            "buffalo": "unknown",
+            "lion": "protected",
+            "rhino": "unknown"
+          },
+          "blockedPieces": 2,
+          "blockedPieceDetails": [
+            {
+              "x": -4.5,
+              "z": -5.5,
+              "reason": "No se puede construir sobre agua o lava"
+            },
+            {
+              "x": -4.5,
+              "z": -7.5,
+              "reason": "No se puede construir sobre agua o lava"
+            }
+          ],
+          "blockedCrops": 0,
+          "strokePoints": 7,
+          "calls": {
+            "path": 5,
+            "wallPlacement": 13,
+            "withWallPreview": 2
+          },
+          "sectorUpdates": 16
+        },
+        {
+          "name": "aware",
+          "ms": 4.6305999999999585,
+          "status": "unknown",
+          "conservativeCut": true,
+          "cutEdges": -1,
+          "flow": 10000,
+          "cells": 625,
+          "boundarySegments": 0,
+          "staticBoundary": null,
+          "workerRoutes": null,
+          "workerRoutesBefore": {
+            "outbound": false,
+            "return": false
+          },
+          "cutMs": 4.364000000000033,
+          "convertMs": 0.00029999999992469384,
+          "validationMs": 0,
+          "stitched": false,
+          "structural": null,
+          "rhinoProbe": null,
+          "calls": {
+            "path": 2,
+            "wallPlacement": 0,
+            "withWallPreview": 0
+          },
+          "sectorUpdates": 0
+        },
+        {
+          "name": "aware",
+          "ms": 4.092499999999973,
+          "status": "unknown",
+          "conservativeCut": true,
+          "cutEdges": -1,
+          "flow": 10000,
+          "cells": 625,
+          "boundarySegments": 0,
+          "staticBoundary": null,
+          "workerRoutes": null,
+          "workerRoutesBefore": {
+            "outbound": false,
+            "return": false
+          },
+          "cutMs": 4.001800000000003,
+          "convertMs": 0.00040000000012696546,
+          "validationMs": 0,
+          "stitched": false,
+          "structural": null,
+          "rhinoProbe": null,
+          "calls": {
+            "path": 2,
+            "wallPlacement": 0,
+            "withWallPreview": 0
+          },
+          "sectorUpdates": 0
+        },
+        {
+          "name": "plain",
+          "ms": 24.82400000000007,
+          "status": "partial",
+          "modules": 3,
+          "cost": 30,
+          "conservativeCut": true,
+          "cutEdges": 8,
+          "flow": 8,
+          "cells": 625,
+          "boundarySegments": 36,
+          "staticBoundary": {
+            "status": "unknown",
+            "segment": 7,
+            "edge": [
+              -5,
+              -8,
+              -4,
+              -8
+            ],
+            "endpoints": [
+              [
+                -4.5,
+                -8.5
+              ],
+              [
+                -4.5,
+                -7.5
+              ]
+            ],
+            "endpointClearances": [
+              0.7670398354530334,
+              1.7631210088729858
+            ],
+            "queries": 11
+          },
+          "workerRoutes": {
+            "outbound": false,
+            "return": false
+          },
+          "workerRoutesBefore": {
+            "outbound": false,
+            "return": false
+          },
+          "cutMs": 2.4450999999999112,
+          "convertMs": 0.49480000000016844,
+          "validationMs": 21.7503999999999,
+          "strokes": 3,
+          "estimatedModules": 5,
+          "estimatedCost": 50,
+          "ambiguous": 0,
+          "junctions": 6,
+          "stitched": false,
+          "strokeSummary": [
+            {
+              "count": 7,
+              "start": [
+                -4.5,
+                -2.5
+              ],
+              "end": [
+                -4.5,
+                -8.5
+              ]
+            },
+            {
+              "count": 2,
+              "start": [
+                4.5,
+                -2.5
+              ],
+              "end": [
+                5.5,
+                -2.5
+              ]
+            },
+            {
+              "count": 2,
+              "start": [
+                4.5,
+                -8.5
+              ],
+              "end": [
+                5.5,
+                -8.5
+              ]
+            }
+          ],
+          "certification": "unknown",
+          "structural": {
+            "status": "open",
+            "reason": "omitted-module"
+          },
+          "rhinoProbe": null,
+          "profiles": {
+            "warthog": "unknown",
+            "hyena": "protected",
+            "buffalo": "unknown",
+            "lion": "protected",
+            "rhino": "unknown"
+          },
+          "blockedPieces": 2,
+          "blockedPieceDetails": [
+            {
+              "x": -4.5,
+              "z": -5.5,
+              "reason": "No se puede construir sobre agua o lava"
+            },
+            {
+              "x": -4.5,
+              "z": -7.5,
+              "reason": "No se puede construir sobre agua o lava"
+            }
+          ],
+          "blockedCrops": 0,
+          "strokePoints": 7,
+          "calls": {
+            "path": 5,
+            "wallPlacement": 13,
+            "withWallPreview": 2
+          },
+          "sectorUpdates": 16
+        }
+      ],
+      "memoryBytes": 16777216
+    },
+    {
+      "kind": "ABBA",
+      "biome": "gran-canon",
+      "site": {
+        "x": -2,
+        "z": -8
+      },
+      "padding": 2,
+      "connectorLimit": 8,
+      "cutMargin": 20,
+      "conservativeCut": true,
+      "constructionAwareCut": false,
+      "compareConstructionCut": true,
+      "rows": [
+        {
+          "name": "plain",
+          "ms": 55.08899999999994,
+          "status": "partial",
+          "modules": 3,
+          "cost": 30,
+          "conservativeCut": true,
+          "cutEdges": 8,
+          "flow": 8,
+          "cells": 1681,
+          "boundarySegments": 36,
+          "staticBoundary": {
+            "status": "unknown",
+            "segment": 7,
+            "edge": [
+              -5,
+              -8,
+              -4,
+              -8
+            ],
+            "endpoints": [
+              [
+                -4.5,
+                -8.5
+              ],
+              [
+                -4.5,
+                -7.5
+              ]
+            ],
+            "endpointClearances": [
+              0.7670398354530334,
+              1.7631210088729858
+            ],
+            "queries": 11
+          },
+          "workerRoutes": {
+            "outbound": false,
+            "return": false
+          },
+          "workerRoutesBefore": {
+            "outbound": false,
+            "return": false
+          },
+          "cutMs": 12.054999999999836,
+          "convertMs": 12.782400000000052,
+          "validationMs": 28.573699999999917,
+          "strokes": 3,
+          "estimatedModules": 5,
+          "estimatedCost": 50,
+          "ambiguous": 0,
+          "junctions": 6,
+          "stitched": false,
+          "strokeSummary": [
+            {
+              "count": 7,
+              "start": [
+                -4.5,
+                -2.5
+              ],
+              "end": [
+                -4.5,
+                -8.5
+              ]
+            },
+            {
+              "count": 2,
+              "start": [
+                4.5,
+                -2.5
+              ],
+              "end": [
+                5.5,
+                -2.5
+              ]
+            },
+            {
+              "count": 2,
+              "start": [
+                4.5,
+                -8.5
+              ],
+              "end": [
+                5.5,
+                -8.5
+              ]
+            }
+          ],
+          "certification": "unknown",
+          "structural": {
+            "status": "open",
+            "reason": "omitted-module"
+          },
+          "rhinoProbe": null,
+          "profiles": {
+            "warthog": "unknown",
+            "hyena": "protected",
+            "buffalo": "unknown",
+            "lion": "protected",
+            "rhino": "unknown"
+          },
+          "blockedPieces": 2,
+          "blockedPieceDetails": [
+            {
+              "x": -4.5,
+              "z": -5.5,
+              "reason": "No se puede construir sobre agua o lava"
+            },
+            {
+              "x": -4.5,
+              "z": -7.5,
+              "reason": "No se puede construir sobre agua o lava"
+            }
+          ],
+          "blockedCrops": 0,
+          "strokePoints": 7,
+          "calls": {
+            "path": 5,
+            "wallPlacement": 13,
+            "withWallPreview": 2
+          },
+          "sectorUpdates": 16
+        },
+        {
+          "name": "aware",
+          "ms": 9.006800000000112,
+          "status": "unknown",
+          "conservativeCut": true,
+          "cutEdges": -1,
+          "flow": 10002,
+          "cells": 1681,
+          "boundarySegments": 0,
+          "staticBoundary": null,
+          "workerRoutes": null,
+          "workerRoutesBefore": {
+            "outbound": false,
+            "return": false
+          },
+          "cutMs": 8.719699999999875,
+          "convertMs": 0.0006000000000767614,
+          "validationMs": 0,
+          "stitched": false,
+          "structural": null,
+          "rhinoProbe": null,
+          "calls": {
+            "path": 2,
+            "wallPlacement": 0,
+            "withWallPreview": 0
+          },
+          "sectorUpdates": 0
+        },
+        {
+          "name": "aware",
+          "ms": 7.954899999999952,
+          "status": "unknown",
+          "conservativeCut": true,
+          "cutEdges": -1,
+          "flow": 10002,
+          "cells": 1681,
+          "boundarySegments": 0,
+          "staticBoundary": null,
+          "workerRoutes": null,
+          "workerRoutesBefore": {
+            "outbound": false,
+            "return": false
+          },
+          "cutMs": 7.81919999999991,
+          "convertMs": 0.00040000000012696546,
+          "validationMs": 0,
+          "stitched": false,
+          "structural": null,
+          "rhinoProbe": null,
+          "calls": {
+            "path": 2,
+            "wallPlacement": 0,
+            "withWallPreview": 0
+          },
+          "sectorUpdates": 0
+        },
+        {
+          "name": "plain",
+          "ms": 24.53280000000018,
+          "status": "partial",
+          "modules": 3,
+          "cost": 30,
+          "conservativeCut": true,
+          "cutEdges": 8,
+          "flow": 8,
+          "cells": 1681,
+          "boundarySegments": 36,
+          "staticBoundary": {
+            "status": "unknown",
+            "segment": 7,
+            "edge": [
+              -5,
+              -8,
+              -4,
+              -8
+            ],
+            "endpoints": [
+              [
+                -4.5,
+                -8.5
+              ],
+              [
+                -4.5,
+                -7.5
+              ]
+            ],
+            "endpointClearances": [
+              0.7670398354530334,
+              1.7631210088729858
+            ],
+            "queries": 11
+          },
+          "workerRoutes": {
+            "outbound": false,
+            "return": false
+          },
+          "workerRoutesBefore": {
+            "outbound": false,
+            "return": false
+          },
+          "cutMs": 5.278699999999844,
+          "convertMs": 0.5154999999999745,
+          "validationMs": 18.587999999999965,
+          "strokes": 3,
+          "estimatedModules": 5,
+          "estimatedCost": 50,
+          "ambiguous": 0,
+          "junctions": 6,
+          "stitched": false,
+          "strokeSummary": [
+            {
+              "count": 7,
+              "start": [
+                -4.5,
+                -2.5
+              ],
+              "end": [
+                -4.5,
+                -8.5
+              ]
+            },
+            {
+              "count": 2,
+              "start": [
+                4.5,
+                -2.5
+              ],
+              "end": [
+                5.5,
+                -2.5
+              ]
+            },
+            {
+              "count": 2,
+              "start": [
+                4.5,
+                -8.5
+              ],
+              "end": [
+                5.5,
+                -8.5
+              ]
+            }
+          ],
+          "certification": "unknown",
+          "structural": {
+            "status": "open",
+            "reason": "omitted-module"
+          },
+          "rhinoProbe": null,
+          "profiles": {
+            "warthog": "unknown",
+            "hyena": "protected",
+            "buffalo": "unknown",
+            "lion": "protected",
+            "rhino": "unknown"
+          },
+          "blockedPieces": 2,
+          "blockedPieceDetails": [
+            {
+              "x": -4.5,
+              "z": -5.5,
+              "reason": "No se puede construir sobre agua o lava"
+            },
+            {
+              "x": -4.5,
+              "z": -7.5,
+              "reason": "No se puede construir sobre agua o lava"
+            }
+          ],
+          "blockedCrops": 0,
+          "strokePoints": 7,
+          "calls": {
+            "path": 5,
+            "wallPlacement": 13,
+            "withWallPreview": 2
+          },
+          "sectorUpdates": 16
+        }
+      ],
+      "memoryBytes": 16777216
+    },
+    {
+      "kind": "ABBA",
+      "biome": "gran-canon",
+      "site": {
+        "x": -2,
+        "z": -8
+      },
+      "padding": 2,
+      "connectorLimit": 8,
+      "cutMargin": 28,
+      "conservativeCut": true,
+      "constructionAwareCut": false,
+      "compareConstructionCut": true,
+      "rows": [
+        {
+          "name": "plain",
+          "ms": 58.78150000000005,
+          "status": "partial",
+          "modules": 3,
+          "cost": 30,
+          "conservativeCut": true,
+          "cutEdges": 8,
+          "flow": 8,
+          "cells": 3249,
+          "boundarySegments": 36,
+          "staticBoundary": {
+            "status": "unknown",
+            "segment": 7,
+            "edge": [
+              -5,
+              -8,
+              -4,
+              -8
+            ],
+            "endpoints": [
+              [
+                -4.5,
+                -8.5
+              ],
+              [
+                -4.5,
+                -7.5
+              ]
+            ],
+            "endpointClearances": [
+              0.7670398354530334,
+              1.7631210088729858
+            ],
+            "queries": 11
+          },
+          "workerRoutes": {
+            "outbound": false,
+            "return": false
+          },
+          "workerRoutesBefore": {
+            "outbound": false,
+            "return": false
+          },
+          "cutMs": 13.164499999999975,
+          "convertMs": 11.180700000000002,
+          "validationMs": 27.422900000000027,
+          "strokes": 3,
+          "estimatedModules": 5,
+          "estimatedCost": 50,
+          "ambiguous": 0,
+          "junctions": 6,
+          "stitched": false,
+          "strokeSummary": [
+            {
+              "count": 7,
+              "start": [
+                -4.5,
+                -2.5
+              ],
+              "end": [
+                -4.5,
+                -8.5
+              ]
+            },
+            {
+              "count": 2,
+              "start": [
+                4.5,
+                -2.5
+              ],
+              "end": [
+                5.5,
+                -2.5
+              ]
+            },
+            {
+              "count": 2,
+              "start": [
+                4.5,
+                -8.5
+              ],
+              "end": [
+                5.5,
+                -8.5
+              ]
+            }
+          ],
+          "certification": "unknown",
+          "structural": {
+            "status": "open",
+            "reason": "omitted-module"
+          },
+          "rhinoProbe": null,
+          "profiles": {
+            "warthog": "unknown",
+            "hyena": "protected",
+            "buffalo": "unknown",
+            "lion": "protected",
+            "rhino": "unknown"
+          },
+          "blockedPieces": 2,
+          "blockedPieceDetails": [
+            {
+              "x": -4.5,
+              "z": -5.5,
+              "reason": "No se puede construir sobre agua o lava"
+            },
+            {
+              "x": -4.5,
+              "z": -7.5,
+              "reason": "No se puede construir sobre agua o lava"
+            }
+          ],
+          "blockedCrops": 0,
+          "strokePoints": 7,
+          "calls": {
+            "path": 5,
+            "wallPlacement": 13,
+            "withWallPreview": 2
+          },
+          "sectorUpdates": 16
+        },
+        {
+          "name": "aware",
+          "ms": 14.667300000000068,
+          "status": "unknown",
+          "conservativeCut": true,
+          "cutEdges": -1,
+          "flow": 10002,
+          "cells": 3249,
+          "boundarySegments": 0,
+          "staticBoundary": null,
+          "workerRoutes": null,
+          "workerRoutesBefore": {
+            "outbound": false,
+            "return": false
+          },
+          "cutMs": 14.313400000000001,
+          "convertMs": 0.00040000000012696546,
+          "validationMs": 0,
+          "stitched": false,
+          "structural": null,
+          "rhinoProbe": null,
+          "calls": {
+            "path": 2,
+            "wallPlacement": 0,
+            "withWallPreview": 0
+          },
+          "sectorUpdates": 0
+        },
+        {
+          "name": "aware",
+          "ms": 13.51299999999992,
+          "status": "unknown",
+          "conservativeCut": true,
+          "cutEdges": -1,
+          "flow": 10002,
+          "cells": 3249,
+          "boundarySegments": 0,
+          "staticBoundary": null,
+          "workerRoutes": null,
+          "workerRoutesBefore": {
+            "outbound": false,
+            "return": false
+          },
+          "cutMs": 13.315800000000081,
+          "convertMs": 0.00029999999992469384,
+          "validationMs": 0,
+          "stitched": false,
+          "structural": null,
+          "rhinoProbe": null,
+          "calls": {
+            "path": 2,
+            "wallPlacement": 0,
+            "withWallPreview": 0
+          },
+          "sectorUpdates": 0
+        },
+        {
+          "name": "plain",
+          "ms": 29.29359999999997,
+          "status": "partial",
+          "modules": 3,
+          "cost": 30,
+          "conservativeCut": true,
+          "cutEdges": 8,
+          "flow": 8,
+          "cells": 3249,
+          "boundarySegments": 36,
+          "staticBoundary": {
+            "status": "unknown",
+            "segment": 7,
+            "edge": [
+              -5,
+              -8,
+              -4,
+              -8
+            ],
+            "endpoints": [
+              [
+                -4.5,
+                -8.5
+              ],
+              [
+                -4.5,
+                -7.5
+              ]
+            ],
+            "endpointClearances": [
+              0.7670398354530334,
+              1.7631210088729858
+            ],
+            "queries": 11
+          },
+          "workerRoutes": {
+            "outbound": false,
+            "return": false
+          },
+          "workerRoutesBefore": {
+            "outbound": false,
+            "return": false
+          },
+          "cutMs": 7.942299999999932,
+          "convertMs": 0.5769999999999982,
+          "validationMs": 20.6391000000001,
+          "strokes": 3,
+          "estimatedModules": 5,
+          "estimatedCost": 50,
+          "ambiguous": 0,
+          "junctions": 6,
+          "stitched": false,
+          "strokeSummary": [
+            {
+              "count": 7,
+              "start": [
+                -4.5,
+                -2.5
+              ],
+              "end": [
+                -4.5,
+                -8.5
+              ]
+            },
+            {
+              "count": 2,
+              "start": [
+                4.5,
+                -2.5
+              ],
+              "end": [
+                5.5,
+                -2.5
+              ]
+            },
+            {
+              "count": 2,
+              "start": [
+                4.5,
+                -8.5
+              ],
+              "end": [
+                5.5,
+                -8.5
+              ]
+            }
+          ],
+          "certification": "unknown",
+          "structural": {
+            "status": "open",
+            "reason": "omitted-module"
+          },
+          "rhinoProbe": null,
+          "profiles": {
+            "warthog": "unknown",
+            "hyena": "protected",
+            "buffalo": "unknown",
+            "lion": "protected",
+            "rhino": "unknown"
+          },
+          "blockedPieces": 2,
+          "blockedPieceDetails": [
+            {
+              "x": -4.5,
+              "z": -5.5,
+              "reason": "No se puede construir sobre agua o lava"
+            },
+            {
+              "x": -4.5,
+              "z": -7.5,
+              "reason": "No se puede construir sobre agua o lava"
+            }
+          ],
+          "blockedCrops": 0,
+          "strokePoints": 7,
+          "calls": {
+            "path": 5,
+            "wallPlacement": 13,
+            "withWallPreview": 2
+          },
+          "sectorUpdates": 16
+        }
+      ],
+      "memoryBytes": 16777216
+    }
+  ]
+}
