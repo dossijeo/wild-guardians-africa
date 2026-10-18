@@ -31,6 +31,8 @@ jobs:
         with:
           workspaces: src-tauri -> target
       - run: npm ci
+      - name: Test native Windows visual launcher preflight
+        run: node --test tests/native-loading-visual-launcher.test.js
       - name: Measure isolated camera resolver CPU cost
         run: node tools/benchmark_camera_usability.mjs "${{ runner.temp }}/camera-usability-cpu.json"
       - id: desktop-build

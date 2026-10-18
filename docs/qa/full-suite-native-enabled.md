@@ -12,4 +12,6 @@ $env:WILD_ENGINE_TOPOLOGICAL_CUT_WASM=$wasm
 npm test
 ```
 
-El SHA-256 del binario fue `674bdf018817e1fa75e5181525faa3f516b90b9072af844fdc08e64fdcbf6b9c`. Las 96 pruebas dirigidas correspondientes también habían pasado por separado (78 de rutas/servicios y 18 de recintos). El nuevo gate de CI utiliza ese mismo binario versionado; la PR verifica por primera vez el conjunto unido en Linux. No se modifican el juego ni el WASM. Esta cobertura Node no sustituye pruebas de teléfono físico, rendimiento WebGL o escucha perceptual de QA-014 y QA-156.
+El SHA-256 del binario fue `674bdf018817e1fa75e5181525faa3f516b90b9072af844fdc08e64fdcbf6b9c`. Las 96 pruebas dirigidas correspondientes también habían pasado por separado (78 de rutas/servicios y 18 de recintos). El gate de la PR #136 utilizó ese mismo binario en Linux: **4.528 aprobadas, cero fallidas y una omitida**, en 16 min 14 s para todo «Validate game». La única omisión fue `tests/native-loading-visual-launcher.test.js`, que requiere PowerShell de Windows; pasó en la suite conjunta local de Windows y también por separado. El workflow de Windows la ejecuta explícitamente para que ambos sistemas cubran las 4.529 pruebas entre sus respectivos entornos.
+
+No se modifican el juego ni el WASM. Esta cobertura Node no sustituye pruebas de teléfono físico, rendimiento WebGL o escucha perceptual de QA-014 y QA-156.
