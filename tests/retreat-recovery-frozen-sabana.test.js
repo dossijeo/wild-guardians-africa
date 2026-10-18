@@ -54,8 +54,8 @@ test('day-34 exhausted animal recovers a native route around a false direct conn
 });
 
 test('day-11 buffalo oscillating at a static connector enters bounded retreat recovery',()=>{
- const state=deserialize(readFileSync(new URL(
-  '../docs/qa/preview-isolation-sabana123-v1-partial-state.json',import.meta.url),'utf8'));
+ const state=deserialize(gunzipSync(readFileSync(new URL(
+  '../docs/qa/preview-isolation-sabana123-v1-partial-state.json.gz',import.meta.url))).toString());
  const actor=state.raid.animals.find(item=>item.id==='animal-9092');
  assert(actor&&actor.status==='retreating'&&actor.hitsRemaining===0);
  const loaded=new Map(),session=createSpatialGameSession(wasm,state,{

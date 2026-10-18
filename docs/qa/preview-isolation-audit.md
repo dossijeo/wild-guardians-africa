@@ -103,8 +103,8 @@ are pending. A committed-code Sabana/123 V1 run (`f7ad3969`, topological
 defense, native intents) reached day 11 and stopped with `status: error`:
 15 animals had gone, but one buffalo with no hits remaining remained in
 `retreating` at approximately (77, 6.18). Its partial state and per-day rows
-are in `docs/qa/preview-isolation-sabana123-v1.json` and the associated
-`-partial-state.json`. This is a technical incomplete-incursion result, not
+are in `docs/qa/preview-isolation-sabana123-v1.json.gz` and the associated
+`-partial-state.json.gz`. This is a technical incomplete-incursion result, not
 a balance defeat or evidence about day 83. Its relationship to preview
 isolation remains unproven. The saved actor repeatedly alternated between
 two positions 0.027 m apart: its next static connector was rejected, then
@@ -112,11 +112,18 @@ the route was recreated without destination progress. Counting repeated
 static rejections in that same local pocket now starts the existing bounded
 retreat recovery. The frozen regression verifies that the buffalo reaches
 its real exit on physically checked steps, without controlled disappearance,
-extra hits or damage. A broader analytic wall-sweep prototype exposed a
+extra hits or damage. A committed-code 14-night rerun (`e6c366df`, identical
+settings) completed normally in 120.31 s wall time: 94.95 s in `Game.tick`
+and 17.53 s in bot decisions. It reached day 15 with 92 living crops,
+716 coins at the end of day 14, and one operational center. The day-end
+serialized hashes for days 1–10 match the interrupted run exactly. The full
+per-day evidence, source and WASM hashes are compressed in
+`docs/qa/preview-isolation-sabana123-v1-rerun.json.gz`.
+A broader analytic wall-sweep prototype exposed a
 separate discrepancy between sampled graph connectors and continuous wall
 clearance, but changed older retreat fixtures; it was discarded pending a
-dedicated movement/graph correction. The complete campaign still needs a
-fresh committed-code run. Do not merge until sustained simulation and reproduction have
+dedicated movement/graph correction. This 14-night run does not establish the
+day-83 campaign outcome. Do not merge until sustained simulation and reproduction have
 been reviewed. The source tree is now `src/world/wild-engine/`; the rename was
 separate from the behavioral change and all 204 playable tests, 51 directed
 wall/enclosure tests, and the WASM/Vite builds pass after it.
