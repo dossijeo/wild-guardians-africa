@@ -4,13 +4,15 @@ import * as Game from '../src/simulation/game.js';
 import {planNight,spawnRaid,updateRaid} from '../src/simulation/raids.js';
 import {Navigation} from '../src/world/navigation.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
+import {rational} from '../src/simulation/money.js';
 import {createNativeRaidCampaignEvidence} from '../tools/native-raid-campaign-evidence.mjs';
 
 function fixture(){
  const s=Game.newGame({seed:712,slotId:'pressure-lifecycle'});Game.resume(s,'intro');
+ s.ledger.balance=rational(10000);
  const nav=new Navigation(712,'sabana',{});nav.field={blocked:()=>false,slope:()=>0,surface:()=>0};nav.propsAt=()=>[];nav.activeBounds=[-48,-48,48,48];nav.setState(s);
  Game.placeStructure(s,'center',{x:-12,z:0},nav);
- for(let i=0;i<30;i++)Game.plant(s,`plant-${i}`,'mijo',4+(i%6)*2,-4+Math.floor(i/6)*2,nav);
+ for(let i=0;i<30;i++)Game.plant(s,`plant-${i}`,'platano',4+(i%6)*2,-4+Math.floor(i/6)*2,nav);
  s.day=100;s.time=600;s.dayPlan={done:true};s.initialPreparation=false;planNight(s);
  assert.ok(s.nightPlan.waves.length>=2);return {s,nav};
 }

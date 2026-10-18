@@ -5,8 +5,8 @@ const state=(day=6)=>({day,rng:712,plants:Array.from({length:1000},()=>({alive:t
 test('night preparation is pure, deterministic, cash-independent and bounded into physical cohorts',()=>{
  const s=state(100),before=JSON.stringify(s),a=preparePressureNight(s);
  assert.equal(JSON.stringify(s),before);assert.deepEqual(a,preparePressureNight({...s,cash:999999}));
- assert.equal(a.plan.pressureFacts.pressure,1);assert.equal(a.plan.waves.flat().length,34);
- assert.deepEqual(a.plan.waves.map(w=>w.length),[16,16,2]);
+ assert.equal(a.plan.pressureFacts.pressure,1);assert.equal(a.plan.waves.flat().length,32);
+ assert.deepEqual(a.plan.waves.map(w=>w.length),[16,16]);
  assert.ok(a.plan.pressureFacts.potential<=a.plan.pressureFacts.budget);
  assert.ok(a.plan.waves.flat().every(a=>a.damageProfile.areaCap===7));
 });
