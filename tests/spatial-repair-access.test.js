@@ -291,5 +291,9 @@ test('a worker beside a ruined gate defers an inconclusive repair without specul
     worker.x=84;worker.z=-2.83;
     assert.deepEqual(planRepairAccess(game,target,nav),
       {status:'safe',updates:[]},'the same repair becomes legal after the worker moves');
+    target.status='intact';target.hp=target.maxHp;nav.setState(game);
+    assert(nav.wallWorkerReachability(entry,witnesses,[],[],true)
+      .every(status=>status==='found'),
+    'committing the formerly deferred gate must preserve every worker access');
   }finally{session.dispose();}
 });
