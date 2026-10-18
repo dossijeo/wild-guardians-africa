@@ -61,8 +61,10 @@ These corrections do **not** yet establish the contract for all previews:
 | --- | --- | --- |
 | `withWallPreview()` | Adds/removes native barriers, restores removed props, and optionally rebuilds worker portals in the confirmed instance. Nested calls repeat that work. | A native query context/overlay for the wall, prop and portal hypothesis, including enclosure certification and any requested routes. |
 
-A simple one-wall `withWallPreview()` probe in a Sabana opening left the JS wall
-stamp unchanged but advanced `lazy_sector_updates()` from 204 to 212. This
+A reproducible one-wall `withWallPreview()` probe in a Sabana/123 opening left
+the JS wall stamp unchanged but advanced `lazy_sector_updates()` from 196 to
+204 and `lazy_route_revision()` from 201 to 210. Run it with
+`node tools/experiments/audit-wall-preview-isolation.mjs`. This
 demonstrates that merely preserving the JS revision is insufficient: the native
 graph is still modified and rebuilt. The current tests for general wall previews
 assert eventual physical restoration, not full observational isolation.
