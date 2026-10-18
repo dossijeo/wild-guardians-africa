@@ -292,6 +292,51 @@ export function createSpatialWorld(module){
     enclosureWorld:point=>navigationBuilt?spatialWorldEnclosure(wasm,point):{ids:[],status:'unknown'},
     componentsWorldBatch,setWorkerGatePortals,
     localClear:(start,end)=>Boolean(wasm.spatial_local_clear(start.x,start.z,end.x,end.z)),
+    overlayStaticClearance:(point,limit,removeIds=[],barriers=[],propIds=[])=>{
+      if(!Array.isArray(removeIds)||removeIds.length>4||
+        !Array.isArray(barriers)||barriers.length>128)
+        throw TypeError('Invalid static-clearance overlay');
+      const additions=barriers.length?wasm.spatial_barrier_batch_ptr(barriers.length):0;
+      const removals=removeIds.length?wasm.spatial_barrier_removal_ptr(removeIds.length):0;
+      if(barriers.length&&!additions||removeIds.length&&!removals)
+        throw Error('Could not stage static-clearance overlay');
+      if(additions){
+        const values=new Float32Array(wasm.memory.buffer,additions,barriers.length*6);
+        barriers.forEach((barrier,i)=>values.set([barrier.x,barrier.z,
+          barrier.halfX,barrier.halfZ,barrier.yaw??0,barrier.passMask??0],i*6));
+      }
+      if(removals)new Int32Array(wasm.memory.buffer,removals,removeIds.length)
+        .set(removeIds);
+      const propCount=stageOverlayProps(propIds);
+      return wasm.spatial_overlay_static_object_clearance(point.x,point.z,limit,
+        removeIds.length,barriers.length,propCount);
+    },
+    overlayCutSolidFaces:(boundary,radius,removeIds=[],barriers=[],propIds=[])=>{
+      if(!Array.isArray(boundary)||boundary.length<4||boundary.length%4||
+        boundary.length>4096*4||!Number.isFinite(radius)||radius<=0||
+        !Array.isArray(removeIds)||removeIds.length>4||
+        !Array.isArray(barriers)||barriers.length>128)
+        throw TypeError('Invalid read-only cut-face proof');
+      const additions=barriers.length?wasm.spatial_barrier_batch_ptr(barriers.length):0;
+      const removals=removeIds.length?wasm.spatial_barrier_removal_ptr(removeIds.length):0;
+      const faces=wasm.spatial_overlay_cut_face_ptr(boundary.length/4);
+      if(!faces||barriers.length&&!additions||removeIds.length&&!removals)
+        throw Error('Could not stage read-only cut-face proof');
+      if(additions){
+        const values=new Float32Array(wasm.memory.buffer,additions,barriers.length*6);
+        barriers.forEach((barrier,i)=>values.set([barrier.x,barrier.z,
+          barrier.halfX,barrier.halfZ,barrier.yaw??0,barrier.passMask??0],i*6));
+      }
+      if(removals)new Int32Array(wasm.memory.buffer,removals,removeIds.length)
+        .set(removeIds);
+      const propCount=stageOverlayProps(propIds);
+      new Int32Array(wasm.memory.buffer,faces,boundary.length).set(boundary);
+      const count=wasm.spatial_overlay_cut_solid_faces(boundary.length/4,
+        removeIds.length,barriers.length,propCount,radius);
+      if(count<0)return null;
+      return [...new Uint8Array(wasm.memory.buffer,
+        wasm.spatial_overlay_cut_result_ptr(),count)].map(Boolean);
+    },
     overlayLocalClear:(start,end,removeIds,barriers,propIds=[],polygons=[])=>{
       if(!Array.isArray(removeIds)||removeIds.length>4||
         removeIds.some(id=>!Number.isSafeInteger(id)||id<=0)||

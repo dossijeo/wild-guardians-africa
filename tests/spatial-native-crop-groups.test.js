@@ -206,7 +206,13 @@ test('enclosure advice quotes real wall modules and never certifies an incomplet
   const group=bridge.getUnprotectedCropGroups()[0];
   assert(group);
   const planner=createCropEnclosurePlanner(game,nav,bridge);
+  const previewRevision=()=>{session.actorCanStand({x:0,z:0},{worker:true});return {stamp:session.routeStamp(),
+    route:session.core.wasm.lazy_route_revision(),
+    sectors:session.core.wasm.lazy_sector_updates()};};
+  const beforePreview=previewRevision();
   const plan=planner.planCropEnclosure(group.id);
+  assert.deepEqual(previewRevision(),beforePreview,
+    'Rectangular advice must not mutate confirmed native topology');
   assert.equal(plan.groupId,group.id);
   assert.equal(plan.status,'ready',JSON.stringify({status:plan.status,reason:plan.reason,
    cost:plan.cost,modules:plan.modules?.length,gaps:plan.gaps?.length}));

@@ -323,6 +323,19 @@ export function createSpatialGameSession(module,state,streamOptions){
       {reverse,margin:48,portals,
         propIds:suppress.filter(id=>!props.suppressed.has(id))});
   }
+  function wallCutSolidFaces(boundary,proposed,suppress,radius){
+    if(activeWallPreview||!Array.isArray(proposed)||!Array.isArray(suppress))
+      return null;
+    const existing=new Set(state.structures.filter(piece=>piece.kind==='wall'&&
+      piece.status!=='ruined').map(piece=>piece.id));
+    const removed=proposed.filter(piece=>existing.has(piece.id));
+    const removeIds=removed.flatMap(piece=>walls.barrierIds(piece.id));
+    const barriers=proposed.flatMap(spatialStructureBarriers);
+    if(removeIds.length>4||barriers.length>128||
+      removed.some(piece=>!walls.barrierIds(piece.id).length))return null;
+    return core.overlayCutSolidFaces(boundary,radius,removeIds,barriers,
+      suppress.filter(id=>!props.suppressed.has(id)));
+  }
   function withVillageEntryPreview(buildings,inspect,suppress=[]){
     if(!Array.isArray(buildings)||typeof inspect!=='function')
       throw TypeError('Expected provisional village buildings and a callback');
@@ -361,6 +374,7 @@ export function createSpatialGameSession(module,state,streamOptions){
     routeActor,routeActorNative,routeActorNativeBatch,actorConnectivity,actorSectorRevision,actorRegions,actorEnclosure,actorRegionsBatch,actorCanStand,actorStepClear,
     actorStepClearExceptWalls,
     queryPropsAt,withWallPreview,withWallStatePreview,gateOverlayClear,
-    wallLocalOverlay,wallWorkerReachability,withVillageEntryPreview,
+    wallLocalOverlay,wallWorkerReachability,wallCutSolidFaces,
+    withVillageEntryPreview,
     dispose:()=>stream.dispose()};
 }

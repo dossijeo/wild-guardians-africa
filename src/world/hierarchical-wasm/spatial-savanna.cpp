@@ -2435,7 +2435,8 @@ int spatial_prop_blocked(float x,float z){return propBlocked(x,z);}
 // The resident prop list includes a halo; barriers and polygons use the same
 // indexed geometry as movement. Terrain/water is deliberately excluded, so a
 // distant-object answer never certifies a natural-border join on its own.
-float spatial_static_object_clearance(float x,float z,float limit){
+float staticObjectClearance(float x,float z,float limit,int removeCount,
+  int addCount,int propCount,const std::array<Barrier,128>* proposed){
   if(!std::isfinite(x)||!std::isfinite(z)||!std::isfinite(limit)||
      limit<=0||limit>8)return std::numeric_limits<float>::quiet_NaN();
   int cx=0,cz=0;
@@ -2444,6 +2445,11 @@ float spatial_static_object_clearance(float x,float z,float limit){
   if(props==residentSolidProps().end())return std::numeric_limits<float>::quiet_NaN();
   double best=double(limit)+1;
   for(const Prop& prop:props->second){
+    bool removed=false;
+    for(int i=0;i<propCount;i++)if(prop.group==overlayRemovedProps[i*3]&&
+       prop.gx==overlayRemovedProps[i*3+1]&&
+       prop.gz==overlayRemovedProps[i*3+2]){removed=true;break;}
+    if(removed)continue;
     const double distance=std::max(0.0,std::hypot(double(x)-prop.x,
       double(z)-prop.z)-prop.radius);
     best=std::min(best,distance);
@@ -2459,6 +2465,9 @@ float spatial_static_object_clearance(float x,float z,float limit){
     if(const auto bucket=barriers.buckets.find(key);bucket!=barriers.buckets.end())
       for(const int id:bucket->second){
         if(!seenBarriers.insert(id).second)continue;
+        if(std::find(barrierRemovalIds.begin(),
+          barrierRemovalIds.begin()+removeCount,id)!=
+          barrierRemovalIds.begin()+removeCount)continue;
         const Barrier& solid=barriers.byId.at(id);
         if(solid.passMask&2)continue;
         const double dx=x-solid.x,dz=z-solid.z;
@@ -2489,6 +2498,84 @@ float spatial_static_object_clearance(float x,float z,float limit){
         best=std::min(best,inside?0.0:nearest);
       }
   }
+  if(proposed)for(int i=0;i<addCount;i++){
+    const Barrier& solid=(*proposed)[i];
+    if(solid.passMask&2)continue;
+    const double dx=x-solid.x,dz=z-solid.z;
+    const double u=dx*solid.c-dz*solid.s;
+    const double v=dx*solid.s+dz*solid.c;
+    best=std::min(best,std::hypot(std::max(0.0,std::abs(u)-solid.halfX),
+      std::max(0.0,std::abs(v)-solid.halfZ)));
+  }
   return float(std::min(best,double(limit)+1));
+}
+float spatial_static_object_clearance(float x,float z,float limit){
+  return staticObjectClearance(x,z,limit,0,0,0,nullptr);
+}
+float spatial_overlay_static_object_clearance(float x,float z,float limit,
+  int removeCount,int addCount,int propCount){
+  if(removeCount<0||removeCount>4||addCount<0||addCount>128||
+     propCount<0||propCount>128||barrierRemovalIds.size()<size_t(removeCount)||
+     barrierBatch.size()<size_t(addCount)*6||
+     overlayRemovedProps.size()<size_t(propCount)*3)
+    return std::numeric_limits<float>::quiet_NaN();
+  for(int i=0;i<removeCount;i++)if(!barrierIndex().byId.count(barrierRemovalIds[i]))
+    return std::numeric_limits<float>::quiet_NaN();
+  std::array<Barrier,128> proposed;
+  if(!prepareOverlayBarriers(addCount,proposed))
+    return std::numeric_limits<float>::quiet_NaN();
+  return staticObjectClearance(x,z,limit,removeCount,addCount,propCount,&proposed);
+}
+std::vector<int32_t> overlayCutFaces;
+std::vector<uint8_t> overlayCutResults;
+int32_t* spatial_overlay_cut_face_ptr(int count){
+  if(count<1||count>4096)return nullptr;
+  overlayCutFaces.resize(size_t(count)*4);
+  return overlayCutFaces.data();
+}
+uint8_t* spatial_overlay_cut_result_ptr(){return overlayCutResults.data();}
+int spatial_overlay_cut_solid_faces(int count,int removeCount,int addCount,
+  int propCount,float radius){
+  if(count<1||count>4096||overlayCutFaces.size()<size_t(count)*4||
+     removeCount<0||removeCount>4||addCount<0||addCount>128||
+     propCount<0||propCount>128||barrierRemovalIds.size()<size_t(removeCount)||
+     barrierBatch.size()<size_t(addCount)*6||
+     overlayRemovedProps.size()<size_t(propCount)*3||
+     !(radius>.0001f)||radius+1>8||!std::isfinite(radius))return -1;
+  for(int i=0;i<removeCount;i++)if(!barrierIndex().byId.count(barrierRemovalIds[i]))
+    return -1;
+  std::array<Barrier,128> proposed;
+  if(!prepareOverlayBarriers(addCount,proposed))return -1;
+  overlayCutResults.assign(size_t(count),0);
+  const float safe=radius-.0001f;
+  for(int face=0;face<count;face++){
+    const int32_t* edge=overlayCutFaces.data()+face*4;
+    const int x=edge[0],z=edge[1],nx=edge[2],nz=edge[3];
+    if(std::abs(x-nx)+std::abs(z-nz)!=1)return -1;
+    const float middleX=(x+nx)*.5f,middleZ=(z+nz)*.5f;
+    const float ax=x!=nx?middleX:middleX-.5f;
+    const float az=x!=nx?middleZ-.5f:middleZ;
+    const float bx=x!=nx?middleX:middleX+.5f;
+    const float bz=x!=nx?middleZ+.5f:middleZ;
+    const auto clearance=[&](float px,float pz){
+      return staticObjectClearance(px,pz,radius+1,removeCount,addCount,
+        propCount,&proposed);
+    };
+    const auto covered=[&](auto&& self,float px,float pz,float qx,float qz,
+      float a,float b,int depth)->bool{
+      if(!std::isfinite(a)||!std::isfinite(b)||a<0||b<0||
+         a>=safe||b>=safe)return false;
+      const float length=std::hypot(qx-px,qz-pz);
+      if((a+b+length)*.5f<safe)return true;
+      if(depth>=12)return false;
+      const float mx=(px+qx)*.5f,mz=(pz+qz)*.5f;
+      const float mid=clearance(mx,mz);
+      return self(self,px,pz,mx,mz,a,mid,depth+1)&&
+        self(self,mx,mz,qx,qz,mid,b,depth+1);
+    };
+    overlayCutResults[face]=covered(covered,ax,az,bx,bz,
+      clearance(ax,az),clearance(bx,bz),0)?1:0;
+  }
+  return count;
 }
 }

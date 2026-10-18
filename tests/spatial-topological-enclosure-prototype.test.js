@@ -340,8 +340,24 @@ test('day-80 cut detours around a rock only after renewed physical certification
       const group=bridge.getUnprotectedCropGroups()[0];
       assert.equal(group.cropIds.length,52);
       const nav=createSpatialNavigationMovement(session,state);
+      for(const species of ['warthog','hyena','buffalo','lion','rhino'])
+        session.actorRegionsBatch([{x:0,z:0}],{worker:false,species});
+      session.actorRegionsBatch([{x:0,z:0}],{worker:true});
+      const revisions=()=>{
+        const wasm=session.core.wasm;
+        const values=[];
+        for(let i=0;i<6;i++){
+          session.core.selectNavigationProfile(i);
+          values.push(wasm.lazy_route_revision());
+        }
+        return {stamp:session.routeStamp(),sectors:wasm.lazy_sector_updates(),
+          routes:values};
+      };
+      const beforePlan=revisions();
       const plan=createCropEnclosurePlanner(state,nav,bridge,session)
         .planCropEnclosure(group.id,{material:'zarzas',method:'topological'});
+      assert.deepEqual(revisions(),beforePlan,
+        'A detached wall detour must leave every confirmed navigation profile unchanged');
       assert.equal(plan.status,'ready',JSON.stringify(plan.attempts));
       assert.equal(plan.kind,'general-cut-local-detour');
       assert.equal(plan.modules.length,6);

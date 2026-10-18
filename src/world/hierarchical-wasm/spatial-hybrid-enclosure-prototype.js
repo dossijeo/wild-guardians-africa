@@ -198,38 +198,72 @@ export function proposeHybridEnclosure({state,nav,session,crops,material='zarzas
       continue;
     }
     let proof;
-    try{proof=nav.withWallPreview(quote.previewPieces,quote.suppressed,()=>{
-      let certifiedBoundary=candidate.boundary;
-      let recutCount=0;
-      if(candidate.recut){
-        const seedPointer=wasm.lazy_cut_seeds_ptr(crops.length);
-        new Int32Array(wasm.memory.buffer,seedPointer,crops.length*2).set(
-          crops.flatMap(p=>[Math.round(p.x),Math.round(p.z)]));
-        recutCount=wasm.lazy_local_crop_cut_conservative_buildable(
-          ...box,crops.length,padding);
-        certifiedBoundary=recutCount===0?Array.from(new Int32Array(
-          wasm.memory.buffer,wasm.lazy_local_crop_cut_boundary_ptr(),
-          wasm.lazy_local_crop_cut_boundary_count()*4)):[];
+    let certifiedBoundary=candidate.boundary;
+    if(candidate.recut){
+      const width=box[2]-box[0],height=box[3]-box[1];
+      const faces=[];
+      for(let z=box[1];z<box[3];z++)for(let x=box[0];x<box[2]-1;x++)
+        faces.push(x,z,x+1,z);
+      for(let z=box[1];z<box[3]-1;z++)for(let x=box[0];x<box[2];x++)
+        faces.push(x,z,x,z+1);
+      const mask=[];
+      for(let i=0;i<faces.length;i+=4096*4){
+        const part=session.wallCutSolidFaces(faces.slice(i,i+4096*4),
+          quote.previewPieces,quote.suppressed,
+          Math.min(...Object.values(ANIMAL_SPATIAL_PROFILES).map(p=>p.radius)));
+        if(!part){mask.length=0;break;}
+        mask.push(...part);
       }
+      if(mask.length===(width-1)*height+width*(height-1)){
+        const pointer=wasm.lazy_overlay_cut_mask_ptr(mask.length);
+        const seeds=wasm.lazy_cut_seeds_ptr(crops.length);
+        if(pointer&&seeds){
+          new Uint8Array(wasm.memory.buffer,pointer,mask.length).set(mask.map(Number));
+          new Int32Array(wasm.memory.buffer,seeds,crops.length*2).set(
+            crops.flatMap(p=>[Math.round(p.x),Math.round(p.z)]));
+          const recutCount=wasm.lazy_local_crop_cut_overlay_buildable(
+            ...box,crops.length,padding);
+          certifiedBoundary=recutCount===0?Array.from(new Int32Array(
+            wasm.memory.buffer,wasm.lazy_local_crop_cut_boundary_ptr(),
+            wasm.lazy_local_crop_cut_boundary_count()*4)):null;
+        }
+      }
+    }
+    {
+      const solid=certifiedBoundary?.length?session.wallCutSolidFaces(
+        certifiedBoundary,quote.previewPieces,quote.suppressed,
+        Math.min(...Object.values(ANIMAL_SPATIAL_PROFILES).map(p=>p.radius))):null;
+      const kinds=certifiedBoundary?.length&&solid?.length===
+        certifiedBoundary.length/4?solid.map((blocked,i)=>{
+          if(blocked)return 1;
+          const edge=certifiedBoundary.slice(i*4,i*4+4);
+          const naturalKind=candidate.recut?wasm.lazy_cut_face_natural(...edge):
+            natural[i]?.kind;
+          return [2,3,4].includes(naturalKind)?naturalKind:0;
+        }):null;
       const {faceCounts,unprovedFaces}=classifyCutBoundaryFaces(
-        certifiedBoundary??[],wasm);
+        certifiedBoundary??[],wasm,kinds??[]);
       const wallLoop=certifiedBoundary||candidate.recut?null:
         inspectSelfClosedQuote(quote,state.structures,crops);
-      const exposedAttackMargin=certifiedBoundary?.length?
-        attackMarginAcrossOpenFaces(crops,certifiedBoundary,
-          [...state.structures,...quote.previewPieces],wasm):NaN;
-      return {movement:certifiedBoundary||candidate.recut?
-        recutCount===0&&faceCounts.unknown===0&&certifiedBoundary.length>0:
+      const replaced=quote.previewPieces.filter(piece=>state.structures.some(
+        existing=>existing.id===piece.id&&existing.kind==='wall'&&
+          existing.status!=='ruined')).map(piece=>piece.id);
+      const workers=workerOrigins.map(origin=>{
+        const out=nav.wallWorkerReachability?.(origin,crops,
+          quote.previewPieces,quote.suppressed,false,replaced);
+        const back=nav.wallWorkerReachability?.(origin,crops,
+          quote.previewPieces,quote.suppressed,true,replaced);
+        return crops.map((_,i)=>out?.[i]==='found'&&back?.[i]==='found'?
+          true:null);
+      });
+      proof={movement:certifiedBoundary||candidate.recut?
+        Boolean(kinds)&&faceCounts.unknown===0&&certifiedBoundary.length>0:
         wallLoop.status==='closed-wall-loop',
-      wallLoop,faceCounts,unprovedFaces,exposedAttackMargin,
-      workers:routeWitness()};
-    },true);}
-    catch(error){
-      if(error.name==='SpatialChunkUnavailable'){
-        attempts.push({...result,status:'unknown',
-          reason:'missing-sector-during-preview'});continue;
-      }
-      throw error;
+      wallLoop,faceCounts,unprovedFaces,
+      exposedAttackMargin:certifiedBoundary?.length?
+        attackMarginAcrossOpenFaces(crops,certifiedBoundary,
+          [...state.structures,...quote.previewPieces],wasm):NaN,
+      workers};
     }
     const workerSafe=crops.every((_,j)=>
       before.some((row,i)=>row[j]===true&&proof.workers[i][j]===true))&&

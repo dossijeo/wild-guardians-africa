@@ -57,6 +57,19 @@ change is material.
 
 These corrections do **not** yet establish the contract for all previews:
 
+The topological enclosure cut (including the day-80 local rock detour) now
+evaluates the proposed wall footprints with a read-only native solid-face
+overlay. A separate overlay mask feeds the existing native cut algorithm;
+natural faces retain their original physical terrain proof. The final boundary
+is checked again under the same hypothesis, while worker access uses the
+positive-only native reachability overlay. The day-80 test confirms that all
+six navigation-profile revisions, the sector-update count and the JS wall
+stamp remain unchanged. The rectangular crop-group planner now uses the
+already available physical wall-loop proof plus bidirectional worker access
+under an overlay; its directed quote test likewise leaves the native worker
+revision unchanged. These changes remove the remaining production enclosure
+calls to `withWallPreview()` and keep uncertified cases as `unknown`.
+
 | Service | Current speculative behavior | Required separation |
 | --- | --- | --- |
 | `withWallPreview()` | Adds/removes native barriers, restores removed props, and optionally rebuilds worker portals in the confirmed instance. Nested calls repeat that work. | A native query context/overlay for the wall, prop and portal hypothesis, including enclosure certification and any requested routes. |
