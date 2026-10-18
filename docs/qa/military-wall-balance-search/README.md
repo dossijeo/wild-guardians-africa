@@ -976,3 +976,42 @@ geometry, defense state and farm trajectory matter more than nominal horde
 size alone. Neither arm survived night 100, and this candidate is **not
 recommended for production**. Its 30- and 60-night improvements remain useful
 evidence, but must not be reported as a full-campaign success.
+
+## Recovery-count cross-biome check: Gran Cañón / 712
+
+The same count-only candidate was replayed for 30 nights in Gran Cañón
+against the original V1 pressure, with the event-driven topological defender.
+Both reports identify source `d266cf5c`, the same WASM, game, raid and runner
+hashes, and their separate candidate hashes. All 30 real raids in each arm
+have verified receipts, zero evidence issues and no coverage loss. The first
+five nights have equal crop and cash counts; their serialized hashes differ
+because the candidate recipe is part of the saved state. Complete reports are
+[control](v1-control-gran-canon712-30.json.gz) and
+[recovery count](v1-recovery-count-gran-canon712-30.json.gz); the
+[nightly comparison](v1-count-gran-canon712-30-nightly.csv) retains cash,
+crops, costs, attacks and timings for every night. Reproduce either arm with
+`node tools/experiments/run-balance-candidate.mjs <recipe> 30 gran-canon 712
+<output.json> topological`.
+
+| Measure through night 30 | Original V1 count | Recovery-count candidate |
+| --- | ---: | ---: |
+| Living crops / coins | 54 / 1,015 | 46 / 981 |
+| Animals, nights 6–30 | 218 | 235 |
+| Crops destroyed by raids, nights 6–30 | 26 | 20 |
+| Wall hits / HP lost | 490 / 9,595 | 616 / 13,218 |
+| Wall purchases / repairs, coins | 200 / 991 | 250 / 1,354 |
+| Income / wages / seeds, coins | 17,566 / 7,980 / 8,080 | 19,735 / 8,104 / 9,746 |
+| `Game.tick` / bot decisions, seconds | 109.65 / 21.19 | 116.36 / 22.24 |
+
+The candidate suppressed six agricultural raid losses but finished with eight
+fewer crops and 34 fewer coins. It bought and repaired more walls. Its larger
+farm trajectory produced **more** animals despite a lower count factor: 235
+versus 218 from night 6. In nights 21–30, the candidate suffered 14 crop
+losses versus 26 in the control, yet its living-crop stock fell from 52 to 46
+while the control recovered from 53 to 54. Harvesting, replanting, income and
+defense spending all differ, so attack losses alone cannot explain the stock.
+The runs were sequential, with different workloads; their wall times do not
+establish a change in engine speed. This second biome does not rescue the
+candidate's authentic night-97 defeat in Sabana, and provides no basis to
+promote its pressure parameters to production. Further balance work should
+evaluate independent seeds and the late-game defense/planting interaction.
