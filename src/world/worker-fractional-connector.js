@@ -19,7 +19,8 @@ function* search(nav,actor,end,radius){
    // across ticks and never substitutes a JavaScript pathfinder.
    let tail;
    if(nav.findPathSteps)tail=yield*nav.findPathSteps(grid,end,radius,null,true,16,{yieldEvery:4});
-   else{yield;tail=nav.path(grid,end,radius,null,true);}
+   else{yield;tail=nav.workerPath?nav.workerPath(grid,end,radius,null):
+     nav.path(grid,end,radius,null,true);}
    if(tail){const prefix=[];for(let node=head;node>0;node=queue[node].parent)prefix.push({x:queue[node].x,z:queue[node].z});prefix.reverse();const route=[...prefix,grid,...tail];return nav.smoothPathSteps?yield*nav.smoothPathSteps(actor,route,radius,null,true):route;}
   }
   for(const [dx,dz] of offsets){
