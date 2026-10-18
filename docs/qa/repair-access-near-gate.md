@@ -61,3 +61,20 @@ acceptance criterion. Keep this branch experimental until the first
 behavioral divergence is explained and physical and strategic outcomes are
 checked. The difference must not be presented as a semantics-preserving
 optimization.
+
+There is a concrete potential source of the divergence: each legacy
+`withWallStatePreview()` calls `walls.sync()` for a provisional wall set and
+again to restore the confirmed set. Both calls can advance the wall mirror's
+topology revision, even though the preview purchases nothing. Those
+revisions can cause active routes to be reconsidered later. The new
+regression asserts that the fast inconclusive quote leaves `routeStamp()`
+unchanged. A read-only live trace of the original implementation reproduced
+all 83 nightly hashes (day-83 `Game.tick`: 72.95 s) and recorded both quotes
+for `structure-1655`: at 89.5 s and 156.1 s, each returned
+`{status: 'unknown', updates: []}`. The optimized branch returns the same
+result on the exact first-call frozen state; the second optimized live result
+has not been instrumented independently. The old trace rules out a
+successful legacy repair at either call. Avoiding provisional wall syncs and
+their topology-revision changes is the likely cause of the changed campaign;
+a route-level trace would identify the first changed worker assignment or
+movement exactly.
