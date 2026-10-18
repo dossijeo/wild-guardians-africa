@@ -1344,3 +1344,40 @@ the economic and physical trajectory. The gzip SHA-256 is
 `f6df6e22ad3e5911ad72073859f8fcb0bdba406bdf2285a4ab125dc2f4c5a28e`.
 Survival to 60 nights makes a 100-night follow-up justified; it does not yet
 prove long-run solvency or a win rate across seeds and biomes.
+
+### Gran Río/123: authentic 100-night V1 victory
+
+Source `e474f7da` requested 100 nights with the identical V1 recipe,
+topological bot, seed and executable input hashes as the 60-night run. All
+first 60 nightly state hashes match exactly. The campaign emitted
+`CampaignWon` at day-101 dawn after **100 completed raids**, all verified
+with zero issues and no evidence coverage loss. The final farm had 23 living
+crops, 300 coins, four workers and one operational center. Night 100 involved
+11 animals, 31 wall hits and zero destroyed crops. This is a real game-rule
+victory, not a simulated continuation or a mathematical projection.
+
+| Cumulative V1 measure through night 100 | Value |
+| --- | ---: |
+| Animals / agricultural raid losses | 1,248 / 1,599 |
+| Wall hits / center hits | 2,789 / 3 |
+| Income / wages / seeds, coins | 101,006 / 43,356 / 50,052 |
+| Paid new walls / repairs, coins | 560 / 7,438 |
+| `Game.tick` / bot decisions, seconds | 706.83 / 281.69 |
+
+Across the 95 military-pressure nights (6–100), 1,599 crops were destroyed
+out of 9,600 living crops observed at raid spawn, a weighted loss rate of
+16.66% per night of exposure. That is far above the initial 2–4% design
+hypothesis for a well-defended farm. The bot survived through continued
+planting, delivery and repair, rather than by making crop losses small. The
+margin remained narrow: night 91 ended with 32 crops and 222 coins; after
+night 97 there were 15 crops and 308 coins. This observation warrants
+examining enclosure protection and late-game recovery before promoting V1.
+
+The complete [100-night report](current-main-pr48-v1-gran-rio123-100.json.gz)
+and [per-night CSV](current-main-pr48-v1-gran-rio123-100-nightly.csv) preserve
+all hashes, physical raid receipts and economic ledgers. The gzip SHA-256 is
+`d60c506fefff7cf3eccc1c8a164094e0e02ad9ec20a1ac270e490479126c6f69`.
+One Gran Río seed joining the two narrow Sabana wins is encouraging evidence
+that the fixed virtual player can reach night 100 under V1 pressure. It does
+not estimate survival probability across six biomes or justify changing
+production military parameters without further independent validation.
