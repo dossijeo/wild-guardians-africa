@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as Game from '../src/simulation/game.js';
+import {serialize} from '../src/persistence/snapshots.js';
 import {rational} from '../src/simulation/money.js';
 import {createSpatialCampaignOpening} from '../tools/experiments/spatial-campaign-opening.mjs';
 
@@ -35,6 +36,7 @@ test('village and center quotes leave confirmed native topology untouched',async
     const stamp=session.routeStamp();
     const updates=session.core.wasm.lazy_sector_updates();
     const routeRevision=session.core.wasm.lazy_route_revision();
+    const gameState=serialize(state);
     for(let i=0;i<100;i++)
       nav.withVillageEntryPreview([building],draft=>{
         assert.equal(draft.walkable(point),false);
@@ -44,6 +46,7 @@ test('village and center quotes leave confirmed native topology untouched',async
     assert.deepEqual(session.routeStamp(),stamp);
     assert.equal(session.core.wasm.lazy_sector_updates(),updates);
     assert.equal(session.core.wasm.lazy_route_revision(),routeRevision);
+    assert.equal(serialize(state),gameState);
     assert.equal(session.actorCanStand(point,{worker:true}),baseline);
   }finally{session.dispose();}
 });
