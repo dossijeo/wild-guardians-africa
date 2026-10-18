@@ -111,7 +111,7 @@ test('QA-015: large real frames stop at each dawn and charge only an explicitly 
   Game.hire(s,'hire-day-102',{olderFemale:1});assert.equal(numberOf(s.ledger.balance),9790);
   assert.equal(Game.hire(s,'repeat-day-102',{olderFemale:1}),false);
   Game.advanceReal(s,1000,nav);assert.equal(s.day,103);assert.equal(s.pauses.includes('hiring'),true);
-  assert.equal(numberOf(s.ledger.balance),10057);assert.equal(s.crates.length,1);assert.equal(s.crates[0].delivered,true);assert.equal(s.events.filter(e=>e.type==='CrateDelivered').length,1);assert.equal(s.events.filter(e=>e.type==='Dawn').length,2);
+  assert.equal(numberOf(s.ledger.balance),10057);assert.equal(s.crates.length,0);assert.equal(Object.keys(s.ledger.entries).filter(id=>id.startsWith('deliver:')).length,1);assert.equal(s.events.filter(e=>e.type==='CrateDelivered').length,1);assert.equal(s.events.filter(e=>e.type==='Dawn').length,2);
   assert.equal(Object.keys(s.ledger.entries).filter(id=>id.startsWith('hire-day-')).length,2);
 });
 

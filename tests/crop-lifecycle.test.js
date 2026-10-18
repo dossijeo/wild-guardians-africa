@@ -46,7 +46,7 @@ test('optional higher staffing pays normal wages and the default policy is repro
  assert.equal(createHash('sha256').update(originalGolden).digest('hex'),'d2d067f5aea3cbfc860e720bd119d8a565056a85e2a8adb6bd8642ecfd7b773f');
  assert.equal(deserialize(originalGolden).crates.filter(c=>c.delivered).length,28);
  assert.equal(baseline.completedNights,1);
- assert.equal(baseline.counts.CrateDelivered,baseline.state.crates.filter(c=>c.delivered).length);
+ assert.equal(baseline.counts.CrateDelivered,Object.keys(baseline.state.ledger.entries).filter(id=>id.startsWith('deliver:')).length);
  assert.equal(baseline.money,Number(baseline.state.ledger.balance.n));
  assert.ok(baseline.counts.CrateDelivered>0);
  assert.equal(baseline.state.events.filter(e=>e.type==='RaidSpawned'&&e.raidFacts).length,1);
@@ -79,13 +79,13 @@ test('native paid farming with lifecycle observation preserves the complete stat
  assert.equal(serialize(observed.state),serialize(baseline.state));
  assert.equal(serialize(deserialize(serialize(observed.state))),serialize(observed.state));
  const crops=observer.report().crops;
- assert.equal(crops.length,observed.state.plants.length);
+ assert.equal(crops.length,observed.counts.CropPlaced);
  assert.equal(crops.filter(p=>p.outcome==='delivered').length,observed.counts.CrateDelivered);
  assert.ok(crops.some(p=>p.outcome==='delivered'));
  for(const row of crops.filter(p=>p.outcome==='delivered')){
   const pickup=row.timeline.findIndex(e=>e.type==='picked'),delivery=row.timeline.findIndex(e=>e.type==='delivered');
   assert.ok(pickup>=0&&delivery>pickup);
-  const crate=observed.state.crates.find(c=>c.id===row.crateId);
-  assert.ok(crate.delivered);assert.equal(row.income,observed.state.ledger.entries['deliver:'+crate.id].n);
+  assert.equal(observed.state.crates.some(c=>c.id===row.crateId),false);
+  assert.equal(row.income,observed.state.ledger.entries['deliver:'+row.crateId].n);
  }
 });

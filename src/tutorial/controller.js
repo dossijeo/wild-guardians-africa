@@ -6,7 +6,7 @@ import {REPEATABLE_MAGIC_IDS,shieldReminderKey,usefulPeacefulMagic,recordMagicRe
 import {dailyTutorialMessages,tutorialMessageShownToday,recordTutorialMessageToday} from './daily-messages.js';
 const known=new Set(TUTORIAL_IDS),reason='tutorial-reading';
 const agriculturalLessons=new Set(['magic.growth','magic.multiply','reminder.growth','reminder.multiply']);
-const delivered=s=>s.crates.some(c=>c.delivered)||s.events.some(e=>e.type==='CrateDelivered');
+const delivered=s=>s.tutorial?.harvestCompleted===true||s.crates.some(c=>c.delivered)||s.events.some(e=>e.type==='CrateDelivered');
 function readingActionCompleted(s,id){
   if(['magic.growth','magic.multiply'].includes(id)){
     const start=s.events.findLastIndex(e=>e.type==='TutorialMessageStarted'&&e.messageId===id);
@@ -32,6 +32,7 @@ export class TutorialController {
     this.state=state;this.profile=profile;this.onError=onError;this.isNarrating=isNarrating;
     const t=state.tutorial??={step:'intro',seen:[]};
     t.seen=[...new Set((t.seen??[]).filter(id=>known.has(id)))];
+    if(t.harvestCompleted!==true&&(state.crates.some(c=>c.delivered)||state.events.some(e=>e.type==='CrateDelivered')||t.seen.includes('basic.harvest')))t.harvestCompleted=true;
     t.pending=[...new Set((t.pending??[]).filter(id=>known.has(id)))];
     t.guideAfterAuto=[...new Set((t.guideAfterAuto??[]).filter(id=>['basic.center','basic.plant'].includes(id)))];
     if(!BASIC_STEPS.includes(t.step))t.step='intro';

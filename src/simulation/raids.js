@@ -6,6 +6,7 @@ import {raidEntryKey} from '../world/raid-entry-data.js';
 import {exteriorRaidEntry} from './raid-exterior-entry.js';
 import {createCropGrouping} from './crop-components.js';
 import {activeCrops} from './active-crops.js';
+import {retireFarmHistory} from './retire-farm-history.js';
 import {RAID_NOTICE_TEXT} from './raid-notice.js';
 import {warmRaidNavigation} from '../world/raid-navigation-warmth.js';
 import {centerBoundaryPoint,centerCulture,centerDeliveryPoint} from '../world/centers.js';
@@ -988,7 +989,7 @@ export function updateRaid(s,dt,nav) {
     const pending=s.raid.pendingWavePlan??nextPressureWave(s.raid,s.time);
     if(pending){s.raid.pendingWavePlan=pending;return;}
     s.raid=null;nav.setState(s);emit(s,'RaidEnded');
-    if(!s.structures.some(operational)&&compare(s.ledger.balance,rational(B.work_center.cost))<0){s.result='defeat';notice(s,'Cayó el último centro; faltan monedas para que otro nazca.');emit(s,'GameOver');return;}
+    if(!s.structures.some(operational)&&compare(s.ledger.balance,rational(B.work_center.cost))<0){s.result='defeat';notice(s,'Cayó el último centro; faltan monedas para que otro nazca.');emit(s,'GameOver');retireFarmHistory(s);return;}
     for(const w of s.workers) {
       if(w.incapacitated||contractExpired(w,s)||s.time>=PROFILES_END(w.profile))continue;
       const center=s.structures.find(c=>c.id===w.centerId&&operational(c));

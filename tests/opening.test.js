@@ -10,11 +10,8 @@ for(const profile of ['olderMale','olderFemale','youngMale','youngFemale']){
     assert.equal(report.plots,8);assert.ok(report.delivered>0&&report.delivered<=8);
     assert.equal(report.money,report.initialBalance+report.delivered*value);
     assert.equal(report.result,null);assert.equal(report.day,2);assert.deepEqual(report.pauses,['hiring']);
-    assert.ok(report.plants.filter(p=>!p.alive).every(p=>p.water.every(w=>w.status==='manual')),'Every harvested plant must complete all required watering');
-    for(const crate of report.crates){
-      assert.equal(crate.carrierId,null);assert.ok(crate.delivered);
-      assert.ok(report.ledger.entries[`deliver:${crate.id}`],'Every delivered box must have exactly one settlement');
-    }
+    assert.ok(report.harvested.every(p=>p.water.every(status=>status==='manual')),'Every harvested plant must complete all required watering');
+    assert.equal(Object.keys(report.ledger.entries).filter(id=>id.startsWith('deliver:')).length,report.delivered);
     assert.ok(Object.values(report.ledger.entries).every(entry=>entry.d==='1'&&Number.isInteger(numberOf(entry))),
       'The economy may not accumulate invisible currency fractions');
   });

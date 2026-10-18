@@ -2,7 +2,6 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {simulateActiveFarm} from '../tools/check_active_farm.mjs';
 import {cropSpec} from '../src/simulation/rules.js';
-import {add} from '../src/simulation/money.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 test('fixed unfortified farm keeps legal work, deliveries, spells and accounting through a real military loss',()=>{
   const report=simulateActiveFarm({profile:'olderFemale',repairBelowHp:540}),s=report.state;
@@ -23,21 +22,20 @@ test('fixed unfortified farm keeps legal work, deliveries, spells and accounting
   let balance=1500n;
   for(const value of Object.values(s.ledger.entries)){assert.equal(value.d,'1');balance+=BigInt(value.n);}
   assert.equal(s.ledger.balance.n,String(balance));assert.equal(s.ledger.balance.d,'1');
-  assert.equal(s.plants.length,Object.keys(s.ledger.entries).filter(id=>id.startsWith('active-plant-')).length);
+  const purchased=Object.keys(s.ledger.entries).filter(id=>id.startsWith('active-plant-')).length;
+  const delivered=Object.keys(s.ledger.entries).filter(id=>id.startsWith('deliver:')).length;
+  assert.equal(purchased,report.counts.CropPlaced);
+  assert.equal(purchased,s.plants.filter(p=>p.alive).length+report.counts.CropPicked+(report.counts.CropDestroyed??0));
+  assert.equal(delivered,report.counts.CrateDelivered);
   const sources=new Set();
   for(const crate of s.crates){
     const plant=s.plants.find(p=>p.id===crate.sourcePlantId);assert.ok(plant&&!plant.alive);assert.equal(crate.species,plant.species);
     assert.ok(!sources.has(plant.id));sources.add(plant.id);assert.ok(plant.growth>=cropSpec(plant.species).growth_seconds);
     assert.ok(plant.water.every(w=>['manual','magic'].includes(w.status)),'Each picked plant must have satisfied every mandatory watering');
-    if(crate.delivered){
-      const earned=add(crate.value,crate.multiplyIncome);
-      const n=BigInt(earned.n),d=BigInt(earned.d);
-      assert.equal(s.ledger.entries[`deliver:${crate.id}`].n,String((n+d-1n)/d));
-      assert.equal(crate.carrierId,null);
-    }else assert.ok(!Object.hasOwn(s.ledger.entries,`deliver:${crate.id}`));
+    assert.equal(crate.delivered,false);
+    assert.ok(!Object.hasOwn(s.ledger.entries,`deliver:${crate.id}`));
   }
-  assert.equal(report.counts.CrateDelivered,s.crates.filter(c=>c.delivered).length);
-  assert.equal(report.counts.CropPicked,s.crates.length);
+  assert.equal(report.counts.CropPicked,delivered+s.crates.length);
   assert.ok(report.deliveries.girasol>0);
   assert.equal(serialize(deserialize(serialize(s))),serialize(s));
 });
