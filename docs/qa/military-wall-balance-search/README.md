@@ -1444,3 +1444,40 @@ the trajectory. Gzip SHA-256:
 `f9c907c389d3b6a26f4b28979d43084fcc8393c6c2095f1de658764839e44103`.
 This justifies a 100-night follow-up, without treating survival to 60 as a
 campaign victory.
+
+### Manglares/2026: 100-night request ends in authentic defeat after night 99
+
+Source `e7aa2749` requested 100 nights using the same executable input hashes,
+seed, V1 pressure recipe and topological bot as the 60-night run. All first 60
+daily state hashes match exactly. The campaign ended with `GameOver` at day-100
+dawn **after 99 completed raids**. Night 100 was not simulated, and this is not
+a 100-night victory. Every completed raid has verified evidence with zero
+issues and no coverage loss.
+
+The terminal farm had zero crops, 32 coins, one worker and one operational
+center. Crop count fell from 70 on day 80 to six on day 96, then zero on days
+98–99. It lacked the productive base to pay for another day. The defeat is an
+economic and military outcome under the actual rules, not a pathfinding stall,
+missing raid, failed save or technical censoring.
+
+| Cumulative V1 measure through night 99 | Value |
+| --- | ---: |
+| Animals / agricultural raid losses | 1,173 / 1,492 |
+| Wall hits / center hits | 2,273 / 11 |
+| Income / wages / seeds, coins | 88,595 / 38,602 / 44,220 |
+| Paid new walls / repairs, coins | 570 / 5,871 |
+| `Game.tick` / bot decisions, seconds | 816.33 / 271.98 |
+
+Across nights 6–99, raid losses were 1,492 out of 8,550 living crops observed
+at raid spawn, or 17.45% of exposure. The initial 2–4% hypothesis remains
+unmet, but the 100-night design criterion is not zero losses or a guaranteed
+win. In the same candidate family, Gran Río/123 achieved a narrow authentic
+100-night victory while Manglares/2026 lost just before the final raid. These
+two outcomes support the intended possibility of both victory and defeat;
+they do not measure a general win probability or prove that the virtual player
+managed every biome equally well.
+
+The complete compressed [report](current-main-pr48-v1-manglares2026-100-request-defeat99.json.gz)
+and [per-night CSV](current-main-pr48-v1-manglares2026-100-request-defeat99-nightly.csv)
+retain all hashes, receipts and economic ledgers. Gzip SHA-256:
+`a0462c50c8cdae32b056529380ce08fd76bc9208af64b0ff584d80077a4112b5`.
