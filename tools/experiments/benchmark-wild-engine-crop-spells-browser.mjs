@@ -16,6 +16,9 @@ const spellAge=Number(process.env.WG_QA_SPELL_AGE??1);
 if(!Number.isFinite(spellAge)||spellAge<0||spellAge>=15)
   throw Error('WG_QA_SPELL_AGE must be between 0 and 15 seconds');
 const realCast=process.env.WG_QA_REAL_CAST==='1';
+const legalPlants=process.env.WG_QA_LEGAL_PLANTS==='1';
+if(legalPlants&&(!realCast||counts.length!==1))
+  throw Error('WG_QA_LEGAL_PLANTS=1 requires WG_QA_REAL_CAST=1 and exactly one crop count');
 const renderTime=process.env.WG_QA_RENDER_TIME===undefined?null:Number(process.env.WG_QA_RENDER_TIME);
 if(renderTime!==null&&(!Number.isFinite(renderTime)||renderTime<0||renderTime>=600))
   throw Error('WG_QA_RENDER_TIME must be in [0, 600)');
@@ -30,6 +33,7 @@ if(disableAgricultureLights&&forceAgricultureLights)throw Error('Choose only one
 const forceSoftDepth=process.env.WG_QA_FORCE_SOFT_DEPTH==='1';
 const screenshotDir=process.env.WG_QA_SCREENSHOT_DIR;
 const screenshotKind=process.env.WG_QA_SCREENSHOT_KIND;
+const canvasScreenshot=process.env.WG_QA_CANVAS_SCREENSHOT==='1';
 const focusSpell=process.env.WG_QA_FOCUS_SPELL==='1';
 if(screenshotDir)await mkdir(screenshotDir,{recursive:true});
 const mode=process.env.WG_QA_MODE??'direct';
@@ -113,18 +117,47 @@ try{
     }
   },{mode,disableAgricultureLights,forceAgricultureLights,forceSoftDepth,realCast});
 
-  const report={kind:'synthetic-interactive-frame-qa',seed:712,biome:'sabana',
-    counts,spellCount,spellAge,realCast,renderTime,arms,gpuEnabled,mode,browserName,disableAgricultureLights,forceAgricultureLights,forceSoftDepth,webglRenderer:ready.webglRenderer,
-    note:'Synthetic plants in the real Wild Engine browser renderer. Each agricultural spell targets exactly one living plant. WG_QA_REAL_CAST=1 invokes Game.cast with a temporary QA-only unpause; otherwise it constructs equivalent spell state. RAF, crop synchronization and VFX run while simulation is paused. GPU timings require EXT_disjoint_timer_query_webgl2. Not a legal campaign or an uninstrumented frame-rate benchmark.',
+  const report={kind:legalPlants?'legal-plant-interactive-frame-qa':'synthetic-interactive-frame-qa',seed:712,biome:'sabana',
+    counts,spellCount,spellAge,realCast,legalPlants,renderTime,arms,gpuEnabled,mode,browserName,disableAgricultureLights,forceAgricultureLights,forceSoftDepth,canvasScreenshot,webglRenderer:ready.webglRenderer,
+    note:legalPlants?'Work center and crops are bought with Game.placeStructure/Game.plant; spells use Game.cast on distinct living crops. RAF, crop synchronization and VFX run while simulation is paused. This is a legal opening snapshot, not a full campaign or an uninstrumented frame-rate benchmark. GPU timings require EXT_disjoint_timer_query_webgl2.':'Synthetic plants in the real Wild Engine browser renderer. Each agricultural spell targets exactly one living plant. WG_QA_REAL_CAST=1 invokes Game.cast with a temporary QA-only unpause; otherwise it constructs equivalent spell state. RAF, crop synchronization and VFX run while simulation is paused. GPU timings require EXT_disjoint_timer_query_webgl2. Not a legal campaign or an uninstrumented frame-rate benchmark.',
     errors,complete:false,results:[]};
   for(const count of counts){
-    await page.evaluate(async({count,mode,focusSpell})=>{
-      const {createPlant}=await import('/src/simulation/crops.js');
+    const plantFixture=await page.evaluate(async({count,mode,focusSpell,legalPlants})=>{
       const {state,world}=globalThis.wildGuardiansSpatialQa();
-      const center=state.villages[0].center;
-      state.plants=Array.from({length:count},(_,index)=>createPlant(
-        `spell-frame-${count}-${index}`,'mijo',center.x+5+(index%40)*1.5,
-        center.z+5+Math.floor(index/40)*1.5,null));
+      let fixture;
+      if(legalPlants){
+        const {plant,openInitialHiring,hire}=await import('/src/simulation/game.js');
+        const {numberOf}=await import('/src/simulation/money.js');
+        const center=state.structures.find(structure=>structure.kind==='center'&&structure.status==='intact');
+        if(!center||state.plants.length)throw Error('Legal plant fixture requires one work center and no existing crops');
+        const started=performance.now(),balanceBefore=numberOf(state.ledger.balance),failures=[];
+        const pauses=state.pauses;
+        state.pauses=[];
+        try{
+          for(let row=0;row<14&&state.plants.length<count;row++)for(let col=0;col<14&&state.plants.length<count;col++){
+            const x=center.x+5+col*1.5,z=center.z+5+row*1.5;
+            try{plant(state,`spell-frame-seed-${row}-${col}`,'mijo',x,z,world.nav);}
+            catch(error){if(failures.length<8)failures.push(String(error.message));}
+          }
+        }finally{state.pauses=pauses;}
+        if(state.plants.length!==count)throw Error(`Only ${state.plants.length}/${count} legal crops placed: ${failures.join('; ')}`);
+        if(state.plants.some(crop=>!crop.alive||crop.centerId!==center.id))
+          throw Error('A legal crop was not assigned to the active work center');
+        const balanceAfterPlanting=numberOf(state.ledger.balance);
+        openInitialHiring(state);
+        hire(state,'spell-frame-hire',{olderFemale:1});
+        fixture={source:'Game.plant',count:state.plants.length,centerId:center.id,
+          workers:state.workers.length,balanceBefore,balanceAfterPlanting,
+          balanceAfterHiring:numberOf(state.ledger.balance),
+          preparationMs:performance.now()-started};
+      }else{
+        const {createPlant}=await import('/src/simulation/crops.js');
+        const center=state.villages[0].center;
+        state.plants=Array.from({length:count},(_,index)=>createPlant(
+          `spell-frame-${count}-${index}`,'mijo',center.x+5+(index%40)*1.5,
+          center.z+5+Math.floor(index/40)*1.5,null));
+        fixture={source:'createPlant',count:state.plants.length};
+      }
       state.spells=[];
       if(focusSpell){
         const x=state.plants[0].x,z=state.plants[0].z,y=world.agricultureVfx.surface(x,z);
@@ -136,7 +169,9 @@ try{
       if(mode==='direct')for(let i=0;i<5;i++)world.render(0);
       else for(let i=0;i<20;i++)await new Promise(resolve=>requestAnimationFrame(resolve));
       if(world.cropBatch.capacity<count)throw Error('Crop batch did not reach fixture capacity');
-    },{count,mode,focusSpell});
+      return fixture;
+    },{count,mode,focusSpell,legalPlants});
+    if(legalPlants)report.plantFixture=plantFixture;
     for(const kind of arms){
       const result=await page.evaluate(async({count,kind,mode,spellCount,spellAge,realCast,renderTime})=>{
         const {state,world,gpu}=globalThis.wildGuardiansSpatialQa();
@@ -209,8 +244,27 @@ try{
           rendererMemory:{...world.renderer.info.memory}};
       },{count,kind,mode,spellCount,spellAge,realCast,renderTime});
       report.results.push(result);
-      if(screenshotDir&&(!screenshotKind||screenshotKind===kind))
-        await page.screenshot({path:`${screenshotDir}/${count}-${kind}.png`});
+      if(screenshotDir&&(!screenshotKind||screenshotKind===kind)){
+        const path=`${screenshotDir}/${count}-${kind}.png`;
+        if(canvasScreenshot){
+          await page.evaluate(()=>{
+            const canvas=globalThis.wildGuardiansSpatialQa().world.renderer.domElement;
+            const ancestors=new Set();
+            for(let node=canvas;node;node=node.parentElement)ancestors.add(node);
+            const hidden=[];
+            for(const node of ancestors)for(const child of node.children??[])if(!ancestors.has(child)){
+              hidden.push([child,child.style.visibility]);child.style.visibility='hidden';
+            }
+            globalThis.__restoreSpellFrameScreenshot=()=>{
+              for(const [child,visibility] of hidden)child.style.visibility=visibility;
+            };
+          });
+          try{
+            const canvas=(await page.evaluateHandle(()=>globalThis.wildGuardiansSpatialQa().world.renderer.domElement)).asElement();
+            await canvas.screenshot({path});
+          }finally{await page.evaluate(()=>globalThis.__restoreSpellFrameScreenshot?.());}
+        }else await page.screenshot({path});
+      }
       if(output)await writeFile(output,JSON.stringify(report,null,2)+'\n');
       console.error(`Measured ${count} crops / ${kind}: ${result.frames} frames, ${Math.round(result.elapsedMs)} ms`);
     }
