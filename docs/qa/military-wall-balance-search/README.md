@@ -1418,3 +1418,29 @@ design target is a competent strategy that can win some 100-night campaigns
 while still losing others; a narrow authentic victory is compatible with that
 target. The initial 2–4% crop-loss figure remains a calibration hypothesis,
 not a hard acceptance gate or a reason to manufacture survival.
+
+### Manglares/2026: V1 through night 60
+
+Source `eccb53f9` requested 60 nights with the identical game, WASM, raid and
+runner input hashes as the 30-night V1 arm. The first 30 daily state hashes
+match exactly. It completed 60 verified raids with zero issues and no evidence
+coverage loss; `result` is `null` because night 100 was not requested.
+
+| V1 horizon | Night 30 | Night 60 |
+| --- | ---: | ---: |
+| Living crops / coins / staff | 106 / 712 / 16 | 72 / 702 / 15 |
+| Animals faced, cumulative | 297 | 689 |
+| Agricultural raid losses, cumulative | 313 | 952 |
+| Wall hits / center hits, cumulative | 592 / 0 | 1,289 / 2 |
+| Paid new walls / repairs, coins | 450 / 1,319 | 450 / 3,247 |
+
+The farm still operated at night 60, though its crop count was lower than at
+night 30 and repair spending more than doubled. Its 60-night `Game.tick` and
+bot decision totals were 587.49 and 167.29 seconds. These are single-arm
+workload measurements, not an engine optimization result. The full compressed
+[report](current-main-pr48-v1-manglares2026-60.json.gz) and
+[per-night CSV](current-main-pr48-v1-manglares2026-60-nightly.csv) preserve
+the trajectory. Gzip SHA-256:
+`f9c907c389d3b6a26f4b28979d43084fcc8393c6c2095f1de658764839e44103`.
+This justifies a 100-night follow-up, without treating survival to 60 as a
+campaign victory.
