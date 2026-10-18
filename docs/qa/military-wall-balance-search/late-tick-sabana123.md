@@ -46,6 +46,39 @@ run must still be checked for nightly hash equality before interpreting it.
 
 The original report's day-83 deltas show only about 1.00 s of raid-target
 selection, 1.01 s of native `planIfNeeded`, 0.84 s of `flushWorldEvents` and
-less than 0.17 s in the other measured intent bridge phases. These are not
-all of `Game.tick`; the unmeasured simulation and native work remains to be
-profiled before changing production code.
+less than 0.17 s in the other measured intent bridge phases.
+
+## Live day-83 CPU profile
+
+The profiling rerun matched **all 83 nightly serialized state hashes** of the
+reference and used the same game, raid and WASM input hashes. Sampling raised
+the measured day-83 `Game.tick` wall time to 112.62 s, so its timing is for
+attribution, not an A/B speed claim. The complete
+[compressed V8 profile](late-tick-sabana123-day83.cpuprofile.gz) can be
+summarized with:
+
+```sh
+node tools/experiments/summarize-day-cpuprofile.mjs \
+  docs/qa/military-wall-balance-search/late-tick-sabana123-day83.cpuprofile.gz
+```
+
+| Inclusive sampled path | Milliseconds |
+| --- | ---: |
+| Full profile | 120,720 |
+| `Game.tick` | 112,355 |
+| `planRepairAccess` | 102,160 |
+| Native repair-access branch | 19,518 |
+| Legacy `withWallStatePreview` repair fallback | 81,078 |
+| Native route calculation within the above paths | 72,981 |
+| Native barrier updates within the above paths | 8,707 |
+| Garbage collector | 274 |
+
+The rows are inclusive and overlap; they must not be added together.
+The dominant path is `Game.tick` → worker repair completion →
+`planRepairAccess` → legacy `checks()` → `withWallStatePreview` → native
+route/sector work. This is evidence of repeated speculative wall-state
+validation during repair, not of spell VFX or GC pauses. The profile does not
+yet identify why `nativeRepairAccess()` returns `null` for the costly calls;
+that branch has distinct causes (unknown residency, inconclusive worker
+access, or no candidate gate). The next diagnostic must classify those
+reasons before changing the repair safety contract.
