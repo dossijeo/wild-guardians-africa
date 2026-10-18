@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import v1 from '../content/balance/raid_pressure_v1.json' assert {type:'json'};
+import {gunzipSync} from 'node:zlib';
+import {readFileSync} from 'node:fs';
 import {BALANCE} from '../src/simulation/balance.js';
 import {activeRaidPressureCandidate,raidPressureCandidateForVersion,
  registerExperimentalPressure,validateProductionRaidPressureConfiguration}
@@ -49,6 +51,18 @@ test('production V1 save restores its frozen plan and rejects signature drift',(
  const stale=JSON.parse(saved);
  stale.nightPlan.pressureFacts.experimentSignature='different-rules';
  assert.throws(()=>deserialize(JSON.stringify(stale)),/experiment mismatch/);
+});
+
+test('a committed v3 save keeps its old raid and advances to V1 next night',()=>{
+ const fixture=gunzipSync(readFileSync(new URL(
+  './fixtures/raid-pressure-v3-saved-night6.json.gz',import.meta.url)));
+ const restored=deserialize(fixture.toString());
+ assert.equal(restored.nightPlan.pressureFacts.candidateVersion,3);
+ assert.equal(restored.nightPlan.actors.length,8);
+ assert.equal(preparePressureNight(restored).reused,true);
+ const next=preparePressureNight({...restored,day:7,nightPlan:null,raid:null});
+ assert.equal(next.plan.pressureFacts.candidateVersion,5);
+ assert.equal(next.plan.pressureFacts.experimentId,'v1-pressure');
 });
 
 test('production V1 and the frozen QA candidate produce identical raids',()=>{
