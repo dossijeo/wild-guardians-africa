@@ -60,3 +60,16 @@ Unspelled controls in these runs were about 33–37 ms GPU. The corrected single
 Growth and multiply now use normal WebGL depth testing against the main scene. Other effects retain soft-particle depth. The spell simulation, local lights, movement, terrain, collision and particle schedules are unchanged; only the smooth fade where particles intersect solids can differ. Focused images of an age-5 effect on **one crop** are [main depth](visual-hard-growth.webp) and [former soft depth](visual-soft-growth.webp). The 1280×800 source screenshots have mean absolute channel difference 0.093/255; this is a coarse whole-frame measure, not proof that every particle edge is identical. The particle material still has depth testing enabled, and opaque crop geometry still writes scene depth. A legal-gameplay spell benchmark and checks on other GPUs remain useful.
 
 Reproduce the corrected comparison with `WG_QA_SPELL_COUNT=1` or `20`, `WG_QA_SPELL_AGE=1` or `5`, and optionally `WG_QA_FORCE_SOFT_DEPTH=1`. The original oversized JSON files remain only as historical diagnostics. The local-light experiment also used that oversized fixture, so no conclusion about lights in current-size spells is drawn from it.
+
+## Commands from the game, not injected spell state
+
+A second browser fixture sets `WG_QA_REAL_CAST=1`. It constructs the work center through `Game.placeStructure`, then uses `Game.cast` on each living target crop while the daytime permission is open. The simulation is paused during the measured RAF frames, so the spells retain a fixed age. The 1,500 crops are still a synthetic rendering stress fixture; these are real spell commands against that fixture, not evidence of a legally financed 1,500-crop campaign.
+
+| Spell commands | Age | Effect | Former soft-depth GPU median | Main-depth GPU median | Depth captures per 60 frames (former → new) |
+| ---: | ---: | --- | ---: | ---: | ---: |
+| 1 | 1 s | Growth | 77.5 ms | 50.8 ms | 60 → 0 |
+| 1 | 1 s | Multiply | 78.2 ms | 47.8 ms | 60 → 0 |
+| 20 | 5 s | Growth | 77.5 ms | 57.0 ms | 60 → 0 |
+| 20 | 5 s | Multiply | 78.9 ms | 58.2 ms | 60 → 0 |
+
+The `Game.cast` results confirm that the earlier manually constructed spells matched the actual renderer input: each has `targetPlantId`, radius `0.65`, and the expected duration. The absolute GPU values vary across runs and differ slightly because this fixture also draws a work center. The main-depth path still leaves a measurable spell cost above the unspelled scene; it removes the redundant scene render, not all particle rendering work. The effect count returns to zero after clearing the test arms. For reproduction, add `WG_QA_REAL_CAST=1` to the command above. The committed `chrome-real-command-*.json` files record the full samples and renderer identity.
