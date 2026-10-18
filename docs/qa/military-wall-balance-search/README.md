@@ -1481,3 +1481,52 @@ The complete compressed [report](current-main-pr48-v1-manglares2026-100-request-
 and [per-night CSV](current-main-pr48-v1-manglares2026-100-request-defeat99-nightly.csv)
 retain all hashes, receipts and economic ledgers. Gzip SHA-256:
 `a0462c50c8cdae32b056529380ce08fd76bc9208af64b0ff584d80077a4112b5`.
+
+### Desierto/712: technical censor corrected, then an authentic defeat
+
+A V1-pressure/topological 100-night request on balance source `ce64f5c5`
+completed 78 raids, then stopped on night 79 with one warthog retaining an
+unreachable crop interaction point and no route. That original run is a
+**technical censor**, not a military or economic defeat. The independent
+[Wild Engine fix in PR #114](https://github.com/dossijeo/wild-guardians-africa/pull/114)
+distinguishes a blocked interaction point from unknown connectivity and lets
+the animal reconsider its target. It changes neither V1 parameters nor game
+economy, damage, movement collision rules or the native WASM binary.
+
+For validation only, source `e912c366` combined the unchanged V1 balance
+candidate with that isolated fix. Recreate its source tree by checking out
+`ce64f5c5` and cherry-picking `feb9cce1` from PR #114, then run:
+
+```text
+node tools/experiments/run-balance-candidate.mjs tools/experiments/balance-candidates/v1-pressure.json 100 desierto 712 <report.json> topological
+```
+
+The combined run reproduced **all 78** daily state hashes of the original
+through the last completed day, then completed night 79 with 38 living crops
+and 318 coins. It ultimately lost on day 93 when the last center fell: zero
+crops, zero operational centers, one worker and 164 coins. The report records
+92 complete nights and 93 ended, verified raid receipts; the day-93 defeat
+occurred during that day's raid. There are zero raid-evidence issues and no
+coverage loss. Night 100 was not played, so this is a genuine defeat, not a
+100-night result.
+
+| Measure, nights 6–93 unless stated | V1 plus PR #114 fix |
+| --- | ---: |
+| Animals / agricultural raid losses | 1,097 / 1,089 |
+| Living-crop exposure at raid spawn | 8,514 |
+| Wall hits / center hits | 2,266 / 25 |
+| Cumulative income / wages / seeds, coins | 88,515 / 40,389 / 41,942 |
+| Paid new walls / repairs, coins | 680 / 6,040 |
+| `Game.tick` / bot decisions, seconds | 563.96 / 223.18 |
+
+Agricultural losses were 12.79% of crop exposure from night 6, above the
+initial 2–4% calibration hypothesis. The [full compressed report](pr114-v1-desierto712-100-request-defeat93.json.gz)
+and [nightly ledger](pr114-v1-desierto712-100-request-defeat93-nightly.csv)
+retain the source and input hashes, economy and physical raid evidence.
+Report gzip SHA-256:
+`016b49907f9015523447d386f008ca4df26d05fd2062c6ce67b68f0774140aa1`.
+This is a third independent long-horizon outcome for V1 with the established
+bot: Gran Río/123 won narrowly, Manglares/2026 lost after night 99, and
+Desierto/712 lost during night 93. It supports the intended possibility of
+both victory and defeat, but does not estimate win probability. The production
+balance remains unchanged; the technical fix is reviewed separately.
