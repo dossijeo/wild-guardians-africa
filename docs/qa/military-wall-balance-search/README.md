@@ -1099,5 +1099,51 @@ costly. It does not show that the new enclosure is physically invalid, nor
 that the recovery-count pressure itself caused the 40-night gap. The lower
 wall times reflect a smaller, dying farm and are not a speedup. Do not
 promote the balance recipe or tune military parameters from this cross-version
-comparison alone. A matched current-engine control arm is being evaluated
-separately.
+comparison alone. The matched current-engine pressure comparison follows below.
+
+## Matched current-engine pressure comparison: Sabana / 712
+
+Using the same post-#108 engine and unchanged topological bot, three real
+campaigns compared the [production pressure](current-main-pr108-control-sabana712-60.json.gz),
+the [original V1 pressure](current-main-pr108-v1-original-sabana712-60.json.gz)
+and [V1 with reduced low-attraction count](current-main-pr108-v1-recovery-count-sabana712-100.json.gz).
+The first two were requested for 60 nights and the third for 100. The
+original-V1 report has a different Git commit because the previous two
+reports were archived between runs; the WASM, `game.js`, `raids.js`, runner,
+balance adapter, pressure modules and defense-policy hashes are identical.
+Only the named experimental pressure recipe differs. All completed raids
+have verified receipts, zero evidence issues and no coverage loss.
+
+| Result | Production | Original V1 | Reduced-count V1 |
+| --- | ---: | ---: | ---: |
+| Last verified night | 36 | 60, horizon reached | 57 |
+| Result | Defeat | Not decided at 60 | Defeat |
+| Living crops / coins at terminal dawn | 0 / 32 | 52 / 579 | 0 / 33 |
+| Animals through each run | 526 | 763 | 547 |
+| Raid crop losses through each run | 527 | 1,161 | 1,299 |
+| First enclosure purchase | Day 4, 410 | Day 4, 410 | Day 4, 410 |
+
+The original-V1 and reduced-count recipes differ only in the count factor:
+`[0.35, 0.60]` versus `[0.25, 0.70]` at the same attraction half-saturation
+of 1,500. They use identical hit and structural-damage factors. Comparing
+the shared first 57 nights, the original V1 faced **722** animals, received
+**1,107** agricultural raid losses and finished with **71 crops, 12 workers
+and 611 coins**. Reduced-count V1 faced **547** animals, received **1,299**
+agricultural losses and finished with no crops, one worker and 33 coins.
+The original run registered 1,436 wall hits and 33,462 wall HP lost versus
+459 hits and 11,098 HP in the reduced-count run. Original-V1 repairs cost
+3,669 coins through night 57 versus 1,231. This reflects different wall
+interception, damage and farm trajectories; the repair spend is not a
+standalone measure of defensive efficiency.
+
+The crops and cash first differ on day 7, after count selection differs on
+night 6. Animal composition and RNG decisions then diverge, even on nights
+with the same total count. The lower count factor therefore cannot be
+interpreted as a fixed percentage reduction in crop losses. This one seed
+strongly rejects the reduced-count candidate as a balance improvement, but
+does not establish a survival probability for original V1. Replaying the
+original V1 to night 100 remains necessary before recommending it.
+
+The production arm is a separate reference, not the control for the isolated
+count coefficient. Its 36-night defeat should not be compared against the
+60-night original-V1 totals as if the exposure duration were equal.
