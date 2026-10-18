@@ -991,10 +991,24 @@ function nativeRepairAccess(s,target,nav){
       if(wallBlocks&&gateBlocks)return {status:'blocked',updates:[]};
     }
   }
+  const repairedAccess=obligations.map(({entry,targets})=>
+    nav.wallWorkerReachability(entry,targets,[repaired],[],true));
+  if(repairedAccess.every(statuses=>statuses?.every(status=>status==='found')===true))
+    return {status:'safe',updates:[]};
+  // A worker standing at this already-present gate can have no certified
+  // connector while it is provisionally restored. Another gate cannot fix
+  // that local uncertainty. Defer until the worker or residency changes;
+  // non-gate walls still search for an access gate as before.
+  const nearGateUnknown=target.gate&&repairedAccess.every(statuses=>
+    statuses?.every(status=>status==='found'||status==='unknown')===true)&&
+    obligations.some(({targets},i)=>repairedAccess[i].some((status,j)=>
+      status==='unknown'&&s.workers.includes(targets[j])&&
+      dist(targets[j],target)<=(target.baseScaleX??1)*gateScale(target.material)+.4));
+  if(nearGateUnknown)
+    return {status:'unknown',updates:[]};
   const reaches=(proposed,removed=[])=>obligations.every(({entry,targets})=>
     nav.wallWorkerReachability(entry,targets,proposed,[],true,removed)
       ?.every(status=>status==='found')===true);
-  if(reaches([repaired]))return {status:'safe',updates:[]};
   const living=activeCrops(s.plants);
   const candidates=s.structures.filter(piece=>piece.kind==='wall'&&!piece.gate&&
     (piece.status==='intact'&&piece.hp>0||piece.id===target.id));

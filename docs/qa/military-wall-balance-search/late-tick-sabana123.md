@@ -82,3 +82,34 @@ yet identify why `nativeRepairAccess()` returns `null` for the costly calls;
 that branch has distinct causes (unknown residency, inconclusive worker
 access, or no candidate gate). The next diagnostic must classify those
 reasons before changing the repair safety contract.
+
+## Exact fallback and directed correction
+
+A second 83-night replay with a read-only reason probe matched every nightly
+hash of the reference. Its two native fallbacks on day 83 both concerned the
+same ruined automatic gate, `structure-1655`, at simulated times 89.5 and
+156.1 s. The native branch reported `no-gate-restores-access` after examining
+57 candidate walls. The [full first-fallback state](../../../tests/fixtures/sabana123-day83-repair-near-gate-unknown.json.gz)
+is preserved as a compressed regression fixture (uncompressed SHA-256
+`882f3fe5630bd1e1b99b5e5a5127303ec76b670e48175a72fed7c585b2d31872`).
+
+At the first fallback, all 11 center/worker witnesses were reachable before
+the hypothetical repair. Restoring the existing gate gave 10 `found` and one
+`unknown`, for worker `worker-85017` standing about 0.6 m from the gate
+center. No witness was `blocked`. Proposing a gate at that same location
+left the same witness `unknown`. The old algorithm then attempted 58 full
+wall-state previews and 11 physical routes, spent 31.78 s, and finally
+returned `unknown` anyway.
+
+The directed candidate defers **only** this case: an existing gate with a
+nearby worker whose provisional access is `unknown`, while every other
+witness is `found` or `unknown`. On the frozen state it returned the same
+`unknown` result in 10.67 ms with zero physical-route calls and zero wall
+previews. After moving that worker to an established accessible position,
+the same repair returned `safe` in 12.36 ms. The ordinary search for an
+additional gate on a non-gate wall remains necessary: an initial broad
+`unknown` shortcut failed the existing automatic-gate regression and was
+rejected. The focused rule passes all eight directed WASM repair tests,
+including that regression; `test:playable` passes 204/204 and the web build
+passes. A full 83-night comparison is still required before claiming that
+the policy and economic trajectory are unchanged.
