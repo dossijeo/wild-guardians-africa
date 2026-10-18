@@ -1141,9 +1141,43 @@ night 6. Animal composition and RNG decisions then diverge, even on nights
 with the same total count. The lower count factor therefore cannot be
 interpreted as a fixed percentage reduction in crop losses. This one seed
 strongly rejects the reduced-count candidate as a balance improvement, but
-does not establish a survival probability for original V1. Replaying the
-original V1 to night 100 remains necessary before recommending it.
+does not establish a survival probability for original V1. The complete
+original-V1 replay follows below.
 
 The production arm is a separate reference, not the control for the isolated
 count coefficient. Its 36-night defeat should not be compared against the
 60-night original-V1 totals as if the exposure duration were equal.
+
+## Complete current-engine V1 replay: Sabana / 712
+
+The original V1 recipe continued from the same deterministic Sabana/712
+setup to an **actual victory after night 100**. The complete
+[100-night report](current-main-pr108-v1-original-sabana712-100.json.gz)
+records source `a2c91ea5`, the recipe and source hashes, all 100 nightly
+state hashes, and 100 verified raid receipts with zero issues and no evidence
+coverage loss. Its first 60 nightly hashes match the archived 60-night arm
+exactly. The intervening commit changed only this QA documentation.
+
+| Measure | Original V1 through night 100 |
+| --- | ---: |
+| Terminal result / dawn | Victory / day 101 |
+| Living crops / coins / operational centers | 11 / 94 / 1 |
+| Animals / raid crop losses, nights 6–100 | 1,276 / 1,702 |
+| Wall hits / wall HP lost | 2,715 / 64,225 |
+| Wall purchases / repairs, coins | 670 / 7,337 |
+| Income / wages / seeds, coins | 105,295 / 43,630 / 54,264 |
+| `Game.tick` / bot decisions, seconds | 736.87 / 355.75 |
+| Full elapsed wall time, seconds | 1,221.58 |
+
+The night-100 raid itself ended physically: ten animals exhausted their
+allocated hits, struck walls 24 times, destroyed no crops, and exited. The
+campaign then emitted `CampaignWon`. This is a narrow success: night 90 had
+39 crops and 287 coins, night 96 had 18 crops and 90 coins, and the winning
+dawn had only 11 crops and 94 coins. It proves that this one seed can reach
+night 100 with legitimate raids and costs on the current engine. It does not
+show a comfortable economic margin, a probability of survival across seeds
+or biomes, or that V1 should replace production pressure. The production and
+reduced-count arms above ended much earlier under the same engine and bot;
+the historical original-V1 run before #108 lost after night 99 under a
+different enclosure trajectory. Keep this balance recipe experimental while
+testing held-out seeds and defense-policy sensitivity.
