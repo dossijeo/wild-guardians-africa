@@ -843,3 +843,32 @@ trajectory, not a pure strength or speed microbenchmark. The gate and wall
 HP changed together, so this pilot cannot identify their separate effects.
 The 60-night continuation is needed to see whether protection and solvency
 persist; no production change follows from this single 30-night result.
+
+The [60-night durability continuation](current-main-pr107-v1-tough-thorn-sabana712-60.json.gz)
+reproduced all 30 pilot hashes, completed 60 verified raids with zero issues
+and no coverage loss, and used the same WASM/game/raids/runner hashes as the
+60-night standard control. The two arms were run sequentially. Its stronger
+early protection led to a larger subsequent farm and different military
+pressure:
+
+| Measure | Standard 100/60 HP | Candidate 120/90 HP |
+| --- | ---: | ---: |
+| Crops / coins after night 60 | 107 / 755 | 96 / 798 |
+| Raid crop losses, nights 6–60 | 915 | 1,074 |
+| Animals, nights 6–60 | 731 | 850 |
+| Wall hits | 1,693 | 2,006 |
+| Wall modules / purchase cost | 55 / 550 | 119 / 1,190 |
+| Repair spending | 4,376 | 4,829 |
+| Income | 76,562 | 93,571 |
+| `Game.tick` / bot decisions | 535.93 / 184.84 s | 744.25 / 255.95 s |
+
+The reversal is concentrated in nights 31–60: the candidate suffered 883
+crop losses versus 495, faced 526 animals versus 408, and bought another
+400 coins of walls versus 20. It still earned 43 more terminal coins, but
+had 11 fewer living crops and materially more agricultural destruction.
+Its higher CPU time reflects a larger and differently attacked farm, not a
+demonstrated navigation regression. The 30-night benefit did not remain a
+clear sustained advantage. Do not infer from this single seed that tougher
+walls are intrinsically bad; the farm's attraction and attack feedback need
+more careful military-pressure tuning. We do not recommend this durability
+candidate for production or promote it to a 100-night run on this evidence.
