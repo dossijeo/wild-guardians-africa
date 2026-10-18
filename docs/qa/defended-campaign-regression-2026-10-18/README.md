@@ -67,3 +67,41 @@ The regression suite passed 4,464 tests, with 60 skipped, and the production
 web build completed. Directed tests cover wall intersections missed by grid
 sampling, native alternative routes for a worker and a buffalo, and movement
 reporting of a rejected static landing.
+
+## Extended 60- and 100-night runs, 19 October 2026
+
+Two fresh runs used the same Sabana/123 configuration above, now from
+`origin/main` at `31905e64`. No economic, military, navigation, or virtual-player
+rule changed between the runs. The campaign runner SHA-256 remained
+`745a77d05768a992ffe5c30853227a4415dbace813f393edf0ae4d02000b7b91`;
+the production Wild Engine WASM SHA-256 was
+`674bdf018817e1fa75e5181525faa3f516b90b9072af844fdc08e64fdcbf6b9c`.
+
+```sh
+node tools/experiments/compare-enclosure-defense-campaigns.mjs sabana 60 123 report-60.json topological
+node tools/experiments/compare-enclosure-defense-campaigns.mjs sabana 100 123 report-100.json topological
+```
+
+| Horizon | Result | Verified raids | Crops alive | Cash | `Game.tick` total | Decisions total | Wall time |
+| ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| 60 | Active | 60/60 | 118 | 870 | 565.7 s | 126.3 s | 720.7 s |
+| 100 | Victory | 100/100 | 1 | 66 | 766.0 s | 188.4 s | 1000.9 s |
+
+The first 60 nights produced identical crops-alive, cash, crop-loss, and
+planting-count records in both runs (60/60 rows). Timing varies with system
+load, so it is not included in that comparison. The complete 100-night report,
+including per-night metrics and military receipts, is
+[`sabana123-topological-100-current.json`](sabana123-topological-100-current.json).
+
+Average `Game.tick` time in the 100-night run was 9.46 s/night for nights
+1–30, 9.34 s for 31–60, 7.59 s for 61–80, and 2.51 s for 81–100. The
+late decrease follows a shrinking active farm; these data do not show a
+progressively increasing tick cost. The campaign incurred 1,386 crop raid
+losses and 3,404 wall hits. It bought 43 wall pieces for 430 coins and made
+1,724 repair requests under the unchanged policy.
+
+This is a valid but extremely narrow victory. The farm first fell below 50
+living crops on night 74 and ended with one crop and 66 coins. It demonstrates
+that the current engine can complete a legally played 100-night defended run
+without a navigation stall; it does not establish a healthy survival margin or
+victory probability across seeds and biomes. Those remain balance questions.
