@@ -729,5 +729,18 @@ The single price change improved both crop survival and cash at this horizon.
 It also changed the farm and raid trajectories; lower repair spending cannot
 be interpreted as the price saving alone. The standard run overlapped other
 CPU-heavy tests whereas the pilot did not, so its wall-clock times are not a
-valid speed comparison. A 60-night continuation of this candidate is needed
-before considering a 100-night test or a production price recommendation.
+valid speed comparison.
+
+The 60-night continuation reproduced the pilot's day-30 serialized-state
+hash (`93c5577584274ff66ee2e01aab467c4855daac9058a8a8b323cc3832d7957ebd`)
+but **stopped during night 34 with an unfinished raid**. It completed only
+33 nights and cannot support any 60-night balance conclusion. The complete
+[interrupted report](current-main-repair-first-v1-cheap-thorn-sabana712-60-interrupted.json.gz)
+records the 4.8 MB partial-state path, exact input hashes, daily results and
+the technical error. `animal-40506` had exhausted its hits and remained
+stationary while repeated invalid retreat connectors restarted its recovery
+deadline. The physical partial state and directed fix are documented in
+[PR #107](https://github.com/dossijeo/wild-guardians-africa/pull/107). That
+fix uses a valid native route from the animal's current position and preserves
+the recovery deadline; it does not change pressure or wall prices. A full
+rerun after the fix is required before considering a production price change.
