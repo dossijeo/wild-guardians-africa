@@ -40,7 +40,14 @@ Validation on the unchanged production balance and WASM binary:
 - `npm run verify:balance`: passed.
 - `npm run build`: passed.
 
-The original 100-night candidate run remains censored at night 79. A new
-continuous campaign with this fix and the same candidate is needed to report
-its eventual game result. No economy, raid pressure, hit budget, damage or
-movement collision rule changed in this patch.
+The original 100-night candidate run remains censored at night 79. A clean
+validation worktree combined this fix with the unchanged V1 pressure candidate
+(`e912c366`). All 78 daily state hashes before the censor matched the
+original run. Night 79 then finished normally, and the campaign continued to
+an authentic day-93 defeat when the final center fell. The run recorded 92
+complete nights and 93 ended, verified raid receipts, with zero evidence
+issues and no coverage loss. Its complete report and nightly ledger are in
+the balance experiment [README](https://github.com/dossijeo/wild-guardians-africa/blob/codex/current-balance-candidate/docs/qa/military-wall-balance-search/README.md).
+The defeat is a balance/gameplay outcome; the blocked-route stall is fixed.
+No economy, raid pressure, hit budget, damage or movement collision rule
+changed in this patch.
