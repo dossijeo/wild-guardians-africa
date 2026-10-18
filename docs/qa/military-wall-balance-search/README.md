@@ -940,3 +940,33 @@ reflects a different and often larger farm workload and cannot be attributed
 to navigation speed. These results justify a 100-night Sabana/712 extension,
 but one seed cannot establish a general balance recommendation. Independent
 seeds and biomes remain necessary, and production balance remains unchanged.
+
+The [100-night request](current-main-pr107-v1-recovery-count-sabana712-100.json.gz)
+reproduced **all 60** hashes of the continuation, then ended in an authentic
+economic defeat after night **97**. It has 97 verified raid receipts, zero
+evidence issues and no coverage loss. At day-98 dawn it had zero crops, one
+operational center, one worker and 27 coins; night 100 was never played.
+The standard V1 control likewise lost economically, but after night 99.
+
+| Measure | Original V1 count | Recovery-count candidate |
+| --- | ---: | ---: |
+| Crops / coins after night 60 | 107 / 755 | 123 / 746 |
+| Crops / coins after night 70 | 54 / 423 | 84 / 541 |
+| Crops / coins after night 80 | 62 / 421 | 60 / 392 |
+| Crops / coins after night 90 | 47 / 582 | 53 / 448 |
+| Last verified night | 99 | 97 |
+| Raid crop losses, nights 91–97 | 96 | 121 |
+| Animals, nights 91–97 | 84 | 70 |
+
+The candidate's advantage at night 70 had vanished by night 80. Its 11
+animals on night 95 destroyed 44 crops, leaving only three alive. The fixed
+topological bot then bought a **paid 22-module enclosure for 220 coins on day
+96**, which ended with only two crops and 33 coins. The control did not
+make that late purchase. This is a legal strategic interaction with the same
+bot policy, not an engine fault or proof that the count factor alone caused
+the final shortfall. The final seven nights brought 121 candidate crop losses
+despite 70 animals, versus 96 losses from 84 animals in the control: attack
+geometry, defense state and farm trajectory matter more than nominal horde
+size alone. Neither arm survived night 100, and this candidate is **not
+recommended for production**. Its 30- and 60-night improvements remain useful
+evidence, but must not be reported as a full-campaign success.
