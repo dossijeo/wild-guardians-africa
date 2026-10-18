@@ -23,6 +23,7 @@ import {PROFILES,allocateWorkers,hiringCost,distributeProfiles,contractExpired} 
 import {spellUnlocked,permission,operational,cropSpec,wallSpec,structureHealth,dawnMinimum,nextRandom,randomInt,villageCost,hitStructure} from './rules.js';
 import {createPlant,advancePlant,waterPlant,isMature,contiguousGroup} from './crops.js';
 import {activeCrops,cropBecameInactive} from './active-crops.js';
+import {activeCrates,crateBecameInactive} from './active-crates.js';
 import {workerEntityLookup} from './worker-entity-lookup.js';
 import {enqueue,taskEnqueuer,reserveTasks,releaseTask,replaceTasks,
   notifyWorkerPlanningChange,notifyWorkerPlanningRoster,taskPlanningRevision} from './tasks.js';
@@ -84,7 +85,8 @@ const profile=w=>PROFILES.find(p=>p.id===w.profile);
 const nearest=(list,point)=>[...list].sort((a,b)=>dist(a,point)-dist(b,point)||a.id.localeCompare(b.id))[0];
 function enqueueLooseCrates(s) {
   const centers=s.structures.filter(operational);
-  for(const crate of s.crates.filter(c=>!c.delivered&&!c.carrierId)) {
+  for(const crate of activeCrates(s.crates)) {
+    if(crate.carrierId)continue;
     const center=nearest(centers,crate);if(center)enqueue(s,center.id,'crate',crate.id);
   }
 }
@@ -664,7 +666,7 @@ export function repairCost(target) {
   return multiply(rational(target.cost),BigInt(damage.n)*BigInt(maximum.d),BigInt(damage.d)*BigInt(maximum.n));
 }
 export function dropCarriedCrate(s,worker){
-  const crate=s.crates.find(c=>c.id===worker.crateId&&!c.delivered);
+  const crate=activeCrates(s.crates).find(c=>c.id===worker.crateId);
   worker.crateId=null;
   if(!crate)return;
   crate.carrierId=null;crate.x=worker.x;crate.z=worker.z;emit(s,'CrateDropped',{targetId:crate.id});
@@ -1357,7 +1359,7 @@ function updateWorkers(s,dt,nav) {
         const delivered=walkTo(s,w,{...w.deliveryApproach,id:`delivery-${center.id}-${crate.id}`},dt,nav,{motion:{carrying:true}});
         crate.x=w.x;crate.z=w.z;
         if(delivered) {
-          const extraIncome=settleMultiplyPower(s,crate);transact(s.ledger,`deliver:${crate.id}`,add(crate.value,extraIncome));crate.multiplyIncome=extraIncome;crate.delivered=true;crate.carrierId=null;w.crateId=null;w.deliveryApproach=null;w.status=ended?'returning':'idle';w.path=null;notifyWorkerPlanningChange(s,w);emit(s,'CrateDelivered',{workerId:w.id,targetId:crate.id,multiplyIncome:crate.multiplyIncome});
+          const extraIncome=settleMultiplyPower(s,crate);transact(s.ledger,`deliver:${crate.id}`,add(crate.value,extraIncome));crate.multiplyIncome=extraIncome;crate.delivered=true;crateBecameInactive(s.crates);crate.carrierId=null;w.crateId=null;w.deliveryApproach=null;w.status=ended?'returning':'idle';w.path=null;notifyWorkerPlanningChange(s,w);emit(s,'CrateDelivered',{workerId:w.id,targetId:crate.id,multiplyIncome:crate.multiplyIncome});
           if(s.tutorial.step==='observe'||s.tutorial.step==='harvest'){s.tutorial.step='done';if(!s.tutorial.basicSkipped)emit(s,'TutorialCompleted',{workerId:w.id,targetId:crate.id});}
         }
         continue;

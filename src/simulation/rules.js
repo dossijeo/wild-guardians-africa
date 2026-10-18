@@ -3,6 +3,7 @@ import {expansionVillagePriceForRuntime} from './village-expansion-price.js';
 import {BALANCE as B} from './balance.js';
 import {wallVisualAt,recordWallPresentation} from './structure-presentation.js';
 import {activeCrops} from './active-crops.js';
+import {activeCrates} from './active-crates.js';
 export const cropSpec = id => { const c=B.crops.find(c=>c.id===id); if(!c)throw new Error('Cultivo desconocido'); return c; };
 export const animalSpec = id => { const c=B.animals.find(c=>c.id===id); if(!c)throw new Error('Animal desconocido'); return c; };
 export const wallSpec = id => { const c=B.walls.find(c=>c.id===id); if(!c)throw new Error('Material desconocido'); return c; };
@@ -42,7 +43,7 @@ export function compositions(budget,unlocked) {
 }
 export function dawnMinimum(state) {
   const center=state.structures.some(operational);
-  const resources=activeCrops(state.plants).some(p=>p.alive)||state.crates.some(c=>!c.delivered);
+  const resources=activeCrops(state.plants).some(p=>p.alive)||activeCrates(state.crates).length>0;
   return (center?0:B.work_center.cost)+HIRING_RESERVE+(resources?0:Math.min(...B.crops.map(c=>c.plant_cost)));
 }
 export function structureHealth(kind,material,gate=false) { return kind==='center'?600:gate?wallSpec(material).gate_hp:wallSpec(material).hp; }
