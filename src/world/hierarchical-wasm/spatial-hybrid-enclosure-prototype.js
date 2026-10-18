@@ -37,6 +37,19 @@ export function classifyCutBoundaryFaces(boundary,wasm,cachedKinds=null){
   return {faceCounts,unprovedFaces};
 }
 
+// A rejected wall slot may coincide with an existing static barrier. Keep it
+// in the physical proof instead of assuming that every omitted module leaves
+// a passage. Crops are never barriers; a quote that silently shortened the
+// chain (for example to preserve worker access) is not a complete proposal.
+export function cutQuoteOmissionReason(quote,{nativeBoundary=false}={}){
+  if(quote.blockedCrops.length)return 'crop-overlap';
+  if(quote.expectedSlots.length!==quote.pieces.length+
+    quote.blockedPieces.length+quote.blockedCrops.length)
+    return 'unaccounted-module';
+  if(quote.blockedPieces.length&&!nativeBoundary)return 'omitted-module';
+  return null;
+}
+
 // An exterior hit ray must cross the cut boundary. A face fully covered by a
 // real wall footprint already blocks that ray; other faces require enough
 // clearance for both central contact and peripheral agricultural damage.
@@ -140,7 +153,8 @@ export function proposeHybridEnclosure({state,nav,session,crops,material='zarzas
   candidates.push({kind:'artificial-hull',
     strokes:[cropClearanceHull(crops,Math.max(2.5,
       MAX_ATTACK_REACH+.25))],boundary:null});
-  for(const candidate of candidates){
+  for(let candidateIndex=0;candidateIndex<candidates.length;candidateIndex++){
+    const candidate=candidates[candidateIndex];
     let quote;
     try{quote=Game.quoteWallChain(state,material,candidate.strokes,nav,
       {smooth:false,snap:false});}
@@ -151,11 +165,32 @@ export function proposeHybridEnclosure({state,nav,session,crops,material='zarzas
       }
       throw error;
     }
+    // A cut can cross a rock without the rock covering its entire face.
+    // Move only that short stroke by a bounded local distance, then ask the
+    // native cut again under the final preview. The old boundary cannot
+    // certify a translated stroke.
+    if(candidate.boundary&&quote.blockedPieces.length===1&&
+      !quote.blockedCrops.length&&quote.expectedSlots.length===
+      quote.pieces.length+1){
+      const blocked=quote.blockedPieces[0];
+      const strokeIndex=candidate.strokes.findIndex(stroke=>stroke.some(
+        point=>Math.hypot(point[0]-blocked.x,point[1]-blocked.z)<.01));
+      if(strokeIndex>=0){
+        const offsets=[1,-1,2,-2].map(distance=>({
+          kind:`${candidate.kind}-local-detour`,boundary:null,
+          recut:true,strokes:candidate.strokes.map((stroke,index)=>
+            index===strokeIndex?stroke.map(([x,z])=>[
+              x+distance*Math.sin(blocked.yaw),
+              z+distance*Math.cos(blocked.yaw)]):stroke)}));
+        candidates.splice(candidateIndex+1,0,...offsets);
+      }
+    }
     const result={kind:candidate.kind,modules:quote.pieces.length,
       cost:quote.cost,gates:quote.gates};
-    if(quote.blockedPieces.length||quote.blockedCrops.length||
-      quote.expectedSlots.length!==quote.pieces.length){
-      attempts.push({...result,status:'open',reason:'omitted-module',
+    const omissionReason=cutQuoteOmissionReason(quote,
+      {nativeBoundary:!!candidate.boundary});
+    if(omissionReason){
+      attempts.push({...result,status:'open',reason:omissionReason,
         gaps:[...quote.blockedPieces.map(piece=>({x:piece.x,z:piece.z,
           reason:nav.wallPlacement(piece).reason??'physical-obstacle'})),
         ...quote.blockedCrops.map(piece=>({x:piece.x,z:piece.z,
@@ -164,15 +199,27 @@ export function proposeHybridEnclosure({state,nav,session,crops,material='zarzas
     }
     let proof;
     try{proof=nav.withWallPreview(quote.previewPieces,quote.suppressed,()=>{
+      let certifiedBoundary=candidate.boundary;
+      let recutCount=0;
+      if(candidate.recut){
+        const seedPointer=wasm.lazy_cut_seeds_ptr(crops.length);
+        new Int32Array(wasm.memory.buffer,seedPointer,crops.length*2).set(
+          crops.flatMap(p=>[Math.round(p.x),Math.round(p.z)]));
+        recutCount=wasm.lazy_local_crop_cut_conservative_buildable(
+          ...box,crops.length,padding);
+        certifiedBoundary=recutCount===0?Array.from(new Int32Array(
+          wasm.memory.buffer,wasm.lazy_local_crop_cut_boundary_ptr(),
+          wasm.lazy_local_crop_cut_boundary_count()*4)):[];
+      }
       const {faceCounts,unprovedFaces}=classifyCutBoundaryFaces(
-        candidate.boundary??[],wasm);
-      const wallLoop=candidate.boundary?null:
+        certifiedBoundary??[],wasm);
+      const wallLoop=certifiedBoundary||candidate.recut?null:
         inspectSelfClosedQuote(quote,state.structures,crops);
-      const exposedAttackMargin=candidate.boundary?
-        attackMarginAcrossOpenFaces(crops,candidate.boundary,
+      const exposedAttackMargin=certifiedBoundary?.length?
+        attackMarginAcrossOpenFaces(crops,certifiedBoundary,
           [...state.structures,...quote.previewPieces],wasm):NaN;
-      return {movement:candidate.boundary?
-        faceCounts.unknown===0&&candidate.boundary.length>0:
+      return {movement:certifiedBoundary||candidate.recut?
+        recutCount===0&&faceCounts.unknown===0&&certifiedBoundary.length>0:
         wallLoop.status==='closed-wall-loop',
       wallLoop,faceCounts,unprovedFaces,exposedAttackMargin,
       workers:routeWitness()};
@@ -188,7 +235,7 @@ export function proposeHybridEnclosure({state,nav,session,crops,material='zarzas
       before.some((row,i)=>row[j]===true&&proof.workers[i][j]===true))&&
       before.every((row,i)=>row.every((value,j)=>
         value!==true||proof.workers[i][j]===true));
-    const attackSafe=candidate.boundary?
+    const attackSafe=candidate.boundary||candidate.recut?
       proof.exposedAttackMargin>0:
       proof.wallLoop?.attackOccluded===true;
     const status=proof.movement&&workerSafe&&attackSafe?
