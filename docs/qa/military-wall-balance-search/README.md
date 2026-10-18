@@ -1381,3 +1381,40 @@ One Gran Río seed joining the two narrow Sabana wins is encouraging evidence
 that the fixed virtual player can reach night 100 under V1 pressure. It does
 not estimate survival probability across six biomes or justify changing
 production military parameters without further independent validation.
+
+### Manglares/2026: independent 30-night control/V1 pair
+
+Both arms used source `478ad875`, the same topological player, seed, biome and
+unchanged economy, wall costs, damage, raid composition rules and physical
+engine. Only the experimental pressure coefficients differed. Both completed
+all 30 requested raids with verified evidence, zero issues and no coverage
+loss. Neither arm reached night 100, so both terminal results are `null`.
+
+| Measure through night 30 | Production pressure | V1 pressure |
+| --- | ---: | ---: |
+| Living crops / coins / staff | 28 / 567 / 11 | 106 / 712 / 16 |
+| Animals faced | 429 | 297 |
+| Agricultural raid losses | 336 | 313 |
+| Wall hits / center hits | 853 / 0 | 592 / 0 |
+| Income / wages / seeds, coins | 31,515 / 13,951 / 14,915 | 35,586 / 16,220 / 17,585 |
+| Paid new walls / repairs, coins | 450 / 2,332 | 450 / 1,319 |
+| `Game.tick` / bot decisions, seconds | 414.83 / 61.47 | 306.46 / 74.87 |
+
+V1 had more productive capacity at night 30 while facing fewer animals, as
+expected from the pressure-only candidate. It was not an effortless run: after
+night 14 it had 133 living crops and 771 coins, and during the remaining 16
+nights it lost agricultural capacity before finishing with 106 crops. The
+different farm sizes, raids and bot decisions make the tick times descriptive
+of the resulting workloads, not a controlled engine-speed comparison.
+
+The [paired nightly ledger](current-main-pr48-manglares2026-v1-30-nightly.csv)
+and complete compressed [control](current-main-pr48-control-manglares2026-30.json.gz)
+and [V1](current-main-pr48-v1-manglares2026-30.json.gz) reports preserve the
+physical raid receipts and source/input hashes. Their gzip SHA-256 values are
+`65d5d6b6817010f586502244b89d89560078466d6df026c0a292b9a2e821bd97`
+and `171f39bde8929d6ca853b747e50cc08e121911873058fdcb6ace36529322c4ff`.
+This second current-main biome supports further long-horizon validation. The
+design target is a competent strategy that can win some 100-night campaigns
+while still losing others; a narrow authentic victory is compatible with that
+target. The initial 2–4% crop-loss figure remains a calibration hypothesis,
+not a hard acceptance gate or a reason to manufacture survival.
