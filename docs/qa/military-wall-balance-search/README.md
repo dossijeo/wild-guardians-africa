@@ -637,12 +637,14 @@ details contained faces whose continuous blockage was not certified (`0`),
 with no unavailable (`-1`) face. Code `0` does not prove animal passage.
 On nights 70–72, three adjacent uncertified faces recur between `x=104` and `105`
 at `z=-1`, `0` and `1`. The artificial-hull alternatives omitted modules
-because of physical placement conflicts. The proposed cut therefore lacks
-a continuous closure certificate; a legal layout covering it and preserving worker access
-has not yet been demonstrated. The raid report does not prove that animals
-crossed these exact faces. This planner limitation means the defeat cannot
-be attributed to military pressure alone. An `unknown` closure must not be
-treated as protected or built speculatively.
+because of physical placement conflicts. In the frozen day-70 state, two
+zero-HP ruins occupied those stroke slots. Merged PR #105 demonstrated that
+two legal 10-coin modules close this **local seam**: native face codes changed
+from `[0,0,0]` to `[1,1,1]` after a paid build that retired the ruins and
+their repair tasks. This does not alone certify the entire enclosure or prove
+that the animals crossed those exact faces. The old cut lacked a continuous
+closure certificate, so its defeat cannot be attributed to military pressure
+alone. An `unknown` closure must not be treated as protected.
 
 `Game.tick` accumulated 672.6 seconds and bot decisions 290.0 seconds. The
 largest single `Game.tick` day was night 19 at 14.6 seconds; these figures
@@ -653,3 +655,19 @@ retain the three event-driven topological campaigns, including hashes, raid
 losses, economy and measured times. With one narrow 100-night victory and two
 authentic defeats across these three runs, neither V1 pressure nor the
 current topological policy is validated for production balance.
+
+## Post-PR #105 physical-enclosure correction
+
+PR #105 is now merged into `main` and synchronized into this experimental
+branch. Its combined Sabana/712 V1 replay completed 72 verified raids with
+zero recorded physical or technical issues: 24 living crops and 307 coins,
+versus 4 and 308 in the old control at that horizon. Raid crop losses from
+night 6 were 1,032 versus 1,107; nights 70–72 lost 43 rather than 131 crops.
+The first state-hash divergence was day 14, so this is a changed farm and
+attack trajectory, not an isolated performance benchmark or proof of a
+100-night win. [Full reports and caveats](../enclosure-face-diagnostics/README.md)
+retain the unsuccessful first Gran Cañón 30-night variant as well as the
+repair-first correction: the latter ended with 54 crops and 1,015 coins,
+compared with 55 and 950 for the established control, with zero issues in
+both. A fresh Sabana/712 100-night request on the merged source is still
+required before updating the balance conclusion above.
