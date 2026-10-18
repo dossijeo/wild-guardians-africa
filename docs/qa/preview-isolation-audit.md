@@ -99,7 +99,15 @@ gate and enclosure regression suite passes with the hypothesis instance.
 This branch remains experimental. The known speculative revision leaks and
 directed physical regressions are addressed. The full Sabana/123 V1 campaign,
 multi-village center-ranking comparison, and broader performance comparison
-are pending. Do not merge until sustained simulation and reproduction have
+are pending. A committed-code Sabana/123 V1 run (`f7ad3969`, topological
+defense, native intents) reached day 11 and stopped with `status: error`:
+15 animals had gone, but one buffalo with no hits remaining remained in
+`retreating` at approximately (77, 6.18). Its partial state and per-day rows
+are in `docs/qa/preview-isolation-sabana123-v1.json` and the associated
+`-partial-state.json`. This is a technical incomplete-incursion result, not
+a balance defeat or evidence about day 83. Its relationship to preview
+isolation remains unproven; investigate it before claiming sustained
+campaign validation. Do not merge until sustained simulation and reproduction have
 been reviewed. The source tree is now `src/world/wild-engine/`; the rename was
 separate from the behavioral change and all 204 playable tests, 51 directed
 wall/enclosure tests, and the WASM/Vite builds pass after it.
