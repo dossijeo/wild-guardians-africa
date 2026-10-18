@@ -23,6 +23,12 @@ el navegador y volvió al HUD del día 1 sin error.
   exercise the six biomes and a worker-reachable crop.
 - Navegador local, Sabana/712: partida nueva y restauración del guardado llegan
   al HUD sin errores de consola. Gran Cañón/712 también arranca y llega al HUD.
+- El smoke empaquetado de Gran Cañón descubrió que una semilla nueva de
+  `Date.now()` se truncaba a 32 bits al entrar en WASM y luego se comparaba
+  erróneamente con la semilla completa. La comprobación utiliza ahora la misma
+  normalización que la generación; una prueba dirigida cubre una semilla
+  temporal de 13 dígitos. El smoke anterior fallaba al cargar y la nueva
+  ejecución empaquetada sigue pendiente de confirmar.
 - Falta prueba interactiva equivalente de los otros cinco biomas y de acciones
   completas con trabajadores, incursiones y construcción antes de fusionar.
 
