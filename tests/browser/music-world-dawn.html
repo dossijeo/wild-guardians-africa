@@ -3,9 +3,9 @@
 <header><p>Sabana/Mapungubwe, semilla 712. Centro, mijo y trabajadora pagados con las 1500 monedas iniciales. Día y primera incursión nativos; avance por pasos de 0,1 s real solicitados. Audio silenciado, sin escucha ni medida de FPS.</p><button id="run" disabled>Recorrer jornada y amanecer A → B</button><output id="status">Preparando…</output><pre id="report"></pre></header><canvas id="world"></canvas>
 <script type="module">
 import * as Game from '../../src/simulation/game.js';
-import {Navigation} from '../../src/world/navigation.js';
 import {centerServicePoint} from '../../src/world/centers.js';
-import {findInitialLocationAsync} from '../../src/world/villages.js';
+import {prepareWildEngineWorld} from '../../src/app/wild-engine-world.js';
+import {createEventDrivenTaskPlanner} from '../../src/world/wild-engine/spatial-intent-bridge.js';
 import {WorldScene} from '../../src/rendering/scene.js';
 import {json} from '../../src/rendering/assets.js';
 import {AudioSystem,SFX_LIMITS} from '../../src/audio/audio.js';
@@ -17,12 +17,12 @@ document.querySelector('#run').textContent=requestedDays===1?'Recorrer jornada y
 document.querySelector('header p').textContent=`Sabana/Mapungubwe, semilla 712. Centro, un mijo por jornada y trabajadora pagados con las 1500 monedas iniciales. ${requestedDays} jornadas e incursiones nativas; pasos de 0,1 s real solicitados. Audio silenciado: no escucha ni medida de FPS.`;
 const audio=new AudioSystem({sfx:0,music:0}),errors=[],history=[],seen=new Set();
 const result={muted:true,predecodedSfx:false,world3D:true,seed:712,qaCredit:0,requestedDays,history,errors,events:{},steps:0,heldSteps:0,peakSfx:0,peakMusic:0,peakPoolPcmBytes:0};
-let state,nav,world,lastTransport,lastPack,phase='setup';
+let state,nav,world,session,stopTasks,stopWorld,lastTransport,lastPack,phase='setup';
 const assert=(v,message)=>{if(!v)throw Error(message);},flush=()=>new Promise(done=>setTimeout(done,0));
 const paint=()=>{output.textContent=JSON.stringify({...result,phase,day:state?.day,time:state?.time,elapsed:state?.elapsed,money:state?.ledger.balance,pauses:state?.pauses,raid:state?.raid?.animals.map(a=>({species:a.species,status:a.status}))??null},null,2);};
 const fail=e=>{errors.push(String(e.message??e));phase='failed';status.textContent='FAIL: '+errors.join(' · ');audio.stop();paint();};
 addEventListener('error',e=>fail(e.error??e.message));addEventListener('unhandledrejection',e=>fail(e.reason));
-addEventListener('pagehide',()=>{audio.dispose();world?.dispose();});
+addEventListener('pagehide',()=>{stopTasks?.();stopWorld?.();audio.dispose();world?.dispose();session?.dispose();});
 function observe(){
  for(const e of state.events)if(!seen.has(e.id)){seen.add(e.id);result.events[e.type]=(result.events[e.type]??0)+1;}
  const before=serialize(state),listener=world.controls.target;
@@ -87,11 +87,22 @@ function plantReachableSeed(id){
  return false;
 }
 try{
- const profile=(await json('/content/biome-savanna.json')).profile,payload=(await json('/content/villages.json')).find(v=>v.id==='mapungubwe');
- state=Game.newGame({seed:712,slotId:'qa-music-world-dawn'});nav=new Navigation(712,'sabana',profile);const site=await findInitialLocationAsync(nav,payload);
- Object.assign(state.villages[0],site);state.suppressed.push(...site.suppress);nav.setState(state);Game.resume(state,'intro');Game.placeStructure(state,'center',site.center,nav);
+ const payload=(await json('/content/villages.json')).find(v=>v.id==='mapungubwe');
+ state=Game.newGame({seed:712,slotId:'qa-music-world-dawn'});
+ world=new WorldScene(document.querySelector('#world'),()=>{});world.onError=fail;
+ const spatial=await prepareWildEngineWorld(world,state,payload);
+ nav=spatial.navigation;session=spatial.session;
+ const site=state.villages[0],center=site.center;
+ nav.setState(state);
+ world.qualitySetting('muy_baja');await world.load(state,nav,payload,{spatialSession:session,farVegetation:false});
+ await world.whenChunksReady();
+ Game.resume(state,'intro');Game.placeStructure(state,'center',center,nav);
  assert(plantReachableSeed('seed'),'Reachable native seed absent');Game.openInitialHiring(state);Game.hire(state,'hire',{youngFemale:1});state.tutorial.step='done';Game.pause(state,'qa');
- world=new WorldScene(document.querySelector('#world'),()=>{});world.onError=fail;world.qualitySetting('muy_baja');await world.load(state,nav,payload);world.focus(state.structures[0]);await world.whenChunksReady();world.render(0);
+ world.sync(0);
+ const planner=createEventDrivenTaskPlanner(session);planner.resetFromState(state);
+ stopTasks=planner.observeTasks(state);stopWorld=planner.observeWorld(state);nav.intentTaskPlanner=planner;
+ assert(world.nav.field===session.field&&world.chunkStream===session.stream,'World does not share Wild Engine terrain');
+ world.focus(state.structures[0]);world.render(0);
  phase='ready';status.textContent='Preparada · partida pagada';document.querySelector('#run').disabled=false;paint();
 }catch(e){fail(e);}
 </script></html>
