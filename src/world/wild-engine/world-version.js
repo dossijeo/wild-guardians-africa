@@ -1,0 +1,1 @@
+export const WILD_ENGINE_WORLD_VERSION=1;
