@@ -13,6 +13,7 @@ import {createSpatialNavigationMovement} from
 import {createSpatialIntentBridge} from
   '../src/world/hierarchical-wasm/spatial-intent-bridge.js';
 import {createOpeningWorld} from '../tools/check_opening.mjs';
+import {centerServicePoint} from '../src/world/centers.js';
 
 const binary=process.env.WILD_ENGINE_NATIVE_ROUTE_WASM;
 const module=binary?new WebAssembly.Module(readFileSync(binary)):null;
@@ -24,6 +25,8 @@ const canyonSnapshot=readFileSync(new URL(
   import.meta.url),'utf8');
 const overlapSnapshot=gunzipSync(readFileSync(new URL(
   './fixtures/sabana712-day15-repair-overlap.json.gz',import.meta.url))).toString();
+const nearGateUnknownSnapshot=gunzipSync(readFileSync(new URL(
+  './fixtures/sabana123-day83-repair-near-gate-unknown.json.gz',import.meta.url))).toString();
 
 async function open(game){
   const loaded=new Map(),session=createSpatialGameSession(module,game,{
@@ -254,3 +257,41 @@ for(const biome of ['manglares','gran-rio','desierto','volcanes'])
         }
       }finally{session.dispose();}
     });
+
+test('a worker beside a ruined gate defers an inconclusive repair without speculative previews',
+ {skip:!module&&'Build and select the experimental WASM first'},async()=>{
+  // This fixture preserves the exact spatial geometry of a live day-83 quote.
+  const game=JSON.parse(nearGateUnknownSnapshot),target=game.structures.find(
+    piece=>piece.id==='structure-1655');
+  const {session,nav}=await open(game);
+  try{
+    const village=game.villages[0],entry=village.entry??village;
+    const witnesses=[...game.structures.filter(piece=>piece.kind==='center'&&
+      piece.status==='intact').map(piece=>centerServicePoint(piece,game,.8)),
+      ...game.workers];
+    const before=nav.wallWorkerReachability(entry,witnesses,[],[],true);
+    assert(before.every(status=>status==='found'));
+    const restored={...target,status:'intact',hp:target.maxHp};
+    const after=nav.wallWorkerReachability(entry,witnesses,[restored],[],true);
+    assert.equal(after[witnesses.findIndex(point=>point.id==='worker-85017')],
+      'unknown');
+    assert(after.every(status=>status==='found'||status==='unknown'));
+    let routes=0,previews=0;
+    const physical=nav.workerPhysicalRoute,preview=nav.withWallStatePreview;
+    nav.workerPhysicalRoute=(...args)=>{routes++;return physical(...args);};
+    nav.withWallStatePreview=(...args)=>{previews++;return preview(...args);};
+    const saved=serialize(game);
+    assert.deepEqual(planRepairAccess(game,target,nav),
+      {status:'unknown',updates:[]});
+    assert.equal(routes,0);assert.equal(previews,0);
+    assert.equal(serialize(game),saved,'an inconclusive quote must not mutate the game');
+    const worker=game.workers.find(item=>item.id==='worker-85017');
+    worker.x=84;worker.z=-2.83;
+    assert.deepEqual(planRepairAccess(game,target,nav),
+      {status:'safe',updates:[]},'the same repair becomes legal after the worker moves');
+    target.status='intact';target.hp=target.maxHp;nav.setState(game);
+    assert(nav.wallWorkerReachability(entry,witnesses,[],[],true)
+      .every(status=>status==='found'),
+    'committing the formerly deferred gate must preserve every worker access');
+  }finally{session.dispose();}
+});
