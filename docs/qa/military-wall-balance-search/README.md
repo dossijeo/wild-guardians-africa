@@ -779,3 +779,37 @@ standard-price arm's night-30 hash matches the older standard report, but its
 later trajectory differs; the old 100-night defeat cannot stand in for a
 100-night result on the corrected engine. That standard-price replay is the
 next staged balance test.
+
+## Corrected-engine standard-price 100-night request
+
+The standard-price Sabana/712 V1 run on the same PR #107 code reproduced
+**all 60** nightly hashes of the matched standard-price run above, then
+continued without a recorded technical or physical issue. Its
+[full report](current-main-pr107-v1-standard-thorn-sabana712-100.json.gz)
+contains 99 verified real raid receipts, zero issues and no coverage loss.
+The campaign ended in an authentic **economic defeat after night 99**:
+at dawn of day 100 it had zero crops, one operational center, one worker and
+7 coins. There was `GameOver`, not `CampaignWon`; night 100 was not played.
+
+| Nights | Crops at end | Cash at end | Raid crop losses | Animals | Wall hits | Income | Wages | Seeds | Repairs |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 6–30 | 84 | 977 | 420 | 323 | 704 | 37,113 | 15,887 | 18,849 | 1,803 |
+| 31–60 | 107 | 755 | 495 | 408 | 989 | 34,788 | 15,662 | 16,755 | 2,573 |
+| 61–76 | 55 | 372 | 256 | 220 | 508 | 13,593 | 6,059 | 6,495 | 1,402 |
+| 77–90 | 47 | 582 | 98 | 188 | 488 | 10,502 | 4,401 | 4,570 | 1,281 |
+| 91–99 | 0 | 7 | 102 | 102 | 209 | 2,461 | 1,184 | 1,210 | 642 |
+
+The last interval's income of 2,461 coins did not cover its 3,036 coins of
+wages, seeds and repairs; the 575-coin shortfall exactly matches the decline
+from 582 coins after night 90 to 7 after night 99. Its raids destroyed 102
+crops in that interval, but the report does not isolate a single attack as
+the sole cause: falling deliveries, staffing and defensive spending feed back
+into one another. It bought 61 wall modules for 610 coins overall and made
+1,281 paid repair requests, spending 7,701 coins. Total measured `Game.tick`
+was 842.69 s and bot decisions 306.29 s over 99 nights; neither is an
+equivalent-state speed comparison with the old 100-night defeat, whose source
+and farm trajectory differ. The new engine improved this seed's mid-campaign
+stock (107 versus 81 crops at night 60) but still did not meet the design
+goal of a reasonably survivable 100-night game. Production balance remains
+unchanged. A staged durability-only thorn candidate is justified next; a
+single-seed improvement will still require independent validation.
