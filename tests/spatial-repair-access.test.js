@@ -281,10 +281,13 @@ test('a worker beside a ruined gate defers an inconclusive repair without specul
     nav.workerPhysicalRoute=(...args)=>{routes++;return physical(...args);};
     nav.withWallStatePreview=(...args)=>{previews++;return preview(...args);};
     const saved=serialize(game);
+    const routeStamp=session.routeStamp();
     assert.deepEqual(planRepairAccess(game,target,nav),
       {status:'unknown',updates:[]});
     assert.equal(routes,0);assert.equal(previews,0);
     assert.equal(serialize(game),saved,'an inconclusive quote must not mutate the game');
+    assert.deepEqual(session.routeStamp(),routeStamp,
+      'an inconclusive quote must not invalidate active routes');
     const worker=game.workers.find(item=>item.id==='worker-85017');
     worker.x=84;worker.z=-2.83;
     assert.deepEqual(planRepairAccess(game,target,nav),
