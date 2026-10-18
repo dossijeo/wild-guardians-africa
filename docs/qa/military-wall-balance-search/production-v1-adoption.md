@@ -47,6 +47,18 @@ input hashes. Their SHA-256 values are respectively
 `925fb88a9c89b4c5842c1de53ab1e911cc57e97e9b21c0d95411bf21146207fb`
 and `63cfa21a35c810b262da9f6f942c6eb85723c2e52cf6903a7b7d4839e3bfbc55`.
 
+## Full production replay
+
+The ordinary production runner then completed Sabana/123 for **100 nights**
+with v5: victory, 9 living crops, 93 coins and 100 completed raids with zero
+evidence issues. All 100 daily living-crop and money values match the archived
+QA V1 run. All 100 complete physical raid receipts match after removing only
+`pressureFacts.candidateVersion` (5 in production, 4 in QA); this includes
+animal composition, hits, damage, walls, crops and exits. This is a direct
+same-rules replay of one seed, not a claim of universal victory. The
+[compressed report](production-v1-sabana123-100-victory.json.gz) and
+[nightly CSV](production-v1-sabana123-100-victory.csv) preserve the evidence.
+
 Targeted pressure, candidate, lifecycle, persistence and QA/production parity
 tests passed. `verify:balance` and the production build passed. The expanded
 playable suite, including the new V1 tests, passed **214/214**.
