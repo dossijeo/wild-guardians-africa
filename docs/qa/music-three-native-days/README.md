@@ -9,3 +9,7 @@ Every dawn changes the production MusicWindowTransport as A -> B -> A -> B at 48
 Sampled peak owned window PCM is 81690624 bytes (77.91 MiB). This is window ownership, not total browser/device RAM. Peak scheduled music sources is 32; queued future and overlap sources are included, so this is not simultaneously audible instrument count. Stop leaves zero active voices and dispose closes the AudioContext. Report and fresh-run browser console contain no errors. The earlier run was interrupted by development-server reload while implementing the wall change; it is not counted as completed evidence.
 
 Source/evidence hashes are retained in `provenance.json`. This proves repeated integrated day-boundary swaps and cleanup across three jornadas, not perceptual listening, physical-device acceptance or a full 100-night audio campaign. Native 44.1 kHz waveform and real-time edge/wrap proof remains separately documented in `docs/qa/music-window-44100/README.md`.
+
+The run above used the former JavaScript `Navigation` fixture. The same directed
+scenario has since been repeated with the production Wild Engine world and
+event-driven worker planner; see [the Wild Engine rerun](wild-engine-rerun.md).
