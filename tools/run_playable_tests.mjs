@@ -20,6 +20,7 @@ const tests = [
   'raid-pressure-budget.test.js',
   'raid-pressure-lifecycle.test.js',
   'raid-pressure-plan.test.js',
+  'raid-pressure-production-v1.test.js',
   'raid-saheliana-exit.test.js',
   'spatial-retreat-recovery.test.js',
   'tutorial-agricultural-guide.test.js',

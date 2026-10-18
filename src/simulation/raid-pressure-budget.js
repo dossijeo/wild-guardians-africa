@@ -1,9 +1,24 @@
 // Pure, unintegrated candidate. No clock, state, command or damage mutations.
 import {BALANCE as B} from './balance.js';
+import v1Pressure from '../../content/balance/raid_pressure_v1.json' assert {type:'json'};
+// The v3 pure-function defaults remain available for existing saved plans.
+// Live night preparation selects activeRaidPressureCandidate() instead.
 export const RAID_PRESSURE_CANDIDATE=Object.freeze({version:3,emaAlpha:1/3,referenceSpacing:1.5,referenceConeRadians:Math.PI/2,peripheralWeight:.5,qMeanMultiplier:1.5,activeWaveLimit:16,countPower:.5,introCountStart:8,introCountRise:2,hitPressureSteps:4});
+const v1Scale=Object.freeze({id:v1Pressure.id,
+ signature:JSON.stringify([v1Pressure.halfSaturation,v1Pressure.count,
+  v1Pressure.hits,v1Pressure.structure]),
+ halfSaturation:v1Pressure.halfSaturation,
+ count:Object.freeze([...v1Pressure.count]),
+ hits:Object.freeze([...v1Pressure.hits]),
+ structure:Object.freeze([...v1Pressure.structure])});
+// Version 5 is the reviewed production recipe. Version 3 remains available
+// for saved plans prepared before the balance change; QA version 4 remains
+// isolated behind explicit registration.
+export const V1_RAID_PRESSURE_CANDIDATE=Object.freeze({
+ ...RAID_PRESSURE_CANDIDATE,version:v1Pressure.version,experiment:v1Scale});
 let experimentalPressure=null;
 // Experimental campaigns install one frozen recipe before creating a world.
-// Production and existing saved plans continue to use the canonical v3 recipe.
+// Already committed plans retain their own versioned recipe.
 export function registerExperimentalPressure({id,halfSaturation,count,hits,structure}){
  if(experimentalPressure)throw Error('Pressure experiment already registered');
  if(typeof id!=='string'||!(/^[a-z0-9-]{1,48}$/).test(id)||
@@ -18,7 +33,7 @@ export function registerExperimentalPressure({id,halfSaturation,count,hits,struc
  experimentalPressure=Object.freeze({...RAID_PRESSURE_CANDIDATE,version:4,experiment});
  return experimentalPressure;
 }
-export function activeRaidPressureCandidate(){return experimentalPressure??RAID_PRESSURE_CANDIDATE;}
+export function activeRaidPressureCandidate(){return experimentalPressure??V1_RAID_PRESSURE_CANDIDATE;}
 export function experimentalPressureFactor(config,kind,observedValue){
  const experiment=config.experiment;if(!experiment)return 1;
  if(!Number.isFinite(observedValue)||observedValue<0)throw Error('Missing observed attraction');
@@ -33,6 +48,7 @@ export function raidPressureCandidateForVersion(version=1){
  if(version===2)return SECOND_RAID_PRESSURE_CANDIDATE;
  if(version===RAID_PRESSURE_CANDIDATE.version)return RAID_PRESSURE_CANDIDATE;
  if(version===4&&experimentalPressure)return experimentalPressure;
+ if(version===V1_RAID_PRESSURE_CANDIDATE.version)return V1_RAID_PRESSURE_CANDIDATE;
  throw Error('Unknown raid pressure candidate version');
 }
 const IDS=['warthog','hyena','buffalo','lion','rhino'],SHARES=[.25,.28,.23,.16,.08],CROP=[1,1,2,2,3],RADII=[.7,1.2,2,1.6,2.8];
@@ -166,7 +182,8 @@ export function selectBudgetedRaid({night,pressure:p,unlocked,rng,postgame=false
  return {status:'selected',introductory:false,targetAnimals,counts,envelope,plan,actors,rng,draws,spentProduct,remainingProduct:plan.q-spentProduct,waves:Array.from({length:Math.ceil(actors.length/config.activeWaveLimit)},(_,i)=>actors.slice(i*config.activeWaveLimit,(i+1)*config.activeWaveLimit)),scope:'Descriptor selection only; composition fixed before full native-range rolls, no physical damage'};
 }
 export function validateRaidPressureRuntimeConfig(config){
- if(config===experimentalPressure)return config;
+ if(config===V1_RAID_PRESSURE_CANDIDATE||
+  experimentalPressure&&config===experimentalPressure)return config;
  const keys=Object.keys(RAID_PRESSURE_CANDIDATE).sort();if(!config||Object.keys(config).sort().join('|')!==keys.join('|'))throw Error('Unknown or missing pressure config fields');
  for(const key of keys)if(config[key]!==RAID_PRESSURE_CANDIDATE[key])throw Error('Unreviewed pressure config drift: '+key);
  return config;
@@ -189,3 +206,15 @@ export function validateRaidPressureConfiguration(json,balance=B){
  const expected={version:3,population:{base:4,span:30,pressurePower:.5,introStartAtNight6:8,introRisePerNight:2},hitPressureSteps:4,status:'pure-unintegrated-candidate',pressure:{dayWeight:.45,valueWeight:.55,valueScale:1000,logDenominator:26,firstNight:1,lastNight:100},ema:{alpha:1/3,nominalWindowNights:5,update:'once-per-night-plan',effective:'max(current agricultural value, EMA)'},composition:{initial:[1,0,0,0,0],final:SHARES,species:IDS,interpolation:'linear-pressure; renormalize native unlocked; Hamilton integer rounding'},reference:{spacing:1.5,coneRadians:Math.PI/2,centralWeight:1,peripheralWeight:.5},q:{meanMultiplier:1.5,unit:'reference agricultural HP points',round:'floor half-point',feasibility:'at least cheapest legal capped worst-case product',selection:'adjust composition before RNG; full native-range hit rolls'},waveActiveLimit:16,speciesCropBaseDamage:CROP,speciesBaseAttackRadii:RADII,structureRounding:'Math.round'};
  if(!equalConfig(json,expected))throw Error('Canonical pressure config/runtime drift');validateRaidPressureSource(balance);return json;
 }
+export function validateProductionRaidPressureConfiguration(json=v1Pressure){
+ const expected={version:5,id:'v1-pressure',firstScaledNight:6,
+  halfSaturation:1500,count:[.35,.60],hits:[.75,.18],
+  structure:[.80,.15]};
+ if(!equalConfig(json,expected)||
+  V1_RAID_PRESSURE_CANDIDATE.version!==json.version||
+  V1_RAID_PRESSURE_CANDIDATE.experiment.signature!==
+   JSON.stringify([json.halfSaturation,json.count,json.hits,json.structure]))
+  throw Error('Production V1 pressure config/runtime drift');
+ return json;
+}
+validateProductionRaidPressureConfiguration();
