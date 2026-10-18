@@ -4,7 +4,7 @@ import {gunzipSync} from 'node:zlib';
 import {performance} from 'node:perf_hooks';
 import {Navigation,BIOME_IDS} from '../../src/world/navigation.js';
 import {createHierarchicalNavigationAdapter} from '../../src/world/hierarchical-navigation-adapter.js';
-import {createHierarchicalWasmNavigatorSync} from '../../src/world/wild-engine-adapter.js';
+import {createHierarchicalWasmNavigatorSync} from '../../src/world/hierarchical-wasm-adapter.js';
 
 const [input,output]=process.argv.slice(2);
 if(!input||!output)throw Error('Usage: benchmark-wasm-hierarchy.mjs state.json.gz report.json');

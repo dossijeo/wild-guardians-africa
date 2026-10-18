@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {createHierarchicalWasmNavigator} from '../src/world/wild-engine-adapter.js';
+import {createHierarchicalWasmNavigator} from '../src/world/hierarchical-wasm-adapter.js';
 import {HierarchicalNavigator} from '../src/world/hierarchical-navigation.js';
 
 const wasm=readFileSync(new URL('../src/world/wild-engine/core.wasm',import.meta.url));
