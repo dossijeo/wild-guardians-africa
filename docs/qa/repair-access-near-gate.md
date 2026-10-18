@@ -78,3 +78,48 @@ successful legacy repair at either call. Avoiding provisional wall syncs and
 their topology-revision changes is the likely cause of the changed campaign;
 a route-level trace would identify the first changed worker assignment or
 movement exactly.
+
+## First divergence in a continuous day-83 replay
+
+The trace harness added to `run-native-intent-campaign.mjs` records workers and
+native route revisions on a chosen day without asking for any new paths. Two
+83-night Sabana/123 V1-pressure/topological-policy runs used the same WASM
+(`b1c0f180...10d1f88809be8`) and balance adapter. Source `79141853` was the
+reference; `f3f449b1` differed in runtime code only by the focused repair
+guard. Their nightly serialized hashes matched for nights 1–82. Each day-83
+trace contains 526 ticks:
+
+- [Original worker trace](repair-access-near-gate-baseline-day83-worker-trace.jsonl.gz)
+  (uncompressed SHA-256 `06c8cc47b06070b5759e370b936da5cfaa1a58db1676c777411d7ef94c814db1`).
+- [Fast-quote worker trace](repair-access-near-gate-optimized-day83-worker-trace.jsonl.gz)
+  (uncompressed SHA-256
+  `dc7afbe95ebbd5792b5ba0931486180516c30e0105d792704e1e6b7ea39896e0`).
+
+At simulated time 89 s the worker snapshots and wall revision were identical.
+At the next tick (time 90 s), immediately after the first inconclusive repair
+quote, the reference wall revision jumped from 536 to 652; the fast quote
+kept it at 536. The **116** extra revisions match 58 provisional previews
+with a wall sync and restoration each. The first worker movement divergence
+occurred in that same tick: `worker-85018` was at z=4.8906 in the reference
+versus z=4.7826 in the fast run. `worker-85019` had already switched from
+carrying a crate to walking toward harvest task `task-85150` in the reference,
+while still carrying in the fast run. Both reached that harvest action by the
+following tick, but the reference action had progressed 0.3 simulated seconds
+further. The first live-crop-count difference followed at time 94 s (59 versus
+60). This establishes that speculative quote revisions caused the **first**
+route and movement divergence, not a different repair approval. It does not
+prove that every later economic or military difference has this single cause.
+
+The trace runs were concurrent and instrumented, so their 89.56 s versus
+7.10 s day-83 `Game.tick` times are not a controlled speed comparison. The
+earlier isolated 72.32 s versus 6.88 s result remains the performance
+reference. The per-tick trace's `money` field was accidentally read from a
+nonexistent top-level property and is null; the harness now reads the ledger
+balance for future runs. Nightly reports still record 585 versus 563 coins at
+the end of day 83. The gameplay-regression hold on this PR remains in force.
+
+To compare the archived traces, decompress both `.jsonl.gz` files and run:
+
+```sh
+node tools/experiments/compare-worker-traces.mjs baseline.jsonl optimized.jsonl
+```

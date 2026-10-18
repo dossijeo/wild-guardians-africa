@@ -83,7 +83,7 @@ try{
     onTick:(state,nav)=>{
       latestState=state;latestNav=nav;nav.serviceRaidConnectivityDemand?.();
       if(state.day===traceDay)workerTrace.push(JSON.stringify({
-        time:state.time,money:state.money,
+        time:state.time,money:`${state.ledger.balance.n}/${state.ledger.balance.d}`,
         living:state.plants.filter(plant=>plant.alive).length,
         routeStamp:nav.routeStamp?.(),
         workers:state.workers.map(worker=>({id:worker.id,x:worker.x,z:worker.z,

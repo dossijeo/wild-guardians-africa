@@ -13,12 +13,17 @@ const firstDifference=(a,b)=>{
   const workers=[];
   for(const id of ids){
     const before=left.get(id),after=right.get(id);
-    if(JSON.stringify(before)!==JSON.stringify(after))workers.push({id,before,after});
+    if(JSON.stringify(before)===JSON.stringify(after))continue;
+    const fields=new Set([...Object.keys(before??{}),...Object.keys(after??{})]);
+    const changes=Object.fromEntries([...fields].filter(key=>
+      JSON.stringify(before?.[key])!==JSON.stringify(after?.[key]))
+      .map(key=>[key,[before?.[key],after?.[key]]]));
+    workers.push({id,changes});
   }
   return {tickTime:[a.time,b.time],money:[a.money,b.money],
     living:[a.living,b.living],routeStamp:[a.routeStamp,b.routeStamp],
     workerCount:[a.workers.length,b.workers.length],
-    changedWorkers:workers.slice(0,5),changedWorkerCount:workers.length};
+    changedWorkers:workers.slice(0,3),changedWorkerCount:workers.length};
 };
 const count=Math.min(baseline.length,candidate.length),first={};
 for(let i=0;i<count;i++){
