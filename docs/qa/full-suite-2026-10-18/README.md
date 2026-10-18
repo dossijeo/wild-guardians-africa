@@ -15,3 +15,20 @@ The 11 directed raid-planning and SFX tests pass after these evidence correction
 | `intensive-farm-policy.test.js` (2 cases) | Defeat by the test's horizon for two poor-investment policies | No terminal result by that horizon |
 
 Those four tests concern campaign balance and policy outcomes. They should be investigated with the balance work, keeping real wins, defeats and unfinished horizons distinct. This evidence refresh does not alter prices, damage, attack pressure, economy or gameplay to satisfy historical outcomes. A subsequent complete suite run is required to establish the new global count.
+
+## Complete rerun on current main and extended loss horizon
+
+The complete suite was rerun on `fdb64bd3b2d8f9f487266d4469a20b9c9337b1b1` (Node 20.11.0, Wild Engine spatial WASM SHA-256 `f0032bf7d6d5bb3336f2f9480fc2dc109906b9d2743315853320420863b07643`). `npm test` finished in 420.25 seconds: **4,521 cases, 4,457 passed, 4 failed, 60 skipped**. The failures are exactly the two historical 100-night active-farm victories and the two poor-investment defeats expected before day 10. No other test failed.
+
+The two poor-investment policies were then run unchanged through a 14-night horizon. Both still use ordinary planting, hiring, delivery, raids and save/reload; `auditIntensiveFarm()` passed. They do lose, but later than the old ten-day assertion:
+
+| Raid camera | Terminal result | Completed nights | Final coins | Maximum living crops | Crops destroyed | Crates delivered | Raid exits |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Off | Economic defeat | 12 | 24 | 188 | 127 | 124 | 12/12 |
+| On | Economic defeat | 13 | 14 | 188 | 146 | 122 | 13/13 |
+
+The work center remains operational in both terminal states and cash falls below the game's actual `dawnMinimum`; these are not fabricated losses from an arbitrary plant-count or time limit. The tests now allow 14 nights, require survival through the introductory period, require the actual `GameOver`, settled raids, physical deliveries, an intact center and cash below the real dawn requirement. They do not hard-code the exact defeat night. `node --test tests/intensive-farm-policy.test.js` passes all five cases in 52.2 seconds after this adjustment.
+
+The complete suite was then repeated on `540f4844` in 423.56 seconds: **4,521 cases, 4,459 passed, 2 failed, 60 skipped**. Both remaining failures are the historical 100-night victory assertions in `active-farm.test.js`; neither poor-management case failed. This is an explicit red full-suite result, not a green acceptance claim.
+
+The old active-farm policy has 16 fixed plots and no perimeter. Its day-eight defeat cannot certify whether competent defended play can reach night 100. Keep that distinction explicit while the separate balance work evaluates protected farms and independent seeds; no military, economic or navigation rule was changed here.
