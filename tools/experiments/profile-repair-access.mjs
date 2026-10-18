@@ -6,10 +6,17 @@ import {cast,hire,planRepairAccess,tick} from '../../src/simulation/game.js';
 import {createSpatialGameSession} from '../../src/world/hierarchical-wasm/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../../src/world/hierarchical-wasm/spatial-navigation-movement.js';
 import {centerServicePoint} from '../../src/world/centers.js';
+import {applyBalanceCandidate} from './balance-candidate.mjs';
 
 const stateFile=process.argv[2];
 const index=Number(process.argv[3]??0);
 if(!stateFile)throw Error('Usage: node profile-repair-access.mjs state.json [ruined-index]');
+const candidateIndex=process.argv.indexOf('--candidate');
+if(candidateIndex>=0){
+  const candidateFile=process.argv[candidateIndex+1];
+  if(!candidateFile)throw Error('Missing --candidate file');
+  applyBalanceCandidate(JSON.parse(readFileSync(candidateFile,'utf8')));
+}
 const snapshot=readFileSync(stateFile);
 const state=deserialize((stateFile.endsWith('.gz')?gunzipSync(snapshot):snapshot).toString());
 const module=new WebAssembly.Module(readFileSync(new URL(

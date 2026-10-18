@@ -23,6 +23,7 @@ const captureDayEnd=Number(process.env.WILD_ENGINE_CAPTURE_DAY_END??0);
 const captureStateDay=Number(process.env.WILD_ENGINE_CAPTURE_STATE_DAY??0);
 const captureStateTime=Number(process.env.WILD_ENGINE_CAPTURE_STATE_TIME??0);
 const cpuProfileDay=Number(process.env.WILD_ENGINE_CPU_PROFILE_DAY??0);
+const repairProbeDay=Number(process.env.WILD_ENGINE_REPAIR_PROBE_DAY??0);
 const captureOccupiedFallback=process.env.WILD_ENGINE_CAPTURE_OCCUPIED_FALLBACK==='1';
 const spatialAdvice=process.env.WILD_ENGINE_SPATIAL_ADVICE==='1';
 const wallSpendingFlag=process.env.WILD_ENGINE_WALL_SPENDING;
@@ -38,6 +39,16 @@ let capturedRaid=false;
 let capturedState=false;
 let capturedOccupiedFallback=false;
 let cpuProfiler=null,cpuProfileFinished=Promise.resolve();
+const repairProbe=new Map();
+if(repairProbeDay>0)globalThis.__wildRepairAccessProbe=sample=>{
+  if(sample.day!==repairProbeDay)return;
+  const key=`${sample.reason}:${sample.targetId}`;
+  let row=repairProbe.get(key);
+  if(!row){row={reason:sample.reason,targetId:sample.targetId,calls:0,
+    firstTime:sample.time,lastTime:sample.time,samples:[]};repairProbe.set(key,row);}
+  row.calls++;row.lastTime=sample.time;
+  if(row.samples.length<8)row.samples.push(sample);
+};
 const assignments=[],seenAssignments=new Set();
 const intentTiming={};
 let timedPlanner=null;
@@ -146,6 +157,9 @@ try{
         });
     },
     onDay:row=>{
+      if(row.day===repairProbeDay)
+        writeFileSync(path.replace(/\.json$/,`-day${row.day}-repair-probe.json`),
+          JSON.stringify({source,inputHashes,rows:[...repairProbe.values()]},null,2));
       if(cpuProfiler&&row.day===cpuProfileDay){
         const profiler=cpuProfiler;cpuProfiler=null;
         cpuProfileFinished=new Promise((resolveProfile,rejectProfile)=>
@@ -213,4 +227,6 @@ try{
   console.error(JSON.stringify({status:'error',day:report.day,
     message:report.message.slice(0,300),partialStatePath}));
   process.exitCode=1;
+}finally{
+  if(repairProbeDay>0)delete globalThis.__wildRepairAccessProbe;
 }
