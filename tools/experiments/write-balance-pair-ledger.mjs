@@ -14,6 +14,7 @@ for(const key of ['biome','seed','strategy','defensePolicy'])
   if(control.parameters[key]!==candidate.parameters[key])
     throw Error(`Mismatched ${key} parameter`);
 if(control.raidEvidence?.status!=='verified'||candidate.raidEvidence?.status!=='verified'||
+  control.raidEvidence.coverageLost||candidate.raidEvidence.coverageLost||
   control.raidEvidence.issues.length||candidate.raidEvidence.issues.length)
   throw Error('Both arms require verified raids with zero evidence issues');
 
