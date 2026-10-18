@@ -143,13 +143,36 @@ export function placeStructure(s,id,{kind='center',material='zarzas',gate=false,
   const suppression=entity.autoGate?nav.wallPlacement(entity).suppress??[]:check.suppress??[];
   return commit(s,id,kind==='center'?'center':'wall',()=>{
     ensurePurchaseBudget(s,cost);transact(s.ledger,id,rational(-cost));
+    const replaced=kind==='wall'?replaceCoincidentRuins(s,[entity]):[];
     s.nextId++;s.sequence++;s.structures.push(entity);
-    s.suppressed.push(...suppression);nav.setState(s);emit(s,'PlacementCommitted',{kind,targetId:s.structures.at(-1).id,presentation:{x,z}});
+    s.suppressed.push(...suppression);nav.setState(s);
+    for(const ruin of replaced)emit(s,'WallRemoved',{
+      targetId:ruin.id,refund:0,replacedBy:entity.id});
+    emit(s,'PlacementCommitted',{kind,targetId:s.structures.at(-1).id,presentation:{x,z}});
     if(kind==='center'){recoverDisplacedWorkers(s);enqueueLooseCrates(s);}
     if(kind==='center'&&s.tutorial.step==='center')s.tutorial.step='plant';
   });
 }
 export function wallCapacity(s,material){return Math.max(0,Math.floor((numberOf(s.ledger.balance)-HIRING_RESERVE)/wallSpec(material).cost));}
+function coincidentRuins(s,pieces){
+  return s.structures.filter(old=>old.kind==='wall'&&old.status==='ruined'&&
+    pieces.some(piece=>Math.hypot(old.x-piece.x,old.z-piece.z)<.35&&
+      Math.abs(Math.sin((old.yaw??0)-(piece.yaw??0)))<.18));
+}
+function replaceCoincidentRuins(s,pieces){
+  const ruins=coincidentRuins(s,pieces);
+  if(!ruins.length)return [];
+  const ids=new Set(ruins.map(ruin=>ruin.id));
+  const tasks=new Set(s.tasks.filter(task=>ids.has(task.targetId))
+    .map(task=>task.id));
+  for(const worker of s.workers.filter(item=>tasks.has(item.taskId))){
+    releaseTask(s,worker);worker.path=null;worker.status='idle';
+    notifyWorkerPlanningChange(s,worker);
+  }
+  replaceTasks(s,s.tasks.filter(task=>!ids.has(task.targetId)));
+  s.structures=s.structures.filter(item=>!ids.has(item.id));
+  return ruins;
+}
 export function affordableWallStroke(s,material,points){
   const maxPieces=wallCapacity(s,material),all=wallStroke(points,s.structures),slots=all.slice(0,maxPieces);
   return {slots,points:maxPieces?(all.length<=maxPieces?points:wallStrokeLine(slots)):[],maxPieces};
@@ -431,6 +454,7 @@ export function quoteWallChain(s,material,points,nav,options={}) {
   }
   const cost=spec.cost*newPieces.length;
   const plan={pieces:newPieces,previewPieces:checks,updates,suppressed:[...suppressed],cost,gates:updates.length,
+    repairableRuins:coincidentRuins(s,newPieces).map(ruin=>ruin.id),
     expectedSlots:slots,strokeSlots,strokeClosed:strokes.map(stroke=>
       stroke.length>=3&&Math.hypot(stroke[0][0]-stroke.at(-1)[0],
         stroke[0][1]-stroke.at(-1)[1])<1e-6),blockedPieces,blockedCrops};
@@ -473,8 +497,12 @@ export function buildWallChain(s,id,material,points,nav,options={}) {
   if(!newPieces.length)return false;
   return commit(s,id,'wall',()=>{
     ensurePurchaseBudget(s,plan.cost);transact(s.ledger,id,rational(-plan.cost));
+    const replaced=replaceCoincidentRuins(s,newPieces);
     for(const update of plan.updates){const existing=s.structures.find(e=>e.id===update.id);if(existing)Object.assign(existing,update);}
     s.structures.push(...newPieces);s.nextId+=newPieces.length;s.sequence+=newPieces.length;s.suppressed.push(...plan.suppressed.filter(key=>!s.suppressed.includes(key)));nav.setState(s);
+    for(const ruin of replaced)emit(s,'WallRemoved',{
+      targetId:ruin.id,refund:0,replacedBy:newPieces.find(piece=>
+        Math.hypot(ruin.x-piece.x,ruin.z-piece.z)<.35)?.id});
     emit(s,'WallChainBuilt',{material,count:newPieces.length,gates:plan.gates,targetId:newPieces[0].id,presentation:{x:newPieces[0].x,z:newPieces[0].z}});
   });
 }
