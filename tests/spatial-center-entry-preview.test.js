@@ -99,6 +99,36 @@ test('a center quote checks both worker directions for each eligible village',as
       JSON.stringify([...costs]));
     assert.deepEqual(session.routeStamp(),stamp);
     assert.equal(session.core.wasm.lazy_route_revision(),revision);
+    const barrier=session.core.addWall(77,-12,.4,18);
+    try{
+      assert(barrier>0);
+      assert.equal(nav.segmentClear({x:76,z:-12},entry,.28,null,true),false);
+      const nativeRevision=session.core.wasm.lazy_route_revision();
+      const obstructed=Game.previewCenter(state,point,nav);
+      assert.equal(obstructed.valid,true);
+      const lengths=new Map(),from=centerServicePoint(obstructed,state,.8);
+      nav.withWallPreview([],obstructed.suppress??[],()=>{
+        const polygon=session.core.addPolygon(obstructed.footprint.footprint,0);
+        try{
+          for(const village of state.villages){
+            const destination=village.entry??village;
+            const route=nav.path(from,destination,.28,null,true);
+            if(!route)continue;
+            let length=0,previous=from;
+            for(const waypoint of route){
+              length+=Math.hypot(previous.x-waypoint.x,previous.z-waypoint.z);
+              previous=waypoint;
+            }
+            lengths.set(village.id,length);
+          }
+        }finally{session.core.removePolygon(polygon);}
+      });
+      assert(lengths.get('village-1')+10<lengths.get('village-secondary'),
+        'the wall creates a materially longer route to the closer village');
+      assert.equal(obstructed.villageId,'village-1',
+        'the selected center must avoid the longer physically valid worker commute');
+      assert.equal(session.core.wasm.lazy_route_revision(),nativeRevision);
+    }finally{session.core.removeWall(barrier);}
   }finally{session.dispose();}
 });
 

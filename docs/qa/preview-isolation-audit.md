@@ -134,10 +134,18 @@ specific preview scenario. A two-village center quote regression proves
 bidirectional worker access and unchanged confirmed revisions. It also
 measures both routes inside an isolated hypothesis instance and confirms
 that the chosen village has the shorter physical route in this fixture.
-The ordinary quote still uses direct distance as its tie-break, so more
-obstructed layouts could rank reachable villages differently from the
-historical route-length criterion; that policy difference remains explicit.
-Do not merge until that functional tradeoff has been reviewed.
+Before the additional correction, the quote used direct distance as its
+tie-break. An obstructed version of the same fixture demonstrated the risk: the direct
+choice required a 51.05 m native route versus 34.05 m to the other village.
+The native read-only overlay BFS now returns its already explored access
+cost when the center quote requests it; the quote ranks eligible villages
+by that cost after proving both directions. It selects the shorter commute
+in this fixture without building route arrays or changing confirmed state.
+This is the cost of the BFS path first discovered by the overlay, not a
+guarantee of the globally shortest continuous route when portals have
+different lengths. Ordinary reachability requests skip the extra cost
+buffer. Do not merge until sustained runtime cost with this addition has
+been checked.
 The source tree is now `src/world/wild-engine/`; the rename was
 separate from the behavioral change and all 204 playable tests, 51 directed
 wall/enclosure tests, and the WASM/Vite builds pass after it.

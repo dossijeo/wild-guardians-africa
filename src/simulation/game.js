@@ -112,13 +112,16 @@ export function previewCenter(s,{x,z,yaw=0},nav) {
       // workers must still be able to stand at the actual village entry.
       let routeLength;
       if(nav.withCenterPreview){
-        if(routes.walkable(entry.x,entry.z,.28,null,true)!==true||
-          routes.reachable(entry,departure)!=='found'||
-          routes.reachable(departure,entry)!=='found')return;
-        // The overlay proves a physical route in both directions. A direct
-        // distance is only the economic tie-break between eligible villages;
-        // no actor will follow it as a path.
-        routeLength=dist(departure,entry);
+        if(routes.walkable(entry.x,entry.z,.28,null,true)!==true)return;
+        const reach=routes.reachCost?
+          (start,end)=>routes.reachCost(start,end):
+          (start,end)=>({status:routes.reachable(start,end),cost:null});
+        const outbound=reach(entry,departure),inbound=reach(departure,entry);
+        if(outbound.status!=='found'||inbound.status!=='found')return;
+        // The same native overlay search already traversed the accessible
+        // cells. Its cost avoids assigning a center through a long detour
+        // merely because that village is closer in a straight line.
+        routeLength=Number.isFinite(inbound.cost)?inbound.cost:dist(departure,entry);
       }else{
         const outbound=routes.path(entry,departure,.28,null,true),
           inbound=outbound&&routes.path(departure,entry,.28,null,true);

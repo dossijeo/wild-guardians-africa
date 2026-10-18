@@ -360,7 +360,7 @@ export function createSpatialWorld(module){
       return result<0?null:Boolean(result);
     },
     overlayReachBatch:(origin,targets,removeIds,barriers,
-      {reverse=false,margin=16,portals=[],propIds=[],polygons=[]}={})=>{
+      {reverse=false,margin=16,portals=[],propIds=[],polygons=[],withCost=false}={})=>{
       if(!Array.isArray(targets)||targets.length<1||targets.length>256||
         !Array.isArray(removeIds)||removeIds.length>4||
         removeIds.some(id=>!Number.isSafeInteger(id)||id<=0)||
@@ -390,11 +390,16 @@ export function createSpatialWorld(module){
       }
       const found=wasm.spatial_overlay_reach_batch(origin.x,origin.z,targets.length,
         removeIds.length,barriers.length,propCount,portals.length,reverse?1:0,
-        margin,polygonCount);
+        margin,polygonCount,withCost?1:0);
       if(found<0)return null;
       const output=wasm.spatial_overlay_reach_result_ptr();
-      return [...new Int32Array(wasm.memory.buffer,output,targets.length)]
+      const statuses=[...new Int32Array(wasm.memory.buffer,output,targets.length)]
         .map(value=>value===1?'found':'unknown');
+      if(!withCost)return statuses;
+      const costs=wasm.spatial_overlay_reach_cost_ptr();
+      const values=[...new Float32Array(wasm.memory.buffer,costs,targets.length)];
+      return statuses.map((status,i)=>({status,
+        cost:status==='found'?values[i]:null}));
     },
     localClearExcept:(start,end,ids)=>{
       if(!Array.isArray(ids)||ids.length<1||ids.length>4||

@@ -83,7 +83,12 @@ export function createSpatialGameSession(module,state,streamOptions){
   let previewCore=null,previewKey='';
   function isolatedPreviewCore(){
     const stamp=routeStamp();
-    const key=`${stamp.wall}:${stamp.other}:${stamp.chunks}`;
+    // The JS mirrors cover ordinary game commands, but native-only topology
+    // changes also invalidate a reusable hypothesis instance. A confirmed
+    // native revision is cheap to read and cannot be advanced by the scratch
+    // world's own speculative mutations.
+    const key=`${stamp.wall}:${stamp.other}:${stamp.chunks}:`+
+      `${confirmedCore.wasm.lazy_route_revision()}`;
     if(previewCore&&previewKey===key)return previewCore;
     const scratch=createSpatialWorld(module);
     const current=confirmedCore.currentChunk();
@@ -396,10 +401,13 @@ export function createSpatialGameSession(module,state,streamOptions){
       throw TypeError('Provisional village buildings need physical footprints');
     const propIds=suppress.filter(id=>!props.suppressed.has(id));
     selectProfile(WORKER_SPATIAL_PROFILE);
+    const reach=(start,end,withCost)=>core.overlayReachBatch(start,[end],[],[],
+      {margin:48,polygons,propIds,withCost})?.[0]??
+      (withCost?{status:'unknown',cost:null}:'unknown');
     return inspect({
       walkable:point=>core.overlayLocalClear(point,point,[],[],propIds,polygons),
-      reachable:(start,end)=>core.overlayReachBatch(start,[end],[],[],
-        {margin:48,polygons,propIds})?.[0]??'unknown'
+      reachable:(start,end)=>reach(start,end,false),
+      reachCost:(start,end)=>reach(start,end,true)
     });
   }
   // Only settlements change the far relief. Walls, crop turnover, shield HP and

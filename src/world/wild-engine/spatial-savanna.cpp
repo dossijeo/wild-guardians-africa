@@ -2163,25 +2163,29 @@ int spatial_overlay_local_clear(float x,float z,float nx,float nz,int removeCoun
 std::vector<float> overlayReachInput;
 std::vector<float> overlayReachPortals;
 std::vector<int32_t> overlayReachOutput;
+std::vector<float> overlayReachCosts;
 float* spatial_overlay_reach_input_ptr(int count){
   if(count<1||count>256)return nullptr;
   overlayReachInput.resize(size_t(count)*2);
   return overlayReachInput.data();
 }
 int32_t* spatial_overlay_reach_result_ptr(){return overlayReachOutput.data();}
+float* spatial_overlay_reach_cost_ptr(){return overlayReachCosts.data();}
 float* spatial_overlay_reach_portal_ptr(int count){
   if(count<0||count>128)return nullptr;
   overlayReachPortals.resize(size_t(count)*4);
   return overlayReachPortals.data();
 }
 int spatial_overlay_reach_batch(float x,float z,int count,int removeCount,
-  int addCount,int propCount,int portalCount,int reverse,int margin,int polygonCount){
+  int addCount,int propCount,int portalCount,int reverse,int margin,int polygonCount,
+  int recordCost){
   if(!navReady||!std::isfinite(x)||!std::isfinite(z)||count<1||count>256||
      overlayReachInput.size()<size_t(count)*2||removeCount<0||removeCount>4||
      addCount<0||addCount>128||propCount<0||propCount>128||
      portalCount<0||portalCount>128||
      overlayReachPortals.size()<size_t(portalCount)*4||
-     (reverse!=0&&reverse!=1)||margin<0||margin>48)
+     (reverse!=0&&reverse!=1)||(recordCost!=0&&recordCost!=1)||
+     margin<0||margin>48)
     return -1;
   std::array<Barrier,128> proposed;
   std::vector<PolygonObstacle> polygons;
@@ -2224,6 +2228,7 @@ int spatial_overlay_reach_batch(float x,float z,int count,int removeCount,
     return probe(float(ax),float(az),float(bx),float(bz));
   };
   overlayReachOutput.assign(size_t(count),-1);
+  if(recordCost)overlayReachCosts.assign(size_t(count),-1.f);
   double minX=x,maxX=x,minZ=z,maxZ=z;
   for(int i=0;i<count;i++){
     const float tx=overlayReachInput[i*2],tz=overlayReachInput[i*2+1];
@@ -2273,6 +2278,8 @@ int spatial_overlay_reach_batch(float x,float z,int count,int removeCount,
       }
   }
   std::vector<uint8_t> seen(size_t(width)*height,0);
+  std::vector<float> reachCost;
+  if(recordCost)reachCost.assign(size_t(width)*height,0.f);
   std::vector<int> queue;
   queue.reserve(std::min(width*height,8192));
   for(int cz=int(std::floor(z))-1;cz<=int(std::ceil(z))+1;cz++)
@@ -2284,7 +2291,9 @@ int spatial_overlay_reach_batch(float x,float z,int count,int removeCount,
       const int clear=reverse?
         probe(float(cx),float(cz),x,z):
         probe(x,z,float(cx),float(cz));
-      if(clear==1){seen[cell]=1;queue.push_back(cell);}
+      if(clear==1){seen[cell]=1;
+        if(recordCost)reachCost[cell]=std::hypot(float(cx)-x,float(cz)-z);
+        queue.push_back(cell);}
     }
   int found=0;
   constexpr int dx[4]={1,-1,0,0},dz[4]={0,0,1,-1};
@@ -2297,7 +2306,10 @@ int spatial_overlay_reach_batch(float x,float z,int count,int removeCount,
         const int clear=reverse?
           probe(tx,tz,float(cx),float(cz)):
           probe(float(cx),float(cz),tx,tz);
-        if(clear==1){overlayReachOutput[target]=1;found++;}
+        if(clear==1){overlayReachOutput[target]=1;
+          if(recordCost)overlayReachCosts[target]=reachCost[cell]+
+            std::hypot(float(cx)-tx,float(cz)-tz);
+          found++;}
       }
     if(const auto it=crossingsByCell.find(cell);it!=crossingsByCell.end())
       for(const int crossingId:it->second){
@@ -2319,7 +2331,13 @@ int spatial_overlay_reach_batch(float x,float z,int count,int removeCount,
             const int exit=reverse?
               probe(float(px),float(pz),crossing.toX,crossing.toZ):
               probe(crossing.toX,crossing.toZ,float(px),float(pz));
-            if(exit==1){seen[destination]=1;queue.push_back(destination);}
+            if(exit==1){seen[destination]=1;
+              if(recordCost)reachCost[destination]=reachCost[cell]+
+                std::hypot(float(cx)-crossing.fromX,float(cz)-crossing.fromZ)+
+                std::hypot(crossing.fromX-crossing.toX,
+                  crossing.fromZ-crossing.toZ)+
+                std::hypot(float(px)-crossing.toX,float(pz)-crossing.toZ);
+              queue.push_back(destination);}
           }
       }
     for(int d=0;d<4;d++){
@@ -2329,7 +2347,9 @@ int spatial_overlay_reach_batch(float x,float z,int count,int removeCount,
       if(seen[next])continue;
       const int clear=reverse?
         gridEdge(nx,nz,cx,cz):gridEdge(cx,cz,nx,nz);
-      if(clear==1){seen[next]=1;queue.push_back(next);}
+      if(clear==1){seen[next]=1;
+        if(recordCost)reachCost[next]=reachCost[cell]+1.f;
+        queue.push_back(next);}
     }
   }
   return found;
