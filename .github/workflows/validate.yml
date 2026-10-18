@@ -37,6 +37,10 @@ jobs:
       - run: npm run verify:browser-syntax
       - run: npm run test:playable
       - run: npm test
+        env:
+          WILD_ENGINE_NATIVE_ROUTE_WASM: ${{ github.workspace }}/src/world/wild-engine/spatial-savanna.wasm
+          WILD_ENGINE_SPATIAL_SERVICES_WASM: ${{ github.workspace }}/src/world/wild-engine/spatial-savanna.wasm
+          WILD_ENGINE_TOPOLOGICAL_CUT_WASM: ${{ github.workspace }}/src/world/wild-engine/spatial-savanna.wasm
       - run: npm run build
       - run: npm run test:web-package
       - run: python tools/package_itch.py
