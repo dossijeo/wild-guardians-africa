@@ -1,0 +1,7 @@
+# Suite completa tras retirar entidades agrícolas resueltas
+
+En el árbol `5e90705fc1ed2fc7283822fcd8b7ced3ac41e395` (commit de la PR #134 `5c8d856e`, fusionado en `main` como `72959321`), `npm test` terminó en Windows con **4.469 pruebas aprobadas, cero fallidas y 60 omitidas** de 4.529, en 430,8 s. La suite incluye los treinta pares de bioma y cultura de la campaña de abandono, cinco culturas en la poscampaña de 300 noches, tutorial, restauración y las nuevas pruebas de retirada. El SHA-256 del WASM de producción era `674bdf018817e1fa75e5181525faa3f516b90b9072af844fdc08e64fdcbf6b9c`.
+
+También pasaron `npm run test:playable` (214/214), `npm run build`, `npm run verify:plan`, las tres pruebas de auditoría SFX y todos los pasos locales de «Validate game»: activos, web, audio, balance, sintaxis del navegador, paquete web y ZIP itch con CRC verificado. El propio «Validate game» de la PR #134 terminó correctamente. Esta PR incorpora `npm test` al workflow para que ese resultado deje de ser una comprobación manual ocasional.
+
+Los 60 casos omitidos son pruebas nativas optativas que requieren variables `WILD_ENGINE_*_WASM`; su cobertura no queda demostrada por el recuento anterior. Las aceptaciones QA-014 (teléfono físico) y QA-156 (escucha perceptual/campaña musical completa) siguen parciales. Una suite Node verde tampoco demuestra FPS, memoria de navegador ni jugabilidad física en teléfono.

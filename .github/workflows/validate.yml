@@ -35,10 +35,8 @@ jobs:
       - run: npm run verify:plan
       - run: npm run verify:balance
       - run: npm run verify:browser-syntax
-      # Provisional release gate for the new magic/raid mechanics. The complete
-      # historical suite remains available as `npm test` while old assertions
-      # that encode superseded balance rules are migrated.
       - run: npm run test:playable
+      - run: npm test
       - run: npm run build
       - run: npm run test:web-package
       - run: python tools/package_itch.py
