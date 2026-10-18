@@ -1,6 +1,6 @@
 # Other Wild Guardians VFX: depth-capture audit
 
-The Growth and Multiply optimization does **not** yet apply to the other effects. All native effects use instanced sprite/rigid buffers, but shield, animal attack, worker, impact, and locomotion effects still request the shared soft-particle scene-depth capture. The capture occurs once per frame if any active effect needs it; it is not repeated for each effect. Those effects also retain their world point lights. This audit changes no production renderer behavior.
+At the time of this baseline, the Growth and Multiply optimization did **not** apply to other effects. All native effects use instanced sprite/rigid buffers, but shield, animal attack, worker, impact, and locomotion effects requested the shared soft-particle scene-depth capture. The capture occurs once per frame if any active effect needs it; it is not repeated for each effect. Those effects retain their world point lights. This baseline audit changed no production renderer behavior. A later [watering-only correction](../watering-vfx-depth-2026-10-18.md) removes capture for its sprites, which all have `soft: 0`.
 
 ## Hardware comparison
 
