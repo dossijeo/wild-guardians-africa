@@ -22,6 +22,7 @@ for(const biome of ['sabana','gran-rio','manglares','volcanes','desierto','gran-
         for(const piece of solid){
           const gate={...piece,gate:true},ports=gatePortalPoints(gate);
           if(ports.length!==2)continue;
+          session.actorCanStand(ports[0],{worker:true});
           const before=session.core.wasm.lazy_sector_updates();
           const overlay=nav.gateOverlayClear(gate,ports);
           assert.equal(session.core.wasm.lazy_sector_updates(),before,
@@ -54,6 +55,7 @@ for(const biome of ['sabana','gran-rio','manglares','volcanes','desierto','gran-
         for(const piece of solid){
           const gate={...piece,gate:true},ports=gatePortalPoints(gate);
           if(ports.length!==2)continue;
+          session.actorCanStand(ports[0],{worker:true});
           const before=session.core.wasm.lazy_sector_updates();
           const readOnly=local.gateClear(gate,ports);
           assert.equal(session.core.wasm.lazy_sector_updates(),before);

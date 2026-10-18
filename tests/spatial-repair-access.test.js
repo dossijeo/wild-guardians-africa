@@ -65,6 +65,13 @@ test('Sabana/123 day 83: repeated repair hypotheses leave confirmed revisions an
       });
       assert.deepEqual(session.routeStamp(),beforeStamp);
     }
+    const confirmed=session.core;
+    for(let i=0;i<100;i++){
+      nav.withWallPreview([repaired],[],draft=>
+        draft.walkable(repaired.x,repaired.z,.28,null,true),true);
+      assert.equal(session.core,confirmed);
+      assert.deepEqual(session.routeStamp(),beforeStamp);
+    }
     assert.equal(session.core.wasm.lazy_sector_updates(),beforeSectors);
     let statePreviews=0;
     const originalPreview=nav.withWallStatePreview;
@@ -90,6 +97,8 @@ test('Sabana/123 day 83: repeated repair hypotheses leave confirmed revisions an
       for(let i=0;i<10;i++){
         session.withWallStatePreview(hypothetical,({route:probe})=>
           probe(actor,home));
+        nav.withWallPreview([repaired],[],draft=>
+          draft.walkable(repaired.x,repaired.z,.28,null,true),true);
         tick(game,.1,nav);
         tick(restored,.1,reopened.nav);
         assert.equal(serialize(game),serialize(restored),

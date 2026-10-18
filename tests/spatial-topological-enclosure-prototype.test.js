@@ -718,8 +718,10 @@ test('Gran Cañón natural corridor closes around planted crops and rejects unce
         const physical=corridorQuote?nav.withWallPreview(
           corridorQuote.previewPieces,corridorQuote.suppressed,()=>{
             const counts={solid:0,wetland:0,river:0,cliff:0,unproved:0};
+            const previewWasm=session.core.wasm;
             for(let i=0;i<corridorBoundary.length;i+=4){
-              const code=wasm.lazy_cut_face_natural(...corridorBoundary.slice(i,i+4));
+              const code=previewWasm.lazy_cut_face_natural(
+                ...corridorBoundary.slice(i,i+4));
               if(code===1)counts.solid++;else if(code===2)counts.wetland++;
               else if(code===3)counts.river++;else if(code===4)counts.cliff++;
               else counts.unproved++;

@@ -53,9 +53,7 @@ as an actor route. Before integration, compare center purchases and economics
 on multi-village fixtures or add a native route-cost result if this ranking
 change is material.
 
-## Remaining speculative mutation path
-
-These corrections do **not** yet establish the contract for all previews:
+## Enclosure and general wall hypotheses
 
 The topological enclosure cut (including the day-80 local rock detour) now
 evaluates the proposed wall footprints with a read-only native solid-face
@@ -70,32 +68,38 @@ under an overlay; its directed quote test likewise leaves the native worker
 revision unchanged. These changes remove the remaining production enclosure
 calls to `withWallPreview()` and keep uncertified cases as `unknown`.
 
-| Service | Current speculative behavior | Required separation |
-| --- | --- | --- |
-| `withWallPreview()` | Adds/removes native barriers, restores removed props, and optionally rebuilds worker portals in the confirmed instance. Nested calls repeat that work. | A native query context/overlay for the wall, prop and portal hypothesis, including enclosure certification and any requested routes. |
+The generic `withWallPreview()` API still needs exact path semantics for older
+QA probes and rare compatibility paths. Its mutating implementation now runs
+inside a disposable *hypothesis instance* of the same C++/WASM engine,
+reconstructed from the confirmed native snapshot and resident chunks. It is
+reused until a confirmed topology or residency revision changes. Barriers,
+suppressed props, portals, sectors, route caches and their revisions in that
+instance are never authoritative. The callback's session navigation points
+to the hypothesis only for its synchronous scope; finally restores the
+confirmed engine, even if the callback throws. A failed restoration discards
+the hypothesis instance. This retains the old physical route checks without
+rolling back revision counters or risking confirmed route handles. It does
+cost extra memory while a legacy preview is needed; the read-only overlays
+remain the ordinary path.
 
-A reproducible one-wall `withWallPreview()` probe in a Sabana/123 opening left
-the JS wall stamp unchanged but advanced `lazy_sector_updates()` from 196 to
-204 and `lazy_route_revision()` from 201 to 210. Run it with
-`node tools/experiments/audit-wall-preview-isolation.mjs`. This
-demonstrates that merely preserving the JS revision is insufficient: the native
-graph is still modified and rebuilt. The current tests for general wall previews
-assert eventual physical restoration, not full observational isolation.
-
-The native overlay already supports local clearance and bounded worker
-reachability. It does not yet expose the hypothetical enclosure certification
-and complete route semantics used by all callers. Replacing those calls with a
-positive-only connectivity result would silently weaken the construction
-guarantees. A follow-up implementation must extend the existing native query
-context, compare its answers against the current full preview across the six
-biomes, and then remove the mutating path. A separate authoritative world or a
-manual rollback of revision counters would leave cache and route-handle safety
-unproven.
+Before isolation, a one-wall Sabana/123 probe increased confirmed
+`lazy_sector_updates()` 196→204 and `lazy_route_revision()` 201→210. The
+same reproducible probe now reports 196→196 and 201→201 across 100 previews.
+On this host, the first hypothesis cost 261 ms and the remaining 99 together
+cost 402 ms (single run; not a distributional benchmark). The dedicated test
+also compares the complete native spatial snapshot, all profile revisions,
+intention counters, game serialization, and a confirmed route after 100
+previews plus a thrown callback. The frozen day-83 test performs another 100
+generic wall hypotheses and 100 repair hypotheses, then interleaves both
+with ten ticks; the two serialized trajectories remain equal. The six-biome
+gate and enclosure regression suite passes with the hypothesis instance.
 
 ## Integration status
 
-This branch is experimental. The day-83 source of the 116 confirmed wall
-revisions and the building-preview mutation are addressed, but the general
-wall-preview contract, longer interleaved
-simulation, and full Sabana/123 V1 campaign have not yet passed. Do not merge
-until those checks and physical access/protection regressions are complete.
+This branch remains experimental. The known speculative revision leaks and
+directed physical regressions are addressed. The full Sabana/123 V1 campaign,
+multi-village center-ranking comparison, and broader performance comparison
+are pending. Do not merge until sustained simulation and reproduction have
+been reviewed. The source tree is now `src/world/wild-engine/`; the rename was
+separate from the behavioral change and all 204 playable tests, 51 directed
+wall/enclosure tests, and the WASM/Vite builds pass after it.

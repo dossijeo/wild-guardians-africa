@@ -282,9 +282,12 @@ test('a center-adjacent crop uses valid animal attack sites to certify its enclo
   assert.equal(quote.pieces.length,35);
   assert.equal(quote.blockedPieces.length,1,
    'one physical obstacle substitutes for a wall module');
-  const after=nav.withWallPreview(quote.previewPieces,quote.suppressed,()=>
-   bridge.getUnprotectedCropGroups({includeProtected:true})
-    .find(item=>item.id===group.id),true);
+  const after=nav.withWallPreview(quote.previewPieces,quote.suppressed,()=>{
+   const draft=createSpatialIntentBridge(session);
+   draft.resetFromState(game);
+   return draft.getUnprotectedCropGroups({includeProtected:true})
+    .find(item=>item.id===group.id);
+  },true);
   assert.equal(after.protection,'protected',JSON.stringify(after.profiles));
   assert(Object.values(after.profiles).every(status=>status==='protected'));
   assert.equal(bridge.getUnprotectedCropGroups()[0].protection,'unprotected',

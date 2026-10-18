@@ -18,7 +18,8 @@ import {BIOME_IDS} from '../biome-ids.js';
 export function createSpatialGameSession(module,state,streamOptions){
   if(!Object.hasOwn(BIOME_IDS,state?.biome)||!Array.isArray(state.villages)||!state.villages.length)
     throw TypeError('Expected a supported game biome and a village');
-  const core=streamOptions.core??createSpatialWorld(module),first=state.villages[0];
+  let core=streamOptions.core??createSpatialWorld(module);
+  const confirmedCore=core,first=state.villages[0];
   const cx=Math.floor((first.x+24)/48),cz=Math.floor((first.z+24)/48);
   if(streamOptions.core){
     const generated=core.terrainState();
@@ -79,6 +80,28 @@ export function createSpatialGameSession(module,state,streamOptions){
     workerPortalTerrainRevision=-1,workerPortalCenterRevision=-1,
     workerPortalPropRevision=-1;
   let activeWallPreview=null;
+  let previewCore=null,previewKey='';
+  function isolatedPreviewCore(){
+    const stamp=routeStamp();
+    const key=`${stamp.wall}:${stamp.other}:${stamp.chunks}`;
+    if(previewCore&&previewKey===key)return previewCore;
+    const scratch=createSpatialWorld(module);
+    const current=confirmedCore.currentChunk();
+    scratch.restoreState(confirmedCore.snapshot(),current.cx,current.cz);
+    for(const name of streamOptions.loaded().keys()){
+      const [cx,cz]=name.split(',').map(Number);
+      if(Number.isInteger(cx)&&Number.isInteger(cz))scratch.addChunk(cx,cz);
+    }
+    const movementProfiles=[WORKER_SPATIAL_PROFILE,
+      ...Object.values(ANIMAL_SPATIAL_PROFILES)];
+    for(const index of profiles){
+      const profile=movementProfiles.find(item=>item.index===index);
+      if(!profile)throw Error(`Unknown preview navigation profile ${index}`);
+      scratch.buildNavigationProfile(profile.index,profile.radius,profile.worker);
+    }
+    previewCore=scratch;previewKey=key;
+    return scratch;
+  }
   function installWorkerPortals(extra=[]){
     const gates=new Map(state.structures.filter(s=>s.kind==='wall'&&s.gate)
       .map(s=>[s.id,s]));
@@ -186,6 +209,9 @@ export function createSpatialGameSession(module,state,streamOptions){
     if(!Array.isArray(proposed)||!Array.isArray(suppress)||typeof inspect!=='function')
       throw TypeError('Expected proposed walls, suppressed props and a callback');
     const parent=activeWallPreview;
+    const previousCore=core;
+    const portalRevisions=[workerPortalRevision,workerPortalChunkRevision,
+      workerPortalTerrainRevision,workerPortalCenterRevision,workerPortalPropRevision];
     const previous=parent?.suppressed??[...props.suppressed];
     const desired=[...new Set([...props.suppressed,...suppress])];
     const records=ids=>ids.map(id=>{
@@ -194,6 +220,17 @@ export function createSpatialGameSession(module,state,streamOptions){
       return {group:Number(match[1]),gx:Number(match[2]),gz:Number(match[3])};
     });
     const barriers=proposed.flatMap(wall=>spatialStructureBarriers(wall));
+    if(!parent){
+      core=isolatedPreviewCore();
+      try{installWorkerPortals();}
+      catch(error){
+        core=previousCore;previewCore=null;previewKey='';
+        [workerPortalRevision,workerPortalChunkRevision,
+          workerPortalTerrainRevision,workerPortalCenterRevision,
+          workerPortalPropRevision]=portalRevisions;
+        throw error;
+      }
+    }
     let ids=[],context=null,parentRemoved=false;
     try{
       if(parent?.ids.length){core.applyBarrierChanges(parent.ids,[]);parent.ids=[];parentRemoved=true;}
@@ -207,18 +244,33 @@ export function createSpatialGameSession(module,state,streamOptions){
         selectProfile(WORKER_SPATIAL_PROFILE);
         installWorkerPortals(proposed);
       }
-      return inspect();
+      const answer=inspect();
+      if(answer&&typeof answer.then==='function')
+        throw TypeError('A wall preview must finish synchronously');
+      return answer;
     }finally{
-      if(context?.ids.length)core.applyBarrierChanges(context.ids,[]);
-      else if(!context&&ids.length)core.applyBarrierChanges(ids,[]);
-      activeWallPreview=parent;
-      if(context?.refreshPortals){
-        selectProfile(WORKER_SPATIAL_PROFILE);
-        installWorkerPortals(parent?.proposed??[]);
+      let restored=false;
+      try{
+        if(context?.ids.length)core.applyBarrierChanges(context.ids,[]);
+        else if(!context&&ids.length)core.applyBarrierChanges(ids,[]);
+        activeWallPreview=parent;
+        if(context?.refreshPortals){
+          selectProfile(WORKER_SPATIAL_PROFILE);
+          installWorkerPortals(parent?.proposed??[]);
+        }
+        if(desired.length!==previous.length||desired.some(id=>!previous.includes(id)))
+          core.restoreRemovedProps(records(previous));
+        if(parentRemoved)parent.ids=core.applyBarrierChanges([],parent.barriers);
+        restored=true;
+      }finally{
+        if(!parent){
+          core=previousCore;
+          [workerPortalRevision,workerPortalChunkRevision,
+            workerPortalTerrainRevision,workerPortalCenterRevision,
+            workerPortalPropRevision]=portalRevisions;
+          if(!restored){previewCore=null;previewKey='';activeWallPreview=null;}
+        }
       }
-      if(desired.length!==previous.length||desired.some(id=>!previous.includes(id)))
-        core.restoreRemovedProps(records(previous));
-      if(parentRemoved)parent.ids=core.applyBarrierChanges([],parent.barriers);
     }
   }
   // A repair can restore a solid wall and close a previously open passage.
@@ -369,12 +421,12 @@ export function createSpatialGameSession(module,state,streamOptions){
   const queryPropsAt=(x,z,radius)=>queryResidentSpatialProps(
     streamOptions.loaded(),props.suppressed,x,z,radius,
     key=>chunkRevisions.get(key)??0);
-  return {core,field,stream,horizonSource,topologySource,routeStamp,
+  return {get core(){return core;},field,stream,horizonSource,topologySource,routeStamp,
     routeUnaffectedByWalls,suppressed:props.suppressed,syncState,
     routeActor,routeActorNative,routeActorNativeBatch,actorConnectivity,actorSectorRevision,actorRegions,actorEnclosure,actorRegionsBatch,actorCanStand,actorStepClear,
     actorStepClearExceptWalls,
     queryPropsAt,withWallPreview,withWallStatePreview,gateOverlayClear,
     wallLocalOverlay,wallWorkerReachability,wallCutSolidFaces,
     withVillageEntryPreview,
-    dispose:()=>stream.dispose()};
+    dispose:()=>{previewCore=null;stream.dispose();}};
 }

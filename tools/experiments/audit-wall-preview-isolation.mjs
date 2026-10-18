@@ -1,7 +1,8 @@
 import {createSpatialCampaignOpening} from './spatial-campaign-opening.mjs';
+import {performance} from 'node:perf_hooks';
 
-// Diagnostic for the remaining mutating wall-preview path. A clean preview
-// would leave all confirmed revision counters unchanged.
+// Frozen, reproducible probe for confirmed-graph isolation and the cost of
+// the first and subsequent exact legacy wall hypotheses.
 const {session,nav,start}=await createSpatialCampaignOpening({
   biome:'sabana',seed:123,slotId:'wall-preview-isolation-audit'});
 try{
@@ -15,10 +16,17 @@ try{
     sectors:session.core.wasm.lazy_sector_updates(),
     nativeRoute:session.core.wasm.lazy_route_revision()});
   const before=snapshot();
+  const started=performance.now();
   nav.withWallPreview([proposal],[],draft=>
     draft.walkable(proposal.x,proposal.z,.28,null,true));
+  const firstMs=performance.now()-started;
+  const warmed=performance.now();
+  for(let i=1;i<100;i++)nav.withWallPreview([proposal],[],draft=>
+    draft.walkable(proposal.x,proposal.z,.28,null,true));
+  const remainingMs=performance.now()-warmed;
   const after=snapshot();
   console.log(JSON.stringify({proposal:{x:proposal.x,z:proposal.z},before,after,
     sectorDelta:after.sectors-before.sectors,
-    routeRevisionDelta:after.nativeRoute-before.nativeRoute}));
+    routeRevisionDelta:after.nativeRoute-before.nativeRoute,
+    firstMs,remainingMs,previewCount:100}));
 }finally{session.dispose();}
