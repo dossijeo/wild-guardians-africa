@@ -872,3 +872,43 @@ clear sustained advantage. Do not infer from this single seed that tougher
 walls are intrinsically bad; the farm's attraction and attack feedback need
 more careful military-pressure tuning. We do not recommend this durability
 candidate for production or promote it to a 100-night run on this evidence.
+
+## Attraction-sensitive recovery count: 30-night pilot
+
+The next isolated candidate changes only the V1 animal-count factor from
+`0.35 + 0.60 A/(A+1500)` to `0.25 + 0.70 A/(A+1500)`, where `A` is the
+currently observed crop attraction. Hit budgets, structural damage, wall
+prices/HP, virtual-player policy and the five introductory nights remain
+unchanged. At attraction 500 the factor is 0.425 instead of 0.500; at 10,000
+it is 0.859 instead of 0.872. This tests whether pressure falls enough to
+support recovery after agricultural losses without much easing a large farm.
+The [candidate recipe](../../../tools/experiments/balance-candidates/v1-pressure-recovery-count.json)
+and [full 30-night report](current-main-pr107-v1-recovery-count-sabana712-30.json.gz)
+make the run reproducible.
+
+The current-engine Sabana/712 standard-price 60-night report above supplies
+the first 30 control nights. Both runs used the same WASM, game, raids and
+runner hashes and the same topological virtual-player policy. The first five
+nights had identical living-crop and cash counts; serialized hashes differ
+because the saved pressure recipe identifies its candidate. Night 6 was the
+first gameplay divergence (four candidate animals versus five control).
+Both arms have 30 verified real raids, zero evidence issues and no coverage
+loss.
+
+| Measure through night 30 | Original V1 count | Recovery-count candidate |
+| --- | ---: | ---: |
+| Living crops / coins | 84 / 977 | 99 / 1,152 |
+| Animals, nights 6–30 | 323 | 293 |
+| Crops destroyed by raids, nights 6–30 | 420 | 278 |
+| Wall hits, nights 6–30 | 704 | 689 |
+| Wall purchases / repairs, coins | 530 / 1,803 | 800 / 1,613 |
+| Income / wages / seeds, coins | 41,774 / 17,780 / 21,384 | 41,107 / 18,127 / 20,115 |
+| `Game.tick` / bot decisions, seconds | 273.60 / 83.39 | 299.94 / 79.14 |
+
+The candidate retained 15 more crops and 175 more coins, but bought 270
+coins more in walls. This is a different farm trajectory, so the tick times
+cannot establish a navigation speed change. The earlier cheaper and stronger
+wall candidates also looked favorable at night 30 before reversing later.
+The recovery-count candidate therefore needs a sustained 60-night replay
+before any balance recommendation, followed by independent seeds and biomes.
+No production parameter was changed.
