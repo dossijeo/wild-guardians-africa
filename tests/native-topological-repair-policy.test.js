@@ -44,7 +44,7 @@ function fixture(){
   startDay:99,repairWalls:true,repairCenters:true});
  const options={command:kind=>`topological-${kind}-${commands++}`,
   reserve:100,centerReserve:50};
- return {state,wall,center,nav,policy,options,
+ return {state,wall,center,nav,policy,options,advice,
   queries:()=>({walls:wallQueries,centers:centerQueries})};
 }
 
@@ -98,4 +98,27 @@ test('a damaged center has priority and a breach wakes maintenance without plann
  assert.equal(numberOf(state.ledger.balance),before,
   'ordinary repair tasks pay only when a worker completes them');
  assert.equal(policy.report().conditionNotifications,2);
+});
+
+test('new breach events outrank obsolete agricultural group IDs',()=>{
+ const {state,wall,nav,policy,options,advice}=fixture();
+ policy.act(state,nav,options);
+ const old={...wall,id:'structure-100',created:100,x:4,hp:0,
+  status:'ruined',defenseGroupId:'crop:old'};
+ const fresh={...wall,id:'structure-200',created:200,x:8,hp:0,
+  status:'ruined',defenseGroupId:'crop:replanted'};
+ state.structures.push(old,fresh);nav.setState(state);
+ advice.getDamagedWalls=()=>[old,fresh].map(item=>({id:item.id,
+  kind:'wall',hp:0,maxHp:100,status:'ruined',paidCoins:10,
+  damageRatio:1,plannedGroupId:item.defenseGroupId}));
+ policy.onCropProtectionChanged({groupId:'crop:old',
+  group:{value:10000},protection:'unprotected'});
+ for(const item of [old,fresh])policy.onStructureConditionChanged({
+  change:'breach',kind:'wall',structureId:item.id,hp:0,maxHp:100,
+  status:'ruined'});
+ assert.equal(policy.act(state,nav,options),2);
+ assert.deepEqual(policy.report().repairHistory.map(row=>row.id),
+  [fresh.id,old.id]);
+ assert.equal(policy.act(state,nav,options),0,
+  'idle decisions must not request the same repairs again');
 });

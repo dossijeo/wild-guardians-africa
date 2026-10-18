@@ -19,7 +19,8 @@ export function createNativeTopologicalDefensePolicy({session,advice,material='z
   let capitalTarget=0,dirty=true,waitForFunds=0,nextPlanAt=0,
     lastGroupBounds=null,repairDirty=true,repairWaitForFunds=0,
     repairRequests=0,conditionNotifications=0;
-  const history=[],repairHistory=[],groupValues=new Map();
+  const history=[],repairHistory=[],breachOrder=new Map();
+  let nextBreachOrder=0;
   const pendingRepairCost=state=>state.tasks.filter(task=>task.kind==='repair')
     .reduce((sum,task)=>{
       const target=state.structures.find(item=>item.id===task.targetId);
@@ -38,8 +39,7 @@ export function createNativeTopologicalDefensePolicy({session,advice,material='z
       advice.getDamagedWalls()):[];
     walls.sort((left,right)=>Number(right.status==='ruined')-
       Number(left.status==='ruined')||
-      (groupValues.get(right.plannedGroupId)??0)-
-      (groupValues.get(left.plannedGroupId)??0)||
+      (breachOrder.get(right.id)??0)-(breachOrder.get(left.id)??0)||
       right.damageRatio-left.damageRatio||left.id.localeCompare(right.id));
     const candidates=[...centers.filter(item=>item.hp<centerRepairThreshold),
       ...walls.filter(item=>item.status==='ruined'||item.hp<item.maxHp*.8)];
@@ -93,6 +93,12 @@ export function createNativeTopologicalDefensePolicy({session,advice,material='z
     },
     onStructureConditionChanged(change){
       conditionNotifications++;
+      if(change.kind==='wall'&&change.structureId){
+        if(change.change==='breach'||change.change==='ruined')
+          breachOrder.set(change.structureId,++nextBreachOrder);
+        else if(change.change==='repaired'||change.change==='removed')
+          breachOrder.delete(change.structureId);
+      }
       if(['breach','ruined','removed'].includes(change.change))dirty=true;
       if(change.change==='repaired'){
         repairDirty=true;return;
@@ -104,8 +110,6 @@ export function createNativeTopologicalDefensePolicy({session,advice,material='z
         repairDirty=true;
     },
     onCropProtectionChanged(change){
-      if(change.group?.value!==undefined)
-        groupValues.set(change.groupId,change.group.value);
       if(change.protection!=='protected')dirty=true;
     },
     act(state,nav,{command,reserve:protectedCash,centerReserve=protectedCash}){
@@ -120,7 +124,6 @@ export function createNativeTopologicalDefensePolicy({session,advice,material='z
       const group=timed('defense.nativeGroups',()=>
         advice.getUnprotectedCropGroups()[0]);
       if(!group){capitalTarget=0;return repairs;}
-      groupValues.set(group.id,group.value??0);
       lastGroupBounds={minX:group.bounds.minX-1,maxX:group.bounds.maxX+1,
         minZ:group.bounds.minZ-1,maxZ:group.bounds.maxZ+1};
       const planner=createCropEnclosurePlanner(state,nav,advice,session);
@@ -133,9 +136,18 @@ export function createNativeTopologicalDefensePolicy({session,advice,material='z
         attempts:plan.attempts?.map(item=>({kind:item.kind,status:item.status,
           reason:item.reason,modules:item.modules,cost:item.cost,
           gaps:item.gaps,expectedSlots:item.expectedSlots,
-          movementFaces:item.movementFaces,attackMargin:item.attackMargin,
+          movementFaces:item.movementFaces,unprovedFaces:item.unprovedFaces,
+          attackMargin:item.attackMargin,
           exposedAttackMargin:item.exposedAttackMargin}))};
       if(plan.status!=='ready'||!plan.modules?.length){
+        capitalTarget=0;waitForFunds=0;history.push(row);return repairs;
+      }
+      // A confirmed ruin already has an ordinary paid repair path. Waiting
+      // for that task avoids buying a second wall while the first is still
+      // repairable; the repair event wakes enclosure planning again.
+      if(repairWalls&&plan.preparedPlan?.repairableRuins?.length){
+        row.reason='repair-ruined-modules-first';
+        row.repairableRuins=plan.preparedPlan.repairableRuins;
         capitalTarget=0;waitForFunds=0;history.push(row);return repairs;
       }
       capitalTarget=plan.cost;
