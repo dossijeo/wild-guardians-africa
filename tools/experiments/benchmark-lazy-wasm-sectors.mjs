@@ -3,7 +3,7 @@ import {dirname} from 'node:path';
 import {gunzipSync} from 'node:zlib';
 import {performance} from 'node:perf_hooks';
 import {Navigation,BIOME_IDS} from '../../src/world/navigation.js';
-import {createHierarchicalWasmNavigatorSync} from '../../src/world/wild-engine-adapter.js';
+import {createHierarchicalWasmNavigatorSync} from '../../src/world/hierarchical-wasm-adapter.js';
 import {createLazySectorProbe} from '../../src/world/wild-engine/lazy-sectors-adapter.js';
 
 const [input,output]=process.argv.slice(2);

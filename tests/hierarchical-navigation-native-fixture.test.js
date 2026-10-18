@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {fixture} from '../tools/probe-raid-reservation-saturation.mjs';
 import {createHierarchicalNavigationAdapter} from '../src/world/hierarchical-navigation-adapter.js';
-import {createHierarchicalWasmNavigator,createHierarchicalWasmNavigatorSync} from '../src/world/wild-engine-adapter.js';
+import {createHierarchicalWasmNavigator,createHierarchicalWasmNavigatorSync} from '../src/world/hierarchical-wasm-adapter.js';
 import {readFileSync} from 'node:fs';
 
 const wasm=readFileSync(new URL('../src/world/wild-engine/core.wasm',import.meta.url));

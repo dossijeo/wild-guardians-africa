@@ -2,7 +2,7 @@ import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
 import {dirname} from 'node:path';
 import {performance} from 'node:perf_hooks';
 import {fixture} from '../probe-raid-reservation-saturation.mjs';
-import {createHierarchicalWasmNavigator} from '../../src/world/wild-engine-adapter.js';
+import {createHierarchicalWasmNavigator} from '../../src/world/hierarchical-wasm-adapter.js';
 import {createLazySectorProbe} from '../../src/world/wild-engine/lazy-sectors-adapter.js';
 
 const output=process.argv[2]??'docs/qa/hierarchical-navigation/worker-gate-wasm.json';
