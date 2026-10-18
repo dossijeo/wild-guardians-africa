@@ -31,6 +31,7 @@
       report.checks.loadingAtFinish = {
         worldWaitMs: worldStartedAt === null ? null : (worldReadyAt ?? performance.now()) - worldStartedAt,
         readyGateReached: worldReadyAt !== null,
+        failure: document.querySelector('.loading-failure')?.textContent ?? null,
         stageBusy: stage?.getAttribute('aria-busy') ?? null,
         displayedProgress: progress?.getAttribute('aria-valuenow') ?? null,
         phaseLabel: document.querySelector('.interactive-loading-title')?.textContent ?? null,
@@ -156,7 +157,11 @@
     else send({action: 'start', biome: 'gran-canon', culture: 'mapungubwe'});
     worldStartedAt = performance.now();
     const worldEnd = worldStartedAt + worldTimeoutMs;
-    while (document.querySelector('#stage')?.getAttribute('aria-busy') !== 'false' && performance.now() < worldEnd) await new Promise(resolve => setTimeout(resolve, 100));
+    while (document.querySelector('#stage')?.getAttribute('aria-busy') !== 'false' && performance.now() < worldEnd) {
+      const failure = document.querySelector('.loading-failure');
+      if (failure) throw Error(`Production loading failed: ${failure.textContent.trim()}`);
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
     if (document.querySelector('#stage')?.getAttribute('aria-busy') !== 'false') throw Error('Production world did not finish loading');
     worldReadyAt = performance.now();
     await new Promise(resolve => setTimeout(resolve, 1000));
