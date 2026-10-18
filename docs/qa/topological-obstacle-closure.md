@@ -39,6 +39,10 @@ native crop-group service reports `protected`. A -2 metre variant still
 leaves one cut edge even though the coarser crop-group classifier says
 `protected`; the renewed cut correctly rejects that variant. This is why
 the crop-group classifier alone is not used as a construction certificate.
+The regression also removes the paid detour module: the native cut then
+requires construction again. This establishes loss of the strict closure
+certificate, not proof that a particular animal can already hit a crop;
+the coarse crop-group label may remain `protected` in that state.
 
 ## Matched timings and validation
 

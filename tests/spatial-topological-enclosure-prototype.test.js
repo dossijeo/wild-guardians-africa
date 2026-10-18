@@ -355,6 +355,23 @@ test('day-80 cut detours around a rock only after renewed physical certification
       bridge.resetFromState(state);
       assert.equal(bridge.getUnprotectedCropGroups({includeProtected:true})
         .find(item=>item.id===group.id)?.protection,'protected');
+      const detourWall=state.structures.find(item=>item.kind==='wall'&&
+        plan.modules.some(piece=>Math.hypot(piece.x-item.x,piece.z-item.z)<.01)&&
+        Math.abs(item.x-106.5)<.01&&Math.abs(item.z+6.5)<.01);
+      assert.ok(detourWall,'Expected the new wall beside the rock');
+      assert.ok(Game.removeWall(state,'obstacle-regression-breach',
+        detourWall.id,nav));
+      const wasm=session.core.wasm;
+      const crops=state.plants.filter(plant=>plant.alive);
+      new Int32Array(wasm.memory.buffer,wasm.lazy_cut_seeds_ptr(crops.length),
+        crops.length*2).set(crops.flatMap(plant=>[
+          Math.round(plant.x),Math.round(plant.z)]));
+      const reach=Math.max(...Object.values(ANIMAL_SPATIAL_PROFILES)
+        .map(profile=>profile.radius))+.65+
+        AGRICULTURAL_PROFILE_LIMITS.attackRadius;
+      assert.ok(wasm.lazy_local_crop_cut_conservative_buildable(
+        70,-18,108,19,crops.length,Math.ceil(reach)+2)>0,
+      'Removing the detour must reopen the native physical cut');
     }finally{session.dispose();}
   });
 test('native five-profile cut is deterministic and responds to local solid changes',
