@@ -1,6 +1,7 @@
 import {commitAgriculturalPower,consumeGrowthPower,settleMultiplyPower} from './agricultural-power.js';
 import {activeRaidEntryPlan} from '../world/raid-entry-data.js';
 import {animalExitConnector} from './animal-exit-connectors.js';
+import {animalNativeExitBridgePending} from './animal-native-exit-bridge.js';
 import {workerReturnRoute,workerReturnRoutePending} from './worker-return-route.js';
 import {workerFractionalConnector,workerFractionalConnectorPending} from '../world/worker-fractional-connector.js';
 import {SpatialChunkUnavailable} from '../world/wild-engine/spatial-navigation-movement.js';
@@ -765,7 +766,7 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
       timedOut=w.exitRouteRecovery&&s.elapsed-w.exitRouteRecovery.startedAt>=
         (w.exitRouteRecovery.reason==='no-exit-progress'?300:1500);
     if(worker||!expandRoute||w.status!=='retreating'||
-      (!exhausted&&!timedOut))return false;
+      (!exhausted&&!timedOut)||animalNativeExitBridgePending(w,destination,nav))return false;
     emit(s,'AnimalRetreatExitAbandoned',{actorId:w.id,x:w.x,z:w.z,elapsed:s.elapsed,
       reason:exhausted?'bounded-search-exhausted':'recovery-timeout',
       hitsRemaining:w.hitsRemaining??0,
@@ -808,6 +809,7 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
     const epoch=routeEpoch(nav,w,destination,worker);
     const wait=routePlanWaits.get(w);
     const pendingSearch=!!w.exitRouteRecovery||!!w.exitConnectorSearch&&!w.exitConnectorSearch.exhausted||
+      !worker&&expandRoute&&animalNativeExitBridgePending(w,destination,nav)||
       worker&&(workerReturnRoutePending(nav,w)||workerFractionalConnectorPending(nav,w));
     if(!nav.forcePlanningPoll&&!pendingSearch&&!w.path&&wait?.epoch===epoch&&s.elapsed<wait.retryAt){
       nav.planningObserver?.({kind:'routeDeferred',actorId:w.id,elapsed:s.elapsed,destinationId:destination.id});

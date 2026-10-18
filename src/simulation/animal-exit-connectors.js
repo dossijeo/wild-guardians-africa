@@ -1,6 +1,7 @@
 import {SearchFrontier} from '../world/search-frontier.js';
 import {animalFootprintConnector,animalFootprintConnectorFailed} from './animal-footprint-connectors.js';
 import {animalGridExitBridge} from './animal-grid-exit-bridge.js';
+import {animalNativeExitBridge} from './animal-native-exit-bridge.js';
 const distances=[4,8,12,16,24,32];
 const angles=32,budget=8;
 // An open fractional corridor can have no usable one-metre grid cells. Try
@@ -9,6 +10,13 @@ const angles=32,budget=8;
 export function animalExitConnector(actor,end,nav){
  const radius=actor.radius??.28;
  if(!nav.segmentClear||!nav.walkable)return null;
+ // Preserve ordinary retreat routing. The native bridge is a final chance
+ // after the existing bounded physical search has exhausted its candidates.
+ if(actor.exitConnectorSearch?.exhausted){
+  const native=animalNativeExitBridge(actor,end,nav);
+  if(native.path){delete actor.exitConnectorSearch;return native.path;}
+  if(native.pending)return null;
+ }
  const key=JSON.stringify([nav.version??0,actor.x,actor.z,end.x,end.z,radius]);
  let search=actor.exitConnectorSearch;
  if(!search||search.key!==key)search=actor.exitConnectorSearch={key,next:0};
