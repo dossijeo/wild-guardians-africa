@@ -40,8 +40,14 @@ let capturedState=false;
 let capturedOccupiedFallback=false;
 let cpuProfiler=null,cpuProfileFinished=Promise.resolve();
 const repairProbe=new Map();
+let repairProbeCaptured=false;
 if(repairProbeDay>0)globalThis.__wildRepairAccessProbe=sample=>{
   if(sample.day!==repairProbeDay)return;
+  if(!repairProbeCaptured&&latestState){
+    repairProbeCaptured=true;
+    writeFileSync(path.replace(/\.json$/,`-day${repairProbeDay}-first-repair-fallback-state.json`),
+      serialize(latestState));
+  }
   const key=`${sample.reason}:${sample.targetId}`;
   let row=repairProbe.get(key);
   if(!row){row={reason:sample.reason,targetId:sample.targetId,calls:0,
