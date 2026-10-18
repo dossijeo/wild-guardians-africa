@@ -912,3 +912,31 @@ wall candidates also looked favorable at night 30 before reversing later.
 The recovery-count candidate therefore needs a sustained 60-night replay
 before any balance recommendation, followed by independent seeds and biomes.
 No production parameter was changed.
+
+The [60-night continuation](current-main-pr107-v1-recovery-count-sabana712-60.json.gz)
+reproduced every hash of the 30-night pilot. It completed 60 verified real
+raids without an evidence issue or loss of coverage. The comparison below is
+against the same current-engine Sabana/712, V1, standard-wall control used for
+the pilot:
+
+| Measure | Original V1 count | Recovery-count candidate |
+| --- | ---: | ---: |
+| Crops / coins after night 30 | 84 / 977 | 99 / 1,152 |
+| Crops / coins after night 60 | 107 / 755 | 123 / 746 |
+| Animals, nights 6–60 | 731 | 704 |
+| Crop losses, nights 6–60 | 915 | 709 |
+| Wall hits, nights 6–60 | 1,693 | 1,759 |
+| Wall purchase / repair cost, coins | 550 / 4,376 | 870 / 4,725 |
+| `Game.tick` / bot decisions, seconds | 535.93 / 184.84 | 706.48 / 191.61 |
+
+This is the first tested candidate in this series whose crop-count advantage
+survived to night 60 without a material loss of cash: 16 extra crops and nine
+fewer coins at the horizon, with 206 fewer agricultural raid losses. The
+feedback is visible in nights 31–60: the candidate faced 411 animals versus
+408 in the control despite its lower count factor, because the larger farm
+raised its attraction; it nevertheless lost 431 crops versus 495. It spent
+589 more coins on walls and repairs in that interval. The higher tick time
+reflects a different and often larger farm workload and cannot be attributed
+to navigation speed. These results justify a 100-night Sabana/712 extension,
+but one seed cannot establish a general balance recommendation. Independent
+seeds and biomes remain necessary, and production balance remains unchanged.
