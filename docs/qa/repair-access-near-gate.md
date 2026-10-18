@@ -38,3 +38,15 @@ that really does need an additional automatic gate. The full campaign
 comparison is tracked separately from this frozen-state test because loading
 a save resets native-derived residency and cannot reproduce the original
 sequence of repair decisions by itself.
+
+An uninterrupted 83-night replay of the corrected build matched the
+reference's nightly serialized hashes through night 82. On night 83,
+`Game.tick` fell from 72.32 s to 6.88 s (90.5% less), while the night-83
+state diverged. The original and corrected runs both spent 76 coins on
+repairs that day; the corrected run finished with 41 rather than 40 living
+crops and 563 rather than 585 coins. This is a real trajectory change, so
+the 90.5% figure is a same-opening campaign comparison, not a claim of
+strictly identical simulation. The frozen first fallback returns the same
+`unknown` in both builds; skipping previews changes native-derived session
+history and may change later navigation. A 100-night follow-up is needed to
+assess sustained behavior after this first divergence.
