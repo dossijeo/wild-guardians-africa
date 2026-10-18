@@ -1220,3 +1220,7 @@ The process advanced and finished normally. This is a profiling lead, not
 evidence that the pressure recipe or any specific navigation routine is
 the cause. Capture a late frozen state and profile `Game.tick` phases
 before changing code for this latency.
+
+The exact day-83 replay, frozen-state controls and live-profiler method are
+recorded in [the late-tick investigation](late-tick-sabana123.md). The frozen
+raid slice alone does not reproduce the continuous-campaign spike.
