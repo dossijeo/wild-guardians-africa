@@ -1015,3 +1015,38 @@ establish a change in engine speed. This second biome does not rescue the
 candidate's authentic night-97 defeat in Sabana, and provides no basis to
 promote its pressure parameters to production. Further balance work should
 evaluate independent seeds and the late-game defense/planting interaction.
+
+## Recovery-count held-out seed: Sabana / 123
+
+An independent Sabana seed was replayed through night 30 using the same
+topological defender and the two pressure recipes. Both arms identify source
+`8e4dd745`, the same WASM, game, raid and runner hashes, and separate recipe
+hashes. Each completed 30 verified real raids, with zero evidence issues and
+no coverage loss. The first five nights had equal crop and cash counts. The
+full [control](v1-control-sabana123-30.json.gz) and
+[recovery-count](v1-recovery-count-sabana123-30.json.gz) reports and
+[nightly comparison](v1-count-sabana123-30-nightly.csv) are retained.
+Reproduce with `node tools/experiments/run-balance-candidate.mjs <recipe>
+30 sabana 123 <output.json> topological`.
+
+| Measure through night 30 | Original V1 count | Recovery-count candidate |
+| --- | ---: | ---: |
+| Living crops / coins | 149 / 975 | 144 / 972 |
+| Animals, nights 6–30 | 319 | 307 |
+| Crops destroyed by raids, nights 6–30 | 431 | 432 |
+| Wall hits / HP lost | 672 / 14,959 | 680 / 15,334 |
+| Wall purchases / repairs, coins | 430 / 1,706 | 430 / 1,623 |
+| Income / wages / seeds, coins | 40,029 / 16,975 / 20,643 | 40,932 / 17,335 / 21,272 |
+| `Game.tick` / bot decisions, seconds | 282.89 / 75.19 | 286.48 / 88.93 |
+
+The candidate saw 12 fewer animals but one more agricultural raid loss, and
+ended with five fewer crops and three fewer coins. It had a severe early
+interval on nights 15–20 (164 losses versus 114), then fewer losses on
+nights 26–30 (111 versus 155); the trajectories are not proportional to the
+animal-count multiplier. Both runs used real payments and unchanged bot
+policy, but their decisions and workloads diverged. Sequential timing cannot
+isolate algorithm speed. Together with the Gran Cañón result and the authentic
+Sabana/712 defeat after night 97, this held-out seed argues against adopting
+the isolated count-factor candidate. It does not establish a better pressure
+recipe or a survival probability; further candidates should account for
+defense geometry and crop-loss feedback across seeds and biomes.
