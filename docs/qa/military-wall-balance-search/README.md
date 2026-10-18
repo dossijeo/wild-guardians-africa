@@ -1530,3 +1530,74 @@ bot: Gran Río/123 won narrowly, Manglares/2026 lost after night 99, and
 Desierto/712 lost during night 93. It supports the intended possibility of
 both victory and defeat, but does not estimate win probability. The production
 balance remains unchanged; the technical fix is reviewed separately.
+
+### Volcanes/712: recovery after losses, then defeat after night 95
+
+The same isolated V1-plus-PR-#114 source `e912c366`, topological bot and
+unchanged game rules were used for a 100-night Volcanes/712 request. Run the
+command above with `volcanes 712` replacing `desierto 712`. It completed 95
+physically simulated raids, all ended and verified with zero issues and no
+coverage loss. At day-96 dawn it lost economically with zero crops, 32 coins,
+one worker and one operational center. This is a genuine defeat after 95
+nights, not a victory or a technical censor.
+
+The farm had 101 crops and 651 coins at night 60, then fell to 37 crops at
+night 67. It recovered to 68 at night 86 before a final decline to zero by
+night 95. This trajectory demonstrates recovery from a damaging raid sequence
+without making survival automatic.
+
+| Cumulative V1 measure through night 95 | Value |
+| --- | ---: |
+| Animals / agricultural raid losses, nights 6–95 | 1,183 / 1,501 |
+| Living-crop exposure at raid spawn, nights 6–95 | 9,111 |
+| Wall hits / center hits, nights 6–95 | 2,456 / 8 |
+| Income / wages / seeds, coins | 97,960 / 41,410 / 49,996 |
+| Paid new walls / repairs, coins | 420 / 6,802 |
+| `Game.tick` / bot decisions, seconds | 630.49 / 264.29 |
+
+Raid losses were 16.47% of crop exposure from night 6, above the initial
+2–4% calibration hypothesis. The [full compressed report](pr114-v1-volcanes712-100-request-defeat95.json.gz)
+and [nightly ledger](pr114-v1-volcanes712-100-request-defeat95-nightly.csv)
+retain all hashes and receipts. Report gzip SHA-256:
+`62231538ba5b2217915081d8c380f4fcf5c12aaf0b32a6de8473dc796d50d034`.
+Before the Sabana check below, four long-horizon biomes had one narrow
+Gran Río/123 win and three authentic late defeats.
+
+### Sabana/123: a second narrow 100-night victory on the current engine
+
+The same isolated source `e912c366`, V1 pressure and topological bot requested
+100 nights in Sabana/123. Run the Desierto command above with `sabana 123`.
+This run completed **all 100 physically simulated raids** and emitted
+`CampaignWon` at day-101 dawn. Every raid ended and has a verified receipt;
+there are zero evidence issues and no coverage loss. The final farm had nine
+living crops, 93 coins, one worker and one operational center. This is an
+authentic but very narrow win, not a projected or early-horizon survival.
+
+The farm had 56 crops and 386 coins at night 60, recovered to 64 crops at
+night 81 after several earlier losses, then finished with only nine. Large
+losses still mattered and victory was not assured by the mid-campaign state.
+
+| Cumulative V1 measure through night 100 | Value |
+| --- | ---: |
+| Animals / agricultural raid losses, nights 6–100 | 1,192 / 1,768 |
+| Living-crop exposure at raid spawn, nights 6–100 | 8,469 |
+| Wall hits / center hits, nights 6–100 | 2,084 / 3 |
+| Income / wages / seeds, coins | 88,539 / 36,914 / 45,900 |
+| Paid new walls / repairs, coins | 890 / 5,442 |
+| `Game.tick` / bot decisions, seconds | 773.99 / 256.22 |
+
+Raid losses were 20.88% of living-crop exposure from night 6, well above the
+initial 2–4% calibration hypothesis. The [full compressed report](pr114-v1-sabana123-100-victory.json.gz)
+and [nightly ledger](pr114-v1-sabana123-100-victory-nightly.csv) preserve
+the hashes, physical raid receipts and economy. Report gzip SHA-256:
+`d76eaef16137e004ab231781b6009862c07863102305c442c175cfe05bb8d588`.
+
+Across five requested 100-night campaigns using the current Wild Engine and
+fixed topological bot, the results are **two narrow victories** (Gran Río/123
+and Sabana/123) and **three authentic late defeats** (Manglares/2026,
+Desierto/712 and Volcanes/712). The first two reports were recorded before
+PR #114, while the last three include that technical route fix; they are not
+a paired algorithm comparison. This pattern fits the design requirement that
+competent management can win but can also lose. It does not establish a
+population win probability or satisfy the 2–4% crop-loss hypothesis. The
+production military balance remains unchanged pending review of V1.
