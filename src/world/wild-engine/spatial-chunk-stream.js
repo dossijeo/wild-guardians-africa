@@ -1,6 +1,6 @@
 import {NativeChunkStream} from '../../rendering/chunk-stream.js';
 
-// Experimental same-instance renderer/navigation seam. Chunk work is
+// Shared renderer/navigation stream. Chunk work is
 // scheduled by NativeChunkStream, while one C++ world supplies both the
 // renderer payload and subsequent synchronous route/surface queries.
 export function createSpatialChunkStream(core,{loaded,onData,onError=()=>{},schedule,cancel}){
