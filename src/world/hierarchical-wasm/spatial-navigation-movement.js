@@ -255,9 +255,7 @@ export function createSpatialNavigationMovement(session,state){
   const withWallPreview=(walls,suppressed,inspect,refreshPortals=false)=>
     session.withWallPreview(walls,suppressed,()=>inspect({walkable,segmentClear,path}),refreshPortals);
   const withWallStatePreview=(structures,inspect)=>
-    session.withWallStatePreview(structures,()=>inspect({
-      route:(start,end)=>session.routeActorNative(start,end,
-        {worker:true,cached:false})}));
+    session.withWallStatePreview(structures,inspect);
   const workerPhysicalRoute=(start,end)=>session.routeActorNative(start,end,
     {worker:true,cached:false});
   const withVillageEntryPreview=(buildings,inspect)=>

@@ -222,25 +222,47 @@ export function createSpatialGameSession(module,state,streamOptions){
     }
   }
   // A repair can restore a solid wall and close a previously open passage.
-  // Evaluate the complete provisional wall set in one synchronous transaction;
-  // the installed mirror and worker portals are restored before returning.
+  // Keep the confirmed mirror and graph untouched: the native overlay probes
+  // the changed footprints against the current topology. An inconclusive
+  // overlay is unknown, never evidence that access has been lost.
   function withWallStatePreview(structures,inspect){
     if(!Array.isArray(structures)||typeof inspect!=='function'||activeWallPreview)
       throw TypeError('Expected an isolated wall-state preview');
-    const original=state.structures;
-    activeWallPreview={ids:[],barriers:[],suppressed:[...props.suppressed],
-      proposed:structures.filter(wall=>wall.kind==='wall'),refreshPortals:true};
-    try{
-      walls.sync(structures);
-      selectProfile(WORKER_SPATIAL_PROFILE);
-      installWorkerPortals(activeWallPreview.proposed);
-      return inspect();
-    }finally{
-      activeWallPreview=null;
-      walls.sync(original);
-      selectProfile(WORKER_SPATIAL_PROFILE);
-      installWorkerPortals([]);
+    const actual=new Map(state.structures.filter(wall=>wall.kind==='wall'&&
+      wall.status!=='ruined').map(wall=>[wall.id,wall]));
+    const proposed=new Map(structures.filter(wall=>wall.kind==='wall'&&
+      wall.status!=='ruined').map(wall=>[wall.id,wall]));
+    const signature=wall=>[wall.x,wall.z,wall.yaw??0,wall.baseScaleX??1,
+      wall.material,Boolean(wall.gate)].join(':');
+    const removeIds=[],barriers=[],portals=[];
+    let unsupported=false;
+    for(const id of new Set([...actual.keys(),...proposed.keys()])){
+      const before=actual.get(id),after=proposed.get(id);
+      if(before&&after&&signature(before)===signature(after))continue;
+      if(before){
+        // The overlay can add a gate portal but cannot suppress an existing
+        // one. A changed/removed gate must remain inconclusive.
+        if(before.gate)unsupported=true;
+        const installed=walls.barrierIds(id);
+        if(installed.length!==spatialStructureBarriers(before).length)
+          unsupported=true;
+        removeIds.push(...installed);
+      }
+      if(after){
+        barriers.push(...spatialStructureBarriers(after));
+        if(after.gate)portals.push(gatePortalPoints(after));
+      }
     }
+    const supported=!unsupported&&removeIds.length<=4&&
+      barriers.length<=128&&portals.every(points=>points.length===2);
+    const route=(start,end)=>{
+      if(!supported)return {status:'unknown'};
+      selectProfile(WORKER_SPATIAL_PROFILE);
+      const result=core.overlayReachBatch(start,[end],removeIds,barriers,
+        {margin:48,portals});
+      return {status:result?.[0]??'unknown'};
+    };
+    return inspect({route});
   }
   function gateOverlayClear(candidate,points,extraSuppress=[]){
     const parent=activeWallPreview;
