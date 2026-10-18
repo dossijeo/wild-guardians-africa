@@ -22,6 +22,11 @@ const captureDayEnd=Number(process.env.WILD_ENGINE_CAPTURE_DAY_END??0);
 const captureStateDay=Number(process.env.WILD_ENGINE_CAPTURE_STATE_DAY??0);
 const captureStateTime=Number(process.env.WILD_ENGINE_CAPTURE_STATE_TIME??0);
 const captureOccupiedFallback=process.env.WILD_ENGINE_CAPTURE_OCCUPIED_FALLBACK==='1';
+const traceDay=Number(process.env.WILD_ENGINE_TRACE_WORKERS_DAY??0);
+if(traceDay&&!Number.isSafeInteger(traceDay))
+  throw RangeError('WILD_ENGINE_TRACE_WORKERS_DAY must be an integer');
+const workerTrace=[];
+const workerTracePath=path.replace(/\.json$/,`-day${traceDay}-worker-trace.jsonl`);
 const spatialAdvice=process.env.WILD_ENGINE_SPATIAL_ADVICE==='1';
 const wallSpendingFlag=process.env.WILD_ENGINE_WALL_SPENDING;
 if(wallSpendingFlag&&!['0','1'].includes(wallSpendingFlag))
@@ -77,6 +82,15 @@ try{
     openingFactory,entryDriverFactory,
     onTick:(state,nav)=>{
       latestState=state;latestNav=nav;nav.serviceRaidConnectivityDemand?.();
+      if(state.day===traceDay)workerTrace.push(JSON.stringify({
+        time:state.time,money:state.money,
+        living:state.plants.filter(plant=>plant.alive).length,
+        routeStamp:nav.routeStamp?.(),
+        workers:state.workers.map(worker=>({id:worker.id,x:worker.x,z:worker.z,
+          status:worker.status,taskId:worker.taskId,destinationId:worker.destinationId,
+          pathVersion:worker.pathVersion,pathLength:worker.path?.length??0,
+          next:worker.path?.[0]??null,actionRemaining:worker.actionRemaining}))
+      }));
       if(!capturedState&&captureStateDay===state.day&&
         state.time>=captureStateTime){
         capturedState=true;
@@ -139,6 +153,8 @@ try{
         });
     },
     onDay:row=>{
+      if(row.day===traceDay)
+        writeFileSync(workerTracePath,workerTrace.join('\n')+'\n');
       if(row.day===captureDayEnd&&latestState)
         writeFileSync(path.replace(/\.json$/,`-day${row.day}-end-state.json`),
           serialize(latestState));
