@@ -1262,3 +1262,54 @@ the physical and economic trajectory. The report gzip SHA-256 values are
 and `89a2bce24c7ad3e1af51b5da363ab9eef2cdf0f2285548781246658778159432`.
 Generate the ledger from the same JSON inputs with
 `tools/experiments/write-balance-pair-ledger.mjs`.
+
+## Current Wild Engine after PR #48: held-out Gran Río/123
+
+The balance lab was synchronized with `main` at source `da4360a6` after the
+Wild Engine directory rename and the physical animal-retreat fix. Only the
+balance experiment adapter applies a candidate recipe; production parameters
+remain unchanged. Two sequential 30-night requests used the same topological
+virtual-player policy, seed 123, WASM SHA-256
+`f0032bf7d6d5bb3336f2f9480fc2dc109906b9d2743315853320420863b07643`
+and matching game, raid and runner hashes. Commands:
+
+```sh
+node tools/experiments/run-balance-candidate.mjs tools/experiments/balance-candidates/control.json 30 gran-rio 123 control.json topological
+node tools/experiments/run-balance-candidate.mjs tools/experiments/balance-candidates/v1-pressure.json 30 gran-rio 123 v1.json topological
+node tools/experiments/write-balance-pair-ledger.mjs control.json v1.json comparison.csv
+```
+
+The first five introduction nights had identical living-crop and cash totals
+and one animal per raid in both arms. Serialized hashes differ from day one
+because the candidate pressure recipe is included in the saved state; that
+does not imply different introductory combat. Both reports have verified
+raids, zero evidence issues and no lost coverage. At the shared day-28
+boundary:
+
+| Gran Río/123 | Production | V1 pressure |
+| --- | ---: | ---: |
+| Result by night 28 | Economic defeat | Still active |
+| Living crops / coins / staff | 0 / 12 / 1 | 126 / 1,117 / 24 |
+| Animals, nights 1–28 | 372 | 278 |
+| Agricultural raid losses | 377 | 337 |
+| Wall hits / center hits | 620 / 26 | 583 / 1 |
+| Wall purchases / repairs, coins | 430 / 1,671 | 430 / 1,345 |
+
+The production arm ended after 28 real raids. V1 completed all 30 requested
+raids and ended the measured horizon with 145 living crops, 974 coins and 21
+workers. Its `result` is `null`: reaching this horizon is not a victory. It
+lost 374 crops to raids and faced 304 animals over the full 30 nights. The
+healthy V1 farm also spent substantially more on wages and seeds than the
+collapsed control. Total `Game.tick` was 153.14 s for 28 control days versus
+244.57 s for 30 V1 days; these are different workloads and do not establish
+an engine-speed comparison.
+
+The [nightly ledger](current-main-pr48-gran-rio123-v1-30-nightly.csv) and
+complete compressed [control](current-main-pr48-control-gran-rio123-30.json.gz)
+and [V1](current-main-pr48-v1-gran-rio123-30.json.gz) reports retain the
+trajectory and source hashes. Their gzip SHA-256 values are respectively
+`9905d7acc9460b0e8fb626532cb6c4517ffc31fb790569cbb18e4428ba7fc554`
+and `84e636a7bcb129e43ba4eaad51fbad89760c6c99c402d62874177c8`.
+This held-out pair supports V1 as a promising pressure candidate in one more
+biome, but does not measure a 100-night survival probability or justify
+changing the production balance yet.
