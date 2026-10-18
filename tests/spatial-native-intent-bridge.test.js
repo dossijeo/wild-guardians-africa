@@ -5,6 +5,7 @@ import {gunzipSync} from 'node:zlib';
 import {execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 import {deserialize,serialize} from '../src/persistence/snapshots.js';
+import {updateRaid} from '../src/simulation/raids.js';
 import {emit,rebuildTasks,walkTo,tick} from '../src/simulation/game.js';
 import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../src/world/wild-engine/spatial-navigation-movement.js';
@@ -289,6 +290,65 @@ test('a saved native animal route resumes movement with its original lease',
    assert(animal.path?.length>0);
    assert.doesNotThrow(()=>serialize(game));
   }finally{stopTasks();stopWorld();}
+ }finally{session.dispose();}
+});
+
+test('a pending saved animal attack retries only after sectors arrive and keeps its lease',
+ {skip:!module&&'Build and select the experimental WASM first'},()=>{
+ const game=deserialize(gunzipSync(readFileSync(new URL(
+  './fixtures/sabana712-d1-native-active-raid.json.gz',import.meta.url))).toString());
+ const animal=game.raid.animals.find(item=>item.targetId);
+ assert(animal);
+ animal.path=null;
+ const targetId=animal.targetId,reservation=animal.reservation,
+  hits=animal.hitsRemaining;
+ const loaded=new Map(),session=createSpatialGameSession(module,game,{
+  loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+ try{
+  const planner=createEventDrivenTaskPlanner(session);
+  const restored=planner.resetFromState(game);
+  assert.deepEqual(restored.pendingAttackRouteIds,[animal.id]);
+  assert.equal(planner.attackRoutePending(animal.id),true);
+  for(let z=-1;z<=1;z++)for(let x=1;x<=3;x++){
+   if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+   loaded.set(`${x},${z}`,session.core.chunkPayload());
+  }
+  const nav=createSpatialNavigationMovement(session,game);
+  assert.equal(planner.retryPendingAttackRoute(game,animal,nav.version),'waiting');
+  assert.equal(animal.path,null);
+  game.elapsed+=8;
+  assert.equal(planner.retryPendingAttackRoute(game,animal,nav.version),'found');
+  assert(animal.path?.length>0);
+  assert.equal(planner.attackRoutePending(animal.id),false);
+  assert.equal(animal.targetId,targetId);
+  assert.equal(animal.reservation,reservation);
+  assert.equal(game.raid.reservations[reservation],animal.id);
+  assert.equal(animal.hitsRemaining,hits);
+ }finally{session.dispose();}
+});
+
+test('an unresolved saved animal attack ends its wait without spending a hit',
+ {skip:!module&&'Build and select the experimental WASM first'},()=>{
+ const game=deserialize(gunzipSync(readFileSync(new URL(
+  './fixtures/sabana712-d1-native-active-raid.json.gz',import.meta.url))).toString());
+ const animal=game.raid.animals.find(item=>item.targetId);
+ animal.path=null;
+ const hits=animal.hitsRemaining;
+ const loaded=new Map(),session=createSpatialGameSession(module,game,{
+  loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+ try{
+  const planner=createEventDrivenTaskPlanner(session);
+  assert.deepEqual(planner.resetFromState(game).pendingAttackRouteIds,[animal.id]);
+  const nav=createSpatialNavigationMovement(session,game);
+  nav.intentTaskPlanner=planner;
+  game.elapsed+=90;
+  updateRaid(game,.1,nav);
+  assert.equal(animal.status,'retreating');
+  assert.equal(animal.targetId,null);
+  assert.equal(animal.hitsRemaining,hits);
+  assert.equal(planner.attackRoutePending(animal.id),false);
+  assert(game.events.some(event=>event.type==='AnimalRetreating'&&
+   event.reason==='unknown-attack-route-timeout'));
  }finally{session.dispose();}
 });
 

@@ -931,8 +931,22 @@ export function updateRaid(s,dt,nav) {
     // A new shield can invalidate the old crop route while creating a valid
     // interaction point at its border. Re-evaluate that point before parking
     // an otherwise pending native route until the shield expires.
-    if(nav.intentTaskPlanner?.attackRoutePending?.(a.id)&&!approachChanged)
-      continue;
+    if(nav.intentTaskPlanner?.attackRoutePending?.(a.id)&&!approachChanged){
+      const retry=nav.intentTaskPlanner.retryPendingAttackRoute?.(s,a,nav.version);
+      if(retry==='expired'){
+        release(s,a,nav);
+        beginRetreat(s,a,nav,'unknown-attack-route-timeout');
+        continue;
+      }
+      if(retry==='reconsider'){
+        // Only the leased interaction point was proved unreachable. Another
+        // side of this crop, a different crop, or a wall may still be valid.
+        release(s,a,nav);
+        a.status='walking';
+        continue;
+      }
+      if(retry!=='found')continue;
+    }
     const legacyApproachBlocked=!nav.intentTaskPlanner&&a.approach&&
       (!reservedApproachClear(s,a,a.approach)||
        !actorSegmentClear(a.approach,a.approach,a,actorBlockers(s,a,false)));

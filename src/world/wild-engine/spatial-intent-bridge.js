@@ -89,6 +89,7 @@ export function createSpatialIntentBridge(session){
     'nav_intent_route_points','nav_intent_route_ptr',
     'nav_intent_route_progress_input_ptr','nav_intent_route_progress',
     'nav_intent_reconcile_topology','nav_intent_replan_attack_route',
+    'spatial_world_route_reason',
     'nav_intent_replan_pending_routes',
     'nav_intent_request_reroute',
     'nav_intent_attack_route_input_ptr','nav_intent_register_attack',
@@ -587,7 +588,11 @@ export function createSpatialIntentBridge(session){
     session.actorSectorRevision({worker:false,species:animal.species});
     const status=wasm.nav_intent_replan_attack_route(numericId(animal.id),
       animal.x,animal.z,animal.approach.x,animal.approach.z);
-    if(status===3)return {status:'unknown'};
+    // The native route planner distinguishes an incomplete graph from a
+    // physically blocked route to this particular interaction point. Neither
+    // verdict certifies that every side of the target is blocked.
+    if(status===3)return {status:wasm.spatial_world_route_reason()===0?
+      'blocked-approach':'unknown'};
     if(status!==1)throw Error(`Native attack reroute rejected: ${status}`);
     if(wasm.nav_intent_actor(numericId(animal.id))!==1)
       throw Error('Native attack reroute lost its active intention');
@@ -641,7 +646,7 @@ export function createSpatialIntentBridge(session){
   };
   const restoreAttackIntents=state=>{
     let committed=0,travelling=0,staleRoutes=0;
-    const pendingAttackRouteIds=[];
+    const pendingAttackRouteIds=[],pendingAttackRouteResults=[];
     for(const animal of [...(state.raid?.animals??[])]
       .sort((left,right)=>numericId(left.id)-numericId(right.id))){
       if(!animal.targetId||['gone','retreating','waiting'].includes(animal.status))
@@ -676,7 +681,14 @@ export function createSpatialIntentBridge(session){
         wasm.nav_intent_restore_attack_site(numericId(animal.id),
           animal.approach.x,animal.approach.z,animal.radius??.28);
         const replacement=replanAttackRoute(animal);
-        if(replacement.status==='unknown')pendingAttackRouteIds.push(animal.id);
+        if(replacement.status!=='found'){
+          pendingAttackRouteIds.push(animal.id);
+          pendingAttackRouteResults.push({id:animal.id,status:replacement.status});
+        }else {
+          animal.path=replacement.path;
+          animal.destinationId=animal.approach.id;
+          animal.pathVersion=session.topologySource.revision();
+        }
         continue;
       }
       try{registerAttackIntent(state,animal,target,animal.path);travelling++;}
@@ -690,11 +702,19 @@ export function createSpatialIntentBridge(session){
           numericId(animal.id),animal.approach.x,animal.approach.z,
           animal.radius??.28);
         const replacement=replanAttackRoute(animal);
-        if(replacement.status==='unknown')pendingAttackRouteIds.push(animal.id);
+        if(replacement.status!=='found'){
+          pendingAttackRouteIds.push(animal.id);
+          pendingAttackRouteResults.push({id:animal.id,status:replacement.status});
+        }else {
+          animal.path=replacement.path;
+          animal.destinationId=animal.approach.id;
+          animal.pathVersion=session.topologySource.revision();
+        }
       }
     }
     return {restoredAnimalAttacks:committed,restoredAnimalRoutes:travelling,
-      invalidSavedAnimalRoutes:staleRoutes,pendingAttackRouteIds};
+      invalidSavedAnimalRoutes:staleRoutes,pendingAttackRouteIds,
+      pendingAttackRouteResults};
   };
   const restoreRetreatIntents=state=>{
     const restoredRetreatRouteIds=[];
@@ -814,6 +834,11 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
   let topologyReconciliations=0,topologyRouteInvalidations=0;
   let lastNavigationVersion=null,pendingNativeChanges=true;
   let lastPlan=null,lastPlanFacts=null,sourceState=null;
+  const markPendingAttackRoute=(actorId,status,elapsed)=>{
+    const id=typeof actorId==='number'?actorId:numericId(actorId);
+    pendingAttackRoutes.set(id,{
+      status,since:elapsed,nextRetry:elapsed+retrySeconds,attempts:0});
+  };
   const setWorker=(worker,state)=>{
     const id=numericId(worker.id);
     if(workerRow(worker,state)[6])eligible.add(id);
@@ -845,8 +870,8 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
     requests.clear();animalRequests.clear();
     workerPlanCounts.clear();animalPlanCounts.clear();
     workerPeakPerMinute.clear();animalPeakPerMinute.clear();
-    for(const id of restoredAnimals.pendingAttackRouteIds)
-      pendingAttackRoutes.set(numericId(id),'unknown');
+    for(const pending of restoredAnimals.pendingAttackRouteResults)
+      markPendingAttackRoute(pending.id,pending.status,state.elapsed);
     pendingTaskEvents=[];pendingWorldEvents=[];
     total=0;animalTotal=0;taskRouteQueries=0;taskCandidates=0;
     homePlanAttempts=0;homePlanFound=0;homePlanFallbacks=0;
@@ -1343,7 +1368,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
             animal.destinationId=animal.approach.id;
             animal.pathVersion=navVersion;
             pendingAttackRoutes.delete(change.actorId);
-          }else pendingAttackRoutes.set(change.actorId,replacement.status);
+          }else markPendingAttackRoute(change.actorId,replacement.status,state.elapsed);
           continue;
         }
       }
@@ -1557,6 +1582,34 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
       return result;
     },
     attackRoutePending:actorId=>pendingAttackRoutes.has(numericId(actorId)),
+    retryPendingAttackRoute:(state,animal,navVersion)=>{
+      const id=numericId(animal.id),pending=pendingAttackRoutes.get(id);
+      if(!pending)return 'ready';
+      if(pending.status==='blocked-approach')return 'reconsider';
+      // A missing sector or a temporarily invalid interaction point is not a
+      // proof that the target is blocked. Give the same lease a few slow
+      // recovery attempts, then end an otherwise unbounded raid wait.
+      if(state.elapsed-pending.since>=90)return 'expired';
+      if(state.elapsed<pending.nextRetry)return 'waiting';
+      if(session.core.wasm.nav_intent_request_reroute(id)!==1)return 'expired';
+      const replacement=bridge.replanAttackRoute(animal);
+      recordAnimalPlan(animal,state.elapsed);
+      pendingNativeChanges=true;
+      if(replacement.status==='found'){
+        animal.path=replacement.path;
+        animal.destinationId=animal.approach.id;
+        animal.pathVersion=navVersion;
+        pendingAttackRoutes.delete(id);
+        return 'found';
+      }
+      if(replacement.status==='blocked-approach'){
+        pending.status=replacement.status;
+        return 'reconsider';
+      }
+      pending.attempts++;
+      pending.nextRetry=state.elapsed+retrySeconds*2**Math.min(pending.attempts,3);
+      return 'waiting';
+    },
     drainTacticalReconsiderations:()=>{
       const actors=[...tacticalReconsiderations]
         .sort((a,b)=>numericId(a)-numericId(b));
