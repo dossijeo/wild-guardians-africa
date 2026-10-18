@@ -57,7 +57,7 @@ The corrected fixture creates a real Wild Engine Sabana/712 browser world with 1
 
 Unspelled controls in these runs were about 33–37 ms GPU. The corrected single-crop and concurrent cases support the same structural finding: one visible agricultural effect previously caused a full-scene depth capture every frame. The active-spell GPU reduction was about 29–36% across these runs. RAF intervals fell from roughly 83 ms to roughly 50–66 ms, but scheduling, thermal state and frame pacing make this less stable than the GPU timer. The control after the effects returned near its baseline, and the VFX instance count returned to zero.
 
-Growth and multiply now use normal WebGL depth testing against the main scene. Other effects retain soft-particle depth. The spell simulation, local lights, movement, terrain, collision and particle schedules are unchanged; only the smooth fade where particles intersect solids can differ. Focused images of an age-5 effect on **one crop** are [main depth](visual-hard-growth.webp) and [former soft depth](visual-soft-growth.webp). The 1280×800 source screenshots have mean absolute channel difference 0.093/255; this is a coarse whole-frame measure, not proof that every particle edge is identical. The particle material still has depth testing enabled, and opaque crop geometry still writes scene depth. A legal-gameplay spell benchmark and checks on other GPUs remain useful.
+Growth and multiply now use normal WebGL depth testing against the main scene. Other effects retain soft-particle depth. The spell simulation, local lights, movement, terrain, collision and particle schedules are unchanged; only the smooth fade where particles intersect solids can differ. Focused images of an age-5 effect on **one crop** are [main depth](visual-hard-growth.webp) and [former soft depth](visual-soft-growth.webp). The 1280×800 source screenshots have mean absolute channel difference 0.093/255; this is a coarse whole-frame measure, not proof that every particle edge is identical. The particle material still has depth testing enabled, and opaque crop geometry still writes scene depth. A full-campaign spell benchmark and checks on other GPUs remain useful.
 
 Reproduce the corrected comparison with `WG_QA_SPELL_COUNT=1` or `20`, `WG_QA_SPELL_AGE=1` or `5`, and optionally `WG_QA_FORCE_SOFT_DEPTH=1`. The original oversized JSON files remain only as historical diagnostics. The local-light experiment also used that oversized fixture, so no conclusion about lights in current-size spells is drawn from it.
 
@@ -90,3 +90,20 @@ Headed hardware Chrome on Intel UHD/D3D11, Sabana/712, 1,500 synthetic crops, 20
 The daytime GPU benefit for 20 effects is about 2–5 ms in absolute spell frames, with baseline variation across runs. The measured frame interval did not improve; it is frame-paced on this device, so this is a GPU-headroom result rather than proof of higher FPS. A single-spell diagnostic showed little difference, which is expected when only two lights are involved. At render time 400 (night presentation after valid daytime casts), a focused comparison measured growth 58.50 → 52.26 ms GPU and multiply 63.10 → 53.32 ms; these two night runs are diagnostic, not an ABBA estimate. Their reports are `chrome-world-lights-night-on.json` and `chrome-world-lights-night-off.json`.
 
 The focused night images [former lights](world-lights-night-on.webp) and [without world lights](world-lights-night-off.webp) are visually close. Across the full 1280×800 image, the per-channel mean absolute difference was below 0.006/255; these screenshots come from separate deterministic page loads, so that number is a coarse comparison, not a guarantee of pixel identity. The original lights remain available to the benchmark with `WG_QA_FORCE_AGRICULTURE_LIGHTS=1`; production uses the lower-cost path. This does not establish performance on other GPUs or with a legally grown 1,500-crop farm.
+
+## Legally planted opening with concurrent spells
+
+The browser benchmark now supports `WG_QA_LEGAL_PLANTS=1` together with `WG_QA_REAL_CAST=1`. On Sabana/712 it bought one work center, planted 20 individual mijo crops through `Game.plant` (700 → 600 coins), hired one worker (600 → 570 coins), and cast growth or multiply separately on all 20 plants. No crop or spell was inserted directly into the game state in this mode. All 20 spells retained distinct plant IDs and the actual 0.65 m visual radius. The [world-only screenshot](legal-20-growth.png) shows their extent over the young crops; it is a screenshot of the 3D canvas with DOM overlays hidden only for capture.
+
+Headed hardware Chrome reported Intel UHD/D3D11. The [full report](chrome-legal-20-crops.json) records 60 RAF frames and 45 settled GPU samples per arm:
+
+| Arm | Active VFX | GPU median | Frame interval median | `world.render` median | Extra scene-depth captures |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Control | 0 | 18.95 ms | 16.8 ms | 3.8 ms | 0 |
+| Growth | 20 | 23.37 ms | 33.1 ms | 5.1 ms | 0 |
+| Multiply | 20 | 23.41 ms | 33.2 ms | 4.8 ms | 0 |
+| Control after | 0 | 17.35 ms | 16.7 ms | 4.0 ms | 0 |
+
+The frame interval is affected by presentation timing and does not equal GPU cost. The effects and native VFX instances returned to zero in the final control. This is a valid purchased opening held at a fixed spell age while paused, not a running campaign or evidence for a 1,500-crop economy. The browser benchmark's synthetic 1,500-crop fixture remains a separate rendering stress test.
+
+Reproduce with the command above, replacing the crop counts with `20` and setting `WG_QA_REAL_CAST=1`, `WG_QA_LEGAL_PLANTS=1`, `WG_QA_FOCUS_SPELL=1`, and optionally `WG_QA_CANVAS_SCREENSHOT=1` with `WG_QA_SCREENSHOT_DIR` to capture the 3D world without UI overlays.
