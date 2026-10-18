@@ -18,6 +18,8 @@ Each value is the median of the two corresponding arm medians. Soft arms capture
 
 The screenshots from this fixture looked similar on flat ground, but several effects occupy few pixels at the chosen age. They do **not** establish visual equivalence at contacts with walls, water, buildings, or slopes. The fixture creates isolated render effects directly, so it does not measure legal game actions, VFX lifetimes in a campaign, or total `Game.tick`. A later production change should compare those contact cases and simultaneous effects before turning off soft depth or world lights for any of these compositions.
 
+A [closer-camera repeat](closeup-sabana-712-hardware.json) for rhino attack and watering likewise found a roughly 4–6 ms GPU difference. Water droplets were visible and appeared similar with and without the extra depth capture on this flat patch of ground. The rhino effect was not visibly representative at the fixed fixture age and position, so its screenshot cannot justify a visual-equivalence claim. Set `WG_QA_CLOSEUP=1` to reproduce this camera placement.
+
 ## Reproduce
 
 Start `npm run dev -- --port 5188 --strictPort`, then run from the repository root:

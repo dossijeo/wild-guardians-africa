@@ -1,0 +1,249 @@
+{
+  "kind": "other-vfx-depth-comparison",
+  "ids": [
+    "rhino",
+    "water"
+  ],
+  "errors": [],
+  "complete": true,
+  "results": [
+    {
+      "id": "rhino",
+      "arm": "control",
+      "frames": 60,
+      "elapsedMs": 1162.3999999985099,
+      "interval": {
+        "count": 49,
+        "median": 16.69999999999891,
+        "p95": 33.20000000000073
+      },
+      "gpu": {
+        "count": 45,
+        "median": 14.27052,
+        "p95": 16.22875
+      },
+      "depthCaptures": 0,
+      "sprites": 0,
+      "nativeVfxInstances": 0
+    },
+    {
+      "id": "rhino",
+      "arm": "soft",
+      "frames": 60,
+      "elapsedMs": 1369.3999999985099,
+      "interval": {
+        "count": 49,
+        "median": 16.700000000000728,
+        "p95": 33.39999999999782
+      },
+      "gpu": {
+        "count": 45,
+        "median": 18.075104,
+        "p95": 19.304634
+      },
+      "depthCaptures": 60,
+      "sprites": 26,
+      "nativeVfxInstances": 1,
+      "screenshot": "test-results/other-vfx-closeup/rhino-soft.png"
+    },
+    {
+      "id": "rhino",
+      "arm": "hard",
+      "frames": 60,
+      "elapsedMs": 1084,
+      "interval": {
+        "count": 49,
+        "median": 16.600000000002183,
+        "p95": 33.20000000000073
+      },
+      "gpu": {
+        "count": 45,
+        "median": 13.960624,
+        "p95": 16.111197
+      },
+      "depthCaptures": 0,
+      "sprites": 26,
+      "nativeVfxInstances": 1,
+      "screenshot": "test-results/other-vfx-closeup/rhino-hard.png"
+    },
+    {
+      "id": "rhino",
+      "arm": "hard",
+      "frames": 60,
+      "elapsedMs": 1015.5,
+      "interval": {
+        "count": 49,
+        "median": 16.600000000002183,
+        "p95": 16.799999999999272
+      },
+      "gpu": {
+        "count": 45,
+        "median": 13.231822,
+        "p95": 14.389687
+      },
+      "depthCaptures": 0,
+      "sprites": 26,
+      "nativeVfxInstances": 1
+    },
+    {
+      "id": "rhino",
+      "arm": "soft",
+      "frames": 60,
+      "elapsedMs": 1304.5,
+      "interval": {
+        "count": 49,
+        "median": 16.700000000000728,
+        "p95": 33.20000000000073
+      },
+      "gpu": {
+        "count": 45,
+        "median": 18.167551,
+        "p95": 19.894686
+      },
+      "depthCaptures": 60,
+      "sprites": 26,
+      "nativeVfxInstances": 1
+    },
+    {
+      "id": "rhino",
+      "arm": "control",
+      "frames": 60,
+      "elapsedMs": 1078.6000000014901,
+      "interval": {
+        "count": 49,
+        "median": 16.69999999999709,
+        "p95": 17
+      },
+      "gpu": {
+        "count": 46,
+        "median": 13.503437,
+        "p95": 16.488853
+      },
+      "depthCaptures": 0,
+      "sprites": 0,
+      "nativeVfxInstances": 0
+    },
+    {
+      "id": "water",
+      "arm": "control",
+      "frames": 60,
+      "elapsedMs": 1036.5,
+      "interval": {
+        "count": 49,
+        "median": 16.600000000002183,
+        "p95": 17
+      },
+      "gpu": {
+        "count": 45,
+        "median": 13.605259,
+        "p95": 16.124999
+      },
+      "depthCaptures": 0,
+      "sprites": 0,
+      "nativeVfxInstances": 0
+    },
+    {
+      "id": "water",
+      "arm": "soft",
+      "frames": 60,
+      "elapsedMs": 1687.699999999255,
+      "interval": {
+        "count": 49,
+        "median": 33.20000000000073,
+        "p95": 33.400000000001455
+      },
+      "gpu": {
+        "count": 45,
+        "median": 23.509479,
+        "p95": 27.148072
+      },
+      "depthCaptures": 60,
+      "sprites": 5,
+      "nativeVfxInstances": 1,
+      "screenshot": "test-results/other-vfx-closeup/water-soft.png"
+    },
+    {
+      "id": "water",
+      "arm": "hard",
+      "frames": 60,
+      "elapsedMs": 1246,
+      "interval": {
+        "count": 49,
+        "median": 16.69999999999709,
+        "p95": 33.29999999999927
+      },
+      "gpu": {
+        "count": 45,
+        "median": 17.548958,
+        "p95": 18.508852
+      },
+      "depthCaptures": 0,
+      "sprites": 5,
+      "nativeVfxInstances": 1,
+      "screenshot": "test-results/other-vfx-closeup/water-hard.png"
+    },
+    {
+      "id": "water",
+      "arm": "hard",
+      "frames": 60,
+      "elapsedMs": 1369.9000000022352,
+      "interval": {
+        "count": 49,
+        "median": 16.700000000000728,
+        "p95": 33.29999999999927
+      },
+      "gpu": {
+        "count": 45,
+        "median": 18.253333,
+        "p95": 20.098749
+      },
+      "depthCaptures": 0,
+      "sprites": 5,
+      "nativeVfxInstances": 1
+    },
+    {
+      "id": "water",
+      "arm": "soft",
+      "frames": 60,
+      "elapsedMs": 1624.199999999255,
+      "interval": {
+        "count": 49,
+        "median": 33.19999999999709,
+        "p95": 33.39999999999782
+      },
+      "gpu": {
+        "count": 45,
+        "median": 23.918801,
+        "p95": 25.824322
+      },
+      "depthCaptures": 60,
+      "sprites": 5,
+      "nativeVfxInstances": 1
+    },
+    {
+      "id": "water",
+      "arm": "control",
+      "frames": 60,
+      "elapsedMs": 1034.5,
+      "interval": {
+        "count": 49,
+        "median": 16.599999999998545,
+        "p95": 16.80000000000291
+      },
+      "gpu": {
+        "count": 45,
+        "median": 13.100937,
+        "p95": 15.487031
+      },
+      "depthCaptures": 0,
+      "sprites": 0,
+      "nativeVfxInstances": 0
+    }
+  ],
+  "ready": {
+    "loaded": true,
+    "authority": true,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "gpuTimer": true
+  }
+}

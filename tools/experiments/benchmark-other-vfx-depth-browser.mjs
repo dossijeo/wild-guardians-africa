@@ -38,13 +38,13 @@ try{
   report.ready=ready;
   if(!ready.loaded||!ready.authority||!ready.gpuTimer||errors.length)
     throw Error(`World/GPU fixture unavailable: ${JSON.stringify({ready,errors})}`);
-  await page.evaluate(()=>{
+  await page.evaluate(({closeup})=>{
     const {state,world}=globalThis.wildGuardiansSpatialQa();
     state.pauses=['qa-vfx-depth'];state.time=100;
     const center=state.villages[0].center,y=world.nav.field.surface(center.x,center.z);
     world.cinematic=true;
     world.controls.target.set(center.x,y+.7,center.z);
-    world.camera.position.set(center.x+10,y+8,center.z+13);
+    world.camera.position.set(center.x+(closeup?3:10),y+(closeup?3:8),center.z+(closeup?4:13));
     world.camera.lookAt(center.x,y+.7,center.z);
     world.attackVfx.update=()=>{};
     world.attackVfx.prepare=camera=>globalThis.__otherVfxEffect?.prepare(camera,world.scene)??false;
@@ -53,7 +53,7 @@ try{
       globalThis.__otherVfxDepthCaptures=(globalThis.__otherVfxDepthCaptures??0)+1;
       return capture.apply(this,args);
     };
-  });
+  },{closeup:process.env.WG_QA_CLOSEUP==='1'});
   const arms=['control','soft','hard','hard','soft','control'];
   for(const id of ids){
     const captured=new Set();
