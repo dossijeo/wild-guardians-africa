@@ -48,5 +48,16 @@ crops and 563 rather than 585 coins. This is a real trajectory change, so
 the 90.5% figure is a same-opening campaign comparison, not a claim of
 strictly identical simulation. The frozen first fallback returns the same
 `unknown` in both builds; skipping previews changes native-derived session
-history and may change later navigation. A 100-night follow-up is needed to
-assess sustained behavior after this first divergence.
+history and may change later navigation.
+
+The 100-night follow-up exposed a consequential divergence. The reference
+won night 100 with 83 coins and no living crops. The optimized run lost at
+the beginning of day 97 with 30 coins and no living crops. Its cumulative
+`Game.tick` time through 96 nights was 727.00 s, against 1,497.14 s across
+the reference's 100 nights; this is **not** a like-for-like final-horizon
+speedup. Late individual ticks show a clear repair-path improvement (night
+90: 3.47 s versus 119.23 s), but the earlier defeat fails the gameplay
+acceptance criterion. Keep this branch experimental until the first
+behavioral divergence is explained and physical and strategic outcomes are
+checked. The difference must not be presented as a semantics-preserving
+optimization.
