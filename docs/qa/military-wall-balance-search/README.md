@@ -744,3 +744,38 @@ deadline. The physical partial state and directed fix are documented in
 fix uses a valid native route from the animal's current position and preserves
 the recovery deadline; it does not change pressure or wall prices. A full
 rerun after the fix is required before considering a production price change.
+
+## Matched 60-night rerun after PR #107
+
+PR #107 is merged into `main` and this branch. With that correction, both
+Sabana/712 arms completed **60 real nights**, with 60 verified raid receipts
+each, zero evidence issues and no coverage loss. The runs were sequential on
+the same host and used the same source revision `6568059c`, WASM, game,
+raids and runner input hashes. The only candidate difference was thorn cost
+10 versus 8 coins; HP, gates, V1 pressure and the virtual-player policy were
+unchanged. The [standard-price report](current-main-pr107-v1-standard-thorn-sabana712-60.json.gz)
+and [8-coin report](current-main-pr107-v1-cheap-thorn-sabana712-60.json.gz)
+contain all nightly hashes, finances, raid evidence and timing.
+
+| Measure | Standard thorn | 8-coin thorn |
+| --- | ---: | ---: |
+| Crops / coins after night 30 | 84 / 977 | 101 / 1,252 |
+| Crops / coins after night 60 | 107 / 755 | 107 / 745 |
+| Raid crop losses, nights 6–60 | 915 | 987 |
+| Animals, nights 6–60 | 731 | 753 |
+| Wall hits, nights 6–60 | 1,693 | 1,738 |
+| Wall modules / purchase cost | 55 / 550 | 57 / 456 |
+| Paid repair cost, nights 1–60 | 4,376 | 3,713 |
+| Income, nights 1–60 | 76,562 | 78,977 |
+| `Game.tick` / bot decisions | 535.93 / 184.84 s | 569.31 / 205.58 s |
+
+The cheaper candidate's early advantage did not persist: nights 31–60 lost
+578 crops versus 495, while drawing 436 versus 408 animals. At night 60 the
+two arms had the same living crop count and the cheaper one had 10 fewer
+coins. Their different farms and incursions mean the timing totals are not
+a same-workload engine benchmark. This one seed does **not** justify reducing
+the production thorn price or launching a cheap-thorn 100-night run. The
+standard-price arm's night-30 hash matches the older standard report, but its
+later trajectory differs; the old 100-night defeat cannot stand in for a
+100-night result on the corrected engine. That standard-price replay is the
+next staged balance test.
