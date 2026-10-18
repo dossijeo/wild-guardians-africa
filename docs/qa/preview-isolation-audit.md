@@ -130,10 +130,14 @@ in bot decisions). Its first 14 day-end state hashes exactly match the
 short run; `docs/qa/preview-isolation-sabana123-v1-long.json.gz` contains
 the full nightly metrics and source/WASM hashes. This result does not reach
 day 83; the frozen day-83 invariance test remains the direct proof for that
-specific preview scenario. A two-village center quote regression also proves
-bidirectional worker access and unchanged confirmed revisions; exact
-route-length ranking among multiple eligible villages is still not measured.
-Do not merge until the remaining functional comparison has been reviewed.
+specific preview scenario. A two-village center quote regression proves
+bidirectional worker access and unchanged confirmed revisions. It also
+measures both routes inside an isolated hypothesis instance and confirms
+that the chosen village has the shorter physical route in this fixture.
+The ordinary quote still uses direct distance as its tie-break, so more
+obstructed layouts could rank reachable villages differently from the
+historical route-length criterion; that policy difference remains explicit.
+Do not merge until that functional tradeoff has been reviewed.
 The source tree is now `src/world/wild-engine/`; the rename was
 separate from the behavioral change and all 204 playable tests, 51 directed
 wall/enclosure tests, and the WASM/Vite builds pass after it.

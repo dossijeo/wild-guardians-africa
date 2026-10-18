@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import * as Game from '../src/simulation/game.js';
 import {serialize} from '../src/persistence/snapshots.js';
 import {rational} from '../src/simulation/money.js';
+import {centerServicePoint} from '../src/world/centers.js';
 import {createSpatialCampaignOpening} from '../tools/experiments/spatial-campaign-opening.mjs';
 
 test('a paid native center preview cannot obstruct its village worker entry',async()=>{
@@ -74,6 +75,28 @@ test('a center quote checks both worker directions for each eligible village',as
     const quote=Game.previewCenter(state,point,nav);
     assert.equal(quote.valid,true,quote.reason);
     assert.equal(quote.villageId,'village-secondary');
+    assert.deepEqual(session.routeStamp(),stamp);
+    assert.equal(session.core.wasm.lazy_route_revision(),revision);
+    const departure=centerServicePoint(quote,state,.8),costs=new Map();
+    nav.withWallPreview([],quote.suppress??[],()=>{
+      const id=session.core.addPolygon(quote.footprint.footprint,0);
+      try{
+        for(const village of state.villages){
+          const destination=village.entry??village;
+          const route=nav.path(departure,destination,.28,null,true);
+          if(!route)continue;
+          let length=0,previous=departure;
+          for(const waypoint of route){
+            length+=Math.hypot(previous.x-waypoint.x,previous.z-waypoint.z);
+            previous=waypoint;
+          }
+          costs.set(village.id,length);
+        }
+      }finally{session.core.removePolygon(id);}
+    });
+    assert(costs.has(quote.villageId));
+    assert(costs.get(quote.villageId)<=Math.min(...costs.values())+1e-6,
+      JSON.stringify([...costs]));
     assert.deepEqual(session.routeStamp(),stamp);
     assert.equal(session.core.wasm.lazy_route_revision(),revision);
   }finally{session.dispose();}
