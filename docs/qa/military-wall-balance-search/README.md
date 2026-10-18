@@ -703,3 +703,31 @@ pressure alone caused the late collapse. `Game.tick` accumulated 1,089.15 s
 and bot decisions 408.11 s over 100 nights, versus 672.65 and 289.97 s over
 76 nights in the smaller, earlier-ending control. Do not interpret those
 different-horizon totals as an algorithm slowdown or speedup.
+
+## Repair-first Sabana/712: isolated thorn-price pilot
+
+After the standard-wall 100-night loss above, the same isolated replay code,
+seed, topological bot and V1 military pressure were run for 30 nights with
+only the thorn module price changed from 10 to 8 coins. Thorn HP remains 100,
+gate HP 60, and all other wall specifications are unchanged. Both arms have
+identical WASM, game, raids and runner input hashes. The lower-price run has
+30 verified raid receipts, zero issues and no coverage loss. It is archived
+in the [full pilot report](current-main-repair-first-v1-cheap-thorn-sabana712-30.json.gz).
+
+| Measure after night 30 | Standard thorn | 8-coin thorn |
+| --- | ---: | ---: |
+| Living crops | 84 | 101 |
+| Coins | 977 | 1,252 |
+| Raid crop losses from night 6 | 420 | 409 |
+| Animals generated | 328 | 322 |
+| Wall hits | 704 | 682 |
+| Wall modules purchased | 53 | 53 |
+| Wall purchase cost | 530 | 424 |
+| Repair spend | 1,803 | 1,391 |
+
+The single price change improved both crop survival and cash at this horizon.
+It also changed the farm and raid trajectories; lower repair spending cannot
+be interpreted as the price saving alone. The standard run overlapped other
+CPU-heavy tests whereas the pilot did not, so its wall-clock times are not a
+valid speed comparison. A 60-night continuation of this candidate is needed
+before considering a 100-night test or a production price recommendation.
