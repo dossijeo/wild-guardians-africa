@@ -813,3 +813,33 @@ stock (107 versus 81 crops at night 60) but still did not meet the design
 goal of a reasonably survivable 100-night game. Production balance remains
 unchanged. A staged durability-only thorn candidate is justified next; a
 single-seed improvement will still require independent validation.
+
+## Thorn-durability pilot: 30 nights
+
+The next candidate keeps the thorn module at 10 coins but raises its wall HP
+from 100 to 120 and gate HP from 60 to 90. No other material, V1 pressure,
+bot policy or game rule changed. Both Sabana/712 arms use identical hashes
+for WASM, `game.js`, `raids.js` and the runner. The top-level source commits
+differ only because documentation was added between sequential runs. The
+[complete 30-night durability report](current-main-pr107-v1-tough-thorn-sabana712-30.json.gz)
+and the standard-price [control](current-main-pr107-v1-standard-thorn-sabana712-60.json.gz)
+each have verified raid evidence, zero issues and no coverage loss.
+
+| Measure after night 30 | Current 100/60 HP | Candidate 120/90 HP |
+| --- | ---: | ---: |
+| Living crops | 84 | 138 |
+| Coins | 977 | 866 |
+| Raid crop losses from night 6 | 420 | 191 |
+| Animals | 323 | 324 |
+| Wall hits | 704 | 833 |
+| Wall modules purchased | 53 | 79 |
+| Wall purchase cost | 530 | 790 |
+| Paid repairs | 1,803 | 1,731 |
+
+The candidate redirected more of a similar-size attack toward the defense
+and lost 229 fewer crops. It also bought 26 more wall modules, spending 260
+additional coins, and closed with 111 fewer coins. This is a changed farm
+trajectory, not a pure strength or speed microbenchmark. The gate and wall
+HP changed together, so this pilot cannot identify their separate effects.
+The 60-night continuation is needed to see whether protection and solvency
+persist; no production change follows from this single 30-night result.
