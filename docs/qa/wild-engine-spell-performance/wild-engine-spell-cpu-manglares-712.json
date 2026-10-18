@@ -1,0 +1,189 @@
+{
+  "kind": "synthetic-simulation-cpu",
+  "seed": 712,
+  "biome": "manglares",
+  "ticksPerArm": 50,
+  "note": "Measures Game.cast and Game.tick under Wild Engine; excludes Three.js, GPU and VFX.",
+  "results": [
+    {
+      "count": 100,
+      "arm": "control",
+      "repetition": 0,
+      "castMs": 0.001100000000064938,
+      "tickMs": 12.786599999999908,
+      "perTickMs": 0.2557319999999981,
+      "heapUsed": 16769872,
+      "spellRemaining": 0
+    },
+    {
+      "count": 100,
+      "arm": "growth",
+      "repetition": 1,
+      "castMs": 0.7907999999999902,
+      "tickMs": 7.161000000000058,
+      "perTickMs": 0.14322000000000115,
+      "heapUsed": 14440784,
+      "spellRemaining": 24.99999999999993
+    },
+    {
+      "count": 100,
+      "arm": "multiply",
+      "repetition": 2,
+      "castMs": 0.11030000000005202,
+      "tickMs": 5.680700000000002,
+      "perTickMs": 0.11361400000000003,
+      "heapUsed": 19039168,
+      "spellRemaining": 10.000000000000018
+    },
+    {
+      "count": 100,
+      "arm": "multiply",
+      "repetition": 3,
+      "castMs": 0.10609999999996944,
+      "tickMs": 5.9243999999999915,
+      "perTickMs": 0.11848799999999983,
+      "heapUsed": 15483616,
+      "spellRemaining": 10.000000000000018
+    },
+    {
+      "count": 100,
+      "arm": "growth",
+      "repetition": 4,
+      "castMs": 0.09169999999994616,
+      "tickMs": 4.826900000000023,
+      "perTickMs": 0.09653800000000047,
+      "heapUsed": 19908768,
+      "spellRemaining": 24.99999999999993
+    },
+    {
+      "count": 100,
+      "arm": "control",
+      "repetition": 5,
+      "castMs": 0.00029999999992469384,
+      "tickMs": 4.420999999999935,
+      "perTickMs": 0.08841999999999871,
+      "heapUsed": 14727416,
+      "spellRemaining": 0
+    },
+    {
+      "count": 500,
+      "arm": "control",
+      "repetition": 0,
+      "castMs": 0.0004000000000132786,
+      "tickMs": 6.742500000000064,
+      "perTickMs": 0.13485000000000127,
+      "heapUsed": 20089928,
+      "spellRemaining": 0
+    },
+    {
+      "count": 500,
+      "arm": "growth",
+      "repetition": 1,
+      "castMs": 0.19119999999998072,
+      "tickMs": 10.007900000000063,
+      "perTickMs": 0.20015800000000128,
+      "heapUsed": 19466448,
+      "spellRemaining": 24.99999999999993
+    },
+    {
+      "count": 500,
+      "arm": "multiply",
+      "repetition": 2,
+      "castMs": 0.09239999999999782,
+      "tickMs": 7.240599999999972,
+      "perTickMs": 0.14481199999999944,
+      "heapUsed": 18508672,
+      "spellRemaining": 10.000000000000018
+    },
+    {
+      "count": 500,
+      "arm": "multiply",
+      "repetition": 3,
+      "castMs": 0.08600000000001273,
+      "tickMs": 13.018800000000056,
+      "perTickMs": 0.2603760000000011,
+      "heapUsed": 17794528,
+      "spellRemaining": 10.000000000000018
+    },
+    {
+      "count": 500,
+      "arm": "growth",
+      "repetition": 4,
+      "castMs": 0.1533999999999196,
+      "tickMs": 13.856999999999971,
+      "perTickMs": 0.27713999999999944,
+      "heapUsed": 16940112,
+      "spellRemaining": 24.99999999999993
+    },
+    {
+      "count": 500,
+      "arm": "control",
+      "repetition": 5,
+      "castMs": 0.0003000000000383807,
+      "tickMs": 6.824500000000057,
+      "perTickMs": 0.13649000000000114,
+      "heapUsed": 22156640,
+      "spellRemaining": 0
+    },
+    {
+      "count": 1500,
+      "arm": "control",
+      "repetition": 0,
+      "castMs": 0.0008000000000265572,
+      "tickMs": 20.04079999999999,
+      "perTickMs": 0.4008159999999998,
+      "heapUsed": 22636296,
+      "spellRemaining": 0
+    },
+    {
+      "count": 1500,
+      "arm": "growth",
+      "repetition": 1,
+      "castMs": 0.2584000000000515,
+      "tickMs": 24.461799999999926,
+      "perTickMs": 0.4892359999999985,
+      "heapUsed": 19899368,
+      "spellRemaining": 24.99999999999993
+    },
+    {
+      "count": 1500,
+      "arm": "multiply",
+      "repetition": 2,
+      "castMs": 0.1897999999999911,
+      "tickMs": 27.67960000000005,
+      "perTickMs": 0.553592000000001,
+      "heapUsed": 31926720,
+      "spellRemaining": 10.000000000000018
+    },
+    {
+      "count": 1500,
+      "arm": "multiply",
+      "repetition": 3,
+      "castMs": 0.1915000000000191,
+      "tickMs": 8.519199999999955,
+      "perTickMs": 0.1703839999999991,
+      "heapUsed": 26077704,
+      "spellRemaining": 10.000000000000018
+    },
+    {
+      "count": 1500,
+      "arm": "growth",
+      "repetition": 4,
+      "castMs": 0.26300000000003365,
+      "tickMs": 12.76030000000003,
+      "perTickMs": 0.2552060000000006,
+      "heapUsed": 20840512,
+      "spellRemaining": 24.99999999999993
+    },
+    {
+      "count": 1500,
+      "arm": "control",
+      "repetition": 5,
+      "castMs": 0.0004000000000132786,
+      "tickMs": 21.387899999999945,
+      "perTickMs": 0.4277579999999989,
+      "heapUsed": 20588736,
+      "spellRemaining": 0
+    }
+  ]
+}
