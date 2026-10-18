@@ -1224,3 +1224,41 @@ before changing code for this latency.
 The exact day-83 replay, frozen-state controls and live-profiler method are
 recorded in [the late-tick investigation](late-tick-sabana123.md). The frozen
 raid slice alone does not reproduce the continuous-campaign spike.
+
+## Post-isolation Desierto/712: 30-night V1 check
+
+After removing the unapproved fast repair quote from this balance branch,
+source `391bf9da` ran two authentic 30-night campaigns with the same `good`
+player, event-driven topological defense, seed 712, Wild Engine binary and
+current wall costs. Only the process-local military pressure recipe differed:
+production control versus V1. The first five presentation nights had the
+same crop and cash totals. Both arms completed 30 raids with verified native
+evidence, zero issues, no lost coverage and an operational center.
+
+| Desierto/712 | Production pressure | V1 pressure |
+| --- | ---: | ---: |
+| Crops / coins after night 18 | 54 / 432 | 133 / 855 |
+| Crops / coins after night 30 | 9 / 266 | 151 / 982 |
+| Agricultural raid losses, nights 6–30 | 351 | 175 |
+| Animals generated, nights 6–30 | 399 | 298 |
+| Paid wall modules / coins | 52 / 520 | 46 / 460 |
+| Repairs paid, coins | 1,981 | 1,606 |
+| Income / wages / seeds, coins | 22,039 / 9,362 / 10,610 | 37,564 / 17,459 / 17,757 |
+
+The control was still active at the 30-night horizon, but had a very small
+agricultural base. V1 retained a much larger farm and cash reserve under the
+same virtual-player policy. Its larger farm also incurred higher legitimate
+labor and seed costs. This is strong evidence for a **30-night Desierto
+improvement**, not a 100-night completion or a recommendation to promote V1
+in all biomes. The runs were concurrent and had different workloads; their
+`Game.tick` totals (174.57 and 261.34 s) are descriptive, not an engine-speed
+comparison.
+
+The [paired nightly ledger](post-isolation-desierto712-topological-30-nightly.csv)
+and compressed full [control](post-isolation-control-desierto712-topological-30.json.gz)
+and [V1](post-isolation-v1-desierto712-topological-30.json.gz) reports retain
+the physical and economic trajectory. The report gzip SHA-256 values are
+`6da019014225a0c7f5d2aad3b2272964255d9e26462402beb2971f1e86c822ed`
+and `89a2bce24c7ad3e1af51b5da363ab9eef2cdf0f2285548781246658778159432`.
+Generate the ledger from the same JSON inputs with
+`tools/experiments/write-balance-pair-ledger.mjs`.
