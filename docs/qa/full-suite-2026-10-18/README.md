@@ -27,5 +27,10 @@ route in a full campaign has been benchmarked.
 Directed verification: 12/12 worker recovery and task-route tests,
 12/12 SFX/VFX catalog and provenance tests, 204/204 playable tests,
 `npm run verify:assets`, and the production build all pass. A complete
-post-change `npm test` run is still needed to confirm the expected remaining
-two historical failures and exclude any other suite-level interaction.
+post-change `npm test` run completed 4,496 tests in 542.5 s: 4,438 passed,
+2 failed, and 56 were skipped. Only the two unchanged historical active-farm
+victory assertions failed; the four failures addressed here passed in the
+full run. The skips include cases requiring separately built and selected
+experimental WASM binaries; they are not counted as executed coverage.
+`verify:balance` and `verify:plan` also pass. Production balance remains
+unchanged.
