@@ -1,36 +1,17 @@
-# Full-suite triage after enclosure integration
+# Full-suite audit on current Wild Engine — 18 October 2026
 
-On 2026-10-18, `npm test` against merged `main` completed 4,496 tests:
-4,434 passed, 6 failed and 56 were skipped (540.4 s). The two
-`tests/active-farm.test.js` failures are the already documented historical
-100-night victory expectations under the superseded military balance; see
-[`current-main-regression-2026-10-17.md`](../active-farm-policy/current-main-regression-2026-10-17.md).
-They remain unchanged and are **not** treated as engine failures or silently
-weakened.
+`npm test` on `origin/main` at `62e89f4e` completed in 417.9 seconds: 4,521 cases, 4,454 passed, 7 failed, 60 skipped. The full output was retained locally during diagnosis. This is a complete source-suite run, distinct from the 214-case `test:playable` CI gate.
 
-The other four failures were reproduced and corrected here:
+Three failures were stale assertions or generated evidence:
 
-| Failure | Cause | Correction |
+- QA-089 expected different **species counts** across seeds for the same night, farm and pressure. Pressure V1 deliberately chooses counts before drawing RNG. A 1,000-seed probe found one count signature, 806 actor orders and 1,000 hit-budget profiles. The test now checks seeded timing, order, individual hits, reproducibility, persistence and absence of rerolls without changing the raid algorithm.
+- The SFX catalogue audit referenced old source hashes and line numbers after unrelated source edits. Regeneration preserved all 126 original audio hashes, all route classifications (100 assigned, 4 context exceptions, 12 reserves, 10 alternatives), and every row's semantic content. Only source hashes and locations changed. The old line pointers caused the second SFX test to read past the source and throw.
+
+The 11 directed raid-planning and SFX tests pass after these evidence corrections. They do **not** prove the other four full-suite failures resolved:
+
+| Test area | Historical expectation | Current result |
 | --- | --- | --- |
-| `spatial-task-route-cache` | A fractional worker return was legitimately continuing a bounded search on tick two, contradicting the old zero-query assertion. Its tail called `path` directly and repeated one blocked native query. | The native tail uses `workerPath`, which reuses the blocked proof. The test distinguishes ordinary replanning from pending recovery and requires no identical native query on the next tick. |
-| Two `sfx-catalog-audit` cases | The generated inventory recorded old source hashes and line numbers after later edits to `main.js`, encounters, game and raids. | Regenerated the inventory. All 126 IDs, original-byte hashes, runtime assignment states and four classification counts are identical to the prior inventory. |
-| `vfx-native` provenance | The manifest retained the module SHA-256 from before the merged instanced-upload optimization in PR #93. | Updated only the module hash to the current `vfx-native.js`; the original lab source and atlas hashes remain unchanged. |
+| `active-farm.test.js` (2 cases) | Victory at night 100 for two olderFemale Sabana/712 policies | Defeat |
+| `intensive-farm-policy.test.js` (2 cases) | Defeat by the test's horizon for two poor-investment policies | No terminal result by that horizon |
 
-The frozen Desierto/983 partial-state probe measured 1,037 native route calls
-on the first tick without the worker blocked-proof adapter. With that adapter,
-it measured 906 on tick one and 23 on tick two after the correction. All 23
-tick-two calls advance an active fractional recovery; none duplicates a
-tick-one origin/destination query. The serialized game state is identical to
-the control after two ticks. This result does not imply that every worker
-route in a full campaign has been benchmarked.
-
-Directed verification: 12/12 worker recovery and task-route tests,
-12/12 SFX/VFX catalog and provenance tests, 204/204 playable tests,
-`npm run verify:assets`, and the production build all pass. A complete
-post-change `npm test` run completed 4,496 tests in 542.5 s: 4,438 passed,
-2 failed, and 56 were skipped. Only the two unchanged historical active-farm
-victory assertions failed; the four failures addressed here passed in the
-full run. The skips include cases requiring separately built and selected
-experimental WASM binaries; they are not counted as executed coverage.
-`verify:balance` and `verify:plan` also pass. Production balance remains
-unchanged.
+Those four tests concern campaign balance and policy outcomes. They should be investigated with the balance work, keeping real wins, defeats and unfinished horizons distinct. This evidence refresh does not alter prices, damage, attack pressure, economy or gameplay to satisfy historical outcomes. A subsequent complete suite run is required to establish the new global count.
