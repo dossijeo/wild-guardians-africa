@@ -5,6 +5,7 @@ import {summarizeIntensiveFarm} from '../tools/summarize_intensive_farm.mjs';
 import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
 import {deserialize} from '../src/persistence/snapshots.js';
+import {dawnMinimum,operational} from '../src/simulation/rules.js';
 
 test('intensive native opening hires daily, expands beyond 16 crops and reinvests physical deliveries without manual harvest',()=>{
  const report=simulateIntensiveFarm({days:3,seed:712});assert.equal(report.result,null);assert.equal(report.completedNights,3);
@@ -47,9 +48,11 @@ test('recorded mixed farm attributes seed investment to live, physically picked 
  assert.throws(()=>summarizeIntensiveFarm(report),/Species seed prices do not reconcile/);
 });
 test('reinvestment without growing labour or maintenance reserves can lose despite a large plantation',()=>{
- const report=simulateIntensiveFarm({days:10,seed:712,reserveLabourGrowth:false,reserveMaintenance:false,burstPlanting:true,cameraEntry:false});
- assert.equal(report.result,'defeat');assert.ok(report.completedNights<10);assert.ok(report.maximumLiving>100);
+ const report=simulateIntensiveFarm({days:14,seed:712,reserveLabourGrowth:false,reserveMaintenance:false,burstPlanting:true,cameraEntry:false});
+ assert.equal(report.result,'defeat');assert.ok(report.completedNights>=6&&report.completedNights<14);assert.ok(report.maximumLiving>100);
  assert.ok(report.counts.CrateDelivered>50);assert.equal(report.counts.GameOver,1);assert.equal(report.counts.CampaignWon??0,0);
+ assert.ok(report.state.structures.some(operational));assert.ok(report.money<dawnMinimum(report.state));
+ assert.equal(report.counts.RaidSpawned,report.counts.RaidEnded);
  assert.ok(auditIntensiveFarm(report));
  assert.equal(summarizeIntensiveFarm(report).campaign100,'unverified');
 });
@@ -70,11 +73,12 @@ test('optional midday hiring uses paid ordinary contracts while preserving next-
 });
 
 test('poor reinvestment can lose with the current near-camera raid policy despite physical harvest income',()=>{
- const report=simulateIntensiveFarm({days:10,seed:712,reserveLabourGrowth:false,reserveMaintenance:false,burstPlanting:true,cameraEntry:true});
- assert.equal(report.policy.cameraEntry,true);assert.equal(report.result,'defeat');assert.ok(report.completedNights<10);
+ const report=simulateIntensiveFarm({days:14,seed:712,reserveLabourGrowth:false,reserveMaintenance:false,burstPlanting:true,cameraEntry:true});
+ assert.equal(report.policy.cameraEntry,true);assert.equal(report.result,'defeat');assert.ok(report.completedNights>=6&&report.completedNights<14);
  assert.ok(report.maximumLiving>100);assert.ok(report.counts.CrateDelivered>50);
  assert.equal(report.counts.GameOver,1);assert.equal(report.counts.CampaignWon??0,0);
  assert.equal(report.counts.RaidSpawned,report.counts.RaidEnded,'No unfinished raid can stand in for economic defeat');
+ assert.ok(report.state.structures.some(operational));assert.ok(report.money<dawnMinimum(report.state));
  assert.ok(auditIntensiveFarm(report));
  const summary=summarizeIntensiveFarm(report);
  assert.equal(summary.campaign100,'unverified');
