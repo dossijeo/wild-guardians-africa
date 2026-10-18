@@ -1,9 +1,10 @@
 import {findSpatialStart} from '../world/wild-engine/spatial-initial-site.js';
 import {createSpatialGameSession} from '../world/wild-engine/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../world/wild-engine/spatial-navigation-movement.js';
+import {WILD_ENGINE_WORLD_VERSION} from '../world/wild-engine/world-version.js';
 import wasmUrl from '../world/wild-engine/spatial-savanna.wasm?url';
 
-export const WILD_ENGINE_WORLD_VERSION=1;
+export {WILD_ENGINE_WORLD_VERSION};
 
 // The same native world supplies rendered chunks, static collisions and routes.
 // A saved game rebuilds its derived sectors from the seed and confirmed changes.

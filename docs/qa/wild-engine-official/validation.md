@@ -27,10 +27,15 @@ el navegador y volvió al HUD del día 1 sin error.
   `Date.now()` se truncaba a 32 bits al entrar en WASM y luego se comparaba
   erróneamente con la semilla completa. La comprobación utiliza ahora la misma
   normalización que la generación; una prueba dirigida cubre una semilla
-  temporal de 13 dígitos. El smoke anterior fallaba al cargar y la nueva
-  ejecución empaquetada sigue pendiente de confirmar.
-- Falta prueba interactiva equivalente de los otros cinco biomas y de acciones
-  completas con trabajadores, incursiones y construcción antes de fusionar.
+  temporal de 13 dígitos. El siguiente smoke empaquetado ya llegó al mundo.
+- El paso posterior de visibilidad de Windows falló porque sus fixtures todavía
+  guardaban un mundo generado por `Navigation` de JavaScript. Ambas fixtures
+  se crean ahora desde una sesión espacial nativa y llevan la versión de mundo.
+  La fixture de visibilidad carga en el navegador y llega al HUD con la misma
+  sesión WASM para terreno, chunks y rutas. La repetición empaquetada queda
+  pendiente.
+- Siguen pendientes pruebas interactivas equivalentes en los otros biomas y
+  acciones completas con trabajadores, incursiones y construcción.
 
 ## Rendimiento de magias sobre cultivos
 
