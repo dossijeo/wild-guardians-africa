@@ -111,5 +111,38 @@ additional gate on a non-gate wall remains necessary: an initial broad
 `unknown` shortcut failed the existing automatic-gate regression and was
 rejected. The focused rule passes all eight directed WASM repair tests,
 including that regression; `test:playable` passes 204/204 and the web build
-passes. A full 83-night comparison is still required before claiming that
-the policy and economic trajectory are unchanged.
+passes.
+
+## Continuous campaign outcome: keep the fast repair quote experimental
+
+The optimized 83-night replay matched the reference's nightly state hashes
+through night 82. Day-83 `Game.tick` fell from 72.32 s to 6.88 s, but its
+serialized state diverged: 41 versus 40 living crops, 563 versus 585 coins,
+and the same 76 coins spent on repairs. A complete follow-up is archived as
+[the optimized 100-night report](near-gate-fix-sabana123-100.json.gz). It
+lost at the beginning of day 97 with no living crops and 30 coins; the
+reference won night 100 with no living crops and 83 coins. Cumulative
+`Game.tick` through 96 nights was 727.00 s in the optimized run, versus
+1,497.14 s across the reference's 100 nights. These totals have different
+horizons and trajectories and are not a pure speed ratio. Individual late
+ticks do show the latency improvement: night 90 took 3.47 s versus 119.23 s.
+
+A read-only trace of the original code reproduced all 83 nightly hashes and
+recorded the result of both problematic repair quotes for `structure-1655`:
+at 89.5 s and 156.1 s, both returned `unknown` with no wall updates. The
+first frozen quote also returns `unknown` under the focused fix. Thus no
+successful legacy repair was lost at those calls. The legacy
+`withWallStatePreview()` syncs provisional and then confirmed walls; each
+sync can advance the wall revision despite no purchase. Fifty-eight such
+previews can exceed the mirror's 64-change route history, prompting later
+route revalidation. The fast quote preserves the route stamp in its
+regression test. A route-level trace is needed to identify the first
+changed worker movement, so this remains a causal hypothesis rather than a
+claim of full functional equivalence.
+
+The focused engine change and regression test are isolated in draft
+[PR #109](https://github.com/dossijeo/wild-guardians-africa/pull/109).
+Its performance is compelling, but the earlier defeat is a gameplay
+regression under the user's comparison criterion. Keep it out of `main`
+until the changed trajectory is understood and validated; do not modify
+the balance recipe to conceal the difference.
