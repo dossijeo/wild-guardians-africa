@@ -3,10 +3,10 @@ import {dirname} from 'node:path';
 import {performance} from 'node:perf_hooks';
 import {fixture} from '../probe-raid-reservation-saturation.mjs';
 import {createHierarchicalNavigationAdapter} from '../../src/world/hierarchical-navigation-adapter.js';
-import {createHierarchicalWasmNavigator} from '../../src/world/hierarchical-wasm-adapter.js';
+import {createHierarchicalWasmNavigator} from '../../src/world/wild-engine-adapter.js';
 
 const output=process.argv[2]??'docs/qa/hierarchical-navigation/closed-breach-wasm.json';
-const bytes=readFileSync('src/world/hierarchical-wasm/core.wasm'),radius=1.1,bounds={minX:-12,minZ:-18,maxX:42,maxZ:38,radius,worker:false,sectorSize:12};
+const bytes=readFileSync('src/world/wild-engine/core.wasm'),radius=1.1,bounds={minX:-12,minZ:-18,maxX:42,maxZ:38,radius,worker:false,sectorSize:12};
 const measured=fn=>{const t=performance.now(),value=fn();return {milliseconds:performance.now()-t,value};};
 const measuredAsync=async fn=>{const t=performance.now(),value=await fn();return {milliseconds:performance.now()-t,value};};
 async function one(variant){

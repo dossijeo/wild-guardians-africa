@@ -1,11 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {createSpatialWorld} from '../src/world/hierarchical-wasm/spatial-world.js';
-import {spatialWorldRoute} from '../src/world/hierarchical-wasm/spatial-local-route.js';
+import {createSpatialWorld} from '../src/world/wild-engine/spatial-world.js';
+import {spatialWorldRoute} from '../src/world/wild-engine/spatial-local-route.js';
 
 const module=new WebAssembly.Module(readFileSync(new URL(
-  '../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+  '../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 
 test('route diagnostics distinguish missing endpoint connectors from unknown native graph',()=>{
   const start={x:.2,z:.2},end={x:3.2,z:.2};

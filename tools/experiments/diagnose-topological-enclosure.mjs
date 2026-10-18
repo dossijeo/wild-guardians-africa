@@ -7,22 +7,22 @@ import {PROFILES} from '../../src/simulation/workforce.js';
 import {AGRICULTURAL_PROFILE_LIMITS} from
   '../../src/simulation/raid-agricultural-impact.js';
 import {ANIMAL_SPATIAL_PROFILES} from
-  '../../src/world/hierarchical-wasm/spatial-movement-profiles.js';
+  '../../src/world/wild-engine/spatial-movement-profiles.js';
 import {createSpatialGameSession} from
-  '../../src/world/hierarchical-wasm/spatial-game-session.js';
+  '../../src/world/wild-engine/spatial-game-session.js';
 import {createSpatialNavigationMovement} from
-  '../../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+  '../../src/world/wild-engine/spatial-navigation-movement.js';
 import {createSpatialIntentBridge} from
-  '../../src/world/hierarchical-wasm/spatial-intent-bridge.js';
+  '../../src/world/wild-engine/spatial-intent-bridge.js';
 import {createCropEnclosurePlanner} from
-  '../../src/world/hierarchical-wasm/spatial-crop-enclosure-plan.js';
+  '../../src/world/wild-engine/spatial-crop-enclosure-plan.js';
 import {cutEdgesToStrokes} from
-  '../../src/world/hierarchical-wasm/spatial-topological-enclosure-prototype.js';
+  '../../src/world/wild-engine/spatial-topological-enclosure-prototype.js';
 
 const [snapshotPath,groupId]=process.argv.slice(2);
 if(!snapshotPath)throw Error('Usage: diagnose-topological-enclosure.mjs SNAPSHOT[.gz] [GROUP_ID]');
 const wasmPath=process.env.WILD_ENGINE_TOPOLOGICAL_CUT_WASM??
-  'src/world/hierarchical-wasm/spatial-savanna.wasm';
+  'src/world/wild-engine/spatial-savanna.wasm';
 const bytes=readFileSync(snapshotPath);
 const state=deserialize((snapshotPath.endsWith('.gz')?gunzipSync(bytes):bytes).toString());
 let diagnosticHire=null;

@@ -2,10 +2,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {fixture} from '../tools/probe-raid-reservation-saturation.mjs';
 import {createHierarchicalNavigationAdapter} from '../src/world/hierarchical-navigation-adapter.js';
-import {createHierarchicalWasmNavigator,createHierarchicalWasmNavigatorSync} from '../src/world/hierarchical-wasm-adapter.js';
+import {createHierarchicalWasmNavigator,createHierarchicalWasmNavigatorSync} from '../src/world/wild-engine-adapter.js';
 import {readFileSync} from 'node:fs';
 
-const wasm=readFileSync(new URL('../src/world/hierarchical-wasm/core.wasm',import.meta.url));
+const wasm=readFileSync(new URL('../src/world/wild-engine/core.wasm',import.meta.url));
 
 test('new sector graph respects a native closed wall and its physical breach',()=>{
   const {s,nav}=fixture('closed-walls'),adapter=createHierarchicalNavigationAdapter(nav);

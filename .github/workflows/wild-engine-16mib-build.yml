@@ -5,7 +5,7 @@ on:
     paths:
       - '.github/workflows/wild-engine-16mib-build.yml'
       - 'tools/build-spatial-savanna-wasm.sh'
-      - 'src/world/hierarchical-wasm/spatial-savanna.wasm'
+      - 'src/world/wild-engine/spatial-savanna.wasm'
       - 'tests/spatial-savanna-prototype.test.js'
   workflow_dispatch:
 
@@ -34,13 +34,13 @@ jobs:
             -e SPATIAL_INITIAL_MEMORY="$memory_bytes" \
             emscripten/emsdk@sha256:77638e6c215a65f25a704c0c831d5c2463a8c0468a58c6cb82489dbe621dfa05 \
             bash tools/build-spatial-savanna-wasm.sh
-          sha256sum src/world/hierarchical-wasm/spatial-savanna.wasm
+          sha256sum src/world/wild-engine/spatial-savanna.wasm
           echo "Expected initial bytes: $memory_bytes" >> "$GITHUB_STEP_SUMMARY"
       - name: Check initial capacity and spatial contracts
         env:
           EXPECTED_MEMORY_BYTES: ${{ matrix.initial_mib == 4 && '4194304' || '16777216' }}
         run: |
-          node -e "const fs=require('node:fs');const m=new WebAssembly.Module(fs.readFileSync('src/world/hierarchical-wasm/spatial-savanna.wasm'));const e=new WebAssembly.Instance(m,{env:{emscripten_notify_memory_growth(){}}}).exports;if(e.memory.buffer.byteLength!==Number(process.env.EXPECTED_MEMORY_BYTES))process.exit(1)"
+          node -e "const fs=require('node:fs');const m=new WebAssembly.Module(fs.readFileSync('src/world/wild-engine/spatial-savanna.wasm'));const e=new WebAssembly.Instance(m,{env:{emscripten_notify_memory_growth(){}}}).exports;if(e.memory.buffer.byteLength!==Number(process.env.EXPECTED_MEMORY_BYTES))process.exit(1)"
           node --test tests/spatial-savanna-prototype.test.js
       - name: Check playable contracts with the 16 MiB binary
         if: matrix.initial_mib == 16
@@ -48,5 +48,5 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: wild-engine-main-${{ matrix.initial_mib }}mib
-          path: src/world/hierarchical-wasm/spatial-savanna.wasm
+          path: src/world/wild-engine/spatial-savanna.wasm
           retention-days: 7

@@ -4,14 +4,14 @@ import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
 import {createHash} from 'node:crypto';
 import {deserialize,serialize} from '../src/persistence/snapshots.js';
-import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
-import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../src/world/wild-engine/spatial-navigation-movement.js';
 import * as Game from '../src/simulation/game.js';
 
 const snapshots=[6,7].map(day=>JSON.parse(gunzipSync(readFileSync(new URL(
   `./fixtures/raid-desert-983/day${day}-defended.json.gz`,import.meta.url)))));
 const wasm=new WebAssembly.Module(readFileSync(new URL(
-  '../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+  '../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 
 function replay(snapshot,reload=false){
   let state=deserialize(JSON.stringify(snapshot.state));

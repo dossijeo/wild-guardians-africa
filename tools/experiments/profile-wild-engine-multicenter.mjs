@@ -6,8 +6,8 @@ import * as Game from '../../src/simulation/game.js';
 import {rational} from '../../src/simulation/money.js';
 import {serialize,deserialize} from '../../src/persistence/snapshots.js';
 import {centerServicePoint} from '../../src/world/centers.js';
-import {createSpatialGameSession} from '../../src/world/hierarchical-wasm/spatial-game-session.js';
-import {createSpatialNavigationMovement} from '../../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+import {createSpatialGameSession} from '../../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../../src/world/wild-engine/spatial-navigation-movement.js';
 import {createSpatialCampaignOpening} from './spatial-campaign-opening.mjs';
 
 // Constructed late-estate QA. Every center, crop and hire is a paid native
@@ -18,8 +18,8 @@ if(!Number.isFinite(seed)||!Number.isFinite(duration)||duration<=0||duration>300
   throw RangeError('Usage: profile-wild-engine-multicenter [biome] [seed] [report.json] [seconds <= 300]');
 const hash=path=>createHash('sha256').update(readFileSync(new URL(path,import.meta.url))).digest('hex');
 const source={commit:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),
-  cppSha256:hash('../../src/world/hierarchical-wasm/spatial-savanna.cpp'),
-  wasmSha256:hash('../../src/world/hierarchical-wasm/spatial-savanna.wasm'),
+  cppSha256:hash('../../src/world/wild-engine/spatial-savanna.cpp'),
+  wasmSha256:hash('../../src/world/wild-engine/spatial-savanna.wasm'),
   runnerSha256:hash('./profile-wild-engine-multicenter.mjs')};
 const {state,nav,session,start,loaded}=await createSpatialCampaignOpening({
   seed,biome,slotId:`engine-multicenter-${biome}-${seed}`});
@@ -91,7 +91,7 @@ try{
   const saved=serialize(state),restored=deserialize(saved);
   if(serialize(restored)!==saved)throw Error('Multi-center save did not round-trip');
   const wasm=new WebAssembly.Module(readFileSync(new URL(
-    '../../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+    '../../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
   const resident=new Map(),fresh=createSpatialGameSession(wasm,restored,{
     loaded:()=>resident,onData:data=>resident.set(`${data.cx},${data.cz}`,data)});
   let reload;

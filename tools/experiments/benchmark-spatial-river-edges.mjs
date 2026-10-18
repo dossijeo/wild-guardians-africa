@@ -1,8 +1,8 @@
 import {readFileSync,writeFileSync} from 'node:fs';
 import {performance} from 'node:perf_hooks';
-import {createSpatialWorld} from '../../src/world/hierarchical-wasm/spatial-world.js';
+import {createSpatialWorld} from '../../src/world/wild-engine/spatial-world.js';
 
-const module=new WebAssembly.Module(readFileSync('src/world/hierarchical-wasm/spatial-savanna.wasm'));
+const module=new WebAssembly.Module(readFileSync('src/world/wild-engine/spatial-savanna.wasm'));
 const output=process.argv[2]??'docs/qa/hierarchical-navigation/spatial-river-edges.json';
 const rows=[];
 for(const biome of ['sabana','gran-rio','volcanes','gran-canon']){

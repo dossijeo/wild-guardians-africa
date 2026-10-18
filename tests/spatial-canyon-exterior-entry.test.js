@@ -2,9 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {deserialize} from '../src/persistence/snapshots.js';
-import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
-import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
-import {ANIMAL_SPATIAL_PROFILES} from '../src/world/hierarchical-wasm/spatial-movement-profiles.js';
+import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../src/world/wild-engine/spatial-navigation-movement.js';
+import {ANIMAL_SPATIAL_PROFILES} from '../src/world/wild-engine/spatial-movement-profiles.js';
 import {chooseRaidEntry,reachableApproach} from '../src/simulation/raids.js';
 import {raidWallEnvelope} from '../src/simulation/raid-exterior-entry.js';
 import {ANIMAL_ACTIONS} from '../src/simulation/animal-actions-data.js';
@@ -13,7 +13,7 @@ import {rational} from '../src/simulation/money.js';
 import * as Game from '../src/simulation/game.js';
 
 const module=new WebAssembly.Module(readFileSync(new URL(
-  '../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+  '../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 const snapshot=new URL('../docs/qa/hierarchical-navigation/spatial-virtual-gran-canon-14-state.json',import.meta.url);
 
 test('Canyon curved-bank exterior entry reaches the farm without crossing water or walls',()=>{

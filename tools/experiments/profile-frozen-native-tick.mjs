@@ -4,9 +4,9 @@ import {createHash} from 'node:crypto';
 import {performance} from 'node:perf_hooks';
 import {deserialize} from '../../src/persistence/snapshots.js';
 import {tick} from '../../src/simulation/game.js';
-import {createSpatialGameSession} from '../../src/world/hierarchical-wasm/spatial-game-session.js';
-import {createSpatialNavigationMovement} from '../../src/world/hierarchical-wasm/spatial-navigation-movement.js';
-import {createEventDrivenTaskPlanner} from '../../src/world/hierarchical-wasm/spatial-intent-bridge.js';
+import {createSpatialGameSession} from '../../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../../src/world/wild-engine/spatial-navigation-movement.js';
+import {createEventDrivenTaskPlanner} from '../../src/world/wild-engine/spatial-intent-bridge.js';
 
 const file=process.argv[2],seconds=Number(process.argv[3]??10);
 if(!file||!Number.isInteger(seconds)||seconds<1||seconds>120)
@@ -17,7 +17,7 @@ const bytes=readFileSync(file),state=deserialize((file.endsWith('.gz')?gunzipSyn
 const pruneHistory=process.argv.includes('--prune-history');
 if(pruneHistory){state.plants=state.plants.filter(plant=>plant.alive);state.crates=state.crates.filter(crate=>!crate.delivered);}
 const module=new WebAssembly.Module(readFileSync(process.env.WILD_ENGINE_SPATIAL_SERVICES_WASM??
-  new URL('../../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+  new URL('../../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 const loaded=new Map(),session=createSpatialGameSession(module,state,{
   loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
 try{

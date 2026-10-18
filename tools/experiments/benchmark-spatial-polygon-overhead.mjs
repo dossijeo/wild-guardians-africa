@@ -1,12 +1,12 @@
 import {readFileSync,writeFileSync} from 'node:fs';
 import {performance} from 'node:perf_hooks';
 import {createHash} from 'node:crypto';
-import {createSpatialWorld} from '../../src/world/hierarchical-wasm/spatial-world.js';
+import {createSpatialWorld} from '../../src/world/wild-engine/spatial-world.js';
 
 const previous=process.argv[2];
 if(!previous)throw Error('Pass a previously committed spatial WASM binary as the first argument');
 const binaries={before:readFileSync(previous),
-  after:readFileSync('src/world/hierarchical-wasm/spatial-savanna.wasm')};
+  after:readFileSync('src/world/wild-engine/spatial-savanna.wasm')};
 const modules={before:new WebAssembly.Module(binaries.before),after:new WebAssembly.Module(binaries.after)};
 const queries=Array.from({length:50},(_,i)=>({start:{x:-18+i%10*4,z:-18+Math.floor(i/10)*7},
   end:{x:17-i%7*4,z:17-Math.floor(i/7)*4}}));

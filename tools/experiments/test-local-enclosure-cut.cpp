@@ -1,4 +1,4 @@
-#include "../../src/world/hierarchical-wasm/local-enclosure-cut.h"
+#include "../../src/world/wild-engine/local-enclosure-cut.h"
 #include <cassert>
 #include <iostream>
 #include <set>

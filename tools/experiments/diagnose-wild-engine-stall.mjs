@@ -1,8 +1,8 @@
 import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
 import {deserialize} from '../../src/persistence/snapshots.js';
-import {createSpatialGameSession} from '../../src/world/hierarchical-wasm/spatial-game-session.js';
-import {createSpatialNavigationMovement} from '../../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+import {createSpatialGameSession} from '../../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../../src/world/wild-engine/spatial-navigation-movement.js';
 import {actorBlockers,actorSegmentClear} from '../../src/simulation/actor-motion.js';
 
 const input=process.argv[2];
@@ -10,7 +10,7 @@ if(!input)throw Error('Pass a captured stall .json.gz file');
 const capture=JSON.parse(gunzipSync(readFileSync(input)).toString());
 const state=deserialize(capture.snapshot),loaded=new Map();
 const wasm=new WebAssembly.Module(readFileSync(new URL(
-  '../../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+  '../../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 const session=createSpatialGameSession(wasm,state,{loaded:()=>loaded,
   onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
 try{

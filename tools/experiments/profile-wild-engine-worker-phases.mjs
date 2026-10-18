@@ -15,8 +15,8 @@ if(!Number.isFinite(seed)||!Number.isFinite(duration)||duration<=0||duration>300
   throw RangeError('Usage: profile-wild-engine-worker-phases [biome] [seed] [report.json] [seconds <= 300]');
 const hash=path=>createHash('sha256').update(readFileSync(new URL(path,import.meta.url))).digest('hex');
 const source={commit:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),
-  cppSha256:hash('../../src/world/hierarchical-wasm/spatial-savanna.cpp'),
-  wasmSha256:hash('../../src/world/hierarchical-wasm/spatial-savanna.wasm'),
+  cppSha256:hash('../../src/world/wild-engine/spatial-savanna.cpp'),
+  wasmSha256:hash('../../src/world/wild-engine/spatial-savanna.wasm'),
   runnerSha256:hash('./profile-wild-engine-worker-phases.mjs')};
 const candidates=[];
 for(let dz=-54;dz<=54;dz+=2)for(let dx=-54;dx<=54;dx+=2)

@@ -3,8 +3,8 @@ import {execFileSync} from 'node:child_process';
 import {performance} from 'node:perf_hooks';
 import {gunzipSync} from 'node:zlib';
 import {deserialize} from '../../src/persistence/snapshots.js';
-import {createSpatialGameSession} from '../../src/world/hierarchical-wasm/spatial-game-session.js';
-import {createSpatialNavigationMovement} from '../../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+import {createSpatialGameSession} from '../../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../../src/world/wild-engine/spatial-navigation-movement.js';
 import {wallStroke,wallStrokeLine} from '../../src/world/wall-layout.js';
 import {rational} from '../../src/simulation/money.js';
 import * as current from '../../src/simulation/game.js';
@@ -15,7 +15,7 @@ let session;
 try{
   const baseline=await import(baselinePath.href);
   const module=new WebAssembly.Module(readFileSync(new URL(
-    '../../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+    '../../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
   const state=deserialize(gunzipSync(readFileSync(new URL(
     '../../tests/fixtures/desierto983-d15-partial-state.json.gz',import.meta.url))));
   state.structures=state.structures.filter(s=>!(s.kind==='wall'&&s.created>=27114));

@@ -4,12 +4,12 @@ import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
 import {deserialize,serialize} from '../src/persistence/snapshots.js';
 import {createPlant} from '../src/simulation/crops.js';
-import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
-import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
-import {createSpatialIntentBridge} from '../src/world/hierarchical-wasm/spatial-intent-bridge.js';
+import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../src/world/wild-engine/spatial-navigation-movement.js';
+import {createSpatialIntentBridge} from '../src/world/wild-engine/spatial-intent-bridge.js';
 import {classifyCutBoundaryFaces,cutQuoteOmissionReason,proposeHybridEnclosure} from
-  '../src/world/hierarchical-wasm/spatial-hybrid-enclosure-prototype.js';
-import {createCropEnclosurePlanner} from '../src/world/hierarchical-wasm/spatial-crop-enclosure-plan.js';
+  '../src/world/wild-engine/spatial-hybrid-enclosure-prototype.js';
+import {createCropEnclosurePlanner} from '../src/world/wild-engine/spatial-crop-enclosure-plan.js';
 import {createNativeTopologicalDefensePolicy} from '../tools/native-topological-defense-policy.mjs';
 import {approximateCutModules,cropClearanceHull,cutEdgesToStrokes,enclosureJunctions,inspectNaturalJunctions,
   identifyNaturalCorridor,
@@ -17,13 +17,13 @@ import {approximateCutModules,cropClearanceHull,cutEdgesToStrokes,enclosureJunct
   inspectStaticCutBoundary,junctionBlocksSmallestAnimal,
   placedEnclosureJunctions,
   SMALLEST_ANIMAL_RADIUS,stitchTwoCutStrokes,
-  wallOccludesBoundaryFace} from '../src/world/hierarchical-wasm/spatial-topological-enclosure-prototype.js';
+  wallOccludesBoundaryFace} from '../src/world/wild-engine/spatial-topological-enclosure-prototype.js';
 import {findVillageEntry,villageLayout} from '../src/world/villages.js';
 import {containsPoint} from '../src/world/footprints.js';
 import {Navigation} from '../src/world/navigation.js';
 import {rational} from '../src/simulation/money.js';
 import {agriculturalRayClear,AGRICULTURAL_PROFILE_LIMITS} from '../src/simulation/raid-agricultural-impact.js';
-import {ANIMAL_SPATIAL_PROFILES} from '../src/world/hierarchical-wasm/spatial-movement-profiles.js';
+import {ANIMAL_SPATIAL_PROFILES} from '../src/world/wild-engine/spatial-movement-profiles.js';
 import * as Game from '../src/simulation/game.js';
 
 test('cut diagnostics distinguish uncertified blockage from unavailable geometry',()=>{

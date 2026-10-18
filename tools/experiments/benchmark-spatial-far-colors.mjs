@@ -1,9 +1,9 @@
 import {readFileSync,writeFileSync} from 'node:fs';
 import {performance} from 'node:perf_hooks';
-import {createSpatialWorld} from '../../src/world/hierarchical-wasm/spatial-world.js';
+import {createSpatialWorld} from '../../src/world/wild-engine/spatial-world.js';
 import {BIOME_IDS} from '../../src/world/biome-ids.js';
 
-const module=new WebAssembly.Module(readFileSync('src/world/hierarchical-wasm/spatial-savanna.wasm'));
+const module=new WebAssembly.Module(readFileSync('src/world/wild-engine/spatial-savanna.wasm'));
 const output=process.argv[2]??'docs/qa/hierarchical-navigation/spatial-far-colors.json';
 const points=new Float32Array(193*97*2);
 for(let row=0;row<97;row++)for(let col=0;col<193;col++){

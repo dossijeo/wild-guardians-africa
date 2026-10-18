@@ -33,8 +33,8 @@ const timedCapturePrefix=process.env.WG_ENGINE_CAPTURE_PREFIX;
 const results=[];
 const sha=path=>createHash('sha256').update(readFileSync(new URL(path,import.meta.url))).digest('hex');
 const source={commit:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),
-  cppSha256:sha('../../src/world/hierarchical-wasm/spatial-savanna.cpp'),
-  wasmSha256:sha('../../src/world/hierarchical-wasm/spatial-savanna.wasm'),
+  cppSha256:sha('../../src/world/wild-engine/spatial-savanna.cpp'),
+  wasmSha256:sha('../../src/world/wild-engine/spatial-savanna.wasm'),
   raidsSha256:sha('../../src/simulation/raids.js'),
   canyonFormationSha256:sha('../../src/simulation/canyon-raid-formation.js'),
   animalRouteClearanceSha256:sha('../../src/simulation/animal-route-clearance.js'),

@@ -1,7 +1,7 @@
 import {writeFileSync} from 'node:fs';
 import {createSpatialCampaignOpening} from './spatial-campaign-opening.mjs';
 import {canyonLandAccess} from '../../src/world/canyon-land-access.js';
-import {ANIMAL_SPATIAL_PROFILES} from '../../src/world/hierarchical-wasm/spatial-movement-profiles.js';
+import {ANIMAL_SPATIAL_PROFILES} from '../../src/world/wild-engine/spatial-movement-profiles.js';
 
 const output=process.argv[2];
 const opening=await createSpatialCampaignOpening({seed:712,biome:'gran-canon',

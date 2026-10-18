@@ -4,12 +4,12 @@
 <style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#b9c6d1;font:14px system-ui}canvas{display:block}#labels{position:fixed;inset:12px 12px auto;display:flex;justify-content:space-between;pointer-events:none}#labels span,#status{padding:7px 11px;background:#193028dd;color:white;border-radius:5px}#status{position:fixed;left:50%;top:12px;transform:translateX(-50%);pointer-events:none}</style>
 </head><body><div id="labels"><span>Mismo mundo · malla desde JS</span><span>Mismo mundo · malla desde C++</span></div><div id="status">Preparando horizonte…</div><script type="module">
 import * as THREE from 'three';
-import {createSpatialWorld} from '../../src/world/hierarchical-wasm/spatial-world.js';
+import {createSpatialWorld} from '../../src/world/wild-engine/spatial-world.js';
 import {activeChunkRegion} from '../../src/world/active-region.js';
 import {buildSpatialHorizonData} from '../../src/rendering/spatial-horizon-data.js';
 import {nativeTerrainBuffer} from '../../src/rendering/terrain-geometry.js';
 import {nativeWaterBuffer} from '../../src/rendering/water-geometry.js';
-import wasmUrl from '../../src/world/hierarchical-wasm/spatial-savanna.wasm?url';
+import wasmUrl from '../../src/world/wild-engine/spatial-savanna.wasm?url';
 
 const status=document.querySelector('#status'),query=new URLSearchParams(location.search);
 const biome=query.get('biome')==='desert'?'desert':'canyons',seed=Number(query.get('seed')??712);

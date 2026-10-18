@@ -2,13 +2,13 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
-import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
-import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../src/world/wild-engine/spatial-navigation-movement.js';
 import {walkTo} from '../src/simulation/game.js';
 
 const fixture=new URL('../docs/qa/retreat-recovery-episode/sabana712-v1-cheap-thorn-day34-partial-state.json.gz',import.meta.url);
 const wasm=new WebAssembly.Module(readFileSync(new URL(
- '../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+ '../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 
 test('day-34 exhausted animal recovers a native route around a false direct connector',()=>{
  // This is the saved state from a real 60-night balance run stopped by an

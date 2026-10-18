@@ -1,10 +1,10 @@
 <!doctype html><html lang="es"><head><meta charset="utf-8"><title>QA · horizonte espacial en Worker</title></head>
 <body><pre id="status">Preparando WASM…</pre><script type="module">
-import {createSpatialWorld} from '../../src/world/hierarchical-wasm/spatial-world.js';
+import {createSpatialWorld} from '../../src/world/wild-engine/spatial-world.js';
 import {activeChunkRegion} from '../../src/world/active-region.js';
 import {NativeHorizon} from '../../src/rendering/horizon.js';
 import * as THREE from 'three';
-import wasmUrl from '../../src/world/hierarchical-wasm/spatial-savanna.wasm?url';
+import wasmUrl from '../../src/world/wild-engine/spatial-savanna.wasm?url';
 
 const status=document.querySelector('#status'),report=[];
 try{
@@ -13,7 +13,7 @@ try{
   let serial=0;
   for(const biome of ['canyons','desert']){
     const core=createSpatialWorld(module);core.generate(712,0,0,biome);
-    const worker=new Worker(new URL('../../src/world/hierarchical-wasm/spatial-horizon-worker.js',import.meta.url),{type:'module'});
+    const worker=new Worker(new URL('../../src/world/wild-engine/spatial-horizon-worker.js',import.meta.url),{type:'module'});
     const color=[58/255,173/255,182/255];
     let largestFrameGap=0,lastFrame=performance.now(),active=true;
     const sampleFrame=()=>{

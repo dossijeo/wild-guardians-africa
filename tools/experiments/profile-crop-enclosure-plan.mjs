@@ -4,13 +4,13 @@ import {performance} from 'node:perf_hooks';
 import {execFileSync} from 'node:child_process';
 import {simulateNativeCampaign} from '../native-campaign-runner.mjs';
 import {createSpatialCampaignOpening} from './spatial-campaign-opening.mjs';
-import {createCropEnclosurePlanner} from '../../src/world/hierarchical-wasm/spatial-crop-enclosure-plan.js';
+import {createCropEnclosurePlanner} from '../../src/world/wild-engine/spatial-crop-enclosure-plan.js';
 
 const out=process.argv[2];
 if(!out)throw Error('Usage: node profile-crop-enclosure-plan.mjs <report.json>');
 const source=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
 const wasmPath=process.env.WILD_ENGINE_SPATIAL_SERVICES_WASM??
-  'src/world/hierarchical-wasm/spatial-savanna.wasm';
+  'src/world/wild-engine/spatial-savanna.wasm';
 const wasmSha256=createHash('sha256').update(readFileSync(wasmPath)).digest('hex');
 let latestState=null,latestNav=null,sample=null;
 const started=performance.now();

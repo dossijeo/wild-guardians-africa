@@ -2,14 +2,14 @@
 import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
 import {deserialize} from '../../src/persistence/snapshots.js';
-import {createSpatialGameSession} from '../../src/world/hierarchical-wasm/spatial-game-session.js';
-import {createSpatialNavigationMovement} from '../../src/world/hierarchical-wasm/spatial-navigation-movement.js';
-import {createEventDrivenTaskPlanner} from '../../src/world/hierarchical-wasm/spatial-intent-bridge.js';
+import {createSpatialGameSession} from '../../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../../src/world/wild-engine/spatial-navigation-movement.js';
+import {createEventDrivenTaskPlanner} from '../../src/world/wild-engine/spatial-intent-bridge.js';
 import {targetFor} from '../../src/simulation/raids.js';
 
 const fixture=process.argv[2]??'tests/fixtures/manglares-123-d10-raid-state.json.gz';
 const binary=process.env.WILD_ENGINE_NATIVE_ROUTE_WASM??
-  'src/world/hierarchical-wasm/spatial-savanna.wasm';
+  'src/world/wild-engine/spatial-savanna.wasm';
 const raw=readFileSync(fixture);
 const state=deserialize(fixture.endsWith('.gz')?gunzipSync(raw).toString():raw.toString());
 const actorId=process.argv[3],actorX=Number(process.argv[4]),

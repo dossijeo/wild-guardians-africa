@@ -1,7 +1,7 @@
-import {findSpatialStart} from '../world/hierarchical-wasm/spatial-initial-site.js';
-import {createSpatialGameSession} from '../world/hierarchical-wasm/spatial-game-session.js';
-import {createSpatialNavigationMovement} from '../world/hierarchical-wasm/spatial-navigation-movement.js';
-import wasmUrl from '../world/hierarchical-wasm/spatial-savanna.wasm?url';
+import {findSpatialStart} from '../world/wild-engine/spatial-initial-site.js';
+import {createSpatialGameSession} from '../world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../world/wild-engine/spatial-navigation-movement.js';
+import wasmUrl from '../world/wild-engine/spatial-savanna.wasm?url';
 
 // Development-only integration path. The regular game keeps its established
 // world until native world generation and all gameplay consumers pass QA.

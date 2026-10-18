@@ -7,15 +7,15 @@ import {AGRICULTURAL_PROFILE_LIMITS,agriculturalRayClear} from
   '../../src/simulation/raid-agricultural-impact.js';
 import {simulateNativeCampaign} from '../native-campaign-runner.mjs';
 import {createSpatialCampaignOpening} from './spatial-campaign-opening.mjs';
-import {createSpatialIntentBridge} from '../../src/world/hierarchical-wasm/spatial-intent-bridge.js';
-import {createCropEnclosurePlanner} from '../../src/world/hierarchical-wasm/spatial-crop-enclosure-plan.js';
+import {createSpatialIntentBridge} from '../../src/world/wild-engine/spatial-intent-bridge.js';
+import {createCropEnclosurePlanner} from '../../src/world/wild-engine/spatial-crop-enclosure-plan.js';
 import {approximateCutModules,cropClearanceHull,inspectSelfClosedQuote,
   inspectPlacedNaturalJunctions,inspectStaticCutBoundary,
-  placedEnclosureJunctions,wallOccludesBoundaryFace} from '../../src/world/hierarchical-wasm/spatial-topological-enclosure-prototype.js';
+  placedEnclosureJunctions,wallOccludesBoundaryFace} from '../../src/world/wild-engine/spatial-topological-enclosure-prototype.js';
 import {wallSpec} from '../../src/simulation/rules.js';
 import {wallCollisionPolygon} from '../../src/world/wall-collision-frame.js';
 import {edgeDistance,footprintDistance} from '../../src/world/footprints.js';
-import {ANIMAL_SPATIAL_PROFILES} from '../../src/world/hierarchical-wasm/spatial-movement-profiles.js';
+import {ANIMAL_SPATIAL_PROFILES} from '../../src/world/wild-engine/spatial-movement-profiles.js';
 import * as Game from '../../src/simulation/game.js';
 
 const biome=process.argv[2]??'sabana',day=Number(process.argv[3]??3);
@@ -30,7 +30,7 @@ if(compareConstructionCut&&!conservativeCut)
   throw Error('Construction comparison requires --conservative-cut');
 if(!Number.isInteger(day)||day<1||day>30)throw RangeError('Invalid target day');
 const wasmPath=process.env.WILD_ENGINE_SPATIAL_SERVICES_WASM??
-  'src/world/hierarchical-wasm/spatial-savanna.wasm';
+  'src/world/wild-engine/spatial-savanna.wasm';
 const binary=readFileSync(wasmPath),module=new WebAssembly.Module(binary);
 if(WebAssembly.Module.imports(module).some(item=>item.module==='wasi_snapshot_preview1')){
   const Instance=WebAssembly.Instance;
@@ -703,7 +703,7 @@ try{
     }});
 }catch(error){if(error!==end)throw error;}
 const report={biome,seed:712,day,source:sha256(readFileSync(
-  new URL('../../src/world/hierarchical-wasm/lazy-sectors.cpp',import.meta.url))),
+  new URL('../../src/world/wild-engine/lazy-sectors.cpp',import.meta.url))),
   wasmSha256:sha256(binary),elapsedSeconds:(performance.now()-started)/1000,
   campaignTiming,
   sample:sample??{status:'not-reached'}};

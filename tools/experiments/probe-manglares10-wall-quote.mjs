@@ -1,7 +1,7 @@
 import {readFileSync,writeFileSync,unlinkSync} from 'node:fs';
 import {deserialize} from '../../src/persistence/snapshots.js';
-import {createSpatialGameSession} from '../../src/world/hierarchical-wasm/spatial-game-session.js';
-import {createSpatialNavigationMovement} from '../../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+import {createSpatialGameSession} from '../../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../../src/world/wild-engine/spatial-navigation-movement.js';
 import * as currentGame from '../../src/simulation/game.js';
 import {execFileSync} from 'node:child_process';
 
@@ -14,7 +14,7 @@ writeFileSync(temporary,source);
 let baseline;
 try{baseline=await import(temporary);}finally{unlinkSync(temporary);}
 const binary=new WebAssembly.Module(readFileSync(new URL(
-  '../../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+  '../../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 const stroke=[[72,-18],[102,-18],[102,18],[72,18],[72,-18]];
 for(const [label,game] of [['before',baseline],['after',currentGame]]){
   const state=deserialize(readFileSync(snapshot,'utf8'));

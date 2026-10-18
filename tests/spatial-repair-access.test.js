@@ -7,11 +7,11 @@ import {numberOf} from '../src/simulation/money.js';
 import {hire,openInitialHiring,placeStructure,planRepairAccess,plant,
   repairCost,requestRepair,tick} from '../src/simulation/game.js';
 import {createSpatialGameSession} from
-  '../src/world/hierarchical-wasm/spatial-game-session.js';
+  '../src/world/wild-engine/spatial-game-session.js';
 import {createSpatialNavigationMovement} from
-  '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+  '../src/world/wild-engine/spatial-navigation-movement.js';
 import {createSpatialIntentBridge} from
-  '../src/world/hierarchical-wasm/spatial-intent-bridge.js';
+  '../src/world/wild-engine/spatial-intent-bridge.js';
 import {createOpeningWorld} from '../tools/check_opening.mjs';
 
 const binary=process.env.WILD_ENGINE_NATIVE_ROUTE_WASM;

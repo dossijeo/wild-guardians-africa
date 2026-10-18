@@ -6,9 +6,9 @@ import {planRepairAccess} from '../../src/simulation/game.js';
 import {operational} from '../../src/simulation/rules.js';
 import {centerServicePoint} from '../../src/world/centers.js';
 import {createSpatialGameSession} from
-  '../../src/world/hierarchical-wasm/spatial-game-session.js';
+  '../../src/world/wild-engine/spatial-game-session.js';
 import {createSpatialNavigationMovement} from
-  '../../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+  '../../src/world/wild-engine/spatial-navigation-movement.js';
 
 const wasmPath=process.env.WILD_ENGINE_NATIVE_ROUTE_WASM;
 if(!wasmPath)throw Error('Set WILD_ENGINE_NATIVE_ROUTE_WASM');

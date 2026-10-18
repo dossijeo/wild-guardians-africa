@@ -3,9 +3,9 @@ import assert from 'node:assert/strict';
 import {createSpatialCampaignOpening} from
   '../tools/experiments/spatial-campaign-opening.mjs';
 import {spatialStructureBarriers} from
-  '../src/world/hierarchical-wasm/spatial-wall-bridge.js';
+  '../src/world/wild-engine/spatial-wall-bridge.js';
 import {SMALLEST_ANIMAL_RADIUS} from
-  '../src/world/hierarchical-wasm/spatial-topological-enclosure-prototype.js';
+  '../src/world/wild-engine/spatial-topological-enclosure-prototype.js';
 
 test('read-only wall clearance matches installed geometry without changing revisions',async()=>{
   const {session,nav,start}=await createSpatialCampaignOpening({

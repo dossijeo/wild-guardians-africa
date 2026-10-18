@@ -3,7 +3,7 @@ import {activeRaidEntryPlan} from '../world/raid-entry-data.js';
 import {animalExitConnector} from './animal-exit-connectors.js';
 import {workerReturnRoute,workerReturnRoutePending} from './worker-return-route.js';
 import {workerFractionalConnector,workerFractionalConnectorPending} from '../world/worker-fractional-connector.js';
-import {SpatialChunkUnavailable} from '../world/hierarchical-wasm/spatial-navigation-movement.js';
+import {SpatialChunkUnavailable} from '../world/wild-engine/spatial-navigation-movement.js';
 import {workerRiskClearance} from './worker-route-clearance.js';
 import {resolveFluidPlacement} from '../world/fluid-placement.js';
 import {ensurePurchaseBudget,HIRING_RESERVE} from './budget.js';

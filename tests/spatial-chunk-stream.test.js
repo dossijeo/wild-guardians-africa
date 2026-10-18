@@ -1,16 +1,16 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {createSpatialWorld} from '../src/world/hierarchical-wasm/spatial-world.js';
-import {createSpatialChunkStream} from '../src/world/hierarchical-wasm/spatial-chunk-stream.js';
-import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
+import {createSpatialWorld} from '../src/world/wild-engine/spatial-world.js';
+import {createSpatialChunkStream} from '../src/world/wild-engine/spatial-chunk-stream.js';
+import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
 import {villageLayout} from '../src/world/villages.js';
 import * as THREE from 'three';
 import {WorldScene} from '../src/rendering/scene.js';
 import {refreshResidentProps} from '../src/rendering/resident-props.js';
 import {BIOME_IDS} from '../src/world/biome-ids.js';
 
-const module=new WebAssembly.Module(readFileSync(new URL('../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+const module=new WebAssembly.Module(readFileSync(new URL('../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 
 test('a Sabana game state renders and routes from one spatial authority through topology events',async()=>{
   const pack=JSON.parse(readFileSync(new URL('../public/content/villages.json',import.meta.url),'utf8'))[0];

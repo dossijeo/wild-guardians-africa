@@ -2,18 +2,18 @@ import {readFileSync,writeFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
 import {performance} from 'node:perf_hooks';
 import {deserialize} from '../../src/persistence/snapshots.js';
-import {createSpatialGameSession} from '../../src/world/hierarchical-wasm/spatial-game-session.js';
-import {createSpatialNavigationMovement} from '../../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+import {createSpatialGameSession} from '../../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../../src/world/wild-engine/spatial-navigation-movement.js';
 import {centerServicePoint} from '../../src/world/centers.js';
 import {gatePortalPoints} from '../../src/world/gate-passages.js';
 import {wallCollisionBounds} from '../../src/world/wall-collision-frame.js';
-import {spatialStructureBarriers} from '../../src/world/hierarchical-wasm/spatial-wall-bridge.js';
+import {spatialStructureBarriers} from '../../src/world/wild-engine/spatial-wall-bridge.js';
 import {quoteWallChain} from '../../src/simulation/game.js';
 
 const output=process.argv[2];
 if(!output)throw Error('Usage: node probe-readonly-wall-gate-routes.mjs report.json');
 const wasm=new WebAssembly.Module(readFileSync(new URL(
-  '../../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+  '../../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 const snapshot=gunzipSync(readFileSync(new URL(
   '../../tests/fixtures/desierto983-d15-partial-state.json.gz',import.meta.url)));
 const state=deserialize(snapshot.toString());

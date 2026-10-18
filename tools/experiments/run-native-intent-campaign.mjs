@@ -42,7 +42,7 @@ mkdirSync(dirname(path),{recursive:true});
 const source=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
 const sha256=path=>createHash('sha256').update(readFileSync(path)).digest('hex');
 const inputHashes={wasm:sha256(process.env.WILD_ENGINE_SPATIAL_SERVICES_WASM??
-  'src/world/hierarchical-wasm/spatial-savanna.wasm'),
+  'src/world/wild-engine/spatial-savanna.wasm'),
   game:sha256('src/simulation/game.js'),raids:sha256('src/simulation/raids.js'),
   runner:sha256('tools/native-campaign-runner.mjs')};
 const openingFactory=async (...args)=>{

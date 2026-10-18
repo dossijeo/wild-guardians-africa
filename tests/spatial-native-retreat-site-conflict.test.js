@@ -4,15 +4,15 @@ import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
 import {deserialize} from '../src/persistence/snapshots.js';
 import * as Game from '../src/simulation/game.js';
-import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
-import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
-import {createEventDrivenTaskPlanner} from '../src/world/hierarchical-wasm/spatial-intent-bridge.js';
+import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../src/world/wild-engine/spatial-navigation-movement.js';
+import {createEventDrivenTaskPlanner} from '../src/world/wild-engine/spatial-intent-bridge.js';
 
 test('a retreating animal near a crop does not block a valid attack site',async()=>{
   const state=deserialize(gunzipSync(readFileSync(new URL(
     './fixtures/sabana712-d19-retreat-site-conflict.json.gz',import.meta.url))).toString());
   const wasm=new WebAssembly.Module(readFileSync(new URL(
-    '../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+    '../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
   const loaded=new Map();
   const session=createSpatialGameSession(wasm,state,{
     loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});

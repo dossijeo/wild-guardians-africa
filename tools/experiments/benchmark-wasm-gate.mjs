@@ -2,12 +2,12 @@ import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
 import {dirname} from 'node:path';
 import {performance} from 'node:perf_hooks';
 import {fixture} from '../probe-raid-reservation-saturation.mjs';
-import {createHierarchicalWasmNavigator} from '../../src/world/hierarchical-wasm-adapter.js';
-import {createLazySectorProbe} from '../../src/world/hierarchical-wasm/lazy-sectors-adapter.js';
+import {createHierarchicalWasmNavigator} from '../../src/world/wild-engine-adapter.js';
+import {createLazySectorProbe} from '../../src/world/wild-engine/lazy-sectors-adapter.js';
 
 const output=process.argv[2]??'docs/qa/hierarchical-navigation/worker-gate-wasm.json';
-const bytes=readFileSync('src/world/hierarchical-wasm/core.wasm');
-const lazyBytes=readFileSync('src/world/hierarchical-wasm/lazy-sectors.wasm');
+const bytes=readFileSync('src/world/wild-engine/core.wasm');
+const lazyBytes=readFileSync('src/world/wild-engine/lazy-sectors.wasm');
 const bounds={minX:-12,minZ:-18,maxX:42,maxZ:38,radius:.28,worker:true,sectorSize:12};
 const requests=[12,14,16,18].flatMap(x=>[8,10,12,14,16,18].map(y=>({start:{x,z:29},end:{x:y,z:7}})));
 const timed=async fn=>{const start=performance.now(),value=await fn();return {milliseconds:performance.now()-start,value};};

@@ -12,7 +12,7 @@ if(!Number.isInteger(days)||days<6||days>100||!Number.isInteger(seed)||
   !output)throw TypeError('Usage: compare-enclosure-defense-campaigns.mjs BIOME DAYS SEED OUTPUT');
 const sha256=bytes=>createHash('sha256').update(bytes).digest('hex');
 const wasmPath=process.env.WILD_ENGINE_SPATIAL_SERVICES_WASM??
-  'src/world/hierarchical-wasm/spatial-savanna.wasm';
+  'src/world/wild-engine/spatial-savanna.wasm';
 const evidence={biome,days,seed,
   sourceSha256:sha256(readFileSync(new URL('../native-campaign-runner.mjs',
     import.meta.url))),wasmSha256:sha256(readFileSync(wasmPath)),arms:[]};
