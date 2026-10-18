@@ -10,6 +10,14 @@ const module=new WebAssembly.Module(readFileSync(new URL(
   '../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 const packs=JSON.parse(readFileSync(new URL('../public/content/villages.json',import.meta.url),'utf8'));
 
+test('native start accepts a real-world timestamp seed after WASM normalization',async()=>{
+  const seed=1792340768268;
+  const state=Game.newGame({seed,biome:'gran-canon',culture:'mapungubwe',
+    slotId:'native-timestamp-seed'});
+  const result=await probeSpatialStart(module,state,packs[0],{x:0,z:-30});
+  assert.equal(typeof result.valid,'boolean');
+});
+
 test('native Sabana start probe checks buildings, entry and twelve routed farm sites',async()=>{
   for(const pack of packs)for(const seed of [712,123,2026]){
     const culture=pack.id==='saheliano'?'saheliana':pack.id;
