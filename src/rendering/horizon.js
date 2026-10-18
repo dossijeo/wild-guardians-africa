@@ -8,7 +8,7 @@ import {activeChunkRegion} from '../world/active-region.js';
 // ChunkManager.plan centers resident terrain on the eye, not the point of interest.
 export const nativeNearRegion=activeChunkRegion;
 const spatialHorizonWorker=()=>typeof Worker==='undefined'?null:
-  new Worker(new URL('../world/hierarchical-wasm/spatial-horizon-worker.js',import.meta.url),{type:'module'});
+  new Worker(new URL('../world/wild-engine/spatial-horizon-worker.js',import.meta.url),{type:'module'});
 const waterRgb=value=>[1,3,5].map(i=>parseInt(value.slice(i,i+2),16)/255);
 
 export class NativeHorizon{

@@ -1,11 +1,11 @@
 import {readFileSync,writeFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {performance} from 'node:perf_hooks';
-import {createSpatialSavannaPrototype} from '../../src/world/hierarchical-wasm/spatial-savanna-adapter.js';
+import {createSpatialSavannaPrototype} from '../../src/world/wild-engine/spatial-savanna-adapter.js';
 
 const beforePath=process.env.WG_QA_BASELINE_WASM;
 if(!beforePath)throw Error('Set WG_QA_BASELINE_WASM to the previous spatial binary');
-const currentPath='src/world/hierarchical-wasm/spatial-savanna.wasm';
+const currentPath='src/world/wild-engine/spatial-savanna.wasm';
 const output=process.argv[2]??'docs/qa/hierarchical-navigation/spatial-prop-removal-abba.json';
 const binaries={before:readFileSync(beforePath),after:readFileSync(currentPath)};
 const modules=Object.fromEntries(Object.entries(binaries).map(([key,bytes])=>[key,new WebAssembly.Module(bytes)]));

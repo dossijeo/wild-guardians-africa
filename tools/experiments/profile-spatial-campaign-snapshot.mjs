@@ -4,8 +4,8 @@ import {createHash} from 'node:crypto';
 import * as Game from '../../src/simulation/game.js';
 import {deserialize} from '../../src/persistence/snapshots.js';
 import {serialize} from '../../src/persistence/snapshots.js';
-import {createSpatialGameSession} from '../../src/world/hierarchical-wasm/spatial-game-session.js';
-import {createSpatialNavigationMovement} from '../../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+import {createSpatialGameSession} from '../../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../../src/world/wild-engine/spatial-navigation-movement.js';
 import {animalExitConnector} from '../../src/simulation/animal-exit-connectors.js';
 
 const input=process.argv[2],steps=Number(process.argv[3]??10),
@@ -13,7 +13,7 @@ const input=process.argv[2],steps=Number(process.argv[3]??10),
 if(!input||!Number.isSafeInteger(steps)||steps<1||steps>1000)
   throw Error('Usage: profile-spatial-campaign-snapshot <saved-state.json> [steps] [report.json]');
 const wasm=new WebAssembly.Module(readFileSync(new URL(
-  '../../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+  '../../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 const state=deserialize(readFileSync(input,'utf8'));
 const loaded=new Map();
 const session=createSpatialGameSession(wasm,state,{

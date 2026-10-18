@@ -49,7 +49,7 @@ bash tools/build-spatial-savanna-wasm.sh
 Extraer el binario base de la revisión indicada como `baseline.wasm` y ejecutar:
 
 ```sh
-node tools/experiments/benchmark-deferred-wall-topology.mjs baseline.wasm src/world/hierarchical-wasm/spatial-savanna.wasm report.json ca212cd964cef246bcd81f485c8a25a6a2e2a6e4
+node tools/experiments/benchmark-deferred-wall-topology.mjs baseline.wasm src/world/wild-engine/spatial-savanna.wasm report.json ca212cd964cef246bcd81f485c8a25a6a2e2a6e4
 ```
 
 `full-abba.json` contiene cuatro rondas A/B/B/A, calentamiento de dos propuestas, ocho propuestas y ocho supresiones hipotéticas de un prop sólido residente por ronda, sobre Sabana/712 con nueve chunks residentes. Los valores siguientes son medianas por ronda; el p95 está en el JSON. El estado serializado tras la construcción y la posición de la puerta coincidieron en las cuatro rondas. Las seis clases de unidad dieron idénticos resultados físicos antes, durante y después de suprimir el prop: ninguna podía ocupar los cinco puntos muestreados antes; todas podían durante; el estado inicial volvió al restaurarlo.
@@ -75,7 +75,7 @@ La restauración de props residentes mejora aproximadamente 32–35 veces en est
 | 8 | 518,22 / 510,93 / 518,67 / 550,77 ms | 561,82 / 534,36 / 550,35 / 639,42 ms | 288 en ambas |
 | 20 | 1149,79 / 1127,83 / 1137,78 / 1149,61 ms | 1203,95 / 1198,47 / 1451,46 / 1192,73 ms | 560 en ambas |
 
-Reproducir con `node tools/experiments/benchmark-deferred-wall-topology.mjs baseline.wasm src/world/hierarchical-wasm/spatial-savanna.wasm report.json`, usando el WASM de `4f154a78` como base; para la última fila, establecer `PROP_CLUSTER_COUNT=20`. El ahorro de regeneración es real por inspección del flujo y la prueba de un prop mejora en estas rondas. Con 8–20 props, el tiempo total cambia poco porque domina la actualización del grafo; el p95 de 20 props no mejoró de forma consistente. No se atribuye a este cambio una mejora de campaña todavía no medida.
+Reproducir con `node tools/experiments/benchmark-deferred-wall-topology.mjs baseline.wasm src/world/wild-engine/spatial-savanna.wasm report.json`, usando el WASM de `4f154a78` como base; para la última fila, establecer `PROP_CLUSTER_COUNT=20`. El ahorro de regeneración es real por inspección del flujo y la prueba de un prop mejora en estas rondas. Con 8–20 props, el tiempo total cambia poco porque domina la actualización del grafo; el p95 de 20 props no mejoró de forma consistente. No se atribuye a este cambio una mejora de campaña todavía no medida.
 
 La regresión de restauración comprueba ahora lotes de 20 props en la ruta localizada y de **65 props en el fallback global**: compara ocupación de trabajadores y cinco especies antes, durante y después de la hipótesis. Pasaron 90 pruebas dirigidas de sesión, navegación, chunks, puertas y props con el binario actualizado, además de `npm run build`.
 
@@ -96,7 +96,7 @@ Reproducción: `node tools/experiments/benchmark-deferred-active-routes.mjs repo
 `desert-abba.json` reproduce Desierto/983, día 15, con 42 trabajadores llegando o huyendo. Compara cuatro cotizaciones por ronda de un trazado de cinco módulos, sin mutar el estado, y después ejecuta una compra con la cotización preparada. El script conserva los SHA-256 del código JS y los dos binarios. Ejecutar:
 
 ```sh
-node tools/experiments/benchmark-deferred-wall-desert.mjs baseline.wasm src/world/hierarchical-wasm/spatial-savanna.wasm desert-report.json ca212cd964cef246bcd81f485c8a25a6a2e2a6e4
+node tools/experiments/benchmark-deferred-wall-desert.mjs baseline.wasm src/world/wild-engine/spatial-savanna.wasm desert-report.json ca212cd964cef246bcd81f485c8a25a6a2e2a6e4
 ```
 
 | Variante | Mediana por cotización, ms | p95, ms | Rutas / 4 | Previews / 4 | Updates de sector / 4 |
@@ -119,7 +119,7 @@ Se probó como variante descartada sustituir cada ruta con una comprobación dir
 `flat20-abba.json` añade el escenario solicitado de una línea sobre terreno despejado de Desierto/983. La partida empieza en una posición generada por Wild Engine y contiene un centro **colocado legalmente**, con ruta laboral válida antes y después de construir. Los 20 módulos son legales, no hay piezas omitidas ni props que suprimir, y no se genera puerta. Reproducción:
 
 ```sh
-node tools/experiments/benchmark-deferred-wall-flat20.mjs baseline.wasm src/world/hierarchical-wasm/spatial-savanna.wasm flat20-report.json ca212cd964cef246bcd81f485c8a25a6a2e2a6e4
+node tools/experiments/benchmark-deferred-wall-flat20.mjs baseline.wasm src/world/wild-engine/spatial-savanna.wasm flat20-report.json ca212cd964cef246bcd81f485c8a25a6a2e2a6e4
 ```
 
 | Variante | Mediana, ms | p95, ms | Previews / 8 | Sectores / 8 | Rutas / 8 |
@@ -150,7 +150,7 @@ La cotización espacial normal ya no busca rutas de trabajadores ni ejecuta `wit
 Los informes reproducibles `topological-reach-canyon.json` y `topological-reach-flat20.json` comparan A/B/B/A con cuatro cotizaciones por ronda y calentamiento previo. Ambas variantes usan **el mismo binario WASM**, registrado por SHA-256 en los JSON; A ejecuta `game.js` de `e8a73feb`, B el candidato. Reproducir con `WALL_BENCH_ITERATIONS=4` y, para Gran Cañón, `WALL_BENCH_SKIP_FALLBACK=1`:
 
 ```text
-node tools/experiments/benchmark-deferred-wall-flat20.mjs src/world/hierarchical-wasm/spatial-savanna.wasm src/world/hierarchical-wasm/spatial-savanna.wasm report.json e8a73feb canyon
+node tools/experiments/benchmark-deferred-wall-flat20.mjs src/world/wild-engine/spatial-savanna.wasm src/world/wild-engine/spatial-savanna.wasm report.json e8a73feb canyon
 ```
 
 En Gran Cañón/712, los tiempos medianos por cotización fueron A1 **96,96 ms**, B1 **19,41 ms**, B2 **17,97 ms**, A2 **92,48 ms**; p95 por ronda: 103,82 / 20,87 / 23,84 / 103,74 ms. Las cuatro cotizaciones de cada ronda pasaron de **4 a 0 búsquedas de ruta**, de **8 a 0 previsualizaciones** y de **272 a 0 reconstrucciones de sector**. Las propuestas, el coste de 400 monedas, las cuatro puertas, la accesibilidad laboral y el hash serializado posterior a la compra coincidieron. Ninguna de las cinco especies cruzó las puertas en la validación física. La memoria lineal comprometida fue 16 MiB en ambas variantes y la construcción pagada actualizó 18 sectores en las dos. Esta comparación no incluye campaña prolongada ni pretende certificar la protección militar de todo el recinto.

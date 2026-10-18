@@ -1,26 +1,26 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {createSpatialSavannaPrototype} from '../src/world/hierarchical-wasm/spatial-savanna-adapter.js';
+import {createSpatialSavannaPrototype} from '../src/world/wild-engine/spatial-savanna-adapter.js';
 import {nativeTerrainBuffer} from '../src/rendering/terrain-geometry.js';
 import {nativeWaterBuffer} from '../src/rendering/water-geometry.js';
 import {chunkTransferables} from '../src/rendering/chunk-data.js';
-import {SpatialSurfaceView} from '../src/world/hierarchical-wasm/spatial-surface-view.js';
-import {ANIMAL_SPATIAL_PROFILES} from '../src/world/hierarchical-wasm/spatial-movement-profiles.js';
-import {createSpatialWorld} from '../src/world/hierarchical-wasm/spatial-world.js';
+import {SpatialSurfaceView} from '../src/world/wild-engine/spatial-surface-view.js';
+import {ANIMAL_SPATIAL_PROFILES} from '../src/world/wild-engine/spatial-movement-profiles.js';
+import {createSpatialWorld} from '../src/world/wild-engine/spatial-world.js';
 import {addSpatialWall,addSpatialWallsBatch,addSpatialGate,addSpatialStructuresBatch,
-  removeSpatialStructure,spatialGateBarriers} from '../src/world/hierarchical-wasm/spatial-wall-bridge.js';
-import {createSpatialWallMirror} from '../src/world/hierarchical-wasm/spatial-wall-mirror.js';
-import {addSpatialCenter,removeSpatialCenter} from '../src/world/hierarchical-wasm/spatial-center-bridge.js';
-import {createSpatialCenterMirror} from '../src/world/hierarchical-wasm/spatial-center-mirror.js';
-import {addSpatialVillageBuildings,removeSpatialVillageBuildings} from '../src/world/hierarchical-wasm/spatial-village-bridge.js';
-import {createSpatialShieldMirror,spatialShieldFootprint} from '../src/world/hierarchical-wasm/spatial-shield-mirror.js';
+  removeSpatialStructure,spatialGateBarriers} from '../src/world/wild-engine/spatial-wall-bridge.js';
+import {createSpatialWallMirror} from '../src/world/wild-engine/spatial-wall-mirror.js';
+import {addSpatialCenter,removeSpatialCenter} from '../src/world/wild-engine/spatial-center-bridge.js';
+import {createSpatialCenterMirror} from '../src/world/wild-engine/spatial-center-mirror.js';
+import {addSpatialVillageBuildings,removeSpatialVillageBuildings} from '../src/world/wild-engine/spatial-village-bridge.js';
+import {createSpatialShieldMirror,spatialShieldFootprint} from '../src/world/wild-engine/spatial-shield-mirror.js';
 import {centerFootprint} from '../src/world/centers.js';
 import {villageLayout} from '../src/world/villages.js';
 import {footprintDistance} from '../src/world/footprints.js';
 import {wallCollisionFrame} from '../src/world/wall-collision-frame.js';
 
-const module=new WebAssembly.Module(readFileSync(new URL('../src/world/hierarchical-wasm/spatial-savanna.wasm',import.meta.url)));
+const module=new WebAssembly.Module(readFileSync(new URL('../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 function validRoute(core,start,result){
   assert.equal(result.status,'found');
   let point=start;

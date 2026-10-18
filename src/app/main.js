@@ -236,7 +236,7 @@ async function startGame(loaded=null,{slotId,preview}={}) {
     if(progressQa){progressQa.preparationPolicy(world.farIsolatedPreparation,world.farZeroVertexPreparation);world.onLoadingSpan=span=>progressQa.loadingSpan(span);world.onLoadingActorQueue=stats=>progressQa.actorQueue(stats);world.onLoadingGpuDraw=run=>progressQa.gpuInvocation('preparation-far-upload-draw',run);}
     await world.load(state,nav,payload,{spatialSession,farVegetation:spatialSession||settings.farVegetation===false?false:farVegetationProfile({quality:settings.quality,biome:nav.config.biome}),loadingProgress});assertLoading();
     if(nativeIntentQa&&spatialSession){
-      const {createEventDrivenTaskPlanner}=await import('../world/hierarchical-wasm/spatial-intent-bridge.js');
+      const {createEventDrivenTaskPlanner}=await import('../world/wild-engine/spatial-intent-bridge.js');
       assertLoading();
       const planner=createEventDrivenTaskPlanner(spatialSession);
       planner.resetFromState(state);

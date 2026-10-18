@@ -3,7 +3,7 @@ import {gunzipSync} from 'node:zlib';
 import {performance} from 'node:perf_hooks';
 import {createHash} from 'node:crypto';
 import {deserialize} from '../../src/persistence/snapshots.js';
-import {createSpatialGameSession} from '../../src/world/hierarchical-wasm/spatial-game-session.js';
+import {createSpatialGameSession} from '../../src/world/wild-engine/spatial-game-session.js';
 
 const fixtures=[
   ['gran-canon-d6','docs/qa/hierarchical-navigation/spatial-gran-canon-seed123-day6-capture-capture-state.json'],

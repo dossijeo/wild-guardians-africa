@@ -1,18 +1,18 @@
 import {readFileSync} from 'node:fs';
 import {performance} from 'node:perf_hooks';
 import {createPlant} from '../../src/simulation/crops.js';
-import {createSpatialGameSession} from '../../src/world/hierarchical-wasm/spatial-game-session.js';
-import {createSpatialNavigationMovement} from '../../src/world/hierarchical-wasm/spatial-navigation-movement.js';
-import {createSpatialIntentBridge} from '../../src/world/hierarchical-wasm/spatial-intent-bridge.js';
-import {createCropEnclosurePlanner} from '../../src/world/hierarchical-wasm/spatial-crop-enclosure-plan.js';
+import {createSpatialGameSession} from '../../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../../src/world/wild-engine/spatial-navigation-movement.js';
+import {createSpatialIntentBridge} from '../../src/world/wild-engine/spatial-intent-bridge.js';
+import {createCropEnclosurePlanner} from '../../src/world/wild-engine/spatial-crop-enclosure-plan.js';
 import {approximateCutModules,cutEdgesToStrokes,inspectSelfClosedQuote,
   inspectStaticCutBoundary,
-  stitchTwoCutStrokes} from '../../src/world/hierarchical-wasm/spatial-topological-enclosure-prototype.js';
+  stitchTwoCutStrokes} from '../../src/world/wild-engine/spatial-topological-enclosure-prototype.js';
 import {villageLayout} from '../../src/world/villages.js';
 import {wallSpec} from '../../src/simulation/rules.js';
 import * as Game from '../../src/simulation/game.js';
 
-const wasmPath=process.argv[2]??'src/world/hierarchical-wasm/spatial-savanna.wasm';
+const wasmPath=process.argv[2]??'src/world/wild-engine/spatial-savanna.wasm';
 const biome=process.argv[3]??'sabana';
 const siteMode=process.argv[4]??'corner';
 const conservativeCut=process.argv.includes('--conservative-cut');

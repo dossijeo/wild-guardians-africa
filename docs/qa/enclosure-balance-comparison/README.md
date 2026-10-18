@@ -24,7 +24,7 @@ and diagnostic are retained as
 [`day9-navdebug.json.gz`](day9-navdebug.json.gz). The probe is reproducible:
 
 ```powershell
-$env:WILD_ENGINE_SPATIAL_SERVICES_WASM=(Resolve-Path 'src/world/hierarchical-wasm/spatial-savanna.wasm').Path
+$env:WILD_ENGINE_SPATIAL_SERVICES_WASM=(Resolve-Path 'src/world/wild-engine/spatial-savanna.wasm').Path
 python -c "import gzip,pathlib; p=pathlib.Path('docs/qa/enclosure-balance-comparison/day9-navdebug.json.gz'); pathlib.Path('.cache/day9-navdebug.json').write_bytes(gzip.decompress(p.read_bytes()))"
 node tools/experiments/probe-spatial-pending-entry.mjs docs/qa/enclosure-balance-comparison/day9-partial-state.json.gz .cache/day9-navdebug.json
 ```

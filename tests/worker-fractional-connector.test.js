@@ -5,7 +5,7 @@ import {gunzipSync} from 'node:zlib';
 import {deserialize,serialize} from '../src/persistence/snapshots.js';
 import {Navigation,BIOME_IDS} from '../src/world/navigation.js';
 import {workerFractionalConnector} from '../src/world/worker-fractional-connector.js';
-import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+import {createSpatialNavigationMovement} from '../src/world/wild-engine/spatial-navigation-movement.js';
 import {walkTo,tick} from '../src/simulation/game.js';
 import {advanceGateLeaves} from '../src/simulation/gates.js';
 const snapshot=new URL('./fixtures/worker-fractional-departure/state.json.gz',import.meta.url);

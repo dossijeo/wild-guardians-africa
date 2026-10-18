@@ -5,8 +5,8 @@ import {createHash} from 'node:crypto';
 import {performance} from 'node:perf_hooks';
 import * as Game from '../../src/simulation/game.js';
 import {deserialize,serialize} from '../../src/persistence/snapshots.js';
-import {createSpatialGameSession} from '../../src/world/hierarchical-wasm/spatial-game-session.js';
-import {createSpatialNavigationMovement} from '../../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+import {createSpatialGameSession} from '../../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../../src/world/wild-engine/spatial-navigation-movement.js';
 
 const fixture=process.argv[2]??'tests/fixtures/manglares-123-d10-raid-state.json.gz';
 const count=Number(process.argv[3]??30);

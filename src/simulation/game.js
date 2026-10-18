@@ -3,7 +3,7 @@ import {activeRaidEntryPlan} from '../world/raid-entry-data.js';
 import {animalExitConnector} from './animal-exit-connectors.js';
 import {workerReturnRoute,workerReturnRoutePending} from './worker-return-route.js';
 import {workerFractionalConnector,workerFractionalConnectorPending} from '../world/worker-fractional-connector.js';
-import {SpatialChunkUnavailable} from '../world/hierarchical-wasm/spatial-navigation-movement.js';
+import {SpatialChunkUnavailable} from '../world/wild-engine/spatial-navigation-movement.js';
 import {workerRiskClearance} from './worker-route-clearance.js';
 import {resolveFluidPlacement} from '../world/fluid-placement.js';
 import {ensurePurchaseBudget,HIRING_RESERVE} from './budget.js';
@@ -110,10 +110,25 @@ export function previewCenter(s,{x,z,yaw=0},nav) {
     const inspect=routes=>{
       // A route snapped out of a new footprint is not a valid departure:
       // workers must still be able to stand at the actual village entry.
-      if(nav.withCenterPreview&&routes.walkable(entry.x,entry.z,.28,null,true)===false)return;
-      const outbound=routes.path(entry,departure,.28,null,true),inbound=outbound&&routes.path(departure,entry,.28,null,true);
-      if(!inbound)return;
-      const routeLength=inbound.reduce((length,p,i)=>length+dist(p,i?inbound[i-1]:departure),0);
+      let routeLength;
+      if(nav.withCenterPreview){
+        if(routes.walkable(entry.x,entry.z,.28,null,true)!==true)return;
+        const reach=routes.reachCost?
+          (start,end)=>routes.reachCost(start,end):
+          (start,end)=>({status:routes.reachable(start,end),cost:null});
+        const outbound=reach(entry,departure),inbound=reach(departure,entry);
+        if(outbound.status!=='found'||inbound.status!=='found')return;
+        // The same native overlay search already traversed the accessible
+        // cells. Its cost avoids assigning a center through a long detour
+        // merely because that village is closer in a straight line.
+        routeLength=Number.isFinite(inbound.cost)?inbound.cost:dist(departure,entry);
+      }else{
+        const outbound=routes.path(entry,departure,.28,null,true),
+          inbound=outbound&&routes.path(departure,entry,.28,null,true);
+        if(!inbound)return;
+        routeLength=inbound.reduce((length,p,i)=>
+          length+dist(p,i?inbound[i-1]:departure),0);
+      }
       candidates.push({...candidate,footprint,suppress:check.suppress??[],villageId:village.id,routeLength,valid:true,cost:B.work_center.cost});
     };
     if(nav.withCenterPreview)nav.withCenterPreview(footprint,check.suppress??[],inspect);
@@ -747,7 +762,8 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
     delete w.exitRouteRecovery;
   const abandonExhaustedExit=()=>{
     const exhausted=w.exitConnectorSearch?.exhausted===true,
-      timedOut=w.exitRouteRecovery&&s.elapsed-w.exitRouteRecovery.startedAt>=1500;
+      timedOut=w.exitRouteRecovery&&s.elapsed-w.exitRouteRecovery.startedAt>=
+        (w.exitRouteRecovery.reason==='no-exit-progress'?300:1500);
     if(worker||!expandRoute||w.status!=='retreating'||
       (!exhausted&&!timedOut))return false;
     emit(s,'AnimalRetreatExitAbandoned',{actorId:w.id,x:w.x,z:w.z,elapsed:s.elapsed,
@@ -764,7 +780,7 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
     if(w.exitRouteRecovery?.destinationId===destination.id&&
       w.exitRouteRecovery.version===nav.version)return;
     w.exitRouteRecovery={destinationId:destination.id,version:nav.version,
-      startedAt:s.elapsed,x:w.x,z:w.z};
+      startedAt:s.elapsed,x:w.x,z:w.z,reason};
     emit(s,'AnimalExitRouteRecovery',{actorId:w.id,x:w.x,z:w.z,
       exitId:destination.id,reason});
   };
@@ -776,6 +792,7 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
     w.mobileRecoveryAttempts=0;
     w.mobileProgressDistance=dist(w,destination);
     w.mobileProgressAt=s.elapsed;
+    delete w.retreatStaticRouteFailure;
   }
   if(!Number.isFinite(w.mobileProgressDistance)||!Number.isFinite(w.mobileProgressAt)){
     w.mobileProgressDistance=dist(w,destination);
@@ -921,11 +938,25 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
   if(remaining<=w.mobileProgressDistance-.75){
     w.mobileProgressDistance=remaining;
     w.mobileProgressAt=s.elapsed;
+    delete w.retreatStaticRouteFailure;
   }
   if(w.exitRouteRecovery&&Number.isFinite(w.exitRouteRecovery.x)&&
     dist(w,w.exitRouteRecovery)>=.75)delete w.exitRouteRecovery;
   if(routeClearance?.blocked()){
     w.path=null;
+    if(!worker&&expandRoute&&w.status==='retreating'){
+      const prior=w.retreatStaticRouteFailure,
+        repeated=prior?.destinationId===destination.id&&
+          prior.version===nav.version&&Math.hypot(w.x-prior.x,w.z-prior.z)<.1;
+      w.retreatStaticRouteFailure={destinationId:destination.id,
+        version:nav.version,x:w.x,z:w.z,count:repeated?
+          Math.min(3,prior.count+1):1};
+      // An invalid route that alternates between two near-identical points
+      // can move a few centimetres forever. Only repeated *static* rejection
+      // without destination progress invokes the bounded exit recovery.
+      if(w.retreatStaticRouteFailure.count>=2&&
+        s.elapsed-w.mobileProgressAt>=12)recoverExitRoute('no-exit-progress');
+    }
     const epoch=routeEpoch(nav,w,destination,worker);
     const previousWait=routePlanWaits.get(w);
     // Retry once at the next movement boundary. If the same physical route
@@ -986,10 +1017,23 @@ function nativeRepairAccess(s,target,nav){
       if(wallBlocks&&gateBlocks)return {status:'blocked',updates:[]};
     }
   }
+  const repairedAccess=obligations.map(({entry,targets})=>
+    nav.wallWorkerReachability(entry,targets,[repaired],[],true));
+  if(repairedAccess.every(statuses=>statuses?.every(status=>status==='found')===true))
+    return {status:'safe',updates:[]};
+  // A worker at this existing gate can lack a certified connector while the
+  // gate is provisionally restored. Another gate cannot resolve that local
+  // uncertainty, so leave the repair pending until movement or residency
+  // changes. Unknown is not evidence of a physical blockage.
+  const nearGateUnknown=target.gate&&repairedAccess.every(statuses=>
+    statuses?.every(status=>status==='found'||status==='unknown')===true)&&
+    obligations.some(({targets},i)=>repairedAccess[i].some((status,j)=>
+      status==='unknown'&&s.workers.includes(targets[j])&&
+      dist(targets[j],target)<=(target.baseScaleX??1)*gateScale(target.material)+.4));
+  if(nearGateUnknown)return {status:'unknown',updates:[]};
   const reaches=(proposed,removed=[])=>obligations.every(({entry,targets})=>
     nav.wallWorkerReachability(entry,targets,proposed,[],true,removed)
       ?.every(status=>status==='found')===true);
-  if(reaches([repaired]))return {status:'safe',updates:[]};
   const living=activeCrops(s.plants);
   const candidates=s.structures.filter(piece=>piece.kind==='wall'&&!piece.gate&&
     (piece.status==='intact'&&piece.hp>0||piece.id===target.id));

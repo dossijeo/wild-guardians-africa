@@ -6,7 +6,7 @@ import {rational} from '../src/simulation/money.js';
 import {centerServicePoint} from '../src/world/centers.js';
 import {wallCollisionBounds} from '../src/world/wall-collision-frame.js';
 import {createSpatialCampaignOpening} from '../tools/experiments/spatial-campaign-opening.mjs';
-import {createSpatialWallMirror} from '../src/world/hierarchical-wasm/spatial-wall-mirror.js';
+import {createSpatialWallMirror} from '../src/world/wild-engine/spatial-wall-mirror.js';
 import {clearNavigation} from './clear-navigation.js';
 
 test('a topological revision retains a physically clear active route',()=>{

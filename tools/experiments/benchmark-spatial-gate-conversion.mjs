@@ -1,9 +1,9 @@
 import {readFileSync,writeFileSync} from 'node:fs';
 import {performance} from 'node:perf_hooks';
-import {createSpatialWorld} from '../../src/world/hierarchical-wasm/spatial-world.js';
-import {addSpatialWallsBatch,addSpatialGate,spatialGateBarriers} from '../../src/world/hierarchical-wasm/spatial-wall-bridge.js';
+import {createSpatialWorld} from '../../src/world/wild-engine/spatial-world.js';
+import {addSpatialWallsBatch,addSpatialGate,spatialGateBarriers} from '../../src/world/wild-engine/spatial-wall-bridge.js';
 
-const module=new WebAssembly.Module(readFileSync('src/world/hierarchical-wasm/spatial-savanna.wasm'));
+const module=new WebAssembly.Module(readFileSync('src/world/wild-engine/spatial-savanna.wasm'));
 const walls=Array.from({length:24},(_,i)=>({kind:'wall',status:'intact',
   id:`wall-${i}`,material:i%2?'adobe':'zarzas',x:-17+(i%8)*4.4,
   z:-13+Math.floor(i/8)*8,yaw:Math.sin(i*.17)*.17,baseScaleX:1}));

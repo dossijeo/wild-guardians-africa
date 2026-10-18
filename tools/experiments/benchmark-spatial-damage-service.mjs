@@ -3,8 +3,8 @@ import {gunzipSync} from 'node:zlib';
 import {performance} from 'node:perf_hooks';
 import {deserialize} from '../../src/persistence/snapshots.js';
 import {repairCost} from '../../src/simulation/game.js';
-import {createSpatialGameSession} from '../../src/world/hierarchical-wasm/spatial-game-session.js';
-import {createSpatialIntentBridge} from '../../src/world/hierarchical-wasm/spatial-intent-bridge.js';
+import {createSpatialGameSession} from '../../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialIntentBridge} from '../../src/world/wild-engine/spatial-intent-bridge.js';
 
 const binary=process.env.WILD_ENGINE_SPATIAL_SERVICES_WASM;
 if(!binary)throw Error('Set WILD_ENGINE_SPATIAL_SERVICES_WASM');

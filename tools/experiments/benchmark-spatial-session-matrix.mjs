@@ -1,10 +1,10 @@
 import {readFileSync,writeFileSync} from 'node:fs';
 import {performance} from 'node:perf_hooks';
-import {createSpatialGameSession} from '../../src/world/hierarchical-wasm/spatial-game-session.js';
+import {createSpatialGameSession} from '../../src/world/wild-engine/spatial-game-session.js';
 import {BIOME_IDS} from '../../src/world/biome-ids.js';
 import {villageLayout} from '../../src/world/villages.js';
 
-const module=new WebAssembly.Module(readFileSync('src/world/hierarchical-wasm/spatial-savanna.wasm'));
+const module=new WebAssembly.Module(readFileSync('src/world/wild-engine/spatial-savanna.wasm'));
 const packs=JSON.parse(readFileSync('public/content/villages.json','utf8'));
 const cultures=['mapungubwe','saheliana','suajili','musgum','etiope'];
 const jobs=new Map([['0,0',{cx:0,cz:0,score:0}],['1,0',{cx:1,cz:0,score:1}]]);

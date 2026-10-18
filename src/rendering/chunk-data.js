@@ -3,7 +3,7 @@ import {buildGroundData} from './terrain-source.js';
 import {nativeChunkWaterData} from './water-data.js';
 import {buildGroundMask417} from './ground-mask.js';
 import {chunkBounds} from './water-source.js';
-import {spatialChunkTransferables} from '../world/hierarchical-wasm/spatial-savanna-payload.js';
+import {spatialChunkTransferables} from '../world/wild-engine/spatial-savanna-payload.js';
 
 // Same deterministic native recipes as the local renderer and navigation.
 // Suppression is applied at installation using the current logical state.

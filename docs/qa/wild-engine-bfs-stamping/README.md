@@ -56,7 +56,7 @@ after the evidence commit, rather than against the former baseline binary.
 Run a case with:
 
 ```powershell
-node tools/experiments/benchmark-wild-engine-bfs.mjs src/world/hierarchical-wasm/spatial-savanna.wasm output.json sabana animal
+node tools/experiments/benchmark-wild-engine-bfs.mjs src/world/wild-engine/spatial-savanna.wasm output.json sabana animal
 ```
 
 No full campaign was run for this experiment. The earlier 14-night profile in

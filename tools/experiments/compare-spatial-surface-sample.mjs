@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
-import {createSpatialWorld} from '../../src/world/hierarchical-wasm/spatial-world.js';
+import {createSpatialWorld} from '../../src/world/wild-engine/spatial-world.js';
 import {WORKER_SPATIAL_PROFILE,ANIMAL_SPATIAL_PROFILES} from
-  '../../src/world/hierarchical-wasm/spatial-movement-profiles.js';
+  '../../src/world/wild-engine/spatial-movement-profiles.js';
 
 const [baselinePath,candidatePath]=process.argv.slice(2);
 if(!baselinePath||!candidatePath)

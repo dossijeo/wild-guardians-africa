@@ -6,12 +6,12 @@ import {execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 import {deserialize,serialize} from '../src/persistence/snapshots.js';
 import {emit,rebuildTasks,walkTo,tick} from '../src/simulation/game.js';
-import {createSpatialGameSession} from '../src/world/hierarchical-wasm/spatial-game-session.js';
-import {createSpatialNavigationMovement} from '../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../src/world/wild-engine/spatial-navigation-movement.js';
 import {canWaterFrom} from '../src/world/work-points.js';
 import {cropBecameInactive} from '../src/simulation/active-crops.js';
 import {createSpatialIntentBridge,createEventDrivenTaskPlanner} from
- '../src/world/hierarchical-wasm/spatial-intent-bridge.js';
+ '../src/world/wild-engine/spatial-intent-bridge.js';
 import {enqueue,notifyWorkerPlanningChange,replaceTasks} from '../src/simulation/tasks.js';
 import {wallCollisionFrame} from '../src/world/wall-collision-frame.js';
 

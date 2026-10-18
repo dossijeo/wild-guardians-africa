@@ -4,7 +4,7 @@ on:
   pull_request:
     paths:
       - '.github/workflows/native-intent-prototype.yml'
-      - 'src/world/hierarchical-wasm/**'
+      - 'src/world/wild-engine/**'
       - 'src/simulation/raids.js'
       - 'src/simulation/game.js'
       - 'tests/raid-region-selection.test.js'

@@ -1,9 +1,9 @@
 import {readFileSync,writeFileSync} from 'node:fs';
 import {performance} from 'node:perf_hooks';
-import {createSpatialWorld} from '../../src/world/hierarchical-wasm/spatial-world.js';
+import {createSpatialWorld} from '../../src/world/wild-engine/spatial-world.js';
 import {BIOME_IDS} from '../../src/world/biome-ids.js';
 
-const module=new WebAssembly.Module(readFileSync('src/world/hierarchical-wasm/spatial-savanna.wasm'));
+const module=new WebAssembly.Module(readFileSync('src/world/wild-engine/spatial-savanna.wasm'));
 const output=process.argv[2]??'docs/qa/hierarchical-navigation/spatial-far-queries.json';
 const same=Array.from({length:1024},(_,i)=>({x:135+(i%32)*.5,z:78+Math.floor(i/32)*.5}));
 const dispersed=Array.from({length:1024},(_,i)=>({x:135+(i%32)*32,z:78+Math.floor(i/32)*32}));

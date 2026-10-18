@@ -2,13 +2,13 @@ import {readFileSync,writeFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {performance} from 'node:perf_hooks';
 import {serialize} from '../../src/persistence/snapshots.js';
-import {createSpatialGameSession} from '../../src/world/hierarchical-wasm/spatial-game-session.js';
-import {createSpatialNavigationMovement} from '../../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+import {createSpatialGameSession} from '../../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../../src/world/wild-engine/spatial-navigation-movement.js';
 import {approximateCutModules,identifyNaturalCorridor} from
-  '../../src/world/hierarchical-wasm/spatial-topological-enclosure-prototype.js';
+  '../../src/world/wild-engine/spatial-topological-enclosure-prototype.js';
 import {AGRICULTURAL_PROFILE_LIMITS} from '../../src/simulation/raid-agricultural-impact.js';
 import {ANIMAL_SPATIAL_PROFILES} from
-  '../../src/world/hierarchical-wasm/spatial-movement-profiles.js';
+  '../../src/world/wild-engine/spatial-movement-profiles.js';
 import {findVillageEntry,villageLayout} from '../../src/world/villages.js';
 import * as Game from '../../src/simulation/game.js';
 

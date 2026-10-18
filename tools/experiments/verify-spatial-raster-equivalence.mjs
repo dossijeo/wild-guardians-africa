@@ -1,10 +1,10 @@
 import {execFileSync} from 'node:child_process';
 import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
 import {dirname} from 'node:path';
-import {createSpatialSavannaPrototype} from '../../src/world/hierarchical-wasm/spatial-savanna-adapter.js';
+import {createSpatialSavannaPrototype} from '../../src/world/wild-engine/spatial-savanna-adapter.js';
 
 const baseline='474875c2';
-const path='src/world/hierarchical-wasm/spatial-savanna.wasm';
+const path='src/world/wild-engine/spatial-savanna.wasm';
 const output=process.argv[2]??'docs/qa/hierarchical-navigation/spatial-raster-equivalence.json';
 const before=new WebAssembly.Module(execFileSync('git',['show',`${baseline}:${path}`]));
 const after=new WebAssembly.Module(readFileSync(path));

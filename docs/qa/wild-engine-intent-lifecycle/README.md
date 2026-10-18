@@ -47,7 +47,7 @@ For interactive QA on a fresh Sabana game, the development build can be opened w
 
 ## Reproduce the current focused checks
 
-With Emscripten configured, run `bash tools/build-spatial-savanna-wasm.sh`, then set `WILD_ENGINE_NATIVE_ROUTE_WASM=src/world/hierarchical-wasm/spatial-savanna.wasm` and execute:
+With Emscripten configured, run `bash tools/build-spatial-savanna-wasm.sh`, then set `WILD_ENGINE_NATIVE_ROUTE_WASM=src/world/wild-engine/spatial-savanna.wasm` and execute:
 
 ```sh
 node --test tests/spatial-native-intent-index.test.js tests/spatial-native-intent-bridge.test.js tests/spatial-native-intent-differential.test.js tests/spatial-native-animal-intent.test.js tests/spatial-native-raid.test.js tests/raid-native-intent-lifecycle.test.js

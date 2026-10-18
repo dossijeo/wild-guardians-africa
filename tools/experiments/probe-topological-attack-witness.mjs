@@ -3,20 +3,20 @@
 import {readFileSync} from 'node:fs';
 import {deserialize} from '../../src/persistence/snapshots.js';
 import {createSpatialGameSession} from
-  '../../src/world/hierarchical-wasm/spatial-game-session.js';
+  '../../src/world/wild-engine/spatial-game-session.js';
 import {createSpatialNavigationMovement} from
-  '../../src/world/hierarchical-wasm/spatial-navigation-movement.js';
+  '../../src/world/wild-engine/spatial-navigation-movement.js';
 import {createSpatialIntentBridge} from
-  '../../src/world/hierarchical-wasm/spatial-intent-bridge.js';
+  '../../src/world/wild-engine/spatial-intent-bridge.js';
 import {ANIMAL_SPATIAL_PROFILES} from
-  '../../src/world/hierarchical-wasm/spatial-movement-profiles.js';
+  '../../src/world/wild-engine/spatial-movement-profiles.js';
 import {approximateCutModules} from
-  '../../src/world/hierarchical-wasm/spatial-topological-enclosure-prototype.js';
+  '../../src/world/wild-engine/spatial-topological-enclosure-prototype.js';
 import {agriculturalRayClear} from
   '../../src/simulation/raid-agricultural-impact.js';
 import {quoteWallChain} from '../../src/simulation/game.js';
 import {createCropEnclosurePlanner} from
-  '../../src/world/hierarchical-wasm/spatial-crop-enclosure-plan.js';
+  '../../src/world/wild-engine/spatial-crop-enclosure-plan.js';
 
 const path=process.argv[2];
 if(!path)throw Error('Pass a frozen state JSON path');
@@ -26,7 +26,7 @@ const state=deserialize(readFileSync(path,'utf8'));
 // read-only QA quote represents the first resumed daylight decision.
 state.pauses=[];
 const binary=readFileSync(process.env.WILD_ENGINE_SPATIAL_SERVICES_WASM??
-  'src/world/hierarchical-wasm/spatial-savanna.wasm');
+  'src/world/wild-engine/spatial-savanna.wasm');
 const module=new WebAssembly.Module(binary),loaded=new Map();
 const session=createSpatialGameSession(module,state,{loaded:()=>loaded,
   onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});

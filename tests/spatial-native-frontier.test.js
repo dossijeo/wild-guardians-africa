@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {createSpatialWorld} from '../src/world/hierarchical-wasm/spatial-world.js';
+import {createSpatialWorld} from '../src/world/wild-engine/spatial-world.js';
 
 const binary=process.env.WILD_ENGINE_NATIVE_ROUTE_WASM;
 

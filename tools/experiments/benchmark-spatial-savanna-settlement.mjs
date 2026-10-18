@@ -1,10 +1,10 @@
 import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
 import {dirname} from 'node:path';
 import {performance} from 'node:perf_hooks';
-import {createSpatialSavannaPrototype} from '../../src/world/hierarchical-wasm/spatial-savanna-adapter.js';
+import {createSpatialSavannaPrototype} from '../../src/world/wild-engine/spatial-savanna-adapter.js';
 
 const output=process.argv[2]??'docs/qa/hierarchical-navigation/spatial-savanna-settlement.json';
-const binary=readFileSync('src/world/hierarchical-wasm/spatial-savanna.wasm');
+const binary=readFileSync('src/world/wild-engine/spatial-savanna.wasm');
 const module=new WebAssembly.Module(binary);
 const timed=fn=>{const start=performance.now();const value=fn();return {ms:performance.now()-start,value};};
 const rows=[];

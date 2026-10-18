@@ -3,15 +3,15 @@ import {dirname} from 'node:path';
 import {performance} from 'node:perf_hooks';
 import {Navigation} from '../../src/world/navigation.js';
 import {buildNativeChunk} from '../../src/rendering/chunk-data.js';
-import {createLazySectorProbeSync} from '../../src/world/hierarchical-wasm/lazy-sectors-adapter.js';
-import {createSpatialSavannaPrototype} from '../../src/world/hierarchical-wasm/spatial-savanna-adapter.js';
+import {createLazySectorProbeSync} from '../../src/world/wild-engine/lazy-sectors-adapter.js';
+import {createSpatialSavannaPrototype} from '../../src/world/wild-engine/spatial-savanna-adapter.js';
 
 const output=process.argv[2]??'docs/qa/hierarchical-navigation/spatial-savanna-prototype.json';
 const biome=['savanna','desert','grand_river','volcanoes','mangrove','canyons'].includes(process.env.WG_QA_BIOME)?
   process.env.WG_QA_BIOME:'savanna';
 const profile=JSON.parse(readFileSync(`public/content/biome-${biome}.json`,'utf8')).profile;
-const oldModule=new WebAssembly.Module(readFileSync('src/world/hierarchical-wasm/lazy-sectors.wasm'));
-const newBytes=readFileSync('src/world/hierarchical-wasm/spatial-savanna.wasm');
+const oldModule=new WebAssembly.Module(readFileSync('src/world/wild-engine/lazy-sectors.wasm'));
+const newBytes=readFileSync('src/world/wild-engine/spatial-savanna.wasm');
 const newModule=new WebAssembly.Module(newBytes);
 const timed=fn=>{const start=performance.now(),result=fn();return {ms:performance.now()-start,result};};
 const canyonWorker=biome==='canyons';
