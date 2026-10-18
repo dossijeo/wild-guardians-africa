@@ -146,3 +146,13 @@ Its performance is compelling, but the earlier defeat is a gameplay
 regression under the user's comparison criterion. Keep it out of `main`
 until the changed trajectory is understood and validated; do not modify
 the balance recipe to conceal the difference.
+
+The balance branch now runs the original repair-access implementation again.
+The fast quote and its directed tests remain only in draft PR #109; this
+branch retains the frozen fixture and reports as evidence. Reverting the
+experimental engine change restores the runtime files to source `79141853`,
+the reference used for the exact 83-night trace. The paired 526-tick traces
+in PR #109 show the first divergence at simulated time 90 s: 58 speculative
+previews advance the old wall revision by 116 and workers move differently
+in that same tick. This explains the route-level origin without treating the
+later economic defeat as acceptable.
