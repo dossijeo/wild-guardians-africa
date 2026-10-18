@@ -980,7 +980,9 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
 // gates are previewed against the same native wall mirror used by movement;
 // no payment or confirmed intention changes during these synchronous probes.
 function nativeRepairAccess(s,target,nav){
-  if(!nav.wallWorkerReachability)return null;
+  const probe=(reason,detail={})=>globalThis.__wildRepairAccessProbe?.(
+    {day:s.day,time:s.time,targetId:target.id,reason,...detail});
+  if(!nav.wallWorkerReachability){probe('batch-unavailable');return null;}
   const obligations=[];
   for(const village of s.villages){
     const entry=village.entry??village;
@@ -990,14 +992,17 @@ function nativeRepairAccess(s,target,nav){
         worker.villageId===village.id)];
     if(!targets.length)continue;
     const before=nav.wallWorkerReachability(entry,targets,[],[],true);
-    if(!before)return null;
+    if(!before){probe('batch-inconclusive',{villageId:village.id});return null;}
     const required=[];
     for(let i=0;i<targets.length;i++){
       if(before[i]==='found'){required.push(targets[i]);continue;}
       // Only inconclusive witnesses need an ordinary route. A known blocked
       // worker was already isolated before this repair and is not a new loss.
       const physical=nav.workerPhysicalRoute(targets[i],entry);
-      if(physical.status==='unknown')return null;
+      if(physical.status==='unknown'){
+        probe('witness-unknown',{villageId:village.id,witnessId:targets[i].id});
+        return null;
+      }
       if(physical.status==='found')required.push(targets[i]);
     }
     if(required.length)obligations.push({entry,targets:required});
@@ -1054,6 +1059,8 @@ function nativeRepairAccess(s,target,nav){
     if(reaches(proposed,wall.id===target.id?[]:[wall.id]))
       return {status:'safe',updates:wall.id===target.id?[gate]:[repaired,gate]};
   }
+  probe('no-gate-restores-access',{obligations:obligations.length,
+    candidateWalls:candidates.length});
   return null;
 }
 export function planRepairAccess(s,target,nav){
