@@ -1050,3 +1050,54 @@ Sabana/712 defeat after night 97, this held-out seed argues against adopting
 the isolated count-factor candidate. It does not establish a better pressure
 recipe or a survival probability; further candidates should account for
 defense geometry and crop-loss feedback across seeds and biomes.
+
+## Enclosure planner sensitivity after PR #108: Sabana / 712
+
+The recovery-count recipe was replayed for up to 100 nights after the
+physically certified obstacle closure from PR #108 reached `main`. The
+complete [new report](current-main-pr108-v1-recovery-count-sabana712-100.json.gz)
+identifies source `4c4d8b41`; the previous
+[report](current-main-pr107-v1-recovery-count-sabana712-100.json.gz)
+identifies source `3b198130`. The WASM, `game.js`, `raids.js`, campaign
+runner, seed, biome, recipe and virtual-player policy hashes match. This is
+an architecture/policy sensitivity comparison, **not** a comparison of two
+balance recipes on the same engine version.
+
+The new run ended in an authentic economic defeat after night **57**, with
+57 verified raid receipts, zero evidence issues, zero crops and one
+operational center. The previous run lasted 97 nights, also ending in
+economic defeat. At night 57 the previous run still had 86 living crops,
+24 workers and 869 coins, versus zero crops, one worker and 33 coins in the
+new run.
+
+| Through night 57 | Before #108 | After #108 |
+| --- | ---: | ---: |
+| Animals | 666 | 547 |
+| Raid crop losses | 665 | 1,299 |
+| Income / wages, coins | 76,188 / 34,255 | 51,169 / 19,757 |
+| Wall purchases / repairs, coins | 870 / 4,340 | 410 / 1,231 |
+| `Game.tick` / bot decisions, seconds | 672.75 / 178.21 | 331.83 / 127.87 |
+
+The first nightly state hash differs on day 2, before any wall purchase.
+Both runs initially proposed a 460-coin cut, but the earlier planner
+rejected the next proposal with an omitted physical module. The new planner
+certified that static obstacle as part of the boundary, so the bot continued
+saving and bought a smaller 410-coin enclosure on day 4. The earlier bot
+bought a 530-coin enclosure on day 7, after more agricultural expansion.
+The new run never selected the one-metre local detour that motivated #108;
+its altered trajectory comes from accepting a physically certified mixed
+barrier earlier. The new farm initially kept more crops through day 9, but
+its later expansion repeatedly required roughly 400–600 coins for another
+complete closure. It made no second wall purchase, accumulating 46
+`saving-for-complete-enclosure` decisions, 78 decisions to repair ruined
+modules first, and 12 uncertified proposals.
+
+This is evidence that the fixed geometric planner exposes a strategic
+weakness in the unchanged economic policy: buying the first affordable
+certified enclosure can protect too small a farm and make later expansion
+costly. It does not show that the new enclosure is physically invalid, nor
+that the recovery-count pressure itself caused the 40-night gap. The lower
+wall times reflect a smaller, dying farm and are not a speedup. Do not
+promote the balance recipe or tune military parameters from this cross-version
+comparison alone. A matched current-engine control arm is being evaluated
+separately.
