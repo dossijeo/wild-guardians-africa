@@ -51,6 +51,34 @@ test('village and center quotes leave confirmed native topology untouched',async
   }finally{session.dispose();}
 });
 
+test('a center quote checks both worker directions for each eligible village',async()=>{
+  const {state,nav,session}=await createSpatialCampaignOpening({
+    seed:712,biome:'sabana',slotId:'native-multiple-village-center-preview'});
+  try{
+    const center=state.structures.find(item=>item.kind==='center');
+    let point=null,entry=null;
+    for(let dz=-24;dz<=24&&!point;dz+=6)for(let dx=-24;dx<=24&&!point;dx+=6){
+      if(Math.hypot(dx,dz)<8)continue;
+      const candidate={x:center.x+dx,z:center.z+dz};
+      if(!Game.previewCenter(state,candidate,nav).valid)continue;
+      for(const [ex,ez] of [[12,0],[-12,0],[0,12],[0,-12]]){
+        const nearby={x:candidate.x+ex,z:candidate.z+ez};
+        if(!nav.walkable(nearby.x,nearby.z,.28,null,true))continue;
+        point=candidate;entry=nearby;break;
+      }
+    }
+    assert(point&&entry,'expected a second constructible center site');
+    state.villages.push({...state.villages[0],id:'village-secondary',
+      x:entry.x,z:entry.z,entry,buildings:[]});
+    const stamp=session.routeStamp(),revision=session.core.wasm.lazy_route_revision();
+    const quote=Game.previewCenter(state,point,nav);
+    assert.equal(quote.valid,true,quote.reason);
+    assert.equal(quote.villageId,'village-secondary');
+    assert.deepEqual(session.routeStamp(),stamp);
+    assert.equal(session.core.wasm.lazy_route_revision(),revision);
+  }finally{session.dispose();}
+});
+
 test('read-only polygon occupancy matches the native confirmed polygon',async()=>{
   const {state,session}=await createSpatialCampaignOpening({
     seed:123,biome:'sabana',slotId:'native-polygon-overlay-differential'});

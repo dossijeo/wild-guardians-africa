@@ -122,8 +122,18 @@ per-day evidence, source and WASM hashes are compressed in
 A broader analytic wall-sweep prototype exposed a
 separate discrepancy between sampled graph connectors and continuous wall
 clearance, but changed older retreat fixtures; it was discarded pending a
-dedicated movement/graph correction. This 14-night run does not establish the
-day-83 campaign outcome. Do not merge until sustained simulation and reproduction have
-been reviewed. The source tree is now `src/world/wild-engine/`; the rename was
+dedicated movement/graph correction. A 100-night-horizon run of the same
+configuration completed 37 nights and ended in a real defeat: zero living
+crops, 31 coins and one operational center at day 38, with no unfinished
+raid or navigation error. It took 349.37 s (272.32 s in `Game.tick`, 52.34 s
+in bot decisions). Its first 14 day-end state hashes exactly match the
+short run; `docs/qa/preview-isolation-sabana123-v1-long.json.gz` contains
+the full nightly metrics and source/WASM hashes. This result does not reach
+day 83; the frozen day-83 invariance test remains the direct proof for that
+specific preview scenario. A two-village center quote regression also proves
+bidirectional worker access and unchanged confirmed revisions; exact
+route-length ranking among multiple eligible villages is still not measured.
+Do not merge until the remaining functional comparison has been reviewed.
+The source tree is now `src/world/wild-engine/`; the rename was
 separate from the behavioral change and all 204 playable tests, 51 directed
 wall/enclosure tests, and the WASM/Vite builds pass after it.
