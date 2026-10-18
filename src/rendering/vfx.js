@@ -24,7 +24,7 @@ export class VfxLibrary {
 
 export class NativeVfx extends THREE.Group {
   constructor(library,id,pipeline,options={}){
-    super();this.library=library;this.pipeline=pipeline;this.surface=options.worldSurface??null;this.surfaceMatrix=new THREE.Matrix4();this.surfaceInverse=new THREE.Matrix4();this.surfacePoint=new THREE.Vector3();this.native=createNativeVfx(id,library.rects,{...options,...(this.surface?{surface:(x,z)=>this.localSurface(x,z)}:{})});this.fragments=options.layers?.fragments!==false;this.stopped=false;this.inverse=new THREE.Matrix4();this.point=new THREE.Vector3();this.rigids=new Map();this.buffers=new Map();
+    super();this.library=library;this.pipeline=pipeline;this.surface=options.worldSurface??null;this.surfaceMatrix=new THREE.Matrix4();this.surfaceInverse=new THREE.Matrix4();this.surfacePoint=new THREE.Vector3();this.native=createNativeVfx(id,library.rects,{...options,...(this.surface?{surface:(x,z)=>this.localSurface(x,z)}:{})});this.fragments=options.layers?.fragments!==false;this.softParticleDepth=options.softParticleDepth!==false;this.stopped=false;this.inverse=new THREE.Matrix4();this.point=new THREE.Vector3();this.rigids=new Map();this.buffers=new Map();
     const v=value=>({value});this.uniforms={uVP:v(new THREE.Matrix4()),uView:v(new THREE.Matrix4()),uModel:v(new THREE.Matrix4()),uInst:v(true),uTime:v(0),uWind:v(options.wind??.3),uWet:v(0),uNight:v(0),uEye:v(new THREE.Vector3()),uRight:v(new THREE.Vector3()),uUp:v(new THREE.Vector3()),uScale:v(1),uExposure:v(1.03),uFogColor:v(new THREE.Color()),uFogRange:v(new THREE.Vector2(1e8,1e9)),uAtlas:v(library.texture),uDepth:v(pipeline.smokeDepth.depthTexture),uViewport:v(new THREE.Vector2()),uNear:v(.1),uFar:v(600),uSunDir:v(new THREE.Vector3()),uSun:v(new THREE.Vector3()),uSky:v(new THREE.Vector3()),uGround:v(new THREE.Vector3()),uParticleLight:v(new THREE.Vector3()),uShadowVP:v(new THREE.Matrix4()),uShadow:v(null),uShadowTexel:v(new THREE.Vector2(1/1024,1/1024)),uHasShadow:v(false)};
     for(let i=0;i<2;i++){this.uniforms['uLightPos'+i]=v(new THREE.Vector3());this.uniforms['uLightCol'+i]=v(new THREE.Vector3());}
     this.localLights=Array.from({length:2},()=>new THREE.PointLight(0xffffff,0,0,2));for(const light of this.localLights){light.visible=false;this.add(light);}
@@ -41,7 +41,8 @@ export class NativeVfx extends THREE.Group {
     const spriteGeometry=new THREE.InstancedBufferGeometry(),corners=new Float32Array([-.5,-.5,.5,-.5,.5,.5,-.5,-.5,.5,.5,-.5,.5]);spriteGeometry.setAttribute('aCorner',new THREE.BufferAttribute(corners,2));spriteGeometry.setAttribute('position',new THREE.Float32BufferAttribute(Array.from({length:6},(_,i)=>[corners[i*2],corners[i*2+1],0]).flat(),3));
     this.spriteBuffer=new THREE.InstancedInterleavedBuffer(new Float32Array(MAX_SPRITES*25),25);this.spriteBuffer.setUsage(THREE.DynamicDrawUsage);
     for(const [name,size,offset] of [['iPos',3,0],['iSize',2,3],['iAngle',1,5],['iRect',4,6],['iNext',4,10],['iColor',4,14],['iParams',4,18],['iDirection',3,22]])spriteGeometry.setAttribute(name,new THREE.InterleavedBufferAttribute(this.spriteBuffer,size,offset));spriteGeometry.instanceCount=0;
-    const spriteFragment=fragment(vfxSpriteFragment).replace('smoothstep(0.,vParams.w,opaque-here)','smoothstep(0.,vParams.w*uScale,opaque-here)').replace('tex.rgb*vColor.rgb*illum,','worldColor(tex.rgb*vColor.rgb*illum),');
+    this.uniforms.uSoftParticleDepth=v(this.softParticleDepth);
+    const spriteFragment=fragment(vfxSpriteFragment).replace('if(vParams.w>0.){','if(uSoftParticleDepth && vParams.w>0.){').replace('uniform float uScale,uExposure;','uniform float uScale,uExposure;uniform bool uSoftParticleDepth;').replace('smoothstep(0.,vParams.w,opaque-here)','smoothstep(0.,vParams.w*uScale,opaque-here)').replace('tex.rgb*vColor.rgb*illum,','worldColor(tex.rgb*vColor.rgb*illum),');
     this.sprites=mesh(spriteGeometry,material(vfxSpriteVertex,spriteFragment,this.uniforms,true));this.sprites.onBeforeRender=(r,s,c)=>this.cameraUniforms(c);this.sprites.renderOrder=3;this.add(this.sprites);
     const geometryFragment=fragment(vfxGeometryFragment).replace('vec4(min(c,vec3(1.7)),','vec4(worldColor(min(c,vec3(1.7))),');
     this.ribbons=mesh(new THREE.BufferGeometry(),material(vfxGeometryVertex,geometryFragment,this.uniforms,true));this.ribbons.onBeforeRender=(r,s,c)=>this.cameraUniforms(c);this.ribbons.renderOrder=2;this.add(this.ribbons);this.environment=vfxEnvironment(.43);this.setRibbonBuffer(1);
@@ -80,7 +81,7 @@ export class NativeVfx extends THREE.Group {
       const solids=this.native.rigidInstances();for(const [id,data] of Object.entries(solids)){const buffer=this.buffers.get(id),m=this.rigids.get(id);buffer.array.set(data.data);buffer.needsUpdate=true;m.geometry.instanceCount=data.count;m.visible=data.count>0&&(this.fragments||['water','corn','leaf'].includes(id));}
       const vertices=this.native.geometry();if(vertices.length/11>this.ribbonCapacity)this.setRibbonBuffer(vertices.length/11);this.ribbonBuffer.array.set(vertices);this.ribbonBuffer.needsUpdate=true;this.ribbons.geometry.setDrawRange(0,vertices.length/11);this.ribbons.visible=vertices.length>0;this.packedTime=this.native.time;
     }
-    return packed.count>0;
+    return packed.count>0&&this.softParticleDepth;
   }
   dispose({retainMaterials=false}={}){
     if(this.disposed)return;this.disposed=true;

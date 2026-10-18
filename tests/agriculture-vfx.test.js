@@ -24,6 +24,19 @@ test('Concurrent agriculture spells release all scene objects and native instanc
   g.manager.update({time:100,spells:[]});assert.equal(g.manager.effects.size,0);assert.equal(g.library.instances.size,0);assert.equal(g.scene.children.length,0);
  }finally{g.dispose();}
 });
+test('Agriculture particles use the main scene depth buffer without requesting a second scene capture',()=>{
+ const g=graphics(),camera=new THREE.PerspectiveCamera(60,4/3,.1,600);
+ try{
+  camera.position.set(0,5,10);camera.lookAt(0,0,0);
+  g.manager.update({time:100,spells:[{id:'growth-depth',kind:'growth',x:0,z:0,radius:2,remaining:28}]});
+  const effect=g.manager.effects.get('growth-depth');
+  assert.equal(effect.softParticleDepth,false);
+  assert.equal(effect.uniforms.uSoftParticleDepth.value,false);
+  assert.equal(effect.sprites.material.depthTest,true);
+  assert.equal(g.manager.prepare(camera),false);
+  assert.ok(effect.sprites.geometry.instanceCount>0);
+ }finally{g.dispose();}
+});
 for(const [kind,duration,cooldown] of [['growth',30,0],['multiply',15,0]])test(`${kind}: native blessing lasts its approved simulated duration without hearts, extra gameplay or lost reload phase`,()=>{
  let s=Game.newGame({slotId:'farm-magic',seed:712});Game.resume(s,'intro');Game.placeStructure(s,'center',{x:0,z:0},nav);Game.plant(s,'seed','mijo',6,0,nav);Game.openInitialHiring(s);Game.hire(s,'hire',{olderMale:1});s.day=5;s.initialPreparation=false;Game.cast(s,'cast',kind,6,0,nav);
  let g=graphics();const id=s.spells[0].id;

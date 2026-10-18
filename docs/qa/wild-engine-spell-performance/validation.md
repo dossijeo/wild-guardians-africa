@@ -36,4 +36,23 @@ node tools/experiments/benchmark-wild-engine-crop-spells-browser.mjs result.json
 
 The Playwright module path is host-specific. To reverse spell order, set `WG_QA_ARMS=control,multiply,growth,control-after`. The development-only `qa-crop-spell-frame` hook exposes the world for this benchmark; production builds do not enable it. The separate CPU benchmark is `node tools/experiments/benchmark-wild-engine-crop-spells.mjs 712 sabana result.json`.
 
-The browser result is from one GPU and synthetic farm layouts; it establishes a reproducible performance issue on that configuration, not a universal frame rate. A legal-gameplay spell benchmark and a visual occlusion check are still needed before changing the depth pipeline.
+The browser result is from one GPU and synthetic farm layouts; it establishes a reproducible performance issue on that configuration, not a universal frame rate.
+
+## Main scene depth for agricultural spells
+
+Growth and multiply previously requested a full-scene depth capture whenever their sprites were visible. The new agricultural effect keeps normal WebGL depth testing against the main scene and skips the extra capture. Other effects retain soft-particle depth where they need it. This changes only the soft fade at particle/solid intersections; the spell simulation, lights, movement, terrain, collision and particle schedules are unchanged.
+
+On the same headed Chrome/D3D11 device, `WG_QA_FORCE_SOFT_DEPTH=1` restored the previous rendering path in the *same build* for the 1,500-crop comparison. Each arm contains 60 RAF frames; GPU medians use 45 settled timer-query samples.
+
+| 1,500 crops | Soft depth GPU / frame | Main depth GPU / frame | Soft depth captures | Main depth captures |
+| --- | ---: | ---: | ---: | ---: |
+| Control | 33.9 ms | 34.6 ms | 0 | 0 |
+| Growth | 74.8 ms | 46.9 ms | 60 | 0 |
+| Multiply | 73.5 ms | 46.7 ms | 60 | 0 |
+| Control after | 34.5 ms | 28.5 ms | 0 | 0 |
+
+The active-spell GPU medians fell by about 37%. The RAF median fell from 83.1 ms to 49.9 ms, though frame pacing is quantized and variable. An independent run across 100/500/1,500 crops found main-depth GPU medians of 22.9/32.0/54.4 ms for growth and 23.1/32.5/52.9 ms for multiply. The spread between runs is why these are reported as measurements on one device, not a guaranteed percentage on every GPU.
+
+For a separate negative-control experiment, disabling the agricultural VFX's two local lights did not improve the 1,500-crop result: growth and multiply GPU medians were 58.5 and 54.8 ms, compared with 54.4 and 52.9 ms in the adjacent main-depth run. We kept those lights.
+
+The same frozen camera and VFX time were used to inspect the [main-depth](visual-hard-growth.webp) and [soft-depth](visual-soft-growth.webp) growth images. Rocks and crops still occlude the effect. A raw 1280×800 screenshot comparison had mean absolute channel difference 0.28/255 for growth and 0.62/255 for multiply; most of the image is unchanged, so this metric does not establish pixel equivalence at every particle edge. The soft intersection fade is intentionally different. A legal-gameplay spell benchmark and checks on more GPUs remain useful before treating the rendering result as universal.
