@@ -14,7 +14,6 @@ import {WORKER_SPATIAL_PROFILE,ANIMAL_SPATIAL_PROFILES} from './spatial-movement
 import {BIOME_IDS} from '../biome-ids.js';
 
 // One authoritative WASM instance supplies the renderer and the actor graph.
-// This is a six-biome integration probe; it is not wired into normal gameplay.
 export function createSpatialGameSession(module,state,streamOptions){
   if(!Object.hasOwn(BIOME_IDS,state?.biome)||!Array.isArray(state.villages)||!state.villages.length)
     throw TypeError('Expected a supported game biome and a village');
@@ -23,7 +22,9 @@ export function createSpatialGameSession(module,state,streamOptions){
   const cx=Math.floor((first.x+24)/48),cz=Math.floor((first.z+24)/48);
   if(streamOptions.core){
     const generated=core.terrainState();
-    if(String(generated.seed)!==String(state.seed)||
+    // The native generator receives the low 32 bits of the game seed. Real
+    // games default to Date.now(), which is wider than the stored native seed.
+    if(generated.seed!==(Number(state.seed)>>>0)||
       generated.biome!==BIOME_IDS[state.biome])
       throw TypeError('Pre-generated spatial world does not match game state');
   }else core.generate(state.seed,cx,cz,state.biome);

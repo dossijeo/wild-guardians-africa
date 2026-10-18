@@ -44,7 +44,7 @@ import {NativeSky,skyNight} from './sky.js';
 import {waterTime} from './world-atmosphere.js';
 import {nativeChunkWater,nativeAssetWater,nativeWaterBuffer} from './water-geometry.js';
 import {cropSpec} from '../simulation/rules.js';
-import {BIOME_IDS} from '../world/navigation.js';
+import {BIOME_IDS} from '../world/biome-ids.js';
 import {createCropBatch,createCropBatchAsync} from './crop-batch.js';
 import {loadCropBridges} from './crop-library.js';
 import {applyWorkerPose,nativeCrate} from './worker-actions.js';

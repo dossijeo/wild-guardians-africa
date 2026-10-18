@@ -20,8 +20,6 @@ import {LOADING_STAGES} from './loading-recipe.js';
 import {SpiritVoice,spiritVoice} from '../audio/spirit-voice.js';
 import {guardianCopy} from '../tutorial/guardian-copy.js';
 import {tutorialMessageShownToday,recordTutorialMessageToday} from '../tutorial/daily-messages.js';
-import {HiringRoutePreparer} from '../world/hiring-route-preparer.js';
-import {warmRaidNavigation} from '../world/raid-navigation-warmth.js';
 import {NoticeLifetime,tutorialCoversNotice} from './notices.js';
 const noticeLifetime=new NoticeLifetime();
 import {syncTutorialActionPause} from '../tutorial/action-pause.js';
@@ -50,9 +48,10 @@ import {formatMoney,formatWholeCoins,numberOf} from '../simulation/money.js';
 import {isMature} from '../simulation/crops.js';
 import {cropSpec,permission,operational,attraction} from '../simulation/rules.js';
 import {BrowserSaveRepository} from '../persistence/browser-saves.js';
-import {Navigation,BIOME_IDS} from '../world/navigation.js';
+import {BIOME_IDS} from '../world/biome-ids.js';
 import {villageLayout,findVillageEntry} from '../world/villages.js';
-import {prepareInitialLocation} from '../world/prepare-initial-location.js';
+import {prepareWildEngineWorld} from './wild-engine-world.js';
+import {createEventDrivenTaskPlanner} from '../world/wild-engine/spatial-intent-bridge.js';
 import {WorldScene} from '../rendering/scene.js';
 import {farVegetationProfile} from '../rendering/far-vegetation-profile.js';
 import {prepareInitialFarWorld} from './far-world-loading.js';
@@ -73,8 +72,6 @@ import '../ui/tutorial.css';
 
 const app=document.querySelector('#app'),saves=new BrowserSaveRepository(localStorage);
 const guidanceQa=import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-guidance');
-const spatialWorldQa=import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-spatial-world');
-const nativeIntentQa=spatialWorldQa&&new URLSearchParams(location.search).has('qa-native-intents');
 const gameplayGpuQa=import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading-gpu-gameplay')?installLoadingGameplayGpuQa(document):null;
 const progressQa=import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')?installLoadingProgressQa(document,{throttleReady:!new URLSearchParams(location.search).has('qa-loading-unthrottled'),gpu:new URLSearchParams(location.search).has('qa-loading-gpu')}):null;
 // Hints come only from already-validated slot listings. The decoded save remains
@@ -120,6 +117,7 @@ const manualMagicActivity=new ManualMagicActivity();
 if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-magic-activity'))globalThis.wildGuardiansMagicActivity=()=>manualMagicActivity.report(state);
 let libraryViewer=null;
 let nativeIntentCleanup=null;
+let wildEngineSession=null;
 let budgetWarningUntil=0,lastBudgetBalance=Infinity,reserveWarningShown=false;
 const tutorialProfile=new TutorialProfile(localStorage);
 const moneyLocale=()=>window.WildGuardiansLanguage?.locale()??'en-US';
@@ -132,7 +130,7 @@ function safe(action){if(leaving)return;commandFeedback='';try{const result=acti
 function save({confirm=false}={}){const owner=juice;return saveGame(state,saves,{confirm,onError:error,onConfirm:()=>owner?.savedSuccessfully()});}
 const exitDesktop=createDesktopExit({host:window,save,hasGame:()=>!!state,onError:failure=>error(moneyLocale().startsWith('es')?'No se pudo cerrar la aplicación: '+failure.message:'Could not close the application: '+failure.message)});
 function bind(id,fn){document.getElementById(id)?.addEventListener('click',()=>safe(fn));}
-function clearWorld(){nativeIntentCleanup?.();nativeIntentCleanup=null;if(import.meta.env.DEV)delete globalThis.wildGuardiansSpatialQa;campaignCinema?.dispose();campaignCinema=null;juice?.dispose();juice=null;gameplayGpuQa?.close();clearLoadingPresentation();libraryViewer?.dispose();libraryViewer=null;dialogVoice.stop();raidLoading?.remove();raidLoading=null;noticeLifetime.reset();eventCards=null;surfaces.reset();uiAudio.reset();toolSession.clear();manualMagicActivity.reset();budgetWarningUntil=0;lastBudgetBalance=Infinity;reserveWarningShown=false;pendingVillage=null;commandFeedback='';setTutorialInteraction(false);tutorial=null;hudHand?.dispose();hudHand=null;guardian?.dispose();guardian=null;world?.dispose();world=null;nav=null;audio.stop();tool=null;selection=null;document.querySelector('#native-hud-style')?.remove();}
+function clearWorld(){nativeIntentCleanup?.();nativeIntentCleanup=null;if(import.meta.env.DEV)delete globalThis.wildGuardiansSpatialQa;campaignCinema?.dispose();campaignCinema=null;juice?.dispose();juice=null;gameplayGpuQa?.close();clearLoadingPresentation();libraryViewer?.dispose();libraryViewer=null;dialogVoice.stop();raidLoading?.remove();raidLoading=null;noticeLifetime.reset();eventCards=null;surfaces.reset();uiAudio.reset();toolSession.clear();manualMagicActivity.reset();budgetWarningUntil=0;lastBudgetBalance=Infinity;reserveWarningShown=false;pendingVillage=null;commandFeedback='';setTutorialInteraction(false);tutorial=null;hudHand?.dispose();hudHand=null;guardian?.dispose();guardian=null;world?.dispose();world=null;wildEngineSession?.dispose();wildEngineSession=null;nav=null;audio.stop();tool=null;selection=null;document.querySelector('#native-hud-style')?.remove();}
 let leaving=false;
 async function menu() {
   if(leaving)return;leaving=true;
@@ -197,19 +195,14 @@ async function startGame(loaded=null,{slotId,preview}={}) {
       next=await world.loadReady(saves.loadPrepared(slotId,{signal:world.loading.signal,onDiagnostic:diagnostic=>{progressQa?.snapshotDecode(diagnostic);if(diagnostic.mode==='synchronous-fallback')console.warn('Snapshot compatibility fallback: '+diagnostic.reason);}}));assertLoading();loaded=next;
       loadingDiorama.show(next);audioOwner.setState(next);audioOwner.start();loadingDiorama.render(0,loadingProgress.value);refreshLoadingOverlay();
     }
-    const [pack,villages]=await Promise.all([json('/content/biome-'+BIOME_IDS[next.biome]+'.json'),json('/content/villages.json')]);assertLoading();
+    const villages=await json('/content/villages.json');assertLoading();
     villageCatalog=villages;
     const payload=villages.find(v=>v.id===(next.culture==='saheliana'?'saheliano':next.culture));
-    let spatialSession=null;
-    if(import.meta.env.DEV&&spatialWorldQa){
-      if(loaded||slotId!==undefined)throw Error('Spatial world QA requires a new game');
-      const {prepareExperimentalSpatialWorld}=await import('./experimental-spatial-world.js');
-      const spatial=await prepareExperimentalSpatialWorld(world,next,payload,{signal:world.loading.signal});
-      assertLoading();nav=spatial.navigation;spatialSession=spatial.session;
-    }else{
-      nav=new Navigation(next.seed,next.biome,pack.profile);
-      if(!loaded) {const start=await prepareInitialLocation(nav,payload,{signal:prepared.world.loading.signal});assertLoading();Object.assign(next.villages[0],start);next.suppressed.push(...start.suppress);}
-    }
+    const spatial=await prepareWildEngineWorld(world,next,payload,
+      {signal:world.loading.signal,loaded:!!loaded});
+    assertLoading();nav=spatial.navigation;
+    const spatialSession=spatial.session;
+    wildEngineSession=spatialSession;
     // Earlier saves predate native collision footprints. Preserve their units
     // and positions while restoring the geometric metadata from the catalog.
     for(const village of next.villages){
@@ -235,15 +228,11 @@ async function startGame(loaded=null,{slotId,preview}={}) {
     world.destructionPass.onDestructionCue=(counts,entity)=>audio.destructionCue(counts,entity,{state,listener:world.controls.target});
     if(progressQa){progressQa.preparationPolicy(world.farIsolatedPreparation,world.farZeroVertexPreparation);world.onLoadingSpan=span=>progressQa.loadingSpan(span);world.onLoadingActorQueue=stats=>progressQa.actorQueue(stats);world.onLoadingGpuDraw=run=>progressQa.gpuInvocation('preparation-far-upload-draw',run);}
     await world.load(state,nav,payload,{spatialSession,farVegetation:spatialSession||settings.farVegetation===false?false:farVegetationProfile({quality:settings.quality,biome:nav.config.biome}),loadingProgress});assertLoading();
-    if(nativeIntentQa&&spatialSession){
-      const {createEventDrivenTaskPlanner}=await import('../world/wild-engine/spatial-intent-bridge.js');
-      assertLoading();
-      const planner=createEventDrivenTaskPlanner(spatialSession);
-      planner.resetFromState(state);
-      const stopTasks=planner.observeTasks(state),stopWorld=planner.observeWorld(state);
-      nav.intentTaskPlanner=planner;
-      nativeIntentCleanup=()=>{stopTasks();stopWorld();delete nav.intentTaskPlanner;};
-    }
+    const planner=createEventDrivenTaskPlanner(spatialSession);
+    planner.resetFromState(state);
+    const stopTasks=planner.observeTasks(state),stopWorld=planner.observeWorld(state);
+    nav.intentTaskPlanner=planner;
+    nativeIntentCleanup=()=>{stopTasks();stopWorld();delete nav.intentTaskPlanner;};
     if(import.meta.env.DEV&&spatialSession)globalThis.wildGuardiansSpatialQa=()=>({
       fieldShared:world.nav.field===spatialSession.field,
       streamShared:world.chunkStream===spatialSession.stream,
@@ -332,7 +321,7 @@ function paintPanelFrame(host,stage,message){
 function openSurface(kind,key=kind){
   if(state.pauses.includes('hiring')&&!['hiring','result'].includes(kind))return false;
   if(!surfaces.open(kind,{mandatory:kind==='hiring',force:kind==='result'}))return false;
-  dialogVoice.stop();world?.hiringRoutePreparer?.cancel();
+  dialogVoice.stop();
   const beforePause=state.pauses.slice();
   setTutorialInteraction(false);guardian?.hide({immediate:true,interrupt:true});
   if(kind!=='context'){selection=null;document.querySelector('#context').replaceChildren();}
@@ -345,7 +334,6 @@ function openSurface(kind,key=kind){
 function closeSurface(){
   dialogVoice.stop();
   if(surfaces.mandatory&&state.pauses.includes('hiring'))return;
-  world?.hiringRoutePreparer?.cancel();
   const beforePause=state.pauses.slice(),kind=surfaces.close({resolved:!state.pauses.includes('hiring')});uiAudio.close();
   document.querySelector('#panel').replaceChildren();document.querySelector('#context').replaceChildren();document.querySelector('#modal').replaceChildren();
   document.querySelector('#stage').classList.remove('hiring-open');selection=null;
@@ -473,8 +461,6 @@ function hiringDialog(centerId=null) {
   if(!openSurface(additional?'modal':'hiring',additional?'additional-hiring':undefined))return;
   if(additional)Game.pause(state,'menu');
   const selection=additional?{}:{...state.hiringSelection},modal=document.querySelector('#modal');
-  const routes=world.hiringRoutePreparer??=(world.spatialSession?
-    {update(){},cancel(){},take(){},dispose(){}}:new HiringRoutePreparer(nav));
   modal.innerHTML=`<div class="overlay native-hiring" id="hiring-dialog">${hiringMarkup({day:state.day,clock:Game.clockLabel(state),hiring:{hasPrevious:state.day>1,draft:NPC_TYPES.map(p=>selection[p.id]??0)}})}</div>`;
   const agricultural=agriculturalDawnMessage(state);
   if(agricultural&&!additional){const announcement=document.createElement('p');announcement.className='hiring-intro';announcement.id='hiringAgriculturalNotice';announcement.role='status';announcement.textContent=agricultural;document.querySelector('#hiringIntro').before(announcement);}
@@ -493,12 +479,12 @@ function hiringDialog(centerId=null) {
   const refresh=()=>{
     for(const [i,p] of NPC_TYPES.entries())selection[p.id]=Number(document.querySelector(`#crewCount${i}`).value);
     if(!additional)state.hiringSelection={...selection};
-    try {const available=numberOf(state.ledger.balance),{cost,canConfirm,message}=hiringConfirmation(selection,available,additional?{time:state.time}:{});document.querySelector('#hireAvailable').textContent=localMoney(state.ledger.balance);document.querySelector('#hireCost').textContent=cost.toLocaleString(window.WildGuardiansLanguage?.locale()??'en-US');document.querySelector('#hireBalance').textContent=(available-cost).toLocaleString(window.WildGuardiansLanguage?.locale()??'en-US');document.querySelector('#hireConfirm').disabled=!canConfirm;document.querySelector('#hireBudgetMessage').textContent=message;if(canConfirm)routes.update(state,selection,centerId);else routes.cancel();}
-    catch(e){routes.cancel();document.querySelector('#hireConfirm').disabled=true;document.querySelector('#hireBudgetMessage').textContent=e.message;}
+    try {const available=numberOf(state.ledger.balance),{cost,canConfirm,message}=hiringConfirmation(selection,available,additional?{time:state.time}:{});document.querySelector('#hireAvailable').textContent=localMoney(state.ledger.balance);document.querySelector('#hireCost').textContent=cost.toLocaleString(window.WildGuardiansLanguage?.locale()??'en-US');document.querySelector('#hireBalance').textContent=(available-cost).toLocaleString(window.WildGuardiansLanguage?.locale()??'en-US');document.querySelector('#hireConfirm').disabled=!canConfirm;document.querySelector('#hireBudgetMessage').textContent=message;}
+    catch(e){document.querySelector('#hireConfirm').disabled=true;document.querySelector('#hireBudgetMessage').textContent=e.message;}
   };
   document.querySelectorAll('[data-crew-step]').forEach(el=>el.onclick=()=>{const input=document.querySelector(`#crewCount${el.dataset.crewStep}`);input.value=Math.max(0,Number(input.value)+Number(el.dataset.delta));refresh();});document.querySelectorAll('[data-crew-count]').forEach(el=>el.oninput=refresh);
   document.querySelector('[data-hire="clear"]').onclick=()=>{document.querySelectorAll('[data-crew-count]').forEach(el=>el.value=0);refresh();};
-  bind('hireConfirm',()=>{if(!hiringConfirmation(selection,numberOf(state.ledger.balance),additional?{time:state.time}:{}).canConfirm)return;const prepared=routes.take(state,selection,centerId);const hired=additional?Game.hireAdditional(state,commandId(),selection,centerId):Game.hire(state,commandId(),selection);if(hired!==false&&prepared)warmRaidNavigation(nav,prepared.warmth);closeSurface();save();audio.gameplay(state.day).catch(()=>{});});refresh();
+  bind('hireConfirm',()=>{if(!hiringConfirmation(selection,numberOf(state.ledger.balance),additional?{time:state.time}:{}).canConfirm)return;additional?Game.hireAdditional(state,commandId(),selection,centerId):Game.hire(state,commandId(),selection);closeSurface();save();audio.gameplay(state.day).catch(()=>{});});refresh();
   paintPanelFrame(modal,stage,'No se ha podido cargar el marco de contratación.');
 }
 window.addEventListener('resize',()=>{if(screen==='game')layoutHud(document.querySelector('#stage'));});
