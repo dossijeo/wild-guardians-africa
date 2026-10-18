@@ -1313,3 +1313,34 @@ and `84e636a7bcb129e43ba4eaad51fbad89760c6c99c402d62874177c8`.
 This held-out pair supports V1 as a promising pressure candidate in one more
 biome, but does not measure a 100-night survival probability or justify
 changing the production balance yet.
+
+### Gran Río/123: 60-night continuation of V1
+
+Source `c8da6536` requested 60 nights with the same seed, V1 recipe and
+topological policy. The first 30 nightly state hashes exactly reproduce the
+30-night V1 pilot; the source change between runs was documentation and QA
+evidence only. The run completed all 60 requested raids, with verified
+coverage, zero evidence issues and no technical censoring. Its terminal
+`result` is `null`, because night 100 was not requested.
+
+| V1 horizon | Night 30 | Night 60 |
+| --- | ---: | ---: |
+| Living crops / coins / staff | 145 / 974 / 21 | 79 / 649 / 15 |
+| Animals faced, cumulative | 304 | 706 |
+| Agricultural raid losses, cumulative | 374 | 957 |
+| Wall hits, cumulative | 649 | 1,532 |
+| Paid new walls / repairs, coins | 430 / 1,531 | 560 / 3,920 |
+
+The farm remained active at night 60 but lost productive capacity after
+night 30. Days 55–60 ended with 71–86 living crops and 481–649 coins; their
+`Game.tick` costs ranged from 6.5 to 9.6 seconds, without a late explosion
+in this interval. The full run accumulated 473.71 seconds of `Game.tick` and
+152.67 seconds of bot decisions. These timings describe this particular farm;
+they are not a speed comparison with the control that lost on night 28.
+
+The complete [60-night report](current-main-pr48-v1-gran-rio123-60.json.gz)
+and [per-night CSV](current-main-pr48-v1-gran-rio123-60-nightly.csv) retain
+the economic and physical trajectory. The gzip SHA-256 is
+`f6df6e22ad3e5911ad72073859f8fcb0bdba406bdf2285a4ab125dc2f4c5a28e`.
+Survival to 60 nights makes a 100-night follow-up justified; it does not yet
+prove long-run solvency or a win rate across seeds and biomes.
