@@ -1181,3 +1181,42 @@ reduced-count arms above ended much earlier under the same engine and bot;
 the historical original-V1 run before #108 lost after night 99 under a
 different enclosure trajectory. Keep this balance recipe experimental while
 testing held-out seeds and defense-policy sensitivity.
+
+## Held-out current-engine V1 replay: Sabana / 123
+
+The same V1 recipe, topological policy, WASM and game/raid/runner source
+hashes were used with a reserved Sabana seed. The complete
+[Sabana/123 report](current-main-pr108-v1-original-sabana123-100.json.gz)
+records source `baf5af97`, all 100 nightly hashes and 100 verified raid
+receipts with zero issues and no evidence coverage loss. The different
+source commit from Sabana/712 contains only the preceding QA report and
+documentation; the executable input hashes match.
+
+| Measure | Sabana/712 | Sabana/123 |
+| --- | ---: | ---: |
+| Last verified night / result | 100 / victory | 100 / victory |
+| Living crops / coins at day-101 dawn | 11 / 94 | 0 / 83 |
+| Animals / raid crop losses | 1,276 / 1,702 | 1,242 / 1,668 |
+| Wall purchases / repairs, coins | 670 / 7,337 | 590 / 7,045 |
+| Income / wages / seeds, coins | 105,295 / 43,630 / 54,264 | 99,162 / 42,183 / 49,961 |
+| `Game.tick` / bot decisions, seconds | 736.87 / 355.75 | 1,497.14 / 314.98 |
+
+The Sabana/123 result is a valid game-rule victory, **not** evidence of a
+sustainable farm at the winning dawn. It had four living crops after night
+98, nine after night 99, then planted twelve on day 100. Workers delivered
+nine harvests that day, but the night-100 raid destroyed all twelve exposed
+crops; `CampaignWon` followed with zero living crops and 83 coins. The
+current victory condition checks completion of night 100, so this report
+must not be presented as a healthy agricultural margin. Neither of these
+two seeds estimates a six-biome win rate or justifies promoting V1 to
+production without further balancing and held-out validation.
+
+The second replay also exposes a separate late-run performance problem.
+`Game.tick` cost 72.32 seconds on day 83, 80.11 on day 87 and 119.23 on day
+90, despite only 40, 59 and 32 living crops at those dawns. The measured
+raid-target selector used about one second or less on each of those days;
+the report does not identify which remaining tick phase caused the spikes.
+The process advanced and finished normally. This is a profiling lead, not
+evidence that the pressure recipe or any specific navigation routine is
+the cause. Capture a late frozen state and profile `Game.tick` phases
+before changing code for this latency.
