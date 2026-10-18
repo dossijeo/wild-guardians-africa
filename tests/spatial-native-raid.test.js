@@ -24,6 +24,43 @@ const module=new WebAssembly.Module(readFileSync(
 const pack=JSON.parse(readFileSync(new URL('../public/content/villages.json',
   import.meta.url),'utf8'))[0];
 
+test('a blocked attack site from the frozen Desert night 79 reselects an accessible wall',()=>{
+  // This reduced fixture keeps confirmed terrain, structures and live crops,
+  // but omits historical plants and the experimental balance bookkeeping.
+  const state=JSON.parse(gunzipSync(readFileSync(new URL(
+    './fixtures/desierto712-d79-pending-attack.json.gz',import.meta.url))));
+  const animal=state.raid.animals[0],oldTarget=animal.targetId,
+    oldReservation=animal.reservation,hits=animal.hitsRemaining;
+  const loaded=new Map(),session=createSpatialGameSession(module,state,{
+    loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+  try{
+    for(let z=-2;z<=2;z++)for(let x=0;x<=3;x++){
+      if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+      loaded.set(`${x},${z}`,session.core.chunkPayload());
+    }
+    const nav=createSpatialNavigationMovement(session,state);
+    nav.setActiveBounds([-24,-72,168,120]);
+    const planner=createEventDrivenTaskPlanner(session);
+    const restored=planner.resetFromState(state);
+    const stopWorld=planner.observeWorld(state),stopTasks=planner.observeTasks(state);
+    nav.intentTaskPlanner=planner;
+    try{
+      assert.deepEqual(restored.pendingAttackRouteResults,
+        [{id:animal.id,status:'blocked-approach'}]);
+      updateRaid(state,.2,nav);
+      assert.equal(animal.targetId,null);
+      assert.equal(state.raid.reservations[oldReservation],undefined);
+      assert.equal(animal.hitsRemaining,hits);
+      assert.equal(planner.attackRoutePending(animal.id),false);
+      updateRaid(state,.2,nav);
+      assert.notEqual(animal.targetId,oldTarget);
+      assert(state.structures.some(item=>item.id===animal.targetId&&
+        item.status==='intact'),
+        'the same animal can attack a physically reachable barrier');
+    }finally{stopTasks();stopWorld();}
+  }finally{session.dispose();}
+});
+
 test('a native raid approaches an active shield border before waiting on its old route',async()=>{
   let sawShieldApproach=false;
   const result=await simulateNativeCampaign({days:1,seed:712,
