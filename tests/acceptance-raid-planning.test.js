@@ -53,8 +53,8 @@ test('QA-088 revised: the first-night clock spawns one mandatory warthog with ze
  const ordinary=Game.newGame({seed:712});ordinary.day=2;planNight(ordinary);assert.deepEqual(ordinary.nightPlan.group,['hyena']);
 });
 
-test('QA-089 revised: a thousand seeded pressure plans are varied, deterministic and never rerolled',()=>{
- const base=fixture(),groups=new Set(),times=new Set();
+test('QA-089 revised: seeded pressure plans vary actor order and hit rolls without rerolling',()=>{
+ const base=fixture(),groups=new Set(),hitProfiles=new Set(),times=new Set();
  base.plants.forEach((plant,i)=>{plant.x=(i%11)*2;plant.z=Math.floor(i/11)*2;});
  for(let seed=1;seed<=1000;seed++){
   const s=structuredClone(base),copy=structuredClone(base);s.day=copy.day=50;s.completedNights=copy.completedNights=49;s.rng=copy.rng=seed;
@@ -62,12 +62,17 @@ test('QA-089 revised: a thousand seeded pressure plans are varied, deterministic
   planNight(s);planNight(copy);
   assert.equal(s.nightPlan.at,323+oracle/4294967296*225,'The first draw controls timing');
   assert.ok(s.nightPlan.group.length>0);assert.deepEqual(copy.nightPlan,s.nightPlan);assert.equal(copy.rng,s.rng);
-  groups.add(signature(s.nightPlan.group));times.add(s.nightPlan.at);
+  groups.add(s.nightPlan.group.join(','));
+  hitProfiles.add(s.nightPlan.waves.flat().map(actor=>actor.hits).join(','));
+  times.add(s.nightPlan.at);
   const planned=structuredClone(s.nightPlan),rng=s.rng;planNight(s);
   assert.deepEqual(s.nightPlan,planned,'Replanning the same night reuses its committed plan');assert.equal(s.rng,rng);
   if(seed%100===0){const restored=deserialize(serialize(s));planNight(restored);assert.deepEqual(restored.nightPlan,planned);assert.equal(restored.rng,rng);}
  }
- assert.ok(groups.size>1,'Composition varies across independent seeds');
+ // Pressure V1 rounds the species counts before drawing RNG; seeded actor
+ // order and individual hit budgets still vary for the same farm and night.
+ assert.ok(groups.size>1,'Actor order varies across independent seeds');
+ assert.ok(hitProfiles.size>1,'Individual hit budgets vary across independent seeds');
  assert.ok(times.size>1,'Timing varies across independent seeds');
 });
 
