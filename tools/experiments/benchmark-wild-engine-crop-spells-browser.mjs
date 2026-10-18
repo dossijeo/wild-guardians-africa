@@ -1,4 +1,4 @@
-import {writeFile} from 'node:fs/promises';
+import {mkdir,writeFile} from 'node:fs/promises';
 import {pathToFileURL} from 'node:url';
 
 const modulePath=process.env.WG_QA_PLAYWRIGHT_MODULE;
@@ -9,11 +9,23 @@ const output=process.argv[2];
 const counts=(process.argv[3]??'100,500,1500').split(',').map(Number);
 if(!counts.length||counts.some(count=>!Number.isSafeInteger(count)||count<1))
   throw Error('Expected positive comma-separated crop counts');
+const spellCount=Number(process.env.WG_QA_SPELL_COUNT??1);
+if(!Number.isSafeInteger(spellCount)||spellCount<1||counts.some(count=>spellCount>count))
+  throw Error('WG_QA_SPELL_COUNT must be a positive integer no larger than each crop count');
+const spellAge=Number(process.env.WG_QA_SPELL_AGE??1);
+if(!Number.isFinite(spellAge)||spellAge<0||spellAge>=15)
+  throw Error('WG_QA_SPELL_AGE must be between 0 and 15 seconds');
 const arms=(process.env.WG_QA_ARMS??'control,growth,multiply,control-after').split(',');
 if(arms.length!==4||arms[0]!=='control'||arms[3]!=='control-after'||
   !['growth','multiply'].includes(arms[1])||!['growth','multiply'].includes(arms[2])||arms[1]===arms[2])
   throw Error('WG_QA_ARMS must be control,growth,multiply,control-after or control,multiply,growth,control-after');
 const gpuEnabled=process.env.WG_QA_GPU!=='0';
+const disableAgricultureLights=process.env.WG_QA_DISABLE_AGRICULTURE_LIGHTS==='1';
+const forceSoftDepth=process.env.WG_QA_FORCE_SOFT_DEPTH==='1';
+const screenshotDir=process.env.WG_QA_SCREENSHOT_DIR;
+const screenshotKind=process.env.WG_QA_SCREENSHOT_KIND;
+const focusSpell=process.env.WG_QA_FOCUS_SPELL==='1';
+if(screenshotDir)await mkdir(screenshotDir,{recursive:true});
 const mode=process.env.WG_QA_MODE??'direct';
 if(!['direct','raf'].includes(mode))throw Error('WG_QA_MODE must be direct or raf');
 const browserName=process.env.WG_QA_BROWSER??'bundled-chromium';
@@ -48,7 +60,7 @@ try{
   });
   if(!ready.world||!ready.authority||errors.length)throw Error(JSON.stringify({ready,errors}));
 
-  await page.evaluate(mode=>{
+  await page.evaluate(({mode,disableAgricultureLights,forceSoftDepth})=>{
     const {state,world,gpu}=globalThis.wildGuardiansSpatialQa();
     if(!state||!world)throw Error('Spell frame QA hook unavailable');
     if(mode==='direct')globalThis.__wildSpellFrameManual=true;
@@ -66,15 +78,34 @@ try{
     wrap(world,'render','renderMs');
     wrap(world,'sync','syncMs');
     wrap(world.agricultureVfx,'update','vfxUpdateMs');
+    if(forceSoftDepth){
+      const update=world.agricultureVfx.update;
+      world.agricultureVfx.update=function(...args){
+        update.apply(this,args);
+        for(const effect of this.effects.values()){
+          effect.softParticleDepth=true;
+          effect.uniforms.uSoftParticleDepth.value=true;
+        }
+      };
+    }
     wrap(world.agricultureVfx,'prepare','vfxPrepareMs');
-  },mode);
+    wrap(world.destructionPass,'captureDepth','depthCaptureMs');
+    if(disableAgricultureLights){
+      const prepare=world.agricultureVfx.prepare;
+      world.agricultureVfx.prepare=function(...args){
+        const depth=prepare.apply(this,args);
+        for(const effect of this.effects.values())for(const light of effect.localLights)light.visible=false;
+        return depth;
+      };
+    }
+  },{mode,disableAgricultureLights,forceSoftDepth});
 
   const report={kind:'synthetic-interactive-frame-qa',seed:712,biome:'sabana',
-    counts,arms,gpuEnabled,mode,browserName,webglRenderer:ready.webglRenderer,
-    note:'Synthetic plants in the real Wild Engine browser renderer. Simulation is paused; RAF, crop synchronization and VFX run. GPU timings require EXT_disjoint_timer_query_webgl2. Not a legal campaign or an uninstrumented frame-rate benchmark.',
+    counts,spellCount,spellAge,arms,gpuEnabled,mode,browserName,disableAgricultureLights,forceSoftDepth,webglRenderer:ready.webglRenderer,
+    note:'Synthetic plants in the real Wild Engine browser renderer. Each agricultural spell targets exactly one living plant and uses Game.spellRadius. Simulation is paused; RAF, crop synchronization and VFX run. GPU timings require EXT_disjoint_timer_query_webgl2. Not a legal campaign or an uninstrumented frame-rate benchmark.',
     errors,complete:false,results:[]};
   for(const count of counts){
-    await page.evaluate(async({count,mode})=>{
+    await page.evaluate(async({count,mode,focusSpell})=>{
       const {createPlant}=await import('/src/simulation/crops.js');
       const {state,world}=globalThis.wildGuardiansSpatialQa();
       const center=state.villages[0].center;
@@ -82,19 +113,30 @@ try{
         `spell-frame-${count}-${index}`,'mijo',center.x+5+(index%40)*1.5,
         center.z+5+Math.floor(index/40)*1.5,null));
       state.spells=[];
+      if(focusSpell){
+        const x=state.plants[0].x,z=state.plants[0].z,y=world.agricultureVfx.surface(x,z);
+        world.cinematic=true;
+        world.controls.target.set(x,y,z);
+        world.camera.position.set(x+13,y+11,z+16);
+        world.camera.lookAt(x,y,z);
+      }
       if(mode==='direct')for(let i=0;i<5;i++)world.render(0);
       else for(let i=0;i<20;i++)await new Promise(resolve=>requestAnimationFrame(resolve));
       if(world.cropBatch.capacity<count)throw Error('Crop batch did not reach fixture capacity');
-    },{count,mode});
+    },{count,mode,focusSpell});
     for(const kind of arms){
-      const result=await page.evaluate(async({count,kind,mode})=>{
+      const result=await page.evaluate(async({count,kind,mode,spellCount,spellAge})=>{
         const {state,world,gpu}=globalThis.wildGuardiansSpatialQa();
-        const center=state.villages[0].center;
-        state.spells=kind==='control'||kind==='control-after'?[]:[{
-          id:`spell-frame-${count}-${kind}`,kind,x:center.x+10,z:center.z+10,
-          radius:12,remaining:kind==='growth'?29:14}];
+        const {spellRadius}=await import('/src/simulation/game.js');
+        const columns=Math.min(40,Math.max(Math.ceil(spellCount/Math.ceil(count/40)),Math.ceil(Math.sqrt(spellCount))));
+        state.spells=kind==='control'||kind==='control-after'?[]:
+          Array.from({length:spellCount},(_,index)=>{
+            const target=state.plants[(index%columns)+Math.floor(index/columns)*40];
+            return {id:`spell-frame-${count}-${kind}-${index}`,kind,x:target.x,z:target.z,
+              targetPlantId:target.id,radius:spellRadius(kind),remaining:(kind==='growth'?30:15)-spellAge};
+          });
         gpu?.reset();
-        const capture={renderMs:[],syncMs:[],vfxUpdateMs:[],vfxPrepareMs:[]};
+        const capture={renderMs:[],syncMs:[],vfxUpdateMs:[],vfxPrepareMs:[],depthCaptureMs:[]};
         globalThis.__spellFrameCapture=capture;
         const frameAts=[],started=performance.now();
         const targetFrames=mode==='direct'?40:60;
@@ -119,13 +161,17 @@ try{
           render:stats(capture.renderMs.slice(10)),sync:stats(capture.syncMs.slice(10)),
           vfxUpdate:stats(capture.vfxUpdateMs.slice(10)),
           vfxPrepare:stats(capture.vfxPrepareMs.slice(10)),
+          depthCaptures:capture.depthCaptureMs.length,
+          depthCapture:stats(capture.depthCaptureMs),
           gpu:probe?{supported:probe.gpu.supported,reason:probe.gpu.reason,
             elapsed:stats(probe.gpu.samples.map(sample=>sample.ms).slice(10))}:null,
           activeEffects:world.agricultureVfx.effects.size,
           nativeVfxInstances:world.vfxLibrary.instances.size,
           rendererMemory:{...world.renderer.info.memory}};
-      },{count,kind,mode});
+      },{count,kind,mode,spellCount,spellAge});
       report.results.push(result);
+      if(screenshotDir&&(!screenshotKind||screenshotKind===kind))
+        await page.screenshot({path:`${screenshotDir}/${count}-${kind}.png`});
       if(output)await writeFile(output,JSON.stringify(report,null,2)+'\n');
       console.error(`Measured ${count} crops / ${kind}: ${result.frames} frames, ${Math.round(result.elapsedMs)} ms`);
     }
