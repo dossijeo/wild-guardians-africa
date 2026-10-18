@@ -1,0 +1,829 @@
+{
+  "kind": "screen-overlay-rendered-abba",
+  "ids": [
+    "growth",
+    "multiply",
+    "shield",
+    "critical",
+    "victory",
+    "defeat"
+  ],
+  "errors": [],
+  "complete": true,
+  "results": [
+    {
+      "id": "growth",
+      "arm": "control",
+      "frames": 60,
+      "canvas": [
+        640,
+        400
+      ],
+      "draws": 0,
+      "updateMs": {
+        "count": 50,
+        "median": 0,
+        "p95": 0,
+        "max": 0.09999999776482582
+      },
+      "paintMs": null,
+      "frameIntervalMs": {
+        "count": 49,
+        "median": 16.600000000000364,
+        "p95": 33.30000000000109,
+        "max": 66.39999999999964
+      },
+      "webglGpuMs": {
+        "count": 45,
+        "median": 16.473489,
+        "p95": 18.534531,
+        "max": 22.560885
+      },
+      "heapBefore": 388212412,
+      "heapAfter": 382686143
+    },
+    {
+      "id": "growth",
+      "arm": "effect",
+      "frames": 60,
+      "canvas": [
+        640,
+        400
+      ],
+      "draws": 30,
+      "updateMs": {
+        "count": 50,
+        "median": 0.19999999925494194,
+        "p95": 0.4000000022351742,
+        "max": 0.4000000022351742
+      },
+      "paintMs": {
+        "count": 25,
+        "median": 0.30000000074505806,
+        "p95": 0.3999999985098839,
+        "max": 0.4000000022351742
+      },
+      "frameIntervalMs": {
+        "count": 49,
+        "median": 16.700000000000728,
+        "p95": 33.20000000000073,
+        "max": 33.5
+      },
+      "webglGpuMs": {
+        "count": 45,
+        "median": 15.567968,
+        "p95": 17.757707,
+        "max": 20.126405
+      },
+      "heapBefore": 388270707,
+      "heapAfter": 403917100
+    },
+    {
+      "id": "growth",
+      "arm": "effect",
+      "frames": 60,
+      "canvas": [
+        640,
+        400
+      ],
+      "draws": 30,
+      "updateMs": {
+        "count": 50,
+        "median": 0.10000000149011612,
+        "p95": 0.30000000074505806,
+        "max": 0.6000000014901161
+      },
+      "paintMs": {
+        "count": 25,
+        "median": 0.19999999925494194,
+        "p95": 0.3999999985098839,
+        "max": 0.6000000014901161
+      },
+      "frameIntervalMs": {
+        "count": 49,
+        "median": 16.700000000000728,
+        "p95": 33.39999999999782,
+        "max": 33.400000000001455
+      },
+      "webglGpuMs": {
+        "count": 45,
+        "median": 16.545937,
+        "p95": 20.476927,
+        "max": 25.908176
+      },
+      "heapBefore": 382253112,
+      "heapAfter": 396738845
+    },
+    {
+      "id": "growth",
+      "arm": "control",
+      "frames": 60,
+      "canvas": [
+        640,
+        400
+      ],
+      "draws": 0,
+      "updateMs": {
+        "count": 50,
+        "median": 0,
+        "p95": 0,
+        "max": 0.10000000149011612
+      },
+      "paintMs": null,
+      "frameIntervalMs": {
+        "count": 49,
+        "median": 16.600000000002183,
+        "p95": 33.20000000000073,
+        "max": 33.39999999999782
+      },
+      "webglGpuMs": {
+        "count": 45,
+        "median": 15.158124,
+        "p95": 16.337916,
+        "max": 17.482655
+      },
+      "heapBefore": 402262185,
+      "heapAfter": 388624825
+    },
+    {
+      "id": "multiply",
+      "arm": "control",
+      "frames": 60,
+      "canvas": [
+        640,
+        400
+      ],
+      "draws": 0,
+      "updateMs": {
+        "count": 50,
+        "median": 0,
+        "p95": 0,
+        "max": 0.09999999776482582
+      },
+      "paintMs": null,
+      "frameIntervalMs": {
+        "count": 49,
+        "median": 16.600000000002183,
+        "p95": 33.20000000000073,
+        "max": 33.400000000001455
+      },
+      "webglGpuMs": {
+        "count": 46,
+        "median": 15.168749,
+        "p95": 17.103489,
+        "max": 19.404165
+      },
+      "heapBefore": 394162089,
+      "heapAfter": 408315827
+    },
+    {
+      "id": "multiply",
+      "arm": "effect",
+      "frames": 60,
+      "canvas": [
+        640,
+        400
+      ],
+      "draws": 30,
+      "updateMs": {
+        "count": 50,
+        "median": 0.19999999925494194,
+        "p95": 0.3999999985098839,
+        "max": 0.5
+      },
+      "paintMs": {
+        "count": 25,
+        "median": 0.20000000298023224,
+        "p95": 0.3999999985098839,
+        "max": 0.5
+      },
+      "frameIntervalMs": {
+        "count": 49,
+        "median": 16.700000000000728,
+        "p95": 33.29999999999927,
+        "max": 33.5
+      },
+      "webglGpuMs": {
+        "count": 45,
+        "median": 16.184686,
+        "p95": 19.364218,
+        "max": 23.586718
+      },
+      "heapBefore": 386046387,
+      "heapAfter": 400695328
+    },
+    {
+      "id": "multiply",
+      "arm": "effect",
+      "frames": 60,
+      "canvas": [
+        640,
+        400
+      ],
+      "draws": 30,
+      "updateMs": {
+        "count": 50,
+        "median": 0.19999999925494194,
+        "p95": 0.3999999985098839,
+        "max": 0.5
+      },
+      "paintMs": {
+        "count": 25,
+        "median": 0.29999999701976776,
+        "p95": 0.30000000074505806,
+        "max": 0.4000000022351742
+      },
+      "frameIntervalMs": {
+        "count": 49,
+        "median": 16.69999999999709,
+        "p95": 33.29999999999927,
+        "max": 33.30000000000291
+      },
+      "webglGpuMs": {
+        "count": 45,
+        "median": 15.453593,
+        "p95": 17.240104,
+        "max": 19.269895
+      },
+      "heapBefore": 406167484,
+      "heapAfter": 393162732
+    },
+    {
+      "id": "multiply",
+      "arm": "control",
+      "frames": 60,
+      "canvas": [
+        640,
+        400
+      ],
+      "draws": 0,
+      "updateMs": {
+        "count": 50,
+        "median": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "paintMs": null,
+      "frameIntervalMs": {
+        "count": 49,
+        "median": 16.600000000002183,
+        "p95": 33.10000000000218,
+        "max": 33.400000000001455
+      },
+      "webglGpuMs": {
+        "count": 45,
+        "median": 15.479634,
+        "p95": 17.005155,
+        "max": 18.960363
+      },
+      "heapBefore": 398535544,
+      "heapAfter": 384443730
+    },
+    {
+      "id": "shield",
+      "arm": "control",
+      "frames": 60,
+      "canvas": [
+        640,
+        400
+      ],
+      "draws": 0,
+      "updateMs": {
+        "count": 50,
+        "median": 0,
+        "p95": 0,
+        "max": 0.09999999776482582
+      },
+      "paintMs": null,
+      "frameIntervalMs": {
+        "count": 49,
+        "median": 16.700000000000728,
+        "p95": 33.29999999999927,
+        "max": 33.30000000000291
+      },
+      "webglGpuMs": {
+        "count": 45,
+        "median": 16.662082,
+        "p95": 21.728905,
+        "max": 27.803645
+      },
+      "heapBefore": 372375555,
+      "heapAfter": 375963977
+    },
+    {
+      "id": "shield",
+      "arm": "effect",
+      "frames": 60,
+      "canvas": [
+        640,
+        400
+      ],
+      "draws": 29,
+      "updateMs": {
+        "count": 50,
+        "median": 0,
+        "p95": 0.30000000074505806,
+        "max": 0.3999999985098839
+      },
+      "paintMs": {
+        "count": 24,
+        "median": 0.19999999925494194,
+        "p95": 0.30000000074505806,
+        "max": 0.30000000074505806
+      },
+      "frameIntervalMs": {
+        "count": 49,
+        "median": 16.69999999999709,
+        "p95": 33.20000000000073,
+        "max": 33.400000000001455
+      },
+      "webglGpuMs": {
+        "count": 45,
+        "median": 15.217343,
+        "p95": 16.475363,
+        "max": 21.746041
+      },
+      "heapBefore": 381511889,
+      "heapAfter": 369437418
+    },
+    {
+      "id": "shield",
+      "arm": "effect",
+      "frames": 60,
+      "canvas": [
+        640,
+        400
+      ],
+      "draws": 30,
+      "updateMs": {
+        "count": 50,
+        "median": 0.19999999925494194,
+        "p95": 0.30000000074505806,
+        "max": 0.30000000074505806
+      },
+      "paintMs": {
+        "count": 25,
+        "median": 0.19999999925494194,
+        "p95": 0.30000000074505806,
+        "max": 0.30000000074505806
+      },
+      "frameIntervalMs": {
+        "count": 49,
+        "median": 16.700000000000728,
+        "p95": 33.20000000000073,
+        "max": 49.79999999999927
+      },
+      "webglGpuMs": {
+        "count": 45,
+        "median": 15.671249,
+        "p95": 17.253436,
+        "max": 19.829531
+      },
+      "heapBefore": 374927462,
+      "heapAfter": 362013758
+    },
+    {
+      "id": "shield",
+      "arm": "control",
+      "frames": 60,
+      "canvas": [
+        640,
+        400
+      ],
+      "draws": 0,
+      "updateMs": {
+        "count": 50,
+        "median": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "paintMs": null,
+      "frameIntervalMs": {
+        "count": 49,
+        "median": 16.700000000000728,
+        "p95": 33.29999999999927,
+        "max": 33.400000000001455
+      },
+      "webglGpuMs": {
+        "count": 46,
+        "median": 16.56875,
+        "p95": 20.712707,
+        "max": 24.015989
+      },
+      "heapBefore": 367582322,
+      "heapAfter": 380664529
+    },
+    {
+      "id": "critical",
+      "arm": "control",
+      "frames": 60,
+      "canvas": [
+        640,
+        400
+      ],
+      "draws": 0,
+      "updateMs": {
+        "count": 50,
+        "median": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "paintMs": null,
+      "frameIntervalMs": {
+        "count": 49,
+        "median": 16.700000000000728,
+        "p95": 33.30000000000291,
+        "max": 49.900000000001455
+      },
+      "webglGpuMs": {
+        "count": 45,
+        "median": 16.70526,
+        "p95": 21.512239,
+        "max": 26.881613
+      },
+      "heapBefore": 386701121,
+      "heapAfter": 372713153
+    },
+    {
+      "id": "critical",
+      "arm": "effect",
+      "frames": 60,
+      "canvas": [
+        640,
+        400
+      ],
+      "draws": 29,
+      "updateMs": {
+        "count": 50,
+        "median": 0,
+        "p95": 0.20000000298023224,
+        "max": 0.30000000074505806
+      },
+      "paintMs": {
+        "count": 24,
+        "median": 0.19999999925494194,
+        "p95": 0.20000000298023224,
+        "max": 0.30000000074505806
+      },
+      "frameIntervalMs": {
+        "count": 49,
+        "median": 16.69999999999709,
+        "p95": 33.30000000000291,
+        "max": 33.5
+      },
+      "webglGpuMs": {
+        "count": 45,
+        "median": 16.678384,
+        "p95": 20.322343,
+        "max": 24.51427
+      },
+      "heapBefore": 378146245,
+      "heapAfter": 365214557
+    },
+    {
+      "id": "critical",
+      "arm": "effect",
+      "frames": 60,
+      "canvas": [
+        640,
+        400
+      ],
+      "draws": 27,
+      "updateMs": {
+        "count": 50,
+        "median": 0,
+        "p95": 0.19999999925494194,
+        "max": 0.30000000074505806
+      },
+      "paintMs": {
+        "count": 22,
+        "median": 0.10000000149011612,
+        "p95": 0.19999999925494194,
+        "max": 0.30000000074505806
+      },
+      "frameIntervalMs": {
+        "count": 49,
+        "median": 16.69999999999709,
+        "p95": 33.299999999995634,
+        "max": 33.5
+      },
+      "webglGpuMs": {
+        "count": 45,
+        "median": 15.053957,
+        "p95": 17.23927,
+        "max": 18.393177
+      },
+      "heapBefore": 370599789,
+      "heapAfter": 384197534
+    },
+    {
+      "id": "critical",
+      "arm": "control",
+      "frames": 60,
+      "canvas": [
+        640,
+        400
+      ],
+      "draws": 0,
+      "updateMs": {
+        "count": 50,
+        "median": 0,
+        "p95": 0,
+        "max": 0.10000000149011612
+      },
+      "paintMs": null,
+      "frameIntervalMs": {
+        "count": 49,
+        "median": 16.60000000000582,
+        "p95": 33.200000000004366,
+        "max": 33.39999999999418
+      },
+      "webglGpuMs": {
+        "count": 45,
+        "median": 15.876197,
+        "p95": 17.038228,
+        "max": 23.105989
+      },
+      "heapBefore": 389545330,
+      "heapAfter": 375185788
+    },
+    {
+      "id": "victory",
+      "arm": "control",
+      "frames": 60,
+      "canvas": [
+        640,
+        400
+      ],
+      "draws": 0,
+      "updateMs": {
+        "count": 50,
+        "median": 0,
+        "p95": 0.09999999776482582,
+        "max": 0.10000000149011612
+      },
+      "paintMs": null,
+      "frameIntervalMs": {
+        "count": 49,
+        "median": 16.69999999999709,
+        "p95": 33.200000000004366,
+        "max": 33.39999999999418
+      },
+      "webglGpuMs": {
+        "count": 45,
+        "median": 16.104583,
+        "p95": 17.649999,
+        "max": 23.12526
+      },
+      "heapBefore": 380580344,
+      "heapAfter": 393465032
+    },
+    {
+      "id": "victory",
+      "arm": "effect",
+      "frames": 60,
+      "canvas": [
+        640,
+        400
+      ],
+      "draws": 30,
+      "updateMs": {
+        "count": 50,
+        "median": 0.30000000074505806,
+        "p95": 0.5,
+        "max": 0.5
+      },
+      "paintMs": {
+        "count": 25,
+        "median": 0.3999999985098839,
+        "p95": 0.4000000022351742,
+        "max": 0.5
+      },
+      "frameIntervalMs": {
+        "count": 49,
+        "median": 16.69999999999709,
+        "p95": 33.299999999995634,
+        "max": 33.5
+      },
+      "webglGpuMs": {
+        "count": 45,
+        "median": 16.034895,
+        "p95": 18.006822,
+        "max": 19.802447
+      },
+      "heapBefore": 371273312,
+      "heapAfter": 386832282
+    },
+    {
+      "id": "victory",
+      "arm": "effect",
+      "frames": 60,
+      "canvas": [
+        640,
+        400
+      ],
+      "draws": 31,
+      "updateMs": {
+        "count": 50,
+        "median": 0.30000000074505806,
+        "p95": 0.5,
+        "max": 0.5999999977648258
+      },
+      "paintMs": {
+        "count": 26,
+        "median": 0.3999999985098839,
+        "p95": 0.5,
+        "max": 0.5
+      },
+      "frameIntervalMs": {
+        "count": 49,
+        "median": 16.700000000004366,
+        "p95": 33.299999999995634,
+        "max": 33.30000000000291
+      },
+      "webglGpuMs": {
+        "count": 45,
+        "median": 15.992759,
+        "p95": 19.258957,
+        "max": 24.230468
+      },
+      "heapBefore": 392191534,
+      "heapAfter": 361613859
+    },
+    {
+      "id": "victory",
+      "arm": "control",
+      "frames": 60,
+      "canvas": [
+        640,
+        400
+      ],
+      "draws": 0,
+      "updateMs": {
+        "count": 50,
+        "median": 0,
+        "p95": 0,
+        "max": 0.10000000149011612
+      },
+      "paintMs": null,
+      "frameIntervalMs": {
+        "count": 49,
+        "median": 16.599999999998545,
+        "p95": 33.299999999995634,
+        "max": 33.30000000000291
+      },
+      "webglGpuMs": {
+        "count": 45,
+        "median": 15.725051,
+        "p95": 19.506197,
+        "max": 24.795416
+      },
+      "heapBefore": 367168326,
+      "heapAfter": 378315189
+    },
+    {
+      "id": "defeat",
+      "arm": "control",
+      "frames": 60,
+      "canvas": [
+        640,
+        400
+      ],
+      "draws": 0,
+      "updateMs": {
+        "count": 50,
+        "median": 0,
+        "p95": 0,
+        "max": 0.10000000149011612
+      },
+      "paintMs": null,
+      "frameIntervalMs": {
+        "count": 49,
+        "median": 16.60000000000582,
+        "p95": 33.19999999999709,
+        "max": 33.30000000000291
+      },
+      "webglGpuMs": {
+        "count": 45,
+        "median": 14.975832,
+        "p95": 15.622238,
+        "max": 18.641926
+      },
+      "heapBefore": 383769993,
+      "heapAfter": 369662579
+    },
+    {
+      "id": "defeat",
+      "arm": "effect",
+      "frames": 60,
+      "canvas": [
+        640,
+        400
+      ],
+      "draws": 29,
+      "updateMs": {
+        "count": 50,
+        "median": 0,
+        "p95": 0.20000000298023224,
+        "max": 0.30000000074505806
+      },
+      "paintMs": {
+        "count": 24,
+        "median": 0.19999999925494194,
+        "p95": 0.20000000298023224,
+        "max": 0.20000000298023224
+      },
+      "frameIntervalMs": {
+        "count": 49,
+        "median": 16.700000000004366,
+        "p95": 33.299999999995634,
+        "max": 33.299999999995634
+      },
+      "webglGpuMs": {
+        "count": 45,
+        "median": 15.663697,
+        "p95": 19.021249,
+        "max": 23.885468
+      },
+      "heapBefore": 375133675,
+      "heapAfter": 361223230
+    },
+    {
+      "id": "defeat",
+      "arm": "effect",
+      "frames": 60,
+      "canvas": [
+        640,
+        400
+      ],
+      "draws": 30,
+      "updateMs": {
+        "count": 50,
+        "median": 0.09999999776482582,
+        "p95": 0.30000000074505806,
+        "max": 0.3999999985098839
+      },
+      "paintMs": {
+        "count": 25,
+        "median": 0.19999999925494194,
+        "p95": 0.30000000074505806,
+        "max": 0.3999999985098839
+      },
+      "frameIntervalMs": {
+        "count": 49,
+        "median": 16.60000000000582,
+        "p95": 33.30000000000291,
+        "max": 33.5
+      },
+      "webglGpuMs": {
+        "count": 46,
+        "median": 15.73729,
+        "p95": 16.883176,
+        "max": 24.357395
+      },
+      "heapBefore": 366592226,
+      "heapAfter": 381020186
+    },
+    {
+      "id": "defeat",
+      "arm": "control",
+      "frames": 60,
+      "canvas": [
+        640,
+        400
+      ],
+      "draws": 0,
+      "updateMs": {
+        "count": 50,
+        "median": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "paintMs": null,
+      "frameIntervalMs": {
+        "count": 49,
+        "median": 16.60000000000582,
+        "p95": 33.099999999998545,
+        "max": 66.60000000000582
+      },
+      "webglGpuMs": {
+        "count": 45,
+        "median": 14.938332,
+        "p95": 15.854166,
+        "max": 17.197238
+      },
+      "heapBefore": 387023918,
+      "heapAfter": 372553067
+    }
+  ],
+  "ready": {
+    "authority": true,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "gpuTimer": true,
+    "preloadMs": 130.19999999925494,
+    "canvas": [
+      640,
+      400
+    ]
+  }
+}
