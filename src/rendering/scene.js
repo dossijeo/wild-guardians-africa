@@ -5,6 +5,7 @@ import {LoadingSyncQueue} from './loading-sync-queue.js';
 import {initialCropCapacity} from './initial-crop-capacity.js';
 import {activeCrops} from '../simulation/active-crops.js';
 import {activeCrates} from '../simulation/active-crates.js';
+import {observeGameEvents} from '../simulation/game.js';
 import {loadingSyncWitness,loadingAwaitWitness} from './loading-sync-witness.js';
 import {waitGpuFrame} from '../../tools/experiments/wait-gpu-frame.js';
 import {waitGpuPreparation} from '../../tools/experiments/wait-gpu-preparation.js';
@@ -31,7 +32,7 @@ import {createWateringEmitter} from './watering-emitter.js';
 import {MudPatches,residentMudSurface} from './mud-patches.js';
 import {installShaderFailureGuard} from './shader-failure.js';
 import {BiomeGround} from './biome-ground.js';
-import {BlenderGroundDetails} from './blender-ground-details.js';
+import {BlenderGroundDetails,markGroundDetailEvent} from './blender-ground-details.js';
 import {refreshResidentProps,sameSuppressions} from './resident-props.js';
 import {SpellPreview} from './spell-preview.js';
 import {RenderOrigin,withRenderOrigin,renderOriginBounds} from './render-origin.js';
@@ -163,6 +164,7 @@ export class WorldScene {
     const milestone=id=>phase('load-milestone:'+id,()=>this.loadingMilestone(id));
     await phase('load-sky',()=>this.loadReady(this.sky.load()));this.toon.environment(this.sky.environmentTextures,this.sky.uniforms.uSkyYaw);this.destructionPass.environmentUniforms=this.toon.environmentUniforms;await milestone('sky');this.state=state;this.simElapsed=state.elapsed;this.nav=nav;this.destructionPass.surface=(x,z)=>nav.field.surface(x,z);this.pack=await this.loadReady(json('/content/biome-'+BIOME_IDS[state.biome]+'.json',{signal:this.loading.signal}));this.prototypes=await phase('load-biome-models',()=>this.loadReady(this.assets.biome(this.pack)));this.biomeGround=new BiomeGround();await phase('load-biome-ground',()=>this.loadReady(this.biomeGround.load(this.assets,BIOME_IDS[state.biome],this.pack.profile,this.nav.field)));if(this.biomeGround.tile.mudPatches){this.mudPatches=new MudPatches();await this.loadReady(this.mudPatches.load(this.assets,this.biomeGround.tile.mudPatches));}this.contactPrototypes=contactPrototypes(this.pack,this.prototypes);this.waterPrototypes=this.pack.assets.map(nativeAssetWater);this.fluidLighting={textures:this.sky.environmentTextures,yaw:this.sky.uniforms.uSkyYaw,uniforms:this.toon.uniforms,shadowUniforms:this.toon.shadowUniforms};this.fluidMaterial=paintedWaterMaterial(this.pack.profile.colors.water,this.state.biome==='volcanes',this.nav.field.seed,null,this.fluidLighting);await milestone('biome');
     this.groundDetails=new BlenderGroundDetails(this.assets,this.scene,BIOME_IDS[state.biome]);this.groundDetails.enabled&&=this.visualLabGroundDetails;await phase('load-ground-details',()=>this.loadReady(this.groundDetails.load()));
+    if(this.groundDetails.enabled)this.groundDetails.releaseEvents=observeGameEvents(state,event=>markGroundDetailEvent(this.groundDetails,state,event,id=>this.objects.get(id)?.position));
     this.villagePrototypes=await phase('load-village-models',()=>this.loadReady(this.assets.village(villagePayload)));this.villageTemplates=new Map([[state.culture,this.villagePrototypes]]);
     this.buildingCatalogue=(await this.loadReady(json('/content/destruction.json',{signal:this.loading.signal}))).buildings;
     await this.loadReady(Promise.all([...new Set([...state.villages.map(v=>v.culture),...state.structures.filter(s=>s.kind==='center').map(s=>centerCulture(s,state))])].map(culture=>this.ensureBuilding(culture))));await milestone('buildings');
@@ -550,6 +552,7 @@ export class WorldScene {
   }
   sync(dt) {
     const s=this.state;if(!s||!this.cropModels)return;
+    this.groundDetails?.flush(this.nav.field,s);
     this.prepareUpcomingAnimalRigs(s);
     const desired=new Set();
     for(const v of s.villages){desired.add(v.id);if(!this.objects.has(v.id)){const mesh=this.villageMesh(v);this.objects.set(v.id,mesh);this.scene.add(mesh);this.cameraVolumesDirty=true;this.cameraDirtyEntities?.set(v.id,v);}}

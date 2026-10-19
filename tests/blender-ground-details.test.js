@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import * as THREE from 'three';
 import {TerrainField} from '../src/world/terrain.js';
-import {BlenderGroundDetails} from '../src/rendering/blender-ground-details.js';
+import {BlenderGroundDetails,markGroundDetailEvent} from '../src/rendering/blender-ground-details.js';
 import {groundSample417} from '../src/rendering/ground-mask.js';
 
 const biomes=['savanna','grand_river','mangrove','volcanoes','canyons','desert'];
@@ -42,4 +42,71 @@ test('3D biome details are deterministic and release chunk instances without acc
     d.geometry.dispose();
     d.material.dispose();
   }
+});
+
+test('confirmed crop and wall events refresh only nearby resident chunks',()=>{
+  const field=new TerrainField({seed:'712',biome:'savanna',river:true,relief:1});
+  const d=details('savanna'),game={plants:[],structures:[],villages:[]};
+  d.chunk(0,0,field,game);
+  d.chunk(1,0,field,game);
+  const original=d.chunks.get('0,0');
+  const other=d.chunks.get('1,0');
+  const [site,wallSite]=original.filter(p=>Math.abs(p.x)<10&&Math.abs(p.z)<10);
+  assert.ok(site&&wallSite);
+
+  const crop={id:'crop-1',alive:true,x:site.x,z:site.z};
+  game.plants.push(crop);
+  markGroundDetailEvent(d,game,{type:'CropPlaced',targetId:crop.id});
+  assert.deepEqual([...d.dirtyChunks],['0,0']);
+  d.flush(field,game);
+  assert.ok(d.chunks.get('0,0').every(p=>(p.x-crop.x)**2+(p.z-crop.z)**2>=1.8**2));
+  assert.equal(d.chunks.get('1,0'),other,'distant chunk was not regenerated');
+  assert.equal(d.refreshStats.candidates,576);
+
+  crop.alive=false;
+  markGroundDetailEvent(d,game,{type:'CropPicked',targetId:crop.id});
+  d.flush(field,game);
+  assert.deepEqual(d.chunks.get('0,0'),original,'harvest restores deterministic detail');
+
+  const wall={id:'wall-1',kind:'wall',status:'intact',x:wallSite.x,z:wallSite.z};
+  game.structures.push(wall);
+  markGroundDetailEvent(d,game,{type:'WallChainBuilt',targetId:wall.id,count:1});
+  d.flush(field,game);
+  assert.ok(d.chunks.get('0,0').every(p=>(p.x-wall.x)**2+(p.z-wall.z)**2>=1.45**2));
+  game.structures=[];
+  markGroundDetailEvent(d,game,{type:'WallRemoved',targetId:wall.id},()=>wall);
+  d.flush(field,game);
+  assert.deepEqual(d.chunks.get('0,0'),original,'demolition restores deterministic detail');
+  assert.equal(d.chunks.get('1,0'),other);
+  const center={id:'center-1',kind:'center',status:'intact',x:site.x,z:site.z};
+  game.structures.push(center);
+  markGroundDetailEvent(d,game,{type:'PlacementCommitted',targetId:center.id});
+  d.flush(field,game);
+  assert.ok(d.chunks.get('0,0').every(p=>(p.x-center.x)**2+(p.z-center.z)**2>=9));
+  const restored=details('savanna');
+  restored.chunk(0,0,field,game);
+  assert.deepEqual(restored.chunks.get('0,0'),d.chunks.get('0,0'),'restored state needs no replay of saved events');
+  restored.dispose();restored.geometry.dispose();restored.material.dispose();
+  d.dispose();d.geometry.dispose();d.material.dispose();
+});
+
+test('multiple changes in one frame coalesce, while non-topological damage is ignored',()=>{
+  const field=new TerrainField({seed:'712',biome:'savanna',river:true,relief:1});
+  const d=details('savanna'),game={plants:[],structures:[],villages:[]};
+  d.chunk(0,0,field,game);
+  const sites=d.chunks.get('0,0').filter(p=>Math.abs(p.x)<10&&Math.abs(p.z)<10);
+  game.structures=sites.slice(0,3).map((p,i)=>({id:`wall-${i}`,kind:'wall',status:'intact',x:p.x,z:p.z}));
+  markGroundDetailEvent(d,game,{type:'WallChainBuilt',targetId:'wall-0',count:3});
+  markGroundDetailEvent(d,game,{type:'RepairApplied',targetId:'wall-0',repair:{previousStatus:'intact'}});
+  assert.equal(d.dirtyChunks.size,1);
+  d.flush(field,game);
+  assert.equal(d.refreshStats.batches,1);
+  assert.equal(d.refreshStats.chunks,1);
+  assert.equal(d.refreshStats.candidates,576);
+  assert.equal(d.flush(field,game),0,'idle frames do no resampling');
+  game.structures[0].status='ruined';
+  markGroundDetailEvent(d,game,{type:'StructureRuined',targetId:'wall-0'});
+  d.flush(field,game);
+  assert.equal(d.refreshStats.chunks,2);
+  d.dispose();d.geometry.dispose();d.material.dispose();
 });

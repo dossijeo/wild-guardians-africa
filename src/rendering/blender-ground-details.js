@@ -17,11 +17,31 @@ function globalDensity(biome,cover,patch,moisture,meso){
   }
 }
 
+// Confirmed game events are the only source of occupancy invalidations. Saved
+// event history is never replayed: loading a scene samples the restored state.
+export function markGroundDetailEvent(details,state,event,previousPosition=()=>null){
+  if(!details?.enabled)return;
+  const mark=point=>{if(point)details.markDirtyAt(point.x,point.z);};
+  if(['CropPlaced','CropPicked','CropDestroyed'].includes(event.type)){
+    mark(state.plants.find(plant=>plant.id===(event.targetId??event.cropId)));
+  }else if(event.type==='PlacementCommitted'){
+    mark(state.structures.find(structure=>structure.id===event.targetId)??event.presentation);
+  }else if(event.type==='WallChainBuilt'){
+    const first=state.structures.findIndex(structure=>structure.id===event.targetId);
+    if(first<0)mark(event.presentation);
+    else for(const structure of state.structures.slice(first,first+event.count))mark(structure);
+  }else if(event.type==='WallRemoved'){
+    mark(previousPosition(event.targetId)??state.structures.find(structure=>structure.id===event.replacedBy));
+  }else if(event.type==='StructureRuined'||event.type==='RepairApplied'&&event.repair?.previousStatus==='ruined'){
+    mark(state.structures.find(structure=>structure.id===event.targetId));
+  }else if(event.type==='VillageFounded')mark(event);
+}
+
 // A visual-only experiment. Blender authors the meshes; JS only chooses places.
 // Candidate locations are stable per chunk, and the regular resident-chunk
 // lifecycle provides culling without one Object3D per tuft.
 export class BlenderGroundDetails{
-  constructor(assets,scene,biome){this.assets=assets;this.scene=scene;this.biome=biome;const variant=new URLSearchParams(globalThis.location?.search??'').get('visualLab');this.global=variant==='global-grass';this.enabled=this.global||biome==='savanna';this.polyHaven=['ph-grass','layer-grass'].includes(variant);this.sculpted=this.global||variant==='layer-grass-sculpted';this.detailed=this.polyHaven||this.sculpted;this.count=0;this.chunks=new Map();}
+  constructor(assets,scene,biome){this.assets=assets;this.scene=scene;this.biome=biome;const variant=new URLSearchParams(globalThis.location?.search??'').get('visualLab');this.global=variant==='global-grass';this.enabled=this.global||biome==='savanna';this.polyHaven=['ph-grass','layer-grass'].includes(variant);this.sculpted=this.global||variant==='layer-grass-sculpted';this.detailed=this.polyHaven||this.sculpted;this.count=0;this.chunks=new Map();this.dirtyChunks=new Set();this.refreshStats={batches:0,chunks:0,candidates:0,totalMs:0,maxMs:0};}
   async load(){
     if(!this.enabled)return;
     const gltf=await this.assets.model(this.sculpted?`/assets/visual-lab/${this.biome==='savanna'?'savanna':nameFor[this.biome]}-sculpted-ground-detail.glb`:this.polyHaven?'/assets/visual-lab/savanna-ph-compact.glb':`/assets/visual-lab/${nameFor[this.biome]}-ground-detail.glb`);
@@ -44,7 +64,13 @@ export class BlenderGroundDetails{
   }
   chunk(cx,cz,field,state){
     if(!this.geometry)return;
-    const positions=[],seed=field.seed,originX=cx*48,originZ=cz*48,key=cx+','+cz;
+    const key=cx+','+cz;
+    this.chunks.set(key,this.sampleChunk(cx,cz,field,state));
+    this.dirtyChunks.delete(key);
+    this.rebuild();
+  }
+  sampleChunk(cx,cz,field,state){
+    const positions=[],seed=field.seed,originX=cx*48,originZ=cz*48;
     const localPlants=state.plants.filter(p=>p.alive!==false&&Math.abs(p.x-originX)<31&&Math.abs(p.z-originZ)<31);
     const blockers=[...localPlants,...state.structures.filter(s=>s.status!=='ruined'),...state.villages]
       .filter(p=>Math.abs(p.x-originX)<31&&Math.abs(p.z-originZ)<31);
@@ -63,8 +89,35 @@ export class BlenderGroundDetails{
       if(blockers.some(p=>d2(x,z,p)<(p.kind==='wall'?1.45:p.kind==='center'?9:p.buildings?80:1.8)))continue;
       positions.push({x,z,bits,y:field.surface(x,z)+.012});
     }
-    this.chunks.set(key,positions);
+    return positions;
+  }
+  markDirtyAt(x,z){
+    if(!this.geometry||!Number.isFinite(x)||!Number.isFinite(z))return;
+    // Candidate positions lie within 24 m of each chunk centre. A 10 m
+    // margin covers the largest village/centre clearance at chunk seams.
+    for(let cx=Math.ceil((x-34)/48);cx<=Math.floor((x+34)/48);cx++)
+      for(let cz=Math.ceil((z-34)/48);cz<=Math.floor((z+34)/48);cz++){
+        const key=cx+','+cz;
+        if(this.chunks.has(key))this.dirtyChunks.add(key);
+      }
+  }
+  flush(field,state){
+    if(!this.dirtyChunks.size)return 0;
+    const start=performance.now(),keys=[...this.dirtyChunks].sort();
+    this.dirtyChunks.clear();
+    for(const key of keys){
+      if(!this.chunks.has(key))continue;
+      const [cx,cz]=key.split(',').map(Number);
+      this.chunks.set(key,this.sampleChunk(cx,cz,field,state));
+      this.refreshStats.chunks++;
+      this.refreshStats.candidates+=576;
+    }
     this.rebuild();
+    const duration=performance.now()-start;
+    this.refreshStats.batches++;
+    this.refreshStats.totalMs+=duration;
+    this.refreshStats.maxMs=Math.max(this.refreshStats.maxMs,duration);
+    return duration;
   }
   rebuild(){
     if(!this.mesh)return;
@@ -88,7 +141,8 @@ export class BlenderGroundDetails{
     this.count=needed;
   }
   release(key){
+    this.dirtyChunks.delete(key);
     if(this.chunks.delete(key))this.rebuild();
   }
-  dispose(){if(this.mesh){this.scene.remove(this.mesh);this.mesh.dispose();this.mesh=null;}this.chunks.clear();this.count=0;}
+  dispose(){this.releaseEvents?.();if(this.mesh){this.scene.remove(this.mesh);this.mesh.dispose();this.mesh=null;}this.chunks.clear();this.dirtyChunks.clear();this.count=0;}
 }
