@@ -34,7 +34,13 @@ export function prepareExteriorDetour(start,radius,box,nav,witness){
   .sort((a,b)=>Math.hypot(a.x-start.x,a.z-start.z)-Math.hypot(b.x-start.x,b.z-start.z));
  for(const end of ends.slice(0,EXTERIOR_DETOUR_LIMITS.paths)){
   if(!nav.walkable(end.x,end.z,radius,null,false)||!witness(end,radius,box,nav))continue;
-  const path=nav.approachPath(start,end,radius,16);
+  let path;
+  try{path=nav.approachPath(start,end,radius,16);}catch(error){
+   // An optional exterior certificate may cross an unloaded sector. It has
+   // not proved a blocked route; keep looking for a resident, positive one.
+   if(error?.name!=='SpatialChunkUnavailable')throw error;
+   continue;
+  }
   if(!path?.length||Math.hypot(path.at(-1).x-end.x,path.at(-1).z-end.z)>1e-7)continue;
   const points=[start,...path];
   if(!points.every(p=>nav.walkable(p.x,p.z,radius,null,false))||!points.slice(1).every((p,i)=>nav.segmentClear(points[i],p,radius,null,false)))continue;
