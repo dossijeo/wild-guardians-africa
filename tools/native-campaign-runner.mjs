@@ -53,7 +53,7 @@ export function syncNativeCampaignRaidView(state,nav,previousCenter){
  }
  return context;
 }
-export async function simulateNativeCampaign({days=100,strategy='good',labourPolicy='legacy',profile='olderFemale',mixed=true,middayHiring=false,plantsPerWorker=12,defend=false,wallSpendingEnabled=true,reserveLabourGrowth=true,reserveMaintenance=true,burstPlanting=false,cameraEntry=true,defensePolicy='expanding',nativeEvidence=true,decisionProfile=false,preparedWallQuotes=true,spatialAdvice=null,nativeIntents=false,defenseEventDriven=nativeIntents,nativeWallPlans=false,onDay,onTick,onDecision,openingFactory=createOpeningWorld,entryDriverFactory=nav=>new NativeCampaignEntryDriver(nav),reloadRaids=true,...world}={}){
+export async function simulateNativeCampaign({days=100,strategy='good',labourPolicy='legacy',profile='olderFemale',mixed=true,middayHiring=false,plantsPerWorker=12,defend=false,wallSpendingEnabled=true,reserveLabourGrowth=true,reserveMaintenance=true,burstPlanting=false,cameraEntry=true,defensePolicy='expanding',nativeEvidence=true,decisionProfile=false,preparedWallQuotes=true,spatialAdvice=null,nativeIntents=false,defenseEventDriven=nativeIntents,nativeWallPlans=false,onDay,onTick,onBeforeTick,onDecision,openingFactory=createOpeningWorld,entryDriverFactory=nav=>new NativeCampaignEntryDriver(nav),reloadRaids=true,...world}={}){
  if(!Number.isSafeInteger(days)||days<1||days>180)throw Error('Native protocol permits1–180 days only');
  if(!Number.isSafeInteger(plantsPerWorker)||plantsPerWorker<1)throw new Error('Plants per worker must be a positive integer');
  const protocol=campaignProtocolForLabour(labourPolicy),q4=labourPolicy==='q4',labourHistory=[],labourReasons={};
@@ -281,6 +281,7 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
     pendingTasks:s.tasks.length}));
    raidEvidence.observe(s);
    const tickStart=s.elapsed,tickTime=s.time;
+   onBeforeTick?.(s,nav,{dt,session:opening.session,loaded:opening.loaded});
    wallStart=performance.now();
    Game.tick(s,dt,nav);evidence?.finishDecision(s);
    const tickStepMs=performance.now()-wallStart;

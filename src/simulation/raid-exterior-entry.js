@@ -95,28 +95,39 @@ function relevantWallRaidFormation(specs,bounds,nav,box){
  if(!box||!nav.raidView||!nav.spatialRelevantWallApproachSides||
     !nav.spatialExteriorEdge||!nav.spatialRouteStatus)return null;
  const radius=Math.max(...specs.map(spec=>spec.radius)),
-   sides=nav.spatialRelevantWallApproachSides(nav.raidView.eye,radius)
-     .sort((a,b)=>distance(a,nav.raidView.eye)-
-       distance(b,nav.raidView.eye)||a.wallId-b.wallId||a.x-b.x||a.z-b.z);
+   order=(a,b)=>distance(a,nav.raidView.eye)-
+     distance(b,nav.raidView.eye)||a.wallId-b.wallId||a.x-b.x||a.z-b.z,
+   relevant=nav.spatialRelevantWallApproachSides(nav.raidView.eye,radius)
+     .sort(order);
  const nativeWitness=(point,r,wallBox)=>
    !!nav.spatialExteriorEdge(point,r,wallBox);
  const routeStatus=createWallRouteWitness(nav);
- for(const side of sides.slice(0,12)){
-  const edge=nav.spatialExteriorEdge(side,radius,box);
-  if(!edge)continue;
-  const proof=prepareExteriorDetour(side,radius,box,nav,nativeWitness,
-    [edge]);
-  if(!proof)continue;
-  const candidate=detourRaidFormation(proof,specs,bounds,nav);
-  if(!candidate||!exteriorGroupWitness(candidate,specs,box,nav,
-    nativeWitness))continue;
-  if(!candidate.entries.every((point,index)=>
-    routeStatus(point,side,specs[index].radius)==='found'))
-    continue;
-  return {...candidate,wallOpportunity:{wallId:side.wallId,
-    groupId:side.groupId,x:side.x,z:side.z}};
- }
- return null;
+ const tried=new Set();
+ // The camera can be in a different native region from the arriving animals.
+ // In that case relevance from its eye excludes every attackable exterior
+ // face. The native wall index is a bounded fallback; every birth still needs
+ // an exterior witness and its own positive route to the chosen face.
+ const trySides=sides=>{
+  for(const side of sides){
+   const key=`${side.wallId}:${side.x}:${side.z}`;
+   if(tried.has(key))continue;tried.add(key);
+   const edge=nav.spatialExteriorEdge(side,radius,box);
+   if(!edge)continue;
+   const proof=prepareExteriorDetour(side,radius,box,nav,nativeWitness,
+     [edge]);
+   if(!proof)continue;
+   const candidate=detourRaidFormation(proof,specs,bounds,nav);
+   if(!candidate||!exteriorGroupWitness(candidate,specs,box,nav,
+     nativeWitness))continue;
+   if(!candidate.entries.every((point,index)=>
+     routeStatus(point,side,specs[index].radius)==='found'))continue;
+   return {...candidate,wallOpportunity:{wallId:side.wallId,
+     groupId:side.groupId,x:side.x,z:side.z}};
+  }
+  return null;
+ };
+ return trySides(relevant.slice(0,12))??
+   trySides(nav.spatialWallApproachSides?.(radius)?.sort(order).slice(0,12)??[]);
 }
 function localView(nav,eye,focus){const local=Object.create(nav);local.raidView={eye,target:focus};return local;}
 function formation(state,specs,bounds,nav,camera,eye,focus,dx,dz,box,radius,witness=exteriorRaidWitness){
