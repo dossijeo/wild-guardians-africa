@@ -279,3 +279,25 @@ Both reproduced the exact serialized final-state SHA-256 from the earlier
 route-proof runs, with no zero-contact raids: 230 contacts in Sabana and 182
 in Manglares from night 6 onward. These unchanged workloads are smoke and
 compatibility checks, not an ABBA benchmark of the new fallback.
+
+### Cause of the remaining late zero-contact waves
+
+A second deterministic run captured the [waiting night-17
+state](desierto123-partial-d17-waiting-state.json.gz) at time 515. The wave
+was born around `(-19.65, -22)` in native weak region 4. Its first warthog's
+crop plan returned `unknown` with zero route queries, and the wall plan
+returned `unknown` with zero candidates. From `(95, 20)` in region 5 of the
+**same saved world**, the wall plan instead returned `structure-1353` with
+one candidate and one successful route query. The compact
+[comparison](desierto123-partial-d17-region-probe.json) records both results.
+
+The late-game defect is therefore primarily an **entry-region selection**
+problem. Being exterior to the defense does not establish access to the
+crop-facing walls. The current entry selector can reject a birth with no
+reachable wall, then return that same birth if its alternative formation
+fails. More wall-query caching would only repeat the wrong strategic question
+faster. A proper fix must select or retain a birth component with a positive
+route to a relevant attack opportunity for the whole wave, without treating
+unknown connectivity as a blocked path or creating animals inside a closed
+defense. Until that behavior is demonstrated over complete raids, this
+native partial-wall integration remains experimental.

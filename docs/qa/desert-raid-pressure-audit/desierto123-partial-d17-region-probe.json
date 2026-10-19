@@ -1,0 +1,84 @@
+{
+  "day": 17,
+  "time": 515.0000000000489,
+  "wallBox": [
+    72.34443650813895,
+    -15.72,
+    97.72,
+    16.719885625154735
+  ],
+  "far": {
+    "actor": "animal-5767",
+    "position": {
+      "x": -20,
+      "z": -22,
+      "region": 4
+    },
+    "crop": {
+      "status": "unknown",
+      "regionQueries": 7,
+      "routeQueries": 0
+    },
+    "wall": {
+      "status": "unknown",
+      "candidatesExamined": 0,
+      "routeQueries": 0
+    },
+    "choice": "unknown",
+    "relevantWalls": [],
+    "portalCount": 6
+  },
+  "near": {
+    "actor": "animal-5767",
+    "position": {
+      "x": 95,
+      "z": 20,
+      "region": 5
+    },
+    "crop": {
+      "status": "unknown",
+      "regionQueries": 7,
+      "routeQueries": 0
+    },
+    "wall": {
+      "status": "found",
+      "targetId": "structure-1353",
+      "candidatesExamined": 1,
+      "routeQueries": 1
+    },
+    "choice": {
+      "id": "structure-1353",
+      "kind": "wall",
+      "native": true,
+      "approach": {
+        "id": "native-approach-structure-1353",
+        "x": 95.05764501987818,
+        "z": 13.657645019878172
+      }
+    },
+    "relevantWalls": [
+      {
+        "id": 1353,
+        "x": 95.35764501987818,
+        "z": 13.357645019878172,
+        "groupId": 5458,
+        "route": "found"
+      },
+      {
+        "id": 1353,
+        "x": 95.05764501987818,
+        "z": 13.657645019878172,
+        "groupId": 5458,
+        "route": "found"
+      },
+      {
+        "id": 1353,
+        "x": 95.65764501987817,
+        "z": 13.057645019878171,
+        "groupId": 5458,
+        "route": "found"
+      }
+    ],
+    "portalCount": 6
+  }
+}
