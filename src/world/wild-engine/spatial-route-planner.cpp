@@ -145,16 +145,35 @@ void shortenOneCorner(Point start,Point end){
     original+=distance(previous,next);previous=next;
   }
   if(original<direct*1.5f||original-direct<2.f)return;
-  Point best{};float bestLength=original;
+  // A long sector route can have hundreds of grid waypoints. Sweeping both
+  // continuous segments for every waypoint makes shortening quadratic in
+  // route length, even when a wall prevents every shortcut. Rank by the
+  // cheap geometric lower bound, then physically validate a bounded set.
+  // Sixteen preserves useful alternate corners beside structures while
+  // avoiding a sweep for every grid step of a long route.
+  struct Candidate {Point corner;float length;};
+  constexpr size_t maxShortcutCandidates=16;
+  std::array<Candidate,maxShortcutCandidates> candidates{};
+  size_t count=0;
   for(size_t at=0;at+2<out.points.size();at+=2){
     const Point corner{out.points[at],out.points[at+1]};
     const float length=distance(start,corner)+distance(corner,end);
-    if(length>=bestLength-0.01f||!clearWorld(start,corner)||
-       !clearWorld(corner,end))continue;
-    best=corner;bestLength=length;
+    if(length>=original-0.01f)continue;
+    size_t index=0;
+    while(index<count&&candidates[index].length<=length)index++;
+    if(index==candidates.size())continue;
+    if(count<candidates.size())count++;
+    for(size_t move=count-1;move>index;move--)
+      candidates[move]=candidates[move-1];
+    candidates[index]={corner,length};
   }
-  if(bestLength<original-0.01f)
-    out.points={best.x,best.z,end.x,end.z};
+  for(size_t index=0;index<count;index++){
+    const Candidate& choice=candidates[index];
+    if(!clearWorld(start,choice.corner)||
+       !clearWorld(choice.corner,end))continue;
+    out.points={choice.corner.x,choice.corner.z,end.x,end.z};
+    return;
+  }
 }
 }
 
