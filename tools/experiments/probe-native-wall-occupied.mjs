@@ -193,5 +193,6 @@ try{
     }
   }
   process.stdout.write(JSON.stringify({fixture,day:state.day,time:state.time,
+    wallBox,activeBounds:nav.activeBounds,
     rows,selection:nav.raidSelectionStats},null,2)+'\n');
 }finally{session.dispose();}

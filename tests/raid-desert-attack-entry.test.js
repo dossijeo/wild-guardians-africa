@@ -59,7 +59,7 @@ test('Desert/123 night 10 uses a native-reachable exterior attack side',()=>{
   }finally{session.dispose();}
 });
 
-test('Desert/123 night 17 exposes a partial crop-facing wall without certifying a raid entry',()=>{
+test('Desert/123 night 17 finds the winding exterior component without changing the raid',()=>{
   const raw=readFileSync(new URL(
     '../docs/qa/desert-raid-pressure-audit/desierto123-d17-waiting-state.json.gz',
     import.meta.url));
@@ -109,8 +109,21 @@ test('Desert/123 night 17 exposes a partial crop-facing wall without certifying 
     assert(distant.length>0);
     assert(distant.every(side=>nav.spatialRouteStatus(farStart,side,
       animal.radius)!=='found'));
+    const box=raidWallEnvelope(state,nav),bounds=nav.activeBounds;
+    const profile={worker:false,species:animal.species};
+    assert.equal(session.actorExteriorRegionWitness(attackStart,bounds,box,
+      profile),1);
+    const edge=session.actorExteriorRegionEdge(attackStart,bounds,box,
+      profile);
+    assert(edge);
+    assert.equal(nav.spatialRouteStatus(attackStart,edge,animal.radius),
+      'found');
+    assert.equal(exteriorRaidWitness(attackStart,animal.radius,box,nav),
+      false,'the current raid policy still rejects this winding component');
+    assert.notEqual(nav.spatialRouteStatus(farStart,attackStart,animal.radius),
+      'found');
+    assert.equal(serialize(state),before);
     assert.equal(wasm.lazy_route_revision(),revision);
     assert.equal(wasm.nav_intent_last_sequence(),sequence);
-    assert.equal(serialize(state),before);
   }finally{session.dispose();}
 });

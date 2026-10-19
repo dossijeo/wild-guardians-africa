@@ -369,8 +369,13 @@ export function createSpatialNavigationMovement(session,state){
     }
     return false;
   };
+  view.spatialExteriorEdge=(point,radius,wallBox)=>
+    view.activeBounds?session.actorExteriorRegionEdge(point,
+      view.activeBounds,wallBox,profile(radius,false,null)):null;
   view.spatialWallApproachSides=radius=>
     session.actorWallApproachSides(profile(radius,false,null));
+  view.spatialRelevantWallApproachSides=(point,radius)=>
+    session.actorRelevantWallApproachSides(point,profile(radius,false,null));
   view.spatialRouteStatus=(start,end,radius)=>
     session.actorRouteStatus(start,end,profile(radius,false,null));
   view.setActiveBounds=bounds=>{

@@ -171,3 +171,45 @@ took 63.57 and 62.85 seconds respectively; this pair is a compatibility check,
 not evidence of a speed gain. The new API is currently used only by frozen QA,
 not by ordinary raids. The existing route-proven entry prototype still needs
 an exterior birth that can reach a **relevant** wall for the entire wave.
+
+## Winding exterior component, rejected entry trial
+
+The night-17 save revealed why four projected boundary points are insufficient.
+From `(95, 20)`, the warthog can reach 14 resident-boundary points in weak
+region 6; its historical birth at `(39, -67.65)` reaches 15 points in weak
+region 0. The first position has a native route to the crop-facing side of
+wall `structure-5123`; the historical birth has no proven route to the ten
+relevant wall sides returned for it. Neither the wall AABB nor the existence
+of *some* boundary route identifies the right exterior component.
+
+An isolated, read-only `spatial_exterior_reachable` query now tests resident
+boundary candidates in the selected animal profile, prunes by the native weak
+region, and requires a complete native route before returning a positive
+certificate and boundary point. It returns `unknown` separately from a known
+negative. The frozen night-17 test proves the `(95, 20)` certificate, its
+route to the returned edge, and that a query leaves the serialized game state,
+topology revision, and intent sequence unchanged. The ordinary raid policy
+does not yet consume this certificate.
+
+A trial that used the certificate for raid entry finished 20 nights but did
+not solve the pressure defect. Compared with the read-only control, the
+trial spent 124.31 instead of 62.85 seconds in total, 77.37 instead of 48.60
+seconds in `Game.tick`, and 38.79 instead of 6.46 seconds in virtual-player
+decisions. The two campaigns diverged on day 9, so those timings combine
+algorithmic and workload differences; they do **not** isolate the cost of the
+native query. Nights 10–20 had 32 wall hits and seven zero-contact raids in
+the trial, versus 58 wall hits and five zero-contact raids in the control.
+The trial ended day 20 with 21 living crops and 2,244 coins, versus 15 and
+1,428 in the control. Better farm survival caused by fewer attacks is not a
+valid balance improvement. The entry integration was removed, and its
+[full evidence](desierto123-exterior-trial-20.json.gz) is retained.
+
+With the query left disconnected from ordinary raids, the repeated
+[20-night campaign](desierto123-exterior-readonly-20.json.gz) completed in
+64.53 seconds. Every daily crop and money count and the final serialized
+state SHA-256 `0912f9d9e6958fe89271a3d04a4e70197c5019a5dbebeeb51ee3563c10eced97`
+matched the prior control. The 1.67-second wall-time difference between two
+runs is not evidence of a speed change. Before adopting an exterior entry,
+it must place the entire wave where individual animals can reach meaningful
+targets and make contact during the actual raid, then pass sustained workload
+and runtime comparisons.

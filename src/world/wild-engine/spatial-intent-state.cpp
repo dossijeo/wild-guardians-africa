@@ -152,6 +152,7 @@ struct IntentState {
   uint64_t wallRevision=0,wallPortalBuilds=0;
   std::vector<double> perimeterRows;
   std::vector<double> relevantWallRows;
+  std::array<double,2> exteriorEdge{};
   std::vector<double> intentChanges;
   std::array<double,10> intentResult{};
   uint32_t session=0;
@@ -747,6 +748,69 @@ int nav_intent_relevant_wall_sides(double startX,double startZ,double radius){
 const double* nav_intent_relevant_wall_sides_ptr(){
   return state().relevantWallRows.data();
 }
+// Positive exterior certificate for irregular defenses. The source need not
+// be outside the walls' AABB: a valid native path to a resident-boundary site
+// beyond that AABB proves it is in an exterior component. Weak regions prune
+// impossible boundary destinations; the final route remains authoritative.
+// 1 = found, 0 = no known route, -1 = unresolved or invalid geometry.
+int spatial_exterior_reachable(double startX,double startZ,double radius,
+    double minX,double minZ,double maxX,double maxZ,
+    double wallMinX,double wallMinZ,double wallMaxX,double wallMaxZ){
+  IntentState& s=state();
+  s.exteriorEdge={std::numeric_limits<double>::quiet_NaN(),
+    std::numeric_limits<double>::quiet_NaN()};
+  if(!coordinate(startX)||!coordinate(startZ)||!std::isfinite(radius)||
+     radius<=0||radius>2||lazy_selected_context()==1||
+     !coordinate(minX)||!coordinate(minZ)||!coordinate(maxX)||
+     !coordinate(maxZ)||!coordinate(wallMinX)||!coordinate(wallMinZ)||
+     !coordinate(wallMaxX)||!coordinate(wallMaxZ)||
+     minX>=maxX||minZ>=maxZ||wallMinX>=wallMaxX||
+     wallMinZ>=wallMaxZ)return -1;
+  const double inset=radius+2;
+  if(maxX-minX<=2*inset||maxZ-minZ<=2*inset)return -1;
+  std::set<int> origins;bool unknown=false;
+  for(int x:{int(std::floor(startX)),int(std::ceil(startX))})
+    for(int z:{int(std::floor(startZ)),int(std::ceil(startZ))}){
+      if(!spatial_local_clear(float(startX),float(startZ),float(x),float(z)))
+        continue;
+      const int region=lazy_weak_region(x,z);
+      if(region==-1)unknown=true;
+      else if(region>=0)origins.insert(region);
+    }
+  if(origins.empty())return -1;
+  struct Edge {double distance,x,z;};
+  std::vector<Edge> edges;
+  const auto add=[&](double x,double z){
+    if(!(x-radius>wallMaxX||x+radius<wallMinX||
+         z-radius>wallMaxZ||z+radius<wallMinZ))return;
+    if(!spatial_local_clear(float(x),float(z),float(x),float(z)))return;
+    const int region=lazy_weak_region(int(std::round(x)),int(std::round(z)));
+    if(region==-1){unknown=true;return;}
+    if(!origins.count(region))return;
+    edges.push_back({std::hypot(x-startX,z-startZ),x,z});
+  };
+  const double loX=minX+inset,hiX=maxX-inset;
+  const double loZ=minZ+inset,hiZ=maxZ-inset;
+  const double stepX=std::max(8.0,(hiX-loX)/128);
+  const double stepZ=std::max(8.0,(hiZ-loZ)/128);
+  for(double x=loX;x<hiX;x+=stepX){add(x,loZ);add(x,hiZ);}
+  add(hiX,loZ);add(hiX,hiZ);
+  for(double z=loZ;z<hiZ;z+=stepZ){add(loX,z);add(hiX,z);}
+  add(loX,hiZ);add(hiX,hiZ);
+  std::sort(edges.begin(),edges.end(),[](const Edge& a,const Edge& b){
+    if(a.distance!=b.distance)return a.distance<b.distance;
+    if(a.x!=b.x)return a.x<b.x;
+    return a.z<b.z;
+  });
+  for(const Edge& edge:edges){
+    const int count=spatial_world_route_cached(float(startX),float(startZ),
+      float(edge.x),float(edge.z));
+    if(count>0){s.exteriorEdge={edge.x,edge.z};return 1;}
+    if(count<0)unknown=true;
+  }
+  return unknown?-1:0;
+}
+const double* spatial_exterior_edge_ptr(){return state().exteriorEdge.data();}
 // Return only the first wall crossing from the animal's weak region toward a
 // sealed crop group. This is a read-only candidate query; the physical route,
 // approach lease and target priority still need validation before adoption.

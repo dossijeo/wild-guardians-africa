@@ -194,6 +194,31 @@ export function createSpatialGameSession(module,state,streamOptions){
       wallId:rows[index*5],region:rows[index*5+1],
       x:rows[index*5+3],z:rows[index*5+4]}));
   }
+  function actorRelevantWallApproachSides(point,options){
+    const profile=actorProfile(options);
+    if(profile.worker)return [];
+    const wasm=core.wasm,count=wasm.nav_intent_relevant_wall_sides(
+      point.x,point.z,profile.radius);
+    if(count<0)return [];
+    const rows=new Float64Array(wasm.memory.buffer,
+      wasm.nav_intent_relevant_wall_sides_ptr(),count*4);
+    return Array.from({length:count},(_,index)=>({
+      wallId:rows[index*4],x:rows[index*4+1],z:rows[index*4+2],
+      groupId:rows[index*4+3]}));
+  }
+  function actorExteriorRegionWitness(point,bounds,wallBox,options){
+    const profile=actorProfile(options);
+    if(profile.worker)return -1;
+    return core.wasm.spatial_exterior_reachable(point.x,point.z,
+      profile.radius,...bounds,...wallBox);
+  }
+  function actorExteriorRegionEdge(point,bounds,wallBox,options){
+    if(actorExteriorRegionWitness(point,bounds,wallBox,options)!==1)
+      return null;
+    const wasm=core.wasm,edge=new Float64Array(wasm.memory.buffer,
+      wasm.spatial_exterior_edge_ptr(),2);
+    return {x:edge[0],z:edge[1]};
+  }
   function actorRouteStatus(start,end,options){
     actorProfile(options);
     const count=core.wasm.spatial_world_route_cached(
@@ -449,7 +474,7 @@ export function createSpatialGameSession(module,state,streamOptions){
     key=>chunkRevisions.get(key)??0);
   return {get core(){return core;},field,stream,horizonSource,topologySource,routeStamp,
     routeUnaffectedByWalls,suppressed:props.suppressed,syncState,
-    routeActor,routeActorNative,routeActorNativeBatch,actorConnectivity,actorSectorRevision,actorRegions,actorWallApproachSides,actorRouteStatus,actorEnclosure,actorRegionsBatch,actorCanStand,actorStepClear,
+    routeActor,routeActorNative,routeActorNativeBatch,actorConnectivity,actorSectorRevision,actorRegions,actorWallApproachSides,actorRelevantWallApproachSides,actorExteriorRegionWitness,actorExteriorRegionEdge,actorRouteStatus,actorEnclosure,actorRegionsBatch,actorCanStand,actorStepClear,
     actorStepClearExceptWalls,
     queryPropsAt,withWallPreview,withWallStatePreview,gateOverlayClear,
     wallLocalOverlay,wallWorkerReachability,wallCutSolidFaces,
