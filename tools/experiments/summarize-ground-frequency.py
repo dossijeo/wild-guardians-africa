@@ -1,11 +1,12 @@
 from pathlib import Path
-import json
-root=Path('docs/qa/global-visual-lab/ground-frequency')
+import json, sys
+study=sys.argv[1] if len(sys.argv)>1 else 'ground-frequency'
+root=Path('docs/qa/global-visual-lab')/study
 data=json.loads((root/'captures.json').read_text())['records']
 rows=[]
 for a in data:
  if a['variant']!='global-lighting': continue
- b=next(b for b in data if b['variant']=='ground-frequency' and all(b[k]==a[k] for k in ['biome','view','phase']))
+ b=next(b for b in data if b['variant']==study and all(b[k]==a[k] for k in ['biome','view','phase']))
  assert all(a[k]==b[k] for k in ['camera','target','time'])
  rows.append({k:a[k] for k in ['biome','view','phase']} | {k+'Delta':b[k]-a[k] for k in ['calls','triangles','textures','geometries']} | {'baselineErrors':a['errors'],'candidateErrors':b['errors']})
 (root/'comparison.json').write_text(json.dumps(rows,indent=2)+'\n',newline='\n')
