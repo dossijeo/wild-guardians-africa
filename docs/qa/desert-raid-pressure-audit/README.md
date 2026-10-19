@@ -231,14 +231,17 @@ candidates fail**. Each proposed birth and exit must pass the existing group
 checks and the new native full-route exterior certificate against the original
 resident bounds. This does not label `unknown` as blocked or invent a route.
 In the frozen state, the ordinary `spawnRaid` creates all five animals;
-three immediately select reachable wall targets, while two still report
-unknown. This fixes the demonstrated pending-entry defect but does not yet
-prove that every animal will spend its attack budget.
+three immediately select reachable wall targets, while two initially report
+unknown. A 180-second replay of the actual `Game.tick` loop finishes the raid
+after 45.6 simulated seconds, with 26 `AnimalLogicalHit` events and five
+`StructureRuined` events. It also records 16 unavailable-target and 16
+unavailable-route events, so the selector still has unresolved work; the
+result does not prove that every animal spent its attack budget.
 
 With this fallback available, the normal 20-night Desert/123 campaign
 [completed](desierto123-inset-fallback-20.json.gz) in 63.92 seconds and
 reproduced the exact prior final serialized hash and all daily crop/money
 counts. The fallback did not activate in that normal campaign. The directed
-raid suite passes 52 tests. The next validation is a resumed raid from the
-formerly stuck save, followed by a sustained campaign with the partial-wall
-attack policy active; neither may be inferred from the unchanged control.
+raid suite passes 52 tests. The remaining validation is a sustained campaign
+with the partial-wall attack policy active; it cannot be inferred from the
+unchanged control or the single resumed raid.

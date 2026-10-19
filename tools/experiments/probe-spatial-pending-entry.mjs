@@ -1,4 +1,5 @@
 import {readFileSync} from 'node:fs';
+import * as Game from '../../src/simulation/game.js';
 import {gunzipSync} from 'node:zlib';
 import {deserialize} from '../../src/persistence/snapshots.js';
 import {createSpatialGameSession} from
@@ -66,6 +67,7 @@ try{
       firstWall:reachable[0]?.wallId??null};
   });
   let chosenTargets=null;
+  let replay=null;
   if(entry){
     spawnRaid(state,state.nightPlan,nav);
     const planner=createEventDrivenTaskPlanner(session);
@@ -77,6 +79,26 @@ try{
       return {actor:index,kind:selected?.target?.kind??null,
         target:selected?.target?.id??null,unknown:!!selected?.unknown};
     });
+    const seconds=Number(process.env.PROBE_RAID_SECONDS??0);
+    if(Number.isInteger(seconds)&&seconds>0){
+      const stopTasks=planner.observeTasks(state),
+        stopWorld=planner.observeWorld(state),events={};
+      const stopEvents=Game.observeGameEvents(state,event=>{
+        if(event.type.startsWith('Animal')||event.type==='StructureRuined')
+          events[event.type]=(events[event.type]??0)+1;
+      });
+      try{
+        for(let second=0;second<seconds&&state.raid&&!state.result;second++){
+          Game.tick(state,1,nav);
+          planner.flushWorldEvents();
+        }
+        replay={elapsed:state.elapsed,raidActive:!!state.raid,events,
+          encounters:state.raid?.encounters?.length??0,
+          actors:state.raid?.animals.map(actor=>({id:actor.id,
+            status:actor.status,hitsRemaining:actor.hitsRemaining,
+            targetId:actor.targetId}))??[]};
+      }finally{stopTasks();stopWorld();stopEvents();}
+    }
   }
   console.log(JSON.stringify({day:state.day,time:state.time,
     groupSize:group.length,hyenas:group.filter(id=>id==='hyena').length,
@@ -87,6 +109,6 @@ try{
     narrowCameraCount:narrowCamera?.entries?.length??0,
     elapsedMs:performance.now()-started,
     entryCount:entry?.entries?.length??0,selectionBounds:entry?.selectionBounds??null,
-    narrowProof,reachableWalls,chosenTargets,
+    narrowProof,reachableWalls,chosenTargets,replay,
     raidSelectionStats:nav.raidSelectionStats??null},null,2));
 }finally{session.dispose();}

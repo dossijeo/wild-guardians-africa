@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
+import * as Game from '../src/simulation/game.js';
 import {deserialize,serialize} from '../src/persistence/snapshots.js';
 import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../src/world/wild-engine/spatial-navigation-movement.js';
@@ -173,5 +174,21 @@ test('Desert/123 pending night 14 certifies an exterior wave after bounds expand
       assert.equal(choice?.target?.kind,'wall');
       planner.cancelAttackIntent(animal.id);
     }
+    let hits=0,ruins=0;
+    const stopTasks=planner.observeTasks(state),
+      stopWorld=planner.observeWorld(state),
+      stopEvents=Game.observeGameEvents(state,event=>{
+        if(event.type==='AnimalLogicalHit')hits++;
+        if(event.type==='StructureRuined')ruins++;
+      });
+    try{
+      for(let second=0;second<180&&state.raid&&!state.result;second++){
+        Game.tick(state,1,nav);
+        planner.flushWorldEvents();
+      }
+    }finally{stopTasks();stopWorld();stopEvents();}
+    assert.equal(state.raid,null,'the restored raid must finish');
+    assert(hits>0,'the physically reachable wall attacks must land');
+    assert(ruins>0,'the wave must be capable of breaking a wall');
   }finally{session.dispose();}
 });
