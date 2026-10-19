@@ -6,15 +6,18 @@ import {deserialize,serialize} from '../src/persistence/snapshots.js';
 import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../src/world/wild-engine/spatial-navigation-movement.js';
 import {createEventDrivenTaskPlanner} from '../src/world/wild-engine/spatial-intent-bridge.js';
-import {chooseRaidEntry} from '../src/simulation/raids.js';
+import {chooseRaidEntry,spawnRaid} from '../src/simulation/raids.js';
 import {raidWallEnvelope} from '../src/simulation/raid-exterior-entry.js';
 import {animalSpec,randomInt} from '../src/simulation/rules.js';
 import {ANIMAL_ACTIONS} from '../src/simulation/animal-actions-data.js';
 
-const fixture=new URL('../docs/qa/desert-raid-pressure-audit/desierto123-pre-entry-diagnostic-day15-pre-entry.json.gz',import.meta.url);
 const wasm=new WebAssembly.Module(readFileSync(new URL('../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 
-test('Desert/123 night 15 enters from a reachable exterior wall side when camera relevance is empty',()=>{
+for(const [day,file] of [
+  [15,'desierto123-pre-entry-diagnostic-day15-pre-entry.json.gz'],
+  [16,'desierto123-day16-pre-entry.json.gz']
+])test(`Desert/123 night ${day} enters from a crop-facing exterior wall side`,()=>{
+  const fixture=new URL(`../docs/qa/desert-raid-pressure-audit/${file}`,import.meta.url);
   const frozen=JSON.parse(gunzipSync(readFileSync(fixture)));
   const state=deserialize(frozen.state),before=serialize(state);
   const loaded=new Map(),session=createSpatialGameSession(wasm,state,{
@@ -39,7 +42,12 @@ test('Desert/123 night 15 enters from a reachable exterior wall side when camera
     const entry=chooseRaidEntry(state,specs,nav.activeBounds,side,nav);
     assert.equal(entry?.entries.length,group.length);
     assert(entry.wallOpportunity);
+    assert.equal(entry.wallOpportunity.wallId,283);
+    assert(Number.isSafeInteger(entry.wallOpportunity.groupId));
     const face={x:entry.wallOpportunity.x,z:entry.wallOpportunity.z};
+    assert(nav.spatialRelevantWallApproachSides(face,radius).some(side=>
+      side.wallId===entry.wallOpportunity.wallId&&
+      side.groupId===entry.wallOpportunity.groupId));
     const box=raidWallEnvelope(state,nav);
     for(let i=0;i<group.length;i++){
       const birth=entry.entries[i],r=specs[i].radius;
@@ -50,5 +58,16 @@ test('Desert/123 night 15 enters from a reachable exterior wall side when camera
         birth.z-entry.entries[j].z)>r+specs[j].radius+1);
     }
     assert.equal(serialize(state),before,'entry consultation changed the game state');
+    if(day===16){
+      assert.equal(spawnRaid(state,state.nightPlan,nav),true);
+      planner.resetFromState(state);
+      const animal=state.raid.animals[0];
+      assert.equal(animal.wallOpportunity.wallId,283);
+      const crop=planner.planAttackCrop(state,animal);
+      assert.notEqual(crop?.status,'found');
+      const wall=planner.planAttackWall(state,animal);
+      assert.equal(wall?.status,'found');
+      assert.equal(wall.target.id,'structure-283');
+    }
   }finally{session.dispose();}
 });

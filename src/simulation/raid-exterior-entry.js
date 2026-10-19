@@ -126,8 +126,21 @@ function relevantWallRaidFormation(specs,bounds,nav,box){
   }
   return null;
  };
- return trySides(relevant.slice(0,12))??
-   trySides(nav.spatialWallApproachSides?.(radius)?.sort(order).slice(0,12)??[]);
+ const preferred=trySides(relevant.slice(0,12));
+ if(preferred)return preferred;
+ const portals=nav.spatialWallApproachSides?.(radius)?.sort(order).slice(0,12)??[];
+ // A portal can lie on a wall that no longer guards a crop. Check its own
+ // exterior face against the native crop-group index before spending route
+ // searches on the generic portal list. The returned group also lets the
+ // attack planner revalidate this exact wall opportunity after spawning.
+ for(const side of portals){
+  const match=nav.spatialRelevantWallApproachSides(side,radius).find(row=>
+    row.wallId===side.wallId&&distance(row,side)<.05);
+  if(!match)continue;
+  const cropFacing=trySides([{...side,groupId:match.groupId}]);
+  if(cropFacing)return cropFacing;
+ }
+ return trySides(portals);
 }
 function localView(nav,eye,focus){const local=Object.create(nav);local.raidView={eye,target:focus};return local;}
 function formation(state,specs,bounds,nav,camera,eye,focus,dx,dz,box,radius,witness=exteriorRaidWitness){

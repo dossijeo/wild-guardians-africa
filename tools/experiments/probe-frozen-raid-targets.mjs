@@ -92,10 +92,27 @@ try{
             x:wasm.lazy_connected_frontier_x(),z:wasm.lazy_connected_frontier_z()}:null};
       })});
   }
+  const cropAccessSamples=[];
+  if(process.env.WILD_PROBE_CROP_ACCESS==='1'){
+    const animal=representatives.find(a=>a.species==='warthog')??representatives[0];
+    const center=state.structures.find(s=>s.kind==='center'&&s.hp>0);
+    for(const dx of [-10,-8,-6,-4,-2,0,2,4,6,8,10])
+      for(const dz of [-12,-8,-4,0,4,8,12]){
+        const point={x:center.x+dx,z:center.z+dz};
+        if(!nav.walkable(point.x,point.z,animal.radius,null,false))continue;
+        const result=planner.planAttackCrop(state,{...animal,...point});
+        cropAccessSamples.push({point,status:result?.status??'none',
+          targetId:result?.target?.id??null,
+          exteriorEdge:nav.spatialExteriorEdge(point,animal.radius,wallBox),
+          diagnostics:result?.diagnostics??null});
+        if(result?.status==='found')planner.cancelAttackIntent(animal.id);
+      }
+  }
   if(serialize(state)!==before)throw Error('Read-only raid probe changed the JS game state');
   const report={fixture,day:state.day,time:state.time,residentRadius,bounds,wallBox,
     animals:state.raid.animals.length,livingCrops:state.plants.filter(p=>p.alive).length,
-    intactWalls:state.structures.filter(s=>s.kind==='wall'&&s.hp>0).length,rows};
+    intactWalls:state.structures.filter(s=>s.kind==='wall'&&s.hp>0).length,
+    rows,cropAccessSamples};
   writeFileSync(out,JSON.stringify(report,null,2)+'\n');
   console.log(JSON.stringify(rows.map(({actorId,species,region,crop,wall,relevantWallSides,nearbySides})=>({
     actorId,species,region,crop:{status:crop?.status,diagnostics:crop?.diagnostics},

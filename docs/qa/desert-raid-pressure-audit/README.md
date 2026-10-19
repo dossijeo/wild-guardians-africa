@@ -576,3 +576,46 @@ physical activity after night 15 prevents a pure speedup claim. The focused
 raid-entry tests, browser syntax check and production build pass. Other
 late-game no-contact waves and interactive-frame latency remain outside this
 specific correction, so the PR stays draft.
+
+### Prefer crop-facing wall faces over unrelated portals
+
+The next frozen night, [Desert/123 day 16](desierto123-day16-pre-entry.json.gz),
+revealed a distinct problem. A portal-only entry chose wall #260 with a
+positive route for the entire wave, but the wall did not face any current crop
+group from that exterior side. Its `wallOpportunity` consequently had no
+group ID; the native attack planner correctly declined the hint, and 11 of
+12 animals eventually retired while waiting. This is why a route to any
+intact wall is insufficient evidence of a useful raid entrance.
+
+The native wall index also contained an exterior face of wall #283. Querying
+the **existing** native crop-relevance service from that face linked it to
+group #5396. All 12 animals could occupy separate exterior positions and
+reach the face. The selector now tries those crop-facing faces first, in
+deterministic camera-distance order, before considering generic portals.
+It performs no crop-by-crop route search. The attack planner revalidates the
+wall ID, group, route and reservation after spawning. The
+[frozen entry comparison](desierto123-day16-pre-entry-probe-crop-face.json)
+and [regression](../../../tests/spatial-raid-exterior-wall-sides.test.js)
+check the physical routes and a real native wall intention. An
+[isolated scan](desierto123-day16-crop-access-exterior-scan.json)
+also found 23 positions with crop routes inside the defense but **none** had
+a native exterior witness; spawning there would have crossed the defensive
+barrier and was rejected. The exploratory extra C++ group-access endpoint
+was removed after that counterexample; this change reuses existing services.
+
+In the [updated 17-night campaign](desierto123-crop-facing-wall-entry-17.json.gz),
+night 15 produces 18 wall hits and night 16 produces 13, compared with 13
+and zero from the generic-portal candidate. Nights 1–14 have identical
+hashes; subsequent finances diverge because more structures take real
+damage. Two runs, including a run with the original unchanged WASM binary,
+produced identical 17 daily hashes and raid records. The final money at
+night 17 is 1,611 versus 1,683 with the prior entry policy; the extra wall
+damage and resulting decisions are part of the physical campaign, not a
+speed-only comparison. Sabana/712 and Manglares/712 both completed
+[14-night](sabana712-crop-facing-entry-14.json.gz)
+[runs](manglares712-crop-facing-entry-14.json.gz) without technical failure
+or a zero-contact wave. The focused 31 tests, browser syntax check and build
+pass. A separate frozen timing probe still spends roughly 0.7–0.8 s in
+entry selection under Node, largely on thousands of existing `walkable`
+checks; interactive frame cost remains an open performance issue. PR #143
+therefore remains draft.

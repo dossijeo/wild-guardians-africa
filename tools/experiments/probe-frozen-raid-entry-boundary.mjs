@@ -1,6 +1,7 @@
 // Reproduce the exact resident-world boundary immediately before a raid birth.
 import {readFileSync,writeFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
+import {performance} from 'node:perf_hooks';
 import {deserialize,serialize} from '../../src/persistence/snapshots.js';
 import {createSpatialGameSession} from '../../src/world/wild-engine/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../../src/world/wild-engine/spatial-navigation-movement.js';
@@ -37,12 +38,32 @@ try{
   const specs=group.map(id=>({spec:animalSpec(id),
     radius:ANIMAL_ACTIONS.animals[id].presentation.footprint.radius}));
   const preferredSide=randomInt({rng:state.rng},0,3);
+  const selectionCalls={};
+  for(const name of ['spatialRouteStatus','spatialExteriorEdge',
+    'spatialExteriorWitness','walkable','path',
+    'spatialRelevantWallApproachSides','spatialWallApproachSides',
+    'approachPath','segmentClear']){
+    const original=nav[name];if(typeof original!=='function')continue;
+    selectionCalls[name]={calls:0,ms:0};
+    nav[name]=(...args)=>{
+      const start=performance.now();
+      try{return original(...args);}finally{
+        selectionCalls[name].calls++;
+        selectionCalls[name].ms+=performance.now()-start;
+      }
+    };
+  }
+  const selectStart=performance.now();
   const entry=chooseRaidEntry(state,specs,nav.activeBounds,preferredSide,nav);
+  const selectionMs=performance.now()-selectStart;
+  const selectionBreakdown=structuredClone(selectionCalls);
   const radius=Math.max(...specs.map(s=>s.radius));
   const cameraRelevant=nav.spatialRelevantWallApproachSides(nav.raidView.eye,radius);
   const allWallSides=nav.spatialWallApproachSides(radius);
   const box=raidWallEnvelope(state,nav);
   const allSideCandidates=allWallSides.map(side=>{
+    const relevantAtFace=nav.spatialRelevantWallApproachSides(side,radius)
+      .filter(value=>value.wallId===side.wallId);
     const edge=nav.spatialExteriorEdge(side,radius,box);
     const proof=edge?prepareExteriorDetour(side,radius,box,nav,
       (point,r,b)=>!!nav.spatialExteriorEdge(point,r,b),[edge]):null;
@@ -53,7 +74,7 @@ try{
       nav.spatialRouteStatus(birth,side,specs[index].radius))??[];
     return {wallId:side.wallId,x:side.x,z:side.z,edge,
       proofPoints:proof?.points.length??0,formation:formation?.entries??null,
-      exterior,routes};
+      exterior,routes,relevantAtFace};
   });
   const sidesByRadius=new Map();
   const wallRoutes=entry?.entries.map((birth,index)=>{
@@ -69,7 +90,8 @@ try{
           status:nav.spatialRouteStatus(birth,side,radius)}))};
   })??[];
   if(serialize(state)!==before)throw Error('Raid entry probe changed game state');
-  const report={day:state.day,time:state.time,preferredSide,
+  const report={day:state.day,time:state.time,preferredSide,selectionMs,
+    selectionBreakdown,
     residentChunks:loaded.size,bounds:nav.activeBounds,view:nav.raidView,
     entry,cameraRelevant:cameraRelevant.slice(0,12),cameraRelevantCount:cameraRelevant.length,
     allWallSidesCount:allWallSides.length,allSideCandidates,wallRoutes,stats:nav.raidSelectionStats};
@@ -77,6 +99,7 @@ try{
   console.log(JSON.stringify({entry:entry?.entries?.length??0,
     wallOpportunity:entry?.wallOpportunity??null,
     foundWallBirths:wallRoutes.filter(row=>row.nearest.some(side=>side.status==='found')).length,
+    selectionMs,
     cameraRelevant:cameraRelevant.length,allWallSides:allWallSides.length,
     viableSideCandidates:allSideCandidates.filter(c=>c.exterior&&
       c.routes.length===specs.length&&c.routes.every(r=>r==='found')).length,
