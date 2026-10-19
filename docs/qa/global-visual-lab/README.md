@@ -70,3 +70,7 @@ Pasaron `npm run build`, 2 pruebas nuevas de Cañón y 33 pruebas dirigidas de t
 ### Composición offline de suelo: resultado negativo
 
 El [ensayo de claros de arena](./ground-composition/README.md) conserva 16 capturas WebGL y curvas Blender editables. No añade draws ni mapas, pero produce manchas recortadas y repetitivas; se descarta sin añadir un flag runtime ni ejecutar otra ABBA. Los materiales anteriores permanecen intactos.
+
+### Transición cromática de charcas: estudio acotado
+
+El [estudio de orilla](./pond-bank-gradient/README.md) aporta una integración discreta del borde sin nuevos draws/texturas. Incluye 16 capturas y ABBA aislada; no demuestra una mejora global ni coste cero. Se conserva solo en QA, con residencia y anchura de transición pendientes, sin activarlo en runtime.
