@@ -45,10 +45,12 @@ test('optional higher staffing pays normal wages while the default twelve-plant 
  assert.equal(oldState.ledger.balance.n,'409');
  assert.equal(baseline.counts.CrateDelivered,28);assert.equal(baseline.money,423);
  assert.equal(baseline.state.crates.filter(c=>c.delivered).length,28);
- assert.equal(createHash('sha256').update(serialize(baseline.state)).digest('hex'),'d2d067f5aea3cbfc860e720bd119d8a565056a85e2a8adb6bd8642ecfd7b773f');
+ // Single-plant magic changes the serialized command/effect history. The
+ // economic and delivery checks above still compare the same one-day outcome.
+ assert.equal(createHash('sha256').update(serialize(baseline.state)).digest('hex'),'18c49f40ace552ce46cf0ee64a1cbe92ab5982bc66c8e26c5db56615a20f413f');
  assert.deepEqual(baseline.state.tutorial.shownToday,{day:2,ids:[]});
  const historical=structuredClone(baseline.state);delete historical.tutorial.shownToday;
- assert.equal(createHash('sha256').update(serialize(historical)).digest('hex'),'bd6c05e62b22f091f0ca46d69182bc984ce1c78367ffdfe45122b0bba0fdc70d');
+ assert.equal(createHash('sha256').update(serialize(historical)).digest('hex'),'9f9b1869b6e33233898b4f0ac430e62d594097480f472779b07d383dba34b883');
  assert.ok(auditIntensiveFarm(baseline));
  assert.equal(serialize(simulateIntensiveFarm({...options,plantsPerWorker:12}).state),serialize(baseline.state));
  const staffed=simulateIntensiveFarm({...options,plantsPerWorker:8});
