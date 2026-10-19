@@ -49,6 +49,18 @@ try{
     }
   }
   const nav=createSpatialNavigationMovement(session,state);
+  if(process.env.WILD_ENGINE_REPAIR_SEQUENTIAL_PREVIEW==='1'){
+    const preview=nav.withWallStatePreview;
+    nav.withWallStatePreview=(walls,inspect)=>preview(walls,({route})=>
+      inspect({route}));
+  }
+  const advanceSeconds=Number(process.env.WILD_ENGINE_REPAIR_ADVANCE_SECONDS??0);
+  if(advanceSeconds>0){
+    const began=performance.now();
+    tick(state,advanceSeconds,nav);
+    console.log(JSON.stringify({phase:'advance',seconds:advanceSeconds,
+      ms:performance.now()-began,day:state.day,time:state.time}));
+  }
   // Compare the same frozen world and WASM with the historical full-route
   // fallback, without changing the production navigation implementation.
   const legacyRepair=process.env.WILD_ENGINE_REPAIR_LEGACY==='1';

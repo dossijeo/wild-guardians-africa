@@ -1091,8 +1091,27 @@ export function planRepairAccess(s,target,nav){
   const repaired={...target,status:'intact',hp:target.maxHp};
   const byId=new Map([[target.id,repaired]]);
   const structures=()=>s.structures.map(piece=>byId.get(piece.id)??piece);
-  const checks=()=>nav.withWallStatePreview(structures(),({route})=>
-    connected.map(([from,to])=>route(from,to).status));
+  const groups=new Map();
+  for(let i=0;i<connected.length;i++){
+    const [from,to]=connected[i];
+    if(!groups.has(to))groups.set(to,{targets:[],indices:[]});
+    const group=groups.get(to);
+    group.targets.push(from);group.indices.push(i);
+  }
+  const checks=()=>nav.withWallStatePreview(structures(),({route,reachBatch})=>{
+    if(!reachBatch)return connected.map(([from,to])=>route(from,to).status);
+    const statuses=new Array(connected.length);
+    for(const [entry,{targets,indices}] of groups){
+      // Reverse reachability asks every worker/center to reach its village.
+      // The overlay graph and hypothetical wall state are shared by the batch.
+      for(let offset=0;offset<targets.length;offset+=256){
+        const batch=reachBatch(entry,targets.slice(offset,offset+256),true);
+        for(let i=0;i<Math.min(256,targets.length-offset);i++)
+          statuses[indices[offset+i]]=batch?.[i]??'unknown';
+      }
+    }
+    return statuses;
+  });
   let statuses=checks();
   if(statuses.every(status=>status==='found'))return {status:'safe',updates:[]};
   const living=activeCrops(s.plants),points=routes.flatMap(route=>
