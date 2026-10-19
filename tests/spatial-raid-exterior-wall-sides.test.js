@@ -71,3 +71,38 @@ for(const [day,file] of [
     }
   }finally{session.dispose();}
 });
+
+test('Desert/123 night 29 does not advertise an unrelated reachable wall as crop-facing',()=>{
+  const fixture=new URL('../docs/qa/desert-raid-pressure-audit/desierto123-day29-pre-entry.json.gz',import.meta.url);
+  const frozen=JSON.parse(gunzipSync(readFileSync(fixture)));
+  const state=deserialize(frozen.state),before=serialize(state);
+  const loaded=new Map(),session=createSpatialGameSession(wasm,state,{
+    loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+  try{
+    for(const key of frozen.navigation.residentChunks){
+      const [cx,cz]=key.split(',').map(Number);
+      assert.notEqual(session.core.addChunk(cx,cz),-1);
+      loaded.set(key,session.core.chunkPayload());
+    }
+    const nav=createSpatialNavigationMovement(session,state);
+    nav.setActiveBounds(frozen.navigation.bounds);
+    nav.setRaidView(frozen.navigation.view.eye,frozen.navigation.view.target);
+    const group=state.nightPlan.group,
+      specs=group.map(id=>({spec:animalSpec(id),
+        radius:ANIMAL_ACTIONS.animals[id].presentation.footprint.radius})),
+      radius=Math.max(...specs.map(spec=>spec.radius));
+    const side=randomInt({rng:state.rng},0,3);
+    const entry=chooseRaidEntry(state,specs,nav.activeBounds,side,nav);
+    assert.equal(entry?.entries.length,group.length);
+    // A future selector may find another, crop-facing entry. If it returns
+    // an attack hint, that exact exterior face must have native crop proof.
+    if(entry.wallOpportunity){
+      const hint=entry.wallOpportunity;
+      assert(Number.isSafeInteger(hint.groupId));
+      assert(nav.spatialRelevantWallApproachSides(hint,radius).some(row=>
+        row.wallId===hint.wallId&&row.groupId===hint.groupId&&
+        Math.hypot(row.x-hint.x,row.z-hint.z)<.05));
+    }
+    assert.equal(serialize(state),before);
+  }finally{session.dispose();}
+});

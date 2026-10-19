@@ -121,8 +121,11 @@ function relevantWallRaidFormation(specs,bounds,nav,box){
      nativeWitness))continue;
    if(!candidate.entries.every((point,index)=>
      routeStatus(point,side,specs[index].radius)==='found'))continue;
-   return {...candidate,wallOpportunity:{wallId:side.wallId,
-     groupId:side.groupId,x:side.x,z:side.z}};
+   // A generic portal only certifies a route to the wall. Without a crop
+   // group on this exterior face it is not a tactical attack opportunity.
+   return side.groupId===undefined?candidate:
+     {...candidate,wallOpportunity:{wallId:side.wallId,
+       groupId:side.groupId,x:side.x,z:side.z}};
   }
   return null;
  };
