@@ -543,3 +543,36 @@ compared as a pure before/after against earlier campaign reports generated
 with different harness settings. Directed mixed-profile, blocked-prefix,
 `unknown`, and native frozen-geometry regressions pass. The remaining raid
 entry and late zero-contact limitations still keep PR #143 experimental.
+
+### Day-15 camera-region mismatch
+
+The matched 17-night campaign exposed a second zero-contact wave on
+Desert/123 night 15: 11 animals spent none of their 26 available hits and
+retired after 176 `unknown` crop and wall decisions. The
+[frozen pre-spawn state](desierto123-pre-entry-diagnostic-day15-pre-entry.json.gz)
+records the exact 25 resident chunks and camera at game time 460. A
+[read-only replay](desierto123-pre-entry-probe.json) reproduces the original
+11 births at `x = -19.65`: Wild Engine knows ten wall approach faces, but
+`spatialRelevantWallApproachSides(camera.eye, 1.1)` returns none. The camera's
+region does not describe the exterior region available to the whole wave.
+
+The selector now tries the existing native wall-face list if its preferred
+camera-relevant list cannot produce a complete formation. It examines at most
+12 additional faces and accepts one only after the native exterior witness
+and individual positive route tests pass for all animals. It does not equate
+`unknown` with `blocked` or change combat rules. The
+[same-state replay](desierto123-pre-entry-probe-fixed.json) finds three legal
+formations and selects wall #260. Every animal has a physically clear route
+to that face. The [direct regression](../../../tests/spatial-raid-exterior-wall-sides.test.js)
+also checks separation, exterior access and no game-state mutation.
+
+The [17-night campaign](desierto123-wall-side-fallback-17.json.gz) completed
+twice with identical daily hashes and raid evidence. Nights 1–14 have the
+same hashes as the prior selector. Night 15 recorded 13 wall hits instead of
+zero contacts; 14 crops and 993 coins remained at its end in both versions.
+Later days diverge because the new attacks damage real walls. Wall times were
+41.07 and 41.14 seconds against one earlier 43.53-second run; different
+physical activity after night 15 prevents a pure speedup claim. The focused
+raid-entry tests, browser syntax check and production build pass. Other
+late-game no-contact waves and interactive-frame latency remain outside this
+specific correction, so the PR stays draft.
