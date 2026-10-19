@@ -22,6 +22,8 @@ Both [baseline](volcanes-baseline-30.json) and [candidate](volcanes-candidate-30
 
 The 4.57 s saving in the identified planning call is specific and reproducible in this frozen campaign. The candidate's aggregate elapsed time was **not** faster in this one A/B pair because unrelated tick time varied by 7.69 s. This is a fix for redundant work on a rejected speculative quote, not evidence of an overall campaign speedup. Neither candidate purchased the incomplete wall. Both runs finished with 158 living crops and 1,003 coins.
 
+A subsequent [60-night baseline](volcanes-baseline-60.json) and [60-night candidate](volcanes-candidate-60.json) match **60/60** serialized hashes and both verify raid evidence. They finish with 113 living crops and 724 coins. Candidate elapsed time was 323.72 s versus 391.60 s in the baseline, but `Game.tick` also varied from 278.12 s to 234.23 s although this patch does not change its loop. These runs were not a controlled ABBA timing experiment; use them as sustained correctness evidence rather than attributing the total elapsed difference to strict quotes.
+
 Reproduce with `node tools/experiments/compare-repair-preview-campaign.mjs batch OUTPUT.json 30 712 volcanes` at the baseline and candidate revisions. The script now retains the native-defense decision phase timings in each daily row. `tests/wall-gate-worker-closure.test.js` verifies that a strict quote rejects an ungated closure while an ordinary quote still leaves the closing piece unbuilt.
 
-The 60-night run preceded this change and is a stability reference, not a candidate-versus-baseline performance comparison. A longer post-change campaign and additional seeds would be appropriate before attributing any global performance change to this small fix.
+Additional seeds and tightly paired runs would be appropriate before attributing any global performance change to this small fix.
