@@ -8,6 +8,37 @@ import {groundSample417} from '../src/rendering/ground-mask.js';
 const biomes=['savanna','grand_river','mangrove','volcanoes','canyons','desert'];
 const state={plants:[{x:7,z:8,alive:true}],structures:[{x:12,z:12,kind:'wall',status:'active'}],villages:[]};
 
+test('grass beds preserve river distribution and savanna occupancy without mutating state',()=>{
+  const before=JSON.stringify(state);
+  for(const biome of ['savanna','grand_river']){
+    const field=new TerrainField({seed:'712',biome,river:true,relief:1});
+    const originalLocation=globalThis.location;
+    let baseline,candidate;
+    try{
+      globalThis.location={search:'?visualLab=global-grass'};baseline=details(biome);
+      globalThis.location={search:'?visualLab=global-grass-beds'};candidate=details(biome);
+    }finally{if(originalLocation===undefined)delete globalThis.location;else globalThis.location=originalLocation;}
+    let a=[],b=[];
+    for(let cx=-2;cx<=2;cx++)for(let cz=-2;cz<=2;cz++){
+      const positions=candidate.sampleChunk(cx,cz,field,state);
+      assert.deepEqual(positions,candidate.sampleChunk(cx,cz,field,state));
+      a.push(...baseline.sampleChunk(cx,cz,field,state));b.push(...positions);
+      for(const p of positions){
+        assert.ok(Math.abs(p.x-cx*48)<24&&Math.abs(p.z-cz*48)<24,'members stay owned by their resident chunk');
+        assert.equal(field.waterInfo(p.x,p.z).inside,false);
+        assert.ok(field.slope(p.x,p.z)<=.42);
+        assert.ok(groundSample417(field,field.c.profile??{},p.x,p.z)[3]<=.27);
+        assert.ok((p.x-7)**2+(p.z-8)**2>=1.8);
+        assert.ok((p.x-12)**2+(p.z-12)**2>=1.45);
+      }
+    }
+    if(biome==='grand_river')assert.deepEqual(b,a,'control biome is unchanged');
+    else {assert.notDeepEqual(b,a);assert.ok(b.length<a.length*1.2,'grouping cannot buy detail with a large instance increase');}
+    for(const d of [baseline,candidate]){d.dispose();d.geometry.dispose();d.material.dispose();}
+  }
+  assert.equal(JSON.stringify(state),before,'visual distribution never edits simulation state');
+});
+
 function details(biome){
   const scene=new THREE.Scene(),result=new BlenderGroundDetails({},scene,biome);
   result.global=true;

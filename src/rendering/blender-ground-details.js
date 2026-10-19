@@ -41,10 +41,10 @@ export function markGroundDetailEvent(details,state,event,previousPosition=()=>n
 // Candidate locations are stable per chunk, and the regular resident-chunk
 // lifecycle provides culling without one Object3D per tuft.
 export class BlenderGroundDetails{
-  constructor(assets,scene,biome){this.assets=assets;this.scene=scene;this.biome=biome;const variant=new URLSearchParams(globalThis.location?.search??'').get('visualLab');this.global=variant==='global-grass';this.enabled=this.global||biome==='savanna';this.polyHaven=['ph-grass','layer-grass'].includes(variant);this.sculpted=this.global||variant==='layer-grass-sculpted';this.detailed=this.polyHaven||this.sculpted;this.count=0;this.chunks=new Map();this.dirtyChunks=new Set();this.refreshStats={batches:0,chunks:0,candidates:0,totalMs:0,maxMs:0};}
+  constructor(assets,scene,biome){this.assets=assets;this.scene=scene;this.biome=biome;const variant=new URLSearchParams(globalThis.location?.search??'').get('visualLab');this.beds=variant==='global-grass-beds'&&biome==='savanna';this.global=['global-grass','global-grass-beds'].includes(variant);this.enabled=this.global||biome==='savanna';this.polyHaven=['ph-grass','layer-grass'].includes(variant);this.sculpted=this.global||variant==='layer-grass-sculpted';this.detailed=this.polyHaven||this.sculpted;this.count=0;this.chunks=new Map();this.dirtyChunks=new Set();this.refreshStats={batches:0,chunks:0,candidates:0,totalMs:0,maxMs:0};}
   async load(){
     if(!this.enabled)return;
-    const gltf=await this.assets.model(this.sculpted?`/assets/visual-lab/${this.biome==='savanna'?'savanna':nameFor[this.biome]}-sculpted-ground-detail.glb`:this.polyHaven?'/assets/visual-lab/savanna-ph-compact.glb':`/assets/visual-lab/${nameFor[this.biome]}-ground-detail.glb`);
+    const gltf=await this.assets.model(this.beds?'/assets/visual-lab/savanna-low-grass-beds.glb':this.sculpted?`/assets/visual-lab/${this.biome==='savanna'?'savanna':nameFor[this.biome]}-sculpted-ground-detail.glb`:this.polyHaven?'/assets/visual-lab/savanna-ph-compact.glb':`/assets/visual-lab/${nameFor[this.biome]}-ground-detail.glb`);
     let source;gltf.scene.traverse(o=>{if(o.isMesh&&!source)source=o;});
     if(!source?.geometry||(!this.polyHaven&&!source.geometry.getAttribute('color')))throw Error('Blender ground detail missing geometry or vertex colours');
     this.geometry=source.geometry;
@@ -85,9 +85,20 @@ export class BlenderGroundDetails{
       const cluster=this.detailed?(clump>.50?1.65:.30)*(nearCrop?1.32:1):1;
       const biomeDensity=this.global?globalDensity(this.biome,cover,patch,moisture,meso):Math.max(0,Math.min(.4,.04+.31*cover*patch+.09*(moisture-.5)))*(this.detailed?.30:1);
       const density=Math.max(0,Math.min(.4,biomeDensity))*cluster;
-      if(chance>density||wear>.27||field.slope(x,z)>.42||field.waterInfo(x,z).inside)continue;
+      if(chance>density/(this.beds?5:1)||wear>.27||field.slope(x,z)>.42||field.waterInfo(x,z).inside)continue;
       if(blockers.some(p=>d2(x,z,p)<(p.kind==='wall'?1.45:p.kind==='center'?9:p.buildings?80:1.8)))continue;
-      positions.push({x,z,bits,y:field.surface(x,z)+.012});
+      if(this.beds){
+        // One asymmetric five-tuft bed replaces five isolated anchors on average.
+        // Keep authored spacing, rotate the group; every member respects terrain/occupancy.
+        const angle=(bits>>>20)/4096*Math.PI*2,c=Math.cos(angle),s=Math.sin(angle);
+        for(const [j,[dx,dz]] of [[0,0],[.82,.32],[-.66,.45],[.24,-.70],[-.50,-.51]].entries()){
+          const px=x+(dx*c-dz*s)*1.35,pz=z+(dx*s+dz*c)*1.35;
+          if(Math.abs(px-originX)>=24||Math.abs(pz-originZ)>=24)continue;
+          if(groundSample417(field,field.c.profile??{},px,pz)[3]>.27||field.slope(px,pz)>.42||field.waterInfo(px,pz).inside)continue;
+          if(blockers.some(p=>d2(px,pz,p)<(p.kind==='wall'?1.45:p.kind==='center'?9:p.buildings?80:1.8)))continue;
+          positions.push({x:px,z:pz,bits:hashCell(seed,bits,j,6153),y:field.surface(px,pz)+.012});
+        }
+      }else positions.push({x,z,bits,y:field.surface(x,z)+.012});
     }
     return positions;
   }
