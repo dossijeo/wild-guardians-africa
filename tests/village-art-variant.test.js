@@ -59,25 +59,26 @@ test('shared art replaces source downloads and keeps one material and buffer for
   assets.disposeModels();
 });
 
-test('exclusive finish preserves every neighbour resource and source geometry',async t=>{
+for(const variant of ['village-finish','village-surface'])test(`${variant} preserves neighbours, source geometry and unrelated UV charts`,async t=>{
+  const name=variant==='village-finish'?'finish':'surface';
   const requests=[];
   t.mock.method(globalThis,'fetch',async url=>{
     requests.push(url);const bytes=read('public'+url);
     return {ok:true,arrayBuffer:async()=>bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength)};
   });
-  const assets=new Assets();assets.visualLab='village-finish';
+  const assets=new Assets();assets.visualLab=variant;
   const textures=[];t.mock.method(assets,'texture',async url=>{textures.push(url);const texture=new THREE.Texture();texture.name=url;return texture;});
   const meshes=await assets.village(village);
-  assert.deepEqual(requests,[village.binary.url,'/assets/visual-lab/mapu-0-finish.bin']);
-  assert.deepEqual(textures,[village.textures.color,'/assets/visual-lab/mapu-0-color-finish.webp']);
-  const source=read('public'+village.binary.url),packed=read('public/assets/visual-lab/mapu-0-finish.bin');
+  assert.deepEqual(requests,[village.binary.url,`/assets/visual-lab/mapu-0-${name}.bin`]);
+  assert.deepEqual(textures,[village.textures.color,`/assets/visual-lab/mapu-0-color-${name}.webp`]);
+  const source=read('public'+village.binary.url),packed=read(`public/assets/visual-lab/mapu-0-${name}.bin`);
   const bytesOf=a=>Buffer.from(a.buffer,a.byteOffset,a.byteLength);
   assert.ok(bytesOf(meshes[0].geometry.attributes.position.data.array).equals(packed.subarray(0,packed.length-village.units[0].count*4)));
   const src=new Float32Array(source.buffer,source.byteOffset,village.vertexBytes/4),idx=new Uint32Array(source.buffer,source.byteOffset+village.vertexBytes,village.indexCount);
   const dst=meshes[0].geometry.attributes.position.data.array,indices=meshes[0].geometry.index.array;
-  const previous=read('public/assets/visual-lab/mapu-0-art.bin'),previousVertexBytes=previous.length-village.units[0].count*4;
+  const previous=read(`public/assets/visual-lab/mapu-0-${name==='finish'?'art':'finish'}.bin`),previousVertexBytes=previous.length-village.units[0].count*4;
   const pv=new Float32Array(previous.buffer,previous.byteOffset,previousVertexBytes/4),pi=new Uint32Array(previous.buffer,previous.byteOffset+previousVertexBytes,village.units[0].count);
-  const arch=new Set(JSON.parse(read('docs/qa/global-visual-lab/workshop-art/refinement-audit.json')).faceSelections['1']);
+  const arch=new Set(name==='finish'?JSON.parse(read('docs/qa/global-visual-lab/workshop-art/refinement-audit.json')).faceSelections['1']:JSON.parse(read('docs/qa/global-visual-lab/workshop-surfaces/rear-unwrap-audit.json')).changedUvFaces);
   for(let i=0;i<indices.length;i++){
     for(let c=0;c<6;c++)assert.equal(dst[indices[i]*8+c],src[idx[village.units[0].offset+i]*8+c]);
     assert.ok(dst[indices[i]*8+6]>=0&&dst[indices[i]*8+6]<=1&&dst[indices[i]*8+7]>=0&&dst[indices[i]*8+7]<=1);
