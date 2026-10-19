@@ -18,7 +18,7 @@ function fixture(culture='mapungubwe',deferRaid=false){
  return state;
 }
 function hit(state,target,animalIndex=0){
- const animal=state.raid.animals[animalIndex];Object.assign(animal,{status:'attacking',animation:'Right_Hand_Sword_Slash',targetId:target.id,attackRemaining:.01,hitsRemaining:3,hitApplied:false,approachShieldId:null});
+ const animal=state.raid.animals[animalIndex];Object.assign(animal,{status:'attacking',animation:'Right_Hand_Sword_Slash',targetId:target.id,reservation:null,approach:null,attackRemaining:.01,hitsRemaining:3,hitApplied:false,approachShieldId:null});
  updateRaid(state,.02,nav);return state.events.filter(e=>e.type==='StructureHit').at(-1);
 }
 function audioFixture(){
