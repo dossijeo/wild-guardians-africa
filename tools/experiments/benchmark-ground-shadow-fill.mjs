@@ -31,4 +31,3 @@ try{
 const output=process.env.WG_ABBA_OUTPUT??'docs/qa/global-visual-lab/abba/report.json';
 await mkdir(dirname(output),{recursive:true});
 await writeFile(output,JSON.stringify({origin,variants,cases,records},null,2)+'\n');
-

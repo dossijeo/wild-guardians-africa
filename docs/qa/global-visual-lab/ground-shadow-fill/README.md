@@ -35,4 +35,3 @@ Siguiente experimento: incorporar terreno residente al pass solar existente para
 | 21 | night | 13.563 → 13.669 | 6.009 → 5.839 |
 
 Sabana diurna supera el presupuesto de +0,5 ms en esta ronda, con una repetición candidata anormalmente lenta (21,53 frente a 17,72 ms). No se elimina esa muestra ni se aprueba rendimiento: repetir en un contexto más estable o con alternancia dentro de la misma página. Gran Río y Cañón no justifican extrapolar a los seis biomas. Mantener solo como candidato QA hasta resolver esta incertidumbre.
-

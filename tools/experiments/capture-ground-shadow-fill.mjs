@@ -23,5 +23,3 @@ for(const [biome,sceneCase] of [['savanna',1],['grand-river',6],['mangrove',11],
 }
 }finally{await browser.close();}
 await writeFile(`${out}/captures.json`,JSON.stringify({note:'Real WorldScene fixture; no CPU/GPU benchmark',records},null,2)+'\n');
-
-
