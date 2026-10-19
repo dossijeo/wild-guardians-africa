@@ -74,3 +74,7 @@ El [ensayo de claros de arena](./ground-composition/README.md) conserva 16 captu
 ### Transición cromática de charcas: estudio acotado
 
 El [estudio de orilla](./pond-bank-gradient/README.md) aporta una integración discreta del borde sin nuevos draws/texturas. Incluye 16 capturas y ABBA aislada; no demuestra una mejora global ni coste cero. Se conserva solo en QA, con residencia y anchura de transición pendientes, sin activarlo en runtime.
+
+### Copas: recuperación selectiva de normal autoral
+
+El [ensayo sobre tres árboles de Sabana](./canopy-authored-normal/README.md) confirma que el mapa normal existente está muy atenuado, pero recuperar parte de su influencia no aporta separación de hojas convincente a cámara de juego. Se descarta el ajuste tras 16 capturas día/noche y control Gran Río; sin cambios runtime ni otra ABBA. La revisión de la referencia también descarta desaturar sus copas como objetivo por sí mismo.
