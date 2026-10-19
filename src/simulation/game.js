@@ -458,6 +458,13 @@ export function quoteWallChain(s,material,points,nav,options={}) {
   newPieces.forEach((piece,i)=>Object.assign(piece,{id:`structure-${s.nextId+i}`,created:s.sequence+i}));
   const gatePlan=planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap);
   if(gatePlan.unhostedWorker||gatePlan.unhosted&&!gatePlan.length){
+    // Enclosure planning needs an atomic closure. A missing worker gate
+    // cannot be repaired by recursively trimming one wall at a time, and
+    // the resulting partial quote would be rejected by its physical proof.
+    if(options.requireComplete){
+      const error=new Error('A complete wall quote would isolate workers');
+      error.name='IncompleteWallQuote';throw error;
+    }
     // The closing module remains unbuilt; the player can later edit the
     // stroke without trapping a worker in a room that has no usable door.
     return quoteWallChain(s,material,points,nav,{...options,
