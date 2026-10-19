@@ -66,3 +66,44 @@ already resident chunks. These measurements do not establish interactive
 frame latency or gains for every world size. The remaining cold cost lies in
 building each profile's raster and sector graph; that requires separate
 profiling before any further algorithmic change.
+
+## Reusing static sector masks during the first profile build
+
+Further profiling of the same frozen Desert/123 night-16 entry found that
+creating two new animal profiles took about 580 ms of an 821 ms selection.
+`buildActiveRaster()` already calculates each cell's static passability and
+directed steps. `refreshSector()` then repeated the terrain and prop checks
+for those cells when copying them into the lazy sector graph. The new path
+copies the raster masks directly **only while a newly created movement profile
+is first populated** and only for sectors whose wall and polygon buckets,
+including a one-cell edge halo, are empty. Sectors near dynamic barriers keep
+the original collision checks. Wall construction, repair, removal and new
+chunk additions keep the original sector refresh path.
+
+The comparison baseline is commit `9844aa39`'s WASM, SHA-256
+`90e0515258273000ab0f5db2d0f0e7cda01ddc666b649799c4113ad76014c27b`.
+The candidate WASM SHA-256 is
+`178b47444cfb53330a4cae6196f69bebbc93ac3a624c60781d64b7fb6bd5ff33`.
+Both were built with the same Emscripten 6.0.12 toolchain.
+Fresh Node processes in A/B/B/A order gave first-selection samples of
+816.1 and 806.9 ms for the baseline versus 569.2 and 576.7 ms for the
+candidate. Native profile construction fell from roughly 576 to 335 ms.
+All runs selected wall #283. These are cold-entry measurements; they do not
+show a faster steady-state pathfinding algorithm.
+
+The six-biome differential verifier now compares profiles created after
+removing a prop and while a wall is present, then compares the world after
+that wall is removed. Visual chunk data, walkability, sample routes and saved
+spatial state agree. The final profile-only build passed 58 directed tests
+covering sectors, walls, gates, previews, worker access and save/restore. In a
+14-night Manglares/712 campaign with identical nightly state hashes, the
+profile-only variant took 84.33 s versus 84.33 s baseline; accumulated
+`Game.tick` was 54.14 versus 53.99 s. This supports the cold-entry gain but
+does **not** establish an overall campaign speedup.
+
+Two wider variants were rejected after measurement. Applying the raster-copy
+path to every sector refresh improved the cold checkpoint but raised
+Manglares `Game.tick` from about 53.7–54.0 to 54.5–55.1 s. Applying it to
+new chunks as well produced 85.04 s total and 56.18 s in `Game.tick` on the
+same 14-night campaign. Both retained nightly state hashes, but neither
+justified enlarging the hot path. The retained change is deliberately narrow.

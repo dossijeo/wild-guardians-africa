@@ -39,6 +39,15 @@ try{
   const specs=group.map(id=>({spec:animalSpec(id),
     radius:ANIMAL_ACTIONS.animals[id].presentation.footprint.radius}));
   const preferredSide=randomInt({rng:state.rng},0,3);
+  const profileBuilds=[];
+  const buildProfile=session.core.buildNavigationProfile;
+  session.core.buildNavigationProfile=(...args)=>{
+    const started=performance.now();
+    try{return buildProfile(...args);}finally{
+      profileBuilds.push({index:args[0],radius:args[1],
+        milliseconds:performance.now()-started});
+    }
+  };
   const selectionCalls={};
   for(const name of ['spatialRouteStatus','spatialExteriorEdge',
     'spatialExteriorWitness','walkable','path',
@@ -122,7 +131,7 @@ try{
   })??[];
   if(serialize(state)!==before)throw Error('Raid entry probe changed game state');
   const report={day:state.day,time:state.time,preferredSide,selectionMs,
-    repeatedSelection,
+    repeatedSelection,profileBuilds,
     selectionBreakdown,
     residentChunks:loaded.size,bounds:nav.activeBounds,view:nav.raidView,
     entry,cameraRelevant:cameraRelevant.slice(0,12),cameraRelevantCount:cameraRelevant.length,

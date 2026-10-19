@@ -26,6 +26,10 @@ for(const biome of biomes){
     assert.equal(b.buildNavigationProfile(profile.index,profile.radius,profile.worker),
       a.buildNavigationProfile(profile.index,profile.radius,profile.worker));
   }
+  const wall=a.addBarrier(12,0,.8,1.2,0);
+  assert(wall>0);
+  assert.equal(b.addBarrier(12,0,.8,1.2,0),wall,
+    `${biome}: barrier ID`);
   const removable=a.props().find(prop=>prop.group>=0&&prop.group<=5);
   if(removable)for(const world of worlds)
     assert.equal(world.removeProp(removable),1,`${biome}: prop removal`);
@@ -44,6 +48,15 @@ for(const biome of biomes){
         `${biome}: profile ${profile.index} route ${x},${z}`);
     }
   }
+  assert.equal(b.removeBarrier(wall),a.removeBarrier(wall),
+    `${biome}: barrier removal`);
+  for(const profile of profiles){
+    a.selectNavigationProfile(profile.index);
+    b.selectNavigationProfile(profile.index);
+    for(const x of [10,11,12,13,14])
+      assert.equal(b.walkable(x,0),a.walkable(x,0),
+        `${biome}: profile ${profile.index} after barrier removal at ${x}`);
+  }
   assert.equal(b.setSettlement(10,8,7,6),a.setSettlement(10,8,7,6));
   for(const cx of [0,1]){
     a.selectChunk(cx,0);b.selectChunk(cx,0);
@@ -52,5 +65,5 @@ for(const biome of biomes){
   }
   assert.deepEqual(b.snapshot(),a.snapshot(),`${biome}: saved spatial state`);
   console.log(JSON.stringify({biome,profiles:profiles.length,
-    chunks:2,removedProp:Boolean(removable),equal:true}));
+    chunks:2,removedProp:Boolean(removable),wallBuiltAndRemoved:true,equal:true}));
 }

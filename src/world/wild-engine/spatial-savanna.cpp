@@ -806,8 +806,39 @@ bool edge(int x,int z,int nx,int nz){
   const bool base=chunk&&!!(chunk->steps[rasterIndex(*chunk,x,z)]&(1<<direction));
   return base&&wallEdgeClear(x,z,nx,nz);
 }
-void refreshSector(int sx,int sz){
+bool dynamicBarrierNearSector(int sx,int sz){
+  // Sector steps reach one cell beyond the sector. Barrier and polygon
+  // buckets already include the largest supported actor radius, so an empty
+  // bucket neighborhood proves that the static raster needs no overlay.
+  const int x0=sx*sector-1,z0=sz*sector-1;
+  const int x1=x0+sector+1,z1=z0+sector+1;
+  const auto& walls=barrierIndex().buckets;
+  const auto& polygons=polygonIndex().buckets;
+  for(int bz=floorDiv(z0,barrierBucketWidth);bz<=floorDiv(z1,barrierBucketWidth);bz++)
+    for(int bx=floorDiv(x0,barrierBucketWidth);bx<=floorDiv(x1,barrierBucketWidth);bx++){
+      const auto key=barrierKey(bx,bz);
+      if(walls.count(key)||polygons.count(key))return true;
+    }
+  return false;
+}
+void refreshSector(int sx,int sz,bool freshRaster=false){
   uint8_t* pass=lazy_pass_ptr(),*steps=lazy_steps_ptr(),*inbound=lazy_inbound_ptr();
+  const int x0=sx*sector,z0=sz*sector;
+  const ChunkRaster* raster=rasterAt(x0,z0);
+  if(freshRaster&&raster&&!dynamicBarrierNearSector(sx,sz)){
+    const int firstX=raster->cx*side-24,firstZ=raster->cz*side-24;
+    if(x0>=firstX&&z0>=firstZ&&x0+sector<=firstX+side&&
+       z0+sector<=firstZ+side){
+      for(int lz=0;lz<sector;lz++)for(int lx=0;lx<sector;lx++){
+        const int i=lz*sector+lx,at=rasterIndex(*raster,x0+lx,z0+lz);
+        pass[i]=raster->pass[at];
+        steps[i]=raster->steps[at];
+        inbound[i]=raster->inbound[at];
+      }
+      lazy_commit_sector(sx,sz);
+      return;
+    }
+  }
   constexpr int dx[4]={1,-1,0,0},dz[4]={0,0,1,-1};
   for(int lz=0;lz<sector;lz++)for(int lx=0;lx<sector;lx++){
     const int i=lz*sector+lx,x=sx*sector+lx,z=sz*sector+lz;
@@ -1086,11 +1117,12 @@ void patchActiveRaster(const Prop& changed){
     }
   }
 }
-void commitActiveSectors(){
+void commitActiveSectors(bool freshRaster=false){
   const int firstX=chunkX*side-24,firstZ=chunkZ*side-24;
-  for(int sz=0;sz<4;sz++)for(int sx=0;sx<4;sx++)refreshSector(firstX/sector+sx,firstZ/sector+sz);
+  for(int sz=0;sz<4;sz++)for(int sx=0;sx<4;sx++)
+    refreshSector(firstX/sector+sx,firstZ/sector+sz,freshRaster);
 }
-void refreshNeighborBorders(int cx,int cz){
+void refreshNeighborBorders(int cx,int cz,bool freshRaster=false){
   constexpr int dx[4]={1,-1,0,0},dz[4]={0,0,1,-1};
   for(int direction=0;direction<4;direction++){
     const int nx=cx+dx[direction],nz=cz+dz[direction];
@@ -1099,7 +1131,7 @@ void refreshNeighborBorders(int cx,int cz){
     for(int i=0;i<4;i++){
       const int sx=firstX+(direction==0?0:direction==1?3:i);
       const int sz=firstZ+(direction==2?0:direction==3?3:i);
-      refreshSector(sx,sz);
+      refreshSector(sx,sz,freshRaster);
     }
   }
 }
@@ -1800,7 +1832,7 @@ int spatial_build_nav_profile(int index,float radius,int worker){
   chunkRasters->clear();
   for(const auto& [cx,cz]:loadedChunks){
     selectResidentChunkForProfile(cx,cz);
-    buildActiveRaster();commitActiveSectors();refreshNeighborBorders(cx,cz);
+    buildActiveRaster();commitActiveSectors(true);refreshNeighborBorders(cx,cz,true);
   }
   if(chunkX!=selectedX||chunkZ!=selectedZ)populateChunk(selectedX,selectedZ);
   navReady=true;
