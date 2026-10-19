@@ -9,7 +9,9 @@ import {createEventDrivenTaskPlanner} from '../src/world/wild-engine/spatial-int
 import {exteriorRaidEntry,exteriorRaidWitness,raidWallEnvelope} from
   '../src/simulation/raid-exterior-entry.js';
 import {exteriorGroupWitness} from '../src/simulation/raid-exterior-connectivity.js';
-import {targetFor} from '../src/simulation/raids.js';
+import {chooseRaidEntry,spawnRaid,targetFor} from '../src/simulation/raids.js';
+import {animalSpec} from '../src/simulation/rules.js';
+import {ANIMAL_ACTIONS} from '../src/simulation/animal-actions-data.js';
 
 test('Desert/123 night 10 uses a native-reachable exterior attack side',()=>{
   const raw=readFileSync(new URL(
@@ -125,5 +127,51 @@ test('Desert/123 night 17 finds the winding exterior component without changing 
     assert.equal(serialize(state),before);
     assert.equal(wasm.lazy_route_revision(),revision);
     assert.equal(wasm.nav_intent_last_sequence(),sequence);
+  }finally{session.dispose();}
+});
+
+test('Desert/123 pending night 14 certifies an exterior wave after bounds expand',()=>{
+  const raw=readFileSync(new URL(
+    '../docs/qa/desert-raid-pressure-audit/desierto123-nativepartial-20-state.json.gz',
+    import.meta.url));
+  const state=deserialize(gunzipSync(raw).toString()),before=serialize(state);
+  const binary=new WebAssembly.Module(readFileSync(new URL(
+    '../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
+  const loaded=new Map(),session=createSpatialGameSession(binary,state,{
+    loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+  try{
+    const nav=createSpatialNavigationMovement(session,state),
+      bounds=[-24,-72,216,168],box=raidWallEnvelope(state,nav),
+      specs=state.nightPlan.group.map(id=>({spec:animalSpec(id),
+        radius:ANIMAL_ACTIONS.animals[id].presentation.footprint.radius}));
+    for(let z=-1;z<=3;z++)for(let x=0;x<=4;x++){
+      if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+      loaded.set(`${x},${z}`,session.core.chunkPayload());
+    }
+    nav.setActiveBounds(bounds);
+    nav.setRaidView({x:99.70247532024266,z:30.57367599590944},
+      state.structures.find(item=>item.kind==='center'));
+    const revision=session.core.wasm.lazy_route_revision();
+    const entry=chooseRaidEntry(state,specs,bounds,0,nav);
+    assert.equal(entry?.entries.length,specs.length);
+    assert.deepEqual(entry.selectionBounds,bounds);
+    for(let index=0;index<specs.length;index++){
+      const point=entry.entries[index],radius=specs[index].radius;
+      assert(nav.walkable(point.x,point.z,radius,null,false));
+      assert(nav.spatialExteriorEdge(point,radius,box));
+    }
+    assert.equal(session.core.wasm.lazy_route_revision(),revision);
+    assert.equal(serialize(state),before);
+    assert.equal(spawnRaid(state,state.nightPlan,nav),true);
+    assert.equal(state.raid.animals.length,specs.length);
+    const planner=createEventDrivenTaskPlanner(session);
+    planner.resetFromState(state);
+    planner.nativeWallSelectionEnabled=true;
+    nav.intentTaskPlanner=planner;
+    for(const animal of state.raid.animals.slice(0,3)){
+      const choice=targetFor(state,animal,nav);
+      assert.equal(choice?.target?.kind,'wall');
+      planner.cancelAttackIntent(animal.id);
+    }
   }finally{session.dispose();}
 });

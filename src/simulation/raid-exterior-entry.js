@@ -136,7 +136,7 @@ function distributedExteriorFormation(state,specs,bounds,nav,camera,focus,box){
  }
  return null;
 }
-export function exteriorRaidEntry(state,specs,bounds,side,nav,base,camera){
+export function exteriorRaidEntry(state,specs,bounds,side,nav,base,camera,insetTrial=false){
  const box=raidWallEnvelope(state,nav),entry=base(state,specs,bounds,side,nav);
  if(groupWitness(entry,specs,box,nav)){
   if(wallAttackOpportunity(entry,specs,box,nav))return entry;
@@ -192,5 +192,21 @@ export function exteriorRaidEntry(state,specs,bounds,side,nav,base,camera){
    const along=detourRaidFormation(proof,specs,expanded,nav);if(along)return along;
   }
  }
- return distributedExteriorFormation(state,specs,bounds,nav,camera,focus,box);
+ const distributed=distributedExteriorFormation(state,specs,bounds,nav,camera,focus,box);
+ if(distributed||insetTrial||!box||!nav.spatialExteriorEdge)return distributed;
+ // A wider resident box can make every four-ray exterior witness miss a
+ // winding component. Retry once with nearby birth bounds, but certify the
+ // complete wave against the original resident boundary in Wild Engine.
+ const inset=bounds.map((value,index)=>value+(index<2?48:-48));
+ if(inset[2]-inset[0]<32||inset[3]-inset[1]<32)return null;
+ const candidateNav=Object.assign(Object.create(nav),{
+  spatialExteriorWitness:(point,radius,wallBox)=>
+    !!nav.spatialExteriorEdge(point,radius,wallBox)});
+ const candidate=exteriorRaidEntry(state,specs,inset,side,candidateNav,
+   base,camera,true);
+ if(!candidate||!groupWitness(candidate,specs,box,candidateNav))return null;
+ const needed=candidate.selectionBounds??bounds;
+ return {...candidate,selectionBounds:[
+   Math.min(bounds[0],needed[0]),Math.min(bounds[1],needed[1]),
+   Math.max(bounds[2],needed[2]),Math.max(bounds[3],needed[3])]};
 }

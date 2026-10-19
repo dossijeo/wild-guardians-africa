@@ -213,3 +213,32 @@ runs is not evidence of a speed change. Before adopting an exterior entry,
 it must place the entire wave where individual animals can reach meaningful
 targets and make contact during the actual raid, then pass sustained workload
 and runtime comparisons.
+
+## Pending-entry regression after resident bounds expand
+
+The saved day-14 partial-wall trial had an unfinished night at time 600.
+Replaying its pending five-animal wave with nine nearby resident chunks found
+five entries in about 30 ms. Loading the full 25-chunk active area made the
+ordinary exterior test reject every entry after about one second: its four
+projected resident-boundary targets missed the winding route. All five
+nearby entries actually have a positive Wild Engine route to the wider
+resident boundary for their animal profile. The detailed
+[frozen probe](desierto123-d14-inset-probe.json) records the positions and
+certificates.
+
+The entry selector now makes one bounded inset retry **only after all normal
+candidates fail**. Each proposed birth and exit must pass the existing group
+checks and the new native full-route exterior certificate against the original
+resident bounds. This does not label `unknown` as blocked or invent a route.
+In the frozen state, the ordinary `spawnRaid` creates all five animals;
+three immediately select reachable wall targets, while two still report
+unknown. This fixes the demonstrated pending-entry defect but does not yet
+prove that every animal will spend its attack budget.
+
+With this fallback available, the normal 20-night Desert/123 campaign
+[completed](desierto123-inset-fallback-20.json.gz) in 63.92 seconds and
+reproduced the exact prior final serialized hash and all daily crop/money
+counts. The fallback did not activate in that normal campaign. The directed
+raid suite passes 52 tests. The next validation is a resumed raid from the
+formerly stuck save, followed by a sustained campaign with the partial-wall
+attack policy active; neither may be inferred from the unchanged control.
