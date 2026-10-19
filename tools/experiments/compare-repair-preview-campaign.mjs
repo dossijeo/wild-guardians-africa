@@ -12,8 +12,8 @@ if(!['sequential','batch'].includes(arm)||!output||
 const sha256=value=>createHash('sha256').update(value).digest('hex');
 const sourceSha256=sha256(readFileSync(new URL('../../src/simulation/game.js',
   import.meta.url)));
-const wasmSha256=sha256(readFileSync(new URL(
-  '../../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
+const wasmSha256=sha256(readFileSync(process.env.WILD_ENGINE_SPATIAL_SERVICES_WASM??
+  new URL('../../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 const rows=[];
 let state=null,wrapped=false;
 const started=performance.now();

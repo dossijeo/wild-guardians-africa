@@ -2243,6 +2243,9 @@ int spatial_overlay_reach_batch(float x,float z,int count,int removeCount,
      !prepareOverlayPolygons(polygonCount,polygons))return -1;
   for(int i=0;i<removeCount;i++)if(!barrierIndex().byId.count(barrierRemovalIds[i]))return -1;
   const auto buckets=indexOverlayBarriers(proposed,addCount);
+  std::array<Barrier,128> removed;
+  for(int i=0;i<removeCount;i++)removed[i]=barrierIndex().byId.at(barrierRemovalIds[i]);
+  const auto removedBuckets=indexOverlayBarriers(removed,removeCount);
   std::vector<Prop> removedFootprints;
   if(propCount){
     for(const auto& [key,props]:residentSolidProps())for(const Prop& prop:props)
@@ -2256,11 +2259,14 @@ int spatial_overlay_reach_batch(float x,float z,int count,int removeCount,
       proposed,polygons,buckets);
   };
   const auto gridEdge=[&](int ax,int az,int bx,int bz){
-    const auto nearby=[&](int px,int pz){
-      return buckets.count(barrierKey(int(std::floor(double(px)/barrierBucketWidth)),
+    const auto nearby=[&](const OverlayBarrierBuckets& index,int px,int pz){
+      return index.count(barrierKey(int(std::floor(double(px)/barrierBucketWidth)),
         int(std::floor(double(pz)/barrierBucketWidth))))!=0;
     };
-    bool changed=removeCount>0||nearby(ax,az)||nearby(bx,bz);
+    // A removed wall changes only edges near its former swept footprint.
+    // The bucket padding covers the largest physical profile and a grid edge.
+    bool changed=nearby(removedBuckets,ax,az)||nearby(removedBuckets,bx,bz)||
+      nearby(buckets,ax,az)||nearby(buckets,bx,bz);
     if(!changed)for(const auto& polygon:polygons)
       if(std::max(ax,bx)>=polygon.minX-radiusNow&&
          std::min(ax,bx)<=polygon.maxX+radiusNow&&
