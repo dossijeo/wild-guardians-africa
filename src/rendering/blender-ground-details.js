@@ -3,16 +3,28 @@ import {groundSample417} from './ground-mask.js';
 import {hashCell} from '../world/terrain.js';
 
 const nameFor={savanna:'savanna',grand_river:'grand-river',mangrove:'mangrove',volcanoes:'volcanoes',canyons:'canyons',desert:'desert'};
+const globalScale={savanna:2.25,grand_river:1.9,mangrove:2.0,volcanoes:1.85,canyons:2.0,desert:1.8};
 const d2=(x,z,point)=>(x-point.x)**2+(z-point.z)**2;
+function globalDensity(biome,cover,patch,moisture,meso){
+  switch(biome){
+    case 'savanna':return (.04+.31*cover*patch+.09*(moisture-.5))*.30;
+    case 'grand_river':return (.014+.095*cover*patch)*(.65+.35*moisture);
+    case 'mangrove':return (.006+.10*cover*patch)*(1-.25*moisture);
+    case 'volcanoes':return .004+.040*meso*patch;
+    case 'canyons':return .006+.045*meso*patch;
+    case 'desert':return .003+.025*meso*patch;
+    default:return 0;
+  }
+}
 
 // A visual-only experiment. Blender authors the meshes; JS only chooses places.
 // Candidate locations are stable per chunk, and the regular resident-chunk
 // lifecycle provides culling without one Object3D per tuft.
 export class BlenderGroundDetails{
-  constructor(assets,scene,biome){this.assets=assets;this.scene=scene;this.biome=biome;this.enabled=biome==='savanna';const variant=new URLSearchParams(globalThis.location?.search??'').get('visualLab');this.polyHaven=['ph-grass','layer-grass'].includes(variant);this.sculpted=variant==='layer-grass-sculpted';this.detailed=this.polyHaven||this.sculpted;this.count=0;this.chunks=new Map();}
+  constructor(assets,scene,biome){this.assets=assets;this.scene=scene;this.biome=biome;const variant=new URLSearchParams(globalThis.location?.search??'').get('visualLab');this.global=variant==='global-grass';this.enabled=this.global||biome==='savanna';this.polyHaven=['ph-grass','layer-grass'].includes(variant);this.sculpted=this.global||variant==='layer-grass-sculpted';this.detailed=this.polyHaven||this.sculpted;this.count=0;this.chunks=new Map();}
   async load(){
     if(!this.enabled)return;
-    const gltf=await this.assets.model(this.sculpted?'/assets/visual-lab/savanna-sculpted-ground-detail.glb':this.polyHaven?'/assets/visual-lab/savanna-ph-compact.glb':`/assets/visual-lab/${nameFor[this.biome]}-ground-detail.glb`);
+    const gltf=await this.assets.model(this.sculpted?`/assets/visual-lab/${this.biome==='savanna'?'savanna':nameFor[this.biome]}-sculpted-ground-detail.glb`:this.polyHaven?'/assets/visual-lab/savanna-ph-compact.glb':`/assets/visual-lab/${nameFor[this.biome]}-ground-detail.glb`);
     let source;gltf.scene.traverse(o=>{if(o.isMesh&&!source)source=o;});
     if(!source?.geometry||(!this.polyHaven&&!source.geometry.getAttribute('color')))throw Error('Blender ground detail missing geometry or vertex colours');
     this.geometry=source.geometry;
@@ -45,7 +57,8 @@ export class BlenderGroundDetails{
       const clump=(hashCell(seed,Math.floor(x/7),Math.floor(z/7),6142)>>>0)/4294967296;
       const nearCrop=localPlants.some(p=>d2(x,z,p)>4&&d2(x,z,p)<42);
       const cluster=this.detailed?(clump>.50?1.65:.30)*(nearCrop?1.32:1):1;
-      const density=Math.max(0,Math.min(.4,.04+.31*cover*patch+.09*(moisture-.5)))*(this.detailed?.30:1)*cluster;
+      const biomeDensity=this.global?globalDensity(this.biome,cover,patch,moisture,meso):Math.max(0,Math.min(.4,.04+.31*cover*patch+.09*(moisture-.5)))*(this.detailed?.30:1);
+      const density=Math.max(0,Math.min(.4,biomeDensity))*cluster;
       if(chance>density||wear>.27||field.slope(x,z)>.42||field.waterInfo(x,z).inside)continue;
       if(blockers.some(p=>d2(x,z,p)<(p.kind==='wall'?1.45:p.kind==='center'?9:p.buildings?80:1.8)))continue;
       positions.push({x,z,bits,y:field.surface(x,z)+.012});
@@ -68,7 +81,7 @@ export class BlenderGroundDetails{
     positions.forEach(({x,z,bits,y},i)=>{
       dummy.position.set(x,y,z);
       dummy.rotation.y=(bits>>>20)/4096*Math.PI*2;
-      const scale=(1.25+((bits>>>14)&63)/63*.65)*(this.sculpted?2.25:this.detailed?3.1:1);
+      const scale=(1.25+((bits>>>14)&63)/63*.65)*(this.global?globalScale[this.biome]:this.sculpted?2.25:this.detailed?3.1:1);
       dummy.scale.setScalar(scale);dummy.updateMatrix();this.mesh.setMatrixAt(i,dummy.matrix);
     });
     this.mesh.count=needed;this.mesh.instanceMatrix.needsUpdate=true;

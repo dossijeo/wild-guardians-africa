@@ -6,6 +6,7 @@ const out=process.env.WG_VISUAL_OUTPUT??'docs/qa/global-visual-lab/six-biome-ref
 const variant=process.env.WG_VISUAL_VARIANT??'0';
 const night=process.env.WG_VISUAL_NIGHT==='1';
 const lowCamera=process.env.WG_VISUAL_LOW_CAMERA==='1';
+const metadataOnly=process.env.WG_VISUAL_METADATA_ONLY==='1';
 const biomes=[['savanna',1],['grand-river',6],['mangrove',11],['volcanoes',16],['canyons',21],['desert',26]].filter(([name])=>!process.env.WG_VISUAL_BIOME||name===process.env.WG_VISUAL_BIOME);
 await mkdir(out,{recursive:true});
 const browser=await chromium.launch({channel:'chrome',headless:true});
@@ -33,13 +34,13 @@ try{
     await page.waitForTimeout(400);
     const metadata=await page.evaluate(()=>{
       const {world,state,biome,culture,seed}=window.qaVisualReference;
-      return {biome,culture,seed,time:state.time,camera:world.camera.position.toArray(),target:world.controls.target.toArray(),fov:world.camera.fov,quality:world.quality,drawCalls:world.renderer.info.render.calls,triangles:world.renderer.info.render.triangles,plants:state.plants.length,walls:state.structures.filter(s=>s.kind==='wall').length,centers:state.structures.filter(s=>s.kind==='center').length,terrainChunks:world.chunks.size,visualLabEnabled:Boolean(world.groundDetails?.enabled),visualLabTufts:world.groundDetails?.count??0};
+      return {biome,culture,seed,time:state.time,camera:world.camera.position.toArray(),target:world.controls.target.toArray(),fov:world.camera.fov,quality:world.quality,drawCalls:world.renderer.info.render.calls,triangles:world.renderer.info.render.triangles,geometries:world.renderer.info.memory.geometries,textures:world.renderer.info.memory.textures,plants:state.plants.length,walls:state.structures.filter(s=>s.kind==='wall').length,centers:state.structures.filter(s=>s.kind==='center').length,terrainChunks:world.chunks.size,visualLabEnabled:Boolean(world.groundDetails?.enabled),visualLabTufts:world.groundDetails?.count??0,visualLabInstanceBufferBytes:world.groundDetails?.mesh?.instanceMatrix.array.byteLength??0};
     });
     const file=`${biome}.png`;
-    await page.locator('#world').screenshot({path:`${out}/${file}`});
+    if(!metadataOnly)await page.locator('#world').screenshot({path:`${out}/${file}`});
     records.push({...metadata,file,errors});
     await page.close();
     console.log(`${biome}: ${metadata.plants} crops, ${metadata.walls} walls, ${metadata.drawCalls} calls`);
   }
 }finally{await browser.close();}
-await writeFile(`${out}/manifest.json`,JSON.stringify({origin,variant,night,lowCamera,renderer:'WorldScene, original game assets and real WebGL pipeline; controlled visual QA fixture with explicit crop/wall entities, not a legal campaign state',viewport:[1280,720],dpr:1,records},null,2)+'\n');
+await writeFile(`${out}/manifest.json`,JSON.stringify({origin,variant,night,lowCamera,metadataOnly,renderer:'WorldScene, original game assets and real WebGL pipeline; controlled visual QA fixture with explicit crop/wall entities, not a legal campaign state',viewport:[1280,720],dpr:1,records},null,2)+'\n');
