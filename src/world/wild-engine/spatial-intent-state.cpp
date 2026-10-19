@@ -2145,6 +2145,24 @@ int nav_intent_plan_attack_wall(double actorId,double startX,double startZ,
         wall->second.z-startZ)});
     }
   }
+  // A partial crop-facing wall need not split two weak regions, so it can be
+  // absent from the enclosure portal list. Consider those physical sides only
+  // when the certified-perimeter pass nominated nothing; the route and lease
+  // below remain mandatory before an attack is proposed.
+  if(candidates.empty()){
+    const int sides=nav_intent_relevant_wall_sides(startX,startZ,radius);
+    if(sides<0)unknown=true;
+    else for(int index=0;index<sides;index++){
+      const size_t base=size_t(index)*4;
+      const uint64_t id=uint64_t(s.relevantWallRows[base]);
+      const auto wall=s.targets.find(id);
+      if(wall==s.targets.end()||!wall->second.active||
+         wall->second.kind!=3||wall->second.status!=0)continue;
+      candidates.push_back({id,uint64_t(s.relevantWallRows[base+3]),
+        s.relevantWallRows[base+1],s.relevantWallRows[base+2],
+        std::hypot(wall->second.x-startX,wall->second.z-startZ)});
+    }
+  }
   std::sort(candidates.begin(),candidates.end(),[](const Candidate& a,
     const Candidate& b){
     if(a.distance!=b.distance)return a.distance<b.distance;

@@ -245,3 +245,37 @@ counts. The fallback did not activate in that normal campaign. The directed
 raid suite passes 52 tests. The remaining validation is a sustained campaign
 with the partial-wall attack policy active; it cannot be inferred from the
 unchanged control or the single resumed raid.
+
+## Experimental partial-wall selection in the native attack planner
+
+The native wall planner previously proposed only walls that separated weak
+navigation regions. This omitted a physically attackable, crop-facing partial
+wall. When the certified-perimeter pass nominates no candidate, the planner
+now consults the native crop-facing wall sides and still requires a complete
+route and an attack-site lease before choosing one. In the frozen night-17
+state, `(95, 20)` now selects `structure-5123`; before this change the same
+native request returned `unknown` with zero candidates.
+
+The [20-night Desert/123 trial](desierto123-partial-native-20.json.gz)
+completed without a technical stall. Compared with the immediately preceding
+[control](desierto123-inset-fallback-20.json.gz), nights 10–20 had 70 versus
+58 wall hits and 88 versus 87 total logical contacts. Both had five
+zero-contact raids. The trial ended with 15 living crops and 1,875 coins,
+versus 15 crops and 1,428 coins in the control. Wall-clock time was 57.72
+versus 63.92 seconds, but the states diverged on day 10, so this is **not**
+an isolated algorithm-speed measurement or a balance recommendation.
+
+The late-game defect remains: nights 16–20 in the trial made no contact.
+The native crop planner's cumulative `unknown/crop-sites` count reached
+1,026 and the wall planner performed 6,634 route queries by day 20; its
+`found` count stopped at 90 after day 15 while `unknown` grew to 903.
+This partial-wall fallback should not be enabled as the default policy until
+the repeated inconclusive group/region work is eliminated and the late
+incursions are investigated. The PR remains experimental.
+
+The same build completed [Sabana/712](sabana712-partial-native-14.json.gz)
+and [Manglares/712](manglares712-partial-native-14.json.gz) for 14 nights.
+Both reproduced the exact serialized final-state SHA-256 from the earlier
+route-proof runs, with no zero-contact raids: 230 contacts in Sabana and 182
+in Manglares from night 6 onward. These unchanged workloads are smoke and
+compatibility checks, not an ABBA benchmark of the new fallback.

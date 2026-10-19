@@ -104,6 +104,13 @@ test('Desert/123 night 17 finds the winding exterior component without changing 
         groupId:rows[index*4+3]}));
     };
     const nearby=sidesAt(attackStart).filter(side=>side.wallId===5123);
+    const originalPosition={x:animal.x,z:animal.z};
+    Object.assign(animal,attackStart);
+    const wallPlan=planner.planAttackWall(state,animal);
+    assert.equal(wallPlan?.status,'found');
+    assert.equal(wallPlan.target.id,'structure-5123');
+    planner.cancelAttackIntent(animal.id);
+    Object.assign(animal,originalPosition);
     assert(nearby.length>0,'the native advice includes the partial wall');
     assert(nearby.some(side=>nav.spatialRouteStatus(attackStart,side,
       animal.radius)==='found'));
