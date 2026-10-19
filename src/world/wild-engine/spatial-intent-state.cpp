@@ -76,10 +76,13 @@ struct WallPortalCache {
   uint32_t topology=0;uint64_t walls=0;double radius=0;bool built=false;
   std::vector<double> rows;
 };
+struct CropProtectionStatus {
+  uint32_t topology=0;float radius=0;int result=-1;bool valid=false;
+};
 struct CropGroup {
   uint64_t id;double value=0,x=0,z=0,minX=0,minZ=0,maxX=0,maxZ=0;
   std::vector<uint64_t> crops;
-  std::unordered_map<int,std::pair<uint32_t,int>> protection;
+  std::unordered_map<int,CropProtectionStatus> protection;
   std::unordered_map<int,AttackSiteCache> attackSites;
 };
 struct DamageKey {double ratio;uint64_t id;};
@@ -122,6 +125,9 @@ struct IntentState {
   std::vector<double> damagedResults;
   std::vector<CropGroup> cropGroups;
   std::vector<double> cropGroupRows,cropGroupMembers;
+  // A crop's physical enclosure verdict is independent of other crops.
+  // Group membership may change without invalidating unchanged crop probes.
+  std::unordered_map<uint64_t,std::array<CropProtectionStatus,6>> cropProtection;
   uint64_t cropRevision=0;bool cropGroupsDirty=true;
   std::unordered_map<int64_t,std::vector<uint64_t>> cropCells;
   std::unordered_map<uint64_t,PlantSearch> plantSearches;
@@ -413,43 +419,40 @@ void rebuildCropGroups(IntentState& s){
   });
   s.cropGroupsDirty=false;
 }
-int cropProtection(const IntentState& s,const CropGroup& group,float radius){
+int cropProtection(const Target& crop,float radius){
   bool open=false,unknown=false;
-  for(uint64_t id:group.crops){
-    const Target& crop=s.targets.at(id);
-    const int xs[2]={int(std::floor(crop.x)),int(std::ceil(crop.x))};
-    const int zs[2]={int(std::floor(crop.z)),int(std::ceil(crop.z))};
-    bool found=false;
-    for(int x:xs)for(int z:zs){
-      if(!spatial_local_clear(float(crop.x),float(crop.z),float(x),float(z)))continue;
+  const int xs[2]={int(std::floor(crop.x)),int(std::ceil(crop.x))};
+  const int zs[2]={int(std::floor(crop.z)),int(std::ceil(crop.z))};
+  bool found=false;
+  for(int x:xs)for(int z:zs){
+    if(!spatial_local_clear(float(crop.x),float(crop.z),float(x),float(z)))continue;
+    const int region=lazy_weak_region(x,z);
+    if(region==-1){unknown=true;continue;}
+    if(region<0)continue;
+    found=true;
+    if(lazy_enclosure(x,z)!=1)open=true;
+  }
+  if(!found){
+    // A crop beside a center may have no clear floor/ceil connector, while
+    // the animal can still attack it from a nearby interaction site. Use
+    // the same twelve local sites as attackSitesFor before calling the
+    // whole group unknown. This work runs only for unresolved crops when
+    // the selected profile's topology changes, never per animal or tick.
+    constexpr int directions=12;
+    for(int sample=0;sample<directions;sample++){
+      const double angle=2*pi*sample/directions;
+      const float px=float(crop.x+std::sin(angle)*(.6+radius));
+      const float pz=float(crop.z+std::cos(angle)*(.6+radius));
+      const int x=int(std::round(px)),z=int(std::round(pz));
+      if(!spatial_local_clear(px,pz,float(x),float(z)))continue;
       const int region=lazy_weak_region(x,z);
       if(region==-1){unknown=true;continue;}
       if(region<0)continue;
       found=true;
       if(lazy_enclosure(x,z)!=1)open=true;
     }
-    if(!found){
-      // A crop beside a center may have no clear floor/ceil connector, while
-      // the animal can still attack it from a nearby interaction site. Use
-      // the same twelve local sites as attackSitesFor before calling the
-      // whole group unknown. This work runs only for unresolved crops when
-      // the selected profile's topology changes, never per animal or tick.
-      constexpr int directions=12;
-      for(int sample=0;sample<directions;sample++){
-        const double angle=2*pi*sample/directions;
-        const float px=float(crop.x+std::sin(angle)*(.6+radius));
-        const float pz=float(crop.z+std::cos(angle)*(.6+radius));
-        const int x=int(std::round(px)),z=int(std::round(pz));
-        if(!spatial_local_clear(px,pz,float(x),float(z)))continue;
-        const int region=lazy_weak_region(x,z);
-        if(region==-1){unknown=true;continue;}
-        if(region<0)continue;
-        found=true;
-        if(lazy_enclosure(x,z)!=1)open=true;
-      }
-    }
-    if(!found)unknown=true;
   }
+  if(!found)unknown=true;
   return open?0:unknown?-1:1;
 }
 // The crop-group index is already maintained for spatial advice. Attach one
@@ -615,6 +618,7 @@ void nav_intent_reset(){
   s.workers.clear();s.targets.clear();s.tasks.clear();
   s.damagedWalls.clear();s.damagedCenters.clear();s.damagedResults.clear();
   s.cropGroups.clear();s.cropGroupRows.clear();s.cropGroupMembers.clear();
+  s.cropProtection.clear();
   s.cropRevision=0;s.cropGroupsDirty=true;
   s.cropCells.clear();s.plantSearches.clear();s.plantLeases.clear();
   s.plantResult.fill(0);s.nextPlantLease=1;s.centerRevision=0;
@@ -829,6 +833,7 @@ int nav_intent_apply_changes(double sequence,int count){
   }
   if(wallChange)s.wallRevision++;
   for(const Change& change:parsed){
+    if(change.kind==2||change.kind==5)s.cropProtection.erase(change.id);
     invalidateDependents(s,change);
     if(!change.op){
       if(change.kind==1)s.workers.erase(change.id);
@@ -963,18 +968,29 @@ int nav_intent_crop_groups(float radius){
   s.cropGroupRows.clear();s.cropGroupMembers.clear();
   s.cropGroupRows.reserve(s.cropGroups.size()*12);
   const int profile=lazy_selected_context();
+  if(profile<0||profile>=6)return -1;
   const uint32_t revision=lazy_route_revision();
   for(CropGroup& group:s.cropGroups){
     auto status=group.protection.find(profile);
-    if(status==group.protection.end()||status->second.first!=revision){
-      const int result=cropProtection(s,group,radius);
-      status=group.protection.insert_or_assign(profile,std::make_pair(revision,result)).first;
+    if(status==group.protection.end()||!status->second.valid||
+       status->second.topology!=revision||status->second.radius!=radius){
+      bool open=false,unknown=false;
+      for(uint64_t id:group.crops){
+        CropProtectionStatus& crop=s.cropProtection[id][profile];
+        if(!crop.valid||crop.topology!=revision||crop.radius!=radius){
+          crop={revision,radius,cropProtection(s.targets.at(id),radius),true};
+        }
+        open|=crop.result==0;unknown|=crop.result<0;
+      }
+      const int result=open?0:unknown?-1:1;
+      status=group.protection.insert_or_assign(profile,
+        CropProtectionStatus{revision,radius,result,true}).first;
     }
     const size_t offset=s.cropGroupMembers.size();
     for(uint64_t id:group.crops)s.cropGroupMembers.push_back(double(id));
     s.cropGroupRows.insert(s.cropGroupRows.end(),{double(group.id),group.value,
       group.x,group.z,group.minX,group.minZ,group.maxX,group.maxZ,
-      double(status->second.second),double(offset),double(group.crops.size()),
+      double(status->second.result),double(offset),double(group.crops.size()),
       double(s.cropRevision)});
   }
   return int(s.cropGroups.size());
