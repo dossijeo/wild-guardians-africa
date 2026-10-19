@@ -1,3 +1,4 @@
+import {patchGlobalGroundFill} from './global-visual-lighting.js';
 import {groundMaterialFunctions,artLightingFunctions,ART_PROFILES} from './biome-material-source.js';
 import {savannaLayerFunctions} from './savanna-layer-source.js';
 import * as THREE from 'three';
@@ -24,6 +25,7 @@ const normalDetailLightingFunctions=artLightingFunctions.replace(
 // Shared by the world renderer only. The original menu owns a separate renderer.
 export class AfricanToon {
   constructor(){
+    this.globalVisualLighting=new URLSearchParams(globalThis.location?.search??'').get('visualLab')==='global-lighting';
     this.uniforms={uEnvEndpoints:{value:1},uFineNoise:{value:1},uWorldOrigin:{value:new THREE.Vector2()},uBiome:{value:0},uWet:{value:0},uNight:{value:0},uNightLight:{value:1},uExposure:{value:1},uLightDir:{value:new THREE.Vector3(-30,55,25).normalize()},uKind:{value:0},uSurfaceType:{value:1},uGroundDetail:{value:1}};
     this.artUniforms={uArtSun:{value:new THREE.Vector3()},uArtShade:{value:new THREE.Vector3()},uArtFoliage:{value:new THREE.Vector3()},uArtParams:{value:new THREE.Vector4()},uArtShape:{value:new THREE.Vector4()},uArtHighlight:{value:0},uArtVolcanicGlow:{value:0}};
     this.materials=new WeakSet();this.shadowUniforms=createNativeShadowUniforms();
@@ -108,9 +110,13 @@ export class AfricanToon {
         #include <opaque_fragment>`);
 
     };
+    if(this.globalVisualLighting&&material.userData.toonGround){
+      const compile=material.onBeforeCompile;
+      material.onBeforeCompile=(shader,renderer)=>{compile(shader,renderer);shader.uniforms.uGlobalGroundShade=this.artUniforms.uArtShade;shader.fragmentShader=patchGlobalGroundFill(shader.fragmentShader);};
+    }
     material.onBeforeCompile=((compile)=>(shader,renderer)=>{compile(shader,renderer);patchNativeShadow(shader,this.shadowUniforms,'vToonWorld');})(material.onBeforeCompile);
     recordNativeDepthHook(material,original,'toon',...(material.userData.horizonBounds?['horizon']:[]));
-    material.customProgramCacheKey=()=>cache()+'|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|'+(material.userData.biomeGround?'biome-ground-4.1.10.3':material.userData.toonGround?'ground':'object')+'|'+(material.userData.biomeGround?.uGroundLayered?.value?'visual-layer':'base-ground')+'|'+(material.userData.artBounds?'illustrated-4.1.6':'toon-4.1.4')+'|'+(material.userData.visualLabNormalDetail?'visual-normal-detail':material.userData.visualLabNormal?'visual-normal':'authored-normal')+'|'+material.type+'|'+(material.userData.horizonBounds?'horizon-clip':'resident');
+    material.customProgramCacheKey=()=>cache()+(this.globalVisualLighting?'|global-visual-lighting':'')+'|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|'+(material.userData.biomeGround?'biome-ground-4.1.10.3':material.userData.toonGround?'ground':'object')+'|'+(material.userData.biomeGround?.uGroundLayered?.value?'visual-layer':'base-ground')+'|'+(material.userData.artBounds?'illustrated-4.1.6':'toon-4.1.4')+'|'+(material.userData.visualLabNormalDetail?'visual-normal-detail':material.userData.visualLabNormal?'visual-normal':'authored-normal')+'|'+material.type+'|'+(material.userData.horizonBounds?'horizon-clip':'resident');
     // The source function already applies its filmic curve. Three still performs
     // output color conversion and fog, without applying a second tone curve.
     material.toneMapped=false;material.needsUpdate=true;

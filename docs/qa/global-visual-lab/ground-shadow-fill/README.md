@@ -35,3 +35,7 @@ Siguiente experimento: incorporar terreno residente al pass solar existente para
 | 21 | night | 13.563 → 13.669 | 6.009 → 5.839 |
 
 Sabana diurna supera el presupuesto de +0,5 ms en esta ronda, con una repetición candidata anormalmente lenta (21,53 frente a 17,72 ms). No se elimina esa muestra ni se aprueba rendimiento: repetir en un contexto más estable o con alternancia dentro de la misma página. Gran Río y Cañón no justifican extrapolar a los seis biomas. Mantener solo como candidato QA hasta resolver esta incertidumbre.
+
+## Repetición y campaña
+
+La [repetición ABBA BAAB en la misma página](PAIRED.md) ya no reproduce la regresión diurna de Sabana. Cañón nocturno registra +0,561 ms: aún no hay aprobación global del presupuesto de +0,5 ms. No se eliminan las muestras desfavorables. Las [capturas de partidas iniciales reales](../campaign-shadow-review/README.md) confirman el beneficio visual en cámara normal de Sabana y Gran Río y muestran la limitación de relieve de Cañón.

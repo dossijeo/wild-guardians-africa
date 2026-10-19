@@ -65,3 +65,12 @@ Antes de adoptar: repetir seis biomas, cámara normal y baja, día/noche con enc
 [48 capturas y ABBA](ground-shadow-fill/README.md): mejora localizada visible sin enfriar el suelo soleado; noche idéntica en los biomas modificados. Se conserva como candidato QA, sin adoptarlo todavía: la ronda de Sabana diurna supera el presupuesto GPU y requiere una medición más estable. Gran Río y Cañón pasan el umbral en esta ronda, sin probarlo para todo el juego. Los seis mockups originales están localizados en [ART-REFERENCES.md](ART-REFERENCES.md).
 
 La inspección de Cañón confirma que reforzar sombras de objetos no resuelve las del relieve: el terreno residente recibe sombra pero no la proyecta. Se prepara un experimento separado, `qa-terrain-shadow-volume.js`, reutilizando geometría y el pass existentes; todavía sin decisión de adopción ni coste aprobado.
+
+## Revisión de campaña y nuevos candidatos (20/10)
+
+- [Partidas reales pausadas](campaign-shadow-review/README.md): 18 capturas de Sabana, Gran Río y Cañón desde el menú, sin entidades artificiales; cámaras estables por pareja y sin errores de red/JS registrados.
+- [Sombras de relieve](terrain-shadow-volume/README.md): beneficio claro en Cañón, no en las vistas de Sabana/Gran Río. Pendiente benchmark de cada pass y streaming; no activado globalmente.
+- [Repetición del relleno en misma página](ground-shadow-fill/PAIRED.md): el salto diurno de Sabana no reaparece; Cañón nocturno supera por poco el umbral. Mantener incertidumbre, no afirmar aceleración.
+- [Cojines de hierba](grass-cushions/README.md): fuente Blender y 8 capturas; descartados por poca presencia visual para +151.140 triángulos. No aumentar densidad del piloto. Se necesita una propuesta conjunta de suelo y masas de vegetación.
+
+La opción integrada `?visualLab=global-lighting` conserva el relleno local y añade casters de terreno solo en Cañón. Build y 20 pruebas existentes pasan; [capturas de integración y recorrido de chunks](global-lighting-integrated/README.md). Es una opción de evaluación, no una declaración de calidad final. Se documenta explícitamente el coste nocturno de terreno por encima del presupuesto previo y el borde de fixture también presente en la referencia.
