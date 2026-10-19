@@ -14,6 +14,12 @@ import {recordNativeDepthHook,recordNativeFluidDepthHook} from './depth-recipes.
 
 const endpointFunctions=endpointEnvironment(environmentFunctions),endpointFluidFunctions=endpointEnvironment(fluidLightingFunctions);
 const diagnosticToon=diagnosticPigment(toonFunctions),diagnosticVolcanic=diagnosticPigment(volcanicFunctions);
+// Experimental village-only relief: retain the authored palette and broad toon
+// bands while allowing the existing tangent-space atlas to affect fine light.
+const normalDetailLightingFunctions=artLightingFunctions.replace(
+  'vec3 lit=toLinear4(clamp(base,0.,1.))*illumination*contact;',
+  'vec3 lit=toLinear4(clamp(base,0.,1.))*illumination*contact; float normalDetail=clamp(dot(N,uLightDir)-dot(normalize(geometricNormal),uLightDir),-.38,.38); lit*=1.+normalDetail*.78;'
+);
 
 // Shared by the world renderer only. The original menu owns a separate renderer.
 export class AfricanToon {
@@ -53,7 +59,7 @@ export class AfricanToon {
       shader.fragmentShader=(material.isMeshBasicMaterial?'varying vec3 vToonLowNormal;\n':'')+worldPatternFunctions+'varying vec3 vToonWorld;uniform float uNight,uNightLight,uExposure,uKind,uSurfaceType,uWet,uBiome,uGroundDetail,uFineNoise,uEnvEndpoints;uniform vec3 uLightDir;\n'+diagnosticToon+'\n'+shader.fragmentShader;
       shader.fragmentShader='uniform sampler2D uEnvDay,uEnvNight;uniform float uEnvYaw,uNativeEnvEnabled;\n'+shader.fragmentShader;
       // The source returns HDR radiance, which africanToon4 grades itself.
-      shader.fragmentShader=shader.fragmentShader.replace('void main() {',endpointFunctions+'\n'+(material.userData.toonGround?'uniform sampler2D uContactMap;uniform vec4 uContactBounds;uniform float uContactOn;\n'+diagnosticGroundNoise(groundLightingFunctions.replace('materialNoise(worldP*.32),fine=materialNoise(worldP*2.6)','materialNoise(worldPatternPosition(worldP)*.32),fine=materialNoise(worldPatternPosition(worldP)*2.6)').replace('sin(worldP.z*.024)','sin(worldPatternPosition(worldP).z*.024)')):'')+'\n'+(material.userData.biomeGround?groundMaterialFunctions+(material.userData.biomeGround.uGroundLayered?.value?savannaLayerFunctions:''):'')+'\n'+(material.userData.artBounds?'uniform vec3 uArtSun,uArtShade,uArtFoliage;uniform vec4 uArtParams,uArtShape;uniform float uArtHighlight,uArtVolcanicGlow;varying vec3 vCanopyNormal;varying float vRelativeHeight;\n'+artLightingFunctions:'')+'\n'+(material.userData.nativeSurface?diagnosticVolcanic:'')+'\nvoid main() {');
+      shader.fragmentShader=shader.fragmentShader.replace('void main() {',endpointFunctions+'\n'+(material.userData.toonGround?'uniform sampler2D uContactMap;uniform vec4 uContactBounds;uniform float uContactOn;\n'+diagnosticGroundNoise(groundLightingFunctions.replace('materialNoise(worldP*.32),fine=materialNoise(worldP*2.6)','materialNoise(worldPatternPosition(worldP)*.32),fine=materialNoise(worldPatternPosition(worldP)*2.6)').replace('sin(worldP.z*.024)','sin(worldPatternPosition(worldP).z*.024)')):'')+'\n'+(material.userData.biomeGround?groundMaterialFunctions+(material.userData.biomeGround.uGroundLayered?.value?savannaLayerFunctions:''):'')+'\n'+(material.userData.artBounds?'uniform vec3 uArtSun,uArtShade,uArtFoliage;uniform vec4 uArtParams,uArtShape;uniform float uArtHighlight,uArtVolcanicGlow;varying vec3 vCanopyNormal;varying float vRelativeHeight;\n'+(material.userData.visualLabNormalDetail?normalDetailLightingFunctions:artLightingFunctions):'')+'\n'+(material.userData.nativeSurface?diagnosticVolcanic:'')+'\nvoid main() {');
       if(material.userData.horizonBounds){
         shader.uniforms.uHorizonBounds={value:material.userData.horizonBounds};shader.fragmentShader='uniform vec4 uHorizonBounds;\n'+shader.fragmentShader;
         shader.fragmentShader=shader.fragmentShader.replace('#include <clipping_planes_fragment>',`#include <clipping_planes_fragment>
@@ -104,7 +110,7 @@ export class AfricanToon {
     };
     material.onBeforeCompile=((compile)=>(shader,renderer)=>{compile(shader,renderer);patchNativeShadow(shader,this.shadowUniforms,'vToonWorld');})(material.onBeforeCompile);
     recordNativeDepthHook(material,original,'toon',...(material.userData.horizonBounds?['horizon']:[]));
-    material.customProgramCacheKey=()=>cache()+'|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|'+(material.userData.biomeGround?'biome-ground-4.1.10.3':material.userData.toonGround?'ground':'object')+'|'+(material.userData.biomeGround?.uGroundLayered?.value?'visual-layer':'base-ground')+'|'+(material.userData.artBounds?'illustrated-4.1.6':'toon-4.1.4')+'|'+(material.userData.visualLabNormal?'visual-normal':'authored-normal')+'|'+material.type+'|'+(material.userData.horizonBounds?'horizon-clip':'resident');
+    material.customProgramCacheKey=()=>cache()+'|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|'+(material.userData.biomeGround?'biome-ground-4.1.10.3':material.userData.toonGround?'ground':'object')+'|'+(material.userData.biomeGround?.uGroundLayered?.value?'visual-layer':'base-ground')+'|'+(material.userData.artBounds?'illustrated-4.1.6':'toon-4.1.4')+'|'+(material.userData.visualLabNormalDetail?'visual-normal-detail':material.userData.visualLabNormal?'visual-normal':'authored-normal')+'|'+material.type+'|'+(material.userData.horizonBounds?'horizon-clip':'resident');
     // The source function already applies its filmic curve. Three still performs
     // output color conversion and fog, without applying a second tone curve.
     material.toneMapped=false;material.needsUpdate=true;
