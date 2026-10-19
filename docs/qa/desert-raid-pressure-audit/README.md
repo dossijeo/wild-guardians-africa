@@ -692,13 +692,25 @@ have no exterior witness from the resident region. This is a concrete
 counterexample to treating a merely reachable wall portal as a useful
 attack target. Route validity alone cannot certify tactical relevance.
 
+An optional diagnostic in `probe-frozen-raid-entry-boundary.mjs`
+(`WILD_PROBE_CROP_ROUTES=1`) samples the living crops from the widest
+animal's birth, using the crop center and four nearby positions. None of
+the 70 routes to 14 living crops was found: 57 returned `unknown` with route
+reason 2 (no usable destination connector), and 13 returned `blocked`.
+These five samples per plant are diagnostic only; they do not certify that
+every physically valid attack position is unreachable. There were 25
+resident chunks at the entry, so the observed route reason points to local
+destination connection rather than an absent sector in these samples.
+
 The current generic-portal fallback can still return an entry with a
 `wallOpportunity` lacking a crop-group ID. The native attack planner
 correctly refuses to turn that hint into a confirmed target, leaving the
 wave to wait and retire. The next correction must either find a physically
 reachable crop/defense opportunity from another certified exterior entry,
 or establish a native topological relationship between the chosen exterior
-wall face and the protected crops. It must not assign the group seen from
-the opposite face to wall #260 by geometry alone or spawn animals inside a
-defense. PR #143 remains draft pending this correction and a new sustained
-replay. The cold-profile speedup is independent of this tactical defect.
+wall face and the protected crops. If no legal attack point exists, the
+zero-contact outcome may be a legitimate successful defense; the generic
+wall hint should still not claim tactical relevance. It must not assign the
+group seen from the opposite face to wall #260 by geometry alone or spawn
+animals inside a defense. PR #143 remains draft pending that distinction
+and a new sustained replay. The cold-profile speedup is independent of it.

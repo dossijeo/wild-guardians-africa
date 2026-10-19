@@ -129,13 +129,32 @@ try{
           wallId:side.wallId,x:side.x,z:side.z,
           status:nav.spatialRouteStatus(birth,side,radius)}))};
   })??[];
+  let cropRouteSamples=null;
+  if(process.env.WILD_PROBE_CROP_ROUTES==='1'&&entry?.entries.length){
+    const widest=specs.reduce((best,spec,index)=>spec.radius>best.radius?
+      {...spec,index}:best,{radius:-1,index:0});
+    const birth=entry.entries[widest.index],radius=widest.radius;
+    const offsets=[[0,0],[radius+1,0],[-radius-1,0],
+      [0,radius+1],[0,-radius-1]];
+    cropRouteSamples=state.plants.filter(plant=>plant.alive).sort((a,b)=>
+      Math.hypot(a.x-birth.x,a.z-birth.z)-
+      Math.hypot(b.x-birth.x,b.z-birth.z)||a.id.localeCompare(b.id))
+      .slice(0,24).map(plant=>({id:plant.id,x:plant.x,z:plant.z,
+        routes:offsets.map(([dx,dz])=>{
+          const status=nav.spatialRouteStatus(birth,
+            {x:plant.x+dx,z:plant.z+dz},radius);
+          return {status,reason:session.core.wasm.spatial_world_route_reason(),
+            graphReason:session.core.wasm.spatial_world_route_graph_reason()};
+        })}));
+  }
   if(serialize(state)!==before)throw Error('Raid entry probe changed game state');
   const report={day:state.day,time:state.time,preferredSide,selectionMs,
     repeatedSelection,profileBuilds,
     selectionBreakdown,
     residentChunks:loaded.size,bounds:nav.activeBounds,view:nav.raidView,
     entry,cameraRelevant:cameraRelevant.slice(0,12),cameraRelevantCount:cameraRelevant.length,
-    allWallSidesCount:allWallSides.length,allSideCandidates,wallRoutes,stats:nav.raidSelectionStats};
+    allWallSidesCount:allWallSides.length,allSideCandidates,wallRoutes,
+    cropRouteSamples,stats:nav.raidSelectionStats};
   writeFileSync(out,JSON.stringify(report,null,2)+'\n');
   console.log(JSON.stringify({entry:entry?.entries?.length??0,
     wallOpportunity:entry?.wallOpportunity??null,
