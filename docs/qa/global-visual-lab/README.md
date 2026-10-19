@@ -82,3 +82,7 @@ El [ensayo sobre tres árboles de Sabana](./canopy-authored-normal/README.md) co
 ### Escala de ondas: dos mecanismos descartados
 
 El [estudio de pintura y normales de agua](./pond-wave-scale/README.md) conserva 32 capturas. Reducir la separación de trazos produce vetas; reducir la longitud de las ondas normales produce franjas de reflexión en cámara baja. Se mantienen los originales y se cambia de componente, sin más barridos de parámetros del agua.
+
+### Hierba corta nativa: sustitución modelada en Blender
+
+El [ensayo plant_02](./native-short-grass/README.md) reduce geometría manteniendo draws, pero pierde la identidad de mata seca y no mejora claramente a cámara de juego. Se conserva el original. Incluye 24 capturas finales válidas, fuentes Blender y corrección explícita del caché de grupos que invalidaba las primeras comparativas. No se publican tiempos GPU.
