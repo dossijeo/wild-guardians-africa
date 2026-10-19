@@ -11,7 +11,7 @@ export class BiomeGround {
   async load(assets,biome,profile,field){
     this.assertOpen();this.profile=profile;this.field=field;
     const tiles=await json('/content/ground-materials.json',{signal:this.loading.signal});
-    this.layeredSavanna=biome==='savanna'&&['layer','layer-relief','layer-grass'].includes(new URLSearchParams(globalThis.location?.search??'').get('visualLab'));
+    this.layeredSavanna=biome==='savanna'&&['layer','layer-relief','layer-grass','layer-grass-sculpted'].includes(new URLSearchParams(globalThis.location?.search??'').get('visualLab'));
     this.layeredRelief=this.layeredSavanna&&new URLSearchParams(globalThis.location?.search??'').get('visualLab')==='layer-relief';
     this.tile=tiles[biome];this.assertOpen();
     try{
