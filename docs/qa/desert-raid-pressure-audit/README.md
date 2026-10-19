@@ -459,3 +459,36 @@ evidence of a speedup in that biome. Directed native intention, route,
 topology, and restoration tests pass (26/26), as does browser syntax
 validation. The PR remains experimental pending interactive latency and wider
 campaign checks.
+
+### Browser main-thread cost of a wall-entry decision
+
+The frozen [Desert/123 day-17 state](desierto123-d17-waiting-state.json.gz)
+has eight animals and 127 intact walls. The independent Chrome harness
+[`benchmark-frozen-raid-entry-browser.mjs`](../../../tools/experiments/benchmark-frozen-raid-entry-browser.mjs)
+loads that state and the same Wild Engine WASM into a minimal Vite page, then
+calls `exteriorRaidEntry()` synchronously in a `requestAnimationFrame` callback.
+It tests the existing animal birth positions against physical wall approaches;
+it is **not** a rendered gameplay frame or a new campaign outcome. Run it with
+the Vite server on port 5188:
+
+```sh
+node tools/experiments/benchmark-frozen-raid-entry-browser.mjs docs/qa/desert-raid-pressure-audit/desierto123-d17-waiting-state.json.gz docs/qa/desert-raid-pressure-audit/desierto123-d17-browser-entry-a.json
+```
+
+The two recorded [Chrome runs](desierto123-d17-browser-entry-a.json)
+([second run](desierto123-d17-browser-entry-b.json)) took 274.2 and 254.4 ms
+inside entry selection. The measured callback-to-callback frame intervals
+were 282.8 and 266.3 ms. Of the selection time, 245.0 and 225.1 ms came from
+51 native `spatialRouteStatus()` calls in each run. Their results were 37
+`blocked`, eight `found`, and six `unknown`; all 51 continuous-coordinate
+requests were distinct. This establishes a real synchronous browser stall
+for this frozen decision, while the empty harness does not measure WebGL
+rendering or a normal wave spawning in the live game.
+
+The current wall-opportunity check asks each birth whether it can reach one
+of up to eight wall faces; the positive routes do not certify the entire
+wave, and the selector correctly falls back to the original entry here.
+Removing those checks solely to shorten the stall could strand animals again.
+A subsequent change should share the region/wall decision or prepare it
+outside the render callback while retaining a positive full-wave route
+certificate; its end-to-end campaign and contact behavior still need tests.
