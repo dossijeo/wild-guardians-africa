@@ -34,4 +34,14 @@ try{
  });
  await page.waitForTimeout(500);
  await page.locator('canvas#world').screenshot({path:`docs/qa/global-visual-lab/workshop-art/${variant}-facade-day.png`});
+ const facade=await page.evaluate(async()=>{
+  const THREE=await import('/node_modules/three/build/three.module.js'),w=window.qaVisualReference.world,m=w.objects.get(w.state.villages[0].id).children.find(m=>m.isMesh),ray=new THREE.Raycaster(),result=[];
+  for(const [x,y]of [[800,400],[780,350],[790,460],[780,420]]){ray.setFromCamera({x:x/640-1,y:1-y/360},w.camera);const h=ray.intersectObject(m)[0];if(h)result.push({screen:[x,y],face:h.faceIndex,point:m.worldToLocal(h.point).toArray(),normal:h.face.normal.toArray()});}return result;
+ });
+ await writeFile('docs/qa/global-visual-lab/workshop-art/facade-probes.json',JSON.stringify(facade,null,2)+'\n');
+ console.log('Facade',JSON.stringify(facade));
+ await page.locator('#night').evaluate(e=>e.click());
+ await page.waitForFunction(()=>!document.querySelector('#night').disabled&&window.qaVisualReference.world.state.time===350);
+ await page.waitForTimeout(500);
+ await page.locator('canvas#world').screenshot({path:`docs/qa/global-visual-lab/workshop-art/${variant}-facade-night.png`});
 }finally{await browser.close();}

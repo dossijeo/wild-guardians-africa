@@ -6,7 +6,7 @@ Este experimento permanece detrás de `?visualLab=village-repacked`. No modifica
 | --- | --- | --- |
 | A — atlas runtime original | Referencia | Cubierta, madera y barro originales, con zonas de textura suave. |
 | B — UV reempaquetada + color original transferido | Prototipo técnico válido | Misma apariencia observable en WebGL, sin ganar detalle artístico; aumenta espacio UV disponible para una variante nueva. |
-| C — redibujo selectivo de materiales | Experimento realizado | Teja y puerta más legibles, franja del arco alineada con las aristas reales; murales protegidos aún suaves. [A/B/C y costes](../workshop-art/README.md). Mejora parcial, no activar por defecto. |
+| C — redibujo selectivo de materiales | Segundo pase realizado | Teja/puerta legibles, arco con UV continua, soles restaurados y cara naranja limpia. Accesorios aún originales. [A/B/C y costes](../workshop-art/README.md). No activar por defecto. |
 
 ## Fuente y fidelidad
 

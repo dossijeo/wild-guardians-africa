@@ -22,7 +22,7 @@ for(const camera of ['medium','close'])for(const phase of ['day','night']){
  }
  differences.push({camera,phase,roi:box,meanAbsoluteRgb:sum/(total*3),pixelsOver12Percent:100*changed/total,interpretation:'Difference within fixed building ROI, not a quality score; compressed screenshot comparison.'});
 }
-const files={};for(const p of ['public/assets/visual-lab/mapu-0-color-art.webp','public/assets/visual-lab/mapu-0-color-repacked.webp','public/assets/visual-lab/mapu-0-repacked.bin'])files[p]={bytes:(await stat(p)).size,sha256:createHash('sha256').update(await readFile(p)).digest('hex')};
+const files={};for(const p of ['public/assets/visual-lab/mapu-0-color-art.webp','public/assets/visual-lab/mapu-0-color-repacked.webp','public/assets/visual-lab/mapu-0-repacked.bin','public/assets/visual-lab/mapu-0-art.bin'])files[p]={bytes:(await stat(p)).size,sha256:createHash('sha256').update(await readFile(p)).digest('hex')};
 const audit=JSON.parse(await readFile(`${out}/art-audit.json`));
 for(const [p,h]of Object.entries(audit.sourceHashes))if(createHash('sha256').update(await readFile(p)).digest('hex')!==h)throw Error(`Source changed: ${p}`);
 const summary={order:report.records.filter(r=>r.camera==='medium'&&r.phase==='day').map(r=>r.variant),groups,differences,files,sourceHashesVerified:true,extraTextureStorageVsABytes:2048*2048*4*4/3,extraTextureStorageVsBBytes:0,note:'RGBA8 mip storage estimate, not measured VRAM/RSS. Both B/C retain the shared source atlas for other village units.'};

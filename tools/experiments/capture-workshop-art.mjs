@@ -3,7 +3,7 @@ import {mkdir,writeFile} from 'node:fs/promises';
 import sharp from 'sharp';
 const out='docs/qa/global-visual-lab/workshop-art';
 await mkdir(out,{recursive:true});
-await sharp(`${out}/mapu-0-color-art.png`).webp({quality:95,effort:6}).toFile('public/assets/visual-lab/mapu-0-color-art.webp');
+await sharp(`${out}/mapu-0-color-refined.png`).webp({quality:95,effort:6}).toFile('public/assets/visual-lab/mapu-0-color-art.webp');
 const variants=(process.env.WG_ART_VARIANTS??'0,village-repacked,village-art').split(',');
 const browser=await chromium.launch({channel:'chrome',headless:true});
 const records=[];
