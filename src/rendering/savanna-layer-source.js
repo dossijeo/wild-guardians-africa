@@ -14,7 +14,12 @@ void groundSavannaLayer(vec3 worldP,vec3 Ng,inout vec3 color,inout vec3 N,inout 
  float wear=ctx.a*up;
  float breakUp=materialNoise(vec3(world.x*.24,0.,world.y*.24));
  float broad=materialNoise(vec3(world.x*.085+17.,0.,world.y*.085-11.));
- float straw=smoothstep(.28,.66,ctx.r+(ctx.g-.5)*.23+(breakUp-.5)*.29+(broad-.5)*.20);
+ float cover=ctx.r+(ctx.g-.5)*.23;
+ // Break up the contour where the mask changes material; leave established
+ // sand and straw stable so the edge does not resemble a displaced straight line.
+ float boundary=1.-smoothstep(.10,.40,abs(cover-.52));
+ float contour=(breakUp-.5)*1.8+(broad-.5)*1.2;
+ float straw=smoothstep(.34,.70,cover+contour*(.15+.75*boundary));
  straw*=up*(1.-wear*.96);
  vec2 sandUV=mat2(.8,-.6,.6,.8)*world*.20+uGroundSeed;
  vec2 strawUV=mat2(.8,-.6,.6,.8)*world*.155+uGroundSeed;
