@@ -26,8 +26,8 @@ test('pauses, result, disposal, elapsed loading and recasting reject obsolete re
 });
 test('native simulated Growth duration ending does not count as cooldown completion',()=>{
  const s=Game.newGame({seed:712});Game.resume(s,'intro');
- const nav={placement:()=>({valid:true}),setState(){},terrainValid:()=>true,walkable:()=>true,path:(_a,b)=>[{x:b.x,z:b.z}]};Game.placeStructure(s,'center',{x:12,z:8},nav);s.day=5;s.time=100;const f=fixture();f.audio.update(s);
- Game.cast(s,'grow','growth',40,40,nav);f.audio.update(s);Game.tick(s,30,nav);f.audio.update(s);assert.equal(f.calls.length,0);assert.ok(Math.abs(s.cooldowns.growth-60)<1e-8);
+ const nav={placement:()=>({valid:true}),setState(){},terrainValid:()=>true,walkable:()=>true,path:(_a,b)=>[{x:b.x,z:b.z}]};Game.placeStructure(s,'center',{x:12,z:8},nav);Game.plant(s,'seed','mijo',17,8,nav);s.day=5;s.time=100;const f=fixture();f.audio.update(s);
+ Game.cast(s,'grow','growth',17,8,nav);f.audio.update(s);Game.tick(s,30,nav);f.audio.update(s);assert.equal(f.calls.length,0);assert.ok(Math.abs(s.cooldowns.growth-60)<1e-8);
  Game.tick(s,60.1,nav);f.audio.update(s);assert.equal(f.calls.length,1);assert.equal(s.cooldowns.growth,0);
 });
 test('AudioSystem stop/suspend and a suspended context release the observer',()=>{

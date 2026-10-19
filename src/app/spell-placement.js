@@ -6,5 +6,5 @@ export function castPickedSpell(state,id,kind,{entityId,point},nav){
   const plant=state.plants.find(p=>p.id===entityId&&p.alive);
   const target=plant??point??state.structures.find(s=>s.id===entityId);
   if(!target)return false;
-  return cast(state,id,kind,target.x,target.z,nav);
+  return cast(state,id,kind,target.x,target.z,nav,plant&&kind!=='shield'?{targetId:plant.id}:{});
 }

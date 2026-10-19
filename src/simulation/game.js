@@ -344,35 +344,48 @@ export function requestRepair(s,id,targetId) {
     const center=nearest(s.structures.filter(operational),target);enqueue(s,center.id,'repair',targetId);emit(s,'RepairRequested',{targetId});
   });
 }
-export const spellRadius=id=>({shield:1.95,growth:2.6,multiply:2.2})[id]; // Calibrated against 1.5 m planting pitch; area, not plant cap.
-export function spellAt(s,id,p) {return s.spells.find(a=>a.kind===id&&a.remaining>0&&dist(a,p)<=a.radius);}
+export const spellRadius=id=>({shield:1.95,growth:.79,multiply:.79})[id];
+export function spellAt(s,id,p) {return s.spells.find(a=>a.kind===id&&a.remaining>0&&(a.targetId?a.targetId===p.id:dist(a,p)<=a.radius));}
 function markMultiplyTargets(s,area){
-  for(const p of s.plants)if(p.alive&&dist(area,p)<=area.radius)p.multiplyHarvest=true;
+  for(const p of s.plants)if(p.alive&&(area.targetId?p.id===area.targetId:dist(area,p)<=area.radius))p.multiplyHarvest=true;
   area.exposureApplied=true;
+}
+function spellPlant(s,x,z){
+  let best=null,bestDistance=Infinity;
+  for(const p of s.plants)if(p.alive){
+    const distance=dist(p,{x,z});
+    if(distance<=spellRadius('growth')&&(distance<bestDistance||distance===bestDistance&&p.id<best.id)){best=p;bestDistance=distance;}
+  }
+  return best;
 }
 export function previewSpell(s,kind,x,z,nav) {
   const draft={kind,x,z,radius:spellRadius(kind),valid:false,reason:null};
   try {
-    validateSpell(s,kind,x,z,nav);draft.valid=true;
+    const {plant}=validateSpell(s,kind,x,z,nav);draft.valid=true;
+    if(plant){draft.x=plant.x;draft.z=plant.z;draft.targetId=plant.id;}
   } catch(error) {draft.reason=error.message;}
   return draft;
 }
-function validateSpell(s,kind,x,z,nav) {
+function validateSpell(s,kind,x,z,nav,targetId=null) {
   const spec=B.spells.find(p=>p.id===kind);if(!spec)throw new Error('Magia desconocida');
   if(!spellUnlocked(s,kind))throw new Error('El Espíritu todavía no ha revelado esta magia');
   if(s.cooldowns[kind]>0)throw new Error('La magia está recargando');
   if(!Number.isFinite(x)||!Number.isFinite(z))throw new Error('Ubicación mágica inválida');
   const radius=spellRadius(kind);
-  if(s.spells.some(a=>a.remaining>0&&dist(a,{x,z})<a.radius+radius))throw new Error('Las áreas mágicas no pueden solaparse');
+  const plant=kind==='shield'?null:spellPlant(s,x,z);
+  if(kind!=='shield'&&!plant)throw new Error('Selecciona un cultivo vivo');
+  if(targetId!==null&&plant?.id!==targetId)throw new Error('El cultivo elegido ya no está disponible');
+  if(kind==='shield'&&s.spells.some(a=>a.kind==='shield'&&a.remaining>0&&dist(a,{x,z})<a.radius+radius))throw new Error('Los escudos no pueden solaparse');
   if(kind==='shield'&&s.raid?.animals.some(a=>a.status!=='gone'&&dist(a,{x,z})<radius+a.radius))throw new Error('El Escudo solapa un animal');
   if(!permission(s,kind))throw new Error('Esta acción no está disponible ahora');
-  return spec;
+  return {spec,plant};
 }
-export function cast(s,id,kind,x,z,nav) {
+export function cast(s,id,kind,x,z,nav,{targetId=null}={}) {
   if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
-  const spec=validateSpell(s,kind,x,z,nav),radius=spellRadius(kind);
+  const {spec,plant}=validateSpell(s,kind,x,z,nav,targetId),radius=spellRadius(kind);
   return commit(s,id,kind,()=>{
-    const area={id:`spell-${s.nextId++}`,kind,x,z,radius,remaining:spec.duration_seconds};
+    const area={id:`spell-${s.nextId++}`,kind,x:plant?.x??x,z:plant?.z??z,radius,remaining:spec.duration_seconds};
+    if(plant)area.targetId=plant.id;
     if(kind==='multiply')markMultiplyTargets(s,area);
     s.spells.push(area);s.cooldowns[kind]=spec.cooldown_seconds;nav.setState(s);emit(s,'SpellActivated',{kind,x,z});
   });

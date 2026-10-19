@@ -55,17 +55,10 @@ export function simulateIntensiveFarm({days=100,profile='olderFemale',mixed=fals
   Game.plant(s,command('plant'),species,p.x,p.z,nav);plantedSequence++;maximumLiving=Math.max(maximumLiving,s.plants.filter(p=>p.alive).length);return true;
  };
  const canCast=(kind,p)=>permission(s,kind)&&s.cooldowns[kind]===0&&
-  !s.spells.some(a=>distance(a,p)<a.radius+Game.spellRadius(kind))&&
+  (kind!=='shield'||!s.spells.some(a=>a.kind==='shield'&&distance(a,p)<a.radius+Game.spellRadius(kind)))&&
   (kind!=='shield'||!s.raid?.animals.some(a=>a.status!=='gone'&&distance(a,p)<a.radius+Game.spellRadius(kind)));
  const cast=(kind,p)=>canCast(kind,p)&&Game.cast(s,command(kind),kind,p.x,p.z,nav);
- const bestMagicPoint=(kind,plants)=>{
-  let best=null,score=0;
-  for(const p of plants)if(canCast(kind,p)){
-   const coverage=plants.reduce((total,q)=>total+Number(distance(p,q)<=Game.spellRadius(kind)),0);
-   if(coverage>score){best=p;score=coverage;}
-  }
-  return best;
- };
+ const bestMagicPoint=(kind,plants)=>plants.find(p=>canCast(kind,p))??null;
  const act=()=>{
   let actions=0;
   if(s.raid){

@@ -29,7 +29,7 @@ export function simulateActiveFarm({days=100,startDay=5,profile='olderMale',repa
     if(e.type==='SpellActivated')magic[e.kind]=(magic[e.kind]??0)+1;
   }};
   const canCast=(kind,p)=>permission(s,kind)&&s.cooldowns[kind]===0&&nav.terrainValid(p.x,p.z,.2)&&
-    !s.spells.some(a=>a.remaining>0&&distance(a,p)<a.radius+Game.spellRadius(kind))&&
+    (kind!=='shield'||!s.spells.some(a=>a.kind==='shield'&&a.remaining>0&&distance(a,p)<a.radius+Game.spellRadius(kind)))&&
     (kind!=='shield'||!s.raid?.animals.some(a=>a.status!=='gone'&&distance(a,p)<a.radius+Game.spellRadius(kind)));
   const cast=(kind,p)=>{if(canCast(kind,p))return Game.cast(s,id(kind),kind,p.x,p.z,nav);return false;};
   const act=()=>{
@@ -52,8 +52,6 @@ export function simulateActiveFarm({days=100,startDay=5,profile='olderMale',repa
     if(s.day>=3&&s.cooldowns.growth===0){
       const growing=live.filter(p=>!isMature(p)&&p.water[0].status!=='due'&&!p.water.some(w=>w.status==='due')&&
         p.water.some(w=>w.status==='future'&&w.at>p.growth&&w.at-p.growth<=40));
-      const coverage=new Map(growing.map(p=>[p.id,live.filter(q=>distance(q,p)<=Game.spellRadius('growth')).length]));
-      growing.sort((a,b)=>coverage.get(b.id)-coverage.get(a.id));
       for(const p of growing)if(cast('growth',p))break;
     }
     if(s.day<startDay||!s.workers.some(w=>w.contractDay===s.day&&s.time<PROFILES.find(p=>p.id===w.profile).end))return;

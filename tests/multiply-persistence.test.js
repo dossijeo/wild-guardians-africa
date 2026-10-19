@@ -28,9 +28,9 @@ for(const reloadAt of ['none','active','expired','carrying'])test(`marked sprout
  Game.tick(s,10,nav);assert.equal(s.crates.length,1);assert.equal(numberOf(s.ledger.balance),cash+22);
  assert.equal(s.events.filter(e=>e.type==='CrateDelivered').length,1);
 });
-test('exposure includes new sprouts during the active interval, but neither outside nor after expiry',()=>{
+test('single-target exposure never transfers to sprouts planted during or after the active interval',()=>{
  const {s,nav}=fixture();Game.cast(s,'multiply','multiply',8,4,nav);
- Game.plant(s,'inside','mijo',8,5.5,nav);assert.equal(s.plants.at(-1).multiplyHarvest,true);
+ Game.plant(s,'inside','mijo',8,5.5,nav);assert.notEqual(s.plants.at(-1).multiplyHarvest,true);
  Game.plant(s,'outside','mijo',8,7,nav);assert.notEqual(s.plants.at(-1).multiplyHarvest,true);
  Game.tick(s,15,nav);Game.plant(s,'late','mijo',8,2.5,nav);assert.notEqual(s.plants.at(-1).multiplyHarvest,true);
 });
@@ -41,15 +41,17 @@ test('legacy active areas are marked once, and pauses freeze the exposure interv
  const p=s.plants[0];let reads=0;const x=p.x;Object.defineProperty(p,'x',{get(){reads++;return x;},enumerable:true});s.time=310;s.nightPlan={done:true,group:[]};s.workers=[];
  Game.tick(s,1,nav);assert.equal(reads,0,'night update does not scan static crops again for exposure');
 });
-test('all powers accept finite terrain points even when building and walking are invalid',()=>{
+test('shield accepts finite ground; agricultural powers use a living crop without terrain placement',()=>{
  for(const kind of ['growth','multiply','shield']){
   const {s,nav}=fixture();nav.terrainValid=()=>{throw new Error('terrain placement must not be consulted');};
-  assert.equal(Game.previewSpell(s,kind,80,80,nav).valid,true);Game.cast(s,'cast',kind,80,80,nav);assert.equal(s.spells[0].kind,kind);
+  const point=kind==='shield'?[80,80]:[8,4];
+  assert.equal(Game.previewSpell(s,kind,...point,nav).valid,true);Game.cast(s,'cast',kind,...point,nav);assert.equal(s.spells[0].kind,kind);
  }
 });
 test('saved exposure fields reject malformed state while accepting older absent fields',()=>{
  const {s}=fixture();s.plants[0].multiplyHarvest='yes';assert.throws(()=>serialize(s));delete s.plants[0].multiplyHarvest;assert.doesNotThrow(()=>serialize(s));
  s.spells.push({id:'bad',kind:'multiply',x:0,z:0,radius:2.2,remaining:15,exposureApplied:1});assert.throws(()=>serialize(s));
+ s.spells[0].exposureApplied=true;s.spells[0].targetId=42;assert.throws(()=>serialize(s));
 });
 
 test('repeated casts mark the same slow-growing crop without stacking beyond double',()=>{

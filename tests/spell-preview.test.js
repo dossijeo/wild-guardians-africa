@@ -12,10 +12,11 @@ function ready(){
   Game.openInitialHiring(s);Game.hire(s,'hire',{olderMale:1});
   s.day=5;s.time=0;s.initialPreparation=false;s.dayPlan={done:true};return s;
 }
-test('Aiming all powers, moving their area, and clearing presentation preserve every simulation field',()=>{
+test('Aiming the shield or a living crop and clearing presentation preserve every simulation field',()=>{
   const s=ready(),scene=new THREE.Scene(),view=new SpellPreview(scene,(x,z)=>x*.1+z*.03),before=serialize(s);
-  for(const kind of ['shield','growth','multiply'])for(const x of [0,10,40,1e6]){
-    const draft=Game.previewSpell(s,kind,x,20,nav);assert.equal(draft.valid,true);
+  for(const kind of ['shield','growth','multiply'])for(const x of (kind==='shield'?[0,10,40,1e6]:[16.7,17,17.3])){
+    const draft=Game.previewSpell(s,kind,x,kind==='shield'?20:8,nav);assert.equal(draft.valid,true);
+    if(kind!=='shield')assert.deepEqual([draft.x,draft.z,draft.targetId],[17,8,s.plants[0].id]);
     assert.equal(draft.radius,Game.spellRadius(kind));view.show(draft);
     assert.equal(view.line.castShadow,false);assert.equal(view.line.visible,true);
     const p=view.geometry.getAttribute('position');
@@ -30,40 +31,41 @@ test('Aiming all powers, moving their area, and clearing presentation preserve e
   view.dispose();assert.equal(scene.children.length,0);
 });
 test('Real-time advancement uses day ×1 and night ×5 while preserving independent cooldowns across reload',()=>{
-  let s=ready();Game.cast(s,'growth','growth',10,20,nav);Game.advanceReal(s,1,nav);
+  let s=ready();Game.cast(s,'growth','growth',17,8,nav);Game.advanceReal(s,1,nav);
   assert.ok(Math.abs(s.cooldowns.growth-89)<1e-8);
   s.time=320;s.nightPlan={done:true,group:[]};Game.cast(s,'shield','shield',30,20,nav);
   const elapsed=s.elapsed;Game.advanceReal(s,1,nav);
   assert.ok(Math.abs(s.elapsed-elapsed-5)<1e-8);assert.ok(Math.abs(s.cooldowns.growth-84)<1e-8);assert.ok(Math.abs(s.cooldowns.shield-85)<1e-8);
   s=deserialize(serialize(s));Game.pause(s,'menu');const before=serialize(s);Game.advanceReal(s,1,nav);assert.equal(serialize(s),before);
 });
-test('Preview and confirmation agree on overlap, terrain, cooldown, locks, blocking pauses and infrastructure',()=>{
+test('Preview and confirmation agree on crop targeting, shield overlap, cooldown, locks and infrastructure',()=>{
   const scenarios=[
     s=>{s.day=1;},s=>{s.cooldowns.growth=1;},s=>{Game.pause(s,'hiring');},s=>{s.structures[0].status='ruined';},
-    s=>{s.spells.push({id:'active',kind:'shield',x:10,z:20,radius:1.95,remaining:10});}
+    s=>{s.plants[0].alive=false;}
   ];
-  for(const change of scenarios){const s=ready();change(s);const before=serialize(s),draft=Game.previewSpell(s,'growth',10,20,nav);assert.equal(draft.valid,false);assert.throws(()=>Game.cast(s,'confirm','growth',10,20,nav),{message:draft.reason});assert.equal(serialize(s),before);}
+  for(const change of scenarios){const s=ready();change(s);const before=serialize(s),draft=Game.previewSpell(s,'growth',17,8,nav);assert.equal(draft.valid,false);assert.throws(()=>Game.cast(s,'confirm','growth',17,8,nav),{message:draft.reason});assert.equal(serialize(s),before);}
   for(const point of [[NaN,0],[0,Infinity]]){
     const s=ready(),blocked={...nav,terrainValid:()=>false},draft=Game.previewSpell(s,'shield',...point,blocked);
     assert.equal(draft.valid,false);assert.throws(()=>Game.cast(s,'invalid','shield',...point,blocked),{message:draft.reason});assert.equal(s.spells.length,0);
   }
-  for(const active of ['shield','growth','multiply'])for(const kind of ['shield','growth','multiply']){
-    const s=ready();Game.cast(s,'active',active,10,20,nav);const radius=Game.spellRadius(kind),x=10+Game.spellRadius(active)+radius;
-    if(kind===active)s.cooldowns[kind]=0; // Isolate area intersection from cooldown rejection.
-    assert.equal(Game.previewSpell(s,kind,x-.001,20,nav).valid,false);
-    assert.equal(Game.previewSpell(s,kind,x+.001,20,nav).valid,true);
-  }
+  const s=ready();Game.cast(s,'shield','shield',17,8,nav);s.cooldowns.shield=0;
+  assert.equal(Game.previewSpell(s,'shield',17+2*Game.spellRadius('shield')-.001,8,nav).valid,false);
+  assert.equal(Game.previewSpell(s,'shield',17+2*Game.spellRadius('shield')+.001,8,nav).valid,true);
+  assert.equal(Game.previewSpell(s,'growth',17,8,nav).valid,true);
+  Game.cast(s,'growth','growth',17,8,nav);
+  assert.equal(Game.previewSpell(s,'multiply',17,8,nav).valid,true,'Agricultural effects may coexist on one crop');
+  assert.equal(Game.previewSpell(s,'growth',40,20,nav).valid,false);
 });
 test('Confirmation rechecks a draft after day/night, worker or raid changes without consuming it',()=>{
   for(const kind of ['growth','multiply'])for(const change of [s=>{s.time=300;},s=>{s.raid={animals:[]};},s=>{Game.pause(s,'menu');}]){
-    const s=ready(),draft=Game.previewSpell(s,kind,10,20,nav);assert.equal(draft.valid,true);change(s);
+    const s=ready(),draft=Game.previewSpell(s,kind,17,8,nav);assert.equal(draft.valid,true);change(s);
     const before=serialize(s);assert.throws(()=>Game.cast(s,'stale',kind,draft.x,draft.z,nav));assert.equal(serialize(s),before);
   }
-  const s=ready();assert.equal(Game.previewSpell(s,'multiply',10,20,nav).valid,true);s.workers=[];
-  assert.equal(Game.previewSpell(s,'multiply',10,20,nav).valid,false);assert.throws(()=>Game.cast(s,'no-workers','multiply',10,20,nav));
+  const s=ready();assert.equal(Game.previewSpell(s,'multiply',17,8,nav).valid,true);s.workers=[];
+  assert.equal(Game.previewSpell(s,'multiply',17,8,nav).valid,false);assert.throws(()=>Game.cast(s,'no-workers','multiply',17,8,nav));
   for(const change of [s=>{s.workers[0].status='home';},s=>{s.workers[0].incapacitated=true;}]){
-    const s=ready();change(s);const before=serialize(s);assert.equal(Game.previewSpell(s,'multiply',10,20,nav).valid,false);
-    assert.throws(()=>Game.cast(s,'unavailable-workers','multiply',10,20,nav));assert.equal(serialize(s),before);
+    const s=ready();change(s);const before=serialize(s);assert.equal(Game.previewSpell(s,'multiply',17,8,nav).valid,false);
+    assert.throws(()=>Game.cast(s,'unavailable-workers','multiply',17,8,nav));assert.equal(serialize(s),before);
   }
 });
 test('Shield preview rejects an animal touching its area without moving or repelling it',()=>{
@@ -75,9 +77,9 @@ test('Shield preview rejects an animal touching its area without moving or repel
 });
 test('One confirmation starts the exact duration and cooldown; replay, pause and snapshot do not restart either',()=>{
   for(const [kind,duration,cooldown] of [['shield',20,90],['growth',30,90],['multiply',15,120]]){
-    let s=ready();Game.cast(s,'confirm',kind,10,20,nav);
+    let s=ready();Game.cast(s,'confirm',kind,kind==='shield'?10:17,kind==='shield'?20:8,nav);
     assert.equal(s.spells[0].remaining,duration);assert.equal(s.cooldowns[kind],cooldown);
-    const before=serialize(s);assert.equal(Game.cast(s,'confirm',kind,10,20,nav),false);assert.equal(serialize(s),before);
+    const before=serialize(s);assert.equal(Game.cast(s,'confirm',kind,kind==='shield'?10:17,kind==='shield'?20:8,nav),false);assert.equal(serialize(s),before);
     Game.tick(s,1,nav);assert.ok(Math.abs(s.spells[0].remaining-(duration-1))<1e-8);assert.ok(Math.abs(s.cooldowns[kind]-(cooldown-1))<1e-8);
     Game.pause(s,'menu');Game.pause(s,'hidden');const paused=serialize(s);Game.advanceReal(s,10,nav);assert.equal(serialize(s),paused);
     s=deserialize(paused);Game.resume(s,'menu');const stillPaused=serialize(s);Game.advanceReal(s,10,nav);assert.equal(serialize(s),stillPaused);
