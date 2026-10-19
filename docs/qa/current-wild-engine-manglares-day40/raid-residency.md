@@ -46,6 +46,10 @@ work is present.
 
 The campaign runner calls `serviceRaidConnectivityDemand()` in
 `native-campaign-entry-driver.mjs::advancePresentation()`, separate from its
-tick call. The next useful profile should follow the complete campaign's
+tick call. Its daily `presentationMs` now includes both calls to
+`advancePresentation()` in each loop iteration; previously it timed only the
+call before `Game.tick` and omitted the call afterward. Historical campaign
+reports therefore undercount presentation time, although their `gameTickMs`
+remains a separate measure. The next useful profile should follow the complete campaign's
 streaming and presentation phases around an observed late-campaign spike,
 rather than optimize navigation based on the former inclusive `ms` alone.
