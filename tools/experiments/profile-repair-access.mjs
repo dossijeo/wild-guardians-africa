@@ -19,8 +19,9 @@ if(candidateIndex>=0){
 }
 const snapshot=readFileSync(stateFile);
 const state=deserialize((stateFile.endsWith('.gz')?gunzipSync(snapshot):snapshot).toString());
-const module=new WebAssembly.Module(readFileSync(new URL(
-  '../../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
+const wasmPath=process.env.WILD_ENGINE_REPAIR_WASM??new URL(
+  '../../src/world/wild-engine/spatial-savanna.wasm',import.meta.url);
+const module=new WebAssembly.Module(readFileSync(wasmPath));
 const loaded=new Map();
 const session=createSpatialGameSession(module,state,{
   loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
