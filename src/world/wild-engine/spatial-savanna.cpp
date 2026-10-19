@@ -70,6 +70,7 @@ struct ChunkRaster {int cx,cz;std::vector<uint8_t> pass,steps,inbound;};
 struct NavProfile {float radius=0;bool worker=false,ready=false;std::unordered_map<uint64_t,ChunkRaster> rasters;};
 uint32_t worldSeed=0;
 int worldBiome=0; // 0: savanna, 1: desert, 2: grand river, 3: volcanoes, 4: mangrove, 5: canyons.
+bool canyonOpenRight=false; // Experimental biome variant 6: one west wall and a traversable east plateau.
 int chunkX=0,chunkZ=0,nextBarrierId=1;
 int nextPolygonId=1;
 float radiusNow=.3f;
@@ -304,6 +305,7 @@ double baseHeight(double x,double z){
       return level-.92+1.05*blend((d-1.7)/(waterHalf+.6-1.7));
     const double floor=level+.13+blend((d-(waterHalf+.6))/(wallStart-(waterHalf+.6)))*.68+
       (noise(x*.13,z*.13,9513)-.5)*.18;
+    if(canyonOpenRight&&side>0)return floor;
     const double flute=(noise(z*.095,side*9,6721)-.5)*2+
       (noise(z*.034,side*13,6517)-.5)*1.8;
     const double edge=wallStart+flute;
@@ -971,6 +973,7 @@ void populateChunk(int cx,int cz,bool visual=true){
         if(worldBiome==5){
           const double distance=std::abs(x-riverX(z));
           const int side=x<riverX(z)?-1:1;
+          if(canyonOpenRight&&side>0&&type==5)continue;
           const double wallStart=17.8+noise(z*.014,side*17,2803)*5.5;
           // Keep one continuous dry ingress on each bank for the largest
           // animal. Solid procedural props otherwise seal short canyon pockets
@@ -1340,8 +1343,8 @@ void horizonDesertNormals(HorizonSampler& sampler,int ox,int oz){
 
 extern "C" {
 int spatial_generate_biome(uint32_t seed,int biome,int cx,int cz){
-  if(biome<0||biome>5)return -1;
-  worldSeed=seed;worldBiome=biome;barrierIndex().byId.clear();barrierIndex().buckets.clear();
+  if(biome<0||biome>6)return -1;
+  worldSeed=seed;canyonOpenRight=biome==6;worldBiome=canyonOpenRight?5:biome;barrierIndex().byId.clear();barrierIndex().buckets.clear();
   polygonIndex().byId.clear();polygonIndex().buckets.clear();polygonInput.clear();polygonState.clear();nextPolygonId=1;
   removedProps().clear();removedPropState.clear();removedPropGeometry().clear();
   batchingBarriers=false;deferredBarrierRefresh.clear();barrierBatch.clear();barrierBatchIds.clear();barrierRemovalIds.clear();

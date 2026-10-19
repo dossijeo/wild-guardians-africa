@@ -26,7 +26,7 @@ const ordinaryBiomes=new Set(['sabana','gran-rio','manglares','volcanes','desier
 // Start with the chunks touched by the proposal; request additional neighbors
 // only if a native route or prop query proves they are needed.
 export async function probeSpatialStart(module,state,payload,
-  {x=60,z=0,chunkMargin=0,measure=false}={}){
+  {x=60,z=0,chunkMargin=0,measure=false,canyonOpenRight=false}={}){
   if(!(ordinaryBiomes.has(state?.biome)||state?.biome==='gran-canon')||
     !state.villages?.length||state.structures?.length||
     !Array.isArray(payload?.units)||![x,z,chunkMargin].every(Number.isFinite)||
@@ -37,8 +37,8 @@ export async function probeSpatialStart(module,state,payload,
   let core=null,layout=null;
   if(state.biome==='gran-canon'){
     core=createSpatialWorld(module);
-    core.generate(state.seed,chunkCoordinate(x),chunkCoordinate(z),state.biome);
-    layout=spatialCanyonLayout(payload,createSpatialTerrainView(core),z);
+    core.generate(state.seed,chunkCoordinate(x),chunkCoordinate(z),state.biome,{canyonOpenRight});
+    layout=spatialCanyonLayout(payload,createSpatialTerrainView(core),z,{canyonOpenRight});
     x=layout.x;
   }
   Object.assign(village,{x,z,buildings:layout?.buildings??villageLayout(payload,x,z)});

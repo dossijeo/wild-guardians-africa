@@ -70,10 +70,11 @@ export function createSpatialWorld(module){
     const pairs=new Int32Array(wasm.memory.buffer,wasm.spatial_changed_chunks_ptr(),count*2);
     return Array.from({length:count},(_,i)=>({cx:pairs[i*2],cz:pairs[i*2+1]}));
   }
-  function generate(seed,cx,cz,biome='savanna'){
+  function generate(seed,cx,cz,biome='savanna',{canyonOpenRight=false}={}){
     const name=BIOME_IDS[biome]??biome;
     if(!Object.hasOwn(SPATIAL_BIOME_CODES,name))throw RangeError('Unsupported spatial biome');
-    const count=wasm.spatial_generate_biome(seed>>>0,SPATIAL_BIOME_CODES[name],cx|0,cz|0);
+    if(canyonOpenRight&&name!=='canyons')throw RangeError('One-wall variant requires canyons');
+    const count=wasm.spatial_generate_biome(seed>>>0,canyonOpenRight?6:SPATIAL_BIOME_CODES[name],cx|0,cz|0);
     chunk={cx:cx|0,cz:cz|0,count};chunks=[[cx|0,cz|0]];navigationBuilt=false;generated=true;
     workerPortalRoutes=[];chunkRevision++;
     return chunk;
