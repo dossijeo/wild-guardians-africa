@@ -157,8 +157,12 @@ export function proposeHybridEnclosure({state,nav,session,crops,material='zarzas
     const candidate=candidates[candidateIndex];
     let quote;
     try{quote=Game.quoteWallChain(state,material,candidate.strokes,nav,
-      {smooth:false,snap:false});}
+      {smooth:false,snap:false,requireComplete:true});}
     catch(error){
+      if(error.name==='IncompleteWallQuote'){
+        attempts.push({kind:candidate.kind,status:'unknown',
+          reason:'worker-access-unproved'});continue;
+      }
       if(error.name==='SpatialChunkUnavailable'){
         attempts.push({kind:candidate.kind,status:'unknown',
           reason:'missing-sector'});continue;

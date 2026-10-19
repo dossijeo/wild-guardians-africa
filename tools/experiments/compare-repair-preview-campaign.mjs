@@ -35,7 +35,8 @@ const report=await simulateNativeCampaign({days,seed,biome,
     const result={day:row.day,stateSha256:sha256(serialize(state)),
       living:row.living,money:row.money,destroyed:row.destroyed,
       gameTickMs:row.wallTime.gameTickMs,
-      decisionMs:row.wallTime.decisionMs};
+      decisionMs:row.wallTime.decisionMs,
+      decisionPhases:row.decisionPhases};
     rows.push(result);
     console.log(JSON.stringify({arm,...result}));
   }});

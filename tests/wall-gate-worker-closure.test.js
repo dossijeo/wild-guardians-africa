@@ -32,6 +32,8 @@ test('a wall stroke leaves its closing piece unbuilt if no gate is physically va
  const quote=Game.quoteWallChain(s,'zarzas',perimeter,nav,options);
  assert(quote.pieces.length<withGate.pieces.length);
  assert.equal(quote.gates,0);
+ assert.throws(()=>Game.quoteWallChain(s,'zarzas',perimeter,nav,
+  {...options,requireComplete:true}),{name:'IncompleteWallQuote'});
 });
 
 test('a single-piece rebuild cannot seal a room without a valid automatic gate',()=>{
