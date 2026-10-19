@@ -1,0 +1,564 @@
+{
+  "source": "0563845750e270abbbfa18e6b9759517ae73a909",
+  "inputHashes": {
+    "wasm": "178b47444cfb53330a4cae6196f69bebbc93ac3a624c60781d64b7fb6bd5ff33",
+    "game": "1eb8379c7ac43bf6cb15d3afd9852814c094cc6da3d5a1285c11b0115ea59d1e",
+    "raids": "df0b3ebc9bb3cfa8396279f3b256fb005ff1794608283bf827620c53100d8dd8",
+    "runner": "9a2721e470e2111f26ce571eae8a8b7db798e59009e0d37121eae1104c47dc1c"
+  },
+  "parameters": {
+    "days": 30,
+    "biome": "desierto",
+    "seed": 123,
+    "strategy": "good",
+    "nativeIntents": true,
+    "wallSpendingEnabled": true,
+    "nativeWallPlans": true,
+    "spatialAdvice": true,
+    "defensePolicy": "topological",
+    "decisionProfile": false,
+    "reloadRaids": false
+  },
+  "status": "completed",
+  "completedNights": 30,
+  "elapsedSeconds": 96.33504960000002,
+  "raidIssues": [],
+  "rows": [
+    {
+      "day": 1,
+      "stateSha256": "dea449c7b6f77abe208f42742f9f81a9ddfcb949771f07558bb1f6be890e5916",
+      "money": 475,
+      "living": 14,
+      "decisionMs": 94.95129999999858,
+      "gameTickMs": 425.1689000000083
+    },
+    {
+      "day": 2,
+      "stateSha256": "137a5f7d18f6a6dfa7830301aaffb53e9d5bbf6813ad56faba005841e5b901df",
+      "money": 94,
+      "living": 17,
+      "decisionMs": 304.8462000000013,
+      "gameTickMs": 281.37579999999434
+    },
+    {
+      "day": 3,
+      "stateSha256": "061889d1378eb703d79cadb0188bc8ea024fbaf82642bddf24d720cb894fbc54",
+      "money": 153,
+      "living": 16,
+      "decisionMs": 130.9403000000052,
+      "gameTickMs": 988.300200000002
+    },
+    {
+      "day": 4,
+      "stateSha256": "c0e50934e5cf9b6ea22d78896a3fee2dfd61ba7e25e5ce4c5e85fd3731a94591",
+      "money": 212,
+      "living": 20,
+      "decisionMs": 221.54890000001433,
+      "gameTickMs": 5720.167799999947
+    },
+    {
+      "day": 5,
+      "stateSha256": "e07f9958423f83ab7064d64aeea8ee03db5a5e69f51354912d199711d675685f",
+      "money": 165,
+      "living": 21,
+      "decisionMs": 330.67179999999644,
+      "gameTickMs": 1326.1251000000157
+    },
+    {
+      "day": 6,
+      "stateSha256": "1190a582e2830bc25677a168674d1d923383b25609fca1cb75d3a75544443242",
+      "money": 278,
+      "living": 29,
+      "decisionMs": 268.24439999998685,
+      "gameTickMs": 1540.7555000000011
+    },
+    {
+      "day": 7,
+      "stateSha256": "e5e50796db5c69f22a897de51ca439a050c27b63fd4dde36572779d20bd8fc9c",
+      "money": 368,
+      "living": 26,
+      "decisionMs": 367.72139999999126,
+      "gameTickMs": 1483.1290999999947
+    },
+    {
+      "day": 8,
+      "stateSha256": "2156a613891bda45aa320c9492766750dd68e9c828208ec825a5afc637aa7f23",
+      "money": 289,
+      "living": 30,
+      "decisionMs": 474.46230000001015,
+      "gameTickMs": 1680.5942999999752
+    },
+    {
+      "day": 9,
+      "stateSha256": "3de7417e2da4a51da17dd5978233ae79a7f97dbb7ba840ce6e3914c0de361390",
+      "money": 321,
+      "living": 42,
+      "decisionMs": 439.58059999998295,
+      "gameTickMs": 2689.6457000000264
+    },
+    {
+      "day": 10,
+      "stateSha256": "50a8191e480d13194ce21c79842bf9436802cba0484ff036d728837b6ff74baa",
+      "money": 739,
+      "living": 13,
+      "decisionMs": 383.27810000004683,
+      "gameTickMs": 2256.2154000000373
+    },
+    {
+      "day": 11,
+      "stateSha256": "54f11ce79d3ad9019193306a252d8cb0714783fac2fe94d8c440da99a55d9e33",
+      "money": 923,
+      "living": 13,
+      "decisionMs": 259.5742999999893,
+      "gameTickMs": 1742.3705000000627
+    },
+    {
+      "day": 12,
+      "stateSha256": "e6cd07b22ff565498bf630f6c3107a92d3aae79cea943b9cb183be9161c87c3f",
+      "money": 920,
+      "living": 11,
+      "decisionMs": 302.2306000000244,
+      "gameTickMs": 1705.620100000022
+    },
+    {
+      "day": 13,
+      "stateSha256": "8d541c5b82b65e74a4addb3383c37aa68c100768692d8f74814dc90456be5430",
+      "money": 948,
+      "living": 13,
+      "decisionMs": 223.83679999997184,
+      "gameTickMs": 1014.1305999999786
+    },
+    {
+      "day": 14,
+      "stateSha256": "8bfa30a690ff488cde72d362ab28d07a268ec6a2eddae1590f9733ff2870e984",
+      "money": 1084,
+      "living": 14,
+      "decisionMs": 323.24549999991723,
+      "gameTickMs": 1897.4971999999689
+    },
+    {
+      "day": 15,
+      "stateSha256": "0085a977fcfa302c639c725b7d6d695ac7c838615c66bf9c490f2a6a6c7ffc89",
+      "money": 993,
+      "living": 14,
+      "decisionMs": 334.41389999997045,
+      "gameTickMs": 2763.4616000000024
+    },
+    {
+      "day": 16,
+      "stateSha256": "87c7e7704ad3c6402243789a638e2350e64bcf977b3474e5bd47e682734684ee",
+      "money": 1167,
+      "living": 15,
+      "decisionMs": 329.4413999999597,
+      "gameTickMs": 2521.831900000063
+    },
+    {
+      "day": 17,
+      "stateSha256": "66cf4783a3f215ee62e97b2f1e3ff3111c350d089769839dee386a0b56ce98b0",
+      "money": 1611,
+      "living": 13,
+      "decisionMs": 328.86089999997057,
+      "gameTickMs": 2385.7421000000177
+    },
+    {
+      "day": 18,
+      "stateSha256": "a28bfb34e47ea7735f1d1ea41c7656afa8280389df22f7c65594c95ff106a0ad",
+      "money": 2009,
+      "living": 15,
+      "decisionMs": 326.11350000003586,
+      "gameTickMs": 2388.836600000075
+    },
+    {
+      "day": 19,
+      "stateSha256": "de32a8929d1b2dc35bc26dfa3fff12b3be2b08caec1c8c51639c705a0e5b5d34",
+      "money": 2509,
+      "living": 12,
+      "decisionMs": 357.1046999999817,
+      "gameTickMs": 2521.9405000000042
+    },
+    {
+      "day": 20,
+      "stateSha256": "51af6f89750421ff8e2181282fd9adf4c17d1ab2fc7c8cc2250c926e9f40272c",
+      "money": 2829,
+      "living": 13,
+      "decisionMs": 383.17730000005395,
+      "gameTickMs": 2875.110199999908
+    },
+    {
+      "day": 21,
+      "stateSha256": "5f0df5a70271953cc18766f1293d2dc4fe2228df4d7cbcdcc79dcfaba2868655",
+      "money": 2975,
+      "living": 15,
+      "decisionMs": 343.2642999999298,
+      "gameTickMs": 2810.9808999999877
+    },
+    {
+      "day": 22,
+      "stateSha256": "aee8f5a7ff06e117e91f2d1365a4357eeadbbd9ed36bc50f8983e6b292f2f147",
+      "money": 3479,
+      "living": 14,
+      "decisionMs": 2742.196600000083,
+      "gameTickMs": 5982.663999999844
+    },
+    {
+      "day": 23,
+      "stateSha256": "866c546615ce015287a2d97665dd42db449f677f626012c335678161ddcbb724",
+      "money": 3934,
+      "living": 14,
+      "decisionMs": 411.42840000000433,
+      "gameTickMs": 2586.3859000002267
+    },
+    {
+      "day": 24,
+      "stateSha256": "90c7e359bb1d2662cf775a46f487b7273cf69849ab272312df0ee1b34a9a996d",
+      "money": 4298,
+      "living": 14,
+      "decisionMs": 361.3317999996798,
+      "gameTickMs": 2818.5657000000647
+    },
+    {
+      "day": 25,
+      "stateSha256": "c09ada767ac0af24764cf39a28d070358555cf8216ace2827d05d8a32c1a5e85",
+      "money": 4705,
+      "living": 13,
+      "decisionMs": 403.51540000025125,
+      "gameTickMs": 3652.292600000146
+    },
+    {
+      "day": 26,
+      "stateSha256": "9f3c7e3790bfc7098f1b5b8db089695e7b92cd5bc325bd4c31a367b7767cd4ea",
+      "money": 5158,
+      "living": 14,
+      "decisionMs": 365.8863999999885,
+      "gameTickMs": 2504.3498999999283
+    },
+    {
+      "day": 27,
+      "stateSha256": "08ad075e081b10f0af33e3a183f0928f3eeebb692ed10e858385e6890bff0ae9",
+      "money": 5344,
+      "living": 15,
+      "decisionMs": 325.0853000000643,
+      "gameTickMs": 2815.29849999999
+    },
+    {
+      "day": 28,
+      "stateSha256": "a0cf8df8848bf30de8440b58846c337ce710166402f70f6afa76b82fd9be4099",
+      "money": 5875,
+      "living": 15,
+      "decisionMs": 326.00399999986985,
+      "gameTickMs": 2875.3287999999884
+    },
+    {
+      "day": 29,
+      "stateSha256": "97bda7122e58d48862ee173d48f991bc3d4ce8cc9609ec22a18c84a23c93a0fe",
+      "money": 6438,
+      "living": 14,
+      "decisionMs": 317.2299000000203,
+      "gameTickMs": 2882.9901999999565
+    },
+    {
+      "day": 30,
+      "stateSha256": "021c1ccacfa3a2e0afbeab88d9256c049e7bebcaf83ab397c66c4cc00112cfb5",
+      "money": 6650,
+      "living": 15,
+      "decisionMs": 292.6157999998977,
+      "gameTickMs": 1458.4993999999424
+    }
+  ],
+  "raids": [
+    {
+      "day": 1,
+      "animals": 1,
+      "contacts": 2,
+      "wallHits": 0,
+      "cropHits": 1,
+      "waitingRetirements": 0,
+      "unavailableAttempts": 0
+    },
+    {
+      "day": 2,
+      "animals": 1,
+      "contacts": 3,
+      "wallHits": 0,
+      "cropHits": 0,
+      "waitingRetirements": 0,
+      "unavailableAttempts": 0
+    },
+    {
+      "day": 3,
+      "animals": 1,
+      "contacts": 4,
+      "wallHits": 0,
+      "cropHits": 0,
+      "waitingRetirements": 0,
+      "unavailableAttempts": 0
+    },
+    {
+      "day": 4,
+      "animals": 1,
+      "contacts": 4,
+      "wallHits": 0,
+      "cropHits": 0,
+      "waitingRetirements": 0,
+      "unavailableAttempts": 0
+    },
+    {
+      "day": 5,
+      "animals": 1,
+      "contacts": 5,
+      "wallHits": 0,
+      "cropHits": 0,
+      "waitingRetirements": 0,
+      "unavailableAttempts": 0
+    },
+    {
+      "day": 6,
+      "animals": 4,
+      "contacts": 9,
+      "wallHits": 6,
+      "cropHits": 0,
+      "waitingRetirements": 0,
+      "unavailableAttempts": 19
+    },
+    {
+      "day": 7,
+      "animals": 4,
+      "contacts": 10,
+      "wallHits": 10,
+      "cropHits": 0,
+      "waitingRetirements": 0,
+      "unavailableAttempts": 22
+    },
+    {
+      "day": 8,
+      "animals": 6,
+      "contacts": 16,
+      "wallHits": 16,
+      "cropHits": 0,
+      "waitingRetirements": 0,
+      "unavailableAttempts": 2
+    },
+    {
+      "day": 9,
+      "animals": 7,
+      "contacts": 16,
+      "wallHits": 12,
+      "cropHits": 0,
+      "waitingRetirements": 1,
+      "unavailableAttempts": 41
+    },
+    {
+      "day": 10,
+      "animals": 5,
+      "contacts": 11,
+      "wallHits": 8,
+      "cropHits": 0,
+      "waitingRetirements": 0,
+      "unavailableAttempts": 14
+    },
+    {
+      "day": 11,
+      "animals": 5,
+      "contacts": 13,
+      "wallHits": 13,
+      "cropHits": 0,
+      "waitingRetirements": 0,
+      "unavailableAttempts": 33
+    },
+    {
+      "day": 12,
+      "animals": 7,
+      "contacts": 5,
+      "wallHits": 0,
+      "cropHits": 0,
+      "waitingRetirements": 5,
+      "unavailableAttempts": 95
+    },
+    {
+      "day": 13,
+      "animals": 8,
+      "contacts": 3,
+      "wallHits": 3,
+      "cropHits": 0,
+      "waitingRetirements": 7,
+      "unavailableAttempts": 140
+    },
+    {
+      "day": 14,
+      "animals": 9,
+      "contacts": 3,
+      "wallHits": 3,
+      "cropHits": 0,
+      "waitingRetirements": 8,
+      "unavailableAttempts": 152
+    },
+    {
+      "day": 15,
+      "animals": 11,
+      "contacts": 26,
+      "wallHits": 18,
+      "cropHits": 0,
+      "waitingRetirements": 1,
+      "unavailableAttempts": 229
+    },
+    {
+      "day": 16,
+      "animals": 12,
+      "contacts": 16,
+      "wallHits": 13,
+      "cropHits": 0,
+      "waitingRetirements": 6,
+      "unavailableAttempts": 247
+    },
+    {
+      "day": 17,
+      "animals": 11,
+      "contacts": 9,
+      "wallHits": 3,
+      "cropHits": 0,
+      "waitingRetirements": 8,
+      "unavailableAttempts": 257
+    },
+    {
+      "day": 18,
+      "animals": 12,
+      "contacts": 17,
+      "wallHits": 12,
+      "cropHits": 0,
+      "waitingRetirements": 6,
+      "unavailableAttempts": 267
+    },
+    {
+      "day": 19,
+      "animals": 11,
+      "contacts": 14,
+      "wallHits": 12,
+      "cropHits": 0,
+      "waitingRetirements": 5,
+      "unavailableAttempts": 226
+    },
+    {
+      "day": 20,
+      "animals": 11,
+      "contacts": 16,
+      "wallHits": 6,
+      "cropHits": 0,
+      "waitingRetirements": 5,
+      "unavailableAttempts": 441
+    },
+    {
+      "day": 21,
+      "animals": 13,
+      "contacts": 34,
+      "wallHits": 24,
+      "cropHits": 0,
+      "waitingRetirements": 4,
+      "unavailableAttempts": 393
+    },
+    {
+      "day": 22,
+      "animals": 12,
+      "contacts": 22,
+      "wallHits": 8,
+      "cropHits": 0,
+      "waitingRetirements": 5,
+      "unavailableAttempts": 589
+    },
+    {
+      "day": 23,
+      "animals": 12,
+      "contacts": 8,
+      "wallHits": 3,
+      "cropHits": 0,
+      "waitingRetirements": 9,
+      "unavailableAttempts": 284
+    },
+    {
+      "day": 24,
+      "animals": 12,
+      "contacts": 30,
+      "wallHits": 21,
+      "cropHits": 0,
+      "waitingRetirements": 3,
+      "unavailableAttempts": 322
+    },
+    {
+      "day": 25,
+      "animals": 12,
+      "contacts": 22,
+      "wallHits": 4,
+      "cropHits": 0,
+      "waitingRetirements": 6,
+      "unavailableAttempts": 732
+    },
+    {
+      "day": 26,
+      "animals": 12,
+      "contacts": 26,
+      "wallHits": 22,
+      "cropHits": 0,
+      "waitingRetirements": 5,
+      "unavailableAttempts": 247
+    },
+    {
+      "day": 27,
+      "animals": 13,
+      "contacts": 2,
+      "wallHits": 2,
+      "cropHits": 0,
+      "waitingRetirements": 13,
+      "unavailableAttempts": 216
+    },
+    {
+      "day": 28,
+      "animals": 13,
+      "contacts": 4,
+      "wallHits": 4,
+      "cropHits": 0,
+      "waitingRetirements": 12,
+      "unavailableAttempts": 204
+    },
+    {
+      "day": 29,
+      "animals": 13,
+      "contacts": 0,
+      "wallHits": 0,
+      "cropHits": 0,
+      "waitingRetirements": 13,
+      "unavailableAttempts": 208
+    },
+    {
+      "day": 30,
+      "animals": 13,
+      "contacts": 0,
+      "wallHits": 0,
+      "cropHits": 0,
+      "waitingRetirements": 13,
+      "unavailableAttempts": 208
+    }
+  ],
+  "day29Entry": {
+    "wallOpportunity": {
+      "wallId": 260,
+      "x": 95.41892596250591,
+      "z": -3.1586862841927354
+    },
+    "entries": 13,
+    "allWallSides": 8,
+    "exteriorReachableSides": [
+      {
+        "wallId": 257,
+        "x": 93.72140775255832,
+        "z": -8.199527335862937,
+        "relevantGroups": []
+      },
+      {
+        "wallId": 260,
+        "x": 95.41892596250591,
+        "z": -3.1586862841927354,
+        "relevantGroups": []
+      }
+    ],
+    "nativeWallQueries": 6
+  }
+}

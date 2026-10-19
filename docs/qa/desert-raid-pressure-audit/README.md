@@ -664,3 +664,41 @@ removes repeated procedural terrain and prop generation when a new movement
 profile first builds its graph. It preserves the selected entries and all
 recorded campaign hashes; cold-profile and sustained timings are reported
 separately there.
+
+### Thirty-night continuation: a new non-contact wall entry
+
+The same `good` / topological / native-intent-wall configuration was continued
+to night 30 on commit `05638457`, with no balance or bot-policy changes.
+The [compact campaign record](desierto123-crop-facing-wall-entry-30-summary.json)
+contains the source and WASM hashes, parameters, 30 nightly state hashes,
+timings and raid contacts. The run completed 30 nights without a technical
+error in 96.34 s, but that is **not** evidence of balanced survival: 13
+animals arrived on each of nights 29 and 30 and made zero contacts. All 13
+retired with attack budget remaining on both nights. Night 27 had only two
+contacts and night 28 four. The campaign recorded no raid-evidence invariant
+error, so contact counts must be examined separately from successful
+termination.
+
+The [frozen pre-entry state](desierto123-day29-pre-entry.json.gz) reproduces
+night 29. Re-running the 29-night campaign produced the same 29 daily state
+hashes. The entry probe chooses wall #260 at (95.42, -3.16) because all 13
+animals have exterior witnesses and native routes to it. Yet the native
+crop-group relevance query returns **no group on that face**. It sees group
+#8488 only from the opposite face at about (99.13, -4.14). The living crops
+are around x=84–88, on the same side of wall #260 as the selected animal
+entry; this wall does not stand between that entry and those crops. Wall
+#257 has the same pattern. The crop-facing faces of walls #243 and #244
+have no exterior witness from the resident region. This is a concrete
+counterexample to treating a merely reachable wall portal as a useful
+attack target. Route validity alone cannot certify tactical relevance.
+
+The current generic-portal fallback can still return an entry with a
+`wallOpportunity` lacking a crop-group ID. The native attack planner
+correctly refuses to turn that hint into a confirmed target, leaving the
+wave to wait and retire. The next correction must either find a physically
+reachable crop/defense opportunity from another certified exterior entry,
+or establish a native topological relationship between the chosen exterior
+wall face and the protected crops. It must not assign the group seen from
+the opposite face to wall #260 by geometry alone or spawn animals inside a
+defense. PR #143 remains draft pending this correction and a new sustained
+replay. The cold-profile speedup is independent of this tactical defect.
