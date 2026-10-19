@@ -79,9 +79,10 @@ export class Assets {
   }
   async village(payload) {
     this.assertOpen();
-    const buffer=await bytes(payload.binary.url,{signal:this.preparation.signal}),vertices=new Float32Array(buffer,0,payload.vertexBytes/4),index=new Uint32Array(buffer,payload.vertexBytes,payload.indexCount);
+    const sharedArt=this.visualLab==='village-shared-art'&&payload.id==='mapungubwe';
+    const buffer=await bytes(sharedArt?'/assets/visual-lab/mapungubwe-shared-art.bin':payload.binary.url,{signal:this.preparation.signal}),vertexBytes=sharedArt?buffer.byteLength-payload.indexCount*4:payload.vertexBytes,vertices=new Float32Array(buffer,0,vertexBytes/4),index=new Uint32Array(buffer,vertexBytes,payload.indexCount);
     const pilotCulture=['mapungubwe','musgum'].includes(payload.id);
-    const experimentalColor=this.visualLab==='texture-detail'&&pilotCulture?`/assets/visual-lab/${payload.id}-color-detail.webp`:payload.textures.color;
+    const experimentalColor=sharedArt?'/assets/visual-lab/mapungubwe-shared-art.webp':this.visualLab==='texture-detail'&&pilotCulture?`/assets/visual-lab/${payload.id}-color-detail.webp`:payload.textures.color;
     const experimentalAtlas=this.visualLab==='normal-enhanced'&&pilotCulture?`/assets/visual-lab/${payload.id}-normal-enhanced.webp`:payload.textures.normal;
     const interleaved=new THREE.InterleavedBuffer(vertices,8),[map,normalMap]=await Promise.all([this.texture(experimentalColor,true),this.visualLab?.startsWith('normal')&&experimentalAtlas?this.texture(experimentalAtlas):null]);
     const repacked=['village-repacked','village-art'].includes(this.visualLab)&&payload.id==='mapungubwe'?await Promise.all([bytes(this.visualLab==='village-art'?'/assets/visual-lab/mapu-0-art.bin':'/assets/visual-lab/mapu-0-repacked.bin',{signal:this.preparation.signal}),this.texture(this.visualLab==='village-art'?'/assets/visual-lab/mapu-0-color-art.webp':'/assets/visual-lab/mapu-0-color-repacked.webp',true)]):null;
