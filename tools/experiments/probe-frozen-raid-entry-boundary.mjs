@@ -48,8 +48,25 @@ try{
     nav[name]=(...args)=>{
       const start=performance.now();
       try{return original(...args);}finally{
+        const elapsed=performance.now()-start;
         selectionCalls[name].calls++;
-        selectionCalls[name].ms+=performance.now()-start;
+        selectionCalls[name].ms+=elapsed;
+        if(name==='walkable'){
+          const byPoint=selectionCalls[name].byPoint??={};
+          const key=`${args[0]}:${args[1]}:${args[2]}`;
+          byPoint[key]=(byPoint[key]??0)+1;
+          const slowest=selectionCalls[name].slowest??=[];
+          if(slowest.length<8||elapsed>slowest.at(-1).ms){
+            slowest.push({x:args[0],z:args[1],radius:args[2],ms:elapsed});
+            slowest.sort((a,b)=>b.ms-a.ms);
+            if(slowest.length>8)slowest.pop();
+          }
+        }
+        if(process.env.WILD_PROBE_CALLERS==='1'){
+          const caller=new Error().stack?.split('\n')[2]?.trim()??'unknown';
+          const byCaller=selectionCalls[name].byCaller??={};
+          byCaller[caller]=(byCaller[caller]??0)+1;
+        }
       }
     };
   }
@@ -57,6 +74,19 @@ try{
   const entry=chooseRaidEntry(state,specs,nav.activeBounds,preferredSide,nav);
   const selectionMs=performance.now()-selectStart;
   const selectionBreakdown=structuredClone(selectionCalls);
+  if(selectionBreakdown.walkable?.byPoint){
+    const repeats=Object.values(selectionBreakdown.walkable.byPoint);
+    selectionBreakdown.walkable.uniquePoints=repeats.length;
+    selectionBreakdown.walkable.repeatedCalls=repeats.reduce((sum,n)=>sum+n-1,0);
+    delete selectionBreakdown.walkable.byPoint;
+  }
+  let repeatedSelection=null;
+  if(process.env.WILD_PROBE_REPEAT_SELECTION==='1'){
+    const start=performance.now();
+    const next=chooseRaidEntry(state,specs,nav.activeBounds,preferredSide,nav);
+    repeatedSelection={milliseconds:performance.now()-start,
+      sameEntry:JSON.stringify(next)===JSON.stringify(entry)};
+  }
   const radius=Math.max(...specs.map(s=>s.radius));
   const cameraRelevant=nav.spatialRelevantWallApproachSides(nav.raidView.eye,radius);
   const allWallSides=nav.spatialWallApproachSides(radius);
@@ -91,6 +121,7 @@ try{
   })??[];
   if(serialize(state)!==before)throw Error('Raid entry probe changed game state');
   const report={day:state.day,time:state.time,preferredSide,selectionMs,
+    repeatedSelection,
     selectionBreakdown,
     residentChunks:loaded.size,bounds:nav.activeBounds,view:nav.raidView,
     entry,cameraRelevant:cameraRelevant.slice(0,12),cameraRelevantCount:cameraRelevant.length,

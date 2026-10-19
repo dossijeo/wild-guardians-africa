@@ -619,3 +619,42 @@ pass. A separate frozen timing probe still spends roughly 0.7–0.8 s in
 entry selection under Node, largely on thousands of existing `walkable`
 checks; interactive frame cost remains an open performance issue. PR #143
 therefore remains draft.
+
+### Entry-selection cost audit: cold sectors, not a safe earlier wall choice
+
+The [frozen night-16 entry state](desierto123-day16-pre-entry.json.gz) was
+profiled again at commit `49413ee7` with WASM SHA-256
+`b3db734225b122095ae43d350c6a21a444115d48ce805b1363d591bc4f5641de`.
+The probe now reports distinct and repeated `walkable` points, the eight
+slowest calls, optional call sites (`WILD_PROBE_CALLERS=1`), and an optional
+second selection in the same native session (`WILD_PROBE_REPEAT_SELECTION=1`).
+The first selection took 721 ms; the identical second selection took 60 ms.
+Two `walkable` calls for different animal radii took 260 and 251 ms, while
+the next slowest took 0.29 ms. They account for most of the cold cost as
+the corresponding native profile/sector data are first prepared. The
+unmodified selector made 2,976 `walkable` calls at 1,655 distinct points;
+1,321 repeated calls are nevertheless not the primary source of the cold
+stall.
+
+Three **unmerged** variations were measured. Moving existing animal-spacing
+checks before `walkable` removed 391 calls on night 16, but an eight-run
+ABBA comparison changed median selection time only from 738 to 734 ms.
+Choosing a crop-facing native wall formation before all generic entry work
+reduced night-15/night-16 `walkable` calls from 2,211/2,976 to 503/533
+and route-status queries from 13/79 to 5/6. Four ABBA pairs reduced
+median frozen selection time from 654 to 593 ms and from 727 to 602 ms.
+But a 17-night Desierto/123 campaign diverged at night 2, took 48.1 s
+instead of 42.4 s, and ended with 1,190 instead of 1,611 coins. A narrower
+variant tried the wall only after camera and near-farm entries failed;
+the night-2 frozen entry remained unchanged and night-16 route queries
+fell from 79 to 6, but its campaign diverged at night 8, took 54.0 s,
+and ended with 85 coins. These campaign comparisons include different
+physical and economic trajectories, so their timings are not pure algorithm
+speed measurements. Neither early-wall variant was retained. The existing
+crop-facing fallback and its 17-night campaign remain the reference.
+
+The next performance investigation should isolate Wild Engine's cold
+profile/sector preparation and the interactive frame where it occurs.
+Merely changing the order of valid raid entrances can accelerate a frozen
+selection while worsening the sustained game. No game rules or production
+navigation paths were changed by this audit.
