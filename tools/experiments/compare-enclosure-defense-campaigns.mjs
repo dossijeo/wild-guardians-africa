@@ -8,7 +8,7 @@ const [biome='gran-canon',daysText='14',seedText='712',output,only]=
   process.argv.slice(2);
 const days=Number(daysText),seed=Number(seedText);
 if(!Number.isInteger(days)||days<6||days>100||!Number.isInteger(seed)||
-  (only&&only!=='expanding'&&only!=='topological')||
+  (only&&!['expanding','topological','no-walls'].includes(only))||
   !output)throw TypeError('Usage: compare-enclosure-defense-campaigns.mjs BIOME DAYS SEED OUTPUT');
 const sha256=bytes=>createHash('sha256').update(bytes).digest('hex');
 const wasmPath=process.env.WILD_ENGINE_SPATIAL_SERVICES_WASM??
@@ -19,9 +19,12 @@ const evidence={biome,days,seed,
 for(const defensePolicy of only?[only]:['expanding','topological']){
   const started=performance.now(),rows=[];
   try{
+    const walls=defensePolicy!=='no-walls';
     const report=await simulateNativeCampaign({days,seed,biome,
-      strategy:'good',culture:'mapungubwe',defend:true,
-      defensePolicy,spatialAdvice:true,decisionProfile:true,
+      strategy:'good',culture:'mapungubwe',defend:walls,
+      wallSpendingEnabled:walls,
+      // Keep ordinary center repair decisions when wall spending is disabled.
+      defensePolicy:walls?defensePolicy:'expanding',spatialAdvice:true,decisionProfile:true,
       nativeIntents:true,nativeWallPlans:true,reloadRaids:false,
       openingFactory:createSpatialCampaignOpening,
       onDay:row=>{

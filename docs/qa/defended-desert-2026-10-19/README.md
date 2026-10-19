@@ -73,6 +73,25 @@ esta combinación de semilla, terreno y política. Debe investigarse por separad
 si los animales alcanzan objetivos relevantes y comparar estrategias y
 semillas; no se debe alterar el motor físico para fabricar más pérdidas.
 
+Como contraste de acceso, una ejecución independiente de la misma semilla,
+estrategia y motor **sin comprar murallas** terminó derrotada después de 26
+noches completas, durante la jornada 27: 220 cultivos destruidos en 27
+incursiones verificadas, cero cultivos vivos y 156 monedas. El informe está en
+[`desierto123-no-walls-30.json.gz`](desierto123-no-walls-30.json.gz)
+(SHA-256 del JSON descomprimido
+`3996876613610972c38a7c70908e2a0a0f5c053684530acc1a7182b5421d9478`).
+Se reproduce con:
+
+```sh
+node tools/experiments/compare-enclosure-defense-campaigns.mjs desierto 30 123 test-results/desierto-no-walls.json no-walls
+```
+
+El modo `no-walls` conserva las reparaciones ordinarias de centros, pero
+desactiva la inversión defensiva. Es una **política distinta**, no un A/B de
+rendimiento ni una prueba de que cada incursión tardía frente a la finca
+amurallada haya encontrado un objetivo útil. Sí demuestra que el terreno por
+sí solo no hace invulnerable la plantación en esta semilla.
+
 Pasaron las 41 pruebas existentes de entrada exterior, conectividad y entrada
 de Desierto, las dos regresiones congeladas y la prueba de desvío desconocido.
 El build de producción pasó. Esta evidencia no sustituye pruebas visuales,
