@@ -30,3 +30,7 @@ La vista desplazada muestra un borde recto del terreno. Está presente también 
 La integración volcánica tiene cuatro capturas adicionales en `../volcanic-charcoal/integrated/`: tres vistas sin diferencias superiores a 3/255 respecto al candidato QA y 0,00282 % en cámara de juego diurna. No se atribuye esa variación mínima a una mejora artística. El ensayo de [estratos erosionados del Cañón](../canyon-bedding/README.md) se descarta por discontinuidades triangulares y pérdida de coherencia visual.
 
 La [medición actual](CONSTANT-PERFORMANCE.md) no aprueba el presupuesto global: Sabana suma +0,656 ms GPU diurnos y +0,742 ms nocturnos; Cañón suma +0,747 ms diurnos. Volcanes queda dentro del umbral en esta ronda. Se mantienen las limitaciones de caché y deriva descritas en el informe. La clave de programa distingue biomas para evitar reutilizar constantes incorrectas; una prueba reproduce la colisión previa y verifica su corrección. 21 pruebas pasan.
+
+## Ampliación de agua
+
+La opción también incorpora ahora [agua irregular con mapa de pendientes compartido](../water-integrated/README.md) en Sabana, Gran Río, Manglares y Cañón. Las capturas originales de este directorio preceden esa ampliación; la evidencia actual está en water-integrated/. Desierto y lava permanecen como controles. El coste incremental de agua se mide por separado y no cancela los límites de rendimiento del suelo/sombras documentados arriba.

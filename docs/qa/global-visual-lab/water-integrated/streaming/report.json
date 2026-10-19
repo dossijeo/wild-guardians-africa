@@ -1,0 +1,120 @@
+{
+  "records": [
+    {
+      "phase": "day",
+      "rebase": false,
+      "file": "day-base.png",
+      "camera": [
+        -24.280269614489953,
+        16.6,
+        33
+      ],
+      "target": [
+        -33.28026961448995,
+        3.6,
+        15.000000000000002
+      ],
+      "origin": [
+        0,
+        0
+      ],
+      "clock": 0,
+      "time": 150
+    },
+    {
+      "phase": "day",
+      "rebase": true,
+      "file": "day-rebased.png",
+      "camera": [
+        -24.280269614489953,
+        16.6,
+        33
+      ],
+      "target": [
+        -33.28026961448995,
+        3.6,
+        15.000000000000002
+      ],
+      "origin": [
+        0,
+        48
+      ],
+      "clock": 0,
+      "time": 150
+    },
+    {
+      "phase": "night",
+      "rebase": false,
+      "file": "night-base.png",
+      "camera": [
+        -24.280269614489953,
+        16.6,
+        33
+      ],
+      "target": [
+        -33.28026961448995,
+        3.6,
+        15.000000000000002
+      ],
+      "origin": [
+        0,
+        0
+      ],
+      "clock": 0,
+      "time": 350
+    },
+    {
+      "phase": "night",
+      "rebase": true,
+      "file": "night-rebased.png",
+      "camera": [
+        -24.280269614489953,
+        16.6,
+        33
+      ],
+      "target": [
+        -33.28026961448995,
+        3.6,
+        15.000000000000002
+      ],
+      "origin": [
+        0,
+        48
+      ],
+      "clock": 0,
+      "time": 350
+    }
+  ],
+  "stream": {
+    "steps": [
+      {
+        "shift": 0,
+        "chunks": 26,
+        "materials": 8,
+        "unbound": 0,
+        "sameTexture": true,
+        "textures": 78
+      },
+      {
+        "shift": 96,
+        "chunks": 26,
+        "materials": 5,
+        "unbound": 0,
+        "sameTexture": true,
+        "textures": 75
+      },
+      {
+        "shift": -96,
+        "chunks": 26,
+        "materials": 8,
+        "unbound": 0,
+        "sameTexture": true,
+        "textures": 82
+      }
+    ],
+    "textureDisposals": 1
+  },
+  "errors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ]
+}

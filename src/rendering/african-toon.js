@@ -1,3 +1,4 @@
+import {acquireWaterSlope,patchGlobalWaterSurface} from './global-water-surface.js';
 import {patchGlobalGroundFill,patchVolcanicCharcoal} from './global-visual-lighting.js';
 import {groundMaterialFunctions,artLightingFunctions,ART_PROFILES} from './biome-material-source.js';
 import {savannaLayerFunctions} from './savanna-layer-source.js';
@@ -147,6 +148,9 @@ export function toonDebris(vertex,fragment){
 export function paintedWaterMaterial(color,lava=false,seed=42,bounds=null,lighting=null,clipOutside=false){
   const material=new THREE.MeshStandardMaterial({color,roughness:.4,metalness:.1,side:THREE.DoubleSide});
   const originalDepthHook=material.onBeforeCompile;
+  const experimentalWater=!!lighting?.globalWaterSurface&&!lava;
+  const waterSlope=experimentalWater?acquireWaterSlope(lighting,material):null;
+  if(waterSlope)material.userData.globalWaterSlope=waterSlope;
   const shadowUniforms=lighting?.shadowUniforms??createNativeShadowUniforms();if(!lighting?.shadowUniforms)material.addEventListener('dispose',()=>shadowUniforms.fallback.dispose());
   const uniforms={uTime:{value:0},uWaterScale:{value:WATER_DEFAULTS.scale},uAmplitude:{value:WATER_DEFAULTS.amplitude},uStrokeWidth:{value:WATER_DEFAULTS.strokeWidth},uHandmade:{value:WATER_DEFAULTS.handmade},uPigment:{value:0},uMotifs:{value:0},uSeedOffset:{value:new THREE.Vector2(...waterSeed(seed))}};
   waterPalette(color,lava).forEach((ink,i)=>uniforms['uInk'+i]={value:new THREE.Vector3(...ink)});
@@ -175,7 +179,8 @@ export function paintedWaterMaterial(color,lava=false,seed=42,bounds=null,lighti
       outgoingLight=sRGBTransferEOTF(vec4(nativeFluid4(vPaintWorld,normalize(cameraPosition-vPaintWorld),fluidVisibility),1.)).rgb;
       #include <opaque_fragment>`);
   };
+  if(waterSlope){const compile=material.onBeforeCompile;material.onBeforeCompile=(shader,renderer)=>{compile(shader,renderer);shader.uniforms.uGlobalWaterSlope=waterSlope;shader.fragmentShader=patchGlobalWaterSurface(shader.fragmentShader);};}
   material.onBeforeCompile=((compile)=>(shader,renderer)=>{compile(shader,renderer);patchNativeShadow(shader,shadowUniforms,'vPaintWorld');})(material.onBeforeCompile);
-  material.toneMapped=false;material.customProgramCacheKey=()=>lava?'african-lava-relative-v4.1.4|hdr-endpoints':'african-water-relative-v4.1.4|hdr-endpoints';
+  material.toneMapped=false;material.customProgramCacheKey=()=>lava?'african-lava-relative-v4.1.4|hdr-endpoints':'african-water-relative-v4.1.4|hdr-endpoints'+(experimentalWater?'|global-water-slope-map':'');
   material.userData.paintUniforms=uniforms;recordNativeFluidDepthHook(material,originalDepthHook,uniforms);return material;
 }
