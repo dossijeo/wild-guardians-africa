@@ -50,6 +50,36 @@ function formation(state,specs,bounds,nav,camera,eye,focus,dx,dz,box,radius,witn
  }
  return {entries,exits,selectionBounds:bounds};
 }
+// A narrow dune-side approach can fit each animal but not the whole camera
+// formation. Collect individually legal, exterior births along the finite
+// defense envelope only after the cheaper group formations have failed.
+function distributedExteriorFormation(state,specs,bounds,nav,camera,focus,box){
+ if(!box||!nav.raidView)return null;
+ const widest=specs.reduce((best,spec)=>spec.radius>best.radius?spec:best,specs[0]);
+ const clamp=(value,min,max)=>Math.max(min,Math.min(max,value));
+ const eye=nav.raidView.eye,nearX=clamp(eye.x,box[0]-16,box[2]+16),nearZ=clamp(eye.z,box[1]-16,box[3]+16);
+ const anchors=[];
+ for(const margin of [4,6,8,12])for(let offset=0;offset<=30;offset+=3)for(const sign of offset?[1,-1]:[1]){
+  const x=nearX+sign*offset,z=nearZ+sign*offset;
+  if(z>=box[1]-16&&z<=box[3]+16)anchors.push({x:box[0]-margin,z},{x:box[2]+margin,z});
+  if(x>=box[0]-16&&x<=box[2]+16)anchors.push({x,z:box[1]-margin},{x,z:box[3]+margin});
+ }
+ anchors.sort((a,b)=>distance(a,eye)-distance(b,eye)||a.x-b.x||a.z-b.z);
+ const entries=[],exits=[];
+ for(const anchor of anchors.slice(0,256)){
+  const local=localView(nav,anchor,focus),piece=camera(state,[widest],bounds,local,local.raidView,0);
+  if(!piece||!exteriorRaidWitness(piece.entries[0],widest.radius,box,nav))continue;
+  const point=piece.entries[0];
+  if(entries.some((prior,i)=>distance(prior,point)<=specs[i].radius+widest.radius+1))continue;
+  entries.push(point);exits.push(piece.exits[0]);
+  if(entries.length===specs.length){
+   const group={entries,exits};
+   if(groupWitness(group,specs,box,nav))return group;
+   entries.pop();exits.pop();
+  }
+ }
+ return null;
+}
 export function exteriorRaidEntry(state,specs,bounds,side,nav,base,camera){
  const box=raidWallEnvelope(state,nav),entry=base(state,specs,bounds,side,nav);
  if(groupWitness(entry,specs,box,nav))return entry;
@@ -101,5 +131,5 @@ export function exteriorRaidEntry(state,specs,bounds,side,nav,base,camera){
    const along=detourRaidFormation(proof,specs,expanded,nav);if(along)return along;
   }
  }
- return null;
+ return distributedExteriorFormation(state,specs,bounds,nav,camera,focus,box);
 }

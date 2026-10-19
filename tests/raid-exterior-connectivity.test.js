@@ -3,9 +3,19 @@ import {readFileSync} from 'node:fs';
 import assert from 'node:assert/strict';
 import {topologyFixture} from '../tools/probe-raid-entry-topology.mjs';
 import {exteriorGroupWitness,EXTERIOR_GRAPH_LIMITS} from '../src/simulation/raid-exterior-connectivity.js';
+import {prepareExteriorDetour} from '../src/simulation/raid-exterior-detour.js';
 function native(){const {s,nav}=topologyFixture('closed');s.structures=[];s.plants=[];s.villages=[];nav.setState(s);return {s,nav};}
 const pair=(birth,exit)=>({entries:[birth],exits:[exit]});
 const certify=(entry,specs,nav,witness)=>exteriorGroupWitness(entry,specs,[-20,-20,20,20],nav,witness);
+test('an unloaded speculative exterior detour does not abort the raid entry search',()=>{
+ let calls=0;
+ const nav={activeBounds:[-2,-2,2,2],version:1,walkable:()=>true,segmentClear:()=>true,
+  approachPath:()=>{calls++;throw Object.assign(Error('not resident'),{name:'SpatialChunkUnavailable'});}};
+ assert.equal(prepareExteriorDetour({x:0,z:0},1,[-1,-1,1,1],nav,()=>true),null);
+ assert.equal(calls,4);
+ nav.approachPath=()=>{throw Error('unexpected route failure')};
+ assert.throws(()=>prepareExteriorDetour({x:0,z:0},1,[-1,-1,1,1],nav,()=>true),/unexpected route failure/);
+});
 test('an exit root certifies its birth through an actual native segment',()=>{
  const {nav}=native(),entry=pair({x:0,z:0},{x:0,z:5});let sweeps=0;const segment=nav.segmentClear.bind(nav);nav.segmentClear=(...a)=>{sweeps++;return segment(...a);};
  assert(certify(entry,[{radius:1.1}],nav,p=>p.z===5));assert.equal(sweeps,1);
