@@ -64,7 +64,7 @@ function appendTask(state,centerId,kind,targetId) {
 }
 // Local to one synchronous append-only crop pass. Never retained across ticks,
 // worker completions, queue reconstruction, attacks or restored snapshots.
-export function taskEnqueuer(state) {
+export function taskEnqueuer(state,beforeAppend=()=>{}) {
   let targets=null;
   return (centerId,kind,targetId)=>{
     if(!centerId)return null;
@@ -76,6 +76,7 @@ export function taskEnqueuer(state) {
     }
     const ids=targets.get(kind)??new Set();
     if(ids.has(targetId))return null;
+    beforeAppend();
     ids.add(targetId);targets.set(kind,ids);
     return appendTask(state,centerId,kind,targetId);
   };

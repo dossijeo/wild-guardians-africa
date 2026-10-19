@@ -1,4 +1,4 @@
-import {commitAgriculturalPower,consumeGrowthPower,settleMultiplyPower} from './agricultural-power.js';
+import {commitAgriculturalPower,growthPowerStep,settleMultiplyPower} from './agricultural-power.js';
 import {activeRaidEntryPlan} from '../world/raid-entry-data.js';
 import {animalExitConnector} from './animal-exit-connectors.js';
 import {animalNativeExitBridgePending} from './animal-native-exit-bridge.js';
@@ -1506,15 +1506,17 @@ export function tick(s,seconds,nav) {
       structure.collapseRemaining-=step;if(structure.collapseRemaining<=1e-9){structure.status='ruined';structure.hp=0;nav.setState(s);emit(s,'StructureRuined',{targetId:structure.id});}
     }
     if(previousTime<300) {
-      const enqueueCrop=taskEnqueuer(s);
-      for(const p of activeCrops(s.plants)) {
+      const growthStep=s.spells.some(spell=>spell.kind==='growth'&&spell.remaining>0)?growthPowerStep(s):null;
+      const flushGrowth=()=>growthStep?.flush();
+      const enqueueCrop=taskEnqueuer(s,flushGrowth);
+      try{for(const p of activeCrops(s.plants)) {
         if(!p.alive)continue;
         const before=isMature(p),growthSpell=spellAt(s,'growth',p),extra=advancePlant(p,step,growthSpell?.power?growthSpell.power.intensity:!!growthSpell);
-        if(growthSpell&&extra>0){growthSpell.growthSecondsAdded=(growthSpell.growthSecondsAdded??0)+extra;consumeGrowthPower(s,growthSpell,extra);}
-        if(!before&&isMature(p)){emit(s,'CropMatured',{targetId:p.id});if(s.tutorial.step==='observe')s.tutorial.step='harvest';}
-        if(!p.harvestRequested)queueMatureHarvest(s,p,enqueueCrop);
+        if(growthSpell&&extra>0){growthSpell.growthSecondsAdded=(growthSpell.growthSecondsAdded??0)+extra;growthStep?.consume(growthSpell,extra);}
+        if(!before&&isMature(p)){flushGrowth();emit(s,'CropMatured',{targetId:p.id});if(s.tutorial.step==='observe')s.tutorial.step='harvest';}
+        if(!p.harvestRequested&&isMature(p)){flushGrowth();queueMatureHarvest(s,p,enqueueCrop);}
         if(p.alive&&p.water.some(w=>w.status==='due')&&p.centerId&&s.structures.some(c=>c.id===p.centerId&&operational(c)))enqueueCrop(p.centerId,p.water[0].status==='due'?'initial':'water',p.id);
-      }
+      }}finally{flushGrowth();}
     }
     const shieldsBefore=s.spells.filter(a=>a.kind==='shield').length;
     for(const spell of s.spells)spell.remaining=Math.max(0,spell.remaining-step);

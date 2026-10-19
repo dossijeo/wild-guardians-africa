@@ -12,7 +12,7 @@ import {applyBalanceCandidate} from './balance-candidate.mjs';
 
 const file=process.argv[2],seconds=Number(process.argv[3]??10);
 if(!file||!Number.isInteger(seconds)||seconds<1||seconds>600)
-  throw Error('Usage: node profile-frozen-native-tick.mjs state.json[.gz] seconds [--dt 0.1] [--candidate candidate.json] [--campaign-residency] [--prune-history] [--count-spatial]');
+  throw Error('Usage: node profile-frozen-native-tick.mjs state.json[.gz] seconds [--dt 0.1] [--candidate candidate.json] [--campaign-residency] [--prune-history] [--count-spatial] [--profile-window]');
 const dtIndex=process.argv.indexOf('--dt');
 const dt=dtIndex<0?1:Number(process.argv[dtIndex+1]);
 if(!Number.isFinite(dt)||dt<=0||dt>1||!Number.isInteger(1/dt))
@@ -29,6 +29,7 @@ const bytes=readFileSync(file),state=deserialize((file.endsWith('.gz')?gunzipSyn
 const pruneHistory=process.argv.includes('--prune-history');
 const campaignResidency=process.argv.includes('--campaign-residency');
 const countSpatial=process.argv.includes('--count-spatial');
+const profileWindow=process.argv.includes('--profile-window');
 if(pruneHistory){state.plants=state.plants.filter(plant=>plant.alive);state.crates=state.crates.filter(crate=>!crate.delivered);}
 const module=new WebAssembly.Module(readFileSync(process.env.WILD_ENGINE_SPATIAL_SERVICES_WASM??
   new URL('../../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
@@ -153,9 +154,10 @@ try{
       structures:state.structures,raid:state.raid};
     console.log(JSON.stringify({phase:'final',pruneHistory,
       activeSha256:createHash('sha256').update(JSON.stringify(active)).digest('hex'),
+      ...(profileWindow||countSpatial?{profileStartUs,profileEndUs}:{}),
       ...(countSpatial?{spatialCalls,spatialMs,navCalls,navMs,wasmCalls,wasmMs,
         nativeAnimalPlans:planner.metrics(state.elapsed).nativeAnimalPlans,
         raidSelectionStats:nav.raidSelectionStats,
-        coreMetrics:session.core.metrics(),profileStartUs,profileEndUs}: {})}));
+        coreMetrics:session.core.metrics()}: {})}));
   }finally{stopTasks();stopWorld();delete nav.intentTaskPlanner;}
 }finally{session.dispose();}
