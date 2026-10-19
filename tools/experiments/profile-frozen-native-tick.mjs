@@ -12,7 +12,7 @@ import {applyBalanceCandidate} from './balance-candidate.mjs';
 
 const file=process.argv[2],seconds=Number(process.argv[3]??10);
 if(!file||!Number.isInteger(seconds)||seconds<1||seconds>600)
-  throw Error('Usage: node profile-frozen-native-tick.mjs state.json[.gz] seconds [--dt 0.1] [--candidate candidate.json] [--campaign-residency] [--prune-history]');
+  throw Error('Usage: node profile-frozen-native-tick.mjs state.json[.gz] seconds [--dt 0.1] [--candidate candidate.json] [--campaign-residency] [--prune-history] [--count-spatial] [--profile-window]');
 const dtIndex=process.argv.indexOf('--dt');
 const dt=dtIndex<0?1:Number(process.argv[dtIndex+1]);
 if(!Number.isFinite(dt)||dt<=0||dt>1||!Number.isInteger(1/dt))
@@ -28,6 +28,8 @@ const bytes=readFileSync(file),state=deserialize((file.endsWith('.gz')?gunzipSyn
 // removed before constructing the native projection. Never write this state.
 const pruneHistory=process.argv.includes('--prune-history');
 const campaignResidency=process.argv.includes('--campaign-residency');
+const countSpatial=process.argv.includes('--count-spatial');
+const profileWindow=process.argv.includes('--profile-window');
 if(pruneHistory){state.plants=state.plants.filter(plant=>plant.alive);state.crates=state.crates.filter(crate=>!crate.delivered);}
 const module=new WebAssembly.Module(readFileSync(process.env.WILD_ENGINE_SPATIAL_SERVICES_WASM??
   new URL('../../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
@@ -49,7 +51,47 @@ try{
       x<=chunk(Math.max(...points.map(point=>point.x))+margin);x++)
       desired.set(`${x},${z}`,{cx:x,cz:z,score:0});
   session.stream.plan(desired);await session.stream.whenIdle();
+  const spatialCalls={},spatialMs={},wasmCalls={},wasmMs={};
+  if(countSpatial){
+    const originalWasm=session.core.wasm,measuredWasm={};
+    for(const [name,value] of Object.entries(originalWasm)){
+      measuredWasm[name]=typeof value==='function'?(...args)=>{
+        const started=performance.now();wasmCalls[name]=(wasmCalls[name]??0)+1;
+        try{return value(...args);}finally{
+          wasmMs[name]=(wasmMs[name]??0)+performance.now()-started;
+        }
+      }:value;
+    }
+    session.core.wasm=measuredWasm;
+  }
+  if(countSpatial)for(const name of ['routeActor','actorConnectivity',
+    'actorRegions','actorEnclosure','actorCanStand','actorStepClear',
+    'actorStepClearExceptWalls','queryPropsAt']){
+    const original=session[name];
+    if(typeof original!=='function')continue;
+    session[name]=(...args)=>{
+      const started=performance.now();spatialCalls[name]=(spatialCalls[name]??0)+1;
+      try{return original(...args);}finally{
+        spatialMs[name]=(spatialMs[name]??0)+performance.now()-started;
+      }
+    };
+  }
   const nav=createSpatialNavigationMovement(session,state),planner=createEventDrivenTaskPlanner(session);
+  if(countSpatial)nav.raidSelectionStats={};
+  const navCalls={},navMs={};
+  if(countSpatial)for(const name of ['walkable','segmentClear','path','workerPath',
+    'approachPath','regionFor','regionConnected','enclosureFor','terrainValid',
+    'workerMotionClear','wallOverlapMotionClear','spatialExteriorWitness',
+    'requestRaidConnectivity','requestRaidFrontier']){
+    const original=nav[name];
+    if(typeof original!=='function')continue;
+    nav[name]=(...args)=>{
+      const started=performance.now();navCalls[name]=(navCalls[name]??0)+1;
+      try{return original(...args);}finally{
+        navMs[name]=(navMs[name]??0)+performance.now()-started;
+      }
+    };
+  }
   if(campaignResidency){
     const cx=chunk(center.x),cz=chunk(center.z);
     nav.setActiveBounds([(cx-1)*48-24,(cz-1)*48-24,(cx+1)*48+24,(cz+1)*48+24]);
@@ -66,7 +108,10 @@ try{
     };
   }
   planner.resetFromState(state);const stopTasks=planner.observeTasks(state),stopWorld=planner.observeWorld(state);
-  const timed=['planIfNeeded','flushWorldEvents','flushTaskEvents','reconcileNavigationRevision','reconcileWorkerRoutes','planHomeRoute'];
+  const timed=['planIfNeeded','flushWorldEvents','flushTaskEvents',
+    'reconcileNavigationRevision','reconcileWorkerRoutes','planHomeRoute',
+    'planAttackCrop','planAttackWall','planRetreatRoute',
+    'retryPendingAttackRoute'];
   const timing=Object.fromEntries(timed.map(name=>[name,0]));
   for(const name of timed){
     const original=planner[name];
@@ -78,24 +123,41 @@ try{
   }
   nav.intentTaskPlanner=planner;
   try{
+    // Setup may restore intents and populate the native index; the query
+    // breakdown below describes only the subsequent timed simulation window.
+    for(const counters of [spatialCalls,spatialMs,navCalls,navMs,wasmCalls,wasmMs])
+      for(const key of Object.keys(counters))delete counters[key];
+    const profileStartUs=Number(process.hrtime.bigint()/1000n);
     for(let second=1;second<=seconds;second++){
       for(const name of timed)timing[name]=0;
       const beforeElapsed=state.elapsed,start=performance.now();
+      let gameTickMs=0,residencyMs=0,residencyLoads=0;
       for(let step=0;step<Math.round(1/dt);step++){
-        tick(state,dt,nav);nav.serviceRaidConnectivityDemand?.();
+        let phase=performance.now();
+        tick(state,dt,nav);gameTickMs+=performance.now()-phase;
+        phase=performance.now();
+        if(nav.serviceRaidConnectivityDemand?.())residencyLoads++;
+        residencyMs+=performance.now()-phase;
       }
       if(state.elapsed<=beforeElapsed)throw Error(`Frozen tick did not advance at second ${second}: ${JSON.stringify({day:state.day,time:state.time,pauses:state.pauses,result:state.result})}`);
       const ms=performance.now()-start,metrics=planner.metrics(state.elapsed);
-      console.log(JSON.stringify({second,day:state.day,time:state.time,ms,pruneHistory,campaignResidency,
+      console.log(JSON.stringify({second,day:state.day,time:state.time,ms,
+        gameTickMs,residencyMs,residencyLoads,pruneHistory,campaignResidency,
         workers:state.workers.length,plants:state.plants.length,crates:state.crates.length,animals:state.raid?.animals.length??0,
         taskQueries:metrics.nativeTaskRouteQueries,planningCalls:metrics.nativePlanningCalls,
         timingMs:{...timing}}));
     }
+    const profileEndUs=Number(process.hrtime.bigint()/1000n);
     const active={day:state.day,time:state.time,elapsed:state.elapsed,nextId:state.nextId,
       rng:state.rng,ledger:state.ledger,workers:state.workers,tasks:state.tasks,
       plants:state.plants.filter(plant=>plant.alive),crates:state.crates.filter(crate=>!crate.delivered),
       structures:state.structures,raid:state.raid};
     console.log(JSON.stringify({phase:'final',pruneHistory,
-      activeSha256:createHash('sha256').update(JSON.stringify(active)).digest('hex')}));
+      activeSha256:createHash('sha256').update(JSON.stringify(active)).digest('hex'),
+      ...(profileWindow||countSpatial?{profileStartUs,profileEndUs}:{}),
+      ...(countSpatial?{spatialCalls,spatialMs,navCalls,navMs,wasmCalls,wasmMs,
+        nativeAnimalPlans:planner.metrics(state.elapsed).nativeAnimalPlans,
+        raidSelectionStats:nav.raidSelectionStats,
+        coreMetrics:session.core.metrics()}: {})}));
   }finally{stopTasks();stopWorld();delete nav.intentTaskPlanner;}
 }finally{session.dispose();}

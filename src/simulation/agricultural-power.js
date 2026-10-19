@@ -33,15 +33,48 @@ export function commitAgriculturalPower(s,p,kind,baseHarvest){
   else p.multiplyPower={day:s.day,amount};
   return {day:s.day,amount,intensity:numberOf(divide(amount,rational(kind==='growth'?15:baseHarvest))),benefited:compare(amount,zero())>0};
 }
-export function consumeGrowthPower(s,spell,extra){
+function growthConsumption(spell,extra){
   if(!spell.power||extra<=0)return;
-  const a=row(s,spell.power.day).growth;
   // Growth integration uses floating seconds. Preserve exact accounting of that
   // measurement and cap cumulative consumption at the committed entitlement.
   const previous=spell.power.consumed??zero();
-  const micros=rational(BigInt(Math.round(extra*1e9)),1000000000n);
-  const next=minimum(spell.power.amount,add(previous,micros));
-  a.consumed=add(a.consumed,subtract(next,previous));spell.power.consumed=next;
+  const microsCount=BigInt(Math.round(extra*1e9));
+  const micros=rational(microsCount,1000000000n);
+  const advanced=add(previous,micros);
+  const capped=compare(advanced,spell.power.amount)>=0;
+  const next=capped?spell.power.amount:advanced;
+  spell.power.consumed=next;
+  return {day:spell.power.day,delta:capped?subtract(next,previous):micros,
+    microsCount:capped?null:microsCount};
+}
+export function consumeGrowthPower(s,spell,extra){
+  const change=growthConsumption(spell,extra);
+  if(change){const a=row(s,change.day).growth;a.consumed=add(a.consumed,change.delta);}
+}
+// The game can apply many independent growth effects within one 0.1s step.
+// Aggregate their exact fractions before touching the large daily account;
+// flush at each observable event boundary and before leaving the crop pass.
+export function growthPowerStep(s){
+  const pending=new Map();
+  return {
+    consume(spell,extra){
+      const change=growthConsumption(spell,extra);
+      if(!change)return;
+      let account=pending.get(change.day);
+      if(!account){account={micros:0n,fraction:zero()};pending.set(change.day,account);}
+      if(change.microsCount===null)account.fraction=add(account.fraction,change.delta);
+      else account.micros+=change.microsCount;
+    },
+    flush(){
+      for(const [day,change] of pending){
+        const delta=change.micros?add(rational(change.micros,1000000000n),
+          change.fraction):change.fraction;
+        const account=row(s,day).growth;
+        account.consumed=add(account.consumed,delta);
+      }
+      pending.clear();
+    }
+  };
 }
 export function settleMultiplyPower(s,crate){
   if(!crate.multiplyPower||crate.multiplyPowerSettled)return zero();
