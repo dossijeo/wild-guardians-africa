@@ -31,7 +31,7 @@ Se corrigió el instalador QA retirando únicamente los grupos `8:*`. El siguien
 | Sabana, cámara baja: draws | 89 | 89 |
 | Sabana, cámara baja: triángulos | 1.430.023 | 1.326.235 |
 
-Los buffers originales incluyen tangentes; los nuevos no usan mapas y emplean color de vértice. Son tamaños de arrays, no VRAM medida. Las cantidades de geometrías y texturas coinciden por pareja. El GLB QA añade 130.332 bytes de descarga: el binario compartido original sigue cargándose para las demás unidades. No se afirma ahorro neto de descarga ni liberación de todo el atlas original. El material derivado es opaco y DoubleSide, frente al material nativo con alpha test; menos triángulos no garantiza menos coste de fragmentos.
+Los buffers originales incluyen tangentes; los nuevos no usan mapas y emplean color de vértice. Son tamaños de arrays, no VRAM medida. Las cantidades de geometrías y texturas coinciden por pareja. El GLB QA añade 130.336 bytes de descarga: el binario compartido original sigue cargándose para las demás unidades. No se afirma ahorro neto de descarga ni liberación de todo el atlas original. El material derivado es opaco y DoubleSide, frente al material nativo con alpha test; menos triángulos no garantiza menos coste de fragmentos.
 
 No se ejecutó ABBA CPU/GPU: la candidata no supera la evaluación artística y las capturas finales coincidieron con una campaña CPU externa. No se publican tiempos contaminados ni se infiere aceleración por el número de triángulos.
 
