@@ -301,3 +301,61 @@ route to a relevant attack opportunity for the whole wave, without treating
 unknown connectivity as a blocked path or creating animals inside a closed
 defense. Until that behavior is demonstrated over complete raids, this
 native partial-wall integration remains experimental.
+
+### Shared physical wall opportunity: experimental follow-up
+
+The [frozen night-17 probe](desierto123-d17-wall-entry-probe.json) starts from
+the actual camera-side exterior component. Wild Engine nominates six
+crop-facing attack faces on two partial walls. From every nominated face, a
+native route reaches the exterior resident edge, and a bounded formation can
+place all nine animals with **9/9 physical routes** back to that face.
+Nevertheless, the prior per-animal straight-line classifier nominates the
+same wall for only one or two of those nine births because the real route
+turns. A weak-region ID alone is insufficient: one of the nine positions is
+quantized to a different weak region despite having a positive physical route.
+
+The experimental entry selector now uses such a face only if the entire wave
+has positive exterior and wall routes. It carries a wall/group/face hint with
+each spawned animal. On an actual attack request, Wild Engine rechecks the
+current wall, live crop group, species-specific physical side, route, and
+attack-site lease. The hint cannot authorize a path across a static barrier;
+the frozen test verifies that the same hint from the original disconnected
+birth does **not** produce an attack. The ordinary planner remains available
+when a hint is stale, blocked, or occupied. This deliberately changes the
+raid entry and target decisions; it does not change damage, attack budgets,
+wall prices, or physical movement rules.
+
+The 20-night [trial](desierto123-shared-wall-hint-20.json.gz) completed.
+Against the immediately preceding partial-wall trial, nights 16–20 had
+15 versus zero wall hits, and zero-contact raids across all 20 nights fell
+from nine to four. Cumulative native wall-route queries fell from 6,634 to
+475. The ending farm had 13 versus 15 living crops and 1,928 versus 1,875
+coins. Total wall time rose from 57.72 to 74.15 seconds; accumulated
+`Game.tick` time rose from 44.60 to 60.67 seconds. The trajectories first
+diverge at night 16, when previously idle animals begin attacking. Thus the
+wall-time comparison is a different physical workload, **not** evidence of
+an algorithm-speed improvement. Nights 17–20 account for most of the tick
+increase (4.80–6.33 seconds per day instead of 1.17–1.92). The remaining
+animals often wait for an exclusive wall reservation and then retreat; this
+is a real policy/contention limit, not permission to let multiple animals
+claim the same wall or to accelerate their attack animation.
+
+A second run with the same binary and seed took 74.43 seconds and reproduced
+the final serialized SHA-256
+`18958224e17c47b4a3737aac930444fce253ba1f124cd7a5554d17fa90c3127b`,
+124 wall hits, four zero-contact raids, and 475 native wall-route queries.
+Reproduce with:
+
+```sh
+node tools/experiments/audit-defended-raid-pressure.mjs desierto 20 123 test-results/desierto123-shared-wall-hint-20.json.gz
+node --test tests/raid-desert-attack-entry.test.js tests/spatial-native-raid.test.js tests/raid-contention-turns.test.js tests/raid-entry-preparer.test.js
+npm run verify:browser-syntax
+```
+
+The directed raid suite passes 56 tests and browser syntax validation passes.
+The prepared browser raid-entry worker still uses the legacy JavaScript
+`Navigation` copy and cannot issue the new native wall-opportunity query; this
+experiment therefore improves the synchronous Wild Engine campaign path but
+does not yet demonstrate the same entry behavior with a prepared browser
+result. The PR remains draft pending that integration and sustained runtime
+evaluation on additional seeds/biomes.

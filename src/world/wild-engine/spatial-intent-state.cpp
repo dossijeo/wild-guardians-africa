@@ -2118,8 +2118,9 @@ int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
 // crossings of certified enclosures; the native route and attack-site lease
 // then confirm one physically reachable, unreserved wall in the same call.
 // This is opt-in until its priorities and campaign outcomes are compared.
-int nav_intent_plan_attack_wall(double actorId,double startX,double startZ,
-                                double radius){
+int planAttackWall(double actorId,double startX,double startZ,double radius,
+                   double hintWallId,double hintX,double hintZ,
+                   double hintGroupId){
   IntentState& s=state();s.wallAttackResult.fill(0);
   if(!integer(actorId)||!coordinate(startX)||!coordinate(startZ)||
      !std::isfinite(radius)||radius<=0||radius>2||
@@ -2130,6 +2131,28 @@ int nav_intent_plan_attack_wall(double actorId,double startX,double startZ,
   struct Candidate {uint64_t id,group;double x,z,distance;};
   std::vector<Candidate> candidates;
   bool unknown=false,occupied=false;
+  // The wave may share a crop-facing wall face discovered during entry
+  // preparation. Re-evaluate that face against current native entities and
+  // this species' radius; the hint is never a route or attack certificate.
+  if(integer(hintWallId)&&integer(hintGroupId)&&coordinate(hintX)&&
+     coordinate(hintZ)){
+    const auto wall=s.targets.find(uint64_t(hintWallId));
+    if(wall!=s.targets.end()&&wall->second.kind==3&&
+       wall->second.active&&wall->second.status==0){
+      const int count=nav_intent_relevant_wall_sides(hintX,hintZ,radius);
+      if(count<0)unknown=true;
+      else for(int i=0;i<count;i++){
+        const size_t base=size_t(i)*4;
+        if(uint64_t(s.relevantWallRows[base])!=uint64_t(hintWallId)||
+           uint64_t(s.relevantWallRows[base+3])!=uint64_t(hintGroupId))
+          continue;
+        candidates.push_back({uint64_t(hintWallId),uint64_t(hintGroupId),
+          s.relevantWallRows[base+1],s.relevantWallRows[base+2],
+          std::hypot(wall->second.x-startX,wall->second.z-startZ)});
+      }
+    }
+  }
+  const size_t hintedCount=candidates.size();
   for(CropGroup& group:s.cropGroups){
     const int status=nav_intent_perimeter_walls(startX,startZ,radius,
       double(group.id));
@@ -2149,7 +2172,7 @@ int nav_intent_plan_attack_wall(double actorId,double startX,double startZ,
   // absent from the enclosure portal list. Consider those physical sides only
   // when the certified-perimeter pass nominated nothing; the route and lease
   // below remain mandatory before an attack is proposed.
-  if(candidates.empty()){
+  if(candidates.size()==hintedCount){
     const int sides=nav_intent_relevant_wall_sides(startX,startZ,radius);
     if(sides<0)unknown=true;
     else for(int index=0;index<sides;index++){
@@ -2170,6 +2193,15 @@ int nav_intent_plan_attack_wall(double actorId,double startX,double startZ,
     if(a.x!=b.x)return a.x<b.x;
     return a.z<b.z;
   });
+  // A valid wave hint is considered first. Ordinary certified perimeter and
+  // partial-wall candidates remain available if it is occupied or blocked.
+  if(hintedCount){
+    std::stable_partition(candidates.begin(),candidates.end(),
+      [hintWallId,hintGroupId](const Candidate& item){
+        return item.id==uint64_t(hintWallId)&&
+          item.group==uint64_t(hintGroupId);
+      });
+  }
   std::set<uint64_t> transientLeases;
   for(double id:s.attackReservedTargets)
     if(integer(id))transientLeases.insert(uint64_t(id));
@@ -2205,6 +2237,16 @@ int nav_intent_plan_attack_wall(double actorId,double startX,double startZ,
   s.wallAttackResult[0]=unknown?3:occupied?4:candidates.empty()?0:2;
   s.wallAttackResult[8]=examined;s.wallAttackResult[9]=routes;
   return int(s.wallAttackResult[0]);
+}
+int nav_intent_plan_attack_wall(double actorId,double startX,double startZ,
+                                double radius){
+  return planAttackWall(actorId,startX,startZ,radius,0,0,0,0);
+}
+int nav_intent_plan_attack_wall_hint(double actorId,double startX,double startZ,
+                                     double radius,double wallId,double sideX,
+                                     double sideZ,double groupId){
+  return planAttackWall(actorId,startX,startZ,radius,wallId,sideX,sideZ,
+                        groupId);
 }
 int nav_intent_attack_action_active(double actorId){
   if(!integer(actorId))return 0;

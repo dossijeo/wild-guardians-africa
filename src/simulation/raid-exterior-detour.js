@@ -26,11 +26,13 @@ export function detourRaidFormation(proof,specs,bounds,nav){
  }
  return {entries,exits,selectionBounds};
 }
-export function prepareExteriorDetour(start,radius,box,nav,witness){
+export function prepareExteriorDetour(start,radius,box,nav,witness,endsOverride=null){
  if(!box||!nav.approachPath||!nav.segmentClear||!nav.walkable(start.x,start.z,radius,null,false))return null;
  const active=nav.activeBounds??box;
  const bounds=[Math.min(active[0],box[0]-48),Math.min(active[1],box[1]-48),Math.max(active[2],box[2]+48),Math.max(active[3],box[3]+48)];
- const ends=[{x:start.x,z:bounds[3]+radius+2},{x:start.x,z:bounds[1]-radius-2},{x:bounds[2]+radius+2,z:start.z},{x:bounds[0]-radius-2,z:start.z}]
+ const ends=(endsOverride??
+   [{x:start.x,z:bounds[3]+radius+2},{x:start.x,z:bounds[1]-radius-2},
+    {x:bounds[2]+radius+2,z:start.z},{x:bounds[0]-radius-2,z:start.z}])
   .sort((a,b)=>Math.hypot(a.x-start.x,a.z-start.z)-Math.hypot(b.x-start.x,b.z-start.z));
  for(const end of ends.slice(0,EXTERIOR_DETOUR_LIMITS.paths)){
   if(!nav.walkable(end.x,end.z,radius,null,false)||!witness(end,radius,box,nav))continue;
@@ -42,7 +44,7 @@ export function prepareExteriorDetour(start,radius,box,nav,witness){
    continue;
   }
   if(!path?.length||Math.hypot(path.at(-1).x-end.x,path.at(-1).z-end.z)>1e-7)continue;
-  const points=[start,...path];
+  const points=[{x:start.x,z:start.z},...path];
   if(!points.every(p=>nav.walkable(p.x,p.z,radius,null,false))||!points.slice(1).every((p,i)=>nav.segmentClear(points[i],p,radius,null,false)))continue;
   // Certificate lifetime is this single preparation, never a geometry epoch.
   const cache=new Map(),version=nav.version;

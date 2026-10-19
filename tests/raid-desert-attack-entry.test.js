@@ -138,6 +138,64 @@ test('Desert/123 night 17 finds the winding exterior component without changing 
   }finally{session.dispose();}
 });
 
+test('Desert/123 partial night 17 shares a crop-facing wall route across the wave',()=>{
+  const raw=readFileSync(new URL(
+    '../docs/qa/desert-raid-pressure-audit/desierto123-partial-d17-waiting-state.json.gz',
+    import.meta.url));
+  const state=deserialize(gunzipSync(raw).toString()),before=serialize(state);
+  const binary=new WebAssembly.Module(readFileSync(new URL(
+    '../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
+  const loaded=new Map(),session=createSpatialGameSession(binary,state,{
+    loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+  try{
+    const village=state.villages[0],cx=Math.floor((village.x+24)/48),
+      cz=Math.floor((village.z+24)/48);
+    for(let z=cz-4;z<=cz+4;z++)for(let x=cx-4;x<=cx+4;x++){
+      if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+      loaded.set(`${x},${z}`,session.core.chunkPayload());
+    }
+    const planner=createEventDrivenTaskPlanner(session);
+    planner.resetFromState(state);planner.nativeWallSelectionEnabled=true;
+    const nav=createSpatialNavigationMovement(session,state);
+    nav.intentTaskPlanner=planner;
+    const bounds=[(cx-4)*48-24,(cz-4)*48-24,
+      (cx+4)*48+24,(cz+4)*48+24];
+    nav.setActiveBounds(bounds);
+    nav.setRaidView({x:99.70247532024266,z:30.57367599590944},
+      state.structures.find(item=>item.kind==='center'));
+    const specs=state.raid.animals.map(animal=>({radius:animal.radius})),
+      original={entries:state.raid.animals.map(animal=>animal.spawn),
+        exits:state.raid.animals.map(animal=>animal.exit)};
+    const selected=exteriorRaidEntry(state,specs,bounds,0,nav,
+      ()=>original,()=>null);
+    assert(selected?.wallOpportunity);
+    assert.equal(selected.entries.length,specs.length);
+    const side=selected.wallOpportunity;
+    for(let index=0;index<specs.length;index++)
+      assert.equal(nav.spatialRouteStatus(selected.entries[index],side,
+        specs[index].radius),'found');
+    const actor=state.raid.animals[0],position={x:actor.x,z:actor.z};
+    Object.assign(actor,selected.entries[0],{wallOpportunity:side});
+    const choice=planner.planAttackWall(state,actor);
+    assert.equal(choice?.status,'found');
+    assert.equal(choice.target.id,`structure-${side.wallId}`);
+    assert.deepEqual(deserialize(serialize(state)).raid.animals[0]
+      .wallOpportunity,side);
+    let prior={...selected.entries[0]};
+    for(const point of choice.approach.path){
+      assert(nav.segmentClear(prior,point,actor.radius,null,false));
+      prior=point;
+    }
+    planner.cancelAttackIntent(actor.id);
+    Object.assign(actor,position);
+    const inaccessible=planner.planAttackWall(state,actor);
+    assert.notEqual(inaccessible?.status,'found',
+      'a shared hint cannot send an animal through an inaccessible component');
+    delete actor.wallOpportunity;
+    assert.equal(serialize(state),before);
+  }finally{session.dispose();}
+});
+
 test('Desert/123 pending night 14 certifies an exterior wave after bounds expand',()=>{
   const raw=readFileSync(new URL(
     '../docs/qa/desert-raid-pressure-audit/desierto123-nativepartial-20-state.json.gz',

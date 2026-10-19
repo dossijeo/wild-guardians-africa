@@ -94,6 +94,32 @@ function wallSideRaidFormation(specs,bounds,nav,focus,box){
  }
  return null;
 }
+function relevantWallRaidFormation(specs,bounds,nav,box){
+ if(!box||!nav.raidView||!nav.spatialRelevantWallApproachSides||
+    !nav.spatialExteriorEdge||!nav.spatialRouteStatus)return null;
+ const radius=Math.max(...specs.map(spec=>spec.radius)),
+   sides=nav.spatialRelevantWallApproachSides(nav.raidView.eye,radius)
+     .sort((a,b)=>distance(a,nav.raidView.eye)-
+       distance(b,nav.raidView.eye)||a.wallId-b.wallId||a.x-b.x||a.z-b.z);
+ const nativeWitness=(point,r,wallBox)=>
+   !!nav.spatialExteriorEdge(point,r,wallBox);
+ for(const side of sides.slice(0,12)){
+  const edge=nav.spatialExteriorEdge(side,radius,box);
+  if(!edge)continue;
+  const proof=prepareExteriorDetour(side,radius,box,nav,nativeWitness,
+    [edge]);
+  if(!proof)continue;
+  const candidate=detourRaidFormation(proof,specs,bounds,nav);
+  if(!candidate||!exteriorGroupWitness(candidate,specs,box,nav,
+    nativeWitness))continue;
+  if(!candidate.entries.every((point,index)=>
+    nav.spatialRouteStatus(point,side,specs[index].radius)==='found'))
+    continue;
+  return {...candidate,wallOpportunity:{wallId:side.wallId,
+    groupId:side.groupId,x:side.x,z:side.z}};
+ }
+ return null;
+}
 function localView(nav,eye,focus){const local=Object.create(nav);local.raidView={eye,target:focus};return local;}
 function formation(state,specs,bounds,nav,camera,eye,focus,dx,dz,box,radius,witness=exteriorRaidWitness){
  const entries=[],exits=[],columns=Math.ceil(Math.sqrt(specs.length)),spacing=radius*2+4;
@@ -142,7 +168,8 @@ export function exteriorRaidEntry(state,specs,bounds,side,nav,base,camera,insetT
   if(wallAttackOpportunity(entry,specs,box,nav))return entry;
   const focus=state.structures.find(t=>t.kind==='center'&&t.hp>0&&
     t.status!=='collapsing')??state.villages[0];
-  return wallSideRaidFormation(specs,bounds,nav,focus,box)??entry;
+  return wallSideRaidFormation(specs,bounds,nav,focus,box)??
+    relevantWallRaidFormation(specs,bounds,nav,box)??entry;
  }
  const focus=state.structures.find(t=>t.kind==='center'&&t.hp>0&&t.status!=='collapsing')??state.villages[0];
  if(!focus)return null;
