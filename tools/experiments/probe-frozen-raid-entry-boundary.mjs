@@ -18,7 +18,8 @@ if(!fixture||!out)throw Error('Usage: probe-frozen-raid-entry-boundary.mjs PRE_E
 const input=readFileSync(fixture);
 const frozen=JSON.parse((fixture.endsWith('.gz')?gunzipSync(input):input).toString());
 const state=deserialize(frozen.state),before=serialize(state);
-const module=new WebAssembly.Module(readFileSync('src/world/wild-engine/spatial-savanna.wasm'));
+const module=new WebAssembly.Module(readFileSync(process.env.WILD_PROBE_WASM??
+  'src/world/wild-engine/spatial-savanna.wasm'));
 const loaded=new Map(),session=createSpatialGameSession(module,state,{
   loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
 try{

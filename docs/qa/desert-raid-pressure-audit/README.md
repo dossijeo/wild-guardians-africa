@@ -658,3 +658,9 @@ profile/sector preparation and the interactive frame where it occurs.
 Merely changing the order of valid raid entrances can accelerate a frozen
 selection while worsening the sustained game. No game rules or production
 navigation paths were changed by this audit.
+
+The follow-up [native resident-data experiment](../wild-engine-resident-profile-reuse/README.md)
+removes repeated procedural terrain and prop generation when a new movement
+profile first builds its graph. It preserves the selected entries and all
+recorded campaign hashes; cold-profile and sustained timings are reported
+separately there.

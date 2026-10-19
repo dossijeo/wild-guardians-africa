@@ -1016,6 +1016,26 @@ void populateChunk(int cx,int cz,bool visual=true){
   residentSolidProps()[chunkKey(cx,cz)]=solidProps;
   residentVisibleProps()[chunkKey(cx,cz)]=props;
 }
+// Building another movement profile changes the raster, not the generated
+// terrain or props. Resident chunks already retain those exact spatial data.
+void selectResidentChunkForProfile(int cx,int cz){
+  const auto key=chunkKey(cx,cz);
+  const auto terrain=residentSpatial().find(key);
+  const auto visible=residentVisibleProps().find(key);
+  const auto solid=residentSolidProps().find(key);
+  if(terrain==residentSpatial().end()||visible==residentVisibleProps().end()||
+     solid==residentSolidProps().end()){
+    populateChunk(cx,cz,false);
+    return;
+  }
+  chunkX=cx;chunkZ=cz;
+  selectNearbySettlements(cx,cz);
+  lattice=terrain->second.lattice;
+  ponds=terrain->second.ponds;
+  props=visible->second;
+  solidProps=solid->second;
+  indexSolidProps();
+}
 void buildActiveRaster(){
   const int firstX=chunkX*side-24,firstZ=chunkZ*side-24;
   staticPass.resize(side*side);staticSteps.assign(side*side,0);staticInbound.resize(side*side);
@@ -1779,7 +1799,8 @@ int spatial_build_nav_profile(int index,float radius,int worker){
   const int selectedX=chunkX,selectedZ=chunkZ;
   chunkRasters->clear();
   for(const auto& [cx,cz]:loadedChunks){
-    populateChunk(cx,cz,false);buildActiveRaster();commitActiveSectors();refreshNeighborBorders(cx,cz);
+    selectResidentChunkForProfile(cx,cz);
+    buildActiveRaster();commitActiveSectors();refreshNeighborBorders(cx,cz);
   }
   if(chunkX!=selectedX||chunkZ!=selectedZ)populateChunk(selectedX,selectedZ);
   navReady=true;
