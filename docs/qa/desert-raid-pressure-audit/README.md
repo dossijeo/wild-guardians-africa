@@ -419,3 +419,43 @@ The frozen replay is reproducible with:
 ```sh
 node tools/experiments/profile-frozen-native-tick.mjs docs/qa/desert-raid-pressure-audit/desierto123-d17-morning-state.json.gz 30 --dt 0.1 --campaign-residency --resident-radius 2
 ```
+
+### Native pending repair decisions
+
+The task planner now retains an inconclusive service decision inside its
+existing native task record while the worker's exact position, target
+geometry, movement profile, and graph revision remain unchanged. An unrelated
+crop task can wake the global FIFO queue without repeating the four physical
+wall approaches for that worker/repair pair. The decision remains `unknown`,
+not `blocked`; movement, target edits, sector arrival, portal changes, route
+rejection, or confirmed topology changes force a new evaluation. Pending
+entries leave with their task or worker and each task retains at most 32.
+No route or strategic target is inferred from an unknown answer.
+
+The 300-second frozen replay produced the same active-state SHA-256 with
+both binaries (`b79465408176a77bcc164df6e3986080278b6e2047d409d9a8375ae2fb58f160`).
+ABBA totals were 3,430/3,464 ms for the control and 751/710 ms for the
+pending-decision variant. Native task route requests fell from 9,809 to 1,541
+in each pair; the 79 global planning boundaries were unchanged. This is a
+frozen workload benchmark, not a complete campaign result.
+
+Two 17-night Desert/123 campaign runs with the pending-decision variant
+finished in 48.18 and 48.00 seconds, compared with 55.11 and 55.40 seconds
+for the directly preceding control runs. All four finished with the same
+serialized final-state SHA-256
+`d04918f917640cfbf7ce237267e179fb87ff638081272525c050232e037e00c8`.
+On day 17, the [traced run](desierto123-pending-repairs-17.json.gz) made
+3,524 worker task route queries instead of 9,712, with the same 110 global
+plans; `Game.tick` fell from about 5.0 to 2.55 seconds. The matching hash
+proves no observed decision or economic divergence for this frozen seed, but
+does not establish universal behavioral equivalence.
+
+The [Sabana/712 14-night smoke](sabana712-pending-repairs-14.json.gz) retained
+its earlier final-state hash
+`711a0699538f15045d179a0b7fe1de77f4ffd0dc862c983d2fab728425191622`,
+139 living crops and 987 coins. Its total time was 67.90 seconds versus 67.18
+seconds previously; the difference is within single-run noise and offers no
+evidence of a speedup in that biome. Directed native intention, route,
+topology, and restoration tests pass (26/26), as does browser syntax
+validation. The PR remains experimental pending interactive latency and wider
+campaign checks.

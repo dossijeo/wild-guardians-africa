@@ -90,7 +90,18 @@ struct DamageOrder {
   }
 };
 // Task kind: 0 direct, 1 water/initial, 2 repair.
-struct Task {uint64_t id,center,target,assigned;double created,rank;int kind;};
+struct PendingUnknownService {
+  double workerX,workerZ,targetX,targetZ,yaw,shape,wallDepthScale;
+  uint64_t targetId;
+  uint32_t topology;
+  int profile,kind,cause;
+};
+struct Task {
+  uint64_t id,center,target,assigned;double created,rank;int kind;
+  // A pending intent is still unknown, never a negative reachability proof.
+  // Reconsider it when its exact worker/target geometry or graph changes.
+  std::map<uint64_t,PendingUnknownService> pendingUnknown;
+};
 // A committed route belongs to the native session. It remains pinned while an
 // actor uses it; speculative task batches never acquire a route handle.
 enum class PlanningState:int {NeedsPlan=0,RouteActive=1,ActionActive=2,
@@ -563,6 +574,22 @@ struct ServiceRoute {
   int unknownReason=0;
   int queries=0;
 };
+bool samePendingService(const PendingUnknownService& pending,
+                        const Worker& worker,const Target& target,int kind){
+  return pending.workerX==worker.x&&pending.workerZ==worker.z&&
+    pending.targetId==target.id&&pending.targetX==target.x&&
+    pending.targetZ==target.z&&pending.yaw==target.yaw&&
+    pending.shape==target.shape&&
+    pending.wallDepthScale==target.wallDepthScale&&
+    pending.topology==lazy_route_revision()&&
+    pending.profile==lazy_selected_context()&&pending.kind==kind;
+}
+PendingUnknownService pendingService(const Worker& worker,const Target& target,
+                                      int kind,int cause){
+  return {worker.x,worker.z,target.x,target.z,target.yaw,target.shape,
+    target.wallDepthScale,target.id,lazy_route_revision(),
+    lazy_selected_context(),kind,cause};
+}
 // The first reachable side of a crop can require a long detour around a
 // building or wall while another side is directly accessible. Probe the
 // remaining service points only for a clearly circuitous route. This keeps
@@ -955,7 +982,10 @@ int nav_intent_apply_changes(double sequence,int count){
   for(const Change& change:parsed){
     invalidateDependents(s,change);
     if(!change.op){
-      if(change.kind==1)s.workers.erase(change.id);
+      if(change.kind==1){
+        s.workers.erase(change.id);
+        for(auto& [id,task]:s.tasks)task.pendingUnknown.erase(change.id);
+      }
       else if(change.kind==2){
         const auto found=s.targets.find(change.id);
         if(found!=s.targets.end()){
@@ -1221,9 +1251,9 @@ int nav_intent_plan_tasks(){
   s.routeQueries=0;s.candidates=0;s.proposalOpen=true;
   s.plannedEntityRevision=s.entityRevision;
   s.plannedProfile=lazy_selected_context();
-  std::vector<const Task*> tasks;
+  std::vector<Task*> tasks;
   tasks.reserve(s.tasks.size());
-  for(const auto& item:s.tasks)if(!item.second.assigned)tasks.push_back(&item.second);
+  for(auto& item:s.tasks)if(!item.second.assigned)tasks.push_back(&item.second);
   std::sort(tasks.begin(),tasks.end(),[](const Task* a,const Task* b){
     if(a->created!=b->created)return a->created<b->created;
     if(a->rank!=b->rank)return a->rank<b->rank;
@@ -1231,7 +1261,7 @@ int nav_intent_plan_tasks(){
   });
   std::unordered_set<uint64_t> reserved;
   std::vector<const Worker*> workers;
-  for(const Task* task:tasks){
+  for(Task* task:tasks){
     const auto targetIt=s.targets.find(task->target);
     if(targetIt==s.targets.end()||!targetIt->second.active)continue;
     const Target& target=targetIt->second;
@@ -1257,10 +1287,23 @@ int nav_intent_plan_tasks(){
     bool unknown=false;int unknownReason=0;
     for(const Worker* worker:workers){
       s.candidates++;s.planningCallsByActor[worker->id]++;
+      const auto pending=task->pendingUnknown.find(worker->id);
+      if(pending!=task->pendingUnknown.end()&&
+         samePendingService(pending->second,*worker,target,task->kind)){
+        unknown=true;unknownReason=pending->second.cause;
+        continue;
+      }
       const ServiceRoute route=findServiceRoute(*worker,target,task->kind);
       s.routeQueries+=route.queries;
       unknown|=route.unknown;
       if(route.unknown)unknownReason=route.unknownReason;
+      if(route.unknown&&route.points.empty()){
+        if(task->pendingUnknown.size()>=32&&
+           !task->pendingUnknown.count(worker->id))
+          task->pendingUnknown.erase(task->pendingUnknown.begin());
+        task->pendingUnknown.insert_or_assign(worker->id,
+          pendingService(*worker,target,task->kind,route.unknownReason));
+      }else task->pendingUnknown.erase(worker->id);
       if(!route.points.empty()){
         s.results[at+1]=double(worker->id);s.results[at+2]=1;
         s.results[at+3]=double(s.routes.size()/2);
