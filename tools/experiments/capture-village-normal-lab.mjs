@@ -43,7 +43,9 @@ try{
           await page.locator('#benchmarkReport').evaluate(e=>e.textContent='');
         }
       }
-      if(camera==='full')await page.locator('#night').evaluate(e=>e.click());
+      // Every camera starts in daylight; medium used to leave close inverted.
+      await page.waitForFunction(()=>!document.querySelector('#night').disabled);
+      await page.locator('#night').evaluate(e=>e.click());
     }
     await page.close();
   }

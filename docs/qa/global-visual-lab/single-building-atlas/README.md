@@ -6,7 +6,7 @@ Este experimento permanece detrás de `?visualLab=village-repacked`. No modifica
 | --- | --- | --- |
 | A — atlas runtime original | Referencia | Cubierta, madera y barro originales, con zonas de textura suave. |
 | B — UV reempaquetada + color original transferido | Prototipo técnico válido | Misma apariencia observable en WebGL, sin ganar detalle artístico; aumenta espacio UV disponible para una variante nueva. |
-| C — redibujo selectivo de materiales | Pendiente del pase artístico | No se ha creado ni medido; no atribuirle resultados. |
+| C — redibujo selectivo de materiales | Experimento realizado | Teja y puerta más legibles, franja del arco alineada con las aristas reales; murales protegidos aún suaves. [A/B/C y costes](../workshop-art/README.md). Mejora parcial, no activar por defecto. |
 
 ## Fuente y fidelidad
 
@@ -28,6 +28,8 @@ Las capturas `case-01-{0,village-repacked}-{medium,close}-{day,night}.webp` se h
 Una primera transferencia quedó cubierta de negro porque el rasterizador invertía V mientras `Assets.texture()` usa `flipY=false`. La corrección usa la orientación runtime y extiende colores fuera de las islas para evitar contaminación negra por mipmapping. Los PNG/WebP de este checkpoint son posteriores a la corrección.
 
 ## Límite y siguiente pase
+
+Actualización C: la evidencia A/B/C vigente está en [workshop-art](../workshop-art/README.md), con fases verificadas a 150/350. El capturador de este checkpoint podía invertir las etiquetas día/noche de `close` al no restablecer día tras `medium`; se corrigió y se recapturaron las tres variantes. Usar esas nuevas tomas para juzgar C. El resto de esta sección conserva el contexto del checkpoint B.
 
 La cubierta terracota y ornamentos conservan las superficies originales. Redibujar a mano las tejas, vetas de madera, barro, piedra y bandas decorativas sobre una copia de atlas a 2048² requiere una fase C independiente, con revisión artística a cámara media y cercana. Puede conservar la UV B si mejora el detalle, pero debe comprobarse de nuevo en WebGL antes de usarla. No activar B por defecto: añade complejidad y carga sin mejora visual suficiente.
 
