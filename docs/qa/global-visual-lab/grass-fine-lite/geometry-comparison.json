@@ -1,0 +1,33 @@
+{
+  "note": "Camera and simulation hour equal; visual water clock not explicitly locked across sessions. Image differences are descriptive, not isolated geometry error or a quality score.",
+  "records": [
+    {
+      "view": "game",
+      "phase": "day",
+      "meanAbsChannelDifference255": 0.31802119502314813,
+      "trianglesRemoved": 44496,
+      "sameCamera": true
+    },
+    {
+      "view": "game",
+      "phase": "night",
+      "meanAbsChannelDifference255": 0.24278392650462963,
+      "trianglesRemoved": 44496,
+      "sameCamera": true
+    },
+    {
+      "view": "low",
+      "phase": "day",
+      "meanAbsChannelDifference255": 0.11678096064814815,
+      "trianglesRemoved": 55296,
+      "sameCamera": true
+    },
+    {
+      "view": "low",
+      "phase": "night",
+      "meanAbsChannelDifference255": 0.06020182291666667,
+      "trianglesRemoved": 55296,
+      "sameCamera": true
+    }
+  ]
+}
