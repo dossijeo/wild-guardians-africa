@@ -4,11 +4,11 @@ import {serialize} from '../../src/persistence/snapshots.js';
 import {simulateNativeCampaign} from '../native-campaign-runner.mjs';
 import {createSpatialCampaignOpening} from './spatial-campaign-opening.mjs';
 
-const [arm,output,daysText='19',seedText='712']=process.argv.slice(2);
+const [arm,output,daysText='19',seedText='712',biome='volcanes']=process.argv.slice(2);
 const days=Number(daysText),seed=Number(seedText);
 if(!['sequential','batch'].includes(arm)||!output||
   !Number.isInteger(days)||days<1||days>100||!Number.isInteger(seed))
-  throw Error('Usage: compare-repair-preview-campaign.mjs ARM OUTPUT [DAYS] [SEED]');
+  throw Error('Usage: compare-repair-preview-campaign.mjs ARM OUTPUT [DAYS] [SEED] [BIOME]');
 const sha256=value=>createHash('sha256').update(value).digest('hex');
 const sourceSha256=sha256(readFileSync(new URL('../../src/simulation/game.js',
   import.meta.url)));
@@ -17,7 +17,7 @@ const wasmSha256=sha256(readFileSync(process.env.WILD_ENGINE_SPATIAL_SERVICES_WA
 const rows=[];
 let state=null,wrapped=false;
 const started=performance.now();
-const report=await simulateNativeCampaign({days,seed,biome:'volcanes',
+const report=await simulateNativeCampaign({days,seed,biome,
   strategy:'good',culture:'mapungubwe',defend:true,wallSpendingEnabled:true,
   defensePolicy:'topological',spatialAdvice:true,decisionProfile:true,
   nativeIntents:true,nativeWallPlans:true,reloadRaids:false,
@@ -39,7 +39,7 @@ const report=await simulateNativeCampaign({days,seed,biome:'volcanes',
     rows.push(result);
     console.log(JSON.stringify({arm,...result}));
   }});
-const result={arm,days,seed,sourceSha256,wasmSha256,
+const result={arm,days,seed,biome,sourceSha256,wasmSha256,
   elapsedMs:performance.now()-started,completedNights:report.completedNights,
   gameResult:report.result,raidEvidenceStatus:report.raidEvidence?.status,
   raidEvidenceIssues:report.raidEvidence?.issues,rows};

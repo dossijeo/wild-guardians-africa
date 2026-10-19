@@ -73,8 +73,10 @@ test('native crop groups share the game adjacency rule and invalidate only on cr
    referenceGroups(game.plants));
   assert.ok(after.every(group=>!group.cropIds.includes(plant.id)));
   bridge.resetFromState(deserialize(serialize(game)));
-  assert.deepEqual(bridge.getUnprotectedCropGroups({includeProtected:true}).map(group=>group.cropIds),
-   after.map(group=>group.cropIds));
+  const fresh=bridge.getUnprotectedCropGroups({includeProtected:true});
+  assert.deepEqual(fresh.map(group=>group.cropIds),after.map(group=>group.cropIds));
+  assert.deepEqual(fresh.map(group=>group.profiles),after.map(group=>group.profiles),
+   'incrementally reused crop verdicts must equal a fresh native session');
  }finally{session.dispose();}
 });
 
@@ -237,11 +239,12 @@ test('enclosure advice quotes real wall modules and never certifies an incomplet
 });
 
 test('missing sectors cannot certify a proposed perimeter',
- {skip:!module&&'Build and select the spatial-services WASM first'},()=>{
+ {skip:!module&&'Build and select the spatial-services WASM first'},async()=>{
  const game=Game.newGame({seed:712,biome:'sabana',slotId:'unknown-crop-plan'});
  game.villages[0].buildings=villageLayout(pack,0,0);
- game.plants.push(createPlant('plant-2','mijo',8,8,null));
- const session=createSpatialGameSession(module,game,{loaded:()=>new Map()});
+ game.plants.push(createPlant('plant-2','mijo',30,30,null));
+ const loaded=new Map(),session=createSpatialGameSession(module,game,{
+  loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
  try{
   const bridge=createSpatialIntentBridge(session);bridge.resetFromState(game);
   const nav=createSpatialNavigationMovement(session,game);
@@ -251,6 +254,16 @@ test('missing sectors cannot certify a proposed perimeter',
   const plan=createCropEnclosurePlanner(game,nav,bridge).planCropEnclosure(group.id);
   assert.notEqual(plan.status,'ready');
   assert.notEqual(plan.status,'protected');
+  const jobs=new Map();
+  for(let z=-1;z<=1;z++)for(let x=-1;x<=1;x++)
+   jobs.set(`${x},${z}`,{cx:x,cz:z,score:Math.hypot(x,z)});
+  session.stream.plan(jobs);await session.stream.whenIdle();
+  const resident=bridge.getUnprotectedCropGroups({includeProtected:true});
+  bridge.resetFromState(game);
+  const fresh=bridge.getUnprotectedCropGroups({includeProtected:true});
+  assert.deepEqual(resident.map(item=>item.profiles),fresh.map(item=>item.profiles),
+   'sector residency must invalidate every cached unknown verdict');
+  assert.equal(resident[0].protection,'unprotected');
  }finally{session.dispose();}
 });
 
