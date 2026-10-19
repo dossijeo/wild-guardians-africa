@@ -75,3 +75,64 @@ node tools/experiments/probe-native-wall-occupied.mjs docs/qa/desert-raid-pressu
 This audit does not change balance or gameplay and is not a corrected campaign
 result. The earlier 100-night defended victory must be interpreted alongside
 this targeting failure before adjusting military pressure or wall prices.
+
+## Experimental wall-side entry prototype
+
+The draft branch now probes routes from a complete candidate wave to native
+wall-face attack sides once during raid preparation. If the existing exterior
+entry has no such route, a bounded formation is tried beside those faces. No
+economic, damage, pressure, or enemy-count rule changes. A frozen night-10
+regression checks the complete seven-animal entry, exterior legality, and
+selection of a real wall target.
+
+On the identical campaign, nights 1–9 retained their previous raid contacts
+and births. Night 10 changed from zero contacts, zero wall hits and seven
+animals retiring with 19 total hits unused to **19 contacts, 11 wall hits and
+all seven hit budgets exhausted**. The [40-night prototype
+evidence](desierto123-routeproof-40.json.gz) completed without a technical
+error, but it is **not ready for integration**:
+
+| Measure | Previous | Wall-side prototype |
+| --- | ---: | ---: |
+| Animals spawned through night 40 | 495 | 370 |
+| Logical contacts | 134 | 164 |
+| Wall hits | 48 | 97 |
+| Unused hit budget | 1,834 / 1,973 | 1,060 / 1,224 |
+| Living crops after day 40 | 76 | 13 |
+| Money after day 40 | 24,894 | 9,822 |
+| Wall-clock campaign time | 240.9 s | 108.2 s |
+
+The different farm sizes and military attraction make the elapsed times and
+whole-campaign totals **different workloads**, not a pure speed comparison.
+In the frozen 10-night reproduction, the extra entry check used 21 native
+route-status queries through night 10 (about 35 ms of measured query time);
+only four of those were needed through night 9. This is preparation-time work,
+not a per-tick route poll.
+
+Short cross-biome checks also completed without technical errors:
+
+| Frozen run | Nights | Logical contacts | Unused hits | Entry-route queries | Entry-route time |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| [Sabana/712](sabana712-routeproof-14.json.gz) | 14 | 248 | 0 | 64 | 113 ms |
+| [Manglares/712](manglares712-routeproof-14.json.gz) | 14 | 200 | 0 | 85 | 129 ms |
+
+These are smoke regressions for raid activity, not matched ABBA performance
+comparisons. The Canyon uses its separate river-bank entry selector and is
+unaffected by this non-Canyon prototype.
+The new entry revives attacks on nights 10–13, but waves again make zero
+contacts from night 17 onward. In the frozen [night-17
+state](desierto123-d17-waiting-state.json.gz), there are 127 intact walls and
+13 living crops. The animal at `(39, -67.65)` has a physically reachable wall
+portal but both native crop and wall planners return `unknown`, examining zero
+wall candidates. A probe from `(95, 20)` can instead select intact wall
+`structure-5123`. That wall does not appear in the eight native wall-portal
+arcs: it matters to the target selector but does not separate two weak graph
+regions. Thus *any reachable wall portal* is too weak an entry criterion.
+
+The next step is a read-only native query for a **relevant attack opportunity**
+against the current crop groups, including useful partial-wall faces that do
+not split weak regions. It must return `unknown` when the required sectors or
+attack sites are unresolved. Raid entry can then choose a position with a
+positive physical route to that opportunity. Until that contract and a
+sustained multi-biome comparison pass, the prototype remains in the draft PR;
+its 40-night outcome must not be used as a final balance recommendation.

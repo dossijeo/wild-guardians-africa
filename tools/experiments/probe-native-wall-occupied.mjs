@@ -39,6 +39,8 @@ try{
   planner.nativeWallSelectionEnabled=true;
   const wasm=session.core.wasm;
   const nav=createSpatialNavigationMovement(session,state);
+  nav.setActiveBounds([(cx-4)*48-24,(cz-4)*48-24,
+    (cx+4)*48+24,(cz+4)*48+24]);
   nav.intentTaskPlanner=planner;
   nav.raidSelectionStats={};
   const rows=[];
@@ -79,6 +81,16 @@ try{
       connectedPortals:portalRegions.filter(row=>
         wasm.lazy_connected(Math.round(point.x),Math.round(point.z),
           Math.round(row.x),Math.round(row.z))===1).length})):[];
+    const portalSourceRegions=new Set(portalRegions.map(row=>row.from));
+    const nearbyPortalRegions=[];
+    if(actorId)for(let z=-26;z<=26;z+=2)for(let x=50;x<=112;x+=2){
+      const region=wasm.lazy_weak_region(x,z);
+      if(!portalSourceRegions.has(region)||!nav.walkable(x,z,animal.radius,
+        null,false))continue;
+      const point={x,z};
+      if(!exteriorRaidWitness(point,animal.radius,wallBox,nav))continue;
+      nearbyPortalRegions.push({x,z,region});
+    }
     const cropEnclosures=actorId?state.plants.filter(crop=>crop.alive)
       .slice(0,8).map(crop=>({id:crop.id,x:crop.x,z:crop.z,
         samples:Array.from({length:12},(_,index)=>{
@@ -142,6 +154,7 @@ try{
       portalCount:actorId?portalCount:undefined,
       portalRegions:actorId?portalRegions:undefined,
       entryCandidates:actorId?entryCandidates:undefined,
+      nearbyPortalRegions:actorId?nearbyPortalRegions.slice(0,48):undefined,
       cropEnclosures:actorId?cropEnclosures:undefined,withoutTransients,
       withoutNativeLeases,
       selectedWall:actorId&&choice?.target?.kind==='wall'?
