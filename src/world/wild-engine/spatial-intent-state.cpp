@@ -90,7 +90,18 @@ struct DamageOrder {
   }
 };
 // Task kind: 0 direct, 1 water/initial, 2 repair.
-struct Task {uint64_t id,center,target,assigned;double created,rank;int kind;};
+struct PendingUnknownService {
+  double workerX,workerZ,targetX,targetZ,yaw,shape,wallDepthScale;
+  uint64_t targetId;
+  uint32_t topology;
+  int profile,kind,cause;
+};
+struct Task {
+  uint64_t id,center,target,assigned;double created,rank;int kind;
+  // A pending intent is still unknown, never a negative reachability proof.
+  // Reconsider it when its exact worker/target geometry or graph changes.
+  std::map<uint64_t,PendingUnknownService> pendingUnknown;
+};
 // A committed route belongs to the native session. It remains pinned while an
 // actor uses it; speculative task batches never acquire a route handle.
 enum class PlanningState:int {NeedsPlan=0,RouteActive=1,ActionActive=2,
@@ -151,6 +162,8 @@ struct IntentState {
   std::unordered_map<int,WallPortalCache> wallPortalCaches;
   uint64_t wallRevision=0,wallPortalBuilds=0;
   std::vector<double> perimeterRows;
+  std::vector<double> relevantWallRows;
+  std::array<double,2> exteriorEdge{};
   std::vector<double> intentChanges;
   std::array<double,10> intentResult{};
   uint32_t session=0;
@@ -561,6 +574,22 @@ struct ServiceRoute {
   int unknownReason=0;
   int queries=0;
 };
+bool samePendingService(const PendingUnknownService& pending,
+                        const Worker& worker,const Target& target,int kind){
+  return pending.workerX==worker.x&&pending.workerZ==worker.z&&
+    pending.targetId==target.id&&pending.targetX==target.x&&
+    pending.targetZ==target.z&&pending.yaw==target.yaw&&
+    pending.shape==target.shape&&
+    pending.wallDepthScale==target.wallDepthScale&&
+    pending.topology==lazy_route_revision()&&
+    pending.profile==lazy_selected_context()&&pending.kind==kind;
+}
+PendingUnknownService pendingService(const Worker& worker,const Target& target,
+                                      int kind,int cause){
+  return {worker.x,worker.z,target.x,target.z,target.yaw,target.shape,
+    target.wallDepthScale,target.id,lazy_route_revision(),
+    lazy_selected_context(),kind,cause};
+}
 // The first reachable side of a crop can require a long detour around a
 // building or wall while another side is directly accessible. Probe the
 // remaining service points only for a clearly circuitous route. This keeps
@@ -596,6 +625,28 @@ ServiceRoute findServiceRoute(const Worker& worker,const Target& target,int kind
   }
   return best;
 }
+uint64_t wallBetweenCropGroups(const IntentState& s,const Target& wall,
+                           double startX,double startZ,double radius){
+  const double c=std::cos(wall.yaw),sn=std::sin(wall.yaw);
+  const auto local=[&](double x,double z){
+    return std::pair<double,double>{(x-wall.x)*c-(z-wall.z)*sn,
+      (x-wall.x)*sn+(z-wall.z)*c};
+  };
+  const auto from=local(startX,startZ);
+  if(std::abs(from.second)<1e-8)return 0;
+  const double width=1.09*wall.shape+radius;
+  for(const CropGroup& group:s.cropGroups){
+    for(uint64_t cropId:group.crops){
+      const Target& crop=s.targets.at(cropId);
+      const auto to=local(crop.x,crop.z);
+      if(from.second*to.second>=0)continue;
+      const double crossing=from.first+(to.first-from.first)*
+        (-from.second)/(to.second-from.second);
+      if(std::abs(crossing)<=width)return group.id;
+    }
+  }
+  return 0;
+}
 }
 
 extern "C" {
@@ -620,7 +671,7 @@ void nav_intent_reset(){
   s.plantResult.fill(0);s.nextPlantLease=1;s.centerRevision=0;
   s.changes.clear();s.results.clear();s.routes.clear();clearProposal(s);
   s.wallPortalCaches.clear();s.wallRevision=0;s.wallPortalBuilds=0;
-  s.perimeterRows.clear();
+  s.perimeterRows.clear();s.relevantWallRows.clear();
   s.sequence=0;s.entityRevision=0;s.damageRevision=0;
   s.routeQueries=0;s.candidates=0;
 }
@@ -687,6 +738,106 @@ const double* nav_intent_wall_portals_ptr(){
   return found==state().wallPortalCaches.end()?nullptr:found->second.rows.data();
 }
 double nav_intent_wall_portal_builds(){return double(state().wallPortalBuilds);}
+// Raid-entry advice, not a protection certificate: nominate intact walls
+// whose physical face intersects the line toward a live crop group. Unlike a
+// region portal, a useful partial wall need not disconnect weak components.
+// The caller must still prove a native route to the proposed attack side, and
+// the ordinary attack planner validates the eventual target and reservation.
+int nav_intent_relevant_wall_sides(double startX,double startZ,double radius){
+  IntentState& s=state();s.relevantWallRows.clear();
+  if(!coordinate(startX)||!coordinate(startZ)||!std::isfinite(radius)||
+     radius<=0||radius>2||lazy_selected_context()==1)return -1;
+  rebuildCropGroups(s);
+  if(s.cropGroups.empty())return 0;
+  std::vector<const Target*> walls;
+  for(const auto& [id,target]:s.targets)
+    if(target.kind==3&&target.active&&target.status==0)
+      walls.push_back(&target);
+  std::sort(walls.begin(),walls.end(),[](const Target* a,const Target* b){
+    return a->id<b->id;
+  });
+  for(const Target* wall:walls){
+    const double c=std::cos(wall->yaw),sn=std::sin(wall->yaw);
+    const uint64_t group=wallBetweenCropGroups(s,*wall,startX,startZ,radius);
+    if(!group)continue;
+    const double side=(startX-wall->x)*sn+(startZ-wall->z)*c>0?1:-1;
+    const double offset=.22*wall->wallDepthScale+radius+.6;
+    for(double along:{0.0,-.6,.6}){
+      const double x=wall->x+c*1.09*wall->shape*along+sn*offset*side;
+      const double z=wall->z-sn*1.09*wall->shape*along+c*offset*side;
+      if(!spatial_local_clear(float(x),float(z),float(x),float(z)))continue;
+      s.relevantWallRows.insert(s.relevantWallRows.end(),
+        {double(wall->id),x,z,double(group)});
+    }
+  }
+  return int(s.relevantWallRows.size()/4);
+}
+const double* nav_intent_relevant_wall_sides_ptr(){
+  return state().relevantWallRows.data();
+}
+// Positive exterior certificate for irregular defenses. The source need not
+// be outside the walls' AABB: a valid native path to a resident-boundary site
+// beyond that AABB proves it is in an exterior component. Weak regions prune
+// impossible boundary destinations; the final route remains authoritative.
+// 1 = found, 0 = no known route, -1 = unresolved or invalid geometry.
+int spatial_exterior_reachable(double startX,double startZ,double radius,
+    double minX,double minZ,double maxX,double maxZ,
+    double wallMinX,double wallMinZ,double wallMaxX,double wallMaxZ){
+  IntentState& s=state();
+  s.exteriorEdge={std::numeric_limits<double>::quiet_NaN(),
+    std::numeric_limits<double>::quiet_NaN()};
+  if(!coordinate(startX)||!coordinate(startZ)||!std::isfinite(radius)||
+     radius<=0||radius>2||lazy_selected_context()==1||
+     !coordinate(minX)||!coordinate(minZ)||!coordinate(maxX)||
+     !coordinate(maxZ)||!coordinate(wallMinX)||!coordinate(wallMinZ)||
+     !coordinate(wallMaxX)||!coordinate(wallMaxZ)||
+     minX>=maxX||minZ>=maxZ||wallMinX>=wallMaxX||
+     wallMinZ>=wallMaxZ)return -1;
+  const double inset=radius+2;
+  if(maxX-minX<=2*inset||maxZ-minZ<=2*inset)return -1;
+  std::set<int> origins;bool unknown=false;
+  for(int x:{int(std::floor(startX)),int(std::ceil(startX))})
+    for(int z:{int(std::floor(startZ)),int(std::ceil(startZ))}){
+      if(!spatial_local_clear(float(startX),float(startZ),float(x),float(z)))
+        continue;
+      const int region=lazy_weak_region(x,z);
+      if(region==-1)unknown=true;
+      else if(region>=0)origins.insert(region);
+    }
+  if(origins.empty())return -1;
+  struct Edge {double distance,x,z;};
+  std::vector<Edge> edges;
+  const auto add=[&](double x,double z){
+    if(!(x-radius>wallMaxX||x+radius<wallMinX||
+         z-radius>wallMaxZ||z+radius<wallMinZ))return;
+    if(!spatial_local_clear(float(x),float(z),float(x),float(z)))return;
+    const int region=lazy_weak_region(int(std::round(x)),int(std::round(z)));
+    if(region==-1){unknown=true;return;}
+    if(!origins.count(region))return;
+    edges.push_back({std::hypot(x-startX,z-startZ),x,z});
+  };
+  const double loX=minX+inset,hiX=maxX-inset;
+  const double loZ=minZ+inset,hiZ=maxZ-inset;
+  const double stepX=std::max(8.0,(hiX-loX)/128);
+  const double stepZ=std::max(8.0,(hiZ-loZ)/128);
+  for(double x=loX;x<hiX;x+=stepX){add(x,loZ);add(x,hiZ);}
+  add(hiX,loZ);add(hiX,hiZ);
+  for(double z=loZ;z<hiZ;z+=stepZ){add(loX,z);add(hiX,z);}
+  add(loX,hiZ);add(hiX,hiZ);
+  std::sort(edges.begin(),edges.end(),[](const Edge& a,const Edge& b){
+    if(a.distance!=b.distance)return a.distance<b.distance;
+    if(a.x!=b.x)return a.x<b.x;
+    return a.z<b.z;
+  });
+  for(const Edge& edge:edges){
+    const int count=spatial_world_route_cached(float(startX),float(startZ),
+      float(edge.x),float(edge.z));
+    if(count>0){s.exteriorEdge={edge.x,edge.z};return 1;}
+    if(count<0)unknown=true;
+  }
+  return unknown?-1:0;
+}
+const double* spatial_exterior_edge_ptr(){return state().exteriorEdge.data();}
 // Return only the first wall crossing from the animal's weak region toward a
 // sealed crop group. This is a read-only candidate query; the physical route,
 // approach lease and target priority still need validation before adoption.
@@ -831,7 +982,10 @@ int nav_intent_apply_changes(double sequence,int count){
   for(const Change& change:parsed){
     invalidateDependents(s,change);
     if(!change.op){
-      if(change.kind==1)s.workers.erase(change.id);
+      if(change.kind==1){
+        s.workers.erase(change.id);
+        for(auto& [id,task]:s.tasks)task.pendingUnknown.erase(change.id);
+      }
       else if(change.kind==2){
         const auto found=s.targets.find(change.id);
         if(found!=s.targets.end()){
@@ -1097,9 +1251,9 @@ int nav_intent_plan_tasks(){
   s.routeQueries=0;s.candidates=0;s.proposalOpen=true;
   s.plannedEntityRevision=s.entityRevision;
   s.plannedProfile=lazy_selected_context();
-  std::vector<const Task*> tasks;
+  std::vector<Task*> tasks;
   tasks.reserve(s.tasks.size());
-  for(const auto& item:s.tasks)if(!item.second.assigned)tasks.push_back(&item.second);
+  for(auto& item:s.tasks)if(!item.second.assigned)tasks.push_back(&item.second);
   std::sort(tasks.begin(),tasks.end(),[](const Task* a,const Task* b){
     if(a->created!=b->created)return a->created<b->created;
     if(a->rank!=b->rank)return a->rank<b->rank;
@@ -1107,7 +1261,7 @@ int nav_intent_plan_tasks(){
   });
   std::unordered_set<uint64_t> reserved;
   std::vector<const Worker*> workers;
-  for(const Task* task:tasks){
+  for(Task* task:tasks){
     const auto targetIt=s.targets.find(task->target);
     if(targetIt==s.targets.end()||!targetIt->second.active)continue;
     const Target& target=targetIt->second;
@@ -1133,10 +1287,23 @@ int nav_intent_plan_tasks(){
     bool unknown=false;int unknownReason=0;
     for(const Worker* worker:workers){
       s.candidates++;s.planningCallsByActor[worker->id]++;
+      const auto pending=task->pendingUnknown.find(worker->id);
+      if(pending!=task->pendingUnknown.end()&&
+         samePendingService(pending->second,*worker,target,task->kind)){
+        unknown=true;unknownReason=pending->second.cause;
+        continue;
+      }
       const ServiceRoute route=findServiceRoute(*worker,target,task->kind);
       s.routeQueries+=route.queries;
       unknown|=route.unknown;
       if(route.unknown)unknownReason=route.unknownReason;
+      if(route.unknown&&route.points.empty()){
+        if(task->pendingUnknown.size()>=32&&
+           !task->pendingUnknown.count(worker->id))
+          task->pendingUnknown.erase(task->pendingUnknown.begin());
+        task->pendingUnknown.insert_or_assign(worker->id,
+          pendingService(*worker,target,task->kind,route.unknownReason));
+      }else task->pendingUnknown.erase(worker->id);
       if(!route.points.empty()){
         s.results[at+1]=double(worker->id);s.results[at+2]=1;
         s.results[at+3]=double(s.routes.size()/2);
@@ -1994,8 +2161,9 @@ int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
 // crossings of certified enclosures; the native route and attack-site lease
 // then confirm one physically reachable, unreserved wall in the same call.
 // This is opt-in until its priorities and campaign outcomes are compared.
-int nav_intent_plan_attack_wall(double actorId,double startX,double startZ,
-                                double radius){
+int planAttackWall(double actorId,double startX,double startZ,double radius,
+                   double hintWallId,double hintX,double hintZ,
+                   double hintGroupId){
   IntentState& s=state();s.wallAttackResult.fill(0);
   if(!integer(actorId)||!coordinate(startX)||!coordinate(startZ)||
      !std::isfinite(radius)||radius<=0||radius>2||
@@ -2006,6 +2174,28 @@ int nav_intent_plan_attack_wall(double actorId,double startX,double startZ,
   struct Candidate {uint64_t id,group;double x,z,distance;};
   std::vector<Candidate> candidates;
   bool unknown=false,occupied=false;
+  // The wave may share a crop-facing wall face discovered during entry
+  // preparation. Re-evaluate that face against current native entities and
+  // this species' radius; the hint is never a route or attack certificate.
+  if(integer(hintWallId)&&integer(hintGroupId)&&coordinate(hintX)&&
+     coordinate(hintZ)){
+    const auto wall=s.targets.find(uint64_t(hintWallId));
+    if(wall!=s.targets.end()&&wall->second.kind==3&&
+       wall->second.active&&wall->second.status==0){
+      const int count=nav_intent_relevant_wall_sides(hintX,hintZ,radius);
+      if(count<0)unknown=true;
+      else for(int i=0;i<count;i++){
+        const size_t base=size_t(i)*4;
+        if(uint64_t(s.relevantWallRows[base])!=uint64_t(hintWallId)||
+           uint64_t(s.relevantWallRows[base+3])!=uint64_t(hintGroupId))
+          continue;
+        candidates.push_back({uint64_t(hintWallId),uint64_t(hintGroupId),
+          s.relevantWallRows[base+1],s.relevantWallRows[base+2],
+          std::hypot(wall->second.x-startX,wall->second.z-startZ)});
+      }
+    }
+  }
+  const size_t hintedCount=candidates.size();
   for(CropGroup& group:s.cropGroups){
     const int status=nav_intent_perimeter_walls(startX,startZ,radius,
       double(group.id));
@@ -2021,6 +2211,24 @@ int nav_intent_plan_attack_wall(double actorId,double startX,double startZ,
         wall->second.z-startZ)});
     }
   }
+  // A partial crop-facing wall need not split two weak regions, so it can be
+  // absent from the enclosure portal list. Consider those physical sides only
+  // when the certified-perimeter pass nominated nothing; the route and lease
+  // below remain mandatory before an attack is proposed.
+  if(candidates.size()==hintedCount){
+    const int sides=nav_intent_relevant_wall_sides(startX,startZ,radius);
+    if(sides<0)unknown=true;
+    else for(int index=0;index<sides;index++){
+      const size_t base=size_t(index)*4;
+      const uint64_t id=uint64_t(s.relevantWallRows[base]);
+      const auto wall=s.targets.find(id);
+      if(wall==s.targets.end()||!wall->second.active||
+         wall->second.kind!=3||wall->second.status!=0)continue;
+      candidates.push_back({id,uint64_t(s.relevantWallRows[base+3]),
+        s.relevantWallRows[base+1],s.relevantWallRows[base+2],
+        std::hypot(wall->second.x-startX,wall->second.z-startZ)});
+    }
+  }
   std::sort(candidates.begin(),candidates.end(),[](const Candidate& a,
     const Candidate& b){
     if(a.distance!=b.distance)return a.distance<b.distance;
@@ -2028,6 +2236,15 @@ int nav_intent_plan_attack_wall(double actorId,double startX,double startZ,
     if(a.x!=b.x)return a.x<b.x;
     return a.z<b.z;
   });
+  // A valid wave hint is considered first. Ordinary certified perimeter and
+  // partial-wall candidates remain available if it is occupied or blocked.
+  if(hintedCount){
+    std::stable_partition(candidates.begin(),candidates.end(),
+      [hintWallId,hintGroupId](const Candidate& item){
+        return item.id==uint64_t(hintWallId)&&
+          item.group==uint64_t(hintGroupId);
+      });
+  }
   std::set<uint64_t> transientLeases;
   for(double id:s.attackReservedTargets)
     if(integer(id))transientLeases.insert(uint64_t(id));
@@ -2063,6 +2280,16 @@ int nav_intent_plan_attack_wall(double actorId,double startX,double startZ,
   s.wallAttackResult[0]=unknown?3:occupied?4:candidates.empty()?0:2;
   s.wallAttackResult[8]=examined;s.wallAttackResult[9]=routes;
   return int(s.wallAttackResult[0]);
+}
+int nav_intent_plan_attack_wall(double actorId,double startX,double startZ,
+                                double radius){
+  return planAttackWall(actorId,startX,startZ,radius,0,0,0,0);
+}
+int nav_intent_plan_attack_wall_hint(double actorId,double startX,double startZ,
+                                     double radius,double wallId,double sideX,
+                                     double sideZ,double groupId){
+  return planAttackWall(actorId,startX,startZ,radius,wallId,sideX,sideZ,
+                        groupId);
 }
 int nav_intent_attack_action_active(double actorId){
   if(!integer(actorId))return 0;

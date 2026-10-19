@@ -1,6 +1,7 @@
 import {exteriorGroupWitness} from './raid-exterior-connectivity.js';
 import {prepareExteriorDetour,detourRaidFormation} from './raid-exterior-detour.js';
 import {wallCollisionFrame} from '../world/wall-collision-frame.js';
+import {createWallRouteWitness} from './raid-wall-route-witness.js';
 const outside=(p,r,b)=>p.x-r>b[2]||p.x+r<b[0]||p.z-r>b[3]||p.z+r<b[1];
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 export const PROJECTED_DETOUR_LIMIT=4;
@@ -38,6 +39,112 @@ export function exteriorRaidWitness(p,r,box,nav){
  return false;
 }
 function groupWitness(entry,specs,box,nav){return exteriorGroupWitness(entry,specs,box,nav,exteriorRaidWitness);}
+// One raid-entry preparation can ask whether the existing native wall faces
+// offer an actual route from each birth. This is never an attack certificate:
+// the ordinary target planner still chooses and validates the final wall.
+function wallAttackOpportunity(entry,specs,box,nav){
+ if(!box||!nav.spatialWallApproachSides||!nav.spatialRouteStatus)return true;
+ const byRadius=new Map(),routeStatus=createWallRouteWitness(nav,elapsed=>{
+  if(!nav.raidSelectionStats)return;
+  nav.raidSelectionStats.raidEntryWallRouteQueries=
+    (nav.raidSelectionStats.raidEntryWallRouteQueries??0)+1;
+  nav.raidSelectionStats.raidEntryWallRouteMs=
+    (nav.raidSelectionStats.raidEntryWallRouteMs??0)+elapsed;
+ });
+ for(let index=0;index<specs.length;index++){
+  const radius=specs[index].radius,point=entry.entries[index];
+  if(!byRadius.has(radius))byRadius.set(radius,nav.spatialWallApproachSides(radius));
+  const sides=byRadius.get(radius);
+  if(!sides.length)continue;
+  const nearest=[...sides].sort((a,b)=>distance(a,point)-distance(b,point)||
+    a.wallId-b.wallId).slice(0,8);
+  if(!nearest.some(side=>routeStatus(point,side,radius)==='found'))
+   return false;
+ }
+ return true;
+}
+function wallSideRaidFormation(specs,bounds,nav,focus,box){
+ if(!box||!focus||!nav.spatialWallApproachSides)return null;
+ const radius=Math.max(...specs.map(spec=>spec.radius)),
+   sides=nav.spatialWallApproachSides(radius),view=nav.raidView;
+ sides.sort((a,b)=>distance(a,view?.eye??focus)-
+   distance(b,view?.eye??focus)||a.wallId-b.wallId||a.x-b.x||a.z-b.z);
+ for(const side of sides.slice(0,16)){
+  const dx=side.x-focus.x,dz=side.z-focus.z,length=Math.hypot(dx,dz);
+  if(length<1e-6)continue;
+  const ux=dx/length,uz=dz/length,
+    eye={x:side.x+ux*(radius+9),z:side.z+uz*(radius+9)},
+    spacing=Math.max(4,radius*2+1.1),
+    entries=specs.map((_,index)=>{
+      const lateral=(index-(specs.length-1)/2)*spacing;
+      return {x:eye.x-uz*lateral,z:eye.z+ux*lateral};
+    }),
+    exits=entries.map(point=>({x:point.x+ux*3,z:point.z+uz*3})),
+    padding=spacing*(specs.length+2)+12,
+    expanded=[Math.min(bounds[0],eye.x-padding),
+      Math.min(bounds[1],eye.z-padding),
+      Math.max(bounds[2],eye.x+padding),
+      Math.max(bounds[3],eye.z+padding)],
+    candidate={entries,exits,selectionBounds:expanded};
+  if(groupWitness(candidate,specs,box,nav)&&
+     wallAttackOpportunity(candidate,specs,box,nav))return candidate;
+ }
+ return null;
+}
+function relevantWallRaidFormation(specs,bounds,nav,box){
+ if(!box||!nav.raidView||!nav.spatialRelevantWallApproachSides||
+    !nav.spatialExteriorEdge||!nav.spatialRouteStatus)return null;
+ const radius=Math.max(...specs.map(spec=>spec.radius)),
+   order=(a,b)=>distance(a,nav.raidView.eye)-
+     distance(b,nav.raidView.eye)||a.wallId-b.wallId||a.x-b.x||a.z-b.z,
+   relevant=nav.spatialRelevantWallApproachSides(nav.raidView.eye,radius)
+     .sort(order);
+ const nativeWitness=(point,r,wallBox)=>
+   !!nav.spatialExteriorEdge(point,r,wallBox);
+ const routeStatus=createWallRouteWitness(nav);
+ const tried=new Set();
+ // The camera can be in a different native region from the arriving animals.
+ // In that case relevance from its eye excludes every attackable exterior
+ // face. The native wall index is a bounded fallback; every birth still needs
+ // an exterior witness and its own positive route to the chosen face.
+ const trySides=sides=>{
+  for(const side of sides){
+   const key=`${side.wallId}:${side.x}:${side.z}`;
+   if(tried.has(key))continue;tried.add(key);
+   const edge=nav.spatialExteriorEdge(side,radius,box);
+   if(!edge)continue;
+   const proof=prepareExteriorDetour(side,radius,box,nav,nativeWitness,
+     [edge]);
+   if(!proof)continue;
+   const candidate=detourRaidFormation(proof,specs,bounds,nav);
+   if(!candidate||!exteriorGroupWitness(candidate,specs,box,nav,
+     nativeWitness))continue;
+   if(!candidate.entries.every((point,index)=>
+     routeStatus(point,side,specs[index].radius)==='found'))continue;
+   // A generic portal only certifies a route to the wall. Without a crop
+   // group on this exterior face it is not a tactical attack opportunity.
+   return side.groupId===undefined?candidate:
+     {...candidate,wallOpportunity:{wallId:side.wallId,
+       groupId:side.groupId,x:side.x,z:side.z}};
+  }
+  return null;
+ };
+ const preferred=trySides(relevant.slice(0,12));
+ if(preferred)return preferred;
+ const portals=nav.spatialWallApproachSides?.(radius)?.sort(order).slice(0,12)??[];
+ // A portal can lie on a wall that no longer guards a crop. Check its own
+ // exterior face against the native crop-group index before spending route
+ // searches on the generic portal list. The returned group also lets the
+ // attack planner revalidate this exact wall opportunity after spawning.
+ for(const side of portals){
+  const match=nav.spatialRelevantWallApproachSides(side,radius).find(row=>
+    row.wallId===side.wallId&&distance(row,side)<.05);
+  if(!match)continue;
+  const cropFacing=trySides([{...side,groupId:match.groupId}]);
+  if(cropFacing)return cropFacing;
+ }
+ return trySides(portals);
+}
 function localView(nav,eye,focus){const local=Object.create(nav);local.raidView={eye,target:focus};return local;}
 function formation(state,specs,bounds,nav,camera,eye,focus,dx,dz,box,radius,witness=exteriorRaidWitness){
  const entries=[],exits=[],columns=Math.ceil(Math.sqrt(specs.length)),spacing=radius*2+4;
@@ -80,9 +187,15 @@ function distributedExteriorFormation(state,specs,bounds,nav,camera,focus,box){
  }
  return null;
 }
-export function exteriorRaidEntry(state,specs,bounds,side,nav,base,camera){
+export function exteriorRaidEntry(state,specs,bounds,side,nav,base,camera,insetTrial=false){
  const box=raidWallEnvelope(state,nav),entry=base(state,specs,bounds,side,nav);
- if(groupWitness(entry,specs,box,nav))return entry;
+ if(groupWitness(entry,specs,box,nav)){
+  if(wallAttackOpportunity(entry,specs,box,nav))return entry;
+  const focus=state.structures.find(t=>t.kind==='center'&&t.hp>0&&
+    t.status!=='collapsing')??state.villages[0];
+  return wallSideRaidFormation(specs,bounds,nav,focus,box)??
+    relevantWallRaidFormation(specs,bounds,nav,box)??entry;
+ }
  const focus=state.structures.find(t=>t.kind==='center'&&t.hp>0&&t.status!=='collapsing')??state.villages[0];
  if(!focus)return null;
  const view=nav.raidView,heading=view?Math.atan2(view.eye.x-view.target.x,view.eye.z-view.target.z):side*Math.PI/2;
@@ -131,5 +244,21 @@ export function exteriorRaidEntry(state,specs,bounds,side,nav,base,camera){
    const along=detourRaidFormation(proof,specs,expanded,nav);if(along)return along;
   }
  }
- return distributedExteriorFormation(state,specs,bounds,nav,camera,focus,box);
+ const distributed=distributedExteriorFormation(state,specs,bounds,nav,camera,focus,box);
+ if(distributed||insetTrial||!box||!nav.spatialExteriorEdge)return distributed;
+ // A wider resident box can make every four-ray exterior witness miss a
+ // winding component. Retry once with nearby birth bounds, but certify the
+ // complete wave against the original resident boundary in Wild Engine.
+ const inset=bounds.map((value,index)=>value+(index<2?48:-48));
+ if(inset[2]-inset[0]<32||inset[3]-inset[1]<32)return null;
+ const candidateNav=Object.assign(Object.create(nav),{
+  spatialExteriorWitness:(point,radius,wallBox)=>
+    !!nav.spatialExteriorEdge(point,radius,wallBox)});
+ const candidate=exteriorRaidEntry(state,specs,inset,side,candidateNav,
+   base,camera,true);
+ if(!candidate||!groupWitness(candidate,specs,box,candidateNav))return null;
+ const needed=candidate.selectionBounds??bounds;
+ return {...candidate,selectionBounds:[
+   Math.min(bounds[0],needed[0]),Math.min(bounds[1],needed[1]),
+   Math.max(bounds[2],needed[2]),Math.max(bounds[3],needed[3])]};
 }

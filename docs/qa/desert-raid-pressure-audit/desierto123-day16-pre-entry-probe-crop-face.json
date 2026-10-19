@@ -1,0 +1,831 @@
+{
+  "day": 16,
+  "time": 460.0000000000364,
+  "preferredSide": 2,
+  "selectionMs": 722.5247000000002,
+  "selectionBreakdown": {
+    "spatialRouteStatus": {
+      "calls": 79,
+      "ms": 78.5141000000001
+    },
+    "spatialExteriorEdge": {
+      "calls": 27,
+      "ms": 64.66899999999964
+    },
+    "spatialExteriorWitness": {
+      "calls": 36,
+      "ms": 3.231199999999717
+    },
+    "walkable": {
+      "calls": 2976,
+      "ms": 522.6016999999985
+    },
+    "path": {
+      "calls": 0,
+      "ms": 0
+    },
+    "spatialRelevantWallApproachSides": {
+      "calls": 4,
+      "ms": 1.8463000000001557
+    },
+    "spatialWallApproachSides": {
+      "calls": 5,
+      "ms": 12.952199999999948
+    },
+    "approachPath": {
+      "calls": 3,
+      "ms": 2.706000000000131
+    },
+    "segmentClear": {
+      "calls": 694,
+      "ms": 13.69049999999936
+    }
+  },
+  "residentChunks": 25,
+  "bounds": [
+    -24,
+    -72,
+    216,
+    168
+  ],
+  "view": {
+    "eye": {
+      "x": 99.70247532024266,
+      "z": 30.57367599590944
+    },
+    "target": {
+      "x": 83,
+      "z": 0
+    }
+  },
+  "entry": {
+    "entries": [
+      {
+        "x": 71.64235498012182,
+        "z": 3.3576450198781713
+      },
+      {
+        "x": 71,
+        "z": 7
+      },
+      {
+        "x": 70,
+        "z": 10
+      },
+      {
+        "x": 66,
+        "z": 10
+      },
+      {
+        "x": 62,
+        "z": 10
+      },
+      {
+        "x": 60,
+        "z": 7
+      },
+      {
+        "x": 60,
+        "z": 3
+      },
+      {
+        "x": 58,
+        "z": 0
+      },
+      {
+        "x": 54,
+        "z": 0
+      },
+      {
+        "x": 52,
+        "z": -3
+      },
+      {
+        "x": 51,
+        "z": -6
+      },
+      {
+        "x": 48,
+        "z": -7
+      }
+    ],
+    "exits": [
+      {
+        "x": 71,
+        "z": 7
+      },
+      {
+        "x": 71,
+        "z": 10
+      },
+      {
+        "x": 67,
+        "z": 10
+      },
+      {
+        "x": 63,
+        "z": 10
+      },
+      {
+        "x": 60,
+        "z": 7
+      },
+      {
+        "x": 60,
+        "z": 4
+      },
+      {
+        "x": 60,
+        "z": 0
+      },
+      {
+        "x": 55,
+        "z": 0
+      },
+      {
+        "x": 52,
+        "z": -3
+      },
+      {
+        "x": 52,
+        "z": -6
+      },
+      {
+        "x": 48,
+        "z": -7
+      },
+      {
+        "x": 48,
+        "z": -10
+      }
+    ],
+    "selectionBounds": [
+      -24,
+      -72,
+      216,
+      168
+    ],
+    "wallOpportunity": {
+      "wallId": 283,
+      "groupId": 5396,
+      "x": 71.64235498012182,
+      "z": 3.3576450198781713
+    }
+  },
+  "cameraRelevant": [],
+  "cameraRelevantCount": 0,
+  "allWallSidesCount": 10,
+  "allSideCandidates": [
+    {
+      "wallId": 243,
+      "x": 74.21999999999998,
+      "z": -6.58,
+      "edge": null,
+      "proofPoints": 0,
+      "formation": null,
+      "exterior": false,
+      "routes": [],
+      "relevantAtFace": []
+    },
+    {
+      "wallId": 243,
+      "x": 74.21999999999998,
+      "z": -10.42,
+      "edge": null,
+      "proofPoints": 0,
+      "formation": null,
+      "exterior": false,
+      "routes": [],
+      "relevantAtFace": [
+        {
+          "wallId": 243,
+          "x": 73.57499999999999,
+          "z": -10.42,
+          "groupId": 5241
+        },
+        {
+          "wallId": 243,
+          "x": 72.92999999999999,
+          "z": -10.42,
+          "groupId": 5241
+        },
+        {
+          "wallId": 243,
+          "x": 74.21999999999998,
+          "z": -10.42,
+          "groupId": 5241
+        }
+      ]
+    },
+    {
+      "wallId": 244,
+      "x": 75.725,
+      "z": -6.58,
+      "edge": null,
+      "proofPoints": 0,
+      "formation": null,
+      "exterior": false,
+      "routes": [],
+      "relevantAtFace": []
+    },
+    {
+      "wallId": 244,
+      "x": 75.725,
+      "z": -10.42,
+      "edge": null,
+      "proofPoints": 0,
+      "formation": null,
+      "exterior": false,
+      "routes": [],
+      "relevantAtFace": [
+        {
+          "wallId": 244,
+          "x": 75.725,
+          "z": -10.42,
+          "groupId": 5116
+        },
+        {
+          "wallId": 244,
+          "x": 75.08,
+          "z": -10.42,
+          "groupId": 5116
+        }
+      ]
+    },
+    {
+      "wallId": 257,
+      "x": 93.72140775255832,
+      "z": -8.199527335862937,
+      "edge": {
+        "x": 115.1,
+        "z": -68.9
+      },
+      "proofPoints": 291,
+      "formation": [
+        {
+          "x": 93.72140775255832,
+          "z": -8.199527335862937
+        },
+        {
+          "x": 95,
+          "z": -5
+        },
+        {
+          "x": 96,
+          "z": -1
+        },
+        {
+          "x": 99,
+          "z": 1
+        },
+        {
+          "x": 100,
+          "z": 5
+        },
+        {
+          "x": 99,
+          "z": 9
+        },
+        {
+          "x": 97,
+          "z": 12
+        },
+        {
+          "x": 95,
+          "z": 15
+        },
+        {
+          "x": 94,
+          "z": 19
+        },
+        {
+          "x": 92,
+          "z": 22
+        },
+        {
+          "x": 88,
+          "z": 22
+        },
+        {
+          "x": 84,
+          "z": 22
+        }
+      ],
+      "exterior": true,
+      "routes": [
+        "found",
+        "found",
+        "found",
+        "found",
+        "found",
+        "found",
+        "found",
+        "found",
+        "found",
+        "found",
+        "found",
+        "found"
+      ],
+      "relevantAtFace": []
+    },
+    {
+      "wallId": 257,
+      "x": 97.52859224744168,
+      "z": -8.700472664137065,
+      "edge": null,
+      "proofPoints": 0,
+      "formation": null,
+      "exterior": false,
+      "routes": [],
+      "relevantAtFace": [
+        {
+          "wallId": 257,
+          "x": 97.52859224744168,
+          "z": -8.700472664137065,
+          "groupId": 5116
+        }
+      ]
+    },
+    {
+      "wallId": 260,
+      "x": 95.41892596250591,
+      "z": -3.1586862841927354,
+      "edge": {
+        "x": 115.1,
+        "z": -68.9
+      },
+      "proofPoints": 285,
+      "formation": [
+        {
+          "x": 95.41892596250591,
+          "z": -3.1586862841927354
+        },
+        {
+          "x": 96,
+          "z": 0
+        },
+        {
+          "x": 99,
+          "z": 1
+        },
+        {
+          "x": 100,
+          "z": 5
+        },
+        {
+          "x": 99,
+          "z": 9
+        },
+        {
+          "x": 97,
+          "z": 12
+        },
+        {
+          "x": 95,
+          "z": 15
+        },
+        {
+          "x": 94,
+          "z": 19
+        },
+        {
+          "x": 92,
+          "z": 22
+        },
+        {
+          "x": 88,
+          "z": 22
+        },
+        {
+          "x": 84,
+          "z": 22
+        },
+        {
+          "x": 84,
+          "z": 26
+        }
+      ],
+      "exterior": true,
+      "routes": [
+        "found",
+        "found",
+        "found",
+        "found",
+        "found",
+        "found",
+        "found",
+        "found",
+        "found",
+        "found",
+        "found",
+        "found"
+      ],
+      "relevantAtFace": []
+    },
+    {
+      "wallId": 260,
+      "x": 99.1310740374941,
+      "z": -4.141313715807269,
+      "edge": null,
+      "proofPoints": 0,
+      "formation": null,
+      "exterior": false,
+      "routes": [],
+      "relevantAtFace": [
+        {
+          "wallId": 260,
+          "x": 99.1310740374941,
+          "z": -4.141313715807269,
+          "groupId": 5116
+        },
+        {
+          "wallId": 260,
+          "x": 98.9960740374941,
+          "z": -4.651313715807268,
+          "groupId": 5116
+        },
+        {
+          "wallId": 260,
+          "x": 99.2660740374941,
+          "z": -3.63131371580727,
+          "groupId": 5116
+        }
+      ]
+    },
+    {
+      "wallId": 283,
+      "x": 71.64235498012182,
+      "z": 3.3576450198781713,
+      "edge": {
+        "x": 67.1,
+        "z": -68.9
+      },
+      "proofPoints": 193,
+      "formation": [
+        {
+          "x": 71.64235498012182,
+          "z": 3.3576450198781713
+        },
+        {
+          "x": 71,
+          "z": 7
+        },
+        {
+          "x": 70,
+          "z": 10
+        },
+        {
+          "x": 66,
+          "z": 10
+        },
+        {
+          "x": 62,
+          "z": 10
+        },
+        {
+          "x": 60,
+          "z": 7
+        },
+        {
+          "x": 60,
+          "z": 3
+        },
+        {
+          "x": 58,
+          "z": 0
+        },
+        {
+          "x": 54,
+          "z": 0
+        },
+        {
+          "x": 52,
+          "z": -3
+        },
+        {
+          "x": 51,
+          "z": -6
+        },
+        {
+          "x": 48,
+          "z": -7
+        }
+      ],
+      "exterior": true,
+      "routes": [
+        "found",
+        "found",
+        "found",
+        "found",
+        "found",
+        "found",
+        "found",
+        "found",
+        "found",
+        "found",
+        "found",
+        "found"
+      ],
+      "relevantAtFace": [
+        {
+          "wallId": 283,
+          "x": 71.64235498012182,
+          "z": 3.3576450198781713,
+          "groupId": 5396
+        },
+        {
+          "wallId": 283,
+          "x": 71.94235498012182,
+          "z": 3.657645019878171,
+          "groupId": 5396
+        }
+      ]
+    },
+    {
+      "wallId": 283,
+      "x": 74.35764501987818,
+      "z": 0.6423549801218287,
+      "edge": null,
+      "proofPoints": 0,
+      "formation": null,
+      "exterior": false,
+      "routes": [],
+      "relevantAtFace": []
+    }
+  ],
+  "wallRoutes": [
+    {
+      "index": 0,
+      "species": "warthog",
+      "birth": {
+        "x": 71.64235498012182,
+        "z": 3.3576450198781713
+      },
+      "candidates": 2,
+      "nearest": [
+        {
+          "wallId": 283,
+          "x": 71.64235498012182,
+          "z": 3.3576450198781713,
+          "status": "found"
+        },
+        {
+          "wallId": 283,
+          "x": 71.94235498012182,
+          "z": 3.657645019878171,
+          "status": "found"
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "species": "hyena",
+      "birth": {
+        "x": 71,
+        "z": 7
+      },
+      "candidates": 3,
+      "nearest": [
+        {
+          "wallId": 2265,
+          "x": 73.78,
+          "z": 6.3,
+          "status": "found"
+        },
+        {
+          "wallId": 2265,
+          "x": 73.78,
+          "z": 6,
+          "status": "found"
+        },
+        {
+          "wallId": 2265,
+          "x": 73.78,
+          "z": 5.7,
+          "status": "found"
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "species": "warthog",
+      "birth": {
+        "x": 70,
+        "z": 10
+      },
+      "candidates": 2,
+      "nearest": [
+        {
+          "wallId": 283,
+          "x": 71.94235498012182,
+          "z": 3.657645019878171,
+          "status": "found"
+        },
+        {
+          "wallId": 283,
+          "x": 71.64235498012182,
+          "z": 3.3576450198781713,
+          "status": "found"
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "species": "warthog",
+      "birth": {
+        "x": 66,
+        "z": 10
+      },
+      "candidates": 2,
+      "nearest": [
+        {
+          "wallId": 283,
+          "x": 71.94235498012182,
+          "z": 3.657645019878171,
+          "status": "found"
+        },
+        {
+          "wallId": 283,
+          "x": 71.64235498012182,
+          "z": 3.3576450198781713,
+          "status": "found"
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "species": "warthog",
+      "birth": {
+        "x": 62,
+        "z": 10
+      },
+      "candidates": 2,
+      "nearest": [
+        {
+          "wallId": 283,
+          "x": 71.64235498012182,
+          "z": 3.3576450198781713,
+          "status": "found"
+        },
+        {
+          "wallId": 283,
+          "x": 71.94235498012182,
+          "z": 3.657645019878171,
+          "status": "found"
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "species": "warthog",
+      "birth": {
+        "x": 60,
+        "z": 7
+      },
+      "candidates": 2,
+      "nearest": [
+        {
+          "wallId": 283,
+          "x": 71.64235498012182,
+          "z": 3.3576450198781713,
+          "status": "found"
+        },
+        {
+          "wallId": 283,
+          "x": 71.94235498012182,
+          "z": 3.657645019878171,
+          "status": "found"
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "species": "warthog",
+      "birth": {
+        "x": 60,
+        "z": 3
+      },
+      "candidates": 2,
+      "nearest": [
+        {
+          "wallId": 283,
+          "x": 71.64235498012182,
+          "z": 3.3576450198781713,
+          "status": "found"
+        },
+        {
+          "wallId": 283,
+          "x": 71.94235498012182,
+          "z": 3.657645019878171,
+          "status": "found"
+        }
+      ]
+    },
+    {
+      "index": 7,
+      "species": "warthog",
+      "birth": {
+        "x": 58,
+        "z": 0
+      },
+      "candidates": 2,
+      "nearest": [
+        {
+          "wallId": 283,
+          "x": 71.64235498012182,
+          "z": 3.3576450198781713,
+          "status": "found"
+        },
+        {
+          "wallId": 283,
+          "x": 71.94235498012182,
+          "z": 3.657645019878171,
+          "status": "found"
+        }
+      ]
+    },
+    {
+      "index": 8,
+      "species": "warthog",
+      "birth": {
+        "x": 54,
+        "z": 0
+      },
+      "candidates": 2,
+      "nearest": [
+        {
+          "wallId": 283,
+          "x": 71.64235498012182,
+          "z": 3.3576450198781713,
+          "status": "found"
+        },
+        {
+          "wallId": 283,
+          "x": 71.94235498012182,
+          "z": 3.657645019878171,
+          "status": "found"
+        }
+      ]
+    },
+    {
+      "index": 9,
+      "species": "warthog",
+      "birth": {
+        "x": 52,
+        "z": -3
+      },
+      "candidates": 2,
+      "nearest": [
+        {
+          "wallId": 283,
+          "x": 71.64235498012182,
+          "z": 3.3576450198781713,
+          "status": "found"
+        },
+        {
+          "wallId": 283,
+          "x": 71.94235498012182,
+          "z": 3.657645019878171,
+          "status": "found"
+        }
+      ]
+    },
+    {
+      "index": 10,
+      "species": "buffalo",
+      "birth": {
+        "x": 51,
+        "z": -6
+      },
+      "candidates": 0,
+      "nearest": []
+    },
+    {
+      "index": 11,
+      "species": "warthog",
+      "birth": {
+        "x": 48,
+        "z": -7
+      },
+      "candidates": 2,
+      "nearest": [
+        {
+          "wallId": 283,
+          "x": 71.64235498012182,
+          "z": 3.3576450198781713,
+          "status": "found"
+        },
+        {
+          "wallId": 283,
+          "x": 71.94235498012182,
+          "z": 3.657645019878171,
+          "status": "found"
+        }
+      ]
+    }
+  ],
+  "stats": {
+    "raidEntryWallRouteQueries": 73,
+    "raidEntryWallRouteMs": 74.97829999999999
+  }
+}

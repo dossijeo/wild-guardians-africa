@@ -1,0 +1,49 @@
+{
+  "kind": "chrome-main-thread-frozen-raid-entry",
+  "fixture": "docs/qa/desert-raid-pressure-audit/desierto123-d17-waiting-state.json.gz",
+  "fixtureSha256": "68d31d7c2a9e99054ac9819b3301161a9c71c4b5caab41d470dff69486b39116",
+  "wasmSha256": "b3db734225b122095ae43d350c6a21a444115d48ce805b1363d591bc4f5641de",
+  "chromeVersion": "155.0.8059.84",
+  "result": {
+    "day": 17,
+    "animals": 8,
+    "walls": 127,
+    "wallEnvelope": [
+      68.28,
+      -17.664430050110404,
+      97.71267515012954,
+      16.719885625154735
+    ],
+    "selectionMs": 254.39999999850988,
+    "frameGapMs": 266.2999999999997,
+    "selectedWall": null,
+    "selectionBounds": null,
+    "counters": {
+      "walkable": {
+        "calls": 16,
+        "ms": 0.30000000447034836
+      },
+      "segmentClear": {
+        "calls": 2,
+        "ms": 0.20000000298023224
+      },
+      "spatialWallApproachSides": {
+        "calls": 1,
+        "ms": 3.6999999955296516
+      },
+      "spatialRouteStatus": {
+        "calls": 51,
+        "ms": 225.09999999403954
+      }
+    },
+    "routeStatuses": {
+      "blocked": 37,
+      "found": 8,
+      "unknown": 6
+    },
+    "uniqueRouteInputs": 51,
+    "duplicateRouteInputs": 0,
+    "linearMemoryBytes": 21495808
+  },
+  "errors": []
+}

@@ -104,7 +104,8 @@ export function createSpatialIntentBridge(session){
     'nav_intent_attack_blockers_ptr','nav_intent_attack_reserved_targets_ptr',
     'nav_intent_plan_attack_crop',
     'nav_intent_attack_result_ptr',
-    'nav_intent_plan_attack_wall','nav_intent_wall_attack_result_ptr',
+    'nav_intent_plan_attack_wall','nav_intent_plan_attack_wall_hint',
+    'nav_intent_wall_attack_result_ptr',
     'nav_intent_attack_action_active','nav_intent_restore_attack_action',
     'nav_intent_restore_attack_pending','nav_intent_restore_attack_site',
     'nav_intent_attack_finished',
@@ -558,8 +559,13 @@ export function createSpatialIntentBridge(session){
   const planAttackWall=(state,animal)=>{
     if(!initialized||!state.raid)throw Error('No native raid intention session');
     if(!prepareAttackTransients(state,animal))return null;
-    const status=wasm.nav_intent_plan_attack_wall(numericId(animal.id),
-      animal.x,animal.z,animal.radius);
+    const hint=animal.wallOpportunity;
+    const status=hint?
+      wasm.nav_intent_plan_attack_wall_hint(numericId(animal.id),
+        animal.x,animal.z,animal.radius,hint.wallId,hint.x,hint.z,
+        hint.groupId):
+      wasm.nav_intent_plan_attack_wall(numericId(animal.id),
+        animal.x,animal.z,animal.radius);
     if(status<0)throw Error(`Native wall intention rejected: ${status}`);
     const values=new Float64Array(wasm.memory.buffer,
       wasm.nav_intent_wall_attack_result_ptr(),10);

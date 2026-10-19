@@ -369,7 +369,9 @@ export function spawnRaid(s,plan,nav,daytime=false) {
   if(entry.selectionBounds)nav.setActiveBounds?.(includeRaidBounds(bounds,raidEntryChunks(entry,specs.map(v=>v.radius))));
   randomInt(s,0,3);delete nav.raidEntryFailure;delete nav.raidEntryDemand;
   const animals=specs.map(({spec,radius},i)=>({id:`animal-${s.nextId++}`,species:spec.id,...entries[i],spawn:{...entries[i]},exit:{...exits[i]},radius,
-    hitsRemaining:plan.actors?.[i]?.hits??(plan.introductory&&!daytime?spec.hit_budget_min:randomInt(s,spec.hit_budget_min,spec.hit_budget_max)),...(plan.actors?.[i]?.damageProfile?{damageProfile:structuredClone(plan.actors[i].damageProfile)}:{}),status:'entering',targetId:null,reservation:null,path:null,attackRemaining:0,attackId:null,hitApplied:false}));
+    hitsRemaining:plan.actors?.[i]?.hits??(plan.introductory&&!daytime?spec.hit_budget_min:randomInt(s,spec.hit_budget_min,spec.hit_budget_max)),...(plan.actors?.[i]?.damageProfile?{damageProfile:structuredClone(plan.actors[i].damageProfile)}:{}),
+    ...(entry.wallOpportunity?{wallOpportunity:{...entry.wallOpportunity}}:{}),
+    status:'entering',targetId:null,reservation:null,path:null,attackRemaining:0,attackId:null,hitApplied:false}));
   if(wave){previous.animals.push(...animals);previous.waveIndex=plan.index;delete previous.pendingWavePlan;}
   else s.raid={id:`raid-${s.day}-${daytime?'day':'night'}`,animals,encounters:[],reservations:{},daytime,...(plan.pressureVersion===1?{waves:structuredClone(plan.waves),waveIndex:0,pressureFacts:structuredClone(plan.pressureFacts)}:{})};
   if(plan.introductory&&!daytime){

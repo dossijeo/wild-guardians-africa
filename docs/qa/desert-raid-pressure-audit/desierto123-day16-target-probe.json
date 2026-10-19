@@ -1,0 +1,146 @@
+{
+  "fixture": "docs/qa/desert-raid-pressure-audit/desierto123-day16-diagnostic-day16-raid-state.json",
+  "day": 16,
+  "time": 465.0000000000375,
+  "residentRadius": 4,
+  "bounds": [
+    -168,
+    -216,
+    264,
+    216
+  ],
+  "wallBox": [
+    72.34443650813895,
+    -15.65556349186104,
+    97.71267515012954,
+    16.714151777033386
+  ],
+  "animals": 12,
+  "livingCrops": 15,
+  "intactWalls": 91,
+  "rows": [
+    {
+      "actorId": "animal-5430",
+      "species": "warthog",
+      "position": {
+        "x": 84,
+        "z": 26
+      },
+      "region": {
+        "ids": [
+          115344
+        ],
+        "unknown": false
+      },
+      "crop": {
+        "status": "unknown",
+        "frontier": null,
+        "regionQueries": 10,
+        "routeQueries": 0,
+        "diagnostics": {
+          "firstCandidateCrop": 0,
+          "preferredTrials": 0,
+          "lastPreferredRouteCount": -2147483648,
+          "siteTrials": 0,
+          "lastRouteCount": -2147483648,
+          "lastRegisterResult": -2147483648,
+          "unknownCauseMask": 4
+        }
+      },
+      "wall": {
+        "status": "unknown",
+        "candidatesExamined": 0,
+        "routeQueries": 0
+      },
+      "relevantWallSides": 0,
+      "birthExteriorEdge": {
+        "x": 115.1,
+        "z": 212.9
+      },
+      "exteriorCandidates": [],
+      "nearbySides": []
+    },
+    {
+      "actorId": "animal-5420",
+      "species": "hyena",
+      "position": {
+        "x": 96,
+        "z": 0
+      },
+      "region": {
+        "ids": [
+          95904
+        ],
+        "unknown": false
+      },
+      "crop": {
+        "status": "unknown",
+        "frontier": null,
+        "regionQueries": 12,
+        "routeQueries": 0,
+        "diagnostics": {
+          "firstCandidateCrop": 0,
+          "preferredTrials": 0,
+          "lastPreferredRouteCount": -2147483648,
+          "siteTrials": 0,
+          "lastRouteCount": -2147483648,
+          "lastRegisterResult": -2147483648,
+          "unknownCauseMask": 4
+        }
+      },
+      "wall": {
+        "status": "unknown",
+        "candidatesExamined": 0,
+        "routeQueries": 0
+      },
+      "relevantWallSides": 0,
+      "birthExteriorEdge": {
+        "x": 114.9,
+        "z": 213.1
+      },
+      "exteriorCandidates": [],
+      "nearbySides": []
+    },
+    {
+      "actorId": "animal-5429",
+      "species": "buffalo",
+      "position": {
+        "x": 84,
+        "z": 22
+      },
+      "region": {
+        "ids": [
+          96337
+        ],
+        "unknown": false
+      },
+      "crop": {
+        "status": "unknown",
+        "frontier": null,
+        "regionQueries": 12,
+        "routeQueries": 0,
+        "diagnostics": {
+          "firstCandidateCrop": 0,
+          "preferredTrials": 0,
+          "lastPreferredRouteCount": -2147483648,
+          "siteTrials": 0,
+          "lastRouteCount": -2147483648,
+          "lastRegisterResult": -2147483648,
+          "unknownCauseMask": 4
+        }
+      },
+      "wall": {
+        "status": "unknown",
+        "candidatesExamined": 0,
+        "routeQueries": 0
+      },
+      "relevantWallSides": 0,
+      "birthExteriorEdge": {
+        "x": 114.97,
+        "z": 213.03
+      },
+      "exteriorCandidates": [],
+      "nearbySides": []
+    }
+  ]
+}

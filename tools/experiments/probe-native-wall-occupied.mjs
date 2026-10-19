@@ -6,6 +6,7 @@ import {createSpatialGameSession} from '../../src/world/wild-engine/spatial-game
 import {createSpatialNavigationMovement} from '../../src/world/wild-engine/spatial-navigation-movement.js';
 import {createEventDrivenTaskPlanner} from '../../src/world/wild-engine/spatial-intent-bridge.js';
 import {targetFor} from '../../src/simulation/raids.js';
+import {raidWallEnvelope,exteriorRaidWitness} from '../../src/simulation/raid-exterior-entry.js';
 
 const fixture=process.argv[2]??'tests/fixtures/manglares-123-d10-raid-state.json.gz';
 const binary=process.env.WILD_ENGINE_NATIVE_ROUTE_WASM??
@@ -38,9 +39,12 @@ try{
   planner.nativeWallSelectionEnabled=true;
   const wasm=session.core.wasm;
   const nav=createSpatialNavigationMovement(session,state);
+  nav.setActiveBounds([(cx-4)*48-24,(cz-4)*48-24,
+    (cx+4)*48+24,(cz+4)*48+24]);
   nav.intentTaskPlanner=planner;
   nav.raidSelectionStats={};
   const rows=[];
+  const wallBox=raidWallEnvelope(state,nav);
   const originalCrop=planner.planAttackCrop;
   const originalWall=planner.planAttackWall;
   let crop=null,wall=null;
@@ -54,6 +58,53 @@ try{
     const groups=Array.from(new Float64Array(wasm.memory.buffer,
       wasm.nav_intent_crop_groups_ptr(),groupCount*12));
     const perimeter=[];
+    const originSamples=[];
+    for(const x of [Math.floor(animal.x),Math.ceil(animal.x)])
+      for(const z of [Math.floor(animal.z),Math.ceil(animal.z)])
+        originSamples.push({x,z,region:wasm.lazy_weak_region(x,z)});
+    const portalCount=wasm.nav_intent_wall_portals(animal.radius);
+    const portals=actorId?Array.from(new Float64Array(wasm.memory.buffer,
+      wasm.nav_intent_wall_portals_ptr(),portalCount*5)):[];
+    const portalRegions=actorId?Array.from({length:portalCount},(_,index)=>
+      ({wall:portals[index*5],from:portals[index*5+1],
+        to:portals[index*5+2],x:portals[index*5+3],z:portals[index*5+4],
+        connected:wasm.lazy_connected(Math.round(animal.x),
+          Math.round(animal.z),Math.round(portals[index*5+3]),
+          Math.round(portals[index*5+4]))})):[];
+    const relevantCount=actorId&&wasm.nav_intent_relevant_wall_sides?.(
+      animal.x,animal.z,animal.radius);
+    const relevantRows=relevantCount>0?Array.from(new Float64Array(
+      wasm.memory.buffer,wasm.nav_intent_relevant_wall_sides_ptr(),
+      relevantCount*4)):[];
+    const entryCandidates=actorId?[
+      {x:wallBox[0]-6,z:0},{x:wallBox[2]+6,z:0},
+      {x:wallBox[0]-6,z:-10},{x:wallBox[2]+6,z:-10},
+      {x:wallBox[0]-6,z:10},{x:wallBox[2]+6,z:10}
+    ].map(point=>({point,region:wasm.lazy_weak_region(
+      Math.round(point.x),Math.round(point.z)),
+      exterior:exteriorRaidWitness(point,animal.radius,wallBox,nav),
+      connectedPortals:portalRegions.filter(row=>
+        wasm.lazy_connected(Math.round(point.x),Math.round(point.z),
+          Math.round(row.x),Math.round(row.z))===1).length})):[];
+    const portalSourceRegions=new Set(portalRegions.map(row=>row.from));
+    const nearbyPortalRegions=[];
+    if(actorId)for(let z=-26;z<=26;z+=2)for(let x=50;x<=112;x+=2){
+      const region=wasm.lazy_weak_region(x,z);
+      if(!portalSourceRegions.has(region)||!nav.walkable(x,z,animal.radius,
+        null,false))continue;
+      const point={x,z};
+      if(!exteriorRaidWitness(point,animal.radius,wallBox,nav))continue;
+      nearbyPortalRegions.push({x,z,region});
+    }
+    const cropEnclosures=actorId?state.plants.filter(crop=>crop.alive)
+      .slice(0,8).map(crop=>({id:crop.id,x:crop.x,z:crop.z,
+        samples:Array.from({length:12},(_,index)=>{
+          const angle=2*Math.PI*index/12,
+            x=Math.round(crop.x+Math.sin(angle)*(.6+animal.radius)),
+            z=Math.round(crop.z+Math.cos(angle)*(.6+animal.radius));
+          return {x,z,region:wasm.lazy_weak_region(x,z),
+            enclosure:wasm.lazy_enclosure(x,z)};
+        })})):[];
     for(let index=0;index<groupCount;index++){
       const groupId=groups[index*12];
       const status=wasm.nav_intent_perimeter_walls(animal.x,animal.z,
@@ -103,7 +154,20 @@ try{
       choice:choice?.unknown?'unknown':choice?.target&&{
         id:choice.target.id,kind:choice.target.kind,
         native:!!choice.native,approach:choice.approach?.point},
-      perimeter:actorId?perimeter:undefined,withoutTransients,
+      perimeter:actorId?perimeter:undefined,
+      originSamples:actorId?originSamples:undefined,
+      portalCount:actorId?portalCount:undefined,
+      relevantWalls:actorId?Array.from({length:relevantRows.length/4},
+        (_,index)=>({id:relevantRows[index*4],
+          x:relevantRows[index*4+1],z:relevantRows[index*4+2],
+          groupId:relevantRows[index*4+3],
+          route:nav.spatialRouteStatus(animal,{
+            x:relevantRows[index*4+1],z:relevantRows[index*4+2]},
+          animal.radius)})):undefined,
+      portalRegions:actorId?portalRegions:undefined,
+      entryCandidates:actorId?entryCandidates:undefined,
+      nearbyPortalRegions:actorId?nearbyPortalRegions.slice(0,48):undefined,
+      cropEnclosures:actorId?cropEnclosures:undefined,withoutTransients,
       withoutNativeLeases,
       selectedWall:actorId&&choice?.target?.kind==='wall'?
         {id:choice.target.id,x:choice.target.x,z:choice.target.z,
@@ -129,5 +193,6 @@ try{
     }
   }
   process.stdout.write(JSON.stringify({fixture,day:state.day,time:state.time,
+    wallBox,activeBounds:nav.activeBounds,
     rows,selection:nav.raidSelectionStats},null,2)+'\n');
 }finally{session.dispose();}

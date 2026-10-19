@@ -1056,6 +1056,58 @@ test('unknown service routes wait for a sector event or low-frequency retry',
  }finally{session.dispose();}
 });
 
+test('unchanged unknown wall repairs keep pending native decisions until a dependency changes',
+ {skip:!module&&'Build and select the experimental WASM first'},()=>{
+ const game=deserialize(gunzipSync(readFileSync(new URL(
+  '../docs/qa/desert-raid-pressure-audit/desierto123-d17-morning-state.json.gz',
+  import.meta.url))).toString());
+ for(const worker of game.workers){
+  worker.status='idle';worker.taskId=null;worker.path=null;
+ }
+ for(const task of game.tasks)task.workerId=null;
+ const loaded=new Map(),session=createSpatialGameSession(module,game,{
+  loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+ try{
+  const center=game.structures.find(item=>item.kind==='center'&&item.status==='intact');
+  const cx=Math.floor((center.x+24)/48),cz=Math.floor((center.z+24)/48);
+  for(let dz=-2;dz<=2;dz++)for(let dx=-2;dx<=2;dx++){
+   session.core.addChunk(cx+dx,cz+dz);
+   loaded.set(`${cx+dx},${cz+dz}`,session.core.chunkPayload());
+  }
+  const planner=createEventDrivenTaskPlanner(session);
+  planner.resetFromState(game);
+  const first=planner.planIfNeeded(0);
+  const firstQueries=session.core.wasm.nav_intent_route_queries();
+  assert(first.filter(row=>row.status===3).length>=10);
+  assert(firstQueries>=100);
+  planner.discard();
+  const repeated=planner.planIfNeeded(8);
+  const repeatedQueries=session.core.wasm.nav_intent_route_queries();
+  assert.deepEqual(repeated.map(row=>[row.taskId,row.workerId,row.status,row.cause]),
+   first.map(row=>[row.taskId,row.workerId,row.status,row.cause]));
+  assert(repeatedQueries<firstQueries/2,
+   'a timer retry preserves unknown without redoing unchanged physical probes');
+  planner.discard();
+  session.core.addChunk(cx+3,cz);
+  planner.planIfNeeded(16);
+  assert(session.core.wasm.nav_intent_route_queries()>repeatedQueries,
+   'new resident geometry invalidates pending connectivity');
+  planner.discard();
+  const worker=game.workers[0];
+  worker.x+=.125;
+  planner.applyEvents(game,[{type:'worker',entity:worker}]);
+  planner.planIfNeeded(16.1);
+  assert(session.core.wasm.nav_intent_route_queries()>0,
+   'a changed source position is reconsidered');
+  planner.discard();
+  planner.resetFromState(game);
+  planner.planIfNeeded(0);
+  assert(session.core.wasm.nav_intent_route_queries()>0,
+   'restoring a session discards derived pending decisions');
+  planner.discard();
+ }finally{session.dispose();}
+});
+
 test('a moved crate reroutes the same worker task at the confirmed event boundary',
  {skip:!module&&'Build and select the experimental WASM first'},()=>{
  const game=deserialize(gunzipSync(readFileSync(new URL(

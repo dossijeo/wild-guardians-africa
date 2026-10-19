@@ -1,0 +1,1422 @@
+{
+  "fixture": "docs/qa/desert-raid-pressure-audit/desierto123-day15-raid-state.json.gz",
+  "day": 15,
+  "time": 465.0000000000375,
+  "residentRadius": 4,
+  "bounds": [
+    -168,
+    -216,
+    264,
+    216
+  ],
+  "wallBox": [
+    72.34443650813895,
+    -15.65556349186104,
+    97.72,
+    16.714151777033386
+  ],
+  "animals": 11,
+  "livingCrops": 14,
+  "intactWalls": 95,
+  "rows": [
+    {
+      "actorId": "animal-5162",
+      "species": "warthog",
+      "position": {
+        "x": -19.65,
+        "z": 19
+      },
+      "region": {
+        "ids": [
+          93888
+        ],
+        "unknown": false
+      },
+      "crop": {
+        "status": "unknown",
+        "frontier": null,
+        "regionQueries": 10,
+        "routeQueries": 0,
+        "diagnostics": {
+          "firstCandidateCrop": 0,
+          "preferredTrials": 0,
+          "lastPreferredRouteCount": -2147483648,
+          "siteTrials": 0,
+          "lastRouteCount": -2147483648,
+          "lastRegisterResult": -2147483648,
+          "unknownCauseMask": 4
+        }
+      },
+      "wall": {
+        "status": "unknown",
+        "candidatesExamined": 4,
+        "routeQueries": 4
+      },
+      "relevantWallSides": 4,
+      "birthExteriorEdge": {
+        "x": -20.900000000000006,
+        "z": 212.9
+      },
+      "exteriorCandidates": [
+        {
+          "wallId": 283,
+          "side": {
+            "x": 71.64235498012182,
+            "z": 3.3576450198781713
+          },
+          "edge": {
+            "x": 75.1,
+            "z": 212.9
+          },
+          "edgeRoute": "found",
+          "proofPoints": 349,
+          "formation": [
+            {
+              "x": 71.64235498012182,
+              "z": 3.3576450198781713
+            },
+            {
+              "x": 71,
+              "z": 7
+            },
+            {
+              "x": 69,
+              "z": 10
+            },
+            {
+              "x": 65,
+              "z": 10
+            },
+            {
+              "x": 61,
+              "z": 10
+            },
+            {
+              "x": 60,
+              "z": 6
+            },
+            {
+              "x": 60,
+              "z": 2
+            },
+            {
+              "x": 57,
+              "z": 0
+            },
+            {
+              "x": 53,
+              "z": 0
+            },
+            {
+              "x": 52,
+              "z": -6
+            },
+            {
+              "x": 49,
+              "z": -7
+            }
+          ],
+          "greedyCount": 11,
+          "groupExterior": true,
+          "routesToSide": [
+            "found",
+            "found",
+            "found",
+            "found",
+            "found",
+            "found",
+            "found",
+            "found",
+            "found",
+            "found",
+            "found"
+          ],
+          "proofHead": [
+            {
+              "x": 71.64235498012182,
+              "z": 3.3576450198781713
+            },
+            {
+              "x": 72,
+              "z": 4
+            },
+            {
+              "x": 71,
+              "z": 4
+            },
+            {
+              "x": 71,
+              "z": 5
+            },
+            {
+              "x": 71,
+              "z": 6
+            },
+            {
+              "x": 71,
+              "z": 7
+            },
+            {
+              "x": 71,
+              "z": 8
+            },
+            {
+              "x": 71,
+              "z": 9
+            }
+          ],
+          "proofTail": [
+            {
+              "x": 75,
+              "z": 207
+            },
+            {
+              "x": 75,
+              "z": 208
+            },
+            {
+              "x": 75,
+              "z": 209
+            },
+            {
+              "x": 75,
+              "z": 210
+            },
+            {
+              "x": 75,
+              "z": 211
+            },
+            {
+              "x": 75,
+              "z": 212
+            },
+            {
+              "x": 75,
+              "z": 213
+            },
+            {
+              "x": 75.1,
+              "z": 212.9
+            }
+          ],
+          "proofLength": 346.87662872884107
+        },
+        {
+          "wallId": 283,
+          "side": {
+            "x": 71.94235498012182,
+            "z": 3.657645019878171
+          },
+          "edge": {
+            "x": 75.1,
+            "z": 212.9
+          },
+          "edgeRoute": "found",
+          "proofPoints": 349,
+          "formation": [
+            {
+              "x": 71.94235498012182,
+              "z": 3.657645019878171
+            },
+            {
+              "x": 71,
+              "z": 7
+            },
+            {
+              "x": 69,
+              "z": 10
+            },
+            {
+              "x": 65,
+              "z": 10
+            },
+            {
+              "x": 61,
+              "z": 10
+            },
+            {
+              "x": 60,
+              "z": 6
+            },
+            {
+              "x": 60,
+              "z": 2
+            },
+            {
+              "x": 57,
+              "z": 0
+            },
+            {
+              "x": 53,
+              "z": 0
+            },
+            {
+              "x": 52,
+              "z": -6
+            },
+            {
+              "x": 49,
+              "z": -7
+            }
+          ],
+          "greedyCount": 11,
+          "groupExterior": true,
+          "routesToSide": [
+            "found",
+            "found",
+            "found",
+            "found",
+            "found",
+            "found",
+            "found",
+            "found",
+            "found",
+            "found",
+            "found"
+          ],
+          "proofHead": [
+            {
+              "x": 71.94235498012182,
+              "z": 3.657645019878171
+            },
+            {
+              "x": 72,
+              "z": 4
+            },
+            {
+              "x": 71,
+              "z": 4
+            },
+            {
+              "x": 71,
+              "z": 5
+            },
+            {
+              "x": 71,
+              "z": 6
+            },
+            {
+              "x": 71,
+              "z": 7
+            },
+            {
+              "x": 71,
+              "z": 8
+            },
+            {
+              "x": 71,
+              "z": 9
+            }
+          ],
+          "proofTail": [
+            {
+              "x": 75,
+              "z": 207
+            },
+            {
+              "x": 75,
+              "z": 208
+            },
+            {
+              "x": 75,
+              "z": 209
+            },
+            {
+              "x": 75,
+              "z": 210
+            },
+            {
+              "x": 75,
+              "z": 211
+            },
+            {
+              "x": 75,
+              "z": 212
+            },
+            {
+              "x": 75,
+              "z": 213
+            },
+            {
+              "x": 75.1,
+              "z": 212.9
+            }
+          ],
+          "proofLength": 346.4885954922713
+        },
+        {
+          "wallId": 2265,
+          "side": {
+            "x": 73.58,
+            "z": 6.3
+          },
+          "edge": {
+            "x": 75.1,
+            "z": 212.9
+          },
+          "edgeRoute": "found",
+          "proofPoints": 353,
+          "formation": [
+            {
+              "x": 73.58,
+              "z": 6.3
+            },
+            {
+              "x": 71,
+              "z": 4
+            },
+            {
+              "x": 71,
+              "z": 10
+            },
+            {
+              "x": 67,
+              "z": 10
+            },
+            {
+              "x": 63,
+              "z": 10
+            },
+            {
+              "x": 60,
+              "z": 8
+            },
+            {
+              "x": 60,
+              "z": 4
+            },
+            {
+              "x": 60,
+              "z": 0
+            },
+            {
+              "x": 56,
+              "z": 0
+            },
+            {
+              "x": 52,
+              "z": 0
+            },
+            {
+              "x": 52,
+              "z": -5
+            }
+          ],
+          "greedyCount": 11,
+          "groupExterior": true,
+          "routesToSide": [
+            "found",
+            "found",
+            "found",
+            "found",
+            "found",
+            "found",
+            "found",
+            "found",
+            "found",
+            "found",
+            "found"
+          ],
+          "proofHead": [
+            {
+              "x": 73.58,
+              "z": 6.3
+            },
+            {
+              "x": 74,
+              "z": 6
+            },
+            {
+              "x": 73,
+              "z": 6
+            },
+            {
+              "x": 72,
+              "z": 6
+            },
+            {
+              "x": 72,
+              "z": 5
+            },
+            {
+              "x": 72,
+              "z": 4
+            },
+            {
+              "x": 71,
+              "z": 4
+            },
+            {
+              "x": 71,
+              "z": 5
+            }
+          ],
+          "proofTail": [
+            {
+              "x": 75,
+              "z": 207
+            },
+            {
+              "x": 75,
+              "z": 208
+            },
+            {
+              "x": 75,
+              "z": 209
+            },
+            {
+              "x": 75,
+              "z": 210
+            },
+            {
+              "x": 75,
+              "z": 211
+            },
+            {
+              "x": 75,
+              "z": 212
+            },
+            {
+              "x": 75,
+              "z": 213
+            },
+            {
+              "x": 75.1,
+              "z": 212.9
+            }
+          ],
+          "proofLength": 350.65756087225986
+        },
+        {
+          "wallId": 2265,
+          "side": {
+            "x": 73.58,
+            "z": 6
+          },
+          "edge": {
+            "x": 75.1,
+            "z": 212.9
+          },
+          "edgeRoute": "found",
+          "proofPoints": 353,
+          "formation": [
+            {
+              "x": 73.58,
+              "z": 6
+            },
+            {
+              "x": 71,
+              "z": 4
+            },
+            {
+              "x": 71,
+              "z": 10
+            },
+            {
+              "x": 67,
+              "z": 10
+            },
+            {
+              "x": 63,
+              "z": 10
+            },
+            {
+              "x": 60,
+              "z": 8
+            },
+            {
+              "x": 60,
+              "z": 4
+            },
+            {
+              "x": 60,
+              "z": 0
+            },
+            {
+              "x": 56,
+              "z": 0
+            },
+            {
+              "x": 52,
+              "z": 0
+            },
+            {
+              "x": 52,
+              "z": -5
+            }
+          ],
+          "greedyCount": 11,
+          "groupExterior": true,
+          "routesToSide": [
+            "found",
+            "found",
+            "found",
+            "found",
+            "found",
+            "found",
+            "found",
+            "found",
+            "found",
+            "found",
+            "found"
+          ],
+          "proofHead": [
+            {
+              "x": 73.58,
+              "z": 6
+            },
+            {
+              "x": 74,
+              "z": 6
+            },
+            {
+              "x": 73,
+              "z": 6
+            },
+            {
+              "x": 72,
+              "z": 6
+            },
+            {
+              "x": 72,
+              "z": 5
+            },
+            {
+              "x": 72,
+              "z": 4
+            },
+            {
+              "x": 71,
+              "z": 4
+            },
+            {
+              "x": 71,
+              "z": 5
+            }
+          ],
+          "proofTail": [
+            {
+              "x": 75,
+              "z": 207
+            },
+            {
+              "x": 75,
+              "z": 208
+            },
+            {
+              "x": 75,
+              "z": 209
+            },
+            {
+              "x": 75,
+              "z": 210
+            },
+            {
+              "x": 75,
+              "z": 211
+            },
+            {
+              "x": 75,
+              "z": 212
+            },
+            {
+              "x": 75,
+              "z": 213
+            },
+            {
+              "x": 75.1,
+              "z": 212.9
+            }
+          ],
+          "proofLength": 350.5614213562373
+        }
+      ],
+      "nearbySides": [
+        {
+          "wallId": 283,
+          "groupId": 4846,
+          "x": 71.64235498012182,
+          "z": 3.3576450198781713,
+          "status": "unknown",
+          "routeReason": 3,
+          "graphReason": 8,
+          "frontier": {
+            "x": 30,
+            "z": 222
+          }
+        },
+        {
+          "wallId": 283,
+          "groupId": 4846,
+          "x": 71.94235498012182,
+          "z": 3.657645019878171,
+          "status": "unknown",
+          "routeReason": 3,
+          "graphReason": 8,
+          "frontier": {
+            "x": 30,
+            "z": 222
+          }
+        },
+        {
+          "wallId": 2265,
+          "groupId": 5116,
+          "x": 73.58,
+          "z": 6.3,
+          "status": "unknown",
+          "routeReason": 3,
+          "graphReason": 8,
+          "frontier": {
+            "x": 30,
+            "z": 222
+          }
+        },
+        {
+          "wallId": 2265,
+          "groupId": 5116,
+          "x": 73.58,
+          "z": 6,
+          "status": "unknown",
+          "routeReason": 3,
+          "graphReason": 8,
+          "frontier": {
+            "x": 30,
+            "z": 222
+          }
+        }
+      ]
+    },
+    {
+      "actorId": "animal-5156",
+      "species": "buffalo",
+      "position": {
+        "x": -19.65,
+        "z": -6
+      },
+      "region": {
+        "ids": [
+          92736
+        ],
+        "unknown": false
+      },
+      "crop": {
+        "status": "unknown",
+        "frontier": null,
+        "regionQueries": 12,
+        "routeQueries": 0,
+        "diagnostics": {
+          "firstCandidateCrop": 0,
+          "preferredTrials": 0,
+          "lastPreferredRouteCount": -2147483648,
+          "siteTrials": 0,
+          "lastRouteCount": -2147483648,
+          "lastRegisterResult": -2147483648,
+          "unknownCauseMask": 4
+        }
+      },
+      "wall": {
+        "status": "unknown",
+        "candidatesExamined": 2,
+        "routeQueries": 2
+      },
+      "relevantWallSides": 2,
+      "birthExteriorEdge": {
+        "x": -69.03,
+        "z": -213.03
+      },
+      "exteriorCandidates": [
+        {
+          "wallId": 283,
+          "side": {
+            "x": 71.73427886167607,
+            "z": 3.2657211383239204
+          },
+          "edge": {
+            "x": 74.97,
+            "z": 213.03
+          },
+          "edgeRoute": "found",
+          "proofPoints": 350,
+          "formation": null,
+          "greedyCount": 11,
+          "groupExterior": false,
+          "routesToSide": null,
+          "proofHead": [
+            {
+              "x": 71.73427886167607,
+              "z": 3.2657211383239204
+            },
+            {
+              "x": 72,
+              "z": 3
+            },
+            {
+              "x": 72,
+              "z": 4
+            },
+            {
+              "x": 71,
+              "z": 4
+            },
+            {
+              "x": 71,
+              "z": 5
+            },
+            {
+              "x": 71,
+              "z": 6
+            },
+            {
+              "x": 71,
+              "z": 7
+            },
+            {
+              "x": 71,
+              "z": 8
+            }
+          ],
+          "proofTail": [
+            {
+              "x": 75,
+              "z": 207
+            },
+            {
+              "x": 75,
+              "z": 208
+            },
+            {
+              "x": 75,
+              "z": 209
+            },
+            {
+              "x": 75,
+              "z": 210
+            },
+            {
+              "x": 75,
+              "z": 211
+            },
+            {
+              "x": 75,
+              "z": 212
+            },
+            {
+              "x": 75,
+              "z": 213
+            },
+            {
+              "x": 74.97,
+              "z": 213.03
+            }
+          ],
+          "proofLength": 347.4182128444981
+        },
+        {
+          "wallId": 283,
+          "side": {
+            "x": 72.03427886167607,
+            "z": 3.5657211383239202
+          },
+          "edge": {
+            "x": 74.97,
+            "z": 213.03
+          },
+          "edgeRoute": "found",
+          "proofPoints": 349,
+          "formation": null,
+          "greedyCount": 11,
+          "groupExterior": false,
+          "routesToSide": null,
+          "proofHead": [
+            {
+              "x": 72.03427886167607,
+              "z": 3.5657211383239202
+            },
+            {
+              "x": 72,
+              "z": 4
+            },
+            {
+              "x": 71,
+              "z": 4
+            },
+            {
+              "x": 71,
+              "z": 5
+            },
+            {
+              "x": 71,
+              "z": 6
+            },
+            {
+              "x": 71,
+              "z": 7
+            },
+            {
+              "x": 71,
+              "z": 8
+            },
+            {
+              "x": 71,
+              "z": 9
+            }
+          ],
+          "proofTail": [
+            {
+              "x": 75,
+              "z": 207
+            },
+            {
+              "x": 75,
+              "z": 208
+            },
+            {
+              "x": 75,
+              "z": 209
+            },
+            {
+              "x": 75,
+              "z": 210
+            },
+            {
+              "x": 75,
+              "z": 211
+            },
+            {
+              "x": 75,
+              "z": 212
+            },
+            {
+              "x": 75,
+              "z": 213
+            },
+            {
+              "x": 74.97,
+              "z": 213.03
+            }
+          ],
+          "proofLength": 346.47805603173214
+        }
+      ],
+      "nearbySides": [
+        {
+          "wallId": 283,
+          "groupId": 5116,
+          "x": 71.73427886167607,
+          "z": 3.2657211383239204,
+          "status": "unknown",
+          "routeReason": 3,
+          "graphReason": 8,
+          "frontier": {
+            "x": 30,
+            "z": 222
+          }
+        },
+        {
+          "wallId": 283,
+          "groupId": 5116,
+          "x": 72.03427886167607,
+          "z": 3.5657211383239202,
+          "status": "unknown",
+          "routeReason": 3,
+          "graphReason": 8,
+          "frontier": {
+            "x": 30,
+            "z": 222
+          }
+        }
+      ]
+    },
+    {
+      "actorId": "animal-5163",
+      "species": "hyena",
+      "position": {
+        "x": -19.65,
+        "z": 23
+      },
+      "region": {
+        "ids": [
+          93888
+        ],
+        "unknown": false
+      },
+      "crop": {
+        "status": "unknown",
+        "frontier": null,
+        "regionQueries": 12,
+        "routeQueries": 0,
+        "diagnostics": {
+          "firstCandidateCrop": 0,
+          "preferredTrials": 0,
+          "lastPreferredRouteCount": -2147483648,
+          "siteTrials": 0,
+          "lastRouteCount": -2147483648,
+          "lastRegisterResult": -2147483648,
+          "unknownCauseMask": 4
+        }
+      },
+      "wall": {
+        "status": "unknown",
+        "candidatesExamined": 8,
+        "routeQueries": 8
+      },
+      "relevantWallSides": 8,
+      "birthExteriorEdge": {
+        "x": -21.099999999999994,
+        "z": 213.1
+      },
+      "exteriorCandidates": [
+        {
+          "wallId": 283,
+          "side": {
+            "x": 71.78377633635914,
+            "z": 3.2162236636408617
+          },
+          "edge": {
+            "x": 74.9,
+            "z": 213.1
+          },
+          "edgeRoute": "found",
+          "proofPoints": 326,
+          "formation": null,
+          "greedyCount": 11,
+          "groupExterior": false,
+          "routesToSide": null,
+          "proofHead": [
+            {
+              "x": 71.78377633635914,
+              "z": 3.2162236636408617
+            },
+            {
+              "x": 72,
+              "z": 3
+            },
+            {
+              "x": 72,
+              "z": 4
+            },
+            {
+              "x": 71,
+              "z": 4
+            },
+            {
+              "x": 71,
+              "z": 5
+            },
+            {
+              "x": 71,
+              "z": 6
+            },
+            {
+              "x": 71,
+              "z": 7
+            },
+            {
+              "x": 71,
+              "z": 8
+            }
+          ],
+          "proofTail": [
+            {
+              "x": 75,
+              "z": 207
+            },
+            {
+              "x": 75,
+              "z": 208
+            },
+            {
+              "x": 75,
+              "z": 209
+            },
+            {
+              "x": 75,
+              "z": 210
+            },
+            {
+              "x": 75,
+              "z": 211
+            },
+            {
+              "x": 75,
+              "z": 212
+            },
+            {
+              "x": 75,
+              "z": 213
+            },
+            {
+              "x": 74.9,
+              "z": 213.1
+            }
+          ],
+          "proofLength": 323.4472077938642
+        },
+        {
+          "wallId": 283,
+          "side": {
+            "x": 72.08377633635914,
+            "z": 3.5162236636408615
+          },
+          "edge": {
+            "x": 74.9,
+            "z": 213.1
+          },
+          "edgeRoute": "found",
+          "proofPoints": 325,
+          "formation": null,
+          "greedyCount": 11,
+          "groupExterior": false,
+          "routesToSide": null,
+          "proofHead": [
+            {
+              "x": 72.08377633635914,
+              "z": 3.5162236636408615
+            },
+            {
+              "x": 72,
+              "z": 4
+            },
+            {
+              "x": 71,
+              "z": 4
+            },
+            {
+              "x": 71,
+              "z": 5
+            },
+            {
+              "x": 71,
+              "z": 6
+            },
+            {
+              "x": 71,
+              "z": 7
+            },
+            {
+              "x": 71,
+              "z": 8
+            },
+            {
+              "x": 70,
+              "z": 8
+            }
+          ],
+          "proofTail": [
+            {
+              "x": 75,
+              "z": 207
+            },
+            {
+              "x": 75,
+              "z": 208
+            },
+            {
+              "x": 75,
+              "z": 209
+            },
+            {
+              "x": 75,
+              "z": 210
+            },
+            {
+              "x": 75,
+              "z": 211
+            },
+            {
+              "x": 75,
+              "z": 212
+            },
+            {
+              "x": 75,
+              "z": 213
+            },
+            {
+              "x": 74.9,
+              "z": 213.1
+            }
+          ],
+          "proofLength": 322.6323979525785
+        },
+        {
+          "wallId": 2265,
+          "side": {
+            "x": 73.78,
+            "z": 6.3
+          },
+          "edge": {
+            "x": 74.9,
+            "z": 213.1
+          },
+          "edgeRoute": "found",
+          "proofPoints": 329,
+          "formation": null,
+          "greedyCount": 11,
+          "groupExterior": false,
+          "routesToSide": null,
+          "proofHead": [
+            {
+              "x": 73.78,
+              "z": 6.3
+            },
+            {
+              "x": 74,
+              "z": 6
+            },
+            {
+              "x": 73,
+              "z": 6
+            },
+            {
+              "x": 72,
+              "z": 6
+            },
+            {
+              "x": 72,
+              "z": 5
+            },
+            {
+              "x": 72,
+              "z": 4
+            },
+            {
+              "x": 71,
+              "z": 4
+            },
+            {
+              "x": 71,
+              "z": 5
+            }
+          ],
+          "proofTail": [
+            {
+              "x": 75,
+              "z": 207
+            },
+            {
+              "x": 75,
+              "z": 208
+            },
+            {
+              "x": 75,
+              "z": 209
+            },
+            {
+              "x": 75,
+              "z": 210
+            },
+            {
+              "x": 75,
+              "z": 211
+            },
+            {
+              "x": 75,
+              "z": 212
+            },
+            {
+              "x": 75,
+              "z": 213
+            },
+            {
+              "x": 74.9,
+              "z": 213.1
+            }
+          ],
+          "proofLength": 326.5134428609921
+        },
+        {
+          "wallId": 2265,
+          "side": {
+            "x": 73.78,
+            "z": 6
+          },
+          "edge": {
+            "x": 74.9,
+            "z": 213.1
+          },
+          "edgeRoute": "found",
+          "proofPoints": 329,
+          "formation": null,
+          "greedyCount": 11,
+          "groupExterior": false,
+          "routesToSide": null,
+          "proofHead": [
+            {
+              "x": 73.78,
+              "z": 6
+            },
+            {
+              "x": 74,
+              "z": 6
+            },
+            {
+              "x": 73,
+              "z": 6
+            },
+            {
+              "x": 72,
+              "z": 6
+            },
+            {
+              "x": 72,
+              "z": 5
+            },
+            {
+              "x": 72,
+              "z": 4
+            },
+            {
+              "x": 71,
+              "z": 4
+            },
+            {
+              "x": 71,
+              "z": 5
+            }
+          ],
+          "proofTail": [
+            {
+              "x": 75,
+              "z": 207
+            },
+            {
+              "x": 75,
+              "z": 208
+            },
+            {
+              "x": 75,
+              "z": 209
+            },
+            {
+              "x": 75,
+              "z": 210
+            },
+            {
+              "x": 75,
+              "z": 211
+            },
+            {
+              "x": 75,
+              "z": 212
+            },
+            {
+              "x": 75,
+              "z": 213
+            },
+            {
+              "x": 74.9,
+              "z": 213.1
+            }
+          ],
+          "proofLength": 326.3614213562373
+        }
+      ],
+      "nearbySides": [
+        {
+          "wallId": 283,
+          "groupId": 4846,
+          "x": 71.78377633635914,
+          "z": 3.2162236636408617,
+          "status": "unknown",
+          "routeReason": 3,
+          "graphReason": 8,
+          "frontier": {
+            "x": 30,
+            "z": 222
+          }
+        },
+        {
+          "wallId": 283,
+          "groupId": 4846,
+          "x": 72.08377633635914,
+          "z": 3.5162236636408615,
+          "status": "unknown",
+          "routeReason": 3,
+          "graphReason": 8,
+          "frontier": {
+            "x": 30,
+            "z": 222
+          }
+        },
+        {
+          "wallId": 2265,
+          "groupId": 5116,
+          "x": 73.78,
+          "z": 6.3,
+          "status": "unknown",
+          "routeReason": 3,
+          "graphReason": 8,
+          "frontier": {
+            "x": 30,
+            "z": 222
+          }
+        },
+        {
+          "wallId": 2265,
+          "groupId": 5116,
+          "x": 73.78,
+          "z": 6,
+          "status": "unknown",
+          "routeReason": 3,
+          "graphReason": 8,
+          "frontier": {
+            "x": 30,
+            "z": 222
+          }
+        },
+        {
+          "wallId": 2266,
+          "groupId": 5076,
+          "x": 74.274,
+          "z": 8.732000000000001,
+          "status": "unknown",
+          "routeReason": 3,
+          "graphReason": 8,
+          "frontier": {
+            "x": 30,
+            "z": 222
+          }
+        },
+        {
+          "wallId": 2265,
+          "groupId": 5116,
+          "x": 73.78,
+          "z": 5.7,
+          "status": "unknown",
+          "routeReason": 3,
+          "graphReason": 8,
+          "frontier": {
+            "x": 30,
+            "z": 222
+          }
+        },
+        {
+          "wallId": 2266,
+          "groupId": 5076,
+          "x": 74.499,
+          "z": 9.032,
+          "status": "unknown",
+          "routeReason": 3,
+          "graphReason": 8,
+          "frontier": {
+            "x": 30,
+            "z": 222
+          }
+        },
+        {
+          "wallId": 2266,
+          "groupId": 5076,
+          "x": 74.72399999999999,
+          "z": 9.332,
+          "status": "unknown",
+          "routeReason": 3,
+          "graphReason": 8,
+          "frontier": {
+            "x": 30,
+            "z": 222
+          }
+        }
+      ]
+    }
+  ]
+}

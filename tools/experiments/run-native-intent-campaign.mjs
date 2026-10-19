@@ -19,6 +19,7 @@ if(!['intent','intent-wall','control'].includes(mode))
 const path=resolve(out),started=performance.now(),rows=[];
 let latestState=null,latestNav=null,dayWorkerSnapshot=[];
 const captureRaidDay=Number(process.env.WILD_ENGINE_CAPTURE_RAID_DAY??0);
+const captureRaidEntryDay=Number(process.env.WILD_ENGINE_CAPTURE_RAID_ENTRY_DAY??0);
 const captureDayEnd=Number(process.env.WILD_ENGINE_CAPTURE_DAY_END??0);
 const captureStateDay=Number(process.env.WILD_ENGINE_CAPTURE_STATE_DAY??0);
 const captureStateTime=Number(process.env.WILD_ENGINE_CAPTURE_STATE_TIME??0);
@@ -36,6 +37,7 @@ if(defenseGate&&!['event','periodic'].includes(defenseGate))
   throw RangeError('Unknown defense event gate');
 const decisionProfile=process.env.WILD_ENGINE_DECISION_PROFILE==='1';
 let capturedRaid=false;
+let capturedRaidEntry=false,lastPreRaidEntry=null;
 let capturedState=false;
 let capturedOccupiedFallback=false;
 let cpuProfiler=null,cpuProfileFinished=Promise.resolve();
@@ -95,8 +97,21 @@ try{
   const result=await simulateNativeCampaign({...parameters,
     culture:'mapungubwe',nativeEvidence:false,
     openingFactory,entryDriverFactory,
+    onBeforeTick:(state,nav,{loaded})=>{
+      if(capturedRaidEntry||captureRaidEntryDay!==state.day||
+        state.raid?.id===`raid-${state.day}-night`||state.time<450)return;
+      lastPreRaidEntry={state:serialize(state),navigation:{
+        bounds:[...nav.activeBounds],view:structuredClone(nav.raidView),
+        version:nav.version,residentChunks:[...loaded.keys()].sort()}};
+    },
     onTick:(state,nav)=>{
       latestState=state;latestNav=nav;nav.serviceRaidConnectivityDemand?.();
+      if(!capturedRaidEntry&&captureRaidEntryDay===state.day&&
+        state.raid?.animals.length&&lastPreRaidEntry){
+        capturedRaidEntry=true;
+        writeFileSync(path.replace(/\.json$/,
+          `-day${state.day}-pre-entry.json`),JSON.stringify(lastPreRaidEntry));
+      }
       if(cpuProfileDay===state.day&&!cpuProfiler){
         cpuProfiler=new InspectorSession();cpuProfiler.connect();
         cpuProfiler.post('Profiler.enable');cpuProfiler.post('Profiler.start');
