@@ -2,6 +2,7 @@
 import {readFileSync,writeFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
 import {createHash} from 'node:crypto';
+import {execFileSync} from 'node:child_process';
 import {pathToFileURL} from 'node:url';
 
 const fixture=process.argv[2],output=process.argv[3];
@@ -10,6 +11,7 @@ const modulePath=process.env.WG_QA_PLAYWRIGHT_MODULE;
 if(!modulePath)throw Error('Set WG_QA_PLAYWRIGHT_MODULE to a local Playwright index.mjs');
 const {chromium}=await import(pathToFileURL(modulePath).href);
 const regionPreflight=process.env.WG_QA_REGION_PREFLIGHT==='1';
+const sharedWitness=process.env.WG_QA_SHARED_WITNESS==='1';
 const frozen=gunzipSync(readFileSync(fixture)).toString();
 const browser=await chromium.launch({channel:process.env.WG_QA_BROWSER??'chrome',headless:process.env.WG_QA_HEADLESS!=='0'});
 const page=await browser.newPage({viewport:{width:1280,height:800}});
@@ -17,7 +19,7 @@ const errors=[];
 page.on('pageerror',error=>errors.push(String(error)));
 try{
   await page.goto(`${process.env.WG_QA_URL??'http://127.0.0.1:5188'}/tests/browser/wild-engine-raid-entry-benchmark.html`);
-  const result=await page.evaluate(async({frozen,regionPreflight})=>{
+  const result=await page.evaluate(async({frozen,regionPreflight,sharedWitness})=>{
     const {deserialize}=await import('/src/persistence/snapshots.js');
     const {createSpatialGameSession}=await import('/src/world/wild-engine/spatial-game-session.js');
     const {createSpatialNavigationMovement}=await import('/src/world/wild-engine/spatial-navigation-movement.js');
@@ -37,7 +39,7 @@ try{
       const planner=createEventDrivenTaskPlanner(session);planner.resetFromState(state);
       const specs=state.raid.animals.map(item=>({radius:item.radius}));
       const original={entries:state.raid.animals.map(item=>item.spawn),exits:state.raid.animals.map(item=>item.exit)};
-      const counters={},routeStatuses={},routeStatusMs={},routeInputs=new Map();
+      const counters={},routeStatuses={},routeStatusMs={},routeInputs=new Map(),routeDestinations=new Map();
       for(const key of ['spatialRouteStatus','spatialExteriorEdge','spatialRelevantWallApproachSides','spatialWallApproachSides','segmentClear','walkable']){
         if(typeof nav[key]!=='function')continue;
         const originalFn=nav[key];
@@ -48,6 +50,9 @@ try{
             routeStatusMs[value]=(routeStatusMs[value]??0)+duration;
             const [from,to,radius]=args,k=`${from.x.toFixed(2)},${from.z.toFixed(2)}>${to.x.toFixed(2)},${to.z.toFixed(2)}@${radius}`;
             const input=routeInputs.get(k)??{count:0,statuses:{}};input.count++;input.statuses[value]=(input.statuses[value]??0)+1;routeInputs.set(k,input);
+            const destination=`${to.x.toFixed(2)},${to.z.toFixed(2)}@${radius}`;
+            const group=routeDestinations.get(destination)??{calls:0,ms:0,statuses:{}};
+            group.calls++;group.ms+=duration;group.statuses[value]=(group.statuses[value]??0)+1;routeDestinations.set(destination,group);
           }
         }};
       }
@@ -61,6 +66,21 @@ try{
           return route(start,end,radius);
         };
       }
+      let witnessReuse=0,witnessChecks=0,witnessMs=0;
+      if(sharedWitness){
+        const route=nav.spatialRouteStatus,witnesses=new Map();
+        nav.spatialRouteStatus=(start,end,radius)=>{
+          const key=`${end.x},${end.z}@${radius}`,witness=witnesses.get(key);
+          if(witness){
+            const at=performance.now(),clear=nav.segmentClear(start,witness,radius,null,false);
+            witnessMs+=performance.now()-at;witnessChecks++;
+            if(clear){witnessReuse++;return 'found';}
+          }
+          const status=route(start,end,radius);
+          if(status==='found'&&!witness)witnesses.set(key,start);
+          return status;
+        };
+      }
       let beforeFrame=0,afterFrame=0,selectionMs=0,selected=null;
       await new Promise(resolve=>requestAnimationFrame(t=>{beforeFrame=t;resolve();}));
       await new Promise(resolve=>requestAnimationFrame(()=>{
@@ -72,13 +92,17 @@ try{
         wallEnvelope:raidWallEnvelope(state,nav),selectionMs,frameGapMs:afterFrame-beforeFrame,
         selectedWall:selected?.wallOpportunity??null,selectionBounds:selected?.selectionBounds??null,
         counters,routeStatuses,routeStatusMs,preflightCalls,preflightBlocked,preflightMs,
+        witnessReuse,witnessChecks,witnessMs,
+        routeDestinations:[...routeDestinations].map(([destination,stats])=>({destination,...stats})).sort((a,b)=>b.ms-a.ms),
         uniqueRouteInputs:routeInputs.size,duplicateRouteInputs:[...routeInputs.values()].filter(row=>row.count>1).length,
         linearMemoryBytes:session.core.wasm.memory?.buffer?.byteLength??null};
     }finally{session.dispose();}
-  },{frozen,regionPreflight});
-  const report={kind:'chrome-main-thread-frozen-raid-entry',fixture,regionPreflight,
+  },{frozen,regionPreflight,sharedWitness});
+  const report={kind:'chrome-main-thread-frozen-raid-entry',fixture,regionPreflight,sharedWitness,
+    gitHead:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),
     fixtureSha256:createHash('sha256').update(readFileSync(fixture)).digest('hex'),
     wasmSha256:createHash('sha256').update(readFileSync('src/world/wild-engine/spatial-savanna.wasm')).digest('hex'),
+    entrySourceSha256:createHash('sha256').update(readFileSync('src/simulation/raid-exterior-entry.js')).digest('hex'),
     chromeVersion:browser.version(),result,errors};
   writeFileSync(output,JSON.stringify(report,null,2)+'\n');
   console.log(JSON.stringify(report.result));

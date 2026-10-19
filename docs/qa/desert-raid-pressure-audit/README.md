@@ -506,3 +506,40 @@ The preflight skipped 37 of 51 full-route calls, but selection time remained
 eight `found` routes consumed 222.8 ms. Connectivity filtering therefore
 removes cheap calls while adding its own work and offers no measured gain.
 It stays confined to the benchmark; no production preflight was added.
+
+### Shared positive wall-route witness
+
+The expensive eight `found` routes in that frozen entry all led from nearby
+warthog births to the **same** native wall face `(70.50, 10.42)` at radius
+`1.1`. A positive route from the first birth can be reused as an existence
+proof for another birth only when Wild Engine's directed static-collision
+check certifies the segment from that birth to the witness. The complete path
+is then that short segment followed by the already proved route. Different
+wall faces and movement radii never share a witness, `unknown` is never
+stored, and witnesses live only during one synchronous entry decision. The
+ordinary native planner still builds each animal's actual movement route.
+
+An isolated Chrome ABBA comparison on the same frozen state measured
+[control A](desierto123-d17-witness-control-a.json) and
+[control B](desierto123-d17-witness-control-b.json) at 274.9/281.9 ms, versus
+[shared A](desierto123-d17-witness-shared-a.json) and
+[shared B](desierto123-d17-witness-shared-b.json) at 78.9/82.0 ms. Seven of
+the eight positive native route calls became seven directed physical segment
+checks totaling under 1 ms. The selected entry and fallback status were
+unchanged. The [integrated browser run](desierto123-d17-native-witness-integrated.json)
+took 77.2 ms, with 44 rather than 51 native route calls and the same 37
+`blocked` and six `unknown` outcomes. This is a main-thread calculation test
+in a minimal page, not a rendered-game FPS measurement.
+
+The matched 17-night Desert/123 campaigns with the [new witness](desierto123-wall-witness-17.json.gz)
+and [prior entry selector](desierto123-wall-witness-control-17.json.gz) both
+completed. All 17 daily serialized-state hashes, raid records, final money
+and crop counts matched; the final daily hash was
+`911750860da95ad36041e48778654adf258bce5abf8b03c80e52b4f43fb2a865`.
+Total wall time was 43.53 versus 43.25 seconds respectively, so the local
+browser stall improvement does not imply an overall campaign speedup. This
+matched pair used the same runner, parameters and WASM; it should not be
+compared as a pure before/after against earlier campaign reports generated
+with different harness settings. Directed mixed-profile, blocked-prefix,
+`unknown`, and native frozen-geometry regressions pass. The remaining raid
+entry and late zero-contact limitations still keep PR #143 experimental.

@@ -1,0 +1,120 @@
+{
+  "kind": "chrome-main-thread-frozen-raid-entry",
+  "fixture": "docs/qa/desert-raid-pressure-audit/desierto123-d17-waiting-state.json.gz",
+  "regionPreflight": false,
+  "sharedWitness": true,
+  "fixtureSha256": "68d31d7c2a9e99054ac9819b3301161a9c71c4b5caab41d470dff69486b39116",
+  "wasmSha256": "b3db734225b122095ae43d350c6a21a444115d48ce805b1363d591bc4f5641de",
+  "chromeVersion": "155.0.8059.84",
+  "result": {
+    "day": 17,
+    "animals": 8,
+    "walls": 127,
+    "wallEnvelope": [
+      68.28,
+      -17.664430050110404,
+      97.71267515012954,
+      16.719885625154735
+    ],
+    "selectionMs": 78.89999999850988,
+    "frameGapMs": 83.39999999999986,
+    "selectedWall": null,
+    "selectionBounds": null,
+    "counters": {
+      "walkable": {
+        "calls": 16,
+        "ms": 0.10000000149011612
+      },
+      "segmentClear": {
+        "calls": 9,
+        "ms": 0.8999999985098839
+      },
+      "spatialWallApproachSides": {
+        "calls": 1,
+        "ms": 3.8000000044703484
+      },
+      "spatialRouteStatus": {
+        "calls": 44,
+        "ms": 46.69999999552965
+      }
+    },
+    "routeStatuses": {
+      "blocked": 37,
+      "found": 1,
+      "unknown": 6
+    },
+    "routeStatusMs": {
+      "blocked": 10.299999997019768,
+      "found": 34,
+      "unknown": 2.399999998509884
+    },
+    "preflightCalls": 0,
+    "preflightBlocked": 0,
+    "preflightMs": 0,
+    "witnessReuse": 7,
+    "witnessChecks": 7,
+    "witnessMs": 0.7999999970197678,
+    "routeDestinations": [
+      {
+        "destination": "70.50,10.42@1.1",
+        "calls": 1,
+        "ms": 34,
+        "statuses": {
+          "found": 1
+        }
+      },
+      {
+        "destination": "74.22,-10.42@1.1",
+        "calls": 8,
+        "ms": 2.7000000029802322,
+        "statuses": {
+          "blocked": 8
+        }
+      },
+      {
+        "destination": "95.42,-3.16@1.1",
+        "calls": 6,
+        "ms": 2.399999998509884,
+        "statuses": {
+          "unknown": 6
+        }
+      },
+      {
+        "destination": "72.50,6.58@1.1",
+        "calls": 8,
+        "ms": 2.3999999910593033,
+        "statuses": {
+          "blocked": 8
+        }
+      },
+      {
+        "destination": "70.50,6.58@1.1",
+        "calls": 8,
+        "ms": 2.1000000089406967,
+        "statuses": {
+          "blocked": 8
+        }
+      },
+      {
+        "destination": "74.22,-6.58@1.1",
+        "calls": 8,
+        "ms": 1.9999999850988388,
+        "statuses": {
+          "blocked": 8
+        }
+      },
+      {
+        "destination": "99.13,-4.14@1.1",
+        "calls": 5,
+        "ms": 1.1000000089406967,
+        "statuses": {
+          "blocked": 5
+        }
+      }
+    ],
+    "uniqueRouteInputs": 44,
+    "duplicateRouteInputs": 0,
+    "linearMemoryBytes": 21495808
+  },
+  "errors": []
+}

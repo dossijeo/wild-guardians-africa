@@ -1,6 +1,7 @@
 import {exteriorGroupWitness} from './raid-exterior-connectivity.js';
 import {prepareExteriorDetour,detourRaidFormation} from './raid-exterior-detour.js';
 import {wallCollisionFrame} from '../world/wall-collision-frame.js';
+import {createWallRouteWitness} from './raid-wall-route-witness.js';
 const outside=(p,r,b)=>p.x-r>b[2]||p.x+r<b[0]||p.z-r>b[3]||p.z+r<b[1];
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 export const PROJECTED_DETOUR_LIMIT=4;
@@ -43,7 +44,13 @@ function groupWitness(entry,specs,box,nav){return exteriorGroupWitness(entry,spe
 // the ordinary target planner still chooses and validates the final wall.
 function wallAttackOpportunity(entry,specs,box,nav){
  if(!box||!nav.spatialWallApproachSides||!nav.spatialRouteStatus)return true;
- const byRadius=new Map();
+ const byRadius=new Map(),routeStatus=createWallRouteWitness(nav,elapsed=>{
+  if(!nav.raidSelectionStats)return;
+  nav.raidSelectionStats.raidEntryWallRouteQueries=
+    (nav.raidSelectionStats.raidEntryWallRouteQueries??0)+1;
+  nav.raidSelectionStats.raidEntryWallRouteMs=
+    (nav.raidSelectionStats.raidEntryWallRouteMs??0)+elapsed;
+ });
  for(let index=0;index<specs.length;index++){
   const radius=specs[index].radius,point=entry.entries[index];
   if(!byRadius.has(radius))byRadius.set(radius,nav.spatialWallApproachSides(radius));
@@ -51,17 +58,7 @@ function wallAttackOpportunity(entry,specs,box,nav){
   if(!sides.length)continue;
   const nearest=[...sides].sort((a,b)=>distance(a,point)-distance(b,point)||
     a.wallId-b.wallId).slice(0,8);
-  if(!nearest.some(side=>{
-   const started=nav.raidSelectionStats?performance.now():0,
-     status=nav.spatialRouteStatus(point,side,radius);
-   if(nav.raidSelectionStats){
-    nav.raidSelectionStats.raidEntryWallRouteQueries=
-      (nav.raidSelectionStats.raidEntryWallRouteQueries??0)+1;
-    nav.raidSelectionStats.raidEntryWallRouteMs=
-      (nav.raidSelectionStats.raidEntryWallRouteMs??0)+performance.now()-started;
-   }
-   return status==='found';
-  }))
+  if(!nearest.some(side=>routeStatus(point,side,radius)==='found'))
    return false;
  }
  return true;
@@ -103,6 +100,7 @@ function relevantWallRaidFormation(specs,bounds,nav,box){
        distance(b,nav.raidView.eye)||a.wallId-b.wallId||a.x-b.x||a.z-b.z);
  const nativeWitness=(point,r,wallBox)=>
    !!nav.spatialExteriorEdge(point,r,wallBox);
+ const routeStatus=createWallRouteWitness(nav);
  for(const side of sides.slice(0,12)){
   const edge=nav.spatialExteriorEdge(side,radius,box);
   if(!edge)continue;
@@ -113,7 +111,7 @@ function relevantWallRaidFormation(specs,bounds,nav,box){
   if(!candidate||!exteriorGroupWitness(candidate,specs,box,nav,
     nativeWitness))continue;
   if(!candidate.entries.every((point,index)=>
-    nav.spatialRouteStatus(point,side,specs[index].radius)==='found'))
+    routeStatus(point,side,specs[index].radius)==='found'))
     continue;
   return {...candidate,wallOpportunity:{wallId:side.wallId,
     groupId:side.groupId,x:side.x,z:side.z}};
