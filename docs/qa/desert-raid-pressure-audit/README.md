@@ -492,3 +492,16 @@ Removing those checks solely to shorten the stall could strand animals again.
 A subsequent change should share the region/wall decision or prepare it
 outside the render callback while retaining a positive full-wave route
 certificate; its end-to-end campaign and contact behavior still need tests.
+
+An isolated ABBA experiment tried the existing native connectivity query as
+a conservative preflight before each physical route. The [control A](desierto123-d17-region-control-a.json),
+[preflight A](desierto123-d17-region-preflight-a.json),
+[preflight B](desierto123-d17-region-preflight-b.json), and
+[control B](desierto123-d17-region-control-b.json) selected the same fallback.
+The preflight skipped 37 of 51 full-route calls, but selection time remained
+256.2/256.7 ms versus 256.2/256.5 ms in the controls. A separate
+[status-timed run](desierto123-d17-region-control-c.json) attributed only
+10.2 ms to all 37 `blocked` routes and 2.4 ms to six `unknown` routes; the
+eight `found` routes consumed 222.8 ms. Connectivity filtering therefore
+removes cheap calls while adding its own work and offers no measured gain.
+It stays confined to the benchmark; no production preflight was added.

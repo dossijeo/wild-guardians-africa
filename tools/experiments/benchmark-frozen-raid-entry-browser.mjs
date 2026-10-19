@@ -6,6 +6,7 @@ import {chromium} from 'playwright';
 
 const fixture=process.argv[2],output=process.argv[3];
 if(!fixture||!output)throw Error('Usage: benchmark-frozen-raid-entry-browser.mjs STATE.json.gz OUTPUT.json');
+const regionPreflight=process.env.WG_QA_REGION_PREFLIGHT==='1';
 const frozen=gunzipSync(readFileSync(fixture)).toString();
 const browser=await chromium.launch({channel:'chrome',headless:true});
 const page=await browser.newPage({viewport:{width:1280,height:800}});
@@ -13,7 +14,7 @@ const errors=[];
 page.on('pageerror',error=>errors.push(String(error)));
 try{
   await page.goto(`${process.env.WG_QA_URL??'http://127.0.0.1:5188'}/tests/browser/wild-engine-raid-entry-benchmark.html`);
-  const result=await page.evaluate(async frozen=>{
+  const result=await page.evaluate(async({frozen,regionPreflight})=>{
     const {deserialize}=await import('/src/persistence/snapshots.js');
     const {createSpatialGameSession}=await import('/src/world/wild-engine/spatial-game-session.js');
     const {createSpatialNavigationMovement}=await import('/src/world/wild-engine/spatial-navigation-movement.js');
@@ -33,18 +34,29 @@ try{
       const planner=createEventDrivenTaskPlanner(session);planner.resetFromState(state);
       const specs=state.raid.animals.map(item=>({radius:item.radius}));
       const original={entries:state.raid.animals.map(item=>item.spawn),exits:state.raid.animals.map(item=>item.exit)};
-      const counters={},routeStatuses={},routeInputs=new Map();
+      const counters={},routeStatuses={},routeStatusMs={},routeInputs=new Map();
       for(const key of ['spatialRouteStatus','spatialExteriorEdge','spatialRelevantWallApproachSides','spatialWallApproachSides','segmentClear','walkable']){
         if(typeof nav[key]!=='function')continue;
         const originalFn=nav[key];
         nav[key]=function(...args){const start=performance.now();let value;try{value=originalFn.apply(this,args);return value;}finally{
-          const row=counters[key]??={calls:0,ms:0};row.calls++;row.ms+=performance.now()-start;
+          const duration=performance.now()-start,row=counters[key]??={calls:0,ms:0};row.calls++;row.ms+=duration;
           if(key==='spatialRouteStatus'){
             routeStatuses[value]=(routeStatuses[value]??0)+1;
+            routeStatusMs[value]=(routeStatusMs[value]??0)+duration;
             const [from,to,radius]=args,k=`${from.x.toFixed(2)},${from.z.toFixed(2)}>${to.x.toFixed(2)},${to.z.toFixed(2)}@${radius}`;
             const input=routeInputs.get(k)??{count:0,statuses:{}};input.count++;input.statuses[value]=(input.statuses[value]??0)+1;routeInputs.set(k,input);
           }
         }};
+      }
+      let preflightBlocked=0,preflightMs=0,preflightCalls=0;
+      if(regionPreflight){
+        const route=nav.spatialRouteStatus;
+        nav.spatialRouteStatus=(start,end,radius)=>{
+          const at=performance.now(),connection=nav.regionConnected(start,end,radius,null,false);
+          preflightMs+=performance.now()-at;preflightCalls++;
+          if(connection===false){preflightBlocked++;return 'blocked';}
+          return route(start,end,radius);
+        };
       }
       let beforeFrame=0,afterFrame=0,selectionMs=0,selected=null;
       await new Promise(resolve=>requestAnimationFrame(t=>{beforeFrame=t;resolve();}));
@@ -56,11 +68,12 @@ try{
       return {day:state.day,animals:specs.length,walls:state.structures.filter(s=>s.kind==='wall'&&s.hp>0).length,
         wallEnvelope:raidWallEnvelope(state,nav),selectionMs,frameGapMs:afterFrame-beforeFrame,
         selectedWall:selected?.wallOpportunity??null,selectionBounds:selected?.selectionBounds??null,
-        counters,routeStatuses,uniqueRouteInputs:routeInputs.size,duplicateRouteInputs:[...routeInputs.values()].filter(row=>row.count>1).length,
+        counters,routeStatuses,routeStatusMs,preflightCalls,preflightBlocked,preflightMs,
+        uniqueRouteInputs:routeInputs.size,duplicateRouteInputs:[...routeInputs.values()].filter(row=>row.count>1).length,
         linearMemoryBytes:session.core.wasm.memory?.buffer?.byteLength??null};
     }finally{session.dispose();}
-  },frozen);
-  const report={kind:'chrome-main-thread-frozen-raid-entry',fixture,
+  },{frozen,regionPreflight});
+  const report={kind:'chrome-main-thread-frozen-raid-entry',fixture,regionPreflight,
     fixtureSha256:createHash('sha256').update(readFileSync(fixture)).digest('hex'),
     wasmSha256:createHash('sha256').update(readFileSync('src/world/wild-engine/spatial-savanna.wasm')).digest('hex'),
     chromeVersion:browser.version(),result,errors};
