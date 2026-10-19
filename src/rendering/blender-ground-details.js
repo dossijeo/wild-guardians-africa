@@ -33,7 +33,8 @@ export class BlenderGroundDetails{
   chunk(cx,cz,field,state){
     if(!this.geometry)return;
     const positions=[],seed=field.seed,originX=cx*48,originZ=cz*48,key=cx+','+cz;
-    const blockers=[...state.plants.filter(p=>p.alive!==false),...state.structures.filter(s=>s.status!=='ruined'),...state.villages]
+    const localPlants=state.plants.filter(p=>p.alive!==false&&Math.abs(p.x-originX)<31&&Math.abs(p.z-originZ)<31);
+    const blockers=[...localPlants,...state.structures.filter(s=>s.status!=='ruined'),...state.villages]
       .filter(p=>Math.abs(p.x-originX)<31&&Math.abs(p.z-originZ)<31);
     for(let iz=0;iz<24;iz++)for(let ix=0;ix<24;ix++){
       const bits=hashCell(seed,cx*24+ix,cz*24+iz,6141),chance=(bits>>>0)/4294967296;
@@ -42,7 +43,7 @@ export class BlenderGroundDetails{
       const [cover,meso,moisture,wear]=groundSample417(field,field.c.profile??{},x,z);
       const patch=Math.max(0,Math.min(1,(meso-.39)/.26));
       const clump=(hashCell(seed,Math.floor(x/7),Math.floor(z/7),6142)>>>0)/4294967296;
-      const nearCrop=state.plants.some(p=>p.alive!==false&&d2(x,z,p)>4&&d2(x,z,p)<42);
+      const nearCrop=localPlants.some(p=>d2(x,z,p)>4&&d2(x,z,p)<42);
       const cluster=this.polyHaven?(clump>.50?1.65:.30)*(nearCrop?1.32:1):1;
       const density=Math.max(0,Math.min(.4,.04+.31*cover*patch+.09*(moisture-.5)))*(this.polyHaven?.30:1)*cluster;
       if(chance>density||wear>.27||field.slope(x,z)>.42||field.waterInfo(x,z).inside)continue;
