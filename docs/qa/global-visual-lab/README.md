@@ -78,3 +78,7 @@ El [estudio de orilla](./pond-bank-gradient/README.md) aporta una integración d
 ### Copas: recuperación selectiva de normal autoral
 
 El [ensayo sobre tres árboles de Sabana](./canopy-authored-normal/README.md) confirma que el mapa normal existente está muy atenuado, pero recuperar parte de su influencia no aporta separación de hojas convincente a cámara de juego. Se descarta el ajuste tras 16 capturas día/noche y control Gran Río; sin cambios runtime ni otra ABBA. La revisión de la referencia también descarta desaturar sus copas como objetivo por sí mismo.
+
+### Escala de ondas: dos mecanismos descartados
+
+El [estudio de pintura y normales de agua](./pond-wave-scale/README.md) conserva 32 capturas. Reducir la separación de trazos produce vetas; reducir la longitud de las ondas normales produce franjas de reflexión en cámara baja. Se mantienen los originales y se cambia de componente, sin más barridos de parámetros del agua.
