@@ -28,6 +28,10 @@ const bytes=readFileSync(file),state=deserialize((file.endsWith('.gz')?gunzipSyn
 // removed before constructing the native projection. Never write this state.
 const pruneHistory=process.argv.includes('--prune-history');
 const campaignResidency=process.argv.includes('--campaign-residency');
+const radiusIndex=process.argv.indexOf('--resident-radius');
+const residentRadius=radiusIndex<0?1:Number(process.argv[radiusIndex+1]);
+if(!Number.isInteger(residentRadius)||residentRadius<1||residentRadius>6)
+  throw Error('--resident-radius must be an integer from 1 to 6');
 if(pruneHistory){state.plants=state.plants.filter(plant=>plant.alive);state.crates=state.crates.filter(crate=>!crate.delivered);}
 const module=new WebAssembly.Module(readFileSync(process.env.WILD_ENGINE_SPATIAL_SERVICES_WASM??
   new URL('../../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
@@ -41,7 +45,8 @@ try{
   if(campaignResidency&&!center)throw Error('Campaign residency needs an operational center');
   if(campaignResidency){
     const cx=chunk(center.x),cz=chunk(center.z);
-    for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++)
+    for(let dz=-residentRadius;dz<=residentRadius;dz++)
+      for(let dx=-residentRadius;dx<=residentRadius;dx++)
       desired.set(`${cx+dx},${cz+dz}`,{cx:cx+dx,cz:cz+dz,score:Math.hypot(dx,dz)});
   }else for(let z=chunk(Math.min(...points.map(point=>point.z))-margin);
     z<=chunk(Math.max(...points.map(point=>point.z))+margin);z++)
@@ -52,7 +57,9 @@ try{
   const nav=createSpatialNavigationMovement(session,state),planner=createEventDrivenTaskPlanner(session);
   if(campaignResidency){
     const cx=chunk(center.x),cz=chunk(center.z);
-    nav.setActiveBounds([(cx-1)*48-24,(cz-1)*48-24,(cx+1)*48+24,(cz+1)*48+24]);
+    nav.setActiveBounds([(cx-residentRadius)*48-24,
+      (cz-residentRadius)*48-24,(cx+residentRadius)*48+24,
+      (cz+residentRadius)*48+24]);
     const pose=nativeCameraPose(nav.field,[center.x,0,center.z],nav.field.canyon?0:.5,
       nav.field.canyon?1.18:1.16,nav.field.canyon?34:38);
     nav.setRaidView({x:pose.eye[0],z:pose.eye[2]},center);
@@ -89,6 +96,8 @@ try{
       console.log(JSON.stringify({second,day:state.day,time:state.time,ms,pruneHistory,campaignResidency,
         workers:state.workers.length,plants:state.plants.length,crates:state.crates.length,animals:state.raid?.animals.length??0,
         taskQueries:metrics.nativeTaskRouteQueries,planningCalls:metrics.nativePlanningCalls,
+        routeCacheHits:Number(session.core.wasm.spatial_route_cache_hits()),
+        routeCacheMisses:Number(session.core.wasm.spatial_route_cache_misses()),
         timingMs:{...timing}}));
     }
     const active={day:state.day,time:state.time,elapsed:state.elapsed,nextId:state.nextId,

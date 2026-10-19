@@ -21,6 +21,9 @@ let captured=false;
 const captureDay=Number(process.env.WILD_ENGINE_CAPTURE_RAID_DAY??0);
 const captureDawnDay=Number(process.env.WILD_ENGINE_CAPTURE_DAWN_DAY??0);
 let capturedDawn=false;
+const captureTickDay=Number(process.env.WILD_ENGINE_CAPTURE_TICK_DAY??0);
+const captureTickTime=Number(process.env.WILD_ENGINE_CAPTURE_TICK_TIME??1);
+let capturedTick=false;
 const traceDay=Number(process.env.WILD_ENGINE_TRACE_TICK_DAY??0);
 const tickTrace=[];
 const taskTraceDay=Number(process.env.WILD_ENGINE_TRACE_TASK_DAY??0);
@@ -40,6 +43,11 @@ try{
     nativeWallPlans:true,reloadRaids:false,
     openingFactory,onTick:(state,nav,step)=>{
       taskTraceState=state;
+      if(!capturedTick&&state.day===captureTickDay&&
+        state.time>=captureTickTime){
+        capturedTick=true;
+        writeFileSync(output+'.tick-state.json.gz',gzipSync(serialize(state)));
+      }
       if(taskTraceDay&&state.day>=taskTraceDay-1&&!taskTraceInstalled&&
         nav.intentTaskPlanner){
         taskTraceInstalled=true;

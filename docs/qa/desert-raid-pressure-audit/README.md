@@ -391,3 +391,31 @@ Reproduce the diagnostic trace with:
 ```sh
 WILD_ENGINE_TRACE_TICK_DAY=17 WILD_ENGINE_TRACE_TASK_DAY=17 node tools/experiments/audit-defended-raid-pressure.mjs desierto 17 123 test-results/desierto123-tasktrace-17.json.gz
 ```
+
+The [morning day-17 state](desierto123-d17-morning-state.json.gz) freezes
+three workers and 13 outstanding wall repairs at time 2.0. Individual
+native route probes found that the inconclusive graph searches reported
+`lazy_connected_reason() == 8` (an open sector frontier); some interaction
+sites also reported a missing end connector. Loading a specific frontier
+has not been proven sufficient to finish those repairs. Consequently the
+planner must retain `unknown`, rather than turn it into `blocked` or discard
+the tasks.
+
+A small rejected experiment stored `unknown` in the existing exact-coordinate
+route cache under the selected profile and graph revision. In a 30-second
+frozen replay, an ABBA sequence produced 332 cache misses in each control
+run and 288 misses plus 44 hits in each experimental run. The four total
+times were 193.07, 196.03, 183.49, and 200.09 ms, respectively, with an
+identical active-state hash
+`8f39410e588254c5cd6564063d367d7459ae6b09316897f749032a6d7c2b3c09`.
+The times overlap and the planner still made 323 route requests in each
+variant. This merely accelerates some redundant polling, so the production
+cache was left unchanged. The next candidate is to hold unresolved repair
+decisions against sector, topology, and worker-location dependencies and
+wake them at a relevant event while preserving global FIFO task priority.
+
+The frozen replay is reproducible with:
+
+```sh
+node tools/experiments/profile-frozen-native-tick.mjs docs/qa/desert-raid-pressure-audit/desierto123-d17-morning-state.json.gz 30 --dt 0.1 --campaign-residency --resident-radius 2
+```
