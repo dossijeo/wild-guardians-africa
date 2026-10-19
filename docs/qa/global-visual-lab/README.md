@@ -86,3 +86,8 @@ El [estudio de pintura y normales de agua](./pond-wave-scale/README.md) conserva
 ### Hierba corta nativa: sustitución modelada en Blender
 
 El [ensayo plant_02](./native-short-grass/README.md) reduce geometría manteniendo draws, pero pierde la identidad de mata seca y no mejora claramente a cámara de juego. Se conserva el original. Incluye 24 capturas finales válidas, fuentes Blender y corrección explícita del caché de grupos que invalidaba las primeras comparativas. No se publican tiempos GPU.
+
+## Escena global: contacto y relleno diurno (19 octubre)
+
+- [Contacto integrado](ground-contact-integration/README.md): descartado, efecto imperceptible a cámara de juego en seis biomas.
+- [Coherencia de sombra del suelo](ground-shade-coherence/README.md): dirección prometedora para Sabana, Gran Río y Cañón, sin adopción global; Volcanes pierde lectura y Desierto usa otra rama. 48 capturas A/B por ensayo y ABBA de iluminación sin regresión observada. Original por defecto.
