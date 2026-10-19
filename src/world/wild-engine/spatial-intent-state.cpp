@@ -151,6 +151,7 @@ struct IntentState {
   std::unordered_map<int,WallPortalCache> wallPortalCaches;
   uint64_t wallRevision=0,wallPortalBuilds=0;
   std::vector<double> perimeterRows;
+  std::vector<double> relevantWallRows;
   std::vector<double> intentChanges;
   std::array<double,10> intentResult{};
   uint32_t session=0;
@@ -596,6 +597,28 @@ ServiceRoute findServiceRoute(const Worker& worker,const Target& target,int kind
   }
   return best;
 }
+uint64_t wallBetweenCropGroups(const IntentState& s,const Target& wall,
+                           double startX,double startZ,double radius){
+  const double c=std::cos(wall.yaw),sn=std::sin(wall.yaw);
+  const auto local=[&](double x,double z){
+    return std::pair<double,double>{(x-wall.x)*c-(z-wall.z)*sn,
+      (x-wall.x)*sn+(z-wall.z)*c};
+  };
+  const auto from=local(startX,startZ);
+  if(std::abs(from.second)<1e-8)return 0;
+  const double width=1.09*wall.shape+radius;
+  for(const CropGroup& group:s.cropGroups){
+    for(uint64_t cropId:group.crops){
+      const Target& crop=s.targets.at(cropId);
+      const auto to=local(crop.x,crop.z);
+      if(from.second*to.second>=0)continue;
+      const double crossing=from.first+(to.first-from.first)*
+        (-from.second)/(to.second-from.second);
+      if(std::abs(crossing)<=width)return group.id;
+    }
+  }
+  return 0;
+}
 }
 
 extern "C" {
@@ -620,7 +643,7 @@ void nav_intent_reset(){
   s.plantResult.fill(0);s.nextPlantLease=1;s.centerRevision=0;
   s.changes.clear();s.results.clear();s.routes.clear();clearProposal(s);
   s.wallPortalCaches.clear();s.wallRevision=0;s.wallPortalBuilds=0;
-  s.perimeterRows.clear();
+  s.perimeterRows.clear();s.relevantWallRows.clear();
   s.sequence=0;s.entityRevision=0;s.damageRevision=0;
   s.routeQueries=0;s.candidates=0;
 }
@@ -687,6 +710,43 @@ const double* nav_intent_wall_portals_ptr(){
   return found==state().wallPortalCaches.end()?nullptr:found->second.rows.data();
 }
 double nav_intent_wall_portal_builds(){return double(state().wallPortalBuilds);}
+// Raid-entry advice, not a protection certificate: nominate intact walls
+// whose physical face intersects the line toward a live crop group. Unlike a
+// region portal, a useful partial wall need not disconnect weak components.
+// The caller must still prove a native route to the proposed attack side, and
+// the ordinary attack planner validates the eventual target and reservation.
+int nav_intent_relevant_wall_sides(double startX,double startZ,double radius){
+  IntentState& s=state();s.relevantWallRows.clear();
+  if(!coordinate(startX)||!coordinate(startZ)||!std::isfinite(radius)||
+     radius<=0||radius>2||lazy_selected_context()==1)return -1;
+  rebuildCropGroups(s);
+  if(s.cropGroups.empty())return 0;
+  std::vector<const Target*> walls;
+  for(const auto& [id,target]:s.targets)
+    if(target.kind==3&&target.active&&target.status==0)
+      walls.push_back(&target);
+  std::sort(walls.begin(),walls.end(),[](const Target* a,const Target* b){
+    return a->id<b->id;
+  });
+  for(const Target* wall:walls){
+    const double c=std::cos(wall->yaw),sn=std::sin(wall->yaw);
+    const uint64_t group=wallBetweenCropGroups(s,*wall,startX,startZ,radius);
+    if(!group)continue;
+    const double side=(startX-wall->x)*sn+(startZ-wall->z)*c>0?1:-1;
+    const double offset=.22*wall->wallDepthScale+radius+.6;
+    for(double along:{0.0,-.6,.6}){
+      const double x=wall->x+c*1.09*wall->shape*along+sn*offset*side;
+      const double z=wall->z-sn*1.09*wall->shape*along+c*offset*side;
+      if(!spatial_local_clear(float(x),float(z),float(x),float(z)))continue;
+      s.relevantWallRows.insert(s.relevantWallRows.end(),
+        {double(wall->id),x,z,double(group)});
+    }
+  }
+  return int(s.relevantWallRows.size()/4);
+}
+const double* nav_intent_relevant_wall_sides_ptr(){
+  return state().relevantWallRows.data();
+}
 // Return only the first wall crossing from the animal's weak region toward a
 // sealed crop group. This is a read-only candidate query; the physical route,
 // approach lease and target priority still need validation before adoption.

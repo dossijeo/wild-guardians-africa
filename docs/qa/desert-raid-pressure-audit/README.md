@@ -136,3 +136,38 @@ attack sites are unresolved. Raid entry can then choose a position with a
 positive physical route to that opportunity. Until that contract and a
 sustained multi-biome comparison pass, the prototype remains in the draft PR;
 its 40-night outcome must not be used as a final balance recommendation.
+
+## Partial walls without a region portal (follow-up)
+
+The frozen night-17 probe distinguishes two facts that the old portal index
+conflated. Wall `structure-5123` does not split weak regions, so it is absent
+from `nav_intent_wall_portals`. The new read-only
+`nav_intent_relevant_wall_sides` query nevertheless identifies its crop-facing
+physical side and the associated agricultural group. From `(95, 20)`, a
+warthog has a native `found` route to that side. From its actual birth at
+`(39, -67.65)`, the query nominates ten sides of four other crop-facing walls,
+but every native route to those sides is `blocked`. The query never treats that
+birth as a viable wall attack or changes the confirmed topology or intent
+sequence. This demonstrates why a partial wall must be considered separately
+from a region portal, while a geometrically relevant wall is still not proof
+of an exterior, reachable birth.
+
+An isolated trial that immediately fed those partial-wall candidates into the
+native wall attack planner found `structure-5123` in one route query from the
+valid `(95, 20)` position. It also made ten failed route queries from the
+distant birth. The first 20-night Desert/123 campaign then diverged from the
+control on night 10 and stalled at the start of day 14 with no active raid.
+That integration was **removed**; its [error report](desierto123-nativepartial-20.json.gz)
+and [partial state](desierto123-nativepartial-20-state.json.gz) are preserved
+for diagnosis. A changed
+economic trajectory is not itself a regression, but an unfinished night is.
+
+With only the read-only native query added, the same 20-night
+[experiment](desierto123-readonly-20.json.gz) completed and reproduced the
+[previous binary's](desierto123-previous-20.json.gz) final serialized-state SHA-256
+`0912f9d9e6958fe89271a3d04a4e70197c5019a5dbebeeb51ee3563c10eced97`.
+Every daily living-crop and money count matched. The prior and read-only runs
+took 63.57 and 62.85 seconds respectively; this pair is a compatibility check,
+not evidence of a speed gain. The new API is currently used only by frozen QA,
+not by ordinary raids. The existing route-proven entry prototype still needs
+an exterior birth that can reach a **relevant** wall for the entire wave.

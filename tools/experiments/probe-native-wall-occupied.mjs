@@ -71,6 +71,11 @@ try{
         connected:wasm.lazy_connected(Math.round(animal.x),
           Math.round(animal.z),Math.round(portals[index*5+3]),
           Math.round(portals[index*5+4]))})):[];
+    const relevantCount=actorId&&wasm.nav_intent_relevant_wall_sides?.(
+      animal.x,animal.z,animal.radius);
+    const relevantRows=relevantCount>0?Array.from(new Float64Array(
+      wasm.memory.buffer,wasm.nav_intent_relevant_wall_sides_ptr(),
+      relevantCount*4)):[];
     const entryCandidates=actorId?[
       {x:wallBox[0]-6,z:0},{x:wallBox[2]+6,z:0},
       {x:wallBox[0]-6,z:-10},{x:wallBox[2]+6,z:-10},
@@ -152,6 +157,13 @@ try{
       perimeter:actorId?perimeter:undefined,
       originSamples:actorId?originSamples:undefined,
       portalCount:actorId?portalCount:undefined,
+      relevantWalls:actorId?Array.from({length:relevantRows.length/4},
+        (_,index)=>({id:relevantRows[index*4],
+          x:relevantRows[index*4+1],z:relevantRows[index*4+2],
+          groupId:relevantRows[index*4+3],
+          route:nav.spatialRouteStatus(animal,{
+            x:relevantRows[index*4+1],z:relevantRows[index*4+2]},
+          animal.radius)})):undefined,
       portalRegions:actorId?portalRegions:undefined,
       entryCandidates:actorId?entryCandidates:undefined,
       nearbyPortalRegions:actorId?nearbyPortalRegions.slice(0,48):undefined,

@@ -58,3 +58,59 @@ test('Desert/123 night 10 uses a native-reachable exterior attack side',()=>{
     assert.equal(choice?.target?.kind,'wall');
   }finally{session.dispose();}
 });
+
+test('Desert/123 night 17 exposes a partial crop-facing wall without certifying a raid entry',()=>{
+  const raw=readFileSync(new URL(
+    '../docs/qa/desert-raid-pressure-audit/desierto123-d17-waiting-state.json.gz',
+    import.meta.url));
+  const state=deserialize(gunzipSync(raw).toString()),before=serialize(state);
+  const binary=new WebAssembly.Module(readFileSync(new URL(
+    '../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
+  const loaded=new Map(),session=createSpatialGameSession(binary,state,{
+    loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+  try{
+    const village=state.villages[0],cx=Math.floor((village.x+24)/48),
+      cz=Math.floor((village.z+24)/48);
+    for(let z=cz-4;z<=cz+4;z++)for(let x=cx-4;x<=cx+4;x++){
+      if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+      loaded.set(`${x},${z}`,session.core.chunkPayload());
+    }
+    const planner=createEventDrivenTaskPlanner(session);
+    planner.resetFromState(state);
+    const nav=createSpatialNavigationMovement(session,state),
+      animal=state.raid.animals[0],wasm=session.core.wasm,
+      attackStart={x:95,z:20},farStart=animal.spawn;
+    nav.intentTaskPlanner=planner;
+    nav.setActiveBounds([(cx-4)*48-24,(cz-4)*48-24,
+      (cx+4)*48+24,(cz+4)*48+24]);
+    // Select the real species profile before asking the native index.
+    nav.spatialRouteStatus(attackStart,attackStart,animal.radius);
+    const revision=wasm.lazy_route_revision(),sequence=wasm.nav_intent_last_sequence();
+    const portals=wasm.nav_intent_wall_portals(animal.radius),
+      portalRows=new Float64Array(wasm.memory.buffer,
+        wasm.nav_intent_wall_portals_ptr(),portals*5);
+    assert(!Array.from({length:portals},(_,index)=>portalRows[index*5])
+      .includes(5123),'the partial wall is absent from region portals');
+    const sidesAt=point=>{
+      const count=wasm.nav_intent_relevant_wall_sides(point.x,point.z,
+        animal.radius);
+      const rows=new Float64Array(wasm.memory.buffer,
+        wasm.nav_intent_relevant_wall_sides_ptr(),count*4);
+      return Array.from({length:count},(_,index)=>({
+        wallId:rows[index*4],x:rows[index*4+1],z:rows[index*4+2],
+        groupId:rows[index*4+3]}));
+    };
+    const nearby=sidesAt(attackStart).filter(side=>side.wallId===5123);
+    assert(nearby.length>0,'the native advice includes the partial wall');
+    assert(nearby.some(side=>nav.spatialRouteStatus(attackStart,side,
+      animal.radius)==='found'));
+    assert(nearby.every(side=>side.groupId>0));
+    const distant=sidesAt(farStart);
+    assert(distant.length>0);
+    assert(distant.every(side=>nav.spatialRouteStatus(farStart,side,
+      animal.radius)!=='found'));
+    assert.equal(wasm.lazy_route_revision(),revision);
+    assert.equal(wasm.nav_intent_last_sequence(),sequence);
+    assert.equal(serialize(state),before);
+  }finally{session.dispose();}
+});
