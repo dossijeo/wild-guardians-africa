@@ -31,7 +31,7 @@ WASM. Use `profile-frozen-native-tick.mjs` with the fixture above, `20` seconds,
 A/B/B/A in separate processes. B removes dead crops and delivered crates from
 the in-memory copy before constructing Wild Engine; it never writes the state.
 
-| Arm | 20 simulated seconds of `Game.tick` | Median per simulated second | p95 | `planIfNeeded` total |
+| Arm | 20 simulated seconds, inclusive profiler loop | Median per simulated second | p95 | `planIfNeeded` total |
 | --- | ---: | ---: | ---: | ---: |
 | A1, intact history | 415.4 ms | 8.75 ms | 86.1 ms | 222.7 ms |
 | B1, pruned history | 411.5 ms | 8.70 ms | 89.1 ms | 229.2 ms |
@@ -53,3 +53,9 @@ middle-campaign peak. A later current-engine snapshot including an active raid
 and a phase-level native profile is needed before changing the planner.
 There is no rendering in these measurements, so they say nothing about FPS,
 GPU cost or magic VFX.
+
+The profiler now separates `gameTickMs` from `residencyMs`. A repeat of this
+day-40 replay loaded no additional sectors during the timed window, so the
+old inclusive figures here largely measure `Game.tick`. The [active-raid
+replay](raid-residency.md) does load sectors and shows why that distinction
+matters.
