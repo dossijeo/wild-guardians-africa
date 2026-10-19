@@ -313,14 +313,14 @@ export function createSpatialGameSession(module,state,streamOptions){
     }
     const supported=!unsupported&&removeIds.length<=4&&
       barriers.length<=128&&portals.every(points=>points.length===2);
-    const route=(start,end)=>{
-      if(!supported)return {status:'unknown'};
+    const reachBatch=(origin,targets,reverse=false)=>{
+      if(!supported)return null;
       selectProfile(WORKER_SPATIAL_PROFILE);
-      const result=core.overlayReachBatch(start,[end],removeIds,barriers,
-        {margin:48,portals});
-      return {status:result?.[0]??'unknown'};
+      return core.overlayReachBatch(origin,targets,removeIds,barriers,
+        {reverse,margin:48,portals});
     };
-    return inspect({route});
+    const route=(start,end)=>({status:reachBatch(start,[end])?.[0]??'unknown'});
+    return inspect({route,reachBatch});
   }
   function gateOverlayClear(candidate,points,extraSuppress=[]){
     const parent=activeWallPreview;
