@@ -353,9 +353,10 @@ npm run verify:browser-syntax
 ```
 
 The directed raid suite passes 56 tests and browser syntax validation passes.
-The prepared browser raid-entry worker still uses the legacy JavaScript
-`Navigation` copy and cannot issue the new native wall-opportunity query; this
-experiment therefore improves the synchronous Wild Engine campaign path but
-does not yet demonstrate the same entry behavior with a prepared browser
-result. The PR remains draft pending that integration and sustained runtime
-evaluation on additional seeds/biomes.
+The older `RaidEntryPreparer` worker still uses the JavaScript `Navigation`
+copy, but the Wild Engine campaign driver does **not** instantiate it, and
+the interactive app initializes Wild Engine navigation directly. The native
+entry path is therefore the relevant implementation for both. Its selection
+can be synchronous on the interactive thread; this trial has not yet measured
+the resulting frame latency in the browser. The PR remains draft pending
+that measurement and sustained evaluation on additional seeds/biomes.
