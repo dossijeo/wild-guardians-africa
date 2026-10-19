@@ -21,6 +21,7 @@ try{
     if(view==='facade'){w.controls.target.set(-.72,-.025,.01).applyMatrix4(m.matrixWorld);w.camera.position.set(-.57,.15,.36).applyMatrix4(m.matrixWorld);}
     else if(view==='rear'){w.controls.target.set(-.72,-.025,-.26).applyMatrix4(m.matrixWorld);w.camera.position.set(-.57,.15,-.60).applyMatrix4(m.matrixWorld);}
     else if(view==='awning'){w.controls.target.set(-.883,-.02,-.13).applyMatrix4(m.matrixWorld);w.camera.position.set(-1.15,.20,.15).applyMatrix4(m.matrixWorld);}
+    else if(view==='pottery'){w.controls.target.set(-.674,-.123,.058).applyMatrix4(m.matrixWorld);w.camera.position.set(-.60,-.04,.26).applyMatrix4(m.matrixWorld);}
     else{const center=m.geometry.boundingBox.getCenter(m.position.clone()).applyMatrix4(m.matrixWorld);w.controls.target.copy(center);w.camera.position.copy(center).add(view==='neighbor-close'?{x:3.5,y:2.5,z:4.5}:{x:9,y:6.5,z:11});}
     w.updateCamera=()=>{w.camera.lookAt(w.controls.target);w.camera.updateMatrixWorld();};w.render(.016);document.querySelector('#qaControls').open=false;
     return {camera:w.camera.position.toArray(),target:w.controls.target.toArray(),unit:m.userData.unit?.key};
