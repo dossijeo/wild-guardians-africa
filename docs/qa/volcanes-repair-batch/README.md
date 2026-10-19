@@ -61,6 +61,16 @@ the 19-night total fell from 80.26 to 62.60 seconds for `Game.tick` and from
 114.33 to 97.09 seconds wall time. Those are one run per arm, so the query
 ABBA is stronger evidence of isolated cost than the campaign timing alone.
 
+The grouped variant also completed [30 nights](batch-30.json). Against the
+archived [30-night control summary](baseline-30-summary.json), all daily living
+crop, money, and crop-destruction counts matched. Total `Game.tick` time was
+183.62 seconds versus 309.95 seconds (40.8% lower); total process time was
+250.83 versus 377.67 seconds (33.6% lower). Both had 30 completed nights and
+verified raid evidence. The original control did not retain daily state
+hashes, so strict serialized-state equivalence is demonstrated only through
+night 19. Several later grouped nights still take roughly 10–15 seconds;
+the residual cost remains worth profiling before longer campaigns.
+
 The WASM SHA-256 for the compared arms was
 `09616da85bf59c50c0cde7b743a4bdccb2eac06ec4eb0b79f79c44ef71d9caa9`.
 The `game.js` SHA-256 was
