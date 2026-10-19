@@ -84,6 +84,7 @@ export class Assets {
     const experimentalColor=this.visualLab==='texture-detail'&&pilotCulture?`/assets/visual-lab/${payload.id}-color-detail.webp`:payload.textures.color;
     const experimentalAtlas=this.visualLab==='normal-enhanced'&&pilotCulture?`/assets/visual-lab/${payload.id}-normal-enhanced.webp`:payload.textures.normal;
     const interleaved=new THREE.InterleavedBuffer(vertices,8),[map,normalMap]=await Promise.all([this.texture(experimentalColor,true),this.visualLab?.startsWith('normal')&&experimentalAtlas?this.texture(experimentalAtlas):null]);
+    const repacked=this.visualLab==='village-repacked'&&payload.id==='mapungubwe'?await Promise.all([bytes('/assets/visual-lab/mapu-0-repacked.bin',{signal:this.preparation.signal}),this.texture('/assets/visual-lab/mapu-0-color-repacked.webp',true)]):null;
     if(this.visualLab==='texture-aniso'){map.anisotropy=8;map.needsUpdate=true;}
     this.assertOpen();const material=this.own(new THREE.MeshStandardMaterial({map,roughness:.95,metalness:0,side:THREE.DoubleSide}));
     if(normalMap){material.normalMap=normalMap;material.normalScale.setScalar(this.visualLab==='normal'?1.15:1.35);material.userData.visualLabNormal=true;material.userData.visualLabNormalDetail=this.visualLab!=='normal';material.needsUpdate=true;}
@@ -94,6 +95,12 @@ export class Assets {
       // Three's automatic bounds. Use the authored unit envelope for both passes.
       geometry.boundingBox=new THREE.Box3(new THREE.Vector3().fromArray(unit.min),new THREE.Vector3().fromArray(unit.max));
       geometry.boundingSphere=geometry.boundingBox.getBoundingSphere(new THREE.Sphere());
+      if(repacked&&unit.key==='mapu-0'){
+        const [packedBytes,packedMap]=repacked,vertexBytes=packedBytes.byteLength-unit.count*4,packedVertices=new Float32Array(packedBytes,0,vertexBytes/4),packedIndex=new Uint32Array(packedBytes,vertexBytes,unit.count),packedInterleaved=new THREE.InterleavedBuffer(packedVertices,8);
+        const packedGeometry=this.own(new THREE.BufferGeometry());packedGeometry.setAttribute('position',new THREE.InterleavedBufferAttribute(packedInterleaved,3,0));packedGeometry.setAttribute('normal',new THREE.InterleavedBufferAttribute(packedInterleaved,3,3));packedGeometry.setAttribute('uv',new THREE.InterleavedBufferAttribute(packedInterleaved,2,6));packedGeometry.setIndex(new THREE.BufferAttribute(packedIndex,1));packedGeometry.boundingBox=geometry.boundingBox.clone();packedGeometry.boundingSphere=geometry.boundingSphere.clone();
+        const packedMaterial=this.own(material.clone());packedMaterial.map=packedMap;packedMaterial.needsUpdate=true;
+        const packedMesh=new THREE.Mesh(packedGeometry,packedMaterial);packedMesh.userData.unit=unit;packedMesh.castShadow=packedMesh.receiveShadow=true;return packedMesh;
+      }
       const mesh=new THREE.Mesh(geometry,material);mesh.userData.unit=unit;mesh.castShadow=mesh.receiveShadow=true;return mesh;
     });
   }
