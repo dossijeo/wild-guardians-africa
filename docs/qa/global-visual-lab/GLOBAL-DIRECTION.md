@@ -96,3 +96,5 @@ Se conserva el [agua con mapa de pendientes compartido](water-integrated/README.
 ## Vegetación externa CC0 (20/10)
 
 [Hierba Kenney adaptada en Blender](kenney-grass/README.md): ocho capturas comparables de día/noche. Malla cerrada de 512 triángulos, 103/128 instancias visibles y un draw adicional; +52.736/+65.536 triángulos. Descartada por lectura demasiado cuadrada y arbustiva. No integrada ni aprobada por rendimiento temporal. Se conservan fuente CC0, licencia y auditoría; buscar hojas más finas y masas coherentes con el suelo antes de aumentar densidad. El objetivo global sigue pendiente.
+
+[Filtrado de frecuencia del suelo](ground-frequency/README.md): 48 capturas, 24 parejas verificadas. Filtrar conjuntamente albedo/normales/ARH reduce ruido pero produce desenfoque y manchas blandas, especialmente en Sabana y Gran Río. Descartado; no integrado. Sin geometría/draw/textura adicional, sin aprobación temporal GPU. Separar contraste cromático de normales y oclusión en el siguiente ensayo.
