@@ -258,13 +258,14 @@ export function updateRaid(s,dt,nav) {
       a.attackRemaining=Math.max(0,a.attackRemaining-dt);
       if(a.attackRemaining>1e-9)continue;
       const target=raidTarget(s,a.targetId);
+      const targetValid=!!target&&('alive' in target?target.alive:target.status==='intact'&&target.hp>0);
       if(!a.hitApplied&&a.hitsRemaining>0){
         a.hitApplied=true;a.hitsRemaining--;observeWaitProgress(s);
-        const shield=target?spellAt(s,'shield',target):null;
+        const shield=targetValid?spellAt(s,'shield',target):null;
         const expiredBorder=!!a.approachShieldId&&a.approachShieldId!==shield?.id;
         // A committed border animation stays at that border. Losing the barrier
         // does not turn it into a ranged hit on the protected target.
-        if(target&&!expiredBorder){
+        if(targetValid&&!expiredBorder){
           let agriculturalImpact=null;
           if('alive' in target&&a.damageProfile)agriculturalImpact=resolveAgriculturalImpact(s,a,target,nav);
           if(!shield){
@@ -291,7 +292,7 @@ export function updateRaid(s,dt,nav) {
             shield:shield?{id:shield.id,x:shield.x,z:shield.z,radius:shield.radius}:null}});
         }else emit(s,'AnimalLogicalMiss',{attackId:a.attackId,targetId:a.targetId,species:a.species,...(expiredBorder?{reason:'shield-expired'}:{})});
       }
-      a.status='walking';a.path=null;if(!target||target.alive===false||target.status&&target.status!=='intact')release(s,a);
+      a.status='walking';a.path=null;if(!targetValid)release(s,a);
       // Finish the committed animation before spending another hit or retreating.
       continue;
     }

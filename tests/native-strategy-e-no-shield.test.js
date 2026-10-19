@@ -16,7 +16,7 @@ test('same command gate used by runner executes native D shield but leaves E unc
  const D=fixture(),E=fixture(),d=nativeCampaignStrategy('no-walls'),e=nativeCampaignStrategy('no-shield');const initialRng=D.s.rng;
  const cast=(f,p,kind,x,z)=>campaignMagicAllowed(p,kind)&&Game.cast(f.s,kind,kind,x,z,f.nav);
  assert.equal(cast(D,d,'shield',0,0),true);assert.equal(cast(E,e,'shield',0,0),false);assert.equal(E.s.spells.length,0);assert.equal(E.s.cooldowns.shield,0);assert.equal(E.s.commandIds.includes('shield'),false);
- for(const kind of ['growth','multiply']){const x=kind==='growth'?50:100;assert.equal(cast(D,d,kind,x,0),true);assert.equal(cast(E,e,kind,x,0),true);assert.equal(D.s.cooldowns[kind],E.s.cooldowns[kind]);}
+ for(const kind of ['growth','multiply']){assert.equal(cast(D,d,kind,0,0),true);assert.equal(cast(E,e,kind,0,0),true);assert.equal(D.s.cooldowns[kind],E.s.cooldowns[kind]);}
  assert.equal(D.s.rng,initialRng);assert.equal(E.s.rng,initialRng);assert.deepEqual(D.s.ledger,E.s.ledger);assert.deepEqual(D.s.workers,E.s.workers);assert.deepEqual(D.s.plants,E.s.plants);
  assert.equal(D.s.events.filter(x=>x.type==='SpellActivated'&&x.kind==='shield').length,1);assert.equal(E.s.events.filter(x=>x.type==='SpellActivated'&&x.kind==='shield').length,0);
 });
