@@ -472,6 +472,7 @@ it is **not** a rendered gameplay frame or a new campaign outcome. Run it with
 the Vite server on port 5188:
 
 ```sh
+WG_QA_PLAYWRIGHT_MODULE=/absolute/path/to/playwright/index.mjs \
 node tools/experiments/benchmark-frozen-raid-entry-browser.mjs docs/qa/desert-raid-pressure-audit/desierto123-d17-waiting-state.json.gz docs/qa/desert-raid-pressure-audit/desierto123-d17-browser-entry-a.json
 ```
 

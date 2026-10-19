@@ -2,13 +2,16 @@
 import {readFileSync,writeFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
 import {createHash} from 'node:crypto';
-import {chromium} from 'playwright';
+import {pathToFileURL} from 'node:url';
 
 const fixture=process.argv[2],output=process.argv[3];
 if(!fixture||!output)throw Error('Usage: benchmark-frozen-raid-entry-browser.mjs STATE.json.gz OUTPUT.json');
+const modulePath=process.env.WG_QA_PLAYWRIGHT_MODULE;
+if(!modulePath)throw Error('Set WG_QA_PLAYWRIGHT_MODULE to a local Playwright index.mjs');
+const {chromium}=await import(pathToFileURL(modulePath).href);
 const regionPreflight=process.env.WG_QA_REGION_PREFLIGHT==='1';
 const frozen=gunzipSync(readFileSync(fixture)).toString();
-const browser=await chromium.launch({channel:'chrome',headless:true});
+const browser=await chromium.launch({channel:process.env.WG_QA_BROWSER??'chrome',headless:process.env.WG_QA_HEADLESS!=='0'});
 const page=await browser.newPage({viewport:{width:1280,height:800}});
 const errors=[];
 page.on('pageerror',error=>errors.push(String(error)));
