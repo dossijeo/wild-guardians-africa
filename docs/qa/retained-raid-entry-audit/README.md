@@ -1,5 +1,16 @@
 # Entrada de incursiones y utilidad de murallas
 
+**Archivo histórico.** Los resultados y hashes de fuente de esta carpeta
+pertenecen a los prototipos originales; no describen el selector de incursiones
+actual. La producción usa ahora `exteriorRaidEntry()` desde `raids.js` y, en el
+recinto controlado, tanto la entrada normal como la candidata antigua nacen
+fuera y golpean una muralla. El caso de límites activos recortados también
+encuentra entrada exterior sin añadir un anillo. Las pruebas conservan los
+resultados archivados como evidencia de la secuencia de investigación y
+comprueban por separado la conducta física vigente. Sus hashes se verificaron
+contra los commits que incorporaron cada artefacto (`4645af95`, `5955feae` y
+`6b253ac2`); no se comparan con las fuentes cambiantes de `HEAD`.
+
 No se repite una campaña ni se cambia producción. Se reconstruye geometría estática y se ejecuta una prueba acotada de selección/movimiento/primer impacto.
 
 ## Mundo conservado del piloto
