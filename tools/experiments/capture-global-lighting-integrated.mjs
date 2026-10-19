@@ -1,9 +1,9 @@
 import {chromium} from 'playwright';
 import {mkdir,writeFile} from 'node:fs/promises';
-const out='docs/qa/global-visual-lab/global-lighting-integrated';await mkdir(out,{recursive:true});const records=[];
+const out=process.env.WG_LIGHTING_OUTPUT??'docs/qa/global-visual-lab/global-lighting-integrated';await mkdir(out,{recursive:true});const records=[];
 const browser=await chromium.launch({channel:'chrome',headless:true});
 try{
-for(const [biome,sceneCase] of [['savanna',1],['grand-river',6],['mangrove',11],['volcano',16],['canyon',21],['desert',26]])for(const variant of ['0','global-lighting']){
+for(const [biome,sceneCase] of [['savanna',1],['grand-river',6],['mangrove',11],['volcano',16],['canyon',21],['desert',26]].filter(([,c])=>!process.env.WG_LIGHTING_CASES||process.env.WG_LIGHTING_CASES.split(',').map(Number).includes(c)))for(const variant of (process.env.WG_LIGHTING_VARIANTS??'0,global-lighting').split(',')){
  const page=await browser.newPage({viewport:{width:1280,height:720}});
  const errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
  await page.goto(`http://127.0.0.1:5190/tests/browser/african-toon.html?case=${sceneCase}&q=media&visualLab=${variant}&visualLabReference=1`);

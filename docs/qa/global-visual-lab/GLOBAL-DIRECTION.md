@@ -74,3 +74,15 @@ La inspección de Cañón confirma que reforzar sombras de objetos no resuelve l
 - [Cojines de hierba](grass-cushions/README.md): fuente Blender y 8 capturas; descartados por poca presencia visual para +151.140 triángulos. No aumentar densidad del piloto. Se necesita una propuesta conjunta de suelo y masas de vegetación.
 
 La opción integrada `?visualLab=global-lighting` conserva el relleno local y añade casters de terreno solo en Cañón. Build y 20 pruebas existentes pasan; [capturas de integración y recorrido de chunks](global-lighting-integrated/README.md). Es una opción de evaluación, no una declaración de calidad final. Se documenta explícitamente el coste nocturno de terreno por encima del presupuesto previo y el borde de fixture también presente en la referencia.
+
+## Pase de paleta volcánica y estratos (20/10)
+
+Se conserva [carbón volcánico](volcanic-charcoal/README.md) únicamente en la opción experimental: reduce el azul del suelo hacia roca neutra cálida, sin recursos adicionales. ABBA QA diurno: 14,416 → 14,424 ms GPU; la deriva nocturna impide concluir sobre rendimiento a partir de su media. La noche y la escala del relieve siguen pendientes. La ruta integrada coincide visualmente con el candidato.
+
+Se elimina la selección de bioma por fragmento del relleno integrado, usando constantes de material; 24 capturas confirman conservación de apariencia. El benchmark de uniformes es histórico, no prueba de coste de la revisión actual. [Estratos del Cañón](canyon-bedding/README.md) descartados: no mejoran el volumen y añaden discontinuidades visibles.
+
+La siguiente intervención artística debe concentrar geometría vegetal legible en masas y distancias útiles, con culling y presupuesto explícito, coordinada con la lectura del suelo. No repetir una distribución uniforme de matas casi invisibles. Ninguno de estos pases alcanza todavía la calidad de los seis mockups.
+
+La [ronda integrada de paletas constantes](global-lighting-integrated/CONSTANT-PERFORMANCE.md) confirma que queda trabajo de coste: Sabana y Cañón diurno superan +0,5 ms GPU. No se promociona la opción a comportamiento por defecto ni se da por aprobado el presupuesto global. Se corrigió además una colisión de claves de caché entre biomas introducida al usar constantes de material (prueba que falla antes y pasa después).
+
+[Islas de hierba visible](grass-islands/README.md): la selección por cámara reduce la geometría adicional a 18.540 triángulos en la vista normal y 26.280 en la baja, pero los tallos angulosos no alcanzan la dirección artística. Descartada la malla; el ahorro no constituye aprobación visual ni benchmark GPU. Fuente Blender, ocho capturas y límites de la prueba conservados.

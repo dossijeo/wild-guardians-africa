@@ -52,7 +52,7 @@ export class BiomeGround {
     return {uGroundPureMoss:{value:this.tile.pureMoss?1:0},uGroundMask:{value:mask},uGroundRect:{value:new THREE.Vector4(bo.minX,bo.minZ,1.5,35)},uGroundMapped:{value:mapped?1:0},uGroundOn:{value:1},uGroundStrength:{value:1},uGroundMicro:{value:1},uGroundLayered:{value:this.layeredSavanna?(this.layeredRelief?2:1):0},uGroundDebug:{value:0},uGroundRelief:{value:1},uGroundParams:{value:new THREE.Vector4(tile.scale,tile.blend,this.layeredRelief?1.6:tile.normalBoost,this.layeredRelief?.12:(tile.relief??tile.jitter??0))},uGroundSeed:{value:new THREE.Vector2(hashCell(this.field.seed,0,1,417)/4294967296,hashCell(this.field.seed,1,0,417)/4294967296)},uGroundSoil:{value:new THREE.Vector3(...soil)},uGroundGrass:{value:new THREE.Vector3(...grass.map((v,i)=>v+(foliage[i]-v)*blend))},uGroundDetailMap:{value:this.textures[0]},uGroundNormal:{value:this.textures[1]},uGroundARH:{value:this.textures[2]},uLayerSandBase:{value:this.layerTextures[0]??this.textures[0]},uLayerSandNormal:{value:this.layerTextures[1]??this.textures[1]},uLayerSandARH:{value:this.layerTextures[2]??this.textures[2]}};
   }
   attach(material,cx,cz,bytes=null,options){
-    const uniforms=this.uniforms(cx,cz,bytes,options);material.userData.biomeGround=uniforms;
+    const uniforms=this.uniforms(cx,cz,bytes,options);material.userData.biomeGround=uniforms;material.userData.groundBiome=this.field.c.biome;
     const mask=uniforms.uGroundMask.value;let owners=0;
     material.userData.retainBiomeGround=next=>{owners++;next.addEventListener('dispose',()=>{
       if(--owners===0&&mask!==this.unmappedMask&&this.masks.delete(mask))mask.dispose();
