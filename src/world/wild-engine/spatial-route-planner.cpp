@@ -148,9 +148,12 @@ void shortenOneCorner(Point start,Point end){
   // A long sector route can have hundreds of grid waypoints. Sweeping both
   // continuous segments for every waypoint makes shortening quadratic in
   // route length, even when a wall prevents every shortcut. Rank by the
-  // cheap geometric lower bound, then physically validate only the best few.
+  // cheap geometric lower bound, then physically validate a bounded set.
+  // Sixteen preserves useful alternate corners beside structures while
+  // avoiding a sweep for every grid step of a long route.
   struct Candidate {Point corner;float length;};
-  std::array<Candidate,4> candidates{};
+  constexpr size_t maxShortcutCandidates=16;
+  std::array<Candidate,maxShortcutCandidates> candidates{};
   size_t count=0;
   for(size_t at=0;at+2<out.points.size();at+=2){
     const Point corner{out.points[at],out.points[at+1]};

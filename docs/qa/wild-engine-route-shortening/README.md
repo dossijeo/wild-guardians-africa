@@ -22,7 +22,7 @@ de puntos y con la longitud de los segmentos probados.
 Wild Engine sigue construyendo la misma ruta válida mediante sectores y
 portales. Para el acortamiento opcional, ordena implícitamente los puntos por
 la longitud geométrica que tendrían los dos tramos y valida físicamente como
-máximo las cuatro mejores propuestas. Solo sustituye la ruta cuando ambos
+máximo las dieciséis mejores propuestas. Solo sustituye la ruta cuando ambos
 tramos pasan las colisiones nativas y son más cortos. Si ninguno pasa, conserva
 la ruta del grafo. No cambia velocidades, colisiones, prioridades, daños ni
 economía.
@@ -51,18 +51,26 @@ Para comparar binarios sin cambiar el código de juego, establece
 base fue el WASM de `main` en `f2808e46`, SHA-256
 `674bdf018817e1fa75e5181525faa3f516b90b9072af844fdc08e64fdcbf6b9c`.
 La variante experimental dio SHA-256
-`c1b15d575f0c9782f4f01e394e8ee43ce5656789d4c3ba0c2ccb8b08d8347352`.
+`09616da85bf59c50c0cde7b743a4bdccb2eac06ec4eb0b79f79c44ef71d9caa9`.
 Ambas se compilaron con `tools/build-spatial-savanna-wasm.sh` y el mismo
 Emscripten 3.1.5. El guardado y los cuatro orígenes fueron idénticos.
 
 | Orden ABBA | Base A (ms) | Acotada B (ms) |
 | --- | ---: | ---: |
-| B/A/A/B, suma de cuatro actores | 5.436 / 5.495 | 122 / 125 |
+| B/A/A/B, suma de cuatro actores | 5.406 / 5.575 | 308 / 302 |
 
 Los cuatro actores eligieron las mismas murallas y los hashes de sus cuatro
 rutas completas coincidieron entre A y B. Las consultas de caché acertadas y
 fallidas también fueron iguales. Este caso mide una reducción de trabajo
 físico inútil, no un cambio de objetivo ni una mejora de la tabla de caché.
+Ambos binarios comprometieron 16 MiB de memoria lineal; el WASM nuevo ocupa
+270 bytes más en disco.
+
+Una primera variante con solo cuatro pruebas de atajo hizo este caso aún más
+rápido, pero alargó indebidamente una ruta real de riego en Desierto. Ocho
+pruebas también fallaron esa regresión. Dieciséis recuperaron el acceso de
+riego y conservaron una mejora de aproximadamente 18 veces en la consulta
+congelada. Las variantes descartadas no son los resultados B de la tabla.
 
 En la reproducción restaurada de los cinco segundos de entrada, el hash de
 estado activo fue idéntico (`ba512e3607c76a58ca51d015279647f533e1f9a5d5d5a8a6799c4b9b0be5e93d`),
@@ -75,25 +83,22 @@ defensa topológica y balance sin cambios:
 | Versión | `Game.tick` acumulado | Cultivos al final | Monedas al final | Noches verificadas |
 | --- | ---: | ---: | ---: | ---: |
 | A, acortamiento exhaustivo | 101,60 s | 133 | 827 | 14 |
-| B, acortamiento acotado | 41,77 s | 151 | 818 | 14 |
+| B, acortamiento acotado | 52,96 s | 142 | 981 | 14 |
 
-La reducción observada de `Game.tick` es del 58,9 %. Las trayectorias de la
+La reducción observada de `Game.tick` es del 47,9 %. Las trayectorias de la
 campaña divergen desde la primera jornada; sus cargas posteriores no son
 idénticas. Por ello, esta cifra es una comparación integral del sistema, no
 una estimación aislada del algoritmo. El benchmark ABBA anterior sí compara
 las mismas cuatro consultas y rutas. Ambas campañas continúan sin derrota en
 la noche 14; no se extrapola una victoria a 100 noches.
-Dos ejecuciones adicionales de B repitieron exactamente la serie diaria de
-cultivos y monedas y terminaron con 151/818. También produjeron el mismo hash
-de estado serializado,
-`f700c9ad2f541edc272ecefd899baf0f6ba56fa56a635945a579eb81b7714463`.
-Sus tiempos de `Game.tick` fueron 41,41 y 42,24 s; la variación temporal no
-alteró el resultado lógico.
+El hash serializado de B fue
+`47a4f8cb2899055671079d72fbdb0f469c304b17909a46e06e6a62de4df85e70`.
 
 ## Verificación y límites
 
-- Las 27 pruebas dirigidas de rutas, incursiones, intenciones e invalidación
-  pasaron con el WASM experimental.
+- Las 87 pruebas del workflow nativo de rutas, incursiones, intenciones,
+  trabajadores y reparaciones pasaron con el WASM final. Incluyen el caso de
+  riego del Desierto que rechazó las variantes de cuatro y ocho propuestas.
 - La regresión `spatial-native-wall-shortening.test.js` replantea cuatro
   ataques desde Manglares/712 y comprueba que la reserva nativa solo acepta
   rutas físicamente validadas hacia murallas activas.
