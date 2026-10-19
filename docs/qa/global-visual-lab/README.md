@@ -91,3 +91,5 @@ El [ensayo plant_02](./native-short-grass/README.md) reduce geometría mantenien
 
 - [Contacto integrado](ground-contact-integration/README.md): descartado, efecto imperceptible a cámara de juego en seis biomas.
 - [Coherencia de sombra del suelo](ground-shade-coherence/README.md): dirección prometedora para Sabana, Gran Río y Cañón, sin adopción global; Volcanes pierde lectura y Desierto usa otra rama. 48 capturas A/B por ensayo y ABBA de iluminación sin regresión observada. Original por defecto.
+
+- [Placas de basalto autorales](basalt-plates/README.md): sustitución de suelo volcánico horneada en Blender, descartada por aspecto de pavimento y pérdida de lectura nocturna. 48 capturas con cinco biomas control; originales intactos.
