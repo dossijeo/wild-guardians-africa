@@ -38,6 +38,62 @@ export function exteriorRaidWitness(p,r,box,nav){
  return false;
 }
 function groupWitness(entry,specs,box,nav){return exteriorGroupWitness(entry,specs,box,nav,exteriorRaidWitness);}
+// One raid-entry preparation can ask whether the existing native wall faces
+// offer an actual route from each birth. This is never an attack certificate:
+// the ordinary target planner still chooses and validates the final wall.
+function wallAttackOpportunity(entry,specs,box,nav){
+ if(!box||!nav.spatialWallApproachSides||!nav.spatialRouteStatus)return true;
+ const byRadius=new Map();
+ for(let index=0;index<specs.length;index++){
+  const radius=specs[index].radius,point=entry.entries[index];
+  if(!byRadius.has(radius))byRadius.set(radius,nav.spatialWallApproachSides(radius));
+  const sides=byRadius.get(radius);
+  if(!sides.length)continue;
+  const nearest=[...sides].sort((a,b)=>distance(a,point)-distance(b,point)||
+    a.wallId-b.wallId).slice(0,8);
+  if(!nearest.some(side=>{
+   const started=nav.raidSelectionStats?performance.now():0,
+     status=nav.spatialRouteStatus(point,side,radius);
+   if(nav.raidSelectionStats){
+    nav.raidSelectionStats.raidEntryWallRouteQueries=
+      (nav.raidSelectionStats.raidEntryWallRouteQueries??0)+1;
+    nav.raidSelectionStats.raidEntryWallRouteMs=
+      (nav.raidSelectionStats.raidEntryWallRouteMs??0)+performance.now()-started;
+   }
+   return status==='found';
+  }))
+   return false;
+ }
+ return true;
+}
+function wallSideRaidFormation(specs,bounds,nav,focus,box){
+ if(!box||!focus||!nav.spatialWallApproachSides)return null;
+ const radius=Math.max(...specs.map(spec=>spec.radius)),
+   sides=nav.spatialWallApproachSides(radius),view=nav.raidView;
+ sides.sort((a,b)=>distance(a,view?.eye??focus)-
+   distance(b,view?.eye??focus)||a.wallId-b.wallId||a.x-b.x||a.z-b.z);
+ for(const side of sides.slice(0,16)){
+  const dx=side.x-focus.x,dz=side.z-focus.z,length=Math.hypot(dx,dz);
+  if(length<1e-6)continue;
+  const ux=dx/length,uz=dz/length,
+    eye={x:side.x+ux*(radius+9),z:side.z+uz*(radius+9)},
+    spacing=Math.max(4,radius*2+1.1),
+    entries=specs.map((_,index)=>{
+      const lateral=(index-(specs.length-1)/2)*spacing;
+      return {x:eye.x-uz*lateral,z:eye.z+ux*lateral};
+    }),
+    exits=entries.map(point=>({x:point.x+ux*3,z:point.z+uz*3})),
+    padding=spacing*(specs.length+2)+12,
+    expanded=[Math.min(bounds[0],eye.x-padding),
+      Math.min(bounds[1],eye.z-padding),
+      Math.max(bounds[2],eye.x+padding),
+      Math.max(bounds[3],eye.z+padding)],
+    candidate={entries,exits,selectionBounds:expanded};
+  if(groupWitness(candidate,specs,box,nav)&&
+     wallAttackOpportunity(candidate,specs,box,nav))return candidate;
+ }
+ return null;
+}
 function localView(nav,eye,focus){const local=Object.create(nav);local.raidView={eye,target:focus};return local;}
 function formation(state,specs,bounds,nav,camera,eye,focus,dx,dz,box,radius,witness=exteriorRaidWitness){
  const entries=[],exits=[],columns=Math.ceil(Math.sqrt(specs.length)),spacing=radius*2+4;
@@ -82,7 +138,12 @@ function distributedExteriorFormation(state,specs,bounds,nav,camera,focus,box){
 }
 export function exteriorRaidEntry(state,specs,bounds,side,nav,base,camera){
  const box=raidWallEnvelope(state,nav),entry=base(state,specs,bounds,side,nav);
- if(groupWitness(entry,specs,box,nav))return entry;
+ if(groupWitness(entry,specs,box,nav)){
+  if(wallAttackOpportunity(entry,specs,box,nav))return entry;
+  const focus=state.structures.find(t=>t.kind==='center'&&t.hp>0&&
+    t.status!=='collapsing')??state.villages[0];
+  return wallSideRaidFormation(specs,bounds,nav,focus,box)??entry;
+ }
  const focus=state.structures.find(t=>t.kind==='center'&&t.hp>0&&t.status!=='collapsing')??state.villages[0];
  if(!focus)return null;
  const view=nav.raidView,heading=view?Math.atan2(view.eye.x-view.target.x,view.eye.z-view.target.z):side*Math.PI/2;

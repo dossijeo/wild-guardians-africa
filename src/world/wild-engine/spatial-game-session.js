@@ -183,6 +183,23 @@ export function createSpatialGameSession(module,state,streamOptions){
     actorProfile(options);
     return core.componentsWorld(point);
   }
+  function actorWallApproachSides(options){
+    const profile=actorProfile(options);
+    if(profile.worker)return [];
+    const wasm=core.wasm,count=wasm.nav_intent_wall_portals(profile.radius);
+    if(count<0)return [];
+    const rows=new Float64Array(wasm.memory.buffer,
+      wasm.nav_intent_wall_portals_ptr(),count*5);
+    return Array.from({length:count},(_,index)=>({
+      wallId:rows[index*5],region:rows[index*5+1],
+      x:rows[index*5+3],z:rows[index*5+4]}));
+  }
+  function actorRouteStatus(start,end,options){
+    actorProfile(options);
+    const count=core.wasm.spatial_world_route_cached(
+      start.x,start.z,end.x,end.z);
+    return count>0?'found':count===0?'blocked':'unknown';
+  }
   function actorEnclosure(point,options){
     actorProfile(options);
     return core.enclosureWorld(point);
@@ -432,7 +449,7 @@ export function createSpatialGameSession(module,state,streamOptions){
     key=>chunkRevisions.get(key)??0);
   return {get core(){return core;},field,stream,horizonSource,topologySource,routeStamp,
     routeUnaffectedByWalls,suppressed:props.suppressed,syncState,
-    routeActor,routeActorNative,routeActorNativeBatch,actorConnectivity,actorSectorRevision,actorRegions,actorEnclosure,actorRegionsBatch,actorCanStand,actorStepClear,
+    routeActor,routeActorNative,routeActorNativeBatch,actorConnectivity,actorSectorRevision,actorRegions,actorWallApproachSides,actorRouteStatus,actorEnclosure,actorRegionsBatch,actorCanStand,actorStepClear,
     actorStepClearExceptWalls,
     queryPropsAt,withWallPreview,withWallStatePreview,gateOverlayClear,
     wallLocalOverlay,wallWorkerReachability,wallCutSolidFaces,
