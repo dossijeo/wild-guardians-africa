@@ -5,6 +5,12 @@ const browser=await chromium.launch({channel:'chrome',headless:true}),records=[]
 try{
  for(const variant of (process.env.WG_ART_VARIANTS??'0,village-art,village-finish').split(',')){
   const page=await browser.newPage({viewport:{width:1280,height:720}});
+  // Local texture-only trials reuse F geometry without adding a runtime flag.
+  if(process.env.WG_ART_TEXTURE_OVERRIDE){
+   if(variant!=='village-details')throw new Error('Texture override requires village-details');
+   const body=await readFile(process.env.WG_ART_TEXTURE_OVERRIDE);
+   await page.route('**/mapu-0-color-details.webp',route=>route.fulfill({contentType:'image/webp',body}));
+  }
   await page.goto(`http://127.0.0.1:5189/tests/browser/african-toon.html?case=1&q=media&visualLab=${variant}&visualLabReference=1`);
   await page.waitForFunction(()=>window.qaVisualReference&&document.querySelector('#status').textContent.includes('/30 ·'));
   await page.locator('#villageClose').evaluate(e=>e.click());await page.waitForFunction(()=>!document.querySelector('#night').disabled);
@@ -22,7 +28,7 @@ try{
    for(const phase of ['day','night']){
     const time=phase==='day'?150:350;if(await page.evaluate(()=>window.qaVisualReference.world.state.time)!==time)await page.locator('#night').evaluate(e=>e.click());
     await page.waitForFunction(t=>window.qaVisualReference.world.state.time===t&&!document.querySelector('#night').disabled,time);await page.waitForTimeout(500);
-    const file=`${variant}-${view}-${phase}.png`;await page.locator('canvas#world').screenshot({path:`${out}/${file}`});records.push({variant,view,phase,file,...state});
+    const file=`${variant}-${view}-${phase}.png`;await page.locator('canvas#world').screenshot({path:`${out}/${file}`});records.push({variant,view,phase,file,...state,...(process.env.WG_ART_TEXTURE_OVERRIDE?{textureOverride:process.env.WG_ART_TEXTURE_OVERRIDE}:{})});
    }
   }
   await page.close();
