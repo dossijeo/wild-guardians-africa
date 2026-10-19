@@ -360,3 +360,34 @@ entry path is therefore the relevant implementation for both. Its selection
 can be synchronous on the interactive thread; this trial has not yet measured
 the resulting frame latency in the browser. The PR remains draft pending
 that measurement and sustained evaluation on additional seeds/biomes.
+
+### Day-17 tick cost: worker repairs, not the new raid entry
+
+An optional [per-tick and per-task trace](desierto123-tasktrace-17.json.gz)
+of the same Desert/123 campaign
+identified the next sustained cost. Day 17 executed 110 native task-planning
+batches with three workers. Thirteen wall-repair tasks remained pending and
+were reconsidered on nearly every batch; they yielded 1,430 `unknown` task
+rows, compared with 62 found task rows. The batches made 9,712 native route
+queries and spent about 3.55 seconds inside the task planner, out of about
+4.91 seconds of `Game.tick` for that day. Many batches test 13 walls × three
+workers × four wall interaction points before assigning one ordinary crop
+task. Native route causes were 1,275 inconclusive graph searches and 155
+missing destination connectors. These are not certified blocked tasks.
+
+The morning trace had no raid animals for the expensive first 300 ticks and
+kept 25 chunks resident. Frozen raid movement was substantially cheaper once
+those chunks were resident. The late tick increase must therefore not be
+attributed to animal animation or the new wall-entry route without further
+evidence. The task planner currently wakes after eligible task changes or an
+eight-second recovery interval and repeats the unresolved repair probes. A
+fix should retain those repairs as pending and wake them when the required
+sector or topology becomes available, while preserving global FIFO task
+priority and treating `unknown` differently from `blocked`. The trace does
+not yet prove that loading a particular frontier would resolve each repair.
+
+Reproduce the diagnostic trace with:
+
+```sh
+WILD_ENGINE_TRACE_TICK_DAY=17 WILD_ENGINE_TRACE_TASK_DAY=17 node tools/experiments/audit-defended-raid-pressure.mjs desierto 17 123 test-results/desierto123-tasktrace-17.json.gz
+```
