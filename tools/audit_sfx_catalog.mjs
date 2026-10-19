@@ -67,8 +67,12 @@ for(const [file,lines] of sourceLines)for(let index=0;index<lines.length;index++
  const seen=new Set();for(const match of lines[index].matchAll(/['"]([a-z0-9_]+)['"]/g))if(bankIds.has(match[1])&&!seen.has(match[1])){
   seen.add(match[1]);const entries=mentions.get(match[1])??[];entries.push({file,line:index+1});mentions.set(match[1],entries);
  }
- if(file.startsWith('src/simulation/')||file.startsWith('src/tutorial/'))for(const match of lines[index].matchAll(/\bemit\([^,]+,\s*['"](\w+)['"]/g)){
-  const entries=eventProducers.get(match[1])??[];entries.push({file,line:index+1,selector:match[0]});eventProducers.set(match[1],entries);
+ if(file.startsWith('src/simulation/')||file.startsWith('src/tutorial/')){
+  const register=(event,selector)=>{const entries=eventProducers.get(event)??[];entries.push({file,line:index+1,selector});eventProducers.set(event,entries);};
+  for(const match of lines[index].matchAll(/\bemit\([^,]+,\s*['"](\w+)['"]/g))register(match[1],match[0]);
+  for(const match of lines[index].matchAll(/\bemit\([^,]+,\s*\w+\s*\?\s*['"](\w+)['"]\s*:\s*['"](\w+)['"]/g)){
+   register(match[1],match[0]);register(match[2],match[0]);
+  }
  }
 }
 const app='src/app/main.js',audioFile='src/audio/audio.js';
