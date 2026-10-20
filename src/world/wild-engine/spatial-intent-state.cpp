@@ -238,6 +238,7 @@ void invalidateDependents(IntentState& s,const Change& change){
       const uint64_t taskId=active==s.activeIntents.end()?0:active->second.task;
       releaseIntent(s,change.id,PlanningState::Cancelled);
       s.activeIntents.erase(change.id);
+      s.planningCallsByActor.erase(change.id);
       const auto task=s.tasks.find(taskId);
       if(task!=s.tasks.end()&&task->second.assigned==change.id)task->second.assigned=0;
     }else{
@@ -1231,6 +1232,23 @@ double nav_intent_actor_planning_calls(double actorId){
   if(!integer(actorId))return 0;
   const auto found=state().planningCallsByActor.find(uint64_t(actorId));
   return found==state().planningCallsByActor.end()?0:double(found->second);
+}
+int nav_intent_retire_actor(double actorId){
+  if(!integer(actorId))return 0;
+  IntentState& s=state();const uint64_t actor=uint64_t(actorId);
+  const auto active=s.activeIntents.find(actor);
+  if(active!=s.activeIntents.end()){
+    // The caller has already removed this actor from the confirmed game.
+    // Reclaim its route and inverse dependencies without publishing a new
+    // intention change for an actor that no longer exists.
+    const size_t changes=s.intentChanges.size();
+    const uint64_t invalidations=s.invalidations;
+    releaseIntent(s,actor,PlanningState::Cancelled);
+    s.intentChanges.resize(changes);s.invalidations=invalidations;
+    s.activeIntents.erase(actor);
+  }
+  s.planningCallsByActor.erase(actor);
+  return 1;
 }
 int nav_intent_actor(double actorId){
   IntentState& s=state();s.intentResult.fill(0);
