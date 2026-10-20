@@ -406,3 +406,8 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Ceniza volcánica: movimiento y regreso
 
 [72 parejas y recorrido de streaming](volcanic-ash-motion/README.md) con cámara/geometría coincidentes, día y noche. Depósitos estables en la muestra de regreso tras cambio de origen; no RGB exacto (2.053 píxeles candidata, 3.361 original). Sin crecimiento monotónico de contadores en una vuelta; no equivale a validar fugas ni coste dinámico. Sigue pendiente optimización antes de promover.
+
+
+### Ceniza precalculada en máscara existente
+
+[Comparación procedural/máscara](volcanic-ash-mask/README.md): 24 capturas coincidentes en geometría, bajo error RGB medio y 8 bloques ABBA. Se reutiliza R del suelo volcánico sin tocar canales restantes ni datos del worker. Mejora GPU nocturna en esta serie, resultado diurno variable; conservar alternativa QA sin promover. Preparación CPU ~0,535 ms/máscara en Node, no latencia de streaming. Pendientes borde con horizonte, movimiento y coste de creación de chunks.

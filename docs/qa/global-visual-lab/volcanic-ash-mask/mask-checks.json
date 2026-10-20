@@ -1,0 +1,11 @@
+{
+  "checks": [
+    "horizontal and vertical overlap including negative coordinates",
+    "borrowed input unchanged",
+    "other channels unchanged",
+    "deterministic rebuild",
+    "invalid size rejected"
+  ],
+  "cpuMsPerMask": 0.534982,
+  "note": "Node CPU microbenchmark, not browser streaming latency; 100 allocations of 4900 bytes, no GPU work."
+}
