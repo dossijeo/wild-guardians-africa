@@ -28,6 +28,13 @@ const inspectDay=Number(process.env.WG_WORKER_INSPECT_DAY??0),
   inspectTime=Number(process.env.WG_WORKER_INSPECT_TIME??0),
   inspectIds=new Set((process.env.WG_WORKER_INSPECT_IDS??'').split(',').filter(Boolean));
 let diagnostic=null;
+const captureOutput=process.env.WG_WORKER_CAPTURE_OUTPUT;
+const captureDay=Number(process.env.WG_WORKER_CAPTURE_DAY??0);
+const captureTime=Number(process.env.WG_WORKER_CAPTURE_TIME??0);
+if(captureOutput&&(!Number.isSafeInteger(captureDay)||captureDay<1||captureDay>days||
+  !Number.isFinite(captureTime)||captureTime<0||captureTime>600))
+  throw Error('WG_WORKER_CAPTURE_OUTPUT requires a valid day and time');
+let captured=false;
 const captureRecovery=(state,event)=>{
   if(event.type!=='ActorMobileCollisionRecovery'||recoverySamples.length>=256)return;
   const actor=state.workers.find(w=>w.id===event.actorId);
@@ -46,6 +53,11 @@ const captureRecovery=(state,event)=>{
     next:next??null,probe,blockers});
 };
 const onTick=(state,nav)=>{
+  if(captureOutput&&!captured&&state.day===captureDay&&state.time>=captureTime){
+    mkdirSync(dirname(captureOutput),{recursive:true});
+    writeFileSync(captureOutput,serialize(state));
+    captured=true;
+  }
   villageEntry??=state.villages[0]?.entry??null;
   sampledTicks++;
   const workers=state.workers.filter(w=>w.status!=='home'&&Number.isFinite(w.x)&&Number.isFinite(w.z));
@@ -109,6 +121,7 @@ const result=await simulateNativeCampaign({days,strategy,seed,biome,culture,
   },
     spatialAdvice:true,nativeIntents:true,nativeWallPlans:true,reloadRaids:false}:{}),
   onTick});
+if(captureOutput&&!captured)throw Error('Requested worker passage snapshot was not reached');
 const report={days,seed,strategy,biome,culture,backend,
   stateHash:createHash('sha256').update(serialize(result.state)).digest('hex'),
   completedNights:result.completedNights,result:result.result,
