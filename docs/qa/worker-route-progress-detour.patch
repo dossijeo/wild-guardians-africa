@@ -1,0 +1,64 @@
+diff --git a/src/simulation/game.js b/src/simulation/game.js
+index 5bbda3e54..fd44aa1f9 100644
+--- a/src/simulation/game.js
++++ b/src/simulation/game.js
+@@ -804,6 +804,7 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
+     w.mobileRecoveryAttempts=0;
+     w.mobileProgressDistance=dist(w,destination);
+     w.mobileProgressAt=s.elapsed;
++    delete w.mobileProgressWaypoint;
+     delete w.retreatStaticRouteFailure;
+   }
+   if(!Number.isFinite(w.mobileProgressDistance)||!Number.isFinite(w.mobileProgressAt)){
+@@ -904,6 +905,22 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
+   // ignore mobile collisions. Static terrain,
+   // barriers and the live gate leaf remain authoritative throughout.
+   const next=w.path[0],distanceToNext=next?dist(w,next):0;
++  // A valid detour may temporarily increase the straight-line distance to
++  // the destination. Progress along its current waypoint is still progress:
++  // it must not start mobile-body phasing merely because the final target has
++  // remained farther away for twelve seconds. Keep this marker in the saved
++  // actor state so a reload does not change the recovery deadline.
++  if(worker&&next){
++    const marker=w.mobileProgressWaypoint;
++    if(!marker||marker.x!==next.x||marker.z!==next.z||
++      !Number.isFinite(marker.distance)){
++      w.mobileProgressWaypoint={x:next.x,z:next.z,distance:distanceToNext};
++      w.mobileProgressAt=s.elapsed;
++    }else if(distanceToNext<=marker.distance-.75){
++      marker.distance=distanceToNext;
++      w.mobileProgressAt=s.elapsed;
++    }
++  }
+   if(!worker&&expandRoute&&next&&s.elapsed-w.mobileProgressAt>=12&&
+     nav.segmentClear?.(w,next,w.radius??.28,ignore,false)===false){
+     w.path=null;
+diff --git a/tests/actor-motion.test.js b/tests/actor-motion.test.js
+index 1a8b17658..04c7ccb07 100644
+--- a/tests/actor-motion.test.js
++++ b/tests/actor-motion.test.js
+@@ -215,6 +215,24 @@ test('Workers crossing opposite ways keep physical separation and both reach the
+   }
+   assert.deepEqual([...arrived].sort(),['worker-a','worker-b']);
+ });
++test('a worker advancing along a detour does not phase through a body merely because the final goal is farther away',()=>{
++ const {state,worker,nav}=fixture();state.raid=null;
++ const destination={id:'detour-goal',x:10,z:0};
++ Object.assign(worker,{id:'detouring-worker',x:0,z:1,status:'walking',radius:.28,
++   path:[{x:0,z:10},{x:10,z:10},{x:10,z:0}],destinationId:destination.id,
++   pathVersion:nav.version,mobileRecoveryDestinationId:destination.id,
++   mobileRecoveryVersion:nav.version,mobileRecoveryAttempts:0,
++   mobileProgressDistance:10,mobileProgressAt:0,dynamicStallSeconds:0,
++   mobileProgressWaypoint:{x:0,z:10,distance:10}});
++ const blocker={id:'other-worker',x:0,z:2,radius:.28,status:'idle'};
++ state.workers=[worker,blocker];state.elapsed=12.1;
++ walkTo(state,worker,destination,.1,nav);
++ assert.equal(worker.mobilePhaseRemaining??0,0);
++ assert.equal(worker.mobileRecoveryAttempts,0);
++ assert.equal(state.events.some(e=>e.type==='ActorMobileCollisionRecovery'),false);
++ assert.equal(worker.mobileProgressWaypoint.distance,9);
++ assert.equal(worker.mobileProgressAt,12.1);
++});
+ test('A walking worker detours around a stationary coworker without moving the coworker',()=>{
+   const {state,worker:traveller,nav}=fixture();state.raid=null;
+   Object.assign(traveller,{id:'traveller',x:-4,z:0,status:'walking',path:null});
