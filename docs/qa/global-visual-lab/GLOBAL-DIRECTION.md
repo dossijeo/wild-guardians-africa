@@ -411,3 +411,8 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Ceniza precalculada en máscara existente
 
 [Comparación procedural/máscara](volcanic-ash-mask/README.md): 24 capturas coincidentes en geometría, bajo error RGB medio y 8 bloques ABBA. Se reutiliza R del suelo volcánico sin tocar canales restantes ni datos del worker. Mejora GPU nocturna en esta serie, resultado diurno variable; conservar alternativa QA sin promover. Preparación CPU ~0,535 ms/máscara en Node, no latencia de streaming. Pendientes borde con horizonte, movimiento y coste de creación de chunks.
+
+
+### Máscara de ceniza: preparación y recarga real
+
+[72 parejas y streaming en navegador](volcanic-ash-mask-motion/README.md): máscara sin desplazamiento amplio en la muestra de regreso, residuales similares a procedural. 85 máscaras nuevas, 46,6 ms CPU acumulados (~0,55 ms por máscara), no tiempo por frame. Horizonte volcánico adicional ausente por diseño y en ejecución; corregida esa precondición, sin declarar validada una transición inexistente. Mantener alternativa de revisión; rendimiento diurno aún variable.
