@@ -386,3 +386,8 @@ El [fundido convencional](obstruction-blend/README.md) se descarta por superposi
 ### Precondición real de la transición de impostores
 
 El piloto de fundido con impostores detectó que la campaña actual usa sesión espacial y desactiva la ruta antigua incluso con la preferencia activada. Se añadió una comprobación que impide emitir comparativas sin adaptadores. [Diagnóstico y prototipo no validado](impostor-blend-pilot/README.md). No hay resultado visual ni de rendimiento atribuible a este candidato; falta una escena con identidades y cobertura coincidentes. El commit de vídeos de ocultación cercana `8d6bc2fa5` quedó publicado correctamente.
+
+
+### Piloto de ocultación junto al río
+
+[Gran Río, nueve poses de día y noche](obstruction-water-pilot/README.md): 18 parejas auditadas, 12 exactas, máximo dos instancias parciales y tres llamadas adicionales. Quita el tramado en la orilla; no acredita un cruce significativo sobre el agua ni composición transparente (el agua actual es opaca). Candidata aún de QA; partículas, superposiciones y ciclo de vida siguen pendientes.
