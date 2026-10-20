@@ -1,7 +1,8 @@
 import {applyMaterialStudy} from '/tools/experiments/qa-continuous-grass.js';
-export async function mountCoverageReview(world){
- if(world.state.biome!=='sabana')throw Error('La revisión de cobertura requiere Sabana');
- await applyMaterialStudy(world,'C');const q=world.qaContinuousGrass;
+export async function mountCoverageReview(world,options={}){
+ const applyStudy=options.applyStudy??applyMaterialStudy,origin=options.origin??[135,9.400129699707032,45];
+ if(world.state.biome!=='sabana'&&!options.applyStudy)throw Error('La revisión de cobertura requiere Sabana');
+ await applyStudy(world,'C');const q=world.qaContinuousGrass;
  let running=true,elapsed=0,started=performance.now();
  const now=()=>elapsed+(running?(performance.now()-started)/1000:0);
  Object.defineProperty(q,'timeOverride',{configurable:true,get:now,set(value){elapsed=Number(value)||0;started=performance.now();}});
@@ -17,9 +18,10 @@ export async function mountCoverageReview(world){
  <p>Escena pausada para comparar. El viento se anima con un reloj visual independiente. Solo C utiliza viento.</p><p id="status" role="status">C · Viento 8×</p>`;
  const cleanView=document.createElement('style');cleanView.textContent='#stage > :not(canvas){visibility:hidden!important;pointer-events:none!important} #world{pointer-events:none!important}';document.head.append(cleanView);
  document.body.append(host);
+ shadow.querySelector('h2').textContent=options.title??'Cobertura de Sabana';
  const status=shadow.querySelector('#status'),buttons=[...shadow.querySelectorAll('[data-variant]')];
- async function camera(){const name=shadow.querySelector('#camera').value;world.controls.target.set(135,9.400129699707032,45);world.camera.position.set(...(name==='close'?[138,11.400129699707032,49]:name==='game'?[157,25.400129699707032,63]:[151,39.400129699707032,63]));world.syncChunks();await world.whenChunksReady();await world.horizon.whenReady();world.render(.016);}
- for(const b of buttons)b.onclick=async()=>{buttons.forEach(x=>x.disabled=true);try{await applyMaterialStudy(world,b.dataset.variant);buttons.forEach(x=>x.setAttribute('aria-pressed',String(x===b)));status.textContent=b.dataset.variant==='C'?`C · Viento ${q.uniforms.uCoverageWindStrength.value}×`:`${b.dataset.variant} · Sin viento`;world.render(.016);}catch(e){status.textContent=e.message;}finally{buttons.forEach(x=>x.disabled=false);}};
+ async function camera(){const name=shadow.querySelector('#camera').value;world.controls.target.fromArray(origin);const offset=name==='close'?[3,2,4]:name==='game'?[22,16,18]:[16,30,18];world.camera.position.set(...origin.map((v,i)=>v+offset[i]));world.syncChunks();await world.whenChunksReady();await world.horizon.whenReady();world.render(.016);}
+ for(const b of buttons)b.onclick=async()=>{buttons.forEach(x=>x.disabled=true);try{await applyStudy(world,b.dataset.variant);buttons.forEach(x=>x.setAttribute('aria-pressed',String(x===b)));status.textContent=b.dataset.variant==='C'?`C · Viento ${q.uniforms.uCoverageWindStrength.value}×`:`${b.dataset.variant} · Sin viento`;world.render(.016);}catch(e){status.textContent=e.message;}finally{buttons.forEach(x=>x.disabled=false);}};
  shadow.querySelector('#wind').oninput=e=>{const strength=Number(e.target.value);q.uniforms.uCoverageWindStrength.value=strength;shadow.querySelector('#strength').textContent=strength+'×';status.textContent=q.variant==='C'?`C · Viento ${strength}×`:`${q.variant} · Fuerza preparada para C`;};
  shadow.querySelector('#motion').onclick=e=>{elapsed=now();started=performance.now();running=!running;e.target.textContent=running?'Congelar viento':'Animar viento';e.target.setAttribute('aria-pressed',String(!running));};
  shadow.querySelector('#camera').onchange=()=>camera().catch(e=>{status.textContent=e.message;});
