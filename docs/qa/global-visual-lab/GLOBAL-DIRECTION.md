@@ -377,3 +377,7 @@ El [fundido convencional](obstruction-blend/README.md) se descarta por superposi
 ## Profundidad auxiliar reutilizada
 
 [Material estándar de profundidad](obstruction-depth-only/README.md): ocho parejas exactas tras sincronizar opacidad.960 muestras GPU/1.440 frames, misma geometría por índice. GPU diurna15,83–16,08→14,70–15,17ms; noche y p95 no concluyentes. Conservar como base QA del fundido, no como aprobación global. Siguiente puerta: vídeo determinista y lectura de la silueta translúcida; después interacción con transparencias e impostores.
+
+## Recorrido de ocultación sincronizado
+
+[Vídeos día/noche](obstruction-fade-motion/README.md):180 parejas con cámara, viento y opacidad por instancia idénticos.119 exactas RGB, máximo3 instancias parciales/4 draws extra. La cuadrícula desaparece; persiste una silueta translúcida intermedia. Piloto con148 imágenes vacías por espera asíncrona tras render excluido; serie final verificada sin imágenes vacías. Candidato solo QA. Siguiente validación: agua/partículas, solapamiento de objetos y lifecycle; transición de impostores sigue independiente y pendiente.
