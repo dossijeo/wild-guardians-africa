@@ -4,6 +4,7 @@ import {newGame,resume,pause,placeStructure,advanceReal,clockLabel} from '../src
 import {rational} from '../src/simulation/money.js';
 import {spawnRaid} from '../src/simulation/raids.js';
 import {createPlant} from '../src/simulation/crops.js';
+import {Microevents} from '../src/microevents/controller.js';
 
 const nav={placement:()=>({valid:true,suppress:[]}),setState:()=>{},terrainValid:()=>true,walkable:()=>true,path:(_start,end)=>[{x:end.x,z:end.z}]};
 function fixture(){
@@ -58,8 +59,15 @@ test('QA-009/010: fractional daylight-to-night frame uses each side of the bound
 
 test('a visible night microevent suspends calm-night fast forward and restores it afterward',()=>{
   const s=fixture();s.time=310;s.nightPlan={at:Infinity,done:true,group:[]};
-  advanceReal(s,.02,nav,{nightFastForward:false});close(s.time,310.02);close(s.elapsed,.02);
-  advanceReal(s,.02,nav,{nightFastForward:true});close(s.time,310.12);close(s.elapsed,.12);
+  const event=Object.create(Microevents.prototype);
+  event.pending=true;event.active=null;
+  advanceReal(s,.02,nav,{nightFastForward:!event.holdsNightSpeed});close(s.time,310.02);
+  event.pending=false;event.active={outcome:null};
+  advanceReal(s,.02,nav,{nightFastForward:!event.holdsNightSpeed});close(s.time,310.04);
+  event.active={outcome:'completed',ending:.1};
+  advanceReal(s,.02,nav,{nightFastForward:!event.holdsNightSpeed});close(s.time,310.06);
+  event.active=null;
+  advanceReal(s,.02,nav,{nightFastForward:!event.holdsNightSpeed});close(s.time,310.16);close(s.elapsed,.16);
 });
 
 test('QA-010: a full calm night preserves growth and remaining water tolerance',()=>{
