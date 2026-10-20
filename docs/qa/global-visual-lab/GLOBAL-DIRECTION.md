@@ -259,3 +259,8 @@ El [relleno cálido de suelo en sombra del Cañón](canyon-warm-floor/README.md)
 [Mangrove damp moss](mangrove-damp-moss/README.md) queda descartado: la máscara húmeda selecciona una región limitada y no aporta volumen apreciable. Se conservan Moss002 puro y barro independiente.
 
 [Desierto: radiancia continua](desert-continuous-radiance/README.md) también se descarta como receta: 24 capturas de campaña y doce parejas verificadas muestran pérdida de dorado y facetas amplias persistentes. El diagnóstico confirma que la salida toon ordinaria de arena no consume la radiancia `lit` calculada previamente; no atribuirle mejoras por cambios en esa BRDF sin verificar la salida final. Mantener la rampa suavizada integrada. Sin benchmark temporal de esta receta rechazada; no repetir barridos de intensidad ni confundir cambio cromático con relieve. Calidad global pendiente.
+
+
+## Cierre y reapertura de cobertura continua
+
+[Lifecycle de cobertura](continuous-grass-lifecycle/README.md): fallo reproducido y corregido en Sabana/Gran Río conservados. El cierre ya no deja una instancia liberada como activa ni pisa callbacks posteriores. Doce ciclos completos en media/baja, 24 capturas día/noche; las reaperturas conservan cobertura y viento 8×, con diferencias residuales de hasta seis píxeles/un nivel RGB. Contadores de geometrías regresan al valor cerrado en cada ciclo. Es una corrección de fiabilidad del piloto, no una nueva aprobación de rendimiento o integración. Calidad global pendiente.

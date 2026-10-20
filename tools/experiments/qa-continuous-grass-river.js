@@ -1,3 +1,4 @@
+import {disposeCoverage} from './qa-coverage-lifecycle.js';
 // Isolated Grand River pilot, derived from Savanna helper SHA256 b4a9ae2269a53623bd9e40969ed83be31c1cdabce5ad4c90ffe4d04ea15e0a5b.
 import * as THREE from 'three';
 import {hashCell} from '/src/world/terrain.js';
@@ -117,9 +118,9 @@ export async function applyMaterialStudy(world,variant='A'){
  visibleTiles.sort((a,b)=>a.dist-b.dist||a.tx-b.tx||a.tz-b.tz);
  for(const {c,tx,tz}of visibleTiles)for(const p of tile(c,tx,tz).items){const dist=Math.hypot(p[0]-eyeX,p[2]-eyeZ);if(dist>q.farDistance)continue;bins[q.variant==='C'&&dist<q.nearDistance?0:1].push(p);}
  for(let k=0;k<2;k++){const entry=q.meshes[k],g=entry.mesh.geometry,bin=bins[k];q.stats.overflow+=Math.max(0,bin.length-entry.capacity);const count=Math.min(entry.capacity,bin.length);for(let i=0;i<count;i++){const p=bin[i];for(let j=0;j<4;j++){g.attributes.coverageAnchor.array[i*4+j]=p[j];g.attributes.coverageData.array[i*4+j]=p[j+4]}g.attributes.coverageSlope.array[i*2]=p[8];g.attributes.coverageSlope.array[i*2+1]=p[9]}for(const name of ['coverageAnchor','coverageData','coverageSlope'])g.attributes[name].needsUpdate=true;g.instanceCount=count;entry.mesh.visible=q.variant!=='A'&&count>0;}q.near=q.meshes[0].mesh.geometry.instanceCount;q.far=q.meshes[1].mesh.geometry.instanceCount;q.stats.selectionMs+=performance.now()-start;q.stats.selectionCount++;q.dirty=false;}
- world.scene.onBeforeRender=function(...args){old?.apply(this,args);q.uniforms.uCoverageTime.value=q.timeOverride??world.state.elapsed;const camera=world.camera,key=[Math.round((camera.position.x-world.scene.position.x)*2),Math.round(camera.position.y*2),Math.round((camera.position.z-world.scene.position.z)*2),...camera.quaternion.toArray().map(v=>v.toFixed(2)),q.variant].join('|');if(q.variant!=='A'&&(q.dirty||key!==q.signature)){q.signature=key;select()}};
+ q.renderHook=world.scene.onBeforeRender=function(...args){old?.apply(this,args);if(q.disposed)return;q.uniforms.uCoverageTime.value=q.timeOverride??world.state.elapsed;const camera=world.camera,key=[Math.round((camera.position.x-world.scene.position.x)*2),Math.round(camera.position.y*2),Math.round((camera.position.z-world.scene.position.z)*2),...camera.quaternion.toArray().map(v=>v.toFixed(2)),q.variant].join('|');if(q.variant!=='A'&&(q.dirty||key!==q.signature)){q.signature=key;select()}};
  q.rebuild=()=>{q.dirty=true};q.chunk=chunk;q.release=key=>{q.chunks.delete(key);const [cx,cz]=key.split(',').map(Number);invalidateWaterNeighbors(cx,cz)};q.markDirtyAt=()=>{q.occupancyDirty=true};q.flush=()=>{if(q.occupancyDirty){q.blockers=blockers();q.tiles.clear();q.dirty=true;q.occupancyDirty=false}};
- q.dispose=()=>{world.scene.onBeforeRender=old;q.releaseEvents?.();world.scene.remove(group);for(const e of q.meshes){e.mesh.geometry.dispose();e.mesh.material.dispose()}q.chunks.clear();q.tiles.clear()};
+ q.dispose=()=>disposeCoverage(world,q,old);
  world.groundDetails.dispose();world.groundDetails=q;
  for(const key of world.chunks.keys()){const [cx,cz]=key.split(',').map(Number);chunk(cx,cz)}
  q.releaseEvents=observeGameEvents(world.state,e=>markGroundDetailEvent(q,world.state,e,id=>world.objects.get(id)?.position));
