@@ -43,4 +43,4 @@ bpy.context.view_layer.objects.active=target
 bpy.ops.object.bake(type='NORMAL')
 image.filepath_raw=str(ASSET);image.file_format='PNG';image.save()
 bpy.ops.wm.save_as_mainfile(filepath=str(OUT/'foliage-detail.blend'))
-(OUT/'source.json').write_text(json.dumps({'source':'Authored in Blender; no third-party assets','seed':712,'uniqueLeaves':72,'periodicCopies':9,'sourceTriangles':len(faces),'boundaryEdges':boundary_count,'textureSize':[512,512],'nominalRGBA8MipBytes':1398101,'gameGeometryAdded':0,'assetBytes':ASSET.stat().st_size},indent=2)+'\n',encoding='utf-8')
+(OUT/'source.json').write_text(json.dumps({'source':'Authored in Blender; no third-party assets','seed':712,'uniqueLeaves':72,'periodicCopies':9,'sourceTriangles':len(faces),'boundaryEdges':boundary_count,'textureSize':[512,512],'nominalRGBA8MipBytes':1398101,'gameGeometryAdded':0,'assetBytes':ASSET.stat().st_size},indent=2)+'\n',encoding='utf-8',newline='\n')

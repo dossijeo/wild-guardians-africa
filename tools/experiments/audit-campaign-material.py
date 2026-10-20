@@ -11,5 +11,5 @@ for a in records:
  assert not a['errors'] and not b['errors'],(a['errors'],b['errors'])
  diff=ImageChops.difference(Image.open(root/a['file']).convert('RGB'),Image.open(root/b['file']).convert('RGB'))
  results.append({'biome':a['biome'],'view':a['view'],'phase':a['phase'],'matched':fields,'delta':{k:b[k]-a[k] for k in ['calls','triangles','textures']},'rgbMAE255':sum(ImageStat.Stat(diff).mean)/3})
-(root/'comparison-audit.json').write_text(json.dumps(results,indent=2)+'\n',encoding='utf-8')
+(root/'comparison-audit.json').write_text(json.dumps(results,indent=2)+'\n',encoding='utf-8',newline='\n')
 print(json.dumps({'pairs':len(results),'errors':0,'maxMAE':max(r['rgbMAE255'] for r in results)},indent=2))
