@@ -103,7 +103,7 @@ try{
   async rawCadence({frames=300,warmup=120,night=0}={}){
    // Separate validation after instrumented runs. This method ends instrumentation.
    meter.dispose();const rows=[];let last=0,lastAccepted=0;
-   for(let i=-warmup;i<frames;i++){const now=await raf();if(i===0)lastAccepted=now;const interval=last?now-last:0;last=now;window.applyFrame(Math.max(0,i)/60,night,Math.max(0,i));let accepted=true;const start=performance.now();if(engine){accepted=renderer.beginFrame(swapChain);if(accepted){renderer.renderView(view);renderer.endFrame()}engine.execute()}else draw();const submitMs=performance.now()-start;if(i>=0){rows.push({interval,accepted,submitMs,presentedInterval:accepted?now-lastAccepted:null});if(accepted)lastAccepted=now;}}
+   for(let i=-warmup;i<frames;i++){const now=await raf();if(i===-1)lastAccepted=now;const interval=last?now-last:0;last=now;window.applyFrame(Math.max(0,i)/60,night,Math.max(0,i));let accepted=true;const start=performance.now();if(engine){accepted=renderer.beginFrame(swapChain);if(accepted){renderer.renderView(view);renderer.endFrame()}engine.execute()}else draw();const submitMs=performance.now()-start;if(i>=0){rows.push({interval,accepted,submitMs,presentedInterval:accepted?now-lastAccepted:null});if(accepted)lastAccepted=now;}}
    const accepted=rows.filter(r=>r.accepted);return {backend,scenario,night,frames,accepted:accepted.length,fps:1000*accepted.length/rows.reduce((s,r)=>s+r.interval,0),frametime:stats(accepted.map(r=>r.presentedInterval)),cpuSubmit:stats(accepted.map(r=>r.submitMs)),errors:[...errors],rows};
   },
   async resourceProbe(){

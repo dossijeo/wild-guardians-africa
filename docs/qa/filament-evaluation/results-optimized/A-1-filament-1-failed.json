@@ -1,0 +1,16 @@
+{
+  "run": 1,
+  "scenario": "A",
+  "density": 1,
+  "backend": "filament",
+  "error": "Error: TypeError: Required member is undefined.\n    at _wgpuDeviceCreateBindGroup (http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.js:1:191542)\n    at http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.wasm:wasm-function[3660]:0x251a98\n    at http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.wasm:wasm-function[4077]:0x26a665\n    at http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.wasm:wasm-function[4072]:0x26a534\n    at http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.wasm:wasm-function[1010]:0x840ed\n    at http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.wasm:wasm-function[637]:0x3e133\n    at http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.wasm:wasm-function[2478]:0x1ef43f\n    at http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.wasm:wasm-function[2477]:0x1d9067\n    at http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.wasm:wasm-function[4806]:0x2b5356\n    at http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.wasm:wasm-function[1216]:0xb0cfd",
+  "consoleMessages": [
+    {
+      "type": "warning",
+      "text": "The powerPreference option is currently ignored when calling requestAdapter() on Windows. See https://crbug.com/369219127"
+    }
+  ],
+  "browserErrors": [
+    "TypeError: Required member is undefined.\n    at _wgpuDeviceCreateBindGroup (http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.js:1:191542)\n    at http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.wasm:wasm-function[3660]:0x251a98\n    at http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.wasm:wasm-function[4077]:0x26a665\n    at http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.wasm:wasm-function[4072]:0x26a534\n    at http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.wasm:wasm-function[1010]:0x840ed\n    at http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.wasm:wasm-function[637]:0x3e133\n    at http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.wasm:wasm-function[2478]:0x1ef43f\n    at http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.wasm:wasm-function[2477]:0x1d9067\n    at http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.wasm:wasm-function[4806]:0x2b5356\n    at http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.wasm:wasm-function[1216]:0xb0cfd"
+  ]
+}

@@ -1,5 +1,9 @@
 # Filament WASM + WebGPU — evaluación
 
+**Resultado: [CONSERVAR THREE.JS + WEBGL2](DECISION.md).** Prueba mínima funcional,
+48 bloques de benchmark y controles conservados. [Resultados](RESULTS.md),
+[protocolo](PROTOCOL.md), [reproducción completa](REPRODUCE.md).
+
 Base: `origin/main` actualizado el 2026-10-20, commit
 `59fdb9459e6ab55718e2397aab83a0c1ebfcd428`. Rama exclusiva
 `codex/filament-webgpu-migration`. No se modifica el renderizador principal.
