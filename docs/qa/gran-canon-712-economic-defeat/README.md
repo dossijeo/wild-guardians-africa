@@ -13,3 +13,28 @@ node tools/experiments/compare-repair-preview-campaign.mjs batch OUTPUT.json 100
 ```
 
 The requested horizon is 100 nights; the runner stops when the real game reaches defeat. The second run used the same `simulateNativeCampaign` options and recorded the final `messages`, work-center HP and serialized-state hash without changing the game.
+
+## Daily finance and defense decisions
+
+The [finance and defense report](finance-defense.json) repeats the same policy and game/WASM on the later docs-only `main` at `7b83a971`, using an instrumented campaign-reporting script. All 77 daily serialized-state hashes match [the original report](campaign.json); all daily finance reconciliation differences are zero. The runner source SHA-256 is `fe029930fc1d3a0dd5f90a799227ba8673d84dc5bdc655ad7af7a7a2e6b725`, and the WASM SHA-256 remains `6feeea330cf5c8d0e338503e85abbb007d6803cd1727c0b425623956234ec551`. The script records category totals without copying individual ledger entries into each daily row.
+
+| Nights | Crops / coins at end | Income | Wages | Seeds | Repairs paid | Walls paid | Net | Crops destroyed |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 1–10 | 49 / 539 | 4,714 | 2,502 | 2,155 | 98 | 120 | −161 | 7 |
+| 11–20 | 50 / 970 | 5,763 | 2,775 | 2,160 | 357 | 40 | +431 | 0 |
+| 21–30 | 47 / 1,033 | 5,894 | 2,802 | 2,522 | 507 | 0 | +63 | 9 |
+| 31–40 | 50 / 919 | 5,914 | 2,728 | 2,539 | 671 | 90 | −114 | 15 |
+| 41–50 | 51 / 651 | 4,736 | 2,650 | 1,615 | 699 | 40 | −268 | 1 |
+| 51–60 | 36 / 464 | 5,318 | 2,825 | 1,970 | 680 | 30 | −187 | 26 |
+| 61–70 | 5 / 62 | 3,203 | 1,617 | 1,305 | 533 | 150 | −402 | 66 |
+| 71–77 | 0 / 31 | 520 | 210 | 140 | 201 | 0 | −31 | 5 |
+
+Across 77 nights, 36,062 coins of delivered income were outweighed by 18,109 in wages, 14,406 in seeds, 3,746 in completed repairs and 470 in new walls. The net change from the runner's first financial checkpoint (700 coins) was −669, leaving 31. The bot bought 47 wall modules and requested 599 repair tasks; a request is not itself a completed repair or a debit, so the 3,746 figure comes from the actual ledger. Verified raids recorded 129 destroyed crops and 1,687 wall hits. The late decline combines agricultural losses, falling income and continuing maintenance; these figures do not isolate whether a different defense policy or balance parameter would have saved the farm.
+
+Reproduce this richer report with:
+
+```sh
+node tools/experiments/compare-enclosure-defense-campaigns.mjs gran-canon 100 712 OUTPUT.json topological
+```
+
+The reporting fix calculates daily hashes from the actual serialized game state; previously this tool read a nonexistent `row.stateSha256` field. The game simulation and defense policy were not changed.
