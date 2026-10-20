@@ -328,3 +328,8 @@ El [relleno cálido de suelo en sombra del Cañón](canyon-warm-floor/README.md)
 ## Manglares: recorte orgánico descartado
 
 [Barro con borde irregular](mangrove-organic-mud-rim/README.md): 24 capturas, doce parejas sin cambios de cámara/geometría. Reduce el polígono visible pero conserva el salto de material y aspecto pegado. Descartado; no gastar presupuesto optimizando esta receta. Siguiente hipótesis: mezcla visual de color/normal/rugosidad en frontera, respetando contornos autoritativos.
+
+
+## Manglares: frontera con mezcla material
+
+[Mezcla barro/musgo](mangrove-mud-moss-blend/README.md): 24 capturas, doce parejas de cámara/geometría idénticas. La ruta común de suelo permite mezclar color/normal/rugosidad/AO sin recorte ni blending; transición más integrada. Interior más claro/húmedo, pendiente control. Preparación ingenua423–586ms acumulados: no promover; cachear cálculos duplicados antes de benchmark GPU. Candidata visual, sin aprobación global.
