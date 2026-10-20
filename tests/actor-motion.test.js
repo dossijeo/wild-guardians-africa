@@ -26,6 +26,8 @@ test('village entry accepts a returning worker within body radius only across a 
 
 test('the first fleeing worker enters the village before a trailing body blocks its exact endpoint',()=>{
  const {s,nav}=createOpeningWorld({seed:712});
+ nav.intentTaskPlanner={needsReconciliation:()=>false,
+   hasPendingAt:()=>false,finishHomeIntent:()=>true};
  const entry=s.villages[0].entry;
  s.workers.push({id:'worker-90001',personId:'person-90001',profile:'olderMale',
    centerId:s.structures[0].id,villageId:s.villages[0].id,
@@ -43,6 +45,8 @@ test('the first fleeing worker enters the village before a trailing body blocks 
    actorBlockers(s,s.workers[0],true,8)),false);
  tick(s,.1,nav);
  assert.equal(s.workers[0].status,'home');
+ assert.equal(s.workers[0].x,entry.x);
+ assert.equal(s.workers[0].z,entry.z);
  assert.equal(s.workers[1].status,'fleeing');
  for(let step=0;step<20&&s.workers[1].status!=='home';step++)tick(s,.1,nav);
  assert.equal(s.workers[1].status,'home','the queue drains after the first worker enters');

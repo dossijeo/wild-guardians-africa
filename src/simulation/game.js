@@ -1363,9 +1363,12 @@ function updateWorkers(s,dt,nav) {
       const p=profile(w),center=s.structures.find(c=>c.id===w.centerId),village=s.villages.find(v=>v.id===w.villageId);
       if(['fleeing','returning','incapacitated'].includes(w.status)) {
         const home={...(village.entry??village),id:`home-${village.id}`};
-        if(workerAtVillageEntry(w,home,nav)){
+        if(nav.intentTaskPlanner&&workerAtVillageEntry(w,home,nav)){
           nav.intentTaskPlanner?.finishHomeIntent?.(w.id);
-          w.path=[];w.status='home';notifyWorkerPlanningChange(s,w);
+          // Complete the remaining sub-radius step as part of entering the
+          // building. The worker ceases to be a dynamic obstacle immediately.
+          w.x=home.x;w.z=home.z;w.path=[];w.status='home';
+          notifyWorkerPlanningChange(s,w);
           continue;
         }
         const nativeHome=nav.intentTaskPlanner?.planHomeRoute?.(s,w,home,nav.version);
