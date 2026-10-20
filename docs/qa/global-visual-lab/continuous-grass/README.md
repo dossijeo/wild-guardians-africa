@@ -136,3 +136,5 @@ Validación de entrega: `npm run build` pasa (406 módulos; avisos existentes de
 - [Láminas curvas recortadas](../continuous-grass-cards/README.md): reducen triángulos, pero pierden cuerpo en la cámara normal.
 
 Ambos cuentan con 18 capturas reales y controles de restauración idénticos. No sustituyen C ni su viento 8×; su descarte es visual, sin conclusión de rendimiento.
+
+- [Agrupaciones de altura](../continuous-grass-cluster/README.md): dos escalas probadas; la más visible amplifica demasiado el estiramiento bajo viento 8×. Se conserva C.
