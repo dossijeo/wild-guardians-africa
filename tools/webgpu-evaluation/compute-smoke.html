@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>WebGPU selection microprobe</title>
+<link rel="icon" href="data:,">
+<body>
+<pre id="status">Initializing isolated compute probe…</pre>
+<script type="module">
+import { WebGPURenderer, Vector3 } from 'three/webgpu';
+import { runComputeProbe } from './compute-probe.js';
+const renderer = new WebGPURenderer({ trackTimestamp: true });
+window.runComputeSmoke = async (options = { samples: 8, warmup: 2 }) => {
+  try {
+    if(options.resident){
+      const s=await(await fetch('/tools/webgpu-evaluation/fixtures/grass-snapshot.json')).json();
+      options={...options,candidates:new Float32Array(s.rawResidentCandidates.items.flatMap(p=>p.slice(0,4))),cameraPosition:new Vector3().fromArray(s.camera.position)};
+    }
+    const report = await runComputeProbe(renderer, { ...options, onProgress: value => console.log(value) });
+    document.querySelector('#status').textContent = JSON.stringify(report, null, 2);
+    return report;
+  } finally {
+    renderer.dispose();
+  }
+};
+</script>
+</body>
+</html>

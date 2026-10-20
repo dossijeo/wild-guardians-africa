@@ -1,0 +1,11 @@
+# B: terreno common TSL
+
+`createTerrainScene({THREE,backend,renderer})` acepta el namespace `three/webgpu`; devuelve scene, camera, update(timeSeconds, nightBoolean, cameraStepRadians), metadata y dispose. `legacy` se rechaza expresamente. Ambos backends deben ser WebGPURenderer (WebGPU y `forceWebGL:true`) para aislar la API usando exactamente el mismo grafo TSL.
+
+La escena conserva los recursos reales de Sabana de `/content/ground-materials.json`: Grass Medium 01 adaptado, normal y ARH. Replica las coordenadas mundiales rotadas, escala .155, altura .075, intersección limitada a ocho lecturas, derivadas explícitas, atenuación por huella de píxel y normal proyectada sobre el terreno. Color, normal y ARH comparten coordenadas desplazadas. El camino se mezcla con suelo usando una máscara procedural reproducible; no es la máscara de campaña. La textura se carga como datos sin conversión sRGB automática, igual que el recurso original; esta escena utiliza iluminación Standard Node y salida del renderer, no reconstrucción AfricanToon.
+
+Incluye terreno ondulado de 32 768 triángulos, cuatro oclusores, sombra solar 1024², iluminación diurna/nocturna, fibras de tres triángulos distribuidas determinísticamente con instancing y viento de vértices. No hay blending, sombras individuales de fibras ni CPU de distribución por fotograma. La animación comparte fórmulas y tiempo en ambos backends; no replica toda la cobertura aprobada (esa corresponde al escenario A).
+
+**Límite de interpretación:** una ventaja aquí no demuestra aceleración del renderizador actual. Falta AfricanToon, el filtro y caché propios de sombras, agua, sombras de contacto, rebasing, streaming y sistemas de campaña. Es una comparación de una carga de terreno TSL con paridad entre APIs. No debe etiquetarse como baseline del juego ni justificar por sí sola una migración. Los normales de las fibras no se deforman, por igual en ambos backends.
+
+El padre del experimento debe verificar compilación/render real y capturas, establecer resolución/calidad/tone mapping idénticos y medir las pasadas completas incluyendo sombras. El máximo de muestras indicado excluye el filtrado físico/an-isotrópico y las lecturas de sombras; no equivale al tráfico real de GPU.

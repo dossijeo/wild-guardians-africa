@@ -1,0 +1,12 @@
+# Compatibilidad y estrategia condicional
+
+Consulta de fuentes primarias: 2026-10-20. La disponibilidad de la API no acredita la compatibilidad de Wild Guardians ni de todos sus shaders.
+
+- Chrome documenta el soporte inicial por plataforma y requisitos de GPU/controlador, incluyendo Windows con D3D12. La prueba local verifica un adaptador **Intel gen-12lp, no fallback**, y `timestamp-query`; no utiliza flags para forzar software o ignorar bloqueos. [Chrome: WebGPU](https://developer.chrome.com/docs/web-platform/webgpu/overview).
+- Safari 26.0 incorporó WebGPU. Esto no constituye una prueba de este juego en Safari, iOS o WebKit. [WebKit: Safari 26.0](https://webkit.org/blog/17333/webkit-features-in-safari-26-0/#webgpu).
+- Mozilla anunció WebGPU en Windows con Firefox 141. El anuncio histórico no permite inferir la cobertura actual de todas sus plataformas ni el rendimiento de esta prueba en Firefox. [Mozilla Graphics](https://mozillagfx.wordpress.com/2025/07/15/shipping-webgpu-on-windows-in-firefox-141/).
+- Three ofrece selección de backend y fallback WebGL2. En r180 esto exige materiales Node/TSL: no ejecuta los hooks GLSL actuales de `AfricanToon` por cambiar `forceWebGL`. La autoridad exacta para este experimento es el código instalado de Three **0.180.0**, no la última documentación. [Three: WebGPURenderer](https://threejs.org/docs/pages/WebGPURenderer.html), [auditoría r180](THREE-R180.md).
+
+Si se justificase una migración, la estrategia sería un único material TSL por efecto, compartido por ambos backends; selección CPU como alternativa a compactación compute, y compute únicamente cuando estén presentes sus capacidades y su beneficio esté medido. Inicialización asíncrona con detección de adaptador/dispositivo, pérdida de dispositivo y recuperación; no detectar únicamente el nombre del navegador. Mantener el renderer actual operativo hasta lograr paridad del núcleo TSL, sin convertir esa coexistencia temporal en dos implementaciones artísticas permanentes.
+
+La alternativa WebGL2 común se ejecuta en estos prototipos. No se han validado Safari, Firefox, Android, WebView2/Tauri ni dispositivos sin WebGPU. Tampoco se han certificado todos los perfiles del juego ni las seis campañas bajo el renderer nuevo. El `AdapterRAM` de WMI es un dato del controlador de una GPU integrada, **no una medida de VRAM disponible**; el navegador no proporciona aquí memoria GPU residente fiable.
