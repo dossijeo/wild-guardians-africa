@@ -359,3 +359,7 @@ La [prueba de aislamiento](savanna-coverage-cost-isolation/README.md) cambia la 
 ## Sabana: eliminar envío fuera del encuadre
 
 La [atribución por draw](savanna-draw-attribution/README.md) identifica lotes de objetos como origen de1,19millones de triángulos. La [candidata de frustum por instancia](savanna-instance-frustum/README.md), solo QA, reduce la vista normal a499mil sin cambiar modelos ni cobertura: cuatro capturas exactas y dos inversas con residuos pendientes. Ocho bloques ABBA muestran GPU diurna14,59–14,81→9,07–10,30ms; noche14,38–20,89→9,47–10,04ms. No extrapolar a toda campaña. Conservar candidata para medir movimiento, invalidación, streaming y seis biomas antes de integración. El objetivo artístico completo sigue pendiente.
+
+## Frustum en movimiento: evitar subidas redundantes
+
+[Recorrido y benchmark](savanna-instance-frustum/motion/README.md):70 de72 parejas RGB exactas; dos residuos localizados, causa pendiente.960 muestras GPU y1.440 frames revelan CPU aproximadamente1ms mayor y48 subidas de grupos/frame frente11, con p95 peor. No integrar la variante actual. Siguiente hipótesis: comprobar visibilidad al mover cámara, pero actualizar matrices/buffers solo si cambian selección u origen. Mantener cobertura y modelos; falta validación global.

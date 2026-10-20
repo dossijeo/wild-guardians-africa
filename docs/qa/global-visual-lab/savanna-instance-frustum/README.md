@@ -39,6 +39,8 @@ El render completo incluye el triángulo del cielo:70→60 draws y1.274.921→49
 
 [Datos completos](performance/benchmarks.json), [resumen](performance/summary.json). Antes de integrar: localizar residuos, medir selección y cadencia durante movimiento, comprobar límites de frustum, carga/descarga y seis biomas. La calidad global de los mockups no queda acreditada por esta optimización.
 
+La [prueba posterior en movimiento](motion/README.md) detecta mayor CPU y unas48 subidas de grupos por frame frente a11 originales; p95 peor pese a menor GPU. No promover esta versión. Separar invalidación de cámara de subida efectiva cuando la selección no cambia.70 de72 parejas del recorrido son exactas; dos residuos diurnos documentados.
+
 ## Reproducción
 
 Vite5190. Ejecutar capturas/compresión separadas del benchmark:
