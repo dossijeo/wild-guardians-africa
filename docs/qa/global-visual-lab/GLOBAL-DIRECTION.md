@@ -180,3 +180,7 @@ Se conserva [la rampa de luz suavizada](desert-soft-light/README.md), con [integ
 ## Relieve foliar horneado en Blender (20/10)
 
 [Foliage detail](foliage-detail/README.md): fuente propia de 72 hojas cerradas, mosaico normal 512², sin nueva geometria en juego. 24 capturas reales y 12 parejas verificadas fuera del poblado en Sabana/Rio/Manglares. El efecto produce pequenas marcas angulosas en copas cercanas y es escaso a distancia; descartado. ABBA de 24 bloques: +0,119 a +0,771 ms GPU, con deriva, mas una textura nominal de 1,33 MiB. No integrado. Priorizar lectura amplia del terreno y masas vegetales; no continuar aumentando detalle fino de copas sin una mejora visual demostrada. Calidad global pendiente.
+
+## Variacion amplia del color del suelo (20/10)
+
+[Ground palette patches](ground-palette-patches/README.md): 24 capturas, 12 parejas verificadas en Sabana/Rio/Canon, dia y noche. Dos escalas de ruido tintan el albedo conservando fibras, normales y geometria. Cambia el cromatismo pero no mejora claramente el volumen: descartado. ABBA final incluye terreno y horizonte; una ronda interrumpida con selector incompleto se archiva como invalida. Deriva relevante; no interpretar diferencias negativas como aceleracion. Siguiente paso: recorrido real de las matas arqueadas conservadas junto a la iluminacion global, antes de promoverlas al modo experimental, manteniendo Manglares excluido hasta resolver coste/aporte. No mas acumulacion de microajustes sin ganancia visible. Calidad global pendiente.
