@@ -238,3 +238,7 @@ La petición posterior del usuario limita este pase al material del suelo; queda
 ## Cubierta continua de Sabana — 20/10/2026
 
 El [piloto A/B/C](continuous-grass/README.md) sustituye la prioridad de matas aisladas. La cobertura opaca instanciada forma franjas continuas con viento y LOD, preservando los modelos originales. C media añade 212.704 triángulos y dos draws en cámara normal; C baja híbrida, 36.960 y un draw. Se entregan 48 capturas/control, dos vídeos, 8.640 muestras GPU Intel UHD, overdraw, memoria y streaming. Se conserva como candidato QA, sin opción por defecto ni extensión a otros biomas: todavía falta finura/agrupación orgánica comparable a la referencia y amortizar la activación. No fusionar.
+
+## Cubierta continua: primer piloto de Gran Río
+
+Tras conservar el resultado de Sabana y su viento 8×, se ha preparado un [piloto específico de Gran Río](continuous-grass-river/README.md): menor altura, pigmento verde y cobertura condicionada por humedad. Cuenta con 48 capturas y vídeos, pero sigue pendiente de benchmark GPU aislado y revisión de orillas/streaming. No se activa por defecto ni se generaliza a otros biomas.
