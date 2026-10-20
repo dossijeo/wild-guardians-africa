@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {actorBlockers,actorSegmentClear} from '../src/simulation/actor-motion.js';
-import {walkTo,newGame} from '../src/simulation/game.js';
+import {walkTo,newGame,tick,workerAtVillageEntry} from '../src/simulation/game.js';
 import {ANIMAL_ACTIONS} from '../src/simulation/animal-actions-data.js';
 import {updateWorkerEncounters} from '../src/simulation/encounters.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
@@ -11,6 +11,46 @@ import {reservedApproachClear} from '../src/simulation/raid-target-reservations.
 import {readFileSync} from 'node:fs';
 import {createOpeningWorld} from '../tools/check_opening.mjs';
 import {edgeDistance} from '../src/world/footprints.js';
+
+test('village entry accepts a returning worker within body radius only across a static clear doorway',()=>{
+ const entry={x:60,z:0},worker={x:60.2263,z:-.0316,radius:.28};
+ let checks=0;
+ const nav={workerMotionClear:()=>{checks++;return true;}};
+ assert.equal(workerAtVillageEntry(worker,entry,nav),true);
+ assert.equal(checks,1);
+ assert.equal(workerAtVillageEntry({...worker,z:-.281},entry,nav),false);
+ assert.equal(checks,1,'distant workers do not query the doorway');
+ assert.equal(workerAtVillageEntry(worker,entry,{workerMotionClear:()=>false}),false,
+   'a wall across the short final segment still prevents arrival');
+});
+
+test('the first fleeing worker enters the village before a trailing body blocks its exact endpoint',()=>{
+ const {s,nav}=createOpeningWorld({seed:712});
+ nav.intentTaskPlanner={needsReconciliation:()=>false,
+   hasPendingAt:()=>false,finishHomeIntent:()=>true};
+ const entry=s.villages[0].entry;
+ s.workers.push({id:'worker-90001',personId:'person-90001',profile:'olderMale',
+   centerId:s.structures[0].id,villageId:s.villages[0].id,
+   x:entry.x+.2263,z:entry.z-.0316,status:'fleeing',radius:.28,
+   taskId:null,crateId:null,path:[{x:entry.x,z:entry.z}],
+   destinationId:`home-${s.villages[0].id}`,pathVersion:nav.version,
+   runRemaining:10,hits:0,incapacitated:false,recovering:false});
+ s.workers.push({id:'worker-90002',personId:'person-90002',profile:'olderMale',
+   centerId:s.structures[0].id,villageId:s.villages[0].id,
+   x:entry.x-.03,z:entry.z-.53,status:'fleeing',radius:.28,
+   taskId:null,crateId:null,path:[{x:entry.x,z:entry.z}],
+   destinationId:`home-${s.villages[0].id}`,pathVersion:nav.version,
+   runRemaining:10,hits:0,incapacitated:false,recovering:false});
+ assert.equal(actorSegmentClear(s.workers[0],entry,s.workers[0],
+   actorBlockers(s,s.workers[0],true,8)),false);
+ tick(s,.1,nav);
+ assert.equal(s.workers[0].status,'home');
+ assert.equal(s.workers[0].x,entry.x);
+ assert.equal(s.workers[0].z,entry.z);
+ assert.equal(s.workers[1].status,'fleeing');
+ for(let step=0;step<20&&s.workers[1].status!=='home';step++)tick(s,.1,nav);
+ assert.equal(s.workers[1].status,'home','the queue drains after the first worker enters');
+});
 
 test('failed route planning waits for a relevant event or a slow recovery retry',()=>{
  const state={elapsed:0},actor={id:'pending-animal',x:0,z:0,radius:.8,species:'hyena',status:'walking',hitsRemaining:2};
