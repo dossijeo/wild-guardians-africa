@@ -16,3 +16,10 @@ export function patchVolcanicCharcoal(source){
  if(!source.includes(anchor))throw Error('Volcanic charcoal: albedo shader anchor missing');
  return source.replace(anchor,'if(rock){float charcoal=dot(tex,vec3(.2126,.7152,.0722));tex=mix(vec3(charcoal)*vec3(1.10,.99,.88),tex,.18);tex=pow(max(tex,vec3(.001)),vec3(.91));}');
 }
+
+// Dry mapped ground keeps its color and microgeometry; avoid a glossy turf response.
+export function patchDryGroundRoughness(source){
+ const anchor='rough=baseRough;';
+ if(!source.includes(anchor))throw Error('Dry ground roughness: shader anchor missing');
+ return source.replace(anchor,'if(!moss&&!rock)baseRough=max(baseRough,.86);rough=baseRough;');
+}

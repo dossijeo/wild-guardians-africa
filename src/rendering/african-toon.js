@@ -1,5 +1,5 @@
 import {acquireWaterSlope,patchGlobalWaterSurface} from './global-water-surface.js';
-import {patchGlobalGroundFill,patchVolcanicCharcoal} from './global-visual-lighting.js';
+import {patchGlobalGroundFill,patchVolcanicCharcoal,patchDryGroundRoughness} from './global-visual-lighting.js';
 import {groundMaterialFunctions,artLightingFunctions,ART_PROFILES} from './biome-material-source.js';
 import {savannaLayerFunctions} from './savanna-layer-source.js';
 import * as THREE from 'three';
@@ -118,6 +118,10 @@ export class AfricanToon {
     if(this.globalVisualLighting&&material.userData.toonGround&&material.userData.groundBiome==='volcanoes'){
       const compile=material.onBeforeCompile;
       material.onBeforeCompile=(shader,renderer)=>{compile(shader,renderer);shader.fragmentShader=patchVolcanicCharcoal(shader.fragmentShader);};
+    }
+    if(this.globalVisualLighting&&material.userData.toonGround&&material.userData.biomeGround&&['savanna','grand_river','canyons'].includes(material.userData.groundBiome)){
+      const compile=material.onBeforeCompile;
+      material.onBeforeCompile=(shader,renderer)=>{compile(shader,renderer);shader.fragmentShader=patchDryGroundRoughness(shader.fragmentShader);};
     }
     material.onBeforeCompile=((compile)=>(shader,renderer)=>{compile(shader,renderer);patchNativeShadow(shader,this.shadowUniforms,'vToonWorld');})(material.onBeforeCompile);
     recordNativeDepthHook(material,original,'toon',...(material.userData.horizonBounds?['horizon']:[]));
