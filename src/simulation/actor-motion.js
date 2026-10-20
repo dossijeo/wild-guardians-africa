@@ -76,9 +76,10 @@ export function actorSegmentClear(start,end,actor,blockers){
   });
 }
 export function prepareActorMotion(state,actor,nav,worker){
-  // Movement inspects at most one local lookahead (under eight metres). Keep
-  // full-world blocker queries for destination occupancy and route validation.
-  const blockers=actorBlockers(state,actor,worker,8);
+  // A worker step only needs the local approach. Animal detours retain their
+  // full native search corridor dependencies, including remote bodies that
+  // may enter an incremental search while it is pending.
+  const blockers=actorBlockers(state,actor,worker,worker?8:Infinity);
   if(!blockers.length)return null;
   const clear=(a,b)=>actorSegmentClear(a,b,actor,blockers);
   if(!actor.path?.length)return clear;
