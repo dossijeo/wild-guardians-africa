@@ -1325,6 +1325,16 @@ function reconcileNativeIntents(s,nav){
     nav.intentTaskPlanner.reconcileWorkerRoutes(s,{navVersion:nav.version});
   }
 }
+// A worker's clearance disc has entered the village doorway once its center
+// is within one body radius of the entry. Requiring the exact point can trap
+// the first person in a queue: the final centimeter would overlap the person
+// behind them, even though the terrain and doorway are open.
+export function workerAtVillageEntry(worker,entry,nav){
+  const radius=worker.radius??.28;
+  if(dist(worker,entry)>radius+1e-9)return false;
+  return nav.workerMotionClear?.(worker,entry,radius)??
+    nav.segmentClear?.(worker,entry,radius,null,true)??false;
+}
 function updateWorkers(s,dt,nav) {
   reconcileNativeIntents(s,nav);
   // Task removals/rebuilds replace the array; enqueues change its length.
@@ -1353,6 +1363,11 @@ function updateWorkers(s,dt,nav) {
       const p=profile(w),center=s.structures.find(c=>c.id===w.centerId),village=s.villages.find(v=>v.id===w.villageId);
       if(['fleeing','returning','incapacitated'].includes(w.status)) {
         const home={...(village.entry??village),id:`home-${village.id}`};
+        if(workerAtVillageEntry(w,home,nav)){
+          nav.intentTaskPlanner?.finishHomeIntent?.(w.id);
+          w.path=[];w.status='home';notifyWorkerPlanningChange(s,w);
+          continue;
+        }
         const nativeHome=nav.intentTaskPlanner?.planHomeRoute?.(s,w,home,nav.version);
         if(nativeHome?.status==='found'){
           w.path=nativeHome.path;w.destinationId=home.id;
