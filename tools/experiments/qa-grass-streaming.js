@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import {observeGameEvents} from '/src/simulation/game.js';
 import {BlenderGroundDetails,markGroundDetailEvent} from '/src/rendering/blender-ground-details.js';
-import {groundSample417} from '/src/rendering/ground-mask.js';
+import {footprintDistance} from '/src/world/footprints.js';
+import {residentWearSampler} from './qa-ground-detail-mask.js';
 import {hashCell} from '/src/world/terrain.js';
 // QA only: stable authored islands, visibility budget, no simulation membership.
 export async function applyMaterialStudy(world){
@@ -13,9 +14,13 @@ export async function applyMaterialStudy(world){
  d.geometry=source.geometry.clone().applyMatrix4(source.matrixWorld);d.material=source.material.clone();d.material.side=THREE.FrontSide;d.material.roughness=.96;if(world.state.biome==='gran-rio')d.material.color.setRGB(.42,1.,.55);
  d.geometry.computeBoundingBox();d.material.userData.artBounds={min:d.geometry.boundingBox.min.clone(),size:d.geometry.boundingBox.getSize(new THREE.Vector3()),crown:.43};
  const field=world.nav.field,state=world.state;
+ // Consume the renderer's resident mask, including native campaign clearings.
  const sample=(cx,cz)=>{
+ const wear=residentWearSampler(world,cx,cz);
  const blockers=[...state.plants.filter(p=>p.alive!==false),...state.structures.filter(s=>s.status!=='ruined'),...state.villages];
- const allowed=(x,z)=>field.slope(x,z)<=.42&&!field.waterInfo(x,z).inside&&groundSample417(field,field.c.profile??{},x,z)[3]<=.27&&!blockers.some(p=>(x-p.x)**2+(z-p.z)**2<(p.kind==='wall'?2.6:p.kind==='center'?12:p.buildings?90:3.6));
+ const obstacles=(world.nav.obstacles??[]).filter(o=>o.kind!=='shield');
+ const occupied=(x,z)=>obstacles.some(o=>o.footprint?footprintDistance(o.footprint,x,z)<.65:Math.hypot(x-o.x,z-o.z)<(o.radius??0)+.65);
+ const allowed=(x,z)=>!occupied(x,z)&&field.slope(x,z)<=.42&&!field.waterInfo(x,z).inside&&wear(x,z)<=.27&&!blockers.some(p=>(x-p.x)**2+(z-p.z)**2<(p.kind==='wall'?2.6:p.kind==='center'?12:p.buildings?90:3.6));
  const candidates=[];
 
   for(let ax=cx*48-21;ax<cx*48+24;ax+=6)for(let az=cz*48-21;az<cz*48+24;az+=6){

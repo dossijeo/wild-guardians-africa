@@ -29,4 +29,4 @@ try{for(const sceneCase of [1,6]){
   }
   return {placementDirty,removed,restored:true,frames,hookCpuMs:timings,limitation:'CPU hook includes QA diagnostics; render cost and loading excluded; synthetic occupancy fixture'};
  });records.push({sceneCase,...result});await page.close();console.log(sceneCase,result.removed);
-}await writeFile('docs/qa/global-visual-lab/grass-streaming/occupancy-motion.json',JSON.stringify(records,null,2)+'\n');}finally{await browser.close()}
+}await writeFile(process.env.WG_GRASS_CHECK_OUTPUT??'docs/qa/global-visual-lab/grass-streaming/occupancy-motion.json',JSON.stringify(records,null,2)+'\n');}finally{await browser.close()}
