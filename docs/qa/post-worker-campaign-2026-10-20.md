@@ -21,4 +21,10 @@ node tools/run_native_campaign.mjs --out test-results/post-worker-good30 --days 
 node tools/run_native_campaign.mjs --out test-results/post-worker-good100 --days 100 --seed 712 --strategy good --biome sabana --culture mapungubwe
 ```
 
-El runner escribe `source.json`, `days.jsonl`, `report.json`, `receipt.json` y el estado comprimido. `observed-native-defeat` es un resultado válido del juego y produce código de salida 2; `incomplete-harness-error` indica una prueba técnica inconclusa y debe tratarse por separado. La prueba responsable de 100 noches en CI se lanzó adicionalmente para comprobar una política distinta sobre el mismo `main`; su resultado no forma parte de esta tabla.
+El runner escribe `source.json`, `days.jsonl`, `report.json`, `receipt.json` y el estado comprimido. `observed-native-defeat` es un resultado válido del juego y produce código de salida 2; `incomplete-harness-error` indica una prueba técnica inconclusa y debe tratarse por separado.
+
+## Prueba adicional de otra política
+
+La [ejecución de CI 39411703305](https://github.com/dossijeo/wild-guardians-africa/actions/runs/39411703305) probó `check_intensive_case.mjs` con Sabana/Mapungubwe/712 y horizonte de 100 noches sobre el mismo `main` `44da3cac`. Es otra política y no forma parte de la comparación reproducible de la tabla. Terminó en derrota económica tras 50 noches: 34 monedas, ningún cultivo vivo y el centro con 600/600 PV. Completó 50 incursiones y 1.847 entregas; registró 1.014 cultivos destruidos, 71 recuperaciones de colisión móvil y dos reparaciones aplicadas. La ejecución falló como comprobación de supervivencia de 100 noches por una derrota válida del juego, no por un error técnico del runner.
+
+Esta configuración ejecuta `simulateIntensiveFarm` con `defend=false` por defecto, por lo que tampoco prueba una defensa con murallas. La política exige reservas económicas antes de plantar; el registro permite identificar esa restricción, pero no basta para atribuirle por sí sola la derrota. Ninguna de las dos campañas documentadas aquí demuestra una victoria de 100 noches en el `main` actual.
