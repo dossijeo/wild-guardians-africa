@@ -59,8 +59,9 @@ try{for(const quality of (process.env.WG_COVER_QUALITY??'media,baja').split(',')
    const r=window.qaCampaignRun;if(!r?.active||!r.rendered)return;
    if(r.previous)r.previous.intervalMs=stamp-r.previous.stamp;
    if(r.index>=0&&r.index<240){const row={...r.rendered,stamp,appFrameCpuMs:cpu,renderCalls:r.renderCalls,hidden:document.hidden};r.rows.push(row);r.previous=row}
+   if(r.index===-1){r.warmupStateChanges=changedPaths(JSON.parse(r.state),JSON.parse(JSON.stringify(w.state)));r.state=JSON.stringify(w.state);r.resident=[...w.chunks.keys()]}
    r.index++;r.rendered=null;r.renderCalls=0;
-   if(r.index>240){r.active=false;r.resolve({rows:r.rows,materialMembershipUnchanged:initialMaterials().length===materials.length&&initialMaterials().every(m=>materials.includes(m)),simulationUnchanged:r.state===JSON.stringify(w.state),stateChanges:changedPaths(JSON.parse(r.state),JSON.parse(JSON.stringify(w.state))),residentBefore:r.resident,residentAfter:[...w.chunks.keys()],memory:{...w.renderer.info.memory}})}
+   if(r.index>240){r.active=false;r.resolve({rows:r.rows,warmupStateChanges:r.warmupStateChanges,materialMembershipUnchanged:initialMaterials().length===materials.length&&initialMaterials().every(m=>materials.includes(m)),simulationUnchanged:r.state===JSON.stringify(w.state),stateChanges:changedPaths(JSON.parse(r.state),JSON.parse(JSON.stringify(w.state))),residentBefore:r.resident,residentAfter:[...w.chunks.keys()],memory:{...w.renderer.info.memory}})}
   };
   window.qaRunCampaign=async(variant,night)=>{
    window.qaSetSand(variant);w.state.time=night?350:150;w.state.day=1;pose(0);
