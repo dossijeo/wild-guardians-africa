@@ -27,3 +27,5 @@ No añade texturas, geometría o draw calls. Añade operaciones aritméticas por
 Solo materiales residentes. Falta binding de chunks/horizonte, prueba con construcción y otras semillas/calidades, comparación temporal fiable y revisión de la coherencia con sombras de objetos. No activar por defecto; main intacto. Mantener la dirección sin barrer intensidades hasta resolver el conjunto, y no confundir calidez con relieve.
 
 Reproducir: `node tools/experiments/capture-canyon-warm-floor.mjs`, servidor del worktree en5190.
+
+Actualización: el [adaptador QA reversible y su prueba de streaming](streaming/README.md) cubren ahora materiales nuevos/horizonte en un recorrido diurno de media. Los demás límites y la falta de aprobación temporal siguen vigentes.
