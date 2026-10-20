@@ -362,7 +362,7 @@ export function createSpatialIntentBridge(session){
     if(!Number.isInteger(budget)||budget<1||budget>4096)
       throw RangeError('Plant search budget must be 1–4096');
     const center=structuresById.get(numericId(centerId));
-    if(center?.kind!=='center'||center.status==='ruined')
+    if(center?.kind!=='center'||center.status!=='intact')
       throw TypeError(`Unknown operational center: ${centerId}`);
     session.actorSectorRevision({worker:true});
     const resident=[...session.stream.loaded().keys()].map(key=>key.split(',').map(Number))

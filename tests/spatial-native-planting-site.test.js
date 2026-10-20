@@ -68,5 +68,29 @@ test('native planting advice reserves legal bidirectional sites and confirms pai
   const repeated=bridge.findPlantingSite(center.id,{budget:64});
   assert.deepEqual(repeated.point,replay.point,
    'the same restored spatial state yields the same next legal site');
+  const restoredCenter=restored.structures.find(item=>item.id===center.id);
+  restoredCenter.hp--;
+  bridge.applyEvents(restored,[{type:'structureDamage',entity:restoredCenter}]);
+  assert.equal(bridge.releasePlantingSite(repeated.reservationId),true,
+   'HP loss without a status change preserves a provisional lease');
+  const preCollapse=bridge.findPlantingSite(center.id,{budget:64});
+  assert.equal(preCollapse.status,'found');
+  restoredCenter.status='collapsing';
+  restoredCenter.hp=0;
+  bridge.applyEvents(restored,[{type:'structureDamage',entity:restoredCenter}]);
+  assert.equal(bridge.releasePlantingSite(preCollapse.reservationId),false,
+   'a collapsing center cannot retain a provisional planting lease');
+  assert.throws(()=>bridge.findPlantingSite(center.id,{budget:64}),
+   /Unknown operational center/);
+  restoredCenter.status='intact';
+  restoredCenter.hp=restoredCenter.maxHp;
+  bridge.applyEvents(restored,[{type:'structureDamage',entity:restoredCenter}]);
+  const recovered=bridge.findPlantingSite(center.id,{budget:64});
+  assert.equal(recovered.status,'found');
+  assert.deepEqual(recovered.point,preCollapse.point,
+   'restoring a center does not leave its former lease occupying the site');
+  bridge.applyEvents(restored,[{type:'target',remove:true,id:center.id}]);
+  assert.equal(bridge.releasePlantingSite(recovered.reservationId),false,
+   'removing the center retires its provisional lease');
  }finally{session.dispose();}
 });
