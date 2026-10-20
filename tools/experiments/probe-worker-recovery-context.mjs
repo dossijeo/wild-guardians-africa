@@ -1,8 +1,11 @@
 import {simulateNativeCampaign} from '../native-campaign-runner.mjs';
+import {createSpatialCampaignOpening} from './spatial-campaign-opening.mjs';
 
-const days=Number(process.argv[2]??8),seed=Number(process.argv[3]??712);
-if(!Number.isSafeInteger(days)||days<1||days>100||!Number.isSafeInteger(seed)||seed<0)
-  throw Error('Usage: node tools/experiments/probe-worker-recovery-context.mjs [days] [seed]');
+const days=Number(process.argv[2]??8),seed=Number(process.argv[3]??712),
+  backend=process.argv[4]??'wild-engine';
+if(!Number.isSafeInteger(days)||days<1||days>100||!Number.isSafeInteger(seed)||seed<0||
+  !['wild-engine','legacy'].includes(backend))
+  throw Error('Usage: node tools/experiments/probe-worker-recovery-context.mjs [days] [seed] [wild-engine|legacy]');
 
 const seen=new Set(),rows=[];
 let beforeWorkers=new Map();
@@ -43,6 +46,9 @@ const onTick=state=>{
 };
 
 const result=await simulateNativeCampaign({days,strategy:'good',seed,
-  biome:'sabana',culture:'mapungubwe',slotId:`native-good-${seed}`,onTick});
-console.log(JSON.stringify({days,seed,completedNights:result.completedNights,
+  biome:'sabana',culture:'mapungubwe',slotId:`native-good-${seed}`,
+  ...(backend==='wild-engine'?{openingFactory:createSpatialCampaignOpening,
+    spatialAdvice:true,nativeIntents:true,nativeWallPlans:true,reloadRaids:false}:{}),
+  onTick});
+console.log(JSON.stringify({days,seed,backend,completedNights:result.completedNights,
   result:result.result,counts,destinations,examples:rows}));
