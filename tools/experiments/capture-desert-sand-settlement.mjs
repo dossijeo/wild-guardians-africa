@@ -17,12 +17,12 @@ try{for(const quality of (process.env.WG_COVER_QUALITY??'media,baja').split(',')
 
 
  await page.addInitScript(quality=>localStorage.setItem('wild-guardians:settings',JSON.stringify({quality,farVegetation:false})),quality);
- await page.goto('http://127.0.0.1:5190/?qa-seed=712&visualLab=global-lighting');
+ await page.goto('http://127.0.0.1:5190/?qa-seed=712&visualLab=global-lighting'+(process.env.WG_SAND_NATIVE==='1'?'&sandRelief=1':''));
  await page.waitForSelector('#native-menu',{timeout:60000});const frame=page.frames().find(f=>f.url().includes('/menu/'))??await page.waitForEvent('framenavigated',{predicate:f=>f.url().includes('/menu/'),timeout:60000});
  await frame.waitForLoadState('load');await frame.waitForFunction(()=>document.body.innerText.toUpperCase().includes('JUEGO NUEVO'));
  await frame.evaluate(biome=>parent.postMessage({type:'wild-guardians:menu',action:'start',biome,culture:'mapungubwe'},location.origin),biome);
  await page.waitForFunction(()=>document.querySelector('#stage[aria-busy="false"]')&&window.qaCampaignWorld?.state,null,{timeout:180000});
- await page.evaluate(async()=>{const w=window.qaCampaignWorld;const {pause}=await import('/src/simulation/game.js');pause(w.state,'qa-visual');w.updateCamera=()=>{w.camera.lookAt(w.controls.target);w.camera.updateMatrixWorld()};});
+ await page.evaluate(async()=>{const w=window.qaCampaignWorld;const {pause}=await import('/src/simulation/game.js');pause(w.state,'menu');w.updateCamera=()=>{w.camera.lookAt(w.controls.target);w.camera.updateMatrixWorld()};});
 
  await page.evaluate(()=>{const w=window.qaCampaignWorld,update=w.materialRegistry.update.bind(w.materialRegistry);w.materialRegistry.update=()=>update(0)});
 
@@ -30,7 +30,7 @@ try{for(const quality of (process.env.WG_COVER_QUALITY??'media,baja').split(',')
 
 
  await page.evaluate(async()=>{const w=window.qaCampaignWorld;w.controls.target.y=w.nav.field.surface(w.controls.target.x,w.controls.target.z)+.9;const o=w.controls.target.toArray();window.qaSandPath=[[22,16,18],[12,5,18],[-18,9,22]].map(([x,y,z])=>[o[0]+x,Math.max(o[1]+y,w.nav.field.surface(o[0]+x,o[2]+z)+1.2),o[2]+z]);w.camera.position.fromArray(window.qaSandPath[0]);w.syncChunks();await w.whenChunksReady();await w.horizon.whenReady();});
- for(const variant of ['base','candidate']){
+ for(const variant of (process.env.WG_SAND_NATIVE==='1'?['integrated']:['base','candidate'])){
   if(variant==='candidate')await page.evaluate(async study=>{await(await import('/tools/experiments/qa-'+study+'.js')).applyMaterialStudy(window.qaCampaignWorld)},study);
   for(const phase of phases){
    const dir=`${out}/${quality}-${variant}-${phase}`;await mkdir(dir,{recursive:true});const frames=[];

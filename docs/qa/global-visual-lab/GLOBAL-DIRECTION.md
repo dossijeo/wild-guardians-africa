@@ -304,3 +304,8 @@ El [relleno cÃ¡lido de suelo en sombra del CaÃ±Ã³n](canyon-warm-floor/READ
 ## Arena seca: cadencia nativa completada
 
 [Serie completa](desert-aerial-sand/dry-specular/campaign-final/README.md): 32 bloques, 7.680 frames con cámara/geometría/estado comparables, media/baja día/noche. No reproduce una penalización grande consistente; dispersión impide afirmar aceleración o certificar +0,5 ms GPU. Avanzar a integración opcional con carga y lifecycle propios, conservando original por defecto, y verificar paridad con helper/streaming. No repetir la serie esperando cifras favorables; conjunto global aún no aprobado.
+
+
+## Arena integrada como opción explícita
+
+[Integración](desert-aerial-sand/integration/README.md): `visualLab=global-lighting&sandRelief=1`, carga y dispose de BiomeGround. Doce parejas reales integración/helper: diez exactas y dos con un píxel/un nivel RGB; mismas cámaras y geometría. Once pruebas pasan. Original por defecto; pendientes streaming y lifecycle de esta nueva ruta antes de ampliar activación.
