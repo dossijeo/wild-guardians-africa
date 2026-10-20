@@ -1,16 +1,17 @@
 import * as THREE from 'three';
-export async function applyMaterialStudy(world){
+export async function applyMaterialStudy(world,{normals=true,softBands=false}={}){
  if(world.state.biome!=='gran-canon')return {control:true};
  const path='/assets/visual-lab/cliff_side-Diffuse.jpg';
  const map=(await world.assets.texture(path,false)).clone();map.wrapS=map.wrapT=THREE.RepeatWrapping;map.minFilter=THREE.LinearMipmapLinearFilter;map.anisotropy=8;map.needsUpdate=true;
- const normalMap=(await world.assets.texture('/assets/visual-lab/cliff_side-nor_gl.png',false)).clone();normalMap.wrapS=normalMap.wrapT=THREE.RepeatWrapping;normalMap.minFilter=THREE.LinearMipmapLinearFilter;normalMap.anisotropy=8;normalMap.needsUpdate=true;
+ const normalMap=normals?(await world.assets.texture('/assets/visual-lab/cliff_side-nor_gl.png',false)).clone():null;if(normalMap){normalMap.wrapS=normalMap.wrapT=THREE.RepeatWrapping;normalMap.minFilter=THREE.LinearMipmapLinearFilter;normalMap.anisotropy=8;normalMap.needsUpdate=true;}
  const getMaterials=()=>[...new Set([...world.terrainMeshes,...(world.horizon?.group?.children??[]).filter(m=>m.userData.nativeHorizon==='terrain')].map(m=>m.material))];const seen=new WeakSet(),programs=new WeakMap();let patched=0,enabled=true;
  const bind=()=>{for(const material of getMaterials()){if(seen.has(material))continue;seen.add(material);patched++;
 
   const before=[material.onBeforeCompile,material.customProgramCacheKey];
   const compile=material.onBeforeCompile,cache=material.customProgramCacheKey.bind(material);
   material.onBeforeCompile=(shader,renderer)=>{
-   compile(shader,renderer);shader.uniforms.uCliffRock={value:map};shader.uniforms.uCliffNormal={value:normalMap};shader.fragmentShader='uniform sampler2D uCliffRock,uCliffNormal;\n'+shader.fragmentShader;
+   compile(shader,renderer);shader.uniforms.uCliffRock={value:map};if(normals)shader.uniforms.uCliffNormal={value:normalMap};shader.fragmentShader='uniform sampler2D uCliffRock,uCliffNormal;\n'+shader.fragmentShader;
+   if(softBands){const bands='pale*.72+thin*.32';if(!shader.fragmentShader.includes(bands))throw Error('Canyon band anchor missing');shader.fragmentShader=shader.fragmentShader.replaceAll(bands,'pale*.24+thin*.10');}
    const anchor='original=mix(original,stone,smoothstep(1.4,4.,h)*.90);';
    if(!shader.fragmentShader.includes(anchor))throw Error('Canyon rock albedo anchor missing');
    shader.fragmentShader=shader.fragmentShader.replace(anchor,anchor+`
@@ -24,7 +25,7 @@ export async function applyMaterialStudy(world){
      original=mix(original,rockColor,rockWall*.85);
     }
    `);
-   const normalAnchor='N=sampleTurfN410(Ng,mapN,uGroundParams.z*uGroundMicro*amount*normalFade);';
+   if(normals){const normalAnchor='N=sampleTurfN410(Ng,mapN,uGroundParams.z*uGroundMicro*amount*normalFade);';
    if(!shader.fragmentShader.includes(normalAnchor))throw Error('Canyon rock normal anchor missing');
    shader.fragmentShader=shader.fragmentShader.replace(normalAnchor,normalAnchor+`
     if(canyon){
@@ -39,15 +40,16 @@ export async function applyMaterialStudy(world){
      }
     }
    `);
+   }
   };
-  material.customProgramCacheKey=()=>cache()+'|qa-canyon-dominant';material.needsUpdate=true;
+  material.customProgramCacheKey=()=>cache()+'|qa-canyon-dominant|normals='+normals+'|softBands='+softBands;material.needsUpdate=true;
   programs.set(material,[before,[material.onBeforeCompile,material.customProgramCacheKey]]);
   if(!enabled)[material.onBeforeCompile,material.customProgramCacheKey]=before;
  }
  };bind();
  world.qaCliffSetEnabled=(value)=>{enabled=!!value;bind();for(const m of getMaterials()){[m.onBeforeCompile,m.customProgramCacheKey]=programs.get(m)[enabled?1:0];m.needsUpdate=true;}};
  const draw=world.drawWorldFrame;world.drawWorldFrame=function(...args){bind();return draw.apply(this,args)};
- const dispose=world.dispose;let released=false;world.dispose=function(...args){try{return dispose.apply(this,args)}finally{if(!released){released=true;map.dispose();normalMap.dispose();}}};
+ const dispose=world.dispose;let released=false;world.dispose=function(...args){try{return dispose.apply(this,args)}finally{if(!released){released=true;map.dispose();normalMap?.dispose();}}};
  world.qaCliffBinding=()=>({patched,resident:getMaterials().length,allBound:getMaterials().every(m=>seen.has(m))});
- return {newTextures:2,newGeometry:0,source:path,scope:'Poly Haven Cliff Side grayscale modulation and normals, 8m repeat, dominant axis; warm base palette and original silhouettes retained',limitations:'QA draw hook binds new terrain and horizon materials; shared maps released at world disposal'};
+ return {newTextures:normals?2:1,newGeometry:0,source:path,normals,softBands,scope:'Poly Haven Cliff Side grayscale modulation and normals, 8m repeat, dominant axis; warm base palette and original silhouettes retained',limitations:'QA draw hook binds new terrain and horizon materials; shared maps released at world disposal'};
 }
