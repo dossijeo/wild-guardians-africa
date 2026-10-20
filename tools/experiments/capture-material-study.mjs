@@ -1,3 +1,4 @@
+import {disableIntegratedNight} from './night-qa-route.mjs';
 import {disableIntegratedCanyon} from './canyon-qa-route.mjs';
 import {disableIntegratedRoughness} from './roughness-qa-route.mjs';
 import {disableIntegratedWater} from './water-qa-route.mjs';
@@ -9,6 +10,7 @@ try{
 for(const [biome,sceneCase] of (['water-surface','water-surface-lean','water-surface-map','ground-frequency','ground-normal-balance','ground-normal-rich','ground-roughness','night-readability'].includes(study)?[['savanna',1],['grand-river',6],['mangrove',11],['volcano',16],['canyon',21],['desert',26]]:['water-ripples','water-reflections'].includes(study)?[['savanna',1],['grand-river',6]]:['grass-islands','kenney-grass','grass-fine','grass-fine-lite','grass-diffuse','grass-lod'].includes(study)?[['savanna',1]]:study==='volcanic-charcoal'?[['volcano',16]]:[['canyon',21]]).filter(([,c])=>!process.env.WG_STUDY_CASES||process.env.WG_STUDY_CASES.split(',').map(Number).includes(c)))for(const variant of [process.env.WG_STUDY_BASELINE??'global-lighting',study]){
  const page=await browser.newPage({viewport:{width:1280,height:720}});
  const errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
+ if(study.startsWith('night-'))await disableIntegratedNight(page);
  if(study.startsWith('canyon-'))await disableIntegratedCanyon(page);
  if(study==='volcanic-charcoal')await page.route('**/src/rendering/african-toon.js',async route=>{const response=await route.fetch();await route.fulfill({response,body:(await response.text()).replace('shader.fragmentShader=patchVolcanicCharcoal(shader.fragmentShader);','/* QA baseline before charcoal integration */')});});
  if(study==='ground-roughness')await disableIntegratedRoughness(page);

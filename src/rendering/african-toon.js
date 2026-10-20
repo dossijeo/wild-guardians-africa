@@ -1,6 +1,6 @@
 import {patchCanyonRock} from './global-canyon-rock.js';
 import {acquireWaterSlope,patchGlobalWaterSurface} from './global-water-surface.js';
-import {patchGlobalGroundFill,patchVolcanicCharcoal,patchDryGroundRoughness} from './global-visual-lighting.js';
+import {patchGlobalGroundFill,patchVolcanicCharcoal,patchDryGroundRoughness,globalNightLight} from './global-visual-lighting.js';
 import {groundMaterialFunctions,artLightingFunctions,ART_PROFILES} from './biome-material-source.js';
 import {savannaLayerFunctions} from './savanna-layer-source.js';
 import * as THREE from 'three';
@@ -35,7 +35,7 @@ export class AfricanToon {
     this.environmentUniforms={uEnvEndpoints:this.uniforms.uEnvEndpoints,uNativeEnvEnabled:{value:0},uEnvDay:{value:null},uEnvNight:{value:null},uEnvYaw:{value:0}};
   }
   environment(textures,yaw){const u=this.environmentUniforms;u.uEnvDay.value=textures?.[0]??null;u.uEnvNight.value=textures?.[1]??null;u.uNativeEnvEnabled.value=textures?.length===2?1:0;this.environmentYaw=yaw;u.uEnvYaw.value=yaw?.value??0;}
-  update(night,sun,biome){this.uniforms.uBiome.value=['sabana','gran-rio','manglares','volcanes','gran-canon','desierto'].indexOf(biome);this.uniforms.uWet.value=biome==='manglares'?.72:biome==='gran-rio'?.25:0;this.uniforms.uNight.value=Number(night);this.uniforms.uNightLight.value=1.12;this.uniforms.uLightDir.value.copy(sun.position).sub(sun.target.position).normalize();this.environmentUniforms.uEnvYaw.value=this.environmentYaw?.value??0;const art=ART_PROFILES[['savanna','grand_river','mangrove','volcanoes','canyons','desert'][this.uniforms.uBiome.value]]??ART_PROFILES.savanna;for(const [key,value] of Object.entries({uArtSun:art.sun,uArtShade:art.shade,uArtFoliage:art.foliage,uArtParams:art.params,uArtShape:art.shape}))this.artUniforms[key].value.fromArray(value);}
+  update(night,sun,biome){this.uniforms.uBiome.value=['sabana','gran-rio','manglares','volcanes','gran-canon','desierto'].indexOf(biome);this.uniforms.uWet.value=biome==='manglares'?.72:biome==='gran-rio'?.25:0;this.uniforms.uNight.value=Number(night);this.uniforms.uNightLight.value=globalNightLight(this.globalVisualLighting,biome);this.uniforms.uLightDir.value.copy(sun.position).sub(sun.target.position).normalize();this.environmentUniforms.uEnvYaw.value=this.environmentYaw?.value??0;const art=ART_PROFILES[['savanna','grand_river','mangrove','volcanoes','canyons','desert'][this.uniforms.uBiome.value]]??ART_PROFILES.savanna;for(const [key,value] of Object.entries({uArtSun:art.sun,uArtShade:art.shade,uArtFoliage:art.foliage,uArtParams:art.params,uArtShape:art.shape}))this.artUniforms[key].value.fromArray(value);}
   material(material){
     if(!(material?.isMeshStandardMaterial||material?.isMeshBasicMaterial&&material.userData.toonGround)||material.transparent||material.userData.paintUniforms||this.materials.has(material))return;
     this.materials.add(material);

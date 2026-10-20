@@ -1,3 +1,4 @@
+import {disableIntegratedNight} from './night-qa-route.mjs';
 import {disableIntegratedCanyon} from './canyon-qa-route.mjs';
 import {disableIntegratedRoughness} from './roughness-qa-route.mjs';
 import {disableIntegratedWater} from './water-qa-route.mjs';
@@ -10,6 +11,7 @@ const browser=await chromium.launch({channel:'chrome',headless:true});const reco
 try{for(const sceneCase of cases){
  const page=await browser.newPage({viewport:{width:1280,height:720},deviceScaleFactor:1});const errors=[];
  page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
+ if(study.startsWith('night-'))await disableIntegratedNight(page);
  if(study.startsWith('canyon-'))await disableIntegratedCanyon(page);
  if(study==='volcanic-charcoal')await page.route('**/src/rendering/african-toon.js',async route=>{const response=await route.fetch();await route.fulfill({response,body:(await response.text()).replace('shader.fragmentShader=patchVolcanicCharcoal(shader.fragmentShader);','/* QA baseline before charcoal integration */')});});
  if(study==='ground-roughness')await disableIntegratedRoughness(page);

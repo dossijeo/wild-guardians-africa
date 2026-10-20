@@ -23,3 +23,6 @@ export function patchDryGroundRoughness(source){
  if(!source.includes(anchor))throw Error('Dry ground roughness: shader anchor missing');
  return source.replace(anchor,'if(!moss&&!rock)baseRough=max(baseRough,.86);rough=baseRough;');
 }
+
+const nightBiomes=new Set(['sabana','gran-rio','manglares','volcanes','gran-canon']);
+export function globalNightLight(enabled,biome){return enabled&&nightBiomes.has(biome)?1.55:1.12;}

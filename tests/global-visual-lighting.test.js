@@ -22,3 +22,16 @@ test('dry roughness is opt-in and limited to mapped Savanna, River and Canyon gr
   material.dispose();toon.shadowUniforms.fallback.dispose();
  }
 });
+
+
+test('night readability stays opt-in and retains the Desert and unknown-biome baseline',()=>{
+ const sun={position:new THREE.Vector3(1,2,3),target:{position:new THREE.Vector3()}};
+ for(const enabled of [false,true])for(const biome of ['sabana','gran-rio','manglares','volcanes','gran-canon','desierto','unknown']){
+  const toon=new AfricanToon();toon.globalVisualLighting=enabled;
+  for(const night of [0,.1,.45,.55,.9,1]){
+   toon.update(night,sun,biome);assert.equal(toon.uniforms.uNight.value,night);
+   assert.equal(toon.uniforms.uNightLight.value,enabled&&!['desierto','unknown'].includes(biome)?1.55:1.12);
+  }
+  toon.shadowUniforms.fallback.dispose();
+ }
+});
