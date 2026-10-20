@@ -17,6 +17,7 @@ import {GUARDIAN_SOUND_IDS} from '../src/audio/guardian-audio.js';
 import {UNLOCK_SOUND_IDS} from '../src/audio/unlock-audio.js';
 import {RAID_ARRIVAL_SOUND_IDS} from '../src/audio/raid-arrival-audio.js';
 import {UI_SOUND_ROUTES} from '../src/audio/ui-audio.js';
+import {EVENTS as MICROEVENTS} from '../src/microevents/definitions.js';
 
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const read=path=>readFileSync(resolve(root,path));
@@ -30,6 +31,7 @@ function add(id,file,selector,trigger){
  assert.ok(line,`${file}: missing ${selector}`);
  const routes=points.get(id)??[];routes.push({file,line,selector,trigger});points.set(id,routes);
 }
+for(const def of Object.values(MICROEVENTS)){if(def.sound)add(def.sound,'src/microevents/definitions.js',def.id+':','Completed microevent: '+def.id);if(def.feedback.contactSound)add(def.feedback.contactSound,'src/microevents/feedback.js','feedback.'+def.id+'=','Owned microevent contact: '+def.id);}
 for(const [event,id] of Object.entries(eventSound))add(id,'src/audio/audio.js','export const eventSound=',event);
 for(const [event,id] of Object.entries(eventExtraSound))add(id,'src/audio/audio.js','export const eventExtraSound=',event+' (extra contact/completion)');
 for(const [event,id] of Object.entries(eventAlertSound))add(id,'src/audio/audio.js','export const eventAlertSound=',event+' (grouped gameplay warning)');
@@ -89,6 +91,8 @@ const adapters={
 const uiMethods={ui_panel_open:'surface',ui_panel_close:'close',ui_tab:'surface',ui_error:'error',ui_pause:'pause',ui_resume:'pause',spirit_select:'selectSpell',spirit_touch:'guidedTouch',spirit_drag:'wallGesture',spirit_drop:'wallGesture',spirit_valid:'guidedPlacement'};
 function chain(point,id){
  const module=point.file.split('/').at(-1).replace('.js','');
+ if(point.file==='src/microevents/feedback.js')return [reference('src/microevents/controller.js','this.sound(contact)'),reference(app,'sound:id=>audio.sound(id,')];
+ if(point.file==='src/microevents/definitions.js')return [reference('src/microevents/controller.js','this.sound(a.def.sound)'),reference(app,'sound:id=>audio.sound(id,')];
  if(module==='ui-audio')return [reference(app,'uiAudio.'+uiMethods[id]+'('),reference(app,'new UiAudio((id,options)=>audio.sound(id,options))')];
  if(module==='destruction-audio')return [reference('src/rendering/building-effects.js','pipeline.onDestructionCue?.('),reference(app,'world.destructionPass.onDestructionCue='),reference(audioFile,'destructionSounds(counts)')];
  if(adapters[module]){const [caller,bridge]=adapters[module];return [reference(app,'audio.'+caller+'('),reference(audioFile,bridge)];}

@@ -1,0 +1,41 @@
+{
+  "scope": "Intel UHD Chrome, 80 rAF intervals per arm, fixed QA world, ABBA. Browser frame intervals include rendering and unrelated runtime; controller samples are JS CPU only. Simulation frozen for reproducible fixture.",
+  "rows": [
+    {
+      "arm": "off",
+      "frameMedianMs": 33.60000000000218,
+      "frameP95Ms": 83.29999999999927,
+      "controllerMedianMs": null,
+      "controllerP95Ms": null,
+      "errors": []
+    },
+    {
+      "arm": "event",
+      "frameMedianMs": 49.89999999999782,
+      "frameP95Ms": 99.79999999999927,
+      "controllerMedianMs": 0.5,
+      "controllerP95Ms": 1.0999999940395355,
+      "maxInstances": 14,
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "errors": []
+    },
+    {
+      "arm": "event",
+      "frameMedianMs": 49.79999999999927,
+      "frameP95Ms": 99.80000000000291,
+      "controllerMedianMs": 0.4000000059604645,
+      "controllerP95Ms": 0.7999999821186066,
+      "maxInstances": 14,
+      "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "errors": []
+    },
+    {
+      "arm": "off",
+      "frameMedianMs": 49.79999999999927,
+      "frameP95Ms": 100.29999999999927,
+      "controllerMedianMs": null,
+      "controllerP95Ms": null,
+      "errors": []
+    }
+  ]
+}
