@@ -138,3 +138,7 @@ Validación de entrega: `npm run build` pasa (406 módulos; avisos existentes de
 Ambos cuentan con 18 capturas reales y controles de restauración idénticos. No sustituyen C ni su viento 8×; su descarte es visual, sin conclusión de rendimiento.
 
 - [Agrupaciones de altura](../continuous-grass-cluster/README.md): dos escalas probadas; la más visible amplifica demasiado el estiramiento bajo viento 8×. Se conserva C.
+
+## Alternativa de viento por rotación
+
+[Vídeos, auditoría y benchmarks](../continuous-grass-rotation/README.md): limita el estiramiento radial manteniendo movimiento fuerte, pero no conserva todas las aristas y añade coste en calidad media diurna. Se conserva como QA independiente; C 8× sigue siendo la versión principal.
