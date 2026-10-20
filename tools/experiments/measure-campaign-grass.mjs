@@ -4,7 +4,7 @@ import {mkdir,writeFile} from 'node:fs/promises';
 
 const study=process.env.WG_GRASS_STUDY??'grass-streaming';const out=process.env.WG_GRASS_OUTPUT??'docs/qa/global-visual-lab/grass-campaign';await mkdir(out,{recursive:true});const records=[],transitions=[];
 const browser=await chromium.launch({channel:'chrome',headless:true});
-try{for(const biome of ['sabana','gran-rio'])for(const variant of ['candidate']){
+try{for(const biome of (process.env.WG_GRASS_BIOMES??'sabana,gran-rio').split(','))for(const variant of ['candidate']){
  const page=await browser.newPage({viewport:{width:1280,height:720},deviceScaleFactor:1});const errors=[];
  page.on('pageerror',e=>errors.push(e.message));page.on('response',r=>{if(r.status()>=400)errors.push(`${r.status()} ${r.url()}`)});
  // In-memory QA observation hook only. The repository and production app are unchanged.
@@ -42,6 +42,7 @@ try{for(const biome of ['sabana','gran-rio'])for(const variant of ['candidate'])
    },visible);records.push({biome,phase,...result,errors:[...errors]});await writeFile(out+'/campaign-performance.json',JSON.stringify({note:'Actual campaign render loop; paused simulation; ABBA visibility, both variants retain assets and selection hook; 30 warmup + 180 samples.',records},null,2)+'\n');console.log(biome,phase,visible);
   }
   await page.evaluate(()=>window.qaCampaignWorld.groundDetails.mesh.visible=true);
+  if(process.env.WG_GRASS_VIDEO!=='0'){
   const video=await page.evaluate(async()=>{
    const w=window.qaCampaignWorld,canvas=w.renderer.domElement,stream=canvas.captureStream(30),chunks=[],frames=[];
    const recorder=new MediaRecorder(stream,{mimeType:'video/webm;codecs=vp9',videoBitsPerSecond:4000000});recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};
@@ -51,6 +52,7 @@ try{for(const biome of ['sabana','gran-rio'])for(const variant of ['candidate'])
    return {bytes:Array.from(new Uint8Array(await new Blob(chunks,{type:'video/webm'}).arrayBuffer())),frames};
   });
   await writeFile(`${out}/${biome}-${phase}-motion.webm`,Buffer.from(video.bytes));await writeFile(`${out}/${biome}-${phase}-motion.json`,JSON.stringify(video.frames)+'\n');
+  }
  }
  await page.close();
 }}finally{await browser.close()}

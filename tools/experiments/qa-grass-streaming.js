@@ -5,13 +5,14 @@ import {footprintDistance} from '/src/world/footprints.js';
 import {residentWearSampler} from './qa-ground-detail-mask.js';
 import {hashCell} from '/src/world/terrain.js';
 // QA only: stable authored islands, visibility budget, no simulation membership.
-export async function applyMaterialStudy(world,{assetPath='/assets/visual-lab/grass-clumps.glb'}={}){
- if(!['sabana','gran-rio'].includes(world.state.biome))return {control:true};
+export async function applyMaterialStudy(world,{assetPath='/assets/visual-lab/grass-clumps.glb',profiles=null,naturalGroups=false}={}){
+ const profile=profiles?.[world.state.biome]??(profiles?null:({'sabana':{color:[1,1,1]},'gran-rio':{color:[.42,1,.55]}}[world.state.biome]));
+ if(!profile)return {control:true};
  const gltf=await world.assets.model(assetPath);
  gltf.scene.updateMatrixWorld(true);let source;gltf.scene.traverse(o=>{if(o.isMesh&&!source)source=o});
  const d=new BlenderGroundDetails(world.assets,world.scene,world.nav.field.c.biome);
  Object.assign(d,{enabled:true,global:true,sculpted:true,detailed:true});
- d.geometry=source.geometry.clone().applyMatrix4(source.matrixWorld);d.material=source.material.clone();d.material.side=THREE.FrontSide;d.material.roughness=.96;if(world.state.biome==='gran-rio')d.material.color.setRGB(.42,1.,.55);
+ d.geometry=source.geometry.clone().applyMatrix4(source.matrixWorld);d.material=source.material.clone();d.material.side=THREE.FrontSide;d.material.roughness=.96;d.material.color.setRGB(...profile.color);
  d.geometry.computeBoundingBox();d.material.userData.artBounds={min:d.geometry.boundingBox.min.clone(),size:d.geometry.boundingBox.getSize(new THREE.Vector3()),crown:.43};
  const field=world.nav.field,state=world.state;
  // Consume the renderer's resident mask, including native campaign clearings.
@@ -24,11 +25,18 @@ export async function applyMaterialStudy(world,{assetPath='/assets/visual-lab/gr
  const candidates=[];
 
   for(let ax=cx*48-21;ax<cx*48+24;ax+=6)for(let az=cz*48-21;az<cz*48+24;az+=6){
-   const bits=hashCell(field.seed,(ax-3)/6,(az-3)/6,7191);if(bits/4294967296>.55)continue;
+   const bits=hashCell(field.seed,(ax-3)/6,(az-3)/6,7191);if(bits/4294967296>(profile.density??.55))continue;
    const angle=bits/4294967296*Math.PI*2,anchorX=ax+((bits>>>8)&255)/255*2-1,anchorZ=az+((bits>>>16)&255)/255*2-1;
-   for(let j=0;j<7;j++){
-    const theta=angle+j*Math.PI/3,r=j===0?0:1.15,x=anchorX+Math.cos(theta)*r,z=anchorZ+Math.sin(theta)*r;
+   const minimum=profile.minGroup??3,maximum=profile.maxGroup??7;
+   const members=naturalGroups?minimum+((bits>>>21)%(maximum-minimum+1)):7,placed=[];
+   for(let j=0;j<members;j++){
+    const variation=hashCell(field.seed,bits,j,7193);
+    const theta=naturalGroups?angle+j*2.399963+((variation&255)/255-.5)*.8:angle+j*Math.PI/3;
+    const r=naturalGroups ? .15+Math.sqrt(((variation>>>8)&65535)/65535)*1.2:j===0?0:1.15;
+    const x=anchorX+Math.cos(theta)*r,z=anchorZ+Math.sin(theta)*r;
+    if(naturalGroups&&placed.some(p=>(p.x-x)**2+(p.z-z)**2<.35**2))continue;
     if(!allowed(x,z))continue;
+    placed.push({x,z});
     candidates.push({x,z,anchorX,anchorZ,y:field.surface(x,z)+.012,bits:hashCell(field.seed,bits,j,7192)});
    }
   }
@@ -64,11 +72,11 @@ export async function applyMaterialStudy(world,{assetPath='/assets/visual-lab/gr
   let changed=false;
   for(const [key,item] of active){const next=Math.max(0,Math.min(1,item.scale+(desired.has(key)?1:-1)*dt/.3));changed||=next!==item.scale;item.scale=next;if(next===0&&!desired.has(key))active.delete(key);}
   for(const [key,p] of desired){if(active.size>=192)break;if(!active.has(key)){active.set(key,{p,scale:first?1:0});changed=true;}}
-  if(changed||first){let i=0;for(const {p,scale} of active.values()){dummy.position.set(p.x,p.y,p.z);dummy.rotation.y=p.bits/4294967296*Math.PI*2;const smooth=scale*scale*(3-2*scale);dummy.scale.setScalar((.85+((p.bits>>>14)&63)/63*.3)*smooth);dummy.updateMatrix();d.mesh.setMatrixAt(i++,dummy.matrix);}d.mesh.count=d.count=active.size;d.mesh.instanceMatrix.needsUpdate=true;}
+  if(changed||first){let i=0;for(const {p,scale} of active.values()){dummy.position.set(p.x,p.y,p.z);dummy.rotation.y=p.bits/4294967296*Math.PI*2;const smooth=scale*scale*(3-2*scale);dummy.scale.setScalar((profile.scale??1)*(.85+((p.bits>>>14)&63)/63*.3)*smooth);dummy.updateMatrix();d.mesh.setMatrixAt(i++,dummy.matrix);}d.mesh.count=d.count=active.size;d.mesh.instanceMatrix.needsUpdate=true;}
   first=false;d.qaActive=[...active].map(([key,v])=>({id:key,scale:v.scale}));
  };
  world.scene.onBeforeRender=hook;
  const dispose=d.dispose.bind(d);let disposed=false;
  d.dispose=()=>{if(disposed)return;disposed=true;if(world.scene.onBeforeRender===hook)world.scene.onBeforeRender=old;dispose();d.geometry.dispose();d.material.dispose();active.clear();desired.clear();};
- return {maxVisible:192,trianglesPerInstance:(d.geometry.index?.count??d.geometry.attributes.position.count)/3,transitionSeconds:.3,hysteresisMeters:4,streaming:true,occupancyEvents:true,limitations:'QA only; scale transitions, no LOD; campaign and other biomes pending'};
+ return {profile,naturalGroups,maxVisible:192,trianglesPerInstance:(d.geometry.index?.count??d.geometry.attributes.position.count)/3,transitionSeconds:.3,hysteresisMeters:4,streaming:true,occupancyEvents:true,limitations:'QA only; scale transitions, no LOD; long traversal and production integration pending'};
 }

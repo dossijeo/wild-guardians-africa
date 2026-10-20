@@ -4,7 +4,7 @@ import {mkdir,writeFile} from 'node:fs/promises';
 
 const study=process.env.WG_GRASS_STUDY??'grass-streaming';const out=process.env.WG_GRASS_OUTPUT??'docs/qa/global-visual-lab/grass-campaign';await mkdir(out,{recursive:true});const records=[],transitions=[];
 const browser=await chromium.launch({channel:'chrome',headless:true});
-try{for(const biome of ['sabana','gran-rio'])for(const variant of ['base','candidate']){
+try{for(const biome of (process.env.WG_GRASS_BIOMES??'sabana,gran-rio').split(','))for(const variant of ['base','candidate']){
  const page=await browser.newPage({viewport:{width:1280,height:720},deviceScaleFactor:1});const errors=[];
  page.on('pageerror',e=>errors.push(e.message));page.on('response',r=>{if(r.status()>=400)errors.push(`${r.status()} ${r.url()}`)});
  // In-memory QA observation hook only. The repository and production app are unchanged.
@@ -21,7 +21,7 @@ try{for(const biome of ['sabana','gran-rio'])for(const variant of ['base','candi
 
  await page.evaluate(()=>{const w=window.qaCampaignWorld,update=w.materialRegistry.update.bind(w.materialRegistry);w.materialRegistry.update=()=>update(0)});
  const selected=variant==='candidate'?study:process.env.WG_GRASS_BASELINE;if(selected)await page.evaluate(async study=>{const {applyMaterialStudy}=await import('/tools/experiments/qa-'+study+'.js');await applyMaterialStudy(window.qaCampaignWorld)},selected);
- for(const [view,offset] of (process.env.WG_GRASS_DETAIL==='1'?[['detail',[3,2,4]]]:[['settlement',[22,16,18]],['overview',[32,26,32]],['low',[14,8,14]]])){
+ for(const [view,offset] of (process.env.WG_GRASS_DETAIL==='1'?[['detail',[3,2,4]]]:[['settlement',[22,16,18]],['overview',[32,26,32]],['low',[14,8,14]]]).filter(([view])=>!process.env.WG_GRASS_VIEWS||process.env.WG_GRASS_VIEWS.split(',').includes(view))){
  await page.evaluate(async({view,offset})=>{const w=window.qaCampaignWorld;if(view==='detail'){const x=w.controls.target.x+28,z=w.controls.target.z+16;const p=[...w.groundDetails.chunks.values()].flat().sort((a,b)=>(a.x-x)**2+(a.z-z)**2-((b.x-x)**2+(b.z-z)**2))[0];w.controls.target.set(p.x,p.y+.2,p.z);}w.camera.position.copy(w.controls.target).add({x:offset[0],y:offset[1],z:offset[2]});w.syncChunks();await w.horizon.whenReady();w.syncChunks();await w.whenChunksReady();w.render(.016);},{view,offset});
   for(const phase of ['day','night']){
    await page.evaluate(phase=>{const w=window.qaCampaignWorld;w.state.day=1;w.state.time=phase==='day'?150:350;w.render(.016);},phase);await page.waitForTimeout(1000);
