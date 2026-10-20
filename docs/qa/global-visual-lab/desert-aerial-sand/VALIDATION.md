@@ -37,4 +37,4 @@ Promedios de las medias de los dos bloques por variante; deriva es diferencia en
 
 ## Recomendación
 
-Conservar normal-only como candidata QA. El fallo de activación queda resuelto y el enlace de materiales sobrevive al recorrido probado. No integrar aún en global-lighting ni main: faltan estabilidad temporal de las crestas con cámara móvil, más vistas del poblado/caminos y una decisión de presupuesto que contemple media/noche. Este pase no añade geometría ni toca simulación. El viento 8× permanece intacto. La calidad global no está completada.
+Conservar normal-only como candidata QA. El fallo de activación queda resuelto y el enlace de materiales sobrevive al recorrido probado. No integrar aún en global-lighting ni main: hay una [comparación posterior con cámara móvil](motion/README.md); siguen pendientes una revisión temporal más amplia, más vistas del poblado/caminos y una decisión de presupuesto que contemple media/noche. Este pase no añade geometría ni toca simulación. El viento 8× permanece intacto. La calidad global no está completada.

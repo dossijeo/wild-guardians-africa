@@ -274,3 +274,8 @@ El [relleno cálido de suelo en sombra del Cañón](canyon-warm-floor/README.md)
 ## Arena normal-only: activación segura y validación
 
 [Validación](desert-aerial-sand/VALIDATION.md): se reproduce y corrige `glTexStorage2D: Texture is immutable` al activar después de noche. Reemplazo seguro del objeto de textura y actualización de uniformes; no mutar Source sobre memoria ya inicializada. Recorridos 0/144/288/0 en media/baja enlazan 25 materiales residentes y un horizonte; 40 capturas contando controles sin helper. Retornos con pequeñas diferencias adicionales cuantificadas, no identidad binaria. 2880 muestras GPU de la candidata final: baja diurna +.338 ms con poca deriva; media/noche aún variables. Mantener candidata QA, sin integrar. Siguiente puerta: cámara móvil y estabilidad de crestas, sin añadir geometría ni rebajar la mejora artística para pasar un contador.
+
+
+## Arena en movimiento: comparativa controlada
+
+[Cuatro vídeos](desert-aerial-sand/motion/README.md), media/baja y día/noche, de elevada a cercana y retorno. 484 parejas A/B coinciden en pose/hora/draws/triángulos tras corregir el harness por cargas asíncronas y caché LOD inicial. Los intentos no comparables se documentan y se excluyen. 308 parejas simétricas con geometría coincidente: 304 exactas, cuatro con hasta seis píxeles/un nivel RGB. No equivale a prueba universal de ausencia de aliasing ni a FPS real; mantener candidata QA y revisar presupuesto acumulado. Sin cambios de material en este pase ni activación general.
