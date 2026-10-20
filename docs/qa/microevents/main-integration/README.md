@@ -6,6 +6,8 @@ The optional event controller reads already visible crops and intact wooden wall
 
 While an event remains visible during a calm night, the app passes `nightFastForward: false` to the game clock. This temporarily changes the usual 5× night advancement to 1× so the player has time to interact; the normal rate returns immediately when the event disappears. The clock setting is transient and is not saved into game state. `tests/acceptance-clock.test.js` checks both transitions.
 
+A later [real-browser integration probe](../night-clock-browser.md) also checks the app frame loop: night progression changes from about 5× to about 1× for visible fireflies, then returns to about 5× when the event is cancelled.
+
 ## Correction of obsolete visual fixtures
 
 The prototype's saved QA farms used the former JavaScript terrain generator. Merely marking them as Wild Engine worlds would place buildings and crops according to the wrong physical terrain. `tools/prepare_microevent_fixture.mjs` and `tools/prepare_microevent_catalogue_fixtures.mjs` now construct paid farms with `createSpatialCampaignOpening`, the current native start site, current placement rules and the current world version. The checked-in fixtures were regenerated from these scripts.
