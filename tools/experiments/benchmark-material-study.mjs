@@ -20,7 +20,7 @@ try{for(const sceneCase of cases){
   const w=window.qaVisualReference.world;
   const materials=study.startsWith('water-')?(()=>{const set=new Set();w.scene.traverse(o=>{if(o.isMesh&&o.material?.userData?.paintUniforms&&o.material.userData.paintUniforms.uSurfaceLava.value<.5)set.add(o.material)});return [...set]})():[...new Set(w.terrainMeshes.map(m=>m.material))];
   const before=materials.map(m=>[m.onBeforeCompile,m.customProgramCacheKey]);
-  const {applyMaterialStudy}=await import('/tools/experiments/qa-'+study+'.js');applyMaterialStudy(w);
+  const {applyMaterialStudy}=await import('/tools/experiments/qa-'+study+'.js');await applyMaterialStudy(w);
   const after=materials.map(m=>[m.onBeforeCompile,m.customProgramCacheKey]);
   window.qaPairSet=(variant)=>{
    if(mode==='fill')materials.forEach((m,i)=>{[m.onBeforeCompile,m.customProgramCacheKey]=(variant?after:before)[i];m.needsUpdate=true;});
