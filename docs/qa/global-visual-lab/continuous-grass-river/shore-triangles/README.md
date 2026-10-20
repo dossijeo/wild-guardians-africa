@@ -46,3 +46,7 @@ Servidor del worktree en 5190:
 Las capturas anteriores corresponden al helper previo a esta corrección (commit 9f739a454). El capturador `capture-continuous-grass-river-shore.mjs` usa la versión vigente del helper; no reproduce automáticamente el código histórico. Los datos iniciales de streaming anteriores se conservan en la carpeta padre y no se mezclan con los nuevos.
 
 Se recomienda conservar la corrección dentro del piloto: elimina una exclusión visual incorrecta y supera las pruebas funcionales de estas escenas. Gran Río sigue pendiente del benchmark aislado; no se activa en el juego normal ni se integra en main.
+
+## Medición posterior aislada
+
+Ya se ha completado la [evaluación de rendimiento, memoria y sobrepintado](../performance/README.md): 20.880 muestras GPU incluyendo repetición por deriva. La cámara elevada media añade alrededor de 2 ms y baja conserva incertidumbre temporal; el piloto no se activa por defecto. Las notas de benchmark pendiente anteriores describen el estado de aquel pase.

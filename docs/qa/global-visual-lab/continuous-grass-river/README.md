@@ -48,3 +48,7 @@ Se recomienda continuar la evaluación del piloto, no integrarlo todavía ni dec
 ## Corrección posterior de orillas
 
 Se ha corregido la exclusión rectangular excesiva del agua nativa: [antes/después, auditoría y streaming](shore-triangles/README.md). Las capturas y cifras anteriores de este informe describen el primer piloto; el helper vigente incluye la corrección. Benchmark GPU aislado aún pendiente.
+
+## Medición posterior aislada
+
+Ya se ha completado la [evaluación de rendimiento, memoria y sobrepintado](performance/README.md): 20.880 muestras GPU incluyendo repetición por deriva. La cámara elevada media añade alrededor de 2 ms y baja conserva incertidumbre temporal; el piloto no se activa por defecto. Las notas de benchmark pendiente anteriores describen el estado de aquel pase.

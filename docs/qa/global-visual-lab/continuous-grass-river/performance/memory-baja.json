@@ -1,0 +1,55 @@
+{
+  "before": {
+    "jsHeapBytes": 40542896,
+    "renderer": {
+      "geometries": 176,
+      "textures": 58
+    },
+    "programs": 31
+  },
+  "enabled": {
+    "jsHeapBytes": 42003864,
+    "renderer": {
+      "geometries": 177,
+      "textures": 58
+    },
+    "programs": 32
+  },
+  "disposed": {
+    "jsHeapBytes": 40834224,
+    "renderer": {
+      "geometries": 176,
+      "textures": 58
+    },
+    "programs": 31
+  },
+  "audit": {
+    "variant": "C",
+    "active": true,
+    "nearDistance": 0,
+    "moduleSpacing": 0.5,
+    "near": 0,
+    "far": 4321,
+    "leaves": 34568,
+    "triangles": 34568,
+    "waterTriangles": 1706,
+    "waterBucketReferences": 5195,
+    "chunks": 25,
+    "cachedTiles": 30,
+    "bufferBytes": 1206456,
+    "stats": {
+      "buildMs": 40.20000001788139,
+      "selectionMs": 33.900000005960464,
+      "selectionCount": 1,
+      "candidates": 7680,
+      "masked": 2633,
+      "overflow": 0
+    },
+    "engineQueries": 0,
+    "castShadow": false
+  },
+  "heapDelta": 1460968,
+  "region": "shore",
+  "note": "CDP JS heap after explicit GC; includes QA module import and shader caches. GPU buffer allocation is known, driver VRAM is not exposed by WebGL2.",
+  "errors": []
+}
