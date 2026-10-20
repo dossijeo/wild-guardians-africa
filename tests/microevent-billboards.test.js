@@ -31,3 +31,14 @@ test('a contact cue is played once across repeated owned gestures; unrelated inp
  c.input('pointermove',{...event,pointerType:'mouse',buttons:0});assert.deepEqual(played,[]);
  for(let i=0;i<3;i++){c.input('pointerdown',event);c.input('pointerup',event);}assert.deepEqual(played,['farm_sack_handle']);
 });
+
+test('catalogue presentation leaves simulation and touch radii untouched within one mesh budget',async()=>{
+ for(const def of Object.values(EVENTS)){
+  const {camera,space}=fixture(def),view=new MicroeventBillboards({scene:new Scene(),camera,state:{time:def.night?310:100}},{texture:new Texture()}),particles=new InteractiveParticles();
+  await view.ready;particles.start(def,()=>.5);particles.step(.25,null);const before=structuredClone(particles.pool),definition=structuredClone(def);
+  for(const reducedMotion of [false,true])view.draw(particles,space,{reducedMotion});
+  assert.deepEqual(particles.pool,before,def.id);assert.deepEqual(def,definition,def.id);
+  assert.equal(view.root.children.length,1,def.id);assert.ok(view.count>0&&view.count<=view.capacity,def.id);
+  assert.ok([...view.buffer.array.slice(0,view.count*15)].every(Number.isFinite),def.id);view.dispose();
+ }
+});
