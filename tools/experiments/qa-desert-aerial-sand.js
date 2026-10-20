@@ -2,15 +2,16 @@ import * as THREE from 'three';
 // QA only: irregular CC0 sand ripples, preserving the existing warm terrain paint.
 export async function applyMaterialStudy(world,options={}){
  if(world.state.biome!=='desierto')throw Error('Desert only');
+ const retired=[];
  for(const [index,name] of (options.normalOnly?[[1,'nor_gl']]:[[0,'Diffuse'],[1,'nor_gl']])){
   const image=new Image();image.src='/docs/qa/global-visual-lab/desert-aerial-sand/'+name+'.png';await image.decode();
-  world.biomeGround.textures[index].source=new THREE.Source(image);world.biomeGround.textures[index].needsUpdate=true;
+  const previous=world.biomeGround.textures[index],replacement=previous.clone();replacement.source=new THREE.Source(image);replacement.needsUpdate=true;world.biomeGround.textures[index]=replacement;retired.push(previous);
  }
  Object.assign(world.biomeGround.tile,{scale:1/30,normalBoost:1,relief:0,jitter:0});
  const seen=new WeakSet();let bound=0;
  function bind(material){
   if(seen.has(material)||material.userData.groundBiome!=='desert'||!material.userData.biomeGround)return;
-  seen.add(material);bound++;material.userData.biomeGround.uGroundParams.value.x=1/30;material.userData.biomeGround.uGroundParams.value.z=1;material.userData.biomeGround.uGroundParams.value.w=0;
+  seen.add(material);bound++;const uniforms=material.userData.biomeGround;for(const [key,index] of [['uGroundDetailMap',0],['uGroundNormal',1],['uLayerSandBase',0],['uLayerSandNormal',1]])if(uniforms[key])uniforms[key].value=world.biomeGround.textures[index];material.userData.biomeGround.uGroundParams.value.x=1/30;material.userData.biomeGround.uGroundParams.value.z=1;material.userData.biomeGround.uGroundParams.value.w=0;
   const compile=material.onBeforeCompile,cache=material.customProgramCacheKey.bind(material);
   material.onBeforeCompile=function(shader,renderer){compile.call(this,shader,renderer);
    const edits=[
@@ -26,5 +27,6 @@ export async function applyMaterialStudy(world,options={}){
  }
  world.scene.traverse(o=>{for(const material of [].concat(o.material??[]))bind(material)});
  const register=world.toon.material;world.toon.material=function(material){const result=register.call(this,material);bind(material);return result;};
- return {bound,scale:1/30,normalStrength:.65,newTextureObjects:0,newGeometry:0,source:'Poly Haven aerial_beach_01, Rob Tuytel, CC0'};
+ for(const texture of retired)texture.dispose();
+ return {bound,scale:1/30,normalStrength:.65,replacementTextureObjects:retired.length,netTextureObjects:0,newGeometry:0,source:'Poly Haven aerial_beach_01, Rob Tuytel, CC0'};
 }

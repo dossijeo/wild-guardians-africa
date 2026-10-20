@@ -1,0 +1,302 @@
+{
+  "streaming": [
+    {
+      "quality": "media",
+      "phase": "day",
+      "returnChangedPixels": 1614,
+      "returnMaxRGB": 29,
+      "residentCounts": [
+        25,
+        25,
+        25,
+        25,
+        25
+      ],
+      "horizonCounts": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "errors": []
+    },
+    {
+      "quality": "media",
+      "phase": "night",
+      "returnChangedPixels": 1804,
+      "returnMaxRGB": 28,
+      "residentCounts": [
+        25,
+        25,
+        25,
+        25,
+        25
+      ],
+      "horizonCounts": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "errors": []
+    },
+    {
+      "quality": "baja",
+      "phase": "day",
+      "returnChangedPixels": 1643,
+      "returnMaxRGB": 35,
+      "residentCounts": [
+        25,
+        25,
+        25,
+        25,
+        25
+      ],
+      "horizonCounts": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "errors": []
+    },
+    {
+      "quality": "baja",
+      "phase": "night",
+      "returnChangedPixels": 1842,
+      "returnMaxRGB": 36,
+      "residentCounts": [
+        25,
+        25,
+        25,
+        25,
+        25
+      ],
+      "horizonCounts": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "errors": []
+    }
+  ],
+  "performance": [
+    {
+      "quality": "media",
+      "phase": "day",
+      "base": {
+        "gpuMean": 10.748820427777776,
+        "cpuMean": 4.424722221742074,
+        "gpuDrift": 0.08854513333333536,
+        "calls": [
+          60,
+          60
+        ],
+        "triangles": [
+          455343,
+          455343
+        ],
+        "samples": 360
+      },
+      "candidate": {
+        "gpuMean": 12.274576205555555,
+        "cpuMean": 4.85416666732894,
+        "gpuDrift": 1.8722621555555463,
+        "calls": [
+          60,
+          60
+        ],
+        "triangles": [
+          455343,
+          455343
+        ],
+        "samples": 360
+      },
+      "gpuDelta": 1.5257557777777784
+    },
+    {
+      "quality": "media",
+      "phase": "night",
+      "base": {
+        "gpuMean": 12.087163183333331,
+        "cpuMean": 4.354166667825646,
+        "gpuDrift": 0.2556889222222285,
+        "calls": [
+          60,
+          60
+        ],
+        "triangles": [
+          455343,
+          455343
+        ],
+        "samples": 360
+      },
+      "candidate": {
+        "gpuMean": 12.774272855555555,
+        "cpuMean": 4.461111110779974,
+        "gpuDrift": 1.3914117333333298,
+        "calls": [
+          60,
+          60
+        ],
+        "triangles": [
+          455343,
+          455343
+        ],
+        "samples": 360
+      },
+      "gpuDelta": 0.6871096722222241
+    },
+    {
+      "quality": "baja",
+      "phase": "day",
+      "base": {
+        "gpuMean": 9.047175191666668,
+        "cpuMean": 3.600833332290252,
+        "gpuDrift": 0.0333031833333326,
+        "calls": [
+          60,
+          60
+        ],
+        "triangles": [
+          440052,
+          440052
+        ],
+        "samples": 360
+      },
+      "candidate": {
+        "gpuMean": 9.3850454,
+        "cpuMean": 3.777222223497099,
+        "gpuDrift": 0.010756066666663955,
+        "calls": [
+          60,
+          60
+        ],
+        "triangles": [
+          440052,
+          440052
+        ],
+        "samples": 360
+      },
+      "gpuDelta": 0.3378702083333316
+    },
+    {
+      "quality": "baja",
+      "phase": "night",
+      "base": {
+        "gpuMean": 10.397583586111109,
+        "cpuMean": 3.9044444448418085,
+        "gpuDrift": 0.49194759444444003,
+        "calls": [
+          60,
+          60
+        ],
+        "triangles": [
+          440052,
+          440052
+        ],
+        "samples": 360
+      },
+      "candidate": {
+        "gpuMean": 11.088318847222226,
+        "cpuMean": 4.294166667097144,
+        "gpuDrift": 1.6498324944444516,
+        "calls": [
+          60,
+          60
+        ],
+        "triangles": [
+          440052,
+          440052
+        ],
+        "samples": 360
+      },
+      "gpuDelta": 0.6907352611111168
+    }
+  ],
+  "returns": [
+    {
+      "quality": "media",
+      "phase": "day",
+      "changedPixels": 0,
+      "maxRGB": 0
+    },
+    {
+      "quality": "media",
+      "phase": "night",
+      "changedPixels": 3,
+      "maxRGB": 4
+    },
+    {
+      "quality": "baja",
+      "phase": "day",
+      "changedPixels": 0,
+      "maxRGB": 0
+    },
+    {
+      "quality": "baja",
+      "phase": "night",
+      "changedPixels": 2,
+      "maxRGB": 1
+    }
+  ],
+  "controlReturns": [
+    {
+      "quality": "media",
+      "phase": "day",
+      "controlChangedPixels": 123,
+      "controlMaxRGB": 34,
+      "candidateChangedPixels": 1614,
+      "intersectionPixels": 87,
+      "candidateOutsideControl": 1527,
+      "errors": [],
+      "outsideControlMaxRGB": 3,
+      "outsideControlPixelsOver2": 1,
+      "candidatePixelsOver2": 30
+    },
+    {
+      "quality": "media",
+      "phase": "night",
+      "controlChangedPixels": 117,
+      "controlMaxRGB": 33,
+      "candidateChangedPixels": 1804,
+      "intersectionPixels": 71,
+      "candidateOutsideControl": 1733,
+      "errors": [],
+      "outsideControlMaxRGB": 2,
+      "outsideControlPixelsOver2": 0,
+      "candidatePixelsOver2": 27
+    },
+    {
+      "quality": "baja",
+      "phase": "day",
+      "controlChangedPixels": 90,
+      "controlMaxRGB": 37,
+      "candidateChangedPixels": 1643,
+      "intersectionPixels": 71,
+      "candidateOutsideControl": 1572,
+      "errors": [],
+      "outsideControlMaxRGB": 3,
+      "outsideControlPixelsOver2": 1,
+      "candidatePixelsOver2": 23
+    },
+    {
+      "quality": "baja",
+      "phase": "night",
+      "controlChangedPixels": 85,
+      "controlMaxRGB": 37,
+      "candidateChangedPixels": 1842,
+      "intersectionPixels": 55,
+      "candidateOutsideControl": 1787,
+      "errors": [],
+      "outsideControlMaxRGB": 2,
+      "outsideControlPixelsOver2": 0,
+      "candidatePixelsOver2": 22
+    }
+  ]
+}

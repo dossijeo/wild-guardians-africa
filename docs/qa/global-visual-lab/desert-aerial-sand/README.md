@@ -1,6 +1,6 @@
 # Arena irregular: candidata QA con normal CC0
 
-Se conserva como candidata visual la variante **normal-only + contorno geométrico**. Las crestas de arena ya son reconocibles desde la cámara normal sin sustituir el dorado actual. No se integra por defecto ni se aprueba el presupuesto: falta medir la variante simplificada y comprobar movimiento, calidades y streaming. El resultado aún tiene grandes zonas lisas según la rampa de iluminación; no equivale al mockup completo.
+Se conserva como candidata visual la variante **normal-only + contorno geométrico**. Las crestas de arena ya son reconocibles desde la cámara normal sin sustituir el dorado actual. No se integra por defecto ni se aprueba el presupuesto: la validación posterior cubre streaming y primeras mediciones media/baja, pero faltan estabilidad temporal y aprobación de coste. Ver [validación actual](VALIDATION.md). El resultado aún tiene grandes zonas lisas según la rampa de iluminación; no equivale al mockup completo.
 
 ## Tres etapas verificadas
 
@@ -37,9 +37,9 @@ Todos los bloques: 60 llamadas y 455343 triángulos enviados. Ninguna nueva pasa
 
 ## Recursos y límites
 
-La normal nueva tiene 1024², igual que la anterior: unos 5.33 MiB nominales RGBA8 con mipmaps. Reemplaza la fuente del objeto de textura existente; no añade sampler ni textura de GPU por diseño. El helper conserva cachés de assets originales y añade una imagen descargada de 2021795 bytes: no se afirma RAM constante ni se mide VRAM real. El Diffuse de 5933588 bytes se entrega para reproducir el diagnóstico, pero no se descarga en la candidata normal-only. Los tamaños/hashes constan en asset-audit.json.
+La normal nueva tiene 1024², igual que la anterior: unos 5.33 MiB nominales RGBA8 con mipmaps. La validación posterior corrigió la sustitución de fuentes inmutables: ahora se reemplaza el objeto de textura, se actualizan sus uniformes y se libera el anterior. No añade sampler ni textura neta por diseño; ver VALIDATION.md para límites de memoria. El helper conserva cachés de assets originales y añade una imagen descargada de 2021795 bytes: no se afirma RAM constante ni se mide VRAM real. El Diffuse de 5933588 bytes se entrega para reproducir el diagnóstico, pero no se descarga en la candidata normal-only. Los tamaños/hashes constan en asset-audit.json.
 
-El callback enlaza nuevos materiales y el horizonte, pero todavía no se ha validado un recorrido largo ni las transiciones entre ellos. Falta revisión de parpadeo con cámara móvil, de caminos ocupados y del perfil bajo. Las crestas dependen aún de la rampa toon: se atenúan mucho en algunas orientaciones. El punteado detectado no era prueba de baja resolución del mapa; eliminar la dependencia del contorno respecto a la normal fina lo resolvió en la comparación controlada.
+El callback enlaza nuevos materiales y el horizonte; la validación posterior comprueba 0/144/288/0 m con cargas completas. No demuestra transición temporal durante movimiento continuo. Falta revisión de parpadeo con cámara móvil y de caminos ocupados. El perfil bajo tiene capturas y mediciones posteriores, sin aprobación global. Las crestas dependen aún de la rampa toon: se atenúan mucho en algunas orientaciones. El punteado detectado no era prueba de baja resolución del mapa; eliminar la dependencia del contorno respecto a la normal fina lo resolvió en la comparación controlada.
 
 ## Reproducir
 

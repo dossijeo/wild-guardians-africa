@@ -269,3 +269,8 @@ El [relleno cálido de suelo en sombra del Cañón](canyon-warm-floor/README.md)
 ## Arena irregular CC0: nueva candidata del Desierto
 
 [Aerial sand](desert-aerial-sand/README.md): 36 capturas en dunas, normal GL de Aerial Beach 01 a escala 30 m, conservando pintura cálida. Separar la normal geométrica para el detector de contorno elimina el punteado que producía el relieve fino. La variante final usa solo el mapa normal y conserva casi la misma imagen que la de dos mapas; se mantiene como candidata QA. 1440 muestras GPU de la receta intermedia muestran coste y deriva importantes, no aprobación. Pendientes coste de normal-only, cámara móvil, perfil bajo y streaming; no integrar todavía. No repetir variantes que usan la normal fina como contorno.
+
+
+## Arena normal-only: activación segura y validación
+
+[Validación](desert-aerial-sand/VALIDATION.md): se reproduce y corrige `glTexStorage2D: Texture is immutable` al activar después de noche. Reemplazo seguro del objeto de textura y actualización de uniformes; no mutar Source sobre memoria ya inicializada. Recorridos 0/144/288/0 en media/baja enlazan 25 materiales residentes y un horizonte; 40 capturas contando controles sin helper. Retornos con pequeñas diferencias adicionales cuantificadas, no identidad binaria. 2880 muestras GPU de la candidata final: baja diurna +.338 ms con poca deriva; media/noche aún variables. Mantener candidata QA, sin integrar. Siguiente puerta: cámara móvil y estabilidad de crestas, sin añadir geometría ni rebajar la mejora artística para pasar un contador.
