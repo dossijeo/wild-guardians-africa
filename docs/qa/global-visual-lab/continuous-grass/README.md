@@ -142,3 +142,7 @@ Ambos cuentan con 18 capturas reales y controles de restauración idénticos. No
 ## Alternativa de viento por rotación
 
 [Vídeos, auditoría y benchmarks](../continuous-grass-rotation/README.md): limita el estiramiento radial manteniendo movimiento fuerte, pero no conserva todas las aristas y añade coste en calidad media diurna. Se conserva como QA independiente; C 8× sigue siendo la versión principal.
+
+## Revisión interactiva
+
+El [panel QA](../continuous-grass-review/README.md) permite comparar A/B/C y controlar fuerza y congelación del viento, cámara e iluminación en el juego real. Abre C con viento 8× en un navegador aislado; no modifica el arranque normal.
