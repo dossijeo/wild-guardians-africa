@@ -19,6 +19,8 @@ The [extended 14-night replay](worker-passage-exact-14.json) has the same serial
 
 An isolated nine-night experiment updated returners nearest to their village first, without reordering the persistent worker array or non-returning updates. It produced the same 780 deliveries, 1,047 coins and 123 crops but **worsened** recovery events from 24 to 35, work overlap pair-ticks from 12 to 15 and deepest work penetration from 0.331 m to 0.559 m. The ordering change was discarded before this report was committed; update order by itself is not a safe traffic policy.
 
+Sorting by remaining route length instead of straight-line village distance reduced nine-night work overlap pair-ticks to 6 and recoveries to 21, but also reduced deliveries to 756 and coins to 922. It was discarded as well. Both ordering experiments alter which actor sees a moving blocker first; neither establishes a simultaneous, collision-safe passage rule or preserves campaign throughput.
+
 Reproduce from a clean checkout with:
 
 ```powershell
