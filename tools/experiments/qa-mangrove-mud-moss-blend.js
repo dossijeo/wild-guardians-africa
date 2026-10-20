@@ -30,6 +30,8 @@ export function applyMaterialStudy(world,options={}){
    }edges[i]=dist;vertexCache?.set(cacheKey,i);
   }
   const old=mud.material,oldNormal=g.attributes.normal;
+  // New streamed chunks have not passed material registration yet. Keep the hidden QA baseline styled too.
+  world.toon.material(old);
   g.setAttribute('color',new THREE.BufferAttribute(colors,3));g.setAttribute('normal',new THREE.BufferAttribute(normals,3));g.setAttribute('qaMudEdge',new THREE.BufferAttribute(edges,1));attributeBytes+=colors.byteLength+normals.byteLength+edges.byteLength;
   const material=nativeGroundMaterial(world.quality);Object.assign(material.userData,ground.material.userData);material.userData.retainBiomeGround?.(material);world.toon.material(material);
   const compile=material.onBeforeCompile,key=material.customProgramCacheKey;
