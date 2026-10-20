@@ -1,5 +1,7 @@
 # Viento en matas 3D: primer prototipo WebGL2
 
+> Corrección posterior: el helper de viento sustituía AfricanToon. Estas cifras e imágenes son históricas y no validan la fidelidad ni el coste del shader corregido. Véase [revalidación](../grass-wind-preserved/README.md).
+
 2026-10-20. QA únicamente, Sabana; sin cambios en producción, simulación o navegación. Implementación propia inspirada en la investigación RheaGrass, sin copiar código ni recursos del proyecto Unity.
 
 ## Resultado visual y recomendación

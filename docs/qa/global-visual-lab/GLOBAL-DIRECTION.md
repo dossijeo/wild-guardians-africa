@@ -212,3 +212,7 @@ La petición posterior del usuario limita este pase al material del suelo; queda
 ### Paleta seca de las matas del Cañón (20/10)
 
 [Canyon dry grass](canyon-dry-grass/README.md): perfil QA de Cañón pasa a tinte lineal [1,.68,.48], conservando forma/distribución y otros biomas. Doce capturas, cuatro retornos exactos, 1.920 muestras GPU. Mejora modesta de coherencia seca, no de volumen. Diferencias temporales cercanas desfavorables y deriva documentadas; no aprueba el coste acumulado ni integra la vegetación en producción.
+
+### Corrección del callback de viento (20/10)
+
+[Grass wind preserved](grass-wind-preserved/README.md): el piloto anterior reemplazaba AfricanToon; se corrige conservando callback y caché. Dieciséis capturas, ocho pares estáticos exactos, doce comprobaciones de identidad del shader y 3.840 muestras GPU. Se retira la aplicabilidad directa de los costes anteriores de viento/sombras a esta revisión. Baja/juego/noche +9,74%; presupuesto no aprobado. Hipótesis de transmisión archivada como prueba inactiva, no descartada artísticamente. Calidad global pendiente.

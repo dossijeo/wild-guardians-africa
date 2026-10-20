@@ -1,5 +1,7 @@
 # Sombras dinámicas de matas con viento: descartadas
 
+> Corrección posterior: el helper de viento sustituía AfricanToon. Estas cifras e imágenes son históricas y no validan la fidelidad ni el coste del shader corregido. Véase [revalidación](../grass-wind-preserved/README.md).
+
 2026-10-20. Variante QA sobre el prototipo grass-wind; mismo asset Blender, colocación y 192 instancias. No cambia el renderer por defecto.
 
 ## Decisión

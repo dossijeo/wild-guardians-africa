@@ -3,8 +3,11 @@ import {applyMaterialStudy as placeGrass} from './qa-grass-biomes.js';
 export async function applyMaterialStudy(world,variant='static') {
  if(!world.qaGrassWind){
   const placement=await placeGrass(world),mesh=world.groundDetails.mesh,m=mesh.material;
+  const compileBase=m.onBeforeCompile,cacheBase=m.customProgramCacheKey.bind(m);
   const uniforms={qaWindTime:{value:0},qaWindStrength:{value:0}};
-  m.onBeforeCompile=shader=>{
+  const compileWind=(shader,renderer)=>{
+   compileBase.call(m,shader,renderer);
+   if(!shader.fragmentShader.includes('artLighting416')||!shader.fragmentShader.includes('nativeShadowOcclusion'))throw Error('Grass wind lost native lighting pipeline');
    if(m.userData.qaWindStatic)return;
    Object.assign(shader.uniforms,uniforms);
    shader.vertexShader=shader.vertexShader.replace('#include <common>',`#include <common>
@@ -22,13 +25,16 @@ export async function applyMaterialStudy(world,variant='static') {
    transformed.xz+=qaWindDirection*qaWindWave*qaWindHeight*qaWindHeight;
    `);
   };
-  m.customProgramCacheKey=()=> 'qa-grass-wind-v1-'+!!m.userData.qaWindStatic;m.needsUpdate=true;
-  world.qaGrassWind={uniforms,placement};
+  const cacheWind=()=>cacheBase()+'|qa-grass-wind-v2-'+!!m.userData.qaWindStatic;
+  world.qaGrassWind={uniforms,placement,compileBase,cacheBase,compileWind,cacheWind};
  }
  const q=world.qaGrassWind,m=world.groundDetails.material;
- const staticMode=variant==='static';
+ const reference=variant.startsWith('reference');
+ const compile=reference?q.compileBase:q.compileWind,cache=reference?q.cacheBase:q.cacheWind;
+ if(m.onBeforeCompile!==compile){m.onBeforeCompile=compile;m.customProgramCacheKey=cache;m.needsUpdate=true;}
+ const staticMode=variant==='static'||reference;
  if(m.userData.qaWindStatic!==staticMode){m.userData.qaWindStatic=staticMode;m.needsUpdate=true;}
- q.uniforms.qaWindStrength.value=variant==='static'?0:.18;
+ q.uniforms.qaWindStrength.value=staticMode?0:.18;
  q.uniforms.qaWindTime.value=variant==='wind2'?2:0;
- return {variant,...q.placement,windStrength:q.uniforms.qaWindStrength.value,windTime:q.uniforms.qaWindTime.value,castShadow:world.groundDetails.mesh.castShadow,additionalTextures:0,notes:'Analytic wind; fixed QA time. No new instances relative to static control.'};
+ return {variant,...q.placement,windStrength:q.uniforms.qaWindStrength.value,windTime:q.uniforms.qaWindTime.value,castShadow:world.groundDetails.mesh.castShadow,additionalTextures:0,notes:'Analytic wind preserving AfricanToon/native shadows; fixed QA time. No new instances relative to static control.'};
 }
