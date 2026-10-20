@@ -391,3 +391,8 @@ El piloto de fundido con impostores detectó que la campaña actual usa sesión 
 ### Piloto de ocultación junto al río
 
 [Gran Río, nueve poses de día y noche](obstruction-water-pilot/README.md): 18 parejas auditadas, 12 exactas, máximo dos instancias parciales y tres llamadas adicionales. Quita el tramado en la orilla; no acredita un cruce significativo sobre el agua ni composición transparente (el agua actual es opaca). Candidata aún de QA; partículas, superposiciones y ciclo de vida siguen pendientes.
+
+
+### Descartada la profundidad compartida del fundido cercano
+
+La [prueba transparente controlada](obstruction-transparent-probe/README.md) confirma oclusión opaca de elementos detrás de objetos parcialmente desvanecidos: 25.431 píxeles del marcador quedan totalmente bloqueados por los auxiliares. No promover la candidata de superficie cercana; esta decisión sustituye su recomendación provisional anterior. Resolverlo necesita composición/profundidad aislada y medición adicional, no solo quitar el tramado. El renderer original permanece intacto.
