@@ -63,12 +63,13 @@ export function applyMaterialStudy(world,options={}){
     outgoingLight=mix(outgoingLight,qaMudToon,mudWeight);
    `+anchor);
   };}
+  if(options.toonInterior){const previous=material.onBeforeCompile;material.onBeforeCompile=function(shader,renderer){previous.call(this,shader,renderer);if(!options.skipInteriorGroundLight)return;const start='vec3 groundReflection=',end='vec3 qaMudAlbedo=mudLinear;';if(!options.toonInterior||!shader.fragmentShader.includes(start)||!shader.fragmentShader.includes(end))throw Error('Interior branch anchors missing');shader.fragmentShader=shader.fragmentShader.replace(start,'outgoingLight=vec3(0.);if(mudWeight<1.){\n'+start).replace(end,'}\n'+end);};}
   if(options.matte){const previous=material.onBeforeCompile;material.onBeforeCompile=function(shader,renderer){previous.call(this,shader,renderer);const from='max(.30,mudPacked.g*.52)';if(!shader.fragmentShader.includes(from))throw Error('Mud roughness anchor missing');shader.fragmentShader=shader.fragmentShader.replace(from,'mix(.78,.95,mudPacked.g)');};}
-  material.customProgramCacheKey=()=>key.call(material)+'|qa-mud-moss-blend-v1|'+Boolean(options.matte)+'|'+Boolean(options.toonInterior);material.needsUpdate=true;mud.material=material;
+  material.customProgramCacheKey=()=>key.call(material)+'|qa-mud-moss-blend-v1|'+Boolean(options.matte)+'|'+Boolean(options.toonInterior)+'|'+Boolean(options.skipInteriorGroundLight);material.needsUpdate=true;mud.material=material;
   const binding={mud,old,material,oldNormal,normalAttribute,blendNormal:normals};if(!enabled){mud.material=old;normalAttribute.array.set(oldNormal);normalAttribute.needsUpdate=true;}bindings.push(binding);g.addEventListener('dispose',()=>{const i=bindings.indexOf(binding);if(i>=0){bindings.splice(i,1);if(mud.material===material)old.dispose();else material.dispose()}});const ms=performance.now()-start;buildMs+=ms;builds.push({origin:[...origin],vertices:p.count,uniqueVertices:uniqueVertices-beforeUnique,cacheHits:cacheHits-beforeHits,ms});
  }
  for(const group of world.chunks.values())bind(group);
  const terrain=world.terrain;world.terrain=function(...args){const group=terrain.apply(this,args);bind(group);return group};
  const audit=()=>({toonInterior:!!options.toonInterior,matte:!!options.matte,bound:bindings.length,attributeBytes,buildMs,cache:options.cache!==false,cacheHits,uniqueVertices,segmentTests,builds:[...builds],newTriangles:0,newDrawCalls:0,extraSamplers:3});
- world.qaMudBlend={audit,setEnabled(value){if(enabled===!!value)return;enabled=!!value;for(const b of bindings){b.mud.material=enabled?b.material:b.old;b.normalAttribute.array.set(enabled?b.blendNormal:b.oldNormal);b.normalAttribute.needsUpdate=true;}}};return audit();
+ world.qaMudBlend={audit,setInteriorSkip(value){options.skipInteriorGroundLight=!!value;for(const b of bindings)b.material.needsUpdate=true;},setEnabled(value){if(enabled===!!value)return;enabled=!!value;for(const b of bindings){b.mud.material=enabled?b.material:b.old;b.normalAttribute.array.set(enabled?b.blendNormal:b.oldNormal);b.normalAttribute.needsUpdate=true;}}};return audit();
 }

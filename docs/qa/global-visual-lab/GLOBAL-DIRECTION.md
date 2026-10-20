@@ -343,3 +343,7 @@ El [relleno cálido de suelo en sombra del Cañón](canyon-warm-floor/README.md)
 ## Manglares: conservar identidad del barro
 
 [Control mate](mangrove-mud-moss-matte/README.md) reduce destellos pero no resuelve el aclarado. [Interior toon](mangrove-mud-moss-toon-interior/README.md) conserva respuesta estilizada hacia dentro y mezcla con suelo en borde; recupera color terroso sin cortar transición. 48 capturas entre ambos ensayos,24 parejas coincidentes en cámara/geometría, sin errores. Elegir interior toon para coste/movimiento; pendiente reutilizar lectura duplicada, GPU y lifecycle. No integrado.
+
+## Manglares: ciclo QA y optimización descartada
+
+Recorrido, descarga y normal única documentados en [motion](mangrove-mud-moss-toon-interior/motion/README.md) y [streaming](mangrove-mud-moss-toon-interior/streaming/README.md). La [rama de iluminación interior](mangrove-mud-moss-interior-branch/README.md) conserva doce capturas exactas, pero32 bloques no demuestran ahorro consistente: descartada. Mantener mezcla anterior solo QA; volver al corte de cobertura y color en Gran Río antes de nuevas micropruebas de barro. Calidad global aún no acreditada.
