@@ -416,3 +416,8 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Máscara de ceniza: preparación y recarga real
 
 [72 parejas y streaming en navegador](volcanic-ash-mask-motion/README.md): máscara sin desplazamiento amplio en la muestra de regreso, residuales similares a procedural. 85 máscaras nuevas, 46,6 ms CPU acumulados (~0,55 ms por máscara), no tiempo por frame. Horizonte volcánico adicional ausente por diseño y en ejecución; corregida esa precondición, sin declarar validada una transición inexistente. Mantener alternativa de revisión; rendimiento diurno aún variable.
+
+
+### Ceniza accesible en una partida normal del laboratorio
+
+[Opción explícita integrada](volcanic-ash-review-option/README.md): `visualLab=global-lighting&volcanicAsh=procedural` o `volcanicAsh=mask`. Solo Volcanes; ausente por defecto. 36/36 capturas RGB exactas contra QA y modo desactivado anterior, 8 pruebas aprobadas y build correcto. Permite revisar sin interceptación de shaders; no es promoción a valor predeterminado ni conclusión de calidad global. PR #159 permanece abierta.

@@ -3,8 +3,9 @@ export async function installVolcanicAshMaskRoute(page,{measurePreparation=false
  await installVolcanicAshRoute(page);
  await page.route('**/src/rendering/biome-ground.js*',async route=>{
   const response=await route.fetch();let body=await response.text();
-  const anchor='mask=new THREE.DataTexture(data,35,35,THREE.RGBAFormat);';
+  const anchor=body.includes("mask=new THREE.DataTexture(this.volcanicAsh==='mask'?ashMask(data,bo):data,35,35,THREE.RGBAFormat);")?"mask=new THREE.DataTexture(this.volcanicAsh==='mask'?ashMask(data,bo):data,35,35,THREE.RGBAFormat);":'mask=new THREE.DataTexture(data,35,35,THREE.RGBAFormat);';
   if(!body.includes(anchor))throw Error('Ash mask allocation anchor missing');
+  body=body.replace("import {volcanicAshMode,ashMask}","import {volcanicAshMode}");
   body="import {ashMask} from '/tools/experiments/qa-volcanic-ash-mask.js';\n"+body.replace(anchor,"mask=new THREE.DataTexture(this.field.c.biome==='volcanoes'?ashMask(data,bo):data,35,35,THREE.RGBAFormat);");
   if(measurePreparation){
    body=body.replace('import {ashMask}', 'import {ashMask as rawAshMask}');
