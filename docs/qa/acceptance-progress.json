@@ -191,7 +191,7 @@
       "area": "Reloj",
       "scenario": "Ocultar pestaña y volver tras muchos minutos",
       "expected": "No hay ganancias, daño, riego ni avance offline.",
-      "audit_status": "partial",
+      "audit_status": "verified",
       "evidence": [
         "docs/qa-acceptance-clock.md",
         "docs/qa/windows-desktop/native-visibility.md",
@@ -203,9 +203,10 @@
         "docs/qa/browser-visibility/recalled-hiring-chrome-2s-details.json",
         "docs/qa/browser-visibility/recalled-hiring-chrome-300s.json",
         "docs/qa/browser-visibility/recalled-hiring-chrome-isolated-2s.json",
-        "docs/qa/browser-visibility/recalled-hiring-chrome-isolated-300s.json"
+        "docs/qa/browser-visibility/recalled-hiring-chrome-isolated-300s.json",
+        "docs/qa/browser-visibility/native-farm-current-300s.json"
       ],
-      "notes": "Domain checks preserve the whole simulation during 1800 seconds of blocked real time. Native Windows 7495dac additionally verifies genuine hidden/visible transitions and 300912.8 ms of unchanged simulation: elapsed 372.1, shield 18.5 and cooldown 88.5. Restoration keeps menu; resuming advances 0.8 simulated seconds during 2517.5 visible ms without offline catch-up. Isolated native partition candidate4b110818 run38014169890 additionally passes genuine300113.2ms minimization: root independently verifies all21 retained simulation fields identical, hidden/visible transitions, menu retained on restoration and1.2 simulated seconds after resume. Its official artifact digest is checked; this is candidate-specific evidence, not default-main readiness. The first Chrome 155 web reports remain historical because their Chrome profiles lived under Vite's watched tree and caused reload logs. An isolated-profile saved-game run now passes seven checks across 300.008 seconds genuinely hidden, including an identical full-state hash, unchanged crop and worker, no navigation or page exception, and no offline catch-up after restoration. QA-014 remains partial because physical phone acceptance is untested."
+      "notes": "Domain checks preserve the whole simulation during 1800 seconds of blocked real time. Native Windows 7495dac verifies genuine hidden/visible transitions and 300912.8 ms of unchanged simulation. The first Chrome 155 web reports remain historical because their Chrome profiles lived under Vite's watched tree and caused reload logs; isolated-profile runs avoid that interference. A fresh Wild Engine farm on current main c98c8a8d9, with one paid crop and a walking worker, passes all seven checks across 300.009 seconds genuinely hidden. Its full-state hash, 665-coin balance, crop growth/water/damage and worker position/task remain unchanged; after restoration elapsed advances only 2.5365 seconds over 2.5 visible seconds. No navigation or page exception occurs. The older saved-game fixture no longer loads under Wild Engine and is retained only as historical evidence. This verifies the stated hidden-tab behavior in Chrome. Physical-phone compatibility is a separate platform check performed by the user; it is not a prerequisite for this case or a blocker for implementation."
     },
     {
       "id": "QA-015",
