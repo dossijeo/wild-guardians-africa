@@ -23,7 +23,7 @@ try{for(const quality of (process.env.WG_COVER_QUALITY??'media').split(','))for(
  await page.evaluate(()=>{const w=window.qaCampaignWorld,update=w.materialRegistry.update.bind(w.materialRegistry);w.materialRegistry.update=()=>update(0)});
 
 
- await page.evaluate(async()=>{window.qaCoverageReview=await (await import('/tools/experiments/qa-continuous-grass-review.js')).mountCoverageReview(window.qaCampaignWorld);});
+ await page.evaluate(async()=>{await (await import('/tools/experiments/qa-continuous-grass-occupancy.js')).applyMaterialStudy(window.qaCampaignWorld,'C');window.qaCoverageReview=await (await import('/tools/experiments/qa-continuous-grass-review.js')).mountCoverageReview(window.qaCampaignWorld);});
  if(process.argv.includes('--headless')){
   const results=[];
   for(const variant of ['A','B','C']){await page.locator(`[data-variant="${variant}"]`).click();await page.waitForFunction(v=>window.qaCampaignWorld.qaContinuousGrass.variant===v&&![...document.querySelector('#coverage-review').shadowRoot.querySelectorAll('button[data-variant]')].some(b=>b.disabled),variant);results.push(await page.evaluate(()=>({variant:window.qaCampaignWorld.qaContinuousGrass.variant,visible:window.qaCampaignWorld.qaContinuousGrass.group.visible,strength:window.qaCampaignWorld.qaContinuousGrass.uniforms.uCoverageWindStrength.value})));}

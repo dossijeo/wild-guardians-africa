@@ -17,3 +17,5 @@ No cambia archivos de `src`, simulación, navegación ni configuración del usua
 `node tools/experiments/review-continuous-grass.mjs --headless` prueba el ciclo A/B/C y su visibilidad, fuerza 12×, congelación/reanudación del reloj, cámara normal, noche, ausencia de errores WebGL y retirada del panel. [Resultado](review-check.json), [captura revisada](review-panel.png). Se corrigió un error de codificación de etiquetas detectado en la inspección visual antes de publicar.
 
 El panel no añade geometría ni cambia el shader retenido. Esta prueba es funcional, no un nuevo benchmark: siguen vigentes las [mediciones del viento 8×](../continuous-grass-wind-strong/README.md). El reloj independiente y la interfaz son exclusivos del flujo QA. No permite juzgar avance de simulación, construcción, streaming distante ni interacción jugable; esas evaluaciones corresponden a sus herramientas específicas.
+
+El lanzador aplica ahora el [filtro de eventos de ocupación](../continuous-grass-occupancy/README.md) antes de montar el panel. Las ventanas previamente abiertas no se reinician ni modifican.
