@@ -355,3 +355,7 @@ La [revisión V2](combined-campaign-review-v2/README.md) reúne las candidatas d
 ## Sabana: no recortar cobertura sin atribución de coste
 
 La [prueba de aislamiento](savanna-coverage-cost-isolation/README.md) cambia la prioridad anterior: ocho bloques ABBA,960 muestras GPU y1.440 frames muestran que desactivar la cobertura no elimina los picos ni produce una mejora consistente. Solo añade39.008 triángulos/un draw frente a1.235.913 triángulos ya enviados sin ella; no interpretar esa proporción como tiempo GPU. Seis parejas reales confirman pérdida visible de volumen al quitarla. Conservar densidad y viento; siguiente acción: atribuir el coste restante por materiales/objetos antes de reducir calidad. No acredita aún presupuesto estable ni calidad global.
+
+## Sabana: eliminar envío fuera del encuadre
+
+La [atribución por draw](savanna-draw-attribution/README.md) identifica lotes de objetos como origen de1,19millones de triángulos. La [candidata de frustum por instancia](savanna-instance-frustum/README.md), solo QA, reduce la vista normal a499mil sin cambiar modelos ni cobertura: cuatro capturas exactas y dos inversas con residuos pendientes. Ocho bloques ABBA muestran GPU diurna14,59–14,81→9,07–10,30ms; noche14,38–20,89→9,47–10,04ms. No extrapolar a toda campaña. Conservar candidata para medir movimiento, invalidación, streaming y seis biomas antes de integración. El objetivo artístico completo sigue pendiente.
