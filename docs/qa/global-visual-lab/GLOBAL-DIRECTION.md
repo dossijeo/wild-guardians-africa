@@ -309,3 +309,8 @@ El [relleno cÃ¡lido de suelo en sombra del CaÃ±Ã³n](canyon-warm-floor/READ
 ## Arena integrada como opción explícita
 
 [Integración](desert-aerial-sand/integration/README.md): `visualLab=global-lighting&sandRelief=1`, carga y dispose de BiomeGround. Doce parejas reales integración/helper: diez exactas y dos con un píxel/un nivel RGB; mismas cámaras y geometría. Once pruebas pasan. Original por defecto; pendientes streaming y lifecycle de esta nueva ruta antes de ampliar activación.
+
+
+## Arena opcional: nuevos chunks y cierre
+
+[Streaming integrado](desert-aerial-sand/integration-streaming/README.md): media/baja, 0/144/288/0m, día/noche. Los 25 materiales residentes y horizonte reciben receta; fuente y clon de normal se liberan una sola vez por cierre. Retorno con diferencias RGB pequeñas documentadas, no identidad. Pendientes reaperturas repetidas y revisión del conjunto; opción conservada sin cambiar defecto.
