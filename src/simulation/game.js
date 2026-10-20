@@ -25,6 +25,7 @@ import {createPlant,advancePlant,waterPlant,isMature,contiguousGroup} from './cr
 import {activeCrops,cropBecameInactive} from './active-crops.js';
 import {activeCrates,crateBecameInactive} from './active-crates.js';
 import {retireFarmHistory} from './retire-farm-history.js';
+import {harvestMicroLoss} from '../microevents/economy.js';
 import {workerEntityLookup} from './worker-entity-lookup.js';
 import {enqueue,taskEnqueuer,reserveTasks,releaseTask,replaceTasks,
   notifyWorkerPlanningChange,notifyWorkerPlanningRoster,taskPlanningRevision} from './tasks.js';
@@ -1170,6 +1171,7 @@ function completeTask(s,w,t,target,nav) {
       if(profile(w).male)value=multiply(value,6,5);
       if(!target.multiplyPower&&(target.multiplyHarvest||spellAt(s,'multiply',target)))value=multiply(value,2);
       if(target.harvestBonus)value=multiply(value,100+target.harvestBonus,100);
+      if(s.microevents?.pendingLosses[target.id])value=harvestMicroLoss(s,target,value,detail=>emit(s,'MicroeventHarvestLossApplied',detail));
       target.alive=false;target.harvestRequested=false;target.multiplyHarvest=false;
       cropBecameInactive(s.plants);
       const crate={id:`crate-${s.nextId++}`,sourcePlantId:target.id,species:target.species,x:w.x,z:w.z,value,multiplyPower:target.multiplyPower??null,profile:w.profile,carrierId:w.id,delivered:false,centerId:w.centerId};delete target.multiplyPower;s.crates.push(crate);w.crateId=crate.id;w.status='carrying';w.path=null;emit(s,'CropPicked',{workerId:w.id,targetId:target.id,crateId:crate.id});
@@ -1593,11 +1595,11 @@ export function tick(s,seconds,nav) {
     if(s.time>=600 && !s.raid && !s.result && (!s.nightPlan?.group?.length||s.nightPlan.done))closeNight(s);
   }
 }
-export function advanceReal(s,seconds,nav) {
+export function advanceReal(s,seconds,nav,{nightFastForward=true}={}) {
   let left=seconds;
   while(left>1e-9 && !s.pauses.length&&!s.result) {
       prepareClockEvents(s,nav);
-    const speed=s.time>=300&&!s.raid?5:1;
+    const speed=nightFastForward&&s.time>=300&&!s.raid?5:1;
     const untilBoundary=Math.min(...clockBoundaries(s).filter(t=>t>s.time+1e-9).map(t=>(t-s.time)/speed));
     const real=Math.min(left,.02,untilBoundary);left-=real;
     tick(s,real*speed,nav);
