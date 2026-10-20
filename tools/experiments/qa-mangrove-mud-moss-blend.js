@@ -29,10 +29,10 @@ export function applyMaterialStudy(world,options={}){
     scan(nearest);for(const c of contours)if(c!==nearest&&bounds(c)<dist)scan(c);
    }edges[i]=dist;vertexCache?.set(cacheKey,i);
   }
-  const old=mud.material,oldNormal=g.attributes.normal;
+  const old=mud.material,normalAttribute=g.attributes.normal,oldNormal=normalAttribute.array.slice();
   // New streamed chunks have not passed material registration yet. Keep the hidden QA baseline styled too.
   world.toon.material(old);
-  g.setAttribute('color',new THREE.BufferAttribute(colors,3));g.setAttribute('normal',new THREE.BufferAttribute(normals,3));g.setAttribute('qaMudEdge',new THREE.BufferAttribute(edges,1));attributeBytes+=colors.byteLength+normals.byteLength+edges.byteLength;
+  g.setAttribute('color',new THREE.BufferAttribute(colors,3));normalAttribute.array.set(normals);normalAttribute.needsUpdate=true;g.setAttribute('qaMudEdge',new THREE.BufferAttribute(edges,1));attributeBytes+=colors.byteLength+normals.byteLength+edges.byteLength;
   const material=nativeGroundMaterial(world.quality);Object.assign(material.userData,ground.material.userData);material.userData.retainBiomeGround?.(material);world.toon.material(material);
   const compile=material.onBeforeCompile,key=material.customProgramCacheKey;
   material.onBeforeCompile=function(shader,renderer){compile.call(this,shader,renderer);Object.assign(shader.uniforms,{uQAMudBase:{value:old.map},uQAMudNormal:{value:old.normalMap},uQAMudPacked:{value:old.roughnessMap}});
@@ -65,10 +65,10 @@ export function applyMaterialStudy(world,options={}){
   };}
   if(options.matte){const previous=material.onBeforeCompile;material.onBeforeCompile=function(shader,renderer){previous.call(this,shader,renderer);const from='max(.30,mudPacked.g*.52)';if(!shader.fragmentShader.includes(from))throw Error('Mud roughness anchor missing');shader.fragmentShader=shader.fragmentShader.replace(from,'mix(.78,.95,mudPacked.g)');};}
   material.customProgramCacheKey=()=>key.call(material)+'|qa-mud-moss-blend-v1|'+Boolean(options.matte)+'|'+Boolean(options.toonInterior);material.needsUpdate=true;mud.material=material;
-  const binding={mud,old,material,oldNormal,blendNormal:g.attributes.normal};if(!enabled){mud.material=old;g.setAttribute('normal',oldNormal);}bindings.push(binding);g.addEventListener('dispose',()=>{const i=bindings.indexOf(binding);if(i>=0){bindings.splice(i,1);if(mud.material===material)old.dispose();else material.dispose()}});const ms=performance.now()-start;buildMs+=ms;builds.push({origin:[...origin],vertices:p.count,uniqueVertices:uniqueVertices-beforeUnique,cacheHits:cacheHits-beforeHits,ms});
+  const binding={mud,old,material,oldNormal,normalAttribute,blendNormal:normals};if(!enabled){mud.material=old;normalAttribute.array.set(oldNormal);normalAttribute.needsUpdate=true;}bindings.push(binding);g.addEventListener('dispose',()=>{const i=bindings.indexOf(binding);if(i>=0){bindings.splice(i,1);if(mud.material===material)old.dispose();else material.dispose()}});const ms=performance.now()-start;buildMs+=ms;builds.push({origin:[...origin],vertices:p.count,uniqueVertices:uniqueVertices-beforeUnique,cacheHits:cacheHits-beforeHits,ms});
  }
  for(const group of world.chunks.values())bind(group);
  const terrain=world.terrain;world.terrain=function(...args){const group=terrain.apply(this,args);bind(group);return group};
  const audit=()=>({toonInterior:!!options.toonInterior,matte:!!options.matte,bound:bindings.length,attributeBytes,buildMs,cache:options.cache!==false,cacheHits,uniqueVertices,segmentTests,builds:[...builds],newTriangles:0,newDrawCalls:0,extraSamplers:3});
- world.qaMudBlend={audit,setEnabled(value){enabled=!!value;for(const b of bindings){b.mud.material=enabled?b.material:b.old;b.mud.geometry.setAttribute('normal',enabled?b.blendNormal:b.oldNormal);}}};return audit();
+ world.qaMudBlend={audit,setEnabled(value){if(enabled===!!value)return;enabled=!!value;for(const b of bindings){b.mud.material=enabled?b.material:b.old;b.normalAttribute.array.set(enabled?b.blendNormal:b.oldNormal);b.normalAttribute.needsUpdate=true;}}};return audit();
 }
