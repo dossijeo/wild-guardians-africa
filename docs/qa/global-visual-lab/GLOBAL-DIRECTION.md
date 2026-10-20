@@ -363,3 +363,9 @@ La [atribución por draw](savanna-draw-attribution/README.md) identifica lotes d
 ## Frustum en movimiento: evitar subidas redundantes
 
 [Recorrido y benchmark](savanna-instance-frustum/motion/README.md):70 de72 parejas RGB exactas; dos residuos localizados, causa pendiente.960 muestras GPU y1.440 frames revelan CPU aproximadamente1ms mayor y48 subidas de grupos/frame frente11, con p95 peor. No integrar la variante actual. Siguiente hipótesis: comprobar visibilidad al mover cámara, pero actualizar matrices/buffers solo si cambian selección u origen. Mantener cobertura y modelos; falta validación global.
+
+## Selección estable y transiciones suaves
+
+La [máscara de selección](savanna-instance-selection/README.md) reduce subidas de48 a unas14 por frame manteniendo geometría exacta; los tiempos se solapan, aún sin aprobación global.68 de72 pares RGB exactos, residuos pendientes. Conservar candidata QA.
+
+El usuario propone suavizar ocultación cercana y paso impostor/3D. La [prueba MSAA](obstruction-msaa/README.md) elimina la cuadrícula8×8 pero4 muestras no producen un fundido continuo; no adoptar sola. Priorizar una transición limitada a instancias próximas que se ocultan y estudiar aparte la coordinación entre impostor y geometría. Mantener las optimizaciones independientes de estos cambios visuales.
