@@ -299,3 +299,8 @@ El [relleno cÃ¡lido de suelo en sombra del CaÃ±Ã³n](canyon-warm-floor/READ
 ## Cadencia de campaña: controles corregidos
 
 [Diagnóstico](desert-aerial-sand/dry-specular/campaign-settled/README.md): el tutorial avanzaba pese a la pausa QA y el horizonte podía incorporar materiales candidatos al control. Pausa existente de menú y estabilización previa corrigen ambos; 480 frames con estado/materiales residentes estables y cámara/geometría coincidentes. Pilotos archivados y excluidos. Serie completa corregida pendiente de cierre; no aprobar rendimiento ni integrar todavía.
+
+
+## Arena seca: cadencia nativa completada
+
+[Serie completa](desert-aerial-sand/dry-specular/campaign-final/README.md): 32 bloques, 7.680 frames con cámara/geometría/estado comparables, media/baja día/noche. No reproduce una penalización grande consistente; dispersión impide afirmar aceleración o certificar +0,5 ms GPU. Avanzar a integración opcional con carga y lifecycle propios, conservando original por defecto, y verificar paridad con helper/streaming. No repetir la serie esperando cifras favorables; conjunto global aún no aprobado.

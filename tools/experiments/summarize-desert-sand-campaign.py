@@ -32,7 +32,7 @@ for quality in ['media','baja']:
    src=root/f'{quality}-{phase}-{name}.png'
    image=Image.open(src).convert('RGB');dst=src.with_suffix('.webp');image.save(dst,lossless=True)
    assert Image.open(dst).convert('RGB').tobytes()==image.tobytes()
-(root/'summary.json').write_text(json.dumps({'samples':7680,'frameParity':'camera, target, draws, triangles for every index in each quality/phase','groups':summary},indent=2)+'\n')
+(root/'summary.json').write_text(json.dumps({'samples':7680,'frameParity':'camera, target, draws, triangles for every index in each quality/phase','groups':summary},indent=2)+'\n',encoding='utf-8',newline='\n')
 for g in summary:
  a,b=[v['mean'] for v in g['variants']]
  print(g['quality'],g['phase'],'RAF',round(a['intervalMs'],3),round(b['intervalMs'],3),'delta',round(g['deltaIntervalMs'],3),'CPU',round(a['appFrameCpuMs'],3),round(b['appFrameCpuMs'],3))
