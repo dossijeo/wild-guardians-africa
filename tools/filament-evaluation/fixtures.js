@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import {Assets} from '/src/rendering/assets.js';
+import {assetUrl} from '/src/rendering/asset-url.js';
 import {clone as cloneSkeleton} from 'three/addons/utils/SkeletonUtils.js';
 import {GLTFExporter} from 'three/addons/exporters/GLTFExporter.js';
 
@@ -18,7 +19,7 @@ export async function createFixture({scenario='A', instancing=false}={}) {
   world.name='shared-static-world';scene.add(world,actorsRoot);
   scene.background=new THREE.Color('#cbd4bf');
   const camera=new THREE.PerspectiveCamera(48,1280/720,.2,260);
-  const sun=new THREE.DirectionalLight('#fff0c7',2.6),ambient=new THREE.HemisphereLight('#e5edff','#8e6c3e',2.1);
+  const sun=new THREE.DirectionalLight('#fff0c7',2.6),ambient=new THREE.HemisphereLight('#e5edff','#8e6c3e',0);
   sun.position.set(-35,60,25);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);
   Object.assign(sun.shadow.camera,{left:-65,right:65,top:65,bottom:-65,near:1,far:160});sun.shadow.camera.updateProjectionMatrix();sun.shadow.bias=-.0002;
   scene.add(sun,ambient);
@@ -44,7 +45,7 @@ export async function createFixture({scenario='A', instancing=false}={}) {
   }
   const hash=n=>{const f=Math.sin(n*78.233+712)*43758.5453;return f-Math.floor(f)};
   const dummy=new THREE.Object3D(),chunks=[];
-  const metadata={scenario,seed:712,instancing,scope:'Common glTF standard-material backend diagnostic, not AfricanToon parity',logical:{chunks:9,buildings:36,vegetation:135,crops:0,workers:scenario==='B'?24:0,animals:scenario==='B'?8:0},sources:{village:village.id,biome:biome.biomeId,crops:cropSource.url,worker:actions.youngMale.url,animal:animalSource.url},omissions:['AfricanToon','continuous grass coverage (scenario C)','native gameplay terrain/streaming','water/VFX','game simulation'],shadow:{mapSize:1024,coverage:130,parityRequiresCapture:true}};
+  const metadata={scenario,seed:712,instancing,scope:'Common glTF standard-material backend diagnostic, not AfricanToon parity',lighting:{ambient:0,directionalOnly:true,dayColor:'#fff0c7',nightColor:'#8095d6',dayIntensity:2.6,nightIntensity:.18,direction:[35,-60,-25],note:'Filament lux requires exposure calibration; exact photometric parity is not implied'},logical:{chunks:9,buildings:36,vegetation:135,crops:0,workers:scenario==='B'?24:0,animals:scenario==='B'?8:0},sources:{village:village.id,biome:biome.biomeId,crops:cropSource.url,worker:actions.youngMale.url,animal:animalSource.url},omissions:['AfricanToon','continuous grass coverage (scenario C)','native gameplay terrain/streaming','water/VFX','game simulation'],shadow:{mapSize:1024,coverage:130,parityRequiresCapture:true}};
   function addCopies(g,m,poses,parent,name){
     if(instancing){
       const mesh=new THREE.InstancedMesh(g,m,poses.length);mesh.name=name;
@@ -72,7 +73,7 @@ export async function createFixture({scenario='A', instancing=false}={}) {
       root.scale.setScalar(scale);root.position.y=-bounds.min.y*scale;
       const wrapper=new THREE.Group();wrapper.name=`actor-${kind}-${i}`;wrapper.add(root);actorsRoot.add(wrapper);
       const mixer=new THREE.AnimationMixer(root);if(source.animations.length)mixer.clipAction(source.animations[0]).play();mixers.push(mixer);
-      actors.push({name:wrapper.name,url,kind,index:i,animation:0,animationCount:source.animations.length,normalization:[scale,-bounds.min.y*scale],base:[-36+hash(i+77+(kind==='animal'?100:0))*72,0,-36+hash(i+111)*72],wrapper});
+      actors.push({name:wrapper.name,url:assetUrl(url),originalUrl:url,kind,index:i,animation:0,animationCount:source.animations.length,normalization:[scale,-bounds.min.y*scale],base:[-36+hash(i+77+(kind==='animal'?100:0))*72,0,-36+hash(i+111)*72],wrapper});
     }
   }
   function actorMatrix(actor,time){
@@ -81,15 +82,22 @@ export async function createFixture({scenario='A', instancing=false}={}) {
     return dummy.matrix.clone().multiply(normalization).toArray();
   }
   function update(time,night=0,cameraStep=time){
-    ambient.intensity=night?.5:2.1;sun.intensity=night?.18:2.6;sun.color.set(night?'#8095d6':'#fff0c7');scene.background.set(night?'#182137':'#cbd4bf');
+    ambient.intensity=0;sun.intensity=night?.18:2.6;sun.color.set(night?'#8095d6':'#fff0c7');scene.background.set(night?'#182137':'#cbd4bf');
     camera.position.set(58+Math.sin(cameraStep*.6)*12,48+Math.sin(cameraStep*.3)*4,68+Math.cos(cameraStep*.6)*8);camera.lookAt(Math.sin(cameraStep*.25)*12,0,0);camera.updateMatrixWorld();
     actors.forEach(actor=>{actor.wrapper.position.set(actor.base[0]+Math.sin(time*.6+actor.index)*2,0,actor.base[2]);actor.wrapper.rotation.y=time*.2+actor.index});mixers.forEach(mixer=>mixer.setTime(time));
+    if(scenario==='B')partialUpdates(time).forEach(({name,matrix})=>world.getObjectByName(name).matrix.fromArray(matrix).decompose(world.getObjectByName(name).position,world.getObjectByName(name).quaternion,world.getObjectByName(name).scale));
     scene.updateMatrixWorld(true);
+  }
+  function partialUpdates(time){
+    // One ninth of the preloaded world moves at 1.5s boundaries. Both engines
+    // submit the same local transform; no IO or geometry recreation is claimed.
+    const epoch=Math.floor(time/1.5),index=epoch%chunks.length;
+    return chunks.map((chunk,i)=>{const x=(i%3-1)*32,z=(Math.floor(i/3)-1)*32;return {name:chunk.name,matrix:new THREE.Matrix4().makeTranslation(x,i===index?.05*Math.sin(time):0,z).toArray()}});
   }
   update(0);
   function triangleStats(root){let meshes=0,triangles=0;root.traverse(mesh=>{if(mesh.isMesh){meshes++;triangles+=(mesh.geometry.index?.count??mesh.geometry.attributes.position.count)/3*(mesh.isInstancedMesh?mesh.count:1)}});return {meshes,triangles}}
   metadata.geometry=triangleStats(scene);
-  return {scene,world,camera,sun,ambient,chunks,actors,metadata,update,actorMatrix,
+  return {scene,world,camera,sun,ambient,chunks,actors,metadata,update,actorMatrix,partialUpdates,
     actorDescriptors:actors.map(({wrapper,...descriptor})=>descriptor),
     async exportGLB(){world.updateMatrixWorld(true);return new GLTFExporter().parseAsync(world,{binary:true,onlyVisible:true,maxTextureSize:4096})},
     dispose(){sun.shadow.dispose();mixers.forEach(m=>m.stopAllAction());scene.traverse(mesh=>{if(mesh.isSkinnedMesh)mesh.skeleton.dispose();if(mesh.isInstancedMesh)mesh.dispose()});ownedGeometries.forEach(g=>g.dispose());ownedMaterials.forEach(m=>m.dispose());assets.disposeModels();scene.clear()}

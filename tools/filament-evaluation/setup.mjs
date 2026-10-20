@@ -1,4 +1,4 @@
-import {readFile,mkdir,writeFile} from 'node:fs/promises';
+import {readFile,mkdir,writeFile,copyFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {execFileSync} from 'node:child_process';
 const folder = new URL('./',import.meta.url);
@@ -13,4 +13,5 @@ const archive=new URL('filament.tgz',vendor);
 await writeFile(archive,bytes);
 const {fileURLToPath}=await import('node:url');
 execFileSync('tar',['-xzf',fileURLToPath(archive),'-C',fileURLToPath(vendor)]);
+for(const name of ['grass','grass-instanced'])await copyFile(new URL(`materials/${name}.filamat`,folder),new URL(`${name}.filamat`,vendor));
 console.log(`Verified official Filament ${lock.version} (${lock.commit})`);

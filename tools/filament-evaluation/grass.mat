@@ -1,0 +1,57 @@
+material {
+    name : WildGuardiansGrassParity,
+    shadingModel : unlit,
+    doubleSided : true,
+    vertexDomain : object,
+    requires : [custom0, custom1, custom2, custom3, custom4, custom5, custom6],
+    variables : [grassColor, grassSun],
+    parameters : [
+        {type : float, name : uCoverageTime},
+        {type : float, name : uCoverageWindStrength},
+        {type : float, name : uCoverageRefined},
+        {type : float, name : uCoverageSpacing},
+        {type : float, name : uCoverageFar},
+        {type : float, name : uCoverageScale},
+        {type : float, name : uNight},
+        {type : float, name : uNightLight},
+        {type : float, name : uExposure},
+        {type : float2, name : uCoverageSeed},
+        {type : float3, name : uEye},
+        {type : float3, name : uLightDir},
+        {type : float3, name : uPigmentTint},
+        {type : sampler2d, name : uCoverageColor, shader : vertex}
+    ]
+}
+vertex {
+    void materialVertex(inout MaterialVertexInputs material) {
+        vec3 position = getPosition().xyz;
+        vec3 normal = getCustom0().xyz, flatPosition = getCustom1().xyz, bladeRoot = getCustom2().xyz;
+        vec4 coverageAnchor = getCustom3(), coverageData = getCustom4();
+        vec2 coverageSlope = getCustom5().xy, uv = getCustom6().xy;
+        float ca=cos(coverageData.x),sa=sin(coverageData.x);mat2 turn=mat2(ca,-sa,sa,ca);
+        vec3 root=coverageAnchor.xyz;float distanceToEye=length(materialParams.uEye.xz-root.xz);
+        float fade=1.-smoothstep(materialParams.uCoverageFar-12.,materialParams.uCoverageFar,distanceToEye);
+        float lod=1.-smoothstep(18.,24.,distanceToEye),growth=fade*(uv.y>=8./12.?lod:1.);
+        vec3 pos=mix(flatPosition,position,lod*materialParams.uCoverageRefined);pos=bladeRoot+(pos-bladeRoot)*growth;
+        pos.xz=turn*pos.xz*materialParams.uCoverageSpacing;pos.y*=coverageAnchor.w;pos.y+=dot(coverageSlope,pos.xz);
+        vec2 direction=normalize(vec2(1.,.38));
+        float wave=.65*sin(materialParams.uCoverageTime*1.15+dot(root.xz,vec2(.21,.13)))+.35*sin(materialParams.uCoverageTime*2.4+dot(root.xz,vec2(.57,-.31))+uv.y*4.);
+        float bend=materialParams.uCoverageRefined*.50*materialParams.uCoverageWindStrength*wave*pow(max(position.y*coverageAnchor.w,0.),2.)*growth;
+        pos.xz+=direction*bend;
+        vec3 N=normal;N.xz=turn*N.xz;N.y-=materialParams.uCoverageRefined*materialParams.uCoverageWindStrength*wave*position.y*dot(N.xz,direction);N=normalize(N+vec3(0.,.45,0.));
+        vec2 tileUV=mat2(.8,-.6,.6,.8)*(root.xz+pos.xz)*materialParams.uCoverageScale+materialParams.uCoverageSeed;
+        vec3 pigment=textureLod(materialParams_uCoverageColor,tileUV,2.).rgb*materialParams.uPigmentTint*(.88+.20*coverageData.y);
+        vec3 base=pow(clamp(pigment,0.,1.),vec3(2.2))*(.63+.37*uv.x)*materialParams.uExposure;
+        material.grassColor=vec4(base*mix(vec3(.17,.28,.34),vec3(.095,.17,.32)*materialParams.uNightLight,materialParams.uNight),1.);
+        material.grassSun=vec4(base*mix(vec3(1.55,1.42,1.02),vec3(.22,.36,.66)*materialParams.uNightLight,materialParams.uNight)*(.35+.65*max(dot(N,materialParams.uLightDir),0.)),1.);
+        material.worldPosition=getWorldFromModelMatrix()*vec4(root+pos,1.);
+    }
+}
+fragment {
+    void material(inout MaterialInputs material) {
+        prepareMaterial(material);
+        vec3 lit=variable_grassColor.rgb+variable_grassSun.rgb;
+        vec3 x=clamp((lit*(2.51*lit+.03))/(lit*(2.43*lit+.59)+.14),0.,1.);
+        material.baseColor=vec4(mix(x*12.92,1.055*pow(x,vec3(1./2.4))-.055,step(vec3(.0031308),x)),1.);
+    }
+}
