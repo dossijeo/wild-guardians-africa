@@ -1,0 +1,98 @@
+[
+  {
+    "id": "feather",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 1,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 3995,
+      "calls": 76,
+      "triangles": 994137,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "feather",
+      "mode": "catch",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 0.0687000000178814
+    }
+  },
+  {
+    "id": "flower",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 3,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 4057,
+      "calls": 76,
+      "triangles": 994141,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "flower",
+      "mode": "hold",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 1.2979000000059608
+    }
+  },
+  {
+    "id": "burrow",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 8,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 4227,
+      "calls": 76,
+      "triangles": 994151,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "burrow",
+      "mode": "catch",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 0.9082999999821184
+    }
+  },
+  {
+    "id": "spores",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 19,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 4393,
+      "calls": 76,
+      "triangles": 994173,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "spores",
+      "mode": "scatter",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 0.8350999999940396
+    }
+  }
+]

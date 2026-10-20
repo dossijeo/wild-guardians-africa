@@ -122,12 +122,26 @@ export function createSprite(id,frame=0){const g=new T.Group();
   else{rod(g,[0,-.1,0],[0,.55,0],.025,'#759956');leaf(g,'#91ad69',[-.23,.4,0],.48,.8);leaf(g,'#a0ba78',[.24,.48,0],.48,-.8);}
  }
  else if(id==='feather'){
-  rod(g,[-.16,-.75,.1],[.16,.68,.1],.025,'#ddcba2');
-  for(let i=0;i<9;i++){const y=-.45+i*.12,x=y*.22,w=.3*Math.sin((i+1)/10*Math.PI);for(const side of [-1,1]){
-   plate(g,[[x,y],[x+side*w,y+.13],[x+side*w*.85,y+.25],[x+.035,y+.14]],i>5?'#5c6c65':side<0?'#dfd7b9':'#a8ae99',.035);
-  }}
+  // Broad uneven vanes and a dark tip survive the small falling sprite.
+  for(const side of [-1,1]){
+   const vane=plate(g,[[0,-.58],[side*.22,-.35],[side*.36,.05],[side*.28,.46],[.04,.76],[side*.08,.24],[0,-.58]],side<0?'#ece0bd':'#b7bca4',.035);
+   vane.position.z=.02;
+   const tip=plate(g,[[side*.28,.46],[.04,.76],[side*.08,.24]],'#536d66',.04);tip.position.z=.06;
+   for(const y of [-.22,.02,.24])rod(g,[0,y,.09],[side*.27,y+.17,.09],.012,'#8e9b82');
+  }
+  rod(g,[0,-.79,.11],[.04,.68,.11],.027,'#f1dfb5');
  }
- else if(id==='flower'){rod(g,[0,-.8,0],[0,.25,0],.035,'#749959');for(let i=0;i<5;i++){const a=i*Math.PI*2/5;ball(g,'#ce9dbd',[Math.sin(a)*.3,.28+Math.cos(a)*.3,.04],[.21,.24,.1],1);}ball(g,'#e7c97b',[0,.28,.15],[.18,.18,.1],1);leaf(g,'#8ca666',[-.2,-.45,0],.4,.9);}
+ else if(id==='flower'){
+  rod(g,[0,-.78,0],[0,.25,0],.042,'#507447');
+  // Cupped petals surround a contrasting pollen disc instead of a row of beads.
+  const bloom=new T.Group();bloom.position.set(0,.28,0);bloom.quaternion.setFromUnitVectors(new T.Vector3(0,0,1),new T.Vector3(4,3.5,5).normalize());g.add(bloom);
+  for(let i=0;i<6;i++){
+   const a=i*Math.PI/3,petal=ball(bloom,i%2?'#d891ae':'#e8adc2',[Math.sin(a)*.31,Math.cos(a)*.31,.03],[.19,.3,.11],1);petal.rotation.z=-a;
+  }
+  ball(bloom,'#785038',[0,0,.16],[.22,.22,.09],1);
+  ball(bloom,'#efc86e',[0,0,.23],[.14,.14,.06],1);
+  foliage(g,'#668a4d',[-.18,-.37,0],.4,.85);
+ }
  else if(id==='spirit'){drop(g,'#b4d7df');for(const x of [-.13,.13])ball(g,'#4c6f81',[x,.02,.37],[.04,.06,.025]);}
  else if(['goldenleaves','pathleaves'].includes(id))foliage(g,id==='goldenleaves'?'#c9943f':'#947144',[0,0,0],1,.25);
  else if(id==='sparkle'||id==='star'){const points=[],n=id==='star'?5:4;for(let i=0;i<n*2;i++){const a=i*Math.PI/n+Math.PI/2,r=i%2?.25:.7;points.push([Math.cos(a)*r,Math.sin(a)*r]);}plate(g,points,'#f1d99d',.12);}
@@ -150,7 +164,13 @@ export function createSprite(id,frame=0){const g=new T.Group();
  }
  else if(id==='mound'){ball(g,'#a88b65',[0,-.16,0],[.8,.48,.55],1);ball(g,'#655a43',[0,-.13,.45],[.37,.27,.05],1);}
  else if(id==='burrow'){ball(g,'#a98c6b',[0,-.05,0],[.48,.53,.36],1);ball(g,'#d3bb97',[0,-.18,.3],[.28,.22,.15],1);for(const x of [-.22,.22])ball(g,'#33483f',[x,.13,.32],[.05,.06,.04]);ball(g,'#947367',[0,-.06,.44],[.08,.05,.04]);for(const x of [-.43,.43])ball(g,'#c0a784',[x,-.4,.24],[.17,.11,.14],0);}
- else if(id==='spores'){for(const side of [-1,1]){leaf(g,'#c5bbaf',[side*.28,.2,0],.5,side*.9);rod(g,[side*.08,.12,0],[side*.18,-.45,0],.02,'#b7a78e');ball(g,'#d7caad',[side*.18,-.48,0],[.09,.14,.09]);}}
+ else if(id==='spores'){
+  // Airborne fungal motes: translucent round bodies, distinct from winged seeds.
+  for(const [x,y,r] of [[-.24,.21,.22],[.25,.08,.17],[-.03,-.29,.19]]){
+   ball(g,'#9b9a7e',[x,y,0],[r,r*.94,r*.66],1,.92);
+   ball(g,'#e1dbb5',[x-.025,y+.035,r*.58],[r*.67,r*.66,r*.2],1);
+  }
+ }
  else if(id==='debris'||id==='branch')twig(g,id==='branch');
  else if(id==='web'){
   const silk=(a,b)=>{rod(g,a,b,.027,'#596c58',5);rod(g,[a[0],a[1],.035],[b[0],b[1],.035],.016,'#f0ebd5',5);};
