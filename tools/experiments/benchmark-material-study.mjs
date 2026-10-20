@@ -25,6 +25,7 @@ try{for(const sceneCase of cases){
   const {applyMaterialStudy}=await import('/tools/experiments/qa-'+study+'.js');await applyMaterialStudy(w);
   const after=materials.map(m=>[m.onBeforeCompile,m.customProgramCacheKey]);
   window.qaPairSet=(variant)=>{
+   if(w.qaNightSetEnabled){w.qaNightSetEnabled(variant);return;}
    if(w.qaCliffSetEnabled){w.qaCliffSetEnabled(variant);return;}
    if(mode==='fill')materials.forEach((m,i)=>{[m.onBeforeCompile,m.customProgramCacheKey]=(variant?after:before)[i];m.needsUpdate=true;});
    else{w.terrainMeshes.forEach(m=>m.castShadow=!!variant);w.releaseNativeShadow.cache.invalidate();}
@@ -44,7 +45,7 @@ try{for(const sceneCase of cases){
    const report=JSON.parse(await page.locator('#benchmarkReport').textContent());
    records.push({sceneCase,phase,variant,view:process.env.WG_PAIR_VIEW??'game',camera:await page.evaluate(()=>({position:window.qaVisualReference.world.camera.position.toArray(),target:window.qaVisualReference.world.controls.target.toArray()})),report,errors:[...errors]});
    console.log(JSON.stringify({sceneCase,phase,variant,gpu:report.gpuElapsedMs?.mean,cpu:report.cpuSubmissionMs.mean,errors:errors.length}));
-   await writeFile(output,JSON.stringify({mode,cases,order:records.map(r=>r.variant),note:'Same page, original and material-study programs; explicit order recorded; global-lighting baseline.',records},null,2)+'\n');
+   await writeFile(output,JSON.stringify({mode,cases,order:records.map(r=>r.variant),note:study==='night-readability'?'Same-page ABBA of night-light uniform 1.12/1.55; shader source and geometry unchanged.':'Same page, original and material-study programs; explicit order recorded; global-lighting baseline.',records},null,2)+'\n');
   }
  }
  await page.close();
