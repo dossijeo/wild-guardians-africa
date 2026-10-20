@@ -21,3 +21,9 @@ Conservar la corrección como candidata QA. Pendientes vídeo de cruce de umbral
 Reproducir con `python tools/experiments/audit-continuous-grass-wind-continuity.py` y `node tools/experiments/capture-continuous-grass-river-continuity.mjs`; `WG_COVER_QUALITY=baja` selecciona calidad baja. Los PNG se convierten a WebP sin pérdida para publicación.
 
 Calidad baja: otras 12 capturas, seis pares idénticos píxel a píxel, sin errores GL ni overflow y sin módulos refinados. Confirma que la corrección no cambia estas vistas del perfil ligero; no mide su coste temporal.
+
+## Secuencia posterior
+
+[Vídeo](camera-comparison.mp4): izquierda LOD 3D anterior, derecha altura de viento corregida. 180 fotogramas por variante, 30 FPS y seis segundos codificados offline; no es benchmark. Poses y conteos near/far coinciden en los 180 pares; sin errores WebGL. Se revisaron los fotogramas 25/35/45 del ascenso ([contacto](transition-contact.webp)); la cubierta permanece continua. No se afirma ausencia de todos los saltos temporales a partir de esos fotogramas. El análisis de normales detectó otro origen potencial de cambios de brillo, tratado aparte en [normal-continuity](../normal-continuity/README.md).
+
+Reproducir: `node tools/experiments/video-continuous-grass-river-continuity.mjs`. La revisión interactiva seguía abierta; estos tiempos no se usan como medición de rendimiento.
