@@ -5,7 +5,7 @@ import {observeGameEvents} from '/src/simulation/game.js';
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
 const vertex=`
 in vec4 coverageAnchor,coverageData;in vec2 coverageSlope;in vec3 flatPosition,bladeRoot;
-uniform float uCoverageTime,uCoverageRefined,uCoverageSpacing,uCoverageFar,uCoverageDiagnostic;
+uniform float uCoverageTime,uCoverageWindStrength,uCoverageRefined,uCoverageSpacing,uCoverageFar,uCoverageDiagnostic;
 uniform sampler2D uCoverageColor;uniform vec2 uCoverageSeed;uniform float uCoverageScale;
 uniform mat4 uNativeLightVP;uniform float uNativeShadowOn;uniform vec3 uNativeShadowLight;
 uniform float uNight,uNightLight,uExposure;uniform vec3 uLightDir;
@@ -23,10 +23,10 @@ void main(){
  pos.y*=coverageAnchor.w;pos.y+=dot(coverageSlope,pos.xz);
  vec2 windDirection=normalize(vec2(1.,.38));
  float wave=.65*sin(uCoverageTime*1.15+dot(root.xz,vec2(.21,.13)))+.35*sin(uCoverageTime*2.4+dot(root.xz,vec2(.57,-.31))+uv.y*4.);
- float bend=uCoverageRefined*.50*wave*pow(max(position.y*coverageAnchor.w,0.),2.)*growth;
+ float bend=uCoverageRefined*.50*uCoverageWindStrength*wave*pow(max(position.y*coverageAnchor.w,0.),2.)*growth;
  pos.xz+=windDirection*bend;
  vec3 worldP=(modelMatrix*vec4(root+pos,1.)).xyz;
- vec3 N=normal;N.xz=turn*N.xz;N.y-=uCoverageRefined*wave*position.y*dot(N.xz,windDirection);N=normalize(N+vec3(0.,.45,0.));
+ vec3 N=normal;N.xz=turn*N.xz;N.y-=uCoverageRefined*uCoverageWindStrength*wave*position.y*dot(N.xz,windDirection);N=normalize(N+vec3(0.,.45,0.));
  vec4 light=uNativeLightVP*vec4(rootWorld+vec3(0.,.12,0.),1.);vCoverageShadow=light.xyz/light.w*.5+.5;
  vec2 tileUV=mat2(.8,-.6,.6,.8)*(root.xz+pos.xz)*uCoverageScale+uCoverageSeed;
  vec3 pigment=textureLod(uCoverageColor,tileUV,2.).rgb*vec3(1.14,1.09,.97);
@@ -59,7 +59,7 @@ export async function applyMaterialStudy(world,variant='A'){
  const low=world.quality==='baja';q.spacing=low?.5:.4;q.farDistance=low?40:48;q.nearDistance=low?0:24;
  const group=new THREE.Group();group.name='qa-continuous-herbaceous-cover';group.userData.materialRegistryExcluded=true;world.scene.add(group);q.group=group;
  const first=world.terrainMeshes.find(m=>m.material.userData.biomeGround).material.userData.biomeGround;
- q.uniforms={...world.toon.uniforms,...world.toon.shadowUniforms,uCoverageTime:{value:0},uCoverageRefined:{value:0},uCoverageSpacing:{value:q.spacing/.4},uCoverageFar:{value:q.farDistance},uCoverageColor:first.uGroundDetailMap,uCoverageSeed:first.uGroundSeed,uCoverageScale:{value:first.uGroundParams.value.x},uCoverageDiagnostic:{value:0}};
+ q.uniforms={...world.toon.uniforms,...world.toon.shadowUniforms,uCoverageTime:{value:0},uCoverageWindStrength:{value:8},uCoverageRefined:{value:0},uCoverageSpacing:{value:q.spacing/.4},uCoverageFar:{value:q.farDistance},uCoverageColor:first.uGroundDetailMap,uCoverageSeed:first.uGroundSeed,uCoverageScale:{value:first.uGroundParams.value.x},uCoverageDiagnostic:{value:0}};
  q.meshes=[['refined',12000],['light',18000]].map(([name,capacity])=>{const g=geometry(modules[name],capacity);const m=new THREE.ShaderMaterial({vertexShader:vertex,fragmentShader:fragment,uniforms:{...q.uniforms,uCoverageRefined:{value:0}},glslVersion:THREE.GLSL3,side:THREE.DoubleSide,transparent:false,depthWrite:true,toneMapped:false});const mesh=new THREE.Mesh(g,m);mesh.name='coverage-'+name;mesh.frustumCulled=false;mesh.castShadow=false;mesh.receiveShadow=true;group.add(mesh);return {mesh,capacity,data:modules[name]}});
  function blockers(){const buckets=new Map();const add=(o,minX,minZ,maxX,maxZ)=>{for(let x=Math.floor((minX-.7)/8);x<=Math.floor((maxX+.7)/8);x++)for(let z=Math.floor((minZ-.7)/8);z<=Math.floor((maxZ+.7)/8);z++){const key=x+','+z;if(!buckets.has(key))buckets.set(key,[]);buckets.get(key).push(o)}};
  // Read existing obstacle footprints once per invalidation; never invoke navigation/engine queries.

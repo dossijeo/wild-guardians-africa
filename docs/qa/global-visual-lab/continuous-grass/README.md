@@ -6,6 +6,10 @@
 
 El [objetivo vigente](OBJECTIVE.md) sustituye los retoques de matas aisladas y POM. Las matas, edificios y demás modelos originales permanecen intactos. Esta entrega añade herramientas QA y geometría visual independiente; no modifica código de simulación, navegación, terreno autoritativo ni la selección predeterminada del juego.
 
+## Actualización: viento extraordinariamente más fuerte
+
+La variante C utiliza ahora una amplitud de viento **8×**. Las capturas y métricas de este informe conservan la intensidad original (1×); la nueva [comparación de vídeo y rendimiento](../continuous-grass-wind-strong/README.md) documenta el cambio de forma independiente.
+
 ## Comparativa real
 
 Cámara normal, día, calidad media (clic para resolución completa):
