@@ -1,0 +1,1169 @@
+{
+  "result": {
+    "shore": {
+      "audit": {
+        "variant": "C",
+        "active": true,
+        "nearDistance": 24,
+        "moduleSpacing": 0.4,
+        "near": 3657,
+        "far": 4871,
+        "leaves": 82852,
+        "triangles": 258388,
+        "waterTriangles": 1706,
+        "waterBucketReferences": 5195,
+        "chunks": 25,
+        "cachedTiles": 78,
+        "bufferBytes": 1206456,
+        "stats": {
+          "buildMs": 119.89999994635582,
+          "selectionMs": 124.2999999821186,
+          "selectionCount": 10,
+          "candidates": 36000,
+          "masked": 12488,
+          "overflow": 0
+        },
+        "engineQueries": 0,
+        "castShadow": false
+      },
+      "water": {
+        "tested": 8528,
+        "inside": 0,
+        "minShore": 0.002814555075019598
+      }
+    },
+    "initial": {
+      "audit": {
+        "variant": "C",
+        "active": true,
+        "nearDistance": 24,
+        "moduleSpacing": 0.4,
+        "near": 3747,
+        "far": 5187,
+        "leaves": 86460,
+        "triangles": 266316,
+        "waterTriangles": 1279,
+        "waterBucketReferences": 4014,
+        "chunks": 25,
+        "cachedTiles": 56,
+        "bufferBytes": 1206456,
+        "stats": {
+          "buildMs": 121.29999992251396,
+          "selectionMs": 132.89999994635582,
+          "selectionCount": 21,
+          "candidates": 36000,
+          "masked": 12488,
+          "overflow": 0
+        },
+        "engineQueries": 0,
+        "castShadow": false
+      },
+      "digest": 4007698769,
+      "water": {
+        "tested": 8934,
+        "inside": 0,
+        "minShore": 91.00149536132812
+      }
+    },
+    "afterMotion": {
+      "audit": {
+        "variant": "C",
+        "active": true,
+        "nearDistance": 24,
+        "moduleSpacing": 0.4,
+        "near": 3747,
+        "far": 5187,
+        "leaves": 86460,
+        "triangles": 266316,
+        "waterTriangles": 1279,
+        "waterBucketReferences": 4014,
+        "chunks": 25,
+        "cachedTiles": 79,
+        "bufferBytes": 1206456,
+        "stats": {
+          "buildMs": 133.49999991059303,
+          "selectionMs": 211.3999999165535,
+          "selectionCount": 105,
+          "candidates": 45200,
+          "masked": 15976,
+          "overflow": 0
+        },
+        "engineQueries": 0,
+        "castShadow": false
+      },
+      "digest": 4007698769
+    },
+    "away": {
+      "elapsedMs": 1499.6000000238419,
+      "audit": {
+        "variant": "C",
+        "active": true,
+        "nearDistance": 24,
+        "moduleSpacing": 0.4,
+        "near": 3747,
+        "far": 8951,
+        "leaves": 116572,
+        "triangles": 296428,
+        "waterTriangles": 698,
+        "waterBucketReferences": 2308,
+        "chunks": 25,
+        "cachedTiles": 39,
+        "bufferBytes": 1206456,
+        "stats": {
+          "buildMs": 190.30000001192093,
+          "selectionMs": 291.8000000715256,
+          "selectionCount": 129,
+          "candidates": 66800,
+          "masked": 16540,
+          "overflow": 0
+        },
+        "engineQueries": 0,
+        "castShadow": false
+      },
+      "water": {
+        "tested": 12698,
+        "inside": 0,
+        "minShore": 0.6120024919509888
+      }
+    },
+    "returned": {
+      "elapsedMs": 1135.800000011921,
+      "audit": {
+        "variant": "C",
+        "active": true,
+        "nearDistance": 24,
+        "moduleSpacing": 0.4,
+        "near": 3747,
+        "far": 5187,
+        "leaves": 86460,
+        "triangles": 266316,
+        "waterTriangles": 1279,
+        "waterBucketReferences": 4014,
+        "chunks": 25,
+        "cachedTiles": 39,
+        "bufferBytes": 1206456,
+        "stats": {
+          "buildMs": 221.80000001192093,
+          "selectionMs": 335.4000001549721,
+          "selectionCount": 155,
+          "candidates": 88400,
+          "masked": 25103,
+          "overflow": 0
+        },
+        "engineQueries": 0,
+        "castShadow": false
+      },
+      "digest": 4007698769,
+      "water": {
+        "tested": 8934,
+        "inside": 0,
+        "minShore": 91.00149536132812
+      }
+    },
+    "invalidation": {
+      "sameDistribution": true,
+      "audit": {
+        "variant": "C",
+        "active": true,
+        "nearDistance": 24,
+        "moduleSpacing": 0.4,
+        "near": 3747,
+        "far": 5187,
+        "leaves": 86460,
+        "triangles": 266316,
+        "waterTriangles": 1279,
+        "waterBucketReferences": 4014,
+        "chunks": 25,
+        "cachedTiles": 39,
+        "bufferBytes": 1206456,
+        "stats": {
+          "buildMs": 247.80000007152557,
+          "selectionMs": 365.80000016093254,
+          "selectionCount": 156,
+          "candidates": 104000,
+          "masked": 31168,
+          "overflow": 0
+        },
+        "engineQueries": 0,
+        "castShadow": false
+      }
+    },
+    "motion": [
+      {
+        "cpuMs": 6.800000011920929,
+        "selectionMs": 0,
+        "buildMs": 0,
+        "near": 3747,
+        "far": 5187,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 7.5,
+        "selectionMs": 1.800000011920929,
+        "buildMs": 1,
+        "near": 4032,
+        "far": 5261,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 7.5,
+        "selectionMs": 0.5999999940395355,
+        "buildMs": 0,
+        "near": 3912,
+        "far": 5339,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 8.699999988079071,
+        "selectionMs": 1.800000011920929,
+        "buildMs": 1,
+        "near": 3794,
+        "far": 5720,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 6.300000011920929,
+        "selectionMs": 1,
+        "buildMs": 0,
+        "near": 3677,
+        "far": 5765,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 11.199999988079071,
+        "selectionMs": 2.300000011920929,
+        "buildMs": 1.300000011920929,
+        "near": 3970,
+        "far": 5797,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 7.299999982118607,
+        "selectionMs": 0.6000000238418579,
+        "buildMs": 0,
+        "near": 3855,
+        "far": 5841,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 3.0999999940395355,
+        "selectionMs": 0,
+        "buildMs": 0,
+        "near": 3855,
+        "far": 5841,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 6.399999976158142,
+        "selectionMs": 1.9000000059604645,
+        "buildMs": 0.800000011920929,
+        "near": 4046,
+        "far": 5913,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 5.899999976158142,
+        "selectionMs": 1.0999999940395355,
+        "buildMs": 0.5,
+        "near": 4198,
+        "far": 6094,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 3.4000000059604645,
+        "selectionMs": 0.5,
+        "buildMs": 0,
+        "near": 4087,
+        "far": 6134,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 2.9000000059604645,
+        "selectionMs": 0,
+        "buildMs": 0,
+        "near": 4087,
+        "far": 6134,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 7.700000017881393,
+        "selectionMs": 1.2000000178813934,
+        "buildMs": 0.5,
+        "near": 4281,
+        "far": 6213,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 9.400000005960464,
+        "selectionMs": 2.5999999940395355,
+        "buildMs": 1.5999999940395355,
+        "near": 4326,
+        "far": 6914,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 2.5999999940395355,
+        "selectionMs": 0,
+        "buildMs": 0,
+        "near": 4326,
+        "far": 6914,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 4.600000023841858,
+        "selectionMs": 0.5999999940395355,
+        "buildMs": 0,
+        "near": 4133,
+        "far": 6993,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 6.700000017881393,
+        "selectionMs": 1.899999976158142,
+        "buildMs": 1.100000023841858,
+        "near": 4038,
+        "far": 7122,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 4.9000000059604645,
+        "selectionMs": 0,
+        "buildMs": 0,
+        "near": 4038,
+        "far": 7122,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 6.5999999940395355,
+        "selectionMs": 1.300000011920929,
+        "buildMs": 0.5999999940395355,
+        "near": 3872,
+        "far": 7580,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 5.5,
+        "selectionMs": 0.699999988079071,
+        "buildMs": 0,
+        "near": 3800,
+        "far": 7598,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 6.0999999940395355,
+        "selectionMs": 0.8999999761581421,
+        "buildMs": 0,
+        "near": 3733,
+        "far": 7624,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 5.800000011920929,
+        "selectionMs": 0.5999999940395355,
+        "buildMs": 0,
+        "near": 3669,
+        "far": 7648,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 5.200000017881393,
+        "selectionMs": 0,
+        "buildMs": 0,
+        "near": 3669,
+        "far": 7648,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 5.5,
+        "selectionMs": 0.5,
+        "buildMs": 0,
+        "near": 3575,
+        "far": 7677,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 4.5999999940395355,
+        "selectionMs": 0,
+        "buildMs": 0,
+        "near": 3575,
+        "far": 7677,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 4.199999988079071,
+        "selectionMs": 0,
+        "buildMs": 0,
+        "near": 3575,
+        "far": 7677,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 3.5,
+        "selectionMs": 0,
+        "buildMs": 0,
+        "near": 3575,
+        "far": 7677,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 6.199999988079071,
+        "selectionMs": 1.5,
+        "buildMs": 0.5999999940395355,
+        "near": 3447,
+        "far": 7814,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 12.299999982118607,
+        "selectionMs": 1.5999999940395355,
+        "buildMs": 0,
+        "near": 3428,
+        "far": 7817,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 3.2000000178813934,
+        "selectionMs": 0,
+        "buildMs": 0,
+        "near": 3428,
+        "far": 7817,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 4.0999999940395355,
+        "selectionMs": 0,
+        "buildMs": 0,
+        "near": 3428,
+        "far": 7817,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 7.200000017881393,
+        "selectionMs": 0,
+        "buildMs": 0,
+        "near": 3428,
+        "far": 7817,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 2.9000000059604645,
+        "selectionMs": 0,
+        "buildMs": 0,
+        "near": 3428,
+        "far": 7817,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 6.799999982118607,
+        "selectionMs": 0.7999999821186066,
+        "buildMs": 0,
+        "near": 3456,
+        "far": 7812,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 7.799999982118607,
+        "selectionMs": 2.199999988079071,
+        "buildMs": 0,
+        "near": 3476,
+        "far": 7816,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 3.199999988079071,
+        "selectionMs": 0,
+        "buildMs": 0,
+        "near": 3476,
+        "far": 7816,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 6.200000017881393,
+        "selectionMs": 0,
+        "buildMs": 0,
+        "near": 3476,
+        "far": 7816,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 4.5,
+        "selectionMs": 0,
+        "buildMs": 0,
+        "near": 3476,
+        "far": 7816,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 7.4000000059604645,
+        "selectionMs": 1.4000000059604645,
+        "buildMs": 0,
+        "near": 3645,
+        "far": 7651,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 9.799999982118607,
+        "selectionMs": 2.0999999940395355,
+        "buildMs": 0,
+        "near": 3698,
+        "far": 7641,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 4.0999999940395355,
+        "selectionMs": 0.6000000238418579,
+        "buildMs": 0,
+        "near": 3763,
+        "far": 7614,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 7.699999988079071,
+        "selectionMs": 1.0999999940395355,
+        "buildMs": 0,
+        "near": 3843,
+        "far": 7584,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 8,
+        "selectionMs": 1,
+        "buildMs": 0,
+        "near": 3907,
+        "far": 7567,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 5.800000011920929,
+        "selectionMs": 0.800000011920929,
+        "buildMs": 0,
+        "near": 3995,
+        "far": 7137,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 5.4000000059604645,
+        "selectionMs": 0.7999999821186066,
+        "buildMs": 0,
+        "near": 4082,
+        "far": 7020,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 3.2000000178813934,
+        "selectionMs": 0,
+        "buildMs": 0,
+        "near": 4082,
+        "far": 7020,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 4.800000011920929,
+        "selectionMs": 0.5999999940395355,
+        "buildMs": 0,
+        "near": 4274,
+        "far": 6930,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 6.4000000059604645,
+        "selectionMs": 0.699999988079071,
+        "buildMs": 0,
+        "near": 4231,
+        "far": 6232,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 6.700000017881393,
+        "selectionMs": 0.8999999761581421,
+        "buildMs": 0,
+        "near": 4333,
+        "far": 6198,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 4.300000011920929,
+        "selectionMs": 0.5,
+        "buildMs": 0,
+        "near": 4040,
+        "far": 6157,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 5.9000000059604645,
+        "selectionMs": 0.5999999940395355,
+        "buildMs": 0,
+        "near": 4146,
+        "far": 6115,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 7.300000011920929,
+        "selectionMs": 0.9000000059604645,
+        "buildMs": 0,
+        "near": 4000,
+        "far": 5931,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 7.300000011920929,
+        "selectionMs": 0.5,
+        "buildMs": 0,
+        "near": 4100,
+        "far": 5892,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 4.800000011920929,
+        "selectionMs": 0.800000011920929,
+        "buildMs": 0,
+        "near": 3801,
+        "far": 5867,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 5.9000000059604645,
+        "selectionMs": 0.9000000059604645,
+        "buildMs": 0,
+        "near": 3913,
+        "far": 5824,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 11.300000011920929,
+        "selectionMs": 0.9000000059604645,
+        "buildMs": 0,
+        "near": 3624,
+        "far": 5787,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 8.699999988079071,
+        "selectionMs": 0.9000000059604645,
+        "buildMs": 0,
+        "near": 3738,
+        "far": 5738,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 6.0999999940395355,
+        "selectionMs": 0.800000011920929,
+        "buildMs": 0,
+        "near": 3856,
+        "far": 5370,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 6.300000011920929,
+        "selectionMs": 0.9000000059604645,
+        "buildMs": 0,
+        "near": 3972,
+        "far": 5302,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 7.699999988079071,
+        "selectionMs": 0.7000000178813934,
+        "buildMs": 0,
+        "near": 4092,
+        "far": 5221,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 7.0999999940395355,
+        "selectionMs": 0.699999988079071,
+        "buildMs": 0,
+        "near": 3819,
+        "far": 5138,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 7.5999999940395355,
+        "selectionMs": 1.0999999940395355,
+        "buildMs": 0,
+        "near": 3932,
+        "far": 5068,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 5.700000017881393,
+        "selectionMs": 1.600000023841858,
+        "buildMs": 0.699999988079071,
+        "near": 4056,
+        "far": 4983,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 6.5999999940395355,
+        "selectionMs": 0.5,
+        "buildMs": 0,
+        "near": 4182,
+        "far": 4896,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 6.4000000059604645,
+        "selectionMs": 0.5999999940395355,
+        "buildMs": 0,
+        "near": 4300,
+        "far": 4822,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 4,
+        "selectionMs": 0.5,
+        "buildMs": 0,
+        "near": 4423,
+        "far": 4688,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 7,
+        "selectionMs": 0.5999999940395355,
+        "buildMs": 0,
+        "near": 4148,
+        "far": 4603,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 5.5,
+        "selectionMs": 1.4000000059604645,
+        "buildMs": 0.9000000059604645,
+        "near": 4264,
+        "far": 4527,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 7.5,
+        "selectionMs": 1,
+        "buildMs": 0.09999999403953552,
+        "near": 4388,
+        "far": 4440,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 7.800000011920929,
+        "selectionMs": 0.800000011920929,
+        "buildMs": 0,
+        "near": 4085,
+        "far": 4077,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 6.800000011920929,
+        "selectionMs": 0.8999999761581421,
+        "buildMs": 0.5,
+        "near": 4188,
+        "far": 3599,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 5.700000017881393,
+        "selectionMs": 0,
+        "buildMs": 0,
+        "near": 4188,
+        "far": 3599,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 6.5,
+        "selectionMs": 0.699999988079071,
+        "buildMs": 0,
+        "near": 4388,
+        "far": 3448,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 6,
+        "selectionMs": 0.5999999940395355,
+        "buildMs": 0.09999999403953552,
+        "near": 4476,
+        "far": 3380,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 4.5,
+        "selectionMs": 0,
+        "buildMs": 0,
+        "near": 4476,
+        "far": 3380,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 7.199999988079071,
+        "selectionMs": 1,
+        "buildMs": 0,
+        "near": 4666,
+        "far": 3244,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 6.4000000059604645,
+        "selectionMs": 1.5,
+        "buildMs": 0.5999999940395355,
+        "near": 4746,
+        "far": 3192,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 4,
+        "selectionMs": 0,
+        "buildMs": 0,
+        "near": 4746,
+        "far": 3192,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 4.300000011920929,
+        "selectionMs": 0.5,
+        "buildMs": 0,
+        "near": 4898,
+        "far": 3083,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 3.5999999940395355,
+        "selectionMs": 0,
+        "buildMs": 0,
+        "near": 4898,
+        "far": 3083,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 5,
+        "selectionMs": 0,
+        "buildMs": 0,
+        "near": 4898,
+        "far": 3083,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 7.300000011920929,
+        "selectionMs": 0.800000011920929,
+        "buildMs": 0.19999998807907104,
+        "near": 5031,
+        "far": 2607,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 6.399999976158142,
+        "selectionMs": 0.7000000178813934,
+        "buildMs": 0.09999999403953552,
+        "near": 5063,
+        "far": 2591,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 5.5,
+        "selectionMs": 0,
+        "buildMs": 0,
+        "near": 5063,
+        "far": 2591,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 3.5,
+        "selectionMs": 0.3999999761581421,
+        "buildMs": 0,
+        "near": 5114,
+        "far": 2568,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 2.5999999940395355,
+        "selectionMs": 0,
+        "buildMs": 0,
+        "near": 5114,
+        "far": 2568,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 2.800000011920929,
+        "selectionMs": 0,
+        "buildMs": 0,
+        "near": 5114,
+        "far": 2568,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 5.199999988079071,
+        "selectionMs": 0,
+        "buildMs": 0,
+        "near": 5114,
+        "far": 2568,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 3.4000000059604645,
+        "selectionMs": 0,
+        "buildMs": 0,
+        "near": 5114,
+        "far": 2568,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 3.0999999940395355,
+        "selectionMs": 0,
+        "buildMs": 0,
+        "near": 5114,
+        "far": 2568,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 5.700000017881393,
+        "selectionMs": 0,
+        "buildMs": 0,
+        "near": 5114,
+        "far": 2568,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 6.200000017881393,
+        "selectionMs": 0,
+        "buildMs": 0,
+        "near": 5114,
+        "far": 2568,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 4.4000000059604645,
+        "selectionMs": 0,
+        "buildMs": 0,
+        "near": 5114,
+        "far": 2568,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 6.5999999940395355,
+        "selectionMs": 0,
+        "buildMs": 0,
+        "near": 5114,
+        "far": 2568,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 2.800000011920929,
+        "selectionMs": 0,
+        "buildMs": 0,
+        "near": 5114,
+        "far": 2568,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 4.5999999940395355,
+        "selectionMs": 0,
+        "buildMs": 0,
+        "near": 5114,
+        "far": 2568,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 4,
+        "selectionMs": 0.699999988079071,
+        "buildMs": 0,
+        "near": 5074,
+        "far": 2584,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 7.899999976158142,
+        "selectionMs": 1.4000000059604645,
+        "buildMs": 0,
+        "near": 5048,
+        "far": 2600,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 7.799999982118607,
+        "selectionMs": 1.199999988079071,
+        "buildMs": 0,
+        "near": 5011,
+        "far": 2614,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 6.700000017881393,
+        "selectionMs": 0.5999999940395355,
+        "buildMs": 0,
+        "near": 4966,
+        "far": 2648,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 4.4000000059604645,
+        "selectionMs": 0,
+        "buildMs": 0,
+        "near": 4966,
+        "far": 2648,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 4.800000011920929,
+        "selectionMs": 0.6000000238418579,
+        "buildMs": 0,
+        "near": 4861,
+        "far": 3111,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 3.5999999940395355,
+        "selectionMs": 0.5,
+        "buildMs": 0,
+        "near": 4786,
+        "far": 3158,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 4.399999976158142,
+        "selectionMs": 0.5,
+        "buildMs": 0,
+        "near": 4699,
+        "far": 3221,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 6.700000017881393,
+        "selectionMs": 0.7999999821186066,
+        "buildMs": 0,
+        "near": 4618,
+        "far": 3285,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 7,
+        "selectionMs": 0.5,
+        "buildMs": 0,
+        "near": 4531,
+        "far": 3344,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 6.4000000059604645,
+        "selectionMs": 0.8999999761581421,
+        "buildMs": 0,
+        "near": 4439,
+        "far": 3403,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 4.9000000059604645,
+        "selectionMs": 0.5,
+        "buildMs": 0,
+        "near": 4333,
+        "far": 3487,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 5.199999988079071,
+        "selectionMs": 0.5999999940395355,
+        "buildMs": 0,
+        "near": 4233,
+        "far": 3566,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 6.199999988079071,
+        "selectionMs": 0.5,
+        "buildMs": 0,
+        "near": 4131,
+        "far": 3644,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 3.699999988079071,
+        "selectionMs": 0.4000000059604645,
+        "buildMs": 0,
+        "near": 4040,
+        "far": 4409,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 6,
+        "selectionMs": 0.9000000059604645,
+        "buildMs": 0,
+        "near": 4321,
+        "far": 4488,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 6.0999999940395355,
+        "selectionMs": 0.5999999940395355,
+        "buildMs": 0,
+        "near": 4210,
+        "far": 4562,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 7,
+        "selectionMs": 0.800000011920929,
+        "buildMs": 0,
+        "near": 4485,
+        "far": 4647,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 5.0999999940395355,
+        "selectionMs": 0,
+        "buildMs": 0,
+        "near": 4485,
+        "far": 4647,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 4.0999999940395355,
+        "selectionMs": 0.5,
+        "buildMs": 0,
+        "near": 4241,
+        "far": 4860,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 7,
+        "selectionMs": 0.800000011920929,
+        "buildMs": 0,
+        "near": 4112,
+        "far": 4948,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 10.799999982118607,
+        "selectionMs": 1,
+        "buildMs": 0,
+        "near": 3997,
+        "far": 5022,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 5.5,
+        "selectionMs": 0.800000011920929,
+        "buildMs": 0,
+        "near": 3872,
+        "far": 5107,
+        "overflow": 0
+      },
+      {
+        "cpuMs": 8.900000005960464,
+        "selectionMs": 1.0999999940395355,
+        "buildMs": 0,
+        "near": 3747,
+        "far": 5187,
+        "overflow": 0
+      }
+    ],
+    "memory": {
+      "renderer": {
+        "geometries": 101,
+        "textures": 48
+      },
+      "heap": {
+        "used": 422286887,
+        "total": 477124895
+      },
+      "residentCandidateNumbers": 95350,
+      "heightBytes": 240100
+    },
+    "note": "waterInfo queries are validation-only, outside timing; no new runtime renderer queries. Timings are diagnostic, not isolated performance benchmarks while another review renderer is open.",
+    "glError": 0
+  },
+  "errors": []
+}

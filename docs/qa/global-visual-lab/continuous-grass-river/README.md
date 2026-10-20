@@ -44,3 +44,7 @@ Los buffers de atributos reservados conservan 1.206.456 bytes de arrays CPU seg�
 El helper de Gran Río es una copia QA aislada de la versión de Sabana, identificada por SHA256 en su cabecera, con los cambios de perfil descritos y el filtro de eventos de ocupación existente. Es una separación provisional para no alterar la sesión abierta de Sabana; antes de integración conviene extraer el código común y mantener perfiles explícitos por bioma. No se han incorporado assets externos: utiliza los módulos Blender propios y las texturas ya presentes.
 
 Se recomienda continuar la evaluación del piloto, no integrarlo todavía ni declarar alcanzada la calidad global. La PR permanece en borrador y main no se modifica.
+
+## Corrección posterior de orillas
+
+Se ha corregido la exclusión rectangular excesiva del agua nativa: [antes/después, auditoría y streaming](shore-triangles/README.md). Las capturas y cifras anteriores de este informe describen el primer piloto; el helper vigente incluye la corrección. Benchmark GPU aislado aún pendiente.
