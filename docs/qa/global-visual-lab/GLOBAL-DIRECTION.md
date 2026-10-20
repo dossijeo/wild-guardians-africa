@@ -216,3 +216,7 @@ La petición posterior del usuario limita este pase al material del suelo; queda
 ### Corrección del callback de viento (20/10)
 
 [Grass wind preserved](grass-wind-preserved/README.md): el piloto anterior reemplazaba AfricanToon; se corrige conservando callback y caché. Dieciséis capturas, ocho pares estáticos exactos, doce comprobaciones de identidad del shader y 3.840 muestras GPU. Se retira la aplicabilidad directa de los costes anteriores de viento/sombras a esta revisión. Baja/juego/noche +9,74%; presupuesto no aprobado. Hipótesis de transmisión archivada como prueba inactiva, no descartada artísticamente. Calidad global pendiente.
+
+### Transmisión foliar en iluminación nativa (20/10)
+
+[Grass translucency native](grass-translucency-native/README.md): parche activo de artLighting416, 36 capturas, seis controles nocturnos y doce retornos exactos, dos clips de cámara en Gran Río y 5.760 muestras GPU. Descartado: aclara caras sin ganancia clara de volumen y reduce contraste en Río. Sin recursos geométricos nuevos; coste variable y presupuesto no aprobado. No repetir aumentos de intensidad para forzar diferencia. La estructura de masas vegetales y el suelo siguen siendo la carencia principal.
