@@ -264,3 +264,8 @@ El [relleno cálido de suelo en sombra del Cañón](canyon-warm-floor/README.md)
 ## Cierre y reapertura de cobertura continua
 
 [Lifecycle de cobertura](continuous-grass-lifecycle/README.md): fallo reproducido y corregido en Sabana/Gran Río conservados. El cierre ya no deja una instancia liberada como activa ni pisa callbacks posteriores. Doce ciclos completos en media/baja, 24 capturas día/noche; las reaperturas conservan cobertura y viento 8×, con diferencias residuales de hasta seis píxeles/un nivel RGB. Contadores de geometrías regresan al valor cerrado en cada ciclo. Es una corrección de fiabilidad del piloto, no una nueva aprobación de rendimiento o integración. Calidad global pendiente.
+
+
+## Arena irregular CC0: nueva candidata del Desierto
+
+[Aerial sand](desert-aerial-sand/README.md): 36 capturas en dunas, normal GL de Aerial Beach 01 a escala 30 m, conservando pintura cálida. Separar la normal geométrica para el detector de contorno elimina el punteado que producía el relieve fino. La variante final usa solo el mapa normal y conserva casi la misma imagen que la de dos mapas; se mantiene como candidata QA. 1440 muestras GPU de la receta intermedia muestran coste y deriva importantes, no aprobación. Pendientes coste de normal-only, cámara móvil, perfil bajo y streaming; no integrar todavía. No repetir variantes que usan la normal fina como contorno.
