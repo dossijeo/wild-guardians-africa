@@ -1,6 +1,10 @@
 import {simulateNativeCampaign} from '../native-campaign-runner.mjs';
 import {createSpatialCampaignOpening} from './spatial-campaign-opening.mjs';
 import {actorBlockers,actorSegmentClear} from '../../src/simulation/actor-motion.js';
+import {mkdirSync,writeFileSync} from 'node:fs';
+import {dirname} from 'node:path';
+import {createHash} from 'node:crypto';
+import {serialize} from '../../src/persistence/snapshots.js';
 
 const [daysArg='14',seedArg='712',strategy='good',biome='sabana',culture='mapungubwe',
   backend='wild-engine']=process.argv.slice(2);
@@ -10,7 +14,8 @@ if(!Number.isSafeInteger(days)||days<1||days>100||!Number.isSafeInteger(seed)||s
   throw Error('Usage: node tools/experiments/probe-worker-overlaps.mjs [days] [seed] [strategy] [biome] [culture] [wild-engine|legacy]');
 
 let sampledTicks=0,overlapTicks=0,lateOverlapTicks=0,pairs=0,maxPenetration=0;
-let workOverlapPairs=0,phasedWorkOverlapPairs=0;
+let workOverlapPairs=0,phasedWorkOverlapPairs=0,maxWorkPenetration=0;
+const distinctWorkPairs=new Set();
 const byDay=new Map(),byStatus=new Map(),examples=[],workExamples=[];
 const overlapWindows={'0-3':0,'3-10':0,'10-30':0,'30+':0};
 let villageEntry=null;
@@ -35,6 +40,8 @@ const onTick=(state,nav)=>{
     byStatus.set(status,(byStatus.get(status)??0)+1);
     if(state.time>30+1e-6){
       workOverlapPairs++;
+      maxWorkPenetration=Math.max(maxWorkPenetration,penetration);
+      distinctWorkPairs.add(`${state.day}:${a.id}:${b.id}`);
       if((a.mobilePhaseRemaining??0)>0||(b.mobilePhaseRemaining??0)>0)
         phasedWorkOverlapPairs++;
     }
@@ -76,7 +83,8 @@ const result=await simulateNativeCampaign({days,strategy,seed,biome,culture,
   ...(backend==='wild-engine'?{openingFactory:createSpatialCampaignOpening,
     spatialAdvice:true,nativeIntents:true,nativeWallPlans:true,reloadRaids:false}:{}),
   onTick});
-console.log(JSON.stringify({days,seed,strategy,biome,culture,backend,
+const report={days,seed,strategy,biome,culture,backend,
+  stateHash:createHash('sha256').update(serialize(result.state)).digest('hex'),
   completedNights:result.completedNights,result:result.result,
   money:result.money,living:result.daily?.at(-1)?.living,staff:result.daily?.at(-1)?.staff,
   delivered:result.counts?.CrateDelivered,
@@ -84,4 +92,17 @@ console.log(JSON.stringify({days,seed,strategy,biome,culture,backend,
   gameTickMs:result.daily?.reduce((n,d)=>n+(d.wallTime?.gameTickMs??0),0),
   sampledTicks,overlapTicks,lateOverlapTicks,pairs,maxPenetration,
   villageEntry,diagnostic,overlapWindows,workOverlapPairs,phasedWorkOverlapPairs,
-  byDay:[...byDay],byStatus:[...byStatus],examples,workExamples}));
+  distinctWorkPairs:distinctWorkPairs.size,maxWorkPenetration,
+  byDay:[...byDay],byStatus:[...byStatus],examples,workExamples};
+const output=process.env.WG_WORKER_PROBE_OUTPUT;
+if(output){
+  mkdirSync(dirname(output),{recursive:true});
+  writeFileSync(output,JSON.stringify(report,null,2)+'\n');
+  console.log(JSON.stringify({output,days,seed,biome,culture,backend,
+    stateHash:report.stateHash,
+    completedNights:report.completedNights,result:report.result,
+    money:report.money,living:report.living,delivered:report.delivered,
+    collisionRecoveries:report.collisionRecoveries,overlapTicks,
+    workOverlapPairs,phasedWorkOverlapPairs,distinctWorkPairs:distinctWorkPairs.size,
+    maxPenetration,maxWorkPenetration}));
+}else console.log(JSON.stringify(report));
