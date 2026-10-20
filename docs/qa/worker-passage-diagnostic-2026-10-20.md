@@ -15,12 +15,17 @@ Comparing each actor's current route head with each blocking body's route head g
 
 This narrows the next implementation problem. A single distance-based retry rule cannot handle all cases: same-direction traffic needs orderly following and a nonoverlapping village release; opposing or crossing traffic needs deterministic yielding to verified free space or a queued passage; an acting worker at an interaction point needs the existing reservation/task semantics. Any proposal must keep the static swept-segment test, preserve the current task and return destinations, and prove that no worker moves through another body. The [14-night counterexample](worker-route-progress-detour.md) shows why a lower recovery-event count alone is insufficient: it lost 60 deliveries and 126 coins while still overlapping.
 
+The [extended 14-night replay](worker-passage-exact-14.json) has the same serialized-state SHA-256 as the uninstrumented baseline, `2224d0ea4889a693d5b396704b444b3dc383a44e02dd2db507d096c08741ec05`: 1,317 deliveries, 899 coins, 145 living crops, 164 total recovery events and 43 work-period overlapping pair-ticks. The synchronous observer captured 141 worker recoveries; the other 23 events belong to animals. Of those workers, 104 were returning, 32 walking and 5 carrying. Return recoveries were not confined to the village doorway: 92 occurred more than 20 m from its entry, with a median distance of 36.4 m. Days 13 and 14 alone contributed 87 worker recoveries. This shifts the priority from a doorway-only fix to safe movement through the shared homeward traffic.
+
+An isolated nine-night experiment updated returners nearest to their village first, without reordering the persistent worker array or non-returning updates. It produced the same 780 deliveries, 1,047 coins and 123 crops but **worsened** recovery events from 24 to 35, work overlap pair-ticks from 12 to 15 and deepest work penetration from 0.331 m to 0.559 m. The ordering change was discarded before this report was committed; update order by itself is not a safe traffic policy.
+
 Reproduce from a clean checkout with:
 
 ```powershell
 $env:WG_WORKER_RECOVERY_DETAIL='1'
 $env:WG_WORKER_PROBE_OUTPUT='test-results/worker-passage-exact-9.json'
 node tools/experiments/probe-worker-overlaps.mjs 9 712 good sabana mapungubwe wild-engine
+# Replace 9 with 14 to reproduce the extended report.
 ```
 
 The extra observer is opt-in and belongs to the QA tool. The production movement and balance code are unchanged.
