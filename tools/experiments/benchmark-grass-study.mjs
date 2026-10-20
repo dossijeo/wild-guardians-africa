@@ -17,7 +17,7 @@ try{for(const sceneCase of cases){
   const w=window.qaVisualReference.world;
   if(w.groundDetails.count)throw Error('Baseline ground details must be empty for visibility comparison');
   const {applyMaterialStudy}=await import('/tools/experiments/qa-'+study+'.js');await applyMaterialStudy(w);
-  window.qaPairSet=v=>{w.groundDetails.mesh.visible=!!v;};
+  window.qaPairSet=v=>{w.groundDetails.mesh.visible=!!v;if(w.groundDetails.farMesh)w.groundDetails.farMesh.visible=!!v;};
  },{study});
  for(const phase of (process.env.WG_PAIR_PHASES??'day,night').split(',')){
   if(phase==='night')await page.locator('#night').evaluate(e=>e.click());
