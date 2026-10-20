@@ -279,3 +279,8 @@ El [relleno cálido de suelo en sombra del Cañón](canyon-warm-floor/README.md)
 ## Arena en movimiento: comparativa controlada
 
 [Cuatro vídeos](desert-aerial-sand/motion/README.md), media/baja y día/noche, de elevada a cercana y retorno. 484 parejas A/B coinciden en pose/hora/draws/triángulos tras corregir el harness por cargas asíncronas y caché LOD inicial. Los intentos no comparables se documentan y se excluyen. 308 parejas simétricas con geometría coincidente: 304 exactas, cuatro con hasta seis píxeles/un nivel RGB. No equivale a prueba universal de ausencia de aliasing ni a FPS real; mantener candidata QA y revisar presupuesto acumulado. Sin cambios de material en este pase ni activación general.
+
+
+## Arena junto al poblado inicial
+
+[Revisión de asentamiento](desert-aerial-sand/settlement/README.md): 24 capturas reales media/baja y día/noche, 12 parejas con cámara/hora/geometría iguales y sin errores. El volumen se aprecia entre edificios y conserva calidez; aparece un borde de camino más dentado en la vista normal. Antes de promover, aislar desgaste/máscara/iluminación en ese borde. No se repite rendimiento ni se integra la candidata; presupuesto media/noche y calidad global siguen pendientes.
