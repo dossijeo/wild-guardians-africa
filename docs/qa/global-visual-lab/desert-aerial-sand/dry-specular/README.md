@@ -38,3 +38,8 @@ node tools/experiments/compare-desert-sand-revisions.mjs
 ```
 
 La última comparación utiliza los WebP lossless de settlement, ya versionados, y los nuevos. Los PNG de trabajo no se añaden a Git. No se alteran simulación, navegación, balance, siluetas ni viento 8×.
+
+
+## Validación posterior
+
+[Movimiento](motion/README.md): cuatro vídeos, 484 parejas A/B coincidentes y 296 retornos con geometría comparable (290 exactos; seis con hasta tres píxeles/un nivel). [Rendimiento](performance/README.md): 8.832 muestras válidas entre series largas e intercaladas, sin errores ni cambios geométricos; continúa la variación y no se certifica +0,5 ms en media/noche. No repetir esta microprueba para buscar aprobación: siguiente puerta, cadencia del juego real sin consultas GPU por frame y coste acumulado. Mantener QA.

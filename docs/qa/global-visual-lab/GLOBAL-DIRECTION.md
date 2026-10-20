@@ -289,3 +289,8 @@ El [relleno cálido de suelo en sombra del Cañón](canyon-warm-floor/README.md)
 ## Arena seca: causa de la franja y corrección localizada
 
 [Ablación](desert-aerial-sand/edge-ablation/README.md): 72 capturas comparables aíslan la franja dentada en la banda especular, no obligan a cambiar desgaste ni borrar normales. [Candidata seca](desert-aerial-sand/dry-specular/README.md): factor especular por suavidad al cuadrado, 24 capturas; ocho de doce vistas idénticas a normal-only y cuatro eliminan la franja conservando relieve. Sin geometría/pasadas nuevas; no hay aprobación temporal de coste. Mantener QA, pendiente movimiento y presupuesto acumulado; calidad global abierta.
+
+
+## Arena seca: movimiento y contraste temporal
+
+[Recorrido del poblado](desert-aerial-sand/dry-specular/motion/README.md): 484 parejas coinciden en cámara/hora/geometría; retorno reproducible con residuos mínimos compartidos por A/B. [Dos protocolos de coste](desert-aerial-sand/dry-specular/performance/README.md): 8.832 muestras válidas, serie larga e intercalación corta ABBA; sin errores ni regresión grande reproducida, pero dispersión impide certificar +0,5 ms media/noche. No reiterar esta microprueba hasta que pase. Siguiente contraste: cadencia de campaña real sin consultas GPU y coste acumulado del conjunto. La candidata no se integra todavía; objetivo de seis biomas abierto.

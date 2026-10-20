@@ -1,0 +1,1278 @@
+{
+  "long": [
+    {
+      "quality": "media",
+      "phase": "day",
+      "gpuOriginal": 10.529183595833333,
+      "gpuCandidate": 11.012895583333332,
+      "delta": 0.48371198749999955,
+      "blocks": [
+        [
+          10.583849955555557,
+          10.265341011111113,
+          10.502540666666668,
+          10.765002749999995
+        ],
+        [
+          11.02103888333333,
+          10.793500133333332,
+          11.016155494444448,
+          11.22088782222222
+        ]
+      ],
+      "cpu": [
+        6.9318055549843445,
+        6.482499999346005
+      ],
+      "frameInterval": [
+        29.74625000000001,
+        29.401111111111106
+      ],
+      "draws": [
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60
+      ],
+      "triangles": [
+        455343,
+        455343,
+        455343,
+        455343,
+        455343,
+        455343,
+        455343,
+        455343
+      ]
+    },
+    {
+      "quality": "media",
+      "phase": "night",
+      "gpuOriginal": 12.096065288888889,
+      "gpuCandidate": 11.939934734722222,
+      "delta": -0.15613055416666732,
+      "blocks": [
+        [
+          11.199371649999998,
+          11.56179352222222,
+          12.558990533333336,
+          13.064105449999998
+        ],
+        [
+          11.687501022222225,
+          11.702953538888886,
+          11.487536866666668,
+          12.881747511111108
+        ]
+      ],
+      "cpu": [
+        5.3081944443699385,
+        5.523055556168159
+      ],
+      "frameInterval": [
+        30.600694444444425,
+        30.762222222222245
+      ],
+      "draws": [
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60
+      ],
+      "triangles": [
+        455343,
+        455343,
+        455343,
+        455343,
+        455343,
+        455343,
+        455343,
+        455343
+      ]
+    },
+    {
+      "quality": "baja",
+      "phase": "day",
+      "gpuOriginal": 9.082333802777779,
+      "gpuCandidate": 9.116967120833333,
+      "delta": 0.034633318055554696,
+      "blocks": [
+        [
+          8.931069544444448,
+          9.160160122222218,
+          9.314753561111116,
+          8.923351983333337
+        ],
+        [
+          9.370174022222226,
+          8.75480045555555,
+          9.302228111111113,
+          9.040665894444444
+        ]
+      ],
+      "cpu": [
+        5.118472221742074,
+        4.881249999337726
+      ],
+      "frameInterval": [
+        27.068055555555553,
+        27.782361111111094
+      ],
+      "draws": [
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60
+      ],
+      "triangles": [
+        440052,
+        440052,
+        440052,
+        440052,
+        440052,
+        440052,
+        440052,
+        440052
+      ]
+    },
+    {
+      "quality": "baja",
+      "phase": "night",
+      "gpuOriginal": 9.493707509722222,
+      "gpuCandidate": 9.543605025000002,
+      "delta": 0.04989751527777919,
+      "blocks": [
+        [
+          9.369751011111113,
+          10.014517166666662,
+          9.224780188888895,
+          9.36578167222222
+        ],
+        [
+          9.413632661111114,
+          9.703256494444444,
+          9.225756772222223,
+          9.831774172222227
+        ]
+      ],
+      "cpu": [
+        5.496388888483246,
+        5.577083333498901
+      ],
+      "frameInterval": [
+        27.991527777777772,
+        28.892638888888886
+      ],
+      "draws": [
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60
+      ],
+      "triangles": [
+        440052,
+        440052,
+        440052,
+        440052,
+        440052,
+        440052,
+        440052,
+        440052
+      ]
+    }
+  ],
+  "paired": [
+    {
+      "quality": "media",
+      "phase": "day",
+      "repeat": 0,
+      "original": {
+        "gpuMs": 10.42557653125,
+        "cpuMs": null,
+        "draws": [
+          60
+        ],
+        "triangles": [
+          455343
+        ]
+      },
+      "candidate": {
+        "gpuMs": 11.018618515624997,
+        "cpuMs": 7.851562501862645,
+        "draws": [
+          60
+        ],
+        "triangles": [
+          455343
+        ]
+      },
+      "delta": 0.593041984374997,
+      "cycles": [
+        {
+          "cycle": 0,
+          "delta": 0.5118620625000023
+        },
+        {
+          "cycle": 1,
+          "delta": 0.33739893749999794
+        },
+        {
+          "cycle": 2,
+          "delta": 1.5863966250000008
+        },
+        {
+          "cycle": 3,
+          "delta": -0.1336068749999999
+        },
+        {
+          "cycle": 4,
+          "delta": 0.8790886250000014
+        },
+        {
+          "cycle": 5,
+          "delta": -0.08679037499999964
+        },
+        {
+          "cycle": 6,
+          "delta": 0.13375306249999852
+        },
+        {
+          "cycle": 7,
+          "delta": 1.5162338124999994
+        }
+      ]
+    },
+    {
+      "quality": "media",
+      "phase": "day",
+      "repeat": 1,
+      "original": {
+        "gpuMs": 10.657812390624999,
+        "cpuMs": null,
+        "draws": [
+          60
+        ],
+        "triangles": [
+          455343
+        ]
+      },
+      "candidate": {
+        "gpuMs": 10.522145125000003,
+        "cpuMs": 7.193749998230487,
+        "draws": [
+          60
+        ],
+        "triangles": [
+          455343
+        ]
+      },
+      "delta": -0.13566726562499554,
+      "cycles": [
+        {
+          "cycle": 0,
+          "delta": -0.059759062499999516
+        },
+        {
+          "cycle": 1,
+          "delta": -1.1810610624999995
+        },
+        {
+          "cycle": 2,
+          "delta": -0.4410708750000012
+        },
+        {
+          "cycle": 3,
+          "delta": 0.2563608125000023
+        },
+        {
+          "cycle": 4,
+          "delta": 0.9686881875000033
+        },
+        {
+          "cycle": 5,
+          "delta": 0.749846999999999
+        },
+        {
+          "cycle": 6,
+          "delta": -1.3042120625000013
+        },
+        {
+          "cycle": 7,
+          "delta": -0.07413106250000112
+        }
+      ]
+    },
+    {
+      "quality": "media",
+      "phase": "day",
+      "repeat": 2,
+      "original": {
+        "gpuMs": 10.396627164062503,
+        "cpuMs": null,
+        "draws": [
+          60
+        ],
+        "triangles": [
+          455343
+        ]
+      },
+      "candidate": {
+        "gpuMs": 10.830758390624998,
+        "cpuMs": 6.839843751862645,
+        "draws": [
+          60
+        ],
+        "triangles": [
+          455343
+        ]
+      },
+      "delta": 0.4341312265624957,
+      "cycles": [
+        {
+          "cycle": 0,
+          "delta": 1.727662624999999
+        },
+        {
+          "cycle": 1,
+          "delta": 1.3155304375000014
+        },
+        {
+          "cycle": 2,
+          "delta": -0.2918878749999987
+        },
+        {
+          "cycle": 3,
+          "delta": 0.010999312500000968
+        },
+        {
+          "cycle": 4,
+          "delta": 0.9057778750000001
+        },
+        {
+          "cycle": 5,
+          "delta": 0.8330012499999988
+        },
+        {
+          "cycle": 6,
+          "delta": -0.7887141249999985
+        },
+        {
+          "cycle": 7,
+          "delta": -0.23931968749999832
+        }
+      ]
+    },
+    {
+      "quality": "media",
+      "phase": "night",
+      "repeat": 0,
+      "original": {
+        "gpuMs": 11.817300609374996,
+        "cpuMs": null,
+        "draws": [
+          60
+        ],
+        "triangles": [
+          455343
+        ]
+      },
+      "candidate": {
+        "gpuMs": 12.543032625000004,
+        "cpuMs": 5.4078124994412065,
+        "draws": [
+          60
+        ],
+        "triangles": [
+          455343
+        ]
+      },
+      "delta": 0.7257320156250078,
+      "cycles": [
+        {
+          "cycle": 0,
+          "delta": 2.9727476875000036
+        },
+        {
+          "cycle": 1,
+          "delta": -0.17603193749999946
+        },
+        {
+          "cycle": 2,
+          "delta": 0.28767912500000037
+        },
+        {
+          "cycle": 3,
+          "delta": 0.4322068125000005
+        },
+        {
+          "cycle": 4,
+          "delta": 0.42384106249999576
+        },
+        {
+          "cycle": 5,
+          "delta": 0.8447851249999996
+        },
+        {
+          "cycle": 6,
+          "delta": -1.1075749375000026
+        },
+        {
+          "cycle": 7,
+          "delta": 2.1282031874999987
+        }
+      ]
+    },
+    {
+      "quality": "media",
+      "phase": "night",
+      "repeat": 1,
+      "original": {
+        "gpuMs": 11.163213242187492,
+        "cpuMs": null,
+        "draws": [
+          60
+        ],
+        "triangles": [
+          455343
+        ]
+      },
+      "candidate": {
+        "gpuMs": 11.559700874999999,
+        "cpuMs": 5.578906248323619,
+        "draws": [
+          60
+        ],
+        "triangles": [
+          455343
+        ]
+      },
+      "delta": 0.3964876328125069,
+      "cycles": [
+        {
+          "cycle": 0,
+          "delta": 0.19781587500000164
+        },
+        {
+          "cycle": 1,
+          "delta": 0.2679622499999983
+        },
+        {
+          "cycle": 2,
+          "delta": 0.4494106875000021
+        },
+        {
+          "cycle": 3,
+          "delta": 0.45995450000000027
+        },
+        {
+          "cycle": 4,
+          "delta": 0.7044303125000013
+        },
+        {
+          "cycle": 5,
+          "delta": -0.004980374999997039
+        },
+        {
+          "cycle": 6,
+          "delta": 0.3029524999999964
+        },
+        {
+          "cycle": 7,
+          "delta": 0.7943553124999987
+        }
+      ]
+    },
+    {
+      "quality": "media",
+      "phase": "night",
+      "repeat": 2,
+      "original": {
+        "gpuMs": 12.591790296874997,
+        "cpuMs": null,
+        "draws": [
+          60
+        ],
+        "triangles": [
+          455343
+        ]
+      },
+      "candidate": {
+        "gpuMs": 12.094213796875001,
+        "cpuMs": 5.132812499767169,
+        "draws": [
+          60
+        ],
+        "triangles": [
+          455343
+        ]
+      },
+      "delta": -0.49757649999999565,
+      "cycles": [
+        {
+          "cycle": 0,
+          "delta": -0.7185059375000016
+        },
+        {
+          "cycle": 1,
+          "delta": -0.5918390624999983
+        },
+        {
+          "cycle": 2,
+          "delta": -1.9837045625000016
+        },
+        {
+          "cycle": 3,
+          "delta": 0.9385644999999965
+        },
+        {
+          "cycle": 4,
+          "delta": 0.9303450625000025
+        },
+        {
+          "cycle": 5,
+          "delta": -2.951774187499998
+        },
+        {
+          "cycle": 6,
+          "delta": 1.1774708124999993
+        },
+        {
+          "cycle": 7,
+          "delta": -0.7811686250000012
+        }
+      ]
+    },
+    {
+      "quality": "baja",
+      "phase": "day",
+      "repeat": 0,
+      "original": {
+        "gpuMs": 8.8599657734375,
+        "cpuMs": null,
+        "draws": [
+          60
+        ],
+        "triangles": [
+          440052
+        ]
+      },
+      "candidate": {
+        "gpuMs": 9.278334492187502,
+        "cpuMs": 7.09218749939464,
+        "draws": [
+          60
+        ],
+        "triangles": [
+          440052
+        ]
+      },
+      "delta": 0.4183687187500027,
+      "cycles": [
+        {
+          "cycle": 0,
+          "delta": 1.548964937500001
+        },
+        {
+          "cycle": 1,
+          "delta": -0.8224055625000002
+        },
+        {
+          "cycle": 2,
+          "delta": -0.4516308749999993
+        },
+        {
+          "cycle": 3,
+          "delta": 0.6110058749999983
+        },
+        {
+          "cycle": 4,
+          "delta": 1.4579524375000013
+        },
+        {
+          "cycle": 5,
+          "delta": 0.8019921250000017
+        },
+        {
+          "cycle": 6,
+          "delta": 0.4462173749999998
+        },
+        {
+          "cycle": 7,
+          "delta": -0.24514656250000222
+        }
+      ]
+    },
+    {
+      "quality": "baja",
+      "phase": "day",
+      "repeat": 1,
+      "original": {
+        "gpuMs": 9.274202835937501,
+        "cpuMs": null,
+        "draws": [
+          60
+        ],
+        "triangles": [
+          440052
+        ]
+      },
+      "candidate": {
+        "gpuMs": 8.886185304687503,
+        "cpuMs": 6.324999999720603,
+        "draws": [
+          60
+        ],
+        "triangles": [
+          440052
+        ]
+      },
+      "delta": -0.38801753124999827,
+      "cycles": [
+        {
+          "cycle": 0,
+          "delta": -2.877884187500001
+        },
+        {
+          "cycle": 1,
+          "delta": -0.4456344999999988
+        },
+        {
+          "cycle": 2,
+          "delta": -0.16977524999999716
+        },
+        {
+          "cycle": 3,
+          "delta": -1.0762401875000016
+        },
+        {
+          "cycle": 4,
+          "delta": 0.3112011249999984
+        },
+        {
+          "cycle": 5,
+          "delta": -0.12919906250000324
+        },
+        {
+          "cycle": 6,
+          "delta": 0.46663393750000104
+        },
+        {
+          "cycle": 7,
+          "delta": 0.8167578750000004
+        }
+      ]
+    },
+    {
+      "quality": "baja",
+      "phase": "day",
+      "repeat": 2,
+      "original": {
+        "gpuMs": 8.852733921874998,
+        "cpuMs": null,
+        "draws": [
+          60
+        ],
+        "triangles": [
+          440052
+        ]
+      },
+      "candidate": {
+        "gpuMs": 9.284705789062494,
+        "cpuMs": 6.171093748416752,
+        "draws": [
+          60
+        ],
+        "triangles": [
+          440052
+        ]
+      },
+      "delta": 0.4319718671874959,
+      "cycles": [
+        {
+          "cycle": 0,
+          "delta": 0.022819062499999987
+        },
+        {
+          "cycle": 1,
+          "delta": 0.5263866875000005
+        },
+        {
+          "cycle": 2,
+          "delta": -0.29005525000000176
+        },
+        {
+          "cycle": 3,
+          "delta": 0.5276921250000015
+        },
+        {
+          "cycle": 4,
+          "delta": 1.263349687499998
+        },
+        {
+          "cycle": 5,
+          "delta": 0.07313799999999837
+        },
+        {
+          "cycle": 6,
+          "delta": -0.17502599999999902
+        },
+        {
+          "cycle": 7,
+          "delta": 1.5074706249999998
+        }
+      ]
+    },
+    {
+      "quality": "baja",
+      "phase": "night",
+      "repeat": 0,
+      "original": {
+        "gpuMs": 9.717084937500003,
+        "cpuMs": null,
+        "draws": [
+          60
+        ],
+        "triangles": [
+          440052
+        ]
+      },
+      "candidate": {
+        "gpuMs": 9.935493906250004,
+        "cpuMs": 6.551562503678724,
+        "draws": [
+          60
+        ],
+        "triangles": [
+          440052
+        ]
+      },
+      "delta": 0.21840896875000126,
+      "cycles": [
+        {
+          "cycle": 0,
+          "delta": -2.415530750000002
+        },
+        {
+          "cycle": 1,
+          "delta": 1.180979875000002
+        },
+        {
+          "cycle": 2,
+          "delta": 1.1234375624999995
+        },
+        {
+          "cycle": 3,
+          "delta": 0.7240526250000006
+        },
+        {
+          "cycle": 4,
+          "delta": 0.41729493749999946
+        },
+        {
+          "cycle": 5,
+          "delta": 1.0548468749999973
+        },
+        {
+          "cycle": 6,
+          "delta": -0.6721616250000011
+        },
+        {
+          "cycle": 7,
+          "delta": 0.33435225000000024
+        }
+      ]
+    },
+    {
+      "quality": "baja",
+      "phase": "night",
+      "repeat": 1,
+      "original": {
+        "gpuMs": 9.803613242187499,
+        "cpuMs": null,
+        "draws": [
+          60
+        ],
+        "triangles": [
+          440052
+        ]
+      },
+      "candidate": {
+        "gpuMs": 9.706269070312503,
+        "cpuMs": 7.127343750791624,
+        "draws": [
+          60
+        ],
+        "triangles": [
+          440052
+        ]
+      },
+      "delta": -0.09734417187499567,
+      "cycles": [
+        {
+          "cycle": 0,
+          "delta": -1.1450130625000003
+        },
+        {
+          "cycle": 1,
+          "delta": 0.10926437500000219
+        },
+        {
+          "cycle": 2,
+          "delta": -0.305507875
+        },
+        {
+          "cycle": 3,
+          "delta": 0.8361621874999994
+        },
+        {
+          "cycle": 4,
+          "delta": 0.4047069999999966
+        },
+        {
+          "cycle": 5,
+          "delta": 0.5121679374999992
+        },
+        {
+          "cycle": 6,
+          "delta": -0.2827897499999992
+        },
+        {
+          "cycle": 7,
+          "delta": -0.9077441875000023
+        }
+      ]
+    },
+    {
+      "quality": "baja",
+      "phase": "night",
+      "repeat": 2,
+      "original": {
+        "gpuMs": 9.623766187500005,
+        "cpuMs": null,
+        "draws": [
+          60
+        ],
+        "triangles": [
+          440052
+        ]
+      },
+      "candidate": {
+        "gpuMs": 9.503646984374997,
+        "cpuMs": 6.821874999674037,
+        "draws": [
+          60
+        ],
+        "triangles": [
+          440052
+        ]
+      },
+      "delta": -0.12011920312500735,
+      "cycles": [
+        {
+          "cycle": 0,
+          "delta": 0.19325831249999936
+        },
+        {
+          "cycle": 1,
+          "delta": -0.2708661249999995
+        },
+        {
+          "cycle": 2,
+          "delta": -0.23013343750000104
+        },
+        {
+          "cycle": 3,
+          "delta": 0.2568621249999996
+        },
+        {
+          "cycle": 4,
+          "delta": 0.10114268749999766
+        },
+        {
+          "cycle": 5,
+          "delta": -0.4129979375000019
+        },
+        {
+          "cycle": 6,
+          "delta": 0.025533937500000548
+        },
+        {
+          "cycle": 7,
+          "delta": -0.6237531874999984
+        }
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "file": "media.json",
+      "phase": "day",
+      "repeat": null,
+      "variant": 0,
+      "samples": 180,
+      "valid": true
+    },
+    {
+      "file": "media.json",
+      "phase": "day",
+      "repeat": null,
+      "variant": 1,
+      "samples": 180,
+      "valid": true
+    },
+    {
+      "file": "media.json",
+      "phase": "day",
+      "repeat": null,
+      "variant": 1,
+      "samples": 180,
+      "valid": true
+    },
+    {
+      "file": "media.json",
+      "phase": "day",
+      "repeat": null,
+      "variant": 0,
+      "samples": 180,
+      "valid": true
+    },
+    {
+      "file": "media.json",
+      "phase": "day",
+      "repeat": null,
+      "variant": 1,
+      "samples": 180,
+      "valid": true
+    },
+    {
+      "file": "media.json",
+      "phase": "day",
+      "repeat": null,
+      "variant": 0,
+      "samples": 180,
+      "valid": true
+    },
+    {
+      "file": "media.json",
+      "phase": "day",
+      "repeat": null,
+      "variant": 0,
+      "samples": 180,
+      "valid": true
+    },
+    {
+      "file": "media.json",
+      "phase": "day",
+      "repeat": null,
+      "variant": 1,
+      "samples": 180,
+      "valid": true
+    },
+    {
+      "file": "media.json",
+      "phase": "night",
+      "repeat": null,
+      "variant": 0,
+      "samples": 180,
+      "valid": true
+    },
+    {
+      "file": "media.json",
+      "phase": "night",
+      "repeat": null,
+      "variant": 1,
+      "samples": 180,
+      "valid": true
+    },
+    {
+      "file": "media.json",
+      "phase": "night",
+      "repeat": null,
+      "variant": 1,
+      "samples": 180,
+      "valid": true
+    },
+    {
+      "file": "media.json",
+      "phase": "night",
+      "repeat": null,
+      "variant": 0,
+      "samples": 180,
+      "valid": true
+    },
+    {
+      "file": "media.json",
+      "phase": "night",
+      "repeat": null,
+      "variant": 1,
+      "samples": 180,
+      "valid": true
+    },
+    {
+      "file": "media.json",
+      "phase": "night",
+      "repeat": null,
+      "variant": 0,
+      "samples": 180,
+      "valid": true
+    },
+    {
+      "file": "media.json",
+      "phase": "night",
+      "repeat": null,
+      "variant": 0,
+      "samples": 180,
+      "valid": true
+    },
+    {
+      "file": "media.json",
+      "phase": "night",
+      "repeat": null,
+      "variant": 1,
+      "samples": 180,
+      "valid": true
+    },
+    {
+      "file": "media-interleaved.json",
+      "phase": "day",
+      "repeat": 0,
+      "variant": null,
+      "samples": 256,
+      "valid": true
+    },
+    {
+      "file": "media-interleaved.json",
+      "phase": "day",
+      "repeat": 1,
+      "variant": null,
+      "samples": 256,
+      "valid": true
+    },
+    {
+      "file": "media-interleaved.json",
+      "phase": "day",
+      "repeat": 2,
+      "variant": null,
+      "samples": 256,
+      "valid": true
+    },
+    {
+      "file": "media-interleaved.json",
+      "phase": "night",
+      "repeat": 0,
+      "variant": null,
+      "samples": 256,
+      "valid": true
+    },
+    {
+      "file": "media-interleaved.json",
+      "phase": "night",
+      "repeat": 1,
+      "variant": null,
+      "samples": 256,
+      "valid": true
+    },
+    {
+      "file": "media-interleaved.json",
+      "phase": "night",
+      "repeat": 2,
+      "variant": null,
+      "samples": 256,
+      "valid": true
+    },
+    {
+      "file": "baja.json",
+      "phase": "day",
+      "repeat": null,
+      "variant": 0,
+      "samples": 180,
+      "valid": true
+    },
+    {
+      "file": "baja.json",
+      "phase": "day",
+      "repeat": null,
+      "variant": 1,
+      "samples": 180,
+      "valid": true
+    },
+    {
+      "file": "baja.json",
+      "phase": "day",
+      "repeat": null,
+      "variant": 1,
+      "samples": 180,
+      "valid": true
+    },
+    {
+      "file": "baja.json",
+      "phase": "day",
+      "repeat": null,
+      "variant": 0,
+      "samples": 180,
+      "valid": true
+    },
+    {
+      "file": "baja.json",
+      "phase": "day",
+      "repeat": null,
+      "variant": 1,
+      "samples": 180,
+      "valid": true
+    },
+    {
+      "file": "baja.json",
+      "phase": "day",
+      "repeat": null,
+      "variant": 0,
+      "samples": 180,
+      "valid": true
+    },
+    {
+      "file": "baja.json",
+      "phase": "day",
+      "repeat": null,
+      "variant": 0,
+      "samples": 180,
+      "valid": true
+    },
+    {
+      "file": "baja.json",
+      "phase": "day",
+      "repeat": null,
+      "variant": 1,
+      "samples": 180,
+      "valid": true
+    },
+    {
+      "file": "baja.json",
+      "phase": "night",
+      "repeat": null,
+      "variant": 0,
+      "samples": 180,
+      "valid": true
+    },
+    {
+      "file": "baja.json",
+      "phase": "night",
+      "repeat": null,
+      "variant": 1,
+      "samples": 180,
+      "valid": true
+    },
+    {
+      "file": "baja.json",
+      "phase": "night",
+      "repeat": null,
+      "variant": 1,
+      "samples": 180,
+      "valid": true
+    },
+    {
+      "file": "baja.json",
+      "phase": "night",
+      "repeat": null,
+      "variant": 0,
+      "samples": 180,
+      "valid": true
+    },
+    {
+      "file": "baja.json",
+      "phase": "night",
+      "repeat": null,
+      "variant": 1,
+      "samples": 180,
+      "valid": true
+    },
+    {
+      "file": "baja.json",
+      "phase": "night",
+      "repeat": null,
+      "variant": 0,
+      "samples": 180,
+      "valid": true
+    },
+    {
+      "file": "baja.json",
+      "phase": "night",
+      "repeat": null,
+      "variant": 0,
+      "samples": 180,
+      "valid": true
+    },
+    {
+      "file": "baja.json",
+      "phase": "night",
+      "repeat": null,
+      "variant": 1,
+      "samples": 180,
+      "valid": true
+    },
+    {
+      "file": "baja-interleaved.json",
+      "phase": "day",
+      "repeat": 0,
+      "variant": null,
+      "samples": 256,
+      "valid": true
+    },
+    {
+      "file": "baja-interleaved.json",
+      "phase": "day",
+      "repeat": 1,
+      "variant": null,
+      "samples": 256,
+      "valid": true
+    },
+    {
+      "file": "baja-interleaved.json",
+      "phase": "day",
+      "repeat": 2,
+      "variant": null,
+      "samples": 256,
+      "valid": true
+    },
+    {
+      "file": "baja-interleaved.json",
+      "phase": "night",
+      "repeat": 0,
+      "variant": null,
+      "samples": 256,
+      "valid": true
+    },
+    {
+      "file": "baja-interleaved.json",
+      "phase": "night",
+      "repeat": 1,
+      "variant": null,
+      "samples": 256,
+      "valid": true
+    },
+    {
+      "file": "baja-interleaved.json",
+      "phase": "night",
+      "repeat": 2,
+      "variant": null,
+      "samples": 256,
+      "valid": true
+    }
+  ],
+  "totalValidSamples": 8832,
+  "limits": "Long blocks and interleaved protocol reported separately; no cherry-picking or subtraction of unrelated phases. CPU render excludes QA toggle call but includes material program revalidation. Frame cadence instrumented, not production FPS."
+}

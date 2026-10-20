@@ -1,8 +1,8 @@
 import {applyMaterialStudy as applySand} from './qa-desert-aerial-sand-normal-only.js';
 // QA only: preserve ripple normals and diffuse lighting, but avoid a broad
 // stylized specular band on nearly fully rough sand. Other materials untouched.
-export async function applyMaterialStudy(world){
- const audit=await applySand(world),seen=new WeakSet();
+export async function applyMaterialStudy(world,options={}){
+ const audit=options.prepared?{prepared:true}:await applySand(world),seen=new WeakSet();
  function bind(material){
   if(seen.has(material)||material.userData.groundBiome!=='desert'||!material.userData.biomeGround)return;
   seen.add(material);const compile=material.onBeforeCompile,cache=material.customProgramCacheKey.bind(material);
