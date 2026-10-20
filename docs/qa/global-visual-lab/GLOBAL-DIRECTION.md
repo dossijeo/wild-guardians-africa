@@ -323,3 +323,8 @@ El [relleno cálido de suelo en sombra del Cañón](canyon-warm-floor/README.md)
 ## Revisión conjunta actual de seis biomas
 
 [Campaña comparada](combined-campaign-review/README.md): 72 capturas, 36 parejas de cámara/hora, tres vistas y día/noche media. Reúne iluminación, cobertura C viento8, Cañón cálido y arena. Sin nuevos benchmarks; coste geométrico de hierba explícito. Pendientes claros: borde de cobertura Río, suelo medio Cañón/Volcanes y repetición/bordes barro-musgo Manglares. Siguiente pase: integración visual de barro, respetando huella y reglas. No se acredita calidad global ni coste combinado.
+
+
+## Manglares: recorte orgánico descartado
+
+[Barro con borde irregular](mangrove-organic-mud-rim/README.md): 24 capturas, doce parejas sin cambios de cámara/geometría. Reduce el polígono visible pero conserva el salto de material y aspecto pegado. Descartado; no gastar presupuesto optimizando esta receta. Siguiente hipótesis: mezcla visual de color/normal/rugosidad en frontera, respetando contornos autoritativos.
