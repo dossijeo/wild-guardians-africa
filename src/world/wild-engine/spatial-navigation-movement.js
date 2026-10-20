@@ -59,6 +59,8 @@ export function createSpatialNavigationMovement(session,state){
     }
     return true;
   };
+  const mobileDetour=(start,end,radius,blockers,worker)=>
+    session.mobileDetour(start,end,radius,blockers,profile(radius,worker,null));
   const rejectRouteSegment=(start,end,radius=.28,worker=true)=>{
     validate(start,end);
     if(Math.hypot(end.x-start.x,end.z-start.z)>1.5)return false;
@@ -317,7 +319,7 @@ export function createSpatialNavigationMovement(session,state){
     routeStamp:session.routeStamp,
     routeUnaffectedByWalls:session.routeUnaffectedByWalls,
     ownsRoute:route=>Array.isArray(route)&&nativeRoutes.has(route),
-    walkable,segmentClear,rejectRouteSegment,path,regionFor,regionConnected,enclosureFor,terrainValid,
+    walkable,segmentClear,mobileDetour,rejectRouteSegment,path,regionFor,regionConnected,enclosureFor,terrainValid,
     withWallPreview,withWallStatePreview,workerPhysicalRoute,
     gateOverlayClear:session.gateOverlayClear,
     wallLocalOverlay:session.wallLocalOverlay,

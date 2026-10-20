@@ -19,11 +19,24 @@ const exactDetourKey=(key,blockers)=>JSON.stringify([key,blockers.map(b=>[b.x,b.
 // worker. Use the native terrain search only after that graph fails. Dynamic
 // caches belong to this attempt, never to the shared static navigation graph.
 function terrainDetour(actor,goal,blockers,nav,worker,clear){
-  if(!nav.findPathSteps)return null;
+  if(!nav.findPathSteps&&!nav.mobileDetour)return null;
   blockers=detourBodies(actor,goal,blockers);
   const key=detourKey(actor,goal,blockers,nav,worker);
   const exactKey=exactDetourKey(key,blockers);
   if(blockedDetours.get(actor)===exactKey)return null;
+  if(nav.mobileDetour){
+    const result=nav.mobileDetour(actor,goal,radius(actor),blockers.map(body=>({
+      x:body.x,z:body.z,radius:radius(body)})),worker);
+    if(result.status!=='found')return null;
+    let before=actor;
+    for(const point of result.points){
+      if(!clear(before,point)||!nav.segmentClear(before,point,radius(actor),null,worker))
+        return null;
+      before=point;
+    }
+    blockedDetours.delete(actor);
+    return result.points;
+  }
   let pending=pendingDetours.get(actor);
   if(!pending||pending.key!==key){
   const origin={x:actor.x,z:actor.z,radius:radius(actor)},snapshot=blockers.map(b=>({x:b.x,z:b.z,radius:radius(b)}));

@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <limits>
 #include <cstring>
+#include <queue>
 #include <vector>
 
 // Experimental whole-world route entry point. The existing sector graph and
@@ -50,6 +51,10 @@ struct RouteBatch {
   std::vector<int32_t> rows;
 };
 RouteBatch& batch(){static RouteBatch* value=new RouteBatch();return *value;}
+struct MobileDetour {
+  std::vector<float> bodies,points;
+};
+MobileDetour& mobileDetour(){static MobileDetour* value=new MobileDetour();return *value;}
 uint32_t bits(float value){uint32_t result;std::memcpy(&result,&value,sizeof(result));return result;}
 uint64_t mix(uint64_t x){
   x^=x>>30;x*=0xbf58476d1ce4e5b9ULL;
@@ -71,6 +76,25 @@ bool clearWorld(Point a,Point b){
     const float f=float(i)/steps,g=float(i+1)/steps;
     if(!spatial_local_clear(a.x+(b.x-a.x)*f,a.z+(b.z-a.z)*f,
       a.x+(b.x-a.x)*g,a.z+(b.z-a.z)*g))return false;
+  }
+  return true;
+}
+bool clearMobile(Point a,Point b,float actorRadius,const std::vector<float>& bodies,
+                 bool allowEscape=false){
+  if(!clearWorld(a,b))return false;
+  const float dx=b.x-a.x,dz=b.z-a.z,lengthSquared=dx*dx+dz*dz;
+  for(size_t i=0;i<bodies.size();i+=3){
+    const float cx=bodies[i],cz=bodies[i+1],required=actorRadius+bodies[i+2];
+    const float sx=a.x-cx,sz=a.z-cz,startSquared=sx*sx+sz*sz;
+    if(allowEscape&&startSquared<(required-1e-5f)*(required-1e-5f)){
+      const float ex=b.x-cx,ez=b.z-cz;
+      if(sx*dx+sz*dz>=-1e-6f&&ex*ex+ez*ez>=startSquared-1e-5f)continue;
+      return false;
+    }
+    const float t=lengthSquared>0?
+      std::clamp(-(sx*dx+sz*dz)/lengthSquared,0.f,1.f):0.f;
+    const float px=sx+t*dx,pz=sz+t*dz;
+    if(px*px+pz*pz<(required-1e-5f)*(required-1e-5f))return false;
   }
   return true;
 }
@@ -178,6 +202,92 @@ void shortenOneCorner(Point start,Point end){
 }
 
 extern "C" {
+// Query-only detour around current actor bodies. The selected navigation
+// profile supplies the terrain, wall and gate predicates; mobile discs never
+// enter the confirmed sector graph or its reusable route cache.
+float* spatial_mobile_detour_bodies_ptr(int count){
+  if(count<0||count>256)return nullptr;
+  auto& bodies=mobileDetour().bodies;
+  bodies.resize(size_t(count)*3);
+  return bodies.data();
+}
+int spatial_mobile_detour(float fromX,float fromZ,float toX,float toZ,
+                          float actorRadius,int bodyCount){
+  auto& state=mobileDetour();state.points.clear();
+  const Point start{fromX,fromZ},end{toX,toZ};
+  if(!finite(start)||!finite(end)||!std::isfinite(actorRadius)||actorRadius<=0||
+     bodyCount<0||bodyCount>256||state.bodies.size()!=size_t(bodyCount)*3)return -1;
+  for(int i=0;i<bodyCount;i++){
+    const size_t at=size_t(i)*3;
+    if(!std::isfinite(state.bodies[at])||!std::isfinite(state.bodies[at+1])||
+       !std::isfinite(state.bodies[at+2])||state.bodies[at+2]<=0)return -1;
+  }
+  if(distance(start,end)>32.f)return -1;
+  if(clearMobile(start,end,actorRadius,state.bodies,true)){
+    state.points={end.x,end.z};return 1;
+  }
+  const int minX=int(std::floor(std::min(fromX,toX)))-16;
+  const int maxX=int(std::ceil(std::max(fromX,toX)))+16;
+  const int minZ=int(std::floor(std::min(fromZ,toZ)))-16;
+  const int maxZ=int(std::ceil(std::max(fromZ,toZ)))+16;
+  const int width=maxX-minX+1,height=maxZ-minZ+1;
+  if(width<1||height<1||int64_t(width)*height>8192)return -1;
+  const int count=width*height;
+  const auto pointFor=[&](int id){return Point{float(minX+id%width),
+    float(minZ+id/width)};};
+  struct Candidate {float priority,cost;int id;};
+  const auto worse=[](const Candidate& a,const Candidate& b){
+    if(a.priority!=b.priority)return a.priority>b.priority;
+    if(a.cost!=b.cost)return a.cost>b.cost;
+    return a.id>b.id;
+  };
+  std::priority_queue<Candidate,std::vector<Candidate>,decltype(worse)> open(worse);
+  std::vector<float> costs(size_t(count),std::numeric_limits<float>::infinity());
+  std::vector<int> parents(size_t(count),-2);
+  std::vector<uint8_t> closed(size_t(count),0);
+  for(int id=0;id<count;id++){
+    const Point point=pointFor(id);
+    const float cost=distance(start,point);
+    if(cost>1.5f||!clearMobile(start,point,actorRadius,state.bodies,true))continue;
+    costs[id]=cost;parents[id]=-1;
+    open.push({cost+distance(point,end),cost,id});
+  }
+  constexpr int offsets[8][2]={{-1,0},{0,-1},{0,1},{1,0},
+                                {-1,-1},{-1,1},{1,-1},{1,1}};
+  while(!open.empty()){
+    const Candidate current=open.top();open.pop();
+    if(closed[current.id]||current.cost>costs[current.id]+1e-5f)continue;
+    closed[current.id]=1;
+    const Point here=pointFor(current.id);
+    if(distance(here,end)<=1.5f&&
+       clearMobile(here,end,actorRadius,state.bodies)){
+      std::vector<Point> reversed;
+      for(int id=current.id;id>=0;id=parents[id])reversed.push_back(pointFor(id));
+      for(auto at=reversed.rbegin();at!=reversed.rend();++at){
+        state.points.push_back(at->x);state.points.push_back(at->z);
+      }
+      state.points.push_back(end.x);state.points.push_back(end.z);
+      return int(state.points.size()/2);
+    }
+    const int x=current.id%width,z=current.id/width;
+    for(const auto& offset:offsets){
+      const int nx=x+offset[0],nz=z+offset[1];
+      if(nx<0||nx>=width||nz<0||nz>=height)continue;
+      const int next=nz*width+nx;
+      if(closed[next])continue;
+      const float cost=current.cost+std::hypot(float(offset[0]),float(offset[1]));
+      if(cost>=costs[next])continue;
+      const Point point=pointFor(next);
+      if(!clearMobile(here,point,actorRadius,state.bodies))continue;
+      costs[next]=cost;parents[next]=current.id;
+      open.push({cost+distance(point,end),cost,next});
+    }
+  }
+  // Missing resident terrain and a genuinely blocked local corridor cannot
+  // be distinguished by this bounded search. Never certify either as blocked.
+  return -1;
+}
+const float* spatial_mobile_detour_ptr(){return mobileDetour().points.data();}
 // Route handles may contain a physically validated long shortcut. Validate
 // that segment with the same bounded continuous sweep used when creating it;
 // spatial_local_clear alone is intentionally limited to short connectors.

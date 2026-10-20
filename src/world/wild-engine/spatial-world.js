@@ -157,6 +157,30 @@ export function createSpatialWorld(module){
       points[points.length-1]={x:end.x,z:end.z};
     return {status:'found',points};
   }
+  function mobileDetour(start,end,actorRadius,bodies){
+    if(![start?.x,start?.z,end?.x,end?.z,actorRadius].every(Number.isFinite)||
+       actorRadius<=0||!Array.isArray(bodies)||bodies.length>256||
+       bodies.some(body=>![body.x,body.z,body.radius].every(Number.isFinite)||
+         body.radius<=0))throw RangeError('Invalid mobile detour query');
+    if(!navigationBuilt||typeof wasm.spatial_mobile_detour!=='function')
+      return {status:'unknown',points:[]};
+    const pointer=wasm.spatial_mobile_detour_bodies_ptr(bodies.length);
+    if(!pointer&&bodies.length)throw Error('Could not allocate mobile detour input');
+    const input=new Float32Array(wasm.memory.buffer,pointer,bodies.length*3);
+    for(let i=0;i<bodies.length;i++){
+      input[i*3]=bodies[i].x;input[i*3+1]=bodies[i].z;
+      input[i*3+2]=bodies[i].radius;
+    }
+    const count=wasm.spatial_mobile_detour(start.x,start.z,end.x,end.z,
+      actorRadius,bodies.length);
+    if(count<0)return {status:'unknown',points:[]};
+    if(!count)return {status:'blocked',points:[]};
+    const values=new Float32Array(wasm.memory.buffer,wasm.spatial_mobile_detour_ptr(),count*2);
+    const points=Array.from({length:count},(_,i)=>({x:values[i*2],z:values[i*2+1]}));
+    if(Math.hypot(points.at(-1).x-end.x,points.at(-1).z-end.z)<1e-4)
+      points[points.length-1]={x:end.x,z:end.z};
+    return {status:'found',points};
+  }
   function routeWorldNativeBatch(queries){
     if(!Array.isArray(queries)||queries.length>4096||queries.some(q=>
       ![q.start?.x,q.start?.z,q.end?.x,q.end?.z].every(Number.isFinite)))
@@ -284,7 +308,7 @@ export function createSpatialWorld(module){
     enclosureAt:point=>navigationBuilt?wasm.lazy_enclosure(point.x,point.z):-1,
     heights,colors,water,groundMask,waterLevels,waterTriangles,props,instances,chunkPayload,changedChunks,route,connected,componentAt,
     routeWorld:(start,end)=>navigationBuilt?spatialWorldRoute(wasm,route,start,end):{status:'unknown',points:[]},
-    routeWorldNative,
+    routeWorldNative,mobileDetour,
     routeWorldNativeBatch,
     chunkRevision:()=>chunkRevision,
     connectedWorld:(start,end)=>navigationBuilt?spatialWorldConnectivity(wasm,connected,start,end):'unknown',

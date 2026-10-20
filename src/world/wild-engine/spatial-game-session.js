@@ -167,6 +167,10 @@ export function createSpatialGameSession(module,state,streamOptions){
     actorProfile({worker,species});
     return core.routeWorldNative(start,end,{cached});
   }
+  function mobileDetour(start,end,radius,bodies,{worker=true,species='warthog'}={}){
+    actorProfile({worker,species});
+    return core.mobileDetour(start,end,radius,bodies);
+  }
   function routeActorNativeBatch(queries,{worker=true,species='warthog'}={}){
     actorProfile({worker,species});
     return core.routeWorldNativeBatch(queries);
@@ -432,7 +436,7 @@ export function createSpatialGameSession(module,state,streamOptions){
     key=>chunkRevisions.get(key)??0);
   return {get core(){return core;},field,stream,horizonSource,topologySource,routeStamp,
     routeUnaffectedByWalls,suppressed:props.suppressed,syncState,
-    routeActor,routeActorNative,routeActorNativeBatch,actorConnectivity,actorSectorRevision,actorRegions,actorEnclosure,actorRegionsBatch,actorCanStand,actorStepClear,
+    routeActor,routeActorNative,routeActorNativeBatch,mobileDetour,actorConnectivity,actorSectorRevision,actorRegions,actorEnclosure,actorRegionsBatch,actorCanStand,actorStepClear,
     actorStepClearExceptWalls,
     queryPropsAt,withWallPreview,withWallStatePreview,gateOverlayClear,
     wallLocalOverlay,wallWorkerReachability,wallCutSolidFaces,
