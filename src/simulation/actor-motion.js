@@ -64,8 +64,14 @@ export function actorBlockers(state,actor,worker,range=Infinity){
   return blockers;
 }
 export function actorSegmentClear(start,end,actor,blockers){
+  const minX=Math.min(start.x,end.x),maxX=Math.max(start.x,end.x);
+  const minZ=Math.min(start.z,end.z),maxZ=Math.max(start.z,end.z);
   return blockers.every(other=>{
-    const required=radius(actor)+radius(other),before=distance(start,other);
+    const required=radius(actor)+radius(other);
+    // A disc outside the swept segment's expanded bounds cannot collide.
+    if(other.x<minX-required||other.x>maxX+required||
+      other.z<minZ-required||other.z>maxZ+required)return true;
+    const before=distance(start,other);
     // Legacy overlaps can escape continuously, without a position correction.
     if(before<required-1e-8){
       if(distance(start,actor)>1e-9)return false;
