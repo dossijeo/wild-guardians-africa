@@ -333,3 +333,8 @@ El [relleno cálido de suelo en sombra del Cañón](canyon-warm-floor/README.md)
 ## Manglares: frontera con mezcla material
 
 [Mezcla barro/musgo](mangrove-mud-moss-blend/README.md): 24 capturas, doce parejas de cámara/geometría idénticas. La ruta común de suelo permite mezclar color/normal/rugosidad/AO sin recorte ni blending; transición más integrada. Interior más claro/húmedo, pendiente control. Preparación ingenua423–586ms acumulados: no promover; cachear cálculos duplicados antes de benchmark GPU. Candidata visual, sin aprobación global.
+
+
+## Manglares: preparación reutilizada
+
+[Caché y búsqueda acotada](mangrove-mud-moss-pruned/README.md): evita89977 evaluaciones repetidas inicialmente; preparación observada158–179ms frente423–460ms, sin atribuir toda diferencia a algoritmo. Once de doce capturas idénticas; cuatro píxeles residuales en una vista. Sigue QA; siguiente puerta visual: separar transición de aclarado/brillo interior antes de GPU/lifecycle.
