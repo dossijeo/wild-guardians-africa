@@ -1,6 +1,7 @@
 import {createHash} from 'node:crypto';
 import {readFileSync,writeFileSync} from 'node:fs';
 import {gzipSync} from 'node:zlib';
+import {serialize} from '../../src/persistence/snapshots.js';
 import {simulateNativeCampaign} from '../native-campaign-runner.mjs';
 import {createSpatialCampaignOpening} from './spatial-campaign-opening.mjs';
 
@@ -18,6 +19,7 @@ const evidence={biome,days,seed,
     import.meta.url))),wasmSha256:sha256(readFileSync(wasmPath)),arms:[]};
 for(const defensePolicy of only?[only]:['expanding','topological']){
   const started=performance.now(),rows=[];
+  let state=null;
   try{
     const walls=defensePolicy!=='no-walls';
     const report=await simulateNativeCampaign({days,seed,biome,
@@ -27,12 +29,15 @@ for(const defensePolicy of only?[only]:['expanding','topological']){
       defensePolicy:walls?defensePolicy:'expanding',spatialAdvice:true,decisionProfile:true,
       nativeIntents:true,nativeWallPlans:true,reloadRaids:false,
       openingFactory:createSpatialCampaignOpening,
+      onTick:current=>{state=current;},
       onDay:row=>{
+        if(!state)throw Error('Missing campaign state for daily hash');
+        const {entries,...finance}=row.finance;
         const daily={day:row.day,living:row.living,money:row.money,
           destroyed:row.destroyed,planted:row.planted,
           decisionMs:row.wallTime.decisionMs,
           gameTickMs:row.wallTime.gameTickMs,
-          stateSha256:row.stateSha256};
+          stateSha256:sha256(serialize(state)),finance};
         rows.push(daily);
         console.log(JSON.stringify({defensePolicy,...daily}));
       }});
