@@ -129,3 +129,10 @@ python tools/experiments/package-continuous-grass.py
 Ejecutar mediciones sin otros trabajos GPU/compresión. `video-continuous-grass.mjs` produce secuencias PNG; los MP4 se codifican con FFmpeg, `-framerate 30 -c:v libx264 -crf 18 -pix_fmt yuv420p`. Para ver viento en una sesión QA no pausada, usar `world.qaContinuousGrass.timeOverride=null`; capturas/benchmarks mantienen fase determinista. Este módulo está preparado para QA en desarrollo, no es una opción publicada del menú.
 
 Validación de entrega: `npm run build` pasa (406 módulos; avisos existentes de tamaño/importación mixta), sintaxis JS/Python comprobada, manifiestos/enlaces locales y errores GL revisados. El campo `engineQueries:0` de las auditorías describe la arquitectura revisada en código; no es un contador instrumentado del motor.
+
+## Ensayos posteriores descartados
+
+- [Orientación coherente](../continuous-grass-flow/README.md): acentúa franjas y repetición.
+- [Láminas curvas recortadas](../continuous-grass-cards/README.md): reducen triángulos, pero pierden cuerpo en la cámara normal.
+
+Ambos cuentan con 18 capturas reales y controles de restauración idénticos. No sustituyen C ni su viento 8×; su descarte es visual, sin conclusión de rendimiento.
