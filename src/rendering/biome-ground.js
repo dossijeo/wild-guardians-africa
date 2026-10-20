@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {CANYON_ROCK_PATH} from './global-canyon-rock.js';
 import {json} from './assets.js';
 import {hashCell,hex} from '../world/terrain.js';
 import {buildGroundMask417} from './ground-mask.js';
@@ -22,6 +23,12 @@ export class BiomeGround {
         const map=this.tile[role]?texture.clone():texture;
         map.wrapS=map.wrapT=THREE.RepeatWrapping;map.minFilter=THREE.LinearMipmapLinearFilter;map.magFilter=THREE.LinearFilter;map.generateMipmaps=true;map.anisotropy=8;map.needsUpdate=true;
         this.textures.push(map);
+      }
+      if(biome==='canyons'&&new URLSearchParams(globalThis.location?.search??'').get('visualLab')==='global-lighting'){
+        const source=await assets.texture(CANYON_ROCK_PATH,false);this.assertOpen();
+        this.cliffRock=source.clone();this.cliffRock.wrapS=this.cliffRock.wrapT=THREE.RepeatWrapping;
+        this.cliffRock.minFilter=THREE.LinearMipmapLinearFilter;this.cliffRock.magFilter=THREE.LinearFilter;
+        this.cliffRock.generateMipmaps=true;this.cliffRock.anisotropy=8;this.cliffRock.needsUpdate=true;
       }
       if(this.layeredSavanna)for(const role of ['base','normal','arh']){
         const source=await assets.texture(tiles.canyons[role],false);
@@ -49,7 +56,7 @@ export class BiomeGround {
       this.unmappedMask.needsUpdate=true;mask=this.unmappedMask;
     }
     const tile=this.tile,colors=this.profile.colors,soil=hex(colors.soil),grass=hex(colors.grass),foliage=hex(colors.foliage),blend=this.field.c.biome==='grand_river'?.32:.20;
-    return {uGroundPureMoss:{value:this.tile.pureMoss?1:0},uGroundMask:{value:mask},uGroundRect:{value:new THREE.Vector4(bo.minX,bo.minZ,1.5,35)},uGroundMapped:{value:mapped?1:0},uGroundOn:{value:1},uGroundStrength:{value:1},uGroundMicro:{value:1},uGroundLayered:{value:this.layeredSavanna?(this.layeredRelief?2:1):0},uGroundDebug:{value:0},uGroundRelief:{value:1},uGroundParams:{value:new THREE.Vector4(tile.scale,tile.blend,this.layeredRelief?1.6:tile.normalBoost,this.layeredRelief?.12:(tile.relief??tile.jitter??0))},uGroundSeed:{value:new THREE.Vector2(hashCell(this.field.seed,0,1,417)/4294967296,hashCell(this.field.seed,1,0,417)/4294967296)},uGroundSoil:{value:new THREE.Vector3(...soil)},uGroundGrass:{value:new THREE.Vector3(...grass.map((v,i)=>v+(foliage[i]-v)*blend))},uGroundDetailMap:{value:this.textures[0]},uGroundNormal:{value:this.textures[1]},uGroundARH:{value:this.textures[2]},uLayerSandBase:{value:this.layerTextures[0]??this.textures[0]},uLayerSandNormal:{value:this.layerTextures[1]??this.textures[1]},uLayerSandARH:{value:this.layerTextures[2]??this.textures[2]}};
+    return {...(this.cliffRock?{uCliffRock:{value:this.cliffRock}}:{}),uGroundPureMoss:{value:this.tile.pureMoss?1:0},uGroundMask:{value:mask},uGroundRect:{value:new THREE.Vector4(bo.minX,bo.minZ,1.5,35)},uGroundMapped:{value:mapped?1:0},uGroundOn:{value:1},uGroundStrength:{value:1},uGroundMicro:{value:1},uGroundLayered:{value:this.layeredSavanna?(this.layeredRelief?2:1):0},uGroundDebug:{value:0},uGroundRelief:{value:1},uGroundParams:{value:new THREE.Vector4(tile.scale,tile.blend,this.layeredRelief?1.6:tile.normalBoost,this.layeredRelief?.12:(tile.relief??tile.jitter??0))},uGroundSeed:{value:new THREE.Vector2(hashCell(this.field.seed,0,1,417)/4294967296,hashCell(this.field.seed,1,0,417)/4294967296)},uGroundSoil:{value:new THREE.Vector3(...soil)},uGroundGrass:{value:new THREE.Vector3(...grass.map((v,i)=>v+(foliage[i]-v)*blend))},uGroundDetailMap:{value:this.textures[0]},uGroundNormal:{value:this.textures[1]},uGroundARH:{value:this.textures[2]},uLayerSandBase:{value:this.layerTextures[0]??this.textures[0]},uLayerSandNormal:{value:this.layerTextures[1]??this.textures[1]},uLayerSandARH:{value:this.layerTextures[2]??this.textures[2]}};
   }
   attach(material,cx,cz,bytes=null,options){
     const uniforms=this.uniforms(cx,cz,bytes,options);material.userData.biomeGround=uniforms;material.userData.groundBiome=this.field.c.biome;
@@ -60,5 +67,5 @@ export class BiomeGround {
     material.userData.retainBiomeGround(material);
   }
   assertOpen(){if(this.disposed)throw new Error('Ground load cancelled');}
-  dispose(){if(this.disposed)return;this.disposed=true;this.loading.abort();for(const texture of [...this.textures,...this.layerTextures,...this.masks,this.unmappedMask].filter(Boolean))texture.dispose();this.textures=[];this.layerTextures=[];this.masks.clear();this.unmappedMask=null;}
+  dispose(){if(this.disposed)return;this.disposed=true;this.loading.abort();for(const texture of [...this.textures,...this.layerTextures,this.cliffRock,...this.masks,this.unmappedMask].filter(Boolean))texture.dispose();this.textures=[];this.layerTextures=[];this.masks.clear();this.unmappedMask=null;this.cliffRock=null;}
 }
