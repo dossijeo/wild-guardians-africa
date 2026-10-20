@@ -1,0 +1,34 @@
+diff --git a/src/simulation/game.js b/src/simulation/game.js
+index 3b2542bf9..1da32e015 100644
+--- a/src/simulation/game.js
++++ b/src/simulation/game.js
+@@ -912,8 +912,18 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
+   const probe=next&&distanceToNext>1e-8?{
+     x:w.x+(next.x-w.x)*Math.min(.5,distanceToNext)/distanceToNext,
+     z:w.z+(next.z-w.z)*Math.min(.5,distanceToNext)/distanceToNext}:null;
+-  if(((w.dynamicStallSeconds??0)>=3||
+-    s.elapsed-w.mobileProgressAt>=12)&&
++  const stalled=(w.dynamicStallSeconds??0)>=3;
++  const noProgress=s.elapsed-w.mobileProgressAt>=12;
++  let preparedMotion=null,rerouted=false;
++  if(worker&&!stalled&&noProgress&&(w.mobilePhaseRemaining??0)<=0&&probe){
++    // A moving worker may be taking a valid detour away from the final goal.
++    // Give newly encountered traffic one physical route attempt before the
++    // no-progress fallback can ignore other bodies.
++    const previousPath=w.path;
++    preparedMotion=prepareActorMotion(s,w,nav,true);
++    rerouted=w.path!==previousPath;
++  }
++  if((stalled||noProgress)&&!rerouted&&
+     (w.mobileRecoveryAttempts??0)<2&&probe){
+     const blockers=actorBlockers(s,w,worker);
+     const staticClear=worker?nav.workerMotionClear?.(w,probe,w.radius??.28):
+@@ -936,7 +946,7 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
+   const dynamicClear=phased?
+     (worker?(a,b)=>nav.workerMotionClear?.(a,b,w.radius??.28)??
+       nav.segmentClear?.(a,b,w.radius??.28,ignore,true)??false:null):
+-    prepareActorMotion(s,w,nav,worker);
++    (preparedMotion??prepareActorMotion(s,w,nav,worker));
+   const routeClearance=worker?workerRiskClearance(w,nav,{radius:w.radius??.28,ignore},dynamicClear):animalRouteClearance(w,nav,{radius:w.radius??.28,ignore,escapeProps:expandRoute},dynamicClear);
+   const clear=routeClearance?.clear??dynamicClear;
+   if(motion)moveWorker(w,dt,{...motion,gates:worker?s.structures:[],clear});else {

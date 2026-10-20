@@ -1,0 +1,27 @@
+diff --git a/src/simulation/game.js b/src/simulation/game.js
+index 3b2542bf9..8bdde9231 100644
+--- a/src/simulation/game.js
++++ b/src/simulation/game.js
+@@ -932,7 +932,21 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
+         x:w.x,z:w.z,elapsed:s.elapsed,duration:3});
+     }
+   }
+-  const phased=(w.mobilePhaseRemaining??0)>0;
++  let phased=(w.mobilePhaseRemaining??0)>0;
++  if(phased&&worker){
++    // The temporary exception is needed only while the blocking body still
++    // occupies the next step. Restore ordinary body clearance as soon as the
++    // worker has passed it, rather than ignoring unrelated traffic for 3 s.
++    const step=next&&distanceToNext>1e-8?{
++      x:w.x+(next.x-w.x)*Math.min(speed*dt,distanceToNext)/distanceToNext,
++      z:w.z+(next.z-w.z)*Math.min(speed*dt,distanceToNext)/distanceToNext}:w;
++    const blockers=actorBlockers(s,w,true,Math.max(speed*dt,.5));
++    if(actorSegmentClear(w,w,w,blockers)&&
++      actorSegmentClear(w,step,w,blockers)){
++      w.mobilePhaseRemaining=0;
++      phased=false;
++    }
++  }
+   const dynamicClear=phased?
+     (worker?(a,b)=>nav.workerMotionClear?.(a,b,w.radius??.28)??
+       nav.segmentClear?.(a,b,w.radius??.28,ignore,true)??false:null):
