@@ -1,0 +1,153 @@
+{
+  "biome": "desierto",
+  "seed": 123,
+  "day": 1,
+  "residentChunks": 25,
+  "entry": {
+    "entries": [
+      {
+        "x": 86.60496202469788,
+        "z": 6.598838723449138
+      }
+    ],
+    "exits": [
+      {
+        "x": 88.0432386405105,
+        "z": 9.231586409120256
+      }
+    ]
+  },
+  "rows": [
+    {
+      "species": "warthog",
+      "origin": {
+        "x": 86.60496202469788,
+        "z": 6.598838723449138
+      },
+      "radius": 1.1,
+      "cropsTested": 15,
+      "unknownAttempts": 0,
+      "found": [
+        {
+          "cropId": "plant-111",
+          "point": {
+            "id": "approach-plant-111-direct-0",
+            "x": 86.68555172940844,
+            "z": 6.170665222335697
+          },
+          "routePoints": 1
+        },
+        {
+          "cropId": "plant-102",
+          "point": {
+            "id": "approach-plant-102-direct-0",
+            "x": 87.36074093876935,
+            "z": 5.7617800091156415
+          },
+          "routePoints": 1
+        },
+        {
+          "cropId": "plant-71",
+          "point": {
+            "id": "approach-plant-71-direct-0",
+            "x": 86.81450824862021,
+            "z": 4.689849937174913
+          },
+          "routePoints": 4
+        },
+        {
+          "cropId": "plant-99",
+          "point": {
+            "id": "approach-plant-99-direct-0",
+            "x": 85.99896696849136,
+            "z": 4.625125214977154
+          },
+          "routePoints": 5
+        },
+        {
+          "cropId": "plant-74",
+          "point": {
+            "id": "approach-plant-74-direct-0",
+            "x": 87.70793247058356,
+            "z": 4.504203785676708
+          },
+          "routePoints": 5
+        },
+        {
+          "cropId": "plant-120",
+          "point": {
+            "id": "approach-plant-120-direct-0",
+            "x": 84.99679214290539,
+            "z": 4.377100368107597
+          },
+          "routePoints": 7
+        },
+        {
+          "cropId": "plant-78",
+          "point": {
+            "id": "approach-plant-78-direct-0",
+            "x": 87.90775785699587,
+            "z": 3.0935021945544587
+          },
+          "routePoints": 7
+        },
+        {
+          "cropId": "plant-114",
+          "point": {
+            "id": "approach-plant-114-direct-5",
+            "x": 87.06990393101923,
+            "z": -4.698562168549642
+          },
+          "routePoints": 54
+        },
+        {
+          "cropId": "plant-117",
+          "point": {
+            "id": "approach-plant-117-direct-3",
+            "x": 87.18884714583866,
+            "z": -3.194410179755638
+          },
+          "routePoints": 55
+        },
+        {
+          "cropId": "plant-107",
+          "point": {
+            "id": "approach-plant-107-direct-4",
+            "x": 86.83219165907916,
+            "z": -3.3292648446993516
+          },
+          "routePoints": 55
+        },
+        {
+          "cropId": "plant-123",
+          "point": {
+            "id": "approach-plant-123-direct-3",
+            "x": 85.6406570504992,
+            "z": -3.445246496501977
+          },
+          "routePoints": 54
+        },
+        {
+          "cropId": "plant-109",
+          "point": {
+            "id": "approach-plant-109-direct-1",
+            "x": 88.1585625383417,
+            "z": -3.2559208848504633
+          },
+          "routePoints": 57
+        },
+        {
+          "cropId": "plant-94",
+          "point": {
+            "id": "approach-plant-94-direct-0",
+            "x": 88.21387924575028,
+            "z": -2.8242509394340773
+          },
+          "routePoints": 57
+        }
+      ]
+    }
+  ],
+  "alternateExterior": [],
+  "scope": "One actor per species at the selected formation point, plus optional twelve envelope points; uses the actual bounded crop attack approach, static attack ray and native route checks. Does not prove all possible exterior entries or reservations."
+}
