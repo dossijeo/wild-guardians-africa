@@ -42,11 +42,38 @@ Fewer recovery events do not imply better traffic or better simulation. The
 native grid search can choose a physically valid but much longer bypass where
 the existing local system would make one actor yield or wait. The worker-only
 comparison shows that altered worker timing is enough to cause a large
-campaign divergence; the animal-only run also changes outcomes. Route lengths
-and the first divergent action have not yet been instrumented, so that
-mechanism remains a hypothesis, not a proven diagnosis. The full variant is
-also slower in this run. No benchmark for other biomes or physical device is
-claimed.
+campaign divergence; the animal-only run also changes outcomes. The full
+variant is also slower in this run. No benchmark for other biomes or physical
+device is claimed.
+
+## First divergence and bounded follow-up
+
+`tools/experiments/trace-mobile-detour.mjs` records one hash of active actor
+position, status, task and next waypoint after each tick. With identical
+two-night inputs, the reference and unrestricted candidate first differ at
+day 1, second 2. Immediately before that tick, `worker-20` is arriving at
+`(60, 0)` and wants to rejoin at `(62, 0)`. Seven workers occupy the shared
+village entrance. The native detour sends it via `(59, 0)`, `(59, -1)`,
+`(60, -2)`, `(61, -2)`, `(62, -1)` and `(62, 0)`: a 6.83 m path for a 2 m
+local goal. This explains the first actor-state divergence; it does not by
+itself explain every later economic difference.
+
+A second experimental variant rejects a detour longer than
+`max(2 × directDistance, directDistance + 1 m)`, returning to the existing
+yield/wait behavior. It pushes the first two-night actor divergence to day 1,
+second 136. At two nights the reference has 62 living crops and 114
+deliveries; the bounded variant has 61 and 115. At 14 nights the bounded
+variant has 112 living crops, 1,285 deliveries, 851 coins and 168 mobile
+recovery events, against the reference's 145, 1,317, 899 and 164. Its
+`Game.tick` total was 128.017 s, but a directed test ran concurrently near
+the beginning of that single run, so this number is **not** a clean A/B
+performance estimate. The functional deficit alone rules out adoption.
+
+The local cost cap is a useful constraint but does not make this grid search
+acceptable. Rejected candidate paths still cost a full native search, and
+accepted short paths can change task timing. The next design should evaluate
+yielding versus detouring before committing a route and avoid scanning when
+the traffic is transient. No threshold was tuned against the 14-night result.
 
 To reproduce the directed checks after building the prototype binary:
 
@@ -57,10 +84,9 @@ node --test tests/spatial-mobile-detour.test.js tests/actor-motion.test.js \
   tests/spatial-animal-wall-overlap.test.js \
   tests/retreat-recovery-frozen-sabana.test.js
 node tools/experiments/bench-worker-detour-cache.mjs 14 712
+node tools/experiments/trace-mobile-detour.mjs reference 2
+node tools/experiments/trace-mobile-detour.mjs candidate 2
 ```
 
-The proposed next investigation is to capture the first route substitution
-that changes a worker's arrival or assignment, measuring detour length against
-the retained segment and whether a deterministic short yield was available.
 Any replacement must improve the full campaign without weakening physical
 clearance, and should be compared in alternating runs before integration.

@@ -27,13 +27,22 @@ function terrainDetour(actor,goal,blockers,nav,worker,clear){
   if(nav.mobileDetour){
     const result=nav.mobileDetour(actor,goal,radius(actor),blockers.map(body=>({
       x:body.x,z:body.z,radius:radius(body)})),worker);
+    globalThis.__wildMobileDetourProbe?.({id:actor.id,status:actor.status,worker,
+      start:{x:actor.x,z:actor.z},goal,blockers:blockers.map(body=>({
+        id:body.id,x:body.x,z:body.z,radius:radius(body)})),
+      result:result.status,points:result.status==='found'?result.points:[]});
     if(result.status!=='found')return null;
-    let before=actor;
+    let before=actor,length=0;
     for(const point of result.points){
       if(!clear(before,point)||!nav.segmentClear(before,point,radius(actor),null,worker))
         return null;
+      length+=distance(before,point);
       before=point;
     }
+    const direct=distance(actor,goal);
+    // This is a local rejoin, not a new journey around the whole settlement.
+    // Waiting/yielding is preferable to a large bypass around temporary bodies.
+    if(length>Math.max(direct*2,direct+1))return null;
     blockedDetours.delete(actor);
     return result.points;
   }
