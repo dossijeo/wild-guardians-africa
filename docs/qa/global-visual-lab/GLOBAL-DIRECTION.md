@@ -318,3 +318,8 @@ El [relleno cálido de suelo en sombra del Cañón](canyon-warm-floor/README.md)
 ## Arena integrada: reapertura validada
 
 [Seis ciclos](desert-aerial-sand/integration-reopen/README.md): tres por calidad media/baja, mismo documento sin reload, cierre por menú y nueva partida. Doce capturas; ocho comparaciones de reapertura idénticas RGB, misma geometría/cámara. Fuente y clon nuevos/liberados una vez en cada ciclo. No certifica fugas prolongadas. Conservar opción y volver a revisar el conjunto de seis biomas; no dedicar más rondas a microvalidar solo arena.
+
+
+## Revisión conjunta actual de seis biomas
+
+[Campaña comparada](combined-campaign-review/README.md): 72 capturas, 36 parejas de cámara/hora, tres vistas y día/noche media. Reúne iluminación, cobertura C viento8, Cañón cálido y arena. Sin nuevos benchmarks; coste geométrico de hierba explícito. Pendientes claros: borde de cobertura Río, suelo medio Cañón/Volcanes y repetición/bordes barro-musgo Manglares. Siguiente pase: integración visual de barro, respetando huella y reglas. No se acredita calidad global ni coste combinado.

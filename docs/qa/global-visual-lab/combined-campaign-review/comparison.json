@@ -1,0 +1,893 @@
+{
+  "note": "Visual comparison; geometry intentionally increases for continuous coverage. No CPU/GPU benchmark.",
+  "pairs": [
+    {
+      "biome": "sabana",
+      "phase": "day",
+      "view": "game",
+      "samePose": true,
+      "draws": [
+        70,
+        72
+      ],
+      "triangles": [
+        1711631,
+        1927535
+      ],
+      "coverage": {
+        "variant": "C",
+        "active": true,
+        "nearDistance": 24,
+        "moduleSpacing": 0.4,
+        "near": 2438,
+        "far": 8703,
+        "leaves": 98880,
+        "triangles": 215904,
+        "chunks": 25,
+        "cachedTiles": 63,
+        "bufferBytes": 1206456,
+        "stats": {
+          "buildMs": 85.70000007748604,
+          "selectionMs": 96,
+          "selectionCount": 7,
+          "candidates": 25200,
+          "masked": 2506,
+          "overflow": 0
+        },
+        "engineQueries": 0,
+        "castShadow": false
+      },
+      "mae": 9.704142071759259,
+      "changedPixels": 514723
+    },
+    {
+      "biome": "sabana",
+      "phase": "day",
+      "view": "oblique",
+      "samePose": true,
+      "draws": [
+        77,
+        79
+      ],
+      "triangles": [
+        1697083,
+        1950031
+      ],
+      "coverage": {
+        "variant": "C",
+        "active": true,
+        "nearDistance": 24,
+        "moduleSpacing": 0.4,
+        "near": 3177,
+        "far": 7791,
+        "leaves": 100452,
+        "triangles": 252948,
+        "chunks": 25,
+        "cachedTiles": 64,
+        "bufferBytes": 1206456,
+        "stats": {
+          "buildMs": 86.80000007152557,
+          "selectionMs": 98.19999998807907,
+          "selectionCount": 8,
+          "candidates": 25600,
+          "masked": 2506,
+          "overflow": 0
+        },
+        "engineQueries": 0,
+        "castShadow": false
+      },
+      "mae": 5.753467158564815,
+      "changedPixels": 207485
+    },
+    {
+      "biome": "sabana",
+      "phase": "day",
+      "view": "reverse",
+      "samePose": true,
+      "draws": [
+        63,
+        65
+      ],
+      "triangles": [
+        1565287,
+        1865675
+      ],
+      "coverage": {
+        "variant": "C",
+        "active": true,
+        "nearDistance": 24,
+        "moduleSpacing": 0.4,
+        "near": 4071,
+        "far": 7016,
+        "leaves": 104980,
+        "triangles": 300388,
+        "chunks": 25,
+        "cachedTiles": 68,
+        "bufferBytes": 1206456,
+        "stats": {
+          "buildMs": 90.30000007152557,
+          "selectionMs": 108.59999999403954,
+          "selectionCount": 14,
+          "candidates": 27200,
+          "masked": 2546,
+          "overflow": 0
+        },
+        "engineQueries": 0,
+        "castShadow": false
+      },
+      "mae": 9.661652560763889,
+      "changedPixels": 387092
+    },
+    {
+      "biome": "sabana",
+      "phase": "night",
+      "view": "game",
+      "samePose": true,
+      "draws": [
+        70,
+        72
+      ],
+      "triangles": [
+        1711631,
+        1927535
+      ],
+      "coverage": {
+        "variant": "C",
+        "active": true,
+        "nearDistance": 24,
+        "moduleSpacing": 0.4,
+        "near": 2438,
+        "far": 8703,
+        "leaves": 98880,
+        "triangles": 215904,
+        "chunks": 25,
+        "cachedTiles": 68,
+        "bufferBytes": 1206456,
+        "stats": {
+          "buildMs": 90.90000006556511,
+          "selectionMs": 114.60000002384186,
+          "selectionCount": 20,
+          "candidates": 27200,
+          "masked": 2546,
+          "overflow": 0
+        },
+        "engineQueries": 0,
+        "castShadow": false
+      },
+      "mae": 13.325432942708334,
+      "changedPixels": 918259
+    },
+    {
+      "biome": "sabana",
+      "phase": "night",
+      "view": "oblique",
+      "samePose": true,
+      "draws": [
+        77,
+        79
+      ],
+      "triangles": [
+        1697083,
+        1950031
+      ],
+      "coverage": {
+        "variant": "C",
+        "active": true,
+        "nearDistance": 24,
+        "moduleSpacing": 0.4,
+        "near": 3177,
+        "far": 7791,
+        "leaves": 100452,
+        "triangles": 252948,
+        "chunks": 25,
+        "cachedTiles": 68,
+        "bufferBytes": 1206456,
+        "stats": {
+          "buildMs": 90.90000006556511,
+          "selectionMs": 116,
+          "selectionCount": 21,
+          "candidates": 27200,
+          "masked": 2546,
+          "overflow": 0
+        },
+        "engineQueries": 0,
+        "castShadow": false
+      },
+      "mae": 10.07412941261574,
+      "changedPixels": 793392
+    },
+    {
+      "biome": "sabana",
+      "phase": "night",
+      "view": "reverse",
+      "samePose": true,
+      "draws": [
+        63,
+        65
+      ],
+      "triangles": [
+        1565287,
+        1865675
+      ],
+      "coverage": {
+        "variant": "C",
+        "active": true,
+        "nearDistance": 24,
+        "moduleSpacing": 0.4,
+        "near": 4071,
+        "far": 7016,
+        "leaves": 104980,
+        "triangles": 300388,
+        "chunks": 25,
+        "cachedTiles": 68,
+        "bufferBytes": 1206456,
+        "stats": {
+          "buildMs": 91.6000000834465,
+          "selectionMs": 122.5,
+          "selectionCount": 27,
+          "candidates": 27200,
+          "masked": 2546,
+          "overflow": 0
+        },
+        "engineQueries": 0,
+        "castShadow": false
+      },
+      "mae": 12.991010561342593,
+      "changedPixels": 826531
+    },
+    {
+      "biome": "gran-rio",
+      "phase": "day",
+      "view": "game",
+      "samePose": true,
+      "draws": [
+        64,
+        66
+      ],
+      "triangles": [
+        579501,
+        869817
+      ],
+      "coverage": {
+        "variant": "C",
+        "active": true,
+        "nearDistance": 24,
+        "moduleSpacing": 0.4,
+        "near": 4147,
+        "far": 5187,
+        "leaves": 91260,
+        "triangles": 290316,
+        "waterTriangles": 1279,
+        "waterBucketReferences": 4014,
+        "chunks": 25,
+        "cachedTiles": 51,
+        "bufferBytes": 1206456,
+        "stats": {
+          "buildMs": 72.7000000178814,
+          "selectionMs": 69,
+          "selectionCount": 2,
+          "candidates": 20400,
+          "masked": 7160,
+          "overflow": 0
+        },
+        "engineQueries": 0,
+        "castShadow": false
+      },
+      "mae": 12.51718605324074,
+      "changedPixels": 635305
+    },
+    {
+      "biome": "gran-rio",
+      "phase": "day",
+      "view": "oblique",
+      "samePose": true,
+      "draws": [
+        70,
+        72
+      ],
+      "triangles": [
+        669352,
+        924228
+      ],
+      "coverage": {
+        "variant": "C",
+        "active": true,
+        "nearDistance": 24,
+        "moduleSpacing": 0.4,
+        "near": 3917,
+        "far": 2482,
+        "leaves": 66860,
+        "triangles": 254876,
+        "waterTriangles": 1279,
+        "waterBucketReferences": 4014,
+        "chunks": 25,
+        "cachedTiles": 57,
+        "bufferBytes": 1206456,
+        "stats": {
+          "buildMs": 74.30000001192093,
+          "selectionMs": 71.69999998807907,
+          "selectionCount": 3,
+          "candidates": 22800,
+          "masked": 9160,
+          "overflow": 0
+        },
+        "engineQueries": 0,
+        "castShadow": false
+      },
+      "mae": 18.182440321180554,
+      "changedPixels": 483059
+    },
+    {
+      "biome": "gran-rio",
+      "phase": "day",
+      "view": "reverse",
+      "samePose": true,
+      "draws": [
+        60,
+        62
+      ],
+      "triangles": [
+        671566,
+        865178
+      ],
+      "coverage": {
+        "variant": "C",
+        "active": true,
+        "nearDistance": 24,
+        "moduleSpacing": 0.4,
+        "near": 2553,
+        "far": 5054,
+        "leaves": 71068,
+        "triangles": 193612,
+        "waterTriangles": 1691,
+        "waterBucketReferences": 5196,
+        "chunks": 25,
+        "cachedTiles": 59,
+        "bufferBytes": 1206456,
+        "stats": {
+          "buildMs": 79.2999999821186,
+          "selectionMs": 81,
+          "selectionCount": 9,
+          "candidates": 23600,
+          "masked": 9560,
+          "overflow": 0
+        },
+        "engineQueries": 0,
+        "castShadow": false
+      },
+      "mae": 11.452188946759259,
+      "changedPixels": 611690
+    },
+    {
+      "biome": "gran-rio",
+      "phase": "night",
+      "view": "game",
+      "samePose": true,
+      "draws": [
+        64,
+        66
+      ],
+      "triangles": [
+        579501,
+        869817
+      ],
+      "coverage": {
+        "variant": "C",
+        "active": true,
+        "nearDistance": 24,
+        "moduleSpacing": 0.4,
+        "near": 4147,
+        "far": 5187,
+        "leaves": 91260,
+        "triangles": 290316,
+        "waterTriangles": 1279,
+        "waterBucketReferences": 4014,
+        "chunks": 25,
+        "cachedTiles": 59,
+        "bufferBytes": 1206456,
+        "stats": {
+          "buildMs": 79.99999997019768,
+          "selectionMs": 85.69999998807907,
+          "selectionCount": 15,
+          "candidates": 23600,
+          "masked": 9560,
+          "overflow": 0
+        },
+        "engineQueries": 0,
+        "castShadow": false
+      },
+      "mae": 8.078654513888889,
+      "changedPixels": 915117
+    },
+    {
+      "biome": "gran-rio",
+      "phase": "night",
+      "view": "oblique",
+      "samePose": true,
+      "draws": [
+        70,
+        72
+      ],
+      "triangles": [
+        669352,
+        924228
+      ],
+      "coverage": {
+        "variant": "C",
+        "active": true,
+        "nearDistance": 24,
+        "moduleSpacing": 0.4,
+        "near": 3917,
+        "far": 2482,
+        "leaves": 66860,
+        "triangles": 254876,
+        "waterTriangles": 1279,
+        "waterBucketReferences": 4014,
+        "chunks": 25,
+        "cachedTiles": 59,
+        "bufferBytes": 1206456,
+        "stats": {
+          "buildMs": 79.99999997019768,
+          "selectionMs": 86.59999996423721,
+          "selectionCount": 16,
+          "candidates": 23600,
+          "masked": 9560,
+          "overflow": 0
+        },
+        "engineQueries": 0,
+        "castShadow": false
+      },
+      "mae": 7.729739221643518,
+      "changedPixels": 732426
+    },
+    {
+      "biome": "gran-rio",
+      "phase": "night",
+      "view": "reverse",
+      "samePose": true,
+      "draws": [
+        60,
+        62
+      ],
+      "triangles": [
+        671566,
+        865178
+      ],
+      "coverage": {
+        "variant": "C",
+        "active": true,
+        "nearDistance": 24,
+        "moduleSpacing": 0.4,
+        "near": 2553,
+        "far": 5054,
+        "leaves": 71068,
+        "triangles": 193612,
+        "waterTriangles": 1691,
+        "waterBucketReferences": 5196,
+        "chunks": 25,
+        "cachedTiles": 59,
+        "bufferBytes": 1206456,
+        "stats": {
+          "buildMs": 80.79999995231628,
+          "selectionMs": 91.30000001192093,
+          "selectionCount": 22,
+          "candidates": 23600,
+          "masked": 9560,
+          "overflow": 0
+        },
+        "engineQueries": 0,
+        "castShadow": false
+      },
+      "mae": 7.951677517361111,
+      "changedPixels": 848994
+    },
+    {
+      "biome": "gran-canon",
+      "phase": "day",
+      "view": "game",
+      "samePose": true,
+      "draws": [
+        39,
+        39
+      ],
+      "triangles": [
+        399675,
+        399675
+      ],
+      "coverage": null,
+      "mae": 27.522462745949074,
+      "changedPixels": 804908
+    },
+    {
+      "biome": "gran-canon",
+      "phase": "day",
+      "view": "oblique",
+      "samePose": true,
+      "draws": [
+        34,
+        34
+      ],
+      "triangles": [
+        246170,
+        246170
+      ],
+      "coverage": null,
+      "mae": 19.214619502314815,
+      "changedPixels": 659793
+    },
+    {
+      "biome": "gran-canon",
+      "phase": "day",
+      "view": "reverse",
+      "samePose": true,
+      "draws": [
+        32,
+        32
+      ],
+      "triangles": [
+        232389,
+        232389
+      ],
+      "coverage": null,
+      "mae": 32.60786277488426,
+      "changedPixels": 850253
+    },
+    {
+      "biome": "gran-canon",
+      "phase": "night",
+      "view": "game",
+      "samePose": true,
+      "draws": [
+        39,
+        39
+      ],
+      "triangles": [
+        399675,
+        399675
+      ],
+      "coverage": null,
+      "mae": 12.453551432291667,
+      "changedPixels": 920760
+    },
+    {
+      "biome": "gran-canon",
+      "phase": "night",
+      "view": "oblique",
+      "samePose": true,
+      "draws": [
+        34,
+        34
+      ],
+      "triangles": [
+        246170,
+        246170
+      ],
+      "coverage": null,
+      "mae": 12.799419126157407,
+      "changedPixels": 921211
+    },
+    {
+      "biome": "gran-canon",
+      "phase": "night",
+      "view": "reverse",
+      "samePose": true,
+      "draws": [
+        32,
+        32
+      ],
+      "triangles": [
+        232389,
+        232389
+      ],
+      "coverage": null,
+      "mae": 14.310819950810185,
+      "changedPixels": 919954
+    },
+    {
+      "biome": "manglares",
+      "phase": "day",
+      "view": "game",
+      "samePose": true,
+      "draws": [
+        64,
+        64
+      ],
+      "triangles": [
+        614104,
+        614104
+      ],
+      "coverage": null,
+      "mae": 2.6066673900462964,
+      "changedPixels": 160214
+    },
+    {
+      "biome": "manglares",
+      "phase": "day",
+      "view": "oblique",
+      "samePose": true,
+      "draws": [
+        60,
+        60
+      ],
+      "triangles": [
+        470157,
+        470157
+      ],
+      "coverage": null,
+      "mae": 1.8371629050925926,
+      "changedPixels": 118335
+    },
+    {
+      "biome": "manglares",
+      "phase": "day",
+      "view": "reverse",
+      "samePose": true,
+      "draws": [
+        63,
+        63
+      ],
+      "triangles": [
+        540732,
+        540732
+      ],
+      "coverage": null,
+      "mae": 0.41517107928240743,
+      "changedPixels": 38071
+    },
+    {
+      "biome": "manglares",
+      "phase": "night",
+      "view": "game",
+      "samePose": true,
+      "draws": [
+        64,
+        64
+      ],
+      "triangles": [
+        614104,
+        614104
+      ],
+      "coverage": null,
+      "mae": 7.420564959490741,
+      "changedPixels": 913480
+    },
+    {
+      "biome": "manglares",
+      "phase": "night",
+      "view": "oblique",
+      "samePose": true,
+      "draws": [
+        60,
+        60
+      ],
+      "triangles": [
+        470157,
+        470157
+      ],
+      "coverage": null,
+      "mae": 6.464350405092593,
+      "changedPixels": 713752
+    },
+    {
+      "biome": "manglares",
+      "phase": "night",
+      "view": "reverse",
+      "samePose": true,
+      "draws": [
+        63,
+        63
+      ],
+      "triangles": [
+        540732,
+        540732
+      ],
+      "coverage": null,
+      "mae": 7.822144097222222,
+      "changedPixels": 771612
+    },
+    {
+      "biome": "volcanes",
+      "phase": "day",
+      "view": "game",
+      "samePose": true,
+      "draws": [
+        69,
+        69
+      ],
+      "triangles": [
+        502116,
+        502116
+      ],
+      "coverage": null,
+      "mae": 2.809789496527778,
+      "changedPixels": 607600
+    },
+    {
+      "biome": "volcanes",
+      "phase": "day",
+      "view": "oblique",
+      "samePose": true,
+      "draws": [
+        68,
+        68
+      ],
+      "triangles": [
+        528331,
+        528331
+      ],
+      "coverage": null,
+      "mae": 1.3472233072916666,
+      "changedPixels": 290992
+    },
+    {
+      "biome": "volcanes",
+      "phase": "day",
+      "view": "reverse",
+      "samePose": true,
+      "draws": [
+        66,
+        66
+      ],
+      "triangles": [
+        437465,
+        437465
+      ],
+      "coverage": null,
+      "mae": 2.489097583912037,
+      "changedPixels": 466621
+    },
+    {
+      "biome": "volcanes",
+      "phase": "night",
+      "view": "game",
+      "samePose": true,
+      "draws": [
+        69,
+        69
+      ],
+      "triangles": [
+        502116,
+        502116
+      ],
+      "coverage": null,
+      "mae": 4.085480324074074,
+      "changedPixels": 863062
+    },
+    {
+      "biome": "volcanes",
+      "phase": "night",
+      "view": "oblique",
+      "samePose": true,
+      "draws": [
+        68,
+        68
+      ],
+      "triangles": [
+        528331,
+        528331
+      ],
+      "coverage": null,
+      "mae": 4.9104593460648145,
+      "changedPixels": 695489
+    },
+    {
+      "biome": "volcanes",
+      "phase": "night",
+      "view": "reverse",
+      "samePose": true,
+      "draws": [
+        66,
+        66
+      ],
+      "triangles": [
+        437465,
+        437465
+      ],
+      "coverage": null,
+      "mae": 5.557395109953704,
+      "changedPixels": 785688
+    },
+    {
+      "biome": "desierto",
+      "phase": "day",
+      "view": "game",
+      "samePose": true,
+      "draws": [
+        44,
+        44
+      ],
+      "triangles": [
+        221404,
+        221404
+      ],
+      "coverage": null,
+      "mae": 3.6085687934027777,
+      "changedPixels": 623316
+    },
+    {
+      "biome": "desierto",
+      "phase": "day",
+      "view": "oblique",
+      "samePose": true,
+      "draws": [
+        39,
+        39
+      ],
+      "triangles": [
+        207188,
+        207188
+      ],
+      "coverage": null,
+      "mae": 1.6597319878472223,
+      "changedPixels": 344043
+    },
+    {
+      "biome": "desierto",
+      "phase": "day",
+      "view": "reverse",
+      "samePose": true,
+      "draws": [
+        47,
+        47
+      ],
+      "triangles": [
+        225117,
+        225117
+      ],
+      "coverage": null,
+      "mae": 3.332029803240741,
+      "changedPixels": 536180
+    },
+    {
+      "biome": "desierto",
+      "phase": "night",
+      "view": "game",
+      "samePose": true,
+      "draws": [
+        44,
+        44
+      ],
+      "triangles": [
+        221404,
+        221404
+      ],
+      "coverage": null,
+      "mae": 4.383044343171297,
+      "changedPixels": 623691
+    },
+    {
+      "biome": "desierto",
+      "phase": "night",
+      "view": "oblique",
+      "samePose": true,
+      "draws": [
+        39,
+        39
+      ],
+      "triangles": [
+        207188,
+        207188
+      ],
+      "coverage": null,
+      "mae": 1.8779987702546297,
+      "changedPixels": 343576
+    },
+    {
+      "biome": "desierto",
+      "phase": "night",
+      "view": "reverse",
+      "samePose": true,
+      "draws": [
+        47,
+        47
+      ],
+      "triangles": [
+        225117,
+        225117
+      ],
+      "coverage": null,
+      "mae": 3.7125014467592594,
+      "changedPixels": 536685
+    }
+  ]
+}
