@@ -2,7 +2,8 @@ import {chromium} from 'playwright';
 import {mkdir,writeFile,readFile} from 'node:fs/promises';
 
 
-const out='docs/qa/global-visual-lab/desert-aerial-sand/settlement';await mkdir(out,{recursive:true});const records=[];
+const study=process.env.WG_SAND_STUDY??'desert-aerial-sand-normal-only';
+const out=process.env.WG_SAND_OUTPUT??'docs/qa/global-visual-lab/desert-aerial-sand/settlement';await mkdir(out,{recursive:true});const records=[];
 const phases=(process.env.WG_SAND_PHASES??'day,night').split(',');
 if(process.env.WG_SAND_APPEND==='1')records.push(...JSON.parse(await readFile(out+'/captures.json','utf8')).records.filter(r=>!((process.env.WG_COVER_QUALITY??'media,baja').split(',').includes(r.quality)&&phases.includes(r.phase))));
 const browser=await chromium.launch({channel:'chrome',headless:true});
@@ -30,7 +31,7 @@ try{for(const quality of (process.env.WG_COVER_QUALITY??'media,baja').split(',')
 
  await page.evaluate(async()=>{const w=window.qaCampaignWorld;w.controls.target.y=w.nav.field.surface(w.controls.target.x,w.controls.target.z)+.9;const o=w.controls.target.toArray();window.qaSandPath=[[22,16,18],[12,5,18],[-18,9,22]].map(([x,y,z])=>[o[0]+x,Math.max(o[1]+y,w.nav.field.surface(o[0]+x,o[2]+z)+1.2),o[2]+z]);w.camera.position.fromArray(window.qaSandPath[0]);w.syncChunks();await w.whenChunksReady();await w.horizon.whenReady();});
  for(const variant of ['base','candidate']){
-  if(variant==='candidate')await page.evaluate(async()=>{await(await import('/tools/experiments/qa-desert-aerial-sand-normal-only.js')).applyMaterialStudy(window.qaCampaignWorld)});
+  if(variant==='candidate')await page.evaluate(async study=>{await(await import('/tools/experiments/qa-'+study+'.js')).applyMaterialStudy(window.qaCampaignWorld)},study);
   for(const phase of phases){
    const dir=`${out}/${quality}-${variant}-${phase}`;await mkdir(dir,{recursive:true});const frames=[];
    await page.evaluate(async phase=>{const w=window.qaCampaignWorld;w.state.time=phase==='day'?150:350;w.state.day=1;w.camera.position.fromArray(window.qaSandPath[0]);w.syncChunks();await w.horizon.whenReady();w.syncChunks();await w.whenChunksReady();for(const group of w.chunks.values())for(const batch of group.userData.lodBatches??[])batch.key=null;w.render(1/30);await Promise.all([...w.objects.values()].map(o=>o.userData.actorReady).filter(Boolean));for(let i=0;i<12;i++)w.render(1/30)},phase);
@@ -38,7 +39,7 @@ try{for(const quality of (process.env.WG_COVER_QUALITY??'media,baja').split(',')
     const frame=await page.evaluate(async i=>{const w=window.qaCampaignWorld;w.camera.position.fromArray(window.qaSandPath[i]);w.syncChunks();await w.horizon.whenReady();w.syncChunks();await w.whenChunksReady();w.render(1/30);return {i,camera:w.camera.position.toArray(),target:w.controls.target.toArray(),time:w.state.time,glError:w.renderer.getContext().getError(),calls:w.renderer.info.render.calls,triangles:w.renderer.info.render.triangles,data:w.renderer.domElement.toDataURL('image/png').split(',')[1]}},i);
     if(frame.glError)throw Error('WebGL error '+frame.glError);await writeFile(`${dir}/${String(i).padStart(4,'0')}.png`,Buffer.from(frame.data,'base64'));delete frame.data;frames.push(frame);
    }
-   if(errors.length)throw Error(errors.join('\n'));records.push({quality,variant,phase,initialLodReset:true,frames,errors:[...errors]});await writeFile(out+'/captures.json',JSON.stringify({seed:712,resolution:[1280,720],views:['game','oblique','reverse'],note:'Real paused campaign settlement, seed 712; identical poses and visual time, settled chunks. Static artistic review, not a performance benchmark.',records},null,2)+'\n');console.log(quality,variant,phase,'captured');
+   if(errors.length)throw Error(errors.join('\n'));records.push({quality,variant,phase,initialLodReset:true,frames,errors:[...errors]});await writeFile(out+'/captures.json',JSON.stringify({study,seed:712,resolution:[1280,720],views:['game','oblique','reverse'],note:'Real paused campaign settlement, seed 712; identical poses and visual time, settled chunks. Static artistic review, not a performance benchmark.',records},null,2)+'\n');console.log(quality,variant,phase,'captured');
   }
  }
  await page.close();

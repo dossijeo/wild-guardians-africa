@@ -284,3 +284,8 @@ El [relleno cálido de suelo en sombra del Cañón](canyon-warm-floor/README.md)
 ## Arena junto al poblado inicial
 
 [Revisión de asentamiento](desert-aerial-sand/settlement/README.md): 24 capturas reales media/baja y día/noche, 12 parejas con cámara/hora/geometría iguales y sin errores. El volumen se aprecia entre edificios y conserva calidez; aparece un borde de camino más dentado en la vista normal. Antes de promover, aislar desgaste/máscara/iluminación en ese borde. No se repite rendimiento ni se integra la candidata; presupuesto media/noche y calidad global siguen pendientes.
+
+
+## Arena seca: causa de la franja y corrección localizada
+
+[Ablación](desert-aerial-sand/edge-ablation/README.md): 72 capturas comparables aíslan la franja dentada en la banda especular, no obligan a cambiar desgaste ni borrar normales. [Candidata seca](desert-aerial-sand/dry-specular/README.md): factor especular por suavidad al cuadrado, 24 capturas; ocho de doce vistas idénticas a normal-only y cuatro eliminan la franja conservando relieve. Sin geometría/pasadas nuevas; no hay aprobación temporal de coste. Mantener QA, pendiente movimiento y presupuesto acumulado; calidad global abierta.

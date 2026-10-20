@@ -1,6 +1,6 @@
 import {readFile,writeFile} from 'node:fs/promises';
 import sharp from 'sharp';
-const root='docs/qa/global-visual-lab/desert-aerial-sand/settlement';
+const root=process.env.WG_SAND_OUTPUT??'docs/qa/global-visual-lab/desert-aerial-sand/settlement';
 const report=JSON.parse(await readFile(root+'/captures.json','utf8')),pairs=[];
 for(const quality of ['media','baja'])for(const phase of ['day','night']){
  const a=report.records.find(r=>r.quality===quality&&r.phase===phase&&r.variant==='base');
