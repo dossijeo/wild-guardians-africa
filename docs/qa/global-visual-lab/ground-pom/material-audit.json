@@ -1,0 +1,120 @@
+{
+  "tileMetres": 6.451612903225807,
+  "texelMetres": 0.006300403225806452,
+  "heightMetres": 0.075,
+  "sun": [
+    -0.804501724269551,
+    0.5101718251465446,
+    0.30414089576044007
+  ],
+  "uvSun": [
+    -0.5361371754666632,
+    0.8441308720113418
+  ],
+  "sunSlope": 0.5931730451971592,
+  "horizonRadiusMetres": 0.20161290322580647,
+  "heightNormalGradientCorrelation": {
+    "1": 0.003254866205560376,
+    "0": -0.0049859261014691715
+  },
+  "maps": {
+    "base": {
+      "path": "public\\assets\\fcd30bb609c499813ca0615ffdb64dfbbc7213eb416a974da6188ce545683ddc.webp",
+      "sha256": "fcd30bb609c499813ca0615ffdb64dfbbc7213eb416a974da6188ce545683ddc",
+      "size": [
+        1024,
+        1024,
+        3
+      ],
+      "bytes": 572164
+    },
+    "normal": {
+      "path": "public\\assets\\53b89cf6d0c9e5f09da189626d86fccb5d84c3742d465534e4c2205dc39e3122.png",
+      "sha256": "53b89cf6d0c9e5f09da189626d86fccb5d84c3742d465534e4c2205dc39e3122",
+      "size": [
+        1024,
+        1024,
+        3
+      ],
+      "bytes": 2590216
+    },
+    "arh": {
+      "path": "public\\assets\\6c61d4c1c8f58c9d3a12e72e17683197710f5088513285a68bb054d181dd138e.png",
+      "sha256": "6c61d4c1c8f58c9d3a12e72e17683197710f5088513285a68bb054d181dd138e",
+      "size": [
+        1024,
+        1024,
+        3
+      ],
+      "bytes": 1562487
+    },
+    "coherent-arh.png": {
+      "sha256": "b8ea757e7cfe33831a991568e827e7a3458224585272de32ef715952a126b8f1",
+      "bytes": 1798528,
+      "rgbaMipBytesEstimate": 5592405.333333333
+    },
+    "coherent-normal.png": {
+      "sha256": "d4bb7e5903ff8329e514888b137a7f43bb851f45b1fa81cad2a9b1df2100f6cf",
+      "bytes": 2608873,
+      "rgbaMipBytesEstimate": 5592405.333333333
+    },
+    "coherent-visibility.png": {
+      "sha256": "1fe6a805f2a0835519396371ca22610320585db0e4e3cdfa5d8829fac9c8283f",
+      "bytes": 1463686,
+      "rgbaMipBytesEstimate": 5592405.333333333
+    },
+    "original-visibility.png": {
+      "sha256": "3a9bd427721d56339ae577287407ddeadba33bb8f12c091df87c6ea805baefe0",
+      "bytes": 1015466,
+      "rgbaMipBytesEstimate": 5592405.333333333
+    },
+    "structured-arh.png": {
+      "sha256": "0ae19633f49c5b9b5cd3dbea66be84c81c2c0a8078aeb1bb4ca23bdd548acd50",
+      "bytes": 1498634,
+      "rgbaMipBytesEstimate": 5592405.333333333
+    },
+    "structured-normal.png": {
+      "sha256": "3b1ef1f0c74bbc5eeddb2c4c550f83c38c51bcb403ec59b08836d7af42e71fe6",
+      "bytes": 1706667,
+      "rgbaMipBytesEstimate": 5592405.333333333
+    },
+    "structured-visibility.png": {
+      "sha256": "45495184e176927a5ecf996c2034f81b093543157688baf4345be5c0b466c175",
+      "bytes": 546324,
+      "rgbaMipBytesEstimate": 5592405.333333333
+    }
+  },
+  "bakes": {
+    "original": {
+      "heightPercentiles": [
+        0.24705882352941178,
+        0.7254901960784313,
+        0.8588235294117647
+      ],
+      "aoMean": 0.9281169436512521,
+      "solarVisibilityMean": 0.9044207188685484,
+      "shadowedFraction": 0.09520339965820312
+    },
+    "coherent": {
+      "heightPercentiles": [
+        3.2468913662102476e-06,
+        0.5177811423208798,
+        0.9999999283911124
+      ],
+      "aoMean": 0.8168919019542084,
+      "solarVisibilityMean": 0.7280436327493246,
+      "shadowedFraction": 0.2711601257324219
+    },
+    "structured": {
+      "heightPercentiles": [
+        0.04886202692341609,
+        0.5692084181930455,
+        0.9577427717560676
+      ],
+      "aoMean": 0.9846117337249694,
+      "solarVisibilityMean": 0.9992438049077286,
+      "shadowedFraction": 0.0006685256958007812
+    }
+  },
+  "note": "Runtime original assets embedded by Bioma_Lab_V4_1_10_3_Manglar_Barro_Humedo.html. Official-source identity not proven by the material label. Coherent variant is a luminance-height hypothesis, not measured physical displacement."
+}

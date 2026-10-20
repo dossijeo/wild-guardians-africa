@@ -196,3 +196,11 @@ Se conserva [la rampa de luz suavizada](desert-soft-light/README.md), con [integ
 ## Control de repetibilidad GPU (20/10)
 
 [Grass repeatability](grass-repeatability/README.md): 32 bloques/5.760 muestras en Canon, A/A identico y ABBA BAAB de 192/128, dia/noche. Camara, matrices, cantidades y contadores invariantes en A/A; aun asi, rango entre bloques 2,135 ms dia/1,209 noche. La diferencia 128-192 cambia de signo respecto al pase previo (-0,171 dia/+0,548 noche). No demuestra ahorro ni lentitud intrinseca de 128. Informe anterior matizado. Siguiente ensayo: aislar recepcion de sombras en matas manteniendo modelo y cantidad, con controles y orden inverso; no usar un unico delta pequeno como veto o aprobacion. Calidad global y presupuesto acumulado pendientes.
+
+## Relieve del suelo sin geometría: Sabana (20/10)
+
+La petición posterior del usuario limita este pase al material del suelo; quedan en pausa los ensayos de sombras de matas y toda geometría adicional. [Ground POM](ground-pom/README.md) compara A original, B continua (equivalente: Sabana ya usa iluminación continua), C POM refinado y D microoclusión precalculada. Añade dos hipótesis de altura coherente E/F como diagnósticos descartados.
+
+56 capturas verificadas, ocho clips de cámara, 9.600 muestras GPU en Intel UHD, calidades media/baja y día/noche. A/B y vuelta A2 idénticos; geometría, draw calls y entidades invariantes. La visibilidad solar forzada no altera un solo píxel nocturno. Contadores de shader: 3,615 lecturas de altura por fragmento de suelo cercano en A frente a 5,951 en C/D. GPU cercana diurna/media: 14,332 ms A; 16,340 C; 15,692 D; existe deriva entre controles idénticos.
+
+**No integrar ni extender a otros biomas:** C reduce el escalonado, pero D no alcanza las acumulaciones del mockup. E parece moldeado y F pierde fibras. Hay un indicio fuerte de incoherencia entre altura y normales y no está demostrada la procedencia física del ARH adaptado. Hace falta un conjunto de mapas coherente antes de aumentar muestras o amplitud. Solo se publican herramientas, mapas QA y evidencia; comportamiento por defecto intacto. El objetivo global de calidad sigue sin alcanzarse.
