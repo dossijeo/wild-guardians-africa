@@ -28,3 +28,7 @@ Reproducir capturas con `capture-campaign-grass.mjs`, WG_GRASS_STUDY=grass-budge
 Siguiente hipotesis: aislar el coste del material y de recibir sombras en las matas, comparando el mismo numero de instancias, antes de recortar mas cobertura. Es una hipotesis pendiente, no una causa establecida por estos datos. No hay cambios de produccion ni aprobacion de calidad global.
 
 Antes de atribuir diferencias pequenas al siguiente shader, incluir control A/A (mismo estado en ambos bloques) y orden inverso/repetido: esta ronda muestra suficiente variacion para no usar un solo ABBA como umbral absoluto de promocion. El resultado no prueba que reducir instancias sea intrinsecamente mas lento en cualquier equipo.
+
+## Repeticion posterior con control identico
+
+[Grass repeatability](../grass-repeatability/README.md) incluye A/A y ABBA BAAB en Canon. El signo de los resultados dia/noche cambia respecto a esta ronda; el control identico tambien varia. Por tanto, las tres diferencias diurnas de esta tabla describen aquella ejecucion, no prueban que 128 sea intrinsecamente mas lento. No hay ahorro estable demostrado; mantener ambos limites como opciones QA.
