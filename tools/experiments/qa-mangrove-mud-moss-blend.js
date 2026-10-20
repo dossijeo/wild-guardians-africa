@@ -49,11 +49,23 @@ export function applyMaterialStudy(world,options={}){
      groundColor=mix(groundColor,mudBase,mudWeight);toonN=normalize(mix(toonN,mudWorldN,mudWeight));groundRough=mix(groundRough,max(.30,mudPacked.g*.52),mudWeight);materialAO410=mix(materialAO410,mudPacked.r,mudWeight);
    `+anchor);
   };
-  material.customProgramCacheKey=()=>key.call(material)+'|qa-mud-moss-blend-v1';material.needsUpdate=true;mud.material=material;
+  if(options.toonInterior){const previous=material.onBeforeCompile;material.onBeforeCompile=function(shader,renderer){previous.call(this,shader,renderer);
+   const anchor='#include <opaque_fragment>';if(!shader.fragmentShader.includes(anchor))throw Error('Mud interior output anchor missing');
+   shader.fragmentShader=shader.fragmentShader.replace(anchor,`
+    vec3 qaMudAlbedo=texture2D(uQAMudBase,vQAMudUV).rgb*vec3(.58,.61,.64);
+    float qaMudRough=max(.04,mudPacked.g*.52);
+    float qaMudLeaf=smoothstep(.018,.13,qaMudAlbedo.g-qaMudAlbedo.r*.87)*smoothstep(.06,.20,qaMudAlbedo.g);
+    vec3 qaMudReflection=uNativeEnvEnabled>.5?environment4(reflect(-toonV,mudWorldN),qaMudRough):vec3(0.);
+    vec3 qaMudToon=toLinear4(africanToon4(vec3(0.),qaMudAlbedo,mudWorldN,toonV,uLightDir,qaMudReflection,qaMudRough,groundVisibility,qaMudLeaf,0.,0.,max(dot(mudWorldN,toonV),0.),worldPatternPosition(vToonWorld)));
+    outgoingLight=mix(outgoingLight,qaMudToon,mudWeight);
+   `+anchor);
+  };}
+  if(options.matte){const previous=material.onBeforeCompile;material.onBeforeCompile=function(shader,renderer){previous.call(this,shader,renderer);const from='max(.30,mudPacked.g*.52)';if(!shader.fragmentShader.includes(from))throw Error('Mud roughness anchor missing');shader.fragmentShader=shader.fragmentShader.replace(from,'mix(.78,.95,mudPacked.g)');};}
+  material.customProgramCacheKey=()=>key.call(material)+'|qa-mud-moss-blend-v1|'+Boolean(options.matte)+'|'+Boolean(options.toonInterior);material.needsUpdate=true;mud.material=material;
   const binding={mud,old,material,oldNormal};bindings.push(binding);g.addEventListener('dispose',()=>{const i=bindings.indexOf(binding);if(i>=0){bindings.splice(i,1);old.dispose()}});const ms=performance.now()-start;buildMs+=ms;builds.push({origin:[...origin],vertices:p.count,uniqueVertices:uniqueVertices-beforeUnique,cacheHits:cacheHits-beforeHits,ms});
  }
  for(const group of world.chunks.values())bind(group);
  const terrain=world.terrain;world.terrain=function(...args){const group=terrain.apply(this,args);bind(group);return group};
- const audit=()=>({bound:bindings.length,attributeBytes,buildMs,cache:options.cache!==false,cacheHits,uniqueVertices,segmentTests,builds:[...builds],newTriangles:0,newDrawCalls:0,extraSamplers:3});
+ const audit=()=>({toonInterior:!!options.toonInterior,matte:!!options.matte,bound:bindings.length,attributeBytes,buildMs,cache:options.cache!==false,cacheHits,uniqueVertices,segmentTests,builds:[...builds],newTriangles:0,newDrawCalls:0,extraSamplers:3});
  world.qaMudBlend={audit};return audit();
 }

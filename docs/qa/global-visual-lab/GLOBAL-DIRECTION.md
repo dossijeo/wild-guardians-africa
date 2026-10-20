@@ -338,3 +338,8 @@ El [relleno cálido de suelo en sombra del Cañón](canyon-warm-floor/README.md)
 ## Manglares: preparación reutilizada
 
 [Caché y búsqueda acotada](mangrove-mud-moss-pruned/README.md): evita89977 evaluaciones repetidas inicialmente; preparación observada158–179ms frente423–460ms, sin atribuir toda diferencia a algoritmo. Once de doce capturas idénticas; cuatro píxeles residuales en una vista. Sigue QA; siguiente puerta visual: separar transición de aclarado/brillo interior antes de GPU/lifecycle.
+
+
+## Manglares: conservar identidad del barro
+
+[Control mate](mangrove-mud-moss-matte/README.md) reduce destellos pero no resuelve el aclarado. [Interior toon](mangrove-mud-moss-toon-interior/README.md) conserva respuesta estilizada hacia dentro y mezcla con suelo en borde; recupera color terroso sin cortar transición. 48 capturas entre ambos ensayos,24 parejas coincidentes en cámara/geometría, sin errores. Elegir interior toon para coste/movimiento; pendiente reutilizar lectura duplicada, GPU y lifecycle. No integrado.
