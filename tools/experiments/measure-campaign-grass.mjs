@@ -21,6 +21,7 @@ try{for(const biome of (process.env.WG_GRASS_BIOMES??'sabana,gran-rio').split(',
 
  await page.evaluate(()=>{const w=window.qaCampaignWorld,update=w.materialRegistry.update.bind(w.materialRegistry);w.materialRegistry.update=()=>update(0)});
  const selected=variant==='candidate'?study:process.env.WG_GRASS_BASELINE;if(selected)await page.evaluate(async study=>{const {applyMaterialStudy}=await import('/tools/experiments/qa-'+study+'.js');await applyMaterialStudy(window.qaCampaignWorld)},selected);
+ if(process.env.WG_CAMPAIGN_TARGET_OFFSET){const offset=process.env.WG_CAMPAIGN_TARGET_OFFSET.split(',').map(Number);if(offset.length!==2||offset.some(v=>!Number.isFinite(v)))throw Error('WG_CAMPAIGN_TARGET_OFFSET requires x,z');await page.evaluate(([x,z])=>{const w=window.qaCampaignWorld;w.controls.target.x+=x;w.controls.target.z+=z;w.controls.target.y=w.nav.field.surface(w.controls.target.x,w.controls.target.z)+.9;},offset);}
  await page.evaluate(async()=>{const w=window.qaCampaignWorld;w.camera.position.copy(w.controls.target).add({x:22,y:16,z:18});w.syncChunks();await w.horizon.whenReady();w.syncChunks();await w.whenChunksReady();});
  for(const phase of ['day','night']){
   await page.evaluate(phase=>{window.qaCampaignWorld.state.time=phase==='day'?150:350},phase);await page.waitForTimeout(1000);
