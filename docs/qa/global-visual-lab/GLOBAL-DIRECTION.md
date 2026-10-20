@@ -396,3 +396,8 @@ El piloto de fundido con impostores detectó que la campaña actual usa sesión 
 ### Descartada la profundidad compartida del fundido cercano
 
 La [prueba transparente controlada](obstruction-transparent-probe/README.md) confirma oclusión opaca de elementos detrás de objetos parcialmente desvanecidos: 25.431 píxeles del marcador quedan totalmente bloqueados por los auxiliares. No promover la candidata de superficie cercana; esta decisión sustituye su recomendación provisional anterior. Resolverlo necesita composición/profundidad aislada y medición adicional, no solo quitar el tramado. El renderer original permanece intacto.
+
+
+### Volcanes: ceniza por zonas
+
+[Depósitos visuales de ceniza](volcanic-ash-pilot/README.md): 24 capturas, 12 parejas con geometría idéntica, y 8 bloques ABBA en Intel UHD. La separación de zonas suaves/rocosas mejora la variedad a distancia de juego; conservar como dirección QA, sin promover todavía. GPU diurna +~1 ms en medias agregadas, con solapamiento entre bloques. Pendientes menor coste, movimiento y streaming; no se añaden texturas, geometría ni draw calls.
