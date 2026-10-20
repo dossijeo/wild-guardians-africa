@@ -347,3 +347,7 @@ El [relleno cálido de suelo en sombra del Cañón](canyon-warm-floor/README.md)
 ## Manglares: ciclo QA y optimización descartada
 
 Recorrido, descarga y normal única documentados en [motion](mangrove-mud-moss-toon-interior/motion/README.md) y [streaming](mangrove-mud-moss-toon-interior/streaming/README.md). La [rama de iluminación interior](mangrove-mud-moss-interior-branch/README.md) conserva doce capturas exactas, pero32 bloques no demuestran ahorro consistente: descartada. Mantener mezcla anterior solo QA; volver al corte de cobertura y color en Gran Río antes de nuevas micropruebas de barro. Calidad global aún no acreditada.
+
+## Presupuesto conjunto: no promover todavía
+
+La [revisión V2](combined-campaign-review-v2/README.md) reúne las candidatas de Río, Manglares y Cañón en seis biomas y dos calidades. El [benchmark en campaña baja](combined-campaign-budget/README.md) completa48 bloques ABBA,5.760 muestras GPU y8.640 frames de cadencia, con paridad de cámara/geometría y sin errores registrados. Manglares presenta una señal de mayor coste; Sabana ya excede el presupuesto de16,7ms en varios bloques. Los controles sin cambios también fluctúan sustancialmente: no atribuir cada delta al material ni anunciar aceleraciones. Mantener candidatas QA, inicio original intacto. Siguiente prioridad: reducir coste de cobertura de Sabana conservando continuidad visual y simplificar mezcla de Manglares; no repetir esta serie sin una hipótesis nueva.
