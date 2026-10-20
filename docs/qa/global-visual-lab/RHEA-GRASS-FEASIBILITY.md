@@ -1,5 +1,7 @@
 # RheaGrass: viabilidad para Wild Guardians
 
+> Actualización de alcance (20/10/2026): la investigación prioritaria es ahora una **cubierta herbácea continua** en Sabana, no matas decorativas dispersas. La propuesta histórica de reutilizar pocas matas queda sustituida por el [objetivo vigente de cobertura A/B/C](continuous-grass/OBJECTIVE.md). El usuario permite estudiar cards con cutout si aportan una alternativa real; no se mantiene una prohibición general de esa representación. Las conclusiones anteriores se conservan como historial, no como criterio de éxito del nuevo ensayo.
+
 Investigación de código, 2026-10-20. Rama `codex/global-visual-lab`. RheaGrass inspeccionado en `bdf2dd4cbed87e496cc289c1bb20ee6245259a18`; Wild Guardians en `ab104764` con experimentos locales pendientes. No se ha ejecutado Unity ni implementado o medido un port. El ensayo de materiales queda separado; sus capturas L terminaron sin errores.
 
 ## Dictamen

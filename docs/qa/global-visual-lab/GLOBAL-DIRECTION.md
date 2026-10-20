@@ -1,5 +1,7 @@
 # Decisión de dirección global
 
+> Actualización de alcance (20/10/2026): la investigación prioritaria es ahora una **cubierta herbácea continua** en Sabana, no matas decorativas dispersas. La propuesta histórica de reutilizar pocas matas queda sustituida por el [objetivo vigente de cobertura A/B/C](continuous-grass/OBJECTIVE.md). El usuario permite estudiar cards con cutout si aportan una alternativa real; no se mantiene una prohibición general de esa representación. Las conclusiones anteriores se conservan como historial, no como criterio de éxito del nuevo ensayo.
+
 Estado: 19 de octubre de 2026, rama experimental `codex/global-visual-lab`. Referencias: seis mockups proporcionados y capturas del renderer real. No se integra en main ni cambia la opción por defecto.
 
 ## Alcance y pausa del atlas
@@ -232,3 +234,7 @@ La petición posterior del usuario limita este pase al material del suelo; queda
 ### Máscara por altura en bases de hierba (20/10)
 
 [Native grass root mask](native-grass-root-mask/README.md): una sola componente conectada en el recurso; la máscara anterior excluía bordes inclinados y cian clasificado como follaje. La transición local 0,025–0,055 integra mejor la peana conservando geometría, pero tiñe raíces/piedras bajas. Dieciséis capturas con cuatro retornos exactos, cuatro clips y 5.760 muestras GPU. Candidato QA sin aprobar coste: dos condiciones superan +5% frente al original. Cerrar por ahora la iteración de este recurso y volver a suelo/vegetación a escala global en Gran Río y Cañón. No extender automáticamente los umbrales ni declarar alcanzada la calidad global.
+
+## Cubierta continua de Sabana — 20/10/2026
+
+El [piloto A/B/C](continuous-grass/README.md) sustituye la prioridad de matas aisladas. La cobertura opaca instanciada forma franjas continuas con viento y LOD, preservando los modelos originales. C media añade 212.704 triángulos y dos draws en cámara normal; C baja híbrida, 36.960 y un draw. Se entregan 48 capturas/control, dos vídeos, 8.640 muestras GPU Intel UHD, overdraw, memoria y streaming. Se conserva como candidato QA, sin opción por defecto ni extensión a otros biomas: todavía falta finura/agrupación orgánica comparable a la referencia y amortizar la activación. No fusionar.
