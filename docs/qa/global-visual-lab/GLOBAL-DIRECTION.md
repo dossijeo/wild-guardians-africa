@@ -250,3 +250,12 @@ La cobertura de Sabana conserva el viento 8× aprobado. Gran Río dispone de [co
 En Gran Cañón, [textura al pie de pared](canyon-wall-foot/README.md) elimina una franja lisa, pero no mejora suficientemente el volumen global. Dieciséis capturas, ocho pares con cámara/entidades/draws/triángulos iguales y sin errores GL registrados. No integrar ni realizar otro barrido de intensidades; conservar evidencia. La primera cámara normal atravesaba una pared y se reemplazó antes de publicar. No se modifica geometría para imitar el mockup.
 
 La calidad global continúa pendiente. Evitar confundir continuidad local de material o diferencias de píxeles con la estructura de masas y separación de planos de las referencias.
+
+
+## Estado posterior: paleta del Cañón y materiales de Manglares/Desierto
+
+El [relleno cálido de suelo en sombra del Cañón](canyon-warm-floor/README.md) se conserva como candidato QA reversible, con [comprobación de streaming](canyon-warm-floor/streaming/README.md), sin aprobar presupuesto global. La [revisión interactiva](global-candidate-review/README.md) reúne Sabana, Gran Río y Cañón; las coberturas mantienen viento 8× y no activan las variantes de LOD de coste incierto.
+
+[Mangrove damp moss](mangrove-damp-moss/README.md) queda descartado: la máscara húmeda selecciona una región limitada y no aporta volumen apreciable. Se conservan Moss002 puro y barro independiente.
+
+[Desierto: radiancia continua](desert-continuous-radiance/README.md) también se descarta como receta: 24 capturas de campaña y doce parejas verificadas muestran pérdida de dorado y facetas amplias persistentes. El diagnóstico confirma que la salida toon ordinaria de arena no consume la radiancia `lit` calculada previamente; no atribuirle mejoras por cambios en esa BRDF sin verificar la salida final. Mantener la rampa suavizada integrada. Sin benchmark temporal de esta receta rechazada; no repetir barridos de intensidad ni confundir cambio cromático con relieve. Calidad global pendiente.
