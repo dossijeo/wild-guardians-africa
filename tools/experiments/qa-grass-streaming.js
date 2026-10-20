@@ -5,7 +5,8 @@ import {footprintDistance} from '/src/world/footprints.js';
 import {residentWearSampler} from './qa-ground-detail-mask.js';
 import {hashCell} from '/src/world/terrain.js';
 // QA only: stable authored islands, visibility budget, no simulation membership.
-export async function applyMaterialStudy(world,{assetPath='/assets/visual-lab/grass-clumps.glb',profiles=null,naturalGroups=false}={}){
+export async function applyMaterialStudy(world,{assetPath='/assets/visual-lab/grass-clumps.glb',profiles=null,naturalGroups=false,maxVisible=192}={}){
+ if(!Number.isInteger(maxVisible)||maxVisible<1||maxVisible>192)throw Error('Invalid grass visibility budget');
  const profile=profiles?.[world.state.biome]??(profiles?null:({'sabana':{color:[1,1,1]},'gran-rio':{color:[.42,1,.55]}}[world.state.biome]));
  if(!profile)return {control:true};
  const gltf=await world.assets.model(assetPath);
@@ -42,15 +43,16 @@ export async function applyMaterialStudy(world,{assetPath='/assets/visual-lab/gr
   }
  return candidates;
  };
- d.mesh=new THREE.InstancedMesh(d.geometry,d.material,192);d.mesh.name='qa-visible-grass-clumps';d.mesh.count=0;d.mesh.receiveShadow=true;d.mesh.frustumCulled=false;world.scene.add(d.mesh);
+ d.mesh=new THREE.InstancedMesh(d.geometry,d.material,maxVisible);d.mesh.name='qa-visible-grass-clumps';d.mesh.count=0;d.mesh.receiveShadow=true;d.mesh.frustumCulled=false;world.scene.add(d.mesh);
  let revision=0,candidates=[];
  d.sampleChunk=(cx,cz)=>sample(cx,cz);
  d.rebuild=()=>{candidates=[...d.chunks.values()].flat();revision++;};
- world.groundDetails.dispose();world.groundDetails=d;d.maxVisible=192;
+ world.groundDetails.dispose();world.groundDetails=d;d.maxVisible=maxVisible;
  for(const key of world.chunks.keys()){const [cx,cz]=key.split(',').map(Number);d.chunk(cx,cz,field,state);}
  d.releaseEvents=observeGameEvents(state,event=>markGroundDetailEvent(d,state,event,id=>world.objects.get(id)?.position));
  const old=world.scene.onBeforeRender,frustum=new THREE.Frustum(),vp=new THREE.Matrix4(),sphere=new THREE.Sphere(new THREE.Vector3(),1.2),dummy=new THREE.Object3D();
  const active=new Map();let signature='',desired=new Map(),last=performance.now(),first=true;
+ d.qaSetBudget=value=>{if(!Number.isInteger(value)||value<1||value>maxVisible)throw Error('Grass budget exceeds allocated capacity');d.maxVisible=value;signature='';};
  const id=p=>p.x+','+p.z;
  const hook=function(...args){
   old?.apply(this,args);const camera=world.camera,now=performance.now(),dt=Math.min(.05,(now-last)/1000);last=now;
@@ -67,16 +69,16 @@ export async function applyMaterialStudy(world,{assetPath='/assets/visual-lab/gr
     visible.push({key,p,score});
    }
    visible.sort((a,b)=>a.score-b.score);
-   desired=new Map(visible.slice(0,192).map(({key,p})=>[key,p]));
+   desired=new Map(visible.slice(0,d.maxVisible).map(({key,p})=>[key,p]));
   }
   let changed=false;
   for(const [key,item] of active){const next=Math.max(0,Math.min(1,item.scale+(desired.has(key)?1:-1)*dt/.3));changed||=next!==item.scale;item.scale=next;if(next===0&&!desired.has(key))active.delete(key);}
-  for(const [key,p] of desired){if(active.size>=192)break;if(!active.has(key)){active.set(key,{p,scale:first?1:0});changed=true;}}
+  for(const [key,p] of desired){if(active.size>=d.maxVisible)break;if(!active.has(key)){active.set(key,{p,scale:first?1:0});changed=true;}}
   if(changed||first){let i=0;for(const {p,scale} of active.values()){dummy.position.set(p.x,p.y,p.z);dummy.rotation.y=p.bits/4294967296*Math.PI*2;const smooth=scale*scale*(3-2*scale);dummy.scale.setScalar((profile.scale??1)*(.85+((p.bits>>>14)&63)/63*.3)*smooth);dummy.updateMatrix();d.mesh.setMatrixAt(i++,dummy.matrix);}d.mesh.count=d.count=active.size;d.mesh.instanceMatrix.needsUpdate=true;}
   first=false;d.qaActive=[...active].map(([key,v])=>({id:key,scale:v.scale}));
  };
  world.scene.onBeforeRender=hook;
  const dispose=d.dispose.bind(d);let disposed=false;
  d.dispose=()=>{if(disposed)return;disposed=true;if(world.scene.onBeforeRender===hook)world.scene.onBeforeRender=old;dispose();d.geometry.dispose();d.material.dispose();active.clear();desired.clear();};
- return {profile,naturalGroups,maxVisible:192,trianglesPerInstance:(d.geometry.index?.count??d.geometry.attributes.position.count)/3,transitionSeconds:.3,hysteresisMeters:4,streaming:true,occupancyEvents:true,limitations:'QA only; scale transitions, no LOD; long traversal and production integration pending'};
+ return {profile,naturalGroups,maxVisible,trianglesPerInstance:(d.geometry.index?.count??d.geometry.attributes.position.count)/3,transitionSeconds:.3,hysteresisMeters:4,streaming:true,occupancyEvents:true,limitations:'QA only; scale transitions, no LOD; long traversal and production integration pending'};
 }
