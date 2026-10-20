@@ -1,0 +1,22 @@
+# Mobile worker recovery: event-gate experiment (20 October 2026)
+
+The current `walkTo()` fallback can ignore mobile bodies for three simulated seconds after either three seconds of stationary blockage or twelve seconds without getting closer to the final destination. The second trigger also fires while a worker is following a valid detour that temporarily moves away from its destination. In the nine-night Wild Engine probe, 18 of 24 worker recovery events occurred with `dynamicStallSeconds < 3`; at day 9, time 115, worker `worker-7088` moved roughly one metre during the tick that started its phase and then overlapped `worker-7072` by 0.331 m. Of 12 work-period overlap pairs in that nine-night run, 11 involved a phased worker.
+
+Two small alternatives were tested against `main` `1c08716cc` on Sabana/Mapungubwe/712, 14 nights, `good` strategy, Wild Engine navigation and native intentions. They changed only the recovery trigger in `src/simulation/game.js`. The production `spatial-savanna.wasm` SHA-256 was `0d2901425c9d16fa38cdafc916680d3086c1b18f6730a0bfc584f6b1315d817d` throughout.
+
+| Variant | Recovery change | Money | Living crops | Deliveries | Recovery events | Overlap ticks after 3 s | Work-period overlap pairs | `Game.tick` sum |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Baseline | Existing stationary **or** no-progress trigger | 899 | 145 | 1,317 | 164 | 48 | 43 | 64.51 s |
+| Stall only | For workers, require `dynamicStallSeconds >= 3`; keep animal trigger | 773 | 133 | 1,257 | 40 | 17 | 9 | 82.35 s |
+| Pre-phase reroute | On a moving worker's no-progress trigger, call `prepareActorMotion()` before phasing; skip that phase only if it replaces the path | 852 | 110 | 1,256 | 61 | 33 | 42 | 71.45 s |
+
+All three runs completed 14 nights without a game result. Both variants passed 52 directed actor-motion, worker-routing and raid-retreat tests. Neither is suitable for integration: the stall-only rule loses 60 deliveries and 126 coins, while the extra reroute loses 61 deliveries and leaves almost the same work-period body overlap count. The three CPU figures are single runs on a shared host with different trajectories and entity counts; they do not establish an algorithmic speedup or slowdown.
+
+Reproduce the baseline on that commit with:
+
+```sh
+node tools/experiments/probe-worker-overlaps.mjs 14 712 good sabana mapungubwe wild-engine
+node tools/experiments/probe-worker-recovery-context.mjs 9 712 wild-engine
+```
+
+The exact experimental diffs are [stall only](worker-recovery-stall-only.patch) and [pre-phase reroute](worker-recovery-prephase-reroute.patch). `git apply --check` succeeds for each against `1c08716cc`; apply only one at a time in an isolated checkout, run the probe, then discard that patch before trying the other. Neither variant remains in production code. A future solution needs physical traffic management at the actual blocker, including a safe passing/yield point or a queued passage, while retaining task throughput. It must also treat the overlapping workers initially emitted at the village entrance separately from work-period traffic. It should be checked against worker-worker and worker-animal blocks, saved routes, and complete campaign outcomes; reducing overlap counts alone is insufficient.
