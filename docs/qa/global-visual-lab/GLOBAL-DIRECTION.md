@@ -1,123 +1,123 @@
-# Decisión de dirección global
+# DecisiÃ³n de direcciÃ³n global
 
-> Actualización de alcance (20/10/2026): la investigación prioritaria es ahora una **cubierta herbácea continua** en Sabana, no matas decorativas dispersas. La propuesta histórica de reutilizar pocas matas queda sustituida por el [objetivo vigente de cobertura A/B/C](continuous-grass/OBJECTIVE.md). El usuario permite estudiar cards con cutout si aportan una alternativa real; no se mantiene una prohibición general de esa representación. Las conclusiones anteriores se conservan como historial, no como criterio de éxito del nuevo ensayo.
+> ActualizaciÃ³n de alcance (20/10/2026): la investigaciÃ³n prioritaria es ahora una **cubierta herbÃ¡cea continua** en Sabana, no matas decorativas dispersas. La propuesta histÃ³rica de reutilizar pocas matas queda sustituida por el [objetivo vigente de cobertura A/B/C](continuous-grass/OBJECTIVE.md). El usuario permite estudiar cards con cutout si aportan una alternativa real; no se mantiene una prohibiciÃ³n general de esa representaciÃ³n. Las conclusiones anteriores se conservan como historial, no como criterio de Ã©xito del nuevo ensayo.
 
-Estado: 19 de octubre de 2026, rama experimental `codex/global-visual-lab`. Referencias: seis mockups proporcionados y capturas del renderer real. No se integra en main ni cambia la opción por defecto.
+Estado: 19 de octubre de 2026, rama experimental `codex/global-visual-lab`. Referencias: seis mockups proporcionados y capturas del renderer real. No se integra en main ni cambia la opciÃ³n por defecto.
 
 ## Alcance y pausa del atlas
 
-La prioridad es la escena completa: iluminación, integración de suelo/objetos, lectura de volumen y vegetación desde cámara normal. **Quedan en pausa el retoque minucioso del atlas del taller y su automatización.** Se conservan sus variantes, archivos fuente, comparaciones y límites; no se revierten ni se presentan como acabadas. Solo se retomarán cuando exista una dirección global visualmente convincente y con coste aceptable.
+La prioridad es la escena completa: iluminaciÃ³n, integraciÃ³n de suelo/objetos, lectura de volumen y vegetaciÃ³n desde cÃ¡mara normal. **Quedan en pausa el retoque minucioso del atlas del taller y su automatizaciÃ³n.** Se conservan sus variantes, archivos fuente, comparaciones y lÃ­mites; no se revierten ni se presentan como acabadas. Solo se retomarÃ¡n cuando exista una direcciÃ³n global visualmente convincente y con coste aceptable.
 
-## Primera comparación y variante elegida para continuar
+## Primera comparaciÃ³n y variante elegida para continuar
 
-La dirección con mejor relación entre impacto visible y coste es **el relleno diurno del suelo y la lectura de sombras proyectadas**. El ensayo demuestra que parte del aspecto plano procede del relleno del suelo, más claro que el de los props. Cambiar ese relleno recupera sombras amplias sin geometría, atlas, texturas o draw calls adicionales.
+La direcciÃ³n con mejor relaciÃ³n entre impacto visible y coste es **el relleno diurno del suelo y la lectura de sombras proyectadas**. El ensayo demuestra que parte del aspecto plano procede del relleno del suelo, mÃ¡s claro que el de los props. Cambiar ese relleno recupera sombras amplias sin geometrÃ­a, atlas, texturas o draw calls adicionales.
 
-No se adopta la sustitución literal del perfil de sombra sobre todo el suelo: enfría zonas soleadas, oscurece demasiado Volcanes y no afecta a la rama toon del Desierto. Es una dirección para continuar, no una solución terminada en seis biomas.
+No se adopta la sustituciÃ³n literal del perfil de sombra sobre todo el suelo: enfrÃ­a zonas soleadas, oscurece demasiado Volcanes y no afecta a la rama toon del Desierto. Es una direcciÃ³n para continuar, no una soluciÃ³n terminada en seis biomas.
 
-| Intervención | Resultado visual | Coste verificado | Decisión |
+| IntervenciÃ³n | Resultado visual | Coste verificado | DecisiÃ³n |
 |---|---|---|---|
-| Contacto aplicado también a luz directa | Prácticamente invisible desde cámara normal | Sin recursos nuevos; una lectura lógica adicional del mapa | Descartar |
-| Relleno del suelo con paleta de sombra de props | Mejor volumen en Sabana, Gran Río y Cañón; beneficios desiguales | ABBA sin regresión observada en Sabana/Gran Río; recursos iguales | Continuar con alcance controlado |
-| Placas de basalto horneadas en Blender | Parecen pavimento; pierden detalle y lectura nocturna | Tres mapas 1024²; geometría y draws de Volcanes iguales | Descartar |
-| Vegetación adicional o sustituta de rondas previas | Matas insuficientes o identidad incorrecta; una prueba empeoró GPU nocturna | Regresión observada de +2,19 ms en matas bajas | No generalizar ni aumentar densidad sin una propuesta artística distinta |
+| Contacto aplicado tambiÃ©n a luz directa | PrÃ¡cticamente invisible desde cÃ¡mara normal | Sin recursos nuevos; una lectura lÃ³gica adicional del mapa | Descartar |
+| Relleno del suelo con paleta de sombra de props | Mejor volumen en Sabana, Gran RÃ­o y CaÃ±Ã³n; beneficios desiguales | ABBA sin regresiÃ³n observada en Sabana/Gran RÃ­o; recursos iguales | Continuar con alcance controlado |
+| Placas de basalto horneadas en Blender | Parecen pavimento; pierden detalle y lectura nocturna | Tres mapas 1024Â²; geometrÃ­a y draws de Volcanes iguales | Descartar |
+| VegetaciÃ³n adicional o sustituta de rondas previas | Matas insuficientes o identidad incorrecta; una prueba empeorÃ³ GPU nocturna | RegresiÃ³n observada de +2,19 ms en matas bajas | No generalizar ni aumentar densidad sin una propuesta artÃ­stica distinta |
 
-## Coste real del candidato de iluminación
+## Coste real del candidato de iluminaciÃ³n
 
-ABBA aislado, calidad media, 1280×720, semilla 712, cámara fija, 180 muestras por fase. Medias de dos repeticiones:
+ABBA aislado, calidad media, 1280Ã—720, semilla 712, cÃ¡mara fija, 180 muestras por fase. Medias de dos repeticiones:
 
-| Escena | GPU original → variante | CPU envío original → variante |
+| Escena | GPU original â†’ variante | CPU envÃ­o original â†’ variante |
 |---|---:|---:|
-| Sabana día | 18,199 → 18,158 ms | 5,359 → 5,210 ms |
-| Sabana noche | 19,023 → 18,693 ms | 5,016 → 4,917 ms |
-| Gran Río día | 14,446 → 14,097 ms | 5,991 → 5,654 ms |
-| Gran Río noche | 14,955 → 14,829 ms | 5,654 → 5,348 ms |
+| Sabana dÃ­a | 18,199 â†’ 18,158 ms | 5,359 â†’ 5,210 ms |
+| Sabana noche | 19,023 â†’ 18,693 ms | 5,016 â†’ 4,917 ms |
+| Gran RÃ­o dÃ­a | 14,446 â†’ 14,097 ms | 5,991 â†’ 5,654 ms |
+| Gran RÃ­o noche | 14,955 â†’ 14,829 ms | 5,654 â†’ 5,348 ms |
 
-Presupuesto previo: +0 mapas/draws/geometría y máximo +0,5 ms GPU. Cumple en estos casos. Las pequeñas diferencias negativas no prueban aceleración; el shader no reduce trabajo y la noche es esencialmente idéntica. No hay medición GPU de los otros cuatro biomas, latencia de carga ni VRAM residente. No confundir el número de recursos con bytes residentes.
+Presupuesto previo: +0 mapas/draws/geometrÃ­a y mÃ¡ximo +0,5 ms GPU. Cumple en estos casos. Las pequeÃ±as diferencias negativas no prueban aceleraciÃ³n; el shader no reduce trabajo y la noche es esencialmente idÃ©ntica. No hay mediciÃ³n GPU de los otros cuatro biomas, latencia de carga ni VRAM residente. No confundir el nÃºmero de recursos con bytes residentes.
 
-## Decisión por bioma
+## DecisiÃ³n por bioma
 
-| Bioma | Lo que merece conservar de la dirección | Condición para continuar |
+| Bioma | Lo que merece conservar de la direcciÃ³n | CondiciÃ³n para continuar |
 |---|---|---|
-| Sabana | Sombras amplias bajo copas y objetos más legibles | Mantener el amarillo cálido de zonas al sol; no añadir grano uniforme |
-| Gran Río | Mejor agrupación visual bajo árboles | Evitar que la sombra funda plantas pequeñas con el tapiz |
-| Manglares | Algo más de profundidad | Resolver integración de bases/musgo sin oscurecer toda la isla; no reclamar raíces nuevas mediante textura |
-| Volcanes | El ensayo no justifica el nuevo relleno | Conservar su versión anterior; el albedo azul y la escala de fractura requieren una propuesta distinta a placas regulares |
-| Gran Cañón | Mayor separación de planos del relieve | Validar también cámara normal transitable: la fixture amplia tiene una pared dominante |
-| Desierto | Sirve de control sin cambios | Su rama toon necesita evaluación propia; no afirmar que comparte el resultado del suelo físico |
+| Sabana | Sombras amplias bajo copas y objetos mÃ¡s legibles | Mantener el amarillo cÃ¡lido de zonas al sol; no aÃ±adir grano uniforme |
+| Gran RÃ­o | Mejor agrupaciÃ³n visual bajo Ã¡rboles | Evitar que la sombra funda plantas pequeÃ±as con el tapiz |
+| Manglares | Algo mÃ¡s de profundidad | Resolver integraciÃ³n de bases/musgo sin oscurecer toda la isla; no reclamar raÃ­ces nuevas mediante textura |
+| Volcanes | El ensayo no justifica el nuevo relleno | Conservar su versiÃ³n anterior; el albedo azul y la escala de fractura requieren una propuesta distinta a placas regulares |
+| Gran CaÃ±Ã³n | Mayor separaciÃ³n de planos del relieve | Validar tambiÃ©n cÃ¡mara normal transitable: la fixture amplia tiene una pared dominante |
+| Desierto | Sirve de control sin cambios | Su rama toon necesita evaluaciÃ³n propia; no afirmar que comparte el resultado del suelo fÃ­sico |
 
-## Siguiente revisión concreta
+## Siguiente revisiÃ³n concreta
 
-Preparar una variante QA que reduzca el relleno **solo donde existe sombra proyectada**, usando la cobertura ya calculada en el shader. Mantener iluminación del suelo soleado y noche originales. Evaluar primero si conserva el beneficio de volumen sin la pérdida de calidez; no realizar un barrido ciego de constantes. Volcanes y Desierto deben mantenerse como controles hasta que haya evidencia específica para modificarlos.
+Preparar una variante QA que reduzca el relleno **solo donde existe sombra proyectada**, usando la cobertura ya calculada en el shader. Mantener iluminaciÃ³n del suelo soleado y noche originales. Evaluar primero si conserva el beneficio de volumen sin la pÃ©rdida de calidez; no realizar un barrido ciego de constantes. Volcanes y Desierto deben mantenerse como controles hasta que haya evidencia especÃ­fica para modificarlos.
 
-Antes de adoptar: repetir seis biomas, cámara normal y baja, día/noche con encuadre/semilla/hora iguales; revisar transición sol/sombra y cambios de cámara. Solo si mejora claramente, coordinar ABBA GPU y validar streaming/calidad. Mantener los mismos presupuestos y documentar toda excepción.
+Antes de adoptar: repetir seis biomas, cÃ¡mara normal y baja, dÃ­a/noche con encuadre/semilla/hora iguales; revisar transiciÃ³n sol/sombra y cambios de cÃ¡mara. Solo si mejora claramente, coordinar ABBA GPU y validar streaming/calidad. Mantener los mismos presupuestos y documentar toda excepciÃ³n.
 
 ## Evidencia revisable
 
-- [Relleno: 48 capturas, evaluación artística y ABBA](ground-shade-coherence/README.md)
+- [Relleno: 48 capturas, evaluaciÃ³n artÃ­stica y ABBA](ground-shade-coherence/README.md)
 - [Sabana original](ground-shade-coherence/savanna-0-game-day.png) / [relleno candidato](ground-shade-coherence/savanna-ground-shade-coherence-game-day.png)
-- [Gran Río original](ground-shade-coherence/grand-river-0-game-day.png) / [relleno candidato](ground-shade-coherence/grand-river-ground-shade-coherence-game-day.png)
+- [Gran RÃ­o original](ground-shade-coherence/grand-river-0-game-day.png) / [relleno candidato](ground-shade-coherence/grand-river-ground-shade-coherence-game-day.png)
 - [Volcanes original](ground-shade-coherence/volcano-0-game-day.png) / [relleno candidato](ground-shade-coherence/volcano-ground-shade-coherence-game-day.png)
 - [Contacto: 48 capturas y descarte](ground-contact-integration/README.md)
 - [Basalto: 48 capturas, Blender y descarte](basalt-plates/README.md)
 
-144 capturas de esta ronda, no 144 escenas de campaña. Son fixtures del renderer real; no equivalen a navegación o combate. Build correcto de 402 módulos en `54e3e0fd`; los cambios siguientes son QA/documentación y conservan runtime original.
+144 capturas de esta ronda, no 144 escenas de campaÃ±a. Son fixtures del renderer real; no equivalen a navegaciÃ³n o combate. Build correcto de 402 mÃ³dulos en `54e3e0fd`; los cambios siguientes son QA/documentaciÃ³n y conservan runtime original.
 
 ## Pase de relleno restringido a sombras
 
-[48 capturas y ABBA](ground-shadow-fill/README.md): mejora localizada visible sin enfriar el suelo soleado; noche idéntica en los biomas modificados. Se conserva como candidato QA, sin adoptarlo todavía: la ronda de Sabana diurna supera el presupuesto GPU y requiere una medición más estable. Gran Río y Cañón pasan el umbral en esta ronda, sin probarlo para todo el juego. Los seis mockups originales están localizados en [ART-REFERENCES.md](ART-REFERENCES.md).
+[48 capturas y ABBA](ground-shadow-fill/README.md): mejora localizada visible sin enfriar el suelo soleado; noche idÃ©ntica en los biomas modificados. Se conserva como candidato QA, sin adoptarlo todavÃ­a: la ronda de Sabana diurna supera el presupuesto GPU y requiere una mediciÃ³n mÃ¡s estable. Gran RÃ­o y CaÃ±Ã³n pasan el umbral en esta ronda, sin probarlo para todo el juego. Los seis mockups originales estÃ¡n localizados en [ART-REFERENCES.md](ART-REFERENCES.md).
 
-La inspección de Cañón confirma que reforzar sombras de objetos no resuelve las del relieve: el terreno residente recibe sombra pero no la proyecta. Se prepara un experimento separado, `qa-terrain-shadow-volume.js`, reutilizando geometría y el pass existentes; todavía sin decisión de adopción ni coste aprobado.
+La inspecciÃ³n de CaÃ±Ã³n confirma que reforzar sombras de objetos no resuelve las del relieve: el terreno residente recibe sombra pero no la proyecta. Se prepara un experimento separado, `qa-terrain-shadow-volume.js`, reutilizando geometrÃ­a y el pass existentes; todavÃ­a sin decisiÃ³n de adopciÃ³n ni coste aprobado.
 
-## Revisión de campaña y nuevos candidatos (20/10)
+## RevisiÃ³n de campaÃ±a y nuevos candidatos (20/10)
 
-- [Partidas reales pausadas](campaign-shadow-review/README.md): 18 capturas de Sabana, Gran Río y Cañón desde el menú, sin entidades artificiales; cámaras estables por pareja y sin errores de red/JS registrados.
-- [Sombras de relieve](terrain-shadow-volume/README.md): beneficio claro en Cañón, no en las vistas de Sabana/Gran Río. Pendiente benchmark de cada pass y streaming; no activado globalmente.
-- [Repetición del relleno en misma página](ground-shadow-fill/PAIRED.md): el salto diurno de Sabana no reaparece; Cañón nocturno supera por poco el umbral. Mantener incertidumbre, no afirmar aceleración.
-- [Cojines de hierba](grass-cushions/README.md): fuente Blender y 8 capturas; descartados por poca presencia visual para +151.140 triángulos. No aumentar densidad del piloto. Se necesita una propuesta conjunta de suelo y masas de vegetación.
+- [Partidas reales pausadas](campaign-shadow-review/README.md): 18 capturas de Sabana, Gran RÃ­o y CaÃ±Ã³n desde el menÃº, sin entidades artificiales; cÃ¡maras estables por pareja y sin errores de red/JS registrados.
+- [Sombras de relieve](terrain-shadow-volume/README.md): beneficio claro en CaÃ±Ã³n, no en las vistas de Sabana/Gran RÃ­o. Pendiente benchmark de cada pass y streaming; no activado globalmente.
+- [RepeticiÃ³n del relleno en misma pÃ¡gina](ground-shadow-fill/PAIRED.md): el salto diurno de Sabana no reaparece; CaÃ±Ã³n nocturno supera por poco el umbral. Mantener incertidumbre, no afirmar aceleraciÃ³n.
+- [Cojines de hierba](grass-cushions/README.md): fuente Blender y 8 capturas; descartados por poca presencia visual para +151.140 triÃ¡ngulos. No aumentar densidad del piloto. Se necesita una propuesta conjunta de suelo y masas de vegetaciÃ³n.
 
-La opción integrada `?visualLab=global-lighting` conserva el relleno local y añade casters de terreno solo en Cañón. Build y 20 pruebas existentes pasan; [capturas de integración y recorrido de chunks](global-lighting-integrated/README.md). Es una opción de evaluación, no una declaración de calidad final. Se documenta explícitamente el coste nocturno de terreno por encima del presupuesto previo y el borde de fixture también presente en la referencia.
+La opciÃ³n integrada `?visualLab=global-lighting` conserva el relleno local y aÃ±ade casters de terreno solo en CaÃ±Ã³n. Build y 20 pruebas existentes pasan; [capturas de integraciÃ³n y recorrido de chunks](global-lighting-integrated/README.md). Es una opciÃ³n de evaluaciÃ³n, no una declaraciÃ³n de calidad final. Se documenta explÃ­citamente el coste nocturno de terreno por encima del presupuesto previo y el borde de fixture tambiÃ©n presente en la referencia.
 
-## Pase de paleta volcánica y estratos (20/10)
+## Pase de paleta volcÃ¡nica y estratos (20/10)
 
-Se conserva [carbón volcánico](volcanic-charcoal/README.md) únicamente en la opción experimental: reduce el azul del suelo hacia roca neutra cálida, sin recursos adicionales. ABBA QA diurno: 14,416 → 14,424 ms GPU; la deriva nocturna impide concluir sobre rendimiento a partir de su media. La noche y la escala del relieve siguen pendientes. La ruta integrada coincide visualmente con el candidato.
+Se conserva [carbÃ³n volcÃ¡nico](volcanic-charcoal/README.md) Ãºnicamente en la opciÃ³n experimental: reduce el azul del suelo hacia roca neutra cÃ¡lida, sin recursos adicionales. ABBA QA diurno: 14,416 â†’ 14,424 ms GPU; la deriva nocturna impide concluir sobre rendimiento a partir de su media. La noche y la escala del relieve siguen pendientes. La ruta integrada coincide visualmente con el candidato.
 
-Se elimina la selección de bioma por fragmento del relleno integrado, usando constantes de material; 24 capturas confirman conservación de apariencia. El benchmark de uniformes es histórico, no prueba de coste de la revisión actual. [Estratos del Cañón](canyon-bedding/README.md) descartados: no mejoran el volumen y añaden discontinuidades visibles.
+Se elimina la selecciÃ³n de bioma por fragmento del relleno integrado, usando constantes de material; 24 capturas confirman conservaciÃ³n de apariencia. El benchmark de uniformes es histÃ³rico, no prueba de coste de la revisiÃ³n actual. [Estratos del CaÃ±Ã³n](canyon-bedding/README.md) descartados: no mejoran el volumen y aÃ±aden discontinuidades visibles.
 
-La siguiente intervención artística debe concentrar geometría vegetal legible en masas y distancias útiles, con culling y presupuesto explícito, coordinada con la lectura del suelo. No repetir una distribución uniforme de matas casi invisibles. Ninguno de estos pases alcanza todavía la calidad de los seis mockups.
+La siguiente intervenciÃ³n artÃ­stica debe concentrar geometrÃ­a vegetal legible en masas y distancias Ãºtiles, con culling y presupuesto explÃ­cito, coordinada con la lectura del suelo. No repetir una distribuciÃ³n uniforme de matas casi invisibles. Ninguno de estos pases alcanza todavÃ­a la calidad de los seis mockups.
 
-La [ronda integrada de paletas constantes](global-lighting-integrated/CONSTANT-PERFORMANCE.md) confirma que queda trabajo de coste: Sabana y Cañón diurno superan +0,5 ms GPU. No se promociona la opción a comportamiento por defecto ni se da por aprobado el presupuesto global. Se corrigió además una colisión de claves de caché entre biomas introducida al usar constantes de material (prueba que falla antes y pasa después).
+La [ronda integrada de paletas constantes](global-lighting-integrated/CONSTANT-PERFORMANCE.md) confirma que queda trabajo de coste: Sabana y CaÃ±Ã³n diurno superan +0,5 ms GPU. No se promociona la opciÃ³n a comportamiento por defecto ni se da por aprobado el presupuesto global. Se corrigiÃ³ ademÃ¡s una colisiÃ³n de claves de cachÃ© entre biomas introducida al usar constantes de material (prueba que falla antes y pasa despuÃ©s).
 
-[Islas de hierba visible](grass-islands/README.md): la selección por cámara reduce la geometría adicional a 18.540 triángulos en la vista normal y 26.280 en la baja, pero los tallos angulosos no alcanzan la dirección artística. Descartada la malla; el ahorro no constituye aprobación visual ni benchmark GPU. Fuente Blender, ocho capturas y límites de la prueba conservados.
+[Islas de hierba visible](grass-islands/README.md): la selecciÃ³n por cÃ¡mara reduce la geometrÃ­a adicional a 18.540 triÃ¡ngulos en la vista normal y 26.280 en la baja, pero los tallos angulosos no alcanzan la direcciÃ³n artÃ­stica. Descartada la malla; el ahorro no constituye aprobaciÃ³n visual ni benchmark GPU. Fuente Blender, ocho capturas y lÃ­mites de la prueba conservados.
 
 ## Agua: superficie y coste (20/10)
 
-El [diagnóstico de agua](water-route-audit/README.md) confirma que el material procedural sí cubre la charca; no hace falta cambiar su geometría. Las [normales irregulares](water-surface/README.md) mejoran la lectura en 48 capturas de seis biomas y 32 vistas adicionales con animación visual, pero el coste supera el presupuesto en varias vistas. Eliminar el dibujo residual de bandas conserva el aspecto y da resultados de coste mixtos: [prueba sin bandas](water-surface-lean/README.md). Pendiente evaluar el mapa compartido de pendientes y partidas reales antes de integrar. La calidad global, las orillas y la vegetación siguen incompletas.
+El [diagnÃ³stico de agua](water-route-audit/README.md) confirma que el material procedural sÃ­ cubre la charca; no hace falta cambiar su geometrÃ­a. Las [normales irregulares](water-surface/README.md) mejoran la lectura en 48 capturas de seis biomas y 32 vistas adicionales con animaciÃ³n visual, pero el coste supera el presupuesto en varias vistas. Eliminar el dibujo residual de bandas conserva el aspecto y da resultados de coste mixtos: [prueba sin bandas](water-surface-lean/README.md). Pendiente evaluar el mapa compartido de pendientes y partidas reales antes de integrar. La calidad global, las orillas y la vegetaciÃ³n siguen incompletas.
 
-Se conserva el [agua con mapa de pendientes compartido](water-integrated/README.md) dentro de `global-lighting`: 48 capturas integradas, 16 de partidas reales y prueba de streaming/origen. El ABBA del candidato con mapa queda dentro de +0,5 ms en las ocho fases de cuatro biomas (máximo +0,250 ms), con deriva documentada. Una textura nominal de ~171 KiB con mipmaps sustituye el cálculo irregular por fragmento; los nuevos chunks comparten el recurso y se libera una vez al cerrar la escena. Build de 404 módulos y 23 pruebas pasan. Esto no resuelve las orillas, la lectura nocturna ni el coste total pendiente del relleno/sombras globales.
+Se conserva el [agua con mapa de pendientes compartido](water-integrated/README.md) dentro de `global-lighting`: 48 capturas integradas, 16 de partidas reales y prueba de streaming/origen. El ABBA del candidato con mapa queda dentro de +0,5 ms en las ocho fases de cuatro biomas (mÃ¡ximo +0,250 ms), con deriva documentada. Una textura nominal de ~171 KiB con mipmaps sustituye el cÃ¡lculo irregular por fragmento; los nuevos chunks comparten el recurso y se libera una vez al cerrar la escena. Build de 404 mÃ³dulos y 23 pruebas pasan. Esto no resuelve las orillas, la lectura nocturna ni el coste total pendiente del relleno/sombras globales.
 
-## Vegetación externa CC0 (20/10)
+## VegetaciÃ³n externa CC0 (20/10)
 
-[Hierba Kenney adaptada en Blender](kenney-grass/README.md): ocho capturas comparables de día/noche. Malla cerrada de 512 triángulos, 103/128 instancias visibles y un draw adicional; +52.736/+65.536 triángulos. Descartada por lectura demasiado cuadrada y arbustiva. No integrada ni aprobada por rendimiento temporal. Se conservan fuente CC0, licencia y auditoría; buscar hojas más finas y masas coherentes con el suelo antes de aumentar densidad. El objetivo global sigue pendiente.
+[Hierba Kenney adaptada en Blender](kenney-grass/README.md): ocho capturas comparables de dÃ­a/noche. Malla cerrada de 512 triÃ¡ngulos, 103/128 instancias visibles y un draw adicional; +52.736/+65.536 triÃ¡ngulos. Descartada por lectura demasiado cuadrada y arbustiva. No integrada ni aprobada por rendimiento temporal. Se conservan fuente CC0, licencia y auditorÃ­a; buscar hojas mÃ¡s finas y masas coherentes con el suelo antes de aumentar densidad. El objetivo global sigue pendiente.
 
-[Filtrado de frecuencia del suelo](ground-frequency/README.md): 48 capturas, 24 parejas verificadas. Filtrar conjuntamente albedo/normales/ARH reduce ruido pero produce desenfoque y manchas blandas, especialmente en Sabana y Gran Río. Descartado; no integrado. Sin geometría/draw/textura adicional, sin aprobación temporal GPU. Separar contraste cromático de normales y oclusión en el siguiente ensayo.
+[Filtrado de frecuencia del suelo](ground-frequency/README.md): 48 capturas, 24 parejas verificadas. Filtrar conjuntamente albedo/normales/ARH reduce ruido pero produce desenfoque y manchas blandas, especialmente en Sabana y Gran RÃ­o. Descartado; no integrado. Sin geometrÃ­a/draw/textura adicional, sin aprobaciÃ³n temporal GPU. Separar contraste cromÃ¡tico de normales y oclusiÃ³n en el siguiente ensayo.
 
-[Normales al 45 %](ground-normal-balance/README.md) y [normales al 160 %](ground-normal-rich/README.md): 32 capturas de Sabana/Gran Río. El primer extremo aplana el tapiz; el segundo enfatiza la paja sin crear masas vegetales. Ambos descartados, valor original conservado. El siguiente pase debe abordar geometría fina y distribución, no seguir ajustando únicamente la intensidad de normales. Contadores y variaciones entre cargas documentados; sin aprobación temporal GPU.
+[Normales al 45 %](ground-normal-balance/README.md) y [normales al 160 %](ground-normal-rich/README.md): 32 capturas de Sabana/Gran RÃ­o. El primer extremo aplana el tapiz; el segundo enfatiza la paja sin crear masas vegetales. Ambos descartados, valor original conservado. El siguiente pase debe abordar geometrÃ­a fina y distribuciÃ³n, no seguir ajustando Ãºnicamente la intensidad de normales. Contadores y variaciones entre cargas documentados; sin aprobaciÃ³n temporal GPU.
 
-[Matas de hojas finas](grass-fine/README.md): fuente Blender cerrada de 72 hojas, ocho capturas y benchmark de visibilidad en la misma escena. Lectura más fina, todavía poca cobertura. +118.656 triángulos en juego; GPU día +0,300 ms, noche +3,196 ms y repetición BAAB +1,192 ms. No integrada por coste. Se conserva la forma para reducir geometría/material antes de ampliar cobertura; no repetir simplemente mayor densidad.
+[Matas de hojas finas](grass-fine/README.md): fuente Blender cerrada de 72 hojas, ocho capturas y benchmark de visibilidad en la misma escena. Lectura mÃ¡s fina, todavÃ­a poca cobertura. +118.656 triÃ¡ngulos en juego; GPU dÃ­a +0,300 ms, noche +3,196 ms y repeticiÃ³n BAAB +1,192 ms. No integrada por coste. Se conserva la forma para reducir geometrÃ­a/material antes de ampliar cobertura; no repetir simplemente mayor densidad.
 
-[Hierba fina reducida](grass-fine-lite/README.md): mismas 72 hojas y posiciones, 720 frente a 1.152 triángulos por mata (-37,5 %), apariencia similar en cámara baja. Se conserva como base de investigación, no integrada. GPU ABBA día/noche +0,990/+0,137 ms; BAAB -0,474/+0,916 ms, variación documentada. El presupuesto sigue sin aprobar; aislar material antes de aumentar densidad.
+[Hierba fina reducida](grass-fine-lite/README.md): mismas 72 hojas y posiciones, 720 frente a 1.152 triÃ¡ngulos por mata (-37,5 %), apariencia similar en cÃ¡mara baja. Se conserva como base de investigaciÃ³n, no integrada. GPU ABBA dÃ­a/noche +0,990/+0,137 ms; BAAB -0,474/+0,916 ms, variaciÃ³n documentada. El presupuesto sigue sin aprobar; aislar material antes de aumentar densidad.
 
-[Material difuso de hierba](grass-diffuse/README.md): ocho capturas y comparación ABBA de materiales sobre idéntica geometría. GPU -0,258 ms día/+0,240 ms noche; no prueba ventaja consistente. Material actual conservado. La siguiente prueba debe reducir segmentos a distancia mediante niveles de detalle, preservando curvatura cercana; no aumentar densidad ni aprobar presupuesto con estos datos.
+[Material difuso de hierba](grass-diffuse/README.md): ocho capturas y comparaciÃ³n ABBA de materiales sobre idÃ©ntica geometrÃ­a. GPU -0,258 ms dÃ­a/+0,240 ms noche; no prueba ventaja consistente. Material actual conservado. La siguiente prueba debe reducir segmentos a distancia mediante niveles de detalle, preservando curvatura cercana; no aumentar densidad ni aprobar presupuesto con estos datos.
 
-[Hierba con dos niveles geométricos](grass-lod/README.md): 29.664 triángulos adicionales en juego frente a 74.160 del piloto reducido; 42.480 en baja. Ocho capturas, seis vistas de transición y población sin duplicados. GPU ABBA +1,568 ms día/+0,238 ms noche: no integrado, presupuesto pendiente. El lateral expone brillo excesivamente claro del suelo a contraluz; siguiente prioridad: aislar respuesta especular del terreno antes de añadir complejidad vegetal. No dar por resuelta la transición abrupta de LOD.
+[Hierba con dos niveles geomÃ©tricos](grass-lod/README.md): 29.664 triÃ¡ngulos adicionales en juego frente a 74.160 del piloto reducido; 42.480 en baja. Ocho capturas, seis vistas de transiciÃ³n y poblaciÃ³n sin duplicados. GPU ABBA +1,568 ms dÃ­a/+0,238 ms noche: no integrado, presupuesto pendiente. El lateral expone brillo excesivamente claro del suelo a contraluz; siguiente prioridad: aislar respuesta especular del terreno antes de aÃ±adir complejidad vegetal. No dar por resuelta la transiciÃ³n abrupta de LOD.
 
 ## Suelo mate a contraluz (20/10)
 
-Se conserva [rugosidad mínima seca 0,86](ground-roughness/README.md) en global-lighting para Sabana, Gran Río y suelo de Cañón: elimina buena parte del reflejo blanquecino sin borrar fibras, normales ni sombras. 72 capturas QA, [36 integradas y 12 de campaña](roughness-integrated/README.md); streaming de los tres biomas y 18 pruebas pasan, build correcto. No añade draw calls, triángulos ni texturas. GPU lateral: Sabana +0,380/+0,043 ms día/noche; Río +0,113/-0,210; Cañón -0,476/+0,848, repetición nocturna -0,289. Variación temporal documentada, no garantía de coste cero ni aprobación del presupuesto global. Renderer por defecto, musgo, volcán y Desierto sin este ajuste. Calidad de mockups todavía pendiente.
+Se conserva [rugosidad mÃ­nima seca 0,86](ground-roughness/README.md) en global-lighting para Sabana, Gran RÃ­o y suelo de CaÃ±Ã³n: elimina buena parte del reflejo blanquecino sin borrar fibras, normales ni sombras. 72 capturas QA, [36 integradas y 12 de campaÃ±a](roughness-integrated/README.md); streaming de los tres biomas y 18 pruebas pasan, build correcto. No aÃ±ade draw calls, triÃ¡ngulos ni texturas. GPU lateral: Sabana +0,380/+0,043 ms dÃ­a/noche; RÃ­o +0,113/-0,210; CaÃ±Ã³n -0,476/+0,848, repeticiÃ³n nocturna -0,289. VariaciÃ³n temporal documentada, no garantÃ­a de coste cero ni aprobaciÃ³n del presupuesto global. Renderer por defecto, musgo, volcÃ¡n y Desierto sin este ajuste. Calidad de mockups todavÃ­a pendiente.
 
-[Respuesta de cielo en paredes](canyon-sky/README.md) y [suavizado de normales compartidas](canyon-normal-smooth/README.md): 24 capturas de Cañón. El primer ensayo resalta triangulación regular; el segundo la atenúa, pero mantiene bandas planas. Ambos descartados, sin cambios runtime. Normales: 23.243 vértices modificados en 15 mallas, posiciones y colores verificados intactos. Evaluar material rocoso proyectado sobre las paredes, no repetir un barrido de intensidades de luz.
+[Respuesta de cielo en paredes](canyon-sky/README.md) y [suavizado de normales compartidas](canyon-normal-smooth/README.md): 24 capturas de CaÃ±Ã³n. El primer ensayo resalta triangulaciÃ³n regular; el segundo la atenÃºa, pero mantiene bandas planas. Ambos descartados, sin cambios runtime. Normales: 23.243 vÃ©rtices modificados en 15 mallas, posiciones y colores verificados intactos. Evaluar material rocoso proyectado sobre las paredes, no repetir un barrido de intensidades de luz.
 
-[Rock035 proyectado en paredes](canyon-rock-texture/README.md) y [color con normales](canyon-rock-normal/README.md): 24 capturas, cero triángulos/draw calls adicionales y una/dos texturas. Descartados: grano fino sin fracturas ni capas amplias; las bandas siguen planas. Fuente existente identificada y licencia CC0 verificada en ambientCG. Buscar roca estratificada a escala mayor, sin intensificar este mapa ni cambiar siluetas. Sin benchmark temporal ni integración.
+[Rock035 proyectado en paredes](canyon-rock-texture/README.md) y [color con normales](canyon-rock-normal/README.md): 24 capturas, cero triÃ¡ngulos/draw calls adicionales y una/dos texturas. Descartados: grano fino sin fracturas ni capas amplias; las bandas siguen planas. Fuente existente identificada y licencia CC0 verificada en ambientCG. Buscar roca estratificada a escala mayor, sin intensificar este mapa ni cambiar siluetas. Sin benchmark temporal ni integraciÃ³n.
 
 [Cliff Side estratificado CC0](canyon-stratified/README.md): doce capturas y seis parejas verificadas. Las grietas ya se leen, pero persisten bandas y aparece discontinuidad al horizonte. GPU ABBA lateral +2,040 ms dia/+1,432 noche, dos texturas, cero draw calls/triangulos extra. Piloto no integrado. Reducir lecturas y resolver continuidad antes de nueva evaluacion; conservar fuente, licencia y hashes.
 
@@ -181,7 +181,7 @@ Se conserva [la rampa de luz suavizada](desert-soft-light/README.md), con [integ
 
 ## Relieve foliar horneado en Blender (20/10)
 
-[Foliage detail](foliage-detail/README.md): fuente propia de 72 hojas cerradas, mosaico normal 512², sin nueva geometria en juego. 24 capturas reales y 12 parejas verificadas fuera del poblado en Sabana/Rio/Manglares. El efecto produce pequenas marcas angulosas en copas cercanas y es escaso a distancia; descartado. ABBA de 24 bloques: +0,119 a +0,771 ms GPU, con deriva, mas una textura nominal de 1,33 MiB. No integrado. Priorizar lectura amplia del terreno y masas vegetales; no continuar aumentando detalle fino de copas sin una mejora visual demostrada. Calidad global pendiente.
+[Foliage detail](foliage-detail/README.md): fuente propia de 72 hojas cerradas, mosaico normal 512Â², sin nueva geometria en juego. 24 capturas reales y 12 parejas verificadas fuera del poblado en Sabana/Rio/Manglares. El efecto produce pequenas marcas angulosas en copas cercanas y es escaso a distancia; descartado. ABBA de 24 bloques: +0,119 a +0,771 ms GPU, con deriva, mas una textura nominal de 1,33 MiB. No integrado. Priorizar lectura amplia del terreno y masas vegetales; no continuar aumentando detalle fino de copas sin una mejora visual demostrada. Calidad global pendiente.
 
 ## Variacion amplia del color del suelo (20/10)
 
@@ -199,98 +199,103 @@ Se conserva [la rampa de luz suavizada](desert-soft-light/README.md), con [integ
 
 [Grass repeatability](grass-repeatability/README.md): 32 bloques/5.760 muestras en Canon, A/A identico y ABBA BAAB de 192/128, dia/noche. Camara, matrices, cantidades y contadores invariantes en A/A; aun asi, rango entre bloques 2,135 ms dia/1,209 noche. La diferencia 128-192 cambia de signo respecto al pase previo (-0,171 dia/+0,548 noche). No demuestra ahorro ni lentitud intrinseca de 128. Informe anterior matizado. Siguiente ensayo: aislar recepcion de sombras en matas manteniendo modelo y cantidad, con controles y orden inverso; no usar un unico delta pequeno como veto o aprobacion. Calidad global y presupuesto acumulado pendientes.
 
-## Relieve del suelo sin geometría: Sabana (20/10)
+## Relieve del suelo sin geometrÃ­a: Sabana (20/10)
 
-La petición posterior del usuario limita este pase al material del suelo; quedan en pausa los ensayos de sombras de matas y toda geometría adicional. [Ground POM](ground-pom/README.md) compara A original, B continua (equivalente: Sabana ya usa iluminación continua), C POM refinado y D microoclusión precalculada. Añade dos hipótesis de altura coherente E/F como diagnósticos descartados.
+La peticiÃ³n posterior del usuario limita este pase al material del suelo; quedan en pausa los ensayos de sombras de matas y toda geometrÃ­a adicional. [Ground POM](ground-pom/README.md) compara A original, B continua (equivalente: Sabana ya usa iluminaciÃ³n continua), C POM refinado y D microoclusiÃ³n precalculada. AÃ±ade dos hipÃ³tesis de altura coherente E/F como diagnÃ³sticos descartados.
 
-56 capturas verificadas, ocho clips de cámara, 9.600 muestras GPU en Intel UHD, calidades media/baja y día/noche. A/B y vuelta A2 idénticos; geometría, draw calls y entidades invariantes. La visibilidad solar forzada no altera un solo píxel nocturno. Contadores de shader: 3,615 lecturas de altura por fragmento de suelo cercano en A frente a 5,951 en C/D. GPU cercana diurna/media: 14,332 ms A; 16,340 C; 15,692 D; existe deriva entre controles idénticos.
+56 capturas verificadas, ocho clips de cÃ¡mara, 9.600 muestras GPU en Intel UHD, calidades media/baja y dÃ­a/noche. A/B y vuelta A2 idÃ©nticos; geometrÃ­a, draw calls y entidades invariantes. La visibilidad solar forzada no altera un solo pÃ­xel nocturno. Contadores de shader: 3,615 lecturas de altura por fragmento de suelo cercano en A frente a 5,951 en C/D. GPU cercana diurna/media: 14,332 ms A; 16,340 C; 15,692 D; existe deriva entre controles idÃ©nticos.
 
-**No integrar ni extender a otros biomas:** C reduce el escalonado, pero D no alcanza las acumulaciones del mockup. E parece moldeado y F pierde fibras. No está demostrada la procedencia física del ARH adaptado. El bake posterior de fibras conocidas mostró que una correlación baja entre gradiente de altura y normales no prueba desalineación; se retira esa interpretación fuerte. Hace falta un conjunto de mapas coherente antes de aumentar muestras o amplitud. Solo se publican herramientas, mapas QA y evidencia; comportamiento por defecto intacto. El objetivo global de calidad sigue sin alcanzarse.
+**No integrar ni extender a otros biomas:** C reduce el escalonado, pero D no alcanza las acumulaciones del mockup. E parece moldeado y F pierde fibras. No estÃ¡ demostrada la procedencia fÃ­sica del ARH adaptado. El bake posterior de fibras conocidas mostrÃ³ que una correlaciÃ³n baja entre gradiente de altura y normales no prueba desalineaciÃ³n; se retira esa interpretaciÃ³n fuerte. Hace falta un conjunto de mapas coherente antes de aumentar muestras o amplitud. Solo se publican herramientas, mapas QA y evidencia; comportamiento por defecto intacto. El objetivo global de calidad sigue sin alcanzarse.
 
 ### Viento y sombras de matas: 2026-10-20
 
-[Prototipo de viento](grass-wind/README.md): candidato QA sobre las mismas 192 matas Blender, sin coste de geometría adicional frente al control estático. Presupuesto fino aún incierto. [Sombras dinámicas](grass-wind-shadow/README.md): descartadas; invalidar el mapa solar completo añade 22–44% GPU en la prueba de media y aporta poco en cámara normal. No activar por defecto; calidad global y streaming largo siguen pendientes.
+[Prototipo de viento](grass-wind/README.md): candidato QA sobre las mismas 192 matas Blender, sin coste de geometrÃ­a adicional frente al control estÃ¡tico. Presupuesto fino aÃºn incierto. [Sombras dinÃ¡micas](grass-wind-shadow/README.md): descartadas; invalidar el mapa solar completo aÃ±ade 22â€“44% GPU en la prueba de media y aporta poco en cÃ¡mara normal. No activar por defecto; calidad global y streaming largo siguen pendientes.
 
-### Paleta seca de las matas del Cañón (20/10)
+### Paleta seca de las matas del CaÃ±Ã³n (20/10)
 
-[Canyon dry grass](canyon-dry-grass/README.md): perfil QA de Cañón pasa a tinte lineal [1,.68,.48], conservando forma/distribución y otros biomas. Doce capturas, cuatro retornos exactos, 1.920 muestras GPU. Mejora modesta de coherencia seca, no de volumen. Diferencias temporales cercanas desfavorables y deriva documentadas; no aprueba el coste acumulado ni integra la vegetación en producción.
+[Canyon dry grass](canyon-dry-grass/README.md): perfil QA de CaÃ±Ã³n pasa a tinte lineal [1,.68,.48], conservando forma/distribuciÃ³n y otros biomas. Doce capturas, cuatro retornos exactos, 1.920 muestras GPU. Mejora modesta de coherencia seca, no de volumen. Diferencias temporales cercanas desfavorables y deriva documentadas; no aprueba el coste acumulado ni integra la vegetaciÃ³n en producciÃ³n.
 
-### Corrección del callback de viento (20/10)
+### CorrecciÃ³n del callback de viento (20/10)
 
-[Grass wind preserved](grass-wind-preserved/README.md): el piloto anterior reemplazaba AfricanToon; se corrige conservando callback y caché. Dieciséis capturas, ocho pares estáticos exactos, doce comprobaciones de identidad del shader y 3.840 muestras GPU. Se retira la aplicabilidad directa de los costes anteriores de viento/sombras a esta revisión. Baja/juego/noche +9,74%; presupuesto no aprobado. Hipótesis de transmisión archivada como prueba inactiva, no descartada artísticamente. Calidad global pendiente.
+[Grass wind preserved](grass-wind-preserved/README.md): el piloto anterior reemplazaba AfricanToon; se corrige conservando callback y cachÃ©. DiecisÃ©is capturas, ocho pares estÃ¡ticos exactos, doce comprobaciones de identidad del shader y 3.840 muestras GPU. Se retira la aplicabilidad directa de los costes anteriores de viento/sombras a esta revisiÃ³n. Baja/juego/noche +9,74%; presupuesto no aprobado. HipÃ³tesis de transmisiÃ³n archivada como prueba inactiva, no descartada artÃ­sticamente. Calidad global pendiente.
 
-### Transmisión foliar en iluminación nativa (20/10)
+### TransmisiÃ³n foliar en iluminaciÃ³n nativa (20/10)
 
-[Grass translucency native](grass-translucency-native/README.md): parche activo de artLighting416, 36 capturas, seis controles nocturnos y doce retornos exactos, dos clips de cámara en Gran Río y 5.760 muestras GPU. Descartado: aclara caras sin ganancia clara de volumen y reduce contraste en Río. Sin recursos geométricos nuevos; coste variable y presupuesto no aprobado. No repetir aumentos de intensidad para forzar diferencia. La estructura de masas vegetales y el suelo siguen siendo la carencia principal.
+[Grass translucency native](grass-translucency-native/README.md): parche activo de artLighting416, 36 capturas, seis controles nocturnos y doce retornos exactos, dos clips de cÃ¡mara en Gran RÃ­o y 5.760 muestras GPU. Descartado: aclara caras sin ganancia clara de volumen y reduce contraste en RÃ­o. Sin recursos geomÃ©tricos nuevos; coste variable y presupuesto no aprobado. No repetir aumentos de intensidad para forzar diferencia. La estructura de masas vegetales y el suelo siguen siendo la carencia principal.
 
 ### Bases cian en hierba seca (20/10)
 
-[Native grass base](native-grass-base/README.md): raycasts identifican pintura del slot 8 sobre suelo seco, no agua del mundo. Máscara cromática limitada al material nativo conserva geometría e iluminación. Doce capturas y 3.840 muestras GPU; tres retornos exactos y cinco píxeles residuales en el cuarto. Mejora parcial de color, pero persisten las peanas circulares y restos cian. Conservar solo como candidato QA, sin aprobar coste (+6,45% media/juego/noche). Próxima investigación: transición material base/suelo; no más aumento de luz para corregir una discontinuidad de materiales. Calidad global pendiente.
+[Native grass base](native-grass-base/README.md): raycasts identifican pintura del slot 8 sobre suelo seco, no agua del mundo. MÃ¡scara cromÃ¡tica limitada al material nativo conserva geometrÃ­a e iluminaciÃ³n. Doce capturas y 3.840 muestras GPU; tres retornos exactos y cinco pÃ­xeles residuales en el cuarto. Mejora parcial de color, pero persisten las peanas circulares y restos cian. Conservar solo como candidato QA, sin aprobar coste (+6,45% media/juego/noche). PrÃ³xima investigaciÃ³n: transiciÃ³n material base/suelo; no mÃ¡s aumento de luz para corregir una discontinuidad de materiales. Calidad global pendiente.
 
-### Transición material de bases al terreno (20/10)
+### TransiciÃ³n material de bases al terreno (20/10)
 
-[Native grass ground base](native-grass-ground-base/README.md): comparte textura de suelo en coordenadas de mundo, con variante adicional de iluminación continua, sombra y contacto. Mejora localizada frente a los discos pintados, especialmente de noche; persisten contorno naranja y falta de normales/POM/máscaras de terreno. Dieciséis capturas, cuatro retornos exactos, cuatro clips de órbita y 5.760 muestras GPU. Conservar como candidato QA sin activar: tres condiciones de la variante continua superan el 5%; no extender la receta incompleta. La calidad global y la transición completa siguen pendientes.
+[Native grass ground base](native-grass-ground-base/README.md): comparte textura de suelo en coordenadas de mundo, con variante adicional de iluminaciÃ³n continua, sombra y contacto. Mejora localizada frente a los discos pintados, especialmente de noche; persisten contorno naranja y falta de normales/POM/mÃ¡scaras de terreno. DiecisÃ©is capturas, cuatro retornos exactos, cuatro clips de Ã³rbita y 5.760 muestras GPU. Conservar como candidato QA sin activar: tres condiciones de la variante continua superan el 5%; no extender la receta incompleta. La calidad global y la transiciÃ³n completa siguen pendientes.
 
-### Máscara por altura en bases de hierba (20/10)
+### MÃ¡scara por altura en bases de hierba (20/10)
 
-[Native grass root mask](native-grass-root-mask/README.md): una sola componente conectada en el recurso; la máscara anterior excluía bordes inclinados y cian clasificado como follaje. La transición local 0,025–0,055 integra mejor la peana conservando geometría, pero tiñe raíces/piedras bajas. Dieciséis capturas con cuatro retornos exactos, cuatro clips y 5.760 muestras GPU. Candidato QA sin aprobar coste: dos condiciones superan +5% frente al original. Cerrar por ahora la iteración de este recurso y volver a suelo/vegetación a escala global en Gran Río y Cañón. No extender automáticamente los umbrales ni declarar alcanzada la calidad global.
+[Native grass root mask](native-grass-root-mask/README.md): una sola componente conectada en el recurso; la mÃ¡scara anterior excluÃ­a bordes inclinados y cian clasificado como follaje. La transiciÃ³n local 0,025â€“0,055 integra mejor la peana conservando geometrÃ­a, pero tiÃ±e raÃ­ces/piedras bajas. DiecisÃ©is capturas con cuatro retornos exactos, cuatro clips y 5.760 muestras GPU. Candidato QA sin aprobar coste: dos condiciones superan +5% frente al original. Cerrar por ahora la iteraciÃ³n de este recurso y volver a suelo/vegetaciÃ³n a escala global en Gran RÃ­o y CaÃ±Ã³n. No extender automÃ¡ticamente los umbrales ni declarar alcanzada la calidad global.
 
-## Cubierta continua de Sabana — 20/10/2026
+## Cubierta continua de Sabana â€” 20/10/2026
 
-El [piloto A/B/C](continuous-grass/README.md) sustituye la prioridad de matas aisladas. La cobertura opaca instanciada forma franjas continuas con viento y LOD, preservando los modelos originales. C media añade 212.704 triángulos y dos draws en cámara normal; C baja híbrida, 36.960 y un draw. Se entregan 48 capturas/control, dos vídeos, 8.640 muestras GPU Intel UHD, overdraw, memoria y streaming. Se conserva como candidato QA, sin opción por defecto ni extensión a otros biomas: todavía falta finura/agrupación orgánica comparable a la referencia y amortizar la activación. No fusionar.
+El [piloto A/B/C](continuous-grass/README.md) sustituye la prioridad de matas aisladas. La cobertura opaca instanciada forma franjas continuas con viento y LOD, preservando los modelos originales. C media aÃ±ade 212.704 triÃ¡ngulos y dos draws en cÃ¡mara normal; C baja hÃ­brida, 36.960 y un draw. Se entregan 48 capturas/control, dos vÃ­deos, 8.640 muestras GPU Intel UHD, overdraw, memoria y streaming. Se conserva como candidato QA, sin opciÃ³n por defecto ni extensiÃ³n a otros biomas: todavÃ­a falta finura/agrupaciÃ³n orgÃ¡nica comparable a la referencia y amortizar la activaciÃ³n. No fusionar.
 
-## Cubierta continua: primer piloto de Gran Río
+## Cubierta continua: primer piloto de Gran RÃ­o
 
-Tras conservar el resultado de Sabana y su viento 8×, se ha preparado un [piloto específico de Gran Río](continuous-grass-river/README.md): menor altura, pigmento verde y cobertura condicionada por humedad. Cuenta con 48 capturas y vídeos, pero sigue pendiente de benchmark GPU aislado y revisión de orillas/streaming. No se activa por defecto ni se generaliza a otros biomas.
+Tras conservar el resultado de Sabana y su viento 8Ã—, se ha preparado un [piloto especÃ­fico de Gran RÃ­o](continuous-grass-river/README.md): menor altura, pigmento verde y cobertura condicionada por humedad. Cuenta con 48 capturas y vÃ­deos, pero sigue pendiente de benchmark GPU aislado y revisiÃ³n de orillas/streaming. No se activa por defecto ni se generaliza a otros biomas.
 
-## Actualización: cobertura, costes y regreso al Cañón
+## ActualizaciÃ³n: cobertura, costes y regreso al CaÃ±Ã³n
 
-La cobertura de Sabana conserva el viento 8× aprobado. Gran Río dispone de [corrección de orillas](continuous-grass-river/shore-triangles/README.md) y [mediciones](continuous-grass-river/performance/README.md); la frase histórica de benchmark pendiente anterior ya no describe el estado actual. Las candidatas de LOD, continuidad de viento y normales siguen separadas. La [validación combinada](continuous-grass-river/combined-validation/README.md) y el [control intercalado](continuous-grass-river/interleaved-validation/README.md) no permiten promover por rendimiento: existe deriva incluso ejecutando la misma ruta en calidad baja. Se conserva la ruta original en baja y se cierran las repeticiones equivalentes en esta sesión.
+La cobertura de Sabana conserva el viento 8Ã— aprobado. Gran RÃ­o dispone de [correcciÃ³n de orillas](continuous-grass-river/shore-triangles/README.md) y [mediciones](continuous-grass-river/performance/README.md); la frase histÃ³rica de benchmark pendiente anterior ya no describe el estado actual. Las candidatas de LOD, continuidad de viento y normales siguen separadas. La [validaciÃ³n combinada](continuous-grass-river/combined-validation/README.md) y el [control intercalado](continuous-grass-river/interleaved-validation/README.md) no permiten promover por rendimiento: existe deriva incluso ejecutando la misma ruta en calidad baja. Se conserva la ruta original en baja y se cierran las repeticiones equivalentes en esta sesiÃ³n.
 
-En Gran Cañón, [textura al pie de pared](canyon-wall-foot/README.md) elimina una franja lisa, pero no mejora suficientemente el volumen global. Dieciséis capturas, ocho pares con cámara/entidades/draws/triángulos iguales y sin errores GL registrados. No integrar ni realizar otro barrido de intensidades; conservar evidencia. La primera cámara normal atravesaba una pared y se reemplazó antes de publicar. No se modifica geometría para imitar el mockup.
+En Gran CaÃ±Ã³n, [textura al pie de pared](canyon-wall-foot/README.md) elimina una franja lisa, pero no mejora suficientemente el volumen global. DiecisÃ©is capturas, ocho pares con cÃ¡mara/entidades/draws/triÃ¡ngulos iguales y sin errores GL registrados. No integrar ni realizar otro barrido de intensidades; conservar evidencia. La primera cÃ¡mara normal atravesaba una pared y se reemplazÃ³ antes de publicar. No se modifica geometrÃ­a para imitar el mockup.
 
-La calidad global continúa pendiente. Evitar confundir continuidad local de material o diferencias de píxeles con la estructura de masas y separación de planos de las referencias.
+La calidad global continÃºa pendiente. Evitar confundir continuidad local de material o diferencias de pÃ­xeles con la estructura de masas y separaciÃ³n de planos de las referencias.
 
 
-## Estado posterior: paleta del Cañón y materiales de Manglares/Desierto
+## Estado posterior: paleta del CaÃ±Ã³n y materiales de Manglares/Desierto
 
-El [relleno cálido de suelo en sombra del Cañón](canyon-warm-floor/README.md) se conserva como candidato QA reversible, con [comprobación de streaming](canyon-warm-floor/streaming/README.md), sin aprobar presupuesto global. La [revisión interactiva](global-candidate-review/README.md) reúne Sabana, Gran Río y Cañón; las coberturas mantienen viento 8× y no activan las variantes de LOD de coste incierto.
+El [relleno cÃ¡lido de suelo en sombra del CaÃ±Ã³n](canyon-warm-floor/README.md) se conserva como candidato QA reversible, con [comprobaciÃ³n de streaming](canyon-warm-floor/streaming/README.md), sin aprobar presupuesto global. La [revisiÃ³n interactiva](global-candidate-review/README.md) reÃºne Sabana, Gran RÃ­o y CaÃ±Ã³n; las coberturas mantienen viento 8Ã— y no activan las variantes de LOD de coste incierto.
 
-[Mangrove damp moss](mangrove-damp-moss/README.md) queda descartado: la máscara húmeda selecciona una región limitada y no aporta volumen apreciable. Se conservan Moss002 puro y barro independiente.
+[Mangrove damp moss](mangrove-damp-moss/README.md) queda descartado: la mÃ¡scara hÃºmeda selecciona una regiÃ³n limitada y no aporta volumen apreciable. Se conservan Moss002 puro y barro independiente.
 
-[Desierto: radiancia continua](desert-continuous-radiance/README.md) también se descarta como receta: 24 capturas de campaña y doce parejas verificadas muestran pérdida de dorado y facetas amplias persistentes. El diagnóstico confirma que la salida toon ordinaria de arena no consume la radiancia `lit` calculada previamente; no atribuirle mejoras por cambios en esa BRDF sin verificar la salida final. Mantener la rampa suavizada integrada. Sin benchmark temporal de esta receta rechazada; no repetir barridos de intensidad ni confundir cambio cromático con relieve. Calidad global pendiente.
+[Desierto: radiancia continua](desert-continuous-radiance/README.md) tambiÃ©n se descarta como receta: 24 capturas de campaÃ±a y doce parejas verificadas muestran pÃ©rdida de dorado y facetas amplias persistentes. El diagnÃ³stico confirma que la salida toon ordinaria de arena no consume la radiancia `lit` calculada previamente; no atribuirle mejoras por cambios en esa BRDF sin verificar la salida final. Mantener la rampa suavizada integrada. Sin benchmark temporal de esta receta rechazada; no repetir barridos de intensidad ni confundir cambio cromÃ¡tico con relieve. Calidad global pendiente.
 
 
 ## Cierre y reapertura de cobertura continua
 
-[Lifecycle de cobertura](continuous-grass-lifecycle/README.md): fallo reproducido y corregido en Sabana/Gran Río conservados. El cierre ya no deja una instancia liberada como activa ni pisa callbacks posteriores. Doce ciclos completos en media/baja, 24 capturas día/noche; las reaperturas conservan cobertura y viento 8×, con diferencias residuales de hasta seis píxeles/un nivel RGB. Contadores de geometrías regresan al valor cerrado en cada ciclo. Es una corrección de fiabilidad del piloto, no una nueva aprobación de rendimiento o integración. Calidad global pendiente.
+[Lifecycle de cobertura](continuous-grass-lifecycle/README.md): fallo reproducido y corregido en Sabana/Gran RÃ­o conservados. El cierre ya no deja una instancia liberada como activa ni pisa callbacks posteriores. Doce ciclos completos en media/baja, 24 capturas dÃ­a/noche; las reaperturas conservan cobertura y viento 8Ã—, con diferencias residuales de hasta seis pÃ­xeles/un nivel RGB. Contadores de geometrÃ­as regresan al valor cerrado en cada ciclo. Es una correcciÃ³n de fiabilidad del piloto, no una nueva aprobaciÃ³n de rendimiento o integraciÃ³n. Calidad global pendiente.
 
 
 ## Arena irregular CC0: nueva candidata del Desierto
 
-[Aerial sand](desert-aerial-sand/README.md): 36 capturas en dunas, normal GL de Aerial Beach 01 a escala 30 m, conservando pintura cálida. Separar la normal geométrica para el detector de contorno elimina el punteado que producía el relieve fino. La variante final usa solo el mapa normal y conserva casi la misma imagen que la de dos mapas; se mantiene como candidata QA. 1440 muestras GPU de la receta intermedia muestran coste y deriva importantes, no aprobación. Pendientes coste de normal-only, cámara móvil, perfil bajo y streaming; no integrar todavía. No repetir variantes que usan la normal fina como contorno.
+[Aerial sand](desert-aerial-sand/README.md): 36 capturas en dunas, normal GL de Aerial Beach 01 a escala 30 m, conservando pintura cÃ¡lida. Separar la normal geomÃ©trica para el detector de contorno elimina el punteado que producÃ­a el relieve fino. La variante final usa solo el mapa normal y conserva casi la misma imagen que la de dos mapas; se mantiene como candidata QA. 1440 muestras GPU de la receta intermedia muestran coste y deriva importantes, no aprobaciÃ³n. Pendientes coste de normal-only, cÃ¡mara mÃ³vil, perfil bajo y streaming; no integrar todavÃ­a. No repetir variantes que usan la normal fina como contorno.
 
 
-## Arena normal-only: activación segura y validación
+## Arena normal-only: activaciÃ³n segura y validaciÃ³n
 
-[Validación](desert-aerial-sand/VALIDATION.md): se reproduce y corrige `glTexStorage2D: Texture is immutable` al activar después de noche. Reemplazo seguro del objeto de textura y actualización de uniformes; no mutar Source sobre memoria ya inicializada. Recorridos 0/144/288/0 en media/baja enlazan 25 materiales residentes y un horizonte; 40 capturas contando controles sin helper. Retornos con pequeñas diferencias adicionales cuantificadas, no identidad binaria. 2880 muestras GPU de la candidata final: baja diurna +.338 ms con poca deriva; media/noche aún variables. Mantener candidata QA, sin integrar. Siguiente puerta: cámara móvil y estabilidad de crestas, sin añadir geometría ni rebajar la mejora artística para pasar un contador.
+[ValidaciÃ³n](desert-aerial-sand/VALIDATION.md): se reproduce y corrige `glTexStorage2D: Texture is immutable` al activar despuÃ©s de noche. Reemplazo seguro del objeto de textura y actualizaciÃ³n de uniformes; no mutar Source sobre memoria ya inicializada. Recorridos 0/144/288/0 en media/baja enlazan 25 materiales residentes y un horizonte; 40 capturas contando controles sin helper. Retornos con pequeÃ±as diferencias adicionales cuantificadas, no identidad binaria. 2880 muestras GPU de la candidata final: baja diurna +.338 ms con poca deriva; media/noche aÃºn variables. Mantener candidata QA, sin integrar. Siguiente puerta: cÃ¡mara mÃ³vil y estabilidad de crestas, sin aÃ±adir geometrÃ­a ni rebajar la mejora artÃ­stica para pasar un contador.
 
 
 ## Arena en movimiento: comparativa controlada
 
-[Cuatro vídeos](desert-aerial-sand/motion/README.md), media/baja y día/noche, de elevada a cercana y retorno. 484 parejas A/B coinciden en pose/hora/draws/triángulos tras corregir el harness por cargas asíncronas y caché LOD inicial. Los intentos no comparables se documentan y se excluyen. 308 parejas simétricas con geometría coincidente: 304 exactas, cuatro con hasta seis píxeles/un nivel RGB. No equivale a prueba universal de ausencia de aliasing ni a FPS real; mantener candidata QA y revisar presupuesto acumulado. Sin cambios de material en este pase ni activación general.
+[Cuatro vÃ­deos](desert-aerial-sand/motion/README.md), media/baja y dÃ­a/noche, de elevada a cercana y retorno. 484 parejas A/B coinciden en pose/hora/draws/triÃ¡ngulos tras corregir el harness por cargas asÃ­ncronas y cachÃ© LOD inicial. Los intentos no comparables se documentan y se excluyen. 308 parejas simÃ©tricas con geometrÃ­a coincidente: 304 exactas, cuatro con hasta seis pÃ­xeles/un nivel RGB. No equivale a prueba universal de ausencia de aliasing ni a FPS real; mantener candidata QA y revisar presupuesto acumulado. Sin cambios de material en este pase ni activaciÃ³n general.
 
 
 ## Arena junto al poblado inicial
 
-[Revisión de asentamiento](desert-aerial-sand/settlement/README.md): 24 capturas reales media/baja y día/noche, 12 parejas con cámara/hora/geometría iguales y sin errores. El volumen se aprecia entre edificios y conserva calidez; aparece un borde de camino más dentado en la vista normal. Antes de promover, aislar desgaste/máscara/iluminación en ese borde. No se repite rendimiento ni se integra la candidata; presupuesto media/noche y calidad global siguen pendientes.
+[RevisiÃ³n de asentamiento](desert-aerial-sand/settlement/README.md): 24 capturas reales media/baja y dÃ­a/noche, 12 parejas con cÃ¡mara/hora/geometrÃ­a iguales y sin errores. El volumen se aprecia entre edificios y conserva calidez; aparece un borde de camino mÃ¡s dentado en la vista normal. Antes de promover, aislar desgaste/mÃ¡scara/iluminaciÃ³n en ese borde. No se repite rendimiento ni se integra la candidata; presupuesto media/noche y calidad global siguen pendientes.
 
 
-## Arena seca: causa de la franja y corrección localizada
+## Arena seca: causa de la franja y correcciÃ³n localizada
 
-[Ablación](desert-aerial-sand/edge-ablation/README.md): 72 capturas comparables aíslan la franja dentada en la banda especular, no obligan a cambiar desgaste ni borrar normales. [Candidata seca](desert-aerial-sand/dry-specular/README.md): factor especular por suavidad al cuadrado, 24 capturas; ocho de doce vistas idénticas a normal-only y cuatro eliminan la franja conservando relieve. Sin geometría/pasadas nuevas; no hay aprobación temporal de coste. Mantener QA, pendiente movimiento y presupuesto acumulado; calidad global abierta.
+[AblaciÃ³n](desert-aerial-sand/edge-ablation/README.md): 72 capturas comparables aÃ­slan la franja dentada en la banda especular, no obligan a cambiar desgaste ni borrar normales. [Candidata seca](desert-aerial-sand/dry-specular/README.md): factor especular por suavidad al cuadrado, 24 capturas; ocho de doce vistas idÃ©nticas a normal-only y cuatro eliminan la franja conservando relieve. Sin geometrÃ­a/pasadas nuevas; no hay aprobaciÃ³n temporal de coste. Mantener QA, pendiente movimiento y presupuesto acumulado; calidad global abierta.
 
 
 ## Arena seca: movimiento y contraste temporal
 
-[Recorrido del poblado](desert-aerial-sand/dry-specular/motion/README.md): 484 parejas coinciden en cámara/hora/geometría; retorno reproducible con residuos mínimos compartidos por A/B. [Dos protocolos de coste](desert-aerial-sand/dry-specular/performance/README.md): 8.832 muestras válidas, serie larga e intercalación corta ABBA; sin errores ni regresión grande reproducida, pero dispersión impide certificar +0,5 ms media/noche. No reiterar esta microprueba hasta que pase. Siguiente contraste: cadencia de campaña real sin consultas GPU y coste acumulado del conjunto. La candidata no se integra todavía; objetivo de seis biomas abierto.
+[Recorrido del poblado](desert-aerial-sand/dry-specular/motion/README.md): 484 parejas coinciden en cÃ¡mara/hora/geometrÃ­a; retorno reproducible con residuos mÃ­nimos compartidos por A/B. [Dos protocolos de coste](desert-aerial-sand/dry-specular/performance/README.md): 8.832 muestras vÃ¡lidas, serie larga e intercalaciÃ³n corta ABBA; sin errores ni regresiÃ³n grande reproducida, pero dispersiÃ³n impide certificar +0,5 ms media/noche. No reiterar esta microprueba hasta que pase. Siguiente contraste: cadencia de campaÃ±a real sin consultas GPU y coste acumulado del conjunto. La candidata no se integra todavÃ­a; objetivo de seis biomas abierto.
+
+
+## Cadencia de campaña: controles corregidos
+
+[Diagnóstico](desert-aerial-sand/dry-specular/campaign-settled/README.md): el tutorial avanzaba pese a la pausa QA y el horizonte podía incorporar materiales candidatos al control. Pausa existente de menú y estabilización previa corrigen ambos; 480 frames con estado/materiales residentes estables y cámara/geometría coincidentes. Pilotos archivados y excluidos. Serie completa corregida pendiente de cierre; no aprobar rendimiento ni integrar todavía.
