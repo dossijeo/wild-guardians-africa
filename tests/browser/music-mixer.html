@@ -1,11 +1,15 @@
 <!doctype html><html lang="es"><meta charset="utf-8"><title>QA mezclas musicales nativas</title>
 <style>body{background:#18231e;color:#edf3dc;font:16px system-ui;padding:24px}button{padding:12px;margin:4px}pre{white-space:pre-wrap;font-size:14px}</style>
-<h1>Mezclas musicales A/B · WebAudio real</h1><p>Salida silenciada. Diez MP3 originales por pack; no modifica partidas.</p>
+<h1>Mezclas musicales A/B · WebAudio real</h1><p id="mode">Diez MP3 originales por pack; no modifica partidas.</p>
 <button id="a">Cargar A</button><button id="b">Cargar B</button><button id="night">Noche</button><button id="attack">Ataque</button><button id="day">Día</button><button id="stop">Parar</button>
 <p id="status">Preparado</p><pre id="report"></pre>
 <script type="module">
 import {AudioSystem} from '/src/audio/audio.js';
-const audio=new AudioSystem({music:0,sfx:0}),state={time:100,raid:null},errors=[],history=[];
+const audible=new URLSearchParams(location.search).has('audible');
+document.querySelector('#mode').textContent=audible?
+  'Escucha manual: salida audible. Ajusta el volumen del dispositivo antes de cargar un pack. No modifica partidas.':
+  'Salida silenciada para QA automatizada. Diez MP3 originales por pack; no modifica partidas.';
+const audio=new AudioSystem({music:audible?1:0,sfx:0}),state={time:100,raid:null},errors=[],history=[];
 const status=document.querySelector('#status'),report=document.querySelector('#report');
 let timer;
 function snapshot(){return {pack:audio.pack??null,scene:audio.mixer?.scene??null,active:audio.active.length,rates:audio.active.map(s=>s.playbackRate.value),pending:audio.mixer?.pending.map(p=>({...p}))??[],levels:audio.mixer?audio.mixer.bank.tracks.map(t=>({id:t.id,logical:audio.mixer.value(t.id,audio.context.currentTime),actual:[...audio.mixer.voices.get(t.id)].map(g=>g.value)})):[],errors,history};}
