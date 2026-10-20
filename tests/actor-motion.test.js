@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {actorBlockers,actorSegmentClear} from '../src/simulation/actor-motion.js';
+import {actorBlockers,actorSegmentClear,prepareActorMotion} from '../src/simulation/actor-motion.js';
 import {walkTo,newGame,tick,workerAtVillageEntry} from '../src/simulation/game.js';
 import {ANIMAL_ACTIONS} from '../src/simulation/animal-actions-data.js';
 import {updateWorkerEncounters} from '../src/simulation/encounters.js';
@@ -11,6 +11,33 @@ import {reservedApproachClear} from '../src/simulation/raid-target-reservations.
 import {readFileSync} from 'node:fs';
 import {createOpeningWorld} from '../tools/check_opening.mjs';
 import {edgeDistance} from '../src/world/footprints.js';
+
+test('an unchanged failed local detour is not rebuilt without a terrain iterator',()=>{
+ const actor={id:'worker-a',x:-2,z:0,radius:.28,status:'walking',
+   path:[{x:2,z:0}]};
+ const blocker={id:'worker-b',x:0,z:0,radius:.28,status:'idle'};
+ const state={workers:[actor,blocker],raid:null};
+ let sampled=0,chunks=1;
+ const nav={version:7,walkable:(_x,z)=>{sampled++;return Math.abs(z)<.15;},
+   segmentClear:()=>true,routeStamp:()=>({chunks})};
+ prepareActorMotion(state,actor,nav,true);
+ const first=sampled;
+ assert.ok(first>0,'the first attempt examines the local graph');
+ prepareActorMotion(state,actor,nav,true);
+ assert.equal(sampled,first,'the identical failure reuses its certificate');
+ blocker.x=.01;
+ prepareActorMotion(state,actor,nav,true);
+ assert.ok(sampled>first,'moving a blocker retries the search');
+ const afterMove=sampled;
+ chunks++;
+ prepareActorMotion(state,actor,nav,true);
+ assert.ok(sampled>afterMove,'a residency revision also retries the search');
+ const afterResidency=sampled;
+ nav.version++;
+ prepareActorMotion(state,actor,nav,true);
+ assert.ok(sampled>afterResidency,'a topology revision also retries the search');
+ assert.deepEqual(actor.path,[{x:2,z:0}]);
+});
 
 test('village entry accepts a returning worker within body radius only across a static clear doorway',()=>{
  const entry={x:60,z:0},worker={x:60.2263,z:-.0316,radius:.28};

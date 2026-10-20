@@ -11,7 +11,9 @@ function detourBodies(actor,goal,blockers){
   const minZ=Math.min(Math.round(actor.z),Math.round(goal.z))-32,maxZ=Math.max(Math.round(actor.z),Math.round(goal.z))+32;
   return blockers.filter(b=>{const reach=radius(actor)+radius(b);return b.x+reach>=minX&&b.x-reach<=maxX&&b.z+reach>=minZ&&b.z-reach<=maxZ;});
 }
-const detourKey=(actor,goal,blockers,nav,worker)=>JSON.stringify([nav.version,worker,actor.x,actor.z,goal.x,goal.z,blockers.map(b=>[b.id,Math.floor(b.x*4),Math.floor(b.z*4),radius(b)])]);
+const detourKey=(actor,goal,blockers,nav,worker)=>JSON.stringify([nav.version,
+  nav.routeStamp?.().chunks??null,worker,actor.x,actor.z,goal.x,goal.z,
+  blockers.map(b=>[b.id,Math.floor(b.x*4),Math.floor(b.z*4),radius(b)])]);
 const exactDetourKey=(key,blockers)=>JSON.stringify([key,blockers.map(b=>[b.x,b.z])]);
 // The small disc graph cannot route around a solid corner next to a fallen
 // worker. Use the native terrain search only after that graph fails. Dynamic
@@ -201,6 +203,10 @@ export function prepareActorMotion(state,actor,nav,worker){
   // Stable identity chooses only one side; stationary bodies never cause this.
   const detour=terrainDetour(actor,goal,blockers,nav,worker,clear);
   if(detour){actor.path=[...detour,...actor.path.slice(rejoin+(look===length?1:0))];return clear;}
+  // Wild Engine has no incremental terrain fallback. Repeating this exact
+  // failed disc graph every tick cannot uncover a new path until the actor,
+  // a blocker or the navigation revision changes.
+  if(!nav.findPathSteps)blockedDetours.set(actor,exactDetourKey(key,localBlockers));
   yieldToOpposing();
   // A narrow occupied passage waits; neither teleport nor discard the route.
   return clear;
