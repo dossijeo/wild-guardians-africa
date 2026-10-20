@@ -44,6 +44,8 @@ test('the first fleeing worker enters the village before a trailing body blocks 
  tick(s,.1,nav);
  assert.equal(s.workers[0].status,'home');
  assert.equal(s.workers[1].status,'fleeing');
+ for(let step=0;step<20&&s.workers[1].status!=='home';step++)tick(s,.1,nav);
+ assert.equal(s.workers[1].status,'home','the queue drains after the first worker enters');
 });
 
 test('failed route planning waits for a relevant event or a slow recovery retry',()=>{
