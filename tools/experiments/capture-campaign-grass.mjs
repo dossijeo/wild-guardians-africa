@@ -1,3 +1,4 @@
+import {disableIntegratedDesertLight} from './desert-light-qa-route.mjs';
 import {chromium} from 'playwright';
 import {mkdir,writeFile} from 'node:fs/promises';
 
@@ -12,6 +13,7 @@ try{for(const biome of (process.env.WG_GRASS_BIOMES??'sabana,gran-rio').split(',
 
 
 
+ if(process.env.WG_DESERT_LIGHT_COMPARE==='1'?variant==='base':study==='desert-soft-light')await disableIntegratedDesertLight(page);
  await page.addInitScript(()=>localStorage.setItem('wild-guardians:settings',JSON.stringify({quality:'media',farVegetation:false})));
  await page.goto('http://127.0.0.1:5190/?qa-seed=712&visualLab=global-lighting');
  await page.waitForSelector('#native-menu',{timeout:60000});const frame=page.frames().find(f=>f.url().includes('/menu/'))??await page.waitForEvent('framenavigated',{predicate:f=>f.url().includes('/menu/'),timeout:60000});
@@ -20,7 +22,8 @@ try{for(const biome of (process.env.WG_GRASS_BIOMES??'sabana,gran-rio').split(',
  await page.evaluate(async()=>{const w=window.qaCampaignWorld;const {pause}=await import('/src/simulation/game.js');pause(w.state,'qa-visual');w.updateCamera=()=>{w.camera.lookAt(w.controls.target);w.camera.updateMatrixWorld()};});
 
  await page.evaluate(()=>{const w=window.qaCampaignWorld,update=w.materialRegistry.update.bind(w.materialRegistry);w.materialRegistry.update=()=>update(0)});
- const selected=variant==='candidate'?study:process.env.WG_GRASS_BASELINE;if(selected)await page.evaluate(async study=>{const {applyMaterialStudy}=await import('/tools/experiments/qa-'+study+'.js');await applyMaterialStudy(window.qaCampaignWorld)},selected);
+ if(process.env.WG_CAMPAIGN_TARGET_OFFSET){const offset=process.env.WG_CAMPAIGN_TARGET_OFFSET.split(',').map(Number);if(offset.length!==2||offset.some(v=>!Number.isFinite(v)))throw Error('WG_CAMPAIGN_TARGET_OFFSET requires x,z');await page.evaluate(([x,z])=>{const w=window.qaCampaignWorld;w.controls.target.x+=x;w.controls.target.z+=z;w.controls.target.y=w.nav.field.surface(w.controls.target.x,w.controls.target.z)+.9;},offset);}
+ const selected=process.env.WG_DESERT_LIGHT_COMPARE==='1'?null:variant==='candidate'?study:process.env.WG_GRASS_BASELINE;if(selected)await page.evaluate(async study=>{const {applyMaterialStudy}=await import('/tools/experiments/qa-'+study+'.js');await applyMaterialStudy(window.qaCampaignWorld)},selected);
  for(const [view,offset] of (process.env.WG_GRASS_DETAIL==='1'?[['detail',[3,2,4]]]:[['settlement',[22,16,18]],['overview',[32,26,32]],['low',[14,8,14]]]).filter(([view])=>!process.env.WG_GRASS_VIEWS||process.env.WG_GRASS_VIEWS.split(',').includes(view))){
  await page.evaluate(async({view,offset})=>{const w=window.qaCampaignWorld;if(view==='detail'){const x=w.controls.target.x+28,z=w.controls.target.z+16;const p=[...w.groundDetails.chunks.values()].flat().sort((a,b)=>(a.x-x)**2+(a.z-z)**2-((b.x-x)**2+(b.z-z)**2))[0];w.controls.target.set(p.x,p.y+.2,p.z);}w.camera.position.copy(w.controls.target).add({x:offset[0],y:offset[1],z:offset[2]});w.syncChunks();await w.horizon.whenReady();w.syncChunks();await w.whenChunksReady();w.render(.016);},{view,offset});
   for(const phase of ['day','night']){

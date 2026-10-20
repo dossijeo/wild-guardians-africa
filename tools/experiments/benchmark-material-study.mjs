@@ -1,3 +1,4 @@
+import {disableIntegratedDesertLight} from './desert-light-qa-route.mjs';
 import {disableIntegratedNight} from './night-qa-route.mjs';
 import {disableIntegratedCanyon} from './canyon-qa-route.mjs';
 import {disableIntegratedRoughness} from './roughness-qa-route.mjs';
@@ -11,18 +12,19 @@ const browser=await chromium.launch({channel:'chrome',headless:true});const reco
 try{for(const sceneCase of cases){
  const page=await browser.newPage({viewport:{width:1280,height:720},deviceScaleFactor:1});const errors=[];
  page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
+ if(study==='desert-soft-light')await disableIntegratedDesertLight(page);
  if(study.startsWith('night-'))await disableIntegratedNight(page);
  if(study.startsWith('canyon-'))await disableIntegratedCanyon(page);
  if(study==='volcanic-charcoal')await page.route('**/src/rendering/african-toon.js',async route=>{const response=await route.fetch();await route.fulfill({response,body:(await response.text()).replace('shader.fragmentShader=patchVolcanicCharcoal(shader.fragmentShader);','/* QA baseline before charcoal integration */')});});
  if(study==='ground-roughness')await disableIntegratedRoughness(page);
  if(study.startsWith('water-'))await disableIntegratedWater(page);
  await page.goto(`http://127.0.0.1:5190/tests/browser/african-toon.html?case=${sceneCase}&q=media&visualLab=global-lighting&visualLabReference=1`);
- await page.waitForFunction(()=>window.qaVisualReference&&document.querySelector('#status').textContent.includes('/30 ·'),null,{timeout:120000});
+ await page.waitForFunction(()=>window.qaVisualReference&&document.querySelector('#status').textContent.includes('/30 '),null,{timeout:120000});
  if(process.env.WG_PAIR_VIEW==='water')await page.evaluate(async()=>{const {focusWater}=await import('/tools/experiments/qa-water-view.js');return focusWater(window.qaVisualReference.world)});
  if(process.env.WG_PAIR_VIEW==='side')await page.evaluate(()=>{const {world:w,state}=window.qaVisualReference;const px=state.plants.reduce((n,p)=>n+p.x,0)/state.plants.length,pz=state.plants.reduce((n,p)=>n+p.z,0)/state.plants.length,y=w.nav.field.surface(px,pz);w.controls.target.set(px,y+.9,pz);w.camera.position.set(px+22,y+10,pz);w.updateCamera=()=>{w.camera.lookAt(w.controls.target);w.camera.updateMatrixWorld()};w.render(.016);});
  await page.evaluate(async({mode,study})=>{
   const w=window.qaVisualReference.world;
-  const materials=study.startsWith('water-')?(()=>{const set=new Set();w.scene.traverse(o=>{if(o.isMesh&&o.material?.userData?.paintUniforms&&o.material.userData.paintUniforms.uSurfaceLava.value<.5)set.add(o.material)});return [...set]})():[...new Set([...w.terrainMeshes,...(['canyon-dominant','canyon-color-only','canyon-soft-bands'].includes(study)?(w.horizon?.group?.children??[]).filter(m=>m.userData.nativeHorizon==='terrain'):[])].map(m=>m.material))];
+  const materials=study.startsWith('water-')?(()=>{const set=new Set();w.scene.traverse(o=>{if(o.isMesh&&o.material?.userData?.paintUniforms&&o.material.userData.paintUniforms.uSurfaceLava.value<.5)set.add(o.material)});return [...set]})():[...new Set([...w.terrainMeshes,...(['canyon-dominant','canyon-color-only','canyon-soft-bands','desert-soft-light'].includes(study)?(w.horizon?.group?.children??[]).filter(m=>m.userData.nativeHorizon==='terrain'):[])].map(m=>m.material))];
   const before=materials.map(m=>[m.onBeforeCompile,m.customProgramCacheKey]);
   const {applyMaterialStudy}=await import('/tools/experiments/qa-'+study+'.js');await applyMaterialStudy(w);
   const after=materials.map(m=>[m.onBeforeCompile,m.customProgramCacheKey]);
