@@ -373,3 +373,7 @@ El usuario propone suavizar ocultación cercana y paso impostor/3D. La [prueba M
 ## Fundidos de cámara: candidato con coste pendiente
 
 El [fundido convencional](obstruction-blend/README.md) se descarta por superposición de caras internas. El [control de superficie cercana](obstruction-surface-blend/README.md) elimina el tramado y reduce esa acumulación, pero añade2–4 draws en poses afectadas y empeora GPU/CPU/cadencia en la serie móvil corregida.960 muestras GPU,1.440 frames; piloto de dt variable excluido por falta de repetibilidad. Mantener solo como candidato visual: pendiente vídeo, profundidad más barata, agua/transparencias, lifecycle e impostores. No activar globalmente ni cambiar main.
+
+## Profundidad auxiliar reutilizada
+
+[Material estándar de profundidad](obstruction-depth-only/README.md): ocho parejas exactas tras sincronizar opacidad.960 muestras GPU/1.440 frames, misma geometría por índice. GPU diurna15,83–16,08→14,70–15,17ms; noche y p95 no concluyentes. Conservar como base QA del fundido, no como aprobación global. Siguiente puerta: vídeo determinista y lectura de la silueta translúcida; después interacción con transparencias e impostores.

@@ -1,5 +1,5 @@
 // QA: split only partially obscured color instances into sortable transparent draws.
-export async function installObstructionBlendRoute(page,{singleSurface=false}={}){
+export async function installObstructionBlendRoute(page,{singleSurface=false,cheapDepth=false}={}){
  await page.route('**/src/rendering/asset-groups.js*',async route=>{
   const response=await route.fetch();let body=await response.text();
   const anchors=['retire(cache,key,retainGeometry=false){const g=cache.get(key);','const matrix=new THREE.Matrix4();let offset=0;','matrix.toArray(g.mesh.instanceMatrix.array,offset*16);','g.mesh.count=offset;'];
@@ -35,6 +35,17 @@ export async function installObstructionBlendRoute(page,{singleSurface=false}={}
     `);
     body=body.replace('fade.visible=true;qaFadeCount++;', 'fade.visible=true;if(fade.qaDepth){matrix.toArray(fade.qaDepth.instanceMatrix.array);fade.qaDepth.instanceMatrix.needsUpdate=true;fade.qaDepth.boundingSphere=null;fade.qaDepth.boundingBox=null;fade.qaDepth.visible=true;}qaFadeCount++;');
     body=body.replace('g.qaFades[i].visible=false;', '{g.qaFades[i].visible=false;if(g.qaFades[i].qaDepth)g.qaFades[i].qaDepth.visible=false;}');
+  }
+  if(cheapDepth){
+    if(!singleSurface)throw Error('Depth-only variant requires singleSurface');
+    body="import {standardDepthMaterial} from '/src/rendering/standard-depth.js';\n"+body;
+    const full="const depthMaterial=material.clone();depthMaterial.transparent=false;depthMaterial.depthWrite=true;depthMaterial.colorWrite=false;depthMaterial.onBeforeCompile=material.onBeforeCompile;depthMaterial.customProgramCacheKey=()=>cacheKey()+'|qa-partial-surface-depth';";
+    if(!body.includes(full))throw Error('Depth-only QA anchor missing');
+    body=body.replace(full,`const depthSource=standardDepthMaterial(base);if(!depthSource)throw Error('Unsupported partial depth recipe');
+      const depthMaterial=depthSource.clone();depthMaterial.colorWrite=false;depthMaterial.depthWrite=true;
+      depthMaterial.onBeforeCompile=(shader,renderer)=>{depthSource.onBeforeCompile(shader,renderer);shader.fragmentShader=shader.fragmentShader.replace('if(vNativeVisibility<.999){if(vNativeVisibility<.002||coverageThreshold(gl_FragCoord.xy)>=vNativeVisibility)discard;}','if(vNativeVisibility<.002)discard;');};
+      depthMaterial.customProgramCacheKey=()=>depthSource.customProgramCacheKey()+'|qa-partial-depth-only';
+    `);
   }
   await route.fulfill({response,body});
  });
