@@ -921,8 +921,7 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
     // An animal can phase around a mobile body occupying its destination;
     // attack initiation still checks approach occupancy, and movement below
     // continues to validate every static segment.
-    if(staticClear&&(!worker||
-      actorSegmentClear(destination,destination,w,blockers))&&
+    if(!worker&&staticClear&&
       !actorSegmentClear(w,probe,w,blockers)){
       w.mobilePhaseRemaining=3;w.dynamicStallSeconds=0;
       w.mobileRecoveryAttempts=(w.mobileRecoveryAttempts??0)+1;
