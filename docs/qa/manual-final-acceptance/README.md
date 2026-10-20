@@ -1,8 +1,8 @@
-# Manual acceptance still needed: QA-014 and QA-156
+# Manual follow-up: QA-156 and optional phone compatibility
 
-The [acceptance register](../acceptance-progress.json) keeps these two cases `partial`. Automated Chrome and Windows runs already cover five-minute visibility changes, state invariance, and several paid Wild Engine days with A/B music swaps. They cannot establish behavior on a physical phone or whether a human hears a clean musical transition. Record the tested build and observations before changing either status.
+The [acceptance register](../acceptance-progress.json) marks QA-014 `verified` and QA-156 `partial`. The [current Wild Engine Chrome run](../browser-visibility/README.md) observed a genuinely hidden paid farm for 300 seconds with an unchanged full-state hash, money, crop and worker state, then normal visible progress. The scenario written for QA-014 is therefore covered. The user's separate physical-phone checks are useful platform compatibility evidence, not a prerequisite for this acceptance case or a blocker for implementation. The A/B music checks still need a perceptual listening verdict.
 
-## QA-014 — physical phone visibility
+## QA-014 — optional physical-phone compatibility
 
 Use an actual phone running the current game build in its browser. Record the commit/build identifier, device, OS/browser versions, URL, and whether the page was installed or opened as a tab. A development build with `?qa-visibility` exposes `wildGuardiansVisibilityQa()` in remote DevTools; the production build intentionally omits it.
 
@@ -11,7 +11,7 @@ Use an actual phone running the current game build in its browser. Record the co
 3. Return to the game. Before allowing several seconds of visible play, record the same fields. There must be no offline clock jump, crop growth/watering, damage, delivery, income or movement attributable to the hidden interval. A previously open menu or hiring pause must remain open.
 4. Let the game run visibly for a few seconds and confirm that normal time and worker movement resume without replaying the hidden interval. Repeat once with a menu or hiring pause stacked over the hidden pause if the device permits.
 
-Pass requires the expected state behavior on the phone, no reload or page exception, and a recorded hidden interval. A production visual check can show the user-visible result; remote DevTools snapshots provide stronger state-level evidence. Keep screenshots or a short recording and note any browser tab discard/reload separately from ordinary visibility restoration. The existing [Chrome report](../browser-visibility/README.md) and [Windows report](../windows-desktop/native-visibility.md) do not replace this test.
+For the optional device check, record the expected state behavior, any reload or page exception, and the hidden interval. A production visual check can show the user-visible result; remote DevTools snapshots provide stronger state-level evidence. Keep screenshots or a short recording and note any browser tab discard/reload separately from ordinary visibility restoration. A phone-specific defect should be reported and fixed, but lack of this device check does not reopen QA-014's verified Chrome behavior.
 
 ## QA-156 — audible A/B continuity
 
@@ -23,4 +23,4 @@ The [three-day Wild Engine run](../music-three-native-days/wild-engine-rerun.md)
 
 ## Record
 
-For each case, save the build SHA, device/browser, date, exact steps, duration, observed pass/fail and any screenshots or audio/video references. Note whether the result came from the production game, a development QA hook or the isolated mixer. Keep the acceptance register partial until the physical and audible observations exist; a failed observation should become a reproducible defect rather than being marked verified.
+For each check, save the build SHA, device/browser, date, exact steps, duration, observed pass/fail and any screenshots or audio/video references. Note whether the result came from the production game, a development QA hook or the isolated mixer. Keep QA-156 partial until the audible observations exist. A failed phone or audio observation should become a reproducible defect rather than silently changing the scope of the existing evidence.
