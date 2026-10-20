@@ -172,3 +172,7 @@ Se conserva [la rampa de luz suavizada](desert-soft-light/README.md), con [integ
 ## Hojas adicionales con triangulos acotados (20/10)
 
 [Grass dense](grass-dense/README.md), 24 hojas/240 triangulos, descartado por tiras rigidas. [Grass mixed](grass-mixed/README.md), 19 hojas/238 triangulos, conserva algunas curvas pero no mejora claramente la masa. 16 capturas cercanas de campana en total, modelos Blender cerrados y validacion glTF sin avisos. ABBA directo del combinado contra el original en Sabana/Rio, sin confundirlo con ocultar vegetacion. Mantener grass-arched; no integrado. Proxima prioridad: lectura del material/normales de la vegetacion existente a escala de juego, antes de otro barrido de cantidad de hojas.
+
+## Follaje nativo fuera del poblado (20/10)
+
+[Transiciones suaves](foliage-soft-light/README.md), 24 capturas y ABBA de tres biomas: aporte pequeno, Sabana diurna +0,566 ms; descartado. [Mayor normal del atlas](foliage-normal/README.md), 28 capturas incluido Rio con camara elevada: no crea detalle nuevo convincente; descartado sin benchmark temporal. Ninguno integrado. Las vistas +50/+30 m muestran masas vegetales nativas mas densas que el claro de aldea: mantener paisaje y aldea en QA antes de juzgar cobertura. No seguir amplificando el atlas existente; siguiente ensayo, detalle de hojas modeladas en Blender y horneado para el material de copas, sin alterar contornos. Calidad global pendiente.
