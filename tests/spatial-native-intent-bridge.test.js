@@ -551,8 +551,13 @@ test('event-fed native intent bridge replays live state and only changes on expl
  const game=deserialize(gunzipSync(readFileSync(new URL(
   './fixtures/desierto983-d15-partial-state.json.gz',import.meta.url))).toString());
  const worker=game.workers.find(w=>w.id==='worker-9263');
+ // This fixture checks one committed native route. Freeze unrelated workers
+ // out of the physical movement scene so stationary snapshot bodies do not
+ // indefinitely occupy its service approach during the movement replay.
+ game.workers=[worker];
  worker.status='idle';worker.taskId=null;worker.contractDay=game.day;
  game.workers.push({...worker,id:'worker-1000001',centerId:null,
+  x:game.villages[0].entry.x,z:game.villages[0].entry.z,
   status:'waiting',taskId:null});
  const plant=game.plants.filter(p=>p.alive&&p.centerId===worker.centerId)
   .sort((a,b)=>Math.hypot(a.x-worker.x,a.z-worker.z)-

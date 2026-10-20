@@ -1375,7 +1375,22 @@ function updateWorkers(s,dt,nav) {
       if(!center||!operational(center)) {if(center&&!contractExpired(w,s)&&s.time<p.end)w.displacedDay??=s.day;cancelIdle(w);releaseTask(s,w);if(w.crateId)dropCarriedCrate(s,w);w.status='returning';w.path=null;notifyWorkerPlanningChange(s,w);continue;}
       const ended=contractExpired(w,s)||s.time>=p.end;
       if(ended&&!['acting','carrying'].includes(w.status)) {cancelIdle(w);releaseTask(s,w);w.status='returning';w.path=null;notifyWorkerPlanningChange(s,w);continue;}
-      if(w.status==='arriving') {if(walkTo(s,w,{...center,...centerServicePoint(center,s,.8),id:`arrival-${center.id}`},dt,nav,{motion:{urgent:!w.raidReturn&&(urgency?urgency.urgent(w):urgentWork(s,w))}})){w.status='idle';w.raidReturn=false;notifyWorkerPlanningChange(s,w);}continue;}
+      if(w.status==='arriving') {
+        const arrival={...center,...centerServicePoint(center,s,.8),id:`arrival-${center.id}`};
+        const reached=walkTo(s,w,arrival,dt,nav,
+          {motion:{urgent:!w.raidReturn&&(urgency?urgency.urgent(w):urgentWork(s,w))}});
+        // Several paid workers share one authored center entrance. Reaching
+        // its clear approach zone is sufficient; insisting on the occupied
+        // exact point can strand later arrivals behind an idle coworker.
+        const nearEntrance=w.path?.length>0&&w.destinationId===arrival.id&&
+          w.pathVersion===nav.version&&dist(w,arrival)<=2&&
+          (nav.segmentClear?.(w,arrival,w.radius??.28,null,true)??false);
+        if(reached||nearEntrance){
+          w.path=null;w.destinationId=null;w.status='idle';w.raidReturn=false;
+          notifyWorkerPlanningChange(s,w);
+        }
+        continue;
+      }
       if(w.status==='carrying') {
         const crate=findCrate(w.crateId);
         if(!crate){w.crateId=null;w.status='idle';notifyWorkerPlanningChange(s,w);continue;}

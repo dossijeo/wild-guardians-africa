@@ -45,10 +45,23 @@ function terrainDetour(actor,goal,blockers,nav,worker,clear){
 }
 // Active worker encounters keep their approved hit/knockback rules. Exhausted
 // animals and incapacitated people need physical clearance without another hit.
-export function actorBlockers(state,actor,worker){
-  const animals=(state.raid?.animals??[]).filter(a=>a!==actor&&a.status!=='gone');
-  if(worker)return animals.filter(a=>actor.incapacitated||a.status==='retreating'||a.hitsRemaining<=0);
-  return [...animals,...state.workers.filter(w=>w.status!=='home'&&(w.incapacitated||actor.status==='retreating'||actor.hitsRemaining<=0))];
+export function actorBlockers(state,actor,worker,range=Infinity){
+  const blockers=[],reach=range+radius(actor);
+  for(const animal of state.raid?.animals??[]){
+    if(animal===actor||animal.status==='gone'||(worker&&
+      !actor.incapacitated&&animal.status!=='retreating'&&animal.hitsRemaining>0))continue;
+    const clearance=reach+radius(animal);
+    if(Math.abs(actor.x-animal.x)<=clearance&&Math.abs(actor.z-animal.z)<=clearance)
+      blockers.push(animal);
+  }
+  for(const other of state.workers){
+    if(other===actor||other.status==='home'||(!worker&&
+      !other.incapacitated&&actor.status!=='retreating'&&actor.hitsRemaining>0))continue;
+    const clearance=reach+radius(other);
+    if(Math.abs(actor.x-other.x)<=clearance&&Math.abs(actor.z-other.z)<=clearance)
+      blockers.push(other);
+  }
+  return blockers;
 }
 export function actorSegmentClear(start,end,actor,blockers){
   return blockers.every(other=>{
@@ -63,7 +76,10 @@ export function actorSegmentClear(start,end,actor,blockers){
   });
 }
 export function prepareActorMotion(state,actor,nav,worker){
-  const blockers=actorBlockers(state,actor,worker);
+  // A worker step only needs the local approach. Animal detours retain their
+  // full native search corridor dependencies, including remote bodies that
+  // may enter an incremental search while it is pending.
+  const blockers=actorBlockers(state,actor,worker,worker?8:Infinity);
   if(!blockers.length)return null;
   const clear=(a,b)=>actorSegmentClear(a,b,actor,blockers);
   if(!actor.path?.length)return clear;

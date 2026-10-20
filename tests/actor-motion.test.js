@@ -132,6 +132,38 @@ test('Workers avoid a retreating beast in both movement directions and charge on
   }
   assert.ok(arrived);assert.ok(total>8);assert.equal(worker.runRemaining,50);assert.equal(worker.hits,0);
 });
+test('Workers crossing opposite ways keep physical separation and both reach their destinations',()=>{
+  const {state,worker:a,nav}=fixture();state.raid=null;
+  Object.assign(a,{id:'worker-a',x:-4,z:0,status:'walking',path:null});
+  const b={...a,id:'worker-b',personId:'person-b',x:4,path:null};
+  state.workers=[a,b];
+  const targets=[[a,{id:'right',x:4,z:0}],[b,{id:'left',x:-4,z:0}]];
+  const arrived=new Set();
+  for(let step=0;step<500&&arrived.size<2;step++)for(const [actor,target] of targets){
+    if(arrived.has(actor.id))continue;
+    const other=actor===a?b:a,before={x:actor.x,z:actor.z};
+    if(walkTo(state,actor,target,.1,nav))arrived.add(actor.id);
+    assert.ok(edgeDistance(before,actor,other.x,other.z)>=.56-1e-8,
+      'worker bodies must not cross during an ordinary movement step');
+  }
+  assert.deepEqual([...arrived].sort(),['worker-a','worker-b']);
+});
+test('A walking worker detours around a stationary coworker without moving the coworker',()=>{
+  const {state,worker:traveller,nav}=fixture();state.raid=null;
+  Object.assign(traveller,{id:'traveller',x:-4,z:0,status:'walking',path:null});
+  const resting={...traveller,id:'resting',personId:'resting-person',x:0,path:null,status:'idle'};
+  state.workers=[traveller,resting];
+  const destination={id:'delivery',x:4,z:0};
+  let arrived=false,detoured=false;
+  for(let step=0;step<250&&!arrived;step++){
+    const before={x:traveller.x,z:traveller.z};
+    arrived=walkTo(state,traveller,destination,.1,nav);
+    assert.ok(edgeDistance(before,traveller,resting.x,resting.z)>=.56-1e-8);
+    detoured||=Math.abs(traveller.z)>.01;
+  }
+  assert.ok(arrived);assert.ok(detoured);
+  assert.deepEqual({x:resting.x,z:resting.z},{x:0,z:0});
+});
 test('A worker blocked by a retreating body spends no reserve or gait time, then resumes the same paid route',()=>{
   const {state,animal,worker,nav}=fixture();animal.x=0;worker.x=-1.4;
   // The destination itself is temporarily occupied, so no alternate endpoint
