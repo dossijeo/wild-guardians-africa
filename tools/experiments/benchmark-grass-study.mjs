@@ -27,7 +27,8 @@ try{for(const sceneCase of cases){
    await page.locator('#benchmarkReport').evaluate(e=>e.textContent='');await page.locator('#benchmark').evaluate(e=>e.click());
    await page.waitForFunction(()=>{try{return !!JSON.parse(document.querySelector('#benchmarkReport').textContent).submittedCalls}catch{return false}},null,{timeout:120000});
    const report=JSON.parse(await page.locator('#benchmarkReport').textContent());
-   records.push({sceneCase,phase,variant,view:process.env.WG_PAIR_VIEW??'game',camera:await page.evaluate(()=>({position:window.qaVisualReference.world.camera.position.toArray(),target:window.qaVisualReference.world.controls.target.toArray()})),report,errors:[...errors]});
+   const instances=await page.evaluate(()=>{const d=window.qaVisualReference.world.groundDetails;if(d.maxVisible&&d.mesh.count>d.maxVisible)throw Error('Ground detail visibility budget exceeded');return {count:d.mesh.count,maxVisible:d.maxVisible??null};});
+   records.push({sceneCase,phase,variant,instances,view:process.env.WG_PAIR_VIEW??'game',camera:await page.evaluate(()=>({position:window.qaVisualReference.world.camera.position.toArray(),target:window.qaVisualReference.world.controls.target.toArray()})),report,errors:[...errors]});
    console.log(JSON.stringify({sceneCase,phase,variant,gpu:report.gpuElapsedMs?.mean,cpu:report.cpuSubmissionMs.mean,errors:errors.length}));
    await writeFile(output,JSON.stringify({mode,cases,order:records.map(r=>r.variant),note:'Same-page visibility comparison; all assets resident in both variants; baseline ground details verified empty. Incremental render cost only.',records},null,2)+'\n');
   }
