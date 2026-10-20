@@ -208,3 +208,7 @@ La petición posterior del usuario limita este pase al material del suelo; queda
 ### Viento y sombras de matas: 2026-10-20
 
 [Prototipo de viento](grass-wind/README.md): candidato QA sobre las mismas 192 matas Blender, sin coste de geometría adicional frente al control estático. Presupuesto fino aún incierto. [Sombras dinámicas](grass-wind-shadow/README.md): descartadas; invalidar el mapa solar completo añade 22–44% GPU en la prueba de media y aporta poco en cámara normal. No activar por defecto; calidad global y streaming largo siguen pendientes.
+
+### Paleta seca de las matas del Cañón (20/10)
+
+[Canyon dry grass](canyon-dry-grass/README.md): perfil QA de Cañón pasa a tinte lineal [1,.68,.48], conservando forma/distribución y otros biomas. Doce capturas, cuatro retornos exactos, 1.920 muestras GPU. Mejora modesta de coherencia seca, no de volumen. Diferencias temporales cercanas desfavorables y deriva documentadas; no aprueba el coste acumulado ni integra la vegetación en producción.
