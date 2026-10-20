@@ -802,7 +802,21 @@ int nav_intent_apply_changes(double sequence,int count){
   }
   bool planningChange=false,damageChange=false,cropChange=false,cropRemoved=false,
     centerChange=false,wallChange=false;
+  std::unordered_set<uint64_t> invalidPlantCenters;
   for(const Change& change:parsed){
+    const auto prior=s.targets.find(change.id);
+    if(change.kind==2&&prior!=s.targets.end()&&prior->second.kind==4&&
+       (!change.op||change.center!=4||prior->second.x!=change.x||
+        prior->second.z!=change.z||prior->second.yaw!=change.created||
+        prior->second.shape!=change.rank||prior->second.active!=change.flag))
+      invalidPlantCenters.insert(change.id);
+    if(change.kind==6&&prior!=s.targets.end()&&prior->second.kind==4&&
+       (!change.op||!prior->second.serviceKnown||
+        prior->second.serviceX!=change.x||prior->second.serviceZ!=change.z))
+      invalidPlantCenters.insert(change.id);
+    if(change.kind==4&&prior!=s.targets.end()&&prior->second.kind==4&&
+       (!change.op||change.assigned!=0))
+      invalidPlantCenters.insert(change.id);
     if(change.kind==2||change.kind==4)damageChange=true;
     if(change.kind==2&&
        (change.op&&change.center==3||
@@ -897,6 +911,12 @@ int nav_intent_apply_changes(double sequence,int count){
   s.sequence++;
   if(damageChange)s.damageRevision++;
   if(cropChange){s.cropRevision++;s.cropGroupsDirty=true;}
+  if(!invalidPlantCenters.empty()){
+    for(auto it=s.plantLeases.begin();it!=s.plantLeases.end();)
+      if(invalidPlantCenters.count(it->second.center))it=s.plantLeases.erase(it);
+      else ++it;
+    centerChange=true;
+  }
   if(cropRemoved||centerChange){s.plantSearches.clear();s.centerRevision++;}
   if(planningChange){s.entityRevision++;clearProposal(s);}
   return 1;
@@ -1011,7 +1031,8 @@ int nav_intent_find_planting_site(double centerId,double minX,double minZ,
   const uint64_t id=uint64_t(centerId);
   const auto found=s.targets.find(id);
   if(found==s.targets.end()||found->second.kind!=4||
-     !found->second.active||!found->second.serviceKnown)return -2;
+     !found->second.active||!found->second.serviceKnown||
+     !found->second.damageKnown||found->second.status!=0)return -2;
   const Target& center=found->second;
   const uint32_t revision=lazy_route_revision();
   for(auto it=s.plantLeases.begin();it!=s.plantLeases.end();)
