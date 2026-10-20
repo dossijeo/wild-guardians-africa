@@ -5,9 +5,9 @@ import {footprintDistance} from '/src/world/footprints.js';
 import {residentWearSampler} from './qa-ground-detail-mask.js';
 import {hashCell} from '/src/world/terrain.js';
 // QA only: stable authored islands, visibility budget, no simulation membership.
-export async function applyMaterialStudy(world){
+export async function applyMaterialStudy(world,{assetPath='/assets/visual-lab/grass-clumps.glb'}={}){
  if(!['sabana','gran-rio'].includes(world.state.biome))return {control:true};
- const gltf=await world.assets.model('/assets/visual-lab/grass-clumps.glb');
+ const gltf=await world.assets.model(assetPath);
  gltf.scene.updateMatrixWorld(true);let source;gltf.scene.traverse(o=>{if(o.isMesh&&!source)source=o});
  const d=new BlenderGroundDetails(world.assets,world.scene,world.nav.field.c.biome);
  Object.assign(d,{enabled:true,global:true,sculpted:true,detailed:true});
@@ -70,5 +70,5 @@ export async function applyMaterialStudy(world){
  world.scene.onBeforeRender=hook;
  const dispose=d.dispose.bind(d);let disposed=false;
  d.dispose=()=>{if(disposed)return;disposed=true;if(world.scene.onBeforeRender===hook)world.scene.onBeforeRender=old;dispose();d.geometry.dispose();d.material.dispose();active.clear();desired.clear();};
- return {maxVisible:192,trianglesPerInstance:360,transitionSeconds:.3,hysteresisMeters:4,streaming:true,occupancyEvents:true,limitations:'QA only; scale transitions, no LOD; campaign and other biomes pending'};
+ return {maxVisible:192,trianglesPerInstance:(d.geometry.index?.count??d.geometry.attributes.position.count)/3,transitionSeconds:.3,hysteresisMeters:4,streaming:true,occupancyEvents:true,limitations:'QA only; scale transitions, no LOD; campaign and other biomes pending'};
 }

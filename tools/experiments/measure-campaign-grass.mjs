@@ -2,7 +2,7 @@ import {chromium} from 'playwright';
 import {mkdir,writeFile} from 'node:fs/promises';
 
 
-const out='docs/qa/global-visual-lab/'+'grass-campaign';await mkdir(out,{recursive:true});const records=[],transitions=[];
+const study=process.env.WG_GRASS_STUDY??'grass-streaming';const out=process.env.WG_GRASS_OUTPUT??'docs/qa/global-visual-lab/grass-campaign';await mkdir(out,{recursive:true});const records=[],transitions=[];
 const browser=await chromium.launch({channel:'chrome',headless:true});
 try{for(const biome of ['sabana','gran-rio'])for(const variant of ['candidate']){
  const page=await browser.newPage({viewport:{width:1280,height:720},deviceScaleFactor:1});const errors=[];
@@ -20,7 +20,7 @@ try{for(const biome of ['sabana','gran-rio'])for(const variant of ['candidate'])
  await page.evaluate(async()=>{const w=window.qaCampaignWorld;const {pause}=await import('/src/simulation/game.js');pause(w.state,'qa-visual');w.updateCamera=()=>{w.camera.lookAt(w.controls.target);w.camera.updateMatrixWorld()};});
 
  await page.evaluate(()=>{const w=window.qaCampaignWorld,update=w.materialRegistry.update.bind(w.materialRegistry);w.materialRegistry.update=()=>update(0)});
- if(variant==='candidate')await page.evaluate(async()=>{const {applyMaterialStudy}=await import('/tools/experiments/qa-grass-streaming.js');await applyMaterialStudy(window.qaCampaignWorld)});
+ const selected=variant==='candidate'?study:process.env.WG_GRASS_BASELINE;if(selected)await page.evaluate(async study=>{const {applyMaterialStudy}=await import('/tools/experiments/qa-'+study+'.js');await applyMaterialStudy(window.qaCampaignWorld)},selected);
  await page.evaluate(async()=>{const w=window.qaCampaignWorld;w.camera.position.copy(w.controls.target).add({x:22,y:16,z:18});w.syncChunks();await w.horizon.whenReady();w.syncChunks();await w.whenChunksReady();});
  for(const phase of ['day','night']){
   await page.evaluate(phase=>{window.qaCampaignWorld.state.time=phase==='day'?150:350},phase);await page.waitForTimeout(1000);
