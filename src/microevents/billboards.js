@@ -48,11 +48,14 @@ export class MicroeventBillboards {
    const frame=def.frames>1?Math.floor(t*(reducedMotion?4:def.fps)+i)%def.frames:0,variant=def.spriteVariants?.[i%def.spriteVariants.length],body=i>0&&def.bodySprite;
    const sx=body?body.x:variant?variant.x:def.spriteOffset+frame*64,sy=body?body.y:variant?variant.y:def.spriteY??0;
    let rotation=def.upright||def.formation==='ground'?0:p.rotation;
-   if(def.id==='termites')rotation=-Math.PI/2+Math.sin(p.phase)*.22;
+   if(def.id==='termites'||def.id==='ants')rotation=-Math.PI/2+Math.sin(p.phase)*.22;
    if(def.behavior.chain){const ahead=i?particles.pool[i-1]:null;rotation=space.angle(ahead?ahead.x-p.x:p.vx,ahead?ahead.y-p.y:p.vy,this.world.camera);}
    // Deterministic visual variety only: preserve particle physics and hit radii.
    if(def.id==='fallingdebris')size*=.78+(i%4)*.12;
-   this.emit(space,p.x,p.y,size,sx,sy,alpha,rotation,p.phase,{lift,height:def.id==='fallingdebris'?size*(.86+(i%3)*.1):size});
+   let height=def.id==='fallingdebris'?size*(.86+(i%3)*.1):size;
+   if(def.id==='fire'){size*=.8+(i%3)*.12;height*=.78+(i%4)*.14;}
+   if(def.behavior.chain){height*=1.45;if(i>particles.count-4)size*=1-(i-(particles.count-4))*.18;}
+   this.emit(space,p.x,p.y,size,sx,sy,alpha,rotation,p.phase,{lift,height});
    if(def.secondary&&def.secondary.kind!=='mound'){
     const s=def.secondary,phase=(t*(s.kind==='rain'?1.6:.5)+i*.19)%1,opacity=s.kind==='lightning'?(reducedMotion?.12:Math.sin(t*9+i)>.92?.9:0):.55;
     const sy=s.spriteY,sx=s.spriteOffset+(s.frames?Math.floor(t*s.fps+i)%s.frames*64:0),rise=s.kind==='smoke'?phase*2.5:s.kind==='rain'?-phase*2.5:0;

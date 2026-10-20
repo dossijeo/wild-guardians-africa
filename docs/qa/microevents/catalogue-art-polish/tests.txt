@@ -1,0 +1,157 @@
+TAP version 13
+# (node:33392) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: particle centers remain at fixed world coordinates when the camera orbits
+ok 1 - particle centers remain at fixed world coordinates when the camera orbits
+  ---
+  duration_ms: 5.2517
+  ...
+# Subtest: world-unit sprites scale naturally with camera distance
+ok 2 - world-unit sprites scale naturally with camera distance
+  ---
+  duration_ms: 1.549
+  ...
+# Subtest: screen ray-plane conversion follows world particles on ground and vertical planes
+ok 3 - screen ray-plane conversion follows world particles on ground and vertical planes
+  ---
+  duration_ms: 0.6378
+  ...
+# Subtest: one pooled instanced world mesh uses real depth and is excluded from existing VFX depth capture
+ok 4 - one pooled instanced world mesh uses real depth and is excluded from existing VFX depth capture
+  ---
+  duration_ms: 5.039
+  ...
+# Subtest: world rendering remains correct across floating-origin recentering
+ok 5 - world rendering remains correct across floating-origin recentering
+  ---
+  duration_ms: 2.3596
+  ...
+# Subtest: an opaque farm structure blocks claiming a sprite hidden behind it
+ok 6 - an opaque farm structure blocks claiming a sprite hidden behind it
+  ---
+  duration_ms: 3.2458
+  ...
+# Subtest: wooden anchors sit in front of their own wall without moving the authoritative entity
+ok 7 - wooden anchors sit in front of their own wall without moving the authoritative entity
+  ---
+  duration_ms: 1.1848
+  ...
+# Subtest: all forty definitions complete through touch ownership using actual world projection
+ok 8 - all forty definitions complete through touch ownership using actual world projection
+  ---
+  duration_ms: 203.8473
+  ...
+# Subtest: a contact cue is played once across repeated owned gestures; unrelated input stays silent
+ok 9 - a contact cue is played once across repeated owned gestures; unrelated input stays silent
+  ---
+  duration_ms: 0.8515
+  ...
+# Subtest: catalogue presentation leaves simulation and touch radii untouched within one mesh budget
+ok 10 - catalogue presentation leaves simulation and touch radii untouched within one mesh budget
+  ---
+  duration_ms: 23.6961
+  ...
+# Subtest: flying creatures move quickly without pointer input and turn inside a bounded volume
+ok 11 - flying creatures move quickly without pointer input and turn inside a bounded volume
+  ---
+  duration_ms: 63.5288
+  ...
+# Subtest: fast flight remains catchable by accessible owned hold at 30, 60 and 120 Hz
+ok 12 - fast flight remains catchable by accessible owned hold at 30, 60 and 120 Hz
+  ---
+  duration_ms: 119.8798
+  ...
+# Subtest: contact VFX require earned progress; hover and ignoring do not emit completion feedback
+ok 13 - contact VFX require earned progress; hover and ignoring do not emit completion feedback
+  ---
+  duration_ms: 2.8047
+  ...
+# Subtest: all feedback uses authored atlas sprites and existing short non-looping SFX
+ok 14 - all feedback uses authored atlas sprites and existing short non-looping SFX
+  ---
+  duration_ms: 7.7557
+  ...
+# Subtest: every catalogue event has an explicit shared primary interaction and hold alternative
+ok 15 - every catalogue event has an explicit shared primary interaction and hold alternative
+  ---
+  duration_ms: 1.4098
+  ...
+# Subtest: radial sweeps do not count as circular movement; either circular direction works
+ok 16 - radial sweeps do not count as circular movement; either circular direction works
+  ---
+  duration_ms: 0.9819
+  ...
+# Subtest: swirl physics follows pointer circulation instead of imposing a constant spin
+ok 17 - swirl physics follows pointer circulation instead of imposing a constant spin
+  ---
+  duration_ms: 1.607
+  ...
+# Subtest: brushing and rubbing require motion; a motionless contact uses the explicit hold alternative
+ok 18 - brushing and rubbing require motion; a motionless contact uses the explicit hold alternative
+  ---
+  duration_ms: 0.1575
+  ...
+# Subtest: a full touch catch emits immediate contact VFX even when released before the next frame
+ok 19 - a full touch catch emits immediate contact VFX even when released before the next frame
+  ---
+  duration_ms: 0.4618
+  ...
+# Subtest: rain cloud can be dragged and dropped over its crop target without hold
+ok 20 - rain cloud can be dragged and dropped over its crop target without hold
+  ---
+  duration_ms: 8.2706
+  ...
+# Subtest: gathering outside the destination cannot settle on release, and cancellation cannot collect
+ok 21 - gathering outside the destination cannot settle on release, and cancellation cannot collect
+  ---
+  duration_ms: 0.6371
+  ...
+# Subtest: a weed needs a deliberate pull; release uproots only the claimed clump
+ok 22 - a weed needs a deliberate pull; release uproots only the claimed clump
+  ---
+  duration_ms: 0.2563
+  ...
+# Subtest: snake guidance moves the head away and preserves the following body
+ok 23 - snake guidance moves the head away and preserves the following body
+  ---
+  duration_ms: 2.1936
+  ...
+# Subtest: accessible hold remains explicit and is reset when a pooled event restarts
+ok 24 - accessible hold remains explicit and is reset when a pooled event restarts
+  ---
+  duration_ms: 18.6924
+  ...
+# Subtest: slow presentation frames preserve real-time hold completion for the entire catalogue
+ok 25 - slow presentation frames preserve real-time hold completion for the entire catalogue
+  ---
+  duration_ms: 473.0788
+  ...
+# Subtest: cloud drag remains usable at low frame rates without an accessible hold contribution
+ok 26 - cloud drag remains usable at low frame rates without an accessible hold contribution
+  ---
+  duration_ms: 11.3992
+  ...
+# Subtest: primary-only verification cannot be satisfied by stationary accessible hold
+ok 27 - primary-only verification cannot be satisfied by stationary accessible hold
+  ---
+  duration_ms: 39.1475
+  ...
+# Subtest: wood-attached insects remain within the visible face band after strong sweeps
+ok 28 - wood-attached insects remain within the visible face band after strong sweeps
+  ---
+  duration_ms: 26.3511
+  ...
+# Subtest: clearing an insect from its local patch requires a real brush, not ambient hover
+ok 29 - clearing an insect from its local patch requires a real brush, not ambient hover
+  ---
+  duration_ms: 0.5011
+  ...
+1..29
+# tests 29
+# suites 0
+# pass 29
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 707.5946
