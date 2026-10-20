@@ -1,0 +1,13 @@
+# Raw diagnostic reports are retained in pilot-reports.json.gz.
+/pilot-*/
+/frame-smoke/
+/timer-smoke/
+/grass-parity/
+/complex-smoke-*.png
+/export-failure.png
+# All timed records are retained; keep lossless captures of the first run per backend.
+/results/*-2-*.png
+/results/*-3-*.png
+/results/*-5-*.png
+/results/*-6-*.png
+/results/*-7-*.png

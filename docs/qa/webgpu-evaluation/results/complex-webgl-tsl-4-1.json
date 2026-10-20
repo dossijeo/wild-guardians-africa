@@ -1,0 +1,4347 @@
+{
+  "run": 4,
+  "protocol": "v3-deterministic-shadow-frame-external-GL-envelope-GPU-pass-sum",
+  "backend": "webgl-tsl",
+  "scenario": "complex",
+  "hardware": {
+    "adapter": {
+      "vendor": "intel",
+      "architecture": "gen-12lp",
+      "device": "",
+      "description": "",
+      "isFallbackAdapter": false
+    },
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+    "hardwareConcurrency": 16,
+    "deviceMemoryGiB": 32,
+    "glRenderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "features": [
+      "depth32float-stencil8",
+      "rg11b10ufloat-renderable",
+      "texture-formats-tier1",
+      "bgra8unorm-storage",
+      "texture-compression-bc",
+      "dual-source-blending",
+      "core-features-and-limits",
+      "float32-filterable",
+      "indirect-first-instance",
+      "float32-blendable",
+      "subgroup-size-control",
+      "depth-clip-control",
+      "texture-compression-bc-sliced-3d",
+      "timestamp-query",
+      "shader-f16",
+      "texture-formats-tier2",
+      "clip-distances",
+      "primitive-index",
+      "texture-component-swizzle",
+      "subgroups"
+    ],
+    "actualBackend": "WebGLBackend"
+  },
+  "metadata": {
+    "scope": "Real game assets in a deterministic render-only stress layout; common standard lighting, NOT migrated AfricanToon or a saved advanced campaign",
+    "materialRoute": "MeshStandardNodeMaterial / WebGPURenderer",
+    "parityCaution": "PCF filtering can differ between WebGLRenderer and WebGPURenderer; compare shadow captures before interpreting timings",
+    "seed": 712,
+    "logical": {
+      "chunks": 9,
+      "buildings": 36,
+      "crops": 432,
+      "vegetation": 135,
+      "walls": 90,
+      "workers": 24,
+      "animals": 8
+    },
+    "sources": {
+      "village": "mapungubwe",
+      "biome": "savanna",
+      "worker": "assets/web/25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238.glb",
+      "animal": "assets/web/88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb",
+      "crops": "assets/web/8f6c9ef7472a2d7f8ffda7f08a78f8027f91d14a8f92b8eeca4084b0f379da36.glb"
+    },
+    "omissions": [
+      "AfricanToon and custom surface hooks",
+      "Native shadow cache (common Three 1024px PCF shadow replaces it)",
+      "Wild Engine simulation/navigation",
+      "Real chunk IO/worker streaming",
+      "Terrain POM, water, VFX and gameplay LOD"
+    ],
+    "streaming": {
+      "kind": "preloaded chunk relocation every 1.5 camera-step seconds; measures matrix/bounds submission only",
+      "events": 10,
+      "lastCpuMs": 0.800000011920929
+    },
+    "memory": {
+      "gpuBytes": null,
+      "note": "Asset GPU allocation unavailable; renderer resource counts are reported by harness"
+    }
+  },
+  "options": {
+    "samples": 120,
+    "warmup": 45,
+    "frames": 180,
+    "moving": true,
+    "night": 1
+  },
+  "timed": [
+    {
+      "frame": 0,
+      "cpuMs": 16.400000005960464,
+      "gpu": {
+        "valid": true,
+        "ms": 64.025104,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 1,
+      "cpuMs": 17.599999994039536,
+      "gpu": {
+        "valid": true,
+        "ms": 49.14375,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 2,
+      "cpuMs": 15.199999988079071,
+      "gpu": {
+        "valid": true,
+        "ms": 16.402447,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 3,
+      "cpuMs": 11.700000017881393,
+      "gpu": {
+        "valid": true,
+        "ms": 42.673333,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 4,
+      "cpuMs": 15.099999994039536,
+      "gpu": {
+        "valid": true,
+        "ms": 16.473489,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 5,
+      "cpuMs": 13.799999982118607,
+      "gpu": {
+        "valid": true,
+        "ms": 17.119843,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 6,
+      "cpuMs": 18.799999982118607,
+      "gpu": {
+        "valid": true,
+        "ms": 75.673385,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 7,
+      "cpuMs": 19.5,
+      "gpu": {
+        "valid": true,
+        "ms": 17.012812,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 8,
+      "cpuMs": 13.099999994039536,
+      "gpu": {
+        "valid": true,
+        "ms": 64.655833,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 9,
+      "cpuMs": 18.900000005960464,
+      "gpu": {
+        "valid": true,
+        "ms": 43.928697,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 10,
+      "cpuMs": 11.200000017881393,
+      "gpu": {
+        "valid": true,
+        "ms": 49.824479,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 11,
+      "cpuMs": 13,
+      "gpu": {
+        "valid": true,
+        "ms": 47.507447,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 12,
+      "cpuMs": 16.69999998807907,
+      "gpu": {
+        "valid": true,
+        "ms": 63.106822,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 13,
+      "cpuMs": 15.299999982118607,
+      "gpu": {
+        "valid": true,
+        "ms": 16.968072,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 14,
+      "cpuMs": 10.600000023841858,
+      "gpu": {
+        "valid": true,
+        "ms": 16.466406,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 15,
+      "cpuMs": 14.900000005960464,
+      "gpu": {
+        "valid": true,
+        "ms": 16.78677,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 16,
+      "cpuMs": 12.599999994039536,
+      "gpu": {
+        "valid": true,
+        "ms": 64.574114,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 17,
+      "cpuMs": 16.19999998807907,
+      "gpu": {
+        "valid": true,
+        "ms": 16.637031,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 18,
+      "cpuMs": 16.099999994039536,
+      "gpu": {
+        "valid": true,
+        "ms": 48.142291,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 19,
+      "cpuMs": 14.699999988079071,
+      "gpu": {
+        "valid": true,
+        "ms": 16.874635,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 20,
+      "cpuMs": 13.400000005960464,
+      "gpu": {
+        "valid": true,
+        "ms": 64.342135,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 21,
+      "cpuMs": 16.69999998807907,
+      "gpu": {
+        "valid": true,
+        "ms": 35.682552,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 22,
+      "cpuMs": 13.5,
+      "gpu": {
+        "valid": true,
+        "ms": 42.157031,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 23,
+      "cpuMs": 17.19999998807907,
+      "gpu": {
+        "valid": true,
+        "ms": 16.956979,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 24,
+      "cpuMs": 12.699999988079071,
+      "gpu": {
+        "valid": true,
+        "ms": 16.66427,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 25,
+      "cpuMs": 15,
+      "gpu": {
+        "valid": true,
+        "ms": 16.775572,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 26,
+      "cpuMs": 12.600000023841858,
+      "gpu": {
+        "valid": true,
+        "ms": 16.813177,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 27,
+      "cpuMs": 13.099999994039536,
+      "gpu": {
+        "valid": true,
+        "ms": 101.5675,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 28,
+      "cpuMs": 18.600000023841858,
+      "gpu": {
+        "valid": true,
+        "ms": 32.029531,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 29,
+      "cpuMs": 13.699999988079071,
+      "gpu": {
+        "valid": true,
+        "ms": 47.109843,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 30,
+      "cpuMs": 12.100000023841858,
+      "gpu": {
+        "valid": true,
+        "ms": 41.098906,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 31,
+      "cpuMs": 12.699999988079071,
+      "gpu": {
+        "valid": true,
+        "ms": 63.835625,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 32,
+      "cpuMs": 15.300000011920929,
+      "gpu": {
+        "valid": true,
+        "ms": 17.369531,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 33,
+      "cpuMs": 15.300000011920929,
+      "gpu": {
+        "valid": true,
+        "ms": 63.133541,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 34,
+      "cpuMs": 15.299999982118607,
+      "gpu": {
+        "valid": true,
+        "ms": 63.795729,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 35,
+      "cpuMs": 14.699999988079071,
+      "gpu": {
+        "valid": true,
+        "ms": 16.607031,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 36,
+      "cpuMs": 11.400000005960464,
+      "gpu": {
+        "valid": true,
+        "ms": 64.530364,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 37,
+      "cpuMs": 13.699999988079071,
+      "gpu": {
+        "valid": true,
+        "ms": 66.183072,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 38,
+      "cpuMs": 18.099999994039536,
+      "gpu": {
+        "valid": true,
+        "ms": 63.802708,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 39,
+      "cpuMs": 11.699999988079071,
+      "gpu": {
+        "valid": true,
+        "ms": 16.556822,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 40,
+      "cpuMs": 12.699999988079071,
+      "gpu": {
+        "valid": true,
+        "ms": 68.103854,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 41,
+      "cpuMs": 13.599999994039536,
+      "gpu": {
+        "valid": true,
+        "ms": 43.523958,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 42,
+      "cpuMs": 16.19999998807907,
+      "gpu": {
+        "valid": true,
+        "ms": 50.473125,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 43,
+      "cpuMs": 13,
+      "gpu": {
+        "valid": true,
+        "ms": 16.60901,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 44,
+      "cpuMs": 20.200000017881393,
+      "gpu": {
+        "valid": true,
+        "ms": 51.984531,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 45,
+      "cpuMs": 11.800000011920929,
+      "gpu": {
+        "valid": true,
+        "ms": 42.00177,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 46,
+      "cpuMs": 11.299999982118607,
+      "gpu": {
+        "valid": true,
+        "ms": 16.72651,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 47,
+      "cpuMs": 17,
+      "gpu": {
+        "valid": true,
+        "ms": 63.398177,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 48,
+      "cpuMs": 11.600000023841858,
+      "gpu": {
+        "valid": true,
+        "ms": 46.132604,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 49,
+      "cpuMs": 15.199999988079071,
+      "gpu": {
+        "valid": true,
+        "ms": 64.443281,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 50,
+      "cpuMs": 16.599999994039536,
+      "gpu": {
+        "valid": true,
+        "ms": 16.859166,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 51,
+      "cpuMs": 13,
+      "gpu": {
+        "valid": true,
+        "ms": 16.842552,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 52,
+      "cpuMs": 13.300000011920929,
+      "gpu": {
+        "valid": true,
+        "ms": 44.898385,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 53,
+      "cpuMs": 13.800000011920929,
+      "gpu": {
+        "valid": true,
+        "ms": 66.040208,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 54,
+      "cpuMs": 17.099999994039536,
+      "gpu": {
+        "valid": true,
+        "ms": 49.09302,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 55,
+      "cpuMs": 15.400000005960464,
+      "gpu": {
+        "valid": true,
+        "ms": 16.89552,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 56,
+      "cpuMs": 13.400000005960464,
+      "gpu": {
+        "valid": true,
+        "ms": 35.388958,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 57,
+      "cpuMs": 12.799999982118607,
+      "gpu": {
+        "valid": true,
+        "ms": 18.052083,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 58,
+      "cpuMs": 14.299999982118607,
+      "gpu": {
+        "valid": true,
+        "ms": 64.343697,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 59,
+      "cpuMs": 10.700000017881393,
+      "gpu": {
+        "valid": true,
+        "ms": 63.512239,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 60,
+      "cpuMs": 17.30000001192093,
+      "gpu": {
+        "valid": true,
+        "ms": 16.68651,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 61,
+      "cpuMs": 16.80000001192093,
+      "gpu": {
+        "valid": true,
+        "ms": 16.907864,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 62,
+      "cpuMs": 14.599999994039536,
+      "gpu": {
+        "valid": true,
+        "ms": 50.758593,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 63,
+      "cpuMs": 14.200000017881393,
+      "gpu": {
+        "valid": true,
+        "ms": 16.528072,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 64,
+      "cpuMs": 13.400000005960464,
+      "gpu": {
+        "valid": true,
+        "ms": 16.310312,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 65,
+      "cpuMs": 11.200000017881393,
+      "gpu": {
+        "valid": true,
+        "ms": 75.838125,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 66,
+      "cpuMs": 12.699999988079071,
+      "gpu": {
+        "valid": true,
+        "ms": 42.83026,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 67,
+      "cpuMs": 11.5,
+      "gpu": {
+        "valid": true,
+        "ms": 47.681562,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 68,
+      "cpuMs": 14.400000005960464,
+      "gpu": {
+        "valid": true,
+        "ms": 39.362031,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 69,
+      "cpuMs": 14.599999994039536,
+      "gpu": {
+        "valid": true,
+        "ms": 63.707812,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 70,
+      "cpuMs": 19,
+      "gpu": {
+        "valid": true,
+        "ms": 44.368385,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 71,
+      "cpuMs": 13.200000017881393,
+      "gpu": {
+        "valid": true,
+        "ms": 50.600833,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 72,
+      "cpuMs": 16.30000001192093,
+      "gpu": {
+        "valid": true,
+        "ms": 54.730625,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 73,
+      "cpuMs": 12.400000005960464,
+      "gpu": {
+        "valid": true,
+        "ms": 16.217447,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 74,
+      "cpuMs": 12.800000011920929,
+      "gpu": {
+        "valid": true,
+        "ms": 62.039895,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 75,
+      "cpuMs": 13.200000017881393,
+      "gpu": {
+        "valid": true,
+        "ms": 36.169843,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 76,
+      "cpuMs": 11.400000005960464,
+      "gpu": {
+        "valid": true,
+        "ms": 64.076927,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 77,
+      "cpuMs": 17.80000001192093,
+      "gpu": {
+        "valid": true,
+        "ms": 49.848802,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 78,
+      "cpuMs": 15,
+      "gpu": {
+        "valid": true,
+        "ms": 16.751041,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 79,
+      "cpuMs": 13.400000005960464,
+      "gpu": {
+        "valid": true,
+        "ms": 66.181406,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 80,
+      "cpuMs": 12.699999988079071,
+      "gpu": {
+        "valid": true,
+        "ms": 43.449166,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 81,
+      "cpuMs": 17,
+      "gpu": {
+        "valid": true,
+        "ms": 62.897343,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 82,
+      "cpuMs": 12.699999988079071,
+      "gpu": {
+        "valid": true,
+        "ms": 40.134531,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 83,
+      "cpuMs": 13.400000005960464,
+      "gpu": {
+        "valid": true,
+        "ms": 44.825885,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 84,
+      "cpuMs": 11.5,
+      "gpu": {
+        "valid": true,
+        "ms": 49.732708,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 85,
+      "cpuMs": 19.099999994039536,
+      "gpu": {
+        "valid": true,
+        "ms": 16.425781,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 86,
+      "cpuMs": 13.199999988079071,
+      "gpu": {
+        "valid": true,
+        "ms": 44.641666,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 87,
+      "cpuMs": 16.599999994039536,
+      "gpu": {
+        "valid": true,
+        "ms": 48.933802,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 88,
+      "cpuMs": 17.400000005960464,
+      "gpu": {
+        "valid": true,
+        "ms": 80.951354,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 89,
+      "cpuMs": 12.900000005960464,
+      "gpu": {
+        "valid": true,
+        "ms": 16.450572,
+        "belowResolution": false
+      },
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 90,
+      "cpuMs": 14.400000005960464,
+      "gpu": {
+        "valid": true,
+        "ms": 64.130729,
+        "belowResolution": false
+      },
+      "drawCalls": 306,
+      "triangles": 4171579,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 91,
+      "cpuMs": 13,
+      "gpu": {
+        "valid": true,
+        "ms": 42.990364,
+        "belowResolution": false
+      },
+      "drawCalls": 306,
+      "triangles": 4171579,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 92,
+      "cpuMs": 15.399999976158142,
+      "gpu": {
+        "valid": true,
+        "ms": 43.448177,
+        "belowResolution": false
+      },
+      "drawCalls": 306,
+      "triangles": 4171579,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 93,
+      "cpuMs": 14.199999988079071,
+      "gpu": {
+        "valid": true,
+        "ms": 34.741875,
+        "belowResolution": false
+      },
+      "drawCalls": 306,
+      "triangles": 4171579,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 94,
+      "cpuMs": 14.300000011920929,
+      "gpu": {
+        "valid": true,
+        "ms": 60.540312,
+        "belowResolution": false
+      },
+      "drawCalls": 306,
+      "triangles": 4171579,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 95,
+      "cpuMs": 19.5,
+      "gpu": {
+        "valid": true,
+        "ms": 43.39052,
+        "belowResolution": false
+      },
+      "drawCalls": 306,
+      "triangles": 4171579,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 96,
+      "cpuMs": 11.099999994039536,
+      "gpu": {
+        "valid": true,
+        "ms": 15.921302,
+        "belowResolution": false
+      },
+      "drawCalls": 306,
+      "triangles": 4171579,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 97,
+      "cpuMs": 12.300000011920929,
+      "gpu": {
+        "valid": true,
+        "ms": 52.43375,
+        "belowResolution": false
+      },
+      "drawCalls": 306,
+      "triangles": 4171579,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 98,
+      "cpuMs": 13.600000023841858,
+      "gpu": {
+        "valid": true,
+        "ms": 15.572447,
+        "belowResolution": false
+      },
+      "drawCalls": 306,
+      "triangles": 4171579,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 99,
+      "cpuMs": 13.199999988079071,
+      "gpu": {
+        "valid": true,
+        "ms": 57.768072,
+        "belowResolution": false
+      },
+      "drawCalls": 306,
+      "triangles": 4171579,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 100,
+      "cpuMs": 16.299999982118607,
+      "gpu": {
+        "valid": true,
+        "ms": 52.999479,
+        "belowResolution": false
+      },
+      "drawCalls": 306,
+      "triangles": 4171579,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 101,
+      "cpuMs": 12.5,
+      "gpu": {
+        "valid": true,
+        "ms": 62.27125,
+        "belowResolution": false
+      },
+      "drawCalls": 306,
+      "triangles": 4171579,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 102,
+      "cpuMs": 15,
+      "gpu": {
+        "valid": true,
+        "ms": 15.779531,
+        "belowResolution": false
+      },
+      "drawCalls": 306,
+      "triangles": 4171579,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 103,
+      "cpuMs": 14.100000023841858,
+      "gpu": {
+        "valid": true,
+        "ms": 15.567187,
+        "belowResolution": false
+      },
+      "drawCalls": 306,
+      "triangles": 4171579,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 104,
+      "cpuMs": 11.300000011920929,
+      "gpu": {
+        "valid": true,
+        "ms": 47.371927,
+        "belowResolution": false
+      },
+      "drawCalls": 306,
+      "triangles": 4171579,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 105,
+      "cpuMs": 12.299999982118607,
+      "gpu": {
+        "valid": true,
+        "ms": 41.96552,
+        "belowResolution": false
+      },
+      "drawCalls": 306,
+      "triangles": 4171579,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 106,
+      "cpuMs": 11.5,
+      "gpu": {
+        "valid": true,
+        "ms": 47.453802,
+        "belowResolution": false
+      },
+      "drawCalls": 306,
+      "triangles": 4171579,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 107,
+      "cpuMs": 13.5,
+      "gpu": {
+        "valid": true,
+        "ms": 39.72901,
+        "belowResolution": false
+      },
+      "drawCalls": 306,
+      "triangles": 4171579,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 108,
+      "cpuMs": 12.799999982118607,
+      "gpu": {
+        "valid": true,
+        "ms": 16.113958,
+        "belowResolution": false
+      },
+      "drawCalls": 306,
+      "triangles": 4171579,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 109,
+      "cpuMs": 17.900000005960464,
+      "gpu": {
+        "valid": true,
+        "ms": 15.660729,
+        "belowResolution": false
+      },
+      "drawCalls": 306,
+      "triangles": 4171579,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 110,
+      "cpuMs": 18.80000001192093,
+      "gpu": {
+        "valid": true,
+        "ms": 73.414583,
+        "belowResolution": false
+      },
+      "drawCalls": 305,
+      "triangles": 4164485,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 111,
+      "cpuMs": 13.400000005960464,
+      "gpu": {
+        "valid": true,
+        "ms": 67.21776,
+        "belowResolution": false
+      },
+      "drawCalls": 305,
+      "triangles": 4164485,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 112,
+      "cpuMs": 17.599999994039536,
+      "gpu": {
+        "valid": true,
+        "ms": 15.906822,
+        "belowResolution": false
+      },
+      "drawCalls": 305,
+      "triangles": 4164485,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 113,
+      "cpuMs": 11.300000011920929,
+      "gpu": {
+        "valid": true,
+        "ms": 16.081979,
+        "belowResolution": false
+      },
+      "drawCalls": 305,
+      "triangles": 4164485,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 114,
+      "cpuMs": 12.699999988079071,
+      "gpu": {
+        "valid": true,
+        "ms": 60.16901,
+        "belowResolution": false
+      },
+      "drawCalls": 305,
+      "triangles": 4164485,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 115,
+      "cpuMs": 12.5,
+      "gpu": {
+        "valid": true,
+        "ms": 78.174062,
+        "belowResolution": false
+      },
+      "drawCalls": 305,
+      "triangles": 4164485,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 116,
+      "cpuMs": 15.200000017881393,
+      "gpu": {
+        "valid": true,
+        "ms": 63.774947,
+        "belowResolution": false
+      },
+      "drawCalls": 305,
+      "triangles": 4164485,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 117,
+      "cpuMs": 17.799999982118607,
+      "gpu": {
+        "valid": true,
+        "ms": 17.091979,
+        "belowResolution": false
+      },
+      "drawCalls": 305,
+      "triangles": 4164485,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 118,
+      "cpuMs": 15.700000017881393,
+      "gpu": {
+        "valid": true,
+        "ms": 47.148281,
+        "belowResolution": false
+      },
+      "drawCalls": 305,
+      "triangles": 4164485,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 119,
+      "cpuMs": 12.599999994039536,
+      "gpu": {
+        "valid": true,
+        "ms": 63.96651,
+        "belowResolution": false
+      },
+      "drawCalls": 305,
+      "triangles": 4164485,
+      "geometries": 18,
+      "textures": 17
+    }
+  ],
+  "interactive": [
+    {
+      "frame": 0,
+      "intervalMs": 49.900000000001455,
+      "intervalSincePreviousFrame": -1,
+      "updateMs": 1,
+      "cpuMs": 11.199999988079071,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 1,
+      "intervalMs": 49.799999999995634,
+      "intervalSincePreviousFrame": 0,
+      "updateMs": 1.100000023841858,
+      "cpuMs": 10.799999982118607,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 2,
+      "intervalMs": 49.900000000001455,
+      "intervalSincePreviousFrame": 1,
+      "updateMs": 0.9000000059604645,
+      "cpuMs": 12.899999976158142,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 3,
+      "intervalMs": 66.5,
+      "intervalSincePreviousFrame": 2,
+      "updateMs": 0.5999999940395355,
+      "cpuMs": 9.200000017881393,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 4,
+      "intervalMs": 33.099999999998545,
+      "intervalSincePreviousFrame": 3,
+      "updateMs": 0.9000000059604645,
+      "cpuMs": 9.300000011920929,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 5,
+      "intervalMs": 83.40000000000146,
+      "intervalSincePreviousFrame": 4,
+      "updateMs": 0.800000011920929,
+      "cpuMs": 9.5,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 6,
+      "intervalMs": 16.599999999998545,
+      "intervalSincePreviousFrame": 5,
+      "updateMs": 1,
+      "cpuMs": 17.30000001192093,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 7,
+      "intervalMs": 133,
+      "intervalSincePreviousFrame": 6,
+      "updateMs": 1.5,
+      "cpuMs": 9.199999988079071,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 8,
+      "intervalMs": 33.30000000000291,
+      "intervalSincePreviousFrame": 7,
+      "updateMs": 1,
+      "cpuMs": 9.5,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 9,
+      "intervalMs": 49.900000000001455,
+      "intervalSincePreviousFrame": 8,
+      "updateMs": 0.699999988079071,
+      "cpuMs": 9.300000011920929,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 10,
+      "intervalMs": 66.39999999999418,
+      "intervalSincePreviousFrame": 9,
+      "updateMs": 0.7000000178813934,
+      "cpuMs": 9.5,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 11,
+      "intervalMs": 49.80000000000291,
+      "intervalSincePreviousFrame": 10,
+      "updateMs": 0.5999999940395355,
+      "cpuMs": 9.599999994039536,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 12,
+      "intervalMs": 83.19999999999709,
+      "intervalSincePreviousFrame": 11,
+      "updateMs": 0.7000000178813934,
+      "cpuMs": 8.599999994039536,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 13,
+      "intervalMs": 49.900000000001455,
+      "intervalSincePreviousFrame": 12,
+      "updateMs": 0.800000011920929,
+      "cpuMs": 8.5,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 14,
+      "intervalMs": 16.599999999998545,
+      "intervalSincePreviousFrame": 13,
+      "updateMs": 1,
+      "cpuMs": 11.300000011920929,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 15,
+      "intervalMs": 66.60000000000582,
+      "intervalSincePreviousFrame": 14,
+      "updateMs": 1,
+      "cpuMs": 9.699999988079071,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 16,
+      "intervalMs": 16.5,
+      "intervalSincePreviousFrame": 15,
+      "updateMs": 0.699999988079071,
+      "cpuMs": 11.200000017881393,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 17,
+      "intervalMs": 16.69999999999709,
+      "intervalSincePreviousFrame": 16,
+      "updateMs": 1.100000023841858,
+      "cpuMs": 14.099999994039536,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 18,
+      "intervalMs": 66.5,
+      "intervalSincePreviousFrame": 17,
+      "updateMs": 0.9000000059604645,
+      "cpuMs": 12.5,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 19,
+      "intervalMs": 83.09999999999854,
+      "intervalSincePreviousFrame": 18,
+      "updateMs": 0.800000011920929,
+      "cpuMs": 12.299999982118607,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 20,
+      "intervalMs": 83.20000000000437,
+      "intervalSincePreviousFrame": 19,
+      "updateMs": 1.300000011920929,
+      "cpuMs": 9.199999988079071,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 21,
+      "intervalMs": 33.299999999995634,
+      "intervalSincePreviousFrame": 20,
+      "updateMs": 0.7000000178813934,
+      "cpuMs": 10.899999976158142,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 22,
+      "intervalMs": 16.5,
+      "intervalSincePreviousFrame": 21,
+      "updateMs": 1.0999999940395355,
+      "cpuMs": 10,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 23,
+      "intervalMs": 83.20000000000437,
+      "intervalSincePreviousFrame": 22,
+      "updateMs": 0.699999988079071,
+      "cpuMs": 9.100000023841858,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 24,
+      "intervalMs": 33.39999999999418,
+      "intervalSincePreviousFrame": 23,
+      "updateMs": 0.7000000178813934,
+      "cpuMs": 9.5,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 25,
+      "intervalMs": 50,
+      "intervalSincePreviousFrame": 24,
+      "updateMs": 1.5,
+      "cpuMs": 17.30000001192093,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 26,
+      "intervalMs": 66.5,
+      "intervalSincePreviousFrame": 25,
+      "updateMs": 0.699999988079071,
+      "cpuMs": 9.699999988079071,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 27,
+      "intervalMs": 49.700000000004366,
+      "intervalSincePreviousFrame": 26,
+      "updateMs": 0.7000000178813934,
+      "cpuMs": 10.5,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 28,
+      "intervalMs": 49.799999999995634,
+      "intervalSincePreviousFrame": 27,
+      "updateMs": 1,
+      "cpuMs": 16.599999994039536,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 29,
+      "intervalMs": 33.400000000001455,
+      "intervalSincePreviousFrame": 28,
+      "updateMs": 0.7999999821186066,
+      "cpuMs": 10.300000011920929,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 30,
+      "intervalMs": 49.80000000000291,
+      "intervalSincePreviousFrame": 29,
+      "updateMs": 0.9000000059604645,
+      "cpuMs": 20.099999994039536,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 31,
+      "intervalMs": 99.79999999999563,
+      "intervalSincePreviousFrame": 30,
+      "updateMs": 0.9000000059604645,
+      "cpuMs": 11.599999994039536,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 32,
+      "intervalMs": 33.30000000000291,
+      "intervalSincePreviousFrame": 31,
+      "updateMs": 0.699999988079071,
+      "cpuMs": 15.800000011920929,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 33,
+      "intervalMs": 33.19999999999709,
+      "intervalSincePreviousFrame": 32,
+      "updateMs": 0.9000000059604645,
+      "cpuMs": 10.800000011920929,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 34,
+      "intervalMs": 66.60000000000582,
+      "intervalSincePreviousFrame": 33,
+      "updateMs": 0.7999999821186066,
+      "cpuMs": 12.400000005960464,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 35,
+      "intervalMs": 49.799999999995634,
+      "intervalSincePreviousFrame": 34,
+      "updateMs": 0.800000011920929,
+      "cpuMs": 9.699999988079071,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 36,
+      "intervalMs": 16.599999999998545,
+      "intervalSincePreviousFrame": 35,
+      "updateMs": 1.0999999940395355,
+      "cpuMs": 10,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 37,
+      "intervalMs": 99.80000000000291,
+      "intervalSincePreviousFrame": 36,
+      "updateMs": 0.9000000059604645,
+      "cpuMs": 9.099999994039536,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 38,
+      "intervalMs": 49.900000000001455,
+      "intervalSincePreviousFrame": 37,
+      "updateMs": 1.300000011920929,
+      "cpuMs": 10.699999988079071,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 39,
+      "intervalMs": 33.19999999999709,
+      "intervalSincePreviousFrame": 38,
+      "updateMs": 0.9000000059604645,
+      "cpuMs": 10.400000005960464,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 40,
+      "intervalMs": 66.70000000000437,
+      "intervalSincePreviousFrame": 39,
+      "updateMs": 1.2000000178813934,
+      "cpuMs": 15.599999994039536,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 41,
+      "intervalMs": 99.69999999999709,
+      "intervalSincePreviousFrame": 40,
+      "updateMs": 1,
+      "cpuMs": 10.400000005960464,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 42,
+      "intervalMs": 16.5,
+      "intervalSincePreviousFrame": 41,
+      "updateMs": 0.7000000178813934,
+      "cpuMs": 13.199999988079071,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 43,
+      "intervalMs": 33.19999999999709,
+      "intervalSincePreviousFrame": 42,
+      "updateMs": 1,
+      "cpuMs": 11.5,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 44,
+      "intervalMs": 33.400000000001455,
+      "intervalSincePreviousFrame": 43,
+      "updateMs": 0.7999999821186066,
+      "cpuMs": 10.700000017881393,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 45,
+      "intervalMs": 49.900000000001455,
+      "intervalSincePreviousFrame": 44,
+      "updateMs": 0.7000000178813934,
+      "cpuMs": 11.599999994039536,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 46,
+      "intervalMs": 66.5,
+      "intervalSincePreviousFrame": 45,
+      "updateMs": 1.300000011920929,
+      "cpuMs": 15.299999982118607,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 47,
+      "intervalMs": 16.5,
+      "intervalSincePreviousFrame": 46,
+      "updateMs": 1.0999999940395355,
+      "cpuMs": 11.300000011920929,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 48,
+      "intervalMs": 49.80000000000291,
+      "intervalSincePreviousFrame": 47,
+      "updateMs": 1.4000000059604645,
+      "cpuMs": 17.099999994039536,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 49,
+      "intervalMs": 50.099999999998545,
+      "intervalSincePreviousFrame": 48,
+      "updateMs": 0.5999999940395355,
+      "cpuMs": 10.599999994039536,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 50,
+      "intervalMs": 66.40000000000146,
+      "intervalSincePreviousFrame": 49,
+      "updateMs": 0.9000000059604645,
+      "cpuMs": 10,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 51,
+      "intervalMs": 16.799999999995634,
+      "intervalSincePreviousFrame": 50,
+      "updateMs": 0.699999988079071,
+      "cpuMs": 10.400000005960464,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 52,
+      "intervalMs": 66.40000000000146,
+      "intervalSincePreviousFrame": 51,
+      "updateMs": 1.9000000059604645,
+      "cpuMs": 16.69999998807907,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 53,
+      "intervalMs": 49.900000000001455,
+      "intervalSincePreviousFrame": 52,
+      "updateMs": 0.7999999821186066,
+      "cpuMs": 10.600000023841858,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 54,
+      "intervalMs": 16.599999999998545,
+      "intervalSincePreviousFrame": 53,
+      "updateMs": 0.9000000059604645,
+      "cpuMs": 17,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 55,
+      "intervalMs": 49.900000000001455,
+      "intervalSincePreviousFrame": 54,
+      "updateMs": 0.800000011920929,
+      "cpuMs": 10.599999994039536,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 56,
+      "intervalMs": 33.299999999995634,
+      "intervalSincePreviousFrame": 55,
+      "updateMs": 0.7999999821186066,
+      "cpuMs": 14.300000011920929,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 57,
+      "intervalMs": 33.200000000004366,
+      "intervalSincePreviousFrame": 56,
+      "updateMs": 0.9000000059604645,
+      "cpuMs": 15.5,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 58,
+      "intervalMs": 83.19999999999709,
+      "intervalSincePreviousFrame": 57,
+      "updateMs": 1,
+      "cpuMs": 10.699999988079071,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 59,
+      "intervalMs": 16.5,
+      "intervalSincePreviousFrame": 58,
+      "updateMs": 0.5999999940395355,
+      "cpuMs": 10.599999994039536,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 60,
+      "intervalMs": 33.5,
+      "intervalSincePreviousFrame": 59,
+      "updateMs": 1.5999999940395355,
+      "cpuMs": 14.600000023841858,
+      "drawCalls": 306,
+      "triangles": 4171579,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 61,
+      "intervalMs": 99.70000000000437,
+      "intervalSincePreviousFrame": 60,
+      "updateMs": 0.800000011920929,
+      "cpuMs": 9.699999988079071,
+      "drawCalls": 306,
+      "triangles": 4171579,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 62,
+      "intervalMs": 66.39999999999418,
+      "intervalSincePreviousFrame": 61,
+      "updateMs": 0.800000011920929,
+      "cpuMs": 13.699999988079071,
+      "drawCalls": 306,
+      "triangles": 4171579,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 63,
+      "intervalMs": 49.900000000001455,
+      "intervalSincePreviousFrame": 62,
+      "updateMs": 0.9000000059604645,
+      "cpuMs": 12.599999994039536,
+      "drawCalls": 306,
+      "triangles": 4171579,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 64,
+      "intervalMs": 16.599999999998545,
+      "intervalSincePreviousFrame": 63,
+      "updateMs": 0.9000000059604645,
+      "cpuMs": 18.19999998807907,
+      "drawCalls": 306,
+      "triangles": 4171579,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 65,
+      "intervalMs": 33.400000000001455,
+      "intervalSincePreviousFrame": 64,
+      "updateMs": 0.7999999821186066,
+      "cpuMs": 11.200000017881393,
+      "drawCalls": 306,
+      "triangles": 4171579,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 66,
+      "intervalMs": 99.70000000000437,
+      "intervalSincePreviousFrame": 65,
+      "updateMs": 0.800000011920929,
+      "cpuMs": 9.5,
+      "drawCalls": 306,
+      "triangles": 4171579,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 67,
+      "intervalMs": 33.299999999995634,
+      "intervalSincePreviousFrame": 66,
+      "updateMs": 0.9000000059604645,
+      "cpuMs": 10,
+      "drawCalls": 306,
+      "triangles": 4171579,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 68,
+      "intervalMs": 49.900000000001455,
+      "intervalSincePreviousFrame": 67,
+      "updateMs": 0.699999988079071,
+      "cpuMs": 10.200000017881393,
+      "drawCalls": 306,
+      "triangles": 4171579,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 69,
+      "intervalMs": 16.599999999998545,
+      "intervalSincePreviousFrame": 68,
+      "updateMs": 0.9000000059604645,
+      "cpuMs": 14.299999982118607,
+      "drawCalls": 306,
+      "triangles": 4171579,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 70,
+      "intervalMs": 33.200000000004366,
+      "intervalSincePreviousFrame": 69,
+      "updateMs": 0.699999988079071,
+      "cpuMs": 10.300000011920929,
+      "drawCalls": 306,
+      "triangles": 4171579,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 71,
+      "intervalMs": 33.099999999998545,
+      "intervalSincePreviousFrame": 70,
+      "updateMs": 0.9000000059604645,
+      "cpuMs": 10.5,
+      "drawCalls": 306,
+      "triangles": 4171579,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 72,
+      "intervalMs": 50.099999999998545,
+      "intervalSincePreviousFrame": 71,
+      "updateMs": 0.7999999821186066,
+      "cpuMs": 10.900000005960464,
+      "drawCalls": 306,
+      "triangles": 4171579,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 73,
+      "intervalMs": 83.09999999999854,
+      "intervalSincePreviousFrame": 72,
+      "updateMs": 0.699999988079071,
+      "cpuMs": 10,
+      "drawCalls": 306,
+      "triangles": 4171579,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 74,
+      "intervalMs": 66.59999999999854,
+      "intervalSincePreviousFrame": 73,
+      "updateMs": 0.8999999761581421,
+      "cpuMs": 10.100000023841858,
+      "drawCalls": 306,
+      "triangles": 4171579,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 75,
+      "intervalMs": 49.80000000000291,
+      "intervalSincePreviousFrame": 74,
+      "updateMs": 0.7000000178813934,
+      "cpuMs": 9.399999976158142,
+      "drawCalls": 306,
+      "triangles": 4171579,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 76,
+      "intervalMs": 49.80000000000291,
+      "intervalSincePreviousFrame": 75,
+      "updateMs": 1,
+      "cpuMs": 13.300000011920929,
+      "drawCalls": 306,
+      "triangles": 4171579,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 77,
+      "intervalMs": 33.299999999995634,
+      "intervalSincePreviousFrame": 76,
+      "updateMs": 0.9000000059604645,
+      "cpuMs": 22.5,
+      "drawCalls": 306,
+      "triangles": 4171579,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 78,
+      "intervalMs": 33.30000000000291,
+      "intervalSincePreviousFrame": 77,
+      "updateMs": 1.5,
+      "cpuMs": 10.799999982118607,
+      "drawCalls": 306,
+      "triangles": 4171579,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 79,
+      "intervalMs": 83.19999999999709,
+      "intervalSincePreviousFrame": 78,
+      "updateMs": 0.7000000178813934,
+      "cpuMs": 14.699999988079071,
+      "drawCalls": 306,
+      "triangles": 4171579,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 80,
+      "intervalMs": 83.09999999999854,
+      "intervalSincePreviousFrame": 79,
+      "updateMs": 0.5999999940395355,
+      "cpuMs": 9.599999994039536,
+      "drawCalls": 305,
+      "triangles": 4164485,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 81,
+      "intervalMs": 49.900000000001455,
+      "intervalSincePreviousFrame": 80,
+      "updateMs": 1,
+      "cpuMs": 11.200000017881393,
+      "drawCalls": 305,
+      "triangles": 4164485,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 82,
+      "intervalMs": 16.599999999998545,
+      "intervalSincePreviousFrame": 81,
+      "updateMs": 1.0999999940395355,
+      "cpuMs": 11,
+      "drawCalls": 305,
+      "triangles": 4164485,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 83,
+      "intervalMs": 99.80000000000291,
+      "intervalSincePreviousFrame": 82,
+      "updateMs": 1.800000011920929,
+      "cpuMs": 10.899999976158142,
+      "drawCalls": 305,
+      "triangles": 4164485,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 84,
+      "intervalMs": 66.40000000000146,
+      "intervalSincePreviousFrame": 83,
+      "updateMs": 0.7999999821186066,
+      "cpuMs": 10.300000011920929,
+      "drawCalls": 305,
+      "triangles": 4164485,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 85,
+      "intervalMs": 49.799999999995634,
+      "intervalSincePreviousFrame": 84,
+      "updateMs": 1,
+      "cpuMs": 15.5,
+      "drawCalls": 305,
+      "triangles": 4164485,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 86,
+      "intervalMs": 50.10000000000582,
+      "intervalSincePreviousFrame": 85,
+      "updateMs": 0.5999999940395355,
+      "cpuMs": 10.5,
+      "drawCalls": 305,
+      "triangles": 4164485,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 87,
+      "intervalMs": 16.89999999999418,
+      "intervalSincePreviousFrame": 86,
+      "updateMs": 1.9000000059604645,
+      "cpuMs": 18.5,
+      "drawCalls": 305,
+      "triangles": 4164485,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 88,
+      "intervalMs": 49.700000000004366,
+      "intervalSincePreviousFrame": 87,
+      "updateMs": 1.399999976158142,
+      "cpuMs": 18.30000001192093,
+      "drawCalls": 305,
+      "triangles": 4164485,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 89,
+      "intervalMs": 33,
+      "intervalSincePreviousFrame": 88,
+      "updateMs": 0.7999999821186066,
+      "cpuMs": 14.300000011920929,
+      "drawCalls": 305,
+      "triangles": 4164485,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 90,
+      "intervalMs": 83.19999999999709,
+      "intervalSincePreviousFrame": 89,
+      "updateMs": 0.699999988079071,
+      "cpuMs": 12.700000017881393,
+      "drawCalls": 305,
+      "triangles": 4164485,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 91,
+      "intervalMs": 66.5,
+      "intervalSincePreviousFrame": 90,
+      "updateMs": 1,
+      "cpuMs": 11.5,
+      "drawCalls": 305,
+      "triangles": 4164485,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 92,
+      "intervalMs": 16.700000000004366,
+      "intervalSincePreviousFrame": 91,
+      "updateMs": 1.2999999821186066,
+      "cpuMs": 16.599999994039536,
+      "drawCalls": 305,
+      "triangles": 4164485,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 93,
+      "intervalMs": 99.79999999999563,
+      "intervalSincePreviousFrame": 92,
+      "updateMs": 1.199999988079071,
+      "cpuMs": 20,
+      "drawCalls": 305,
+      "triangles": 4164485,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 94,
+      "intervalMs": 33.30000000000291,
+      "intervalSincePreviousFrame": 93,
+      "updateMs": 0.699999988079071,
+      "cpuMs": 10.599999994039536,
+      "drawCalls": 305,
+      "triangles": 4164485,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 95,
+      "intervalMs": 16.5,
+      "intervalSincePreviousFrame": 94,
+      "updateMs": 0.9000000059604645,
+      "cpuMs": 19.69999998807907,
+      "drawCalls": 305,
+      "triangles": 4164485,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 96,
+      "intervalMs": 49.900000000001455,
+      "intervalSincePreviousFrame": 95,
+      "updateMs": 1.5,
+      "cpuMs": 12.099999994039536,
+      "drawCalls": 305,
+      "triangles": 4164485,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 97,
+      "intervalMs": 49.89999999999418,
+      "intervalSincePreviousFrame": 96,
+      "updateMs": 1.2000000178813934,
+      "cpuMs": 13.599999994039536,
+      "drawCalls": 305,
+      "triangles": 4164485,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 98,
+      "intervalMs": 99.70000000000437,
+      "intervalSincePreviousFrame": 97,
+      "updateMs": 1.2000000178813934,
+      "cpuMs": 12.900000005960464,
+      "drawCalls": 305,
+      "triangles": 4164485,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 99,
+      "intervalMs": 49.900000000001455,
+      "intervalSincePreviousFrame": 98,
+      "updateMs": 1,
+      "cpuMs": 14.699999988079071,
+      "drawCalls": 305,
+      "triangles": 4164485,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 100,
+      "intervalMs": 66.59999999999854,
+      "intervalSincePreviousFrame": 99,
+      "updateMs": 0.800000011920929,
+      "cpuMs": 12.599999994039536,
+      "drawCalls": 305,
+      "triangles": 4164485,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 101,
+      "intervalMs": 16.599999999998545,
+      "intervalSincePreviousFrame": 100,
+      "updateMs": 1.2000000178813934,
+      "cpuMs": 11.599999994039536,
+      "drawCalls": 305,
+      "triangles": 4164485,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 102,
+      "intervalMs": 49.900000000001455,
+      "intervalSincePreviousFrame": 101,
+      "updateMs": 0.7000000178813934,
+      "cpuMs": 11.799999982118607,
+      "drawCalls": 305,
+      "triangles": 4164485,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 103,
+      "intervalMs": 49.900000000001455,
+      "intervalSincePreviousFrame": 102,
+      "updateMs": 1.100000023841858,
+      "cpuMs": 13.5,
+      "drawCalls": 305,
+      "triangles": 4164485,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 104,
+      "intervalMs": 99.69999999999709,
+      "intervalSincePreviousFrame": 103,
+      "updateMs": 0.800000011920929,
+      "cpuMs": 10,
+      "drawCalls": 305,
+      "triangles": 4164485,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 105,
+      "intervalMs": 16.80000000000291,
+      "intervalSincePreviousFrame": 104,
+      "updateMs": 1,
+      "cpuMs": 15.5,
+      "drawCalls": 305,
+      "triangles": 4164485,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 106,
+      "intervalMs": 16.599999999998545,
+      "intervalSincePreviousFrame": 105,
+      "updateMs": 1.2999999821186066,
+      "cpuMs": 12.900000005960464,
+      "drawCalls": 305,
+      "triangles": 4164485,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 107,
+      "intervalMs": 83.09999999999854,
+      "intervalSincePreviousFrame": 106,
+      "updateMs": 0.800000011920929,
+      "cpuMs": 12.699999988079071,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 108,
+      "intervalMs": 33.19999999999709,
+      "intervalSincePreviousFrame": 107,
+      "updateMs": 0.5999999940395355,
+      "cpuMs": 13.5,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 109,
+      "intervalMs": 66.5,
+      "intervalSincePreviousFrame": 108,
+      "updateMs": 1,
+      "cpuMs": 13,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 110,
+      "intervalMs": 49.900000000001455,
+      "intervalSincePreviousFrame": 109,
+      "updateMs": 1.300000011920929,
+      "cpuMs": 13.199999988079071,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 111,
+      "intervalMs": 16.599999999998545,
+      "intervalSincePreviousFrame": 110,
+      "updateMs": 0.699999988079071,
+      "cpuMs": 11.700000017881393,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 112,
+      "intervalMs": 66.60000000000582,
+      "intervalSincePreviousFrame": 111,
+      "updateMs": 0.699999988079071,
+      "cpuMs": 11,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 113,
+      "intervalMs": 66.5,
+      "intervalSincePreviousFrame": 112,
+      "updateMs": 1,
+      "cpuMs": 14.300000011920929,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 114,
+      "intervalMs": 33.19999999999709,
+      "intervalSincePreviousFrame": 113,
+      "updateMs": 1.100000023841858,
+      "cpuMs": 12.899999976158142,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 115,
+      "intervalMs": 50.099999999998545,
+      "intervalSincePreviousFrame": 114,
+      "updateMs": 0.7999999821186066,
+      "cpuMs": 10.900000005960464,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 116,
+      "intervalMs": 16.30000000000291,
+      "intervalSincePreviousFrame": 115,
+      "updateMs": 1.0999999940395355,
+      "cpuMs": 16.5,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 117,
+      "intervalMs": 66.59999999999854,
+      "intervalSincePreviousFrame": 116,
+      "updateMs": 1.2000000178813934,
+      "cpuMs": 17.5,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 118,
+      "intervalMs": 83.09999999999854,
+      "intervalSincePreviousFrame": 117,
+      "updateMs": 1,
+      "cpuMs": 11.800000011920929,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 119,
+      "intervalMs": 33.5,
+      "intervalSincePreviousFrame": 118,
+      "updateMs": 1,
+      "cpuMs": 11.700000017881393,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 120,
+      "intervalMs": 49.700000000004366,
+      "intervalSincePreviousFrame": 119,
+      "updateMs": 1.300000011920929,
+      "cpuMs": 11.199999988079071,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 121,
+      "intervalMs": 33.299999999995634,
+      "intervalSincePreviousFrame": 120,
+      "updateMs": 1.199999988079071,
+      "cpuMs": 13.400000005960464,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 122,
+      "intervalMs": 49.80000000000291,
+      "intervalSincePreviousFrame": 121,
+      "updateMs": 1.199999988079071,
+      "cpuMs": 15.300000011920929,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 123,
+      "intervalMs": 16.69999999999709,
+      "intervalSincePreviousFrame": 122,
+      "updateMs": 1,
+      "cpuMs": 11.800000011920929,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 124,
+      "intervalMs": 33.200000000004366,
+      "intervalSincePreviousFrame": 123,
+      "updateMs": 0.800000011920929,
+      "cpuMs": 12.900000005960464,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 125,
+      "intervalMs": 83.19999999999709,
+      "intervalSincePreviousFrame": 124,
+      "updateMs": 0.7999999821186066,
+      "cpuMs": 11.5,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 126,
+      "intervalMs": 49.80000000000291,
+      "intervalSincePreviousFrame": 125,
+      "updateMs": 0.7999999821186066,
+      "cpuMs": 12.100000023841858,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 127,
+      "intervalMs": 16.599999999998545,
+      "intervalSincePreviousFrame": 126,
+      "updateMs": 0.8999999761581421,
+      "cpuMs": 22.5,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 128,
+      "intervalMs": 33.400000000001455,
+      "intervalSincePreviousFrame": 127,
+      "updateMs": 0.800000011920929,
+      "cpuMs": 14.699999988079071,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 129,
+      "intervalMs": 83.09999999999854,
+      "intervalSincePreviousFrame": 128,
+      "updateMs": 1,
+      "cpuMs": 13.100000023841858,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 130,
+      "intervalMs": 49.799999999995634,
+      "intervalSincePreviousFrame": 129,
+      "updateMs": 0.9000000059604645,
+      "cpuMs": 11.599999994039536,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 131,
+      "intervalMs": 16.700000000004366,
+      "intervalSincePreviousFrame": 130,
+      "updateMs": 1.300000011920929,
+      "cpuMs": 18,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 132,
+      "intervalMs": 33.299999999995634,
+      "intervalSincePreviousFrame": 131,
+      "updateMs": 0.8999999761581421,
+      "cpuMs": 14,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 133,
+      "intervalMs": 66.40000000000146,
+      "intervalSincePreviousFrame": 132,
+      "updateMs": 0.9000000059604645,
+      "cpuMs": 16.299999982118607,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 134,
+      "intervalMs": 33.400000000001455,
+      "intervalSincePreviousFrame": 133,
+      "updateMs": 0.7999999821186066,
+      "cpuMs": 14.100000023841858,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 135,
+      "intervalMs": 66.40000000000146,
+      "intervalSincePreviousFrame": 134,
+      "updateMs": 1.0999999940395355,
+      "cpuMs": 19,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 136,
+      "intervalMs": 66.5,
+      "intervalSincePreviousFrame": 135,
+      "updateMs": 0.9000000059604645,
+      "cpuMs": 16.19999998807907,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 137,
+      "intervalMs": 49.900000000001455,
+      "intervalSincePreviousFrame": 136,
+      "updateMs": 0.9000000059604645,
+      "cpuMs": 11.899999976158142,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 138,
+      "intervalMs": 16.69999999999709,
+      "intervalSincePreviousFrame": 137,
+      "updateMs": 0.9000000059604645,
+      "cpuMs": 22.5,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 139,
+      "intervalMs": 33.30000000000291,
+      "intervalSincePreviousFrame": 138,
+      "updateMs": 0.699999988079071,
+      "cpuMs": 13.599999994039536,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 140,
+      "intervalMs": 66.59999999999854,
+      "intervalSincePreviousFrame": 139,
+      "updateMs": 0.9000000059604645,
+      "cpuMs": 13.900000005960464,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 141,
+      "intervalMs": 99.69999999999709,
+      "intervalSincePreviousFrame": 140,
+      "updateMs": 1.0999999940395355,
+      "cpuMs": 12.599999994039536,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 142,
+      "intervalMs": 16.5,
+      "intervalSincePreviousFrame": 141,
+      "updateMs": 0.9000000059604645,
+      "cpuMs": 17.400000005960464,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 143,
+      "intervalMs": 66.80000000000291,
+      "intervalSincePreviousFrame": 142,
+      "updateMs": 0.9000000059604645,
+      "cpuMs": 12.900000005960464,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 144,
+      "intervalMs": 49.799999999995634,
+      "intervalSincePreviousFrame": 143,
+      "updateMs": 0.9000000059604645,
+      "cpuMs": 12.800000011920929,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 145,
+      "intervalMs": 16.400000000001455,
+      "intervalSincePreviousFrame": 144,
+      "updateMs": 0.9000000059604645,
+      "cpuMs": 20.599999994039536,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 146,
+      "intervalMs": 83.5,
+      "intervalSincePreviousFrame": 145,
+      "updateMs": 0.8999999761581421,
+      "cpuMs": 12.5,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 147,
+      "intervalMs": 16.30000000000291,
+      "intervalSincePreviousFrame": 146,
+      "updateMs": 1,
+      "cpuMs": 13.5,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 148,
+      "intervalMs": 66.59999999999854,
+      "intervalSincePreviousFrame": 147,
+      "updateMs": 1.199999988079071,
+      "cpuMs": 15.700000017881393,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 149,
+      "intervalMs": 33.19999999999709,
+      "intervalSincePreviousFrame": 148,
+      "updateMs": 1.0999999940395355,
+      "cpuMs": 21.200000017881393,
+      "drawCalls": 304,
+      "triangles": 4161155,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 150,
+      "intervalMs": 66.5,
+      "intervalSincePreviousFrame": 149,
+      "updateMs": 2,
+      "cpuMs": 14.199999988079071,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 151,
+      "intervalMs": 66.60000000000582,
+      "intervalSincePreviousFrame": 150,
+      "updateMs": 1.5999999940395355,
+      "cpuMs": 19.700000017881393,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 152,
+      "intervalMs": 16.5,
+      "intervalSincePreviousFrame": 151,
+      "updateMs": 1.0999999940395355,
+      "cpuMs": 19.099999994039536,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 153,
+      "intervalMs": 83.5,
+      "intervalSincePreviousFrame": 152,
+      "updateMs": 1.699999988079071,
+      "cpuMs": 23.099999994039536,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 154,
+      "intervalMs": 66.19999999999709,
+      "intervalSincePreviousFrame": 153,
+      "updateMs": 0.800000011920929,
+      "cpuMs": 12.299999982118607,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 155,
+      "intervalMs": 66.69999999999709,
+      "intervalSincePreviousFrame": 154,
+      "updateMs": 1.0999999940395355,
+      "cpuMs": 15.200000017881393,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 156,
+      "intervalMs": 33.10000000000582,
+      "intervalSincePreviousFrame": 155,
+      "updateMs": 0.7999999821186066,
+      "cpuMs": 12.800000011920929,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 157,
+      "intervalMs": 16.599999999998545,
+      "intervalSincePreviousFrame": 156,
+      "updateMs": 0.800000011920929,
+      "cpuMs": 14.599999994039536,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 158,
+      "intervalMs": 66.5,
+      "intervalSincePreviousFrame": 157,
+      "updateMs": 1,
+      "cpuMs": 12.800000011920929,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 159,
+      "intervalMs": 66.59999999999854,
+      "intervalSincePreviousFrame": 158,
+      "updateMs": 1.199999988079071,
+      "cpuMs": 19.900000005960464,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 160,
+      "intervalMs": 83.19999999999709,
+      "intervalSincePreviousFrame": 159,
+      "updateMs": 0.800000011920929,
+      "cpuMs": 13.199999988079071,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 161,
+      "intervalMs": 49.900000000001455,
+      "intervalSincePreviousFrame": 160,
+      "updateMs": 1,
+      "cpuMs": 16.69999998807907,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 162,
+      "intervalMs": 49.80000000000291,
+      "intervalSincePreviousFrame": 161,
+      "updateMs": 0.7999999821186066,
+      "cpuMs": 14,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 163,
+      "intervalMs": 66.5,
+      "intervalSincePreviousFrame": 162,
+      "updateMs": 1.0999999940395355,
+      "cpuMs": 18.19999998807907,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 164,
+      "intervalMs": 16.799999999995634,
+      "intervalSincePreviousFrame": 163,
+      "updateMs": 1,
+      "cpuMs": 13.900000005960464,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 165,
+      "intervalMs": 83.10000000000582,
+      "intervalSincePreviousFrame": 164,
+      "updateMs": 1,
+      "cpuMs": 17.100000023841858,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 166,
+      "intervalMs": 16.5,
+      "intervalSincePreviousFrame": 165,
+      "updateMs": 0.7999999821186066,
+      "cpuMs": 15,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 167,
+      "intervalMs": 100,
+      "intervalSincePreviousFrame": 166,
+      "updateMs": 0.7000000178813934,
+      "cpuMs": 14.5,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 168,
+      "intervalMs": 66.29999999999563,
+      "intervalSincePreviousFrame": 167,
+      "updateMs": 0.5999999940395355,
+      "cpuMs": 13,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 169,
+      "intervalMs": 66.40000000000146,
+      "intervalSincePreviousFrame": 168,
+      "updateMs": 0.800000011920929,
+      "cpuMs": 17,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 170,
+      "intervalMs": 16.80000000000291,
+      "intervalSincePreviousFrame": 169,
+      "updateMs": 0.9000000059604645,
+      "cpuMs": 20.099999994039536,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 171,
+      "intervalMs": 66.59999999999854,
+      "intervalSincePreviousFrame": 170,
+      "updateMs": 1.0999999940395355,
+      "cpuMs": 17.30000001192093,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 172,
+      "intervalMs": 16.5,
+      "intervalSincePreviousFrame": 171,
+      "updateMs": 1,
+      "cpuMs": 16.900000005960464,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 173,
+      "intervalMs": 83.09999999999854,
+      "intervalSincePreviousFrame": 172,
+      "updateMs": 0.9000000059604645,
+      "cpuMs": 13.900000005960464,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 174,
+      "intervalMs": 16.599999999998545,
+      "intervalSincePreviousFrame": 173,
+      "updateMs": 0.7999999821186066,
+      "cpuMs": 22.900000005960464,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 175,
+      "intervalMs": 83.30000000000291,
+      "intervalSincePreviousFrame": 174,
+      "updateMs": 0.7999999821186066,
+      "cpuMs": 13.400000005960464,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 176,
+      "intervalMs": 49.799999999995634,
+      "intervalSincePreviousFrame": 175,
+      "updateMs": 1,
+      "cpuMs": 19.5,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 177,
+      "intervalMs": 33.30000000000291,
+      "intervalSincePreviousFrame": 176,
+      "updateMs": 1.5999999940395355,
+      "cpuMs": 19.200000017881393,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 178,
+      "intervalMs": 66.5,
+      "intervalSincePreviousFrame": 177,
+      "updateMs": 0.9000000059604645,
+      "cpuMs": 12.699999988079071,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    {
+      "frame": 179,
+      "intervalMs": 66.5,
+      "intervalSincePreviousFrame": 178,
+      "updateMs": 0.9000000059604645,
+      "cpuMs": 12.799999982118607,
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    }
+  ],
+  "memory": {
+    "jsHeapUsed": 138871536,
+    "rendererCounts": {
+      "geometries": 18,
+      "textures": 17
+    },
+    "estimated": {
+      "gpuBytes": null,
+      "note": "Asset GPU allocation unavailable; renderer resource counts are reported by harness"
+    }
+  },
+  "timer": {
+    "kind": "external-GL-whole-render-envelope",
+    "supported": true,
+    "reason": null,
+    "disjointEvents": 0,
+    "discarded": 165,
+    "overflowSkipped": 0,
+    "foreignQuerySkipped": 0,
+    "allocationFailures": 0,
+    "unresolvedAtDispose": 0,
+    "contextLost": false,
+    "pending": 0,
+    "samples": [
+      {
+        "frame": -1,
+        "ms": 60.66401
+      },
+      {
+        "frame": -2,
+        "ms": 17.43927
+      },
+      {
+        "frame": -3,
+        "ms": 17.76125
+      },
+      {
+        "frame": -4,
+        "ms": 50.241927
+      },
+      {
+        "frame": -5,
+        "ms": 60.008177
+      },
+      {
+        "frame": -6,
+        "ms": 92.772239
+      },
+      {
+        "frame": -7,
+        "ms": 79.3125
+      },
+      {
+        "frame": -8,
+        "ms": 66.510572
+      },
+      {
+        "frame": -9,
+        "ms": 16.960416
+      },
+      {
+        "frame": -10,
+        "ms": 16.722864
+      },
+      {
+        "frame": -11,
+        "ms": 73.190989
+      },
+      {
+        "frame": -12,
+        "ms": 16.972083
+      },
+      {
+        "frame": -13,
+        "ms": 24.738645
+      },
+      {
+        "frame": -14,
+        "ms": 62.135312
+      },
+      {
+        "frame": -15,
+        "ms": 37.986302
+      },
+      {
+        "frame": -16,
+        "ms": 63.622291
+      },
+      {
+        "frame": -17,
+        "ms": 16.783333
+      },
+      {
+        "frame": -18,
+        "ms": 50.058958
+      },
+      {
+        "frame": -19,
+        "ms": 17.201197
+      },
+      {
+        "frame": -20,
+        "ms": 16.622239
+      },
+      {
+        "frame": -21,
+        "ms": 49.102604
+      },
+      {
+        "frame": -22,
+        "ms": 47.930208
+      },
+      {
+        "frame": -23,
+        "ms": 42.927291
+      },
+      {
+        "frame": -24,
+        "ms": 50.041927
+      },
+      {
+        "frame": -25,
+        "ms": 18.426979
+      },
+      {
+        "frame": -26,
+        "ms": 95.478333
+      },
+      {
+        "frame": -27,
+        "ms": 47.569895
+      },
+      {
+        "frame": -28,
+        "ms": 23.827083
+      },
+      {
+        "frame": -29,
+        "ms": 16.341145
+      },
+      {
+        "frame": -30,
+        "ms": 64.903072
+      },
+      {
+        "frame": -31,
+        "ms": 48.063229
+      },
+      {
+        "frame": -32,
+        "ms": 16.636562
+      },
+      {
+        "frame": -33,
+        "ms": 58.436614
+      },
+      {
+        "frame": -34,
+        "ms": 64.255468
+      },
+      {
+        "frame": -35,
+        "ms": 50.428072
+      },
+      {
+        "frame": -36,
+        "ms": 44.273072
+      },
+      {
+        "frame": -37,
+        "ms": 43.672916
+      },
+      {
+        "frame": -38,
+        "ms": 40.588906
+      },
+      {
+        "frame": -39,
+        "ms": 16.548177
+      },
+      {
+        "frame": -40,
+        "ms": 16.573281
+      },
+      {
+        "frame": -41,
+        "ms": 16.899791
+      },
+      {
+        "frame": -42,
+        "ms": 40.579062
+      },
+      {
+        "frame": -43,
+        "ms": 22.213072
+      },
+      {
+        "frame": -44,
+        "ms": 16.495312
+      },
+      {
+        "frame": -45,
+        "ms": 16.837083
+      },
+      {
+        "frame": 0,
+        "ms": 64.025104
+      },
+      {
+        "frame": 1,
+        "ms": 49.14375
+      },
+      {
+        "frame": 2,
+        "ms": 16.402447
+      },
+      {
+        "frame": 3,
+        "ms": 42.673333
+      },
+      {
+        "frame": 4,
+        "ms": 16.473489
+      },
+      {
+        "frame": 5,
+        "ms": 17.119843
+      },
+      {
+        "frame": 6,
+        "ms": 75.673385
+      },
+      {
+        "frame": 7,
+        "ms": 17.012812
+      },
+      {
+        "frame": 8,
+        "ms": 64.655833
+      },
+      {
+        "frame": 9,
+        "ms": 43.928697
+      },
+      {
+        "frame": 10,
+        "ms": 49.824479
+      },
+      {
+        "frame": 11,
+        "ms": 47.507447
+      },
+      {
+        "frame": 12,
+        "ms": 63.106822
+      },
+      {
+        "frame": 13,
+        "ms": 16.968072
+      },
+      {
+        "frame": 14,
+        "ms": 16.466406
+      },
+      {
+        "frame": 15,
+        "ms": 16.78677
+      },
+      {
+        "frame": 16,
+        "ms": 64.574114
+      },
+      {
+        "frame": 17,
+        "ms": 16.637031
+      },
+      {
+        "frame": 18,
+        "ms": 48.142291
+      },
+      {
+        "frame": 19,
+        "ms": 16.874635
+      },
+      {
+        "frame": 20,
+        "ms": 64.342135
+      },
+      {
+        "frame": 21,
+        "ms": 35.682552
+      },
+      {
+        "frame": 22,
+        "ms": 42.157031
+      },
+      {
+        "frame": 23,
+        "ms": 16.956979
+      },
+      {
+        "frame": 24,
+        "ms": 16.66427
+      },
+      {
+        "frame": 25,
+        "ms": 16.775572
+      },
+      {
+        "frame": 26,
+        "ms": 16.813177
+      },
+      {
+        "frame": 27,
+        "ms": 101.5675
+      },
+      {
+        "frame": 28,
+        "ms": 32.029531
+      },
+      {
+        "frame": 29,
+        "ms": 47.109843
+      },
+      {
+        "frame": 30,
+        "ms": 41.098906
+      },
+      {
+        "frame": 31,
+        "ms": 63.835625
+      },
+      {
+        "frame": 32,
+        "ms": 17.369531
+      },
+      {
+        "frame": 33,
+        "ms": 63.133541
+      },
+      {
+        "frame": 34,
+        "ms": 63.795729
+      },
+      {
+        "frame": 35,
+        "ms": 16.607031
+      },
+      {
+        "frame": 36,
+        "ms": 64.530364
+      },
+      {
+        "frame": 37,
+        "ms": 66.183072
+      },
+      {
+        "frame": 38,
+        "ms": 63.802708
+      },
+      {
+        "frame": 39,
+        "ms": 16.556822
+      },
+      {
+        "frame": 40,
+        "ms": 68.103854
+      },
+      {
+        "frame": 41,
+        "ms": 43.523958
+      },
+      {
+        "frame": 42,
+        "ms": 50.473125
+      },
+      {
+        "frame": 43,
+        "ms": 16.60901
+      },
+      {
+        "frame": 44,
+        "ms": 51.984531
+      },
+      {
+        "frame": 45,
+        "ms": 42.00177
+      },
+      {
+        "frame": 46,
+        "ms": 16.72651
+      },
+      {
+        "frame": 47,
+        "ms": 63.398177
+      },
+      {
+        "frame": 48,
+        "ms": 46.132604
+      },
+      {
+        "frame": 49,
+        "ms": 64.443281
+      },
+      {
+        "frame": 50,
+        "ms": 16.859166
+      },
+      {
+        "frame": 51,
+        "ms": 16.842552
+      },
+      {
+        "frame": 52,
+        "ms": 44.898385
+      },
+      {
+        "frame": 53,
+        "ms": 66.040208
+      },
+      {
+        "frame": 54,
+        "ms": 49.09302
+      },
+      {
+        "frame": 55,
+        "ms": 16.89552
+      },
+      {
+        "frame": 56,
+        "ms": 35.388958
+      },
+      {
+        "frame": 57,
+        "ms": 18.052083
+      },
+      {
+        "frame": 58,
+        "ms": 64.343697
+      },
+      {
+        "frame": 59,
+        "ms": 63.512239
+      },
+      {
+        "frame": 60,
+        "ms": 16.68651
+      },
+      {
+        "frame": 61,
+        "ms": 16.907864
+      },
+      {
+        "frame": 62,
+        "ms": 50.758593
+      },
+      {
+        "frame": 63,
+        "ms": 16.528072
+      },
+      {
+        "frame": 64,
+        "ms": 16.310312
+      },
+      {
+        "frame": 65,
+        "ms": 75.838125
+      },
+      {
+        "frame": 66,
+        "ms": 42.83026
+      },
+      {
+        "frame": 67,
+        "ms": 47.681562
+      },
+      {
+        "frame": 68,
+        "ms": 39.362031
+      },
+      {
+        "frame": 69,
+        "ms": 63.707812
+      },
+      {
+        "frame": 70,
+        "ms": 44.368385
+      },
+      {
+        "frame": 71,
+        "ms": 50.600833
+      },
+      {
+        "frame": 72,
+        "ms": 54.730625
+      },
+      {
+        "frame": 73,
+        "ms": 16.217447
+      },
+      {
+        "frame": 74,
+        "ms": 62.039895
+      },
+      {
+        "frame": 75,
+        "ms": 36.169843
+      },
+      {
+        "frame": 76,
+        "ms": 64.076927
+      },
+      {
+        "frame": 77,
+        "ms": 49.848802
+      },
+      {
+        "frame": 78,
+        "ms": 16.751041
+      },
+      {
+        "frame": 79,
+        "ms": 66.181406
+      },
+      {
+        "frame": 80,
+        "ms": 43.449166
+      },
+      {
+        "frame": 81,
+        "ms": 62.897343
+      },
+      {
+        "frame": 82,
+        "ms": 40.134531
+      },
+      {
+        "frame": 83,
+        "ms": 44.825885
+      },
+      {
+        "frame": 84,
+        "ms": 49.732708
+      },
+      {
+        "frame": 85,
+        "ms": 16.425781
+      },
+      {
+        "frame": 86,
+        "ms": 44.641666
+      },
+      {
+        "frame": 87,
+        "ms": 48.933802
+      },
+      {
+        "frame": 88,
+        "ms": 80.951354
+      },
+      {
+        "frame": 89,
+        "ms": 16.450572
+      },
+      {
+        "frame": 90,
+        "ms": 64.130729
+      },
+      {
+        "frame": 91,
+        "ms": 42.990364
+      },
+      {
+        "frame": 92,
+        "ms": 43.448177
+      },
+      {
+        "frame": 93,
+        "ms": 34.741875
+      },
+      {
+        "frame": 94,
+        "ms": 60.540312
+      },
+      {
+        "frame": 95,
+        "ms": 43.39052
+      },
+      {
+        "frame": 96,
+        "ms": 15.921302
+      },
+      {
+        "frame": 97,
+        "ms": 52.43375
+      },
+      {
+        "frame": 98,
+        "ms": 15.572447
+      },
+      {
+        "frame": 99,
+        "ms": 57.768072
+      },
+      {
+        "frame": 100,
+        "ms": 52.999479
+      },
+      {
+        "frame": 101,
+        "ms": 62.27125
+      },
+      {
+        "frame": 102,
+        "ms": 15.779531
+      },
+      {
+        "frame": 103,
+        "ms": 15.567187
+      },
+      {
+        "frame": 104,
+        "ms": 47.371927
+      },
+      {
+        "frame": 105,
+        "ms": 41.96552
+      },
+      {
+        "frame": 106,
+        "ms": 47.453802
+      },
+      {
+        "frame": 107,
+        "ms": 39.72901
+      },
+      {
+        "frame": 108,
+        "ms": 16.113958
+      },
+      {
+        "frame": 109,
+        "ms": 15.660729
+      },
+      {
+        "frame": 110,
+        "ms": 73.414583
+      },
+      {
+        "frame": 111,
+        "ms": 67.21776
+      },
+      {
+        "frame": 112,
+        "ms": 15.906822
+      },
+      {
+        "frame": 113,
+        "ms": 16.081979
+      },
+      {
+        "frame": 114,
+        "ms": 60.16901
+      },
+      {
+        "frame": 115,
+        "ms": 78.174062
+      },
+      {
+        "frame": 116,
+        "ms": 63.774947
+      },
+      {
+        "frame": 117,
+        "ms": 17.091979
+      },
+      {
+        "frame": 118,
+        "ms": 47.148281
+      },
+      {
+        "frame": 119,
+        "ms": 63.96651
+      }
+    ]
+  },
+  "errors": [],
+  "limitations": [
+    "GL uses one external query around all render commands; GPU sums pass durations, excluding inter-pass gaps/transfers: not strictly identical scopes.",
+    "Serialized GPU samples are not total wall time or queue latency.",
+    "Interactive RAF is measured separately without readback.",
+    "JS heap is not GPU memory."
+  ],
+  "capture": {
+    "counts": {
+      "drawCalls": 318,
+      "triangles": 4409229,
+      "geometries": 18,
+      "textures": 17
+    },
+    "camera": {
+      "position": [
+        58,
+        48,
+        76
+      ],
+      "quaternion": [
+        -0.2184212286364742,
+        0.3115676591967793,
+        0.07382391699239997,
+        0.9218285035208403
+      ]
+    },
+    "errors": []
+  },
+  "consoleErrors": []
+}
