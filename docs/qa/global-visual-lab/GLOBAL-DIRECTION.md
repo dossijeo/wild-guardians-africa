@@ -224,3 +224,7 @@ La petición posterior del usuario limita este pase al material del suelo; queda
 ### Bases cian en hierba seca (20/10)
 
 [Native grass base](native-grass-base/README.md): raycasts identifican pintura del slot 8 sobre suelo seco, no agua del mundo. Máscara cromática limitada al material nativo conserva geometría e iluminación. Doce capturas y 3.840 muestras GPU; tres retornos exactos y cinco píxeles residuales en el cuarto. Mejora parcial de color, pero persisten las peanas circulares y restos cian. Conservar solo como candidato QA, sin aprobar coste (+6,45% media/juego/noche). Próxima investigación: transición material base/suelo; no más aumento de luz para corregir una discontinuidad de materiales. Calidad global pendiente.
+
+### Transición material de bases al terreno (20/10)
+
+[Native grass ground base](native-grass-ground-base/README.md): comparte textura de suelo en coordenadas de mundo, con variante adicional de iluminación continua, sombra y contacto. Mejora localizada frente a los discos pintados, especialmente de noche; persisten contorno naranja y falta de normales/POM/máscaras de terreno. Dieciséis capturas, cuatro retornos exactos, cuatro clips de órbita y 5.760 muestras GPU. Conservar como candidato QA sin activar: tres condiciones de la variante continua superan el 5%; no extender la receta incompleta. La calidad global y la transición completa siguen pendientes.
