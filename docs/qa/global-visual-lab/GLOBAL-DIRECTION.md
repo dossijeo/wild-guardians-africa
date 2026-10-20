@@ -168,3 +168,7 @@ Se conserva [la rampa de luz suavizada](desert-soft-light/README.md), con [integ
 ## Sombras de matas arqueadas (20/10)
 
 [Grass contact](grass-contact/README.md): 36 capturas, 18 parejas con matas identicas, 24 bloques ABBA de campana con cache solar desactivada. GPU incremental -0,148 a +0,421 ms con variacion; auditoria de todos los pases confirma +1 draw y 240 triangulos por instancia en cada actualizacion. No integrado: beneficio cercano discreto y casi nulo en Canon. Los contadores habituales de ultimo pase no incluyen sombras; la auditoria separada evita presentarlos como coste cero. Prioridad siguiente: forma y cobertura de las masas vegetales con el mismo presupuesto, antes de mas instancias o ajustes globales del sesgo solar.
+
+## Hojas adicionales con triangulos acotados (20/10)
+
+[Grass dense](grass-dense/README.md), 24 hojas/240 triangulos, descartado por tiras rigidas. [Grass mixed](grass-mixed/README.md), 19 hojas/238 triangulos, conserva algunas curvas pero no mejora claramente la masa. 16 capturas cercanas de campana en total, modelos Blender cerrados y validacion glTF sin avisos. ABBA directo del combinado contra el original en Sabana/Rio, sin confundirlo con ocultar vegetacion. Mantener grass-arched; no integrado. Proxima prioridad: lectura del material/normales de la vegetacion existente a escala de juego, antes de otro barrido de cantidad de hojas.
