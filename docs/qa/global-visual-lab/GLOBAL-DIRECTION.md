@@ -228,3 +228,7 @@ La petición posterior del usuario limita este pase al material del suelo; queda
 ### Transición material de bases al terreno (20/10)
 
 [Native grass ground base](native-grass-ground-base/README.md): comparte textura de suelo en coordenadas de mundo, con variante adicional de iluminación continua, sombra y contacto. Mejora localizada frente a los discos pintados, especialmente de noche; persisten contorno naranja y falta de normales/POM/máscaras de terreno. Dieciséis capturas, cuatro retornos exactos, cuatro clips de órbita y 5.760 muestras GPU. Conservar como candidato QA sin activar: tres condiciones de la variante continua superan el 5%; no extender la receta incompleta. La calidad global y la transición completa siguen pendientes.
+
+### Máscara por altura en bases de hierba (20/10)
+
+[Native grass root mask](native-grass-root-mask/README.md): una sola componente conectada en el recurso; la máscara anterior excluía bordes inclinados y cian clasificado como follaje. La transición local 0,025–0,055 integra mejor la peana conservando geometría, pero tiñe raíces/piedras bajas. Dieciséis capturas con cuatro retornos exactos, cuatro clips y 5.760 muestras GPU. Candidato QA sin aprobar coste: dos condiciones superan +5% frente al original. Cerrar por ahora la iteración de este recurso y volver a suelo/vegetación a escala global en Gran Río y Cañón. No extender automáticamente los umbrales ni declarar alcanzada la calidad global.
