@@ -7,7 +7,28 @@ function rod(g,a,b,r,color,sides=5){const from=new T.Vector3(...a),to=new T.Vect
 function cone(g,p,r,h,color,rotation=[0,0,0]){const m=mesh(g,new T.ConeGeometry(r,h,5),color,p);m.rotation.set(...rotation);return m;}
 function plate(g,points,color,depth=.08){const s=new T.Shape();points.forEach(([x,y],i)=>i?s.lineTo(x,y):s.moveTo(x,y));s.closePath();return mesh(g,new T.ExtrudeGeometry(s,{depth,bevelEnabled:false}),color);}
 function leaf(g,color,p=[0,0,0],scale=1,angle=0){const vertices=[0,.7,0,-.36,.02,0,0,-.6,0,.36,.02,0,0,.02,.16],indices=[0,1,4,1,2,4,2,3,4,3,0,4,0,3,2,0,2,1],geo=new T.BufferGeometry();geo.setAttribute('position',new T.Float32BufferAttribute(vertices,3));geo.setIndex(indices);geo.computeVertexNormals();const m=mesh(g,geo,color,p,[scale,scale,scale]);m.rotation.z=angle;rod(g,[p[0],p[1]-.55*scale,p[2]+.1],[p[0],p[1]+.53*scale,p[2]+.1],.018*scale,'#c9bd8a');return m;}
-function cloud(g,color,opacity=1){for(const [x,y,z,r] of [[-.48,-.12,0,.38],[-.14,.08,0,.5],[.31,-.05,0,.43],[.49,-.15,.05,.3],[.08,-.24,.2,.4]])ball(g,color,[x,y,z],[r,r*.85,r*.75],1,opacity);}
+// Folded blade with an asymmetric edge, used by foliage rather than insect wings.
+function foliage(g,color,p=[0,0,0],scale=1,angle=0){
+ const root=new T.Group();root.position.set(...p);root.scale.setScalar(scale);root.rotation.z=angle;g.add(root);
+ const edge=[[0,.73],[-.21,.43],[-.36,.1],[-.28,-.14],[-.08,-.53],[.18,-.33],[.34,-.04],[.27,.28]],vertices=[],indices=[];
+ for(const [x,y] of edge)vertices.push(x,y,0);vertices.push(0,.02,.14);
+ for(let i=0;i<edge.length;i++)indices.push(i,(i+1)%edge.length,8);
+ const geometry=new T.BufferGeometry();geometry.setAttribute('position',new T.Float32BufferAttribute(vertices,3));geometry.setIndex(indices);geometry.computeVertexNormals();
+ const blade=mesh(root,geometry,color);blade.material=mat(color);blade.material.side=T.DoubleSide;
+ rod(root,[0,-.67,.02],[0,.62,.12],.022,'#d8c68b');
+ for(const y of [-.25,.02,.28])for(const side of [-1,1])rod(root,[0,y,.14],[side*.23,y+.13,.035],.009,'#bfae73');
+ return root;
+}
+function waterDrop(g,color){
+ const points=[new T.Vector2(0,-.56),new T.Vector2(.29,-.5),new T.Vector2(.43,-.26),new T.Vector2(.4,.02),new T.Vector2(.24,.31),new T.Vector2(.09,.55),new T.Vector2(0,.72)];
+ const m=mesh(g,new T.LatheGeometry(points,12),color);m.material=new T.MeshStandardMaterial({color,roughness:.25,metalness:.05,flatShading:true});
+ ball(g,'#f0f9e7',[-.1,.02,.36],[.075,.2,.04],1);
+ ball(g,'#c5eef0',[.22,-.3,.29],[.08,.06,.035],0);
+}
+function cloud(g,color,opacity=1){
+ // Unequal overlapping lobes form a continuous crown and a scalloped underside.
+ for(const [x,y,z,r] of [[-.44,-.08,0,.31],[-.1,.13,-.02,.45],[.34,.02,.01,.36],[-.4,-.26,.14,.24],[-.1,-.25,.16,.32],[.24,-.23,.16,.3],[.48,-.2,.07,.2]])ball(g,color,[x,y,z],[r,r*.86,r*.75],2,opacity);
+}
 function bug(g,type,frame=0){const gold=type==='beetle',ant=type==='ants',termite=type==='termite',fly=type==='fly',locust=type==='locust',body=gold?'#d5ab4e':ant?'#79432a':termite?'#b18d61':'#8ca468';
  ball(g,body,[0,-.16,0],[gold?.43:.25,gold?.5:.42,.25],1);ball(g,body,[0,.26,.05],[.23,.22,.2],1);if(ant||termite)ball(g,body,[0,.04,.02],[.17,.19,.16],0);
  for(const side of [-1,1]){for(let i=0;i<3;i++)rod(g,[side*.14,.13-i*.2,0],[side*(.43+i*.035),.25-i*.27,.08],.038,'#3f4831');rod(g,[side*.11,.42,.03],[side*.26,.61,.02],.027,'#3f4831');ball(g,'#344c3c',[side*.1,.33,.22],[.035,.045,.035],0);}
@@ -83,7 +104,7 @@ export function createSprite(id,frame=0){const g=new T.Group();
    ball(g,i%2?'#ac8753':'#c4a371',[Math.cos(a)*.53,Math.sin(a)*.39,Math.sin(a)*.1],[r,r*.65,r*.6],1,.78);
   }
  }
- else if(id==='raindrop'||id==='dew')drop(g,id==='dew'?'#9bcac3':'#8ab8d0');
+ else if(id==='raindrop'||id==='dew')waterDrop(g,id==='dew'?'#70bbb8':'#68a9c5');
  else if(id==='flame'){
   // Three crooked tongues and an inset hot core remain readable in the 64px bake.
   const bend=Math.sin(frame*1.35)*.16;
@@ -97,7 +118,7 @@ export function createSprite(id,frame=0){const g=new T.Group();
  else if(id==='lightning'){const m=plate(g,[[.15,.8],[-.4,-.05],[-.03,-.05],[-.18,-.8],[.5,.18],[.1,.18],[.38,.8]],frame===1?'#f9edbc':'#e4cb86',.12);m.rotation.z=(frame-1)*.04;}
  else if(id==='seed'||id==='rareseed'){
   ball(g,id==='seed'?'#b78b58':'#d8b766',[0,-.24,0],[.22,.44,.22],1);
-  if(id==='seed'){rod(g,[0,-.1,0],[0,.6,0],.018,'#d6cba8');for(let i=0;i<8;i++){const a=i*Math.PI/4;rod(g,[0,.35,0],[Math.cos(a)*.46,.6+Math.sin(a)*.2,Math.sin(a)*.22],.014,'#f3e6c5');}}
+  if(id==='seed'){rod(g,[0,-.1,0],[0,.6,0],.018,'#d6cba8');for(let i=0;i<12;i++){const a=i*Math.PI/6,tip=[Math.cos(a)*.46,.6+Math.sin(a)*.2,Math.sin(a)*.22];rod(g,[0,.35,0],tip,.024,'#f3e6c5');ball(g,'#eee2bf',tip,[.05,.025,.035],0);}}
   else{rod(g,[0,-.1,0],[0,.55,0],.025,'#759956');leaf(g,'#91ad69',[-.23,.4,0],.48,.8);leaf(g,'#a0ba78',[.24,.48,0],.48,-.8);}
  }
  else if(id==='feather'){
@@ -108,17 +129,43 @@ export function createSprite(id,frame=0){const g=new T.Group();
  }
  else if(id==='flower'){rod(g,[0,-.8,0],[0,.25,0],.035,'#749959');for(let i=0;i<5;i++){const a=i*Math.PI*2/5;ball(g,'#ce9dbd',[Math.sin(a)*.3,.28+Math.cos(a)*.3,.04],[.21,.24,.1],1);}ball(g,'#e7c97b',[0,.28,.15],[.18,.18,.1],1);leaf(g,'#8ca666',[-.2,-.45,0],.4,.9);}
  else if(id==='spirit'){drop(g,'#b4d7df');for(const x of [-.13,.13])ball(g,'#4c6f81',[x,.02,.37],[.04,.06,.025]);}
- else if(['goldenleaves','pathleaves'].includes(id))leaf(g,id==='goldenleaves'?'#d5b56b':'#ab946b',[0,0,0],1,.25);
+ else if(['goldenleaves','pathleaves'].includes(id))foliage(g,id==='goldenleaves'?'#c9943f':'#947144',[0,0,0],1,.25);
  else if(id==='sparkle'||id==='star'){const points=[],n=id==='star'?5:4;for(let i=0;i<n*2;i++){const a=i*Math.PI/n+Math.PI/2,r=i%2?.25:.7;points.push([Math.cos(a)*r,Math.sin(a)*r]);}plate(g,points,'#f1d99d',.12);}
  else if(['rainbow','rainbowAqua','rainbowGold'].includes(id))gem(g,{rainbow:'#ba9ec7',rainbowAqua:'#8fbdc8',rainbowGold:'#dcc583'}[id]);
- else if(id==='pollen'||id==='grain'){for(const [x,y,a] of [[-.3,.25,.4],[.25,.03,-.25],[-.05,-.35,1]]){const m=ball(g,id==='pollen'?'#dbbf75':'#d1b16a',[x,y,0],[.13,.27,.14],0);m.rotation.z=a;}}
- else if(id==='weeds'){for(const [x,a] of [[-.28,.45],[0,-.08],[.28,-.4]])leaf(g,'#849c5d',[x,0,0],.8,a);for(const x of [-.12,.1,.23])rod(g,[x,-.4,.02],[x*.8,-.7,.08],.028,'#ad9269');}
+ else if(id==='pollen'){
+  // Matte uneven motes, without the hard highlights of spilled grain or coins.
+  for(const [x,y,r] of [[-.29,.22,.18],[.27,.1,.15],[-.07,-.31,.15],[.06,.42,.08],[.34,-.26,.08]])ball(g,'#d6b45d',[x,y,0],[r,r*.9,r*.7],1,.96);
+ }
+ else if(id==='grain'){
+  for(const [x,y,a] of [[-.27,.24,.4],[.24,.01,-.25],[-.04,-.34,1]]){
+   const kernel=new T.Group();kernel.position.set(x,y,0);kernel.rotation.z=a;g.add(kernel);
+   ball(kernel,'#c28e3c',[0,0,0],[.16,.29,.14],1);
+   rod(kernel,[0,-.19,.13],[0,.19,.13],.018,'#74532c');
+   ball(kernel,'#f0d18b',[-.055,.06,.115],[.04,.14,.025],0);
+  }
+ }
+ else if(id==='weeds'){
+  for(const [x,y,scale,a] of [[-.2,-.08,.72,.78],[.17,-.03,.8,-.65],[0,.19,.85,.08]])foliage(g,x<0?'#547334':'#6f8f43',[x,y,0],scale,a);
+  for(const x of [-.12,.1,.23]){rod(g,[x,-.4,.02],[x*.8,-.73,.08],.035,'#ad9269');rod(g,[x*.9,-.58,.06],[x*.9+.13,-.66,.08],.022,'#c9af7f');}
+ }
  else if(id==='mound'){ball(g,'#a88b65',[0,-.16,0],[.8,.48,.55],1);ball(g,'#655a43',[0,-.13,.45],[.37,.27,.05],1);}
  else if(id==='burrow'){ball(g,'#a98c6b',[0,-.05,0],[.48,.53,.36],1);ball(g,'#d3bb97',[0,-.18,.3],[.28,.22,.15],1);for(const x of [-.22,.22])ball(g,'#33483f',[x,.13,.32],[.05,.06,.04]);ball(g,'#947367',[0,-.06,.44],[.08,.05,.04]);for(const x of [-.43,.43])ball(g,'#c0a784',[x,-.4,.24],[.17,.11,.14],0);}
  else if(id==='spores'){for(const side of [-1,1]){leaf(g,'#c5bbaf',[side*.28,.2,0],.5,side*.9);rod(g,[side*.08,.12,0],[side*.18,-.45,0],.02,'#b7a78e');ball(g,'#d7caad',[side*.18,-.48,0],[.09,.14,.09]);}}
  else if(id==='debris'||id==='branch')twig(g,id==='branch');
- else if(id==='web'){for(let j=0;j<8;j++){const a=j*Math.PI/4;rod(g,[0,0,0],[Math.cos(a)*.75,Math.sin(a)*.75,0],.012,'#e0ddc6',4);}for(const r of [.3,.62])for(let j=0;j<8;j++){const a=j*Math.PI/4,b=(j+1)*Math.PI/4;rod(g,[Math.cos(a)*r,Math.sin(a)*r,0],[Math.cos(b)*r,Math.sin(b)*r,0],.012,'#e0ddc6',4);}}
- else if(id==='sack'){const points=[new T.Vector2(0,-.6),new T.Vector2(.38,-.53),new T.Vector2(.49,-.12),new T.Vector2(.22,.34),new T.Vector2(.26,.58)];mesh(g,new T.LatheGeometry(points,8),'#b99e70');mesh(g,new T.TorusGeometry(.22,.035,4,8),'#887c55',[0,.32,0]).rotation.x=Math.PI/2;}
+ else if(id==='web'){
+  const silk=(a,b)=>{rod(g,a,b,.027,'#596c58',5);rod(g,[a[0],a[1],.035],[b[0],b[1],.035],.016,'#f0ebd5',5);};
+  for(let j=0;j<8;j++){const a=j*Math.PI/4;silk([0,0,0],[Math.cos(a)*.75,Math.sin(a)*.75,0]);}
+  for(const r of [.24,.46,.66])for(let j=0;j<8;j++){const a=j*Math.PI/4,b=(j+1)*Math.PI/4;silk([Math.cos(a)*r,Math.sin(a)*r,0],[Math.cos(b)*r,Math.sin(b)*r,0]);}
+  for(const a of [.7,2.6,4.2])ball(g,'#eef4da',[Math.cos(a)*.65,Math.sin(a)*.65,.06],[.045,.055,.04],0);
+ }
+ else if(id==='sack'){
+  const points=[new T.Vector2(0,-.6),new T.Vector2(.38,-.53),new T.Vector2(.49,-.12),new T.Vector2(.29,.34),new T.Vector2(.31,.52)];mesh(g,new T.LatheGeometry(points,8),'#c6a46d');
+  mesh(g,new T.TorusGeometry(.28,.055,5,10),'#765b35',[0,.4,0]).rotation.x=Math.PI/2;
+  ball(g,'#76552e',[0,.47,0],[.26,.035,.25],1);
+  for(const [x,z] of [[-.12,.05],[.08,.11],[.04,-.11]])ball(g,'#e7c378',[x,.5,z],[.1,.07,.12],1);
+  rod(g,[-.17,-.31,.42],[.1,.14,.41],.025,'#82613a');
+  for(const y of [-.2,-.07,.06])ball(g,'#e8d2a0',[y*.6,y,.45],[.08,.07,.025],0);
+ }
  else if(id==='snake'||id==='snakebody'){
   ball(g,id==='snake'?'#879c53':'#75894a',[0,0,0],[id==='snake'?.37:.28,.65,.24],1);
   ball(g,'#d3c793',[0,-.16,.17],[.23,.37,.1],0);
