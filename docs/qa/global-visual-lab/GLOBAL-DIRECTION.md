@@ -369,3 +369,7 @@ La [atribución por draw](savanna-draw-attribution/README.md) identifica lotes d
 La [máscara de selección](savanna-instance-selection/README.md) reduce subidas de48 a unas14 por frame manteniendo geometría exacta; los tiempos se solapan, aún sin aprobación global.68 de72 pares RGB exactos, residuos pendientes. Conservar candidata QA.
 
 El usuario propone suavizar ocultación cercana y paso impostor/3D. La [prueba MSAA](obstruction-msaa/README.md) elimina la cuadrícula8×8 pero4 muestras no producen un fundido continuo; no adoptar sola. Priorizar una transición limitada a instancias próximas que se ocultan y estudiar aparte la coordinación entre impostor y geometría. Mantener las optimizaciones independientes de estos cambios visuales.
+
+## Fundidos de cámara: candidato con coste pendiente
+
+El [fundido convencional](obstruction-blend/README.md) se descarta por superposición de caras internas. El [control de superficie cercana](obstruction-surface-blend/README.md) elimina el tramado y reduce esa acumulación, pero añade2–4 draws en poses afectadas y empeora GPU/CPU/cadencia en la serie móvil corregida.960 muestras GPU,1.440 frames; piloto de dt variable excluido por falta de repetibilidad. Mantener solo como candidato visual: pendiente vídeo, profundidad más barata, agua/transparencias, lifecycle e impostores. No activar globalmente ni cambiar main.
