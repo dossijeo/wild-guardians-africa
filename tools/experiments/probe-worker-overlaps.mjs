@@ -1,6 +1,7 @@
 import {simulateNativeCampaign} from '../native-campaign-runner.mjs';
 import {createSpatialCampaignOpening} from './spatial-campaign-opening.mjs';
 import {actorBlockers,actorSegmentClear} from '../../src/simulation/actor-motion.js';
+import {observeGameEvents} from '../../src/simulation/game.js';
 import {mkdirSync,writeFileSync} from 'node:fs';
 import {dirname} from 'node:path';
 import {createHash} from 'node:crypto';
@@ -19,10 +20,31 @@ const distinctWorkPairs=new Set();
 const byDay=new Map(),byStatus=new Map(),examples=[],workExamples=[];
 const overlapWindows={'0-3':0,'3-10':0,'10-30':0,'30+':0};
 let villageEntry=null;
+const captureRecoveries=process.env.WG_WORKER_RECOVERY_DETAIL==='1';
+if(captureRecoveries&&backend!=='wild-engine')
+  throw Error('Recovery detail currently requires the continuous Wild Engine opening');
+const recoverySamples=[];
 const inspectDay=Number(process.env.WG_WORKER_INSPECT_DAY??0),
   inspectTime=Number(process.env.WG_WORKER_INSPECT_TIME??0),
   inspectIds=new Set((process.env.WG_WORKER_INSPECT_IDS??'').split(',').filter(Boolean));
 let diagnostic=null;
+const captureRecovery=(state,event)=>{
+  if(event.type!=='ActorMobileCollisionRecovery'||recoverySamples.length>=256)return;
+  const actor=state.workers.find(w=>w.id===event.actorId);
+  if(!actor)return;
+  const next=actor.path?.[0],distance=next?Math.hypot(next.x-actor.x,next.z-actor.z):0;
+  const probe=distance>1e-8?{x:actor.x+(next.x-actor.x)*Math.min(.5,distance)/distance,
+    z:actor.z+(next.z-actor.z)*Math.min(.5,distance)/distance}:null;
+  const blockers=probe?actorBlockers(state,actor,true,8)
+    .filter(other=>!actorSegmentClear(actor,probe,actor,[other]))
+    .map(other=>({id:other.id,status:other.status,x:other.x,z:other.z,
+      radius:other.radius??.28,distance:Math.hypot(actor.x-other.x,actor.z-other.z),
+      next:other.path?.[0]??null})):[];
+  recoverySamples.push({day:state.day,time:state.time,elapsed:state.elapsed,
+    actorId:actor.id,status:actor.status,x:event.x,z:event.z,
+    destinationId:actor.destinationId,pathLength:actor.path?.length??0,
+    next:next??null,probe,blockers});
+};
 const onTick=(state,nav)=>{
   villageEntry??=state.villages[0]?.entry??null;
   sampledTicks++;
@@ -80,7 +102,11 @@ const onTick=(state,nav)=>{
 
 const result=await simulateNativeCampaign({days,strategy,seed,biome,culture,
   slotId:`native-${strategy}-${seed}`,
-  ...(backend==='wild-engine'?{openingFactory:createSpatialCampaignOpening,
+  ...(backend==='wild-engine'?{openingFactory:async world=>{
+    const opening=await createSpatialCampaignOpening(world);
+    if(captureRecoveries)observeGameEvents(opening.s,event=>captureRecovery(opening.s,event));
+    return opening;
+  },
     spatialAdvice:true,nativeIntents:true,nativeWallPlans:true,reloadRaids:false}:{}),
   onTick});
 const report={days,seed,strategy,biome,culture,backend,
@@ -94,6 +120,7 @@ const report={days,seed,strategy,biome,culture,backend,
   villageEntry,diagnostic,overlapWindows,workOverlapPairs,phasedWorkOverlapPairs,
   distinctWorkPairs:distinctWorkPairs.size,maxWorkPenetration,
   byDay:[...byDay],byStatus:[...byStatus],examples,workExamples};
+if(captureRecoveries)report.recoverySamples=recoverySamples;
 const output=process.env.WG_WORKER_PROBE_OUTPUT;
 if(output){
   mkdirSync(dirname(output),{recursive:true});
