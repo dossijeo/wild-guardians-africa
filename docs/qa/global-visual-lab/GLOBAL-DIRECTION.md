@@ -381,3 +381,8 @@ El [fundido convencional](obstruction-blend/README.md) se descarta por superposi
 ## Recorrido de ocultación sincronizado
 
 [Vídeos día/noche](obstruction-fade-motion/README.md):180 parejas con cámara, viento y opacidad por instancia idénticos.119 exactas RGB, máximo3 instancias parciales/4 draws extra. La cuadrícula desaparece; persiste una silueta translúcida intermedia. Piloto con148 imágenes vacías por espera asíncrona tras render excluido; serie final verificada sin imágenes vacías. Candidato solo QA. Siguiente validación: agua/partículas, solapamiento de objetos y lifecycle; transición de impostores sigue independiente y pendiente.
+
+
+### Precondición real de la transición de impostores
+
+El piloto de fundido con impostores detectó que la campaña actual usa sesión espacial y desactiva la ruta antigua incluso con la preferencia activada. Se añadió una comprobación que impide emitir comparativas sin adaptadores. [Diagnóstico y prototipo no validado](impostor-blend-pilot/README.md). No hay resultado visual ni de rendimiento atribuible a este candidato; falta una escena con identidades y cobertura coincidentes. El commit de vídeos de ocultación cercana `8d6bc2fa5` quedó publicado correctamente.
