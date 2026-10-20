@@ -28,7 +28,7 @@
     "src/rendering/scene.js": "11b06c7a32cbf5a597552518da92feeae69d4b37efb2b20eac2e06c87f8b321a",
     "src/simulation/encounters.js": "4da176cd4a4ae1de9d41d8b9560ade5fb360433bb203233a53de5b77d7e41e18",
     "src/simulation/game.js": "d169104538500fcb87f4dda20ecf93db0715df9087e7e9117175d7f7ae5b7781",
-    "src/simulation/raids.js": "035561fdf53862f274e143c88fa853afba34375bc4f75e4456266eae80df730f",
+    "src/simulation/raids.js": "d178913266ea348d4b83310e61cdd9e182aa3355a29f2b74f10c5ac659c704bb",
     "src/tutorial/controller.js": "1d58ea14160ea44883c72a7b6806e630103a607d6866e4edf587582aec80f774",
     "src/world/navigation.js": "20439b77e2e4c056092e6bad43910642ff90c1a93408616173fcccd4fbbb90e2",
     "tools/audit_sfx_catalog.mjs": "e2b75593a9c7d97384c658b1f41e2ad4972e8d85992fc220746f548831c27874"
@@ -7054,7 +7054,7 @@
           "callers": [
             {
               "file": "src/simulation/raids.js",
-              "line": 991,
+              "line": 992,
               "selector": "emit(s,'RaidEnded'"
             },
             {
@@ -7191,7 +7191,7 @@
             },
             {
               "file": "src/simulation/raids.js",
-              "line": 992,
+              "line": 993,
               "selector": "emit(s,'GameOver'"
             },
             {
