@@ -18,11 +18,12 @@ try{for(const sceneCase of cases){
  if(process.env.WG_PAIR_VIEW==='side')await page.evaluate(()=>{const {world:w,state}=window.qaVisualReference;const px=state.plants.reduce((n,p)=>n+p.x,0)/state.plants.length,pz=state.plants.reduce((n,p)=>n+p.z,0)/state.plants.length,y=w.nav.field.surface(px,pz);w.controls.target.set(px,y+.9,pz);w.camera.position.set(px+22,y+10,pz);w.updateCamera=()=>{w.camera.lookAt(w.controls.target);w.camera.updateMatrixWorld()};w.render(.016);});
  await page.evaluate(async({mode,study})=>{
   const w=window.qaVisualReference.world;
-  const materials=study.startsWith('water-')?(()=>{const set=new Set();w.scene.traverse(o=>{if(o.isMesh&&o.material?.userData?.paintUniforms&&o.material.userData.paintUniforms.uSurfaceLava.value<.5)set.add(o.material)});return [...set]})():[...new Set(w.terrainMeshes.map(m=>m.material))];
+  const materials=study.startsWith('water-')?(()=>{const set=new Set();w.scene.traverse(o=>{if(o.isMesh&&o.material?.userData?.paintUniforms&&o.material.userData.paintUniforms.uSurfaceLava.value<.5)set.add(o.material)});return [...set]})():[...new Set([...w.terrainMeshes,...(study==='canyon-dominant'?(w.horizon?.group?.children??[]).filter(m=>m.userData.nativeHorizon==='terrain'):[])].map(m=>m.material))];
   const before=materials.map(m=>[m.onBeforeCompile,m.customProgramCacheKey]);
   const {applyMaterialStudy}=await import('/tools/experiments/qa-'+study+'.js');await applyMaterialStudy(w);
   const after=materials.map(m=>[m.onBeforeCompile,m.customProgramCacheKey]);
   window.qaPairSet=(variant)=>{
+   if(w.qaCliffSetEnabled){w.qaCliffSetEnabled(variant);return;}
    if(mode==='fill')materials.forEach((m,i)=>{[m.onBeforeCompile,m.customProgramCacheKey]=(variant?after:before)[i];m.needsUpdate=true;});
    else{w.terrainMeshes.forEach(m=>m.castShadow=!!variant);w.releaseNativeShadow.cache.invalidate();}
   };
