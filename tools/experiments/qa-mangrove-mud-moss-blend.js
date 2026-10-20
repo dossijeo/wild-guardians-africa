@@ -3,7 +3,7 @@ import {nativeGroundMaterial} from '/src/rendering/render-quality.js';
 // QA: mix mud and moss in a single opaque surface recipe. No terrain mutation.
 export function applyMaterialStudy(world,options={}){
  if(world.state.biome!=='manglares')throw Error('Mangrove only');
- const seen=new WeakSet(),bindings=[];let buildMs=0,attributeBytes=0,cacheHits=0,uniqueVertices=0,segmentTests=0;const builds=[];
+ const seen=new WeakSet(),bindings=[];let buildMs=0,attributeBytes=0,cacheHits=0,uniqueVertices=0,segmentTests=0,enabled=true;const builds=[];
  function bind(group){
   if(seen.has(group))return;seen.add(group);
   const ground=group.children.find(m=>m.userData.ground),mud=group.children.find(m=>m.name==='mangrove-mud-patches');if(!ground||!mud)return;
@@ -40,7 +40,8 @@ export function applyMaterialStudy(world,options={}){
    const anchor='vec3 groundAlbedo=toLinear4(clamp(groundColor,0.,1.));';if(!shader.fragmentShader.includes(anchor))throw Error('Missing ground mix anchor');
    shader.fragmentShader=shader.fragmentShader.replace(anchor,`
      float mudWeight=smoothstep(.05,.85,vQAMudEdge);
-     vec3 mudBase=sRGBTransferOETF(vec4(texture2D(uQAMudBase,vQAMudUV).rgb*vec3(.58,.61,.64),1.)).rgb;
+     vec3 mudLinear=texture2D(uQAMudBase,vQAMudUV).rgb*vec3(.58,.61,.64);
+     vec3 mudBase=sRGBTransferOETF(vec4(mudLinear,1.)).rgb;
      vec3 mudN=texture2D(uQAMudNormal,vQAMudUV).xyz*2.-1.;
      vec3 mudPacked=texture2D(uQAMudPacked,vQAMudUV).rgb;
      vec3 mudUp=normalize(inverseTransformDirection(normalize(vNormal),viewMatrix));
@@ -52,7 +53,7 @@ export function applyMaterialStudy(world,options={}){
   if(options.toonInterior){const previous=material.onBeforeCompile;material.onBeforeCompile=function(shader,renderer){previous.call(this,shader,renderer);
    const anchor='#include <opaque_fragment>';if(!shader.fragmentShader.includes(anchor))throw Error('Mud interior output anchor missing');
    shader.fragmentShader=shader.fragmentShader.replace(anchor,`
-    vec3 qaMudAlbedo=texture2D(uQAMudBase,vQAMudUV).rgb*vec3(.58,.61,.64);
+    vec3 qaMudAlbedo=mudLinear;
     float qaMudRough=max(.04,mudPacked.g*.52);
     float qaMudLeaf=smoothstep(.018,.13,qaMudAlbedo.g-qaMudAlbedo.r*.87)*smoothstep(.06,.20,qaMudAlbedo.g);
     vec3 qaMudReflection=uNativeEnvEnabled>.5?environment4(reflect(-toonV,mudWorldN),qaMudRough):vec3(0.);
@@ -62,10 +63,10 @@ export function applyMaterialStudy(world,options={}){
   };}
   if(options.matte){const previous=material.onBeforeCompile;material.onBeforeCompile=function(shader,renderer){previous.call(this,shader,renderer);const from='max(.30,mudPacked.g*.52)';if(!shader.fragmentShader.includes(from))throw Error('Mud roughness anchor missing');shader.fragmentShader=shader.fragmentShader.replace(from,'mix(.78,.95,mudPacked.g)');};}
   material.customProgramCacheKey=()=>key.call(material)+'|qa-mud-moss-blend-v1|'+Boolean(options.matte)+'|'+Boolean(options.toonInterior);material.needsUpdate=true;mud.material=material;
-  const binding={mud,old,material,oldNormal};bindings.push(binding);g.addEventListener('dispose',()=>{const i=bindings.indexOf(binding);if(i>=0){bindings.splice(i,1);old.dispose()}});const ms=performance.now()-start;buildMs+=ms;builds.push({origin:[...origin],vertices:p.count,uniqueVertices:uniqueVertices-beforeUnique,cacheHits:cacheHits-beforeHits,ms});
+  const binding={mud,old,material,oldNormal,blendNormal:g.attributes.normal};if(!enabled){mud.material=old;g.setAttribute('normal',oldNormal);}bindings.push(binding);g.addEventListener('dispose',()=>{const i=bindings.indexOf(binding);if(i>=0){bindings.splice(i,1);if(mud.material===material)old.dispose();else material.dispose()}});const ms=performance.now()-start;buildMs+=ms;builds.push({origin:[...origin],vertices:p.count,uniqueVertices:uniqueVertices-beforeUnique,cacheHits:cacheHits-beforeHits,ms});
  }
  for(const group of world.chunks.values())bind(group);
  const terrain=world.terrain;world.terrain=function(...args){const group=terrain.apply(this,args);bind(group);return group};
  const audit=()=>({toonInterior:!!options.toonInterior,matte:!!options.matte,bound:bindings.length,attributeBytes,buildMs,cache:options.cache!==false,cacheHits,uniqueVertices,segmentTests,builds:[...builds],newTriangles:0,newDrawCalls:0,extraSamplers:3});
- world.qaMudBlend={audit};return audit();
+ world.qaMudBlend={audit,setEnabled(value){enabled=!!value;for(const b of bindings){b.mud.material=enabled?b.material:b.old;b.mud.geometry.setAttribute('normal',enabled?b.blendNormal:b.oldNormal);}}};return audit();
 }

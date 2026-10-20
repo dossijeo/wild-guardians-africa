@@ -1,0 +1,90 @@
+{
+  "blocks": 32,
+  "gpuSamples": 5760,
+  "results": [
+    {
+      "quality": "media",
+      "phase": "day",
+      "stats": {
+        "gpuElapsedMs": [
+          17.86488545555556,
+          18.752291865277773
+        ],
+        "cpuSubmissionMs": [
+          5.316666666666666,
+          5.65055555548105
+        ]
+      },
+      "gpuDeltaMs": 0.8874064097222139,
+      "calls": 93,
+      "triangles": 1270580,
+      "returnExact": false,
+      "returnChangedPixels": 7,
+      "returnMax": 23,
+      "changedPixels": 7650
+    },
+    {
+      "quality": "media",
+      "phase": "night",
+      "stats": {
+        "gpuElapsedMs": [
+          18.292380926388887,
+          18.44956429166667
+        ],
+        "cpuSubmissionMs": [
+          5.136527778249648,
+          5.369583333366447
+        ]
+      },
+      "gpuDeltaMs": 0.1571833652777812,
+      "calls": 93,
+      "triangles": 1270580,
+      "returnExact": true,
+      "returnChangedPixels": 0,
+      "returnMax": 0,
+      "changedPixels": 7430
+    },
+    {
+      "quality": "baja",
+      "phase": "day",
+      "stats": {
+        "gpuElapsedMs": [
+          14.118573323611109,
+          14.050118106944442
+        ],
+        "cpuSubmissionMs": [
+          5.594999999428789,
+          5.588472222785155
+        ]
+      },
+      "gpuDeltaMs": -0.06845521666666698,
+      "calls": 92,
+      "triangles": 1017508,
+      "returnExact": false,
+      "returnChangedPixels": 24,
+      "returnMax": 44,
+      "changedPixels": 7673
+    },
+    {
+      "quality": "baja",
+      "phase": "night",
+      "stats": {
+        "gpuElapsedMs": [
+          14.991019306944448,
+          14.485194408333335
+        ],
+        "cpuSubmissionMs": [
+          4.843333333606521,
+          4.9038888889054455
+        ]
+      },
+      "gpuDeltaMs": -0.5058248986111131,
+      "calls": 92,
+      "triangles": 1017508,
+      "returnExact": true,
+      "returnChangedPixels": 0,
+      "returnMax": 0,
+      "changedPixels": 7470
+    }
+  ]
+}
