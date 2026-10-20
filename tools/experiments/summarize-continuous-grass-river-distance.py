@@ -1,6 +1,6 @@
 import json, statistics, sys
 from pathlib import Path
-sys.stdout.reconfigure(encoding="utf-8")
+sys.stdout.reconfigure(encoding="utf-8",newline="\n")
 p=Path("docs/qa/global-visual-lab/continuous-grass-river/distance-lod")
 r=json.loads((p/"benchmarks-media.json").read_text(encoding="utf-8"))["records"]
 assert len(r)==16
@@ -23,5 +23,5 @@ for view in ["game","elevated"]:
   row["gpuDelta"]=row["distance"]["gpuMedian"]-row["original"]["gpuMedian"]
   row["baselineDrift"]=statistics.median(s["ms"] for s in a[3]["gpu"]["samples"])-statistics.median(s["ms"] for s in a[0]["gpu"]["samples"])
   rows.append(row)
-(p/"timing-summary.json").write_text(json.dumps({"samples":1920,"rows":rows},indent=2)+"\n",encoding="utf-8")
+(p/"timing-summary.json").write_text(json.dumps({"samples":1920,"rows":rows},indent=2)+"\n",encoding="utf-8",newline="\n")
 for row in rows:print(json.dumps(row))
