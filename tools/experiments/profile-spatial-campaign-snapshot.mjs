@@ -6,10 +6,14 @@ import {deserialize} from '../../src/persistence/snapshots.js';
 import {serialize} from '../../src/persistence/snapshots.js';
 import {createSpatialGameSession} from '../../src/world/wild-engine/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../../src/world/wild-engine/spatial-navigation-movement.js';
+import {createEventDrivenTaskPlanner} from '../../src/world/wild-engine/spatial-intent-bridge.js';
 import {animalExitConnector} from '../../src/simulation/animal-exit-connectors.js';
 
 const input=process.argv[2],steps=Number(process.argv[3]??10),
   output=process.argv[4];
+// Opt in to the campaign's native task planner when replaying saved native
+// intent runs. The standalone profiler also supports legacy navigation.
+const nativeIntents=process.env.WG_SPATIAL_PROFILE_NATIVE_INTENTS==='1';
 if(!input||!Number.isSafeInteger(steps)||steps<1||steps>1000)
   throw Error('Usage: profile-spatial-campaign-snapshot <saved-state.json> [steps] [report.json]');
 const wasm=new WebAssembly.Module(readFileSync(new URL(
@@ -19,6 +23,7 @@ const loaded=new Map();
 const session=createSpatialGameSession(wasm,state,{
   loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)
 });
+let stopIntentTasks=null,stopIntentWorld=null,nav=null;
 try{
   const village=state.villages[0],cx=Math.floor((village.x+24)/48),
     cz=Math.floor((village.z+24)/48),residentRadius=Number(process.env.WG_SPATIAL_PROFILE_RADIUS??1);
@@ -28,7 +33,7 @@ try{
     if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
     loaded.set(`${x},${z}`,session.core.chunkPayload());
   }
-  const nav=createSpatialNavigationMovement(session,state);
+  nav=createSpatialNavigationMovement(session,state);
   session.core.enableConnectivityDiagnostics();
   nav.raidSelectionStats={};
   if(process.env.WG_UNSTABLE_SPATIAL_OBSTACLES==='1'){
@@ -48,6 +53,13 @@ try{
   }
   nav.setActiveBounds([(cx-residentRadius)*48-24,(cz-residentRadius)*48-24,
     (cx+residentRadius)*48+24,(cz+residentRadius)*48+24]);
+  if(nativeIntents){
+    const planner=createEventDrivenTaskPlanner(session);
+    planner.resetFromState(state);
+    stopIntentTasks=planner.observeTasks(state);
+    stopIntentWorld=planner.observeWorld(state);
+    nav.intentTaskPlanner=planner;
+  }
   const calls={},approachTargets=new Map();
   for(const name of ['workerPath','path','approachPath','walkable',
     'segmentClear','workerMotionClear','propsAt','regionFor',
@@ -109,7 +121,7 @@ try{
     }
     enclosureSamples[species]=counts;
   }
-  const report={input,steps:rows.length,residentRadius,calls,rows,
+  const report={input,steps:rows.length,residentRadius,nativeIntents,calls,rows,
     topApproachTargets:[...approachTargets].sort((a,b)=>b[1].calls-a[1].calls).slice(0,30),
     raidSelection:nav.raidSelectionStats,
     connectivityDemand:[...(nav.raidConnectivityDemand??[])],
@@ -149,5 +161,11 @@ try{
     }
   }
   if(output)writeFileSync(output,JSON.stringify(report,null,2)+'\n');
+  if(process.env.WG_SPATIAL_PROFILE_SAVE_STATE)
+    writeFileSync(process.env.WG_SPATIAL_PROFILE_SAVE_STATE,serialize(state));
   console.log(JSON.stringify(report));
-}finally{session.dispose();}
+}finally{
+  stopIntentTasks?.();stopIntentWorld?.();
+  if(nav)delete nav.intentTaskPlanner;
+  session.dispose();
+}
