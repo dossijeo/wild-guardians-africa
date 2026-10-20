@@ -242,3 +242,11 @@ El [piloto A/B/C](continuous-grass/README.md) sustituye la prioridad de matas ai
 ## Cubierta continua: primer piloto de Gran Río
 
 Tras conservar el resultado de Sabana y su viento 8×, se ha preparado un [piloto específico de Gran Río](continuous-grass-river/README.md): menor altura, pigmento verde y cobertura condicionada por humedad. Cuenta con 48 capturas y vídeos, pero sigue pendiente de benchmark GPU aislado y revisión de orillas/streaming. No se activa por defecto ni se generaliza a otros biomas.
+
+## Actualización: cobertura, costes y regreso al Cañón
+
+La cobertura de Sabana conserva el viento 8× aprobado. Gran Río dispone de [corrección de orillas](continuous-grass-river/shore-triangles/README.md) y [mediciones](continuous-grass-river/performance/README.md); la frase histórica de benchmark pendiente anterior ya no describe el estado actual. Las candidatas de LOD, continuidad de viento y normales siguen separadas. La [validación combinada](continuous-grass-river/combined-validation/README.md) y el [control intercalado](continuous-grass-river/interleaved-validation/README.md) no permiten promover por rendimiento: existe deriva incluso ejecutando la misma ruta en calidad baja. Se conserva la ruta original en baja y se cierran las repeticiones equivalentes en esta sesión.
+
+En Gran Cañón, [textura al pie de pared](canyon-wall-foot/README.md) elimina una franja lisa, pero no mejora suficientemente el volumen global. Dieciséis capturas, ocho pares con cámara/entidades/draws/triángulos iguales y sin errores GL registrados. No integrar ni realizar otro barrido de intensidades; conservar evidencia. La primera cámara normal atravesaba una pared y se reemplazó antes de publicar. No se modifica geometría para imitar el mockup.
+
+La calidad global continúa pendiente. Evitar confundir continuidad local de material o diferencias de píxeles con la estructura de masas y separación de planos de las referencias.
