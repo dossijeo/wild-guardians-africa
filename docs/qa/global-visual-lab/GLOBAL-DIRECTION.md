@@ -401,3 +401,8 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Volcanes: ceniza por zonas
 
 [Depósitos visuales de ceniza](volcanic-ash-pilot/README.md): 24 capturas, 12 parejas con geometría idéntica, y 8 bloques ABBA en Intel UHD. La separación de zonas suaves/rocosas mejora la variedad a distancia de juego; conservar como dirección QA, sin promover todavía. GPU diurna +~1 ms en medias agregadas, con solapamiento entre bloques. Pendientes menor coste, movimiento y streaming; no se añaden texturas, geometría ni draw calls.
+
+
+### Ceniza volcánica: movimiento y regreso
+
+[72 parejas y recorrido de streaming](volcanic-ash-motion/README.md) con cámara/geometría coincidentes, día y noche. Depósitos estables en la muestra de regreso tras cambio de origen; no RGB exacto (2.053 píxeles candidata, 3.361 original). Sin crecimiento monotónico de contadores en una vuelta; no equivale a validar fugas ni coste dinámico. Sigue pendiente optimización antes de promover.
