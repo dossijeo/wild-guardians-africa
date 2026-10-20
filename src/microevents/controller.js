@@ -25,6 +25,7 @@ export class Microevents {
     if(debug){const freeze=document.createElement('button');freeze.textContent='QA Freeze event';freeze.style.cssText='padding:6px;font:12px sans-serif';freeze.onclick=()=>{this.qaFrozen=!this.qaFrozen;freeze.setAttribute('aria-pressed',String(this.qaFrozen));if(this.qaFrozen)this.refreshQaHit();};this.qaControls.append(freeze);try{const gl=world.renderer.getContext(),extension=gl.getExtension('WEBGL_debug_renderer_info');this.diagnostic.dataset.renderer=extension?gl.getParameter(extension.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER);}catch{this.diagnostic.dataset.renderer='unavailable';}}
   }
   log(type,detail={}){this.records.push({type,at:this.clock(),day:this.state.day,...detail});if(this.records.length>256)this.records.shift();if(type==='spawn')this.metrics.spawns++;if(type==='completed')this.metrics.completed++;if(type==='ignored')this.metrics.ignored++;if(type==='idle-rescue')this.metrics.rescued++;}
+  get holdsNightSpeed(){return !!(this.pending||this.active);}
   blocked(){const c=this.context();return [...this.state.pauses,...(this.state.raid?['raid']:[]),...(this.state.result?['result']:[]),...(document.hidden?['hidden']:[]),...(c.surface?['ui']:[]),...(c.tool?['tool']:[]),...(c.tutorial?['tutorial']:[]),...(c.cinematic||this.world.cinematic?['cinematic']:[]),...(c.notification?['notification']:[]),...(this.failed?['assets']:[])];}
   project(anchor){this.world.camera.updateMatrixWorld();this.point.set(anchor.entity.x+(anchor.offsetX??0),anchor.y,anchor.entity.z+(anchor.offsetZ??0)).project(this.world.camera);const r=this.world.canvas.getBoundingClientRect(),x=(this.point.x+1)*r.width/2,y=(1-this.point.y)*r.height/2;
     if(this.point.z< -1||this.point.z>1||x<100||y<105||x>r.width-100||y>r.height-95)return null;
@@ -42,7 +43,7 @@ export class Microevents {
     try{
       await this.billboards.ready;const saved=await this.save();
       const cameraUnsafe=this.cameraPointers.size>0||this.owned.size>0||this.clock()<(this.wheelUntil??0)||poseChanged(cameraPose(this.world.camera),pose)||!force&&this.director.cameraStable<MICROEVENT_CONFIG.stable;
-      if(!saved||this.disposed||this.blocked().length||cameraUnsafe||this.state.commandIds.length!==commandCount||this.settings.microevents==='off'||!eligibleAnchor(def,anchor.entity)||!this.project(anchor)){settleEvent(this.state,ticket,'cancelled',{enabled:false});return false;}
+      if(!saved||this.disposed||this.blocked().length||cameraUnsafe||this.state.commandIds.length!==commandCount||this.settings.microevents==='off'||!compatible(def,this.state)||!eligibleAnchor(def,anchor.entity)||!this.project(anchor)){settleEvent(this.state,ticket,'cancelled',{enabled:false});return false;}
       this.active={def,anchor,ticket,economy,ending:0,outcome:null};this.director.begin(def,{reserved:true});this.particles.start(def,()=>this.director.random());this.particles.learned=this.learned?.has(def.primary.mode)??false;this.space?.begin(def,anchor,this.world.camera);return true;
     }catch(e){settleEvent(this.state,ticket,'cancelled',{enabled:false});this.failed=true;this.log('error',{message:e.message});return false;}
     finally{this.pending=false;}
