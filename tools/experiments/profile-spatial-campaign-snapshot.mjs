@@ -133,6 +133,9 @@ try{
       dynamicStallSeconds:a.dynamicStallSeconds??0})),
     mobileRecoveryEvents:state.events.filter(e=>
       e.type==='ActorMobileCollisionRecovery').length,
+    mobileRecoverySamples:state.events.filter(e=>
+      e.type==='ActorMobileCollisionRecovery').map(e=>({actorId:e.actorId,
+      elapsed:e.elapsed,x:e.x,z:e.z})),
     raidEventCounts:Object.fromEntries([...new Set(state.events.map(e=>e.type).filter(type=>type.startsWith('Animal')||type.startsWith('Crop')||type.startsWith('Structure')))].map(type=>[type,state.events.filter(e=>e.type===type).length])),
     wallRecoveryEvents:state.events.filter(e=>
       e.type==='AnimalWallOverlapRecovery').length,
