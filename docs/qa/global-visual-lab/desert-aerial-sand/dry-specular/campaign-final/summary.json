@@ -1,0 +1,314 @@
+{
+  "samples": 7680,
+  "frameParity": "camera, target, draws, triangles for every index in each quality/phase",
+  "groups": [
+    {
+      "quality": "media",
+      "phase": "day",
+      "variants": [
+        {
+          "variant": 0,
+          "blocks": [
+            {
+              "intervalMs": 28.129166666666666,
+              "appFrameCpuMs": 3.9645833329608045,
+              "renderCpuMs": 3.4775000012169284,
+              "p95IntervalMs": 33.5
+            },
+            {
+              "intervalMs": 33.673333333333325,
+              "appFrameCpuMs": 4.470833333333333,
+              "renderCpuMs": 4.002916666368644,
+              "p95IntervalMs": 50.10000000000582
+            },
+            {
+              "intervalMs": 41.43333333333333,
+              "appFrameCpuMs": 4.036249999329447,
+              "renderCpuMs": 3.6095833349972963,
+              "p95IntervalMs": 50.19999999999709
+            },
+            {
+              "intervalMs": 31.732500000000012,
+              "appFrameCpuMs": 4.571666665002704,
+              "renderCpuMs": 4.112499999875824,
+              "p95IntervalMs": 50.5
+            }
+          ],
+          "mean": {
+            "intervalMs": 33.74208333333333,
+            "appFrameCpuMs": 4.260833332656572,
+            "renderCpuMs": 3.800625000614673,
+            "p95IntervalMs": 46.07500000000073
+          }
+        },
+        {
+          "variant": 1,
+          "blocks": [
+            {
+              "intervalMs": 27.921666666666685,
+              "appFrameCpuMs": 3.934166668727994,
+              "renderCpuMs": 3.4712499997268123,
+              "p95IntervalMs": 33.700000000004366
+            },
+            {
+              "intervalMs": 27.921249999999993,
+              "appFrameCpuMs": 3.902083333209157,
+              "renderCpuMs": 3.508333332464099,
+              "p95IntervalMs": 49.89999999999418
+            },
+            {
+              "intervalMs": 34.08833333333335,
+              "appFrameCpuMs": 5.0262500011672575,
+              "renderCpuMs": 4.44708333487312,
+              "p95IntervalMs": 50.29999999998836
+            },
+            {
+              "intervalMs": 36.51291666666669,
+              "appFrameCpuMs": 4.317083331942558,
+              "renderCpuMs": 3.8220833336313564,
+              "p95IntervalMs": 66.5
+            }
+          ],
+          "mean": {
+            "intervalMs": 31.61104166666668,
+            "appFrameCpuMs": 4.294895833761742,
+            "renderCpuMs": 3.812187500173847,
+            "p95IntervalMs": 50.099999999996726
+          }
+        }
+      ],
+      "deltaIntervalMs": -2.131041666666654
+    },
+    {
+      "quality": "media",
+      "phase": "night",
+      "variants": [
+        {
+          "variant": 0,
+          "blocks": [
+            {
+              "intervalMs": 40.25458333333336,
+              "appFrameCpuMs": 4.02916666554908,
+              "renderCpuMs": 3.5779166661202906,
+              "p95IntervalMs": 50.30000000000291
+            },
+            {
+              "intervalMs": 33.6037500000001,
+              "appFrameCpuMs": 4.375416667386889,
+              "renderCpuMs": 3.9287499992797774,
+              "p95IntervalMs": 50.10000000000582
+            },
+            {
+              "intervalMs": 39.76916666666669,
+              "appFrameCpuMs": 3.582916666815678,
+              "renderCpuMs": 3.217499999701977,
+              "p95IntervalMs": 50.10000000000582
+            },
+            {
+              "intervalMs": 29.09958333333331,
+              "appFrameCpuMs": 3.6399999996026358,
+              "renderCpuMs": 3.262500000372529,
+              "p95IntervalMs": 33.5
+            }
+          ],
+          "mean": {
+            "intervalMs": 35.68177083333337,
+            "appFrameCpuMs": 3.906874999838571,
+            "renderCpuMs": 3.496666666368643,
+            "p95IntervalMs": 46.00000000000364
+          }
+        },
+        {
+          "variant": 1,
+          "blocks": [
+            {
+              "intervalMs": 35.47374999999999,
+              "appFrameCpuMs": 4.5700000004221994,
+              "renderCpuMs": 4.090416666368643,
+              "p95IntervalMs": 50.19999999999709
+            },
+            {
+              "intervalMs": 41.01750000000005,
+              "appFrameCpuMs": 3.8424999995778006,
+              "renderCpuMs": 3.449166666219632,
+              "p95IntervalMs": 50.10000000000582
+            },
+            {
+              "intervalMs": 36.44458333333326,
+              "appFrameCpuMs": 3.9516666664431495,
+              "renderCpuMs": 3.5491666660954553,
+              "p95IntervalMs": 50.19999999998254
+            },
+            {
+              "intervalMs": 28.892083333333357,
+              "appFrameCpuMs": 3.6745833329856397,
+              "renderCpuMs": 3.297083332637946,
+              "p95IntervalMs": 33.70000000001164
+            }
+          ],
+          "mean": {
+            "intervalMs": 35.45697916666666,
+            "appFrameCpuMs": 4.009687499857197,
+            "renderCpuMs": 3.596458332830419,
+            "p95IntervalMs": 46.04999999999927
+          }
+        }
+      ],
+      "deltaIntervalMs": -0.2247916666667038
+    },
+    {
+      "quality": "baja",
+      "phase": "day",
+      "variants": [
+        {
+          "variant": 0,
+          "blocks": [
+            {
+              "intervalMs": 31.317500000000003,
+              "appFrameCpuMs": 4.267083334674438,
+              "renderCpuMs": 3.6854166661699614,
+              "p95IntervalMs": 50.200000000004366
+            },
+            {
+              "intervalMs": 33.88083333333334,
+              "appFrameCpuMs": 4.278750000521541,
+              "renderCpuMs": 3.728333333383004,
+              "p95IntervalMs": 50.099999999998545
+            },
+            {
+              "intervalMs": 34.98916666666664,
+              "appFrameCpuMs": 3.5208333340783913,
+              "renderCpuMs": 3.0874999987582368,
+              "p95IntervalMs": 50.10000000000582
+            },
+            {
+              "intervalMs": 28.96208333333337,
+              "appFrameCpuMs": 3.9445833334078393,
+              "renderCpuMs": 3.5087499998509886,
+              "p95IntervalMs": 50
+            }
+          ],
+          "mean": {
+            "intervalMs": 32.28739583333334,
+            "appFrameCpuMs": 4.002812500670553,
+            "renderCpuMs": 3.5024999995405475,
+            "p95IntervalMs": 50.10000000000218
+          }
+        },
+        {
+          "variant": 1,
+          "blocks": [
+            {
+              "intervalMs": 29.585416666666667,
+              "appFrameCpuMs": 4.146250000223517,
+              "renderCpuMs": 3.6158333325137693,
+              "p95IntervalMs": 49.900000000001455
+            },
+            {
+              "intervalMs": 28.961250000000017,
+              "appFrameCpuMs": 3.796249998360872,
+              "renderCpuMs": 3.354583333308498,
+              "p95IntervalMs": 50
+            },
+            {
+              "intervalMs": 29.16875,
+              "appFrameCpuMs": 4.141666666294138,
+              "renderCpuMs": 3.67041666743656,
+              "p95IntervalMs": 50
+            },
+            {
+              "intervalMs": 34.088333333333324,
+              "appFrameCpuMs": 4.0237499995778006,
+              "renderCpuMs": 3.52958333392938,
+              "p95IntervalMs": 50.10000000000582
+            }
+          ],
+          "mean": {
+            "intervalMs": 30.450937500000002,
+            "appFrameCpuMs": 4.026979166114082,
+            "renderCpuMs": 3.5426041667970516,
+            "p95IntervalMs": 50.00000000000182
+          }
+        }
+      ],
+      "deltaIntervalMs": -1.83645833333334
+    },
+    {
+      "quality": "baja",
+      "phase": "night",
+      "variants": [
+        {
+          "variant": 0,
+          "blocks": [
+            {
+              "intervalMs": 27.228749999999977,
+              "appFrameCpuMs": 3.536249999701977,
+              "renderCpuMs": 3.1045833330601456,
+              "p95IntervalMs": 49.89999999999418
+            },
+            {
+              "intervalMs": 26.951666666666643,
+              "appFrameCpuMs": 3.1887499994287887,
+              "renderCpuMs": 2.845416665573915,
+              "p95IntervalMs": 33.80000000001746
+            },
+            {
+              "intervalMs": 26.88250000000007,
+              "appFrameCpuMs": 3.203750001763304,
+              "renderCpuMs": 2.8512499996771417,
+              "p95IntervalMs": 33.5
+            },
+            {
+              "intervalMs": 26.74499999999995,
+              "appFrameCpuMs": 3.1804166668405136,
+              "renderCpuMs": 2.8308333323647576,
+              "p95IntervalMs": 49.89999999999418
+            }
+          ],
+          "mean": {
+            "intervalMs": 26.95197916666666,
+            "appFrameCpuMs": 3.277291666933646,
+            "renderCpuMs": 2.90802083266899,
+            "p95IntervalMs": 41.775000000001455
+          }
+        },
+        {
+          "variant": 1,
+          "blocks": [
+            {
+              "intervalMs": 25.15041666666669,
+              "appFrameCpuMs": 3.2254166663934787,
+              "renderCpuMs": 2.857499998311202,
+              "p95IntervalMs": 33.40000000000873
+            },
+            {
+              "intervalMs": 25.84375,
+              "appFrameCpuMs": 3.3374999977648256,
+              "renderCpuMs": 2.9779166667411725,
+              "p95IntervalMs": 33.69999999999709
+            },
+            {
+              "intervalMs": 25.98208333333326,
+              "appFrameCpuMs": 3.199166666716337,
+              "renderCpuMs": 2.86541666649282,
+              "p95IntervalMs": 49.70000000001164
+            },
+            {
+              "intervalMs": 25.84375,
+              "appFrameCpuMs": 3.252500000720223,
+              "renderCpuMs": 2.889166666318973,
+              "p95IntervalMs": 33.5
+            }
+          ],
+          "mean": {
+            "intervalMs": 25.704999999999988,
+            "appFrameCpuMs": 3.253645832898716,
+            "renderCpuMs": 2.8974999994660418,
+            "p95IntervalMs": 37.575000000004366
+          }
+        }
+      ],
+      "deltaIntervalMs": -1.246979166666673
+    }
+  ]
+}
