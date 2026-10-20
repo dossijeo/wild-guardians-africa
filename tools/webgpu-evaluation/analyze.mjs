@@ -3,15 +3,30 @@ import sharp from 'sharp';
 const root=process.argv[2]??'docs/qa/webgpu-evaluation/results';
 const files=(await readdir(root)).filter(f=>/-(?:legacy|webgpu|webgl-tsl)-\d+-[01]\.json$/.test(f));
 const stat=xs=>{const s=[...xs].sort((a,b)=>a-b);return {n:s.length,mean:s.reduce((a,b)=>a+b,0)/s.length,p50:s[Math.floor((s.length-1)*.5)],p95:s[Math.floor((s.length-1)*.95)],min:s[0],max:s.at(-1)}};
-const rows=[];
+const rows=[],reports=[];
 for(const file of files){
- const r=JSON.parse(await readFile(`${root}/${file}`,'utf8'));
+ const r=JSON.parse(await readFile(`${root}/${file}`,'utf8'));reports.push(r);
  rows.push({file,scenario:r.scenario,backend:r.backend,run:r.run,night:r.options.night,
   gpuMs:stat(r.timed.filter(s=>s.gpu.valid).map(s=>s.gpu.ms)),zeroGpuSamples:r.timed.filter(s=>s.gpu.valid&&s.gpu.ms===0).length,
   cpuSerializedMs:stat(r.timed.map(s=>s.cpuMs)),cpuInteractiveMs:stat(r.interactive.map(s=>s.cpuMs)),
   updateMs:stat(r.interactive.map(s=>s.updateMs)),intervalMs:stat(r.interactive.map(s=>s.intervalMs)),
   drawCalls:[...new Set(r.interactive.map(s=>s.drawCalls))],triangles:[...new Set(r.interactive.map(s=>s.triangles))],
   counts:r.capture.counts,errors:r.errors.concat(r.consoleErrors)});
+}
+const frameParity=[];
+for(const a of reports.filter(r=>r.backend!=='webgpu')){
+ const b=reports.filter(r=>r.backend==='webgpu'&&r.scenario===a.scenario&&r.options.night===a.options.night).sort((x,y)=>Math.abs(x.run-a.run)-Math.abs(y.run-a.run))[0];
+ if(!b)continue;
+ const outputPass=a.backend==='legacy'?1:0;
+ for(const phase of ['timed','interactive']){
+  const mismatches=[];
+  if(a[phase].length!==b[phase].length)throw Error('Frame count mismatch');
+  for(let i=0;i<a[phase].length;i++){
+   const x=a[phase][i],y=b[phase][i];
+   if(x.drawCalls+outputPass!==y.drawCalls||x.triangles+outputPass!==y.triangles)mismatches.push({frame:i,reference:{drawCalls:x.drawCalls,triangles:x.triangles},candidate:{drawCalls:y.drawCalls,triangles:y.triangles}});
+  }
+  frameParity.push({scenario:a.scenario,night:a.options.night,reference:a.backend,referenceRun:a.run,candidateRun:b.run,phase,frames:a[phase].length,outputPassCorrection:outputPass,mismatches});
+ }
 }
 const parity=[];
 for(const scenario of [...new Set(rows.map(r=>r.scenario))])for(const night of [0,1]){
@@ -34,5 +49,5 @@ for(const scenario of [...new Set(rows.map(r=>r.scenario))])for(const night of [
    .webp({quality:92}).toFile(`${root}/${scenario}-${other.backend}-versus-webgpu-${night?'night':'day'}.webp`);
  }
 }
-await writeFile(`${root}/summary.json`,JSON.stringify({rows,parity},null,2));
+await writeFile(`${root}/summary.json`,JSON.stringify({rows,parity,frameParity},null,2));
 console.log(JSON.stringify({rows:rows.map(r=>({scenario:r.scenario,backend:r.backend,run:r.run,night:r.night,gpu:r.gpuMs.mean,cpu:r.cpuInteractiveMs.mean,p95:r.intervalMs.p95,errors:r.errors.length})),parity},null,2));

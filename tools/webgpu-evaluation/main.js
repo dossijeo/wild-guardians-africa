@@ -16,7 +16,7 @@ renderer.outputColorSpace=THREE.SRGBColorSpace;
 renderer.toneMapping=THREE.NoToneMapping;
 renderer.info.autoReset=false;
 document.body.append(renderer.domElement);
-if(!legacy)await renderer.init();
+if(!legacy){await renderer.init();renderer._animation.stop()}
 const timestampSupported=legacy?null:renderer.backend.trackTimestamp;
 if(backend==='webgpu'&&!renderer.backend.isWebGPUBackend)throw Error('WebGPU silently fell back; invalid GPU comparison');
 const adapter=(!legacy&&renderer.backend.adapter)||await navigator.gpu?.requestAdapter();
@@ -47,7 +47,13 @@ const timer=gl?new GpuTimer(gl):null;
 const raf=()=>new Promise(resolve=>requestAnimationFrame(resolve));
 function pose(t=0,n=night,step=0){time=t;night=n;fixture.update(t,n,step)}
 function counts(){const r=renderer.info.render;return {drawCalls:legacy?r.calls:r.drawCalls,triangles:r.triangles,geometries:renderer.info.memory.geometries,textures:renderer.info.memory.textures}}
-function draw(){renderer.info.reset();renderer.render(scene,camera)}
+// QA owns the outer frame clock. The internal RAF otherwise lets ShadowNode
+// reuse a shadow in some serialized samples but not others (Three r180).
+function draw(){
+ renderer.info.reset();
+ if(!legacy){renderer._nodes.nodeFrame.update();renderer.info.frame=renderer._nodes.nodeFrame.frameId}
+ renderer.render(scene,camera);
+}
 async function resolveFresh(){
  const pool=renderer.backend.timestampQueryPool.render;
  if(!pool?.trackTimestamp||pool.currentQueryIndex===0||pool.pendingResolve)return {valid:false,reason:'no-fresh-query'};
@@ -94,7 +100,7 @@ window.qa={
    if(i>=30)interactive.push({frame:i-30,intervalMs:now-previous,intervalSincePreviousFrame:i-31,updateMs,cpuMs,...counts()});previous=now;
   }
   if(!legacy)renderer.backend.trackTimestamp=!gl&&timestampSupported;
-  return {protocol:'v2-external-GL-envelope-GPU-pass-sum',backend,scenario,hardware,metadata:fixture.metadata,options:{samples,warmup,frames,moving,night:n},timed,interactive,
+  return {protocol:'v3-deterministic-shadow-frame-external-GL-envelope-GPU-pass-sum',backend,scenario,hardware,metadata:fixture.metadata,options:{samples,warmup,frames,moving,night:n},timed,interactive,
    memory:{jsHeapUsed:performance.memory?.usedJSHeapSize??null,rendererCounts:{...renderer.info.memory},estimated:fixture.metadata?.memory??null},
    timer:timer?{kind:'external-GL-whole-render-envelope',...timer.report()}:{kind:'Three-r180-per-frame-pass-sum',supported:renderer.backend.trackTimestamp},
    errors:[...errors],limitations:['GL uses one external query around all render commands; GPU sums pass durations, excluding inter-pass gaps/transfers: not strictly identical scopes.','Serialized GPU samples are not total wall time or queue latency.','Interactive RAF is measured separately without readback.','JS heap is not GPU memory.']};
