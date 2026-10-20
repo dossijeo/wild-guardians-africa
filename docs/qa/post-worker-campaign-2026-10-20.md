@@ -14,6 +14,8 @@ La estrategia solicitó defensas, pero no compró ninguna pieza de muralla en es
 
 Los 30 primeros registros diarios de las corridas de 30 y 100 noches coinciden exactamente en día, dinero, plantilla, siembras, entregas, destrucciones, cultivos vivos y tareas pendientes. El prefijo de 14 noches comparte el mismo árbol fuente y reproduce su cierre conocido. Los tiempos de CPU no son un A/B de algoritmos: `Game.tick` acumuló 155,77 s hasta la noche 30 y 171,63 s hasta la derrota en la corrida de 100; las decisiones acumularon 8,38 s en esta última. Las ejecuciones se hicieron en momentos distintos y con cargas de trabajo divergentes.
 
+Los tiempos diarios de esa misma corrida tampoco crecen simplemente con la edad de la partida: `Game.tick` empleó 1,85 s el día 1 (8 trabajadores, 65 cultivos vivos), 9,20 s el día 8 (24 trabajadores, 149 cultivos), 1,75 s el día 30 (9 trabajadores, 46 cultivos) y 0,51 s el día 44 (1 trabajador, ningún cultivo). La caída de coste cuando desaparecen entidades contradice la hipótesis de un crecimiento temporal monótono, pero no identifica por sí sola qué subsistema domina los días de mayor carga. El guardado final contiene cero cultivos, trabajadores, cajas y hechizos, y conserva los últimos 200 eventos; esto verifica esas colecciones en ese punto, no la ausencia universal de retenciones en memoria nativa o durante la jornada.
+
 Reproducir desde ese commit, con una carpeta de salida nueva para cada intento:
 
 ```sh
