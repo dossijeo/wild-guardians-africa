@@ -30,7 +30,7 @@ porque Three los usa para ordenar dibujos incluso con frustumCulled=false.
 - [x] M4: CPU/GPU/cadencia/p95 separados, memoria y llamadas GL, normal/densa;
   conservar resultados negativos y protocolos inválidos identificados.
 - [x] M5: checks locales y [PR #212](https://github.com/dossijeo/wild-guardians-africa/pull/212) preparada.
-  CI y merge autorizado pendientes; no mergear si falla el head final.
+  Estado vigente de CI y merge en la PR; solo integrar el head final validado.
 
 ## Decisiones y criterios de cierre
 
@@ -46,3 +46,6 @@ sin escaneo por frame ni cambios en Engine. No añadir otros rediseños.
 Cierre: pruebas/build finales, evidencia reproducible conservada y propuesta de PR
 con limitaciones explícitas. La siguiente evaluación útil es otro hardware, no más
 microoptimizaciones en este equipo. Autorización posterior del usuario (21/10): mergear a main cuando esté listo y validado.
+
+La regresión de rangos pendientes sin dibujo se corrigió mediante unión de
+intervalos.21 pruebas pasan; ABBA y tráfico finales reproducen el ahorro medido.

@@ -44,18 +44,18 @@ bloque; densa:180; muy baja:360. GPU y cadencia proceden de ventanas separadas.
 La escena densa añade300 cultivos,24 trabajadores,16 animales,3 centros y40 murallas;
 es un fixture visual, no una campaña avanzada simulada.
 
-### Normal, media
+### Normal, media; código final con rangos acotados
 
 | Variante/fase | CPU media/p95 | GPU media/p95 | Intervalo media/p95 |
 |---|---:|---:|---:|
-| main day | 9.92/14.41 | 22.05/36.61 | 29.25/58.31 |
-| main night | 7.15/10.32 | 25.35/46.65 | 19.43/31.13 |
-| candidate day | 8.03/11.61 | 12.34/16.19 | 16.90/22.01 |
-| candidate night | 7.70/10.61 | 13.57/17.15 | 17.30/23.08 |
-| candidate day | 7.96/10.90 | 12.55/16.60 | 17.27/23.73 |
-| candidate night | 7.67/10.61 | 13.01/16.82 | 17.09/21.50 |
-| main day | 7.39/10.60 | 15.47/20.58 | 18.78/36.21 |
-| main night | 7.34/10.60 | 16.69/21.67 | 19.21/31.33 |
+| main day | 7.02/9.40 | 15.57/20.49 | 17.79/29.53 |
+| main night | 7.63/10.50 | 15.57/19.31 | 19.82/33.91 |
+| candidate day | 8.70/13.21 | 14.28/20.48 | 17.26/22.56 |
+| candidate night | 8.27/12.11 | 13.36/17.49 | 17.46/22.23 |
+| candidate day | 7.99/10.81 | 12.29/15.90 | 17.55/25.21 |
+| candidate night | 7.72/10.51 | 13.30/17.22 | 16.72/21.81 |
+| main day | 7.58/10.92 | 15.44/20.19 | 18.50/32.65 |
+| main night | 7.41/10.51 | 16.13/20.07 | 19.09/33.40 |
 
 ### Densa, media
 
@@ -107,7 +107,8 @@ Diagnóstico GL separado, media, cámara móvil, ambas fases idénticas:
 
 −77,7% de payload de grupos y −20,3% global respecto a main. Son bytes emitidos
 por llamadas API bufferData/SubData, no tráfico físico del driver ni tiempo GPU.
-Los otros83.188,4bytes/frame son iguales. No usar tiempos instrumentados para FPS.
+La atribución de grupos cuenta matrices/cobertura; el resto, incluidos atributos
+estáticos, queda en el total global. Los otros83.188,4bytes/frame son iguales. No usar tiempos instrumentados para FPS.
 Con cámara estática, ambos lados tienen cero subidas de buffers/texturas y cero
 actualizaciones de grupos: se conserva una propiedad que main ya tenía.
 
@@ -179,3 +180,24 @@ scene.js en el inventario SFX. Regenerar el inventario cambia únicamente ese ha
 sin rutas ni archivos de audio. La repetición del catálogo y las regresiones del
 renderer pasan20/20. La suite completa de CI debe confirmar el head final antes
 del merge. [PR #212](https://github.com/dossijeo/wild-guardians-africa/pull/212).
+
+## Corrección final de memoria pendiente de subir
+
+Una regresión adicional reproduce el crecimiento de rangos pendientes cuando una
+pasada cambia pero nunca se dibuja (por ejemplo sombras desactivadas o en caché).
+Three añade rangos hasta la subida real. Se fusionan intervalos solapados/adyacentes
+al registrar cambios:64 ediciones repetidas dejan un intervalo, conservando los
+intervalos disjuntos y todos los datos pendientes. Las21 pruebas dirigidas pasan;
+build final aprobado. Esto corrige bookkeeping, no selección ni contenido GPU.
+
+`bounded-abba` vuelve a comparar el código final contra main: la tabla normal de
+arriba usa esa ejecución. `bounded-transfers` reproduce exactamente las cifras de
+payload anteriores; `bounded-visual` añade48 capturas de Sabana, cuatro presets,
+día/noche y dos cámaras. Todos los contratos estructurales pasan. Se conservan
+residuos RGB: candidato2 píxeles/max1 (media noche rotada) y10/max25 (alta día
+rotado); A/A28/max13 y18/max25. No se afirma igualdad RGB estricta.
+El heap recogido ronda49,7–51,4MB y backing321,59–321,70MB, capacidad142.816bytes
+idéntica. Las series densas y la matriz de seis biomas corresponden al predecesor
+inmediato; el cambio final solo fusiona rangos, sin cambiar matrices ni selección.
+La validación de CI del predecesor pasó en14m50; el head final debe superar CI.
+Estado definitivo de comprobaciones e integración: consultar la PR enlazada.
