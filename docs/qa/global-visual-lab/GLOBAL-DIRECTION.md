@@ -711,3 +711,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Manglares: sustrato aprobado integrado como opción
 
 [`mangroveSubstrate=full`](mangrove-substrate-integrated/README.md) con global-lighting:12parejas QA/integrada RGB exactas, baja/media día/noche, build y4pruebas pasan. Conserva receta completa. Aún depende del ayudanteQA para bordes de barro; integración del conjunto y streaming pendientes. No declarar terminada la mejora global ni eliminar variantes por coste.
+
+
+### Manglares: bordes de barro incorporados al ciclo normal de chunks
+
+[Receta completa integrada](mangrove-full-integrated/README.md):12parejas RGB exactas contra QA, sin ayudante en candidato; mismos vértices y triángulos. Build y3pruebas pasan. Streaming integrado en ejecución; faltan auditoría, coste y perfil muy_baja en GPU. Se conserva el aspecto aprobado sin activar por defecto ni tocar main.
