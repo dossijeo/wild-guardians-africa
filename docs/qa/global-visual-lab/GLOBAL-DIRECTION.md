@@ -575,3 +575,7 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Cañón: streaming de canyonSand integrado
 
 [18 parejas QA/integrada](canyon-sand-integrated/streaming/README.md):10 exactas RGB; otras1–7 píxeles, máximo10 niveles, causa no aislada. Cámaras/chunks/geometría iguales,16 cambios de origen por variante, textura adicional liberada una vez. Tira diurna conserva depósitos. Mantener opción explícita; pendiente revisión temporal continua. No afirmar paridad exacta global ni ausencia de fugas largas.
+
+### Revisión conjunta V3: priorizar repetición de Manglares
+
+[Seis biomas día/noche](combined-campaign-review-v3/README.md), calidad media y tres poses. Integra en la comparación paleta de Río, arena de Cañón y ceniza; otros tres controles sin cambios A/B. Persisten claro uniforme del Río, musgo repetitivo de Manglares y masas planas de ceniza. Siguiente prioridad: romper repetición y organizar cobertura de Manglares sin cambiar ocupación/siluetas. No hay benchmark nuevo ni aprobación global.
