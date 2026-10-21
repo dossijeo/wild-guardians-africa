@@ -33,14 +33,32 @@ try{
   const actors=ids.map(id=>state.workers.find(worker=>worker.id===id));
   if(actors.some(actor=>!actor))throw Error('The frozen crossing workers are missing');
   const before=actors.map(({id,x,z,path})=>({id,x,z,next:path?.[0]??null}));
-  tick(state,1,nav);
+  const trace=[];
+  const routeRemaining=actor=>{
+    let prior=actor,total=0;
+    for(const point of actor.path??[]){
+      total+=Math.hypot(point.x-prior.x,point.z-prior.z);prior=point;
+    }
+    return total;
+  };
+  if(process.argv.includes('--trace-progress')){
+    for(let step=0;step<10;step++){
+      tick(state,.1,nav);
+      trace.push(actors.map(actor=>({id:actor.id,x:actor.x,z:actor.z,
+        destinationDistance:Math.hypot(actor.x-(actor.taskApproach?.destination?.x??actor.x),
+          actor.z-(actor.taskApproach?.destination?.z??actor.z)),
+        routeRemaining:routeRemaining(actor),waypoints:actor.path?.length??0,
+        next:actor.path?.[0]??null,progressAt:actor.mobileProgressAt,
+        phaseRemaining:actor.mobilePhaseRemaining??0})));
+    }
+  }else tick(state,1,nav);
   const [a,b]=actors,distance=Math.hypot(a.x-b.x,a.z-b.z);
   console.log(JSON.stringify({day:state.day,time:state.time,
     mode:'saved paths retained for collision diagnosis',before,
     after:actors.map(({id,x,z,path,mobilePhaseRemaining})=>({id,x,z,
       next:path?.[0]??null,mobilePhaseRemaining:mobilePhaseRemaining??0})),
     distance,penetration:Math.max(0,(a.radius??.28)+(b.radius??.28)-distance),
-    recoveryEvents:state.events.filter(event=>
+    ...(trace.length?{trace}:{}),recoveryEvents:state.events.filter(event=>
       event.type==='ActorMobileCollisionRecovery'&&ids.includes(event.actorId))
       .map(({actorId,x,z,elapsed,duration})=>({actorId,x,z,elapsed,duration}))},null,2));
 }finally{session.dispose();}

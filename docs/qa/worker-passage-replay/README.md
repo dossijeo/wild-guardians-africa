@@ -45,3 +45,18 @@ Three isolated changes eliminated this crossing, but none met the campaign accep
 | Local avoidance early only when recovery is due | 14 | 1264 | 830 | 104 | 53 | 14 |
 
 The lower collision counts do not compensate for lost deliveries and crops. The simulated economy and virtual player react to altered movement, so differing state hashes are expected and these rows are not pure CPU comparisons. All three movement edits were discarded; no production rule changed. A future fix must distinguish useful detour progress from a genuine cyclic stall while preserving the timed escape from crowded passages, then pass both this crossing and prolonged campaign comparisons.
+
+## Route-remaining progress experiment on current main
+
+On `01f245331`, `node tools/experiments/replay-worker-crossing.mjs --trace-progress` exposes the next ten 0.1-second steps of both saved workers. The ordinary recovery starts at elapsed 4914.4. At that point `worker-7088` has moved from `(76.074, -1.000)` to `(76.390, -0.945)` and its remaining polyline drops from 33.45 m at the first sampled step to 33.25 m. The one-second replay ends with 0.331 m body penetration. The trace shows actual movement along a detour while the old twelve-second timer still refers to straight-line destination progress; it does not prove that all prolonged movement is productive.
+
+A temporary candidate also tracked the remaining length of a worker's current waypoint polyline. At the twelve-second recovery boundary it treated a 0.75 m reduction as progress and postponed collision phasing. It was tested on the saved crossing and on fresh, continuous native-intent campaigns with the same Sabana/Mapungubwe/712 policy and production WASM. It passed the 30 directed movement/retry tests and removed the saved crossing. The [run hashes and metrics](route-remaining-ab.json) record the comparison. The continuous results ruled it out:
+
+| Variant | Nights | Deliveries | Coins | Living crops | Recoveries | Work-period overlap pairs |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Current main | 9 | 780 | 1047 | 123 | 24 | 12 |
+| Route-remaining candidate | 9 | 781 | 1028 | 126 | 9 | 2 |
+| Current main | 14 | 1317 | 899 | 145 | 164 | 43 |
+| Route-remaining candidate | 14 | 1257 | 773 | 133 | 40 | 9 |
+
+The candidate reduces collisions but loses 60 deliveries, 126 coins and 12 living crops at night 14. Its game-tick time also changes with the entire divergent campaign, so it cannot be attributed to the extra route-length calculation alone. It is **not adopted**. The shipped movement code and rules remain unchanged. A safe fix needs a local decision that distinguishes a useful detour from cyclic congestion *without* simply delaying most recovery episodes; it must preserve campaign throughput as well as body separation.
