@@ -7,7 +7,7 @@ import {patchDesertSand} from './global-desert-sand.js';
 import {patchDesertLight} from './global-desert-light.js';
 import {patchCanyonRock} from './global-canyon-rock.js';
 import {acquireWaterSlope,patchGlobalWaterSurface} from './global-water-surface.js';
-import {patchGlobalGroundFill,patchVolcanicCharcoal,patchDryGroundRoughness,globalNightLight} from './global-visual-lighting.js';
+import {patchGlobalGroundFill,patchVolcanicCharcoal,patchDryGroundRoughness,globalNightLight,patchVolcanicNightAmbient} from './global-visual-lighting.js';
 import {groundMaterialFunctions,artLightingFunctions,ART_PROFILES} from './biome-material-source.js';
 import {savannaLayerFunctions} from './savanna-layer-source.js';
 import * as THREE from 'three';
@@ -35,6 +35,7 @@ const normalDetailLightingFunctions=artLightingFunctions.replace(
 export class AfricanToon {
   constructor(){
     this.globalVisualLighting=new URLSearchParams(globalThis.location?.search??'').get('visualLab')==='global-lighting';
+    this.volcanicNightAmbient=this.globalVisualLighting&&new URLSearchParams(globalThis.location?.search??'').get('volcanicNight')==='ambient';
     this.uniforms={uEnvEndpoints:{value:1},uFineNoise:{value:1},uWorldOrigin:{value:new THREE.Vector2()},uBiome:{value:0},uWet:{value:0},uNight:{value:0},uNightLight:{value:1},uExposure:{value:1},uLightDir:{value:new THREE.Vector3(-30,55,25).normalize()},uKind:{value:0},uSurfaceType:{value:1},uGroundDetail:{value:1}};
     this.artUniforms={uArtSun:{value:new THREE.Vector3()},uArtShade:{value:new THREE.Vector3()},uArtFoliage:{value:new THREE.Vector3()},uArtParams:{value:new THREE.Vector4()},uArtShape:{value:new THREE.Vector4()},uArtHighlight:{value:0},uArtVolcanicGlow:{value:0}};
     this.materials=new WeakSet();this.shadowUniforms=createNativeShadowUniforms();
@@ -133,7 +134,7 @@ export class AfricanToon {
     }
     if(this.globalVisualLighting&&material.userData.toonGround&&material.userData.groundBiome==='volcanoes'){
       const compile=material.onBeforeCompile;
-      material.onBeforeCompile=(shader,renderer)=>{compile(shader,renderer);shader.fragmentShader=patchVolcanicCharcoal(shader.fragmentShader);shader.fragmentShader=patchVolcanicAsh(shader.fragmentShader,material.userData.volcanicAsh);shader.fragmentShader=patchVolcanicRock(shader.fragmentShader,material.userData.volcanicRock);};
+      material.onBeforeCompile=(shader,renderer)=>{compile(shader,renderer);shader.fragmentShader=patchVolcanicCharcoal(shader.fragmentShader);shader.fragmentShader=patchVolcanicAsh(shader.fragmentShader,material.userData.volcanicAsh);shader.fragmentShader=patchVolcanicRock(shader.fragmentShader,material.userData.volcanicRock);if(this.volcanicNightAmbient&&material.userData.biomeGround)shader.fragmentShader=patchVolcanicNightAmbient(shader.fragmentShader);};
     }
     if(this.globalVisualLighting&&material.userData.toonGround&&material.userData.biomeGround&&['savanna','grand_river','canyons'].includes(material.userData.groundBiome)){
       const compile=material.onBeforeCompile;
@@ -157,7 +158,7 @@ export class AfricanToon {
       material.onBeforeCompile=(shader,renderer)=>{compile(shader,renderer);shader.fragmentShader=patchCanyonSand(shader.fragmentShader,material.userData.canyonSandFull);};
     }
     recordNativeDepthHook(material,original,'toon',...(material.userData.horizonBounds?['horizon']:[]));
-    material.customProgramCacheKey=()=>cache()+(material.userData.volcanicRock?'|volcanic-rock-layered-v1':'')+(material.userData.riverSoil?'|river-soil-v2':'')+(material.userData.mangroveSubstrate?'|mangrove-substrate-full-v1':'')+(material.userData.canyonSand?'|canyon-sand-v2:'+Boolean(material.userData.canyonSandFull):'')+(material.userData.volcanicAsh?'|volcanic-ash-v1:'+material.userData.volcanicAsh:'')+(material.userData.desertSand?'|desert-sand-v1':'')+(material.userData.biomeGround?.uCliffRock?'|cliff-rock-v1':'')+(this.globalVisualLighting?'|global-visual-lighting|desert-soft-v1|'+(material.userData.groundBiome??'object'):'')+'|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|'+(material.userData.biomeGround?'biome-ground-4.1.10.3':material.userData.toonGround?'ground':'object')+'|'+(material.userData.biomeGround?.uGroundLayered?.value?'visual-layer':'base-ground')+'|'+(material.userData.artBounds?'illustrated-4.1.6':'toon-4.1.4')+'|'+(material.userData.visualLabNormalDetail?'visual-normal-detail':material.userData.visualLabNormal?'visual-normal':'authored-normal')+'|'+material.type+'|'+(material.userData.horizonBounds?'horizon-clip':'resident');
+    material.customProgramCacheKey=()=>cache()+(this.volcanicNightAmbient?'|volcanic-night-ambient-v1':'')+(material.userData.volcanicRock?'|volcanic-rock-layered-v1':'')+(material.userData.riverSoil?'|river-soil-v2':'')+(material.userData.mangroveSubstrate?'|mangrove-substrate-full-v1':'')+(material.userData.canyonSand?'|canyon-sand-v2:'+Boolean(material.userData.canyonSandFull):'')+(material.userData.volcanicAsh?'|volcanic-ash-v1:'+material.userData.volcanicAsh:'')+(material.userData.desertSand?'|desert-sand-v1':'')+(material.userData.biomeGround?.uCliffRock?'|cliff-rock-v1':'')+(this.globalVisualLighting?'|global-visual-lighting|desert-soft-v1|'+(material.userData.groundBiome??'object'):'')+'|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|'+(material.userData.biomeGround?'biome-ground-4.1.10.3':material.userData.toonGround?'ground':'object')+'|'+(material.userData.biomeGround?.uGroundLayered?.value?'visual-layer':'base-ground')+'|'+(material.userData.artBounds?'illustrated-4.1.6':'toon-4.1.4')+'|'+(material.userData.visualLabNormalDetail?'visual-normal-detail':material.userData.visualLabNormal?'visual-normal':'authored-normal')+'|'+material.type+'|'+(material.userData.horizonBounds?'horizon-clip':'resident');
     // The source function already applies its filmic curve. Three still performs
     // output color conversion and fog, without applying a second tone curve.
     material.toneMapped=false;material.needsUpdate=true;

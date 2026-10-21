@@ -26,3 +26,10 @@ export function patchDryGroundRoughness(source){
 
 const nightBiomes=new Set(['sabana','gran-rio','manglares','volcanes','gran-canon']);
 export function globalNightLight(enabled,biome){return enabled&&nightBiomes.has(biome)?1.55:1.12;}
+
+// Preserve the daytime endpoint while lifting only volcanic nighttime ground fill.
+export function patchVolcanicNightAmbient(source){
+ const anchor='vec3 biomeAmbient=mix(vec3(.55,.63,.67),vec3(.095,.17,.32)*uNightLight,uNight);';
+ if(!source.includes(anchor))throw Error('Volcanic night ambient: shader anchor missing');
+ return source.replace(anchor,'vec3 biomeAmbient=mix(vec3(.55,.63,.67),vec3(.095,.17,.32)*uNightLight*((uBiome>2.5&&uBiome<3.5)?1.65:1.),uNight);');
+}

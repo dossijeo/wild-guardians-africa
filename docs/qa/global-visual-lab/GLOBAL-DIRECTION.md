@@ -879,3 +879,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Volcanes: extremo nocturno corregido
 
 [30 capturas de cinco momentos](volcanic-night-endpoint-20261021/README.md): día/noche exactos al control; tres estados intermedios conservan lectura sin amplificar el componente diurno. Candidata corregida retenida para integración opt-in, sin atribuirle aún tiempos del shader anterior ni validar ciclo completo.
+
+
+### Ambiente nocturno volcánico: opción integrada
+
+[15 parejas exactas QA/opción](volcanic-night-integrated-20261021/README.md): activar visualLab=global-lighting&volcanicNight=ambient.5 tests y build pasan. Solo suelo volcánico mapeado, predeterminado intacto. Pendientes amanecer, streaming y coste final; no aprobación global ni main.
