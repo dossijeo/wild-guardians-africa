@@ -591,3 +591,7 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Manglares: composición offline a memoria nominal constante
 
 [24 capturas](mangrove-moss-composite/README.md):tres mapas1024² con escalas1/4 precalculadas. Mantiene áreas gruesas y finas sin seis lecturas en runtime; shader original,16MiB nominal como fuente. Pierde ancho de banda fino y sigue repitiendo cada~8.7m. Conservar QA para benchmark/juntas/movimiento, no afirmar coste igual ni integrar todavía.
+
+### Manglares: coste offline no concluyente
+
+[ABAB de compuesto](mangrove-moss-composite/performance/README.md),1920muestras GPU/1920frames: +0.283ms día/+0.460ms noche agrupados, pero parejas cambian signo y una noche+1.108ms. No aprobar equivalencia o presupuesto estable. Revisar detalle cercano y juntas antes de más repeticiones; candidata solo QA.

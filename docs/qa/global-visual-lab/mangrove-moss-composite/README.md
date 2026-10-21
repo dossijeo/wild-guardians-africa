@@ -29,3 +29,7 @@ python tools/experiments/package-mangrove-moss-composite.py
 ```
 
 Vite5190. [Capturas](captures.json), [comparación](comparison.json). Mapas horneados y código publicados; PNG capturados locales, pares normales publicados. Interceptor QA modifica únicamente los tres paths del material Manglares.
+
+## Medición posterior
+
+[ABAB directo](performance/README.md):1920muestras GPU, resultado mixto (+0.283/+0.460ms agrupados día/noche, parejas de signo distinto). Presupuesto no aprobado. Mantener QA y revisar detalle cercano/juntas; esta actualización sustituye la condición de benchmark aún no ejecutado.
