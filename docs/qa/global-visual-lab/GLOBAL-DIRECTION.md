@@ -599,3 +599,7 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Manglares: compuesto cercano insuficiente para promover
 
 [24 capturas cercanas](mangrove-moss-composite/close/README.md):rompe uniformidad pero detalle fino granular y volumen todavía plano en oblicua; no promover. Bordes numéricos no certifican juntas y normal horizontal empeora relativamente. Mantener estudio; siguiente cambio debe mejorar estructura/transición a humedad, no solo escala.
+
+### Manglares: borde variable insuficiente; avance de musgo candidato
+
+[36 capturas en dos ensayos](mangrove-mud-fringe/README.md):variar anchura conserva disco; avance desigual de musgo hacia interior rompe contorno aparente en parche cercano día/noche. Geometría/ocupación intactas. Reduce área visible y podría borrar parches pequeños: conservar QA para normal/tamaños/coste, no integrar. Sin benchmark nuevo.
