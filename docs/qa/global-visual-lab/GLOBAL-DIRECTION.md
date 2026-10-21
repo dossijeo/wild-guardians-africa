@@ -974,3 +974,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Gran Río: LOD compuesto con paleta y desgaste
 
 [Seis parejas equivalentes](river-grass-lod-equivalent-20261021/README.md): viento/normales/pigmento adaptados al shader independiente de Gran Río. Cobertura, geometría y draws iguales; continuidad y paleta conservadas en revisión normal día/noche. Dos rondas inválidas conservadas por interceptor incorrecto y pérdida de máscara; corregidas antes de comparar. Candidata QA, pendientes movimiento y coste específico.
+
+
+### Gran Río: coste del LOD coherente
+
+[ABBA válido](river-grass-lod-equivalent-20261021/performance/README.md):480 muestras GPU,720 frames,misma cobertura/geometría. GPU diurna favorable en ambos bloques de candidata; CPU similar,cadencia nocturna prácticamente igual. Residencia de texturas inicial distinta y variación del control limitan causalidad. Conservar candidata, pendiente evaluación temporal; no extrapolar a Sabana ni promover por defecto.
