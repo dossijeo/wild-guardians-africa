@@ -40,3 +40,13 @@ Rangos de medias de dos bloques, no intervalos de confianza. La reducción de su
 **Conservar como candidata experimental.** El cambio elimina invalidaciones GPU innecesarias sin perder el ahorro geométrico del culling. No demuestra todavía una aceleración uniforme ni resuelve la preparación restante en JavaScript. Antes de promoción: repetir con streaming normal y eventos de modificación reales, y medir el agrupador restante. No se habilita por defecto.
 
 [Datos completos](effective-selection-abab/benchmarks.json), [auditoría](effective-selection-abab/summary.json), [día](effective-selection-abab/day-pair.webp), [noche](effective-selection-abab/night-pair.webp).
+
+## Validación de eventos reales
+
+Se ejecutó la variante `engine-selection` con la escena densa y tres comandos reales de plantación. Cada `CropPlaced` añadió una supresión, retiró un registro y conservó otros 172. Se verificó que ningún registro nativo retuviera el prop suprimido.
+
+La prueba compara además las matrices/visibilidad anteriores y posteriores de cada grupo existente. En los dos primeros eventos cambió un buffer y aumentaron sus versiones de matrices y visibilidad para que Three.js lo suba. El tercer evento sustituyó un registro sin cambiar la salida visible: un evento lógico no obliga a cambiar el buffer de cámara. La prueba no hace una lectura de memoria GPU ni certifica píxeles posteriores al evento; verifica datos de salida e invalidación de atributos.
+
+Los tiempos de esta prueba son diagnósticos de llamadas individuales, no un benchmark: las copias de comprobación se realizan fuera del trabajo normal del renderer. [Resultado verificable](effective-selection-mutations-uploads/engine-selection-mutations.json). La prueba inicial sin comprobación de versiones también se conserva en `effective-selection-mutations`.
+
+Reproducir con `WR_ORDER=engine-selection`, `WR_DENSE=1`, `WR_MUTATE=1`, `WR_MUTATE_ONLY=1` y un `WR_OUT` nuevo. La validación con streaming normal y el traslado de la preparación restante siguen pendientes.

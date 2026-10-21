@@ -22,6 +22,7 @@ export async function exerciseRendererMutations(w){
    const check=w.nav.placement(p.x,p.z,.4);
    if(!check.valid||!check.suppress?.length)continue;
    const before=new Map(module?.sources??[]),oldCount=w.state.suppressed.length;
+   const buffers=new Map([...w.assetGroups.colors.values()].map(g=>[g,{count:g.mesh.count,version:g.mesh.instanceMatrix.version,visibilityVersion:g.mesh.geometry.attributes.nativeVisibility.version,matrices:g.mesh.instanceMatrix.array.slice(0,g.mesh.count*16),visibility:g.mesh.geometry.attributes.nativeVisibility.array.slice(0,g.mesh.count)}]));
    if(module)module.metrics={};
    const start=performance.now();
    plant(w.state,`wr-mutation-${samples.length}`,'maiz',p.x,p.z,w.nav);
@@ -32,10 +33,17 @@ export async function exerciseRendererMutations(w){
    if(added.some(id=>!w.nav.suppressed.has(id)))throw Error('Navigation suppression view not updated');
    const stale=[...module.sources.keys()].some(batch=>batch.instances.some(p=>added.includes(p.id)));
    if(stale)throw Error('Renderer retains a suppressed prop after confirmed event');
+   let changedBuffers=0;
+   for(const g of w.assetGroups.colors.values()){
+    const old=buffers.get(g);if(!old)continue;
+    const m=g.mesh.instanceMatrix,v=g.mesh.geometry.attributes.nativeVisibility,n=g.mesh.count;
+    const changed=old.count!==n||old.matrices.some((x,i)=>i<n*16&&!Object.is(x,m.array[i]))||old.visibility.some((x,i)=>i<n&&!Object.is(x,v.array[i]));
+    if(changed){changedBuffers++;if(m.version<=old.version||v.version<=old.visibilityVersion)throw Error('Changed renderer output did not invalidate GPU buffers');}
+   }
    let retained=0,retired=0;
    for(const [batch,source] of before)if(module.sources.get(batch)===source)retained++;else retired++;
    samples.push({x:p.x,z:p.z,commandMs,renderMs,addedSuppressions:w.state.suppressed.length-oldCount,
-    retainedSources:retained,retiredSources:retired,metrics:{...module?.metrics}});
+    retainedSources:retained,retiredSources:retired,changedBuffers,metrics:{...module?.metrics}});
   }
   if(samples.length!==3)throw Error(`Only ${samples.length} valid mutation sites found`);
   if(events.filter(type=>type==='CropPlaced').length!==3)throw Error('Missing confirmed crop events');
