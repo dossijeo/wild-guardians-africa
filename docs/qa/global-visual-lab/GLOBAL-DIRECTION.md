@@ -1247,3 +1247,7 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 
 ### Cielo: transición nocturna muestreada
 Quince parejas de Sabana en sky-twilight-20261021: cinco niveles de mezcla y tres cámaras. Cámaras, horas, triángulos y draw calls coinciden. Sin dominante extraña en revisión visual de pose 1. Se conserva candidata; pendiente vídeo continuo, amanecer y coste GPU. La discrepancia nocturna de un call del pase anterior no se reproduce; causa no determinada.
+
+
+### Cielo: secuencias de ciclo y coste pendiente
+96 capturas en sky-cycle-20261021, vídeos ensamblados de amanecer/anochecer con cámara fija. 48 parejas con cámaras/horas/triángulos iguales; una difiere en un draw call. Hojas revisadas sin dominante extraña; reproducción continua pendiente. Benchmark aplazado por contención GPU externa 80–88 %, documentada en sky-cost-20261021. Sin cifras nuevas ni integración por defecto.
