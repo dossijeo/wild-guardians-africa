@@ -18,6 +18,18 @@ const classified=overlaps.map(example=>{
     phased:example.aPhase>0||example.bPhase>0,
     penetration:example.penetration};
 });
+const byStatus={};
+for(const example of overlaps){
+  const key=[example.aStatus,example.bStatus].sort().join('/');
+  byStatus[key]=(byStatus[key]??0)+1;
+}
+const returning=overlaps.filter(example=>
+  example.aStatus==='returning'&&example.bStatus==='returning');
+const homeDistances=returning.flatMap(example=>[example.a,example.b].map(id=>{
+  const x=id===example.a?example.ax:example.bx;
+  const z=id===example.a?example.az:example.bz;
+  return Math.hypot(x-report.villageEntry.x,z-report.villageEntry.z);
+}));
 console.log(JSON.stringify({stateHash:report.stateHash,
   workOverlapPairs:report.workOverlapPairs,
   sampledLatePairs:classified.length,
@@ -26,4 +38,7 @@ console.log(JSON.stringify({stateHash:report.stateHash,
   otherBodyPairs:classified.filter(row=>row.actorId&&!row.originalBlocker).length,
   unlinkedPairs:classified.filter(row=>!row.actorId).length,
   phasedPairs:classified.filter(row=>row.phased).length,
+  byStatus,
+  returningDistanceToVillage:homeDistances.length?{
+    min:Math.min(...homeDistances),max:Math.max(...homeDistances)}:null,
   examples:classified.filter(row=>!row.originalBlocker)},null,2));
