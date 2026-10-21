@@ -1349,3 +1349,8 @@ User requests continued iteration against original day/night loading mockups, fi
 ### 2026-10-22 - Native shadow ownership prerequisite
 
 World asset-shadow proxies are now scoped to WorldScene. Loading QA no longer detaches the world hook. 31 relevant tests pass, eight images match the prior day-air candidate exactly, and disposing the garden restores real world rendering with 19 asset-shadow draws and no GL errors. See `loading-shadow-owned-20261022`. Full art-direction runtime integration and moving-light benchmark remain pending.
+
+
+### 2026-10-22 - Native diffuse light option
+
+`loadingBeam=diffuse` now owns its analytic lighting/atmosphere and aligned native shadows through the diorama lifecycle. Four controlled images match QA exactly; real menu completion and cancellation pass. 24 existing loading tests plus two ownership/option tests pass. Native central mesa/contact/plant-region composition and animated-cost measurements remain pending; do not present the full QA composition as already integrated.
