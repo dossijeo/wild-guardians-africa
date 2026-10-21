@@ -1184,3 +1184,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Manglares: crecimiento por cobertura sin efecto
 
 [Seis parejas exactas](mangrove-leaf-cover-growth-20261021/README.md) al adelantar tamaño completo .48→.28. No promover; cámara normal solo near1/far452. Priorizar diagnóstico de exclusiones en región del poblado, no más ajustes de tamaño sin evidencia.
+
+
+### Manglares: desgaste del poblado identificado
+
+[Mapa de exclusiones](mangrove-village-mask-20261021/README.md):8634/9216 puntos rechazados primero por desgaste,508 aceptados. groundWear417 mezcla patio circular ycorredores;selector rechaza ambos. Seis capturas exactas. Próximo experimento distinguir patio/camino sin relajar agua/ocupación ni cambiar simulación.
