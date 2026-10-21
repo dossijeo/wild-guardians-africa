@@ -114,3 +114,31 @@ respectively (the cumulative suppression list is still copied on registration).
 These command timings are single-run diagnostics, not an FPS benchmark.
 The earlier engine-event-mutations output lacked the stale-record check and must
 not be used as correctness evidence.
+
+## Fixed residency result
+
+fixed-dense-events-abab uses the same 49 resident chunks in every variant and
+zero chunk creations during both measurement passes. All 960 GPU frames and
+1440 cadence frames have equal camera/draw/triangle sequences. This isolates
+renderer preparation from the previously identified residency timing difference.
+It is a larger fixed workload, not a replacement measurement of normal streaming.
+
+Exact image equivalence still fails: three daytime pixels differ (maximum
+channel delta 26) and fifteen nighttime pixels differ (maximum delta 37).
+The cause is not established. The strict auditor therefore keeps this run
+invalid for a performance claim; no tolerance was relaxed to make it pass.
+
+Even as exploratory timings, results are inconsistent: day render CPU changes
+15.242->14.426 and 14.558->12.854 ms, but night changes 12.544->15.503 and
+13.125->12.801 ms. GPU means span 34.310-43.502 ms. No robust end-to-end gain
+has been established. Eight targeted tests pass, including real-event adapter
+logic and native matrix equivalence; these do not prove visual parity of the
+whole dense renderer.
+
+Current recommendation: retain Three.js/WebGL2 and keep Wild Renderer as an
+experimental module. Do not implement the conditional GLES submission variant
+or integrate this prototype into the production renderer on this evidence.
+The event invalidation and packed-memory approach is viable and removes work,
+but the remaining JS grouping/LOD/fade metadata checks and GPU load prevent a
+clear end-to-end conclusion. Streaming latency quantification and the remaining
+pixel discrepancy are explicit limitations, not successful validations.

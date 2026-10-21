@@ -6,10 +6,16 @@ d=json.loads((p/'benchmarks.json').read_text(encoding='utf-8'));rows=d['records'
 summary=[];comparisons=[];mismatches=[];diagnostic="--diagnostic" in sys.argv;incremental="--incremental" in sys.argv;av="combined" if incremental else "base";bv="incremental" if incremental else "combined"
 if '--events' in sys.argv:incremental=True;av='incremental';bv='events'
 if '--engine' in sys.argv:incremental=True;av='combined';bv='engine'
+if '--engine-events' in sys.argv:incremental=True;av='combined';bv='engine-events'
 for phase in ['day','night']:
  rr=[r for r in rows if r['phase']==phase];assert [r['variant'] for r in rr]==([av,bv,av,bv] if incremental else [av,bv,bv,av])
  for r in rr:
   assert not r['errors'] and r['time']==rr[0]['time'] and r['target']==rr[0]['target']
+  if r.get('fixedResidency'):
+   assert rr[0].get('fixedResidency')
+   for key in ['region','keys']:assert r['fixedResidency'][key]==rr[0]['fixedResidency'][key]
+   assert all(r[mode].get('streamCreated')==0 for mode in ['gpu','cadence'])
+  else:assert not rr[0].get('fixedResidency')
   dense=bool(r.get('fixture'))
   for mode,n in [('gpu',120 if dense else 180),('cadence',180 if dense else 360)]:
    v=r[mode];assert v['stateUnchanged'] and v['glError']==0 and len(v['frames'])==n

@@ -1,7 +1,7 @@
 {
   "base": "451b9e9bf",
   "branch": "codex/wild-renderer-wasm",
-  "date": "2026-10-21T09:17:01.289Z",
+  "date": "2026-10-21T09:45:10.075Z",
   "node": "v20.11.0",
   "chrome": "155.0.8059.86",
   "playwright": "1.64.1",
@@ -19,11 +19,15 @@
     "src/rendering/wild-renderer/event-lifecycle.js": "5c0874447d99854f43fd68ceaf12639fce2836d4336aade8b970c303a35e3f2e",
     "src/rendering/wild-renderer/packed-props.cpp": "90c386abe94ec3bdf18424cc0b5edc44e99a26fa737e13420ebcb3ac9c02e25f",
     "src/rendering/wild-renderer/packed-props.js": "dffe9cac7b70afd0de5f81ef4f5c91450441858998802a040ae9beeca15e80a5",
-    "src/rendering/wild-renderer/engine-packed.js": "1055e3db4ffb54433db95d28ee5693ea2ed0bc1b2bdc54c013de876c78981b87",
+    "src/rendering/wild-renderer/engine-packed.js": "9b913ba1bd223b666016c27a894343c8a25d7faa38cca8cea4354872731df574",
+    "src/rendering/wild-renderer/engine-events.js": "2faf01cf172fe10d3d852cea1c23a47c5be73d5503fbefa5c814bc3791f7dca3",
+    "src/rendering/wild-renderer/suppression-events.js": "ca2f1d4caf49b40606207c8204611ef3d8aeb629ff7315d6b566c1eac6f6ae5a",
+    "tools/experiments/qa-wild-renderer-fixed-residency.js": "301e01c8b5321718e09ef795d238434e0ded2786b101cdf284ff41ba638bd21a",
+    "tools/experiments/qa-wild-renderer-mutations.js": "4182d8e0818c599041c7078d8957bae47ed6f6fd38613d738258cf45d929b50b",
     "tools/experiments/qa-engine-packed-route.mjs": "24f296c019816edf1640f6556b98df6980fc9c6c6ef10c9d4f77300a59420552",
     "tools/experiments/qa-wild-renderer-route.mjs": "8d33f2f672f0443c897dcaf044bf2e89cbe516d9434bf7c347e9b7bd5661e17c",
-    "tools/experiments/qa-wild-renderer-measure.js": "3623926e2d40d83edfecca85ae49184e62c29f4f0833eab3f823882e9614fbf4",
+    "tools/experiments/qa-wild-renderer-measure.js": "d8125b8790f9e675e5fdb3443fde8bf16f46b5babde36420a84dd254c1e61e32",
     "tools/experiments/qa-wild-renderer-dense.js": "f75a516f04b02631a748ee50fb902d936edcae977c6cca3b6106d5c2110ef2b6",
-    "tools/experiments/measure-wild-renderer.mjs": "412d240c88f58e401bdb70f0c9d063f442fbef0fadacf022a0f95dbede5b411f"
+    "tools/experiments/measure-wild-renderer.mjs": "65fa0f5314cf4b46112ada6227facaf61ae231489de689bce3f2121e88748235"
   }
 }
