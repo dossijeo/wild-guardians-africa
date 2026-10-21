@@ -13,7 +13,7 @@ import {gatePortalPoints} from '../world/gate-passages.js';
 import {wallCollisionBounds} from '../world/wall-collision-frame.js';
 import {containsPoint,footprintDistance} from '../world/footprints.js';
 import {centerCulture,centerFootprint,centerServicePoint,centerDeliveryPoint} from '../world/centers.js';
-import {actorBlockers,actorSegmentClear,prepareActorMotion,createWorkerBodyIndex,workerYieldPoint} from './actor-motion.js';
+import {actorBlockers,actorSegmentClear,prepareActorMotion,createWorkerBodyIndex} from './actor-motion.js';
 import {animalRouteClearance} from './animal-route-clearance.js';
 import {animalSlopeRecoveryPath} from './animal-slope-recovery.js';
 import {BALANCE as B} from './balance.js';
@@ -799,7 +799,6 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
   if(w.exitRouteRecovery&&!w.path&&abandonExhaustedExit())return true;
   if(w.mobileRecoveryDestinationId!==destination.id||
     w.mobileRecoveryVersion!==nav.version){
-    delete w.mobileYield;
     w.mobileRecoveryDestinationId=destination.id;
     w.mobileRecoveryVersion=nav.version;
     w.mobileRecoveryAttempts=0;
@@ -899,38 +898,6 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
       if(w.path?.length&&dist(w,w.path[0])<=1e-7)w.path.shift();}
     return w.path?.length===0;
   }
-  const stepMobileYield=()=>{
-    const yielding=w.mobileYield;
-    if(!worker||!yielding)return false;
-    const point={x:yielding.x,z:yielding.z};
-    const blockers=actorBlockers(s,w,true,8);
-    if(dist(w,point)<=1e-5){
-      const next=w.path?.[0],length=next?dist(w,next):0,
-        probe=length>1e-8?{x:w.x+(next.x-w.x)*Math.min(.5,length)/length,
-          z:w.z+(next.z-w.z)*Math.min(.5,length)/length}:null;
-      if(!probe||actorSegmentClear(w,probe,w,blockers)){
-        delete w.mobileYield;w.mobileProgressAt=s.elapsed;
-        w.mobileProgressDistance=dist(w,destination);
-        return false;
-      }
-      return true;
-    }
-    const path=w.path;
-    w.path=[point];
-    const clear=(a,b)=>nav.workerMotionClear?.(a,b,w.radius??.28)&&
-      actorSegmentClear(a,b,w,blockers);
-    if(motion)moveWorker(w,dt,{...motion,gates:s.structures,clear});
-    else{
-      const metres=movePathWithGates(w,speed*dt,s.structures,clear);
-      w.motionPhase=(w.motionPhase??0)+metres/speed;
-    }
-    w.path=path;
-    if(dist(previous,w)>1e-8){w.heading=Math.atan2(w.x-previous.x,w.z-previous.z);
-      w.dynamicStallSeconds=0;}
-    else w.dynamicStallSeconds=Math.min(3,(w.dynamicStallSeconds??0)+dt);
-    return true;
-  };
-  if(stepMobileYield())return false;
   // The ordinary local avoidance remains first. Only after stationary time
   // or prolonged movement without destination progress, and only when a short
   // static step is valid but occupied by another moving body, temporarily
@@ -959,28 +926,14 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
     if(staticClear&&(!worker||
       actorSegmentClear(destination,destination,w,blockers))&&
       !actorSegmentClear(w,probe,w,blockers)){
-      const yieldingBlocker=worker&&nav.motionProbeYield?blockers.find(body=>
-        s.workers.includes(body)&&!actorSegmentClear(w,probe,w,[body])):null;
-      const blocker=yieldingBlocker??(worker?blockers.find(body=>
-        s.workers.includes(body)&&!actorSegmentClear(w,probe,w,[body])):null);
-      const yieldPoint=blocker?workerYieldPoint(s,w,blocker,nav,blockers):null;
-      w.dynamicStallSeconds=0;
+      w.mobilePhaseRemaining=3;w.dynamicStallSeconds=0;
       w.mobileRecoveryAttempts=(w.mobileRecoveryAttempts??0)+1;
       w.mobileProgressDistance=dist(w,destination);
       w.mobileProgressAt=s.elapsed;
-      if(yieldPoint){
-        w.mobileYield={destinationId:destination.id,version:nav.version,
-          blockerId:blocker.id,x:yieldPoint.x,z:yieldPoint.z,startedAt:s.elapsed};
-        nav.motionObserver?.({kind:'workerYieldStart',actorId:w.id,
-          blockerId:blocker.id,elapsed:s.elapsed,point:yieldPoint});
-        if(stepMobileYield())return false;
-      }
-      w.mobilePhaseRemaining=3;
       nav.motionObserver?.({kind:'mobileCollisionRecovery',actorId:w.id,
         status:w.status,elapsed:s.elapsed,
         trigger:stationarySeconds>=3?'stationary':'destination-stall',
-        stationarySeconds,destinationStallSeconds,
-        ...(nav.motionProbeYield?{yieldPoint,blockerId:yieldingBlocker?.id??null}:{})});
+        stationarySeconds,destinationStallSeconds});
       emit(s,'ActorMobileCollisionRecovery',{actorId:w.id,
         x:w.x,z:w.z,elapsed:s.elapsed,duration:3});
     }

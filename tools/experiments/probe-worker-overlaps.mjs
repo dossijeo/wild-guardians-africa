@@ -119,7 +119,6 @@ const result=await simulateNativeCampaign({days,strategy,seed,biome,culture,
     const opening=await createSpatialCampaignOpening(world);
     if(captureRecoveries){
       observeGameEvents(opening.s,event=>captureRecovery(opening.s,event));
-      opening.nav.motionProbeYield=process.env.WG_WORKER_YIELD_PROBE==='1';
       opening.nav.motionObserver=event=>motionSamples.push({day:opening.s.day,
         time:opening.s.time,...event});
     }
