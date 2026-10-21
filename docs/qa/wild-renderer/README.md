@@ -1,5 +1,7 @@
 # Wild Renderer: audit and protocol
 
+Current consolidated recommendation and limitations: [DECISION.md](DECISION.md).
+
 Branch codex/wild-renderer-wasm, isolated worktree based on 451b9e9bf. Three.js 0.180.0 remains the sole graphics backend. The prototype has no production imports. Wild Engine and simulation are unchanged.
 
 ## Spatial reuse and scope

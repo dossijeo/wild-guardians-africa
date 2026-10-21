@@ -159,3 +159,15 @@ original/event nighttime pair is exactly equal. This demonstrates baseline
 image non-repeatability; it does not prove that every cross-variant difference
 has the same cause. No performance threshold or pixel tolerance was relaxed.
 The existing recommendation to retain the production renderer is unchanged.
+
+## Streaming latency measured separately
+
+streaming-events-abab completes 20 chunk installations in every block, with
+identical installed-key multisets, identical final residency and no cancellations.
+Both adapters use the main-thread native builder (no worker). Mean request-to-
+installation latency is 139.025 / 130.910 / 135.430 / 113.375 ms in A/B/A/B order.
+Build means are 29.795 / 27.435 / 28.565 / 24.890 ms; installation means are
+2.300 / 2.065 / 1.860 / 1.970 ms. The algorithm generating native chunks is
+unchanged, so its timing variation limits attribution of the observed advantage.
+These instrumented samples neither measure first presentation nor establish an
+FPS improvement. See DECISION.md for the consolidated recommendation.
