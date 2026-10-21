@@ -781,3 +781,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 
 [Doce capturas corregidas](canyon-bank-proximity-v3/README.md): conserva arena seca y limita sedimento junto al río. Detectada y corregida solo en QA la sobrescritura constante de contexto. Candidata pendiente de coste de preparación/streaming y horizonte; no integrada.
 
+
+### Gran Cañón: discontinuidad cercana/lejana visible
+
+[Alejamiento comparado](canyon-bank-distance-motion-v2/README.md): 96 parejas y vídeos día/noche. Corte de tono del fondo del cañón ya presente en control; sedimento no lo origina. Priorizar aislamiento de material/iluminación del horizonte antes de integrar ribera. No validada continuidad global.
+
