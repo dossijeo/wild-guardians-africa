@@ -25,9 +25,9 @@ python tools/experiments/audit-mangrove-substrate-full.py
 
 Variantes exclusivamente QA. Simulación, navegación, reglas y main intactos.
 
-## Decisión: descartar el conjunto para integración
+## Decisión revisada por indicación del usuario: conservar y optimizar
 
-El resultado no justifica el coste en Intel UHD. No seguir afinando umbrales o pequeñas ramas de esta implementación como vía de integración. Se conservan código y evidencia para investigación, sin activar por defecto. Esta decisión sustituye las recomendaciones provisionales de conservar la receta visual/optimización como candidata a integración; sus hallazgos aislados siguen siendo válidos.
+El usuario aprueba esta dirección visual y pide optimizarla manteniendo su aspecto. Queda revocada la recomendación anterior de abandonar el conjunto por su coste. La receta completa se conserva como referencia visual de la optimización; no está aprobada todavía para activación por defecto. Los benchmarks siguientes siguen siendo válidos y describen trabajo pendiente, no un veto artístico.
 
 Intel UHD0x9A60/ANGLE D3D11, baja,1280×720, ABAB por fase,180 frames de calentamiento y240 muestras por bloque.1.920 consultas GPU válidas y1.920 frames de cadencia; sin disjoint, descartes, pendientes o errores. Geometría y cámara coincidentes por índice. [Datos completos](performance/benchmarks.json) · [Resumen](performance/summary.json).
 
@@ -36,7 +36,7 @@ Intel UHD0x9A60/ANGLE D3D11, baja,1280×720, ABAB por fase,180 frames de calenta
 | Día |8.897 /8.654|13.632 /12.323|+4.735 /+3.669|
 | Noche |8.961 /9.822|13.583 /13.685|+4.622 /+3.862|
 
-Promedios de bloques: día8.776→12.978ms (+47.9%); noche9.392→13.634ms (+45.2%). Los cuatro pares son desfavorables. No son intervalos de confianza ni prueba en todos los dispositivos, pero constituyen evidencia suficiente para rechazar este coste frente al beneficio observado.
+Promedios de bloques: día8.776→12.978ms (+47.9%); noche9.392→13.634ms (+45.2%). Los cuatro pares son desfavorables. No son intervalos de confianza ni prueba en todos los dispositivos, y acreditan un sobrecoste relevante que debe optimizarse o compensarse mediante ahorros medidos en el renderizador.
 
 CPU de render: día control4.269/4.441ms y candidata4.335/4.199; noche4.188/4.194 frente4.338/4.607. Subidas de buffers5.4/frame en todos los bloques. Cadencia media18.64–19.58ms y p95 48.9–52.2ms; no demuestra60fps estables. CPU excluye simulación; intervalos no son presentación. No confundir cadencia parecida con coste GPU equivalente.
 
@@ -44,6 +44,6 @@ La evaluación no identifica qué fracción del sobrecoste corresponde a textura
 
 ## Lo que se conserva y prioridad siguiente
 
-Conservar el diagnóstico de máscaras nativas, los rangos distintos de altura y la coherencia cromática al compartir iluminación. La transición por altura aporta separación, pero no volumen geométrico. Para reconsiderar esta dirección haría falta una representación sustancialmente más barata y una mejora artística mayor, no otra pequeña calibración de la misma mezcla.
+Conservar la receta completa y sus capturas, además del diagnóstico de máscaras nativas, alturas y coherencia cromática. Optimizar trabajo redundante de materiales e iluminación comparando contra esta misma apariencia aprobada. Si una simplificación cambia la imagen, mostrarla como alternativa visual, no asumir que equivale a la referencia.
 
-El experimento global continúa: volver a las prioridades de volumen/sombras y cobertura de Sabana, Gran Río y Gran Cañón antes de dedicar más iteraciones a este sustrato de Manglares. No se declara alcanzada la calidad de ninguno de los seis mockups con este ensayo.
+Pueden investigarse ahorros en otros sistemas del renderizador; solo una medición conjunta permite afirmar que compensan este coste. No cambiar simulación ni navegación. La calidad global de los seis biomas sigue pendiente y main permanece intacto.
