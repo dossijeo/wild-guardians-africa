@@ -1149,3 +1149,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Gran Río: recuperación localizada del detalle nocturno
 
 [Dos intensidades QA](river-night-ambient-strong-20261021/README.md),seis parejas cada una. Primera demasiado sutil;segunda mejora lectura de fibras sin cambiar día (tres parejas exactas),sombras oinstancias. Conservar candidata,validar distancia/crepúsculo antes de integración;sin costeGPU medido.
+
+
+### Gran Río: revisión nocturna a distancia
+
+[Seis parejas](river-night-distance-20261021/README.md) conservan cámaras y geometría, tres diurnas exactas. Sin anillo luminoso evidente en poses estáticas; a distancia sigue dominando suelo plano. Conservar candidata, pendientes crepúsculo/movimiento/baja y rendimiento.
