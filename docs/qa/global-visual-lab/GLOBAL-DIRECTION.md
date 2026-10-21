@@ -1039,3 +1039,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Manglares: orientación oblicua descartada artísticamente
 
 [Seis parejas90/45 grados](moss-oblique-20261021/README.md):misma geometría,sin errores. Persiste patrón de filas;no mejora suficiente para reemplazar mezcla anterior. Conservada como descarte artístico,no por coste. Siguiente dirección:distribución/escala de acumulaciones.
+
+
+### Manglares: dos escalas de acumulaciones
+
+[Seis parejas](moss-two-scales-20261021/README.md):segunda escalaUV.57,misma geometría,sin errores. Más variedad en primer plano,franjas todavía visibles. Conservar candidata,sin reemplazo ni aprobación de coste. Pendientes noche/movimiento;no benchmark por contención GPU conocida.
