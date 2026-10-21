@@ -120,6 +120,32 @@ export function actorSegmentClear(start,end,actor,blockers){
     return edgeDistance(start,end,other.x,other.z)>=required-1e-8;
   });
 }
+// A proposed shoulder for a moving worker. This is only a geometric proposal:
+// the caller must keep checking live bodies while travelling and before rejoining.
+export function workerYieldPoint(state,actor,opposing,nav,blockers=actorBlockers(state,actor,true,8)){
+  if(!actor.path?.length||!opposing?.path?.length)return null;
+  const angle=Math.atan2(actor.x-opposing.x,actor.z-opposing.z),
+    required=radius(actor)+radius(opposing),next=actor.path[0];
+  for(const reach of [.5,1,1.5,2,3,4]){
+    let best=null,bestScore=Infinity;
+    for(const offset of [0,Math.PI/8,-Math.PI/8,Math.PI/4,-Math.PI/4,
+      Math.PI/2,-Math.PI/2,3*Math.PI/4,-3*Math.PI/4]){
+      const point={x:actor.x+Math.sin(angle+offset)*reach,
+        z:actor.z+Math.cos(angle+offset)*reach};
+      if(distance(point,opposing)<required+.2||
+        !actorSegmentClear(actor,point,actor,blockers)||
+        !nav.workerMotionClear?.(actor,point,radius(actor)))continue;
+      const future=opposing.path[0],span=distance(opposing,future),
+        end=span>1?{x:opposing.x+(future.x-opposing.x)/span,
+          z:opposing.z+(future.z-opposing.z)/span}:future;
+      if(!actorSegmentClear(opposing,end,opposing,[{...point,radius:radius(actor)+.1}]))continue;
+      const score=distance(point,next);
+      if(score<bestScore){best=point;bestScore=score;}
+    }
+    if(best)return best;
+  }
+  return null;
+}
 export function prepareActorMotion(state,actor,nav,worker,workerIndex=null){
   // A worker step only needs the local approach. Animal detours retain their
   // full native search corridor dependencies, including remote bodies that

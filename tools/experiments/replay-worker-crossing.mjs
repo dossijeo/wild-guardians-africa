@@ -4,7 +4,7 @@ import {deserialize} from '../../src/persistence/snapshots.js';
 import {tick} from '../../src/simulation/game.js';
 import {createSpatialGameSession} from '../../src/world/wild-engine/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../../src/world/wild-engine/spatial-navigation-movement.js';
-import {actorBlockers,actorSegmentClear} from '../../src/simulation/actor-motion.js';
+import {actorBlockers,actorSegmentClear,workerYieldPoint} from '../../src/simulation/actor-motion.js';
 
 // Retain the continuous campaign's saved paths through a fresh native session
 // to isolate mobile avoidance. This intentionally does not model load/replan.
@@ -42,10 +42,11 @@ try{
     }
     return total;
   };
-  let yieldCandidates;
+  let yieldCandidates,proposedYield;
   if(process.argv.includes('--probe-yield')){
     for(let step=0;step<3;step++)tick(state,.1,nav);
     const actor=actors[1],blockers=actorBlockers(state,actor,true,8);
+    proposedYield=workerYieldPoint(state,actor,actors[0],nav,blockers);
     yieldCandidates=[];
     for(const reach of [.5,1,1.5,2,3,4])for(let i=0;i<32;i++){
       const angle=i*Math.PI/16,point={x:actor.x+Math.sin(angle)*reach,
@@ -79,6 +80,7 @@ try{
     distance,penetration:Math.max(0,(a.radius??.28)+(b.radius??.28)-distance),
     ...(trace.length?{trace}:{}),...(yieldCandidates?{
       blockerIds:actorBlockers(state,actors[1],true,8).map(body=>body.id),
+      proposedYield,
       yieldCandidateCount:yieldCandidates.length,
       rejoinClearCount:yieldCandidates.filter(candidate=>candidate.rejoinClearNow).length,
       yieldCandidates:yieldCandidates.slice(0,15)}:{}),
