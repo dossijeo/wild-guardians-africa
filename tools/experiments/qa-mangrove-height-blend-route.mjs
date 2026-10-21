@@ -1,4 +1,4 @@
-export async function installMangroveHeightBlendRoute(page,{height=true,calibrated=false}={}){
+export async function installMangroveHeightBlendRoute(page,{height=true,calibrated=false,linearSoil=false}={}){
  await page.route('**/src/rendering/biome-ground.js*',async route=>{
   const response=await route.fetch();let body=await response.text();
   const anchor="if(this.layeredSavanna)for(const role of ['base','normal','arh']){";
@@ -18,7 +18,8 @@ export async function installMangroveHeightBlendRoute(page,{height=true,calibrat
   if(uGroundMapped<.5)ctx=vec4(.8,.5,.65,0.);
   float mossCover=smoothstep(.30,.50,ctx.g*.64+ctx.r*.18+patchNoise*.18-ctx.a*.10);
   mossCover=mix(.38,.98,mossCover);
-  vec3 soil=textureGrad(uLayerSandBase,uv,dx,dy).rgb*vec3(.58,.61,.64);
+  vec3 soilRaw=textureGrad(uLayerSandBase,uv,dx,dy).rgb;
+  vec3 soil=${linearSoil?'sRGBTransferOETF(vec4(toLinear4(soilRaw)*vec3(.58,.61,.64),1.)).rgb':'soilRaw*vec3(.58,.61,.64)'};
   vec3 soilN=textureGrad(uLayerSandNormal,uv,dx,dy).rgb*2.-1.;
   vec3 soilARH=textureGrad(uLayerSandARH,uv,dx,dy).rgb;
   ${height?`float heightDifference=${calibrated?'clamp((arh.b-186./255.)/(69./255.),-.5,.5)-clamp((soilARH.b-39./255.)/(123./255.),-.5,.5)':'arh.b-soilARH.b'}+(mossCover*2.-1.)*1.4;

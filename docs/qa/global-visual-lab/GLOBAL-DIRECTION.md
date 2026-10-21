@@ -639,3 +639,7 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Manglares: la transición por altura no basta para volumen
 
 [24 capturas cercanas](mangrove-height-blend/transition-close/README.md) en región seleccionada por máscara contextual. Separación visible entre materiales, pero musgo pegado al plano, sin espesor/oclusión de borde, y barro cromáticamente incoherente. No integrar ni endurecer máscara para simular volumen. Sin benchmark nuevo; piloto inicial sin transición excluido.
+
+### Manglares: conversión de color no resuelve la discrepancia
+
+[24 capturas](mangrove-height-blend/linear-color/README.md) con transición por altura fija: multiplicador en RGB codificado frente a luz lineal aproximada. Barro más claro, pero sigue diferencia con parches y tinte nocturno. No adoptar como corrección completa; toLinear4 es gamma2.2, no sRGB exacto. Separar iluminación/rugosidad de las dos rutas antes de más calibración cromática. Sin benchmark ni integración.
