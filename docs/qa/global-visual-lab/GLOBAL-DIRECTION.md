@@ -535,3 +535,7 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Cañón: arena seca sigue costando más con cámara móvil
 
 [ABBA completo](canyon-sand-dry/moving-performance/README.md):960 muestras GPU,1440 frames, geometría y cámaras iguales. Día grava6.04–6.63ms/arena7.29–7.70ms; noche6.79–7.21/7.38–8.09ms. No aprobar presupuesto. Investigar reducir trabajo del material manteniendo relieve, no repetir la máscara descartada.
+
+### Cañón: arena con un mapa, candidata de coste
+
+[Normal-only seca](canyon-sand-normal-only/README.md):24 capturas frente a completa, una textura adicional verificada. ABBA móvil frente a grava: noche6.89–7.01ms contra6.85–7.06ms; control diurno deriva5.61–7.51ms y no permite aprobar presupuesto. Conserva relieve cercano con menor variación de color. Continuar, no integrar.
