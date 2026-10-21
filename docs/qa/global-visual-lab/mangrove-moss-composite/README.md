@@ -33,3 +33,7 @@ Vite5190. [Capturas](captures.json), [comparación](comparison.json). Mapas horn
 ## Medición posterior
 
 [ABAB directo](performance/README.md):1920muestras GPU, resultado mixto (+0.283/+0.460ms agrupados día/noche, parejas de signo distinto). Presupuesto no aprobado. Mantener QA y revisar detalle cercano/juntas; esta actualización sustituye la condición de benchmark aún no ejecutado.
+
+## Revisión cercana posterior
+
+[24 capturas oblicuas y bordes](close/README.md):variación parcial pero detalle fino granular, sin salto claro de volumen. No promover; conservar como estudio de distribución. No repetir benchmark sin resolver estructura artística. Juntas y estabilidad temporal no certificadas.

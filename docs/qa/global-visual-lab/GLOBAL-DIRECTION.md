@@ -595,3 +595,7 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Manglares: coste offline no concluyente
 
 [ABAB de compuesto](mangrove-moss-composite/performance/README.md),1920muestras GPU/1920frames: +0.283ms día/+0.460ms noche agrupados, pero parejas cambian signo y una noche+1.108ms. No aprobar equivalencia o presupuesto estable. Revisar detalle cercano y juntas antes de más repeticiones; candidata solo QA.
+
+### Manglares: compuesto cercano insuficiente para promover
+
+[24 capturas cercanas](mangrove-moss-composite/close/README.md):rompe uniformidad pero detalle fino granular y volumen todavía plano en oblicua; no promover. Bordes numéricos no certifican juntas y normal horizontal empeora relativamente. Mantener estudio; siguiente cambio debe mejorar estructura/transición a humedad, no solo escala.
