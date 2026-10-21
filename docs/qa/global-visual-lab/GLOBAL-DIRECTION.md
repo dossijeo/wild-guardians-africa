@@ -436,3 +436,8 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Gran Río: descartada la reducción de altura más extensa
 
 [Transición de 12 frente a 24 metros](river-cover-fade/README.md): 24 capturas, 12 parejas con geometría enviada idéntica. La franja más amplia suaviza parcialmente el borde, pero aplana la cubierta a distancia de juego. No adoptar ni invertir en benchmark temporal de esta candidata; conservar altura y estudiar la diferencia de respuesta suelo/cubierta. Sin cambios de producción.
+
+
+### Gran Río: sombreado de raíz insuficiente
+
+[24 capturas de raíz fija frente a atenuada](river-cover-root/README.md), geometría coincidente. No promover: el cambio es leve y no resuelve el borde. La lectura de shaders identifica respuestas difusas distintas entre suelo y cubierta; siguiente prueba debe aislar esa diferencia conservando volumen, en vez de acumular ajustes pequeños de brillo.
