@@ -900,9 +900,9 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
   }
   // The ordinary local avoidance remains first. Only after stationary time
   // or prolonged movement without destination progress, and only when a short
-  // static step is valid but occupied by another moving body, temporarily
-  // ignore mobile collisions. Static terrain,
-  // barriers and the live gate leaf remain authoritative throughout.
+  // static step is valid but occupied by another moving body, recover locally.
+  // Animals may phase past a mobile body; workers must retain body clearance.
+  // Static terrain, barriers and the live gate leaf remain authoritative.
   const next=w.path[0],distanceToNext=next?dist(w,next):0;
   if(!worker&&expandRoute&&next&&s.elapsed-w.mobileProgressAt>=12&&
     nav.segmentClear?.(w,next,w.radius??.28,ignore,false)===false){
@@ -934,10 +934,7 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
     }
   }
   const phased=(w.mobilePhaseRemaining??0)>0;
-  const dynamicClear=phased?
-    (worker?(a,b)=>nav.workerMotionClear?.(a,b,w.radius??.28)??
-      nav.segmentClear?.(a,b,w.radius??.28,ignore,true)??false:null):
-    prepareActorMotion(s,w,nav,worker);
+  const dynamicClear=worker||!phased?prepareActorMotion(s,w,nav,worker):null;
   const routeClearance=worker?workerRiskClearance(w,nav,{radius:w.radius??.28,ignore},dynamicClear):animalRouteClearance(w,nav,{radius:w.radius??.28,ignore,escapeProps:expandRoute},dynamicClear);
   const clear=routeClearance?.clear??dynamicClear;
   if(motion)moveWorker(w,dt,{...motion,gates:worker?s.structures:[],clear});else {

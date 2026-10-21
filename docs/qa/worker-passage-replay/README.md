@@ -60,3 +60,29 @@ A temporary candidate also tracked the remaining length of a worker's current wa
 | Route-remaining candidate | 14 | 1257 | 773 | 133 | 40 | 9 |
 
 The candidate reduces collisions but loses 60 deliveries, 126 coins and 12 living crops at night 14. Its game-tick time also changes with the entire divergent campaign, so it cannot be attributed to the extra route-length calculation alone. It is **not adopted**. The shipped movement code and rules remain unchanged. A safe fix needs a local decision that distinguishes a useful detour from cyclic congestion *without* simply delaying most recovery episodes; it must preserve campaign throughput as well as body separation.
+
+## Experimental worker-body clearance
+
+On `2e9e9b71a`, the day-9 replay still shows the immediate cause: a recovery window lets a worker ignore another worker's body while following a retained route. The experimental `codex/worker-recovery-slow-window` branch changes only that clearance rule. Animals retain their existing recovery behavior; a worker continues to use local body avoidance during its recovery window. `tests/worker-mobile-crossing.test.js` checks the frozen crossing, which has 0.331 m penetration on main and no penetration with the experiment. The 31 directed movement/retry tests pass.
+
+The same native-intent Sabana/Mapungubwe/712 campaign, same production WASM and policy, was run to 14 and 30 nights with the current main behavior and the experimental rule. These are deterministic single runs, not ABBA CPU estimates. The game states diverge after movement changes, so the cumulative `Game.tick` times do not isolate per-tick algorithm cost.
+
+| Variant | Nights | Deliveries | Coins | Living crops | Recoveries | Work-period overlap pairs | `Game.tick` total |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Main | 14 | 1317 | 899 | 145 | 164 | 43 | 71.2 s |
+| Worker-body clearance | 14 | 1290 | 1011 | 129 | 143 | 0 | 62.2 s |
+| Main | 30 | 2776 | 736 | 123 | 927 | 225 | 205.7 s |
+| Worker-body clearance | 30 | 2547 | 715 | 115 | 756 | 4 | 185.6 s |
+
+The remaining four work-period overlap samples in the 30-night experiment all belong to one pair of fleeing workers on day 25. They are near the village, have no route, and penetrate by at most 0.038 m; none is in a recovery window. The larger 0.56 m maximum across each full campaign occurs in the initial worker spawn cluster at time 0–3 s, before ordinary work movement.
+
+A separate slow-movement gate cut recovery events to 38 at night 14 and 275 at night 30, with the *same* deliveries, coins, living crops and work-period overlap counts as the smaller change. It added another per-worker timer and was therefore discarded for now. The smaller rule is kept **experimental**: it greatly improves physical separation but reduces 30-night deliveries by 229 (8.2%) and living crops by eight. It should not be merged before the traffic bottleneck is understood and further seeds/biomes are checked.
+
+Reproduce the directed case and campaign probe:
+
+```powershell
+node --test tests/worker-mobile-crossing.test.js tests/actor-motion.test.js tests/route-event-retry.test.js tests/spatial-canyon-traffic-recovery.test.js tests/retreat-recovery-frozen-sabana.test.js
+node tools/experiments/replay-worker-crossing.mjs
+$env:WG_WORKER_PROBE_OUTPUT='test-results/worker-body-clearance-30.json'
+node tools/experiments/probe-worker-overlaps.mjs 30 712 good sabana mapungubwe wild-engine
+```
