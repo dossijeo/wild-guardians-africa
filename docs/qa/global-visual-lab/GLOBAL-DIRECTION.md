@@ -889,3 +889,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Volcanes: amanecer exacto, rendimiento aún sin aprobación
 
 [15 parejas amanecer](volcanic-dawn-20261021/README.md) QA/integrada exactas. [ABBA final](volcanic-night-integrated-20261021/performance/README.md) registra primera repetición candidata más lenta y segunda cercana al control: mantener todos los datos, repetir alternancia en misma página antes de aprobar coste. Opción artística conservada.
+
+
+### Volcanes: ajuste conservado tras streaming
+
+[32 capturas y cuatro regresos](volcanic-night-streaming-20261021/README.md):25 chunks/110 geometrías estables en regresos, sin errores ni crecimiento de texturas dentro de variante. Lectura nocturna conservada. Tiempos de carga/render/auditoría no equivalen a FPS; rendimiento final sigue pendiente de aclarar.
