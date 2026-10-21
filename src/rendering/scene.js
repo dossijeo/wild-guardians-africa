@@ -1,4 +1,4 @@
-import {bindMangroveMudEdges} from './global-mangrove-mud-edges.js';
+import {bindMangroveMudEdges,configureMangroveMudMaterial} from './global-mangrove-mud-edges.js';
 import {raidEntryChunks,raidResidentDemand,includeRaidBounds} from '../world/raid-entry-residency.js';
 import {PreciseTap} from '../ui/precise-tap.js';
 import {startInitialFarRegion} from './initial-far-region.js';
@@ -139,7 +139,20 @@ export class WorldScene {
   showSpellPreview(draft){this.spellPreview.show(draft);}
   clearSpellPreview(){this.spellPreview.clear();}
   clearWallPreview(){if(this.wallPreview){for(const wall of this.wallPreview.children)wall.dispose();this.scene.remove(this.wallPreview);this.wallPreview=null;}}
-  qualitySetting(quality) {this.quality=quality;this.farVegetation?.configureQuality?.(quality);this.toon.uniforms.uGroundDetail.value=quality==='muy_baja'?0:1;this.destructionPass.quality=['muy_baja','baja'].includes(quality)?0:1;this.destructionPass.effectQuality=quality==='alta'?'high':['muy_baja','baja'].includes(quality)?'low':'medium';updateGroundQuality(this.terrainMeshes,quality,mesh=>this.materialRegistry?.refresh(mesh));this.renderer.shadowMap.enabled=['media','alta'].includes(quality);resizeShadowMap(this.sun,quality);this.resize();}
+  qualitySetting(quality) {
+    this.quality=quality;
+    this.farVegetation?.configureQuality?.(quality);
+    this.toon.uniforms.uGroundDetail.value=quality==='muy_baja'?0:1;
+    this.destructionPass.quality=['muy_baja','baja'].includes(quality)?0:1;
+    this.destructionPass.effectQuality=quality==='alta'?'high':['muy_baja','baja'].includes(quality)?'low':'medium';
+    const qualityGround=this.biomeGround?.mangroveSubstrate?[...this.terrainMeshes,...[...this.chunks.values()].flatMap(group=>group.children.filter(mesh=>mesh.userData.globalMudBlend))]:this.terrainMeshes;
+    updateGroundQuality(qualityGround,quality,mesh=>{configureMangroveMudMaterial(this,mesh.material);this.materialRegistry?.refresh(mesh);});
+    const shadowsEnabled=['media','alta'].includes(quality),shadowsChanged=this.renderer.shadowMap.enabled!==shadowsEnabled;
+    this.renderer.shadowMap.enabled=shadowsEnabled;
+    // Shadow defines are compiled into materials; re-enable must invalidate unshadowed programs.
+    if(shadowsChanged)this.scene.traverse(object=>{for(const material of (Array.isArray(object.material)?object.material:[object.material]))if(material)material.needsUpdate=true;});
+    resizeShadowMap(this.sun,quality);this.resize();
+  }
   async loadReady(pending,releaseLate){
     const signal=this.loading?.signal;let value;
     const check=()=>{if(this.disposed||signal?.aborted)throw new Error('Carga de mundo cancelada');};

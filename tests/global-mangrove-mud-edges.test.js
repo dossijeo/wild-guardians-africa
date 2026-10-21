@@ -2,7 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import {AfricanToon} from '../src/rendering/african-toon.js';
-import {bindMangroveMudEdges} from '../src/rendering/global-mangrove-mud-edges.js';
+import {bindMangroveMudEdges,configureMangroveMudMaterial} from '../src/rendering/global-mangrove-mud-edges.js';
+import {updateGroundQuality} from '../src/rendering/render-quality.js';
 test('mud edge preparation preserves positions and owns replacement material across quality paths',()=>{
  for(const quality of ['media','muy_baja']){
   const group=new THREE.Group();group.userData.nativeChunkOrigin=[0,0];
@@ -16,6 +17,10 @@ test('mud edge preparation preserves positions and owns replacement material acr
   assert.deepEqual([...mudGeometry.attributes.position.array],positions);assert.equal(retained,1);assert.equal(disposed,1);assert.equal(textureDisposed,0);assert.equal(mudGeometry.attributes.qaMudEdge.count,3);
   const shader={...(quality==='muy_baja'?THREE.ShaderLib.basic:THREE.ShaderLib.standard),uniforms:{}};mud.material.onBeforeCompile(shader,{});
   assert.ok(shader.fragmentShader.includes(quality==='muy_baja'?'vec3 mudUp=normalize(vToonLowNormal);':'vec3 mudUp=normalize(inverseTransformDirection(normalize(vNormal),viewMatrix));'));
+  const replacementQuality=quality==='muy_baja'?'media':'muy_baja';const before=mud.material;let released=0;before.addEventListener('dispose',()=>released++);
+  assert.equal(updateGroundQuality([mud],replacementQuality,m=>configureMangroveMudMaterial({toon},m.material)),1);
+  assert.equal(released,1);assert.equal(retained,2);assert.equal(mud.material.userData.mangroveMudTextures.base,texture);
+  const changed={...(replacementQuality==='muy_baja'?THREE.ShaderLib.basic:THREE.ShaderLib.standard),uniforms:{}};mud.material.onBeforeCompile(changed,{});assert.ok(changed.fragmentShader.includes('qaMudToon'));assert.equal(textureDisposed,0);
   mud.material.dispose();ground.material.dispose();geometry.dispose();mudGeometry.dispose();texture.dispose();toon.shadowUniforms.fallback.dispose();
  }
 });

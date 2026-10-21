@@ -27,9 +27,20 @@ export function bindMangroveMudEdges(world,group){
   }
   const old=mud.material,normalAttribute=g.attributes.normal;
   g.setAttribute('color',new THREE.BufferAttribute(colors,3));normalAttribute.array.set(normals);normalAttribute.needsUpdate=true;g.setAttribute('qaMudEdge',new THREE.BufferAttribute(edges,1));attributeBytes+=colors.byteLength+normals.byteLength+edges.byteLength;
-  const material=nativeGroundMaterial(world.quality);Object.assign(material.userData,ground.material.userData);material.userData.retainBiomeGround?.(material);world.toon.material(material);
+  const material=nativeGroundMaterial(world.quality);Object.assign(material.userData,ground.material.userData);material.userData.retainBiomeGround?.(material);
+  material.userData.mangroveMudTextures={base:old.map,normal:old.normalMap,packed:old.roughnessMap};
+  configureMangroveMudMaterial(world,material);mud.material=material;
+  old.dispose();
+  mud.userData.globalMudBlend={attributeBytes,cacheHits,uniqueVertices,segmentTests,buildMs:performance.now()-start};
+}
+
+// Reapply the same edge recipe when the quality profile replaces the ground material.
+export function configureMangroveMudMaterial(world,material){
+ const textures=material.userData.mangroveMudTextures;
+ if(!textures)return;
+ world.toon.material(material);
   const compile=material.onBeforeCompile,key=material.customProgramCacheKey;
-  material.onBeforeCompile=function(shader,renderer){compile.call(this,shader,renderer);Object.assign(shader.uniforms,{uQAMudBase:{value:old.map},uQAMudNormal:{value:old.normalMap},uQAMudPacked:{value:old.roughnessMap}});
+  material.onBeforeCompile=function(shader,renderer){compile.call(this,shader,renderer);Object.assign(shader.uniforms,{uQAMudBase:{value:textures.base},uQAMudNormal:{value:textures.normal},uQAMudPacked:{value:textures.packed}});
    shader.vertexShader='attribute float qaMudEdge;varying float vQAMudEdge;varying vec2 vQAMudUV;\n'+shader.vertexShader;
    shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvQAMudEdge=qaMudEdge;vQAMudUV=uv;');
    shader.fragmentShader='uniform sampler2D uQAMudBase,uQAMudNormal,uQAMudPacked;varying float vQAMudEdge;varying vec2 vQAMudUV;\n'+shader.fragmentShader;
@@ -57,7 +68,5 @@ export function bindMangroveMudEdges(world,group){
     outgoingLight=mix(outgoingLight,qaMudToon,mudWeight);
    `+anchor);
   };}
-  material.customProgramCacheKey=()=>key.call(material)+'|global-mud-moss-full-v1';material.needsUpdate=true;mud.material=material;
-  old.dispose();
-  mud.userData.globalMudBlend={attributeBytes,cacheHits,uniqueVertices,segmentTests,buildMs:performance.now()-start};
+  material.customProgramCacheKey=()=>key.call(material)+'|global-mud-moss-full-v1';material.needsUpdate=true;
 }
