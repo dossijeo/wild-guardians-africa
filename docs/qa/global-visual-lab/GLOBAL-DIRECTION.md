@@ -676,3 +676,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Manglares: color-only no acredita ahorro estable
 
 [Benchmark de color condicional](mangrove-height-blend/sample-gate/color-only/performance/README.md):1920 muestras GPU válidas; diferencias diurnas+5.446/−1.108ms, nocturnas−.019/−3.543ms, con fuerte variación del control. No promover como optimización demostrada. Las72 parejas móviles conservan diferencias pequeñas, pero no sustituyen la prueba de coste. La receta visual aprobada se conserva; ampliar validación de recursos y buscar trabajo redundante sin degradar la imagen.
+
+
+### Manglares: receta aprobada supera recorrido y cierre acotados
+
+[Streaming del sustrato completo](mangrove-height-blend/full-streaming/README.md):36 capturas/18 parejas, dos circuitos por fase con±192m, escenas comparables y sin errores. Regresos nocturnos exactos; diurnos con residuo pequeño también en control. Tres texturas liberadas una vez cada una;24 geometrías y cero referencias QA tras cierre. No prueba de fugas prolongadas ni nuevo benchmark. Conservar la receta visual aprobada, sin activar optimizaciones de muestreo no demostradas.
