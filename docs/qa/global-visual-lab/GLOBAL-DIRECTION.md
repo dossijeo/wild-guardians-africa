@@ -551,3 +551,7 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Cañón: confirmación diurna de coste normal-only
 
 [ABAB con 180 frames de calentamiento](canyon-sand-normal-only/day-confirmation/README.md):960 muestras GPU y960 frames separados de cadencia, cámaras/geometría iguales. Grava6.62–6.72ms frente a arena6.59–6.77ms; sin sobrecoste relevante observado en este recorrido bajo. No prueba aceleración ni coste cercano con mayor ocupación de pantalla. Conservar candidata; pendientes revisión temporal completa y streaming prolongado antes de integrar.
+
+### Cañón: coste cercano limita la aprobación de arena
+
+[ABAB cercano día/noche](canyon-sand-normal-only/close-performance/README.md):1920 muestras GPU y1920 frames, geometría/cámara iguales. Día +0.230/+0.536ms GPU frente a grava; noche mixta. Conservar candidata visual, no aprobar presupuesto universal desde la cámara anterior. Siguiente investigación: trabajo redundante de grava/POM y mezcla, con ablación que conserve lectura de material.
