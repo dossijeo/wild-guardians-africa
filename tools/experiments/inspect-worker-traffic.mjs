@@ -4,6 +4,7 @@ import {actorBlockers,actorSegmentClear} from '../../src/simulation/actor-motion
 import {deserialize} from '../../src/persistence/snapshots.js';
 import {createSpatialGameSession} from '../../src/world/wild-engine/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../../src/world/wild-engine/spatial-navigation-movement.js';
+import {workerWallOverlapRecoveryPath} from '../../src/world/worker-wall-overlap-recovery.js';
 
 const input=process.argv[2];
 if(!input)throw Error('Usage: inspect-worker-traffic.mjs <state.json[.gz]>');
@@ -83,9 +84,12 @@ if(process.argv.includes('--native')){
         }
         const path=nav.workerPath(worker,{...entry,id:`home-${village.id}`},
           worker.radius??.28,null);
+        const recovery=!startStand?workerWallOverlapRecoveryPath(nav,worker,
+          {...entry,id:`home-${village.id}`},worker.radius??.28):null;
         nativeFresh.push({id:worker.id,found:!!path,points:path?.length??0,
           head:path?.[0]??null,routeStatus:route.status,routeReason:route.reason,
-          startStand,endStand,startRegions,endRegions,nearbyStructures,standable});
+          startStand,endStand,startRegions,endRegions,nearbyStructures,standable,
+          wallOverlapRecoveryPoints:recovery?.length??0});
       }catch(error){nativeFresh.push({id:worker.id,error:error.name,
         message:error.message});}
     }
