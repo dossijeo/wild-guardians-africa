@@ -142,3 +142,20 @@ The event invalidation and packed-memory approach is viable and removes work,
 but the remaining JS grouping/LOD/fade metadata checks and GPU load prevent a
 clear end-to-end conclusion. Streaming latency quantification and the remaining
 pixel discrepancy are explicit limitations, not successful validations.
+
+## Independent image repeatability
+
+The capture harness now stores one screenshot per block and records its path;
+previous series retained only the final screenshot for each variant/phase.
+Their exact-image claims therefore applied to those retained images, not every
+individual repetition. The auditor reports capture-history availability and
+checks every pair when individual captures exist.
+
+dense-image-repeatability contains two fresh pages per variant, day and night,
+with no benchmark measurements. Original/original differences are 4 daytime
+pixels (max delta 31) and 1 nighttime pixel (max delta 4). Event/event differences
+are 7 daytime pixels (max delta 12) and 6 nighttime pixels (max delta 1). One
+original/event nighttime pair is exactly equal. This demonstrates baseline
+image non-repeatability; it does not prove that every cross-variant difference
+has the same cause. No performance threshold or pixel tolerance was relaxed.
+The existing recommendation to retain the production renderer is unchanged.

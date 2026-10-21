@@ -30,6 +30,11 @@ for phase in ['day','night']:
   summary[-1].update({key:st.mean((x['wasm'] or {}).get(key,0) for x in f) for key in ['registryMs','registerMs','registeredInstances','registrations','descriptorBytes','orderUploads','visibilityUploads','engineCopiedBytes','nativePropRegistrations']})
  a=Image.open(p/f'sabana-baja-{av}-{phase}/scene.png').convert('RGB');b=Image.open(p/f'sabana-baja-{bv}-{phase}/scene.png').convert('RGB');diff=ImageChops.difference(a,b)
  changed=sum(px!=(0,0,0) for px in diff.getdata());comparisons.append(dict(phase=phase,changedPixels=changed,maxChannelDelta=max(v[1] for v in diff.getextrema())));print(phase,'changed pixels',changed)
+ if all(r.get('screenshot') for r in rr):
+  for i in range(len(rr)):
+   for j in range(i+1,len(rr)):
+    x=Image.open(p/rr[i]['screenshot']).convert('RGB');y=Image.open(p/rr[j]['screenshot']).convert('RGB');delta=ImageChops.difference(x,y)
+    comparisons.append(dict(phase=phase,blocks=[i,j],sameVariant=rr[i]['variant']==rr[j]['variant'],changedPixels=sum(px!=(0,0,0) for px in delta.getdata()),maxChannelDelta=max(v[1] for v in delta.getextrema())))
  pair=Image.new('RGB',(2560,720));pair.paste(a,(0,0));pair.paste(b,(1280,0));pair.save(p/f'{phase}-pair.webp',lossless=True)
-(p/'summary.json').write_text(json.dumps({'validForPerformanceComparison':not any(r.get('diagnosticDrawTrace') for r in rows) and not mismatches and all(c['changedPixels']==0 for c in comparisons),'mismatches':mismatches,'rows':summary,'images':comparisons,'device':rows[0]['gpu']['device'],'samplesGPU':sum(len(r['gpu']['gpu']['samples']) for r in rows),'framesCadence':sum(len(r['cadence']['frames']) for r in rows)},indent=2)+'\n',encoding='utf-8')
+(p/'summary.json').write_text(json.dumps({'validForPerformanceComparison':not any(r.get('diagnosticDrawTrace') for r in rows) and not mismatches and all(c['changedPixels']==0 for c in comparisons),'individualCaptureHistoryAvailable':all(r.get('screenshot') for r in rows),'mismatches':mismatches,'rows':summary,'images':comparisons,'device':rows[0]['gpu']['device'],'samplesGPU':sum(len(r['gpu']['gpu']['samples']) for r in rows),'framesCadence':sum(len(r['cadence']['frames']) for r in rows)},indent=2)+'\n',encoding='utf-8')
 for r in summary:print(r)
