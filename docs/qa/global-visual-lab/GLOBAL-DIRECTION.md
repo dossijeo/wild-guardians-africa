@@ -761,3 +761,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Volcanes: fracturas ampliadas
 
 [Doce capturas](volcanic-rock-scale/README.md): Rock035 al doble de extensión y altura nominal, normales sin aumentar, ceniza conservada. Fracturas más legibles desde vista normal; conservar candidata por mejora artística. Pendientes POM en movimiento/coste y áreas de ceniza aún lisas; no integrar ni declarar objetivo alcanzado.
+
+
+### Volcanes: afloramientos dentro de ceniza
+
+[Doce capturas](volcanic-ash-cavities/README.md): el mapa de altura reduce ceniza sobre crestas y conserva depósitos amplios. Mejora estructural visible; conservar candidata con una lecturaARH adicional, coste y movimiento pendientes. Aproximación sobre UV sin desplazar, no capas físicas ni siluetas nuevas.
