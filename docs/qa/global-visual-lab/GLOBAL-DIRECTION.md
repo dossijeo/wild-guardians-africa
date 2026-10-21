@@ -1354,3 +1354,8 @@ World asset-shadow proxies are now scoped to WorldScene. Loading QA no longer de
 ### 2026-10-22 - Native diffuse light option
 
 `loadingBeam=diffuse` now owns its analytic lighting/atmosphere and aligned native shadows through the diorama lifecycle. Four controlled images match QA exactly; real menu completion and cancellation pass. 24 existing loading tests plus two ownership/option tests pass. Native central mesa/contact/plant-region composition and animated-cost measurements remain pending; do not present the full QA composition as already integrated.
+
+
+### 2026-10-22 - Native central mesa
+
+The diffuse option now owns central mesa layout and atmospheric feathering in LoadingDiorama. Four captures match the previous QA backdrop exactly without backdrop routing; actual completion and cancel flow pass. Contact/planting-region and sky parity remain separate pending integration; animated cost still unmeasured. See `loading-native-mesa-20261022`.

@@ -1,6 +1,6 @@
 import {chromium} from 'playwright';
 import {mkdir,writeFile} from 'node:fs/promises';
-const out='docs/qa/global-visual-lab/loading-diffuse-flow-20261022';await mkdir(out,{recursive:true});
+const out=process.env.WG_LOADING_FLOW_OUT??'docs/qa/global-visual-lab/loading-diffuse-flow-20261022';await mkdir(out,{recursive:true});
 const browser=await chromium.launch({channel:'chrome',headless:true});const results=[];
 try{for(const mode of ['original','beam','cancel']){
  const page=await browser.newPage({viewport:{width:1280,height:720},deviceScaleFactor:1});const errors=[];

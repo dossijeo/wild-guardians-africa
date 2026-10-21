@@ -1,0 +1,77 @@
+{
+  "note": "Actual menu-to-load-to-game and cancellation. Read-only PNG observation adds overhead; not a timing benchmark or pixel-equivalent A/B.",
+  "results": [
+    {
+      "mode": "original",
+      "dioramaDisposed": true,
+      "stageBusy": "false",
+      "menu": false,
+      "loadingOverlay": false,
+      "frames": [
+        {
+          "label": "initial",
+          "progress": 0,
+          "night": 0,
+          "plants": 4
+        },
+        {
+          "label": "middle",
+          "progress": 0.5406510362036735,
+          "night": 0,
+          "plants": 4
+        },
+        {
+          "label": "late",
+          "progress": 0.9436794893611368,
+          "night": 0,
+          "plants": 4
+        }
+      ],
+      "errors": []
+    },
+    {
+      "mode": "beam",
+      "dioramaDisposed": true,
+      "stageBusy": "false",
+      "menu": false,
+      "loadingOverlay": false,
+      "frames": [
+        {
+          "label": "initial",
+          "progress": 0,
+          "night": 0,
+          "plants": 4
+        },
+        {
+          "label": "middle",
+          "progress": 0.5404049206255889,
+          "night": 0,
+          "plants": 4
+        },
+        {
+          "label": "late",
+          "progress": 0.9434395805104208,
+          "night": 0,
+          "plants": 4
+        }
+      ],
+      "errors": []
+    },
+    {
+      "mode": "cancel",
+      "dioramaDisposed": true,
+      "stageBusy": null,
+      "menu": true,
+      "loadingOverlay": false,
+      "frames": [
+        {
+          "label": "initial",
+          "progress": 0,
+          "night": 0,
+          "plants": 4
+        }
+      ],
+      "errors": []
+    }
+  ]
+}

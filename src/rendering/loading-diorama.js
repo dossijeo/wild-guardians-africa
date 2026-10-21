@@ -71,11 +71,11 @@ export class LoadingDiorama {
     // loading-only Source local, including cleanup of arrivals after abort.
     const atlasPending=this.loadBackdropTexture(atlasUrl);
     const mountainTexture=await phase('diorama-prepare-mountain-atlas',()=>world.loadReady(atlasPending));
-    const layout=mountains.arcLayout.slice(0,3).map((arc,index)=>({...arc,angle:Math.atan2(-4.8,-6.4)+(index-1)*.45,height:index===1?6.5:4.6,baseY:-1.4}));
+    const diffuse=loadingDiffuseEnabled(),layout=diffuse?mountains.arcLayout.slice(1,2).map(arc=>({...arc,angle:Math.atan2(-4.8,-6.4),height:7,aspect:2.47,uv:[.06,.515625,.35,.984375],baseY:-2.6})):mountains.arcLayout.slice(0,3).map((arc,index)=>({...arc,angle:Math.atan2(-4.8,-6.4)+(index-1)*.45,height:index===1?6.5:4.6,baseY:-1.4}));
     const backdropOwner={scene:this.scene,camera:this.camera,nav:{config:{biome:'savanna'},field:{surface:()=>0}},toon:this.toon};
-    this.backdrop=createBiomeBackdrop(backdropOwner,mountainTexture,{radius:35,arcLayout:layout,stableAltitude:false,parallax:0,fogMix:.2,fogBaseMix:.8,fogDayColor:'#decba6',fogNightColor:'#26364a'});
+    this.backdrop=createBiomeBackdrop(backdropOwner,mountainTexture,{radius:35,arcLayout:layout,stableAltitude:false,parallax:0,fogMix:diffuse?.45:.2,fogBaseMix:diffuse?.85:.8,fogDayColor:'#decba6',fogNightColor:'#26364a'});
     // Feather only this presentation's atlas foot into the analytic haze.
-    featherLoadingBackdrop(this.backdrop);
+    featherLoadingBackdrop(this.backdrop,{diffuse});
     this.batch=await phase('diorama-prepare-maize-batch',()=>createCropBatchAsync(this.scene,world.renderer,gltf,preparedBridges,this.plants.capacity,{species:['maiz'],shadows:false,signal:this.abort.signal,cancelled:()=>this.disposed||world.disposed}));this.scene.traverse(object=>{for(const material of [object.material].flat().filter(Boolean))this.textureOwner.material(material);});this.toon.environment(world.sky.environmentTextures,world.sky.uniforms.uSkyYaw);this.toon.apply(this.scene);
     // A small cold presentation fill belongs only to the diorama maize. It
     // reuses the existing night-light uniform/GLSL; soil and real-world lighting
@@ -129,7 +129,9 @@ export class LoadingDiorama {
 }
 
 
-export function featherLoadingBackdrop(backdrop){
- let changed=0;backdrop.root.traverse(mesh=>{if(!mesh.material?.isShaderMaterial)return;const source=mesh.material.fragmentShader,next=source.replace(',1.);\n #include <colorspace_fragment>',',smoothstep(.02,.4,vBackdropHeight)*c.a);\n #include <colorspace_fragment>');if(next===source)throw Error('Missing loading backdrop alpha recipe');mesh.material.transparent=true;mesh.material.fragmentShader=next;changed++;});
+export function featherLoadingBackdrop(backdrop,{diffuse=false}={}){
+ let changed=0;backdrop.root.traverse(mesh=>{if(!mesh.material?.isShaderMaterial)return;const source=mesh.material.fragmentShader,next=source.replace(',1.);\n #include <colorspace_fragment>',',smoothstep(.02,.4,vBackdropHeight)*c.a);\n #include <colorspace_fragment>');if(next===source)throw Error('Missing loading backdrop alpha recipe');mesh.material.transparent=true;mesh.material.fragmentShader=next;
+ if(diffuse){const uv=mesh.geometry.attributes.uv;let lo=1,hi=0;for(let i=0;i<uv.count;i++){lo=Math.min(lo,uv.getX(i));hi=Math.max(hi,uv.getX(i));}const n=x=>x.toFixed(8);mesh.material.fragmentShader=next.replace('texture2D(uBackdropAtlas,vBackdropUv)','texture2D(uBackdropAtlas,vBackdropUv,2.5)').replace('smoothstep(.02,.4,vBackdropHeight)*c.a',`smoothstep(.02,.6,vBackdropHeight)*c.a*(1.-uBackdropNight)*smoothstep(${n(lo)},${n(lo+(hi-lo)*.18)},vBackdropUv.x)*(1.-smoothstep(${n(hi-(hi-lo)*.18)},${n(hi)},vBackdropUv.x))`);}
+ changed++;});
  if(!changed)throw Error('Missing loading backdrop material');return backdrop;
 }
