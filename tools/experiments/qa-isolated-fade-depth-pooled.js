@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import {standardDepthMaterial} from '/src/rendering/standard-depth.js';
 export function installIsolatedFadeDepth(w){
- const renderer=w.renderer,original=renderer.render,entries=new Map(),pool=[];let busy=false,draws=0,created=0;
+ const renderer=w.renderer,original=renderer.render,entries=new Map(),pool=[];let busy=false,draws=0,created=0,disposed=false;
  const acquire=()=>pool.pop()??(created++,new THREE.WebGLRenderTarget(size.x,size.y,{depthTexture:new THREE.DepthTexture(size.x,size.y,THREE.UnsignedIntType)}));
  const size=new THREE.Vector2();
  renderer.render=function(scene,camera){
@@ -21,8 +21,8 @@ export function installIsolatedFadeDepth(w){
      const mesh=new THREE.InstancedMesh(fade.geometry,material,1);mesh.frustumCulled=false;mesh.matrixAutoUpdate=false;const isolated=new THREE.Scene();isolated.add(mesh);
      const uniform={value:rt.depthTexture},resolution={value:size.clone()},compile=fade.material.onBeforeCompile,key=fade.material.customProgramCacheKey.bind(fade.material);
      fade.material.onBeforeCompile=(shader,r)=>{compile(shader,r);shader.uniforms.uQaIsolatedDepth=uniform;shader.uniforms.uQaIsolatedResolution=resolution;shader.fragmentShader='uniform sampler2D uQaIsolatedDepth;uniform vec2 uQaIsolatedResolution;\n'+shader.fragmentShader;shader.fragmentShader=shader.fragmentShader.replace('#include <clipping_planes_fragment>','#include <clipping_planes_fragment>\nif(gl_FragCoord.z>texture2D(uQaIsolatedDepth,gl_FragCoord.xy/uQaIsolatedResolution).r+0.0000002)discard;')};fade.material.customProgramCacheKey=()=>key()+'|isolated-nearest-surface-v1';fade.material.needsUpdate=true;
-     e={rt,mesh,material,isolated,resolution,uniform};entries.set(fade,e);
-     fade.material.addEventListener('dispose',()=>{if(e.rt)pool.push(e.rt);e.rt=null;e.uniform.value=null;material.dispose();mesh.dispose();entries.delete(fade)});
+     e={rt,mesh,material,isolated,resolution,uniform,compile,key};entries.set(fade,e);
+     e.release=()=>{if(e.rt)pool.push(e.rt);e.rt=null;e.uniform.value=null;material.dispose();mesh.dispose();entries.delete(fade);fade.material.removeEventListener('dispose',e.release)};fade.material.addEventListener('dispose',e.release);
     }
     if(!e.rt){e.rt=acquire();e.uniform.value=e.rt.depthTexture;}
     if(e.rt.width!==size.x||e.rt.height!==size.y){e.rt.setSize(size.x,size.y)}e.resolution.value.copy(size);
@@ -32,5 +32,10 @@ export function installIsolatedFadeDepth(w){
   }finally{renderer.setRenderTarget(target);renderer.autoClear=auto;renderer.shadowMap.enabled=shadow;busy=false;}
   return original.call(this,scene,camera);
  };
- return w.qaIsolatedFadeDepth={enabled:true,audit:()=>({targets:[...entries.values()].filter(e=>e.rt).length+pool.length,assigned:[...entries.values()].filter(e=>e.rt).length,pooled:pool.length,created,depthDraws:draws,width:size.x,height:size.y})};
+ const wrapper=renderer.render;
+ const trim=()=>{for(const rt of pool)rt.dispose();pool.length=0;};
+ // Clear Three material program/uniform caches as well as restoring callbacks.
+ // Otherwise reinstalling the same cache key can reuse a disposed depth sampler.
+ const dispose=()=>{if(disposed)return;if(busy)throw Error('Cannot dispose during isolated depth render');if(renderer.render!==wrapper)throw Error('Another render wrapper must be removed first');renderer.render=original;for(const [fade,e] of [...entries]){fade.material.onBeforeCompile=e.compile;fade.material.customProgramCacheKey=e.key;fade.material.needsUpdate=true;e.release();fade.material.dispose();}trim();disposed=true;};
+ return w.qaIsolatedFadeDepth={enabled:true,trim,dispose,audit:()=>({disposed,targets:[...entries.values()].filter(e=>e.rt).length+pool.length,assigned:[...entries.values()].filter(e=>e.rt).length,pooled:pool.length,created,depthDraws:draws,width:size.x,height:size.y})};
 }

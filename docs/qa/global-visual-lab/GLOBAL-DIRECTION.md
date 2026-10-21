@@ -804,3 +804,7 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Pool de profundidad para fundidos
 
 [Comparación de reutilización](obstruction-isolated-pool/README.md): misma ruta, cuatro targets retenidos pasan a tres (28.125→21.094MiB nominales).69/72 parejas exactas; tres con3–21 píxeles distintos documentados, una sin parciales. Sin nuevas asignaciones en la segunda fase. Variante QA, no mejora de FPS demostrada ni integración global.
+
+### Ciclo de vida de los targets aislados
+
+[Resolución y desmontaje](obstruction-isolated-lifecycle-v2/README.md):72 parejas al cambiar1280→960→1280,67 exactas y máximo9 píxeles distintos. Trim3→1, dispose1→0, reinstalación con imagen exacta tras corregir caché de uniformes antigua. Helper QA, no certificación de fugas globales ni de efectos reales.
