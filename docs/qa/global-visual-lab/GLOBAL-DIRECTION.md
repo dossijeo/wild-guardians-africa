@@ -441,3 +441,8 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Gran Río: sombreado de raíz insuficiente
 
 [24 capturas de raíz fija frente a atenuada](river-cover-root/README.md), geometría coincidente. No promover: el cambio es leve y no resuelve el borde. La lectura de shaders identifica respuestas difusas distintas entre suelo y cubierta; siguiente prueba debe aislar esa diferencia conservando volumen, en vez de acumular ajustes pequeños de brillo.
+
+
+### Gran Río: Lambert de suelo no basta para hojas
+
+[24 capturas con aproximación difusa del terreno](river-cover-diffuse/README.md): misma geometría, mayor lectura de orientación diurna pero oscurecimiento nocturno excesivo. Descartar; no confundir aproximación Lambert con equivalencia de BRDF completa. Próximo diagnóstico: contribución por ambas caras y luz transmitida, aislando términos antes de ajustar paleta. Sin benchmark temporal por fallo artístico.
