@@ -651,3 +651,7 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Manglares: receta compartida mejora coherencia, coste no aprobado
 
 [24 capturas y ABAB](mangrove-height-blend/soil-toon/README.md). La receta del barro aproxima su respuesta a los parches, cálida de día y menos azul de noche. 1.920 muestras GPU válidas/1.920 frames, misma geometría; deriva fuerte y candidata más lenta en ambas noches (+5.944/+1.008ms). Conservar referencia visual, no integrar doble iluminación sin evitar trabajo redundante y validar coste/imagen. No demuestra volumen global ni presupuesto cumplido.
+
+### Manglares: omitir iluminación sin peso ofrece ahorro nocturno
+
+[Capturas, repetición y ABAB](mangrove-height-blend/lighting-skip/README.md).11/12 parejas iniciales exactas;18 píxeles residuales en una pose. Repetición baja6/6 exactas, causa del residuo no aislada.1.920 muestras GPU válidas/1.920 frames: noche−2.934/−0.647ms frente a doble iluminación; día+0.749/−0.394ms. Conservar candidata QA, no aprobar presupuesto global; flag falso por defecto. Coste total frente a musgo puro pendiente.

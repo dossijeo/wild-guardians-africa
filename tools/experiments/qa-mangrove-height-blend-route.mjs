@@ -1,4 +1,4 @@
-export async function installMangroveHeightBlendRoute(page,{height=true,calibrated=false,linearSoil=false,toonSoil=false}={}){
+export async function installMangroveHeightBlendRoute(page,{height=true,calibrated=false,linearSoil=false,toonSoil=false,skipUnusedLighting=false}={}){
  await page.route('**/src/rendering/biome-ground.js*',async route=>{
   const response=await route.fetch();let body=await response.text();
   const anchor="if(this.layeredSavanna)for(const role of ['base','normal','arh']){";
@@ -41,7 +41,13 @@ export async function installMangroveHeightBlendRoute(page,{height=true,calibrat
    vec3 qaSoilReflection=uNativeEnvEnabled>.5?environment4(reflect(-toonV,qaSoilNormal),qaSoilRough):vec3(0.);
    vec3 qaSoilLit=toLinear4(africanToon4(vec3(0.),qaSoilAlbedo,qaSoilNormal,toonV,uLightDir,qaSoilReflection,qaSoilRough,groundVisibility,qaSoilLeaf,0.,0.,max(dot(qaSoilNormal,toonV),0.),worldPatternPosition(vToonWorld)));
    outgoingLight=mix(outgoingLight,qaSoilLit,qaSoilWeight);
-  }`);await route.fulfill({response,body});
+  }`);
+  if(skipUnusedLighting){
+   const start='vec3 biomeSun=',soil='if(uBiome>1.5&&uBiome<2.5){';
+   if(!body.includes(start)||!body.includes(soil))throw Error('Lighting branch anchors missing');
+   body=body.replace(start,'outgoingLight=vec3(0.);if(qaSoilWeight<1.){'+start).replace(anchor,anchor+'}').replace(soil,'if(uBiome>1.5&&uBiome<2.5&&qaSoilWeight>0.){');
+  }
+  await route.fulfill({response,body});
  });
 
 }
