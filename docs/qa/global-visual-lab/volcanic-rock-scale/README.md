@@ -14,3 +14,8 @@ La vista normal diurna muestra fracturas más amplias y separables alrededor de 
 ## Benchmark en Intel UHD
 
 [ABBA](performance/README.md):960consultasGPU/1440frames, misma geometría. GPU diurna menor en candidata, controles variables; noche y cadencia mixtas. Conservar propuesta sin afirmar aceleración ni descartar por coste. POM en movimiento sigue pendiente.
+
+
+## Cámara comparable y vídeos
+
+[144parejas y vídeos día/noche](motion/README.md): misma trayectoria/geometría, sin erroresGL. Vista cercana inspeccionada conserva fracturas amplias; no certificar ausencia de artefactos temporales en todo el vídeo solo con esa inspección.
