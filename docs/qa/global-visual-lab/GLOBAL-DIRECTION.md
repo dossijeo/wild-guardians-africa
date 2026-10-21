@@ -1134,3 +1134,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Manglares: coste de cámara móvil medido
 
 [ABBA IntelUHD,baja](mangrove-leaf-moving-cost-20261021/README.md):720GPU/720cadencia válidos,trayectorias iguales. Selector0.16–0.17ms;GPU+0.65/+0.76ms día/noche;intervalo+1.9/+2.3ms. Cachés calientes,sin construcción de tiles;no streaming frío. Conservar calidad yoptimizar, no aprobación global.
+
+
+### Manglares: rangos activos de subida
+
+[Equivalencia y ABBA](mangrove-leaf-upload-ranges-20261021/README.md): seis parejas exactas; geometría y trayectoria iguales. Prefijo activo nominal94KB frente1.2MB de capacidad, sin reducir VRAM. No mejora consistente de FPS/GPU en esta ronda; conservar candidata de bajo riesgo sin atribuir ganancia demostrada.
