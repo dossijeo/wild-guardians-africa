@@ -1352,7 +1352,8 @@ function updateWorkers(s,dt,nav) {
     if(s.workers.length<96)return null;
     walkingCandidates??=s.workers.reduce((n,w)=>n+Number(w.idleState?.mode==='walk'&&
       (w.status==='idle'||w.status==='waiting')),0);
-    return walkingCandidates>=16?(idleBodies??=createWorkerBodyIndex(s.workers)):null;
+    return walkingCandidates>=Math.max(48,Math.ceil(s.workers.length/4))?
+      (idleBodies??=createWorkerBodyIndex(s.workers)):null;
   };
   const newArrivals=[];
   const nativeTasks=!!nav.intentTaskPlanner;
