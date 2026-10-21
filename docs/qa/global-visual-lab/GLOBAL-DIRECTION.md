@@ -515,3 +515,7 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Cañón: arena visible a cámara normal, coste nocturno pendiente
 
 [Revisión normal](canyon-sand-maps/overview/README.md) y [ABBA Intel UHD](canyon-sand-maps/performance/README.md): 24 capturas adicionales; elevada obstruida no válida para evaluar conjunto. Arena conserva ondulaciones normales; 960 muestras GPU muestran noche 7.69–8.20ms contra 6.63–7.27ms. No aprobar coste ni integrar.
+
+### Cañón: precalcular depósitos no ahorra GPU demostrado
+
+[Máscara residente](canyon-sand-mask/README.md): 24 capturas con diferencias pequeñas (.036–.168/255), 960 muestras GPU. Día procedural7.51–7.69ms contra máscara8.16–9.60ms; noche variable sin ventaja. No promover. También pendiente tratar horizonte sin máscara; mantener receta procedural QA.

@@ -1,8 +1,9 @@
-export async function installCanyonSandMapsRoute(page,enabled){
+export async function installCanyonSandMapsRoute(page,enabled,{depositMask=false}={}){
  await page.route('**/content/ground-materials.json*',async route=>{const response=await route.fetch(),tiles=await response.json();tiles.canyons.scale=.08;await route.fulfill({response,json:tiles});});
  if(!enabled)return;
  await page.route('**/src/rendering/biome-ground.js*',async route=>{
   const response=await route.fetch();let body=await response.text();
+  if(depositMask){body="import {canyonDepositMask} from '/tools/experiments/qa-canyon-deposit-mask.js';\n"+body;const from="this.volcanicAsh==='mask'?ashMask(data,bo):data";if(!body.includes(from))throw Error('Mask anchor missing');body=body.replace(from,"this.field.c.biome==='canyons'?canyonDepositMask(data,bo):("+from+")");}
   const anchor='if(this.layeredSavanna)for(const role';
   if(!body.includes(anchor))throw Error('Sand load anchor missing');
   body=body.replace(anchor,`if(biome==='canyons')for(const path of ['/docs/qa/global-visual-lab/desert-aerial-sand/Diffuse.png','/assets/visual-lab/aerial_beach_01-normal.png']){
@@ -28,6 +29,7 @@ export async function installCanyonSandMapsRoute(page,enabled){
   }`;
   if(!body.includes(anchor))throw Error('Sediment shader anchor missing');
   body=body.replace(anchor,anchor+code.replaceAll('\n','\\n'));
+  if(depositMask){const from='if(canyon)ctx=vec4(1.,.5,.65,0.);';if(!body.includes(from))throw Error('Context anchor missing');body=body.replace(from,'float qaDepositField=ctx.g;'+from);body=body.replace('materialNoise(vec3(wp.x*.10,0.,wp.z*.10))*.75+materialNoise(vec3(wp.x*.27,0.,wp.z*.27))*.25','qaDepositField');}
   await route.fulfill({response,body});
  });
 }
