@@ -924,3 +924,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Desierto: baja integrada tras reemplazo de chunks
 
 [32 capturas y regresos](desert-wear-streaming-20261021/README.md):25 chunks/62 geometrías estables, sin errores ni crecimiento de texturas dentro de variante. Relieve conservado de noche. No benchmark de movimiento continuo ni ahorro VRAM demostrado; opción retenida.
+
+
+### Desierto: movimiento real durante carga
+
+[960 renders continuos](desert-continuous-20261021/README.md), sin errores; cámaras iguales, carga asíncrona difiere18/6 frames día/noche. Tiempos medios similares con picos en ambos; no atribuir rendimiento causal ni ausencia de shimmering sin vídeo. Opción conservada.
