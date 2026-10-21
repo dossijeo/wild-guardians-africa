@@ -1239,3 +1239,7 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Cielo: horizonte con protección de nubes
 
 [Seis parejas](sky-horizon-cloud-mask-20261021/README.md):preserva mejor nubes que tinte uniforme,mejora moderada. Conservar para revisar seis biomas ycrepúsculo antes de seguir afinando. Noche exacta,GPU pendiente.
+
+
+### 2026-10-21 — cielo en seis biomas
+72 capturas y 36 parejas publicadas en sky-six-biomes-20261021. Candidata de horizonte con protección de nubes: día menos gris y noche azul oscuro. Mejora moderada, conservada para seguir trabajando; no integración por defecto. Una pareja nocturna de Sabana difiere en un draw call y queda pendiente de repetición. Sin benchmark nuevo. Objetivo global pendiente.
