@@ -914,3 +914,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Desierto: compatibilidad visual en baja
 
 [Seis parejas día/noche](desert-wear-low-20261021/README.md): relieve residual visible, cámaras/geometría iguales y sin errores. Sin sombras solares como media; no extrapolar benchmark ni a muy_baja. Mantener candidata, pendientes movimiento e integración.
+
+
+### Desierto: opción residual integrada
+
+[Seis parejas QA/integrada](desert-wear-integrated-20261021/README.md): sandWear=residual junto a sandRelief=1/global-lighting.2 exactas,resto1–2 píxeles con delta1RGB; no afirmar igualdad exacta.4 tests/build pasan. Predeterminado intacto, pendientes movimiento/streaming y baja integrada.

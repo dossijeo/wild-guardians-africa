@@ -4,7 +4,7 @@ export function desertSandEnabled(search=globalThis.location?.search??''){
  const query=new URLSearchParams(search);
  return query.get('visualLab')==='global-lighting'&&query.get('sandRelief')==='1';
 }
-export function patchDesertSand(source){
+export function patchDesertSand(source,residualWear=false){
  const edits=[
   ['tile=textureGrad(uGroundDetailMap,uv,du,dv).rgb;','if(!desert)tile=textureGrad(uGroundDetailMap,uv,du,dv).rgb;'],
   ['float needDetail=(desert||canyon)?grainFade:fineFade;','float needDetail=desert?(1.-smoothstep(.15,.65,pixelSpan)):canyon?grainFade:fineFade;'],
@@ -17,5 +17,6 @@ export function patchDesertSand(source){
   ['float specBand=smoothstep(.62,.88,spec)*(1.-rough*.40);','float specBand=smoothstep(.62,.88,spec)*(1.-rough)*(1.-rough);']
  ];
  for(const [from,to]of edits){if(!source.includes(from))throw Error('Desert sand shader anchor missing: '+from);source=source.replace(from,to)}
+ if(residualWear)source=source.replace('normalAmount=.65*up*(1.-wear*.85);','normalAmount=.65*up*(1.-wear*.55);');
  return 'vec3 sandGeometricNormal;\n'+source;
 }
