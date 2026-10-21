@@ -1267,3 +1267,7 @@ Seis parejas en desert-ripple-bounded-20261021. Corrige estiramiento excesivo y 
 
 ### Desierto: relieve mesoscópico candidato
 Seis parejas en desert-meso-20261021: pendientes de material a dos escalas aportan volumen visible sin deformar las ondas pequeñas. Conservar candidata; ligera apariencia arrugada lejana pendiente de atenuación/movimiento. Mismos calls/triángulos, sin benchmark nuevo ni integración por defecto. Validar baja, streaming y coste antes de promover.
+
+
+### Desierto: relieve conservado en baja
+Seis parejas en desert-meso-low-20261021: mejora visible en laderas también sin sombras de edificios del perfil media; mismos calls/triángulos. Mantener candidata. Benchmark preparado pero no ejecutado por carga externa 23–76 % documentada en desert-meso-cost-20261021. Pendientes movimiento, atenuación lejana y coste.
