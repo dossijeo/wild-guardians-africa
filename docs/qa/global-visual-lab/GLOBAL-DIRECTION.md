@@ -904,3 +904,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Desierto: recuperar relieve residual del desgaste
 
 [Seis parejas](desert-wear-relief-20261021/README.md): normales residuales15→45% en desgaste máximo, arena intacta y máscaras sin cambios. Ondulaciones suaves entre edificios, candidata conservada; pendientes coste, movimiento y revisión nocturna. No integrada ni solución completa de uniformidad.
+
+
+### Desierto: coste y lectura nocturna del relieve residual
+
+[ABBA Intel UHD](desert-wear-relief-20261021/performance/README.md): GPU favorable, CPU similar, sin mejora consistente de cadencia. Conservar candidata por ondulaciones visibles también de noche; no prometer FPS. Pendientes movimiento/perfil bajo, no integrada.
