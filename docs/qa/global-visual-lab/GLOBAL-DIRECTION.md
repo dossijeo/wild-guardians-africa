@@ -567,3 +567,7 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Cañón: arena conserva distribución tras cambios de origen
 
 [Streaming corregido](canyon-sand-normal-only/streaming-corrected/README.md):36 capturas,18 parejas, dos circuitos por fase,16 cambios de origen/variante. Regresos globales verificados; tira diurna mantiene depósitos. Una capa liberada una vez. Recuentos nocturnos regresan sin crecimiento acumulado observado; no prueba de fugas largas. Piloto con conversión doble de origen excluido. Coste cercano previo sigue vigente; no integrar todavía.
+
+### Cañón: arena normal-only integrada como opción explícita
+
+[`canyonSand=1` con global-lighting](canyon-sand-integrated/README.md), solo Cañón y off por defecto.12/12 parejas RGB exactas QA/integrada, media/baja día/noche, una capa y geometría iguales; build pasa. No incluye atenuación POM descartada. Coste cercano previo persiste; pendiente validar streaming integrado y revisión temporal. No aprobación global ni main.

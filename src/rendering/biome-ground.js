@@ -1,3 +1,4 @@
+import {canyonSandEnabled} from './global-canyon-sand.js';
 import {volcanicAshMode,ashMask} from './global-volcanic-ash.js';
 import {desertSandEnabled,DESERT_SAND_NORMAL_PATH} from './global-desert-sand.js';
 import * as THREE from 'three';
@@ -17,8 +18,9 @@ export class BiomeGround {
     this.layeredSavanna=biome==='savanna'&&['layer','layer-relief','layer-grass','layer-grass-sculpted'].includes(new URLSearchParams(globalThis.location?.search??'').get('visualLab'));
     this.layeredRelief=this.layeredSavanna&&new URLSearchParams(globalThis.location?.search??'').get('visualLab')==='layer-relief';
     this.desertSand=biome==='desert'&&desertSandEnabled();
+    this.canyonSand=biome==='canyons'&&canyonSandEnabled();
     this.volcanicAsh=biome==='volcanoes'?volcanicAshMode():null;
-    this.tile=this.desertSand?{...tiles[biome],normal:DESERT_SAND_NORMAL_PATH,scale:1/30,normalBoost:1,relief:0,jitter:0}:tiles[biome];this.assertOpen();
+    this.tile=this.desertSand?{...tiles[biome],normal:DESERT_SAND_NORMAL_PATH,scale:1/30,normalBoost:1,relief:0,jitter:0}:tiles[biome];this.assertOpen();if(this.canyonSand)this.tile={...this.tile,scale:.08};
     try{
       for(const role of ['base','normal','arh']){
         const texture=this.tile[role]?await assets.texture(this.tile[role],false):new THREE.DataTexture(new Uint8Array([255,230,128,255]),1,1);
@@ -33,6 +35,10 @@ export class BiomeGround {
         this.cliffRock=source.clone();this.cliffRock.wrapS=this.cliffRock.wrapT=THREE.RepeatWrapping;
         this.cliffRock.minFilter=THREE.LinearMipmapLinearFilter;this.cliffRock.magFilter=THREE.LinearFilter;
         this.cliffRock.generateMipmaps=true;this.cliffRock.anisotropy=8;this.cliffRock.needsUpdate=true;
+      }
+      if(this.canyonSand){
+        const source=await assets.texture(DESERT_SAND_NORMAL_PATH,false);this.assertOpen();
+        const map=source.clone();map.wrapS=map.wrapT=THREE.RepeatWrapping;map.minFilter=THREE.LinearMipmapLinearFilter;map.magFilter=THREE.LinearFilter;map.generateMipmaps=true;map.anisotropy=8;map.needsUpdate=true;this.layerTextures.push(map);
       }
       if(this.layeredSavanna)for(const role of ['base','normal','arh']){
         const source=await assets.texture(tiles.canyons[role],false);
@@ -60,10 +66,10 @@ export class BiomeGround {
       this.unmappedMask.needsUpdate=true;mask=this.unmappedMask;
     }
     const tile=this.tile,colors=this.profile.colors,soil=hex(colors.soil),grass=hex(colors.grass),foliage=hex(colors.foliage),blend=this.field.c.biome==='grand_river'?.32:.20;
-    return {...(this.cliffRock?{uCliffRock:{value:this.cliffRock}}:{}),uGroundPureMoss:{value:this.tile.pureMoss?1:0},uGroundMask:{value:mask},uGroundRect:{value:new THREE.Vector4(bo.minX,bo.minZ,1.5,35)},uGroundMapped:{value:mapped?1:0},uGroundOn:{value:1},uGroundStrength:{value:1},uGroundMicro:{value:1},uGroundLayered:{value:this.layeredSavanna?(this.layeredRelief?2:1):0},uGroundDebug:{value:0},uGroundRelief:{value:1},uGroundParams:{value:new THREE.Vector4(tile.scale,tile.blend,this.layeredRelief?1.6:tile.normalBoost,this.layeredRelief?.12:(tile.relief??tile.jitter??0))},uGroundSeed:{value:new THREE.Vector2(hashCell(this.field.seed,0,1,417)/4294967296,hashCell(this.field.seed,1,0,417)/4294967296)},uGroundSoil:{value:new THREE.Vector3(...soil)},uGroundGrass:{value:new THREE.Vector3(...grass.map((v,i)=>v+(foliage[i]-v)*blend))},uGroundDetailMap:{value:this.textures[0]},uGroundNormal:{value:this.textures[1]},uGroundARH:{value:this.textures[2]},uLayerSandBase:{value:this.layerTextures[0]??this.textures[0]},uLayerSandNormal:{value:this.layerTextures[1]??this.textures[1]},uLayerSandARH:{value:this.layerTextures[2]??this.textures[2]}};
+    return {...(this.canyonSand?{uCanyonSandNormal:{value:this.layerTextures[0]}}:{}),...(this.cliffRock?{uCliffRock:{value:this.cliffRock}}:{}),uGroundPureMoss:{value:this.tile.pureMoss?1:0},uGroundMask:{value:mask},uGroundRect:{value:new THREE.Vector4(bo.minX,bo.minZ,1.5,35)},uGroundMapped:{value:mapped?1:0},uGroundOn:{value:1},uGroundStrength:{value:1},uGroundMicro:{value:1},uGroundLayered:{value:this.layeredSavanna?(this.layeredRelief?2:1):0},uGroundDebug:{value:0},uGroundRelief:{value:1},uGroundParams:{value:new THREE.Vector4(tile.scale,tile.blend,this.layeredRelief?1.6:tile.normalBoost,this.layeredRelief?.12:(tile.relief??tile.jitter??0))},uGroundSeed:{value:new THREE.Vector2(hashCell(this.field.seed,0,1,417)/4294967296,hashCell(this.field.seed,1,0,417)/4294967296)},uGroundSoil:{value:new THREE.Vector3(...soil)},uGroundGrass:{value:new THREE.Vector3(...grass.map((v,i)=>v+(foliage[i]-v)*blend))},uGroundDetailMap:{value:this.textures[0]},uGroundNormal:{value:this.textures[1]},uGroundARH:{value:this.textures[2]},uLayerSandBase:{value:this.layerTextures[0]??this.textures[0]},uLayerSandNormal:{value:this.layerTextures[1]??this.textures[1]},uLayerSandARH:{value:this.layerTextures[2]??this.textures[2]}};
   }
   attach(material,cx,cz,bytes=null,options){
-    const uniforms=this.uniforms(cx,cz,bytes,options);material.userData.biomeGround=uniforms;material.userData.desertSand=this.desertSand;material.userData.groundBiome=this.field.c.biome;material.userData.volcanicAsh=this.volcanicAsh;
+    const uniforms=this.uniforms(cx,cz,bytes,options);material.userData.biomeGround=uniforms;material.userData.desertSand=this.desertSand;material.userData.canyonSand=this.canyonSand;material.userData.groundBiome=this.field.c.biome;material.userData.volcanicAsh=this.volcanicAsh;
     const mask=uniforms.uGroundMask.value;let owners=0;
     material.userData.retainBiomeGround=next=>{owners++;next.addEventListener('dispose',()=>{
       if(--owners===0&&mask!==this.unmappedMask&&this.masks.delete(mask))mask.dispose();
