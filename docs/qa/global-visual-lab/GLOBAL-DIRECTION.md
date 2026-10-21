@@ -808,3 +808,7 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Ciclo de vida de los targets aislados
 
 [Resolución y desmontaje](obstruction-isolated-lifecycle-v2/README.md):72 parejas al cambiar1280→960→1280,67 exactas y máximo9 píxeles distintos. Trim3→1, dispose1→0, reinstalación con imagen exacta tras corregir caché de uniformes antigua. Helper QA, no certificación de fugas globales ni de efectos reales.
+
+### Humo nativo con profundidad aislada
+
+[Diagnóstico con BuildingEffects](obstruction-isolated-smoke-probe/README.md): partículas QA por shaders y pase de humo reales,583070 píxeles de señal con/sin aislado, cero completamente bloqueados. Color del árbol oculto para aislar profundidad; no certifica composición final ni todos los VFX. Pendiente evitar prepasadas redundantes al capturar profundidad auxiliar.
