@@ -426,3 +426,8 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Gran Río: continuidad de paleta en la cubierta
 
 [Paleta de suelo aplicada a hojas](river-cover-palette/README.md): 24 capturas, 12 parejas y 8 bloques ABBA. Menor borde oscuro en la muestra media, con el mismo desgaste, instancias y triángulos. Solo tres constantes, sin nuevas muestras o recursos. Tiempos GPU solapados y noche candidata algo mayor: no afirmar aceleración. Conservar candidata visual para probar movimiento/LOD; no sustituir aún receta anterior.
+
+
+### Paleta de Gran Río: movimiento y LOD
+
+[144 parejas y benchmark móvil](river-cover-palette-motion/README.md), baja/media y día/noche. Misma geometría, selección y viento; el color aclara la cubierta sin resolver todo el borde lejano. GPU menor en esta serie, picos nocturnos no mejores uniformemente: conservar como ajuste cromático, no optimización. Apto para revisión explícita, sin sustituir aún el valor anterior.
