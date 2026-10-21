@@ -1089,3 +1089,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Manglares: atenuación por cobertura insuficiente
 
 [Seis parejas](mangrove-leaf-edge-20261021/README.md): crecimiento por máscara mantiene instancias y triángulos, pero no resuelve frontera principal. Existen además exclusiones binarias; diagnosticar su contribución espacial antes de ajustar. Conservar prueba, no promover como solución ni atribuir ganancias FPS.
+
+
+### Manglares: desgaste identificado y borde suavizado
+
+[Diagnóstico espacial](mangrove-leaf-mask-audit-20261021/README.md):3076 exclusiones por desgaste,114 por margen y323 por agua sobre9216 posiciones;clasificador mantiene seis capturas exactas. [Candidata](mangrove-leaf-wear-edge-20261021/README.md) reduce tamaño por desgaste sin modificar exclusiones ni presupuesto geométrico. Mejora visible del borde día/noche;conservar QA. Pendientes movimiento,agua/ocupación,streaming yGPU.
