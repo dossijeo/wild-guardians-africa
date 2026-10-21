@@ -1372,3 +1372,7 @@ Integrated event-updated root contact into loadingBeam=diffuse. Four day/night l
 
 ## Native fixed-view loading planting (2026-10-22)
 Diffuse option now restricts additional plants to the tested fixed-view region through a gesture-only predicate. Twelve captures, eight mature plants, fixed zoom/FOV/distance and no GL errors. See loading-native-region-20261022. Initial portrait leaf edges, other aspect ratios and full-region UI remain unresolved; no full quality claim.
+
+
+## Native loading haze and renewed mockup comparison (2026-10-22)
+Diffuse atmosphere now owns the selected horizon opacity, with four pixel-identical captures and no added draw. See loading-native-haze-20261022 for day/night side-by-sides and outstanding artistic differences: night blue/stars/peripheral ground, day soil warmth, group composition and UI. Global sky grading remains QA-only.

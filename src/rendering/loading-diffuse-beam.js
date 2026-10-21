@@ -22,6 +22,8 @@ export function installLoadingDiffuseBeam(d){
  const start=original.indexOf('float shaft='),end=original.indexOf('vec3 light=',start);
  if(start<0||end<0)throw Error('Mist anchors missing');
  let candidate=original.slice(0,start)+'vec2 beamScreen=vScreen;'+profile+'float shaft=beamFootprint*mix(.68,.52,uNight)*(1.-smoothstep(.2,.85,uForward.y));'+original.slice(end);
+ // Let the sky remain visible through the island's peripheral atmosphere.
+ candidate=candidate.replace('mix(.86,.96,distant)','mix(.76,.92,distant)');
  candidate=candidate.replace('vec3(.5,.66,.92)','vec3(.38,.72,1.)');
  candidate=candidate.replace('float edge=loadingFocusEdge()',`vec2 starGrid=(vScreen*.5+.5)*vec2(70.,40.);
  vec2 cell=floor(starGrid);float starHash=fract(sin(dot(cell,vec2(127.1,311.7)))*43758.5453);
