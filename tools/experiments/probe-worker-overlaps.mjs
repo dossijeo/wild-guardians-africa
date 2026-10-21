@@ -20,11 +20,20 @@ const distinctWorkPairs=new Set();
 const byDay=new Map(),byStatus=new Map(),examples=[],workExamples=[];
 const overlapWindows={'0-3':0,'3-10':0,'10-30':0,'30+':0};
 let villageEntry=null;
-const captureRecoveries=process.env.WG_WORKER_RECOVERY_DETAIL==='1';
+const captureRouteProgress=process.env.WG_WORKER_ROUTE_PROGRESS_DETAIL==='1';
+const captureRecoveries=process.env.WG_WORKER_RECOVERY_DETAIL==='1'||captureRouteProgress;
 if(captureRecoveries&&backend!=='wild-engine')
   throw Error('Recovery detail currently requires the continuous Wild Engine opening');
 const recoverySamples=[];
 const motionSamples=[];
+const routeProgressByActor=new Map();
+const remainingRoute=actor=>{
+  let distance=0,prior=actor;
+  for(const point of actor.path??[]){
+    distance+=Math.hypot(point.x-prior.x,point.z-prior.z);prior=point;
+  }
+  return distance;
+};
 const inspectDay=Number(process.env.WG_WORKER_INSPECT_DAY??0),
   inspectTime=Number(process.env.WG_WORKER_INSPECT_TIME??0),
   inspectIds=new Set((process.env.WG_WORKER_INSPECT_IDS??'').split(',').filter(Boolean));
@@ -51,7 +60,9 @@ const captureRecovery=(state,event)=>{
   recoverySamples.push({day:state.day,time:state.time,elapsed:state.elapsed,
     actorId:actor.id,status:actor.status,x:event.x,z:event.z,
     destinationId:actor.destinationId,pathLength:actor.path?.length??0,
-    next:next??null,probe,blockers});
+    next:next??null,probe,blockers,
+    ...(captureRouteProgress?{priorMotion:(routeProgressByActor.get(actor.id)??[])
+      .filter(sample=>sample.elapsed>=state.elapsed-12.1)}:{})});
 };
 const onTick=(state,nav)=>{
   if(captureOutput&&!captured&&state.day===captureDay&&state.time>=captureTime){
@@ -62,6 +73,26 @@ const onTick=(state,nav)=>{
   villageEntry??=state.villages[0]?.entry??null;
   sampledTicks++;
   const workers=state.workers.filter(w=>w.status!=='home'&&Number.isFinite(w.x)&&Number.isFinite(w.z));
+  if(captureRouteProgress){
+    const villageEntries=new Map(state.villages.map(village=>
+      [village.id,village.entry??village]));
+    const activeIds=new Set(workers.map(worker=>worker.id));
+    for(const id of routeProgressByActor.keys())if(!activeIds.has(id))routeProgressByActor.delete(id);
+    for(const worker of workers){
+      const history=routeProgressByActor.get(worker.id)??[];
+      if(history.length&&state.elapsed-history.at(-1).elapsed<.5)continue;
+      const home=worker.status==='returning'?villageEntries.get(worker.villageId):null;
+      history.push({elapsed:state.elapsed,x:worker.x,z:worker.z,
+        directHomeDistance:home?Math.hypot(worker.x-home.x,worker.z-home.z):null,
+        progressThresholdDistance:worker.mobileProgressDistance??null,
+        remainingRoute:remainingRoute(worker),pathLength:worker.path?.length??0,
+        next:worker.path?.[0]??null,
+        progressAt:worker.mobileProgressAt??null,
+        stationarySeconds:worker.dynamicStallSeconds??0});
+      while(history.length&&history[0].elapsed<state.elapsed-12.1)history.shift();
+      routeProgressByActor.set(worker.id,history);
+    }
+  }
   let found=false;
   for(let i=0;i<workers.length;i++)for(let j=i+1;j<workers.length;j++){
     const a=workers[i],b=workers[j],distance=Math.hypot(a.x-b.x,a.z-b.z);
