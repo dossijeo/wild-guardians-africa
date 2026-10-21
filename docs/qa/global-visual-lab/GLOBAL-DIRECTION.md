@@ -555,3 +555,7 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Cañón: coste cercano limita la aprobación de arena
 
 [ABAB cercano día/noche](canyon-sand-normal-only/close-performance/README.md):1920 muestras GPU y1920 frames, geometría/cámara iguales. Día +0.230/+0.536ms GPU frente a grava; noche mixta. Conservar candidata visual, no aprobar presupuesto universal desde la cámara anterior. Siguiente investigación: trabajo redundante de grava/POM y mezcla, con ablación que conserve lectura de material.
+
+### Cañón: atenuación de POM bajo arena, prueba visual
+
+[24 capturas](canyon-sand-buried-relief/README.md) comparan normal-only con/sin atenuar parallax residual de grava bajo depósito. Parejas cercanas media día/noche conservan ondulaciones, cambian detalle fino. No es equivalente exacto: grava conserva peso residual. Una textura y geometría iguales. Conservar QA para medir; no afirmar ahorro antes del benchmark ni activar por defecto.
