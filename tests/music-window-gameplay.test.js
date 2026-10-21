@@ -19,7 +19,7 @@ function fixture({read,decode,rate=48000}={}){
  audio.context={state:'running',sampleRate:rate,currentTime:1,
   createGain:()=>({gain:{value:1,setValueAtTime(){},cancelScheduledValues(){},linearRampToValueAtTime(){}},connect(){},disconnect(){}}),
   createBufferSource:()=>{const source={playbackRate:{value:1},connect(){},disconnect(){},start(){},stop(){this.stopped=true;}};sources.push(source);return source;},
-  async decodeAudioData(item){decoded.push(item);await decode?.(item);return item.full?item:{length:Math.floor(item.entry.decodedSamples*rate/48000),sampleRate:rate,numberOfChannels:2};}
+  async decodeAudioData(item){decoded.push(item);await decode?.(item);return item.full?item:{pack:item.pack,length:Math.floor(item.entry.decodedSamples*rate/48000),sampleRate:rate,numberOfChannels:2};}
  };
  audio.sfx={items:[]};audio.musicGain={};return {audio,reads,decoded,fullReads,sources};
 }
@@ -32,6 +32,25 @@ test('production gameplay selects short windows, keeps silent tracks logical and
  await audio.gameplay(2);assert.equal(old.pcmBytes(),0);assert.equal(old.disposed,true);
  assert.ok(reads.filter(r=>r.pack==='b').every(r=>!['s0','s6'].includes(r.id)));
  audio.stop();assert.equal(audio.active.length,0);assert.equal(audio.musicWindowPool,null);
+});
+test('daily A/B/A changes never mix active sources from incompatible packs',async()=>{
+ const {audio}=fixture();
+ for(const [day,pack] of [[1,'a'],[2,'b'],[3,'a']]){
+  const outgoing=[...audio.active],oldPool=audio.musicWindowPool;
+  await audio.gameplay(day);
+  assert.ok(outgoing.every(source=>source.stopped),
+    `all previous ${day-1} sources must stop before ${pack} begins`);
+  if(oldPool){assert.equal(oldPool.disposed,true);assert.equal(oldPool.pcmBytes(),0);}
+  assert.equal(audio.active.length,0,'the old deck is gone before the new one pumps');
+  audio.updateMusic({day,time:0,workers:[],spells:[]});
+  assert.ok(audio.active.length>0);
+  assert.ok(audio.active.every(source=>source.buffer?.pack===pack));
+  assert.equal(new Set(audio.active.map(source=>source.musicDeckStart)).size,1,
+    'all first windows share one composition clock');
+  assert.equal(new Set(audio.active.map(source=>source.musicDeckOffset)).size,1,
+    'all first windows share one source offset');
+ }
+ audio.stop();assert.equal(audio.active.length,0);
 });
 test('a scene change during initial loading primes the new audible group before starting its clock',async()=>{
  const wait=deferred();let hold=true;
