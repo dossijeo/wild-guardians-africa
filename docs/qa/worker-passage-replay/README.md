@@ -117,3 +117,19 @@ The existing bounded wall-overlap recovery also returns no path for either worke
 A fresh **production** campaign on the same seed, biome, culture and economic strategy was captured at day 10, time 151 with `WG_WORKER_CAPTURE_DAY=10`, `WG_WORKER_CAPTURE_TIME=150` and `probe-worker-overlaps.mjs 10 712 good sabana mapungubwe wild-engine`. The campaign completed ten nights with state hash `7be452006d51e700a035321b780529710b2ca821e16e8b95d5d529b562df9c17`, 896 deliveries, 1,208 coins and 112 living crops. Its day-10 snapshot has 21 instantiated workers (nine walking, eight acting and four carrying), **zero fleeing** and zero side-yield states. There is no analogous homebound jam at this checkpoint on current `main`; the rejected candidate's earlier movement decisions have already diverged. The baseline still has 12 sampled overlap pairs after time 30 in the ten-night probe, so this comparison does not resolve the separate worker-body collision defect. Do not port a rescue rule for these two invalid positions without reproducing the condition on production movement.
 
 Reproduce the capped candidate by applying the patch in a disposable branch and running `node tools/experiments/replay-worker-crossing.mjs`, `node --test tests/actor-motion.test.js`, then `node tools/experiments/probe-worker-overlaps.mjs 14 712 good sabana mapungubwe wild-engine`. For the unlimited-attempt variant used to capture day 10, also change the worker recovery condition to `worker||(w.mobileRecoveryAttempts??0)<2`. Set `WG_WORKER_CAPTURE_DAY=10`, `WG_WORKER_CAPTURE_TIME=150`, and `WG_WORKER_CAPTURE_OUTPUT` to capture the dense state. The next design must coordinate passage and free the homebound queue *without* restoring body phasing; simply waiting at a valid shoulder does not guarantee that the path to the village becomes usable.
+
+## Bounded shoulder experiment, also rejected
+
+[`yield-bounded-not-adopted.patch`](yield-bounded-not-adopted.patch) retains the physical side-yield prototype but gives it a two-second deadline. If traffic has not cleared, the worker resumes the existing bounded collision recovery; unlike the indefinite-yield candidate, the original route is retained and homebound workers do not wait at the shoulder for hundreds of seconds. The patch applies to this branch (`git apply --check`) and is **not** active in production. It changes no economy or navigation rules, but it still changes worker trajectories. SHA-256 of the patch: `daa0631cd0ac5f62f2cbbfa82ddf25b1b4eb64a81001e7545ffd4e5dc3a5fce5`.
+
+The frozen day-9 crossing ends with 0.740 m body separation and no recovery event; 26 directed actor-motion tests pass. Continuous Sabana/Mapungubwe/712 runs with the same native-intent policy give:
+
+| Movement | Nights completed | Deliveries | Coins | Living crops | Recovery events | Overlap pairs after time 30 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Production baseline | 9 | 780 | 1,047 | 123 | 24 | 12 |
+| Two-second shoulder | 9 | 765 | 973 | 125 | 3 | 1 |
+| Production baseline | 14 | 1,317 | 899 | 145 | 164 | 43 |
+| Two-second shoulder | 14 | 1,295 | 1,201 | 125 | 11 | 1 |
+| One-second shoulder | 14 | 1,251 | 960 | 125 | 32 | 3 |
+
+The two-second candidate avoids the sustained day-10 jam and completes 14 nights, but it loses 15 deliveries and 74 coins by night 9 and 20 living crops by night 14. One late overlap remains (two returning workers on day 8; the existing phase mechanism penetrates 0.116 m), so this does not establish physical separation. Shortening the deadline to one second worsens deliveries and leaves three late overlaps. These are deterministic single runs, not an ABBA CPU comparison. Tick totals cannot be compared as a pure movement cost after campaigns diverge. The candidate is therefore not merged. The next fix needs to solve the conflicting passage without either indefinite shoulder waits or residual phasing, then preserve enough agricultural throughput in sustained campaigns.
