@@ -103,3 +103,16 @@ The isolated [`targeted-phase-rejected.patch`](targeted-phase-rejected.patch) le
 Run `node tools/experiments/replay-worker-crossing.mjs --trace-progress --yield-candidates` to inspect the instant before the day-9 recovery. The diagnostic checks five distances and five directions relative to each worker's next waypoint. It requires both native worker terrain clearance and swept clearance from the other saved worker. At the recovery boundary it finds **22 of 25** clear candidate steps for `worker-7072` and **25 of 25** for `worker-7088`. The first 0.65 m lateral step on either side is clear for both. This rules out the hypothesis that the saved crossing has no nearby physical space to yield. It does **not** prove that any candidate reconnects safely to the worker's full route, avoids every other body in the live campaign, or preserves delivery throughput.
 
 The diagnostic is read-only: replaying with and without it yields identical final positions and `ActorMobileCollisionRecovery` events. The next movement prototype should choose and validate a complete yield-and-rejoin maneuver and coordinate the two actors. Merely suppressing the twelve-second phase timer has already failed the 14-night campaign comparison above.
+
+## Rejected local right-side bias
+
+The isolated [`right-lane-rejected.patch`](right-lane-rejected.patch) adds a cost to left-side nodes in the existing local disc graph only when a nearby moving coworker travels in the opposing direction. Terrain and body clearance checks remain unchanged. With the factor 2 shown in the patch, the saved day-9 crossing ends one second later with 0.966 m separation and no recovery event; the 26 directed actor-motion tests pass. The factor 1 variant removes the multiplier; factor 4 doubles it. The same Sabana/Mapungubwe/712 Wild Engine campaign produced:
+
+| Left-side cost factor | Deliveries | Coins | Living crops | Recovery events | Overlap examples after time 30 | Distinct pairs |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Current main | 1,317 | 899 | 145 | 164 | 43 | 34 |
+| 1 | 1,277 | 960 | 117 | 156 | 41 | 40 |
+| 2 | 1,289 | 788 | 146 | 74 | 20 | 18 |
+| 4 | 1,148 | 771 | 77 | 103 | 269 | 18 |
+
+The factor 2 result is a useful diagnostic: consistent side preference resolves one crossing and reduces late overlaps, but it does not provide physical separation for the other 18 pairs and loses 28 deliveries and 111 coins. Factor 4 makes some overlaps persist for multiple ticks without an active phase, and substantially harms the farm. No factor is adopted. The raw [factor 1](right-lane-1-14.json), [factor 2](right-lane-2-14.json) and [factor 4](right-lane-4-14.json) reports preserve state hashes, tick costs and every sampled overlap. Single divergent campaign runs do not isolate an algorithmic CPU effect or justify tuning the penalty to this seed.

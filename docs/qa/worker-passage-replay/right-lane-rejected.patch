@@ -1,0 +1,30 @@
+diff --git a/src/simulation/actor-motion.js b/src/simulation/actor-motion.js
+index 7f818ae8f..8b70d7f4f 100644
+--- a/src/simulation/actor-motion.js
++++ b/src/simulation/actor-motion.js
+@@ -209,6 +209,11 @@ export function prepareActorMotion(state,actor,nav,worker,workerIndex=null){
+     return clear;
+   }
+   const nearby=blockers.filter(b=>edgeDistance(actor,goal,b.x,b.z)<radius(actor)+radius(b)+.1);
++  const goalDistance=distance(actor,goal);
++  const forward={x:(goal.x-actor.x)/goalDistance,z:(goal.z-actor.z)/goalDistance};
++  const opposing=worker&&nearby.some(other=>other.path?.length&&
++    (next.x-actor.x)*(other.path[0].x-other.x)+
++    (next.z-actor.z)*(other.path[0].z-other.z)<0);
+   const nodes=[{x:actor.x,z:actor.z},goal];
+   for(const other of nearby){
+     // Circumscribe the clearance disc: chords between adjacent samples must
+@@ -231,7 +236,12 @@ export function prepareActorMotion(state,actor,nav,worker,workerIndex=null){
+     }
+     closed.add(index);
+     for(let j=1;j<nodes.length;j++)if(!closed.has(j)){
+-      const cost=costs[index]+distance(nodes[index],nodes[j]);
++      // Give opposing workers consistent passing sides when both alternatives
++      // are physically clear. The penalty never relaxes terrain/body checks.
++      const right=(nodes[j].x-actor.x)*forward.z-
++        (nodes[j].z-actor.z)*forward.x;
++      const sideCost=opposing&&right<-.05?2*Math.min(1,-right):0;
++      const cost=costs[index]+distance(nodes[index],nodes[j])+sideCost;
+       if(cost<costs[j]&&clear(nodes[index],nodes[j])&&staticClear(nodes[index],nodes[j])){costs[j]=cost;previous[j]=index;}
+     }
+   }
