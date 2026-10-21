@@ -1412,3 +1412,7 @@ Existing canyon mask has no shore data and water has no depth input. QA fills un
 
 ## Canyon shallow-water edge candidate (2026-10-22)
 Twelve captures test two lateral-bank floats per existing water vertex, producing turquoise shallow edges before native lighting. Modest improvement retained for continuity/cost testing, not integrated. No extra geometry/draw/sample; 8 bytes per water vertex and creation queries. Far horizon water remains unchanged. See canyon-water-depth-20261022.
+
+
+## Canyon bank streaming audit (2026-10-22)
+192-unit out/back: 352 coincident boundary comparisons, zero attribute error; 81744 resident bytes for 10218 vertices restored on return. Night exact, day drift also in control. No GL errors, paired geometry/counters equal. Near/far water and GPU timing still pending. See canyon-water-stream-20261022.

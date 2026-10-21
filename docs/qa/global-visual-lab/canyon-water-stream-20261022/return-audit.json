@@ -1,0 +1,30 @@
+[
+  {
+    "variant": "baseline",
+    "phase": "day",
+    "returnPixelIdentical": false,
+    "maxChannelDelta": 19,
+    "sameChunks": true
+  },
+  {
+    "variant": "baseline",
+    "phase": "night",
+    "returnPixelIdentical": true,
+    "maxChannelDelta": 0,
+    "sameChunks": true
+  },
+  {
+    "variant": "depth",
+    "phase": "day",
+    "returnPixelIdentical": false,
+    "maxChannelDelta": 19,
+    "sameChunks": true
+  },
+  {
+    "variant": "depth",
+    "phase": "night",
+    "returnPixelIdentical": true,
+    "maxChannelDelta": 0,
+    "sameChunks": true
+  }
+]
