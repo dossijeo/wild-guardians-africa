@@ -1243,3 +1243,7 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 
 ### 2026-10-21 — cielo en seis biomas
 72 capturas y 36 parejas publicadas en sky-six-biomes-20261021. Candidata de horizonte con protección de nubes: día menos gris y noche azul oscuro. Mejora moderada, conservada para seguir trabajando; no integración por defecto. Una pareja nocturna de Sabana difiere en un draw call y queda pendiente de repetición. Sin benchmark nuevo. Objetivo global pendiente.
+
+
+### Cielo: transición nocturna muestreada
+Quince parejas de Sabana en sky-twilight-20261021: cinco niveles de mezcla y tres cámaras. Cámaras, horas, triángulos y draw calls coinciden. Sin dominante extraña en revisión visual de pose 1. Se conserva candidata; pendiente vídeo continuo, amanecer y coste GPU. La discrepancia nocturna de un call del pase anterior no se reproduce; causa no determinada.
