@@ -12,6 +12,6 @@ El material previo se libera inmediatamente tras sustituirlo; MudPatches mantien
 
 ## Pendientes
 
-Recorrido de streaming integrado iniciado con dos circuitos ±192m y cierre; pendiente de auditoría. También pendiente benchmark del conjunto integrado, muy_baja en GPU y cambios de calidad en caliente. No afirmar validación integral ni igualdad de coste a partir de capturas. Conservar calidad aprobada y registrar costes por separado.
+[Streaming integrado completado](streaming/README.md):18parejas RGB exactas en dos circuitos ±192m; geometrías y tres texturas liberadas una vez al cierre. No prueba de fugas prolongadas. También pendiente benchmark del conjunto integrado, muy_baja en GPU y cambios de calidad en caliente. No afirmar validación integral ni igualdad de coste a partir de capturas. Conservar calidad aprobada y registrar costes por separado.
 
 Reproducir: `node tools/experiments/capture-mangrove-full-integrated.mjs`, `python tools/experiments/package-mangrove-full-integrated.py`, `node tools/experiments/capture-mangrove-integrated-streaming.mjs`, con Vite5190. Base/original es recetaQA, combined/candidate es integrada.
