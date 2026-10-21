@@ -14,10 +14,11 @@ import {json,bytes} from '../rendering/asset-fetch.js';
 import {MUSIC_POLICIES,gameplayMusicScene} from './music-policy.js';
 import {MusicMixer} from './music-mixer.js';
 import {MusicTransport} from './music-transport.js';
+import {MusicWindowTransport} from './music-window-transport.js';
 import {MusicLoadQueue} from './music-load-queue.js';
 import {MusicStream} from './music-stream.js';
 import {prepareMusicDiskCache} from './music-disk-cache.js';
-import {startWindowMusic} from './start-window-music.js';
+import {prepareWindowMusic,startWindowMusic} from './start-window-music.js';
 export const eventSound={TutorialMessageStarted:'spirit_tutorial_cue',PlacementCommitted:'build_place',WallChainBuilt:'build_place',WallRemoved:'build_demolish_manual',CropPlaced:'ui_buy',CropPicked:'farm_crop_to_crate',CrateDelivered:'eco_crop_sold',CrateDropped:'farm_crate_move',HarvestRequested:'ui_click',HiringConfirmed:'ui_confirm',RaidSpawned:'game_attack_alert',RaidEnded:'game_attack_over',SpellActivated:'spirit_power_activate',RepairApplied:'build_repair',StructureHit:'beast_hit_structure',StructureRuined:'wall_collapse_full',WorkerHit:'npc_hit',WorkerIncapacitated:'npc_fall',CampaignWon:'game_victory',GameOver:'game_major_loss',PostgameStarted:'ui_unlock'};
 export const eventExtraSound=Object.freeze({PlacementCommitted:'build_complete',WallChainBuilt:'build_complete',VillageFounded:'build_complete',WorkerHit:'beast_hit_character',WorkerIncapacitated:'beast_hit_character'});
 export const eventAlertSound=Object.freeze({WorkerIncapacitated:'game_farmer_hurt',TutorialCompleted:'ui_objective_complete'});
@@ -35,7 +36,7 @@ export function eventAudioOptions(event,id,state,listener){
   return {bus,emitter,gain:Number.isFinite(distance)?1/(1+(distance/24)**2):1};
 }
 export class AudioSystem {
-  constructor(settings,resources={json,bytes}){this.settings=settings;this.resources=resources;this.active=[];this.voices=new Map();this.buffers=new Map();this.seen=new Set();this.loops=new Map();this.generation=0;this.musicGeneration=0;this.musicBuffers=new Set();this.musicRetryAt=0;this.menuActive=false;}
+  constructor(settings,resources={json,bytes}){this.settings=settings;this.resources=resources;this.active=[];this.voices=new Map();this.buffers=new Map();this.seen=new Set();this.loops=new Map();this.generation=0;this.musicGeneration=0;this.musicBuffers=new Set();this.musicRetryAt=0;this.menuActive=false;this.musicPending=null;}
   async unlock() {
     this.context??=new AudioContext();await this.context.resume();
     if(!this.sfxGain){this.sfxGain=this.context.createGain();this.sfxGain.connect(this.context.destination);this.musicGain=this.context.createGain();this.musicGain.connect(this.context.destination);}
@@ -116,6 +117,7 @@ export class AudioSystem {
     }catch(error){if(musicGeneration===this.musicGeneration){this.stopMusic();this.musicError=error;}throw error;}
   }
   stopMusic({preserveEvent=false}={}){
+    this.musicPending?.pool?.dispose();this.musicPending=null;
     this.menuStream?.dispose();this.menuStream=null;
     this.musicGeneration++;this.transport?.dispose();this.transport=null;this.mixer=null;if(!preserveEvent)this.musicEvent=null;
     this.musicWindowPool?.dispose();this.musicWindowPool=null;
@@ -124,27 +126,58 @@ export class AudioSystem {
   }
   async gameplay(day) {
     if(!this.context||this.context.state!=='running')return;
-    const pack=day%2?'a':'b';if(this.pack===pack)return;
-    this.stopMusic({preserveEvent:true});this.musicError=null;this.pack=pack;const generation=this.musicGeneration;
-    try{
-      await this.sfxBank();if(this.pack!==pack||generation!==this.musicGeneration)return;
+    const pack=day%2?'a':'b';
+    if(this.musicPending?.pack===pack)return this.musicPending.promise;
+    if(this.pack===pack){
+      if(this.musicPending){this.musicGeneration++;this.musicPending.pool?.dispose();this.musicPending=null;}
+      return;
+    }
+    // Keep an audible short-window pack until the replacement's first windows
+    // are decoded. The two compositions never play together: commit disposes
+    // the old transport before creating the new deck.
+    const retainOutgoing=this.transport instanceof MusicWindowTransport&&
+      [44100,48000].includes(this.context.sampleRate);
+    if(retainOutgoing){
+      this.musicGeneration++;this.musicPending?.pool?.dispose();this.musicPending=null;
+    }else this.stopMusic({preserveEvent:true});
+    this.musicError=null;
+    const generation=this.musicGeneration,pending={pack,generation,pool:null,promise:null};
+    this.musicPending=pending;
+    const current=()=>this.musicPending===pending&&generation===this.musicGeneration&&
+      this.context?.state==='running';
+    const run=async()=>{try{
+      await this.sfxBank();if(!current())return;
       const bank=await this.resources.json(`/content/music-${pack}.json`);
-      if(this.pack!==pack||generation!==this.musicGeneration)return;
-      const current=()=>this.pack===pack&&generation===this.musicGeneration;
+      if(!current())return;
       this.musicLoads??=new MusicLoadQueue();
       // Prepared byte windows are validated at both common native rates.
       // Other rates retain the original route until their resampling is checked.
       if(bank.navigation?.sections?.length&&[44100,48000].includes(this.context.sampleRate)&&this.resources.musicWindows!==false){
-        await startWindowMusic(this,pack,bank,current);return;
+        const pool=await prepareWindowMusic(this,pack,bank,current,created=>{
+          pending.pool=created;
+          if(!retainOutgoing)this.musicWindowPool=created;
+        });
+        if(!pool||!current()){pool?.dispose();return;}
+        this.musicPending=null;
+        if(this.musicWindowPool===pool)this.musicWindowPool=null;
+        this.stopMusic({preserveEvent:true});this.pack=pack;
+        startWindowMusic(this,pack,bank,pool,{startDelay:retainOutgoing?.02:.1});
+        return;
+      }
+      if(retainOutgoing){
+        // An incoming legacy bank cannot use the short-window handoff. Keep
+        // its existing startup path and generation checks unchanged.
+        this.musicPending=null;this.stopMusic({preserveEvent:true});
+        return this.gameplay(day);
       }
       // Compatibility route: retain only the current pack's full PCM.
       const loaded=await Promise.all(bank.tracks.filter(t=>!t.silent).map(t=>{
         this.musicBuffers.add(t.data.url);
         return this.musicLoads.run(current,async()=>({track:t,buffer:await this.buffer(t.data.url,{current})}));
       }));
-      if(this.pack!==pack||generation!==this.musicGeneration)return;
+      if(!current())return;
       if(this.context.state!=='running'){this.stopMusic({preserveEvent:true});return;}
-      this.musicRetryAt=0;
+      this.musicPending=null;this.musicRetryAt=0;this.pack=pack;
       if(bank.navigation?.sections?.length){this.transport=new MusicTransport(this,pack,bank,loaded,this.resources.musicTransport);return;}
       const when=this.context.currentTime+.1;
       const scene=this.musicScene??'day',policy=MUSIC_POLICIES[pack],voices=new Map();
@@ -154,12 +187,26 @@ export class AudioSystem {
         if(source&&track.id)voices.set(track.id,this.voices.get(source).volume.gain);
       }
       if(voices.size)this.mixer=new MusicMixer(pack,bank,voices,when,scene,{automatic:true});
-    }catch(error){if(this.pack===pack&&generation===this.musicGeneration){this.stopMusic({preserveEvent:true});this.musicError=error;this.musicRetryAt=this.context.currentTime+2;}throw error;}
+    }catch(error){
+      if(current()&&retainOutgoing){
+        pending.pool?.dispose();this.musicPending=null;
+        this.musicError=error;this.musicRetryAt=this.context.currentTime+2;
+      }else if(current()||this.pack===pack&&this.musicPending===null){
+        this.stopMusic({preserveEvent:true});this.musicError=error;
+        this.musicRetryAt=this.context.currentTime+2;
+      }
+      throw error;
+    }
+    finally{if(this.musicPending===pending)this.musicPending=null;}};
+    pending.promise=run();return pending.promise;
   }
   updateMusic(state){
     this.musicScene=gameplayMusicScene(state);
     if(this.context?.state==='running'){
-      const pack=state.day%2?'a':'b';if(Number.isSafeInteger(state.day)&&state.day>0&&!state.result&&this.pack!==pack&&this.context.currentTime>=this.musicRetryAt)this.gameplay(state.day).catch(()=>{});
+      const pack=state.day%2?'a':'b';if(Number.isSafeInteger(state.day)&&state.day>0&&!state.result&&
+        (this.pack!==pack||this.musicPending&&this.musicPending.pack!==pack)&&
+        this.musicPending?.pack!==pack&&this.context.currentTime>=this.musicRetryAt)
+        this.gameplay(state.day).catch(()=>{});
       try{if(this.transport)this.transport.update(this.musicScene,this.context.currentTime);else this.mixer?.update(this.musicScene,this.context.currentTime);if(this.musicEvent&&this.mixer){this.mixer.triggerEvent(this.musicEvent,this.context.currentTime);this.musicEvent=null;}}catch(error){this.stopMusic({preserveEvent:true});this.musicError=error;this.musicRetryAt=this.context.currentTime+2;}
     }
   }

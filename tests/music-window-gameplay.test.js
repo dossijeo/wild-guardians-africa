@@ -7,7 +7,7 @@ import {MusicTransport} from '../src/audio/music-transport.js';
 const banks=Object.fromEntries(['a','b'].map(pack=>[pack,JSON.parse(readFileSync(new URL(`../public/content/music-${pack}.json`,import.meta.url)))]));
 const indices=Object.fromEntries(['a','b'].map(pack=>[pack,JSON.parse(readFileSync(new URL(`../public/content/music-windows-${pack}.json`,import.meta.url)))]));
 const settle=()=>new Promise(resolve=>setImmediate(resolve));
-function deferred(){let resolve;const promise=new Promise(r=>resolve=r);return {promise,resolve};}
+function deferred(){let resolve,reject;const promise=new Promise((r,j)=>{resolve=r;reject=j;});return {promise,resolve,reject};}
 function fixture({read,decode,rate=48000}={}){
  const reads=[],decoded=[],fullReads=[],sources=[];
  const audio=new AudioSystem({sfx:0,music:0},{json:async url=>{
@@ -32,6 +32,46 @@ test('production gameplay selects short windows, keeps silent tracks logical and
  await audio.gameplay(2);assert.equal(old.pcmBytes(),0);assert.equal(old.disposed,true);
  assert.ok(reads.filter(r=>r.pack==='b').every(r=>!['s0','s6'].includes(r.id)));
  audio.stop();assert.equal(audio.active.length,0);assert.equal(audio.musicWindowPool,null);
+});
+test('a slow pack switch keeps the old composition audible until its replacement is ready',async()=>{
+ const gate=deferred(),{audio,reads,sources}=fixture({read:item=>
+   item.pack==='b'?gate.promise:undefined});
+ await audio.gameplay(1);
+ audio.updateMusic({day:1,time:0,workers:[],spells:[]});
+ const old=audio.musicWindowPool,oldTransport=audio.transport,
+   oldSources=[...sources];
+ assert.ok(oldSources.length>0);
+ const pending=audio.gameplay(2);await settle();
+ assert.ok(reads.some(item=>item.pack==='b'));
+ assert.equal(audio.pack,'a');assert.equal(audio.musicPending.pack,'b');
+ assert.equal(audio.transport.pool,old);assert.equal(old.disposed,false);
+ assert.ok(audio.active.length>0);
+ gate.resolve();await pending;
+ assert.equal(audio.pack,'b');assert.equal(old.disposed,true);
+ assert.equal(old.pcmBytes(),0);
+ assert.notEqual(audio.transport,oldTransport);
+ assert.equal(audio.active.length,0);
+ audio.updateMusic({day:2,time:0,workers:[],spells:[]});
+ assert.ok(sources.length>oldSources.length);
+ assert.ok(Math.abs(audio.transport.primary.start-audio.context.currentTime-.02)<1e-9);
+ audio.stop();
+});
+test('a canceled or failed incoming pack cannot silence the outgoing short-window pack',async()=>{
+ for(const fails of [false,true]){
+  const gate=deferred(),{audio}=fixture({read:item=>
+    item.pack==='b'?gate.promise:undefined});
+  await audio.gameplay(1);audio.updateMusic({day:1,time:0,workers:[],spells:[]});
+  const old=audio.musicWindowPool,oldTransport=audio.transport,
+    oldCount=audio.active.length;
+  const pending=audio.gameplay(2);await settle();
+  if(fails)gate.reject(Error('network failure'));
+  else{await audio.gameplay(1);gate.resolve();}
+  if(fails)await assert.rejects(pending,/network failure/);else await pending;
+  assert.equal(audio.pack,'a');assert.equal(old.disposed,false);
+  assert.equal(audio.transport,oldTransport);
+  assert.equal(audio.active.length,oldCount);
+  audio.stop();
+ }
 });
 test('a scene change during initial loading primes the new audible group before starting its clock',async()=>{
  const wait=deferred();let hold=true;

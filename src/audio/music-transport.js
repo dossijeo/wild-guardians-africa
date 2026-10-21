@@ -3,11 +3,12 @@ import {MusicMixer} from './music-mixer.js';
 
 // The supplied lab moves all ten stems together. Only registered edges can branch.
 export class MusicTransport {
-  constructor(audio,pack,bank,loaded,{offset=0,random=Math.random}={}) {
+  constructor(audio,pack,bank,loaded,{offset=0,random=Math.random,startDelay=.1}={}) {
     this.audio=audio;this.bank=bank;this.loaded=loaded;this.random=random;this.nav=bank.navigation;
     this.decks=[];this.history=[];this.lastJumpAt=-Infinity;this.lastEdge=null;this.jumps=0;this.loops=0;
     this.policy=MUSIC_POLICIES[pack];this.scene=audio.musicScene??'day';
-    this.primary=this.createDeck(audio.context.currentTime+.1,offset,.06);
+    this.primary=this.createDeck(audio.context.currentTime+startDelay,offset,
+      Math.min(.06,startDelay));
     this.mixer=new MusicMixer(pack,bank,this.primary.voices,this.primary.start-offset,this.scene,{automatic:true});
     audio.mixer=this.mixer;this.section=this.sectionFor(offset);this.visit('start');
   }
