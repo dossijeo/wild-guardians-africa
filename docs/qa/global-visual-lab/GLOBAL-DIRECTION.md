@@ -1069,3 +1069,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Manglares: volver a la referencia de cubierta
 
 [Revisión del mockup ypipeline](mangrove-cover-direction-20261021/README.md):suelo ya tiene iluminación continua;la referencia destaca hojas solapadas con silueta. GLB existentes78/128triángulos no prueban cubierta continua. Próximo prototipo:unidad baja de hojas anchas Blender+instancing,máscaras/LOD existentes,presupuesto por área. No seguir mezclando mapas como sustituto de esa representación.
+
+
+### Manglares: primer módulo Blender de hojas bajas
+
+[Asset ypresupuesto](mangrove-leaf-cover-20261021/README.md):32 triángulos,8 hojas,altura9cm. Proyección40% a separación.5;no cumple continuidad. Mejorar reparto antes de subir densidad. JSON/GLB/.blend conservados,sin integración en juego ni afirmación de éxito.
