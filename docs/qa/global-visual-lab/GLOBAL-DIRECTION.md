@@ -994,3 +994,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Gran Río: variación espacial de pigmento
 
 [Seis parejas](river-patch-color-20261021/README.md):campo determinista precalculado por tile y atributo existente,sin nuevas texturas/geometría. Variación suave visible en vista elevada,mejora modesta,no resuelve uniformidad. Candidata QA conservada;pendientes coste y transición hacia terreno lejano.
+
+
+### Gran Río: transición lejana del pigmento espacial
+
+[Seis parejas](river-patch-fade-20261021/README.md):retorno24–36 al pigmento original mediante componente existente,sin nuevas texturas/geometría. [ABBA](river-patch-fade-20261021/performance/README.md) técnicamente válido pero deriva del control14.52→25.74ms día impide aislar coste. Conservar candidata visual;no aprobar rendimiento ni descartarla por esta ronda. Próxima medición debe alternar en misma escena con residencia estabilizada.
