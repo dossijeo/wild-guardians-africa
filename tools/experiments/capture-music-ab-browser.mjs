@@ -4,6 +4,11 @@ import {pathToFileURL} from 'node:url';
 
 const output=resolve(process.argv[2]??'test-results/music-ab-continuity.webm');
 const reportPath=output.replace(/\.webm$/i,'.json');
+const short=process.env.WG_QA_SHORT_MUSIC==='1';
+const staged=process.env.WG_QA_STAGED_MUSIC==='1';
+const firstSeconds=short?Number(process.env.WG_QA_FIRST_SECONDS??4):37;
+if(!Number.isInteger(firstSeconds)||firstSeconds<1||firstSeconds>37)
+  throw Error('WG_QA_FIRST_SECONDS must be an integer from 1 to 37');
 const playwrightPath=process.env.WG_QA_PLAYWRIGHT_MODULE;
 const {chromium}=await import(playwrightPath?
   playwrightPath.startsWith('file:')?playwrightPath:
@@ -21,9 +26,10 @@ try{
     !message.location().url.endsWith('/favicon.ico'))
     consoleErrors.push({text:message.text(),url:message.location().url});});
   await page.goto(url.href,{waitUntil:'networkidle'});
-  const capture=await page.evaluate(async()=>{
+  const capture=await page.evaluate(async({short,staged,firstSeconds})=>{
     const {AudioSystem}=await import('/src/audio/audio.js');
     const audio=new AudioSystem({music:1,sfx:0});
+    audio.resources.stagedMusicHandoff=staged;
     await audio.unlock();
     if(!MediaRecorder.isTypeSupported('audio/webm;codecs=opus'))
       throw Error('Chrome cannot record the WebAudio output as Opus');
@@ -48,16 +54,14 @@ try{
         voices:audio.active.length});
     };
     recorder.start(1000);
-    await runScene('day',37);
-    await runScene('night',12);
-    await runScene('attack',12);
+    await runScene('day',firstSeconds);
+    if(!short){await runScene('night',12);await runScene('attack',12);}
     const switchStart=audio.context.currentTime;
     state.day=2;await audio.gameplay(2);
     stages.push({transition:'A-to-B',from:switchStart,
       to:audio.context.currentTime,pack:audio.pack});
-    await runScene('day',37);
-    await runScene('night',12);
-    await runScene('attack',12);
+    await runScene('day',short?4:37);
+    if(!short){await runScene('night',12);await runScene('attack',12);}
     recorder.stop();await stopped;
     const blob=new Blob(chunks,{type:recorder.mimeType});
     const base64=await new Promise((resolve,reject)=>{
@@ -65,12 +69,12 @@ try{
       reader.onload=()=>resolve(reader.result.split(',')[1]);
       reader.readAsDataURL(blob);
     });
-    const report={sampleRate:audio.context.sampleRate,stages,
+    const report={sampleRate:audio.context.sampleRate,stages,short,staged,firstSeconds,
       bytes:blob.size,mimeType:recorder.mimeType,
       musicError:audio.musicError??null};
     audio.dispose();
     return {base64,report};
-  });
+  },{short,staged,firstSeconds});
   mkdirSync(dirname(output),{recursive:true});
   writeFileSync(output,Buffer.from(capture.base64,'base64'));
   writeFileSync(reportPath,JSON.stringify({...capture.report,

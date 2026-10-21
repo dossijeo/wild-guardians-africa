@@ -8,11 +8,11 @@ const banks=Object.fromEntries(['a','b'].map(pack=>[pack,JSON.parse(readFileSync
 const indices=Object.fromEntries(['a','b'].map(pack=>[pack,JSON.parse(readFileSync(new URL(`../public/content/music-windows-${pack}.json`,import.meta.url)))]));
 const settle=()=>new Promise(resolve=>setImmediate(resolve));
 function deferred(){let resolve;const promise=new Promise(r=>resolve=r);return {promise,resolve};}
-function fixture({read,decode,rate=48000}={}){
+function fixture({read,decode,rate=48000,staged=false}={}){
  const reads=[],decoded=[],fullReads=[],sources=[];
  const audio=new AudioSystem({sfx:0,music:0},{json:async url=>{
   const pack=url.includes('-a')?'a':'b';return url.includes('windows')?indices[pack]:banks[pack];
- },bytes:async url=>{fullReads.push(url);return {full:true,url};},musicReader:{readRange:async(url,start)=>{
+ },stagedMusicHandoff:staged,bytes:async url=>{fullReads.push(url);return {full:true,url};},musicReader:{readRange:async(url,start)=>{
   const pack=indices.a.tracks.some(t=>t.url===url)?'a':'b',track=indices[pack].tracks.find(t=>t.url===url),entry=track.windows.find(w=>w.startByte===start);
   const item={pack,id:track.id,entry};reads.push(item);await read?.(item);return item;
  }}});
@@ -51,6 +51,37 @@ test('daily A/B/A changes never mix active sources from incompatible packs',asyn
     'all first windows share one source offset');
  }
  audio.stop();assert.equal(audio.active.length,0);
+});
+test('staged A/B handoff keeps the old short windows audible until the new pack is ready',async()=>{
+ const wait=deferred();
+ const {audio,reads}=fixture({staged:true,read:item=>item.pack==='b'?wait.promise:undefined});
+ await audio.gameplay(1);
+ audio.updateMusic({day:1,time:0,workers:[],spells:[]});
+ const oldPool=audio.musicWindowPool,outgoing=[...audio.active];
+ const switching=audio.gameplay(2);await settle();
+ assert.equal(audio.pack,'a');assert.equal(audio.musicWindowPool,oldPool);
+ assert.ok(outgoing.length>0&&outgoing.every(source=>audio.active.includes(source)));
+ assert.equal(reads.filter(item=>item.pack==='b').length,2,
+   'the shared decoder queue limits preparation work');
+ audio.updateMusic({day:2,time:0,workers:[],spells:[]});
+ assert.equal(audio.pack,'a');assert.equal(audio.musicWindowPool,oldPool);
+ wait.resolve();await switching;
+ assert.equal(audio.pack,'b');assert.ok(audio.transport instanceof MusicWindowTransport);
+ assert.ok(outgoing.every(source=>!audio.active.includes(source)));assert.equal(oldPool.disposed,true);
+ assert.equal(oldPool.pcmBytes(),0);
+ audio.stop();
+});
+test('a staged pack request is discarded if the game returns to the old day',async()=>{
+ const wait=deferred();
+ const {audio}=fixture({staged:true,read:item=>item.pack==='b'?wait.promise:undefined});
+ await audio.gameplay(1);audio.updateMusic({day:1,time:0,workers:[],spells:[]});
+ const oldPool=audio.musicWindowPool,outgoing=[...audio.active];
+ const switching=audio.gameplay(2);await settle();
+ audio.updateMusic({day:1,time:0,workers:[],spells:[]});
+ wait.resolve();await switching;
+ assert.equal(audio.pack,'a');assert.equal(audio.musicWindowPool,oldPool);
+ assert.equal(oldPool.disposed,false);assert.ok(outgoing.every(source=>audio.active.includes(source)));
+ audio.stop();
 });
 test('a scene change during initial loading primes the new audible group before starting its clock',async()=>{
  const wait=deferred();let hold=true;

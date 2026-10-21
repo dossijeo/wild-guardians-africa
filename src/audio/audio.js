@@ -17,7 +17,8 @@ import {MusicTransport} from './music-transport.js';
 import {MusicLoadQueue} from './music-load-queue.js';
 import {MusicStream} from './music-stream.js';
 import {prepareMusicDiskCache} from './music-disk-cache.js';
-import {startWindowMusic} from './start-window-music.js';
+import {startWindowMusic,prepareWindowMusic,commitWindowMusic} from './start-window-music.js';
+import {MusicWindowTransport} from './music-window-transport.js';
 export const eventSound={TutorialMessageStarted:'spirit_tutorial_cue',PlacementCommitted:'build_place',WallChainBuilt:'build_place',WallRemoved:'build_demolish_manual',CropPlaced:'ui_buy',CropPicked:'farm_crop_to_crate',CrateDelivered:'eco_crop_sold',CrateDropped:'farm_crate_move',HarvestRequested:'ui_click',HiringConfirmed:'ui_confirm',RaidSpawned:'game_attack_alert',RaidEnded:'game_attack_over',SpellActivated:'spirit_power_activate',RepairApplied:'build_repair',StructureHit:'beast_hit_structure',StructureRuined:'wall_collapse_full',WorkerHit:'npc_hit',WorkerIncapacitated:'npc_fall',CampaignWon:'game_victory',GameOver:'game_major_loss',PostgameStarted:'ui_unlock'};
 export const eventExtraSound=Object.freeze({PlacementCommitted:'build_complete',WallChainBuilt:'build_complete',VillageFounded:'build_complete',WorkerHit:'beast_hit_character',WorkerIncapacitated:'beast_hit_character'});
 export const eventAlertSound=Object.freeze({WorkerIncapacitated:'game_farmer_hurt',TutorialCompleted:'ui_objective_complete'});
@@ -116,6 +117,7 @@ export class AudioSystem {
     }catch(error){if(musicGeneration===this.musicGeneration){this.stopMusic();this.musicError=error;}throw error;}
   }
   stopMusic({preserveEvent=false}={}){
+    this.stagedMusicTarget=null;this.stagedMusicPromise=null;
     this.menuStream?.dispose();this.menuStream=null;
     this.musicGeneration++;this.transport?.dispose();this.transport=null;this.mixer=null;if(!preserveEvent)this.musicEvent=null;
     this.musicWindowPool?.dispose();this.musicWindowPool=null;
@@ -125,6 +127,35 @@ export class AudioSystem {
   async gameplay(day) {
     if(!this.context||this.context.state!=='running')return;
     const pack=day%2?'a':'b';if(this.pack===pack)return;
+    if(this.resources.stagedMusicHandoff===true&&this.transport instanceof MusicWindowTransport){
+      if(this.stagedMusicTarget===pack)return this.stagedMusicPromise;
+      this.stagedMusicTarget=pack;
+      const generation=this.musicGeneration;
+      const current=()=>this.stagedMusicTarget===pack&&generation===this.musicGeneration;
+      const pending=(async()=>{
+        let pool=null;
+        try{
+          await this.sfxBank();if(!current())return;
+          const bank=await this.resources.json(`/content/music-${pack}.json`);
+          if(!current())return;
+          this.musicLoads??=new MusicLoadQueue();
+          pool=await prepareWindowMusic(this,pack,bank,current);
+          if(!pool||!current())return;
+          this.stopMusic({preserveEvent:true});this.pack=pack;
+          commitWindowMusic(this,pack,bank,pool);pool=null;
+          this.musicError=null;
+        }catch(error){
+          if(current()){this.musicError=error;this.musicRetryAt=this.context.currentTime+2;}
+          throw error;
+        }finally{
+          pool?.dispose();
+          if(this.stagedMusicPromise===pending){this.stagedMusicTarget=null;
+            this.stagedMusicPromise=null;}
+        }
+      })();
+      this.stagedMusicPromise=pending;
+      return pending;
+    }
     this.stopMusic({preserveEvent:true});this.musicError=null;this.pack=pack;const generation=this.musicGeneration;
     try{
       await this.sfxBank();if(this.pack!==pack||generation!==this.musicGeneration)return;
@@ -159,7 +190,9 @@ export class AudioSystem {
   updateMusic(state){
     this.musicScene=gameplayMusicScene(state);
     if(this.context?.state==='running'){
-      const pack=state.day%2?'a':'b';if(Number.isSafeInteger(state.day)&&state.day>0&&!state.result&&this.pack!==pack&&this.context.currentTime>=this.musicRetryAt)this.gameplay(state.day).catch(()=>{});
+      const pack=state.day%2?'a':'b';
+      if(this.stagedMusicTarget&&this.stagedMusicTarget!==pack)this.stagedMusicTarget=null;
+      if(Number.isSafeInteger(state.day)&&state.day>0&&!state.result&&this.pack!==pack&&this.context.currentTime>=this.musicRetryAt)this.gameplay(state.day).catch(()=>{});
       try{if(this.transport)this.transport.update(this.musicScene,this.context.currentTime);else this.mixer?.update(this.musicScene,this.context.currentTime);if(this.musicEvent&&this.mixer){this.mixer.triggerEvent(this.musicEvent,this.context.currentTime);this.musicEvent=null;}}catch(error){this.stopMusic({preserveEvent:true});this.musicError=error;this.musicRetryAt=this.context.currentTime+2;}
     }
   }
