@@ -1392,3 +1392,7 @@ Removed the final graphical QA dependency from loading captures: local graded sk
 
 ## Loading planting feedback (2026-10-22)
 Rejected soil gestures now provide localized feedback, cleared by successful planting. Real mouse gesture and four captures verified; no global-full claim or added frame scan. See loading-plant-feedback-20261022.
+
+
+## Fresh global sky pairs over V11 (2026-10-22)
+36 fresh campaign captures / 18 pairs for Sabana, Gran Rio and Gran Canon, matching cameras/time/draws/triangles. Sky benefit is localized to horizon-visible views; it does not resolve ground relief. See global-sky-paired-20261022. No old ground-shadow-fill process active; selected fill already integrated. V11 coverage adapters and other three biome sky checks remain pending.
