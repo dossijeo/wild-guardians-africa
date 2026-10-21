@@ -103,3 +103,17 @@ The isolated [`targeted-phase-rejected.patch`](targeted-phase-rejected.patch) le
 Run `node tools/experiments/replay-worker-crossing.mjs --trace-progress --yield-candidates` to inspect the instant before the day-9 recovery. The diagnostic checks five distances and five directions relative to each worker's next waypoint. It requires both native worker terrain clearance and swept clearance from the other saved worker. At the recovery boundary it finds **22 of 25** clear candidate steps for `worker-7072` and **25 of 25** for `worker-7088`. The first 0.65 m lateral step on either side is clear for both. This rules out the hypothesis that the saved crossing has no nearby physical space to yield. It does **not** prove that any candidate reconnects safely to the worker's full route, avoids every other body in the live campaign, or preserves delivery throughput.
 
 The diagnostic is read-only: replaying with and without it yields identical final positions and `ActorMobileCollisionRecovery` events. The next movement prototype should choose and validate a complete yield-and-rejoin maneuver and coordinate the two actors. Merely suppressing the twelve-second phase timer has already failed the 14-night campaign comparison above.
+
+## Encounter classes behind the 43 late overlaps
+
+`node tools/experiments/analyze-worker-phase-blockers.mjs test-results/worker-phase-blocker-14.json` now joins each overlap to its preceding recovery and the **event-time** route heads of the recovered worker and original blocking body. Cosine ≥0.5 is labelled same-direction, ≤−0.5 opposing, and the remainder crossing. These are local heading descriptions, not certificates of a complete route or a safe bypass. The 14-night report retains the baseline whole-state hash above.
+
+| Relationship to the recovered worker | Pair-ticks | Distinct day/worker pairs | Return/return pairs | Maximum penetration |
+| --- | ---: | ---: | ---: | ---: |
+| Same-direction original blocker | 17 | 12 | 11 | 0.420 m |
+| Crossing original blocker | 11 | 10 | 5 | 0.445 m |
+| Opposing original blocker | 5 | 5 | 3 | 0.476 m |
+| Third-party body after phasing | 9 | 8 | 5 | 0.274 m |
+| Original blocker without route heading | 1 | 1 | 0 | 0.162 m |
+
+The distinct-pair column is not additive: one pair can appear in more than one class over time. This shows why a special rule for head-on encounters alone cannot solve the problem. Most sampled overlaps with the original blocker involve following or crossing traffic; 11 same-direction examples are workers returning to the village. Nine more overlaps involve a different body that was not the recovery trigger. The next design must maintain safe spacing within a convoy, account for third-party bodies while resolving a blockage, and handle crossing traffic, rather than merely biasing which side two opposing workers choose.

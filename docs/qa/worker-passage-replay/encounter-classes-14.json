@@ -1,0 +1,209 @@
+{
+  "stateHash": "2224d0ea4889a693d5b396704b444b3dc383a44e02dd2db507d096c08741ec05",
+  "workOverlapPairs": 43,
+  "sampledLatePairs": 43,
+  "linkedToRecovery": 43,
+  "originalBlockerPairs": 34,
+  "otherBodyPairs": 9,
+  "unlinkedPairs": 0,
+  "phasedPairs": 42,
+  "byEncounter": {
+    "opposing": {
+      "pairTicks": 5,
+      "distinctPairs": 5,
+      "maxPenetration": 0.47550984139653607
+    },
+    "crossing": {
+      "pairTicks": 11,
+      "distinctPairs": 10,
+      "maxPenetration": 0.44454876029263124
+    },
+    "same-direction": {
+      "pairTicks": 17,
+      "distinctPairs": 12,
+      "maxPenetration": 0.4200959274977527
+    },
+    "third-party": {
+      "pairTicks": 9,
+      "distinctPairs": 8,
+      "maxPenetration": 0.2737036191431542
+    },
+    "missing-heading": {
+      "pairTicks": 1,
+      "distinctPairs": 1,
+      "maxPenetration": 0.16194739431843547
+    }
+  },
+  "byEncounterStatus": {
+    "opposing": {
+      "walking/walking": 1,
+      "returning/returning": 3,
+      "carrying/walking": 1
+    },
+    "crossing": {
+      "walking/walking": 3,
+      "carrying/walking": 3,
+      "returning/returning": 5
+    },
+    "same-direction": {
+      "walking/walking": 3,
+      "returning/returning": 11,
+      "carrying/walking": 3
+    },
+    "third-party": {
+      "returning/returning": 5,
+      "walking/walking": 4
+    },
+    "missing-heading": {
+      "acting/carrying": 1
+    }
+  },
+  "byStatus": {
+    "walking/walking": 11,
+    "carrying/walking": 7,
+    "returning/returning": 24,
+    "acting/carrying": 1
+  },
+  "returningDistanceToVillage": {
+    "min": 14.488988780984334,
+    "max": 43.009417270096904
+  },
+  "examples": [
+    {
+      "day": 9,
+      "time": 330.0000000000068,
+      "a": "worker-7082",
+      "b": "worker-7086",
+      "actorId": "worker-7086",
+      "blockingIds": [
+        "worker-7069",
+        "worker-7081"
+      ],
+      "statuses": "returning/returning",
+      "originalBlocker": false,
+      "encounter": "third-party",
+      "phased": true,
+      "penetration": 0.0458477957562905
+    },
+    {
+      "day": 12,
+      "time": 315.0000000000034,
+      "a": "worker-10728",
+      "b": "worker-10733",
+      "actorId": "worker-10733",
+      "blockingIds": [
+        "worker-10731"
+      ],
+      "statuses": "returning/returning",
+      "originalBlocker": false,
+      "encounter": "third-party",
+      "phased": true,
+      "penetration": 0.013685288984284671
+    },
+    {
+      "day": 12,
+      "time": 320.00000000000455,
+      "a": "worker-10728",
+      "b": "worker-10731",
+      "actorId": "worker-10731",
+      "blockingIds": [
+        "worker-10733"
+      ],
+      "statuses": "returning/returning",
+      "originalBlocker": false,
+      "encounter": "third-party",
+      "phased": true,
+      "penetration": 0.20535204974133475
+    },
+    {
+      "day": 13,
+      "time": 144.99999999999545,
+      "a": "worker-12043",
+      "b": "worker-12045",
+      "actorId": "worker-12043",
+      "blockingIds": [
+        "worker-12055"
+      ],
+      "statuses": "walking/walking",
+      "originalBlocker": false,
+      "encounter": "third-party",
+      "phased": true,
+      "penetration": 0.1216460652370927
+    },
+    {
+      "day": 13,
+      "time": 198.9999999999921,
+      "a": "worker-12047",
+      "b": "worker-12058",
+      "actorId": "worker-12058",
+      "blockingIds": [
+        "worker-12056"
+      ],
+      "statuses": "walking/walking",
+      "originalBlocker": false,
+      "encounter": "third-party",
+      "phased": true,
+      "penetration": 0.25845656024424735
+    },
+    {
+      "day": 13,
+      "time": 199.99999999999204,
+      "a": "worker-12047",
+      "b": "worker-12058",
+      "actorId": "worker-12058",
+      "blockingIds": [
+        "worker-12056"
+      ],
+      "statuses": "walking/walking",
+      "originalBlocker": false,
+      "encounter": "third-party",
+      "phased": true,
+      "penetration": 0.2606841948705383
+    },
+    {
+      "day": 14,
+      "time": 281.0000000000051,
+      "a": "worker-13385",
+      "b": "worker-13396",
+      "actorId": "worker-13396",
+      "blockingIds": [
+        "worker-13403"
+      ],
+      "statuses": "walking/walking",
+      "originalBlocker": false,
+      "encounter": "third-party",
+      "phased": true,
+      "penetration": 0.1809800883978972
+    },
+    {
+      "day": 14,
+      "time": 315.0000000000034,
+      "a": "worker-13387",
+      "b": "worker-13394",
+      "actorId": "worker-13387",
+      "blockingIds": [
+        "worker-13388"
+      ],
+      "statuses": "returning/returning",
+      "originalBlocker": false,
+      "encounter": "third-party",
+      "phased": true,
+      "penetration": 0.2737036191431542
+    },
+    {
+      "day": 14,
+      "time": 315.0000000000034,
+      "a": "worker-13388",
+      "b": "worker-13394",
+      "actorId": "worker-13388",
+      "blockingIds": [
+        "worker-13387"
+      ],
+      "statuses": "returning/returning",
+      "originalBlocker": false,
+      "encounter": "third-party",
+      "phased": true,
+      "penetration": 0.21728126486201693
+    }
+  ]
+}
