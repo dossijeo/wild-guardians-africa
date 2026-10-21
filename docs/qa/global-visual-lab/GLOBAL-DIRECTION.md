@@ -849,3 +849,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Manglares: dos orientaciones conservadas como candidata
 
 [Seis parejas y ABBA](moss-orientations-20261021/README.md): menor repetición de filas, volumen y paleta conservados. Tres lecturas extra, sin geometría ni pasadas añadidas. GPU diurna 15.96/17.67→19.35/19.92 ms: conservar candidata y optimizar; no integrar todavía ni descartar solo por coste. Falta movimiento/streaming y variedad macro del mockup.
+
+
+### Musgo: perspectiva normal a elevada
+
+[48 parejas día/noche](moss-orientation-motion-20261021/README.md), cámaras y geometría coincidentes, sin errores. Conserva menor repetición en vistas revisadas. Vídeos de capturas asentadas a12fps, no FPS real ni certificación de estabilidad temporal/streaming. Candidata retenida, no integrada.
