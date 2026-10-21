@@ -1029,3 +1029,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Volcanes: coste integrado de spectrum
 
 [ABBA](volcanic-spectrum-integrated-20261021/performance/README.md):480 muestras válidas,misma geometría. Último control14.45→27.13ms GPU día impide atribuir ventaja a candidata14.82/14.97ms. Conservar opción visual,no aprobar coste global;diagnosticar scheduling/carga antes de repetir precisión.
+
+
+### Diagnóstico: carga GPU concurrente confirmada
+
+[Ocho muestras CIM](gpu-contention-20261021/README.md) sin benchmark propio:Chrome GPU de measure-wild-renderer.mjs usa10–95% del motor3D. No se interrumpe ni se contacta con otro trabajo. Explicación plausible,no prueba retrospectiva de todas las rondas. Antes de más benchmarks precisos registrar carga yesperar ventana sin prueba concurrente;continuar trabajo artístico sin atribuir ganancias FPS.
