@@ -60,9 +60,18 @@ export class MicroeventBillboards {
    if(def.behavior.chain){height*=1.45;if(i>particles.count-4)size*=1-(i-(particles.count-4))*.18;}
    this.emit(space,p.x,p.y,size,sx,sy,alpha,rotation,p.phase,{lift,height});
    if(def.secondary&&def.secondary.kind!=='mound'){
-    const s=def.secondary,phase=(t*(s.kind==='rain'?1.6:.5)+i*.19)%1,opacity=s.kind==='lightning'?(reducedMotion?.12:Math.sin(t*9+i)>.92?.9:0):.55;
-    const sy=s.spriteY,sx=s.spriteOffset+(s.frames?Math.floor(t*s.fps+i)%s.frames*64:0),rise=s.kind==='smoke'?phase*2.5:s.kind==='rain'?-phase*2.5:0;
-    this.emit(space,p.x,p.y,s.size,sx,sy,fade*(1-p.progress)*opacity,0,p.phase,{lift:rise});
+    const s=def.secondary,phase=(t*(s.kind==='rain'?(reducedMotion?.2:1.6):.5)+i*.19)%1;
+    const sy=s.spriteY,sx=s.spriteOffset+(s.frames?Math.floor(t*s.fps+i)%s.frames*64:0),base=fade*(1-p.progress);
+    if(s.kind==='rain'){
+     // Staggered narrow drops below each cloud, fading at both ends of their fall.
+     for(let j=0;j<3;j++){const fall=(phase+j/3)%1,opacity=Math.sin(fall*Math.PI)*.64;
+      this.emit(space,p.x+(j-1)*size*.19,p.y,s.size*.48,sx,sy,base*opacity,-.12,p.phase,{height:s.size*.9,lift:-space.unit*(size*.17+fall*38)});}
+    }else if(s.kind==='lightning'){
+     const opacity=reducedMotion?.12:Math.sin(t*9+i)>.92?.9:0;
+     this.emit(space,p.x,p.y,s.size*.65,sx,sy,base*opacity,0,p.phase,{height:s.size,lift:-space.unit*size*.4});
+    }else{
+     this.emit(space,p.x,p.y,s.size,sx,sy,base*.55,0,p.phase,{lift:s.kind==='smoke'?phase*2.5:0});
+    }
    }
    const effect=FEEDBACK_SPRITES[def.feedback?.vfx],age=t-p.feedbackAt;
    if(effect&&age>=0&&age<.45)for(let j=0;j<3;j++){const angle=p.phase+j*2.094,travel=(reducedMotion?8:32)*age;this.emit(space,p.feedbackX+Math.cos(angle)*travel,p.feedbackY+Math.sin(angle)*travel,effect.size*(1-age/.55),effect.x,effect.y,fade*(1-age/.45)*.7,angle,p.phase,{lift:age*.4,mode:effect.glow?1:0});}
