@@ -844,3 +844,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Manglares: deformar UV no elimina la repetición
 
 [Seis parejas](mangrove-uv-warp-v2/README.md): ondas suaves conservan volumen/paleta pero convierten filas en filas curvas. No promover por insuficiencia artística; original intacto. Próximo enfoque: orientaciones locales mezcladas sin costuras y normales coherentes. No descartado por coste, ni benchmark temporal de esta variante.
+
+
+### Manglares: dos orientaciones conservadas como candidata
+
+[Seis parejas y ABBA](moss-orientations-20261021/README.md): menor repetición de filas, volumen y paleta conservados. Tres lecturas extra, sin geometría ni pasadas añadidas. GPU diurna 15.96/17.67→19.35/19.92 ms: conservar candidata y optimizar; no integrar todavía ni descartar solo por coste. Falta movimiento/streaming y variedad macro del mockup.
