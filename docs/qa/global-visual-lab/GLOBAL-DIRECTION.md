@@ -607,3 +607,7 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Manglares: el borde irregular fijo no supera la vista general
 
 [24 capturas y 12 parejas](mangrove-mud-fringe/overview/README.md), media/baja, día/noche y tres vistas. Cámaras, hora y geometría coinciden. La inspección elevada diurna y normal nocturna muestra reducción excesiva de varios parches: descartar el avance fijo de 2,2 unidades, sustituyendo la valoración provisional cercana. Sin nuevo benchmark; primero preservar núcleos de barro con un límite dependiente del tamaño. El musgo repetitivo sigue sin alcanzar la referencia artística.
+
+### Manglares: borde limitado por tamaño, solo QA
+
+[24 capturas y benchmark ABAB](mangrove-mud-fringe/sized-inset/README.md). El radio aproximado del contorno limita el avance y conserva mejor el núcleo de barro en las vistas inspeccionadas. 1.920 muestras GPU válidas y 1.920 frames de cadencia, con geometría coincidente; diferencias GPU cambian de signo y último bloque nocturno empeora notablemente. No hay coste estable demostrado: conservar solo como prototipo visual, pendiente temporal/streaming y diagnóstico de variabilidad. No resuelve el musgo repetitivo ni acredita calidad global.
