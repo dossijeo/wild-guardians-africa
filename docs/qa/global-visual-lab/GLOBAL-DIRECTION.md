@@ -939,3 +939,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Sabana: secuencia comparativa viento/LOD
 
 [72 parejas y vídeos](grass-wind-motion-20261021/README.md): cámara/tiempo de viento/geometría iguales, selección cercana2438–3186. Sin errores, cobertura conservada en contacto. Vídeo de poses asentadas, no FPS; pendientes evaluación temporal fina y coste, no afirmar LOD completamente resuelto.
+
+
+### Sabana: normales base del LOD
+
+[Seis parejas y auditoría de módulos](grass-normal-lod-20261021/README.md): normales difieren20° media/40.6°máximo; candidata interpola hacia módulo light con atributo1296bytes nominales. Sin geometría añadida ni errores. Cambio estático pequeño; pendientes prueba temporal/coste antes de promover.
