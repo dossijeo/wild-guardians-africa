@@ -1428,3 +1428,7 @@ Twelve real captures: five of six pairs exact, remaining max channel delta 1/255
 
 ## Canyon horizon normal isolation (2026-10-22)
 Twelve fresh real captures: area-weighted coincident-vertex normals soften distant diagonal bright facets without changing positions or triangle counts. Sawtooth bank persists. Retain QA candidate; construction cost and resident-edge continuity unmeasured, no FPS claim. See canyon-horizon-normals-20261022.
+
+
+## Canyon normal preparation cost (2026-10-22)
+Live 103212-vertex horizon, alternating string/numeric implementation: warmed median 29.5 vs 10.5 ms, exact float32 normal equivalence and unchanged positions/colours. Retain numeric QA candidate; move preparation to existing worker before integration. Not an FPS/GPU claim. See canyon-horizon-normal-cost-20261022.
