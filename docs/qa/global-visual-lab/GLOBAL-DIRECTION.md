@@ -1295,3 +1295,7 @@ El usuario aprueba expresamente el último relieve filtrado de Desierto para la 
 
 ### Pantalla de carga: referencia y atmósfera
 loading-art-20261021 contiene cuatro capturas del LoadingDiorama real, día/noche base/candidata. Mejora moderada del fondo; pendiente contacto del maíz, overlay e interacción. Sin promoción ni afirmación de rendimiento.
+
+
+### Jardín de carga según los nuevos mockups
+loading-contact-20261021 compara atmósfera, contacto y composición garden. Interfaz real, día/noche, clic para plantar y callback de cancelar verificados. Noche despejada y montaña diurna suavizada; contacto sutil. 6 draws en todas; garden reduce 48 triángulos decorativos, sin afirmación de rendimiento. Pendientes sombras direccionales, coste y encuadre vertical (quinta planta cortada). Solo QA.
