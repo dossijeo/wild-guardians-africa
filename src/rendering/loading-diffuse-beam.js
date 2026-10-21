@@ -63,8 +63,10 @@ export function installLoadingDiffuseBeam(d){
     vec3 beamTint=mix(vec3(1.,.80,.42),vec3(.75,.90,.74),uLoadingFocusNight);
     outgoingLight*=mix(1.,${mesh===d.ground?'mix(.46,.18,uLoadingFocusNight)':'mix(.72,.30,uLoadingFocusNight)'},uLoadingDiffuse);
     outgoingLight+=diffuseColor.rgb*beamTint*beamFootprint*(.24+.76*beamLambert)*mix(.16,1.,${visibility})*${mesh===d.ground?'mix(1.2,3.0,uLoadingFocusNight)':'mix(2.1,3.5,uLoadingFocusNight)'}*uLoadingDiffuse;
-    ${mesh===d.ground?`float rim=smoothstep(2.5,6.2,length(vLoadingSoil));
-    outgoingLight=mix(outgoingLight,mix(vec3(.44,.32,.20),vec3(.003,.010,.025),uLoadingFocusNight),rim*.6*uLoadingDiffuse);
+    ${mesh===d.ground?`outgoingLight*=mix(vec3(1.12,.91,.72),vec3(1.),uLoadingFocusNight);
+    outgoingLight+=diffuseColor.rgb*vec3(.018,.042,.085)*uLoadingFocusNight*(1.-clamp(beamFootprint,0.,1.));
+    float rim=smoothstep(2.5,6.2,length(vLoadingSoil));
+    outgoingLight=mix(outgoingLight,mix(vec3(.44,.32,.20),vec3(.012,.028,.065),uLoadingFocusNight),rim*.6*uLoadingDiffuse);
     diffuseColor.a*=mix(1.,1.-smoothstep(uIslandInner,uIslandInner+2.3,length(vLoadingSoil)),uLoadingDiffuse);`:''}
    }\n`+token);
   };m.customProgramCacheKey=()=>key+'|loading-diffuse-v1';m.needsUpdate=true;

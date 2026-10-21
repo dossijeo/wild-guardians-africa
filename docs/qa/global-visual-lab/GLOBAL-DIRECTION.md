@@ -1380,3 +1380,7 @@ Diffuse atmosphere now owns the selected horizon opacity, with four pixel-identi
 
 ## Loading night depth (2026-10-22)
 Selected blue atmosphere and stronger soft stars with aspect-correct cells. Four native captures match QA trial; daytime maximum difference is one 8-bit channel level. See loading-native-night-depth-20261022/night-three-way.webp. Six draws, no additional textures; GPU delta unproven.
+
+
+## Loading soil tone (2026-10-22)
+Selected warmer daytime earth and restrained textured blue night rim. Four native captures match QA trial; existing draws/shadows preserved. See loading-native-soil-tone-20261022 for day/night mockup-before-after comparisons. Global biome materials unchanged; overall quality goal remains unproven.
