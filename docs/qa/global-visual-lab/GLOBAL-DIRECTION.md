@@ -1019,3 +1019,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Volcanes: relleno cromático en baja
 
 [Seis parejas](volcanic-spectrum-low-20261021/README.md):día exacto y lectura nocturna moderadamente mejor en vista revisada;misma cámara/geometría,sin errores. Apariencia compatible con baja,no validación FPS ni muy_baja. Candidata QA conservada.
+
+
+### Volcanes: spectrum integrado como opción
+
+[Seis parejas QA/integración exactas](volcanic-spectrum-integrated-20261021/README.md). visualLab=global-lighting&volcanicNight=spectrum,ambient anterior conservado,predeterminado intacto.12 tests existentes ybuild pasan. Integración experimental,no aprobación de coste ni finalización global.
