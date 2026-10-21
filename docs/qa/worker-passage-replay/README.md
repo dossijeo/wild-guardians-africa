@@ -82,3 +82,16 @@ Two small prototypes were rejected on the same 14-night campaign:
 | Check village arrival again after movement | 1,317 | 899 | 145 | 164 | 43 |
 
 Disabling return phasing left a queue outside the village when an incursion began; 99 of its work-period overlaps were subsequently between fleeing workers. The post-movement arrival check had no observable effect, including the same full state hash. Both edits were removed. These results narrow the physical bug: simply delaying or disabling phase does not resolve shared passages. The next candidate must create a traversable, deterministic yield or alternate route and still clear returning workers before the raid boundary. It must also preserve the existing economic throughput; none of these measurements justifies relaxing body collision.
+
+## Avoidance-before-recovery ordering: rejected
+
+On `main` at `dc2680de9` (same production movement and WASM as the reference), a temporary two-line prototype called `prepareActorMotion()` for a worker before checking whether the twelve-second destination watchdog should start mobile phasing. The ordinary avoidance result was then reused for that tick instead of invoking it twice. This tested whether the fallback was being authorized against an occupied waypoint that local avoidance would immediately replace. No balance, speed, task or navigation rule changed.
+
+The frozen day-9 one-second replay improved: worker `7088` had no recovery event, the pair ended 0.588 m apart and penetration was zero. All 26 directed actor-motion tests passed. The continuous 14-night Sabana/Mapungubwe/712 campaign, however, contradicted adoption:
+
+| Variant | State SHA-256 | Deliveries | Coins | Living crops | Recovery events | Overlap pairs after time 30 | Maximum penetration |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Production reference | `2224d0ea4889a693d5b396704b444b3dc383a44e02dd2db507d096c08741ec05` | 1,317 | 899 | 145 | 164 | 43 | 0.476 m |
+| Avoidance first | `b5e3ba4e5163a268898db8d438d0198f19ad5198640f7f674c12856d34ef448c` | 1,274 | 808 | 80 | 80 | 54 | 0.560 m |
+
+The candidate still entered simultaneous mobile phasing in later traffic, including a day-12 walking pair headed through the same waypoint; their sampled penetration reached 0.512 m. Thus the order change removed one false recovery but did not coordinate right of way or prevent physical crossing. Its lower `Game.tick` total (63.6 s versus the reference's 71.8 s) reflects a different campaign and cannot be claimed as an isolated speedup. The movement edit was discarded. Reproduce the campaign with `node tools/experiments/probe-worker-overlaps.mjs 14 712 good sabana mapungubwe wild-engine` after moving `prepareActorMotion()` before the recovery probe and reusing its return value for ordinary movement. A safe fix must coordinate passage without authorizing two actors to ignore each other's bodies.
