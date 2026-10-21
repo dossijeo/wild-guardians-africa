@@ -874,3 +874,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Ambiente volcánico: coste y transición pendiente
 
 [ABBA Intel UHD](volcanic-night-components-20261021/performance/README.md): sin regresión consistente, sin mejora FPS demostrada. La multiplicación actual refuerza también el componente diurno durante crepúsculo; antes de integrar, corregir solo el extremo nocturno y capturar estados intermedios.
+
+
+### Volcanes: extremo nocturno corregido
+
+[30 capturas de cinco momentos](volcanic-night-endpoint-20261021/README.md): día/noche exactos al control; tres estados intermedios conservan lectura sin amplificar el componente diurno. Candidata corregida retenida para integración opt-in, sin atribuirle aún tiempos del shader anterior ni validar ciclo completo.
