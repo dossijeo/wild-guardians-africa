@@ -840,3 +840,7 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Revisión global V6
 
 [36 capturas seis biomas](combined-campaign-review-v6/README.md), mismas cámaras/horas que V5, sin errores. Conserva mejoras de Volcanes/Cañón. Próximo foco: repetición regular del musgo de Manglares, sin perder volumen/paleta; lectura nocturna volcánica pendiente. No certifica calidad objetivo global ni FPS del conjunto.
+
+### Manglares: deformar UV no elimina la repetición
+
+[Seis parejas](mangrove-uv-warp/README.md): ondas suaves conservan volumen/paleta pero convierten filas en filas curvas. No promover por insuficiencia artística; original intacto. Próximo enfoque: orientaciones locales mezcladas sin costuras y normales coherentes. No descartado por coste, ni benchmark temporal de esta variante.
