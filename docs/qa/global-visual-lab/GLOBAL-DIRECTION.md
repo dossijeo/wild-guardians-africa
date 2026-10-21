@@ -1214,3 +1214,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Manglares: pigmento de cubierta de patio
 
 [Seis parejas](mangrove-yard-pigment-20261021/README.md) acercan hojas al musgo sin cambios geométricos. Conservar candidata para benchmark completo;repetición yvalidación dinámica pendientes. No integrada V10.
+
+
+### Skyboxes incorporados a la dirección global
+
+[Primer pase QA](sky-depth-20261021/README.md):noche menos parda,día aún demasiado sutil. Trabajar nubes y horizonte;no basta aumentar saturación. [Benchmark de patio](mangrove-yard-cost-20261021/README.md) contaminado por carga externa,no decisión de coste.
