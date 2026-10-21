@@ -964,3 +964,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Sabana: combinación final y benchmark inválido
 
 [72 parejas/vídeos](grass-final-motion-20261021/README.md) de viento+normales+pigmento, sin errores. [ABBA rechazado](grass-pigment-lod-20261021/performance/README.md): consulta GPU960777ms en último control; conservar muestra, no calcular aprobación. Repetición pendiente, candidata no integrada.
+
+
+### Sabana: repetición válida del coste final de LOD
+
+[ABBA repetido](grass-pigment-repeat-20261021/README.md):480 muestras GPU válidas,720 frames de cadencia y geometría igual. GPU media aumenta1.35ms día/0.54ms noche; variación entre bloques impide afirmar mejora de FPS. Ronda anterior inválida conservada, causa no identificada. Mantener candidata visual en QA, pendiente revisión temporal y Gran Río; sin integración por defecto.
