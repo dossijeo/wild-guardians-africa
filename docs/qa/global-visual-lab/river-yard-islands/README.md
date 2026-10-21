@@ -88,3 +88,8 @@ Reproducir: WG_WIND_PADDING=1, WG_YARD_OUT con carpeta nueva, node tools/experim
 ### Perfil medio: volumen cercano conservado
 
 [Doce capturas](medium-padding/README.md): el margen0,85 conserva más del99% de módulos cercanos, sin overflow/errores. Inspección oblicua diurna y normal nocturna mantiene continuidad y legibilidad. No benchmark de media ni validación de movimiento.
+
+
+### Margen ampliado: reconstrucción al regresar
+
+[36capturas de streaming](wind-padding-streaming/README.md): módulos y triángulos recuperados exactamente en ambos regresos, día/noche; sin erroresGL ni overflow. Candidata61geometrías/46texturas tras regresar. Residuos RGB pequeños documentados. No medición de fluidez continua ni validación de media.
