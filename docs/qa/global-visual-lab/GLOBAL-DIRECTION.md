@@ -1129,3 +1129,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Manglares: primera medida estática con baja contención
 
 [ABBA IntelUHD](mangrove-leaf-cost-20261021/README.md),480GPU/720cadencia válidos. Cubierta suma2draw calls/59504triángulos;delta GPU medio+0.40ms día/+1.16ms noche,convariación entre bloques. Cadencia~16.6ms,sin diferenciaFPS demostrada. Conservar candidata,pendientes movimiento/preparación/media;no aprobación global.
+
+
+### Manglares: coste de cámara móvil medido
+
+[ABBA IntelUHD,baja](mangrove-leaf-moving-cost-20261021/README.md):720GPU/720cadencia válidos,trayectorias iguales. Selector0.16–0.17ms;GPU+0.65/+0.76ms día/noche;intervalo+1.9/+2.3ms. Cachés calientes,sin construcción de tiles;no streaming frío. Conservar calidad yoptimizar, no aprobación global.
