@@ -2,6 +2,43 @@ import {edgeDistance} from '../world/footprints.js';
 
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 const radius=a=>a.radius??.28;
+const bodyCellSize=10;
+const bodyCell=(x,z)=>`${Math.floor(x/bodyCellSize)},${Math.floor(z/bodyCellSize)}`;
+// The worker pass advances in roster order. Keep bucket membership current
+// after each actor so local queries see exactly the same positions as a scan.
+export function createWorkerBodyIndex(workers){
+  const buckets=new Map(),cells=new Array(workers.length),indicesByWorker=new WeakMap();
+  let maxRadius=0;
+  for(let i=0;i<workers.length;i++){
+    const w=workers[i];indicesByWorker.set(w,i);maxRadius=Math.max(maxRadius,radius(w));
+    if(!Number.isFinite(w.x)||!Number.isFinite(w.z))continue;
+    const key=bodyCell(w.x,w.z);cells[i]=key;
+    let bucket=buckets.get(key);if(!bucket)buckets.set(key,bucket=new Set());
+    bucket.add(i);
+  }
+  return {
+    update(worker){
+      const i=indicesByWorker.get(worker);if(i===undefined)return;
+      maxRadius=Math.max(maxRadius,radius(worker));
+      const previous=cells[i],next=Number.isFinite(worker.x)&&Number.isFinite(worker.z)?bodyCell(worker.x,worker.z):undefined;
+      if(previous===next)return;
+      if(previous!==undefined){const bucket=buckets.get(previous);bucket.delete(i);if(!bucket.size)buckets.delete(previous);}
+      cells[i]=next;
+      if(next!==undefined){let bucket=buckets.get(next);if(!bucket)buckets.set(next,bucket=new Set());bucket.add(i);}
+    },
+    nearby(actor,range){
+      if(!Number.isFinite(actor.x)||!Number.isFinite(actor.z))return workers;
+      const reach=range+radius(actor)+maxRadius,
+        minX=Math.floor((actor.x-reach)/bodyCellSize),maxX=Math.floor((actor.x+reach)/bodyCellSize),
+        minZ=Math.floor((actor.z-reach)/bodyCellSize),maxZ=Math.floor((actor.z+reach)/bodyCellSize),indices=[];
+      for(let x=minX;x<=maxX;x++)for(let z=minZ;z<=maxZ;z++){
+        const bucket=buckets.get(`${x},${z}`);if(bucket)indices.push(...bucket);
+      }
+      indices.sort((a,b)=>a-b);
+      return indices.map(i=>workers[i]);
+    }
+  };
+}
 const blockedDetours=new WeakMap();
 const pendingDetours=new WeakMap();
 // Match the native search corridor (32 grid cells). Bodies whose clearance
@@ -47,7 +84,7 @@ function terrainDetour(actor,goal,blockers,nav,worker,clear){
 }
 // Active worker encounters keep their approved hit/knockback rules. Exhausted
 // animals and incapacitated people need physical clearance without another hit.
-export function actorBlockers(state,actor,worker,range=Infinity){
+export function actorBlockers(state,actor,worker,range=Infinity,workerIndex=null){
   const blockers=[],reach=range+radius(actor);
   for(const animal of state.raid?.animals??[]){
     if(animal===actor||animal.status==='gone'||(worker&&
@@ -56,7 +93,7 @@ export function actorBlockers(state,actor,worker,range=Infinity){
     if(Math.abs(actor.x-animal.x)<=clearance&&Math.abs(actor.z-animal.z)<=clearance)
       blockers.push(animal);
   }
-  for(const other of state.workers){
+  for(const other of workerIndex&&Number.isFinite(range)?workerIndex.nearby(actor,range):state.workers){
     if(other===actor||other.status==='home'||(!worker&&
       !other.incapacitated&&actor.status!=='retreating'&&actor.hitsRemaining>0))continue;
     const clearance=reach+radius(other);
@@ -83,11 +120,11 @@ export function actorSegmentClear(start,end,actor,blockers){
     return edgeDistance(start,end,other.x,other.z)>=required-1e-8;
   });
 }
-export function prepareActorMotion(state,actor,nav,worker){
+export function prepareActorMotion(state,actor,nav,worker,workerIndex=null){
   // A worker step only needs the local approach. Animal detours retain their
   // full native search corridor dependencies, including remote bodies that
   // may enter an incremental search while it is pending.
-  const blockers=actorBlockers(state,actor,worker,worker?8:Infinity);
+  const blockers=actorBlockers(state,actor,worker,worker?8:Infinity,workerIndex);
   if(!blockers.length)return null;
   const clear=(a,b)=>actorSegmentClear(a,b,actor,blockers);
   if(!actor.path?.length)return clear;

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {actorBlockers,actorSegmentClear,prepareActorMotion} from '../src/simulation/actor-motion.js';
+import {actorBlockers,actorSegmentClear,prepareActorMotion,createWorkerBodyIndex} from '../src/simulation/actor-motion.js';
 import {walkTo,newGame,tick,workerAtVillageEntry} from '../src/simulation/game.js';
 import {ANIMAL_ACTIONS} from '../src/simulation/animal-actions-data.js';
 import {updateWorkerEncounters} from '../src/simulation/encounters.js';
@@ -11,6 +11,27 @@ import {reservedApproachClear} from '../src/simulation/raid-target-reservations.
 import {readFileSync} from 'node:fs';
 import {createOpeningWorld} from '../tools/check_opening.mjs';
 import {edgeDistance} from '../src/world/footprints.js';
+
+test('local worker buckets match the roster scan across movement and status changes',()=>{
+ const workers=Array.from({length:100},(_,i)=>({id:`worker-${i}`,
+   x:(i%20)*4-38,z:Math.floor(i/20)*4-8,radius:i%7===0?.42:.28,
+   status:i%11===0?'home':'idle'}));
+ const state={workers,raid:{animals:[{id:'animal',x:0,z:0,radius:.8,
+   status:'retreating',hitsRemaining:0}]}};
+ const index=createWorkerBodyIndex(workers);
+ const compare=()=>{
+   for(const actor of workers)assert.deepEqual(
+     actorBlockers(state,actor,true,8,index).map(b=>b.id),
+     actorBlockers(state,actor,true,8).map(b=>b.id));
+ };
+ compare();
+ for(let step=0;step<20;step++){
+   const worker=workers[(step*17)%workers.length];
+   worker.x+=step%2?13:-11;worker.z+=step%3?2:-12;
+   worker.status=step%4?'idle':'home';index.update(worker);
+   compare();
+ }
+});
 
 test('an unchanged failed local detour is not rebuilt without a terrain iterator',()=>{
  const actor={id:'worker-a',x:-2,z:0,radius:.28,status:'walking',
