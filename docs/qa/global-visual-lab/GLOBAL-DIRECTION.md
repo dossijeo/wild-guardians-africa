@@ -1334,3 +1334,8 @@ User rejects camera retreat when adding plants. Do not integrate capacity-fit or
 ### 2026-10-22 - Diffuse light and reference comparison
 
 User requests continued iteration against original day/night loading mockups, fixed zoom, diffuse overlapping rays and stronger contrast. `loading-mockup-comparison-20261022` includes original references, three-way sheets and explicit remaining differences. `loading-diffuse-contrast-20261022` preserves native shadows in the added light and aligns the directional source with the beam; six projected direction checks pass. Day ground contrast and night light isolation improve. Moving-camera shadow-cache cost and integration remain pending. No claim of final mockup equivalence.
+
+
+### 2026-10-22 - Central mesa composition
+
+`loading-central-mesa-20261022` concentrates the existing atlas into a softer central mesa matching the day reference direction. Fixed camera, maize and aligned beam shadows preserved. Height-9 trial rejected as oversized; height 7 with lower base retained. Eight captures pass, both night outputs pixel-identical to prior diffuse-light candidate, unchanged draws/triangles. Day sky colour and full integration remain pending.
