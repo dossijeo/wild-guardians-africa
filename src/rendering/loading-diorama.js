@@ -1,3 +1,5 @@
+import {loadingBeamEnabled} from './loading-beam.js';
+import {applyLoadingBeamLight} from './loading-beam-light.js';
 import {loadingSyncWitness,loadingAwaitWitness} from './loading-sync-witness.js';
 import {waitGpuFrame} from '../../tools/experiments/wait-gpu-frame.js';
 import {compileLoadingPrograms} from './loading-programs.js';
@@ -83,6 +85,7 @@ export class LoadingDiorama {
       material.onBeforeCompile=(shader,renderer)=>{compile.call(material,shader,renderer);shader.uniforms.uNightLight=this.cropNightFill;};
     }});
     const focused=new Set();this.scene.traverse(mesh=>{for(const material of [mesh.material].flat().filter(Boolean)){if(focused.has(material)||(!material.isMeshStandardMaterial&&!material.isMeshPhysicalMaterial))continue;focused.add(material);this.focusLight.apply(material);}});
+    if(loadingBeamEnabled())applyLoadingBeamLight(this.scene);
     // Warm all five stages and four morph bridges, including ones not present in
     // the first frame. Counts/visibility restored before accepting interaction.
     const saved=[];this.scene.traverse(mesh=>{if(mesh.isInstancedMesh){saved.push([mesh,mesh.count,mesh.visible]);mesh.count=1;mesh.visible=true;}});

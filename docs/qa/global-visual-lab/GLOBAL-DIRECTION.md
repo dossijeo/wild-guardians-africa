@@ -1315,3 +1315,7 @@ loading-pcf-20261021 compara ambas rutas originales (suelo transparente Three PC
 
 ### Carga: transición al plantar y extremos de giro
 loading-framing-motion-20261021 añade distancia interpolada .35 s, respuesta inmediata con movimiento reducido y vídeo offline de seis segundos (4→11→18 plantas). 180 frames y 12 poses día/noche/formato/ángulo: cero raíces fuera y errores. No benchmark ni carga real. Conserva sombras originales; pendiente integrar ciclo de vida y restauración a partida.
+
+
+### Rayo de carga oblicuo e iluminación material
+Solicitud del usuario: más presencia/oblicuidad y que alumbre las plantas. loading-beam-light-20261022 conecta huella de bruma con contribución de luz según normal/albedo en maíz y suelo. Opción nativa loadingBeam=oblique, desactivada por defecto, cuatro capturas píxel exacto con QA. Sin nuevas pasadas/texturas; coste por fragmento pendiente. Es luz artística proyectada, no volumen físico ni nuevas sombras del rayo.
