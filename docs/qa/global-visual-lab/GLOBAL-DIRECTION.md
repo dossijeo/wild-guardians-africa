@@ -859,3 +859,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Musgo: muestreo condicional con paridad visual
 
 [Seis parejas exactas y ABBA](moss-sample-gate-20261021/README.md): omite color/normal secundarios cuando su peso es cero. Conserva toda la imagen en estas vistas. GPU diurna favorable pero controles variables y cadencia sin ganancia consistente: retener candidata, no prometer FPS ni integrar aún.
+
+
+### Volcanes: luz direccional nocturna insuficiente por sí sola
+
+[Seis parejas](volcanic-night-relief-20261021/README.md): +45% solo direccional del suelo, día exacto; crestas algo más visibles de noche pero zonas oscuras aún ilegibles. Conservar diagnóstico, no integrar ni atribuir coste/FPS sin benchmark. Revisar ambiente y oclusión como siguiente hipótesis.
