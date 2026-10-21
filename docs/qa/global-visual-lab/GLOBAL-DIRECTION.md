@@ -746,3 +746,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Gran Río: claros herbáceos del poblado
 
 [Piloto visual](river-yard-islands/README.md): separa la explanada radial de los accesos mediante una máscara visual y el snapshot de poblados ya disponible en Engine. Doce capturas; vista normal añade693 módulos/5.544triángulos y reduce el claro marrón circular. Conservar candidata; coste, caminos, varios poblados y streaming sin validar. No integrado ni declarado objetivo alcanzado.
+
+
+### Revisión conjunta actualizada tras Gran Río
+
+[36capturas de seis biomas](combined-campaign-review-v5/README.md): reúne opciones conservadas y claros herbáceos/margen de viento. Sin erroresGL/overflow; no benchmark ni aprobación global. Prioridad artística siguiente: planos y luz cálida de roca volcánica, conservando ceniza y noche. No continuar indefinidamente microvalidando solo GranRío.
