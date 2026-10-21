@@ -666,3 +666,8 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 La valoración artística no se descarta automáticamente al superar un presupuesto de GPU. Una variante visualmente prometedora se conserva con receta, capturas y coste, pendiente de optimización local o compensación medida en otros sistemas. No activar por defecto no significa abandonar la dirección visual. Las simplificaciones deben compararse con la mejor imagen conservada, no solo con el original plano.
 
 Queda revocada la recomendación anterior de abandonar el sustrato completo de Manglares: el usuario aprueba su aspecto y pide optimizarlo. Sus medidas siguen vigentes; no hay aprobación de rendimiento ni de integración en main. Véase [revisión de decisiones](VISUAL-CANDIDATES-REVIEW.md).
+
+
+### Manglares: optimización conservando la referencia visual aprobada
+
+[Protección por altura](mangrove-height-blend/sample-gate/height-guard/README.md): seis parejas reales,8–25 píxeles residuales por imagen.1920 muestras GPU válidas; cuatro diferencias favorables, pero magnitud variable (−.087 a−1.927ms) y última candidata con peor CPU/cadencia. Conservar candidata sin afirmar equivalencia exacta ni ahorro estable. La receta visual aprobada sigue intacta; no se abandona por coste.
