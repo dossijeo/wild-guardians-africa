@@ -1359,3 +1359,8 @@ World asset-shadow proxies are now scoped to WorldScene. Loading QA no longer de
 ### 2026-10-22 - Native central mesa
 
 The diffuse option now owns central mesa layout and atmospheric feathering in LoadingDiorama. Four captures match the previous QA backdrop exactly without backdrop routing; actual completion and cancel flow pass. Contact/planting-region and sky parity remain separate pending integration; animated cost still unmeasured. See `loading-native-mesa-20261022`.
+
+
+### 2026-10-22 - Native moving-light shadow cost attribution
+
+Two 768-query series on Intel UHD confirm 6 draws/16002 triangles with cached shadows and 7/29882 with wind or beam-aligned camera movement. Same-pose cache/refresh day/night images match exactly. GPU repeat drift remains near 2x even after RAF-paced collection, so timing deltas are inconclusive; do not claim FPS gain or discard the art. CPU submission around 0.5 ms in this isolated fixture. See `loading-native-motion-paced-20261022`. Stronger timing control needed before a release budget.
