@@ -1311,3 +1311,7 @@ loading-pcf-20261021 compara ambas rutas originales (suelo transparente Three PC
 
 ### Carga: capacidad completa y cámara
 32 pares en loading-capacity-fit-v2-20261021: 18 plantas, cuatro etapas, día/noche y dos formatos con sombras on/off. La cámara fija cortaba 1/4 raíces; fit V2 deja cero, conserva geometría y desplaza niebla para evitar ocultación. Pendientes transición suave, rotación, cuatro plantas y texto al llenar capacidad. Candidata QA, no integración.
+
+
+### Carga: transición al plantar y extremos de giro
+loading-framing-motion-20261021 añade distancia interpolada .35 s, respuesta inmediata con movimiento reducido y vídeo offline de seis segundos (4→11→18 plantas). 180 frames y 12 poses día/noche/formato/ángulo: cero raíces fuera y errores. No benchmark ni carga real. Conserva sombras originales; pendiente integrar ciclo de vida y restauración a partida.
