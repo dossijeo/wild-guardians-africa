@@ -9,3 +9,8 @@ Doce capturas, media1280x720, semilla712, tres cámaras día/noche. Cámara/hora
 **Conservar candidata artística**: aporta estructura y separación de materiales más perceptibles que el tinte solar. No integrar aún: costeGPU, estabilidad temporal y peso de depósitos siguen abiertos. No declarar cumplido el mockup; no hay siluetas nuevas ni volumen geométrico de suelo.
 
 [Normal día](day-0-pair.webp), [normal noche](night-0-pair.webp), [estado](captures.json), [diferenciasRGB](comparison.json). Reproducir capture-volcanic-ash-cavities.mjs, Vite5190. La transformación solo se aplica a la páginaQA candidata; main y las reglas permanecen intactas.
+
+
+## Coste y recorrido
+
+[ABBA](performance/README.md): coste mixto, primer bloque nocturnoB+2,997msGPU; conservar sin promover. [144parejas](motion/README.md) con geometría/cámaras iguales; recortes cercanos muestran líneas duras compartidas por ambas variantes. Próximo diagnóstico: ablación del POM antes de aumentar muestras o culpar a la mezcla de ceniza.
