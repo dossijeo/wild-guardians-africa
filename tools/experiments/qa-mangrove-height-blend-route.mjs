@@ -1,4 +1,4 @@
-export async function installMangroveHeightBlendRoute(page,{height=true,calibrated=false,linearSoil=false,toonSoil=false,skipUnusedLighting=false}={}){
+export async function installMangroveHeightBlendRoute(page,{height=true,calibrated=false,linearSoil=false,toonSoil=false,skipUnusedLighting=false,gateSoilSamples=false}={}){
  await page.route('**/src/rendering/biome-ground.js*',async route=>{
   const response=await route.fetch();let body=await response.text();
   const anchor="if(this.layeredSavanna)for(const role of ['base','normal','arh']){";
@@ -11,7 +11,7 @@ export async function installMangroveHeightBlendRoute(page,{height=true,calibrat
   const response=await route.fetch();let body=await response.text();
   const anchor='rough=clamp(arh.g,.5,.99);wet=0.;materialAO410=mix(.45,1.,arh.r);materialCover410=1.;return;';
   if(!body.includes(anchor))throw Error('Pure moss anchor missing');
-  const patch=`vec2 ctxUV=((worldP.xz-uGroundRect.xy)/uGroundRect.z+1.5)/uGroundRect.w;
+  let patch=`vec2 ctxUV=((worldP.xz-uGroundRect.xy)/uGroundRect.z+1.5)/uGroundRect.w;
   vec4 ctx=texture(uGroundMask,ctxUV);
   vec3 wp=worldPatternPosition(worldP);
   float patchNoise=materialNoise(vec3(wp.x*.12,3.7,wp.z*.12));
@@ -30,6 +30,16 @@ export async function installMangroveHeightBlendRoute(page,{height=true,calibrat
   N=normalize(mix(sampleTurfN410(Ng,soilN,.55*fade),N,mossCover));
   rough=mix(clamp(soilARH.g,.78,.96),clamp(arh.g,.5,.99),mossCover);
   wet=0.;materialAO410=mix(mix(.65,1.,soilARH.r),mix(.45,1.,arh.r),mossCover);materialCover410=mossCover;return;`;
+  if(gateSoilSamples){
+   if(!height||!toonSoil||!skipUnusedLighting)throw Error('Sample gating requires full recipe');
+   const begin=patch.indexOf('  vec3 soilRaw='),end=patch.indexOf('  vec3 soilARH=');
+   const samples=patch.slice(begin,end);
+   patch=patch.slice(0,begin)+patch.slice(end);
+   const at=patch.indexOf('  qaSoilAlbedo=');
+   if(begin<0||end<0||at<0)throw Error('Sample gate anchors missing');
+   const gated=samples.replace('vec3 soilRaw=','soilRaw=').replace('vec3 soil=','soil=').replace('vec3 soilN=','soilN=');
+   patch=patch.slice(0,at)+'  vec3 soilRaw=vec3(0.),soil=vec3(0.),soilN=vec3(0.,0.,1.);if(mossCover<1.){'+gated+'}\n'+patch.slice(at);
+  }
   if(toonSoil)body=body.replace('void groundMaterial417(', 'vec3 qaSoilAlbedo=vec3(0.),qaSoilNormal=vec3(0.,1.,0.);float qaSoilRough=1.,qaSoilWeight=0.;void groundMaterial417(');
   body=body.replace('void groundMaterial417(', 'uniform sampler2D uLayerSandBase,uLayerSandNormal,uLayerSandARH;void groundMaterial417(');
   body=body.replace(anchor,patch.replaceAll('\n','\\n'));await route.fulfill({response,body});
