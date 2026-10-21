@@ -1424,3 +1424,7 @@ Same shallow-bank data now covers QA horizon water (+36864 bytes). Two 12-image 
 
 ## Canyon horizon receiveShadow isolation (2026-10-22)
 Twelve real captures: five of six pairs exact, remaining max channel delta 1/255. No improvement; do not integrate flag as seam fix. AfricanToon ground visibility bypasses receiveShadow (unlike objects). Coarse horizon normals/geometry remain next diagnostic; no performance claim. See canyon-horizon-shadow-receive-20261022.
+
+
+## Canyon horizon normal isolation (2026-10-22)
+Twelve fresh real captures: area-weighted coincident-vertex normals soften distant diagonal bright facets without changing positions or triangle counts. Sawtooth bank persists. Retain QA candidate; construction cost and resident-edge continuity unmeasured, no FPS claim. See canyon-horizon-normals-20261022.
