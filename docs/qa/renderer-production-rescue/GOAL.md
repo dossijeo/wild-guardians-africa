@@ -29,7 +29,8 @@ porque Three los usa para ordenar dibujos incluso con frustumCulled=false.
 - [x] M3: seis biomas, cuatro presets, día/noche, cámara/LOD, sombras, streaming y comandos.
 - [x] M4: CPU/GPU/cadencia/p95 separados, memoria y llamadas GL, normal/densa;
   conservar resultados negativos y protocolos inválidos identificados.
-- [ ] M5: checks finales y PR pequeña y merge autorizado solo tras validación.
+- [x] M5: checks locales y [PR #212](https://github.com/dossijeo/wild-guardians-africa/pull/212) preparada.
+  CI y merge autorizado pendientes; no mergear si falla el head final.
 
 ## Decisiones y criterios de cierre
 

@@ -170,3 +170,12 @@ diferencial. Siguiente paso de mayor valor fuera de esta tarea: reproducir en un
 GPU débil y otro proveedor antes de afirmar mejoras generalizadas de cadencia.
 No continuar microbenchmarks en este mismo equipo ni introducir excepciones de
 calidad basadas en él. La PR debe superar las comprobaciones antes del merge autorizado por el usuario.
+
+## Checks finales
+
+Build aprobado; sintaxis de176 scripts de navegador sin fallos. La suite completa
+local terminó en507,95s con4.584 aprobados,62 omitidos y un fallo: hash obsoleto de
+scene.js en el inventario SFX. Regenerar el inventario cambia únicamente ese hash,
+sin rutas ni archivos de audio. La repetición del catálogo y las regresiones del
+renderer pasan20/20. La suite completa de CI debe confirmar el head final antes
+del merge. [PR #212](https://github.com/dossijeo/wild-guardians-africa/pull/212).
