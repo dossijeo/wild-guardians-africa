@@ -933,7 +933,9 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
       nav.motionObserver?.({kind:'mobileCollisionRecovery',actorId:w.id,
         status:w.status,elapsed:s.elapsed,
         trigger:stationarySeconds>=3?'stationary':'destination-stall',
-        stationarySeconds,destinationStallSeconds});
+        stationarySeconds,destinationStallSeconds,
+        blockingIds:blockers.filter(body=>!actorSegmentClear(w,probe,w,[body]))
+          .map(body=>body.id)});
       emit(s,'ActorMobileCollisionRecovery',{actorId:w.id,
         x:w.x,z:w.z,elapsed:s.elapsed,duration:3});
     }

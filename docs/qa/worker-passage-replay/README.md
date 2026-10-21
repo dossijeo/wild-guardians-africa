@@ -82,3 +82,18 @@ Two small prototypes were rejected on the same 14-night campaign:
 | Check village arrival again after movement | 1,317 | 899 | 145 | 164 | 43 |
 
 Disabling return phasing left a queue outside the village when an incursion began; 99 of its work-period overlaps were subsequently between fleeing workers. The post-movement arrival check had no observable effect, including the same full state hash. Both edits were removed. These results narrow the physical bug: simply delaying or disabling phase does not resolve shared passages. The next candidate must create a traversable, deterministic yield or alternate route and still clear returning workers before the raid boundary. It must also preserve the existing economic throughput; none of these measurements justifies relaxing body collision.
+
+## Which bodies does recovery actually cross?
+
+The optional `nav.motionObserver` now reports `blockingIds` when a mobile recovery starts. This observer-only field does not enter game events or actor state. A fresh 14-night Sabana/Mapungubwe/712 native-intent run retained the baseline state SHA-256 `2224d0ea4889a693d5b396704b444b3dc383a44e02dd2db507d096c08741ec05`, 1,317 deliveries, 899 coins, 145 living crops and 43 overlap examples after time 30. Each example links to a recovery within 3.2 simulated seconds: **34 pairs overlap a body that originally blocked the recovered worker; 9 pairs overlap another body**. Of the 43 examples, 24 are returning/returning workers, 11 walking/walking, seven carrying/walking and one acting/carrying. The returning pairs are 14.5–43.0 m from the village entry, so a near-door arrival adjustment cannot resolve them. This resolves an ambiguity in the previous timing-only attribution. It does not prove that the original blocker was the only cause of the path stall.
+
+To regenerate and classify the report:
+
+```powershell
+$env:WG_WORKER_RECOVERY_DETAIL='1'
+$env:WG_WORKER_PROBE_OUTPUT='test-results/worker-phase-blocker-14.json'
+node tools/experiments/probe-worker-overlaps.mjs 14 712 good sabana mapungubwe wild-engine
+node tools/experiments/analyze-worker-phase-blockers.mjs test-results/worker-phase-blocker-14.json
+```
+
+The isolated [`targeted-phase-rejected.patch`](targeted-phase-rejected.patch) let a recovering worker ignore only the bodies in `blockingIds` while retaining static and third-party body clearance. It applies to the baseline commit (`git apply --check`) but is **not active in the game**. All 26 directed actor-motion tests passed. A 14-night run completed with 24 late overlap examples, all with original blocking bodies, and no third-party example. Yet it delivered only 1,260 crates and left 117 living crops, versus 1,317 and 145 in the baseline; money was 928 versus 899. Limiting phasing is therefore an incomplete physical fix with a material campaign regression, not an adoption candidate. A correct solution must coordinate passage around the original blocker rather than granting any temporary body penetration.
