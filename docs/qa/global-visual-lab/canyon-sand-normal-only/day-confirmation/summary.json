@@ -1,0 +1,65 @@
+{
+  "blocks": 4,
+  "gpuSamples": 960,
+  "cadenceFrames": 960,
+  "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "results": [
+    {
+      "phase": "day",
+      "variant": "original",
+      "gpuMs": [
+        6.620920595833334,
+        6.71901885
+      ],
+      "cpuRenderMs": [
+        3.4245833328614634,
+        3.5791666669150195
+      ],
+      "intervalMs": [
+        16.627499999975164,
+        16.628750000024834
+      ],
+      "intervalP95Ms": [
+        17,
+        17
+      ],
+      "groupCpuMs": [
+        0.6612499999503295,
+        0.7595833331346512
+      ],
+      "uploadsPerFrame": [
+        2.525,
+        2.525
+      ]
+    },
+    {
+      "phase": "day",
+      "variant": "candidate",
+      "gpuMs": [
+        6.589254733333333,
+        6.767295791666666
+      ],
+      "cpuRenderMs": [
+        3.282083333283663,
+        3.4991666662196317
+      ],
+      "intervalMs": [
+        16.627499999975164,
+        16.628333333383004
+      ],
+      "intervalP95Ms": [
+        17.19999998807907,
+        17.099999994039536
+      ],
+      "groupCpuMs": [
+        0.6129166660209496,
+        0.6920833335568507
+      ],
+      "uploadsPerFrame": [
+        2.525,
+        2.525
+      ]
+    }
+  ],
+  "note": "Two block means per variant/phase; not confidence intervals. CPU render excludes simulation; intervals are render entries, not presentation."
+}

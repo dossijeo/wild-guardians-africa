@@ -547,3 +547,7 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Cañón: aproximación cercana de arena normal-only
 
 [Cuatro vídeos y 144 parejas](canyon-sand-normal-only/motion-close/README.md), media/baja y día/noche: cámara, hora y geometría coincidentes, cero errores registrados. Pareja diurna inspeccionada conserva ondulaciones; secuencia disponible para revisión temporal completa. Recorrido inicial oculto por meseta descartado y sustituido por aproximación corta despejada. No mide FPS ni streaming largo. Coste diurno todavía inconcluso; mantener QA sin integrar.
+
+### Cañón: confirmación diurna de coste normal-only
+
+[ABAB con 180 frames de calentamiento](canyon-sand-normal-only/day-confirmation/README.md):960 muestras GPU y960 frames separados de cadencia, cámaras/geometría iguales. Grava6.62–6.72ms frente a arena6.59–6.77ms; sin sobrecoste relevante observado en este recorrido bajo. No prueba aceleración ni coste cercano con mayor ocupación de pantalla. Conservar candidata; pendientes revisión temporal completa y streaming prolongado antes de integrar.
