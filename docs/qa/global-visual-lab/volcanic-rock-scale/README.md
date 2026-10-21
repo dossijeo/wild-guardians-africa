@@ -9,3 +9,8 @@ Doce capturas de campaña real, media1280x720, semilla712, tres cámaras día/no
 La vista normal diurna muestra fracturas más amplias y separables alrededor de edificios. La inversa nocturna mantiene legibilidad pero sigue teniendo áreas muy oscuras. **Conservar como candidata artística**, no declarar acabado: el suelo liso de ceniza sigue dominando parte del poblado y no aparecen siluetas nuevas. No se combina con el tinte solar previo para poder evaluar la escala por separado. Pendientes costeGPU, oblicuidad en movimiento y evaluación de exageración del POM0,44.
 
 [Normal día](day-0-pair.webp), [inversa noche](night-2-pair.webp), [datos](captures.json), [diferencias](comparison.json). Reproducir node tools/experiments/capture-volcanic-rock-scale.mjs con Vite5190. La modificación del JSON de materiales vive solo en la página candidata interceptada; producción permanece intacta.
+
+
+## Benchmark en Intel UHD
+
+[ABBA](performance/README.md):960consultasGPU/1440frames, misma geometría. GPU diurna menor en candidata, controles variables; noche y cadencia mixtas. Conservar propuesta sin afirmar aceleración ni descartar por coste. POM en movimiento sigue pendiente.
