@@ -1049,3 +1049,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Manglares: recorrido de mezcla de escalas
 
 [48 parejas yvídeos](moss-scale-motion-20261021/README.md),misma cámara/geometría,sin errores. Contacto nocturno conserva regiones,relieve pierde lectura al elevarse. No certifica ausencia de shimmering;poses asentadas,no FPS. Mantener candidata QA ylimitaciones globales.
+
+
+### Manglares: diagnóstico del recurso yescala
+
+[Auditoría de mapas](moss-source-audit-20261021/README.md):tile8.70unidades/secundario15.26,ruta pureMoss sin POM,normal atenuada a distancia. FFT muestra anisotropía moderada,no prueba de filas fuertes globales. Próxima hipótesis:variación de fase espacial continua,con mapas coherentes;evitar más rotaciones aisladas.
