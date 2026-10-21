@@ -1416,3 +1416,7 @@ Twelve captures test two lateral-bank floats per existing water vertex, producin
 
 ## Canyon bank streaming audit (2026-10-22)
 192-unit out/back: 352 coincident boundary comparisons, zero attribute error; 81744 resident bytes for 10218 vertices restored on return. Night exact, day drift also in control. No GL errors, paired geometry/counters equal. Near/far water and GPU timing still pending. See canyon-water-stream-20261022.
+
+
+## Canyon horizon bank prototype (2026-10-22)
+Same shallow-bank data now covers QA horizon water (+36864 bytes). Two 12-image fixtures pass counters/errors. Long river view exposes pre-existing wall/shore LOD discontinuities; do not claim seamless horizon or integrate yet. See canyon-water-horizon-view-20261022. Next inspect horizon transition rather than masking it with colour.
