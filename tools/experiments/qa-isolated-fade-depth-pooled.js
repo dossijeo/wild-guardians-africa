@@ -5,7 +5,7 @@ export function installIsolatedFadeDepth(w){
  const acquire=()=>pool.pop()??(created++,new THREE.WebGLRenderTarget(size.x,size.y,{depthTexture:new THREE.DepthTexture(size.x,size.y,THREE.UnsignedIntType)}));
  const size=new THREE.Vector2();
  renderer.render=function(scene,camera){
-  if(scene!==w.scene||busy||w.qaIsolatedFadeDepth?.enabled===false)return original.call(this,scene,camera);
+  if(scene!==w.scene||busy||w.qaIsolatedFadeDepth?.enabled===false||(w.qaIsolatedFadeDepth?.skipSmokeDepth!==false&&renderer.getRenderTarget()===w.destructionPass?.smokeDepth))return original.call(this,scene,camera);
   const target=renderer.getRenderTarget(),auto=renderer.autoClear,shadow=renderer.shadowMap.enabled;
   renderer.getDrawingBufferSize(size);scene.updateMatrixWorld(true);busy=true;
   try{
@@ -37,5 +37,5 @@ export function installIsolatedFadeDepth(w){
  // Clear Three material program/uniform caches as well as restoring callbacks.
  // Otherwise reinstalling the same cache key can reuse a disposed depth sampler.
  const dispose=()=>{if(disposed)return;if(busy)throw Error('Cannot dispose during isolated depth render');if(renderer.render!==wrapper)throw Error('Another render wrapper must be removed first');renderer.render=original;for(const [fade,e] of [...entries]){fade.material.onBeforeCompile=e.compile;fade.material.customProgramCacheKey=e.key;fade.material.needsUpdate=true;e.release();fade.material.dispose();}trim();disposed=true;};
- return w.qaIsolatedFadeDepth={enabled:true,trim,dispose,audit:()=>({disposed,targets:[...entries.values()].filter(e=>e.rt).length+pool.length,assigned:[...entries.values()].filter(e=>e.rt).length,pooled:pool.length,created,depthDraws:draws,width:size.x,height:size.y})};
+ return w.qaIsolatedFadeDepth={enabled:true,skipSmokeDepth:true,trim,dispose,audit:()=>({disposed,targets:[...entries.values()].filter(e=>e.rt).length+pool.length,assigned:[...entries.values()].filter(e=>e.rt).length,pooled:pool.length,created,depthDraws:draws,width:size.x,height:size.y})};
 }

@@ -812,3 +812,7 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Humo nativo con profundidad aislada
 
 [Diagnóstico con BuildingEffects](obstruction-isolated-smoke-probe/README.md): partículas QA por shaders y pase de humo reales,583070 píxeles de señal con/sin aislado, cero completamente bloqueados. Color del árbol oculto para aislar profundidad; no certifica composición final ni todos los VFX. Pendiente evitar prepasadas redundantes al capturar profundidad auxiliar.
+
+### Prepasada aislada sin duplicación en smokeDepth
+
+[Composición con árbol visible](obstruction-isolated-smoke-composition/README.md): imágenes exactas con/sin humo al omitir el trabajo auxiliar dentro de captureDepth. Dos parciales:4→2 dibujos auxiliares con humo;2→2 sin humo. Sin equivalencia automática en FPS. Helper QA, pendiente integración y validación amplia.
