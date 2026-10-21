@@ -507,3 +507,7 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Cañón: separar depósitos arenosos de grava
 
 [Prueba de composición](canyon-sediment/README.md): 24 capturas, geometría idéntica. Cambio amplio de lectura frente a grava uniforme, pero arena procedural demasiado lisa y con patrón residual de piedras. No integrar receta; investigar material de arena coherente, no más microcontraste.
+
+### Cañón: mapas de arena recuperan ondulaciones
+
+[Depósitos Aerial Beach 01](canyon-sand-maps/README.md): 24 capturas, geometría idéntica. Candidata cercana con ondulaciones visibles, pero crestas demasiado destacadas en sombra. Dos mapas y dos lecturas extra; coste temporal, cámara normal y lifecycle pendientes. No integrar aún.
