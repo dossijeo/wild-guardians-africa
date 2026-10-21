@@ -35,3 +35,11 @@ extern "C" int wr_props(const PackedProp* props,int count,int slot,
  }
  return written;
 }
+
+// Reuse filtered Engine indices produced at registration; geometry supplies visual extents.
+extern "C" void wr_lod_props(const PackedProp* props,const uint32_t* indices,int count,double width,double depth,double centerY,double* output){
+ for(int i=0;i<count;i++){const auto& p=props[indices[i]];double* o=output+i*4;
+  o[0]=p.x;o[1]=double(p.y)+centerY*p.scale;o[2]=p.z;
+  o[3]=std::fmax(width*p.scale,depth*p.scale)*.25;
+ }
+}
