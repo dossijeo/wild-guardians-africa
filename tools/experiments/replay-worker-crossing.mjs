@@ -33,8 +33,15 @@ try{
   const ids=['worker-7072','worker-7088'];
   const actors=ids.map(id=>state.workers.find(worker=>worker.id===id));
   if(actors.some(actor=>!actor))throw Error('The frozen crossing workers are missing');
+  const noPhase=process.argv.includes('--no-phase');
+  if(noPhase)for(const actor of actors)actor.mobileRecoveryAttempts=2;
   const before=actors.map(({id,x,z,path})=>({id,x,z,next:path?.[0]??null}));
   const trace=[];
+  const requestedSteps=process.argv.find(arg=>arg.startsWith('--steps='));
+  const steps=requestedSteps?Number(requestedSteps.slice('--steps='.length)):10;
+  if(!Number.isSafeInteger(steps)||steps<1||steps>300)
+    throw Error('--steps must be an integer from 1 to 300');
+  const summaryOnly=process.argv.includes('--summary');
   const yieldCandidates=[];
   const inspectYield=()=>actors.map(actor=>{
     const other=actors.find(candidate=>candidate!==actor);
@@ -60,8 +67,8 @@ try{
     }
     return total;
   };
-  if(process.argv.includes('--trace-progress')){
-    for(let step=0;step<10;step++){
+  if(process.argv.includes('--trace-progress')||requestedSteps){
+    for(let step=0;step<steps;step++){
       const beforeElapsed=state.elapsed;
       const beforeYield=process.argv.includes('--yield-candidates')?inspectYield():null;
       tick(state,.1,nav);
@@ -78,12 +85,24 @@ try{
     }
   }else tick(state,1,nav);
   const [a,b]=actors,distance=Math.hypot(a.x-b.x,a.z-b.z);
+  const traceSummary=trace.length?{
+    steps:trace.length,
+    minimumDistance:Math.min(...trace.map(([left,right])=>
+      Math.hypot(left.x-right.x,left.z-right.z))),
+    minimumRouteRemaining:actors.map((_,index)=>Math.min(...trace.map(pair=>
+      pair[index].routeRemaining))),
+    finalRouteRemaining:trace.at(-1).map(actor=>actor.routeRemaining),
+    maximumWaypoints:actors.map((_,index)=>Math.max(...trace.map(pair=>
+      pair[index].waypoints)))
+  }:null;
   console.log(JSON.stringify({day:state.day,time:state.time,
-    mode:'saved paths retained for collision diagnosis',before,
+    mode:noPhase?'saved paths, mobile phase suppressed for both crossing workers':
+      'saved paths retained for collision diagnosis',before,
     after:actors.map(({id,x,z,path,mobilePhaseRemaining})=>({id,x,z,
       next:path?.[0]??null,mobilePhaseRemaining:mobilePhaseRemaining??0})),
     distance,penetration:Math.max(0,(a.radius??.28)+(b.radius??.28)-distance),
-    ...(trace.length?{trace}:{}),...(yieldCandidates.length?{yieldCandidates}:{}),
+    ...(trace.length?{traceSummary,...(summaryOnly?{}:{trace})}:{}),
+    ...(yieldCandidates.length?{yieldCandidates}:{}),
     recoveryEvents:state.events.filter(event=>
       event.type==='ActorMobileCollisionRecovery'&&ids.includes(event.actorId))
       .map(({actorId,x,z,elapsed,duration})=>({actorId,x,z,elapsed,duration}))},null,2));
