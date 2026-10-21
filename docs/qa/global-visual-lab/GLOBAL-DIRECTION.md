@@ -1094,3 +1094,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Manglares: desgaste identificado y borde suavizado
 
 [Diagnóstico espacial](mangrove-leaf-mask-audit-20261021/README.md):3076 exclusiones por desgaste,114 por margen y323 por agua sobre9216 posiciones;clasificador mantiene seis capturas exactas. [Candidata](mangrove-leaf-wear-edge-20261021/README.md) reduce tamaño por desgaste sin modificar exclusiones ni presupuesto geométrico. Mejora visible del borde día/noche;conservar QA. Pendientes movimiento,agua/ocupación,streaming yGPU.
+
+
+### Manglares: convergencia LOD de hojas
+
+[LOD QA](mangrove-leaf-lod-20261021/README.md) alinea centro, normales, pigmento y atenuación de viento. Seis parejas normales conservan cubierta; seis parejas de extremo forzado dan MAE RGBA máximo0.001214/255,no equivalencia exacta. +672 bytes de normales,sin triángulos adicionales. Movimiento,streaming yGPU pendientes.
