@@ -1179,3 +1179,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Revisión global V10
 
 [36 capturas](combined-campaign-review-v10/README.md):33 exactas frente V9,solo cambia Gran Río nocturno. Conservar combinación QA con mejora medida;priorizar coherencia suelo/cobertura de Manglares. No objetivo global alcanzado.
+
+
+### Manglares: crecimiento por cobertura sin efecto
+
+[Seis parejas exactas](mangrove-leaf-cover-growth-20261021/README.md) al adelantar tamaño completo .48→.28. No promover; cámara normal solo near1/far452. Priorizar diagnóstico de exclusiones en región del poblado, no más ajustes de tamaño sin evidencia.
