@@ -619,3 +619,7 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Manglares: escala uniforme fina insuficiente
 
 [Ensayo .115 frente a .32](mangrove-moss-fine-scale/README.md):24 capturas/12 parejas, media/baja, día/noche, cámara/geometría coincidentes. Reduce los abultamientos grandes pero conserva cobertura homogénea y pierde lectura nocturna. No promover ni hacer benchmark de esta candidata como solución completa. Siguiente hipótesis: distribución de materiales por condiciones del terreno, no otra intensidad universal de normal o escala.
+
+### Manglares: ruta contextual existente descartada como sustitución
+
+[24 capturas](mangrove-context/README.md) comparan pureMoss con la rama contextual existente, misma escala/mapas y amplitud parallax cero. Cámara/geometría coinciden. Brillo húmedo extenso y zonas oscuras homogéneas; no adoptar. La rama mezcla color base fuera del musgo, no otro material texturizado. Reutilizar máscaras requiere desacoplar cobertura y humedad, verificar sus datos reales y diseñar distribución entre materiales; no basta con desactivar pureMoss. Sin nuevo benchmark por fallo artístico.
