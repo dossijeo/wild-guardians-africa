@@ -30,3 +30,13 @@ ABBA Intel UHD, baja1280×720, cámara fija y misma población, cobertura C/vien
 Rangos de medias de dos bloques, no intervalos de confianza. Hay sobrecoste GPU diurno (+2,86/+0,50ms al emparejar A1/B1 y A2/B2); noche inconclusa. Cadencia candidata cercana a16,63ms, limitada por refresco; no implica coste cero. Se conserva la mejora artística con su coste explícito, no se descarta solo por rendimiento.
 
 [Benchmark](performance/benchmarks.json), [resumen](performance/summary.json). Reproducir con measure-river-yard-islands.mjs y audit-river-yard-islands.py. Capturas corregidas usando WG_YARD_OUT nuevo. Pendientes movimiento, streaming, varios asentamientos y comprobación de huellas animadas junto a accesos; sin promoción a producción.
+
+## Recorrido de streaming y cambio de origen
+
+36 capturas: dos variantes, día/noche y nueve posiciones por recorrido. Cámaras, objetivos mundiales, orígenes y chunks coinciden A/B. La geometría difiere intencionadamente. Sin errores GL/overflow; cada sesión libera sus tres texturas de tierra una vez al cerrar.
+
+Al volver a la posición inicial (índices0/4/8), la candidata recupera388.756 triángulos y8.627 módulos lejanos; el control372.748 y6.626. Contadores idénticos en ambos regresos, día/noche. MAE de retorno diurno0,00892/255 candidata y0,00800 control; noche candidata0,00000181 y control0. No se atribuye automáticamente el residuo a una causa ni se declara repetibilidad RGB exacta.
+
+Tras descargar y volver, los contadores de candidata se estabilizan en61geometrías/46texturas, mantenidos durante el recorrido nocturno. No es una medición de VRAM ni una prueba prolongada de ausencia de fugas. La vista diurna de regreso inspeccionada mantiene el camino descubierto y la continuidad de hierba en el entorno.
+
+[Capturas y estado](streaming/captures.json), [auditoría](streaming/summary.json), [regreso diurno](streaming/baja-combined-day-4.png). Reproducir con capture-river-yard-streaming.mjs y package-river-yard-streaming.py. La prueba espera a completar las cargas en cada parada; no equivale a un vídeo de movimiento continuo ni a un benchmark de latencia. Siguen pendientes varios poblados, cambios de ocupación y huellas de hojas durante viento fuerte.
