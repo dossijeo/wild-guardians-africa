@@ -686,3 +686,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Cañón: arena completa disponible como alternativa explícita
 
 [`canyonSand=full` con global-lighting](canyon-sand-full-integrated/README.md), solo Cañón. La opción1 conserva normal-only.11/12 parejas QA/integrada exactas; una difiere2píxeles. Build y9pruebas pasan. Fuente CC0 existente copiada sin cambio; caché separada por variante. Pendientes streaming integrado y coste cercano, sin main ni sustitución del perfil económico.
+
+
+### Cañón: recorrido de arena completa integrada
+
+[36capturas y cierre](canyon-sand-full-integrated/streaming/README.md):18parejas QA/integrada,13exactas y5con2–5píxeles de diferencia máxima1. Escenas/origen/geometría coincidentes; ambas texturas se liberan una vez. Regresos sin crecimiento acumulado observado, no prueba de fugas largas ni coste cercano. Mantener completa como alternativa del laboratorio.
