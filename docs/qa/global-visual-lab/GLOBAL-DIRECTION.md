@@ -786,3 +786,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 
 [Alejamiento comparado](canyon-bank-distance-motion-v2/README.md): 96 parejas y vídeos día/noche. Corte de tono del fondo del cañón ya presente en control; sedimento no lo origina. Priorizar aislamiento de material/iluminación del horizonte antes de integrar ribera. No validada continuidad global.
 
+
+### Preferencia explícita: transparencia suave antes que tramado
+
+[Fundido integrado en laboratorio](obstruction-smooth-frontside/README.md): parciales con alpha blending sin profundidad auxiliar; opacos siguen agrupados. FrontSide no elimina las capas delanteras de copas complejas: queda pendiente superficie más cercana aislada. No declarar retirado todo dithering de impostores/clipping.
+

@@ -113,3 +113,16 @@ test('shortened prop residency preserves logical instances and terrain group vis
  groups.enabled=false;groups.update(chunks,camera);assert.equal(batch.meshes[0].layers.mask,((1<<31)>>>0));assert.equal(chunks.get('other').userData.lodBatches[0].meshes[0].layers.mask,1);
  front.userData.farPropsVisible=true;groups.update(chunks,camera);assert.equal(batch.meshes[0].layers.mask,1);groups.dispose();
 });
+
+test('smooth obstruction splits only partial color, preserves shadows and releases transparent resources',()=>{
+ const {groups,chunks,camera}=fixture();groups.smoothObstruction=true;
+ const batch=chunks.get('front').userData.lodBatches[0],a=batch.meshes[0].geometry.attributes.nativeVisibility;
+ a.array[0]=.35;a.array[1]=0;a.needsUpdate=true;groups.update(chunks,camera);
+ const g=groups.colors.get('0:0'),fade=g.smoothFades[0];assert.equal(g.mesh.count,4);assert.equal(fade.visible,true);assert.equal(fade.material.transparent,true);assert.equal(fade.material.depthWrite,false);assert.equal(fade.material.side,THREE.FrontSide);assert.equal(groups.shadows.get('0').mesh.count,9);
+ const shader={...THREE.ShaderLib.standard,uniforms:{}};fade.material.onBeforeCompile(shader,{});
+ assert.ok(shader.fragmentShader.includes('diffuseColor.a*=clamp(vNativeVisibility,0.,1.)'));
+ assert.ok(!shader.fragmentShader.includes('coverageThreshold(gl_FragCoord.xy)>=vNativeVisibility'));
+ let disposed=0;fade.material.addEventListener('dispose',()=>disposed++);
+ a.array.fill(1);a.needsUpdate=true;groups.update(chunks,camera);assert.equal(fade.visible,false);assert.equal(groups.colors.get('0:0').mesh.count,6);
+ groups.dispose();assert.equal(disposed,1);assert.equal(fade.parent,null);
+});

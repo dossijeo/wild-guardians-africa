@@ -47,9 +47,9 @@ export class NativeAssetGroups{
   constructor(scene){
     this.scene=scene;this.root=new THREE.Group();this.root.name='native_merged_assets';scene.add(this.root);
     this.colors=new Map();this.shadows=new Map();this.shadowRoot=new THREE.Group();this.shadowChunks=new Map([['merged',this.shadowRoot]]);
-    this.enabled=true;this.omitZeroColor=false;this.reuseStaticOnResize=true;this.frustum=new THREE.Frustum();this.vp=new THREE.Matrix4();
+    this.smoothObstruction=new URLSearchParams(globalThis.location?.search??'').get('visualLab')==='global-lighting';this.enabled=true;this.omitZeroColor=false;this.reuseStaticOnResize=true;this.frustum=new THREE.Frustum();this.vp=new THREE.Matrix4();
   }
-  retire(cache,key,retainGeometry=false){const g=cache.get(key);g.mesh.removeFromParent();g.mesh.dispose();if(g.pass==='color'&&!retainGeometry)g.mesh.geometry.dispose();cache.delete(key);}
+  retire(cache,key,retainGeometry=false){const g=cache.get(key);for(const fade of g.smoothFades??[]){fade.removeFromParent();fade.geometry.dispose();fade.material.dispose();fade.dispose();}g.mesh.removeFromParent();g.mesh.dispose();if(g.pass==='color'&&!retainGeometry)g.mesh.geometry.dispose();cache.delete(key);}
   clear(){for(const cache of [this.colors,this.shadows])for(const key of [...cache.keys()])this.retire(cache,key);this.shadowRoot.userData.lodBatches=[];}
   prepare(cache,key,entries,pass,stats){
     const count=entries.reduce((n,e)=>n+e.mesh.count,0),capacity=powerCapacity(count),first=entries[0],source=pass==='shadow'?first.batch.levels.at(-1):first.batch.levels[first.level];
@@ -67,18 +67,37 @@ export class NativeAssetGroups{
       if(pass==='color')this.root.add(mesh);
       g={mesh,capacity,pass,stamp:null};cache.set(key,g);
     }
-    const stamp=(pass==='color'&&this.omitZeroColor?'compact|':'full|')+entries.map(e=>e.batch.uid+':'+e.level+':'+e.mesh.count+':'+e.mesh.instanceMatrix.version+':'+(pass==='color'?(e.mesh.geometry.attributes.nativeVisibility?.version??0):0)+':'+e.group.matrixWorld.elements.join(',')).join('|');
+    const stamp=(this.smoothObstruction?'smooth|':'dither|')+(pass==='color'&&this.omitZeroColor?'compact|':'full|')+entries.map(e=>e.batch.uid+':'+e.level+':'+e.mesh.count+':'+e.mesh.instanceMatrix.version+':'+(pass==='color'?(e.mesh.geometry.attributes.nativeVisibility?.version??0):0)+':'+e.group.matrixWorld.elements.join(',')).join('|');
     if(stamp!==g.stamp){
-      const matrix=new THREE.Matrix4();let offset=0;
+      const matrix=new THREE.Matrix4();let offset=0,smoothFadeCount=0;
       for(const e of entries)for(let i=0;i<e.mesh.count;i++){
         // Completely faded native trees have a faithful billboard replacement.
         // Keep partial coverage and every shadow caster; omit only zero color.
         if(pass==='color'&&this.omitZeroColor&&(e.mesh.geometry.attributes.nativeVisibility?.array[i]??1)<=0)continue;
-        matrix.fromArray(e.mesh.instanceMatrix.array,i*16).premultiply(e.group.matrixWorld);matrix.elements[12]-=this.origin.x;matrix.elements[14]-=this.origin.z;matrix.toArray(g.mesh.instanceMatrix.array,offset*16);
+        matrix.fromArray(e.mesh.instanceMatrix.array,i*16).premultiply(e.group.matrixWorld);matrix.elements[12]-=this.origin.x;matrix.elements[14]-=this.origin.z;
+        const smoothVisibility=e.mesh.geometry.attributes.nativeVisibility?.array[i]??1;
+        if(this.smoothObstruction&&pass==='color'&&smoothVisibility<.999){
+          if(smoothVisibility<.002)continue;
+          g.smoothFades??=[];let fade=g.smoothFades[smoothFadeCount];
+          if(!fade){
+            const base=source.material,material=base.clone(),compile=base.onBeforeCompile,cacheKey=base.customProgramCacheKey.bind(base);
+            material.side=THREE.FrontSide;material.transparent=true;material.depthWrite=false;material.alphaToCoverage=false;material.forceSinglePass=true;
+            material.onBeforeCompile=(shader,renderer)=>{compile.call(base,shader,renderer);
+              shader.fragmentShader=shader.fragmentShader.replace('if(vNativeVisibility<.999){if(vNativeVisibility<.002||coverageThreshold(gl_FragCoord.xy)>=vNativeVisibility)discard;}','if(vNativeVisibility<.002)discard;');
+              shader.fragmentShader=shader.fragmentShader.replace('#include <opaque_fragment>','diffuseColor.a*=clamp(vNativeVisibility,0.,1.);\n#include <opaque_fragment>');
+            };
+            material.customProgramCacheKey=()=>cacheKey()+'|native-partial-blend-v1';
+            fade=new THREE.InstancedMesh(geometryView(source.geometry,1),material,1);fade.name='native-obstruction-blend';fade.userData.materialRegistryExcluded=true;fade.receiveShadow=true;this.root.add(fade);g.smoothFades.push(fade);
+          }
+          matrix.toArray(fade.instanceMatrix.array);fade.instanceMatrix.needsUpdate=true;
+          fade.geometry.attributes.nativeVisibility.array[0]=smoothVisibility;fade.geometry.attributes.nativeVisibility.needsUpdate=true;
+          fade.boundingSphere=null;fade.boundingBox=null;fade.visible=true;smoothFadeCount++;continue;
+        }
+        matrix.toArray(g.mesh.instanceMatrix.array,offset*16);
         if(pass==='color')g.mesh.geometry.attributes.nativeVisibility.array[offset]=e.mesh.geometry.attributes.nativeVisibility?.array[i]??1;
         offset++;
       }
-      g.mesh.count=offset;g.mesh.instanceMatrix.needsUpdate=true;if(pass==='color')g.mesh.geometry.attributes.nativeVisibility.needsUpdate=true;
+      for(let i=smoothFadeCount;i<(g.smoothFades?.length??0);i++)g.smoothFades[i].visible=false;g.mesh.count=offset;g.mesh.instanceMatrix.needsUpdate=true;if(pass==='color')g.mesh.geometry.attributes.nativeVisibility.needsUpdate=true;
       g.mesh.boundingBox=null;g.mesh.boundingSphere=null;g.stamp=stamp;stats.uploads++;
     }
     stats.bytes+=capacity*(pass==='color'?68:64);
