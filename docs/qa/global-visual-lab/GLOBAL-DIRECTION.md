@@ -523,3 +523,7 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Cañón: elevada útil y liberación de arena verificadas
 
 [12 capturas elevadas](canyon-sand-maps/elevated/README.md): vista corregida muestra ambas orillas y ondulaciones; noche oscurece depósitos. world.dispose libera exactamente una vez cada uno de los dos clones. No equivale a prueba de fugas prolongada; coste nocturno y movimiento pendientes.
+
+### Cañón: crestas claras vinculadas a reflexión ambiental
+
+[Ablación normal/color](canyon-sand-ablation/README.md),18 capturas, y [reflexión](canyon-sand-reflection/README.md),12 capturas: normal plana elimina crestas pero borra volumen; color medio no elimina el patrón. Anular biomeSpec quita crestas blancas en sombra conservando relieve soleado, pero afecta otros materiales. No integrar anulación global; estudiar respuesta especular limitada a arena seca.

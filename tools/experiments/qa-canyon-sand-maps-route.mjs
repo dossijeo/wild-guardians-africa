@@ -1,4 +1,4 @@
-export async function installCanyonSandMapsRoute(page,enabled,{depositMask=false}={}){
+export async function installCanyonSandMapsRoute(page,enabled,{depositMask=false,flatNormal=false,flatColor=false}={}){
  await page.route('**/content/ground-materials.json*',async route=>{const response=await route.fetch(),tiles=await response.json();tiles.canyons.scale=.08;await route.fulfill({response,json:tiles});});
  if(!enabled)return;
  await page.route('**/src/rendering/biome-ground.js*',async route=>{
@@ -29,6 +29,8 @@ export async function installCanyonSandMapsRoute(page,enabled,{depositMask=false
   }`;
   if(!body.includes(anchor))throw Error('Sediment shader anchor missing');
   body=body.replace(anchor,anchor+code.replaceAll('\n','\\n'));
+  if(flatNormal)body=body.replace('textureGrad(uLayerSandNormal,suv,sdx,sdy).rgb*2.-1.','vec3(0.,0.,1.)');
+  if(flatColor)body=body.replace('textureGrad(uLayerSandBase,suv,sdx,sdy).rgb', 'vec3(0.56913064,0.52422576,0.47915630)');
   if(depositMask){const from='if(canyon)ctx=vec4(1.,.5,.65,0.);';if(!body.includes(from))throw Error('Context anchor missing');body=body.replace(from,'float qaDepositField=ctx.g;'+from);body=body.replace('materialNoise(vec3(wp.x*.10,0.,wp.z*.10))*.75+materialNoise(vec3(wp.x*.27,0.,wp.z*.27))*.25','qaDepositField');}
   await route.fulfill({response,body});
  });
