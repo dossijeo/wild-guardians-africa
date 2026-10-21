@@ -768,6 +768,12 @@ function retainRouteAfterWallChange(w,destination,nav){
 }
 export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignore=null,worker=true,motion=null,expandRoute=false,routeVia=null,externallyPlanned=false}={}) {
   const previous={x:w.x,z:w.z};
+  // Recovery is a three-second window of simulation time, even when an
+  // action, gate or route wait interrupts movement during that window.
+  if(Number.isFinite(w.mobilePhaseUntil)){
+    w.mobilePhaseRemaining=Math.max(0,w.mobilePhaseUntil-s.elapsed);
+    if(!w.mobilePhaseRemaining)delete w.mobilePhaseUntil;
+  }
   if(worker)w.running=false;
   if(w.exitRouteRecovery&&
     (w.exitRouteRecovery.destinationId!==destination.id||w.exitRouteRecovery.version!==nav.version))
@@ -926,7 +932,8 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
     if(staticClear&&(!worker||
       actorSegmentClear(destination,destination,w,blockers))&&
       !actorSegmentClear(w,probe,w,blockers)){
-      w.mobilePhaseRemaining=3;w.dynamicStallSeconds=0;
+      w.mobilePhaseRemaining=3;w.mobilePhaseUntil=s.elapsed+3;
+      w.dynamicStallSeconds=0;
       w.mobileRecoveryAttempts=(w.mobileRecoveryAttempts??0)+1;
       w.mobileProgressDistance=dist(w,destination);
       w.mobileProgressAt=s.elapsed;
@@ -949,7 +956,8 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
     const metres=worker?movePathWithGates(w,speed*dt,s.structures,clear):movePath(w,speed*dt,clear);w.motionPhase=(w.motionPhase??0)+metres/speed;
   }
   if(dist(previous,w)>1e-9)w.heading=Math.atan2(w.x-previous.x,w.z-previous.z);
-  if(phased)w.mobilePhaseRemaining=Math.max(0,w.mobilePhaseRemaining-dt);
+  if(phased)w.mobilePhaseRemaining=Math.max(0,
+    (w.mobilePhaseUntil??s.elapsed+w.mobilePhaseRemaining)-s.elapsed-dt);
   if(dist(previous,w)>1e-8||!w.path?.length)w.dynamicStallSeconds=0;
   else w.dynamicStallSeconds=Math.min(3,(w.dynamicStallSeconds??0)+dt);
   const remaining=dist(w,destination);

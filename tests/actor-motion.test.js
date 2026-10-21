@@ -216,6 +216,23 @@ test('mobile collision recovery stops after two attempts for the same destinatio
   assert.equal(animal.mobilePhaseRemaining??0,0);
   assert.equal(state.events.some(e=>e.type==='ActorMobileCollisionRecovery'),false);
 });
+test('worker recovery expires while an action interrupts movement',()=>{
+  const {state,worker,nav}=fixture();state.raid=null;state.elapsed=10;
+  const blocker={...worker,id:'other-worker',x:.7,z:0,status:'idle',path:null};
+  state.workers=[worker,blocker];
+  const destination={id:'task-approach',x:2,z:0};
+  Object.assign(worker,{x:0,z:0,status:'walking',path:[{x:2,z:0}],
+    destinationId:destination.id,pathVersion:nav.version,
+    mobileRecoveryDestinationId:destination.id,mobileRecoveryVersion:nav.version,
+    mobileRecoveryAttempts:2,mobileProgressDistance:2,mobileProgressAt:5,
+    mobilePhaseRemaining:2.5,mobilePhaseUntil:8});
+  const before={x:worker.x,z:worker.z};
+  walkTo(state,worker,destination,.1,nav);
+  assert.equal(worker.mobilePhaseRemaining,0);
+  assert.equal(worker.mobilePhaseUntil,undefined);
+  assert.ok(actorSegmentClear(before,worker,worker,[blocker]),
+    'a stale recovery cannot carry through the other worker');
+});
 test('Workers avoid a retreating beast in both movement directions and charge only travelled running metres',()=>{
   const {state,animal,worker,nav}=fixture('rhino');animal.x=0;worker.x=-4;
   const destination={id:'home',x:4,z:0};let arrived=false,total=0;
