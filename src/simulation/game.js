@@ -799,6 +799,9 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
   if(w.exitRouteRecovery&&!w.path&&abandonExhaustedExit())return true;
   if(w.mobileRecoveryDestinationId!==destination.id||
     w.mobileRecoveryVersion!==nav.version){
+    if(w.mobileYield)nav.motionObserver?.({kind:'workerYieldEnd',actorId:w.id,
+      blockerId:w.mobileYield.blockerId,elapsed:s.elapsed,
+      duration:s.elapsed-w.mobileYield.startedAt,reason:'destination-or-revision'});
     delete w.mobileYield;
     w.mobileRecoveryDestinationId=destination.id;
     w.mobileRecoveryVersion=nav.version;
@@ -905,10 +908,20 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
     const point={x:yielding.x,z:yielding.z};
     const blockers=actorBlockers(s,w,true,8);
     if(dist(w,point)<=1e-5){
+      if(yielding.pointReachedAt===undefined){
+        yielding.pointReachedAt=s.elapsed;
+        nav.motionObserver?.({kind:'workerYieldPointReached',actorId:w.id,
+          blockerId:yielding.blockerId,elapsed:s.elapsed,
+          travelSeconds:s.elapsed-yielding.startedAt});
+      }
       const next=w.path?.[0],length=next?dist(w,next):0,
         probe=length>1e-8?{x:w.x+(next.x-w.x)*Math.min(.5,length)/length,
           z:w.z+(next.z-w.z)*Math.min(.5,length)/length}:null;
       if(!probe||actorSegmentClear(w,probe,w,blockers)){
+        nav.motionObserver?.({kind:'workerYieldEnd',actorId:w.id,
+          blockerId:yielding.blockerId,elapsed:s.elapsed,
+          duration:s.elapsed-yielding.startedAt,
+          waitSeconds:s.elapsed-yielding.pointReachedAt,reason:'rejoined'});
         delete w.mobileYield;w.mobileProgressAt=s.elapsed;
         w.mobileProgressDistance=dist(w,destination);
         return false;
