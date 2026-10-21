@@ -1,0 +1,7 @@
+# Canyon two-scale normal trial
+
+Retained the existing 30-unit normal/albedo scale and added the same normal texture at 12 units, rotated independently, with .3 slope weight. Both coordinates account for world origin and use explicit derivatives. Geometry, masks, palette and normalFade remain unchanged. One additional textureGrad per canyon material fragment; no new texture allocation or draw.
+
+Reproduce: WG_REVIEW_BIOMES=gran-canon; node tools/experiments/capture-canyon-sand-layered-20261022.mjs; python tools/experiments/package-canyon-sand-layered-20261022.py. Vite 5190, seed 712, media 1280x720, three poses/day/night. Twelve real captures, six pairs with matching camera/target/time/draws/triangles; no console/network/GL errors. No timer benchmark or FPS claim.
+
+Decision: retain as documented QA trial, do not integrate. It preserves the broad relief better than the fine-only experiment but the added detail is marginal at normal gameplay distance. This is insufficient artistic benefit, not rejection of an attractive result solely for performance. The major gap against the reference is the uniform straight shoreline and sparse shore structure; repeated normal-scale refinement does not address it. Next step should investigate material-only shore transition using the existing water/terrain masks, preserving authoritative geometry and navigation. Default and experimental runtime materials remain unchanged. Desert approval is unaffected.

@@ -1400,3 +1400,7 @@ Rejected soil gestures now provide localized feedback, cleared by successful pla
 
 ## Canyon sand scale trial (2026-10-22)
 Twelve real captures compare 30 versus 12 world-unit sand period, all paired counters/cameras equal. Finer scale weakens relief at game distance; do not promote alone. Artistic rejection, no performance claim. See canyon-sand-scale-20261022. Next direction: retain mesoscopic structure with fine detail and more natural material shore transition, without authoritative geometry changes.
+
+
+## Canyon two-scale normal trial (2026-10-22)
+Twelve paired captures retain broad sand normals plus rotated fine detail. Improvement too subtle at gameplay distance; no integration, no performance rejection. Adds one textureGrad. See canyon-sand-layered-20261022. Stop normal-scale refinement and investigate the visibly uniform shore transition using existing presentation masks.
