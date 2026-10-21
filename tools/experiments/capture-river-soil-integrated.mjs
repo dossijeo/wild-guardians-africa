@@ -4,9 +4,9 @@ import {chromium} from 'playwright';
 import {mkdir,writeFile,readFile} from 'node:fs/promises';
 
 
-const out='docs/qa/global-visual-lab/river-soil-integrated';await mkdir(out,{recursive:true});const records=[];const phases=['day','night'];
+const out=process.env.WG_RIVER_OUT??'docs/qa/global-visual-lab/river-soil-integrated';await mkdir(out,{recursive:true});const records=[];const phases=['day','night'];
 const browser=await chromium.launch({channel:'chrome',headless:true});
-try{for(const quality of ['baja','media'])for(const biome of ['gran-rio'])for(const variant of ['base','combined']){
+try{for(const quality of (process.env.WG_RIVER_QUALITY??'baja,media').split(','))for(const biome of ['gran-rio'])for(const variant of ['base','combined']){
  const page=await browser.newPage({viewport:{width:1280,height:720},deviceScaleFactor:1});const errors=[];
  page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error'||/GL_INVALID|CONTEXT_LOST|error X/.test(m.text()))errors.push(m.text())});page.on('response',r=>{if(r.status()>=400)errors.push(`${r.status()} ${r.url()}`)});
  // In-memory QA observation hook only. The repository and production app are unchanged.
@@ -23,7 +23,7 @@ try{for(const quality of ['baja','media'])for(const biome of ['gran-rio'])for(co
  await frame.waitForLoadState('load');await frame.waitForFunction(()=>document.body.innerText.toUpperCase().includes('JUEGO NUEVO'));
  await frame.evaluate(biome=>parent.postMessage({type:'wild-guardians:menu',action:'start',biome,culture:'mapungubwe'},location.origin),biome);
  await page.waitForFunction(()=>document.querySelector('#stage[aria-busy="false"]')&&window.qaCampaignWorld?.state,null,{timeout:180000});
- await page.evaluate(async()=>{const w=window.qaCampaignWorld;const {pause}=await import('/src/simulation/game.js');pause(w.state,'menu');w.updateCamera=()=>{w.camera.lookAt(w.controls.target);w.camera.updateMatrixWorld()};});
+ await page.evaluate(async()=>{const w=window.qaCampaignWorld;const {pause}=await import('/src/simulation/game.js');pause(w.state,'menu');w.state.elapsed=2;w.simElapsed=2;w.updateCamera=()=>{w.camera.lookAt(w.controls.target);w.camera.updateMatrixWorld()};});
 
  await page.evaluate(()=>{const w=window.qaCampaignWorld,update=w.materialRegistry.update.bind(w.materialRegistry);w.materialRegistry.update=()=>update(0)});
 

@@ -1,10 +1,10 @@
 from pathlib import Path
-import json
+import json,os
 import numpy as np
 from PIL import Image
-p=Path('docs/qa/global-visual-lab/river-soil-integrated');d=json.loads((p/'captures.json').read_text(encoding='utf-8'));rs=d['records'];assert len(rs)==8
+p=Path(os.environ.get('WG_RIVER_OUT','docs/qa/global-visual-lab/river-soil-integrated'));d=json.loads((p/'captures.json').read_text(encoding='utf-8'));rs=d['records'];qualities=os.environ.get('WG_RIVER_QUALITY','baja,media').split(',');assert len(rs)==4*len(qualities)
 results=[]
-for quality in ['media','baja']:
+for quality in qualities:
  for biome in ['gran-rio']:
   for phase in ['day','night']:
    a,b=[next(r for r in rs if r['quality']==quality and r['biome']==biome and r['phase']==phase and r['variant']==v) for v in ['base','combined']]
@@ -22,4 +22,4 @@ for quality in ['media','baja']:
     results.append(dict(quality=quality,biome=biome,phase=phase,view=view,calls=x['calls'],triangles=x['triangles'],mae=float(diff.mean()),changedPixels=int(np.any(diff,axis=2).sum())))
     if i==0:
      pair=Image.new('RGB',(2560,720));pair.paste(ims[0],(0,0));pair.paste(ims[1],(1280,0));pair.resize((1920,540)).save(p/f'{biome}-{quality}-{phase}-pair.webp',quality=94)
-(p/'comparison.json').write_text(json.dumps(dict(note='QA V2 soil versus integrated V2 soil, equal submitted geometry; static parity, no timing claim.',pairs=results),indent=2)+'\n',encoding='utf-8',newline='\n');print('12 matched pairs, 24 verified lossless captures')
+(p/'comparison.json').write_text(json.dumps(dict(note='QA V2 soil versus integrated V2 soil, equal submitted geometry; static parity, no timing claim.',pairs=results),indent=2)+'\n',encoding='utf-8',newline='\n');print(f'{len(results)} matched pairs, {len(results)*2} verified lossless captures')

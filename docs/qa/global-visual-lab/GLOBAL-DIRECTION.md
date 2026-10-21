@@ -731,3 +731,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Gran Río: streaming de tierra integrada
 
 [72capturas/36parejas](river-soil-integrated/streaming/README.md):24exactas, resto máximo10píxeles/delta1; geometría/cobertura/origen coincidentes. Tres texturas liberadas una vez al cierre en cada sesión. Regresos nocturnos casi exactos; residuos diurnos similares en QA/integrada. Coste integrado y transición artística del poblado pendientes.
+
+
+### Gran Río: integración en perfil mínimo
+
+[Doce capturas en muy_baja](river-soil-integrated/minimum/README.md): cuatro de seis parejas QA/integración exactas, residuos inversos de 154/29 píxeles. Geometría y cobertura coinciden. La explanada regular sigue siendo un límite artístico y los tiempos GPU/CPU del perfil mínimo siguen pendientes; no se declara calidad global alcanzada.
