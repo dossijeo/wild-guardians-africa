@@ -187,6 +187,7 @@ for(const species of Object.keys(ANIMAL_ACTIONS.animals))test(`${species}: exhau
 });
 test('An occupied narrow passage phases mobile collisions after a bounded wait, retaining static clearance',()=>{
   const {state,animal,worker,nav}=fixture();nav.field.slope=(_x,z)=>Math.abs(z)>1.2?1:0;
+  const motion=[];nav.motionObserver=event=>motion.push(event);
   const destination={id:'exit',x:4,z:0};let arrived=false;
   for(let i=0;i<100&&!arrived;i++){
     const before={x:animal.x,z:animal.z};
@@ -196,6 +197,11 @@ test('An occupied narrow passage phases mobile collisions after a bounded wait, 
   }
   assert.ok(arrived);
   assert.ok(state.events.some(e=>e.type==='ActorMobileCollisionRecovery'));
+  assert.equal(motion.length,1);
+  assert.equal(motion[0].kind,'mobileCollisionRecovery');
+  assert.equal(motion[0].actorId,animal.id);
+  assert.ok(['stationary','destination-stall'].includes(motion[0].trigger));
+  assert.ok(motion[0].stationarySeconds>=3||motion[0].destinationStallSeconds>=12);
   assert.equal(animal.destinationId,'exit');assert.equal(worker.hits,0);
 });
 test('mobile collision recovery stops after two attempts for the same destination',()=>{
