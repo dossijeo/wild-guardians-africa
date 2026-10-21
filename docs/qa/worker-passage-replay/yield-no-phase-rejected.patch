@@ -1,0 +1,150 @@
+diff --git a/src/simulation/actor-motion.js b/src/simulation/actor-motion.js
+index 7f818ae8f..eed6c7a6c 100644
+--- a/src/simulation/actor-motion.js
++++ b/src/simulation/actor-motion.js
+@@ -120,6 +120,32 @@ export function actorSegmentClear(start,end,actor,blockers){
+     return edgeDistance(start,end,other.x,other.z)>=required-1e-8;
+   });
+ }
++// A proposed shoulder for a moving worker. This is only a geometric proposal:
++// the caller must keep checking live bodies while travelling and before rejoining.
++export function workerYieldPoint(state,actor,opposing,nav,blockers=actorBlockers(state,actor,true,8)){
++  if(!actor.path?.length||!opposing?.path?.length)return null;
++  const angle=Math.atan2(actor.x-opposing.x,actor.z-opposing.z),
++    required=radius(actor)+radius(opposing),next=actor.path[0];
++  for(const reach of [.5,1,1.5,2,3,4]){
++    let best=null,bestScore=Infinity;
++    for(const offset of [0,Math.PI/8,-Math.PI/8,Math.PI/4,-Math.PI/4,
++      Math.PI/2,-Math.PI/2,3*Math.PI/4,-3*Math.PI/4]){
++      const point={x:actor.x+Math.sin(angle+offset)*reach,
++        z:actor.z+Math.cos(angle+offset)*reach};
++      if(distance(point,opposing)<required+.2||
++        !actorSegmentClear(actor,point,actor,blockers)||
++        !nav.workerMotionClear?.(actor,point,radius(actor)))continue;
++      const future=opposing.path[0],span=distance(opposing,future),
++        end=span>1?{x:opposing.x+(future.x-opposing.x)/span,
++          z:opposing.z+(future.z-opposing.z)/span}:future;
++      if(!actorSegmentClear(opposing,end,opposing,[{...point,radius:radius(actor)+.1}]))continue;
++      const score=distance(point,next);
++      if(score<bestScore){best=point;bestScore=score;}
++    }
++    if(best)return best;
++  }
++  return null;
++}
+ export function prepareActorMotion(state,actor,nav,worker,workerIndex=null){
+   // A worker step only needs the local approach. Animal detours retain their
+   // full native search corridor dependencies, including remote bodies that
+diff --git a/src/simulation/game.js b/src/simulation/game.js
+index 0aebfaf8e..67441cd06 100644
+--- a/src/simulation/game.js
++++ b/src/simulation/game.js
+@@ -13,7 +13,7 @@ import {gatePortalPoints} from '../world/gate-passages.js';
+ import {wallCollisionBounds} from '../world/wall-collision-frame.js';
+ import {containsPoint,footprintDistance} from '../world/footprints.js';
+ import {centerCulture,centerFootprint,centerServicePoint,centerDeliveryPoint} from '../world/centers.js';
+-import {actorBlockers,actorSegmentClear,prepareActorMotion,createWorkerBodyIndex} from './actor-motion.js';
++import {actorBlockers,actorSegmentClear,prepareActorMotion,createWorkerBodyIndex,workerYieldPoint} from './actor-motion.js';
+ import {animalRouteClearance} from './animal-route-clearance.js';
+ import {animalSlopeRecoveryPath} from './animal-slope-recovery.js';
+ import {BALANCE as B} from './balance.js';
+@@ -797,8 +797,11 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
+       exitId:destination.id,reason});
+   };
+   if(w.exitRouteRecovery&&!w.path&&abandonExhaustedExit())return true;
++  // Experimental: a worker must never inherit an old body-phasing window.
++  if(worker&&w.mobilePhaseRemaining>0)w.mobilePhaseRemaining=0;
+   if(w.mobileRecoveryDestinationId!==destination.id||
+     w.mobileRecoveryVersion!==nav.version){
++    delete w.mobileYield;
+     w.mobileRecoveryDestinationId=destination.id;
+     w.mobileRecoveryVersion=nav.version;
+     w.mobileRecoveryAttempts=0;
+@@ -898,6 +901,38 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
+       if(w.path?.length&&dist(w,w.path[0])<=1e-7)w.path.shift();}
+     return w.path?.length===0;
+   }
++  const stepMobileYield=()=>{
++    const yielding=w.mobileYield;
++    if(!worker||!yielding)return false;
++    const point={x:yielding.x,z:yielding.z};
++    const blockers=actorBlockers(s,w,true,8);
++    if(dist(w,point)<=1e-5){
++      const next=w.path?.[0],length=next?dist(w,next):0,
++        probe=length>1e-8?{x:w.x+(next.x-w.x)*Math.min(.5,length)/length,
++          z:w.z+(next.z-w.z)*Math.min(.5,length)/length}:null;
++      if(!probe||actorSegmentClear(w,probe,w,blockers)){
++        delete w.mobileYield;w.mobileProgressAt=s.elapsed;
++        w.mobileProgressDistance=dist(w,destination);
++        return false;
++      }
++      return true;
++    }
++    const path=w.path;
++    w.path=[point];
++    const clear=(a,b)=>nav.workerMotionClear?.(a,b,w.radius??.28)&&
++      actorSegmentClear(a,b,w,blockers);
++    if(motion)moveWorker(w,dt,{...motion,gates:s.structures,clear});
++    else{
++      const metres=movePathWithGates(w,speed*dt,s.structures,clear);
++      w.motionPhase=(w.motionPhase??0)+metres/speed;
++    }
++    w.path=path;
++    if(dist(previous,w)>1e-8){w.heading=Math.atan2(w.x-previous.x,w.z-previous.z);
++      w.dynamicStallSeconds=0;}
++    else w.dynamicStallSeconds=Math.min(3,(w.dynamicStallSeconds??0)+dt);
++    return true;
++  };
++  if(stepMobileYield())return false;
+   // The ordinary local avoidance remains first. Only after stationary time
+   // or prolonged movement without destination progress, and only when a short
+   // static step is valid but occupied by another moving body, temporarily
+@@ -916,7 +951,7 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
+   const stationarySeconds=w.dynamicStallSeconds??0,
+     destinationStallSeconds=s.elapsed-w.mobileProgressAt;
+   if((stationarySeconds>=3||destinationStallSeconds>=12)&&
+-    (w.mobileRecoveryAttempts??0)<2&&probe){
++    (worker||(w.mobileRecoveryAttempts??0)<2)&&probe){
+     const blockers=actorBlockers(s,w,worker);
+     const staticClear=worker?nav.workerMotionClear?.(w,probe,w.radius??.28):
+       nav.segmentClear?.(w,probe,w.radius??.28,ignore,false);
+@@ -926,16 +961,36 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
+     if(staticClear&&(!worker||
+       actorSegmentClear(destination,destination,w,blockers))&&
+       !actorSegmentClear(w,probe,w,blockers)){
+-      w.mobilePhaseRemaining=3;w.dynamicStallSeconds=0;
+-      w.mobileRecoveryAttempts=(w.mobileRecoveryAttempts??0)+1;
++      const yieldingBlocker=worker&&nav.motionProbeYield?blockers.find(body=>
++        s.workers.includes(body)&&!actorSegmentClear(w,probe,w,[body])):null;
++      const blocker=yieldingBlocker??(worker?blockers.find(body=>
++        s.workers.includes(body)&&!actorSegmentClear(w,probe,w,[body])):null);
++      const yieldPoint=blocker?workerYieldPoint(s,w,blocker,nav,blockers):null;
++      w.dynamicStallSeconds=0;
+       w.mobileProgressDistance=dist(w,destination);
+       w.mobileProgressAt=s.elapsed;
++      if(yieldPoint){
++        w.mobileRecoveryAttempts=(w.mobileRecoveryAttempts??0)+1;
++        w.mobileYield={destinationId:destination.id,version:nav.version,
++          blockerId:blocker.id,x:yieldPoint.x,z:yieldPoint.z,startedAt:s.elapsed};
++        nav.motionObserver?.({kind:'workerYieldStart',actorId:w.id,
++          blockerId:blocker.id,elapsed:s.elapsed,point:yieldPoint});
++        if(stepMobileYield())return false;
++      }
++      if(worker){
++        nav.motionObserver?.({kind:'workerYieldUnavailable',actorId:w.id,
++          blockerId:blocker?.id??null,elapsed:s.elapsed});
++      }else{
++      w.mobileRecoveryAttempts=(w.mobileRecoveryAttempts??0)+1;
++      w.mobilePhaseRemaining=3;
+       nav.motionObserver?.({kind:'mobileCollisionRecovery',actorId:w.id,
+         status:w.status,elapsed:s.elapsed,
+         trigger:stationarySeconds>=3?'stationary':'destination-stall',
+-        stationarySeconds,destinationStallSeconds});
++        stationarySeconds,destinationStallSeconds,
++        ...(nav.motionProbeYield?{yieldPoint,blockerId:yieldingBlocker?.id??null}:{})});
+       emit(s,'ActorMobileCollisionRecovery',{actorId:w.id,
+         x:w.x,z:w.z,elapsed:s.elapsed,duration:3});
++      }
+     }
+   }
+   const phased=(w.mobilePhaseRemaining??0)>0;
