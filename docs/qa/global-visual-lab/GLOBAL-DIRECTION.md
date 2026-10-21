@@ -820,3 +820,7 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Gran Cañón: corte ligado a contribución de sombra
 
 [Dos diagnósticos](canyon-shadow-isolation/README.md): receiveShadow del horizonte no cambia píxeles; neutralizar groundVisibility elimina corte y sombras útiles. No integrar ese diagnóstico. Revisar cobertura/proyección/transición de shadow map y relleno cálido dependiente de sombra antes de recolorear materiales. La atribución previa a material cercano/lejano no estaba demostrada.
+
+### Gran Cañón: recuperar emisores de sombra lejanos
+
+[Candidata horizon.castShadow](canyon-horizon-caster/README.md): recupera continuidad sombreada del valle en vistas36/47 conservando volumen. Ampliar fade del borde no arregló el corte. Mantener candidata; medir trabajo real de actualización de sombras antes de integrar. Contadores de captura solo color, no coste total.
