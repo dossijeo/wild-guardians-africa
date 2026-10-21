@@ -696,3 +696,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Gran Río: perturbación del material insuficiente visualmente
 
 [24capturas de franja de tierra](river-soil-material-fringe/README.md): misma geometría y máscara nativa, variación solo del peso de mezcla. Diferencia demasiado sutil en normal diurna/nocturna revisadas; no promover microajuste, sin benchmark. TierraV2 conservada. Requiere composición a escala mayor, no acumular pequeños umbrales.
+
+
+### Buffers residentes: primer prototipo por chunk
+
+[Prueba QA en Sabana](persistent-asset-groups/README.md): misma cobertura y triángulos, pero CPU/cadencia empeoran en cuatro parejas ABBA. La partición por chunk aumenta llamadas y vistas de geometría, y mantiene subidas por LOD/visibilidad. No integrar este diseño; conservar el objetivo de matrices residentes separando selección y transiciones. Ninguna variante artística se reduce o descarta por este resultado técnico. [Comparación previa de contenido](instance-cull-upload-gate/README.md) evita muchas subidas pero sigue pagando recorrido CPU; tampoco prueba mejora estable de cadencia.
