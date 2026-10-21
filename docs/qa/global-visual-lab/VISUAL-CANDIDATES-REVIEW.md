@@ -29,3 +29,8 @@ La revisión inicial no demuestra que todos los descartes históricos hayan sido
 ### Cañón: coste incremental medido y vistas generales revisadas
 
 [Comparación directa](canyon-sand-full-review/performance/README.md): noche+.156/+.311ms GPU para receta completa; día−1.295/+.800ms, inconcluso.1920muestras válidas, escenas iguales. Reinspeccionadas normal diurna/elevada nocturna ya existentes: ondulaciones similares, variación fina adicional en completa. Conservar completa como candidata viable, pendiente coste cercano e integración; no descartarla por el benchmark histórico contra grava.
+
+
+### Cañón: candidata completa disponible y coste cercano verificado
+
+[Opciones integradas en primer plano](canyon-sand-full-integrated/close-performance/README.md):1920muestras GPU, diferencias−.226 a+.335ms, sin sobrecoste consistente en esta serie. Conservación visual e integración/streaming documentadas. Recomendada como referencia de calidad para próximas revisiones globales, con económica como alternativa; no aprobación universal de rendimiento ni main.
