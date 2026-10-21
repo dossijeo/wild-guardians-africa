@@ -6,6 +6,7 @@ from PIL import Image, ImageChops
 p = Path(sys.argv[1])
 records = json.loads((p / 'benchmarks.json').read_text(encoding='utf-8'))['records']
 assert len(records) == 12
+assert not any(r.get('diagnosticLodProfile') or r.get('diagnosticDrawTrace') for r in records), 'Diagnostic instrumentation is not a performance comparison'
 rows, differences, images = [], [], []
 for phase in ['day', 'night']:
     rr = [r for r in records if r['phase'] == phase]

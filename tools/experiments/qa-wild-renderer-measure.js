@@ -16,7 +16,7 @@ export async function measureCampaign(world,{gpuEnabled=false,samples=180,warmup
     const start=performance.now();
     try{return original.apply(this,world.qaDenseFixture?[1/30]:args);}catch(error){clearTimeout(timeout);reject(error);throw error;}finally{
      const cpuMs=performance.now()-start;if(recording)gpu?.end();
-     if(recording)frames.push({drawTrace:world.qaDrawTrace?.enabled?world.qaDrawTrace.rows:undefined,packMs:world.assetGroups.qaPackMs,wasm:world.assetGroups.qaWildRenderer?{...world.assetGroups.qaWildRenderer.metrics,liveBytes:world.assetGroups.qaWildRenderer.liveBytes}:null,groupCpuMs,uploads:world.assetGroups.stats.uploads,groupBytes:world.assetGroups.stats.bytes,frame:index-warmup,cpuMs,intervalMs:interval,calls:renderer.info.render.calls,triangles:renderer.info.render.triangles,camera:world.camera.position.toArray()});
+     if(recording)frames.push({lodProfile:globalThis.qaLodProfile?{...globalThis.qaLodProfile}:undefined,drawTrace:world.qaDrawTrace?.enabled?world.qaDrawTrace.rows:undefined,packMs:world.assetGroups.qaPackMs,wasm:world.assetGroups.qaWildRenderer?{...world.assetGroups.qaWildRenderer.metrics,liveBytes:world.assetGroups.qaWildRenderer.liveBytes}:null,groupCpuMs,uploads:world.assetGroups.stats.uploads,groupBytes:world.assetGroups.stats.bytes,frame:index-warmup,cpuMs,intervalMs:interval,calls:renderer.info.render.calls,triangles:renderer.info.render.triangles,camera:world.camera.position.toArray()});
      renderer.info.autoReset=auto;
      if(++index===warmup+samples){world.render=original;clearTimeout(timeout);resolve();}
     }
