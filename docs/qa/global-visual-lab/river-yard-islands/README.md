@@ -40,3 +40,12 @@ Al volver a la posición inicial (índices0/4/8), la candidata recupera388.756 t
 Tras descargar y volver, los contadores de candidata se estabilizan en61geometrías/46texturas, mantenidos durante el recorrido nocturno. No es una medición de VRAM ni una prueba prolongada de ausencia de fugas. La vista diurna de regreso inspeccionada mantiene el camino descubierto y la continuidad de hierba en el entorno.
 
 [Capturas y estado](streaming/captures.json), [auditoría](streaming/summary.json), [regreso diurno](streaming/baja-combined-day-4.png). Reproducir con capture-river-yard-streaming.mjs y package-river-yard-streaming.py. La prueba espera a completar las cargas en cada parada; no equivale a un vídeo de movimiento continuo ni a un benchmark de latencia. Siguen pendientes varios poblados, cambios de ocupación y huellas de hojas durante viento fuerte.
+
+
+## Máscara compatible con varios poblados
+
+El piloto procesa todos los descriptores del snapshot, combinando el desgaste de accesos por máximo y la influencia de los claros por unión. Así un claro vecino no elimina el camino de otro poblado. No modifica Engine ni navegación. Tres pruebas pasan, incluida independencia del orden de dos poblados solapados y conservación de sus accesos.
+
+La regresión real conserva la escena de un poblado: las seis capturas de la candidata coinciden exactamente con native-path, día/noche y tres cámaras. Cuatro capturas de control también coinciden; las dos inversas presentan 128/95 píxeles diferentes, delta máximo 122/96. No se atribuyen esos residuos sin aislar su causa. La lámina diurna normal inspeccionada conserva caminos descubiertos y cobertura alrededor de edificios.
+
+[Comparativa diurna](multi-support-regression/day-game-pair.webp), [capturas](multi-support-regression/captures.json), [diferencias contra el pase anterior](multi-support-regression/regression.json). Esta prueba no es un benchmark nuevo ni valida varios poblados reales: la cobertura de ese caso es todavía unitaria. Siguen pendientes actualización por eventos de ocupación y comprobación de hojas animadas en accesos. Mantener candidata QA; no promover aún ni declarar alcanzada la calidad global.

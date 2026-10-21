@@ -22,3 +22,18 @@ test('path noise matches native cubic reference including negative coordinates',
   assert.equal(nativePathNoise(x,z,seed),expected);
  }
 });
+
+test('multiple settlement paths are preserved regardless of snapshot order',()=>{
+ const source=new Uint8Array(35*35*4).fill(220),field={seed:712,c:{biome:'grand_river'}},sites=[{x:0,z:0,hx:20,hz:15},{x:30,z:12,hx:20,hz:15}];
+ const old=globalThis.qaCampaignWorld;
+ try{
+  globalThis.qaCampaignWorld={spatialSession:{horizonSource:{snapshot:()=>({settlements:sites})}}};
+  const a=riverYardIslands(source,{minX:0,minZ:0},field);sites.reverse();
+  const b=riverYardIslands(source,{minX:0,minZ:0},field);assert.deepEqual(a,b);
+  // Centers and nearby approach samples of both settlements remain worn.
+  for(const [x,z] of [[0,0],[0,6],[30,12],[30,18],[24,12]]){
+   const ix=x/1.5+1,iz=z/1.5+1;assert.ok(a[(iz*35+ix)*4+3]>=Math.round(.74*255));
+  }
+  assert.deepEqual(source,new Uint8Array(source.length).fill(220));
+ }finally{globalThis.qaCampaignWorld=old;}
+});
