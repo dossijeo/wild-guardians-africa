@@ -28,3 +28,7 @@ python tools/experiments/package-mangrove-mud-inset.py
 ```
 
 Vite5190. [Registros inset](inset/captures.json), [comparación inset](inset/comparison.json). PNG y WebP completos locales; pares de extremos y registros publicados.
+
+## Revisión posterior desde vistas generales
+
+La [comparativa general](overview/README.md) descarta la amplitud fija de 2,2 unidades por pérdida excesiva de barro en parches pequeños. Sustituye la valoración provisional anterior. Conservar el código solo como evidencia; estudiar un límite dependiente del tamaño antes de nuevas pruebas de coste.

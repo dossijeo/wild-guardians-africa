@@ -603,3 +603,7 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Manglares: borde variable insuficiente; avance de musgo candidato
 
 [36 capturas en dos ensayos](mangrove-mud-fringe/README.md):variar anchura conserva disco; avance desigual de musgo hacia interior rompe contorno aparente en parche cercano día/noche. Geometría/ocupación intactas. Reduce área visible y podría borrar parches pequeños: conservar QA para normal/tamaños/coste, no integrar. Sin benchmark nuevo.
+
+### Manglares: el borde irregular fijo no supera la vista general
+
+[24 capturas y 12 parejas](mangrove-mud-fringe/overview/README.md), media/baja, día/noche y tres vistas. Cámaras, hora y geometría coinciden. La inspección elevada diurna y normal nocturna muestra reducción excesiva de varios parches: descartar el avance fijo de 2,2 unidades, sustituyendo la valoración provisional cercana. Sin nuevo benchmark; primero preservar núcleos de barro con un límite dependiente del tamaño. El musgo repetitivo sigue sin alcanzar la referencia artística.
