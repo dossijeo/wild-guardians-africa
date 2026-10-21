@@ -451,3 +451,8 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Gran Río: respuesta de la cara opuesta
 
 [24 capturas y 8 bloques ABBA](river-cover-two-sided/README.md): aclarado moderado sin regresión nocturna visual como Lambert, pero el borde permanece. GPU de la candidata mayor en esta serie; no promover con una mejora limitada. Conservar alternativa QA y diagnosticar material subyacente/cobertura efectiva antes de otra corrección de iluminación.
+
+
+### Diagnóstico: no confundir desgaste con alcance de hierba
+
+[Seis parejas con falso color](river-cover-boundary/README.md) separan reducción por distancia y altura de ancla. El borde junto al poblado en media muestra reducción de ancla sin señal roja apreciable: no es solo LOD lejano. Suelo conserva textura herbácea donde la cubierta ya se elimina por desgaste. Priorizar coordinación material/máscaras, respetando caminos, antes de más ajustes de iluminación. Esta evidencia corrige la interpretación demasiado general del borde en ensayos anteriores.
