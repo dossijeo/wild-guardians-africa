@@ -1014,3 +1014,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Volcanes: transición del relleno cromático
 
 [15 parejas en cinco niveles](volcanic-spectrum-twilight-20261021/README.md):día exacto,diferencia gradual hacia noche,cámara/hora/geometría iguales,sin errores. Vista intermedia conserva roca oscura. Conservar candidata;no certificar ciclo continuo ni rendimiento con estas capturas.
+
+
+### Volcanes: relleno cromático en baja
+
+[Seis parejas](volcanic-spectrum-low-20261021/README.md):día exacto y lectura nocturna moderadamente mejor en vista revisada;misma cámara/geometría,sin errores. Apariencia compatible con baja,no validación FPS ni muy_baja. Candidata QA conservada.
