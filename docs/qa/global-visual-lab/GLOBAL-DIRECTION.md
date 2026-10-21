@@ -1344,3 +1344,8 @@ User requests continued iteration against original day/night loading mockups, fi
 ### 2026-10-22 - Day atmosphere and fixed-view contrast
 
 `loading-day-air-20261022` reduces only daytime mist-vignette attenuation and warms the outer haze. Day reference/prior/candidate sheet retained; eight captures pass, both night outputs pixel-identical. Original maize, fixed camera, central mesa and aligned beam shadows preserved. Next priority: consolidate these QA candidates into a controlled native loading option and measure animated cost rather than indefinitely accumulating isolated visual fixtures.
+
+
+### 2026-10-22 - Native shadow ownership prerequisite
+
+World asset-shadow proxies are now scoped to WorldScene. Loading QA no longer detaches the world hook. 31 relevant tests pass, eight images match the prior day-air candidate exactly, and disposing the garden restores real world rendering with 19 asset-shadow draws and no GL errors. See `loading-shadow-owned-20261022`. Full art-direction runtime integration and moving-light benchmark remain pending.

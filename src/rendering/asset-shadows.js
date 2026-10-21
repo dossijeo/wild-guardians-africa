@@ -29,7 +29,7 @@ export function updateAssetShadow(batch){
 
 export function disposeAssetShadows(group){for(const batch of group.userData.lodBatches??[])batch.shadow?.dispose();}
 
-export function installAssetShadows(renderer,chunks){
+export function installAssetShadows(renderer,chunks,ownerScene=null){
   let map=renderer.shadowMap,original=map.render;const proxies=new THREE.Group();proxies.name='native_asset_shadow_pass';proxies.matrixAutoUpdate=false;
   // These borrowed solid materials are temporary shadow-pass inputs, not world
   // color materials or animated water. Avoid scene material discovery per pass.
@@ -41,6 +41,7 @@ export function installAssetShadows(renderer,chunks){
   function render(lights,scene,camera){
     // Some diagnostic passes disable shadows. Avoid entering the color render
     // list or allocating/updating GPU resources when no shadow is requested.
+    if(ownerScene&&scene!==ownerScene)return original.call(this,lights,scene,camera);
     if(!map.enabled||(!map.autoUpdate&&!map.needsUpdate)||!lights.length)return original.call(this,lights,scene,camera);
     stats.draws=stats.triangles=0;
     const materials=new Map();
