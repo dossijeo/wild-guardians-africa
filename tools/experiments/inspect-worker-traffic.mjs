@@ -94,5 +94,7 @@ if(process.argv.includes('--native')){
 console.log(JSON.stringify({day:state.day,time:state.time,elapsed:state.elapsed,
   villageEntry:home,workerCount:rows.length,
   statusCounts:rows.reduce((counts,row)=>(counts[row.status]=(counts[row.status]??0)+1,counts),{}),
-  routeMissing:rows.filter(row=>!row.pathPoints).map(row=>row.id),
+  locomotionRouteMissing:rows.filter(row=>
+    ['walking','fleeing','returning','arriving','incapacitated'].includes(row.status)&&
+    !row.pathPoints).map(row=>row.id),
   atYield:rows.filter(row=>row.atYield).map(row=>row.id),cycles,nativeFresh,rows},null,2));
