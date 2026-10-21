@@ -1009,3 +1009,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Volcanes: equilibrio cromático nocturno
 
 [Seis parejas](volcanic-night-spectrum-20261021/README.md):relleno nocturno menos azul,mantiene roca oscura y mejora moderadamente lectura. Tres vistas diurnas exactas;misma geometría,sin errores. Solo cambia constante,sin benchmark temporal aún. Candidata QA conservada,pendiente crepúsculo y coste;objetivo global no alcanzado.
+
+
+### Volcanes: transición del relleno cromático
+
+[15 parejas en cinco niveles](volcanic-spectrum-twilight-20261021/README.md):día exacto,diferencia gradual hacia noche,cámara/hora/geometría iguales,sin errores. Vista intermedia conserva roca oscura. Conservar candidata;no certificar ciclo continuo ni rendimiento con estas capturas.
