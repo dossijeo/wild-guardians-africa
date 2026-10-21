@@ -832,3 +832,7 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Opción integrada de emisor lejano de Gran Cañón
 
 [Paridad QA/integrada](canyon-horizon-integrated/README.md): `visualLab=global-lighting&canyonShadows=horizon`, solo canyons.12 parejas exactas baja/media día/noche; baja sin sombras solares es compatibilidad, media confirma receta.11 tests y build pasan. Opt-in, pendientes streaming/movimiento prolongados; no main.
+
+### Horizonte emisor tras reemplazo de chunks
+
+[Cuatro regresos día/noche](canyon-horizon-streaming/README.md):25 chunks activos,88 geometrías y56 texturas en regresos de candidata, sin crecimiento observado ni errores. Sombras se reconstruyen al viajar. Prueba acotada, no garantía de fugas a largo plazo ni benchmark de movimiento continuo.
