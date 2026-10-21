@@ -1224,3 +1224,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Cielo diurno: separación de nubes
 
 [Seis parejas](sky-cloud-depth-20261021/README.md):azul más presente,nubes conservadas por heurística. Horizonte aún gris;auditor detecta diferencias también en mitad inferior,diagnosticar aislamiento antes de integrar. Pendientes seis biomas,crepúsculo yGPU.
+
+
+### Cielo: aislamiento verificado en seis vistas
+
+[Máscara negro/blanco](sky-visible-mask-20261021/README.md):0 cambios cromáticos fuera de píxeles que responden al cielo. Único píxel inferior748,626 también corresponde al fondo. Continuar revisión artística;no evidencia de alteración del terreno en estas vistas.
