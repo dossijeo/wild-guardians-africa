@@ -721,3 +721,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Reversibilidad de calidad en seis biomas
 
 [48capturas estabilizadas](all-biome-quality-switch-settled/README.md):sin erroresGPU; seis de12regresos RGB exactos y demás1–6píxeles. Sombras recuperadas en mosaico diurno; máscaras estables y contadores de geometrías/texturas vuelven al inicio. No benchmark ni validación de todas las combinaciones artísticas. La primera comparación de Desierto se invalidó por chunks pendientes y se repitió correctamente.
+
+
+### Gran Río: tierra V2 conservada como opción integrada
+
+[`riverSoil=1`](river-soil-integrated/README.md) con global-lighting, solo Gran Río.9/12parejas QA/integrada RGB exactas; tres inversas con residuos sin causa aislada. Build y6pruebas pasan. La cubierta/paleta siguen usando ayudantesQA en estas capturas; pendientes streaming y coste integrados. El borde regular del poblado sigue siendo una limitación artística, no resuelta por integrar la receta.

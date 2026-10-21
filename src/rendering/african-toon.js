@@ -1,3 +1,4 @@
+import {patchRiverSoil} from './global-river-soil.js';
 import {patchMangroveSubstrate} from './global-mangrove-substrate.js';
 import {patchCanyonSand} from './global-canyon-sand.js';
 import {patchVolcanicAsh} from './global-volcanic-ash.js';
@@ -117,6 +118,10 @@ export class AfricanToon {
         #include <opaque_fragment>`);
 
     };
+    if(material.userData.toonGround&&material.userData.biomeGround&&material.userData.riverSoil){
+      const compile=material.onBeforeCompile;
+      material.onBeforeCompile=(shader,renderer)=>{compile(shader,renderer);shader.fragmentShader=patchRiverSoil(shader.fragmentShader);};
+    }
     if(material.userData.toonGround&&material.userData.biomeGround&&material.userData.mangroveSubstrate){
       const compile=material.onBeforeCompile;
       material.onBeforeCompile=(shader,renderer)=>{compile(shader,renderer);shader.fragmentShader=patchMangroveSubstrate(shader.fragmentShader);};
@@ -151,7 +156,7 @@ export class AfricanToon {
       material.onBeforeCompile=(shader,renderer)=>{compile(shader,renderer);shader.fragmentShader=patchCanyonSand(shader.fragmentShader,material.userData.canyonSandFull);};
     }
     recordNativeDepthHook(material,original,'toon',...(material.userData.horizonBounds?['horizon']:[]));
-    material.customProgramCacheKey=()=>cache()+(material.userData.mangroveSubstrate?'|mangrove-substrate-full-v1':'')+(material.userData.canyonSand?'|canyon-sand-v2:'+Boolean(material.userData.canyonSandFull):'')+(material.userData.volcanicAsh?'|volcanic-ash-v1:'+material.userData.volcanicAsh:'')+(material.userData.desertSand?'|desert-sand-v1':'')+(material.userData.biomeGround?.uCliffRock?'|cliff-rock-v1':'')+(this.globalVisualLighting?'|global-visual-lighting|desert-soft-v1|'+(material.userData.groundBiome??'object'):'')+'|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|'+(material.userData.biomeGround?'biome-ground-4.1.10.3':material.userData.toonGround?'ground':'object')+'|'+(material.userData.biomeGround?.uGroundLayered?.value?'visual-layer':'base-ground')+'|'+(material.userData.artBounds?'illustrated-4.1.6':'toon-4.1.4')+'|'+(material.userData.visualLabNormalDetail?'visual-normal-detail':material.userData.visualLabNormal?'visual-normal':'authored-normal')+'|'+material.type+'|'+(material.userData.horizonBounds?'horizon-clip':'resident');
+    material.customProgramCacheKey=()=>cache()+(material.userData.riverSoil?'|river-soil-v2':'')+(material.userData.mangroveSubstrate?'|mangrove-substrate-full-v1':'')+(material.userData.canyonSand?'|canyon-sand-v2:'+Boolean(material.userData.canyonSandFull):'')+(material.userData.volcanicAsh?'|volcanic-ash-v1:'+material.userData.volcanicAsh:'')+(material.userData.desertSand?'|desert-sand-v1':'')+(material.userData.biomeGround?.uCliffRock?'|cliff-rock-v1':'')+(this.globalVisualLighting?'|global-visual-lighting|desert-soft-v1|'+(material.userData.groundBiome??'object'):'')+'|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|'+(material.userData.biomeGround?'biome-ground-4.1.10.3':material.userData.toonGround?'ground':'object')+'|'+(material.userData.biomeGround?.uGroundLayered?.value?'visual-layer':'base-ground')+'|'+(material.userData.artBounds?'illustrated-4.1.6':'toon-4.1.4')+'|'+(material.userData.visualLabNormalDetail?'visual-normal-detail':material.userData.visualLabNormal?'visual-normal':'authored-normal')+'|'+material.type+'|'+(material.userData.horizonBounds?'horizon-clip':'resident');
     // The source function already applies its filmic curve. Three still performs
     // output color conversion and fog, without applying a second tone curve.
     material.toneMapped=false;material.needsUpdate=true;
