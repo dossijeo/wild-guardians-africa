@@ -701,3 +701,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Buffers residentes: primer prototipo por chunk
 
 [Prueba QA en Sabana](persistent-asset-groups/README.md): misma cobertura y triángulos, pero CPU/cadencia empeoran en cuatro parejas ABBA. La partición por chunk aumenta llamadas y vistas de geometría, y mantiene subidas por LOD/visibilidad. No integrar este diseño; conservar el objetivo de matrices residentes separando selección y transiciones. Ninguna variante artística se reduce o descarta por este resultado técnico. [Comparación previa de contenido](instance-cull-upload-gate/README.md) evita muchas subidas pero sigue pagando recorrido CPU; tampoco prueba mejora estable de cadencia.
+
+
+### Selección por IDs sobre matrices residentes: prueba ejecutada
+
+[Prototipo WebGL2 real](resident-matrices/README.md):960muestras GPU,1440fotogramas, calls/triángulos coincidentes. Viable funcionalmente, pero la primera versión empeora CPU/GPU/cadencia; conserva empaquetado de origen y pierde residencia al recrear lotes. Mantener en QA, sin integración ni generalizar como límite de WebGL2. No reducir calidad artística; el rendimiento debe financiar las mejoras aprobadas, no reemplazarlas.
