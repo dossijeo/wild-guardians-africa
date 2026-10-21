@@ -1271,3 +1271,7 @@ Seis parejas en desert-meso-20261021: pendientes de material a dos escalas aport
 
 ### Desierto: relieve conservado en baja
 Seis parejas en desert-meso-low-20261021: mejora visible en laderas también sin sombras de edificios del perfil media; mismos calls/triángulos. Mantener candidata. Benchmark preparado pero no ejecutado por carga externa 23–76 % documentada en desert-meso-cost-20261021. Pendientes movimiento, atenuación lejana y coste.
+
+
+### Desierto: atenuación lejana preferida
+Seis parejas en desert-meso-filter-20261021 comparan candidata mesoscópica anterior con atenuación .25–1.2. Conserva volumen cercano y reduce arrugas lejanas; preferir para siguiente validación. Mismos calls/triángulos. No ahorro GPU demostrado: siguen calculándose ruido/gradientes. Movimiento y coste pendientes.
