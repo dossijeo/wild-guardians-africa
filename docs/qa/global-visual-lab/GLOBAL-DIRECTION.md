@@ -1263,3 +1263,7 @@ Seis parejas en desert-ripple-warp-20261021. Rompe repetición pero estira las o
 
 ### Desierto: deformación acotada, mejora insuficiente
 Seis parejas en desert-ripple-bounded-20261021. Corrige estiramiento excesivo y transforma gradiente; resultado visual demasiado próximo al original para promover. No descartado por rendimiento. Siguiente dirección: relieve mesoscópico/acumulaciones; no más amplitud UV. Objetivo global pendiente.
+
+
+### Desierto: relieve mesoscópico candidato
+Seis parejas en desert-meso-20261021: pendientes de material a dos escalas aportan volumen visible sin deformar las ondas pequeñas. Conservar candidata; ligera apariencia arrugada lejana pendiente de atenuación/movimiento. Mismos calls/triángulos, sin benchmark nuevo ni integración por defecto. Validar baja, streaming y coste antes de promover.
