@@ -7,3 +7,8 @@ Doce capturas de renderer real, media1280x720, semilla712, tres cámaras día/no
 Conservar como candidata QA. Pendientes comparación en movimiento y costeALU/GPU; igual número máximo de muestras no implica coste idéntico. No nuevas pasadas ni geometría. No se modifica producción ni otros biomas como resultado de este piloto.
 
 [Comparación cercana](day-1-pair.webp), [datos](captures.json), [ablación previa](../volcanic-pom-ablation/README.md). Reproducir capture-volcanic-pom-refined.mjs, Vite5190. Código de transformación aislado en qa-volcanic-pom-refine.mjs.
+
+
+## Coste y recorrido del refinamiento
+
+[ABBA](performance/README.md):GPU menor en cuatro parejas, cadencia mixta; no aceleración uniforme. [144parejas de cámara](motion/README.md): geometría igual, recortes consecutivos conservan relieve y suavizan parte de los escalones. Mantener candidata para integración opcional, con controles y límites temporales explícitos.
