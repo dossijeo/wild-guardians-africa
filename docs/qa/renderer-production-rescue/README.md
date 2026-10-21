@@ -1,7 +1,7 @@
 # Auditoría de recuperación JS
 
-El objetivo y los hitos están en [GOAL.md](GOAL.md). El prototipo modifica solo
-NativeAssetGroups. No incorpora archivos, imports o memoria de Wild Renderer WASM.
+El objetivo y los hitos están en [GOAL.md](GOAL.md). La implementación modifica NativeAssetGroups y el guard de sincronización de
+props confirmados en WorldScene. No incorpora archivos, imports o memoria de Wild Renderer WASM.
 Las herramientas se ejecutan desde la raíz del checkout con npm ci, Python 3,
 Chrome y Playwright disponibles. Si Playwright vive fuera de node_modules,
 RENDERER_PLAYWRIGHT acepta la URL file: de su index.mjs.
@@ -11,8 +11,9 @@ RENDERER_PLAYWRIGHT acepta la URL file: de su index.mjs.
 Iniciar Vite: `npm run dev -- --port 5197 --strictPort`.
 `RR_MAIN` es el SHA inmutable de main usado para crear el checkout; no usar una
 rama experimental como referencia. El medidor sirve su asset-groups.js completo,
-y el del candidato, como módulos separados del mismo servidor. El resto de la
-aplicación proviene de ese main. Config guarda SHA de ambos módulos y entorno.
+y el del candidato, como módulos separados del mismo servidor. El auditor también sirve los métodos syncChunks/syncResidentProps originales de
+WorldScene para que main conserve su semántica real. El resto de la aplicación
+proviene de ese main. Config guarda SHA de módulos, métodos de escena, harness y entorno.
 No editar módulos de producción durante una serie.
 
 ```powershell
@@ -66,3 +67,26 @@ La memoria de atributos de grupos es exacta, separada del heap JS estimado por
 Chrome y del heap recogido por CDP fuera de las ventanas. Objetos GL de Three
 no son bytes de VRAM. Streaming normal pertenece a una validación separada;
 la residencia fija no sirve como prueba de latencia o corrección de streaming.
+
+## Validación adicional y archivo
+
+RR_SHADOW=1 compara cada captura con recalcular las sombras tras invalidar la
+caché. RR_STREAM=1 ejecuta el recorrido de streaming normal para ambas variantes.
+RR_STREAM_AFTER_MUTATE=1 exige que los props suprimidos no reaparezcan tras un
+recorrido después de comandos reales (usar junto a RR_MUTATE=1). Se guardan eventos,
+latencias de petición/instalación y población obsoleta por variante; son diagnósticos,
+no mediciones de FPS. RR_FOCUS=props acerca la cámara al fixture denso.
+
+El culling queda activo en todos los presets. No usar very-low-policy como candidato.
+[RESULTS.md](RESULTS.md) distingue series válidas, fallidas y descartadas. El archivo
+[evidence](evidence/manifest.json) contiene los JSON originales comprimidos sin
+cambiar bytes; los hashes de imágenes permiten auditar las capturas locales.
+
+```powershell
+python tools/audit-renderer-rescue.py docs/qa/renderer-production-rescue/evidence/final-abba/results.json.gz
+python tools/verify-renderer-matrix.py --poses=2 test-results/renderer-rescue-frozen-matrix/results.json
+```
+
+El segundo comando falla ante cualquier diferencia RGB, comparación estructural
+inválida o condición ausente. El informe conserva esas diferencias incluso cuando
+los controles A/A también varían. No sustituirlo por tolerancias silenciosas.
