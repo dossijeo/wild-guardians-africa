@@ -899,3 +899,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Revisión global V7
 
 [36 capturas comparables con V6](combined-campaign-review-v7/README.md), sin errores. Incluye opción nocturna volcánica y musgo QA de dos orientaciones. Mantener mejoras; siguiente foco artístico: claros de Desierto demasiado lisos, conservando desgaste/ocupación. Pendientes transición de cubierta Sabana/Río y validación temporal/coste del conjunto; objetivo global no logrado.
+
+
+### Desierto: recuperar relieve residual del desgaste
+
+[Seis parejas](desert-wear-relief-20261021/README.md): normales residuales15→45% en desgaste máximo, arena intacta y máscaras sin cambios. Ondulaciones suaves entre edificios, candidata conservada; pendientes coste, movimiento y revisión nocturna. No integrada ni solución completa de uniformidad.
