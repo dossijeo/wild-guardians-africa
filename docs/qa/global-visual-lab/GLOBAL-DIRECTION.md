@@ -1109,3 +1109,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Manglares: conexión QA con streaming
 
 [Prueba de ciclo de vida](mangrove-leaf-stream-20261021/README.md):seis parejas exactamente iguales;recorrido0→192→0 mantiene claves de25chunks,resuelve invalidación yrestaura capa original al desmontar. Sin errores;no certifica fugas ni latencia. Pendientes eventos reales,baja ybenchmark.
+
+
+### Manglares: perfil bajo pendiente de calidad
+
+[Cuatro hojas](mangrove-leaf-low-20261021/README.md) pasan streaming pero quedan dispersas. [Ocho hojas a cámara fija](mangrove-leaf-low-eight-fixed-20261021/README.md) cubren más con doble triángulo,mismas instancias,pero parecen parches planos;no promover por resultado artístico. Intento automático inválido preservado. Mejorar unidad antes de densidad;GPU pendiente.
