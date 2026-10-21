@@ -1404,3 +1404,7 @@ Twelve real captures compare 30 versus 12 world-unit sand period, all paired cou
 
 ## Canyon two-scale normal trial (2026-10-22)
 Twelve paired captures retain broad sand normals plus rotated fine detail. Improvement too subtle at gameplay distance; no integration, no performance rejection. Adds one textureGrad. See canyon-sand-layered-20261022. Stop normal-scale refinement and investigate the visibly uniform shore transition using existing presentation masks.
+
+
+## Canyon shore feasibility (2026-10-22)
+Existing canyon mask has no shore data and water has no depth input. QA fills unused B at chunk creation from waterInfo: twelve captures confirm location, but dark strip reads as trench. Do not integrate; scalar dampening alone fails artistic goal. Added 1225 queries/mask unbenchmarked. See canyon-shore-20261022.
