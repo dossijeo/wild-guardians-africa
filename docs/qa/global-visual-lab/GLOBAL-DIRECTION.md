@@ -421,3 +421,8 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Ceniza accesible en una partida normal del laboratorio
 
 [Opción explícita integrada](volcanic-ash-review-option/README.md): `visualLab=global-lighting&volcanicAsh=procedural` o `volcanicAsh=mask`. Solo Volcanes; ausente por defecto. 36/36 capturas RGB exactas contra QA y modo desactivado anterior, 8 pruebas aprobadas y build correcto. Permite revisar sin interceptación de shaders; no es promoción a valor predeterminado ni conclusión de calidad global. PR #159 permanece abierta.
+
+
+### Gran Río: continuidad de paleta en la cubierta
+
+[Paleta de suelo aplicada a hojas](river-cover-palette/README.md): 24 capturas, 12 parejas y 8 bloques ABBA. Menor borde oscuro en la muestra media, con el mismo desgaste, instancias y triángulos. Solo tres constantes, sin nuevas muestras o recursos. Tiempos GPU solapados y noche candidata algo mayor: no afirmar aceleración. Conservar candidata visual para probar movimiento/LOD; no sustituir aún receta anterior.
