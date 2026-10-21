@@ -623,3 +623,7 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Manglares: ruta contextual existente descartada como sustitución
 
 [24 capturas](mangrove-context/README.md) comparan pureMoss con la rama contextual existente, misma escala/mapas y amplitud parallax cero. Cámara/geometría coinciden. Brillo húmedo extenso y zonas oscuras homogéneas; no adoptar. La rama mezcla color base fuera del musgo, no otro material texturizado. Reutilizar máscaras requiere desacoplar cobertura y humedad, verificar sus datos reales y diseñar distribución entre materiales; no basta con desactivar pureMoss. Sin nuevo benchmark por fallo artístico.
+
+### Manglares: rangos contextuales verificados en campaña espacial
+
+[Auditoría de 25 máscaras enlazadas](mangrove-context/mask-audit/README.md): cobertura R mediana235/255 y máximo245, frente al límite0.42 del generador JS de humedal. La partida utiliza payload nativo; no calibrar mezcla con el rango antiguo. G/B aportan variación espacial y A desgaste localizado. Diseñar mezcla visual sin alterar motor, pendiente horizonte y otras semillas. Esta auditoría no es una mejora visual ni un benchmark.
