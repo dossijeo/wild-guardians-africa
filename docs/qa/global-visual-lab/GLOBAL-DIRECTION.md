@@ -909,3 +909,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Desierto: coste y lectura nocturna del relieve residual
 
 [ABBA Intel UHD](desert-wear-relief-20261021/performance/README.md): GPU favorable, CPU similar, sin mejora consistente de cadencia. Conservar candidata por ondulaciones visibles también de noche; no prometer FPS. Pendientes movimiento/perfil bajo, no integrada.
+
+
+### Desierto: compatibilidad visual en baja
+
+[Seis parejas día/noche](desert-wear-low-20261021/README.md): relieve residual visible, cámaras/geometría iguales y sin errores. Sin sombras solares como media; no extrapolar benchmark ni a muy_baja. Mantener candidata, pendientes movimiento e integración.
