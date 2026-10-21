@@ -543,3 +543,7 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Cañón: normal-only conserva lectura a cámara normal
 
 [12 capturas y cierre real](canyon-sand-normal-only/overview/README.md): mantiene ondulaciones en normal diurna y elevada nocturna inspeccionadas, con color más uniforme. Una textura adicional, liberada una vez. Pendientes revisión temporal y medición diurna estable; no integrar.
+
+### Cañón: aproximación cercana de arena normal-only
+
+[Cuatro vídeos y 144 parejas](canyon-sand-normal-only/motion-close/README.md), media/baja y día/noche: cámara, hora y geometría coincidentes, cero errores registrados. Pareja diurna inspeccionada conserva ondulaciones; secuencia disponible para revisión temporal completa. Recorrido inicial oculto por meseta descartado y sustituido por aproximación corta despejada. No mide FPS ni streaming largo. Coste diurno todavía inconcluso; mantener QA sin integrar.
