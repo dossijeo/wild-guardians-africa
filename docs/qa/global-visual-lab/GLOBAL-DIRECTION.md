@@ -969,3 +969,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Sabana: repetición válida del coste final de LOD
 
 [ABBA repetido](grass-pigment-repeat-20261021/README.md):480 muestras GPU válidas,720 frames de cadencia y geometría igual. GPU media aumenta1.35ms día/0.54ms noche; variación entre bloques impide afirmar mejora de FPS. Ronda anterior inválida conservada, causa no identificada. Mantener candidata visual en QA, pendiente revisión temporal y Gran Río; sin integración por defecto.
+
+
+### Gran Río: LOD compuesto con paleta y desgaste
+
+[Seis parejas equivalentes](river-grass-lod-equivalent-20261021/README.md): viento/normales/pigmento adaptados al shader independiente de Gran Río. Cobertura, geometría y draws iguales; continuidad y paleta conservadas en revisión normal día/noche. Dos rondas inválidas conservadas por interceptor incorrecto y pérdida de máscara; corregidas antes de comparar. Candidata QA, pendientes movimiento y coste específico.
