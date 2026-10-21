@@ -836,3 +836,7 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Horizonte emisor tras reemplazo de chunks
 
 [Cuatro regresos día/noche](canyon-horizon-streaming/README.md):25 chunks activos,88 geometrías y56 texturas en regresos de candidata, sin crecimiento observado ni errores. Sombras se reconstruyen al viajar. Prueba acotada, no garantía de fugas a largo plazo ni benchmark de movimiento continuo.
+
+### Revisión global V6
+
+[36 capturas seis biomas](combined-campaign-review-v6/README.md), mismas cámaras/horas que V5, sin errores. Conserva mejoras de Volcanes/Cañón. Próximo foco: repetición regular del musgo de Manglares, sin perder volumen/paleta; lectura nocturna volcánica pendiente. No certifica calidad objetivo global ni FPS del conjunto.
