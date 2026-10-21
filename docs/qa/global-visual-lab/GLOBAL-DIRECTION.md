@@ -476,3 +476,8 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Tierra del río: coste móvil mixto
 
 [Benchmark móvil de V2](river-soil-layer-motion/README.md): ocho bloques, 960 muestras GPU/1.440 frames, geometría igual. GPU diurna +~1,30 ms (11,4 %) agregado, noche menor; no promover todavía. Próxima optimización concreta: evitar leer mapas de hierba donde la capa de tierra los sustituye completamente, exigiendo equivalencia visual.
+
+
+### Salida anticipada de tierra: no mejora GPU demostrada
+
+[Paridad y benchmark móvil](river-soil-early/README.md): ocho de doce parejas exactas; otras cuatro suman cinco píxeles con máximo 1/255 tras sincronizar ocultaciones. 960 muestras GPU/1.440 frames no muestran ahorro consistente. Mantener opción desactivada; reducir lecturas teóricas no basta para aprobar la optimización.

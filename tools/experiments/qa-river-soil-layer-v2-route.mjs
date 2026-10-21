@@ -1,5 +1,6 @@
+import {patchRiverSoilEarlyExit} from './qa-river-soil-early-exit.mjs';
 import {installRiverCoverPaletteRoute} from './qa-river-cover-palette-route.mjs';
-export async function installRiverSoilLayerV2Route(page,enabled){
+export async function installRiverSoilLayerV2Route(page,enabled,{earlyExit=false}={}){
  await installRiverCoverPaletteRoute(page,true);
  if(!enabled)return;
  await page.route('**/src/rendering/biome-ground.js*',async route=>{
@@ -34,6 +35,7 @@ export async function installRiverSoilLayerV2Route(page,enabled){
  }`.replaceAll('\n','\\n')]
   ];
   for(const [a,b]of changes){if(!body.includes(a))throw Error('Soil shader anchor missing: '+a);body=body.replace(a,b);}
+  if(earlyExit)body=patchRiverSoilEarlyExit(body);
   await route.fulfill({response,body});
  });
 }
