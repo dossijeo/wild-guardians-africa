@@ -1,0 +1,88 @@
+diff --git a/src/simulation/game.js b/src/simulation/game.js
+index dfb8c3791..ef998e2e8 100644
+--- a/src/simulation/game.js
++++ b/src/simulation/game.js
+@@ -804,6 +804,7 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
+     w.mobileRecoveryAttempts=0;
+     w.mobileProgressDistance=dist(w,destination);
+     w.mobileProgressAt=s.elapsed;
++    delete w.mobileYield;
+     delete w.retreatStaticRouteFailure;
+   }
+   if(!Number.isFinite(w.mobileProgressDistance)||!Number.isFinite(w.mobileProgressAt)){
+@@ -885,6 +886,16 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
+     if(!w.path){routePlanWaits.set(w,{epoch,retryAt:s.elapsed+ROUTE_RETRY_SECONDS});return abandonExhaustedExit();}
+   }
+   if(worker&&waitForGate(w,s.structures))return false;
++  if(worker&&w.mobileYield){
++    const yielding=w.mobileYield,body=s.workers.find(other=>other.id===yielding.blockerId);
++    if(yielding.destinationId===destination.id&&yielding.version===nav.version&&
++      body&&body.status!=='home'&&s.elapsed<yielding.until&&
++      dist(w,yielding.point)<.12&&dist(w,body)<(w.radius??.28)+(body.radius??.28)+1.2)
++      return false;
++    if(!body||body.status==='home'||s.elapsed>=yielding.until||
++      dist(w,body)>=(w.radius??.28)+(body.radius??.28)+1.2)
++      delete w.mobileYield;
++  }
+   if(!worker&&w.wallEscape){
+     const {exit,wallIds}=w.wallEscape,remaining=dist(w,exit);
+     if(remaining>1e-8){
+@@ -926,6 +937,33 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
+     if(staticClear&&(!worker||
+       actorSegmentClear(destination,destination,w,blockers))&&
+       !actorSegmentClear(w,probe,w,blockers)){
++      if(worker&&w.mobileRecoveryAttempts===0){
++        const blocking=blockers.find(body=>s.workers.includes(body)&&
++          body.path?.length&&!actorSegmentClear(w,probe,w,[body]));
++        if(blocking&&
++          (next.x-w.x)*(blocking.path[0].x-blocking.x)+
++          (next.z-w.z)*(blocking.path[0].z-blocking.z)<0){
++          const heading=Math.atan2(next.x-w.x,next.z-w.z);
++          const ahead=blocking.path[0],aheadDistance=dist(blocking,ahead);
++          const step=aheadDistance>1e-8?{
++            x:blocking.x+(ahead.x-blocking.x)*Math.min(1,aheadDistance)/aheadDistance,
++            z:blocking.z+(ahead.z-blocking.z)*Math.min(1,aheadDistance)/aheadDistance}:null;
++          for(const offset of [Math.PI/2,-Math.PI/2,3*Math.PI/4,-3*Math.PI/4]){
++            const point={x:w.x+Math.sin(heading+offset)*.9,
++              z:w.z+Math.cos(heading+offset)*.9};
++            if(!nav.workerMotionClear?.(w,point,w.radius??.28)||
++              !actorSegmentClear(w,point,w,blockers)||!step||
++              !actorSegmentClear(blocking,step,blocking,
++                [{x:point.x,z:point.z,radius:w.radius??.28}]))continue;
++            w.path=[point,...w.path];
++            w.mobileYield={point,blockerId:blocking.id,destinationId:destination.id,
++              version:nav.version,until:s.elapsed+3};
++            w.mobileRecoveryAttempts++;
++            w.mobileProgressAt=s.elapsed;
++            return false;
++          }
++        }
++      }
+       w.mobilePhaseRemaining=3;w.dynamicStallSeconds=0;
+       w.mobileRecoveryAttempts=(w.mobileRecoveryAttempts??0)+1;
+       w.mobileProgressDistance=dist(w,destination);
+diff --git a/tools/experiments/replay-worker-crossing.mjs b/tools/experiments/replay-worker-crossing.mjs
+index c8eaaea37..156a2507f 100644
+--- a/tools/experiments/replay-worker-crossing.mjs
++++ b/tools/experiments/replay-worker-crossing.mjs
+@@ -13,6 +13,10 @@ const state=deserialize(gunzipSync(readFileSync(new URL(
+ const wasm=new WebAssembly.Module(readFileSync(new URL(
+   '../../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
+ const loaded=new Map();
++const durationArg=process.argv.find(argument=>argument.startsWith('--seconds='));
++const duration=durationArg?Number(durationArg.slice('--seconds='.length)):1;
++if(!Number.isFinite(duration)||duration<=0||duration>30)
++  throw Error('--seconds must be within (0, 30]');
+ const session=createSpatialGameSession(wasm,state,{
+   loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+ try{
+@@ -51,7 +55,8 @@ try{
+         next:actor.path?.[0]??null,progressAt:actor.mobileProgressAt,
+         phaseRemaining:actor.mobilePhaseRemaining??0})));
+     }
+-  }else tick(state,1,nav);
++  }else for(let elapsed=0;elapsed<duration-1e-9;elapsed+=.1)
++    tick(state,Math.min(.1,duration-elapsed),nav);
+   const [a,b]=actors,distance=Math.hypot(a.x-b.x,a.z-b.z);
+   console.log(JSON.stringify({day:state.day,time:state.time,
+     mode:'saved paths retained for collision diagnosis',before,

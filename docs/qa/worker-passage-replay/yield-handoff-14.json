@@ -1,0 +1,863 @@
+{
+  "days": 14,
+  "seed": 712,
+  "strategy": "good",
+  "biome": "sabana",
+  "culture": "mapungubwe",
+  "backend": "wild-engine",
+  "stateHash": "30c8df499a1a50d924956d7442ee9722d3f67d350406949b682b241fa05010e3",
+  "completedNights": 14,
+  "result": null,
+  "money": 694,
+  "living": 132,
+  "staff": 16,
+  "delivered": 1220,
+  "collisionRecoveries": 62,
+  "gameTickMs": 46585.264200000085,
+  "sampledTicks": 6119,
+  "overlapTicks": 39,
+  "lateOverlapTicks": 20,
+  "pairs": 590,
+  "maxPenetration": 0.56,
+  "villageEntry": {
+    "x": 60,
+    "z": 0
+  },
+  "diagnostic": null,
+  "overlapWindows": {
+    "0-3": 19,
+    "3-10": 3,
+    "10-30": 0,
+    "30+": 17
+  },
+  "workOverlapPairs": 19,
+  "phasedWorkOverlapPairs": 19,
+  "distinctWorkPairs": 16,
+  "maxWorkPenetration": 0.32243853304358494,
+  "byDay": [
+    [
+      1,
+      {
+        "ticks": 1,
+        "pairs": 6,
+        "firstTime": 0.9999999999999999,
+        "lastTime": 0.9999999999999999
+      }
+    ],
+    [
+      2,
+      {
+        "ticks": 1,
+        "pairs": 3,
+        "firstTime": 0.9999999999999999,
+        "lastTime": 0.9999999999999999
+      }
+    ],
+    [
+      3,
+      {
+        "ticks": 2,
+        "pairs": 21,
+        "firstTime": 0.9999999999999999,
+        "lastTime": 2.0000000000000004
+      }
+    ],
+    [
+      5,
+      {
+        "ticks": 1,
+        "pairs": 1,
+        "firstTime": 0.9999999999999999,
+        "lastTime": 0.9999999999999999
+      }
+    ],
+    [
+      6,
+      {
+        "ticks": 2,
+        "pairs": 7,
+        "firstTime": 0.9999999999999999,
+        "lastTime": 161.99999999999446
+      }
+    ],
+    [
+      7,
+      {
+        "ticks": 1,
+        "pairs": 21,
+        "firstTime": 0.9999999999999999,
+        "lastTime": 0.9999999999999999
+      }
+    ],
+    [
+      8,
+      {
+        "ticks": 3,
+        "pairs": 66,
+        "firstTime": 0.9999999999999999,
+        "lastTime": 179.99999999999332
+      }
+    ],
+    [
+      9,
+      {
+        "ticks": 6,
+        "pairs": 307,
+        "firstTime": 0.9999999999999999,
+        "lastTime": 5.999999999999995
+      }
+    ],
+    [
+      10,
+      {
+        "ticks": 2,
+        "pairs": 65,
+        "firstTime": 0.9999999999999999,
+        "lastTime": 2.0000000000000004
+      }
+    ],
+    [
+      11,
+      {
+        "ticks": 4,
+        "pairs": 15,
+        "firstTime": 0.9999999999999999,
+        "lastTime": 375.00000000001705
+      }
+    ],
+    [
+      12,
+      {
+        "ticks": 2,
+        "pairs": 7,
+        "firstTime": 0.9999999999999999,
+        "lastTime": 370.0000000000159
+      }
+    ],
+    [
+      13,
+      {
+        "ticks": 6,
+        "pairs": 43,
+        "firstTime": 0.9999999999999999,
+        "lastTime": 405.0000000000239
+      }
+    ],
+    [
+      14,
+      {
+        "ticks": 8,
+        "pairs": 28,
+        "firstTime": 0.9999999999999999,
+        "lastTime": 365.0000000000148
+      }
+    ]
+  ],
+  "byStatus": [
+    [
+      "arriving/arriving",
+      6
+    ],
+    [
+      "walking/walking",
+      548
+    ],
+    [
+      "acting/walking",
+      3
+    ],
+    [
+      "fleeing/walking",
+      17
+    ],
+    [
+      "returning/returning",
+      16
+    ]
+  ],
+  "examples": [
+    {
+      "day": 1,
+      "time": 0.9999999999999999,
+      "a": "worker-14",
+      "b": "worker-16",
+      "aStatus": "arriving",
+      "bStatus": "arriving",
+      "distance": 0.5006039571848274,
+      "penetration": 0.059396042815172634
+    },
+    {
+      "day": 1,
+      "time": 0.9999999999999999,
+      "a": "worker-14",
+      "b": "worker-18",
+      "aStatus": "arriving",
+      "bStatus": "arriving",
+      "distance": 0.21599999999999397,
+      "penetration": 0.3440000000000061
+    },
+    {
+      "day": 1,
+      "time": 0.9999999999999999,
+      "a": "worker-14",
+      "b": "worker-20",
+      "aStatus": "arriving",
+      "bStatus": "arriving",
+      "distance": 0.21599999999999397,
+      "penetration": 0.3440000000000061
+    },
+    {
+      "day": 1,
+      "time": 0.9999999999999999,
+      "a": "worker-16",
+      "b": "worker-18",
+      "aStatus": "arriving",
+      "bStatus": "arriving",
+      "distance": 0.32399999999999607,
+      "penetration": 0.23600000000000398
+    },
+    {
+      "day": 1,
+      "time": 0.9999999999999999,
+      "a": "worker-16",
+      "b": "worker-20",
+      "aStatus": "arriving",
+      "bStatus": "arriving",
+      "distance": 0.32399999999999607,
+      "penetration": 0.23600000000000398
+    },
+    {
+      "day": 1,
+      "time": 0.9999999999999999,
+      "a": "worker-18",
+      "b": "worker-20",
+      "aStatus": "arriving",
+      "bStatus": "arriving",
+      "distance": 0,
+      "penetration": 0.56
+    },
+    {
+      "day": 2,
+      "time": 0.9999999999999999,
+      "a": "worker-464",
+      "b": "worker-466",
+      "aStatus": "walking",
+      "bStatus": "walking",
+      "distance": 0.23999999999999713,
+      "penetration": 0.32000000000000295
+    },
+    {
+      "day": 2,
+      "time": 0.9999999999999999,
+      "a": "worker-464",
+      "b": "worker-468",
+      "aStatus": "walking",
+      "bStatus": "walking",
+      "distance": 0.23999999999999713,
+      "penetration": 0.32000000000000295
+    },
+    {
+      "day": 2,
+      "time": 0.9999999999999999,
+      "a": "worker-466",
+      "b": "worker-468",
+      "aStatus": "walking",
+      "bStatus": "walking",
+      "distance": 0,
+      "penetration": 0.56
+    },
+    {
+      "day": 3,
+      "time": 0.9999999999999999,
+      "a": "worker-923",
+      "b": "worker-924",
+      "aStatus": "walking",
+      "bStatus": "walking",
+      "distance": 0.4075857713102282,
+      "penetration": 0.15241422868977184
+    },
+    {
+      "day": 3,
+      "time": 0.9999999999999999,
+      "a": "worker-923",
+      "b": "worker-925",
+      "aStatus": "walking",
+      "bStatus": "walking",
+      "distance": 0.10799999999999699,
+      "penetration": 0.45200000000000307
+    },
+    {
+      "day": 3,
+      "time": 0.9999999999999999,
+      "a": "worker-923",
+      "b": "worker-926",
+      "aStatus": "walking",
+      "bStatus": "walking",
+      "distance": 0.3523138511757853,
+      "penetration": 0.20768614882421477
+    }
+  ],
+  "workExamples": [
+    {
+      "day": 6,
+      "time": 161.99999999999446,
+      "a": "worker-3600",
+      "b": "worker-3612",
+      "aStatus": "walking",
+      "bStatus": "acting",
+      "aPhase": 2.6999999999999997,
+      "bPhase": 0,
+      "ax": 87.46507160102621,
+      "az": -2.0550695486596564,
+      "bx": 87.51637268066406,
+      "bz": -2.350184202194214,
+      "aDestination": "plant-3219",
+      "bDestination": "native-point-task-3890",
+      "aNext": {
+        "x": 87,
+        "z": -3
+      },
+      "bNext": null,
+      "aPathLength": 2,
+      "bPathLength": 0,
+      "aRaidReturn": false,
+      "bRaidReturn": false,
+      "distance": 0.2995404138056018,
+      "penetration": 0.26045958619439824
+    },
+    {
+      "day": 8,
+      "time": 179.99999999999332,
+      "a": "worker-5667",
+      "b": "worker-5677",
+      "aStatus": "acting",
+      "bStatus": "walking",
+      "aPhase": 0,
+      "bPhase": 1.899999999999999,
+      "ax": 87,
+      "az": -9,
+      "bx": 87,
+      "bz": -8.74072458861838,
+      "aDestination": "plant-5245",
+      "bDestination": "native-point-task-6027",
+      "aNext": null,
+      "bNext": {
+        "x": 87,
+        "z": -8
+      },
+      "aPathLength": 0,
+      "bPathLength": 6,
+      "aRaidReturn": false,
+      "bRaidReturn": false,
+      "distance": 0.25927541138161914,
+      "penetration": 0.3007245886183809
+    },
+    {
+      "day": 11,
+      "time": 330.0000000000068,
+      "a": "worker-9397",
+      "b": "worker-9405",
+      "aStatus": "returning",
+      "bStatus": "returning",
+      "aPhase": 0,
+      "bPhase": 1.1999999999999984,
+      "ax": 99.87236978338615,
+      "az": -10.001894859626235,
+      "bx": 99.6436403119668,
+      "bz": -9.585067144311017,
+      "aDestination": "home-village-1",
+      "bDestination": "home-village-1",
+      "aNext": {
+        "x": 99.94317194874712,
+        "z": -10.127878524280469
+      },
+      "bNext": {
+        "x": 100.13350872873117,
+        "z": -9.977519198864004
+      },
+      "aPathLength": 84,
+      "bPathLength": 84,
+      "aRaidReturn": false,
+      "bRaidReturn": false,
+      "distance": 0.4754603194281057,
+      "penetration": 0.08453968057189437
+    },
+    {
+      "day": 11,
+      "time": 330.0000000000068,
+      "a": "worker-9404",
+      "b": "worker-9407",
+      "aStatus": "returning",
+      "bStatus": "returning",
+      "aPhase": 1.899999999999999,
+      "bPhase": 0,
+      "ax": 101,
+      "az": -11.204771061263791,
+      "bx": 100.6303830907778,
+      "bz": -10.878338378688678,
+      "aDestination": "home-village-1",
+      "bDestination": "home-village-1",
+      "aNext": {
+        "x": 101,
+        "z": -12
+      },
+      "bNext": {
+        "x": 100,
+        "z": -11
+      },
+      "aPathLength": 80,
+      "bPathLength": 82,
+      "aRaidReturn": false,
+      "bRaidReturn": false,
+      "distance": 0.4931277277097267,
+      "penetration": 0.06687227229027337
+    },
+    {
+      "day": 11,
+      "time": 340.0000000000091,
+      "a": "worker-9397",
+      "b": "worker-9404",
+      "aStatus": "returning",
+      "bStatus": "returning",
+      "aPhase": 2.3999999999999995,
+      "bPhase": 0,
+      "ax": 94.84219832786326,
+      "az": -15.175010591479278,
+      "bx": 94.62129312243303,
+      "bz": -15.544893313385877,
+      "aDestination": "home-village-1",
+      "bDestination": "home-village-1",
+      "aNext": {
+        "x": 95,
+        "z": -17
+      },
+      "bNext": {
+        "x": 94.1639101055404,
+        "z": -15.883402976472182
+      },
+      "aPathLength": 69,
+      "bPathLength": 69,
+      "aRaidReturn": false,
+      "bRaidReturn": false,
+      "distance": 0.43082750347581744,
+      "penetration": 0.1291724965241826
+    },
+    {
+      "day": 11,
+      "time": 375.00000000001705,
+      "a": "worker-9401",
+      "b": "worker-9402",
+      "aStatus": "returning",
+      "bStatus": "returning",
+      "aPhase": 0,
+      "bPhase": 0.2999999999999985,
+      "ax": 73.56244352042792,
+      "az": -17,
+      "bx": 73.1430489171266,
+      "bz": -17,
+      "aDestination": "home-village-1",
+      "bDestination": "home-village-1",
+      "aNext": {
+        "x": 73,
+        "z": -17
+      },
+      "bNext": {
+        "x": 73,
+        "z": -17
+      },
+      "aPathLength": 47,
+      "bPathLength": 47,
+      "aRaidReturn": false,
+      "bRaidReturn": false,
+      "distance": 0.4193946033013134,
+      "penetration": 0.14060539669868666
+    },
+    {
+      "day": 11,
+      "time": 375.00000000001705,
+      "a": "worker-9402",
+      "b": "worker-9403",
+      "aStatus": "returning",
+      "bStatus": "returning",
+      "aPhase": 0.2999999999999985,
+      "bPhase": 0,
+      "ax": 73.1430489171266,
+      "az": -17,
+      "bx": 73.13199615478516,
+      "bz": -16.637316499201354,
+      "aDestination": "home-village-1",
+      "bDestination": "home-village-1",
+      "aNext": {
+        "x": 73,
+        "z": -17
+      },
+      "bNext": {
+        "x": 73.13199615478516,
+        "z": -18.93108558654785
+      },
+      "aPathLength": 47,
+      "bPathLength": 44,
+      "aRaidReturn": false,
+      "bRaidReturn": false,
+      "distance": 0.3628518779156832,
+      "penetration": 0.19714812208431687
+    },
+    {
+      "day": 12,
+      "time": 370.0000000000159,
+      "a": "worker-10376",
+      "b": "worker-10377",
+      "aStatus": "returning",
+      "bStatus": "returning",
+      "aPhase": 0,
+      "bPhase": 0.7999999999999984,
+      "ax": 65.01658730205085,
+      "az": -21.001105007691915,
+      "bx": 65,
+      "bz": -21.23808667785473,
+      "aDestination": "home-village-1",
+      "bDestination": "home-village-1",
+      "aNext": {
+        "x": 65,
+        "z": -20
+      },
+      "bNext": {
+        "x": 65,
+        "z": -21
+      },
+      "aPathLength": 26,
+      "bPathLength": 27,
+      "aRaidReturn": false,
+      "bRaidReturn": false,
+      "distance": 0.23756146695641508,
+      "penetration": 0.32243853304358494
+    },
+    {
+      "day": 13,
+      "time": 370.0000000000159,
+      "a": "worker-11325",
+      "b": "worker-11331",
+      "aStatus": "returning",
+      "bStatus": "returning",
+      "aPhase": 0,
+      "bPhase": 2.5999999999999996,
+      "ax": 67.31218437475964,
+      "az": -23.53523598108236,
+      "bx": 67.45777426629937,
+      "bz": -24.05169039378264,
+      "aDestination": "home-village-1",
+      "bDestination": "home-village-1",
+      "aNext": {
+        "x": 67.1469355736419,
+        "z": -23.645651699931005
+      },
+      "bNext": {
+        "x": 67,
+        "z": -24
+      },
+      "aPathLength": 34,
+      "bPathLength": 32,
+      "aRaidReturn": false,
+      "bRaidReturn": false,
+      "distance": 0.5365832432308538,
+      "penetration": 0.02341675676914623
+    },
+    {
+      "day": 13,
+      "time": 380.0000000000182,
+      "a": "worker-11322",
+      "b": "worker-11329",
+      "aStatus": "returning",
+      "bStatus": "returning",
+      "aPhase": 0,
+      "bPhase": 0.49999999999999845,
+      "ax": 66.91359681092835,
+      "az": -24,
+      "bx": 67.4515279584468,
+      "bz": -24,
+      "aDestination": "home-village-1",
+      "bDestination": "home-village-1",
+      "aNext": {
+        "x": 66,
+        "z": -24
+      },
+      "bNext": {
+        "x": 67,
+        "z": -24
+      },
+      "aPathLength": 31,
+      "bPathLength": 32,
+      "aRaidReturn": false,
+      "bRaidReturn": false,
+      "distance": 0.5379311475184494,
+      "penetration": 0.02206885248155066
+    },
+    {
+      "day": 13,
+      "time": 395.0000000000216,
+      "a": "worker-11319",
+      "b": "worker-11324",
+      "aStatus": "returning",
+      "bStatus": "returning",
+      "aPhase": 0,
+      "bPhase": 0.8999999999999984,
+      "ax": 72,
+      "az": -21.89321114121289,
+      "bx": 72,
+      "bz": -21.395564572473383,
+      "aDestination": "home-village-1",
+      "bDestination": "home-village-1",
+      "aNext": {
+        "x": 72,
+        "z": -22
+      },
+      "bNext": {
+        "x": 72,
+        "z": -22
+      },
+      "aPathLength": 39,
+      "bPathLength": 39,
+      "aRaidReturn": false,
+      "bRaidReturn": false,
+      "distance": 0.4976465687395084,
+      "penetration": 0.06235343126049164
+    },
+    {
+      "day": 13,
+      "time": 405.0000000000239,
+      "a": "worker-11319",
+      "b": "worker-11324",
+      "aStatus": "returning",
+      "bStatus": "returning",
+      "aPhase": 1.6999999999999988,
+      "bPhase": 0,
+      "ax": 65,
+      "az": -22.30678885878774,
+      "bx": 65.06281815993933,
+      "bz": -21.927957462452635,
+      "aDestination": "home-village-1",
+      "bDestination": "home-village-1",
+      "aNext": {
+        "x": 65,
+        "z": -22
+      },
+      "bNext": {
+        "x": 65,
+        "z": -21
+      },
+      "aPathLength": 28,
+      "bPathLength": 27,
+      "aRaidReturn": false,
+      "bRaidReturn": false,
+      "distance": 0.38400435943797334,
+      "penetration": 0.1759956405620267
+    },
+    {
+      "day": 14,
+      "time": 270.0000000000027,
+      "a": "worker-12476",
+      "b": "worker-12479",
+      "aStatus": "walking",
+      "bStatus": "acting",
+      "aPhase": 2.400000000000134,
+      "bPhase": 0,
+      "ax": 81.72855250746018,
+      "az": -3,
+      "bx": 81.68048858642578,
+      "bz": -3.475226402282715,
+      "aDestination": "native-point-task-12923",
+      "bDestination": "native-point-task-12960",
+      "aNext": {
+        "x": 82,
+        "z": -3
+      },
+      "bNext": null,
+      "aPathLength": 28,
+      "bPathLength": 0,
+      "aRaidReturn": false,
+      "bRaidReturn": false,
+      "distance": 0.4776507865918087,
+      "penetration": 0.08234921340819135
+    },
+    {
+      "day": 14,
+      "time": 315.0000000000034,
+      "a": "worker-12471",
+      "b": "worker-12478",
+      "aStatus": "returning",
+      "bStatus": "returning",
+      "aPhase": 0,
+      "bPhase": 2.2999999999999994,
+      "ax": 100.65116719997917,
+      "az": -10.453651946493077,
+      "bx": 100.64086242644044,
+      "bz": -11,
+      "aDestination": "home-village-1",
+      "bDestination": "home-village-1",
+      "aNext": {
+        "x": 100.84301912320448,
+        "z": -10.58184330323597
+      },
+      "bNext": {
+        "x": 101,
+        "z": -11
+      },
+      "aPathLength": 86,
+      "bPathLength": 81,
+      "aRaidReturn": false,
+      "bRaidReturn": false,
+      "distance": 0.5464452250029171,
+      "penetration": 0.013554774997082908
+    },
+    {
+      "day": 14,
+      "time": 325.0000000000057,
+      "a": "worker-12471",
+      "b": "worker-12478",
+      "aStatus": "returning",
+      "bStatus": "returning",
+      "aPhase": 2.2999999999999994,
+      "bPhase": 0,
+      "ax": 95.17636557046232,
+      "az": -16.158545494573083,
+      "bx": 94.89909569909673,
+      "bz": -16.42291353879293,
+      "aDestination": "home-village-1",
+      "bDestination": "home-village-1",
+      "aNext": {
+        "x": 95,
+        "z": -17
+      },
+      "bNext": {
+        "x": 94.45106920952608,
+        "z": -16.45365194649308
+      },
+      "aPathLength": 69,
+      "bPathLength": 70,
+      "aRaidReturn": false,
+      "bRaidReturn": false,
+      "distance": 0.38310448231744504,
+      "penetration": 0.17689551768255501
+    },
+    {
+      "day": 14,
+      "time": 335.00000000000796,
+      "a": "worker-12473",
+      "b": "worker-12477",
+      "aStatus": "returning",
+      "bStatus": "returning",
+      "aPhase": 0,
+      "bPhase": 2.6999999999999997,
+      "ax": 96.43648148517609,
+      "az": -15.747143459071292,
+      "bx": 96,
+      "bz": -15.53378531329561,
+      "aDestination": "home-village-1",
+      "bDestination": "home-village-1",
+      "aNext": {
+        "x": 96.41815669676403,
+        "z": -15.843942010059639
+      },
+      "bNext": {
+        "x": 96,
+        "z": -16
+      },
+      "aPathLength": 72,
+      "bPathLength": 71,
+      "aRaidReturn": false,
+      "bRaidReturn": false,
+      "distance": 0.4858372003772058,
+      "penetration": 0.07416279962279426
+    },
+    {
+      "day": 14,
+      "time": 340.0000000000091,
+      "a": "worker-12472",
+      "b": "worker-12481",
+      "aStatus": "returning",
+      "bStatus": "returning",
+      "aPhase": 0,
+      "bPhase": 2.1999999999999993,
+      "ax": 96,
+      "az": -14.718694573399546,
+      "bx": 96.19706980373614,
+      "bz": -14.406857823960168,
+      "aDestination": "home-village-1",
+      "bDestination": "home-village-1",
+      "aNext": {
+        "x": 96,
+        "z": -15
+      },
+      "bNext": {
+        "x": 96,
+        "z": -14.446057445160367
+      },
+      "aPathLength": 72,
+      "bPathLength": 71,
+      "aRaidReturn": false,
+      "bRaidReturn": false,
+      "distance": 0.368888419234758,
+      "penetration": 0.19111158076524204
+    },
+    {
+      "day": 14,
+      "time": 360.00000000001364,
+      "a": "worker-12471",
+      "b": "worker-12478",
+      "aStatus": "returning",
+      "bStatus": "returning",
+      "aPhase": 0,
+      "bPhase": 1.899999999999999,
+      "ax": 67.09627737079092,
+      "az": -24.494764621816525,
+      "bx": 67.57561994177868,
+      "bz": -24.771919022290415,
+      "aDestination": "home-village-1",
+      "bDestination": "home-village-1",
+      "aNext": {
+        "x": 67.09198490168552,
+        "z": -24.497303017304716
+      },
+      "bNext": {
+        "x": 67.53182771973258,
+        "z": -24.794972775009402
+      },
+      "aPathLength": 34,
+      "bPathLength": 33,
+      "aRaidReturn": false,
+      "bRaidReturn": false,
+      "distance": 0.553700155375818,
+      "penetration": 0.006299844624182094
+    },
+    {
+      "day": 14,
+      "time": 365.0000000000148,
+      "a": "worker-12478",
+      "b": "worker-12480",
+      "aStatus": "returning",
+      "bStatus": "returning",
+      "aPhase": 0,
+      "bPhase": 1.2999999999999985,
+      "ax": 65.79069399442722,
+      "az": -21.17090684477937,
+      "bx": 65.76215138509541,
+      "bz": -21.638783384796206,
+      "aDestination": "home-village-1",
+      "bDestination": "home-village-1",
+      "aNext": {
+        "x": 65.54634805350692,
+        "z": -19.89993098166686
+      },
+      "bNext": {
+        "x": 65,
+        "z": -21
+      },
+      "aPathLength": 26,
+      "bPathLength": 27,
+      "aRaidReturn": false,
+      "bRaidReturn": false,
+      "distance": 0.46874634638106083,
+      "penetration": 0.09125365361893922
+    }
+  ]
+}

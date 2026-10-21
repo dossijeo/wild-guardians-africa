@@ -97,3 +97,17 @@ node tools/experiments/analyze-worker-phase-blockers.mjs test-results/worker-pha
 ```
 
 The isolated [`targeted-phase-rejected.patch`](targeted-phase-rejected.patch) let a recovering worker ignore only the bodies in `blockingIds` while retaining static and third-party body clearance. It applies to the baseline commit (`git apply --check`) but is **not active in the game**. All 26 directed actor-motion tests passed. A 14-night run completed with 24 late overlap examples, all with original blocking bodies, and no third-party example. Yet it delivered only 1,260 crates and left 117 living crops, versus 1,317 and 145 in the baseline; money was 928 versus 899. Limiting phasing is therefore an incomplete physical fix with a material campaign regression, not an adoption candidate. A correct solution must coordinate passage around the original blocker rather than granting any temporary body penetration.
+
+## Rejected lateral handoff prototype
+
+The isolated [`yield-handoff-rejected.patch`](yield-handoff-rejected.patch) attempts a short, terrain- and body-cleared lateral step when a worker is about to enter mobile-collision phasing. It retains the original route, waits briefly for the blocking coworker, and falls back to the existing recovery. The second variant limits the maneuver to workers moving in opposing directions; that restriction is included in the patch. Removing the added dot-product condition reproduces the first variant. This patch is **not active in the game**.
+
+The saved day-9 crossing improved: after one simulated second the workers were 0.983 m apart with no recovery event, and after eight seconds both had moved away without penetrating. All 26 directed actor-motion tests passed. The full Sabana/Mapungubwe/712 native-intent campaign is the deciding test:
+
+| Variant | Deliveries | Coins | Living crops | Recoveries | Overlap examples after time 30 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Current main | 1,317 | 899 | 145 | 164 | 43 |
+| Yield at any moving coworker | 1,220 | 694 | 132 | 62 | 19 |
+| Yield only to opposing movement | 1,260 | 825 | 151 | 114 | 30 |
+
+The unrestricted maneuver loses too much agricultural throughput. The opposing-only maneuver still loses 57 deliveries and 74 coins, and 30 sampled overlaps remain, with up to 0.538 m penetration. A physically complete and economically acceptable right-of-way policy needs more than inserting a lateral waypoint at the late recovery threshold. Neither variant is adopted. The campaign reports are reproducible with `node tools/experiments/probe-worker-overlaps.mjs 14 712 good sabana mapungubwe wild-engine` after applying the patch; the short replay accepts `--seconds=8` in the patched script.
