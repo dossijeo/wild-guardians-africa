@@ -1,4 +1,4 @@
-export async function installMangroveHeightBlendRoute(page,{height=true,calibrated=false,linearSoil=false,toonSoil=false,skipUnusedLighting=false,gateSoilSamples=false,guardSoilDerivatives=false,guardSoilHeight=false}={}){
+export async function installMangroveHeightBlendRoute(page,{height=true,calibrated=false,linearSoil=false,toonSoil=false,skipUnusedLighting=false,gateSoilSamples=false,guardSoilDerivatives=false,guardSoilHeight=false,gateSoilColorOnly=false}={}){
  await page.route('**/src/rendering/biome-ground.js*',async route=>{
   const response=await route.fetch();let body=await response.text();
   const anchor="if(this.layeredSavanna)for(const role of ['base','normal','arh']){";
@@ -37,8 +37,10 @@ export async function installMangroveHeightBlendRoute(page,{height=true,calibrat
    patch=patch.slice(0,begin)+patch.slice(end);
    const at=patch.indexOf('  qaSoilAlbedo=');
    if(begin<0||end<0||at<0)throw Error('Sample gate anchors missing');
-   const gated=samples.replace('vec3 soilRaw=','soilRaw=').replace('vec3 soil=','soil=').replace('vec3 soilN=','soilN=');
-   patch=patch.slice(0,at)+'  vec3 soilRaw=vec3(0.),soil=vec3(0.),soilN=vec3(0.,0.,1.);if('+ (guardSoilHeight?'mossCover<1.||heightDifference<transitionWidth+2.*fwidth(heightDifference)':guardSoilDerivatives?'mossCover<1.||fwidth(mossCover)>0.':'mossCover<1.') +'){'+gated+'}\n'+patch.slice(at);
+   let gated=samples.replace('vec3 soilRaw=','soilRaw=').replace('vec3 soil=','soil=').replace('vec3 soilN=','soilN=');
+   let retainedNormal='';
+   if(gateSoilColorOnly){const normal='soilN=textureGrad(uLayerSandNormal,uv,dx,dy).rgb*2.-1.;';if(!gated.includes(normal))throw Error('Normal sample missing');gated=gated.replace(normal,'');retainedNormal=normal;}
+   patch=patch.slice(0,at)+'  vec3 soilRaw=vec3(0.),soil=vec3(0.),soilN=vec3(0.,0.,1.);'+retainedNormal+'if('+ (guardSoilHeight?'mossCover<1.||heightDifference<transitionWidth+2.*fwidth(heightDifference)':guardSoilDerivatives?'mossCover<1.||fwidth(mossCover)>0.':'mossCover<1.') +'){'+gated+'}\n'+patch.slice(at);
   }
   if(toonSoil)body=body.replace('void groundMaterial417(', 'vec3 qaSoilAlbedo=vec3(0.),qaSoilNormal=vec3(0.,1.,0.);float qaSoilRough=1.,qaSoilWeight=0.;void groundMaterial417(');
   body=body.replace('void groundMaterial417(', 'uniform sampler2D uLayerSandBase,uLayerSandNormal,uLayerSandARH;void groundMaterial417(');
