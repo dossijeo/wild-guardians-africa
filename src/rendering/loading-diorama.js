@@ -1,3 +1,4 @@
+import {createLoadingPlantRegion} from './loading-plant-region.js';
 import {loadingDiffuseEnabled,installLoadingDiffuseBeam} from './loading-diffuse-beam.js';
 import {loadingBeamEnabled} from './loading-beam.js';
 import {applyLoadingBeamLight} from './loading-beam-light.js';
@@ -87,7 +88,7 @@ export class LoadingDiorama {
     }});
     const focused=new Set();this.scene.traverse(mesh=>{for(const material of [mesh.material].flat().filter(Boolean)){if(focused.has(material)||(!material.isMeshStandardMaterial&&!material.isMeshPhysicalMaterial))continue;focused.add(material);this.focusLight.apply(material);}});
     if(loadingBeamEnabled())applyLoadingBeamLight(this.scene);
-    if(loadingDiffuseEnabled())this.diffuseBeam=installLoadingDiffuseBeam(this);
+    if(loadingDiffuseEnabled()){this.plants.validPosition=createLoadingPlantRegion(this.plants.radius);this.diffuseBeam=installLoadingDiffuseBeam(this);}
     // Warm all five stages and four morph bridges, including ones not present in
     // the first frame. Counts/visibility restored before accepting interaction.
     const saved=[];this.scene.traverse(mesh=>{if(mesh.isInstancedMesh){saved.push([mesh,mesh.count,mesh.visible]);mesh.count=1;mesh.visible=true;}});

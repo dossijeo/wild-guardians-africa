@@ -1368,3 +1368,7 @@ Two 768-query series on Intel UHD confirm 6 draws/16002 triangles with cached sh
 
 ## Native loading root contact (2026-10-22)
 Integrated event-updated root contact into loadingBeam=diffuse. Four day/night landscape/portrait captures are pixel-identical to the previous QA contact version; 6 calls, 16002 triangles, no GL errors. See loading-native-contact-20261022/README.md. Original default unchanged; sky/mist QA parity and planting-region integration remain pending.
+
+
+## Native fixed-view loading planting (2026-10-22)
+Diffuse option now restricts additional plants to the tested fixed-view region through a gesture-only predicate. Twelve captures, eight mature plants, fixed zoom/FOV/distance and no GL errors. See loading-native-region-20261022. Initial portrait leaf edges, other aspect ratios and full-region UI remain unresolved; no full quality claim.
