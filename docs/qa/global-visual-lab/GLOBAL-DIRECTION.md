@@ -1079,3 +1079,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Caras traseras de árboles: comparación explícita
 
 [24 capturas reales](obstruction-backfaces-20261021/README.md): DoubleSide, FrontSide actual y superficie más cercana, Sabana baja día/noche. FrontSide reduce acumulación pero conserva capas delanteras; profundidad aislada mejora la lectura del suelo y permanece candidata QA. Dos targets nominales 14.06 MiB y dos dibujos auxiliares con dos parciales; no atribuir FPS a contadores de la última pasada. Sin cambios de modelos ni integración.
+
+
+### Manglares: cubierta Blender probada dentro del juego
+
+[36 capturas y assets](mangrove-leaf-fill-20261021/README.md): ocho hojas,32 triángulos,proyección periódica40→92% sin subir densidad. Material corregido muestra hojas solapadas desde cámara normal;conservar candidata. Región añade92–115mil triángulos y2draw calls,sin errores. Frontera con musgo,LOD,streaming yGPU pendientes;no integrada ni objetivo alcanzado.
