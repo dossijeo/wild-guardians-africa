@@ -491,3 +491,7 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Cañón: precálculo solar recupera microdetalle, no volumen global
 
 [ARH alfa con 32 pasos de medio texel](canyon-microshadow-bake/README.md): RGB conservado, sin nuevas lecturas. 24 capturas; seis parejas nocturnas exactas, cambios diurnos pequeños sin salto artístico claro. No incorporar. Evitar más rondas equivalentes de microcontraste; el relieve mesoscópico sigue pendiente.
+
+### Gran Río: alinear desgaste no naturaliza la frontera
+
+[Comparación V2 frente a transición .08–.30](river-soil-wear-aligned/README.md): 24 capturas con geometría idéntica. Reduce franja verde plana pero agranda y acentúa el claro circular. No promover; investigar forma espacial visual antes de más cambios de umbral.
