@@ -1255,3 +1255,7 @@ Quince parejas de Sabana en sky-twilight-20261021: cinco niveles de mezcla y tre
 
 ### Cielo: comandos de dibujo instrumentados
 24 parejas de amanecer en sky-draw-diagnostic-20261021 envían el mismo multiconjunto de comandos WebGL; la diferencia intermitente anterior no se reproduce y sigue sin causa identificada. GPU externa 78–93 % en segunda comprobación: coste pendiente. Continuar trabajo visual independiente, sin usar la contención como bloqueo global.
+
+
+### Desierto: deformación amplia no promovida
+Seis parejas en desert-ripple-warp-20261021. Rompe repetición pero estira las ondas en bandas peinadas; descartada esta intensidad por calidad visual, no por rendimiento. Misma cámara/hora/triángulos/calls. Sin benchmark nuevo. Próximo enfoque: limitar Jacobiano y transformar normales coherentemente, conservando calidez.
