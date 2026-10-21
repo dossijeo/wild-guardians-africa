@@ -136,7 +136,7 @@ export class WorldScene {
   showSpellPreview(draft){this.spellPreview.show(draft);}
   clearSpellPreview(){this.spellPreview.clear();}
   clearWallPreview(){if(this.wallPreview){for(const wall of this.wallPreview.children)wall.dispose();this.scene.remove(this.wallPreview);this.wallPreview=null;}}
-  qualitySetting(quality) {this.quality=quality;this.farVegetation?.configureQuality?.(quality);this.toon.uniforms.uGroundDetail.value=quality==='muy_baja'?0:1;this.destructionPass.quality=['muy_baja','baja'].includes(quality)?0:1;this.destructionPass.effectQuality=quality==='alta'?'high':['muy_baja','baja'].includes(quality)?'low':'medium';updateGroundQuality(this.terrainMeshes,quality,mesh=>this.materialRegistry?.refresh(mesh));this.renderer.shadowMap.enabled=['media','alta'].includes(quality);resizeShadowMap(this.sun,quality);this.resize();}
+  qualitySetting(quality) {this.quality=quality;if(this.assetGroups)this.assetGroups.instanceCulling=quality!=='muy_baja';this.farVegetation?.configureQuality?.(quality);this.toon.uniforms.uGroundDetail.value=quality==='muy_baja'?0:1;this.destructionPass.quality=['muy_baja','baja'].includes(quality)?0:1;this.destructionPass.effectQuality=quality==='alta'?'high':['muy_baja','baja'].includes(quality)?'low':'medium';updateGroundQuality(this.terrainMeshes,quality,mesh=>this.materialRegistry?.refresh(mesh));this.renderer.shadowMap.enabled=['media','alta'].includes(quality);resizeShadowMap(this.sun,quality);this.resize();}
   async loadReady(pending,releaseLate){
     const signal=this.loading?.signal;let value;
     const check=()=>{if(this.disposed||signal?.aborted)throw new Error('Carga de mundo cancelada');};

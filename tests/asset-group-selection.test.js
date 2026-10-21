@@ -69,3 +69,17 @@ test('rebasing, removal, recreation and quality/LOD changes keep independent col
   f.chunks.set('a',f.chunk);updateAssetLods(f.chunks,f.camera,'muy_baja');f.groups.update(f.chunks,f.camera,{x:shift.x,z:shift.z});
   assert.equal(f.groups.colors.size,1);assert.equal(f.groups.shadows.get('0').mesh.count,3);f.groups.dispose();f.groups.dispose();
 });
+
+
+test('a local matrix or coverage change leaves other slots and shadow buffers intact',()=>{
+ const f=fixture(),other=new THREE.Group();f.scene.add(other);f.chunks.set('other',other);
+ createAssetLod(other,f.batch.levels,[8,12,16].map(x=>({x,y:0,z:0,sx:1,sy:1,sz:1,yaw:0})),{group:0,role:'prop'},1);
+ updateAssetLods(f.chunks,f.camera,'alta');render(f);
+ const g=f.groups.colors.get('1:0'),shadow=f.groups.shadows.get('1'),versions=[g.mesh.instanceMatrix.version,g.mesh.geometry.attributes.nativeVisibility.version,shadow.mesh.instanceMatrix.version];
+ const source=f.batch.meshes[0];source.instanceMatrix.array[12]=1;source.instanceMatrix.needsUpdate=true;
+ assert.equal(render(f).uploads,2);assert.equal(f.groups.colors.get('1:0'),g);
+ assert.deepEqual([g.mesh.instanceMatrix.version,g.mesh.geometry.attributes.nativeVisibility.version,shadow.mesh.instanceMatrix.version],versions);
+ const matrixVersion=f.groups.colors.get('0:0').mesh.instanceMatrix.version,shadowVersion=f.groups.shadows.get('0').mesh.instanceMatrix.version;
+ source.geometry.attributes.nativeVisibility.setX(0,.4);source.geometry.attributes.nativeVisibility.needsUpdate=true;
+ assert.equal(render(f).uploads,1);assert.equal(f.groups.colors.get('0:0').mesh.instanceMatrix.version,matrixVersion);assert.equal(f.groups.shadows.get('0').mesh.instanceMatrix.version,shadowVersion);f.groups.dispose();
+});

@@ -49,8 +49,9 @@ try{for(const quality of (process.env.RR_QUALITY??'media').split(','))for(const 
   const render=w.render;w.qaRenderDelta=0;w.render=function(){return render.call(this,this.qaRenderDelta)};
   w.updateCamera=()=>{w.camera.lookAt(w.qaLookAt??w.controls.target);w.camera.updateMatrixWorld()};
   globalThis.rrClasses={main:(await import('/src/rendering/qa-groups-main.js')).NativeAssetGroups,candidate:(await import('/src/rendering/qa-groups-candidate.js')).NativeAssetGroups,naive:(await import('/src/rendering/qa-groups-naive.js')).NativeAssetGroups};
+  globalThis.rrCandidateCulling=w.assetGroups.instanceCulling;
   globalThis.rrWorldMain=(await import('/src/rendering/qa-scene-main.js')).WorldScene.prototype;globalThis.rrWorldCandidate=Object.getPrototypeOf(w);
-  globalThis.rrSwap=variant=>{const methods=variant==='main'?rrWorldMain:rrWorldCandidate;w.syncChunks=methods.syncChunks;w.syncResidentProps=methods.syncResidentProps;const old=w.assetGroups,next=new rrClasses[variant](w.scene);next.omitZeroColor=old.omitZeroColor;old.dispose();w.assetGroups=next;};
+  globalThis.rrSwap=variant=>{const methods=variant==='main'?rrWorldMain:rrWorldCandidate;w.syncChunks=methods.syncChunks;w.syncResidentProps=methods.syncResidentProps;const old=w.assetGroups,next=new rrClasses[variant](w.scene);next.omitZeroColor=old.omitZeroColor;next.instanceCulling=rrCandidateCulling;old.dispose();w.assetGroups=next;};
   globalThis.rrPose=t=>{const p=w.controls.target,x=p.x+22-40*t,z=p.z+18+4*t;w.camera.position.set(x,Math.max(p.y+16-7*t,w.nav.field.surface(x,z)+1.2),z);w.updateCamera()};
   rrPose(0);w.syncChunks();await w.horizon.whenReady();w.syncChunks();await w.whenChunksReady();w.render(0);
   await Promise.all([...w.objects.values()].map(o=>o.userData.actorReady).filter(Boolean));
@@ -61,6 +62,7 @@ try{for(const quality of (process.env.RR_QUALITY??'media').split(','))for(const 
  if(process.env.RR_DENSE==='1')await page.evaluate(async()=>await(await import('/tools/qa-renderer-dense.js')).installDenseFixture(window.qaCampaignWorld));
  if(process.env.RR_STREAM==='1'){const streams=[];for(const variant of ['main','candidate']){const streaming=await page.evaluate(async variant=>{const w=window.qaCampaignWorld;rrSwap(variant);return await(await import('/tools/qa-renderer-streaming.js')).measureStreamingSweep(w)},variant);streams.push({variant,...streaming});await writeFile(out+'/'+biome+'-'+quality+'-streaming.json',JSON.stringify({streams,errors},null,2));}}
  if(process.env.RR_MUTATE==='1'){const mutation=await page.evaluate(async()=>await(await import('/tools/qa-renderer-mutations.js')).exerciseRendererMutations(window.qaCampaignWorld));await writeFile(out+'/'+biome+'-'+quality+'-mutations.json',JSON.stringify({mutation,errors},null,2));}
+ if(process.env.RR_STREAM_AFTER_MUTATE==='1'){const streaming=await page.evaluate(async()=>{const w=window.qaCampaignWorld;rrSwap('candidate');const result=await(await import('/tools/qa-renderer-streaming.js')).measureStreamingSweep(w);for(const group of w.chunks.values())for(const batch of group.userData.lodBatches??[])if(batch.instances.some(p=>w.nav.suppressed.has(p.id)))throw Error('Streaming restored a confirmed suppressed prop');return result;});await writeFile(out+'/'+biome+'-'+quality+'-post-command-streaming.json',JSON.stringify({streaming,errors},null,2));}
  if(process.env.RR_PERF==='1'){
   await page.evaluate(async()=>{
    const w=window.qaCampaignWorld,{nativeNearRegion}=await import('/src/rendering/horizon.js');
@@ -114,7 +116,7 @@ try{for(const quality of (process.env.RR_QUALITY??'media').split(','))for(const 
    console.log('capture',biome,quality,phase,pose);
    let control=null;
    for(const variant of ['main','candidate','main']){
-    const capture=await page.evaluate(({variant,reset})=>{
+    const capture=await page.evaluate(({variant,reset,shadowCheck})=>{
      const w=window.qaCampaignWorld;rrSwap(variant);for(let i=0;i<12;i++)w.render(0);
      const colors=[...w.assetGroups.colors].map(([key,g])=>[key,{matrix:Array.from(g.mesh.instanceMatrix.array.slice(0,g.mesh.count*16)),coverage:Array.from(g.mesh.geometry.attributes.nativeVisibility.array.slice(0,g.mesh.count)),bounds:g.mesh.boundingSphere?[...g.mesh.boundingSphere.center.toArray(),g.mesh.boundingSphere.radius]:null}]);
      if(reset)w.qaControlColors=new Map(colors);
@@ -128,13 +130,15 @@ try{for(const quality of (process.env.RR_QUALITY??'media').split(','))for(const 
       }
      }
      const shadows=[...w.assetGroups.shadows].map(([key,g])=>[key,g.mesh.count,Array.from(g.mesh.instanceMatrix.array.slice(0,g.mesh.count*16))]);
-     return {contentEqual,boundsEqual,png:w.renderer.domElement.toDataURL('image/png').split(',')[1],shadows,keys:[...w.chunks.keys()].sort(),camera:w.camera.position.toArray(),glError:w.renderer.getContext().getError(),colorCount:[...w.assetGroups.colors.values()].reduce((n,g)=>n+g.mesh.count,0)};
-    },{variant,reset:control===null});
+     const png=w.renderer.domElement.toDataURL('image/png').split(',')[1];let forced=null;if(shadowCheck&&w.renderer.shadowMap.enabled){w.releaseNativeShadow.cache.invalidate();w.render(0);forced=w.renderer.domElement.toDataURL('image/png').split(',')[1];}
+     return {contentEqual,boundsEqual,png,forced,shadows,keys:[...w.chunks.keys()].sort(),camera:w.camera.position.toArray(),glError:w.renderer.getContext().getError(),colorCount:[...w.assetGroups.colors.values()].reduce((n,g)=>n+g.mesh.count,0)};
+    },{variant,reset:control===null,shadowCheck:process.env.RR_SHADOW==='1'});
     const bytes=Buffer.from(capture.png,'base64'),raw=await sharp(bytes).ensureAlpha().raw().toBuffer({resolveWithObject:true});
     const name=`${biome}-${quality}-${phase}-${pose}-${variant}-${rows.length}.webp`;await sharp(bytes).webp({lossless:true,effort:0}).toFile(out+'/'+name);
     let difference=null;if(control){if(raw.data.length!==control.raw.length)throw Error('Resolution changed');let pixels=0,max=0;for(let i=0;i<raw.data.length;i+=4){let d=0;for(let k=0;k<3;k++)d=Math.max(d,Math.abs(raw.data[i+k]-control.raw[i+k]));if(d)pixels++;max=Math.max(max,d)}difference={pixels,max,shadowsEqual:JSON.stringify(capture.shadows)===control.shadows,residencyEqual:JSON.stringify(capture.keys)===control.keys};}
     else control={raw:raw.data,shadows:JSON.stringify(capture.shadows),keys:JSON.stringify(capture.keys)};
-    const {png,shadows,...proof}=capture;proof.shadowSHA=createHash('sha256').update(JSON.stringify(shadows)).digest('hex');rows.push({biome,quality,phase,pose,variant,name,...proof,difference,errors:[...errors]});
+    let shadowDifference=null;if(capture.forced){const forced=Buffer.from(capture.forced,'base64'),target=await sharp(forced).ensureAlpha().raw().toBuffer();let pixels=0,max=0;for(let i=0;i<target.length;i+=4){let d=0;for(let k=0;k<3;k++)d=Math.max(d,Math.abs(target[i+k]-raw.data[i+k]));if(d)pixels++;max=Math.max(max,d)}shadowDifference={pixels,max};await sharp(forced).webp({lossless:true,effort:0}).toFile(out+'/'+name.replace('.webp','-forced.webp'));}
+    const {png,forced,shadows,...proof}=capture;proof.shadowDifference=shadowDifference;proof.shadowSHA=createHash('sha256').update(JSON.stringify(shadows)).digest('hex');rows.push({biome,quality,phase,pose,variant,name,...proof,difference,errors:[...errors]});
     await writeFile(out+'/results.json',JSON.stringify({config,rows},null,2));
     if(errors.length||capture.glError||!capture.contentEqual||!capture.boundsEqual||difference&&(!difference.shadowsEqual||!difference.residencyEqual))throw Error('Capture validation failed: '+JSON.stringify({errors,difference}));
    }
