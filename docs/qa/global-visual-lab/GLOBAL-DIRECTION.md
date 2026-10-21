@@ -984,3 +984,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Gran Río: recorrido de LOD con viento
 
 [72 parejas y vídeos](river-grass-motion-20261021/README.md): selección cercana3778–4631 y lejana5845–7489,idénticas entre variantes;sin errores. Contactos mantienen continuidad y caminos. Poses asentadas a12fps,no rendimiento real ni certificación de ausencia de popping. Conservar QA;pendiente revisión temporal fina y nueva vista global de seis biomas.
+
+
+### Revisión global V8
+
+[36 capturas de seis biomas](combined-campaign-review-v8/README.md),cámara/hora iguales a V7,sin errores. Reúne LOD de hierba y relieve residual del Desierto. Identidad cromática conservada;persisten uniformidad de Gran Río,repetición del musgo y detalle nocturno volcánico insuficiente. Objetivo global no alcanzado;priorizar cambio artístico mesoscópico o legibilidad nocturna sobre microajustes adicionales de LOD. Sin benchmark global ni integración por defecto.
