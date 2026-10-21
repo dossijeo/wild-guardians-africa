@@ -531,3 +531,7 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Cañón: respuesta seca acotada a depósitos
 
 [36 capturas](canyon-sand-dry/README.md): atenuación especular ambiental por peso de arena, conservando normales e iluminación directa. Reduce crestas claras cercanas y mantiene ondulación normal/nocturna. Conservar QA, no integrar: movimiento y coste total siguen pendientes.
+
+### Cañón: arena seca sigue costando más con cámara móvil
+
+[ABBA completo](canyon-sand-dry/moving-performance/README.md):960 muestras GPU,1440 frames, geometría y cámaras iguales. Día grava6.04–6.63ms/arena7.29–7.70ms; noche6.79–7.21/7.38–8.09ms. No aprobar presupuesto. Investigar reducir trabajo del material manteniendo relieve, no repetir la máscara descartada.
