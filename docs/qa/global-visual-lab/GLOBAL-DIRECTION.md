@@ -824,3 +824,7 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Gran Cañón: recuperar emisores de sombra lejanos
 
 [Candidata horizon.castShadow](canyon-horizon-caster/README.md): recupera continuidad sombreada del valle en vistas36/47 conservando volumen. Ampliar fade del borde no arregló el corte. Mantener candidata; medir trabajo real de actualización de sombras antes de integrar. Contadores de captura solo color, no coste total.
+
+### Coste del emisor lejano de Gran Cañón
+
+[ABBA caché/forzado](canyon-horizon-caster/performance/README.md): caché sigue acertando sin draws añadidos; actualización suma1 draw/34404 triángulos en view47. Tiempos variables incluso en control: no delta temporal robusto. Conservar candidata visual; pendientes movimiento/streaming y perfil bajo.
