@@ -1174,3 +1174,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Gran Río: recorrido de cámara con viento
 
 [72 parejas y vídeos](river-night-motion-20261021/README.md),selección y cámaras iguales,sin overflow. Contacto conserva mejora cerca y a distancia. Poses asentadas,no fluidez real ni certificación temporal exhaustiva. Candidata para revisión global.
+
+
+### Revisión global V10
+
+[36 capturas](combined-campaign-review-v10/README.md):33 exactas frente V9,solo cambia Gran Río nocturno. Conservar combinación QA con mejora medida;priorizar coherencia suelo/cobertura de Manglares. No objetivo global alcanzado.
