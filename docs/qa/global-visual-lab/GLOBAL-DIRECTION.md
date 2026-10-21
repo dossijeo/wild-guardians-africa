@@ -671,3 +671,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Manglares: optimización conservando la referencia visual aprobada
 
 [Protección por altura](mangrove-height-blend/sample-gate/height-guard/README.md): seis parejas reales,8–25 píxeles residuales por imagen.1920 muestras GPU válidas; cuatro diferencias favorables, pero magnitud variable (−.087 a−1.927ms) y última candidata con peor CPU/cadencia. Conservar candidata sin afirmar equivalencia exacta ni ahorro estable. La receta visual aprobada sigue intacta; no se abandona por coste.
+
+
+### Manglares: color-only no acredita ahorro estable
+
+[Benchmark de color condicional](mangrove-height-blend/sample-gate/color-only/performance/README.md):1920 muestras GPU válidas; diferencias diurnas+5.446/−1.108ms, nocturnas−.019/−3.543ms, con fuerte variación del control. No promover como optimización demostrada. Las72 parejas móviles conservan diferencias pequeñas, pero no sustituyen la prueba de coste. La receta visual aprobada se conserva; ampliar validación de recursos y buscar trabajo redundante sin degradar la imagen.
