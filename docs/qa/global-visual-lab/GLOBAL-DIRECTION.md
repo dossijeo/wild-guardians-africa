@@ -944,3 +944,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Sabana: normales base del LOD
 
 [Seis parejas y auditoría de módulos](grass-normal-lod-20261021/README.md): normales difieren20° media/40.6°máximo; candidata interpola hacia módulo light con atributo1296bytes nominales. Sin geometría añadida ni errores. Cambio estático pequeño; pendientes prueba temporal/coste antes de promover.
+
+
+### Sabana: coste conjunto de transición LOD
+
+[ABBA original/viento+normales](grass-normal-lod-20261021/performance/README.md): GPU diurna ~+0.48ms, CPU/cadencia sin ganancia consistente. Instancias/triángulos iguales. Conservar candidata, falta validar beneficio temporal final; no descartar por coste ni prometer FPS.
