@@ -1,0 +1,23 @@
+{
+  "base": "451b9e9bf",
+  "branch": "codex/wild-renderer-wasm",
+  "date": "2026-10-21T08:47:46.037Z",
+  "node": "v20.11.0",
+  "chrome": "155.0.8059.86",
+  "playwright": "1.64.1",
+  "platform": "win32",
+  "release": "10.0.26200",
+  "cpu": "11th Gen Intel(R) Core(TM) i7-11800H @ 2.30GHz",
+  "compiler": "Emscripten 6.0.12, -O3 -ffp-contract=off; see tools/build-wild-renderer.ps1",
+  "linearMemoryBytes": 67108864,
+  "wasmBytes": 8242,
+  "hashes": {
+    "src/rendering/wild-renderer/core.cpp": "9c426197023cc39434ed6613e2e2f7e731c731e3f56c3d67a5160fedd23b07e5",
+    "src/rendering/wild-renderer/core.wasm": "67995e79ee57fd710d0d03f3e52a739a09ef6b1375362ae630e1efcf3f11263f",
+    "src/rendering/wild-renderer/adapter.js": "98e7e5e4141708364b53ccc0d577cc176dac98373d72de6eaf77cc1dd1755255",
+    "tools/experiments/qa-wild-renderer-route.mjs": "6dfc9d05de3c191c1d2432fe48c3e87b7a95e3ca0ca21af9986b2683783d22f6",
+    "tools/experiments/qa-wild-renderer-measure.js": "3623926e2d40d83edfecca85ae49184e62c29f4f0833eab3f823882e9614fbf4",
+    "tools/experiments/qa-wild-renderer-dense.js": "b7b9c2e982c8c22fd5792896a0a3f820bafdc77f11fb4a6e2de5819f0332d270",
+    "tools/experiments/measure-wild-renderer.mjs": "3f880241ec9fff924d0f73311ccb24c7acbabe5af81d5a41a4ce0924cceae1d7"
+  }
+}

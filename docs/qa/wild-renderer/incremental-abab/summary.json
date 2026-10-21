@@ -1,0 +1,277 @@
+{
+  "validForPerformanceComparison": true,
+  "mismatches": [],
+  "rows": [
+    {
+      "phase": "day",
+      "variant": "combined",
+      "cpuMs": 5.899722221990427,
+      "groupMs": 1.4549999999503294,
+      "packMs": 0.26944444361660214,
+      "gpuMs": 12.1289231,
+      "intervalMs": 18.24527777781089,
+      "fpsCadence": 54.808702403871116,
+      "p50": 16.799999982118607,
+      "p95": 31.30000001192093,
+      "p99": 48.599999994039536,
+      "inputMs": 0.12694444350070425,
+      "kernelMs": 0.08055555505885018,
+      "copyBytes": 14646.577777777778,
+      "liveBytes": 281536,
+      "callsRange": [
+        55,
+        69
+      ],
+      "trianglesRange": [
+        472424,
+        594099
+      ],
+      "registryMs": 0,
+      "registerMs": 0,
+      "registeredInstances": 0,
+      "registrations": 0,
+      "descriptorBytes": 34074.75555555556,
+      "orderUploads": 0,
+      "visibilityUploads": 0
+    },
+    {
+      "phase": "day",
+      "variant": "incremental",
+      "cpuMs": 5.742222223099735,
+      "groupMs": 1.2727777782413694,
+      "packMs": 0.2333333331677649,
+      "gpuMs": 12.765554683333333,
+      "intervalMs": 18.199166666716337,
+      "fpsCadence": 54.94757085932162,
+      "p50": 16.700000017881393,
+      "p95": 31.099999994039536,
+      "p99": 51.400000005960464,
+      "inputMs": 0.10277777744664086,
+      "kernelMs": 0.07111111175682809,
+      "copyBytes": 712.5,
+      "liveBytes": 735088,
+      "callsRange": [
+        55,
+        69
+      ],
+      "trianglesRange": [
+        472424,
+        594099
+      ],
+      "registryMs": 0.0625,
+      "registerMs": 0,
+      "registeredInstances": 0.25,
+      "registrations": 0.10555555555555556,
+      "descriptorBytes": 528.5555555555555,
+      "orderUploads": 8.688888888888888,
+      "visibilityUploads": 1.7
+    },
+    {
+      "phase": "day",
+      "variant": "combined",
+      "cpuMs": 5.661944443235795,
+      "groupMs": 1.3788888898160723,
+      "packMs": 0.2505555570953422,
+      "gpuMs": 12.786693666666666,
+      "intervalMs": 18.21194444447756,
+      "fpsCadence": 54.9090188062391,
+      "p50": 16.900000005960464,
+      "p95": 29.100000023841858,
+      "p99": 45.69999998807907,
+      "inputMs": 0.12277777782744831,
+      "kernelMs": 0.07305555625094308,
+      "copyBytes": 14646.244444444445,
+      "liveBytes": 281536,
+      "callsRange": [
+        55,
+        69
+      ],
+      "trianglesRange": [
+        472424,
+        594099
+      ],
+      "registryMs": 0,
+      "registerMs": 0,
+      "registeredInstances": 0,
+      "registrations": 0,
+      "descriptorBytes": 34074.75555555556,
+      "orderUploads": 0,
+      "visibilityUploads": 0
+    },
+    {
+      "phase": "day",
+      "variant": "incremental",
+      "cpuMs": 5.843611111657487,
+      "groupMs": 1.3200000000496706,
+      "packMs": 0.26027777741352714,
+      "gpuMs": 12.090732466666667,
+      "intervalMs": 18.707222222205665,
+      "fpsCadence": 53.455290588946426,
+      "p50": 16.900000005960464,
+      "p95": 31.799999982118607,
+      "p99": 47.69999998807907,
+      "inputMs": 0.11944444361660216,
+      "kernelMs": 0.07638888913724158,
+      "copyBytes": 711.7333333333333,
+      "liveBytes": 735088,
+      "callsRange": [
+        55,
+        69
+      ],
+      "trianglesRange": [
+        472424,
+        594099
+      ],
+      "registryMs": 0.058055555406543946,
+      "registerMs": 0,
+      "registeredInstances": 0.25,
+      "registrations": 0.10555555555555556,
+      "descriptorBytes": 525.3888888888889,
+      "orderUploads": 8.688888888888888,
+      "visibilityUploads": 1.5972222222222223
+    },
+    {
+      "phase": "night",
+      "variant": "combined",
+      "cpuMs": 6.0275000009271835,
+      "groupMs": 1.4636111107137468,
+      "packMs": 0.2530555557873514,
+      "gpuMs": 11.9093798,
+      "intervalMs": 19.781388888839217,
+      "fpsCadence": 50.55256764929212,
+      "p50": 18.30000001192093,
+      "p95": 32.599999994039536,
+      "p99": 50.70000001788139,
+      "inputMs": 0.12611111162437333,
+      "kernelMs": 0.06888888875643412,
+      "copyBytes": 14645.81111111111,
+      "liveBytes": 281536,
+      "callsRange": [
+        55,
+        69
+      ],
+      "trianglesRange": [
+        472424,
+        594099
+      ],
+      "registryMs": 0,
+      "registerMs": 0,
+      "registeredInstances": 0,
+      "registrations": 0,
+      "descriptorBytes": 34074.75555555556,
+      "orderUploads": 0,
+      "visibilityUploads": 0
+    },
+    {
+      "phase": "night",
+      "variant": "incremental",
+      "cpuMs": 5.420000000215239,
+      "groupMs": 1.2308333333995607,
+      "packMs": 0.22888888948493533,
+      "gpuMs": 13.623029794444445,
+      "intervalMs": 18.244722222205667,
+      "fpsCadence": 54.81037134031557,
+      "p50": 16.900000005960464,
+      "p95": 27.899999976158142,
+      "p99": 43.29999998211861,
+      "inputMs": 0.09944444431198968,
+      "kernelMs": 0.0658333334657881,
+      "copyBytes": 712.0222222222222,
+      "liveBytes": 735088,
+      "callsRange": [
+        55,
+        69
+      ],
+      "trianglesRange": [
+        472424,
+        594099
+      ],
+      "registryMs": 0.06416666722959942,
+      "registerMs": 0,
+      "registeredInstances": 0.25,
+      "registrations": 0.10555555555555556,
+      "descriptorBytes": 526.5555555555555,
+      "orderUploads": 8.688888888888888,
+      "visibilityUploads": 1.6444444444444444
+    },
+    {
+      "phase": "night",
+      "variant": "combined",
+      "cpuMs": 5.7308333331512085,
+      "groupMs": 1.4177777781254715,
+      "packMs": 0.26305555635028416,
+      "gpuMs": 12.917541366666667,
+      "intervalMs": 18.738611111127668,
+      "fpsCadence": 53.36574808397425,
+      "p50": 17.299999982118607,
+      "p95": 28.400000005960464,
+      "p99": 43.70000001788139,
+      "inputMs": 0.1427777777115504,
+      "kernelMs": 0.06638888890544574,
+      "copyBytes": 14646.31111111111,
+      "liveBytes": 281536,
+      "callsRange": [
+        55,
+        69
+      ],
+      "trianglesRange": [
+        472424,
+        594099
+      ],
+      "registryMs": 0,
+      "registerMs": 0,
+      "registeredInstances": 0,
+      "registrations": 0,
+      "descriptorBytes": 34074.75555555556,
+      "orderUploads": 0,
+      "visibilityUploads": 0
+    },
+    {
+      "phase": "night",
+      "variant": "incremental",
+      "cpuMs": 5.475277778175142,
+      "groupMs": 1.2222222223050065,
+      "packMs": 0.2505555553568734,
+      "gpuMs": 12.934958677777777,
+      "intervalMs": 18.106666666683225,
+      "fpsCadence": 55.22827687771091,
+      "p50": 16.700000017881393,
+      "p95": 27.400000005960464,
+      "p99": 45.60000002384186,
+      "inputMs": 0.11361111154158911,
+      "kernelMs": 0.07138888902134366,
+      "copyBytes": 712.0555555555555,
+      "liveBytes": 735088,
+      "callsRange": [
+        55,
+        69
+      ],
+      "trianglesRange": [
+        472424,
+        594099
+      ],
+      "registryMs": 0.05972222189108531,
+      "registerMs": 0.0005555556052260929,
+      "registeredInstances": 0.25,
+      "registrations": 0.10555555555555556,
+      "descriptorBytes": 526.6666666666666,
+      "orderUploads": 8.688888888888888,
+      "visibilityUploads": 1.6472222222222221
+    }
+  ],
+  "images": [
+    {
+      "phase": "day",
+      "changedPixels": 0,
+      "maxChannelDelta": 0
+    },
+    {
+      "phase": "night",
+      "changedPixels": 0,
+      "maxChannelDelta": 0
+    }
+  ],
+  "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "samplesGPU": 1440,
+  "framesCadence": 2880
+}
