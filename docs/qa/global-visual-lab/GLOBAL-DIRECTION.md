@@ -655,3 +655,7 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Manglares: omitir iluminación sin peso ofrece ahorro nocturno
 
 [Capturas, repetición y ABAB](mangrove-height-blend/lighting-skip/README.md).11/12 parejas iniciales exactas;18 píxeles residuales en una pose. Repetición baja6/6 exactas, causa del residuo no aislada.1.920 muestras GPU válidas/1.920 frames: noche−2.934/−0.647ms frente a doble iluminación; día+0.749/−0.394ms. Conservar candidata QA, no aprobar presupuesto global; flag falso por defecto. Coste total frente a musgo puro pendiente.
+
+### Decisión del conjunto de Manglares: no integrar
+
+[Comparación total contra musgo puro](mangrove-height-blend/full-review/README.md):24 capturas y1.920 muestras GPU válidas/1.920 frames. Sobrecoste en los cuatro pares:+4.735/+3.669ms día,+4.622/+3.862ms noche (promedios+47.9%/+45.2%). La distribución mejora, pero no el volumen suficiente. Descartar esta implementación de mezcla/iluminación para integración; sustituye recomendaciones provisionales previas. Conservar hallazgos de máscaras/color/altura, no seguir puliendo pequeños umbrales de esta receta. Retomar prioridades Sabana/Gran Río/Gran Cañón; objetivo global no alcanzado.
