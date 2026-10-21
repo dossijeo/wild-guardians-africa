@@ -8,7 +8,7 @@ export async function createEventLifecycleWildRenderer(url=new URL('./core.wasm'
 // use the inherited adapter; this does not claim full Engine-event integration.
 export class EventLifecycleWildRenderer extends IncrementalWildRenderer {
  constructor(wasm){super(wasm);this.eventLifecycle=true;this.owners=new Map();}
- source(entry){
+ trackEntry(entry){
   let owner=this.owners.get(entry.group);
   if(!owner){
    owner={batches:new Map(),removed:()=>this.releaseOwner(entry.group)};
@@ -20,8 +20,9 @@ export class EventLifecycleWildRenderer extends IncrementalWildRenderer {
    owner.batches.set(entry.batch,{mesh,dispose});
    mesh.addEventListener('dispose',dispose);
   }
-  return super.source(entry);
+
  }
+ source(entry){this.trackEntry(entry);return super.source(entry);}
  releaseBatch(group,batch){
   const owner=this.owners.get(group),binding=owner?.batches.get(batch);
   if(!binding)return;

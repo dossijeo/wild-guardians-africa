@@ -36,3 +36,32 @@ La memoria viva del allocator aumenta de 1.100.144 a 4.871.092 bytes (no VRAM). 
 **Mantener solo como prototipo QA.** No demuestra una mejora global suficiente y no se activa por defecto. La selección nativa y su equivalencia inicial están implementadas, pero aún quedan conversión de listas, recorrido de lotes, memoria excesiva y validación con eventos/streaming del nuevo adaptador. No dar por cumplida la arquitectura persistente completa.
 
 [Datos brutos](native-lod-abab/benchmarks.json), [resumen](native-lod-abab/summary.json), [día](native-lod-abab/day-pair.webp), [noche](native-lod-abab/night-pair.webp).
+
+## Variante de registro ligero
+
+`engine-light-lod` separa el registro de selección del registro de empaquetado. Conserva 32 bytes de datos visuales y 12 bytes de índices por instancia, más umbrales/contadores por lote. No crea matrices mundiales ni esferas de todos los LOD al seleccionar un lote. Los recursos de empaquetado se materializan cuando los necesita el agrupador.
+
+Se comparte el export compacto por chunk. En el registro inicial todavía se utiliza el filtro nativo existente con scratch temporal de matrices; se libera al terminar. No hay copia de posiciones por cámara ni lectura numérica de instancias JS. Este scratch y la conversión de listas de salida siguen siendo oportunidades posteriores, no costes eliminados.
+
+`trackEntry` registra el ciclo de vida sin crear datos geométricos; retirada del mesh, retirada del grupo e invalidación explícita liberan el registro ligero. Diez pruebas cubren modos anteriores y ligero, paridad, cámara, invalidación y retiro; el caso ligero exige cero registros de empaquetado tras seleccionar LOD y cero memoria viva después de dispose.
+
+A/B frente a engine-selection, con WR_ORDER=engine-selection,engine-light-lod,engine-selection,engine-light-lod y WR_FIXED_RESIDENCY=1. Auditor: --light-lod.
+
+### Resultado del registro ligero: memoria corregida, CPU peor
+
+La memoria nativa viva es 1.805.540 bytes, frente a 4.871.092 de la integración acoplada anterior y 1.100.144 del control sin LOD nativo. Son bytes del allocator, no VRAM ni memoria total del proceso.
+
+| Pareja | CPU A → B | Intervalo A → B |
+|---|---:|---:|
+| Día 1 | 7,577 → 8,079 ms | 16,813 → 16,674 ms |
+| Día 2 | 7,330 → 7,872 ms | 16,906 → 16,675 ms |
+| Noche 1 | 7,270 → 7,973 ms | 16,675 → 17,553 ms |
+| Noche 2 | 7,045 → 7,864 ms | 17,441 → 17,320 ms |
+
+CPU empeora en las cuatro parejas (+0,50–0,82 ms). La cadencia mixta, cercana a 16,7 ms en muchos bloques, no demuestra mejora global. La conversión de salida, llamadas por lote y recorridos JS permanecen; esta serie no aísla cuánto aporta cada uno. No se atribuye el resultado únicamente al núcleo C++.
+
+Mismos draws/triángulos/cámaras por frame, sin errores GL ni cambios de estado/residencia. 1.440 consultas GPU y 2.880 frames de cadencia. Máximo GPU individual 28,357 ms: no se repite la anomalía extrema anterior. Quedan residuos de imagen de hasta 7 píxeles, por lo que la auditoría estricta no pasa.
+
+**No promover la integración LOD nativa actual.** La separación ligera resuelve la reserva excesiva, pero no la rentabilidad. Se conserva como prototipo comparativo; no se habilita en producción ni se presenta como aceleración. La hipótesis más amplia del agrupador persistente no queda resuelta por este selector por lote.
+
+[Datos](light-lod-abab/benchmarks.json), [resumen](light-lod-abab/summary.json), [día](light-lod-abab/day-pair.webp), [noche](light-lod-abab/night-pair.webp).
