@@ -1059,3 +1059,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Manglares: regiones desplazadas descartadas
 
 [Seis parejas](moss-regions-20261021/README.md):cuatro muestras regionales,misma geometría,sin errores. Promedio suaviza relieve yno elimina filas;no promover por resultado artístico. Coste no medido,no motivo del descarte. Si se retoma,preservar crestas con mezcla por altura yvalidar origen flotante.
+
+
+### Manglares: regiones por altura no promovidas
+
+[Seis parejas](moss-height-regions-20261021/README.md):ponderación exponencial por altura,misma geometría,sin errores. No supera visualmente a dos escalas,persiste suavizado. Descarte artístico,no por coste. Cerrar ajustes de esta mezcla antes de nueva hipótesis sobre material/iluminación.
