@@ -800,3 +800,7 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Fundido aislado: coste activo y movimiento reproducible
 
 [Coste con un parcial al35%](obstruction-isolated-depth/performance-held/README.md): ABBA GPU favorable en Intel UHD, CPU similar; no extrapolar a FPS global. [Secuencia día/noche](obstruction-isolated-motion-v2/README.md):72 parejas con cámara/opacidad exactas, hasta tres parciales y cuatro targets retenidos (~28.125MiB nominales). La acumulación de targets es el siguiente foco de optimización. Mantener candidata; integración global y validación de efectos reales pendientes.
+
+### Pool de profundidad para fundidos
+
+[Comparación de reutilización](obstruction-isolated-pool/README.md): misma ruta, cuatro targets retenidos pasan a tres (28.125→21.094MiB nominales).69/72 parejas exactas; tres con3–21 píxeles distintos documentados, una sin parciales. Sin nuevas asignaciones en la segunda fase. Variante QA, no mejora de FPS demostrada ni integración global.
