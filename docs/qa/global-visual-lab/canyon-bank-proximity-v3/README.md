@@ -31,3 +31,8 @@ Limitación adicional: 158 geometrías en todos los bloques, pero renderer.info.
 Esta prueba no incluye crear máscaras ni streaming. Hay 1225 llamadas waterInfo por chunk; en la vista espacial cada una consulta nivel y distancia a la orilla. Sigue pendiente medir ese coste y estudiar datos compactos o cálculo por filas sin modificar Engine. También pendientes cámara móvil y transición al horizonte.
 
 Reproducir: `node tools/experiments/measure-canyon-bank-proximity.mjs` (usar WG_BANK_OUT para una salida nueva), luego `python tools/experiments/audit-canyon-bank-performance.py` sobre la ruta predeterminada. Datos completos en performance/benchmarks.json y resumen en performance/summary.json. Las capturas visuales anteriores siguen siendo la evidencia artística; no se capturan imágenes dentro de ventanas de medición.
+
+### Diagnóstico posterior de recursos
+
+[Inventario instrumentado](../canyon-bank-resources/README.md): la diferencia diurna de nueve texturas se corresponde con máscaras 35×35 asignadas a WebGL (25 frente a 16, ambas variantes poseen 25). No es prueba de ahorro VRAM; queda explicar/controlar el historial de subida. Preparación inicial de 25 máscaras: 9,5 ms acumulados, .38 ms media, 1.6 ms máximo. No equivale a coste por frame ni a streaming completo.
+
