@@ -57,7 +57,7 @@ export class IncrementalWildRenderer extends WildRenderer{
    }
   }
   w.rows.length=ec;const kernelStart=performance.now();this.lastUpdated=dirty;
-  if(dirty){w.count=this.wasm.wr_select(w.descPtr,ec,this.planesPtr,origin.x,origin.z,w.outputPtr,w.outVisPtr,omitZero?1:0);w.epoch=this.epoch;w.omit=omitZero;}
+  if(dirty){if(this.effectiveSelection){const result=this.wasm.wr_select_checked(w.descPtr,ec,this.planesPtr,origin.x,origin.z,w.outputPtr,w.outVisPtr,omitZero?1:0,w.count??-1);this.lastUpdated=result>=0;w.count=result>=0?result:-result-1;}else w.count=this.wasm.wr_select(w.descPtr,ec,this.planesPtr,origin.x,origin.z,w.outputPtr,w.outVisPtr,omitZero?1:0);w.epoch=this.epoch;w.omit=omitZero;}
   const end=performance.now();this.addMetric('calls',dirty?1:0);this.addMetric('inputMs',kernelStart-start);this.addMetric('kernelMs',end-kernelStart);this.addMetric('instances',total);return w.count;
  }
  release(g){super.release(g);this.groups.delete(g);}

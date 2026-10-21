@@ -1,7 +1,7 @@
 {
   "base": "451b9e9bf",
   "branch": "codex/wild-renderer-wasm",
-  "date": "2026-10-21T09:45:10.075Z",
+  "date": "2026-10-21T10:11:12.449Z",
   "node": "v20.11.0",
   "chrome": "155.0.8059.86",
   "playwright": "1.64.1",
@@ -10,12 +10,12 @@
   "cpu": "11th Gen Intel(R) Core(TM) i7-11800H @ 2.30GHz",
   "compiler": "Emscripten 6.0.12, -O3 -ffp-contract=off; see tools/build-wild-renderer.ps1",
   "linearMemoryBytes": 67108864,
-  "wasmBytes": 17186,
+  "wasmBytes": 18464,
   "hashes": {
-    "src/rendering/wild-renderer/core.cpp": "80560121c2343a3ff9f21ba45a53ee9ccd9c0c5ad2457024b210129d35f9d2af",
-    "src/rendering/wild-renderer/core.wasm": "d0d0a50d882f0784a390f75a775ee39e977941d3b9e064e8b0cbff67fa16dcf8",
+    "src/rendering/wild-renderer/core.cpp": "8d9ee559b9619b52b4814e0ace1139347c7b0894c34a9854cbb54117808932fb",
+    "src/rendering/wild-renderer/core.wasm": "9c017a8686ab5ae5980de6dc0ca3063a8f1584c67eb36d1a0f3618890cdb8f20",
     "src/rendering/wild-renderer/adapter.js": "da54865e10c4a3c9ba112d98afd1ebf216c83deabf1c0d663befaf9648802e1c",
-    "src/rendering/wild-renderer/incremental.js": "24ef55c11a4810f05c3ed1fbd2b32ac5db5823ce4e27c5854728a077167295ad",
+    "src/rendering/wild-renderer/incremental.js": "b7c0b9b66b14d462921579ef304f3c39de63a2ad03a8b5904e4531939a9f57fc",
     "src/rendering/wild-renderer/event-lifecycle.js": "5c0874447d99854f43fd68ceaf12639fce2836d4336aade8b970c303a35e3f2e",
     "src/rendering/wild-renderer/packed-props.cpp": "90c386abe94ec3bdf18424cc0b5edc44e99a26fa737e13420ebcb3ac9c02e25f",
     "src/rendering/wild-renderer/packed-props.js": "dffe9cac7b70afd0de5f81ef4f5c91450441858998802a040ae9beeca15e80a5",
@@ -28,6 +28,6 @@
     "tools/experiments/qa-wild-renderer-route.mjs": "8d33f2f672f0443c897dcaf044bf2e89cbe516d9434bf7c347e9b7bd5661e17c",
     "tools/experiments/qa-wild-renderer-measure.js": "d8125b8790f9e675e5fdb3443fde8bf16f46b5babde36420a84dd254c1e61e32",
     "tools/experiments/qa-wild-renderer-dense.js": "f75a516f04b02631a748ee50fb902d936edcae977c6cca3b6106d5c2110ef2b6",
-    "tools/experiments/measure-wild-renderer.mjs": "65fa0f5314cf4b46112ada6227facaf61ae231489de689bce3f2121e88748235"
+    "tools/experiments/measure-wild-renderer.mjs": "9315edbf804c92ad7220be08a5889b8a7e16efd240e9c2a4d452444d480e453d"
   }
 }

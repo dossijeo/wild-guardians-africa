@@ -1,5 +1,6 @@
 #include <cmath>
 #include <cstdint>
+#include <cstring>
 // Inputs: Float32 local matrices/visibility; Float64 transforms, sphere and planes.
 // Descriptor: world[16], sphere[4], first, count. Output stays in WASM memory.
 extern "C" int wr_pack(const float* input,const float* visibility,const double* desc,int entries,const double* planes,double ox,double oz,float* output,float* outVisibility,int omitZero){
@@ -44,8 +45,8 @@ extern "C" void wr_register(const float* local,const double* world,const double*
  }
 }
 // Each descriptor contains persistent matrix/sphere/order/visibility pointers and count.
-extern "C" int wr_select(const uint32_t* descriptors,int entries,const double* planes,double ox,double oz,float* output,float* outVisibility,int omitZero){
- int written=0;
+template<bool checkChanges> int select_instances(const uint32_t* descriptors,int entries,const double* planes,double ox,double oz,float* output,float* outVisibility,int omitZero,int previousCount){
+ int written=0;bool changed=previousCount<0;
  for(int e=0;e<entries;e++){
   const uint32_t* d=descriptors+e*5;
   const double* matrices=reinterpret_cast<const double*>(uintptr_t(d[0]));
@@ -58,8 +59,19 @@ extern "C" int wr_select(const uint32_t* descriptors,int entries,const double* p
    for(int p=0;p<6;p++){const double* q=planes+p*4;if(q[0]*s[0]+q[1]*s[1]+q[2]*s[2]+q[3]<-s[3]){visible=false;break;}}
    if(!visible)continue;
    const double* m=matrices+i*16;float* out=output+written*16;
-   for(int k=0;k<16;k++)out[k]=float(m[k]);out[12]=float(m[12]-ox);out[14]=float(m[14]-oz);outVisibility[written++]=visibility[i];
+   for(int k=0;k<16;k++){
+    const float value=float(m[k]-(k==12?ox:k==14?oz:0));
+    if constexpr(checkChanges){if(written>=previousCount||std::memcmp(out+k,&value,sizeof(float))!=0)changed=true;}
+    out[k]=value;
+   }
+   if constexpr(checkChanges){if(written>=previousCount||std::memcmp(outVisibility+written,visibility+i,sizeof(float))!=0)changed=true;}
+   outVisibility[written++]=visibility[i];
   }
  }
+ if constexpr(checkChanges){if(!changed&&written==previousCount)return -written-1;}
  return written;
 }
+
+extern "C" int wr_select(const uint32_t* d,int n,const double* p,double x,double z,float* o,float* v,int omit){return select_instances<false>(d,n,p,x,z,o,v,omit,-1);}
+// Negative result encodes unchanged output count as -count-1, including empty groups.
+extern "C" int wr_select_checked(const uint32_t* d,int n,const double* p,double x,double z,float* o,float* v,int omit,int previous){return select_instances<true>(d,n,p,x,z,o,v,omit,previous);}
