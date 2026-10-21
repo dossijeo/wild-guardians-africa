@@ -1388,3 +1388,7 @@ Selected warmer daytime earth and restrained textured blue night rim. Four nativ
 
 ## Native loading sky owner (2026-10-22)
 Removed the final graphical QA dependency from loading captures: local graded sky materials borrow textures and geometry without changing the gameplay sky. Four captures match the QA-graded predecessor exactly. See loading-native-sky-20261022. Local material/program overhead remains unbenchmarked; no extra texture or draw.
+
+
+## Loading planting feedback (2026-10-22)
+Rejected soil gestures now provide localized feedback, cleared by successful planting. Real mouse gesture and four captures verified; no global-full claim or added frame scan. See loading-plant-feedback-20261022.
