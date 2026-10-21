@@ -49,3 +49,12 @@ El piloto procesa todos los descriptores del snapshot, combinando el desgaste de
 La regresión real conserva la escena de un poblado: las seis capturas de la candidata coinciden exactamente con native-path, día/noche y tres cámaras. Cuatro capturas de control también coinciden; las dos inversas presentan 128/95 píxeles diferentes, delta máximo 122/96. No se atribuyen esos residuos sin aislar su causa. La lámina diurna normal inspeccionada conserva caminos descubiertos y cobertura alrededor de edificios.
 
 [Comparativa diurna](multi-support-regression/day-game-pair.webp), [capturas](multi-support-regression/captures.json), [diferencias contra el pase anterior](multi-support-regression/regression.json). Esta prueba no es un benchmark nuevo ni valida varios poblados reales: la cobertura de ese caso es todavía unitaria. Siguen pendientes actualización por eventos de ocupación y comprobación de hojas animadas en accesos. Mantener candidata QA; no promover aún ni declarar alcanzada la calidad global.
+
+
+## Ocupación mediante una orden real de cultivo
+
+La escena inicial contiene el poblado nativo pero ningún centro operativo del jugador. Por eso el primer intento de plantar fue rechazado correctamente por las reglas; no era un fallo del renderer. El harness crea primero un centro mediante previewCenter/placeStructure y después ejecuta plant, sin cambiar las reglas ni inyectar eventos artificiales.
+
+CropPlaced invalida la ocupación y el sync consume esa invalidación. En un radio de 2,2 unidades del cultivo, los anclajes de módulos cacheados pasan de 60 a 0. Sin overflow ni errores de página/GL en seis capturas posteriores (tres cámaras, día/noche). La vista oblicua inspeccionada conserva la cobertura circundante. El contador verifica anclajes, no el alcance máximo de hojas animadas. Estos datos no son un benchmark y las imágenes posteriores no constituyen una comparación antes/después. Falta validar retirada, varios poblados reales y viento en los límites.
+
+[Evento y cobertura](crop-event/mutation.json), [capturas posteriores](crop-event/captures.json). Reproducir con node tools/experiments/capture-river-yard-crop.mjs, Vite en 5190. Cambios exclusivos de la sesión QA; ninguna modificación de simulación en el repositorio.

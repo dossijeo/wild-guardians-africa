@@ -1,0 +1,43 @@
+{
+  "centerSetup": {
+    "x": 79.83156862745099,
+    "z": 15.827254901960787
+  },
+  "site": [
+    96.2781862745098,
+    24.217892156862746
+  ],
+  "before": 60,
+  "after": 0,
+  "events": [
+    "CropPlaced"
+  ],
+  "dirtyAfterEvent": true,
+  "dirtyAfterSync": false,
+  "coverage": {
+    "variant": "C",
+    "active": true,
+    "nearDistance": 0,
+    "moduleSpacing": 0.5,
+    "near": 0,
+    "far": 5550,
+    "leaves": 44400,
+    "triangles": 44400,
+    "waterTriangles": 1279,
+    "waterBucketReferences": 4014,
+    "chunks": 25,
+    "cachedTiles": 31,
+    "bufferBytes": 1206456,
+    "stats": {
+      "buildMs": 87.79999989271164,
+      "selectionMs": 88.7999999821186,
+      "selectionCount": 4,
+      "candidates": 25344,
+      "masked": 3568,
+      "overflow": 0
+    },
+    "engineQueries": 0,
+    "castShadow": false
+  },
+  "note": "Real plant command; paused immediately after synchronous command. Cached module anchors checked within crop exclusion radius, not animated blade extents."
+}
