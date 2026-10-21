@@ -13,6 +13,16 @@ test('diffuse owner releases its shadow map and fallback once and restores the w
  let fallback=0,map=0;uniforms.fallback.addEventListener('dispose',()=>fallback++);
  const beam=installLoadingDiffuseBeam(d);sun.shadow.map=new THREE.WebGLRenderTarget(512,512);sun.shadow.map.addEventListener('dispose',()=>map++);
  assert.notEqual(renderer.shadowMap.render,original);const p=camera.position.clone();beam.update();assert.deepEqual(camera.position,p);
+ // The visible shafts rise toward screen (.48, 1); cast shadows must run away
+ // from that source, including portrait framing and the loading camera orbit.
+ for(const aspect of [1280/720,390/844])for(const angle of [-10,0,10]){
+  camera.aspect=aspect;camera.position.copy(p).applyAxisAngle(new THREE.Vector3(0,1,0),angle*Math.PI/180);camera.lookAt(0,1.15,0);camera.updateProjectionMatrix();beam.update();
+  const light=sun.position.clone().sub(sun.target.position).normalize();
+  assert.ok(light.y>0,'source must remain above the ground');
+  const tip=new THREE.Vector3(0,2,0),shadow=tip.clone().addScaledVector(light,-(tip.y-.09)/light.y);
+  const a=tip.project(camera),b=shadow.project(camera),away=new THREE.Vector2((b.x-a.x)*aspect,b.y-a.y).normalize();
+  assert.ok(away.dot(new THREE.Vector2(-.48,-1).normalize())>.99999,`shadow opposes beam at aspect ${aspect}, orbit ${angle}`);
+ }
  beam.dispose();beam.dispose();assert.equal(renderer.shadowMap.render,original);assert.equal(map,1);assert.equal(fallback,1);assert.equal(uniforms.uNativeShadowFiltered.value,null);
  ground.geometry.dispose();ground.material.dispose();
 });
