@@ -1144,3 +1144,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Revisión global V9
 
 [36 capturas de seis biomas](combined-campaign-review-v9/README.md), cámaras/horas iguales a V8 ysin errores. Añade espectro nocturno volcánico yhojas media/musgo dos escalas. Sigue pendiente lectura nocturna de Río/Volcanes ycoherencia suelo/cobertura de Manglares:éxito local no implica mejora global. No extrapolar benchmark baja a esta combinación media ni declarar objetivo alcanzado.
+
+
+### Gran Río: recuperación localizada del detalle nocturno
+
+[Dos intensidades QA](river-night-ambient-strong-20261021/README.md),seis parejas cada una. Primera demasiado sutil;segunda mejora lectura de fibras sin cambiar día (tres parejas exactas),sombras oinstancias. Conservar candidata,validar distancia/crepúsculo antes de integración;sin costeGPU medido.
