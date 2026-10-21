@@ -929,3 +929,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Desierto: movimiento real durante carga
 
 [960 renders continuos](desert-continuous-20261021/README.md), sin errores; cámaras iguales, carga asíncrona difiere18/6 frames día/noche. Tiempos medios similares con picos en ambos; no atribuir rendimiento causal ni ausencia de shimmering sin vídeo. Opción conservada.
+
+
+### Sabana: viento y LOD geométrico
+
+[Seis parejas](grass-wind-lod-20261021/README.md): candidata aplica el lod18–24 existente a bend y normales, evitando salto de esas expresiones al lote lejano. Mantiene viento8 cercano y geometría; falta vídeo/cruce del límite/coste, no declarar mejora temporal demostrada por capturas estáticas.
