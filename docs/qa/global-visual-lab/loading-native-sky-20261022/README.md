@@ -1,0 +1,9 @@
+# Native loading sky ownership
+
+Diffuse loading now owns two lightweight sky materials with the selected cloud-preserving grading. Geometry, HDR panorama textures and camera uniforms are borrowed; no new image decoding or GPU texture copies. Opacity belongs to the local materials. World sky shader/materials remain unchanged. Dispose releases only the local materials. Original loading default remains unchanged.
+
+Reproduce: capture-loading-native-sky-20261022.mjs, Vite 5190. No sky-source or loading-mist QA routes. The readonly world observer and explicit capture staging remain. All four real captures are pixel-identical to the preceding QA-graded version (loading-native-soil-tone-20261022). Seed 712, progress .75, day/night, landscape/portrait. Six calls / 16002 triangles, zero console/GL errors, shadow direction audit and world handoff pass. Unit tests verify resource isolation and disposal. This adds local shader programs/materials, not draws or textures; startup cost has not been benchmarked.
+
+The artistic loading composition is now reproducible without graphical source interception. Fixed-region UI, initial portrait leaf framing and final art comparison remain incomplete. The global six-biome sky direction still requires its own integration and validation; this change does not silently apply it to gameplay.
+
+Actual flow verification: original and diffuse both reached gameplay and disposed the diorama (loading-native-sky-flow-20261022/flow.json). The third cancellation case timed out waiting for the button to become visible; it did not exercise cancellation and is not counted as passing. A separate cancellation run with existing qa-loading pacing passed, returned to menu and disposed the diorama without errors (loading-native-sky-cancel-20261022). Reproduce with verify-loading-sky-cancel-20261022.mjs and WG_LOADING_FLOW_OUT. The initial visibility timeout cause remains unproven.

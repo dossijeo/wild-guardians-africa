@@ -1384,3 +1384,7 @@ Selected blue atmosphere and stronger soft stars with aspect-correct cells. Four
 
 ## Loading soil tone (2026-10-22)
 Selected warmer daytime earth and restrained textured blue night rim. Four native captures match QA trial; existing draws/shadows preserved. See loading-native-soil-tone-20261022 for day/night mockup-before-after comparisons. Global biome materials unchanged; overall quality goal remains unproven.
+
+
+## Native loading sky owner (2026-10-22)
+Removed the final graphical QA dependency from loading captures: local graded sky materials borrow textures and geometry without changing the gameplay sky. Four captures match the QA-graded predecessor exactly. See loading-native-sky-20261022. Local material/program overhead remains unbenchmarked; no extra texture or draw.
