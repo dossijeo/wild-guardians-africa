@@ -1154,3 +1154,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Gran Río: revisión nocturna a distancia
 
 [Seis parejas](river-night-distance-20261021/README.md) conservan cámaras y geometría, tres diurnas exactas. Sin anillo luminoso evidente en poses estáticas; a distancia sigue dominando suelo plano. Conservar candidata, pendientes crepúsculo/movimiento/baja y rendimiento.
+
+
+### Gran Río: ambiente nocturno en baja
+
+[Seis parejas](river-night-low-20261021/README.md): mejora de lectura conservada con módulo lejano, 42–68 mil triángulos de cubierta sin cambios entre variantes. Tres diurnas exactas, sin errores. Conservar candidata; pendientes crepúsculo, movimiento y benchmark.
