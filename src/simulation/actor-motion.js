@@ -135,6 +135,12 @@ export function workerYieldPoint(state,actor,opposing,nav,blockers=actorBlockers
       if(distance(point,opposing)<required+.2||
         !actorSegmentClear(actor,point,actor,blockers)||
         !nav.workerMotionClear?.(actor,point,radius(actor)))continue;
+      const backLength=distance(point,next);
+      const rejoin=backLength>.5?{
+        x:point.x+(next.x-point.x)*.5/backLength,
+        z:point.z+(next.z-point.z)*.5/backLength}:next;
+      if(!actorSegmentClear(point,rejoin,actor,blockers)||
+        !nav.workerMotionClear?.(point,rejoin,radius(actor)))continue;
       const future=opposing.path[0],span=distance(opposing,future),
         end=span>1?{x:opposing.x+(future.x-opposing.x)/span,
           z:opposing.z+(future.z-opposing.z)/span}:future;
