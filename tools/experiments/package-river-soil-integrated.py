@@ -22,4 +22,4 @@ for quality in qualities:
     results.append(dict(quality=quality,biome=biome,phase=phase,view=view,calls=x['calls'],triangles=x['triangles'],mae=float(diff.mean()),changedPixels=int(np.any(diff,axis=2).sum())))
     if i==0:
      pair=Image.new('RGB',(2560,720));pair.paste(ims[0],(0,0));pair.paste(ims[1],(1280,0));pair.resize((1920,540)).save(p/f'{biome}-{quality}-{phase}-pair.webp',quality=94)
-(p/'comparison.json').write_text(json.dumps(dict(note='QA V2 soil versus integrated V2 soil, equal submitted geometry; static parity, no timing claim.',pairs=results),indent=2)+'\n',encoding='utf-8',newline='\n');print(f'{len(results)} matched pairs, {len(results)*2} verified lossless captures')
+(p/'comparison.json').write_text(json.dumps(dict(note=('Original ground versus integrated V2 soil' if os.environ.get('WG_RIVER_ORIGINAL')=='1' else 'QA V2 soil versus integrated V2 soil')+', equal submitted geometry; static captures, no timing claim.',pairs=results),indent=2)+'\n',encoding='utf-8',newline='\n');print(f'{len(results)} matched pairs, {len(results)*2} verified lossless captures')

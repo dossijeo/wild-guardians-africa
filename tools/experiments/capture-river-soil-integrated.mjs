@@ -15,7 +15,7 @@ try{for(const quality of (process.env.WG_RIVER_QUALITY??'baja,media').split(',')
 
 
 
- await installRiverSoilLayerV2Route(page,variant==='base');
+ await installRiverSoilLayerV2Route(page,variant==='base'&&process.env.WG_RIVER_ORIGINAL!=='1');
  if(variant==='combined'&&biome==='gran-canon')await page.route('**/content/ground-materials.json*',async route=>{const response=await route.fetch(),tiles=await response.json();if(tiles.canyons.scale!==.2)throw Error('Unexpected canyon scale');tiles.canyons.scale=.08;await route.fulfill({response,json:tiles});});
  await page.addInitScript(quality=>localStorage.setItem('wild-guardians:settings',JSON.stringify({quality,farVegetation:false})),quality);
  await page.goto('http://127.0.0.1:5190/?qa-seed=712'+'&visualLab=global-lighting&sandRelief=1'+(variant==='combined'?'&riverSoil=1':''));
@@ -53,7 +53,7 @@ try{for(const quality of (process.env.WG_RIVER_QUALITY??'baja,media').split(',')
     const frame=await page.evaluate(async i=>{const w=window.qaCampaignWorld;w.camera.position.fromArray(window.qaSandPath[i]);w.syncChunks();await w.horizon.whenReady();w.syncChunks();await w.whenChunksReady();w.render(1/30);return {i,camera:w.camera.position.toArray(),target:w.controls.target.toArray(),time:w.state.time,glError:w.renderer.getContext().getError(),coverage:w.qaContinuousGrass?.audit()??null,calls:w.renderer.info.render.calls,triangles:w.renderer.info.render.triangles,data:w.renderer.domElement.toDataURL('image/png').split(',')[1]}},i);
     if(frame.glError)throw Error('WebGL error '+frame.glError);await writeFile(`${dir}/${String(i).padStart(4,'0')}.png`,Buffer.from(frame.data,'base64'));delete frame.data;frames.push(frame);
    }
-   if(errors.length)throw Error(errors.join('\n'));records.push({biome,quality,variant,phase,initialLodReset:true,frames,errors:[...errors]});await writeFile(out+'/captures.json',JSON.stringify({study:'QA V2 versus integrated V2: Both retain river wear and candidate palette; compare original ground versus Ground079S soil layer at .12-.70 wear, pigment .68/.60/.48; identical palette and geometry',seed:712,resolution:[1280,720],views:['game','oblique','reverse'],note:'Real paused campaign settlement, seed 712; identical poses and visual time, settled chunks. Static artistic review, not a performance benchmark.',records},null,2)+'\n');console.log(biome,quality,variant,phase,'captured');
+   if(errors.length)throw Error(errors.join('\n'));records.push({biome,quality,variant,phase,initialLodReset:true,frames,errors:[...errors]});await writeFile(out+'/captures.json',JSON.stringify({study:process.env.WG_RIVER_ORIGINAL==='1'?'Original ground versus integrated V2 soil; same palette and geometry':'QA V2 versus integrated V2 soil; same palette and geometry',seed:712,resolution:[1280,720],views:['game','oblique','reverse'],note:'Real paused campaign settlement, seed 712; identical poses and visual time, settled chunks. Static artistic review, not a performance benchmark.',records},null,2)+'\n');console.log(biome,quality,variant,phase,'captured');
   }
  await page.close();
  }}finally{await browser.close()}

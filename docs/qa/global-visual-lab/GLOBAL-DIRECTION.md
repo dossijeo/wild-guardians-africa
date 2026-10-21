@@ -736,3 +736,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Gran Río: integración en perfil mínimo
 
 [Doce capturas en muy_baja](river-soil-integrated/minimum/README.md): cuatro de seis parejas QA/integración exactas, residuos inversos de 154/29 píxeles. Geometría y cobertura coinciden. La explanada regular sigue siendo un límite artístico y los tiempos GPU/CPU del perfil mínimo siguen pendientes; no se declara calidad global alcanzada.
+
+
+### Gran Río: coste de la tierra integrada en muy_baja
+
+[ABBA y capturas original/integrada](river-soil-integrated/minimum-performance/README.md):960muestras GPU/1.440frames, misma geometría/cobertura. Medias GPU solapadas, sin sobrecoste consistente; cadencia fija cercana a16,6ms. Conservar opción artística sin afirmar coste cero ni extrapolar a movimiento. El borde circular del poblado continúa pendiente; no repetir los ajustes menores de fringe ya evaluados.
