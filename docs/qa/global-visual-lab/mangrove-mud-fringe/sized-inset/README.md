@@ -41,3 +41,7 @@ Intel UHD 0x9A60 / ANGLE D3D11, calidad baja, 1280×720. ABAB por fase, 180 foto
 CPU de render diurna: original 5.205/4.756 ms, candidata 4.945/5.453 ms. Nocturna: original 4.811/4.627 ms, candidata 4.918/6.952 ms. El p95 de intervalos nocturnos alcanza 106.3 ms en el último bloque candidato, frente a 68.9/53.3 ms de los controles. No se ha aislado la causa de esa inestabilidad; no atribuirla exclusivamente al shader ni excluir el bloque desfavorable. Las subidas de buffers medias coinciden: 5.4 por fotograma.
 
 La deriva y los cambios de signo impiden presentar ahorro o sobrecoste estable. Las mediciones CPU excluyen simulación y los intervalos son entradas al render, no presentación en pantalla. No se midieron VRAM real ni construcción/streaming de atributos. Mantener solo como candidata QA visual, no como mejora aprobada. Su mérito es conservar mejor los parches que el inset fijo, no resolver el objetivo global de Manglares.
+
+## Comprobación posterior de recarga
+
+[36 capturas y lifecycle](streaming/README.md): 18 parejas con geometría/cámara coincidente; atributos presentes en chunks nuevos, referencias activas liberadas al cerrar el mundo. Retornos nocturnos exactos, residuo diurno pequeño sin causa aislada. Solo valida el recorrido acotado; la recomendación QA y la limitación de rendimiento permanecen.

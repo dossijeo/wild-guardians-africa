@@ -611,3 +611,7 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Manglares: borde limitado por tamaño, solo QA
 
 [24 capturas y benchmark ABAB](mangrove-mud-fringe/sized-inset/README.md). El radio aproximado del contorno limita el avance y conserva mejor el núcleo de barro en las vistas inspeccionadas. 1.920 muestras GPU válidas y 1.920 frames de cadencia, con geometría coincidente; diferencias GPU cambian de signo y último bloque nocturno empeora notablemente. No hay coste estable demostrado: conservar solo como prototipo visual, pendiente temporal/streaming y diagnóstico de variabilidad. No resuelve el musgo repetitivo ni acredita calidad global.
+
+### Borde de Manglares: recarga acotada validada
+
+[Dos circuitos y cierre del mundo](mangrove-mud-fringe/sized-inset/streaming/README.md), 36 capturas/18 parejas, misma cámara/geometría. Atributos válidos en chunks cargados; 371.100 bytes adicionales constantes al volver; 24 geometrías notifican dispose una vez y cero referencias activas tras cierre. Retornos nocturnos exactos, diurnos con residuo pequeño no aislado. No prueba prolongada de fugas ni coste estable. Mantener QA y volver a priorizar la estructura superficial del musgo y su relación con los otros biomas, no seguir acumulando retoques menores de borde.
