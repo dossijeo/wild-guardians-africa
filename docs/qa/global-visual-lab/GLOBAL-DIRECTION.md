@@ -716,3 +716,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Manglares: bordes de barro incorporados al ciclo normal de chunks
 
 [Receta completa integrada](mangrove-full-integrated/README.md):12parejas RGB exactas contra QA, sin ayudante en candidato; mismos vértices y triángulos. Build y3pruebas pasan. Streaming integrado en ejecución; faltan auditoría, coste y perfil muy_baja en GPU. Se conserva el aspecto aprobado sin activar por defecto ni tocar main.
+
+
+### Reversibilidad de calidad en seis biomas
+
+[48capturas estabilizadas](all-biome-quality-switch-settled/README.md):sin erroresGPU; seis de12regresos RGB exactos y demás1–6píxeles. Sombras recuperadas en mosaico diurno; máscaras estables y contadores de geometrías/texturas vuelven al inicio. No benchmark ni validación de todas las combinaciones artísticas. La primera comparación de Desierto se invalidó por chunks pendientes y se repitió correctamente.
