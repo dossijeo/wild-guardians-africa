@@ -481,3 +481,8 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Salida anticipada de tierra: no mejora GPU demostrada
 
 [Paridad y benchmark móvil](river-soil-early/README.md): ocho de doce parejas exactas; otras cuatro suman cinco píxeles con máximo 1/255 tras sincronizar ocultaciones. 960 muestras GPU/1.440 frames no muestran ahorro consistente. Mantener opción desactivada; reducir lecturas teóricas no basta para aprobar la optimización.
+
+
+### Cañón: tres muestras de microvisibilidad no aportan volumen
+
+[24 capturas y análisis de altura](canyon-microshadow/README.md): solo 26–53 píxeles diurnos cambian; noche exacta. Descartar tres lecturas extra. Diagnóstico offline: 0,0384 % de texeles bloqueados con pasos .05/.12/.25 m a amplitud .10 m. No forzar profundidad; estudiar horizonte offline con pasos de texel antes de añadir más coste al shader.
