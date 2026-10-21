@@ -8,6 +8,7 @@ if '--events' in sys.argv:incremental=True;av='incremental';bv='events'
 if '--engine' in sys.argv:incremental=True;av='combined';bv='engine'
 if '--engine-events' in sys.argv:incremental=True;av='combined';bv='engine-events'
 if '--effective-selection' in sys.argv:incremental=True;av='engine-events';bv='engine-selection'
+if '--lod-gate' in sys.argv:incremental=True;av='engine-selection';bv='engine-lod-gate'
 for phase in ['day','night']:
  rr=[r for r in rows if r['phase']==phase];assert [r['variant'] for r in rr]==([av,bv,av,bv] if incremental else [av,bv,bv,av])
  for r in rr:
