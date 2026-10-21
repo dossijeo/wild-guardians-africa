@@ -1408,3 +1408,7 @@ Twelve paired captures retain broad sand normals plus rotated fine detail. Impro
 
 ## Canyon shore feasibility (2026-10-22)
 Existing canyon mask has no shore data and water has no depth input. QA fills unused B at chunk creation from waterInfo: twelve captures confirm location, but dark strip reads as trench. Do not integrate; scalar dampening alone fails artistic goal. Added 1225 queries/mask unbenchmarked. See canyon-shore-20261022.
+
+
+## Canyon shallow-water edge candidate (2026-10-22)
+Twelve captures test two lateral-bank floats per existing water vertex, producing turquoise shallow edges before native lighting. Modest improvement retained for continuity/cost testing, not integrated. No extra geometry/draw/sample; 8 bytes per water vertex and creation queries. Far horizon water remains unchanged. See canyon-water-depth-20261022.
