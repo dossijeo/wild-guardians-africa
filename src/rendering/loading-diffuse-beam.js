@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import {installNativeShadow} from './native-shadow.js';
+import {installLoadingContact} from './loading-contact.js';
 export function loadingDiffuseEnabled(search=globalThis.location?.search??''){return new URLSearchParams(search).get('loadingBeam')==='diffuse';}
 // Loading-only analytic light and atmosphere. Reuses existing material draws.
 export function installLoadingDiffuseBeam(d){
@@ -63,6 +64,7 @@ export function installLoadingDiffuseBeam(d){
    }\n`+token);
   };m.customProgramCacheKey=()=>key+'|loading-diffuse-v1';m.needsUpdate=true;
  }});
+ const contact=installLoadingContact(d);
  mist.fragmentShader=candidate;mist.needsUpdate=true;let disposed=false;
- return {update,plant:updateIsland,dispose(){if(disposed)return;disposed=true;release();d.sun.shadow.dispose();}};
+ return {update,plant(){updateIsland();contact.sync();},dispose(){if(disposed)return;disposed=true;release();d.sun.shadow.dispose();}};
 }

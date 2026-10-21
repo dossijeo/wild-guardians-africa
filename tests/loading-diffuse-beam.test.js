@@ -9,7 +9,7 @@ test('diffuse option is explicit and does not replace the original oblique optio
 });
 test('diffuse owner releases its shadow map and fallback once and restores the world hook',()=>{
  const original=()=>{},renderer={shadowMap:{render:original,enabled:true,autoUpdate:true}},scene=new THREE.Scene(),ground=new THREE.Mesh(new THREE.PlaneGeometry(),new THREE.MeshStandardMaterial()),camera=new THREE.PerspectiveCamera(40,1,.1,80),sun=new THREE.DirectionalLight();scene.add(ground,sun);camera.position.set(4.8,3.1,6.4);camera.lookAt(0,1.15,0);
- const uniforms=createNativeShadowUniforms(),d={world:{renderer},scene,ground,camera,sun,toon:{shadowUniforms:uniforms},plants:{plants:[{x:0,z:0}]},mist:{day:new THREE.Color(),night:new THREE.Color(),material:{fragmentShader:'float shaft=0.;vec3 light=vec3(.5,.66,.92);float edge=loadingFocusEdge();'}}};
+ const uniforms=createNativeShadowUniforms(),d={world:{renderer},scene,ground,camera,sun,toon:{shadowUniforms:uniforms},plants:{capacity:18,plants:[{x:0,z:0}]},mist:{day:new THREE.Color(),night:new THREE.Color(),material:{fragmentShader:'float shaft=0.;vec3 light=vec3(.5,.66,.92);float edge=loadingFocusEdge();'}}};
  let fallback=0,map=0;uniforms.fallback.addEventListener('dispose',()=>fallback++);
  const beam=installLoadingDiffuseBeam(d);sun.shadow.map=new THREE.WebGLRenderTarget(512,512);sun.shadow.map.addEventListener('dispose',()=>map++);
  assert.notEqual(renderer.shadowMap.render,original);const p=camera.position.clone();beam.update();assert.deepEqual(camera.position,p);

@@ -1364,3 +1364,7 @@ The diffuse option now owns central mesa layout and atmospheric feathering in Lo
 ### 2026-10-22 - Native moving-light shadow cost attribution
 
 Two 768-query series on Intel UHD confirm 6 draws/16002 triangles with cached shadows and 7/29882 with wind or beam-aligned camera movement. Same-pose cache/refresh day/night images match exactly. GPU repeat drift remains near 2x even after RAF-paced collection, so timing deltas are inconclusive; do not claim FPS gain or discard the art. CPU submission around 0.5 ms in this isolated fixture. See `loading-native-motion-paced-20261022`. Stronger timing control needed before a release budget.
+
+
+## Native loading root contact (2026-10-22)
+Integrated event-updated root contact into loadingBeam=diffuse. Four day/night landscape/portrait captures are pixel-identical to the previous QA contact version; 6 calls, 16002 triangles, no GL errors. See loading-native-contact-20261022/README.md. Original default unchanged; sky/mist QA parity and planting-region integration remain pending.
