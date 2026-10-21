@@ -1339,3 +1339,8 @@ User requests continued iteration against original day/night loading mockups, fi
 ### 2026-10-22 - Central mesa composition
 
 `loading-central-mesa-20261022` concentrates the existing atlas into a softer central mesa matching the day reference direction. Fixed camera, maize and aligned beam shadows preserved. Height-9 trial rejected as oversized; height 7 with lower base retained. Eight captures pass, both night outputs pixel-identical to prior diffuse-light candidate, unchanged draws/triangles. Day sky colour and full integration remain pending.
+
+
+### 2026-10-22 - Day atmosphere and fixed-view contrast
+
+`loading-day-air-20261022` reduces only daytime mist-vignette attenuation and warms the outer haze. Day reference/prior/candidate sheet retained; eight captures pass, both night outputs pixel-identical. Original maize, fixed camera, central mesa and aligned beam shadows preserved. Next priority: consolidate these QA candidates into a controlled native loading option and measure animated cost rather than indefinitely accumulating isolated visual fixtures.
