@@ -1119,3 +1119,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Manglares: arqueado cercano en baja no basta
 
 [Seis parejas](mangrove-leaf-low-arched-20261021/README.md):ocho hojas arqueadas cerca mejoran luz local,pero persisten parches desde cámara normal. Mismas instancias;33–71mil triángulos frente20–42mil,+1drawcall. Conservar prueba,no promover ni descartar solo por rendimiento.
+
+
+### Manglares: variación interna sin aumentar triángulos
+
+[Nuevo módulo Blender](mangrove-leaf-varied-20261021/README.md) varía ángulo yaltura de ocho hojas;seis parejas baja mantienen instancias/presupuesto. Menor alineación ymejor lectura local;conservar candidata,parche aún demasiado distinguible. Pendientes movimiento/GPU, no éxito global.
