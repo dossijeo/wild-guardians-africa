@@ -67,3 +67,14 @@ CropPlaced invalida la ocupación y el sync consume esa invalidación. En un rad
 La lámina de tiempos 0/2/4/6 segundos muestra cambios claros de orientación en la cobertura, conservando el área despejada del cultivo. No se certifica ausencia de intersecciones mediante esta observación. El límite conservador derivado del shader y los vértices es 0,752 unidades para módulos ligeros y 0,821 para refinados, superior al margen de 0,6 usado en exclusiones. Se aplica la desigualdad triangular al radio local máximo (mezcla convexa de position/flatPosition/bladeRoot, escala 1,25) más la flexión máxima 0,5*8*(altura*0,9)^2. Es una cota, no una colisión medida.
 
 Este resultado impide dar por cerrada la validación de viento en bordes. Siguiente cambio: ajustar la exclusión al alcance de las hojas y comparar cuánto afecta a la continuidad visual antes de conservarlo. No reducir el viento aprobado para ocultar el problema. [Datos](wind-event/captures.json), [resumen](wind-event/summary.json), [cotas](wind-event/wind-bounds.json). Reproducir con node tools/experiments/capture-river-yard-wind.mjs; codificar PNG a 12 fps con ffmpeg/libx264, CRF18, yuv420p.
+
+
+## Margen de viento 0,85: candidata conservada
+
+La opción QA qaRiverWindPadding amplía a0,85 la exclusión por huellas y agua, incluyendo buckets y consulta de chunks vecinos. La ruta river-wear escala también las ocho muestras de desgaste. Conserva fuerza8, materiales y geometría de módulos. Por defecto sigue0,6. Esta opción de caminos requiere la ruta river-wear del harness; no se presenta como cambio de producción.
+
+Seis capturas comparables contra crop-event, mismo centro y cultivo colocados con órdenes reales, misma cámara/hora. Módulos visibles: normal5550→5492, oblicua4808→4710, inversa5024→4952; triángulos518743→518279,586870→586086,544669→544093. Mismos contadores día/noche. La inspección de la pareja oblicua conserva continuidad y ensancha ligeramente el claro del cultivo. Sin errores GL/overflow. El evento de cultivo sigue eliminando los anclajes próximos.
+
+[Comparativa cercana](wind-padding/day-1-pair.webp), [contadores](wind-padding/comparison.json), [capturas](wind-padding/captures.json). Son contadores de carga geométrica, no tiempos GPU/CPU. El margen supera la cota geométrica calculada para fuerza8 y escalas actuales; no certifica todos los caminos: ocho muestras de máscara no cubren matemáticamente el disco completo, y siguen pendientes movimiento/streaming y perfil medio. Conservar opción para esas pruebas; no habilitar globalmente aún.
+
+Reproducir: WG_WIND_PADDING=1, WG_YARD_OUT con carpeta nueva, node tools/experiments/capture-river-yard-crop.mjs. El primer intento se detuvo por un ancla de transformación QA desactualizada; se corrigió la compatibilidad con river-wear antes de capturar.
