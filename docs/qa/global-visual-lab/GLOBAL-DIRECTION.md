@@ -691,3 +691,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Cañón: recorrido de arena completa integrada
 
 [36capturas y cierre](canyon-sand-full-integrated/streaming/README.md):18parejas QA/integrada,13exactas y5con2–5píxeles de diferencia máxima1. Escenas/origen/geometría coincidentes; ambas texturas se liberan una vez. Regresos sin crecimiento acumulado observado, no prueba de fugas largas ni coste cercano. Mantener completa como alternativa del laboratorio.
+
+
+### Gran Río: perturbación del material insuficiente visualmente
+
+[24capturas de franja de tierra](river-soil-material-fringe/README.md): misma geometría y máscara nativa, variación solo del peso de mezcla. Diferencia demasiado sutil en normal diurna/nocturna revisadas; no promover microajuste, sin benchmark. TierraV2 conservada. Requiere composición a escala mayor, no acumular pequeños umbrales.

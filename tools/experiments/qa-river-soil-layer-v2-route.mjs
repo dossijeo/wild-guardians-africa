@@ -1,6 +1,6 @@
 import {patchRiverSoilEarlyExit} from './qa-river-soil-early-exit.mjs';
 import {installRiverCoverPaletteRoute} from './qa-river-cover-palette-route.mjs';
-export async function installRiverSoilLayerV2Route(page,enabled,{earlyExit=false,wearAligned=false,fringeMask=false}={}){
+export async function installRiverSoilLayerV2Route(page,enabled,{earlyExit=false,wearAligned=false,fringeMask=false,materialFringe=false}={}){
  await installRiverCoverPaletteRoute(page,true);
  if(!enabled)return;
  await page.route('**/src/rendering/biome-ground.js*',async route=>{
@@ -36,6 +36,7 @@ export async function installRiverSoilLayerV2Route(page,enabled,{earlyExit=false
  }`.replaceAll('\n','\\n')]
   ];
   for(const [a,b]of changes){if(!body.includes(a))throw Error('Soil shader anchor missing: '+a);body=body.replace(a,b);}
+  if(materialFringe){const from='float soilWeight=smoothstep(.12,.70,wear);';if(!body.includes(from))throw Error('Material fringe anchor missing');body=body.replace(from,'vec3 qaSoilWorld=worldPatternPosition(worldP);float qaSoilNoise=materialNoise(vec3(qaSoilWorld.x*.35,2.7,qaSoilWorld.z*.35));float soilWeight=smoothstep(.12,.70,wear);soilWeight=clamp(soilWeight+(qaSoilNoise-.5)*1.8*soilWeight*(1.-soilWeight),0.,1.);');}
   if(wearAligned)body=body.replaceAll('smoothstep(.12,.70,wear)','smoothstep(.08,.30,wear)');
   if(earlyExit&&wearAligned)throw Error('Early exit threshold has not been validated for aligned wear');
   if(earlyExit)body=patchRiverSoilEarlyExit(body);
