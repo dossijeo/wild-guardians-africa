@@ -726,3 +726,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Gran Río: tierra V2 conservada como opción integrada
 
 [`riverSoil=1`](river-soil-integrated/README.md) con global-lighting, solo Gran Río.9/12parejas QA/integrada RGB exactas; tres inversas con residuos sin causa aislada. Build y6pruebas pasan. La cubierta/paleta siguen usando ayudantesQA en estas capturas; pendientes streaming y coste integrados. El borde regular del poblado sigue siendo una limitación artística, no resuelta por integrar la receta.
+
+
+### Gran Río: streaming de tierra integrada
+
+[72capturas/36parejas](river-soil-integrated/streaming/README.md):24exactas, resto máximo10píxeles/delta1; geometría/cobertura/origen coincidentes. Tres texturas liberadas una vez al cierre en cada sesión. Regresos nocturnos casi exactos; residuos diurnos similares en QA/integrada. Coste integrado y transición artística del poblado pendientes.

@@ -14,6 +14,6 @@ La URL activa solo el material. Las capturas mantienen la cubiertaC/viento8, pal
 
 La región despejada del poblado sigue siendo amplia y regular. No se resuelve aquí la transición de cobertura; no usar la integración como prueba de alcanzar los mockups. Variantes de moteado y perturbación de borde quedan conservadas, sin reemplazar silenciosamente V2.
 
-Pendientes: streaming/origen y liberación de las texturas en la ruta integrada, rendimiento comparable y perfil muy bajo en GPU. Los costesQA anteriores siguen documentados, pero no son un benchmark nuevo de esta integración. Las tres texturas se clonan y disponen mediante layerTextures; falta verificar ese ciclo en esta ruta.
+[Streaming/origen y liberación verificados](streaming/README.md):36parejas,24exactas y resto máximo10píxeles/delta1; tres texturas liberadas una vez. Pendientes rendimiento comparable y perfil muy bajo en GPU. Los costesQA anteriores siguen documentados, pero no son un benchmark nuevo de esta integración. Las tres texturas se clonan y disponen mediante layerTextures; ese ciclo se verificó en el recorrido acotado, no como prueba prolongada de fugas.
 
 Reproducir con `node tools/experiments/capture-river-soil-integrated.mjs` y `python tools/experiments/package-river-soil-integrated.py`, Vite5190. Base=QA V2; combined=integrada. PNG/WebP originales locales, captures.json/comparison.json versionados.
