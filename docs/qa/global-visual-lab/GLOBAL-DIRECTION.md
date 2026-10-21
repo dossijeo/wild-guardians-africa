@@ -527,3 +527,7 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Cañón: crestas claras vinculadas a reflexión ambiental
 
 [Ablación normal/color](canyon-sand-ablation/README.md),18 capturas, y [reflexión](canyon-sand-reflection/README.md),12 capturas: normal plana elimina crestas pero borra volumen; color medio no elimina el patrón. Anular biomeSpec quita crestas blancas en sombra conservando relieve soleado, pero afecta otros materiales. No integrar anulación global; estudiar respuesta especular limitada a arena seca.
+
+### Cañón: respuesta seca acotada a depósitos
+
+[36 capturas](canyon-sand-dry/README.md): atenuación especular ambiental por peso de arena, conservando normales e iluminación directa. Reduce crestas claras cercanas y mantiene ondulación normal/nocturna. Conservar QA, no integrar: movimiento y coste total siguen pendientes.
