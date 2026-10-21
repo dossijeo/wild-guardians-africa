@@ -1204,3 +1204,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Manglares: cubierta de patio visible
 
 [Máscara nativa QA](mangrove-native-yard-20261021/README.md) permite hojas entre edificios,corredores conservadores intactos. Cámara normal near1→1090,triángulos3648→63112. Mejora de volumen con bordes rectos ycontraste pendiente. Conservar candidata,medir coste yrefinar;V10 intacta.
+
+
+### Manglares: borde gradual de cubierta de patio
+
+[Seis parejas](mangrove-yard-edge-20261021/README.md) conservan instancias ytriángulos, suavizan borde fuera del corredor. Conservar candidata; contraste musgo/hojas ybenchmark pendientes. No integrada V10.
