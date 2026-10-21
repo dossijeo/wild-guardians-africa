@@ -1396,3 +1396,7 @@ Rejected soil gestures now provide localized feedback, cleared by successful pla
 
 ## Fresh global sky pairs over V11 (2026-10-22)
 36 fresh campaign captures / 18 pairs for Sabana, Gran Rio and Gran Canon, matching cameras/time/draws/triangles. Sky benefit is localized to horizon-visible views; it does not resolve ground relief. See global-sky-paired-20261022. No old ground-shadow-fill process active; selected fill already integrated. V11 coverage adapters and other three biome sky checks remain pending.
+
+
+## Canyon sand scale trial (2026-10-22)
+Twelve real captures compare 30 versus 12 world-unit sand period, all paired counters/cameras equal. Finer scale weakens relief at game distance; do not promote alone. Artistic rejection, no performance claim. See canyon-sand-scale-20261022. Next direction: retain mesoscopic structure with fine detail and more natural material shore transition, without authoritative geometry changes.
