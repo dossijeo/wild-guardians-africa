@@ -3,6 +3,16 @@ import {nativePropBatchVisible} from './prop-transition-residency.js';
 import {createAssetShadow} from './asset-shadows.js';
 
 const powerCapacity=count=>2**Math.ceil(Math.log2(Math.max(8,count)));
+function addDirtyRange(attribute,start,end){
+  // A disabled/cached pass may never upload. Keep pending intervals disjoint,
+  // so repeated edits cannot grow bookkeeping with the number of frames.
+  const ranges=attribute.updateRanges;
+  for(let i=ranges.length-1;i>=0;i--){
+    const r=ranges[i];if(r.start>end||r.start+r.count<start)continue;
+    start=Math.min(start,r.start);end=Math.max(end,r.start+r.count);ranges.splice(i,1);
+  }
+  attribute.addUpdateRange(start,end-start);
+}
 function transferStaticAttributes(source,destination){
   const names=Object.keys(source.attributes).filter(name=>name!=='nativeVisibility');
   const other=Object.keys(destination.attributes).filter(name=>name!=='nativeVisibility');
@@ -104,8 +114,8 @@ export class NativeAssetGroups{
       }
       // Count is draw state, not buffer content. Unchanged prefixes need no upload.
       g.mesh.count=offset;
-      if(matrixEnd){g.mesh.instanceMatrix.addUpdateRange(matrixStart,matrixEnd-matrixStart);g.mesh.instanceMatrix.needsUpdate=true;}
-      if(coverageEnd){visibility.addUpdateRange(coverageStart,coverageEnd-coverageStart);visibility.needsUpdate=true;}
+      if(matrixEnd){addDirtyRange(g.mesh.instanceMatrix,matrixStart,matrixEnd);g.mesh.instanceMatrix.needsUpdate=true;}
+      if(coverageEnd){addDirtyRange(visibility,coverageStart,coverageEnd);visibility.needsUpdate=true;}
       if(matrixEnd||coverageEnd)stats.uploads++;
       g.mesh.boundingBox=null;g.mesh.boundingSphere=bounds;g.sourceStamp=sourceStamp;g.stamp=stamp;
     }

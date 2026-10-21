@@ -83,3 +83,15 @@ test('a local matrix or coverage change leaves other slots and shadow buffers in
  source.geometry.attributes.nativeVisibility.setX(0,.4);source.geometry.attributes.nativeVisibility.needsUpdate=true;
  assert.equal(render(f).uploads,1);assert.equal(f.groups.colors.get('0:0').mesh.instanceMatrix.version,matrixVersion);assert.equal(f.groups.shadows.get('0').mesh.instanceMatrix.version,shadowVersion);f.groups.dispose();
 });
+
+test('pending dirty ranges remain bounded when a pass is never drawn',()=>{
+ const f=fixture();render(f);
+ const color=f.groups.colors.get('0:0').mesh.instanceMatrix,shadow=f.groups.shadows.get('0').mesh.instanceMatrix;
+ color.onUploadCallback();shadow.onUploadCallback();
+ for(let i=0;i<64;i++){
+  f.batch.meshes[0].instanceMatrix.array[12]=1+i%2;f.batch.meshes[0].instanceMatrix.needsUpdate=true;render(f);
+ }
+ assert.equal(color.updateRanges.length,1);assert.equal(shadow.updateRanges.length,1);
+ assert.equal(color.array[12],2);assert.equal(shadow.array[12],2);
+ color.onUploadCallback();shadow.onUploadCallback();assert.deepEqual(color.updateRanges,[]);assert.deepEqual(shadow.updateRanges,[]);f.groups.dispose();
+});

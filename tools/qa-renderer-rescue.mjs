@@ -27,8 +27,8 @@ try{for(const quality of (process.env.RR_QUALITY??'media').split(','))for(const 
   const three=body.match(/import \* as THREE from ["']([^"']+)["']/);if(!three)throw Error('Three import missing');
   let code=route.request().url().includes('qa-groups-main')?source:candidate;
   if(route.request().url().includes('qa-groups-naive')){
-   const matrix='if(matrixEnd){g.mesh.instanceMatrix.addUpdateRange(matrixStart,matrixEnd-matrixStart);g.mesh.instanceMatrix.needsUpdate=true;}';
-   const coverage='if(coverageEnd){visibility.addUpdateRange(coverageStart,coverageEnd-coverageStart);visibility.needsUpdate=true;}';
+   const matrix='if(matrixEnd){addDirtyRange(g.mesh.instanceMatrix,matrixStart,matrixEnd);g.mesh.instanceMatrix.needsUpdate=true;}';
+   const coverage='if(coverageEnd){addDirtyRange(visibility,coverageStart,coverageEnd);visibility.needsUpdate=true;}';
    if(!code.includes(matrix)||!code.includes(coverage))throw Error('Naive diagnostic anchors changed');
    code=code.replace(matrix,'g.mesh.instanceMatrix.needsUpdate=true;').replace(coverage,'if(visibility)visibility.needsUpdate=true;').replace('if(matrixEnd||coverageEnd)stats.uploads++;','stats.uploads++;');
   }
