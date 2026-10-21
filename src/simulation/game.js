@@ -1344,14 +1344,15 @@ function updateWorkers(s,dt,nav) {
   const findPlant=workerEntityLookup(()=>s.plants,{reuse:true,appendOnly:true}),findCrate=workerEntityLookup(()=>s.crates,{reuse:true,appendOnly:true}),findTask=workerEntityLookup(()=>s.tasks,{reuse:true});
   let idlePlants;
   let idleBodies;
-  let idleCandidates;
+  let walkingCandidates;
   // One ambient walker is cheaper with a scan, even in a large paid crew.
   // Count only when an idle call actually occurs; the threshold avoids bucket
   // construction when there are too few queries to amortize it.
   const bodyIndex=()=>{
     if(s.workers.length<96)return null;
-    idleCandidates??=s.workers.reduce((n,w)=>n+Number(w.status==='idle'||w.status==='waiting'),0);
-    return idleCandidates>=16?(idleBodies??=createWorkerBodyIndex(s.workers)):null;
+    walkingCandidates??=s.workers.reduce((n,w)=>n+Number(w.idleState?.mode==='walk'&&
+      (w.status==='idle'||w.status==='waiting')),0);
+    return walkingCandidates>=16?(idleBodies??=createWorkerBodyIndex(s.workers)):null;
   };
   const newArrivals=[];
   const nativeTasks=!!nav.intentTaskPlanner;

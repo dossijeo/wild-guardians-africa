@@ -127,10 +127,15 @@ test('Game.tick keeps body clearance with a large indexed waiting roster',()=>{
   moving.idleState={anchorId:s.villages[0].id,mode:'walk',elapsed:0,
     rng:1,remaining:10,approachRetry:0,pathVersion:nav.version,
     destination:{id:'idle-moving',x:2,z:0}};
-  for(let i=1;i<100;i++)s.workers.push({...moving,id:`worker-${i}`,
-    personId:`person-${i}`,x:i===1?1:i*30,path:null,destinationId:null,
-    idleState:{anchorId:s.villages[0].id,mode:'rest',elapsed:0,
-      rng:1,remaining:1000,approachRetry:0}});
+  for(let i=1;i<100;i++){
+    const x=i===1?1:i*30,destinationId=`idle-worker-${i}`;
+    s.workers.push({...moving,id:`worker-${i}`,personId:`person-${i}`,x,
+      path:i===1?null:[{x:x+2,z:0}],destinationId:i===1?null:destinationId,
+      idleState:i===1?{anchorId:s.villages[0].id,mode:'rest',elapsed:0,
+        rng:1,remaining:1000,approachRetry:0}:{anchorId:s.villages[0].id,
+        mode:'walk',elapsed:0,rng:1,remaining:1000,approachRetry:0,
+        pathVersion:nav.version,destination:{id:destinationId,x:x+2,z:0}}});
+  }
   const standing=s.workers[1];
   for(let i=0;i<20;i++){
     Game.tick(s,.1,nav);

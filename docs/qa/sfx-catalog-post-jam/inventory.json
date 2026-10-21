@@ -30,7 +30,7 @@
     "src/rendering/crop-batch.js": "96f37896195dda9cbf2c2e2e9570c982305c83cdb1e20b3e36671b7754ab233c",
     "src/rendering/scene.js": "6ac9e17c1f17df5cc90d85a0f61ccde339b177b444851a54ad3e70e3f3eff3c6",
     "src/simulation/encounters.js": "4da176cd4a4ae1de9d41d8b9560ade5fb360433bb203233a53de5b77d7e41e18",
-    "src/simulation/game.js": "484f66506f7044d2b4445ccf7759689ae9ffef9e6299f411f4806aaa7c0529ce",
+    "src/simulation/game.js": "a2289998c41238618a76ed43575f0dfc91e7ff28920e1bf694cc27b3704652f5",
     "src/simulation/raids.js": "d178913266ea348d4b83310e61cdd9e182aa3355a29f2b74f10c5ac659c704bb",
     "src/tutorial/controller.js": "1d58ea14160ea44883c72a7b6806e630103a607d6866e4edf587582aec80f774",
     "src/world/navigation.js": "20439b77e2e4c056092e6bad43910642ff90c1a93408616173fcccd4fbbb90e2",
@@ -1958,7 +1958,7 @@
         "sources": [
           {
             "file": "src/simulation/game.js",
-            "line": 1482,
+            "line": 1483,
             "selector": "if(t.kind==='repair'){completeTask"
           }
         ],
@@ -2280,7 +2280,7 @@
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 1541,
+              "line": 1542,
               "selector": "emit(s,'VillageFounded'"
             },
             {
@@ -3002,7 +3002,7 @@
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 1577,
+              "line": 1578,
               "selector": "emit(s,'StructureRuined'"
             },
             {
@@ -6441,7 +6441,7 @@
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 1436,
+              "line": 1437,
               "selector": "emit(s,'TutorialCompleted'"
             },
             {
@@ -6537,7 +6537,7 @@
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 1521,
+              "line": 1522,
               "selector": "emit(s,'PostgameStarted'"
             },
             {
@@ -6926,7 +6926,7 @@
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 1434,
+              "line": 1435,
               "selector": "emit(s,'CrateDelivered'"
             },
             {
@@ -7476,7 +7476,7 @@
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 1517,
+              "line": 1518,
               "selector": "emit(s,'CampaignWon'"
             },
             {
@@ -7542,7 +7542,7 @@
           "callers": [
             {
               "file": "src/simulation/game.js",
-              "line": 1516,
+              "line": 1517,
               "selector": "emit(s,'GameOver'"
             },
             {
