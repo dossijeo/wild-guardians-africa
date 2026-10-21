@@ -934,3 +934,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Sabana: viento y LOD geométrico
 
 [Seis parejas](grass-wind-lod-20261021/README.md): candidata aplica el lod18–24 existente a bend y normales, evitando salto de esas expresiones al lote lejano. Mantiene viento8 cercano y geometría; falta vídeo/cruce del límite/coste, no declarar mejora temporal demostrada por capturas estáticas.
+
+
+### Sabana: secuencia comparativa viento/LOD
+
+[72 parejas y vídeos](grass-wind-motion-20261021/README.md): cámara/tiempo de viento/geometría iguales, selección cercana2438–3186. Sin errores, cobertura conservada en contacto. Vídeo de poses asentadas, no FPS; pendientes evaluación temporal fina y coste, no afirmar LOD completamente resuelto.
