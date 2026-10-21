@@ -1139,3 +1139,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Manglares: rangos activos de subida
 
 [Equivalencia y ABBA](mangrove-leaf-upload-ranges-20261021/README.md): seis parejas exactas; geometría y trayectoria iguales. Prefijo activo nominal94KB frente1.2MB de capacidad, sin reducir VRAM. No mejora consistente de FPS/GPU en esta ronda; conservar candidata de bajo riesgo sin atribuir ganancia demostrada.
+
+
+### Revisión global V9
+
+[36 capturas de seis biomas](combined-campaign-review-v9/README.md), cámaras/horas iguales a V8 ysin errores. Añade espectro nocturno volcánico yhojas media/musgo dos escalas. Sigue pendiente lectura nocturna de Río/Volcanes ycoherencia suelo/cobertura de Manglares:éxito local no implica mejora global. No extrapolar benchmark baja a esta combinación media ni declarar objetivo alcanzado.
