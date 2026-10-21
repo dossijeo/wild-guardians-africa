@@ -539,3 +539,7 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Cañón: arena con un mapa, candidata de coste
 
 [Normal-only seca](canyon-sand-normal-only/README.md):24 capturas frente a completa, una textura adicional verificada. ABBA móvil frente a grava: noche6.89–7.01ms contra6.85–7.06ms; control diurno deriva5.61–7.51ms y no permite aprobar presupuesto. Conserva relieve cercano con menor variación de color. Continuar, no integrar.
+
+### Cañón: normal-only conserva lectura a cámara normal
+
+[12 capturas y cierre real](canyon-sand-normal-only/overview/README.md): mantiene ondulaciones en normal diurna y elevada nocturna inspeccionadas, con color más uniforme. Una textura adicional, liberada una vez. Pendientes revisión temporal y medición diurna estable; no integrar.
