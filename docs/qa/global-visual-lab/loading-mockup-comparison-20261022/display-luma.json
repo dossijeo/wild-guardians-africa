@@ -1,0 +1,33 @@
+{
+  "note": "Display RGB luma of fixed ground rectangles, not photometry. Lit x580:640 y430:470; side x930:990 y430:470. Mockups have different framing/aspect and are not measured as equivalent.",
+  "metrics": [
+    {
+      "phase": "day",
+      "variant": "before",
+      "lit_mean": 0.46736996568627454,
+      "side_mean": 0.45498982614379085,
+      "ratio": 1.027209706307963
+    },
+    {
+      "phase": "day",
+      "variant": "after",
+      "lit_mean": 0.43204151797385615,
+      "side_mean": 0.30868328267973855,
+      "ratio": 1.3996271978942987
+    },
+    {
+      "phase": "night",
+      "variant": "before",
+      "lit_mean": 0.4039741797385621,
+      "side_mean": 0.23819916699346402,
+      "ratio": 1.6959512698448975
+    },
+    {
+      "phase": "night",
+      "variant": "after",
+      "lit_mean": 0.49245257026143785,
+      "side_mean": 0.08576406928104575,
+      "ratio": 5.741945017180663
+    }
+  ]
+}

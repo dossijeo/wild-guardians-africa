@@ -1329,3 +1329,8 @@ User rejects camera retreat when adding plants. Do not integrate capacity-fit or
 ### 2026-10-22 - Fixed-view planting-region candidate
 
 `loading-plant-region-20261022` tests a presentation-only validity envelope for new plants instead of camera retreat. The deterministic gesture sequence fits eight mature maize plants, with twelve day/night/orbit/aspect screenshots and unchanged zoom/FOV. Original four plants and models preserved. Region-full UI, broader viewport validation and integration remain pending; no performance claim from drawing fewer plants.
+
+
+### 2026-10-22 - Diffuse light and reference comparison
+
+User requests continued iteration against original day/night loading mockups, fixed zoom, diffuse overlapping rays and stronger contrast. `loading-mockup-comparison-20261022` includes original references, three-way sheets and explicit remaining differences. `loading-diffuse-contrast-20261022` preserves native shadows in the added light and aligns the directional source with the beam; six projected direction checks pass. Day ground contrast and night light isolation improve. Moving-camera shadow-cache cost and integration remain pending. No claim of final mockup equivalence.
