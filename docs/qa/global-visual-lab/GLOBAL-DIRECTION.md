@@ -1189,3 +1189,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Manglares: desgaste del poblado identificado
 
 [Mapa de exclusiones](mangrove-village-mask-20261021/README.md):8634/9216 puntos rechazados primero por desgaste,508 aceptados. groundWear417 mezcla patio circular ycorredores;selector rechaza ambos. Seis capturas exactas. Próximo experimento distinguir patio/camino sin relajar agua/ocupación ni cambiar simulación.
+
+
+### Manglares: separación patio/camino no aplicada
+
+[Intento inválido](mangrove-yard-cover-20261021-recheck/README.md):campo JS settlementSite ausente en escena nativa aunque máscara residente contiene desgaste. Helper ahora falla explícitamente. Verificar generación nativa y fuente de metadatos antes de reconstruir componentes; no rechazo de hipótesis artística.
