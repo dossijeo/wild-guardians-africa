@@ -864,3 +864,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Volcanes: luz direccional nocturna insuficiente por sí sola
 
 [Seis parejas](volcanic-night-relief-20261021/README.md): +45% solo direccional del suelo, día exacto; crestas algo más visibles de noche pero zonas oscuras aún ilegibles. Conservar diagnóstico, no integrar ni atribuir coste/FPS sin benchmark. Revisar ambiente y oclusión como siguiente hipótesis.
+
+
+### Volcanes: separar ambiente y oclusión
+
+[18 capturas](volcanic-night-components-20261021/README.md): ambiente nocturno x1.65 mejora lectura de depósitos; suavizar AO tiene efecto pequeño. Día exacto. Conservar ambiente como candidata pendiente de coste/ciclo/movimiento; no integrar ni eliminar AO globalmente.
