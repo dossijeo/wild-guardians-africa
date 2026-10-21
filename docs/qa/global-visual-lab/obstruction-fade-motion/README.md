@@ -22,7 +22,7 @@ El primer intento esperaba una importación asíncrona de diagnóstico después 
 
 ## Recomendación y límites
 
-Conservar para revisión de ocultación cercana, aún sin activar. El fundido usa la profundidad de la superficie parcial más cercana y no resuelve composición general de capas transparentes. Priorizar una escena con agua/partículas y varios objetos parcialmente ocultos, además de descargar/recrear lotes. Impostores desactivados: no extrapolar esta prueba a su transición con modelos3D. No se cambian modelos ni simulación; main intacto.
+**Recomendación sustituida: no integrar esta variante.** La [prueba posterior de transparencias](../obstruction-transparent-probe/README.md) demuestra que su profundidad auxiliar bloquea elementos que deberían verse a través del objeto. Conservar los vídeos como evidencia del prototipo descartado. El fundido usa la profundidad de la superficie parcial más cercana y no resuelve composición general de capas transparentes. Priorizar una escena con agua/partículas y varios objetos parcialmente ocultos, además de descargar/recrear lotes. Impostores desactivados: no extrapolar esta prueba a su transición con modelos3D. No se cambian modelos ni simulación; main intacto.
 
 ## Reproducción
 
