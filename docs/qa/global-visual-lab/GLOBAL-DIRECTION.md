@@ -1074,3 +1074,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Manglares: primer módulo Blender de hojas bajas
 
 [Asset ypresupuesto](mangrove-leaf-cover-20261021/README.md):32 triángulos,8 hojas,altura9cm. Proyección40% a separación.5;no cumple continuidad. Mejorar reparto antes de subir densidad. JSON/GLB/.blend conservados,sin integración en juego ni afirmación de éxito.
+
+
+### Caras traseras de árboles: comparación explícita
+
+[24 capturas reales](obstruction-backfaces-20261021/README.md): DoubleSide, FrontSide actual y superficie más cercana, Sabana baja día/noche. FrontSide reduce acumulación pero conserva capas delanteras; profundidad aislada mejora la lectura del suelo y permanece candidata QA. Dos targets nominales 14.06 MiB y dos dibujos auxiliares con dos parciales; no atribuir FPS a contadores de la última pasada. Sin cambios de modelos ni integración.
