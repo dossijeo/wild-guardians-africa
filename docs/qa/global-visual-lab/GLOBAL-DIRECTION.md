@@ -843,4 +843,4 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 
 ### Manglares: deformar UV no elimina la repetición
 
-[Seis parejas](mangrove-uv-warp/README.md): ondas suaves conservan volumen/paleta pero convierten filas en filas curvas. No promover por insuficiencia artística; original intacto. Próximo enfoque: orientaciones locales mezcladas sin costuras y normales coherentes. No descartado por coste, ni benchmark temporal de esta variante.
+[Seis parejas](mangrove-uv-warp-v2/README.md): ondas suaves conservan volumen/paleta pero convierten filas en filas curvas. No promover por insuficiencia artística; original intacto. Próximo enfoque: orientaciones locales mezcladas sin costuras y normales coherentes. No descartado por coste, ni benchmark temporal de esta variante.
