@@ -1,0 +1,97 @@
+diff --git a/src/simulation/game.js b/src/simulation/game.js
+index dfb8c3791..bc7cc4463 100644
+--- a/src/simulation/game.js
++++ b/src/simulation/game.js
+@@ -50,6 +50,11 @@ const routePlanWaits=new WeakMap();
+ // planning path until this navigator has observed their current route.
+ const activeRouteStamps=new WeakMap();
+ const ROUTE_RETRY_SECONDS=8;
++const routeRemainingDistance=actor=>{
++  let length=0,previous=actor;
++  for(const point of actor.path??[]){length+=dist(previous,point);previous=point;}
++  return length;
++};
+ const routeEpoch=(nav,actor,destination,worker)=>{
+   const sectors=nav.spatialSectorRevision?.(actor.radius??.28,worker)??0;
+   return `${destination.id}:${destination.x}:${destination.z}:${nav.version}:${sectors}:${worker?'worker':actor.species??'animal'}`;
+@@ -804,6 +809,8 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
+     w.mobileRecoveryAttempts=0;
+     w.mobileProgressDistance=dist(w,destination);
+     w.mobileProgressAt=s.elapsed;
++    delete w.mobileRouteProgressDistance;
++    delete w.mobileRouteSampleAt;
+     delete w.retreatStaticRouteFailure;
+   }
+   if(!Number.isFinite(w.mobileProgressDistance)||!Number.isFinite(w.mobileProgressAt)){
+@@ -904,6 +911,22 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
+   // ignore mobile collisions. Static terrain,
+   // barriers and the live gate leaf remain authoritative throughout.
+   const next=w.path[0],distanceToNext=next?dist(w,next):0;
++  if(worker){
++    // A valid route may initially lead away from its destination. Sampling its
++    // remaining length avoids mistaking that detour for a collision stall.
++    // Keep this bounded to one path scan every three simulated seconds.
++    if(!Number.isFinite(w.mobileRouteProgressDistance)||
++      s.elapsed-(w.mobileRouteSampleAt??-Infinity)>=3){
++      const routeRemaining=routeRemainingDistance(w);
++      if(Number.isFinite(w.mobileRouteProgressDistance)&&
++        Math.abs(routeRemaining-w.mobileRouteProgressDistance)>=.75){
++        w.mobileProgressDistance=dist(w,destination);
++        w.mobileProgressAt=s.elapsed;
++      }
++      w.mobileRouteProgressDistance=routeRemaining;
++      w.mobileRouteSampleAt=s.elapsed;
++    }
++  }
+   if(!worker&&expandRoute&&next&&s.elapsed-w.mobileProgressAt>=12&&
+     nav.segmentClear?.(w,next,w.radius??.28,ignore,false)===false){
+     w.path=null;
+@@ -930,6 +953,8 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
+       w.mobileRecoveryAttempts=(w.mobileRecoveryAttempts??0)+1;
+       w.mobileProgressDistance=dist(w,destination);
+       w.mobileProgressAt=s.elapsed;
++      if(worker){w.mobileRouteProgressDistance=routeRemainingDistance(w);
++        w.mobileRouteSampleAt=s.elapsed;}
+       nav.motionObserver?.({kind:'mobileCollisionRecovery',actorId:w.id,
+         status:w.status,elapsed:s.elapsed,
+         trigger:stationarySeconds>=3?'stationary':'destination-stall',
+diff --git a/tests/actor-motion.test.js b/tests/actor-motion.test.js
+index d0f2a1255..c5455664e 100644
+--- a/tests/actor-motion.test.js
++++ b/tests/actor-motion.test.js
+@@ -216,6 +216,35 @@ test('mobile collision recovery stops after two attempts for the same destinatio
+   assert.equal(animal.mobilePhaseRemaining??0,0);
+   assert.equal(state.events.some(e=>e.type==='ActorMobileCollisionRecovery'),false);
+ });
++test('a returning worker advancing along a bent route is not treated as destination-stalled',()=>{
++  const {state,worker,nav}=fixture();state.raid=null;
++  const destination={id:'home',x:10,z:0};
++  Object.assign(worker,{x:-1,z:0,status:'returning',radius:.28,
++    path:[{x:-4,z:0},{x:10,z:0}],destinationId:destination.id,
++    pathVersion:nav.version,mobileRecoveryDestinationId:destination.id,
++    mobileRecoveryVersion:nav.version,mobileRecoveryAttempts:0,
++    mobileProgressDistance:10,mobileProgressAt:0,
++    mobileRouteProgressDistance:18,mobileRouteSampleAt:0});
++  state.workers.push({id:'blocking-worker',x:-1.65,z:0,radius:.28,
++    status:'returning'});
++  const probe={x:-1.5,z:0};
++  assert.equal(nav.workerMotionClear(worker,probe,.28),true);
++  assert.equal(actorSegmentClear(worker,probe,worker,actorBlockers(state,worker,true)),false);
++  state.elapsed=12;
++  walkTo(state,worker,destination,0,nav);
++  assert.equal(worker.mobileRecoveryAttempts,0,
++    'the worker shortened its route despite moving farther from home');
++  assert.equal(worker.mobileProgressAt,12);
++  assert.equal(worker.mobileRouteProgressDistance,17);
++  worker.path=[{x:-4,z:0},{x:10,z:0}];
++  worker.mobileProgressAt=0;
++  worker.mobileProgressDistance=10;
++  delete worker.mobileRouteProgressDistance;
++  worker.dynamicStallSeconds=0;
++  walkTo(state,worker,destination,0,nav);
++  assert.equal(worker.mobileRecoveryAttempts,1,
++    'without evidence of route progress, the bounded recovery still applies');
++});
+ test('Workers avoid a retreating beast in both movement directions and charge only travelled running metres',()=>{
+   const {state,animal,worker,nav}=fixture('rhino');animal.x=0;worker.x=-4;
+   const destination={id:'home',x:4,z:0};let arrived=false,total=0;
