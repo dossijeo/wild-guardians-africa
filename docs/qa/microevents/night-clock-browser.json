@@ -1,19 +1,26 @@
 {
   "before": {
-    "realSeconds": 1.2025999999940395,
-    "simulatedSeconds": 6.487999999999986,
-    "clock": 316.488000000001
+    "realSeconds": 1.2009000000059604,
+    "simulatedSeconds": 6.402499999999999,
+    "clock": 316.4025000000008
+  },
+  "preparing": {
+    "realSeconds": 1.209,
+    "simulatedSeconds": 1.197199999999997,
+    "clock": 317.6164000000007
   },
   "during": {
-    "realSeconds": 1.2056000000238418,
-    "simulatedSeconds": 1.1141999999999888,
-    "clock": 317.60220000000055
+    "realSeconds": 1.207,
+    "simulatedSeconds": 1.2140999999999984,
+    "clock": 318.8305000000005
   },
   "after": {
-    "realSeconds": 1.2019000000059605,
-    "simulatedSeconds": 5.985999999999999,
-    "clock": 323.58820000000145
+    "realSeconds": 1.2010999999940395,
+    "simulatedSeconds": 6.068499999999993,
+    "clock": 324.89900000000034
   },
+  "pendingAtStart": true,
+  "pendingAtEnd": true,
   "forced": true,
   "activeAtStart": "fireflies",
   "activeAtEnd": "fireflies",
@@ -21,8 +28,9 @@
   "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
   "errors": [],
   "rates": {
-    "before": 5.394977548671331,
-    "during": 0.9241871267235853,
-    "after": 4.980447624569692
+    "before": 5.331418103062887,
+    "preparing": 0.9902398676592199,
+    "during": 1.0058823529411751,
+    "after": 5.05245191909925
   }
 }
