@@ -631,3 +631,7 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Manglares: mezcla texturizada todavía insuficiente
 
 [Dos repartos de musgo/barro](mangrove-substrate/README.md),48 capturas/24 parejas. Primero demasiado barro; segundo conserva verde pero aparece mancha amplia de detalles superpuestos. Ninguno aprobado. Mezcla de mapas reales con rugosidad alta evita la respuesta húmeda anterior, pero necesita transición por estructura/altura y coherencia con parches. Tres lecturas extra de mapas y una máscara; sin benchmark por fallo artístico, horizonte y lifecycle pendientes. No seguir solo ajustando umbrales.
+
+### Manglares: transición por altura, candidata sin aprobar
+
+[48 capturas](mangrove-height-blend/README.md) frente a mezcla lineal. Mapas de altura con medianas186/255 y39/255 requieren normalización artística antes de comparar. La variante calibrada separa musgo/barro, pero tiene borde de detalle pequeño y barro nocturno azulado. Conservar solo para estudiar primer plano/movimiento y coherencia de color; coste, horizonte y recursos pendientes. No integrar ni declarar mejora global.
