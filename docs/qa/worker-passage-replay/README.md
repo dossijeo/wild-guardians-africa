@@ -82,3 +82,14 @@ Two small prototypes were rejected on the same 14-night campaign:
 | Check village arrival again after movement | 1,317 | 899 | 145 | 164 | 43 |
 
 Disabling return phasing left a queue outside the village when an incursion began; 99 of its work-period overlaps were subsequently between fleeing workers. The post-movement arrival check had no observable effect, including the same full state hash. Both edits were removed. These results narrow the physical bug: simply delaying or disabling phase does not resolve shared passages. The next candidate must create a traversable, deterministic yield or alternate route and still clear returning workers before the raid boundary. It must also preserve the existing economic throughput; none of these measurements justifies relaxing body collision.
+
+## Expiring recovery by elapsed time does not resolve the passage
+
+Branch `codex/worker-phase-elapsed` (`cf1b5f94e`) gives each three-second collision-recovery window an absolute simulation deadline. The prior `mobilePhaseRemaining` counter is decremented only inside `walkTo()`, so an intervening action or route wait can leave it positive after more than three simulated seconds. The candidate expires the window on the next movement call and includes a directed regression test. All 27 actor-motion tests pass. It was compared with the unmodified `main` base on the continuous 14-night Sabana/Mapungubwe/712 replay with the same native WASM and bot:
+
+| Variant | State SHA-256 | Deliveries | Coins | Living crops | Recovery events | Sampled overlap pairs after time 30 | Maximum penetration |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Current main | `2224d0ea4889a693d5b396704b444b3dc383a44e02dd2db507d096c08741ec05` | 1,317 | 899 | 145 | 164 | 43 | 0.476 m |
+| Elapsed-time recovery | `8cc7b67a05f5cfa9e86834d811b60995ed82718e33930aee8a5ccc10ec507a98` | 1,296 | 1,027 | 143 | 148 | 41 | 0.533 m |
+
+The deadline fixes the stale-counter semantics but does not materially solve the physical crossing: 41 overlaps remain, the deepest overlap is larger, and the campaign loses 21 deliveries and two living crops. The higher coin balance belongs to a divergent campaign and is not an isolated improvement. This branch is retained as a measured experiment, **not** a proposed production fix. A coordinated, collision-free passage mechanism remains necessary.
