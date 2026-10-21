@@ -77,11 +77,11 @@ test('camera-driven chunk synchronization does not poll the unchanged suppressio
 });
 
 
-test('very-low quality keeps chunk culling while higher qualities enable individual color culling',()=>{
+test('all quality presets retain individual color culling',()=>{
  const world={assetGroups:{instanceCulling:true},toon:{uniforms:{uGroundDetail:{value:0}}},destructionPass:{},renderer:{shadowMap:{}},sun:new THREE.DirectionalLight(),terrainMeshes:[],resize(){}};
  for(const quality of ['muy_baja','baja','media','alta','muy_baja']){
   WorldScene.prototype.qualitySetting.call(world,quality);
-  assert.equal(world.assetGroups.instanceCulling,quality!=='muy_baja');
+  assert.equal(world.assetGroups.instanceCulling,true);
   assert.equal(world.renderer.shadowMap.enabled,['media','alta'].includes(quality));
  }
 });

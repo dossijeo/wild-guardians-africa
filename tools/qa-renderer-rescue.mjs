@@ -102,7 +102,7 @@ try{for(const quality of (process.env.RR_QUALITY??'media').split(','))for(const 
      if(w.qaResidentKeys!==JSON.stringify([...w.chunks.keys()].sort()))throw Error('Residency changed');
      const arrays=new Set();let groupCapacityBytes=0;
      for(const cache of [w.assetGroups.colors,w.assetGroups.shadows])for(const g of cache.values())for(const a of [g.mesh.instanceMatrix,g.mesh.geometry.attributes.nativeVisibility].filter(Boolean))if(!arrays.has(a.array)){arrays.add(a.array);groupCapacityBytes+=a.array.byteLength}
-     return {gpu,cadence,groupCapacityBytes,jsHeap:performance.memory?{used:performance.memory.usedJSHeapSize,total:performance.memory.totalJSHeapSize}:null,memory:{...renderer.info.memory},device:ext?gl.getParameter(ext.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER),resolution:[renderer.domElement.width,renderer.domElement.height],residentKeys:w.qaResidentKeys,glError:gl.getError()};
+     return {instanceCulling:variant!=='main'&&!!w.assetGroups.instanceCulling,gpu,cadence,groupCapacityBytes,jsHeap:performance.memory?{used:performance.memory.usedJSHeapSize,total:performance.memory.totalJSHeapSize}:null,memory:{...renderer.info.memory},device:ext?gl.getParameter(ext.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER),resolution:[renderer.domElement.width,renderer.domElement.height],residentKeys:w.qaResidentKeys,glError:gl.getError()};
     }finally{traffic?.dispose()}
    },{variant,phase,samples:Number(process.env.RR_SAMPLES??180),warmup:Number(process.env.RR_WARMUP??180),trace:process.env.RR_TRACE==='1',staticCamera:process.env.RR_STATIC==='1'});
    const client=await page.context().newCDPSession(page);await client.send('HeapProfiler.collectGarbage');result.collectedHeap=await client.send('Runtime.getHeapUsage');await client.detach();
@@ -131,7 +131,7 @@ try{for(const quality of (process.env.RR_QUALITY??'media').split(','))for(const 
      }
      const shadows=[...w.assetGroups.shadows].map(([key,g])=>[key,g.mesh.count,Array.from(g.mesh.instanceMatrix.array.slice(0,g.mesh.count*16))]);
      const png=w.renderer.domElement.toDataURL('image/png').split(',')[1];let forced=null;if(shadowCheck&&w.renderer.shadowMap.enabled){w.releaseNativeShadow.cache.invalidate();w.render(0);forced=w.renderer.domElement.toDataURL('image/png').split(',')[1];}
-     return {contentEqual,boundsEqual,png,forced,shadows,keys:[...w.chunks.keys()].sort(),camera:w.camera.position.toArray(),glError:w.renderer.getContext().getError(),colorCount:[...w.assetGroups.colors.values()].reduce((n,g)=>n+g.mesh.count,0)};
+     return {instanceCulling:variant!=='main'&&!!w.assetGroups.instanceCulling,contentEqual,boundsEqual,png,forced,shadows,keys:[...w.chunks.keys()].sort(),camera:w.camera.position.toArray(),glError:w.renderer.getContext().getError(),colorCount:[...w.assetGroups.colors.values()].reduce((n,g)=>n+g.mesh.count,0)};
     },{variant,reset:control===null,shadowCheck:process.env.RR_SHADOW==='1'});
     const bytes=Buffer.from(capture.png,'base64'),raw=await sharp(bytes).ensureAlpha().raw().toBuffer({resolveWithObject:true});
     const name=`${biome}-${quality}-${phase}-${pose}-${variant}-${rows.length}.webp`;await sharp(bytes).webp({lossless:true,effort:0}).toFile(out+'/'+name);

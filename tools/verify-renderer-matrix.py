@@ -27,4 +27,4 @@ missing=[list(key) for key in sorted(expected) if key not in cases or not all(v 
 report={'expectedConditions':len(expected),'completeConditions':len(expected)-len(missing),'missing':missing,'invalidComparisons':invalid,'pixelDifferences':different,'structuralMatrixPassed':not missing and not invalid,'strictMatrixPassed':not missing and not invalid and not different,'config':config,'images':images}
 Path(paths[-1]).with_name('matrix-audit.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
 print(json.dumps({k:v for k,v in report.items() if k not in ['config','images']},ensure_ascii=False,indent=2))
-if missing or different:sys.exit(1)
+if missing or invalid or different:sys.exit(1)
