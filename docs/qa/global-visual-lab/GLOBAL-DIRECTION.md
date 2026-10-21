@@ -1259,3 +1259,7 @@ Quince parejas de Sabana en sky-twilight-20261021: cinco niveles de mezcla y tre
 
 ### Desierto: deformación amplia no promovida
 Seis parejas en desert-ripple-warp-20261021. Rompe repetición pero estira las ondas en bandas peinadas; descartada esta intensidad por calidad visual, no por rendimiento. Misma cámara/hora/triángulos/calls. Sin benchmark nuevo. Próximo enfoque: limitar Jacobiano y transformar normales coherentemente, conservando calidez.
+
+
+### Desierto: deformación acotada, mejora insuficiente
+Seis parejas en desert-ripple-bounded-20261021. Corrige estiramiento excesivo y transforma gradiente; resultado visual demasiado próximo al original para promover. No descartado por rendimiento. Siguiente dirección: relieve mesoscópico/acumulaciones; no más amplitud UV. Objetivo global pendiente.
