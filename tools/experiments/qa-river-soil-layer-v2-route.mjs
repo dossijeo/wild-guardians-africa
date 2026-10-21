@@ -1,10 +1,11 @@
 import {patchRiverSoilEarlyExit} from './qa-river-soil-early-exit.mjs';
 import {installRiverCoverPaletteRoute} from './qa-river-cover-palette-route.mjs';
-export async function installRiverSoilLayerV2Route(page,enabled,{earlyExit=false,wearAligned=false}={}){
+export async function installRiverSoilLayerV2Route(page,enabled,{earlyExit=false,wearAligned=false,fringeMask=false}={}){
  await installRiverCoverPaletteRoute(page,true);
  if(!enabled)return;
  await page.route('**/src/rendering/biome-ground.js*',async route=>{
   const response=await route.fetch();let body=await response.text();
+  if(fringeMask){body="import {riverFringeMask} from '/tools/experiments/qa-river-fringe-mask.js';\n"+body;const anchor='this.volcanicAsh===\'mask\'?ashMask(data,bo):data';if(!body.includes(anchor))throw Error('Mask transform anchor missing');body=body.replace(anchor,"this.field.c.biome==='grand_river'?riverFringeMask(data,bo):("+anchor+")");}
   const a='if(this.layeredSavanna)for(const role';
   if(!body.includes(a))throw Error('Soil loading anchor missing');
   body=body.replace(a,"if(this.layeredSavanna||biome==='grand_river')for(const role");

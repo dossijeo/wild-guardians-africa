@@ -499,3 +499,7 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Gran Río: ruta nativa de máscaras confirmada
 
 [Diagnóstico del borde irregular](river-yard-shape/README.md): modificar el generador JavaScript deja 12/12 parejas RGB exactas porque BiomeGround recibe bytes nativos. No es rechazo artístico. El siguiente piloto debe transformar una copia visual al recibir los bytes y comprobar cambios efectivos antes de ampliar capturas.
+
+### Gran Río: transformación de máscara residente funcional
+
+[Franja irregular monotónica](river-fringe-mask/README.md): 633 cambios de alfa registrados, 24 capturas, invariantes y solapes sintéticos correctos. Cambia suelo y selección de hojas sin tocar Wild Engine. No promover receta: irregularidad limitada y pérdida de cobertura; falta una mejora artística clara.
