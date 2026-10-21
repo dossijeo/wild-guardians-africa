@@ -571,3 +571,7 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Cañón: arena normal-only integrada como opción explícita
 
 [`canyonSand=1` con global-lighting](canyon-sand-integrated/README.md), solo Cañón y off por defecto.12/12 parejas RGB exactas QA/integrada, media/baja día/noche, una capa y geometría iguales; build pasa. No incluye atenuación POM descartada. Coste cercano previo persiste; pendiente validar streaming integrado y revisión temporal. No aprobación global ni main.
+
+### Cañón: streaming de canyonSand integrado
+
+[18 parejas QA/integrada](canyon-sand-integrated/streaming/README.md):10 exactas RGB; otras1–7 píxeles, máximo10 niveles, causa no aislada. Cámaras/chunks/geometría iguales,16 cambios de origen por variante, textura adicional liberada una vez. Tira diurna conserva depósitos. Mantener opción explícita; pendiente revisión temporal continua. No afirmar paridad exacta global ni ausencia de fugas largas.
