@@ -635,3 +635,7 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Manglares: transición por altura, candidata sin aprobar
 
 [48 capturas](mangrove-height-blend/README.md) frente a mezcla lineal. Mapas de altura con medianas186/255 y39/255 requieren normalización artística antes de comparar. La variante calibrada separa musgo/barro, pero tiene borde de detalle pequeño y barro nocturno azulado. Conservar solo para estudiar primer plano/movimiento y coherencia de color; coste, horizonte y recursos pendientes. No integrar ni declarar mejora global.
+
+### Manglares: la transición por altura no basta para volumen
+
+[24 capturas cercanas](mangrove-height-blend/transition-close/README.md) en región seleccionada por máscara contextual. Separación visible entre materiales, pero musgo pegado al plano, sin espesor/oclusión de borde, y barro cromáticamente incoherente. No integrar ni endurecer máscara para simular volumen. Sin benchmark nuevo; piloto inicial sin transición excluido.

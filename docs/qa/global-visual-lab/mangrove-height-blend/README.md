@@ -34,3 +34,7 @@ python tools/experiments/package-mangrove-height-calibrated.py
 ```
 
 Todo mediante rutas QA. Sin assets nuevos ni cambios en simulación, navegación, modelos o main.
+
+## Revisión cercana posterior
+
+[Transición en primer plano](transition-close/README.md): la selección separa materiales, pero sigue sin dar espesor y conserva discrepancias de color. No demuestra mejora suficiente de volumen para integrar. El piloto de suelo libre sin transición se excluye; cámaras corregidas verificadas.
