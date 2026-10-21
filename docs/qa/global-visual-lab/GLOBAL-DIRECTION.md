@@ -1319,3 +1319,8 @@ loading-framing-motion-20261021 añade distancia interpolada .35 s, respuesta in
 
 ### Rayo de carga oblicuo e iluminación material
 Solicitud del usuario: más presencia/oblicuidad y que alumbre las plantas. loading-beam-light-20261022 conecta huella de bruma con contribución de luz según normal/albedo en maíz y suelo. Opción nativa loadingBeam=oblique, desactivada por defecto, cuatro capturas píxel exacto con QA. Sin nuevas pasadas/texturas; coste por fragmento pendiente. Es luz artística proyectada, no volumen físico ni nuevas sombras del rayo.
+
+
+### 2026-10-22 - Fixed loading zoom takes precedence
+
+User rejects camera retreat when adding plants. Do not integrate capacity-fit or smooth-framing adapters. Parallel-ray and island-haze QA retains original fixed camera and verifies position/FOV/zoom from 4 to 18 plants. See `loading-parallel-fixed-20261022/README.md`. Capacity portrait clipping must be addressed through composition/planting bounds, never automatic zoom.
