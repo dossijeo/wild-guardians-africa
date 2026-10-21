@@ -869,3 +869,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Volcanes: separar ambiente y oclusión
 
 [18 capturas](volcanic-night-components-20261021/README.md): ambiente nocturno x1.65 mejora lectura de depósitos; suavizar AO tiene efecto pequeño. Día exacto. Conservar ambiente como candidata pendiente de coste/ciclo/movimiento; no integrar ni eliminar AO globalmente.
+
+
+### Ambiente volcánico: coste y transición pendiente
+
+[ABBA Intel UHD](volcanic-night-components-20261021/performance/README.md): sin regresión consistente, sin mejora FPS demostrada. La multiplicación actual refuerza también el componente diurno durante crepúsculo; antes de integrar, corregir solo el extremo nocturno y capturar estados intermedios.
