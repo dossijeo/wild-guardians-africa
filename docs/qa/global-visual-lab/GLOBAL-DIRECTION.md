@@ -583,3 +583,7 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Manglares: deformar UV no resuelve cobertura uniforme
 
 [Prueba UV](mangrove-uv-warp/README.md):24 capturas tras corregir inserción de shader. Curva filas pero conserva formas abultadas uniformes; descartar artísticamente sin benchmark. Hallazgo de pipeline: uGroundPureMoss retorna antes de POM/máscaras generales y fija cobertura1. Siguiente trabajo debe actuar sobre esa rama real y distribución de material, no aumentar parallax inactivo.
+
+### Manglares: dos escalas suavizan patrón pero exceden coste
+
+[24 capturas y ABAB](mangrove-moss-scales/README.md):menos repetición gruesa, pérdida de relieve; GPU+1.81ms día/+2.12ms noche agrupados,1920muestras. Descartar mezcla doble en tiempo real. Investigar composición offline reutilizable manteniendo tres lecturas, sin presentar ahorro antes de probarlo.
