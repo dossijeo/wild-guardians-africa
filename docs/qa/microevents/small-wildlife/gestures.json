@@ -1,0 +1,74 @@
+[
+  {
+    "id": "beetle",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 1,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 2491,
+      "calls": 76,
+      "triangles": 994137,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "beetle",
+      "mode": "catch",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 0.07270000001788139
+    }
+  },
+  {
+    "id": "locusts",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 16,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 2563,
+      "calls": 76,
+      "triangles": 994167,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "locusts",
+      "mode": "scatter",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 2.389200000017881
+    }
+  },
+  {
+    "id": "thornseeds",
+    "fixture": "wood",
+    "forced": true,
+    "instances": 10,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "render": {
+      "frame": 2837,
+      "calls": 76,
+      "triangles": 994155,
+      "points": 0,
+      "lines": 0
+    },
+    "particleTime": 0.7500000000000007,
+    "anchor": "plant-7",
+    "errors": [],
+    "gesture": {
+      "event": "thornseeds",
+      "mode": "brush",
+      "completed": true,
+      "usedFallback": false,
+      "duration": 0.7479000000059606
+    }
+  }
+]

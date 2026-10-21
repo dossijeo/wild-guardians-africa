@@ -70,7 +70,38 @@ export function createSprite(id,frame=0){const g=new T.Group();
    ball(g,'#3e3928',[side*.12,.45,.2],[.045,.045,.03],0);
   }
  }
- else if(['beetle','locust','ants','insects'].includes(id))bug(g,id==='insects'?'fly':id,frame);
+ else if(id==='beetle'){
+  // A broad split carapace and dark thorax distinguish the single golden scarab.
+  ball(g,'#324c3c',[0,-.14,0],[.43,.5,.22],1);
+  for(const side of [-1,1]){
+   ball(g,'#c3983f',[side*.2,-.18,.1],[.215,.43,.2],1);
+   ball(g,'#e4c775',[side*.23,-.06,.26],[.065,.22,.045],0);
+   for(let i=0;i<3;i++){
+    const y=.15-i*.23;rod(g,[side*.27,y,0],[side*.52,y+.08,.02],.047,'#364a32');rod(g,[side*.52,y+.08,.02],[side*.58,y-.12,.02],.035,'#4f5b36');
+   }
+   rod(g,[side*.12,.48,.04],[side*.29,.67,.05],.03,'#354b34');ball(g,'#bdaa60',[side*.29,.67,.05],[.07,.045,.05],0);
+  }
+  ball(g,'#4e7254',[0,.29,.08],[.29,.23,.2],1);
+  ball(g,'#344e3c',[0,.5,.06],[.2,.15,.16],1);
+  for(const side of [-1,1])ball(g,'#e9d49b',[side*.13,.53,.18],[.04,.04,.035],0);
+  g.quaternion.setFromUnitVectors(new T.Vector3(0,0,1),new T.Vector3(4,3.5,5).normalize());
+ }
+ else if(id==='locust'){
+  // Side profile: tapered abdomen, long antennae and folded jumping legs.
+  ball(g,'#6d8b46',[-.18,-.04,0],[.5,.17,.16],1);
+  ball(g,'#9cb666',[.2,.05,.02],[.24,.22,.18],1);
+  ball(g,'#aabb70',[.46,.13,.03],[.2,.19,.17],1);
+  ball(g,'#394b2e',[.52,.2,.19],[.075,.085,.04],1);
+  for(const z of [-.1,.16]){
+   rod(g,[-.05,-.04,z],[-.31,.3,z],.07,'#849e4d');rod(g,[-.31,.3,z],[-.48,-.35,z],.033,'#435b32');rod(g,[-.48,-.35,z],[-.69,-.38,z],.025,'#435b32');
+   rod(g,[.2,-.02,z],[.32,-.26,z],.027,'#526a39');rod(g,[.32,-.26,z],[.55,-.29,z],.022,'#526a39');
+  }
+  rod(g,[.5,.26,0],[.67,.64,0],.023,'#5d693d');rod(g,[.42,.28,-.04],[.4,.67,-.04],.02,'#5d693d');
+  const flap=[.6,.25,-.12][frame],wing=plate(g,[[.12,.1],[-.57,flap],[-.62,flap-.15],[-.08,-.04]],'#b4c58b',.035);wing.position.z=.2;
+  rod(g,[.08,.12,.25],[-.56,flap-.06,.25],.015,'#718448');
+  g.quaternion.setFromUnitVectors(new T.Vector3(0,0,1),new T.Vector3(4,3.5,5).normalize());
+ }
+ else if(['ants','insects'].includes(id))bug(g,id==='insects'?'fly':id,frame);
  else if(id==='bird'){
   ball(g,'#97b3bd',[0,-.12,0],[.32,.5,.28],1);ball(g,'#e5d7ad',[0,-.22,.2],[.22,.32,.16],1);ball(g,'#6d91a4',[0,.4,.04],[.29,.27,.25],1);
   for(const side of [-1,1]){const wing=plate(g,[[side*.18,.13],[side*.85,[.65,.2,-.4,.12][frame]],[side*.65,-.23],[side*.2,-.32]],'#6e93a5');wing.position.z=-.08;ball(g,'#263d42',[side*.15,.46,.24],[.035,.04,.03]);rod(g,[side*.1,-.48,.03],[side*.13,-.62,.1],.025,'#b28b55');}cone(g,[0,.32,.39],.1,.24,'#e4b267',[Math.PI/2,0,0]);
@@ -192,7 +223,17 @@ export function createSprite(id,frame=0){const g=new T.Group();
   for(const y of [-.3,.08,.4])ball(g,'#4e693e',[0,y,.23],[.16,.1,.04],0);
   if(id==='snake'){for(const x of [-.23,.23]){ball(g,'#e7c874',[x,.32,.21],[.075,.08,.04]);ball(g,'#243f2d',[x,.34,.25],[.03,.06,.02]);}rod(g,[0,.59,.14],[0,.8,.12],.025,'#a85849');}
  }
- else if(id==='thornseeds'){ball(g,'#b8a574',[0,0,0],[.45,.48,.43],0);for(let i=0;i<9;i++){const a=i*Math.PI*2/9,m=cone(g,[Math.cos(a)*.48,Math.sin(a)*.48,0],.1,.35,'#a59865');m.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),new T.Vector3(Math.cos(a),Math.sin(a),0));}}
+ else if(id==='thornseeds'){
+  ball(g,'#a4844d',[0,0,0],[.36,.4,.3],1);
+  // Sparse hooked burs keep negative space between their dark tips at game scale.
+  for(let i=0;i<8;i++){
+   const a=i*Math.PI/4,r=.52+(i%3)*.04,x=Math.cos(a),y=Math.sin(a);
+   rod(g,[x*.26,y*.3,.03],[x*r,y*r,.03],.04,'#866339');
+   rod(g,[x*r,y*r,.03],[x*r-y*.12,y*r+x*.12,.03],.032,'#59482e');
+  }
+  for(const [x,y] of [[-.13,.18],[.16,.08],[-.04,-.18]])ball(g,'#ceb77d',[x,y,.27],[.075,.09,.035],0);
+  g.quaternion.setFromUnitVectors(new T.Vector3(0,0,1),new T.Vector3(4,3.5,5).normalize());
+ }
  else if(id==='fallingdebris'){
   // Uneven chipped planes, without fine details that disappear in the runtime sprite.
   const geo=new T.IcosahedronGeometry(1,0),positions=geo.getAttribute('position');
