@@ -86,3 +86,25 @@ node tools/experiments/replay-worker-crossing.mjs
 $env:WG_WORKER_PROBE_OUTPUT='test-results/worker-body-clearance-30.json'
 node tools/experiments/probe-worker-overlaps.mjs 30 712 good sabana mapungubwe wild-engine
 ```
+
+## Day 10 shared-passage deadlock
+
+The body-clearance experiment above is not ready for integration. A continuous native-intent campaign produced a second frozen state at day 10, time 26: [compressed state](sabana-712-day10-traffic.json.gz), SHA-256 `6feb538e9cad995831ffab29c122d0cf129b8ee0a2b0a6a58e86c1deca61b606` (uncompressed state `dd09baee257bd81865f0b38db9e75dc27895b90926abb4ef933742023e4ba0c1`). Workers `worker-8276`, `worker-8277` and `worker-8278` have different tasks but share the same narrow route connector near `(71, 6)`. They block one another without touching. Their paths remain valid, yet all three move **zero metres** in a ten-second replay:
+
+```powershell
+node tools/experiments/replay-worker-jam.mjs docs/qa/worker-passage-replay/sabana-712-day10-traffic.json.gz 10
+```
+
+The campaign probe now records active time, stationary time and the longest uninterrupted wait for workers with a route. In the 14-night Sabana/712 comparison, main spent 311 worker-seconds stationary out of 45,015 active worker-seconds, with a longest wait of 22 seconds. The body-clearance branch spent 1,095 out of 44,151 and had a 262-second wait. These sums count simultaneous workers separately and are diagnostic, not `Game.tick` CPU times. This explains why removing collision phasing alone loses throughput: ordinary local avoidance can deadlock when several workers follow the same direction through a narrow connector.
+
+An experimental yield extension gave a blocked worker a statically and dynamically validated lateral point, kept its confirmed route afterward and let the three frozen workers clear the passage without overlap. All 32 directed movement tests passed. It was **rejected** after continuous campaign checks:
+
+| Yield prototype | Deliveries, night 14 | Coins | Living crops | Stationary worker-seconds | Longest wait | Work-period overlaps |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Body clearance only | 1290 | 1011 | 129 | 1095 | 262 s | 0 |
+| Early yield, including prior animal-yield change | 1227 | 1023 | 101 | 140 | 6 s | 0 |
+| Early yield, animals unchanged | 1189 | 708 | 117 | 161 | 6 s | 0 |
+| Yield after 3 s, animals unchanged | 1171 | 1022 | 49 | 4154 | 458 s | 0 |
+| Yield after 3 s only for work traffic | 1210 | 729 | 122 | 1001 | 127 s | 1 |
+
+The late-yield prototypes indirectly caused long waits for fleeing workers, including one that remained en route for hundreds of seconds. The targeted replay therefore does not establish campaign safety. All yield changes to `actor-motion.js` and their positive-only test were removed. A future solution must coordinate passage order without broad route churn, preserve workers' home return, and pass prolonged campaign comparisons as well as the two frozen states. The body-clearance branch remains experimental and must not be merged on the strength of the day-9 crossing alone.

@@ -16,6 +16,10 @@ if(!Number.isSafeInteger(days)||days<1||days>100||!Number.isSafeInteger(seed)||s
 
 let sampledTicks=0,overlapTicks=0,lateOverlapTicks=0,pairs=0,maxPenetration=0;
 let workOverlapPairs=0,phasedWorkOverlapPairs=0,maxWorkPenetration=0;
+let priorElapsed=null,priorWorkers=new Map();
+const traffic={activeSeconds:0,stationarySeconds:0,phasedSeconds:0,
+  maxStationarySeconds:0,maxStationaryActor:null,byStatus:{},longWaits:[]};
+const stationaryStreaks=new Map();
 const distinctWorkPairs=new Set();
 const byDay=new Map(),byStatus=new Map(),examples=[],workExamples=[];
 const overlapWindows={'0-3':0,'3-10':0,'10-30':0,'30+':0};
@@ -61,6 +65,36 @@ const onTick=(state,nav)=>{
   villageEntry??=state.villages[0]?.entry??null;
   sampledTicks++;
   const workers=state.workers.filter(w=>w.status!=='home'&&Number.isFinite(w.x)&&Number.isFinite(w.z));
+  const dt=priorElapsed===null?0:Math.max(0,Math.min(1,state.elapsed-priorElapsed));
+  for(const worker of workers){
+    const prior=priorWorkers.get(worker.id),active=worker.path?.length>0&&
+      ['walking','carrying','returning','fleeing'].includes(worker.status);
+    if(!active||!prior||prior.status!==worker.status||!prior.path){
+      stationaryStreaks.delete(worker.id);continue;
+    }
+    const moved=Math.hypot(worker.x-prior.x,worker.z-prior.z);
+    const row=traffic.byStatus[worker.status]??={activeSeconds:0,stationarySeconds:0};
+    traffic.activeSeconds+=dt;row.activeSeconds+=dt;
+    if((worker.mobilePhaseRemaining??0)>0)traffic.phasedSeconds+=dt;
+    if(moved<1e-5){
+      traffic.stationarySeconds+=dt;row.stationarySeconds+=dt;
+      const streak=(stationaryStreaks.get(worker.id)??0)+dt;
+      stationaryStreaks.set(worker.id,streak);
+      if(streak>traffic.maxStationarySeconds){
+        traffic.maxStationarySeconds=streak;
+        traffic.maxStationaryActor={day:state.day,time:state.time,id:worker.id,
+          status:worker.status,destinationId:worker.destinationId,
+          x:worker.x,z:worker.z,next:worker.path?.[0]??null};
+      }
+      if(streak>=10&&streak-dt<10&&traffic.longWaits.length<40)
+        traffic.longWaits.push({day:state.day,time:state.time,id:worker.id,
+          status:worker.status,destinationId:worker.destinationId,
+          x:worker.x,z:worker.z,next:worker.path?.[0]??null});
+    }else stationaryStreaks.delete(worker.id);
+  }
+  priorElapsed=state.elapsed;
+  priorWorkers=new Map(workers.map(w=>[w.id,{x:w.x,z:w.z,status:w.status,
+    path:w.path?.length>0}]));
   let found=false;
   for(let i=0;i<workers.length;i++)for(let j=i+1;j<workers.length;j++){
     const a=workers[i],b=workers[j],distance=Math.hypot(a.x-b.x,a.z-b.z);
@@ -131,7 +165,7 @@ const report={days,seed,strategy,biome,culture,backend,
   gameTickMs:result.daily?.reduce((n,d)=>n+(d.wallTime?.gameTickMs??0),0),
   sampledTicks,overlapTicks,lateOverlapTicks,pairs,maxPenetration,
   villageEntry,diagnostic,overlapWindows,workOverlapPairs,phasedWorkOverlapPairs,
-  distinctWorkPairs:distinctWorkPairs.size,maxWorkPenetration,
+  distinctWorkPairs:distinctWorkPairs.size,maxWorkPenetration,traffic,
   byDay:[...byDay],byStatus:[...byStatus],examples,workExamples};
 if(captureRecoveries)report.recoverySamples=recoverySamples;
 const output=process.env.WG_WORKER_PROBE_OUTPUT;
