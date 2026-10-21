@@ -1291,3 +1291,7 @@ En desert-meso-native-cost-20261021, preflight libre pero otra prueba GPU reapar
 
 ### V11 y aprobación artística de Desierto
 El usuario aprueba expresamente el último relieve filtrado de Desierto para la versión final: preservar su apariencia durante optimización. V11 incorpora sandMeso=1: 36 capturas, 30 idénticas a V10, solo seis de Desierto cambian. Coste fiable pendiente; no fusión. Nueva prioridad solicitada: mejorar pantalla de carga interactiva en coherencia con el juego. PR #159 permanece draft.
+
+
+### Pantalla de carga: referencia y atmósfera
+loading-art-20261021 contiene cuatro capturas del LoadingDiorama real, día/noche base/candidata. Mejora moderada del fondo; pendiente contacto del maíz, overlay e interacción. Sin promoción ni afirmación de rendimiento.
