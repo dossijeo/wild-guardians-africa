@@ -1209,3 +1209,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Manglares: borde gradual de cubierta de patio
 
 [Seis parejas](mangrove-yard-edge-20261021/README.md) conservan instancias ytriángulos, suavizan borde fuera del corredor. Conservar candidata; contraste musgo/hojas ybenchmark pendientes. No integrada V10.
+
+
+### Manglares: pigmento de cubierta de patio
+
+[Seis parejas](mangrove-yard-pigment-20261021/README.md) acercan hojas al musgo sin cambios geométricos. Conservar candidata para benchmark completo;repetición yvalidación dinámica pendientes. No integrada V10.
