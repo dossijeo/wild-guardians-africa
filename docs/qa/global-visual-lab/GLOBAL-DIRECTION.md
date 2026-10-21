@@ -1199,3 +1199,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Manglares: fuente nativa encontrada
 
 [Resumen de asentamiento](mangrove-native-site-20261021/README.md) disponible vía horizonSource.snapshot():centro60,0,semiejes28.405/15.724. Receta C++ confirma patio/corredores y radios derivados. Se puede leer por invalidación,sin nuevas consultas por fotograma ni cambios de Engine. Verificar noise antes de reconstruir máscara visual.
+
+
+### Manglares: cubierta de patio visible
+
+[Máscara nativa QA](mangrove-native-yard-20261021/README.md) permite hojas entre edificios,corredores conservadores intactos. Cámara normal near1→1090,triángulos3648→63112. Mejora de volumen con bordes rectos ycontraste pendiente. Conservar candidata,medir coste yrefinar;V10 intacta.
