@@ -1104,3 +1104,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Manglares: recorrido comparable de LOD
 
 [72 parejas y vídeos](mangrove-leaf-motion-20261021/README.md):near489–2429,far4067–5469,cámara/viento/geometría iguales,sin errores. Láminas conservan cubierta con menor detalle a distancia. Poses asentadas a12fps,no benchmark ni certificación temporal exhaustiva. Streaming,perfil bajo,cámara fija ycoste pendientes.
+
+
+### Manglares: conexión QA con streaming
+
+[Prueba de ciclo de vida](mangrove-leaf-stream-20261021/README.md):seis parejas exactamente iguales;recorrido0→192→0 mantiene claves de25chunks,resuelve invalidación yrestaura capa original al desmontar. Sin errores;no certifica fugas ni latencia. Pendientes eventos reales,baja ybenchmark.
