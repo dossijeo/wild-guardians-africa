@@ -1169,3 +1169,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Gran Río: coste nocturno medido
 
 [ABBA Intel UHD](river-night-cost-20261021/README.md),720 tiempos GPU válidos. Noche A16.64/B16.69ms,sin penalización clara CPU/cadencia. Deriva diurna impide atribuir pequeñas diferencias. Conservar mejora artística, movimiento pendiente.
+
+
+### Gran Río: recorrido de cámara con viento
+
+[72 parejas y vídeos](river-night-motion-20261021/README.md),selección y cámaras iguales,sin overflow. Contacto conserva mejora cerca y a distancia. Poses asentadas,no fluidez real ni certificación temporal exhaustiva. Candidata para revisión global.
