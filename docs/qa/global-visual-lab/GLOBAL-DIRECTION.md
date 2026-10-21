@@ -706,3 +706,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Selección por IDs sobre matrices residentes: prueba ejecutada
 
 [Prototipo WebGL2 real](resident-matrices/README.md):960muestras GPU,1440fotogramas, calls/triángulos coincidentes. Viable funcionalmente, pero la primera versión empeora CPU/GPU/cadencia; conserva empaquetado de origen y pierde residencia al recrear lotes. Mantener en QA, sin integración ni generalizar como límite de WebGL2. No reducir calidad artística; el rendimiento debe financiar las mejoras aprobadas, no reemplazarlas.
+
+
+### Manglares: sustrato aprobado integrado como opción
+
+[`mangroveSubstrate=full`](mangrove-substrate-integrated/README.md) con global-lighting:12parejas QA/integrada RGB exactas, baja/media día/noche, build y4pruebas pasan. Conserva receta completa. Aún depende del ayudanteQA para bordes de barro; integración del conjunto y streaming pendientes. No declarar terminada la mejora global ni eliminar variantes por coste.
