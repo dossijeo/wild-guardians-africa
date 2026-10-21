@@ -587,3 +587,7 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Manglares: dos escalas suavizan patrón pero exceden coste
 
 [24 capturas y ABAB](mangrove-moss-scales/README.md):menos repetición gruesa, pérdida de relieve; GPU+1.81ms día/+2.12ms noche agrupados,1920muestras. Descartar mezcla doble en tiempo real. Investigar composición offline reutilizable manteniendo tres lecturas, sin presentar ahorro antes de probarlo.
+
+### Manglares: composición offline a memoria nominal constante
+
+[24 capturas](mangrove-moss-composite/README.md):tres mapas1024² con escalas1/4 precalculadas. Mantiene áreas gruesas y finas sin seis lecturas en runtime; shader original,16MiB nominal como fuente. Pierde ancho de banda fino y sigue repitiendo cada~8.7m. Conservar QA para benchmark/juntas/movimiento, no afirmar coste igual ni integrar todavía.
