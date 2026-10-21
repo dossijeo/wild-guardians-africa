@@ -78,3 +78,8 @@ Seis capturas comparables contra crop-event, mismo centro y cultivo colocados co
 [Comparativa cercana](wind-padding/day-1-pair.webp), [contadores](wind-padding/comparison.json), [capturas](wind-padding/captures.json). Son contadores de carga geométrica, no tiempos GPU/CPU. El margen supera la cota geométrica calculada para fuerza8 y escalas actuales; no certifica todos los caminos: ocho muestras de máscara no cubren matemáticamente el disco completo, y siguen pendientes movimiento/streaming y perfil medio. Conservar opción para esas pruebas; no habilitar globalmente aún.
 
 Reproducir: WG_WIND_PADDING=1, WG_YARD_OUT con carpeta nueva, node tools/experiments/capture-river-yard-crop.mjs. El primer intento se detuvo por un ancla de transformación QA desactualizada; se corrigió la compatibilidad con river-wear antes de capturar.
+
+
+### Coste del margen ampliado
+
+[ABBA en Intel UHD](wind-padding-performance/README.md):960consultasGPU/1440frames. Cadencia cercana a16,63ms en ambas variantes; no mejora demostrada deFPS. GPU sin sobrecoste consistente, CPU mixta. Conservar candidata por su función visual; no extrapolar esta cámara fija a generación, eventos o streaming.
