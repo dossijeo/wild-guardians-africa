@@ -1194,3 +1194,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Manglares: separación patio/camino no aplicada
 
 [Intento inválido](mangrove-yard-cover-20261021-recheck/README.md):campo JS settlementSite ausente en escena nativa aunque máscara residente contiene desgaste. Helper ahora falla explícitamente. Verificar generación nativa y fuente de metadatos antes de reconstruir componentes; no rechazo de hipótesis artística.
+
+
+### Manglares: fuente nativa encontrada
+
+[Resumen de asentamiento](mangrove-native-site-20261021/README.md) disponible vía horizonSource.snapshot():centro60,0,semiejes28.405/15.724. Receta C++ confirma patio/corredores y radios derivados. Se puede leer por invalidación,sin nuevas consultas por fotograma ni cambios de Engine. Verificar noise antes de reconstruir máscara visual.
