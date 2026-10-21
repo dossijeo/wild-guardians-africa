@@ -1084,3 +1084,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Manglares: cubierta Blender probada dentro del juego
 
 [36 capturas y assets](mangrove-leaf-fill-20261021/README.md): ocho hojas,32 triángulos,proyección periódica40→92% sin subir densidad. Material corregido muestra hojas solapadas desde cámara normal;conservar candidata. Región añade92–115mil triángulos y2draw calls,sin errores. Frontera con musgo,LOD,streaming yGPU pendientes;no integrada ni objetivo alcanzado.
+
+
+### Manglares: atenuación por cobertura insuficiente
+
+[Seis parejas](mangrove-leaf-edge-20261021/README.md): crecimiento por máscara mantiene instancias y triángulos, pero no resuelve frontera principal. Existen además exclusiones binarias; diagnosticar su contribución espacial antes de ajustar. Conservar prueba, no promover como solución ni atribuir ganancias FPS.
