@@ -36,3 +36,6 @@ Reproducir: `node tools/experiments/measure-canyon-bank-proximity.mjs` (usar WG_
 
 [Inventario instrumentado](../canyon-bank-resources/README.md): la diferencia diurna de nueve texturas se corresponde con máscaras 35×35 asignadas a WebGL (25 frente a 16, ambas variantes poseen 25). No es prueba de ahorro VRAM; queda explicar/controlar el historial de subida. Preparación inicial de 25 máscaras: 9,5 ms acumulados, .38 ms media, 1.6 ms máximo. No equivale a coste por frame ni a streaming completo.
 
+
+[Streaming de ida/vuelta](../canyon-bank-streaming-v2/README.md): 16 capturas, mismas claves/geometría por parada y 25 máscaras retenidas tras retorno. 80 construcciones adicionales cuestan20.2ms acumulados en esta ejecución; no son tiempos por frame. Conservar candidata; horizonte y movimiento continuo pendientes.
+
