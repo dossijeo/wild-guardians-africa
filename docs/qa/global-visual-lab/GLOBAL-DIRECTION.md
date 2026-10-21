@@ -511,3 +511,7 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Cañón: mapas de arena recuperan ondulaciones
 
 [Depósitos Aerial Beach 01](canyon-sand-maps/README.md): 24 capturas, geometría idéntica. Candidata cercana con ondulaciones visibles, pero crestas demasiado destacadas en sombra. Dos mapas y dos lecturas extra; coste temporal, cámara normal y lifecycle pendientes. No integrar aún.
+
+### Cañón: arena visible a cámara normal, coste nocturno pendiente
+
+[Revisión normal](canyon-sand-maps/overview/README.md) y [ABBA Intel UHD](canyon-sand-maps/performance/README.md): 24 capturas adicionales; elevada obstruida no válida para evaluar conjunto. Arena conserva ondulaciones normales; 960 muestras GPU muestran noche 7.69–8.20ms contra 6.63–7.27ms. No aprobar coste ni integrar.
