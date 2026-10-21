@@ -466,3 +466,8 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Gran Río: tierra con detalle bajo el desgaste
 
 [Ground079S pigmentado, segunda iteración](river-soil-layer-v2/README.md): recupera detalle de suelo desnudo y diferencia tierra/hierba; primera versión demasiado clara descartada. 24 capturas por iteración y 8 bloques ABBA para V2, geometría coincidente. Tres texturas adicionales (~16 MiB RGBA8+mips estimados), hasta tres lecturas en tierra. GPU con alta variabilidad y rangos solapados: candidata solo QA, sin aprobar coste. Pendientes movimiento, streaming y repetición de rendimiento.
+
+
+### Capa de tierra: movimiento y liberación comprobados en una vuelta
+
+[144 parejas, vídeos y streaming](river-soil-layer-motion/README.md). Cámara/viento/opacidades/geometría coinciden; muestra de regreso sin desplazamiento amplio, con pequeños residuales también en control. Tres eventos de liberación para tres texturas al cerrar cada candidata. Una vuelta por calidad no prueba ausencia de fugas; coste aún pendiente de repetición estable. Conservar QA sin promover.
