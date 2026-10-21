@@ -1251,3 +1251,7 @@ Quince parejas de Sabana en sky-twilight-20261021: cinco niveles de mezcla y tre
 
 ### Cielo: secuencias de ciclo y coste pendiente
 96 capturas en sky-cycle-20261021, vídeos ensamblados de amanecer/anochecer con cámara fija. 48 parejas con cámaras/horas/triángulos iguales; una difiere en un draw call. Hojas revisadas sin dominante extraña; reproducción continua pendiente. Benchmark aplazado por contención GPU externa 80–88 %, documentada en sky-cost-20261021. Sin cifras nuevas ni integración por defecto.
+
+
+### Cielo: comandos de dibujo instrumentados
+24 parejas de amanecer en sky-draw-diagnostic-20261021 envían el mismo multiconjunto de comandos WebGL; la diferencia intermitente anterior no se reproduce y sigue sin causa identificada. GPU externa 78–93 % en segunda comprobación: coste pendiente. Continuar trabajo visual independiente, sin usar la contención como bloqueo global.
