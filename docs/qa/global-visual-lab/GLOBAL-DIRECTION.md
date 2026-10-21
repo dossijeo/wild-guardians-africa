@@ -771,3 +771,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Volcanes: diagnóstico y refinamiento de POM
 
 [Ablación](volcanic-pom-ablation/README.md) y [refinamiento](volcanic-pom-refined/README.md),24capturas: anular desplazamiento reduce franjas pero aplana; interpolar cruce suaviza parte del escalonado manteniendo relieve, máximo8lecturas. Conservar candidata QA, pendientes movimiento/coste y líneas residuales del material.
+
+### Gran Cañón: diagnóstico de sedimento de ribera
+
+[Ensayo por altura](canyon-bank-sediment/README.md): doce capturas, contadores y cámaras iguales. Oscurece demasiada terraza y pierde arena sin resolver la orilla; no integrar. Siguiente prueba requiere proximidad espacial al agua, no altura sola. [Receta volcánica optativa integrada](volcanic-rock-integrated/README.md): paridad exacta con QA en seis parejas; costes previos conservados.
+
