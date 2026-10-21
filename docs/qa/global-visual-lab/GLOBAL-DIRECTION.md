@@ -1124,3 +1124,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Manglares: variación interna sin aumentar triángulos
 
 [Nuevo módulo Blender](mangrove-leaf-varied-20261021/README.md) varía ángulo yaltura de ocho hojas;seis parejas baja mantienen instancias/presupuesto. Menor alineación ymejor lectura local;conservar candidata,parche aún demasiado distinguible. Pendientes movimiento/GPU, no éxito global.
+
+
+### Manglares: primera medida estática con baja contención
+
+[ABBA IntelUHD](mangrove-leaf-cost-20261021/README.md),480GPU/720cadencia válidos. Cubierta suma2draw calls/59504triángulos;delta GPU medio+0.40ms día/+1.16ms noche,convariación entre bloques. Cadencia~16.6ms,sin diferenciaFPS demostrada. Conservar candidata,pendientes movimiento/preparación/media;no aprobación global.
