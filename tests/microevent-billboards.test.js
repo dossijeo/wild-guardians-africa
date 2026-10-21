@@ -10,6 +10,16 @@ import {EVENTS} from '../src/microevents/definitions.js';
 import {withRenderOrigin} from '../src/rendering/render-origin.js';
 import {withDepthCaptureMaterials} from '../src/rendering/depth-capture.js';
 const rect={left:0,top:0,width:800,height:600};
+test('atmospheric decoration stays pooled and never mutates interactive particle positions',async()=>{
+ for(const id of ['raincloud','fire','storm','lightning','dustdevil','vortex','fog','smoke']){
+  const def=EVENTS[id],{camera,space}=fixture(def),view=new MicroeventBillboards({scene:new Scene(),camera,state:{time:100}},{texture:new Texture()}),particles=new InteractiveParticles();
+  await view.ready;particles.start(def,()=>.43);particles.step(.5,null);
+  const before=particles.pool.slice(0,particles.count).map(p=>[p.x,p.y,p.progress]);
+  for(const reducedMotion of [false,true]){view.draw(particles,space,{reducedMotion});assert.ok(view.count<view.capacity,id);assert.deepEqual(particles.pool.slice(0,particles.count).map(p=>[p.x,p.y,p.progress]),before,id);}
+  if(id==='raincloud'){assert.equal(view.count,1+def.count*4);const a=view.buffer.array;assert.ok(a[2*15+1]<a[15+1],'rain is below its cloud');assert.ok(a[2*15+3]<a[2*15+4],'drops have a narrow silhouette');}
+  view.dispose();
+ }
+});
 function fixture(def=EVENTS.seeds){const camera=new PerspectiveCamera(42,4/3,.1,500);camera.position.set(12,12,18);camera.lookAt(0,1,0);camera.updateMatrixWorld(true);const anchor={entity:{x:0,z:0},groundY:0,y:1.3},space=new MicroeventSpace();space.begin(def,anchor,camera);return {camera,anchor,space};}
 test('particle centers remain at fixed world coordinates when the camera orbits',()=>{for(const def of [EVENTS.seeds,EVENTS.weeds,EVENTS.raincloud,EVENTS.snake]){const {camera,space}=fixture(def),p={x:20,y:12,phase:.7,progress:.2},before=space.worldPosition(p,new Vector3()).clone(),screen=space.project(p,camera,rect);camera.position.set(-18,10,14);camera.lookAt(0,1,0);camera.updateMatrixWorld(true);const after=space.worldPosition(p,new Vector3()),next=space.project(p,camera,rect);assert.ok(before.distanceTo(after)<1e-10);assert.ok(Math.hypot(screen.x-next.x,screen.y-next.y)>1);}});
 test('world-unit sprites scale naturally with camera distance',()=>{const {camera,space}=fixture(),near=space.pixelsPerUnit(camera,rect);camera.position.multiplyScalar(2);camera.lookAt(0,1,0);camera.updateMatrixWorld(true);assert.ok(space.pixelsPerUnit(camera,rect)<near*.6);});
