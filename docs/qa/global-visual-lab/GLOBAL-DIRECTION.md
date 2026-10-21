@@ -647,3 +647,7 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Manglares: el azul no desaparece al atenuar especular ambiental
 
 [Ablación localizada](mangrove-height-blend/soil-spec/README.md),24 capturas con escena/geometría coincidentes. biomeSpec ponderado por cobertura de musgo: barro más oscuro, pero persiste tinte nocturno y diferencia con parches. No adoptar supresión general ni atribuir toda la discrepancia a reflejos. Sin benchmark; el cálculo original sigue ejecutándose.
+
+### Manglares: receta compartida mejora coherencia, coste no aprobado
+
+[24 capturas y ABAB](mangrove-height-blend/soil-toon/README.md). La receta del barro aproxima su respuesta a los parches, cálida de día y menos azul de noche. 1.920 muestras GPU válidas/1.920 frames, misma geometría; deriva fuerte y candidata más lenta en ambas noches (+5.944/+1.008ms). Conservar referencia visual, no integrar doble iluminación sin evitar trabajo redundante y validar coste/imagen. No demuestra volumen global ni presupuesto cumplido.

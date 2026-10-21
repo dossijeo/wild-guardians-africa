@@ -1,24 +1,24 @@
-# IluminaciÃ³n del sustrato coherente con los parches
+# Iluminación del sustrato coherente con los parches
 
-Candidata QA: el barro proyectado usa africanToon4 con la receta del interior de parches; el musgo conserva la ruta de terreno. Se mezclan los resultados con el mismo peso por altura ya validado. Ambas variantes usan conversiÃ³n aproximada del tinte en luz lineal. La comparaciÃ³n cambia receta de iluminaciÃ³n y rugosidad del sustrato conjuntamente, no aÃ­sla un Ãºnico tÃ©rmino de luz.
+Candidata QA: el barro proyectado usa africanToon4 con la receta del interior de parches; el musgo conserva la ruta de terreno. Se mezclan los resultados con el mismo peso por altura ya validado. Ambas variantes usan conversión aproximada del tinte en luz lineal. La comparación cambia receta de iluminación y rugosidad del sustrato conjuntamente, no aísla un único término de luz.
 
-[Oblicua diurna](manglares-media-day-2-pair.webp) Â· [Oblicua nocturna](manglares-media-night-2-pair.webp). Izquierda iluminaciÃ³n de terreno; derecha receta de parches para el barro. Inspeccionadas candidatas completas de ambas vistas.
+[Oblicua diurna](manglares-media-day-2-pair.webp) · [Oblicua nocturna](manglares-media-night-2-pair.webp). Izquierda iluminación de terreno; derecha receta de parches para el barro. Inspeccionadas candidatas completas de ambas vistas.
 
-La candidata recupera un barro cÃ¡lido de dÃ­a y reduce el tinte azul de noche. Su respuesta se acerca a los parches existentes. Conservar como candidata visual, **sin aprobar integraciÃ³n**: la superficie continÃºa plana, el reparto de musgo necesita revisiÃ³n global y el coste de evaluar dos recetas debe medirse. Esto no acredita equivalencia con los mockups.
+La candidata recupera un barro cálido de día y reduce el tinte azul de noche. Su respuesta se acerca a los parches existentes. Conservar como candidata visual, **sin aprobar integración**: la superficie continúa plana, el reparto de musgo necesita revisión global y el coste de evaluar dos recetas debe medirse. Esto no acredita equivalencia con los mockups.
 
-## ImplementaciÃ³n y lÃ­mites
+## Implementación y límites
 
-La funciÃ³n del material conserva albedo, normal, rugosidad y peso de barro en variables del fragmento. DespuÃ©s de iluminar el terreno, calcula africanToon4 para barro y mezcla salidas. Albedo con toLinear4 aproximado gamma2.2; rugosidad max(.04,ARH.gÃ—.52), normal .55 con atenuaciÃ³n de distancia, reflexiÃ³n de entorno y detecciÃ³n de material vegetal igual a la receta de los parches. No se garantiza igualdad RGB: parches tienen UV diferentes, decodificaciÃ³n sRGB hardware y normal sin la misma atenuaciÃ³n.
+La función del material conserva albedo, normal, rugosidad y peso de barro en variables del fragmento. Después de iluminar el terreno, calcula africanToon4 para barro y mezcla salidas. Albedo con toLinear4 aproximado gamma2.2; rugosidad max(.04,ARH.g×.52), normal .55 con atenuación de distancia, reflexión de entorno y detección de material vegetal igual a la receta de los parches. No se garantiza igualdad RGB: parches tienen UV diferentes, decodificación sRGB hardware y normal sin la misma atenuación.
 
-No aÃ±ade geometrÃ­a, draw calls ni texturas frente al prototipo de mezcla de materiales. SÃ­ aÃ±ade cÃ¡lculo de iluminaciÃ³n y otra consulta al entorno; actualmente se calcula incluso donde su peso es cero. El terreno ya iluminado tambiÃ©n se calcula donde domina barro. Es una implementaciÃ³n de evaluaciÃ³n, todavÃ­a sin eliminaciÃ³n de trabajo redundante. No afirmar coste nulo por mantener draw calls.
+No añade geometría, draw calls ni texturas frente al prototipo de mezcla de materiales. Sí añade cálculo de iluminación y otra consulta al entorno; actualmente se calcula incluso donde su peso es cero. El terreno ya iluminado también se calcula donde domina barro. Es una implementación de evaluación, todavía sin eliminación de trabajo redundante. No afirmar coste nulo por mantener draw calls.
 
 ## Evidencia visual
 
-24 capturas/12 parejas, media/baja, dÃ­a150/noche350, tres vistas prÃ³ximas a transiciÃ³n, seed712,1280Ã—720. CÃ¡mara, objetivo, hora, draw calls y triÃ¡ngulos coinciden, sin errores registrados. Conversiones WebP individuales lossless verificadas contra PNG; pares reducidos publicados. [Registros](captures.json) Â· [ComparaciÃ³n](comparison.json).
+24 capturas/12 parejas, media/baja, día150/noche350, tres vistas próximas a transición, seed712,1280×720. Cámara, objetivo, hora, draw calls y triángulos coinciden, sin errores registrados. Conversiones WebP individuales lossless verificadas contra PNG; pares reducidos publicados. [Registros](captures.json) · [Comparación](comparison.json).
 
-Pendientes: vista normal/elevada integrada, movimiento visual, horizonte, recursos y coste estable. La mediciÃ³n de cÃ¡mara mÃ³vil usa el recorrido general del asentamiento, no reproduce exactamente estas cÃ¡maras cercanas. Sin cambios de simulaciÃ³n, navegaciÃ³n, modelos ni main.
+Pendientes: vista normal/elevada integrada, movimiento visual, horizonte, recursos y coste estable. La medición de cámara móvil usa el recorrido general del asentamiento, no reproduce exactamente estas cámaras cercanas. Sin cambios de simulación, navegación, modelos ni main.
 
-## ReproducciÃ³n
+## Reproducción
 
 Vite5190:
 
