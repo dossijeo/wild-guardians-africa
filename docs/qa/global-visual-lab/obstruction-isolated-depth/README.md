@@ -11,3 +11,6 @@ Limitaciones: targets completos1280×720 con colorRGBA8 y profundidaduint32, ~7.
 La selección es por instancia, no una sola capa para todos los árboles: dos árboles superpuestos pueden contribuir ambos. La profundidad conserva alpha maps y clipping por la receta standardDepthMaterial, pero necesita comprobación visual en todos los materiales. No se modifica Engine, navegación, modelos originales ni producción.
 
 Reproducción: Vite5190 y `node tools/experiments/capture-obstruction-isolated-depth.mjs`. Código qa-isolated-fade-depth.js; capturas.json y comparison.json. La ruta QA añade referencia al material fuente solo para construir su receta de profundidad. Rama experimental; main intacta.
+
+[Prueba de transparente posterior](../obstruction-isolated-transparent-probe-v2/README.md): fondos exactos y859680 píxeles de marcador visibles con/sin prepasada, cero bloqueados. Diagnóstico acotado; no certifica humo/efectos reales ni rendimiento.
+

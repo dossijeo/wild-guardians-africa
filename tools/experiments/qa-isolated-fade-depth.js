@@ -4,7 +4,7 @@ export function installIsolatedFadeDepth(w){
  const renderer=w.renderer,original=renderer.render,entries=new Map();let busy=false,draws=0;
  const size=new THREE.Vector2();
  renderer.render=function(scene,camera){
-  if(scene!==w.scene||busy)return original.call(this,scene,camera);
+  if(scene!==w.scene||busy||w.qaIsolatedFadeDepth?.enabled===false)return original.call(this,scene,camera);
   const target=renderer.getRenderTarget(),auto=renderer.autoClear,shadow=renderer.shadowMap.enabled;
   renderer.getDrawingBufferSize(size);scene.updateMatrixWorld(true);busy=true;
   try{
@@ -28,5 +28,5 @@ export function installIsolatedFadeDepth(w){
   }finally{renderer.setRenderTarget(target);renderer.autoClear=auto;renderer.shadowMap.enabled=shadow;busy=false;}
   return original.call(this,scene,camera);
  };
- return w.qaIsolatedFadeDepth={audit:()=>({targets:entries.size,depthDraws:draws,width:size.x,height:size.y})};
+ return w.qaIsolatedFadeDepth={enabled:true,audit:()=>({targets:entries.size,depthDraws:draws,width:size.x,height:size.y})};
 }
