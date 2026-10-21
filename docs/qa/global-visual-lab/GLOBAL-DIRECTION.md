@@ -579,3 +579,7 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Revisión conjunta V3: priorizar repetición de Manglares
 
 [Seis biomas día/noche](combined-campaign-review-v3/README.md), calidad media y tres poses. Integra en la comparación paleta de Río, arena de Cañón y ceniza; otros tres controles sin cambios A/B. Persisten claro uniforme del Río, musgo repetitivo de Manglares y masas planas de ceniza. Siguiente prioridad: romper repetición y organizar cobertura de Manglares sin cambiar ocupación/siluetas. No hay benchmark nuevo ni aprobación global.
+
+### Manglares: deformar UV no resuelve cobertura uniforme
+
+[Prueba UV](mangrove-uv-warp/README.md):24 capturas tras corregir inserción de shader. Curva filas pero conserva formas abultadas uniformes; descartar artísticamente sin benchmark. Hallazgo de pipeline: uGroundPureMoss retorna antes de POM/máscaras generales y fija cobertura1. Siguiente trabajo debe actuar sobre esa rama real y distribución de material, no aumentar parallax inactivo.
