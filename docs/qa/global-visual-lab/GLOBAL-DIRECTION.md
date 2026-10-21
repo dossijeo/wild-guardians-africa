@@ -756,3 +756,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Volcanes: tinte solar insuficiente para resolver volumen
 
 [Doce capturas](volcanic-solar-rock/README.md): noche RGB exacta, geometría/draws iguales. La calidez tenue no resuelve planos ni explanadas lisas; conservar referencia de color, no integrar ni descartar por coste. Siguiente ensayo centrado en escala/estructura mesoscópica de roca, con ceniza conservada.
+
+
+### Volcanes: fracturas ampliadas
+
+[Doce capturas](volcanic-rock-scale/README.md): Rock035 al doble de extensión y altura nominal, normales sin aumentar, ceniza conservada. Fracturas más legibles desde vista normal; conservar candidata por mejora artística. Pendientes POM en movimiento/coste y áreas de ceniza aún lisas; no integrar ni declarar objetivo alcanzado.
