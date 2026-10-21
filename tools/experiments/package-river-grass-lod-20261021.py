@@ -14,4 +14,4 @@ for phase in ['day','night']:
   aa,bb=[np.asarray(im,dtype=np.float32) for im in ims]
   rows.append({'phase':phase,'frame':x['i'],'mae':float(abs(aa-bb).mean()),'changedPixels':int(np.any(aa!=bb,axis=2).sum())})
   pair=Image.new('RGB',(2560,720));pair.paste(ims[0]);pair.paste(ims[1],(1280,0));pair.save(p/f'{phase}-{x["i"]}-pair.webp',lossless=True)
-(p/'summary.json').write_text(json.dumps(rows,indent=2)+'\n');print(rows)
+(p/'summary.json').write_text(json.dumps(rows,indent=2)+'\n',encoding='utf-8',newline='\n');print(rows)
