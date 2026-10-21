@@ -4,6 +4,7 @@ import {deserialize} from '../../src/persistence/snapshots.js';
 import {tick} from '../../src/simulation/game.js';
 import {createSpatialGameSession} from '../../src/world/wild-engine/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../../src/world/wild-engine/spatial-navigation-movement.js';
+import {actorSegmentClear} from '../../src/simulation/actor-motion.js';
 
 // Retain the continuous campaign's saved paths through a fresh native session
 // to isolate mobile avoidance. This intentionally does not model load/replan.
@@ -34,6 +35,24 @@ try{
   if(actors.some(actor=>!actor))throw Error('The frozen crossing workers are missing');
   const before=actors.map(({id,x,z,path})=>({id,x,z,next:path?.[0]??null}));
   const trace=[];
+  const yieldCandidates=[];
+  const inspectYield=()=>actors.map(actor=>{
+    const other=actors.find(candidate=>candidate!==actor);
+    const waypoint=actor.path?.[0];
+    if(!waypoint)return {actorId:actor.id,candidates:[]};
+    const heading=Math.atan2(waypoint.x-actor.x,waypoint.z-actor.z);
+    const candidates=[];
+    for(const distance of [.65,.9,1.2,1.6,2.2])for(const angle of
+      [Math.PI/2,-Math.PI/2,3*Math.PI/4,-3*Math.PI/4,Math.PI]){
+      const point={x:actor.x+Math.sin(heading+angle)*distance,
+        z:actor.z+Math.cos(heading+angle)*distance};
+      if(!nav.workerMotionClear(actor,point,actor.radius??.28))continue;
+      if(!actorSegmentClear(actor,point,actor,[other]))continue;
+      candidates.push({distance,angle,x:point.x,z:point.z});
+    }
+    return {actorId:actor.id,position:{x:actor.x,z:actor.z},
+      waypoint,available:candidates.length,candidates:candidates.slice(0,5)};
+  });
   const routeRemaining=actor=>{
     let prior=actor,total=0;
     for(const point of actor.path??[]){
@@ -43,7 +62,13 @@ try{
   };
   if(process.argv.includes('--trace-progress')){
     for(let step=0;step<10;step++){
+      const beforeElapsed=state.elapsed;
+      const beforeYield=process.argv.includes('--yield-candidates')?inspectYield():null;
       tick(state,.1,nav);
+      if(beforeYield&&state.events.some(event=>
+        event.type==='ActorMobileCollisionRecovery'&&ids.includes(event.actorId)&&
+        event.elapsed>beforeElapsed+1e-8))
+        yieldCandidates.push({step,beforeYield});
       trace.push(actors.map(actor=>({id:actor.id,x:actor.x,z:actor.z,
         destinationDistance:Math.hypot(actor.x-(actor.taskApproach?.destination?.x??actor.x),
           actor.z-(actor.taskApproach?.destination?.z??actor.z)),
@@ -58,7 +83,8 @@ try{
     after:actors.map(({id,x,z,path,mobilePhaseRemaining})=>({id,x,z,
       next:path?.[0]??null,mobilePhaseRemaining:mobilePhaseRemaining??0})),
     distance,penetration:Math.max(0,(a.radius??.28)+(b.radius??.28)-distance),
-    ...(trace.length?{trace}:{}),recoveryEvents:state.events.filter(event=>
+    ...(trace.length?{trace}:{}),...(yieldCandidates.length?{yieldCandidates}:{}),
+    recoveryEvents:state.events.filter(event=>
       event.type==='ActorMobileCollisionRecovery'&&ids.includes(event.actorId))
       .map(({actorId,x,z,elapsed,duration})=>({actorId,x,z,elapsed,duration}))},null,2));
 }finally{session.dispose();}
