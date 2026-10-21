@@ -14,6 +14,8 @@ const waterRgb=value=>[1,3,5].map(i=>parseInt(value.slice(i,i+2),16)/255);
 export class NativeHorizon{
   constructor(scene,waterMaterial,onMaterialChange=null,groundMaterial=null,options={}){
     this.scene=scene;this.waterMaterial=waterMaterial;this.onMaterialChange=onMaterialChange;
+    const visualOptions=new URLSearchParams(globalThis.location?.search??'');
+    this.canyonShadowCaster=visualOptions.get('visualLab')==='global-lighting'&&visualOptions.get('canyonShadows')==='horizon';
     this.groundMaterial=groundMaterial;this.group=null;this.key=null;this.region=null;
     this.spatial=options.spatial??null;
     this.generator=new HorizonGenerator({...options,
@@ -46,7 +48,7 @@ export class NativeHorizon{
     if(!retained)this.groundMaterial?.(material,region.cx,region.cz);
     // Canyon batches discard the resident rectangle; desert's seam apron remains.
     if(config.biome==='canyons'){material.userData.horizonBounds??=new THREE.Vector4();material.userData.horizonBounds.set(...region.bounds);}
-    const ground=new THREE.Mesh(nativeTerrainBuffer(data.terrain),material);ground.userData.nativeHorizon='terrain';group.add(ground);
+    const ground=new THREE.Mesh(nativeTerrainBuffer(data.terrain),material);ground.userData.nativeHorizon='terrain';ground.castShadow=config.biome==='canyons'&&this.canyonShadowCaster;group.add(ground);
     if(data.water.length){const water=new THREE.Mesh(nativeTerrainBuffer(data.water),this.waterMaterial(region.bounds,true));water.userData.nativeHorizon='water';group.add(water);}
     this.group=group;this.scene.add(group);
     return this.region;

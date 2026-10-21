@@ -828,3 +828,7 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Coste del emisor lejano de Gran Cañón
 
 [ABBA caché/forzado](canyon-horizon-caster/performance/README.md): caché sigue acertando sin draws añadidos; actualización suma1 draw/34404 triángulos en view47. Tiempos variables incluso en control: no delta temporal robusto. Conservar candidata visual; pendientes movimiento/streaming y perfil bajo.
+
+### Opción integrada de emisor lejano de Gran Cañón
+
+[Paridad QA/integrada](canyon-horizon-integrated/README.md): `visualLab=global-lighting&canyonShadows=horizon`, solo canyons.12 parejas exactas baja/media día/noche; baja sin sombras solares es compatibilidad, media confirma receta.11 tests y build pasan. Opt-in, pendientes streaming/movimiento prolongados; no main.
