@@ -791,3 +791,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 
 [Fundido integrado en laboratorio](obstruction-smooth-frontside/README.md): parciales con alpha blending sin profundidad auxiliar; opacos siguen agrupados. FrontSide no elimina las capas delanteras de copas complejas: queda pendiente superficie más cercana aislada. No declarar retirado todo dithering de impostores/clipping.
 
+
+### Fundido de árboles con superficie aislada
+
+[Prototipo de una capa por objeto](obstruction-isolated-depth/README.md): dieciséis capturas, mejora visible en copa cercana sin tramado ni profundidad opaca compartida. Conservar candidata; hasta21.09MiB nominales, coste y transparentes detrás sin validar. No integración todavía.
+
