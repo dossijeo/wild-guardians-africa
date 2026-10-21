@@ -2,7 +2,7 @@
 
 Objetivo autónomo: rescatar exclusivamente culling por instancia e invalidación
 por salida efectiva en JavaScript/Three.js, contra main actual, preparando una PR
-acotada sin merge. Las decisiones y datos están en [RESULTS.md](RESULTS.md) y la
+acotada. El usuario autorizó después el merge a main cuando esté listo y validado. Las decisiones y datos están en [RESULTS.md](RESULTS.md) y la
 reproducción en [README.md](README.md).
 
 ## Diagnóstico e hipótesis
@@ -29,7 +29,7 @@ porque Three los usa para ordenar dibujos incluso con frustumCulled=false.
 - [x] M3: seis biomas, cuatro presets, día/noche, cámara/LOD, sombras, streaming y comandos.
 - [x] M4: CPU/GPU/cadencia/p95 separados, memoria y llamadas GL, normal/densa;
   conservar resultados negativos y protocolos inválidos identificados.
-- [ ] M5: checks finales y PR pequeña para revisión, sin merge.
+- [ ] M5: checks finales y PR pequeña y merge autorizado solo tras validación.
 
 ## Decisiones y criterios de cierre
 
@@ -44,4 +44,4 @@ Durante comandos reales se corrigió el guard por identidad de Set de supresione
 sin escaneo por frame ni cambios en Engine. No añadir otros rediseños.
 Cierre: pruebas/build finales, evidencia reproducible conservada y propuesta de PR
 con limitaciones explícitas. La siguiente evaluación útil es otro hardware, no más
-microoptimizaciones en este equipo. No integrar automáticamente en main.
+microoptimizaciones en este equipo. Autorización posterior del usuario (21/10): mergear a main cuando esté listo y validado.

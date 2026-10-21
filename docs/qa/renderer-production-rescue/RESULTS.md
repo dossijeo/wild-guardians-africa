@@ -4,7 +4,7 @@ Se propone una PR acotada a dos archivos de producción, conservando Three.js y
 el LOD existente. Culling individual de color e invalidación por salida efectiva
 se aplican a **todos los presets**, incluido `muy_baja`. No se incorpora Wild
 Renderer WASM, LOD nativo, culling diferencial, motor adicional ni cambios de Engine.
-No se mergea automáticamente.
+El usuario autorizó posteriormente el merge a main una vez listo y validado.
 
 Referencia: `origin/main` `cd6c9af0d350ff1f79cd9a1dea0da0786eca4e2a`.
 Las cifras antiguas de 54% y 48→11,4 actualizaciones no son la comparación actual.
@@ -169,5 +169,4 @@ explícitos. No justifica recuperar el motor experimental, LOD nativo ni culling
 diferencial. Siguiente paso de mayor valor fuera de esta tarea: reproducir en una
 GPU débil y otro proveedor antes de afirmar mejoras generalizadas de cadencia.
 No continuar microbenchmarks en este mismo equipo ni introducir excepciones de
-calidad basadas en él. La PR se prepara sin merge; la decisión final de integración
-queda en revisión.
+calidad basadas en él. La PR debe superar las comprobaciones antes del merge autorizado por el usuario.
