@@ -1024,3 +1024,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Volcanes: spectrum integrado como opción
 
 [Seis parejas QA/integración exactas](volcanic-spectrum-integrated-20261021/README.md). visualLab=global-lighting&volcanicNight=spectrum,ambient anterior conservado,predeterminado intacto.12 tests existentes ybuild pasan. Integración experimental,no aprobación de coste ni finalización global.
+
+
+### Volcanes: coste integrado de spectrum
+
+[ABBA](volcanic-spectrum-integrated-20261021/performance/README.md):480 muestras válidas,misma geometría. Último control14.45→27.13ms GPU día impide atribuir ventaja a candidata14.82/14.97ms. Conservar opción visual,no aprobar coste global;diagnosticar scheduling/carga antes de repetir precisión.
