@@ -1283,3 +1283,7 @@ Implementado sandMeso=1, condicionado a visualLab=global-lighting y sandRelief=1
 
 ### Desierto: ida/vuelta de streaming
 En desert-meso-stream-20261021, sandMeso off/on conserva chunks y contadores tras viaje de 192 unidades. Noche retorna píxel exacto; día diferencias mínimas también en control, con origen 0→240→48. Sin salto visible en hoja diurna. No prueba de movimiento continuo ni fugas; costes pendientes.
+
+
+### Desierto: ABBA nativo contaminado durante la ejecución
+En desert-meso-native-cost-20261021, preflight libre pero otra prueba GPU reaparece durante ABBA (35–80 %). 720 queries y 720 muestras de cadencia con geometría/cámaras iguales; control diurno deriva 10.103→16.819 ms GPU. validity.json declara comparación de rendimiento inválida. No atribuir sobrecoste ni descartar candidata; coste fiable pendiente.
