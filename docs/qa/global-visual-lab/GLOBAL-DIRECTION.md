@@ -751,3 +751,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Revisión conjunta actualizada tras Gran Río
 
 [36capturas de seis biomas](combined-campaign-review-v5/README.md): reúne opciones conservadas y claros herbáceos/margen de viento. Sin erroresGL/overflow; no benchmark ni aprobación global. Prioridad artística siguiente: planos y luz cálida de roca volcánica, conservando ceniza y noche. No continuar indefinidamente microvalidando solo GranRío.
+
+
+### Volcanes: tinte solar insuficiente para resolver volumen
+
+[Doce capturas](volcanic-solar-rock/README.md): noche RGB exacta, geometría/draws iguales. La calidez tenue no resuelve planos ni explanadas lisas; conservar referencia de color, no integrar ni descartar por coste. Siguiente ensayo centrado en escala/estructura mesoscópica de roca, con ceniza conservada.
