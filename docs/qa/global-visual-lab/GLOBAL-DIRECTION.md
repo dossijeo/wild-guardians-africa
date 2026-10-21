@@ -1219,3 +1219,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Skyboxes incorporados a la dirección global
 
 [Primer pase QA](sky-depth-20261021/README.md):noche menos parda,día aún demasiado sutil. Trabajar nubes y horizonte;no basta aumentar saturación. [Benchmark de patio](mangrove-yard-cost-20261021/README.md) contaminado por carga externa,no decisión de coste.
+
+
+### Cielo diurno: separación de nubes
+
+[Seis parejas](sky-cloud-depth-20261021/README.md):azul más presente,nubes conservadas por heurística. Horizonte aún gris;auditor detecta diferencias también en mitad inferior,diagnosticar aislamiento antes de integrar. Pendientes seis biomas,crepúsculo yGPU.
