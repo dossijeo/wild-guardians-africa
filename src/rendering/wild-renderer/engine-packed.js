@@ -5,6 +5,14 @@ export async function createEnginePackedWildRenderer(suppressed){
 }
 export class EnginePackedWildRenderer extends EventLifecycleWildRenderer {
  constructor(wasm,suppressed){super(wasm);this.suppressed=suppressed;this.packedChunks=new Map();}
+ suppressionRecords(){
+  const ids=[];
+  for(const id of this.suppressed()){
+   const match=/^spatial:([0-5]):(-?\d+):(-?\d+)$/.exec(id);
+   if(match)ids.push(Number(match[1]),Number(match[2]),Number(match[3]));
+  }
+  return ids;
+ }
  initializeLocal(e,r){
   const snapshot=e.group.userData.propSources?.qaPacked;
   if(snapshot?.format!=='wild-engine-props-v1')throw Error('Missing packed Engine payload');
@@ -17,11 +25,7 @@ export class EnginePackedWildRenderer extends EventLifecycleWildRenderer {
   }
   if(chunk.snapshot!==snapshot)throw Error('Packed payload changed without chunk replacement');
   // Only invoked on registration/invalidation, never on camera-only frames.
-  const ids=[];
-  for(const id of this.suppressed()){
-   const match=/^spatial:([0-5]):(-?\d+):(-?\d+)$/.exec(id);
-   if(match)ids.push(Number(match[1]),Number(match[2]),Number(match[3]));
-  }
+  const ids=this.suppressionRecords();
   const count=snapshot.count,bytes=Math.max(8,count*68+ids.length*4),ptr=this.alloc(bytes);
   try{
    const order=ptr+count*64,hidden=ptr+count*68;

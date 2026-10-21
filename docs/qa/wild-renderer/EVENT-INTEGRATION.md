@@ -49,3 +49,68 @@ changes, dense scenes, complete event invalidation, CPU memory accounting and
 end-to-end benefit still need validation. Shadows, LOD and obstruction retain
 existing JavaScript representations. No adoption recommendation or GLES emission
 variant is justified yet. No production simulation/navigation code was changed.
+
+## Confirmed-event subscription and dense follow-up
+
+The independent `engine-events` variant subscribes to observeGameEvents. It
+reads the initial suppressed identities once, then processes only newly appended
+identities at event delivery. Unrelated events do not revisit old records.
+Native batch registration consumes the cached compact integers. Tests cover
+partial replacement following PlacementCommitted and disposal of the observer.
+This does not yet move all render grouping or LOD/fade invalidation into WASM.
+No game performance result is claimed for this additional variant yet.
+
+The first engine-dense-abab series is invalid for performance attribution:
+four frames differ in draw/triangle counts across three blocks, and the final
+day screenshots differ at nine pixels (maximum channel delta 28). Night pixels
+match exactly. No mismatched frame is removed from the data. Dense warmup was
+only 60 frames of a 180-frame camera loop; the follow-up engine-dense-warm-abab
+uses a full 180-frame warmup. This is a protocol correction to test, not a proven
+explanation of the mismatches. That run is still pending.
+
+The full-camera warmup did not establish dense equivalence. Differences recur
+at camera phase 105-106, including between repetitions of the original adapter.
+The completed engine-dense-warm-abab is therefore also excluded. A separate
+renderBufferDirect trace now records object identities and actual draw-count
+contributions around frames 100-110. Trace-run timings are explicitly ineligible
+for performance claims. The protocol must identify the divergent objects before
+another performance comparison is meaningful.
+
+A QA mutation helper is prepared to issue three real crop commands against the
+dense fixture, preserving placement validation and publishing real CropPlaced
+events. It records affected and retained source registrations. Its initial execution was pending at that point; verified results follow below.
+
+## Draw-level evidence for dense mismatch
+
+The diagnostic original-adapter night GPU/cadence traces diverge at frames
+105-106. The extra draws include a 2401-vertex terrain mesh (4608 triangles),
+water/prop meshes at world origins (240,0,0) and (240,0,-48), and increased
+native_merged_assets instance counts. This identifies streamed chunk contents,
+not an actor animation or merely a changed counter. A complete warmup cannot
+stabilize data that the moving residency window subsequently evicts/reloads.
+
+Next comparison must distinguish a fixed-residency rendering workload from
+streaming latency under moving residency. Neither metric substitutes for the
+other. Existing dense results remain excluded from CPU/GPU speedup claims.
+
+## Verified real crop events
+
+engine-event-mutations-verified/engine-events-mutations.json records three real
+plant commands in a peaceful daytime stress fixture (animals removed for this
+command test; UI pauses restored synchronously afterward). Each command passes
+normal placement and purchase validation and emits CropPlaced.
+
+The first stronger check exposed stale renderer data: the suppression Set had
+changed contents without changing identity, so syncResidentProps skipped its
+refresh. The event variant now explicitly invalidates propSuppressionSource
+when new suppression records arrive. This change is QA-only; stable renderer
+code is not altered.
+
+After the correction, every command retires exactly one registered batch and
+retains 172 others. Checks confirm the navigation suppression view is updated
+and no registered batch retains any newly suppressed ID. Chunk packed data is
+reused; suppression records copied into native scratch total 12, 24 and 36 bytes
+respectively (the cumulative suppression list is still copied on registration).
+These command timings are single-run diagnostics, not an FPS benchmark.
+The earlier engine-event-mutations output lacked the stale-record check and must
+not be used as correctness evidence.
