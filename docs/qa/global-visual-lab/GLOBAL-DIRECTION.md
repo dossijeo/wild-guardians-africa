@@ -446,3 +446,8 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Gran Río: Lambert de suelo no basta para hojas
 
 [24 capturas con aproximación difusa del terreno](river-cover-diffuse/README.md): misma geometría, mayor lectura de orientación diurna pero oscurecimiento nocturno excesivo. Descartar; no confundir aproximación Lambert con equivalencia de BRDF completa. Próximo diagnóstico: contribución por ambas caras y luz transmitida, aislando términos antes de ajustar paleta. Sin benchmark temporal por fallo artístico.
+
+
+### Gran Río: respuesta de la cara opuesta
+
+[24 capturas y 8 bloques ABBA](river-cover-two-sided/README.md): aclarado moderado sin regresión nocturna visual como Lambert, pero el borde permanece. GPU de la candidata mayor en esta serie; no promover con una mejora limitada. Conservar alternativa QA y diagnosticar material subyacente/cobertura efectiva antes de otra corrección de iluminación.
