@@ -776,3 +776,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 
 [Ensayo por altura](canyon-bank-sediment/README.md): doce capturas, contadores y cámaras iguales. Oscurece demasiada terraza y pierde arena sin resolver la orilla; no integrar. Siguiente prueba requiere proximidad espacial al agua, no altura sola. [Receta volcánica optativa integrada](volcanic-rock-integrated/README.md): paridad exacta con QA en seis parejas; costes previos conservados.
 
+
+### Gran Cañón: proximidad espacial a ribera
+
+[Doce capturas corregidas](canyon-bank-proximity-v3/README.md): conserva arena seca y limita sedimento junto al río. Detectada y corregida solo en QA la sobrescritura constante de contexto. Candidata pendiente de coste de preparación/streaming y horizonte; no integrada.
+
