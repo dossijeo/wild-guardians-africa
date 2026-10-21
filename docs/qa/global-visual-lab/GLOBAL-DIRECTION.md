@@ -1279,3 +1279,7 @@ Seis parejas en desert-meso-filter-20261021 comparan candidata mesoscópica ante
 
 ### Desierto: candidata disponible mediante opción explícita
 Implementado sandMeso=1, condicionado a visualLab=global-lighting y sandRelief=1, desactivado por defecto. Seis parejas QA/opción nativa exactamente iguales en desert-meso-optin-20261021. Clave de shader propia, guardas verificadas. Mantener como experimental: coste/movimiento/streaming pendientes; main intacta.
+
+
+### Desierto: ida/vuelta de streaming
+En desert-meso-stream-20261021, sandMeso off/on conserva chunks y contadores tras viaje de 192 unidades. Noche retorna píxel exacto; día diferencias mínimas también en control, con origen 0→240→48. Sin salto visible en hoja diurna. No prueba de movimiento continuo ni fugas; costes pendientes.
