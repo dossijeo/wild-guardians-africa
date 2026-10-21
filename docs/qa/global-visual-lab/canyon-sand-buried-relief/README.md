@@ -1,6 +1,6 @@
 # Atenuar parallax de grava bajo depósitos de arena
 
-Candidata QA, no optimización aprobada. Compara arena seca normal-only completa (izquierda) con atenuación del parallax de la grava donde domina arena (derecha). No compara con terreno original sin arena.
+Resultado posterior: **descartada como optimización**, al no demostrar ahorro en el [benchmark directo](performance/README.md). La revisión visual inicial se conserva a continuación. Compara arena seca normal-only completa (izquierda) con atenuación del parallax de la grava donde domina arena (derecha). No compara con terreno original sin arena.
 
 [Primer plano día](media-day-2-pair.webp) · [Primer plano noche](media-night-2-pair.webp) · [Registros](captures.json) · [Comparación](comparison.json).
 
@@ -26,3 +26,5 @@ python tools/experiments/package-canyon-sand-buried-relief.py
 ```
 
 Opción buriedRelief=false por defecto en el interceptor QA. Sin cambios de renderer principal, simulación, navegación, modelos ni main. No nuevos recursos externos. PNG locales; WebP sin pérdida originales y pares comprimidos publicados.
+
+El benchmark posterior sustituye la recomendación provisional de conservar para medir: mantener buriedRelief=false.

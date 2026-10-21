@@ -559,3 +559,7 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Cañón: atenuación de POM bajo arena, prueba visual
 
 [24 capturas](canyon-sand-buried-relief/README.md) comparan normal-only con/sin atenuar parallax residual de grava bajo depósito. Parejas cercanas media día/noche conservan ondulaciones, cambian detalle fino. No es equivalente exacto: grava conserva peso residual. Una textura y geometría iguales. Conservar QA para medir; no afirmar ahorro antes del benchmark ni activar por defecto.
+
+### Cañón: descartar atenuación de POM como ahorro
+
+[ABAB directo](canyon-sand-buried-relief/performance/README.md),1920 muestras GPU/1920 frames: candidata más lenta en cuatro parejas (+0.028/+0.429ms día,+0.543/+0.137ms noche), sin ahorro demostrado. No atribuir causa sin más instrumentación. Mantener buriedRelief=false y arena normal-only sin esta aproximación. No promover ni repetir la misma receta sin nueva hipótesis.
