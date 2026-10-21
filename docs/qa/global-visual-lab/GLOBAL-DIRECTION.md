@@ -1004,3 +1004,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Gran Río: aislar residencia en benchmark de pigmento
 
 [ABBA en una misma escena](river-patch-shared-20261021/README.md):180 geometrías/67 texturas constantes,480 muestras válidas. Persiste deriva GPU del control29.09→21.71ms día;residencia desigual no era la única causa. Sin conclusión causal de coste. Conservar candidata;antes de repetir benchmarks,diagnosticar carga/scheduling y validar imagen del control clonado. Continuar trabajo artístico global sin descartar por esta incertidumbre.
+
+
+### Volcanes: equilibrio cromático nocturno
+
+[Seis parejas](volcanic-night-spectrum-20261021/README.md):relleno nocturno menos azul,mantiene roca oscura y mejora moderadamente lectura. Tres vistas diurnas exactas;misma geometría,sin errores. Solo cambia constante,sin benchmark temporal aún. Candidata QA conservada,pendiente crepúsculo y coste;objetivo global no alcanzado.
