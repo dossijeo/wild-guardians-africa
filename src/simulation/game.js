@@ -13,7 +13,7 @@ import {gatePortalPoints} from '../world/gate-passages.js';
 import {wallCollisionBounds} from '../world/wall-collision-frame.js';
 import {containsPoint,footprintDistance} from '../world/footprints.js';
 import {centerCulture,centerFootprint,centerServicePoint,centerDeliveryPoint} from '../world/centers.js';
-import {actorBlockers,actorSegmentClear,prepareActorMotion,createWorkerBodyIndex} from './actor-motion.js';
+import {actorBlockers,actorSegmentClear,prepareActorMotion,createWorkerBodyIndex,actorDetourStatus} from './actor-motion.js';
 import {animalRouteClearance} from './animal-route-clearance.js';
 import {animalSlopeRecoveryPath} from './animal-slope-recovery.js';
 import {BALANCE as B} from './balance.js';
@@ -934,6 +934,7 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
         status:w.status,elapsed:s.elapsed,
         trigger:stationarySeconds>=3?'stationary':'destination-stall',
         stationarySeconds,destinationStallSeconds,
+        detour:actorDetourStatus(w),
         blockingIds:blockers.filter(body=>!actorSegmentClear(w,probe,w,[body]))
           .map(body=>body.id)});
       emit(s,'ActorMobileCollisionRecovery',{actorId:w.id,
