@@ -1044,3 +1044,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Manglares: dos escalas de acumulaciones
 
 [Seis parejas](moss-two-scales-20261021/README.md):segunda escalaUV.57,misma geometría,sin errores. Más variedad en primer plano,franjas todavía visibles. Conservar candidata,sin reemplazo ni aprobación de coste. Pendientes noche/movimiento;no benchmark por contención GPU conocida.
+
+
+### Manglares: recorrido de mezcla de escalas
+
+[48 parejas yvídeos](moss-scale-motion-20261021/README.md),misma cámara/geometría,sin errores. Contacto nocturno conserva regiones,relieve pierde lectura al elevarse. No certifica ausencia de shimmering;poses asentadas,no FPS. Mantener candidata QA ylimitaciones globales.
