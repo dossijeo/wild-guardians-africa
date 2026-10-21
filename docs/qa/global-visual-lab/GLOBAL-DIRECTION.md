@@ -954,3 +954,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Sabana: cuantificar el extremo de LOD
 
 [Diagnóstico de3153 instancias comunes](grass-lod-endpoint-20261021/README.md): normales reducen diferencia de imagen entre cercano aplanado/lejano19% día y5% noche; sigue siendo parcial. No confundir métrica de píxeles con calidad global ni aprobar coste automáticamente. Persisten otras diferencias de representación.
+
+
+### Sabana: muestreo de color coherente entre LOD
+
+[Diagnóstico](grass-pigment-endpoint-20261021/README.md) reduce salto adicional51% día/65% noche respecto a viento+normales usando raíz común lejana. [Seis parejas normales](grass-pigment-lod-20261021/README.md) conservan cobertura/paleta en vista revisada. Falta animación/coste final; candidata QA, no solución global certificada.
