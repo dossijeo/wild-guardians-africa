@@ -999,3 +999,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Gran Río: transición lejana del pigmento espacial
 
 [Seis parejas](river-patch-fade-20261021/README.md):retorno24–36 al pigmento original mediante componente existente,sin nuevas texturas/geometría. [ABBA](river-patch-fade-20261021/performance/README.md) técnicamente válido pero deriva del control14.52→25.74ms día impide aislar coste. Conservar candidata visual;no aprobar rendimiento ni descartarla por esta ronda. Próxima medición debe alternar en misma escena con residencia estabilizada.
+
+
+### Gran Río: aislar residencia en benchmark de pigmento
+
+[ABBA en una misma escena](river-patch-shared-20261021/README.md):180 geometrías/67 texturas constantes,480 muestras válidas. Persiste deriva GPU del control29.09→21.71ms día;residencia desigual no era la única causa. Sin conclusión causal de coste. Conservar candidata;antes de repetir benchmarks,diagnosticar carga/scheduling y validar imagen del control clonado. Continuar trabajo artístico global sin descartar por esta incertidumbre.
