@@ -1,7 +1,7 @@
 from pathlib import Path
-import json
+import json,os
 from PIL import Image
-p=Path('docs/qa/global-visual-lab/river-yard-islands/native-site')
+p=Path(os.environ.get('WG_YARD_OUT','docs/qa/global-visual-lab/river-yard-islands/native-site'))
 d=json.loads((p/'captures.json').read_text());rows=d['records'];assert len(rows)==4
 results=[]
 for phase in ['day','night']:

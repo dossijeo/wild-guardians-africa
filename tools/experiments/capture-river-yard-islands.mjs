@@ -5,7 +5,7 @@ import {chromium} from 'playwright';
 import {mkdir,writeFile,readFile} from 'node:fs/promises';
 
 
-const out='docs/qa/global-visual-lab/river-yard-islands/native-site';await mkdir(out,{recursive:true});const records=[];const phases=['day','night'];
+const out=process.env.WG_YARD_OUT??'docs/qa/global-visual-lab/river-yard-islands/native-site';await mkdir(out,{recursive:true});const records=[];const phases=['day','night'];
 const browser=await chromium.launch({channel:'chrome',headless:true});
 try{for(const quality of ['baja'])for(const biome of ['gran-rio'])for(const variant of ['base','combined']){
  const page=await browser.newPage({viewport:{width:1280,height:720},deviceScaleFactor:1});const errors=[];
