@@ -884,3 +884,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Ambiente nocturno volcánico: opción integrada
 
 [15 parejas exactas QA/opción](volcanic-night-integrated-20261021/README.md): activar visualLab=global-lighting&volcanicNight=ambient.5 tests y build pasan. Solo suelo volcánico mapeado, predeterminado intacto. Pendientes amanecer, streaming y coste final; no aprobación global ni main.
+
+
+### Volcanes: amanecer exacto, rendimiento aún sin aprobación
+
+[15 parejas amanecer](volcanic-dawn-20261021/README.md) QA/integrada exactas. [ABBA final](volcanic-night-integrated-20261021/performance/README.md) registra primera repetición candidata más lenta y segunda cercana al control: mantener todos los datos, repetir alternancia en misma página antes de aprobar coste. Opción artística conservada.
