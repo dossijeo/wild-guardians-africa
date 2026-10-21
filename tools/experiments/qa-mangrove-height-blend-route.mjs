@@ -1,4 +1,4 @@
-export async function installMangroveHeightBlendRoute(page,{height=true,calibrated=false,linearSoil=false}={}){
+export async function installMangroveHeightBlendRoute(page,{height=true,calibrated=false,linearSoil=false,toonSoil=false}={}){
  await page.route('**/src/rendering/biome-ground.js*',async route=>{
   const response=await route.fetch();let body=await response.text();
   const anchor="if(this.layeredSavanna)for(const role of ['base','normal','arh']){";
@@ -25,11 +25,23 @@ export async function installMangroveHeightBlendRoute(page,{height=true,calibrat
   ${height?`float heightDifference=${calibrated?'clamp((arh.b-186./255.)/(69./255.),-.5,.5)-clamp((soilARH.b-39./255.)/(123./255.),-.5,.5)':'arh.b-soilARH.b'}+(mossCover*2.-1.)*1.4;
   float transitionWidth=max(.10,fwidth(heightDifference)*1.5);
   mossCover=smoothstep(-transitionWidth,transitionWidth,heightDifference);`:''}
+  ${toonSoil?'qaSoilAlbedo=toLinear4(soilRaw)*vec3(.58,.61,.64);qaSoilNormal=sampleTurfN410(Ng,soilN,.55*fade);qaSoilRough=max(.04,soilARH.g*.52);qaSoilWeight=1.-mossCover;':''}
   color=mix(soil,color,mossCover);
   N=normalize(mix(sampleTurfN410(Ng,soilN,.55*fade),N,mossCover));
   rough=mix(clamp(soilARH.g,.78,.96),clamp(arh.g,.5,.99),mossCover);
   wet=0.;materialAO410=mix(mix(.65,1.,soilARH.r),mix(.45,1.,arh.r),mossCover);materialCover410=mossCover;return;`;
+  if(toonSoil)body=body.replace('void groundMaterial417(', 'vec3 qaSoilAlbedo=vec3(0.),qaSoilNormal=vec3(0.,1.,0.);float qaSoilRough=1.,qaSoilWeight=0.;void groundMaterial417(');
   body=body.replace('void groundMaterial417(', 'uniform sampler2D uLayerSandBase,uLayerSandNormal,uLayerSandARH;void groundMaterial417(');
   body=body.replace(anchor,patch.replaceAll('\n','\\n'));await route.fulfill({response,body});
  });
+ if(toonSoil)await page.route('**/src/rendering/african-toon.js*',async route=>{
+  const response=await route.fetch();let body=await response.text();const anchor='outgoingLight=toLinear4(filmic4(groundLit));';if(!body.includes(anchor))throw Error('Soil light anchor missing');
+  body=body.replace(anchor,anchor+`if(uBiome>1.5&&uBiome<2.5){
+   float qaSoilLeaf=smoothstep(.018,.13,qaSoilAlbedo.g-qaSoilAlbedo.r*.87)*smoothstep(.06,.20,qaSoilAlbedo.g);
+   vec3 qaSoilReflection=uNativeEnvEnabled>.5?environment4(reflect(-toonV,qaSoilNormal),qaSoilRough):vec3(0.);
+   vec3 qaSoilLit=toLinear4(africanToon4(vec3(0.),qaSoilAlbedo,qaSoilNormal,toonV,uLightDir,qaSoilReflection,qaSoilRough,groundVisibility,qaSoilLeaf,0.,0.,max(dot(qaSoilNormal,toonV),0.),worldPatternPosition(vToonWorld)));
+   outgoingLight=mix(outgoingLight,qaSoilLit,qaSoilWeight);
+  }`);await route.fulfill({response,body});
+ });
+
 }
