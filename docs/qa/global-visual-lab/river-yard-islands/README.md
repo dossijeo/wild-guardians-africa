@@ -83,3 +83,8 @@ Reproducir: WG_WIND_PADDING=1, WG_YARD_OUT con carpeta nueva, node tools/experim
 ### Coste del margen ampliado
 
 [ABBA en Intel UHD](wind-padding-performance/README.md):960consultasGPU/1440frames. Cadencia cercana a16,63ms en ambas variantes; no mejora demostrada deFPS. GPU sin sobrecoste consistente, CPU mixta. Conservar candidata por su función visual; no extrapolar esta cámara fija a generación, eventos o streaming.
+
+
+### Perfil medio: volumen cercano conservado
+
+[Doce capturas](medium-padding/README.md): el margen0,85 conserva más del99% de módulos cercanos, sin overflow/errores. Inspección oblicua diurna y normal nocturna mantiene continuidad y legibilidad. No benchmark de media ni validación de movimiento.

@@ -7,7 +7,7 @@ import {mkdir,writeFile,readFile} from 'node:fs/promises';
 
 const out=process.env.WG_YARD_OUT??'docs/qa/global-visual-lab/river-yard-islands/crop-event';await mkdir(out,{recursive:true});const records=[];const phases=['day','night'];
 const browser=await chromium.launch({channel:'chrome',headless:true});
-try{for(const quality of ['baja'])for(const biome of ['gran-rio'])for(const variant of ['combined']){
+try{for(const quality of [process.env.WG_YARD_QUALITY??'baja'])for(const biome of ['gran-rio'])for(const variant of ['combined']){
  const page=await browser.newPage({viewport:{width:1280,height:720},deviceScaleFactor:1});const errors=[];
  if(process.env.WG_WIND_PADDING==='1')await page.addInitScript(()=>globalThis.qaRiverWindPadding=true);
  page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error'||/GL_INVALID|CONTEXT_LOST|error X/.test(m.text()))errors.push(m.text())});page.on('response',r=>{if(r.status()>=400)errors.push(`${r.status()} ${r.url()}`)});
