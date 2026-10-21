@@ -1307,3 +1307,7 @@ loading-shadow-isolated-20261021 añade sombras reales del maíz y corrige el en
 
 ### Carga: filtro de cuatro muestras no promovido
 loading-pcf-20261021 compara ambas rutas originales (suelo transparente Three PCFSoft, maíz PCF nativo) con cuatro consultas. Pierde suavidad en suelo y no muestra ahorro en ABAB. Conservar sombras originales; no descartar la mejora artística. Medición parcial con otras cargas, sin delta causal exacto. Solo QA.
+
+
+### Carga: capacidad completa y cámara
+32 pares en loading-capacity-fit-v2-20261021: 18 plantas, cuatro etapas, día/noche y dos formatos con sombras on/off. La cámara fija cortaba 1/4 raíces; fit V2 deja cero, conserva geometría y desplaza niebla para evitar ocultación. Pendientes transición suave, rotación, cuatro plantas y texto al llenar capacidad. Candidata QA, no integración.
