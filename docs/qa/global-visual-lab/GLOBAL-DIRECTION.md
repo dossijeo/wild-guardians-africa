@@ -1275,3 +1275,7 @@ Seis parejas en desert-meso-low-20261021: mejora visible en laderas también sin
 
 ### Desierto: atenuación lejana preferida
 Seis parejas en desert-meso-filter-20261021 comparan candidata mesoscópica anterior con atenuación .25–1.2. Conserva volumen cercano y reduce arrugas lejanas; preferir para siguiente validación. Mismos calls/triángulos. No ahorro GPU demostrado: siguen calculándose ruido/gradientes. Movimiento y coste pendientes.
+
+
+### Desierto: candidata disponible mediante opción explícita
+Implementado sandMeso=1, condicionado a visualLab=global-lighting y sandRelief=1, desactivado por defecto. Seis parejas QA/opción nativa exactamente iguales en desert-meso-optin-20261021. Clave de shader propia, guardas verificadas. Mantener como experimental: coste/movimiento/streaming pendientes; main intacta.
