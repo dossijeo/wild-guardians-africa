@@ -1064,3 +1064,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Manglares: regiones por altura no promovidas
 
 [Seis parejas](moss-height-regions-20261021/README.md):ponderación exponencial por altura,misma geometría,sin errores. No supera visualmente a dos escalas,persiste suavizado. Descarte artístico,no por coste. Cerrar ajustes de esta mezcla antes de nueva hipótesis sobre material/iluminación.
+
+
+### Manglares: volver a la referencia de cubierta
+
+[Revisión del mockup ypipeline](mangrove-cover-direction-20261021/README.md):suelo ya tiene iluminación continua;la referencia destaca hojas solapadas con silueta. GLB existentes78/128triángulos no prueban cubierta continua. Próximo prototipo:unidad baja de hojas anchas Blender+instancing,máscaras/LOD existentes,presupuesto por área. No seguir mezclando mapas como sustituto de esa representación.
