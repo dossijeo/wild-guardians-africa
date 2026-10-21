@@ -627,3 +627,7 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Manglares: rangos contextuales verificados en campaña espacial
 
 [Auditoría de 25 máscaras enlazadas](mangrove-context/mask-audit/README.md): cobertura R mediana235/255 y máximo245, frente al límite0.42 del generador JS de humedal. La partida utiliza payload nativo; no calibrar mezcla con el rango antiguo. G/B aportan variación espacial y A desgaste localizado. Diseñar mezcla visual sin alterar motor, pendiente horizonte y otras semillas. Esta auditoría no es una mejora visual ni un benchmark.
+
+### Manglares: mezcla texturizada todavía insuficiente
+
+[Dos repartos de musgo/barro](mangrove-substrate/README.md),48 capturas/24 parejas. Primero demasiado barro; segundo conserva verde pero aparece mancha amplia de detalles superpuestos. Ninguno aprobado. Mezcla de mapas reales con rugosidad alta evita la respuesta húmeda anterior, pero necesita transición por estructura/altura y coherencia con parches. Tres lecturas extra de mapas y una máscara; sin benchmark por fallo artístico, horizonte y lifecycle pendientes. No seguir solo ajustando umbrales.
