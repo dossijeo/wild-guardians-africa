@@ -854,3 +854,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Musgo: perspectiva normal a elevada
 
 [48 parejas día/noche](moss-orientation-motion-20261021/README.md), cámaras y geometría coincidentes, sin errores. Conserva menor repetición en vistas revisadas. Vídeos de capturas asentadas a12fps, no FPS real ni certificación de estabilidad temporal/streaming. Candidata retenida, no integrada.
+
+
+### Musgo: muestreo condicional con paridad visual
+
+[Seis parejas exactas y ABBA](moss-sample-gate-20261021/README.md): omite color/normal secundarios cuando su peso es cero. Conserva toda la imagen en estas vistas. GPU diurna favorable pero controles variables y cadencia sin ganancia consistente: retener candidata, no prometer FPS ni integrar aún.
