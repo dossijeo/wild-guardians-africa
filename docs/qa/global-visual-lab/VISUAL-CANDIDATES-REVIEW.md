@@ -24,3 +24,8 @@ La revisión inicial no demuestra que todos los descartes históricos hayan sido
 ## Cañón: revisión directa completada en aproximación cercana
 
 [144 parejas y cuatro vídeos](canyon-sand-full-review/README.md) comparan normal-only frente a receta completa. Primeros planos diurno/nocturno inspeccionados recuperan variación fina con el mapa de color; ambas mantienen ondulaciones. Conservar completa como alternativa artística, sin aprobación de coste incremental ni decisión desde cámara normal/elevada todavía. No equivale a preferencia expresa del usuario.
+
+
+### Cañón: coste incremental medido y vistas generales revisadas
+
+[Comparación directa](canyon-sand-full-review/performance/README.md): noche+.156/+.311ms GPU para receta completa; día−1.295/+.800ms, inconcluso.1920muestras válidas, escenas iguales. Reinspeccionadas normal diurna/elevada nocturna ya existentes: ondulaciones similares, variación fina adicional en completa. Conservar completa como candidata viable, pendiente coste cercano e integración; no descartarla por el benchmark histórico contra grava.
