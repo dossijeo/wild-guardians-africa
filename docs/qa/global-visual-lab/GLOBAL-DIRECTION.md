@@ -949,3 +949,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Sabana: coste conjunto de transición LOD
 
 [ABBA original/viento+normales](grass-normal-lod-20261021/performance/README.md): GPU diurna ~+0.48ms, CPU/cadencia sin ganancia consistente. Instancias/triángulos iguales. Conservar candidata, falta validar beneficio temporal final; no descartar por coste ni prometer FPS.
+
+
+### Sabana: cuantificar el extremo de LOD
+
+[Diagnóstico de3153 instancias comunes](grass-lod-endpoint-20261021/README.md): normales reducen diferencia de imagen entre cercano aplanado/lejano19% día y5% noche; sigue siendo parcial. No confundir métrica de píxeles con calidad global ni aprobar coste automáticamente. Persisten otras diferencias de representación.
