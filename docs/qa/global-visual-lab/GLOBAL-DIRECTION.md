@@ -495,3 +495,7 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Gran Río: alinear desgaste no naturaliza la frontera
 
 [Comparación V2 frente a transición .08–.30](river-soil-wear-aligned/README.md): 24 capturas con geometría idéntica. Reduce franja verde plana pero agranda y acentúa el claro circular. No promover; investigar forma espacial visual antes de más cambios de umbral.
+
+### Gran Río: ruta nativa de máscaras confirmada
+
+[Diagnóstico del borde irregular](river-yard-shape/README.md): modificar el generador JavaScript deja 12/12 parejas RGB exactas porque BiomeGround recibe bytes nativos. No es rechazo artístico. El siguiente piloto debe transformar una copia visual al recibir los bytes y comprobar cambios efectivos antes de ampliar capturas.
