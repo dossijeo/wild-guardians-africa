@@ -816,3 +816,7 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Prepasada aislada sin duplicación en smokeDepth
 
 [Composición con árbol visible](obstruction-isolated-smoke-composition/README.md): imágenes exactas con/sin humo al omitir el trabajo auxiliar dentro de captureDepth. Dos parciales:4→2 dibujos auxiliares con humo;2→2 sin humo. Sin equivalencia automática en FPS. Helper QA, pendiente integración y validación amplia.
+
+### Gran Cañón: corte ligado a contribución de sombra
+
+[Dos diagnósticos](canyon-shadow-isolation/README.md): receiveShadow del horizonte no cambia píxeles; neutralizar groundVisibility elimina corte y sombras útiles. No integrar ese diagnóstico. Revisar cobertura/proyección/transición de shadow map y relleno cálido dependiente de sombra antes de recolorear materiales. La atribución previa a material cercano/lejano no estaba demostrada.
