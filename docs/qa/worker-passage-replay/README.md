@@ -117,3 +117,5 @@ The diagnostic is read-only: replaying with and without it yields identical fina
 | Original blocker without route heading | 1 | 1 | 0 | 0.162 m |
 
 The distinct-pair column is not additive: one pair can appear in more than one class over time. This shows why a special rule for head-on encounters alone cannot solve the problem. Most sampled overlaps with the original blocker involve following or crossing traffic; 11 same-direction examples are workers returning to the village. Nine more overlaps involve a different body that was not the recovery trigger. The next design must maintain safe spacing within a convoy, account for third-party bodies while resolving a blockage, and handle crossing traffic, rather than merely biasing which side two opposing workers choose.
+
+The [one-second moving-blocker grace trial](moving-blocker-grace-rejected.md) also resolved the saved crossing but reduced 14-night deliveries from 1,317 to 1,227 and increased late overlap pair-ticks from 43 to 47. Its movement patch was removed; no fixed-delay grace is adopted.
