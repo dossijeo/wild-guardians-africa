@@ -681,3 +681,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Manglares: receta aprobada supera recorrido y cierre acotados
 
 [Streaming del sustrato completo](mangrove-height-blend/full-streaming/README.md):36 capturas/18 parejas, dos circuitos por fase con±192m, escenas comparables y sin errores. Regresos nocturnos exactos; diurnos con residuo pequeño también en control. Tres texturas liberadas una vez cada una;24 geometrías y cero referencias QA tras cierre. No prueba de fugas prolongadas ni nuevo benchmark. Conservar la receta visual aprobada, sin activar optimizaciones de muestreo no demostradas.
+
+
+### Cañón: arena completa disponible como alternativa explícita
+
+[`canyonSand=full` con global-lighting](canyon-sand-full-integrated/README.md), solo Cañón. La opción1 conserva normal-only.11/12 parejas QA/integrada exactas; una difiere2píxeles. Build y9pruebas pasan. Fuente CC0 existente copiada sin cambio; caché separada por variante. Pendientes streaming integrado y coste cercano, sin main ni sustitución del perfil económico.

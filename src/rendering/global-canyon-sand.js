@@ -1,8 +1,9 @@
 // Explicit laboratory option; uses existing CC0 Aerial Beach 01 normal map.
 export function canyonSandEnabled(search=globalThis.location?.search??''){
- const q=new URLSearchParams(search);return q.get('visualLab')==='global-lighting'&&q.get('canyonSand')==='1';
+ const q=new URLSearchParams(search);return q.get('visualLab')==='global-lighting'&&['1','full'].includes(q.get('canyonSand'));
 }
-export function patchCanyonSand(source){
+export function canyonSandFull(search=globalThis.location?.search??''){return canyonSandEnabled(search)&&new URLSearchParams(search).get('canyonSand')==='full';}
+export function patchCanyonSand(source,full=false){
  const edits=[
  ['void groundMaterial417(', 'uniform sampler2D uCanyonSandNormal;float canyonSandWeight=0.;void groundMaterial417('],
  ['materialAO410=mix(1.,mix(.45,1.,arh.r),amount);',`materialAO410=mix(1.,mix(.45,1.,arh.r),amount);if(canyon){
@@ -20,5 +21,6 @@ export function patchCanyonSand(source){
  ['float biomeAO=nativeContact4(vToonWorld)*materialAO410;','biomeSpec*=mix(1.,(.02*.02)/(1.-.98*.72),canyonSandWeight);float biomeAO=nativeContact4(vToonWorld)*materialAO410;']
  ];
  for(const [from,to] of edits){if(!source.includes(from))throw Error('Canyon sand anchor missing: '+from);source=source.replace(from,to);}
+ if(full)source=source.replace('uniform sampler2D uCanyonSandNormal;', 'uniform sampler2D uCanyonSandNormal,uCanyonSandBase;').replace('vec3 sand=vec3(0.56913064,0.52422576,0.47915630)', 'vec3 sand=textureGrad(uCanyonSandBase,suv,sdx,sdy).rgb');
  return source;
 }
