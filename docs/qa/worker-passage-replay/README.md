@@ -103,3 +103,30 @@ The isolated [`targeted-phase-rejected.patch`](targeted-phase-rejected.patch) le
 Run `node tools/experiments/replay-worker-crossing.mjs --trace-progress --yield-candidates` to inspect the instant before the day-9 recovery. The diagnostic checks five distances and five directions relative to each worker's next waypoint. It requires both native worker terrain clearance and swept clearance from the other saved worker. At the recovery boundary it finds **22 of 25** clear candidate steps for `worker-7072` and **25 of 25** for `worker-7088`. The first 0.65 m lateral step on either side is clear for both. This rules out the hypothesis that the saved crossing has no nearby physical space to yield. It does **not** prove that any candidate reconnects safely to the worker's full route, avoids every other body in the live campaign, or preserves delivery throughput.
 
 The diagnostic is read-only: replaying with and without it yields identical final positions and `ActorMobileCollisionRecovery` events. The next movement prototype should choose and validate a complete yield-and-rejoin maneuver and coordinate the two actors. Merely suppressing the twelve-second phase timer has already failed the 14-night campaign comparison above.
+
+## Rejected same-direction return convoy guard
+
+The isolated [`solid-convoy-rejected.patch`](solid-convoy-rejected.patch), based on `1b5444927`, withheld mobile phasing only when a returning worker had exactly one blocker: another worker returning to the same village, ahead, moving in a similar direction and not stalled. It left ordinary collision clearance and all other recovery cases unchanged. This is a **rejected experiment**, not active production movement code.
+
+The same Sabana/Mapungubwe/712 native-intent campaign was run for 14 nights with `WG_WORKER_RECOVERY_DETAIL=1`; all 26 directed actor-motion tests passed. These are single deterministic runs, not a CPU benchmark. The baseline's full state hash was `2224d0ea4889a693d5b396704b444b3dc383a44e02dd2db507d096c08741ec05`; the candidate's was `385e388d26db7742c30f382b889816ba05c55c8c35c41ce3df5e5bf63dcb1adc`.
+
+| Measure | Baseline | Convoy guard |
+| --- | ---: | ---: |
+| Deliveries / coins / living crops | 1,317 / 899 / 145 | 1,317 / 899 / 145 |
+| Recovery events | 164 | 147 |
+| Late work-period overlap pair-ticks | 43 | 42 |
+| Distinct late overlapping pairs | 34 | 31 |
+| Maximum late work-period penetration | 0.4755 m | 0.4755 m |
+
+Classification by route heading at the recovery event shows **same-direction pairs 17→14**, but **crossing pairs 11→15**. Opposing pairs fell 5→4; third-party pairs fell 9→7; one candidate overlap could not be linked to a recent recovery. Returning/returning crossing pairs rose 5→9. The guard therefore displaced, rather than solved, the physical conflict. The small total change and unchanged maximum penetration do not justify altering movement. The candidate patch was removed after measurement.
+
+To repeat, apply the patch to its recorded base in an isolated worktree, run `node --test tests/actor-motion.test.js`, then run:
+
+```powershell
+$env:WG_WORKER_RECOVERY_DETAIL='1'
+$env:WG_WORKER_PROBE_OUTPUT='test-results/worker-solid-convoy-detail-14.json'
+node tools/experiments/probe-worker-overlaps.mjs 14 712 good sabana mapungubwe wild-engine
+node tools/experiments/analyze-worker-phase-blockers.mjs test-results/worker-solid-convoy-detail-14.json
+```
+
+The original-blocker pairs remain 34 in both runs. A future fix needs a complete, valid yielding and rejoining trajectory with deterministic coordination; withholding phasing from one follower is not enough.
