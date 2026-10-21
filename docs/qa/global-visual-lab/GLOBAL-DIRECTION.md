@@ -766,3 +766,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Volcanes: afloramientos dentro de ceniza
 
 [Doce capturas](volcanic-ash-cavities/README.md): el mapa de altura reduce ceniza sobre crestas y conserva depósitos amplios. Mejora estructural visible; conservar candidata con una lecturaARH adicional, coste y movimiento pendientes. Aproximación sobre UV sin desplazar, no capas físicas ni siluetas nuevas.
+
+
+### Volcanes: diagnóstico y refinamiento de POM
+
+[Ablación](volcanic-pom-ablation/README.md) y [refinamiento](volcanic-pom-refined/README.md),24capturas: anular desplazamiento reduce franjas pero aplana; interpolar cruce suaviza parte del escalonado manteniendo relieve, máximo8lecturas. Conservar candidata QA, pendientes movimiento/coste y líneas residuales del material.
