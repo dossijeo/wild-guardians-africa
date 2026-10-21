@@ -1,0 +1,66 @@
+{
+  "sampleRate": 48000,
+  "stages": [
+    {
+      "pack": "a",
+      "scene": "day",
+      "from": 0,
+      "to": 39.53066666666667,
+      "mixerScene": "day",
+      "voices": 16
+    },
+    {
+      "pack": "a",
+      "scene": "night",
+      "from": 39.53066666666667,
+      "to": 52.4,
+      "mixerScene": "night",
+      "voices": 16
+    },
+    {
+      "pack": "a",
+      "scene": "attack",
+      "from": 52.4,
+      "to": 65.22133333333333,
+      "mixerScene": "attack",
+      "voices": 16
+    },
+    {
+      "transition": "A-to-B",
+      "from": 65.22133333333333,
+      "to": 65.57066666666667,
+      "pack": "b"
+    },
+    {
+      "pack": "b",
+      "scene": "day",
+      "from": 65.57066666666667,
+      "to": 105.312,
+      "mixerScene": "day",
+      "voices": 16
+    },
+    {
+      "pack": "b",
+      "scene": "night",
+      "from": 105.312,
+      "to": 118.192,
+      "mixerScene": "night",
+      "voices": 16
+    },
+    {
+      "pack": "b",
+      "scene": "attack",
+      "from": 118.192,
+      "to": 131.05066666666667,
+      "mixerScene": "attack",
+      "voices": 16
+    }
+  ],
+  "bytes": 2104007,
+  "mimeType": "audio/webm;codecs=opus",
+  "musicError": null,
+  "browserVersion": "155.0.8059.86",
+  "url": "http://127.0.0.1:5219/tests/browser/music-mixer.html",
+  "httpErrors": [],
+  "consoleErrors": []
+}

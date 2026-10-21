@@ -21,6 +21,8 @@ Listen for clipping, missing stems, abrupt silence, doubled beats, mismatched mu
 
 The [three-day Wild Engine run](../music-three-native-days/wild-engine-rerun.md) established technical A/B/A/B swaps and source cleanup with output muted. It did not establish perceptual quality, a physical-phone audio budget, or a 100-night listening result.
 
+A [Chrome recording of the original A→B WebAudio output](../music-audible-ab/README.md) now provides a full two-minute isolated reference, a short pack-change excerpt and a native-world dawn excerpt with ambience and effects. These still need a listener's verdict; keep QA-156 partial until that observation is recorded.
+
 ## Record
 
 For each check, save the build SHA, device/browser, date, exact steps, duration, observed pass/fail and any screenshots or audio/video references. Note whether the result came from the production game, a development QA hook or the isolated mixer. Keep QA-156 partial until the audible observations exist. A failed phone or audio observation should become a reproducible defect rather than silently changing the scope of the existing evidence.
