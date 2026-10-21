@@ -486,3 +486,8 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Cañón: tres muestras de microvisibilidad no aportan volumen
 
 [24 capturas y análisis de altura](canyon-microshadow/README.md): solo 26–53 píxeles diurnos cambian; noche exacta. Descartar tres lecturas extra. Diagnóstico offline: 0,0384 % de texeles bloqueados con pasos .05/.12/.25 m a amplitud .10 m. No forzar profundidad; estudiar horizonte offline con pasos de texel antes de añadir más coste al shader.
+
+
+### Cañón: precálculo solar recupera microdetalle, no volumen global
+
+[ARH alfa con 32 pasos de medio texel](canyon-microshadow-bake/README.md): RGB conservado, sin nuevas lecturas. 24 capturas; seis parejas nocturnas exactas, cambios diurnos pequeños sin salto artístico claro. No incorporar. Evitar más rondas equivalentes de microcontraste; el relieve mesoscópico sigue pendiente.
