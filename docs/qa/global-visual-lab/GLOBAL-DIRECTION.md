@@ -1034,3 +1034,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Diagnóstico: carga GPU concurrente confirmada
 
 [Ocho muestras CIM](gpu-contention-20261021/README.md) sin benchmark propio:Chrome GPU de measure-wild-renderer.mjs usa10–95% del motor3D. No se interrumpe ni se contacta con otro trabajo. Explicación plausible,no prueba retrospectiva de todas las rondas. Antes de más benchmarks precisos registrar carga yesperar ventana sin prueba concurrente;continuar trabajo artístico sin atribuir ganancias FPS.
+
+
+### Manglares: orientación oblicua descartada artísticamente
+
+[Seis parejas90/45 grados](moss-oblique-20261021/README.md):misma geometría,sin errores. Persiste patrón de filas;no mejora suficiente para reemplazar mezcla anterior. Conservada como descarte artístico,no por coste. Siguiente dirección:distribución/escala de acumulaciones.
