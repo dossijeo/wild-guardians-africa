@@ -1159,3 +1159,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Gran Río: ambiente nocturno en baja
 
 [Seis parejas](river-night-low-20261021/README.md): mejora de lectura conservada con módulo lejano, 42–68 mil triángulos de cubierta sin cambios entre variantes. Tres diurnas exactas, sin errores. Conservar candidata; pendientes crepúsculo, movimiento y benchmark.
+
+
+### Gran Río: mezcla nocturna progresiva
+
+[Quince parejas](river-night-twilight-20261021/README.md) verifican uNight 0/.25/.5/.75/1, cámaras y geometría iguales. Mezcla intermedia discreta, tres diurnas exactas. Conservar candidata; aún faltan movimiento y benchmark.
