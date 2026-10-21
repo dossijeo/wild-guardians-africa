@@ -4,6 +4,7 @@ import {deserialize} from '../../src/persistence/snapshots.js';
 import {tick} from '../../src/simulation/game.js';
 import {createSpatialGameSession} from '../../src/world/wild-engine/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../../src/world/wild-engine/spatial-navigation-movement.js';
+import {actorBlockers,actorSegmentClear} from '../../src/simulation/actor-motion.js';
 
 // Retain the continuous campaign's saved paths through a fresh native session
 // to isolate mobile avoidance. This intentionally does not model load/replan.
@@ -41,6 +42,24 @@ try{
     }
     return total;
   };
+  let yieldCandidates;
+  if(process.argv.includes('--probe-yield')){
+    for(let step=0;step<3;step++)tick(state,.1,nav);
+    const actor=actors[1],blockers=actorBlockers(state,actor,true,8);
+    yieldCandidates=[];
+    for(const reach of [.5,1,1.5,2,3,4])for(let i=0;i<32;i++){
+      const angle=i*Math.PI/16,point={x:actor.x+Math.sin(angle)*reach,
+        z:actor.z+Math.cos(angle)*reach};
+      if(!nav.workerMotionClear(actor,point,actor.radius??.28)||
+        !actorSegmentClear(actor,point,actor,blockers))continue;
+      yieldCandidates.push({point,reach,angle,
+        rejoinClearNow:actorSegmentClear(point,actor.path[0],actor,blockers),
+        routeDistance:Math.hypot(
+        point.x-(actor.path?.[0]?.x??point.x),
+        point.z-(actor.path?.[0]?.z??point.z))});
+    }
+    yieldCandidates.sort((a,b)=>a.reach-b.reach||a.routeDistance-b.routeDistance);
+  }
   if(process.argv.includes('--trace-progress')){
     for(let step=0;step<10;step++){
       tick(state,.1,nav);
@@ -51,14 +70,19 @@ try{
         next:actor.path?.[0]??null,progressAt:actor.mobileProgressAt,
         phaseRemaining:actor.mobilePhaseRemaining??0})));
     }
-  }else tick(state,1,nav);
+  }else if(!yieldCandidates)tick(state,1,nav);
   const [a,b]=actors,distance=Math.hypot(a.x-b.x,a.z-b.z);
   console.log(JSON.stringify({day:state.day,time:state.time,
     mode:'saved paths retained for collision diagnosis',before,
     after:actors.map(({id,x,z,path,mobilePhaseRemaining})=>({id,x,z,
       next:path?.[0]??null,mobilePhaseRemaining:mobilePhaseRemaining??0})),
     distance,penetration:Math.max(0,(a.radius??.28)+(b.radius??.28)-distance),
-    ...(trace.length?{trace}:{}),recoveryEvents:state.events.filter(event=>
+    ...(trace.length?{trace}:{}),...(yieldCandidates?{
+      blockerIds:actorBlockers(state,actors[1],true,8).map(body=>body.id),
+      yieldCandidateCount:yieldCandidates.length,
+      rejoinClearCount:yieldCandidates.filter(candidate=>candidate.rejoinClearNow).length,
+      yieldCandidates:yieldCandidates.slice(0,15)}:{}),
+    recoveryEvents:state.events.filter(event=>
       event.type==='ActorMobileCollisionRecovery'&&ids.includes(event.actorId))
       .map(({actorId,x,z,elapsed,duration})=>({actorId,x,z,elapsed,duration}))},null,2));
 }finally{session.dispose();}
