@@ -57,9 +57,16 @@ try{
     await runScene('day',firstSeconds);
     if(!short){await runScene('night',12);await runScene('attack',12);}
     const switchStart=audio.context.currentTime;
-    state.day=2;await audio.gameplay(2);
+    state.day=2;
+    const switching=audio.gameplay(2);
+    let handoffPolls=0;
+    while(audio.pack!=='b'&&audio.context.currentTime-switchStart<10){
+      audio.updateMusic(state);handoffPolls++;await sleep(20);
+    }
+    await switching;
+    if(staged&&handoffPolls===0)throw Error('Staged transition was not pumped');
     stages.push({transition:'A-to-B',from:switchStart,
-      to:audio.context.currentTime,pack:audio.pack});
+      to:audio.context.currentTime,pack:audio.pack,handoffPolls});
     await runScene('day',short?4:37);
     if(!short){await runScene('night',12);await runScene('attack',12);}
     recorder.stop();await stopped;
