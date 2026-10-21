@@ -643,3 +643,7 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Manglares: conversión de color no resuelve la discrepancia
 
 [24 capturas](mangrove-height-blend/linear-color/README.md) con transición por altura fija: multiplicador en RGB codificado frente a luz lineal aproximada. Barro más claro, pero sigue diferencia con parches y tinte nocturno. No adoptar como corrección completa; toLinear4 es gamma2.2, no sRGB exacto. Separar iluminación/rugosidad de las dos rutas antes de más calibración cromática. Sin benchmark ni integración.
+
+### Manglares: el azul no desaparece al atenuar especular ambiental
+
+[Ablación localizada](mangrove-height-blend/soil-spec/README.md),24 capturas con escena/geometría coincidentes. biomeSpec ponderado por cobertura de musgo: barro más oscuro, pero persiste tinte nocturno y diferencia con parches. No adoptar supresión general ni atribuir toda la discrepancia a reflejos. Sin benchmark; el cálculo original sigue ejecutándose.
