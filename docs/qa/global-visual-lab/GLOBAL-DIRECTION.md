@@ -1234,3 +1234,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Cielo: tinte uniforme de horizonte no promovido
 
 [Seis parejas](sky-horizon-depth-20261021/README.md):menos gris pero nubes bajas pierden contraste. Mantener sky-cloud-depth como referencia;separar bruma ynubes. Noche exacta,sin benchmark ni integración.
+
+
+### Cielo: horizonte con protección de nubes
+
+[Seis parejas](sky-horizon-cloud-mask-20261021/README.md):preserva mejor nubes que tinte uniforme,mejora moderada. Conservar para revisar seis biomas ycrepúsculo antes de seguir afinando. Noche exacta,GPU pendiente.
