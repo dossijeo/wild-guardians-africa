@@ -324,7 +324,7 @@ export class WorldScene {
   }
   syncResidentProps() {
     if(!this.nav||!this.prototypes)return {chunks:0,slots:0};
-    if(this.propSuppressionSource===this.nav.suppressed)return {chunks:0,slots:0};
+    // Confirmed commands call explicitly; Engine may mutate its Set in place.
     if(sameSuppressions(this.propsSuppressed,this.nav.suppressed)){this.propSuppressionSource=this.nav.suppressed;return {chunks:0,slots:0};}
     const stats=refreshResidentProps(this.chunks,this.nav.suppressed,(group,slot,instances)=>this.buildPropSlot(group,slot,instances));
     this.propsSuppressed=new Set(this.nav.suppressed);this.propSuppressionSource=this.nav.suppressed;
@@ -386,7 +386,7 @@ export class WorldScene {
       this.farVisibilityOwned=this.farVisualRange!=null;
     }
     if(visibilityChanged)this.releaseNativeShadow?.cache.invalidate();
-    this.syncResidentProps();
+    if(this.propSuppressionSource!==this.nav.suppressed)this.syncResidentProps();
     this.contacts.update(this.chunks,this.contactPrototypes,visibleRegion.bounds,this.chunkRevision,this.nav.config.layers);
   }
   villageMesh(village) {

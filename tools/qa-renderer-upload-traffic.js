@@ -1,11 +1,11 @@
 // Diagnostic call accounting, deliberately separate from timing comparisons.
 // Counts bytes submitted by GL API calls, not driver traffic or VRAM residency.
-export function traceUploadTraffic(gl,{rendererMemory=null}={}){
+export function traceUploadTraffic(gl,{rendererMemory=null,rendererData=null}={}){
  const original=new Map();let frame;
- const reset=()=>frame={bufferAllocationBytes:0,bufferUploadBytes:0,rendererBufferUploadBytes:rendererMemory?0:null,textureUploadBytes:0,bufferCalls:0,textureCalls:0};reset();
+ const reset=()=>frame={bufferAllocationBytes:0,bufferUploadBytes:0,rendererBufferUploadBytes:rendererMemory||rendererData?0:null,textureUploadBytes:0,bufferCalls:0,textureCalls:0};reset();
  const bytes=(data,offset=0,length)=>{if(!data)return 0;const stride=data.BYTES_PER_ELEMENT??1;return (length||((data.length??data.byteLength)-offset))*stride;};
  const wrap=(name,record)=>{if(typeof gl[name]!=='function')return;const fn=gl[name];original.set(name,fn);gl[name]=function(...args){record(args);return fn.apply(this,args);};};
- const uploaded=(data,n)=>{frame.bufferUploadBytes+=n;if(rendererMemory&&data?.buffer===rendererMemory)frame.rendererBufferUploadBytes+=n;};
+ const uploaded=(data,n)=>{frame.bufferUploadBytes+=n;if(rendererData?rendererData(data):rendererMemory&&data?.buffer===rendererMemory)frame.rendererBufferUploadBytes+=n;};
  wrap('bufferData',a=>{frame.bufferCalls++;if(typeof a[1]==='number')frame.bufferAllocationBytes+=a[1];else{const n=bytes(a[1],a[3],a[4]);frame.bufferAllocationBytes+=n;uploaded(a[1],n);}});
  wrap('bufferSubData',a=>{frame.bufferCalls++;uploaded(a[2],bytes(a[2],a[3],a[4]));});
  const pixelBytes=(format,type)=>{

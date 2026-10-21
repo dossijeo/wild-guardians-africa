@@ -1,5 +1,5 @@
 """Summarize every measurement block; never trim samples or add CPU to GPU."""
-import json, sys, statistics
+import gzip, json, sys, statistics
 from pathlib import Path
 
 def stats(values):
@@ -11,10 +11,10 @@ def stats(values):
         return values[lo] + (values[min(lo+1,len(values)-1)]-values[lo])*(i-lo)
     return dict(n=len(values), mean=statistics.fmean(values), p50=percentile(.5), p95=percentile(.95), p99=percentile(.99))
 
-path=Path(sys.argv[1]); data=json.loads(path.read_text(encoding='utf-8'))
+path=Path(sys.argv[1]); data=json.loads(gzip.decompress(path.read_bytes()).decode('utf-8') if path.suffix=='.gz' else path.read_text(encoding='utf-8'))
 rows=[]
 for item in data['rows']:
-    row={key:item.get(key) for key in ['biome','quality','variant','phase','diagnostic','groupCapacityBytes','jsHeap','memory','resolution','glError','errors']}
+    row={key:item.get(key) for key in ['biome','quality','variant','phase','diagnostic','groupCapacityBytes','collectedHeap','jsHeap','memory','resolution','glError','errors']}
     if 'cadence' not in item:
         row.update({key:item.get(key) for key in ['pose','difference','name','colorCount']})
     else:
