@@ -34,3 +34,8 @@ La revisión inicial no demuestra que todos los descartes históricos hayan sido
 ### Cañón: candidata completa disponible y coste cercano verificado
 
 [Opciones integradas en primer plano](canyon-sand-full-integrated/close-performance/README.md):1920muestras GPU, diferencias−.226 a+.335ms, sin sobrecoste consistente en esta serie. Conservación visual e integración/streaming documentadas. Recomendada como referencia de calidad para próximas revisiones globales, con económica como alternativa; no aprobación universal de rendimiento ni main.
+
+
+## Gran Río: variación cromática amplia conservada para revisión
+
+[24capturas](river-soil-mottling/README.md) muestran cambio perceptible en suelo del poblado sin modificar cobertura ni máscaras. Conservar alternativa; manchas suaves pueden parecer sombras y oscurecen de noche. No benchmark todavía, no descarte por coste ni aprobación artística definitiva. V2 original permanece disponible.
