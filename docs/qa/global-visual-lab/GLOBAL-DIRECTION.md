@@ -1229,3 +1229,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Cielo: aislamiento verificado en seis vistas
 
 [Máscara negro/blanco](sky-visible-mask-20261021/README.md):0 cambios cromáticos fuera de píxeles que responden al cielo. Único píxel inferior748,626 también corresponde al fondo. Continuar revisión artística;no evidencia de alteración del terreno en estas vistas.
+
+
+### Cielo: tinte uniforme de horizonte no promovido
+
+[Seis parejas](sky-horizon-depth-20261021/README.md):menos gris pero nubes bajas pierden contraste. Mantener sky-cloud-depth como referencia;separar bruma ynubes. Noche exacta,sin benchmark ni integración.
