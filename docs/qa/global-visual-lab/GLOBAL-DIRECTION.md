@@ -615,3 +615,7 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Borde de Manglares: recarga acotada validada
 
 [Dos circuitos y cierre del mundo](mangrove-mud-fringe/sized-inset/streaming/README.md), 36 capturas/18 parejas, misma cámara/geometría. Atributos válidos en chunks cargados; 371.100 bytes adicionales constantes al volver; 24 geometrías notifican dispose una vez y cero referencias activas tras cierre. Retornos nocturnos exactos, diurnos con residuo pequeño no aislado. No prueba prolongada de fugas ni coste estable. Mantener QA y volver a priorizar la estructura superficial del musgo y su relación con los otros biomas, no seguir acumulando retoques menores de borde.
+
+### Manglares: escala uniforme fina insuficiente
+
+[Ensayo .115 frente a .32](mangrove-moss-fine-scale/README.md):24 capturas/12 parejas, media/baja, día/noche, cámara/geometría coincidentes. Reduce los abultamientos grandes pero conserva cobertura homogénea y pierde lectura nocturna. No promover ni hacer benchmark de esta candidata como solución completa. Siguiente hipótesis: distribución de materiales por condiciones del terreno, no otra intensidad universal de normal o escala.
