@@ -471,3 +471,8 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Capa de tierra: movimiento y liberación comprobados en una vuelta
 
 [144 parejas, vídeos y streaming](river-soil-layer-motion/README.md). Cámara/viento/opacidades/geometría coinciden; muestra de regreso sin desplazamiento amplio, con pequeños residuales también en control. Tres eventos de liberación para tres texturas al cerrar cada candidata. Una vuelta por calidad no prueba ausencia de fugas; coste aún pendiente de repetición estable. Conservar QA sin promover.
+
+
+### Tierra del río: coste móvil mixto
+
+[Benchmark móvil de V2](river-soil-layer-motion/README.md): ocho bloques, 960 muestras GPU/1.440 frames, geometría igual. GPU diurna +~1,30 ms (11,4 %) agregado, noche menor; no promover todavía. Próxima optimización concreta: evitar leer mapas de hierba donde la capa de tierra los sustituye completamente, exigiendo equivalencia visual.
