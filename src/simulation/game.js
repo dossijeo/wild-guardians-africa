@@ -13,7 +13,7 @@ import {gatePortalPoints} from '../world/gate-passages.js';
 import {wallCollisionBounds} from '../world/wall-collision-frame.js';
 import {containsPoint,footprintDistance} from '../world/footprints.js';
 import {centerCulture,centerFootprint,centerServicePoint,centerDeliveryPoint} from '../world/centers.js';
-import {actorBlockers,actorSegmentClear,prepareActorMotion} from './actor-motion.js';
+import {actorBlockers,actorSegmentClear,prepareActorMotion,createWorkerBodyIndex} from './actor-motion.js';
 import {animalRouteClearance} from './animal-route-clearance.js';
 import {animalSlopeRecoveryPath} from './animal-slope-recovery.js';
 import {BALANCE as B} from './balance.js';
@@ -1343,6 +1343,18 @@ function updateWorkers(s,dt,nav) {
   // Unchanged queues can reuse their index while reservation fields stay live.
   const findPlant=workerEntityLookup(()=>s.plants,{reuse:true,appendOnly:true}),findCrate=workerEntityLookup(()=>s.crates,{reuse:true,appendOnly:true}),findTask=workerEntityLookup(()=>s.tasks,{reuse:true});
   let idlePlants;
+  let idleBodies;
+  let walkingCandidates;
+  // One ambient walker is cheaper with a scan, even in a large paid crew.
+  // Count only when an idle call actually occurs; the threshold avoids bucket
+  // construction when there are too few queries to amortize it.
+  const bodyIndex=()=>{
+    if(s.workers.length<96)return null;
+    walkingCandidates??=s.workers.reduce((n,w)=>n+Number(w.idleState?.mode==='walk'&&
+      (w.status==='idle'||w.status==='waiting')),0);
+    return walkingCandidates>=Math.max(48,Math.ceil(s.workers.length/4))?
+      (idleBodies??=createWorkerBodyIndex(s.workers)):null;
+  };
   const newArrivals=[];
   const nativeTasks=!!nav.intentTaskPlanner;
   if(!s.raid&&s.time<300)for(const w of s.workers){
@@ -1390,7 +1402,7 @@ function updateWorkers(s,dt,nav) {
         continue;
       }
       if(w.status==='home')continue;
-      if(w.status==='waiting'&&!center&&!s.raid&&!contractExpired(w,s)&&s.time<p.end){updateIdle(w,{...(village.entry??village),id:village.id},dt,nav,s.seed,s.structures,s);continue;}
+      if(w.status==='waiting'&&!center&&!s.raid&&!contractExpired(w,s)&&s.time<p.end){updateIdle(w,{...(village.entry??village),id:village.id},dt,nav,s.seed,s.structures,s,bodyIndex);continue;}
       if(w.status!=='idle')cancelIdle(w);
       if(!center||!operational(center)) {if(center&&!contractExpired(w,s)&&s.time<p.end)w.displacedDay??=s.day;cancelIdle(w);releaseTask(s,w);if(w.crateId)dropCarriedCrate(s,w);w.status='returning';w.path=null;notifyWorkerPlanningChange(s,w);continue;}
       const ended=contractExpired(w,s)||s.time>=p.end;
@@ -1431,7 +1443,7 @@ function updateWorkers(s,dt,nav) {
       if(!t) {
         if(w.status!=='idle'){w.status='idle';notifyWorkerPlanningChange(s,w);}
         if(s.tasks.some(task=>task.centerId===w.centerId&&!task.workerId))cancelIdle(w);
-        else {idlePlants??=activeCrops(s.plants);updateIdle(w,idleFarmAnchor(s,w,center,idlePlants),dt,nav,s.seed,s.structures,s);}
+        else {idlePlants??=activeCrops(s.plants);updateIdle(w,idleFarmAnchor(s,w,center,idlePlants),dt,nav,s.seed,s.structures,s,bodyIndex);}
         continue;
       }
       const target=findPlant(t.targetId)??findCrate(t.targetId)??s.structures.find(e=>e.id===t.targetId);
@@ -1485,7 +1497,7 @@ function updateWorkers(s,dt,nav) {
         if(t.kind==='repair'){completeTask(s,w,t,target,nav);urgency?.invalidate();continue;}
         w.actionRemaining-=dt;if(w.actionRemaining<=0)completeTask(s,w,t,target,nav);
       }
-    } finally {urgency?.changed(w);}
+    } finally {urgency?.changed(w);idleBodies?.update(w);}
   }
   reserveAvailableTasks(s,nav);
 }
