@@ -19,3 +19,8 @@ Registrar por separado: valoración visual, coste medido, errores funcionales y 
 Optimizar primero Manglares contra la receta completa aprobada, manteniendo semilla, cámara, hora y resolución. Los ahorros fuera del material deben medirse junto con la variante; no sumar diferencias de pruebas independientes. No sacrificar apariencia silenciosamente para aprobar rendimiento.
 
 La revisión inicial no demuestra que todos los descartes históricos hayan sido evaluados correctamente. Queda pendiente revisar visualmente las alternativas completas de Cañón y Gran Río frente a sus sustituciones económicas, y ampliar el inventario si aparecen otros candidatos. Los descartes por fallos visuales concretos no se rehabilitan automáticamente.
+
+
+## Cañón: revisión directa completada en aproximación cercana
+
+[144 parejas y cuatro vídeos](canyon-sand-full-review/README.md) comparan normal-only frente a receta completa. Primeros planos diurno/nocturno inspeccionados recuperan variación fina con el mapa de color; ambas mantienen ondulaciones. Conservar completa como alternativa artística, sin aprobación de coste incremental ni decisión desde cámara normal/elevada todavía. No equivale a preferencia expresa del usuario.
