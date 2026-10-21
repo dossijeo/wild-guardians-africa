@@ -9,6 +9,10 @@ retaining the other 172. A consistent improvement in total frame time has not
 been demonstrated. This is not proof that a more complete native grouper could
 never help, nor a reason to discard the approved graphical variants.
 
+## Scope correction after user review
+
+The previous comparison did not include an uncull control. It cannot close the hypothesis of eliminating the CPU penalty of culling with a fuller native preparation pipeline. The new [ABCABC control](CULLING-CONTROL.md) confirms the GPU and cadence benefit of culling relative to no per-instance culling. WASM retains the triangle reduction, but still performs about 48 group uploads per moving frame and leaves most grouper work outside the moved kernel. Continue investigating effective-selection invalidation and the remaining JS grouper; the production renderer remains unchanged meanwhile.
+
 ## What was built
 
 - Independent Emscripten C++/WASM transform, sphere-culling and matrix-packing
