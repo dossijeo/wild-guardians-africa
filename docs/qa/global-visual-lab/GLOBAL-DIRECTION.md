@@ -1303,3 +1303,7 @@ loading-contact-20261021 compara atmósfera, contacto y composición garden. Int
 
 ### Jardín de carga: sombras nativas y aislamiento
 loading-shadow-isolated-20261021 añade sombras reales del maíz y corrige el encuadre vertical para cinco plantas. Hallazgo: el hook de proxies de partida contaminaba el primer shadow pass (672812 triángulos); retirada solo QA, deja 29882 con viento y 7 draws. Estático GPU ~2.9 ms sin / 4.6–4.8 con; viento inestable, sin delta fiable. Conservar candidata visual, optimizar muestreo y aislar propietarios antes de integrar. No cambio de producción.
+
+
+### Carga: filtro de cuatro muestras no promovido
+loading-pcf-20261021 compara ambas rutas originales (suelo transparente Three PCFSoft, maíz PCF nativo) con cuatro consultas. Pierde suavidad en suelo y no muestra ahorro en ABAB. Conservar sombras originales; no descartar la mejora artística. Medición parcial con otras cargas, sin delta causal exacto. Solo QA.
