@@ -1420,3 +1420,7 @@ Twelve captures test two lateral-bank floats per existing water vertex, producin
 
 ## Canyon horizon bank prototype (2026-10-22)
 Same shallow-bank data now covers QA horizon water (+36864 bytes). Two 12-image fixtures pass counters/errors. Long river view exposes pre-existing wall/shore LOD discontinuities; do not claim seamless horizon or integrate yet. See canyon-water-horizon-view-20261022. Next inspect horizon transition rather than masking it with colour.
+
+
+## Canyon horizon receiveShadow isolation (2026-10-22)
+Twelve real captures: five of six pairs exact, remaining max channel delta 1/255. No improvement; do not integrate flag as seam fix. AfricanToon ground visibility bypasses receiveShadow (unlike objects). Coarse horizon normals/geometry remain next diagnostic; no performance claim. See canyon-horizon-shadow-receive-20261022.
