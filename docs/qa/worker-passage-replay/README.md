@@ -60,3 +60,25 @@ A temporary candidate also tracked the remaining length of a worker's current wa
 | Route-remaining candidate | 14 | 1257 | 773 | 133 | 40 | 9 |
 
 The candidate reduces collisions but loses 60 deliveries, 126 coins and 12 living crops at night 14. Its game-tick time also changes with the entire divergent campaign, so it cannot be attributed to the extra route-length calculation alone. It is **not adopted**. The shipped movement code and rules remain unchanged. A safe fix needs a local decision that distinguishes a useful detour from cyclic congestion *without* simply delaying most recovery episodes; it must preserve campaign throughput as well as body separation.
+
+## Recovery-trigger attribution on the 14-night replay
+
+The simulation now exposes an optional `nav.motionObserver` at the instant a mobile-collision recovery is authorized. It reports whether the worker was stationary for three seconds or had spent twelve seconds without reducing straight-line distance to the destination. The observer does not change the event payload, saved state or movement. The overlap probe attaches it only when `WG_WORKER_RECOVERY_DETAIL=1`:
+
+```powershell
+$env:WG_WORKER_RECOVERY_DETAIL='1'
+$env:WG_WORKER_PROBE_OUTPUT='test-results/worker-recovery-detail-14.json'
+node tools/experiments/probe-worker-overlaps.mjs 14 712 good sabana mapungubwe wild-engine
+```
+
+The frozen Sabana/Mapungubwe/712 replay retained the baseline state SHA-256 `2224d0ea4889a693d5b396704b444b3dc383a44e02dd2db507d096c08741ec05`, 1,317 deliveries, 899 coins and 145 living crops. It emitted 164 recoveries: 141 for workers and 23 for animals. Among workers, 122 followed the twelve-second destination-progress condition and 19 followed three seconds of actual stationary time. All 43 overlap examples after time 30 can be linked to a recovery of one of the two workers within the preceding 3.2 simulated seconds. Forty link to the destination-progress trigger and three to stationary recovery. The attribution uses the probe's sampled examples; in this run the sample includes all 43 pairs. The legacy metric name `workOverlapPairs` means time > 30 and also includes nighttime; it is not restricted to paid working hours.
+
+Two small prototypes were rejected on the same 14-night campaign:
+
+| Variant | Deliveries | Coins | Living crops | Recoveries | Work-period overlap pairs |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Baseline | 1,317 | 899 | 145 | 164 | 43 |
+| Disable mobile phasing only while returning | 1,317 | 899 | 145 | 88 | 118 |
+| Check village arrival again after movement | 1,317 | 899 | 145 | 164 | 43 |
+
+Disabling return phasing left a queue outside the village when an incursion began; 99 of its work-period overlaps were subsequently between fleeing workers. The post-movement arrival check had no observable effect, including the same full state hash. Both edits were removed. These results narrow the physical bug: simply delaying or disabling phase does not resolve shared passages. The next candidate must create a traversable, deterministic yield or alternate route and still clear returning workers before the raid boundary. It must also preserve the existing economic throughput; none of these measurements justifies relaxing body collision.

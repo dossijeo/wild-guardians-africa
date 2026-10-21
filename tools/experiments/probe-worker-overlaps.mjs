@@ -24,6 +24,7 @@ const captureRecoveries=process.env.WG_WORKER_RECOVERY_DETAIL==='1';
 if(captureRecoveries&&backend!=='wild-engine')
   throw Error('Recovery detail currently requires the continuous Wild Engine opening');
 const recoverySamples=[];
+const motionSamples=[];
 const inspectDay=Number(process.env.WG_WORKER_INSPECT_DAY??0),
   inspectTime=Number(process.env.WG_WORKER_INSPECT_TIME??0),
   inspectIds=new Set((process.env.WG_WORKER_INSPECT_IDS??'').split(',').filter(Boolean));
@@ -116,7 +117,11 @@ const result=await simulateNativeCampaign({days,strategy,seed,biome,culture,
   slotId:`native-${strategy}-${seed}`,
   ...(backend==='wild-engine'?{openingFactory:async world=>{
     const opening=await createSpatialCampaignOpening(world);
-    if(captureRecoveries)observeGameEvents(opening.s,event=>captureRecovery(opening.s,event));
+    if(captureRecoveries){
+      observeGameEvents(opening.s,event=>captureRecovery(opening.s,event));
+      opening.nav.motionObserver=event=>motionSamples.push({day:opening.s.day,
+        time:opening.s.time,...event});
+    }
     return opening;
   },
     spatialAdvice:true,nativeIntents:true,nativeWallPlans:true,reloadRaids:false}:{}),
@@ -133,7 +138,21 @@ const report={days,seed,strategy,biome,culture,backend,
   villageEntry,diagnostic,overlapWindows,workOverlapPairs,phasedWorkOverlapPairs,
   distinctWorkPairs:distinctWorkPairs.size,maxWorkPenetration,
   byDay:[...byDay],byStatus:[...byStatus],examples,workExamples};
-if(captureRecoveries)report.recoverySamples=recoverySamples;
+if(captureRecoveries){
+  report.recoverySamples=recoverySamples;report.motionSamples=motionSamples;
+  const work=workExamples.filter(example=>example.time>30),byTrigger={};
+  let linked=0;
+  for(const example of work){
+    const recovery=motionSamples.filter(sample=>sample.day===example.day&&
+      (sample.actorId===example.a||sample.actorId===example.b)&&
+      sample.time<=example.time+1e-6&&example.time-sample.time<=3.2)
+      .sort((a,b)=>b.time-a.time)[0];
+    if(!recovery)continue;
+    linked++;byTrigger[recovery.trigger]=(byTrigger[recovery.trigger]??0)+1;
+  }
+  report.workRecoveryAttribution={sampledWorkExamples:work.length,linked,
+    unlinked:work.length-linked,byTrigger};
+}
 const output=process.env.WG_WORKER_PROBE_OUTPUT;
 if(output){
   mkdirSync(dirname(output),{recursive:true});

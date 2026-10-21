@@ -913,8 +913,9 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
   const probe=next&&distanceToNext>1e-8?{
     x:w.x+(next.x-w.x)*Math.min(.5,distanceToNext)/distanceToNext,
     z:w.z+(next.z-w.z)*Math.min(.5,distanceToNext)/distanceToNext}:null;
-  if(((w.dynamicStallSeconds??0)>=3||
-    s.elapsed-w.mobileProgressAt>=12)&&
+  const stationarySeconds=w.dynamicStallSeconds??0,
+    destinationStallSeconds=s.elapsed-w.mobileProgressAt;
+  if((stationarySeconds>=3||destinationStallSeconds>=12)&&
     (w.mobileRecoveryAttempts??0)<2&&probe){
     const blockers=actorBlockers(s,w,worker);
     const staticClear=worker?nav.workerMotionClear?.(w,probe,w.radius??.28):
@@ -929,6 +930,10 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
       w.mobileRecoveryAttempts=(w.mobileRecoveryAttempts??0)+1;
       w.mobileProgressDistance=dist(w,destination);
       w.mobileProgressAt=s.elapsed;
+      nav.motionObserver?.({kind:'mobileCollisionRecovery',actorId:w.id,
+        status:w.status,elapsed:s.elapsed,
+        trigger:stationarySeconds>=3?'stationary':'destination-stall',
+        stationarySeconds,destinationStallSeconds});
       emit(s,'ActorMobileCollisionRecovery',{actorId:w.id,
         x:w.x,z:w.z,elapsed:s.elapsed,duration:3});
     }
