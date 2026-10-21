@@ -461,3 +461,8 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Gran Río: falta detalle de tierra bajo la cubierta
 
 [Desgaste coordinado del material](river-ground-wear/README.md): 24 capturas, geometría igual. Al reducir Grass Medium 01 aparece color base casi uniforme y se pierde detalle en poblado/caminos; descartar implementación. Próxima prueba: capa de tierra reutilizable, revisando Ground079S existente, en lugar de retirar textura sin sustitución. Sin benchmark temporal por fallo artístico claro.
+
+
+### Gran Río: tierra con detalle bajo el desgaste
+
+[Ground079S pigmentado, segunda iteración](river-soil-layer-v2/README.md): recupera detalle de suelo desnudo y diferencia tierra/hierba; primera versión demasiado clara descartada. 24 capturas por iteración y 8 bloques ABBA para V2, geometría coincidente. Tres texturas adicionales (~16 MiB RGBA8+mips estimados), hasta tres lecturas en tierra. GPU con alta variabilidad y rangos solapados: candidata solo QA, sin aprobar coste. Pendientes movimiento, streaming y repetición de rendimiento.
