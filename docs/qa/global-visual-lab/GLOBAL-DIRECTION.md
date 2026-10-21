@@ -1099,3 +1099,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Manglares: convergencia LOD de hojas
 
 [LOD QA](mangrove-leaf-lod-20261021/README.md) alinea centro, normales, pigmento y atenuación de viento. Seis parejas normales conservan cubierta; seis parejas de extremo forzado dan MAE RGBA máximo0.001214/255,no equivalencia exacta. +672 bytes de normales,sin triángulos adicionales. Movimiento,streaming yGPU pendientes.
+
+
+### Manglares: recorrido comparable de LOD
+
+[72 parejas y vídeos](mangrove-leaf-motion-20261021/README.md):near489–2429,far4067–5469,cámara/viento/geometría iguales,sin errores. Láminas conservan cubierta con menor detalle a distancia. Poses asentadas a12fps,no benchmark ni certificación temporal exhaustiva. Streaming,perfil bajo,cámara fija ycoste pendientes.
