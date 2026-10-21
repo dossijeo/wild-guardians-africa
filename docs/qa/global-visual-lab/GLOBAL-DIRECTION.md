@@ -989,3 +989,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Revisión global V8
 
 [36 capturas de seis biomas](combined-campaign-review-v8/README.md),cámara/hora iguales a V7,sin errores. Reúne LOD de hierba y relieve residual del Desierto. Identidad cromática conservada;persisten uniformidad de Gran Río,repetición del musgo y detalle nocturno volcánico insuficiente. Objetivo global no alcanzado;priorizar cambio artístico mesoscópico o legibilidad nocturna sobre microajustes adicionales de LOD. Sin benchmark global ni integración por defecto.
+
+
+### Gran Río: variación espacial de pigmento
+
+[Seis parejas](river-patch-color-20261021/README.md):campo determinista precalculado por tile y atributo existente,sin nuevas texturas/geometría. Variación suave visible en vista elevada,mejora modesta,no resuelve uniformidad. Candidata QA conservada;pendientes coste y transición hacia terreno lejano.
