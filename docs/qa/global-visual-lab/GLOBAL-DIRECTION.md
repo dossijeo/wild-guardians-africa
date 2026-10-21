@@ -1114,3 +1114,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Manglares: perfil bajo pendiente de calidad
 
 [Cuatro hojas](mangrove-leaf-low-20261021/README.md) pasan streaming pero quedan dispersas. [Ocho hojas a cámara fija](mangrove-leaf-low-eight-fixed-20261021/README.md) cubren más con doble triángulo,mismas instancias,pero parecen parches planos;no promover por resultado artístico. Intento automático inválido preservado. Mejorar unidad antes de densidad;GPU pendiente.
+
+
+### Manglares: arqueado cercano en baja no basta
+
+[Seis parejas](mangrove-leaf-low-arched-20261021/README.md):ocho hojas arqueadas cerca mejoran luz local,pero persisten parches desde cámara normal. Mismas instancias;33–71mil triángulos frente20–42mil,+1drawcall. Conservar prueba,no promover ni descartar solo por rendimiento.
