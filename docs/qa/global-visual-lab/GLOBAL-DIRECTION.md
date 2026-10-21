@@ -1324,3 +1324,8 @@ Solicitud del usuario: más presencia/oblicuidad y que alumbre las plantas. load
 ### 2026-10-22 - Fixed loading zoom takes precedence
 
 User rejects camera retreat when adding plants. Do not integrate capacity-fit or smooth-framing adapters. Parallel-ray and island-haze QA retains original fixed camera and verifies position/FOV/zoom from 4 to 18 plants. See `loading-parallel-fixed-20261022/README.md`. Capacity portrait clipping must be addressed through composition/planting bounds, never automatic zoom.
+
+
+### 2026-10-22 - Fixed-view planting-region candidate
+
+`loading-plant-region-20261022` tests a presentation-only validity envelope for new plants instead of camera retreat. The deterministic gesture sequence fits eight mature maize plants, with twelve day/night/orbit/aspect screenshots and unchanged zoom/FOV. Original four plants and models preserved. Region-full UI, broader viewport validation and integration remain pending; no performance claim from drawing fewer plants.
