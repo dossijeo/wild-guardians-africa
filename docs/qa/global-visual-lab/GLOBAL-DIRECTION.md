@@ -959,3 +959,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Sabana: muestreo de color coherente entre LOD
 
 [Diagnóstico](grass-pigment-endpoint-20261021/README.md) reduce salto adicional51% día/65% noche respecto a viento+normales usando raíz común lejana. [Seis parejas normales](grass-pigment-lod-20261021/README.md) conservan cobertura/paleta en vista revisada. Falta animación/coste final; candidata QA, no solución global certificada.
+
+
+### Sabana: combinación final y benchmark inválido
+
+[72 parejas/vídeos](grass-final-motion-20261021/README.md) de viento+normales+pigmento, sin errores. [ABBA rechazado](grass-pigment-lod-20261021/performance/README.md): consulta GPU960777ms en último control; conservar muestra, no calcular aprobación. Repetición pendiente, candidata no integrada.
