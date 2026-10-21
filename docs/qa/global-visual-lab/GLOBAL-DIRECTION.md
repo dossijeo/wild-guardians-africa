@@ -503,3 +503,7 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Gran Río: transformación de máscara residente funcional
 
 [Franja irregular monotónica](river-fringe-mask/README.md): 633 cambios de alfa registrados, 24 capturas, invariantes y solapes sintéticos correctos. Cambia suelo y selección de hojas sin tocar Wild Engine. No promover receta: irregularidad limitada y pérdida de cobertura; falta una mejora artística clara.
+
+### Cañón: separar depósitos arenosos de grava
+
+[Prueba de composición](canyon-sediment/README.md): 24 capturas, geometría idéntica. Cambio amplio de lectura frente a grava uniforme, pero arena procedural demasiado lisa y con patrón residual de piedras. No integrar receta; investigar material de arena coherente, no más microcontraste.
