@@ -1,0 +1,44 @@
+diff --git a/src/simulation/game.js b/src/simulation/game.js
+index dfb8c3791..b830c074f 100644
+--- a/src/simulation/game.js
++++ b/src/simulation/game.js
+@@ -802,6 +802,7 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
+     w.mobileRecoveryDestinationId=destination.id;
+     w.mobileRecoveryVersion=nav.version;
+     w.mobileRecoveryAttempts=0;
++    w.mobileFollowingDeferrals=0;
+     w.mobileProgressDistance=dist(w,destination);
+     w.mobileProgressAt=s.elapsed;
+     delete w.retreatStaticRouteFailure;
+@@ -926,6 +927,23 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
+     if(staticClear&&(!worker||
+       actorSegmentClear(destination,destination,w,blockers))&&
+       !actorSegmentClear(w,probe,w,blockers)){
++      const blocking=worker?blockers.filter(body=>
++        !actorSegmentClear(w,probe,w,[body])):[];
++      const ahead=blocking.length===1?blocking[0]:null;
++      const forward=next?{x:next.x-w.x,z:next.z-w.z}:null;
++      const otherForward=ahead?.path?.[0]?{
++        x:ahead.path[0].x-ahead.x,z:ahead.path[0].z-ahead.z}:null;
++      const product=forward&&otherForward?
++        Math.hypot(forward.x,forward.z)*Math.hypot(otherForward.x,otherForward.z):0;
++      const sameDirection=product>1e-8&&
++        (forward.x*otherForward.x+forward.z*otherForward.z)/product>=.5;
++      if(worker&&w.status==='returning'&&stationarySeconds<3&&
++        (w.mobileFollowingDeferrals??0)<2&&ahead?.status==='returning'&&
++        ahead.destinationId===destination.id&&sameDirection&&
++        dist(ahead,destination)<dist(w,destination)){
++        w.mobileFollowingDeferrals=(w.mobileFollowingDeferrals??0)+1;
++        w.mobileProgressAt=s.elapsed-11;
++      }else{
+       w.mobilePhaseRemaining=3;w.dynamicStallSeconds=0;
+       w.mobileRecoveryAttempts=(w.mobileRecoveryAttempts??0)+1;
+       w.mobileProgressDistance=dist(w,destination);
+@@ -938,6 +956,7 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
+           .map(body=>body.id)});
+       emit(s,'ActorMobileCollisionRecovery',{actorId:w.id,
+         x:w.x,z:w.z,elapsed:s.elapsed,duration:3});
++      }
+     }
+   }
+   const phased=(w.mobilePhaseRemaining??0)>0;
