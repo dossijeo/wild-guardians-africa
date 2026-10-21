@@ -1299,3 +1299,7 @@ loading-art-20261021 contiene cuatro capturas del LoadingDiorama real, día/noch
 
 ### Jardín de carga según los nuevos mockups
 loading-contact-20261021 compara atmósfera, contacto y composición garden. Interfaz real, día/noche, clic para plantar y callback de cancelar verificados. Noche despejada y montaña diurna suavizada; contacto sutil. 6 draws en todas; garden reduce 48 triángulos decorativos, sin afirmación de rendimiento. Pendientes sombras direccionales, coste y encuadre vertical (quinta planta cortada). Solo QA.
+
+
+### Jardín de carga: sombras nativas y aislamiento
+loading-shadow-isolated-20261021 añade sombras reales del maíz y corrige el encuadre vertical para cinco plantas. Hallazgo: el hook de proxies de partida contaminaba el primer shadow pass (672812 triángulos); retirada solo QA, deja 29882 con viento y 7 draws. Estático GPU ~2.9 ms sin / 4.6–4.8 con; viento inestable, sin delta fiable. Conservar candidata visual, optimizar muestreo y aislar propietarios antes de integrar. No cambio de producción.
