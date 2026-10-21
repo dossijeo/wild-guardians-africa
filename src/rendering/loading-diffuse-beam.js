@@ -25,11 +25,14 @@ export function installLoadingDiffuseBeam(d){
  // Let the sky remain visible through the island's peripheral atmosphere.
  candidate=candidate.replace('mix(.86,.96,distant)','mix(.76,.92,distant)');
  candidate=candidate.replace('vec3(.5,.66,.92)','vec3(.38,.72,1.)');
- candidate=candidate.replace('float edge=loadingFocusEdge()',`vec2 starGrid=(vScreen*.5+.5)*vec2(70.,40.);
+ candidate=candidate.replace('float edge=loadingFocusEdge()',`float skyFill=.58*(1.-belowHorizon)*uNight;
+ float filledAlpha=color.a+(1.-color.a)*skyFill;
+ color.rgb=(color.rgb*color.a+vec3(.018,.12,.32)*(1.-color.a)*skyFill)/max(.001,filledAlpha);color.a=filledAlpha;
+ vec2 starGrid=(vScreen*.5+.5)*vec2(40.*beamAspect,40.);
  vec2 cell=floor(starGrid);float starHash=fract(sin(dot(cell,vec2(127.1,311.7)))*43758.5453);
  vec2 jitter=vec2(fract(starHash*71.7),fract(starHash*123.9));
  float starDistance=length(fract(starGrid)-(.15+.7*jitter));
- float stars=(exp(-starDistance*starDistance/ .003)*.8+exp(-starDistance*starDistance/.025)*.12)*step(.94,starHash)*smoothstep(-.1,.35,vScreen.y)*uNight;
+ float stars=(exp(-starDistance*starDistance/.006)*1.2+exp(-starDistance*starDistance/.045)*.22)*step(.90,starHash)*smoothstep(-.1,.35,vScreen.y)*uNight;
  color.rgb+=vec3(.35,.68,1.)*stars; color.a=max(color.a,stars*.8);
  float edge=loadingFocusEdge()`);
  candidate=candidate.replace('edge*mix(.30,.28,uNight)','edge*mix(.08,.28,uNight)').replace('mix(1.,.70,edge)','mix(1.,mix(.96,.70,uNight),edge)');

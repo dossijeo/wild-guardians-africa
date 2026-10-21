@@ -1376,3 +1376,7 @@ Diffuse option now restricts additional plants to the tested fixed-view region t
 
 ## Native loading haze and renewed mockup comparison (2026-10-22)
 Diffuse atmosphere now owns the selected horizon opacity, with four pixel-identical captures and no added draw. See loading-native-haze-20261022 for day/night side-by-sides and outstanding artistic differences: night blue/stars/peripheral ground, day soil warmth, group composition and UI. Global sky grading remains QA-only.
+
+
+## Loading night depth (2026-10-22)
+Selected blue atmosphere and stronger soft stars with aspect-correct cells. Four native captures match QA trial; daytime maximum difference is one 8-bit channel level. See loading-native-night-depth-20261022/night-three-way.webp. Six draws, no additional textures; GPU delta unproven.
