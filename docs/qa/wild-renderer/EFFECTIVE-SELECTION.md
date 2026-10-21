@@ -50,3 +50,22 @@ La prueba compara además las matrices/visibilidad anteriores y posteriores de c
 Los tiempos de esta prueba son diagnósticos de llamadas individuales, no un benchmark: las copias de comprobación se realizan fuera del trabajo normal del renderer. [Resultado verificable](effective-selection-mutations-uploads/engine-selection-mutations.json). La prueba inicial sin comprobación de versiones también se conserva en `effective-selection-mutations`.
 
 Reproducir con `WR_ORDER=engine-selection`, `WR_DENSE=1`, `WR_MUTATE=1`, `WR_MUTATE_ONLY=1` y un `WR_OUT` nuevo. La validación con streaming normal y el traslado de la preparación restante siguen pendientes.
+
+## Streaming normal A/B/A/B
+
+Cuatro recorridos de 360 frames, sin residencia fija, completaron 20 instalaciones cada uno, sin cancelaciones, observaciones pendientes ni errores registrados. Coinciden el multiconjunto de chunks instalados y las claves residentes finales. Se ejecutó la ruta sin worker.
+
+| Bloque | Solicitud a instalación media | p95 | Instalación media |
+|---|---:|---:|---:|
+| A1 eventos | 135,60 ms | 232,10 ms | 2,435 ms |
+| B1 salida efectiva | 131,15 ms | 214,70 ms | 2,435 ms |
+| A2 eventos | 130,25 ms | 223,90 ms | 2,415 ms |
+| B2 salida efectiva | 113,93 ms | 194,40 ms | 2,250 ms |
+
+No se observa una regresión de latencia en estas repeticiones, pero la generación nativa también cambia de duración pese a conservar su algoritmo. No atribuir toda la diferencia a la variante ni convertir estos números en FPS. El experimento no certifica equivalencia visual por frame durante streaming, primera presentación, ausencia de fugas prolongadas ni el backend worker.
+
+[Datos](effective-selection-streaming/streaming.json), [resumen auditado](effective-selection-streaming/summary.json). Reproducción: `WR_STREAM_ONLY=1`, `WR_ORDER=engine-events,engine-selection,engine-events,engine-selection`, sin `WR_FIXED_RESIDENCY`, salida nueva; auditar mediante `audit-wild-renderer-streaming.py <salida> --effective-selection`.
+
+### Preparación aún pendiente
+
+La inspección de `asset-lod.js:updateAssetLods` confirma que, además del agrupador, se recorren lotes y se evalúa `nativeLodBins` cuando cambia la clave cuantizada de cámara/calidad. Si cambia un orden, se reconstruyen matrices con Object3D para los meshes fuente. El adaptador persistente mantiene matrices propias, pero no elimina esa preparación anterior. Debe medirse separadamente antes de decidir qué trasladar; sus consumidores de sombras, cobertura y clipping impiden omitirla indiscriminadamente. Los eventos de Engine permiten actualizar población, pero no sustituyen los cambios de selección provocados por cámara.

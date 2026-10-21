@@ -3,7 +3,8 @@ from pathlib import Path
 
 root=Path(sys.argv[1]);data=json.loads((root/'streaming.json').read_text(encoding='utf-8'))
 rows=data['records']
-assert [r['variant'] for r in rows]==['combined','engine-events','combined','engine-events']
+expected=['engine-events','engine-selection'] if '--effective-selection' in sys.argv else ['combined','engine-events']
+assert [r['variant'] for r in rows]==expected*2
 out=[];reference=None
 for record in rows:
  stream=record['streaming'];assert not record['errors'] and stream['frames']==360
