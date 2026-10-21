@@ -456,3 +456,8 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Diagnóstico: no confundir desgaste con alcance de hierba
 
 [Seis parejas con falso color](river-cover-boundary/README.md) separan reducción por distancia y altura de ancla. El borde junto al poblado en media muestra reducción de ancla sin señal roja apreciable: no es solo LOD lejano. Suelo conserva textura herbácea donde la cubierta ya se elimina por desgaste. Priorizar coordinación material/máscaras, respetando caminos, antes de más ajustes de iluminación. Esta evidencia corrige la interpretación demasiado general del borde en ensayos anteriores.
+
+
+### Gran Río: falta detalle de tierra bajo la cubierta
+
+[Desgaste coordinado del material](river-ground-wear/README.md): 24 capturas, geometría igual. Al reducir Grass Medium 01 aparece color base casi uniforme y se pierde detalle en poblado/caminos; descartar implementación. Próxima prueba: capa de tierra reutilizable, revisando Ground079S existente, en lugar de retirar textura sin sustitución. Sin benchmark temporal por fallo artístico claro.
