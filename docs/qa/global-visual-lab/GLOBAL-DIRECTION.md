@@ -894,3 +894,8 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 ### Volcanes: ajuste conservado tras streaming
 
 [32 capturas y cuatro regresos](volcanic-night-streaming-20261021/README.md):25 chunks/110 geometrías estables en regresos, sin errores ni crecimiento de texturas dentro de variante. Lectura nocturna conservada. Tiempos de carga/render/auditoría no equivalen a FPS; rendimiento final sigue pendiente de aclarar.
+
+
+### Revisión global V7
+
+[36 capturas comparables con V6](combined-campaign-review-v7/README.md), sin errores. Incluye opción nocturna volcánica y musgo QA de dos orientaciones. Mantener mejoras; siguiente foco artístico: claros de Desierto demasiado lisos, conservando desgaste/ocupación. Pendientes transición de cubierta Sabana/Río y validación temporal/coste del conjunto; objetivo global no logrado.
