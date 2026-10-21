@@ -54,9 +54,50 @@ test('A changed navigation version invalidates a blocked paseo before moving',()
   assert.deepEqual({x:w.x,z:w.z},position);assert.equal(w.path,null);assert.equal(w.idleState.mode,'rest');
 });
 
+test('an ambient worker avoids a coworker without overlapping or replanning',()=>{
+  const moving=worker('youngMale');moving.x=0;
+  moving.path=[{x:2,z:0}];moving.destinationId='idle-worker-1';
+  moving.pathVersion=nav.version;
+  moving.idleState={anchorId:anchor.id,mode:'walk',elapsed:0,
+    rng:1,remaining:10,approachRetry:0,pathVersion:nav.version,
+    destination:{id:moving.destinationId,x:2,z:0}};
+  const standing={...worker('olderFemale'),id:'worker-2',personId:'person-2',x:1};
+  const state={workers:[moving,standing],raid:null};
+  let searches=0;
+  const observedNav={...nav,path:()=>{searches++;return null;}};
+  for(let i=0;i<20;i++){
+    updateIdle(moving,anchor,.1,observedNav,712,[],state);
+    assert.ok(Math.hypot(moving.x-standing.x,moving.z-standing.z)>=.56-1e-8);
+  }
+  assert.ok(moving.x>0);
+  assert.ok(Math.hypot(moving.x-standing.x,moving.z-standing.z)>=.56-1e-8);
+  assert.equal(searches,0);
+  standing.x=4;
+  for(let i=0;i<30&&moving.idleState.mode==='walk';i++)
+    updateIdle(moving,anchor,.1,observedNav,712,[],state);
+  assert.equal(moving.x,2);
+  assert.equal(moving.idleState.mode,'rest');
+  assert.equal(searches,0);
+});
+
 function waitingGame(){
   const s=Game.newGame({seed:712,slotId:'idle'});Game.resume(s,'intro');Game.pause(s,'hiring');Game.hire(s,'hire',{olderFemale:1});return s;
 }
+test('Game.tick applies coworker clearance to village waiting walks',()=>{
+  const s=waitingGame(),moving=s.workers[0],standing={...moving,
+    id:'worker-standing',personId:'person-standing',x:1,z:0,path:null,
+    idleState:null};
+  moving.x=0;moving.z=0;moving.path=[{x:2,z:0}];
+  moving.destinationId='idle-moving';moving.pathVersion=nav.version;
+  moving.idleState={anchorId:s.villages[0].id,mode:'walk',elapsed:0,
+    rng:1,remaining:10,approachRetry:0,pathVersion:nav.version,
+    destination:{id:'idle-moving',x:2,z:0}};
+  s.workers.push(standing);
+  for(let i=0;i<20;i++){
+    Game.tick(s,.1,nav);
+    assert.ok(Math.hypot(moving.x-standing.x,moving.z-standing.z)>=.56-1e-8);
+  }
+});
 test('Waiting in a village has a real anchor and freezes/resumes identically across pause and save',()=>{
   const s=waitingGame(),w=s.workers[0],rng=s.rng;assert.equal(w.status,'waiting');assert.equal(w.centerId,null);
   while(w.idleState?.mode!=='walk')Game.tick(s,.1,nav);

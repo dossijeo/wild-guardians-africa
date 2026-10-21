@@ -1,5 +1,6 @@
 import {LOCOMOTION as L} from './locomotion-calibration.js';
 import {moveWorker} from './locomotion.js';
+import {prepareActorMotion} from './actor-motion.js';
 
 // Cosmetic choices have their own persisted stream: waiting never consumes a raid/event roll.
 function seedFor(worker,seed){
@@ -12,7 +13,7 @@ export function cancelIdle(worker){
   if(worker.idleState?.mode==='walk'){worker.path=null;worker.destinationId=null;}
   worker.idleState=null;worker.running=false;
 }
-export function updateIdle(worker,anchor,seconds,nav,seed,gates=[]){
+export function updateIdle(worker,anchor,seconds,nav,seed,gates=[],state=null){
   const source=L.sources.find(s=>s.profile===worker.profile);
   let idle=worker.idleState;
   if(!idle||idle.anchorId!==anchor.id){
@@ -31,7 +32,10 @@ export function updateIdle(worker,anchor,seconds,nav,seed,gates=[]){
       worker.path=path;idle.pathVersion=nav.version;
     }
     const previous={x:worker.x,z:worker.z};
-    const arrived=moveWorker(worker,seconds,{gates}); // Ambient walking never requests a run.
+    // Ambient movement needs the same local body avoidance as paid movement;
+    // merely stopping at another worker can trap both near a shared entrance.
+    const clear=state?prepareActorMotion(state,worker,nav,true):null;
+    const arrived=moveWorker(worker,seconds,{gates,clear}); // Ambient walking never requests a run.
     if(Math.hypot(worker.x-previous.x,worker.z-previous.z)>1e-9)worker.heading=Math.atan2(worker.x-previous.x,worker.z-previous.z);
     if(arrived)cancelWalk(worker,idle,source);
     return;
