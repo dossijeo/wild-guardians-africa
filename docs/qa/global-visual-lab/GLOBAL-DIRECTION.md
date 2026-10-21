@@ -796,3 +796,7 @@ Queda revocada la recomendación anterior de abandonar el sustrato completo de M
 
 [Prototipo de una capa por objeto](obstruction-isolated-depth/README.md): dieciséis capturas, mejora visible en copa cercana sin tramado ni profundidad opaca compartida. Conservar candidata; hasta21.09MiB nominales, coste y transparentes detrás sin validar. No integración todavía.
 
+
+### Fundido aislado: coste activo y movimiento reproducible
+
+[Coste con un parcial al35%](obstruction-isolated-depth/performance-held/README.md): ABBA GPU favorable en Intel UHD, CPU similar; no extrapolar a FPS global. [Secuencia día/noche](obstruction-isolated-motion-v2/README.md):72 parejas con cámara/opacidad exactas, hasta tres parciales y cuatro targets retenidos (~28.125MiB nominales). La acumulación de targets es el siguiente foco de optimización. Mantener candidata; integración global y validación de efectos reales pendientes.

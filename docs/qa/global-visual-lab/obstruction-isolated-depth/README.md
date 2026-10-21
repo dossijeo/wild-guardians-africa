@@ -14,3 +14,5 @@ Reproducción: Vite5190 y `node tools/experiments/capture-obstruction-isolated-d
 
 [Prueba de transparente posterior](../obstruction-isolated-transparent-probe-v2/README.md): fondos exactos y859680 píxeles de marcador visibles con/sin prepasada, cero bloqueados. Diagnóstico acotado; no certifica humo/efectos reales ni rendimiento.
 
+
+Actualización: [benchmark de fundido activo](performance-held/README.md) y [movimiento controlado](../obstruction-isolated-motion-v2/README.md) completados como pruebas acotadas. No sustituyen humo real ni estabilidad temporal exhaustiva. La ruta móvil alcanza cuatro targets retenidos (~28.125MiB nominales).
