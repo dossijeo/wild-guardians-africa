@@ -519,3 +519,7 @@ La [prueba transparente controlada](obstruction-transparent-probe/README.md) con
 ### Cañón: precalcular depósitos no ahorra GPU demostrado
 
 [Máscara residente](canyon-sand-mask/README.md): 24 capturas con diferencias pequeñas (.036–.168/255), 960 muestras GPU. Día procedural7.51–7.69ms contra máscara8.16–9.60ms; noche variable sin ventaja. No promover. También pendiente tratar horizonte sin máscara; mantener receta procedural QA.
+
+### Cañón: elevada útil y liberación de arena verificadas
+
+[12 capturas elevadas](canyon-sand-maps/elevated/README.md): vista corregida muestra ambas orillas y ondulaciones; noche oscurece depósitos. world.dispose libera exactamente una vez cada uno de los dos clones. No equivale a prueba de fugas prolongada; coste nocturno y movimiento pendientes.
