@@ -78,7 +78,7 @@ test('camera-driven chunk synchronization does not poll the unchanged suppressio
 
 
 test('all quality presets retain individual color culling',()=>{
- const world={assetGroups:{instanceCulling:true},toon:{uniforms:{uGroundDetail:{value:0}}},destructionPass:{},renderer:{shadowMap:{}},sun:new THREE.DirectionalLight(),terrainMeshes:[],resize(){}};
+ const world={scene:new THREE.Scene(),assetGroups:{instanceCulling:true},toon:{uniforms:{uGroundDetail:{value:0}}},destructionPass:{},renderer:{shadowMap:{}},sun:new THREE.DirectionalLight(),terrainMeshes:[],resize(){}};
  for(const quality of ['muy_baja','baja','media','alta','muy_baja']){
   WorldScene.prototype.qualitySetting.call(world,quality);
   assert.equal(world.assetGroups.instanceCulling,true);

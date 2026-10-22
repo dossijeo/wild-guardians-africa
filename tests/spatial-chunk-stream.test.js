@@ -249,7 +249,7 @@ test('production terrain installer accepts the same C++ payload used for navigat
   const pack=JSON.parse(readFileSync(new URL('../public/content/biome-savanna.json',import.meta.url),'utf8'));
   const data=core.chunkPayload(),geometry=new THREE.BoxGeometry(1,1,1),material=new THREE.MeshStandardMaterial();
   geometry.computeBoundingBox();
-  const world={buildPropSlot:WorldScene.prototype.buildPropSlot,nav:{field:core,suppressed:new Set(),
+  const world={toon:{globalVisualLighting:false},buildPropSlot:WorldScene.prototype.buildPropSlot,nav:{field:core,suppressed:new Set(),
     chunk(){throw Error('The renderer must use the C++ payload');}},pack,
     prototypes:Array.from({length:20},()=>[0,1,2].map(()=>new THREE.Mesh(geometry,material))),
     quality:'media',terrainMeshes:[],waterPrototypes:Array(20).fill(null),

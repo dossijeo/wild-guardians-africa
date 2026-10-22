@@ -53,7 +53,8 @@ test('live ground switches keep geometry and shared materials, release replaced 
 test('live world quality and resize preserve simulation, ground geometry and existing chunk objects',()=>{
  const geometry=new THREE.PlaneGeometry(),ground=new THREE.Mesh(geometry,nativeGroundMaterial('media')),chunk=new THREE.Group();chunk.add(ground);
  const state={money:217,plants:[{id:'crop',growth:13,waterRemaining:7}],workers:[{id:'worker',taskId:'sow'}],time:150},snapshot=JSON.stringify(state),chunks=new Map([['0,0',chunk]]);
- const world={state,chunks,terrainMeshes:[ground],quality:'media',toon:new AfricanToon(),destructionPass:{},renderer:{shadowMap:{enabled:true},setSize(w,h){this.size=[w,h];}},sun:new THREE.DirectionalLight(),camera:new THREE.PerspectiveCamera(),canvas:{getBoundingClientRect:()=>({width:3840,height:2160})},resize:WorldScene.prototype.resize};
+ const scene=new THREE.Scene();scene.add(chunk);
+ const world={scene,state,chunks,terrainMeshes:[ground],quality:'media',toon:new AfricanToon(),destructionPass:{},renderer:{shadowMap:{enabled:true},setSize(w,h){this.size=[w,h];}},sun:new THREE.DirectionalLight(),camera:new THREE.PerspectiveCamera(),canvas:{getBoundingClientRect:()=>({width:3840,height:2160})},resize:WorldScene.prototype.resize};
  const previous=Object.getOwnPropertyDescriptor(globalThis,'devicePixelRatio');Object.defineProperty(globalThis,'devicePixelRatio',{value:2,configurable:true});
  try{
   for(const quality of ['muy_baja','baja','media','alta','media']){
