@@ -1676,3 +1676,8 @@ Skip water noise outside its maximum 3.5-unit shore influence, keeping derivativ
 ### Native Mangrove shore streaming
 
 `mangrove-bank-native-stream-20261022`: ten native settled frames,25 shore/50 total masks every stop,no errors. Camera/geometry exact to QA;7 RGB exact,3 differ in3-5 pixels (max9/77/74),cause unisolated. Retain opt-in and return to combined artistic review; broader seed/motion validation still pending.
+
+
+### Six-biome native review V2
+
+`six-biome-native-review-v2-20261022`:36 real frames,six individually inspected art sheets,new River underlay/Mangrove shore enabled.24 unaffected-biome RGB frames exact incl.approved Desert. Retain additions; global parity unproven. Remaining strong gaps: Canyon blue smooth banks,Volcano cold gray ground,Savanna/River macro cover structure. Next bounded Volcano direct-ground warmth experiment preserving night/ambient/models.
