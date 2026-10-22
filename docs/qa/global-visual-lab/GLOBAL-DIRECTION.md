@@ -1964,3 +1964,8 @@ QA2→8 samples/metre retains lateral serration; twelve captures preserve camera
 ## 2026-10-22: soft Canyon bank retained for refinement
 
 Wider depth opacity ramp visibly softens sawtooth without geometry/mask-resolution changes or transverse strips. Twelve capture controls pass. Reverse day/night inspected; daylight too diffuse in places. Retain QA, tune intermediate ramp and measure transparent-rim cost before promotion. See canyon-soft-bank-20261022.
+
+
+## 2026-10-22: intermediate Canyon bank GPU cost
+
+720 valid GPU samples, zero workload mismatches. Day +1.863/+1.081ms, night +0.314/+0.183ms versus original ramp with same opaque core. Retain art candidate; optimize transparent rim work rather than reject visual result. Motion and per-pass mechanism remain unverified. See canyon-balanced-bank-cost-20261022.
