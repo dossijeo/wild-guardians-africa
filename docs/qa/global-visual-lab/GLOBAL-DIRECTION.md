@@ -1549,3 +1549,7 @@ Six new paired day/night frames: two-scale world noise breaks clean bank tint; h
 
 ### 2026-10-22: reject height-only Canyon bank humidity
 Twelve new day/night frames, exact geometry/cameras versus sediment. Broad .04-.52 height humidity darkens the low shelf too widely; narrow .015-.16 avoids it but adds little visible structure. Terrain source confirms shelf starts only .13 above water. Neither integrated; no timing claim for rejected variants. Preserve sediment QA; next priority River broad-scale continuous coverage rather than further marginal bank color changes. See canyon-bank-combined-review-20261022.
+
+
+### 2026-10-22: River correlated coverage study
+18 real frames: baseline/correlated height/correlated height+pigment, same instance budget and exclusions. Height-only reduces volume; meadow retains more but fine texture still dominates, neither native integration justified. Six meadow pairs exact counters/camera; ABAB720 valid GPU queries, day deltas+.304/-.285ms, CPUday+.51/+.55ms, night variable. No zero-cost/speedup claim, cached build cost unmeasured. Next investigate module/material scale and far transition rather than density or minor random tuning. See river-coverage-structure-20261022.
