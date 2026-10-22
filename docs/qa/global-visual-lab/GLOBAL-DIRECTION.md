@@ -1734,3 +1734,7 @@ Real cinematic sampling exposed daytime sky grading jump and nighttime decorativ
 ### Canyon coupled wet-bank review closed
 
 `canyon-bank-coupled-review-20261022`:12 controlled frames from interrupted trial reviewed/audited. Dark wet bank reinforces canal-like outline, especially night; reject artistically, no timing claim. Next need consistent submerged-ground lighting rather than more independent tint/noise/darkening.
+
+### Canyon lit submerged sand pilot
+
+`canyon-bank-litbed-review-20261022`:12 matched real captures, no errors. Independent bed normal/BRDF before water reflection avoids dark edge but introduces daytime pale fringe. QA only; shared sand/rock material mixture still missing, no performance or final-art claim.
