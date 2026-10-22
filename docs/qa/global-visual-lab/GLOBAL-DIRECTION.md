@@ -1681,3 +1681,8 @@ Skip water noise outside its maximum 3.5-unit shore influence, keeping derivativ
 ### Six-biome native review V2
 
 `six-biome-native-review-v2-20261022`:36 real frames,six individually inspected art sheets,new River underlay/Mangrove shore enabled.24 unaffected-biome RGB frames exact incl.approved Desert. Retain additions; global parity unproven. Remaining strong gaps: Canyon blue smooth banks,Volcano cold gray ground,Savanna/River macro cover structure. Next bounded Volcano direct-ground warmth experiment preserving night/ambient/models.
+
+
+### Volcano ground sunlight trial
+
+`volcano-ground-sun-review-20261022`:12 real frames,3 night pairs RGB exact,all geometry/camera/time exact. Warmer mapped-ground direct sun produces moderate brown highlights while retaining cavities. Retain QA comparison, not final art match or native adoption. Next localize warmth to relief lighting; no new timing claim.
