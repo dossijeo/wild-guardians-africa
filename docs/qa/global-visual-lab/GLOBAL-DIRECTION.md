@@ -1452,3 +1452,7 @@ Valid 12-image 4x8 vs2x2 horizon comparison: distant wall facets improve, bank s
 
 ## Adaptive Canyon horizon candidate (2026-10-22)
 River-corridor2x2 with conforming4x8 exterior: six day/night candidate images exact versus full fine reference, ~72% fewer horizon vertices (227-229k vs803k). Three-origin topology audit passes; no spatial state mutation. QA builder generation remains slow (Node559-749 ms), no GPU/FPS claim. Retain art/candidate; validate other views and optimize generation before integration. See canyon-horizon-adaptive-20261022.
+
+
+## Adaptive builder packing optimization (2026-10-22)
+Direct Float32 packing plus bounded edge lookup: three-origin Node medians454-508 ->160-241 ms. All24 buffer comparisons exact; six new game captures pixel-identical. QA only; no FPS/heap claim, moving latency and other views pending. See canyon-adaptive-build-cost-20261022 and canyon-horizon-adaptive-fast-20261022.
