@@ -1496,3 +1496,8 @@ Gran Rio:18 real images compare sky-only latitude to the same day remap in envir
 ## 2026-10-22: precalculated sky/environment palette
 
 18 real Gran Rio day/twilight/night captures in sky-environment-palette-20261022. Shared artistic palette applied to reduced environment radiance once in sky worker; turquoise day water retained,night reflections cooler. Nine matched camera/counter pairs,no errors. Cached row latitude is byte-identical to uncached on both real HDRs. Node build overhead about30ms per texture,not per frame. A/B/A/B Intel UHD in sky-environment-palette-cost-20261022:720 valid GPU samples;day B +.232/+.852ms,night slightly faster,cadence16.62-16.63ms. No zero-cost/FPS claim. Retain moderate consistency candidate; next broader settlement/biome review and shared native sky integration. Default/main untouched.
+
+
+## 2026-10-22: six-biome palette decision and native atmospheric sky
+
+72 real paired images across all6 biomes in sky-palette-six-biomes-20261022. Full environment palette preserved as QA but NOT adopted globally: Canyon water becomes too blue/less softly turquoise,matte-surface benefit small. Keep authored environment palette. Integrate selected cloud-protected sky grading plus shared day-reflection latitude via visualLab=global-lighting&skyAtmosphere=clouds. 36 fresh native captures all pixel-exact to retained QA baseline,18 targeted tests pass;see sky-atmosphere-native-20261022. Original default and main untouched. Earlier shader performance evidence retained; broader motion/quality/loading visual validation and remaining terrain/vegetation adapter integration are pending.
