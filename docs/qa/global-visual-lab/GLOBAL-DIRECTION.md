@@ -1448,3 +1448,7 @@ Native opt-in now reuses 3.45 MiB worker scratch. A/B/A/B normal median 13.2 -> 
 
 ## Canyon fine-grid visual reference (2026-10-22)
 Valid 12-image 4x8 vs2x2 horizon comparison: distant wall facets improve, bank steps/join remain. Horizon103212 ->802656 vertices (+233148 triangles/frame), calls unchanged. Retain artistic reference, pursue localized conforming refinement, not global density increase. Initial failed color-batch attempt replaced and guard added. See canyon-horizon-grid-20261022.
+
+
+## Adaptive Canyon horizon candidate (2026-10-22)
+River-corridor2x2 with conforming4x8 exterior: six day/night candidate images exact versus full fine reference, ~72% fewer horizon vertices (227-229k vs803k). Three-origin topology audit passes; no spatial state mutation. QA builder generation remains slow (Node559-749 ms), no GPU/FPS claim. Retain art/candidate; validate other views and optimize generation before integration. See canyon-horizon-adaptive-20261022.
