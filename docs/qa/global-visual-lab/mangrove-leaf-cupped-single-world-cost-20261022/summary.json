@@ -1,0 +1,466 @@
+{
+  "results": [
+    {
+      "variant": "original",
+      "phase": "day",
+      "run": 0,
+      "gpu": {
+        "mean": 18.740137366666666,
+        "p95": 21.125052,
+        "max": 39.20302
+      },
+      "cpu": {
+        "mean": 6.157777778307596,
+        "p95": 9.099999964237213,
+        "max": 11.199999988079071
+      },
+      "interval": {
+        "mean": 23.961111111111112,
+        "p95": 30.400000035762787,
+        "max": 47.60000002384186
+      },
+      "memory": {
+        "geometries": 142,
+        "textures": 104
+      },
+      "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "variant": "original",
+      "phase": "night",
+      "run": 0,
+      "gpu": {
+        "mean": 18.2666443,
+        "p95": 20.568333,
+        "max": 24.333176
+      },
+      "cpu": {
+        "mean": 5.4311111125681135,
+        "p95": 8.099999964237213,
+        "max": 9.800000011920929
+      },
+      "interval": {
+        "mean": 21.69888888862398,
+        "p95": 25.30000001192093,
+        "max": 31
+      },
+      "memory": {
+        "geometries": 143,
+        "textures": 104
+      },
+      "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "variant": "cupped",
+      "phase": "day",
+      "run": 1,
+      "gpu": {
+        "mean": 18.34367558888889,
+        "p95": 22.48078,
+        "max": 29.650885
+      },
+      "cpu": {
+        "mean": 6.214444442590078,
+        "p95": 8.599999964237213,
+        "max": 10.5
+      },
+      "interval": {
+        "mean": 23.742222222354677,
+        "p95": 28.5,
+        "max": 39.40000003576279
+      },
+      "memory": {
+        "geometries": 144,
+        "textures": 104
+      },
+      "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "variant": "cupped",
+      "phase": "night",
+      "run": 1,
+      "gpu": {
+        "mean": 20.559512322222222,
+        "p95": 24.053541,
+        "max": 33.446509
+      },
+      "cpu": {
+        "mean": 6.0855555560853745,
+        "p95": 8,
+        "max": 10.400000035762787
+      },
+      "interval": {
+        "mean": 24.458888889021345,
+        "p95": 28.299999952316284,
+        "max": 38.19999998807907
+      },
+      "memory": {
+        "geometries": 144,
+        "textures": 104
+      },
+      "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "variant": "original",
+      "phase": "day",
+      "run": 2,
+      "gpu": {
+        "mean": 18.033105,
+        "p95": 21.610416,
+        "max": 32.322603
+      },
+      "cpu": {
+        "mean": 6.022222222884496,
+        "p95": 8.399999976158142,
+        "max": 9.199999988079071
+      },
+      "interval": {
+        "mean": 23.294444444444444,
+        "p95": 26.69999998807907,
+        "max": 35.69999998807907
+      },
+      "memory": {
+        "geometries": 144,
+        "textures": 104
+      },
+      "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "variant": "original",
+      "phase": "night",
+      "run": 2,
+      "gpu": {
+        "mean": 19.5321327,
+        "p95": 24.081874,
+        "max": 32.77354
+      },
+      "cpu": {
+        "mean": 6.304444444179535,
+        "p95": 9,
+        "max": 11.199999988079071
+      },
+      "interval": {
+        "mean": 25.276666666401756,
+        "p95": 32.39999997615814,
+        "max": 38.5
+      },
+      "memory": {
+        "geometries": 144,
+        "textures": 104
+      },
+      "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "variant": "cupped",
+      "phase": "day",
+      "run": 3,
+      "gpu": {
+        "mean": 17.404268722222223,
+        "p95": 19.361509,
+        "max": 24.381509
+      },
+      "cpu": {
+        "mean": 5.693333339691162,
+        "p95": 8.199999988079071,
+        "max": 10.600000023841858
+      },
+      "interval": {
+        "mean": 22.363333333200877,
+        "p95": 26,
+        "max": 28.899999976158142
+      },
+      "memory": {
+        "geometries": 146,
+        "textures": 104
+      },
+      "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "variant": "cupped",
+      "phase": "night",
+      "run": 3,
+      "gpu": {
+        "mean": 18.834841666666666,
+        "p95": 21.930311,
+        "max": 33.857603
+      },
+      "cpu": {
+        "mean": 5.821111116144392,
+        "p95": 8.100000023841858,
+        "max": 10.899999976158142
+      },
+      "interval": {
+        "mean": 23.02333333359824,
+        "p95": 27.80000001192093,
+        "max": 37.59999996423721
+      },
+      "memory": {
+        "geometries": 146,
+        "textures": 104
+      },
+      "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    }
+  ],
+  "controls": [
+    {
+      "phase": "day",
+      "mode": "gpu",
+      "pair": 1,
+      "unexpected": [
+        {
+          "frame": 55,
+          "calls": 0,
+          "triangles": -19003
+        },
+        {
+          "frame": 56,
+          "calls": 0,
+          "triangles": -19003
+        },
+        {
+          "frame": 57,
+          "calls": 0,
+          "triangles": -18939
+        }
+      ],
+      "leafTriangleDelta": {
+        "mean": 13211.022222222222,
+        "p95": 21072,
+        "max": 23040
+      }
+    },
+    {
+      "phase": "day",
+      "mode": "gpu",
+      "pair": 2,
+      "unexpected": [
+        {
+          "frame": 59,
+          "calls": 0,
+          "triangles": -18603
+        },
+        {
+          "frame": 60,
+          "calls": 0,
+          "triangles": -18459
+        }
+      ],
+      "leafTriangleDelta": {
+        "mean": 13211.022222222222,
+        "p95": 21072,
+        "max": 23040
+      }
+    },
+    {
+      "phase": "day",
+      "mode": "cadence",
+      "pair": 1,
+      "unexpected": [
+        {
+          "frame": 52,
+          "calls": 0,
+          "triangles": -19003
+        },
+        {
+          "frame": 53,
+          "calls": 0,
+          "triangles": -19003
+        },
+        {
+          "frame": 54,
+          "calls": 0,
+          "triangles": -19003
+        },
+        {
+          "frame": 55,
+          "calls": 0,
+          "triangles": -19003
+        },
+        {
+          "frame": 56,
+          "calls": 0,
+          "triangles": -19003
+        },
+        {
+          "frame": 57,
+          "calls": 0,
+          "triangles": -18939
+        }
+      ],
+      "leafTriangleDelta": {
+        "mean": 13211.022222222222,
+        "p95": 21072,
+        "max": 23040
+      }
+    },
+    {
+      "phase": "day",
+      "mode": "cadence",
+      "pair": 2,
+      "unexpected": [
+        {
+          "frame": 56,
+          "calls": 0,
+          "triangles": -19003
+        },
+        {
+          "frame": 57,
+          "calls": 0,
+          "triangles": -18939
+        },
+        {
+          "frame": 58,
+          "calls": 0,
+          "triangles": -18939
+        }
+      ],
+      "leafTriangleDelta": {
+        "mean": 13211.022222222222,
+        "p95": 21072,
+        "max": 23040
+      }
+    },
+    {
+      "phase": "night",
+      "mode": "gpu",
+      "pair": 1,
+      "unexpected": [
+        {
+          "frame": 52,
+          "calls": 0,
+          "triangles": 33275
+        },
+        {
+          "frame": 53,
+          "calls": 0,
+          "triangles": 33275
+        },
+        {
+          "frame": 54,
+          "calls": 0,
+          "triangles": 33275
+        },
+        {
+          "frame": 55,
+          "calls": 0,
+          "triangles": 33275
+        },
+        {
+          "frame": 56,
+          "calls": 0,
+          "triangles": 33275
+        },
+        {
+          "frame": 57,
+          "calls": 0,
+          "triangles": 33339
+        },
+        {
+          "frame": 58,
+          "calls": 0,
+          "triangles": 33339
+        }
+      ],
+      "leafTriangleDelta": {
+        "mean": 13211.022222222222,
+        "p95": 21072,
+        "max": 23040
+      }
+    },
+    {
+      "phase": "night",
+      "mode": "gpu",
+      "pair": 2,
+      "unexpected": [],
+      "leafTriangleDelta": {
+        "mean": 13211.022222222222,
+        "p95": 21072,
+        "max": 23040
+      }
+    },
+    {
+      "phase": "night",
+      "mode": "cadence",
+      "pair": 1,
+      "unexpected": [
+        {
+          "frame": 55,
+          "calls": 0,
+          "triangles": 33275
+        },
+        {
+          "frame": 56,
+          "calls": 0,
+          "triangles": 33275
+        },
+        {
+          "frame": 57,
+          "calls": 0,
+          "triangles": 33339
+        },
+        {
+          "frame": 58,
+          "calls": 0,
+          "triangles": 33339
+        },
+        {
+          "frame": 59,
+          "calls": 0,
+          "triangles": 33675
+        }
+      ],
+      "leafTriangleDelta": {
+        "mean": 13211.022222222222,
+        "p95": 21072,
+        "max": 23040
+      }
+    },
+    {
+      "phase": "night",
+      "mode": "cadence",
+      "pair": 2,
+      "unexpected": [
+        {
+          "frame": 52,
+          "calls": 0,
+          "triangles": -19003
+        },
+        {
+          "frame": 53,
+          "calls": 0,
+          "triangles": -19003
+        },
+        {
+          "frame": 54,
+          "calls": 0,
+          "triangles": -19003
+        },
+        {
+          "frame": 55,
+          "calls": 0,
+          "triangles": -19003
+        },
+        {
+          "frame": 56,
+          "calls": 0,
+          "triangles": -19003
+        },
+        {
+          "frame": 57,
+          "calls": 0,
+          "triangles": -18939
+        },
+        {
+          "frame": 58,
+          "calls": 0,
+          "triangles": -18939
+        }
+      ],
+      "leafTriangleDelta": {
+        "mean": 13211.022222222222,
+        "p95": 21072,
+        "max": 23040
+      }
+    }
+  ]
+}

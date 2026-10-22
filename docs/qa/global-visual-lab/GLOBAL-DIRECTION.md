@@ -1929,3 +1929,8 @@ Low-profile exposed-soil comparison with full backgrounds: within-cell amplitude
 ## 2026-10-22: authored folded/rounded leaf candidates
 
 Prior near-arched experiment already showed limited benefit; current audit identifies averaged far normals and four-vertex silhouette. New own Blender assets keep roots/population but use six-sided leaves with retained crease normals,24 far/48 near triangles. Low-profile real captures preserve instance counts/draws; rounded silhouette improves leaf reading, stronger cupped version retained for cost comparison. Local improvement, not full mockup equivalence. No native promotion or performance rejection; GPU/motion/medium validation pending. See mangrove-leaf-folded-20261022 and mangrove-leaf-cupped-20261022.
+
+
+## 2026-10-22: cupped leaf cost isolated at fixed camera
+
+Reload and single-world moving studies retain20/33 non-leaf LOD frame mismatches; not causal cost evidence. Fixed-camera single-world control passes all workload checks with720 valid GPU queries: daytime +0.26/+0.22ms; nighttime mixed -0.80/+0.28ms. Retain cupped visual candidate, no FPS claim. Two asset tests prove retained-leaf endpoint attribute equality but not motion appearance. Medium imagery/LOD movement still needed before integration. See mangrove-leaf-cupped-static-cost-20261022 and the two preceding cost directories.
