@@ -1738,3 +1738,7 @@ Real cinematic sampling exposed daytime sky grading jump and nighttime decorativ
 ### Canyon lit submerged sand pilot
 
 `canyon-bank-litbed-review-20261022`:12 matched real captures, no errors. Independent bed normal/BRDF before water reflection avoids dark edge but introduces daytime pale fringe. QA only; shared sand/rock material mixture still missing, no performance or final-art claim.
+
+### Canyon mixed bed pilot
+
+`canyon-bank-mixedbed-review-20261022`:12 matched frames, no errors. Shared texture/deposit weights alone strengthen pale foam-like fringe; reject native adoption. Full ground color/normal/AO contract remains absent; inspect complete transformation before further approximations.
