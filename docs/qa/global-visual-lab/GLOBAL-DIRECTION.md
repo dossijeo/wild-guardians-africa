@@ -1565,3 +1565,7 @@ ABAB720 valid GPU queries, same per-frame geometry. Day deltas-.150/-.481ms,nigh
 
 ### 2026-10-22: River underlay lifecycle and motion evidence
 12 live coverage-quality/visibility states pass expected activation/range; restored frames pixel-exact and dispose clears filter. Overall renderer remains media. Camera/wind videos day/night:96 paired frames exact geometry/camera,0overflow/errors, fixed residents not streaming. Sampled contact sheets inspected, full temporal artifact absence not claimed. Exclusion eligibility remains next native-integration gate. See river-underlay-lifecycle-20261022 and river-underlay-motion-20261022.
+
+
+### 2026-10-22: selected-anchor River underlay mask
+QA R8 masks now derive from actual capacity-limited draw anchors after renderer exclusions;12 realframes,6 pairs exact counters/camera,retained blade readability.25masks235225R8bytes+equalCPU scratch. Naive127updates294.3ms cumulative CPU,97uploads912673bytes;not frametime benchmark, optimize cached tile raster before adoption. Unit probe passes ownership/capacity/clear/upload suppression/eviction/dispose. Exclusion influence approximate, temporal/gameplay validation pending. See river-underlay-selected-mask-20261022.
