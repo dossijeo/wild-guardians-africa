@@ -1974,3 +1974,8 @@ Wider depth opacity ramp visibly softens sawtooth without geometry/mask-resoluti
 ## 2026-10-22: early shoreline discard timing inconclusive
 
 720 valid GPU samples, zero workload mismatches, mixed day deltas +0.736/-2.218ms and night +0.790/+0.169ms. Keep optimization QA only; balanced bank art retained. Small residual pixels occur beside building, cause not isolated. Full-background192m streaming validation started separately. See canyon-early-bank-cost-20261022.
+
+
+## 2026-10-22: balanced Canyon bank native opt-in
+
+Native canyonBank=balanced requires global-lighting and natural shores, Canyon only. Five/six QA comparisons RGB exact; remaining13 pixels beside building. Five targeted tests pass. Retained art with measured +1.08–1.86ms daytime GPU cost; early-discard optimization excluded. Day/night sampled motion review and192m streaming controls documented. Defaults unchanged; reflection repetition remains pending. See canyon-balanced-native-20261022.

@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 // Visual shore mask: sampled once when the water mesh is built, never per frame.
 export function naturalWaterEdgesEnabled(search=globalThis.location?.search??''){const q=new URLSearchParams(search);return q.get('visualLab')==='global-lighting'&&q.get('waterEdges')==='natural';}
+export function balancedCanyonBankEnabled(biome,search=globalThis.location?.search??''){const q=new URLSearchParams(search);return biome==='gran-canon'&&q.get('visualLab')==='global-lighting'&&q.get('waterEdges')==='natural'&&q.get('canyonBank')==='balanced';}
 export function prepareNaturalWater(world,geometry,cx,cz,source){
  if(world.state.biome==='desierto')return;
  geometry.computeBoundingBox();const box=geometry.boundingBox,field=world.nav.field;
@@ -27,6 +28,7 @@ export function prepareNaturalWater(world,geometry,cx,cz,source){
  for(let i=0;i<samples.length;i++){const h=Math.round((samples[i]-lo)/span*65535);bytes[i*4]=h>>>8;bytes[i*4+1]=h&255;bytes[i*4+2]=Math.round(boundaryDistance(minX+(i%nx)/(nx-1)*width,minZ+Math.floor(i/nx)/(nz-1)*height)/4*255);bytes[i*4+3]=255;}
  const texture=new THREE.DataTexture(bytes,nx,nz,THREE.RGBAFormat);texture.minFilter=texture.magFilter=THREE.LinearFilter;texture.unpackAlignment=1;texture.needsUpdate=true;
  const material=source,compile=source.onBeforeCompile,key=source.customProgramCacheKey();
+ const balancedBank=balancedCanyonBankEnabled(world.state.biome);
  material.transparent=true;material.depthWrite=false;material.forceSinglePass=true;
  material.userData.paintUniforms=source.userData.paintUniforms;
  material.onBeforeCompile=function(shader,renderer){compile.call(this,shader,renderer);
@@ -47,6 +49,7 @@ float qaShoreNoise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix
  diffuseColor.a*=smoothstep(qaEdge,qaEdge+qaWidth,qaDepth);
  diffuseColor.a*=smoothstep(.04+qaLarge*.35,.48+qaLarge*.35,qaTexel.b*4.);
  `+anchor);
+ if(balancedBank)shader.fragmentShader=shader.fragmentShader.replace('float qaEdge=mix(.015,.19,qaLarge)+.035*qaFine;','float qaEdge=mix(.015,.07,qaLarge)+.02*qaFine;').replace('float qaWidth=mix(.075,.23,qaLarge);','float qaWidth=mix(.24,.48,qaLarge);');
  // Coverage-derived optical depth, not bathymetry. Preserve the approved deep-water QA appearance.
  if(world.state.biome==='manglares'){
  const bodyAnchor='vec3 base=uInk0*.72;';
@@ -59,7 +62,7 @@ float qaShoreNoise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix
  float bodyBlend=smoothstep(.10,.85,bodyDepth);
  vec3 base=mix(uInk0*.72,vec3(.16,.29,.22),bodyBlend);`).replace('base=mix(uInk0*.72,sediment,shallow*.85);','base=mix(base,sediment,shallow*.85);');
  }
- };material.customProgramCacheKey=()=>key+'|qa-depth-bank-v2|'+world.state.biome;
+ };material.customProgramCacheKey=()=>key+'|qa-depth-bank-v2|'+world.state.biome+(balancedBank?'|balanced-bank':'');
  geometry.userData.naturalWaterMaterial=material;
  const release=()=>{material.removeEventListener('dispose',release);texture.dispose();};material.addEventListener('dispose',release);
  geometry.userData.naturalWaterBed={nx,nz,bytes:bytes.byteLength,minX,minZ,width,height,lo,span};
