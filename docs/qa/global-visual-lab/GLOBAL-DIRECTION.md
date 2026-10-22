@@ -1944,3 +1944,8 @@ Bank-centred medium comparison shows clearer collective leaf volume. Original/cu
 ## 2026-10-22: medium cupped-leaf cost verified
 
 Fixed-camera medium ABAB: 720 valid GPU samples and zero unexplained workload frames. Daytime +0.435/+0.896ms (2.1–4.7%); night +0.585/-0.128ms. Retain visual improvement, no FPS claim or moving-cost generalization. Both geometry sets resident, so this is not final memory budget. See mangrove-leaf-cupped-medium-cost-20261022. Composite review recipe is separate from historical base query to preserve A/B controls.
+
+
+## 2026-10-22: combined five-biome captures complete
+
+60 frames with native far backgrounds ready and no recorded GL/page errors; Mangroves separately captured. Static evidence only, not full completion. Grand Canyon reverse daylight exposes sawtooth water boundary and repetitive reflections despite retained warm shadow richness. Prioritize an isolated visual shoreline treatment; preserve authoritative terrain/water. See reviewed-five-biomes-20261022.
