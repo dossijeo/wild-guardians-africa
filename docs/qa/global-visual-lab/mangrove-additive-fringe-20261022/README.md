@@ -5,3 +5,7 @@ QA-only threshold extension in continuous-grass; original pigment, geometry and 
 24 captures, 12 pose/time/origin matched pairs, no errors or overflow. Full far backgrounds, media, seed712. Close/day, normal/day, close/night inspected. Visible leaf presence is retained, but additions form disconnected bands because the original fringe still shrinks while new roots start near full size. Do not select this form. Follow-up connected fringe remaps effective wear consistently for existing and new roots, without shrinking original leaves.
 
 Run capture-mangrove-additive-fringe-20261022.mjs and compare-mangrove-additive-fringe-20261022.py. Added instances/triangles recorded per pair in comparison.json. No performance claim; no native integration. Existing paths have narrower visual shoulders, requiring gameplay-view review for any accepted successor.
+
+## User selection clarified
+
+The user explicitly chose the LEFT image: original dense leaves. The additive right-side candidate is not selected. An uncommitted native additive option was briefly prepared after misreading the selection, then removed immediately when clarified. Preserve original recipe, density, color and boundary treatment as the approved reference. Connected fringe is likewise not selected.

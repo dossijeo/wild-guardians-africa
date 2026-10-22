@@ -7,3 +7,7 @@ Reproduce first capture-mangrove-additive-fringe-20261022.mjs, then capture-mang
 12 compared pairs (warmup/final, day/night, close/game/reverse), no recorded errors or overflow. The candidate adds 125/179/180 selected module instances and 4368/5160/6336 triangles in close/game/reverse, for both phases. Same draw passes; this does not prove same GPU cost. Monotone acceptance retains original roots by construction, but these aggregate records are not a per-root identity audit.
 
 Close/day, game/day and close/night inspected. Leaf size, dark-light separation and dense appearance are retained. Added fringe now connects to the dense cover; the detached bands of the first attempt are gone in inspected views. The edge is less regular, but broad straight regions remain at gameplay scale. Keep as candidate, not complete or approved. Full-size leaves extend farther into the low-wear shoulder; path cores above .42 and water/object exclusions stay clear by the algorithm, but moving-camera path clearance needs review. Benchmark GPU/CPU and streaming before native selection. Selected original recipe unchanged.
+
+## User selection clarified
+
+The user explicitly chose the LEFT image: original dense leaves. The additive right-side candidate is not selected. An uncommitted native additive option was briefly prepared after misreading the selection, then removed immediately when clarified. Preserve original recipe, density, color and boundary treatment as the approved reference. Connected fringe is likewise not selected.

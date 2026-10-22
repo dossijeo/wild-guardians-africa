@@ -1998,3 +1998,7 @@ The user rejects mangroveDistribution=varied: leaves lose too much apparent dens
 ## User rejection: insufficient visible leaf presence
 
 User explicitly rejects this pigment blend because leaves become almost invisible against the ground. Unchanged geometric density does not establish preserved perceptual density. Supersedes earlier positive candidate assessment. Do not select or integrate this treatment. The uncommitted native option was removed after its capture completed. Dense original pigment, geometry and selected recipe remain unchanged. Next work must preserve original contrast as well as size and density, and target spatial boundary regularity directly.
+
+## 2026-10-22: approved Mangrove leaves are the LEFT original
+
+User clarified the selection of the additive-fringe comparison: LEFT, original dense coverage, not the additive right side. Keep the original selected recipe and its pigment, size, density and boundary response. Both additive and connected fringe remain QA history, not selected improvements. The mistaken uncommitted native additive option was removed. Do not interpret this approval as validation of all six biomes or completion of performance/streaming checks.
