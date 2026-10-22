@@ -1766,3 +1766,7 @@ Real cinematic sampling exposed daytime sky grading jump and nighttime decorativ
 ### Canyon authored bank cover candidate
 
 `canyon-bank-cover-review-20261022`:new original Blender104-triangle module (same triangle budget, wider26 leaves) visibly improves collective mass in12 controlled day/night captures;317 instances and calls/triangles match. Retain QA candidate, still separate plants. `canyon-bank-cover-cost-20261022`:720 valid Intel UHD GPU samples; daytime GPU delta ~0ms, night variable +.339/-2.459ms, no speedup claim. Before native adoption audit larger footprint/occupancy, quality/seed and streaming.
+
+### Canyon cover footprint and streaming correction
+
+`canyon-cover-footprint-stream-20261022` detects35 water-overhang and4 blocker-radius intrusions despite dry anchors. `canyon-cover-footprint-fixed-20261022` rejects those using actual transformed vertices during generation;279 versus317 instances at origin, zero sampled violations.30 real day/night streaming checkpoints total,25 detail chunks stable, all six return images RGB exact after fixing blank-frame capture harness. QA only; generation timing/events/other profiles still pending.
