@@ -1,3 +1,4 @@
+import {prepareMangroveBank} from './mangrove-shore.js';
 import {continuousGrassEnabled,createContinuousGrass} from './continuous-grass.js';
 import {bindMangroveMudEdges,configureMangroveMudMaterial} from './global-mangrove-mud-edges.js';
 import {raidEntryChunks,raidResidentDemand,includeRaidBounds} from '../world/raid-entry-residency.js';
@@ -206,7 +207,7 @@ export class WorldScene {
     this.locomotionVfx=new LocomotionVfx(this.vfxLibrary,this.destructionPass,this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z),(x,z)=>this.nav.field.canyon?this.nav.field.waterInfo(x,z):null);await milestone('vfx');
     this.raidCamera=new RaidCameraDirector(this.camera,this.controls,nav.field);this.focusFarm();
     const initialFarRegion=this.loadingCpuBudget&&loadingProgress&&farVegetation?startInitialFarRegion(this,farVegetation===true?{}:farVegetation):null;
-    this.chunkStream=spatialSession?.stream??new NativeChunkStream(this.nav.config,this.pack.profile,{loaded:()=>this.chunks,onData:data=>this.installChunk(data),onError:error=>this.onError?.(error),onFallback:error=>console.warn('Generación local de chunks:',error.message??error)});
+    this.chunkStream=spatialSession?.stream??new NativeChunkStream(this.nav.config,this.pack.profile,{loaded:()=>this.chunks,onData:data=>this.installChunk(data),onError:error=>this.onError?.(error),onFallback:error=>console.warn('GeneraciÃ³n local de chunks:',error.message??error)});
     this.syncChunks();await phase('load-chunks-horizon-ready',()=>this.loadReady(Promise.all([this.chunkStream.whenReady(),this.horizon.whenReady()])));if(this.disposed)throw new Error('Carga de mundo cancelada');this.syncChunks();await milestone('chunks');
     await this.loadReady(this.prepareSavedAnimalRigs(state));loadingSyncWitness(this.onLoadingSpan,'restore-sync',()=>this.sync(0));
     if(continuousGrassEnabled(state.biome)){
@@ -334,7 +335,7 @@ export class WorldScene {
     const material=nativeGroundMaterial(this.quality);
     this.biomeGround?.attach(material,cx,cz,payload?.groundMask);material.userData.toonGround=true;material.userData.nativeGroundColor=true;const ground=new THREE.Mesh(geometry,material);ground.position.set(0,0,0);ground.receiveShadow=true;ground.castShadow=this.toon.globalVisualLighting&&this.state.biome==='gran-canon';ground.userData.ground=true;group.add(ground);this.terrainMeshes.push(ground);if(this.mudPatches){const mud=this.mudPatches.chunk(this.nav.field,cx,cz);if(mud){group.add(mud);group.userData.mudSurface=mud.geometry.userData;if(this.biomeGround.mangroveSubstrate)bindMangroveMudEdges(this,group);}}
     const waterGeometry=payload?nativeWaterBuffer(payload.water):nativeChunkWater(this.nav.field,cx,cz,this.pack.profile);
-    if(waterGeometry){const mesh=new THREE.Mesh(waterGeometry,this.fluidMaterial);mesh.position.set(0,0,0);mesh.receiveShadow=true;mesh.userData.nativeFluid='chunk';group.add(mesh);}
+    if(waterGeometry){prepareMangroveBank(this,waterGeometry,cx,cz);const mesh=new THREE.Mesh(waterGeometry,this.fluidMaterial);mesh.position.set(0,0,0);mesh.receiveShadow=true;mesh.userData.nativeFluid='chunk';group.add(mesh);}
     const chunk=payload??this.nav.chunk(cx,cz);group.userData.propSources=chunk.instances;group.userData.contactInstances=chunk.instances.map(list=>list.filter(p=>!this.nav.suppressed.has(p.id)));
     for(let i=0;i<20;i++)this.buildPropSlot(group,i,group.userData.contactInstances[i]);
     return group;

@@ -1666,3 +1666,8 @@ Skip water noise outside its maximum 3.5-unit shore influence, keeping derivativ
 ### Mangrove streaming control/warm repeat
 
 `mangrove-bank-stream-control-20261022`: twenty real daytime frames. Both native and candidate drift on first trip (~196-198k pixels), both second trips exact RGB; candidate holds25 masks. No errors. First-trip cause remains unisolated, not candidate-exclusive. Supports moving retained candidate to explicit opt-in native implementation, preserving general limitation and measured GPU cost.
+
+
+### Native opt-in Mangrove shore
+
+`mangroveShore=sediment` with global lighting/full substrate integrates retained gated sediment and land mask, defaults unchanged. `mangrove-bank-native-parity-20261022`: six RGB frames exact to QA, no errors; native ownership/option tests pass. Mangroves have no NativeHorizon, resident water only. Native live streaming and broader art composition still pending.
