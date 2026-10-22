@@ -8,7 +8,7 @@ import {farGroundColorUvs} from './far-ground-color-map.js';
 export function attachNativeGroundSeam(candidate,ground,world,{createMaterial,configureGeometry=null,prepare=null,cancelled=()=>false,streamFactory=()=>new FarGroundSeamStream()}={}){
  if(!ground.colorMap||typeof createMaterial!=='function')throw Error('Mapped ground required for seam');
  const emptyPromise=Promise.resolve(null),sourceSeed=world.nav.config.seed,sourceBiome=world.nav.config.biome;
- let closed=false,generation=0,current=null,requestedBounds=null,pending=null,stream=streamFactory(),lost=world.renderer.getContext().isContextLost(),preparedPromise=emptyPromise;
+ let closed=false,generation=0,current=null,requestedBounds=null,requestedRevision=null,pending=null,stream=streamFactory(),lost=world.renderer.getContext().isContextLost(),preparedPromise=emptyPromise;
  const stats={requests:0,adopted:0,stale:0,vertices:0,bytes:0,buildMs:0,errors:[]};candidate.groundSeamStats=stats;
  const sourceConfig=JSON.stringify(world.nav.config);
  const canvas=world.renderer.domElement;
@@ -20,12 +20,13 @@ export function attachNativeGroundSeam(candidate,ground,world,{createMaterial,co
   if(closed||world.disposed||lost||cancelled())return emptyPromise;
   if(world.nav.config.seed!==sourceSeed||world.nav.config.biome!==sourceBiome)return Promise.reject(Error('Ground seam world configuration changed'));
   const bounds=world.nearBounds;if(!Array.isArray(bounds)||bounds.length!==4||!bounds.every(Number.isFinite))return Promise.reject(Error('Invalid adopted seam bounds'));
-  if(requestedBounds&&bounds[0]===requestedBounds[0]&&bounds[1]===requestedBounds[1]&&bounds[2]===requestedBounds[2]&&bounds[3]===requestedBounds[3])return pending??preparedPromise;
+  const revision=world.spatialSession?.horizonSource.revision()??0;
+  if(requestedRevision===revision&&requestedBounds&&bounds[0]===requestedBounds[0]&&bounds[1]===requestedBounds[1]&&bounds[2]===requestedBounds[2]&&bounds[3]===requestedBounds[3])return pending??preparedPromise;
   if(JSON.stringify(world.nav.config)!==sourceConfig)return Promise.reject(Error('Ground seam world configuration changed'));
-  const next=bounds.join(':');requestedBounds=[...bounds];const epoch=++generation;stats.requests++;
-  const request={config:world.nav.config,nearBounds:[...bounds],ground:{positions:ground.positions,indices:ground.indices,bounds:ground.bounds,nx:ground.nx,nz:ground.nz,contactCells:ground.contactCells}};
+  const next=bounds.join(':');requestedRevision=revision;requestedBounds=[...bounds];const epoch=++generation;stats.requests++;
+  const request={...(world.spatialSession?{spatialTerrain:world.spatialSession.horizonSource.snapshot()}:{}),config:world.nav.config,nearBounds:[...bounds],ground:{positions:ground.positions,indices:ground.indices,bounds:ground.bounds,nx:ground.nx,nz:ground.nz,contactCells:ground.contactCells}};
   pending=stream.request(next,request).then(async result=>{
-   const stale=()=>closed||world.disposed||epoch!==generation||lost||cancelled()||world.nearBounds.join(':')!==next||JSON.stringify(world.nav.config)!==sourceConfig;
+   const stale=()=>closed||world.disposed||epoch!==generation||lost||cancelled()||(world.spatialSession?.horizonSource.revision()??0)!==revision||world.nearBounds.join(':')!==next||JSON.stringify(world.nav.config)!==sourceConfig;
    if(!result||stale()){stats.stale++;if(epoch===generation)requestedBounds=null;return null;}
    const data=result.data,geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.BufferAttribute(data.positions,3));geometry.setAttribute('uv',new THREE.BufferAttribute(farGroundColorUvs(data.positions,ground.colorMap),2));geometry.setIndex(new THREE.BufferAttribute(data.indices,1));
    let material;try{configureGeometry?.(geometry);material=createMaterial();}catch(error){geometry.dispose();throw error;}

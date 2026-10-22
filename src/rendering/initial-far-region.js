@@ -16,7 +16,7 @@ export function startInitialFarRegion(world,options={},services={}){
   const species=payload.biomes[config.biome];if(!species?.length)throw Error('Missing biome impostors');
   const metadata=species[0],groundTreeBases=Object.fromEntries(species.map(s=>[s.slot,s.localBase]));
   const includeGround=(options.includeFarGround??true)&&metadata.slot===0&&!['canyons','desert'].includes(config.biome);
-  descriptor={...nativeFarRegionRequest(config,profile,center,{groundStep:16,...options,metadata,slot:metadata.slot,groundTreeBases,includeGround,bakedOnly:true}),treesOnly:!includeGround};
+  descriptor={...nativeFarRegionRequest(config,profile,center,{groundStep:16,...options,metadata,slot:metadata.slot,groundTreeBases,includeGround,bakedOnly:true}),treesOnly:!includeGround,...(world.spatialSession?{spatialTerrain:world.spatialSession.horizonSource.snapshot()}: {})};
   return loadingAwaitWitness(world.onLoadingSpan,'initial-far-region-worker',()=>loadRegion(descriptor,{signal:controller.signal}));
  }).finally(()=>signal.removeEventListener('abort',abort));
  // The request starts before its consumer exists. Observe failures now, but

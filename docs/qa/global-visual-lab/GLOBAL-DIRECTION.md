@@ -1823,3 +1823,8 @@ Opt-in `waterEdges=natural&waterCore=opaque` retains exact static and ten moving
 ## 2026-10-22: user selects deep blue Mangrove water
 
 Retain and refine deep blue over olive, superseding the earlier optical-depth rejection. Native natural-water shader now matches the selected QA result (five RGB-exact pairs, two differing pixels in the sixth). Moss retained. No FPS claim; extra map read remains to benchmark. See [native deep water](mangrove-deep-water-native-20261022/README.md).
+
+
+## 2026-10-22: full background required for subsequent QA
+
+User requires all subsequent artistic and performance validation to include the normal distant 2D impostors and HQ mountain backdrops. Do not set farVegetation:false in new final-scene comparisons. Use the normal quality-driven farVegetationProfile, verify attachment and loaded adapter layers plus visible biome-2d-backdrop, and include their resource and draw cost. Prior isolated 3D studies remain diagnostic only. Review color, lighting and transitions before considering DOF; DOF is an optional experiment, not an approved default or a substitute for matching distant art. New capture harness: tools/experiments/capture-full-background-review-20261022.mjs.
