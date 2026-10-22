@@ -1694,3 +1694,7 @@ Skip water noise outside its maximum 3.5-unit shore influence, keeping derivativ
 ### Volcano ash structure pilot
 
 `volcano-ash-structure-review-20261022`:12 real frames, six geometry/camera/time pairs exact, no captured errors. Wider warmer deposits improve broad material separation more visibly than sun tint. Both day/night change. Retain QA; excessive smoothing, motion and ABAB cost remain to evaluate before native promotion.
+
+### Volcano ash deposits ABAB cost
+
+`volcano-ash-structure-cost-20261022`:720 valid GPU samples, equivalent moving-camera geometry/state. GPU deltas -.130 to +.039 ms, no consistent change; night CPU +.200/+.378 ms, cadence ~16.63 ms paced. Retain visual candidate, no speedup claim; visual motion, lower profile and additional seeds pending.
