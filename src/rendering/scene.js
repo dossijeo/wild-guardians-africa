@@ -1,3 +1,4 @@
+import {continuousGrassEnabled,createContinuousGrass} from './continuous-grass.js';
 import {bindMangroveMudEdges,configureMangroveMudMaterial} from './global-mangrove-mud-edges.js';
 import {raidEntryChunks,raidResidentDemand,includeRaidBounds} from '../world/raid-entry-residency.js';
 import {PreciseTap} from '../ui/precise-tap.js';
@@ -207,6 +208,10 @@ export class WorldScene {
     this.chunkStream=spatialSession?.stream??new NativeChunkStream(this.nav.config,this.pack.profile,{loaded:()=>this.chunks,onData:data=>this.installChunk(data),onError:error=>this.onError?.(error),onFallback:error=>console.warn('Generación local de chunks:',error.message??error)});
     this.syncChunks();await phase('load-chunks-horizon-ready',()=>this.loadReady(Promise.all([this.chunkStream.whenReady(),this.horizon.whenReady()])));if(this.disposed)throw new Error('Carga de mundo cancelada');this.syncChunks();await milestone('chunks');
     await this.loadReady(this.prepareSavedAnimalRigs(state));loadingSyncWitness(this.onLoadingSpan,'restore-sync',()=>this.sync(0));
+    if(continuousGrassEnabled(state.biome)){
+      const coverage=await phase('load-continuous-grass',()=>this.loadReady(createContinuousGrass(this),layer=>layer.dispose()));
+      this.groundDetails.dispose();this.groundDetails=coverage;
+    }
     this.setCameraExclusion(true,{trees:true});this.updateCamera();
     this.hands=loadingSyncWitness(this.onLoadingSpan,'hands-constructor',()=>new NativeHands(this.scene,(x,z)=>this.nav.field.surface(x,z),{motion:!matchMedia('(prefers-reduced-motion: reduce)').matches,onError:e=>this.onError?.(e)}));
     await phase('load-hands-ready',()=>this.loadReady(this.hands.ready));

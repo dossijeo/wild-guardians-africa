@@ -1501,3 +1501,7 @@ Gran Rio:18 real images compare sky-only latitude to the same day remap in envir
 ## 2026-10-22: six-biome palette decision and native atmospheric sky
 
 72 real paired images across all6 biomes in sky-palette-six-biomes-20261022. Full environment palette preserved as QA but NOT adopted globally: Canyon water becomes too blue/less softly turquoise,matte-surface benefit small. Keep authored environment palette. Integrate selected cloud-protected sky grading plus shared day-reflection latitude via visualLab=global-lighting&skyAtmosphere=clouds. 36 fresh native captures all pixel-exact to retained QA baseline,18 targeted tests pass;see sky-atmosphere-native-20261022. Original default and main untouched. Earlier shader performance evidence retained; broader motion/quality/loading visual validation and remaining terrain/vegetation adapter integration are pending.
+
+
+### 2026-10-22: native Savanna continuous coverage
+Scene-owned optional grassCoverage=continuous in global-lighting. Retained pigment/normal/wind LOD, event-driven occupancy, resident renderer masks, no Engine queries. Six QA/native day/night camera pairs pixel-exact; equal calls/triangles/instances; 1,207,752 attribute/index bytes; zero overflow. Six lifecycle/occupancy tests pass. No new FPS claim. See continuous-grass-native-20261022/README.md. Movement, quality, River integration and global quality remain pending.
