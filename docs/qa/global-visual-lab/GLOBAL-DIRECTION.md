@@ -1770,3 +1770,7 @@ Real cinematic sampling exposed daytime sky grading jump and nighttime decorativ
 ### Canyon cover footprint and streaming correction
 
 `canyon-cover-footprint-stream-20261022` detects35 water-overhang and4 blocker-radius intrusions despite dry anchors. `canyon-cover-footprint-fixed-20261022` rejects those using actual transformed vertices during generation;279 versus317 instances at origin, zero sampled violations.30 real day/night streaming checkpoints total,25 detail chunks stable, all six return images RGB exact after fixing blank-frame capture harness. QA only; generation timing/events/other profiles still pending.
+
+### Canyon cover secondary seed / low-quality validation
+
+`canyon-cover-secondary-low-20261022`:seed913/baja,15 real streaming checkpoints, zero sampled footprint violations, all three RGB returns exact; day/night natural-bank views retain vegetation readability. sampleChunk102 calls mean.626/p951.400/max8.100ms (not full streaming/frame cost). Keep candidate; event verification and quality policy pending, no native adoption yet.
