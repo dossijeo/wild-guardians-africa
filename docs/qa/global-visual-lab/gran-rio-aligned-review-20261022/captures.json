@@ -1,0 +1,2826 @@
+{
+  "study": "Native opt-in smooth transition validation without QA material replacement; full far backgrounds; no timing claim.",
+  "fixture": {
+    "path": "docs/qa/global-visual-lab/gran-rio-populated-frozen-20261022/native-fixture.json",
+    "living": 12,
+    "workers": 2,
+    "scope": "Current Wild Engine opening; 12 paid millet crops and two paid workers; 120 seconds ordinary simulation. Tutorial skipped for directed QA. No money, growth, RNG or terrain overrides."
+  },
+  "seed": 712,
+  "resolution": [
+    1280,
+    720
+  ],
+  "views": [
+    "game",
+    "elevated",
+    "reverse"
+  ],
+  "note": "Loaded paid first-day campaign fixture, paused for visual time variants; seed 712; identical poses and visual time, settled chunks. Static artistic review, not a performance benchmark.",
+  "records": [
+    {
+      "query": "visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment",
+      "biome": "gran-rio",
+      "quality": "media",
+      "variant": "warmup",
+      "phase": "day",
+      "initialLodReset": true,
+      "frames": [
+        {
+          "extraCalls": 4,
+          "extraTriangles": 4186,
+          "farBackground": {
+            "mountainsVisible": true,
+            "enabled": true,
+            "stats": {
+              "logicalStandbyPreload": true,
+              "species": 4,
+              "estimatedAtlasTextureBytes": 44739242.666666664,
+              "estimatedBackdropTextureBytes": 5592405.333333333,
+              "errors": []
+            },
+            "adapters": [
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 7,
+                  "stalePreparations": 2,
+                  "preparationAttempts": 9,
+                  "fencedPreparations": 7,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 7,
+                  "packingChanges": 11,
+                  "cachedTextures": 35,
+                  "textureUploads": 0,
+                  "logicalPreloads": 16,
+                  "logicalPreloadEntries": 15,
+                  "errors": [],
+                  "coverage": 12,
+                  "prepared": 12,
+                  "signature": "0:0|0:0:fe2b1492-715b-4158-adf1-61c657461845:69ca7bd9-c485-445b-8813-18055212a78a:3|0:2:a7a88bd4-0073-462d-bf1e-0b65dadf3cb7:69ca7bd9-c485-445b-8813-18055212a78a:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 3,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 36,
+                    "estimatedOwnedGpuBytes": 1717500,
+                    "estimatedPreparedMatrixCpuBytes": 18432,
+                    "errors": []
+                  }
+                }
+              },
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 10,
+                  "stalePreparations": 1,
+                  "preparationAttempts": 11,
+                  "fencedPreparations": 10,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 7,
+                  "packingChanges": 16,
+                  "cachedTextures": 50,
+                  "textureUploads": 0,
+                  "logicalPreloads": 17,
+                  "logicalPreloadEntries": 12,
+                  "errors": [],
+                  "coverage": 25,
+                  "prepared": 25,
+                  "signature": "0:0|1:0:31596c27-adde-4a28-aad5-cda705862c39:9b686923-430a-4876-96e5-2529a76a7cd0:3|1:1:fe7e7ff3-f4ac-45a4-a9f7-2130f35a6006:9b686923-430a-4876-96e5-2529a76a7cd0:3|1:2:7b59d911-35e5-4739-9aeb-1ce6c5c92b3e:9b686923-430a-4876-96e5-2529a76a7cd0:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 6,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 44,
+                    "estimatedOwnedGpuBytes": 1814976,
+                    "estimatedPreparedMatrixCpuBytes": 24576,
+                    "errors": []
+                  }
+                }
+              },
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 7,
+                  "stalePreparations": 2,
+                  "preparationAttempts": 9,
+                  "fencedPreparations": 7,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 8,
+                  "packingChanges": 13,
+                  "cachedTextures": 35,
+                  "textureUploads": 0,
+                  "logicalPreloads": 18,
+                  "logicalPreloadEntries": 12,
+                  "errors": [],
+                  "coverage": 14,
+                  "prepared": 14,
+                  "signature": "0:0|2:0:9605664f-b6a7-4787-b219-0f6bbcbfab3f:44f42ebc-2cc2-4524-b0a6-770d1d3c10f0:3|2:1:d0a5c575-e3fa-47d2-b48d-efb3437d87f7:44f42ebc-2cc2-4524-b0a6-770d1d3c10f0:3|2:2:67ba5aa2-d4a7-47f7-8f25-3e305ad6490f:44f42ebc-2cc2-4524-b0a6-770d1d3c10f0:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 4,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 33,
+                    "estimatedOwnedGpuBytes": 2196768,
+                    "estimatedPreparedMatrixCpuBytes": 24576,
+                    "errors": []
+                  }
+                }
+              },
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 8,
+                  "stalePreparations": 1,
+                  "preparationAttempts": 9,
+                  "fencedPreparations": 8,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 8,
+                  "packingChanges": 13,
+                  "cachedTextures": 40,
+                  "textureUploads": 0,
+                  "logicalPreloads": 17,
+                  "logicalPreloadEntries": 11,
+                  "errors": [],
+                  "coverage": 17,
+                  "prepared": 17,
+                  "signature": "0:0|3:0:d71b0535-4aa1-489b-af9a-a451751b14dd:d396c223-1cb4-46f2-837a-04654388c347:3|3:1:f89b6642-239c-4575-8b2d-e266e86f6ddf:d396c223-1cb4-46f2-837a-04654388c347:3|3:2:6876721f-88d3-4c1e-b20e-8ecbd82fa86f:d396c223-1cb4-46f2-837a-04654388c347:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 4,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 38,
+                    "estimatedOwnedGpuBytes": 2422764,
+                    "estimatedPreparedMatrixCpuBytes": 24576,
+                    "errors": []
+                  }
+                }
+              }
+            ]
+          },
+          "origin": [
+            0,
+            0
+          ],
+          "i": 0,
+          "palette": null,
+          "elapsed": 119.99999999999746,
+          "workers": [
+            {
+              "id": "worker-28",
+              "x": 92.17041585165633,
+              "z": -8.97372946865972
+            },
+            {
+              "id": "worker-30",
+              "x": 93.67254603634564,
+              "z": -8.935038949880074
+            }
+          ],
+          "camera": [
+            105,
+            23.568869972229002,
+            18
+          ],
+          "target": [
+            83,
+            7.568869972229004,
+            0
+          ],
+          "time": 150,
+          "glError": 0,
+          "coverage": {
+            "distribution": "original",
+            "leafShape": null,
+            "variant": "C",
+            "active": true,
+            "quality": "media",
+            "biome": "gran-rio",
+            "edgePadding": 0.85,
+            "nearDistance": 24,
+            "moduleSpacing": 0.4,
+            "near": 3104,
+            "far": 5384,
+            "leaves": 80320,
+            "triangles": 229312,
+            "chunks": 25,
+            "cachedTiles": 48,
+            "bufferBytes": 1207752,
+            "stats": {
+              "buildMs": 89.200000166893,
+              "selectionMs": 124.30000001192093,
+              "selectionCount": 92,
+              "candidates": 19200,
+              "masked": 5593,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "settings": {
+            "riverYards": true,
+            "moss": false,
+            "substrate": false,
+            "canyonSoft": false,
+            "canyonNormals": true,
+            "desertMeso": true
+          },
+          "memory": {
+            "geometries": 339,
+            "textures": 111
+          },
+          "calls": 105,
+          "triangles": 874470
+        },
+        {
+          "extraCalls": 4,
+          "extraTriangles": 4186,
+          "farBackground": {
+            "mountainsVisible": true,
+            "enabled": true,
+            "stats": {
+              "logicalStandbyPreload": true,
+              "species": 4,
+              "estimatedAtlasTextureBytes": 44739242.666666664,
+              "estimatedBackdropTextureBytes": 5592405.333333333,
+              "errors": []
+            },
+            "adapters": [
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 8,
+                  "stalePreparations": 2,
+                  "preparationAttempts": 10,
+                  "fencedPreparations": 8,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 8,
+                  "packingChanges": 12,
+                  "cachedTextures": 40,
+                  "textureUploads": 0,
+                  "logicalPreloads": 18,
+                  "logicalPreloadEntries": 15,
+                  "errors": [],
+                  "coverage": 11,
+                  "prepared": 11,
+                  "signature": "0:0|0:1:9852969f-03b2-4629-b4da-7b59a8d3a22d:69ca7bd9-c485-445b-8813-18055212a78a:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 4,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 45,
+                    "estimatedOwnedGpuBytes": 1724028,
+                    "estimatedPreparedMatrixCpuBytes": 24576,
+                    "errors": []
+                  }
+                }
+              },
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 11,
+                  "stalePreparations": 1,
+                  "preparationAttempts": 12,
+                  "fencedPreparations": 11,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 8,
+                  "packingChanges": 17,
+                  "cachedTextures": 55,
+                  "textureUploads": 0,
+                  "logicalPreloads": 19,
+                  "logicalPreloadEntries": 12,
+                  "errors": [],
+                  "coverage": 13,
+                  "prepared": 13,
+                  "signature": "0:0|1:0:31596c27-adde-4a28-aad5-cda705862c39:9b686923-430a-4876-96e5-2529a76a7cd0:3|1:1:58a65fd0-584e-4a77-8b46-d07a6ace24d1:9b686923-430a-4876-96e5-2529a76a7cd0:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 7,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 49,
+                    "estimatedOwnedGpuBytes": 1814976,
+                    "estimatedPreparedMatrixCpuBytes": 24576,
+                    "errors": []
+                  }
+                }
+              },
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 8,
+                  "stalePreparations": 2,
+                  "preparationAttempts": 10,
+                  "fencedPreparations": 8,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 9,
+                  "packingChanges": 14,
+                  "cachedTextures": 40,
+                  "textureUploads": 0,
+                  "logicalPreloads": 20,
+                  "logicalPreloadEntries": 12,
+                  "errors": [],
+                  "coverage": 9,
+                  "prepared": 9,
+                  "signature": "0:0|2:0:9605664f-b6a7-4787-b219-0f6bbcbfab3f:44f42ebc-2cc2-4524-b0a6-770d1d3c10f0:3|2:1:d0a5c575-e3fa-47d2-b48d-efb3437d87f7:44f42ebc-2cc2-4524-b0a6-770d1d3c10f0:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 5,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 36,
+                    "estimatedOwnedGpuBytes": 2196768,
+                    "estimatedPreparedMatrixCpuBytes": 24576,
+                    "errors": []
+                  }
+                }
+              },
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 9,
+                  "stalePreparations": 1,
+                  "preparationAttempts": 10,
+                  "fencedPreparations": 9,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 9,
+                  "packingChanges": 14,
+                  "cachedTextures": 45,
+                  "textureUploads": 0,
+                  "logicalPreloads": 19,
+                  "logicalPreloadEntries": 11,
+                  "errors": [],
+                  "coverage": 8,
+                  "prepared": 8,
+                  "signature": "0:0|3:1:f89b6642-239c-4575-8b2d-e266e86f6ddf:d396c223-1cb4-46f2-837a-04654388c347:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 5,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 39,
+                    "estimatedOwnedGpuBytes": 2422764,
+                    "estimatedPreparedMatrixCpuBytes": 24576,
+                    "errors": []
+                  }
+                }
+              }
+            ]
+          },
+          "origin": [
+            0,
+            0
+          ],
+          "i": 1,
+          "palette": null,
+          "elapsed": 119.99999999999746,
+          "workers": [
+            {
+              "id": "worker-28",
+              "x": 92.17041585165633,
+              "z": -8.97372946865972
+            },
+            {
+              "id": "worker-30",
+              "x": 93.67254603634564,
+              "z": -8.935038949880074
+            }
+          ],
+          "camera": [
+            89,
+            41.568869972229,
+            6
+          ],
+          "target": [
+            83,
+            7.568869972229004,
+            0
+          ],
+          "time": 150,
+          "glError": 0,
+          "coverage": {
+            "distribution": "original",
+            "leafShape": null,
+            "variant": "C",
+            "active": true,
+            "quality": "media",
+            "biome": "gran-rio",
+            "edgePadding": 0.85,
+            "nearDistance": 24,
+            "moduleSpacing": 0.4,
+            "near": 5188,
+            "far": 4923,
+            "leaves": 101640,
+            "triangles": 350664,
+            "chunks": 25,
+            "cachedTiles": 51,
+            "bufferBytes": 1207752,
+            "stats": {
+              "buildMs": 91.40000015497208,
+              "selectionMs": 128,
+              "selectionCount": 93,
+              "candidates": 20400,
+              "masked": 6043,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "settings": {
+            "riverYards": true,
+            "moss": false,
+            "substrate": false,
+            "canyonSoft": false,
+            "canyonNormals": true,
+            "desertMeso": true
+          },
+          "memory": {
+            "geometries": 301,
+            "textures": 111
+          },
+          "calls": 65,
+          "triangles": 965436
+        },
+        {
+          "extraCalls": 4,
+          "extraTriangles": 4186,
+          "farBackground": {
+            "mountainsVisible": true,
+            "enabled": true,
+            "stats": {
+              "logicalStandbyPreload": true,
+              "species": 4,
+              "estimatedAtlasTextureBytes": 44739242.666666664,
+              "estimatedBackdropTextureBytes": 5592405.333333333,
+              "errors": []
+            },
+            "adapters": [
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 9,
+                  "stalePreparations": 2,
+                  "preparationAttempts": 11,
+                  "fencedPreparations": 9,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 9,
+                  "packingChanges": 13,
+                  "cachedTextures": 45,
+                  "textureUploads": 0,
+                  "logicalPreloads": 24,
+                  "logicalPreloadEntries": 14,
+                  "errors": [],
+                  "coverage": 19,
+                  "prepared": 19,
+                  "signature": "0:0|0:0:3d0e1441-fdc7-4402-81c0-dda368e4eaa2:69ca7bd9-c485-445b-8813-18055212a78a:3|0:1:881f4e84-21e7-4003-abb4-c4c9fa9c9631:69ca7bd9-c485-445b-8813-18055212a78a:3|0:2:1a3873dc-0259-4d09-856b-a71ed30cb196:69ca7bd9-c485-445b-8813-18055212a78a:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 5,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 56,
+                    "estimatedOwnedGpuBytes": 1724028,
+                    "estimatedPreparedMatrixCpuBytes": 24576,
+                    "errors": []
+                  }
+                }
+              },
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 12,
+                  "stalePreparations": 1,
+                  "preparationAttempts": 13,
+                  "fencedPreparations": 12,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 9,
+                  "packingChanges": 18,
+                  "cachedTextures": 60,
+                  "textureUploads": 0,
+                  "logicalPreloads": 25,
+                  "logicalPreloadEntries": 14,
+                  "errors": [],
+                  "coverage": 21,
+                  "prepared": 21,
+                  "signature": "0:0|1:0:31596c27-adde-4a28-aad5-cda705862c39:9b686923-430a-4876-96e5-2529a76a7cd0:3|1:1:58a65fd0-584e-4a77-8b46-d07a6ace24d1:9b686923-430a-4876-96e5-2529a76a7cd0:3|1:2:fce79195-7441-4adb-a466-913e2d1f4829:9b686923-430a-4876-96e5-2529a76a7cd0:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 8,
+                    "rendered": 1,
+                    "submittedInstances": 1,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 958,
+                    "visibleTriangles": 958,
+                    "trees": 61,
+                    "estimatedOwnedGpuBytes": 1814976,
+                    "estimatedPreparedMatrixCpuBytes": 24576,
+                    "errors": []
+                  }
+                }
+              },
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 9,
+                  "stalePreparations": 2,
+                  "preparationAttempts": 11,
+                  "fencedPreparations": 9,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 10,
+                  "packingChanges": 15,
+                  "cachedTextures": 45,
+                  "textureUploads": 0,
+                  "logicalPreloads": 26,
+                  "logicalPreloadEntries": 10,
+                  "errors": [],
+                  "coverage": 14,
+                  "prepared": 14,
+                  "signature": "0:0|2:1:f8e03ed0-7622-4f2e-b40b-25e2d7f13eed:44f42ebc-2cc2-4524-b0a6-770d1d3c10f0:3|2:2:ef84a9a2-08e9-41df-b922-5584a7842021:44f42ebc-2cc2-4524-b0a6-770d1d3c10f0:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 6,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 48,
+                    "estimatedOwnedGpuBytes": 2196768,
+                    "estimatedPreparedMatrixCpuBytes": 24576,
+                    "errors": []
+                  }
+                }
+              },
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 10,
+                  "stalePreparations": 1,
+                  "preparationAttempts": 11,
+                  "fencedPreparations": 10,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 10,
+                  "packingChanges": 15,
+                  "cachedTextures": 50,
+                  "textureUploads": 0,
+                  "logicalPreloads": 25,
+                  "logicalPreloadEntries": 13,
+                  "errors": [],
+                  "coverage": 14,
+                  "prepared": 14,
+                  "signature": "0:0|3:0:816b4af8-e77d-4dbb-a150-fc8865c41fd9:d396c223-1cb4-46f2-837a-04654388c347:3|3:1:f89b6642-239c-4575-8b2d-e266e86f6ddf:d396c223-1cb4-46f2-837a-04654388c347:3|3:2:c7d6cdcf-3ab1-41ca-a647-205da158bd30:d396c223-1cb4-46f2-837a-04654388c347:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 6,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 49,
+                    "estimatedOwnedGpuBytes": 2422764,
+                    "estimatedPreparedMatrixCpuBytes": 24576,
+                    "errors": []
+                  }
+                }
+              }
+            ]
+          },
+          "origin": [
+            0,
+            0
+          ],
+          "i": 2,
+          "palette": null,
+          "elapsed": 119.99999999999746,
+          "workers": [
+            {
+              "id": "worker-28",
+              "x": 92.17041585165633,
+              "z": -8.97372946865972
+            },
+            {
+              "id": "worker-30",
+              "x": 93.67254603634564,
+              "z": -8.935038949880074
+            }
+          ],
+          "camera": [
+            65,
+            16.568869972229002,
+            22
+          ],
+          "target": [
+            83,
+            7.568869972229004,
+            0
+          ],
+          "time": 150,
+          "glError": 0,
+          "coverage": {
+            "distribution": "original",
+            "leafShape": null,
+            "variant": "C",
+            "active": true,
+            "quality": "media",
+            "biome": "gran-rio",
+            "edgePadding": 0.85,
+            "nearDistance": 24,
+            "moduleSpacing": 0.4,
+            "near": 2624,
+            "far": 5142,
+            "leaves": 72624,
+            "triangles": 198576,
+            "chunks": 25,
+            "cachedTiles": 54,
+            "bufferBytes": 1207752,
+            "stats": {
+              "buildMs": 96.00000011920929,
+              "selectionMs": 137.29999995231628,
+              "selectionCount": 99,
+              "candidates": 21600,
+              "masked": 6049,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "settings": {
+            "riverYards": true,
+            "moss": false,
+            "substrate": false,
+            "canyonSoft": false,
+            "canyonNormals": true,
+            "desertMeso": true
+          },
+          "memory": {
+            "geometries": 318,
+            "textures": 106
+          },
+          "calls": 89,
+          "triangles": 875405
+        }
+      ],
+      "errors": []
+    },
+    {
+      "query": "visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment",
+      "biome": "gran-rio",
+      "quality": "media",
+      "variant": "warmup",
+      "phase": "night",
+      "initialLodReset": true,
+      "frames": [
+        {
+          "extraCalls": 4,
+          "extraTriangles": 4186,
+          "farBackground": {
+            "mountainsVisible": true,
+            "enabled": true,
+            "stats": {
+              "logicalStandbyPreload": true,
+              "species": 4,
+              "estimatedAtlasTextureBytes": 44739242.666666664,
+              "estimatedBackdropTextureBytes": 5592405.333333333,
+              "errors": []
+            },
+            "adapters": [
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 10,
+                  "stalePreparations": 2,
+                  "preparationAttempts": 12,
+                  "fencedPreparations": 10,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 10,
+                  "packingChanges": 14,
+                  "cachedTextures": 50,
+                  "textureUploads": 0,
+                  "logicalPreloads": 30,
+                  "logicalPreloadEntries": 15,
+                  "errors": [],
+                  "coverage": 12,
+                  "prepared": 12,
+                  "signature": "0:0|0:0:3d0e1441-fdc7-4402-81c0-dda368e4eaa2:69ca7bd9-c485-445b-8813-18055212a78a:3|0:2:1a3873dc-0259-4d09-856b-a71ed30cb196:69ca7bd9-c485-445b-8813-18055212a78a:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 6,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 61,
+                    "estimatedOwnedGpuBytes": 1724028,
+                    "estimatedPreparedMatrixCpuBytes": 24576,
+                    "errors": []
+                  }
+                }
+              },
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 13,
+                  "stalePreparations": 1,
+                  "preparationAttempts": 14,
+                  "fencedPreparations": 13,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 10,
+                  "packingChanges": 19,
+                  "cachedTextures": 65,
+                  "textureUploads": 0,
+                  "logicalPreloads": 31,
+                  "logicalPreloadEntries": 12,
+                  "errors": [],
+                  "coverage": 25,
+                  "prepared": 25,
+                  "signature": "0:0|1:0:31596c27-adde-4a28-aad5-cda705862c39:9b686923-430a-4876-96e5-2529a76a7cd0:3|1:1:30970b3b-0587-4b43-914a-5808cd5c7441:9b686923-430a-4876-96e5-2529a76a7cd0:3|1:2:4fe473c7-8eb6-481d-92ba-086d7adebc06:9b686923-430a-4876-96e5-2529a76a7cd0:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 9,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 67,
+                    "estimatedOwnedGpuBytes": 1828032,
+                    "estimatedPreparedMatrixCpuBytes": 36864,
+                    "errors": []
+                  }
+                }
+              },
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 10,
+                  "stalePreparations": 2,
+                  "preparationAttempts": 12,
+                  "fencedPreparations": 10,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 11,
+                  "packingChanges": 16,
+                  "cachedTextures": 50,
+                  "textureUploads": 0,
+                  "logicalPreloads": 32,
+                  "logicalPreloadEntries": 12,
+                  "errors": [],
+                  "coverage": 14,
+                  "prepared": 14,
+                  "signature": "0:0|2:0:a1ccd3bf-1c75-4cee-8d90-527d230375fc:44f42ebc-2cc2-4524-b0a6-770d1d3c10f0:3|2:1:237cf0fb-4b16-46ee-9ee4-33fd50fc1ae6:44f42ebc-2cc2-4524-b0a6-770d1d3c10f0:3|2:2:ef84a9a2-08e9-41df-b922-5584a7842021:44f42ebc-2cc2-4524-b0a6-770d1d3c10f0:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 7,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 53,
+                    "estimatedOwnedGpuBytes": 2196768,
+                    "estimatedPreparedMatrixCpuBytes": 24576,
+                    "errors": []
+                  }
+                }
+              },
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 11,
+                  "stalePreparations": 1,
+                  "preparationAttempts": 12,
+                  "fencedPreparations": 11,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 10,
+                  "packingChanges": 16,
+                  "cachedTextures": 55,
+                  "textureUploads": 0,
+                  "logicalPreloads": 31,
+                  "logicalPreloadEntries": 11,
+                  "errors": [],
+                  "coverage": 17,
+                  "prepared": 17,
+                  "signature": "0:0|3:0:816b4af8-e77d-4dbb-a150-fc8865c41fd9:d396c223-1cb4-46f2-837a-04654388c347:3|3:1:f89b6642-239c-4575-8b2d-e266e86f6ddf:d396c223-1cb4-46f2-837a-04654388c347:3|3:2:c7d6cdcf-3ab1-41ca-a647-205da158bd30:d396c223-1cb4-46f2-837a-04654388c347:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 7,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 52,
+                    "estimatedOwnedGpuBytes": 2422764,
+                    "estimatedPreparedMatrixCpuBytes": 24576,
+                    "errors": []
+                  }
+                }
+              }
+            ]
+          },
+          "origin": [
+            0,
+            0
+          ],
+          "i": 0,
+          "palette": null,
+          "elapsed": 119.99999999999746,
+          "workers": [
+            {
+              "id": "worker-28",
+              "x": 92.17041585165633,
+              "z": -8.97372946865972
+            },
+            {
+              "id": "worker-30",
+              "x": 93.67254603634564,
+              "z": -8.935038949880074
+            }
+          ],
+          "camera": [
+            105,
+            23.568869972229002,
+            18
+          ],
+          "target": [
+            83,
+            7.568869972229004,
+            0
+          ],
+          "time": 350,
+          "glError": 0,
+          "coverage": {
+            "distribution": "original",
+            "leafShape": null,
+            "variant": "C",
+            "active": true,
+            "quality": "media",
+            "biome": "gran-rio",
+            "edgePadding": 0.85,
+            "nearDistance": 24,
+            "moduleSpacing": 0.4,
+            "near": 3104,
+            "far": 5384,
+            "leaves": 80320,
+            "triangles": 229312,
+            "chunks": 25,
+            "cachedTiles": 54,
+            "bufferBytes": 1207752,
+            "stats": {
+              "buildMs": 96.80000007152557,
+              "selectionMs": 144.49999994039536,
+              "selectionCount": 105,
+              "candidates": 21600,
+              "masked": 6049,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "settings": {
+            "riverYards": true,
+            "moss": false,
+            "substrate": false,
+            "canyonSoft": false,
+            "canyonNormals": true,
+            "desertMeso": true
+          },
+          "memory": {
+            "geometries": 331,
+            "textures": 106
+          },
+          "calls": 105,
+          "triangles": 874470
+        },
+        {
+          "extraCalls": 4,
+          "extraTriangles": 4186,
+          "farBackground": {
+            "mountainsVisible": true,
+            "enabled": true,
+            "stats": {
+              "logicalStandbyPreload": true,
+              "species": 4,
+              "estimatedAtlasTextureBytes": 44739242.666666664,
+              "estimatedBackdropTextureBytes": 5592405.333333333,
+              "errors": []
+            },
+            "adapters": [
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 11,
+                  "stalePreparations": 2,
+                  "preparationAttempts": 13,
+                  "fencedPreparations": 11,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 11,
+                  "packingChanges": 15,
+                  "cachedTextures": 55,
+                  "textureUploads": 0,
+                  "logicalPreloads": 32,
+                  "logicalPreloadEntries": 15,
+                  "errors": [],
+                  "coverage": 11,
+                  "prepared": 11,
+                  "signature": "0:0|0:1:d2ebbb7c-245b-4a67-a441-dfc0aa5a2a43:69ca7bd9-c485-445b-8813-18055212a78a:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 6,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 61,
+                    "estimatedOwnedGpuBytes": 1724028,
+                    "estimatedPreparedMatrixCpuBytes": 24576,
+                    "errors": []
+                  }
+                }
+              },
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 14,
+                  "stalePreparations": 1,
+                  "preparationAttempts": 15,
+                  "fencedPreparations": 14,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 11,
+                  "packingChanges": 20,
+                  "cachedTextures": 70,
+                  "textureUploads": 0,
+                  "logicalPreloads": 33,
+                  "logicalPreloadEntries": 12,
+                  "errors": [],
+                  "coverage": 13,
+                  "prepared": 13,
+                  "signature": "0:0|1:0:31596c27-adde-4a28-aad5-cda705862c39:9b686923-430a-4876-96e5-2529a76a7cd0:3|1:1:ef2e67ec-c94b-4f6a-b547-2ff6ec01ba62:9b686923-430a-4876-96e5-2529a76a7cd0:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 9,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 67,
+                    "estimatedOwnedGpuBytes": 1828032,
+                    "estimatedPreparedMatrixCpuBytes": 36864,
+                    "errors": []
+                  }
+                }
+              },
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 11,
+                  "stalePreparations": 2,
+                  "preparationAttempts": 13,
+                  "fencedPreparations": 11,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 12,
+                  "packingChanges": 17,
+                  "cachedTextures": 55,
+                  "textureUploads": 0,
+                  "logicalPreloads": 34,
+                  "logicalPreloadEntries": 12,
+                  "errors": [],
+                  "coverage": 9,
+                  "prepared": 9,
+                  "signature": "0:0|2:0:a1ccd3bf-1c75-4cee-8d90-527d230375fc:44f42ebc-2cc2-4524-b0a6-770d1d3c10f0:3|2:1:237cf0fb-4b16-46ee-9ee4-33fd50fc1ae6:44f42ebc-2cc2-4524-b0a6-770d1d3c10f0:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 7,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 53,
+                    "estimatedOwnedGpuBytes": 2196768,
+                    "estimatedPreparedMatrixCpuBytes": 24576,
+                    "errors": []
+                  }
+                }
+              },
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 12,
+                  "stalePreparations": 1,
+                  "preparationAttempts": 13,
+                  "fencedPreparations": 12,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 11,
+                  "packingChanges": 17,
+                  "cachedTextures": 60,
+                  "textureUploads": 0,
+                  "logicalPreloads": 33,
+                  "logicalPreloadEntries": 11,
+                  "errors": [],
+                  "coverage": 8,
+                  "prepared": 8,
+                  "signature": "0:0|3:1:f89b6642-239c-4575-8b2d-e266e86f6ddf:d396c223-1cb4-46f2-837a-04654388c347:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 7,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 52,
+                    "estimatedOwnedGpuBytes": 2422764,
+                    "estimatedPreparedMatrixCpuBytes": 24576,
+                    "errors": []
+                  }
+                }
+              }
+            ]
+          },
+          "origin": [
+            0,
+            0
+          ],
+          "i": 1,
+          "palette": null,
+          "elapsed": 119.99999999999746,
+          "workers": [
+            {
+              "id": "worker-28",
+              "x": 92.17041585165633,
+              "z": -8.97372946865972
+            },
+            {
+              "id": "worker-30",
+              "x": 93.67254603634564,
+              "z": -8.935038949880074
+            }
+          ],
+          "camera": [
+            89,
+            41.568869972229,
+            6
+          ],
+          "target": [
+            83,
+            7.568869972229004,
+            0
+          ],
+          "time": 350,
+          "glError": 0,
+          "coverage": {
+            "distribution": "original",
+            "leafShape": null,
+            "variant": "C",
+            "active": true,
+            "quality": "media",
+            "biome": "gran-rio",
+            "edgePadding": 0.85,
+            "nearDistance": 24,
+            "moduleSpacing": 0.4,
+            "near": 5188,
+            "far": 4923,
+            "leaves": 101640,
+            "triangles": 350664,
+            "chunks": 25,
+            "cachedTiles": 54,
+            "bufferBytes": 1207752,
+            "stats": {
+              "buildMs": 96.80000007152557,
+              "selectionMs": 145.0999999642372,
+              "selectionCount": 106,
+              "candidates": 21600,
+              "masked": 6049,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "settings": {
+            "riverYards": true,
+            "moss": false,
+            "substrate": false,
+            "canyonSoft": false,
+            "canyonNormals": true,
+            "desertMeso": true
+          },
+          "memory": {
+            "geometries": 302,
+            "textures": 106
+          },
+          "calls": 65,
+          "triangles": 965436
+        },
+        {
+          "extraCalls": 4,
+          "extraTriangles": 4186,
+          "farBackground": {
+            "mountainsVisible": true,
+            "enabled": true,
+            "stats": {
+              "logicalStandbyPreload": true,
+              "species": 4,
+              "estimatedAtlasTextureBytes": 44739242.666666664,
+              "estimatedBackdropTextureBytes": 5592405.333333333,
+              "errors": []
+            },
+            "adapters": [
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 12,
+                  "stalePreparations": 2,
+                  "preparationAttempts": 14,
+                  "fencedPreparations": 12,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 12,
+                  "packingChanges": 16,
+                  "cachedTextures": 60,
+                  "textureUploads": 0,
+                  "logicalPreloads": 38,
+                  "logicalPreloadEntries": 14,
+                  "errors": [],
+                  "coverage": 19,
+                  "prepared": 19,
+                  "signature": "0:0|0:0:c7095033-d1e3-4733-bffd-c5042ca9acb5:69ca7bd9-c485-445b-8813-18055212a78a:3|0:1:ba64b23c-2cfa-4ad0-809d-0f79a8575b75:69ca7bd9-c485-445b-8813-18055212a78a:3|0:2:165f582e-e384-4ca8-8e98-fe4dc2f6e512:69ca7bd9-c485-445b-8813-18055212a78a:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 7,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 61,
+                    "estimatedOwnedGpuBytes": 1724028,
+                    "estimatedPreparedMatrixCpuBytes": 24576,
+                    "errors": []
+                  }
+                }
+              },
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 15,
+                  "stalePreparations": 1,
+                  "preparationAttempts": 16,
+                  "fencedPreparations": 15,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 12,
+                  "packingChanges": 21,
+                  "cachedTextures": 75,
+                  "textureUploads": 0,
+                  "logicalPreloads": 39,
+                  "logicalPreloadEntries": 14,
+                  "errors": [],
+                  "coverage": 21,
+                  "prepared": 21,
+                  "signature": "0:0|1:0:31596c27-adde-4a28-aad5-cda705862c39:9b686923-430a-4876-96e5-2529a76a7cd0:3|1:1:ef2e67ec-c94b-4f6a-b547-2ff6ec01ba62:9b686923-430a-4876-96e5-2529a76a7cd0:3|1:2:41b59e77-f424-42b9-a566-361e464584e9:9b686923-430a-4876-96e5-2529a76a7cd0:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 10,
+                    "rendered": 1,
+                    "submittedInstances": 1,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 958,
+                    "visibleTriangles": 958,
+                    "trees": 67,
+                    "estimatedOwnedGpuBytes": 1841088,
+                    "estimatedPreparedMatrixCpuBytes": 49152,
+                    "errors": []
+                  }
+                }
+              },
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 12,
+                  "stalePreparations": 2,
+                  "preparationAttempts": 14,
+                  "fencedPreparations": 12,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 13,
+                  "packingChanges": 18,
+                  "cachedTextures": 60,
+                  "textureUploads": 0,
+                  "logicalPreloads": 40,
+                  "logicalPreloadEntries": 10,
+                  "errors": [],
+                  "coverage": 14,
+                  "prepared": 14,
+                  "signature": "0:0|2:1:306a055c-5e24-4ca8-9452-c8649d71024f:44f42ebc-2cc2-4524-b0a6-770d1d3c10f0:3|2:2:b1a915e0-845c-4c9d-8484-431e280de53b:44f42ebc-2cc2-4524-b0a6-770d1d3c10f0:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 8,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 54,
+                    "estimatedOwnedGpuBytes": 2196768,
+                    "estimatedPreparedMatrixCpuBytes": 24576,
+                    "errors": []
+                  }
+                }
+              },
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 13,
+                  "stalePreparations": 1,
+                  "preparationAttempts": 14,
+                  "fencedPreparations": 13,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 12,
+                  "packingChanges": 18,
+                  "cachedTextures": 65,
+                  "textureUploads": 0,
+                  "logicalPreloads": 39,
+                  "logicalPreloadEntries": 13,
+                  "errors": [],
+                  "coverage": 14,
+                  "prepared": 14,
+                  "signature": "0:0|3:0:72a75995-0ac6-4632-9ed4-74d78f1064aa:d396c223-1cb4-46f2-837a-04654388c347:3|3:1:f89b6642-239c-4575-8b2d-e266e86f6ddf:d396c223-1cb4-46f2-837a-04654388c347:3|3:2:1e6523bc-d02e-4247-8afa-471c1a1eb49a:d396c223-1cb4-46f2-837a-04654388c347:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 8,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 53,
+                    "estimatedOwnedGpuBytes": 2422764,
+                    "estimatedPreparedMatrixCpuBytes": 24576,
+                    "errors": []
+                  }
+                }
+              }
+            ]
+          },
+          "origin": [
+            0,
+            0
+          ],
+          "i": 2,
+          "palette": null,
+          "elapsed": 119.99999999999746,
+          "workers": [
+            {
+              "id": "worker-28",
+              "x": 92.17041585165633,
+              "z": -8.97372946865972
+            },
+            {
+              "id": "worker-30",
+              "x": 93.67254603634564,
+              "z": -8.935038949880074
+            }
+          ],
+          "camera": [
+            65,
+            16.568869972229002,
+            22
+          ],
+          "target": [
+            83,
+            7.568869972229004,
+            0
+          ],
+          "time": 350,
+          "glError": 0,
+          "coverage": {
+            "distribution": "original",
+            "leafShape": null,
+            "variant": "C",
+            "active": true,
+            "quality": "media",
+            "biome": "gran-rio",
+            "edgePadding": 0.85,
+            "nearDistance": 24,
+            "moduleSpacing": 0.4,
+            "near": 2624,
+            "far": 5142,
+            "leaves": 72624,
+            "triangles": 198576,
+            "chunks": 25,
+            "cachedTiles": 54,
+            "bufferBytes": 1207752,
+            "stats": {
+              "buildMs": 97.6000000834465,
+              "selectionMs": 150.0999999642372,
+              "selectionCount": 112,
+              "candidates": 21600,
+              "masked": 6049,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "settings": {
+            "riverYards": true,
+            "moss": false,
+            "substrate": false,
+            "canyonSoft": false,
+            "canyonNormals": true,
+            "desertMeso": true
+          },
+          "memory": {
+            "geometries": 319,
+            "textures": 106
+          },
+          "calls": 90,
+          "triangles": 876806
+        }
+      ],
+      "errors": []
+    },
+    {
+      "query": "visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment",
+      "biome": "gran-rio",
+      "quality": "media",
+      "variant": "native",
+      "phase": "day",
+      "initialLodReset": true,
+      "frames": [
+        {
+          "extraCalls": 4,
+          "extraTriangles": 4186,
+          "farBackground": {
+            "mountainsVisible": true,
+            "enabled": true,
+            "stats": {
+              "logicalStandbyPreload": true,
+              "species": 4,
+              "estimatedAtlasTextureBytes": 44739242.666666664,
+              "estimatedBackdropTextureBytes": 5592405.333333333,
+              "errors": []
+            },
+            "adapters": [
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 13,
+                  "stalePreparations": 2,
+                  "preparationAttempts": 15,
+                  "fencedPreparations": 13,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 13,
+                  "packingChanges": 17,
+                  "cachedTextures": 65,
+                  "textureUploads": 0,
+                  "logicalPreloads": 44,
+                  "logicalPreloadEntries": 15,
+                  "errors": [],
+                  "coverage": 12,
+                  "prepared": 12,
+                  "signature": "0:0|0:0:c7095033-d1e3-4733-bffd-c5042ca9acb5:69ca7bd9-c485-445b-8813-18055212a78a:3|0:2:165f582e-e384-4ca8-8e98-fe4dc2f6e512:69ca7bd9-c485-445b-8813-18055212a78a:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 8,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 61,
+                    "estimatedOwnedGpuBytes": 1724028,
+                    "estimatedPreparedMatrixCpuBytes": 24576,
+                    "errors": []
+                  }
+                }
+              },
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 16,
+                  "stalePreparations": 1,
+                  "preparationAttempts": 17,
+                  "fencedPreparations": 16,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 13,
+                  "packingChanges": 22,
+                  "cachedTextures": 80,
+                  "textureUploads": 0,
+                  "logicalPreloads": 45,
+                  "logicalPreloadEntries": 12,
+                  "errors": [],
+                  "coverage": 25,
+                  "prepared": 25,
+                  "signature": "0:0|1:0:31596c27-adde-4a28-aad5-cda705862c39:9b686923-430a-4876-96e5-2529a76a7cd0:3|1:1:a386d13b-426f-42b3-99d1-ac2d8205ac8b:9b686923-430a-4876-96e5-2529a76a7cd0:3|1:2:452567c2-2bd6-42b1-b7b7-3a08500a5170:9b686923-430a-4876-96e5-2529a76a7cd0:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 11,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 67,
+                    "estimatedOwnedGpuBytes": 1841088,
+                    "estimatedPreparedMatrixCpuBytes": 49152,
+                    "errors": []
+                  }
+                }
+              },
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 13,
+                  "stalePreparations": 2,
+                  "preparationAttempts": 15,
+                  "fencedPreparations": 13,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 14,
+                  "packingChanges": 19,
+                  "cachedTextures": 65,
+                  "textureUploads": 0,
+                  "logicalPreloads": 46,
+                  "logicalPreloadEntries": 12,
+                  "errors": [],
+                  "coverage": 14,
+                  "prepared": 14,
+                  "signature": "0:0|2:0:4c01ce90-0157-4f82-8bdd-9b47cb247843:44f42ebc-2cc2-4524-b0a6-770d1d3c10f0:3|2:1:936f2af5-4fa6-44e8-b3eb-192860c3eb66:44f42ebc-2cc2-4524-b0a6-770d1d3c10f0:3|2:2:b1a915e0-845c-4c9d-8484-431e280de53b:44f42ebc-2cc2-4524-b0a6-770d1d3c10f0:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 9,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 54,
+                    "estimatedOwnedGpuBytes": 2196768,
+                    "estimatedPreparedMatrixCpuBytes": 24576,
+                    "errors": []
+                  }
+                }
+              },
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 14,
+                  "stalePreparations": 1,
+                  "preparationAttempts": 15,
+                  "fencedPreparations": 14,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 12,
+                  "packingChanges": 19,
+                  "cachedTextures": 70,
+                  "textureUploads": 0,
+                  "logicalPreloads": 45,
+                  "logicalPreloadEntries": 11,
+                  "errors": [],
+                  "coverage": 17,
+                  "prepared": 17,
+                  "signature": "0:0|3:0:72a75995-0ac6-4632-9ed4-74d78f1064aa:d396c223-1cb4-46f2-837a-04654388c347:3|3:1:f89b6642-239c-4575-8b2d-e266e86f6ddf:d396c223-1cb4-46f2-837a-04654388c347:3|3:2:1e6523bc-d02e-4247-8afa-471c1a1eb49a:d396c223-1cb4-46f2-837a-04654388c347:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 9,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 53,
+                    "estimatedOwnedGpuBytes": 2422764,
+                    "estimatedPreparedMatrixCpuBytes": 24576,
+                    "errors": []
+                  }
+                }
+              }
+            ]
+          },
+          "origin": [
+            0,
+            0
+          ],
+          "i": 0,
+          "palette": null,
+          "elapsed": 119.99999999999746,
+          "workers": [
+            {
+              "id": "worker-28",
+              "x": 92.17041585165633,
+              "z": -8.97372946865972
+            },
+            {
+              "id": "worker-30",
+              "x": 93.67254603634564,
+              "z": -8.935038949880074
+            }
+          ],
+          "camera": [
+            105,
+            23.568869972229002,
+            18
+          ],
+          "target": [
+            83,
+            7.568869972229004,
+            0
+          ],
+          "time": 150,
+          "glError": 0,
+          "coverage": {
+            "distribution": "original",
+            "leafShape": null,
+            "variant": "C",
+            "active": true,
+            "quality": "media",
+            "biome": "gran-rio",
+            "edgePadding": 0.85,
+            "nearDistance": 24,
+            "moduleSpacing": 0.4,
+            "near": 3104,
+            "far": 5384,
+            "leaves": 80320,
+            "triangles": 229312,
+            "chunks": 25,
+            "cachedTiles": 54,
+            "bufferBytes": 1207752,
+            "stats": {
+              "buildMs": 98.30000007152557,
+              "selectionMs": 155.59999990463257,
+              "selectionCount": 118,
+              "candidates": 21600,
+              "masked": 6049,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "settings": {
+            "riverYards": true,
+            "moss": false,
+            "substrate": false,
+            "canyonSoft": false,
+            "canyonNormals": true,
+            "desertMeso": true
+          },
+          "memory": {
+            "geometries": 332,
+            "textures": 106
+          },
+          "calls": 105,
+          "triangles": 874470
+        },
+        {
+          "extraCalls": 4,
+          "extraTriangles": 4186,
+          "farBackground": {
+            "mountainsVisible": true,
+            "enabled": true,
+            "stats": {
+              "logicalStandbyPreload": true,
+              "species": 4,
+              "estimatedAtlasTextureBytes": 44739242.666666664,
+              "estimatedBackdropTextureBytes": 5592405.333333333,
+              "errors": []
+            },
+            "adapters": [
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 14,
+                  "stalePreparations": 2,
+                  "preparationAttempts": 16,
+                  "fencedPreparations": 14,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 14,
+                  "packingChanges": 18,
+                  "cachedTextures": 70,
+                  "textureUploads": 0,
+                  "logicalPreloads": 46,
+                  "logicalPreloadEntries": 15,
+                  "errors": [],
+                  "coverage": 11,
+                  "prepared": 11,
+                  "signature": "0:0|0:1:e789698b-e7ac-4218-902e-28891b6f1804:69ca7bd9-c485-445b-8813-18055212a78a:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 8,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 61,
+                    "estimatedOwnedGpuBytes": 1724028,
+                    "estimatedPreparedMatrixCpuBytes": 24576,
+                    "errors": []
+                  }
+                }
+              },
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 17,
+                  "stalePreparations": 1,
+                  "preparationAttempts": 18,
+                  "fencedPreparations": 17,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 14,
+                  "packingChanges": 23,
+                  "cachedTextures": 85,
+                  "textureUploads": 0,
+                  "logicalPreloads": 47,
+                  "logicalPreloadEntries": 12,
+                  "errors": [],
+                  "coverage": 13,
+                  "prepared": 13,
+                  "signature": "0:0|1:0:31596c27-adde-4a28-aad5-cda705862c39:9b686923-430a-4876-96e5-2529a76a7cd0:3|1:1:ad58d9be-2efc-46b5-9ada-b42ff8e40883:9b686923-430a-4876-96e5-2529a76a7cd0:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 11,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 67,
+                    "estimatedOwnedGpuBytes": 1841088,
+                    "estimatedPreparedMatrixCpuBytes": 49152,
+                    "errors": []
+                  }
+                }
+              },
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 14,
+                  "stalePreparations": 2,
+                  "preparationAttempts": 16,
+                  "fencedPreparations": 14,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 15,
+                  "packingChanges": 20,
+                  "cachedTextures": 70,
+                  "textureUploads": 0,
+                  "logicalPreloads": 48,
+                  "logicalPreloadEntries": 12,
+                  "errors": [],
+                  "coverage": 9,
+                  "prepared": 9,
+                  "signature": "0:0|2:0:4c01ce90-0157-4f82-8bdd-9b47cb247843:44f42ebc-2cc2-4524-b0a6-770d1d3c10f0:3|2:1:936f2af5-4fa6-44e8-b3eb-192860c3eb66:44f42ebc-2cc2-4524-b0a6-770d1d3c10f0:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 10,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 54,
+                    "estimatedOwnedGpuBytes": 2196768,
+                    "estimatedPreparedMatrixCpuBytes": 24576,
+                    "errors": []
+                  }
+                }
+              },
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 15,
+                  "stalePreparations": 1,
+                  "preparationAttempts": 16,
+                  "fencedPreparations": 15,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 13,
+                  "packingChanges": 20,
+                  "cachedTextures": 75,
+                  "textureUploads": 0,
+                  "logicalPreloads": 47,
+                  "logicalPreloadEntries": 11,
+                  "errors": [],
+                  "coverage": 8,
+                  "prepared": 8,
+                  "signature": "0:0|3:1:f89b6642-239c-4575-8b2d-e266e86f6ddf:d396c223-1cb4-46f2-837a-04654388c347:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 10,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 53,
+                    "estimatedOwnedGpuBytes": 2422764,
+                    "estimatedPreparedMatrixCpuBytes": 24576,
+                    "errors": []
+                  }
+                }
+              }
+            ]
+          },
+          "origin": [
+            0,
+            0
+          ],
+          "i": 1,
+          "palette": null,
+          "elapsed": 119.99999999999746,
+          "workers": [
+            {
+              "id": "worker-28",
+              "x": 92.17041585165633,
+              "z": -8.97372946865972
+            },
+            {
+              "id": "worker-30",
+              "x": 93.67254603634564,
+              "z": -8.935038949880074
+            }
+          ],
+          "camera": [
+            89,
+            41.568869972229,
+            6
+          ],
+          "target": [
+            83,
+            7.568869972229004,
+            0
+          ],
+          "time": 150,
+          "glError": 0,
+          "coverage": {
+            "distribution": "original",
+            "leafShape": null,
+            "variant": "C",
+            "active": true,
+            "quality": "media",
+            "biome": "gran-rio",
+            "edgePadding": 0.85,
+            "nearDistance": 24,
+            "moduleSpacing": 0.4,
+            "near": 5188,
+            "far": 4923,
+            "leaves": 101640,
+            "triangles": 350664,
+            "chunks": 25,
+            "cachedTiles": 54,
+            "bufferBytes": 1207752,
+            "stats": {
+              "buildMs": 98.30000007152557,
+              "selectionMs": 156.9999998807907,
+              "selectionCount": 119,
+              "candidates": 21600,
+              "masked": 6049,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "settings": {
+            "riverYards": true,
+            "moss": false,
+            "substrate": false,
+            "canyonSoft": false,
+            "canyonNormals": true,
+            "desertMeso": true
+          },
+          "memory": {
+            "geometries": 302,
+            "textures": 106
+          },
+          "calls": 65,
+          "triangles": 965436
+        },
+        {
+          "extraCalls": 4,
+          "extraTriangles": 4186,
+          "farBackground": {
+            "mountainsVisible": true,
+            "enabled": true,
+            "stats": {
+              "logicalStandbyPreload": true,
+              "species": 4,
+              "estimatedAtlasTextureBytes": 44739242.666666664,
+              "estimatedBackdropTextureBytes": 5592405.333333333,
+              "errors": []
+            },
+            "adapters": [
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 15,
+                  "stalePreparations": 2,
+                  "preparationAttempts": 17,
+                  "fencedPreparations": 15,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 15,
+                  "packingChanges": 19,
+                  "cachedTextures": 75,
+                  "textureUploads": 0,
+                  "logicalPreloads": 52,
+                  "logicalPreloadEntries": 14,
+                  "errors": [],
+                  "coverage": 19,
+                  "prepared": 19,
+                  "signature": "0:0|0:0:5b576e76-34ca-4ef9-a934-bab99f7487d9:69ca7bd9-c485-445b-8813-18055212a78a:3|0:1:edef6141-59a1-4f00-87b7-9fc67afe3877:69ca7bd9-c485-445b-8813-18055212a78a:3|0:2:3c9d6360-f197-41bb-85d6-84c696761502:69ca7bd9-c485-445b-8813-18055212a78a:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 9,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 61,
+                    "estimatedOwnedGpuBytes": 1724028,
+                    "estimatedPreparedMatrixCpuBytes": 24576,
+                    "errors": []
+                  }
+                }
+              },
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 18,
+                  "stalePreparations": 1,
+                  "preparationAttempts": 19,
+                  "fencedPreparations": 18,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 15,
+                  "packingChanges": 24,
+                  "cachedTextures": 90,
+                  "textureUploads": 0,
+                  "logicalPreloads": 53,
+                  "logicalPreloadEntries": 14,
+                  "errors": [],
+                  "coverage": 21,
+                  "prepared": 21,
+                  "signature": "0:0|1:0:31596c27-adde-4a28-aad5-cda705862c39:9b686923-430a-4876-96e5-2529a76a7cd0:3|1:1:ad58d9be-2efc-46b5-9ada-b42ff8e40883:9b686923-430a-4876-96e5-2529a76a7cd0:3|1:2:a7379c60-02e9-4bdb-a9eb-6f763a0a181e:9b686923-430a-4876-96e5-2529a76a7cd0:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 12,
+                    "rendered": 1,
+                    "submittedInstances": 1,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 958,
+                    "visibleTriangles": 958,
+                    "trees": 67,
+                    "estimatedOwnedGpuBytes": 1841088,
+                    "estimatedPreparedMatrixCpuBytes": 49152,
+                    "errors": []
+                  }
+                }
+              },
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 15,
+                  "stalePreparations": 2,
+                  "preparationAttempts": 17,
+                  "fencedPreparations": 15,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 16,
+                  "packingChanges": 21,
+                  "cachedTextures": 75,
+                  "textureUploads": 0,
+                  "logicalPreloads": 54,
+                  "logicalPreloadEntries": 10,
+                  "errors": [],
+                  "coverage": 14,
+                  "prepared": 14,
+                  "signature": "0:0|2:1:155d1327-4f6f-4ec1-8e31-1f0db4839483:44f42ebc-2cc2-4524-b0a6-770d1d3c10f0:3|2:2:3e13e708-1034-49c3-b225-251c4daaca67:44f42ebc-2cc2-4524-b0a6-770d1d3c10f0:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 11,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 54,
+                    "estimatedOwnedGpuBytes": 2196768,
+                    "estimatedPreparedMatrixCpuBytes": 24576,
+                    "errors": []
+                  }
+                }
+              },
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 16,
+                  "stalePreparations": 1,
+                  "preparationAttempts": 17,
+                  "fencedPreparations": 16,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 14,
+                  "packingChanges": 21,
+                  "cachedTextures": 80,
+                  "textureUploads": 0,
+                  "logicalPreloads": 53,
+                  "logicalPreloadEntries": 13,
+                  "errors": [],
+                  "coverage": 14,
+                  "prepared": 14,
+                  "signature": "0:0|3:0:4e62f067-fbe3-4c1f-9257-5511fd4f78f3:d396c223-1cb4-46f2-837a-04654388c347:3|3:1:f89b6642-239c-4575-8b2d-e266e86f6ddf:d396c223-1cb4-46f2-837a-04654388c347:3|3:2:af5b49f8-7a06-4e6b-9248-718927d3b1db:d396c223-1cb4-46f2-837a-04654388c347:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 11,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 53,
+                    "estimatedOwnedGpuBytes": 2422764,
+                    "estimatedPreparedMatrixCpuBytes": 24576,
+                    "errors": []
+                  }
+                }
+              }
+            ]
+          },
+          "origin": [
+            0,
+            0
+          ],
+          "i": 2,
+          "palette": null,
+          "elapsed": 119.99999999999746,
+          "workers": [
+            {
+              "id": "worker-28",
+              "x": 92.17041585165633,
+              "z": -8.97372946865972
+            },
+            {
+              "id": "worker-30",
+              "x": 93.67254603634564,
+              "z": -8.935038949880074
+            }
+          ],
+          "camera": [
+            65,
+            16.568869972229002,
+            22
+          ],
+          "target": [
+            83,
+            7.568869972229004,
+            0
+          ],
+          "time": 150,
+          "glError": 0,
+          "coverage": {
+            "distribution": "original",
+            "leafShape": null,
+            "variant": "C",
+            "active": true,
+            "quality": "media",
+            "biome": "gran-rio",
+            "edgePadding": 0.85,
+            "nearDistance": 24,
+            "moduleSpacing": 0.4,
+            "near": 2624,
+            "far": 5142,
+            "leaves": 72624,
+            "triangles": 198576,
+            "chunks": 25,
+            "cachedTiles": 54,
+            "bufferBytes": 1207752,
+            "stats": {
+              "buildMs": 99.00000005960464,
+              "selectionMs": 161.59999990463257,
+              "selectionCount": 125,
+              "candidates": 21600,
+              "masked": 6049,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "settings": {
+            "riverYards": true,
+            "moss": false,
+            "substrate": false,
+            "canyonSoft": false,
+            "canyonNormals": true,
+            "desertMeso": true
+          },
+          "memory": {
+            "geometries": 319,
+            "textures": 106
+          },
+          "calls": 90,
+          "triangles": 876806
+        }
+      ],
+      "errors": []
+    },
+    {
+      "query": "visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment",
+      "biome": "gran-rio",
+      "quality": "media",
+      "variant": "native",
+      "phase": "night",
+      "initialLodReset": true,
+      "frames": [
+        {
+          "extraCalls": 4,
+          "extraTriangles": 4186,
+          "farBackground": {
+            "mountainsVisible": true,
+            "enabled": true,
+            "stats": {
+              "logicalStandbyPreload": true,
+              "species": 4,
+              "estimatedAtlasTextureBytes": 44739242.666666664,
+              "estimatedBackdropTextureBytes": 5592405.333333333,
+              "errors": []
+            },
+            "adapters": [
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 16,
+                  "stalePreparations": 2,
+                  "preparationAttempts": 18,
+                  "fencedPreparations": 16,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 16,
+                  "packingChanges": 20,
+                  "cachedTextures": 80,
+                  "textureUploads": 0,
+                  "logicalPreloads": 58,
+                  "logicalPreloadEntries": 15,
+                  "errors": [],
+                  "coverage": 12,
+                  "prepared": 12,
+                  "signature": "0:0|0:0:5b576e76-34ca-4ef9-a934-bab99f7487d9:69ca7bd9-c485-445b-8813-18055212a78a:3|0:2:3c9d6360-f197-41bb-85d6-84c696761502:69ca7bd9-c485-445b-8813-18055212a78a:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 10,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 61,
+                    "estimatedOwnedGpuBytes": 1724028,
+                    "estimatedPreparedMatrixCpuBytes": 24576,
+                    "errors": []
+                  }
+                }
+              },
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 19,
+                  "stalePreparations": 1,
+                  "preparationAttempts": 20,
+                  "fencedPreparations": 19,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 16,
+                  "packingChanges": 25,
+                  "cachedTextures": 95,
+                  "textureUploads": 0,
+                  "logicalPreloads": 59,
+                  "logicalPreloadEntries": 12,
+                  "errors": [],
+                  "coverage": 25,
+                  "prepared": 25,
+                  "signature": "0:0|1:0:31596c27-adde-4a28-aad5-cda705862c39:9b686923-430a-4876-96e5-2529a76a7cd0:3|1:1:ea234427-47e4-4ae5-9376-a2804bf62276:9b686923-430a-4876-96e5-2529a76a7cd0:3|1:2:6a457aab-d571-4f9e-8585-c73f82b047b5:9b686923-430a-4876-96e5-2529a76a7cd0:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 13,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 67,
+                    "estimatedOwnedGpuBytes": 1841088,
+                    "estimatedPreparedMatrixCpuBytes": 49152,
+                    "errors": []
+                  }
+                }
+              },
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 16,
+                  "stalePreparations": 2,
+                  "preparationAttempts": 18,
+                  "fencedPreparations": 16,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 17,
+                  "packingChanges": 22,
+                  "cachedTextures": 80,
+                  "textureUploads": 0,
+                  "logicalPreloads": 60,
+                  "logicalPreloadEntries": 12,
+                  "errors": [],
+                  "coverage": 14,
+                  "prepared": 14,
+                  "signature": "0:0|2:0:c89220ed-95ca-400e-9332-73c7e2b32d73:44f42ebc-2cc2-4524-b0a6-770d1d3c10f0:3|2:1:3701bb62-2b47-4818-a1d2-5f5a76706dd7:44f42ebc-2cc2-4524-b0a6-770d1d3c10f0:3|2:2:3e13e708-1034-49c3-b225-251c4daaca67:44f42ebc-2cc2-4524-b0a6-770d1d3c10f0:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 12,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 54,
+                    "estimatedOwnedGpuBytes": 2196768,
+                    "estimatedPreparedMatrixCpuBytes": 24576,
+                    "errors": []
+                  }
+                }
+              },
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 17,
+                  "stalePreparations": 1,
+                  "preparationAttempts": 18,
+                  "fencedPreparations": 17,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 14,
+                  "packingChanges": 22,
+                  "cachedTextures": 85,
+                  "textureUploads": 0,
+                  "logicalPreloads": 59,
+                  "logicalPreloadEntries": 11,
+                  "errors": [],
+                  "coverage": 17,
+                  "prepared": 17,
+                  "signature": "0:0|3:0:4e62f067-fbe3-4c1f-9257-5511fd4f78f3:d396c223-1cb4-46f2-837a-04654388c347:3|3:1:f89b6642-239c-4575-8b2d-e266e86f6ddf:d396c223-1cb4-46f2-837a-04654388c347:3|3:2:af5b49f8-7a06-4e6b-9248-718927d3b1db:d396c223-1cb4-46f2-837a-04654388c347:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 12,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 53,
+                    "estimatedOwnedGpuBytes": 2422764,
+                    "estimatedPreparedMatrixCpuBytes": 24576,
+                    "errors": []
+                  }
+                }
+              }
+            ]
+          },
+          "origin": [
+            0,
+            0
+          ],
+          "i": 0,
+          "palette": null,
+          "elapsed": 119.99999999999746,
+          "workers": [
+            {
+              "id": "worker-28",
+              "x": 92.17041585165633,
+              "z": -8.97372946865972
+            },
+            {
+              "id": "worker-30",
+              "x": 93.67254603634564,
+              "z": -8.935038949880074
+            }
+          ],
+          "camera": [
+            105,
+            23.568869972229002,
+            18
+          ],
+          "target": [
+            83,
+            7.568869972229004,
+            0
+          ],
+          "time": 350,
+          "glError": 0,
+          "coverage": {
+            "distribution": "original",
+            "leafShape": null,
+            "variant": "C",
+            "active": true,
+            "quality": "media",
+            "biome": "gran-rio",
+            "edgePadding": 0.85,
+            "nearDistance": 24,
+            "moduleSpacing": 0.4,
+            "near": 3104,
+            "far": 5384,
+            "leaves": 80320,
+            "triangles": 229312,
+            "chunks": 25,
+            "cachedTiles": 54,
+            "bufferBytes": 1207752,
+            "stats": {
+              "buildMs": 99.59999996423721,
+              "selectionMs": 166.4999998807907,
+              "selectionCount": 131,
+              "candidates": 21600,
+              "masked": 6049,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "settings": {
+            "riverYards": true,
+            "moss": false,
+            "substrate": false,
+            "canyonSoft": false,
+            "canyonNormals": true,
+            "desertMeso": true
+          },
+          "memory": {
+            "geometries": 332,
+            "textures": 106
+          },
+          "calls": 105,
+          "triangles": 874470
+        },
+        {
+          "extraCalls": 4,
+          "extraTriangles": 4186,
+          "farBackground": {
+            "mountainsVisible": true,
+            "enabled": true,
+            "stats": {
+              "logicalStandbyPreload": true,
+              "species": 4,
+              "estimatedAtlasTextureBytes": 44739242.666666664,
+              "estimatedBackdropTextureBytes": 5592405.333333333,
+              "errors": []
+            },
+            "adapters": [
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 17,
+                  "stalePreparations": 2,
+                  "preparationAttempts": 19,
+                  "fencedPreparations": 17,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 17,
+                  "packingChanges": 21,
+                  "cachedTextures": 85,
+                  "textureUploads": 0,
+                  "logicalPreloads": 60,
+                  "logicalPreloadEntries": 15,
+                  "errors": [],
+                  "coverage": 11,
+                  "prepared": 11,
+                  "signature": "0:0|0:1:77b71bfc-66f0-4b0d-9d50-dbcb741f8181:69ca7bd9-c485-445b-8813-18055212a78a:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 10,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 61,
+                    "estimatedOwnedGpuBytes": 1724028,
+                    "estimatedPreparedMatrixCpuBytes": 24576,
+                    "errors": []
+                  }
+                }
+              },
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 20,
+                  "stalePreparations": 1,
+                  "preparationAttempts": 21,
+                  "fencedPreparations": 20,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 17,
+                  "packingChanges": 26,
+                  "cachedTextures": 100,
+                  "textureUploads": 0,
+                  "logicalPreloads": 61,
+                  "logicalPreloadEntries": 12,
+                  "errors": [],
+                  "coverage": 13,
+                  "prepared": 13,
+                  "signature": "0:0|1:0:31596c27-adde-4a28-aad5-cda705862c39:9b686923-430a-4876-96e5-2529a76a7cd0:3|1:1:55e7edf5-8d2d-46be-a128-2b164d369e20:9b686923-430a-4876-96e5-2529a76a7cd0:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 13,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 67,
+                    "estimatedOwnedGpuBytes": 1841088,
+                    "estimatedPreparedMatrixCpuBytes": 49152,
+                    "errors": []
+                  }
+                }
+              },
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 17,
+                  "stalePreparations": 2,
+                  "preparationAttempts": 19,
+                  "fencedPreparations": 17,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 18,
+                  "packingChanges": 23,
+                  "cachedTextures": 85,
+                  "textureUploads": 0,
+                  "logicalPreloads": 62,
+                  "logicalPreloadEntries": 12,
+                  "errors": [],
+                  "coverage": 9,
+                  "prepared": 9,
+                  "signature": "0:0|2:0:c89220ed-95ca-400e-9332-73c7e2b32d73:44f42ebc-2cc2-4524-b0a6-770d1d3c10f0:3|2:1:3701bb62-2b47-4818-a1d2-5f5a76706dd7:44f42ebc-2cc2-4524-b0a6-770d1d3c10f0:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 13,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 54,
+                    "estimatedOwnedGpuBytes": 2196768,
+                    "estimatedPreparedMatrixCpuBytes": 24576,
+                    "errors": []
+                  }
+                }
+              },
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 18,
+                  "stalePreparations": 1,
+                  "preparationAttempts": 19,
+                  "fencedPreparations": 18,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 15,
+                  "packingChanges": 23,
+                  "cachedTextures": 90,
+                  "textureUploads": 0,
+                  "logicalPreloads": 61,
+                  "logicalPreloadEntries": 11,
+                  "errors": [],
+                  "coverage": 8,
+                  "prepared": 8,
+                  "signature": "0:0|3:1:f89b6642-239c-4575-8b2d-e266e86f6ddf:d396c223-1cb4-46f2-837a-04654388c347:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 13,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 53,
+                    "estimatedOwnedGpuBytes": 2422764,
+                    "estimatedPreparedMatrixCpuBytes": 24576,
+                    "errors": []
+                  }
+                }
+              }
+            ]
+          },
+          "origin": [
+            0,
+            0
+          ],
+          "i": 1,
+          "palette": null,
+          "elapsed": 119.99999999999746,
+          "workers": [
+            {
+              "id": "worker-28",
+              "x": 92.17041585165633,
+              "z": -8.97372946865972
+            },
+            {
+              "id": "worker-30",
+              "x": 93.67254603634564,
+              "z": -8.935038949880074
+            }
+          ],
+          "camera": [
+            89,
+            41.568869972229,
+            6
+          ],
+          "target": [
+            83,
+            7.568869972229004,
+            0
+          ],
+          "time": 350,
+          "glError": 0,
+          "coverage": {
+            "distribution": "original",
+            "leafShape": null,
+            "variant": "C",
+            "active": true,
+            "quality": "media",
+            "biome": "gran-rio",
+            "edgePadding": 0.85,
+            "nearDistance": 24,
+            "moduleSpacing": 0.4,
+            "near": 5188,
+            "far": 4923,
+            "leaves": 101640,
+            "triangles": 350664,
+            "chunks": 25,
+            "cachedTiles": 54,
+            "bufferBytes": 1207752,
+            "stats": {
+              "buildMs": 99.59999996423721,
+              "selectionMs": 167.19999986886978,
+              "selectionCount": 132,
+              "candidates": 21600,
+              "masked": 6049,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "settings": {
+            "riverYards": true,
+            "moss": false,
+            "substrate": false,
+            "canyonSoft": false,
+            "canyonNormals": true,
+            "desertMeso": true
+          },
+          "memory": {
+            "geometries": 302,
+            "textures": 106
+          },
+          "calls": 65,
+          "triangles": 965436
+        },
+        {
+          "extraCalls": 4,
+          "extraTriangles": 4186,
+          "farBackground": {
+            "mountainsVisible": true,
+            "enabled": true,
+            "stats": {
+              "logicalStandbyPreload": true,
+              "species": 4,
+              "estimatedAtlasTextureBytes": 44739242.666666664,
+              "estimatedBackdropTextureBytes": 5592405.333333333,
+              "errors": []
+            },
+            "adapters": [
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 18,
+                  "stalePreparations": 2,
+                  "preparationAttempts": 20,
+                  "fencedPreparations": 18,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 18,
+                  "packingChanges": 22,
+                  "cachedTextures": 90,
+                  "textureUploads": 0,
+                  "logicalPreloads": 66,
+                  "logicalPreloadEntries": 14,
+                  "errors": [],
+                  "coverage": 19,
+                  "prepared": 19,
+                  "signature": "0:0|0:0:948a6639-b338-449e-bfee-145b917dc62a:69ca7bd9-c485-445b-8813-18055212a78a:3|0:1:ed7b5521-1553-40cb-8f54-3993cb5aadf2:69ca7bd9-c485-445b-8813-18055212a78a:3|0:2:e30ecb0c-aea7-43d4-81f0-ac3db5cdb690:69ca7bd9-c485-445b-8813-18055212a78a:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 11,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 61,
+                    "estimatedOwnedGpuBytes": 1724028,
+                    "estimatedPreparedMatrixCpuBytes": 24576,
+                    "errors": []
+                  }
+                }
+              },
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 21,
+                  "stalePreparations": 1,
+                  "preparationAttempts": 22,
+                  "fencedPreparations": 21,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 18,
+                  "packingChanges": 27,
+                  "cachedTextures": 105,
+                  "textureUploads": 0,
+                  "logicalPreloads": 67,
+                  "logicalPreloadEntries": 14,
+                  "errors": [],
+                  "coverage": 21,
+                  "prepared": 21,
+                  "signature": "0:0|1:0:31596c27-adde-4a28-aad5-cda705862c39:9b686923-430a-4876-96e5-2529a76a7cd0:3|1:1:55e7edf5-8d2d-46be-a128-2b164d369e20:9b686923-430a-4876-96e5-2529a76a7cd0:3|1:2:d58a432f-ad44-47d3-8e4b-cadd52b1de23:9b686923-430a-4876-96e5-2529a76a7cd0:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 14,
+                    "rendered": 1,
+                    "submittedInstances": 1,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 958,
+                    "visibleTriangles": 958,
+                    "trees": 67,
+                    "estimatedOwnedGpuBytes": 1841088,
+                    "estimatedPreparedMatrixCpuBytes": 49152,
+                    "errors": []
+                  }
+                }
+              },
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 18,
+                  "stalePreparations": 2,
+                  "preparationAttempts": 20,
+                  "fencedPreparations": 18,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 19,
+                  "packingChanges": 24,
+                  "cachedTextures": 90,
+                  "textureUploads": 0,
+                  "logicalPreloads": 68,
+                  "logicalPreloadEntries": 10,
+                  "errors": [],
+                  "coverage": 14,
+                  "prepared": 14,
+                  "signature": "0:0|2:1:5717ce58-16b5-4572-a090-0165e2ff2475:44f42ebc-2cc2-4524-b0a6-770d1d3c10f0:3|2:2:af209788-7c9b-47f8-b692-e5c8cfbd798f:44f42ebc-2cc2-4524-b0a6-770d1d3c10f0:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 14,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 54,
+                    "estimatedOwnedGpuBytes": 2196768,
+                    "estimatedPreparedMatrixCpuBytes": 24576,
+                    "errors": []
+                  }
+                }
+              },
+              {
+                "ready": true,
+                "stats": {
+                  "cancelledRegions": 0,
+                  "regions": 1,
+                  "nativePreparations": 19,
+                  "stalePreparations": 1,
+                  "preparationAttempts": 20,
+                  "fencedPreparations": 19,
+                  "rejectedPacking": 0,
+                  "signatureChanges": 16,
+                  "packingChanges": 24,
+                  "cachedTextures": 95,
+                  "textureUploads": 0,
+                  "logicalPreloads": 67,
+                  "logicalPreloadEntries": 13,
+                  "errors": [],
+                  "coverage": 14,
+                  "prepared": 14,
+                  "signature": "0:0|3:0:f909be59-434a-4b41-945f-04ec618bedd0:d396c223-1cb4-46f2-837a-04654388c347:3|3:1:f89b6642-239c-4575-8b2d-e266e86f6ddf:d396c223-1cb4-46f2-837a-04654388c347:3|3:2:7b9e2f74-5fb0-4b9a-841d-a9406e672476:d396c223-1cb4-46f2-837a-04654388c347:3",
+                  "standby": {
+                    "cancelledPreparations": 0,
+                    "preparations": 14,
+                    "rendered": 0,
+                    "submittedInstances": 0,
+                    "maskedInstances": 0,
+                    "submittedTriangles": 0,
+                    "visibleTriangles": 0,
+                    "trees": 53,
+                    "estimatedOwnedGpuBytes": 2422764,
+                    "estimatedPreparedMatrixCpuBytes": 24576,
+                    "errors": []
+                  }
+                }
+              }
+            ]
+          },
+          "origin": [
+            0,
+            0
+          ],
+          "i": 2,
+          "palette": null,
+          "elapsed": 119.99999999999746,
+          "workers": [
+            {
+              "id": "worker-28",
+              "x": 92.17041585165633,
+              "z": -8.97372946865972
+            },
+            {
+              "id": "worker-30",
+              "x": 93.67254603634564,
+              "z": -8.935038949880074
+            }
+          ],
+          "camera": [
+            65,
+            16.568869972229002,
+            22
+          ],
+          "target": [
+            83,
+            7.568869972229004,
+            0
+          ],
+          "time": 350,
+          "glError": 0,
+          "coverage": {
+            "distribution": "original",
+            "leafShape": null,
+            "variant": "C",
+            "active": true,
+            "quality": "media",
+            "biome": "gran-rio",
+            "edgePadding": 0.85,
+            "nearDistance": 24,
+            "moduleSpacing": 0.4,
+            "near": 2624,
+            "far": 5142,
+            "leaves": 72624,
+            "triangles": 198576,
+            "chunks": 25,
+            "cachedTiles": 54,
+            "bufferBytes": 1207752,
+            "stats": {
+              "buildMs": 100.19999992847443,
+              "selectionMs": 170.799999833107,
+              "selectionCount": 138,
+              "candidates": 21600,
+              "masked": 6049,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "settings": {
+            "riverYards": true,
+            "moss": false,
+            "substrate": false,
+            "canyonSoft": false,
+            "canyonNormals": true,
+            "desertMeso": true
+          },
+          "memory": {
+            "geometries": 319,
+            "textures": 106
+          },
+          "calls": 90,
+          "triangles": 876806
+        }
+      ],
+      "errors": []
+    }
+  ]
+}
