@@ -1591,3 +1591,8 @@ See `river-underlay-mask-persistent-stream-20261022/README.md`. Real day/night 9
 ### River underlay: repeat daytime streaming
 
 `river-underlay-mask-persistent-stream-warm-20261022` removes night/cache-warmth confounding: both control and candidate reproduce cold drift on first trip, then return pixel-exact with identical mask hashes on a second daytime trip. No stale ownership/GL errors; geometry counts exact. This is settled single-seed evidence, not fast-streaming or occupancy validation. Proceed to gameplay occupancy checks; candidate remains QA-only.
+
+
+### Persistent River underlay: actual crop event
+
+`river-underlay-mask-persistent-occupancy-20261022` exercises normal center placement and maize planting, without manual coverage invalidation. CropPlaced sets dirty, normal sync consumes it; 97 nearby anchors become zero and mask center is zero. Four inspected real frames, no GL errors or overflow. Night frames are post-placement only, not a separate planting test. Other occupancy events and quality/overflow recovery remain pending; no timing claim.
