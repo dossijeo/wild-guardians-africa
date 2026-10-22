@@ -53,3 +53,16 @@ Reproduce added captures with `node tools/experiments/capture-canyon-bank-sedime
 Baseline day drift is 1.125 ms, much larger than the second paired difference. These results show no consistent measured penalty in this fixture, not a demonstrated optimization. RAF means 16.624–16.634 ms are refresh-limited and do not establish uncapped FPS. Full p95 and device data remain in summary JSON. No other captures/tests ran during timing.
 
 Reproduce timings with `node tools/experiments/measure-canyon-bank-sediment-20261022.mjs`; set `WG_BENCH_OUT=docs/qa/global-visual-lab/canyon-bank-sediment-cost-20261022` and run `python tools/experiments/audit-canyon-native-composition-resident-cost-20261022.py`. Streaming, additional camera/seed coverage, native integration and bank detail remain pending.
+
+
+## Land-side height-based wetness: not selected
+
+Twelve further real images compare `wetbank` and `wetedge`, both over the sediment-water candidate. Both feed the existing TerrainField river level into a QA ground uniform and modify only ground color/roughness after the sand layer. No terrain, navigation, geometry, textures or draws change. Each has six camera/time/geometry-equivalent pairs against baseline; `land-only-audit.json` additionally verifies all twelve comparisons against sediment, isolating the land material change.
+
+`wetbank` fades humidity between .04 and .52 height units above water, modulated by .18 units of existing material noise, multiplies color by (.76,.90,.85), and approaches roughness .62. Visually it darkens too much bank, especially at night. **Reject this broad variant artistically**, not on performance grounds.
+
+Source inspection explains the failure: `canyonHeight` in `src/world/terrain.js` builds a floor starting only .13 units above river level and rising gradually by .68 toward the wall. Height alone is a poor proxy for a narrow shoreline on this broad shelf.
+
+`wetedge` narrows the interval to .015–.16, noise to .04, color multiplier to (.90,.96,.92), roughness to .76. It avoids the excessive darkening but contributes little perceptible shoreline structure. **Do not integrate it merely because it compiles and changes pixels.** Day and night game views were inspected; the hard contour persists in both variants.
+
+Capture scripts `capture-canyon-bank-wetbank-20261022.mjs` and `capture-canyon-bank-wetedge-20261022.mjs` append their records after the original baseline. Set WG_BANK_VARIANT accordingly for paired audits. The directory now contains 36 frames across six variants. No additional GPU timings were run for these rejected land-side studies; the previous sediment benchmark does not measure them. Their source adds one noise evaluation and arithmetic, no texture fetch. Return to broader grass-coverage structure next; keep sediment as QA and defer native shoreline integration until an approach improves the boundary itself.

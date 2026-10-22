@@ -1545,3 +1545,7 @@ Shared continuous coverage now owns retained Blender Mangrove leaves, original g
 
 ### 2026-10-22: Canyon sediment-edge QA and cost
 Six new paired day/night frames: two-scale world noise breaks clean bank tint; hard land/water contour remains, QA retained not adopted. Moving resident A/B/A/B720 valid GPU queries and exact frame geometry. GPUday10.894/9.617 then9.769/9.629ms;night10.753/10.745 then10.812/10.732ms. Baseline day drift1.125ms: no speedup claim. CPU/cadence separate; no streaming/preparation measurement. See canyon-bank-combined-review-20261022 and canyon-bank-sediment-cost-20261022.
+
+
+### 2026-10-22: reject height-only Canyon bank humidity
+Twelve new day/night frames, exact geometry/cameras versus sediment. Broad .04-.52 height humidity darkens the low shelf too widely; narrow .015-.16 avoids it but adds little visible structure. Terrain source confirms shelf starts only .13 above water. Neither integrated; no timing claim for rejected variants. Preserve sediment QA; next priority River broad-scale continuous coverage rather than further marginal bank color changes. See canyon-bank-combined-review-20261022.
