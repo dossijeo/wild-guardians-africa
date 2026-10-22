@@ -1631,3 +1631,8 @@ See `river-underlay-native-lifecycle-20261022.md` and JSON: 30 real frames using
 ### Mangrove shallow band trial: not selected
 
 `mangrove-bank-shallow-review-20261022`: 12 real frames/6 exact geometry-camera pairs. Existing shore distance sampled to one float per water vertex; no added geometry/draws. Day/night inspection finds a uniform dark halo, not reference-like sediment/roots transition. Reject this form artistically, preserve evidence; no timing claim. Next localized irregular transition rather than global dark bank strip.
+
+
+### Mangrove irregular sediment candidate
+
+`mangrove-bank-sediment-review-20261022`: 12 real frames, six matched camera/time/geometry pairs. World-space variable sediment reduces continuous dark halo but improvement remains modest; hard green land edge persists. Retain QA intermediate, next coherent land-side wet substrate; no native adoption or timing claim.
