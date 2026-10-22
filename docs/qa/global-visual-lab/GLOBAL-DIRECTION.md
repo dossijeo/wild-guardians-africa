@@ -2039,3 +2039,7 @@ El usuario observa camuflaje con el suelo y solicita oscurecer, aumentar contras
 ## 2026-10-23: tono intermedio de helechos
 
 El usuario considera excesivamente oscura la última variante. Mantener tamaño (+35% XZ / +25% Y), contraste 1,22, distribución y gradiente de volumen; aclarar únicamente la modulación de color de (0,30;0,43;0,25) a (0,37;0,50;0,31), sin regresar al primer verde (0,48;0,61;0,40). Revisar capturas de día y noche. Los benchmarks de variantes superadas se conservan como parciales; no justifican una decisión de rendimiento de esta versión.
+
+## 2026-10-23: borde irregular de helechos
+
+El usuario solicita reducir aproximadamente 30% la densidad en la periferia para romper la franja uniforme, conservando el interior. Probar descarte determinista durante generación de tiles cacheados, con probabilidad máxima 0,30 en el borde y transición gradual a cero en el interior. Reutilizar las muestras de cobertura/desgaste ya calculadas para la huella, sin nuevas consultas a Wild Engine ni aleatoriedad por cámara/fotograma. Mantener color intermedio, tamaño y exclusiones de seguridad. No reducir la densidad global ni usar transparencia para ocultar plantas.
