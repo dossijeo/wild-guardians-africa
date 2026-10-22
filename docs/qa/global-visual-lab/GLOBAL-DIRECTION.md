@@ -1808,3 +1808,8 @@ La revisión apunta ahora a riverX(102), no a una charca. Worldbank suaviza el b
 ## 2026-10-22: Gran Rio soil bank
 
 Native opt-in `riverBank=soil` preserves the validated variable soil bank and reduces grass at the water margin. Six day/night QA/native captures are RGB exact. ABAB cost is mixed, including a night regression; retained for visible artistic improvement, not claimed as an FPS optimization. Short streaming passes without errors, but daytime return differs and remains unresolved. See [report](river-land-bank-review-20261022/README.md). Approved moss shore direction remains retained; biome-specific water palettes are next.
+
+
+## 2026-10-22: native regional water palettes
+
+Opt-in `waterPalette=regional` with global-lighting now preserves the reviewed biome colors through the shared fluid material context. All 36 day/night QA/native comparisons are RGB exact. Mangrove olive remains an artistic candidate needing surface variation; approved moss shores are retained. No extra shader work or textures, and no FPS gain claimed. See [native palette report](native-water-palette-parity-20261022/README.md). Worldbank shoreline routing remains QA and must still be integrated and validated separately.

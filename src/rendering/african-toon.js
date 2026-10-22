@@ -208,7 +208,7 @@ export function paintedWaterMaterial(color,lava=false,seed=42,bounds=null,lighti
   if(waterSlope)material.userData.globalWaterSlope=waterSlope;
   const shadowUniforms=lighting?.shadowUniforms??createNativeShadowUniforms();if(!lighting?.shadowUniforms)material.addEventListener('dispose',()=>shadowUniforms.fallback.dispose());
   const uniforms={uTime:{value:0},uWaterScale:{value:WATER_DEFAULTS.scale},uAmplitude:{value:WATER_DEFAULTS.amplitude},uStrokeWidth:{value:WATER_DEFAULTS.strokeWidth},uHandmade:{value:WATER_DEFAULTS.handmade},uPigment:{value:0},uMotifs:{value:0},uSeedOffset:{value:new THREE.Vector2(...waterSeed(seed))}};
-  waterPalette(color,lava).forEach((ink,i)=>uniforms['uInk'+i]={value:new THREE.Vector3(...ink)});
+  waterPalette(color,lava,lighting?.regionalWaterBiome).forEach((ink,i)=>uniforms['uInk'+i]={value:new THREE.Vector3(...ink)});
   uniforms.uFluidClip={value:bounds?(clipOutside?2:1):0};uniforms.uFluidBounds={value:new THREE.Vector4(...(bounds??[-1e8,-1e8,1e8,1e8]))};
   Object.assign(uniforms,{uEnvEndpoints:lighting?.uniforms.uEnvEndpoints??{value:1},uWorldOrigin:lighting?.uniforms.uWorldOrigin??{value:new THREE.Vector2()},uEnvDay:{value:lighting?.textures[0]??null},uEnvNight:{value:lighting?.textures[1]??null},uEnvYaw:lighting?.yaw??{value:0},uNight:lighting?.uniforms.uNight??{value:0},uNightLight:lighting?.uniforms.uNightLight??{value:1.12},uLightDir:lighting?.uniforms.uLightDir??{value:new THREE.Vector3(-30,55,25).normalize()},uExposure:{value:1},uKind:{value:1},uSurfaceLava:{value:lava?1:0}});
   material.onBeforeCompile=shader=>{

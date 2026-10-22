@@ -2,7 +2,17 @@
 export const WATER_DEFAULTS=Object.freeze({speed:.65,scale:.55,amplitude:.72,strokeWidth:1.08,handmade:.52});
 const hex=value=>[1,3,5].map(i=>parseInt(value.slice(i,i+2),16)/255);
 const mix=(a,b,t)=>a.map((v,i)=>v+(b[i]-v)*t);
-export function waterPalette(color,lava=false){
+const REGIONAL_WATER=Object.freeze({
+ sabana:['#627967','#8b9e7b','#b2bc93','#d4d6b2'],
+ 'gran-rio':['#487f70','#518c87','#8ab2a1','#c7d2b9'],
+ manglares:['#879a42','#7c8c58','#a6ae7a','#cdd0a3'],
+ 'gran-canon':['#456e80','#6596a1','#97b9b8','#d2d9c4'],
+});
+export function regionalWaterEnabled(search=globalThis.location?.search??''){
+ const q=new URLSearchParams(search);return q.get('visualLab')==='global-lighting'&&q.get('waterPalette')==='regional';
+}
+export function waterPalette(color,lava=false,biome=null){
+  if(!lava&&REGIONAL_WATER[biome])return REGIONAL_WATER[biome].map(hex);
   const water=hex(color);
   if(lava)return [hex('#421d16'),hex('#b43d0b'),water,hex('#ffe284')];
   const deep=mix(water,hex('#157986'),.28),mid=mix(water,hex('#38bcc5'),.42),light=mix(mid,hex('#7fe3d6'),.36);
