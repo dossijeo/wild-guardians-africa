@@ -1,0 +1,356 @@
+{
+  "results": [
+    {
+      "variant": "alpha",
+      "phase": "day",
+      "run": 0,
+      "gpu": {
+        "mean": 24.176171466666666,
+        "p95": 29.066614,
+        "max": 44.86302
+      },
+      "cpu": {
+        "mean": 6.6188888834582436,
+        "p95": 10.800000011920929,
+        "max": 12.300000011920929
+      },
+      "interval": {
+        "mean": 28.608888889021344,
+        "p95": 33.10000002384186,
+        "max": 64.89999997615814
+      },
+      "packingMs": {
+        "mean": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "uploadBytes": {
+        "mean": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "memory": {
+        "geometries": 234,
+        "textures": 121
+      },
+      "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "variant": "alpha",
+      "phase": "night",
+      "run": 0,
+      "gpu": {
+        "mean": 23.13791278888889,
+        "p95": 27.984113,
+        "max": 44.907239
+      },
+      "cpu": {
+        "mean": 5.876666663752662,
+        "p95": 9.599999964237213,
+        "max": 10.099999964237213
+      },
+      "interval": {
+        "mean": 26.295555555820464,
+        "p95": 32,
+        "max": 51.200000047683716
+      },
+      "packingMs": {
+        "mean": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "uploadBytes": {
+        "mean": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "memory": {
+        "geometries": 234,
+        "textures": 121
+      },
+      "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "variant": "ordered",
+      "phase": "day",
+      "run": 1,
+      "gpu": {
+        "mean": 22.751317855555556,
+        "p95": 27.371978,
+        "max": 38.419322
+      },
+      "cpu": {
+        "mean": 6.007777781618966,
+        "p95": 9.5,
+        "max": 13
+      },
+      "interval": {
+        "mean": 25.68888888888889,
+        "p95": 29.399999976158142,
+        "max": 52.30000001192093
+      },
+      "packingMs": {
+        "mean": 0.18888888756434122,
+        "p95": 0.30000001192092896,
+        "max": 0.6000000238418579
+      },
+      "uploadBytes": {
+        "mean": 44040,
+        "p95": 44040,
+        "max": 44040
+      },
+      "memory": {
+        "geometries": 238,
+        "textures": 121
+      },
+      "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "variant": "ordered",
+      "phase": "night",
+      "run": 1,
+      "gpu": {
+        "mean": 23.069720011111112,
+        "p95": 27.230467,
+        "max": 44.174739
+      },
+      "cpu": {
+        "mean": 6.45999999973509,
+        "p95": 10.599999964237213,
+        "max": 12.300000011920929
+      },
+      "interval": {
+        "mean": 28.691111110978657,
+        "p95": 35,
+        "max": 61.30000001192093
+      },
+      "packingMs": {
+        "mean": 0.19888889127307469,
+        "p95": 0.30000001192092896,
+        "max": 0.3999999761581421
+      },
+      "uploadBytes": {
+        "mean": 44040,
+        "p95": 44040,
+        "max": 44040
+      },
+      "memory": {
+        "geometries": 238,
+        "textures": 121
+      },
+      "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "variant": "alpha",
+      "phase": "day",
+      "run": 2,
+      "gpu": {
+        "mean": 22.17556338888889,
+        "p95": 25.721093,
+        "max": 30.347499
+      },
+      "cpu": {
+        "mean": 5.567777776055866,
+        "p95": 8.800000011920929,
+        "max": 11.099999964237213
+      },
+      "interval": {
+        "mean": 25.370000000132453,
+        "p95": 29.900000035762787,
+        "max": 47.30000001192093
+      },
+      "packingMs": {
+        "mean": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "uploadBytes": {
+        "mean": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "memory": {
+        "geometries": 238,
+        "textures": 121
+      },
+      "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "variant": "alpha",
+      "phase": "night",
+      "run": 2,
+      "gpu": {
+        "mean": 23.6432618,
+        "p95": 29.355259,
+        "max": 44.007551
+      },
+      "cpu": {
+        "mean": 6.437777777512868,
+        "p95": 11.5,
+        "max": 14.300000011920929
+      },
+      "interval": {
+        "mean": 29.386666666799123,
+        "p95": 36.200000047683716,
+        "max": 66.19999998807907
+      },
+      "packingMs": {
+        "mean": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "uploadBytes": {
+        "mean": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "memory": {
+        "geometries": 238,
+        "textures": 121
+      },
+      "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "variant": "ordered",
+      "phase": "day",
+      "run": 3,
+      "gpu": {
+        "mean": 22.693024544444445,
+        "p95": 28.267134,
+        "max": 36.253175
+      },
+      "cpu": {
+        "mean": 5.931111113230387,
+        "p95": 9.5,
+        "max": 10.5
+      },
+      "interval": {
+        "mean": 25.881111111243566,
+        "p95": 32.30000001192093,
+        "max": 48.30000001192093
+      },
+      "packingMs": {
+        "mean": 0.18555555476082697,
+        "p95": 0.30000001192092896,
+        "max": 0.40000003576278687
+      },
+      "uploadBytes": {
+        "mean": 44040,
+        "p95": 44040,
+        "max": 44040
+      },
+      "memory": {
+        "geometries": 238,
+        "textures": 121
+      },
+      "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "variant": "ordered",
+      "phase": "night",
+      "run": 3,
+      "gpu": {
+        "mean": 23.540865977777777,
+        "p95": 29.780416,
+        "max": 39.82604
+      },
+      "cpu": {
+        "mean": 6.6622222198380365,
+        "p95": 10.5,
+        "max": 13.300000011920929
+      },
+      "interval": {
+        "mean": 29.27444444431199,
+        "p95": 37.60000002384186,
+        "max": 57.5
+      },
+      "packingMs": {
+        "mean": 0.1977777792347802,
+        "p95": 0.30000001192092896,
+        "max": 0.40000003576278687
+      },
+      "uploadBytes": {
+        "mean": 44040,
+        "p95": 44040,
+        "max": 44040
+      },
+      "memory": {
+        "geometries": 238,
+        "textures": 121
+      },
+      "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    }
+  ],
+  "controls": [
+    {
+      "phase": "day",
+      "mode": "gpu",
+      "pair": 1,
+      "unexpected": []
+    },
+    {
+      "phase": "day",
+      "mode": "gpu",
+      "pair": 2,
+      "unexpected": []
+    },
+    {
+      "phase": "day",
+      "mode": "cadence",
+      "pair": 1,
+      "unexpected": []
+    },
+    {
+      "phase": "day",
+      "mode": "cadence",
+      "pair": 2,
+      "unexpected": [
+        {
+          "frame": 31,
+          "calls": 5,
+          "triangles": 4677
+        },
+        {
+          "frame": 32,
+          "calls": 5,
+          "triangles": 4677
+        }
+      ]
+    },
+    {
+      "phase": "night",
+      "mode": "gpu",
+      "pair": 1,
+      "unexpected": []
+    },
+    {
+      "phase": "night",
+      "mode": "gpu",
+      "pair": 2,
+      "unexpected": []
+    },
+    {
+      "phase": "night",
+      "mode": "cadence",
+      "pair": 1,
+      "unexpected": []
+    },
+    {
+      "phase": "night",
+      "mode": "cadence",
+      "pair": 2,
+      "unexpected": [
+        {
+          "frame": 31,
+          "calls": 3,
+          "triangles": -273
+        },
+        {
+          "frame": 32,
+          "calls": 3,
+          "triangles": -273
+        }
+      ]
+    }
+  ]
+}

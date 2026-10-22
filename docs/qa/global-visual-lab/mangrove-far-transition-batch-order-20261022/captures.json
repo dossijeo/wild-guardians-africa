@@ -1,0 +1,239 @@
+{
+  "note": "Same-frame cross-atlas diagnostic: place impostor meshes in a fixed renderOrder band starting at 5000, reverse only their relative batch order, then restore that band. Canonical instance arrays unchanged. This forced-band image is diagnostic, not normal gameplay ordering.",
+  "records": [
+    {
+      "biome": "manglares",
+      "quality": "media",
+      "phase": "day",
+      "variant": "before",
+      "packing": {
+        "packs": 0,
+        "packMs": 0,
+        "uploadBytes": 0
+      },
+      "meshes": 4,
+      "instances": 1101,
+      "camera": [
+        74,
+        13.219999933242798,
+        14
+      ],
+      "shots": [
+        {
+          "order": "original",
+          "calls": 66,
+          "triangles": 450871,
+          "glError": 0
+        },
+        {
+          "order": "reversed",
+          "calls": 66,
+          "triangles": 450871,
+          "glError": 0
+        },
+        {
+          "order": "restored",
+          "calls": 66,
+          "triangles": 450871,
+          "glError": 0
+        }
+      ],
+      "errors": []
+    },
+    {
+      "biome": "manglares",
+      "quality": "media",
+      "phase": "day",
+      "variant": "after",
+      "packing": {
+        "packs": 0,
+        "packMs": 0,
+        "uploadBytes": 0
+      },
+      "meshes": 4,
+      "instances": 1101,
+      "camera": [
+        74,
+        13.219999933242798,
+        14
+      ],
+      "shots": [
+        {
+          "order": "original",
+          "calls": 66,
+          "triangles": 450871,
+          "glError": 0
+        },
+        {
+          "order": "reversed",
+          "calls": 66,
+          "triangles": 450871,
+          "glError": 0
+        },
+        {
+          "order": "restored",
+          "calls": 66,
+          "triangles": 450871,
+          "glError": 0
+        }
+      ],
+      "errors": []
+    },
+    {
+      "biome": "manglares",
+      "quality": "media",
+      "phase": "day",
+      "variant": "ordered",
+      "packing": {
+        "packs": 4,
+        "packMs": 2.399999976158142,
+        "uploadBytes": 44040
+      },
+      "meshes": 4,
+      "instances": 1101,
+      "camera": [
+        74,
+        13.219999933242798,
+        14
+      ],
+      "shots": [
+        {
+          "order": "original",
+          "calls": 70,
+          "triangles": 453073,
+          "glError": 0
+        },
+        {
+          "order": "reversed",
+          "calls": 70,
+          "triangles": 453073,
+          "glError": 0
+        },
+        {
+          "order": "restored",
+          "calls": 70,
+          "triangles": 453073,
+          "glError": 0
+        }
+      ],
+      "errors": []
+    },
+    {
+      "biome": "manglares",
+      "quality": "media",
+      "phase": "night",
+      "variant": "before",
+      "packing": {
+        "packs": 4,
+        "packMs": 2.399999976158142,
+        "uploadBytes": 44040
+      },
+      "meshes": 4,
+      "instances": 1101,
+      "camera": [
+        74,
+        13.219999933242798,
+        14
+      ],
+      "shots": [
+        {
+          "order": "original",
+          "calls": 66,
+          "triangles": 450871,
+          "glError": 0
+        },
+        {
+          "order": "reversed",
+          "calls": 66,
+          "triangles": 450871,
+          "glError": 0
+        },
+        {
+          "order": "restored",
+          "calls": 66,
+          "triangles": 450871,
+          "glError": 0
+        }
+      ],
+      "errors": []
+    },
+    {
+      "biome": "manglares",
+      "quality": "media",
+      "phase": "night",
+      "variant": "after",
+      "packing": {
+        "packs": 4,
+        "packMs": 2.399999976158142,
+        "uploadBytes": 44040
+      },
+      "meshes": 4,
+      "instances": 1101,
+      "camera": [
+        74,
+        13.219999933242798,
+        14
+      ],
+      "shots": [
+        {
+          "order": "original",
+          "calls": 66,
+          "triangles": 450871,
+          "glError": 0
+        },
+        {
+          "order": "reversed",
+          "calls": 66,
+          "triangles": 450871,
+          "glError": 0
+        },
+        {
+          "order": "restored",
+          "calls": 66,
+          "triangles": 450871,
+          "glError": 0
+        }
+      ],
+      "errors": []
+    },
+    {
+      "biome": "manglares",
+      "quality": "media",
+      "phase": "night",
+      "variant": "ordered",
+      "packing": {
+        "packs": 4,
+        "packMs": 2.399999976158142,
+        "uploadBytes": 44040
+      },
+      "meshes": 4,
+      "instances": 1101,
+      "camera": [
+        74,
+        13.219999933242798,
+        14
+      ],
+      "shots": [
+        {
+          "order": "original",
+          "calls": 70,
+          "triangles": 453073,
+          "glError": 0
+        },
+        {
+          "order": "reversed",
+          "calls": 70,
+          "triangles": 453073,
+          "glError": 0
+        },
+        {
+          "order": "restored",
+          "calls": 70,
+          "triangles": 453073,
+          "glError": 0
+        }
+      ],
+      "errors": []
+    }
+  ]
+}

@@ -18,3 +18,13 @@ for r in d['records']:
   sheet=Image.new('RGB',(1280,744));sheet.paste(Image.fromarray(x),(0,24));sheet.paste(Image.open(folder/'reversed.png').resize((640,360)),(640,384));ImageDraw.Draw(sheet).text((8,6),'Original full view; reversed ordering inset bottom right',fill='white');sheet.save(p/f"{r['phase']}-order.jpg",quality=94)
 (p/'audit.json').write_text(json.dumps(rows,indent=2)+'\n',encoding='utf8',newline='\n')
 print(json.dumps(rows,indent=2))
+
+if {'full','incremental'}.issubset({r['variant'] for r in d['records']}):
+ parity=[]
+ for phase in ['day','night']:
+  r=next(r for r in d['records'] if r['phase']==phase)
+  a=np.array(Image.open(p/f"{r['biome']}-{r['quality']}-full-{phase}/original.png").convert('RGB'))
+  b=np.array(Image.open(p/f"{r['biome']}-{r['quality']}-incremental-{phase}/original.png").convert('RGB'))
+  row=dict(phase=phase,pixels=int(np.any(a!=b,axis=2).sum()));parity.append(row)
+ (p/'parity.json').write_text(json.dumps(parity,indent=2)+'\n',encoding='utf8',newline='\n')
+ assert all(r['pixels']==0 for r in parity),parity

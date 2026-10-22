@@ -1863,3 +1863,8 @@ Motion captures retain blue water/moss/full backgrounds. Strict parity fails on 
 ## 2026-10-22: ordered smooth impostor QA candidate
 
 Implemented opaque/partial complementary draws plus per-atlas depth ordering in reusable packed views, preserving canonical readiness IDs. Mangrove day/night input-order reversal now RGB exact (unsorted alpha changed ~4000 pixels); unit test passes. Static Intel UHD ABAB: +4 calls/+2202 triangles; daytime GPU +0.28/+0.47 ms, night mixed (+1.96/-1.01). Retain candidate for art; no native adoption or speedup claim. Moving sorting/upload cost, cross-atlas partial overlap and standby ordering remain next requirements. See mangrove-far-transition-ordered-20261022 and far-ordered-static-cost-20261022.
+
+
+## 2026-10-22: moving ordered transparency and incremental packing
+
+Per-atlas opaque split reduces forced batch-order sensitivity from ~5768 to 40 pixels in Mangroves; residual is a small partial-crown overlap, not globally solved transparency. Moving baseline sorting/packing costs ~0.19-0.20 ms and marks 44040 bytes/frame. Incremental cache has RGB-exact day/night parity and equal ABAB workloads but saves only 0.85% bytes and ~0.006-0.049 ms local mean; do not adopt as significant optimization or attribute noisy whole-frame gains to it. Retain smooth art candidate; broaden normal-order visual validation across biomes next, rather than expanding marginal cache work. See mangrove-far-transition-batch-order-20261022 and far-incremental-moving-cost-20261022.
