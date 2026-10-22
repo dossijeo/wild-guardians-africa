@@ -7,7 +7,7 @@ import {emit} from '../src/simulation/game.js';
 
 test('continuous coverage requires explicit Savanna lab option',()=>{
  assert.equal(continuousGrassEnabled('sabana','?visualLab=global-lighting&grassCoverage=continuous'),true);
- for(const [biome,query] of [['sabana',''],['sabana','?grassCoverage=continuous'],['manglares','?visualLab=global-lighting&grassCoverage=continuous']])assert.equal(continuousGrassEnabled(biome,query),false);
+ for(const [biome,query] of [['sabana',''],['sabana','?grassCoverage=continuous'],['volcanes','?visualLab=global-lighting&grassCoverage=continuous']])assert.equal(continuousGrassEnabled(biome,query),false);
 });
 test('native coverage follows time, event invalidation, chunk ownership and idempotent disposal',async()=>{
  const modules=JSON.parse(await readFile(new URL('../public/assets/visual-lab/continuous-grass/modules.json',import.meta.url),'utf8'));

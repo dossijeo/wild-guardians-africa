@@ -1529,3 +1529,7 @@ canyonFloor=warm integrates retained floor palette for mapped resident/horizon m
 
 ### 2026-10-22: native two-scale Mangrove moss
 mangroveMoss=layered integrates retained height-blended rotated moss maps before separate soil lighting. Six QA/native pairs pixel-exact,4 tests pass. Intel UHD moving ABAB720validGPUqueries, exact per-frame geometry/cameras. GPUday-.135/-.311ms,night+.058/+.726ms;CPU+.128 to+.354ms. Preserve art,opt-in;no optimization claim, investigate alongside leaf-coverage integration. Leaf adapter,low/portrait/streaming/global completion remain pending. See mangrove-moss-native-20261022.
+
+
+### 2026-10-22: native Mangrove leaf coverage
+Shared continuous coverage now owns retained Blender Mangrove leaves, original geometry/pigment/wind/LOD/wear taper; distinct density and fixed leaf size. Six QA/native pairs pixel-exact, equal counters and1,204,048bufferbytes,8tests pass. Moving ABAB720validGPUqueries exact per-frame geometry; timings vary both signs,baseline night drift2.116ms;no speedup claim. Retain native opt-in. Native moss/substrate/leaf/sky composition available;long streaming,quality,portrait,event gameplay and overall art target pending. See mangrove-leaf-native-20261022.

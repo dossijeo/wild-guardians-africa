@@ -1,3 +1,4 @@
+import {prepareMangroveLeaves,mangroveLeafShader} from './mangrove-leaf-cover.js';
 import {markGroundDetailEvent} from './blender-ground-details.js';
 import * as THREE from 'three';
 import {hashCell} from '../world/terrain.js';
@@ -54,23 +55,24 @@ void main(){
 function geometry(data,capacity){const g=new THREE.InstancedBufferGeometry();for(const [name,size]of [['position',3],['normal',3],['flatPosition',3],['bladeRoot',3],['flatNormal',3],['uv',2]])g.setAttribute(name,new THREE.Float32BufferAttribute(data[name],size));g.setIndex(data.index);g.setAttribute('coverageAnchor',new THREE.InstancedBufferAttribute(new Float32Array(capacity*4),4));g.setAttribute('coverageData',new THREE.InstancedBufferAttribute(new Float32Array(capacity*4),4));g.setAttribute('coverageSlope',new THREE.InstancedBufferAttribute(new Float32Array(capacity*2),2));g.instanceCount=0;return g;}
 export function continuousGrassEnabled(biome,search=globalThis.location?.search??''){
  const params=new URLSearchParams(search);
- return ['sabana','gran-rio'].includes(biome)&&params.get('visualLab')==='global-lighting'&&params.get('grassCoverage')==='continuous';
+ return ['sabana','gran-rio','manglares'].includes(biome)&&params.get('visualLab')==='global-lighting'&&params.get('grassCoverage')==='continuous';
 }
 // Scene-owned visual layer. Resident render geometry and confirmed events are
 // its only spatial inputs; borrowed terrain textures remain owned by BiomeGround.
 export async function createContinuousGrass(world){
- const river=world.state.biome==='gran-rio';
- if(!river&&world.state.biome!=='sabana')throw Error('Continuous coverage supports Savanna and Grand River');
- const modules=await(await fetch('/assets/visual-lab/continuous-grass/modules.json',{signal:world.loading?.signal})).json();
+ const river=world.state.biome==='gran-rio',mangrove=world.state.biome==='manglares';
+ if(!river&&!mangrove&&world.state.biome!=='sabana')throw Error('Unsupported continuous coverage biome');
+ const raw=await(await fetch(mangrove?'/assets/visual-lab/mangrove-leaf-fill-20261021/modules.json':'/assets/visual-lab/continuous-grass/modules.json',{signal:world.loading?.signal})).json();
+ const modules=mangrove?prepareMangroveLeaves(raw):raw;
  if(world.disposed||world.loading?.signal.aborted)throw Error('Coverage loading cancelled');
  const q={variant:'C',chunks:new Map(),tiles:new Map(),dirty:true,enabled:true,timeOverride:null,stats:{buildMs:0,selectionMs:0,selectionCount:0,candidates:0,masked:0,overflow:0},signature:'',near:0,far:0};
- const low=['baja','muy_baja'].includes(world.quality);q.spacing=low?.5:.4;q.farDistance=low?40:48;q.nearDistance=low?0:24;
+ const low=['baja','muy_baja'].includes(world.quality);q.spacing=mangrove?(low?.6:.5):(low?.5:.4);q.farDistance=low?40:48;q.nearDistance=low?0:24;
  q.edgePadding=river?.85:.6;
- const vertexShader=river?vertex.replace('vec3(1.14,1.09,.97)','vec3(1.14,1.18,1.05)').replace('dayShade=vec3(.17,.28,.34)','dayShade=vec3(.14,.26,.32)').replace('vec3(1.55,1.42,1.02)','vec3(1.77,1.79,1.42)').replace('nightShade=vec3(.095,.17,.32)','nightShade=vec3(.24,.36,.48)'):vertex;
+ const vertexShader=mangrove?mangroveLeafShader(vertex):river?vertex.replace('vec3(1.14,1.09,.97)','vec3(1.14,1.18,1.05)').replace('dayShade=vec3(.17,.28,.34)','dayShade=vec3(.14,.26,.32)').replace('vec3(1.55,1.42,1.02)','vec3(1.77,1.79,1.42)').replace('nightShade=vec3(.095,.17,.32)','nightShade=vec3(.24,.36,.48)'):vertex;
  const group=new THREE.Group();group.name='continuous-herbaceous-cover';group.userData.materialRegistryExcluded=true;world.scene.add(group);q.group=group;
  const first=world.terrainMeshes.find(m=>m.material.userData.biomeGround).material.userData.biomeGround;
- q.uniforms={...world.toon.uniforms,...world.toon.shadowUniforms,uCoverageTime:{value:0},uCoverageWindStrength:{value:8},uCoverageRefined:{value:1},uCoverageSpacing:{value:q.spacing/.4},uCoverageFar:{value:q.farDistance},uCoverageColor:first.uGroundDetailMap,uCoverageSeed:first.uGroundSeed,uCoverageScale:{value:first.uGroundParams.value.x},uCoverageDiagnostic:{value:0}};
- for(const data of Object.values(modules)){data.flatNormal=[];for(let i=0;i<data.uv.length/2;i++){const leaf=Math.round(data.uv[i*2+1]*12);const n=leaf<8?modules.light.normal.slice(leaf*9,leaf*9+3):data.normal.slice(i*3,i*3+3);data.flatNormal.push(...n);}}
+ q.uniforms={...world.toon.uniforms,...world.toon.shadowUniforms,uCoverageTime:{value:0},uCoverageWindStrength:{value:8},uCoverageRefined:{value:1},uCoverageSpacing:{value:mangrove?1:q.spacing/.4},uCoverageFar:{value:q.farDistance},uCoverageColor:first.uGroundDetailMap,uCoverageSeed:first.uGroundSeed,uCoverageScale:{value:first.uGroundParams.value.x},uCoverageDiagnostic:{value:0}};
+ if(!mangrove)for(const data of Object.values(modules)){data.flatNormal=[];for(let i=0;i<data.uv.length/2;i++){const leaf=Math.round(data.uv[i*2+1]*12);const n=leaf<8?modules.light.normal.slice(leaf*9,leaf*9+3):data.normal.slice(i*3,i*3+3);data.flatNormal.push(...n);}}
  q.meshes=[['refined',12000],['light',18000]].map(([name,capacity])=>{const g=geometry(modules[name],capacity);const m=new THREE.ShaderMaterial({vertexShader,fragmentShader:fragment,uniforms:{...q.uniforms,uCoverageRefined:{value:1}},glslVersion:THREE.GLSL3,side:THREE.DoubleSide,transparent:false,depthWrite:true,toneMapped:false});const mesh=new THREE.Mesh(g,m);mesh.name='coverage-'+name;mesh.frustumCulled=false;mesh.castShadow=false;mesh.receiveShadow=true;group.add(mesh);return {mesh,capacity,data:modules[name]}});
  function blockers(){const buckets=new Map();const add=(o,minX,minZ,maxX,maxZ)=>{for(let x=Math.floor((minX-q.edgePadding-.1)/8);x<=Math.floor((maxX+q.edgePadding+.1)/8);x++)for(let z=Math.floor((minZ-q.edgePadding-.1)/8);z<=Math.floor((maxZ+q.edgePadding+.1)/8);z++){const key=x+','+z;if(!buckets.has(key))buckets.set(key,[]);buckets.get(key).push(o)}};
  // Read existing obstacle footprints once per invalidation; never invoke navigation/engine queries.
@@ -113,10 +115,10 @@ export async function createContinuousGrass(world){
  const bits=hashCell(seed,ix,iz,8371),x=(ix+.5)*step+((bits&255)/255-.5)*step*.25,z=(iz+.5)*step+(((bits>>>8)&255)/255-.5)*step*.25;
  if(x<c.cx*48-24||x>=c.cx*48+24||z<c.cz*48-24||z>=c.cz*48+24)continue;
  const s=sample(c,x,z),[cover,meso,moisture,wear]=s.ctx;q.stats.candidates++;
- if(cover<(river?.20:.10)||(river&&moisture<.20)||wear>.25||Math.hypot(s.sx,s.sz)>.42||nearWater(c,x,z)||(q.blockers.get(Math.floor(x/8)+','+Math.floor(z/8))??[]).some(o=>o.polygon?footprintDistance(o.polygon,x,z)<q.edgePadding:Math.hypot(x-o.x,z-o.z)<o.r+q.edgePadding)){q.stats.masked++;continue;}
+ if(cover<(river?.20:.10)||(river&&moisture<.20)||wear>.25||Math.hypot(s.sx,s.sz)>.42||(mangrove?nearWaterChunk(c,x,z):nearWater(c,x,z))||(q.blockers.get(Math.floor(x/8)+','+Math.floor(z/8))??[]).some(o=>o.polygon?footprintDistance(o.polygon,x,z)<q.edgePadding:Math.hypot(x-o.x,z-o.z)<o.r+q.edgePadding)){q.stats.masked++;continue;}
  // Check the footprint against the resident wear mask, keeping leaf reach off paths.
  let edgeWear=wear;for(const [dx,dz] of [[.6,0],[-.6,0],[0,.6],[0,-.6],[.42,.42],[-.42,.42],[.42,-.42],[-.42,-.42]]){edgeWear=Math.max(edgeWear,sample(c,x+dx*(q.edgePadding/.6),z+dz*(q.edgePadding/.6)).ctx[3]);if(edgeWear>.27)break;}if(edgeWear>.27){q.stats.masked++;continue;}
- items.push([x,s.y+.006,z,(river?clamp((.27-edgeWear)/.17,0,1)*(.65+.25*((bits>>>16)&255)/255)*clamp((cover-.20)/.12,0,1)*clamp((moisture-.20)/.12,0,1):(.80+.32*((bits>>>16)&255)/255)*clamp((cover-.08)/.18,.7,1)),bits/4294967296*Math.PI*2,meso*.65+moisture*.35,cover,moisture,s.sx,s.sz]);}
+ items.push([x,s.y+.006,z,(river?clamp((.27-edgeWear)/.17,0,1)*(.65+.25*((bits>>>16)&255)/255)*clamp((cover-.20)/.12,0,1)*clamp((moisture-.20)/.12,0,1):(.80+.32*((bits>>>16)&255)/255)*clamp((cover-.08)/.18,.7,1)),bits/4294967296*Math.PI*2,meso*.65+moisture*.35,cover,mangrove?wear:moisture,s.sx,s.sz]);}
  const result={chunk:c.cx+','+c.cz,tx,tz,items};q.tiles.set(key,result);q.stats.buildMs+=performance.now()-start;return result;}
  const old=world.scene.onBeforeRender,frustum=new THREE.Frustum(),vp=new THREE.Matrix4(),sphere=new THREE.Sphere(new THREE.Vector3(),6.5);
  function select(){const start=performance.now(),camera=world.camera,eyeX=camera.position.x-world.scene.position.x,eyeZ=camera.position.z-world.scene.position.z;vp.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse);frustum.setFromProjectionMatrix(vp);const bins=[[],[]],visibleTiles=[];q.stats.overflow=0;
@@ -130,8 +132,8 @@ export async function createContinuousGrass(world){
  q.configureQuality=quality=>{
   if(q.quality===quality)return;
   q.quality=quality;const low=['baja','muy_baja'].includes(quality);
-  q.spacing=low?.5:.4;q.farDistance=low?40:48;q.nearDistance=low?0:24;
-  q.uniforms.uCoverageSpacing.value=q.spacing/.4;q.uniforms.uCoverageFar.value=q.farDistance;
+  q.spacing=mangrove?(low?.6:.5):(low?.5:.4);q.farDistance=low?40:48;q.nearDistance=low?0:24;
+  q.uniforms.uCoverageSpacing.value=mangrove?1:q.spacing/.4;q.uniforms.uCoverageFar.value=q.farDistance;
   q.group.visible=quality!=='muy_baja'&&q.variant!=='A';q.tiles.clear();q.dirty=true;
  };
  q.configureQuality(world.quality);
@@ -145,6 +147,6 @@ export async function createContinuousGrass(world){
  };
  for(const key of world.chunks.keys()){const [cx,cz]=key.split(',').map(Number);chunk(cx,cz)}
  q.releaseEvents=observeGameEvents(world.state,event=>markGroundDetailEvent(q,world.state,event,id=>world.objects.get(id)?.position));
- q.audit=()=>({variant:q.variant,active:q.group.visible&&!q.disposed,quality:q.quality,biome:world.state.biome,edgePadding:q.edgePadding,nearDistance:q.nearDistance,moduleSpacing:q.spacing,near:q.near,far:q.far,leaves:q.near*12+q.far*8,triangles:q.near*60+q.far*8,chunks:q.chunks.size,cachedTiles:q.tiles.size,bufferBytes:q.meshes.reduce((s,e)=>s+Object.values(e.mesh.geometry.attributes).reduce((n,a)=>n+a.array.byteLength,0)+(e.mesh.geometry.index?.array.byteLength??0),0),stats:{...q.stats},engineQueries:0,castShadow:false});
+ q.audit=()=>({variant:q.variant,active:q.group.visible&&!q.disposed,quality:q.quality,biome:world.state.biome,edgePadding:q.edgePadding,nearDistance:q.nearDistance,moduleSpacing:q.spacing,near:q.near,far:q.far,leaves:q.near*(mangrove?8:12)+q.far*(mangrove?4:8),triangles:q.near*(mangrove?32:60)+q.far*8,chunks:q.chunks.size,cachedTiles:q.tiles.size,bufferBytes:q.meshes.reduce((s,e)=>s+Object.values(e.mesh.geometry.attributes).reduce((n,a)=>n+a.array.byteLength,0)+(e.mesh.geometry.index?.array.byteLength??0),0),stats:{...q.stats},engineQueries:0,castShadow:false});
  return q;
 }
