@@ -207,7 +207,7 @@ export class WorldScene {
     this.locomotionVfx=new LocomotionVfx(this.vfxLibrary,this.destructionPass,this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z),(x,z)=>this.nav.field.canyon?this.nav.field.waterInfo(x,z):null);await milestone('vfx');
     this.raidCamera=new RaidCameraDirector(this.camera,this.controls,nav.field);this.focusFarm();
     const initialFarRegion=this.loadingCpuBudget&&loadingProgress&&farVegetation?startInitialFarRegion(this,farVegetation===true?{}:farVegetation):null;
-    this.chunkStream=spatialSession?.stream??new NativeChunkStream(this.nav.config,this.pack.profile,{loaded:()=>this.chunks,onData:data=>this.installChunk(data),onError:error=>this.onError?.(error),onFallback:error=>console.warn('GeneraciÃƒÂ³n local de chunks:',error.message??error)});
+    this.chunkStream=spatialSession?.stream??new NativeChunkStream(this.nav.config,this.pack.profile,{loaded:()=>this.chunks,onData:data=>this.installChunk(data),onError:error=>this.onError?.(error),onFallback:error=>console.warn('GeneraciÃ³n local de chunks:',error.message??error)});
     this.syncChunks();await phase('load-chunks-horizon-ready',()=>this.loadReady(Promise.all([this.chunkStream.whenReady(),this.horizon.whenReady()])));if(this.disposed)throw new Error('Carga de mundo cancelada');this.syncChunks();await milestone('chunks');
     await this.loadReady(this.prepareSavedAnimalRigs(state));loadingSyncWitness(this.onLoadingSpan,'restore-sync',()=>this.sync(0));
     if(continuousGrassEnabled(state.biome)){
