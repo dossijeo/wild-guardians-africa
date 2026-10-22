@@ -1774,3 +1774,7 @@ Real cinematic sampling exposed daytime sky grading jump and nighttime decorativ
 ### Canyon cover secondary seed / low-quality validation
 
 `canyon-cover-secondary-low-20261022`:seed913/baja,15 real streaming checkpoints, zero sampled footprint violations, all three RGB returns exact; day/night natural-bank views retain vegetation readability. sampleChunk102 calls mean.626/p951.400/max8.100ms (not full streaming/frame cost). Keep candidate; event verification and quality policy pending, no native adoption yet.
+
+### Canyon cover event lifecycle
+
+`canyon-cover-events-20261022`:actual event bus/field/asset in isolated copied-state scene, six crop/wall/center events at0.529m from chunk seam. Four nearby chunks update; removal restores exact279-instance distribution; zero sampled footprint violations and idle flush0. Observed event flush4.2-10.6ms, not a benchmark bound. Event logic supported; quality policy and generation cost remain before opt-in native integration.

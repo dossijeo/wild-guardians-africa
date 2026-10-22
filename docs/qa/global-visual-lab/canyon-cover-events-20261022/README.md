@@ -1,0 +1,7 @@
+# Canyon cover event invalidation
+
+Reproduce with Vite5190: node tools/experiments/verify-canyon-cover-events-20261022.mjs. Runs actual Blender asset, campaign seed712 field and actual observeGameEvents/emit bus in a separate offscreen scene with copied state arrays. Synthetic crop/wall/center records exercise renderer subscriptions; this is not a gameplay-command or campaign regression test. Live campaign arrays and rules unchanged.
+
+Site x-17.343695/z215.470968,0.529 units from a chunk seam.25 resident detail chunks initially279 instances. CropPlaced removes1; CropPicked restores279 exactly. WallChainBuilt removes1; WallRemoved restores exactly. PlacementCommitted center removes4; StructureRuined restores exactly. Each event invalidates the same4 nearby chunks. Every post-flush vertex audit has zero water/occupancy violations. Immediate second flush returns0, proving this path does not resample without dirty chunks. events.json retains all records.
+
+Observed synchronous flush time4.2-10.6ms for4 chunks (includes regeneration and rebuild; excludes GPU execution). This is a single instrumented event sequence, not a controlled overhead or worst-case bound. Largest first update10.6ms is material and needs attention before broad adoption; no FPS improvement claim. Existing larger-footprint filter remains QA-only. Further work: quality policy and reduce repeated geometric/field work during event regeneration without weakening exclusions, then integrate behind an explicit option and validate real commands.
