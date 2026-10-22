@@ -52,3 +52,7 @@ day: [normal](side-by-side-gran-canon-day-0.jpg) · [elevated](side-by-side-gran
 night: [normal](side-by-side-gran-canon-night-0.jpg) · [elevated](side-by-side-gran-canon-night-1.jpg) · [reverse](side-by-side-gran-canon-night-2.jpg)
 
 [Desert paired images and controls](../main-desert-comparison-20261022/README.md)
+
+## Follow-up: normal night views inspected
+
+All six normal night pairs inspected. Sabana/River retain visible grass depth and recognizable silhouettes; darker, less saturated water fits surroundings. Mangrove leaf-patch repetition persists at night, while water/shore integration improves. Desert dune relief remains readable. Canyon wall detail and softened shoreline remain visible; broad dark-blue river and repeated highlights still need motion judgment. Volcano ground separates rock/ash more clearly, but lava dominates both images and geometric glowing cells remain conspicuous. No normal-night catastrophic loss of readability identified; this is qualitative review, not a luminance or playability certification. Elevated/reverse visual review and temporal checks remain pending.
