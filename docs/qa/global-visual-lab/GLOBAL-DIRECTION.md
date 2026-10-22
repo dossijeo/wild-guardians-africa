@@ -1690,3 +1690,7 @@ Skip water noise outside its maximum 3.5-unit shore influence, keeping derivativ
 ### Volcano orientation-weighted warmth review
 
 `volcano-ground-ridge-review-20261022`:18 real frames; six night pairs RGB exact, geometry/camera/time retained. Localized sun-facing warmth preserves charcoal better than uniform tint, but visual gain is modest. Both remain QA, no native promotion or performance claim. Next prioritize material-scale variation rather than further small tint changes.
+
+### Volcano ash structure pilot
+
+`volcano-ash-structure-review-20261022`:12 real frames, six geometry/camera/time pairs exact, no captured errors. Wider warmer deposits improve broad material separation more visibly than sun tint. Both day/night change. Retain QA; excessive smoothing, motion and ABAB cost remain to evaluate before native promotion.
