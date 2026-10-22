@@ -1,5 +1,5 @@
 import {GpuTimer} from '/tests/browser/gpu-timer.js';
-export async function measureCampaign(world,{gpuEnabled=false,samples=180,warmup=30}={}){
+export async function measureCampaign(world,{gpuEnabled=false,samples=180,warmup=30,diagnostics=false}={}){
  const renderer=world.renderer,gl=renderer.getContext(),gpu=gpuEnabled?new GpuTimer(gl):null,original=world.render,frames=[];
  const state=()=>JSON.stringify({day:world.state.day,time:world.state.time,elapsed:world.state.elapsed,structures:world.state.structures,workers:world.state.workers,plants:world.state.plants});
  const before=state();let index=0,last=null;
@@ -13,7 +13,7 @@ export async function measureCampaign(world,{gpuEnabled=false,samples=180,warmup
     const start=performance.now();
     try{return original.apply(this,args);}catch(error){clearTimeout(timeout);reject(error);throw error;}finally{
      const cpuMs=performance.now()-start;if(recording)gpu?.end();
-     if(recording)frames.push({frame:index-warmup,cpuMs,intervalMs:interval,calls:renderer.info.render.calls,triangles:renderer.info.render.triangles,camera:world.camera.position.toArray()});
+     if(recording)frames.push({frame:index-warmup,cpuMs,intervalMs:interval,calls:renderer.info.render.calls,triangles:renderer.info.render.triangles,camera:world.camera.position.toArray(),...(diagnostics?{renderDt:args[0],obstruction:{...world.obstructionStats},lod:{...world.lodStats},shadowCache:{...world.releaseNativeShadow?.cache.stats},groups:{...world.assetGroups.stats}}:{})});
      renderer.info.autoReset=auto;
      if(++index===warmup+samples){world.render=original;clearTimeout(timeout);resolve();}
     }

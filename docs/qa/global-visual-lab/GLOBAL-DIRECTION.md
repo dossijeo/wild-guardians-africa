@@ -2002,3 +2002,20 @@ User explicitly rejects this pigment blend because leaves become almost invisibl
 ## 2026-10-22: approved Mangrove leaves are the LEFT original
 
 User clarified the selection of the additive-fringe comparison: LEFT, original dense coverage, not the additive right side. Keep the original selected recipe and its pigment, size, density and boundary response. Both additive and connected fringe remain QA history, not selected improvements. The mistaken uncommitted native additive option was removed. Do not interpret this approval as validation of all six biomes or completion of performance/streaming checks.
+
+
+## 2026-10-22: tarea posterior a la pantalla de inicio — microeventos
+
+Solicitud explícita del usuario tras incorporar main: validar visualmente los microeventos interactivos (grupos de sprites de hojas, pájaros, hormigas, nubes, fuego y demás variantes) frente a la nueva dirección gráfica.
+
+Orden de trabajo: terminar primero la integración de main y la nueva línea base; completar las mejoras y validaciones pendientes de biomas, agua e impostores; rehacer la pantalla de inicio ya encargada; después abordar esta revisión de microeventos. No adelantar cambios artísticos de microeventos durante los benchmarks de integración.
+
+Criterios: presencia visible y legible sobre la zona de cultivos a escala normal de juego; coherencia de color, iluminación y calidad con los seis biomas y su ciclo día/noche; movimiento natural, variado e interesante; ausencia de clipping con suelo, cultivos, edificios y demás elementos, y revisión de bordes de pantalla/oclusiones. Comprobar también las interacciones durante los tiempos muertos y conservar su comportamiento funcional.
+
+El usuario autoriza sustituir los sprites si su diseño o calidad desentonan. Revisar primero el catálogo real y demostrar los problemas con capturas/vídeos del juego; validar las sustituciones en contexto, con cámara fija y en movimiento, perfiles medio/bajo y costes medidos. Documentar fuentes y licencias de cualquier recurso nuevo. No considerar terminada la tarea por el mero hecho de que los sprites se dibujen o las pruebas funcionales pasen.
+
+## 2026-10-23: experimento autorizado de hojas de Manglares en sprites
+
+El usuario solicita probar sprites 2D con normales, elevados unos centímetros, incluso con varias hojas por sprite, frente a las hojas 3D caras. Esta autorización específica permite tarjetas para este experimento; no reinterpretar la antigua exclusión de planos cruzados como prohibición. Conservar la variante 3D aprobada como control y no reducir densidad, tamaño ni contraste para producir una aparente mejora de rendimiento.
+
+Primera candidata QA: horneado de las hojas cupped existentes, ocho hojas/16 triángulos cerca y cuatro/8 lejos, cobertura alfa y normales en espacio del módulo, 4,5 cm sobre suelo. Mantener buffers de instancias, máscaras, distancias y selección originales. Preparada sin modificar src ni activar la opción por defecto. Comparar primer plano, escala normal y ángulo oblicuo, día/noche y movimiento; medir GPU/CPU, overdraw y memoria antes de recomendar. Las normales del viento son todavía una aproximación y la tarjeta no conserva la silueta vertical de la hoja. La comparación real se ejecutará tras la serie de integración en marcha para no contaminarla.
