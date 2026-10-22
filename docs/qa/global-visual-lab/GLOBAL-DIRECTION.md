@@ -1517,3 +1517,7 @@ Shared native opt-in now includes Gran Rio with its retained pigment/night ambie
 
 ### 2026-10-22: native River yard mask
 riverYards=islands integrates retained visual wear islands in BiomeGround. Existing renderer revision/snapshot source injected, cached until terrain revision changes; no QA globals or Engine internals. Six native/QA day-night pose pairs pixel-exact, seven targeted tests pass, snapshot test one read across25 same-revision accesses. No FPS claim; real newly-founded-village event validation pending. Retained River composition now runs with native soil/coverage/yards/sky options. See river-yards-native-20261022.
+
+
+### 2026-10-22: native Canyon warm shadow floor
+canyonFloor=warm integrates retained floor palette for mapped resident/horizon materials, no QA lifecycle wrappers. Twelve near/wide day-night pairs:7 pixel-exact,5 max1/255 sparse differences; equal geometry/counters,4 tests pass. Intel UHD moving-camera ABAB720 valid GPU queries:day deltas-.303/+.024ms,night+.156/+.395ms;cadence17.55-17.57ms. Retain opt-in with night overhead documented; no optimization claim. Wide plateau mottling still present in baseline; soft sand/adaptive horizon remain to combine and validate. See canyon-warm-floor-native-20261022.

@@ -1,3 +1,4 @@
+import {canyonWarmFloorEnabled,patchCanyonWarmFloor} from './global-canyon-warm-floor.js';
 import {skyAtmosphereEnabled} from './sky-atmosphere.js';
 import {patchVolcanicRock} from './global-volcanic-rock.js';
 import {patchRiverSoil} from './global-river-soil.js';
@@ -37,6 +38,7 @@ const normalDetailLightingFunctions=artLightingFunctions.replace(
 // Shared by the world renderer only. The original menu owns a separate renderer.
 export class AfricanToon {
   constructor(){
+    this.canyonWarmFloor=canyonWarmFloorEnabled();
     this.globalVisualLighting=new URLSearchParams(globalThis.location?.search??'').get('visualLab')==='global-lighting';
     this.volcanicNightSpectrum=this.globalVisualLighting&&new URLSearchParams(globalThis.location?.search??'').get('volcanicNight')==='spectrum';
     this.volcanicNightAmbient=this.globalVisualLighting&&new URLSearchParams(globalThis.location?.search??'').get('volcanicNight')==='ambient'||this.volcanicNightSpectrum;
@@ -163,8 +165,13 @@ export class AfricanToon {
       const compile=material.onBeforeCompile;
       material.onBeforeCompile=(shader,renderer)=>{compile(shader,renderer);shader.fragmentShader=patchCanyonSand(shader.fragmentShader,material.userData.canyonSandFull,material.userData.canyonSandSoft);};
     }
+    const warmFloor=this.canyonWarmFloor&&this.globalVisualLighting&&material.userData.toonGround&&material.userData.biomeGround&&material.userData.groundBiome==='canyons';
+    if(warmFloor){
+      const compile=material.onBeforeCompile;
+      material.onBeforeCompile=(shader,renderer)=>{compile(shader,renderer);shader.fragmentShader=patchCanyonWarmFloor(shader.fragmentShader);};
+    }
     recordNativeDepthHook(material,original,'toon',...(material.userData.horizonBounds?['horizon']:[]));
-    material.customProgramCacheKey=()=>cache()+atmosphereCacheKey+(this.desertMeso?'|desert-meso-filter-v1':'')+(this.desertResidualWear?'|desert-residual-wear-v1':'')+(this.volcanicNightSpectrum?'|volcanic-night-spectrum-v1':this.volcanicNightAmbient?'|volcanic-night-ambient-v1':'')+(material.userData.volcanicRock?'|volcanic-rock-layered-v1':'')+(material.userData.riverSoil?'|river-soil-v2':'')+(material.userData.mangroveSubstrate?'|mangrove-substrate-full-v1':'')+(material.userData.canyonSand?'|canyon-sand-v2:'+Boolean(material.userData.canyonSandFull):'')+(material.userData.canyonSandSoft?'|canyon-sand-soft-v1':'')+(material.userData.volcanicAsh?'|volcanic-ash-v1:'+material.userData.volcanicAsh:'')+(material.userData.desertSand?'|desert-sand-v1':'')+(material.userData.biomeGround?.uCliffRock?'|cliff-rock-v1':'')+(this.globalVisualLighting?'|global-visual-lighting|desert-soft-v1|'+(material.userData.groundBiome??'object'):'')+'|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|'+(material.userData.biomeGround?'biome-ground-4.1.10.3':material.userData.toonGround?'ground':'object')+'|'+(material.userData.biomeGround?.uGroundLayered?.value?'visual-layer':'base-ground')+'|'+(material.userData.artBounds?'illustrated-4.1.6':'toon-4.1.4')+'|'+(material.userData.visualLabNormalDetail?'visual-normal-detail':material.userData.visualLabNormal?'visual-normal':'authored-normal')+'|'+material.type+'|'+(material.userData.horizonBounds?'horizon-clip':'resident');
+    material.customProgramCacheKey=()=>cache()+atmosphereCacheKey+(warmFloor?'|canyon-warm-floor-v1':'')+(this.desertMeso?'|desert-meso-filter-v1':'')+(this.desertResidualWear?'|desert-residual-wear-v1':'')+(this.volcanicNightSpectrum?'|volcanic-night-spectrum-v1':this.volcanicNightAmbient?'|volcanic-night-ambient-v1':'')+(material.userData.volcanicRock?'|volcanic-rock-layered-v1':'')+(material.userData.riverSoil?'|river-soil-v2':'')+(material.userData.mangroveSubstrate?'|mangrove-substrate-full-v1':'')+(material.userData.canyonSand?'|canyon-sand-v2:'+Boolean(material.userData.canyonSandFull):'')+(material.userData.canyonSandSoft?'|canyon-sand-soft-v1':'')+(material.userData.volcanicAsh?'|volcanic-ash-v1:'+material.userData.volcanicAsh:'')+(material.userData.desertSand?'|desert-sand-v1':'')+(material.userData.biomeGround?.uCliffRock?'|cliff-rock-v1':'')+(this.globalVisualLighting?'|global-visual-lighting|desert-soft-v1|'+(material.userData.groundBiome??'object'):'')+'|african-toon-v4.1.4|native-pcf-relative|fine-noise-diagnostic|hdr-endpoints|'+(material.userData.biomeGround?'biome-ground-4.1.10.3':material.userData.toonGround?'ground':'object')+'|'+(material.userData.biomeGround?.uGroundLayered?.value?'visual-layer':'base-ground')+'|'+(material.userData.artBounds?'illustrated-4.1.6':'toon-4.1.4')+'|'+(material.userData.visualLabNormalDetail?'visual-normal-detail':material.userData.visualLabNormal?'visual-normal':'authored-normal')+'|'+material.type+'|'+(material.userData.horizonBounds?'horizon-clip':'resident');
     // The source function already applies its filmic curve. Three still performs
     // output color conversion and fog, without applying a second tone curve.
     material.toneMapped=false;material.needsUpdate=true;
