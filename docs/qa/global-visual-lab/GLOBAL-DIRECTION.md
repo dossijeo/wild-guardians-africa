@@ -1919,3 +1919,8 @@ Single-world rectangle/triangle ABAB yields 720 valid GPU queries and ~2062 addi
 ## 2026-10-22: corrected leaf shoreline survives low-quality streaming
 
 192m low-profile Mangrove excursion day/night: no overflow/errors, leaf counts2432/4066/1864/4066/2432 return exactly. 80 whole coverage-chunk preparations mean0.514ms/p951.8ms/max2.9ms, event/streaming work rather than per-frame; index-only time and actual JS memory not isolated. Full backgrounds retained. Shoreline shape looks natural in the far checkpoint, but regular leaf repetition on exposed soil remains an artistic issue separate from rectangular exclusions. See mangrove-leaf-stream-low-20261022.
+
+
+## 2026-10-22: wider leaf jitter retained as QA only
+
+Low-profile exposed-soil comparison with full backgrounds: within-cell amplitude0.25→0.95 breaks some regularity but enlarges holes; flat leaf-piece appearance persists. Do not adopt as a claimed volume solution or reject based on unmeasured performance. Preserve QA candidate and water-footprint fix. Next examine far-leaf shape/normals and material contrast. See mangrove-leaf-jitter-20261022.
