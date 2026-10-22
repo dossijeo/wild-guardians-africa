@@ -7,3 +7,6 @@ QA-only stamp into existing renderer ground-mask wear channel, maximum .7 at cro
 Not production ready: QA mutates once and has no event-driven removal/restoration. A native implementation must retain immutable base masks, update on visual crop invalidations and dispose correctly; must not leave marks when crops disappear. Benchmark and streaming/event validation required before integration. Selected recipe unchanged.
 
 Reproduce capture-river-crop-soil-20261022.mjs then compare-river-crop-soil-20261022.py. Baseline gran-rio-populated-frozen-20261022; left original, right candidate. Crop audit separately confirms12 opaque original-stage models; no alpha transition responsible for this snapshot's low contrast.
+
+
+Lifecycle prototype added separately in tools/experiments/crop-soil-mask-prototype-20261022.mjs (not imported by game). Tests verify base bytes untouched, non-wear channels preserved, no work without invalidation, marks removed after empty-crop invalidation, original memory restored on release and idempotent disposal. Still requires actual event wiring, chunk ownership/streaming and visual equivalence tests before native integration. A changed texture data pointer also requires coordinating cached ground-detail mask references; do not wire it blindly.
