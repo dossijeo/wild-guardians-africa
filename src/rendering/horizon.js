@@ -18,7 +18,7 @@ export class NativeHorizon{
     this.canyonShadowCaster=visualOptions.get('visualLab')==='global-lighting'&&visualOptions.get('canyonShadows')==='horizon';
     this.smoothCanyonNormals=visualOptions.get('visualLab')==='global-lighting'&&visualOptions.get('canyonNormals')==='smooth';
     this.groundMaterial=groundMaterial;this.group=null;this.key=null;this.region=null;
-    this.spatial=options.spatial??null;
+    this.spatial=options.spatial??null;this.prepareWater=options.prepareWater??null;
     this.generator=new HorizonGenerator({...options,
       workerFactory:options.workerFactory??(this.spatial?spatialHorizonWorker:undefined)});
   }
@@ -52,7 +52,7 @@ export class NativeHorizon{
     // Canyon batches discard the resident rectangle; desert's seam apron remains.
     if(config.biome==='canyons'){material.userData.horizonBounds??=new THREE.Vector4();material.userData.horizonBounds.set(...region.bounds);}
     const ground=new THREE.Mesh(nativeTerrainBuffer(data.terrain),material);ground.userData.nativeHorizon='terrain';ground.castShadow=config.biome==='canyons'&&this.canyonShadowCaster;group.add(ground);
-    if(data.water.length){const water=new THREE.Mesh(nativeTerrainBuffer(data.water),this.waterMaterial(region.bounds,true));water.userData.nativeHorizon='water';group.add(water);}
+    if(data.water.length){const water=new THREE.Mesh(nativeTerrainBuffer(data.water),this.waterMaterial(region.bounds,true));water.userData.nativeHorizon='water';this.prepareWater?.(water,region);group.add(water);}
     this.group=group;this.scene.add(group);
     return this.region;
   }
