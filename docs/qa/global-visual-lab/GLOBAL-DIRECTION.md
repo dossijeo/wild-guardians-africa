@@ -1596,3 +1596,8 @@ See `river-underlay-mask-persistent-stream-20261022/README.md`. Real day/night 9
 ### Persistent River underlay: actual crop event
 
 `river-underlay-mask-persistent-occupancy-20261022` exercises normal center placement and maize planting, without manual coverage invalidation. CropPlaced sets dirty, normal sync consumes it; 97 nearby anchors become zero and mask center is zero. Four inspected real frames, no GL errors or overflow. Night frames are post-placement only, not a separate planting test. Other occupancy events and quality/overflow recovery remain pending; no timing claim.
+
+
+### Persistent River underlay: quality/capacity recovery
+
+`river-underlay-mask-persistent-quality-20261022`: 16 frames, six restored RGB frames pixel-exact, activation/ranges correct, forced overflow disables filter, no GL errors. Two-render settling leaves first-frame recovery ordering unproven; helper disables overflow immediately but reactivation currently reads prior overflow. Resolve before native integration.
