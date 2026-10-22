@@ -1,4 +1,4 @@
-# Six-biome closure review — candidate1
+# Six-biome closure review â€” candidate1
 
 This is an evidence-based closure plan, not a completion declaration. Reference/current JPGs preserve aspect ratio, using actual mockups listed in ART-REFERENCES.md and the latest native medium day game-view captures. Different world populations/cameras are explicitly not pixel-equivalent. Current images are sources already recorded, not new renders.
 
@@ -17,7 +17,7 @@ Closure gates for each biome:
 | Sabana | Warm continuous grass and shadow separation in reviewed-five-biomes | Combined candidate low-profile/motion check; inhabited/cultivated framing and overall comparison | Small ripple pattern changes |
 | Gran Rio | Dense grass, distinct soil/water margin, full backgrounds | Check near/far material transition and representative inhabited/riverside views; combined modest-profile evidence | Extra microdetail only visible close up |
 | Mangroves | Cupped leaves, moss, deep blue water; leaf-specific cost/motion evidence | Resolve or demonstrate acceptable broad green uniformity at normal view; ensure leaf/soil variation reads naturally, then combined review | Individual leaf decoration |
-| Desert | Warm dunes and accepted shadow richness retained | Oasis edge view missing from current combined set; inhabited/cultivated scene and combined low/motion checks | Further dune detail if not visible at gameplay scale |
+| Desert | Warm dunes and accepted shadow richness retained | Water gate not applicable: authored desert profile fluid=none and no water assets; inhabited/cultivated scene and combined low/motion checks | Further dune detail if not visible at gameplay scale |
 | Volcanoes | Rock/ash contrast and luminous lava retained | Review normal-scale warm/cool balance against reference and lava edges in motion; combined modest-profile evidence | Additional fissure microdetail |
 | Grand Canyon | Stratification/shadows, balanced native bank, cost and stream/motion evidence | Representative richer riverbank/cultivated scene, combined low-profile and water-time animation check | Minor repeated distant highlights unless dominant in normal play |
 
@@ -25,4 +25,6 @@ These are unresolved evidence/art questions, not a claim every item is a confirm
 
 Stopping rule: once the gates are evidenced and no important defect dominates normal play, close the biome with explicit limitations. Move minor residuals to optional backlog rather than repeatedly redesigning accepted systems. Reopen only for a demonstrated regression or unmet requirement, not merely because another variation is possible.
 
-Immediate next action: representative scene/framing audit, prioritizing missing Desert oasis and Canyon riverside coverage, plus targeted Mangrove ground variation. No further water-ripple micro-experiments until their normal-view importance is established.
+Immediate next action: representative scene/framing audit, prioritizing Desert modest-profile checks and Canyon riverside coverage, plus targeted Mangrove ground variation. No further water-ripple micro-experiments until their normal-view importance is established.
+
+Correction: initial oasis gate was an unsupported assumption. Inspected biome-desert.json: fluid=none, no assets with water. spatial-savanna.cpp preparePonds skips biome1 and fluidLevelFor returns0. Do not add an oasis to satisfy a QA gate. The existing dry-biome scope is unchanged.
