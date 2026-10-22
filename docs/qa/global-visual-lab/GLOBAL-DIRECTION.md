@@ -1993,3 +1993,8 @@ Native mangroveDistribution=varied requires global-lighting and Mangrove; origin
 ## 2026-10-22: user rejects reduced leaf presence
 
 The user rejects mangroveDistribution=varied: leaves lose too much apparent density and volume. This supersedes earlier positive artistic assessments. Keep the dense original in the selected recipe. The optional variant remains only as rejected experimental history, not a final candidate. Further distribution work must preserve original leaf size and growth response; isolate positional/orientation changes instead of reducing coverage. The completed low-quality benchmark measures this rejected option and does not justify adoption.
+
+
+## User rejection: insufficient visible leaf presence
+
+User explicitly rejects this pigment blend because leaves become almost invisible against the ground. Unchanged geometric density does not establish preserved perceptual density. Supersedes earlier positive candidate assessment. Do not select or integrate this treatment. The uncommitted native option was removed after its capture completed. Dense original pigment, geometry and selected recipe remain unchanged. Next work must preserve original contrast as well as size and density, and target spatial boundary regularity directly.
