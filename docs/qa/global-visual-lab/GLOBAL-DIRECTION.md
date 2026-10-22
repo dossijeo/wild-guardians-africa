@@ -1984,3 +1984,7 @@ Native canyonBank=balanced requires global-lighting and natural shores, Canyon o
 ## 2026-10-22: explicit six-biome closure criteria
 
 See closure-review-20261022 for six mockup/current comparisons, per-biome unmet evidence versus optional polish, and frozen globalClosureQuery candidate. No biome declared complete. Stop treating every possible ripple variant as a blocker; prioritize representative normal-scale scenes, missing oasis/riverside evidence and Mangrove broad material variation. Preserve full original goal and final technical checks.
+
+## 2026-10-22: varied Mangrove cover available as opt-in
+
+Native mangroveDistribution=varied requires global-lighting and Mangrove; original recipe retained. Twelve QA/native images RGB exact; six final workloads identical. Six targeted tests pass. Reduces visible grid/patch contrast, but broad homogeneous areas remain. Measured day GPU cost +0.61..1.85ms, night -0.53..0.67ms, CPU mixed; no FPS claim. See mangrove-varied-native-20261022. This preserves the candidate for review rather than declaring Mangrove complete.

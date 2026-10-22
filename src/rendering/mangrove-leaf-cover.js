@@ -12,11 +12,13 @@ export function prepareMangroveLeaves(raw){
  return {...data,flatPosition,flatNormal,bladeRoot,uv};};
  return {refined:adapt(raw.near,true),light:adapt(raw.far,false)};
 }
-export function mangroveLeafShader(vertex){
- return vertex.replace('growth=farFade*extra;', 'growth=farFade*extra*smoothstep(.10,.48,coverageData.z)*(1.-smoothstep(.03,.25,coverageData.w));')
+export function mangroveLeafShader(vertex,varied=false){
+ return vertex.replace('growth=farFade*extra;', varied?'growth=farFade*extra*smoothstep(.10,.96,coverageData.z)*(1.-smoothstep(.03,.25,coverageData.w))*(.25+.75*coverageData.y);':'growth=farFade*extra*smoothstep(.10,.48,coverageData.z)*(1.-smoothstep(.03,.25,coverageData.w));')
  .replace('(root.xz+pos.xz*lod)*uCoverageScale','(root.xz+mix(localRoot.xz,pos.xz,lod))*uCoverageScale')
  .replace('vec3(1.14,1.09,.97)','vec3(.72,.78,.62)')
  .replace('pigment*=.88+.20*coverageData.y;', 'pigment*=mix(.72,1.08,fract(uv.y*13.7+coverageData.x*3.17));');
 }
 
 export function cuppedMangroveLeavesEnabled(search=globalThis.location?.search??''){const q=new URLSearchParams(search);return q.get('visualLab')==='global-lighting'&&q.get('mangroveLeaves')==='cupped';}
+
+export function variedMangroveDistributionEnabled(search=globalThis.location?.search??''){const q=new URLSearchParams(search);return q.get('visualLab')==='global-lighting'&&q.get('mangroveDistribution')==='varied';}
