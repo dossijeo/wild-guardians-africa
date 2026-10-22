@@ -1853,3 +1853,8 @@ Warmed single-world Sabana QA: six before/alpha pairs have equal calls/triangles
 ## 2026-10-22: moving full-background transition control
 
 Sabana day/night 240-frame camera paths retain exact per-frame calls/triangles across dither, alpha and return. Ten PNG return controls are RGB exact. Real WebM recordings retained (235 encoded frames; not synchronized benchmarks). Smooth far-tree candidate removes dotted coverage, but dense overlap ordering, other biomes and long-distance streaming remain unproven. No production adoption yet. See far-transition-motion-20261022/README.md.
+
+
+## 2026-10-22: Mangrove transparency order limitation isolated
+
+Motion captures retain blue water/moss/full backgrounds. Strict parity fails on one nocturnal frame (8 triangles) and 3 tiny RGB return differences; not a performance comparison. Independent synchronous impostor-order reversal is exact under dither but changes 4018 day / 4010 night pixels under alpha, with all restored images exact and equal workloads. Alpha batches currently lack camera-depth ordering and disable depth writes even for opaque coverage. Retain smooth direction; next separate opaque coverage and assess ordering of partial transitions, measuring added cost. Do not adopt current unsorted alpha globally. See mangrove-far-transition-order-20261022/README.md.
