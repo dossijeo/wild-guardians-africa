@@ -1641,3 +1641,8 @@ See `river-underlay-native-lifecycle-20261022.md` and JSON: 30 real frames using
 ### Mangrove land/water substrate candidate
 
 `mangrove-bank-wetland-review-20261022`: 12 real frames, six exact geometry pairs. Existing soil exposed near shore via R8 distance mask + existing patch noise; visibly breaks green edge into brown pockets, night readable, contours still smooth. Retain QA candidate. Temporary texture ownership currently whole-scene only; fix chunk lifetime before streaming/benchmark/native adoption.
+
+
+### Mangrove shore-mask ownership corrected
+
+`mangrove-bank-owned-review-20261022`: QA shares existing ground material owner counter; shore texture released with final owner and removed from whole-scene registry. In-browser real-class controlled-resource test passes normal and scene-first disposal exactly once. Six real RGB captures exact to prior candidate, no errors. Live streaming and benchmark still pending; no native adoption.
