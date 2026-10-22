@@ -1,7 +1,7 @@
 import {volcanicRockEnabled} from './global-volcanic-rock.js';
 import {riverSoilEnabled} from './global-river-soil.js';
 import {mangroveSubstrateEnabled} from './global-mangrove-substrate.js';
-import {canyonSandEnabled,canyonSandFull} from './global-canyon-sand.js';
+import {canyonSandEnabled,canyonSandFull,canyonSandSoft} from './global-canyon-sand.js';
 import {volcanicAshMode,ashMask} from './global-volcanic-ash.js';
 import {desertSandEnabled,DESERT_SAND_NORMAL_PATH} from './global-desert-sand.js';
 import * as THREE from 'three';
@@ -23,7 +23,7 @@ export class BiomeGround {
     this.riverSoil=biome==='grand_river'&&riverSoilEnabled();
     this.mangroveSubstrate=biome==='mangrove'&&mangroveSubstrateEnabled();
     this.desertSand=biome==='desert'&&desertSandEnabled();
-    this.canyonSand=biome==='canyons'&&canyonSandEnabled();this.canyonSandFull=this.canyonSand&&canyonSandFull();
+    this.canyonSand=biome==='canyons'&&canyonSandEnabled();this.canyonSandFull=this.canyonSand&&canyonSandFull();this.canyonSandSoft=this.canyonSand&&canyonSandSoft();
     this.volcanicRock=biome==='volcanoes'&&volcanicRockEnabled();
     this.volcanicAsh=this.volcanicRock?'mask':biome==='volcanoes'?volcanicAshMode():null;
     this.tile=this.desertSand?{...tiles[biome],normal:DESERT_SAND_NORMAL_PATH,scale:1/30,normalBoost:1,relief:0,jitter:0}:tiles[biome];this.assertOpen();if(this.canyonSand)this.tile={...this.tile,scale:.08};if(this.volcanicRock)this.tile={...this.tile,scale:.06,relief:.44};
@@ -87,7 +87,7 @@ export class BiomeGround {
     return {...(this.riverSoil?{uQaSoilBase:{value:this.layerTextures[0]},uQaSoilNormal:{value:this.layerTextures[1]},uQaSoilARH:{value:this.layerTextures[2]}}:{}),...(this.canyonSand?{uCanyonSandNormal:{value:this.layerTextures[0]},...(this.canyonSandFull?{uCanyonSandBase:{value:this.layerTextures[1]}}:{})}:{}),...(this.cliffRock?{uCliffRock:{value:this.cliffRock}}:{}),uGroundPureMoss:{value:this.tile.pureMoss?1:0},uGroundMask:{value:mask},uGroundRect:{value:new THREE.Vector4(bo.minX,bo.minZ,1.5,35)},uGroundMapped:{value:mapped?1:0},uGroundOn:{value:1},uGroundStrength:{value:1},uGroundMicro:{value:1},uGroundLayered:{value:this.layeredSavanna?(this.layeredRelief?2:1):0},uGroundDebug:{value:0},uGroundRelief:{value:1},uGroundParams:{value:new THREE.Vector4(tile.scale,tile.blend,this.layeredRelief?1.6:tile.normalBoost,this.layeredRelief?.12:(tile.relief??tile.jitter??0))},uGroundSeed:{value:new THREE.Vector2(hashCell(this.field.seed,0,1,417)/4294967296,hashCell(this.field.seed,1,0,417)/4294967296)},uGroundSoil:{value:new THREE.Vector3(...soil)},uGroundGrass:{value:new THREE.Vector3(...grass.map((v,i)=>v+(foliage[i]-v)*blend))},uGroundDetailMap:{value:this.textures[0]},uGroundNormal:{value:this.textures[1]},uGroundARH:{value:this.textures[2]},uLayerSandBase:{value:this.layerTextures[0]??this.textures[0]},uLayerSandNormal:{value:this.layerTextures[1]??this.textures[1]},uLayerSandARH:{value:this.layerTextures[2]??this.textures[2]}};
   }
   attach(material,cx,cz,bytes=null,options){
-    const uniforms=this.uniforms(cx,cz,bytes,options);material.userData.biomeGround=uniforms;material.userData.desertSand=this.desertSand;material.userData.riverSoil=this.riverSoil;material.userData.mangroveSubstrate=this.mangroveSubstrate;material.userData.canyonSand=this.canyonSand;material.userData.canyonSandFull=this.canyonSandFull;material.userData.groundBiome=this.field.c.biome;material.userData.volcanicAsh=this.volcanicAsh;material.userData.volcanicRock=this.volcanicRock;
+    const uniforms=this.uniforms(cx,cz,bytes,options);material.userData.biomeGround=uniforms;material.userData.desertSand=this.desertSand;material.userData.riverSoil=this.riverSoil;material.userData.mangroveSubstrate=this.mangroveSubstrate;material.userData.canyonSand=this.canyonSand;material.userData.canyonSandFull=this.canyonSandFull;material.userData.canyonSandSoft=this.canyonSandSoft;material.userData.groundBiome=this.field.c.biome;material.userData.volcanicAsh=this.volcanicAsh;material.userData.volcanicRock=this.volcanicRock;
     const mask=uniforms.uGroundMask.value;let owners=0;
     material.userData.retainBiomeGround=next=>{owners++;next.addEventListener('dispose',()=>{
       if(--owners===0&&mask!==this.unmappedMask&&this.masks.delete(mask))mask.dispose();

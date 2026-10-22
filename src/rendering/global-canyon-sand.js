@@ -3,7 +3,8 @@ export function canyonSandEnabled(search=globalThis.location?.search??''){
  const q=new URLSearchParams(search);return q.get('visualLab')==='global-lighting'&&['1','full'].includes(q.get('canyonSand'));
 }
 export function canyonSandFull(search=globalThis.location?.search??''){return canyonSandEnabled(search)&&new URLSearchParams(search).get('canyonSand')==='full';}
-export function patchCanyonSand(source,full=false){
+export function canyonSandSoft(search=globalThis.location?.search??''){return canyonSandEnabled(search)&&new URLSearchParams(search).get('canyonSandBlend')==='soft';}
+export function patchCanyonSand(source,full=false,soft=false){
  const edits=[
  ['void groundMaterial417(', 'uniform sampler2D uCanyonSandNormal;float canyonSandWeight=0.;void groundMaterial417('],
  ['materialAO410=mix(1.,mix(.45,1.,arh.r),amount);',`materialAO410=mix(1.,mix(.45,1.,arh.r),amount);if(canyon){
@@ -22,5 +23,6 @@ export function patchCanyonSand(source,full=false){
  ];
  for(const [from,to] of edits){if(!source.includes(from))throw Error('Canyon sand anchor missing: '+from);source=source.replace(from,to);}
  if(full)source=source.replace('uniform sampler2D uCanyonSandNormal;', 'uniform sampler2D uCanyonSandNormal,uCanyonSandBase;').replace('vec3 sand=vec3(0.56913064,0.52422576,0.47915630)', 'vec3 sand=textureGrad(uCanyonSandBase,suv,sdx,sdy).rgb');
+ if(soft)source=source.replace(')*canyonFlat;\n   vec2 suv=', '),mix(.35,1.,1.-smoothstep(.16,.65,footprint)))*canyonFlat;\n   vec2 suv=').replace('float deposit=smoothstep(.32,.62,','float deposit=mix(.55,smoothstep(.32,.62,');
  return source;
 }

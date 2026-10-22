@@ -1472,3 +1472,7 @@ Direct Float32 packing plus bounded edge lookup: three-origin Node medians454-50
 
 ## Soft sand camera playback (2026-10-22)
 240 real frames,120 matched day/night pairs; camera rises near-to-wide. Deliver MP4 comparisons and keyframes; near detail retained, distant contrast attenuates. Settled pose capture encoded30fps, NOT realtime benchmark or full temporal certification. Candidate ready for opt-in integration review; default unchanged. See canyon-sand-soft-motion-20261022.
+
+
+## Native soft Canyon sand option (2026-10-22)
+`visualLab=global-lighting&canyonSand=full&canyonSandBlend=soft` now native, default unchanged. 12 fresh images:10 exact vs QA,2 max1/255 delta;3 targeted tests pass. Geometry/other adapters still QA, quality/GPU validation pending. See canyon-sand-soft-native-20261022.
