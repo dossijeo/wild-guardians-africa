@@ -9,7 +9,7 @@ export function syncSelectedGrassMask(world,q){
  if(changed){
   const anchors=[];for(const tile of q.tiles.values())if(world.chunks.has(tile.chunk))for(const anchor of tile.items)anchors.push(anchor);
   // Replaced groups must not retain the old material's mask uniform ownership.
-  for(const [key,g]of world.chunks)if(p.chunks.has(key)&&p.chunks.get(key)!==g){const e=p.raster.selectedMasks?.get(key);if(e){e.texture.dispose();p.raster.selectedMasks.delete(key);}}
+  for(const [key,g]of world.chunks)if(p.chunks.has(key)&&p.chunks.get(key)!==g){const e=p.raster.selectedMasks?.get(key);if(e){if(e.uniform.value===e.texture)e.uniform.value=e.fallback;e.texture.dispose();p.raster.selectedMasks.delete(key);}}
   raster(world,p.raster,[anchors]);p.tiles=new Map(q.tiles);p.chunks=new Map(world.chunks);p.rebuilds++;
  }
  p.checks++;p.cpuMs+=performance.now()-start;

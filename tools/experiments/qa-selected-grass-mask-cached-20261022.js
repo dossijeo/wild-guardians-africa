@@ -4,7 +4,7 @@ const size=97,step=.5,radius=.4;
 // QA only: rasterize accepted, capacity-limited draw anchors, never Engine records.
 export function syncSelectedGrassMask(world,q,bins){
  const start=performance.now();q.selectedMasks??=new Map();q.stampCache??=new WeakMap();let uploads=0,bytes=0;
- for(const [key,e]of q.selectedMasks)if(!world.chunks.has(key)){e.texture.dispose();q.selectedMasks.delete(key);}
+ for(const [key,e]of q.selectedMasks)if(!world.chunks.has(key)){if(e.uniform.value===e.texture)e.uniform.value=e.fallback;e.texture.dispose();q.selectedMasks.delete(key);}
  for(const [key,g]of world.chunks){
   const uniform=g.children.find(m=>m.userData.ground)?.material.userData.biomeGround?.uQaCoverageMask;if(!uniform)continue;
   let e=q.selectedMasks.get(key);if(!e){const [cx,cz]=key.split(',').map(Number),data=new Uint8Array(size*size),texture=new THREE.DataTexture(data,size,size,THREE.RedFormat);texture.minFilter=texture.magFilter=THREE.LinearFilter;texture.generateMipmaps=false;texture.unpackAlignment=1;texture.needsUpdate=true;e={texture,data,scratch:new Uint8Array(data.length),x:cx*48-24,z:cz*48-24,uniform,fallback:uniform.value};q.selectedMasks.set(key,e);}

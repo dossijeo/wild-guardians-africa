@@ -40,3 +40,8 @@ python tools/experiments/audit-canyon-native-composition-resident-cost-20261022.
 ```
 
 Vite on5190. Global six-biome art objective remains incomplete; main untouched.
+
+
+### Mask ownership follow-up
+
+Corrected stale sampler references when resident chunks are evicted or replaced: the departing material returns to its fallback before its mask is disposed. The persistent regression test now checks replacement ownership, eviction disposal exactly once, zero resident bytes after eviction, and fresh allocation on re-entry. This is a synthetic lifecycle check, not evidence of successful gameplay streaming or occupancy-event integration; those gates remain pending.
