@@ -1,3 +1,4 @@
+import {createCropSoilMasks,cropSoilEnabled} from './crop-soil-mask.js';
 import {syncSelectedGrassMask,disposeSelectedGrassMask} from './grass-underlay-mask.js';
 import {prepareMangroveLeaves,mangroveLeafShader,cuppedMangroveLeavesEnabled,variedMangroveDistributionEnabled} from './mangrove-leaf-cover.js';
 import {markGroundDetailEvent} from './blender-ground-details.js';
@@ -63,6 +64,7 @@ export function continuousGrassEnabled(biome,search=globalThis.location?.search?
 export async function createContinuousGrass(world){
  const river=world.state.biome==='gran-rio',mangrove=world.state.biome==='manglares';
  if(!river&&!mangrove&&world.state.biome!=='sabana')throw Error('Unsupported continuous coverage biome');
+ const cropSoil=river&&cropSoilEnabled()?createCropSoilMasks():null;
  const cupped=mangrove&&cuppedMangroveLeavesEnabled(),varied=mangrove&&variedMangroveDistributionEnabled();
  const raw=await(await fetch(cupped?'/assets/visual-lab/mangrove-leaf-cupped-20261022/modules.json':mangrove?'/assets/visual-lab/mangrove-leaf-fill-20261021/modules.json':'/assets/visual-lab/continuous-grass/modules.json',{signal:world.loading?.signal})).json();
  const modules=mangrove&&!cupped?prepareMangroveLeaves(raw):raw;
@@ -86,7 +88,7 @@ export async function createContinuousGrass(world){
  function chunk(cx,cz){const key=cx+','+cz,source=world.chunks.get(key),ground=source?.children.find(o=>o.userData.ground);if(!ground)return;const start=performance.now(),p=ground.geometry.attributes.position,h=new Float32Array(49*49),seen=new Uint8Array(49*49);
  for(let i=0;i<p.count;i++){const x=Math.round(p.getX(i)+24),z=Math.round(p.getZ(i)+24);if(x>=0&&x<=48&&z>=0&&z<=48){h[z*49+x]=p.getY(i);seen[z*49+x]=1}}
  if(seen.some(x=>!x))throw Error('Coverage requires resident 49x49 renderer height lattice');
- const mask=ground.material.userData.biomeGround.uGroundMask.value.image;const water=[],waterTriangles=new Map();let waterTriangleCount=0;const mat=new THREE.Matrix4(),box=new THREE.Box3();
+ const cropSoilTexture=ground.material.userData.biomeGround.uGroundMask.value;const priorSoil=q.chunks.get(key)?.cropSoilTexture;if(priorSoil&&priorSoil!==cropSoilTexture)cropSoil?.release(priorSoil);cropSoil?.attach(cropSoilTexture,cx,cz,world.state.plants);const mask=cropSoilTexture.image;const water=[],waterTriangles=new Map();let waterTriangleCount=0;const mat=new THREE.Matrix4(),box=new THREE.Box3();
  for(const mesh of source.children.filter(m=>m.userData.nativeFluid)){
  if((river||mangrove)&&mesh.userData.nativeFluid==='chunk'){
  const position=mesh.geometry.attributes.position,index=mesh.geometry.index,count=index?.count??position.count;
@@ -96,7 +98,7 @@ export async function createContinuousGrass(world){
  for(let bx=Math.floor(minX/8);bx<=Math.floor(maxX/8);bx++)for(let bz=Math.floor(minZ/8);bz<=Math.floor(maxZ/8);bz++){const key=bx+','+bz;if(!waterTriangles.has(key))waterTriangles.set(key,[]);waterTriangles.get(key).push(tri);}
  }continue;}
  mesh.geometry.computeBoundingBox();if(mesh.isInstancedMesh){for(let i=0;i<mesh.count;i++){mesh.getMatrixAt(i,mat);box.copy(mesh.geometry.boundingBox).applyMatrix4(mat);water.push([box.min.x+cx*48,box.min.z+cz*48,box.max.x+cx*48,box.max.z+cz*48])}}else{box.copy(mesh.geometry.boundingBox);water.push([box.min.x+cx*48,box.min.z+cz*48,box.max.x+cx*48,box.max.z+cz*48])}}
- q.chunks.set(key,{cx,cz,h,mask,water,waterTriangles,waterTriangleCount});invalidateWaterNeighbors(cx,cz);q.stats.buildMs+=performance.now()-start;}
+ q.chunks.set(key,{cx,cz,h,mask,cropSoilTexture,water,waterTriangles,waterTriangleCount});invalidateWaterNeighbors(cx,cz);q.stats.buildMs+=performance.now()-start;}
  function nearWaterChunk(c,x,z){
  if(c.water.some(b=>x>b[0]-q.edgePadding&&x<b[2]+q.edgePadding&&z>b[1]-q.edgePadding&&z<b[3]+q.edgePadding))return true;
  for(const t of c.waterTriangles.get(Math.floor(x/8)+','+Math.floor(z/8))??[]){
@@ -139,16 +141,16 @@ export async function createContinuousGrass(world){
   q.group.visible=quality!=='muy_baja'&&q.variant!=='A';q.tiles.clear();q.dirty=true;
  };
  q.configureQuality(world.quality);
- q.rebuild=()=>{q.dirty=true};q.chunk=chunk;q.release=key=>{q.chunks.delete(key);const [cx,cz]=key.split(',').map(Number);invalidateWaterNeighbors(cx,cz)};q.markDirtyAt=()=>{q.occupancyDirty=true};q.flush=()=>{if(q.occupancyDirty){q.blockers=blockers();q.tiles.clear();q.dirty=true;q.occupancyDirty=false}};
+ q.rebuild=()=>{q.dirty=true};q.chunk=chunk;q.release=key=>{cropSoil?.release(q.chunks.get(key)?.cropSoilTexture);q.chunks.delete(key);const [cx,cz]=key.split(',').map(Number);invalidateWaterNeighbors(cx,cz)};q.markDirtyAt=()=>{q.occupancyDirty=true};q.flush=()=>{if(q.occupancyDirty){cropSoil?.flush(world.state.plants);q.blockers=blockers();q.tiles.clear();q.dirty=true;q.occupancyDirty=false}};
  q.dispose=()=>{
   if(q.disposed)return;if(world.biomeGround.riverUnderlay){disposeSelectedGrassMask(q);world.biomeGround.coverageUnderlay?.value.set(0,q.farDistance);}q.disposed=true;q.enabled=false;q.group.visible=false;
   if(world.scene.onBeforeRender===q.renderHook)world.scene.onBeforeRender=old;
-  q.releaseEvents?.();q.releaseEvents=null;world.scene.remove(q.group);
+  q.releaseEvents?.();q.releaseEvents=null;cropSoil?.dispose();world.scene.remove(q.group);
   for(const entry of q.meshes){entry.mesh.geometry.dispose();entry.mesh.material.dispose();}
   q.chunks.clear();q.tiles.clear();q.blockers.clear();
  };
  for(const key of world.chunks.keys()){const [cx,cz]=key.split(',').map(Number);chunk(cx,cz)}
- q.releaseEvents=observeGameEvents(world.state,event=>markGroundDetailEvent(q,world.state,event,id=>world.objects.get(id)?.position));
+ q.releaseEvents=observeGameEvents(world.state,event=>{markGroundDetailEvent(q,world.state,event,id=>world.objects.get(id)?.position);if(cropSoil&&['CropPlaced','CropPicked','CropDestroyed'].includes(event.type)){cropSoil.invalidate();q.occupancyDirty=true;}});
  q.audit=()=>({distribution:varied?'varied':'original',leafShape:mangrove?(cupped?'cupped':'original'):null,variant:q.variant,active:q.group.visible&&!q.disposed,quality:q.quality,biome:world.state.biome,edgePadding:q.edgePadding,nearDistance:q.nearDistance,moduleSpacing:q.spacing,near:q.near,far:q.far,leaves:q.near*(mangrove?8:12)+q.far*(mangrove?4:8),triangles:q.meshes.reduce((n,e)=>n+e.mesh.geometry.index.count/3*e.mesh.geometry.instanceCount,0),chunks:q.chunks.size,cachedTiles:q.tiles.size,bufferBytes:q.meshes.reduce((s,e)=>s+Object.values(e.mesh.geometry.attributes).reduce((n,a)=>n+a.array.byteLength,0)+(e.mesh.geometry.index?.array.byteLength??0),0),stats:{...q.stats},engineQueries:0,castShadow:false});
  return q;
 }
