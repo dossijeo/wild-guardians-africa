@@ -1,0 +1,9 @@
+# Fix: secondary moss UV origin compensation
+
+The ground material compensates base UV origin using modulo-one offsets, which is correct for its repeating primary texture. The secondary moss layer rotates and scales those UVs by .57. Dropping an integer base offset before a noninteger scale changes that layer's phase, so a render-origin shift visibly rearranged the moss. The fix restores the integer offset before the secondary rotation/scale. Base maps, source assets, world geometry and the floating-origin system remain unchanged.
+
+Controlled native round trip, day/night, normal vs fixed origin: daytime normal-origin mean RGB return error falls from 7.872 to 0.004105/255; changed pixels fall from 491252 to 8967, with only 34 pixels exceeding eight channel levels. This is a substantial verified correction, not pixel-exact parity. Residual differences remain unisolated. See difference-summary.json and audit.json for all four runs. The approved origin-zero composition is preserved by construction (added offset is zero there).
+
+A separate shadow-disabled diagnostic still reproduced mean error 9.016 before the fix, excluding solar shadow sampling as the primary source. Its evidence is retained in mangrove-shadow-isolation-20261022. Tests verify coordinate invariance for positive, negative and distant origins and multiple material scales. No texture fetch, geometry or draw call is added; only coordinate arithmetic for the already-enabled secondary layer changes. No measured FPS claim.
+
+Reproduce `node --test tests/mangrove-secondary-uv.test.js`; with Vite 5190, `node tools/experiments/capture-mangrove-origin-fix-20261022.mjs`, then `python tools/experiments/audit-mangrove-origin-fix-20261022.py`. Remaining shoreline work includes Volcano static mismatch and native benchmarks/optimization; this fix does not complete the global goal.

@@ -6,7 +6,8 @@ export function patchMangroveMoss(source){
  const anchor='vec3 arh=textureGrad(uGroundARH,uv,dx,dy).rgb;\n  float fade=';
  if(!source.includes(anchor))throw Error('Mangrove moss shader anchor missing');
  return source.replace(anchor,`vec3 arh=textureGrad(uGroundARH,uv,dx,dy).rgb;
-  vec2 uv2=vec2(-uv.y,uv.x)*.57+vec2(.371,.619),dx2=vec2(-dx.y,dx.x)*.57,dy2=vec2(-dy.y,dy.x)*.57;
+  vec2 secondaryUV=uv+floor(mat2(.8,-.6,.6,.8)*uWorldOrigin*uGroundParams.x);
+  vec2 uv2=vec2(-secondaryUV.y,secondaryUV.x)*.57+vec2(.371,.619),dx2=vec2(-dx.y,dx.x)*.57,dy2=vec2(-dy.y,dy.x)*.57;
   vec3 arh2=textureGrad(uGroundARH,uv2,dx2,dy2).rgb;
   vec3 qaWorld=worldPatternPosition(worldP);
   float qaRegion=materialNoise(vec3(qaWorld.x*.18,6.3,qaWorld.z*.18));
