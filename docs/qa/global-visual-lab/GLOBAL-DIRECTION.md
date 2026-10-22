@@ -1521,3 +1521,7 @@ riverYards=islands integrates retained visual wear islands in BiomeGround. Exist
 
 ### 2026-10-22: native Canyon warm shadow floor
 canyonFloor=warm integrates retained floor palette for mapped resident/horizon materials, no QA lifecycle wrappers. Twelve near/wide day-night pairs:7 pixel-exact,5 max1/255 sparse differences; equal geometry/counters,4 tests pass. Intel UHD moving-camera ABAB720 valid GPU queries:day deltas-.303/+.024ms,night+.156/+.395ms;cadence17.55-17.57ms. Retain opt-in with night overhead documented; no optimization claim. Wide plateau mottling still present in baseline; soft sand/adaptive horizon remain to combine and validate. See canyon-warm-floor-native-20261022.
+
+
+### 2026-10-22: preferred combined native Canyon material
+36 real captures compare warm base/soft sand/soft+smooth normals,12 matched three-way poses day-night; same geometry/counters, no errors. Retain combined recipe: less plateau mottling, improved slope volume, near ripples/strata intact. Re-read original mockup; shoreline/water/detail remain incomplete. Near moving ABAB failed geometry equivalence on12 frames due horizon timing; preserve invalid data. Fixed-resident repeat passes720GPUqueries,day+.18ms,night+.10/-.17ms;wide passes720queries but second combined day+1.61ms. No free-cost claim. Worker normal builds3-15.7ms observed,3.62MB scratch. See canyon-native-composition-20261022/preferred-recipe.json and README. Streaming and global quality remain pending.
