@@ -1481,3 +1481,8 @@ Direct Float32 packing plus bounded edge lookup: three-origin Node medians454-50
 ## 2026-10-22: remaining sky comparisons
 
 Completed 36 real captures / 18 matched day-night pairs for Mangroves, Volcanoes and Desert in global-sky-remaining-20261022. All paired cameras, times, draws and triangles match; no recorded errors. Approved Desert mesorelief preserved. Cooler sky grading is retained as a candidate, but low horizons remain too uniform and elevated views do not validate sky detail. Combined with global-sky-paired-20261022, all six biomes now have this limited static comparison. No timing or global completion claim; native sky integration and richer composition remain pending.
+
+
+## 2026-10-22: cloud latitude experiments
+
+Three Sabana low-camera trials (36 real day/night captures) isolate panorama latitude. Large negative and positive offsets lose cloud detail: rejected. Mild -.025 offset retains clouds and improves presence near treetops; keep QA candidate in sky-cloud-latitude-subtle-20261022. A/B/A/B Intel UHD evidence in sky-cloud-latitude-cost-20261022: matched counters,720 valid GPU samples; baseline drift prevents isolated cost conclusion. Reflection panorama remains unchanged, requiring consistency work before integration. No production shader changes or completion claim. No live ground-shadow-fill experiment process found.
