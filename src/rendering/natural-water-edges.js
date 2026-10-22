@@ -8,9 +8,10 @@ export function prepareNaturalWater(world,geometry,cx,cz,source){
  const width=box.max.x-box.min.x+1,height=box.max.z-box.min.z+1;
  const nx=Math.min(513,Math.ceil(width*2)+1),nz=Math.min(513,Math.ceil(height*2)+1);
  const edgeMap=new Map(),pos=geometry.attributes.position;
- const vertex=i=>[pos.getX(i)+cx*48,pos.getZ(i)+cz*48];
+ const vertices=new Array(field.canyon?0:pos.count),vertexKeys=new Array(field.canyon?0:pos.count);
+ const vertex=i=>{if(!vertices[i]){const v=[pos.getX(i)+cx*48,pos.getZ(i)+cz*48];vertices[i]=v;vertexKeys[i]=v.map(n=>n.toFixed(4)).join(',');}return vertices[i];};
  if(!field.canyon)for(let i=0;i+2<pos.count;i+=3)for(let j=0;j<3;j++){
- const a=vertex(i+j),b=vertex(i+(j+1)%3),ka=a.map(v=>v.toFixed(4)).join(','),kb=b.map(v=>v.toFixed(4)).join(','),key=ka<kb?ka+'|'+kb:kb+'|'+ka;
+ const a=vertex(i+j),b=vertex(i+(j+1)%3),ka=vertexKeys[i+j],kb=vertexKeys[i+(j+1)%3],key=ka<kb?ka+'|'+kb:kb+'|'+ka;
  const prev=edgeMap.get(key);if(prev)prev.count++;else edgeMap.set(key,{a,b,count:1});
  }
  const bins=new Map(),binSize=4;
