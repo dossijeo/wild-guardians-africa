@@ -1444,3 +1444,7 @@ Live 103212-vertex horizon, alternating string/numeric implementation: warmed me
 
 ## Reusable horizon normal scratch (2026-10-22)
 Native opt-in now reuses 3.45 MiB worker scratch. A/B/A/B normal median 13.2 -> 4.5-4.6 ms; delivery 112-116 -> 103-107 ms. All endpoint images identical, 17 tests pass. No frame improvement claim (B2 max worse; residency differs). Stop micro-optimizing and return to visible bank/LOD continuity. See canyon-horizon-scratch-motion-20261022.
+
+
+## Canyon fine-grid visual reference (2026-10-22)
+Valid 12-image 4x8 vs2x2 horizon comparison: distant wall facets improve, bank steps/join remain. Horizon103212 ->802656 vertices (+233148 triangles/frame), calls unchanged. Retain artistic reference, pursue localized conforming refinement, not global density increase. Initial failed color-batch attempt replaced and guard added. See canyon-horizon-grid-20261022.
