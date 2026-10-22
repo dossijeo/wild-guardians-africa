@@ -1,0 +1,3 @@
+# Reflection endpoint equivalence
+
+Run capture-sky-reflection-endpoints-20261022.mjs with WG_REVIEW_BIOMES=gran-rio and Vite5190, then audit-sky-reflection-endpoints-20261022.py. Real campaign,seed712,media,1280x720. One fixed river camera,three phases,three sequential frames each: uEnvEndpoints=1,0,1. Candidate sky and reflection latitude installed throughout. All six comparisons pixel-exact; camera,time,draws,triangles identical; no recorded errors. This verifies optimized day/night endpoints and the full blend path produce the same image for the corrected reflection UVs. It is not a GPU benchmark or a full day/night animation test.

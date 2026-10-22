@@ -1486,3 +1486,8 @@ Completed 36 real captures / 18 matched day-night pairs for Mangroves, Volcanoes
 ## 2026-10-22: cloud latitude experiments
 
 Three Sabana low-camera trials (36 real day/night captures) isolate panorama latitude. Large negative and positive offsets lose cloud detail: rejected. Mild -.025 offset retains clouds and improves presence near treetops; keep QA candidate in sky-cloud-latitude-subtle-20261022. A/B/A/B Intel UHD evidence in sky-cloud-latitude-cost-20261022: matched counters,720 valid GPU samples; baseline drift prevents isolated cost conclusion. Reflection panorama remains unchanged, requiring consistency work before integration. No production shader changes or completion claim. No live ground-shadow-fill experiment process found.
+
+
+## 2026-10-22: sky/reflection directional consistency
+
+Gran Rio:18 real images compare sky-only latitude to the same day remap in environment4 and endpoint guards. Reflected clouds now follow the revised sky direction; daytime/twilight visible change. Nine same-page endpoint ON/OFF/ON frames yield six pixel-exact comparisons. See sky-reflection-latitude-20261022 and sky-reflection-endpoints-20261022. Intel UHD A/B/A/B in sky-reflection-cost-20261022:720 valid GPU samples,matched counters; day means13.391/13.387/13.297/13.455ms,RAF16.62-16.63ms. Retain QA candidate; no broad FPS claim. Different display/radiance color curves remain unresolved, so native integration still pending.
