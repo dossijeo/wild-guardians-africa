@@ -1899,3 +1899,8 @@ Requisitos que deben conservarse: animación de acercamiento al elegir una opci�
 Native captures now cover all six biomes with full backgrounds. Additional four-biome run matches prior QA calls/triangles in 24/24 views; Volcanoes exact, Desert/Canyon tiny edge residuals, River includes its subsequent water-palette change and is not an isolated pixel comparison. Mangrove 192m streaming excursion replaces nine regions/species; corrected lifecycle check releases all 12 tracked smooth resources and restores the preceding continuous-grass scene hook. Return tree representation is not exact and requires original-path control. Keep opt-in; no new timing claim. See far-transition-native-other-biomes-20261022 and far-transition-native-stream-verified-20261022.
 
 Original-dither streaming control completed: return images also differ (10564 day/8262 night pixels). Across all ten checkpoints, smooth-vs-original workload delta equals exactly its four complementary opaque draws and 2190–2206 triangles; no unexplained extra workload. This separates the pre-existing stateful return behavior from the smooth integration, without proving identical per-pixel causes. See far-transition-legacy-stream-control-20261022.
+
+
+## 2026-10-22: native moving low-quality transition benchmark
+
+Intel UHD Mangroves, full backgrounds, native original/smooth reload ABAB: 720 valid GPU queries, exact per-frame workload after subtracting opaque split, no GL errors. Day GPU delta -0.99/+1.05ms; night -0.94/-0.98ms. CPU/cadence mixed and reload variance prevents causal FPS claims. Retain art; no consistent disproportionate penalty shown by this modest-profile local path. Other-biome timings and transparency-order limitations remain. See far-native-low-moving-cost-20261022.
