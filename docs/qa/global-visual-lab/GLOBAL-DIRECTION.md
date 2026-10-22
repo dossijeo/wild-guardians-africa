@@ -1533,3 +1533,7 @@ mangroveMoss=layered integrates retained height-blended rotated moss maps before
 
 ### 2026-10-22: native Mangrove leaf coverage
 Shared continuous coverage now owns retained Blender Mangrove leaves, original geometry/pigment/wind/LOD/wear taper; distinct density and fixed leaf size. Six QA/native pairs pixel-exact, equal counters and1,204,048bufferbytes,8tests pass. Moving ABAB720validGPUqueries exact per-frame geometry; timings vary both signs,baseline night drift2.116ms;no speedup claim. Retain native opt-in. Native moss/substrate/leaf/sky composition available;long streaming,quality,portrait,event gameplay and overall art target pending. See mangrove-leaf-native-20261022.
+
+
+### 2026-10-22: six-biome native composition baseline and art gaps
+36 real day/night frames, six individually reviewed art-reference sheets; no QA material/coverage adapters, no captured GL/console errors. Native integration is established, artistic completion is not: River coverage too uniform, Mangrove settlement dominated by moss, Canyon water/banks too abrupt. Preserve approved Desert relief. Prioritize retained Canyon bank-depth evaluation then broad-scale grass structure. Counters only, no new timing claim; full-recipe movement/profiles/events remain pending. See six-biome-native-review-20261022/README.md.
