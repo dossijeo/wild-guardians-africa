@@ -1561,3 +1561,7 @@ Twelve new day/night frames, exact geometry/cameras versus sediment. Broad .04-.
 
 ### 2026-10-22: River underlay activation and cost
 ABAB720 valid GPU queries, same per-frame geometry. Day deltas-.150/-.481ms,night+.134/+.052ms versus baseline night drift.704ms;no speedup/zero-cost claim. Added shared QA activation/range from coverage state:18 real frames,6 off pairs exact original terrain and6 on pairs exact retained candidate. Media visibility only verified; live quality/dispose, motion video, exclusions and streaming pending. See river-underlay-activation-20261022.
+
+
+### 2026-10-22: River underlay lifecycle and motion evidence
+12 live coverage-quality/visibility states pass expected activation/range; restored frames pixel-exact and dispose clears filter. Overall renderer remains media. Camera/wind videos day/night:96 paired frames exact geometry/camera,0overflow/errors, fixed residents not streaming. Sampled contact sheets inspected, full temporal artifact absence not claimed. Exclusion eligibility remains next native-integration gate. See river-underlay-lifecycle-20261022 and river-underlay-motion-20261022.
