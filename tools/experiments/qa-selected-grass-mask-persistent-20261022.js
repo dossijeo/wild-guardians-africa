@@ -14,6 +14,6 @@ export function syncSelectedGrassMask(world,q){
  }
  p.checks++;p.cpuMs+=performance.now()-start;
  q.selectedMaskStats={...p.raster.selectedMaskStats,checks:p.checks,rebuilds:p.rebuilds,persistentCpuMs:p.cpuMs};
- if(q.stats.overflow)world.biomeGround.qaCoverageUnderlay.value.x=0;
+ world.biomeGround.qaCoverageUnderlay.value.x=q.group?.visible&&q.variant!=="A"&&q.quality!=="muy_baja"&&!q.stats.overflow?1:0;
 }
 export function disposeSelectedGrassMask(q){if(q.persistentMask)release(q.persistentMask.raster);q.persistentMask=null;}

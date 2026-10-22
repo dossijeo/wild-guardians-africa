@@ -1601,3 +1601,8 @@ See `river-underlay-mask-persistent-stream-20261022/README.md`. Real day/night 9
 ### Persistent River underlay: quality/capacity recovery
 
 `river-underlay-mask-persistent-quality-20261022`: 16 frames, six restored RGB frames pixel-exact, activation/ranges correct, forced overflow disables filter, no GL errors. Two-render settling leaves first-frame recovery ordering unproven; helper disables overflow immediately but reactivation currently reads prior overflow. Resolve before native integration.
+
+
+### Persistent River underlay: same-render recovery fixed
+
+The helper now sets activation from current selection state, resolving previous-overflow lag. `river-underlay-mask-persistent-first-frame-20261022` captures ONE render after transitions: six restored RGB frames exact, expected activation/ranges, no GL errors, overflow recovery passes helper regression too. Candidate still QA-only; native integration/parity and broader art review remain.
