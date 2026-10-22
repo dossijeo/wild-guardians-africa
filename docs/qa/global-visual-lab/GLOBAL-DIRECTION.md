@@ -1959,3 +1959,8 @@ Removing Canyon edge-distance bypass creates transverse dry stripes at internal 
 ## 2026-10-22: Canyon denser bed mask does not solve sawtooth
 
 QA2→8 samples/metre retains lateral serration; twelve captures preserve camera/draw/triangle counts and record no errors. Do not promote up-to16x mask texels for this limited change. Native height query is continuous triangular interpolation of one-metre terrain lattice. Next isolate visual bank treatment; authoritative geometry unchanged. See canyon-depth-density-20261022.
+
+
+## 2026-10-22: soft Canyon bank retained for refinement
+
+Wider depth opacity ramp visibly softens sawtooth without geometry/mask-resolution changes or transverse strips. Twelve capture controls pass. Reverse day/night inspected; daylight too diffuse in places. Retain QA, tune intermediate ramp and measure transparent-rim cost before promotion. See canyon-soft-bank-20261022.
