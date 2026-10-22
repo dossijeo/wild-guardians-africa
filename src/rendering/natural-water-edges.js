@@ -9,7 +9,7 @@ export function prepareNaturalWater(world,geometry,cx,cz,source){
  const nx=Math.min(513,Math.ceil(width*2)+1),nz=Math.min(513,Math.ceil(height*2)+1);
  const edgeMap=new Map(),pos=geometry.attributes.position;
  const vertex=i=>[pos.getX(i)+cx*48,pos.getZ(i)+cz*48];
- for(let i=0;i+2<pos.count;i+=3)for(let j=0;j<3;j++){
+ if(!field.canyon)for(let i=0;i+2<pos.count;i+=3)for(let j=0;j<3;j++){
  const a=vertex(i+j),b=vertex(i+(j+1)%3),ka=a.map(v=>v.toFixed(4)).join(','),kb=b.map(v=>v.toFixed(4)).join(','),key=ka<kb?ka+'|'+kb:kb+'|'+ka;
  const prev=edgeMap.get(key);if(prev)prev.count++;else edgeMap.set(key,{a,b,count:1});
  }
