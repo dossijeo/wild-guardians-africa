@@ -1616,3 +1616,8 @@ The helper now sets activation from current selection state, resolving previous-
 ### Native River underlay lifecycle verified
 
 See `river-underlay-native-lifecycle-20261022.md` and JSON: 30 real frames using native code only. Repeated daytime streaming exact; actual planting removes 97 anchors and clears mask; six quality/capacity/visibility restoration frames exact on first render. No GL errors or stale ownership. Cold first-trip drift persists as documented. Next native ABAB cost, then shared art recipe/review; not global completion.
+
+
+### Native River underlay cost decision
+
+`river-underlay-native-cost-20261022`: ABAB Intel UHD, 720 valid GPU samples, exact per-frame geometry/camera, no GL errors. Mixed CPU/GPU/interval differences; baseline drifts >.9 ms GPU, so no speedup claim. Second night B costs +.413 ms GPU/+ .676 ms interval. RETAIN opt-in for visible underlay improvement; not zero-cost or stable FPS gain. Resume broader artistic work after this measured native integration.
