@@ -1553,3 +1553,7 @@ Twelve new day/night frames, exact geometry/cameras versus sediment. Broad .04-.
 
 ### 2026-10-22: River correlated coverage study
 18 real frames: baseline/correlated height/correlated height+pigment, same instance budget and exclusions. Height-only reduces volume; meadow retains more but fine texture still dominates, neither native integration justified. Six meadow pairs exact counters/camera; ABAB720 valid GPU queries, day deltas+.304/-.285ms, CPUday+.51/+.55ms, night variable. No zero-cost/speedup claim, cached build cost unmeasured. Next investigate module/material scale and far transition rather than density or minor random tuning. See river-coverage-structure-20261022.
+
+
+### 2026-10-22: River layer isolation and underlay candidate
+24 fresh day/night frames compare baseline/terrain-only/blade pigment mip5/ground underlay filtering. Terrain-only retains fine mottling; blade filtering contributes little. Ground underlay8x color footprint under mask/distance eligibility makes standing blades clearer; retained QA pending motion/cost/actual coverage eligibility. Six underlay pairs exact camera/counters. Initial auxiliary-sample patch failed GLSL scope; corrected to materialCover410 assignment, successful frames only. No fresh timing claim; main/native unchanged. See river-coverage-pigment-scale-20261022.
