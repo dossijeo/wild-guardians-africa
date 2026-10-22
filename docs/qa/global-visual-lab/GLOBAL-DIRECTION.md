@@ -1828,3 +1828,13 @@ Retain and refine deep blue over olive, superseding the earlier optical-depth re
 ## 2026-10-22: full background required for subsequent QA
 
 User requires all subsequent artistic and performance validation to include the normal distant 2D impostors and HQ mountain backdrops. Do not set farVegetation:false in new final-scene comparisons. Use the normal quality-driven farVegetationProfile, verify attachment and loaded adapter layers plus visible biome-2d-backdrop, and include their resource and draw cost. Prior isolated 3D studies remain diagnostic only. Review color, lighting and transitions before considering DOF; DOF is an optional experiment, not an approved default or a substitute for matching distant art. New capture harness: tools/experiments/capture-full-background-review-20261022.mjs.
+
+
+## 2026-10-22: pendiente indicado por el usuario — hojas de Manglares
+
+Corregir los patrones rectangulares visibles en las hojas del suelo de Manglares. Revisar distribucion, mascaras y limites de parches/chunks con capturas comparables, preservando el musgo aprobado. El usuario pide hacerlo despues: continuar primero con el agua lejana y la integracion/validacion de fondos 2D conectados a Wild Engine. No cambiar la prioridad actual por esta anotacion.
+
+
+## 2026-10-22: distant Mangrove water and benchmark parity
+
+Muted-blue distant water retained with natural shores, preserving near blue and moss; no extra shader operations. Full-background day/night far-facing comparisons match calls/triangles. Terrain revision is now part of seam cache keys, with regression coverage. Both full-scene reload-based ABAB attempts failed workload equivalence (one extra call, 5641 triangles in one load), even after idle adapters and 45 stable renders. Do not claim performance from those attempts; next control must alternate variants within one loaded world and inspect resource/draw differences. See mangrove-far-water-native-20261022 and mangrove-deep-water-full-settled-cost-20261022.

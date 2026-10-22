@@ -23,10 +23,10 @@ export function attachNativeGroundSeam(candidate,ground,world,{createMaterial,co
   const revision=world.spatialSession?.horizonSource.revision()??0;
   if(requestedRevision===revision&&requestedBounds&&bounds[0]===requestedBounds[0]&&bounds[1]===requestedBounds[1]&&bounds[2]===requestedBounds[2]&&bounds[3]===requestedBounds[3])return pending??preparedPromise;
   if(JSON.stringify(world.nav.config)!==sourceConfig)return Promise.reject(Error('Ground seam world configuration changed'));
-  const next=bounds.join(':');requestedRevision=revision;requestedBounds=[...bounds];const epoch=++generation;stats.requests++;
+  const boundsKey=bounds.join(':'),next=boundsKey+':terrain:'+revision;requestedRevision=revision;requestedBounds=[...bounds];const epoch=++generation;stats.requests++;
   const request={...(world.spatialSession?{spatialTerrain:world.spatialSession.horizonSource.snapshot()}:{}),config:world.nav.config,nearBounds:[...bounds],ground:{positions:ground.positions,indices:ground.indices,bounds:ground.bounds,nx:ground.nx,nz:ground.nz,contactCells:ground.contactCells}};
   pending=stream.request(next,request).then(async result=>{
-   const stale=()=>closed||world.disposed||epoch!==generation||lost||cancelled()||(world.spatialSession?.horizonSource.revision()??0)!==revision||world.nearBounds.join(':')!==next||JSON.stringify(world.nav.config)!==sourceConfig;
+   const stale=()=>closed||world.disposed||epoch!==generation||lost||cancelled()||(world.spatialSession?.horizonSource.revision()??0)!==revision||world.nearBounds.join(':')!==boundsKey||JSON.stringify(world.nav.config)!==sourceConfig;
    if(!result||stale()){stats.stale++;if(epoch===generation)requestedBounds=null;return null;}
    const data=result.data,geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.BufferAttribute(data.positions,3));geometry.setAttribute('uv',new THREE.BufferAttribute(farGroundColorUvs(data.positions,ground.colorMap),2));geometry.setIndex(new THREE.BufferAttribute(data.indices,1));
    let material;try{configureGeometry?.(geometry);material=createMaterial();}catch(error){geometry.dispose();throw error;}
