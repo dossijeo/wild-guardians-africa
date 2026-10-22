@@ -8,6 +8,7 @@ import {assetUrl} from './asset-url.js';
 import {json} from './assets.js';
 import {farAtmosphere} from './far-atmosphere.js';
 import {farVegetationProfile} from './far-vegetation-profile.js';
+import {smoothFarTransitionsEnabled} from './smooth-far-transitions.js';
 import {attachNativeFarWorld} from '../../tools/experiments/attach-native-far-world.js';
 
 // RGBA8 plus mip estimate from loaded dimensions; this is not driver RAM.
@@ -15,7 +16,7 @@ const textureStorageEstimate=(texture,width,height)=>{const image=texture.image;
 
 // Baked resources are owned from the beginning of an asynchronous attachment.
 // A world closed during fetch/preparation must release late arrivals as well.
-export async function attachBiomeFarVegetation(world,{start=60,end=90,residentRange=null,visualRange=null,preserveTerrain=true,transitionMargin=8,includeFarGround=true,logicalStandbyPreload=false,parallelAssets=false,initialRegion=null,...options}={},services={}){
+export async function attachBiomeFarVegetation(world,{start=60,end=90,residentRange=null,visualRange=null,preserveTerrain=true,transitionMargin=8,includeFarGround=true,logicalStandbyPreload=false,smoothTransitions=smoothFarTransitionsEnabled(),parallelAssets=false,initialRegion=null,...options}={},services={}){
  if(world.farVegetation)throw Error('Far vegetation already attached');
  if(typeof parallelAssets!=='boolean')throw Error('Invalid parallel far assets option');
  const phase=(label,run)=>loadingAwaitWitness(world.onLoadingSpan,'far-assets:'+label,run);
@@ -60,7 +61,7 @@ export async function attachBiomeFarVegetation(world,{start=60,end=90,residentRa
   const transitionSlots=species.map(s=>s.slot);
   const groundTreeBases=Object.fromEntries(species.map(s=>[s.slot,s.localBase]));
   for(const result of results){if(cancelled())throw Error('Far vegetation attachment cancelled');const {metadata,day,night}=result.value;
-   const adapter=await phase('attach:'+metadata.slot,()=>attachSpecies(world,{initialRegion:result===results[0]?initialRegion:null,groundStep:16,densityStart:Math.max(end+30,180),densityEnd:280,densityMinimum:.04,fadeStart:280,fadeEnd:330,...options,logicalStandbyPreload,cancelled,metadata,texture:day,prelitAtlas:{day,night,rotations:8,views:8,resolution:128,premultipliedLinear:metadata.prelitAlphaEncoding==='srgb-encoded-linear-premultiplied'},slot:metadata.slot,ownsWorld:false,bakedOnly:true,groundTreeBases,includeGround:includeFarGround&&metadata.slot===0&&!['canyons','desert'].includes(world.nav.config.biome),start,end}));
+   const adapter=await phase('attach:'+metadata.slot,()=>attachSpecies(world,{initialRegion:result===results[0]?initialRegion:null,groundStep:16,densityStart:Math.max(end+30,180),densityEnd:280,densityMinimum:.04,fadeStart:280,fadeEnd:330,...options,logicalStandbyPreload,smoothTransitions,cancelled,metadata,texture:day,prelitAtlas:{day,night,rotations:8,views:8,resolution:128,premultipliedLinear:metadata.prelitAlphaEncoding==='srgb-encoded-linear-premultiplied'},slot:metadata.slot,ownsWorld:false,bakedOnly:true,groundTreeBases,includeGround:includeFarGround&&metadata.slot===0&&!['canyons','desert'].includes(world.nav.config.biome),start,end}));
    if(cancelled()){adapter.dispose();throw Error('Far vegetation attachment cancelled');}adapters.push(adapter);
   }
   if(!parallelAssets)backdropTexture=await phase('backdrop',()=>load(backdropPath));

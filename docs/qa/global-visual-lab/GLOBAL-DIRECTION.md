@@ -1887,3 +1887,8 @@ Solicitud del usuario: iniciar esta mejora **después de completar los impostore
 Referencia artística: [mockup de inicio](references/start-screen-layered-parallax-13762.png). Renovar la composición 2D mediante capas con profundidad y parallax: paisaje cálido al atardecer, horizonte y cascadas, guardianes en las nubes, vegetación y personajes en primer plano, y tótem central que organiza las opciones. Usar el mockup como dirección de composición, riqueza cromática y jerarquía visual.
 
 Requisitos que deben conservarse: animación de acercamiento al elegir una opción; partículas de colores en movimiento que iluminan el tótem; funcionamiento de las opciones y legibilidad de la interfaz. Validar en el menú real la composición, el parallax, el acercamiento y las partículas, incluyendo vídeo y coste de rendimiento. Esta anotación programa trabajo dentro del objetivo existente; no inicia una automatización ni cambia ahora el menú.
+
+
+## 2026-10-22: native opt-in smooth far transition integration
+
+`farTransitions=smooth` inside the global-lighting lab now enables the reviewed ordered candidate without QA material routes. 76 targeted tests pass; Sabana/Mangrove native captures match QA calls/triangles in 12/12 views, 10 RGB exact and two tiny residuals. No new performance claim. Scene-scoped owned packing and standby clones preserve canonical IDs and dispose independently. Keep opt-in pending long-distance streaming, native moving benchmarks and remaining-biome captures. See [native integration evidence](far-transition-native-20261022/README.md).

@@ -1,10 +1,12 @@
+import {createSmoothFarImpostor} from '../../src/rendering/smooth-far-transitions.js';
 import {treeTransitionWeight,validateTreeTransitionPolicy} from './tree-transition-range.js';
 import * as THREE from 'three';
 import {impostorHullShape} from './impostor-hull.js';
 import {coverageThreshold} from '../../src/rendering/obstruction-source.js';
 import {impostorLightingDeclarations,impostorLightingColor,impostorLightingUniforms,normalAtlasDeclarations,normalAtlasLightingColor} from './far-impostor-lighting.js';
 import {modelOrigin,NearTreeSelection,treeDensityRank,treeImportanceRank} from './far-impostor-math.js';
-export function createFarImpostorPrototype(source,texture,metadata,trees,{start=40,end=60,toon=null,seed=712,normalAtlas=null,prelitAtlas=null,nativeModels=true,importanceHeight=16,importanceMaxBoost=4,transitionHeight=null,cullZeroImpostors=false}={}){
+export function createFarImpostorPrototype(source,texture,metadata,trees,{start=40,end=60,toon=null,seed=712,normalAtlas=null,prelitAtlas=null,nativeModels=true,importanceHeight=16,importanceMaxBoost=4,transitionHeight=null,cullZeroImpostors=false,smoothScene=null}={}){
+ if(smoothScene&&nativeModels)throw Error('Smooth far transition requires native world ownership');
  if(typeof cullZeroImpostors!=='boolean')throw Error('Invalid zero-coverage culling option');
  transitionHeight=validateTreeTransitionPolicy(transitionHeight,start,end);
  const floatLiteral=value=>Number.isInteger(value)?value+'.0':String(value),baseLiteral=floatLiteral(metadata.baseV??0);
@@ -43,6 +45,7 @@ export function createFarImpostorPrototype(source,texture,metadata,trees,{start=
  }`});
  if(toon||prelitAtlas)material.toneMapped=false;
  const impostors=new THREE.Mesh(geometry,material);impostors.frustumCulled=false;impostors.castShadow=false;
+ const smoothFar=smoothScene?createSmoothFarImpostor(impostors,smoothScene):null;
  let modelGeometry,modelMaterial,models,originalColor;
  if(nativeModels){
  modelGeometry=source.geometry.clone();attrs(modelGeometry,trees.length);modelGeometry.setAttribute('aTreeReady',readyAttribute(trees.length));
@@ -86,6 +89,6 @@ export function createFarImpostorPrototype(source,texture,metadata,trees,{start=
  }
  function setHullEnabled(enabled){if(!hullShape)return false;const changed=hullShape.set(enabled);geometry.setDrawRange(plane.drawRange.start,plane.drawRange.count);return changed;}
  function stats(){return {selectionScans:selection.scans,matrixUploads,readinessRevision,readinessUploads};}
- function dispose({disposeTexture=true}={}){geometry.dispose();material.dispose();modelGeometry?.dispose();modelMaterial?.dispose();models?.dispose();if(disposeTexture){texture.dispose();normalAtlas?.dispose();prelitAtlas?.day.dispose();prelitAtlas?.night.dispose();}}
- return {impostors,models,uniforms,setHullEnabled,setTransitionHeight,treeTransitionRange,update,setTreeReadiness,setTreeEnabled,treeState,snapshotTreeState,restoreTreeState,stats,dispose};
+ function dispose({disposeTexture=true}={}){smoothFar?.dispose();geometry.dispose();material.dispose();modelGeometry?.dispose();modelMaterial?.dispose();models?.dispose();if(disposeTexture){texture.dispose();normalAtlas?.dispose();prelitAtlas?.day.dispose();prelitAtlas?.night.dispose();}}
+ return {impostors,models,uniforms,prepareSmoothFar:camera=>smoothFar?.prepare(camera),setHullEnabled,setTransitionHeight,treeTransitionRange,update,setTreeReadiness,setTreeEnabled,treeState,snapshotTreeState,restoreTreeState,stats,dispose};
 }
