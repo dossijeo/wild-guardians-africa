@@ -1,3 +1,4 @@
+import {riverBankMask,riverBankEnabled} from './river-bank-mask.js';
 import {mangroveShoreEnabled,createShoreMask} from './mangrove-shore.js';
 import {mangroveMossEnabled} from './global-mangrove-moss.js';
 import {riverYardsEnabled,createRiverYardSites,riverYardIslands} from './river-yard-islands.js';
@@ -26,6 +27,7 @@ export class BiomeGround {
     this.riverYards=biome==='grand_river'&&riverYardsEnabled();this.riverYardSites=this.riverYards?createRiverYardSites(field,settlementSource):null;
     this.mangroveShore=biome==='mangrove'&&mangroveShoreEnabled();
     this.riverSoil=biome==='grand_river'&&riverSoilEnabled();
+    this.riverBank=this.riverSoil&&riverBankEnabled();
     this.riverUnderlay=this.riverSoil&&new URLSearchParams(globalThis.location?.search??'').get('riverUnderlay')==='persistent';
     this.mangroveMoss=biome==='mangrove'&&mangroveMossEnabled();
     this.mangroveSubstrate=biome==='mangrove'&&mangroveSubstrateEnabled();
@@ -84,6 +86,7 @@ export class BiomeGround {
       const data=bytes??buildGroundMask417(this.field.c,this.profile,this.field,bo);
       mask=new THREE.DataTexture(this.riverYards?riverYardIslands(data,bo,this.field,this.riverYardSites()):this.volcanicAsh==='mask'?ashMask(data,bo):data,35,35,THREE.RGBAFormat);
       mask.minFilter=mask.magFilter=THREE.LinearFilter;mask.generateMipmaps=false;
+      if(this.riverBank)mask.image.data=riverBankMask(mask.image.data,this.field,bo);
       mask.needsUpdate=true;this.masks.add(mask);
     }else{
       // The far shader replaces this sample with a constant. Reuse one valid

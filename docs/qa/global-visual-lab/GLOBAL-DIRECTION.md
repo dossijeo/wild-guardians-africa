@@ -1803,3 +1803,8 @@ El Cañón conserva las seis capturas estáticas y las diez de recorrido RGB exa
 ## Gran Río: cauce principal, no generalizar corebank (22 octubre)
 
 La revisión apunta ahora a riverX(102), no a una charca. Worldbank suaviza el borde, pero aún falta material de ribera. Corebank es exacto en cuatro vistas y difiere en ocho píxeles en otras dos; ABAB Intel UHD (720 consultas) no muestra ganancia consistente de GPU y aumenta CPU 0,07–0,49 ms. Mantenerlo como candidato del Cañón, no política universal. Dos ensayos de sedimento en el agua producen un contorno oscuro o una mejora demasiado discreta: no adoptar como solución final. Próximo trabajo: material terrestre húmedo de la ribera, sin alterar terreno autoritativo. [Evidencia y reproducción](river-channel-bank-review-20261022/README.md).
+
+
+## 2026-10-22: Gran Rio soil bank
+
+Native opt-in `riverBank=soil` preserves the validated variable soil bank and reduces grass at the water margin. Six day/night QA/native captures are RGB exact. ABAB cost is mixed, including a night regression; retained for visible artistic improvement, not claimed as an FPS optimization. Short streaming passes without errors, but daytime return differs and remains unresolved. See [report](river-land-bank-review-20261022/README.md). Approved moss shore direction remains retained; biome-specific water palettes are next.
