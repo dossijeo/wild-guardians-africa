@@ -7,3 +7,7 @@ QA-only original dense leaf variant. Preserve original pigment/contrast, root di
 CPU arithmetic check on cached distribution audit: 8119 accepted roots,6392 unchanged wear-growth values,1727 increased,zero decreased. This is not an exact GPU pixel-area measurement (shader float arithmetic differs), nor a performance benchmark. Geometry workload unchanged does not imply unchanged GPU cost/overdraw. No benchmark run for this candidate yet.
 
 Reproduce capture-mangrove-edge-retention-20261022.mjs and compare-mangrove-edge-retention-20261022.py. Original left in pairs. Selected original remains unchanged. Earlier pigment blend and reduced-density variants remain rejected by user.
+
+## Follow-up decision
+
+Close day/night comparison in mangrove-edge-close-20261022 shows retained leaf presence but still a cut-out perimeter. Not selected: artistic improvement insufficient. Change the spatial boundary, rather than continuing to tune this taper.
