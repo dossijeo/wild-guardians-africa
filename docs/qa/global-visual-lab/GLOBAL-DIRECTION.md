@@ -1573,3 +1573,7 @@ QA R8 masks now derive from actual capacity-limited draw anchors after renderer 
 
 ### 2026-10-22: cached grass-mask footprints
 30 deterministic mask/upload cases exact;6 real reference/cached pairs pixel-exact. ABAB720validqueries equalgeometry:CPUrender-.264 to-.522ms in4pairs,GPU signs vary,RAF no consistent improvement. Coldcapture cumulative mask time250.2/288.8ms: no cold-build benefit,JS cachememory additional. Retain modest CPU improvement QA;next incremental mask updates,not native adoption. See river-underlay-mask-cache-20261022.
+
+
+### 2026-10-22: reject Set-based incremental mask optimization
+30 deterministic byte/upload cases and6 real image pairs exact.102rebuilt/2963skipped chunkupdates does not yield frame benefit:ABAB720validGPUqueries,CPUdelta-.04/+.808ms day,-.24/+1.130night,interval inconsistent. Keep prior footprint cache and visual improvement; reject this machinery as preferred. Next persistent accepted-tile eligibility with explicit changed-semantics/overflow validation. See river-underlay-mask-incremental-20261022.
