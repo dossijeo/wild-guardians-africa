@@ -1758,3 +1758,7 @@ Real cinematic sampling exposed daytime sky grading jump and nighttime decorativ
 ### Canyon vegetation context and archived scatter
 
 `canyon-scatter-restoration-review-20261022`:12 controlled frames restore existing Blender canyon module in QA. 249-255 instances, +1 draw call, +25,896-26,520 triangles; no timing claim. Art gain too weak at game scale, not rejected for performance. Next regional coverage/distribution instead of uniformly sparse tufts. Preliminary farVegetation A/B invalid: spatialSession disables both arms; recorded separately, not used for conclusions.
+
+### Canyon bank regions and measured cost
+
+`canyon-bank-regions-review-20261022`:12 paired frames concentrate existing Blender modules near banks with gaps;317 instances versus249-255 and unchanged draws. More visible placement, still thin isolated tufts. `canyon-bank-regions-cost-20261022`:720 valid GPU samples, ABAB Intel UHD; paired GPU deltas +.181/+.319/+1.209/+1.861ms, RAF ~16.63ms. Cost variable, not free; retain QA direction, improve collective authored mass before density escalation/native adoption.
