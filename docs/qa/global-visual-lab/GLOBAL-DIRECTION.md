@@ -1848,3 +1848,8 @@ Muted-blue distant water retained with natural shores, preserving near blue and 
 ## 2026-10-22: controlled smooth far transition candidate
 
 Warmed single-world Sabana QA: six before/alpha pairs have equal calls/triangles; all six return-to-dither images are RGB exact. Old alpha reload comparison was contaminated by an inherited water override and is explicitly invalidated in its report. QA clone registration corrected to avoid duplicate AfricanToon. Fixed-camera full-scene ABAB has 720 valid GPU samples; daytime delta mixed, night alpha +0.22/+1.09 ms GPU. Retain candidate for refinement, not production: overlap ordering, movement and other biomes still pending. Moving benchmark remains non-equivalent due changing tree selection. See far-transition-warmed-world-20261022 and far-alpha-static-cost-20261022.
+
+
+## 2026-10-22: moving full-background transition control
+
+Sabana day/night 240-frame camera paths retain exact per-frame calls/triangles across dither, alpha and return. Ten PNG return controls are RGB exact. Real WebM recordings retained (235 encoded frames; not synchronized benchmarks). Smooth far-tree candidate removes dotted coverage, but dense overlap ordering, other biomes and long-distance streaming remain unproven. No production adoption yet. See far-transition-motion-20261022/README.md.
