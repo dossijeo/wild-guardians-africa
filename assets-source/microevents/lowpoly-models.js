@@ -276,7 +276,25 @@ export function createSprite(id,frame=0){const g=new T.Group();
    ball(g,'#e1dbb5',[x-.025,y+.035,r*.58],[r*.67,r*.66,r*.2],1);
   }
  }
- else if(id==='debris'||id==='branch')twig(g,id==='branch');
+ else if(id==='debris')twig(g);
+ else if(id==='branch'){
+  // A bent, tapering bough with a clear fork; the former crossed rods read as a cross.
+  rod(g,[-.55,-.65,0],[-.16,-.16,.01],.105,'#735036');
+  rod(g,[-.16,-.16,.01],[.02,.23,.02],.082,'#8c6340');
+  rod(g,[.02,.23,.02],[.36,.65,.03],.052,'#a77c4c');
+  rod(g,[-.16,-.16,0],[.28,.02,.03],.066,'#88613f');
+  rod(g,[.28,.02,.03],[.63,.31,.02],.036,'#a77c4c');
+  rod(g,[.02,.23,0],[-.33,.47,.03],.041,'#8c6340');
+  rod(g,[-.33,.47,.03],[-.5,.67,.03],.023,'#ad8757');
+  // Short warm bark ridges and exposed broken ends stay subordinate to the wood.
+  rod(g,[-.49,-.57,.09],[-.21,-.2,.09],.018,'#bd9360');
+  rod(g,[-.1,-.07,.08],[.04,.27,.07],.013,'#bd9360');
+  ball(g,'#d7ba84',[-.56,-.66,.045],[.09,.055,.07],0);
+  ball(g,'#d7ba84',[.64,.32,.04],[.035,.035,.03],0);
+  foliage(g,'#728244',[.38,.52,.06],.34,-.7);
+  foliage(g,'#9b9c52',[-.3,.52,.06],.27,.8);
+  g.quaternion.setFromUnitVectors(new T.Vector3(0,0,1),new T.Vector3(4,3.5,5).normalize());
+ }
  else if(id==='web'){
   const silk=(a,b)=>{rod(g,a,b,.027,'#596c58',5);rod(g,[a[0],a[1],.035],[b[0],b[1],.035],.016,'#f0ebd5',5);};
   for(let j=0;j<8;j++){const a=j*Math.PI/4;silk([0,0,0],[Math.cos(a)*.75,Math.sin(a)*.75,0]);}
