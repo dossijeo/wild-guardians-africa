@@ -1541,3 +1541,7 @@ Shared continuous coverage now owns retained Blender Mangrove leaves, original g
 
 ### 2026-10-22: Canyon bank transition revisited on native composition
 18 fresh frames compare baseline/retained depth/wider world-modulated transition, six exact geometry/camera pairs per candidate. Original tint too subtle; wider variant visibly separates shallow/center but remains a clean band, not natural shoreline detail. Both retained QA, not adopted. No new draws/triangles/textures, no fresh timing claim; structured variant adds two fragment sine evaluations. Next: coherent land/water boundary detail, then movement/seams and timings. See canyon-bank-combined-review-20261022/README.md.
+
+
+### 2026-10-22: Canyon sediment-edge QA and cost
+Six new paired day/night frames: two-scale world noise breaks clean bank tint; hard land/water contour remains, QA retained not adopted. Moving resident A/B/A/B720 valid GPU queries and exact frame geometry. GPUday10.894/9.617 then9.769/9.629ms;night10.753/10.745 then10.812/10.732ms. Baseline day drift1.125ms: no speedup claim. CPU/cadence separate; no streaming/preparation measurement. See canyon-bank-combined-review-20261022 and canyon-bank-sediment-cost-20261022.
