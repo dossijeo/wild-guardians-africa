@@ -3,7 +3,7 @@ import {chromium} from 'playwright';
 import {mkdir,writeFile,readFile} from 'node:fs/promises';
 
 
-const out='docs/qa/global-visual-lab/native-water-edges-parity-20261022';await mkdir(out,{recursive:true});const records=[];const phases=['day','night'];
+const out=process.env.WG_REVIEW_OUT??'docs/qa/global-visual-lab/native-water-edges-parity-20261022';await mkdir(out,{recursive:true});const records=[];const phases=['day','night'];
 const browser=await chromium.launch({channel:'chrome',headless:true});
 try{for(const quality of (process.env.WG_COVER_QUALITY??'media').split(','))for(const biome of (process.env.WG_REVIEW_BIOMES??'sabana,gran-rio,manglares,desierto,volcanes,gran-canon').split(','))for(const variant of ['worldbank','native']){
  const page=await browser.newPage({viewport:{width:1280,height:720},deviceScaleFactor:1});const errors=[];

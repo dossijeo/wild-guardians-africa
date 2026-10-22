@@ -1,8 +1,8 @@
-import json
+import json,os
 from pathlib import Path
 import numpy as np
 from PIL import Image, ImageDraw
-root=Path("docs/qa/global-visual-lab/native-water-edges-parity-20261022")
+root=Path(os.environ.get("WG_REVIEW_OUT","docs/qa/global-visual-lab/native-water-edges-parity-20261022"))
 data=json.loads((root/"captures.json").read_text(encoding="utf8"))
 lookup={(r["biome"],r["phase"],r["variant"]):r for r in data["records"]}
 audit=[]
