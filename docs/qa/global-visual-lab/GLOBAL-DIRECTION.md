@@ -1988,3 +1988,8 @@ See closure-review-20261022 for six mockup/current comparisons, per-biome unmet 
 ## 2026-10-22: varied Mangrove cover available as opt-in
 
 Native mangroveDistribution=varied requires global-lighting and Mangrove; original recipe retained. Twelve QA/native images RGB exact; six final workloads identical. Six targeted tests pass. Reduces visible grid/patch contrast, but broad homogeneous areas remain. Measured day GPU cost +0.61..1.85ms, night -0.53..0.67ms, CPU mixed; no FPS claim. See mangrove-varied-native-20261022. This preserves the candidate for review rather than declaring Mangrove complete.
+
+
+## 2026-10-22: user rejects reduced leaf presence
+
+The user rejects mangroveDistribution=varied: leaves lose too much apparent density and volume. This supersedes earlier positive artistic assessments. Keep the dense original in the selected recipe. The optional variant remains only as rejected experimental history, not a final candidate. Further distribution work must preserve original leaf size and growth response; isolate positional/orientation changes instead of reducing coverage. The completed low-quality benchmark measures this rejected option and does not justify adoption.
