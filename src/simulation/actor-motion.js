@@ -41,6 +41,8 @@ export function createWorkerBodyIndex(workers){
 }
 const blockedDetours=new WeakMap();
 const pendingDetours=new WeakMap();
+export const actorDetourStatus=actor=>({pending:pendingDetours.has(actor),
+  blocked:blockedDetours.has(actor)});
 // Match the native search corridor (32 grid cells). Bodies whose clearance
 // discs cannot touch it cannot change this search, even while moving elsewhere.
 function detourBodies(actor,goal,blockers){
