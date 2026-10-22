@@ -54,33 +54,56 @@ void main(){
 function geometry(data,capacity){const g=new THREE.InstancedBufferGeometry();for(const [name,size]of [['position',3],['normal',3],['flatPosition',3],['bladeRoot',3],['flatNormal',3],['uv',2]])g.setAttribute(name,new THREE.Float32BufferAttribute(data[name],size));g.setIndex(data.index);g.setAttribute('coverageAnchor',new THREE.InstancedBufferAttribute(new Float32Array(capacity*4),4));g.setAttribute('coverageData',new THREE.InstancedBufferAttribute(new Float32Array(capacity*4),4));g.setAttribute('coverageSlope',new THREE.InstancedBufferAttribute(new Float32Array(capacity*2),2));g.instanceCount=0;return g;}
 export function continuousGrassEnabled(biome,search=globalThis.location?.search??''){
  const params=new URLSearchParams(search);
- return biome==='sabana'&&params.get('visualLab')==='global-lighting'&&params.get('grassCoverage')==='continuous';
+ return ['sabana','gran-rio'].includes(biome)&&params.get('visualLab')==='global-lighting'&&params.get('grassCoverage')==='continuous';
 }
 // Scene-owned visual layer. Resident render geometry and confirmed events are
 // its only spatial inputs; borrowed terrain textures remain owned by BiomeGround.
 export async function createContinuousGrass(world){
- if(world.state.biome!=='sabana')throw Error('Continuous coverage currently supports Savanna');
+ const river=world.state.biome==='gran-rio';
+ if(!river&&world.state.biome!=='sabana')throw Error('Continuous coverage supports Savanna and Grand River');
  const modules=await(await fetch('/assets/visual-lab/continuous-grass/modules.json',{signal:world.loading?.signal})).json();
  if(world.disposed||world.loading?.signal.aborted)throw Error('Coverage loading cancelled');
  const q={variant:'C',chunks:new Map(),tiles:new Map(),dirty:true,enabled:true,timeOverride:null,stats:{buildMs:0,selectionMs:0,selectionCount:0,candidates:0,masked:0,overflow:0},signature:'',near:0,far:0};
  const low=['baja','muy_baja'].includes(world.quality);q.spacing=low?.5:.4;q.farDistance=low?40:48;q.nearDistance=low?0:24;
+ q.edgePadding=river?.85:.6;
+ const vertexShader=river?vertex.replace('vec3(1.14,1.09,.97)','vec3(1.14,1.18,1.05)').replace('dayShade=vec3(.17,.28,.34)','dayShade=vec3(.14,.26,.32)').replace('vec3(1.55,1.42,1.02)','vec3(1.77,1.79,1.42)').replace('nightShade=vec3(.095,.17,.32)','nightShade=vec3(.24,.36,.48)'):vertex;
  const group=new THREE.Group();group.name='continuous-herbaceous-cover';group.userData.materialRegistryExcluded=true;world.scene.add(group);q.group=group;
  const first=world.terrainMeshes.find(m=>m.material.userData.biomeGround).material.userData.biomeGround;
  q.uniforms={...world.toon.uniforms,...world.toon.shadowUniforms,uCoverageTime:{value:0},uCoverageWindStrength:{value:8},uCoverageRefined:{value:1},uCoverageSpacing:{value:q.spacing/.4},uCoverageFar:{value:q.farDistance},uCoverageColor:first.uGroundDetailMap,uCoverageSeed:first.uGroundSeed,uCoverageScale:{value:first.uGroundParams.value.x},uCoverageDiagnostic:{value:0}};
  for(const data of Object.values(modules)){data.flatNormal=[];for(let i=0;i<data.uv.length/2;i++){const leaf=Math.round(data.uv[i*2+1]*12);const n=leaf<8?modules.light.normal.slice(leaf*9,leaf*9+3):data.normal.slice(i*3,i*3+3);data.flatNormal.push(...n);}}
- q.meshes=[['refined',12000],['light',18000]].map(([name,capacity])=>{const g=geometry(modules[name],capacity);const m=new THREE.ShaderMaterial({vertexShader:vertex,fragmentShader:fragment,uniforms:{...q.uniforms,uCoverageRefined:{value:1}},glslVersion:THREE.GLSL3,side:THREE.DoubleSide,transparent:false,depthWrite:true,toneMapped:false});const mesh=new THREE.Mesh(g,m);mesh.name='coverage-'+name;mesh.frustumCulled=false;mesh.castShadow=false;mesh.receiveShadow=true;group.add(mesh);return {mesh,capacity,data:modules[name]}});
- function blockers(){const buckets=new Map();const add=(o,minX,minZ,maxX,maxZ)=>{for(let x=Math.floor((minX-.7)/8);x<=Math.floor((maxX+.7)/8);x++)for(let z=Math.floor((minZ-.7)/8);z<=Math.floor((maxZ+.7)/8);z++){const key=x+','+z;if(!buckets.has(key))buckets.set(key,[]);buckets.get(key).push(o)}};
+ q.meshes=[['refined',12000],['light',18000]].map(([name,capacity])=>{const g=geometry(modules[name],capacity);const m=new THREE.ShaderMaterial({vertexShader,fragmentShader:fragment,uniforms:{...q.uniforms,uCoverageRefined:{value:1}},glslVersion:THREE.GLSL3,side:THREE.DoubleSide,transparent:false,depthWrite:true,toneMapped:false});const mesh=new THREE.Mesh(g,m);mesh.name='coverage-'+name;mesh.frustumCulled=false;mesh.castShadow=false;mesh.receiveShadow=true;group.add(mesh);return {mesh,capacity,data:modules[name]}});
+ function blockers(){const buckets=new Map();const add=(o,minX,minZ,maxX,maxZ)=>{for(let x=Math.floor((minX-q.edgePadding-.1)/8);x<=Math.floor((maxX+q.edgePadding+.1)/8);x++)for(let z=Math.floor((minZ-q.edgePadding-.1)/8);z<=Math.floor((maxZ+q.edgePadding+.1)/8);z++){const key=x+','+z;if(!buckets.has(key))buckets.set(key,[]);buckets.get(key).push(o)}};
  // Read existing obstacle footprints once per invalidation; never invoke navigation/engine queries.
  for(const o of world.nav.obstacles??[]){if(o.kind==='shield')continue;const p=o.footprint;if(p?.length)add({polygon:p.map(v=>({x:v.x,z:v.z}))},Math.min(...p.map(v=>v.x)),Math.min(...p.map(v=>v.z)),Math.max(...p.map(v=>v.x)),Math.max(...p.map(v=>v.z)));else if(Number.isFinite(o.x)&&Number.isFinite(o.z)){const r=o.radius??.5;add({x:o.x,z:o.z,r},o.x-r,o.z-r,o.x+r,o.z+r)}}
  for(const p of world.state.plants.filter(p=>p.alive!==false))add({x:p.x,z:p.z,r:1.6},p.x-1.6,p.z-1.6,p.x+1.6,p.z+1.6);
  return buckets;}
  q.blockers=blockers();
+ function invalidateWaterNeighbors(cx,cz){for(const [key,t]of q.tiles)if(t.chunk===cx+','+cz||(t.tx+1)*8>cx*48-24-q.edgePadding&&t.tx*8<cx*48+24+q.edgePadding&&(t.tz+1)*8>cz*48-24-q.edgePadding&&t.tz*8<cz*48+24+q.edgePadding)q.tiles.delete(key);q.dirty=true;}
  function chunk(cx,cz){const key=cx+','+cz,source=world.chunks.get(key),ground=source?.children.find(o=>o.userData.ground);if(!ground)return;const start=performance.now(),p=ground.geometry.attributes.position,h=new Float32Array(49*49),seen=new Uint8Array(49*49);
  for(let i=0;i<p.count;i++){const x=Math.round(p.getX(i)+24),z=Math.round(p.getZ(i)+24);if(x>=0&&x<=48&&z>=0&&z<=48){h[z*49+x]=p.getY(i);seen[z*49+x]=1}}
  if(seen.some(x=>!x))throw Error('Coverage requires resident 49x49 renderer height lattice');
- const mask=ground.material.userData.biomeGround.uGroundMask.value.image;const water=[];const mat=new THREE.Matrix4(),box=new THREE.Box3();
- for(const mesh of source.children.filter(m=>m.userData.nativeFluid)){mesh.geometry.computeBoundingBox();if(mesh.isInstancedMesh){for(let i=0;i<mesh.count;i++){mesh.getMatrixAt(i,mat);box.copy(mesh.geometry.boundingBox).applyMatrix4(mat);water.push([box.min.x+cx*48,box.min.z+cz*48,box.max.x+cx*48,box.max.z+cz*48])}}else{box.copy(mesh.geometry.boundingBox);water.push([box.min.x+cx*48,box.min.z+cz*48,box.max.x+cx*48,box.max.z+cz*48])}}
- q.chunks.set(key,{cx,cz,h,mask,water});for(const [t,v]of q.tiles)if(v.chunk===key)q.tiles.delete(t);q.dirty=true;q.stats.buildMs+=performance.now()-start;}
+ const mask=ground.material.userData.biomeGround.uGroundMask.value.image;const water=[],waterTriangles=new Map();let waterTriangleCount=0;const mat=new THREE.Matrix4(),box=new THREE.Box3();
+ for(const mesh of source.children.filter(m=>m.userData.nativeFluid)){
+ if(river&&mesh.userData.nativeFluid==='chunk'){
+ const position=mesh.geometry.attributes.position,index=mesh.geometry.index,count=index?.count??position.count;
+ for(let i=0;i<count;i+=3){const tri=[];for(let j=0;j<3;j++){const k=index?index.getX(i+j):i+j;tri.push(position.getX(k)+cx*48,position.getZ(k)+cz*48);}
+ const area=(tri[2]-tri[0])*(tri[5]-tri[1])-(tri[3]-tri[1])*(tri[4]-tri[0]);if(Math.abs(area)<1e-9)continue;
+ waterTriangleCount++;const minX=Math.min(tri[0],tri[2],tri[4])-q.edgePadding,maxX=Math.max(tri[0],tri[2],tri[4])+q.edgePadding,minZ=Math.min(tri[1],tri[3],tri[5])-q.edgePadding,maxZ=Math.max(tri[1],tri[3],tri[5])+q.edgePadding;
+ for(let bx=Math.floor(minX/8);bx<=Math.floor(maxX/8);bx++)for(let bz=Math.floor(minZ/8);bz<=Math.floor(maxZ/8);bz++){const key=bx+','+bz;if(!waterTriangles.has(key))waterTriangles.set(key,[]);waterTriangles.get(key).push(tri);}
+ }continue;}
+ mesh.geometry.computeBoundingBox();if(mesh.isInstancedMesh){for(let i=0;i<mesh.count;i++){mesh.getMatrixAt(i,mat);box.copy(mesh.geometry.boundingBox).applyMatrix4(mat);water.push([box.min.x+cx*48,box.min.z+cz*48,box.max.x+cx*48,box.max.z+cz*48])}}else{box.copy(mesh.geometry.boundingBox);water.push([box.min.x+cx*48,box.min.z+cz*48,box.max.x+cx*48,box.max.z+cz*48])}}
+ q.chunks.set(key,{cx,cz,h,mask,water,waterTriangles,waterTriangleCount});invalidateWaterNeighbors(cx,cz);q.stats.buildMs+=performance.now()-start;}
+ function nearWaterChunk(c,x,z){
+ if(c.water.some(b=>x>b[0]-q.edgePadding&&x<b[2]+q.edgePadding&&z>b[1]-q.edgePadding&&z<b[3]+q.edgePadding))return true;
+ for(const t of c.waterTriangles.get(Math.floor(x/8)+','+Math.floor(z/8))??[]){
+ const a=(t[2]-t[0])*(z-t[1])-(t[3]-t[1])*(x-t[0]),b=(t[4]-t[2])*(z-t[3])-(t[5]-t[3])*(x-t[2]),d=(t[0]-t[4])*(z-t[5])-(t[1]-t[5])*(x-t[4]);
+ if((a>=0&&b>=0&&d>=0)||(a<=0&&b<=0&&d<=0))return true;
+ for(let i=0;i<3;i++){const j=(i+1)%3,ax=t[i*2],az=t[i*2+1],dx=t[j*2]-ax,dz=t[j*2+1]-az,u=clamp(((x-ax)*dx+(z-az)*dz)/(dx*dx+dz*dz||1),0,1);if((x-ax-u*dx)**2+(z-az-u*dz)**2<q.edgePadding*q.edgePadding)return true;}
+ }return false;}
+ function nearWater(c,x,z){
+ const xs=[c.cx],zs=[c.cz];if(x<c.cx*48-24+q.edgePadding)xs.push(c.cx-1);if(x>c.cx*48+24-q.edgePadding)xs.push(c.cx+1);if(z<c.cz*48-24+q.edgePadding)zs.push(c.cz-1);if(z>c.cz*48+24-q.edgePadding)zs.push(c.cz+1);
+ for(const cx of xs)for(const cz of zs){const neighbor=q.chunks.get(cx+','+cz);if(neighbor&&nearWaterChunk(neighbor,x,z))return true;}return false;
+ }
  function sample(c,x,z){const lx=clamp(x-(c.cx*48-24),0,47.99999),lz=clamp(z-(c.cz*48-24),0,47.99999),ix=Math.floor(lx),iz=Math.floor(lz),fx=lx-ix,fz=lz-iz;
  const a=c.h[iz*49+ix],b=c.h[iz*49+ix+1],d=c.h[(iz+1)*49+ix],e=c.h[(iz+1)*49+ix+1];let y,sx,sz;if(fx+fz<=1){sx=b-a;sz=d-a;y=a+fx*sx+fz*sz}else{sx=e-d;sz=e-b;y=e-(1-fx)*sx-(1-fz)*sz}
  const mx=clamp(lx/1.5+1,0,33.9999),mz=clamp(lz/1.5+1,0,33.9999),gx=Math.floor(mx),gz=Math.floor(mz),tx=mx-gx,tz=mz-gz,ctx=[];
@@ -90,10 +113,10 @@ export async function createContinuousGrass(world){
  const bits=hashCell(seed,ix,iz,8371),x=(ix+.5)*step+((bits&255)/255-.5)*step*.25,z=(iz+.5)*step+(((bits>>>8)&255)/255-.5)*step*.25;
  if(x<c.cx*48-24||x>=c.cx*48+24||z<c.cz*48-24||z>=c.cz*48+24)continue;
  const s=sample(c,x,z),[cover,meso,moisture,wear]=s.ctx;q.stats.candidates++;
- if(cover<.10||wear>.25||Math.hypot(s.sx,s.sz)>.42||c.water.some(b=>x>b[0]-.6&&x<b[2]+.6&&z>b[1]-.6&&z<b[3]+.6)||(q.blockers.get(Math.floor(x/8)+','+Math.floor(z/8))??[]).some(o=>o.polygon?footprintDistance(o.polygon,x,z)<.6:Math.hypot(x-o.x,z-o.z)<o.r+.6)){q.stats.masked++;continue;}
+ if(cover<(river?.20:.10)||(river&&moisture<.20)||wear>.25||Math.hypot(s.sx,s.sz)>.42||nearWater(c,x,z)||(q.blockers.get(Math.floor(x/8)+','+Math.floor(z/8))??[]).some(o=>o.polygon?footprintDistance(o.polygon,x,z)<q.edgePadding:Math.hypot(x-o.x,z-o.z)<o.r+q.edgePadding)){q.stats.masked++;continue;}
  // Check the footprint against the resident wear mask, keeping leaf reach off paths.
- if([[.6,0],[-.6,0],[0,.6],[0,-.6],[.42,.42],[-.42,.42],[.42,-.42],[-.42,-.42]].some(([dx,dz])=>sample(c,x+dx,z+dz).ctx[3]>.27)){q.stats.masked++;continue;}
- items.push([x,s.y+.006,z,(.80+.32*((bits>>>16)&255)/255)*clamp((cover-.08)/.18,.7,1),bits/4294967296*Math.PI*2,meso*.65+moisture*.35,cover,moisture,s.sx,s.sz]);}
+ let edgeWear=wear;for(const [dx,dz] of [[.6,0],[-.6,0],[0,.6],[0,-.6],[.42,.42],[-.42,.42],[.42,-.42],[-.42,-.42]]){edgeWear=Math.max(edgeWear,sample(c,x+dx*(q.edgePadding/.6),z+dz*(q.edgePadding/.6)).ctx[3]);if(edgeWear>.27)break;}if(edgeWear>.27){q.stats.masked++;continue;}
+ items.push([x,s.y+.006,z,(river?clamp((.27-edgeWear)/.17,0,1)*(.65+.25*((bits>>>16)&255)/255)*clamp((cover-.20)/.12,0,1)*clamp((moisture-.20)/.12,0,1):(.80+.32*((bits>>>16)&255)/255)*clamp((cover-.08)/.18,.7,1)),bits/4294967296*Math.PI*2,meso*.65+moisture*.35,cover,moisture,s.sx,s.sz]);}
  const result={chunk:c.cx+','+c.cz,tx,tz,items};q.tiles.set(key,result);q.stats.buildMs+=performance.now()-start;return result;}
  const old=world.scene.onBeforeRender,frustum=new THREE.Frustum(),vp=new THREE.Matrix4(),sphere=new THREE.Sphere(new THREE.Vector3(),6.5);
  function select(){const start=performance.now(),camera=world.camera,eyeX=camera.position.x-world.scene.position.x,eyeZ=camera.position.z-world.scene.position.z;vp.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse);frustum.setFromProjectionMatrix(vp);const bins=[[],[]],visibleTiles=[];q.stats.overflow=0;
@@ -112,7 +135,7 @@ export async function createContinuousGrass(world){
   q.group.visible=quality!=='muy_baja'&&q.variant!=='A';q.tiles.clear();q.dirty=true;
  };
  q.configureQuality(world.quality);
- q.rebuild=()=>{q.dirty=true};q.chunk=chunk;q.release=key=>{q.chunks.delete(key);for(const [k,v]of q.tiles)if(v.chunk===key)q.tiles.delete(k);q.dirty=true};q.markDirtyAt=()=>{q.occupancyDirty=true};q.flush=()=>{if(q.occupancyDirty){q.blockers=blockers();q.tiles.clear();q.dirty=true;q.occupancyDirty=false}};
+ q.rebuild=()=>{q.dirty=true};q.chunk=chunk;q.release=key=>{q.chunks.delete(key);const [cx,cz]=key.split(',').map(Number);invalidateWaterNeighbors(cx,cz)};q.markDirtyAt=()=>{q.occupancyDirty=true};q.flush=()=>{if(q.occupancyDirty){q.blockers=blockers();q.tiles.clear();q.dirty=true;q.occupancyDirty=false}};
  q.dispose=()=>{
   if(q.disposed)return;q.disposed=true;q.enabled=false;q.group.visible=false;
   if(world.scene.onBeforeRender===q.renderHook)world.scene.onBeforeRender=old;
@@ -122,6 +145,6 @@ export async function createContinuousGrass(world){
  };
  for(const key of world.chunks.keys()){const [cx,cz]=key.split(',').map(Number);chunk(cx,cz)}
  q.releaseEvents=observeGameEvents(world.state,event=>markGroundDetailEvent(q,world.state,event,id=>world.objects.get(id)?.position));
- q.audit=()=>({variant:q.variant,active:q.group.visible&&!q.disposed,quality:q.quality,nearDistance:q.nearDistance,moduleSpacing:q.spacing,near:q.near,far:q.far,leaves:q.near*12+q.far*8,triangles:q.near*60+q.far*8,chunks:q.chunks.size,cachedTiles:q.tiles.size,bufferBytes:q.meshes.reduce((s,e)=>s+Object.values(e.mesh.geometry.attributes).reduce((n,a)=>n+a.array.byteLength,0)+(e.mesh.geometry.index?.array.byteLength??0),0),stats:{...q.stats},engineQueries:0,castShadow:false});
+ q.audit=()=>({variant:q.variant,active:q.group.visible&&!q.disposed,quality:q.quality,biome:world.state.biome,edgePadding:q.edgePadding,nearDistance:q.nearDistance,moduleSpacing:q.spacing,near:q.near,far:q.far,leaves:q.near*12+q.far*8,triangles:q.near*60+q.far*8,chunks:q.chunks.size,cachedTiles:q.tiles.size,bufferBytes:q.meshes.reduce((s,e)=>s+Object.values(e.mesh.geometry.attributes).reduce((n,a)=>n+a.array.byteLength,0)+(e.mesh.geometry.index?.array.byteLength??0),0),stats:{...q.stats},engineQueries:0,castShadow:false});
  return q;
 }

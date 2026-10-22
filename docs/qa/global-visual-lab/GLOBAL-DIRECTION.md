@@ -1509,3 +1509,7 @@ Scene-owned optional grassCoverage=continuous in global-lighting. Retained pigme
 
 ### 2026-10-22: coverage projection and live-quality fixes
 Native Savanna coverage now reselects on projection changes and accepts runtime quality. Settled 96-unit outbound/return path: 25 coverage/resident chunks, no orphans or overflow, day/night. Media/baja/very-low/media restores identical instance/counter totals; low retains continuous light modules, very-low uses terrain fallback. FOV automatic/forced buffers and final images exact. Six targeted tests pass. See continuous-grass-stream-quality-20261022; continuous motion timing, rapid streaming and full biome completion remain pending.
+
+
+### 2026-10-22: native River coverage and moving-camera cost
+Shared native opt-in now includes Gran Rio with its retained pigment/night ambient/wear taper/.85 wind padding and resident water triangles. Twelve QA/native pairs across Savanna/River pixel-exact; seven tests pass including adjacent water-chunk invalidation. Clean moving-camera/wind A/B/A/B Intel UHD:720 valid GPU samples, identical frame geometry/cameras; native GPU deltas -.173 to +.223ms, CPU within .026ms, no consistent cost/speedup. Preserve exploratory noisy run separately. See continuous-grass-river-native-20261022. Keep opt-in; River rapid streaming, full preset and other-biome integration remain pending.
