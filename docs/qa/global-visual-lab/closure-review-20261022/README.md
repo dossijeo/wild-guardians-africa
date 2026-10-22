@@ -28,3 +28,5 @@ Stopping rule: once the gates are evidenced and no important defect dominates no
 Immediate next action: representative scene/framing audit, prioritizing Desert modest-profile checks and Canyon riverside coverage, plus targeted Mangrove ground variation. No further water-ripple micro-experiments until their normal-view importance is established.
 
 Correction: initial oasis gate was an unsupported assumption. Inspected biome-desert.json: fluid=none, no assets with water. spatial-savanna.cpp preparePonds skips biome1 and fluidLevelFor returns0. Do not add an oasis to satisfy a QA gate. The existing dry-biome scope is unchanged.
+
+Additional required acceptance evidence: matched current-main versus selected experimental captures for all six biomes, not mockups alone. See ../main-five-biomes-comparison-20261022/README.md and Desert pilot. Thirty additional pose/time/origin pairs pass; normal-day review identifies Mangrove cover repetition as a real remaining art defect. Other views still require perceptual review.
