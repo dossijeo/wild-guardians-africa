@@ -1686,3 +1686,7 @@ Skip water noise outside its maximum 3.5-unit shore influence, keeping derivativ
 ### Volcano ground sunlight trial
 
 `volcano-ground-sun-review-20261022`:12 real frames,3 night pairs RGB exact,all geometry/camera/time exact. Warmer mapped-ground direct sun produces moderate brown highlights while retaining cavities. Retain QA comparison, not final art match or native adoption. Next localize warmth to relief lighting; no new timing claim.
+
+### Volcano orientation-weighted warmth review
+
+`volcano-ground-ridge-review-20261022`:18 real frames; six night pairs RGB exact, geometry/camera/time retained. Localized sun-facing warmth preserves charcoal better than uniform tint, but visual gain is modest. Both remain QA, no native promotion or performance claim. Next prioritize material-scale variation rather than further small tint changes.
