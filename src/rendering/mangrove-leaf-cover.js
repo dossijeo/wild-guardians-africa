@@ -18,3 +18,5 @@ export function mangroveLeafShader(vertex){
  .replace('vec3(1.14,1.09,.97)','vec3(.72,.78,.62)')
  .replace('pigment*=.88+.20*coverageData.y;', 'pigment*=mix(.72,1.08,fract(uv.y*13.7+coverageData.x*3.17));');
 }
+
+export function cuppedMangroveLeavesEnabled(search=globalThis.location?.search??''){const q=new URLSearchParams(search);return q.get('visualLab')==='global-lighting'&&q.get('mangroveLeaves')==='cupped';}

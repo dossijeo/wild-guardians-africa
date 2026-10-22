@@ -17,6 +17,6 @@ test('Mangrove leaf modules preserve authored geometry and leaf LOD mapping',asy
   const world={biomeGround:{},state:{biome:'manglares',elapsed:3,plants:[]},scene:new THREE.Scene(),camera:new THREE.PerspectiveCamera(),quality:'media',toon:{uniforms:{},shadowUniforms:{}},terrainMeshes:[{material:{userData:{biomeGround:{uGroundDetailMap:{value:new THREE.Texture()},uGroundSeed:{value:new THREE.Vector2()},uGroundParams:{value:new THREE.Vector4(.115,0,0,0)}}}}}],chunks:new Map(),objects:new Map(),nav:{obstacles:[],field:{seed:712}}};
   q=await createContinuousGrass(world);assert.equal(q.spacing,.5);assert.equal(q.uniforms.uCoverageSpacing.value,1);assert.ok(q.meshes[0].mesh.material.vertexShader.includes('coverageData.w'));
   q.configureQuality('baja');assert.equal(q.spacing,.6);assert.equal(q.nearDistance,0);assert.equal(q.uniforms.uCoverageSpacing.value,1,'leaf size stays authored when density drops');q.configureQuality('media');assert.equal(q.spacing,.5);
-  q.near=2;q.far=3;assert.equal(q.audit().leaves,28);assert.equal(q.audit().triangles,88);q.dispose();assert.equal(world.scene.children.length,0);
+  q.near=2;q.far=3;q.meshes[0].mesh.geometry.instanceCount=2;q.meshes[1].mesh.geometry.instanceCount=3;assert.equal(q.audit().leaves,28);assert.equal(q.audit().triangles,88);q.dispose();assert.equal(world.scene.children.length,0);
  }finally{q?.dispose();globalThis.fetch=originalFetch;}
 });

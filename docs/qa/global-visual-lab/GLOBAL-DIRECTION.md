@@ -1934,3 +1934,8 @@ Prior near-arched experiment already showed limited benefit; current audit ident
 ## 2026-10-22: cupped leaf cost isolated at fixed camera
 
 Reload and single-world moving studies retain20/33 non-leaf LOD frame mismatches; not causal cost evidence. Fixed-camera single-world control passes all workload checks with720 valid GPU queries: daytime +0.26/+0.22ms; nighttime mixed -0.80/+0.28ms. Retain cupped visual candidate, no FPS claim. Two asset tests prove retained-leaf endpoint attribute equality but not motion appearance. Medium imagery/LOD movement still needed before integration. See mangrove-leaf-cupped-static-cost-20261022 and the two preceding cost directories.
+
+
+## 2026-10-22: cupped Mangrove leaf native option and medium motion
+
+Bank-centred medium comparison shows clearer collective leaf volume. Original/cupped camera and leaf counts match for240 requested frames day/night, no overflow/errors. Recordings235–236 frames, qualitative only; initial water-centred framing retained as limited evidence. Native `mangroveLeaves=cupped` within global-lighting is now opt-in, original default unchanged. Ten native-vs-QA checkpoints RGB exact; eight targeted tests pass. Low static GPU cost remains prior evidence; medium timing/global temporal certification not claimed. See mangrove-leaf-cupped-native-motion-20261022.

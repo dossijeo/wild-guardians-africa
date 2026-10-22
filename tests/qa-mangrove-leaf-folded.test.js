@@ -7,3 +7,6 @@ for(const variant of ['folded','cupped'])test(`QA ${variant} leaves retain ident
  for(const attr of ['position','flatPosition','normal','flatNormal','bladeRoot','uv']){const stride=attr==='uv'?2:3;for(const [i,leaf]of [0,2,5,7].entries())assert.deepEqual(d.refined[attr].slice(leaf*7*stride,(leaf+1)*7*stride),d.light[attr].slice(i*7*stride,(i+1)*7*stride),`${attr} leaf ${leaf}`);}
  for(const m of Object.values(d)){assert.deepEqual(m.normal,m.flatNormal,'far crease normals retained');for(let i=0;i<m.normal.length;i+=3)assert.ok(Math.abs(Math.hypot(...m.normal.slice(i,i+3))-1)<1e-5);}
 });
+
+import {cuppedMangroveLeavesEnabled} from '../src/rendering/mangrove-leaf-cover.js';
+test('cupped leaves require explicit visual-lab selection',()=>{assert.equal(cuppedMangroveLeavesEnabled('?mangroveLeaves=cupped'),false);assert.equal(cuppedMangroveLeavesEnabled('?visualLab=global-lighting'),false);assert.equal(cuppedMangroveLeavesEnabled('?visualLab=global-lighting&mangroveLeaves=cupped'),true);});
