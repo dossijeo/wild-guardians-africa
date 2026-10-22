@@ -2019,3 +2019,23 @@ El usuario autoriza sustituir los sprites si su diseño o calidad desentonan. Re
 El usuario solicita probar sprites 2D con normales, elevados unos centímetros, incluso con varias hojas por sprite, frente a las hojas 3D caras. Esta autorización específica permite tarjetas para este experimento; no reinterpretar la antigua exclusión de planos cruzados como prohibición. Conservar la variante 3D aprobada como control y no reducir densidad, tamaño ni contraste para producir una aparente mejora de rendimiento.
 
 Primera candidata QA: horneado de las hojas cupped existentes, ocho hojas/16 triángulos cerca y cuatro/8 lejos, cobertura alfa y normales en espacio del módulo, 4,5 cm sobre suelo. Mantener buffers de instancias, máscaras, distancias y selección originales. Preparada sin modificar src ni activar la opción por defecto. Comparar primer plano, escala normal y ángulo oblicuo, día/noche y movimiento; medir GPU/CPU, overdraw y memoria antes de recomendar. Las normales del viento son todavía una aproximación y la tarjeta no conserva la silueta vertical de la hoja. La comparación real se ejecutará tras la serie de integración en marcha para no contaminarla.
+
+## 2026-10-23: helecho suministrado, corrección de postura
+
+El usuario solicita probar el GLB CC0 de Holly Fern horneado en Blender (color/transparencia y normales), con módulos de rama completa mayores y distribución menos costosa. Tras la primera captura horizontal, aclara que las ramas deben salir del suelo, no parecer hojas caídas. La postura horizontal queda como diagnóstico, no candidata artística. Evaluar tarjetas erguidas/inclinadas ancladas por el tallo, normales rotadas coherentemente, viento moderado y oclusión desde cámara normal e inversa. Conservar hojas 3D aprobadas como control; no aceptar reducción de coste que simplemente deje menos cobertura visible.
+
+## 2026-10-23: dirección corregida de helechos — matas bajas estrelladas
+
+El usuario reemplaza la postura erguida por manojos de 3–5 frondas superpuestas, ligeramente cóncavas/horizontales, que se abren desde un centro junto al suelo. Mantener una masa baja de base (textura o cobertura densa aprobada) y usar helechos agrupados con menor frecuencia para variar altura. No interpretar como retorno a ramas caídas ni arbustos altos. Orientar la normal de iluminación hacia arriba, suavizar normales horneadas y añadir translucidez sutil para evitar reversos negros. Comparar la opción híbrida con base 3D preservada y declarar expresamente su coste adicional, sin prometer ahorro por reducir solo la capa emergente. El benchmark erguido en curso se conserva como candidato superado, no se retoca durante la medición.
+
+## 2026-10-23: comparar cobertura solo de helechos
+
+El usuario pide ver las frondas sin la alfombra de hojas redondas. Preparar una alternativa independiente que oculte únicamente las mallas base y use matas radiales en todos los anclajes válidos existentes, frente a la mezcla de base completa y aproximadamente un séptimo de matas. Mantener la variante aprobada recuperable; no confundir esta nueva autorización para quitar la base en una prueba con aprobación artística del resultado. Revisar continuidad, caminos, agua, vista de juego y noche; registrar densidad, silueta y costes reales.
+
+## 2026-10-23: legibilidad de la cobertura solo de helechos
+
+El usuario observa camuflaje con el suelo y solicita oscurecer, aumentar contraste y también tamaño. Probar variante independiente con frondas 35% más amplias y 25% más altas, verde más oscuro, contraste de albedo 1,22 y gradiente suave de base a punta. Aumentar margen de máscara a 1 m para respetar agua, cultivos y obstáculos; conservar control anterior. Reutilizar directamente buffers nativos sin pase adicional de selección en la variante solo de helechos. No presentar reducción de triángulos como mejora FPS sin medición.
+
+## 2026-10-23: tono intermedio de helechos
+
+El usuario considera excesivamente oscura la última variante. Mantener tamaño (+35% XZ / +25% Y), contraste 1,22, distribución y gradiente de volumen; aclarar únicamente la modulación de color de (0,30;0,43;0,25) a (0,37;0,50;0,31), sin regresar al primer verde (0,48;0,61;0,40). Revisar capturas de día y noche. Los benchmarks de variantes superadas se conservan como parciales; no justifican una decisión de rendimiento de esta versión.
