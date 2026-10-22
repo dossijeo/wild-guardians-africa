@@ -1924,3 +1924,8 @@ Single-world rectangle/triangle ABAB yields 720 valid GPU queries and ~2062 addi
 ## 2026-10-22: wider leaf jitter retained as QA only
 
 Low-profile exposed-soil comparison with full backgrounds: within-cell amplitude0.25→0.95 breaks some regularity but enlarges holes; flat leaf-piece appearance persists. Do not adopt as a claimed volume solution or reject based on unmeasured performance. Preserve QA candidate and water-footprint fix. Next examine far-leaf shape/normals and material contrast. See mangrove-leaf-jitter-20261022.
+
+
+## 2026-10-22: authored folded/rounded leaf candidates
+
+Prior near-arched experiment already showed limited benefit; current audit identifies averaged far normals and four-vertex silhouette. New own Blender assets keep roots/population but use six-sided leaves with retained crease normals,24 far/48 near triangles. Low-profile real captures preserve instance counts/draws; rounded silhouette improves leaf reading, stronger cupped version retained for cost comparison. Local improvement, not full mockup equivalence. No native promotion or performance rejection; GPU/motion/medium validation pending. See mangrove-leaf-folded-20261022 and mangrove-leaf-cupped-20261022.
