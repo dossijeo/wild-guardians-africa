@@ -1626,3 +1626,8 @@ See `river-underlay-native-lifecycle-20261022.md` and JSON: 30 real frames using
 ### Mangrove representative bank review
 
 `mangrove-bank-native-review-20261022` adds six native day/night frames and original-reference side-by-side. Individual inspection identifies hard uniform green/blue shore boundary as dominant gap; leafy bank groups already present. Next prioritize existing-surface shallow/wet transition, not indiscriminate density. Geometry/layout preserved; counters only, no new timing claim.
+
+
+### Mangrove shallow band trial: not selected
+
+`mangrove-bank-shallow-review-20261022`: 12 real frames/6 exact geometry-camera pairs. Existing shore distance sampled to one float per water vertex; no added geometry/draws. Day/night inspection finds a uniform dark halo, not reference-like sediment/roots transition. Reject this form artistically, preserve evidence; no timing claim. Next localized irregular transition rather than global dark bank strip.
