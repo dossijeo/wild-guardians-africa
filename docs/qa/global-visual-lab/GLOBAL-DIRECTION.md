@@ -1646,3 +1646,8 @@ See `river-underlay-native-lifecycle-20261022.md` and JSON: 30 real frames using
 ### Mangrove shore-mask ownership corrected
 
 `mangrove-bank-owned-review-20261022`: QA shares existing ground material owner counter; shore texture released with final owner and removed from whole-scene registry. In-browser real-class controlled-resource test passes normal and scene-first disposal exactly once. Six real RGB captures exact to prior candidate, no errors. Live streaming and benchmark still pending; no native adoption.
+
+
+### Mangrove combined shore ABAB cost
+
+`mangrove-bank-wetland-cost-20261022`: Intel UHD 720 valid GPU samples, exact camera/geometry, no errors. Candidate adds .475-1.136 ms GPU across four pairs (range .475 to 1.136); CPU/cadence mixed. Retain visual result and isolate shader cost before native adoption; procedural water noise is a hypothesis, not proven bottleneck. No FPS gain or streaming-cost claim.
