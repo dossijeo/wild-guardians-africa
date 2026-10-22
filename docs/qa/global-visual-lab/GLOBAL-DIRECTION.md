@@ -1979,3 +1979,8 @@ Wider depth opacity ramp visibly softens sawtooth without geometry/mask-resoluti
 ## 2026-10-22: balanced Canyon bank native opt-in
 
 Native canyonBank=balanced requires global-lighting and natural shores, Canyon only. Five/six QA comparisons RGB exact; remaining13 pixels beside building. Five targeted tests pass. Retained art with measured +1.08–1.86ms daytime GPU cost; early-discard optimization excluded. Day/night sampled motion review and192m streaming controls documented. Defaults unchanged; reflection repetition remains pending. See canyon-balanced-native-20261022.
+
+
+## 2026-10-22: explicit six-biome closure criteria
+
+See closure-review-20261022 for six mockup/current comparisons, per-biome unmet evidence versus optional polish, and frozen globalClosureQuery candidate. No biome declared complete. Stop treating every possible ripple variant as a blocker; prioritize representative normal-scale scenes, missing oasis/riverside evidence and Mangrove broad material variation. Preserve full original goal and final technical checks.
