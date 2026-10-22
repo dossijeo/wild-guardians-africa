@@ -1525,3 +1525,7 @@ canyonFloor=warm integrates retained floor palette for mapped resident/horizon m
 
 ### 2026-10-22: preferred combined native Canyon material
 36 real captures compare warm base/soft sand/soft+smooth normals,12 matched three-way poses day-night; same geometry/counters, no errors. Retain combined recipe: less plateau mottling, improved slope volume, near ripples/strata intact. Re-read original mockup; shoreline/water/detail remain incomplete. Near moving ABAB failed geometry equivalence on12 frames due horizon timing; preserve invalid data. Fixed-resident repeat passes720GPUqueries,day+.18ms,night+.10/-.17ms;wide passes720queries but second combined day+1.61ms. No free-cost claim. Worker normal builds3-15.7ms observed,3.62MB scratch. See canyon-native-composition-20261022/preferred-recipe.json and README. Streaming and global quality remain pending.
+
+
+### 2026-10-22: native two-scale Mangrove moss
+mangroveMoss=layered integrates retained height-blended rotated moss maps before separate soil lighting. Six QA/native pairs pixel-exact,4 tests pass. Intel UHD moving ABAB720validGPUqueries, exact per-frame geometry/cameras. GPUday-.135/-.311ms,night+.058/+.726ms;CPU+.128 to+.354ms. Preserve art,opt-in;no optimization claim, investigate alongside leaf-coverage integration. Leaf adapter,low/portrait/streaming/global completion remain pending. See mangrove-moss-native-20261022.
