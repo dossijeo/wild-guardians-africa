@@ -1,0 +1,486 @@
+{
+  "study": "Native opt-in smooth transition validation without QA material replacement; full far backgrounds; no timing claim.",
+  "fixture": {
+    "path": "docs/qa/global-visual-lab/desert-populated-closure-20261022/native-fixture.json",
+    "living": 12,
+    "workers": 2,
+    "scope": "Current Wild Engine opening; 12 paid millet crops and two paid workers; 120 seconds ordinary simulation. Tutorial skipped for directed QA. No money, growth, RNG or terrain overrides."
+  },
+  "seed": 712,
+  "resolution": [
+    1280,
+    720
+  ],
+  "views": [
+    "game",
+    "elevated",
+    "reverse"
+  ],
+  "note": "Loaded paid first-day campaign fixture, paused for visual time variants; seed 712; identical poses and visual time, settled chunks. Static artistic review, not a performance benchmark.",
+  "records": [
+    {
+      "query": "",
+      "biome": "desierto",
+      "quality": "media",
+      "variant": "warmup",
+      "phase": "day",
+      "initialLodReset": true,
+      "frames": [
+        {
+          "extraCalls": 0,
+          "extraTriangles": 0,
+          "farBackground": {
+            "mountainsVisible": false,
+            "enabled": false,
+            "adapters": []
+          },
+          "origin": [
+            0,
+            0
+          ],
+          "i": 0,
+          "palette": null,
+          "camera": [
+            105,
+            32.29186954498291,
+            18
+          ],
+          "target": [
+            83,
+            16.29186954498291,
+            0
+          ],
+          "time": 150,
+          "glError": 0,
+          "coverage": null,
+          "settings": {},
+          "memory": {
+            "geometries": 137,
+            "textures": 75
+          },
+          "calls": 51,
+          "triangles": 316333
+        },
+        {
+          "extraCalls": 0,
+          "extraTriangles": 0,
+          "farBackground": {
+            "mountainsVisible": false,
+            "enabled": false,
+            "adapters": []
+          },
+          "origin": [
+            0,
+            0
+          ],
+          "i": 1,
+          "palette": null,
+          "camera": [
+            89,
+            50.29186954498291,
+            6
+          ],
+          "target": [
+            83,
+            16.29186954498291,
+            0
+          ],
+          "time": 150,
+          "glError": 0,
+          "coverage": null,
+          "settings": {},
+          "memory": {
+            "geometries": 132,
+            "textures": 75
+          },
+          "calls": 35,
+          "triangles": 265709
+        },
+        {
+          "extraCalls": 0,
+          "extraTriangles": 0,
+          "farBackground": {
+            "mountainsVisible": false,
+            "enabled": false,
+            "adapters": []
+          },
+          "origin": [
+            0,
+            0
+          ],
+          "i": 2,
+          "palette": null,
+          "camera": [
+            65,
+            25.29186954498291,
+            22
+          ],
+          "target": [
+            83,
+            16.29186954498291,
+            0
+          ],
+          "time": 150,
+          "glError": 0,
+          "coverage": null,
+          "settings": {},
+          "memory": {
+            "geometries": 135,
+            "textures": 72
+          },
+          "calls": 47,
+          "triangles": 264434
+        }
+      ],
+      "errors": []
+    },
+    {
+      "query": "",
+      "biome": "desierto",
+      "quality": "media",
+      "variant": "warmup",
+      "phase": "night",
+      "initialLodReset": true,
+      "frames": [
+        {
+          "extraCalls": 0,
+          "extraTriangles": 0,
+          "farBackground": {
+            "mountainsVisible": false,
+            "enabled": false,
+            "adapters": []
+          },
+          "origin": [
+            0,
+            0
+          ],
+          "i": 0,
+          "palette": null,
+          "camera": [
+            105,
+            32.29186954498291,
+            18
+          ],
+          "target": [
+            83,
+            16.29186954498291,
+            0
+          ],
+          "time": 350,
+          "glError": 0,
+          "coverage": null,
+          "settings": {},
+          "memory": {
+            "geometries": 139,
+            "textures": 72
+          },
+          "calls": 51,
+          "triangles": 316333
+        },
+        {
+          "extraCalls": 0,
+          "extraTriangles": 0,
+          "farBackground": {
+            "mountainsVisible": false,
+            "enabled": false,
+            "adapters": []
+          },
+          "origin": [
+            0,
+            0
+          ],
+          "i": 1,
+          "palette": null,
+          "camera": [
+            89,
+            50.29186954498291,
+            6
+          ],
+          "target": [
+            83,
+            16.29186954498291,
+            0
+          ],
+          "time": 350,
+          "glError": 0,
+          "coverage": null,
+          "settings": {},
+          "memory": {
+            "geometries": 133,
+            "textures": 72
+          },
+          "calls": 35,
+          "triangles": 265709
+        },
+        {
+          "extraCalls": 0,
+          "extraTriangles": 0,
+          "farBackground": {
+            "mountainsVisible": false,
+            "enabled": false,
+            "adapters": []
+          },
+          "origin": [
+            0,
+            0
+          ],
+          "i": 2,
+          "palette": null,
+          "camera": [
+            65,
+            25.29186954498291,
+            22
+          ],
+          "target": [
+            83,
+            16.29186954498291,
+            0
+          ],
+          "time": 350,
+          "glError": 0,
+          "coverage": null,
+          "settings": {},
+          "memory": {
+            "geometries": 135,
+            "textures": 72
+          },
+          "calls": 47,
+          "triangles": 264434
+        }
+      ],
+      "errors": []
+    },
+    {
+      "query": "",
+      "biome": "desierto",
+      "quality": "media",
+      "variant": "native",
+      "phase": "day",
+      "initialLodReset": true,
+      "frames": [
+        {
+          "extraCalls": 0,
+          "extraTriangles": 0,
+          "farBackground": {
+            "mountainsVisible": false,
+            "enabled": false,
+            "adapters": []
+          },
+          "origin": [
+            0,
+            0
+          ],
+          "i": 0,
+          "palette": null,
+          "camera": [
+            105,
+            32.29186954498291,
+            18
+          ],
+          "target": [
+            83,
+            16.29186954498291,
+            0
+          ],
+          "time": 150,
+          "glError": 0,
+          "coverage": null,
+          "settings": {},
+          "memory": {
+            "geometries": 139,
+            "textures": 72
+          },
+          "calls": 51,
+          "triangles": 316333
+        },
+        {
+          "extraCalls": 0,
+          "extraTriangles": 0,
+          "farBackground": {
+            "mountainsVisible": false,
+            "enabled": false,
+            "adapters": []
+          },
+          "origin": [
+            0,
+            0
+          ],
+          "i": 1,
+          "palette": null,
+          "camera": [
+            89,
+            50.29186954498291,
+            6
+          ],
+          "target": [
+            83,
+            16.29186954498291,
+            0
+          ],
+          "time": 150,
+          "glError": 0,
+          "coverage": null,
+          "settings": {},
+          "memory": {
+            "geometries": 133,
+            "textures": 72
+          },
+          "calls": 35,
+          "triangles": 265709
+        },
+        {
+          "extraCalls": 0,
+          "extraTriangles": 0,
+          "farBackground": {
+            "mountainsVisible": false,
+            "enabled": false,
+            "adapters": []
+          },
+          "origin": [
+            0,
+            0
+          ],
+          "i": 2,
+          "palette": null,
+          "camera": [
+            65,
+            25.29186954498291,
+            22
+          ],
+          "target": [
+            83,
+            16.29186954498291,
+            0
+          ],
+          "time": 150,
+          "glError": 0,
+          "coverage": null,
+          "settings": {},
+          "memory": {
+            "geometries": 135,
+            "textures": 72
+          },
+          "calls": 47,
+          "triangles": 264434
+        }
+      ],
+      "errors": []
+    },
+    {
+      "query": "",
+      "biome": "desierto",
+      "quality": "media",
+      "variant": "native",
+      "phase": "night",
+      "initialLodReset": true,
+      "frames": [
+        {
+          "extraCalls": 0,
+          "extraTriangles": 0,
+          "farBackground": {
+            "mountainsVisible": false,
+            "enabled": false,
+            "adapters": []
+          },
+          "origin": [
+            0,
+            0
+          ],
+          "i": 0,
+          "palette": null,
+          "camera": [
+            105,
+            32.29186954498291,
+            18
+          ],
+          "target": [
+            83,
+            16.29186954498291,
+            0
+          ],
+          "time": 350,
+          "glError": 0,
+          "coverage": null,
+          "settings": {},
+          "memory": {
+            "geometries": 139,
+            "textures": 72
+          },
+          "calls": 51,
+          "triangles": 316333
+        },
+        {
+          "extraCalls": 0,
+          "extraTriangles": 0,
+          "farBackground": {
+            "mountainsVisible": false,
+            "enabled": false,
+            "adapters": []
+          },
+          "origin": [
+            0,
+            0
+          ],
+          "i": 1,
+          "palette": null,
+          "camera": [
+            89,
+            50.29186954498291,
+            6
+          ],
+          "target": [
+            83,
+            16.29186954498291,
+            0
+          ],
+          "time": 350,
+          "glError": 0,
+          "coverage": null,
+          "settings": {},
+          "memory": {
+            "geometries": 133,
+            "textures": 72
+          },
+          "calls": 35,
+          "triangles": 265709
+        },
+        {
+          "extraCalls": 0,
+          "extraTriangles": 0,
+          "farBackground": {
+            "mountainsVisible": false,
+            "enabled": false,
+            "adapters": []
+          },
+          "origin": [
+            0,
+            0
+          ],
+          "i": 2,
+          "palette": null,
+          "camera": [
+            65,
+            25.29186954498291,
+            22
+          ],
+          "target": [
+            83,
+            16.29186954498291,
+            0
+          ],
+          "time": 350,
+          "glError": 0,
+          "coverage": null,
+          "settings": {},
+          "memory": {
+            "geometries": 135,
+            "textures": 72
+          },
+          "calls": 47,
+          "triangles": 264434
+        }
+      ],
+      "errors": []
+    }
+  ]
+}
