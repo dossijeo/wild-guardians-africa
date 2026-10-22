@@ -1778,3 +1778,7 @@ Real cinematic sampling exposed daytime sky grading jump and nighttime decorativ
 ### Canyon cover event lifecycle
 
 `canyon-cover-events-20261022`:actual event bus/field/asset in isolated copied-state scene, six crop/wall/center events at0.529m from chunk seam. Four nearby chunks update; removal restores exact279-instance distribution; zero sampled footprint violations and idle flush0. Observed event flush4.2-10.6ms, not a benchmark bound. Event logic supported; quality policy and generation cost remain before opt-in native integration.
+
+### Canyon bank cover explicit native option
+
+`canyonCover=banks` with global-lighting now enables the validated Blender bank module through native rendering. `canyon-cover-native-parity-20261022`:15/15 real day/night streaming frames RGB exact versus corrected QA,4 existing lifecycle tests pass, option isolated to canyons. Default/global recipe unchanged. Quality policy and broader native/gameplay validation remain outstanding; no final-global-quality claim.
