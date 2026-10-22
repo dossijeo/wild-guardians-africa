@@ -1468,3 +1468,7 @@ Direct Float32 packing plus bounded edge lookup: three-origin Node medians454-50
 
 ## Soft sand near/gameplay check (2026-10-22)
 12 real captures at seed918271: near detail/shadows retained, six matched draw/triangle pairs; distant/grazing regions change. Keep QA candidate, temporal fade and other quality profiles pending before integration. See canyon-sand-soft-near-20261022.
+
+
+## Soft sand camera playback (2026-10-22)
+240 real frames,120 matched day/night pairs; camera rises near-to-wide. Deliver MP4 comparisons and keyframes; near detail retained, distant contrast attenuates. Settled pose capture encoded30fps, NOT realtime benchmark or full temporal certification. Candidate ready for opt-in integration review; default unchanged. See canyon-sand-soft-motion-20261022.
