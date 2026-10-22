@@ -1656,3 +1656,8 @@ See `river-underlay-native-lifecycle-20261022.md` and JSON: 30 real frames using
 ### Mangrove sediment gating
 
 Skip water noise outside its maximum 3.5-unit shore influence, keeping derivatives outside branch. Six RGB pairs exact; no added memory. `mangrove-bank-gated-cost-20261022` ABAB720 GPU samples: three pairs improve .380-.689 ms, first day regresses .143ms; CPU mixed. Retain preferred QA optimization, not guaranteed FPS gain. Live streaming/continuity remains before integration.
+
+
+### Mangrove shore live streaming ownership
+
+`mangrove-bank-stream-20261022`: real 96-unit round trips, 25 shore masks live at every stop, each step creates/releases five, registry stays50 including ground masks. No accumulating shore textures in this path, no GL errors. Geometry return exact; night RGB exact, day differs and remains unisolated. Settled test only, not fast streaming/full parity.
