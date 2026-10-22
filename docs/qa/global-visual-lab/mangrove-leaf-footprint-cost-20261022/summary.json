@@ -1,0 +1,551 @@
+{
+  "results": [
+    {
+      "variant": "box",
+      "phase": "day",
+      "run": 0,
+      "gpu": {
+        "mean": 27.516022111111113,
+        "p95": 34.118332,
+        "max": 44.73802
+      },
+      "cpu": {
+        "mean": 9.11222222381168,
+        "p95": 13.799999952316284,
+        "max": 15.199999988079071
+      },
+      "interval": {
+        "mean": 32.97222222222222,
+        "p95": 40.09999996423721,
+        "max": 58.59999996423721
+      },
+      "rebuild": {
+        "wallMs": 18,
+        "tileBuildMs": 13.300000011920929,
+        "coverage": {
+          "variant": "C",
+          "active": true,
+          "quality": "media",
+          "biome": "manglares",
+          "edgePadding": 0.6,
+          "nearDistance": 24,
+          "moduleSpacing": 0.5,
+          "near": 559,
+          "far": 3431,
+          "leaves": 18196,
+          "triangles": 45336,
+          "chunks": 25,
+          "cachedTiles": 38,
+          "bufferBytes": 1204048,
+          "stats": {
+            "buildMs": 80.59999990463257,
+            "selectionMs": 79.69999986886978,
+            "selectionCount": 95,
+            "candidates": 29952,
+            "masked": 15014,
+            "overflow": 0
+          },
+          "engineQueries": 0,
+          "castShadow": false
+        }
+      },
+      "memory": {
+        "geometries": 236,
+        "textures": 121
+      },
+      "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "variant": "box",
+      "phase": "night",
+      "run": 0,
+      "gpu": {
+        "mean": 23.50375251111111,
+        "p95": 28.246977,
+        "max": 35.488697
+      },
+      "cpu": {
+        "mean": 8.30111111137602,
+        "p95": 12.600000023841858,
+        "max": 14.5
+      },
+      "interval": {
+        "mean": 33.82444444431199,
+        "p95": 40.69999998807907,
+        "max": 67.69999998807907
+      },
+      "rebuild": {
+        "wallMs": 18,
+        "tileBuildMs": 13.300000011920929,
+        "coverage": {
+          "variant": "C",
+          "active": true,
+          "quality": "media",
+          "biome": "manglares",
+          "edgePadding": 0.6,
+          "nearDistance": 24,
+          "moduleSpacing": 0.5,
+          "near": 559,
+          "far": 3431,
+          "leaves": 18196,
+          "triangles": 45336,
+          "chunks": 25,
+          "cachedTiles": 38,
+          "bufferBytes": 1204048,
+          "stats": {
+            "buildMs": 80.59999990463257,
+            "selectionMs": 79.69999986886978,
+            "selectionCount": 95,
+            "candidates": 29952,
+            "masked": 15014,
+            "overflow": 0
+          },
+          "engineQueries": 0,
+          "castShadow": false
+        }
+      },
+      "memory": {
+        "geometries": 236,
+        "textures": 121
+      },
+      "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "variant": "triangles",
+      "phase": "day",
+      "run": 1,
+      "gpu": {
+        "mean": 23.134657611111113,
+        "p95": 28.072603,
+        "max": 40.011614
+      },
+      "cpu": {
+        "mean": 6.235555555423101,
+        "p95": 10.599999964237213,
+        "max": 11.199999988079071
+      },
+      "interval": {
+        "mean": 27.518888889418708,
+        "p95": 37.59999996423721,
+        "max": 69.40000003576279
+      },
+      "rebuild": {
+        "wallMs": 35.09999996423721,
+        "tileBuildMs": 26.70000010728836,
+        "coverage": {
+          "variant": "C",
+          "active": true,
+          "quality": "media",
+          "biome": "manglares",
+          "edgePadding": 0.6,
+          "nearDistance": 24,
+          "moduleSpacing": 0.5,
+          "near": 559,
+          "far": 3785,
+          "leaves": 19612,
+          "triangles": 48168,
+          "chunks": 25,
+          "cachedTiles": 38,
+          "bufferBytes": 1204048,
+          "stats": {
+            "buildMs": 115.6000000834465,
+            "selectionMs": 337.90000039339066,
+            "selectionCount": 544,
+            "candidates": 42496,
+            "masked": 19913,
+            "overflow": 0
+          },
+          "engineQueries": 0,
+          "castShadow": false
+        }
+      },
+      "memory": {
+        "geometries": 236,
+        "textures": 121
+      },
+      "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "variant": "triangles",
+      "phase": "night",
+      "run": 1,
+      "gpu": {
+        "mean": 24.4292102,
+        "p95": 29.037603,
+        "max": 34.281926
+      },
+      "cpu": {
+        "mean": 6.8811111072699225,
+        "p95": 10.800000011920929,
+        "max": 11.900000035762787
+      },
+      "interval": {
+        "mean": 32.076666666401756,
+        "p95": 41.89999997615814,
+        "max": 56
+      },
+      "rebuild": {
+        "wallMs": 35.09999996423721,
+        "tileBuildMs": 26.70000010728836,
+        "coverage": {
+          "variant": "C",
+          "active": true,
+          "quality": "media",
+          "biome": "manglares",
+          "edgePadding": 0.6,
+          "nearDistance": 24,
+          "moduleSpacing": 0.5,
+          "near": 559,
+          "far": 3785,
+          "leaves": 19612,
+          "triangles": 48168,
+          "chunks": 25,
+          "cachedTiles": 38,
+          "bufferBytes": 1204048,
+          "stats": {
+            "buildMs": 115.6000000834465,
+            "selectionMs": 337.90000039339066,
+            "selectionCount": 544,
+            "candidates": 42496,
+            "masked": 19913,
+            "overflow": 0
+          },
+          "engineQueries": 0,
+          "castShadow": false
+        }
+      },
+      "memory": {
+        "geometries": 236,
+        "textures": 121
+      },
+      "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "variant": "box",
+      "phase": "day",
+      "run": 2,
+      "gpu": {
+        "mean": 23.835549366666665,
+        "p95": 27.547915,
+        "max": 37.276249
+      },
+      "cpu": {
+        "mean": 6.5877777801619635,
+        "p95": 10.300000011920929,
+        "max": 13.199999988079071
+      },
+      "interval": {
+        "mean": 27.833333333333332,
+        "p95": 34,
+        "max": 47.80000001192093
+      },
+      "rebuild": {
+        "wallMs": 16.100000023841858,
+        "tileBuildMs": 10.699999928474426,
+        "coverage": {
+          "variant": "C",
+          "active": true,
+          "quality": "media",
+          "biome": "manglares",
+          "edgePadding": 0.6,
+          "nearDistance": 24,
+          "moduleSpacing": 0.5,
+          "near": 559,
+          "far": 3431,
+          "leaves": 18196,
+          "triangles": 45336,
+          "chunks": 25,
+          "cachedTiles": 38,
+          "bufferBytes": 1204048,
+          "stats": {
+            "buildMs": 130.10000002384186,
+            "selectionMs": 535.9000006914139,
+            "selectionCount": 992,
+            "candidates": 55040,
+            "masked": 25587,
+            "overflow": 0
+          },
+          "engineQueries": 0,
+          "castShadow": false
+        }
+      },
+      "memory": {
+        "geometries": 236,
+        "textures": 121
+      },
+      "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "variant": "box",
+      "phase": "night",
+      "run": 2,
+      "gpu": {
+        "mean": 24.109133888888888,
+        "p95": 29.017707,
+        "max": 32.759009
+      },
+      "cpu": {
+        "mean": 6.770000003443824,
+        "p95": 11,
+        "max": 13.100000023841858
+      },
+      "interval": {
+        "mean": 29.616666666666667,
+        "p95": 36.200000047683716,
+        "max": 53.59999996423721
+      },
+      "rebuild": {
+        "wallMs": 16.100000023841858,
+        "tileBuildMs": 10.699999928474426,
+        "coverage": {
+          "variant": "C",
+          "active": true,
+          "quality": "media",
+          "biome": "manglares",
+          "edgePadding": 0.6,
+          "nearDistance": 24,
+          "moduleSpacing": 0.5,
+          "near": 559,
+          "far": 3431,
+          "leaves": 18196,
+          "triangles": 45336,
+          "chunks": 25,
+          "cachedTiles": 38,
+          "bufferBytes": 1204048,
+          "stats": {
+            "buildMs": 130.10000002384186,
+            "selectionMs": 535.9000006914139,
+            "selectionCount": 992,
+            "candidates": 55040,
+            "masked": 25587,
+            "overflow": 0
+          },
+          "engineQueries": 0,
+          "castShadow": false
+        }
+      },
+      "memory": {
+        "geometries": 236,
+        "textures": 121
+      },
+      "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "variant": "triangles",
+      "phase": "day",
+      "run": 3,
+      "gpu": {
+        "mean": 23.02554361111111,
+        "p95": 29.01302,
+        "max": 33.188072
+      },
+      "cpu": {
+        "mean": 6.185555552774005,
+        "p95": 9.300000011920929,
+        "max": 11.5
+      },
+      "interval": {
+        "mean": 27.028888889153798,
+        "p95": 32.30000001192093,
+        "max": 63.59999996423721
+      },
+      "rebuild": {
+        "wallMs": 15.799999952316284,
+        "tileBuildMs": 10.800000071525574,
+        "coverage": {
+          "variant": "C",
+          "active": true,
+          "quality": "media",
+          "biome": "manglares",
+          "edgePadding": 0.6,
+          "nearDistance": 24,
+          "moduleSpacing": 0.5,
+          "near": 559,
+          "far": 3785,
+          "leaves": 19612,
+          "triangles": 48168,
+          "chunks": 25,
+          "cachedTiles": 38,
+          "bufferBytes": 1204048,
+          "stats": {
+            "buildMs": 144.1000002026558,
+            "selectionMs": 704.5000019073486,
+            "selectionCount": 1439,
+            "candidates": 67584,
+            "masked": 30486,
+            "overflow": 0
+          },
+          "engineQueries": 0,
+          "castShadow": false
+        }
+      },
+      "memory": {
+        "geometries": 236,
+        "textures": 121
+      },
+      "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "variant": "triangles",
+      "phase": "night",
+      "run": 3,
+      "gpu": {
+        "mean": 23.36223582222222,
+        "p95": 27.388124,
+        "max": 32.033229
+      },
+      "cpu": {
+        "mean": 6.733333337306976,
+        "p95": 11.699999988079071,
+        "max": 20
+      },
+      "interval": {
+        "mean": 27.566666666666666,
+        "p95": 37.200000047683716,
+        "max": 53.69999998807907
+      },
+      "rebuild": {
+        "wallMs": 15.799999952316284,
+        "tileBuildMs": 10.800000071525574,
+        "coverage": {
+          "variant": "C",
+          "active": true,
+          "quality": "media",
+          "biome": "manglares",
+          "edgePadding": 0.6,
+          "nearDistance": 24,
+          "moduleSpacing": 0.5,
+          "near": 559,
+          "far": 3785,
+          "leaves": 19612,
+          "triangles": 48168,
+          "chunks": 25,
+          "cachedTiles": 38,
+          "bufferBytes": 1204048,
+          "stats": {
+            "buildMs": 144.1000002026558,
+            "selectionMs": 704.5000019073486,
+            "selectionCount": 1439,
+            "candidates": 67584,
+            "masked": 30486,
+            "overflow": 0
+          },
+          "engineQueries": 0,
+          "castShadow": false
+        }
+      },
+      "memory": {
+        "geometries": 236,
+        "textures": 121
+      },
+      "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    }
+  ],
+  "controls": [
+    {
+      "phase": "day",
+      "mode": "gpu",
+      "pair": 1,
+      "unexpected": [],
+      "leafTriangleDelta": {
+        "mean": 2062.311111111111,
+        "p95": 3680,
+        "max": 3944
+      }
+    },
+    {
+      "phase": "day",
+      "mode": "gpu",
+      "pair": 2,
+      "unexpected": [],
+      "leafTriangleDelta": {
+        "mean": 2062.311111111111,
+        "p95": 3680,
+        "max": 3944
+      }
+    },
+    {
+      "phase": "day",
+      "mode": "cadence",
+      "pair": 1,
+      "unexpected": [],
+      "leafTriangleDelta": {
+        "mean": 2062.311111111111,
+        "p95": 3680,
+        "max": 3944
+      }
+    },
+    {
+      "phase": "day",
+      "mode": "cadence",
+      "pair": 2,
+      "unexpected": [
+        {
+          "frame": 31,
+          "calls": -1,
+          "triangles": -691
+        },
+        {
+          "frame": 32,
+          "calls": -1,
+          "triangles": -763
+        }
+      ],
+      "leafTriangleDelta": {
+        "mean": 2062.311111111111,
+        "p95": 3680,
+        "max": 3944
+      }
+    },
+    {
+      "phase": "night",
+      "mode": "gpu",
+      "pair": 1,
+      "unexpected": [
+        {
+          "frame": 89,
+          "calls": -1,
+          "triangles": 3522
+        }
+      ],
+      "leafTriangleDelta": {
+        "mean": 2062.311111111111,
+        "p95": 3680,
+        "max": 3944
+      }
+    },
+    {
+      "phase": "night",
+      "mode": "gpu",
+      "pair": 2,
+      "unexpected": [],
+      "leafTriangleDelta": {
+        "mean": 2062.311111111111,
+        "p95": 3680,
+        "max": 3944
+      }
+    },
+    {
+      "phase": "night",
+      "mode": "cadence",
+      "pair": 1,
+      "unexpected": [],
+      "leafTriangleDelta": {
+        "mean": 2062.311111111111,
+        "p95": 3680,
+        "max": 3944
+      }
+    },
+    {
+      "phase": "night",
+      "mode": "cadence",
+      "pair": 2,
+      "unexpected": [],
+      "leafTriangleDelta": {
+        "mean": 2062.311111111111,
+        "p95": 3680,
+        "max": 3944
+      }
+    }
+  ]
+}

@@ -1909,3 +1909,8 @@ Intel UHD Mangroves, full backgrounds, native original/smooth reload ABAB: 720 v
 ## 2026-10-22: Mangrove rectangular leaf exclusions corrected
 
 Resumed deferred leaf investigation after native far integration/low-quality validation. Resident water was excluding leaves over its entire rectangular bounding box. Reuse existing River triangle buckets plus neighbor checks in Mangroves, preserving authored leaves, moss, blue water and shore padding. Native six-image parity with QA exact; 2696–8976 recovered leaf triangles, no overflow. Five relevant tests include dry corners/wet triangle interiors and neighbor invalidation. Cost of restored coverage pending; no FPS claim. Asset-water bounding fallback and other distribution patterns remain limitations. See mangrove-leaf-triangle-native-20261022.
+
+
+## 2026-10-22: recovered Mangrove leaf coverage cost
+
+Single-world rectangle/triangle ABAB yields 720 valid GPU queries and ~2062 additional leaf triangles on the moving path. Three paired frames differ in non-leaf representation; initial rectangle pass also slower than repeat. No consistent GPU penalty, but no causal speedup/zero-cost claim. Visible tile rebuild 13.3/10.7ms rectangle versus26.7/10.8ms triangles, outside samples; chunk-index creation remains unmeasured. Retain art fix and document limitations. See mangrove-leaf-footprint-cost-20261022.
