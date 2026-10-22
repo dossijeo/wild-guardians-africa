@@ -1892,3 +1892,10 @@ Requisitos que deben conservarse: animación de acercamiento al elegir una opci�
 ## 2026-10-22: native opt-in smooth far transition integration
 
 `farTransitions=smooth` inside the global-lighting lab now enables the reviewed ordered candidate without QA material routes. 76 targeted tests pass; Sabana/Mangrove native captures match QA calls/triangles in 12/12 views, 10 RGB exact and two tiny residuals. No new performance claim. Scene-scoped owned packing and standby clones preserve canonical IDs and dispose independently. Keep opt-in pending long-distance streaming, native moving benchmarks and remaining-biome captures. See [native integration evidence](far-transition-native-20261022/README.md).
+
+
+## 2026-10-22: native smooth coverage across six biomes and streaming cleanup
+
+Native captures now cover all six biomes with full backgrounds. Additional four-biome run matches prior QA calls/triangles in 24/24 views; Volcanoes exact, Desert/Canyon tiny edge residuals, River includes its subsequent water-palette change and is not an isolated pixel comparison. Mangrove 192m streaming excursion replaces nine regions/species; corrected lifecycle check releases all 12 tracked smooth resources and restores the preceding continuous-grass scene hook. Return tree representation is not exact and requires original-path control. Keep opt-in; no new timing claim. See far-transition-native-other-biomes-20261022 and far-transition-native-stream-verified-20261022.
+
+Original-dither streaming control completed: return images also differ (10564 day/8262 night pixels). Across all ten checkpoints, smooth-vs-original workload delta equals exactly its four complementary opaque draws and 2190–2206 triangles; no unexplained extra workload. This separates the pre-existing stateful return behavior from the smooth integration, without proving identical per-pixel causes. See far-transition-legacy-stream-control-20261022.

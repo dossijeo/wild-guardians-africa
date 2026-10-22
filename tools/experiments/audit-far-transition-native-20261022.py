@@ -2,9 +2,10 @@ from pathlib import Path
 from PIL import Image
 import numpy as np
 import json
+import os
 root=Path('docs/qa/global-visual-lab')
 old=root/'far-transition-six-biome-20261022'
-new=root/'far-transition-native-20261022'
+new=Path(os.environ.get('WG_REVIEW_OUT',str(root/'far-transition-native-20261022')))
 a=json.loads((old/'captures.json').read_text())['records']
 b=json.loads((new/'captures.json').read_text())['records']
 rows=[]
