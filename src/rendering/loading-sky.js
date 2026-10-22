@@ -3,10 +3,11 @@ import * as THREE from 'three';
 // remain borrowed from the loaded world sky; its materials are never modified.
 export function createLoadingSky(sky){
  const scene=new THREE.Scene(),materials=sky.materials.map(source=>{
-  const material=source.clone();material.uniforms={...source.uniforms,uSkyOpacity:{value:source.uniforms.uSkyOpacity?.value??1}};
+  const material=source.clone();material.uniforms={...source.uniforms,uSkyOpacity:{value:source.uniforms.uSkyOpacity?.value??1},uLoadingSkyGrade:{value:1}};
   const anchor='base=applySaturation(base,uSkySaturation);';
   if(!material.fragmentShader.includes(anchor))throw Error('Loading sky grading anchor missing');
-  if(!material.fragmentShader.includes('qaAltitude'))material.fragmentShader=material.fragmentShader.replace(anchor,`base=applySaturation(base,uSkySaturation);
+  if(!material.fragmentShader.includes('qaAltitude'))material.fragmentShader=material.fragmentShader.replace('precision highp float;','precision highp float;uniform float uLoadingSkyGrade;').replace(anchor,`base=applySaturation(base,uSkySaturation);
+ vec3 loadingOriginalSky=base;
  float qaAltitude=smoothstep(-.05,.65,d.y);
  if(uSkyKind<.5){
  float altitude=smoothstep(-.03,.45,d.y);
@@ -19,10 +20,11 @@ export function createLoadingSky(sky){
  vec3 haze=vec3(.70,.88,1.06)*lum;
  base=mix(base,haze,horizon*.55*(1.-cloud));
  }
- else {base*=vec3(.66,.80,1.05);}`);
+ else {base*=vec3(.66,.80,1.05);}
+ base=mix(loadingOriginalSky,base,uLoadingSkyGrade);`);
   return material;
  });
  sky.scene.children.forEach((source,i)=>{const mesh=new THREE.Mesh(source.geometry,materials[i]);mesh.frustumCulled=false;mesh.renderOrder=source.renderOrder;scene.add(mesh);});
  let disposed=false;
- return {scene,materials,uniforms:sky.uniforms,render:sky.render,dispose(){if(disposed)return;disposed=true;materials.forEach(m=>m.dispose());scene.clear();}};
+ return {scene,materials,uniforms:sky.uniforms,render:sky.render,setGrade(value){materials.forEach(m=>{m.uniforms.uLoadingSkyGrade.value=Math.max(0,Math.min(1,value));});},dispose(){if(disposed)return;disposed=true;materials.forEach(m=>m.dispose());scene.clear();}};
 }

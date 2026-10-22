@@ -1726,3 +1726,7 @@ Skip water noise outside its maximum 3.5-unit shore influence, keeping derivativ
 ### Canyon cross-section diagnosis
 
 `canyon-bank-cross-section-20261022`:81 native mesh raycasts at z102. Mesh/field agree ~2.2e-7; approximate wet depth is close (summary.json). Large coordinate offset ruled out locally. Visible shoreline is inside nominal waterHalf; next couple wet land and water lighting/material response, not more isolated color noise.
+
+### Loading day/night sky handoff continuity
+
+Real cinematic sampling exposed daytime sky grading jump and nighttime decorative mist-star cut. Loading sky grade and mist now fade during ascent, reaching world appearance before skyOnly/handoff. Day/night final videos and frame sequences retained;10 existing tests pass. QA night clock override only, production simulation untouched. Videos10Hz, not FPS benchmarks.
