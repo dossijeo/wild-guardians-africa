@@ -1651,3 +1651,8 @@ See `river-underlay-native-lifecycle-20261022.md` and JSON: 30 real frames using
 ### Mangrove combined shore ABAB cost
 
 `mangrove-bank-wetland-cost-20261022`: Intel UHD 720 valid GPU samples, exact camera/geometry, no errors. Candidate adds .475-1.136 ms GPU across four pairs (range .475 to 1.136); CPU/cadence mixed. Retain visual result and isolate shader cost before native adoption; procedural water noise is a hypothesis, not proven bottleneck. No FPS gain or streaming-cost claim.
+
+
+### Mangrove sediment gating
+
+Skip water noise outside its maximum 3.5-unit shore influence, keeping derivatives outside branch. Six RGB pairs exact; no added memory. `mangrove-bank-gated-cost-20261022` ABAB720 GPU samples: three pairs improve .380-.689 ms, first day regresses .143ms; CPU mixed. Retain preferred QA optimization, not guaranteed FPS gain. Live streaming/continuity remains before integration.
