@@ -1440,3 +1440,7 @@ Live 103212-vertex horizon, alternating string/numeric implementation: warmed me
 
 ## Canyon continuous camera A/B/A/B (2026-10-22)
 180-frame/192-unit day path: CPU medians 4.7-5.0 ms; normal option raises worker median latency from 92.6/94.4 to 121.5/109.4 ms. 20 and 16 paired frames differ in residency; do not claim FPS improvement. Settled geometry equal and repeat images exact. Retain opt-in visual improvement, reduce delivery cost; night motion pending. See canyon-horizon-motion-20261022.
+
+
+## Reusable horizon normal scratch (2026-10-22)
+Native opt-in now reuses 3.45 MiB worker scratch. A/B/A/B normal median 13.2 -> 4.5-4.6 ms; delivery 112-116 -> 103-107 ms. All endpoint images identical, 17 tests pass. No frame improvement claim (B2 max worse; residency differs). Stop micro-optimizing and return to visible bank/LOD continuity. See canyon-horizon-scratch-motion-20261022.
