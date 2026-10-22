@@ -1456,3 +1456,7 @@ River-corridor2x2 with conforming4x8 exterior: six day/night candidate images ex
 
 ## Adaptive builder packing optimization (2026-10-22)
 Direct Float32 packing plus bounded edge lookup: three-origin Node medians454-508 ->160-241 ms. All24 buffer comparisons exact; six new game captures pixel-identical. QA only; no FPS/heap claim, moving latency and other views pending. See canyon-adaptive-build-cost-20261022 and canyon-horizon-adaptive-fast-20261022.
+
+
+## Adaptive horizon second-seed angles (2026-10-22)
+24 new captures at seed918271. Close views exact but weak horizon coverage; wide views show small outer lighting/contour differences, no obvious still-image cracks. Retain candidate, do not generalize exact pixel claims. Broad plateau material blotches shared with full-fine reference need separate material work. See canyon-adaptive-angles-20261022 and canyon-adaptive-wide-20261022.
