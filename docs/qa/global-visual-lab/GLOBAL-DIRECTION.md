@@ -1606,3 +1606,8 @@ See `river-underlay-mask-persistent-stream-20261022/README.md`. Real day/night 9
 ### Persistent River underlay: same-render recovery fixed
 
 The helper now sets activation from current selection state, resolving previous-overflow lag. `river-underlay-mask-persistent-first-frame-20261022` captures ONE render after transitions: six restored RGB frames exact, expected activation/ranges, no GL errors, overflow recovery passes helper regression too. Candidate still QA-only; native integration/parity and broader art review remain.
+
+
+### Native opt-in River underlay
+
+`riverUnderlay=persistent` now enables the retained underlay with River soil/global lighting. Native modules own masks and same-selection activation; defaults unchanged. `river-underlay-native-parity-20261022`: six native/QA pairs RGB pixel-exact with exact draw/triangle counts and no GL errors. Native helper regression added. Browser native lifecycle and broader art review remain pending; previous QA benchmark is not a fresh native performance measurement.

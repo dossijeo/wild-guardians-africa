@@ -1,3 +1,4 @@
+import {syncSelectedGrassMask,disposeSelectedGrassMask} from './grass-underlay-mask.js';
 import {prepareMangroveLeaves,mangroveLeafShader} from './mangrove-leaf-cover.js';
 import {markGroundDetailEvent} from './blender-ground-details.js';
 import * as THREE from 'three';
@@ -127,8 +128,8 @@ export async function createContinuousGrass(world){
  visibleTiles.push({c,tx,tz,dist:Math.hypot(x-eyeX,z-eyeZ)});}
  visibleTiles.sort((a,b)=>a.dist-b.dist||a.tx-b.tx||a.tz-b.tz);
  for(const {c,tx,tz}of visibleTiles)for(const p of tile(c,tx,tz).items){const dist=Math.hypot(p[0]-eyeX,p[2]-eyeZ);if(dist>q.farDistance)continue;bins[q.variant==='C'&&dist<q.nearDistance?0:1].push(p);}
- for(let k=0;k<2;k++){const entry=q.meshes[k],g=entry.mesh.geometry,bin=bins[k];q.stats.overflow+=Math.max(0,bin.length-entry.capacity);const count=Math.min(entry.capacity,bin.length);for(let i=0;i<count;i++){const p=bin[i];for(let j=0;j<4;j++){g.attributes.coverageAnchor.array[i*4+j]=p[j];g.attributes.coverageData.array[i*4+j]=p[j+4]}g.attributes.coverageSlope.array[i*2]=p[8];g.attributes.coverageSlope.array[i*2+1]=p[9]}for(const name of ['coverageAnchor','coverageData','coverageSlope'])g.attributes[name].needsUpdate=true;g.instanceCount=count;entry.mesh.visible=q.variant!=='A'&&count>0;}q.near=q.meshes[0].mesh.geometry.instanceCount;q.far=q.meshes[1].mesh.geometry.instanceCount;q.stats.selectionMs+=performance.now()-start;q.stats.selectionCount++;q.dirty=false;}
- q.renderHook=world.scene.onBeforeRender=function(...args){old?.apply(this,args);if(q.disposed)return;q.uniforms.uCoverageTime.value=q.timeOverride??world.state.elapsed;const camera=world.camera,key=[Math.round((camera.position.x-world.scene.position.x)*2),Math.round(camera.position.y*2),Math.round((camera.position.z-world.scene.position.z)*2),...camera.quaternion.toArray().map(v=>v.toFixed(2)),...camera.projectionMatrix.elements,q.variant].join('|');if(q.quality!=='muy_baja'&&q.variant!=='A'&&(q.dirty||key!==q.signature)){q.signature=key;select()}};
+ for(let k=0;k<2;k++){const entry=q.meshes[k],g=entry.mesh.geometry,bin=bins[k];q.stats.overflow+=Math.max(0,bin.length-entry.capacity);const count=Math.min(entry.capacity,bin.length);for(let i=0;i<count;i++){const p=bin[i];for(let j=0;j<4;j++){g.attributes.coverageAnchor.array[i*4+j]=p[j];g.attributes.coverageData.array[i*4+j]=p[j+4]}g.attributes.coverageSlope.array[i*2]=p[8];g.attributes.coverageSlope.array[i*2+1]=p[9]}for(const name of ['coverageAnchor','coverageData','coverageSlope'])g.attributes[name].needsUpdate=true;g.instanceCount=count;entry.mesh.visible=q.variant!=='A'&&count>0;}q.near=q.meshes[0].mesh.geometry.instanceCount;q.far=q.meshes[1].mesh.geometry.instanceCount;if(world.biomeGround.riverUnderlay)syncSelectedGrassMask(world,q);q.stats.selectionMs+=performance.now()-start;q.stats.selectionCount++;q.dirty=false;}
+ q.renderHook=world.scene.onBeforeRender=function(...args){old?.apply(this,args);if(q.disposed)return;if(world.biomeGround.riverUnderlay)world.biomeGround.coverageUnderlay?.value.set(q.group.visible&&q.variant!=="A"&&q.quality!=="muy_baja"&&!q.stats.overflow?1:0,q.farDistance);q.uniforms.uCoverageTime.value=q.timeOverride??world.state.elapsed;const camera=world.camera,key=[Math.round((camera.position.x-world.scene.position.x)*2),Math.round(camera.position.y*2),Math.round((camera.position.z-world.scene.position.z)*2),...camera.quaternion.toArray().map(v=>v.toFixed(2)),...camera.projectionMatrix.elements,q.variant].join('|');if(q.quality!=='muy_baja'&&q.variant!=='A'&&(q.dirty||key!==q.signature)){q.signature=key;select()}};
  q.configureQuality=quality=>{
   if(q.quality===quality)return;
   q.quality=quality;const low=['baja','muy_baja'].includes(quality);
@@ -139,7 +140,7 @@ export async function createContinuousGrass(world){
  q.configureQuality(world.quality);
  q.rebuild=()=>{q.dirty=true};q.chunk=chunk;q.release=key=>{q.chunks.delete(key);const [cx,cz]=key.split(',').map(Number);invalidateWaterNeighbors(cx,cz)};q.markDirtyAt=()=>{q.occupancyDirty=true};q.flush=()=>{if(q.occupancyDirty){q.blockers=blockers();q.tiles.clear();q.dirty=true;q.occupancyDirty=false}};
  q.dispose=()=>{
-  if(q.disposed)return;q.disposed=true;q.enabled=false;q.group.visible=false;
+  if(q.disposed)return;if(world.biomeGround.riverUnderlay){disposeSelectedGrassMask(q);world.biomeGround.coverageUnderlay?.value.set(0,q.farDistance);}q.disposed=true;q.enabled=false;q.group.visible=false;
   if(world.scene.onBeforeRender===q.renderHook)world.scene.onBeforeRender=old;
   q.releaseEvents?.();q.releaseEvents=null;world.scene.remove(q.group);
   for(const entry of q.meshes){entry.mesh.geometry.dispose();entry.mesh.material.dispose();}

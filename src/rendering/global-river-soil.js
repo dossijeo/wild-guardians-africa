@@ -2,7 +2,13 @@
 export function riverSoilEnabled(search=globalThis.location?.search??''){
  const q=new URLSearchParams(search);return q.get('visualLab')==='global-lighting'&&q.get('riverSoil')==='1';
 }
-export function patchRiverSoil(source){
+export function patchRiverSoil(source,underlay=false){
+ if(underlay){
+  source='uniform vec2 uCoverageUnderlay;uniform sampler2D uCoverageUnderlayMask;\n'+source;
+  const anchor='materialCover410=amount;';if(!source.includes(anchor))throw Error('River underlay shader anchor missing');
+  source=source.replace(anchor,anchor+`float selectedCover=texture(uCoverageUnderlayMask,((worldP.xz-uGroundRect.xy)/.5+.5)/97.).r;float coveredNear=smoothstep(.02,.30,selectedCover)*uGroundMapped*uCoverageUnderlay.x*(1.-smoothstep(uCoverageUnderlay.y-18.,uCoverageUnderlay.y,length(cameraPosition.xz-worldP.xz)))*smoothstep(.20,.32,ctx.r)*smoothstep(.20,.32,ctx.b)*(1.-smoothstep(.08,.25,wear));
+ tex=textureGrad(uGroundDetailMap,uv,dx*mix(1.,8.,coveredNear),dy*mix(1.,8.,coveredNear)).rgb;`);
+ }
  const edits=[
   [
     "uniform sampler2D uGroundMask,uGroundDetailMap,uGroundNormal;",
