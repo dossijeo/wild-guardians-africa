@@ -143,6 +143,7 @@ export class WorldScene {
   qualitySetting(quality) {
     this.quality=quality;
     this.farVegetation?.configureQuality?.(quality);
+    this.groundDetails?.configureQuality?.(quality);
     this.toon.uniforms.uGroundDetail.value=quality==='muy_baja'?0:1;
     this.destructionPass.quality=['muy_baja','baja'].includes(quality)?0:1;
     this.destructionPass.effectQuality=quality==='alta'?'high':['muy_baja','baja'].includes(quality)?'low':'medium';

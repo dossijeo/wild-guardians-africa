@@ -20,6 +20,10 @@ test('native coverage follows time, event invalidation, chunk ownership and idem
  let q;
  try{
   q=await createContinuousGrass(world);scene.onBeforeRender();assert.equal(q.uniforms.uCoverageTime.value,12);const selections=q.stats.selectionCount;state.elapsed=14;scene.onBeforeRender();assert.equal(q.stats.selectionCount,selections);assert.equal(q.uniforms.uCoverageTime.value,14);
+  world.camera.aspect=2;world.camera.updateProjectionMatrix();scene.onBeforeRender();assert.equal(q.stats.selectionCount,selections+1,'projection changes reselect without camera translation');
+  q.configureQuality('baja');scene.onBeforeRender();assert.equal(q.nearDistance,0);assert.equal(q.spacing,.5);assert.equal(q.uniforms.uCoverageFar.value,40);
+  const lowSelections=q.stats.selectionCount;q.configureQuality('muy_baja');scene.onBeforeRender();assert.equal(q.group.visible,false);assert.equal(q.stats.selectionCount,lowSelections);
+  q.configureQuality('media');scene.onBeforeRender();assert.equal(q.group.visible,true);assert.equal(q.spacing,.4);assert.equal(q.nearDistance,24);assert.equal(q.stats.selectionCount,lowSelections+1);
   emit(state,'WorkerMoved');assert.equal(q.occupancyDirty,undefined);emit(state,'CropPlaced',{cropId:1});assert.equal(q.occupancyDirty,true);q.flush();assert.equal(q.occupancyDirty,false);assert.equal(q.dirty,true);
   q.chunks.set('0,0',{});q.tiles.set('0,0',{chunk:'0,0'});q.release('0,0');assert.equal(q.chunks.size,0);assert.equal(q.tiles.size,0);
   let disposalCount=0;for(const e of q.meshes)for(const resource of [e.mesh.geometry,e.mesh.material])resource.addEventListener('dispose',()=>disposalCount++);

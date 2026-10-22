@@ -63,7 +63,7 @@ export async function createContinuousGrass(world){
  const modules=await(await fetch('/assets/visual-lab/continuous-grass/modules.json',{signal:world.loading?.signal})).json();
  if(world.disposed||world.loading?.signal.aborted)throw Error('Coverage loading cancelled');
  const q={variant:'C',chunks:new Map(),tiles:new Map(),dirty:true,enabled:true,timeOverride:null,stats:{buildMs:0,selectionMs:0,selectionCount:0,candidates:0,masked:0,overflow:0},signature:'',near:0,far:0};
- const low=world.quality==='baja';q.spacing=low?.5:.4;q.farDistance=low?40:48;q.nearDistance=low?0:24;
+ const low=['baja','muy_baja'].includes(world.quality);q.spacing=low?.5:.4;q.farDistance=low?40:48;q.nearDistance=low?0:24;
  const group=new THREE.Group();group.name='continuous-herbaceous-cover';group.userData.materialRegistryExcluded=true;world.scene.add(group);q.group=group;
  const first=world.terrainMeshes.find(m=>m.material.userData.biomeGround).material.userData.biomeGround;
  q.uniforms={...world.toon.uniforms,...world.toon.shadowUniforms,uCoverageTime:{value:0},uCoverageWindStrength:{value:8},uCoverageRefined:{value:1},uCoverageSpacing:{value:q.spacing/.4},uCoverageFar:{value:q.farDistance},uCoverageColor:first.uGroundDetailMap,uCoverageSeed:first.uGroundSeed,uCoverageScale:{value:first.uGroundParams.value.x},uCoverageDiagnostic:{value:0}};
@@ -103,7 +103,15 @@ export async function createContinuousGrass(world){
  visibleTiles.sort((a,b)=>a.dist-b.dist||a.tx-b.tx||a.tz-b.tz);
  for(const {c,tx,tz}of visibleTiles)for(const p of tile(c,tx,tz).items){const dist=Math.hypot(p[0]-eyeX,p[2]-eyeZ);if(dist>q.farDistance)continue;bins[q.variant==='C'&&dist<q.nearDistance?0:1].push(p);}
  for(let k=0;k<2;k++){const entry=q.meshes[k],g=entry.mesh.geometry,bin=bins[k];q.stats.overflow+=Math.max(0,bin.length-entry.capacity);const count=Math.min(entry.capacity,bin.length);for(let i=0;i<count;i++){const p=bin[i];for(let j=0;j<4;j++){g.attributes.coverageAnchor.array[i*4+j]=p[j];g.attributes.coverageData.array[i*4+j]=p[j+4]}g.attributes.coverageSlope.array[i*2]=p[8];g.attributes.coverageSlope.array[i*2+1]=p[9]}for(const name of ['coverageAnchor','coverageData','coverageSlope'])g.attributes[name].needsUpdate=true;g.instanceCount=count;entry.mesh.visible=q.variant!=='A'&&count>0;}q.near=q.meshes[0].mesh.geometry.instanceCount;q.far=q.meshes[1].mesh.geometry.instanceCount;q.stats.selectionMs+=performance.now()-start;q.stats.selectionCount++;q.dirty=false;}
- q.renderHook=world.scene.onBeforeRender=function(...args){old?.apply(this,args);if(q.disposed)return;q.uniforms.uCoverageTime.value=q.timeOverride??world.state.elapsed;const camera=world.camera,key=[Math.round((camera.position.x-world.scene.position.x)*2),Math.round(camera.position.y*2),Math.round((camera.position.z-world.scene.position.z)*2),...camera.quaternion.toArray().map(v=>v.toFixed(2)),q.variant].join('|');if(q.variant!=='A'&&(q.dirty||key!==q.signature)){q.signature=key;select()}};
+ q.renderHook=world.scene.onBeforeRender=function(...args){old?.apply(this,args);if(q.disposed)return;q.uniforms.uCoverageTime.value=q.timeOverride??world.state.elapsed;const camera=world.camera,key=[Math.round((camera.position.x-world.scene.position.x)*2),Math.round(camera.position.y*2),Math.round((camera.position.z-world.scene.position.z)*2),...camera.quaternion.toArray().map(v=>v.toFixed(2)),...camera.projectionMatrix.elements,q.variant].join('|');if(q.quality!=='muy_baja'&&q.variant!=='A'&&(q.dirty||key!==q.signature)){q.signature=key;select()}};
+ q.configureQuality=quality=>{
+  if(q.quality===quality)return;
+  q.quality=quality;const low=['baja','muy_baja'].includes(quality);
+  q.spacing=low?.5:.4;q.farDistance=low?40:48;q.nearDistance=low?0:24;
+  q.uniforms.uCoverageSpacing.value=q.spacing/.4;q.uniforms.uCoverageFar.value=q.farDistance;
+  q.group.visible=quality!=='muy_baja'&&q.variant!=='A';q.tiles.clear();q.dirty=true;
+ };
+ q.configureQuality(world.quality);
  q.rebuild=()=>{q.dirty=true};q.chunk=chunk;q.release=key=>{q.chunks.delete(key);for(const [k,v]of q.tiles)if(v.chunk===key)q.tiles.delete(k);q.dirty=true};q.markDirtyAt=()=>{q.occupancyDirty=true};q.flush=()=>{if(q.occupancyDirty){q.blockers=blockers();q.tiles.clear();q.dirty=true;q.occupancyDirty=false}};
  q.dispose=()=>{
   if(q.disposed)return;q.disposed=true;q.enabled=false;q.group.visible=false;
@@ -114,6 +122,6 @@ export async function createContinuousGrass(world){
  };
  for(const key of world.chunks.keys()){const [cx,cz]=key.split(',').map(Number);chunk(cx,cz)}
  q.releaseEvents=observeGameEvents(world.state,event=>markGroundDetailEvent(q,world.state,event,id=>world.objects.get(id)?.position));
- q.audit=()=>({variant:q.variant,active:q.variant!=='A',nearDistance:q.nearDistance,moduleSpacing:q.spacing,near:q.near,far:q.far,leaves:q.near*12+q.far*8,triangles:q.near*60+q.far*8,chunks:q.chunks.size,cachedTiles:q.tiles.size,bufferBytes:q.meshes.reduce((s,e)=>s+Object.values(e.mesh.geometry.attributes).reduce((n,a)=>n+a.array.byteLength,0)+(e.mesh.geometry.index?.array.byteLength??0),0),stats:{...q.stats},engineQueries:0,castShadow:false});
+ q.audit=()=>({variant:q.variant,active:q.group.visible&&!q.disposed,quality:q.quality,nearDistance:q.nearDistance,moduleSpacing:q.spacing,near:q.near,far:q.far,leaves:q.near*12+q.far*8,triangles:q.near*60+q.far*8,chunks:q.chunks.size,cachedTiles:q.tiles.size,bufferBytes:q.meshes.reduce((s,e)=>s+Object.values(e.mesh.geometry.attributes).reduce((n,a)=>n+a.array.byteLength,0)+(e.mesh.geometry.index?.array.byteLength??0),0),stats:{...q.stats},engineQueries:0,castShadow:false});
  return q;
 }

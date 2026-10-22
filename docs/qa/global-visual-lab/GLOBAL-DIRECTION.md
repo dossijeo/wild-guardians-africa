@@ -1505,3 +1505,7 @@ Gran Rio:18 real images compare sky-only latitude to the same day remap in envir
 
 ### 2026-10-22: native Savanna continuous coverage
 Scene-owned optional grassCoverage=continuous in global-lighting. Retained pigment/normal/wind LOD, event-driven occupancy, resident renderer masks, no Engine queries. Six QA/native day/night camera pairs pixel-exact; equal calls/triangles/instances; 1,207,752 attribute/index bytes; zero overflow. Six lifecycle/occupancy tests pass. No new FPS claim. See continuous-grass-native-20261022/README.md. Movement, quality, River integration and global quality remain pending.
+
+
+### 2026-10-22: coverage projection and live-quality fixes
+Native Savanna coverage now reselects on projection changes and accepts runtime quality. Settled 96-unit outbound/return path: 25 coverage/resident chunks, no orphans or overflow, day/night. Media/baja/very-low/media restores identical instance/counter totals; low retains continuous light modules, very-low uses terrain fallback. FOV automatic/forced buffers and final images exact. Six targeted tests pass. See continuous-grass-stream-quality-20261022; continuous motion timing, rapid streaming and full biome completion remain pending.
