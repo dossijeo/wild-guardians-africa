@@ -1798,3 +1798,8 @@ La petición de completar orillas naturales sigue siendo la prioridad activa y *
 ## Orillas: interior opaco sin pérdida visual (22 octubre, corebank)
 
 El Cañón conserva las seis capturas estáticas y las diez de recorrido RGB exactas frente a worldbank, incluyendo cambio de origen. Separar interior opaco/franja transparente recupera 1,35–3,07 ms GPU de día y 1,09–2,85 ms de noche en ABAB Intel UHD, con 720 consultas válidas. Añade 4–5 draws, no geometrías/mapas nuevos. No hay mejora CPU consistente ni se prueba aumento de FPS. Se conserva como candidata QA; falta integración, otros biomas, perfiles y streaming prolongado. [Comparativa y límites](canyon-core-bank-review-20261022/README.md). La prioridad sigue siendo completar las orillas naturales de todos los biomas.
+
+
+## Gran Río: cauce principal, no generalizar corebank (22 octubre)
+
+La revisión apunta ahora a riverX(102), no a una charca. Worldbank suaviza el borde, pero aún falta material de ribera. Corebank es exacto en cuatro vistas y difiere en ocho píxeles en otras dos; ABAB Intel UHD (720 consultas) no muestra ganancia consistente de GPU y aumenta CPU 0,07–0,49 ms. Mantenerlo como candidato del Cañón, no política universal. Dos ensayos de sedimento en el agua producen un contorno oscuro o una mejora demasiado discreta: no adoptar como solución final. Próximo trabajo: material terrestre húmedo de la ribera, sin alterar terreno autoritativo. [Evidencia y reproducción](river-channel-bank-review-20261022/README.md).
