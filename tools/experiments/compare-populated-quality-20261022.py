@@ -1,7 +1,7 @@
-import json,sys
+import json,sys,os
 from pathlib import Path
 from PIL import Image, ImageDraw
-biome=sys.argv[1];p=Path(f'docs/qa/global-visual-lab/{biome}-populated-frozen-20261022');q=Path(f'docs/qa/global-visual-lab/{biome}-populated-low-20261022')
+biome=sys.argv[1];p=Path(os.environ.get('WG_MEDIUM_CAPTURE_DIR',f'docs/qa/global-visual-lab/{biome}-populated-frozen-20261022'));q=Path(os.environ.get('WG_LOW_CAPTURE_DIR',f'docs/qa/global-visual-lab/{biome}-populated-low-20261022'))
 a=json.loads((p/'captures.json').read_text(encoding='utf-8'));b=json.loads((q/'captures.json').read_text(encoding='utf-8'));rows=[]
 assert len(a['records'])==len(b['records'])==4
 for r in a['records']:
