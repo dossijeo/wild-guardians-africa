@@ -1586,3 +1586,8 @@ QA R8 masks now derive from actual capacity-limited draw anchors after renderer 
 ### Persistent River underlay: settled streaming probe
 
 See `river-underlay-mask-persistent-stream-20261022/README.md`. Real day/night 96-unit round trip: 25 masks/25 resident chunks, no orphan ownership or GL errors, 10 chunks replaced at far stop. Return geometry counts exact; night pixels exact, day has small unresolved differences (10438 pixels, max 39/255). Not full visual parity, occupancy validation, or a timing benchmark. Keep candidate QA-only pending control comparison.
+
+
+### River underlay: repeat daytime streaming
+
+`river-underlay-mask-persistent-stream-warm-20261022` removes night/cache-warmth confounding: both control and candidate reproduce cold drift on first trip, then return pixel-exact with identical mask hashes on a second daytime trip. No stale ownership/GL errors; geometry counts exact. This is settled single-seed evidence, not fast-streaming or occupancy validation. Proceed to gameplay occupancy checks; candidate remains QA-only.
