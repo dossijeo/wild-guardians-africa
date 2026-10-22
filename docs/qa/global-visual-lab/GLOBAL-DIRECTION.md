@@ -1621,3 +1621,8 @@ See `river-underlay-native-lifecycle-20261022.md` and JSON: 30 real frames using
 ### Native River underlay cost decision
 
 `river-underlay-native-cost-20261022`: ABAB Intel UHD, 720 valid GPU samples, exact per-frame geometry/camera, no GL errors. Mixed CPU/GPU/interval differences; baseline drifts >.9 ms GPU, so no speedup claim. Second night B costs +.413 ms GPU/+ .676 ms interval. RETAIN opt-in for visible underlay improvement; not zero-cost or stable FPS gain. Resume broader artistic work after this measured native integration.
+
+
+### Mangrove representative bank review
+
+`mangrove-bank-native-review-20261022` adds six native day/night frames and original-reference side-by-side. Individual inspection identifies hard uniform green/blue shore boundary as dominant gap; leafy bank groups already present. Next prioritize existing-surface shallow/wet transition, not indiscriminate density. Geometry/layout preserved; counters only, no new timing claim.
