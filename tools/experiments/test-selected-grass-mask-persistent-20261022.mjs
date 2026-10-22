@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import * as THREE from 'three';
+import {syncSelectedGrassMask as sync,disposeSelectedGrassMask as release} from './qa-selected-grass-mask-persistent-20261022.js';
+const fallback=new THREE.DataTexture(new Uint8Array([0]),1,1,THREE.RedFormat),uniform=()=>({value:fallback});
+const group=u=>({children:[{userData:{ground:true},material:{userData:{biomeGround:{uQaCoverageMask:u}}}}]});
+const u=uniform(),world={chunks:new Map([['0,0',group(u)]]),biomeGround:{qaCoverageUnderlay:{value:new THREE.Vector2(1,48)}}},q={tiles:new Map([['0,0',{chunk:'0,0',items:[[0,0,0,1]]}]]),stats:{overflow:0}};
+sync(world,q);assert.equal(q.selectedMaskStats.rebuilds,1);assert.ok(u.value.image.data[48*97+48]>0);
+for(let i=0;i<50;i++)sync(world,q);assert.equal(q.selectedMaskStats.rebuilds,1);assert.equal(q.selectedMaskStats.checks,51);
+q.stats.overflow=1;sync(world,q);assert.equal(world.biomeGround.qaCoverageUnderlay.value.x,0);
+q.tiles.clear();sync(world,q);assert.equal(q.selectedMaskStats.rebuilds,2);assert.ok(u.value.image.data.every(x=>x===0));
+q.tiles.set('0,0',{chunk:'0,0',items:[[1,0,1,1]]});sync(world,q);assert.equal(q.selectedMaskStats.rebuilds,3);
+const next=uniform();world.chunks.set('0,0',group(next));sync(world,q);assert.notEqual(next.value,fallback);assert.ok(next.value.image.data.some(x=>x>0));
+release(q);assert.equal(next.value,fallback);assert.equal(q.persistentMask,null);fallback.dispose();console.log('Persistent eligibility: unchanged-camera checks skip rebuild, invalidation clears, overflow disables, replacement/disposal pass');

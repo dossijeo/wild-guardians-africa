@@ -1577,3 +1577,7 @@ QA R8 masks now derive from actual capacity-limited draw anchors after renderer 
 
 ### 2026-10-22: reject Set-based incremental mask optimization
 30 deterministic byte/upload cases and6 real image pairs exact.102rebuilt/2963skipped chunkupdates does not yield frame benefit:ABAB720validGPUqueries,CPUdelta-.04/+.808ms day,-.24/+1.130night,interval inconsistent. Keep prior footprint cache and visual improvement; reject this machinery as preferred. Next persistent accepted-tile eligibility with explicit changed-semantics/overflow validation. See river-underlay-mask-incremental-20261022.
+
+
+### 2026-10-22: persistent accepted-tile underlay eligibility
+5/6 real pairs pixel-exact,last1 redchannel1/255;equalgeometry. Changed semantics fromselecteddrawmask,overflow disablesfilter. Synthetic invalidation/replacement/dispose checks pass. ABAB720validGPUqueries CPUrender improves1.233-2.303ms,GPU similar,interval3better1worse:no stableFPSclaim. Captureuploads26vs92,butcold/invalidation wrapper309msvs240ms remainscostly. Preferred QA,nextrealoccupancy/streaming/quality/overflowrecovery before native. See river-underlay-mask-persistent-20261022.
