@@ -1706,3 +1706,7 @@ Skip water noise outside its maximum 3.5-unit shore influence, keeping derivativ
 ### Native volcanic deposits option
 
 `volcanicDeposits=broad` with global-lighting/layered rock retains broader warmer ash, scoped to Volcano. Six native day/night captures RGB exact to QA (`volcano-ash-native-parity-20261022`), defaults unchanged. Movement/streaming validation still pending; no fresh timing claim.
+
+### Volcanic deposits native streaming control
+
+`volcano-deposits-native-stream-20261022`:30 settled frames, paired geometry/camera exact,25 ground masks throughout,no errors. Both baseline/candidate warm-day and night roundtrips RGB exact; cold-return small differences occur in both, cause unisolated. Resources stabilize; not full leak proof or continuous-motion validation. Retain opt-in.
