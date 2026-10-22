@@ -14,7 +14,7 @@ test('river coverage keeps neighboring water clear and invalidates shore tiles o
  const chunks=new Map();for(const cx of [0,1]){const group=new THREE.Group(),g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));const m=new THREE.Mesh(g,new THREE.MeshBasicMaterial());m.userData.ground=true;m.material.userData.biomeGround=ground;group.add(m);chunks.set(cx+',0',group);}
  const waterGeometry=new THREE.BufferGeometry();waterGeometry.setAttribute('position',new THREE.Float32BufferAttribute([-24,0,-8,-20,0,-8,-20,0,8,-24,0,-8,-20,0,8,-24,0,8],3));const water=new THREE.Mesh(waterGeometry,new THREE.MeshBasicMaterial());water.userData.nativeFluid='chunk';chunks.get('1,0').add(water);
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(60,1,.1,500);camera.position.set(24,14,16);camera.lookAt(24,0,0);camera.updateMatrixWorld();
- const world={state:{biome:'gran-rio',elapsed:2,plants:[],structures:[]},scene,camera,quality:'media',toon:{uniforms:{},shadowUniforms:{}},terrainMeshes:[chunks.get('0,0').children[0]],chunks,objects:new Map(),nav:{obstacles:[],field:{seed:712}}};
+ const world={biomeGround:{},state:{biome:'gran-rio',elapsed:2,plants:[],structures:[]},scene,camera,quality:'media',toon:{uniforms:{},shadowUniforms:{}},terrainMeshes:[chunks.get('0,0').children[0]],chunks,objects:new Map(),nav:{obstacles:[],field:{seed:712}}};
  let q;
  try{
   q=await createContinuousGrass(world);scene.onBeforeRender();assert.equal(q.edgePadding,.85);assert.equal(q.chunks.get('1,0').waterTriangleCount,2);

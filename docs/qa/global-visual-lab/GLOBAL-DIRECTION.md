@@ -1904,3 +1904,8 @@ Original-dither streaming control completed: return images also differ (10564 da
 ## 2026-10-22: native moving low-quality transition benchmark
 
 Intel UHD Mangroves, full backgrounds, native original/smooth reload ABAB: 720 valid GPU queries, exact per-frame workload after subtracting opaque split, no GL errors. Day GPU delta -0.99/+1.05ms; night -0.94/-0.98ms. CPU/cadence mixed and reload variance prevents causal FPS claims. Retain art; no consistent disproportionate penalty shown by this modest-profile local path. Other-biome timings and transparency-order limitations remain. See far-native-low-moving-cost-20261022.
+
+
+## 2026-10-22: Mangrove rectangular leaf exclusions corrected
+
+Resumed deferred leaf investigation after native far integration/low-quality validation. Resident water was excluding leaves over its entire rectangular bounding box. Reuse existing River triangle buckets plus neighbor checks in Mangroves, preserving authored leaves, moss, blue water and shore padding. Native six-image parity with QA exact; 2696–8976 recovered leaf triangles, no overflow. Five relevant tests include dry corners/wet triangle interiors and neighbor invalidation. Cost of restored coverage pending; no FPS claim. Asset-water bounding fallback and other distribution patterns remain limitations. See mangrove-leaf-triangle-native-20261022.

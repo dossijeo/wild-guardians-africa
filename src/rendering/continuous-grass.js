@@ -87,7 +87,7 @@ export async function createContinuousGrass(world){
  if(seen.some(x=>!x))throw Error('Coverage requires resident 49x49 renderer height lattice');
  const mask=ground.material.userData.biomeGround.uGroundMask.value.image;const water=[],waterTriangles=new Map();let waterTriangleCount=0;const mat=new THREE.Matrix4(),box=new THREE.Box3();
  for(const mesh of source.children.filter(m=>m.userData.nativeFluid)){
- if(river&&mesh.userData.nativeFluid==='chunk'){
+ if((river||mangrove)&&mesh.userData.nativeFluid==='chunk'){
  const position=mesh.geometry.attributes.position,index=mesh.geometry.index,count=index?.count??position.count;
  for(let i=0;i<count;i+=3){const tri=[];for(let j=0;j<3;j++){const k=index?index.getX(i+j):i+j;tri.push(position.getX(k)+cx*48,position.getZ(k)+cz*48);}
  const area=(tri[2]-tri[0])*(tri[5]-tri[1])-(tri[3]-tri[1])*(tri[4]-tri[0]);if(Math.abs(area)<1e-9)continue;
@@ -116,7 +116,7 @@ export async function createContinuousGrass(world){
  const bits=hashCell(seed,ix,iz,8371),x=(ix+.5)*step+((bits&255)/255-.5)*step*.25,z=(iz+.5)*step+(((bits>>>8)&255)/255-.5)*step*.25;
  if(x<c.cx*48-24||x>=c.cx*48+24||z<c.cz*48-24||z>=c.cz*48+24)continue;
  const s=sample(c,x,z),[cover,meso,moisture,wear]=s.ctx;q.stats.candidates++;
- if(cover<(river?.20:.10)||(river&&moisture<.20)||wear>.25||Math.hypot(s.sx,s.sz)>.42||(mangrove?nearWaterChunk(c,x,z):nearWater(c,x,z))||(q.blockers.get(Math.floor(x/8)+','+Math.floor(z/8))??[]).some(o=>o.polygon?footprintDistance(o.polygon,x,z)<q.edgePadding:Math.hypot(x-o.x,z-o.z)<o.r+q.edgePadding)){q.stats.masked++;continue;}
+ if(cover<(river?.20:.10)||(river&&moisture<.20)||wear>.25||Math.hypot(s.sx,s.sz)>.42||nearWater(c,x,z)||(q.blockers.get(Math.floor(x/8)+','+Math.floor(z/8))??[]).some(o=>o.polygon?footprintDistance(o.polygon,x,z)<q.edgePadding:Math.hypot(x-o.x,z-o.z)<o.r+q.edgePadding)){q.stats.masked++;continue;}
  // Check the footprint against the resident wear mask, keeping leaf reach off paths.
  let edgeWear=wear;for(const [dx,dz] of [[.6,0],[-.6,0],[0,.6],[0,-.6],[.42,.42],[-.42,.42],[.42,-.42],[-.42,-.42]]){edgeWear=Math.max(edgeWear,sample(c,x+dx*(q.edgePadding/.6),z+dz*(q.edgePadding/.6)).ctx[3]);if(edgeWear>.27)break;}if(edgeWear>.27){q.stats.masked++;continue;}
  items.push([x,s.y+.006,z,(river?clamp((.27-edgeWear)/.17,0,1)*(.65+.25*((bits>>>16)&255)/255)*clamp((cover-.20)/.12,0,1)*clamp((moisture-.20)/.12,0,1):(.80+.32*((bits>>>16)&255)/255)*clamp((cover-.08)/.18,.7,1)),bits/4294967296*Math.PI*2,meso*.65+moisture*.35,cover,mangrove?wear:moisture,s.sx,s.sz]);}

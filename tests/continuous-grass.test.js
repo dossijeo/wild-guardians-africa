@@ -15,7 +15,7 @@ test('native coverage follows time, event invalidation, chunk ownership and idem
  const scene=new THREE.Scene(),old=scene.onBeforeRender,texture=new THREE.Texture();let textureDisposals=0;texture.addEventListener('dispose',()=>textureDisposals++);
  const ground={uGroundDetailMap:{value:texture},uGroundSeed:{value:new THREE.Vector2()},uGroundParams:{value:new THREE.Vector4(.2,0,0,0)}};
  const state={biome:'sabana',elapsed:12,plants:[{id:1,x:0,z:0}],structures:[],events:[],sequence:0};
- const world={state,scene,quality:'media',toon:{uniforms:{},shadowUniforms:{}},terrainMeshes:[{material:{userData:{biomeGround:ground}}}],chunks:new Map(),objects:new Map(),nav:{obstacles:[],field:{seed:712}},camera:new THREE.PerspectiveCamera(42,1,.1,500)};
+ const world={biomeGround:{},state,scene,quality:'media',toon:{uniforms:{},shadowUniforms:{}},terrainMeshes:[{material:{userData:{biomeGround:ground}}}],chunks:new Map(),objects:new Map(),nav:{obstacles:[],field:{seed:712}},camera:new THREE.PerspectiveCamera(42,1,.1,500)};
  world.camera.position.set(0,20,20);world.camera.lookAt(0,0,0);world.camera.updateMatrixWorld();
  let q;
  try{
