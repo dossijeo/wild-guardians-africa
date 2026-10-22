@@ -1,6 +1,6 @@
-import json,statistics
+import json,statistics,os
 from pathlib import Path
-p=Path('docs/qa/global-visual-lab/mangrove-leaf-cupped-static-cost-20261022')
+p=Path(os.environ.get('WG_REVIEW_OUT','docs/qa/global-visual-lab/mangrove-leaf-cupped-static-cost-20261022'))
 d=json.loads((p/'benchmarks.json').read_text());out=[];controls=[]
 def stats(xs):
  xs=sorted(xs);return dict(mean=statistics.mean(xs),p95=xs[int((len(xs)-1)*.95)],max=max(xs))

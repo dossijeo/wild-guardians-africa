@@ -1939,3 +1939,8 @@ Reload and single-world moving studies retain20/33 non-leaf LOD frame mismatches
 ## 2026-10-22: cupped Mangrove leaf native option and medium motion
 
 Bank-centred medium comparison shows clearer collective leaf volume. Original/cupped camera and leaf counts match for240 requested frames day/night, no overflow/errors. Recordings235–236 frames, qualitative only; initial water-centred framing retained as limited evidence. Native `mangroveLeaves=cupped` within global-lighting is now opt-in, original default unchanged. Ten native-vs-QA checkpoints RGB exact; eight targeted tests pass. Low static GPU cost remains prior evidence; medium timing/global temporal certification not claimed. See mangrove-leaf-cupped-native-motion-20261022.
+
+
+## 2026-10-22: medium cupped-leaf cost verified
+
+Fixed-camera medium ABAB: 720 valid GPU samples and zero unexplained workload frames. Daytime +0.435/+0.896ms (2.1–4.7%); night +0.585/-0.128ms. Retain visual improvement, no FPS claim or moving-cost generalization. Both geometry sets resident, so this is not final memory budget. See mangrove-leaf-cupped-medium-cost-20261022. Composite review recipe is separate from historical base query to preserve A/B controls.
