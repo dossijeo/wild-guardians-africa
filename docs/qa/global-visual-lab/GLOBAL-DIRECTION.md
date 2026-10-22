@@ -1858,3 +1858,8 @@ Sabana day/night 240-frame camera paths retain exact per-frame calls/triangles a
 ## 2026-10-22: Mangrove transparency order limitation isolated
 
 Motion captures retain blue water/moss/full backgrounds. Strict parity fails on one nocturnal frame (8 triangles) and 3 tiny RGB return differences; not a performance comparison. Independent synchronous impostor-order reversal is exact under dither but changes 4018 day / 4010 night pixels under alpha, with all restored images exact and equal workloads. Alpha batches currently lack camera-depth ordering and disable depth writes even for opaque coverage. Retain smooth direction; next separate opaque coverage and assess ordering of partial transitions, measuring added cost. Do not adopt current unsorted alpha globally. See mangrove-far-transition-order-20261022/README.md.
+
+
+## 2026-10-22: ordered smooth impostor QA candidate
+
+Implemented opaque/partial complementary draws plus per-atlas depth ordering in reusable packed views, preserving canonical readiness IDs. Mangrove day/night input-order reversal now RGB exact (unsorted alpha changed ~4000 pixels); unit test passes. Static Intel UHD ABAB: +4 calls/+2202 triangles; daytime GPU +0.28/+0.47 ms, night mixed (+1.96/-1.01). Retain candidate for art; no native adoption or speedup claim. Moving sorting/upload cost, cross-atlas partial overlap and standby ordering remain next requirements. See mangrove-far-transition-ordered-20261022 and far-ordered-static-cost-20261022.
