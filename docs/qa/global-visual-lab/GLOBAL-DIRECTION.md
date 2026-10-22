@@ -1464,3 +1464,7 @@ Direct Float32 packing plus bounded edge lookup: three-origin Node medians454-50
 
 ## Canyon plateau material contrast (2026-10-22)
 24 real captures isolate footprint-dependent sand deposit blending on identical adaptive geometry. Full distance averaging too flat: reject artistically. Retain35%-variation soft candidate, pending near/gameplay and motion checks. Same texture samples/draws/triangles, no GPU/FPS claim. See canyon-sand-distance-blend-20261022 and canyon-sand-soft-blend-20261022.
+
+
+## Soft sand near/gameplay check (2026-10-22)
+12 real captures at seed918271: near detail/shadows retained, six matched draw/triangle pairs; distant/grazing regions change. Keep QA candidate, temporal fade and other quality profiles pending before integration. See canyon-sand-soft-near-20261022.
