@@ -1843,3 +1843,8 @@ Muted-blue distant water retained with natural shores, preserving near blue and 
 ## 2026-10-22: single-world full-scene water benchmark
 
 720 valid GPU samples with exactly matching GPU workload across ABAB; CPU/cadence workload equal within each pair, one nocturnal frame differs between pairs. GPU means 19-21 ms, shader deltas mixed; no speedup or consistent penalty demonstrated. Retain deep blue for art. See mangrove-water-single-world-cost-20261022. Far-transition alpha trial is QA only: impostor/standby paths no longer dither, but reload-based capture workloads differ. Next compare transparency within one loaded world and inspect readiness/ordering; do not adopt or reject from these first images alone. Mangrove rectangular ground-leaf patterns remain deferred per user priority.
+
+
+## 2026-10-22: controlled smooth far transition candidate
+
+Warmed single-world Sabana QA: six before/alpha pairs have equal calls/triangles; all six return-to-dither images are RGB exact. Old alpha reload comparison was contaminated by an inherited water override and is explicitly invalidated in its report. QA clone registration corrected to avoid duplicate AfricanToon. Fixed-camera full-scene ABAB has 720 valid GPU samples; daytime delta mixed, night alpha +0.22/+1.09 ms GPU. Retain candidate for refinement, not production: overlap ordering, movement and other biomes still pending. Moving benchmark remains non-equivalent due changing tree selection. See far-transition-warmed-world-20261022 and far-alpha-static-cost-20261022.
