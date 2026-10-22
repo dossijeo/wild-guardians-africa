@@ -1636,3 +1636,8 @@ See `river-underlay-native-lifecycle-20261022.md` and JSON: 30 real frames using
 ### Mangrove irregular sediment candidate
 
 `mangrove-bank-sediment-review-20261022`: 12 real frames, six matched camera/time/geometry pairs. World-space variable sediment reduces continuous dark halo but improvement remains modest; hard green land edge persists. Retain QA intermediate, next coherent land-side wet substrate; no native adoption or timing claim.
+
+
+### Mangrove land/water substrate candidate
+
+`mangrove-bank-wetland-review-20261022`: 12 real frames, six exact geometry pairs. Existing soil exposed near shore via R8 distance mask + existing patch noise; visibly breaks green edge into brown pockets, night readable, contours still smooth. Retain QA candidate. Temporary texture ownership currently whole-scene only; fix chunk lifetime before streaming/benchmark/native adoption.
