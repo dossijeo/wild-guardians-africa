@@ -1838,3 +1838,8 @@ Corregir los patrones rectangulares visibles en las hojas del suelo de Manglares
 ## 2026-10-22: distant Mangrove water and benchmark parity
 
 Muted-blue distant water retained with natural shores, preserving near blue and moss; no extra shader operations. Full-background day/night far-facing comparisons match calls/triangles. Terrain revision is now part of seam cache keys, with regression coverage. Both full-scene reload-based ABAB attempts failed workload equivalence (one extra call, 5641 triangles in one load), even after idle adapters and 45 stable renders. Do not claim performance from those attempts; next control must alternate variants within one loaded world and inspect resource/draw differences. See mangrove-far-water-native-20261022 and mangrove-deep-water-full-settled-cost-20261022.
+
+
+## 2026-10-22: single-world full-scene water benchmark
+
+720 valid GPU samples with exactly matching GPU workload across ABAB; CPU/cadence workload equal within each pair, one nocturnal frame differs between pairs. GPU means 19-21 ms, shader deltas mixed; no speedup or consistent penalty demonstrated. Retain deep blue for art. See mangrove-water-single-world-cost-20261022. Far-transition alpha trial is QA only: impostor/standby paths no longer dither, but reload-based capture workloads differ. Next compare transparency within one loaded world and inspect readiness/ordering; do not adopt or reject from these first images alone. Mangrove rectangular ground-leaf patterns remain deferred per user priority.
