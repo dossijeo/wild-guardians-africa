@@ -1,0 +1,456 @@
+{
+  "study": "Real crop placement invalidation of persistent underlay; night captures post-placement only.",
+  "seed": 712,
+  "resolution": [
+    1280,
+    720
+  ],
+  "views": [
+    "game",
+    "elevated",
+    "reverse"
+  ],
+  "note": "Real paused campaign settlement, seed 712; identical poses and visual time, settled chunks. Static artistic review, not a performance benchmark.",
+  "records": [
+    {
+      "biome": "gran-rio",
+      "quality": "media",
+      "variant": "native",
+      "phase": "day",
+      "initialLodReset": true,
+      "frames": [
+        {
+          "i": 0,
+          "crop": null,
+          "palette": null,
+          "camera": [
+            109.83156862745099,
+            23.571262741088866,
+            33.827254901960785
+          ],
+          "target": [
+            87.83156862745099,
+            7.5712627410888675,
+            15.827254901960785
+          ],
+          "time": 150,
+          "glError": 0,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "quality": "media",
+            "biome": "gran-rio",
+            "edgePadding": 0.85,
+            "nearDistance": 24,
+            "moduleSpacing": 0.4,
+            "near": 4147,
+            "far": 7489,
+            "leaves": 109676,
+            "triangles": 308732,
+            "chunks": 25,
+            "cachedTiles": 67,
+            "bufferBytes": 1207752,
+            "stats": {
+              "buildMs": 89.79999989271164,
+              "selectionMs": 163.90000027418137,
+              "selectionCount": 88,
+              "candidates": 26800,
+              "masked": 9832,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "underlay": [
+            1,
+            48
+          ],
+          "selectedMask": {
+            "updates": 3,
+            "cpuMs": 47.19999998807907,
+            "uploads": 15,
+            "uploadBytes": 141135,
+            "residentBytes": 235225,
+            "meshes": 25,
+            "checks": 88,
+            "rebuilds": 3,
+            "persistentCpuMs": 50.799999952316284
+          },
+          "settings": {
+            "riverYards": true,
+            "moss": false,
+            "substrate": false,
+            "canyonSoft": false,
+            "canyonNormals": true,
+            "desertMeso": true
+          },
+          "memory": {
+            "geometries": 176,
+            "textures": 77
+          },
+          "calls": 66,
+          "triangles": 888233
+        },
+        {
+          "i": 1,
+          "crop": {
+            "centerSetup": {
+              "x": 79.83156862745099,
+              "z": 15.827254901960787
+            },
+            "site": [
+              96.18725490196078,
+              24.201764705882354
+            ],
+            "before": 97,
+            "after": 0,
+            "events": [
+              "CropPlaced"
+            ],
+            "dirtyAfterEvent": true,
+            "dirtyAfterSync": false,
+            "coverage": {
+              "variant": "C",
+              "active": true,
+              "quality": "media",
+              "biome": "gran-rio",
+              "edgePadding": 0.85,
+              "nearDistance": 24,
+              "moduleSpacing": 0.4,
+              "near": 4029,
+              "far": 7121,
+              "leaves": 105316,
+              "triangles": 298708,
+              "chunks": 25,
+              "cachedTiles": 40,
+              "bufferBytes": 1207752,
+              "stats": {
+                "buildMs": 166.8999999165535,
+                "selectionMs": 269.40000027418137,
+                "selectionCount": 90,
+                "candidates": 58800,
+                "masked": 17378,
+                "overflow": 0
+              },
+              "engineQueries": 0,
+              "castShadow": false
+            },
+            "note": "Real plant command; paused immediately after synchronous command. Cached module anchors checked within crop exclusion radius, not animated blade extents.",
+            "maskAfter": 0
+          },
+          "palette": null,
+          "camera": [
+            109.83156862745099,
+            23.571262741088866,
+            33.827254901960785
+          ],
+          "target": [
+            87.83156862745099,
+            7.5712627410888675,
+            15.827254901960785
+          ],
+          "time": 150,
+          "glError": 0,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "quality": "media",
+            "biome": "gran-rio",
+            "edgePadding": 0.85,
+            "nearDistance": 24,
+            "moduleSpacing": 0.4,
+            "near": 4029,
+            "far": 7121,
+            "leaves": 105316,
+            "triangles": 298708,
+            "chunks": 25,
+            "cachedTiles": 40,
+            "bufferBytes": 1207752,
+            "stats": {
+              "buildMs": 166.8999999165535,
+              "selectionMs": 269.40000027418137,
+              "selectionCount": 90,
+              "candidates": 58800,
+              "masked": 17378,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "underlay": [
+            1,
+            48
+          ],
+          "selectedMask": {
+            "updates": 5,
+            "cpuMs": 66.89999997615814,
+            "uploads": 23,
+            "uploadBytes": 216407,
+            "residentBytes": 235225,
+            "meshes": 25,
+            "checks": 90,
+            "rebuilds": 5,
+            "persistentCpuMs": 71.59999996423721
+          },
+          "settings": {
+            "riverYards": true,
+            "moss": false,
+            "substrate": false,
+            "canyonSoft": false,
+            "canyonNormals": true,
+            "desertMeso": true
+          },
+          "memory": {
+            "geometries": 178,
+            "textures": 85
+          },
+          "calls": 68,
+          "triangles": 889400
+        }
+      ],
+      "errors": []
+    },
+    {
+      "biome": "gran-rio",
+      "quality": "media",
+      "variant": "native",
+      "phase": "night",
+      "initialLodReset": true,
+      "frames": [
+        {
+          "i": 0,
+          "crop": {
+            "centerSetup": {
+              "x": 79.83156862745099,
+              "z": 15.827254901960787
+            },
+            "site": [
+              96.18725490196078,
+              24.201764705882354
+            ],
+            "before": 97,
+            "after": 0,
+            "events": [
+              "CropPlaced"
+            ],
+            "dirtyAfterEvent": true,
+            "dirtyAfterSync": false,
+            "coverage": {
+              "variant": "C",
+              "active": true,
+              "quality": "media",
+              "biome": "gran-rio",
+              "edgePadding": 0.85,
+              "nearDistance": 24,
+              "moduleSpacing": 0.4,
+              "near": 4029,
+              "far": 7121,
+              "leaves": 105316,
+              "triangles": 298708,
+              "chunks": 25,
+              "cachedTiles": 40,
+              "bufferBytes": 1207752,
+              "stats": {
+                "buildMs": 166.8999999165535,
+                "selectionMs": 269.40000027418137,
+                "selectionCount": 90,
+                "candidates": 58800,
+                "masked": 17378,
+                "overflow": 0
+              },
+              "engineQueries": 0,
+              "castShadow": false
+            },
+            "note": "Real plant command; paused immediately after synchronous command. Cached module anchors checked within crop exclusion radius, not animated blade extents.",
+            "maskAfter": 0
+          },
+          "palette": null,
+          "camera": [
+            109.83156862745099,
+            23.571262741088866,
+            33.827254901960785
+          ],
+          "target": [
+            87.83156862745099,
+            7.5712627410888675,
+            15.827254901960785
+          ],
+          "time": 350,
+          "glError": 0,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "quality": "media",
+            "biome": "gran-rio",
+            "edgePadding": 0.85,
+            "nearDistance": 24,
+            "moduleSpacing": 0.4,
+            "near": 4029,
+            "far": 7121,
+            "leaves": 105316,
+            "triangles": 298708,
+            "chunks": 25,
+            "cachedTiles": 40,
+            "bufferBytes": 1207752,
+            "stats": {
+              "buildMs": 166.8999999165535,
+              "selectionMs": 269.40000027418137,
+              "selectionCount": 90,
+              "candidates": 58800,
+              "masked": 17378,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "underlay": [
+            1,
+            48
+          ],
+          "selectedMask": {
+            "updates": 5,
+            "cpuMs": 66.89999997615814,
+            "uploads": 23,
+            "uploadBytes": 216407,
+            "residentBytes": 235225,
+            "meshes": 25,
+            "checks": 90,
+            "rebuilds": 5,
+            "persistentCpuMs": 71.59999996423721
+          },
+          "settings": {
+            "riverYards": true,
+            "moss": false,
+            "substrate": false,
+            "canyonSoft": false,
+            "canyonNormals": true,
+            "desertMeso": true
+          },
+          "memory": {
+            "geometries": 178,
+            "textures": 85
+          },
+          "calls": 68,
+          "triangles": 889400
+        },
+        {
+          "i": 1,
+          "crop": {
+            "centerSetup": {
+              "x": 79.83156862745099,
+              "z": 15.827254901960787
+            },
+            "site": [
+              96.18725490196078,
+              24.201764705882354
+            ],
+            "before": 97,
+            "after": 0,
+            "events": [
+              "CropPlaced"
+            ],
+            "dirtyAfterEvent": true,
+            "dirtyAfterSync": false,
+            "coverage": {
+              "variant": "C",
+              "active": true,
+              "quality": "media",
+              "biome": "gran-rio",
+              "edgePadding": 0.85,
+              "nearDistance": 24,
+              "moduleSpacing": 0.4,
+              "near": 4029,
+              "far": 7121,
+              "leaves": 105316,
+              "triangles": 298708,
+              "chunks": 25,
+              "cachedTiles": 40,
+              "bufferBytes": 1207752,
+              "stats": {
+                "buildMs": 166.8999999165535,
+                "selectionMs": 269.40000027418137,
+                "selectionCount": 90,
+                "candidates": 58800,
+                "masked": 17378,
+                "overflow": 0
+              },
+              "engineQueries": 0,
+              "castShadow": false
+            },
+            "note": "Real plant command; paused immediately after synchronous command. Cached module anchors checked within crop exclusion radius, not animated blade extents.",
+            "maskAfter": 0
+          },
+          "palette": null,
+          "camera": [
+            109.83156862745099,
+            23.571262741088866,
+            33.827254901960785
+          ],
+          "target": [
+            87.83156862745099,
+            7.5712627410888675,
+            15.827254901960785
+          ],
+          "time": 350,
+          "glError": 0,
+          "coverage": {
+            "variant": "C",
+            "active": true,
+            "quality": "media",
+            "biome": "gran-rio",
+            "edgePadding": 0.85,
+            "nearDistance": 24,
+            "moduleSpacing": 0.4,
+            "near": 4029,
+            "far": 7121,
+            "leaves": 105316,
+            "triangles": 298708,
+            "chunks": 25,
+            "cachedTiles": 40,
+            "bufferBytes": 1207752,
+            "stats": {
+              "buildMs": 166.8999999165535,
+              "selectionMs": 269.40000027418137,
+              "selectionCount": 90,
+              "candidates": 58800,
+              "masked": 17378,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": false
+          },
+          "underlay": [
+            1,
+            48
+          ],
+          "selectedMask": {
+            "updates": 5,
+            "cpuMs": 66.89999997615814,
+            "uploads": 23,
+            "uploadBytes": 216407,
+            "residentBytes": 235225,
+            "meshes": 25,
+            "checks": 90,
+            "rebuilds": 5,
+            "persistentCpuMs": 71.59999996423721
+          },
+          "settings": {
+            "riverYards": true,
+            "moss": false,
+            "substrate": false,
+            "canyonSoft": false,
+            "canyonNormals": true,
+            "desertMeso": true
+          },
+          "memory": {
+            "geometries": 178,
+            "textures": 85
+          },
+          "calls": 68,
+          "triangles": 889400
+        }
+      ],
+      "errors": []
+    }
+  ]
+}

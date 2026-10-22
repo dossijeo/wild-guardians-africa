@@ -1611,3 +1611,8 @@ The helper now sets activation from current selection state, resolving previous-
 ### Native opt-in River underlay
 
 `riverUnderlay=persistent` now enables the retained underlay with River soil/global lighting. Native modules own masks and same-selection activation; defaults unchanged. `river-underlay-native-parity-20261022`: six native/QA pairs RGB pixel-exact with exact draw/triangle counts and no GL errors. Native helper regression added. Browser native lifecycle and broader art review remain pending; previous QA benchmark is not a fresh native performance measurement.
+
+
+### Native River underlay lifecycle verified
+
+See `river-underlay-native-lifecycle-20261022.md` and JSON: 30 real frames using native code only. Repeated daytime streaming exact; actual planting removes 97 anchors and clears mask; six quality/capacity/visibility restoration frames exact on first render. No GL errors or stale ownership. Cold first-trip drift persists as documented. Next native ABAB cost, then shared art recipe/review; not global completion.
