@@ -1949,3 +1949,8 @@ Fixed-camera medium ABAB: 720 valid GPU samples and zero unexplained workload fr
 ## 2026-10-22: combined five-biome captures complete
 
 60 frames with native far backgrounds ready and no recorded GL/page errors; Mangroves separately captured. Static evidence only, not full completion. Grand Canyon reverse daylight exposes sawtooth water boundary and repetitive reflections despite retained warm shadow richness. Prioritize an isolated visual shoreline treatment; preserve authoritative terrain/water. See reviewed-five-biomes-20261022.
+
+
+## 2026-10-22: Canyon generic mesh-edge mask rejected
+
+Removing Canyon edge-distance bypass creates transverse dry stripes at internal strip joins; sawtooth bank persists. Twelve QA frames, no GL/page errors. Production unchanged; not a performance rejection. Next isolate depth sampling. See canyon-boundary-mask-20261022.
