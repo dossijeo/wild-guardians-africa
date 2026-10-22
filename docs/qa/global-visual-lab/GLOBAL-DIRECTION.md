@@ -1491,3 +1491,8 @@ Three Sabana low-camera trials (36 real day/night captures) isolate panorama lat
 ## 2026-10-22: sky/reflection directional consistency
 
 Gran Rio:18 real images compare sky-only latitude to the same day remap in environment4 and endpoint guards. Reflected clouds now follow the revised sky direction; daytime/twilight visible change. Nine same-page endpoint ON/OFF/ON frames yield six pixel-exact comparisons. See sky-reflection-latitude-20261022 and sky-reflection-endpoints-20261022. Intel UHD A/B/A/B in sky-reflection-cost-20261022:720 valid GPU samples,matched counters; day means13.391/13.387/13.297/13.455ms,RAF16.62-16.63ms. Retain QA candidate; no broad FPS claim. Different display/radiance color curves remain unresolved, so native integration still pending.
+
+
+## 2026-10-22: precalculated sky/environment palette
+
+18 real Gran Rio day/twilight/night captures in sky-environment-palette-20261022. Shared artistic palette applied to reduced environment radiance once in sky worker; turquoise day water retained,night reflections cooler. Nine matched camera/counter pairs,no errors. Cached row latitude is byte-identical to uncached on both real HDRs. Node build overhead about30ms per texture,not per frame. A/B/A/B Intel UHD in sky-environment-palette-cost-20261022:720 valid GPU samples;day B +.232/+.852ms,night slightly faster,cadence16.62-16.63ms. No zero-cost/FPS claim. Retain moderate consistency candidate; next broader settlement/biome review and shared native sky integration. Default/main untouched.
