@@ -1714,3 +1714,7 @@ Skip water noise outside its maximum 3.5-unit shore influence, keeping derivativ
 ### Canyon mineral shallows pilot
 
 `canyon-bank-mineral-review-20261022`:18 controlled captures; repaired obsolete resident-water QA anchor. Mineral palette softens blue contrast but still produces blurry bands and straight shoreline. Retain QA, no native adoption; structural bank treatment needed before timing work.
+
+### Canyon granular shelves rejected
+
+`canyon-bank-granular-review-20261022`:12 controlled frames, no errors, equal geometry. Defined noise shelves read as painted/floating patches, worse at night; reject artistically before benchmarking. Next couple existing land/water material response or actual depth, not further isolated water color noise.
