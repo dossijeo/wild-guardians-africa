@@ -1436,3 +1436,7 @@ Live 103212-vertex horizon, alternating string/numeric implementation: warmed me
 
 ## Native opt-in horizon normal worker (2026-10-22)
 `visualLab=global-lighting&canyonNormals=smooth` prepares existing normal slots in horizon workers. Twelve captures exact versus main-thread candidate/control; 17 targeted tests pass. Worker preparation 10-33.8 ms, not total frame latency. Continuous camera validation pending; default unchanged. See canyon-horizon-worker-normals-20261022.
+
+
+## Canyon continuous camera A/B/A/B (2026-10-22)
+180-frame/192-unit day path: CPU medians 4.7-5.0 ms; normal option raises worker median latency from 92.6/94.4 to 121.5/109.4 ms. 20 and 16 paired frames differ in residency; do not claim FPS improvement. Settled geometry equal and repeat images exact. Retain opt-in visual improvement, reduce delivery cost; night motion pending. See canyon-horizon-motion-20261022.
