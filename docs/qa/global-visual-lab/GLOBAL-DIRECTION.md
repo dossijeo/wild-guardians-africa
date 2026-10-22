@@ -1954,3 +1954,8 @@ Fixed-camera medium ABAB: 720 valid GPU samples and zero unexplained workload fr
 ## 2026-10-22: Canyon generic mesh-edge mask rejected
 
 Removing Canyon edge-distance bypass creates transverse dry stripes at internal strip joins; sawtooth bank persists. Twelve QA frames, no GL/page errors. Production unchanged; not a performance rejection. Next isolate depth sampling. See canyon-boundary-mask-20261022.
+
+
+## 2026-10-22: Canyon denser bed mask does not solve sawtooth
+
+QA2→8 samples/metre retains lateral serration; twelve captures preserve camera/draw/triangle counts and record no errors. Do not promote up-to16x mask texels for this limited change. Native height query is continuous triangular interpolation of one-metre terrain lattice. Next isolate visual bank treatment; authoritative geometry unchanged. See canyon-depth-density-20261022.
