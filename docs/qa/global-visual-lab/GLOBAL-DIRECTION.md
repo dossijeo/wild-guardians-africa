@@ -1786,3 +1786,10 @@ Real cinematic sampling exposed daytime sky grading jump and nighttime decorativ
 ### Priority: natural water edges in all biomes
 
 User explicitly reprioritized completing natural water/land transitions across all six biomes; vegetation must not substitute for this. `canyon-transparent-bank-review-20261022`:12 real matched frames use single-pass depth opacity to expose actual terrain lighting, eliminating copied-bed pale fringe. Edge now less straight but too blurred; retain foundation, not final shore. No timing/sorting claims yet. Next reusable shore/depth representation and biome-specific transition, movement and cost validation.
+
+
+## Orillas: mapa de fondo y contorno, seis biomas (22 octubre, worldbank)
+
+La petición de completar orillas naturales sigue siendo la prioridad activa y **no está terminada**. Se ha probado un prototipo QA con mapa de fondo/contorno, transición irregular y origen flotante correcto. 72 capturas reales cubren seis biomas, tres vistas, día/noche; se registra una pareja no equivalente en Volcanes noche vista 2. Desierto permanece RGB idéntico. Se corrigen el borrado del agua de Manglares, el contorno duplicado de charcas y la falsa costa del horizonte del Cañón. El borde es más suave y el Cañón gana entrantes; todavía faltan sedimento/corteza, mayor naturalidad y validación de streaming. Nada se activa por defecto.
+
+[Comparativas, límites y reproducción](biome-world-bank-review-20261022/README.md). [ABAB Intel UHD](biome-world-bank-cost-20261022/README.md): 1.440 consultas GPU válidas y contadores equivalentes. Sabana sin penalización consistente; Cañón +2,81–4,56 ms GPU. Se conserva la dirección visual; siguiente trabajo: reducir el área transparente, integrar perfiles específicos y validar el recorrido/recursos, no reemplazar orillas por más matas.
