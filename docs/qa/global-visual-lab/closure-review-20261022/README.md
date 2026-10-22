@@ -36,3 +36,5 @@ Populated Desert update: reproducible medium/low benchmark and matching day/nigh
 
 
 Canyon inhabited-bank update: gran-canon-populated-native-camera-20261022 and main-canyon-populated-20261022 now provide exact saved-state/camera day-night comparisons with 12 crops and two workers. Generic cross-biome framing was rejected for cliff obstruction; native Canyon framing used. Normal day/night art improves clearly over frozen main. Water reflection repetition, animated review and combined modest-profile costs remain pending. Mangrove dense original is explicitly user-approved (LEFT in the fringe comparison); do not reopen its density/color treatment as a closure requirement.
+
+Canyon controlled cost update: canyon-populated-resident-cost-20261022 passes720GPU samples and equal repeated resource/workload/state checks after QA initializes all resident ground masks. Medium15.51–15.76ms day/18.04–18.55ms night;low14.59–14.91/15.69–16.31. CPU mixed. Preserve medium art;low optional quality compromise. Water-time/dolly videos are sampled evidence;active-play/long-streaming and six-biome combined closure remain open.
