@@ -12,7 +12,7 @@ import {NativeTreeCoverage} from './native-tree-coverage.js';
 import {NativePreparedTreeCoverage} from './native-prepared-tree-coverage.js';
 import {NativePreparationCadence} from './native-preparation-cadence.js';
 import {prepareSharedNativeWorld} from './shared-native-world-preparation.js';
-import {FarRegionTracker,nativeFarRegionRequest} from './far-region-tracker.js';
+import {FarRegionTracker,nativeFarRegionRequest,nativeFarInitialCenter} from './far-region-tracker.js';
 import {NativeFarGpuCancelled,prepareNativeFarGpu,releaseNativeFarGpuCache,nativeFarGpuRevision,nativeFarGpuContextLost} from './prepare-native-far-gpu.js';
 import {nativeChunkBounds} from '../../src/rendering/asset-groups.js';
 import {skyNight} from '../../src/rendering/sky.js';
@@ -43,7 +43,7 @@ export async function attachNativeFarWorld(world,{cancelled:ownerCancelled=()=>f
  // Those versions must not invalidate the preparation that enabled that fade.
  const errors=[],coverage=new NativeTreeCoverage(slot),signature=()=>nativeFarRenderSignature(world,slot);
  const frustum=new Frustum(),vp=new Matrix4();
- const prepared=new NativePreparedTreeCoverage(coverage,signature,record=>nativeFarPackingSignature(world,record)),tracker=new FarRegionTracker({x:world.camera.position.x,z:world.camera.position.z});
+ const prepared=new NativePreparedTreeCoverage(coverage,signature,record=>nativeFarPackingSignature(world,record)),tracker=new FarRegionTracker(nativeFarInitialCenter(world.camera.position,world.toon?.globalVisualLighting===true));
  const stats={cancelledRegions:0,regions:0,nativePreparations:0,stalePreparations:0,preparationAttempts:0,fencedPreparations:0,rejectedPacking:0,signatureChanges:0,packingChanges:0,cachedTextures:0,textureUploads:0,logicalPreloads:0,logicalPreloadEntries:0,errors};
  finalizeStandbyMaterials(world.toon,world.prototypes[slot]);
  const textures=new Set([texture,prelitAtlas.day,prelitAtlas.night]);

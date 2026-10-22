@@ -1,12 +1,12 @@
 import {json} from './assets.js';
 import {loadFarSceneData} from '../../tools/experiments/far-scene-loader.js';
-import {nativeFarRegionRequest} from '../../tools/experiments/far-region-tracker.js';
+import {nativeFarRegionRequest,nativeFarInitialCenter} from '../../tools/experiments/far-region-tracker.js';
 import {loadingAwaitWitness,loadingSyncWitness} from './loading-sync-witness.js';
 
 // Start only procedural data after the real home camera has been chosen.
 // GPU roots, textures, ground seams and fences are still admitted later.
 export function startInitialFarRegion(world,options={},services={}){
- const controller=new AbortController(),signal=world.loading.signal,center={x:world.camera.position.x,z:world.camera.position.z};
+ const controller=new AbortController(),signal=world.loading.signal,center=nativeFarInitialCenter(world.camera.position,world.toon?.globalVisualLighting===true);
  const config=structuredClone(world.nav.config),profile=structuredClone(world.pack.profile);
  const loadManifest=services.loadManifest??json,loadRegion=services.loadRegion??loadFarSceneData;
  const abort=()=>controller.abort();signal.addEventListener('abort',abort,{once:true});if(signal.aborted)abort();

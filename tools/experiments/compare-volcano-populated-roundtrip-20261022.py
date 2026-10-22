@@ -1,9 +1,9 @@
-import json
+import json,os
 from pathlib import Path
 import numpy as np
 from PIL import Image
 
-root=Path('docs/qa/global-visual-lab/volcanes-populated-roundtrip-20261022')
+root=Path(os.environ.get('WG_ROUNDTRIP_DIR','docs/qa/global-visual-lab/volcanes-populated-roundtrip-20261022'))
 rows=[]
 for phase in ['day','night']:
     data=json.loads((root/f'media-{phase}.json').read_text(encoding='utf-8'))
