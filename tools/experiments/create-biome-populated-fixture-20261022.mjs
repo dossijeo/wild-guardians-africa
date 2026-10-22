@@ -11,10 +11,10 @@ const o=await createSpatialCampaignOpening({seed:712,biome,culture:'mapungubwe',
 try {
  const {state:s,nav}=o; s.wildEngineWorldVersion=WILD_ENGINE_WORLD_VERSION;
  const center=s.structures[0],origin=centerServicePoint(center,s,.8);
- let count=0;
+ let count=0;const skippedRoutes=[];
  for(let dz=-9;dz<=9&&count<12;dz+=1.5)for(let dx=4.5;dx<=15&&count<12;dx+=1.5){
   const p={x:Math.round((center.x+dx)/1.5)*1.5,z:Math.round((center.z+dz)/1.5)*1.5};
-  if(nav.placement(p.x,p.z,.4).valid&&nav.path(origin,p,.28,null,true)&&nav.path(p,origin,.28,null,true)){
+  if(!nav.placement(p.x,p.z,.4).valid)continue;let reachable=false;try{reachable=!!nav.path(origin,p,.28,null,true)&&!!nav.path(p,origin,.28,null,true);}catch(error){if(error.constructor.name!=='SpatialChunkUnavailable')throw error;skippedRoutes.push({point:p,details:error.details,missing:error.missing});continue;}if(reachable){
    assert.ok(Game.plant(s,'closure-plant-'+count,'mijo',p.x,p.z,nav));count++;
   }
  }
@@ -22,6 +22,6 @@ try {
  for(let i=0;i<1200;i++)Game.tick(s,.1,nav);
  assert.ok(s.elapsed>=119);assert.equal(s.workers.length,2);Game.pause(s,'menu');
  const snapshot=serialize(s);deserialize(snapshot);
- const record={timing:{navigationContext:{state:snapshot}},living:s.plants.filter(p=>p.alive).length,workers:s.workers.length,scope:'Current Wild Engine opening; 12 paid millet crops and two paid workers; 120 seconds ordinary simulation. Tutorial skipped for directed QA. No money, growth, RNG or terrain overrides.',worldVersion:s.wildEngineWorldVersion};
+ const record={skippedRoutes,timing:{navigationContext:{state:snapshot}},living:s.plants.filter(p=>p.alive).length,workers:s.workers.length,scope:'Current Wild Engine opening; 12 paid millet crops and two paid workers; 120 seconds ordinary simulation. Tutorial skipped for directed QA. No money, growth, RNG or terrain overrides.',worldVersion:s.wildEngineWorldVersion};
  await mkdir(out,{recursive:true});await writeFile(out+'/native-fixture.json',JSON.stringify(record,null,2)+'\n');console.log(JSON.stringify({living:record.living,workers:record.workers,time:s.time,elapsed:s.elapsed}));
 }finally{o.dispose()}

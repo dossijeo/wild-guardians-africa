@@ -1,0 +1,7 @@
+# Frozen main versus inhabited experimental Canyon
+
+Baseline detached main b2497b0695218652672c805c40971ea830686e3a on Vite5191; experimental selected closure recipe on5190. Baseline checkout and main untouched. Run capture-main-canyon-populated-20261022.mjs then compare-main-canyon-populated-20261022.py, after experimental native-camera captures. Exact fixture loaded on both, pre-game-frame pause, explicit experimental camera coordinates replayed on main.
+
+12 pairs (warmup/final, day/night, normal/elevated/reverse): exact camera/target/time/render-origin/simulation-elapsed/worker-position matches, no page or GL errors. Six final pair images show main left, experiment right. This verifies the captured state fields, not arbitrary gameplay equivalence. Main's far vegetation behavior differs from the experimental Engine-connected pipeline; this is a product visual comparison, not equal-workload performance benchmarking.
+
+Normal day/night inspected. Experimental cliff stratification has recognizable surface detail versus main's flat stripes; shadows and ground relief give the settlement stronger depth; darker regional blue and textured bank soften main's abrupt turquoise edge. Buildings and crops remain recognizable, daytime warmth retained. New distant water highlights repeat visibly and need motion evaluation. Lower shadow/lighting cost cannot be inferred from triangle counters. Keep selected art; complete combined performance and animation checks before closure.

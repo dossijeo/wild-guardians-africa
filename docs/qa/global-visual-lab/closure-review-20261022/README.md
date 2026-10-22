@@ -33,3 +33,6 @@ Additional required acceptance evidence: matched current-main versus selected ex
 
 
 Populated Desert update: reproducible medium/low benchmark and matching day/night/three-view captures completed in desert-populated-frozen-cost-20261022 and desert-populated-frozen-20261022. Pre-game pause removes variable footstep effects. Medium retains approved cast shadows; low is a measured visual compromise. Earlier populated motion remains sampled evidence and used late pause; do not equate it to exact saved-state benchmarking. Active play/long streaming and final combined audit remain open.
+
+
+Canyon inhabited-bank update: gran-canon-populated-native-camera-20261022 and main-canyon-populated-20261022 now provide exact saved-state/camera day-night comparisons with 12 crops and two workers. Generic cross-biome framing was rejected for cliff obstruction; native Canyon framing used. Normal day/night art improves clearly over frozen main. Water reflection repetition, animated review and combined modest-profile costs remain pending. Mangrove dense original is explicitly user-approved (LEFT in the fringe comparison); do not reopen its density/color treatment as a closure requirement.
