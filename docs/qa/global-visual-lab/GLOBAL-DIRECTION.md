@@ -1569,3 +1569,7 @@ ABAB720 valid GPU queries, same per-frame geometry. Day deltas-.150/-.481ms,nigh
 
 ### 2026-10-22: selected-anchor River underlay mask
 QA R8 masks now derive from actual capacity-limited draw anchors after renderer exclusions;12 realframes,6 pairs exact counters/camera,retained blade readability.25masks235225R8bytes+equalCPU scratch. Naive127updates294.3ms cumulative CPU,97uploads912673bytes;not frametime benchmark, optimize cached tile raster before adoption. Unit probe passes ownership/capacity/clear/upload suppression/eviction/dispose. Exclusion influence approximate, temporal/gameplay validation pending. See river-underlay-selected-mask-20261022.
+
+
+### 2026-10-22: cached grass-mask footprints
+30 deterministic mask/upload cases exact;6 real reference/cached pairs pixel-exact. ABAB720validqueries equalgeometry:CPUrender-.264 to-.522ms in4pairs,GPU signs vary,RAF no consistent improvement. Coldcapture cumulative mask time250.2/288.8ms: no cold-build benefit,JS cachememory additional. Retain modest CPU improvement QA;next incremental mask updates,not native adoption. See river-underlay-mask-cache-20261022.
