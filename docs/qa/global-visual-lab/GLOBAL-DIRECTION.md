@@ -1476,3 +1476,8 @@ Direct Float32 packing plus bounded edge lookup: three-origin Node medians454-50
 
 ## Native soft Canyon sand option (2026-10-22)
 `visualLab=global-lighting&canyonSand=full&canyonSandBlend=soft` now native, default unchanged. 12 fresh images:10 exact vs QA,2 max1/255 delta;3 targeted tests pass. Geometry/other adapters still QA, quality/GPU validation pending. See canyon-sand-soft-native-20261022.
+
+
+## 2026-10-22: remaining sky comparisons
+
+Completed 36 real captures / 18 matched day-night pairs for Mangroves, Volcanoes and Desert in global-sky-remaining-20261022. All paired cameras, times, draws and triangles match; no recorded errors. Approved Desert mesorelief preserved. Cooler sky grading is retained as a candidate, but low horizons remain too uniform and elevated views do not validate sky detail. Combined with global-sky-paired-20261022, all six biomes now have this limited static comparison. No timing or global completion claim; native sky integration and richer composition remain pending.
