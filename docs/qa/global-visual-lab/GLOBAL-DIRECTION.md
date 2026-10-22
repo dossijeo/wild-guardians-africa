@@ -1914,3 +1914,8 @@ Resumed deferred leaf investigation after native far integration/low-quality val
 ## 2026-10-22: recovered Mangrove leaf coverage cost
 
 Single-world rectangle/triangle ABAB yields 720 valid GPU queries and ~2062 additional leaf triangles on the moving path. Three paired frames differ in non-leaf representation; initial rectangle pass also slower than repeat. No consistent GPU penalty, but no causal speedup/zero-cost claim. Visible tile rebuild 13.3/10.7ms rectangle versus26.7/10.8ms triangles, outside samples; chunk-index creation remains unmeasured. Retain art fix and document limitations. See mangrove-leaf-footprint-cost-20261022.
+
+
+## 2026-10-22: corrected leaf shoreline survives low-quality streaming
+
+192m low-profile Mangrove excursion day/night: no overflow/errors, leaf counts2432/4066/1864/4066/2432 return exactly. 80 whole coverage-chunk preparations mean0.514ms/p951.8ms/max2.9ms, event/streaming work rather than per-frame; index-only time and actual JS memory not isolated. Full backgrounds retained. Shoreline shape looks natural in the far checkpoint, but regular leaf repetition on exposed soil remains an artistic issue separate from rectangular exclusions. See mangrove-leaf-stream-low-20261022.
