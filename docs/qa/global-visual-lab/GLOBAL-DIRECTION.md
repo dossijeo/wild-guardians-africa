@@ -1730,3 +1730,7 @@ Skip water noise outside its maximum 3.5-unit shore influence, keeping derivativ
 ### Loading day/night sky handoff continuity
 
 Real cinematic sampling exposed daytime sky grading jump and nighttime decorative mist-star cut. Loading sky grade and mist now fade during ascent, reaching world appearance before skyOnly/handoff. Day/night final videos and frame sequences retained;10 existing tests pass. QA night clock override only, production simulation untouched. Videos10Hz, not FPS benchmarks.
+
+### Canyon coupled wet-bank review closed
+
+`canyon-bank-coupled-review-20261022`:12 controlled frames from interrupted trial reviewed/audited. Dark wet bank reinforces canal-like outline, especially night; reject artistically, no timing claim. Next need consistent submerged-ground lighting rather than more independent tint/noise/darkening.
