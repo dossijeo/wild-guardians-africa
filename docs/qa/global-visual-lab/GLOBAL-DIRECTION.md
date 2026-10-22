@@ -1513,3 +1513,7 @@ Native Savanna coverage now reselects on projection changes and accepts runtime 
 
 ### 2026-10-22: native River coverage and moving-camera cost
 Shared native opt-in now includes Gran Rio with its retained pigment/night ambient/wear taper/.85 wind padding and resident water triangles. Twelve QA/native pairs across Savanna/River pixel-exact; seven tests pass including adjacent water-chunk invalidation. Clean moving-camera/wind A/B/A/B Intel UHD:720 valid GPU samples, identical frame geometry/cameras; native GPU deltas -.173 to +.223ms, CPU within .026ms, no consistent cost/speedup. Preserve exploratory noisy run separately. See continuous-grass-river-native-20261022. Keep opt-in; River rapid streaming, full preset and other-biome integration remain pending.
+
+
+### 2026-10-22: native River yard mask
+riverYards=islands integrates retained visual wear islands in BiomeGround. Existing renderer revision/snapshot source injected, cached until terrain revision changes; no QA globals or Engine internals. Six native/QA day-night pose pairs pixel-exact, seven targeted tests pass, snapshot test one read across25 same-revision accesses. No FPS claim; real newly-founded-village event validation pending. Retained River composition now runs with native soil/coverage/yards/sky options. See river-yards-native-20261022.

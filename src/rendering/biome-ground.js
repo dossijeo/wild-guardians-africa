@@ -1,3 +1,4 @@
+import {riverYardsEnabled,createRiverYardSites,riverYardIslands} from './river-yard-islands.js';
 import {volcanicRockEnabled} from './global-volcanic-rock.js';
 import {riverSoilEnabled} from './global-river-soil.js';
 import {mangroveSubstrateEnabled} from './global-mangrove-substrate.js';
@@ -15,11 +16,12 @@ import {chunkBounds} from './water-source.js';
 // its lighting recipe; normal and packed AO/roughness/height remain raw too.
 export class BiomeGround {
   constructor(){this.textures=[];this.layerTextures=[];this.masks=new Set();this.loading=new AbortController();this.disposed=false;}
-  async load(assets,biome,profile,field){
+  async load(assets,biome,profile,field,{settlementSource=null}={}){
     this.assertOpen();this.profile=profile;this.field=field;
     const tiles=await json('/content/ground-materials.json',{signal:this.loading.signal});
     this.layeredSavanna=biome==='savanna'&&['layer','layer-relief','layer-grass','layer-grass-sculpted'].includes(new URLSearchParams(globalThis.location?.search??'').get('visualLab'));
     this.layeredRelief=this.layeredSavanna&&new URLSearchParams(globalThis.location?.search??'').get('visualLab')==='layer-relief';
+    this.riverYards=biome==='grand_river'&&riverYardsEnabled();this.riverYardSites=this.riverYards?createRiverYardSites(field,settlementSource):null;
     this.riverSoil=biome==='grand_river'&&riverSoilEnabled();
     this.mangroveSubstrate=biome==='mangrove'&&mangroveSubstrateEnabled();
     this.desertSand=biome==='desert'&&desertSandEnabled();
@@ -74,7 +76,7 @@ export class BiomeGround {
     let mask;
     if(mapped){
       const data=bytes??buildGroundMask417(this.field.c,this.profile,this.field,bo);
-      mask=new THREE.DataTexture(this.volcanicAsh==='mask'?ashMask(data,bo):data,35,35,THREE.RGBAFormat);
+      mask=new THREE.DataTexture(this.riverYards?riverYardIslands(data,bo,this.field,this.riverYardSites()):this.volcanicAsh==='mask'?ashMask(data,bo):data,35,35,THREE.RGBAFormat);
       mask.minFilter=mask.magFilter=THREE.LinearFilter;mask.generateMipmaps=false;
       mask.needsUpdate=true;this.masks.add(mask);
     }else{
