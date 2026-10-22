@@ -1557,3 +1557,7 @@ Twelve new day/night frames, exact geometry/cameras versus sediment. Broad .04-.
 
 ### 2026-10-22: River layer isolation and underlay candidate
 24 fresh day/night frames compare baseline/terrain-only/blade pigment mip5/ground underlay filtering. Terrain-only retains fine mottling; blade filtering contributes little. Ground underlay8x color footprint under mask/distance eligibility makes standing blades clearer; retained QA pending motion/cost/actual coverage eligibility. Six underlay pairs exact camera/counters. Initial auxiliary-sample patch failed GLSL scope; corrected to materialCover410 assignment, successful frames only. No fresh timing claim; main/native unchanged. See river-coverage-pigment-scale-20261022.
+
+
+### 2026-10-22: River underlay activation and cost
+ABAB720 valid GPU queries, same per-frame geometry. Day deltas-.150/-.481ms,night+.134/+.052ms versus baseline night drift.704ms;no speedup/zero-cost claim. Added shared QA activation/range from coverage state:18 real frames,6 off pairs exact original terrain and6 on pairs exact retained candidate. Media visibility only verified; live quality/dispose, motion video, exclusions and streaming pending. See river-underlay-activation-20261022.
