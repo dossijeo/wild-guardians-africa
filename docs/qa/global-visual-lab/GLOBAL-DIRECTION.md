@@ -1969,3 +1969,8 @@ Wider depth opacity ramp visibly softens sawtooth without geometry/mask-resoluti
 ## 2026-10-22: intermediate Canyon bank GPU cost
 
 720 valid GPU samples, zero workload mismatches. Day +1.863/+1.081ms, night +0.314/+0.183ms versus original ramp with same opaque core. Retain art candidate; optimize transparent rim work rather than reject visual result. Motion and per-pass mechanism remain unverified. See canyon-balanced-bank-cost-20261022.
+
+
+## 2026-10-22: early shoreline discard timing inconclusive
+
+720 valid GPU samples, zero workload mismatches, mixed day deltas +0.736/-2.218ms and night +0.790/+0.169ms. Keep optimization QA only; balanced bank art retained. Small residual pixels occur beside building, cause not isolated. Full-background192m streaming validation started separately. See canyon-early-bank-cost-20261022.
