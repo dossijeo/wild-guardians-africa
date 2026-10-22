@@ -1,0 +1,269 @@
+{
+  "note": "Immediate synchronous dither/ordered/return draws without world frame updates between variants. Isolates material toggle from stateful camera/readiness transitions; not runtime handoff validation.",
+  "records": [
+    {
+      "biome": "sabana",
+      "quality": "media",
+      "phase": "day",
+      "frames": [
+        {
+          "variant": "before",
+          "camera": [
+            183,
+            27.56340160369873,
+            103
+          ],
+          "time": 150,
+          "calls": 77,
+          "triangles": 1624701,
+          "glError": 0
+        },
+        {
+          "variant": "after",
+          "camera": [
+            183,
+            27.56340160369873,
+            103
+          ],
+          "time": 150,
+          "calls": 81,
+          "triangles": 1628245,
+          "glError": 0
+        },
+        {
+          "variant": "return",
+          "camera": [
+            183,
+            27.56340160369873,
+            103
+          ],
+          "time": 150,
+          "calls": 77,
+          "triangles": 1624701,
+          "glError": 0
+        }
+      ],
+      "errors": []
+    },
+    {
+      "biome": "sabana",
+      "quality": "media",
+      "phase": "night",
+      "frames": [
+        {
+          "variant": "before",
+          "camera": [
+            183,
+            27.56340160369873,
+            103
+          ],
+          "time": 350,
+          "calls": 77,
+          "triangles": 1624701,
+          "glError": 0
+        },
+        {
+          "variant": "after",
+          "camera": [
+            183,
+            27.56340160369873,
+            103
+          ],
+          "time": 350,
+          "calls": 81,
+          "triangles": 1628245,
+          "glError": 0
+        },
+        {
+          "variant": "return",
+          "camera": [
+            183,
+            27.56340160369873,
+            103
+          ],
+          "time": 350,
+          "calls": 77,
+          "triangles": 1624701,
+          "glError": 0
+        }
+      ],
+      "errors": []
+    },
+    {
+      "biome": "desierto",
+      "quality": "media",
+      "phase": "day",
+      "frames": [
+        {
+          "variant": "before",
+          "camera": [
+            82,
+            32.29186954498291,
+            18
+          ],
+          "time": 150,
+          "calls": 51,
+          "triangles": 217163,
+          "glError": 0
+        },
+        {
+          "variant": "after",
+          "camera": [
+            82,
+            32.29186954498291,
+            18
+          ],
+          "time": 150,
+          "calls": 55,
+          "triangles": 218175,
+          "glError": 0
+        },
+        {
+          "variant": "return",
+          "camera": [
+            82,
+            32.29186954498291,
+            18
+          ],
+          "time": 150,
+          "calls": 51,
+          "triangles": 217163,
+          "glError": 0
+        }
+      ],
+      "errors": []
+    },
+    {
+      "biome": "desierto",
+      "quality": "media",
+      "phase": "night",
+      "frames": [
+        {
+          "variant": "before",
+          "camera": [
+            82,
+            32.29186954498291,
+            18
+          ],
+          "time": 350,
+          "calls": 51,
+          "triangles": 217163,
+          "glError": 0
+        },
+        {
+          "variant": "after",
+          "camera": [
+            82,
+            32.29186954498291,
+            18
+          ],
+          "time": 350,
+          "calls": 55,
+          "triangles": 218175,
+          "glError": 0
+        },
+        {
+          "variant": "return",
+          "camera": [
+            82,
+            32.29186954498291,
+            18
+          ],
+          "time": 350,
+          "calls": 51,
+          "triangles": 217163,
+          "glError": 0
+        }
+      ],
+      "errors": []
+    },
+    {
+      "biome": "gran-canon",
+      "quality": "media",
+      "phase": "day",
+      "frames": [
+        {
+          "variant": "before",
+          "camera": [
+            -25.868919372558594,
+            20.840380859375,
+            120
+          ],
+          "time": 150,
+          "calls": 42,
+          "triangles": 376341,
+          "glError": 0
+        },
+        {
+          "variant": "after",
+          "camera": [
+            -25.868919372558594,
+            20.840380859375,
+            120
+          ],
+          "time": 150,
+          "calls": 43,
+          "triangles": 376345,
+          "glError": 0
+        },
+        {
+          "variant": "return",
+          "camera": [
+            -25.868919372558594,
+            20.840380859375,
+            120
+          ],
+          "time": 150,
+          "calls": 42,
+          "triangles": 376341,
+          "glError": 0
+        }
+      ],
+      "errors": []
+    },
+    {
+      "biome": "gran-canon",
+      "quality": "media",
+      "phase": "night",
+      "frames": [
+        {
+          "variant": "before",
+          "camera": [
+            -25.868919372558594,
+            20.840380859375,
+            120
+          ],
+          "time": 350,
+          "calls": 42,
+          "triangles": 376341,
+          "glError": 0
+        },
+        {
+          "variant": "after",
+          "camera": [
+            -25.868919372558594,
+            20.840380859375,
+            120
+          ],
+          "time": 350,
+          "calls": 43,
+          "triangles": 376345,
+          "glError": 0
+        },
+        {
+          "variant": "return",
+          "camera": [
+            -25.868919372558594,
+            20.840380859375,
+            120
+          ],
+          "time": 350,
+          "calls": 42,
+          "triangles": 376341,
+          "glError": 0
+        }
+      ],
+      "errors": []
+    }
+  ]
+}

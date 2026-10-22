@@ -1868,3 +1868,8 @@ Implemented opaque/partial complementary draws plus per-atlas depth ordering in 
 ## 2026-10-22: moving ordered transparency and incremental packing
 
 Per-atlas opaque split reduces forced batch-order sensitivity from ~5768 to 40 pixels in Mangroves; residual is a small partial-crown overlap, not globally solved transparency. Moving baseline sorting/packing costs ~0.19-0.20 ms and marks 44040 bytes/frame. Incremental cache has RGB-exact day/night parity and equal ABAB workloads but saves only 0.85% bytes and ~0.006-0.049 ms local mean; do not adopt as significant optimization or attribute noisy whole-frame gains to it. Retain smooth art candidate; broaden normal-order visual validation across biomes next, rather than expanding marginal cache work. See mangrove-far-transition-batch-order-20261022 and far-incremental-moving-cost-20261022.
+
+
+## 2026-10-22: ordered transitions reviewed across six biomes
+
+144 real captures, three views/day/night with full native backgrounds. Candidate visually useful on transitioning trees in Sabana/River/Volcanoes and retained in Mangroves; Canyon sparse view shows no demonstrated benefit. 31/36 matrix returns exact; Sabana game-view return changes one native representation (1 draw/4937 triangles), while immediate material-toggle return is exact. Tiny Desert/Canyon edge residuals remain. QA extra-call counter corrected to exclude empty Canyon batch; raw evidence retained. Proceed toward opt-in native integration/lifetime and near-handoff checks, not marginal cache optimization. Gran Rio distant turquoise water still needs separate palette integration; Mangrove leaf rectangles remain deferred. See far-transition-six-biome-20261022/README.md and far-transition-direct-control-20261022/README.md.
