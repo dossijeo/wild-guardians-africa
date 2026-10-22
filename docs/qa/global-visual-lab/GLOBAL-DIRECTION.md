@@ -1813,3 +1813,8 @@ Native opt-in `riverBank=soil` preserves the validated variable soil bank and re
 ## 2026-10-22: native regional water palettes
 
 Opt-in `waterPalette=regional` with global-lighting now preserves the reviewed biome colors through the shared fluid material context. All 36 day/night QA/native comparisons are RGB exact. Mangrove olive remains an artistic candidate needing surface variation; approved moss shores are retained. No extra shader work or textures, and no FPS gain claimed. See [native palette report](native-water-palette-parity-20261022/README.md). Worldbank shoreline routing remains QA and must still be integrated and validated separately.
+
+
+## 2026-10-22: native Canyon core validated
+
+Opt-in `waterEdges=natural&waterCore=opaque` retains exact static and ten moving-checkpoint shore/core RGB parity. Intel UHD ABAB saves 0.97-2.49 ms GPU day and 1.72-2.95 ms night; CPU mixed, no FPS gain demonstrated. Retain Canyon-only; do not generalize. See [benchmark](native-canyon-core-cost-20261022/README.md) and [streaming](native-canyon-core-stream-20261022/README.md). Construction cost and modest-quality validation remain pending.
