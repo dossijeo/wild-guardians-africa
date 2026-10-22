@@ -1432,3 +1432,7 @@ Twelve fresh real captures: area-weighted coincident-vertex normals soften dista
 
 ## Canyon normal preparation cost (2026-10-22)
 Live 103212-vertex horizon, alternating string/numeric implementation: warmed median 29.5 vs 10.5 ms, exact float32 normal equivalence and unchanged positions/colours. Retain numeric QA candidate; move preparation to existing worker before integration. Not an FPS/GPU claim. See canyon-horizon-normal-cost-20261022.
+
+
+## Native opt-in horizon normal worker (2026-10-22)
+`visualLab=global-lighting&canyonNormals=smooth` prepares existing normal slots in horizon workers. Twelve captures exact versus main-thread candidate/control; 17 targeted tests pass. Worker preparation 10-33.8 ms, not total frame latency. Continuous camera validation pending; default unchanged. See canyon-horizon-worker-normals-20261022.

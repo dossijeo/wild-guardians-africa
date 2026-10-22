@@ -1,3 +1,4 @@
+import {smoothHorizonNormals} from '../../rendering/horizon-normals.js';
 import {createSpatialWorld} from './spatial-world.js';
 import {validateSpatialTerrainState} from './spatial-state.js';
 import wasmUrl from './spatial-savanna.wasm?url';
@@ -20,6 +21,7 @@ self.onmessage=async({data:request})=>{
     for(const site of state.settlements)if(!Number.isFinite(
       world.addSettlement(site.x,site.z,site.hx,site.hz)))throw Error('Invalid horizon settlement');
     const data=world.horizon(request.region,request.waterColor,request.river);
+    if(request.smoothNormals)data.normalBuild=smoothHorizonNormals(data.terrain);
     self.postMessage({id:request.id,data,metrics:world.metrics()},[data.terrain.buffer,data.water.buffer]);
   }catch(error){self.postMessage({id:request.id,error:String(error.stack??error)});}
 };

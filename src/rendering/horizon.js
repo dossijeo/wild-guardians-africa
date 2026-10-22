@@ -16,6 +16,7 @@ export class NativeHorizon{
     this.scene=scene;this.waterMaterial=waterMaterial;this.onMaterialChange=onMaterialChange;
     const visualOptions=new URLSearchParams(globalThis.location?.search??'');
     this.canyonShadowCaster=visualOptions.get('visualLab')==='global-lighting'&&visualOptions.get('canyonShadows')==='horizon';
+    this.smoothCanyonNormals=visualOptions.get('visualLab')==='global-lighting'&&visualOptions.get('canyonNormals')==='smooth';
     this.groundMaterial=groundMaterial;this.group=null;this.key=null;this.region=null;
     this.spatial=options.spatial??null;
     this.generator=new HorizonGenerator({...options,
@@ -24,7 +25,7 @@ export class NativeHorizon{
   update(config,profile,region,quality,force=false){
     const revision=this.spatial?.revision();
     if(this.spatial&&!Number.isSafeInteger(revision))throw TypeError('Spatial horizon needs an integer terrain revision');
-    const key=JSON.stringify([config.biome,config.seed,config.relief,config.river,region.cx,region.cz,region.range,revision]);
+    const key=JSON.stringify([config.biome,config.seed,config.relief,config.river,region.cx,region.cz,region.range,revision,this.smoothCanyonNormals]);
     const materialKey=JSON.stringify([config.biome,config.seed,config.relief,config.river,quality==='muy_baja']);
     if(!['canyons','desert'].includes(config.biome)){this.generator.cancel();this.clear();return region;}
     const ready=this.generator.take(key);
@@ -33,11 +34,13 @@ export class NativeHorizon{
     let data=ready;
     if(!data){
       if(this.spatial&&(this.generator.disabled||this.generator.dead))return this.region??region;
-      const task=this.spatial?{key,region,state:this.spatial.snapshot(),
-        waterColor:waterRgb(profile.colors.water),river:config.river}:{key,config,profile,region};
+      const smoothNormals=config.biome==='canyons'&&this.smoothCanyonNormals;
+      const task=this.spatial?{key,region,smoothNormals,state:this.spatial.snapshot(),
+        waterColor:waterRgb(profile.colors.water),river:config.river}:{key,config,profile,region,smoothNormals};
       if(this.generator.plan(task,force)||this.spatial)return this.region??region;
-      data=buildHorizonData({config,profile,region});
+      data=buildHorizonData({config,profile,region,smoothNormals});
     }
+    this.normalBuild=data.normalBuild??null;
     const retained=this.materialKey===materialKey?this.group?.children.find(o=>o.userData.nativeHorizon==='terrain')?.material:null;
     this.clear(retained);this.key=key;this.materialKey=materialKey;this.region=structuredClone(region);
     const group=new THREE.Group();group.name='native-horizon';group.position.set(region.cx*48,0,region.cz*48);
