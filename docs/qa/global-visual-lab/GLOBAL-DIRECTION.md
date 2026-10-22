@@ -1754,3 +1754,7 @@ Real cinematic sampling exposed daytime sky grading jump and nighttime decorativ
 ### Canyon shared ground material: microdetail trial series closed
 
 `canyon-bank-sharedground-review-20261022`:12 real day/night frames use actual groundMaterial417/full soft sand and borrowed uniforms. Camera/geometry/resource counts match, no final errors. No convincing game-scale gain; lighting parity remains incomplete. QA only, no timing/adoption claim. Close isolated bed-microdetail series and move to broad bank transition/distribution; do not continue tiny pigment/normal tweaks.
+
+### Canyon vegetation context and archived scatter
+
+`canyon-scatter-restoration-review-20261022`:12 controlled frames restore existing Blender canyon module in QA. 249-255 instances, +1 draw call, +25,896-26,520 triangles; no timing claim. Art gain too weak at game scale, not rejected for performance. Next regional coverage/distribution instead of uniformly sparse tufts. Preliminary farVegetation A/B invalid: spatialSession disables both arms; recorded separately, not used for conclusions.
