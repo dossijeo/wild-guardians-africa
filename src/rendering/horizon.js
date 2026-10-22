@@ -52,13 +52,13 @@ export class NativeHorizon{
     // Canyon batches discard the resident rectangle; desert's seam apron remains.
     if(config.biome==='canyons'){material.userData.horizonBounds??=new THREE.Vector4();material.userData.horizonBounds.set(...region.bounds);}
     const ground=new THREE.Mesh(nativeTerrainBuffer(data.terrain),material);ground.userData.nativeHorizon='terrain';ground.castShadow=config.biome==='canyons'&&this.canyonShadowCaster;group.add(ground);
-    if(data.water.length){const water=new THREE.Mesh(nativeTerrainBuffer(data.water),this.waterMaterial(region.bounds,true));water.userData.nativeHorizon='water';this.prepareWater?.(water,region);group.add(water);}
+    if(data.water.length){const water=new THREE.Mesh(nativeTerrainBuffer(data.water),this.waterMaterial(region.bounds,true));water.userData.nativeHorizon='water';group.add(water);this.prepareWater?.(water,region);}
     this.group=group;this.scene.add(group);
     return this.region;
   }
   whenReady(){return this.generator.whenReady();}
   clear(retained=null){
-    if(this.group){this.scene.remove(this.group);this.group.traverse(o=>{if(o.isMesh){o.geometry.dispose();if(o.material!==retained)o.material.dispose();}});this.group=null;}
+    if(this.group){this.scene.remove(this.group);this.group.traverse(o=>{if(o.isMesh){if(!o.userData.borrowedWaterGeometry)o.geometry.dispose();if(o.material!==retained)o.material.dispose();}});this.group=null;}
     this.key=null;this.region=null;
   }
   dispose(){this.generator.dispose();this.clear();}
