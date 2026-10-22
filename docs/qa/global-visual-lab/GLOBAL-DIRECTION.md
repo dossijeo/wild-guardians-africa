@@ -1750,3 +1750,7 @@ Real cinematic sampling exposed daytime sky grading jump and nighttime decorativ
 ### Canyon native normal-basis correction in QA
 
 `canyon-bank-normalbasis-review-20261022`:12 real frames; all six pairs camera/time/geometry equal, no errors. Shared native sampleTurfN410 fixes the reversed lateral basis in submerged-bed pilots. Visual effect minimal across all day/night views; retained as QA correctness groundwork, not an art improvement or native feature. Reinspection of original mockup confirms bank continuity and game-scale composition remain the priority.
+
+### Canyon shared ground material: microdetail trial series closed
+
+`canyon-bank-sharedground-review-20261022`:12 real day/night frames use actual groundMaterial417/full soft sand and borrowed uniforms. Camera/geometry/resource counts match, no final errors. No convincing game-scale gain; lighting parity remains incomplete. QA only, no timing/adoption claim. Close isolated bed-microdetail series and move to broad bank transition/distribution; do not continue tiny pigment/normal tweaks.
