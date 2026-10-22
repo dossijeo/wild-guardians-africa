@@ -1782,3 +1782,7 @@ Real cinematic sampling exposed daytime sky grading jump and nighttime decorativ
 ### Canyon bank cover explicit native option
 
 `canyonCover=banks` with global-lighting now enables the validated Blender bank module through native rendering. `canyon-cover-native-parity-20261022`:15/15 real day/night streaming frames RGB exact versus corrected QA,4 existing lifecycle tests pass, option isolated to canyons. Default/global recipe unchanged. Quality policy and broader native/gameplay validation remain outstanding; no final-global-quality claim.
+
+### Priority: natural water edges in all biomes
+
+User explicitly reprioritized completing natural water/land transitions across all six biomes; vegetation must not substitute for this. `canyon-transparent-bank-review-20261022`:12 real matched frames use single-pass depth opacity to expose actual terrain lighting, eliminating copied-bed pale fringe. Edge now less straight but too blurred; retain foundation, not final shore. No timing/sorting claims yet. Next reusable shore/depth representation and biome-specific transition, movement and cost validation.

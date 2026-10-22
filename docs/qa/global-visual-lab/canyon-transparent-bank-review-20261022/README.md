@@ -1,0 +1,9 @@
+# Canyon transparent bank foundation
+
+Reproduce with Vite5190: node tools/experiments/capture-canyon-transparent-bank-20261022.mjs. Seed712/media/1280x720, native baseline versus QA transparentbank, three cameras day/night. All12 real captures retained. Six paired camera/time/draw/triangle signatures equal, no captured errors. All paired sheets inspected.
+
+Unlike prior opaque bed approximations, this fades water opacity using approximate canyon depth so the actual already-rendered terrain/material/lighting is visible beneath. Water remains one draw per mesh via forceSinglePass=true, depthWrite=false, transparency enabled. No copied ground shader, extra texture/pass/geometry or vegetation. Width varies with world-locked noise. Existing resident/horizon clipping preserved. First exploratory run had default double-sided transparency passes; final complete rerun uses single-pass only.
+
+Result: removes the mismatched pale fringe and breaks the perfectly straight color edge, but transition is too diffuse/blurred, especially along the game/reverse view. Retain as foundation, NOT completed natural shore. No GPU timing or transparency sorting/overdraw/movement guarantee from static counts. Actual bed visibility solves a material-continuity issue but does not create new terrain geometry or refraction. Depth currently canyon-specific approximation, not transferable unchanged to other biomes.
+
+Next: derive reusable depth/shore information from existing visual terrain/water data, tighten the optical transition without recreating a painted edge, and validate moving camera/transparent-object ordering and cost. Then biome-specific treatments for Savanna and Grand River water, Mangrove muddy banks (reuse existing sediment work), Desert oasis sand, Canyon mineral banks, and volcanic water where present (keep lava separate). All-six scope remains required; vegetation work is supporting detail, not a substitute. Native/default renderer unchanged.
