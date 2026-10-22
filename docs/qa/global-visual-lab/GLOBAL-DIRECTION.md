@@ -1661,3 +1661,8 @@ Skip water noise outside its maximum 3.5-unit shore influence, keeping derivativ
 ### Mangrove shore live streaming ownership
 
 `mangrove-bank-stream-20261022`: real 96-unit round trips, 25 shore masks live at every stop, each step creates/releases five, registry stays50 including ground masks. No accumulating shore textures in this path, no GL errors. Geometry return exact; night RGB exact, day differs and remains unisolated. Settled test only, not fast streaming/full parity.
+
+
+### Mangrove streaming control/warm repeat
+
+`mangrove-bank-stream-control-20261022`: twenty real daytime frames. Both native and candidate drift on first trip (~196-198k pixels), both second trips exact RGB; candidate holds25 masks. No errors. First-trip cause remains unisolated, not candidate-exclusive. Supports moving retained candidate to explicit opt-in native implementation, preserving general limitation and measured GPU cost.
