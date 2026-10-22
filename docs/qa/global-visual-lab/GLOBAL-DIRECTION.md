@@ -1742,3 +1742,7 @@ Real cinematic sampling exposed daytime sky grading jump and nighttime decorativ
 ### Canyon mixed bed pilot
 
 `canyon-bank-mixedbed-review-20261022`:12 matched frames, no errors. Shared texture/deposit weights alone strengthen pale foam-like fringe; reject native adoption. Full ground color/normal/AO contract remains absent; inspect complete transformation before further approximations.
+
+### Canyon reflection and material-contract diagnosis
+
+`canyon-bank-reflectiondepth-review-20261022`:12 real controlled frames, all six day/night camera/geometry pairs equal, no captured errors. Reducing near-shore reflection softens daytime pale rim but does not resolve the canal-like bank; diagnostic only, no native adoption or timing claim. Source audit found reversed normal-map lateral axis in prior bed pilots plus omitted gravel normal/ARH, AO and warm shadow fill. Correct shared material response before more color tuning.
