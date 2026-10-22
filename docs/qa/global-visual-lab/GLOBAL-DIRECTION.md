@@ -1698,3 +1698,7 @@ Skip water noise outside its maximum 3.5-unit shore influence, keeping derivativ
 ### Volcano ash deposits ABAB cost
 
 `volcano-ash-structure-cost-20261022`:720 valid GPU samples, equivalent moving-camera geometry/state. GPU deltas -.130 to +.039 ms, no consistent change; night CPU +.200/+.378 ms, cadence ~16.63 ms paced. Retain visual candidate, no speedup claim; visual motion, lower profile and additional seeds pending.
+
+### Volcano deposits low-profile second seed
+
+`volcano-ash-low-seed-review-20261022`:12 real captures, seed913/baja, six matched camera/geometry/time pairs, no captured errors. Day/night game-view inspection retains material separation; broad ash smoothing remains an artistic caveat. Static transfer check, not low-profile performance or motion validation.
