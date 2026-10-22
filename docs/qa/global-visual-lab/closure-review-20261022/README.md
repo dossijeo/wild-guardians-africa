@@ -30,3 +30,6 @@ Immediate next action: representative scene/framing audit, prioritizing Desert m
 Correction: initial oasis gate was an unsupported assumption. Inspected biome-desert.json: fluid=none, no assets with water. spatial-savanna.cpp preparePonds skips biome1 and fluidLevelFor returns0. Do not add an oasis to satisfy a QA gate. The existing dry-biome scope is unchanged.
 
 Additional required acceptance evidence: matched current-main versus selected experimental captures for all six biomes, not mockups alone. See ../main-five-biomes-comparison-20261022/README.md and Desert pilot. Thirty additional pose/time/origin pairs pass; normal-day review identifies Mangrove cover repetition as a real remaining art defect. Other views still require perceptual review.
+
+
+Populated Desert update: reproducible medium/low benchmark and matching day/night/three-view captures completed in desert-populated-frozen-cost-20261022 and desert-populated-frozen-20261022. Pre-game pause removes variable footstep effects. Medium retains approved cast shadows; low is a measured visual compromise. Earlier populated motion remains sampled evidence and used late pause; do not equate it to exact saved-state benchmarking. Active play/long streaming and final combined audit remain open.
