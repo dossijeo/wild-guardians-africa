@@ -1671,3 +1671,8 @@ Skip water noise outside its maximum 3.5-unit shore influence, keeping derivativ
 ### Native opt-in Mangrove shore
 
 `mangroveShore=sediment` with global lighting/full substrate integrates retained gated sediment and land mask, defaults unchanged. `mangrove-bank-native-parity-20261022`: six RGB frames exact to QA, no errors; native ownership/option tests pass. Mangroves have no NativeHorizon, resident water only. Native live streaming and broader art composition still pending.
+
+
+### Native Mangrove shore streaming
+
+`mangrove-bank-native-stream-20261022`: ten native settled frames,25 shore/50 total masks every stop,no errors. Camera/geometry exact to QA;7 RGB exact,3 differ in3-5 pixels (max9/77/74),cause unisolated. Retain opt-in and return to combined artistic review; broader seed/motion validation still pending.
