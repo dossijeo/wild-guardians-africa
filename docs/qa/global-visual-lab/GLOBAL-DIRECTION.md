@@ -1702,3 +1702,7 @@ Skip water noise outside its maximum 3.5-unit shore influence, keeping derivativ
 ### Volcano deposits low-profile second seed
 
 `volcano-ash-low-seed-review-20261022`:12 real captures, seed913/baja, six matched camera/geometry/time pairs, no captured errors. Day/night game-view inspection retains material separation; broad ash smoothing remains an artistic caveat. Static transfer check, not low-profile performance or motion validation.
+
+### Native volcanic deposits option
+
+`volcanicDeposits=broad` with global-lighting/layered rock retains broader warmer ash, scoped to Volcano. Six native day/night captures RGB exact to QA (`volcano-ash-native-parity-20261022`), defaults unchanged. Movement/streaming validation still pending; no fresh timing claim.
