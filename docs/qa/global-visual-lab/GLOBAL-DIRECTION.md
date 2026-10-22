@@ -1710,3 +1710,7 @@ Skip water noise outside its maximum 3.5-unit shore influence, keeping derivativ
 ### Volcanic deposits native streaming control
 
 `volcano-deposits-native-stream-20261022`:30 settled frames, paired geometry/camera exact,25 ground masks throughout,no errors. Both baseline/candidate warm-day and night roundtrips RGB exact; cold-return small differences occur in both, cause unisolated. Resources stabilize; not full leak proof or continuous-motion validation. Retain opt-in.
+
+### Canyon mineral shallows pilot
+
+`canyon-bank-mineral-review-20261022`:18 controlled captures; repaired obsolete resident-water QA anchor. Mineral palette softens blue contrast but still produces blurry bands and straight shoreline. Retain QA, no native adoption; structural bank treatment needed before timing work.
