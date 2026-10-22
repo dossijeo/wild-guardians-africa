@@ -1878,3 +1878,12 @@ Per-atlas opaque split reduces forced batch-order sensitivity from ~5768 to 40 p
 ## 2026-10-22: native Gran Rio distant-water palette
 
 Retained muted blue [.30,.44,.48] for natural-shore Gran Rio regional-water path, replacing bright turquoise far patches. Grey-green QA alternative not selected. Six initial return controls exact; six native-to-selected-blue pairs exact. Native return has one tiny 3-pixel/max2 residual documented. Calls/triangles/resources unchanged; constant uniform edit adds no shader operations or maps. Existing six far-ground tests pass. Simplified distant reflections/night response and moving seams remain limitations. See river-far-water-palette-20261022 and river-far-water-native-20261022.
+
+
+## 2026-10-22: tarea posterior — pantalla de inicio por capas y parallax
+
+Solicitud del usuario: iniciar esta mejora **después de completar los impostores, las mejoras del agua y los seis biomas**. No desplazar la validación actual ni confundir esta pantalla con la carga interactiva.
+
+Referencia artística: [mockup de inicio](references/start-screen-layered-parallax-13762.png). Renovar la composición 2D mediante capas con profundidad y parallax: paisaje cálido al atardecer, horizonte y cascadas, guardianes en las nubes, vegetación y personajes en primer plano, y tótem central que organiza las opciones. Usar el mockup como dirección de composición, riqueza cromática y jerarquía visual.
+
+Requisitos que deben conservarse: animación de acercamiento al elegir una opción; partículas de colores en movimiento que iluminan el tótem; funcionamiento de las opciones y legibilidad de la interfaz. Validar en el menú real la composición, el parallax, el acercamiento y las partículas, incluyendo vídeo y coste de rendimiento. Esta anotación programa trabajo dentro del objetivo existente; no inicia una automatización ni cambia ahora el menú.
