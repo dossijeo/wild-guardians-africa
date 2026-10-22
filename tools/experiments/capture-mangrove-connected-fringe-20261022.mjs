@@ -1,9 +1,9 @@
 import {globalReviewedQuery} from './global-reviewed-recipe-20261022.mjs';
 import {chromium} from 'playwright';
-import {mkdir,writeFile,readFile} from 'node:fs/promises';
+import {mkdir,writeFile,readFile,cp} from 'node:fs/promises';
 
 
-const out=process.env.WG_REVIEW_OUT??'docs/qa/global-visual-lab/mangrove-connected-fringe-20261022';await mkdir(out,{recursive:true});const records=JSON.parse(await readFile('docs/qa/global-visual-lab/mangrove-additive-fringe-20261022/captures.json','utf8')).records.filter(r=>r.treatment==='original');const phases=['day','night'];
+const out=process.env.WG_REVIEW_OUT??'docs/qa/global-visual-lab/mangrove-connected-fringe-20261022';await mkdir(out,{recursive:true});await cp('docs/qa/global-visual-lab/mangrove-additive-fringe-20261022/original',out+'/original',{recursive:true});const records=JSON.parse(await readFile('docs/qa/global-visual-lab/mangrove-additive-fringe-20261022/captures.json','utf8')).records.filter(r=>r.treatment==='original');const phases=['day','night'];
 const browser=await chromium.launch({channel:'chrome',headless:true});
 try{for(const treatment of ['fringe'])for(const quality of (process.env.WG_COVER_QUALITY??'media').split(','))for(const biome of (process.env.WG_REVIEW_BIOMES??'manglares').split(',')){
  const page=await browser.newPage({viewport:{width:1280,height:720},deviceScaleFactor:1});const errors=[];
