@@ -1718,3 +1718,7 @@ Skip water noise outside its maximum 3.5-unit shore influence, keeping derivativ
 ### Canyon granular shelves rejected
 
 `canyon-bank-granular-review-20261022`:12 controlled frames, no errors, equal geometry. Defined noise shelves read as painted/floating patches, worse at night; reject artistically before benchmarking. Next couple existing land/water material response or actual depth, not further isolated water color noise.
+
+### Canyon shared sand bed pilot
+
+`canyon-bank-bed-review-20261022`:12 controlled frames, borrowed existing sand texture and approximate depth attenuation. Removes floating-patch appearance, but normal-view gain remains subtle and straight shore unresolved. QA only, no measured cost/native adoption; avoid further tiny tint tuning.
