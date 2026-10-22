@@ -1537,3 +1537,7 @@ Shared continuous coverage now owns retained Blender Mangrove leaves, original g
 
 ### 2026-10-22: six-biome native composition baseline and art gaps
 36 real day/night frames, six individually reviewed art-reference sheets; no QA material/coverage adapters, no captured GL/console errors. Native integration is established, artistic completion is not: River coverage too uniform, Mangrove settlement dominated by moss, Canyon water/banks too abrupt. Preserve approved Desert relief. Prioritize retained Canyon bank-depth evaluation then broad-scale grass structure. Counters only, no new timing claim; full-recipe movement/profiles/events remain pending. See six-biome-native-review-20261022/README.md.
+
+
+### 2026-10-22: Canyon bank transition revisited on native composition
+18 fresh frames compare baseline/retained depth/wider world-modulated transition, six exact geometry/camera pairs per candidate. Original tint too subtle; wider variant visibly separates shallow/center but remains a clean band, not natural shoreline detail. Both retained QA, not adopted. No new draws/triangles/textures, no fresh timing claim; structured variant adds two fragment sine evaluations. Next: coherent land/water boundary detail, then movement/seams and timings. See canyon-bank-combined-review-20261022/README.md.
