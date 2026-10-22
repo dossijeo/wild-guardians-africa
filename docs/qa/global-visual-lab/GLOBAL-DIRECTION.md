@@ -1581,3 +1581,8 @@ QA R8 masks now derive from actual capacity-limited draw anchors after renderer 
 
 ### 2026-10-22: persistent accepted-tile underlay eligibility
 5/6 real pairs pixel-exact,last1 redchannel1/255;equalgeometry. Changed semantics fromselecteddrawmask,overflow disablesfilter. Synthetic invalidation/replacement/dispose checks pass. ABAB720validGPUqueries CPUrender improves1.233-2.303ms,GPU similar,interval3better1worse:no stableFPSclaim. Captureuploads26vs92,butcold/invalidation wrapper309msvs240ms remainscostly. Preferred QA,nextrealoccupancy/streaming/quality/overflowrecovery before native. See river-underlay-mask-persistent-20261022.
+
+
+### Persistent River underlay: settled streaming probe
+
+See `river-underlay-mask-persistent-stream-20261022/README.md`. Real day/night 96-unit round trip: 25 masks/25 resident chunks, no orphan ownership or GL errors, 10 chunks replaced at far stop. Return geometry counts exact; night pixels exact, day has small unresolved differences (10438 pixels, max 39/255). Not full visual parity, occupancy validation, or a timing benchmark. Keep candidate QA-only pending control comparison.
