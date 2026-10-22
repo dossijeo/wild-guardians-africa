@@ -10,7 +10,7 @@ test('complete catalogue audit reproduces from current source and exact original
  assert.deepEqual(report.rows.map(row=>row.id),bank.items.map(item=>item.id));
 });
 test('assignments, context exceptions, reserves and alternatives stay distinct from audible acceptance',()=>{
- assert.deepEqual(report.classificationCounts,{'assigned-compatible-source':100,'context-exception':4,'scope-reserve':12,'unbound-alternative':10});
+ assert.deepEqual(report.classificationCounts,{'assigned-compatible-source':101,'context-exception':4,'scope-reserve':11,'unbound-alternative':10});
  for(const row of report.rows){
   assert.equal(row.audiblePlaybackVerified,false);assert.equal(row.runtimeUnused,row.runtimeStatus==='unassigned');
   if(row.runtimeStatus==='assigned'){

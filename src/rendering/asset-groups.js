@@ -3,6 +3,16 @@ import {nativePropBatchVisible} from './prop-transition-residency.js';
 import {createAssetShadow} from './asset-shadows.js';
 
 const powerCapacity=count=>2**Math.ceil(Math.log2(Math.max(8,count)));
+function addDirtyRange(attribute,start,end){
+  // A disabled/cached pass may never upload. Keep pending intervals disjoint,
+  // so repeated edits cannot grow bookkeeping with the number of frames.
+  const ranges=attribute.updateRanges;
+  for(let i=ranges.length-1;i>=0;i--){
+    const r=ranges[i];if(r.start>end||r.start+r.count<start)continue;
+    start=Math.min(start,r.start);end=Math.max(end,r.start+r.count);ranges.splice(i,1);
+  }
+  attribute.addUpdateRange(start,end-start);
+}
 function transferStaticAttributes(source,destination){
   const names=Object.keys(source.attributes).filter(name=>name!=='nativeVisibility');
   const other=Object.keys(destination.attributes).filter(name=>name!=='nativeVisibility');
@@ -47,7 +57,7 @@ export class NativeAssetGroups{
   constructor(scene){
     this.scene=scene;this.root=new THREE.Group();this.root.name='native_merged_assets';scene.add(this.root);
     this.colors=new Map();this.shadows=new Map();this.shadowRoot=new THREE.Group();this.shadowChunks=new Map([['merged',this.shadowRoot]]);
-    this.smoothObstruction=new URLSearchParams(globalThis.location?.search??'').get('visualLab')==='global-lighting';this.enabled=true;this.omitZeroColor=false;this.reuseStaticOnResize=true;this.frustum=new THREE.Frustum();this.vp=new THREE.Matrix4();
+    this.smoothObstruction=new URLSearchParams(globalThis.location?.search??'').get('visualLab')==='global-lighting';this.enabled=true;this.instanceCulling=true;this.omitZeroColor=false;this.reuseStaticOnResize=true;this.frustum=new THREE.Frustum();this.vp=new THREE.Matrix4();
   }
   retire(cache,key,retainGeometry=false){const g=cache.get(key);for(const fade of g.smoothFades??[]){fade.removeFromParent();fade.geometry.dispose();fade.material.dispose();fade.dispose();}g.mesh.removeFromParent();g.mesh.dispose();if(g.pass==='color'&&!retainGeometry)g.mesh.geometry.dispose();cache.delete(key);}
   clear(){for(const cache of [this.colors,this.shadows])for(const key of [...cache.keys()])this.retire(cache,key);this.shadowRoot.userData.lodBatches=[];}
@@ -62,20 +72,38 @@ export class NativeAssetGroups{
     if(!g){
       const mesh=pass==='shadow'?createAssetShadow([source],capacity,first.batch.group):new THREE.InstancedMesh(geometryView(source.geometry,capacity),source.material,capacity);
       mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+      mesh.instanceMatrix.onUpload(()=>mesh.instanceMatrix.clearUpdateRanges());
+      if(pass==='color'){const a=mesh.geometry.attributes.nativeVisibility;a.onUpload(()=>a.clearUpdateRanges());}
       mesh.frustumCulled=false;mesh.castShadow=pass==='shadow';mesh.receiveShadow=pass==='color';
       mesh.userData.nativeMergedAsset=true;mesh.userData.nativeMergedPass=pass;
       if(pass==='color')this.root.add(mesh);
-      g={mesh,capacity,pass,stamp:null};cache.set(key,g);
+      g={mesh,capacity,pass,stamp:null,sourceStamp:null};cache.set(key,g);
     }
-    const stamp=(this.smoothObstruction?'smooth|':'dither|')+(pass==='color'&&this.omitZeroColor?'compact|':'full|')+entries.map(e=>e.batch.uid+':'+e.level+':'+e.mesh.count+':'+e.mesh.instanceMatrix.version+':'+(pass==='color'?(e.mesh.geometry.attributes.nativeVisibility?.version??0):0)+':'+e.group.matrixWorld.elements.join(',')).join('|');
+    const sourceStamp=(this.smoothObstruction?'smooth|':'dither|')+(pass==='color'&&this.omitZeroColor?'compact|':'full|')+entries.map(e=>e.batch.uid+':'+e.level+':'+e.mesh.count+':'+e.mesh.instanceMatrix.version+':'+(pass==='color'?(e.mesh.geometry.attributes.nativeVisibility?.version??0):0)+':'+e.group.matrixWorld.elements.join(',')).join('|');
+    const cull=pass==='color'&&this.instanceCulling;
+    const stamp=(cull?this.vp.elements.join(',')+'|':'')+sourceStamp;
     if(stamp!==g.stamp){
-      const matrix=new THREE.Matrix4();let offset=0,smoothFadeCount=0;
+      const matrix=new THREE.Matrix4(),sphere=new THREE.Sphere(),boundsMatrix=new THREE.Matrix4();
+      if(!source.geometry.boundingSphere)source.geometry.computeBoundingSphere();
+      const rebuildBounds=sourceStamp!==g.sourceStamp,bounds=rebuildBounds?new THREE.Sphere().makeEmpty():g.mesh.boundingSphere;
+      const visibility=pass==='color'?g.mesh.geometry.attributes.nativeVisibility:null;
+      let offset=0,smoothFadeCount=0,matrixStart=Infinity,matrixEnd=0,coverageStart=Infinity,coverageEnd=0;
       for(const e of entries)for(let i=0;i<e.mesh.count;i++){
-        // Completely faded native trees have a faithful billboard replacement.
-        // Keep partial coverage and every shadow caster; omit only zero color.
-        if(pass==='color'&&this.omitZeroColor&&(e.mesh.geometry.attributes.nativeVisibility?.array[i]??1)<=0)continue;
-        matrix.fromArray(e.mesh.instanceMatrix.array,i*16).premultiply(e.group.matrixWorld);matrix.elements[12]-=this.origin.x;matrix.elements[14]-=this.origin.z;
-        const smoothVisibility=e.mesh.geometry.attributes.nativeVisibility?.array[i]??1;
+        const coverage=e.mesh.geometry.attributes.nativeVisibility?.array[i]??1;
+        // The logical population and all shadow casters remain unchanged.
+        if(pass==='color'&&this.omitZeroColor&&coverage<=0)continue;
+        matrix.fromArray(e.mesh.instanceMatrix.array,i*16).premultiply(e.group.matrixWorld);
+        let visible=true;
+        if(cull){sphere.copy(source.geometry.boundingSphere).applyMatrix4(matrix);sphere.radius+=2.5;visible=this.frustum.intersectsSphere(sphere);}
+        matrix.elements[12]-=this.origin.x;matrix.elements[14]-=this.origin.z;
+        if(rebuildBounds){
+          // Preserve Three's original draw-sorting bounds, including culled color
+          // instances, in the Float32 coordinates actually submitted to GL.
+          for(let k=0;k<16;k++)boundsMatrix.elements[k]=Math.fround(matrix.elements[k]);
+          bounds.union(sphere.copy(source.geometry.boundingSphere).applyMatrix4(boundsMatrix));
+        }
+        if(!visible)continue;
+        const smoothVisibility=coverage;
         if(this.smoothObstruction&&pass==='color'&&smoothVisibility<.999){
           if(smoothVisibility<.002)continue;
           g.smoothFades??=[];let fade=g.smoothFades[smoothFadeCount];
@@ -87,18 +115,33 @@ export class NativeAssetGroups{
               shader.fragmentShader=shader.fragmentShader.replace('#include <opaque_fragment>','diffuseColor.a*=clamp(vNativeVisibility,0.,1.);\n#include <opaque_fragment>');
             };
             material.customProgramCacheKey=()=>cacheKey()+'|native-partial-blend-v1';
-            fade=new THREE.InstancedMesh(geometryView(source.geometry,1),material,1);fade.name='native-obstruction-blend';fade.userData.materialRegistryExcluded=true;fade.receiveShadow=true;this.root.add(fade);g.smoothFades.push(fade);
+            fade=new THREE.InstancedMesh(geometryView(source.geometry,1),material,1);fade.instanceMatrix.setUsage(THREE.DynamicDrawUsage);fade.instanceMatrix.onUpload(()=>fade.instanceMatrix.clearUpdateRanges());const a=fade.geometry.attributes.nativeVisibility;a.onUpload(()=>a.clearUpdateRanges());fade.name='native-obstruction-blend';fade.userData.materialRegistryExcluded=true;fade.receiveShadow=true;this.root.add(fade);g.smoothFades.push(fade);
           }
-          matrix.toArray(fade.instanceMatrix.array);fade.instanceMatrix.needsUpdate=true;
-          fade.geometry.attributes.nativeVisibility.array[0]=smoothVisibility;fade.geometry.attributes.nativeVisibility.needsUpdate=true;
+          let fadeStart=Infinity,fadeEnd=0;
+          for(let k=0;k<16;k++){const value=Math.fround(matrix.elements[k]);if(fade.instanceMatrix.array[k]!==value){fade.instanceMatrix.array[k]=value;fadeStart=Math.min(fadeStart,k);fadeEnd=k+1;}}
+          const fadeVisibility=fade.geometry.attributes.nativeVisibility;
+          const fadeCoverageChanged=fadeVisibility.array[0]!==Math.fround(smoothVisibility);
+          if(fadeEnd){addDirtyRange(fade.instanceMatrix,fadeStart,fadeEnd);fade.instanceMatrix.needsUpdate=true;}
+          if(fadeCoverageChanged){fadeVisibility.array[0]=smoothVisibility;addDirtyRange(fadeVisibility,0,1);fadeVisibility.needsUpdate=true;}
+          if(fadeEnd||fadeCoverageChanged)stats.uploads++;
           fade.boundingSphere=null;fade.boundingBox=null;fade.visible=true;smoothFadeCount++;continue;
         }
-        matrix.toArray(g.mesh.instanceMatrix.array,offset*16);
-        if(pass==='color')g.mesh.geometry.attributes.nativeVisibility.array[offset]=e.mesh.geometry.attributes.nativeVisibility?.array[i]??1;
+        for(let k=0;k<16;k++){
+          const index=offset*16+k,value=Math.fround(matrix.elements[k]);
+          if(g.mesh.instanceMatrix.array[index]!==value){g.mesh.instanceMatrix.array[index]=value;matrixStart=Math.min(matrixStart,index);matrixEnd=index+1;}
+        }
+        if(visibility&&visibility.array[offset]!==Math.fround(coverage)){
+          visibility.array[offset]=coverage;coverageStart=Math.min(coverageStart,offset);coverageEnd=offset+1;
+        }
         offset++;
       }
-      for(let i=smoothFadeCount;i<(g.smoothFades?.length??0);i++)g.smoothFades[i].visible=false;g.mesh.count=offset;g.mesh.instanceMatrix.needsUpdate=true;if(pass==='color')g.mesh.geometry.attributes.nativeVisibility.needsUpdate=true;
-      g.mesh.boundingBox=null;g.mesh.boundingSphere=null;g.stamp=stamp;stats.uploads++;
+      // Count is draw state, not buffer content. Unchanged prefixes need no upload.
+      for(let i=smoothFadeCount;i<(g.smoothFades?.length??0);i++)g.smoothFades[i].visible=false;
+      g.mesh.count=offset;
+      if(matrixEnd){addDirtyRange(g.mesh.instanceMatrix,matrixStart,matrixEnd);g.mesh.instanceMatrix.needsUpdate=true;}
+      if(coverageEnd){addDirtyRange(visibility,coverageStart,coverageEnd);visibility.needsUpdate=true;}
+      if(matrixEnd||coverageEnd)stats.uploads++;
+      g.mesh.boundingBox=null;g.mesh.boundingSphere=bounds;g.sourceStamp=sourceStamp;g.stamp=stamp;
     }
     stats.bytes+=capacity*(pass==='color'?68:64);
     if(pass==='shadow')this.shadowRoot.userData.lodBatches.push({shadow:g.mesh,meshes:[g.mesh]});
@@ -109,7 +152,7 @@ export class NativeAssetGroups{
     if(!this.origin||this.origin.x!==origin.x||this.origin.z!==origin.z){
       this.origin={x:origin.x,z:origin.z};this.root.position.set(origin.x,0,origin.z);
       this.shadowRoot.position.copy(this.root.position);this.shadowRoot.updateMatrixWorld(true);
-      for(const cache of [this.colors,this.shadows])for(const group of cache.values())group.stamp=null;
+      for(const cache of [this.colors,this.shadows])for(const group of cache.values()){group.stamp=null;group.sourceStamp=null;}
     }
     const stats={colorGroups:0,shadowGroups:0,visibleChunks:0,uploads:0,bytes:0,rawColorSlices:0,shadowChunks:0,culledShadowChunks:0};
     this.stats=stats;this.shadowRoot.userData.lodBatches=[];this.shadowChunks=new Map([['merged',this.shadowRoot]]);

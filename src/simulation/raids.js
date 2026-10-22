@@ -988,6 +988,7 @@ export function updateRaid(s,dt,nav) {
   if(s.raid.animals.every(a=>a.status==='gone')) {
     const pending=s.raid.pendingWavePlan??nextPressureWave(s.raid,s.time);
     if(pending){s.raid.pendingWavePlan=pending;return;}
+    nav.intentTaskPlanner?.retireRaidActors?.(s.raid.animals);
     s.raid=null;nav.setState(s);emit(s,'RaidEnded');
     if(!s.structures.some(operational)&&compare(s.ledger.balance,rational(B.work_center.cost))<0){s.result='defeat';notice(s,'Cayó el último centro; faltan monedas para que otro nazca.');emit(s,'GameOver');retireFarmHistory(s);return;}
     for(const w of s.workers) {

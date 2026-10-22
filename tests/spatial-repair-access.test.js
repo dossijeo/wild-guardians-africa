@@ -12,6 +12,7 @@ import {createSpatialNavigationMovement} from
   '../src/world/wild-engine/spatial-navigation-movement.js';
 import {createSpatialIntentBridge} from
   '../src/world/wild-engine/spatial-intent-bridge.js';
+import {centerServicePoint} from '../src/world/centers.js';
 import {createOpeningWorld} from '../tools/check_opening.mjs';
 
 const binary=process.env.WILD_ENGINE_NATIVE_ROUTE_WASM;
@@ -26,6 +27,9 @@ const overlapSnapshot=gunzipSync(readFileSync(new URL(
   './fixtures/sabana712-day15-repair-overlap.json.gz',import.meta.url))).toString();
 const day83Snapshot=gunzipSync(readFileSync(new URL(
   './fixtures/sabana123-day83-repair-near-gate-unknown.json.gz',
+  import.meta.url))).toString();
+const volcanoDay19Snapshot=gunzipSync(readFileSync(new URL(
+  './fixtures/volcanes712-day19-repair-before-arrival.json.gz',
   import.meta.url))).toString();
 
 async function open(game){
@@ -122,6 +126,37 @@ test('Sabana day 15: occupied repair footprints defer without speculative routes
       assert.equal(planRepairAccess(game,target,nav).status,'blocked');
     }
     assert.equal(routes,0);assert.equal(previews,0);
+  }finally{session.dispose();}
+});
+
+test('Volcanes/712 day 19: reverse reach batch matches each repair witness',
+ {skip:!module&&'Build and select the experimental WASM first'},async()=>{
+  const game=deserialize(volcanoDay19Snapshot),{session,nav}=await open(game);
+  try{
+    tick(game,.2,nav);
+    const target=game.structures.find(piece=>piece.id==='structure-2183');
+    assert(target&&target.status==='ruined');
+    const entry=game.villages[0].entry??game.villages[0];
+    const witnesses=[...game.structures.filter(piece=>piece.kind==='center'&&
+      piece.status==='intact').map(piece=>centerServicePoint(piece,game,.8)),
+    ...game.workers.filter(worker=>worker.status!=='home')];
+    const repaired={...target,status:'intact',hp:target.maxHp};
+    const candidates=[null,target,...game.structures.filter(piece=>
+      piece.kind==='wall'&&piece.status==='intact'&&!piece.gate)];
+    for(const candidate of candidates){
+      const change=candidate?{...(candidate.id===target.id?repaired:candidate),
+        gate:true,autoGate:true}:null;
+      const hypothesis=game.structures.map(piece=>{
+        if(piece.id===target.id)return change?.id===target.id?change:repaired;
+        return piece.id===change?.id?change:piece;
+      });
+      session.withWallStatePreview(hypothesis,({route,reachBatch})=>{
+        const sequential=witnesses.map(point=>route(point,entry).status);
+        const batch=reachBatch(entry,witnesses,true);
+        assert.deepEqual(batch??witnesses.map(()=>'unknown'),sequential,
+          `candidate ${candidate?.id??'solid-wall'}`);
+      });
+    }
   }finally{session.dispose();}
 });
 

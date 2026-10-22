@@ -1,11 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {commitAgriculturalPower,settleMultiplyPower,consumeGrowthPower,agriculturalPowerReport,validateAgriculturalPower} from '../src/simulation/agricultural-power.js';
+import {commitAgriculturalPower,settleMultiplyPower,consumeGrowthPower,growthPowerStep,agriculturalPowerReport,validateAgriculturalPower} from '../src/simulation/agricultural-power.js';
 import {numberOf,compare,rational} from '../src/simulation/money.js';
 import * as Game from '../src/simulation/game.js';
 import {createPlant,waterPlant,advancePlant} from '../src/simulation/crops.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {cropSpec} from '../src/simulation/rules.js';
+import {observeTaskChanges,taskEnqueuer} from '../src/simulation/tasks.js';
 const state=()=>({day:1,plants:[],crates:[],spells:[]});
 test('200 distinct applications retain measurable declining marginal power without exceeding either budget',()=>{
  for(const [kind,reference,budget] of [['growth',15,180],['multiply',11,132]]){
@@ -37,6 +38,45 @@ test('execution records actual growth only; unused power remains committed',()=>
  const s=state(),p={},power=commitAgriculturalPower(s,p,'growth',11),spell={power};
  consumeGrowthPower(s,spell,2);assert.equal(numberOf(agriculturalPowerReport(s).growth.consumed),2);
  consumeGrowthPower(s,spell,100);assert.equal(compare(agriculturalPowerReport(s).growth.consumed,power.amount),0);
+});
+test('batched Growth preserves exact accounting at observation boundaries and entitlement caps',()=>{
+ const direct=state();
+ for(let i=0;i<29;i++){
+  const plant={id:`p${i}`};direct.plants.push(plant);
+  direct.spells.push({kind:'growth',power:commitAgriculturalPower(direct,plant,'growth',11)});
+ }
+ const batched=structuredClone(direct);
+ for(const seconds of [.007123456,.1,100]){
+  const step=growthPowerStep(batched);
+  for(let i=0;i<direct.spells.length;i++){
+   consumeGrowthPower(direct,direct.spells[i],seconds);
+   step.consume(batched.spells[i],seconds);
+   if(i===13){
+    step.flush();
+    assert.deepEqual(batched.agriculturalPower,direct.agriculturalPower);
+   }
+  }
+  step.flush();
+  assert.deepEqual(batched.agriculturalPower,direct.agriculturalPower);
+  assert.deepEqual(batched.spells,direct.spells);
+  validateAgriculturalPower(batched);
+ }
+});
+test('new task observers see flushed Growth consumption',()=>{
+ const s={...state(),tasks:[],nextId:1,sequence:1};
+ const plant={id:'crop'};s.plants.push(plant);
+ const spell={power:commitAgriculturalPower(s,plant,'growth',11)};
+ const step=growthPowerStep(s);
+ step.consume(spell,.1);
+ const observed=[];
+ const stop=observeTaskChanges(s,event=>observed.push({event,consumed:agriculturalPowerReport(s).growth.consumed}));
+ const enqueue=taskEnqueuer(s,()=>step.flush());
+ enqueue('center','water',plant.id);
+ enqueue('center','water',plant.id);
+ stop();
+ assert.equal(observed.length,1);
+ assert.equal(observed[0].event.type,'created');
+ assert.equal(compare(observed[0].consumed,spell.power.consumed),0);
 });
 test('fractional Growth does not grant a free watering checkpoint; legacy full-strength snapshots retain their old behavior',()=>{
  const p=createPlant('a','mijo',0,0,null),legacy=createPlant('b','mijo',0,0,null);waterPlant(p);waterPlant(legacy);

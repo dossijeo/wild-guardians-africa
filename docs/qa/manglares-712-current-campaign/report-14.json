@@ -1,0 +1,830 @@
+{
+  "biome": "manglares",
+  "days": 14,
+  "seed": 712,
+  "sourceSha256": "fe029930fc1d3a0dd5f90a799227ba8673d84dc5bdc655ad7af7a7a2a2e6b725",
+  "wasmSha256": "09616da85bf59c50c0cde7b743a4bdccb2eac06ec4eb0b79f79c44ef71d9caa9",
+  "arms": [
+    {
+      "defensePolicy": "topological",
+      "status": "completed",
+      "elapsedMs": 66823.4801,
+      "result": null,
+      "completedNights": 14,
+      "rows": [
+        {
+          "day": 1,
+          "living": 70,
+          "money": 368,
+          "destroyed": 0,
+          "planted": 112,
+          "decisionMs": 596.3475999999987,
+          "gameTickMs": 469.5809000000054
+        },
+        {
+          "day": 2,
+          "living": 64,
+          "money": 530,
+          "destroyed": 0,
+          "planted": 76,
+          "decisionMs": 841.4279999999944,
+          "gameTickMs": 639.7796000000044
+        },
+        {
+          "day": 3,
+          "living": 58,
+          "money": 794,
+          "destroyed": 0,
+          "planted": 88,
+          "decisionMs": 687.6786999999931,
+          "gameTickMs": 972.6069999999972
+        },
+        {
+          "day": 4,
+          "living": 74,
+          "money": 458,
+          "destroyed": 0,
+          "planted": 95,
+          "decisionMs": 1031.3875999999946,
+          "gameTickMs": 1227.2854999999836
+        },
+        {
+          "day": 5,
+          "living": 79,
+          "money": 589,
+          "destroyed": 0,
+          "planted": 78,
+          "decisionMs": 693.7179000000269,
+          "gameTickMs": 2099.684900000011
+        },
+        {
+          "day": 6,
+          "living": 100,
+          "money": 535,
+          "destroyed": 0,
+          "planted": 98,
+          "decisionMs": 930.5905999999923,
+          "gameTickMs": 2539.7225999999937
+        },
+        {
+          "day": 7,
+          "living": 104,
+          "money": 682,
+          "destroyed": 0,
+          "planted": 102,
+          "decisionMs": 1067.0046000000402,
+          "gameTickMs": 3176.5419999999976
+        },
+        {
+          "day": 8,
+          "living": 106,
+          "money": 798,
+          "destroyed": 0,
+          "planted": 96,
+          "decisionMs": 1103.294199999993,
+          "gameTickMs": 3777.8857000000244
+        },
+        {
+          "day": 9,
+          "living": 124,
+          "money": 750,
+          "destroyed": 0,
+          "planted": 102,
+          "decisionMs": 1241.4358000000175,
+          "gameTickMs": 3611.4518000000135
+        },
+        {
+          "day": 10,
+          "living": 120,
+          "money": 895,
+          "destroyed": 0,
+          "planted": 110,
+          "decisionMs": 1461.122500000034,
+          "gameTickMs": 4345.729100000004
+        },
+        {
+          "day": 11,
+          "living": 130,
+          "money": 910,
+          "destroyed": 0,
+          "planted": 106,
+          "decisionMs": 1386.2157999999326,
+          "gameTickMs": 3844.8408999999883
+        },
+        {
+          "day": 12,
+          "living": 124,
+          "money": 1078,
+          "destroyed": 0,
+          "planted": 119,
+          "decisionMs": 1962.2597000000314,
+          "gameTickMs": 4379.536600000072
+        },
+        {
+          "day": 13,
+          "living": 143,
+          "money": 915,
+          "destroyed": 0,
+          "planted": 115,
+          "decisionMs": 1949.8990999999442,
+          "gameTickMs": 4712.277600000074
+        },
+        {
+          "day": 14,
+          "living": 142,
+          "money": 981,
+          "destroyed": 0,
+          "planted": 123,
+          "decisionMs": 2220.6805999999706,
+          "gameTickMs": 5195.2551999999705
+        }
+      ],
+      "defense": {
+        "material": "zarzas",
+        "startDay": 2,
+        "capitalTarget": 0,
+        "waitForFunds": 0,
+        "history": [
+          {
+            "day": 2,
+            "time": 0,
+            "groupId": "crop:plant-106",
+            "kind": "general-cut",
+            "status": "ready",
+            "cost": 470,
+            "modules": 47,
+            "paidCost": 0,
+            "paidPieces": 0,
+            "reason": "saving-for-complete-enclosure"
+          },
+          {
+            "day": 2,
+            "time": 109.99999999999802,
+            "groupId": "crop:plant-288",
+            "kind": "general-cut",
+            "status": "ready",
+            "cost": 470,
+            "modules": 47,
+            "paidCost": 0,
+            "paidPieces": 0,
+            "reason": "saving-for-complete-enclosure"
+          },
+          {
+            "day": 2,
+            "time": 169.99999999999463,
+            "groupId": "crop:plant-333",
+            "kind": "general-cut",
+            "status": "ready",
+            "cost": 470,
+            "modules": 47,
+            "paidCost": 0,
+            "paidPieces": 0,
+            "reason": "saving-for-complete-enclosure"
+          },
+          {
+            "day": 4,
+            "time": 218.99999999999082,
+            "groupId": "crop:plant-1858",
+            "kind": "general-cut",
+            "status": "ready",
+            "cost": 430,
+            "modules": 43,
+            "paidCost": 430,
+            "paidPieces": 43,
+            "reason": null,
+            "ids": [
+              "structure-2332",
+              "structure-2333",
+              "structure-2334",
+              "structure-2335",
+              "structure-2336",
+              "structure-2337",
+              "structure-2338",
+              "structure-2339",
+              "structure-2340",
+              "structure-2341",
+              "structure-2342",
+              "structure-2343",
+              "structure-2344",
+              "structure-2345",
+              "structure-2346",
+              "structure-2347",
+              "structure-2348",
+              "structure-2349",
+              "structure-2350",
+              "structure-2351",
+              "structure-2352",
+              "structure-2353",
+              "structure-2354",
+              "structure-2355",
+              "structure-2356",
+              "structure-2357",
+              "structure-2358",
+              "structure-2359",
+              "structure-2360",
+              "structure-2361",
+              "structure-2362",
+              "structure-2363",
+              "structure-2364",
+              "structure-2365",
+              "structure-2366",
+              "structure-2367",
+              "structure-2368",
+              "structure-2369",
+              "structure-2370",
+              "structure-2371",
+              "structure-2372",
+              "structure-2373",
+              "structure-2374"
+            ],
+            "enclosureId": "enclosure:structure-2332"
+          }
+        ],
+        "repairRequests": 53,
+        "repairWaitForFunds": 0,
+        "repairHistory": [
+          {
+            "day": 7,
+            "time": 149.99999999999503,
+            "id": "structure-2343",
+            "kind": "wall",
+            "estimatedCost": 6,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 7,
+            "time": 149.99999999999503,
+            "id": "structure-2368",
+            "kind": "wall",
+            "estimatedCost": 4,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 7,
+            "time": 149.99999999999503,
+            "id": "structure-2370",
+            "kind": "wall",
+            "estimatedCost": 4,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 7,
+            "time": 149.99999999999503,
+            "id": "structure-2372",
+            "kind": "wall",
+            "estimatedCost": 4,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 8,
+            "time": 153.9999999999948,
+            "id": "structure-2370",
+            "kind": "wall",
+            "estimatedCost": 4,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 9,
+            "time": 139.99999999999574,
+            "id": "structure-2372",
+            "kind": "wall",
+            "estimatedCost": 8,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 9,
+            "time": 140.99999999999568,
+            "id": "structure-2366",
+            "kind": "wall",
+            "estimatedCost": 6,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 9,
+            "time": 140.99999999999568,
+            "id": "structure-2368",
+            "kind": "wall",
+            "estimatedCost": 6,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 9,
+            "time": 140.99999999999568,
+            "id": "structure-2341",
+            "kind": "wall",
+            "estimatedCost": 5,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 9,
+            "time": 140.99999999999568,
+            "id": "structure-2343",
+            "kind": "wall",
+            "estimatedCost": 4,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 9,
+            "time": 147.99999999999528,
+            "id": "structure-2367",
+            "kind": "wall",
+            "estimatedCost": 4,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 9,
+            "time": 147.99999999999528,
+            "id": "structure-2370",
+            "kind": "wall",
+            "estimatedCost": 4,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 10,
+            "time": 133.99999999999608,
+            "id": "structure-2343",
+            "kind": "wall",
+            "estimatedCost": 10,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 10,
+            "time": 133.99999999999608,
+            "id": "structure-2340",
+            "kind": "wall",
+            "estimatedCost": 6,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 10,
+            "time": 133.99999999999608,
+            "id": "structure-2342",
+            "kind": "wall",
+            "estimatedCost": 6,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 10,
+            "time": 137.99999999999585,
+            "id": "structure-2372",
+            "kind": "wall",
+            "estimatedCost": 6,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 10,
+            "time": 137.99999999999585,
+            "id": "structure-2366",
+            "kind": "wall",
+            "estimatedCost": 4,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 10,
+            "time": 138.9999999999958,
+            "id": "structure-2368",
+            "kind": "wall",
+            "estimatedCost": 4,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 10,
+            "time": 138.9999999999958,
+            "id": "structure-2369",
+            "kind": "wall",
+            "estimatedCost": 4,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 10,
+            "time": 138.9999999999958,
+            "id": "structure-2370",
+            "kind": "wall",
+            "estimatedCost": 4,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 11,
+            "time": 154.99999999999474,
+            "id": "structure-2364",
+            "kind": "wall",
+            "estimatedCost": 6,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 11,
+            "time": 154.99999999999474,
+            "id": "structure-2368",
+            "kind": "wall",
+            "estimatedCost": 4,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 11,
+            "time": 156.99999999999463,
+            "id": "structure-2369",
+            "kind": "wall",
+            "estimatedCost": 4,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 11,
+            "time": 163.99999999999423,
+            "id": "structure-2370",
+            "kind": "wall",
+            "estimatedCost": 4,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 11,
+            "time": 164.99999999999417,
+            "id": "structure-2366",
+            "kind": "wall",
+            "estimatedCost": 3,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 12,
+            "time": 99.99999999999814,
+            "id": "structure-2362",
+            "kind": "wall",
+            "estimatedCost": 10,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 12,
+            "time": 99.99999999999814,
+            "id": "structure-2343",
+            "kind": "wall",
+            "estimatedCost": 10,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 12,
+            "time": 99.99999999999814,
+            "id": "structure-2338",
+            "kind": "wall",
+            "estimatedCost": 4,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 12,
+            "time": 100.99999999999808,
+            "id": "structure-2342",
+            "kind": "wall",
+            "estimatedCost": 6,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 12,
+            "time": 102.99999999999797,
+            "id": "structure-2364",
+            "kind": "wall",
+            "estimatedCost": 6,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 12,
+            "time": 102.99999999999797,
+            "id": "structure-2366",
+            "kind": "wall",
+            "estimatedCost": 6,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 12,
+            "time": 102.99999999999797,
+            "id": "structure-2370",
+            "kind": "wall",
+            "estimatedCost": 6,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 12,
+            "time": 102.99999999999797,
+            "id": "structure-2340",
+            "kind": "wall",
+            "estimatedCost": 4,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 12,
+            "time": 102.99999999999797,
+            "id": "structure-2336",
+            "kind": "wall",
+            "estimatedCost": 3,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 12,
+            "time": 106.99999999999774,
+            "id": "structure-2341",
+            "kind": "wall",
+            "estimatedCost": 4,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 12,
+            "time": 107.99999999999768,
+            "id": "structure-2372",
+            "kind": "wall",
+            "estimatedCost": 4,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 13,
+            "time": 59.000000000000405,
+            "id": "structure-2341",
+            "kind": "wall",
+            "estimatedCost": 6,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 13,
+            "time": 61.00000000000043,
+            "id": "structure-2368",
+            "kind": "wall",
+            "estimatedCost": 5,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 13,
+            "time": 61.00000000000043,
+            "id": "structure-2343",
+            "kind": "wall",
+            "estimatedCost": 4,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 13,
+            "time": 63.00000000000046,
+            "id": "structure-2362",
+            "kind": "wall",
+            "estimatedCost": 4,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 13,
+            "time": 65.00000000000041,
+            "id": "structure-2364",
+            "kind": "wall",
+            "estimatedCost": 4,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 14,
+            "time": 98.9999999999982,
+            "id": "structure-2372",
+            "kind": "wall",
+            "estimatedCost": 10,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 14,
+            "time": 101.99999999999802,
+            "id": "structure-2369",
+            "kind": "wall",
+            "estimatedCost": 10,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 14,
+            "time": 101.99999999999802,
+            "id": "structure-2338",
+            "kind": "wall",
+            "estimatedCost": 8,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 14,
+            "time": 109.99999999999757,
+            "id": "structure-2340",
+            "kind": "wall",
+            "estimatedCost": 8,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 14,
+            "time": 109.99999999999757,
+            "id": "structure-2366",
+            "kind": "wall",
+            "estimatedCost": 8,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 14,
+            "time": 121.99999999999675,
+            "id": "structure-2364",
+            "kind": "wall",
+            "estimatedCost": 6,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 14,
+            "time": 121.99999999999675,
+            "id": "structure-2336",
+            "kind": "wall",
+            "estimatedCost": 4,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 14,
+            "time": 129.9999999999963,
+            "id": "structure-2370",
+            "kind": "wall",
+            "estimatedCost": 6,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 14,
+            "time": 134.99999999999602,
+            "id": "structure-2341",
+            "kind": "wall",
+            "estimatedCost": 4,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 14,
+            "time": 135.99999999999596,
+            "id": "structure-2343",
+            "kind": "wall",
+            "estimatedCost": 4,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 14,
+            "time": 135.99999999999596,
+            "id": "structure-2368",
+            "kind": "wall",
+            "estimatedCost": 4,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          },
+          {
+            "day": 14,
+            "time": 135.99999999999596,
+            "id": "structure-2367",
+            "kind": "wall",
+            "estimatedCost": 4,
+            "enclosureId": "enclosure:structure-2332",
+            "plannedGroupId": "crop:plant-1858"
+          }
+        ],
+        "conditionNotifications": 230,
+        "paidCost": 430,
+        "paidPieces": 43,
+        "scope": "Full certified native enclosure with event-driven paid repairs; unknown proposals never purchased"
+      },
+      "raids": [
+        {
+          "day": 1,
+          "cropsDestroyed": 0,
+          "wallHits": 0,
+          "structuresRuined": []
+        },
+        {
+          "day": 2,
+          "cropsDestroyed": 0,
+          "wallHits": 0,
+          "structuresRuined": []
+        },
+        {
+          "day": 3,
+          "cropsDestroyed": 0,
+          "wallHits": 0,
+          "structuresRuined": []
+        },
+        {
+          "day": 4,
+          "cropsDestroyed": 0,
+          "wallHits": 0,
+          "structuresRuined": []
+        },
+        {
+          "day": 5,
+          "cropsDestroyed": 0,
+          "wallHits": 0,
+          "structuresRuined": []
+        },
+        {
+          "day": 6,
+          "cropsDestroyed": 0,
+          "wallHits": 11,
+          "structuresRuined": []
+        },
+        {
+          "day": 7,
+          "cropsDestroyed": 0,
+          "wallHits": 4,
+          "structuresRuined": []
+        },
+        {
+          "day": 8,
+          "cropsDestroyed": 0,
+          "wallHits": 17,
+          "structuresRuined": []
+        },
+        {
+          "day": 9,
+          "cropsDestroyed": 0,
+          "wallHits": 25,
+          "structuresRuined": [
+            "structure-2343"
+          ]
+        },
+        {
+          "day": 10,
+          "cropsDestroyed": 0,
+          "wallHits": 11,
+          "structuresRuined": []
+        },
+        {
+          "day": 11,
+          "cropsDestroyed": 0,
+          "wallHits": 29,
+          "structuresRuined": [
+            "structure-2343",
+            "structure-2362"
+          ]
+        },
+        {
+          "day": 12,
+          "cropsDestroyed": 0,
+          "wallHits": 14,
+          "structuresRuined": []
+        },
+        {
+          "day": 13,
+          "cropsDestroyed": 0,
+          "wallHits": 32,
+          "structuresRuined": [
+            "structure-2369",
+            "structure-2372"
+          ]
+        },
+        {
+          "day": 14,
+          "cropsDestroyed": 0,
+          "wallHits": 27,
+          "structuresRuined": [
+            "structure-2362",
+            "structure-2366"
+          ]
+        }
+      ],
+      "raidEvidenceStatus": "verified",
+      "raidEvidenceIssues": []
+    }
+  ]
+}

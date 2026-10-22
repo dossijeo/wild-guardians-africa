@@ -76,10 +76,13 @@ struct WallPortalCache {
   uint32_t topology=0;uint64_t walls=0;double radius=0;bool built=false;
   std::vector<double> rows;
 };
+struct CropProtectionStatus {
+  uint32_t topology=0;float radius=0;int result=-1;bool valid=false;
+};
 struct CropGroup {
   uint64_t id;double value=0,x=0,z=0,minX=0,minZ=0,maxX=0,maxZ=0;
   std::vector<uint64_t> crops;
-  std::unordered_map<int,std::pair<uint32_t,int>> protection;
+  std::unordered_map<int,CropProtectionStatus> protection;
   std::unordered_map<int,AttackSiteCache> attackSites;
 };
 struct DamageKey {double ratio;uint64_t id;};
@@ -122,6 +125,9 @@ struct IntentState {
   std::vector<double> damagedResults;
   std::vector<CropGroup> cropGroups;
   std::vector<double> cropGroupRows,cropGroupMembers;
+  // A crop's physical enclosure verdict is independent of other crops.
+  // Group membership may change without invalidating unchanged crop probes.
+  std::unordered_map<uint64_t,std::array<CropProtectionStatus,6>> cropProtection;
   uint64_t cropRevision=0;bool cropGroupsDirty=true;
   std::unordered_map<int64_t,std::vector<uint64_t>> cropCells;
   std::unordered_map<uint64_t,PlantSearch> plantSearches;
@@ -232,6 +238,7 @@ void invalidateDependents(IntentState& s,const Change& change){
       const uint64_t taskId=active==s.activeIntents.end()?0:active->second.task;
       releaseIntent(s,change.id,PlanningState::Cancelled);
       s.activeIntents.erase(change.id);
+      s.planningCallsByActor.erase(change.id);
       const auto task=s.tasks.find(taskId);
       if(task!=s.tasks.end()&&task->second.assigned==change.id)task->second.assigned=0;
     }else{
@@ -413,43 +420,40 @@ void rebuildCropGroups(IntentState& s){
   });
   s.cropGroupsDirty=false;
 }
-int cropProtection(const IntentState& s,const CropGroup& group,float radius){
+int cropProtection(const Target& crop,float radius){
   bool open=false,unknown=false;
-  for(uint64_t id:group.crops){
-    const Target& crop=s.targets.at(id);
-    const int xs[2]={int(std::floor(crop.x)),int(std::ceil(crop.x))};
-    const int zs[2]={int(std::floor(crop.z)),int(std::ceil(crop.z))};
-    bool found=false;
-    for(int x:xs)for(int z:zs){
-      if(!spatial_local_clear(float(crop.x),float(crop.z),float(x),float(z)))continue;
+  const int xs[2]={int(std::floor(crop.x)),int(std::ceil(crop.x))};
+  const int zs[2]={int(std::floor(crop.z)),int(std::ceil(crop.z))};
+  bool found=false;
+  for(int x:xs)for(int z:zs){
+    if(!spatial_local_clear(float(crop.x),float(crop.z),float(x),float(z)))continue;
+    const int region=lazy_weak_region(x,z);
+    if(region==-1){unknown=true;continue;}
+    if(region<0)continue;
+    found=true;
+    if(lazy_enclosure(x,z)!=1)open=true;
+  }
+  if(!found){
+    // A crop beside a center may have no clear floor/ceil connector, while
+    // the animal can still attack it from a nearby interaction site. Use
+    // the same twelve local sites as attackSitesFor before calling the
+    // whole group unknown. This work runs only for unresolved crops when
+    // the selected profile's topology changes, never per animal or tick.
+    constexpr int directions=12;
+    for(int sample=0;sample<directions;sample++){
+      const double angle=2*pi*sample/directions;
+      const float px=float(crop.x+std::sin(angle)*(.6+radius));
+      const float pz=float(crop.z+std::cos(angle)*(.6+radius));
+      const int x=int(std::round(px)),z=int(std::round(pz));
+      if(!spatial_local_clear(px,pz,float(x),float(z)))continue;
       const int region=lazy_weak_region(x,z);
       if(region==-1){unknown=true;continue;}
       if(region<0)continue;
       found=true;
       if(lazy_enclosure(x,z)!=1)open=true;
     }
-    if(!found){
-      // A crop beside a center may have no clear floor/ceil connector, while
-      // the animal can still attack it from a nearby interaction site. Use
-      // the same twelve local sites as attackSitesFor before calling the
-      // whole group unknown. This work runs only for unresolved crops when
-      // the selected profile's topology changes, never per animal or tick.
-      constexpr int directions=12;
-      for(int sample=0;sample<directions;sample++){
-        const double angle=2*pi*sample/directions;
-        const float px=float(crop.x+std::sin(angle)*(.6+radius));
-        const float pz=float(crop.z+std::cos(angle)*(.6+radius));
-        const int x=int(std::round(px)),z=int(std::round(pz));
-        if(!spatial_local_clear(px,pz,float(x),float(z)))continue;
-        const int region=lazy_weak_region(x,z);
-        if(region==-1){unknown=true;continue;}
-        if(region<0)continue;
-        found=true;
-        if(lazy_enclosure(x,z)!=1)open=true;
-      }
-    }
-    if(!found)unknown=true;
   }
+  if(!found)unknown=true;
   return open?0:unknown?-1:1;
 }
 // The crop-group index is already maintained for spatial advice. Attach one
@@ -615,6 +619,7 @@ void nav_intent_reset(){
   s.workers.clear();s.targets.clear();s.tasks.clear();
   s.damagedWalls.clear();s.damagedCenters.clear();s.damagedResults.clear();
   s.cropGroups.clear();s.cropGroupRows.clear();s.cropGroupMembers.clear();
+  s.cropProtection.clear();
   s.cropRevision=0;s.cropGroupsDirty=true;
   s.cropCells.clear();s.plantSearches.clear();s.plantLeases.clear();
   s.plantResult.fill(0);s.nextPlantLease=1;s.centerRevision=0;
@@ -797,7 +802,21 @@ int nav_intent_apply_changes(double sequence,int count){
   }
   bool planningChange=false,damageChange=false,cropChange=false,cropRemoved=false,
     centerChange=false,wallChange=false;
+  std::unordered_set<uint64_t> invalidPlantCenters;
   for(const Change& change:parsed){
+    const auto prior=s.targets.find(change.id);
+    if(change.kind==2&&prior!=s.targets.end()&&prior->second.kind==4&&
+       (!change.op||change.center!=4||prior->second.x!=change.x||
+        prior->second.z!=change.z||prior->second.yaw!=change.created||
+        prior->second.shape!=change.rank||prior->second.active!=change.flag))
+      invalidPlantCenters.insert(change.id);
+    if(change.kind==6&&prior!=s.targets.end()&&prior->second.kind==4&&
+       (!change.op||!prior->second.serviceKnown||
+        prior->second.serviceX!=change.x||prior->second.serviceZ!=change.z))
+      invalidPlantCenters.insert(change.id);
+    if(change.kind==4&&prior!=s.targets.end()&&prior->second.kind==4&&
+       (!change.op||change.assigned!=0))
+      invalidPlantCenters.insert(change.id);
     if(change.kind==2||change.kind==4)damageChange=true;
     if(change.kind==2&&
        (change.op&&change.center==3||
@@ -829,6 +848,7 @@ int nav_intent_apply_changes(double sequence,int count){
   }
   if(wallChange)s.wallRevision++;
   for(const Change& change:parsed){
+    if(change.kind==2||change.kind==5)s.cropProtection.erase(change.id);
     invalidateDependents(s,change);
     if(!change.op){
       if(change.kind==1)s.workers.erase(change.id);
@@ -891,6 +911,12 @@ int nav_intent_apply_changes(double sequence,int count){
   s.sequence++;
   if(damageChange)s.damageRevision++;
   if(cropChange){s.cropRevision++;s.cropGroupsDirty=true;}
+  if(!invalidPlantCenters.empty()){
+    for(auto it=s.plantLeases.begin();it!=s.plantLeases.end();)
+      if(invalidPlantCenters.count(it->second.center))it=s.plantLeases.erase(it);
+      else ++it;
+    centerChange=true;
+  }
   if(cropRemoved||centerChange){s.plantSearches.clear();s.centerRevision++;}
   if(planningChange){s.entityRevision++;clearProposal(s);}
   return 1;
@@ -963,18 +989,29 @@ int nav_intent_crop_groups(float radius){
   s.cropGroupRows.clear();s.cropGroupMembers.clear();
   s.cropGroupRows.reserve(s.cropGroups.size()*12);
   const int profile=lazy_selected_context();
+  if(profile<0||profile>=6)return -1;
   const uint32_t revision=lazy_route_revision();
   for(CropGroup& group:s.cropGroups){
     auto status=group.protection.find(profile);
-    if(status==group.protection.end()||status->second.first!=revision){
-      const int result=cropProtection(s,group,radius);
-      status=group.protection.insert_or_assign(profile,std::make_pair(revision,result)).first;
+    if(status==group.protection.end()||!status->second.valid||
+       status->second.topology!=revision||status->second.radius!=radius){
+      bool open=false,unknown=false;
+      for(uint64_t id:group.crops){
+        CropProtectionStatus& crop=s.cropProtection[id][profile];
+        if(!crop.valid||crop.topology!=revision||crop.radius!=radius){
+          crop={revision,radius,cropProtection(s.targets.at(id),radius),true};
+        }
+        open|=crop.result==0;unknown|=crop.result<0;
+      }
+      const int result=open?0:unknown?-1:1;
+      status=group.protection.insert_or_assign(profile,
+        CropProtectionStatus{revision,radius,result,true}).first;
     }
     const size_t offset=s.cropGroupMembers.size();
     for(uint64_t id:group.crops)s.cropGroupMembers.push_back(double(id));
     s.cropGroupRows.insert(s.cropGroupRows.end(),{double(group.id),group.value,
       group.x,group.z,group.minX,group.minZ,group.maxX,group.maxZ,
-      double(status->second.second),double(offset),double(group.crops.size()),
+      double(status->second.result),double(offset),double(group.crops.size()),
       double(s.cropRevision)});
   }
   return int(s.cropGroups.size());
@@ -994,7 +1031,8 @@ int nav_intent_find_planting_site(double centerId,double minX,double minZ,
   const uint64_t id=uint64_t(centerId);
   const auto found=s.targets.find(id);
   if(found==s.targets.end()||found->second.kind!=4||
-     !found->second.active||!found->second.serviceKnown)return -2;
+     !found->second.active||!found->second.serviceKnown||
+     !found->second.damageKnown||found->second.status!=0)return -2;
   const Target& center=found->second;
   const uint32_t revision=lazy_route_revision();
   for(auto it=s.plantLeases.begin();it!=s.plantLeases.end();)
@@ -1215,6 +1253,23 @@ double nav_intent_actor_planning_calls(double actorId){
   if(!integer(actorId))return 0;
   const auto found=state().planningCallsByActor.find(uint64_t(actorId));
   return found==state().planningCallsByActor.end()?0:double(found->second);
+}
+int nav_intent_retire_actor(double actorId){
+  if(!integer(actorId))return 0;
+  IntentState& s=state();const uint64_t actor=uint64_t(actorId);
+  const auto active=s.activeIntents.find(actor);
+  if(active!=s.activeIntents.end()){
+    // The caller has already removed this actor from the confirmed game.
+    // Reclaim its route and inverse dependencies without publishing a new
+    // intention change for an actor that no longer exists.
+    const size_t changes=s.intentChanges.size();
+    const uint64_t invalidations=s.invalidations;
+    releaseIntent(s,actor,PlanningState::Cancelled);
+    s.intentChanges.resize(changes);s.invalidations=invalidations;
+    s.activeIntents.erase(actor);
+  }
+  s.planningCallsByActor.erase(actor);
+  return 1;
 }
 int nav_intent_actor(double actorId){
   IntentState& s=state();s.intentResult.fill(0);

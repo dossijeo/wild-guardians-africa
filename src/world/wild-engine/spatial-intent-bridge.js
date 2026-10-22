@@ -110,7 +110,8 @@ export function createSpatialIntentBridge(session){
     'nav_intent_attack_finished',
     'nav_intent_attack_cancel',
     'nav_intent_action_active','nav_intent_finish',
-    'nav_intent_actor_planning_calls','nav_intent_routes_ptr',
+    'nav_intent_actor_planning_calls','nav_intent_retire_actor',
+    'nav_intent_routes_ptr',
     'nav_intent_route_point_count'])
     if(typeof wasm?.[name]!=='function')throw TypeError(`Missing ${name}`);
   let sequence=0,initialized=false;
@@ -361,7 +362,7 @@ export function createSpatialIntentBridge(session){
     if(!Number.isInteger(budget)||budget<1||budget>4096)
       throw RangeError('Plant search budget must be 1–4096');
     const center=structuresById.get(numericId(centerId));
-    if(center?.kind!=='center'||center.status==='ruined')
+    if(center?.kind!=='center'||center.status!=='intact')
       throw TypeError(`Unknown operational center: ${centerId}`);
     session.actorSectorRevision({worker:true});
     const resident=[...session.stream.loaded().keys()].map(key=>key.split(',').map(Number))
@@ -783,6 +784,7 @@ export function createSpatialIntentBridge(session){
     markAttackActive:actorId=>wasm.nav_intent_attack_action_active(numericId(actorId))===1,
     finishAttackIntent:actorId=>wasm.nav_intent_attack_finished(numericId(actorId)),
     cancelAttackIntent:actorId=>wasm.nav_intent_attack_cancel(numericId(actorId))===1,
+    retireActor:actorId=>wasm.nav_intent_retire_actor(numericId(actorId))===1,
     reconcileTopology:()=>wasm.nav_intent_reconcile_topology(),
     replanPendingRoutes:()=>wasm.nav_intent_replan_pending_routes(),
     markActionActive:actorId=>wasm.nav_intent_action_active(numericId(actorId))===1,
@@ -1010,7 +1012,12 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
       throw error;
     }
     for(const event of events)if(event.type==='worker'){
-      if(event.remove){eligible.delete(numericId(event.id));projectedPositions.delete(numericId(event.id));}
+      if(event.remove){
+        const id=numericId(event.id);
+        eligible.delete(id);projectedPositions.delete(id);
+        requests.delete(id);workerPlanCounts.delete(id);workerPeakPerMinute.delete(id);
+        homeRoutes.delete(id);homeAttempts.delete(id);
+      }
       else setWorker(event.entity,state);
     }
     const planningChanged=events.some(event=>event.type!=='structureDamage');
@@ -1580,6 +1587,15 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
       const result=bridge.cancelAttackIntent(actorId);
       if(result)pendingNativeChanges=true;
       return result;
+    },
+    retireRaidActors:animals=>{
+      for(const animal of animals){
+        const id=numericId(animal.id);
+        bridge.retireActor(animal.id);
+        animalRequests.delete(id);animalPlanCounts.delete(id);
+        animalPeakPerMinute.delete(id);pendingAttackRoutes.delete(id);
+        tacticalReconsiderations.delete(id);retreatRoutes.delete(id);
+      }
     },
     attackRoutePending:actorId=>pendingAttackRoutes.has(numericId(actorId)),
     retryPendingAttackRoute:(state,animal,navVersion)=>{

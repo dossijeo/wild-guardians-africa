@@ -1,4 +1,4 @@
-import {commitAgriculturalPower,consumeGrowthPower,settleMultiplyPower} from './agricultural-power.js';
+import {commitAgriculturalPower,growthPowerStep,settleMultiplyPower} from './agricultural-power.js';
 import {activeRaidEntryPlan} from '../world/raid-entry-data.js';
 import {animalExitConnector} from './animal-exit-connectors.js';
 import {animalNativeExitBridgePending} from './animal-native-exit-bridge.js';
@@ -13,7 +13,7 @@ import {gatePortalPoints} from '../world/gate-passages.js';
 import {wallCollisionBounds} from '../world/wall-collision-frame.js';
 import {containsPoint,footprintDistance} from '../world/footprints.js';
 import {centerCulture,centerFootprint,centerServicePoint,centerDeliveryPoint} from '../world/centers.js';
-import {actorBlockers,actorSegmentClear,prepareActorMotion} from './actor-motion.js';
+import {actorBlockers,actorSegmentClear,prepareActorMotion,createWorkerBodyIndex} from './actor-motion.js';
 import {animalRouteClearance} from './animal-route-clearance.js';
 import {animalSlopeRecoveryPath} from './animal-slope-recovery.js';
 import {BALANCE as B} from './balance.js';
@@ -25,6 +25,7 @@ import {createPlant,advancePlant,waterPlant,isMature,contiguousGroup} from './cr
 import {activeCrops,cropBecameInactive} from './active-crops.js';
 import {activeCrates,crateBecameInactive} from './active-crates.js';
 import {retireFarmHistory} from './retire-farm-history.js';
+import {harvestMicroLoss} from '../microevents/economy.js';
 import {workerEntityLookup} from './worker-entity-lookup.js';
 import {enqueue,taskEnqueuer,reserveTasks,releaseTask,replaceTasks,
   notifyWorkerPlanningChange,notifyWorkerPlanningRoster,taskPlanningRevision} from './tasks.js';
@@ -458,6 +459,13 @@ export function quoteWallChain(s,material,points,nav,options={}) {
   newPieces.forEach((piece,i)=>Object.assign(piece,{id:`structure-${s.nextId+i}`,created:s.sequence+i}));
   const gatePlan=planNewWallGates(s,newPieces,nav,blockedPieces,cropOverlap);
   if(gatePlan.unhostedWorker||gatePlan.unhosted&&!gatePlan.length){
+    // Enclosure planning needs an atomic closure. A missing worker gate
+    // cannot be repaired by recursively trimming one wall at a time, and
+    // the resulting partial quote would be rejected by its physical proof.
+    if(options.requireComplete){
+      const error=new Error('A complete wall quote would isolate workers');
+      error.name='IncompleteWallQuote';throw error;
+    }
     // The closing module remains unbuilt; the player can later edit the
     // stroke without trapping a worker in a room that has no usable door.
     return quoteWallChain(s,material,points,nav,{...options,
@@ -905,8 +913,9 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
   const probe=next&&distanceToNext>1e-8?{
     x:w.x+(next.x-w.x)*Math.min(.5,distanceToNext)/distanceToNext,
     z:w.z+(next.z-w.z)*Math.min(.5,distanceToNext)/distanceToNext}:null;
-  if(((w.dynamicStallSeconds??0)>=3||
-    s.elapsed-w.mobileProgressAt>=12)&&
+  const stationarySeconds=w.dynamicStallSeconds??0,
+    destinationStallSeconds=s.elapsed-w.mobileProgressAt;
+  if((stationarySeconds>=3||destinationStallSeconds>=12)&&
     (w.mobileRecoveryAttempts??0)<2&&probe){
     const blockers=actorBlockers(s,w,worker);
     const staticClear=worker?nav.workerMotionClear?.(w,probe,w.radius??.28):
@@ -921,6 +930,12 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
       w.mobileRecoveryAttempts=(w.mobileRecoveryAttempts??0)+1;
       w.mobileProgressDistance=dist(w,destination);
       w.mobileProgressAt=s.elapsed;
+      nav.motionObserver?.({kind:'mobileCollisionRecovery',actorId:w.id,
+        status:w.status,elapsed:s.elapsed,
+        trigger:stationarySeconds>=3?'stationary':'destination-stall',
+        stationarySeconds,destinationStallSeconds,
+        blockingIds:blockers.filter(body=>!actorSegmentClear(w,probe,w,[body]))
+          .map(body=>body.id)});
       emit(s,'ActorMobileCollisionRecovery',{actorId:w.id,
         x:w.x,z:w.z,elapsed:s.elapsed,duration:3});
     }
@@ -1091,8 +1106,27 @@ export function planRepairAccess(s,target,nav){
   const repaired={...target,status:'intact',hp:target.maxHp};
   const byId=new Map([[target.id,repaired]]);
   const structures=()=>s.structures.map(piece=>byId.get(piece.id)??piece);
-  const checks=()=>nav.withWallStatePreview(structures(),({route})=>
-    connected.map(([from,to])=>route(from,to).status));
+  const groups=new Map();
+  for(let i=0;i<connected.length;i++){
+    const [from,to]=connected[i];
+    if(!groups.has(to))groups.set(to,{targets:[],indices:[]});
+    const group=groups.get(to);
+    group.targets.push(from);group.indices.push(i);
+  }
+  const checks=()=>nav.withWallStatePreview(structures(),({route,reachBatch})=>{
+    if(!reachBatch)return connected.map(([from,to])=>route(from,to).status);
+    const statuses=new Array(connected.length);
+    for(const [entry,{targets,indices}] of groups){
+      // Reverse reachability asks every worker/center to reach its village.
+      // The overlay graph and hypothetical wall state are shared by the batch.
+      for(let offset=0;offset<targets.length;offset+=256){
+        const batch=reachBatch(entry,targets.slice(offset,offset+256),true);
+        for(let i=0;i<Math.min(256,targets.length-offset);i++)
+          statuses[indices[offset+i]]=batch?.[i]??'unknown';
+      }
+    }
+    return statuses;
+  });
   let statuses=checks();
   if(statuses.every(status=>status==='found'))return {status:'safe',updates:[]};
   const living=activeCrops(s.plants),points=routes.flatMap(route=>
@@ -1144,6 +1178,7 @@ function completeTask(s,w,t,target,nav) {
       if(profile(w).male)value=multiply(value,6,5);
       if(!target.multiplyPower&&(target.multiplyHarvest||spellAt(s,'multiply',target)))value=multiply(value,2);
       if(target.harvestBonus)value=multiply(value,100+target.harvestBonus,100);
+      if(s.microevents?.pendingLosses[target.id])value=harvestMicroLoss(s,target,value,detail=>emit(s,'MicroeventHarvestLossApplied',detail));
       target.alive=false;target.harvestRequested=false;target.multiplyHarvest=false;
       cropBecameInactive(s.plants);
       const crate={id:`crate-${s.nextId++}`,sourcePlantId:target.id,species:target.species,x:w.x,z:w.z,value,multiplyPower:target.multiplyPower??null,profile:w.profile,carrierId:w.id,delivered:false,centerId:w.centerId};delete target.multiplyPower;s.crates.push(crate);w.crateId=crate.id;w.status='carrying';w.path=null;emit(s,'CropPicked',{workerId:w.id,targetId:target.id,crateId:crate.id});
@@ -1299,12 +1334,34 @@ function reconcileNativeIntents(s,nav){
     nav.intentTaskPlanner.reconcileWorkerRoutes(s,{navVersion:nav.version});
   }
 }
+// A worker's clearance disc has entered the village doorway once its center
+// is within one body radius of the entry. Requiring the exact point can trap
+// the first person in a queue: the final centimeter would overlap the person
+// behind them, even though the terrain and doorway are open.
+export function workerAtVillageEntry(worker,entry,nav){
+  const radius=worker.radius??.28;
+  if(dist(worker,entry)>radius+1e-9)return false;
+  return nav.workerMotionClear?.(worker,entry,radius)??
+    nav.segmentClear?.(worker,entry,radius,null,true)??false;
+}
 function updateWorkers(s,dt,nav) {
   reconcileNativeIntents(s,nav);
   // Task removals/rebuilds replace the array; enqueues change its length.
   // Unchanged queues can reuse their index while reservation fields stay live.
   const findPlant=workerEntityLookup(()=>s.plants,{reuse:true,appendOnly:true}),findCrate=workerEntityLookup(()=>s.crates,{reuse:true,appendOnly:true}),findTask=workerEntityLookup(()=>s.tasks,{reuse:true});
   let idlePlants;
+  let idleBodies;
+  let walkingCandidates;
+  // One ambient walker is cheaper with a scan, even in a large paid crew.
+  // Count only when an idle call actually occurs; the threshold avoids bucket
+  // construction when there are too few queries to amortize it.
+  const bodyIndex=()=>{
+    if(s.workers.length<96)return null;
+    walkingCandidates??=s.workers.reduce((n,w)=>n+Number(w.idleState?.mode==='walk'&&
+      (w.status==='idle'||w.status==='waiting')),0);
+    return walkingCandidates>=Math.max(48,Math.ceil(s.workers.length/4))?
+      (idleBodies??=createWorkerBodyIndex(s.workers)):null;
+  };
   const newArrivals=[];
   const nativeTasks=!!nav.intentTaskPlanner;
   if(!s.raid&&s.time<300)for(const w of s.workers){
@@ -1327,6 +1384,14 @@ function updateWorkers(s,dt,nav) {
       const p=profile(w),center=s.structures.find(c=>c.id===w.centerId),village=s.villages.find(v=>v.id===w.villageId);
       if(['fleeing','returning','incapacitated'].includes(w.status)) {
         const home={...(village.entry??village),id:`home-${village.id}`};
+        if(nav.intentTaskPlanner&&workerAtVillageEntry(w,home,nav)){
+          nav.intentTaskPlanner?.finishHomeIntent?.(w.id);
+          // Complete the remaining sub-radius step as part of entering the
+          // building. The worker ceases to be a dynamic obstacle immediately.
+          w.x=home.x;w.z=home.z;w.path=[];w.status='home';
+          notifyWorkerPlanningChange(s,w);
+          continue;
+        }
         const nativeHome=nav.intentTaskPlanner?.planHomeRoute?.(s,w,home,nav.version);
         if(nativeHome?.status==='found'){
           w.path=nativeHome.path;w.destinationId=home.id;
@@ -1344,12 +1409,27 @@ function updateWorkers(s,dt,nav) {
         continue;
       }
       if(w.status==='home')continue;
-      if(w.status==='waiting'&&!center&&!s.raid&&!contractExpired(w,s)&&s.time<p.end){updateIdle(w,{...(village.entry??village),id:village.id},dt,nav,s.seed,s.structures);continue;}
+      if(w.status==='waiting'&&!center&&!s.raid&&!contractExpired(w,s)&&s.time<p.end){updateIdle(w,{...(village.entry??village),id:village.id},dt,nav,s.seed,s.structures,s,bodyIndex);continue;}
       if(w.status!=='idle')cancelIdle(w);
       if(!center||!operational(center)) {if(center&&!contractExpired(w,s)&&s.time<p.end)w.displacedDay??=s.day;cancelIdle(w);releaseTask(s,w);if(w.crateId)dropCarriedCrate(s,w);w.status='returning';w.path=null;notifyWorkerPlanningChange(s,w);continue;}
       const ended=contractExpired(w,s)||s.time>=p.end;
       if(ended&&!['acting','carrying'].includes(w.status)) {cancelIdle(w);releaseTask(s,w);w.status='returning';w.path=null;notifyWorkerPlanningChange(s,w);continue;}
-      if(w.status==='arriving') {if(walkTo(s,w,{...center,...centerServicePoint(center,s,.8),id:`arrival-${center.id}`},dt,nav,{motion:{urgent:!w.raidReturn&&(urgency?urgency.urgent(w):urgentWork(s,w))}})){w.status='idle';w.raidReturn=false;notifyWorkerPlanningChange(s,w);}continue;}
+      if(w.status==='arriving') {
+        const arrival={...center,...centerServicePoint(center,s,.8),id:`arrival-${center.id}`};
+        const reached=walkTo(s,w,arrival,dt,nav,
+          {motion:{urgent:!w.raidReturn&&(urgency?urgency.urgent(w):urgentWork(s,w))}});
+        // Several paid workers share one authored center entrance. Reaching
+        // its clear approach zone is sufficient; insisting on the occupied
+        // exact point can strand later arrivals behind an idle coworker.
+        const nearEntrance=w.path?.length>0&&w.destinationId===arrival.id&&
+          w.pathVersion===nav.version&&dist(w,arrival)<=2&&
+          (nav.segmentClear?.(w,arrival,w.radius??.28,null,true)??false);
+        if(reached||nearEntrance){
+          w.path=null;w.destinationId=null;w.status='idle';w.raidReturn=false;
+          notifyWorkerPlanningChange(s,w);
+        }
+        continue;
+      }
       if(w.status==='carrying') {
         const crate=findCrate(w.crateId);
         if(!crate){w.crateId=null;w.status='idle';notifyWorkerPlanningChange(s,w);continue;}
@@ -1370,7 +1450,7 @@ function updateWorkers(s,dt,nav) {
       if(!t) {
         if(w.status!=='idle'){w.status='idle';notifyWorkerPlanningChange(s,w);}
         if(s.tasks.some(task=>task.centerId===w.centerId&&!task.workerId))cancelIdle(w);
-        else {idlePlants??=activeCrops(s.plants);updateIdle(w,idleFarmAnchor(s,w,center,idlePlants),dt,nav,s.seed,s.structures);}
+        else {idlePlants??=activeCrops(s.plants);updateIdle(w,idleFarmAnchor(s,w,center,idlePlants),dt,nav,s.seed,s.structures,s,bodyIndex);}
         continue;
       }
       const target=findPlant(t.targetId)??findCrate(t.targetId)??s.structures.find(e=>e.id===t.targetId);
@@ -1424,7 +1504,7 @@ function updateWorkers(s,dt,nav) {
         if(t.kind==='repair'){completeTask(s,w,t,target,nav);urgency?.invalidate();continue;}
         w.actionRemaining-=dt;if(w.actionRemaining<=0)completeTask(s,w,t,target,nav);
       }
-    } finally {urgency?.changed(w);}
+    } finally {urgency?.changed(w);idleBodies?.update(w);}
   }
   reserveAvailableTasks(s,nav);
 }
@@ -1506,15 +1586,17 @@ export function tick(s,seconds,nav) {
       structure.collapseRemaining-=step;if(structure.collapseRemaining<=1e-9){structure.status='ruined';structure.hp=0;nav.setState(s);emit(s,'StructureRuined',{targetId:structure.id});}
     }
     if(previousTime<300) {
-      const enqueueCrop=taskEnqueuer(s);
-      for(const p of activeCrops(s.plants)) {
+      const growthStep=s.spells.some(spell=>spell.kind==='growth'&&spell.remaining>0)?growthPowerStep(s):null;
+      const flushGrowth=()=>growthStep?.flush();
+      const enqueueCrop=taskEnqueuer(s,flushGrowth);
+      try{for(const p of activeCrops(s.plants)) {
         if(!p.alive)continue;
         const before=isMature(p),growthSpell=spellAt(s,'growth',p),extra=advancePlant(p,step,growthSpell?.power?growthSpell.power.intensity:!!growthSpell);
-        if(growthSpell&&extra>0){growthSpell.growthSecondsAdded=(growthSpell.growthSecondsAdded??0)+extra;consumeGrowthPower(s,growthSpell,extra);}
-        if(!before&&isMature(p)){emit(s,'CropMatured',{targetId:p.id});if(s.tutorial.step==='observe')s.tutorial.step='harvest';}
-        if(!p.harvestRequested)queueMatureHarvest(s,p,enqueueCrop);
+        if(growthSpell&&extra>0){growthSpell.growthSecondsAdded=(growthSpell.growthSecondsAdded??0)+extra;growthStep?.consume(growthSpell,extra);}
+        if(!before&&isMature(p)){flushGrowth();emit(s,'CropMatured',{targetId:p.id});if(s.tutorial.step==='observe')s.tutorial.step='harvest';}
+        if(!p.harvestRequested&&isMature(p)){flushGrowth();queueMatureHarvest(s,p,enqueueCrop);}
         if(p.alive&&p.water.some(w=>w.status==='due')&&p.centerId&&s.structures.some(c=>c.id===p.centerId&&operational(c)))enqueueCrop(p.centerId,p.water[0].status==='due'?'initial':'water',p.id);
-      }
+      }}finally{flushGrowth();}
     }
     const shieldsBefore=s.spells.filter(a=>a.kind==='shield').length;
     for(const spell of s.spells)spell.remaining=Math.max(0,spell.remaining-step);
@@ -1532,11 +1614,11 @@ export function tick(s,seconds,nav) {
     if(s.time>=600 && !s.raid && !s.result && (!s.nightPlan?.group?.length||s.nightPlan.done))closeNight(s);
   }
 }
-export function advanceReal(s,seconds,nav) {
+export function advanceReal(s,seconds,nav,{nightFastForward=true}={}) {
   let left=seconds;
   while(left>1e-9 && !s.pauses.length&&!s.result) {
       prepareClockEvents(s,nav);
-    const speed=s.time>=300&&!s.raid?5:1;
+    const speed=nightFastForward&&s.time>=300&&!s.raid?5:1;
     const untilBoundary=Math.min(...clockBoundaries(s).filter(t=>t>s.time+1e-9).map(t=>(t-s.time)/speed));
     const real=Math.min(left,.02,untilBoundary);left-=real;
     tick(s,real*speed,nav);

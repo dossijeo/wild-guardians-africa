@@ -551,8 +551,13 @@ test('event-fed native intent bridge replays live state and only changes on expl
  const game=deserialize(gunzipSync(readFileSync(new URL(
   './fixtures/desierto983-d15-partial-state.json.gz',import.meta.url))).toString());
  const worker=game.workers.find(w=>w.id==='worker-9263');
+ // This fixture checks one committed native route. Freeze unrelated workers
+ // out of the physical movement scene so stationary snapshot bodies do not
+ // indefinitely occupy its service approach during the movement replay.
+ game.workers=[worker];
  worker.status='idle';worker.taskId=null;worker.contractDay=game.day;
  game.workers.push({...worker,id:'worker-1000001',centerId:null,
+  x:game.villages[0].entry.x,z:game.villages[0].entry.z,
   status:'waiting',taskId:null});
  const plant=game.plants.filter(p=>p.alive&&p.centerId===worker.centerId)
   .sort((a,b)=>Math.hypot(a.x-worker.x,a.z-worker.z)-
@@ -840,6 +845,38 @@ test('event-fed native intent bridge replays live state and only changes on expl
     'a newly assigned task has a distinct native intention');
   }
   stopRestoredTasks();stopRestoredWorld();
+ }finally{session.dispose();}
+});
+
+test('removing a worker releases native and JavaScript per-actor planning records',
+ {skip:!module&&'Build and select the experimental WASM first'},()=>{
+ const game=deserialize(gunzipSync(readFileSync(new URL(
+  './fixtures/desierto983-d15-partial-state.json.gz',import.meta.url))).toString());
+ const worker=game.workers.find(item=>item.id==='worker-9263');
+ worker.status='idle';worker.taskId=null;worker.contractDay=game.day;
+ for(const other of game.workers)if(other!==worker)other.status='acting';
+ const plant=game.plants.find(item=>item.alive&&item.centerId===worker.centerId);
+ game.tasks=[{id:'task-999999',created:1,centerId:worker.centerId,
+  kind:'water',targetId:plant.id,workerId:null,blocked:false}];
+ const loaded=new Map(),session=createSpatialGameSession(module,game,{
+  loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+ try{
+  const village=game.villages[0],cx=Math.floor((village.x+24)/48),
+   cz=Math.floor((village.z+24)/48);
+  for(let z=cz-2;z<=cz+2;z++)for(let x=cx-2;x<=cx+2;x++){
+   if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+   loaded.set(`${x},${z}`,session.core.chunkPayload());
+  }
+  const planner=createEventDrivenTaskPlanner(session),wasm=session.core.wasm;
+  planner.resetFromState(game);
+  planner.planIfNeeded(0);
+  assert(wasm.nav_intent_actor_planning_calls(9263)>0);
+  assert(planner.metrics(0).workerPlansByActor[9263]>0);
+  game.workers=game.workers.filter(item=>item!==worker);
+  planner.applyEvents(game,[{type:'worker',remove:true,id:worker.id}]);
+  assert.equal(wasm.nav_intent_actor_planning_calls(9263),0);
+  assert.equal(planner.metrics(0).workerPlansByActor[9263],undefined);
+  assert.equal(planner.metrics(0).perWorkerPerMinute[9263],undefined);
  }finally{session.dispose();}
 });
 

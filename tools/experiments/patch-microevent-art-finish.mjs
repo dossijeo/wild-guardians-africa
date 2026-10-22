@@ -1,0 +1,2 @@
+import sharp from 'sharp';import {execFileSync} from 'node:child_process';
+const fresh=await sharp('assets-source/microevents/lowpoly-atlas.png').ensureAlpha().raw().toBuffer();const base=await sharp(execFileSync('git',['show','39a50ca2b:public/content/microevents/atlas.webp'])).ensureAlpha().raw().toBuffer();for(const cell of [32,34,48])for(let y=0;y<64;y++){const k=((Math.floor(cell/8)*64+y)*512+(cell%8)*64)*4;fresh.copy(base,k,k,k+64*4);}await sharp(base,{raw:{width:512,height:512,channels:4}}).png().toFile('assets-source/microevents/lowpoly-atlas.png');

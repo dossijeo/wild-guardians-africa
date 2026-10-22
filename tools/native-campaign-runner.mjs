@@ -290,7 +290,9 @@ export async function simulateNativeCampaign({days=100,strategy='good',labourPol
    if(!decision.actions){idle[decision.reason]=(idle[decision.reason]??0)+actualDt;unoccupiedSeconds+=daylightDt;idleRun+=daylightDt;longestIdle=Math.max(longestIdle,idleRun);}else idleRun=0;
    collect();evidence?.observe(s);raidEvidence.observe(s);
    onTick?.(s,nav,{decisionMs:decisionStepMs,gameTickMs:tickStepMs,dt});
+   wallStart=performance.now();
    await driver.advancePresentation(s);
+   presentationWallMs+=performance.now()-wallStart;
    if(reloadRaids&&s.raid&&!savedRaids.has(s.raid.id)){savedRaids.add(s.raid.id);stopSpatialEvents?.();stopDefenseEvents?.();s=deserialize(serialize(s));nav.setState(s);advice?.resetFromState(s);spatialEvents=[];stopSpatialEvents=advice?Game.observeGameEvents(s,event=>spatialEvents.push(event)):null;stopDefenseEvents=observeDefenseEvents();reloads++;}
    if(s.elapsed-start>2400)throw new Error(`Unfinished real incursion on day ${day}: ${JSON.stringify(s.raid)}`);
   }

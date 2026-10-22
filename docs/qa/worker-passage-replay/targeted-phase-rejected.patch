@@ -1,0 +1,58 @@
+diff --git a/src/simulation/game.js b/src/simulation/game.js
+index 0aebfaf8e..fd0b988bc 100644
+--- a/src/simulation/game.js
++++ b/src/simulation/game.js
+@@ -799,6 +799,8 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
+   if(w.exitRouteRecovery&&!w.path&&abandonExhaustedExit())return true;
+   if(w.mobileRecoveryDestinationId!==destination.id||
+     w.mobileRecoveryVersion!==nav.version){
++    w.mobilePhaseRemaining=0;
++    delete w.mobilePhaseBlockerIds;
+     w.mobileRecoveryDestinationId=destination.id;
+     w.mobileRecoveryVersion=nav.version;
+     w.mobileRecoveryAttempts=0;
+@@ -926,22 +928,29 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
+     if(staticClear&&(!worker||
+       actorSegmentClear(destination,destination,w,blockers))&&
+       !actorSegmentClear(w,probe,w,blockers)){
++      const blockingIds=blockers.filter(body=>
++        !actorSegmentClear(w,probe,w,[body])).map(body=>body.id);
+       w.mobilePhaseRemaining=3;w.dynamicStallSeconds=0;
++      if(worker)w.mobilePhaseBlockerIds=blockingIds;
+       w.mobileRecoveryAttempts=(w.mobileRecoveryAttempts??0)+1;
+       w.mobileProgressDistance=dist(w,destination);
+       w.mobileProgressAt=s.elapsed;
+       nav.motionObserver?.({kind:'mobileCollisionRecovery',actorId:w.id,
+         status:w.status,elapsed:s.elapsed,
+         trigger:stationarySeconds>=3?'stationary':'destination-stall',
+-        stationarySeconds,destinationStallSeconds});
++        stationarySeconds,destinationStallSeconds,blockingIds});
+       emit(s,'ActorMobileCollisionRecovery',{actorId:w.id,
+         x:w.x,z:w.z,elapsed:s.elapsed,duration:3});
+     }
+   }
+   const phased=(w.mobilePhaseRemaining??0)>0;
++  const phaseExempt=phased&&worker?new Set(w.mobilePhaseBlockerIds??[]):null;
++  const phaseOtherBodies=phaseExempt?actorBlockers(s,w,true,8)
++    .filter(body=>!phaseExempt.has(body.id)):null;
+   const dynamicClear=phased?
+-    (worker?(a,b)=>nav.workerMotionClear?.(a,b,w.radius??.28)??
+-      nav.segmentClear?.(a,b,w.radius??.28,ignore,true)??false:null):
++    (worker?(a,b)=>(nav.workerMotionClear?.(a,b,w.radius??.28)??
++      nav.segmentClear?.(a,b,w.radius??.28,ignore,true)??false)&&
++      actorSegmentClear(a,b,w,phaseOtherBodies):null):
+     prepareActorMotion(s,w,nav,worker);
+   const routeClearance=worker?workerRiskClearance(w,nav,{radius:w.radius??.28,ignore},dynamicClear):animalRouteClearance(w,nav,{radius:w.radius??.28,ignore,escapeProps:expandRoute},dynamicClear);
+   const clear=routeClearance?.clear??dynamicClear;
+@@ -949,7 +958,10 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
+     const metres=worker?movePathWithGates(w,speed*dt,s.structures,clear):movePath(w,speed*dt,clear);w.motionPhase=(w.motionPhase??0)+metres/speed;
+   }
+   if(dist(previous,w)>1e-9)w.heading=Math.atan2(w.x-previous.x,w.z-previous.z);
+-  if(phased)w.mobilePhaseRemaining=Math.max(0,w.mobilePhaseRemaining-dt);
++  if(phased){
++    w.mobilePhaseRemaining=Math.max(0,w.mobilePhaseRemaining-dt);
++    if(!w.mobilePhaseRemaining)delete w.mobilePhaseBlockerIds;
++  }
+   if(dist(previous,w)>1e-8||!w.path?.length)w.dynamicStallSeconds=0;
+   else w.dynamicStallSeconds=Math.min(3,(w.dynamicStallSeconds??0)+dt);
+   const remaining=dist(w,destination);

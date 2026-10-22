@@ -352,7 +352,7 @@ export class WorldScene {
   }
   syncResidentProps() {
     if(!this.nav||!this.prototypes)return {chunks:0,slots:0};
-    if(this.propSuppressionSource===this.nav.suppressed)return {chunks:0,slots:0};
+    // Confirmed commands call explicitly; Engine may mutate its Set in place.
     if(sameSuppressions(this.propsSuppressed,this.nav.suppressed)){this.propSuppressionSource=this.nav.suppressed;return {chunks:0,slots:0};}
     const stats=refreshResidentProps(this.chunks,this.nav.suppressed,(group,slot,instances)=>this.buildPropSlot(group,slot,instances));
     this.propsSuppressed=new Set(this.nav.suppressed);this.propSuppressionSource=this.nav.suppressed;
@@ -415,7 +415,7 @@ export class WorldScene {
       this.farVisibilityOwned=this.farVisualRange!=null;
     }
     if(visibilityChanged)this.releaseNativeShadow?.cache.invalidate();
-    this.syncResidentProps();
+    if(this.propSuppressionSource!==this.nav.suppressed)this.syncResidentProps();
     this.contacts.update(this.chunks,this.contactPrototypes,visibleRegion.bounds,this.chunkRevision,this.nav.config.layers);
   }
   villageMesh(village) {
@@ -581,10 +581,13 @@ export class WorldScene {
     const desired=new Set();
     for(const v of s.villages){desired.add(v.id);if(!this.objects.has(v.id)){const mesh=this.villageMesh(v);this.objects.set(v.id,mesh);this.scene.add(mesh);this.cameraVolumesDirty=true;this.cameraDirtyEntities?.set(v.id,v);}}
     const visiblePlants=activeCrops(s.plants).filter(p=>Math.hypot(p.x-this.controls.target.x,p.z-this.controls.target.z)<140);
+    this.microeventVisiblePlants=visiblePlants;
     if(visiblePlants.length>this.cropBatch.capacity)loadingSyncWitness(this.onLoadingSpan,'sync-crop-resize',()=>{this.cropBatch.dispose();this.cropBatch=createCropBatch(this.scene,this.renderer,this.cropGltf,this.cropBridgeData,2**Math.ceil(Math.log2(visiblePlants.length)));});
     if(this.onLoadingSpan)loadingSyncWitness(this.onLoadingSpan,'sync-crop-update',()=>this.cropBatch.update(visiblePlants,s.elapsed,(x,z)=>this.nav.field.surface(x,z),this.renderOrigin,this.nav.field));
     else this.cropBatch.update(visiblePlants,s.elapsed,(x,z)=>this.nav.field.surface(x,z),this.renderOrigin,this.nav.field);
-    for(const e of [...s.structures,...activeCrates(s.crates),...s.workers,...(s.raid?.animals.filter(a=>a.status!=='gone')??[]),...s.spells]) {
+    this.microeventVisibleWood=[];
+    for(const e of [...s.structures,...activeCrates(s.crates),...s.workers.filter(w=>w.status!=='home'),...(s.raid?.animals.filter(a=>a.status!=='gone')??[]),...s.spells]) {
+      if(e.kind==='wall'&&e.material==='empalizada'&&e.status==='intact'&&Math.hypot(e.x-this.controls.target.x,e.z-this.controls.target.z)<140)this.microeventVisibleWood.push(e);
       desired.add(e.id);let mesh=this.objects.get(e.id);
       if(!mesh) {
         if(e.kind==='center')mesh=this.centerMesh(e);
@@ -599,7 +602,6 @@ export class WorldScene {
       mesh.position.set(e.x,('profile' in e||'hitsRemaining' in e?this.nav.actorSurface(e.x,e.z):this.nav.field.surface(e.x,e.z))+.025,e.z);
       if(!('value' in e)&&('profile' in e||'hitsRemaining' in e)&&!this.mixers.has(e.id))this.requestActor(e,'profile' in e?'worker':'animal',mesh);
       if('value' in e)mesh.visible=!e.carrierId;
-      if('profile' in e&&!('value' in e))mesh.visible=e.status!=='home';
       if(e.kind==='wall'){mesh.rotation.y=e.yaw;mesh.update(e,dt,s.elapsed);}
       else if(e.kind==='center')mesh.update(e,s.elapsed);
       if(e.kind==='wall'||e.kind==='center'){
@@ -691,7 +693,7 @@ export class WorldScene {
     finally{stages.return();}
   }
   render(dt) {if(this.onLoadingSpan){const stages=this.renderFrameUpdates(dt);try{let stage=0;while(!loadingSyncWitness(this.onLoadingSpan,'world-frame-stage:'+stage++,()=>stages.next()).done){}return loadingSyncWitness(this.onLoadingSpan,'world-frame-draw',()=>this.drawRenderFrame());}finally{stages.return();}}for(const step of this.renderFrameUpdates(dt)){}return this.drawRenderFrame();}
-  drawRenderFrame() {return this.presentationDraw?this.presentationDraw(()=>this.drawWorldFrame()):this.drawWorldFrame();}
+  drawRenderFrame() {this.beforeMicroeventDraw?.();return this.presentationDraw?this.presentationDraw(()=>this.drawWorldFrame()):this.drawWorldFrame();}
   drawWorldFrame() {return withRenderOrigin({scene:this.scene,camera:this.camera,origin:this.renderOrigin,detached:[this.assetGroups.shadowRoot],minMax:()=>renderOriginBounds(this.scene,this.materialRegistry.enabled?this.materialRegistry.materials.keys():null),minSize:()=>[this.contacts.uniforms.uContactBounds.value,...this.terrainMeshes.map(m=>m.material.userData.biomeGround?.uGroundRect.value).filter(Boolean),...((this.horizon?.group?.children??[]).map(m=>m.material?.userData.biomeGround?.uGroundRect.value).filter(Boolean))]},()=>{this.destructionPass.render(this.camera,this.scene);const workDepth=!!this.workVfx?.prepare(this.camera),attackDepth=!!this.attackVfx?.prepare(this.camera),shieldDepth=!!this.shieldVfx?.prepare(this.camera),agricultureDepth=!!this.agricultureVfx?.prepare(this.camera),materialDepth=!!this.materialVfx?.prepare(this.camera),locomotionDepth=!!this.locomotionVfx?.prepare(this.camera),depth=workDepth||attackDepth||shieldDepth||agricultureDepth||materialDepth||locomotionDepth;this.toon.update(skyNight(this.state),this.sun,this.state.biome);this.materialRegistry.update(waterTime(this.state.elapsed));const autoClear=this.renderer.autoClear;try{this.renderer.autoClear=false;this.renderer.clear();this.sky.render(this.renderer,this.camera,this.state);
 // The existing sky draw advances Three geometry updates before shadowless depth capture.
 if(depth)this.destructionPass.captureDepth(this.camera,this.scene);this.renderer.render(this.scene,this.camera);}finally{this.renderer.autoClear=autoClear;}this.destructionPass.renderSmoke(this.camera,this.scene,{depthPrepared:depth});});}

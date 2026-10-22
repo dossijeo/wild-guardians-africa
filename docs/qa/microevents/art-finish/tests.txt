@@ -1,0 +1,426 @@
+TAP version 13
+# (node:11776) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: particle centers remain at fixed world coordinates when the camera orbits
+ok 1 - particle centers remain at fixed world coordinates when the camera orbits
+  ---
+  duration_ms: 7.2963
+  ...
+# Subtest: world-unit sprites scale naturally with camera distance
+ok 2 - world-unit sprites scale naturally with camera distance
+  ---
+  duration_ms: 2.145
+  ...
+# Subtest: screen ray-plane conversion follows world particles on ground and vertical planes
+ok 3 - screen ray-plane conversion follows world particles on ground and vertical planes
+  ---
+  duration_ms: 1.1019
+  ...
+# Subtest: one pooled instanced world mesh uses real depth and is excluded from existing VFX depth capture
+ok 4 - one pooled instanced world mesh uses real depth and is excluded from existing VFX depth capture
+  ---
+  duration_ms: 7.8227
+  ...
+# Subtest: world rendering remains correct across floating-origin recentering
+ok 5 - world rendering remains correct across floating-origin recentering
+  ---
+  duration_ms: 2.5142
+  ...
+# Subtest: an opaque farm structure blocks claiming a sprite hidden behind it
+ok 6 - an opaque farm structure blocks claiming a sprite hidden behind it
+  ---
+  duration_ms: 3.8205
+  ...
+# Subtest: wooden anchors sit in front of their own wall without moving the authoritative entity
+ok 7 - wooden anchors sit in front of their own wall without moving the authoritative entity
+  ---
+  duration_ms: 1.5943
+  ...
+# Subtest: all forty definitions complete through touch ownership using actual world projection
+ok 8 - all forty definitions complete through touch ownership using actual world projection
+  ---
+  duration_ms: 316.2389
+  ...
+# Subtest: a contact cue is played once across repeated owned gestures; unrelated input stays silent
+ok 9 - a contact cue is played once across repeated owned gestures; unrelated input stays silent
+  ---
+  duration_ms: 1.9998
+  ...
+# Subtest: catalogue presentation leaves simulation and touch radii untouched within one mesh budget
+ok 10 - catalogue presentation leaves simulation and touch radii untouched within one mesh budget
+  ---
+  duration_ms: 33.4751
+  ...
+# Subtest: flying creatures move quickly without pointer input and turn inside a bounded volume
+ok 11 - flying creatures move quickly without pointer input and turn inside a bounded volume
+  ---
+  duration_ms: 82.5168
+  ...
+# Subtest: fast flight remains catchable by accessible owned hold at 30, 60 and 120 Hz
+ok 12 - fast flight remains catchable by accessible owned hold at 30, 60 and 120 Hz
+  ---
+  duration_ms: 169.2787
+  ...
+# Subtest: contact VFX require earned progress; hover and ignoring do not emit completion feedback
+ok 13 - contact VFX require earned progress; hover and ignoring do not emit completion feedback
+  ---
+  duration_ms: 5.0506
+  ...
+# Subtest: all feedback uses authored atlas sprites and existing short non-looping SFX
+ok 14 - all feedback uses authored atlas sprites and existing short non-looping SFX
+  ---
+  duration_ms: 10.1938
+  ...
+# (node:22692) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: bird deduction uses authoritative harvest and one delivery (baseline, reload ripe)
+ok 15 - bird deduction uses authoritative harvest and one delivery (baseline, reload ripe)
+  ---
+  duration_ms: 60.6643
+  ...
+# Subtest: bird deduction uses authoritative harvest and one delivery (baseline, reload carrying)
+ok 16 - bird deduction uses authoritative harvest and one delivery (baseline, reload carrying)
+  ---
+  duration_ms: 17.9581
+  ...
+# Subtest: bird deduction uses authoritative harvest and one delivery (loss, reload ripe)
+ok 17 - bird deduction uses authoritative harvest and one delivery (loss, reload ripe)
+  ---
+  duration_ms: 20.3692
+  ...
+# Subtest: bird deduction uses authoritative harvest and one delivery (loss, reload carrying)
+ok 18 - bird deduction uses authoritative harvest and one delivery (loss, reload carrying)
+  ---
+  duration_ms: 20.2552
+  ...
+# Subtest: bird deduction uses authoritative harvest and one delivery (disabled, reload ripe)
+ok 19 - bird deduction uses authoritative harvest and one delivery (disabled, reload ripe)
+  ---
+  duration_ms: 19.0007
+  ...
+# Subtest: bird deduction uses authoritative harvest and one delivery (disabled, reload carrying)
+ok 20 - bird deduction uses authoritative harvest and one delivery (disabled, reload carrying)
+  ---
+  duration_ms: 15.6411
+  ...
+# Subtest: disabling microeventEconomy clears a reserved deduction before the harvest frame
+ok 21 - disabling microeventEconomy clears a reserved deduction before the harvest frame
+  ---
+  duration_ms: 14.1691
+  ...
+# Subtest: disabling microeventLosses clears a reserved deduction before the harvest frame
+ok 22 - disabling microeventLosses clears a reserved deduction before the harvest frame
+  ---
+  duration_ms: 17.8454
+  ...
+# Subtest: every catalogue event has an explicit shared primary interaction and hold alternative
+ok 23 - every catalogue event has an explicit shared primary interaction and hold alternative
+  ---
+  duration_ms: 2.1455
+  ...
+# Subtest: radial sweeps do not count as circular movement; either circular direction works
+ok 24 - radial sweeps do not count as circular movement; either circular direction works
+  ---
+  duration_ms: 1.3317
+  ...
+# Subtest: swirl physics follows pointer circulation instead of imposing a constant spin
+ok 25 - swirl physics follows pointer circulation instead of imposing a constant spin
+  ---
+  duration_ms: 2.6358
+  ...
+# Subtest: brushing and rubbing require motion; a motionless contact uses the explicit hold alternative
+ok 26 - brushing and rubbing require motion; a motionless contact uses the explicit hold alternative
+  ---
+  duration_ms: 0.1974
+  ...
+# Subtest: a full touch catch emits immediate contact VFX even when released before the next frame
+ok 27 - a full touch catch emits immediate contact VFX even when released before the next frame
+  ---
+  duration_ms: 0.5684
+  ...
+# Subtest: rain cloud can be dragged and dropped over its crop target without hold
+ok 28 - rain cloud can be dragged and dropped over its crop target without hold
+  ---
+  duration_ms: 9.9418
+  ...
+# Subtest: gathering outside the destination cannot settle on release, and cancellation cannot collect
+ok 29 - gathering outside the destination cannot settle on release, and cancellation cannot collect
+  ---
+  duration_ms: 0.8233
+  ...
+# Subtest: a weed needs a deliberate pull; release uproots only the claimed clump
+ok 30 - a weed needs a deliberate pull; release uproots only the claimed clump
+  ---
+  duration_ms: 0.4133
+  ...
+# Subtest: snake guidance moves the head away and preserves the following body
+ok 31 - snake guidance moves the head away and preserves the following body
+  ---
+  duration_ms: 3.3246
+  ...
+# Subtest: accessible hold remains explicit and is reset when a pooled event restarts
+ok 32 - accessible hold remains explicit and is reset when a pooled event restarts
+  ---
+  duration_ms: 20.2673
+  ...
+# Subtest: slow presentation frames preserve real-time hold completion for the entire catalogue
+ok 33 - slow presentation frames preserve real-time hold completion for the entire catalogue
+  ---
+  duration_ms: 700.5115
+  ...
+# Subtest: cloud drag remains usable at low frame rates without an accessible hold contribution
+ok 34 - cloud drag remains usable at low frame rates without an accessible hold contribution
+  ---
+  duration_ms: 8.5567
+  ...
+# Subtest: primary-only verification cannot be satisfied by stationary accessible hold
+ok 35 - primary-only verification cannot be satisfied by stationary accessible hold
+  ---
+  duration_ms: 50.4816
+  ...
+# Subtest: wood-attached insects remain within the visible face band after strong sweeps
+ok 36 - wood-attached insects remain within the visible face band after strong sweeps
+  ---
+  duration_ms: 33.6746
+  ...
+# Subtest: clearing an insect from its local patch requires a real brush, not ambient hover
+ok 37 - clearing an insect from its local patch requires a real brush, not ambient hover
+  ---
+  duration_ms: 0.7197
+  ...
+# (node:20976) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: pointer history stays bounded, ordered and independent of moving world anchors
+ok 38 - pointer history stays bounded, ordered and independent of moving world anchors
+  ---
+  duration_ms: 2.774
+  ...
+# Subtest: pointer velocity remains finite for co-timed samples and very fast swipes
+ok 39 - pointer velocity remains finite for co-timed samples and very fast swipes
+  ---
+  duration_ms: 0.2384
+  ...
+# Subtest: passive mouse tracking records motion before an event without claiming input
+ok 40 - passive mouse tracking records motion before an event without claiming input
+  ---
+  duration_ms: 0.9806
+  ...
+# Subtest: camera stability blocks spawning without resetting meaningful-action idle
+ok 41 - camera stability blocks spawning without resetting meaningful-action idle
+  ---
+  duration_ms: 2.1978
+  ...
+# Subtest: all blocked states and Off prevent opportunities; cooldown prevents rapid repeat
+ok 42 - all blocked states and Off prevent opportunities; cooldown prevents rapid repeat
+  ---
+  duration_ms: 0.9242
+  ...
+# Subtest: active interruption cancels with no ignored streak and no reward
+ok 43 - active interruption cancels with no ignored streak and no reward
+  ---
+  duration_ms: 0.3052
+  ...
+# Subtest: idle rescue includes management during an event and counts each spawn once
+ok 44 - idle rescue includes management during an event and counts each spawn once
+  ---
+  duration_ms: 0.5055
+  ...
+# Subtest: ignored streak halves probability and engagement recovers gradually
+ok 45 - ignored streak halves probability and engagement recovers gradually
+  ---
+  duration_ms: 0.3336
+  ...
+# Subtest: director RNG is independent of simulation RNG and resumes from persisted state
+ok 46 - director RNG is independent of simulation RNG and resumes from persisted state
+  ---
+  duration_ms: 0.4185
+  ...
+# Subtest: microevent randomness and outcomes do not invalidate planning-worker keys or payloads
+ok 47 - microevent randomness and outcomes do not invalidate planning-worker keys or payloads
+  ---
+  duration_ms: 3.5945
+  ...
+# Subtest: day/night compatibility and nuisance frequency cap
+ok 48 - day/night compatibility and nuisance frequency cap
+  ---
+  duration_ms: 1.0564
+  ...
+# Subtest: seeds settle once using existing coins and production-derived daily cap
+ok 49 - seeds settle once using existing coins and production-derived daily cap
+  ---
+  duration_ms: 0.4087
+  ...
+# Subtest: no income, no economic reward; fireflies never alter magic
+ok 50 - no income, no economic reward; fireflies never alter magic
+  ---
+  duration_ms: 0.3475
+  ...
+# Subtest: losses can be disabled independently while seed rewards remain enabled
+ok 51 - losses can be disabled independently while seed rewards remain enabled
+  ---
+  duration_ms: 0.4415
+  ...
+# Subtest: bird loss is local, rounded down, one harvest only and never multiplied
+ok 52 - bird loss is local, rounded down, one harvest only and never multiplied
+  ---
+  duration_ms: 0.5571
+  ...
+# Subtest: pending losses cannot stack and daily reservations are bounded
+ok 53 - pending losses cannot stack and daily reservations are bounded
+  ---
+  duration_ms: 0.4713
+  ...
+# Subtest: delayed harvests share a settlement-day cap as well as reservation caps
+ok 54 - delayed harvests share a settlement-day cap as well as reservation caps
+  ---
+  duration_ms: 1.0191
+  ...
+# Subtest: invalid or destroyed targets, cancellations, disabled economics and day rollover have no penalty
+ok 55 - invalid or destroyed targets, cancellations, disabled economics and day rollover have no penalty
+  ---
+  duration_ms: 0.5747
+  ...
+# Subtest: save/load keeps caps, deductions, serial and RNG; abandoned event never pays on load
+ok 56 - save/load keeps caps, deductions, serial and RNG; abandoned event never pays on load
+  ---
+  duration_ms: 3.6323
+  ...
+# Subtest: snapshot rejects malformed microevent ledgers and invalid serial tickets
+ok 57 - snapshot rejects malformed microevent ledgers and invalid serial tickets
+  ---
+  duration_ms: 0.6844
+  ...
+# Subtest: ordinary delivered income excludes microevent credit and resets at dawn
+ok 58 - ordinary delivered income excludes microevent credit and resets at dawn
+  ---
+  duration_ms: 0.2525
+  ...
+# Subtest: hover gives physical reaction but cannot complete; hold works at 30/60/120 Hz
+ok 59 - hover gives physical reaction but cannot complete; hold works at 30/60/120 Hz
+  ---
+  duration_ms: 702.3206
+  ...
+# Subtest: dispersed birds leave no invisible anchor hitbox and support hold where visible
+ok 60 - dispersed birds leave no invisible anchor hitbox and support hold where visible
+  ---
+  duration_ms: 3.6282
+  ...
+# Subtest: mouse and touch gesture ownership prevents forwarding to core actions
+ok 61 - mouse and touch gesture ownership prevents forwarding to core actions
+  ---
+  duration_ms: 0.9548
+  ...
+# Subtest: a second touch starting on UI keeps UI priority while cancelling the world event
+ok 62 - a second touch starting on UI keeps UI priority while cancelling the world event
+  ---
+  duration_ms: 0.2757
+  ...
+# Subtest: world projection rejects offscreen, behind-camera and UI-covered anchors
+ok 63 - world projection rejects offscreen, behind-camera and UI-covered anchors
+  ---
+  duration_ms: 1.6629
+  ...
+# Subtest: a held old gesture cannot farm a second event after cooldown expires
+ok 64 - a held old gesture cannot farm a second event after cooldown expires
+  ---
+  duration_ms: 1.0351
+  ...
+# Subtest: a stationary physical pointer is reprojected when its world anchor moves
+ok 65 - a stationary physical pointer is reprojected when its world anchor moves
+  ---
+  duration_ms: 0.8581
+  ...
+# Subtest: failed durable reservation never starts particles or pays a reward
+ok 66 - failed durable reservation never starts particles or pays a reward
+  ---
+  duration_ms: 0.8744
+  ...
+# Subtest: core action while spawn persistence is pending cancels its stale ticket
+ok 67 - core action while spawn persistence is pending cancels its stale ticket
+  ---
+  duration_ms: 0.3742
+  ...
+# Subtest: camera movement or contact during durable reservation prevents late appearance
+ok 68 - camera movement or contact during durable reservation prevents late appearance
+  ---
+  duration_ms: 0.6898
+  ...
+# Subtest: a saved reservation with a stable camera starts exactly one event
+ok 69 - a saved reservation with a stable camera starts exactly one event
+  ---
+  duration_ms: 0.2755
+  ...
+# Subtest: final atlas has transparency and nonempty distinct animation frames
+ok 70 - final atlas has transparency and nonempty distinct animation frames
+  ---
+  duration_ms: 71.3366
+  ...
+# Subtest: expanded events remain declarative, cosmetic and use real eligible anchor types
+ok 71 - expanded events remain declarative, cosmetic and use real eligible anchor types
+  ---
+  duration_ms: 0.3794
+  ...
+# Subtest: emergencies share a six-minute cooldown and require their own anchors
+ok 72 - emergencies share a six-minute cooldown and require their own anchors
+  ---
+  duration_ms: 0.2611
+  ...
+# Subtest: expanded atlas contains distinct animated insects and flames with transparent silhouettes
+ok 73 - expanded atlas contains distinct animated insects and flames with transparent silhouettes
+  ---
+  duration_ms: 71.0145
+  ...
+# Subtest: termite reservation validates actual wooden structures and never changes structure health or money
+ok 74 - termite reservation validates actual wooden structures and never changes structure health or money
+  ---
+  duration_ms: 0.4163
+  ...
+# Subtest: the original catalogue has fourteen opportunities, sixteen nuisances and ten emergencies
+ok 75 - the original catalogue has fourteen opportunities, sixteen nuisances and ten emergencies
+  ---
+  duration_ms: 0.209
+  ...
+# Subtest: every expanded catalogue outcome leaves the existing money, magic and health untouched
+ok 76 - every expanded catalogue outcome leaves the existing money, magic and health untouched
+  ---
+  duration_ms: 1.4534
+  ...
+# Subtest: falling, root pulling, orbit and connected body presets provide distinct physical responses
+ok 77 - falling, root pulling, orbit and connected body presets provide distinct physical responses
+  ---
+  duration_ms: 8.3299
+  ...
+# Subtest: gathering progress requires the crop or sack destination, with a hold alternative
+ok 78 - gathering progress requires the crop or sack destination, with a hold alternative
+  ---
+  duration_ms: 1.1831
+  ...
+# Subtest: tap targets use their visible shape while hidden burrowing animals cannot own input
+ok 79 - tap targets use their visible shape while hidden burrowing animals cannot own input
+  ---
+  duration_ms: 0.3353
+  ...
+# Subtest: all catalogue sprite and secondary regions are in bounds, nonempty and transparent
+ok 80 - all catalogue sprite and secondary regions are in bounds, nonempty and transparent
+  ---
+  duration_ms: 313.5172
+  ...
+# Subtest: all forty live particle presets complete through owned touch input without forwarding a gesture
+ok 81 - all forty live particle presets complete through owned touch input without forwarding a gesture
+  ---
+  duration_ms: 170.5787
+  ...
+# Subtest: world-occluded anchors are rejected before reservation or save
+ok 82 - world-occluded anchors are rejected before reservation or save
+  ---
+  duration_ms: 4.2157
+  ...
+1..82
+# tests 82
+# suites 0
+# pass 82
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1881.525

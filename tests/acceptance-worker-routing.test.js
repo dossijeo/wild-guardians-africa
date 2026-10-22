@@ -9,6 +9,7 @@ import {SaveRepository,serialize} from '../src/persistence/snapshots.js';
 import {reserveTasks} from '../src/simulation/tasks.js';
 import {workerPose} from '../src/rendering/worker-actions.js';
 import {LOCOMOTION as L} from '../src/simulation/locomotion-calibration.js';
+import {centerServicePoint} from '../src/world/centers.js';
 import {readFileSync} from 'node:fs';
 const libraries=JSON.parse(readFileSync('public/content/worker-actions.json'));
 function navigation(s){const n=new Navigation(712,'sabana',{});n.field={blocked:()=>false,slope:()=>0,surface:()=>0};n.propsAt=()=>[];n.activeBounds=[-48,-48,48,48];n.setState(s);return n;}
@@ -21,6 +22,17 @@ function farm(culture='mapungubwe',centers=1,profile='olderFemale',count=2){
 function until(s,nav,predicate,seconds=200){for(let i=0;!predicate()&&i<seconds*20&&!s.result&&!s.pauses.length;i++)Game.tick(s,.05,nav);assert.ok(predicate(),JSON.stringify({time:s.time,workers:s.workers.map(w=>w.status),raid:s.raid}));}
 function saved(s){const map=new Map(),repo=new SaveRepository({getItem:k=>map.get(k)??null,setItem:(k,v)=>map.set(k,v),removeItem:k=>map.delete(k)});repo.save(s);return repo.load(s.slotId);}
 const point=w=>({x:w.x,z:w.z});
+
+test('four paid workers reach the shared center entrance without waiting for idle colleagues to wander',()=>{
+ const {s,nav}=farm('mapungubwe',1,'olderFemale',4);
+ until(s,nav,()=>s.workers.every(w=>w.status==='idle'),20);
+ assert.ok(s.time<20,'center arrival must not wait for an idle worker to move at random');
+ const entrance=centerServicePoint(s.structures[0],s,.8);
+ for(const worker of s.workers){
+  assert.ok(Math.hypot(worker.x-entrance.x,worker.z-entrance.z)<=2+1e-8);
+  assert.ok(nav.segmentClear(worker,entrance,.28,null,true));
+ }
+});
 
 test('QA-047/048: actual paid workers reserve FIFO by nearest free colleague and never duplicate plant/crate owners',()=>{
  const {s,nav}=farm();until(s,nav,()=>s.workers.every(w=>w.status==='idle'));

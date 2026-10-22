@@ -374,6 +374,12 @@ test('a native Sabana incursion spawns physically and advances through Game.tick
     assert.equal(state.raid,null,JSON.stringify({status:animal.status,
       hitsRemaining:animal.hitsRemaining,x:animal.x,z:animal.z,time:state.time}));
     assert(state.events.some(event=>event.type==='RaidEnded'));
+    assert.deepEqual(planner.metrics(state.elapsed).animalPlansByActor,{},
+      'completed raids release per-animal planning history');
+    assert.deepEqual(planner.metrics(state.elapsed).perAnimalPerMinute,{});
+    assert.equal(session.core.wasm.nav_intent_actor_planning_calls(
+      Number(animal.id.split('-').at(-1))),0,
+    'Wild Engine releases the retired animal planning counter');
     assert(animal.hitsRemaining<initialHits,
       'the native route should lead to a physical attack, not only a retreat');
     assert(intentCalls.registered>=intentCalls.committed&&intentCalls.committed>0);

@@ -10,16 +10,19 @@ import {WorldScene} from '../../src/rendering/scene.js';
 import {json} from '../../src/rendering/assets.js';
 import {AudioSystem,SFX_LIMITS} from '../../src/audio/audio.js';
 import {serialize} from '../../src/persistence/snapshots.js';
+import {compare} from '../../src/simulation/money.js';
 const status=document.querySelector('#status'),output=document.querySelector('#report');
-const requestedDays=Number(new URLSearchParams(location.search).get('days')??1);
-if(!Number.isSafeInteger(requestedDays)||requestedDays<1||requestedDays>4)throw Error('QA days must be 1–4');
+const params=new URLSearchParams(location.search),audible=params.has('audible');
+const requestedDays=Number(params.get('days')??1);
+if(!Number.isSafeInteger(requestedDays)||requestedDays<1||requestedDays>14)throw Error('QA days must be 1–14');
 document.querySelector('#run').textContent=requestedDays===1?'Recorrer jornada y amanecer A → B':`Recorrer ${requestedDays} jornadas y alternancia A ↔ B`;
-document.querySelector('header p').textContent=`Sabana/Mapungubwe, semilla 712. Centro, un mijo por jornada y trabajadora pagados con las 1500 monedas iniciales. ${requestedDays} jornadas e incursiones nativas; pasos de 0,1 s real solicitados. Audio silenciado: no escucha ni medida de FPS.`;
-const audio=new AudioSystem({sfx:0,music:0}),errors=[],history=[],seen=new Set();
-const result={muted:true,predecodedSfx:false,world3D:true,seed:712,qaCredit:0,requestedDays,history,errors,events:{},steps:0,heldSteps:0,peakSfx:0,peakMusic:0,peakPoolPcmBytes:0};
+document.querySelector('header p').textContent=`Sabana/Mapungubwe, semilla 712. Centro, un mijo por jornada y trabajadora pagados con las 1500 monedas iniciales. ${requestedDays} jornadas e incursiones nativas; pasos de 0,1 s real solicitados. ${audible?'Audio audible para escucha QA.':'Audio silenciado; no acredita escucha.'} No mide FPS.`;
+const audio=new AudioSystem({sfx:audible?0.7:0,music:audible?1:0}),errors=[],history=[],seen=new Set();
+if(audible)window.__wildMusicQaAudio=audio;
+const result={muted:!audible,predecodedSfx:false,world3D:true,seed:712,qaCredit:0,requestedDays,history,errors,events:{},steps:0,heldSteps:0,peakSfx:0,peakMusic:0,peakPoolPcmBytes:0,repairRequests:[]};
 let state,nav,world,session,stopTasks,stopWorld,lastTransport,lastPack,phase='setup';
 const assert=(v,message)=>{if(!v)throw Error(message);},flush=()=>new Promise(done=>setTimeout(done,0));
-const paint=()=>{output.textContent=JSON.stringify({...result,phase,day:state?.day,time:state?.time,elapsed:state?.elapsed,money:state?.ledger.balance,pauses:state?.pauses,raid:state?.raid?.animals.map(a=>({species:a.species,status:a.status}))??null},null,2);};
+const paint=()=>{output.textContent=JSON.stringify({...result,phase,day:state?.day,time:state?.time,elapsed:state?.elapsed,money:state?.ledger.balance,gameResult:state?.result,center:state?.structures[0]&&{hp:state.structures[0].hp,maxHp:state.structures[0].maxHp,status:state.structures[0].status},pauses:state?.pauses,raid:state?.raid?.animals.map(a=>({species:a.species,status:a.status}))??null},null,2);};
 const fail=e=>{errors.push(String(e.message??e));phase='failed';status.textContent='FAIL: '+errors.join(' · ');audio.stop();paint();};
 addEventListener('error',e=>fail(e.error??e.message));addEventListener('unhandledrejection',e=>fail(e.reason));
 addEventListener('pagehide',()=>{stopTasks?.();stopWorld?.();audio.dispose();world?.dispose();session?.dispose();});
@@ -65,14 +68,28 @@ document.querySelector('#run').onclick=async()=>{
     Game.advanceReal(state,.1,nav);observe();world.render(.1);assert(world.renderer.getContext().getError()===0,'WebGL error');await flush();
     if(++result.steps%100===0)paint();if(result.steps>requestedDays*10000)throw Error('Native days did not finish');
    }
-   assert(state.day===day+1&&!state.result&&state.completedNights===day&&!state.raid,'Native night did not resolve');assert(state.pauses.includes('hiring'),'Dawn hiring absent');
+   if(state.result)throw Error(`Campaign ended on day ${day}: ${state.result}`);
+   assert(state.day===day+1&&state.completedNights===day&&!state.raid,'Native night did not resolve');assert(state.pauses.includes('hiring'),'Dawn hiring absent');
    assert(result.events.CrateDelivered>=day,'Paid crop delivery absent');assert(result.events.RaidSpawned===day&&result.events.RaidEnded===day,'Native incursion absent');
    const pack=state.day%2?'a':'b';phase='music-'+pack;status.textContent=`Amanecer ${state.day}: cargando ventanas ${pack.toUpperCase()}…`;const dawn=serialize(state);observe();await loaded(pack);observe();history.push(capture());
    assert(serialize(state)===dawn,'Music changes paused dawn');assert(history.at(-1).transport==='MusicWindowTransport','Dawn did not select validated windows');assert(new Set(history.at(-1).stems.map(s=>s.id)).size===8,'Dawn audible group absent');
    assert(audio.voices.has(wind)&&audio.ambient.entries.get('wind').source===wind,'Daily music replaced native wind');
    assert(oldUrls.every(url=>!audio.buffers.has(url))&&oldPool.disposed&&oldPool.pcmBytes()===0,'Old music pack retained');result.windPreserved=true;result.oldPackEvicted=true;
-   if(day<requestedDays){Game.hire(state,'hire-day-'+state.day,{youngFemale:1});assert(plantReachableSeed('seed-day-'+state.day),'Reachable paid daily seed absent');}
+   if(day<requestedDays){
+    Game.hire(state,'hire-day-'+state.day,{youngFemale:1});
+    const center=state.structures[0];
+    if(center.status==='intact'&&center.hp<center.maxHp&&!state.tasks.some(task=>task.kind==='repair'&&task.targetId===center.id)){
+     const cost=Game.repairCost(center);
+     if(compare(state.ledger.balance,cost)>=0){Game.requestRepair(state,'repair-day-'+state.day,center.id);result.repairRequests.push({day:state.day,hp:center.hp,cost});}
+    }
+    assert(plantReachableSeed('seed-day-'+state.day),'Reachable paid daily seed absent');
+   }
    paint();
+  }
+  if(audible){
+   phase='listening';status.textContent='Amanecer B · escucha de la transición con ambiente nativo';paint();
+   const until=performance.now()+12000;
+   while(performance.now()<until){observe();world.render(0);await new Promise(done=>setTimeout(done,100));}
   }
   audio.stop();result.voicesAfterStop=audio.active.length;assert(!audio.active.length&&!audio.musicBuffers.size,'Audio resources retained');audio.dispose();await flush();result.context=audio.context.state;assert(result.context==='closed','Context not closed');
   phase='complete';status.textContent=`Completada · ${requestedDays} jornadas nativas y alternancia A ↔ B`;paint();

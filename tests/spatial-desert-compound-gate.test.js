@@ -28,6 +28,18 @@ async function resident(state){
   return {session,nav};
 }
 
+function assertWorkersResume(state,nav,workers){
+  const moved=new Set();
+  for(let step=0;step<20&&moved.size<workers.length;step++){
+    const before=new Map(workers.map(w=>[w.id,{x:w.x,z:w.z}]));
+    Game.tick(state,1,nav);
+    for(const worker of workers)if(Math.hypot(worker.x-before.get(worker.id).x,
+      worker.z-before.get(worker.id).z)>.05)moved.add(worker.id);
+  }
+  assert.equal(moved.size,workers.length,
+    'every worker with a valid route must resume movement after nearby bodies clear');
+}
+
 test('closing an incremental compound perimeter adds a usable third gate',async()=>{
   const state=deserialize(snapshot);
   const finalWalls=state.structures.filter(s=>s.kind==='wall'&&s.created>=27114);
@@ -89,10 +101,7 @@ test('closing an incremental compound perimeter adds a usable third gate',async(
         .every(w=>second.nav.path(w,w.status==='fleeing'?reloaded.villages[0].entry:
           centerServicePoint(reloadedCenter,reloaded,.8),.28,null,true)));
     }finally{second.session.dispose();}
-    const beforePositions=new Map(workers.map(w=>[w.id,{x:w.x,z:w.z}]));
-    Game.tick(state,1,nav);
-    assert(workers.every(w=>Math.hypot(w.x-beforePositions.get(w.id).x,
-      w.z-beforePositions.get(w.id).z)>.05),'all 42 workers actually move');
+    assertWorkersResume(state,nav,workers);
   }finally{session.dispose();}
 });
 
@@ -151,9 +160,6 @@ test('closing a compound perimeter one paid module at a time preserves worker ex
         .every(w=>second.nav.path(w,w.status==='fleeing'?reloaded.villages[0].entry:
           centerServicePoint(reloadedCenter,reloaded,.8),.28,null,true)));
     }finally{second.session.dispose();}
-    const beforePositions=new Map(workers.map(w=>[w.id,{x:w.x,z:w.z}]));
-    Game.tick(state,1,nav);
-    assert(workers.every(w=>Math.hypot(w.x-beforePositions.get(w.id).x,
-      w.z-beforePositions.get(w.id).z)>.05),'all workers resume physical movement');
+    assertWorkersResume(state,nav,workers);
   }finally{session.dispose();}
 });
