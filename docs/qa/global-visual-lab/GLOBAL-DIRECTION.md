@@ -1762,3 +1762,7 @@ Real cinematic sampling exposed daytime sky grading jump and nighttime decorativ
 ### Canyon bank regions and measured cost
 
 `canyon-bank-regions-review-20261022`:12 paired frames concentrate existing Blender modules near banks with gaps;317 instances versus249-255 and unchanged draws. More visible placement, still thin isolated tufts. `canyon-bank-regions-cost-20261022`:720 valid GPU samples, ABAB Intel UHD; paired GPU deltas +.181/+.319/+1.209/+1.861ms, RAF ~16.63ms. Cost variable, not free; retain QA direction, improve collective authored mass before density escalation/native adoption.
+
+### Canyon authored bank cover candidate
+
+`canyon-bank-cover-review-20261022`:new original Blender104-triangle module (same triangle budget, wider26 leaves) visibly improves collective mass in12 controlled day/night captures;317 instances and calls/triangles match. Retain QA candidate, still separate plants. `canyon-bank-cover-cost-20261022`:720 valid Intel UHD GPU samples; daytime GPU delta ~0ms, night variable +.339/-2.459ms, no speedup claim. Before native adoption audit larger footprint/occupancy, quality/seed and streaming.
