@@ -47,7 +47,19 @@ float qaShoreNoise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix
  diffuseColor.a*=smoothstep(qaEdge,qaEdge+qaWidth,qaDepth);
  diffuseColor.a*=smoothstep(.04+qaLarge*.35,.48+qaLarge*.35,qaTexel.b*4.);
  `+anchor);
- };material.customProgramCacheKey=()=>key+'|qa-depth-bank-v1';
+ // Coverage-derived optical depth, not bathymetry. Preserve the approved deep-water QA appearance.
+ if(world.state.biome==='manglares'){
+ const bodyAnchor='vec3 base=uInk0*.72;';
+ if(!shader.fragmentShader.includes(bodyAnchor))throw Error('Mangrove deep-water anchor missing');
+ shader.fragmentShader=shader.fragmentShader.replace(bodyAnchor,`vec2 bodyUV=(worldPatternPosition(worldP).xz-qaBedBounds.xy)/qaBedBounds.zw;
+ bodyUV=(bodyUV*(qaBedSize-1.)+.5)/qaBedSize;
+ vec2 bodyRG=texture2D(qaBed,bodyUV).rg;
+ float bodyHeight=qaBedRange.x+dot(bodyRG,vec2(65280.,255.))/65535.*qaBedRange.y;
+ float bodyDepth=max(0.,worldP.y-bodyHeight);
+ float bodyBlend=smoothstep(.10,.85,bodyDepth);
+ vec3 base=mix(uInk0*.72,vec3(.16,.29,.22),bodyBlend);`).replace('base=mix(uInk0*.72,sediment,shallow*.85);','base=mix(base,sediment,shallow*.85);');
+ }
+ };material.customProgramCacheKey=()=>key+'|qa-depth-bank-v2|'+world.state.biome;
  geometry.userData.naturalWaterMaterial=material;
  const release=()=>{material.removeEventListener('dispose',release);texture.dispose();};material.addEventListener('dispose',release);
  geometry.userData.naturalWaterBed={nx,nz,bytes:bytes.byteLength,minX,minZ,width,height,lo,span};

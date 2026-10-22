@@ -1818,3 +1818,8 @@ Opt-in `waterPalette=regional` with global-lighting now preserves the reviewed b
 ## 2026-10-22: native Canyon core validated
 
 Opt-in `waterEdges=natural&waterCore=opaque` retains exact static and ten moving-checkpoint shore/core RGB parity. Intel UHD ABAB saves 0.97-2.49 ms GPU day and 1.72-2.95 ms night; CPU mixed, no FPS gain demonstrated. Retain Canyon-only; do not generalize. See [benchmark](native-canyon-core-cost-20261022/README.md) and [streaming](native-canyon-core-stream-20261022/README.md). Construction cost and modest-quality validation remain pending.
+
+
+## 2026-10-22: user selects deep blue Mangrove water
+
+Retain and refine deep blue over olive, superseding the earlier optical-depth rejection. Native natural-water shader now matches the selected QA result (five RGB-exact pairs, two differing pixels in the sixth). Moss retained. No FPS claim; extra map read remains to benchmark. See [native deep water](mangrove-deep-water-native-20261022/README.md).
