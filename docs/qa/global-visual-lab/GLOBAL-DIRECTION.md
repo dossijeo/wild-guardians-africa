@@ -1746,3 +1746,7 @@ Real cinematic sampling exposed daytime sky grading jump and nighttime decorativ
 ### Canyon reflection and material-contract diagnosis
 
 `canyon-bank-reflectiondepth-review-20261022`:12 real controlled frames, all six day/night camera/geometry pairs equal, no captured errors. Reducing near-shore reflection softens daytime pale rim but does not resolve the canal-like bank; diagnostic only, no native adoption or timing claim. Source audit found reversed normal-map lateral axis in prior bed pilots plus omitted gravel normal/ARH, AO and warm shadow fill. Correct shared material response before more color tuning.
+
+### Canyon native normal-basis correction in QA
+
+`canyon-bank-normalbasis-review-20261022`:12 real frames; all six pairs camera/time/geometry equal, no errors. Shared native sampleTurfN410 fixes the reversed lateral basis in submerged-bed pilots. Visual effect minimal across all day/night views; retained as QA correctness groundwork, not an art improvement or native feature. Reinspection of original mockup confirms bank continuity and game-scale composition remain the priority.
