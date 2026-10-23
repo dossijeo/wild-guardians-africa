@@ -507,6 +507,13 @@ export class WorldScene {
       staging.clear();this.scene.remove(staging);this.releaseNativeShadow?.cache.invalidate();
     }
   }
+  async warmResidentDepth({nextFrame}={}){
+    const cancelled=()=>this.disposed||this.loading.signal.aborted;
+    const options={signal:this.loading.signal,cancelled,nextFrame,batchSize:32,onPrepare:this.onLoadingSpan};
+    await loadingAwaitWitness(this.onLoadingSpan,'warm-resident-depth',()=>this.destructionPass.prepareDepth(this.camera,this.scene,{...options,compile:(scene,camera,target)=>compileLoadingPrograms(this.renderer,scene,camera,target,{signal:this.loading.signal,cancelled,getEpoch:()=>this.glResourceEpoch?.stats.epoch??0,onSubmit:this.onLoadingSpan})}));
+    if(cancelled())throw Error('Resident depth preload cancelled');
+    await initializeProgramBindingsAsync(this.renderer,{cancelled,nextFrame});
+  }
   raidReady(){return (this.state?.raid?.animals??[]).every(a=>a.status==='gone'||this.mixers.has(a.id));}
   actorsReady(){return this.raidReady()&&(this.state?.workers??[]).every(w=>w.status==='home'||this.mixers.has(w.id));}
   requestActor(entity,type,root){
