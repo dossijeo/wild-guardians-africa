@@ -202,3 +202,12 @@ Latest package check: production build succeeds; nested-path threaded runtime re
 ## Concurrent lifecycle regression
 
 `node tools/experiments/check-spatial-thread-lifecycle.mjs` exercises the shipped threaded module in all six biomes. While jobs run, main-thread terrain and route queries continue. A world restore rejects the pre-restore result; eight cycles per biome add/remove a polygon during preparation, reject stale output, retry, publish and remove the chunk. Resident counts and final saved state are asserted (polygon ID allocation advances normally). All six pass; see thread-lifecycle.json. This is a native API correctness test, not full active-game simulation, a race sanitizer or a performance benchmark.
+
+
+## Native Windows / WebView2 packaged runtime
+
+Built with `npx tauri build --no-bundle -- --locked` (Rust stable MSVC, Visual Studio 2022). Run the release executable with `--smoke-report ABSOLUTE_REPORT_PATH --smoke-pthreads`. This opt-in check loads the packaged Emscripten module from the actual Tauri origin, asserts adopted shared memory, generates/publishes all six biomes and shuts down the pthread. `tauri-pthread-runtime.json` passes on WebView2 155: `http://tauri.localhost`, secure context and cross-origin isolation true, worker identity 1, no errors. One-profile publication timings are 0.25-0.64 ms, with 16 MiB linear memory. These small scenes are compatibility evidence, not comparable to the populated Mangroves benchmark or proof of full-game desktop acceptance. Normal launch is unchanged.
+
+The separate itch archive check currently fails: 1042 files / 569133972 bytes exceed the repository packager limits of 1000 files / 500000000 bytes. See itch-package-limits.json. Runtime module plus WASM account for about 0.6 MiB; existing graphics dominate the package. No assets were removed and no limits were bypassed. Nested-path browser runtime validation passes, but the real itch artifact remains an open distribution gate.
+
+The ordinary packaged desktop smoke also passes: Gran Cañón / Mapungubwe reaches world readiness in 12.68 seconds, renders a 1024x576 canvas in very-low quality, and reports no errors. It checks packaged models, audio, worker creation, local storage and menu. See tauri-full-game.json/png. This is a single launch and short render check; it does not assert the application backend, prolonged streaming, all six full game scenes, save/load or active actor correctness. The independent native runtime test above establishes pthread support for this WebView2 host.
