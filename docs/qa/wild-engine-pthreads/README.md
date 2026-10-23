@@ -352,3 +352,12 @@ Reproduction: run check-spatial-thread-game.mjs with WG_THREAD_PORT=5299, WG_THR
 `node tools/experiments/check-spatial-thread-browser-disposal.mjs` runs nine fresh shared-memory runtimes in real Chrome: three idle, three observed at native status 2 (running), and three at status 3 (ready but unpublished). Every case builds all six navigation profiles in Mangroves. Each calls dispose twice and asserts the same promise, waits with a 10-second deadline, requires stopped status 5 and zero running/unused pthread workers, checks resident chunk count stays at one, and verifies the disposed job cannot publish.
 
 All nine pass in `thread-browser-disposal.json`. Running-job disposal returns in 0.015–0.060 ms; asynchronous completion takes 13.54–15.13 ms. Ready-job completion takes 4.64–5.06 ms. These are small functional timing samples, not a robust performance benchmark. Runtime-owned worker registries are empty; this does not prove immediate process RSS reclamation or garbage collection of the retained WASM memory. Full-game graphics teardown and cancellation through the UI remain separate acceptance gates.
+
+
+## Full game return-to-menu with pending native work
+
+`WG_THREAD_EXIT=1 WG_THREAD_FROZEN=1 WG_THREAD_PORT=5299 node tools/experiments/check-spatial-thread-game.mjs` exposes the production menu function and runtime handle through QA source routes only. After loading a populated Mangroves game, camera travel starts actual streaming. The test observes native status 2, invokes the ordinary return-to-menu function (including saving), awaits session disposal, and observes another 200 ms for late chunk installation.
+
+`game-exit-running.json` passes: world disposed, menu present, zero pthread workers, native stopped status 5, zero late installs, one discarded job, idle queue and zero stream failures. Total menu transition was 288.57 ms, including save and graphics teardown, not native shutdown cost. Disposal calls observed statuses [3,5]: generation finished during the save/menu preparation before the first session dispose call. Thus this proves pending-result discard and idempotent integrated teardown, not that the game-level shutdown interrupted computation. The separate browser runtime lifecycle test covers shutdown while status 2.
+
+This checks scene disposal and absence of late installation, not a GPU-memory leak audit. QA holds the old world/runtime for inspection and does not measure garbage collection. No production files changed.
