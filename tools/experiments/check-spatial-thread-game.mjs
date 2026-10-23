@@ -104,9 +104,16 @@ try{
     const now=await frame();rows.frames.push(now-last);last=now;
     if(options.completeLegs){
      const deadline=performance.now()+60000;
-     for(let warm=0;warm<2;warm++){const now=await frame();rows.frames.push(now-last);last=now;}
-     while(w.chunkStream.summary().busy||w.chunkStream.summary().queued){if(performance.now()>deadline)throw Error('Leg completion timeout');const now=await frame();rows.frames.push(now-last);last=now;}
-     for(let settle=0;settle<12;settle++){const now=await frame();rows.frames.push(now-last);last=now;}
+     // Desert/canyon adopt the new near rectangle only after asynchronous
+     // horizon preparation. An idle near queue alone can precede that adoption.
+     for(let stable=0;stable<12;){
+      if(performance.now()>deadline)throw Error('Leg/horizon completion timeout');
+      const now=await frame();rows.frames.push(now-last);last=now;
+      const stream=w.chunkStream.summary(),horizon=w.horizon?.generator;
+      const complete=!stream.busy&&!stream.queued&&!horizon?.latest&&!horizon?.busy&&
+       [...w.chunkStream.desired.keys()].every(key=>w.chunks.has(key));
+      stable=complete?stable+1:0;
+     }
      legs.push({leg:i,displacement,created:w.chunkStream.stats.created-initialCreated,resident:core.metrics().loadedChunks,keys:[...w.chunks.keys()].sort()});
     }
     if(w.actorsReady())actorsReadyFrames++;
