@@ -6,6 +6,8 @@ export async function measureActivePasses(w,{mode,samples=60,warmup=60,drawCensu
  const gpu=mode==='frame'?new GpuTimer(gl):null,passes=mode==='passes'?new RenderPassTimer(w):null,cpu=mode==='cpu'?new RenderCpuCalls(w):null;
  const snapshot=()=>({elapsed:w.state.elapsed,time:w.state.time,workers:w.state.workers.map(a=>({id:a.id,x:a.x,z:a.z,task:a.task})),pauses:[...w.state.pauses]});
  const before=snapshot();let index=0,last=null;
+ const cache=mode==='bake'?w.mangroveMaterialCache:null,bakeTimer=cache?new GpuTimer(gl):null,bakeSamples=[],originalUpdate=cache?.update;
+ if(cache)cache.update=function(){const recording=index>=warmup&&index<warmup+samples,published=cache.queue.stats.published;if(recording)bakeTimer.begin(index-warmup);const start=performance.now();try{return originalUpdate();}finally{if(recording){bakeTimer.end();bakeSamples.push({frame:index-warmup,cpuMs:performance.now()-start,published:cache.queue.stats.published-published});}}};
  // Optional draw census is diagnostic only: never use its CPU timings as a benchmark.
  const census=mode==='census'||drawCensus,direct=r.renderBufferDirect;let draws=null;
  if(census)r.renderBufferDirect=function(camera,scene,geometry,material,object,group){
@@ -25,7 +27,7 @@ export async function measureActivePasses(w,{mode,samples=60,warmup=60,drawCensu
  const cpuMs=performance.now()-start;let calls=null;if(recording){gpu?.end();passes?.stop();calls=cpu?.end();frames.push({frame:index-warmup,...(census?{draws:draws.slice()}:{}),cpuMs,intervalMs:interval,calls:r.info.render.calls,triangles:r.info.render.triangles,camera:w.camera.position.toArray(),coverage:{near:w.groundDetails.near,far:w.groundDetails.far},materialCache:w.mangroveMaterialCache?{...w.mangroveMaterialCache.queue.stats,entries:w.mangroveMaterialCache.queue.entries.size,added:w.mangroveMaterialCache.stats.added,removed:w.mangroveMaterialCache.stats.removed}:null,cpuCalls:calls,shadow:{...w.releaseNativeShadow.cache.stats}});}draws=null;r.info.autoReset=auto;
  if(++index===warmup+samples){w.render=original;clearTimeout(timeout);resolve();}}
  };});
- for(let i=0;i<150&&(gpu?.pending.length||passes?.timer.pending.length);i++){await new Promise(resolve=>setTimeout(resolve,8));gpu?.poll();passes?.poll();}
- const ext=gl.getExtension('WEBGL_debug_renderer_info');return {mode,frames,before,after:snapshot(),gpu:gpu?.report()??null,passes:passes?.report()??null,glError:gl.getError(),memory:{...r.info.memory},coverage:w.groundDetails.audit(),device:ext?gl.getParameter(ext.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER)};
- }finally{r.renderBufferDirect=direct;w.render=original;cpu?.dispose();passes?.dispose();gpu?.dispose();}
+ for(let i=0;i<150&&(gpu?.pending.length||passes?.timer.pending.length||bakeTimer?.pending.length);i++){await new Promise(resolve=>setTimeout(resolve,8));gpu?.poll();passes?.poll();bakeTimer?.poll();}
+ const ext=gl.getExtension('WEBGL_debug_renderer_info');return {mode,frames,bake:cache?{samples:bakeSamples,gpu:bakeTimer.report()}:null,before,after:snapshot(),gpu:gpu?.report()??null,passes:passes?.report()??null,glError:gl.getError(),memory:{...r.info.memory},coverage:w.groundDetails.audit(),device:ext?gl.getParameter(ext.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER)};
+ }finally{if(cache)cache.update=originalUpdate;bakeTimer?.dispose();r.renderBufferDirect=direct;w.render=original;cpu?.dispose();passes?.dispose();gpu?.dispose();}
 }
