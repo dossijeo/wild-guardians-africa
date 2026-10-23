@@ -11,7 +11,7 @@ if [[ "${SPATIAL_PROFILE:-0}" == 1 ]]; then profile_flags+=(-DWILD_SPATIAL_PROFI
 runtime_flags=(-s STANDALONE_WASM=1)
 output="${SPATIAL_WASM_OUTPUT:-src/world/wild-engine/spatial-savanna.wasm}"
 if [[ "${SPATIAL_PTHREADS:-0}" == 1 ]]; then
-  output="${SPATIAL_WASM_OUTPUT:-src/world/wild-engine/spatial-threaded.mjs}"
+  output="${SPATIAL_WASM_OUTPUT:-public/wild-engine/spatial-threaded.mjs}"
   if [[ "$output" != *.mjs && "$output" != *.js ]]; then
     echo 'Pthread builds require a .mjs or .js runtime output' >&2
     exit 2
