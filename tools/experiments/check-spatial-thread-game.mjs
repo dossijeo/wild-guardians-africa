@@ -2,7 +2,11 @@ import {chromium} from 'playwright';
 import {readFile,writeFile} from 'node:fs/promises';
 import {globalClosureQuery} from './global-closure-recipe-20261022.mjs';
 const threaded=process.env.WG_THREADS!=='0',benchmark=process.env.WG_THREAD_BENCH==='1',frozen=process.env.WG_THREAD_FROZEN==='1';
-const fixture=JSON.parse(await readFile('docs/qa/global-visual-lab/manglares-populated-frozen-20261022/native-fixture.json','utf8'));
+const biome=process.env.WG_THREAD_BIOME??'manglares';
+const fixtures={sabana:'sabana-populated-frozen-20261022',desierto:'desert-populated-closure-20261022','gran-rio':'gran-rio-populated-frozen-20261022',volcanes:'volcanes-populated-frozen-20261022',manglares:'manglares-populated-frozen-20261022','gran-canon':'gran-canon-populated-native-camera-20261022'};
+if(!fixtures[biome])throw Error('Unknown biome');
+const fixture=JSON.parse(await readFile(`docs/qa/global-visual-lab/${fixtures[biome]}/native-fixture.json`,'utf8'));
+if(JSON.parse(fixture.timing.navigationContext.state).biome!==biome)throw Error('Fixture biome mismatch');
 if(process.env.WG_THREAD_ACTIVE==='1'){const state=JSON.parse(fixture.timing.navigationContext.state);state.tutorial.basicSkipped=true;fixture.timing.navigationContext.state=JSON.stringify(state);}
 const browser=await chromium.launch({channel:'chrome',headless:true});
 const page=await browser.newPage({viewport:{width:1280,height:720}}),errors=[];
@@ -13,7 +17,7 @@ try{
  if(frozen)await page.route('**/src/app/main.js*',async route=>{const response=await route.fetch();const body=await response.text(),anchor='world.render(0);loadingOverlay?.dispose();';if(body.split(anchor).length!==2)throw Error('Missing readiness freeze anchor');await route.fulfill({response,body:body.replace(anchor,"Game.pause(state,'menu');"+anchor)});});
  await page.route('**/@vite/client',async route=>{const response=await route.fetch();const source=await response.text(),anchor='transport.connect(createHMRHandler(handleMessage));';if(!source.includes(anchor))throw Error('Missing HMR anchor');await route.fulfill({response,body:source.replace(anchor,'// QA: freeze module versions during measurement.')});});
  await page.route('**/src/rendering/scene.js*',async route=>{const r=await route.fetch();let s=await r.text();if(process.env.WG_THREAD_DETAIL==='1')for(const name of ['prepareMangroveBank','prepareNaturalWater','prepareNaturalAssetWater','prepareOpaqueCore','bindMangroveMudEdges','nativeTerrainBuffer']){const pattern=new RegExp('(import\\s*\\{[^}]*?)\\b'+name+'\\b');if(!pattern.test(s))throw Error('Missing import '+name);s=s.replace(pattern,'$1'+name+' as qaOriginal_'+name);s+='\nfunction '+name+'(...args){const t=performance.now();try{return qaOriginal_'+name+'(...args);}finally{globalThis.qaThreadDetail?.('+JSON.stringify(name)+',performance.now()-t);}}\n';}if(!s.includes('this.raycaster=new'))throw Error('Missing world observation anchor');await route.fulfill({response:r,body:s.replace('this.raycaster=new','globalThis.qaThreadWorld=this;this.raycaster=new')});});
- await page.goto(`http://127.0.0.1:${process.env.WG_THREAD_PORT??5192}/?`+globalClosureQuery('manglares')+'&mangroveFerns=holly&groundCache=fixed512&wildEngineThreads='+(threaded?'1':'0')+'&chunkInstall='+(process.env.WG_CHUNK_INSTALL??'sync'));
+ await page.goto(`http://127.0.0.1:${process.env.WG_THREAD_PORT??5192}/?`+globalClosureQuery(biome)+'&mangroveFerns=holly&groundCache=fixed512&wildEngineThreads='+(threaded?'1':'0')+'&chunkInstall='+(process.env.WG_CHUNK_INSTALL??'sync'));
  await page.waitForSelector('#native-menu',{timeout:60000});
  const frame=page.frames().find(f=>f.url().includes('/menu/'))??await page.waitForEvent('framenavigated',{predicate:f=>f.url().includes('/menu/'),timeout:60000});
  await frame.waitForLoadState('load');await frame.waitForFunction(()=>document.body.innerText.toUpperCase().includes('JUEGO NUEVO'));
@@ -81,6 +85,6 @@ try{
  },{active:process.env.WG_THREAD_ACTIVE==='1',depthWarm:process.env.WG_THREAD_DEPTH_WARM==='1',glDetail:process.env.WG_THREAD_GL_DETAIL==='1',frames:Number(process.env.WG_THREAD_FRAMES??180),distance:Number(process.env.WG_THREAD_DISTANCE??96)});
  if(profiler){const {profile}=await profiler.send('Profiler.stop');await writeFile((process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json').replace(/\.json$/,'.cpuprofile'),JSON.stringify(profile));await profiler.detach();}
  if(frozen&&benchmark)await page.screenshot({path:(process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json').replace(/\.json$/,'.png')});
- await writeFile(process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json',JSON.stringify({scope:'Loaded populated Mangroves game in Chrome, initial stream. Not ABAB performance acceptance.',result,errors},null,2)+'\n');
+ await writeFile(process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json',JSON.stringify({scope:'Loaded populated game in Chrome; see streaming scope for limitations.',biome,result,errors},null,2)+'\n');
  console.log(JSON.stringify({result,errors}));
 }finally{await browser.close();}

@@ -267,3 +267,19 @@ Capacity does not shrink after removal; it is a reusable high-water allocation, 
 `node tools/experiments/check-spatial-thread-browser-growth.mjs` executes the same portable pressure case as the Node entry point, using the real isolated Chrome/Emscripten worker runtime served by Vite. It performs all 429 publication/removal cycles with six navigation profiles, validates payload heights and post-growth JS polygon writes/native reads, and checks runtime teardown. `thread-browser-growth.json` passes: 16 -> 40 MiB capacity, no further growth in repeated or disjoint regions, one resident chunk / 16 active sectors after each pass, zero page errors, zero registered pthreads and zero unused workers after disposal.
 
 The first runner attempt used an absent Emscripten runningWorkers field and failed its report construction; it was corrected to inspect the actual PThread.pthreads registry and repeated from a fresh browser. The passing result is from the complete rerun. The test serves an isolated blank page to avoid unrelated game loading and does not measure full-game resource leaks, GPU memory, process RSS or frame performance. Node and browser now share spatial-thread-growth-case.mjs to keep the assertions identical.
+
+
+## Six real-game biome streaming checks
+
+QA harness accepts `WG_THREAD_BIOME` and validates each saved fixture's biome before loading. Sequential Chrome runs use the real populated fixtures, approved global graphics recipes, 720p medium Intel UHD, frozen initial state, QA tutorial omission, 60 warm frames, then 360 active frames / 144m per-frame camera travel. Each of the six biomes completes 15 new chunks with the pthread backend, all 360 actor-ready frames, zero paused frames and no errors beyond the already documented shader warnings. See biome-active-summary.json, individual raw reports and real screenshots.
+
+| Biome | RAF mean / p95 / max (ms) | Publication mean (ms) |
+|---|---|---:|
+| Sabana | 35.34 / 66.64 / 149.61 | 0.758 |
+| Desierto | 22.36 / 33.37 / 83.18 | 0.653 |
+| Gran Río | 32.43 / 66.46 / 166.57 | 0.752 |
+| Volcanes | 31.83 / 66.45 / 166.29 | 0.804 |
+| Gran Cañón | 18.38 / 32.83 / 116.62 | 0.773 |
+| Manglares | 34.83 / 50.08 / 183.04 | 0.726 |
+
+This expands real-renderer functional coverage beyond Mangroves. One run per different scene is not a performance comparison between backends or a ranking of biome efficiency. Timings are RAF/CPU, not GPU. Captures record end states, not exact before/after equivalence. Still required: paired low-quality and GPU measurements, edits during generation, animals, save/load/teardown of complete games, long sessions, packaging and remaining streaming stalls. No artistic changes or simulation rules were modified.
