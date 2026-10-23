@@ -458,3 +458,20 @@ A current GL-instrumented zigzag run records 49 getProgramInfoLog calls above 20
 A QA-only WG_THREAD_PIN_PROGRAMS=1 probe adds one reference to each warmed Three 0.180 program for the measurement, then releases those references in finally (destroying only programs whose remaining references are zero). It uses version-specific internal program fields and is not a production implementation. Same scene/camera cadence: slow GL calls fall from 49 to zero; RAF mean/p95/max changes from 32.64/99.71/182.79ms to 21.98/49.77/99.73ms.
 
 **This is not a valid quantified performance win yet:** the faster run completes only 63 chunk installations versus 85 during frame-count-driven camera reversals, because asynchronous work cancellation changes with elapsed time. Installation cost itself remains about 17.5ms. Both return to an idle queue, with no unexpected console errors. The next comparison must require equivalent completed work, repeated A/B/A/B, and a bounded lifecycle/memory policy before adopting retention. Raw reports/captures: game-zigzag-gl-detail and game-zigzag-program-pin. No production shader or artistic setting changed.
+
+
+## Completed-work program retention ABAB
+
+WG_THREAD_COMPLETE_LEGS=1 waits for each camera position to finish its queue and twelve settling frames before proceeding. Four alternating positions at x+240/x complete exactly 100 chunk installations per run, with identical per-leg installed key inventories, final native state (25 chunks, 400 sectors, 16 MiB), and no cancellations. Simulation is paused; quality medium, Intel UHD, 720p, GL attribution enabled. This removes the previous different-work confound.
+
+| ms | A1 normal | B1 pinned | A2 normal | B2 pinned |
+|---|---:|---:|---:|---:|
+| RAF mean | 28.17 | 26.42 | 28.50 | 27.43 |
+| RAF p95 | 66.51 | 50.06 | 66.50 | 49.91 |
+| RAF max | 116.35 | 99.75 | 100.06 | 99.78 |
+| Total observed RAF interval | 8480.51 | 8347.39 | 8663.41 | 8613.53 |
+| GL calls over 20ms | 15 | 0 | 12 | 0 |
+
+Repeated p95 improvement is about 25%; total elapsed benefit is only 1.6%/0.6%. Chunk installation still averages 15.9–17.0ms with peaks up to 50.3ms. Final PNG RGB MAE is 0.000196/0.000060 on a 0–255 scale, with localized maximum channel differences 18/20; not pixel-identical. These results support program-lifecycle retention as a stutter reduction candidate, not a complete streaming fix.
+
+Reproduce the four runs with WG_THREAD_PORT=5299, WG_THREAD_FROZEN=1, WG_THREAD_BENCH=1, WG_THREAD_COMPLETE_LEGS=1, WG_THREAD_GL_DETAIL=1, WG_THREAD_FRAMES=4, WG_THREAD_DISTANCE=240 and WG_THREAD_PIN_PROGRAMS=0/1/0/1. Raw program-retain-{a1,b1,a2,b2}.json/png and program-retain-summary.json contain evidence. GPU memory/driver allocation is not measured. The private-field retention probe remains QA-only pending a bounded production design, teardown checks and wider validation.

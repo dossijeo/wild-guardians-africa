@@ -70,7 +70,7 @@ try{
   const game=await import(gameUrl);game.pause(w.state,'menu');
   let depthWarmMs=null;if(options.depthWarm){const start=performance.now();await w.destructionPass.prepareDepth(w.camera,w.scene);const {initializeProgramBindingsAsync}=await import('/src/rendering/program-bindings.js');await initializeProgramBindingsAsync(w.renderer);depthWarmMs=performance.now()-start;}
   w.updateCamera=()=>{w.camera.lookAt(w.controls.target);w.camera.updateMatrixWorld();};
-  const readiness=[],slowDraws=[],slowGl=[];let actorsReadyFrames=0,pausedFrames=0;
+  const readiness=[],slowDraws=[],slowGl=[],legs=[];let actorsReadyFrames=0,pausedFrames=0;
   const detail={};globalThis.qaThreadDetail=(name,ms)=>(detail[name]??=[]).push(ms);
   const rows={slices:[],preparationCpu:[],preparationLatency:[],generate:[],admit:[],cancel:[],publish:[],install:[],terrain:[],props:[],mud:[],attach:[],details:[],render:[],draw:[],cache:[],nativeCompute:[],frames:[]};
   w.onTerrainPreparationSlice=row=>rows.slices.push(row.ms);
@@ -98,10 +98,17 @@ try{
   let last=await frame();
   try{
    for(let i=0;i<options.frames;i++){
-    const displacement=options.zigzag?(Math.floor(i/12)%2?options.distance:0):Math.min(options.distance,i*.8);
+    const displacement=options.completeLegs?((i%2===0)?options.distance:0):options.zigzag?(Math.floor(i/12)%2?options.distance:0):Math.min(options.distance,i*.8);
     w.controls.target.copy(origin);w.controls.target.x+=displacement;
     w.camera.position.copy(camera);w.camera.position.x+=displacement;
     const now=await frame();rows.frames.push(now-last);last=now;
+    if(options.completeLegs){
+     const deadline=performance.now()+60000;
+     for(let warm=0;warm<2;warm++){const now=await frame();rows.frames.push(now-last);last=now;}
+     while(w.chunkStream.summary().busy||w.chunkStream.summary().queued){if(performance.now()>deadline)throw Error('Leg completion timeout');const now=await frame();rows.frames.push(now-last);last=now;}
+     for(let settle=0;settle<12;settle++){const now=await frame();rows.frames.push(now-last);last=now;}
+     legs.push({leg:i,displacement,created:w.chunkStream.stats.created-initialCreated,resident:core.metrics().loadedChunks,keys:[...w.chunks.keys()].sort()});
+    }
     if(w.actorsReady())actorsReadyFrames++;
     if(w.state.pauses.length)pausedFrames++;
     if(i%60===0)readiness.push({frame:i,elapsed:w.state.elapsed,ready:w.actorsReady(),pauses:[...w.state.pauses],stream:w.chunkStream.summary()});
@@ -119,8 +126,8 @@ try{
   const gl=w.renderer.getContext(),debug=gl.getExtension('WEBGL_debug_renderer_info');
   if(options.active&&w.state.elapsed<=initialElapsed)throw Error('Active simulation did not advance');
   const workersAfter=w.state.workers.map(worker=>({id:worker.id,x:worker.x,z:worker.z,status:worker.status}));
-  return {scope:options.active?'Active simulation streaming pilot from frozen initial state, per-frame camera travel; final state varies with wall-clock time. CPU/RAF only, not GPU or equivalence acceptance.':'Paused simulation streaming after 60 warm frames. CPU/RAF only.',options,initialElapsed,workersBefore,workersAfter,actorsReadyFrames,pausedFrames,readiness,slowDraws,slowGl,fixtureTutorialSkipped:options.active,initialPrograms,depthWarmMs,gpu:gpuResult?{...gpuResult,summary:summary(gpuResult.samplesMs)}:null,hardware:debug?gl.getParameter(debug.UNMASKED_RENDERER_WEBGL):null,cameraOrigin:camera.toArray(),targetOrigin:origin.toArray(),elapsed:w.state.elapsed,baseline,final:core.metrics(),created:w.chunkStream.stats.created-initialCreated,detail:Object.fromEntries(Object.entries(detail).map(([k,v])=>[k,summary(v)])),summary:Object.fromEntries(Object.entries(rows).map(([k,v])=>[k,summary(v)])),rows};
- },{pinPrograms:process.env.WG_THREAD_PIN_PROGRAMS==='1',zigzag:process.env.WG_THREAD_ZIGZAG==='1',active:process.env.WG_THREAD_ACTIVE==='1',gpu:process.env.WG_THREAD_GPU==='1',depthWarm:process.env.WG_THREAD_DEPTH_WARM==='1',glDetail:process.env.WG_THREAD_GL_DETAIL==='1',frames:Number(process.env.WG_THREAD_FRAMES??180),distance:Number(process.env.WG_THREAD_DISTANCE??96)});
+  return {scope:options.active?'Active simulation streaming pilot from frozen initial state, per-frame camera travel; final state varies with wall-clock time. CPU/RAF only, not GPU or equivalence acceptance.':'Paused simulation streaming after 60 warm frames. CPU/RAF only.',options,legs,initialElapsed,workersBefore,workersAfter,actorsReadyFrames,pausedFrames,readiness,slowDraws,slowGl,fixtureTutorialSkipped:options.active,initialPrograms,depthWarmMs,gpu:gpuResult?{...gpuResult,summary:summary(gpuResult.samplesMs)}:null,hardware:debug?gl.getParameter(debug.UNMASKED_RENDERER_WEBGL):null,cameraOrigin:camera.toArray(),targetOrigin:origin.toArray(),elapsed:w.state.elapsed,baseline,final:core.metrics(),created:w.chunkStream.stats.created-initialCreated,detail:Object.fromEntries(Object.entries(detail).map(([k,v])=>[k,summary(v)])),summary:Object.fromEntries(Object.entries(rows).map(([k,v])=>[k,summary(v)])),rows};
+ },{completeLegs:process.env.WG_THREAD_COMPLETE_LEGS==='1',pinPrograms:process.env.WG_THREAD_PIN_PROGRAMS==='1',zigzag:process.env.WG_THREAD_ZIGZAG==='1',active:process.env.WG_THREAD_ACTIVE==='1',gpu:process.env.WG_THREAD_GPU==='1',depthWarm:process.env.WG_THREAD_DEPTH_WARM==='1',glDetail:process.env.WG_THREAD_GL_DETAIL==='1',frames:Number(process.env.WG_THREAD_FRAMES??180),distance:Number(process.env.WG_THREAD_DISTANCE??96)});
  if(profiler){const {profile}=await profiler.send('Profiler.stop');await writeFile((process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json').replace(/\.json$/,'.cpuprofile'),JSON.stringify(profile));await profiler.detach();}
  if(frozen&&(benchmark||process.env.WG_THREAD_EDIT==='1'))await page.screenshot({path:(process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json').replace(/\.json$/,'.png')});
  await writeFile(process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json',JSON.stringify({scope:'Loaded populated game in Chrome; see streaming scope for limitations.',biome,quality,result,errors},null,2)+'\n');

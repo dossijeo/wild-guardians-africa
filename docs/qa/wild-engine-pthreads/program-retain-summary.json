@@ -1,0 +1,141 @@
+{
+  "scope": "Paused medium Mangroves four completed 240m camera legs ABAB, identical installed chunk inventories. QA internal Three program retention. CPU/RAF; no GPU memory measurement",
+  "rows": [
+    {
+      "run": "a1",
+      "pin": false,
+      "frames": {
+        "count": 301,
+        "mean": 28.17445182724253,
+        "p95": 66.51000000000204,
+        "max": 116.34999999999854
+      },
+      "totalRafMs": 8480.510000000002,
+      "slowGlCount": 15,
+      "slowGlMs": 546.1350000500679,
+      "created": 100,
+      "cancelCount": 0,
+      "install": {
+        "count": 100,
+        "mean": 15.924700000882149,
+        "p95": 28.5900000333786,
+        "max": 44.50500005483627
+      },
+      "finalNative": {
+        "memoryBytes": 16777216,
+        "loadedChunks": 25,
+        "residentPropRecords": 269,
+        "residentVisiblePropRecords": 5713,
+        "loadedSectors": 400,
+        "sectorSlots": 400,
+        "sectorUpdates": 5040,
+        "haloProps": 4
+      }
+    },
+    {
+      "run": "b1",
+      "pin": true,
+      "frames": {
+        "count": 316,
+        "mean": 26.415806962025307,
+        "p95": 50.05500000000029,
+        "max": 99.74500000000262
+      },
+      "totalRafMs": 8347.394999999997,
+      "slowGlCount": 0,
+      "slowGlMs": 0,
+      "created": 100,
+      "cancelCount": 0,
+      "install": {
+        "count": 100,
+        "mean": 16.621399999856948,
+        "p95": 27.62999999523163,
+        "max": 42.43000000715256
+      },
+      "finalNative": {
+        "memoryBytes": 16777216,
+        "loadedChunks": 25,
+        "residentPropRecords": 269,
+        "residentVisiblePropRecords": 5713,
+        "loadedSectors": 400,
+        "sectorSlots": 400,
+        "sectorUpdates": 5040,
+        "haloProps": 4
+      }
+    },
+    {
+      "run": "a2",
+      "pin": false,
+      "frames": {
+        "count": 304,
+        "mean": 28.498042763157915,
+        "p95": 66.49500000000262,
+        "max": 100.05500000000029
+      },
+      "totalRafMs": 8663.405000000006,
+      "slowGlCount": 12,
+      "slowGlMs": 430.8850000500679,
+      "created": 100,
+      "cancelCount": 0,
+      "install": {
+        "count": 100,
+        "mean": 16.568050001859664,
+        "p95": 28.764999985694885,
+        "max": 38.66499996185303
+      },
+      "finalNative": {
+        "memoryBytes": 16777216,
+        "loadedChunks": 25,
+        "residentPropRecords": 269,
+        "residentVisiblePropRecords": 5713,
+        "loadedSectors": 400,
+        "sectorSlots": 400,
+        "sectorUpdates": 5040,
+        "haloProps": 4
+      }
+    },
+    {
+      "run": "b2",
+      "pin": true,
+      "frames": {
+        "count": 314,
+        "mean": 27.431640127388523,
+        "p95": 49.90500000000611,
+        "max": 99.77500000000146
+      },
+      "totalRafMs": 8613.534999999996,
+      "slowGlCount": 0,
+      "slowGlMs": 0,
+      "created": 100,
+      "cancelCount": 0,
+      "install": {
+        "count": 100,
+        "mean": 17.022450001239775,
+        "p95": 28.569999992847443,
+        "max": 50.25499999523163
+      },
+      "finalNative": {
+        "memoryBytes": 16777216,
+        "loadedChunks": 25,
+        "residentPropRecords": 269,
+        "residentVisiblePropRecords": 5713,
+        "loadedSectors": 400,
+        "sectorSlots": 400,
+        "sectorUpdates": 5040,
+        "haloProps": 4
+      }
+    }
+  ],
+  "images": [
+    {
+      "pair": "1",
+      "rgbMAE255": 0.00019639756944444444,
+      "maxChannelDifference": 18
+    },
+    {
+      "pair": "2",
+      "rgbMAE255": 6.0040509259259255e-05,
+      "maxChannelDifference": 20
+    }
+  ]
+}
