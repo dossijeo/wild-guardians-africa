@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {MaterialBakeQueue} from '/src/rendering/material-bake-queue.js';
 import {GpuTimer} from '/tests/browser/gpu-timer.js';
 import {bakeFragment,installHybridCache} from './qa-mangrove-hybrid-cache-20261023.js';
 import {MangroveCacheProjection,cacheBytes} from './qa-mangrove-cache-projection-20261023.js';
@@ -15,6 +16,7 @@ export async function installRegionCache(w,{verifyTiles=false}={}){
  }
  const coarse=await installHybridCache(w,128,'weights',plan),r=w.renderer;
  const stats={scope:'QA frozen coarse cache and detailed region; tiled generation, no streaming invalidation yet',coarse,regions:[],bytes:coarse.bytes,tileSubmissionsMs:[]};
+ const queue=new MaterialBakeQueue({budgetBytes:32*1024*1024,reservedBytes:coarse.bytes});stats.queue=queue.stats;
  const scene=new THREE.Scene(),camera=new THREE.Camera(),geometry=new THREE.PlaneGeometry(2,2),first=fine[0]?.mesh.material.userData.biomeGround;
  if(!first)return stats;
  const uniforms={...first,uGroundRect:{value:first.uGroundRect.value.clone()},uGroundMask:{value:first.uGroundMask.value},uWetBank:{value:first.uWetBank.value},uQaBakeRect:{value:new THREE.Vector3(first.uGroundRect.value.x,first.uGroundRect.value.y,24)},resolution:{value:1024}};
@@ -37,15 +39,21 @@ export async function installRegionCache(w,{verifyTiles=false}={}){
    const point=ray.clone().multiplyScalar((y-w.camera.position.y)/ray.y).add(w.camera.position);
    const x=THREE.MathUtils.clamp(point.x-side/2,box.min.x,box.max.x-side),z=THREE.MathUtils.clamp(point.z-side/2,box.min.z,box.max.z-side);
    uniforms.uGroundRect.value.copy(u.uGroundRect.value);uniforms.uGroundMask.value=u.uGroundMask.value;uniforms.uWetBank.value=u.uWetBank.value;uniforms.uQaBakeRect.value.set(x,z,side);material.uniformsNeedUpdate=true;
-   const target=new THREE.WebGLRenderTarget(pixels,pixels,{depthBuffer:false,minFilter:THREE.LinearMipmapLinearFilter,magFilter:THREE.LinearFilter,generateMipmaps:false});
-   target.scissorTest=true;
-   try{for(let tile=0;tile<16;tile++){
-    const col=tile%4,rowIndex=Math.floor(tile/4),x0=Math.floor(col*pixels/4),y0=Math.floor(rowIndex*pixels/4),x1=Math.floor((col+1)*pixels/4),y1=Math.floor((rowIndex+1)*pixels/4);
-    target.scissor.set(x0,y0,x1-x0,y1-y0);target.texture.generateMipmaps=tile===15;
-    const previous=r.getRenderTarget(),auto=r.autoClear,t=performance.now();timer.begin(stats.tileSubmissionsMs.length);
-    try{r.autoClear=false;r.setRenderTarget(target);r.render(scene,camera);}finally{r.setRenderTarget(previous);r.autoClear=auto;timer.end();}
-    stats.tileSubmissionsMs.push(performance.now()-t);await new Promise(requestAnimationFrame);
-   }}catch(error){target.dispose();throw error;}
+   let target=null;
+   const release=()=>queue.remove(row.key);mesh.material.addEventListener('dispose',release);
+   const admitted=queue.request(row.key,{version:1,bytes:cacheBytes(size),tiles:16,
+    create(){const value=new THREE.WebGLRenderTarget(pixels,pixels,{depthBuffer:false,minFilter:THREE.LinearMipmapLinearFilter,magFilter:THREE.LinearFilter,generateMipmaps:false});value.scissorTest=true;return value;},
+    draw(value,tile){
+     const col=tile%4,rowIndex=Math.floor(tile/4),x0=Math.floor(col*pixels/4),y0=Math.floor(rowIndex*pixels/4),x1=Math.floor((col+1)*pixels/4),y1=Math.floor((rowIndex+1)*pixels/4);
+     value.scissor.set(x0,y0,x1-x0,y1-y0);value.texture.generateMipmaps=tile===15;
+     const previous=r.getRenderTarget(),auto=r.autoClear,t=performance.now();timer.begin(stats.tileSubmissionsMs.length);
+     try{r.autoClear=false;r.setRenderTarget(value);r.render(scene,camera);}finally{r.setRenderTarget(previous);r.autoClear=auto;timer.end();}
+     stats.tileSubmissionsMs.push(performance.now()-t);
+    },publish(value){target=value;},destroy(value){value.dispose();}
+   });
+   if(admitted==='budget'){stats.budgetFallbacks=(stats.budgetFallbacks??0)+1;continue;}
+   while(queue.pending.has(row.key)){await new Promise(requestAnimationFrame);queue.step();}
+   if(!target)continue; // Chunk disposed during preparation: never publish stale data.
    target.scissorTest=false;
    if(verifyTiles){
     // Readback is QA-only and excluded from timing runs. Keep the full viewport
@@ -73,10 +81,10 @@ export async function installRegionCache(w,{verifyTiles=false}={}){
      cached=mix(cached,texture(uQaFineCache,fineUV),fineBlend);
     `);
    };
-   mesh.material.customProgramCacheKey=()=>key()+'|qa-fine-region-v1';mesh.material.needsUpdate=true;mesh.material.addEventListener('dispose',()=>target.dispose());
+   mesh.material.customProgramCacheKey=()=>key()+'|qa-fine-region-v1';mesh.material.needsUpdate=true;
    stats.bytes+=cacheBytes(size);stats.regions.push({key:row.key,x,z,side,resolution:size,tiles:16});
   }
   const deadline=performance.now()+10000;while(timer.pending.length&&performance.now()<deadline){await new Promise(requestAnimationFrame);timer.poll();}stats.generationGpu=timer.report();
- }finally{timer.dispose();material.dispose();geometry.dispose();}
+ }catch(error){queue.dispose();throw error;}finally{timer.dispose();material.dispose();geometry.dispose();}
  return stats;
 }
