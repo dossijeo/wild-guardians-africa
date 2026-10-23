@@ -9,6 +9,17 @@
 #include <unordered_set>
 #include <utility>
 #include <vector>
+#ifdef WILD_SPATIAL_PROFILE
+#include <emscripten/emscripten.h>
+namespace { double spatialProfileTimes[14]{}; }
+extern "C" EMSCRIPTEN_KEEPALIVE void spatial_profile_reset(){std::fill_n(spatialProfileTimes,14,0.0);}
+extern "C" EMSCRIPTEN_KEEPALIVE double spatial_profile_ms(int index){return index>=0&&index<14?spatialProfileTimes[index]:-1;}
+#define SPATIAL_TICK(name) const double name=emscripten_get_now()
+#define SPATIAL_TOCK(index,name) spatialProfileTimes[index]+=emscripten_get_now()-name
+#else
+#define SPATIAL_TICK(name)
+#define SPATIAL_TOCK(index,name)
+#endif
 
 // Isolated spatial-authority experiment. The same deterministic functions
 // produce render heights, visible props and navigation occupancy. It is not
@@ -809,6 +820,7 @@ bool edge(int x,int z,int nx,int nz){
   return base&&wallEdgeClear(x,z,nx,nz);
 }
 void refreshSector(int sx,int sz){
+  SPATIAL_TICK(sectorFillStarted);
   uint8_t* pass=lazy_pass_ptr(),*steps=lazy_steps_ptr(),*inbound=lazy_inbound_ptr();
   constexpr int dx[4]={1,-1,0,0},dz[4]={0,0,1,-1};
   for(int lz=0;lz<sector;lz++)for(int lx=0;lx<sector;lx++){
@@ -828,7 +840,9 @@ void refreshSector(int sx,int sz){
       if(edge(nx,nz,x,z))inbound[i]|=1<<d;
     }
   }
+  SPATIAL_TOCK(12,sectorFillStarted);SPATIAL_TICK(sectorGraphStarted);
   lazy_commit_sector(sx,sz);
+  SPATIAL_TOCK(13,sectorGraphStarted);
 }
 template<class F> void forEachRectSector(int minX,int minZ,int maxX,int maxZ,F visit){
   if(!navReady)return;
@@ -897,6 +911,7 @@ void groundColorAt(double wx,double wz,float* output){
   }
 }
 void populateChunk(int cx,int cz,bool visual=true){
+  SPATIAL_TICK(populateStarted);SPATIAL_TICK(setupStarted);
   chunkX=cx;chunkZ=cz;props.clear();solidProps.clear();staticPass.clear();staticSteps.clear();staticInbound.clear();haloPropCount=0;
   selectNearbySettlements(cx,cz);
   // The standalone no-entry WASM binary has no startup constructor pass.
@@ -905,6 +920,7 @@ void populateChunk(int cx,int cz,bool visual=true){
     heights.assign(grid*grid,0);colors.assign(grid*grid*3,0);
     water.assign(side*side,0);waterLevels.assign(side*side,0);
   }
+  SPATIAL_TOCK(5,setupStarted);SPATIAL_TICK(latticeStarted);
   const int x0=cx*side-24,z0=cz*side-24;
   lattice.resize(latticeSpan*latticeSpan);
   for(int z=0;z<latticeSpan;z++)for(int x=0;x<latticeSpan;x++)
@@ -913,20 +929,27 @@ void populateChunk(int cx,int cz,bool visual=true){
   // A settlement explicitly invalidates affected samples before regeneration.
   if(!residentSpatial().count(chunkKey(cx,cz)))
     residentSpatial()[chunkKey(cx,cz)]={lattice,ponds};
+  SPATIAL_TOCK(6,latticeStarted);
   if(visual){
+  SPATIAL_TICK(colorStarted);
   for(int z=0;z<grid;z++)for(int x=0;x<grid;x++){
     const int i=z*grid+x,wx=x0+x,wz=z0+z;
     heights[i]=float(latticeHeight(wx,wz));
     // Biome-specific colors come from this C++ world, not a second JS recipe.
     groundColorAt(wx,wz,colors.data()+i*3);
   }
+  SPATIAL_TOCK(7,colorStarted);SPATIAL_TICK(waterStarted);
   for(int z=0;z<side;z++)for(int x=0;x<side;x++){
     const double level=fluidLevel(x0+x+.5,z0+z+.5);
     water[z*side+x]=level!=0;waterLevels[z*side+x]=float(level);
   }
+  SPATIAL_TOCK(8,waterStarted);SPATIAL_TICK(maskStarted);
   buildGroundMask(cx,cz);
+  SPATIAL_TOCK(9,maskStarted);SPATIAL_TICK(meshStarted);
   buildWaterMesh(cx,cz);
+  SPATIAL_TOCK(10,meshStarted);
   }
+  SPATIAL_TICK(propsStarted);
   constexpr double savannaSpacing[6]={13.5,7,2.8,9,10,32};
   constexpr double desertSpacing[6]={19,11,4.6,15,23,54};
   constexpr double canyonSpacing[6]={13,5.2,3.5,9,19,31};
@@ -1018,6 +1041,7 @@ void populateChunk(int cx,int cz,bool visual=true){
   indexSolidProps();
   residentSolidProps()[chunkKey(cx,cz)]=solidProps;
   residentVisibleProps()[chunkKey(cx,cz)]=props;
+  SPATIAL_TOCK(11,propsStarted);SPATIAL_TOCK(0,populateStarted);
 }
 void buildActiveRaster(){
   const int firstX=chunkX*side-24,firstZ=chunkZ*side-24;
@@ -1370,15 +1394,19 @@ int spatial_add_chunk(int cx,int cz){
   if(!chunkRasters)return -1;
   if(chunkRasters->count(chunkKey(cx,cz)))return 0;
   for(const auto& [x,z]:loadedChunks)if(x==cx&&z==cz)return 0;
+  SPATIAL_TICK(totalStarted);
   populateChunk(cx,cz);loadedChunks.emplace_back(cx,cz);
   const int previous=activeProfile;
   for(int profile=0;profile<navigationProfiles;profile++){
     selectProfile(profile);
     if(!navReady)continue;
     // Both radii rasterize the same freshly generated terrain and props.
-    buildActiveRaster();commitActiveSectors();refreshNeighborBorders(cx,cz);
+    SPATIAL_TICK(rasterStarted);buildActiveRaster();SPATIAL_TOCK(1,rasterStarted);
+    SPATIAL_TICK(commitStarted);commitActiveSectors();SPATIAL_TOCK(2,commitStarted);
+    SPATIAL_TICK(borderStarted);refreshNeighborBorders(cx,cz);SPATIAL_TOCK(3,borderStarted);
   }
   selectProfile(previous);
+  SPATIAL_TOCK(4,totalStarted);
   return int(props.size())+1;
 }
 int spatial_select_chunk(int cx,int cz){
