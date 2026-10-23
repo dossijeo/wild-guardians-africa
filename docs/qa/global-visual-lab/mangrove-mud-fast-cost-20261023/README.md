@@ -43,3 +43,9 @@ python tools/experiments/audit-mangrove-mud-fast-20261023.py docs/qa/global-visu
 ## Relacion con la atribucion
 
 La atribucion activa previa mide suelo7.8–8.2ms, overlay1.3–1.4ms y sombras completas~3.5ms. Este ensayo aborda trabajo redundante del overlay, no los8ms completos del suelo. Overdraw aun no medido directamente. El LOD aprobado esta en ambos ensayos, pero su integracion nativa y validacion del ciclo de recursos siguen pendientes. Mantener la prioridad: costes de escena y recalculos evitables, sin adelgazar el arte aprobado.
+
+## Auditoria de residuos entre repeticiones
+
+Comparar tambien A1/A2 y B1/B2 revela variacion incluso sin cambiar shader:4703/4765 pixeles diurnos y3103/4333 nocturnos. Solo14 pixeles diurnos (maximo1/255) y19 nocturnos (maximo5/255) permanecen diferentes A/B y estables dentro de cada variante en ambas repeticiones. Esto impide atribuir el total de diferencias al candidato. No prueba equivalencia fuera de estas vistas ni descarta residuos coincidentes con zonas variables.
+
+Mapas residual-day/night.png: azul indica variacion entre repeticiones; magenta diferencia estable entre variantes; naranja diferencia A1/B1 restante. Inspeccion del mapa nocturno: la variacion azul se concentra en arboles del fondo; pequenos residuos magenta sobre barro y otros puntos. La causa temporal exacta no esta demostrada. Antes de promocionar conviene fijar los relojes de esa vegetacion en una comparacion visual dedicada, sin modificar el benchmark de rendimiento original. El auditor reproduce estos mapas.

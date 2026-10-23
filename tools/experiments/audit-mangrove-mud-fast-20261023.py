@@ -34,3 +34,15 @@ for phase in ['day','night']:
   delta=np.abs(x-y);comparisons.append(dict(phase=phase,repeat=a//4+1,changedPixels=int(np.any(delta,axis=2).sum()),maxChannel=int(delta.max()),meanAbsolute=float(delta.mean())))
 (p/'image-comparison.json').write_text(json.dumps(comparisons,indent=2)+'\n',encoding='utf-8')
 print(comparisons)
+
+# Separate repeat drift from stable A/B residuals; not a proof of causation.
+residuals=[]
+for phase,ids in [('day',[0,2,4,6]),('night',[1,3,5,7])]:
+ a,b,c,d=[np.asarray(Image.open(p/f'media-{v}-{phase}-{i}.png').convert('RGB'),dtype=np.int16) for v,i in zip(['base','fast','base','fast'],ids)]
+ ab=np.any(a!=b,axis=2);cd=np.any(c!=d,axis=2);aa=np.any(a!=c,axis=2);bb=np.any(b!=d,axis=2)
+ stable=ab&cd&~aa&~bb
+ residuals.append(dict(phase=phase,baseRepeatPixels=int(aa.sum()),fastRepeatPixels=int(bb.sum()),stableVariantPixels=int(stable.sum()),stableVariantMax=int(np.abs(a-b)[stable].max()) if stable.any() else 0))
+ heat=np.zeros_like(a,dtype=np.uint8);heat[ab]=[255,100,0];heat[aa|bb]=[0,100,255];heat[stable]=[255,0,255]
+ Image.fromarray(heat).save(p/f'residual-{phase}.png')
+(p/'residual-analysis.json').write_text(json.dumps(residuals,indent=2)+'\n',encoding='utf-8')
+print(residuals)
