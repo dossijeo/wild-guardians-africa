@@ -3,6 +3,7 @@ import {readFile,writeFile} from 'node:fs/promises';
 import {globalClosureQuery} from './global-closure-recipe-20261022.mjs';
 const threaded=process.env.WG_THREADS!=='0',benchmark=process.env.WG_THREAD_BENCH==='1',frozen=process.env.WG_THREAD_FROZEN==='1';
 const fixture=JSON.parse(await readFile('docs/qa/global-visual-lab/manglares-populated-frozen-20261022/native-fixture.json','utf8'));
+if(process.env.WG_THREAD_ACTIVE==='1'){const state=JSON.parse(fixture.timing.navigationContext.state);state.tutorial.basicSkipped=true;fixture.timing.navigationContext.state=JSON.stringify(state);}
 const browser=await chromium.launch({channel:'chrome',headless:true});
 const page=await browser.newPage({viewport:{width:1280,height:720}}),errors=[];
 page.on('pageerror',e=>errors.push(e.message));
@@ -28,43 +29,55 @@ try{
  const result=await page.evaluate(async()=>{const w=qaThreadWorld;await w.whenChunksReady();return {isolated:crossOriginIsolated,runtime:w.spatialSession.runtime,stream:w.chunkStream.summary(),native:w.spatialSession.core.metrics(),chunks:w.chunks.size,stage:document.querySelector('#stage')?.getAttribute('aria-busy'),elapsed:w.state.elapsed,renderer:w.renderer.getContext().getParameter(w.renderer.getContext().RENDERER)};});
  if(result.runtime.backend!==(threaded?'pthreads':'standalone'))throw Error(JSON.stringify(result));
  if(frozen&&result.elapsed!==JSON.parse(fixture.timing.navigationContext.state).elapsed)throw Error('Fixture advanced before pause');
- if(benchmark)result.streaming=await page.evaluate(async()=>{
+ const profiler=process.env.WG_THREAD_CPU_PROFILE==='1'?await page.context().newCDPSession(page):null;
+ if(profiler){await profiler.send('Profiler.enable');await profiler.send('Profiler.start');}
+ if(benchmark)result.streaming=await page.evaluate(async(options)=>{
   const w=qaThreadWorld,core=w.spatialSession.core;
   const gameUrl=performance.getEntriesByType('resource').map(e=>e.name).find(n=>new URL(n).pathname==='/src/simulation/game.js');
   if(!gameUrl)throw Error('Missing canonical simulation module');
-  (await import(gameUrl)).pause(w.state,'menu');
+  const game=await import(gameUrl);game.pause(w.state,'menu');
   w.updateCamera=()=>{w.camera.lookAt(w.controls.target);w.camera.updateMatrixWorld();};
+  const readiness=[],slowDraws=[],slowGl=[];let actorsReadyFrames=0,pausedFrames=0;
   const detail={};globalThis.qaThreadDetail=(name,ms)=>(detail[name]??=[]).push(ms);
   const rows={slices:[],preparationCpu:[],preparationLatency:[],generate:[],admit:[],publish:[],install:[],terrain:[],props:[],mud:[],attach:[],details:[],render:[],draw:[],cache:[],nativeCompute:[],frames:[]};
   w.onTerrainPreparationSlice=row=>rows.slices.push(row.ms);
   w.onTerrainPreparationDone=row=>{rows.preparationCpu.push(row.cpuMs);rows.preparationLatency.push(row.elapsedMs);};
-  const wrap=(object,name,key)=>{const original=object[name];object[name]=function(...args){const t=performance.now();try{return original.apply(this,args);}finally{rows[key].push(performance.now()-t);}};return ()=>{object[name]=original;};};
+  const wrap=(object,name,key)=>{const original=object[name];object[name]=function(...args){const t=performance.now();try{return original.apply(this,args);}finally{const ms=performance.now()-t;rows[key].push(ms);if(key==='draw'&&ms>100)slowDraws.push({ms,programs:w.renderer.info.programs.length,elapsed:w.state.elapsed,pauses:[...w.state.pauses]});}};return ()=>{object[name]=original;};};
   const restore=[wrap(core,'addChunk','generate'),wrap(w,'installChunk','install'),wrap(w,'terrain','terrain'),wrap(w,'buildPropSlot','props'),wrap(w,'render','render'),wrap(w,'drawRenderFrame','draw')];
   if(w.mudPatches)restore.push(wrap(w.mudPatches,'chunk','mud'));
   if(w.biomeGround)restore.push(wrap(w.biomeGround,'attach','attach'));
   if(w.groundDetails)restore.push(wrap(w.groundDetails,'chunk','details'));
   if(w.mangroveMaterialCache)restore.push(wrap(w.mangroveMaterialCache,'update','cache'));
   if(core.preparation){restore.push(wrap(core.preparation,'start','admit'),wrap(core.preparation,'publish','publish'));const publish=core.preparation.publish;core.preparation.publish=(...a)=>{rows.nativeCompute.push(core.preparation.metric(1));return publish(...a);};}
+  if(options.glDetail){for(const [object,name,key] of [[w,'beforeMicroeventDraw','microevents'],[w,'presentationDraw','presentation'],[w,'drawWorldFrame','worldDraw'],[w.renderer,'render','threeRender']])if(typeof object[name]==='function'){rows[key]=[];restore.push(wrap(object,name,key));}const gl=w.renderer.getContext();for(const name of ['compileShader','linkProgram','getProgramParameter','getShaderParameter','getShaderInfoLog','getProgramInfoLog','getUniformLocation','getActiveUniform','getActiveAttrib','drawElements','drawElementsInstanced','drawArrays','drawArraysInstanced','texImage2D','texSubImage2D','bufferData','bufferSubData']){const original=gl[name];gl[name]=function(...args){const t=performance.now();try{return original.apply(this,args);}finally{const ms=performance.now()-t;if(ms>20)slowGl.push({name,ms,elapsed:w.state.elapsed});}};restore.push(()=>{gl[name]=original;});}}
   const frame=()=>new Promise(r=>requestAnimationFrame(r));
   for(let i=0;i<60;i++)await frame();
   for(const values of [...Object.values(rows),...Object.values(detail)])values.length=0;
   const origin=w.controls.target.clone(),camera=w.camera.position.clone();
   const baseline=core.metrics(),initialCreated=w.chunkStream.stats.created;
+  const initialElapsed=w.state.elapsed,workersBefore=w.state.workers.map(worker=>({id:worker.id,x:worker.x,z:worker.z,status:worker.status}));
+  if(options.active)game.resume(w.state,'menu');
   let last=await frame();
   try{
-   for(let i=0;i<180;i++){
-    const displacement=Math.min(96,i*.8);
+   for(let i=0;i<options.frames;i++){
+    const displacement=Math.min(options.distance,i*.8);
     w.controls.target.copy(origin);w.controls.target.x+=displacement;
     w.camera.position.copy(camera);w.camera.position.x+=displacement;
     const now=await frame();rows.frames.push(now-last);last=now;
+    if(w.actorsReady())actorsReadyFrames++;
+    if(w.state.pauses.length)pausedFrames++;
+    if(i%60===0)readiness.push({frame:i,elapsed:w.state.elapsed,ready:w.actorsReady(),pauses:[...w.state.pauses],stream:w.chunkStream.summary()});
    }
    const deadline=performance.now()+60000;
    while(w.chunkStream.summary().busy||w.chunkStream.summary().queued){if(performance.now()>deadline)throw Error('Stream completion deadline');const now=await frame();rows.frames.push(now-last);last=now;}
-  }finally{for(const undo of restore)undo();}
+  }finally{game.pause(w.state,'menu');for(const undo of restore)undo();}
   const summary=values=>{const sorted=[...values].sort((a,b)=>a-b);return {count:values.length,mean:values.reduce((a,b)=>a+b,0)/(values.length||1),p95:sorted[Math.floor((sorted.length-1)*.95)]??null,max:sorted.at(-1)??null};};
   const gl=w.renderer.getContext(),debug=gl.getExtension('WEBGL_debug_renderer_info');
-  return {scope:'Paused simulation, continuous 96m camera travel at fixed per-frame steps after 60 warm frames. CPU/RAF only; not GPU or active simulation acceptance.',hardware:debug?gl.getParameter(debug.UNMASKED_RENDERER_WEBGL):null,cameraOrigin:camera.toArray(),targetOrigin:origin.toArray(),elapsed:w.state.elapsed,baseline,final:core.metrics(),created:w.chunkStream.stats.created-initialCreated,detail:Object.fromEntries(Object.entries(detail).map(([k,v])=>[k,summary(v)])),summary:Object.fromEntries(Object.entries(rows).map(([k,v])=>[k,summary(v)])),rows};
- });
+  if(options.active&&w.state.elapsed<=initialElapsed)throw Error('Active simulation did not advance');
+  const workersAfter=w.state.workers.map(worker=>({id:worker.id,x:worker.x,z:worker.z,status:worker.status}));
+  return {scope:options.active?'Active simulation streaming pilot from frozen initial state, per-frame camera travel; final state varies with wall-clock time. CPU/RAF only, not GPU or equivalence acceptance.':'Paused simulation streaming after 60 warm frames. CPU/RAF only.',options,initialElapsed,workersBefore,workersAfter,actorsReadyFrames,pausedFrames,readiness,slowDraws,slowGl,fixtureTutorialSkipped:options.active,hardware:debug?gl.getParameter(debug.UNMASKED_RENDERER_WEBGL):null,cameraOrigin:camera.toArray(),targetOrigin:origin.toArray(),elapsed:w.state.elapsed,baseline,final:core.metrics(),created:w.chunkStream.stats.created-initialCreated,detail:Object.fromEntries(Object.entries(detail).map(([k,v])=>[k,summary(v)])),summary:Object.fromEntries(Object.entries(rows).map(([k,v])=>[k,summary(v)])),rows};
+ },{active:process.env.WG_THREAD_ACTIVE==='1',glDetail:process.env.WG_THREAD_GL_DETAIL==='1',frames:Number(process.env.WG_THREAD_FRAMES??180),distance:Number(process.env.WG_THREAD_DISTANCE??96)});
+ if(profiler){const {profile}=await profiler.send('Profiler.stop');await writeFile((process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json').replace(/\.json$/,'.cpuprofile'),JSON.stringify(profile));await profiler.detach();}
  if(frozen&&benchmark)await page.screenshot({path:(process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json').replace(/\.json$/,'.png')});
  await writeFile(process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json',JSON.stringify({scope:'Loaded populated Mangroves game in Chrome, initial stream. Not ABAB performance acceptance.',result,errors},null,2)+'\n');
  console.log(JSON.stringify({result,errors}));
