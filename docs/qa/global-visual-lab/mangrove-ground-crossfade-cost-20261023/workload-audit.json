@@ -1,0 +1,26 @@
+{
+  "passed": true,
+  "phasePassed": {
+    "day": true
+  },
+  "issues": [],
+  "windows": {
+    "day/frame": {
+      "matchingCameraAndFernCoverage": true,
+      "extraQuadFramesByRun": [
+        21,
+        5,
+        21
+      ]
+    },
+    "day/cadence": {
+      "matchingCameraAndFernCoverage": true,
+      "extraQuadFramesByRun": [
+        18,
+        17,
+        9
+      ]
+    }
+  },
+  "limitation": "Count audit permits differences of one two-triangle bake quad when comparing cache variants; not an individual asset census."
+}
