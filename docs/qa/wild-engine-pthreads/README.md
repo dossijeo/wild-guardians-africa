@@ -387,3 +387,15 @@ The prior dist contained 1042 files / 569,134,687 bytes. A SHA-256 audit found o
 Approved holly-fern-frond and holly-fern-lod assets, cupped leaves, continuous-grass modules and all runtime art remain included. No texture conversion, quality reduction or shader change was made. The package verifier rejects textual runtime references to excluded paths and verifies their absence along with existing asset/link checks.
 
 `npm run package:itch` now passes: **997 files, 491,960,976 uncompressed bytes**, 841 checked relative links, CRC-verified ZIP. Only three files and about 8 MB remain under current limits. See package-itch-clean.json for archive size/hash. `check-spatial-thread-package.mjs` also passes on the rebuilt dist: isolated/shared memory, native worker identity 1, successful publication from a nested URL. This resolves the local packaging limit, not actual hosted itch isolation/configuration. Tauri rebuild and full packaged-game validation remain pending.
+
+
+## Rebuilt Windows executable after package cleanup
+
+Built source commit 34e36bf33 with `npx tauri build --no-bundle -- --locked`; frontend inventory checks pass and the optimized Rust build finishes in 2m12s. `tauri-rebuilt-artifact.json` records executable SHA-256 and size. The executable is not committed.
+
+Two sequential checks run against that new executable:
+
+- `--smoke-report <absolute tauri-pthreads-rebuilt.json> --smoke-pthreads`: passes on http://tauri.localhost, secure and isolated, supplied shared memory adopted, six biomes with native worker identity 1 and successful publication, clean shutdown, no errors.
+- `--smoke-report <absolute tauri-game-rebuilt.json>`: full application smoke passes, 17 runtime GLBs load, audio decodes, storage/WebGL2/worker checks pass, Gran Cañón / Mapungubwe reaches world readiness at 1024x576 in 12.31 seconds, no errors.
+
+These are complementary checks: the game smoke does not currently expose/assert its chosen native backend, and the explicit pthread check does not exercise a full campaign. No installer bundle, non-Windows platform or hosted itch deployment is covered by these results. Distribution acceptance therefore remains incomplete.
