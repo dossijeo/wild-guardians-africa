@@ -1,3 +1,4 @@
+import {canyonWaterReflectionEnabled,patchCanyonWaterReflection} from './canyon-water-reflection.js';
 import {mangroveFernEnabled} from './mangrove-fern-option.js';
 import {patchFernGround} from './mangrove-fern-ground.js';
 import {patchMangroveMoss} from './global-mangrove-moss.js';
@@ -208,6 +209,7 @@ export function paintedWaterMaterial(color,lava=false,seed=42,bounds=null,lighti
   const material=new THREE.MeshStandardMaterial({color,roughness:.4,metalness:.1,side:THREE.DoubleSide});
   const originalDepthHook=material.onBeforeCompile;
   const experimentalWater=!!lighting?.globalWaterSurface&&!lava;
+  const calmCanyon=experimentalWater&&canyonWaterReflectionEnabled(lighting?.biome);
   const waterSlope=experimentalWater?acquireWaterSlope(lighting,material):null;
   if(waterSlope)material.userData.globalWaterSlope=waterSlope;
   const shadowUniforms=lighting?.shadowUniforms??createNativeShadowUniforms();if(!lighting?.shadowUniforms)material.addEventListener('dispose',()=>shadowUniforms.fallback.dispose());
@@ -238,8 +240,8 @@ export function paintedWaterMaterial(color,lava=false,seed=42,bounds=null,lighti
       outgoingLight=sRGBTransferEOTF(vec4(nativeFluid4(vPaintWorld,normalize(cameraPosition-vPaintWorld),fluidVisibility),1.)).rgb;
       #include <opaque_fragment>`);
   };
-  if(waterSlope){const compile=material.onBeforeCompile;material.onBeforeCompile=(shader,renderer)=>{compile(shader,renderer);shader.uniforms.uGlobalWaterSlope=waterSlope;shader.fragmentShader=patchGlobalWaterSurface(shader.fragmentShader);};}
+  if(waterSlope){const compile=material.onBeforeCompile;material.onBeforeCompile=(shader,renderer)=>{compile(shader,renderer);shader.uniforms.uGlobalWaterSlope=waterSlope;shader.fragmentShader=patchGlobalWaterSurface(shader.fragmentShader);if(calmCanyon)shader.fragmentShader=patchCanyonWaterReflection(shader.fragmentShader);};}
   material.onBeforeCompile=((compile)=>(shader,renderer)=>{compile(shader,renderer);patchNativeShadow(shader,shadowUniforms,'vPaintWorld');})(material.onBeforeCompile);
-  material.toneMapped=false;material.customProgramCacheKey=()=>lava?'african-lava-relative-v4.1.4|hdr-endpoints':'african-water-relative-v4.1.4|hdr-endpoints'+atmosphereCacheKey+(experimentalWater?'|global-water-slope-map':'');
+  material.toneMapped=false;material.customProgramCacheKey=()=>lava?'african-lava-relative-v4.1.4|hdr-endpoints':'african-water-relative-v4.1.4|hdr-endpoints'+atmosphereCacheKey+(experimentalWater?'|global-water-slope-map':'')+(calmCanyon?'|canyon-calm-day':'');
   material.userData.paintUniforms=uniforms;recordNativeFluidDepthHook(material,originalDepthHook,uniforms);return material;
 }

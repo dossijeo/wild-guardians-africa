@@ -7,3 +7,7 @@ Six final baseline/candidate pairs (plus warm-up captures): identical camera, ta
 Reproduce with Vite5190: set WG_REFLECTION to baseline then day and run tools/experiments/capture-canyon-day-reflection-20261023.mjs. Run review-canyon-day-reflection-20261023.py for paired controls/contact sheets. Source helper qa-canyon-day-reflection-20261023.mjs is shared with the separate benchmark. The real screenshots are not postprocessed except contact-sheet assembly.
 
 See ../canyon-day-reflection-cost-20261023 for A/B/A/B cost evidence. No main/simulation change. Next: animated native populated scene and streaming before optional Canyon-only integration.
+
+## Native option follow-up
+
+Now exposed explicitly as canyonWater=calm within the global lighting lab for Canyon only. See ../canyon-day-reflection-motion-20261023 for movement evidence and integration limitations. native/ captures use the source implementation without QA water replacement. Five of six final captures match QA pixel-for-pixel; day/game has3pixels,max5channel levels difference. All draw/state/resource controls match. Not a new default or full biome completion.
