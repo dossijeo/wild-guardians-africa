@@ -35,3 +35,15 @@ export async function verifyIncrementalStream(w){
   return {samples,scope:'Real automatic cache regeneration across streamed chunks; settling waits exclude a continuous-motion performance claim'};
  }finally{w.camera.position.copy(camera);w.controls.target.copy(target);}
 }
+
+export async function verifyIncrementalTeardown(w){
+ const cache=w.qaIncrementalGround;if(!cache)throw Error('Expected incremental cache');
+ let stable=0,frames=0;while(stable<10){await new Promise(requestAnimationFrame);stable=cache.queue.pending.size===0?stable+1:0;if(++frames>900)throw Error('Cache failed to settle before teardown');}
+ const before={memory:{...w.renderer.info.memory},entries:cache.queue.entries.size,states:cache.states.size,queue:{...cache.queue.stats}};
+ cache.dispose();w.render(0);
+ const after={memory:{...w.renderer.info.memory},entries:cache.queue.entries.size,states:cache.states.size,pending:cache.queue.pending.size,queue:{...cache.queue.stats},glError:w.renderer.getContext().getError()};
+ if(after.entries||after.states||after.pending||after.queue.bytes||after.glError)throw Error('Incremental teardown state leak');
+ if(before.memory.textures-after.memory.textures!==before.entries+1)throw Error('Cache/fallback texture leak');
+ if(before.memory.geometries-after.memory.geometries!==1)throw Error('Bake geometry leak');
+ return {before,after,scope:'Real complete owner teardown and original-shader restoration; no claim about whole-game resource lifecycle'};
+}

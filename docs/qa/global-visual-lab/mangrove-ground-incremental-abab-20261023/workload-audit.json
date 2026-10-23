@@ -1,20 +1,26 @@
 {
-  "frame": {
-    "matchingCameraAndFernCoverage": true,
-    "identicalOriginalRepeats": true,
-    "candidateExtraQuadFrames": [
-      68,
-      69
-    ],
-    "otherCountDifferences": 0
+  "passed": true,
+  "phasePassed": {
+    "day": true
   },
-  "cadence": {
-    "matchingCameraAndFernCoverage": true,
-    "identicalOriginalRepeats": true,
-    "candidateExtraQuadFrames": [
-      71,
-      77
-    ],
-    "otherCountDifferences": 0
-  }
+  "issues": [],
+  "windows": {
+    "day/frame": {
+      "matchingCameraAndFernCoverage": true,
+      "extraQuadFramesByRun": [
+        68,
+        0,
+        69
+      ]
+    },
+    "day/cadence": {
+      "matchingCameraAndFernCoverage": true,
+      "extraQuadFramesByRun": [
+        71,
+        0,
+        77
+      ]
+    }
+  },
+  "limitation": "Count audit permits one additional two-triangle bake quad; not an individual asset census."
 }
