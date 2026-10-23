@@ -1,0 +1,155 @@
+{
+  "records": [
+    {
+      "action": "media",
+      "before": {
+        "rebuilds": 7,
+        "instances": 18670,
+        "capacity": 65536,
+        "overflow": 0,
+        "active": true
+      },
+      "after": {
+        "rebuilds": 7,
+        "instances": 18670,
+        "capacity": 65536,
+        "overflow": 0,
+        "active": true
+      },
+      "quality": "media",
+      "visible": true,
+      "cache": {
+        "draws": 141,
+        "hits": 175,
+        "untracked": 0
+      },
+      "glError": 0
+    },
+    {
+      "action": "muy_baja",
+      "before": {
+        "rebuilds": 7,
+        "instances": 18670,
+        "capacity": 65536,
+        "overflow": 0,
+        "active": true
+      },
+      "after": {
+        "rebuilds": 7,
+        "instances": 18670,
+        "capacity": 65536,
+        "overflow": 0,
+        "active": false
+      },
+      "quality": "muy_baja",
+      "visible": false,
+      "cache": {
+        "draws": 142,
+        "hits": 179,
+        "untracked": 0
+      },
+      "glError": 0
+    },
+    {
+      "action": "baja",
+      "before": {
+        "rebuilds": 7,
+        "instances": 18670,
+        "capacity": 65536,
+        "overflow": 0,
+        "active": false
+      },
+      "after": {
+        "rebuilds": 8,
+        "instances": 10100,
+        "capacity": 65536,
+        "overflow": 0,
+        "active": true
+      },
+      "quality": "baja",
+      "visible": true,
+      "cache": {
+        "draws": 143,
+        "hits": 184,
+        "untracked": 0
+      },
+      "glError": 0
+    },
+    {
+      "action": "media",
+      "before": {
+        "rebuilds": 8,
+        "instances": 10100,
+        "capacity": 65536,
+        "overflow": 0,
+        "active": true
+      },
+      "after": {
+        "rebuilds": 9,
+        "instances": 18670,
+        "capacity": 65536,
+        "overflow": 0,
+        "active": true
+      },
+      "quality": "media",
+      "visible": true,
+      "cache": {
+        "draws": 144,
+        "hits": 188,
+        "untracked": 0
+      },
+      "glError": 0
+    },
+    {
+      "action": "same-chunk",
+      "before": {
+        "rebuilds": 9,
+        "instances": 18670,
+        "capacity": 65536,
+        "overflow": 0,
+        "active": true
+      },
+      "after": {
+        "rebuilds": 10,
+        "instances": 18670,
+        "capacity": 65536,
+        "overflow": 0,
+        "active": true
+      },
+      "quality": "media",
+      "visible": true,
+      "cache": {
+        "draws": 144,
+        "hits": 193,
+        "untracked": 0
+      },
+      "glError": 0
+    },
+    {
+      "action": "flush",
+      "before": {
+        "rebuilds": 10,
+        "instances": 18670,
+        "capacity": 65536,
+        "overflow": 0,
+        "active": true
+      },
+      "after": {
+        "rebuilds": 11,
+        "instances": 18670,
+        "capacity": 65536,
+        "overflow": 0,
+        "active": true
+      },
+      "quality": "media",
+      "visible": true,
+      "cache": {
+        "draws": 144,
+        "hits": 199,
+        "untracked": 0
+      },
+      "glError": 0
+    }
+  ],
+  "errors": []
+}
