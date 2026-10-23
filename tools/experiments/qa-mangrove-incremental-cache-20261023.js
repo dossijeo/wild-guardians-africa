@@ -16,7 +16,7 @@ export async function installIncrementalCache(w,{smooth=false}={}){
  const bake=new THREE.ShaderMaterial({uniforms,vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}',fragmentShader:fragment,depthTest:false,depthWrite:false,toneMapped:false});
  const quad=new THREE.Mesh(geometry,bake);quad.frustumCulled=false;scene.add(quad);
  const stats={scope:'QA incremental cache; optional replacement crossfade, initial fallback still atomic',smooth,queue:queue.stats,added:0,removed:0,plans:0,submissions:[],publications:0};
- let dirty=true,closed=false,frame=0,lastCamera='',owner;
+ let lastUpdate=performance.now(),dirty=true,closed=false,frame=0,lastCamera='',owner;
  const refresh=s=>{
   if(!s.coarse||s.wantFine&&!s.fine)return;
   for(const material of s.record.materials){
@@ -27,10 +27,12 @@ export async function installIncrementalCache(w,{smooth=false}={}){
     branch=branch.replace('vec4 cached=texture(uQaGroundCache,cacheUV);',`vec4 cached=texture(uQaGroundCache,cacheUV);
      if(uQaFineOn>.5){vec2 q=(worldP.xz-uGroundRect.xy-uQaFineRect.xy)/uQaFineRect.z;vec2 e=min(q,1.-q);float blend=smoothstep(0.,1.5/uQaFineRect.z,min(e.x,e.y));cached=mix(cached,texture(uQaFineCache,(q*uQaFineRect.w+1.)/(uQaFineRect.w+2.)),blend);}`);
     if(smooth)branch=branch.replace('vec4 cached=texture(uQaGroundCache,cacheUV);',`vec4 cached=texture(uQaGroundCache,cacheUV);if(uQaCoarseFade<1.)cached=mix(texture(uQaOldCoarse,((worldP.xz-uGroundRect.xy)/48.*uQaOldResolution+1.)/(uQaOldResolution+2.)),cached,uQaCoarseFade);`).replace('if(uQaFineOn>.5){vec2 q=', 'vec4 coarseCached=cached;if(uQaFineOn>.5){vec2 q=').replace('cached=mix(cached,texture(uQaFineCache,(q*uQaFineRect.w+1.)/(uQaFineRect.w+2.)),blend);}',`cached=mix(cached,texture(uQaFineCache,(q*uQaFineRect.w+1.)/(uQaFineRect.w+2.)),blend);}if(uQaFineFade<1.){vec2 q=(worldP.xz-uGroundRect.xy-uQaOldFineRect.xy)/uQaOldFineRect.z;vec2 e=min(q,1.-q);float b=smoothstep(0.,1.5/uQaOldFineRect.z,min(e.x,e.y));vec4 old=mix(coarseCached,texture(uQaOldFine,(q*uQaOldFineRect.w+1.)/(uQaOldFineRect.w+2.)),b);cached=mix(old,cached,uQaFineFade);}`);
+    if(smooth)branch=branch.replace('if(uQaFineOn>.5)', 'if(uQaFineOn>0.)');
+    if(smooth)branch=branch.replace('vec3 tex=textureGrad', 'cached=mix(coarseCached,cached,uQaFineOn);\n vec3 tex=textureGrad');
     shader.fragmentShader=(smooth?'uniform sampler2D uQaOldCoarse,uQaOldFine;uniform float uQaCoarseFade,uQaFineFade,uQaOldResolution;uniform vec4 uQaOldFineRect;\n':'')+'uniform sampler2D uQaGroundCache,uQaFineCache;uniform float uQaCacheResolution,uQaCacheReady,uQaFineOn;uniform vec4 uQaFineRect;\n'+shader.fragmentShader.slice(0,a)+branch+shader.fragmentShader.slice(a);
     Object.assign(shader.uniforms,s.uniforms);
    };
-   material.customProgramCacheKey=()=>key()+'|incremental-mangrove-v1'+(smooth?'|crossfade':'');material.needsUpdate=true;s.patched.add(material);s.hooks.set(material,{prior,key});
+   material.customProgramCacheKey=()=>key()+'|incremental-mangrove-v1'+(smooth?'|crossfade-fine-visibility-v2':'');material.needsUpdate=true;s.patched.add(material);s.hooks.set(material,{prior,key});
   }
   s.uniforms.uQaCacheReady.value=1;
  };
@@ -52,7 +54,7 @@ export async function installIncrementalCache(w,{smooth=false}={}){
     }
     target.scissorTest=false;s[kind]=target;stats.publications++;
     if(kind==='coarse'){s.uniforms.uQaGroundCache.value=target.texture;s.uniforms.uQaCacheResolution.value=size;}
-    else{s.uniforms.uQaFineCache.value=target.texture;s.uniforms.uQaFineRect.value.set(x-u.uGroundRect.value.x,z-u.uGroundRect.value.y,side,size);s.uniforms.uQaFineOn.value=1;}
+    else{s.uniforms.uQaFineCache.value=target.texture;s.uniforms.uQaFineRect.value.set(x-u.uGroundRect.value.x,z-u.uGroundRect.value.y,side,size);s.uniforms.uQaFineOn.value=smooth?s.uniforms.uQaFineOn.value:1;}
     refresh(s);
    },destroy:target=>target.dispose()});
  }
@@ -64,13 +66,19 @@ export async function installIncrementalCache(w,{smooth=false}={}){
    s.wantFine=row.flavor==='noise';request(s,'coarse',s.wantFine?512:row.resolution,rect.x,rect.y,48);
    if(s.wantFine){const box=planner.entries.find(e=>e.key===row.key).box,ray=new THREE.Vector3(0,-.55,.5).unproject(w.camera).sub(w.camera.position).normalize();const point=ray.multiplyScalar(((box.min.y+box.max.y)/2-w.camera.position.y)/ray.y).add(w.camera.position);
     const x=THREE.MathUtils.clamp(Math.round((point.x-12)/4)*4,box.min.x,box.max.x-24),z=THREE.MathUtils.clamp(Math.round((point.z-12)/4)*4,box.min.z,box.max.z-24);request(s,'fine',1024,x,z,24);
-   }else{if(s.transitions)delete s.transitions.fine;s.uniforms.uQaFineFade.value=1;s.uniforms.uQaOldFine.value=fallback;queue.remove(row.key+':fine');s.fine=null;s.uniforms.uQaFineOn.value=0;s.uniforms.uQaFineCache.value=fallback;refresh(s);}
+   }else{if(smooth){queue.cancel(row.key+':fine');}else{if(s.transitions)delete s.transitions.fine;s.uniforms.uQaFineFade.value=1;s.uniforms.uQaOldFine.value=fallback;queue.remove(row.key+':fine');s.fine=null;s.uniforms.uQaFineOn.value=0;s.uniforms.uQaFineCache.value=fallback;}refresh(s);}
   }
  }
  const warm=new THREE.WebGLRenderTarget(1,1,{depthBuffer:false}),previous=r.getRenderTarget();
  try{uniforms.uQaBakeRect.value.set(first.uGroundRect.value.x,first.uGroundRect.value.y,48);r.setRenderTarget(warm);const compiled=r.compileAsync(scene,camera);r.setRenderTarget(previous);await compiled;r.setRenderTarget(warm);r.render(scene,camera);}finally{r.setRenderTarget(previous);warm.dispose();}
  const original=w.render;
  const controller={stats,queue,states,owner,update(){if(closed)return;
+  const now=performance.now(),delta=Math.min(100,now-lastUpdate);lastUpdate=now;
+  if(smooth)for(const s of states.values()){
+   const u=s.uniforms,target=s.wantFine&&s.fine?1:0;
+   u.uQaFineOn.value=target?Math.min(1,u.uQaFineOn.value+delta/180):Math.max(0,u.uQaFineOn.value-delta/180);
+   if(!s.wantFine&&s.fine&&u.uQaFineOn.value===0){u.uQaFineCache.value=fallback;u.uQaOldFine.value=fallback;u.uQaFineFade.value=1;if(s.transitions)delete s.transitions.fine;queue.remove(s.record.key+':fine');s.fine=null;}
+  }
   if(smooth)for(const s of states.values())for(const [kind,start]of Object.entries(s.transitions??{})){
    const t=Math.min(1,(performance.now()-start)/180),u=s.uniforms;u[kind==='coarse'?'uQaCoarseFade':'uQaFineFade'].value=t*t*(3-2*t);
    if(t===1){u[kind==='coarse'?'uQaOldCoarse':'uQaOldFine'].value=fallback;queue.releasePrevious(s.record.key+':'+kind);delete s.transitions[kind];dirty=true;}

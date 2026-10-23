@@ -47,3 +47,17 @@ export async function verifyIncrementalTeardown(w){
  if(before.memory.geometries-after.memory.geometries!==1)throw Error('Bake geometry leak');
  return {before,after,scope:'Real complete owner teardown and original-shader restoration; no claim about whole-game resource lifecycle'};
 }
+
+export async function verifyFineVisibility(w){
+ const cache=w.qaIncrementalGround,base=w.camera.position.clone(),samples=[];
+ if(!cache?.stats.smooth)throw Error('Expected smooth cache');
+ try{
+  for(const extraHeight of [0,70,0]){
+   w.camera.position.copy(base);w.camera.position.y+=extraHeight;
+   for(let i=0;i<120;i++){await new Promise(requestAnimationFrame);samples.push({extraHeight,frame:i,entries:cache.queue.entries.size,bytes:cache.queue.stats.bytes,regions:[...cache.states].filter(([,s])=>s.fine||s.uniforms.uQaFineOn.value>0).map(([key,s])=>({key,wanted:s.wantFine,visibility:s.uniforms.uQaFineOn.value}))});}
+  }
+  const intermediate=samples.flatMap(s=>s.regions).filter(r=>r.visibility>0&&r.visibility<1);
+  if(!intermediate.some(r=>!r.wanted)||!intermediate.some(r=>r.wanted))throw Error('Fine entry/exit did not interpolate');
+  return {samples,intermediateSamples:intermediate.length,peakBytes:cache.queue.stats.peakBytes,glError:w.renderer.getContext().getError()};
+ }finally{w.camera.position.copy(base);}
+}
