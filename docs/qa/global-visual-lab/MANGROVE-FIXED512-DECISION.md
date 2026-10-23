@@ -17,6 +17,7 @@ The long fixed512 baseline against uncached original recorded whole-GPU gains of
 - [Streaming and teardown](mangrove-ground-fixed-stream-20261023/README.md): 30 unload/reload events, one-target invalidation, complete cache release.
 - [Material replacement](mangrove-fixed-material-switch-20261023/README.md): very-low/medium toggles retain 25 targets and bounded live hooks; disposed material references fixed.
 - [Post-switch images](mangrove-fixed-quality-images-20261023/README.md): ground crop exact, full-scene differences remain unattributed.
+- [Extended live stability](mangrove-fixed-live-extended-20261023/README.md): 1,800 frames each from day/night, 25 cache targets and 33.58 MiB stable; uncached controls also show daytime scene-resource growth. Not a leak-free campaign certification.
 - [Live smoke](mangrove-fixed-live-smoke-20261023/README.md): ~9.4 s simulation progression and moving workers, no errors.
 
 ## Memory and streaming limits
