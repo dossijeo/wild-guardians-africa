@@ -399,3 +399,12 @@ Two sequential checks run against that new executable:
 - `--smoke-report <absolute tauri-game-rebuilt.json>`: full application smoke passes, 17 runtime GLBs load, audio decodes, storage/WebGL2/worker checks pass, Gran Cañón / Mapungubwe reaches world readiness at 1024x576 in 12.31 seconds, no errors.
 
 These are complementary checks: the game smoke does not currently expose/assert its chosen native backend, and the explicit pthread check does not exercise a full campaign. No installer bundle, non-Windows platform or hosted itch deployment is covered by these results. Distribution acceptance therefore remains incomplete.
+
+
+## Native route differential across concurrent publication and edits
+
+`node tools/experiments/check-spatial-thread-routes.mjs` compares the actual pthread core against the standalone WASM on seed 712 in all six biomes. Each core builds the worker and five animal collision profiles from production footprint data. For each profile it evaluates 25 local routes and requires exact agreement of status, reasons and every returned point.
+
+Six stages cover original state, a polygon added while native status is observed at 2, successful publication after stale-input rejection/retry, routes in the newly published neighbor, polygon removal, and neighbor removal. Total: 5400 route comparisons, all equal. Each stage includes successful routes (31–144 out of 150 depending on terrain/profile mix), not only matching failures. Adding the polygon reduces successful routes and removing it restores the initial counts in every biome. Every stale preparation rejects with -2 before retry.
+
+See thread-route-differential.json. This tests actual navigation results with shared-memory preparation and main-thread edits, not active actor movement, gate semantics, raid simulation, a performance benchmark, or exhaustive path correctness. Some queries can complete after the worker has finished; the obstacle mutation itself is issued immediately after observing running status.

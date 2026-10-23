@@ -1,0 +1,221 @@
+{
+  "scope": "Native route differential against standalone for all six actor profiles; no live actor movement or raid simulation",
+  "rows": [
+    {
+      "biome": "sabana",
+      "editStatus": 2,
+      "stages": [
+        {
+          "stage": "initial",
+          "queries": 150,
+          "successful": 98
+        },
+        {
+          "stage": "obstacle-added-during-generation",
+          "queries": 150,
+          "successful": 86
+        },
+        {
+          "stage": "published-with-obstacle",
+          "queries": 150,
+          "successful": 86
+        },
+        {
+          "stage": "published-neighbor",
+          "queries": 150,
+          "successful": 80
+        },
+        {
+          "stage": "obstacle-removed",
+          "queries": 150,
+          "successful": 98
+        },
+        {
+          "stage": "neighbor-removed",
+          "queries": 150,
+          "successful": 98
+        }
+      ]
+    },
+    {
+      "biome": "desierto",
+      "editStatus": 2,
+      "stages": [
+        {
+          "stage": "initial",
+          "queries": 150,
+          "successful": 144
+        },
+        {
+          "stage": "obstacle-added-during-generation",
+          "queries": 150,
+          "successful": 132
+        },
+        {
+          "stage": "published-with-obstacle",
+          "queries": 150,
+          "successful": 132
+        },
+        {
+          "stage": "published-neighbor",
+          "queries": 150,
+          "successful": 54
+        },
+        {
+          "stage": "obstacle-removed",
+          "queries": 150,
+          "successful": 144
+        },
+        {
+          "stage": "neighbor-removed",
+          "queries": 150,
+          "successful": 144
+        }
+      ]
+    },
+    {
+      "biome": "gran-rio",
+      "editStatus": 2,
+      "stages": [
+        {
+          "stage": "initial",
+          "queries": 150,
+          "successful": 98
+        },
+        {
+          "stage": "obstacle-added-during-generation",
+          "queries": 150,
+          "successful": 86
+        },
+        {
+          "stage": "published-with-obstacle",
+          "queries": 150,
+          "successful": 86
+        },
+        {
+          "stage": "published-neighbor",
+          "queries": 150,
+          "successful": 80
+        },
+        {
+          "stage": "obstacle-removed",
+          "queries": 150,
+          "successful": 98
+        },
+        {
+          "stage": "neighbor-removed",
+          "queries": 150,
+          "successful": 98
+        }
+      ]
+    },
+    {
+      "biome": "volcanes",
+      "editStatus": 2,
+      "stages": [
+        {
+          "stage": "initial",
+          "queries": 150,
+          "successful": 97
+        },
+        {
+          "stage": "obstacle-added-during-generation",
+          "queries": 150,
+          "successful": 85
+        },
+        {
+          "stage": "published-with-obstacle",
+          "queries": 150,
+          "successful": 85
+        },
+        {
+          "stage": "published-neighbor",
+          "queries": 150,
+          "successful": 67
+        },
+        {
+          "stage": "obstacle-removed",
+          "queries": 150,
+          "successful": 97
+        },
+        {
+          "stage": "neighbor-removed",
+          "queries": 150,
+          "successful": 97
+        }
+      ]
+    },
+    {
+      "biome": "manglares",
+      "editStatus": 2,
+      "stages": [
+        {
+          "stage": "initial",
+          "queries": 150,
+          "successful": 51
+        },
+        {
+          "stage": "obstacle-added-during-generation",
+          "queries": 150,
+          "successful": 45
+        },
+        {
+          "stage": "published-with-obstacle",
+          "queries": 150,
+          "successful": 45
+        },
+        {
+          "stage": "published-neighbor",
+          "queries": 150,
+          "successful": 79
+        },
+        {
+          "stage": "obstacle-removed",
+          "queries": 150,
+          "successful": 51
+        },
+        {
+          "stage": "neighbor-removed",
+          "queries": 150,
+          "successful": 51
+        }
+      ]
+    },
+    {
+      "biome": "gran-canon",
+      "editStatus": 2,
+      "stages": [
+        {
+          "stage": "initial",
+          "queries": 150,
+          "successful": 38
+        },
+        {
+          "stage": "obstacle-added-during-generation",
+          "queries": 150,
+          "successful": 31
+        },
+        {
+          "stage": "published-with-obstacle",
+          "queries": 150,
+          "successful": 31
+        },
+        {
+          "stage": "published-neighbor",
+          "queries": 150,
+          "successful": 99
+        },
+        {
+          "stage": "obstacle-removed",
+          "queries": 150,
+          "successful": 38
+        },
+        {
+          "stage": "neighbor-removed",
+          "queries": 150,
+          "successful": 38
+        }
+      ]
+    }
+  ]
+}
