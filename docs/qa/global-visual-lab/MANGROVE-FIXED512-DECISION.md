@@ -1,4 +1,4 @@
-# Mangrove ground — fixed512 integration decision
+# Mangrove ground â€” fixed512 integration decision
 
 ## Recommendation
 
@@ -6,9 +6,9 @@ Retain the user's selected fixed512 material cache. It is implemented in the ren
 
 ## Cause and retained solution
 
-Earlier material ablations identify static composition as the main ground color-pass cost (~7.8–8.2 ms). Cache RGBA stores moss-scale blend, moss/soil blend, AO and roughness at 512 plus gutters/mips per resident chunk. Shared color/normal textures, dynamic lighting and shadows remain. No fern density reduction. The retained appearance is green moss with localized mud, NOT the deliberately all-mud invalidation-test screenshot.
+Earlier material ablations identify static composition as the main ground color-pass cost (~7.8â€“8.2 ms). Cache RGBA stores moss-scale blend, moss/soil blend, AO and roughness at 512 plus gutters/mips per resident chunk. Shared color/normal textures, dynamic lighting and shadows remain. No fern density reduction. The retained appearance is green moss with localized mud, NOT the deliberately all-mud invalidation-test screenshot.
 
-The long fixed512 baseline against uncached original recorded whole-GPU gains of 1.59–4.35 ms across day/night pairs; see [original long comparison](mangrove-ground-hybrid512-long-20261023/). The final direct comparison rejected the incremental-memory alternative: valid day pairs saved 0.67–1.13 ms GPU and 1.24–1.26 ms frame time with fixed512; [decision](mangrove-ground-final-512-decision-20261023/README.md). Those results select the shader architecture; they are not new evidence for every subsequent integration change.
+The long fixed512 baseline against uncached original recorded whole-GPU gains of 1.59â€“4.35 ms across day/night pairs; see [original long comparison](mangrove-ground-hybrid512-long-20261023/). The final direct comparison rejected the incremental-memory alternative: valid day pairs saved 0.67â€“1.13 ms GPU and 1.24â€“1.26 ms frame time with fixed512; [decision](mangrove-ground-final-512-decision-20261023/README.md). Those results select the shader architecture; they are not new evidence for every subsequent integration change.
 
 ## Image and ownership evidence
 
@@ -27,4 +27,4 @@ Continuous streaming still has large frame spikes. [Source attribution](mangrove
 
 ## Remaining acceptance work
 
-The integrated path still needs a final whole-frame original-versus-cache benchmark with reliable workload attribution, longer active-world validation including actual construction/crop changes, first-load generation/compilation characterization, and full-scene quality-switch discrepancy attribution. The ideal 20–23 ms whole-GPU target is not established across active and streaming scenarios. Keep these requirements open; do not label Mangrove globally finished or extend the architecture to other biomes solely on current evidence.
+[Integrated static-day ABAB](mangrove-integrated-static-abab-20261023/README.md) now passes workload audit: 2.54–2.96 ms GPU and 1.83–2.11 ms whole-frame gains, preserving approved green coverage with slight blend smoothing. This isolates material cost; moving and active-world acceptance remains open. The integrated path still needs longer active-world validation including actual construction/crop changes, first-load generation/compilation characterization, and full-scene quality-switch discrepancy attribution. The ideal 20â€“23 ms whole-GPU target is not established across active and streaming scenarios. Keep these requirements open; do not label Mangrove globally finished or extend the architecture to other biomes solely on current evidence.
