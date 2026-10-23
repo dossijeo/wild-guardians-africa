@@ -9,7 +9,7 @@ test('fern option requires the visual lab and exact explicit selection',()=>{
  for(const q of ['', '?mangroveFerns=holly','?visualLab=global-lighting&mangroveFerns=no'])assert.equal(mangroveFernEnabled(q),false);
  assert.equal(mangroveFernEnabled('?visualLab=global-lighting&mangroveFerns=holly'),true);
 });
-test('native fern owns its two maps and depth materials across quality changes and disposes once',async()=>{
+test('native fern owns its near maps and far atlases and depth materials across quality changes and disposes once',async()=>{
  const fetch=globalThis.fetch,location=globalThis.location,load=THREE.TextureLoader.prototype.loadAsync;
  const data=JSON.parse(await readFile(new URL('../public/assets/visual-lab/mangrove-leaf-fill-20261021/modules.json',import.meta.url),'utf8'));
  const owned=[];globalThis.fetch=async()=>({json:async()=>structuredClone(data)});globalThis.location={search:'?visualLab=global-lighting&mangroveFerns=holly'};
@@ -27,10 +27,22 @@ test('native fern owns its two maps and depth materials across quality changes a
  const world={biomeGround:{},state:{biome:'manglares',elapsed:2,plants:[],structures:[],events:[],sequence:0},scene:new THREE.Scene(),quality:'media',toon:{uniforms:{},shadowUniforms:{}},renderer:{shadowMap:{enabled:true}},sun:new THREE.DirectionalLight(),releaseNativeShadow:{cache:{invalidate(){}}},terrainMeshes:[{material:{userData:{biomeGround:ground}}}],chunks:new Map(),objects:new Map(),nav:{obstacles:[],field:{seed:712}},camera:new THREE.PerspectiveCamera()};
  let q;
  try{
-  q=await createContinuousGrass(world);assert.equal(owned.length,2);assert.ok(q.chunks.has('0,0'),'chunk arriving during texture loading is reconciled before activation');assert.equal(q.spacing,.65);assert.equal(world.sun.shadow.mapSize.x,2048);assert.equal(q.audit().castShadow,true);
+  q=await createContinuousGrass(world);assert.equal(owned.length,5);assert.ok(q.chunks.has('0,0'),'chunk arriving during texture loading is reconciled before activation');assert.equal(q.spacing,.65);assert.equal(world.sun.shadow.mapSize.x,2048);assert.equal(q.audit().castShadow,true);
   let disposed=0;for(const t of owned)t.addEventListener('dispose',()=>disposed++);
-  for(const e of q.meshes){assert.equal(e.mesh.geometry.index.count,96);assert.ok(e.mesh.castShadow);e.mesh.customDepthMaterial.addEventListener('dispose',()=>disposed++);}
+  assert.equal(q.screenLod,true);assert.equal(q.meshes[0].mesh.geometry.index.count,96);assert.equal(q.meshes[1].mesh.geometry.index.count,24);assert.equal(q.meshes[0].mesh.castShadow,true);assert.equal(q.meshes[1].mesh.castShadow,false);
+  const shadow=world.scene.getObjectByName('fern-prebaked-shadow');assert.ok(shadow);q.meshes[1].mesh.geometry.instanceCount=7;q.meshes[1].mesh.visible=true;q.syncLod();assert.equal(shadow.geometry.instanceCount,7);assert.equal(shadow.visible,true);
+  for(const e of q.meshes)e.mesh.customDepthMaterial.addEventListener('dispose',()=>disposed++);
   q.configureQuality('baja');assert.equal(q.spacing,.75);q.configureQuality('muy_baja');assert.equal(q.group.visible,false);q.configureQuality('media');assert.equal(q.spacing,.65);assert.equal(q.group.visible,true);
-  q.dispose();q.dispose();assert.equal(disposed,4);assert.equal(borrowedDisposed,0);assert.equal(world.scene.children.length,0);
+  q.dispose();q.dispose();assert.equal(disposed,7);assert.equal(borrowedDisposed,0);assert.equal(world.scene.children.length,0);
  }finally{q?.dispose();globalThis.fetch=fetch;globalThis.location=location;THREE.TextureLoader.prototype.loadAsync=load;borrowed.dispose();for(const group of world.chunks.values())for(const mesh of group.children){mesh.geometry.dispose();mesh.material.dispose();}}
+});
+
+
+test('cancelled far atlas loading releases every fulfilled texture before scene mutation',async()=>{
+ const {applyFernLod}=await import('../src/rendering/mangrove-fern-lod.js');
+ const load=THREE.TextureLoader.prototype.loadAsync;let disposed=0;
+ THREE.TextureLoader.prototype.loadAsync=async()=>{const t=new THREE.Texture();t.addEventListener('dispose',()=>disposed++);return t;};
+ const q={disposed:true};
+ try{await assert.rejects(applyFernLod({},q),/cancelled/);assert.equal(disposed,3);assert.equal(q.syncLod,undefined);}
+ finally{THREE.TextureLoader.prototype.loadAsync=load;}
 });
