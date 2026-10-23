@@ -69,3 +69,25 @@ export async function verifyMaterialEntry(w){
  if(!intermediate.length||samples.at(-1).weights.some(s=>s.weight!==1))throw Error('Material entry did not transition to completion');
  return {samples,intermediate:intermediate.length,glError:w.renderer.getContext().getError()};
 }
+
+export async function verifyFixedLifecycle(w){
+ const c=w.qaFixedGround,camera=w.camera.position.clone(),target=w.controls.target.clone(),samples=[];
+ const settle=async()=>{for(let i=0;i<180;i++){await new Promise(requestAnimationFrame);if(c.queue.entries.size===c.states.size&&!c.queue.pending.size&&[...c.states].every(([key,s])=>c.queue.entries.get(key)?.spec.version===s.revision))return;}throw Error('Fixed512 cache failed to settle');};
+ try{
+  for(const offset of [0,144,0]){
+   w.camera.position.copy(camera);w.camera.position.x+=offset;w.controls.target.copy(target);w.controls.target.x+=offset;
+   w.syncChunks();await w.horizon.whenReady();w.syncChunks();await w.whenChunksReady();await settle();
+   if([...w.chunks.keys()].sort().join('|')!==[...c.states.keys()].sort().join('|'))throw Error('Fixed512 registry mismatch');
+   samples.push({offset,entries:c.queue.entries.size,states:c.states.size,queue:{...c.queue.stats},added:c.stats.added,removed:c.stats.removed});
+  }
+  const [key,s]=c.states.entries().next().value,old=s.texture.value,before=c.queue.stats.published;
+  s.mask.dispatchEvent({type:'groundmaskchanged'});await settle();
+  if(s.texture.value===old||c.queue.stats.published!==before+1)throw Error('Mask invalidation did not replace exactly one target');
+  const replacement={published:c.queue.stats.published-before,queue:{...c.queue.stats}};
+  const memory={...w.renderer.info.memory},count=c.queue.entries.size;c.dispose();w.render(0);
+  if(c.queue.stats.bytes||c.states.size||c.queue.entries.size||c.queue.pending.size)throw Error('Fixed512 retained disposed cache');
+  if(memory.textures-w.renderer.info.memory.textures!==count)throw Error('Fixed512 texture release mismatch');
+  if(w.renderer.getContext().getError())throw Error('GL error after fixed512 lifecycle');
+  return {samples,replacement,releasedTextures:count,scope:'Settled streaming, explicit mask notification and complete teardown; not a continuous-motion benchmark'};
+ }finally{w.camera.position.copy(camera);w.controls.target.copy(target);}
+}
