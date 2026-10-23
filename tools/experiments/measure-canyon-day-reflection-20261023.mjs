@@ -4,11 +4,11 @@ import {chromium} from 'playwright';
 import {mkdir,writeFile,readFile} from 'node:fs/promises';
 
 
-const out='docs/qa/global-visual-lab/canyon-day-reflection-cost-20261023';await mkdir(out,{recursive:true});const records=[];const phases=['day','night'];
+const out=process.env.WG_REVIEW_OUT??'docs/qa/global-visual-lab/canyon-day-reflection-cost-20261023';await mkdir(out,{recursive:true});const records=[];const phases=['day','night'];
 const fixture=JSON.parse(await readFile('docs/qa/global-visual-lab/gran-canon-populated-native-camera-20261022/native-fixture.json','utf8'));
 const pose=JSON.parse(await readFile('docs/qa/global-visual-lab/gran-canon-populated-native-camera-20261022/captures.json','utf8')).records.find(r=>r.variant==='native'&&r.phase==='day').frames[0];
 const browser=await chromium.launch({channel:'chrome',headless:true});
-try{for(const quality of ['media'])for(const biome of (process.env.WG_REVIEW_BIOMES??'gran-canon').split(','))for(const variant of ['baseline','day','baseline','day']){
+try{for(const quality of (process.env.WG_COVER_QUALITY??'media').split(','))for(const biome of (process.env.WG_REVIEW_BIOMES??'gran-canon').split(','))for(const variant of ['baseline','day','baseline','day']){
  const page=await browser.newPage({viewport:{width:1280,height:720},deviceScaleFactor:1});const errors=[];
  page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error'||/GL_INVALID|CONTEXT_LOST|error X/.test(m.text()))errors.push(m.text())});page.on('response',r=>{if(r.status()>=400)errors.push(`${r.status()} ${r.url()}`)});
  await page.route('**/src/rendering/scene.js*',async route=>{const response=await route.fetch();const body=await response.text();if(!body.includes('this.raycaster=new'))throw Error('Observation anchor missing');await route.fulfill({response,body:body.replace('this.raycaster=new','globalThis.qaCampaignWorld=this;this.raycaster=new')});});
@@ -16,8 +16,8 @@ try{for(const quality of ['media'])for(const biome of (process.env.WG_REVIEW_BIO
 
  await page.addInitScript(text=>localStorage.setItem('wild-guardians:slot:opening',text),fixture.timing.navigationContext.state);
  await page.route('**/src/app/main.js*',async route=>{const response=await route.fetch();let body=await response.text();const a="world.render(0);loadingOverlay?.dispose();",b="Game.pause(state,'menu');world.render(0);loadingOverlay?.dispose();";if(body.split(a).length!==2)throw Error('Pre-game pause anchor missing');body=body.replace(a,b);await route.fulfill({response,body});});
- if(variant==='day')await routeDayReflection(page);
- await page.goto('http://127.0.0.1:5190/?qa-seed=712&'+globalClosureQuery(biome));
+ if(variant==='day'&&process.env.WG_NATIVE_REFLECTION!=='1')await routeDayReflection(page);
+ await page.goto('http://127.0.0.1:5190/?qa-seed=712&'+globalClosureQuery(biome)+(variant==='day'&&process.env.WG_NATIVE_REFLECTION==='1'?'&canyonWater=calm':''));
  await page.waitForSelector('#native-menu',{timeout:60000});const frame=page.frames().find(f=>f.url().includes('/menu/'))??await page.waitForEvent('framenavigated',{predicate:f=>f.url().includes('/menu/'),timeout:60000});
  await frame.waitForLoadState('load');await frame.waitForFunction(()=>document.body.innerText.toUpperCase().includes('JUEGO NUEVO'));
  await frame.evaluate(biome=>parent.postMessage({type:'wild-guardians:menu',action:'load-slot',slotId:'opening'},location.origin),biome);
@@ -40,7 +40,7 @@ try{for(const quality of ['media'])for(const biome of (process.env.WG_REVIEW_BIO
     const moving=function(...args){const t=index++/149*Math.PI*2;w.camera.position.set(base[0],base[1],base[2]);return original.apply(this,args);};
     try{w.render=moving;const gpu=await measureCampaign(w,{gpuEnabled:true,samples:90,warmup:60});index=0;w.render=moving;const cadence=await measureCampaign(w,{samples:90,warmup:60});return {gpu,cadence,sceneAudit};}finally{w.render=original;w.syncChunks=originalSync;}
    });
-   if(errors.length)throw Error(errors.join('\n'));records.push({biome,quality,variant,phase,...result,errors:[...errors]});await writeFile(out+'/benchmarks.json',JSON.stringify({seed:712,note:"All resident ground masks explicitly uploaded before warmup in both profiles (QA only, outside timing). Baseline/day/baseline/day, medium fixed camera, full closure recipe and backgrounds. Only daytime environment normal response differs; same shadow and LOD settings. Artistic candidate cost, not optimization claim. 60 warmup + 90 samples per pass; GPU queries and cadence measured separately. Paused simulation, resident scene with syncChunks suspended; excludes shoreline construction and streaming latency.",records},null,2));console.log(quality,variant,phase,'measured');
+   if(errors.length)throw Error(errors.join('\n'));records.push({biome,quality,variant,phase,nativeReflection:process.env.WG_NATIVE_REFLECTION==='1',...result,errors:[...errors]});await writeFile(out+'/benchmarks.json',JSON.stringify({seed:712,note:"All resident ground masks explicitly uploaded before warmup in both profiles (QA only, outside timing). Baseline/day/baseline/day, selected-quality fixed camera, full closure recipe and backgrounds. Only daytime environment normal response differs; same shadow and LOD settings. Artistic candidate cost, not optimization claim. 60 warmup + 90 samples per pass; GPU queries and cadence measured separately. Paused simulation, resident scene with syncChunks suspended; excludes shoreline construction and streaming latency.",records},null,2));console.log(quality,variant,phase,'measured');
   }
  await page.close();
  }}finally{await browser.close()}

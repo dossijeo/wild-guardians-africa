@@ -1,6 +1,6 @@
-import json,statistics
+import json,statistics,os
 from pathlib import Path
-p=Path('docs/qa/global-visual-lab/canyon-day-reflection-cost-20261023')
+p=Path(os.environ.get('WG_REVIEW_OUT','docs/qa/global-visual-lab/canyon-day-reflection-cost-20261023'))
 d=json.loads((p/'benchmarks.json').read_text());assert len(d['records'])==8
 rows=[]
 def stats(v):
