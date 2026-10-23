@@ -56,9 +56,10 @@ export function nativeChunkBounds(group){
 export class NativeAssetGroups{
   constructor(scene){
     this.scene=scene;this.root=new THREE.Group();this.root.name='native_merged_assets';scene.add(this.root);
-    this.colors=new Map();this.shadows=new Map();this.shadowRoot=new THREE.Group();this.shadowChunks=new Map([['merged',this.shadowRoot]]);
+    this.materialEpoch=0;this.materialEpochs=new WeakMap();this.colors=new Map();this.shadows=new Map();this.shadowRoot=new THREE.Group();this.shadowChunks=new Map([['merged',this.shadowRoot]]);
     this.smoothObstruction=new URLSearchParams(globalThis.location?.search??'').get('visualLab')==='global-lighting';this.enabled=true;this.instanceCulling=true;this.omitZeroColor=false;this.reuseStaticOnResize=true;this.frustum=new THREE.Frustum();this.vp=new THREE.Matrix4();
   }
+  invalidateMaterials(){this.materialEpoch++;}
   retire(cache,key,retainGeometry=false){const g=cache.get(key);for(const fade of g.smoothFades??[]){fade.removeFromParent();fade.geometry.dispose();fade.material.dispose();fade.dispose();}g.mesh.removeFromParent();g.mesh.dispose();if(g.pass==='color'&&!retainGeometry)g.mesh.geometry.dispose();cache.delete(key);}
   clear(){for(const cache of [this.colors,this.shadows])for(const key of [...cache.keys()])this.retire(cache,key);this.shadowRoot.userData.lodBatches=[];}
   prepare(cache,key,entries,pass,stats){
@@ -143,6 +144,9 @@ export class NativeAssetGroups{
       if(matrixEnd||coverageEnd)stats.uploads++;
       g.mesh.boundingBox=null;g.mesh.boundingSphere=bounds;g.sourceStamp=sourceStamp;g.stamp=stamp;
     }
+    // Quality can change while an LOD material has no scene mesh. Refresh it
+    // when selected again, including fade clones created after the switch.
+    if(pass==='color'&&this.materialEpoch&&(g.materialEpoch!==this.materialEpoch||g.materialFadeCount!==(g.smoothFades?.length??0))){for(const mesh of [g.mesh,...(g.smoothFades??[])]){const material=mesh.material;if(this.materialEpochs.get(material)!==this.materialEpoch){material.needsUpdate=true;this.materialEpochs.set(material,this.materialEpoch);}}g.materialEpoch=this.materialEpoch;g.materialFadeCount=g.smoothFades?.length??0;}
     stats.bytes+=capacity*(pass==='color'?68:64);
     if(pass==='shadow')this.shadowRoot.userData.lodBatches.push({shadow:g.mesh,meshes:[g.mesh]});
     if(retiredGeometry)transferStaticAttributes(retiredGeometry,g.mesh.geometry);

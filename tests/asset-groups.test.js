@@ -126,3 +126,17 @@ test('smooth obstruction splits only partial color, preserves shadows and releas
  a.array.fill(1);a.needsUpdate=true;groups.update(chunks,camera);assert.equal(fade.visible,false);assert.equal(groups.colors.get('0:0').mesh.count,6);
  groups.dispose();assert.equal(disposed,1);assert.equal(fade.parent,null);
 });
+
+
+test('quality epoch refreshes merged and late fade materials once without buffer uploads',()=>{
+ const {groups,chunks,camera}=fixture();groups.smoothObstruction=true;
+ groups.update(chunks,camera);const base=groups.colors.get('0:0').mesh.material,v=base.version;
+ groups.invalidateMaterials();assert.equal(groups.update(chunks,camera).uploads,0);assert.equal(base.version,v+1);
+ groups.update(chunks,camera);assert.equal(base.version,v+1);
+ const mesh=chunks.get('front').userData.lodBatches[0].meshes[0];mesh.geometry.attributes.nativeVisibility.array[0]=.4;mesh.geometry.attributes.nativeVisibility.needsUpdate=true;
+ groups.update(chunks,camera);const fade=groups.colors.get('0:0').smoothFades[0].material,fv=fade.version;
+ assert.equal(groups.materialEpochs.get(fade),groups.materialEpoch,'late-created fade receives current quality invalidation');
+ groups.update(chunks,camera);assert.equal(fade.version,fv);
+ groups.invalidateMaterials();assert.equal(groups.update(chunks,camera).uploads,0);assert.equal(fade.version,fv+1);assert.equal(base.version,v+2);
+ groups.dispose();
+});

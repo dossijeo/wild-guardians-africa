@@ -54,7 +54,7 @@ test('live world quality and resize preserve simulation, ground geometry and exi
  const geometry=new THREE.PlaneGeometry(),ground=new THREE.Mesh(geometry,nativeGroundMaterial('media')),chunk=new THREE.Group();chunk.add(ground);
  const state={money:217,plants:[{id:'crop',growth:13,waterRemaining:7}],workers:[{id:'worker',taskId:'sow'}],time:150},snapshot=JSON.stringify(state),chunks=new Map([['0,0',chunk]]);
  const scene=new THREE.Scene();scene.add(chunk);
- const world={scene,state,chunks,terrainMeshes:[ground],quality:'media',toon:new AfricanToon(),destructionPass:{},renderer:{shadowMap:{enabled:true},setSize(w,h){this.size=[w,h];}},sun:new THREE.DirectionalLight(),camera:new THREE.PerspectiveCamera(),canvas:{getBoundingClientRect:()=>({width:3840,height:2160})},resize:WorldScene.prototype.resize};
+ let materialInvalidations=0;const world={assetGroups:{invalidateMaterials(){materialInvalidations++;}},scene,state,chunks,terrainMeshes:[ground],quality:'media',toon:new AfricanToon(),destructionPass:{},renderer:{shadowMap:{enabled:true},setSize(w,h){this.size=[w,h];}},sun:new THREE.DirectionalLight(),camera:new THREE.PerspectiveCamera(),canvas:{getBoundingClientRect:()=>({width:3840,height:2160})},resize:WorldScene.prototype.resize};
  const previous=Object.getOwnPropertyDescriptor(globalThis,'devicePixelRatio');Object.defineProperty(globalThis,'devicePixelRatio',{value:2,configurable:true});
  try{
   for(const quality of ['muy_baja','baja','media','alta','media']){
@@ -62,6 +62,7 @@ test('live world quality and resize preserve simulation, ground geometry and exi
    assert.equal(!!ground.material.isMeshBasicMaterial,quality==='muy_baja');assert.equal(world.renderer.shadowMap.enabled,['media','alta'].includes(quality));assert.equal(world.toon.uniforms.uGroundDetail.value,quality==='muy_baja'?0:1);
    assert.deepEqual(world.renderer.size,[world.renderResolution.width,world.renderResolution.height]);assert.equal(world.camera.aspect,world.renderResolution.width/world.renderResolution.height);assert.ok(world.renderResolution.width*world.renderResolution.height<2605000);
   }
+  assert.equal(materialInvalidations,2,'only the two shadow-enable transitions invalidate grouped materials');
  }finally{if(previous)Object.defineProperty(globalThis,'devicePixelRatio',previous);else delete globalThis.devicePixelRatio;}
 });
 

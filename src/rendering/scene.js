@@ -156,6 +156,7 @@ export class WorldScene {
     updateGroundQuality(qualityGround,quality,mesh=>{configureMangroveMudMaterial(this,mesh.material);this.materialRegistry?.refresh(mesh);});
     const shadowsEnabled=['media','alta'].includes(quality),shadowsChanged=this.renderer.shadowMap.enabled!==shadowsEnabled;
     this.renderer.shadowMap.enabled=shadowsEnabled;
+    if(shadowsChanged)this.assetGroups.invalidateMaterials();
     // Shadow defines are compiled into materials; re-enable must invalidate unshadowed programs.
     if(shadowsChanged)this.scene.traverse(object=>{for(const material of (Array.isArray(object.material)?object.material:[object.material]))if(material)material.needsUpdate=true;});
     resizeShadowMap(this.sun,mangroveFernEnabled()&&this.state?.biome==='manglares'&&shadowsEnabled?'alta':quality);this.resize();
