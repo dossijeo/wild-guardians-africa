@@ -31,7 +31,7 @@ for r in j['records']:
    d['inclusiveCpuMs']={k:round(v/60,3) for k,v in sorted(totals.items(),key=lambda kv:-kv[1])}
   row['modes'][m['mode']]=d
  out.append(row)
-(p/'summary.json').write_text(json.dumps(out,indent=2)+'\n',encoding='utf-8')
+(p/'summary.json').write_text(json.dumps(out,indent=2)+'\n',encoding='utf-8',newline='\n')
 drift=[]
 for phase in ['day','night']:
  records=[r for r in j['records'] if r['phase']==phase]
@@ -59,5 +59,5 @@ for phase in ['day','night']:
    if x['pass']=='screen' and x['segment']=='color:ground':totals[x['frame']][0]+=x['calls'];totals[x['frame']][1]+=x['triangles']
   sequences.append(totals)
  assert all(x==sequences[0] for x in sequences),'ground draw workload'
-(p/'non-ground-drift.json').write_text(json.dumps(drift,indent=2)+'\n',encoding='utf-8')
+(p/'non-ground-drift.json').write_text(json.dumps(drift,indent=2)+'\n',encoding='utf-8',newline='\n')
 print('Non-ground drift',drift)
