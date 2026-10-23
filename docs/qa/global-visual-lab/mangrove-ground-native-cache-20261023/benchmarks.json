@@ -1,0 +1,1112 @@
+{
+  "seed": 712,
+  "note": "Diagnostic ABAB resident ground shader variant versus original. Variant is recorded in sceneAudit.ablation. Paused identical fixture and camera sequence, fixed fern/material time. Geometry, draw settings, resolution, overlays and shadows retained. Whole GPU, subsystem GPU and cadence in separate windows. Hybrid cache is a QA candidate; not integrated into streaming.",
+  "records": [
+    {
+      "biome": "manglares",
+      "quality": "media",
+      "variant": "fixednative",
+      "phase": "day",
+      "measurements": [
+        {
+          "mode": "cadence",
+          "frames": [
+            {
+              "frame": 0,
+              "cpuMs": 6.899999976158142,
+              "intervalMs": 33.40000003576279,
+              "calls": 133,
+              "triangles": 932217,
+              "camera": [
+                109.59244879761732,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1480,
+                "far": 636
+              },
+              "shadow": {
+                "draws": 285,
+                "hits": 273,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 1,
+              "cpuMs": 7.800000011920929,
+              "intervalMs": 31.19999998807907,
+              "calls": 133,
+              "triangles": 931371,
+              "camera": [
+                109.31221865876908,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1466,
+                "far": 641
+              },
+              "shadow": {
+                "draws": 286,
+                "hits": 273,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 2,
+              "cpuMs": 8.199999988079071,
+              "intervalMs": 32.30000001192093,
+              "calls": 132,
+              "triangles": 918050,
+              "camera": [
+                109.02432155251138,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1323,
+                "far": 646
+              },
+              "shadow": {
+                "draws": 287,
+                "hits": 273,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 3,
+              "cpuMs": 10.5,
+              "intervalMs": 30.69999998807907,
+              "calls": 132,
+              "triangles": 921392,
+              "camera": [
+                108.7292693493929,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1326,
+                "far": 647
+              },
+              "shadow": {
+                "draws": 288,
+                "hits": 273,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 4,
+              "cpuMs": 10.100000023841858,
+              "intervalMs": 27.69999998807907,
+              "calls": 134,
+              "triangles": 913194,
+              "camera": [
+                108.42758664146345,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1326,
+                "far": 647
+              },
+              "shadow": {
+                "draws": 289,
+                "hits": 273,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 5,
+              "cpuMs": 7.5,
+              "intervalMs": 27.900000035762787,
+              "calls": 134,
+              "triangles": 910166,
+              "camera": [
+                108.11980980956841,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1328,
+                "far": 654
+              },
+              "shadow": {
+                "draws": 290,
+                "hits": 273,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 6,
+              "cpuMs": 8.199999988079071,
+              "intervalMs": 28.69999998807907,
+              "calls": 134,
+              "triangles": 900272,
+              "camera": [
+                107.8064860696832,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1172,
+                "far": 663
+              },
+              "shadow": {
+                "draws": 291,
+                "hits": 273,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 7,
+              "cpuMs": 10,
+              "intervalMs": 32.19999998807907,
+              "calls": 134,
+              "triangles": 899201,
+              "camera": [
+                107.48817249998322,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1173,
+                "far": 667
+              },
+              "shadow": {
+                "draws": 292,
+                "hits": 273,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 8,
+              "cpuMs": 14.400000035762787,
+              "intervalMs": 30.899999976158142,
+              "calls": 133,
+              "triangles": 898996,
+              "camera": [
+                107.16543505037916,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1175,
+                "far": 671
+              },
+              "shadow": {
+                "draws": 293,
+                "hits": 273,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 9,
+              "cpuMs": 9.899999976158142,
+              "intervalMs": 32.30000001192093,
+              "calls": 133,
+              "triangles": 899723,
+              "camera": [
+                106.83884753627875,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1176,
+                "far": 674
+              },
+              "shadow": {
+                "draws": 294,
+                "hits": 273,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 10,
+              "cpuMs": 7.600000023841858,
+              "intervalMs": 28.80000001192093,
+              "calls": 133,
+              "triangles": 898151,
+              "camera": [
+                106.50899061836391,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1177,
+                "far": 680
+              },
+              "shadow": {
+                "draws": 295,
+                "hits": 273,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 11,
+              "cpuMs": 7.099999964237213,
+              "intervalMs": 26.80000001192093,
+              "calls": 133,
+              "triangles": 896684,
+              "camera": [
+                106.17645077019723,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1178,
+                "far": 685
+              },
+              "shadow": {
+                "draws": 296,
+                "hits": 273,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 12,
+              "cpuMs": 8.399999976158142,
+              "intervalMs": 27.69999998807907,
+              "calls": 132,
+              "triangles": 895192,
+              "camera": [
+                105.84181923549336,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1179,
+                "far": 690
+              },
+              "shadow": {
+                "draws": 297,
+                "hits": 273,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 13,
+              "cpuMs": 9.100000023841858,
+              "intervalMs": 27.19999998807907,
+              "calls": 132,
+              "triangles": 894868,
+              "camera": [
+                105.5056909769093,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1179,
+                "far": 695
+              },
+              "shadow": {
+                "draws": 298,
+                "hits": 273,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 14,
+              "cpuMs": 7.300000011920929,
+              "intervalMs": 26.80000001192093,
+              "calls": 132,
+              "triangles": 894236,
+              "camera": [
+                105.1686636182225,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1181,
+                "far": 697
+              },
+              "shadow": {
+                "draws": 299,
+                "hits": 273,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 15,
+              "cpuMs": 9,
+              "intervalMs": 27.19999998807907,
+              "calls": 132,
+              "triangles": 892769,
+              "camera": [
+                104.83133638177752,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1182,
+                "far": 702
+              },
+              "shadow": {
+                "draws": 300,
+                "hits": 273,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 16,
+              "cpuMs": 7.199999988079071,
+              "intervalMs": 26.5,
+              "calls": 132,
+              "triangles": 889845,
+              "camera": [
+                104.4943090230907,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1183,
+                "far": 710
+              },
+              "shadow": {
+                "draws": 301,
+                "hits": 273,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 17,
+              "cpuMs": 10.299999952316284,
+              "intervalMs": 25.400000035762787,
+              "calls": 132,
+              "triangles": 889338,
+              "camera": [
+                104.15818076450662,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1185,
+                "far": 711
+              },
+              "shadow": {
+                "draws": 302,
+                "hits": 273,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 18,
+              "cpuMs": 7.299999952316284,
+              "intervalMs": 26,
+              "calls": 131,
+              "triangles": 887223,
+              "camera": [
+                103.82354922980277,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1186,
+                "far": 715
+              },
+              "shadow": {
+                "draws": 303,
+                "hits": 273,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 19,
+              "cpuMs": 7,
+              "intervalMs": 27.599999964237213,
+              "calls": 131,
+              "triangles": 885746,
+              "camera": [
+                103.49100938163609,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1187,
+                "far": 719
+              },
+              "shadow": {
+                "draws": 304,
+                "hits": 273,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 20,
+              "cpuMs": 12.100000023841858,
+              "intervalMs": 28.69999998807907,
+              "calls": 130,
+              "triangles": 885380,
+              "camera": [
+                103.16115246372125,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1188,
+                "far": 722
+              },
+              "shadow": {
+                "draws": 305,
+                "hits": 273,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 21,
+              "cpuMs": 7,
+              "intervalMs": 24.900000035762787,
+              "calls": 128,
+              "triangles": 880064,
+              "camera": [
+                102.83456494962084,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1188,
+                "far": 722
+              },
+              "shadow": {
+                "draws": 306,
+                "hits": 273,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 22,
+              "cpuMs": 10.199999988079071,
+              "intervalMs": 24,
+              "calls": 125,
+              "triangles": 879746,
+              "camera": [
+                102.51182750001678,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1189,
+                "far": 733
+              },
+              "shadow": {
+                "draws": 307,
+                "hits": 273,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 23,
+              "cpuMs": 8,
+              "intervalMs": 26.30000001192093,
+              "calls": 124,
+              "triangles": 877091,
+              "camera": [
+                102.1935139303168,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1189,
+                "far": 740
+              },
+              "shadow": {
+                "draws": 308,
+                "hits": 273,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 24,
+              "cpuMs": 7.100000023841858,
+              "intervalMs": 24.799999952316284,
+              "calls": 123,
+              "triangles": 874428,
+              "camera": [
+                101.88019019043159,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1189,
+                "far": 740
+              },
+              "shadow": {
+                "draws": 309,
+                "hits": 273,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 25,
+              "cpuMs": 7.599999964237213,
+              "intervalMs": 25.400000035762787,
+              "calls": 122,
+              "triangles": 864765,
+              "camera": [
+                101.57241335853655,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1044,
+                "far": 747
+              },
+              "shadow": {
+                "draws": 310,
+                "hits": 273,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 26,
+              "cpuMs": 8,
+              "intervalMs": 24.099999964237213,
+              "calls": 121,
+              "triangles": 863745,
+              "camera": [
+                101.2707306506071,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1044,
+                "far": 753
+              },
+              "shadow": {
+                "draws": 311,
+                "hits": 273,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 27,
+              "cpuMs": 9.299999952316284,
+              "intervalMs": 25.200000047683716,
+              "calls": 122,
+              "triangles": 867061,
+              "camera": [
+                100.97567844748862,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1044,
+                "far": 757
+              },
+              "shadow": {
+                "draws": 312,
+                "hits": 273,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 28,
+              "cpuMs": 8.5,
+              "intervalMs": 25.899999976158142,
+              "calls": 120,
+              "triangles": 865287,
+              "camera": [
+                100.68778134123092,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1044,
+                "far": 762
+              },
+              "shadow": {
+                "draws": 313,
+                "hits": 273,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 29,
+              "cpuMs": 7.400000035762787,
+              "intervalMs": 25.19999998807907,
+              "calls": 120,
+              "triangles": 865431,
+              "camera": [
+                100.40755120238268,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1044,
+                "far": 762
+              },
+              "shadow": {
+                "draws": 314,
+                "hits": 273,
+                "untracked": 0
+              }
+            }
+          ],
+          "before": {
+            "elapsed": 119.99999999999746,
+            "time": 150,
+            "workers": [
+              {
+                "id": "worker-28",
+                "x": 89.2736051038211,
+                "z": -7.901560026403565
+              },
+              {
+                "id": "worker-30",
+                "x": 87.7564653439287,
+                "z": -7.841555534920514
+              }
+            ],
+            "pauses": [
+              "menu"
+            ]
+          },
+          "after": {
+            "elapsed": 119.99999999999746,
+            "time": 150,
+            "workers": [
+              {
+                "id": "worker-28",
+                "x": 89.2736051038211,
+                "z": -7.901560026403565
+              },
+              {
+                "id": "worker-30",
+                "x": 87.7564653439287,
+                "z": -7.841555534920514
+              }
+            ],
+            "pauses": [
+              "menu"
+            ]
+          },
+          "gpu": null,
+          "passes": null,
+          "glError": 0,
+          "memory": {
+            "geometries": 285,
+            "textures": 163
+          },
+          "coverage": {
+            "distribution": "original",
+            "leafShape": "cupped",
+            "variant": "C",
+            "active": true,
+            "quality": "media",
+            "biome": "manglares",
+            "edgePadding": 1,
+            "nearDistance": 24,
+            "moduleSpacing": 0.65,
+            "near": 1044,
+            "far": 762,
+            "leaves": 7224,
+            "triangles": 39504,
+            "chunks": 25,
+            "cachedTiles": 53,
+            "bufferBytes": 1206340,
+            "stats": {
+              "buildMs": 70.29999995231628,
+              "selectionMs": 87.09999960660934,
+              "selectionCount": 147,
+              "candidates": 7996,
+              "masked": 4620,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": true,
+            "cardStudy": {
+              "representation": "native-holly-fern-balanced",
+              "shadowResolution": 2048,
+              "castsNativeShadow": true,
+              "sizeXZ": 1.35,
+              "sizeY": 1.6,
+              "colorContrast": 1.12,
+              "edgePadding": 1,
+              "frondsPerClump": 4,
+              "trianglesPerClump": 32,
+              "textureCount": 2,
+              "textureBytesEstimate": 11184810.666666666,
+              "normal": "upward ambient; baked normal transformed by analytic curved-frond tangent and instance height",
+              "reuseNativeInstanceBuffers": true,
+              "extraSelectionPass": false,
+              "stats": {
+                "instances": 1806,
+                "updates": 0,
+                "selectionMs": 0
+              },
+              "prelit": {
+                "nearAndFar": false,
+                "nearNative": true,
+                "orientations": 8,
+                "atlasWidth": 2048,
+                "atlasHeight": 256,
+                "solarShadowOpacity": 0.55,
+                "solarShadowQuad": true,
+                "liveNormalSampling": false,
+                "liveShadowCasting": false,
+                "liveWind": false,
+                "limitation": "Baked far-field lighting; static shadows cannot follow animated leaves or receive surrounding object shadows."
+              }
+            },
+            "baseMeshesReplaced": true
+          },
+          "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+        }
+      ],
+      "sceneAudit": {
+        "frameStep": null,
+        "ablation": {
+          "scope": "Fixed512 material cache lifecycle",
+          "queue": {
+            "bytes": 35209000,
+            "peakBytes": 35209000,
+            "tiles": 30,
+            "published": 30,
+            "cancelled": 0,
+            "rejected": 0
+          },
+          "added": 30,
+          "removed": 5,
+          "invalidations": 0
+        },
+        "rendererShadowEnabled": true,
+        "nativeShadowOn": 1,
+        "fernShadowEnabled": [
+          true,
+          false
+        ],
+        "shadowResolution": 2048,
+        "shadowCacheBefore": {
+          "draws": 225,
+          "hits": 272,
+          "untracked": 0
+        },
+        "cardStudy": {
+          "representation": "native-holly-fern-balanced",
+          "shadowResolution": 2048,
+          "castsNativeShadow": true,
+          "sizeXZ": 1.35,
+          "sizeY": 1.6,
+          "colorContrast": 1.12,
+          "edgePadding": 1,
+          "frondsPerClump": 4,
+          "trianglesPerClump": 32,
+          "textureCount": 2,
+          "textureBytesEstimate": 11184810.666666666,
+          "normal": "upward ambient; baked normal transformed by analytic curved-frond tangent and instance height",
+          "reuseNativeInstanceBuffers": true,
+          "extraSelectionPass": false,
+          "stats": {
+            "instances": 1881,
+            "updates": 0,
+            "selectionMs": 0
+          },
+          "prelit": {
+            "nearAndFar": false,
+            "nearNative": true,
+            "orientations": 8,
+            "atlasWidth": 2048,
+            "atlasHeight": 256,
+            "solarShadowOpacity": 0.55,
+            "solarShadowQuad": true,
+            "liveNormalSampling": false,
+            "liveShadowCasting": false,
+            "liveWind": false,
+            "limitation": "Baked far-field lighting; static shadows cannot follow animated leaves or receive surrounding object shadows."
+          }
+        },
+        "residentMasks": [
+          "0,-1",
+          "0,-2",
+          "0,0",
+          "0,1",
+          "0,2",
+          "1,-1",
+          "1,-2",
+          "1,0",
+          "1,1",
+          "1,2",
+          "2,-1",
+          "2,-2",
+          "2,0",
+          "2,1",
+          "2,2",
+          "3,-1",
+          "3,-2",
+          "3,0",
+          "3,1",
+          "3,2",
+          "4,-1",
+          "4,-2",
+          "4,0",
+          "4,1",
+          "4,2"
+        ],
+        "origin": [
+          0,
+          0
+        ],
+        "target": [
+          83,
+          4.219999933242798,
+          0
+        ],
+        "chunks": [
+          "0,-1",
+          "0,-2",
+          "0,0",
+          "0,1",
+          "0,2",
+          "1,-1",
+          "1,-2",
+          "1,0",
+          "1,1",
+          "1,2",
+          "2,-1",
+          "2,-2",
+          "2,0",
+          "2,1",
+          "2,2",
+          "3,-1",
+          "3,-2",
+          "3,0",
+          "3,1",
+          "3,2",
+          "4,-1",
+          "4,-2",
+          "4,0",
+          "4,1",
+          "4,2"
+        ],
+        "objects": 4,
+        "elapsed": 119.99999999999746,
+        "workers": [
+          {
+            "id": "worker-28",
+            "x": 89.2736051038211,
+            "z": -7.901560026403565,
+            "actionRemaining": 2.7999999999999994
+          },
+          {
+            "id": "worker-30",
+            "x": 87.7564653439287,
+            "z": -7.841555534920514,
+            "actionRemaining": -1.970645868709653e-15
+          }
+        ],
+        "memory": {
+          "geometries": 280,
+          "textures": 163
+        },
+        "far": {
+          "logicalStandbyPreload": true,
+          "species": 4,
+          "estimatedAtlasTextureBytes": 44739242.666666664,
+          "estimatedBackdropTextureBytes": 5592405.333333333,
+          "errors": []
+        },
+        "farEnabled": true,
+        "instanceCulling": true,
+        "workload": [
+          92,
+          405640,
+          280,
+          163
+        ]
+      },
+      "capture": {
+        "camera": [
+          105,
+          20.219999933242796,
+          18
+        ],
+        "target": [
+          83,
+          4.219999933242798,
+          0
+        ]
+      },
+      "stateBefore": {
+        "elapsed": 119.99999999999746,
+        "workers": [
+          {
+            "id": "worker-28",
+            "personId": "person-27",
+            "profile": "olderFemale",
+            "contractDay": 1,
+            "centerId": "structure-2",
+            "villageId": "village-1",
+            "x": 89.2736051038211,
+            "z": -7.901560026403565,
+            "status": "acting",
+            "taskId": "task-49",
+            "crateId": null,
+            "path": [],
+            "hits": 0,
+            "incapacitated": false,
+            "recovering": false,
+            "runRemaining": 56.28259775852689,
+            "actionRemaining": 2.7999999999999994,
+            "idleState": null,
+            "running": false,
+            "taskApproach": {
+              "taskId": "task-49",
+              "destination": {
+                "x": 89.2736051038211,
+                "z": -7.901560026403565,
+                "id": "water-point-plant-15-0"
+              }
+            },
+            "destinationId": "water-point-plant-15-0",
+            "pathVersion": 2,
+            "mobileRecoveryDestinationId": "water-point-plant-15-0",
+            "mobileRecoveryVersion": 2,
+            "mobileRecoveryAttempts": 0,
+            "mobileProgressDistance": 0.07996699645575049,
+            "mobileProgressAt": 119.39999999999749,
+            "runPhase": 20.633956572765268,
+            "heading": 1.0657965320074176,
+            "dynamicStallSeconds": 0,
+            "walkPhase": 14.009742078065697
+          },
+          {
+            "id": "worker-30",
+            "personId": "person-29",
+            "profile": "olderFemale",
+            "contractDay": 1,
+            "centerId": "structure-2",
+            "villageId": "village-1",
+            "x": 87.7564653439287,
+            "z": -7.841555534920514,
+            "status": "idle",
+            "taskId": null,
+            "crateId": null,
+            "path": null,
+            "hits": 0,
+            "incapacitated": false,
+            "recovering": false,
+            "runRemaining": 56.14723422960332,
+            "actionRemaining": -1.970645868709653e-15,
+            "idleState": {
+              "anchorId": "farm-plant-13",
+              "mode": "rest",
+              "elapsed": 0.7,
+              "rng": 4243961242,
+              "remaining": 6.899999904632571,
+              "approachRetry": 0
+            },
+            "running": false,
+            "taskApproach": null,
+            "destinationId": "water-point-plant-11-0",
+            "pathVersion": 2,
+            "mobileRecoveryDestinationId": "water-point-plant-11-0",
+            "mobileRecoveryVersion": 2,
+            "mobileRecoveryAttempts": 0,
+            "mobileProgressDistance": 0.19013642722333118,
+            "mobileProgressAt": 112.69999999999787,
+            "runPhase": 20.690358043150088,
+            "heading": -1.1466831464329033,
+            "dynamicStallSeconds": 0,
+            "walkPhase": 11.505847359833481
+          }
+        ],
+        "time": 150
+      },
+      "stateAfter": {
+        "elapsed": 119.99999999999746,
+        "workers": [
+          {
+            "id": "worker-28",
+            "personId": "person-27",
+            "profile": "olderFemale",
+            "contractDay": 1,
+            "centerId": "structure-2",
+            "villageId": "village-1",
+            "x": 89.2736051038211,
+            "z": -7.901560026403565,
+            "status": "acting",
+            "taskId": "task-49",
+            "crateId": null,
+            "path": [],
+            "hits": 0,
+            "incapacitated": false,
+            "recovering": false,
+            "runRemaining": 56.28259775852689,
+            "actionRemaining": 2.7999999999999994,
+            "idleState": null,
+            "running": false,
+            "taskApproach": {
+              "taskId": "task-49",
+              "destination": {
+                "x": 89.2736051038211,
+                "z": -7.901560026403565,
+                "id": "water-point-plant-15-0"
+              }
+            },
+            "destinationId": "water-point-plant-15-0",
+            "pathVersion": 2,
+            "mobileRecoveryDestinationId": "water-point-plant-15-0",
+            "mobileRecoveryVersion": 2,
+            "mobileRecoveryAttempts": 0,
+            "mobileProgressDistance": 0.07996699645575049,
+            "mobileProgressAt": 119.39999999999749,
+            "runPhase": 20.633956572765268,
+            "heading": 1.0657965320074176,
+            "dynamicStallSeconds": 0,
+            "walkPhase": 14.009742078065697
+          },
+          {
+            "id": "worker-30",
+            "personId": "person-29",
+            "profile": "olderFemale",
+            "contractDay": 1,
+            "centerId": "structure-2",
+            "villageId": "village-1",
+            "x": 87.7564653439287,
+            "z": -7.841555534920514,
+            "status": "idle",
+            "taskId": null,
+            "crateId": null,
+            "path": null,
+            "hits": 0,
+            "incapacitated": false,
+            "recovering": false,
+            "runRemaining": 56.14723422960332,
+            "actionRemaining": -1.970645868709653e-15,
+            "idleState": {
+              "anchorId": "farm-plant-13",
+              "mode": "rest",
+              "elapsed": 0.7,
+              "rng": 4243961242,
+              "remaining": 6.899999904632571,
+              "approachRetry": 0
+            },
+            "running": false,
+            "taskApproach": null,
+            "destinationId": "water-point-plant-11-0",
+            "pathVersion": 2,
+            "mobileRecoveryDestinationId": "water-point-plant-11-0",
+            "mobileRecoveryVersion": 2,
+            "mobileRecoveryAttempts": 0,
+            "mobileProgressDistance": 0.19013642722333118,
+            "mobileProgressAt": 112.69999999999787,
+            "runPhase": 20.690358043150088,
+            "heading": -1.1466831464329033,
+            "dynamicStallSeconds": 0,
+            "walkPhase": 11.505847359833481
+          }
+        ],
+        "time": 150,
+        "pauses": [
+          "menu"
+        ]
+      },
+      "shadowCacheAfter": {
+        "draws": 315,
+        "hits": 273,
+        "untracked": 0
+      },
+      "errors": []
+    }
+  ]
+}

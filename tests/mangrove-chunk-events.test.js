@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
-import {observeMangroveChunks} from '../tools/experiments/qa-mangrove-chunk-events-20261023.js';
+import {observeMangroveChunks} from '../src/rendering/mangrove-chunk-events.js';
 function chunk(biome='mangrove'){
  const group=new THREE.Group(),material=new THREE.MeshBasicMaterial(),mesh=new THREE.Mesh(new THREE.PlaneGeometry(),material);
  material.userData.groundBiome=biome;material.userData.retainBiomeGround=()=>{};mesh.userData.ground=true;group.add(mesh);return group;
