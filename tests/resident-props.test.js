@@ -78,10 +78,12 @@ test('camera-driven chunk synchronization does not poll the unchanged suppressio
 
 
 test('all quality presets retain individual color culling',()=>{
- const world={scene:new THREE.Scene(),assetGroups:{instanceCulling:true},toon:{uniforms:{uGroundDetail:{value:0}}},destructionPass:{},renderer:{shadowMap:{}},sun:new THREE.DirectionalLight(),terrainMeshes:[],resize(){}};
+ let invalidations=0;
+ const world={scene:new THREE.Scene(),assetGroups:{instanceCulling:true,invalidateMaterials(){invalidations++;}},toon:{uniforms:{uGroundDetail:{value:0}}},destructionPass:{},renderer:{shadowMap:{}},sun:new THREE.DirectionalLight(),terrainMeshes:[],resize(){}};
  for(const quality of ['muy_baja','baja','media','alta','muy_baja']){
   WorldScene.prototype.qualitySetting.call(world,quality);
   assert.equal(world.assetGroups.instanceCulling,true);
   assert.equal(world.renderer.shadowMap.enabled,['media','alta'].includes(quality));
  }
+ assert.equal(invalidations,3,'only shadow enable transitions invalidate compiled materials');
 });
