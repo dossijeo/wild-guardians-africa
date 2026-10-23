@@ -1,3 +1,4 @@
+import {mangroveFernEnabled} from './mangrove-fern-option.js';
 import {createCropSoilMasks,cropSoilEnabled} from './crop-soil-mask.js';
 import {syncSelectedGrassMask,disposeSelectedGrassMask} from './grass-underlay-mask.js';
 import {prepareMangroveLeaves,mangroveLeafShader,cuppedMangroveLeavesEnabled,variedMangroveDistributionEnabled} from './mangrove-leaf-cover.js';
@@ -64,13 +65,14 @@ export function continuousGrassEnabled(biome,search=globalThis.location?.search?
 export async function createContinuousGrass(world){
  const river=world.state.biome==='gran-rio',mangrove=world.state.biome==='manglares';
  if(!river&&!mangrove&&world.state.biome!=='sabana')throw Error('Unsupported continuous coverage biome');
+ const fern=mangrove&&mangroveFernEnabled();
  const cropSoil=river&&cropSoilEnabled()?createCropSoilMasks():null;
  const cupped=mangrove&&cuppedMangroveLeavesEnabled(),varied=mangrove&&variedMangroveDistributionEnabled();
  const raw=await(await fetch(cupped?'/assets/visual-lab/mangrove-leaf-cupped-20261022/modules.json':mangrove?'/assets/visual-lab/mangrove-leaf-fill-20261021/modules.json':'/assets/visual-lab/continuous-grass/modules.json',{signal:world.loading?.signal})).json();
  const modules=mangrove&&!cupped?prepareMangroveLeaves(raw):raw;
  if(world.disposed||world.loading?.signal.aborted)throw Error('Coverage loading cancelled');
  const q={variant:'C',chunks:new Map(),tiles:new Map(),dirty:true,enabled:true,timeOverride:null,stats:{buildMs:0,selectionMs:0,selectionCount:0,candidates:0,masked:0,overflow:0},signature:'',near:0,far:0};
- const low=['baja','muy_baja'].includes(world.quality);q.spacing=mangrove?(low?.6:.5):(low?.5:.4);q.farDistance=low?40:48;q.nearDistance=low?0:24;
+ const low=['baja','muy_baja'].includes(world.quality);q.spacing=mangrove?(fern?(low?.75:.65):(low?.6:.5)):(low?.5:.4);q.farDistance=low?40:48;q.nearDistance=low?0:24;
  q.edgePadding=river?.85:.6;
  const vertexShader=mangrove?mangroveLeafShader(vertex,varied):river?vertex.replace('vec3(1.14,1.09,.97)','vec3(1.14,1.18,1.05)').replace('dayShade=vec3(.17,.28,.34)','dayShade=vec3(.14,.26,.32)').replace('vec3(1.55,1.42,1.02)','vec3(1.77,1.79,1.42)').replace('nightShade=vec3(.095,.17,.32)','nightShade=vec3(.24,.36,.48)'):vertex;
  const group=new THREE.Group();group.name='continuous-herbaceous-cover';group.userData.materialRegistryExcluded=true;world.scene.add(group);q.group=group;
@@ -121,7 +123,8 @@ export async function createContinuousGrass(world){
  const s=sample(c,x,z),[cover,meso,moisture,wear]=s.ctx;q.stats.candidates++;
  if(cover<(river?.20:.10)||(river&&moisture<.20)||wear>.25||Math.hypot(s.sx,s.sz)>.42||nearWater(c,x,z)||(q.blockers.get(Math.floor(x/8)+','+Math.floor(z/8))??[]).some(o=>o.polygon?footprintDistance(o.polygon,x,z)<q.edgePadding:Math.hypot(x-o.x,z-o.z)<o.r+q.edgePadding)){q.stats.masked++;continue;}
  // Check the footprint against the resident wear mask, keeping leaf reach off paths.
- let edgeWear=wear;for(const [dx,dz] of [[.6,0],[-.6,0],[0,.6],[0,-.6],[.42,.42],[-.42,.42],[.42,-.42],[-.42,-.42]]){edgeWear=Math.max(edgeWear,sample(c,x+dx*(q.edgePadding/.6),z+dz*(q.edgePadding/.6)).ctx[3]);if(edgeWear>.27)break;}if(edgeWear>.27){q.stats.masked++;continue;}
+ let edgeWear=wear,fernEdgeCover=cover;for(const [dx,dz] of [[.6,0],[-.6,0],[0,.6],[0,-.6],[.42,.42],[-.42,.42],[.42,-.42],[-.42,-.42]]){const probe=sample(c,x+dx*(q.edgePadding/.6),z+dz*(q.edgePadding/.6)).ctx;edgeWear=Math.max(edgeWear,probe[3]);if(fern)fernEdgeCover=Math.min(fernEdgeCover,probe[0]);if(edgeWear>.27)break;}if(edgeWear>.27){q.stats.masked++;continue;}
+ if(fern){const edge=Math.max(clamp((.42-fernEdgeCover)/.32,0,1),clamp((edgeWear-.06)/.21,0,1));if(hashCell(seed,ix,iz,21931)/4294967296<.30*edge)continue;}
  items.push([x,s.y+.006,z,(river?clamp((.27-edgeWear)/.17,0,1)*(.65+.25*((bits>>>16)&255)/255)*clamp((cover-.20)/.12,0,1)*clamp((moisture-.20)/.12,0,1):(.80+.32*((bits>>>16)&255)/255)*clamp((cover-.08)/.18,.7,1)),bits/4294967296*Math.PI*2,(varied?noise(x*.19,z*.19,seed^9581)*.65+noise(x*.71,z*.71,seed^9517)*.35:meso*.65+moisture*.35),cover,mangrove?wear:moisture,s.sx,s.sz]);}
  const result={chunk:c.cx+','+c.cz,tx,tz,items};q.tiles.set(key,result);q.stats.buildMs+=performance.now()-start;return result;}
  const old=world.scene.onBeforeRender,frustum=new THREE.Frustum(),vp=new THREE.Matrix4(),sphere=new THREE.Sphere(new THREE.Vector3(),6.5);
@@ -136,7 +139,7 @@ export async function createContinuousGrass(world){
  q.configureQuality=quality=>{
   if(q.quality===quality)return;
   q.quality=quality;const low=['baja','muy_baja'].includes(quality);
-  q.spacing=mangrove?(low?.6:.5):(low?.5:.4);q.farDistance=low?40:48;q.nearDistance=low?0:24;
+  q.spacing=mangrove?(fern?(low?.75:.65):(low?.6:.5)):(low?.5:.4);q.farDistance=low?40:48;q.nearDistance=low?0:24;
   q.uniforms.uCoverageSpacing.value=mangrove?1:q.spacing/.4;q.uniforms.uCoverageFar.value=q.farDistance;
   q.group.visible=quality!=='muy_baja'&&q.variant!=='A';q.tiles.clear();q.dirty=true;
  };
@@ -152,5 +155,6 @@ export async function createContinuousGrass(world){
  for(const key of world.chunks.keys()){const [cx,cz]=key.split(',').map(Number);chunk(cx,cz)}
  q.releaseEvents=observeGameEvents(world.state,event=>{markGroundDetailEvent(q,world.state,event,id=>world.objects.get(id)?.position);if(cropSoil&&['CropPlaced','CropPicked','CropDestroyed'].includes(event.type)){cropSoil.invalidate();q.occupancyDirty=true;}});
  q.audit=()=>({distribution:varied?'varied':'original',leafShape:mangrove?(cupped?'cupped':'original'):null,variant:q.variant,active:q.group.visible&&!q.disposed,quality:q.quality,biome:world.state.biome,edgePadding:q.edgePadding,nearDistance:q.nearDistance,moduleSpacing:q.spacing,near:q.near,far:q.far,leaves:q.near*(mangrove?8:12)+q.far*(mangrove?4:8),triangles:q.meshes.reduce((n,e)=>n+e.mesh.geometry.index.count/3*e.mesh.geometry.instanceCount,0),chunks:q.chunks.size,cachedTiles:q.tiles.size,bufferBytes:q.meshes.reduce((s,e)=>s+Object.values(e.mesh.geometry.attributes).reduce((n,a)=>n+a.array.byteLength,0)+(e.mesh.geometry.index?.array.byteLength??0),0),stats:{...q.stats},engineQueries:0,castShadow:false});
+ if(fern){try{const {applyHollyFern}=await import('./mangrove-fern-material.js');await applyHollyFern(world,q);}catch(e){q.dispose();throw e;}}
  return q;
 }
