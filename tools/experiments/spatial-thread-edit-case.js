@@ -28,8 +28,8 @@ export async function verifyConcurrentWallEdit(w){
   return id;
  };
  p.publish=function(...args){const result=originalPublish.apply(this,args);publications.push({id:args[0],result});return result;};
- const travel=async(command)=>{
-  action=command;w.controls.target.x+=48;w.camera.position.x+=48;
+ const travel=async(command,delta=48)=>{
+  action=command;w.controls.target.x+=delta;w.camera.position.x+=delta;
   const deadline=performance.now()+30000;
   do{if(performance.now()>deadline)throw Error('Concurrent edit stream timeout');await new Promise(requestAnimationFrame);}
   while(action||w.chunkStream.summary().busy||w.chunkStream.summary().queued);
@@ -48,6 +48,25 @@ export async function verifyConcurrentWallEdit(w){
   await travel(()=>{if(game.removeWall(s,'qa-pthread-wall-remove',wall.id,w.nav)===false)throw Error('Remove command rejected');});
   if(core.snapshot().barriers.length!==initialBarriers)throw Error('Removed wall restored by stale publication');
   if(events.length!==2||!events.every(event=>publications.some(row=>row.id===event.id&&row.result===-2)))throw Error('Missing stale result rejection');
-  return {scope:'Real legal build/remove commands overlapping confirmed running native generation, production session mirror, paused between commands; not a raid or active actor-route stress test',initialBarriers,built,finalBarriers:core.snapshot().barriers.length,events,publications,stream:w.chunkStream.summary()};
+  const seed=s.plants.find(plant=>plant.alive!==false);if(!seed)throw Error('Missing crop fixture');
+  let point=null;
+  for(let radius=2;radius<=10&&!point;radius+=2)for(let i=0;i<16&&!point;i++){
+   const x=seed.x+Math.cos(i*Math.PI/8)*radius,z=seed.z+Math.sin(i*Math.PI/8)*radius;
+   if(s.plants.some(plant=>plant.alive!==false&&Math.hypot(plant.x-x,plant.z-z)<1.2))continue;
+   if(w.nav.placement(x,z,.4).valid)point={x,z};
+  }
+  if(!point)throw Error('No legal crop site');
+  let crop,batchSawCrop=false;const originalBatch=w.cropBatch.update;
+  w.cropBatch.update=function(plants,...args){if(crop&&plants.some(plant=>plant.id===crop.id))batchSawCrop=true;return originalBatch.call(this,plants,...args);};
+  try{
+   await travel(()=>{
+    const before=s.plants.length;
+    if(game.plant(s,'qa-pthread-crop',seed.species,point.x,point.z,w.nav)===false||s.plants.length!==before+1)throw Error('Crop command rejected');
+    crop=s.plants.at(-1);
+   },-48);
+   if(!batchSawCrop)throw Error('Concurrent crop missing renderer batch');
+   if(!s.plants.some(plant=>plant.id===crop.id&&plant.alive!==false))throw Error('Concurrent crop lost from state');
+  }finally{w.cropBatch.update=originalBatch;}
+  return {scope:'Real legal build/remove and crop commands overlapping confirmed running native generation, production session mirror, paused between commands; not a raid or active actor-route stress test',initialBarriers,built,crop:{id:crop.id,x:crop.x,z:crop.z,rendererBatchSawCrop:batchSawCrop},finalBarriers:core.snapshot().barriers.length,events,publications,stream:w.chunkStream.summary()};
  }finally{action=null;p.start=originalStart;p.publish=originalPublish;w.updateCamera=originalCamera;}
 }

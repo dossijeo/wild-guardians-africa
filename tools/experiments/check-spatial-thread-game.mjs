@@ -5,7 +5,7 @@ const threaded=process.env.WG_THREADS!=='0',benchmark=process.env.WG_THREAD_BENC
 const biome=process.env.WG_THREAD_BIOME??'manglares';
 const fixtures={sabana:'sabana-populated-frozen-20261022',desierto:'desert-populated-closure-20261022','gran-rio':'gran-rio-populated-frozen-20261022',volcanes:'volcanes-populated-frozen-20261022',manglares:'manglares-populated-frozen-20261022','gran-canon':'gran-canon-populated-native-camera-20261022'};
 if(!fixtures[biome])throw Error('Unknown biome');
-const fixture=JSON.parse(await readFile(`docs/qa/global-visual-lab/${fixtures[biome]}/native-fixture.json`,'utf8'));
+const fixture=JSON.parse(await readFile(process.env.WG_THREAD_FIXTURE_FILE??`docs/qa/global-visual-lab/${fixtures[biome]}/native-fixture.json`,'utf8'));
 if(JSON.parse(fixture.timing.navigationContext.state).biome!==biome)throw Error('Fixture biome mismatch');
 if(process.env.WG_THREAD_ACTIVE==='1'){const state=JSON.parse(fixture.timing.navigationContext.state);state.tutorial.basicSkipped=true;fixture.timing.navigationContext.state=JSON.stringify(state);}
 const browser=await chromium.launch({channel:'chrome',headless:true});
@@ -34,6 +34,20 @@ try{
  if(result.runtime.backend!==(threaded?'pthreads':'standalone'))throw Error(JSON.stringify(result));
  if(frozen&&result.elapsed!==JSON.parse(fixture.timing.navigationContext.state).elapsed)throw Error('Fixture advanced before pause');
  if(process.env.WG_THREAD_EDIT==='1')result.concurrentEdits=await page.evaluate(async()=>await (await import('/tools/experiments/spatial-thread-edit-case.js')).verifyConcurrentWallEdit(qaThreadWorld));
+ if(fixture.concurrentEditExpectations)result.reloadedEdits=await page.evaluate(expected=>{
+  const w=qaThreadWorld,s=w.state,crop=s.plants.find(p=>p.id===expected.crop.id);
+  if(!crop||crop.alive===false||crop.x!==expected.crop.x||crop.z!==expected.crop.z)throw Error('Saved crop missing after full app load');
+  const wall=s.structures.find(p=>p.id===expected.built.wallId);
+  if(wall)throw Error('Removed wall restored after load');
+  const barriers=w.spatialSession.core.snapshot().barriers.length;
+  if(barriers!==expected.finalBarriers)throw Error('Saved native barriers mismatch');
+  return {cropId:crop.id,barriers,wallAbsent:!wall,wallStatus:wall?.status??null,stage:document.querySelector('#stage')?.getAttribute('aria-busy')};
+ },fixture.concurrentEditExpectations);
+ if(process.env.WG_THREAD_SAVE_FIXTURE){
+  const text=await page.evaluate(async()=>{const {serialize}=await import('/src/persistence/snapshots.js');return serialize(qaThreadWorld.state);});
+  await writeFile(process.env.WG_THREAD_SAVE_FIXTURE,JSON.stringify({timing:{navigationContext:{state:text}},concurrentEditExpectations:result.concurrentEdits},null,2)+'\n');
+  result.savedFixture=process.env.WG_THREAD_SAVE_FIXTURE;
+ }
  const profiler=process.env.WG_THREAD_CPU_PROFILE==='1'?await page.context().newCDPSession(page):null;
  if(profiler){await profiler.send('Profiler.enable');await profiler.send('Profiler.start');}
  if(benchmark)result.streaming=await page.evaluate(async(options)=>{

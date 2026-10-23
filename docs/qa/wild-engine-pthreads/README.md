@@ -311,3 +311,25 @@ See gpu-active-summary.json and raw reports. Final active elapsed times differ, 
 `game-concurrent-wall-running.json/png` passes. Jobs 25 and 31 are both recorded running at their respective edits; both publication attempts return stale-input -2 and subsequent jobs succeed. Native barrier count is 0 -> 1 -> 0, the built wall is rendered, ten chunks are installed, and the final queue is idle with no stream failures. No unexpected console errors are present. The earlier queued-only pilot is not used as running-overlap evidence.
 
 This validates a real command/event/mirror path against stale native preparation, without synthetic writes to obstacle memory or replacing game commands. Simulation is paused between the two commands to make the scenario controlled. It does not yet cover raid damage, gate state changes, crops, new settlements, save/reload or concurrent active actor route correctness. Those remain required along with distribution/performance gaps.
+
+
+## Concurrent crop edit and full application reload
+
+The edit scenario now performs a normal Game.plant command while native status is exactly 2, after building and removing a wall. It verifies the new crop remains alive and reaches the renderer crop batch. The crop need not invalidate navigation: job 37 publishes successfully, whereas wall jobs 25 and 31 reject stale inputs with -2. All 15 new chunks finish without stream failures.
+
+`game-concurrent-save.json/png` records the three commands. The harness calls the production snapshot serializer (including validation) and writes `concurrent-edits-saved-fixture.json`. A separate fresh Chrome invocation loads that snapshot through the ordinary menu load-slot flow. `game-concurrent-reload.json` verifies plant-51 at its saved coordinates, structure-50 absent, zero native wall barriers, pthread backend, 25 resident chunks, and loading complete. Only previously known f_environment4 shader warnings occur. This covers the serialized state and normal application loading; it does not test the UI save button or shutdown during an unfinished job.
+
+Reproduce sequentially with PowerShell from the lab worktree and Vite on 5299:
+
+```powershell
+$env:WG_THREAD_PORT='5299'; $env:WG_THREAD_FROZEN='1'; $env:WG_THREAD_EDIT='1'
+$env:WG_THREAD_SAVE_FIXTURE='docs/qa/wild-engine-pthreads/concurrent-edits-saved-fixture.json'
+$env:WG_THREAD_REPORT='docs/qa/wild-engine-pthreads/game-concurrent-save.json'
+node tools/experiments/check-spatial-thread-game.mjs
+Remove-Item Env:WG_THREAD_EDIT,Env:WG_THREAD_SAVE_FIXTURE
+$env:WG_THREAD_FIXTURE_FILE='docs/qa/wild-engine-pthreads/concurrent-edits-saved-fixture.json'
+$env:WG_THREAD_REPORT='docs/qa/wild-engine-pthreads/game-concurrent-reload.json'
+node tools/experiments/check-spatial-thread-game.mjs
+```
+
+Active animal routing, gates, raids, long-session teardown and distribution acceptance remain open. No production simulation or rendering behavior was modified in this extension.
