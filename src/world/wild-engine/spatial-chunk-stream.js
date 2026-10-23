@@ -70,5 +70,6 @@ export function createSpatialChunkStream(core,{loaded,onData,onError=()=>{},sche
   // The renderer owns its installed meshes. Releasing a spatial chunk after
   // those meshes are evicted keeps the graph and prop records bounded too.
   stream.releaseChunk=(cx,cz)=>core.removeChunk(cx,cz);
+  stream.releaseChunks=coordinates=>core.removeChunks(coordinates);
   return stream;
 }

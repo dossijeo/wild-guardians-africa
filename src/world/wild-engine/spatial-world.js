@@ -121,6 +121,25 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
     }
     return removed;
   }
+  function removeChunks(coordinates){
+    if(!Array.isArray(coordinates)||coordinates.length>4096||coordinates.some(p=>!Array.isArray(p)||p.length!==2||p.some(n=>!Number.isInteger(n)||n<-2147483648||n>2147483647)))throw TypeError('Invalid chunk removal batch');
+    if(!coordinates.length)return 0;
+    if(!wasm.spatial_remove_chunks)return coordinates.reduce((count,[x,z])=>count+removeChunk(x,z),0);
+    const pointer=wasm.spatial_remove_chunks_ptr(coordinates.length);
+    if(!pointer)throw Error('Could not allocate chunk removal batch');
+    const data=new Int32Array(wasm.memory.buffer,pointer,coordinates.length*2);
+    coordinates.forEach((p,i)=>data.set(p,i*2));
+    const removed=wasm.spatial_remove_chunks(coordinates.length);
+    if(removed<0)throw Error('Native chunk removal failed');
+    if(removed){
+      const keys=new Set(coordinates.map(([x,z])=>x+','+z));
+      chunkRevision+=removed;chunks=chunks.filter(([x,z])=>!keys.has(x+','+z));
+      if(chunk&&keys.has(chunk.cx+','+chunk.cz)){
+        const last=chunks.at(-1);chunk=last?{cx:last[0],cz:last[1],count:wasm.spatial_prop_count()}:null;
+      }
+    }
+    return removed;
+  }
   function props(){
     return spatialProps(wasm);
   }
@@ -295,7 +314,7 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
     }
     wasm.lazy_commit_portals();
   }
-  return {wasm,preparation,generate,addChunk,selectChunk,removeChunk,currentChunk:()=>chunk,
+  return {wasm,preparation,generate,addChunk,selectChunk,removeChunk,removeChunks,currentChunk:()=>chunk,
     enableConnectivityDiagnostics:()=>{diagnoseConnectivity=true;},
     connectivityDiagnostics:()=>structuredClone(connectivityReasons),
     enclosureAt:point=>navigationBuilt?wasm.lazy_enclosure(point.x,point.z):-1,

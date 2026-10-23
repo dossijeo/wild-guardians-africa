@@ -1435,6 +1435,8 @@ void horizonDesertNormals(HorizonSampler& sampler,int ox,int oz){
 }
 }
 
+// Main-thread-only staging buffer; workers never access eviction requests.
+static std::vector<int32_t> chunkRemovalInput;
 extern "C" {
 int spatial_generate_biome(uint32_t seed,int biome,int cx,int cz){
   if(biome<0||biome>6)return -1;
@@ -1507,6 +1509,54 @@ int spatial_remove_chunk(int cx,int cz){
     else {props.clear();solidProps.clear();ponds.clear();heights.clear();colors.clear();water.clear();groundMask.clear();waterLevels.clear();waterTriangles.clear();}
   }
   return 1;
+}
+int32_t* spatial_remove_chunks_ptr(int count){
+  if(count<0||count>4096)return nullptr;
+  chunkRemovalInput.resize(size_t(count)*2);
+  return chunkRemovalInput.data();
+}
+int spatial_remove_chunks(int count){
+  if(count<0||count>4096||size_t(count)*2!=chunkRemovalInput.size())return -1;
+  std::vector<std::pair<int,int>> removed;
+  for(int i=0;i<count;i++){
+    const int cx=chunkRemovalInput[i*2],cz=chunkRemovalInput[i*2+1];
+    const auto it=std::find(loadedChunks.begin(),loadedChunks.end(),std::pair<int,int>{cx,cz});
+    if(it==loadedChunks.end())continue;
+    removed.emplace_back(cx,cz);loadedChunks.erase(it);
+    residentSpatial().erase(chunkKey(cx,cz));
+    residentSolidProps().erase(chunkKey(cx,cz));
+    residentVisibleProps().erase(chunkKey(cx,cz));
+  }
+  if(removed.empty())return 0;
+  residencyRevision+=removed.size();
+  const int previous=activeProfile;
+  for(int profile=0;profile<navigationProfiles;profile++){
+    selectProfile(profile);if(!navReady)continue;
+    // Remove the complete batch before refreshing surviving boundary sectors.
+    // Intermediate borders of chunks about to disappear have no observer.
+    for(const auto& [cx,cz]:removed){
+      chunkRasters->erase(chunkKey(cx,cz));
+      const int firstX=(cx*side-24)/sector,firstZ=(cz*side-24)/sector;
+      for(int z=0;z<4;z++)for(int x=0;x<4;x++)lazy_remove_sector(firstX+x,firstZ+z);
+    }
+    std::unordered_set<uint64_t> refreshed;
+    constexpr int dx[4]={1,-1,0,0},dz[4]={0,0,1,-1};
+    for(const auto& [cx,cz]:removed)for(int d=0;d<4;d++){
+      const int nx=cx+dx[d],nz=cz+dz[d];
+      if(!chunkRasters->count(chunkKey(nx,nz)))continue;
+      const int x0=(nx*side-24)/sector,z0=(nz*side-24)/sector;
+      for(int i=0;i<4;i++){
+        const int x=x0+(d==0?0:d==1?3:i),z=z0+(d==2?0:d==3?3:i);
+        if(refreshed.insert(chunkKey(x,z)).second)refreshSector(x,z);
+      }
+    }
+  }
+  selectProfile(previous);
+  if(std::find(removed.begin(),removed.end(),std::pair<int,int>{chunkX,chunkZ})!=removed.end()){
+    if(!loadedChunks.empty())populateChunk(loadedChunks.back().first,loadedChunks.back().second);
+    else {props.clear();solidProps.clear();ponds.clear();heights.clear();colors.clear();water.clear();groundMask.clear();waterLevels.clear();waterTriangles.clear();}
+  }
+  return int(removed.size());
 }
 int spatial_chunk_count(){return int(loadedChunks.size());}
 int spatial_resident_prop_count(){
