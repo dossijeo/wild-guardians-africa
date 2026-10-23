@@ -424,3 +424,12 @@ The campaign-opening helper now accepts an optional runtimeFactory for QA depend
 `node tools/experiments/check-spatial-thread-first-day.mjs` passes for Sabana and Mangroves: normal paid planting/hiring commands, one worker moves 28.49m, 1200 half-second ticks reach day 2, introductory RaidSpawned and RaidEnded events occur, raid is cleared and no terminal result appears. Forty background chunks publish in each case, with no stale result in this particular scenario. Native status 2 overlaps 73/130 simulation ticks respectively, including 5/8 ticks while a raid is active. New jobs are distributed every 30 ticks rather than concentrated before the raid. Each run uses one shared authoritative core; the standalone helper remains only for starting-site selection.
 
 This is headless integration evidence, not a rendered FPS benchmark or full campaign. The helper still resolves raid-demand chunks synchronously and background jobs are outside the active camera area. It does not prove asynchronous raid-demand loading or wall damage during a raid. Existing spatial-campaign-opening tests also pass after the optional injection change. See thread-first-day.json and the executable QA script.
+
+
+## Production raid residency planner uses pthread streaming
+
+Inspection confirms the synchronous serviceRaidConnectivityDemand is a headless campaign helper, not the app renderer path. Production WorldScene.syncChunks merges raidResidentDemand pins into the same NativeChunkStream plan as camera chunks.
+
+`node tools/experiments/check-spatial-thread-raid-residency.mjs` invokes that production scene method with a real shared core/stream in all six biomes. Mesh installation is a stub (no GPU). A sparse raid entry/exit at z=320/323 requests its remote chunk in addition to the 25 near chunks, without filling the intervening rectangle. Every successful absent-chunk publication asserts native worker identity 1. core.addChunk is replaced with a throwing guard, so any synchronous absent generation fails the test. Cancelling the raid demand removes the remote chunk from both installed inventory and native residency while preserving all 25 near chunks.
+
+All six pass with zero synchronous addChunk calls and zero stream failures; see thread-raid-residency.json. This validates the production planning/stream connection and cancellation, complementing the first-day AI test, but does not combine GPU installation, live raid AI and asynchronous sparse streaming in one full-game run.
