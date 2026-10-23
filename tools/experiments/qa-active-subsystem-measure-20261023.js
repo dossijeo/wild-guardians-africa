@@ -22,7 +22,7 @@ export async function measureActivePasses(w,{mode,samples=60,warmup=60,drawCensu
  draws=census&&recording?[]:null;
  if(recording){gpu?.begin(index-warmup);passes?.start(index-warmup);cpu?.begin();}const start=performance.now();
  try{return original.apply(this,args);}catch(e){clearTimeout(timeout);reject(e);throw e;}finally{
- const cpuMs=performance.now()-start;let calls=null;if(recording){gpu?.end();passes?.stop();calls=cpu?.end();frames.push({frame:index-warmup,...(census?{draws:draws.slice()}:{}),cpuMs,intervalMs:interval,calls:r.info.render.calls,triangles:r.info.render.triangles,camera:w.camera.position.toArray(),coverage:{near:w.groundDetails.near,far:w.groundDetails.far},cpuCalls:calls,shadow:{...w.releaseNativeShadow.cache.stats}});}draws=null;r.info.autoReset=auto;
+ const cpuMs=performance.now()-start;let calls=null;if(recording){gpu?.end();passes?.stop();calls=cpu?.end();frames.push({frame:index-warmup,...(census?{draws:draws.slice()}:{}),cpuMs,intervalMs:interval,calls:r.info.render.calls,triangles:r.info.render.triangles,camera:w.camera.position.toArray(),coverage:{near:w.groundDetails.near,far:w.groundDetails.far},materialCache:w.mangroveMaterialCache?{...w.mangroveMaterialCache.queue.stats,entries:w.mangroveMaterialCache.queue.entries.size,added:w.mangroveMaterialCache.stats.added,removed:w.mangroveMaterialCache.stats.removed}:null,cpuCalls:calls,shadow:{...w.releaseNativeShadow.cache.stats}});}draws=null;r.info.autoReset=auto;
  if(++index===warmup+samples){w.render=original;clearTimeout(timeout);resolve();}}
  };});
  for(let i=0;i<150&&(gpu?.pending.length||passes?.timer.pending.length);i++){await new Promise(resolve=>setTimeout(resolve,8));gpu?.poll();passes?.poll();}
