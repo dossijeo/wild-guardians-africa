@@ -121,3 +121,23 @@ The new check-spatial-thread-game.mjs exercises a saved populated Mangroves scen
 The first full-game probe failed with Invalid spatial polygon. Investigation showed Emscripten 6.0.12 had compiled out support for the incoming wasmMemory option: the adapter's supplied memory was not the native memory. Earlier adapter tests only checked shared-memory type and metadata, so their apparent success did NOT establish payload/JS-write correctness. Native direct-runtime differential tests are unaffected. The build now explicitly includes wasmMemory alongside the complete default incoming module API (especially instantiateWasm, required by pthread startup). The adapter fails immediately unless runtime.HEAPU8.buffer is identical to the supplied memory.buffer.
 
 Adapter tests now write a polygon through the JS facade and verify the native snapshot, and compare a payload height with the authoritative surface query in all six biomes. Adapter and threaded-stream tests pass with the rebuilt runtime. The Chrome game probe now waits for aria-busy=false, not just chunk count: the saved populated Mangroves game finishes loading using pthreads, 25 chunks, 400 sectors and 16 MiB shared linear memory. See thread-game.json. Recorded console messages are shader compiler warnings about f_environment4; no other captured errors occurred. This is the first complete initial-load check, not a streaming ABAB result, a memory peak measurement or six-biome gameplay acceptance. Packaged runtime must be rebuilt/rechecked after this correction, and Tauri remains pending.
+
+
+## First in-game streaming ABAB pilot — not final acceptance
+
+Reproduce with the dedicated isolated Vite server and `WG_THREAD_PORT=5299 WG_THREAD_BENCH=1 WG_THREADS=0|1 WG_THREAD_REPORT=... node tools/experiments/check-spatial-thread-game.mjs`. Reports game-stream-a1/b1/a2/b2.json capture the A/B/A/B order on Intel UHD (ANGLE D3D11), 1280x720, medium, approved Mangroves recipe/fixed512/ferns/far scenery. Each run installs ten new chunks during 96m of camera travel, after 60 warm frames; simulation is paused before travel.
+
+| Metric (ms) | A1 synchronous | B1 pthread | A2 synchronous | B2 pthread |
+|---|---:|---:|---:|---:|
+| Main native generation mean/chunk | 46.41 | 0 | 45.45 | 0 |
+| Main admission mean/chunk | — | 0.060 | — | 0.065 |
+| Main publication mean/chunk | — | 0.880 | — | 0.729 |
+| Worker compute mean/chunk | — | 52.91 | — | 49.88 |
+| Graphics install mean/chunk | 16.21 | 18.73 | 16.52 | 16.94 |
+| RAF interval mean | 40.46 | 40.09 | 39.26 | 40.74 |
+| RAF interval p95 | 83.25 | 83.04 | 83.30 | 66.90 |
+| RAF interval max | 166.22 | 182.93 | 149.71 | 166.33 |
+
+Conclusion: the main-thread native generation stall is removed, but total-frame improvement is NOT established. The graphics install remains expensive and one thread run has a worse maximum. These numbers must not be presented as a successful FPS optimization. All runs have 25 final resident chunks and 16 MiB linear memory; this is not peak accounting.
+
+Limitations: RAF intervals include display scheduling and are not GPU times; no GPU pass timings or image-equivalence captures were collected. Simulation is paused only after loading, with elapsed values differing by roughly two seconds between runs, so the snapshots are not strictly frozen/equivalent. Camera distance is stepped per frame, not per wall-clock second. This pilot motivates a stricter frozen-state comparison and attribution of remaining installation/render/streaming stalls, followed by active-simulation validation. It does not close the user acceptance gate.
