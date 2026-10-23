@@ -107,3 +107,10 @@ The application loader now prefers the Emscripten pthread runtime when crossOrig
 Vite dev/preview responses now send COOP same-origin and COEP require-corp. The generated runtime and WASM are shipped together under public/wild-engine, outside bundler rewriting, so Emscripten can locate its module worker and binary relative to its own URL. Rebuild them with `SPATIAL_PTHREADS=1 bash tools/build-spatial-savanna-wasm.sh` (default pthread output now points there). Both generated files belong to the package.
 
 `npm run build` and `npm run test:web-package` pass. `node tools/experiments/check-spatial-thread-package.mjs` loads the actual dist runtime in Chrome from a nested URL, asserts isolation/shared memory/native worker identity, publishes a Mangroves chunk and shuts down. See thread-package.json. This proves packaged runtime resolution, not full-game browser behavior or actual itch deployment. itch must enable SharedArrayBuffer-compatible isolation; Tauri security headers/WebView2 validation, live gameplay, fallback testing and six-biome ABAB remain pending.
+
+
+## Isolation integration follow-up (validation pending)
+
+The full browser probe exposed an iframe regression: the custom public-file middleware returned menu HTML before Vite applied configured response headers. With an isolated parent, Chrome blocked that unisolated menu document. A first middleware now applies isolation headers before the package middleware; HTTP inspection confirms COEP on /menu/index.html. A separate Vite dependency cache avoids a locked existing Windows cache. Tauri security.headers now declares the same COOP/COEP values supported by the installed CLI schema, but no WebView2 acceptance is claimed yet.
+
+The new check-spatial-thread-game.mjs exercises a saved populated Mangroves scene via the actual menu/application loader (WG_THREAD_PORT selects a dedicated dev server). At this checkpoint its live run has not produced a completed report, so it is not a passing test. No game performance conclusion is supported. Windows cargo is not on PATH or at C:/Users/PC/.cargo/bin/cargo.exe; toolchain discovery is still needed, not yet an established blocker.

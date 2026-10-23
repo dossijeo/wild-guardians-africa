@@ -11,7 +11,7 @@
   },
   "app": {
     "windows": [{"title": "Wild Guardians Africa", "width": 1280, "height": 720, "minWidth": 800, "minHeight": 480}],
-    "security": {"csp": null}
+    "security": {"csp": null, "headers": {"Cross-Origin-Opener-Policy": "same-origin", "Cross-Origin-Embedder-Policy": "require-corp"}}
   },
   "bundle": {
     "active": true,
