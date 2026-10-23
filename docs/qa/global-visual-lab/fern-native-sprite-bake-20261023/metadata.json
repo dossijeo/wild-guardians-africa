@@ -1,0 +1,40 @@
+{
+  "metadata": {
+    "debug": {
+      "draws": 2,
+      "triangles": 34,
+      "indexCount": 96,
+      "position": [
+        -0.21802499890327454,
+        0.0560000017285347,
+        0,
+        0.21802499890327454,
+        0.0560000017285347,
+        0
+      ],
+      "uv": [
+        0.25,
+        0.2199999988079071,
+        0.75,
+        0.2199999988079071
+      ],
+      "texture": 1024
+    },
+    "orientationCount": 8,
+    "angleStepDegrees": 45,
+    "widthMeters": 2.8,
+    "resolution": 512,
+    "shadowResolution": 1024,
+    "source": "approved native fern material + customDepthMaterial",
+    "dayNightSeparate": true,
+    "solarShadowSeparate": true,
+    "windFrozen": true,
+    "lightDirection": [
+      -0.804501724269551,
+      0.5101718251465446,
+      0.30414089576044007
+    ],
+    "limitation": "Single clump offline bake; runtime atlas selection, wind/shadow mismatch, terrain conformity and dynamic-object shadow reception still require implementation and comparison."
+  },
+  "errors": []
+}
