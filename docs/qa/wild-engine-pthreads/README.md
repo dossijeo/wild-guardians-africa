@@ -181,3 +181,19 @@ Remaining prerequisite for yielding in production: changes to suppressions/settl
 The default remains synchronous installation pending measured acceptance. Scheduler tests cover suspension, obsolete request, quality change, teardown, scheduler failure and late-result disposal; existing stream/spatial tests and actual six-biome pthread queue tests pass. These focused tests do not yet prove all real-game edits during staging.
 
 The populated frozen Mangroves pilot completes ten chunks with staged installation: final scene incorporation mean 0.68 ms, RAF mean 31.41 ms / p95 50.03 / maximum 83.22. IMPORTANT: this does not remove the 14–16 ms construction work; it moves it to preparation slices, not yet separately instrumented. It is not an ABAB adoption result. The final screenshot differs from frozen-stream-b2.png by mean absolute channel difference 0.00121/255 (628 changed channels), consistent with the prior tiny frame differences. See staged-install-pilot.json/png. Next: instrument actual slices and completion latency, perform paired comparisons and real edit/cancellation tests, then decide whether to retain or further subdivide. Production pthread generation remains independent of this optional graphics experiment.
+
+## Installation scheduling ABAB decision
+
+Both variants in `install-abab-{a1,b1,a2,b2}` use the same pthread generation. A installs graphics synchronously; B prepares privately in stages. This comparison must not be confused with the earlier synchronous-native versus pthread comparison. Same frozen state, camera path, 720p medium Intel UHD, ten new chunks and final 25 resident chunks.
+
+| RAF metric (ms) | A1 | B1 | A2 | B2 |
+|---|---:|---:|---:|---:|
+| Mean | 30.95 | 30.76 | 30.85 | 30.21 |
+| p95 | 49.96 | 50.04 | 50.16 | 50.07 |
+| Maximum | 83.18 | 83.13 | 83.23 | 83.28 |
+
+Staged preparation still costs 16.16 / 15.24 ms CPU per chunk, in slices averaging 5.05 / 4.76 ms with maxima 13.19 / 13.80 ms. Completion latency averages 32.42 / 36.20 ms (maximum 89.67 ms). Final installation drops below 0.8 ms on average, but this is moved work, not eliminated work. No meaningful p95 or maximum improvement is demonstrated: staged graphics installation stays QA-only, disabled by default. Native pthread generation remains enabled independently.
+
+Final screenshot mean absolute channel differences are 0.001073 and 0.000136 on a 0-255 scale, with 265 and 365 changed channels. The recorded state and camera agree. These are paused-scene short-run measurements, not GPU times or active-simulation acceptance. Full results and images accompany `install-abab-summary.json`.
+
+Latest package check: production build succeeds; nested-path threaded runtime reports isolation, shared memory, worker identity 1 and successful publication. Web package validation passes (1042 files, 841 relative links); 22 targeted streaming/preparation tests pass. This does not establish real itch-host isolation or Tauri/WebView2 compatibility. Active simulation, broader lifecycle stress, peak memory and real desktop distribution remain required before declaring completion.
