@@ -8,6 +8,7 @@ export class MaterialBakeQueue {
     this.reservedBytes = reservedBytes;
     this.entries = new Map();
     this.pending = new Map();
+    this.retired = new Map();
     this.closed = false;
     this.stats = {bytes: reservedBytes, peakBytes: reservedBytes, tiles: 0, published: 0, cancelled: 0, rejected: 0};
   }
@@ -18,6 +19,7 @@ export class MaterialBakeQueue {
     for (const name of ['create', 'draw', 'publish', 'destroy']) if (typeof spec[name] !== 'function') throw Error('Missing bake callback: ' + name);
     const current = this.entries.get(key), pending = this.pending.get(key);
     if (pending?.spec.version === spec.version || (!pending && current?.spec.version === spec.version)) return 'unchanged';
+    if (this.retired.has(key)) return 'transition';
     // Reserve the full target, including mips, before allocation. Never evict a
     // published target merely to admit its replacement: the owner chooses fallback.
     const reclaim = pending?.spec.bytes ?? 0;
@@ -54,13 +56,23 @@ export class MaterialBakeQueue {
         this.pending.delete(key);
         this.entries.set(key, job);
         this.stats.published++;
-        if (previous) { this.stats.bytes -= previous.spec.bytes; previous.spec.destroy(previous.target); }
+        if (previous) {
+          if (job.spec.retainPrevious) this.retired.set(key, previous);
+          else { this.stats.bytes -= previous.spec.bytes; previous.spec.destroy(previous.target); }
+        }
       }
       return true;
     } catch (error) { this.cancel(key); throw error; }
   }
+  releasePrevious(key) {
+    const entry = this.retired.get(key);
+    if (!entry) return false;
+    this.retired.delete(key); this.stats.bytes -= entry.spec.bytes; entry.spec.destroy(entry.target);
+    return true;
+  }
   remove(key) {
     this.cancel(key);
+    this.releasePrevious(key);
     const entry = this.entries.get(key);
     if (entry) { this.entries.delete(key); this.stats.bytes -= entry.spec.bytes; entry.spec.destroy(entry.target); }
   }

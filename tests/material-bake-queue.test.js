@@ -52,3 +52,13 @@ test('over-budget invalidation cancels obsolete pending data without evicting th
  q.request('chunk',o.spec(2));q.step();assert.equal(q.request('chunk',o.spec(3,12)),'budget');
  assert.equal(q.step(),false);assert.deepEqual(o.published,[1]);assert.deepEqual(o.destroyed,[2]);assert.equal(q.stats.bytes,8);
 });
+
+test('crossfade retains and budgets old target, deferring further replacements until release',()=>{
+ const q=new MaterialBakeQueue({budgetBytes:16}),o=owner();q.request('chunk',o.spec(1,8,1));q.step();
+ q.request('chunk',{...o.spec(2,8,1),retainPrevious:true});q.step();
+ assert.equal(q.stats.bytes,16);assert.deepEqual(o.destroyed,[]);assert.equal(q.retired.size,1);
+ assert.equal(q.request('chunk',o.spec(3,8,1)),'transition');assert.equal(q.pending.size,0);
+ q.releasePrevious('chunk');q.releasePrevious('chunk');assert.deepEqual(o.destroyed,[1]);assert.equal(q.stats.bytes,8);
+ q.request('chunk',{...o.spec(3,8,1),retainPrevious:true});q.step();q.dispose();
+ assert.deepEqual(o.destroyed,[1,2,3]);assert.equal(q.stats.bytes,0);assert.equal(q.retired.size,0);
+});
