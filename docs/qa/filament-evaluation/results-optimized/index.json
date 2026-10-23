@@ -1,0 +1,511 @@
+{
+  "created": "2026-10-20T21:49:25.383Z",
+  "protocol": {
+    "order": [
+      "three",
+      "filament",
+      "three",
+      "filament"
+    ],
+    "scenarios": [
+      "A",
+      "B"
+    ],
+    "frames": 300,
+    "warmup": 120,
+    "samples": 60,
+    "resolution": [
+      1280,
+      720
+    ],
+    "dpr": 1
+  },
+  "records": [
+    {
+      "run": 0,
+      "backend": "three",
+      "scenario": "A",
+      "density": 1,
+      "nativeInstancing": true,
+      "optimized": true,
+      "night": 0,
+      "metadata": {
+        "scenario": "A",
+        "seed": 712,
+        "instancing": false,
+        "scope": "Common glTF standard-material backend diagnostic, not AfricanToon parity",
+        "lighting": {
+          "ambient": 0,
+          "directionalOnly": true,
+          "dayColor": "#fff0c7",
+          "nightColor": "#8095d6",
+          "dayIntensity": 2.6,
+          "nightIntensity": 0.18,
+          "direction": [
+            35,
+            -60,
+            -25
+          ],
+          "note": "Filament lux requires exposure calibration; exact photometric parity is not implied"
+        },
+        "logical": {
+          "chunks": 9,
+          "buildings": 36,
+          "vegetation": 135,
+          "crops": 432,
+          "workers": 0,
+          "animals": 0
+        },
+        "sources": {
+          "village": "mapungubwe",
+          "biome": "savanna",
+          "crops": "assets/web/8f6c9ef7472a2d7f8ffda7f08a78f8027f91d14a8f92b8eeca4084b0f379da36.glb",
+          "worker": "assets/web/25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238.glb",
+          "animal": "assets/web/88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb"
+        },
+        "omissions": [
+          "AfricanToon",
+          "continuous grass coverage (scenario C)",
+          "native gameplay terrain/streaming",
+          "water/VFX",
+          "game simulation"
+        ],
+        "shadow": {
+          "mapSize": 1024,
+          "coverage": 130,
+          "parityRequiresCapture": true
+        },
+        "geometry": {
+          "meshes": 604,
+          "triangles": 1415471
+        }
+      },
+      "rendererIdentity": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "initializedMs": 504.8700000047684,
+      "errors": [],
+      "summary": {
+        "frametime": {
+          "n": 300,
+          "mean": 18.069216666666666,
+          "p50": 16.63000000000011,
+          "p95": 33.284999999999854,
+          "p99": 33.4399999999996
+        },
+        "rafInterval": {
+          "n": 300,
+          "mean": 18.069216666666666,
+          "p50": 16.63000000000011,
+          "p95": 33.284999999999854,
+          "p99": 33.4399999999996
+        },
+        "cpuUpdate": {
+          "n": 300,
+          "mean": 0.18106666674216587,
+          "p50": 0.15000000596046448,
+          "p95": 0.35499998927116394,
+          "p99": 0.41999998688697815
+        },
+        "cpuSubmit": {
+          "n": 300,
+          "mean": 1.8027166672547659,
+          "p50": 1.7350000143051147,
+          "p95": 2.6800000071525574,
+          "p99": 3.169999986886978
+        },
+        "gpu": {
+          "n": 60,
+          "mean": 15.573248733333337,
+          "p50": 15.227708,
+          "p95": 18.032083,
+          "p99": 18.501302
+        },
+        "fps": 55.342742214429144,
+        "rafFps": 55.342742214429144,
+        "acceptedFrames": 300,
+        "skippedFrames": 0,
+        "drawCalls": {
+          "n": 300,
+          "mean": 236,
+          "p50": 236,
+          "p95": 236,
+          "p99": 236
+        },
+        "triangles": {
+          "n": 300,
+          "mean": 2830942,
+          "p50": 2830942,
+          "p95": 2830942,
+          "p99": 2830942
+        }
+      },
+      "memory": {
+        "js": {
+          "used": 30226489,
+          "total": 37860021
+        },
+        "wasm": 0,
+        "gpu": {
+          "gpuMemoryBytes": null,
+          "reason": "WebGL resource byte allocations not exposed; Three counters reported separately"
+        },
+        "three": {
+          "geometries": 14,
+          "textures": 7
+        }
+      },
+      "resources": [
+        {
+          "url": "http://127.0.0.1:5296/@vite/client",
+          "bytes": 182615,
+          "transfer": 182915,
+          "ms": 12.094999998807907
+        },
+        {
+          "url": "http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.js",
+          "bytes": 1278692,
+          "transfer": 1278992,
+          "ms": 60.49499997496605
+        },
+        {
+          "url": "http://127.0.0.1:5296/tools/filament-evaluation/benchmark.js",
+          "bytes": 92931,
+          "transfer": 93231,
+          "ms": 60.00999999046326
+        },
+        {
+          "url": "http://127.0.0.1:5296/node_modules/vite/dist/client/env.mjs",
+          "bytes": 3861,
+          "transfer": 4161,
+          "ms": 40.610000014305115
+        },
+        {
+          "url": "http://127.0.0.1:5296/node_modules/.vite/deps/three.js?v=3d9148bb",
+          "bytes": 63254,
+          "transfer": 63554,
+          "ms": 8.814999997615814
+        },
+        {
+          "url": "http://127.0.0.1:5296/node_modules/.vite/deps/three_addons_loaders_GLTFLoader__js.js?v=3d9148bb",
+          "bytes": 100696,
+          "transfer": 100996,
+          "ms": 10.96000000834465
+        },
+        {
+          "url": "http://127.0.0.1:5296/node_modules/.vite/deps/three_addons_libs_meshopt_decoder__module__js.js?v=3d9148bb",
+          "bytes": 25323,
+          "transfer": 25623,
+          "ms": 11.275000005960464
+        },
+        {
+          "url": "http://127.0.0.1:5296/node_modules/.vite/deps/three_addons_utils_SkeletonUtils__js.js?v=3d9148bb",
+          "bytes": 8546,
+          "transfer": 8846,
+          "ms": 13.449999988079071
+        },
+        {
+          "url": "http://127.0.0.1:5296/tools/filament-evaluation/instrument.js",
+          "bytes": 55330,
+          "transfer": 55630,
+          "ms": 18.610000014305115
+        },
+        {
+          "url": "http://127.0.0.1:5296/tools/filament-evaluation/plane.js",
+          "bytes": 8875,
+          "transfer": 9175,
+          "ms": 20.84000000357628
+        },
+        {
+          "url": "http://127.0.0.1:5296/tools/filament-evaluation/optimize-world.js",
+          "bytes": 16067,
+          "transfer": 16367,
+          "ms": 23.069999992847443
+        },
+        {
+          "url": "http://127.0.0.1:5296/tools/filament-evaluation/grass.js",
+          "bytes": 78381,
+          "transfer": 78681,
+          "ms": 29.055000007152557
+        },
+        {
+          "url": "http://127.0.0.1:5296/node_modules/.vite/deps/chunk-SCGUQBHX.js?v=3d9148bb",
+          "bytes": 1618906,
+          "transfer": 1619206,
+          "ms": 29.959999978542328
+        },
+        {
+          "url": "http://127.0.0.1:5296/node_modules/.vite/deps/chunk-76JBKNUK.js?v=3d9148bb",
+          "bytes": 28467,
+          "transfer": 28767,
+          "ms": 26.780000001192093
+        },
+        {
+          "url": "http://127.0.0.1:5296/tools/filament-evaluation/vendor/fixture-A.json",
+          "bytes": 4349,
+          "transfer": 4649,
+          "ms": 4.310000002384186
+        },
+        {
+          "url": "http://127.0.0.1:5296/favicon.ico",
+          "bytes": 0,
+          "transfer": 300,
+          "ms": 1.905000001192093
+        },
+        {
+          "url": "http://127.0.0.1:5296/tools/filament-evaluation/vendor/world-A.glb",
+          "bytes": 64129832,
+          "transfer": 64130132,
+          "ms": 197.52499997615814
+        }
+      ],
+      "consoleMessages": [
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        }
+      ]
+    },
+    {
+      "run": 0,
+      "backend": "three",
+      "scenario": "A",
+      "density": 1,
+      "nativeInstancing": true,
+      "optimized": true,
+      "night": 1,
+      "metadata": {
+        "scenario": "A",
+        "seed": 712,
+        "instancing": false,
+        "scope": "Common glTF standard-material backend diagnostic, not AfricanToon parity",
+        "lighting": {
+          "ambient": 0,
+          "directionalOnly": true,
+          "dayColor": "#fff0c7",
+          "nightColor": "#8095d6",
+          "dayIntensity": 2.6,
+          "nightIntensity": 0.18,
+          "direction": [
+            35,
+            -60,
+            -25
+          ],
+          "note": "Filament lux requires exposure calibration; exact photometric parity is not implied"
+        },
+        "logical": {
+          "chunks": 9,
+          "buildings": 36,
+          "vegetation": 135,
+          "crops": 432,
+          "workers": 0,
+          "animals": 0
+        },
+        "sources": {
+          "village": "mapungubwe",
+          "biome": "savanna",
+          "crops": "assets/web/8f6c9ef7472a2d7f8ffda7f08a78f8027f91d14a8f92b8eeca4084b0f379da36.glb",
+          "worker": "assets/web/25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238.glb",
+          "animal": "assets/web/88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb"
+        },
+        "omissions": [
+          "AfricanToon",
+          "continuous grass coverage (scenario C)",
+          "native gameplay terrain/streaming",
+          "water/VFX",
+          "game simulation"
+        ],
+        "shadow": {
+          "mapSize": 1024,
+          "coverage": 130,
+          "parityRequiresCapture": true
+        },
+        "geometry": {
+          "meshes": 604,
+          "triangles": 1415471
+        }
+      },
+      "rendererIdentity": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "initializedMs": 504.8700000047684,
+      "errors": [],
+      "summary": {
+        "frametime": {
+          "n": 300,
+          "mean": 16.684050000000006,
+          "p50": 16.6299999999992,
+          "p95": 16.7599999999984,
+          "p99": 16.834999999999127
+        },
+        "rafInterval": {
+          "n": 300,
+          "mean": 16.684050000000006,
+          "p50": 16.6299999999992,
+          "p95": 16.7599999999984,
+          "p99": 16.834999999999127
+        },
+        "cpuUpdate": {
+          "n": 300,
+          "mean": 0.10344999959071477,
+          "p50": 0.09000000357627869,
+          "p95": 0.1899999976158142,
+          "p99": 0.2600000202655792
+        },
+        "cpuSubmit": {
+          "n": 300,
+          "mean": 2.0123333331942557,
+          "p50": 1.9800000190734863,
+          "p95": 2.669999986886978,
+          "p99": 2.824999988079071
+        },
+        "gpu": {
+          "n": 60,
+          "mean": 14.814883216666669,
+          "p50": 14.659791,
+          "p95": 16.485156,
+          "p99": 17.791666
+        },
+        "fps": 59.93748520293332,
+        "rafFps": 59.93748520293332,
+        "acceptedFrames": 300,
+        "skippedFrames": 0,
+        "drawCalls": {
+          "n": 300,
+          "mean": 236,
+          "p50": 236,
+          "p95": 236,
+          "p99": 236
+        },
+        "triangles": {
+          "n": 300,
+          "mean": 2830942,
+          "p50": 2830942,
+          "p95": 2830942,
+          "p99": 2830942
+        }
+      },
+      "memory": {
+        "js": {
+          "used": 30057694,
+          "total": 39170970
+        },
+        "wasm": 0,
+        "gpu": {
+          "gpuMemoryBytes": null,
+          "reason": "WebGL resource byte allocations not exposed; Three counters reported separately"
+        },
+        "three": {
+          "geometries": 14,
+          "textures": 7
+        }
+      },
+      "resources": [
+        {
+          "url": "http://127.0.0.1:5296/@vite/client",
+          "bytes": 182615,
+          "transfer": 182915,
+          "ms": 12.094999998807907
+        },
+        {
+          "url": "http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.js",
+          "bytes": 1278692,
+          "transfer": 1278992,
+          "ms": 60.49499997496605
+        },
+        {
+          "url": "http://127.0.0.1:5296/tools/filament-evaluation/benchmark.js",
+          "bytes": 92931,
+          "transfer": 93231,
+          "ms": 60.00999999046326
+        },
+        {
+          "url": "http://127.0.0.1:5296/node_modules/vite/dist/client/env.mjs",
+          "bytes": 3861,
+          "transfer": 4161,
+          "ms": 40.610000014305115
+        },
+        {
+          "url": "http://127.0.0.1:5296/node_modules/.vite/deps/three.js?v=3d9148bb",
+          "bytes": 63254,
+          "transfer": 63554,
+          "ms": 8.814999997615814
+        },
+        {
+          "url": "http://127.0.0.1:5296/node_modules/.vite/deps/three_addons_loaders_GLTFLoader__js.js?v=3d9148bb",
+          "bytes": 100696,
+          "transfer": 100996,
+          "ms": 10.96000000834465
+        },
+        {
+          "url": "http://127.0.0.1:5296/node_modules/.vite/deps/three_addons_libs_meshopt_decoder__module__js.js?v=3d9148bb",
+          "bytes": 25323,
+          "transfer": 25623,
+          "ms": 11.275000005960464
+        },
+        {
+          "url": "http://127.0.0.1:5296/node_modules/.vite/deps/three_addons_utils_SkeletonUtils__js.js?v=3d9148bb",
+          "bytes": 8546,
+          "transfer": 8846,
+          "ms": 13.449999988079071
+        },
+        {
+          "url": "http://127.0.0.1:5296/tools/filament-evaluation/instrument.js",
+          "bytes": 55330,
+          "transfer": 55630,
+          "ms": 18.610000014305115
+        },
+        {
+          "url": "http://127.0.0.1:5296/tools/filament-evaluation/plane.js",
+          "bytes": 8875,
+          "transfer": 9175,
+          "ms": 20.84000000357628
+        },
+        {
+          "url": "http://127.0.0.1:5296/tools/filament-evaluation/optimize-world.js",
+          "bytes": 16067,
+          "transfer": 16367,
+          "ms": 23.069999992847443
+        },
+        {
+          "url": "http://127.0.0.1:5296/tools/filament-evaluation/grass.js",
+          "bytes": 78381,
+          "transfer": 78681,
+          "ms": 29.055000007152557
+        },
+        {
+          "url": "http://127.0.0.1:5296/node_modules/.vite/deps/chunk-SCGUQBHX.js?v=3d9148bb",
+          "bytes": 1618906,
+          "transfer": 1619206,
+          "ms": 29.959999978542328
+        },
+        {
+          "url": "http://127.0.0.1:5296/node_modules/.vite/deps/chunk-76JBKNUK.js?v=3d9148bb",
+          "bytes": 28467,
+          "transfer": 28767,
+          "ms": 26.780000001192093
+        },
+        {
+          "url": "http://127.0.0.1:5296/tools/filament-evaluation/vendor/fixture-A.json",
+          "bytes": 4349,
+          "transfer": 4649,
+          "ms": 4.310000002384186
+        },
+        {
+          "url": "http://127.0.0.1:5296/favicon.ico",
+          "bytes": 0,
+          "transfer": 300,
+          "ms": 1.905000001192093
+        },
+        {
+          "url": "http://127.0.0.1:5296/tools/filament-evaluation/vendor/world-A.glb",
+          "bytes": 64129832,
+          "transfer": 64130132,
+          "ms": 197.52499997615814
+        }
+      ],
+      "consoleMessages": [
+        {
+          "type": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        }
+      ]
+    }
+  ]
+}

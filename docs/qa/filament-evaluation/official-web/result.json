@@ -1,0 +1,168 @@
+{
+  "started": "2026-10-20T21:31:45.684Z",
+  "events": [
+    {
+      "stage": "hardware-adapter",
+      "ms": 234.6050000190735
+    },
+    {
+      "stage": "device-created",
+      "ms": 275.4350000023842
+    },
+    {
+      "stage": "wasm-initialized",
+      "ms": 357.0100000202656,
+      "webgpuEnum": 4,
+      "initWebGPUAvailable": true,
+      "wasmBytes": 18874368
+    },
+    {
+      "stage": "webgpu-surface-created",
+      "ms": 388.67500001192093
+    },
+    {
+      "stage": "glb-downloaded",
+      "ms": 579.5250000059605,
+      "url": "/assets/25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238.glb",
+      "bytes": 27893128
+    },
+    {
+      "stage": "glb-resources-loaded",
+      "ms": 1791.6899999976158
+    },
+    {
+      "stage": "render-completed",
+      "ms": 5024.110000014305
+    },
+    {
+      "stage": "finished",
+      "ms": 5024.189999997616
+    }
+  ],
+  "errors": [],
+  "done": true,
+  "adapter": {
+    "vendor": "intel",
+    "architecture": "gen-12lp",
+    "device": "",
+    "description": "",
+    "isFallbackAdapter": false,
+    "features": [
+      "depth32float-stencil8",
+      "rg11b10ufloat-renderable",
+      "texture-formats-tier1",
+      "bgra8unorm-storage",
+      "texture-compression-bc",
+      "dual-source-blending",
+      "core-features-and-limits",
+      "float32-filterable",
+      "indirect-first-instance",
+      "float32-blendable",
+      "subgroup-size-control",
+      "depth-clip-control",
+      "texture-compression-bc-sliced-3d",
+      "timestamp-query",
+      "texture-formats-tier2",
+      "shader-f16",
+      "clip-distances",
+      "primitive-index",
+      "texture-component-swizzle",
+      "subgroups"
+    ]
+  },
+  "deviceFeatures": [
+    "float32-blendable",
+    "core-features-and-limits",
+    "depth32float-stencil8",
+    "rg11b10ufloat-renderable",
+    "float32-filterable",
+    "depth-clip-control",
+    "texture-compression-bc"
+  ],
+  "submissions": 119,
+  "backend": "WEBGPU",
+  "model": {
+    "bounds": {
+      "min": [
+        -0.33746951818466187,
+        -0.000005651893843605649,
+        -0.27241793274879456
+      ],
+      "max": [
+        0.3357490301132202,
+        1.6999998092651367,
+        0.2746312916278839
+      ]
+    },
+    "entities": 62,
+    "animations": 12
+  },
+  "renderedFrames": 120,
+  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+  "resources": [
+    {
+      "name": "http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.js",
+      "duration": 22.575000017881393,
+      "transferSize": 279973,
+      "decodedBodySize": 279673
+    },
+    {
+      "name": "http://127.0.0.1:5296/tools/filament-evaluation/main.js",
+      "duration": 10.75,
+      "transferSize": 6107,
+      "decodedBodySize": 5807
+    },
+    {
+      "name": "http://127.0.0.1:5296/tools/filament-evaluation/plane.js",
+      "duration": 2.294999986886978,
+      "transferSize": 2020,
+      "decodedBodySize": 1720
+    },
+    {
+      "name": "http://127.0.0.1:5296/favicon.ico",
+      "duration": 2.020000010728836,
+      "transferSize": 309,
+      "decodedBodySize": 9
+    },
+    {
+      "name": "http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.wasm",
+      "duration": 21.78999999165535,
+      "transferSize": 4489866,
+      "decodedBodySize": 4489566
+    },
+    {
+      "name": "http://127.0.0.1:5296/content/worker-actions.json",
+      "duration": 3.4300000071525574,
+      "transferSize": 18308,
+      "decodedBodySize": 18008
+    },
+    {
+      "name": "http://127.0.0.1:5296/assets/25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238.glb",
+      "duration": 54.49500000476837,
+      "transferSize": 27893428,
+      "decodedBodySize": 27893128
+    }
+  ],
+  "consoleMessages": [
+    {
+      "type": "warning",
+      "text": "The powerPreference option is currently ignored when calling requestAdapter() on Windows. See https://crbug.com/369219127"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "type": "log",
+      "text": "FEngine (32 bits) created at 0x2030c0 (threading is disabled)\n"
+    },
+    {
+      "type": "log",
+      "text": "Backend feature level: 2\n"
+    },
+    {
+      "type": "log",
+      "text": "FEngine feature level: 1\n"
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "done": true,
+  "errors": [],
+  "frames": 10,
+  "adapter": {
+    "description": "",
+    "vendor": "intel",
+    "isFallbackAdapter": false
+  },
+  "backend": 4,
+  "stage": "camera",
+  "metadata": {
+    "sourceCommit": "719510cec",
+    "biome": "sabana",
+    "instances": 10741,
+    "triangles": 212704,
+    "drawCalls": 2,
+    "attributeBytes": 38790144,
+    "indexBytes": 2552448,
+    "representation": "expanded-parity",
+    "limitations": [
+      "Captured resident selection: no runtime CPU culling or streaming measured.",
+      "Shader distance LOD / far fade active; fixed submitted topology, no automatic CPU removal.",
+      "Grass shadow visibility is 1 in both engines, matching the source experiment.",
+      "Density > 1 repeats captured distribution with 0.07 unit x offsets.",
+      "Partial update touches contiguous 1% instance ranges in persistent buffers; does not measure game selection."
+    ]
+  },
+  "partialBytes": 384768,
+  "messages": [
+    {
+      "type": "debug",
+      "text": "[vite] connecting..."
+    },
+    {
+      "type": "warning",
+      "text": "The powerPreference option is currently ignored when calling requestAdapter() on Windows. See https://crbug.com/369219127"
+    },
+    {
+      "type": "debug",
+      "text": "[vite] connected."
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "type": "log",
+      "text": "FEngine (32 bits) created at 0x2030c0 (threading is disabled)\n"
+    },
+    {
+      "type": "log",
+      "text": "Backend feature level: 2\n"
+    },
+    {
+      "type": "log",
+      "text": "FEngine feature level: 1\n"
+    },
+    {
+      "type": "warning",
+      "text": "Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently"
+    }
+  ]
+}

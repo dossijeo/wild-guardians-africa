@@ -1,0 +1,3562 @@
+{
+  "run": 2,
+  "backend": "three",
+  "scenario": "C",
+  "density": 0.5,
+  "nativeInstancing": true,
+  "optimized": false,
+  "night": 0,
+  "metadata": {
+    "sourceCommit": "719510cec",
+    "biome": "sabana",
+    "instances": 5370,
+    "triangles": 106348,
+    "drawCalls": 2,
+    "attributeBytes": 220848,
+    "indexBytes": 408,
+    "representation": "native-three-instancing",
+    "limitations": [
+      "Captured resident selection: no runtime CPU culling or streaming measured.",
+      "Shader distance LOD / far fade active; fixed submitted topology, no automatic CPU removal.",
+      "Grass shadow visibility is 1 in both engines, matching the source experiment.",
+      "Density > 1 repeats captured distribution with 0.07 unit x offsets.",
+      "Partial update touches contiguous 1% instance ranges in persistent buffers; does not measure game selection."
+    ]
+  },
+  "rendererIdentity": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "initializedMs": 136.83500000834465,
+  "interactive": [
+    {
+      "interval": 16.565000000000055,
+      "updateMs": 0.18000000715255737,
+      "submitMs": 0.2449999749660492,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.710000000000036,
+      "updateMs": 0.10499998927116394,
+      "submitMs": 0.2150000035762787,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.640000000000327,
+      "updateMs": 0.11500000953674316,
+      "submitMs": 0.24500000476837158,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.549999999999727,
+      "updateMs": 0.08500000834465027,
+      "submitMs": 0.2750000059604645,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.710000000000036,
+      "updateMs": 0.2199999988079071,
+      "submitMs": 0.35499998927116394,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.704999999999927,
+      "updateMs": 0.1899999976158142,
+      "submitMs": 0.675000011920929,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.440000000000055,
+      "updateMs": 0.06499999761581421,
+      "submitMs": 0.19999998807907104,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.659999999999854,
+      "updateMs": 0.08500000834465027,
+      "submitMs": 0.21000000834465027,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.675000000000182,
+      "updateMs": 0.12000000476837158,
+      "submitMs": 0.1849999725818634,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.5949999999998,
+      "updateMs": 0.06999999284744263,
+      "submitMs": 0.12000000476837158,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.645000000000437,
+      "updateMs": 0.10999998450279236,
+      "submitMs": 0.15000000596046448,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.684999999999945,
+      "updateMs": 0.1300000250339508,
+      "submitMs": 0.8999999761581421,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.440000000000055,
+      "updateMs": 0.09999999403953552,
+      "submitMs": 0.18000000715255737,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.704999999999927,
+      "updateMs": 0.08000001311302185,
+      "submitMs": 0.1550000011920929,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.634999999999764,
+      "updateMs": 0.11500000953674316,
+      "submitMs": 0.18000000715255737,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.68000000000029,
+      "updateMs": 0.07500001788139343,
+      "submitMs": 0.17999997735023499,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.699999999999818,
+      "updateMs": 0.09999999403953552,
+      "submitMs": 0.15000000596046448,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.4050000000002,
+      "updateMs": 0.06000000238418579,
+      "submitMs": 0.15000000596046448,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.754999999999654,
+      "updateMs": 0.06000000238418579,
+      "submitMs": 0.13499999046325684,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.625,
+      "updateMs": 0.08500000834465027,
+      "submitMs": 0.16999998688697815,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.664999999999964,
+      "updateMs": 0.06499999761581421,
+      "submitMs": 0.14499998092651367,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.66000000000031,
+      "updateMs": 0.12999999523162842,
+      "submitMs": 0.2150000035762787,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.534999999999854,
+      "updateMs": 0.0949999988079071,
+      "submitMs": 0.2199999988079071,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.605000000000018,
+      "updateMs": 0.12999999523162842,
+      "submitMs": 0.23999997973442078,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.61499999999978,
+      "updateMs": 0.10999998450279236,
+      "submitMs": 0.23500001430511475,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.590000000000146,
+      "updateMs": 0.05500000715255737,
+      "submitMs": 0.10999998450279236,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.720000000000255,
+      "updateMs": 0.06499999761581421,
+      "submitMs": 0.17500001192092896,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.629999999999654,
+      "updateMs": 0.12000000476837158,
+      "submitMs": 0.1899999976158142,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.605000000000018,
+      "updateMs": 0.09999999403953552,
+      "submitMs": 0.22499999403953552,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.695000000000164,
+      "updateMs": 0.14500001072883606,
+      "submitMs": 0.29999998211860657,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.65000000000009,
+      "updateMs": 0.09000000357627869,
+      "submitMs": 0.1850000023841858,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.670000000000073,
+      "updateMs": 0.06499999761581421,
+      "submitMs": 0.125,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.559999999999945,
+      "updateMs": 0.08500000834465027,
+      "submitMs": 0.19499999284744263,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.629999999999654,
+      "updateMs": 0.1199999749660492,
+      "submitMs": 0.1550000011920929,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.580000000000382,
+      "updateMs": 0.14000001549720764,
+      "submitMs": 0.2849999964237213,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.609999999999673,
+      "updateMs": 0.16499999165534973,
+      "submitMs": 0.22999998927116394,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.789999999999964,
+      "updateMs": 0.07499998807907104,
+      "submitMs": 0.1550000011920929,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.455000000000382,
+      "updateMs": 0.08000001311302185,
+      "submitMs": 0.2800000011920929,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.6899999999996,
+      "updateMs": 0.12000000476837158,
+      "submitMs": 0.2849999964237213,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.63000000000011,
+      "updateMs": 0.1599999964237213,
+      "submitMs": 0.3050000071525574,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.63500000000022,
+      "updateMs": 0.08500000834465027,
+      "submitMs": 0.17499998211860657,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.56999999999971,
+      "updateMs": 0.5349999964237213,
+      "submitMs": 0.30000001192092896,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.710000000000036,
+      "updateMs": 0.12999999523162842,
+      "submitMs": 0.36500000953674316,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.605000000000018,
+      "updateMs": 0.10999998450279236,
+      "submitMs": 0.3799999952316284,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.75,
+      "updateMs": 0.11000001430511475,
+      "submitMs": 0.25999999046325684,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.440000000000055,
+      "updateMs": 0.06499999761581421,
+      "submitMs": 0.1550000011920929,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.764999999999873,
+      "updateMs": 0.08000001311302185,
+      "submitMs": 0.1499999761581421,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.610000000000127,
+      "updateMs": 0.06999999284744263,
+      "submitMs": 0.1550000011920929,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.659999999999854,
+      "updateMs": 0.11000001430511475,
+      "submitMs": 0.3199999928474426,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.55500000000029,
+      "updateMs": 0.3399999737739563,
+      "submitMs": 0.5750000178813934,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.684999999999945,
+      "updateMs": 0.08000001311302185,
+      "submitMs": 0.25999999046325684,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.625,
+      "updateMs": 0.09999999403953552,
+      "submitMs": 0.27000001072883606,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.52500000000009,
+      "updateMs": 0.125,
+      "submitMs": 0.19499999284744263,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.634999999999764,
+      "updateMs": 0.08000001311302185,
+      "submitMs": 0.24500000476837158,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.710000000000036,
+      "updateMs": 0.07999998331069946,
+      "submitMs": 0.19500002264976501,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.51000000000022,
+      "updateMs": 0.10500001907348633,
+      "submitMs": 0.22499999403953552,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.69499999999971,
+      "updateMs": 0.06000000238418579,
+      "submitMs": 0.12999999523162842,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.6550000000002,
+      "updateMs": 0.08500000834465027,
+      "submitMs": 0.15000000596046448,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.72499999999991,
+      "updateMs": 0.12000000476837158,
+      "submitMs": 0.25,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.34999999999991,
+      "updateMs": 0.06999999284744263,
+      "submitMs": 0.23500001430511475,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.800000000000182,
+      "updateMs": 0.11500000953674316,
+      "submitMs": 0.3400000035762787,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.639999999999873,
+      "updateMs": 0.06999999284744263,
+      "submitMs": 0.1550000011920929,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.559999999999945,
+      "updateMs": 0.10499998927116394,
+      "submitMs": 0.2549999952316284,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.63000000000011,
+      "updateMs": 0.11500000953674316,
+      "submitMs": 0.18000000715255737,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.965000000000146,
+      "updateMs": 0.125,
+      "submitMs": 0.19999998807907104,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.375,
+      "updateMs": 0.09999999403953552,
+      "submitMs": 0.16999998688697815,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.549999999999727,
+      "updateMs": 0.11499997973442078,
+      "submitMs": 0.3100000023841858,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.5300000000002,
+      "updateMs": 0.16999998688697815,
+      "submitMs": 0.2150000035762787,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.735000000000127,
+      "updateMs": 0.11000001430511475,
+      "submitMs": 0.2849999964237213,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.605000000000018,
+      "updateMs": 0.09999999403953552,
+      "submitMs": 0.3100000023841858,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.659999999999854,
+      "updateMs": 0.0949999988079071,
+      "submitMs": 0.1550000011920929,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.664999999999964,
+      "updateMs": 0.13500002026557922,
+      "submitMs": 0.33000001311302185,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.610000000000127,
+      "updateMs": 0.07000002264976501,
+      "submitMs": 0.1850000023841858,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.539999999999964,
+      "updateMs": 0.12999999523162842,
+      "submitMs": 0.32499998807907104,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.704999999999927,
+      "updateMs": 0.09999999403953552,
+      "submitMs": 0.1599999964237213,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.654999999999745,
+      "updateMs": 0.07499998807907104,
+      "submitMs": 0.17500001192092896,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 17.240000000000236,
+      "updateMs": 0.10000002384185791,
+      "submitMs": 0.1549999713897705,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 15.960000000000036,
+      "updateMs": 0.11500000953674316,
+      "submitMs": 0.28999999165534973,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.634999999999764,
+      "updateMs": 0.11500000953674316,
+      "submitMs": 0.2750000059604645,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.695000000000164,
+      "updateMs": 0.06499999761581421,
+      "submitMs": 0.1850000023841858,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.565000000000055,
+      "updateMs": 0.06000000238418579,
+      "submitMs": 0.1599999964237213,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.670000000000073,
+      "updateMs": 0.08000001311302185,
+      "submitMs": 0.19499999284744263,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.61499999999978,
+      "updateMs": 0.07499998807907104,
+      "submitMs": 0.18000000715255737,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.625,
+      "updateMs": 0.10499998927116394,
+      "submitMs": 0.46000000834465027,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.625,
+      "updateMs": 0.10499998927116394,
+      "submitMs": 0.3150000274181366,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.519999999999982,
+      "updateMs": 0.09999999403953552,
+      "submitMs": 0.16500002145767212,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.84999999999991,
+      "updateMs": 0.125,
+      "submitMs": 0.20499998331069946,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.575000000000273,
+      "updateMs": 0.125,
+      "submitMs": 0.32999998331069946,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.514999999999873,
+      "updateMs": 0.1300000250339508,
+      "submitMs": 0.5149999856948853,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.704999999999927,
+      "updateMs": 0.13499999046325684,
+      "submitMs": 0.25999999046325684,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.65000000000009,
+      "updateMs": 0.11500000953674316,
+      "submitMs": 0.24500000476837158,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.789999999999964,
+      "updateMs": 0.11000001430511475,
+      "submitMs": 0.22499999403953552,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.420000000000073,
+      "updateMs": 0.11500000953674316,
+      "submitMs": 0.29499998688697815,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.670000000000073,
+      "updateMs": 0.125,
+      "submitMs": 0.29499998688697815,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.49499999999989,
+      "updateMs": 0.06000000238418579,
+      "submitMs": 0.12999999523162842,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.690000000000055,
+      "updateMs": 0.12000000476837158,
+      "submitMs": 0.1550000011920929,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.735000000000127,
+      "updateMs": 0.07500001788139343,
+      "submitMs": 0.13499999046325684,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.644999999999982,
+      "updateMs": 0.15000000596046448,
+      "submitMs": 0.1599999964237213,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.5949999999998,
+      "updateMs": 0.10000002384185791,
+      "submitMs": 0.20999997854232788,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.735000000000127,
+      "updateMs": 0.09999999403953552,
+      "submitMs": 0.1899999976158142,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.40000000000009,
+      "updateMs": 0.07000002264976501,
+      "submitMs": 0.12999999523162842,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.754999999999654,
+      "updateMs": 0.14000001549720764,
+      "submitMs": 0.2800000011920929,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.515000000000327,
+      "updateMs": 0.0949999988079071,
+      "submitMs": 0.17499998211860657,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.80500000000029,
+      "updateMs": 0.0949999988079071,
+      "submitMs": 0.12000000476837158,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.524999999999636,
+      "updateMs": 0.11000001430511475,
+      "submitMs": 0.29499998688697815,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.63500000000022,
+      "updateMs": 0.08000001311302185,
+      "submitMs": 0.14499998092651367,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.484999999999673,
+      "updateMs": 0.09000000357627869,
+      "submitMs": 0.20499998331069946,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.734999999999673,
+      "updateMs": 0.11000001430511475,
+      "submitMs": 0.26999998092651367,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.55500000000029,
+      "updateMs": 0.06999999284744263,
+      "submitMs": 0.16500002145767212,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.720000000000255,
+      "updateMs": 0.12000000476837158,
+      "submitMs": 0.28999999165534973,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.604999999999563,
+      "updateMs": 0.09000000357627869,
+      "submitMs": 0.22499999403953552,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.670000000000073,
+      "updateMs": 0.10499998927116394,
+      "submitMs": 0.23500001430511475,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.645000000000437,
+      "updateMs": 0.125,
+      "submitMs": 0.45000001788139343,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.5649999999996,
+      "updateMs": 0.11000001430511475,
+      "submitMs": 0.24000000953674316,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.735000000000582,
+      "updateMs": 0.12000000476837158,
+      "submitMs": 0.3199999928474426,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.50999999999931,
+      "updateMs": 0.11000001430511475,
+      "submitMs": 0.26500001549720764,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.650000000000546,
+      "updateMs": 0.11000001430511475,
+      "submitMs": 0.26499998569488525,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.524999999999636,
+      "updateMs": 0.11000001430511475,
+      "submitMs": 0.26499998569488525,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.725000000000364,
+      "updateMs": 0.11500000953674316,
+      "submitMs": 0.25999999046325684,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.664999999999964,
+      "updateMs": 0.12000000476837158,
+      "submitMs": 0.29500001668930054,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.604999999999563,
+      "updateMs": 0.125,
+      "submitMs": 0.28999999165534973,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.645000000000437,
+      "updateMs": 0.0949999988079071,
+      "submitMs": 0.1550000011920929,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.704999999999927,
+      "updateMs": 0.07499998807907104,
+      "submitMs": 0.14000001549720764,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.599999999999454,
+      "updateMs": 0.06999999284744263,
+      "submitMs": 0.125,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.5600000000004,
+      "updateMs": 0.11499997973442078,
+      "submitMs": 0.2800000011920929,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.75,
+      "updateMs": 0.10499998927116394,
+      "submitMs": 0.25,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.56999999999971,
+      "updateMs": 0.04999998211860657,
+      "submitMs": 0.09999999403953552,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.640000000000327,
+      "updateMs": 0.25,
+      "submitMs": 0.304999977350235,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.604999999999563,
+      "updateMs": 0.11500000953674316,
+      "submitMs": 0.3100000023841858,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.585000000000036,
+      "updateMs": 0.10499998927116394,
+      "submitMs": 0.35500001907348633,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.780000000000655,
+      "updateMs": 0.0949999988079071,
+      "submitMs": 0.1599999964237213,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.465000000000146,
+      "updateMs": 0.07999998331069946,
+      "submitMs": 0.24000000953674316,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.659999999999854,
+      "updateMs": 0.07500001788139343,
+      "submitMs": 0.17499998211860657,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.670000000000073,
+      "updateMs": 0.10000002384185791,
+      "submitMs": 0.38499999046325684,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.67999999999938,
+      "updateMs": 0.2150000035762787,
+      "submitMs": 1.3899999856948853,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.454999999999927,
+      "updateMs": 0.27000001072883606,
+      "submitMs": 0.6149999797344208,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.579999999999927,
+      "updateMs": 0.11500000953674316,
+      "submitMs": 0.15000000596046448,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.725000000000364,
+      "updateMs": 0.07499998807907104,
+      "submitMs": 0.15000000596046448,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.55500000000029,
+      "updateMs": 0.2750000059604645,
+      "submitMs": 0.3050000071525574,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.729999999999563,
+      "updateMs": 0.054999977350234985,
+      "submitMs": 0.10000002384185791,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.69500000000062,
+      "updateMs": 0.08500000834465027,
+      "submitMs": 0.13999998569488525,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.539999999999964,
+      "updateMs": 0.11500000953674316,
+      "submitMs": 0.2800000011920929,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.609999999999673,
+      "updateMs": 0.08500000834465027,
+      "submitMs": 0.1499999761581421,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.55999999999949,
+      "updateMs": 0.13999998569488525,
+      "submitMs": 0.17500001192092896,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.705000000000837,
+      "updateMs": 0.06000000238418579,
+      "submitMs": 0.09999999403953552,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.639999999999418,
+      "updateMs": 0.13499999046325684,
+      "submitMs": 0.20499998331069946,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.68000000000029,
+      "updateMs": 0.0949999988079071,
+      "submitMs": 0.16500002145767212,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.524999999999636,
+      "updateMs": 0.125,
+      "submitMs": 0.32999998331069946,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.5600000000004,
+      "updateMs": 0.11499997973442078,
+      "submitMs": 0.2550000250339508,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.639999999999418,
+      "updateMs": 0.09000000357627869,
+      "submitMs": 0.1599999964237213,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 17.025000000000546,
+      "updateMs": 0.1550000011920929,
+      "submitMs": 0.29999998211860657,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.390000000000327,
+      "updateMs": 0.10499998927116394,
+      "submitMs": 0.1899999976158142,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.61999999999989,
+      "updateMs": 0.20499998331069946,
+      "submitMs": 0.2549999952316284,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.710000000000036,
+      "updateMs": 0.09999999403953552,
+      "submitMs": 0.1599999964237213,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.625,
+      "updateMs": 0.17000001668930054,
+      "submitMs": 0.22999998927116394,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.469999999999345,
+      "updateMs": 0.1499999761581421,
+      "submitMs": 0.16500002145767212,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.69000000000051,
+      "updateMs": 0.0949999988079071,
+      "submitMs": 0.20000001788139343,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.539999999999964,
+      "updateMs": 0.07999998331069946,
+      "submitMs": 0.13500002026557922,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.579999999999927,
+      "updateMs": 0.14000001549720764,
+      "submitMs": 0.13499999046325684,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.654999999999745,
+      "updateMs": 0.10999998450279236,
+      "submitMs": 0.17500001192092896,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.75,
+      "updateMs": 0.12000000476837158,
+      "submitMs": 0.24000000953674316,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.61999999999989,
+      "updateMs": 0.12000000476837158,
+      "submitMs": 0.2199999988079071,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.545000000000073,
+      "updateMs": 0.07999998331069946,
+      "submitMs": 0.20000001788139343,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.909999999999854,
+      "updateMs": 0.0949999988079071,
+      "submitMs": 0.20500001311302185,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.390000000000327,
+      "updateMs": 0.06999999284744263,
+      "submitMs": 0.125,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.574999999999818,
+      "updateMs": 0.1550000011920929,
+      "submitMs": 0.22999998927116394,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.640000000000327,
+      "updateMs": 0.09999999403953552,
+      "submitMs": 0.1899999976158142,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.625,
+      "updateMs": 0.10999998450279236,
+      "submitMs": 0.2750000059604645,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.574999999999818,
+      "updateMs": 0.08500000834465027,
+      "submitMs": 0.10499998927116394,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.6899999999996,
+      "updateMs": 0.08500000834465027,
+      "submitMs": 0.1550000011920929,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.68000000000029,
+      "updateMs": 0.08500000834465027,
+      "submitMs": 0.12999999523162842,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.574999999999818,
+      "updateMs": 0.05500000715255737,
+      "submitMs": 0.5049999952316284,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.76000000000022,
+      "updateMs": 0.06499999761581421,
+      "submitMs": 0.125,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.425000000000182,
+      "updateMs": 0.08500000834465027,
+      "submitMs": 0.14500001072883606,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.729999999999563,
+      "updateMs": 0.06999999284744263,
+      "submitMs": 0.14000001549720764,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.6200000000008,
+      "updateMs": 0.11500000953674316,
+      "submitMs": 0.2800000011920929,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.544999999999163,
+      "updateMs": 0.10500001907348633,
+      "submitMs": 0.2150000035762787,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.655000000000655,
+      "updateMs": 0.10999998450279236,
+      "submitMs": 0.18000000715255737,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.63000000000011,
+      "updateMs": 0.19500002264976501,
+      "submitMs": 0.16999998688697815,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.68499999999949,
+      "updateMs": 0.09000000357627869,
+      "submitMs": 0.24000000953674316,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.5600000000004,
+      "updateMs": 0.22499999403953552,
+      "submitMs": 0.1850000023841858,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.854999999999563,
+      "updateMs": 0.08000001311302185,
+      "submitMs": 0.35499998927116394,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.574999999999818,
+      "updateMs": 0.07499998807907104,
+      "submitMs": 0.125,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.4950000000008,
+      "updateMs": 0.08500000834465027,
+      "submitMs": 0.1599999964237213,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.61499999999978,
+      "updateMs": 0.10999998450279236,
+      "submitMs": 0.1550000011920929,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.56999999999971,
+      "updateMs": 0.050000011920928955,
+      "submitMs": 0.11000001430511475,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.765000000000327,
+      "updateMs": 0.10999998450279236,
+      "submitMs": 0.25,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.519999999999527,
+      "updateMs": 0.08499997854232788,
+      "submitMs": 0.16500002145767212,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.76000000000022,
+      "updateMs": 0.08000001311302185,
+      "submitMs": 0.12000000476837158,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.625,
+      "updateMs": 0.13500002026557922,
+      "submitMs": 0.25999999046325684,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.5,
+      "updateMs": 0.10499998927116394,
+      "submitMs": 0.25,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.645000000000437,
+      "updateMs": 0.07999998331069946,
+      "submitMs": 0.1300000250339508,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.604999999999563,
+      "updateMs": 0.07500001788139343,
+      "submitMs": 0.13499999046325684,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.604999999999563,
+      "updateMs": 0.07500001788139343,
+      "submitMs": 0.1599999964237213,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.950000000000728,
+      "updateMs": 0.07500001788139343,
+      "submitMs": 0.21000000834465027,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.324999999999818,
+      "updateMs": 0.06000000238418579,
+      "submitMs": 0.10999998450279236,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.63500000000022,
+      "updateMs": 0.07500001788139343,
+      "submitMs": 0.1199999749660492,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.824999999999818,
+      "updateMs": 0.09000000357627869,
+      "submitMs": 0.14499998092651367,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.625,
+      "updateMs": 0.27000001072883606,
+      "submitMs": 0.5,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.63500000000022,
+      "updateMs": 0.09999999403953552,
+      "submitMs": 0.20500001311302185,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.55999999999949,
+      "updateMs": 0.07499998807907104,
+      "submitMs": 0.12000000476837158,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.579999999999927,
+      "updateMs": 0.0949999988079071,
+      "submitMs": 0.16499999165534973,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.735000000000582,
+      "updateMs": 0.08500000834465027,
+      "submitMs": 0.15000000596046448,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.56999999999971,
+      "updateMs": 0.06000000238418579,
+      "submitMs": 0.11499997973442078,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.644999999999527,
+      "updateMs": 0.06999999284744263,
+      "submitMs": 0.11500000953674316,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.50500000000011,
+      "updateMs": 0.07999998331069946,
+      "submitMs": 0.11000001430511475,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.63000000000011,
+      "updateMs": 0.08499997854232788,
+      "submitMs": 0.1599999964237213,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.74499999999989,
+      "updateMs": 0.13999998569488525,
+      "submitMs": 0.19499999284744263,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.5600000000004,
+      "updateMs": 0.07499998807907104,
+      "submitMs": 0.13499999046325684,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.579999999999927,
+      "updateMs": 0.07499998807907104,
+      "submitMs": 0.22499999403953552,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.61999999999989,
+      "updateMs": 0.09000000357627869,
+      "submitMs": 0.13499999046325684,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.725000000000364,
+      "updateMs": 0.06999999284744263,
+      "submitMs": 0.12999999523162842,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.75500000000011,
+      "updateMs": 0.09000000357627869,
+      "submitMs": 0.1550000011920929,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.460000000000036,
+      "updateMs": 0.07999998331069946,
+      "submitMs": 0.13499999046325684,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.779999999999745,
+      "updateMs": 0.07500001788139343,
+      "submitMs": 0.12999999523162842,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.644999999999527,
+      "updateMs": 0.07000002264976501,
+      "submitMs": 0.13999998569488525,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.610000000000582,
+      "updateMs": 0.10999998450279236,
+      "submitMs": 0.20500001311302185,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.449999999999818,
+      "updateMs": 0.06499999761581421,
+      "submitMs": 0.17500001192092896,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.734999999999673,
+      "updateMs": 0.07999998331069946,
+      "submitMs": 0.13500002026557922,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.61499999999978,
+      "updateMs": 0.11500000953674316,
+      "submitMs": 0.1899999976158142,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.540000000000873,
+      "updateMs": 0.10499998927116394,
+      "submitMs": 0.19999998807907104,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.644999999999527,
+      "updateMs": 0.07999998331069946,
+      "submitMs": 0.14000001549720764,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.609999999999673,
+      "updateMs": 0.18000000715255737,
+      "submitMs": 0.6649999916553497,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.75500000000011,
+      "updateMs": 0.0949999988079071,
+      "submitMs": 0.12000000476837158,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.530000000000655,
+      "updateMs": 0.07500001788139343,
+      "submitMs": 0.13499999046325684,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 17.089999999999236,
+      "updateMs": 0.0949999988079071,
+      "submitMs": 0.1550000011920929,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.200000000000728,
+      "updateMs": 0.10499998927116394,
+      "submitMs": 0.24000000953674316,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.664999999999964,
+      "updateMs": 0.18000000715255737,
+      "submitMs": 0.2799999713897705,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.55999999999949,
+      "updateMs": 0.10999998450279236,
+      "submitMs": 0.14000001549720764,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.574999999999818,
+      "updateMs": 0.08000001311302185,
+      "submitMs": 0.12999999523162842,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.735000000000582,
+      "updateMs": 0.10000002384185791,
+      "submitMs": 0.18000000715255737,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.61999999999989,
+      "updateMs": 0.13499999046325684,
+      "submitMs": 0.20499998331069946,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.61499999999978,
+      "updateMs": 0.08500000834465027,
+      "submitMs": 0.22499999403953552,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.664999999999964,
+      "updateMs": 0.06499999761581421,
+      "submitMs": 0.10000002384185791,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.61499999999978,
+      "updateMs": 0.054999977350234985,
+      "submitMs": 0.08000001311302185,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.55500000000029,
+      "updateMs": 0.11500000953674316,
+      "submitMs": 0.2199999988079071,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.835000000000036,
+      "updateMs": 0.13500002026557922,
+      "submitMs": 0.2199999988079071,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.515000000000327,
+      "updateMs": 0.10499998927116394,
+      "submitMs": 0.23999997973442078,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 17.149999999999636,
+      "updateMs": 0.10499998927116394,
+      "submitMs": 0.1850000023841858,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.24499999999989,
+      "updateMs": 0.08499997854232788,
+      "submitMs": 0.1300000250339508,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.550000000000182,
+      "updateMs": 0.12999999523162842,
+      "submitMs": 0.3400000035762787,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.534999999999854,
+      "updateMs": 0.06999999284744263,
+      "submitMs": 0.13500002026557922,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.985000000000582,
+      "updateMs": 0.13499999046325684,
+      "submitMs": 0.2250000238418579,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.279999999999745,
+      "updateMs": 0.10500001907348633,
+      "submitMs": 0.2150000035762787,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.715000000000146,
+      "updateMs": 0.07500001788139343,
+      "submitMs": 0.13999998569488525,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.5649999999996,
+      "updateMs": 0.06499999761581421,
+      "submitMs": 0.10999998450279236,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.699999999999818,
+      "updateMs": 0.06999999284744263,
+      "submitMs": 0.11000001430511475,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.460000000000036,
+      "updateMs": 0.09999999403953552,
+      "submitMs": 0.2750000059604645,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.914999999999964,
+      "updateMs": 0.09000000357627869,
+      "submitMs": 0.13999998569488525,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.5,
+      "updateMs": 0.08499997854232788,
+      "submitMs": 0.24000000953674316,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.579999999999927,
+      "updateMs": 0.07999998331069946,
+      "submitMs": 0.19499999284744263,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.610000000000582,
+      "updateMs": 0.08000001311302185,
+      "submitMs": 0.10499998927116394,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.724999999999454,
+      "updateMs": 0.06999999284744263,
+      "submitMs": 0.125,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.50500000000011,
+      "updateMs": 0.09000000357627869,
+      "submitMs": 0.16499999165534973,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.63000000000011,
+      "updateMs": 0.12000000476837158,
+      "submitMs": 0.4000000059604645,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.61999999999989,
+      "updateMs": 0.10999998450279236,
+      "submitMs": 0.2199999988079071,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.675000000000182,
+      "updateMs": 0.08500000834465027,
+      "submitMs": 0.1599999964237213,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.6899999999996,
+      "updateMs": 0.11500000953674316,
+      "submitMs": 0.16999998688697815,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.545000000000073,
+      "updateMs": 0.2150000035762787,
+      "submitMs": 0.3199999928474426,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.605000000000473,
+      "updateMs": 0.10999998450279236,
+      "submitMs": 0.30000001192092896,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.590000000000146,
+      "updateMs": 0.09000000357627869,
+      "submitMs": 0.2549999952316284,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.74499999999989,
+      "updateMs": 0.07499998807907104,
+      "submitMs": 0.125,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.5649999999996,
+      "updateMs": 0.07499998807907104,
+      "submitMs": 0.18000000715255737,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.61999999999989,
+      "updateMs": 0.08500000834465027,
+      "submitMs": 0.23499998450279236,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.610000000000582,
+      "updateMs": 0.12999999523162842,
+      "submitMs": 0.17000001668930054,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.625,
+      "updateMs": 0.07499998807907104,
+      "submitMs": 0.16499999165534973,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.675000000000182,
+      "updateMs": 0.09000000357627869,
+      "submitMs": 0.1549999713897705,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.50999999999931,
+      "updateMs": 0.1300000250339508,
+      "submitMs": 0.22499999403953552,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.63000000000011,
+      "updateMs": 0.07999998331069946,
+      "submitMs": 0.15000000596046448,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.595000000000255,
+      "updateMs": 0.09999999403953552,
+      "submitMs": 0.19500002264976501,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.734999999999673,
+      "updateMs": 0.10500001907348633,
+      "submitMs": 0.17999997735023499,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.68000000000029,
+      "updateMs": 0.08500000834465027,
+      "submitMs": 0.16499999165534973,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.670000000000073,
+      "updateMs": 0.07499998807907104,
+      "submitMs": 0.12000000476837158,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.595000000000255,
+      "updateMs": 0.11500000953674316,
+      "submitMs": 0.2750000059604645,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.654999999999745,
+      "updateMs": 0.06999999284744263,
+      "submitMs": 0.16500002145767212,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.644999999999527,
+      "updateMs": 0.10500001907348633,
+      "submitMs": 0.2150000035762787,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.56500000000051,
+      "updateMs": 0.07999998331069946,
+      "submitMs": 0.13499999046325684,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.670000000000073,
+      "updateMs": 0.06499999761581421,
+      "submitMs": 0.13499999046325684,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.48999999999978,
+      "updateMs": 0.09999999403953552,
+      "submitMs": 0.24500000476837158,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.75,
+      "updateMs": 0.06000000238418579,
+      "submitMs": 0.14499998092651367,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.8149999999996,
+      "updateMs": 0.07499998807907104,
+      "submitMs": 0.1300000250339508,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.4350000000004,
+      "updateMs": 0.12999999523162842,
+      "submitMs": 0.19499999284744263,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.649999999999636,
+      "updateMs": 0.10499998927116394,
+      "submitMs": 0.24500000476837158,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.645000000000437,
+      "updateMs": 0.1899999976158142,
+      "submitMs": 0.3799999952316284,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.699999999999818,
+      "updateMs": 0.10499998927116394,
+      "submitMs": 0.17500001192092896,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.63000000000011,
+      "updateMs": 0.09000000357627869,
+      "submitMs": 0.17500001192092896,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.420000000000073,
+      "updateMs": 0.07500001788139343,
+      "submitMs": 0.10999998450279236,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.774999999999636,
+      "updateMs": 0.10499998927116394,
+      "submitMs": 0.21000000834465027,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.61500000000069,
+      "updateMs": 0.10500001907348633,
+      "submitMs": 0.1599999964237213,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.574999999999818,
+      "updateMs": 0.07999998331069946,
+      "submitMs": 0.2549999952316284,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.5649999999996,
+      "updateMs": 0.07499998807907104,
+      "submitMs": 0.125,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.73999999999978,
+      "updateMs": 0.13500002026557922,
+      "submitMs": 0.2549999952316284,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.730000000000473,
+      "updateMs": 0.04999998211860657,
+      "submitMs": 0.0949999988079071,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.545000000000073,
+      "updateMs": 0.13500002026557922,
+      "submitMs": 0.29999998211860657,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.625,
+      "updateMs": 0.05500000715255737,
+      "submitMs": 0.09000000357627869,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.590000000000146,
+      "updateMs": 0.12000000476837158,
+      "submitMs": 0.17499998211860657,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.534999999999854,
+      "updateMs": 0.1199999749660492,
+      "submitMs": 0.19500002264976501,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.69499999999971,
+      "updateMs": 0.09999999403953552,
+      "submitMs": 0.22999998927116394,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.579999999999927,
+      "updateMs": 0.09999999403953552,
+      "submitMs": 0.1599999964237213,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    },
+    {
+      "interval": 16.710000000000036,
+      "updateMs": 0.08000001311302185,
+      "submitMs": 0.13999998569488525,
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": null,
+      "drawCalls": 2,
+      "accepted": true
+    }
+  ],
+  "timed": [
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 1.110416,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.821302,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.815677,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.894114,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.944583,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.949166,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.991614,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.828802,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.768229,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.914947,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.885625,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 1.016614,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.812343,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.986875,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.886614,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.834843,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.75,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.803906,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.957552,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.841927,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.747708,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 1.438854,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.770416,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.828437,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 1.104166,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 1.02927,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.75052,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.928541,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.904947,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 1.056614,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.904322,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 1.104947,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 1.004791,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.970416,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.901562,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 1.024635,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.917135,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.936197,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 1.008385,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 1.006822,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.887135,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.935416,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.83125,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 1.047552,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 1.079375,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.956562,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.878333,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.896979,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.747864,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.673958,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.822135,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.69427,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.746354,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.732239,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.71026,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.789791,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.829218,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.76901,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.840989,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    },
+    {
+      "draws": 2,
+      "triangles": 106348,
+      "gpuMs": 0.779791,
+      "gpuScope": "Elapsed WebGL commands around complete renderer.render incl shadows; no CPU updates"
+    }
+  ],
+  "errors": [],
+  "summary": {
+    "frametime": {
+      "n": 300,
+      "mean": 16.628483333333335,
+      "p50": 16.625,
+      "p95": 16.800000000000182,
+      "p99": 17.025000000000546
+    },
+    "rafInterval": {
+      "n": 300,
+      "mean": 16.628483333333335,
+      "p50": 16.625,
+      "p95": 16.800000000000182,
+      "p99": 17.025000000000546
+    },
+    "cpuUpdate": {
+      "n": 300,
+      "mean": 0.10526666700839997,
+      "p50": 0.09999999403953552,
+      "p95": 0.18000000715255737,
+      "p99": 0.27000001072883606
+    },
+    "cpuSubmit": {
+      "n": 300,
+      "mean": 0.21679999897877375,
+      "p50": 0.1899999976158142,
+      "p95": 0.36500000953674316,
+      "p99": 0.6649999916553497
+    },
+    "gpu": {
+      "n": 60,
+      "mean": 0.8967052499999998,
+      "p50": 0.887135,
+      "p95": 1.104166,
+      "p99": 1.110416
+    },
+    "fps": 60.137775644000406,
+    "rafFps": 60.137775644000406,
+    "acceptedFrames": 300,
+    "skippedFrames": 0,
+    "drawCalls": {
+      "n": 300,
+      "mean": 2,
+      "p50": 2,
+      "p95": 2,
+      "p99": 2
+    },
+    "triangles": {
+      "n": 300,
+      "mean": 106348,
+      "p50": 106348,
+      "p95": 106348,
+      "p99": 106348
+    }
+  },
+  "memory": {
+    "js": {
+      "used": 25302522,
+      "total": 30473810
+    },
+    "wasm": 0,
+    "gpu": {
+      "gpuMemoryBytes": null,
+      "reason": "WebGL resource byte allocations not exposed; Three counters reported separately"
+    },
+    "three": {
+      "geometries": 2,
+      "textures": 1
+    }
+  },
+  "resources": [
+    {
+      "url": "http://127.0.0.1:5296/@vite/client",
+      "bytes": 182615,
+      "transfer": 182915,
+      "ms": 22.984999984502792
+    },
+    {
+      "url": "http://127.0.0.1:5296/tools/filament-evaluation/vendor/filament.js",
+      "bytes": 1278692,
+      "transfer": 1278992,
+      "ms": 91.7049999833107
+    },
+    {
+      "url": "http://127.0.0.1:5296/tools/filament-evaluation/benchmark.js",
+      "bytes": 92931,
+      "transfer": 93231,
+      "ms": 89.76999998092651
+    },
+    {
+      "url": "http://127.0.0.1:5296/node_modules/vite/dist/client/env.mjs",
+      "bytes": 3861,
+      "transfer": 4161,
+      "ms": 63.195000022649765
+    },
+    {
+      "url": "http://127.0.0.1:5296/node_modules/.vite/deps/three.js?v=3d9148bb",
+      "bytes": 63254,
+      "transfer": 63554,
+      "ms": 4.019999980926514
+    },
+    {
+      "url": "http://127.0.0.1:5296/node_modules/.vite/deps/three_addons_loaders_GLTFLoader__js.js?v=3d9148bb",
+      "bytes": 100696,
+      "transfer": 100996,
+      "ms": 7.139999985694885
+    },
+    {
+      "url": "http://127.0.0.1:5296/node_modules/.vite/deps/three_addons_libs_meshopt_decoder__module__js.js?v=3d9148bb",
+      "bytes": 25323,
+      "transfer": 25623,
+      "ms": 7.280000001192093
+    },
+    {
+      "url": "http://127.0.0.1:5296/node_modules/.vite/deps/three_addons_utils_SkeletonUtils__js.js?v=3d9148bb",
+      "bytes": 8546,
+      "transfer": 8846,
+      "ms": 7.6700000166893005
+    },
+    {
+      "url": "http://127.0.0.1:5296/tools/filament-evaluation/instrument.js",
+      "bytes": 55330,
+      "transfer": 55630,
+      "ms": 8.879999995231628
+    },
+    {
+      "url": "http://127.0.0.1:5296/tools/filament-evaluation/plane.js",
+      "bytes": 8875,
+      "transfer": 9175,
+      "ms": 9.965000003576279
+    },
+    {
+      "url": "http://127.0.0.1:5296/tools/filament-evaluation/optimize-world.js",
+      "bytes": 16067,
+      "transfer": 16367,
+      "ms": 11.215000003576279
+    },
+    {
+      "url": "http://127.0.0.1:5296/tools/filament-evaluation/grass.js",
+      "bytes": 78381,
+      "transfer": 78681,
+      "ms": 14.724999994039536
+    },
+    {
+      "url": "http://127.0.0.1:5296/node_modules/.vite/deps/chunk-SCGUQBHX.js?v=3d9148bb",
+      "bytes": 1618906,
+      "transfer": 1619206,
+      "ms": 14.905000001192093
+    },
+    {
+      "url": "http://127.0.0.1:5296/node_modules/.vite/deps/chunk-76JBKNUK.js?v=3d9148bb",
+      "bytes": 28467,
+      "transfer": 28767,
+      "ms": 11.96000000834465
+    },
+    {
+      "url": "http://127.0.0.1:5296/tools/filament-evaluation/fixtures/grass-snapshot.json",
+      "bytes": 4765224,
+      "transfer": 4765524,
+      "ms": 30.604999989271164
+    },
+    {
+      "url": "http://127.0.0.1:5296/assets/fcd30bb609c499813ca0615ffdb64dfbbc7213eb416a974da6188ce545683ddc.webp",
+      "bytes": 572164,
+      "transfer": 572464,
+      "ms": 7.284999996423721
+    }
+  ],
+  "consoleMessages": []
+}
