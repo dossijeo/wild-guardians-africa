@@ -141,3 +141,18 @@ Reproduce with the dedicated isolated Vite server and `WG_THREAD_PORT=5299 WG_TH
 Conclusion: the main-thread native generation stall is removed, but total-frame improvement is NOT established. The graphics install remains expensive and one thread run has a worse maximum. These numbers must not be presented as a successful FPS optimization. All runs have 25 final resident chunks and 16 MiB linear memory; this is not peak accounting.
 
 Limitations: RAF intervals include display scheduling and are not GPU times; no GPU pass timings or image-equivalence captures were collected. Simulation is paused only after loading, with elapsed values differing by roughly two seconds between runs, so the snapshots are not strictly frozen/equivalent. Camera distance is stepped per frame, not per wall-clock second. This pilot motivates a stricter frozen-state comparison and attribution of remaining installation/render/streaming stalls, followed by active-simulation validation. It does not close the user acceptance gate.
+
+
+## Frozen-state ABAB and visual comparison
+
+Set WG_THREAD_FROZEN=1 in addition to the pilot options. QA now pauses at the application's loading handoff before simulation advances and asserts exact fixture elapsed time (119.99999999999746). All four frozen-stream reports retain identical initial camera/target, time and ten newly installed chunks. Timers separately record terrain construction, ground-detail registration, full render CPU, draw CPU and cache update CPU; these nested measurements must NOT be summed.
+
+| RAF metric (ms) | A1 | B1 | A2 | B2 |
+|---|---:|---:|---:|---:|
+| Mean | 32.52 | 31.69 | 31.69 | 31.60 |
+| p95 | 66.53 | 50.04 | 66.58 | 66.32 |
+| Maximum | 99.74 | 83.25 | 99.77 | 83.10 |
+
+The native main-thread stall reduction persists; publication averages 0.69/0.77 ms. Worst observed RAF interval improves in both pairs, but mean improvement is small and p95 improvement is not consistent. The short paused-scene experiment still does not prove acceptance under active simulation or longer sessions. Terrain construction accounts for most installation CPU (roughly 14–16 ms/chunk); ground-detail registration and cache-update CPU are much smaller in this fixture. GPU costs have not been attributed by these CPU timers.
+
+The four final real-renderer screenshots are frozen-stream-a1/b1/a2/b2.png. A1/B1 were visually inspected: terrain, shoreline, foliage, objects and camera composition agree. Pairwise mean absolute channel differences are 0.00170 and 0.00121 on a 0–255 scale; only 919 and 628 of 2,764,800 channels differ. This supports equivalent final appearance for this view, not all six biomes or all transient streaming frames. See frozen-stream-summary.json for the camera/state and detailed timing summaries. Next work remains attribution and scheduling of graphics installation, active simulation/six-biome validation, GPU/memory measurements and distribution tests.
