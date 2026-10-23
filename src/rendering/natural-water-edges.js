@@ -21,7 +21,7 @@ export function prepareNaturalWater(world,geometry,cx,cz,source){
  if((Math.abs(a[0]-b[0])<1e-4&&Math.abs(Math.abs(a[0]-cx*48)-24)<1e-4)||(Math.abs(a[1]-b[1])<1e-4&&Math.abs(Math.abs(a[1]-cz*48)-24)<1e-4))continue;
  for(let z=Math.floor((Math.min(a[1],b[1])-4)/binSize);z<=Math.floor((Math.max(a[1],b[1])+4)/binSize);z++)for(let x=Math.floor((Math.min(a[0],b[0])-4)/binSize);x<=Math.floor((Math.max(a[0],b[0])+4)/binSize);x++){const key=x+','+z;if(!bins.has(key))bins.set(key,[]);bins.get(key).push({a,b});}
  }
- const boundaryDistance=(x,z)=>{if(field.canyon)return 4;let d=4;for(const {a,b} of bins.get(Math.floor(x/binSize)+','+Math.floor(z/binSize))??[]){const dx=b[0]-a[0],dz=b[1]-a[1],t=Math.max(0,Math.min(1,((x-a[0])*dx+(z-a[1])*dz)/(dx*dx+dz*dz||1)));d=Math.min(d,Math.hypot(x-a[0]-t*dx,z-a[1]-t*dz));}return d;};
+ const boundaryDistance=(x,z)=>{if(field.canyon)return 4;let squared=16;for(const {a,b} of bins.get(Math.floor(x/binSize)+','+Math.floor(z/binSize))??[]){const dx=b[0]-a[0],dz=b[1]-a[1],t=Math.max(0,Math.min(1,((x-a[0])*dx+(z-a[1])*dz)/(dx*dx+dz*dz||1))),rx=x-a[0]-t*dx,rz=z-a[1]-t*dz;squared=Math.min(squared,rx*rx+rz*rz);}return Math.sqrt(squared);};
  const samples=new Float32Array(nx*nz);let lo=Infinity,hi=-Infinity;
  for(let z=0;z<nz;z++)for(let x=0;x<nx;x++){const px=minX+x/(nx-1)*width,pz=minZ+z/(nz-1)*height;const h=field.wetland?field.wetlandLevel(px,pz)-Math.max(0,field.waterInfo(px,pz).mask-.61)*3:field.surface(px,pz);samples[z*nx+x]=h;lo=Math.min(lo,h);hi=Math.max(hi,h);}
  const span=Math.max(.001,hi-lo),bytes=new Uint8Array(nx*nz*4);
