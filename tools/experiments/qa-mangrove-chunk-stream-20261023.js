@@ -15,3 +15,23 @@ export async function verifyMangroveChunkStream(w){
   return {...result,scope:'Chunk event/cancellation probe only; new chunks retain original ground shading until incremental creation is connected'};
  }finally{w.camera.position.copy(camera);w.controls.target.copy(target);}
 }
+
+export async function verifyIncrementalStream(w){
+ const camera=w.camera.position.clone(),target=w.controls.target.clone(),cache=w.qaIncrementalGround,samples=[];
+ if(!cache)throw Error('Expected incremental cache');
+ try{
+  for(const offset of [0,144,0]){
+   w.camera.position.copy(camera);w.camera.position.x+=offset;w.controls.target.copy(target);w.controls.target.x+=offset;
+   w.syncChunks();await w.horizon.whenReady();w.syncChunks();await w.whenChunksReady();
+   let stable=0,frames=0;
+   while(stable<10){await new Promise(requestAnimationFrame);stable=cache.queue.pending.size===0?stable+1:0;if(++frames>900)throw Error('Incremental cache did not settle');}
+   const registered=[...cache.states.keys()].sort(),resident=[...w.chunks.keys()].sort();
+   if(registered.join('|')!==resident.join('|'))throw Error('Incremental chunk registry mismatch');
+   if([...cache.queue.entries.keys()].some(key=>!cache.states.has(key.split(':')[0])))throw Error('Non-resident cache retained');
+   const ready=[...cache.states.values()].filter(s=>s.uniforms.uQaCacheReady.value===1).length;
+   if(!ready||cache.queue.stats.peakBytes>32*1024*1024)throw Error('Cache generation or budget failed');
+   samples.push({offset,frames,resident:resident.length,registered:registered.length,ready,entries:cache.queue.entries.size,pending:cache.queue.pending.size,queue:{...cache.queue.stats},added:cache.stats.added,removed:cache.stats.removed,memory:{...w.renderer.info.memory},glError:w.renderer.getContext().getError()});
+  }
+  return {samples,scope:'Real automatic cache regeneration across streamed chunks; settling waits exclude a continuous-motion performance claim'};
+ }finally{w.camera.position.copy(camera);w.controls.target.copy(target);}
+}

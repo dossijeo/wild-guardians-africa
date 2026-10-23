@@ -41,7 +41,7 @@ void main(){
  float rough=mix(clamp(soil.g,.78,.96),clamp(arh.g,.5,.99),cover);
  gl_FragColor=vec4(mossMix,cover,ao,rough);
 }`;
-const liveBranch=`if(uGroundPureMoss>.5){
+export const liveBranch=`if(uGroundPureMoss>.5){
  vec2 uv=mat2(.8,-.6,.6,.8)*worldP.xz*uGroundParams.x+uGroundSeed+mod(mat2(.8,-.6,.6,.8)*uWorldOrigin*uGroundParams.x,1.);
  vec2 dx=dFdx(uv),dy=dFdy(uv);
  vec2 cacheUV=((worldP.xz-uGroundRect.xy)/48.*uQaCacheResolution+1.)/(uQaCacheResolution+2.);

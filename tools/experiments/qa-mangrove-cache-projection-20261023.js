@@ -10,8 +10,10 @@ export class MangroveCacheProjection {
   this.point=new THREE.Vector3();this.eyePoint=new THREE.Vector3();this.screen=new THREE.Vector3();this.dx=new THREE.Vector3();this.dz=new THREE.Vector3();
   this.rays=Array.from({length:9},()=>new THREE.Vector3());
   world.scene.updateMatrixWorld(true);
-  for(const [key,group]of world.chunks){const mesh=group.children.find(o=>o.userData.ground);if(!mesh)continue;mesh.geometry.computeBoundingBox();this.entries.push({key,box:mesh.geometry.boundingBox.clone().applyMatrix4(mesh.matrixWorld)});}
+  for(const [key,group]of world.chunks)this.register(key,group);
  }
+ register(key,group){this.release(key);const mesh=group.children.find(o=>o.userData.ground);if(!mesh)return;group.updateMatrixWorld(true);mesh.geometry.computeBoundingBox();this.entries.push({key,box:mesh.geometry.boundingBox.clone().applyMatrix4(mesh.matrixWorld)});}
+ release(key){this.entries=this.entries.filter(e=>e.key!==key);this.history.delete(key);}
  pixelsPerMetre(point,camera,width,height){
   this.eyePoint.copy(point).applyMatrix4(camera.matrixWorldInverse);if(this.eyePoint.z>=-camera.near)return 0;
   this.screen.copy(point).project(camera);this.dx.copy(point);this.dx.x+=.1;this.dx.project(camera);this.dz.copy(point);this.dz.z+=.1;this.dz.project(camera);
