@@ -1,0 +1,60 @@
+TAP version 13
+# Subtest: full fixed512 cache reserves replacement space and deferred chunks cannot starve edits
+ok 1 - full fixed512 cache reserves replacement space and deferred chunks cannot starve edits
+  ---
+  duration_ms: 9.1399
+  ...
+# Subtest: existing and streamed chunks notify once; removal precedes material disposal
+ok 2 - existing and streamed chunks notify once; removal precedes material disposal
+  ---
+  duration_ms: 3.3156
+  ...
+# Subtest: quality clones register through existing retain callback; unrelated biome is ignored
+ok 3 - quality clones register through existing retain callback; unrelated biome is ignored
+  ---
+  duration_ms: 1.19
+  ...
+# Subtest: camera replacement keeps published target until every tile is ready; budget counts both
+ok 4 - camera replacement keeps published target until every tile is ready; budget counts both
+  ---
+  duration_ms: 1.9995
+  ...
+# Subtest: successive invalidations cancel partial stale bake and coalesce duplicate versions
+ok 5 - successive invalidations cancel partial stale bake and coalesce duplicate versions
+  ---
+  duration_ms: 0.1872
+  ...
+# Subtest: unload cancels pending work and releases resident data without late publication
+ok 6 - unload cancels pending work and releases resident data without late publication
+  ---
+  duration_ms: 0.5094
+  ...
+# Subtest: failed generation releases temporary resource but preserves prior published data
+ok 7 - failed generation releases temporary resource but preserves prior published data
+  ---
+  duration_ms: 0.3091
+  ...
+# Subtest: an owner disposed during drawing cannot publish a stale target
+ok 8 - an owner disposed during drawing cannot publish a stale target
+  ---
+  duration_ms: 0.1472
+  ...
+# Subtest: over-budget invalidation cancels obsolete pending data without evicting the resident target
+ok 9 - over-budget invalidation cancels obsolete pending data without evicting the resident target
+  ---
+  duration_ms: 0.1231
+  ...
+# Subtest: crossfade retains and budgets old target, deferring further replacements until release
+ok 10 - crossfade retains and budgets old target, deferring further replacements until release
+  ---
+  duration_ms: 0.175
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 166.5134

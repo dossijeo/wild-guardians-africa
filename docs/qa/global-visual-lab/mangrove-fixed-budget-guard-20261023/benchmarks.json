@@ -1,0 +1,1606 @@
+{
+  "seed": 712,
+  "note": "Diagnostic ABAB resident ground shader variant versus original. Variant is recorded in sceneAudit.ablation. Paused identical fixture and camera sequence, fixed fern/material time. Geometry, draw settings, resolution, overlays and shadows retained. Whole GPU, subsystem GPU and cadence in separate windows. fixednative uses the integrated opt-in cache; other variants may use QA adapters.",
+  "records": [
+    {
+      "biome": "manglares",
+      "quality": "media",
+      "variant": "fixednative",
+      "phase": "day",
+      "measurements": [
+        {
+          "mode": "cadence",
+          "frames": [
+            {
+              "frame": 0,
+              "cpuMs": 5.699999988079071,
+              "intervalMs": 18.80000001192093,
+              "calls": 93,
+              "triangles": 405641,
+              "camera": [
+                105,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1181,
+                "far": 700
+              },
+              "materialCache": {
+                "bytes": 35209000,
+                "peakBytes": 35209000,
+                "tiles": 30,
+                "published": 30,
+                "cancelled": 0,
+                "rejected": 0,
+                "entries": 25,
+                "added": 30,
+                "removed": 5
+              },
+              "shadow": {
+                "draws": 222,
+                "hits": 304,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 1,
+              "cpuMs": 5.100000023841858,
+              "intervalMs": 17.80000001192093,
+              "calls": 93,
+              "triangles": 405641,
+              "camera": [
+                105,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1181,
+                "far": 700
+              },
+              "materialCache": {
+                "bytes": 35209000,
+                "peakBytes": 35209000,
+                "tiles": 30,
+                "published": 30,
+                "cancelled": 0,
+                "rejected": 0,
+                "entries": 25,
+                "added": 30,
+                "removed": 5
+              },
+              "shadow": {
+                "draws": 222,
+                "hits": 305,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 2,
+              "cpuMs": 6.199999988079071,
+              "intervalMs": 18.19999998807907,
+              "calls": 93,
+              "triangles": 405641,
+              "camera": [
+                105,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1181,
+                "far": 700
+              },
+              "materialCache": {
+                "bytes": 35209000,
+                "peakBytes": 35209000,
+                "tiles": 30,
+                "published": 30,
+                "cancelled": 0,
+                "rejected": 0,
+                "entries": 25,
+                "added": 30,
+                "removed": 5
+              },
+              "shadow": {
+                "draws": 222,
+                "hits": 306,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 3,
+              "cpuMs": 6,
+              "intervalMs": 18.400000035762787,
+              "calls": 93,
+              "triangles": 405641,
+              "camera": [
+                105,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1181,
+                "far": 700
+              },
+              "materialCache": {
+                "bytes": 35209000,
+                "peakBytes": 35209000,
+                "tiles": 30,
+                "published": 30,
+                "cancelled": 0,
+                "rejected": 0,
+                "entries": 25,
+                "added": 30,
+                "removed": 5
+              },
+              "shadow": {
+                "draws": 222,
+                "hits": 307,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 4,
+              "cpuMs": 6.199999988079071,
+              "intervalMs": 20.599999964237213,
+              "calls": 93,
+              "triangles": 405641,
+              "camera": [
+                105,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1181,
+                "far": 700
+              },
+              "materialCache": {
+                "bytes": 35209000,
+                "peakBytes": 35209000,
+                "tiles": 30,
+                "published": 30,
+                "cancelled": 0,
+                "rejected": 0,
+                "entries": 25,
+                "added": 30,
+                "removed": 5
+              },
+              "shadow": {
+                "draws": 222,
+                "hits": 308,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 5,
+              "cpuMs": 7.300000011920929,
+              "intervalMs": 21.600000023841858,
+              "calls": 93,
+              "triangles": 405641,
+              "camera": [
+                105,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1181,
+                "far": 700
+              },
+              "materialCache": {
+                "bytes": 35209000,
+                "peakBytes": 35209000,
+                "tiles": 30,
+                "published": 30,
+                "cancelled": 0,
+                "rejected": 0,
+                "entries": 25,
+                "added": 30,
+                "removed": 5
+              },
+              "shadow": {
+                "draws": 222,
+                "hits": 309,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 6,
+              "cpuMs": 5.400000035762787,
+              "intervalMs": 19.599999964237213,
+              "calls": 93,
+              "triangles": 405641,
+              "camera": [
+                105,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1181,
+                "far": 700
+              },
+              "materialCache": {
+                "bytes": 35209000,
+                "peakBytes": 35209000,
+                "tiles": 30,
+                "published": 30,
+                "cancelled": 0,
+                "rejected": 0,
+                "entries": 25,
+                "added": 30,
+                "removed": 5
+              },
+              "shadow": {
+                "draws": 222,
+                "hits": 310,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 7,
+              "cpuMs": 5.100000023841858,
+              "intervalMs": 18.5,
+              "calls": 93,
+              "triangles": 405641,
+              "camera": [
+                105,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1181,
+                "far": 700
+              },
+              "materialCache": {
+                "bytes": 35209000,
+                "peakBytes": 35209000,
+                "tiles": 30,
+                "published": 30,
+                "cancelled": 0,
+                "rejected": 0,
+                "entries": 25,
+                "added": 30,
+                "removed": 5
+              },
+              "shadow": {
+                "draws": 222,
+                "hits": 311,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 8,
+              "cpuMs": 5.700000047683716,
+              "intervalMs": 19,
+              "calls": 93,
+              "triangles": 405641,
+              "camera": [
+                105,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1181,
+                "far": 700
+              },
+              "materialCache": {
+                "bytes": 35209000,
+                "peakBytes": 35209000,
+                "tiles": 30,
+                "published": 30,
+                "cancelled": 0,
+                "rejected": 0,
+                "entries": 25,
+                "added": 30,
+                "removed": 5
+              },
+              "shadow": {
+                "draws": 222,
+                "hits": 312,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 9,
+              "cpuMs": 6.699999988079071,
+              "intervalMs": 17.600000023841858,
+              "calls": 93,
+              "triangles": 405641,
+              "camera": [
+                105,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1181,
+                "far": 700
+              },
+              "materialCache": {
+                "bytes": 35209000,
+                "peakBytes": 35209000,
+                "tiles": 30,
+                "published": 30,
+                "cancelled": 0,
+                "rejected": 0,
+                "entries": 25,
+                "added": 30,
+                "removed": 5
+              },
+              "shadow": {
+                "draws": 222,
+                "hits": 313,
+                "untracked": 0
+              }
+            }
+          ],
+          "preparation": [],
+          "bake": null,
+          "before": {
+            "elapsed": 119.99999999999746,
+            "time": 150,
+            "workers": [
+              {
+                "id": "worker-28",
+                "x": 89.2736051038211,
+                "z": -7.901560026403565
+              },
+              {
+                "id": "worker-30",
+                "x": 87.7564653439287,
+                "z": -7.841555534920514
+              }
+            ],
+            "pauses": [
+              "menu"
+            ]
+          },
+          "after": {
+            "elapsed": 119.99999999999746,
+            "time": 150,
+            "workers": [
+              {
+                "id": "worker-28",
+                "x": 89.2736051038211,
+                "z": -7.901560026403565
+              },
+              {
+                "id": "worker-30",
+                "x": 87.7564653439287,
+                "z": -7.841555534920514
+              }
+            ],
+            "pauses": [
+              "menu"
+            ]
+          },
+          "gpu": null,
+          "passes": null,
+          "glError": 0,
+          "memory": {
+            "geometries": 280,
+            "textures": 163
+          },
+          "coverage": {
+            "distribution": "original",
+            "leafShape": "cupped",
+            "variant": "C",
+            "active": true,
+            "quality": "media",
+            "biome": "manglares",
+            "edgePadding": 1,
+            "nearDistance": 24,
+            "moduleSpacing": 0.65,
+            "near": 1181,
+            "far": 700,
+            "leaves": 7524,
+            "triangles": 43392,
+            "chunks": 25,
+            "cachedTiles": 46,
+            "bufferBytes": 1206340,
+            "stats": {
+              "buildMs": 70.79999989271164,
+              "selectionMs": 66.29999959468842,
+              "selectionCount": 91,
+              "candidates": 6903,
+              "masked": 3925,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": true,
+            "cardStudy": {
+              "representation": "native-holly-fern-balanced",
+              "shadowResolution": 2048,
+              "castsNativeShadow": true,
+              "sizeXZ": 1.35,
+              "sizeY": 1.6,
+              "colorContrast": 1.12,
+              "edgePadding": 1,
+              "frondsPerClump": 4,
+              "trianglesPerClump": 32,
+              "textureCount": 2,
+              "textureBytesEstimate": 11184810.666666666,
+              "normal": "upward ambient; baked normal transformed by analytic curved-frond tangent and instance height",
+              "reuseNativeInstanceBuffers": true,
+              "extraSelectionPass": false,
+              "stats": {
+                "instances": 1881,
+                "updates": 0,
+                "selectionMs": 0
+              },
+              "prelit": {
+                "nearAndFar": false,
+                "nearNative": true,
+                "orientations": 8,
+                "atlasWidth": 2048,
+                "atlasHeight": 256,
+                "solarShadowOpacity": 0.55,
+                "solarShadowQuad": true,
+                "liveNormalSampling": false,
+                "liveShadowCasting": false,
+                "liveWind": false,
+                "limitation": "Baked far-field lighting; static shadows cannot follow animated leaves or receive surrounding object shadows."
+              }
+            },
+            "baseMeshesReplaced": true
+          },
+          "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+        }
+      ],
+      "sceneAudit": {
+        "staticView": true,
+        "streaming": false,
+        "frameStep": null,
+        "ablation": {
+          "scope": "Fixed512 material cache lifecycle",
+          "queue": {
+            "bytes": 35209000,
+            "peakBytes": 35209000,
+            "tiles": 30,
+            "published": 30,
+            "cancelled": 0,
+            "rejected": 0
+          },
+          "added": 30,
+          "removed": 5,
+          "invalidations": 0
+        },
+        "rendererShadowEnabled": true,
+        "nativeShadowOn": 1,
+        "fernShadowEnabled": [
+          true,
+          false
+        ],
+        "shadowResolution": 2048,
+        "shadowCacheBefore": {
+          "draws": 222,
+          "hits": 273,
+          "untracked": 0
+        },
+        "cardStudy": {
+          "representation": "native-holly-fern-balanced",
+          "shadowResolution": 2048,
+          "castsNativeShadow": true,
+          "sizeXZ": 1.35,
+          "sizeY": 1.6,
+          "colorContrast": 1.12,
+          "edgePadding": 1,
+          "frondsPerClump": 4,
+          "trianglesPerClump": 32,
+          "textureCount": 2,
+          "textureBytesEstimate": 11184810.666666666,
+          "normal": "upward ambient; baked normal transformed by analytic curved-frond tangent and instance height",
+          "reuseNativeInstanceBuffers": true,
+          "extraSelectionPass": false,
+          "stats": {
+            "instances": 1881,
+            "updates": 0,
+            "selectionMs": 0
+          },
+          "prelit": {
+            "nearAndFar": false,
+            "nearNative": true,
+            "orientations": 8,
+            "atlasWidth": 2048,
+            "atlasHeight": 256,
+            "solarShadowOpacity": 0.55,
+            "solarShadowQuad": true,
+            "liveNormalSampling": false,
+            "liveShadowCasting": false,
+            "liveWind": false,
+            "limitation": "Baked far-field lighting; static shadows cannot follow animated leaves or receive surrounding object shadows."
+          }
+        },
+        "residentMasks": [
+          "0,-1",
+          "0,-2",
+          "0,0",
+          "0,1",
+          "0,2",
+          "1,-1",
+          "1,-2",
+          "1,0",
+          "1,1",
+          "1,2",
+          "2,-1",
+          "2,-2",
+          "2,0",
+          "2,1",
+          "2,2",
+          "3,-1",
+          "3,-2",
+          "3,0",
+          "3,1",
+          "3,2",
+          "4,-1",
+          "4,-2",
+          "4,0",
+          "4,1",
+          "4,2"
+        ],
+        "origin": [
+          0,
+          0
+        ],
+        "target": [
+          83,
+          4.219999933242798,
+          0
+        ],
+        "chunks": [
+          "0,-1",
+          "0,-2",
+          "0,0",
+          "0,1",
+          "0,2",
+          "1,-1",
+          "1,-2",
+          "1,0",
+          "1,1",
+          "1,2",
+          "2,-1",
+          "2,-2",
+          "2,0",
+          "2,1",
+          "2,2",
+          "3,-1",
+          "3,-2",
+          "3,0",
+          "3,1",
+          "3,2",
+          "4,-1",
+          "4,-2",
+          "4,0",
+          "4,1",
+          "4,2"
+        ],
+        "objects": 4,
+        "elapsed": 119.99999999999746,
+        "workers": [
+          {
+            "id": "worker-28",
+            "x": 89.2736051038211,
+            "z": -7.901560026403565,
+            "actionRemaining": 2.7999999999999994
+          },
+          {
+            "id": "worker-30",
+            "x": 87.7564653439287,
+            "z": -7.841555534920514,
+            "actionRemaining": -1.970645868709653e-15
+          }
+        ],
+        "memory": {
+          "geometries": 280,
+          "textures": 163
+        },
+        "far": {
+          "logicalStandbyPreload": true,
+          "species": 4,
+          "estimatedAtlasTextureBytes": 44739242.666666664,
+          "estimatedBackdropTextureBytes": 5592405.333333333,
+          "errors": []
+        },
+        "farEnabled": true,
+        "instanceCulling": true,
+        "workload": [
+          92,
+          405640,
+          280,
+          163
+        ]
+      },
+      "capture": {
+        "camera": [
+          105,
+          20.219999933242796,
+          18
+        ],
+        "target": [
+          83,
+          4.219999933242798,
+          0
+        ]
+      },
+      "stateBefore": {
+        "elapsed": 119.99999999999746,
+        "workers": [
+          {
+            "id": "worker-28",
+            "personId": "person-27",
+            "profile": "olderFemale",
+            "contractDay": 1,
+            "centerId": "structure-2",
+            "villageId": "village-1",
+            "x": 89.2736051038211,
+            "z": -7.901560026403565,
+            "status": "acting",
+            "taskId": "task-49",
+            "crateId": null,
+            "path": [],
+            "hits": 0,
+            "incapacitated": false,
+            "recovering": false,
+            "runRemaining": 56.28259775852689,
+            "actionRemaining": 2.7999999999999994,
+            "idleState": null,
+            "running": false,
+            "taskApproach": {
+              "taskId": "task-49",
+              "destination": {
+                "x": 89.2736051038211,
+                "z": -7.901560026403565,
+                "id": "water-point-plant-15-0"
+              }
+            },
+            "destinationId": "water-point-plant-15-0",
+            "pathVersion": 2,
+            "mobileRecoveryDestinationId": "water-point-plant-15-0",
+            "mobileRecoveryVersion": 2,
+            "mobileRecoveryAttempts": 0,
+            "mobileProgressDistance": 0.07996699645575049,
+            "mobileProgressAt": 119.39999999999749,
+            "runPhase": 20.633956572765268,
+            "heading": 1.0657965320074176,
+            "dynamicStallSeconds": 0,
+            "walkPhase": 14.009742078065697
+          },
+          {
+            "id": "worker-30",
+            "personId": "person-29",
+            "profile": "olderFemale",
+            "contractDay": 1,
+            "centerId": "structure-2",
+            "villageId": "village-1",
+            "x": 87.7564653439287,
+            "z": -7.841555534920514,
+            "status": "idle",
+            "taskId": null,
+            "crateId": null,
+            "path": null,
+            "hits": 0,
+            "incapacitated": false,
+            "recovering": false,
+            "runRemaining": 56.14723422960332,
+            "actionRemaining": -1.970645868709653e-15,
+            "idleState": {
+              "anchorId": "farm-plant-13",
+              "mode": "rest",
+              "elapsed": 0.7,
+              "rng": 4243961242,
+              "remaining": 6.899999904632571,
+              "approachRetry": 0
+            },
+            "running": false,
+            "taskApproach": null,
+            "destinationId": "water-point-plant-11-0",
+            "pathVersion": 2,
+            "mobileRecoveryDestinationId": "water-point-plant-11-0",
+            "mobileRecoveryVersion": 2,
+            "mobileRecoveryAttempts": 0,
+            "mobileProgressDistance": 0.19013642722333118,
+            "mobileProgressAt": 112.69999999999787,
+            "runPhase": 20.690358043150088,
+            "heading": -1.1466831464329033,
+            "dynamicStallSeconds": 0,
+            "walkPhase": 11.505847359833481
+          }
+        ],
+        "time": 150
+      },
+      "stateAfter": {
+        "elapsed": 119.99999999999746,
+        "workers": [
+          {
+            "id": "worker-28",
+            "personId": "person-27",
+            "profile": "olderFemale",
+            "contractDay": 1,
+            "centerId": "structure-2",
+            "villageId": "village-1",
+            "x": 89.2736051038211,
+            "z": -7.901560026403565,
+            "status": "acting",
+            "taskId": "task-49",
+            "crateId": null,
+            "path": [],
+            "hits": 0,
+            "incapacitated": false,
+            "recovering": false,
+            "runRemaining": 56.28259775852689,
+            "actionRemaining": 2.7999999999999994,
+            "idleState": null,
+            "running": false,
+            "taskApproach": {
+              "taskId": "task-49",
+              "destination": {
+                "x": 89.2736051038211,
+                "z": -7.901560026403565,
+                "id": "water-point-plant-15-0"
+              }
+            },
+            "destinationId": "water-point-plant-15-0",
+            "pathVersion": 2,
+            "mobileRecoveryDestinationId": "water-point-plant-15-0",
+            "mobileRecoveryVersion": 2,
+            "mobileRecoveryAttempts": 0,
+            "mobileProgressDistance": 0.07996699645575049,
+            "mobileProgressAt": 119.39999999999749,
+            "runPhase": 20.633956572765268,
+            "heading": 1.0657965320074176,
+            "dynamicStallSeconds": 0,
+            "walkPhase": 14.009742078065697
+          },
+          {
+            "id": "worker-30",
+            "personId": "person-29",
+            "profile": "olderFemale",
+            "contractDay": 1,
+            "centerId": "structure-2",
+            "villageId": "village-1",
+            "x": 87.7564653439287,
+            "z": -7.841555534920514,
+            "status": "idle",
+            "taskId": null,
+            "crateId": null,
+            "path": null,
+            "hits": 0,
+            "incapacitated": false,
+            "recovering": false,
+            "runRemaining": 56.14723422960332,
+            "actionRemaining": -1.970645868709653e-15,
+            "idleState": {
+              "anchorId": "farm-plant-13",
+              "mode": "rest",
+              "elapsed": 0.7,
+              "rng": 4243961242,
+              "remaining": 6.899999904632571,
+              "approachRetry": 0
+            },
+            "running": false,
+            "taskApproach": null,
+            "destinationId": "water-point-plant-11-0",
+            "pathVersion": 2,
+            "mobileRecoveryDestinationId": "water-point-plant-11-0",
+            "mobileRecoveryVersion": 2,
+            "mobileRecoveryAttempts": 0,
+            "mobileProgressDistance": 0.19013642722333118,
+            "mobileProgressAt": 112.69999999999787,
+            "runPhase": 20.690358043150088,
+            "heading": -1.1466831464329033,
+            "dynamicStallSeconds": 0,
+            "walkPhase": 11.505847359833481
+          }
+        ],
+        "time": 150,
+        "pauses": [
+          "menu"
+        ]
+      },
+      "shadowCacheAfter": {
+        "draws": 222,
+        "hits": 314,
+        "untracked": 0
+      },
+      "errors": []
+    },
+    {
+      "biome": "manglares",
+      "quality": "media",
+      "variant": "fixednative",
+      "phase": "night",
+      "measurements": [
+        {
+          "mode": "cadence",
+          "frames": [
+            {
+              "frame": 0,
+              "cpuMs": 5.400000035762787,
+              "intervalMs": 19.899999976158142,
+              "calls": 93,
+              "triangles": 405641,
+              "camera": [
+                105,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1181,
+                "far": 700
+              },
+              "materialCache": {
+                "bytes": 35209000,
+                "peakBytes": 35209000,
+                "tiles": 30,
+                "published": 30,
+                "cancelled": 0,
+                "rejected": 0,
+                "entries": 25,
+                "added": 30,
+                "removed": 5
+              },
+              "shadow": {
+                "draws": 221,
+                "hits": 305,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 1,
+              "cpuMs": 5.300000011920929,
+              "intervalMs": 18.600000023841858,
+              "calls": 93,
+              "triangles": 405641,
+              "camera": [
+                105,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1181,
+                "far": 700
+              },
+              "materialCache": {
+                "bytes": 35209000,
+                "peakBytes": 35209000,
+                "tiles": 30,
+                "published": 30,
+                "cancelled": 0,
+                "rejected": 0,
+                "entries": 25,
+                "added": 30,
+                "removed": 5
+              },
+              "shadow": {
+                "draws": 221,
+                "hits": 306,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 2,
+              "cpuMs": 5.699999988079071,
+              "intervalMs": 20,
+              "calls": 93,
+              "triangles": 405641,
+              "camera": [
+                105,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1181,
+                "far": 700
+              },
+              "materialCache": {
+                "bytes": 35209000,
+                "peakBytes": 35209000,
+                "tiles": 30,
+                "published": 30,
+                "cancelled": 0,
+                "rejected": 0,
+                "entries": 25,
+                "added": 30,
+                "removed": 5
+              },
+              "shadow": {
+                "draws": 221,
+                "hits": 307,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 3,
+              "cpuMs": 6,
+              "intervalMs": 22.5,
+              "calls": 93,
+              "triangles": 405641,
+              "camera": [
+                105,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1181,
+                "far": 700
+              },
+              "materialCache": {
+                "bytes": 35209000,
+                "peakBytes": 35209000,
+                "tiles": 30,
+                "published": 30,
+                "cancelled": 0,
+                "rejected": 0,
+                "entries": 25,
+                "added": 30,
+                "removed": 5
+              },
+              "shadow": {
+                "draws": 221,
+                "hits": 308,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 4,
+              "cpuMs": 8.199999988079071,
+              "intervalMs": 24.30000001192093,
+              "calls": 93,
+              "triangles": 405641,
+              "camera": [
+                105,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1181,
+                "far": 700
+              },
+              "materialCache": {
+                "bytes": 35209000,
+                "peakBytes": 35209000,
+                "tiles": 30,
+                "published": 30,
+                "cancelled": 0,
+                "rejected": 0,
+                "entries": 25,
+                "added": 30,
+                "removed": 5
+              },
+              "shadow": {
+                "draws": 221,
+                "hits": 309,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 5,
+              "cpuMs": 7.900000035762787,
+              "intervalMs": 20.099999964237213,
+              "calls": 93,
+              "triangles": 405641,
+              "camera": [
+                105,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1181,
+                "far": 700
+              },
+              "materialCache": {
+                "bytes": 35209000,
+                "peakBytes": 35209000,
+                "tiles": 30,
+                "published": 30,
+                "cancelled": 0,
+                "rejected": 0,
+                "entries": 25,
+                "added": 30,
+                "removed": 5
+              },
+              "shadow": {
+                "draws": 221,
+                "hits": 310,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 6,
+              "cpuMs": 5.699999988079071,
+              "intervalMs": 21.30000001192093,
+              "calls": 93,
+              "triangles": 405641,
+              "camera": [
+                105,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1181,
+                "far": 700
+              },
+              "materialCache": {
+                "bytes": 35209000,
+                "peakBytes": 35209000,
+                "tiles": 30,
+                "published": 30,
+                "cancelled": 0,
+                "rejected": 0,
+                "entries": 25,
+                "added": 30,
+                "removed": 5
+              },
+              "shadow": {
+                "draws": 221,
+                "hits": 311,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 7,
+              "cpuMs": 6,
+              "intervalMs": 19.80000001192093,
+              "calls": 93,
+              "triangles": 405641,
+              "camera": [
+                105,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1181,
+                "far": 700
+              },
+              "materialCache": {
+                "bytes": 35209000,
+                "peakBytes": 35209000,
+                "tiles": 30,
+                "published": 30,
+                "cancelled": 0,
+                "rejected": 0,
+                "entries": 25,
+                "added": 30,
+                "removed": 5
+              },
+              "shadow": {
+                "draws": 221,
+                "hits": 312,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 8,
+              "cpuMs": 6.199999988079071,
+              "intervalMs": 22,
+              "calls": 93,
+              "triangles": 405641,
+              "camera": [
+                105,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1181,
+                "far": 700
+              },
+              "materialCache": {
+                "bytes": 35209000,
+                "peakBytes": 35209000,
+                "tiles": 30,
+                "published": 30,
+                "cancelled": 0,
+                "rejected": 0,
+                "entries": 25,
+                "added": 30,
+                "removed": 5
+              },
+              "shadow": {
+                "draws": 221,
+                "hits": 313,
+                "untracked": 0
+              }
+            },
+            {
+              "frame": 9,
+              "cpuMs": 6.300000011920929,
+              "intervalMs": 21.30000001192093,
+              "calls": 93,
+              "triangles": 405641,
+              "camera": [
+                105,
+                20.219999933242796,
+                18
+              ],
+              "coverage": {
+                "near": 1181,
+                "far": 700
+              },
+              "materialCache": {
+                "bytes": 35209000,
+                "peakBytes": 35209000,
+                "tiles": 30,
+                "published": 30,
+                "cancelled": 0,
+                "rejected": 0,
+                "entries": 25,
+                "added": 30,
+                "removed": 5
+              },
+              "shadow": {
+                "draws": 221,
+                "hits": 314,
+                "untracked": 0
+              }
+            }
+          ],
+          "preparation": [],
+          "bake": null,
+          "before": {
+            "elapsed": 119.99999999999746,
+            "time": 350,
+            "workers": [
+              {
+                "id": "worker-28",
+                "x": 89.2736051038211,
+                "z": -7.901560026403565
+              },
+              {
+                "id": "worker-30",
+                "x": 87.7564653439287,
+                "z": -7.841555534920514
+              }
+            ],
+            "pauses": [
+              "menu"
+            ]
+          },
+          "after": {
+            "elapsed": 119.99999999999746,
+            "time": 350,
+            "workers": [
+              {
+                "id": "worker-28",
+                "x": 89.2736051038211,
+                "z": -7.901560026403565
+              },
+              {
+                "id": "worker-30",
+                "x": 87.7564653439287,
+                "z": -7.841555534920514
+              }
+            ],
+            "pauses": [
+              "menu"
+            ]
+          },
+          "gpu": null,
+          "passes": null,
+          "glError": 0,
+          "memory": {
+            "geometries": 280,
+            "textures": 163
+          },
+          "coverage": {
+            "distribution": "original",
+            "leafShape": "cupped",
+            "variant": "C",
+            "active": true,
+            "quality": "media",
+            "biome": "manglares",
+            "edgePadding": 1,
+            "nearDistance": 24,
+            "moduleSpacing": 0.65,
+            "near": 1181,
+            "far": 700,
+            "leaves": 7524,
+            "triangles": 43392,
+            "chunks": 25,
+            "cachedTiles": 46,
+            "bufferBytes": 1206340,
+            "stats": {
+              "buildMs": 66.59999984502792,
+              "selectionMs": 63.60000020265579,
+              "selectionCount": 88,
+              "candidates": 6903,
+              "masked": 3925,
+              "overflow": 0
+            },
+            "engineQueries": 0,
+            "castShadow": true,
+            "cardStudy": {
+              "representation": "native-holly-fern-balanced",
+              "shadowResolution": 2048,
+              "castsNativeShadow": true,
+              "sizeXZ": 1.35,
+              "sizeY": 1.6,
+              "colorContrast": 1.12,
+              "edgePadding": 1,
+              "frondsPerClump": 4,
+              "trianglesPerClump": 32,
+              "textureCount": 2,
+              "textureBytesEstimate": 11184810.666666666,
+              "normal": "upward ambient; baked normal transformed by analytic curved-frond tangent and instance height",
+              "reuseNativeInstanceBuffers": true,
+              "extraSelectionPass": false,
+              "stats": {
+                "instances": 1881,
+                "updates": 0,
+                "selectionMs": 0
+              },
+              "prelit": {
+                "nearAndFar": false,
+                "nearNative": true,
+                "orientations": 8,
+                "atlasWidth": 2048,
+                "atlasHeight": 256,
+                "solarShadowOpacity": 0.55,
+                "solarShadowQuad": true,
+                "liveNormalSampling": false,
+                "liveShadowCasting": false,
+                "liveWind": false,
+                "limitation": "Baked far-field lighting; static shadows cannot follow animated leaves or receive surrounding object shadows."
+              }
+            },
+            "baseMeshesReplaced": true
+          },
+          "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+        }
+      ],
+      "sceneAudit": {
+        "staticView": true,
+        "streaming": false,
+        "frameStep": null,
+        "ablation": {
+          "scope": "Fixed512 material cache lifecycle",
+          "queue": {
+            "bytes": 35209000,
+            "peakBytes": 35209000,
+            "tiles": 30,
+            "published": 30,
+            "cancelled": 0,
+            "rejected": 0
+          },
+          "added": 30,
+          "removed": 5,
+          "invalidations": 0
+        },
+        "rendererShadowEnabled": true,
+        "nativeShadowOn": 1,
+        "fernShadowEnabled": [
+          true,
+          false
+        ],
+        "shadowResolution": 2048,
+        "shadowCacheBefore": {
+          "draws": 221,
+          "hits": 274,
+          "untracked": 0
+        },
+        "cardStudy": {
+          "representation": "native-holly-fern-balanced",
+          "shadowResolution": 2048,
+          "castsNativeShadow": true,
+          "sizeXZ": 1.35,
+          "sizeY": 1.6,
+          "colorContrast": 1.12,
+          "edgePadding": 1,
+          "frondsPerClump": 4,
+          "trianglesPerClump": 32,
+          "textureCount": 2,
+          "textureBytesEstimate": 11184810.666666666,
+          "normal": "upward ambient; baked normal transformed by analytic curved-frond tangent and instance height",
+          "reuseNativeInstanceBuffers": true,
+          "extraSelectionPass": false,
+          "stats": {
+            "instances": 1881,
+            "updates": 0,
+            "selectionMs": 0
+          },
+          "prelit": {
+            "nearAndFar": false,
+            "nearNative": true,
+            "orientations": 8,
+            "atlasWidth": 2048,
+            "atlasHeight": 256,
+            "solarShadowOpacity": 0.55,
+            "solarShadowQuad": true,
+            "liveNormalSampling": false,
+            "liveShadowCasting": false,
+            "liveWind": false,
+            "limitation": "Baked far-field lighting; static shadows cannot follow animated leaves or receive surrounding object shadows."
+          }
+        },
+        "residentMasks": [
+          "0,-1",
+          "0,-2",
+          "0,0",
+          "0,1",
+          "0,2",
+          "1,-1",
+          "1,-2",
+          "1,0",
+          "1,1",
+          "1,2",
+          "2,-1",
+          "2,-2",
+          "2,0",
+          "2,1",
+          "2,2",
+          "3,-1",
+          "3,-2",
+          "3,0",
+          "3,1",
+          "3,2",
+          "4,-1",
+          "4,-2",
+          "4,0",
+          "4,1",
+          "4,2"
+        ],
+        "origin": [
+          0,
+          0
+        ],
+        "target": [
+          83,
+          4.219999933242798,
+          0
+        ],
+        "chunks": [
+          "0,-1",
+          "0,-2",
+          "0,0",
+          "0,1",
+          "0,2",
+          "1,-1",
+          "1,-2",
+          "1,0",
+          "1,1",
+          "1,2",
+          "2,-1",
+          "2,-2",
+          "2,0",
+          "2,1",
+          "2,2",
+          "3,-1",
+          "3,-2",
+          "3,0",
+          "3,1",
+          "3,2",
+          "4,-1",
+          "4,-2",
+          "4,0",
+          "4,1",
+          "4,2"
+        ],
+        "objects": 4,
+        "elapsed": 119.99999999999746,
+        "workers": [
+          {
+            "id": "worker-28",
+            "x": 89.2736051038211,
+            "z": -7.901560026403565,
+            "actionRemaining": 2.7999999999999994
+          },
+          {
+            "id": "worker-30",
+            "x": 87.7564653439287,
+            "z": -7.841555534920514,
+            "actionRemaining": -1.970645868709653e-15
+          }
+        ],
+        "memory": {
+          "geometries": 280,
+          "textures": 163
+        },
+        "far": {
+          "logicalStandbyPreload": true,
+          "species": 4,
+          "estimatedAtlasTextureBytes": 44739242.666666664,
+          "estimatedBackdropTextureBytes": 5592405.333333333,
+          "errors": []
+        },
+        "farEnabled": true,
+        "instanceCulling": true,
+        "workload": [
+          92,
+          405640,
+          280,
+          163
+        ]
+      },
+      "capture": {
+        "camera": [
+          105,
+          20.219999933242796,
+          18
+        ],
+        "target": [
+          83,
+          4.219999933242798,
+          0
+        ]
+      },
+      "stateBefore": {
+        "elapsed": 119.99999999999746,
+        "workers": [
+          {
+            "id": "worker-28",
+            "personId": "person-27",
+            "profile": "olderFemale",
+            "contractDay": 1,
+            "centerId": "structure-2",
+            "villageId": "village-1",
+            "x": 89.2736051038211,
+            "z": -7.901560026403565,
+            "status": "acting",
+            "taskId": "task-49",
+            "crateId": null,
+            "path": [],
+            "hits": 0,
+            "incapacitated": false,
+            "recovering": false,
+            "runRemaining": 56.28259775852689,
+            "actionRemaining": 2.7999999999999994,
+            "idleState": null,
+            "running": false,
+            "taskApproach": {
+              "taskId": "task-49",
+              "destination": {
+                "x": 89.2736051038211,
+                "z": -7.901560026403565,
+                "id": "water-point-plant-15-0"
+              }
+            },
+            "destinationId": "water-point-plant-15-0",
+            "pathVersion": 2,
+            "mobileRecoveryDestinationId": "water-point-plant-15-0",
+            "mobileRecoveryVersion": 2,
+            "mobileRecoveryAttempts": 0,
+            "mobileProgressDistance": 0.07996699645575049,
+            "mobileProgressAt": 119.39999999999749,
+            "runPhase": 20.633956572765268,
+            "heading": 1.0657965320074176,
+            "dynamicStallSeconds": 0,
+            "walkPhase": 14.009742078065697
+          },
+          {
+            "id": "worker-30",
+            "personId": "person-29",
+            "profile": "olderFemale",
+            "contractDay": 1,
+            "centerId": "structure-2",
+            "villageId": "village-1",
+            "x": 87.7564653439287,
+            "z": -7.841555534920514,
+            "status": "idle",
+            "taskId": null,
+            "crateId": null,
+            "path": null,
+            "hits": 0,
+            "incapacitated": false,
+            "recovering": false,
+            "runRemaining": 56.14723422960332,
+            "actionRemaining": -1.970645868709653e-15,
+            "idleState": {
+              "anchorId": "farm-plant-13",
+              "mode": "rest",
+              "elapsed": 0.7,
+              "rng": 4243961242,
+              "remaining": 6.899999904632571,
+              "approachRetry": 0
+            },
+            "running": false,
+            "taskApproach": null,
+            "destinationId": "water-point-plant-11-0",
+            "pathVersion": 2,
+            "mobileRecoveryDestinationId": "water-point-plant-11-0",
+            "mobileRecoveryVersion": 2,
+            "mobileRecoveryAttempts": 0,
+            "mobileProgressDistance": 0.19013642722333118,
+            "mobileProgressAt": 112.69999999999787,
+            "runPhase": 20.690358043150088,
+            "heading": -1.1466831464329033,
+            "dynamicStallSeconds": 0,
+            "walkPhase": 11.505847359833481
+          }
+        ],
+        "time": 350
+      },
+      "stateAfter": {
+        "elapsed": 119.99999999999746,
+        "workers": [
+          {
+            "id": "worker-28",
+            "personId": "person-27",
+            "profile": "olderFemale",
+            "contractDay": 1,
+            "centerId": "structure-2",
+            "villageId": "village-1",
+            "x": 89.2736051038211,
+            "z": -7.901560026403565,
+            "status": "acting",
+            "taskId": "task-49",
+            "crateId": null,
+            "path": [],
+            "hits": 0,
+            "incapacitated": false,
+            "recovering": false,
+            "runRemaining": 56.28259775852689,
+            "actionRemaining": 2.7999999999999994,
+            "idleState": null,
+            "running": false,
+            "taskApproach": {
+              "taskId": "task-49",
+              "destination": {
+                "x": 89.2736051038211,
+                "z": -7.901560026403565,
+                "id": "water-point-plant-15-0"
+              }
+            },
+            "destinationId": "water-point-plant-15-0",
+            "pathVersion": 2,
+            "mobileRecoveryDestinationId": "water-point-plant-15-0",
+            "mobileRecoveryVersion": 2,
+            "mobileRecoveryAttempts": 0,
+            "mobileProgressDistance": 0.07996699645575049,
+            "mobileProgressAt": 119.39999999999749,
+            "runPhase": 20.633956572765268,
+            "heading": 1.0657965320074176,
+            "dynamicStallSeconds": 0,
+            "walkPhase": 14.009742078065697
+          },
+          {
+            "id": "worker-30",
+            "personId": "person-29",
+            "profile": "olderFemale",
+            "contractDay": 1,
+            "centerId": "structure-2",
+            "villageId": "village-1",
+            "x": 87.7564653439287,
+            "z": -7.841555534920514,
+            "status": "idle",
+            "taskId": null,
+            "crateId": null,
+            "path": null,
+            "hits": 0,
+            "incapacitated": false,
+            "recovering": false,
+            "runRemaining": 56.14723422960332,
+            "actionRemaining": -1.970645868709653e-15,
+            "idleState": {
+              "anchorId": "farm-plant-13",
+              "mode": "rest",
+              "elapsed": 0.7,
+              "rng": 4243961242,
+              "remaining": 6.899999904632571,
+              "approachRetry": 0
+            },
+            "running": false,
+            "taskApproach": null,
+            "destinationId": "water-point-plant-11-0",
+            "pathVersion": 2,
+            "mobileRecoveryDestinationId": "water-point-plant-11-0",
+            "mobileRecoveryVersion": 2,
+            "mobileRecoveryAttempts": 0,
+            "mobileProgressDistance": 0.19013642722333118,
+            "mobileProgressAt": 112.69999999999787,
+            "runPhase": 20.690358043150088,
+            "heading": -1.1466831464329033,
+            "dynamicStallSeconds": 0,
+            "walkPhase": 11.505847359833481
+          }
+        ],
+        "time": 350,
+        "pauses": [
+          "menu"
+        ]
+      },
+      "shadowCacheAfter": {
+        "draws": 221,
+        "hits": 315,
+        "untracked": 0
+      },
+      "errors": []
+    }
+  ]
+}

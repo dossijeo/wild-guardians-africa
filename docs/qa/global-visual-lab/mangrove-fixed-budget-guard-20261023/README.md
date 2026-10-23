@@ -1,0 +1,13 @@
+# Fixed512 admission reserve and invalidation fairness
+
+Found a correctness failure at cache saturation: 40 MiB admitted 29 fixed512 targets, leaving insufficient room for a replacement. The first budget-rejected new chunk stayed at the head of the dirty set, starving later resident invalidations. A changed material could remain stale indefinitely.
+
+Fix: new-target admission preserves room for one full replacement target, and deferred new chunks rotate to the end of the dirty set. Maximum residency at this budget is now 28 cached chunks; overflow keeps the original unpatched material. A resident edit can progress without evicting its old target. Freed space admits a deferred chunk later. Normal 25-chunk scenes retain exactly the same 512 resolution and memory. This is correctness at the existing memory cap, not a new lower-memory shader variant.
+
+Regression: tests/mangrove-cache-budget.test.js creates 32 chunk owners with a mock renderer, dispatches a real mask-change event, verifies that the resident edit publishes despite waiting new chunks, verifies original-material fallback, admission after unload, budget and complete teardown. Against previous HEAD it fails specifically because publications remain 29 instead of advancing to 30. With the fix, all 10 cache/queue/chunk tests pass. Raw outputs included. This is ownership/admission evidence, NOT a real 32-chunk GPU scene.
+
+Real-renderer validation: integrated fixednative at 720p / Intel UHD / medium / day and night. Synthetic changed-mask test updates 742,059 cache channel bytes and restores all bytes exactly in both phases, with exactly two publications. Resident bytes 35,209,000; replacement peak 36,617,360; no rejected jobs or browser/GL errors. Visually inspected restored daytime image: approved green moss and localized mud remain. The all-mud `mask-changed` image is deliberately synthetic and is not the selected artwork. Probe now accepts the integrated controller as well as the old QA adapter.
+
+Reproduction: node --test tests/mangrove-cache-budget.test.js tests/material-bake-queue.test.js tests/mangrove-chunk-events.test.js. Renderer: WG_VARIANT_SEQUENCE=fixednative; WG_PHASES=day,night; WG_COVER_QUALITY=media; WG_MODES=cadence; WG_SAMPLES=10; WG_WARMUP=30; WG_STATIC_VIEW=1; WG_FIXED_MASK_PROBE=1; WG_REVIEW_OUT=<fresh directory>; node tools/experiments/measure-mangrove-ground-hybrid-20261023.mjs.
+
+Limits: ten-frame preambles are not performance measurements. Actual larger-region visual coverage and first-load compiler cost remain unvalidated. Admission order is not camera-priority scheduling. One deferred new chunk is considered per frame, so many deferred chunks can delay an edit by that many frames, but no longer indefinitely.

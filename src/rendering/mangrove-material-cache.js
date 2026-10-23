@@ -25,6 +25,9 @@ export function createMangroveMaterialCache(w){
   if(closed)return;
   // Admit one target at a time; keep published targets until replacement completes.
   if(!queue.pending.size&&dirty.size){const key=dirty.values().next().value,s=states.get(key);if(!s){dirty.delete(key);return;}
+   // Keep one replacement target available: a full cache must still accept edits.
+   // Rotate deferred new chunks so they cannot starve invalidations behind them.
+   if(!queue.entries.has(key)&&queue.stats.bytes+2*bytes>queue.budgetBytes){dirty.delete(key);dirty.add(key);return;}
    const result=queue.request(key,{version:s.revision,bytes,tiles:1,create:()=>new THREE.WebGLRenderTarget(514,514,{depthBuffer:false,minFilter:THREE.LinearMipmapLinearFilter,magFilter:THREE.LinearFilter,generateMipmaps:true}),draw(target){
     const source=s.record.ground.material.userData.biomeGround;for(const [name,u]of Object.entries(source))uniforms[name]=u;
     uniforms.uGroundRect={value:s.rect};bake.uniformsNeedUpdate=true;

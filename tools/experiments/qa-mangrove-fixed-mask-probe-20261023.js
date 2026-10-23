@@ -1,5 +1,5 @@
 export async function verifyFixedMask(w){
- const c=w.qaFixedGround;if(!c)throw Error('Fixed cache missing');
+ const c=w.mangroveMaterialCache??w.qaFixedGround;if(!c)throw Error('Fixed cache missing');
  const target=w.controls.target;
  const [key,s]=[...c.states].sort((a,b)=>Math.hypot(a[1].rect.x+24-target.x,a[1].rect.y+24-target.z)-Math.hypot(b[1].rect.x+24-target.x,b[1].rect.y+24-target.z))[0];
  const mask=s.mask,original=mask.image.data,changed=new Uint8Array(original),captures=[];
