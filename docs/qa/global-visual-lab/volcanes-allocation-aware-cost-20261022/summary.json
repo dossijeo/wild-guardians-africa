@@ -1,0 +1,226 @@
+{
+  "rows": [
+    {
+      "quality": "media",
+      "phase": "day",
+      "gpu": {
+        "mean": 19.5963491,
+        "p95": 22.825052
+      },
+      "cpu": {
+        "mean": 6.205555551581913,
+        "p95": 7.699999988079071
+      },
+      "interval": {
+        "mean": 19.0355555554231,
+        "p95": 22.600000023841858
+      },
+      "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "quality": "media",
+      "phase": "night",
+      "gpu": {
+        "mean": 16.3321321,
+        "p95": 18.617291
+      },
+      "cpu": {
+        "mean": 5.265555556615194,
+        "p95": 6.399999976158142
+      },
+      "interval": {
+        "mean": 17.629999999867547,
+        "p95": 19.19999998807907
+      },
+      "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "quality": "baja",
+      "phase": "day",
+      "gpu": {
+        "mean": 16.839533766666666,
+        "p95": 20.456562
+      },
+      "cpu": {
+        "mean": 5.7122222224871315,
+        "p95": 6.800000011920929
+      },
+      "interval": {
+        "mean": 16.632222222619585,
+        "p95": 17.100000023841858
+      },
+      "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "quality": "baja",
+      "phase": "night",
+      "gpu": {
+        "mean": 14.70825861111111,
+        "p95": 16.45401
+      },
+      "cpu": {
+        "mean": 5.4822222272555035,
+        "p95": 6.5
+      },
+      "interval": {
+        "mean": 16.627777777777776,
+        "p95": 17.099999964237213
+      },
+      "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "quality": "media",
+      "phase": "day",
+      "gpu": {
+        "mean": 15.428399533333334,
+        "p95": 16.950989
+      },
+      "cpu": {
+        "mean": 6.052222224076589,
+        "p95": 7.399999976158142
+      },
+      "interval": {
+        "mean": 17.818888888756433,
+        "p95": 20.30000001192093
+      },
+      "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "quality": "media",
+      "phase": "night",
+      "gpu": {
+        "mean": 15.98407891111111,
+        "p95": 17.846822
+      },
+      "cpu": {
+        "mean": 5.502222221427494,
+        "p95": 6.699999988079071
+      },
+      "interval": {
+        "mean": 18.044444444444444,
+        "p95": 19.80000001192093
+      },
+      "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "quality": "baja",
+      "phase": "day",
+      "gpu": {
+        "mean": 13.814765777777778,
+        "p95": 15.241458
+      },
+      "cpu": {
+        "mean": 5.634444441397985,
+        "p95": 6.599999964237213
+      },
+      "interval": {
+        "mean": 16.62444444431199,
+        "p95": 17.100000023841858
+      },
+      "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "quality": "baja",
+      "phase": "night",
+      "gpu": {
+        "mean": 13.753598411111112,
+        "p95": 15.378958
+      },
+      "cpu": {
+        "mean": 5.354444440868166,
+        "p95": 6.100000023841858
+      },
+      "interval": {
+        "mean": 16.632222221957313,
+        "p95": 17.200000047683716
+      },
+      "device": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    }
+  ],
+  "resourceAudit": [
+    {
+      "quality": "media",
+      "phase": "day",
+      "first": {
+        "geometries": 323,
+        "textures": 110
+      },
+      "repeat": {
+        "geometries": 323,
+        "textures": 110
+      },
+      "registeredFadeGeometries": [
+        17,
+        17
+      ],
+      "registeredFadePayloadBytes": [
+        2968258,
+        2968258
+      ],
+      "scope": "Resource differences must be wholly accounted for by registered fade geometries; visible fade descriptors, other geometry counts and textures identical. Payload is nominal, not total VRAM."
+    },
+    {
+      "quality": "media",
+      "phase": "night",
+      "first": {
+        "geometries": 323,
+        "textures": 110
+      },
+      "repeat": {
+        "geometries": 323,
+        "textures": 110
+      },
+      "registeredFadeGeometries": [
+        17,
+        17
+      ],
+      "registeredFadePayloadBytes": [
+        2968258,
+        2968258
+      ],
+      "scope": "Resource differences must be wholly accounted for by registered fade geometries; visible fade descriptors, other geometry counts and textures identical. Payload is nominal, not total VRAM."
+    },
+    {
+      "quality": "baja",
+      "phase": "day",
+      "first": {
+        "geometries": 298,
+        "textures": 108
+      },
+      "repeat": {
+        "geometries": 298,
+        "textures": 108
+      },
+      "registeredFadeGeometries": [
+        13,
+        13
+      ],
+      "registeredFadePayloadBytes": [
+        2444942,
+        2444942
+      ],
+      "scope": "Resource differences must be wholly accounted for by registered fade geometries; visible fade descriptors, other geometry counts and textures identical. Payload is nominal, not total VRAM."
+    },
+    {
+      "quality": "baja",
+      "phase": "night",
+      "first": {
+        "geometries": 298,
+        "textures": 108
+      },
+      "repeat": {
+        "geometries": 298,
+        "textures": 108
+      },
+      "registeredFadeGeometries": [
+        13,
+        13
+      ],
+      "registeredFadePayloadBytes": [
+        2444942,
+        2444942
+      ],
+      "scope": "Resource differences must be wholly accounted for by registered fade geometries; visible fade descriptors, other geometry counts and textures identical. Payload is nominal, not total VRAM."
+    }
+  ]
+}
