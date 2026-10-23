@@ -482,3 +482,10 @@ Reproduce the four runs with WG_THREAD_PORT=5299, WG_THREAD_FROZEN=1, WG_THREAD_
 The QA pin probe now uses retainWarmedPrograms instead of open-coded reference edits. The adapter explicitly supports Three revision 180, validates reference-count fields, retains at most 96 unique programs from the initial snapshot, never accumulates later variants, and releases its references once in the measurement finally block. Only programs with no material references remaining are destroyed. Unsupported versions fail closed by retaining nothing. Three unit tests cover the cap, remaining material ownership, idempotent release, malformed metadata, unsupported versions and already-removed programs.
 
 The real Chrome two-leg run in program-retain-bounded.json completes 50 chunk installations, releases every acquired reference and reports no unexpected console errors. This is lifecycle validation, not another paired performance result. The adapter is still used only by QA, not enabled in the application. The cap is a program-count bound, not a GPU byte budget; driver allocation size is unavailable. Full app teardown/context restoration and quality-change validation remain before integration.
+
+
+## Program lease context-restoration safety
+
+Three replaces renderer.info.programs when restoring WebGL. The experimental lease previously retained the old collection and could attempt to destroy pre-loss handles later. dispose now abandons its references without GL deletion if the collection changed or the context is lost; stats distinguish abandonment from normal release.
+
+Four unit tests pass. `check-program-retention-context.mjs` also uses real Chrome WebGL: draw a small scene, retain its program, force context loss and restoration, confirm the program collection changes, dispose the old lease without destruction, draw again without GL error, and acquire/release a fresh lease. program-retain-context.json records one abandoned old program and one normally released fresh program. This verifies the adapter across real context replacement, not complete game restoration or driver memory reclamation. Application retention remains disabled by default.

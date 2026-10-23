@@ -5,7 +5,7 @@ import {REVISION} from 'three';
 export function retainWarmedPrograms(renderer,{limit=96,revision=REVISION}={}){
  if(!Number.isSafeInteger(limit)||limit<0)throw RangeError('Invalid program retention limit');
  const programs=renderer.info?.programs;
- const stats={retained:0,released:0,destroyed:0,skipped:0,unsupported:false};
+ const stats={retained:0,released:0,destroyed:0,abandoned:0,skipped:0,unsupported:false};
  const pinned=[];let disposed=false;
  if(revision!=='180'||!Array.isArray(programs)){stats.unsupported=true;return {stats,dispose(){}};}
  for(const program of new Set(programs)){
@@ -15,6 +15,7 @@ export function retainWarmedPrograms(renderer,{limit=96,revision=REVISION}={}){
  }
  return {stats,dispose(){
   if(disposed)return;disposed=true;
+  if(renderer.info?.programs!==programs||renderer.getContext?.().isContextLost?.()){stats.abandoned=pinned.length;pinned.length=0;return;}
   for(const program of pinned){
    const index=programs.indexOf(program);
    // Renderer/context teardown may already have removed the old collection.

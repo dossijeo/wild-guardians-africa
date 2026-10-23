@@ -18,3 +18,11 @@ test('unsupported versions and malformed entries do not acquire references',()=>
 test('already removed programs are not destroyed twice',()=>{
  const a=program(),renderer={info:{programs:[a]}};const lease=retainWarmedPrograms(renderer);renderer.info.programs.length=0;lease.dispose();assert.equal(a.destroyed,0);
 });
+
+test('context replacement and loss abandon old handles without deleting them',()=>{
+ for(const replaced of [false,true]){
+  const a=program(),renderer={info:{programs:[a]},getContext:()=>({isContextLost:()=>!replaced})};
+  const lease=retainWarmedPrograms(renderer);if(replaced)renderer.info.programs=[];
+  lease.dispose();assert.equal(lease.stats.abandoned,1);assert.equal(lease.stats.released,0);assert.equal(a.destroyed,0);
+ }
+});
