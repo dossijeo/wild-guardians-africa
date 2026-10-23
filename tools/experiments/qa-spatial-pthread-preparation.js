@@ -65,5 +65,5 @@ export async function verifyThreadPreparation(m,profiles){
  await wait(()=>m._spatial_prepare_status()===2||m._spatial_prepare_status()===3);
  m._spatial_prepare_shutdown();await wait(()=>m._spatial_prepare_status()===5);
  m._spatial_prepare_release();await wait(()=>m.PThread.unusedWorkers.length===1);
- return {rows,cancelState,lateCancellation:true,shutdownReturnedWorker:true,shared:m.HEAPU8.buffer instanceof SharedArrayBuffer,scope:'Actual pthread terrain + static navigation preparation in one WASM memory, concurrently with main-thread queries, selected-scratch regeneration and a wall edit. Byte equality against synchronous generation for six biomes/six authored profiles. No publication, live-game streaming, prepared overlays or distribution acceptance yet.'};
+ return {rows,cancelState,lateCancellation:true,shutdownReturnedWorker:true,shared:m.HEAPU8.buffer instanceof SharedArrayBuffer,scope:'Actual pthread terrain + static navigation preparation in one WASM memory, concurrently with main-thread queries, selected-scratch regeneration and a wall edit. Byte equality against synchronous generation for six biomes/six authored profiles. This probe does not exercise publication or establish live-game streaming/distribution acceptance.'};
 }

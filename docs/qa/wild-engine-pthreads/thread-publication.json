@@ -1,0 +1,190 @@
+{
+  "preparation": false,
+  "publication": true,
+  "scope": "Real pthread preparation; see result.scope for limits.",
+  "result": {
+    "rows": [
+      {
+        "biome": 0,
+        "publishMs": 1.5299999713897705,
+        "payloadEqual": true,
+        "navigationEqual": true,
+        "barrierPreserved": true,
+        "payloadHashes": [
+          589335869,
+          185234268,
+          592041349,
+          2166136261,
+          1228267150
+        ],
+        "navigationHashes": [
+          1922842021,
+          4047544439,
+          3599069623,
+          2591086878,
+          3809474947,
+          737561332
+        ]
+      },
+      {
+        "biome": 1,
+        "publishMs": 1.1299999952316284,
+        "payloadEqual": true,
+        "navigationEqual": true,
+        "barrierPreserved": true,
+        "payloadHashes": [
+          762362748,
+          341051545,
+          3305697754,
+          2166136261,
+          3436344060
+        ],
+        "navigationHashes": [
+          472932779,
+          651007362,
+          1376982393,
+          52094074,
+          2865568490,
+          3599692630
+        ]
+      },
+      {
+        "biome": 2,
+        "publishMs": 1.1150000095367432,
+        "payloadEqual": true,
+        "navigationEqual": true,
+        "barrierPreserved": true,
+        "payloadHashes": [
+          589335869,
+          1782203880,
+          816262781,
+          2166136261,
+          1848394660
+        ],
+        "navigationHashes": [
+          1922842021,
+          4047544439,
+          3599069623,
+          2591086878,
+          3809474947,
+          737561332
+        ]
+      },
+      {
+        "biome": 3,
+        "publishMs": 0.9650000333786011,
+        "payloadEqual": true,
+        "navigationEqual": true,
+        "barrierPreserved": true,
+        "payloadHashes": [
+          589335869,
+          4280157033,
+          1502009426,
+          2166136261,
+          2440224840
+        ],
+        "navigationHashes": [
+          3026181483,
+          1411196964,
+          4016583116,
+          2621196256,
+          1245234387,
+          3473292126
+        ]
+      },
+      {
+        "biome": 4,
+        "publishMs": 0.949999988079071,
+        "payloadEqual": true,
+        "navigationEqual": true,
+        "barrierPreserved": true,
+        "payloadHashes": [
+          4217103142,
+          1510885178,
+          1306607116,
+          2374691746,
+          2974461956
+        ],
+        "navigationHashes": [
+          1411603891,
+          3186345206,
+          3364822317,
+          863387195,
+          867047202,
+          940906569
+        ]
+      },
+      {
+        "biome": 5,
+        "publishMs": 1.0799999833106995,
+        "payloadEqual": true,
+        "navigationEqual": true,
+        "barrierPreserved": true,
+        "payloadHashes": [
+          749340260,
+          3305894223,
+          1599686352,
+          2166136261,
+          4140333275
+        ],
+        "navigationHashes": [
+          2455900773,
+          3793204465,
+          3842033917,
+          2554148106,
+          846615337,
+          851659937
+        ]
+      }
+    ],
+    "rejected": [
+      {
+        "kind": "wrong-id",
+        "result": -1,
+        "worldUnchanged": true
+      },
+      {
+        "kind": "settlement",
+        "result": -2,
+        "worldUnchanged": true
+      },
+      {
+        "kind": "suppression",
+        "result": -2,
+        "worldUnchanged": true
+      },
+      {
+        "kind": "residency",
+        "result": -2,
+        "worldUnchanged": true
+      },
+      {
+        "kind": "world-reset",
+        "result": -2,
+        "worldUnchanged": true
+      },
+      {
+        "kind": "profile",
+        "result": -2,
+        "worldUnchanged": true
+      },
+      {
+        "kind": "wall",
+        "result": -2,
+        "worldUnchanged": true
+      },
+      {
+        "kind": "door",
+        "result": -2,
+        "worldUnchanged": true
+      },
+      {
+        "kind": "wall-removal",
+        "result": -2,
+        "worldUnchanged": true
+      }
+    ],
+    "scope": "Native publication of pthread-prepared terrain/static rasters, one shared world, six biomes and authored profiles. Dense navigation/visual comparison with synchronous path, prepared wall overlay retained, stale terrain/residency/profile/world/id rejection without mutation. Overlay filling runs on the pthread; no game-stream or FPS acceptance."
+  },
+  "errors": []
+}

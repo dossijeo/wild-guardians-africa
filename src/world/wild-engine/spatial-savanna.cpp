@@ -94,6 +94,8 @@ WILD_SAMPLING_LOCAL int worldBiome=0; // 0: savanna, 1: desert, 2: grand river, 
 WILD_SAMPLING_LOCAL bool canyonOpenRight=false; // Experimental biome variant 6: one west wall and a traversable east plateau.
 WILD_SAMPLING_LOCAL int chunkX=0,chunkZ=0;
 int nextBarrierId=1;
+// Main-thread revisions. Workers capture values, never read these concurrently.
+uint64_t terrainInputRevision=1,residencyRevision=1,overlayRevision=1;
 int nextPolygonId=1;
 WILD_SAMPLING_LOCAL float radiusNow=.3f;
 WILD_SAMPLING_LOCAL bool workerNow=true;
@@ -142,7 +144,7 @@ std::unordered_set<PropKey,PropKeyHash>& removedProps(){
 }
 WILD_SAMPLING_LOCAL std::array<std::vector<int>,propBucketSide*propBucketSide> propBuckets;
 WILD_SAMPLING_LOCAL int haloPropCount=0;
-BarrierIndex* barrierRegistry=nullptr;
+WILD_SAMPLING_LOCAL BarrierIndex* barrierRegistry=nullptr;
 BarrierIndex& barrierIndex(){
   if(!barrierRegistry)barrierRegistry=new BarrierIndex();
   return *barrierRegistry;
@@ -151,7 +153,7 @@ struct PolygonIndex {
   std::unordered_map<int,PolygonObstacle> byId;
   std::unordered_map<uint64_t,std::vector<int>> buckets;
 };
-PolygonIndex* polygonRegistry=nullptr;
+WILD_SAMPLING_LOCAL PolygonIndex* polygonRegistry=nullptr;
 PolygonIndex& polygonIndex(){
   if(!polygonRegistry)polygonRegistry=new PolygonIndex();
   return *polygonRegistry;
@@ -178,7 +180,7 @@ float maxBuiltRadius(){
   return result;
 }
 int activeProfile=0;
-std::unordered_map<uint64_t,ChunkRaster>* chunkRasters=nullptr;
+WILD_SAMPLING_LOCAL std::unordered_map<uint64_t,ChunkRaster>* chunkRasters=nullptr;
 std::vector<std::pair<int,int>> loadedChunks;
 std::vector<float> barrierBatch;
 std::vector<int> barrierBatchIds;
@@ -1182,6 +1184,7 @@ Settlement makeSettlement(double x,double z,double hx,double hz){
   return {true,x,z,sorted[2],hx,hz,clear,clear+6,clear+13};
 }
 void refreshSettlementChunks(const std::vector<Settlement>& changed){
+  ++terrainInputRevision;
   removedPropGeometry().clear();
   const int selectedX=chunkX,selectedZ=chunkZ,previous=activeProfile;
   changedSettlementChunks.clear();
@@ -1206,6 +1209,7 @@ void refreshSettlementChunks(const std::vector<Settlement>& changed){
   if(touched)populateChunk(selectedX,selectedZ);
 }
 void refreshBarrier(const Barrier& barrier){
+  ++overlayRevision;
   if(batchingBarriers){deferredBarrierRefresh.push_back(barrier);return;}
   const float maxRadius=maxBuiltRadius();
   const int r=int(std::ceil(maxRadius))+1,previous=activeProfile;
@@ -1220,6 +1224,7 @@ void refreshBarrier(const Barrier& barrier){
   selectProfile(previous);
 }
 void refreshPolygon(const PolygonObstacle& polygon){
+  ++overlayRevision;
   const int r=int(std::ceil(maxBuiltRadius()))+1,previous=activeProfile;
   for(int profile=0;profile<navigationProfiles;profile++){
     selectProfile(profile);
@@ -1230,6 +1235,7 @@ void refreshPolygon(const PolygonObstacle& polygon){
   selectProfile(previous);
 }
 void refreshRemovedPropChunks(const Prop* changed){
+  ++terrainInputRevision;
   const int selectedX=chunkX,selectedZ=chunkZ,previous=activeProfile;
   std::vector<std::pair<int,int>> affected;
   for(const auto& [cx,cz]:loadedChunks){
@@ -1271,6 +1277,7 @@ void refreshRemovedPropChunks(const Prop* changed){
     populateChunk(selectedX,selectedZ);
 }
 void refreshRemovedPropChunksBatch(const std::vector<Prop>& changed){
+  ++terrainInputRevision;
   if(changed.empty())return;
   if(changed.size()==1){refreshRemovedPropChunks(&changed.front());return;}
   const int selectedX=chunkX,selectedZ=chunkZ,previous=activeProfile;
@@ -1431,6 +1438,7 @@ void horizonDesertNormals(HorizonSampler& sampler,int ox,int oz){
 extern "C" {
 int spatial_generate_biome(uint32_t seed,int biome,int cx,int cz){
   if(biome<0||biome>6)return -1;
+  ++terrainInputRevision;++residencyRevision;
   worldSeed=seed;canyonOpenRight=biome==6;worldBiome=canyonOpenRight?5:biome;barrierIndex().byId.clear();barrierIndex().buckets.clear();
   polygonIndex().byId.clear();polygonIndex().buckets.clear();polygonInput.clear();polygonState.clear();nextPolygonId=1;
   removedProps().clear();removedPropState.clear();removedPropGeometry().clear();
@@ -1458,7 +1466,7 @@ int spatial_add_chunk(int cx,int cz){
   if(chunkRasters->count(chunkKey(cx,cz)))return 0;
   for(const auto& [x,z]:loadedChunks)if(x==cx&&z==cz)return 0;
   SPATIAL_TICK(totalStarted);
-  populateChunk(cx,cz);loadedChunks.emplace_back(cx,cz);
+  populateChunk(cx,cz);loadedChunks.emplace_back(cx,cz);++residencyRevision;
   const int previous=activeProfile;
   for(int profile=0;profile<navigationProfiles;profile++){
     selectProfile(profile);
@@ -1480,7 +1488,7 @@ int spatial_select_chunk(int cx,int cz){
 int spatial_remove_chunk(int cx,int cz){
   const auto it=std::find(loadedChunks.begin(),loadedChunks.end(),std::pair<int,int>{cx,cz});
   if(it==loadedChunks.end())return 0;
-  loadedChunks.erase(it);
+  loadedChunks.erase(it);++residencyRevision;
   residentSpatial().erase(chunkKey(cx,cz));
   residentSolidProps().erase(chunkKey(cx,cz));
   residentVisibleProps().erase(chunkKey(cx,cz));
