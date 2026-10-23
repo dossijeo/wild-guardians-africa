@@ -6,7 +6,10 @@ const rows=[];
 for(const biome of ['sabana','desierto','gran-rio','volcanes','manglares','gran-canon']){
  const handle=await createThreadedSpatialWorld(factory),{core,memory}=handle;
  try{
+  assert.equal(handle.runtime.HEAPU8.buffer,memory.buffer);
   core.generate(712,0,0,biome);core.buildNavigationProfile(1,.28,true);
+  const polygon=core.addPolygon([{x:1,z:1},{x:3,z:1},{x:3,z:3},{x:1,z:3}]);
+  assert(polygon>0);assert.equal(core.snapshot().polygons.length,1);
   const revision=core.chunkRevision(),id=core.preparation.start(1,0),start=performance.now();
   assert(id>0);
   while(core.preparation.status()!==3){
@@ -18,7 +21,8 @@ for(const biome of ['sabana','desierto','gran-rio','volcanes','manglares','gran-
   assert(core.preparation.publish(id,1,0)>0);
   assert.equal(core.chunkRevision(),revision+1);
   assert.equal(core.currentChunk().cx,1);
-  assert.equal(core.chunkPayload().cx,1);
+  const payload=core.chunkPayload();assert.equal(payload.cx,1);
+  assert.equal(payload.terrain.positions[(24*49+24)*3+1],Math.fround(core.surface(48,0)));
   assert.equal(core.metrics().loadedChunks,2);
   assert(memory.buffer instanceof SharedArrayBuffer);
   core.preparation.release();

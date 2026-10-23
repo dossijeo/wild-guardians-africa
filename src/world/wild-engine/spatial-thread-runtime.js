@@ -5,6 +5,10 @@ import {createSpatialWorld} from './spatial-world.js';
 export async function createThreadedSpatialWorld(factory,{initialPages=256,maximumPages=8192,...options}={}){
   const memory=new WebAssembly.Memory({initial:initialPages,maximum:maximumPages,shared:true});
   const runtime=await factory({...options,wasmMemory:memory});
+  if(runtime.HEAPU8.buffer!==memory.buffer){
+    runtime.PThread?.terminateAllThreads();
+    throw Error('Wild Engine runtime did not adopt the shared memory');
+  }
   const exports={memory};
   for(const [name,value] of Object.entries(runtime))
     if(name.startsWith('_')&&typeof value==='function')exports[name.slice(1)]=value;

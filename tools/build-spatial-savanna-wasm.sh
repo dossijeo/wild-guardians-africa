@@ -18,6 +18,7 @@ if [[ "${SPATIAL_PTHREADS:-0}" == 1 ]]; then
   fi
   runtime_flags=(-pthread -s MODULARIZE=1 -s EXPORT_ES6=1 -s PTHREAD_POOL_SIZE=1
     -s ALLOW_BLOCKING_ON_MAIN_THREAD=0 -s EXIT_RUNTIME=0
+    -s 'INCOMING_MODULE_JS_API=["wasmMemory","wasmBinary","mainScriptUrlOrBlob","ENVIRONMENT","arguments","canvas","dynamicLibraries","elementPointerLock","instantiateWasm","locateFile","monitorRunDependencies","noExitRuntime","noInitialRun","onAbort","onExit","onRuntimeInitialized","postRun","preInit","preRun","print","printErr","setStatus","statusMessage","stderr","stdin","stdout","thisProgram","wasm","websocket"]'
     -s MAXIMUM_MEMORY=536870912 -s 'EXPORTED_RUNTIME_METHODS=["HEAPU8","PThread"]')
 fi
 em++ "${profile_flags[@]}" src/world/wild-engine/spatial-savanna.cpp src/world/wild-engine/lazy-sectors.cpp src/world/wild-engine/spatial-route-planner.cpp src/world/wild-engine/spatial-action-planner.cpp src/world/wild-engine/spatial-intent-state.cpp -std=c++17 -O3 \
