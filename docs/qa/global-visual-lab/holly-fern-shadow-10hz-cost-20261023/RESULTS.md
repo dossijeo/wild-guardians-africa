@@ -1,3 +1,5 @@
+> CORRECTION (2026-10-23): the fern QA call `resizeShadowMap(light, 4096)` actually selected 1024 because the API expects a quality name. Claims of a 4096 map in this report are incorrect. See `../holly-fern-shadow-actual2048-20261023/README.md`. Original measurements are retained.
+
 # Sombras de helechos a 10 Hz: camara fija
 
 A: sombra continua. B: tiempo de viento de sombra cuantizado a 10 Hz. Color/viento visible sin cambios, ambas variantes con sombras 4096. Intel UHD,1280x720,calidad media,escena poblada pausada,fondo completo. Dos parejas A/B/A/B,60 warmup+90 muestras por pase, GPU y cadencia separados.

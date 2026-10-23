@@ -1,6 +1,8 @@
+> CORRECTION (2026-10-23): the fern QA call `resizeShadowMap(light, 4096)` actually selected 1024 because the API expects a quality name. Claims of a 4096 map in this report are incorrect. See `../holly-fern-shadow-actual2048-20261023/README.md`. Original measurements are retained.
+
 # Fern silhouette against the supplied mockup
 
-QA-only artistic iteration; no default renderer or main change. Seed 712, 1280×720, medium, three native campaign views with full distant impostors/mountains, day and night. `side-by-side.jpg` juxtaposes the unmodified artistic reference and actual renderer output; `iterations.jpg` compares four real renders. No screenshot relighting.
+QA-only artistic iteration; no default renderer or main change. Seed 712, 1280Ãƒâ€”720, medium, three native campaign views with full distant impostors/mountains, day and night. `side-by-side.jpg` juxtaposes the unmodified artistic reference and actual renderer output; `iterations.jpg` compares four real renders. No screenshot relighting.
 
 ## Changes and selection
 

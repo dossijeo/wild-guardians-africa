@@ -1,3 +1,5 @@
+> CORRECTION (2026-10-23): the fern QA call `resizeShadowMap(light, 4096)` actually selected 1024 because the API expects a quality name. Claims of a 4096 map in this report are incorrect. See `../holly-fern-shadow-actual2048-20261023/README.md`. Original measurements are retained.
+
 # Seguimiento por version de buffers de sombra: QA
 
 A/B usan la misma region de sombras independiente, mismas instancias visibles, geometria, viento10Hz,mapa4096 y recorrido movil8m. A recorre atributos activos en cada snapshot; B solo para los tres atributos del productor QA registra version, identidad, almacenamiento, cantidad y divisor. El productor incrementa versiones en cada reconstruccion. No se modifica shadow-cache.js de produccion.

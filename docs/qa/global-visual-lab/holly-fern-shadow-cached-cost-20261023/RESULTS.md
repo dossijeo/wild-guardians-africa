@@ -1,13 +1,15 @@
+> CORRECTION (2026-10-23): the fern QA call `resizeShadowMap(light, 4096)` actually selected 1024 because the API expects a quality name. Claims of a 4096 map in this report are incorrect. See `../holly-fern-shadow-actual2048-20261023/README.md`. Original measurements are retained.
+
 # Coste aislado de sombras de helechos
 
-A: mismos helechos sin proyectar sombras. B: proyectan sombras. Ambas variantes usan mapa solar 4096, mismas geometrías, instancias, materiales, cámara y semilla. No es una comparación con producción 1024. Intel UHD, campaña pausada, 1280x720, fondo completo, cámara móvil, viento determinista. A/B/A/B; 60 warmup + 90 muestras GPU y otra pasada de cadencia.
+A: mismos helechos sin proyectar sombras. B: proyectan sombras. Ambas variantes usan mapa solar 4096, mismas geometrÃƒÂ­as, instancias, materiales, cÃƒÂ¡mara y semilla. No es una comparaciÃƒÂ³n con producciÃƒÂ³n 1024. Intel UHD, campaÃƒÂ±a pausada, 1280x720, fondo completo, cÃƒÂ¡mara mÃƒÂ³vil, viento determinista. A/B/A/B; 60 warmup + 90 muestras GPU y otra pasada de cadencia.
 
 | Fase | GPU A / B ms | Deltas de las dos parejas | CPU A / B ms | Cadencia A / B ms |
 |---|---|---|---|---|
 | day | 21.31 / 26.17 | +4.33 / +5.40 | 7.93 / 9.66 | 27.22 / 34.64 |
 | night | 23.10 / 24.30 | -1.05 / +3.44 | 7.96 / 9.45 | 30.59 / 32.34 |
 
-Verificado: misma selección de instancias y trayectoria en todas las repeticiones. Las diferencias de triángulos/draws incluyen la pasada de sombra adicional. Auditoría y percentiles en summary.json. No sumar CPU y GPU. Dos parejas no eliminan deriva térmica ni variación del sistema; la campaña está pausada. Memoria GPU física y overdraw no medidos. La calidad visual sigue pendiente de alcanzar el mockup.
+Verificado: misma selecciÃƒÂ³n de instancias y trayectoria en todas las repeticiones. Las diferencias de triÃƒÂ¡ngulos/draws incluyen la pasada de sombra adicional. AuditorÃƒÂ­a y percentiles en summary.json. No sumar CPU y GPU. Dos parejas no eliminan deriva tÃƒÂ©rmica ni variaciÃƒÂ³n del sistema; la campaÃƒÂ±a estÃƒÂ¡ pausada. Memoria GPU fÃƒÂ­sica y overdraw no medidos. La calidad visual sigue pendiente de alcanzar el mockup.
 
 ## Interpretacion tras corregir el contrato VFX
 

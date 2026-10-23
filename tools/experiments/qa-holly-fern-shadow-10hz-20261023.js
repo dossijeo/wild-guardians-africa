@@ -3,7 +3,7 @@ import {fernClumpGeometryData} from './holly-fern-smooth-frond-geometry-20261023
 // QA fern-only: replace static geometry and reuse native instance buffers and selection.
 export async function applyHollyFern(world){
  const q=world.groundDetails;if(world.state.biome!=='manglares'||q.cardStudy)throw Error('Expected native Mangrove layer');
- const {resizeShadowMap}=await import('/src/rendering/shadow-camera.js');resizeShadowMap(world.sun,4096);world.releaseNativeShadow.cache.invalidate();
+ const {resizeShadowMap}=await import('/src/rendering/shadow-camera.js');resizeShadowMap(world.sun,'media');world.releaseNativeShadow.cache.invalidate();
  const data=fernClumpGeometryData(),loader=new THREE.TextureLoader();
  // Enlarged footprint + wind allowance: rebuild existing cached masks once.
  q.edgePadding=1.;q.markDirtyAt();q.flush();
@@ -46,7 +46,7 @@ void main(){if(texture(uLeafCoverage,vCardUv).a<.5)discard;fernDepth=packDepthTo
  }
  const dispose=q.dispose.bind(q);q.dispose=()=>{if(q.disposed)return;for(const e of q.meshes){e.mesh.customDepthMaterial?.dispose();e.mesh.customDepthMaterial=null;}coverage.dispose();normal.dispose();dispose();};
  const stats={get instances(){return q.near+q.far;},updates:0,selectionMs:0};
- q.cardStudy={representation:'fern-relief-shadow-10hz',shadowResolution:4096,castsNativeShadow:true,sizeXZ:1.35,sizeY:1.6,colorContrast:1.12,edgePadding:1,frondsPerClump:4,trianglesPerClump:32,textureCount:2,textureBytesEstimate:2*1024*1024*4*4/3,normal:'upward ambient; direct baked lateral x1.8, y x0.7 with minimum 0.35 and arc term',reuseNativeInstanceBuffers:true,extraSelectionPass:false,stats};
+ q.cardStudy={representation:'fern-relief-shadow-10hz',shadowResolution:world.sun.shadow.mapSize.x,castsNativeShadow:true,sizeXZ:1.35,sizeY:1.6,colorContrast:1.12,edgePadding:1,frondsPerClump:4,trianglesPerClump:32,textureCount:2,textureBytesEstimate:2*1024*1024*4*4/3,normal:'upward ambient; direct baked lateral x1.8, y x0.7 with minimum 0.35 and arc term',reuseNativeInstanceBuffers:true,extraSelectionPass:false,stats};
  const audit=q.audit.bind(q);q.audit=()=>({...audit(),cardStudy:{...q.cardStudy,stats:{...stats}},leaves:(q.near+q.far)*4,baseMeshesReplaced:true});
  return q.cardStudy;
 }

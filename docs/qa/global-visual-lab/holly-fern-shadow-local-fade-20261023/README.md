@@ -1,3 +1,5 @@
+> CORRECTION (2026-10-23): the fern QA call `resizeShadowMap(light, 4096)` actually selected 1024 because the API expects a quality name. Claims of a 4096 map in this report are incorrect. See `../holly-fern-shadow-actual2048-20261023/README.md`. Original measurements are retained.
+
 # Sombras locales con transicion radial
 
 Variante QA del proxy guarded. Mantiene la geometria/color/densidad visibles. Solo la geometria de profundidad se contrae gradualmente entre24 y40m del centro de la region (media,farDistance48). Se seleccionan casters hasta40m en vez de60m. La posicion del centro usa la misma rejilla8m. Viento de sombra10Hz, mapa4096 diagnostico.
