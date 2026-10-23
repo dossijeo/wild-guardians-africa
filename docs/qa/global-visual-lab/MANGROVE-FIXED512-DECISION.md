@@ -1,0 +1,30 @@
+# Mangrove ground — fixed512 integration decision
+
+## Recommendation
+
+Retain the user's selected fixed512 material cache. It is implemented in the renderer behind `visualLab=global-lighting&groundCache=fixed512`, requiring the existing Mangrove substrate and shoreline recipe. Keep PR #159 draft; no merge to main. Lower-memory/projection alternatives are closed. This report consolidates evidence, not a claim that all global visual work or campaign validation is complete.
+
+## Cause and retained solution
+
+Earlier material ablations identify static composition as the main ground color-pass cost (~7.8–8.2 ms). Cache RGBA stores moss-scale blend, moss/soil blend, AO and roughness at 512 plus gutters/mips per resident chunk. Shared color/normal textures, dynamic lighting and shadows remain. No fern density reduction. The retained appearance is green moss with localized mud, NOT the deliberately all-mud invalidation-test screenshot.
+
+The long fixed512 baseline against uncached original recorded whole-GPU gains of 1.59–4.35 ms across day/night pairs; see [original long comparison](mangrove-ground-hybrid512-long-20261023/). The final direct comparison rejected the incremental-memory alternative: valid day pairs saved 0.67–1.13 ms GPU and 1.24–1.26 ms frame time with fixed512; [decision](mangrove-ground-final-512-decision-20261023/README.md). Those results select the shader architecture; they are not new evidence for every subsequent integration change.
+
+## Image and ownership evidence
+
+- [Near/media and elevated/low](mangrove-fixed-near-parity-20261023/README.md), [elevated details](mangrove-fixed-elevated-parity-20261023/README.md): integrated versus selected cache; nighttime images exact, day differs at 10/21 pixels.
+- [Mask edit/restoration](mangrove-ground-fixed-mask-20261023/README.md): altered cache restores byte-exactly; synthetic input, not a gameplay planting test.
+- [Streaming and teardown](mangrove-ground-fixed-stream-20261023/README.md): 30 unload/reload events, one-target invalidation, complete cache release.
+- [Material replacement](mangrove-fixed-material-switch-20261023/README.md): very-low/medium toggles retain 25 targets and bounded live hooks; disposed material references fixed.
+- [Post-switch images](mangrove-fixed-quality-images-20261023/README.md): ground crop exact, full-scene differences remain unattributed.
+- [Live smoke](mangrove-fixed-live-smoke-20261023/README.md): ~9.4 s simulation progression and moving workers, no errors.
+
+## Memory and streaming limits
+
+25 targets consume 33.58 MiB, explicitly accepted by the user. Replacement peak measured 34.92 MiB; admission cap 40 MiB. This is cache texture accounting, not total driver VRAM. Demand above cap retains original-material fallback; larger resident-region fairness/coverage still needs validation. Cache generation measured ~0.35 ms CPU and ~0.96 ms GPU per target; first-load compiler cost is not covered by those warm measurements.
+
+Continuous streaming still has large frame spikes. [Source attribution](mangrove-stream-native-split-20261023/README.md) measures native addChunk at 47.53 ms mean versus payload extraction 0.36 ms and graphical installation ~15 ms. This predates/also occurs without cache. Do not weaken the artwork to address synchronous native generation; no engine/navigation rewrite is included here. Local mud lookup and water-distance savings do not constitute a solved p95 problem; ABAB limitations are documented in their reports.
+
+## Remaining acceptance work
+
+The integrated path still needs a final whole-frame original-versus-cache benchmark with reliable workload attribution, longer active-world validation including actual construction/crop changes, first-load generation/compilation characterization, and full-scene quality-switch discrepancy attribution. The ideal 20–23 ms whole-GPU target is not established across active and streaming scenarios. Keep these requirements open; do not label Mangrove globally finished or extend the architecture to other biomes solely on current evidence.
