@@ -61,6 +61,8 @@ try{
   result.savedFixture=process.env.WG_THREAD_SAVE_FIXTURE;
  }
  if(process.env.WG_THREAD_EXIT==='1')result.exit=await page.evaluate(async()=>await (await import('/tools/experiments/spatial-thread-game-exit-case.js')).verifyGameExit(qaThreadWorld));
+ if(process.env.WG_THREAD_CONTEXT==='1')await page.screenshot({path:(process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json').replace(/\.json$/, '-before.png')});
+ if(process.env.WG_THREAD_CONTEXT==='1')result.contextRestore=await page.evaluate(async()=>await (await import('/tools/experiments/spatial-thread-game-context-case.js')).verifyGameContextRestore(qaThreadWorld));
  const profiler=process.env.WG_THREAD_CPU_PROFILE==='1'?await page.context().newCDPSession(page):null;
  if(profiler){await profiler.send('Profiler.enable');await profiler.send('Profiler.start');}
  if(benchmark)result.streaming=await page.evaluate(async(options)=>{
@@ -127,7 +129,7 @@ try{
   return {scope:options.active?'Active simulation streaming pilot from frozen initial state, per-frame camera travel; final state varies with wall-clock time. CPU/RAF only, not GPU or equivalence acceptance.':'Paused simulation streaming after 60 warm frames. CPU/RAF only.',options,programRetention:programLease?.stats??null,legs,initialElapsed,workersBefore,workersAfter,actorsReadyFrames,pausedFrames,readiness,slowDraws,slowGl,fixtureTutorialSkipped:options.active,initialPrograms,depthWarmMs,gpu:gpuResult?{...gpuResult,summary:summary(gpuResult.samplesMs)}:null,hardware:debug?gl.getParameter(debug.UNMASKED_RENDERER_WEBGL):null,cameraOrigin:camera.toArray(),targetOrigin:origin.toArray(),elapsed:w.state.elapsed,baseline,final:core.metrics(),created:w.chunkStream.stats.created-initialCreated,detail:Object.fromEntries(Object.entries(detail).map(([k,v])=>[k,summary(v)])),summary:Object.fromEntries(Object.entries(rows).map(([k,v])=>[k,summary(v)])),rows};
  },{completeLegs:process.env.WG_THREAD_COMPLETE_LEGS==='1',pinPrograms:process.env.WG_THREAD_PIN_PROGRAMS==='1',zigzag:process.env.WG_THREAD_ZIGZAG==='1',active:process.env.WG_THREAD_ACTIVE==='1',gpu:process.env.WG_THREAD_GPU==='1',depthWarm:process.env.WG_THREAD_DEPTH_WARM==='1',glDetail:process.env.WG_THREAD_GL_DETAIL==='1',frames:Number(process.env.WG_THREAD_FRAMES??180),distance:Number(process.env.WG_THREAD_DISTANCE??96)});
  if(profiler){const {profile}=await profiler.send('Profiler.stop');await writeFile((process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json').replace(/\.json$/,'.cpuprofile'),JSON.stringify(profile));await profiler.detach();}
- if(frozen&&(benchmark||process.env.WG_THREAD_EDIT==='1'))await page.screenshot({path:(process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json').replace(/\.json$/,'.png')});
+ if(frozen&&(benchmark||process.env.WG_THREAD_EDIT==='1'||process.env.WG_THREAD_CONTEXT==='1'))await page.screenshot({path:(process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json').replace(/\.json$/,'.png')});
  await writeFile(process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json',JSON.stringify({scope:'Loaded populated game in Chrome; see streaming scope for limitations.',biome,quality,result,errors},null,2)+'\n');
  console.log(JSON.stringify({result,errors}));
 }finally{await browser.close();}

@@ -127,7 +127,7 @@ export class WorldScene {
     canvas.addEventListener('pointerup',e=>{const gesture=tap.up(e);if(this.controls.enabled&&this.state&&gesture)onPick({...this.pick(e),...gesture});},listenerOptions);
     canvas.addEventListener('pointercancel',e=>tap.up(e,true),listenerOptions);
     this.resizeObserver=new ResizeObserver(()=>this.resize());this.resizeObserver.observe(canvas);this.quality='media';this.resize();
-    canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();this.onContextLost?.();},listenerOptions);canvas.addEventListener('webglcontextrestored',()=>this.onContextRestored?.(),listenerOptions);
+    canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();this.onContextLost?.();},listenerOptions);canvas.addEventListener('webglcontextrestored',()=>{this.restoreCachedGraphics();this.onContextRestored?.();},listenerOptions);
   }
   resize() {const r=this.canvas.getBoundingClientRect(),resolution=nativeRenderResolution(r.width,r.height,devicePixelRatio,this.quality,this.pixelRatioLimit),aspect=resolution.width/resolution.height;this.renderResolution=resolution;if(this.canvas.width!==resolution.width||this.canvas.height!==resolution.height)this.renderer.setSize(resolution.width,resolution.height,false);if(this.camera.aspect!==aspect){this.camera.aspect=aspect;this.camera.updateProjectionMatrix();}}
   showWallStroke(points){
@@ -509,6 +509,13 @@ export class WorldScene {
       for(const [mesh,culled] of originals)mesh.frustumCulled=culled;
       staging.clear();this.scene.remove(staging);this.releaseNativeShadow?.cache.invalidate();
     }
+  }
+  restoreCachedGraphics(){
+    // Render targets survive as JS objects, but their pixels do not survive loss.
+    const cache=this.mangroveMaterialCache;
+    if(cache)for(const key of cache.states.keys())cache.invalidate(key);
+    this.releaseNativeShadow?.cache.invalidate();
+    this.renderer.shadowMap.needsUpdate=true;
   }
   retainStreamingPrograms(){
     this.releaseRetainedPrograms();
