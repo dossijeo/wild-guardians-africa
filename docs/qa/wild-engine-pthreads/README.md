@@ -489,3 +489,10 @@ The real Chrome two-leg run in program-retain-bounded.json completes 50 chunk in
 Three replaces renderer.info.programs when restoring WebGL. The experimental lease previously retained the old collection and could attempt to destroy pre-loss handles later. dispose now abandons its references without GL deletion if the collection changed or the context is lost; stats distinguish abandonment from normal release.
 
 Four unit tests pass. `check-program-retention-context.mjs` also uses real Chrome WebGL: draw a small scene, retain its program, force context loss and restoration, confirm the program collection changes, dispose the old lease without destruction, draw again without GL error, and acquire/release a fresh lease. program-retain-context.json records one abandoned old program and one normally released fresh program. This verifies the adapter across real context replacement, not complete game restoration or driver memory reclamation. Application retention remains disabled by default.
+
+
+## Opt-in scene lifecycle integration
+
+The application now supports retainPrograms=1 (off by default). After the final initial world render, WorldScene retains at most 96 warmed programs. Quality changes release the old lease without accumulating a new one; context loss abandons invalid old handles; scene disposal releases before materials/renderer teardown. The QA benchmark lease and application lease are separate alternatives, not intended to be enabled together.
+
+`game-retention-exit.json` validates the actual app option: 79 programs retained at readiness and all 79 references released on the production return-to-menu path with pending pthread work. World disposal, zero workers and no late chunk installs still pass. Eighteen targeted quality/culling/retention tests pass; quality fixture assertions check the lease is released exactly once and cleared across preset changes. No artistic settings or simulation behavior changes. Performance of the app-integrated option, full-game context restoration and all-biome coverage remain pending; it is not the default yet.

@@ -55,10 +55,11 @@ test('live world quality and resize preserve simulation, ground geometry and exi
  const state={money:217,plants:[{id:'crop',growth:13,waterRemaining:7}],workers:[{id:'worker',taskId:'sow'}],time:150},snapshot=JSON.stringify(state),chunks=new Map([['0,0',chunk]]);
  const scene=new THREE.Scene();scene.add(chunk);
  let materialInvalidations=0;const world={assetGroups:{invalidateMaterials(){materialInvalidations++;}},scene,state,chunks,terrainMeshes:[ground],quality:'media',toon:new AfricanToon(),destructionPass:{},renderer:{shadowMap:{enabled:true},setSize(w,h){this.size=[w,h];}},sun:new THREE.DirectionalLight(),camera:new THREE.PerspectiveCamera(),canvas:{getBoundingClientRect:()=>({width:3840,height:2160})},resize:WorldScene.prototype.resize};
+ let releasedPrograms=0;world.programLease={dispose(){releasedPrograms++;}};
  const previous=Object.getOwnPropertyDescriptor(globalThis,'devicePixelRatio');Object.defineProperty(globalThis,'devicePixelRatio',{value:2,configurable:true});
  try{
   for(const quality of ['muy_baja','baja','media','alta','media']){
-   WorldScene.prototype.qualitySetting.call(world,quality);assert.equal(world.chunks,chunks);assert.equal(chunks.get('0,0'),chunk);assert.equal(ground.geometry,geometry);assert.equal(JSON.stringify(state),snapshot);
+   world.releaseRetainedPrograms=WorldScene.prototype.releaseRetainedPrograms;WorldScene.prototype.qualitySetting.call(world,quality);assert.equal(releasedPrograms,1);assert.equal(world.programLease,null);assert.equal(world.chunks,chunks);assert.equal(chunks.get('0,0'),chunk);assert.equal(ground.geometry,geometry);assert.equal(JSON.stringify(state),snapshot);
    assert.equal(!!ground.material.isMeshBasicMaterial,quality==='muy_baja');assert.equal(world.renderer.shadowMap.enabled,['media','alta'].includes(quality));assert.equal(world.toon.uniforms.uGroundDetail.value,quality==='muy_baja'?0:1);
    assert.deepEqual(world.renderer.size,[world.renderResolution.width,world.renderResolution.height]);assert.equal(world.camera.aspect,world.renderResolution.width/world.renderResolution.height);assert.ok(world.renderResolution.width*world.renderResolution.height<2605000);
   }
@@ -69,6 +70,7 @@ test('live world quality and resize preserve simulation, ground geometry and exi
 test('static resize keeps the drawing buffer and observes DPR changes even with unchanged CSS dimensions',()=>{
  let ratio=1.25,calls=0;const rect={width:1280,height:720},canvas={width:0,height:0,getBoundingClientRect:()=>rect};
  const world={canvas,quality:'media',camera:new THREE.PerspectiveCamera(),renderer:{setSize(w,h){calls++;canvas.width=w;canvas.height=h;}}};
+ let releasedPrograms=0;world.programLease={dispose(){releasedPrograms++;}};
  const previous=Object.getOwnPropertyDescriptor(globalThis,'devicePixelRatio');Object.defineProperty(globalThis,'devicePixelRatio',{get:()=>ratio,configurable:true});
  try{
   WorldScene.prototype.resize.call(world);assert.equal(calls,1);assert.deepEqual([canvas.width,canvas.height],[1600,900]);

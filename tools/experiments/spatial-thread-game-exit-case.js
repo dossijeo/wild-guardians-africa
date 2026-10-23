@@ -1,4 +1,5 @@
 export async function verifyGameExit(w){
+ const retained=w.programLease;
  const handle=globalThis.qaThreadHandle,p=handle.core.preparation,session=w.spatialSession;
  let observed=false,disposalStates=[],disposePromise=null,lateInstalls=0,exitPromise=null;
  const start=p.start,dispose=session.dispose,install=w.installChunk;
@@ -18,5 +19,6 @@ export async function verifyGameExit(w){
  await new Promise(r=>setTimeout(r,200));
  const workers=Object.keys(handle.runtime.PThread.pthreads).length+handle.runtime.PThread.unusedWorkers.length;
  if(!w.disposed||workers||lateInstalls||p.status()!==5||!document.querySelector('#native-menu'))throw Error('Game exit cleanup failed');
- return {...exit,disposalStates,worldDisposed:w.disposed,workers,lateInstalls,nativeStatus:p.status(),menu:true,stream:w.chunkStream.summary()};
+ if(retained&&retained.stats.released+retained.stats.abandoned!==retained.stats.retained)throw Error('Retained program references leaked');
+ return {...exit,programRetention:retained?.stats??null,disposalStates,worldDisposed:w.disposed,workers,lateInstalls,nativeStatus:p.status(),menu:true,stream:w.chunkStream.summary()};
 }
