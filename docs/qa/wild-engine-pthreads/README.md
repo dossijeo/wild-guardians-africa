@@ -302,3 +302,12 @@ Four sequential Intel UHD / Chrome / 720p medium Mangroves runs use 600 active f
 The repeated p95 improvement survives GPU instrumentation, while mean/max frame improvements remain unproven. GPU work is not reduced: averages are slightly higher for B, especially the second pair. This experiment cannot identify the cause of that variation. Native main-thread generation averages 43.12/42.03 ms in A, while publication averages 0.725/0.792 ms in B. These results support removal of the frequent CPU generation stall, not a general GPU/FPS optimization. Compare this series internally; do not combine it with the non-instrumented baseline.
 
 See gpu-active-summary.json and raw reports. Final active elapsed times differ, GPU timestamps include command-stream idle periods, only one graphics quality/biome is measured, and per-pass/peak-memory/long-session gates remain open. No art or production simulation was changed by the QA instrumentation.
+
+
+## Real wall commands during running pthread generation
+
+`WG_THREAD_EDIT=1 WG_THREAD_FROZEN=1` runs a disposable real Mangroves game fixture and finds a legal wall site through normal navigation placement. The QA hook observes the next streaming job, yields until native status is exactly 2 (running), then issues the normal Game.placeStructure command and production session synchronization. After publication/retry it asserts the authoritative barrier count increased and the renderer contains the wall. A second camera move repeats the overlap with Game.removeWall and asserts the barrier is absent after all results publish.
+
+`game-concurrent-wall-running.json/png` passes. Jobs 25 and 31 are both recorded running at their respective edits; both publication attempts return stale-input -2 and subsequent jobs succeed. Native barrier count is 0 -> 1 -> 0, the built wall is rendered, ten chunks are installed, and the final queue is idle with no stream failures. No unexpected console errors are present. The earlier queued-only pilot is not used as running-overlap evidence.
+
+This validates a real command/event/mirror path against stale native preparation, without synthetic writes to obstacle memory or replacing game commands. Simulation is paused between the two commands to make the scenario controlled. It does not yet cover raid damage, gate state changes, crops, new settlements, save/reload or concurrent active actor route correctness. Those remain required along with distribution/performance gaps.
