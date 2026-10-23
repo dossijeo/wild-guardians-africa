@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import * as THREE from 'three';
+import {ShadowCache,shadowSnapshot} from '../src/rendering/shadow-cache.js';
 import {VfxLibrary} from '../src/rendering/vfx.js';
 import {BuildingDestructionPass} from '../src/rendering/buildings.js';
 import {TerrainField} from '../src/world/terrain.js';
@@ -87,4 +88,20 @@ test('Two native local lights retain source positions/colors on world materials 
   const {library,pipeline,camera}=setup(),fx=library.create('spirit',pipeline);fx.scale.setScalar(2);fx.seek(2);fx.prepare(camera);const native=fx.native.lights;
   assert.equal(fx.localLights.length,2);for(let i=0;i<2;i++){const light=fx.localLights[i];assert.deepEqual(light.position.toArray(),native.positions[i]);assert.deepEqual(light.color.toArray(),native.colors[i]);assert.equal(light.castShadow,false);assert.equal(light.intensity,4/2.2);assert.equal(light.visible,true);}
   fx.clear();assert.ok(fx.localLights.every(l=>!l.visible));const hidden=library.create('spirit',pipeline,{layers:{lights:false}});hidden.seek(2);hidden.prepare(camera);assert.ok(hidden.localLights.every(l=>!l.visible));library.dispose();pipeline.dispose();
+});
+
+
+test('VFX shadow cache tracks depth inputs without depending on the view camera',()=>{
+ const {library,pipeline,camera}=setup(),scene=new THREE.Scene(),sun=new THREE.DirectionalLight(),fx=library.create('dig',pipeline);
+ sun.position.set(5,10,5);scene.add(sun,sun.target,fx);fx.seek(1.2);fx.prepare(camera);scene.updateMatrixWorld(true);
+ const renderer={shadowMap:{type:THREE.PCFSoftShadowMap}},cache=new ShadowCache();
+ const snapshot=()=>shadowSnapshot(renderer,sun,scene,camera);
+ const first=snapshot();assert.ok(first);cache.commit(first);assert.ok(cache.matches(snapshot()));
+ camera.position.x+=10;camera.updateMatrixWorld(true);fx.cameraUniforms(camera);assert.ok(cache.matches(snapshot()),'view-derived uVP must not invalidate depth');
+ for(const key of ['uTime','uWind']){fx.uniforms[key].value+=.5;assert.equal(cache.matches(snapshot()),false,key);cache.commit(snapshot());}
+ fx.position.x+=2;scene.updateMatrixWorld(true);assert.equal(cache.matches(snapshot()),false,'effect transform');cache.commit(snapshot());
+ const active=[...fx.rigids.values()].find(m=>m.visible&&m.geometry.instanceCount>0);assert.ok(active);
+ active.geometry.getAttribute('iModel').data.array[12]+=.25;assert.equal(cache.matches(snapshot()),false,'instance transform');cache.commit(snapshot());
+ active.onBeforeShadow=()=>{};assert.equal(snapshot(),null,'unknown callbacks must still fail closed');
+ library.dispose();pipeline.dispose();
 });

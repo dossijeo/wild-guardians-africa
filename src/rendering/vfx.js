@@ -32,11 +32,14 @@ export class NativeVfx extends THREE.Group {
     this.rigidMaterial=material(vfxRigidVertex,rigidFragment,this.uniforms);
     this.depthMaterial=material(vfxShadowVertex,'precision highp float;'+THREE.ShaderChunk.packing+'out vec4 fragColor;void main(){fragColor=packDepthToRGBA(gl_FragCoord.z);}',this.uniforms);
     this.depthMaterial.userData.worldDepthCompatible=true;
+    // uVP is derived by cameraUniforms from the tracked light camera and effect
+    // transform. Do not track its last view-camera value between depth passes.
+    this.depthMaterial.userData.nativeShadowInputs=()=>[this.matrixWorld,this.uniforms.uInst.value,this.uniforms.uModel.value,this.uniforms.uTime.value,this.uniforms.uWind.value];
     for(const [id,shape] of library.shapes){
       const g=new THREE.InstancedBufferGeometry();for(const [name,attribute] of Object.entries(shape.attributes))g.setAttribute(name,attribute);
       const buffer=new THREE.InstancedInterleavedBuffer(new Float32Array(256*23),23);buffer.setUsage(THREE.DynamicDrawUsage);this.buffers.set(id,buffer);
       for(const [name,size,offset] of [['iModel',16,0],['iColor',3,16],['iMaterial',4,19]])g.setAttribute(name,new THREE.InterleavedBufferAttribute(buffer,size,offset));g.instanceCount=0;
-      const particle=mesh(g,this.rigidMaterial);particle.castShadow=true;particle.customDepthMaterial=this.depthMaterial;particle.onBeforeRender=(r,s,c)=>this.cameraUniforms(c);particle.onBeforeShadow=(r,o,c,shadowCamera)=>this.cameraUniforms(shadowCamera);this.rigids.set(id,particle);this.add(particle);
+      const particle=mesh(g,this.rigidMaterial);particle.castShadow=true;particle.customDepthMaterial=this.depthMaterial;particle.onBeforeRender=(r,s,c)=>this.cameraUniforms(c);particle.onBeforeShadow=(r,o,c,shadowCamera)=>this.cameraUniforms(shadowCamera);particle.userData.nativeShadowCallback=particle.onBeforeShadow;this.rigids.set(id,particle);this.add(particle);
     }
     const spriteGeometry=new THREE.InstancedBufferGeometry(),corners=new Float32Array([-.5,-.5,.5,-.5,.5,.5,-.5,-.5,.5,.5,-.5,.5]);spriteGeometry.setAttribute('aCorner',new THREE.BufferAttribute(corners,2));spriteGeometry.setAttribute('position',new THREE.Float32BufferAttribute(Array.from({length:6},(_,i)=>[corners[i*2],corners[i*2+1],0]).flat(),3));
     this.spriteBuffer=new THREE.InstancedInterleavedBuffer(new Float32Array(MAX_SPRITES*25),25);this.spriteBuffer.setUsage(THREE.DynamicDrawUsage);
@@ -74,7 +77,7 @@ export class NativeVfx extends THREE.Group {
     const lights=this.native.lights;for(let i=0;i<2;i++){
       u['uLightPos'+i].value.fromArray(lights.positions[i]);u['uLightCol'+i].value.fromArray(lights.colors[i]);
       // Keep native color/position on ordinary world materials too. Three uses
-      // inverse-square attenuation; its far field is scaled to the lab's 1+2.2*d².
+      // inverse-square attenuation; its far field is scaled to the lab's 1+2.2*dÂ².
       const light=this.localLights[i];if(light){light.position.fromArray(lights.positions[i]);light.color.fromArray(lights.colors[i]);light.intensity=u.uScale.value**2/2.2;light.visible=lights.colors[i].some(c=>c>0);}
     }
     if(this.packedTime!==this.native.time){
