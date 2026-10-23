@@ -155,6 +155,11 @@ export async function createContinuousGrass(world){
  for(const key of world.chunks.keys()){const [cx,cz]=key.split(',').map(Number);chunk(cx,cz)}
  q.releaseEvents=observeGameEvents(world.state,event=>{markGroundDetailEvent(q,world.state,event,id=>world.objects.get(id)?.position);if(cropSoil&&['CropPlaced','CropPicked','CropDestroyed'].includes(event.type)){cropSoil.invalidate();q.occupancyDirty=true;}});
  q.audit=()=>({distribution:varied?'varied':'original',leafShape:mangrove?(cupped?'cupped':'original'):null,variant:q.variant,active:q.group.visible&&!q.disposed,quality:q.quality,biome:world.state.biome,edgePadding:q.edgePadding,nearDistance:q.nearDistance,moduleSpacing:q.spacing,near:q.near,far:q.far,leaves:q.near*(mangrove?8:12)+q.far*(mangrove?4:8),triangles:q.meshes.reduce((n,e)=>n+e.mesh.geometry.index.count/3*e.mesh.geometry.instanceCount,0),chunks:q.chunks.size,cachedTiles:q.tiles.size,bufferBytes:q.meshes.reduce((s,e)=>s+Object.values(e.mesh.geometry.attributes).reduce((n,a)=>n+a.array.byteLength,0)+(e.mesh.geometry.index?.array.byteLength??0),0),stats:{...q.stats},engineQueries:0,castShadow:false});
- if(fern){try{const {applyHollyFern}=await import('./mangrove-fern-material.js');await applyHollyFern(world,q);}catch(e){q.dispose();throw e;}}
+ if(fern){try{const {applyHollyFern}=await import('./mangrove-fern-material.js');await applyHollyFern(world,q);
+  // Chunks can arrive or be replaced while the fern textures load. Reconcile
+  // against the live renderer snapshot before handing this layer to the world.
+  for(const key of q.chunks.keys())if(!world.chunks.has(key))q.release(key);
+  for(const key of world.chunks.keys()){const [cx,cz]=key.split(',').map(Number);chunk(cx,cz);}
+ }catch(e){q.dispose();throw e;}}
  return q;
 }
