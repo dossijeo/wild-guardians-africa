@@ -31,7 +31,30 @@ for(const biome of ['sabana','desierto','gran-rio','volcanes','manglares','gran-
   compare('published-with-obstacle');compare('published-neighbor',36);
   a.removePolygon(pa);b.removePolygon(pb);compare('obstacle-removed');
   a.removeChunk(1,0);b.removeChunk(1,0);compare('neighbor-removed');
-  rows.push({biome,editStatus,stages});
+  let gatePoint=null;
+  for(let z=-18;z<=18&&!gatePoint;z+=3)for(let x=-18;x<=18&&!gatePoint;x+=3){
+   const start={x:x-.7,z},end={x:x+.7,z};
+   if(profiles.every(profile=>{a.selectNavigationProfile(profile.index);return a.localClear(start,end);}))gatePoint={x,z,start,end};
+  }
+  assert(gatePoint,`${biome}: no common traversable gate fixture`);
+  const gateChecks=[];
+  const checkGate=expectedWorkerOnly=>{
+   for(const profile of profiles){a.selectNavigationProfile(profile.index);b.selectNavigationProfile(profile.index);
+    const expected=a.localClear(gatePoint.start,gatePoint.end),actual=b.localClear(gatePoint.start,gatePoint.end);
+    assert.equal(actual,expected);assert.equal(actual,expectedWorkerOnly?profile.worker:true,`${biome}/${profile.index} gate permission`);
+    assert.deepEqual(b.routeWorld(gatePoint.start,gatePoint.end),a.routeWorld(gatePoint.start,gatePoint.end));
+    gateChecks.push({profile:profile.index,workerOnly:expectedWorkerOnly,clear:actual});
+   }
+  };
+  id=p.start(1,0);assert(id>0);await wait(2);
+  const gateStatus=p.status(),ga=a.addBarrier(gatePoint.x,gatePoint.z,.3,2,1),gb=b.addBarrier(gatePoint.x,gatePoint.z,.3,2,1);
+  assert(ga>0&&gb>0);checkGate(true);await wait(3);assert.equal(p.publish(id,1,0),-2);p.release();
+  id=p.start(1,0);await wait(3);assert(p.publish(id,1,0)>0);p.release();a.addChunk(1,0);checkGate(true);
+  a.removeChunk(1,0);b.removeChunk(1,0);
+  id=p.start(1,0);await wait(2);a.removeBarrier(ga);b.removeBarrier(gb);checkGate(false);
+  await wait(3);assert.equal(p.publish(id,1,0),-2);p.release();
+  id=p.start(1,0);await wait(3);assert(p.publish(id,1,0)>0);p.release();a.addChunk(1,0);checkGate(false);
+  rows.push({biome,editStatus,stages,gateStatus,gatePoint,gateChecks});
  }finally{await handle.dispose();}
 }
 await writeFile('docs/qa/wild-engine-pthreads/thread-route-differential.json',JSON.stringify({scope:'Native route differential against standalone for all six actor profiles; no live actor movement or raid simulation',rows},null,2)+'\n');

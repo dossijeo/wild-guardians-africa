@@ -408,3 +408,10 @@ These are complementary checks: the game smoke does not currently expose/assert 
 Six stages cover original state, a polygon added while native status is observed at 2, successful publication after stale-input rejection/retry, routes in the newly published neighbor, polygon removal, and neighbor removal. Total: 5400 route comparisons, all equal. Each stage includes successful routes (31–144 out of 150 depending on terrain/profile mix), not only matching failures. Adding the polygon reduces successful routes and removing it restores the initial counts in every biome. Every stale preparation rejects with -2 before retry.
 
 See thread-route-differential.json. This tests actual navigation results with shared-memory preparation and main-thread edits, not active actor movement, gate semantics, raid simulation, a performance benchmark, or exhaustive path correctness. Some queries can complete after the worker has finished; the obstacle mutation itself is issued immediately after observing running status.
+
+
+## Worker-only gate permeability during preparation
+
+The native route differential now also locates a short traversable segment shared by all six profiles in each biome. It adds an ordinary native barrier with worker-only pass mask 1 while preparation is observed running, verifies local crossing is allowed only for workers, rejects the stale result, retries publication and repeats the permeability check. Removal occurs during a second preparation; the stale result again rejects, and all profiles regain the original crossing before and after retry/publication. Route result objects are compared against the synchronous core throughout.
+
+All six biomes pass 144 additional gate/profile checks (24 each), alongside the original 5400 route comparisons. The fixture uses segments of length 1.4m because spatial_local_clear intentionally rejects segments longer than 1.5m; an initial 4m fixture was invalid and was corrected without changing production code. No settlement or terrain flattening is used. This covers the native permeability representation used by gates, not automatic gate placement commands or active raids.
