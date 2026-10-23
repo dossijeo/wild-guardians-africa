@@ -72,7 +72,7 @@ try{
   w.updateCamera=()=>{w.camera.lookAt(w.controls.target);w.camera.updateMatrixWorld();};
   const readiness=[],slowDraws=[],slowGl=[];let actorsReadyFrames=0,pausedFrames=0;
   const detail={};globalThis.qaThreadDetail=(name,ms)=>(detail[name]??=[]).push(ms);
-  const rows={slices:[],preparationCpu:[],preparationLatency:[],generate:[],admit:[],publish:[],install:[],terrain:[],props:[],mud:[],attach:[],details:[],render:[],draw:[],cache:[],nativeCompute:[],frames:[]};
+  const rows={slices:[],preparationCpu:[],preparationLatency:[],generate:[],admit:[],cancel:[],publish:[],install:[],terrain:[],props:[],mud:[],attach:[],details:[],render:[],draw:[],cache:[],nativeCompute:[],frames:[]};
   w.onTerrainPreparationSlice=row=>rows.slices.push(row.ms);
   w.onTerrainPreparationDone=row=>{rows.preparationCpu.push(row.cpuMs);rows.preparationLatency.push(row.elapsedMs);};
   const wrap=(object,name,key)=>{const original=object[name];object[name]=function(...args){const t=performance.now();try{return original.apply(this,args);}finally{const ms=performance.now()-t;rows[key].push(ms);if(key==='draw'&&ms>100)slowDraws.push({ms,programs:w.renderer.info.programs.length,elapsed:w.state.elapsed,pauses:[...w.state.pauses]});}};return ()=>{object[name]=original;};};
@@ -81,7 +81,7 @@ try{
   if(w.biomeGround)restore.push(wrap(w.biomeGround,'attach','attach'));
   if(w.groundDetails)restore.push(wrap(w.groundDetails,'chunk','details'));
   if(w.mangroveMaterialCache)restore.push(wrap(w.mangroveMaterialCache,'update','cache'));
-  if(core.preparation){restore.push(wrap(core.preparation,'start','admit'),wrap(core.preparation,'publish','publish'));const publish=core.preparation.publish;core.preparation.publish=(...a)=>{rows.nativeCompute.push(core.preparation.metric(1));return publish(...a);};}
+  if(core.preparation){restore.push(wrap(core.preparation,'start','admit'),wrap(core.preparation,'cancel','cancel'),wrap(core.preparation,'publish','publish'));const publish=core.preparation.publish;core.preparation.publish=(...a)=>{rows.nativeCompute.push(core.preparation.metric(1));return publish(...a);};}
   if(options.glDetail){for(const [object,name,key] of [[w,'beforeMicroeventDraw','microevents'],[w,'presentationDraw','presentation'],[w,'drawWorldFrame','worldDraw'],[w.renderer,'render','threeRender']])if(typeof object[name]==='function'){rows[key]=[];restore.push(wrap(object,name,key));}const gl=w.renderer.getContext();for(const name of ['compileShader','linkProgram','getProgramParameter','getShaderParameter','getShaderInfoLog','getProgramInfoLog','getUniformLocation','getActiveUniform','getActiveAttrib','drawElements','drawElementsInstanced','drawArrays','drawArraysInstanced','texImage2D','texSubImage2D','bufferData','bufferSubData']){const original=gl[name];gl[name]=function(...args){const t=performance.now();try{return original.apply(this,args);}finally{const ms=performance.now()-t;if(ms>20){const program=name==='getProgramInfoLog'?w.renderer.info.programs.find(p=>p.program===args[0]):null;slowGl.push({name,ms,elapsed:w.state.elapsed,program:program?{id:program.id,name:program.name,cacheKey:program.cacheKey}:null});}}};restore.push(()=>{gl[name]=original;});}}
   const frame=()=>new Promise(r=>requestAnimationFrame(r));
   for(let i=0;i<60;i++)await frame();
@@ -95,7 +95,7 @@ try{
   let last=await frame();
   try{
    for(let i=0;i<options.frames;i++){
-    const displacement=Math.min(options.distance,i*.8);
+    const displacement=options.zigzag?(Math.floor(i/12)%2?options.distance:0):Math.min(options.distance,i*.8);
     w.controls.target.copy(origin);w.controls.target.x+=displacement;
     w.camera.position.copy(camera);w.camera.position.x+=displacement;
     const now=await frame();rows.frames.push(now-last);last=now;
@@ -107,12 +107,14 @@ try{
    while(w.chunkStream.summary().busy||w.chunkStream.summary().queued){if(performance.now()>deadline)throw Error('Stream completion deadline');const now=await frame();rows.frames.push(now-last);last=now;}
   }finally{game.pause(w.state,'menu');gpu?.stop();for(const undo of restore)undo();}
   const gpuResult=gpu?await gpu.finish():null;
+  if(options.zigzag&&core.preparation&&rows.cancel.length===0)throw Error('Zigzag did not exercise native cancellation');
+  if(w.chunkStream.summary().failed||w.chunkStream.summary().busy||w.chunkStream.summary().queued)throw Error('Stream did not settle cleanly');
   const summary=values=>{const sorted=[...values].sort((a,b)=>a-b);return {count:values.length,mean:values.reduce((a,b)=>a+b,0)/(values.length||1),p95:sorted[Math.floor((sorted.length-1)*.95)]??null,max:sorted.at(-1)??null};};
   const gl=w.renderer.getContext(),debug=gl.getExtension('WEBGL_debug_renderer_info');
   if(options.active&&w.state.elapsed<=initialElapsed)throw Error('Active simulation did not advance');
   const workersAfter=w.state.workers.map(worker=>({id:worker.id,x:worker.x,z:worker.z,status:worker.status}));
   return {scope:options.active?'Active simulation streaming pilot from frozen initial state, per-frame camera travel; final state varies with wall-clock time. CPU/RAF only, not GPU or equivalence acceptance.':'Paused simulation streaming after 60 warm frames. CPU/RAF only.',options,initialElapsed,workersBefore,workersAfter,actorsReadyFrames,pausedFrames,readiness,slowDraws,slowGl,fixtureTutorialSkipped:options.active,initialPrograms,depthWarmMs,gpu:gpuResult?{...gpuResult,summary:summary(gpuResult.samplesMs)}:null,hardware:debug?gl.getParameter(debug.UNMASKED_RENDERER_WEBGL):null,cameraOrigin:camera.toArray(),targetOrigin:origin.toArray(),elapsed:w.state.elapsed,baseline,final:core.metrics(),created:w.chunkStream.stats.created-initialCreated,detail:Object.fromEntries(Object.entries(detail).map(([k,v])=>[k,summary(v)])),summary:Object.fromEntries(Object.entries(rows).map(([k,v])=>[k,summary(v)])),rows};
- },{active:process.env.WG_THREAD_ACTIVE==='1',gpu:process.env.WG_THREAD_GPU==='1',depthWarm:process.env.WG_THREAD_DEPTH_WARM==='1',glDetail:process.env.WG_THREAD_GL_DETAIL==='1',frames:Number(process.env.WG_THREAD_FRAMES??180),distance:Number(process.env.WG_THREAD_DISTANCE??96)});
+ },{zigzag:process.env.WG_THREAD_ZIGZAG==='1',active:process.env.WG_THREAD_ACTIVE==='1',gpu:process.env.WG_THREAD_GPU==='1',depthWarm:process.env.WG_THREAD_DEPTH_WARM==='1',glDetail:process.env.WG_THREAD_GL_DETAIL==='1',frames:Number(process.env.WG_THREAD_FRAMES??180),distance:Number(process.env.WG_THREAD_DISTANCE??96)});
  if(profiler){const {profile}=await profiler.send('Profiler.stop');await writeFile((process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json').replace(/\.json$/,'.cpuprofile'),JSON.stringify(profile));await profiler.detach();}
  if(frozen&&(benchmark||process.env.WG_THREAD_EDIT==='1'))await page.screenshot({path:(process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json').replace(/\.json$/,'.png')});
  await writeFile(process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json',JSON.stringify({scope:'Loaded populated game in Chrome; see streaming scope for limitations.',biome,quality,result,errors},null,2)+'\n');

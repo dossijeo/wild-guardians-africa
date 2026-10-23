@@ -442,3 +442,10 @@ Found an integration gap: native cancellation existed, but spatial-chunk-stream 
 A cancelled builder can finish after demand returns for the same coordinate. NativeChunkStream now treats an explicit null async result as a discarded job and replans current demand, rather than reporting a malformed payload. A deterministic unit test covers that race. Ordinary build errors still follow the error path.
 
 `check-spatial-thread-cancellation.mjs` failed against the previous implementation (zero native cancellations), then passed after the fix. Real shared-memory Mangroves jobs cover demand replacement, forced epoch invalidation, and remove/re-add of the same request. Each cancelled result reports native cancellation=1 and worker identity=1; each replacement publishes, no obsolete chunk is installed, and stream failures remain zero. The targeted chunk suites pass 18 tests. See thread-stream-cancellation.json. No FPS or latency gain is claimed without paired measurements. Packaged binaries predate this JS fix and will need rebuilding for final acceptance.
+
+
+## Rendered rapid-camera cancellation stress
+
+`WG_THREAD_ZIGZAG=1` switches the benchmark camera between its original x and x+240m every twelve frames. With WG_THREAD_FRAMES=240, WG_THREAD_DISTANCE=240, WG_THREAD_FROZEN=1 and WG_THREAD_BENCH=1, the real Mangroves renderer exercises nine native cancellations. It installs 92 chunks over the alternating moves, then drains to an idle queue with no failures; native residency returns to 25 chunks / 400 sectors and WASM capacity remains 16 MiB. The harness asserts cancellation occurred and the queue settled. Only known f_environment4 shader warnings are logged.
+
+`game-zigzag-cancellation.json/png` records the run. Including the final drain, 292 RAF samples average 32.40ms, p95 83.13ms, maximum 199.55ms. Simulation is paused and no GPU timer is enabled. This is an adversarial camera correctness test, not an A/B performance claim or evidence of eliminating remaining shader/installation stalls. The camera now has an explicit optional pattern flag; default benchmark motion is unchanged.
