@@ -61,3 +61,11 @@ export async function verifyFineVisibility(w){
   return {samples,intermediateSamples:intermediate.length,peakBytes:cache.queue.stats.peakBytes,glError:w.renderer.getContext().getError()};
  }finally{w.camera.position.copy(base);}
 }
+
+export async function verifyMaterialEntry(w){
+ const c=w.qaIncrementalGround,samples=[];
+ for(let frame=0;frame<120;frame++){await new Promise(requestAnimationFrame);samples.push({frame,weights:[...c.states].filter(([,s])=>s.uniforms.uQaCacheReady.value===1).map(([key,s])=>({key,weight:s.uniforms.uQaEntryBlend.value})),bytes:c.queue.stats.bytes});}
+ const intermediate=samples.flatMap(s=>s.weights).filter(s=>s.weight>0&&s.weight<1);
+ if(!intermediate.length||samples.at(-1).weights.some(s=>s.weight!==1))throw Error('Material entry did not transition to completion');
+ return {samples,intermediate:intermediate.length,glError:w.renderer.getContext().getError()};
+}
