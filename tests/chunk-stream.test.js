@@ -125,3 +125,13 @@ test('late asynchronous prepared graphics are disposed after stream teardown',as
  await new Promise(resolve=>setImmediate(resolve));
  assert.deepEqual(installed,[]);assert.deepEqual(discarded,[data]);
 });
+
+test('cancelled async request is retried when its demand returns before completion',async()=>{
+ const loaded=new Map(),errors=[];let complete,calls=0;
+ const stream=new NativeChunkStream({}, {},{loaded:()=>loaded,onData:data=>loaded.set('0,0',data),onError:e=>errors.push(e),workerFactory:()=>null,
+  buildAsync:()=>{calls++;return calls===1?new Promise(resolve=>{complete=resolve;}):Promise.resolve({cx:0,cz:0});}});
+ const jobs=new Map([['0,0',{cx:0,cz:0,score:0}]]);
+ stream.plan(jobs);await Promise.resolve();stream.plan(new Map());stream.plan(jobs);
+ complete(null);await stream.whenIdle();
+ assert.equal(calls,2);assert.equal(loaded.size,1);assert.deepEqual(errors,[]);assert.equal(stream.stats.discarded,1);stream.dispose();
+});

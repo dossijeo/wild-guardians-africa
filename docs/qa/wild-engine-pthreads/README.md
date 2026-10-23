@@ -433,3 +433,12 @@ Inspection confirms the synchronous serviceRaidConnectivityDemand is a headless 
 `node tools/experiments/check-spatial-thread-raid-residency.mjs` invokes that production scene method with a real shared core/stream in all six biomes. Mesh installation is a stub (no GPU). A sparse raid entry/exit at z=320/323 requests its remote chunk in addition to the 25 near chunks, without filling the intervening rectangle. Every successful absent-chunk publication asserts native worker identity 1. core.addChunk is replaced with a throwing guard, so any synchronous absent generation fails the test. Cancelling the raid demand removes the remote chunk from both installed inventory and native residency while preserving all 25 near chunks.
 
 All six pass with zero synchronous addChunk calls and zero stream failures; see thread-raid-residency.json. This validates the production planning/stream connection and cancellation, complementing the first-day AI test, but does not combine GPU installation, live raid AI and asynchronous sparse streaming in one full-game run.
+
+
+## Forward obsolete stream requests to native cancellation
+
+Found an integration gap: native cancellation existed, but spatial-chunk-stream only waited for an obsolete job to finish before discarding its result. It now signals p.cancel once when the request becomes non-current, keeps ownership until the worker reaches its terminal result, and releases normally. C++ cancellation remains cooperative between generation/profile phases; this is not instantaneous interruption inside a raster.
+
+A cancelled builder can finish after demand returns for the same coordinate. NativeChunkStream now treats an explicit null async result as a discarded job and replans current demand, rather than reporting a malformed payload. A deterministic unit test covers that race. Ordinary build errors still follow the error path.
+
+`check-spatial-thread-cancellation.mjs` failed against the previous implementation (zero native cancellations), then passed after the fix. Real shared-memory Mangroves jobs cover demand replacement, forced epoch invalidation, and remove/re-add of the same request. Each cancelled result reports native cancellation=1 and worker identity=1; each replacement publishes, no obsolete chunk is installed, and stream failures remain zero. The targeted chunk suites pass 18 tests. See thread-stream-cancellation.json. No FPS or latency gain is claimed without paired measurements. Packaged binaries predate this JS fix and will need rebuilding for final acceptance.

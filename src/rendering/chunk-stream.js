@@ -57,6 +57,11 @@ export class NativeChunkStream{
     if(this.dead||!this.busy||message.id!==this.busy.id||message.epoch!==this.busy.epoch){this.stats.discarded++;this.discardData(message.data);return;}
     const job=this.busy,key=job.cx+','+job.cz;this.busy=null;
     if(message.epoch!==this.epoch||!this.desired.has(key)||this.loaded().has(key)&&!this.stale.has(key)){this.stats.discarded++;this.discardData(message.data);}
+    else if(message.data===null&&!message.error&&this.buildAsync){
+      // An async builder may have cancelled a job while demand disappeared.
+      // If that demand returned meanwhile, schedule a fresh job for it.
+      this.stats.discarded++;this.plan(this.desired);
+    }
     else if(message.error){this.failed.add(key);this.stats.failed++;this.onError(new Error(message.error));}
     else{
       try{if(message.data.cx!==job.cx||message.data.cz!==job.cz)throw new Error('Respuesta de chunk con coordenadas incorrectas');this.onData(message.data);this.stale.delete(key);this.stats.created++;}

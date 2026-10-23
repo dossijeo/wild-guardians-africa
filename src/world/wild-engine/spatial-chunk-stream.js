@@ -21,13 +21,15 @@ export function createSpatialChunkStream(core,{loaded,onData,onError=()=>{},sche
     while(current()){
       const id=p.start(cx,cz);
       if(id<=0)throw Error(`Could not dispatch native chunk ${cx},${cz}: ${id}`);
+      let cancelled=false;
       try{
         while(p.status()!==3){
           if(p.status()===5)throw Error('Native generation stopped');
+          if(!current()&&!cancelled){p.cancel();cancelled=true;}
           // Notification polling, not deferred generation: C++ runs on pthread.
           await new Promise(resolve=>setTimeout(resolve,4));
         }
-        if(!current())return null;
+        if(cancelled||!current())return null;
         const result=p.publish(id,cx,cz);
         if(result>0)return core.chunkPayload();
         if(result!==-2)throw Error(`Native chunk publication failed: ${result}`);
