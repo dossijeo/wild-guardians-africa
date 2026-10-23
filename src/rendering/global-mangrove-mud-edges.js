@@ -1,11 +1,18 @@
 import * as THREE from 'three';
 import {nativeGroundMaterial} from './render-quality.js';
+// Preserve the original four-decimal lookup, with allocation-free keys for the
+// integer terrain lattice. String fallback keeps irregular coordinates distinct.
+export function mudTerrainKey(x,z){
+ const a=Number.isInteger(x)?x:Number(x.toFixed(4)),b=Number.isInteger(z)?z:Number(z.toFixed(4));
+ if(!(a===0&&x<0)&&!(b===0&&z<0)&&Number.isInteger(a)&&Number.isInteger(b)&&a>=-32768&&a<32768&&b>=-32768&&b<32768)return (a+32768)+(b+32768)*65536;
+ return x.toFixed(4)+','+z.toFixed(4);
+}
 // One-time visual preparation of existing mud triangles; no world queries or per-frame work.
 export function bindMangroveMudEdges(world,group){
  let attributeBytes=0,cacheHits=0,uniqueVertices=0,segmentTests=0;
   const ground=group.children.find(m=>m.userData.ground),mud=group.children.find(m=>m.name==='mangrove-mud-patches');if(!ground||!mud)return;
   const start=performance.now(),gp=ground.geometry.attributes.position,gc=ground.geometry.attributes.color,gn=ground.geometry.attributes.normal,grid=new Map();
-  for(let i=0;i<gp.count;i++)grid.set(gp.getX(i).toFixed(4)+','+gp.getZ(i).toFixed(4),i);
+  for(let i=0;i<gp.count;i++)grid.set(mudTerrainKey(gp.getX(i),gp.getZ(i)),i);
   const g=mud.geometry,p=g.attributes.position,colors=new Float32Array(p.count*3),normals=new Float32Array(p.count*3),edges=new Float32Array(p.count),origin=group.userData.nativeChunkOrigin,vertexCache=new Map();
   const contours=g.userData.mudOutlines.map(points=>({points,minX:Math.min(...points.map(p=>p[0])),maxX:Math.max(...points.map(p=>p[0])),minZ:Math.min(...points.map(p=>p[1])),maxZ:Math.max(...points.map(p=>p[1]))}));
   for(let i=0;i<p.count;i++){
@@ -14,7 +21,7 @@ export function bindMangroveMudEdges(world,group){
    if(previous!==undefined){colors.set(colors.subarray(previous*3,previous*3+3),i*3);normals.set(normals.subarray(previous*3,previous*3+3),i*3);edges[i]=edges[previous];cacheHits++;continue;}
    uniqueVertices++;
    const corners=fx+fz<=1?[[ix,iz,1-fx-fz],[ix+1,iz,fx],[ix,iz+1,fz]]:[[ix+1,iz+1,fx+fz-1],[ix,iz+1,1-fx],[ix+1,iz,1-fz]];
-   for(const [cx,cz,w]of corners){if(w<1e-7)continue;const j=grid.get(cx.toFixed(4)+','+cz.toFixed(4));if(j===undefined)throw Error('Missing terrain interpolation vertex '+cx+','+cz);for(let k=0;k<3;k++){colors[i*3+k]+=gc.getComponent(j,k)*w;normals[i*3+k]+=gn.getComponent(j,k)*w}}
+   for(const [cx,cz,w]of corners){if(w<1e-7)continue;const j=grid.get(mudTerrainKey(cx,cz));if(j===undefined)throw Error('Missing terrain interpolation vertex '+cx+','+cz);for(let k=0;k<3;k++){colors[i*3+k]+=gc.getComponent(j,k)*w;normals[i*3+k]+=gn.getComponent(j,k)*w}}
    let dist=Infinity;const wx=x+origin[0],wz=z+origin[1];
    const bounds=c=>Math.hypot(Math.max(c.minX-wx,0,wx-c.maxX),Math.max(c.minZ-wz,0,wz-c.maxZ));
    const scan=c=>{const contour=c.points;for(let j=0;j<contour.length;j++){
