@@ -475,3 +475,10 @@ WG_THREAD_COMPLETE_LEGS=1 waits for each camera position to finish its queue and
 Repeated p95 improvement is about 25%; total elapsed benefit is only 1.6%/0.6%. Chunk installation still averages 15.9–17.0ms with peaks up to 50.3ms. Final PNG RGB MAE is 0.000196/0.000060 on a 0–255 scale, with localized maximum channel differences 18/20; not pixel-identical. These results support program-lifecycle retention as a stutter reduction candidate, not a complete streaming fix.
 
 Reproduce the four runs with WG_THREAD_PORT=5299, WG_THREAD_FROZEN=1, WG_THREAD_BENCH=1, WG_THREAD_COMPLETE_LEGS=1, WG_THREAD_GL_DETAIL=1, WG_THREAD_FRAMES=4, WG_THREAD_DISTANCE=240 and WG_THREAD_PIN_PROGRAMS=0/1/0/1. Raw program-retain-{a1,b1,a2,b2}.json/png and program-retain-summary.json contain evidence. GPU memory/driver allocation is not measured. The private-field retention probe remains QA-only pending a bounded production design, teardown checks and wider validation.
+
+
+## Bounded experimental program lease
+
+The QA pin probe now uses retainWarmedPrograms instead of open-coded reference edits. The adapter explicitly supports Three revision 180, validates reference-count fields, retains at most 96 unique programs from the initial snapshot, never accumulates later variants, and releases its references once in the measurement finally block. Only programs with no material references remaining are destroyed. Unsupported versions fail closed by retaining nothing. Three unit tests cover the cap, remaining material ownership, idempotent release, malformed metadata, unsupported versions and already-removed programs.
+
+The real Chrome two-leg run in program-retain-bounded.json completes 50 chunk installations, releases every acquired reference and reports no unexpected console errors. This is lifecycle validation, not another paired performance result. The adapter is still used only by QA, not enabled in the application. The cap is a program-count bound, not a GPU byte budget; driver allocation size is unavailable. Full app teardown/context restoration and quality-change validation remain before integration.
