@@ -13,6 +13,13 @@ const page=await browser.newPage({viewport:{width:1280,height:720}}),errors=[];
 page.on('pageerror',e=>errors.push(e.message));
 page.on('console',m=>{if(m.type()==='error'||m.type()==='warning'){errors.push(m.text());console.log(m.text().slice(0,500));}});
 try{
+ if(process.env.WG_THREAD_NO_ISOLATION==='1')await page.route('**/*',async route=>{
+  if(route.request().resourceType()!=='document')return route.fallback();
+  const response=await route.fetch(),headers={...response.headers()};
+  delete headers['cross-origin-opener-policy'];delete headers['cross-origin-embedder-policy'];
+  await route.fulfill({response,headers});
+ });
+ if(process.env.WG_THREAD_BOOT_FAILURE==='1')await page.route('**/wild-engine/spatial-threaded.mjs',route=>route.fulfill({status:503,contentType:'text/javascript',body:'// QA: unavailable pthread module'}));
  await page.addInitScript(text=>{localStorage.setItem('wild-guardians:slot:opening',text);localStorage.setItem('wild-guardians:settings',JSON.stringify({quality:'media',farVegetation:true}));},fixture.timing.navigationContext.state);
  if(frozen)await page.route('**/src/app/main.js*',async route=>{const response=await route.fetch();const body=await response.text(),anchor='world.render(0);loadingOverlay?.dispose();';if(body.split(anchor).length!==2)throw Error('Missing readiness freeze anchor');await route.fulfill({response,body:body.replace(anchor,"Game.pause(state,'menu');"+anchor)});});
  await page.route('**/@vite/client',async route=>{const response=await route.fetch();const source=await response.text(),anchor='transport.connect(createHMRHandler(handleMessage));';if(!source.includes(anchor))throw Error('Missing HMR anchor');await route.fulfill({response,body:source.replace(anchor,'// QA: freeze module versions during measurement.')});});
@@ -31,7 +38,9 @@ try{
   await page.waitForTimeout(10000);
  }
  const result=await page.evaluate(async()=>{const w=qaThreadWorld;await w.whenChunksReady();return {isolated:crossOriginIsolated,runtime:w.spatialSession.runtime,stream:w.chunkStream.summary(),native:w.spatialSession.core.metrics(),chunks:w.chunks.size,stage:document.querySelector('#stage')?.getAttribute('aria-busy'),elapsed:w.state.elapsed,renderer:w.renderer.getContext().getParameter(w.renderer.getContext().RENDERER)};});
- if(result.runtime.backend!==(threaded?'pthreads':'standalone'))throw Error(JSON.stringify(result));
+ if(process.env.WG_THREAD_NO_ISOLATION==='1'&&(result.isolated||result.runtime.fallbackReason!=='SharedArrayBuffer isolation unavailable'))throw Error('Missing real non-isolated fallback');
+ if(process.env.WG_THREAD_BOOT_FAILURE==='1'&&(!result.isolated||!result.runtime.fallbackReason))throw Error('Missing isolated boot-failure fallback');
+ if(result.runtime.backend!==((threaded&&process.env.WG_THREAD_NO_ISOLATION!=='1'&&process.env.WG_THREAD_BOOT_FAILURE!=='1')?'pthreads':'standalone'))throw Error(JSON.stringify(result));
  if(frozen&&result.elapsed!==JSON.parse(fixture.timing.navigationContext.state).elapsed)throw Error('Fixture advanced before pause');
  if(process.env.WG_THREAD_EDIT==='1')result.concurrentEdits=await page.evaluate(async()=>await (await import('/tools/experiments/spatial-thread-edit-case.js')).verifyConcurrentWallEdit(qaThreadWorld));
  if(fixture.concurrentEditExpectations)result.reloadedEdits=await page.evaluate(expected=>{
