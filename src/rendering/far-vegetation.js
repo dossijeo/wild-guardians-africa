@@ -1,3 +1,4 @@
+import {withRaisedMountainBase} from './raised-mountain-base.js';
 import {loadingAwaitWitness} from './loading-sync-witness.js';
 import {validateTreeTransitionPolicy} from '../../tools/experiments/tree-transition-range.js';
 import {releaseNativeFarGpuCache,registerNativeFarTextureOwner} from '../../tools/experiments/prepare-native-far-gpu.js';
@@ -25,7 +26,7 @@ export async function attachBiomeFarVegetation(world,{start=60,end=90,residentRa
  if(typeof includeFarGround!=='boolean')throw Error('Invalid far ground option');
  if(options.qualityDriven!==undefined&&typeof options.qualityDriven!=='boolean')throw Error('Invalid far quality policy');
  if(options.backdropHQ!==undefined&&typeof options.backdropHQ!=='boolean')throw Error('Invalid HQ mountain policy');
- const mountain=options.backdropHQ?mountainBackdropProfile(world.nav.config.biome,world.state?.seed??world.nav.config.seed):null;
+ const mountain=withRaisedMountainBase(options.backdropHQ?mountainBackdropProfile(world.nav.config.biome,world.state?.seed??world.nav.config.seed):null,world.nav.config.biome);
  if(!Number.isFinite(start)||!Number.isFinite(end)||start<0||end<=start||!Number.isFinite(transitionMargin)||transitionMargin<0||transitionMargin>24)throw Error('Invalid far transition distances');
  for(const radius of [residentRange,visualRange])if(radius!==null&&(!Number.isInteger(radius)||radius<1||radius>3))throw Error('Invalid far resident radius');
  if(visualRange!==null&&visualRange>(residentRange??(world.quality==='alta'?3:2)))throw Error('Visual radius exceeds terrain residency');
