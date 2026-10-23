@@ -361,3 +361,20 @@ All nine pass in `thread-browser-disposal.json`. Running-job disposal returns in
 `game-exit-running.json` passes: world disposed, menu present, zero pthread workers, native stopped status 5, zero late installs, one discarded job, idle queue and zero stream failures. Total menu transition was 288.57 ms, including save and graphics teardown, not native shutdown cost. Disposal calls observed statuses [3,5]: generation finished during the save/menu preparation before the first session dispose call. Thus this proves pending-result discard and idempotent integrated teardown, not that the game-level shutdown interrupted computation. The separate browser runtime lifecycle test covers shutdown while status 2.
 
 This checks scene disposal and absence of late installation, not a GPU-memory leak audit. QA holds the old world/runtime for inspection and does not measure garbage collection. No production files changed.
+
+
+## Low-quality active GPU ABAB
+
+The harness accepts WG_THREAD_QUALITY (default media). A sequential baja run uses the same Mangroves fixture, Intel UHD / Chrome, 1280x720 viewport, 60 warm frames, 600 active frames and 240m camera path, fixed512 cache and existing fern LOD. Each run creates 25 chunks, has zero paused frames, and records 201 GPU intervals. See low-active-summary.json and low-active-{a1,b1,a2,b2}.json/png. Captures are active end states, not pixel-equivalence evidence.
+
+| ms | A1 sync | B1 pthread | A2 sync | B2 pthread |
+|---|---:|---:|---:|---:|
+| RAF mean | 27.58 | 25.75 | 27.35 | 25.33 |
+| RAF p95 | 66.51 | 49.90 | 66.50 | 49.90 |
+| RAF maximum | 116.38 | 182.96 | 199.44 | 182.97 |
+| GPU mean | 21.13 | 20.60 | 20.98 | 20.34 |
+| GPU p95 | 31.00 | 29.20 | 31.71 | 30.81 |
+
+Mean frametime improves 6.6% and 7.4% in the paired runs; p95 improves about 25% in both. Worst-frame improvement is not consistent. Synchronous native generation costs 48.05/47.30 ms per chunk, versus main-thread publication 0.792/0.734 ms for pthreads. The GPU interval is slightly lower here, but it includes pipeline idle time and is not evidence that pthreads reduce shader work. This does not remove the remaining graphics streaming stalls.
+
+Reproduce with WG_THREAD_PORT=5299, WG_THREAD_FROZEN=1, WG_THREAD_ACTIVE=1, WG_THREAD_BENCH=1, WG_THREAD_GPU=1, WG_THREAD_FRAMES=600, WG_THREAD_DISTANCE=240, WG_THREAD_QUALITY=baja; run sequentially with WG_THREADS=0,1,0,1 and distinct WG_THREAD_REPORT paths. No simultaneous builds or other benchmarks were run. This is one biome/quality sequence, not long-session or all-biome performance acceptance.

@@ -3,6 +3,8 @@ import {readFile,writeFile} from 'node:fs/promises';
 import {globalClosureQuery} from './global-closure-recipe-20261022.mjs';
 const threaded=process.env.WG_THREADS!=='0',benchmark=process.env.WG_THREAD_BENCH==='1',frozen=process.env.WG_THREAD_FROZEN==='1';
 const biome=process.env.WG_THREAD_BIOME??'manglares';
+const quality=process.env.WG_THREAD_QUALITY??'media';
+if(!['baja','media','alta'].includes(quality))throw Error('Invalid QA quality');
 const fixtures={sabana:'sabana-populated-frozen-20261022',desierto:'desert-populated-closure-20261022','gran-rio':'gran-rio-populated-frozen-20261022',volcanes:'volcanes-populated-frozen-20261022',manglares:'manglares-populated-frozen-20261022','gran-canon':'gran-canon-populated-native-camera-20261022'};
 if(!fixtures[biome])throw Error('Unknown biome');
 const fixture=JSON.parse(await readFile(process.env.WG_THREAD_FIXTURE_FILE??`docs/qa/global-visual-lab/${fixtures[biome]}/native-fixture.json`,'utf8'));
@@ -20,7 +22,7 @@ try{
   await route.fulfill({response,headers});
  });
  if(process.env.WG_THREAD_BOOT_FAILURE==='1')await page.route('**/wild-engine/spatial-threaded.mjs',route=>route.fulfill({status:503,contentType:'text/javascript',body:'// QA: unavailable pthread module'}));
- await page.addInitScript(text=>{localStorage.setItem('wild-guardians:slot:opening',text);localStorage.setItem('wild-guardians:settings',JSON.stringify({quality:'media',farVegetation:true}));},fixture.timing.navigationContext.state);
+ await page.addInitScript(({text,quality})=>{localStorage.setItem('wild-guardians:slot:opening',text);localStorage.setItem('wild-guardians:settings',JSON.stringify({quality,farVegetation:true}));},{text:fixture.timing.navigationContext.state,quality});
  if(frozen)await page.route('**/src/app/main.js*',async route=>{const response=await route.fetch();const body=await response.text(),anchor='world.render(0);loadingOverlay?.dispose();';if(body.split(anchor).length!==2)throw Error('Missing readiness freeze anchor');await route.fulfill({response,body:body.replace(anchor,"Game.pause(state,'menu');"+anchor)+(process.env.WG_THREAD_EXIT==='1'?'\nglobalThis.qaReturnToMenu=menu;':'')});});
  if(process.env.WG_THREAD_EXIT==='1')await page.route('**/src/world/wild-engine/spatial-thread-runtime.js*',async route=>{const response=await route.fetch(),source=await response.text(),anchor='return {core,memory,runtime,dispose(){';if(!source.includes(anchor))throw Error('Missing runtime observation anchor');await route.fulfill({response,body:source.replace(anchor,'return globalThis.qaThreadHandle={core,memory,runtime,dispose(){')});});
  await page.route('**/@vite/client',async route=>{const response=await route.fetch();const source=await response.text(),anchor='transport.connect(createHMRHandler(handleMessage));';if(!source.includes(anchor))throw Error('Missing HMR anchor');await route.fulfill({response,body:source.replace(anchor,'// QA: freeze module versions during measurement.')});});
@@ -113,6 +115,6 @@ try{
  },{active:process.env.WG_THREAD_ACTIVE==='1',gpu:process.env.WG_THREAD_GPU==='1',depthWarm:process.env.WG_THREAD_DEPTH_WARM==='1',glDetail:process.env.WG_THREAD_GL_DETAIL==='1',frames:Number(process.env.WG_THREAD_FRAMES??180),distance:Number(process.env.WG_THREAD_DISTANCE??96)});
  if(profiler){const {profile}=await profiler.send('Profiler.stop');await writeFile((process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json').replace(/\.json$/,'.cpuprofile'),JSON.stringify(profile));await profiler.detach();}
  if(frozen&&(benchmark||process.env.WG_THREAD_EDIT==='1'))await page.screenshot({path:(process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json').replace(/\.json$/,'.png')});
- await writeFile(process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json',JSON.stringify({scope:'Loaded populated game in Chrome; see streaming scope for limitations.',biome,result,errors},null,2)+'\n');
+ await writeFile(process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json',JSON.stringify({scope:'Loaded populated game in Chrome; see streaming scope for limitations.',biome,quality,result,errors},null,2)+'\n');
  console.log(JSON.stringify({result,errors}));
 }finally{await browser.close();}
