@@ -31,10 +31,10 @@ for r in j['records']:
    d['inclusiveCpuMs']={k:round(v/60,3) for k,v in sorted(totals.items(),key=lambda kv:-kv[1])}
   row['modes'][m['mode']]=d
  out.append(row)
-(p/'summary.json').write_text(json.dumps(out,indent=2)+'\n',encoding='utf-8')
+(p/'summary.json').write_text(json.dumps(out,indent=2)+'\n',encoding='utf-8',newline='\n')
 for phase in ['day','night']:
  records=[r for r in j['records'] if r['phase']==phase]
- assert [r['variant'] for r in records]==['base','flat','base','flat']
+ assert [r['variant'] for r in records]==['base',sys.argv[2] if len(sys.argv)>2 else 'flat','base',sys.argv[2] if len(sys.argv)>2 else 'flat']
  for field in ['elapsed','workers','time']:
   assert all(r['stateBefore'][field]==records[0]['stateBefore'][field] for r in records),field
  for mode in ['frame','passes','cadence']:
