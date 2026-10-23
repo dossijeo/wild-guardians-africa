@@ -1,0 +1,99 @@
+{
+  "scope": "Nine real Chrome native runtime lifecycle cases; no game renderer or process RSS measurement",
+  "result": {
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+    "rows": [
+      {
+        "phase": "idle",
+        "repeat": 0,
+        "before": 0,
+        "callMs": 0.29500001668930054,
+        "elapsedMs": 0.36000001430511475,
+        "workers": 0,
+        "loadedChunks": 1,
+        "memoryBytes": 16777216
+      },
+      {
+        "phase": "idle",
+        "repeat": 1,
+        "before": 0,
+        "callMs": 0.0549999475479126,
+        "elapsedMs": 0.11499994993209839,
+        "workers": 0,
+        "loadedChunks": 1,
+        "memoryBytes": 16777216
+      },
+      {
+        "phase": "idle",
+        "repeat": 2,
+        "before": 0,
+        "callMs": 0.04500001668930054,
+        "elapsedMs": 0.06500005722045898,
+        "workers": 0,
+        "loadedChunks": 1,
+        "memoryBytes": 16777216
+      },
+      {
+        "phase": "running",
+        "repeat": 0,
+        "before": 2,
+        "callMs": 0.014999985694885254,
+        "elapsedMs": 13.539999961853027,
+        "workers": 0,
+        "loadedChunks": 1,
+        "memoryBytes": 16777216
+      },
+      {
+        "phase": "running",
+        "repeat": 1,
+        "before": 2,
+        "callMs": 0.06000000238418579,
+        "elapsedMs": 15.125,
+        "workers": 0,
+        "loadedChunks": 1,
+        "memoryBytes": 16777216
+      },
+      {
+        "phase": "running",
+        "repeat": 2,
+        "before": 2,
+        "callMs": 0.025000035762786865,
+        "elapsedMs": 14.485000014305115,
+        "workers": 0,
+        "loadedChunks": 1,
+        "memoryBytes": 16777216
+      },
+      {
+        "phase": "ready",
+        "repeat": 0,
+        "before": 3,
+        "callMs": 0.020000040531158447,
+        "elapsedMs": 5.060000002384186,
+        "workers": 0,
+        "loadedChunks": 1,
+        "memoryBytes": 16777216
+      },
+      {
+        "phase": "ready",
+        "repeat": 1,
+        "before": 3,
+        "callMs": 0.020000040531158447,
+        "elapsedMs": 4.64000004529953,
+        "workers": 0,
+        "loadedChunks": 1,
+        "memoryBytes": 16777216
+      },
+      {
+        "phase": "ready",
+        "repeat": 2,
+        "before": 3,
+        "callMs": 0.07499998807907104,
+        "elapsedMs": 4.944999992847443,
+        "workers": 0,
+        "loadedChunks": 1,
+        "memoryBytes": 16777216
+      }
+    ]
+  },
+  "errors": []
+}

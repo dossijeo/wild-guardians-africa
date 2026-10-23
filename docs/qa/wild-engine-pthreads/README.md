@@ -345,3 +345,10 @@ Two additional full Mangroves app loads use the normal saved-slot menu path, wit
 Both reach loading complete with 25 chunks, an idle queue, zero stream failures, unchanged paused simulation time and 16 MiB native memory. The latter intentionally produces a 503 and fallback warning; other logged warnings are the known f_environment4 messages. This proves basic full-load fallback, not active streaming performance, automatic recovery after a running worker fails, or actual itch hosting.
 
 Reproduction: run check-spatial-thread-game.mjs with WG_THREAD_PORT=5299, WG_THREAD_FROZEN=1 and exactly one of WG_THREAD_NO_ISOLATION=1 or WG_THREAD_BOOT_FAILURE=1. Set WG_THREAD_REPORT to a distinct report file. The QA changes only response delivery, without overriding browser isolation properties or production runtime decisions.
+
+
+## Browser runtime shutdown at three ownership phases
+
+`node tools/experiments/check-spatial-thread-browser-disposal.mjs` runs nine fresh shared-memory runtimes in real Chrome: three idle, three observed at native status 2 (running), and three at status 3 (ready but unpublished). Every case builds all six navigation profiles in Mangroves. Each calls dispose twice and asserts the same promise, waits with a 10-second deadline, requires stopped status 5 and zero running/unused pthread workers, checks resident chunk count stays at one, and verifies the disposed job cannot publish.
+
+All nine pass in `thread-browser-disposal.json`. Running-job disposal returns in 0.015–0.060 ms; asynchronous completion takes 13.54–15.13 ms. Ready-job completion takes 4.64–5.06 ms. These are small functional timing samples, not a robust performance benchmark. Runtime-owned worker registries are empty; this does not prove immediate process RSS reclamation or garbage collection of the retained WASM memory. Full-game graphics teardown and cancellation through the UI remain separate acceptance gates.
