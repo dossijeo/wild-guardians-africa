@@ -331,19 +331,34 @@ export class WorldScene {
     focusNewTutorialPlacement(this,target,true);
     return target;
   }
-  terrain(cx,cz,payload=null) {
+  *prepareTerrainSteps(cx,cz,payload=null) {
     const group=new THREE.Group();group.position.set(cx*48,0,cz*48);group.userData.nativeChunkOrigin=[cx*48,cz*48];
+    let completed=false;
+    try{
     if(payload?.authority==='spatial-wasm'){
       group.userData.spatialAuthority='spatial-wasm';
       group.userData.spatialTerrainRevision=payload.terrainRevision;
     }
     const geometry=payload?nativeTerrainBuffer(payload.terrain):nativeGroundGeometry(this.nav.field,this.pack.profile,cx,cz);
     const material=nativeGroundMaterial(this.quality);
-    this.biomeGround?.attach(material,cx,cz,payload?.groundMask);material.userData.toonGround=true;material.userData.nativeGroundColor=true;const ground=new THREE.Mesh(geometry,material);ground.position.set(0,0,0);ground.receiveShadow=true;ground.castShadow=this.toon.globalVisualLighting&&this.state.biome==='gran-canon';ground.userData.ground=true;group.add(ground);this.terrainMeshes.push(ground);if(this.mudPatches){const mud=this.mudPatches.chunk(this.nav.field,cx,cz);if(mud){group.add(mud);group.userData.mudSurface=mud.geometry.userData;if(this.biomeGround.mangroveSubstrate)bindMangroveMudEdges(this,group);}}
+    this.biomeGround?.attach(material,cx,cz,payload?.groundMask);material.userData.toonGround=true;material.userData.nativeGroundColor=true;const ground=new THREE.Mesh(geometry,material);ground.position.set(0,0,0);ground.receiveShadow=true;ground.castShadow=this.toon.globalVisualLighting&&this.state.biome==='gran-canon';ground.userData.ground=true;group.add(ground);yield 'ground';if(this.mudPatches){const mud=this.mudPatches.chunk(this.nav.field,cx,cz);if(mud){group.add(mud);group.userData.mudSurface=mud.geometry.userData;yield 'mud-geometry';if(this.biomeGround.mangroveSubstrate)bindMangroveMudEdges(this,group);yield 'mud-edges';}}
     const waterGeometry=payload?nativeWaterBuffer(payload.water):nativeChunkWater(this.nav.field,cx,cz,this.pack.profile);
-    if(waterGeometry){const waterMaterial=this.naturalWaterEdges&&this.state.biome!=='desierto'?paintedWaterMaterial(this.pack.profile.colors.water,this.state.biome==='volcanes',this.nav.field.seed,null,this.fluidLighting):this.fluidMaterial;prepareMangroveBank(this,waterGeometry,cx,cz,waterMaterial);if(waterMaterial!==this.fluidMaterial)prepareNaturalWater(this,waterGeometry,cx,cz,waterMaterial);const mesh=new THREE.Mesh(waterGeometry,waterMaterial);mesh.position.set(0,0,0);mesh.receiveShadow=true;mesh.userData.nativeFluid='chunk';group.add(mesh);if(this.waterOpaqueCore)prepareOpaqueCore(mesh);}
+    if(waterGeometry){const waterMaterial=this.naturalWaterEdges&&this.state.biome!=='desierto'?paintedWaterMaterial(this.pack.profile.colors.water,this.state.biome==='volcanes',this.nav.field.seed,null,this.fluidLighting):this.fluidMaterial;const mesh=new THREE.Mesh(waterGeometry,waterMaterial);mesh.position.set(0,0,0);mesh.receiveShadow=true;mesh.userData.nativeFluid='chunk';group.add(mesh);prepareMangroveBank(this,waterGeometry,cx,cz,waterMaterial);yield 'bank';if(waterMaterial!==this.fluidMaterial)prepareNaturalWater(this,waterGeometry,cx,cz,waterMaterial);yield 'water-edges';if(this.waterOpaqueCore)prepareOpaqueCore(mesh);}
     const chunk=payload??this.nav.chunk(cx,cz);group.userData.propSources=chunk.instances;group.userData.contactInstances=chunk.instances.map(list=>list.filter(p=>!this.nav.suppressed.has(p.id)));
-    for(let i=0;i<20;i++)this.buildPropSlot(group,i,group.userData.contactInstances[i]);
+    for(let i=0;i<20;i++){this.buildPropSlot(group,i,group.userData.contactInstances[i]);yield 'prop-slot';}
+    completed=true;return group;
+    }finally{if(!completed)this.disposePreparedTerrain(group);}
+  }
+  disposePreparedTerrain(group){
+    disposeAssetShadows(group);
+    group.traverse(o=>{if(o.isInstancedMesh){o.dispose();if(o.geometry.userData.obstruction||o.geometry.userData.nativeChunkClip)o.geometry.dispose();if(o.userData.nativeFluid==='asset'&&o.material!==this.fluidMaterial)o.material.dispose();return;}if(o.isMesh){if(!o.userData.borrowedWaterGeometry)o.geometry.dispose();if(o.material!==this.fluidMaterial)o.material.dispose();}});
+  }
+  terrain(cx,cz,payload=null){
+    const steps=this.prepareTerrainSteps(cx,cz,payload);
+    let result;
+    do{result=steps.next();}while(!result.done);
+    const group=result.value;
+    for(const child of group.children)if(child.userData.ground)this.terrainMeshes.push(child);
     return group;
   }
   buildPropSlot(group,i,instances) {
