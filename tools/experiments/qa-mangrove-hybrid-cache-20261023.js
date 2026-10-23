@@ -5,7 +5,7 @@ import {GpuTimer} from '/tests/browser/gpu-timer.js';
 // Experiment only. RGBA = secondary moss weight, moss/soil weight, final AO,
 // final roughness. Color and normal detail, lighting and shadows remain live.
 const noise=toonFunctions.slice(toonFunctions.indexOf('float detailHash('),toonFunctions.indexOf('vec3 toLinear4('));
-const bakeFragment=`precision highp float;
+export const bakeFragment=`precision highp float;
 uniform sampler2D uGroundARH,uLayerSandARH,uGroundMask,uWetBank;
 uniform vec4 uGroundRect,uGroundParams;uniform vec2 uGroundSeed;
 uniform float resolution;varying vec2 vUv;
