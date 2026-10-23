@@ -151,7 +151,6 @@ std::vector<PolygonStateRecord> polygonState;
 std::vector<Settlement> settlements;
 std::vector<int32_t> changedSettlementChunks;
 std::vector<size_t> nearbySettlements;
-std::vector<uint8_t> staticPass,staticSteps,staticInbound;
 // No-entry WASM does not initialize C++ globals; construct profiles lazily.
 constexpr int navigationProfiles=6;
 NavProfile* navProfiles[navigationProfiles]={};
@@ -819,9 +818,7 @@ bool edge(int x,int z,int nx,int nz){
   const bool base=chunk&&!!(chunk->steps[rasterIndex(*chunk,x,z)]&(1<<direction));
   return base&&wallEdgeClear(x,z,nx,nz);
 }
-void refreshSector(int sx,int sz){
-  SPATIAL_TICK(sectorFillStarted);
-  uint8_t* pass=lazy_pass_ptr(),*steps=lazy_steps_ptr(),*inbound=lazy_inbound_ptr();
+void prepareSectorOverlay(int sx,int sz,uint8_t* pass,uint8_t* steps,uint8_t* inbound){
   constexpr int dx[4]={1,-1,0,0},dz[4]={0,0,1,-1};
   for(int lz=0;lz<sector;lz++)for(int lx=0;lx<sector;lx++){
     const int i=lz*sector+lx,x=sx*sector+lx,z=sz*sector+lz;
@@ -840,6 +837,10 @@ void refreshSector(int sx,int sz){
       if(edge(nx,nz,x,z))inbound[i]|=1<<d;
     }
   }
+}
+void refreshSector(int sx,int sz){
+  SPATIAL_TICK(sectorFillStarted);
+  prepareSectorOverlay(sx,sz,lazy_pass_ptr(),lazy_steps_ptr(),lazy_inbound_ptr());
   SPATIAL_TOCK(12,sectorFillStarted);SPATIAL_TICK(sectorGraphStarted);
   lazy_commit_sector(sx,sz);
   SPATIAL_TOCK(13,sectorGraphStarted);
@@ -910,9 +911,11 @@ void groundColorAt(double wx,double wz,float* output){
     output[k]=float(std::clamp(color*shade,0.0,1.0));
   }
 }
-void populateChunk(int cx,int cz,bool visual=true){
+// Selected scratch only. Resident ownership is published by populateChunk below.
+// This still reads the live generation inputs; it is not safe on a worker yet.
+void prepareSelectedChunk(int cx,int cz,bool visual){
   SPATIAL_TICK(populateStarted);SPATIAL_TICK(setupStarted);
-  chunkX=cx;chunkZ=cz;props.clear();solidProps.clear();staticPass.clear();staticSteps.clear();staticInbound.clear();haloPropCount=0;
+  chunkX=cx;chunkZ=cz;props.clear();solidProps.clear();haloPropCount=0;
   selectNearbySettlements(cx,cz);
   // The standalone no-entry WASM binary has no startup constructor pass.
   preparePonds(cx,cz);
@@ -925,10 +928,6 @@ void populateChunk(int cx,int cz,bool visual=true){
   lattice.resize(latticeSpan*latticeSpan);
   for(int z=0;z<latticeSpan;z++)for(int x=0;x<latticeSpan;x++)
     lattice[z*latticeSpan+x]=height(x0+x-pad,z0+z-pad);
-  // Graph rebuilds, prop edits and chunk selection reuse the resident relief.
-  // A settlement explicitly invalidates affected samples before regeneration.
-  if(!residentSpatial().count(chunkKey(cx,cz)))
-    residentSpatial()[chunkKey(cx,cz)]={lattice,ponds};
   SPATIAL_TOCK(6,latticeStarted);
   if(visual){
   SPATIAL_TICK(colorStarted);
@@ -1039,11 +1038,52 @@ void populateChunk(int cx,int cz,bool visual=true){
     }
   }
   indexSolidProps();
-  residentSolidProps()[chunkKey(cx,cz)]=solidProps;
-  residentVisibleProps()[chunkKey(cx,cz)]=props;
   SPATIAL_TOCK(11,propsStarted);SPATIAL_TOCK(0,populateStarted);
 }
-void buildActiveRaster(){
+// A completed job owns every output buffer. Moving it to the publication
+// thread transfers ownership, not procedural work or a second live world.
+struct PreparedChunkData {
+  int cx=0,cz=0,halo=0;
+  std::vector<float> heights,colors,waterLevels,waterTriangles;
+  std::vector<uint8_t> water,groundMask;
+  std::vector<double> lattice;
+  std::vector<Pond> ponds;
+  std::vector<Prop> props,solidProps;
+  std::array<std::vector<int>,propBucketSide*propBucketSide> propBuckets;
+  std::vector<size_t> nearbySettlements;
+};
+PreparedChunkData takePreparedChunkData(){
+  return {chunkX,chunkZ,haloPropCount,std::move(heights),std::move(colors),
+    std::move(waterLevels),std::move(waterTriangles),std::move(water),
+    std::move(groundMask),std::move(lattice),std::move(ponds),std::move(props),
+    std::move(solidProps),std::move(propBuckets),std::move(nearbySettlements)};
+}
+void selectPreparedChunkData(PreparedChunkData data){
+  chunkX=data.cx;chunkZ=data.cz;haloPropCount=data.halo;
+  heights=std::move(data.heights);colors=std::move(data.colors);
+  waterLevels=std::move(data.waterLevels);waterTriangles=std::move(data.waterTriangles);
+  water=std::move(data.water);groundMask=std::move(data.groundMask);
+  lattice=std::move(data.lattice);ponds=std::move(data.ponds);
+  props=std::move(data.props);solidProps=std::move(data.solidProps);
+  propBuckets=std::move(data.propBuckets);nearbySettlements=std::move(data.nearbySettlements);
+}
+void publishSelectedChunk(){
+  const auto key=chunkKey(chunkX,chunkZ);
+  // Settlement changes invalidate relief explicitly; ordinary selection keeps it.
+  if(!residentSpatial().count(key))residentSpatial()[key]={lattice,ponds};
+  residentSolidProps()[key]=solidProps;
+  residentVisibleProps()[key]=props;
+}
+void populateChunk(int cx,int cz,bool visual=true){
+  prepareSelectedChunk(cx,cz,visual);
+  auto prepared=takePreparedChunkData();
+  selectPreparedChunkData(std::move(prepared));
+  publishSelectedChunk();
+}
+// Preparation owns its output; live navigation is not modified until installation.
+ChunkRaster prepareActiveRaster(){
+  ChunkRaster result{chunkX,chunkZ,{},{},{}};
+  auto& staticPass=result.pass;auto& staticSteps=result.steps;auto& staticInbound=result.inbound;
   const int firstX=chunkX*side-24,firstZ=chunkZ*side-24;
   staticPass.resize(side*side);staticSteps.assign(side*side,0);staticInbound.resize(side*side);
   for(int z=0;z<side;z++)for(int x=0;x<side;x++)staticPass[z*side+x]=terrainPropWalkable(firstX+x,firstZ+z);
@@ -1067,8 +1107,13 @@ void buildActiveRaster(){
       if(terrainPropEdge(wx,wz,wx+dx[d],wz+dz[d]))staticSteps[i]|=1<<d;
   }
   staticInbound=staticSteps;
-  chunkRasters->insert_or_assign(chunkKey(chunkX,chunkZ),ChunkRaster{chunkX,chunkZ,staticPass,staticSteps,staticInbound});
+  return result;
 }
+void installPreparedRaster(ChunkRaster raster){
+  const auto key=chunkKey(raster.cx,raster.cz);
+  chunkRasters->insert_or_assign(key,std::move(raster));
+}
+void buildActiveRaster(){installPreparedRaster(prepareActiveRaster());}
 void patchActiveRaster(const Prop& changed){
   const auto it=chunkRasters->find(chunkKey(chunkX,chunkZ));
   if(it==chunkRasters->end())return;
