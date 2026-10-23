@@ -233,3 +233,21 @@ QA-only explicit preparation after readiness (`WG_THREAD_DEPTH_WARM=1`) takes 19
 The real integration pilot (240 active frames, 96m path, same initial fixture/hardware/medium quality) records RAF mean 40.26 / p95 66.54 / max 166.29 ms versus the earlier identity run 53.90 / 83.06 / 3525.17 ms. This is a single before/after attribution comparison with GL instrumentation, not ABAB acceptance; active final simulation states differ with elapsed wall time. Later streaming still incurs getProgramInfoLog waits of 26-158 ms, including newly encountered/recreated far and depth variants. Those costs and the roughly 15ms graphics installation remain unresolved. Explicit post-readiness QA warmup is OFF for the integration run.
 
 Frozen regression screenshot `final-depth-frozen-regression.png` matches the original same-state/camera `install-abab-a1.png`: mean absolute channel difference 0.002305/255, 1773 changed channels out of 2764800. Visually inspected terrain, foliage, shoreline and shadows remain consistent in this view. See final-depth-image-diff.json. All 26 focused far-loading/depth-preload/program-binding tests pass, including final-warmup cancellation; production build passes. Broader active ABAB, six-biome scenes, distribution revalidation and residual streaming preparation remain open.
+
+
+## Active ABAB after final-depth preparation
+
+Four sequential fresh Chrome executions on Intel UHD, medium quality, 1280x720, frozen initial fixture elapsed 120, tutorial omitted only in QA, 60 paused warm frames then 600 active frames and identical per-frame 240m camera path. A uses standalone synchronous generation; B uses pthreads. Both include the final resident-depth loading fix, original synchronous graphics installation and identical graphics options. No builds or other benchmarks ran concurrently. GL instrumentation and CPU profiler were disabled.
+
+| Metric (ms) | A1 | B1 | A2 | B2 |
+|---|---:|---:|---:|---:|
+| RAF mean | 32.40 | 31.70 | 31.65 | 31.79 |
+| RAF p95 | 66.52 | 50.28 | 66.62 | 50.12 |
+| RAF maximum | 199.64 | 216.16 | 182.66 | 182.91 |
+| Native synchronous generation mean | 45.31 | — | 43.64 | — |
+| Native publication mean | — | 0.73 | — | 0.82 |
+| Graphics installation mean | 14.25 | 15.89 | 13.63 | 15.56 |
+
+All runs install 25 new chunks, have zero paused frames and 600 actor-ready frames, finish with 16 MiB linear memory, and have no console errors beyond the previously recorded f_environment4 shader warnings. Native worker compute averages 48.41 / 47.03 ms. Thus this does not accelerate total native calculation; it removes the 44-45 ms main-thread generation call. p95 improves consistently by about 25%, while mean does not consistently improve and maximum remains unchanged or worse. Graphics installation is slightly more expensive in B in both pairs; no cause is established by these measurements.
+
+The initial fixture/camera/path are identical, but final active simulation time differs (138.74-139.29), so final screenshot pixel comparisons cannot establish exact state equivalence. Frozen-state equivalence remains separate evidence. CPU/RAF measurements are not GPU timings. Two workers are present; this does not cover a dense raid, construction/destruction or long sessions. See active-abab-summary.json, raw reports and screenshots. This is evidence for reduced frequent generation stalls, NOT closure of the full performance, correctness, memory or distribution gates.
