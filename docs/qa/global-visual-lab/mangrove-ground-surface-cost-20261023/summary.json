@@ -1,0 +1,1306 @@
+[
+  {
+    "variant": "base",
+    "phase": "day",
+    "modes": {
+      "frame": {
+        "cpuRenderMs": 9.442,
+        "intervalMs": 30.792,
+        "p95IntervalMs": 41.2,
+        "calls": 123.35,
+        "triangles": 867475.5,
+        "elapsedAdvance": 0.0,
+        "memory": {
+          "geometries": 279,
+          "textures": 136
+        },
+        "gpuQueries": 60,
+        "gpuMs": 24.601
+      },
+      "passes": {
+        "cpuRenderMs": 11.757,
+        "intervalMs": 30.867,
+        "p95IntervalMs": 41.8,
+        "calls": 123.367,
+        "triangles": 867475.5,
+        "elapsedAdvance": 0.0,
+        "memory": {
+          "geometries": 280,
+          "textures": 136
+        },
+        "gpuQueries": 2770,
+        "depthCaptures": 0,
+        "depthGpuPerCaptureMs": null,
+        "passPerFrame": {
+          "building-mask/prepare": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "building-mask/shadow": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "building-mask/draw": {
+            "gpuMs": 0.192,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "sky/prepare": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "sky/shadow": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "sky/draw": {
+            "gpuMs": 0.978,
+            "calls": 1.0,
+            "triangles": 1.0,
+            "segments": 60
+          },
+          "screen/prepare": {
+            "gpuMs": 0.001,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "screen/shadow": {
+            "gpuMs": 3.501,
+            "calls": 39.0,
+            "triangles": 482154.4666666667,
+            "segments": 60
+          },
+          "screen/draw": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "screen/color:other": {
+            "gpuMs": 3.831,
+            "calls": 17.8,
+            "triangles": 99921.4,
+            "segments": 240
+          },
+          "screen/color:other-instanced": {
+            "gpuMs": 2.751,
+            "calls": 26.016666666666666,
+            "triangles": 125786.03333333334,
+            "segments": 196
+          },
+          "screen/color:ground": {
+            "gpuMs": 8.223,
+            "calls": 12.55,
+            "triangles": 54322.4,
+            "segments": 638
+          },
+          "screen/color:ground-overlay": {
+            "gpuMs": 1.363,
+            "calls": 8.633333333333333,
+            "triangles": 11797.366666666667,
+            "segments": 518
+          },
+          "screen/color:fern-near": {
+            "gpuMs": 0.452,
+            "calls": 1.0,
+            "triangles": 30043.2,
+            "segments": 60
+          },
+          "screen/color:skinned": {
+            "gpuMs": 0.401,
+            "calls": 2.0,
+            "triangles": 46278.0,
+            "segments": 60
+          },
+          "screen/color:fern-far": {
+            "gpuMs": 0.609,
+            "calls": 2.0,
+            "triangles": 7476.333333333333,
+            "segments": 120
+          },
+          "screen/color:far-tree-system": {
+            "gpuMs": 0.277,
+            "calls": 8.0,
+            "triangles": 4412.0,
+            "segments": 180
+          },
+          "screen/color:dynamic-vfx": {
+            "gpuMs": 0.024,
+            "calls": 1.0,
+            "triangles": 1960.0,
+            "segments": 60
+          },
+          "screen/color:water": {
+            "gpuMs": 0.18,
+            "calls": 4.366666666666666,
+            "triangles": 3323.3,
+            "segments": 158
+          }
+        }
+      },
+      "cadence": {
+        "cpuRenderMs": 9.133,
+        "intervalMs": 30.835,
+        "p95IntervalMs": 38.1,
+        "calls": 123.35,
+        "triangles": 867475.5,
+        "elapsedAdvance": 0.0,
+        "memory": {
+          "geometries": 279,
+          "textures": 136
+        }
+      }
+    }
+  },
+  {
+    "variant": "base",
+    "phase": "night",
+    "modes": {
+      "frame": {
+        "cpuRenderMs": 8.083,
+        "intervalMs": 28.767,
+        "p95IntervalMs": 37.9,
+        "calls": 123.35,
+        "triangles": 867475.5,
+        "elapsedAdvance": 0.0,
+        "memory": {
+          "geometries": 279,
+          "textures": 136
+        },
+        "gpuQueries": 60,
+        "gpuMs": 23.846
+      },
+      "passes": {
+        "cpuRenderMs": 10.602,
+        "intervalMs": 30.773,
+        "p95IntervalMs": 40.2,
+        "calls": 123.367,
+        "triangles": 867475.5,
+        "elapsedAdvance": 0.0,
+        "memory": {
+          "geometries": 280,
+          "textures": 136
+        },
+        "gpuQueries": 2770,
+        "depthCaptures": 0,
+        "depthGpuPerCaptureMs": null,
+        "passPerFrame": {
+          "building-mask/prepare": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "building-mask/shadow": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "building-mask/draw": {
+            "gpuMs": 0.189,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "sky/prepare": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "sky/shadow": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "sky/draw": {
+            "gpuMs": 1.758,
+            "calls": 1.0,
+            "triangles": 1.0,
+            "segments": 60
+          },
+          "screen/prepare": {
+            "gpuMs": 0.003,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "screen/shadow": {
+            "gpuMs": 3.701,
+            "calls": 39.0,
+            "triangles": 482154.4666666667,
+            "segments": 60
+          },
+          "screen/draw": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "screen/color:other": {
+            "gpuMs": 3.73,
+            "calls": 17.8,
+            "triangles": 99921.4,
+            "segments": 240
+          },
+          "screen/color:other-instanced": {
+            "gpuMs": 2.596,
+            "calls": 26.016666666666666,
+            "triangles": 125786.03333333334,
+            "segments": 196
+          },
+          "screen/color:ground": {
+            "gpuMs": 8.406,
+            "calls": 12.55,
+            "triangles": 54322.4,
+            "segments": 638
+          },
+          "screen/color:ground-overlay": {
+            "gpuMs": 1.491,
+            "calls": 8.633333333333333,
+            "triangles": 11797.366666666667,
+            "segments": 518
+          },
+          "screen/color:fern-near": {
+            "gpuMs": 0.451,
+            "calls": 1.0,
+            "triangles": 30043.2,
+            "segments": 60
+          },
+          "screen/color:skinned": {
+            "gpuMs": 0.382,
+            "calls": 2.0,
+            "triangles": 46278.0,
+            "segments": 60
+          },
+          "screen/color:fern-far": {
+            "gpuMs": 0.51,
+            "calls": 2.0,
+            "triangles": 7476.333333333333,
+            "segments": 120
+          },
+          "screen/color:far-tree-system": {
+            "gpuMs": 0.28,
+            "calls": 8.0,
+            "triangles": 4412.0,
+            "segments": 180
+          },
+          "screen/color:dynamic-vfx": {
+            "gpuMs": 0.032,
+            "calls": 1.0,
+            "triangles": 1960.0,
+            "segments": 60
+          },
+          "screen/color:water": {
+            "gpuMs": 0.196,
+            "calls": 4.366666666666666,
+            "triangles": 3323.3,
+            "segments": 158
+          }
+        }
+      },
+      "cadence": {
+        "cpuRenderMs": 8.24,
+        "intervalMs": 30.332,
+        "p95IntervalMs": 38.9,
+        "calls": 123.35,
+        "triangles": 867475.5,
+        "elapsedAdvance": 0.0,
+        "memory": {
+          "geometries": 279,
+          "textures": 136
+        }
+      }
+    }
+  },
+  {
+    "variant": "surface",
+    "phase": "day",
+    "modes": {
+      "frame": {
+        "cpuRenderMs": 7.987,
+        "intervalMs": 25.563,
+        "p95IntervalMs": 31.4,
+        "calls": 123.35,
+        "triangles": 867475.5,
+        "elapsedAdvance": 0.0,
+        "memory": {
+          "geometries": 279,
+          "textures": 136
+        },
+        "gpuQueries": 60,
+        "gpuMs": 20.668
+      },
+      "passes": {
+        "cpuRenderMs": 10.852,
+        "intervalMs": 26.478,
+        "p95IntervalMs": 33.3,
+        "calls": 123.367,
+        "triangles": 867475.5,
+        "elapsedAdvance": 0.0,
+        "memory": {
+          "geometries": 280,
+          "textures": 136
+        },
+        "gpuQueries": 2770,
+        "depthCaptures": 0,
+        "depthGpuPerCaptureMs": null,
+        "passPerFrame": {
+          "building-mask/prepare": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "building-mask/shadow": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "building-mask/draw": {
+            "gpuMs": 0.197,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "sky/prepare": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "sky/shadow": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "sky/draw": {
+            "gpuMs": 0.962,
+            "calls": 1.0,
+            "triangles": 1.0,
+            "segments": 60
+          },
+          "screen/prepare": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "screen/shadow": {
+            "gpuMs": 3.385,
+            "calls": 39.0,
+            "triangles": 482154.4666666667,
+            "segments": 60
+          },
+          "screen/draw": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "screen/color:other": {
+            "gpuMs": 3.725,
+            "calls": 17.8,
+            "triangles": 99921.4,
+            "segments": 240
+          },
+          "screen/color:other-instanced": {
+            "gpuMs": 2.572,
+            "calls": 26.016666666666666,
+            "triangles": 125786.03333333334,
+            "segments": 196
+          },
+          "screen/color:ground": {
+            "gpuMs": 6.573,
+            "calls": 12.55,
+            "triangles": 54322.4,
+            "segments": 638
+          },
+          "screen/color:ground-overlay": {
+            "gpuMs": 1.321,
+            "calls": 8.633333333333333,
+            "triangles": 11797.366666666667,
+            "segments": 518
+          },
+          "screen/color:fern-near": {
+            "gpuMs": 0.455,
+            "calls": 1.0,
+            "triangles": 30043.2,
+            "segments": 60
+          },
+          "screen/color:skinned": {
+            "gpuMs": 0.367,
+            "calls": 2.0,
+            "triangles": 46278.0,
+            "segments": 60
+          },
+          "screen/color:fern-far": {
+            "gpuMs": 0.578,
+            "calls": 2.0,
+            "triangles": 7476.333333333333,
+            "segments": 120
+          },
+          "screen/color:far-tree-system": {
+            "gpuMs": 0.271,
+            "calls": 8.0,
+            "triangles": 4412.0,
+            "segments": 180
+          },
+          "screen/color:dynamic-vfx": {
+            "gpuMs": 0.032,
+            "calls": 1.0,
+            "triangles": 1960.0,
+            "segments": 60
+          },
+          "screen/color:water": {
+            "gpuMs": 0.196,
+            "calls": 4.366666666666666,
+            "triangles": 3323.3,
+            "segments": 158
+          }
+        }
+      },
+      "cadence": {
+        "cpuRenderMs": 8.378,
+        "intervalMs": 26.847,
+        "p95IntervalMs": 33.7,
+        "calls": 123.35,
+        "triangles": 867475.5,
+        "elapsedAdvance": 0.0,
+        "memory": {
+          "geometries": 279,
+          "textures": 136
+        }
+      }
+    }
+  },
+  {
+    "variant": "surface",
+    "phase": "night",
+    "modes": {
+      "frame": {
+        "cpuRenderMs": 7.198,
+        "intervalMs": 25.582,
+        "p95IntervalMs": 36.9,
+        "calls": 123.35,
+        "triangles": 867475.5,
+        "elapsedAdvance": 0.0,
+        "memory": {
+          "geometries": 279,
+          "textures": 136
+        },
+        "gpuQueries": 60,
+        "gpuMs": 20.929
+      },
+      "passes": {
+        "cpuRenderMs": 10.748,
+        "intervalMs": 30.59,
+        "p95IntervalMs": 38.6,
+        "calls": 123.367,
+        "triangles": 867475.5,
+        "elapsedAdvance": 0.0,
+        "memory": {
+          "geometries": 280,
+          "textures": 136
+        },
+        "gpuQueries": 2770,
+        "depthCaptures": 0,
+        "depthGpuPerCaptureMs": null,
+        "passPerFrame": {
+          "building-mask/prepare": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "building-mask/shadow": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "building-mask/draw": {
+            "gpuMs": 0.203,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "sky/prepare": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "sky/shadow": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "sky/draw": {
+            "gpuMs": 1.82,
+            "calls": 1.0,
+            "triangles": 1.0,
+            "segments": 60
+          },
+          "screen/prepare": {
+            "gpuMs": 0.003,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "screen/shadow": {
+            "gpuMs": 3.512,
+            "calls": 39.0,
+            "triangles": 482154.4666666667,
+            "segments": 60
+          },
+          "screen/draw": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "screen/color:other": {
+            "gpuMs": 4.009,
+            "calls": 17.8,
+            "triangles": 99921.4,
+            "segments": 240
+          },
+          "screen/color:other-instanced": {
+            "gpuMs": 2.792,
+            "calls": 26.016666666666666,
+            "triangles": 125786.03333333334,
+            "segments": 196
+          },
+          "screen/color:ground": {
+            "gpuMs": 6.907,
+            "calls": 12.55,
+            "triangles": 54322.4,
+            "segments": 638
+          },
+          "screen/color:ground-overlay": {
+            "gpuMs": 1.521,
+            "calls": 8.633333333333333,
+            "triangles": 11797.366666666667,
+            "segments": 518
+          },
+          "screen/color:fern-near": {
+            "gpuMs": 0.481,
+            "calls": 1.0,
+            "triangles": 30043.2,
+            "segments": 60
+          },
+          "screen/color:skinned": {
+            "gpuMs": 0.412,
+            "calls": 2.0,
+            "triangles": 46278.0,
+            "segments": 60
+          },
+          "screen/color:fern-far": {
+            "gpuMs": 0.611,
+            "calls": 2.0,
+            "triangles": 7476.333333333333,
+            "segments": 120
+          },
+          "screen/color:far-tree-system": {
+            "gpuMs": 0.464,
+            "calls": 8.0,
+            "triangles": 4412.0,
+            "segments": 180
+          },
+          "screen/color:dynamic-vfx": {
+            "gpuMs": 0.027,
+            "calls": 1.0,
+            "triangles": 1960.0,
+            "segments": 60
+          },
+          "screen/color:water": {
+            "gpuMs": 0.209,
+            "calls": 4.366666666666666,
+            "triangles": 3323.3,
+            "segments": 158
+          }
+        }
+      },
+      "cadence": {
+        "cpuRenderMs": 7.813,
+        "intervalMs": 27.567,
+        "p95IntervalMs": 32.9,
+        "calls": 123.35,
+        "triangles": 867475.5,
+        "elapsedAdvance": 0.0,
+        "memory": {
+          "geometries": 279,
+          "textures": 136
+        }
+      }
+    }
+  },
+  {
+    "variant": "base",
+    "phase": "day",
+    "modes": {
+      "frame": {
+        "cpuRenderMs": 7.635,
+        "intervalMs": 26.797,
+        "p95IntervalMs": 34.6,
+        "calls": 123.35,
+        "triangles": 867475.5,
+        "elapsedAdvance": 0.0,
+        "memory": {
+          "geometries": 279,
+          "textures": 136
+        },
+        "gpuQueries": 60,
+        "gpuMs": 22.245
+      },
+      "passes": {
+        "cpuRenderMs": 10.055,
+        "intervalMs": 27.467,
+        "p95IntervalMs": 36.2,
+        "calls": 123.367,
+        "triangles": 867475.5,
+        "elapsedAdvance": 0.0,
+        "memory": {
+          "geometries": 280,
+          "textures": 136
+        },
+        "gpuQueries": 2770,
+        "depthCaptures": 0,
+        "depthGpuPerCaptureMs": null,
+        "passPerFrame": {
+          "building-mask/prepare": {
+            "gpuMs": 0.001,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "building-mask/shadow": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "building-mask/draw": {
+            "gpuMs": 0.193,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "sky/prepare": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "sky/shadow": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "sky/draw": {
+            "gpuMs": 0.935,
+            "calls": 1.0,
+            "triangles": 1.0,
+            "segments": 60
+          },
+          "screen/prepare": {
+            "gpuMs": 0.002,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "screen/shadow": {
+            "gpuMs": 3.357,
+            "calls": 39.0,
+            "triangles": 482154.4666666667,
+            "segments": 60
+          },
+          "screen/draw": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "screen/color:other": {
+            "gpuMs": 3.602,
+            "calls": 17.8,
+            "triangles": 99921.4,
+            "segments": 240
+          },
+          "screen/color:other-instanced": {
+            "gpuMs": 2.602,
+            "calls": 26.016666666666666,
+            "triangles": 125786.03333333334,
+            "segments": 196
+          },
+          "screen/color:ground": {
+            "gpuMs": 7.692,
+            "calls": 12.55,
+            "triangles": 54322.4,
+            "segments": 638
+          },
+          "screen/color:ground-overlay": {
+            "gpuMs": 1.279,
+            "calls": 8.633333333333333,
+            "triangles": 11797.366666666667,
+            "segments": 518
+          },
+          "screen/color:fern-near": {
+            "gpuMs": 0.431,
+            "calls": 1.0,
+            "triangles": 30043.2,
+            "segments": 60
+          },
+          "screen/color:skinned": {
+            "gpuMs": 0.373,
+            "calls": 2.0,
+            "triangles": 46278.0,
+            "segments": 60
+          },
+          "screen/color:fern-far": {
+            "gpuMs": 0.604,
+            "calls": 2.0,
+            "triangles": 7476.333333333333,
+            "segments": 120
+          },
+          "screen/color:far-tree-system": {
+            "gpuMs": 0.273,
+            "calls": 8.0,
+            "triangles": 4412.0,
+            "segments": 180
+          },
+          "screen/color:dynamic-vfx": {
+            "gpuMs": 0.023,
+            "calls": 1.0,
+            "triangles": 1960.0,
+            "segments": 60
+          },
+          "screen/color:water": {
+            "gpuMs": 0.184,
+            "calls": 4.366666666666666,
+            "triangles": 3323.3,
+            "segments": 158
+          }
+        }
+      },
+      "cadence": {
+        "cpuRenderMs": 7.677,
+        "intervalMs": 26.797,
+        "p95IntervalMs": 33.1,
+        "calls": 123.35,
+        "triangles": 867475.5,
+        "elapsedAdvance": 0.0,
+        "memory": {
+          "geometries": 279,
+          "textures": 136
+        }
+      }
+    }
+  },
+  {
+    "variant": "base",
+    "phase": "night",
+    "modes": {
+      "frame": {
+        "cpuRenderMs": 7.737,
+        "intervalMs": 26.675,
+        "p95IntervalMs": 35.7,
+        "calls": 123.35,
+        "triangles": 867475.5,
+        "elapsedAdvance": 0.0,
+        "memory": {
+          "geometries": 279,
+          "textures": 136
+        },
+        "gpuQueries": 60,
+        "gpuMs": 22.549
+      },
+      "passes": {
+        "cpuRenderMs": 10.113,
+        "intervalMs": 28.797,
+        "p95IntervalMs": 37.6,
+        "calls": 123.367,
+        "triangles": 867475.5,
+        "elapsedAdvance": 0.0,
+        "memory": {
+          "geometries": 280,
+          "textures": 136
+        },
+        "gpuQueries": 2778,
+        "depthCaptures": 0,
+        "depthGpuPerCaptureMs": null,
+        "passPerFrame": {
+          "building-mask/prepare": {
+            "gpuMs": 0.001,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "building-mask/shadow": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "building-mask/draw": {
+            "gpuMs": 0.182,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "sky/prepare": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "sky/shadow": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "sky/draw": {
+            "gpuMs": 1.677,
+            "calls": 1.0,
+            "triangles": 1.0,
+            "segments": 60
+          },
+          "screen/prepare": {
+            "gpuMs": 0.002,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "screen/shadow": {
+            "gpuMs": 3.238,
+            "calls": 39.0,
+            "triangles": 482154.4666666667,
+            "segments": 60
+          },
+          "screen/draw": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "screen/color:other": {
+            "gpuMs": 3.593,
+            "calls": 17.8,
+            "triangles": 99921.4,
+            "segments": 240
+          },
+          "screen/color:other-instanced": {
+            "gpuMs": 2.549,
+            "calls": 26.016666666666666,
+            "triangles": 125786.03333333334,
+            "segments": 196
+          },
+          "screen/color:ground": {
+            "gpuMs": 8.003,
+            "calls": 12.55,
+            "triangles": 54322.4,
+            "segments": 646
+          },
+          "screen/color:ground-overlay": {
+            "gpuMs": 1.366,
+            "calls": 8.633333333333333,
+            "triangles": 11797.366666666667,
+            "segments": 518
+          },
+          "screen/color:fern-near": {
+            "gpuMs": 0.441,
+            "calls": 1.0,
+            "triangles": 30043.2,
+            "segments": 60
+          },
+          "screen/color:skinned": {
+            "gpuMs": 0.363,
+            "calls": 2.0,
+            "triangles": 46278.0,
+            "segments": 60
+          },
+          "screen/color:fern-far": {
+            "gpuMs": 0.516,
+            "calls": 2.0,
+            "triangles": 7476.333333333333,
+            "segments": 120
+          },
+          "screen/color:far-tree-system": {
+            "gpuMs": 0.296,
+            "calls": 8.0,
+            "triangles": 4412.0,
+            "segments": 180
+          },
+          "screen/color:dynamic-vfx": {
+            "gpuMs": 0.031,
+            "calls": 1.0,
+            "triangles": 1960.0,
+            "segments": 60
+          },
+          "screen/color:water": {
+            "gpuMs": 0.19,
+            "calls": 4.366666666666666,
+            "triangles": 3323.3,
+            "segments": 158
+          }
+        }
+      },
+      "cadence": {
+        "cpuRenderMs": 7.925,
+        "intervalMs": 29.012,
+        "p95IntervalMs": 38,
+        "calls": 123.35,
+        "triangles": 867475.5,
+        "elapsedAdvance": 0.0,
+        "memory": {
+          "geometries": 279,
+          "textures": 136
+        }
+      }
+    }
+  },
+  {
+    "variant": "surface",
+    "phase": "day",
+    "modes": {
+      "frame": {
+        "cpuRenderMs": 7.507,
+        "intervalMs": 24.893,
+        "p95IntervalMs": 32.3,
+        "calls": 123.35,
+        "triangles": 867475.5,
+        "elapsedAdvance": 0.0,
+        "memory": {
+          "geometries": 279,
+          "textures": 136
+        },
+        "gpuQueries": 60,
+        "gpuMs": 20.174
+      },
+      "passes": {
+        "cpuRenderMs": 9.943,
+        "intervalMs": 25.447,
+        "p95IntervalMs": 32.7,
+        "calls": 123.367,
+        "triangles": 867475.5,
+        "elapsedAdvance": 0.0,
+        "memory": {
+          "geometries": 280,
+          "textures": 136
+        },
+        "gpuQueries": 2770,
+        "depthCaptures": 0,
+        "depthGpuPerCaptureMs": null,
+        "passPerFrame": {
+          "building-mask/prepare": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "building-mask/shadow": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "building-mask/draw": {
+            "gpuMs": 0.181,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "sky/prepare": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "sky/shadow": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "sky/draw": {
+            "gpuMs": 0.949,
+            "calls": 1.0,
+            "triangles": 1.0,
+            "segments": 60
+          },
+          "screen/prepare": {
+            "gpuMs": 0.002,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "screen/shadow": {
+            "gpuMs": 3.29,
+            "calls": 39.0,
+            "triangles": 482154.4666666667,
+            "segments": 60
+          },
+          "screen/draw": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "screen/color:other": {
+            "gpuMs": 3.582,
+            "calls": 17.8,
+            "triangles": 99921.4,
+            "segments": 240
+          },
+          "screen/color:other-instanced": {
+            "gpuMs": 2.444,
+            "calls": 26.016666666666666,
+            "triangles": 125786.03333333334,
+            "segments": 196
+          },
+          "screen/color:ground": {
+            "gpuMs": 6.272,
+            "calls": 12.55,
+            "triangles": 54322.4,
+            "segments": 638
+          },
+          "screen/color:ground-overlay": {
+            "gpuMs": 1.299,
+            "calls": 8.633333333333333,
+            "triangles": 11797.366666666667,
+            "segments": 518
+          },
+          "screen/color:fern-near": {
+            "gpuMs": 0.414,
+            "calls": 1.0,
+            "triangles": 30043.2,
+            "segments": 60
+          },
+          "screen/color:skinned": {
+            "gpuMs": 0.358,
+            "calls": 2.0,
+            "triangles": 46278.0,
+            "segments": 60
+          },
+          "screen/color:fern-far": {
+            "gpuMs": 0.564,
+            "calls": 2.0,
+            "triangles": 7476.333333333333,
+            "segments": 120
+          },
+          "screen/color:far-tree-system": {
+            "gpuMs": 0.27,
+            "calls": 8.0,
+            "triangles": 4412.0,
+            "segments": 180
+          },
+          "screen/color:dynamic-vfx": {
+            "gpuMs": 0.03,
+            "calls": 1.0,
+            "triangles": 1960.0,
+            "segments": 60
+          },
+          "screen/color:water": {
+            "gpuMs": 0.183,
+            "calls": 4.366666666666666,
+            "triangles": 3323.3,
+            "segments": 158
+          }
+        }
+      },
+      "cadence": {
+        "cpuRenderMs": 8.012,
+        "intervalMs": 28.983,
+        "p95IntervalMs": 34.2,
+        "calls": 123.35,
+        "triangles": 867475.5,
+        "elapsedAdvance": 0.0,
+        "memory": {
+          "geometries": 279,
+          "textures": 136
+        }
+      }
+    }
+  },
+  {
+    "variant": "surface",
+    "phase": "night",
+    "modes": {
+      "frame": {
+        "cpuRenderMs": 7.805,
+        "intervalMs": 26.358,
+        "p95IntervalMs": 33.3,
+        "calls": 123.35,
+        "triangles": 867475.5,
+        "elapsedAdvance": 0.0,
+        "memory": {
+          "geometries": 279,
+          "textures": 136
+        },
+        "gpuQueries": 60,
+        "gpuMs": 21.833
+      },
+      "passes": {
+        "cpuRenderMs": 9.992,
+        "intervalMs": 27.17,
+        "p95IntervalMs": 33.6,
+        "calls": 123.367,
+        "triangles": 867475.5,
+        "elapsedAdvance": 0.0,
+        "memory": {
+          "geometries": 280,
+          "textures": 136
+        },
+        "gpuQueries": 2770,
+        "depthCaptures": 0,
+        "depthGpuPerCaptureMs": null,
+        "passPerFrame": {
+          "building-mask/prepare": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "building-mask/shadow": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "building-mask/draw": {
+            "gpuMs": 0.189,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "sky/prepare": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "sky/shadow": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "sky/draw": {
+            "gpuMs": 1.682,
+            "calls": 1.0,
+            "triangles": 1.0,
+            "segments": 60
+          },
+          "screen/prepare": {
+            "gpuMs": 0.001,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "screen/shadow": {
+            "gpuMs": 3.299,
+            "calls": 39.0,
+            "triangles": 482154.4666666667,
+            "segments": 60
+          },
+          "screen/draw": {
+            "gpuMs": 0.0,
+            "calls": 0.0,
+            "triangles": 0.0,
+            "segments": 60
+          },
+          "screen/color:other": {
+            "gpuMs": 3.693,
+            "calls": 17.8,
+            "triangles": 99921.4,
+            "segments": 240
+          },
+          "screen/color:other-instanced": {
+            "gpuMs": 2.623,
+            "calls": 26.016666666666666,
+            "triangles": 125786.03333333334,
+            "segments": 196
+          },
+          "screen/color:ground": {
+            "gpuMs": 6.342,
+            "calls": 12.55,
+            "triangles": 54322.4,
+            "segments": 638
+          },
+          "screen/color:ground-overlay": {
+            "gpuMs": 1.397,
+            "calls": 8.633333333333333,
+            "triangles": 11797.366666666667,
+            "segments": 518
+          },
+          "screen/color:fern-near": {
+            "gpuMs": 0.431,
+            "calls": 1.0,
+            "triangles": 30043.2,
+            "segments": 60
+          },
+          "screen/color:skinned": {
+            "gpuMs": 0.355,
+            "calls": 2.0,
+            "triangles": 46278.0,
+            "segments": 60
+          },
+          "screen/color:fern-far": {
+            "gpuMs": 0.472,
+            "calls": 2.0,
+            "triangles": 7476.333333333333,
+            "segments": 120
+          },
+          "screen/color:far-tree-system": {
+            "gpuMs": 0.283,
+            "calls": 8.0,
+            "triangles": 4412.0,
+            "segments": 180
+          },
+          "screen/color:dynamic-vfx": {
+            "gpuMs": 0.023,
+            "calls": 1.0,
+            "triangles": 1960.0,
+            "segments": 60
+          },
+          "screen/color:water": {
+            "gpuMs": 0.199,
+            "calls": 4.366666666666666,
+            "triangles": 3323.3,
+            "segments": 158
+          }
+        }
+      },
+      "cadence": {
+        "cpuRenderMs": 7.885,
+        "intervalMs": 27.008,
+        "p95IntervalMs": 33.1,
+        "calls": 123.35,
+        "triangles": 867475.5,
+        "elapsedAdvance": 0.0,
+        "memory": {
+          "geometries": 279,
+          "textures": 136
+        }
+      }
+    }
+  }
+]
