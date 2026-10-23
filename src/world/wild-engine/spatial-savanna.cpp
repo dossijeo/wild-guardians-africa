@@ -9,9 +9,19 @@
 #include <unordered_set>
 #include <utility>
 #include <vector>
+#ifdef __EMSCRIPTEN_PTHREADS__
+#include <atomic>
+#include <memory>
+#include <pthread.h>
+#include <emscripten/threading.h>
+#include <emscripten/emscripten.h>
+#define WILD_SAMPLING_LOCAL thread_local
+#else
+#define WILD_SAMPLING_LOCAL
+#endif
 #ifdef WILD_SPATIAL_PROFILE
 #include <emscripten/emscripten.h>
-namespace { double spatialProfileTimes[14]{}; }
+namespace { WILD_SAMPLING_LOCAL double spatialProfileTimes[14]{}; }
 extern "C" EMSCRIPTEN_KEEPALIVE void spatial_profile_reset(){std::fill_n(spatialProfileTimes,14,0.0);}
 extern "C" EMSCRIPTEN_KEEPALIVE double spatial_profile_ms(int index){return index>=0&&index<14?spatialProfileTimes[index]:-1;}
 #define SPATIAL_TICK(name) const double name=emscripten_get_now()
@@ -79,29 +89,31 @@ struct BarrierIndex {
 struct Settlement {bool active=false;double x=0,z=0,y=0,hx=0,hz=0,clearRadius=0,softRadius=0,haloRadius=0;};
 struct ChunkRaster {int cx,cz;std::vector<uint8_t> pass,steps,inbound;};
 struct NavProfile {float radius=0;bool worker=false,ready=false;std::unordered_map<uint64_t,ChunkRaster> rasters;};
-uint32_t worldSeed=0;
-int worldBiome=0; // 0: savanna, 1: desert, 2: grand river, 3: volcanoes, 4: mangrove, 5: canyons.
-bool canyonOpenRight=false; // Experimental biome variant 6: one west wall and a traversable east plateau.
-int chunkX=0,chunkZ=0,nextBarrierId=1;
+WILD_SAMPLING_LOCAL uint32_t worldSeed=0;
+WILD_SAMPLING_LOCAL int worldBiome=0; // 0: savanna, 1: desert, 2: grand river, 3: volcanoes, 4: mangrove, 5: canyons.
+WILD_SAMPLING_LOCAL bool canyonOpenRight=false; // Experimental biome variant 6: one west wall and a traversable east plateau.
+WILD_SAMPLING_LOCAL int chunkX=0,chunkZ=0;
+int nextBarrierId=1;
 int nextPolygonId=1;
-float radiusNow=.3f;
-bool workerNow=true,navReady=false;
-std::vector<float> heights,colors;
+WILD_SAMPLING_LOCAL float radiusNow=.3f;
+WILD_SAMPLING_LOCAL bool workerNow=true;
+bool navReady=false;
+WILD_SAMPLING_LOCAL std::vector<float> heights,colors;
 std::vector<float> groundQueryInput,groundQueryOutput;
 std::vector<float> horizonTerrain,horizonWater;
-std::vector<uint8_t> water;
-std::vector<uint8_t> groundMask;
-std::vector<float> waterLevels;
-std::vector<float> waterTriangles;
-std::vector<double> lattice;
-std::vector<Pond> ponds;
-std::unordered_map<uint64_t,ChunkSpatialSample>* residentSpatialRegistry=nullptr;
+WILD_SAMPLING_LOCAL std::vector<uint8_t> water;
+WILD_SAMPLING_LOCAL std::vector<uint8_t> groundMask;
+WILD_SAMPLING_LOCAL std::vector<float> waterLevels;
+WILD_SAMPLING_LOCAL std::vector<float> waterTriangles;
+WILD_SAMPLING_LOCAL std::vector<double> lattice;
+WILD_SAMPLING_LOCAL std::vector<Pond> ponds;
+WILD_SAMPLING_LOCAL std::unordered_map<uint64_t,ChunkSpatialSample>* residentSpatialRegistry=nullptr;
 std::unordered_map<uint64_t,ChunkSpatialSample>& residentSpatial(){
   if(!residentSpatialRegistry)residentSpatialRegistry=new std::unordered_map<uint64_t,ChunkSpatialSample>();
   return *residentSpatialRegistry;
 }
-std::vector<Prop> props;
-std::vector<Prop> solidProps;
+WILD_SAMPLING_LOCAL std::vector<Prop> props;
+WILD_SAMPLING_LOCAL std::vector<Prop> solidProps;
 std::unordered_map<uint64_t,std::vector<Prop>>* residentPropRegistry=nullptr;
 std::unordered_map<uint64_t,std::vector<Prop>>& residentSolidProps(){
   if(!residentPropRegistry)residentPropRegistry=new std::unordered_map<uint64_t,std::vector<Prop>>();
@@ -113,7 +125,7 @@ std::unordered_map<uint64_t,std::vector<Prop>>& residentVisibleProps(){
     residentVisiblePropRegistry=new std::unordered_map<uint64_t,std::vector<Prop>>();
   return *residentVisiblePropRegistry;
 }
-std::unordered_set<PropKey,PropKeyHash>* removedPropRegistry=nullptr;
+WILD_SAMPLING_LOCAL std::unordered_set<PropKey,PropKeyHash>* removedPropRegistry=nullptr;
 // Geometry retained only for a prop that was resident when suppressed. This
 // lets a preview restore that exact local footprint without rebuilding every
 // loaded sector. Settlement regeneration clears these witnesses.
@@ -128,8 +140,8 @@ std::unordered_set<PropKey,PropKeyHash>& removedProps(){
   if(!removedPropRegistry)removedPropRegistry=new std::unordered_set<PropKey,PropKeyHash>();
   return *removedPropRegistry;
 }
-std::array<std::vector<int>,propBucketSide*propBucketSide> propBuckets;
-int haloPropCount=0;
+WILD_SAMPLING_LOCAL std::array<std::vector<int>,propBucketSide*propBucketSide> propBuckets;
+WILD_SAMPLING_LOCAL int haloPropCount=0;
 BarrierIndex* barrierRegistry=nullptr;
 BarrierIndex& barrierIndex(){
   if(!barrierRegistry)barrierRegistry=new BarrierIndex();
@@ -148,9 +160,9 @@ std::vector<float> polygonInput;
 std::vector<float> regionBatchInput;
 std::vector<int32_t> regionBatchOutput;
 std::vector<PolygonStateRecord> polygonState;
-std::vector<Settlement> settlements;
+WILD_SAMPLING_LOCAL std::vector<Settlement> settlements;
 std::vector<int32_t> changedSettlementChunks;
-std::vector<size_t> nearbySettlements;
+WILD_SAMPLING_LOCAL std::vector<size_t> nearbySettlements;
 // No-entry WASM does not initialize C++ globals; construct profiles lazily.
 constexpr int navigationProfiles=6;
 NavProfile* navProfiles[navigationProfiles]={};
@@ -913,6 +925,12 @@ void groundColorAt(double wx,double wz,float* output){
 }
 // Selected scratch only. Resident ownership is published by populateChunk below.
 // This still reads the live generation inputs; it is not safe on a worker yet.
+double proceduralPropSpacing(int type){
+  constexpr double savannaSpacing[6]={13.5,7,2.8,9,10,32};
+  constexpr double desertSpacing[6]={19,11,4.6,15,23,54};
+  constexpr double canyonSpacing[6]={13,5.2,3.5,9,19,31};
+  return worldBiome==1?desertSpacing[type]:worldBiome==5?canyonSpacing[type]:savannaSpacing[type];
+}
 void prepareSelectedChunk(int cx,int cz,bool visual){
   SPATIAL_TICK(populateStarted);SPATIAL_TICK(setupStarted);
   chunkX=cx;chunkZ=cz;props.clear();solidProps.clear();haloPropCount=0;
@@ -949,9 +967,6 @@ void prepareSelectedChunk(int cx,int cz,bool visual){
   SPATIAL_TOCK(10,meshStarted);
   }
   SPATIAL_TICK(propsStarted);
-  constexpr double savannaSpacing[6]={13.5,7,2.8,9,10,32};
-  constexpr double desertSpacing[6]={19,11,4.6,15,23,54};
-  constexpr double canyonSpacing[6]={13,5.2,3.5,9,19,31};
   constexpr double savannaDensity[6]={.53,.51,.72,.30,.28,.63};
   constexpr double desertDensity[6]={.30,.22,.035,.17,.10,.12};
   constexpr double riverDensity[6]={.62,.63,.64,.28,.26,.57};
@@ -967,7 +982,7 @@ void prepareSelectedChunk(int cx,int cz,bool visual){
   constexpr float desertRadii[20]={3.6568f,2.4170f,2.3057f,2.4988f,.8174f,.7033f,.7061f,.6348f,.5378f,.6449f,1.4225f,2.2645f,1.05f,1.7903f,1.9822f,.85f,1.35f,5.2349f,5.9548f,2.4f};
   constexpr float canyonRadii[20]={4.2725f,2.9148f,11.9575f,8.5710f,11.2582f,.7518f,.9655f,.5382f,.6040f,.5602f,1.7548f,3.4760f,1.2f,1.8f,1.45f,.9f,1.2369f,1.3973f,6.1408f,3.25f};
   for(int type=0;type<6;type++){
-    const double cell=worldBiome==1?desertSpacing[type]:worldBiome==5?canyonSpacing[type]:savannaSpacing[type];
+    const double cell=proceduralPropSpacing(type);
     // A neighbor owns and renders a prop whose footprint crosses our edge.
     // Generate its collision record from the same global cells, without
     // duplicating the visible instance in this chunk.
@@ -1114,6 +1129,9 @@ void installPreparedRaster(ChunkRaster raster){
   chunkRasters->insert_or_assign(key,std::move(raster));
 }
 void buildActiveRaster(){installPreparedRaster(prepareActiveRaster());}
+#ifdef __EMSCRIPTEN_PTHREADS__
+#include "spatial-preparation-worker.inc"
+#endif
 void patchActiveRaster(const Prop& changed){
   const auto it=chunkRasters->find(chunkKey(chunkX,chunkZ));
   if(it==chunkRasters->end())return;
