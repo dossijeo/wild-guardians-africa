@@ -7,8 +7,8 @@ import {gatePortalPoints} from '../gate-passages.js';
 
 // Synchronous world authority. The same WASM instance answers spatial queries
 // and supplies visual buffers; rendering remains the caller's responsibility.
-export function createSpatialWorld(module){
-  const wasm=new WebAssembly.Instance(module,{
+export function createSpatialWorld(module,{exports:runtimeExports}={}){
+  const wasm=runtimeExports??new WebAssembly.Instance(module,{
     env:{emscripten_notify_memory_growth(){}},
     // Current Emscripten standalone builds may import this even though the
     // game never exits the spatial module. Older binaries omit the import.
@@ -85,6 +85,22 @@ export function createSpatialWorld(module){
     if(result>0){chunk={cx:cx|0,cz:cz|0,count:result-1};chunks.push([cx|0,cz|0]);chunkRevision++;}
     return result>0?result-1:result;
   }
+  // Publication already selected the prepared buffers; never call selectChunk
+  // here, because the synchronous selection path regenerates visual data.
+  function publishPreparedChunk(id,cx,cz){
+    const result=wasm.spatial_prepare_publish(id);
+    if(result>0){chunk={cx:cx|0,cz:cz|0,count:result-1};chunks.push([cx|0,cz|0]);chunkRevision++;}
+    return result;
+  }
+  const preparation=wasm.spatial_prepare_start?{
+    start:(cx,cz)=>wasm.spatial_prepare_start(cx|0,cz|0),
+    status:()=>wasm.spatial_prepare_status(),
+    cancel:()=>wasm.spatial_prepare_cancel(),
+    release:()=>wasm.spatial_prepare_release(),
+    shutdown:()=>wasm.spatial_prepare_shutdown(),
+    publish:publishPreparedChunk,
+    metric:field=>wasm.spatial_prepare_metric(field)
+  }:null;
   function selectChunk(cx,cz){
     if(!generated)throw Error('Generate the world before selecting a chunk');
     const result=wasm.spatial_select_chunk(cx|0,cz|0);
@@ -279,7 +295,7 @@ export function createSpatialWorld(module){
     }
     wasm.lazy_commit_portals();
   }
-  return {wasm,generate,addChunk,selectChunk,removeChunk,currentChunk:()=>chunk,
+  return {wasm,preparation,generate,addChunk,selectChunk,removeChunk,currentChunk:()=>chunk,
     enableConnectivityDiagnostics:()=>{diagnoseConnectivity=true;},
     connectivityDiagnostics:()=>structuredClone(connectivityReasons),
     enclosureAt:point=>navigationBuilt?wasm.lazy_enclosure(point.x,point.z):-1,
