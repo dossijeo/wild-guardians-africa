@@ -5,8 +5,8 @@ export function createChunkWorker(){return typeof Worker==='undefined'?null:new 
 // One native generation request at a time. Epochs invalidate forced rebuilds;
 // request IDs prevent an old or duplicated response from completing a new job.
 export class NativeChunkStream{
-  constructor(config,profile,{loaded,onData,onError=()=>{},onFallback=()=>{},workerFactory=createChunkWorker,build=buildNativeChunk,buildAsync=null,schedule=(callback,delay)=>setTimeout(callback,delay),cancel=handle=>clearTimeout(handle)}){
-    Object.assign(this,{config:structuredClone(config),profile:structuredClone(profile),loaded,onData,onError,onFallback,build,buildAsync,schedule,cancel});
+  constructor(config,profile,{loaded,onData,onError=()=>{},onFallback=()=>{},workerFactory=createChunkWorker,build=buildNativeChunk,buildAsync=null,discardData=()=>{},schedule=(callback,delay)=>setTimeout(callback,delay),cancel=handle=>clearTimeout(handle)}){
+    Object.assign(this,{config:structuredClone(config),profile:structuredClone(profile),loaded,onData,onError,onFallback,build,buildAsync,discardData,schedule,cancel});
     this.queue=[];this.desired=new Map();this.failed=new Set();this.stale=new Set();this.busy=null;this.serial=0;this.epoch=0;this.dead=false;this.waiters=[];this.timer=null;
     this.stats={created:0,discarded:0,failed:0,fallbacks:0};
     try{this.worker=workerFactory();}catch(error){this.worker=null;this.stats.fallbacks++;onFallback(error);}
@@ -54,9 +54,9 @@ export class NativeChunkStream{
     this.settle();
   }
   receive(message){
-    if(this.dead||!this.busy||message.id!==this.busy.id||message.epoch!==this.busy.epoch){this.stats.discarded++;return;}
+    if(this.dead||!this.busy||message.id!==this.busy.id||message.epoch!==this.busy.epoch){this.stats.discarded++;this.discardData(message.data);return;}
     const job=this.busy,key=job.cx+','+job.cz;this.busy=null;
-    if(message.epoch!==this.epoch||!this.desired.has(key)||this.loaded().has(key)&&!this.stale.has(key)){this.stats.discarded++;}
+    if(message.epoch!==this.epoch||!this.desired.has(key)||this.loaded().has(key)&&!this.stale.has(key)){this.stats.discarded++;this.discardData(message.data);}
     else if(message.error){this.failed.add(key);this.stats.failed++;this.onError(new Error(message.error));}
     else{
       try{if(message.data.cx!==job.cx||message.data.cz!==job.cz)throw new Error('Respuesta de chunk con coordenadas incorrectas');this.onData(message.data);this.stale.delete(key);this.stats.created++;}

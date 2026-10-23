@@ -1,3 +1,4 @@
+import {prepareTerrainChunk,discardPreparedTerrain} from '../rendering/prepare-terrain-chunk.js';
 import {findSpatialStart} from '../world/wild-engine/spatial-initial-site.js';
 import {createSpatialGameSession} from '../world/wild-engine/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../world/wild-engine/spatial-navigation-movement.js';
@@ -40,6 +41,10 @@ export async function prepareWildEngineWorld(world,state,payload,{signal,loaded=
     }
     session=createSpatialGameSession(module,state,{
     ...(threaded?{core:threaded.core}:{}),
+    ...(new URLSearchParams(location.search).get('chunkInstall')==='staged'?{
+      prepareData:(data,current)=>prepareTerrainChunk(world,data,current),
+      discardData:data=>discardPreparedTerrain(world,data)
+    }:{}),
     loaded:()=>world.chunks,
     onData:data=>world.installChunk(data),
     onError:error=>world.onError?.(error)});

@@ -144,6 +144,11 @@ export function createSpatialGameSession(module,state,streamOptions){
   selectProfile(WORKER_SPATIAL_PROFILE);
   selectProfile(ANIMAL_SPATIAL_PROFILES.warthog);
   stream=createSpatialChunkStream(core,{...streamOptions,
+    preparationRevision:()=>terrainRevision+props.revision(),
+    ...(streamOptions.prepareData?{prepareData:(data,current)=>{
+      data.terrainRevision=chunkRevisions.get(`${data.cx},${data.cz}`)??0;
+      return streamOptions.prepareData(data,current);
+    }}:{}),
     onData:data=>{
       data.terrainRevision=chunkRevisions.get(`${data.cx},${data.cz}`)??0;
       streamOptions.onData(data);

@@ -386,7 +386,8 @@ export class WorldScene {
     if(evict){this.chunkRevision++;this.handStaticBoxes=null;const [cx,cz]=key.split(',').map(Number);this.chunkStream?.releaseChunk?.(cx,cz);}
   }
   installChunk(data){
-    const key=data.cx+','+data.cz,group=this.terrain(data.cx,data.cz,data);
+    const key=data.cx+','+data.cz,group=data.preparedGroup??this.terrain(data.cx,data.cz,data);
+    if(data.preparedGroup){for(const child of group.children)if(child.userData.ground)this.terrainMeshes.push(child);delete data.preparedGroup;}
     const previous=this.chunks.get(key);
     if(previous)this.removeInstalledChunk(key,previous,{evict:false});
     this.chunks.set(key,group);this.scene.add(group);this.groundDetails?.chunk(data.cx,data.cz,this.nav.field,this.state);this.chunkRevision++;this.handStaticBoxes=null;
