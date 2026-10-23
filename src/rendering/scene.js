@@ -2,7 +2,7 @@ import {retainWarmedPrograms} from './retain-warmed-programs.js';
 import {createMangroveMaterialCache,mangroveMaterialCacheEnabled} from './mangrove-material-cache.js';
 import {mangroveFernEnabled} from './mangrove-fern-option.js';
 import {waterOpaqueCoreEnabled,prepareOpaqueCore} from './water-opaque-core.js';
-import {naturalWaterEdgesEnabled,prepareNaturalWater,prepareNaturalAssetWater} from './natural-water-edges.js';
+import {naturalWaterEdgesEnabled,prepareNaturalWaterBed,prepareNaturalWater,prepareNaturalAssetWater} from './natural-water-edges.js';
 import {regionalWaterEnabled} from './world-atmosphere.js';
 import {prepareMangroveBank} from './mangrove-shore.js';
 import {continuousGrassEnabled,createContinuousGrass} from './continuous-grass.js';
@@ -99,6 +99,9 @@ export class WorldScene {
     // avoiding another draw of all resident geometry. QA may opt out explicitly.
     this.farIsolatedPreparation=true;
     this.batchChunkEviction=new URLSearchParams(globalThis.location?.search??'').get('chunkEviction')==='batch';
+    this.stagedHorizonBed=new URLSearchParams(globalThis.location?.search??'').get('horizonBed')==='staged';
+    const bedBudget=Number(new URLSearchParams(globalThis.location?.search??'').get('horizonBedBudget')??2);
+    this.horizonBedBudget=Number.isFinite(bedBudget)?Math.max(.5,Math.min(8,bedBudget)):2;
     // Approved G recipe: submit-CPU16 pacing and owned initial far preparation.
     this.loadingCpuBudget=true;
     this.loading=new AbortController();this.renderOrigin=new RenderOrigin();this.toon=new AfricanToon();this.contacts=new NativeContacts();this.toon.contactUniforms=this.contacts.uniforms;this.chunkRevision=0;this.canvas=canvas;this.assets=new Assets();const visualLab=new URLSearchParams(globalThis.location?.search??'').get('visualLab');this.visualLabGroundDetails=['grass','ph-grass','layer-grass','layer-grass-sculpted','global-grass','global-grass-beds'].includes(visualLab);this.assets.visualLab=['normal','normal-relief','normal-enhanced','texture-detail','texture-aniso','village-repacked','village-art','village-shared-art','village-finish','village-surface','village-details'].includes(visualLab)?visualLab:null;this.objects=new Map();this.chunks=new Map();this.movementSurfaceAt=(x,z)=>this.nav?.field.canyon&&this.nav.field.waterInfo(x,z).inside?'water':residentMudSurface(this.chunks,x,z);this.mixers=new Map();this.wateringEmitters=new Map();this.waterMouth=new THREE.Vector3();this.waterDirection=new THREE.Vector3();this.scene=new THREE.Scene();this.materialRegistry=new SceneMaterialRegistry(this.scene,this.toon);this.assetGroups=new NativeAssetGroups(this.scene);this.sky=new NativeSky();
@@ -401,7 +404,7 @@ export class WorldScene {
   syncChunks(force=false) {
     if(!this.nav||!this.prototypes)return;
     const requested=nativeNearRegion(this.camera.position,this.quality,this.farResidentRange??null);
-    this.horizon??=new NativeHorizon(this.scene,(bounds,outside)=>paintedWaterMaterial(this.pack.profile.colors.water,false,this.nav.field.seed,bounds,this.fluidLighting,outside),mesh=>this.materialRegistry?.refresh(mesh),(material,cx,cz)=>{this.biomeGround?.attach(material,cx,cz,null,{mapped:false});},{spatial:this.spatialSession?.horizonSource,prepareWater:this.naturalWaterEdges?(mesh,region)=>{prepareNaturalWater(this,mesh.geometry,region.cx,region.cz,mesh.material);if(this.waterOpaqueCore)prepareOpaqueCore(mesh);}:null});
+    this.horizon??=new NativeHorizon(this.scene,(bounds,outside)=>paintedWaterMaterial(this.pack.profile.colors.water,false,this.nav.field.seed,bounds,this.fluidLighting,outside),mesh=>this.materialRegistry?.refresh(mesh),(material,cx,cz)=>{this.biomeGround?.attach(material,cx,cz,null,{mapped:false});},{spatial:this.spatialSession?.horizonSource,preparationBudgetMs:this.horizonBedBudget,prepareWaterBed:this.stagedHorizonBed&&this.naturalWaterEdges?(geometry,region)=>prepareNaturalWaterBed(this,geometry,region.cx,region.cz):null,prepareWater:this.naturalWaterEdges?(mesh,region,bed)=>{prepareNaturalWater(this,mesh.geometry,region.cx,region.cz,mesh.material,bed);if(this.waterOpaqueCore)prepareOpaqueCore(mesh);}:null});
     // Adopt the horizon and its matching resident rectangle in the same frame.
     // Keeping the preceding rectangle while the worker runs avoids exposing
     // the old horizon's centre hole or overlapping its seam with new chunks.

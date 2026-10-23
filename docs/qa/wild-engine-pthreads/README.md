@@ -549,3 +549,20 @@ The renderer uses this only with `chunkEviction=batch`, off by default. Meshes a
 Real Canyon ABAB (`matrix-batch-eviction/RESULTS.md`, no program retention) completes 50 identical installations in all runs. Individual eviction totals 127.4/114.4ms over 50 calls; batching totals 9.13/9.34ms over two calls. RAF maximum falls from 183.0/166.3ms to 116.5/116.4ms, and total observed interval from 2860/2860ms to 2727/2727ms (~4.7%). p95 is mixed (16.98/16.95 versus 33.18/16.88ms); do not claim uniform tail improvement. One image pair is byte-equivalent in RGB, the other differs by at most one channel level; reviewed Canyon terrain/water/shadows are preserved.
 
 Batch eviction is promising but still opt-in pending active-world, camera-continuous and wider rendered-biome validation. The refreshed pthread binary includes this API; the previous packaged/Tauri reports predate it and are not acceptance evidence for the new binary. Remaining horizon-mask and other graphical installation stalls prevent closing the primary objective.
+
+## Incremental horizon shore map: measured, not adopted
+
+`prepareNaturalWaterBed` separates CPU sampling/packing from texture/material adoption. The default synchronous wrapper drains the same algorithm without yields. With `horizonBed=staged`, a streaming horizon prepares its map in bounded batches (128 surface queries per yield, 1024 encoded texels per yield); initial loading remains synchronous. The old horizon, clipping bounds and resident region stay in place until the complete new map is ready. Camera/key, terrain revision or material-type changes discard private preparation. Disposal returns the iterator and releases its uninstalled geometry. Adoption uses the finished map without resampling. This is incremental main-thread **graphics preparation**, not pthread generation; native chunk generation remains on the existing shared-memory worker.
+
+Eighteen relevant tests pass, including exact packed bytes/range/bounds against the original Canyon implementation at maximum 513² size, no repeat sampling during adoption, retention of old clipping/region, revision cancellation and disposal. The game comparison waits for pending shore preparation as well as horizon/native queues. `horizonBedBudget` is an experimental clamped 0.5–8ms scheduling budget; default 2ms. It bounds the sampling work between checks, not all geometry/adoption work or the whole frame.
+
+Both real ABAB series use pthreads, batch eviction, no program retention, 50 identical installations and medium 720p Intel UHD. A is synchronous shore preparation; B is incremental:
+
+| Budget | A total RAF ms | B total RAF ms | A max frame ms | B max frame ms |
+|---|---|---|---|---|
+| 2ms | 2760 / 2644 | 3991 / 4057 | 132.9 / 116.4 | 66.6 / 83.0 |
+| 6ms | 2811 / 2794 | 2960 / 3309 | 116.3 / 132.9 | 82.9 / 116.3 |
+
+The 2ms variant reduces large frame stalls but delays completion by 45–53%. At 6ms the delay is 5–18%; the second B run also worsens mean/p95 (18.59/33.20 versus 18.26/16.91ms). Adoption still peaks around 21–25ms inside horizon.update despite the smaller sampling budget. **Do not enable this by default:** splitting work alone does not provide a convincing overall tradeoff. Keep as a reproducible QA alternative, not an achieved optimization. Next investigation should reduce or offload the map computation rather than continue tuning small budgets.
+
+Reports/captures: `matrix-horizon-bed` and `matrix-horizon-bed-6ms`. Viewed images preserve Canyon terrain, water and shadows. Larger full-frame differences occur in animated right-side UI; excluding only x1000..1249/y360..549 gives exactly equal RGB for both 2ms pairs and MAE 0.00000839/255, max 5 for both 6ms pairs. Full-frame statistics are retained separately; UI exclusion is supplemental and explicitly recorded. No map resolution, lighting or vegetation reduction was used. Current distribution acceptance still needs fresh builds after the experimental changes.

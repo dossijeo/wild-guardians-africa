@@ -19,6 +19,8 @@ export class NativeHorizon{
     this.smoothCanyonNormals=visualOptions.get('visualLab')==='global-lighting'&&visualOptions.get('canyonNormals')==='smooth';
     this.groundMaterial=groundMaterial;this.group=null;this.key=null;this.region=null;
     this.spatial=options.spatial??null;this.prepareWater=options.prepareWater??null;
+    this.prepareWaterBed=options.prepareWaterBed??null;this.pendingPreparation=null;
+    this.preparationBudgetMs=options.preparationBudgetMs??2;this.now=options.now??(()=>performance.now());
     this.generator=new HorizonGenerator({...options,
       workerFactory:options.workerFactory??(this.spatial?spatialHorizonWorker:undefined)});
   }
@@ -27,8 +29,16 @@ export class NativeHorizon{
     if(this.spatial&&!Number.isSafeInteger(revision))throw TypeError('Spatial horizon needs an integer terrain revision');
     const key=JSON.stringify([config.biome,config.seed,config.relief,config.river,region.cx,region.cz,region.range,revision,this.smoothCanyonNormals]);
     const materialKey=JSON.stringify([config.biome,config.seed,config.relief,config.river,quality==='muy_baja']);
+    if(this.pendingPreparation&&(force||this.pendingPreparation.key!==key||this.pendingPreparation.materialKey!==materialKey))this.cancelPreparation();
     if(!['canyons','desert'].includes(config.biome)){this.generator.cancel();this.clear();return region;}
-    const ready=this.generator.take(key);
+    let preparedData=null,preparedBed=null,waterGeometry=null;
+    if(this.pendingPreparation){
+      const pending=this.pendingPreparation,start=this.now();let step;
+      do{step=pending.steps.next();}while(!step.done&&this.now()-start<this.preparationBudgetMs);
+      if(!step.done)return this.region;
+      preparedData=pending.data;preparedBed=step.value;waterGeometry=pending.geometry;this.pendingPreparation=null;
+    }
+    const ready=preparedData??this.generator.take(key);
     if(!ready&&!force&&this.key===key){this.generator.cancel();if(this.group)updateGroundQuality(this.group.children.filter(o=>o.userData.nativeHorizon==='terrain'),quality,this.onMaterialChange);this.materialKey=materialKey;return this.region;}
     if(!ready&&!force&&this.spatial&&this.generator.latest?.key===key)return this.region??region;
     let data=ready;
@@ -39,6 +49,13 @@ export class NativeHorizon{
         waterColor:waterRgb(profile.colors.water),river:config.river}:{key,config,profile,region,smoothNormals};
       if(this.generator.plan(task,force)||this.spatial)return this.region??region;
       data=buildHorizonData({config,profile,region,smoothNormals});
+    }
+    // Initial loading remains synchronous. During streaming the old horizon
+    // keeps ownership of its near hole until the complete new shore map exists.
+    if(this.prepareWaterBed&&this.group&&data.water.length&&!waterGeometry){
+      const geometry=nativeTerrainBuffer(data.water);
+      this.pendingPreparation={key,materialKey,data,geometry,steps:this.prepareWaterBed(geometry,region)};
+      return this.region;
     }
     this.normalBuild=data.normalBuild??null;
     const retained=this.materialKey===materialKey?this.group?.children.find(o=>o.userData.nativeHorizon==='terrain')?.material:null;
@@ -52,12 +69,14 @@ export class NativeHorizon{
     // Canyon batches discard the resident rectangle; desert's seam apron remains.
     if(config.biome==='canyons'){material.userData.horizonBounds??=new THREE.Vector4();material.userData.horizonBounds.set(...region.bounds);}
     const ground=new THREE.Mesh(nativeTerrainBuffer(data.terrain),material);ground.userData.nativeHorizon='terrain';ground.castShadow=config.biome==='canyons'&&this.canyonShadowCaster;group.add(ground);
-    if(data.water.length){const water=new THREE.Mesh(nativeTerrainBuffer(data.water),this.waterMaterial(region.bounds,true));water.userData.nativeHorizon='water';group.add(water);this.prepareWater?.(water,region);}
+    if(data.water.length){const water=new THREE.Mesh(waterGeometry??nativeTerrainBuffer(data.water),this.waterMaterial(region.bounds,true));water.userData.nativeHorizon='water';group.add(water);this.prepareWater?.(water,region,preparedBed);}
     this.group=group;this.scene.add(group);
     return this.region;
   }
   whenReady(){return this.generator.whenReady();}
+  cancelPreparation(){const pending=this.pendingPreparation;if(!pending)return;this.pendingPreparation=null;pending.steps.return?.();pending.geometry.dispose();}
   clear(retained=null){
+    this.cancelPreparation();
     if(this.group){this.scene.remove(this.group);this.group.traverse(o=>{if(o.isMesh){if(!o.userData.borrowedWaterGeometry)o.geometry.dispose();if(o.material!==retained)o.material.dispose();}});this.group=null;}
     this.key=null;this.region=null;
   }
