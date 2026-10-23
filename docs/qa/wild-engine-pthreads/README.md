@@ -197,3 +197,8 @@ Staged preparation still costs 16.16 / 15.24 ms CPU per chunk, in slices averagi
 Final screenshot mean absolute channel differences are 0.001073 and 0.000136 on a 0-255 scale, with 265 and 365 changed channels. The recorded state and camera agree. These are paused-scene short-run measurements, not GPU times or active-simulation acceptance. Full results and images accompany `install-abab-summary.json`.
 
 Latest package check: production build succeeds; nested-path threaded runtime reports isolation, shared memory, worker identity 1 and successful publication. Web package validation passes (1042 files, 841 relative links); 22 targeted streaming/preparation tests pass. This does not establish real itch-host isolation or Tauri/WebView2 compatibility. Active simulation, broader lifecycle stress, peak memory and real desktop distribution remain required before declaring completion.
+
+
+## Concurrent lifecycle regression
+
+`node tools/experiments/check-spatial-thread-lifecycle.mjs` exercises the shipped threaded module in all six biomes. While jobs run, main-thread terrain and route queries continue. A world restore rejects the pre-restore result; eight cycles per biome add/remove a polygon during preparation, reject stale output, retry, publish and remove the chunk. Resident counts and final saved state are asserted (polygon ID allocation advances normally). All six pass; see thread-lifecycle.json. This is a native API correctness test, not full active-game simulation, a race sanitizer or a performance benchmark.
