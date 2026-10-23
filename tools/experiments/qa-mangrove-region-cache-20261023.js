@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {observeMangroveChunks} from './qa-mangrove-chunk-events-20261023.js';
 import {MaterialBakeQueue} from '/src/rendering/material-bake-queue.js';
 import {GpuTimer} from '/tests/browser/gpu-timer.js';
 import {bakeFragment,installHybridCache} from './qa-mangrove-hybrid-cache-20261023.js';
@@ -17,6 +18,10 @@ export async function installRegionCache(w,{verifyTiles=false}={}){
  const coarse=await installHybridCache(w,128,'weights',plan),r=w.renderer;
  const stats={scope:'QA frozen coarse cache and detailed region; tiled generation, no streaming invalidation yet',coarse,regions:[],bytes:coarse.bytes,tileSubmissionsMs:[]};
  const queue=new MaterialBakeQueue({budgetBytes:32*1024*1024,reservedBytes:coarse.bytes});stats.queue=queue.stats;
+ stats.chunkEvents={added:0,removed:0,retained:0};
+ const owner=observeMangroveChunks(w,{add(){stats.chunkEvents.added++;},remove(record){stats.chunkEvents.removed++;queue.remove(record.key);},material(){stats.chunkEvents.retained++;}});
+ w.qaRegionCacheOwner={owner,queue,stats,dispose(){owner.dispose();queue.dispose();}};
+
  const scene=new THREE.Scene(),camera=new THREE.Camera(),geometry=new THREE.PlaneGeometry(2,2),first=fine[0]?.mesh.material.userData.biomeGround;
  if(!first)return stats;
  const uniforms={...first,uGroundRect:{value:first.uGroundRect.value.clone()},uGroundMask:{value:first.uGroundMask.value},uWetBank:{value:first.uWetBank.value},uQaBakeRect:{value:new THREE.Vector3(first.uGroundRect.value.x,first.uGroundRect.value.y,24)},resolution:{value:1024}};
@@ -85,6 +90,6 @@ export async function installRegionCache(w,{verifyTiles=false}={}){
    stats.bytes+=cacheBytes(size);stats.regions.push({key:row.key,x,z,side,resolution:size,tiles:16});
   }
   const deadline=performance.now()+10000;while(timer.pending.length&&performance.now()<deadline){await new Promise(requestAnimationFrame);timer.poll();}stats.generationGpu=timer.report();
- }catch(error){queue.dispose();throw error;}finally{timer.dispose();material.dispose();geometry.dispose();}
+ }catch(error){owner.dispose();queue.dispose();throw error;}finally{timer.dispose();material.dispose();geometry.dispose();}
  return stats;
 }
