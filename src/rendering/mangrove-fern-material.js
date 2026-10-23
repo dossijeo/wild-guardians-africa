@@ -33,9 +33,9 @@ ${m.fragmentShader}`;
 
  float invSlope=inversesqrt(1.+vFrondSlope*vFrondSlope);leafN=normalize(vec3(leafN.x, (leafN.y+leafN.z*vFrondSlope)*invSlope,(leafN.z-leafN.y*vFrondSlope)*invSlope));
  float ca=cos(vCardAngle),sa=sin(vCardAngle);leafN.xz=mat2(ca,-sa,sa,ca)*leafN.xz;
- vec3 leafBase=pow(max(mix(leaf.rgb,vec3(dot(leaf.rgb,vec3(.2126,.7152,.0722))),.45)/vec3(.22),vec3(0.)),vec3(1.12))*.22*uExposure*vec3(.85,.98,.63)*(.62+.38*vCoverageTip);
+ vec3 leafBase=pow(max(mix(leaf.rgb,vec3(dot(leaf.rgb,vec3(.2126,.7152,.0722))),.45)/vec3(.22),vec3(0.)),vec3(1.12))*.22*uExposure*mix(vec3(1.0,1.03,.73),vec3(.85,.98,.63),uNight)*(.62+.38*vCoverageTip);
  vec3 leafAmbient=leafBase*(.30+.70*smoothstep(.08,.85,vCoverageTip))*mix(vec3(.17,.28,.34),vec3(.095,.17,.32)*uNightLight,uNight);
- vec3 leafSun=leafBase*(.30+.70*smoothstep(.12,.75,vCoverageTip))*mix(vec3(2.05,1.90,1.28),vec3(.22,.36,.66)*uNightLight,uNight)*(.12+.88*max(dot(leafN,uLightDir),0.)+.06*(1.-uNight)*max(dot(-leafN,uLightDir),0.));`);
+ vec3 leafSun=leafBase*(.30+.70*smoothstep(.12,.75,vCoverageTip))*mix(vec3(2.46,2.28,1.54),vec3(.22,.36,.66)*uNightLight,uNight)*(.12+.88*max(dot(leafN,uLightDir),0.)+.06*(1.-uNight)*max(dot(-leafN,uLightDir),0.));`);
     m.fragmentShader=m.fragmentShader.replace('sp.z-.0007','sp.z-.00008');
     m.fragmentShader=m.fragmentShader.replace('vec3 lit=vCoverageColor+vCoverageSun*mix(.07,1.,visibility);','vec3 lit=leafAmbient+leafSun*mix(.07,1.,visibility);');
   m.vertexShader=m.vertexShader.replace('rootWorld+vec3(0.,.12,0.)','worldP+vec3(0.,.025,0.)');
