@@ -283,3 +283,22 @@ QA harness accepts `WG_THREAD_BIOME` and validates each saved fixture's biome be
 | Manglares | 34.83 / 50.08 / 183.04 | 0.726 |
 
 This expands real-renderer functional coverage beyond Mangroves. One run per different scene is not a performance comparison between backends or a ranking of biome efficiency. Timings are RAF/CPU, not GPU. Captures record end states, not exact before/after equivalence. Still required: paired low-quality and GPU measurements, edits during generation, animals, save/load/teardown of complete games, long sessions, packaging and remaining streaming stalls. No artistic changes or simulation rules were modified.
+
+
+## Active ABAB with asynchronous GPU elapsed queries
+
+`WG_THREAD_GPU=1` adds a bounded QA timer around WorldScene.render, sampling every third render and polling readiness without blocking. Queries are deleted after reading, disjoint invalidates the entire GPU series, another active elapsed query fails explicitly, and teardown has a deadline/cleanup. Unit tests cover valid readings, render return preservation, disjoint and timeout cleanup. This measures the GPU command interval including pipeline bubbles, not isolated GPU busy time or individual passes.
+
+Four sequential Intel UHD / Chrome / 720p medium Mangroves runs use 600 active frames and the same 240m per-frame camera path. Each returns 201 valid samples, no omitted queries and no disjoint. All install 25 chunks with zero paused frames.
+
+| Metric (ms) | A1 sync | B1 pthread | A2 sync | B2 pthread |
+|---|---:|---:|---:|---:|
+| GPU mean | 25.85 | 26.06 | 25.67 | 26.88 |
+| GPU p95 | 39.38 | 39.85 | 38.33 | 38.43 |
+| RAF mean | 32.26 | 31.51 | 32.04 | 32.48 |
+| RAF p95 | 66.51 | 50.12 | 66.54 | 50.25 |
+| RAF max | 166.64 | 182.99 | 182.85 | 182.94 |
+
+The repeated p95 improvement survives GPU instrumentation, while mean/max frame improvements remain unproven. GPU work is not reduced: averages are slightly higher for B, especially the second pair. This experiment cannot identify the cause of that variation. Native main-thread generation averages 43.12/42.03 ms in A, while publication averages 0.725/0.792 ms in B. These results support removal of the frequent CPU generation stall, not a general GPU/FPS optimization. Compare this series internally; do not combine it with the non-instrumented baseline.
+
+See gpu-active-summary.json and raw reports. Final active elapsed times differ, GPU timestamps include command-stream idle periods, only one graphics quality/biome is measured, and per-pass/peak-memory/long-session gates remain open. No art or production simulation was changed by the QA instrumentation.
