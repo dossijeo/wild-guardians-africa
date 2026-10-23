@@ -22,3 +22,24 @@ export async function verifyCropPlacementCache(w){
  const after=snapshot();if(w.renderer.getContext().getError())throw Error('Placement GL error');
  return {before,after,crop:{id:crop.id,species:crop.species,x:crop.x,z:crop.z},rendererBatchSawCrop:true,changedMaskBytes,capture:w.renderer.domElement.toDataURL('image/png').split(',')[1],scope:'Real crop command with normal navigation and event flow; paused fixture, no construction or synthetic mask invalidation'};
 }
+
+export async function verifyWallPlacementCache(w){
+ const url=performance.getEntriesByType('resource').map(r=>r.name).find(u=>/\/src\/simulation\/game\.js(?:\?|$)/.test(u));
+ const game=await import(url),s=w.state,c=w.mangroveMaterialCache,center=s.structures.find(e=>e.kind==='center');
+ if(!c||!center)throw Error('Wall cache fixture missing');
+ const snapshot=()=>({structures:s.structures.length,objects:w.objects.size,entries:c.queue.entries.size,bytes:c.queue.stats.bytes,publications:c.queue.stats.published,invalidations:c.stats.invalidations,suppressed:s.suppressed.length,shadow:{...w.releaseNativeShadow.cache.stats}});
+ const before=snapshot(),masks=new Map([...c.states].map(([key,v])=>[key,new Uint8Array(v.mask.image.data)]));let candidate=null;
+ for(let radius=8;radius<=16&&!candidate;radius+=4)for(let i=0;i<16&&!candidate;i++){
+  const item={kind:'wall',material:'empalizada',gate:false,x:center.x+Math.cos(i*Math.PI/8)*radius,z:center.z+Math.sin(i*Math.PI/8)*radius,yaw:0};
+  if(w.nav.wallPlacement(item).valid)candidate=item;
+ }
+ if(!candidate)throw Error('No legal nearby wall site');
+ let accepted;game.resume(s,'menu');try{accepted=game.placeStructure(s,'qa-ground-real-wall',candidate,w.nav);}finally{game.pause(s,'menu');}
+ if(accepted===false||s.structures.length!==before.structures+1)throw Error('Wall not committed');
+ const wall=s.structures.at(-1);w.syncResidentProps();
+ for(let i=0;i<90;i++){await new Promise(requestAnimationFrame);w.render(0);}
+ const object=w.objects.get(wall.id);if(!object)throw Error('Wall missing renderer object');let casters=0;object.traverse(o=>{if(o.isMesh&&o.castShadow)casters++;});
+ let changedMaskBytes=0;for(const [key,data]of masks){const current=c.states.get(key)?.mask.image.data;if(!current)throw Error('Unexpected chunk removal');for(let i=0;i<data.length;i++)changedMaskBytes+=Number(data[i]!==current[i]);}
+ if(w.renderer.getContext().getError())throw Error('Wall placement GL error');
+ return {before,after:snapshot(),wall:{id:wall.id,x:wall.x,z:wall.z,material:wall.material},rendererObjectPresent:true,casters,changedMaskBytes,capture:w.renderer.domElement.toDataURL('image/png').split(',')[1],scope:'Single legal wall placement; normal command/navigation, paused after commit, no synthetic mask writes'};
+}
