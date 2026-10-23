@@ -378,3 +378,12 @@ The harness accepts WG_THREAD_QUALITY (default media). A sequential baja run use
 Mean frametime improves 6.6% and 7.4% in the paired runs; p95 improves about 25% in both. Worst-frame improvement is not consistent. Synchronous native generation costs 48.05/47.30 ms per chunk, versus main-thread publication 0.792/0.734 ms for pthreads. The GPU interval is slightly lower here, but it includes pipeline idle time and is not evidence that pthreads reduce shader work. This does not remove the remaining graphics streaming stalls.
 
 Reproduce with WG_THREAD_PORT=5299, WG_THREAD_FROZEN=1, WG_THREAD_ACTIVE=1, WG_THREAD_BENCH=1, WG_THREAD_GPU=1, WG_THREAD_FRAMES=600, WG_THREAD_DISTANCE=240, WG_THREAD_QUALITY=baja; run sequentially with WG_THREADS=0,1,0,1 and distinct WG_THREAD_REPORT paths. No simultaneous builds or other benchmarks were run. This is one biome/quality sequence, not long-session or all-biome performance acceptance.
+
+
+## Itch package size blocker resolved locally
+
+The prior dist contained 1042 files / 569,134,687 bytes. A SHA-256 audit found only 15,473,874 redundant bytes across eight files: deduplication alone could not resolve the limits. Inspection found eight visual-lab directories referenced only by tools/experiments, not shipped application code/content. The web package plugin now excludes these directories from dist while retaining every source asset for development QA: ground-fiber-bake, ground-pom, moss-composite, fern-composite-lod-20261023, holly-fern-cards-20261023, mangrove-leaf-cards-20261023, continuous-grass-cards, continuous-grass-flow.
+
+Approved holly-fern-frond and holly-fern-lod assets, cupped leaves, continuous-grass modules and all runtime art remain included. No texture conversion, quality reduction or shader change was made. The package verifier rejects textual runtime references to excluded paths and verifies their absence along with existing asset/link checks.
+
+`npm run package:itch` now passes: **997 files, 491,960,976 uncompressed bytes**, 841 checked relative links, CRC-verified ZIP. Only three files and about 8 MB remain under current limits. See package-itch-clean.json for archive size/hash. `check-spatial-thread-package.mjs` also passes on the rebuilt dist: isolated/shared memory, native worker identity 1, successful publication from a nested URL. This resolves the local packaging limit, not actual hosted itch isolation/configuration. Tauri rebuild and full packaged-game validation remain pending.
