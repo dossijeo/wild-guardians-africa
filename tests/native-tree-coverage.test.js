@@ -72,6 +72,15 @@ test('far coverage composes obstruction, preserves native logical coverage and r
  assert.equal(coverage.update(f.chunks,f.camera,()=>state,1),1);assert.ok(Math.abs(batch.meshes[0].geometry.attributes.nativeVisibility.getX(0)-.4)<1e-6);assert.equal(batch.fade.attribute.version,baseVersion);assert.ok(Math.abs(batch.fade.attribute.getX(0)-.8)<1e-6);
  f.camera.aspect=1;f.camera.lookAt(0,2,0);f.camera.updateMatrixWorld();groups.update(f.chunks,f.camera,{x:0,z:0});assert.equal(groups.colors.size,1);assert.ok(Math.abs([...groups.colors.values()][0].mesh.geometry.attributes.nativeVisibility.getX(0)-.4)<1e-6);
  const scans=coverage.scans;for(let i=0;i<180;i++)assert.equal(coverage.update(f.chunks,f.camera,()=>state,1),0);assert.equal(coverage.scans,scans);
+ // Repacking native LOD coverage may overwrite the composed values without
+ // changing logical obstruction, matrix order, camera or readiness.
+ batch.packCoverage();
+ assert.ok(Math.abs(batch.meshes[0].geometry.attributes.nativeVisibility.getX(0)-.8)<1e-6);
+ assert.equal(coverage.update(f.chunks,f.camera,()=>state,1),1);
+ assert.ok(Math.abs(batch.meshes[0].geometry.attributes.nativeVisibility.getX(0)-.4)<1e-6);
+ const restoredScans=coverage.scans;
+ assert.equal(coverage.update(f.chunks,f.camera,()=>state,1),0);
+ assert.equal(coverage.scans,restoredScans);
  state.enabled=false;coverage.update(f.chunks,f.camera,()=>state,2);assert.equal(batch.meshes[0].geometry.attributes.nativeVisibility.getX(0),0);groups.update(f.chunks,f.camera,{x:0,z:0});assert.equal([...groups.colors.values()][0].mesh.geometry.attributes.nativeVisibility.getX(0),0);
  coverage.update(f.chunks,f.camera,()=>null,3);assert.ok(Math.abs(batch.meshes[0].geometry.attributes.nativeVisibility.getX(0)-.8)<1e-6);groups.dispose();f.close();
 });
