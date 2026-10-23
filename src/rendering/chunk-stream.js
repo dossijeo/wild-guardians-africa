@@ -5,8 +5,8 @@ export function createChunkWorker(){return typeof Worker==='undefined'?null:new 
 // One native generation request at a time. Epochs invalidate forced rebuilds;
 // request IDs prevent an old or duplicated response from completing a new job.
 export class NativeChunkStream{
-  constructor(config,profile,{loaded,onData,onError=()=>{},onFallback=()=>{},workerFactory=createChunkWorker,build=buildNativeChunk,schedule=(callback,delay)=>setTimeout(callback,delay),cancel=handle=>clearTimeout(handle)}){
-    Object.assign(this,{config:structuredClone(config),profile:structuredClone(profile),loaded,onData,onError,onFallback,build,schedule,cancel});
+  constructor(config,profile,{loaded,onData,onError=()=>{},onFallback=()=>{},workerFactory=createChunkWorker,build=buildNativeChunk,buildAsync=null,schedule=(callback,delay)=>setTimeout(callback,delay),cancel=handle=>clearTimeout(handle)}){
+    Object.assign(this,{config:structuredClone(config),profile:structuredClone(profile),loaded,onData,onError,onFallback,build,buildAsync,schedule,cancel});
     this.queue=[];this.desired=new Map();this.failed=new Set();this.stale=new Set();this.busy=null;this.serial=0;this.epoch=0;this.dead=false;this.waiters=[];this.timer=null;
     this.stats={created:0,discarded:0,failed:0,fallbacks:0};
     try{this.worker=workerFactory();}catch(error){this.worker=null;this.stats.fallbacks++;onFallback(error);}
@@ -40,7 +40,14 @@ export class NativeChunkStream{
       const job=this.queue.shift(),key=job.cx+','+job.cz;
       if(!this.desired.has(key)||this.loaded().has(key)&&!this.stale.has(key)||this.failed.has(key))continue;
       const request={...job,id:++this.serial,epoch:this.epoch,config:this.config,profile:this.profile};this.busy=request;
-      if(this.worker){try{this.worker.postMessage(request);}catch(error){this.fallback(error);}}
+      if(this.buildAsync){
+        const current=()=>!this.dead&&this.busy===request&&request.epoch===this.epoch&&
+          this.desired.has(key)&&(!this.loaded().has(key)||this.stale.has(key));
+        Promise.resolve().then(()=>this.buildAsync(request,current)).then(
+          data=>this.receive({id:request.id,epoch:request.epoch,data}),
+          error=>this.receive({id:request.id,epoch:request.epoch,error:String(error.stack??error)}));
+      }
+      else if(this.worker){try{this.worker.postMessage(request);}catch(error){this.fallback(error);}}
       else this.timer=this.schedule(()=>{this.timer=null;if(this.dead)return;try{this.receive({id:request.id,epoch:request.epoch,data:this.build(this.config,this.profile,job.cx,job.cz)});}catch(error){this.receive({id:request.id,epoch:request.epoch,error:String(error.stack??error)});}},0);
       return;
     }
@@ -66,6 +73,6 @@ export class NativeChunkStream{
   freshLoaded(){let count=0;for(const key of this.loaded().keys())if(!this.stale.has(key))count++;return count;}
   whenReady(minimum=9){if(this.dead)return Promise.resolve({cancelled:true});if(this.freshLoaded()>=minimum||!this.busy&&!this.queue.length)return this.failed.size?Promise.reject(new Error('No se pudieron generar todos los chunks')):Promise.resolve({cancelled:false});return new Promise((resolve,reject)=>this.waiters.push({resolve,reject,minimum}));}
   settle(){const idle=!this.busy&&!this.queue.length;for(const waiter of [...this.waiters])if(idle||waiter.minimum&&this.freshLoaded()>=waiter.minimum){this.waiters.splice(this.waiters.indexOf(waiter),1);this.failed.size?waiter.reject(new Error('No se pudieron generar todos los chunks')):waiter.resolve({cancelled:this.dead});}}
-  summary(){return {...this.stats,worker:!!this.worker,queued:this.queue.length,busy:!!this.busy,stale:this.stale.size,epoch:this.epoch};}
+  summary(){return {...this.stats,worker:!!this.worker,asyncPreparation:!!this.buildAsync,queued:this.queue.length,busy:!!this.busy,stale:this.stale.size,epoch:this.epoch};}
   dispose(){if(this.dead)return;this.dead=true;this.epoch++;this.worker?.terminate();this.worker=null;if(this.timer!==null)this.cancel(this.timer);this.timer=null;this.busy=null;this.queue=[];this.desired.clear();this.failed.clear();this.stale.clear();this.settle();}
 }

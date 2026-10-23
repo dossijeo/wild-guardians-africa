@@ -12,7 +12,31 @@ export function createSpatialChunkStream(core,{loaded,onData,onError=()=>{},sche
       throw Error(`Could not generate spatial chunk ${cx},${cz}`);
     return core.chunkPayload();
   };
-  const stream=new NativeChunkStream({}, {},{loaded,onData,onError,build,
+  const buildAsync=core.preparation?async(request,current)=>{
+    const {cx,cz}=request,p=core.preparation;
+    if(!current())return null;
+    // Initial/resident invalidated chunks already belong to the authority.
+    // Only absent chunks need a native generation job.
+    if(core.selectChunk(cx,cz)>=0)return core.chunkPayload();
+    while(current()){
+      const id=p.start(cx,cz);
+      if(id<=0)throw Error(`Could not dispatch native chunk ${cx},${cz}: ${id}`);
+      try{
+        while(p.status()!==3){
+          if(p.status()===5)throw Error('Native generation stopped');
+          // Notification polling, not deferred generation: C++ runs on pthread.
+          await new Promise(resolve=>setTimeout(resolve,4));
+        }
+        if(!current())return null;
+        const result=p.publish(id,cx,cz);
+        if(result>0)return core.chunkPayload();
+        if(result!==-2)throw Error(`Native chunk publication failed: ${result}`);
+        // A world edit invalidated the snapshot. Retry from current inputs.
+      }finally{p.release();}
+    }
+    return null;
+  }:null;
+  const stream=new NativeChunkStream({}, {},{loaded,onData,onError,build,buildAsync,
     workerFactory:()=>null,...(schedule?{schedule}:{}),...(cancel?{cancel}:{})});
   // The renderer owns its installed meshes. Releasing a spatial chunk after
   // those meshes are evicted keeps the graph and prop records bounded too.
