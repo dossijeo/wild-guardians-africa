@@ -5,13 +5,14 @@ import {withScreenTarget} from './screen-target.js';
 // Use the shared bounded compiler, selecting every borrowed recipe needed by
 // loading. Screen state and materials are restored before asynchronous waiting.
 // A loss event is latched even if the context is restored between polls.
-export function compileLoadingPrograms(renderer,scene,camera,targetScene,{scheduler=null,signal,cancelled=()=>false,getEpoch=()=>0,timeout=30000,now=()=>performance.now(),screen=false,onSubmit,onCpu}={}) {
+export function compileLoadingPrograms(renderer,scene,camera,targetScene,{scheduler=null,deadline,signal,cancelled=()=>false,getEpoch=()=>0,timeout=30000,now=()=>performance.now(),screen=false,onSubmit,onCpu}={}) {
  const begin=now(),gl=renderer.getContext(),epoch=getEpoch(),owner=new AbortController();let lost=false;
  const check=()=>{if(signal?.aborted||owner.signal.aborted||cancelled()||lost||renderer.getContext()!==gl||getEpoch()!==epoch||gl.isContextLost())throw Error('Loading compilation cancelled');if(now()-begin>timeout)throw Error('Loading compilation timed out');};
  const lose=()=>{lost=true;owner.abort();},abort=()=>owner.abort();
  const cleanup=()=>{gl.canvas?.removeEventListener('webglcontextlost',lose);signal?.removeEventListener('abort',abort);};
  check();gl.canvas?.addEventListener('webglcontextlost',lose);signal?.addEventListener('abort',abort,{once:true});
  const execute=()=>{
+ if(scheduler&&onSubmit){const end=now();try{onSubmit({label:'loading-compile-admission-wait',start:begin,end,duration:end-begin,scope:'Queue wall time before submission, not CPU or GPU duration.'});}catch{}}
  let materials;const submitWitness=onSubmit||onCpu?span=>{try{onSubmit?.(span);}catch{}try{onCpu?.(span.duration);}catch{}}:null;
  try{materials=submitWitness?loadingSyncWitness(submitWitness,'loading-compile-submit',()=>screen?withScreenTarget(renderer,()=>renderer.compile(scene,camera,targetScene)):renderer.compile(scene,camera,targetScene),now):(screen?withScreenTarget(renderer,()=>renderer.compile(scene,camera,targetScene)):renderer.compile(scene,camera,targetScene));check();}
  catch(error){cleanup();throw error;}
@@ -24,7 +25,7 @@ export function compileLoadingPrograms(renderer,scene,camera,targetScene,{schedu
  if(!scheduler)return execute();
  // A scheduled unit owns synchronous submission only. Its returned readiness
  // promise is awaited by the caller, never charged as CPU or run inside a frame.
- return scheduler.submit((function*(){check();return execute();})(),{signal:owner.signal,valid:()=>{check();return true;},priority:20,deadline:begin+250}).then(result=>{check();return result;}).finally(cleanup);
+ return scheduler.submit((function*(){check();return execute();})(),{signal:owner.signal,valid:()=>{check();return true;},priority:20,deadline:deadline??begin+250}).then(result=>{check();return result;}).finally(cleanup);
 }
 
 // Compile bounded views of the original objects against the complete native

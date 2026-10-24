@@ -36,11 +36,11 @@ export async function verifyGameQualityCycle(w){
   let stagedPreparation=null,settingMs=0;
   if(new URLSearchParams(location.search).get('qualityStaged')==='1'){
    if(prewarm)throw Error('Staged preparation must keep presentation running');
-   const oldQuality=w.quality,revision=w.streamingProgramRevision,oldShadow=w.renderer.shadowMap.enabled,scope=createProgramRetentionScope(w.renderer),start=performance.now();let draws=0,pinFailed=false;
+   const oldQuality=w.quality,revision=w.streamingProgramRevision,oldShadow=w.renderer.shadowMap.enabled,scope=createProgramRetentionScope(w.renderer),start=performance.now();let draws=0,pinFailed=false;const compileSpans=[];
    const originalDraw=w.drawRenderFrame;w.drawRenderFrame=function(...args){if(w.quality!==oldQuality||w.renderer.shadowMap.enabled!==oldShadow)throw Error('Staged quality leaked into presentation');draws++;return originalDraw.apply(this,args);};
    try{
-    const stats=await prepareLiveScenePrograms(createShadowRecipeRenderer(w.renderer,quality==='media'||quality==='alta'),w.scene,w.camera,{screen:true,scheduler:globalFrameSchedulerEnabled()?globalFrameScheduler:null,onSubmit:span=>{if(span.label==='loading-compile-submit'&&!scope.acquire())pinFailed=true;},cancelled:()=>w.disposed||pinFailed||w.quality!==oldQuality||w.streamingProgramRevision!==revision,getEpoch:()=>w.glResourceEpoch?.stats.epoch??0,batchSize:8,frameBudget:6});
-    stagedPreparation={ms:performance.now()-start,draws,stats};
+    const stats=await prepareLiveScenePrograms(createShadowRecipeRenderer(w.renderer,quality==='media'||quality==='alta'),w.scene,w.camera,{screen:true,scheduler:globalFrameSchedulerEnabled()?globalFrameScheduler:null,onSubmit:span=>{compileSpans.push({...span,admission:span.label==='loading-compile-admission-wait'?globalFrameScheduler.snapshot():undefined});if(span.label==='loading-compile-submit'&&!scope.acquire())pinFailed=true;},cancelled:()=>w.disposed||pinFailed||w.quality!==oldQuality||w.streamingProgramRevision!==revision,getEpoch:()=>w.glResourceEpoch?.stats.epoch??0,batchSize:8,frameBudget:6});
+    stagedPreparation={ms:performance.now()-start,draws,stats,compileSpans};
     w.drawRenderFrame=originalDraw;
     const activate=performance.now();w.qualitySetting(quality);settingMs=performance.now()-activate;await w.streamingProgramRefresh;stagedPreparation.activationMs=performance.now()-activate;
    }finally{w.drawRenderFrame=originalDraw;scope.dispose();if(stagedPreparation)stagedPreparation.retention={...scope.stats};}

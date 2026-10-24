@@ -123,3 +123,13 @@ test('queued compilation latches context loss even if restored before admission'
  const scheduler=new GlobalFrameScheduler(),f=fixture({isReady:()=>true}),canvas=new EventTarget();f.renderer.getContext().canvas=canvas;let calls=0;f.renderer.compile=()=>{calls++;return new Set();};
  const pending=compileLoadingPrograms(f.renderer,{},{},undefined,{scheduler});canvas.dispatchEvent(new Event('webglcontextlost'));await assert.rejects(pending,/cancelled/);assert.equal(calls,0);
 });
+
+
+test('compiler forwards the operation deadline and reports queue wait separately',async()=>{
+ let clock=10,job,options;const rows=[],f=fixture({isReady:()=>true});
+ const scheduler={submit(iterator,value){job=iterator;options=value;return new Promise(resolve=>{this.resolve=resolve;});}};
+ const pending=compileLoadingPrograms(f.renderer,{},{},undefined,{scheduler,deadline:5,now:()=>clock,onSubmit:row=>rows.push(row)});
+ assert.equal(options.deadline,5);clock=40;scheduler.resolve(job.next().value);await pending;
+ assert.equal(rows[0].label,'loading-compile-admission-wait');assert.equal(rows[0].duration,30);
+ assert.equal(rows[1].label,'loading-compile-submit');assert.equal(rows[1].duration,0);
+});

@@ -18,6 +18,9 @@ export async function prepareLiveScenePrograms(renderer,scene,camera,{batchSize=
  const snapshot=object=>recipe(object,version);
  const epoch=options.getEpoch?.();
  const begin=now(),completed=new WeakMap(),stats={rounds:0,batches:0,objects:0,invalidatedBatches:0,retiredObjects:0,lastPending:0};
+ // One operation deadline survives batch boundaries and scene churn. Renewing
+ // it for each tiny submission hides already-overdue work from global admission.
+ const deadline=options.deadline??begin+250;
  const check=()=>{if(options.signal?.aborted||options.cancelled?.()||options.getEpoch?.()!==epoch)throw Error('Live program preparation cancelled');if(now()-begin>timeout){const error=Error('Live program preparation timed out');error.preparation={...stats};throw error;}};
  if(!Number.isInteger(batchSize)||batchSize<1)throw new RangeError('Invalid live program batch size');
  for(;;){
@@ -32,7 +35,7 @@ export async function prepareLiveScenePrograms(renderer,scene,camera,{batchSize=
    try{
     // Three r180 mutates material.version while compiling transparent sides.
     // Accept only synchronous compiler mutations; later edits remain invalidations.
-    await compile(renderer,view,camera,scene,{...options,timeout:Math.max(1,timeout-(now()-begin)),now,batchSize,guardResourceDisposal:true,onSubmit:span=>{if(span.label==='loading-compile-submit'){for(const object of batch)for(const material of (Array.isArray(object.material)?object.material:[object.material])){const entry=material&&versions.get(material);if(entry)entry.observed=material.version;}recipes=batch.map(snapshot);}options.onSubmit?.(span);}});
+    await compile(renderer,view,camera,scene,{...options,deadline,timeout:Math.max(1,timeout-(now()-begin)),now,batchSize,guardResourceDisposal:true,onSubmit:span=>{if(span.label==='loading-compile-submit'){for(const object of batch)for(const material of (Array.isArray(object.material)?object.material:[object.material])){const entry=material&&versions.get(material);if(entry)entry.observed=material.version;}recipes=batch.map(snapshot);}options.onSubmit?.(span);}});
     check();stats.batches++;
     for(let j=0;j<batch.length;j++)if(belongs(batch[j],scene)&&same(recipes[j],snapshot(batch[j]))){completed.set(batch[j],recipes[j]);stats.objects++;}
    }catch(error){if(error.code!=='BORROWED_RESOURCE_DISPOSED')throw error;stats.invalidatedBatches++;await waitGpuFrame({check,signal:options.signal,nextFrame:options.nextFrame});}

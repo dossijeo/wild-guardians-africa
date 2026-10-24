@@ -1,4 +1,4 @@
-# Global Frame Scheduler — work in progress
+# Global Frame Scheduler â€” work in progress
 
 Reference: `54075e228`, experimental branch only. Candidate opt-in: `?frameScheduler=1`. No performance benefit claimed yet. No scheduler migration is complete.
 
@@ -22,7 +22,7 @@ This is infrastructure plus one real producer, not acceptance. Need renderer A/B
 
 Run `node --test tests/global-frame-scheduler.test.js tests/prepare-terrain-chunk.test.js` for deterministic lifecycle/admission checks. Full six-biome real game acceptance remains pending.
 
-## First real-renderer pilot — not adopted
+## First real-renderer pilot â€” not adopted
 
 Intel UHD / ANGLE D3D11, Mangroves 720p media, actual production streaming defaults, pthreads, active simulation, identical saved initial state frozen until readiness. Files: `scheduler-baseline-active-a1.json` and `scheduler-candidate-active-b1.json`. Only one A/B pair, not statistical acceptance; simulation evolves with wall time. The earlier `scheduler-first-active.json` had no initial freeze and is functional evidence only.
 
@@ -34,8 +34,8 @@ Intel UHD / ANGLE D3D11, Mangroves 720p media, actual production streaming defau
 | Presentation P95 | 66.51 ms | 66.51 ms |
 | Presentation max | 182.8 ms | 216.1 ms |
 | Frames including queue drain | 180 | 296 |
-| Candidate private preparation CPU / chunk | — | 9.48 ms |
-| Candidate private preparation latency / chunk | — | 1005.78 ms |
+| Candidate private preparation CPU / chunk | â€” | 9.48 ms |
+| Candidate private preparation latency / chunk | â€” | 1005.78 ms |
 
 Both runs settle without unexpected browser errors. Candidate runs 876 units including initial load, 332.53 ms accumulated work and 41.54 ms accumulated coordination (not per-frame overhead). Largest unit 7.86 ms; 12 deadline overruns. Runtime remains one authoritative shared pthread world.
 
@@ -73,7 +73,7 @@ Initial prototypes (`quality-live-batches-active-1.failure.json`, `-2.failure.js
 
 Real active Mangroves runs `quality-live-batches-active-3.json` and `-4.json` pass four quality steps, 240 camera frames, 15 streamed chunks, no unexpected GL errors, no whole-scene restarts. In run 4 the first baja preparation completes in 5286.76 ms over four rounds, skips 252 retired objects, completes 196 batches / 1466 object recipes. Later media/baja preparations take 273.32 / 105.79 ms. Temporary program scopes acquire/release 81/118/108/108 references; none exhausted or leaked. Largest observed RAF intervals per step: 59.45/67.77/105.95/76.03 ms.
 
-Historical bounded-retention prototype had 60 whole-scene restarts for first baja; this is evidence of removed redundant restart behavior, NOT interleaved A/B proof of overall frame-time improvement. First baja still takes about 5.3–5.6 s, and the existing QA wrapper holds the last rendered canvas during preparation. Neither responsive visual presentation nor complete scheduler adoption is established. Candidate remains opt-in (`WG_THREAD_LIVE_PREPARATION=1`, with quality prewarm and temporary pins). No production quality transition changed.
+Historical bounded-retention prototype had 60 whole-scene restarts for first baja; this is evidence of removed redundant restart behavior, NOT interleaved A/B proof of overall frame-time improvement. First baja still takes about 5.3â€“5.6 s, and the existing QA wrapper holds the last rendered canvas during preparation. Neither responsive visual presentation nor complete scheduler adoption is established. Candidate remains opt-in (`WG_THREAD_LIVE_PREPARATION=1`, with quality prewarm and temporary pins). No production quality transition changed.
 
 26 compiler/lifecycle tests pass, covering disposed/retired batches, new objects, material edits, shared transparent compiler mutations, timeout/cancellation and context epoch changes. Next: integrate useful compile submission units with global admission, and replace the held-frame QA transaction with a validated resource transition before adoption. Full image equivalence and ABAB acceptance remain required.
 
@@ -146,6 +146,26 @@ Reproduction: existing game harness, port5190, default streaming, frozen initial
 
 Evidence: `quality-staged-shadow-active-1.json` and `quality-staged-shadow-local-active-1.json`. All four changes complete, no unexpected GL errors, retained programs fully released. Global first baja activation plus recovery is 379 ms; local 611.5 ms. These are awaited wall times, not synchronous CPU. In these first reports `settingMs` accidentally includes preparation: do not interpret it as qualitySetting CPU. Harness now measures that synchronous call separately; original reports are preserved.
 
-Conclusion: presentation can remain live during this preparation, but the approach is NOT accepted. Global admission adds seconds even for warm recipes, while the first baja remains ~8 seconds with local admission too. Therefore both admission latency and shader/resource recipe work need attention. The current fixed-per-submission initial estimate and repeated frame admission for warm batches deserve investigation; reducing preparation to one atomic large compile would simply recreate stalls. Scene recipes also churn during live rendering (4–6 global rounds); whole-scene stabilization is still too expensive. This is only shadow-define staging, not a complete transactional quality system, and no production quality path or default was changed.
+Conclusion: presentation can remain live during this preparation, but the approach is NOT accepted. Global admission adds seconds even for warm recipes, while the first baja remains ~8 seconds with local admission too. Therefore both admission latency and shader/resource recipe work need attention. The current fixed-per-submission initial estimate and repeated frame admission for warm batches deserve investigation; reducing preparation to one atomic large compile would simply recreate stalls. Scene recipes also churn during live rendering (4â€“6 global rounds); whole-scene stabilization is still too expensive. This is only shadow-define staging, not a complete transactional quality system, and no production quality path or default was changed.
 
 Next: inspect costs/recipe reuse and scheduler admission for warm compilation, avoid preparing unchanged quality, and cover resource replacement before adopting a transition. Full visual equivalence, all-biome ABAB, deadlines/backpressure and distribution validation remain pending. No end-to-end performance success is claimed.
+
+
+## Operation deadlines instead of renewed batch deadlines
+
+Admission diagnostics now separate queued wall time, synchronous compile submission and awaited program readiness. This is opt-in witness instrumentation, not GPU timing. A real active-scene run (`quality-staged-admission-active-1.json`) shows warm media/baja transitions spending 2559.8/2759.0 ms in admission but only 31.3/28.6 ms submitting programs. The initial media step spends 14520.1 ms queued versus 45.1 ms submitting. There is substantial avoidable coordination latency; it is not a slow C++ kernel or proof of GPU saturation.
+
+Confirmed policy error: every small batch created a fresh deadline 250 ms in the future. An already-overdue quality transaction repeatedly lost its urgency when advancing to the next batch. Live preparation now captures one absolute operation deadline and forwards it through all batches/retries. Existing mandatory CPU protection, measured headroom and bounded explicit deadline loans remain unchanged. This does not enlarge the universal frame budget or label overdue work free time.
+
+Diagnostic sequential A/B (not repeated ABAB acceptance), same harness/settings/Intel UHD, global scheduler enabled in both:
+
+| Step | Renewed deadline prep | Shared deadline prep | Renewed RAF P95 / max | Shared RAF P95 / max |
+|---|---:|---:|---:|---:|
+| media | 14819 ms | 11166 ms | 64.0 / 295.3 ms | 74.1 / 233.1 ms |
+| baja | 10384 ms | 6536 ms | 47.4 / 142.0 ms | 48.4 / 173.5 ms |
+| media | 2736 ms | 600 ms | 51.9 / 67.7 ms | 43.0 / 75.8 ms |
+| baja | 2978 ms | 801 ms | 56.4 / 70.2 ms | 54.0 / 76.8 ms |
+
+Candidate evidence: `quality-staged-operation-deadline-1.json`. Warm queue wait falls to 457.2/656.8 ms; first baja readiness wait remains 5035.5 ms. No unexpected GL errors or leaked temporary program references. Initial media still takes 11 seconds during streaming/churn; frame tails are not consistently improved. Not accepted as final scheduler performance. Full simulation timing differs with elapsed wall time, so these runs cannot establish image equivalence or isolate all thermal/scene variance.
+
+41 scheduler/compiler/live-preparation tests pass, including immutable operation deadlines across batches and distinct admission versus submission timing. Next work remains reducing redundant scene recipes, understanding initial admission starvation under streaming, and transactional quality resource coverage. The opt-in remains off by default, main untouched, no artistic changes.

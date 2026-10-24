@@ -34,3 +34,10 @@ test('a context epoch change invalidates the entire operation',async()=>{
  const f=fixture();f.add();let epoch=0;
  await assert.rejects(prepareLiveScenePrograms({},f.scene,{}, {getEpoch:()=>epoch,nextFrame:async()=>{},compile:async()=>{epoch++;}}),/cancelled/);
 });
+
+
+test('all batches retain the operation deadline instead of renewing priority',async()=>{
+ const f=fixture();f.add();f.add();let clock=1000;const deadlines=[];
+ await prepareLiveScenePrograms({},f.scene,{}, {now:()=>clock,batchSize:1,nextFrame:async()=>{},compile:async(r,v,c,t,o)=>{deadlines.push(o.deadline);clock+=400;}});
+ assert.deepEqual(deadlines,[1250,1250]);
+});
