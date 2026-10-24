@@ -1085,3 +1085,42 @@ change: evidence of significant variability, not an optimization. No performance
 claim based on this single run.240/240advancing,15new chunks,zero pending/failures.
 15 scheduler/GPU-timer tests pass, QA modules syntax checked. Further work must
 measure frame tails and required-chunk latency independently of QA diagnostics.
+
+
+### Recovery compilation admission: two controlled iterations, not adopted (2026-10-24)
+
+The quality recovery still uses its specialized compile budget. Tested passing
+its owned obstruction representatives through the global scheduler (safe to defer:
+no borrowed live material override held across an await). First ABAB reports
+`scheduler-recovery-admission-{a1,b1,a2,b2}.json`: legacy first two transitions
+1009/816 and788/856ms before diagnostics, candidate1618/2042 and1411/1170ms.
+No acceptable throughput result. Existing compiler gives each batch a fresh250ms
+grace; changed the batched helper to capture ONE operation deadline, preserving
+explicit deadlines. Regression test verifies all later batches retain it and
+never invoke the independent yield budget when globally admitted.
+
+Second ABAB `scheduler-recovery-deadline-*`: before-diagnostic low/media/low
+A1=807/864/4458ms, B1=1068/1449/5039ms,
+A2=1230/1730/5366ms, B2=846/965/3248ms.
+Maximum RAF A1=107/130/179, B1=163/302/321,
+A2=294/284/277, B2=179/171/214ms. Direction changes between pairs;
+no consistent full-frame or throughput benefit. All runs exercised active
+simulation and streaming, with no harness failure. Camera travel uses the same
+240-frame protocol, but changing preparation duration changes which camera frame
+coincides with quality boundaries; not pixel-equivalence validation.
+
+Do NOT activate live recovery admission. Scene production code returned to its
+previous policy. Keep the operation-deadline fix for callers already using the
+batched global API (unit correctness, not claimed real-frame speedup). The live
+experiment remains QA-only via WG_THREAD_RECOVERY_GLOBAL_ADMISSION=1 source
+transform; omit it for current control. Historical runs used the inverse
+WG_THREAD_RECOVERY_LEGACY_ADMISSION switch while the candidate was temporarily
+in source. First series predates the shared-deadline change; reproducing it needs
+that old policy. No benchmark values rewritten.38 scheduler/compiler tests pass.
+
+Code audit identifies a next structural lead: qualitySetting releases the old
+program lease before recovery, and retainStreamingPrograms also disposes before
+acquiring. This can delete exclusively pinned variants before reuse. Investigate
+transactional replacement and lifecycle safety rather than repeatedly trying to
+hide the same preparation behind another budget. This remains a hypothesis for
+performance, not a demonstrated saving or completed scheduler integration.

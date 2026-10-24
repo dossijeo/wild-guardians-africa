@@ -34,6 +34,9 @@ export function compileLoadingPrograms(renderer,scene,camera,targetScene,{schedu
 // state synchronously in each submission before yielding to the loading RAF.
 export async function compileLoadingProgramsBatched(renderer,scene,camera,targetScene,{batchSize=4,frameBudget=0,now=()=>performance.now(),nextFrame,guardResourceDisposal=false,...options}={}) {
  if(!Number.isInteger(batchSize)||batchSize<1)throw Error('Loading compile batch size must be positive');
+ // All batches serve one operation: do not renew its admission grace period
+ // after every driver wait. Explicit caller deadlines remain authoritative.
+ if(options.scheduler)options={...options,deadline:options.deadline??now()+250};
  const objects=[];scene.traverse(object=>{if(object.isMesh||object.isPoints||object.isLine||object.isSprite)objects.push(object);});
  // Optional live-scene safety: own cancellation for every borrowed resource,
  // including later batches. This does not freeze scene membership or mutations.

@@ -133,3 +133,14 @@ test('compiler forwards the operation deadline and reports queue wait separately
  assert.equal(rows[0].label,'loading-compile-admission-wait');assert.equal(rows[0].duration,30);
  assert.equal(rows[1].label,'loading-compile-submit');assert.equal(rows[1].duration,0);
 });
+
+
+test('batched scheduler deadline belongs to the operation, not each later batch',async()=>{
+ for(const explicit of [undefined,75]){
+  let clock=100;const deadlines=[],objects=Array.from({length:3},()=>({isMesh:true}));
+  const gl={isContextLost:()=>false},scene={traverse:fn=>objects.forEach(fn)},renderer={getContext:()=>gl,properties:{get:()=>({})},compile:()=>{clock+=300;return new Set();}};
+  const scheduler={submit(iterator,options){deadlines.push(options.deadline);return Promise.resolve(iterator.next().value);}};
+  await compileLoadingProgramsBatched(renderer,scene,{},scene,{scheduler,batchSize:1,now:()=>clock,deadline:explicit,nextFrame:()=>assert.fail('global admission must replace the local yield budget')});
+  assert.deepEqual(deadlines,Array(3).fill(explicit??350));
+ }
+});
