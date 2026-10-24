@@ -190,3 +190,14 @@ not the earlier media baseline. A serial original control is running with
 profile-specific filenames and captures, preserving existing evidence.
 No timing acceptance or visual equivalence is claimed from these single loads.
 The candidate remains opt-in. See pruned-baja-validation.json and raw reports.
+
+### First paired low-profile controls
+
+Sabana and Gran Rio both retain 77 links in original and candidate.
+RGB mean absolute differences on the 0..255 scale are respectively
+[0.000964, 0.001067, 0.001368] and [0.002184, 0.002356, 0.003223].
+Difference bounding boxes: (1107,467)-(1134,493) and (212,207)-(1135,494).
+The Sabana pair was visually inspected: ground and grass coverage remain
+unchanged to inspection. These opening captures do not validate night or motion.
+The remaining original controls continue serially. A reusable comparison script
+requires all six matching profile reports before emitting the final count table.
