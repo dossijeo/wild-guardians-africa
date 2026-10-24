@@ -631,3 +631,28 @@ Other-biome paired image validation still pending; flags remain opt-in.
 Reproduce WG_THREAD_PORT=5190, BIOME=sabana, DEFAULT_STREAMING/FROZEN=1,
 QUALITY=media, QUALITY_CYCLE/QUALITY_MENU_PROTOCOL/QUALITY_CAPTURE=1, all three
 candidate flags0 then1, no ACTIVE. Main untouched; PR159 remains draft.
+
+
+### Integrated four-biome daytime image pairs (2026-10-24)
+
+Completed control/candidate pairs for Gran Río, Desierto, Volcanes, Gran Cañón
+using the same paused populated fixtures, seed/camera/time/1280x720, quality
+baja/media/baja with120settled frames per capture. Control all three flags off;
+candidate scheduler/stableShadowPrograms/cropDepthPreparation on. No source
+or artwork changes. Raw reports/screenshots named `scheduler-visual-<biome>-*`;
+12 side-by-side JPEGs and `scheduler-visual-four-biomes-difference.json`.
+
+RGB MAD over0–255, baja/media/baja:
+Gran Río .003720/.003967/.002270;
+Desierto .000108/.000366/.001102;
+Volcanes .004714/.004225/.001928;
+Gran Cañón .000240/.000041/.000407.
+Largest fraction pixels with any-channel delta>8=.000217 (0.0217%).
+Inspected first baja and media side-by-sides for all four: ground detail,
+coverage, buildings, water/lava, quality-specific shadows and background remain
+visually consistent. Third baja also measured, no claim of exact bit equality.
+This validates fixed daytime scenes and low/medium profiles, not night/all
+camera angles/context restoration or performance. Full integrated nighttime
+Manglares still differs in scope from older stable-shadow-only night pairs;
+do not conflate these checks. All source flags remain opt-in; PR draft/main
+unchanged. Reproduction is the Sabana visual protocol with the four biome ids.
