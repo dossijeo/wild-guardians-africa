@@ -169,3 +169,14 @@ Diagnostic sequential A/B (not repeated ABAB acceptance), same harness/settings/
 Candidate evidence: `quality-staged-operation-deadline-1.json`. Warm queue wait falls to 457.2/656.8 ms; first baja readiness wait remains 5035.5 ms. No unexpected GL errors or leaked temporary program references. Initial media still takes 11 seconds during streaming/churn; frame tails are not consistently improved. Not accepted as final scheduler performance. Full simulation timing differs with elapsed wall time, so these runs cannot establish image equivalence or isolate all thermal/scene variance.
 
 41 scheduler/compiler/live-preparation tests pass, including immutable operation deadlines across batches and distinct admission versus submission timing. Next work remains reducing redundant scene recipes, understanding initial admission starvation under streaming, and transactional quality resource coverage. The opt-in remains off by default, main untouched, no artistic changes.
+
+
+## Rejected: ordinary mesh preparation aliases
+
+Inspected Three r180 WebGLRenderer.prepareMaterial and WebGLPrograms.getParameters. Tested sharing preparation for ordinary meshes with identical geometry/material identities, excluding instanced/batched/skinned objects and material arrays. Revision/lifetime checks kept aliases pending if their representative retired or changed. Ten tests passed, including identity isolation, instanced exclusion and representative retirement. Prototype archived in `shared-recipes-rejected.patch` and removed from active code.
+
+`quality-staged-shared-recipes-1.json`: same active quality harness with shared operation deadlines. Only 24 object preparations shared per transition. Warm batches remain 162/165 versus 164/165 previously; warm preparation 790/1150 ms versus 600/801 ms. First baja 7191 ms versus 6536 ms. Frame P95/max show no consistent gain. Initial media varies 9952 versus 11166 ms with different churn rounds (9 versus 22); that isolated difference cannot establish benefit. No unexpected GL failures or temporary retention leaks.
+
+Decision: discard the grouping layer. Its limited reuse does not justify maintenance or address the dominant cost. Reports/patch preserve reproducibility. These are diagnostic successive runs, not performance acceptance. Do not collapse distinct shader variants to improve counts.
+
+PR159 verified OPEN/draft with the correct experimental head. Remaining focus is admission under streaming and first target shader/resource preparation. Scheduler remains opt-in; overall objective remains unfinished.
