@@ -1,3 +1,4 @@
+import {streamingOptions} from '../rendering/streaming-options.js';
 import {prepareTerrainChunk,discardPreparedTerrain} from '../rendering/prepare-terrain-chunk.js';
 import {findSpatialStart} from '../world/wild-engine/spatial-initial-site.js';
 import {createSpatialGameSession} from '../world/wild-engine/spatial-game-session.js';
@@ -36,7 +37,8 @@ export async function prepareWildEngineWorld(world,state,payload,{signal,loaded=
   let session;
   try{
     if(threaded){
-      threaded.core.preparation?.visualOptions?.(state.biome==='manglares'&&new URLSearchParams(location.search).get('waterBedWorker')!=='0'?(new URLSearchParams(location.search).get('waterShoreWorker')==='1'?3:1):0);
+      const visual=streamingOptions(state.biome);
+      threaded.core.preparation?.visualOptions?.(visual.waterBed?(visual.waterShore?3:1):0);
       const first=state.villages[0];
       threaded.core.generate(state.seed,Math.floor((first.x+24)/48),Math.floor((first.z+24)/48),state.biome);
     }
