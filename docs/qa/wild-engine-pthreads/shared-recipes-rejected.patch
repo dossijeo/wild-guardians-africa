@@ -1,0 +1,72 @@
+diff --git a/src/rendering/live-program-preparation.js b/src/rendering/live-program-preparation.js
+index f66c9d5be..54289bb44 100644
+--- a/src/rendering/live-program-preparation.js
++++ b/src/rendering/live-program-preparation.js
+@@ -17,15 +17,27 @@ export async function prepareLiveScenePrograms(renderer,scene,camera,{batchSize=
+  };
+  const snapshot=object=>recipe(object,version);
+  const epoch=options.getEpoch?.();
+- const begin=now(),completed=new WeakMap(),stats={rounds:0,batches:0,objects:0,invalidatedBatches:0,retiredObjects:0,lastPending:0};
++ const begin=now(),completed=new WeakMap(),stats={rounds:0,batches:0,objects:0,invalidatedBatches:0,retiredObjects:0,sharedObjects:0,lastPending:0};
+  // One operation deadline survives batch boundaries and scene churn. Renewing
+  // it for each tiny submission hides already-overdue work from global admission.
+  const deadline=options.deadline??begin+250;
+  const check=()=>{if(options.signal?.aborted||options.cancelled?.()||options.getEpoch?.()!==epoch)throw Error('Live program preparation cancelled');if(now()-begin>timeout){const error=Error('Live program preparation timed out');error.preparation={...stats};throw error;}};
+  if(!Number.isInteger(batchSize)||batchSize<1)throw new RangeError('Invalid live program batch size');
+  for(;;){
+-  check();stats.rounds++;const pending=[];
+-  scene.traverse(object=>{if(renderable(object)&&!same(completed.get(object),snapshot(object)))pending.push(object);});
++  check();stats.rounds++;const pending=[],shared=new WeakMap(),aliases=new Map();
++  scene.traverse(object=>{
++   if(!renderable(object)||same(completed.get(object),snapshot(object)))return;
++   // r180 compile parameters for ordinary meshes depend on geometry/material,
++   // not transform or entity identity. Keep specialized object recipes separate.
++   const eligible=object.isMesh&&!object.isInstancedMesh&&!object.isBatchedMesh&&!object.isSkinnedMesh&&object.geometry&&object.material&&!Array.isArray(object.material);
++   if(eligible){
++    let materials=shared.get(object.geometry);if(!materials){materials=new WeakMap();shared.set(object.geometry,materials);}
++    const leader=materials.get(object.material);
++    if(leader){aliases.get(leader).push(object);return;}
++    materials.set(object.material,object);aliases.set(object,[]);
++   }
++   pending.push(object);
++  });
+   stats.lastPending=pending.length;if(!pending.length)return stats;
+   for(let i=0;i<pending.length;i+=batchSize){
+    check();const batch=pending.slice(i,i+batchSize).filter(object=>{if(belongs(object,scene))return true;stats.retiredObjects++;return false;});
+@@ -37,7 +49,7 @@ export async function prepareLiveScenePrograms(renderer,scene,camera,{batchSize=
+     // Accept only synchronous compiler mutations; later edits remain invalidations.
+     await compile(renderer,view,camera,scene,{...options,deadline,timeout:Math.max(1,timeout-(now()-begin)),now,batchSize,guardResourceDisposal:true,onSubmit:span=>{if(span.label==='loading-compile-submit'){for(const object of batch)for(const material of (Array.isArray(object.material)?object.material:[object.material])){const entry=material&&versions.get(material);if(entry)entry.observed=material.version;}recipes=batch.map(snapshot);}options.onSubmit?.(span);}});
+     check();stats.batches++;
+-    for(let j=0;j<batch.length;j++)if(belongs(batch[j],scene)&&same(recipes[j],snapshot(batch[j]))){completed.set(batch[j],recipes[j]);stats.objects++;}
++    for(let j=0;j<batch.length;j++)if(belongs(batch[j],scene)&&same(recipes[j],snapshot(batch[j]))){completed.set(batch[j],recipes[j]);stats.objects++;for(const alias of aliases.get(batch[j])??[]){if(belongs(alias,scene)&&same(recipes[j],snapshot(alias))){completed.set(alias,recipes[j]);stats.sharedObjects++;}}}
+    }catch(error){if(error.code!=='BORROWED_RESOURCE_DISPOSED')throw error;stats.invalidatedBatches++;await waitGpuFrame({check,signal:options.signal,nextFrame:options.nextFrame});}
+   }
+   // Bound mutation churn even if all readiness promises resolve immediately.
+diff --git a/tests/live-program-preparation.test.js b/tests/live-program-preparation.test.js
+index 0e67e8058..608439544 100644
+--- a/tests/live-program-preparation.test.js
++++ b/tests/live-program-preparation.test.js
+@@ -41,3 +41,23 @@ test('all batches retain the operation deadline instead of renewing priority',as
+  await prepareLiveScenePrograms({},f.scene,{}, {now:()=>clock,batchSize:1,nextFrame:async()=>{},compile:async(r,v,c,t,o)=>{deadlines.push(o.deadline);clock+=400;}});
+  assert.deepEqual(deadlines,[1250,1250]);
+ });
++
++
++test('ordinary mesh aliases share compile only with identical geometry and material',async()=>{
++ const f=fixture(),a=f.add(),b=f.add(),c=f.add(),d=f.add();b.geometry=a.geometry;b.material=a.material;c.material=a.material;d.geometry=a.geometry;
++ const seen=[];
++ const stats=await prepareLiveScenePrograms({},f.scene,{}, {nextFrame:async()=>{},compile:async(r,v)=>v.traverse(o=>seen.push(o))});
++ assert.deepEqual(seen,[a,c,d]);assert.equal(stats.sharedObjects,1);
++});
++
++test('instanced variants are never merged with an ordinary mesh recipe',async()=>{
++ const f=fixture(),a=f.add(),b=f.add();b.geometry=a.geometry;b.material=a.material;b.isInstancedMesh=true;const seen=[];
++ await prepareLiveScenePrograms({},f.scene,{}, {nextFrame:async()=>{},compile:async(r,v)=>v.traverse(o=>seen.push(o))});
++ assert.deepEqual(seen,[a,b]);
++});
++
++test('a surviving alias is retried if its representative retires while compiling',async()=>{
++ const f=fixture(),a=f.add(),b=f.add();b.geometry=a.geometry;b.material=a.material;const seen=[];
++ await prepareLiveScenePrograms({},f.scene,{}, {nextFrame:async()=>{},compile:async(r,v)=>{v.traverse(o=>seen.push(o));if(seen.length===1){a.parent=null;f.objects.splice(0,1);}}});
++ assert.deepEqual(seen,[a,b]);
++});
