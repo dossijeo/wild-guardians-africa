@@ -5,7 +5,7 @@ import {withScreenTarget} from './screen-target.js';
 // Use the shared bounded compiler, selecting every borrowed recipe needed by
 // loading. Screen state and materials are restored before asynchronous waiting.
 // A loss event is latched even if the context is restored between polls.
-export function compileLoadingPrograms(renderer,scene,camera,targetScene,{scheduler=null,deadline,signal,cancelled=()=>false,getEpoch=()=>0,timeout=30000,now=()=>performance.now(),screen=false,onSubmit,onCpu}={}) {
+export function compileLoadingPrograms(renderer,scene,camera,targetScene,{scheduler=null,deadline,signal,cancelled=()=>false,getEpoch=()=>0,timeout=30000,now=()=>performance.now(),screen=false,onSubmit,onCpu,onProgramReady}={}) {
  const begin=now(),gl=renderer.getContext(),epoch=getEpoch(),owner=new AbortController();let lost=false;
  const check=()=>{if(signal?.aborted||owner.signal.aborted||cancelled()||lost||renderer.getContext()!==gl||getEpoch()!==epoch||gl.isContextLost())throw Error('Loading compilation cancelled');if(now()-begin>timeout)throw Error('Loading compilation timed out');};
  const lose=()=>{lost=true;owner.abort();},abort=()=>owner.abort();
@@ -20,7 +20,7 @@ export function compileLoadingPrograms(renderer,scene,camera,targetScene,{schedu
  // the shared core without submitting or querying the native renderer twice.
  const submitted={compile:()=>materials,properties:renderer.properties};
  const waitStart=onSubmit?now():null;let waitFailed=false;
- return compileGpuPreparation(submitted,scene,camera,targetScene,{check,signal:owner.signal,selectPrograms:properties=>properties.programs?.size?properties.programs.values():[properties.currentProgram]}).then(()=>scene,error=>{waitFailed=true;throw error;}).finally(()=>{cleanup();if(onSubmit){const end=now();try{onSubmit({label:'loading-compile-readiness-wait',start:waitStart,end,duration:end-waitStart,failed:waitFailed,scope:'Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.'});}catch{}}});
+ return compileGpuPreparation(submitted,scene,camera,targetScene,{check,signal:owner.signal,onProgramReady,selectPrograms:properties=>properties.programs?.size?properties.programs.values():[properties.currentProgram]}).then(()=>scene,error=>{waitFailed=true;throw error;}).finally(()=>{cleanup();if(onSubmit){const end=now();try{onSubmit({label:'loading-compile-readiness-wait',start:waitStart,end,duration:end-waitStart,failed:waitFailed,scope:'Awaited program-readiness wall time after synchronous submission; includes polling/driver scheduling, not CPU or GPU duration.'});}catch{}}});
  };
  if(!scheduler)return execute();
  // A scheduled unit owns synchronous submission only. Its returned readiness

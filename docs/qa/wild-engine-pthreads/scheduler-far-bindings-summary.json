@@ -1,0 +1,141 @@
+{
+  "scope": "ABAB Manglares720p media same frozen save. Both use scheduler; only B enables farValidatedBindings. Existing RAF instrumented, no additional RAF. Callback CPU excludes asynchronous continuations and scheduler tail. Presentation includes all work between RAFs, not GPU time. Far spans run until result snapshot; not loading critical path.",
+  "rows": [
+    {
+      "run": "a1",
+      "readyMs": 33882.905000030994,
+      "presentation": {
+        "count": 1268,
+        "mean": 26.699960567823346,
+        "p95": 66.54499999999825,
+        "p99": 133.3199999999997,
+        "max": 947.8349999999991
+      },
+      "mandatoryCallbackCpu": {
+        "count": 1269,
+        "mean": 1.2652403461923742,
+        "p95": 4.7950000166893005,
+        "p99": 6.789999961853027,
+        "max": 9.995000004768372
+      },
+      "farDraw": {
+        "count": 28,
+        "mean": 7.463392857994352,
+        "p95": 16.285000026226044,
+        "p99": 29.714999973773956,
+        "max": 126.87000000476837
+      },
+      "bindings": null,
+      "chunks": 25,
+      "pending": 0
+    },
+    {
+      "run": "b1",
+      "readyMs": 32882.064999997616,
+      "presentation": {
+        "count": 1179,
+        "mean": 27.86934266327396,
+        "p95": 66.52000000000044,
+        "p99": 149.66999999999825,
+        "max": 964.3250000000007
+      },
+      "mandatoryCallbackCpu": {
+        "count": 1180,
+        "mean": 1.3031355934122861,
+        "p95": 5.290000021457672,
+        "p99": 7.1700000166893005,
+        "max": 10.589999973773956
+      },
+      "farDraw": {
+        "count": 28,
+        "mean": 1.4526785675968443,
+        "p95": 2.875,
+        "p99": 3.8549999594688416,
+        "max": 5.409999966621399
+      },
+      "bindings": {
+        "count": 34,
+        "mean": 0.9429411817999447,
+        "p95": 0.18000000715255737,
+        "p99": 0.1899999976158142,
+        "max": 30.730000019073486
+      },
+      "chunks": 25,
+      "pending": 0
+    },
+    {
+      "run": "a2",
+      "readyMs": 31551.40999996662,
+      "presentation": {
+        "count": 1297,
+        "mean": 24.32101773323053,
+        "p95": 49.94499999999971,
+        "p99": 133.15499999999884,
+        "max": 964.3450000000012
+      },
+      "mandatoryCallbackCpu": {
+        "count": 1298,
+        "mean": 1.2849075498492766,
+        "p95": 4.534999966621399,
+        "p99": 6.905000030994415,
+        "max": 11.509999990463257
+      },
+      "farDraw": {
+        "count": 28,
+        "mean": 7.51785714498588,
+        "p95": 10.194999992847443,
+        "p99": 33.2049999833107,
+        "max": 128.99500000476837
+      },
+      "bindings": null,
+      "chunks": 25,
+      "pending": 0
+    },
+    {
+      "run": "b2",
+      "readyMs": 31848.275000035763,
+      "presentation": {
+        "count": 1169,
+        "mean": 27.225911035072713,
+        "p95": 66.44500000000153,
+        "p99": 133.0149999999976,
+        "max": 1130.8650000000016
+      },
+      "mandatoryCallbackCpu": {
+        "count": 1170,
+        "mean": 1.3354358973156693,
+        "p95": 5.180000007152557,
+        "p99": 7.274999976158142,
+        "max": 14.050000011920929
+      },
+      "farDraw": {
+        "count": 28,
+        "mean": 1.3746428596121925,
+        "p95": 2.7300000190734863,
+        "p99": 3.159999966621399,
+        "max": 5.254999995231628
+      },
+      "bindings": {
+        "count": 34,
+        "mean": 0.9002941180677975,
+        "p95": 0.26999998092651367,
+        "p99": 6.159999966621399,
+        "max": 23.1700000166893
+      },
+      "chunks": 25,
+      "pending": 0
+    }
+  ],
+  "images": [
+    {
+      "pair": 1,
+      "rgbMad": 0.003029513888888889,
+      "fractionPixelsAbove8": 0.00015516493055555555
+    },
+    {
+      "pair": 2,
+      "rgbMad": 0.00040075231481481483,
+      "fractionPixelsAbove8": 5.4253472222222224e-06
+    }
+  ]
+}

@@ -23,18 +23,26 @@ try{
   await route.fulfill({response,headers});
  });
  if(process.env.WG_THREAD_FAR_TIMES==='1')await page.route('**/tools/experiments/attach-native-far-world.js*',async route=>{
-  const response=await route.fetch(),source=await response.text();
+  const response=await route.fetch();let source=await response.text();
+  if(process.env.WG_THREAD_FAR_DRAW_TIMES==='1'){source="import {measureFarDraw} from '/tools/experiments/far-draw-attribution.js';\n"+source;const draw='measureDraw:world.onLoadingGpuDraw';if(source.split(draw).length!==4)throw Error('Far draw witness anchors changed');source=source.replaceAll(draw,'measureDraw:submit=>measureFarDraw(world.renderer,slot,submit)');}
   const anchor="const witness=world.onLoadingSpan?span=>world.onLoadingSpan({...span,label:span.label+':slot'+slot}):null;";
   if(source.split(anchor).length!==2)throw Error('Missing far phase witness anchor');
   const replacement="const witness=span=>{const row={...span,label:span.label+':slot'+slot};(globalThis.qaFarPreparationSpans??=[]).push(row);world.onLoadingSpan?.(row);};";
   await route.fulfill({response,body:source.replace(anchor,replacement)});
  });
  if(process.env.WG_THREAD_BOOT_FAILURE==='1')await page.route('**/wild-engine/spatial-threaded.mjs',route=>route.fulfill({status:503,contentType:'text/javascript',body:'// QA: unavailable pthread module'}));
+ if(process.env.WG_THREAD_LOADING_LONG_FRAMES==='1')await page.addInitScript(()=>{
+  globalThis.qaLoadingLongFrames=[];
+  if(PerformanceObserver.supportedEntryTypes.includes('long-animation-frame')){
+   globalThis.qaLoadingLongFrameObserver=new PerformanceObserver(list=>{for(const entry of list.getEntries())if(globalThis.qaStreamingLoadStart&&entry.startTime>=qaStreamingLoadStart&&(!globalThis.qaStreamingReadyAt||entry.startTime<qaStreamingReadyAt))qaLoadingLongFrames.push(entry.toJSON());});
+   qaLoadingLongFrameObserver.observe({type:'long-animation-frame'});
+  }
+ });
  await page.addInitScript(({text,quality})=>{localStorage.setItem('wild-guardians:slot:opening',text);localStorage.setItem('wild-guardians:settings',JSON.stringify({quality,farVegetation:true}));},{text:fixture.timing.navigationContext.state,quality});
- if(frozen||process.env.WG_THREAD_MAIN_PHASES==='1')await page.route('**/src/app/main.js*',async route=>{
+ if(frozen||process.env.WG_THREAD_MAIN_PHASES==='1'||process.env.WG_THREAD_LOADING_FRAMES==='1')await page.route('**/src/app/main.js*',async route=>{
   const response=await route.fetch();let body=await response.text();
   if(frozen){const anchor='world.render(0);world.retainStreamingPrograms();loadingOverlay?.dispose();';if(body.split(anchor).length!==2)throw Error('Missing readiness freeze anchor');body=body.replace(anchor,"globalThis.qaStreamingReadyAt=performance.now();Game.pause(state,'menu');"+anchor);}
-  if(process.env.WG_THREAD_MAIN_PHASES==='1')body=instrumentMainFrame(body);
+  if(process.env.WG_THREAD_MAIN_PHASES==='1'||process.env.WG_THREAD_LOADING_FRAMES==='1')body=instrumentMainFrame(body);
   if(process.env.WG_THREAD_EXIT==='1')body+='\nglobalThis.qaReturnToMenu=menu;';
   await route.fulfill({response,body});
  });
@@ -47,6 +55,7 @@ try{
  await page.route('**/@vite/client',async route=>{const response=await route.fetch();const source=await response.text(),anchor='transport.connect(createHMRHandler(handleMessage));';if(!source.includes(anchor))throw Error('Missing HMR anchor');await route.fulfill({response,body:source.replace(anchor,'// QA: freeze module versions during measurement.')});});
  await page.route('**/src/rendering/scene.js*',async route=>{const r=await route.fetch();let s=await r.text();if(process.env.WG_THREAD_DETAIL==='1')for(const name of ['prepareMangroveBank','prepareNaturalWater','prepareNaturalAssetWater','prepareOpaqueCore','nativeTerrainBuffer']){const pattern=new RegExp('(import\\s*\\{[^}]*?)\\b'+name+'\\b');if(!pattern.test(s))throw Error('Missing import '+name);s=s.replace(pattern,'$1'+name+' as qaOriginal_'+name);s+='\nfunction '+name+'(...args){const t=performance.now();try{return qaOriginal_'+name+'(...args);}finally{globalThis.qaThreadDetail?.('+JSON.stringify(name)+',performance.now()-t);}}\n';}if(process.env.WG_THREAD_LOADING_TIMES==='1'){const phase='const phase=(label,run)=>loadingAwaitWitness(this.onLoadingSpan,label,run);';if(s.split(phase).length!==3)throw Error('Loading phase anchors changed');s=s.replaceAll(phase,'const phase=async(label,run)=>{const t=performance.now();try{return await loadingAwaitWitness(this.onLoadingSpan,label,run);}finally{(globalThis.qaLoadingPhases??=[]).push({label,ms:performance.now()-t});}};');}if(process.env.WG_THREAD_RECOVERY_SUSPEND_FRAME==='1'){const wait='await waitGpuFrame({check,signal:owner.signal});';if(!s.includes(wait))throw Error('Missing recovery frame anchor');s=s.replace(wait,'await waitGpuFrame({check,signal:owner.signal,nextFrame:()=>new Promise(()=>{})});');}if(!s.includes('this.raycaster=new'))throw Error('Missing world observation anchor');await route.fulfill({response:r,body:s.replace('this.raycaster=new','globalThis.qaThreadWorld=this;this.raycaster=new')});});
  const gameUrl=new URL(`http://127.0.0.1:${process.env.WG_THREAD_PORT??5192}/?`+globalClosureQuery(biome)+'&mangroveFerns=holly&groundCache=fixed512&wildEngineThreads='+(threaded?'1':'0')+'&chunkInstall='+(process.env.WG_CHUNK_INSTALL??'sync')+'&horizonBedBudget='+(process.env.WG_HORIZON_BED_BUDGET??'2')+'&horizonBed='+(process.env.WG_HORIZON_BED??'sync')+'&chunkEviction='+(process.env.WG_CHUNK_EVICTION??'single')+'&ownedFarGpu='+(process.env.WG_THREAD_OWNED_FAR??'1')+'&streamingRecovery='+(process.env.WG_THREAD_RECOVERY??'auto')+'&waterShoreWorker='+(process.env.WG_THREAD_WATER_SHORE_WORKER??'0')+'&waterBedWorker='+(process.env.WG_THREAD_WATER_BED_WORKER??'auto')+'&waterBedDirect='+(process.env.WG_THREAD_WATER_BED_DIRECT??'0')+'&warmObstruction='+(process.env.WG_THREAD_WARM_OBSTRUCTION??'0')+'&retainPrograms='+(process.env.WG_THREAD_RETAIN_APP??'0'));
+ if(process.env.WG_THREAD_FAR_VALIDATED_BINDINGS==='1')gameUrl.searchParams.set('farValidatedBindings','1');
  if(process.env.WG_FRAME_SCHEDULER_DIAGNOSTICS==='1')gameUrl.searchParams.set('frameSchedulerDiagnostics','1');
  if(process.env.WG_THREAD_CROP_DEPTH_SHADOW_WARM==='1')gameUrl.searchParams.set('cropDepthShadowWarm','1');
  if(process.env.WG_THREAD_QUALITY_COMPILE_CONCURRENCY)gameUrl.searchParams.set('qualityCompileConcurrency',process.env.WG_THREAD_QUALITY_COMPILE_CONCURRENCY);
@@ -74,7 +83,9 @@ try{
  await page.waitForSelector('#native-menu',{timeout:60000});
  const frame=page.frames().find(f=>f.url().includes('/menu/'))??await page.waitForEvent('framenavigated',{predicate:f=>f.url().includes('/menu/'),timeout:60000});
  await frame.waitForLoadState('load',{timeout:60000});await frame.waitForFunction(()=>document.body.innerText.toUpperCase().includes('JUEGO NUEVO'),null,{timeout:60000});
- await page.evaluate(()=>{globalThis.qaStreamingLoadStart=performance.now();});
+ const loadingProfiler=process.env.WG_THREAD_LOADING_CPU_PROFILE==='1'?await page.context().newCDPSession(page):null;
+ if(loadingProfiler){await loadingProfiler.send('Profiler.enable');await loadingProfiler.send('Profiler.start');}
+ await page.evaluate(collect=>{globalThis.qaStreamingLoadStart=performance.now();if(collect){globalThis.qaLoadingFrames=[];globalThis.qaMainFrame=row=>{if(!globalThis.qaStreamingReadyAt&&qaLoadingFrames.length<10000)qaLoadingFrames.push(row);};}},process.env.WG_THREAD_LOADING_FRAMES==='1');
  await frame.evaluate(()=>parent.postMessage({type:'wild-guardians:menu',action:'load-slot',slotId:'opening'},location.origin));
  for(let attempt=0;attempt<18;attempt++){
   const diagnostic=await page.evaluate(()=>({text:document.body.innerText.slice(-1200),stage:document.querySelector('#stage')?.getAttribute('aria-busy'),runtime:globalThis.qaThreadWorld?.spatialSession?.runtime,chunks:globalThis.qaThreadWorld?.chunks?.size,stream:globalThis.qaThreadWorld?.chunkStream?.summary(),isolated:crossOriginIsolated}));
@@ -84,7 +95,9 @@ try{
   if(attempt===17)throw Error('Game readiness deadline exceeded; see thread-game-loading.json');
   await page.waitForTimeout(10000);
  }
- const result=await page.evaluate(async()=>{const w=qaThreadWorld;await w.whenChunksReady();return {farPreparationSpans:globalThis.qaFarPreparationSpans??null,cropDepthPreparation:w.cropDepthPreparation??null,loading:{readyMs:globalThis.qaStreamingReadyAt-globalThis.qaStreamingLoadStart,phases:globalThis.qaLoadingPhases??[]},actorPreparation:w.loadingActorQueue?{...w.loadingActorQueue.stats,pending:w.loadingActorQueue.jobs.length,global:!!w.loadingActorQueue.scheduler}:null,streamingOptions:w.streamingOptions,isolated:crossOriginIsolated,runtime:w.spatialSession.runtime,programRetention:w.programLease?.stats??null,stream:w.chunkStream.summary(),native:w.spatialSession.core.metrics(),chunks:w.chunks.size,stage:document.querySelector('#stage')?.getAttribute('aria-busy'),elapsed:w.state.elapsed,renderer:w.renderer.getContext().getParameter(w.renderer.getContext().RENDERER)};});
+ const result=await page.evaluate(async()=>{const w=qaThreadWorld;await w.whenChunksReady();return {farDraws:globalThis.qaFarDraws??null,farPreparationSpans:globalThis.qaFarPreparationSpans??null,cropDepthPreparation:w.cropDepthPreparation??null,loading:{longFrames:globalThis.qaLoadingLongFrames??null,frames:globalThis.qaLoadingFrames??null,readyMs:globalThis.qaStreamingReadyAt-globalThis.qaStreamingLoadStart,phases:globalThis.qaLoadingPhases??[]},actorPreparation:w.loadingActorQueue?{...w.loadingActorQueue.stats,pending:w.loadingActorQueue.jobs.length,global:!!w.loadingActorQueue.scheduler}:null,streamingOptions:w.streamingOptions,isolated:crossOriginIsolated,runtime:w.spatialSession.runtime,programRetention:w.programLease?.stats??null,stream:w.chunkStream.summary(),native:w.spatialSession.core.metrics(),chunks:w.chunks.size,stage:document.querySelector('#stage')?.getAttribute('aria-busy'),elapsed:w.state.elapsed,renderer:w.renderer.getContext().getParameter(w.renderer.getContext().RENDERER)};});
+ if(loadingProfiler){const {profile}=await loadingProfiler.send('Profiler.stop');await writeFile(process.env.WG_THREAD_REPORT.replace(/\.json$/,'.cpuprofile'),JSON.stringify(profile));await loadingProfiler.detach();}
+ if(process.env.WG_THREAD_LOADING_CAPTURE==='1')await page.screenshot({path:process.env.WG_THREAD_REPORT.replace(/\.json$/,'.png')});
  if(process.env.WG_THREAD_NO_ISOLATION==='1'&&(result.isolated||result.runtime.fallbackReason!=='SharedArrayBuffer isolation unavailable'))throw Error('Missing real non-isolated fallback');
  if(process.env.WG_THREAD_BOOT_FAILURE==='1'&&(!result.isolated||!result.runtime.fallbackReason))throw Error('Missing isolated boot-failure fallback');
  if(result.runtime.backend!==((threaded&&process.env.WG_THREAD_NO_ISOLATION!=='1'&&process.env.WG_THREAD_BOOT_FAILURE!=='1')?'pthreads':'standalone'))throw Error(JSON.stringify(result));

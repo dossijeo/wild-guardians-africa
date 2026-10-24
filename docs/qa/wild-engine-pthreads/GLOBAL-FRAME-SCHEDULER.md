@@ -829,3 +829,85 @@ parallel texture preparation. Replacing it with a global job that retains
 borrowed GL state or awaits fences in the scheduler would be incorrect. Need
 atomic submission attribution and resource-recipe reuse before integration;
 not established by this single exploratory run. No throughput win claimed.
+
+
+### Far first-use shader diagnostics: attributed and bounded experiment (2026-10-24)
+
+`far-draw-attribution.js` is QA-only, synchronous wrappers restored in finally.
+No extra GL query/draw. `WG_THREAD_FAR_TIMES=1` plus FAR_DRAW_TIMES=1 records
+CPU per native API and slow material submissions. Nested durations overlap.
+Report `scheduler-far-draw-attribution.json`: worst draw81.875ms includes
+51.135ms getProgramInfoLog and26.635ms getShaderInfoLog. bufferData0.080ms.
+Main slow recipe smooth-far-opaque48.255ms; another ShaderMaterial29.240ms.
+Thus this observed spike is first-use successful-program diagnostics, not
+buffer transfer or geometric density. This is attribution, not an A/B speedup.
+
+New explicit opt-in `farValidatedBindings=1` (not implicit in scheduler):
+compile readiness snapshots actual selected programs; ready hook validates
+LINK_STATUS, then initializes uniform/attribute bindings with Three's success
+log queries disabled only for that synchronous call. Debug flag restored in
+finally; failed links run full Three diagnostics and reject preparation. No
+shader source, geometry, buffers, density, light or render pass removed.
+Success warning strings are intentionally not fetched in this experiment;
+shader/link failures are not ignored. Three r180-specific, unsupported binding
+shape rejects. Hook exceptions and post-hook owner invalidation propagate.
+No new RAF, global GL patch or asynchronous borrowed state introduced.
+
+Pilot `scheduler-far-validated-bindings-pilot.json`: maxdraw5.22ms;34binding
+initializations total2.565ms/max1.165ms. This showed an opportunity but is not
+acceptance, so repeated without per-GL-call wrappers below.
+
+ABAB `scheduler-far-bindings-{a1,b1,a2,b2}.json`, PNGs and summary. Both use
+scheduler bundle, same Manglares media1280x720 save, frozen at readiness,
+actual defaults/pthreads. Only B adds farValidatedBindings=1. Flags:
+WG_THREAD_PORT=5190, DEFAULT_STREAMING=1, FROZEN=1, LOADING_TIMES=1,
+FAR_TIMES=1, LOADING_FRAMES=1, LOADING_CAPTURE=1, WG_FRAME_SCHEDULER=1;
+alternate FAR_VALIDATED_BINDINGS absent/1/absent/1. Each prefixed WG_THREAD_
+except WG_FRAME_SCHEDULER. Fresh browser; serial, no concurrent builds/tests.
+
+| Run | Ready | Far draw max | Binding max | Load RAF P95/P99/max |
+|---|---:|---:|---:|---:|
+| A1 |33.883s|126.87ms|not separately prepared|66.54/133.32/947.83ms|
+| B1 |32.882s|5.41ms|30.73ms|66.52/149.67/964.33ms|
+| A2 |31.551s|129.00ms|not separately prepared|49.94/133.15/964.35ms|
+| B2 |31.848s|5.25ms|23.17ms|66.45/133.01/1130.87ms|
+
+28far draws in each case. B bindings total32.06/30.61ms, versus A total draw
+CPU208.98/210.50ms, B draw40.68/38.49ms. Strong localized CPU reduction, but
+NOT complete-frame or loading-throughput acceptance. P95 does not improve;
+B2 max is worse. Largest loading frame remains about1s, outside measured main
+RAF callback (callback max10–14ms), requiring attribution of asynchronous
+continuations/driver work; do not label it GPU without evidence. Hook still has
+23–31ms atomic outliers. Candidate stays a separate gate pending this diagnosis.
+
+Both image pairs inspected at fixed view; RGB MAD .003030/.000401 out of255,
+fraction pixels delta>8 .000155/.00000543. Same25chunks, no pending scheduler
+work. Scope is fixed daytime Manglares, not all-biome/night/moving equivalence.
+45 unit tests pass across compiler, binding validation and QA wrappers,
+including failed link rejection/debug restoration, cancellation and ready-hook
+errors. Vite production build passes (6.72s, existing bundle-size warning). Full
+acceptance and platform distribution tests remain pending for this variant.
+
+
+### Remaining loading peak: browser long frame and CPU profile (2026-10-24)
+
+`scheduler-loading-long-frame-attribution.json`: observed943ms long animation
+frame,892.62ms blockingDuration,939.71ms script continuation attributed to
+wait-gpu-frame RAF resolver. That resolver is an async origin, NOT proof the
+wait itself consumes CPU. Added opt-in LOADING_LONG_FRAMES observer and
+LOADING_CPU_PROFILE CDP sampler in QA harness; no extra animation loop or
+production instrumentation. Existing frame timings omit async continuations,
+so their low callback maximum could not exclude a main-thread stall.
+
+`scheduler-loading-block-profile.json/.cpuprofile` and summary expose cumulative
+sampled self-time, not exact atomic-call duration: texSubImage2D under
+initializeLoadingTextures~930ms; getProgramInfoLog under renderLoadingFrame~915ms;
+getProgramInfoLog under initializeProgramBindingsAsync~699ms; getContext under
+GuardianMesh/SpriteMesh~795ms and renderer construction~223ms. Profile overhead
+and OS scheduling apply; do not compare this run's speed to non-profiled ABAB.
+
+Next actions are therefore concrete: identify upload sampler sizes/source and
+first-use program recipes; remove redundant successful diagnostics where safe,
+then address actual texture upload/context creation cost. Do not place one
+large texSubImage2D in a scheduler job and claim it is interruptible. No change
+to assets, density, simulation, or those other producers made in this checkpoint.
