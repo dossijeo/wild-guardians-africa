@@ -3,18 +3,30 @@ const abortError=()=>new DOMException('Loading actor preparation cancelled','Abo
 // One loading owner has one pump and at most one pending frame. Tasks stay
 // synchronous; this spreads complete native actor adoptions, not fake async.
 export class LoadingSyncQueue {
- constructor({signal,cancelled=()=>false,getEpoch=()=>0,frameBudget=6,timeout=30000,pollIntervalMs=100,nextFrame,now=()=>performance.now(),onDiagnostic=()=>{}}={}){
+ constructor({scheduler=null,signal,cancelled=()=>false,getEpoch=()=>0,frameBudget=6,timeout=30000,pollIntervalMs=100,nextFrame,now=()=>performance.now(),onDiagnostic=()=>{}}={}){
   if(!Number.isFinite(frameBudget)||frameBudget<=0||!Number.isFinite(timeout)||timeout<=0)throw new RangeError('Invalid loading actor queue budget');
+  this.scheduler=scheduler;this.scheduled=new Set();
   this.signal=signal;this.cancelled=cancelled;this.getEpoch=getEpoch;this.epoch=getEpoch();this.frameBudget=frameBudget;this.timeout=timeout;this.pollIntervalMs=pollIntervalMs;this.nextFrame=nextFrame;this.now=now;this.onDiagnostic=onDiagnostic;
   this.owner=new AbortController();this.jobs=[];this.pumping=false;this.closed=false;this.spent=0;this.stats={submitted:0,completed:0,failed:0,yields:0,cpuMs:0,maxTaskMs:0};
   this.abort=()=>this.close(signal?.reason??abortError());signal?.addEventListener('abort',this.abort,{once:true});if(signal?.aborted)this.abort();
  }
- report(){try{this.onDiagnostic({...this.stats,pending:this.jobs.length,closed:this.closed,scope:'Accumulated synchronous task CPU wall time; yields and queue waits are not GPU work.'});}catch{}}
+ report(){try{this.onDiagnostic({...this.stats,pending:this.jobs.length+this.scheduled.size,closed:this.closed,scope:'Accumulated synchronous task CPU wall time; yields and queue waits are not GPU work.'});}catch{}}
  check(deadline){if(this.closed||this.signal?.aborted||this.cancelled()||this.getEpoch()!==this.epoch)throw this.failure??abortError();if(this.now()>=deadline)throw new DOMException('Loading actor preparation timed out','TimeoutError');}
  run(task){
   if(typeof task!=='function')return Promise.reject(new TypeError('Loading actor task must be a function'));
   if(this.closed)return Promise.reject(this.failure??abortError());
+  if(this.scheduler)return this.runScheduled(task);
   return new Promise((resolve,reject)=>{this.jobs.push({task,resolve,reject,deadline:this.now()+this.timeout});this.stats.submitted++;this.start();});
+ }
+ runScheduled(task){
+  const queue=this,key=Symbol(),deadline=this.now()+this.timeout;
+  this.scheduled.add(key);this.stats.submitted++;
+  const work=(function*(){
+   queue.check(deadline);const began=queue.now();
+   try{const value=task();if(value?.then){Promise.resolve(value).catch(()=>{});throw new TypeError('Loading actor queue accepts only synchronous tasks');}queue.check(deadline);return value;}
+   finally{const cpu=queue.now()-began;queue.stats.cpuMs+=cpu;queue.stats.maxTaskMs=Math.max(queue.stats.maxTaskMs,cpu);}
+  })();
+  return this.scheduler.submit(work,{key,signal:this.owner.signal,valid:()=>{this.check(deadline);return true;},priority:30,deadline:this.now()+250}).then(value=>{this.check(deadline);this.stats.completed++;return value;}).catch(error=>{this.stats.failed++;throw error;}).finally(()=>{this.scheduled.delete(key);this.report();});
  }
  // Empty queues do not reset CPU: asset promise continuations may refill them
  // within the same browser frame. Only an actual yielded frame resets it.

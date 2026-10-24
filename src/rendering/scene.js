@@ -269,7 +269,7 @@ export class WorldScene {
   loadingActorPreparation(){
     if(!this.loadingActorQueue){
       const gl=this.renderer.getContext();
-      this.loadingActorQueue=new LoadingSyncQueue({signal:this.loading.signal,cancelled:()=>this.disposed||this.renderer.getContext()!==gl||gl.isContextLost(),getEpoch:()=>this.glResourceEpoch?.stats.epoch??0,onDiagnostic:stats=>this.onLoadingActorQueue?.(stats)});
+      this.loadingActorQueue=new LoadingSyncQueue({scheduler:this.frameScheduler,signal:this.loading.signal,cancelled:()=>this.disposed||this.renderer.getContext()!==gl||gl.isContextLost(),getEpoch:()=>this.glResourceEpoch?.stats.epoch??0,onDiagnostic:stats=>this.onLoadingActorQueue?.(stats)});
     }
     return this.loadingActorQueue;
   }
