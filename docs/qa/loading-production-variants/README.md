@@ -115,3 +115,32 @@ Saved UI failure evidence; stopped the already-failed browser test explicitly,
 then started a fresh corrected pilot. This failure is not a throughput sample.
 Three source-preservation tests pass; renderer validation and A/B/A/B remain
 required. No count reduction or load-time saving is claimed.
+
+Corrected pilot completes25chunks in34.883s with90 link calls (unchanged) and
+one post-ready guardian-context link (unchanged). Capture inspected: moss,
+mud patches, fern coverage, shoreline, buildings and shadows retain the selected
+opening appearance. Not a pixel-equivalence or all-camera/night acceptance.
+Source input shrinks from11145 to6368 characters for eligible biome materials;
+this alone does not establish lower driver compile time or total loading.
+A fresh A/B/A/B series now runs without the GL inventory wrappers, same frozen
+Mangrove fixture, media720p, pthreads/scheduler, full background and post-ready
+observation. No other source edits during the performance series.
+
+## Mangrove A/B/A/B source-pruning result: throughput signal, acceptance pending
+
+| Run | Ready ms | World compile phase ms | Loading P99 ms | Loading max ms | Post-ready max ms |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| A1 original |36522|5358|133|449|349|
+| B1 pruned |35429|4618|133|416|549|
+| A2 original |37206|5431|117|233|300|
+| B2 pruned |35682|4978|150|416|565|
+
+Both pairs improve total readiness (1.094s/1.524s), with a reduction in world
+compilation wall time (0.740s/0.453s). These phase waits are not exclusive CPU
+or GPU durations. Count remains90 in diagnostic pilots; this removes source
+branches, not program instances. Post-ready maxima worsen in both B runs and
+must be attributed before promotion; do not accept a loading-only win.
+RGB mean absolute differences A1/B1 approximately .00130/.00136/.00182 and
+A2/B2 .00197/.00207/.00266 over720p, confined to bbox around buildings/crops.
+Not evidence for night, motion, all profiles or all biomes. The candidate remains
+off by default; next gate is post-ready attribution and broader equivalence.
