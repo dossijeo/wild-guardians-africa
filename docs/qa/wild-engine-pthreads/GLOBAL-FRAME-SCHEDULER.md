@@ -1540,3 +1540,45 @@ Keep corrected experiment QA-only;do NOT activate or broaden to more textures ba
 on the isolated upload results. The throughput bug is resolved for this observed
 finalization sequence,but global scheduler acceptance remains unproved. Reports,
 summaries and captures retained;no simulation/art/production defaults changed.
+
+
+### Remaining context creation spikes and Guardian worker feasibility (2026-10-24)
+
+New WG_CONTEXT_CREATION_TIMES records actual HTMLCanvasElement.getContext wall
+spans and owning callsites before loading. scheduler-context-creation-attribution:
+Guardian avatar WebGL624.78ms,world prepared canvas WebGL2356.46ms;four2Dcontexts
+under.1ms each. No repeated canvas context observed in this load. This does not
+justify deduplication or replacing first creation with an await. NativeGuardian
+currently creates its own WebGL context,mesh/shader/texture after image load;
+dispose loses that context. GuardianMagic is a separate2Dcanvas whose glow anchors
+call the deformed mesh.project:offloading only the mesh would risk temporal mismatch.
+
+Implemented QA-only worker probe using UNCHANGED generated GuardianMesh and
+GuardianMagic together. Worker imports native code,fetches/decode sprite with
+premultiplyAlpha=premultiply (matching GL's original HTMLImage premultiplication),
+uses OffscreenCanvas for both. QA adapts client sizing fields;production must use
+an explicit sizing interface instead of this shim. Three deterministic gestures,
+full vertex/pixel/glow comparisons. Contexts lost,worker terminated,DOM removed.
+No simulation or visible production UI changes.
+
+scheduler-guardian-worker-probe:worker WebGLcreation664.595ms,main heartbeat202ticks,
+maxgap15.81ms during worker sequence (includes reads). First run reported the normal
+Canvas2D willReadFrequently warning and harness exited1;data retained as failure.
+That warning is now explicitly allowed ONLY for this readback probe and remains
+in its report. Renderer was not changed to suppress it or force a different path.
+
+scheduler-guardian-worker-alpha repeat:workercontext259.095ms,133heartbeat ticks,
+maxgap21.235ms. Cold/warm variation,not an A/Bperformance comparison. Identical10010
+vertex values perpose. Avatar360000channel samples differ max2/255,mean.0024–.0035.
+Magic raw unpremultiplied RGB differences reach255 on transparent texels;retained
+raw comparison plus composited/premultiplied comparison max2.0314,mean.00462/255.
+Onepose exact,another rawmax1. No claim of byte-identical artwork.
+
+This proves a viable off-main execution experiment with retained geometry and
+small raster differences;NOT full initial-load improvement,visible animated
+compositor validation or cross-browser support. Worker setup still takes time
+and may contend with driver work. Next:bounded latest-pose messages with mesh+magic
+rendered together,explicit dimensions,ownership/disposal,fallback when OffscreenCanvas
+is unavailable or fails,actual loading ABAB and visible gesture/resize/lifecycle QA.
+No new permanent RAF should be introduced. Main world renderer context remains a
+separate356ms blocker;do not imply this experiment solves that or scheduler scope.
