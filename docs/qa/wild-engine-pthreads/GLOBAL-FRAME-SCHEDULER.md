@@ -1582,3 +1582,54 @@ rendered together,explicit dimensions,ownership/disposal,fallback when Offscreen
 is unavailable or fails,actual loading ABAB and visible gesture/resize/lifecycle QA.
 No new permanent RAF should be introduced. Main world renderer context remains a
 separate356ms blocker;do not imply this experiment solves that or scheduler scope.
+
+
+### Guardian worker integrated behind an opt-in (2026-10-24)
+
+New guardianWorker=1 enables GuardianCanvasExecutor in the real NativeGuardian.
+One frame in flight plus one latest pose,replacing stale pending poses. Pose arrays
+snapshot before queuing. No RAF/timer render loop;existing presentation drives it.
+Gesture physics/dialog/voice remain on main. Worker renders mesh+magic together
+using original generated renderer classes with explicit sizing overrides;no shim
+properties or edits to original renderer/hash. Offscreen resources belong to worker.
+Startup15s watchdog and worker errors restore main rendering on fresh canvases;
+transferred canvases cannot be reused. Dispose terminates executor and closes late
+untransferred bitmaps. Rejection and late acknowledgements do not revive disposed UI.
+
+Three new unit tests plus existing Guardian voice,lifecycle,geometry/copy/audio:
+40pass. Production Vitebuild passes7.34s,emitsguardian-canvas-worker-BTbhnMdQ.js.
+This proves packaging only,not actual itch/Tauri/WebView2 compatibility.
+
+scheduler-guardian-integrated-smoke loaded worker successfully,but its supposed
+visible screenshot contained no portrait:normal narrator logic immediately hid the
+QA message. Retained as insufficient visual evidence. Corrected visible case
+suppresses hide ONLY during the diagnostic presentation,then restores it. Real
+NativeGuardian animation sends92frames/91acks across90observed frames,workerready,
+0failures. Avatar+glow capture inspected. Injected executor failure afterready
+terminates worker,restoresmainmesh,and keeps exactly2canvases;fallback screenshot
+inspected. This is not a real lost-context or unsupported-browser test.
+
+Initial-load ABAB scheduler-guardian-load-* keeps readiness31.73/31.36/31.90/32.01s;
+no consistent latency improvement/regression. However attribution timestamps show
+Guardian context starts34489.8ms AFTER last loading frame34440.3ms. The old loading
+window excludes the target pause! Preserve those measurements only for load safety.
+Added separately flagged WG_GUARDIAN_TAIL=1:record first5s afterready,including the
+boundary interval from last loading timestamp. Does not change readiness cutoff.
+
+| run | samples | postready P95 / P99 / max ms |
+| --- | ---: | --- |
+| A1 main | 47 |149.65 /199.52 /714.76 |
+| B1 worker |89 |83.30 /133.02 /498.90 |
+| A2 main |54 |166.26 /233.10 /598.67 |
+| B2 worker |57 |149.82 /216.11 /565.42 |
+
+Both pairs improve,but magnitude varies sharply and samples are small. Readiness
+in this second series33.14/33.02/38.23/34.25s has significant drift;do not claim a
+4sload win from onepair. No GPU timers used here. Worker setup1.58–2.47s completes
+before snapshots,but may delay first portrait appearance:must investigate early
+preparation/first-dialog readiness rather than hiding this latency tradeoff.
+
+Keep opt-in. Remaining:actual resize,contextloss,cancelwhilebooting and repeated
+world teardown inbrowser,first-dialog latency and earlier preparation,packaged
+iframe/Tauri fallback,more hardware/biomes and main world context creation. Global
+scheduler remains incomplete. Art,simulation,mainbranch and defaultbackend unchanged.

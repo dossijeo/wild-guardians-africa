@@ -16,6 +16,7 @@ const page=await browser.newPage({viewport:{width:1280,height:720}}),errors=[],q
 page.on('pageerror',e=>errors.push(e.message));
 page.on('console',m=>{if(m.type()==='error'||m.type()==='warning'){errors.push(m.text());console.log(m.text().slice(0,500));}});
 try{
+ if(process.env.WG_GUARDIAN_DIAGNOSTICS==='1')await page.route('**/src/ui/guardian.js*',async route=>{const response=await route.fetch(),source=await response.text(),anchor='this.ready=this.load();';if(source.split(anchor).length!==2)throw Error('Guardian QA anchor changed');await route.fulfill({response,body:source.replace(anchor,'globalThis.qaGuardian=this;'+anchor)});});
  if(process.env.WG_CONTEXT_CREATION_TIMES==='1')await page.addInitScript(()=>{
   const original=HTMLCanvasElement.prototype.getContext,ids=new WeakMap();let serial=0;globalThis.qaContextCreations=[];
   HTMLCanvasElement.prototype.getContext=function(type,...args){const known=ids.has(this);if(!known)ids.set(this,++serial);const start=performance.now();let result;try{return result=original.call(this,type,...args);}finally{const end=performance.now();if(!known||type.startsWith('webgl')||end-start>1)qaContextCreations.push({start,ms:end-start,type,canvas:ids.get(this),known,id:this.id,className:this.className,width:this.width,height:this.height,created:!!result,stack:new Error().stack});}};
@@ -89,6 +90,7 @@ try{
  if(process.env.WG_THREAD_QUALITY_PHASES==='1')gameUrl.searchParams.set('qualityPhases','1');
  if(process.env.WG_THREAD_QUALITY_STAGED==='1')gameUrl.searchParams.set('qualityStaged','1');
  if(process.env.WG_THREAD_LIVE_PREPARATION==='1')gameUrl.searchParams.set('qualityLivePreparation','1');
+ if(process.env.WG_GUARDIAN_WORKER==='1')gameUrl.searchParams.set('guardianWorker','1');
  if(process.env.WG_FRAME_SCHEDULER==='1')gameUrl.searchParams.set('frameScheduler','1');
  if(process.env.WG_MUD_EDGE_WORKER==='1')gameUrl.searchParams.set('mudEdgeWorker','1');
  if(process.env.WG_TRANSACTIONAL_PROGRAMS==='1')gameUrl.searchParams.set('transactionalPrograms','1');
@@ -108,7 +110,8 @@ try{
  await frame.waitForLoadState('load',{timeout:60000});await frame.waitForFunction(()=>document.body.innerText.toUpperCase().includes('JUEGO NUEVO'),null,{timeout:60000});
  const loadingProfiler=process.env.WG_THREAD_LOADING_CPU_PROFILE==='1'?await page.context().newCDPSession(page):null;
  if(loadingProfiler){await loadingProfiler.send('Profiler.enable');await loadingProfiler.send('Profiler.start');}
- await page.evaluate(collect=>{globalThis.qaStreamingLoadStart=performance.now();if(collect){globalThis.qaLoadingFrames=[];globalThis.qaMainFrame=row=>{if(!globalThis.qaStreamingReadyAt&&qaLoadingFrames.length<10000)qaLoadingFrames.push(row);};}},process.env.WG_THREAD_LOADING_FRAMES==='1');
+ if(process.env.WG_GUARDIAN_TAIL==='1')await page.evaluate(()=>{globalThis.qaCollectPostReady=true;});
+ await page.evaluate(collect=>{globalThis.qaStreamingLoadStart=performance.now();if(collect){globalThis.qaLoadingFrames=[];globalThis.qaPostReadyFrames=[];globalThis.qaMainFrame=row=>{if(!globalThis.qaStreamingReadyAt&&qaLoadingFrames.length<10000)qaLoadingFrames.push(row);else if(globalThis.qaCollectPostReady&&performance.now()<qaStreamingReadyAt+5000)qaPostReadyFrames.push(row);};}},process.env.WG_THREAD_LOADING_FRAMES==='1');
  await frame.evaluate(()=>parent.postMessage({type:'wild-guardians:menu',action:'load-slot',slotId:'opening'},location.origin));
  for(let attempt=0;attempt<18;attempt++){
   const diagnostic=await page.evaluate(()=>({text:document.body.innerText.slice(-1200),stage:document.querySelector('#stage')?.getAttribute('aria-busy'),runtime:globalThis.qaThreadWorld?.spatialSession?.runtime,chunks:globalThis.qaThreadWorld?.chunks?.size,stream:globalThis.qaThreadWorld?.chunkStream?.summary(),isolated:crossOriginIsolated}));
@@ -118,7 +121,18 @@ try{
   if(attempt===17)throw Error('Game readiness deadline exceeded; see thread-game-loading.json');
   await page.waitForTimeout(10000);
  }
- const result=await page.evaluate(async()=>{const w=qaThreadWorld;await w.whenChunksReady();return {contextCreations:globalThis.qaContextCreations??null,texturePilot:globalThis.qaTexturePilotStats??null,farDraws:globalThis.qaFarDraws??null,farPreparationSpans:globalThis.qaFarPreparationSpans??null,cropDepthPreparation:w.cropDepthPreparation??null,loading:{textureUploads:globalThis.qaLoadingTextureUploads??null,longFrames:globalThis.qaLoadingLongFrames??null,frames:globalThis.qaLoadingFrames??null,readyMs:globalThis.qaStreamingReadyAt-globalThis.qaStreamingLoadStart,phases:globalThis.qaLoadingPhases??[]},actorPreparation:w.loadingActorQueue?{...w.loadingActorQueue.stats,pending:w.loadingActorQueue.jobs.length,global:!!w.loadingActorQueue.scheduler}:null,streamingOptions:w.streamingOptions,isolated:crossOriginIsolated,runtime:w.spatialSession.runtime,programRetention:w.programLease?.stats??null,stream:w.chunkStream.summary(),native:w.spatialSession.core.metrics(),chunks:w.chunks.size,stage:document.querySelector('#stage')?.getAttribute('aria-busy'),elapsed:w.state.elapsed,renderer:w.renderer.getContext().getParameter(w.renderer.getContext().RENDERER)};});
+ if(process.env.WG_GUARDIAN_TAIL==='1')await page.evaluate(async()=>{while(performance.now()<qaStreamingReadyAt+5200)await new Promise(requestAnimationFrame);});
+ const result=await page.evaluate(async()=>{const w=qaThreadWorld;await w.whenChunksReady();return {postReady:globalThis.qaCollectPostReady?{readyAt:qaStreamingReadyAt,lastLoadingFrame:qaLoadingFrames.at(-1),frames:qaPostReadyFrames}:null,contextCreations:globalThis.qaContextCreations??null,texturePilot:globalThis.qaTexturePilotStats??null,farDraws:globalThis.qaFarDraws??null,farPreparationSpans:globalThis.qaFarPreparationSpans??null,cropDepthPreparation:w.cropDepthPreparation??null,loading:{textureUploads:globalThis.qaLoadingTextureUploads??null,longFrames:globalThis.qaLoadingLongFrames??null,frames:globalThis.qaLoadingFrames??null,readyMs:globalThis.qaStreamingReadyAt-globalThis.qaStreamingLoadStart,phases:globalThis.qaLoadingPhases??[]},actorPreparation:w.loadingActorQueue?{...w.loadingActorQueue.stats,pending:w.loadingActorQueue.jobs.length,global:!!w.loadingActorQueue.scheduler}:null,streamingOptions:w.streamingOptions,isolated:crossOriginIsolated,runtime:w.spatialSession.runtime,programRetention:w.programLease?.stats??null,stream:w.chunkStream.summary(),native:w.spatialSession.core.metrics(),chunks:w.chunks.size,stage:document.querySelector('#stage')?.getAttribute('aria-busy'),elapsed:w.state.elapsed,renderer:w.renderer.getContext().getParameter(w.renderer.getContext().RENDERER)};});
+ if(process.env.WG_GUARDIAN_DIAGNOSTICS==='1')result.guardian=await page.evaluate(()=>{const g=globalThis.qaGuardian;return g?{backend:g.canvasWorker?'worker':'main',ready:g.canvasWorker?.readyState??!!g.mesh,stats:g.canvasWorker?.stats??null,fallback:g.workerDiagnostic??null}:null;});
+ if(process.env.WG_GUARDIAN_VISIBLE==='1'){
+  result.guardianVisible=await page.evaluate(async()=>{const g=qaGuardian;await g.ready;const hide=g.hide;g.hide=()=>{};globalThis.qaRestoreGuardian=()=>{g.hide=hide;g.hide({immediate:true});};g.show({key:'qa-worker-visible',text:'El Espíritu protege la naturaleza.',gesture:'reveal'});for(let i=0;i<90;i++)await new Promise(requestAnimationFrame);return {backend:g.canvasWorker?'worker':'main',ready:g.canvasWorker?.readyState??!!g.mesh,stats:g.canvasWorker?.stats??null,size:g.canvasWorker?.size??null};});
+  await page.screenshot({path:process.env.WG_THREAD_REPORT.replace(/\.json$/,'-guardian.png')});
+  if(process.env.WG_GUARDIAN_FAIL_AFTER_READY==='1'){
+   result.guardianFallback=await page.evaluate(async()=>{const g=qaGuardian;g.canvasWorker.fail(Error('QA executor failure after ready'));for(let i=0;i<20;i++)await new Promise(requestAnimationFrame);return {backend:g.canvasWorker?'worker':'main',mesh:!!g.mesh,fallback:g.workerDiagnostic,canvasCount:g.root.querySelectorAll('canvas').length};});
+   await page.screenshot({path:process.env.WG_THREAD_REPORT.replace(/\.json$/,'-fallback.png')});
+  }
+  await page.evaluate(()=>globalThis.qaRestoreGuardian?.());
+ }
  if(process.env.WG_GUARDIAN_WORKER_PROBE==='1')result.guardianWorkerProbe=await page.evaluate(async()=>{const {probeGuardianWorker}=await import('/tools/experiments/guardian-worker-probe.js');return probeGuardianWorker();});
  if(process.env.WG_TEXTURE_STAGING_PROBE==='1')result.textureStaging=await page.evaluate(async strategy=>{const {probeTextureStaging}=await import('/tools/experiments/texture-staging-probe.js');return probeTextureStaging(qaThreadWorld,{strategy});},process.env.WG_TEXTURE_STAGING_MODE??'scheduled');
  if(loadingProfiler){const {profile}=await loadingProfiler.send('Profiler.stop');await writeFile((process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json').replace(/\.json$/,'.cpuprofile'),JSON.stringify(profile));await loadingProfiler.detach();}

@@ -1,3 +1,4 @@
+import {GuardianCanvasExecutor} from './guardian-canvas-executor.js';
 import {guardianCopy} from '../tutorial/guardian-copy.js';
 import './guardian-native.css';
 import {GuardianMesh,GuardianMagic,OrnamentPhysics,guardianPose,GUARDIAN_SPRITE,GESTURE_MIN_SECONDS} from './guardian-native.js';
@@ -30,8 +31,21 @@ export class NativeGuardian {
       const image=new Image();image.decoding='async';
       await new Promise((resolve,reject)=>{image.onload=resolve;image.onerror=()=>reject(new Error('No se ha podido cargar el Espíritu original.'));image.src=assetUrl(GUARDIAN_SPRITE);});
       if(this.disposed)return;
+      this.loadedImage=image;
+      if(new URLSearchParams(globalThis.location?.search??'').get('guardianWorker')==='1'){
+        this.canvasWorker=new GuardianCanvasExecutor(this.canvas,this.fx,image,{onFailure:()=>{try{this.restoreMainRenderer();}catch(error){this.onError(error);}}});
+        try{await this.canvasWorker.ready;if(this.disposed)return;this.resize();return;}catch{if(this.disposed)return;this.restoreMainRenderer();return;}
+      }
       this.mesh=new GuardianMesh(this.canvas,image);this.magic=new GuardianMagic(this.fx);this.resize();
     }catch(error){if(!this.disposed)this.onError(error);}
+  }
+  restoreMainRenderer(){
+    if(this.disposed||this.mesh)return;
+    this.workerDiagnostic={...this.canvasWorker?.stats};this.canvasWorker?.dispose();this.canvasWorker=null;
+    // A transferred canvas cannot acquire a main-thread context again.
+    this.observer.unobserve(this.canvas);
+    const avatar=this.canvas.cloneNode(false),magic=this.fx.cloneNode(false);this.canvas.replaceWith(avatar);this.fx.replaceWith(magic);this.canvas=avatar;this.fx=magic;this.observer.observe(avatar);
+    this.mesh=new GuardianMesh(avatar,this.loadedImage);this.magic=new GuardianMagic(magic);this.resize();
   }
   show({key,text,gesture='speak',advance=null,dismiss=null,closeAfter=false,blocking=false,skip=null,result=false,onVoiceEnded=null}){
     if(this.disposed||this.key===key)return;
@@ -70,7 +84,7 @@ export class NativeGuardian {
     else this.lifecycle.finish();
   }
   present(phase){try{this.onPresentation(phase);}catch{}}
-  resize(){if(this.mesh){this.mesh.resize();this.magic.resize();this.draw(0);}}
+  resize(){if(this.canvasWorker?.readyState){this.canvasWorker.resize();this.draw(0);}else if(this.mesh){this.mesh.resize();this.magic.resize();this.draw(0);}}
   update(){
     if(this.disposed||document.hidden||this.root.classList.contains('closed')){this.lastStamp=null;return;}
     const stamp=performance.now(),elapsed=this.lastStamp===null?0:Math.max(0,(stamp-this.lastStamp)/1000);this.lastStamp=stamp;
@@ -83,7 +97,7 @@ export class NativeGuardian {
     this.draw(Math.min(elapsed,.065));
   }
   draw(dt){
-    if(!this.mesh||this.mesh.lost)return;
+    if((!this.mesh&&!this.canvasWorker?.readyState)||this.mesh?.lost)return;
     const sample=this.lifecycle.sample(this.gesture??'idle',this.duration??7),gesture=sample.state;
     const q=guardianPose(gesture,sample.age,sample.duration,this.time,1),gain=this.reduced?0:1,follow=1-Math.exp(-dt*5.4);
     for(const k of ['roll','yaw','pitch','lift','zoom','headX','headY','bodyX','bodyRoll']){
@@ -92,14 +106,15 @@ export class NativeGuardian {
     }
     for(const k of ['eyes','medallion','reveal'])this.pose[k]+=(q[k]*gain-this.pose[k])*(1-Math.exp(-dt*4));
     this.physics.step(this.time,dt,this.pose.roll,this.pose.yaw,q.reveal*gain,gain,gain);
-    this.mesh.update(this.pose.roll,this.pose.yaw,this.pose.pitch,{...this.pose,blend:1,angles:this.physics.angles,offsets:this.physics.offsets});
-    this.mesh.draw();this.magic.draw(this.mesh,this.time,this.pose,false);
+    const pose={...this.pose,blend:1,angles:this.physics.angles,offsets:this.physics.offsets};
+    if(this.canvasWorker?.readyState)this.canvasWorker.render(this.time,pose);
+    else{this.mesh.update(this.pose.roll,this.pose.yaw,this.pose.pitch,pose);this.mesh.draw();this.magic.draw(this.mesh,this.time,this.pose,false);}
     this.present(document.hidden?'hidden':this.lifecycle.phase);
     this.root.dataset.phase=gesture;
     this.root.dataset.lifecycle=this.lifecycle.phase;
   }
   dispose(){
     this.voice?.dispose();
-    this.disposed=true;this.present('disposed');this.observer.disconnect();this.mesh?.gl?.getExtension('WEBGL_lose_context')?.loseContext();this.container.replaceChildren();
+    this.disposed=true;this.canvasWorker?.dispose();this.present('disposed');this.observer.disconnect();this.mesh?.gl?.getExtension('WEBGL_lose_context')?.loseContext();this.container.replaceChildren();
   }
 }
