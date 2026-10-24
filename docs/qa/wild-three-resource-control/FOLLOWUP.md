@@ -124,3 +124,22 @@ Opening A1/B1 captures were inspected: ground, fern coverage, shadows, buildings
 and distant scenery retain their appearance. This is not full lifecycle proof.
 The common multi-second gap requires separate long-animation-frame attribution;
 no claim that it is GPU execution, driver waiting or caused by concurrency yet.
+
+## Common stall: browser long-animation-frame evidence
+
+The separate sequential attribution run completes in38.838s. Chrome reports a
+3379.540ms long animation frame (start18469.170ms), blockingDuration3320.525ms.
+Its script attribution is3367.085ms to the wait-gpu-frame.js RAF callback at
+18480.950ms. This includes promise continuations invoked after resolving that
+frame; it does not establish that the trivial RAF callback itself is costly.
+Thus the gap includes real main-thread occupation, not just slow presentation.
+No specific GL operation is established yet. A QA-only slow WebGL-call tracer
+records synchronous calls >=5ms and their stacks without querying GPU state;
+its output must not be used as an uninstrumented performance comparison.
+
+The GL attribution run identifies onFirstUse/getUniforms during the auxiliary
+render at src/rendering/buildings.js:217. Three getProgramInfoLog calls alone
+cost1485.505,958.325 and350.740ms synchronously. These are driver-call wall times,
+not GPU execution durations. Next action: audit the exact depth/material recipe
+prepared before that auxiliary draw, rather than increase compile concurrency
+or disable all shader diagnostics. Reports preserve all slow calls and stacks.
