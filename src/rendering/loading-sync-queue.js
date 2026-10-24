@@ -27,7 +27,7 @@ export class LoadingSyncQueue {
     try{const value=job.task();if(value?.then){Promise.resolve(value).catch(()=>{});throw new TypeError('Loading actor queue accepts only synchronous tasks');}queue.check(job.deadline);queue.stats.completed++;job.resolve(value);}
     catch(error){queue.stats.failed++;job.reject(error);}
     finally{const cpu=queue.now()-began;queue.stats.cpuMs+=cpu;queue.stats.maxTaskMs=Math.max(queue.stats.maxTaskMs,cpu);queue.report();}
-   })(),{signal:this.owner.signal,valid:()=>{this.check(job.deadline);return true;},priority:30,deadline:job.admissionDeadline});
+   })(),{signal:this.owner.signal,valid:()=>{this.check(job.deadline);return true;},priority:30,required:true,deadline:job.admissionDeadline});
   }}catch(error){this.close(error);}
  }
  // Empty queues do not reset CPU: asset promise continuations may refill them

@@ -7,14 +7,15 @@ export class GlobalFrameScheduler {
     this.jobs=new Map();this.sequence=0;this.samples=[];this.lastTimestamp=null;
     this.budget=0;this.nextOversizeRecovery=0;this.cooldown=0;this.lastPolicy=-Infinity;
     this.policy={median:0,p95:0,p99:0,cpu95:0,jitter:0};
-    this.stats={completed:0,cancelled:0,failed:0,units:0,workMs:0,coordinationMs:0,maxUnitMs:0,overruns:0,deadlineLoans:0,oversizeRecoveries:0,continuationMs:0,continuationTurns:0};
+    this.stats={completed:0,cancelled:0,failed:0,units:0,workMs:0,coordinationMs:0,maxUnitMs:0,overruns:0,deadlineLoans:0,oversizeRecoveries:0,emergencyUnits:0,emergencyMs:0,maxEmergencyMs:0,emergencyEstimatedMs:0,continuationMs:0,continuationTurns:0};
   }
-  submit(iterator,{key=Symbol(),valid=()=>true,priority=0,deadline=Infinity,estimateMs=.25,estimate=null,signal,label=null}={}) {
+  submit(iterator,{key=Symbol(),valid=()=>true,priority=0,deadline=Infinity,estimateMs=.25,estimate=null,signal,label=null,required=false}={}) {
+    if(typeof required!=='boolean'||(required&&!Number.isFinite(deadline)))return Promise.reject(new TypeError('Required work needs a finite deadline'));
     if(this.jobs.has(key))this.cancel(key);
     if(this.jobs.size>=this.maxPending)return Promise.reject(new Error('Frame scheduler backpressure'));
     return new Promise((resolve,reject)=>{
       const created=this.now();
-      const job={iterator,key,label,valid,priority,deadline,estimate,cost:Math.max(.01,estimateMs),created,lastServed:created,order:this.sequence++,resolve,reject,signal};
+      const job={iterator,key,label,valid,priority,deadline,estimate,required,cost:Math.max(.01,estimateMs),created,lastServed:created,order:this.sequence++,resolve,reject,signal};
       job.abort=()=>this.cancel(key);this.jobs.set(key,job);
       signal?.addEventListener('abort',job.abort,{once:true});
       if(signal?.aborted)this.cancel(key);
@@ -76,7 +77,7 @@ export class GlobalFrameScheduler {
         drainTurns++;this.stats.continuationTurns++;continue;
       }
       if(units++>=1024)break;
-      const time=this.now();let selected=null,best=-Infinity,borrowed=false,oversized=false;
+      const time=this.now();let selected=null,best=-Infinity,borrowed=false,oversized=false,emergencySelected=false,selectedEstimate=0;
       for(const job of this.jobs.values()){
         let valid;try{valid=job.valid();}catch(error){this.remove(job);try{job.iterator.return?.();}catch{}job.reject(error);this.stats.failed++;continue;}
         if(!valid){this.cancel(job.key);continue;}
@@ -99,9 +100,15 @@ export class GlobalFrameScheduler {
         // an explicit overrun, never headroom or a lowered cost estimate.
         const recovery=!fits&&!loan&&work===0&&time-job.deadline>=2000&&time>=this.nextOversizeRecovery&&
           cost>period*.5&&cpu<period*.85&&cpu+cost<=period*2&&time-frame.timestamp+cost<=period*3;
-        if(!fits&&!loan&&!recovery)continue;
+        // Required loading cannot starve behind an atomic driver's outlier.
+        // Prefer a cheap CPU frame after one observation window, but after two
+        // windows accept one explicit hitch. This is never counted as headroom.
+        const overdue=time-Math.max(job.deadline,job.lastServed);
+        const emergency=!fits&&!loan&&!recovery&&job.required&&work===0&&time>=this.nextOversizeRecovery&&
+          overdue>=2000&&(cpu<period*.85||overdue>=4000);
+        if(!fits&&!loan&&!recovery&&!emergency)continue;
         const score=job.priority+age/100+(urgent?1000:0)-job.order*.000001;
-        if(score>best){selected=job;best=score;borrowed=loan||recovery;oversized=recovery;}
+        if((emergency&&!emergencySelected)||(emergency===emergencySelected&&score>best)){selected=job;best=score;borrowed=loan||recovery||emergency;oversized=recovery||emergency;emergencySelected=emergency;selectedEstimate=cost;}
       }
       if(!selected)break;
       const start=this.now();selected.lastServed=start;if(oversized){this.nextOversizeRecovery=start+2000;this.stats.oversizeRecoveries++;}
@@ -112,6 +119,7 @@ export class GlobalFrameScheduler {
         else {selected.order=this.sequence++;if(result.value&&typeof result.value==='object'&&'waitFor' in result.value)this.waitFor(selected,result.value.waitFor);}
       }catch(error){this.remove(selected);try{selected.iterator.return?.();}catch{}selected.reject(error);this.stats.failed++;}
       const duration=this.now()-start;work+=duration;if(borrowed&&!oversized)this.stats.deadlineLoans++;this.stats.units++;this.stats.maxUnitMs=Math.max(this.stats.maxUnitMs,duration);
+      if(emergencySelected){this.stats.emergencyUnits++;this.stats.emergencyMs+=duration;this.stats.maxEmergencyMs=Math.max(this.stats.maxEmergencyMs,duration);this.stats.emergencyEstimatedMs+=selectedEstimate;}
       selected.cost=Math.max(duration,selected.cost*.8); // Conservative recent unit estimate.
       if(borrowed||this.now()-began>=remaining){this.stats.overruns++;break;}
     }

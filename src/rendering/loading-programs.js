@@ -25,7 +25,7 @@ export function compileLoadingPrograms(renderer,scene,camera,targetScene,{schedu
  if(!scheduler)return execute();
  // A scheduled unit owns synchronous submission only. Its returned readiness
  // promise is awaited by the caller, never charged as CPU or run inside a frame.
- return scheduler.submit((function*(){check();return execute();})(),{signal:owner.signal,valid:()=>{check();return true;},priority:20,deadline:deadline??begin+250}).then(result=>{check();return result;}).finally(cleanup);
+ return scheduler.submit((function*(){check();return execute();})(),{signal:owner.signal,valid:()=>{check();return true;},priority:20,required:true,deadline:deadline??begin+250}).then(result=>{check();return result;}).finally(cleanup);
 }
 
 // Compile bounded views of the original objects against the complete native

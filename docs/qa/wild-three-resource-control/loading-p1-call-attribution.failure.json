@@ -1,0 +1,311 @@
+{
+  "message": "Game readiness deadline exceeded; see thread-game-loading.json",
+  "diagnostic": {
+    "texturePilot": {
+      "completed": 0,
+      "fallbacks": 0,
+      "units": 2,
+      "maxUnitMs": 168.14999997615814,
+      "workMs": 168.34499990940094,
+      "extraPixelBytes": 0,
+      "records": [
+        {
+          "name": "texture_0",
+          "width": 2048,
+          "height": 2048,
+          "began": 21394.139999985695,
+          "units": [
+            {
+              "phase": "allocation",
+              "ms": 0.19499993324279785,
+              "calls": [
+                {
+                  "name": "bindTexture",
+                  "ms": 0.009999990463256836,
+                  "args": [
+                    3553,
+                    null
+                  ]
+                },
+                {
+                  "name": "pixelStorei",
+                  "ms": 0.004999995231628418,
+                  "args": [
+                    37440,
+                    null
+                  ]
+                },
+                {
+                  "name": "pixelStorei",
+                  "ms": 0,
+                  "args": [
+                    37441,
+                    null
+                  ]
+                },
+                {
+                  "name": "pixelStorei",
+                  "ms": 0.004999995231628418,
+                  "args": [
+                    3317,
+                    4
+                  ]
+                },
+                {
+                  "name": "pixelStorei",
+                  "ms": 0,
+                  "args": [
+                    37443,
+                    0
+                  ]
+                },
+                {
+                  "name": "texStorage2D",
+                  "ms": 0,
+                  "args": [
+                    3553,
+                    12,
+                    35907,
+                    2048,
+                    2048
+                  ]
+                },
+                {
+                  "name": "generateMipmap",
+                  "ms": 0,
+                  "args": [
+                    3553
+                  ]
+                },
+                {
+                  "name": "bindTexture",
+                  "ms": 0,
+                  "args": [
+                    3553,
+                    null
+                  ]
+                }
+              ]
+            },
+            {
+              "phase": "rows",
+              "ms": 168.14999997615814,
+              "calls": [
+                {
+                  "name": "bindTexture",
+                  "ms": 0.004999995231628418,
+                  "args": [
+                    3553,
+                    null
+                  ]
+                },
+                {
+                  "name": "pixelStorei",
+                  "ms": 0.009999990463256836,
+                  "args": [
+                    37440,
+                    null
+                  ]
+                },
+                {
+                  "name": "pixelStorei",
+                  "ms": 0.004999995231628418,
+                  "args": [
+                    37441,
+                    null
+                  ]
+                },
+                {
+                  "name": "pixelStorei",
+                  "ms": 0,
+                  "args": [
+                    3317,
+                    4
+                  ]
+                },
+                {
+                  "name": "getParameter",
+                  "ms": 47.300000071525574,
+                  "args": [
+                    3314
+                  ]
+                },
+                {
+                  "name": "getParameter",
+                  "ms": 119.9099999666214,
+                  "args": [
+                    32878
+                  ]
+                },
+                {
+                  "name": "getParameter",
+                  "ms": 0.010000109672546387,
+                  "args": [
+                    3316
+                  ]
+                },
+                {
+                  "name": "getParameter",
+                  "ms": 0,
+                  "args": [
+                    3315
+                  ]
+                },
+                {
+                  "name": "getParameter",
+                  "ms": 0,
+                  "args": [
+                    32877
+                  ]
+                },
+                {
+                  "name": "pixelStorei",
+                  "ms": 0,
+                  "args": [
+                    3314,
+                    2048
+                  ]
+                },
+                {
+                  "name": "pixelStorei",
+                  "ms": 0,
+                  "args": [
+                    32878,
+                    2048
+                  ]
+                },
+                {
+                  "name": "pixelStorei",
+                  "ms": 0,
+                  "args": [
+                    3316,
+                    0
+                  ]
+                },
+                {
+                  "name": "pixelStorei",
+                  "ms": 0,
+                  "args": [
+                    3315,
+                    0
+                  ]
+                },
+                {
+                  "name": "pixelStorei",
+                  "ms": 0,
+                  "args": [
+                    32877,
+                    0
+                  ]
+                },
+                {
+                  "name": "texSubImage2D",
+                  "ms": 0.34999990463256836,
+                  "args": [
+                    3553,
+                    0,
+                    0,
+                    0,
+                    2048
+                  ]
+                },
+                {
+                  "name": "pixelStorei",
+                  "ms": 0,
+                  "args": [
+                    3314,
+                    0
+                  ]
+                },
+                {
+                  "name": "pixelStorei",
+                  "ms": 0,
+                  "args": [
+                    32878,
+                    0
+                  ]
+                },
+                {
+                  "name": "pixelStorei",
+                  "ms": 0,
+                  "args": [
+                    3316,
+                    0
+                  ]
+                },
+                {
+                  "name": "pixelStorei",
+                  "ms": 0,
+                  "args": [
+                    3315,
+                    0
+                  ]
+                },
+                {
+                  "name": "pixelStorei",
+                  "ms": 0,
+                  "args": [
+                    32877,
+                    0
+                  ]
+                },
+                {
+                  "name": "bindTexture",
+                  "ms": 0.004999995231628418,
+                  "args": [
+                    3553,
+                    null
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "scheduler": {
+      "completed": 67,
+      "cancelled": 0,
+      "failed": 0,
+      "units": 920,
+      "workMs": 561.6900018453598,
+      "coordinationMs": 182.09499526023865,
+      "maxUnitMs": 168.2150000333786,
+      "overruns": 25,
+      "deadlineLoans": 18,
+      "oversizeRecoveries": 2,
+      "continuationMs": 68.21499967575073,
+      "continuationTurns": 905,
+      "median": 16.639999999984866,
+      "p95": 33.30999999999767,
+      "p99": 33.42499999998836,
+      "cpu95": 1.2149999141693115,
+      "jitter": 16.670000000012806,
+      "budgetMs": 5.778919953013048,
+      "pending": 1,
+      "waiting": 0,
+      "oldestMs": 152489.6100000143
+    }
+  },
+  "qualityStatuses": [],
+  "errors": [
+    "THREE.WebGLProgram: Program Info Log: (758,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(763,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (758,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(763,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (791,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(796,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (811,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(816,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (650,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(655,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (650,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(655,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (798,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(803,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (798,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(803,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (816,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(821,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(816,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(821,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (815,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(820,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(815,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(820,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (676,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(681,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (278,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(283,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (205,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(210,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (761,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(766,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (759,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(764,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(759,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(764,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (615,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(620,1): warning X4000: use of potentially uninitialized variable (f_environment4)"
+  ]
+}

@@ -1,0 +1,739 @@
+{
+  "message": "Game readiness deadline exceeded; see thread-game-loading.json",
+  "diagnostic": {
+    "texturePilot": {
+      "completed": 4,
+      "fallbacks": 0,
+      "units": 158,
+      "maxUnitMs": 35.7849999666214,
+      "workMs": 96.40999948978424,
+      "extraPixelBytes": 0,
+      "records": [
+        {
+          "name": "texture_0",
+          "width": 2048,
+          "height": 2048,
+          "began": 20888.764999985695,
+          "units": [
+            {
+              "phase": "allocation",
+              "ms": 0.12999999523162842
+            },
+            {
+              "phase": "rows",
+              "ms": 0.8949999809265137
+            },
+            {
+              "phase": "rows",
+              "ms": 0.18000006675720215
+            },
+            {
+              "phase": "rows",
+              "ms": 0.24500000476837158
+            },
+            {
+              "phase": "rows",
+              "ms": 0.21000003814697266
+            },
+            {
+              "phase": "rows",
+              "ms": 0.3049999475479126
+            },
+            {
+              "phase": "rows",
+              "ms": 0.26999998092651367
+            },
+            {
+              "phase": "rows",
+              "ms": 0.21500003337860107
+            },
+            {
+              "phase": "rows",
+              "ms": 0.48500001430511475
+            },
+            {
+              "phase": "rows",
+              "ms": 0.3399999141693115
+            },
+            {
+              "phase": "rows",
+              "ms": 0.25
+            },
+            {
+              "phase": "rows",
+              "ms": 0.13499999046325684
+            },
+            {
+              "phase": "rows",
+              "ms": 0.1499999761581421
+            },
+            {
+              "phase": "rows",
+              "ms": 0.12999999523162842
+            },
+            {
+              "phase": "rows",
+              "ms": 0.1400001049041748
+            },
+            {
+              "phase": "rows",
+              "ms": 0.1799999475479126
+            },
+            {
+              "phase": "rows",
+              "ms": 0.08999991416931152
+            },
+            {
+              "phase": "rows",
+              "ms": 0.08000004291534424
+            },
+            {
+              "phase": "rows",
+              "ms": 0.08000004291534424
+            },
+            {
+              "phase": "rows",
+              "ms": 0.10500001907348633
+            },
+            {
+              "phase": "rows",
+              "ms": 0.10499989986419678
+            },
+            {
+              "phase": "rows",
+              "ms": 0.09499990940093994
+            },
+            {
+              "phase": "rows",
+              "ms": 0.09500002861022949
+            },
+            {
+              "phase": "rows",
+              "ms": 0.09000003337860107
+            },
+            {
+              "phase": "rows",
+              "ms": 0.08000004291534424
+            },
+            {
+              "phase": "rows",
+              "ms": 0.16999995708465576
+            },
+            {
+              "phase": "rows",
+              "ms": 0.125
+            },
+            {
+              "phase": "rows",
+              "ms": 0.12000000476837158
+            },
+            {
+              "phase": "rows",
+              "ms": 0.09500002861022949
+            },
+            {
+              "phase": "rows",
+              "ms": 0.13499999046325684
+            },
+            {
+              "phase": "rows",
+              "ms": 0.12000000476837158
+            },
+            {
+              "phase": "rows",
+              "ms": 0.13999998569488525
+            },
+            {
+              "phase": "rows",
+              "ms": 0.0849999189376831
+            }
+          ],
+          "elapsedMs": 246.84499990940094,
+          "finished": true
+        },
+        {
+          "name": "texture_0_normal",
+          "width": 2048,
+          "height": 2048,
+          "began": 21135.699999928474,
+          "units": [
+            {
+              "phase": "allocation",
+              "ms": 0.06499993801116943
+            },
+            {
+              "phase": "rows",
+              "ms": 0.08500003814697266
+            },
+            {
+              "phase": "rows",
+              "ms": 0.06999993324279785
+            },
+            {
+              "phase": "rows",
+              "ms": 0.06500005722045898
+            },
+            {
+              "phase": "rows",
+              "ms": 0.08000004291534424
+            },
+            {
+              "phase": "rows",
+              "ms": 0.06999993324279785
+            },
+            {
+              "phase": "rows",
+              "ms": 0.0700000524520874
+            },
+            {
+              "phase": "rows",
+              "ms": 0.14499998092651367
+            },
+            {
+              "phase": "rows",
+              "ms": 0.11000001430511475
+            },
+            {
+              "phase": "rows",
+              "ms": 0.15999996662139893
+            },
+            {
+              "phase": "rows",
+              "ms": 0.08500003814697266
+            },
+            {
+              "phase": "rows",
+              "ms": 0.06500005722045898
+            },
+            {
+              "phase": "rows",
+              "ms": 0.06499993801116943
+            },
+            {
+              "phase": "rows",
+              "ms": 0.09000003337860107
+            },
+            {
+              "phase": "rows",
+              "ms": 0.09000003337860107
+            },
+            {
+              "phase": "rows",
+              "ms": 0.07999992370605469
+            },
+            {
+              "phase": "rows",
+              "ms": 0.12000000476837158
+            },
+            {
+              "phase": "rows",
+              "ms": 0.11000001430511475
+            },
+            {
+              "phase": "rows",
+              "ms": 0.11000001430511475
+            },
+            {
+              "phase": "rows",
+              "ms": 0.11000001430511475
+            },
+            {
+              "phase": "rows",
+              "ms": 0.44499993324279785
+            },
+            {
+              "phase": "rows",
+              "ms": 0.12000000476837158
+            },
+            {
+              "phase": "rows",
+              "ms": 0.11000001430511475
+            },
+            {
+              "phase": "rows",
+              "ms": 0.09500002861022949
+            },
+            {
+              "phase": "rows",
+              "ms": 5.054999947547913
+            },
+            {
+              "phase": "rows",
+              "ms": 0.19000005722045898
+            },
+            {
+              "phase": "rows",
+              "ms": 0.11500000953674316
+            },
+            {
+              "phase": "rows",
+              "ms": 0.16499996185302734
+            },
+            {
+              "phase": "rows",
+              "ms": 0.0849999189376831
+            },
+            {
+              "phase": "rows",
+              "ms": 0.09500002861022949
+            },
+            {
+              "phase": "rows",
+              "ms": 0.08000004291534424
+            },
+            {
+              "phase": "rows",
+              "ms": 0.11500000953674316
+            },
+            {
+              "phase": "rows",
+              "ms": 0.0849999189376831
+            }
+          ],
+          "elapsedMs": 248.56500005722046,
+          "finished": true
+        },
+        {
+          "name": "texture_0_metallic-texture_0_roughness",
+          "width": 2048,
+          "height": 2048,
+          "began": 21384.299999952316,
+          "units": [
+            {
+              "phase": "allocation",
+              "ms": 0.08000004291534424
+            },
+            {
+              "phase": "rows",
+              "ms": 0.16499996185302734
+            },
+            {
+              "phase": "rows",
+              "ms": 0.1099998950958252
+            },
+            {
+              "phase": "rows",
+              "ms": 0.07999992370605469
+            },
+            {
+              "phase": "rows",
+              "ms": 0.08500003814697266
+            },
+            {
+              "phase": "rows",
+              "ms": 0.0700000524520874
+            },
+            {
+              "phase": "rows",
+              "ms": 0.07499992847442627
+            },
+            {
+              "phase": "rows",
+              "ms": 0.13499999046325684
+            },
+            {
+              "phase": "rows",
+              "ms": 0.16999995708465576
+            },
+            {
+              "phase": "rows",
+              "ms": 0.14499998092651367
+            },
+            {
+              "phase": "rows",
+              "ms": 0.13999998569488525
+            },
+            {
+              "phase": "rows",
+              "ms": 0.08000004291534424
+            },
+            {
+              "phase": "rows",
+              "ms": 0.09500002861022949
+            },
+            {
+              "phase": "rows",
+              "ms": 0.10000002384185791
+            },
+            {
+              "phase": "rows",
+              "ms": 0.10500001907348633
+            },
+            {
+              "phase": "rows",
+              "ms": 0.07499992847442627
+            },
+            {
+              "phase": "rows",
+              "ms": 0.08500003814697266
+            },
+            {
+              "phase": "rows",
+              "ms": 0.07500004768371582
+            },
+            {
+              "phase": "rows",
+              "ms": 0.06499993801116943
+            },
+            {
+              "phase": "rows",
+              "ms": 0.315000057220459
+            },
+            {
+              "phase": "rows",
+              "ms": 0.18499994277954102
+            },
+            {
+              "phase": "rows",
+              "ms": 0.22999989986419678
+            },
+            {
+              "phase": "rows",
+              "ms": 0.19000005722045898
+            },
+            {
+              "phase": "rows",
+              "ms": 0.18499994277954102
+            },
+            {
+              "phase": "rows",
+              "ms": 0.1650000810623169
+            },
+            {
+              "phase": "rows",
+              "ms": 0.10000002384185791
+            },
+            {
+              "phase": "rows",
+              "ms": 0.07499992847442627
+            },
+            {
+              "phase": "rows",
+              "ms": 0.09000003337860107
+            },
+            {
+              "phase": "rows",
+              "ms": 0.125
+            },
+            {
+              "phase": "rows",
+              "ms": 0.10000002384185791
+            },
+            {
+              "phase": "rows",
+              "ms": 0.0700000524520874
+            },
+            {
+              "phase": "rows",
+              "ms": 0.06999993324279785
+            },
+            {
+              "phase": "rows",
+              "ms": 0.1700000762939453
+            }
+          ],
+          "elapsedMs": 116.10500001907349,
+          "finished": true
+        },
+        {
+          "name": "texture_0",
+          "width": 2048,
+          "height": 2048,
+          "began": 21601.014999985695,
+          "units": [
+            {
+              "phase": "allocation",
+              "ms": 0.07999992370605469
+            },
+            {
+              "phase": "rows",
+              "ms": 0.16000008583068848
+            },
+            {
+              "phase": "rows",
+              "ms": 0.13999998569488525
+            },
+            {
+              "phase": "rows",
+              "ms": 0.125
+            },
+            {
+              "phase": "rows",
+              "ms": 0.11500000953674316
+            },
+            {
+              "phase": "rows",
+              "ms": 0.1650000810623169
+            },
+            {
+              "phase": "rows",
+              "ms": 0.12999999523162842
+            },
+            {
+              "phase": "rows",
+              "ms": 0.1499999761581421
+            },
+            {
+              "phase": "rows",
+              "ms": 0.2200000286102295
+            },
+            {
+              "phase": "rows",
+              "ms": 0.11000001430511475
+            },
+            {
+              "phase": "rows",
+              "ms": 0.10000002384185791
+            },
+            {
+              "phase": "rows",
+              "ms": 0.10500001907348633
+            },
+            {
+              "phase": "rows",
+              "ms": 0.11500000953674316
+            },
+            {
+              "phase": "rows",
+              "ms": 0.125
+            },
+            {
+              "phase": "rows",
+              "ms": 0.0849999189376831
+            },
+            {
+              "phase": "rows",
+              "ms": 0.08000004291534424
+            },
+            {
+              "phase": "rows",
+              "ms": 0.09000003337860107
+            },
+            {
+              "phase": "rows",
+              "ms": 0.07499992847442627
+            },
+            {
+              "phase": "rows",
+              "ms": 0.07999992370605469
+            },
+            {
+              "phase": "rows",
+              "ms": 0.1499999761581421
+            },
+            {
+              "phase": "rows",
+              "ms": 0.11000001430511475
+            },
+            {
+              "phase": "rows",
+              "ms": 0.11500000953674316
+            },
+            {
+              "phase": "rows",
+              "ms": 0.08500003814697266
+            },
+            {
+              "phase": "rows",
+              "ms": 0.07500004768371582
+            },
+            {
+              "phase": "rows",
+              "ms": 0.07999992370605469
+            },
+            {
+              "phase": "rows",
+              "ms": 0.09500002861022949
+            },
+            {
+              "phase": "rows",
+              "ms": 0.13999998569488525
+            },
+            {
+              "phase": "rows",
+              "ms": 0.13499999046325684
+            },
+            {
+              "phase": "rows",
+              "ms": 0.11500000953674316
+            },
+            {
+              "phase": "rows",
+              "ms": 0.13499999046325684
+            },
+            {
+              "phase": "rows",
+              "ms": 0.09000003337860107
+            },
+            {
+              "phase": "rows",
+              "ms": 0.06999993324279785
+            },
+            {
+              "phase": "rows",
+              "ms": 35.7849999666214
+            }
+          ],
+          "elapsedMs": 51.394999980926514,
+          "finished": true
+        },
+        {
+          "name": "texture_0_normal",
+          "width": 2048,
+          "height": 2048,
+          "began": 21652.4699999094,
+          "units": [
+            {
+              "phase": "allocation",
+              "ms": 0.12000000476837158
+            },
+            {
+              "phase": "rows",
+              "ms": 0.25
+            },
+            {
+              "phase": "rows",
+              "ms": 0.17499995231628418
+            },
+            {
+              "phase": "rows",
+              "ms": 0.1499999761581421
+            },
+            {
+              "phase": "rows",
+              "ms": 0.19999992847442627
+            },
+            {
+              "phase": "rows",
+              "ms": 0.09499990940093994
+            },
+            {
+              "phase": "rows",
+              "ms": 0.16000008583068848
+            },
+            {
+              "phase": "rows",
+              "ms": 0.10500001907348633
+            },
+            {
+              "phase": "rows",
+              "ms": 0.06999993324279785
+            },
+            {
+              "phase": "rows",
+              "ms": 0.09500002861022949
+            },
+            {
+              "phase": "rows",
+              "ms": 0.09000003337860107
+            },
+            {
+              "phase": "rows",
+              "ms": 0.09500002861022949
+            },
+            {
+              "phase": "rows",
+              "ms": 0.07499992847442627
+            },
+            {
+              "phase": "rows",
+              "ms": 0.11500000953674316
+            },
+            {
+              "phase": "rows",
+              "ms": 0.09000003337860107
+            },
+            {
+              "phase": "rows",
+              "ms": 0.0700000524520874
+            },
+            {
+              "phase": "rows",
+              "ms": 0.06999993324279785
+            },
+            {
+              "phase": "rows",
+              "ms": 0.0700000524520874
+            },
+            {
+              "phase": "rows",
+              "ms": 0.06999993324279785
+            },
+            {
+              "phase": "rows",
+              "ms": 0.08000004291534424
+            },
+            {
+              "phase": "rows",
+              "ms": 0.08000004291534424
+            },
+            {
+              "phase": "rows",
+              "ms": 0.07499992847442627
+            },
+            {
+              "phase": "rows",
+              "ms": 0.06500005722045898
+            },
+            {
+              "phase": "rows",
+              "ms": 0.06999993324279785
+            },
+            {
+              "phase": "rows",
+              "ms": 0.0700000524520874
+            },
+            {
+              "phase": "rows",
+              "ms": 35.700000047683716
+            }
+          ]
+        }
+      ]
+    },
+    "scheduler": {
+      "completed": 71,
+      "cancelled": 0,
+      "failed": 0,
+      "units": 1076,
+      "workMs": 562.4150006771088,
+      "coordinationMs": 189.16999864578247,
+      "maxUnitMs": 35.825000047683716,
+      "overruns": 23,
+      "deadlineLoans": 10,
+      "oversizeRecoveries": 2,
+      "continuationMs": 104.58499956130981,
+      "continuationTurns": 1047,
+      "median": 16.639999999984866,
+      "p95": 33.23499999998603,
+      "p99": 33.46499999999651,
+      "cpu95": 1.3399999141693115,
+      "jitter": 16.595000000001164,
+      "budgetMs": 6.584297259909722,
+      "pending": 1,
+      "waiting": 0,
+      "oldestMs": 151220.08499991894
+    }
+  },
+  "qualityStatuses": [],
+  "errors": [
+    "THREE.WebGLProgram: Program Info Log: (758,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(763,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (758,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(763,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (791,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(796,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (811,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(816,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (650,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(655,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (650,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(655,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (798,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(803,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (798,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(803,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (816,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(821,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(816,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(821,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (815,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(820,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(815,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(820,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (676,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(681,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (278,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(283,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (205,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(210,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (761,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(766,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (759,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(764,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(759,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(764,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (615,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(620,1): warning X4000: use of potentially uninitialized variable (f_environment4)"
+  ]
+}

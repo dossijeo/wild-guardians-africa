@@ -105,6 +105,8 @@ try{
  if(process.env.WG_THREAD_QUALITY_ACTIVE==='1')gameUrl.searchParams.set('qualityActive','1');
  if(process.env.WG_THREAD_QUALITY_ATTRIBUTION==='1')gameUrl.searchParams.set('qualityAttribution','1');
  if(process.env.WG_THREAD_QUALITY_PREWARM==='1')gameUrl.searchParams.set('qualityPrewarm','1');
+ if(process.env.WG_WILD_TEXTURE_TRACE==='1')gameUrl.searchParams.set('wildTextureTrace','1');
+ if(process.env.WG_PARALLEL_FAR_DECODE==='1')gameUrl.searchParams.set('parallelFarDecode','1');
  await page.goto(gameUrl.href);
  await page.waitForSelector('#native-menu',{timeout:60000});
  const frame=page.frames().find(f=>f.url().includes('/menu/'))??await page.waitForEvent('framenavigated',{predicate:f=>f.url().includes('/menu/'),timeout:60000});

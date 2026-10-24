@@ -3,6 +3,7 @@ import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
 import {assetUrl} from '/src/rendering/asset-url.js';
 import {NativeSky} from '/src/rendering/sky.js';
+const regionsFirst=new URLSearchParams(location.search).get('regionsFirst')==='1';
 const deferredMips=new URLSearchParams(location.search).get('deferredMips')==='1';
 const renderer=new THREE.WebGLRenderer({canvas:document.querySelector('#world'),antialias:false});
 renderer.setSize(1280,720);const gl=renderer.getContext();
@@ -28,7 +29,7 @@ window.runTextureProbe=async()=>{
  const alpha=await createImageBitmap(new ImageData(pixels,128,128),{premultiplyAlpha:'none',colorSpaceConversion:'none'}),alphaTexture=new THREE.Texture(alpha);alphaTexture.colorSpace=THREE.SRGBColorSpace;alphaTexture.flipY=false;
  sources.push({name:'synthetic-alpha',texture:alphaTexture});const rows=[];
  try{for(const {name,url,texture}of sources){let reference=null;const trials=[];
- for(const mode of ['full','regions','full','regions']){const target=clone(texture),source=clone(texture),calls=[],units=[],before=renderer.info.memory.textures;
+ for(const mode of (regionsFirst?['regions','full','regions','full']:['full','regions','full','regions'])){const target=clone(texture),source=clone(texture),calls=[],units=[],before=renderer.info.memory.textures;
  const methods=['getParameter','texStorage2D','texSubImage2D','generateMipmap'],originals=methods.map(n=>gl[n]);
  for(const [i,n]of methods.entries())gl[n]=function(...args){const start=performance.now();try{return originals[i].apply(this,args);}finally{calls.push({name:n,parameter:n==='getParameter'?args[0]:null,ms:performance.now()-start});}};
  const began=performance.now();let preparationMs,error=null,actual;
@@ -41,5 +42,5 @@ window.runTextureProbe=async()=>{
  await nextFrame();}
  rows.push({name,url,dataTexture:!!texture.isDataTexture,width:texture.image.width,height:texture.image.height,colorSpace:texture.colorSpace,imageType:texture.image.constructor.name,trials});}
  }finally{alpha.close();sky?.dispose();for(const {texture}of sources)texture.dispose();}
- const ext=gl.getExtension('WEBGL_debug_renderer_info');return {runtime,deferredMips,revision:THREE.REVISION,hardware:ext?gl.getParameter(ext.UNMASKED_RENDERER_WEBGL):null,scope:'Public API feasibility on model/sky resources plus alpha adversary; runtime flag selects shipped aliases instead of source GLBs. Explicit RAF per region and mip readbacks; NOT game throughput or GPU-time benchmark. No canvas pixel conversion.',rows};
+ const ext=gl.getExtension('WEBGL_debug_renderer_info');return {runtime,deferredMips,regionsFirst,revision:THREE.REVISION,hardware:ext?gl.getParameter(ext.UNMASKED_RENDERER_WEBGL):null,scope:'Public API feasibility on model/sky resources plus alpha adversary; runtime flag selects shipped aliases instead of source GLBs. Explicit RAF per region and mip readbacks; NOT game throughput or GPU-time benchmark. No canvas pixel conversion.',rows};
 };

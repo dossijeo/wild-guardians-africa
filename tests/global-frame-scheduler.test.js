@@ -121,3 +121,37 @@ test('terrain wrapper forwards dependency output but rejects a stale revision be
  const world={quality:'media',*prepareTerrainSteps(){try{assert.equal(yield {label:'worker',waitFor:dependency},group);return group;}finally{closed++;}}};
  const pending=prepareTerrainChunk(world,{cx:0,cz:0},()=>true,{scheduler:r.scheduler});r.frame();if(stale)world.quality='baja';resolve(group);await Promise.resolve();r.frame();const result=await pending;assert.equal(stale?result:result.preparedGroup,stale?null:group);assert.equal(closed,1);}
 });
+
+test('required oversized work makes bounded progress; optional work cannot borrow emergency capacity',async()=>{
+ let time=1000,calls=0;const scheduler=new GlobalFrameScheduler({now:()=>time});
+ const required=scheduler.submit((function*(){calls++;time+=.2;return 7;})(),{required:true,deadline:1000,estimate:()=>183});
+ const optional=scheduler.submit((function*(){throw Error('Optional work ran');})(),{key:'optional',deadline:1000,estimate:()=>183});
+ scheduler.beginFrame(time);time+=2;await scheduler.endFrame();assert.equal(calls,0);
+ time=3100;scheduler.beginFrame(time);time+=2;await scheduler.endFrame();assert.equal(await required,7);
+ assert.equal(scheduler.snapshot().emergencyUnits,1);assert.ok(scheduler.snapshot().emergencyMs<1);assert.equal(scheduler.snapshot().emergencyEstimatedMs,183);
+ time=9000;scheduler.beginFrame(time);time+=2;await scheduler.endFrame();assert.equal(scheduler.snapshot().pending,1);scheduler.cancel('optional');await optional;
+});
+test('required emergency units are globally rate limited and cannot starve on persistent mandatory CPU load',async()=>{
+ let time=1000,calls=0;const scheduler=new GlobalFrameScheduler({now:()=>time});
+ const task=()=>scheduler.submit((function*(){calls++;time+=35;return calls;})(),{required:true,deadline:1000,estimate:()=>35});
+ const a=task(),b=task();const frame=async()=>{scheduler.beginFrame(time);time+=20;await scheduler.endFrame();};
+ time=3100;await frame();assert.equal(calls,0);
+ time=5100;await frame();assert.equal(calls,1);await a;assert.equal(scheduler.snapshot().maxEmergencyMs,35);
+ time=5200;await frame();assert.equal(calls,1);
+ time=7200;await frame();await b;assert.equal(calls,2);assert.equal(scheduler.snapshot().emergencyMs,70);
+});
+test('cancelled and stale required jobs never use emergency admission',async()=>{
+ let time=1000,ran=0,valid=true;const scheduler=new GlobalFrameScheduler({now:()=>time}),abort=new AbortController();
+ const a=scheduler.submit((function*(){ran++;})(),{required:true,deadline:1000,estimate:()=>183,signal:abort.signal});
+ const b=scheduler.submit((function*(){ran++;})(),{required:true,deadline:1000,estimate:()=>183,valid:()=>valid});
+ abort.abort();valid=false;time=10000;scheduler.beginFrame(time);await scheduler.endFrame();await Promise.all([a,b]);assert.equal(ran,0);assert.equal(scheduler.snapshot().emergencyUnits,0);assert.equal(scheduler.snapshot().pending,0);
+ await assert.rejects(scheduler.submit((function*(){})(),{required:true}),/finite deadline/);
+});
+
+test('overdue indispensable work is not hidden by a continuously refilled optional queue',async()=>{
+ let time=1000,essential=0;const scheduler=new GlobalFrameScheduler({now:()=>time});
+ const task=scheduler.submit((function*(){essential++;return 1;})(),{required:true,deadline:1000,estimate:()=>183});
+ const optional=scheduler.submit((function*(){while(true){time+=1;yield;}})(),{key:'busy',priority:1e9,deadline:0});
+ time=3100;scheduler.beginFrame(time);time+=2;await scheduler.endFrame();assert.equal(await task,1);assert.equal(essential,1);assert.equal(scheduler.snapshot().emergencyUnits,1);
+ scheduler.cancel('busy');await optional;
+});

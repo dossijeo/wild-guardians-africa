@@ -1,5 +1,8 @@
 # Decision: retain official Three.js; reject prototype P1 for adoption
 
+Historical P1 decision; see [FOLLOWUP.md](FOLLOWUP.md) for P2 attribution and
+user-directed emergency admission/parallel loading work. P1 remains rejected.
+
 2026-10-24. Branch codex/wild-three-resource-control; base02cb81d0d.
 This closes the adoption decision for P1, not every possible internal Three change.
 No game dependency, main, PR159 or scheduler worktree was replaced.

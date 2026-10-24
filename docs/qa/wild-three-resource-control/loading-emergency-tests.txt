@@ -1,0 +1,541 @@
+TAP version 13
+# (node:14064) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./tools/wild-three/node-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: normal target recipe compiles once and accepts already-ready selected programs
+ok 1 - normal target recipe compiles once and accepts already-ready selected programs
+  ---
+  duration_ms: 2.1517
+  ...
+# Subtest: cancelled owner prevents even synchronous submission
+ok 2 - cancelled owner prevents even synchronous submission
+  ---
+  duration_ms: 0.7771
+  ...
+# Subtest: selected program is snapshotted once while borrowed material is restored
+ok 3 - selected program is snapshotted once while borrowed material is restored
+  ---
+  duration_ms: 6.5856
+  ...
+# Subtest: deduplicates shared programs and stops querying already completed variants
+ok 4 - deduplicates shared programs and stops querying already completed variants
+  ---
+  duration_ms: 25.9011
+  ...
+# Subtest: an abort removes owned polling without querying disposed programs later
+ok 5 - an abort removes owned polling without querying disposed programs later
+  ---
+  duration_ms: 32.9384
+  ...
+# Subtest: context generation change rejects before querying a stale selected program
+ok 6 - context generation change rejects before querying a stale selected program
+  ---
+  duration_ms: 30.9526
+  ...
+# Subtest: never-ready driver has a bounded caller deadline with no remaining poll
+ok 7 - never-ready driver has a bounded caller deadline with no remaining poll
+  ---
+  duration_ms: 35.2481
+  ...
+# Subtest: readiness fault propagates intact and stops polling
+ok 8 - readiness fault propagates intact and stops polling
+  ---
+  duration_ms: 33.5545
+  ...
+# Subtest: missing readiness program fails rather than claiming completion
+ok 9 - missing readiness program fails rather than claiming completion
+  ---
+  duration_ms: 0.8616
+  ...
+# Subtest: owner invalidation inside the final readiness query cannot produce acceptance
+ok 10 - owner invalidation inside the final readiness query cannot produce acceptance
+  ---
+  duration_ms: 0.3409
+  ...
+# Subtest: explicit all-variant selection snapshots once and waits every borrowed recipe
+ok 11 - explicit all-variant selection snapshots once and waits every borrowed recipe
+  ---
+  duration_ms: 15.4908
+  ...
+# Subtest: default selector still ignores unrelated pending variants
+ok 12 - default selector still ignores unrelated pending variants
+  ---
+  duration_ms: 0.494
+  ...
+# Subtest: invalid or empty explicit selection never claims material readiness
+ok 13 - invalid or empty explicit selection never claims material readiness
+  ---
+  duration_ms: 0.5372
+  ...
+# Subtest: a deleted Three program is cancelled before its driver readiness query
+ok 14 - a deleted Three program is cancelled before its driver readiness query
+  ---
+  duration_ms: 14.9929
+  ...
+# Subtest: ready binding hook runs once for shared selected program and propagates validation errors
+ok 15 - ready binding hook runs once for shared selected program and propagates validation errors
+  ---
+  duration_ms: 0.6087
+  ...
+# Subtest: owner invalidation by ready hook cannot resolve preparation
+ok 16 - owner invalidation by ready hook cannot resolve preparation
+  ---
+  duration_ms: 0.2809
+  ...
+# (node:24540) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./tools/wild-three/node-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:24540) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# Subtest: HQ profile loads only its chosen biome atlas with stable four-arc settings and retains an explicit legacy switch
+ok 17 - HQ profile loads only its chosen biome atlas with stable four-arc settings and retains an explicit legacy switch
+  ---
+  duration_ms: 4.5135
+  ...
+# Subtest: integrated quality changes reuse owned adapters and atlas resources within the prepared extent
+ok 18 - integrated quality changes reuse owned adapters and atlas resources within the prepared extent
+  ---
+  duration_ms: 1.9059
+  ...
+# Subtest: attachment loads only selected biome resources and releases them once on world close
+ok 19 - attachment loads only selected biome resources and releases them once on world close
+  ---
+  duration_ms: 0.3719
+  ...
+# Subtest: atmosphere options reach the biome adapter and invalid distances allocate no resources
+ok 20 - atmosphere options reach the biome adapter and invalid distances allocate no resources
+  ---
+  duration_ms: 0.6342
+  ...
+# Subtest: late texture arriving after attachment cancellation is immediately released
+ok 21 - late texture arriving after attachment cancellation is immediately released
+  ---
+  duration_ms: 10.4861
+  ...
+# Subtest: late prepared species is disposed after world close without double-releasing earlier textures
+ok 22 - late prepared species is disposed after world close without double-releasing earlier textures
+  ---
+  duration_ms: 0.9126
+  ...
+# Subtest: configured visual radius is reversible on disable/dispose and validated before resource loading
+ok 23 - configured visual radius is reversible on disable/dispose and validated before resource loading
+  ---
+  duration_ms: 0.7773
+  ...
+# Subtest: visual-only radius retains loaded radius ownership and restores both preceding values
+ok 24 - visual-only radius retains loaded radius ownership and restores both preceding values
+  ---
+  duration_ms: 0.6895
+  ...
+# Subtest: prop transition circle is owned and restored independently of exact terrain residency
+ok 25 - prop transition circle is owned and restored independently of exact terrain residency
+  ---
+  duration_ms: 0.7488
+  ...
+# Subtest: closing the biome owner releases native upload cache listeners before disposing its atlas textures
+ok 26 - closing the biome owner releases native upload cache listeners before disposing its atlas textures
+  ---
+  duration_ms: 3.4829
+  ...
+# Subtest: late GPU callback cannot resurrect closed owner or disturb replacement false
+ok 27 - late GPU callback cannot resurrect closed owner or disturb replacement false
+  ---
+  duration_ms: 0.6503
+  ...
+# Subtest: late GPU callback cannot resurrect closed owner or disturb replacement true
+ok 28 - late GPU callback cannot resurrect closed owner or disturb replacement true
+  ---
+  duration_ms: 0.7923
+  ...
+# Subtest: faithful impostors remain exact until the atmospheric far landscape and distances stay configurable
+ok 29 - faithful impostors remain exact until the atmospheric far landscape and distances stay configurable
+  ---
+  duration_ms: 9.0738
+  ...
+# Subtest: far ground is independently configurable without changing exact terrain ownership
+ok 30 - far ground is independently configurable without changing exact terrain ownership
+  ---
+  duration_ms: 0.5594
+  ...
+# Subtest: logical native prewarm stays opt-in and invalid options allocate no atlas
+ok 31 - logical native prewarm stays opt-in and invalid options allocate no atlas
+  ---
+  duration_ms: 0.592
+  ...
+# Subtest: seed changes invalidate the whole far owner and release borrowed preparations once
+ok 32 - seed changes invalidate the whole far owner and release borrowed preparations once
+  ---
+  duration_ms: 0.2882
+  ...
+# Subtest: texture storage estimates use loaded atlas dimensions rather than a uniform species size
+ok 33 - texture storage estimates use loaded atlas dimensions rather than a uniform species size
+  ---
+  duration_ms: 0.3442
+  ...
+# Subtest: landscape composition forwards existing backdrop controls without altering atlas ownership
+ok 34 - landscape composition forwards existing backdrop controls without altering atlas ownership
+  ---
+  duration_ms: 0.4117
+  ...
+# Subtest: runtime metadata selects linear premultiplied atlases without changing unmarked species
+ok 35 - runtime metadata selects linear premultiplied atlases without changing unmarked species
+  ---
+  duration_ms: 0.5442
+  ...
+# Subtest: authored large-tree policy preserves the native color transition envelope and rejects invalid policy before assets
+ok 36 - authored large-tree policy preserves the native color transition envelope and rejects invalid policy before assets
+  ---
+  duration_ms: 0.4062
+  ...
+# Subtest: loading-only bitmap textures retain far-owner disposal and native vertical orientation
+ok 37 - loading-only bitmap textures retain far-owner disposal and native vertical orientation
+  ---
+  duration_ms: 0.5989
+  ...
+# Subtest: parallel loading starts day, night and backdrop before any image resolves, without parallel attachment
+ok 38 - parallel loading starts day, night and backdrop before any image resolves, without parallel attachment
+  ---
+  duration_ms: 2.9898
+  ...
+# Subtest: parallel loading cancellation releases every late image and never attaches a partial region
+ok 39 - parallel loading cancellation releases every late image and never attaches a partial region
+  ---
+  duration_ms: 0.9794
+  ...
+# Subtest: parallel loading observes sibling failure and releases successful images before rejecting
+ok 40 - parallel loading observes sibling failure and releases successful images before rejecting
+  ---
+  duration_ms: 0.6137
+  ...
+# Subtest: parallel images preserve sequential species admission and all exact texture pairs
+ok 41 - parallel images preserve sequential species admission and all exact texture pairs
+  ---
+  duration_ms: 1.2717
+  ...
+# Subtest: far images decode before admission but no adapter is published until the GPU gate opens
+ok 42 - far images decode before admission but no adapter is published until the GPU gate opens
+  ---
+  duration_ms: 1.2858
+  ...
+# Subtest: disposing a pending far admission cancels the wait and releases every decoded image once
+ok 43 - disposing a pending far admission cancels the wait and releases every decoded image once
+  ---
+  duration_ms: 0.7045
+  ...
+# Subtest: a failed warmup rejects far admission and releases images without publishing geometry
+ok 44 - a failed warmup rejects far admission and releases images without publishing geometry
+  ---
+  duration_ms: 0.5274
+  ...
+# (node:4620) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./tools/wild-three/node-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: only presentation advances work; a complete private group is published
+ok 45 - only presentation advances work; a complete private group is published
+  ---
+  duration_ms: 5.0584
+  ...
+# Subtest: revision invalidation closes private resources without publishing
+ok 46 - revision invalidation closes private resources without publishing
+  ---
+  duration_ms: 0.5038
+  ...
+# Subtest: replacement and abort settle cancelled jobs immediately
+ok 47 - replacement and abort settle cancelled jobs immediately
+  ---
+  duration_ms: 0.3551
+  ...
+# Subtest: mandatory CPU has precedence even over overdue jobs
+ok 48 - mandatory CPU has precedence even over overdue jobs
+  ---
+  duration_ms: 0.4288
+  ...
+# Subtest: statistics expire after two seconds and do not label intervals GPU time
+ok 49 - statistics expire after two seconds and do not label intervals GPU time
+  ---
+  duration_ms: 1.9625
+  ...
+# Subtest: slow presentation intervals alone do not permanently starve cheap work
+ok 50 - slow presentation intervals alone do not permanently starve cheap work
+  ---
+  duration_ms: 1.3951
+  ...
+# Subtest: an expired deadline borrows one bounded unit instead of starving; mandatory overload still wins
+ok 51 - an expired deadline borrows one bounded unit instead of starving; mandatory overload still wins
+  ---
+  duration_ms: 0.4593
+  ...
+# Subtest: ready promise continuations share one presentation budget without another frame
+ok 52 - ready promise continuations share one presentation budget without another frame
+  ---
+  duration_ms: 0.9361
+  ...
+# Subtest: aging measures time without service rather than privileging an old endless job
+ok 53 - aging measures time without service rather than privileging an old endless job
+  ---
+  duration_ms: 0.359
+  ...
+# Subtest: a failing cost estimator closes only its job and leaves other work executable
+ok 54 - a failing cost estimator closes only its job and leaves other work executable
+  ---
+  duration_ms: 1.0781
+  ...
+# Subtest: admission diagnostics are optional and distinguish late callbacks from CPU work
+ok 55 - admission diagnostics are optional and distinguish late callbacks from CPU work
+  ---
+  duration_ms: 0.3478
+  ...
+# Subtest: historical oversized estimates recover without permanent starvation or dropping CPU guards
+ok 56 - historical oversized estimates recover without permanent starvation or dropping CPU guards
+  ---
+  duration_ms: 0.4206
+  ...
+# Subtest: required streamed terrain starts without a fresh grace period on late presentation
+ok 57 - required streamed terrain starts without a fresh grace period on late presentation
+  ---
+  duration_ms: 0.6465
+  ...
+# Subtest: dependency wait frees presentation capacity and resumes only on an admitted frame
+ok 58 - dependency wait frees presentation capacity and resumes only on an admitted frame
+  ---
+  duration_ms: 0.8558
+  ...
+# Subtest: cancelled dependency cannot resume or remove its replacement
+ok 59 - cancelled dependency cannot resume or remove its replacement
+  ---
+  duration_ms: 0.9894
+  ...
+# Subtest: failed dependency releases only its job and runs cleanup
+ok 60 - failed dependency releases only its job and runs cleanup
+  ---
+  duration_ms: 1.0647
+  ...
+# Subtest: terrain wrapper forwards dependency output but rejects a stale revision before publication
+ok 61 - terrain wrapper forwards dependency output but rejects a stale revision before publication
+  ---
+  duration_ms: 0.9874
+  ...
+# Subtest: required oversized work makes bounded progress; optional work cannot borrow emergency capacity
+ok 62 - required oversized work makes bounded progress; optional work cannot borrow emergency capacity
+  ---
+  duration_ms: 0.5576
+  ...
+# Subtest: required emergency units are globally rate limited and cannot starve on persistent mandatory CPU load
+ok 63 - required emergency units are globally rate limited and cannot starve on persistent mandatory CPU load
+  ---
+  duration_ms: 0.4009
+  ...
+# Subtest: cancelled and stale required jobs never use emergency admission
+ok 64 - cancelled and stale required jobs never use emergency admission
+  ---
+  duration_ms: 0.6338
+  ...
+# Subtest: overdue indispensable work is not hidden by a continuously refilled optional queue
+ok 65 - overdue indispensable work is not hidden by a continuously refilled optional queue
+  ---
+  duration_ms: 0.3111
+  ...
+# (node:39276) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./tools/wild-three/node-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: loading compilation snapshots programs before borrowed materials are restored
+ok 66 - loading compilation snapshots programs before borrowed materials are restored
+  ---
+  duration_ms: 15.5216
+  ...
+# Subtest: loading compilation cancellation releases a pending poll immediately
+ok 67 - loading compilation cancellation releases a pending poll immediately
+  ---
+  duration_ms: 1.5987
+  ...
+# Subtest: loading compilation reports timeout without an indefinite poll
+ok 68 - loading compilation reports timeout without an indefinite poll
+  ---
+  duration_ms: 0.4197
+  ...
+# Subtest: loading compilation rejects a destroyed owner before submitting programs
+ok 69 - loading compilation rejects a destroyed owner before submitting programs
+  ---
+  duration_ms: 0.2539
+  ...
+# Subtest: explicit screen compilation restores target and viewport while its program is still pending
+ok 70 - explicit screen compilation restores target and viewport while its program is still pending
+  ---
+  duration_ms: 13.5408
+  ...
+# Subtest: bounded compiler retains original native objects and target-scene lighting without mutation
+ok 71 - bounded compiler retains original native objects and target-scene lighting without mutation
+  ---
+  duration_ms: 2.1046
+  ...
+# Subtest: bounded compiler cancels before a later submission
+ok 72 - bounded compiler cancels before a later submission
+  ---
+  duration_ms: 0.5124
+  ...
+# Subtest: compilation readiness includes every native variant of a shared material
+ok 73 - compilation readiness includes every native variant of a shared material
+  ---
+  duration_ms: 14.5984
+  ...
+# Subtest: loading compilation latches loss and restoration before another program query
+ok 74 - loading compilation latches loss and restoration before another program query
+  ---
+  duration_ms: 32.9393
+  ...
+# Subtest: loading compilation rejects generation changes even without a loss event
+ok 75 - loading compilation rejects generation changes even without a loss event
+  ---
+  duration_ms: 0.6883
+  ...
+# Subtest: submission CPU witness is synchronous and does not include pending program readiness
+ok 76 - submission CPU witness is synchronous and does not include pending program readiness
+  ---
+  duration_ms: 0.6066
+  ...
+# Subtest: optional compile diagnostic failure cannot change native readiness or original submission error
+ok 77 - optional compile diagnostic failure cannot change native readiness or original submission error
+  ---
+  duration_ms: 0.3183
+  ...
+# Subtest: optional program readiness witness reports waited wall time separately from submission CPU
+ok 78 - optional program readiness witness reports waited wall time separately from submission CPU
+  ---
+  duration_ms: 15.0977
+  ...
+# Subtest: CPU-budget compiler retains every native object while an actual readiness wait already delivers presentation
+ok 79 - CPU-budget compiler retains every native object while an actual readiness wait already delivers presentation
+  ---
+  duration_ms: 16.8667
+  ...
+# Subtest: a throwing optional CPU observer cannot remove the bounded compilation yield or readiness
+ok 80 - a throwing optional CPU observer cannot remove the bounded compilation yield or readiness
+  ---
+  duration_ms: 0.7168
+  ...
+# Subtest: borrowed geometry disposal aborts readiness before another driver query
+ok 81 - borrowed geometry disposal aborts readiness before another driver query
+  ---
+  duration_ms: 30.9054
+  ...
+# Subtest: borrowed material disposal aborts readiness before another driver query
+ok 82 - borrowed material disposal aborts readiness before another driver query
+  ---
+  duration_ms: 33.3526
+  ...
+# Subtest: borrowed disposal cancels a suspended frame and never submits the next batch
+ok 83 - borrowed disposal cancels a suspended frame and never submits the next batch
+  ---
+  duration_ms: 1.2821
+  ...
+# Subtest: guarded compilation cleans listeners on success, submission failure and external abort
+ok 84 - guarded compilation cleans listeners on success, submission failure and external abort
+  ---
+  duration_ms: 1.013
+  ...
+# Subtest: guarded batched compilation cancels during a suspended frame on context loss
+ok 85 - guarded batched compilation cancels during a suspended frame on context loss
+  ---
+  duration_ms: 0.4677
+  ...
+# Subtest: scheduler admits submission but never charges readiness wait as synchronous work
+ok 86 - scheduler admits submission but never charges readiness wait as synchronous work
+  ---
+  duration_ms: 13.05
+  ...
+# Subtest: aborting queued compilation rejects without submitting or needing another frame
+ok 87 - aborting queued compilation rejects without submitting or needing another frame
+  ---
+  duration_ms: 0.5604
+  ...
+# Subtest: queued compilation latches context loss even if restored before admission
+ok 88 - queued compilation latches context loss even if restored before admission
+  ---
+  duration_ms: 0.3995
+  ...
+# Subtest: compiler forwards the operation deadline and reports queue wait separately
+ok 89 - compiler forwards the operation deadline and reports queue wait separately
+  ---
+  duration_ms: 0.2699
+  ...
+# Subtest: batched scheduler deadline belongs to the operation, not each later batch
+ok 90 - batched scheduler deadline belongs to the operation, not each later batch
+  ---
+  duration_ms: 0.6369
+  ...
+# (node:28988) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./tools/wild-three/node-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: one accumulated CPU budget spreads 36 expensive synchronous tasks in order
+ok 91 - one accumulated CPU budget spreads 36 expensive synchronous tasks in order
+  ---
+  duration_ms: 4.7307
+  ...
+# Subtest: cheap tasks share the frame without an obligatory yield per actor; idle pump restarts
+ok 92 - cheap tasks share the frame without an obligatory yield per actor; idle pump restarts
+  ---
+  duration_ms: 0.7497
+  ...
+# Subtest: owner abort wakes a suspended RAF and rejects queued work without late adoption
+ok 93 - owner abort wakes a suspended RAF and rejects queued work without late adoption
+  ---
+  duration_ms: 1.6273
+  ...
+# Subtest: deadline and context epoch are checked independently of suspended RAF
+ok 94 - deadline and context epoch are checked independently of suspended RAF
+  ---
+  duration_ms: 20.466
+  ...
+# Subtest: already aborted owner never runs a task
+ok 95 - already aborted owner never runs a task
+  ---
+  duration_ms: 0.8374
+  ...
+# Subtest: individual failure and diagnostic failure preserve success of following synchronous jobs
+ok 96 - individual failure and diagnostic failure preserve success of following synchronous jobs
+  ---
+  duration_ms: 2.004
+  ...
+# Subtest: async jobs are rejected and their later failures remain observed
+ok 97 - async jobs are rejected and their later failures remain observed
+  ---
+  duration_ms: 0.5876
+  ...
+# Subtest: validation rejects unusable budgets and tasks
+ok 98 - validation rejects unusable budgets and tasks
+  ---
+  duration_ms: 0.6294
+  ...
+# Subtest: serial promise continuations keep accumulated CPU until a real frame, including empty queues
+ok 99 - serial promise continuations keep accumulated CPU until a real frame, including empty queues
+  ---
+  duration_ms: 4.2422
+  ...
+# Subtest: global admission replaces the actor queue pump and shares ready continuations
+ok 100 - global admission replaces the actor queue pump and shares ready continuations
+  ---
+  duration_ms: 4.6863
+  ...
+# Subtest: closing globally queued actor preparation rejects without another frame
+ok 101 - closing globally queued actor preparation rejects without another frame
+  ---
+  duration_ms: 0.6259
+  ...
+# Subtest: burst producer preserves FIFO without exhausting global admission capacity
+ok 102 - burst producer preserves FIFO without exhausting global admission capacity
+  ---
+  duration_ms: 9.9564
+  ...
+# Subtest: aborting a burst rejects both admitted and producer-held work without adoption
+ok 103 - aborting a burst rejects both admitted and producer-held work without adoption
+  ---
+  duration_ms: 1.4179
+  ...
+1..103
+# tests 103
+# suites 0
+# pass 103
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 475.3564
