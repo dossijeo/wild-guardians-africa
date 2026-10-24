@@ -385,3 +385,16 @@ workloads and must not be used as direct speed comparisons.
 The matrix summarizer requires all18original biome/profile reports and rejects
 accidentally enabled candidates before writing a complete coverage table.
 Remaining high-profile loads continue serially; no defaults changed.
+
+### Additional original high-profile observations
+
+Gran Rio, Mangroves and Desert complete49chunks with83/90/70links,
+respectively: each matches its medium link count despite higher residency.
+No non-X4000 console entries. Sabana and River still have one world link
+after ready (plus guardian), consistent with earlier profiles; this remains
+a known limitation, not a solved deferred-compilation issue. Volcanoes and
+Canyon remain in the running serial matrix.
+Far quality configuration adjusts transition bands within prepared bounds
+without reloading atlases or geometry; these are not separate eagerly loaded
+quality-specific asset sets to delete. Day/night atlases support the actual
+cycle and are not discarded laboratory variants.
