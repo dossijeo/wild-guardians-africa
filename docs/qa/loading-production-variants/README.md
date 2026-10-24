@@ -144,3 +144,15 @@ RGB mean absolute differences A1/B1 approximately .00130/.00136/.00182 and
 A2/B2 .00197/.00207/.00266 over720p, confined to bbox around buildings/crops.
 Not evidence for night, motion, all profiles or all biomes. The candidate remains
 off by default; next gate is post-ready attribution and broader equivalence.
+
+## Post-ready attribution candidate
+
+The pruned diagnostic links no world program after readiness; the sole late
+link is guardian-avatar context1. Chrome attributes704.945ms to the onload
+continuation of images/860cc542...webp, with732.990ms long-animation-frame
+and670.170ms blocking duration. image-runtime.json maps that image exactly to
+GUARDIAN_SPRITE. Traced calls in the interval: guardian texImage2D28.055ms,
+getProgramParameter7.470ms. Those two calls do not explain the full continuation;
+do not label the entire705ms GPU time or shader compilation.
+An identically instrumented original control is running to compare attribution.
+This narrows the cause but does not yet close the post-ready regression gate.
