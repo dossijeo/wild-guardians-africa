@@ -519,3 +519,45 @@ alone; do not repeatedly tune tiny optional units or weaken safeguards without
 finding that cause. No conclusion that mandatory simulation itself is at fault.
 Current required-chunk deadline improvement retained; scheduler still opt-in,
 main and approved graphics unchanged.
+
+
+### Main-loop and browser frame attribution (2026-10-24)
+
+Added QA-only source transform `tools/experiments/main-frame-attribution.js`,
+asserting unique anchors in main.js. WG_THREAD_MAIN_PHASES=1 separates tutorial/
+pre-simulation, simulation, effects, render, audio, interface and tail; records
+whole synchronous mandatory callback and callback lateness against RAF timestamp.
+Also wraps existing renderer update iterator steps without changing results,
+and observes browser long-animation-frame entries when supported. Observer and
+wrappers are removed after measurement. No production instrumentation added.
+
+Two diagnostic runs `scheduler-main-attribution-{1,2}.json`, active low
+Manglares720p Intel UHD, current scheduler+immediate required terrain+stable
+shadow recipes+crop preparation,360frames/144m. Both finish15chunks without
+paused frames or errors. Run1 simulation mean0.240ms/max5.225ms; main callback
+max38.33ms, render max37.50ms, audio max0.755ms, interface max7.27ms. RAF max83.17ms.
+Thus do not blame simulation or redesign authoritative logic from RAF alone.
+
+Run2 main callback max26.955ms; GPU query mean21.464/P95 30.229/max39.847ms.
+Renderer update stage mean/max ms:
+0 camera/chunks .462/12.175; 1 LOD+sync1.026/4.190; 2 obstruction .299/1.145;
+3 far vegetation .658/5.465; 4 asset groups .852/3.920; 5 effects .206/1.475;
+6 origin uniforms .001/.015; 7 material cache .020/.480.
+
+Browser reports18 long-animation frames, ALL blockingDuration0. The two
+largest are84.16/82.21ms; time before browser renderStart62.82/64.81ms, attributed
+JS20.79/14.43ms. PresentationTime trails paintTime by73/132ms in those entries.
+These are browser timing observations, NOT proof of GPU saturation or GPU busy
+time; compositor/driver/OS scheduling remains unseparated. Observer entries
+cover only >=50ms frames, not the full distribution. No subtraction is treated
+as available CPU budget. Strong evidence that these intervals are not simply
+83ms main-thread synchronous tasks. Further CPU slicing alone cannot be claimed
+to remove them. Retain mandatory logic; do not lower safety guards to chase
+unattributed presentation delay.
+
+This changes the next action: evaluate remaining scheduler benefit against
+actual CPU blockers/quality transitions and throughput, with presentation and
+GPU constraints explicitly separated. Do not indefinitely tune sub-ms grid
+units trying to fix these browser intervals. Main/callback phase metrics and
+browser entries are archived for reproducibility; full scheduler goal remains
+open and opt-in. No simulation, artwork, quality defaults or main changes.

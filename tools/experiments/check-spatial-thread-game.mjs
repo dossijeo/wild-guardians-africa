@@ -1,3 +1,4 @@
+import {instrumentMainFrame} from './main-frame-attribution.js';
 import {chromium} from 'playwright';
 import {readFile,writeFile} from 'node:fs/promises';
 import {globalClosureQuery} from './global-closure-recipe-20261022.mjs';
@@ -23,7 +24,13 @@ try{
  });
  if(process.env.WG_THREAD_BOOT_FAILURE==='1')await page.route('**/wild-engine/spatial-threaded.mjs',route=>route.fulfill({status:503,contentType:'text/javascript',body:'// QA: unavailable pthread module'}));
  await page.addInitScript(({text,quality})=>{localStorage.setItem('wild-guardians:slot:opening',text);localStorage.setItem('wild-guardians:settings',JSON.stringify({quality,farVegetation:true}));},{text:fixture.timing.navigationContext.state,quality});
- if(frozen)await page.route('**/src/app/main.js*',async route=>{const response=await route.fetch();const body=await response.text(),anchor='world.render(0);world.retainStreamingPrograms();loadingOverlay?.dispose();';if(body.split(anchor).length!==2)throw Error('Missing readiness freeze anchor');await route.fulfill({response,body:body.replace(anchor,"globalThis.qaStreamingReadyAt=performance.now();Game.pause(state,'menu');"+anchor)+(process.env.WG_THREAD_EXIT==='1'?'\nglobalThis.qaReturnToMenu=menu;':'')});});
+ if(frozen||process.env.WG_THREAD_MAIN_PHASES==='1')await page.route('**/src/app/main.js*',async route=>{
+  const response=await route.fetch();let body=await response.text();
+  if(frozen){const anchor='world.render(0);world.retainStreamingPrograms();loadingOverlay?.dispose();';if(body.split(anchor).length!==2)throw Error('Missing readiness freeze anchor');body=body.replace(anchor,"globalThis.qaStreamingReadyAt=performance.now();Game.pause(state,'menu');"+anchor);}
+  if(process.env.WG_THREAD_MAIN_PHASES==='1')body=instrumentMainFrame(body);
+  if(process.env.WG_THREAD_EXIT==='1')body+='\nglobalThis.qaReturnToMenu=menu;';
+  await route.fulfill({response,body});
+ });
  if(process.env.WG_THREAD_TERRAIN_DEFERRED==='1')await page.route('**/src/rendering/prepare-terrain-chunk.js*',async route=>{
   const response=await route.fetch(),source=await response.text(),anchor='deadline:now()';
   if(source.split(anchor).length!==2)throw Error('Missing terrain deadline anchor');
@@ -120,6 +127,7 @@ try{
   // QA-only authored path: the night raid camera otherwise owns this pose.
   if(options.lockRaidCamera&&w.raidCamera)w.raidCamera.update=()=>{};
   const readiness=[],slowDraws=[],slowGl=[],legs=[];let actorsReadyFrames=0,pausedFrames=0;
+  const mainPhases=[],mainFrames=[];globalThis.qaMainPhase=row=>mainPhases.push(row);globalThis.qaMainFrame=row=>mainFrames.push(row);
   const detail={};globalThis.qaThreadDetail=(name,ms)=>(detail[name]??=[]).push(ms);
   const preparedShore={count:0,bytes:0};const preparedWater={count:0,bytes:0};
   const rows={slices:[],preparationCpu:[],preparationLatency:[],generate:[],remove:[],removeBatch:[],admit:[],cancel:[],publish:[],install:[],terrain:[],props:[],mud:[],attach:[],details:[],render:[],draw:[],cache:[],nativeCompute:[],frames:[]};
@@ -132,7 +140,18 @@ try{
   };
   w.onTerrainPreparationDone=row=>{rows.preparationCpu.push(row.cpuMs);rows.preparationLatency.push(row.elapsedMs);};
   const wrap=(object,name,key)=>{const original=object[name];object[name]=function(...args){if(key==='install'&&args[0]?.waterShore){preparedShore.count++;preparedShore.bytes+=args[0].waterShore.byteLength;}if(key==='install'&&args[0]?.waterBed){preparedWater.count++;preparedWater.bytes+=args[0].waterBed.bytes.byteLength;}const t=performance.now();try{return original.apply(this,args);}finally{const ms=performance.now()-t;rows[key].push(ms);if(key==='draw'&&ms>100)slowDraws.push({ms,programs:w.renderer.info.programs.length,elapsed:w.state.elapsed,pauses:[...w.state.pauses]});}};return ()=>{object[name]=original;};};
+  const longAnimationFrames=[],rendererStages=[];
+  const loafSupported=PerformanceObserver.supportedEntryTypes.includes('long-animation-frame');
+  const loafObserver=options.mainPhases&&loafSupported?new PerformanceObserver(list=>longAnimationFrames.push(...list.getEntries().map(entry=>entry.toJSON()))):null;
+  loafObserver?.observe({type:'long-animation-frame'});
   const restore=[wrap(core,'addChunk','generate'),wrap(core,'removeChunk','remove'),wrap(core,'removeChunks','removeBatch'),wrap(w,'installChunk','install'),wrap(w,'terrain','terrain'),wrap(w,'buildPropSlot','props'),wrap(w,'render','render'),wrap(w,'drawRenderFrame','draw')];
+  if(options.mainPhases){
+   const original=w.renderFrameUpdates;
+   w.renderFrameUpdates=function*(...args){const iterator=original.apply(this,args);let stage=0;
+    try{for(;;){const start=performance.now();let next;try{next=iterator.next();}finally{rendererStages.push({stage:stage++,start,ms:performance.now()-start});}if(next.done)return next.value;yield next.value;}}finally{iterator.return?.();}
+   };
+   restore.push(()=>{w.renderFrameUpdates=original;});
+  }
   if(w.mudPatches)restore.push(wrap(w.mudPatches,'chunk','mud'));
   if(w.biomeGround)restore.push(wrap(w.biomeGround,'attach','attach'));
   if(w.groundDetails)restore.push(wrap(w.groundDetails,'chunk','details'));
@@ -143,6 +162,7 @@ try{
   const frame=()=>new Promise(r=>requestAnimationFrame(r));
   for(let i=0;i<60;i++)await frame();
   for(const values of [...Object.values(rows),...Object.values(detail)])values.length=0;
+  mainPhases.length=0;mainFrames.length=0;rendererStages.length=0;longAnimationFrames.length=0;loafObserver?.takeRecords();
   const gpu=options.gpu?(await import('/tools/experiments/spatial-stream-gpu-timer.js')).installStreamGpuTimer(w):null;
   const programLease=options.pinPrograms?(await import('/src/rendering/retain-warmed-programs.js')).retainWarmedPrograms(w.renderer):null;
   const origin=w.controls.target.clone(),camera=w.camera.position.clone();
@@ -177,7 +197,7 @@ try{
    }
    const deadline=performance.now()+60000;
    while(w.chunkStream.summary().busy||w.chunkStream.summary().queued||w.horizon?.generator.latest||w.horizon?.generator.busy||w.horizon?.pendingPreparation||farPending()){if(performance.now()>deadline)throw Error('Stream completion deadline');const now=await frame();rows.frames.push(now-last);last=now;}
-  }finally{game.pause(w.state,'menu');gpu?.stop();for(const undo of restore)undo();
+  }finally{if(loafObserver){longAnimationFrames.push(...loafObserver.takeRecords().map(entry=>entry.toJSON()));loafObserver.disconnect();}globalThis.qaMainPhase=null;globalThis.qaMainFrame=null;game.pause(w.state,'menu');gpu?.stop();for(const undo of restore)undo();
   programLease?.dispose();
   }
   const gpuResult=gpu?await gpu.finish():null;
@@ -188,8 +208,8 @@ try{
   const gl=w.renderer.getContext(),debug=gl.getExtension('WEBGL_debug_renderer_info');
   if(options.active&&w.state.elapsed<=initialElapsed)throw Error('Active simulation did not advance');
   const workersAfter=w.state.workers.map(worker=>({id:worker.id,x:worker.x,z:worker.z,status:worker.status}));
-  return {terrainPhases,preparedShore,preparedWater,scope:options.active?'Active simulation streaming pilot from frozen initial state, per-frame camera travel; final state varies with wall-clock time. CPU/RAF only, not GPU or equivalence acceptance.':'Paused simulation streaming after 60 warm frames. CPU/RAF only.',options,farSettled:!farPending(),farStatus:w.farVegetation?.adapters.map(a=>({status:a.preparationStatus(),errors:a.stats.errors})),programRetention:programLease?.stats??null,legs,initialElapsed,workersBefore,workersAfter,actorsReadyFrames,pausedFrames,readiness,slowDraws,slowGl,fixtureTutorialSkipped:options.active,initialPrograms,depthWarmMs,gpu:gpuResult?{...gpuResult,summary:summary(gpuResult.samplesMs)}:null,hardware:debug?gl.getParameter(debug.UNMASKED_RENDERER_WEBGL):null,cameraOrigin:camera.toArray(),targetOrigin:origin.toArray(),elapsed:w.state.elapsed,baseline,final:core.metrics(),created:w.chunkStream.stats.created-initialCreated,detail:Object.fromEntries(Object.entries(detail).map(([k,v])=>[k,summary(v)])),summary:Object.fromEntries(Object.entries(rows).map(([k,v])=>[k,summary(v)])),rows};
- },{lockRaidCamera:process.env.WG_THREAD_LOCK_RAID_CAMERA==='1',completeLegs:process.env.WG_THREAD_COMPLETE_LEGS==='1',pinPrograms:process.env.WG_THREAD_PIN_PROGRAMS==='1',zigzag:process.env.WG_THREAD_ZIGZAG==='1',active:process.env.WG_THREAD_ACTIVE==='1',gpu:process.env.WG_THREAD_GPU==='1',depthWarm:process.env.WG_THREAD_DEPTH_WARM==='1',glDetail:process.env.WG_THREAD_GL_DETAIL==='1',frames:Number(process.env.WG_THREAD_FRAMES??180),distance:Number(process.env.WG_THREAD_DISTANCE??96)});
+  return {loafSupported,longAnimationFrames,rendererStages,mainPhases,mainFrames,terrainPhases,preparedShore,preparedWater,scope:options.active?'Active simulation streaming pilot from frozen initial state, per-frame camera travel; final state varies with wall-clock time. CPU/RAF only, not GPU or equivalence acceptance.':'Paused simulation streaming after 60 warm frames. CPU/RAF only.',options,farSettled:!farPending(),farStatus:w.farVegetation?.adapters.map(a=>({status:a.preparationStatus(),errors:a.stats.errors})),programRetention:programLease?.stats??null,legs,initialElapsed,workersBefore,workersAfter,actorsReadyFrames,pausedFrames,readiness,slowDraws,slowGl,fixtureTutorialSkipped:options.active,initialPrograms,depthWarmMs,gpu:gpuResult?{...gpuResult,summary:summary(gpuResult.samplesMs)}:null,hardware:debug?gl.getParameter(debug.UNMASKED_RENDERER_WEBGL):null,cameraOrigin:camera.toArray(),targetOrigin:origin.toArray(),elapsed:w.state.elapsed,baseline,final:core.metrics(),created:w.chunkStream.stats.created-initialCreated,detail:Object.fromEntries(Object.entries(detail).map(([k,v])=>[k,summary(v)])),summary:Object.fromEntries(Object.entries(rows).map(([k,v])=>[k,summary(v)])),rows};
+ },{mainPhases:process.env.WG_THREAD_MAIN_PHASES==='1',lockRaidCamera:process.env.WG_THREAD_LOCK_RAID_CAMERA==='1',completeLegs:process.env.WG_THREAD_COMPLETE_LEGS==='1',pinPrograms:process.env.WG_THREAD_PIN_PROGRAMS==='1',zigzag:process.env.WG_THREAD_ZIGZAG==='1',active:process.env.WG_THREAD_ACTIVE==='1',gpu:process.env.WG_THREAD_GPU==='1',depthWarm:process.env.WG_THREAD_DEPTH_WARM==='1',glDetail:process.env.WG_THREAD_GL_DETAIL==='1',frames:Number(process.env.WG_THREAD_FRAMES??180),distance:Number(process.env.WG_THREAD_DISTANCE??96)});
  result.scheduler=await page.evaluate(async()=>{const url=performance.getEntriesByType('resource').map(e=>e.name).find(n=>new URL(n).pathname==='/src/app/global-frame-scheduler.js');if(!url)throw Error('Missing canonical scheduler module');const {globalFrameScheduler}=await import(url);return {moduleUrl:url,...globalFrameScheduler.snapshot()};});
  if(profiler){const {profile}=await profiler.send('Profiler.stop');await writeFile((process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json').replace(/\.json$/,'.cpuprofile'),JSON.stringify(profile));await profiler.detach();}
  if(frozen&&(benchmark||process.env.WG_THREAD_EDIT==='1'||process.env.WG_THREAD_CONTEXT==='1'))await page.screenshot({path:(process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json').replace(/\.json$/,'.png')});
