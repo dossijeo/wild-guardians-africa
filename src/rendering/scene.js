@@ -99,6 +99,7 @@ export class WorldScene {
     // avoiding another draw of all resident geometry. QA may opt out explicitly.
     this.farIsolatedPreparation=true;
     this.batchChunkEviction=new URLSearchParams(globalThis.location?.search??'').get('chunkEviction')==='batch';
+    this.nativeHorizonBed=new URLSearchParams(globalThis.location?.search??'').get('horizonBed')==='native-grid';
     this.stagedHorizonBed=new URLSearchParams(globalThis.location?.search??'').get('horizonBed')==='staged';
     const bedBudget=Number(new URLSearchParams(globalThis.location?.search??'').get('horizonBedBudget')??2);
     this.horizonBedBudget=Number.isFinite(bedBudget)?Math.max(.5,Math.min(8,bedBudget)):2;
@@ -404,7 +405,7 @@ export class WorldScene {
   syncChunks(force=false) {
     if(!this.nav||!this.prototypes)return;
     const requested=nativeNearRegion(this.camera.position,this.quality,this.farResidentRange??null);
-    this.horizon??=new NativeHorizon(this.scene,(bounds,outside)=>paintedWaterMaterial(this.pack.profile.colors.water,false,this.nav.field.seed,bounds,this.fluidLighting,outside),mesh=>this.materialRegistry?.refresh(mesh),(material,cx,cz)=>{this.biomeGround?.attach(material,cx,cz,null,{mapped:false});},{spatial:this.spatialSession?.horizonSource,preparationBudgetMs:this.horizonBedBudget,prepareWaterBed:this.stagedHorizonBed&&this.naturalWaterEdges?(geometry,region)=>prepareNaturalWaterBed(this,geometry,region.cx,region.cz):null,prepareWater:this.naturalWaterEdges?(mesh,region,bed)=>{prepareNaturalWater(this,mesh.geometry,region.cx,region.cz,mesh.material,bed);if(this.waterOpaqueCore)prepareOpaqueCore(mesh);}:null});
+    this.horizon??=new NativeHorizon(this.scene,(bounds,outside)=>paintedWaterMaterial(this.pack.profile.colors.water,false,this.nav.field.seed,bounds,this.fluidLighting,outside),mesh=>this.materialRegistry?.refresh(mesh),(material,cx,cz)=>{this.biomeGround?.attach(material,cx,cz,null,{mapped:false});},{spatial:this.spatialSession?.horizonSource,preparationBudgetMs:this.horizonBedBudget,prepareWaterBed:this.stagedHorizonBed&&this.naturalWaterEdges?(geometry,region)=>prepareNaturalWaterBed(this,geometry,region.cx,region.cz):null,prepareWater:this.naturalWaterEdges?(mesh,region,bed)=>{prepareNaturalWater(this,mesh.geometry,region.cx,region.cz,mesh.material,bed,{nativeGrid:this.nativeHorizonBed});if(this.waterOpaqueCore)prepareOpaqueCore(mesh);}:null});
     // Adopt the horizon and its matching resident rectangle in the same frame.
     // Keeping the preceding rectangle while the worker runs avoids exposing
     // the old horizon's centre hole or overlapping its seam with new chunks.

@@ -45,3 +45,18 @@ test('pending bed keeps old horizon and clipping until adoption, cancels on revi
  horizon.update(config,profile,first,'media');let disposed=0;horizon.pendingPreparation.geometry.addEventListener('dispose',()=>disposed++);
  horizon.dispose();horizon.dispose();assert.equal(disposed,1);assert.equal(horizon.pendingPreparation,null);assert.equal(scene.children.length,0);
 });
+
+test('native grid packs identical water bytes and consumes the borrowed view without yielding',()=>{
+ const geometry=new THREE.PlaneGeometry(80,90,1,1).rotateX(-Math.PI/2).toNonIndexed();
+ const height=(x,z)=>Math.fround(Math.sin(x*.2)+Math.cos(z*.13));
+ const field={canyon:true,surface:height},world={state:{biome:'gran-canon'},nav:{field}};
+ const baseline=prepareNaturalWaterBed(world,geometry,-2,3,{yielding:false}).next().value;
+ let calls=0;
+ field.surfaceGrid=(x,z,w,h,nx,nz)=>{calls++;return Float32Array.from({length:nx*nz},(_,i)=>height(x+i%nx/(nx-1)*w,z+Math.floor(i/nx)/(nz-1)*h));};
+ field.surface=()=>assert.fail('Native grid must replace scalar queries');
+ const step=prepareNaturalWaterBed(world,geometry,-2,3,{nativeGrid:true}).next();
+ assert(step.done);assert.equal(calls,1);assert.deepEqual(step.value,baseline);
+ field.surfaceGrid=()=>null;field.surface=height;
+ assert.deepEqual(prepareNaturalWaterBed(world,geometry,-2,3,{nativeGrid:true,yielding:false}).next().value,baseline);
+ geometry.dispose();
+});

@@ -527,6 +527,12 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
     propBlocked:(x,z)=>Boolean(wasm.spatial_prop_blocked(x,z)),
     surface,slope,
     surfaceAnywhere:(x,z)=>wasm.spatial_surface_anywhere(x,z),
+    // Borrowed view, valid until the next grid query or WASM memory growth.
+    surfaceGrid:(minX,minZ,width,height,nx,nz)=>{
+      if(![minX,minZ,width,height].every(Number.isFinite)||!Number.isInteger(nx)||!Number.isInteger(nz)||nx<2||nz<2||nx>513||nz>513)return null;
+      const pointer=wasm.spatial_surface_grid?.(minX,minZ,width,height,nx,nz);
+      return pointer?new Float32Array(wasm.memory.buffer,pointer,nx*nz):null;
+    },
     fluidLevel:(x,z)=>wasm.spatial_fluid_level(x,z),
     fluidLevelAnywhere:(x,z)=>wasm.spatial_fluid_level_anywhere(x,z),
     waterShoreAnywhere:(x,z)=>wasm.spatial_water_shore_anywhere(x,z),

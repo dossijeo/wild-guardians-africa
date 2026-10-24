@@ -2,7 +2,7 @@ import * as THREE from 'three';
 // Visual shore mask: sampled once when the water mesh is built, never per frame.
 export function naturalWaterEdgesEnabled(search=globalThis.location?.search??''){const q=new URLSearchParams(search);return q.get('visualLab')==='global-lighting'&&q.get('waterEdges')==='natural';}
 export function balancedCanyonBankEnabled(biome,search=globalThis.location?.search??''){const q=new URLSearchParams(search);return biome==='gran-canon'&&q.get('visualLab')==='global-lighting'&&q.get('waterEdges')==='natural'&&q.get('canyonBank')==='balanced';}
-export function* prepareNaturalWaterBed(world,geometry,cx,cz,{yielding=true}={}){
+export function* prepareNaturalWaterBed(world,geometry,cx,cz,{yielding=true,nativeGrid=false}={}){
  if(world.state.biome==='desierto')return;
  geometry.computeBoundingBox();const box=geometry.boundingBox,field=world.nav.field;
  const minX=box.min.x+cx*48-.5,minZ=box.min.z+cz*48-.5;
@@ -22,15 +22,18 @@ export function* prepareNaturalWaterBed(world,geometry,cx,cz,{yielding=true}={})
  for(let z=Math.floor((Math.min(a[1],b[1])-4)/binSize);z<=Math.floor((Math.max(a[1],b[1])+4)/binSize);z++)for(let x=Math.floor((Math.min(a[0],b[0])-4)/binSize);x<=Math.floor((Math.max(a[0],b[0])+4)/binSize);x++){const key=x+','+z;if(!bins.has(key))bins.set(key,[]);bins.get(key).push({a,b});}
  }
  const boundaryDistance=(x,z)=>{if(field.canyon)return 4;let squared=16;for(const {a,b} of bins.get(Math.floor(x/binSize)+','+Math.floor(z/binSize))??[]){const dx=b[0]-a[0],dz=b[1]-a[1],t=Math.max(0,Math.min(1,((x-a[0])*dx+(z-a[1])*dz)/(dx*dx+dz*dz||1))),rx=x-a[0]-t*dx,rz=z-a[1]-t*dz;squared=Math.min(squared,rx*rx+rz*rz);}return Math.sqrt(squared);};
- const samples=new Float32Array(nx*nz);let lo=Infinity,hi=-Infinity;
- for(let z=0;z<nz;z++)for(let x=0;x<nx;x++){const px=minX+x/(nx-1)*width,pz=minZ+z/(nz-1)*height;const h=field.wetland?field.wetlandLevel(px,pz)-Math.max(0,field.waterInfo(px,pz).mask-.61)*3:field.surface(px,pz);samples[z*nx+x]=h;lo=Math.min(lo,h);hi=Math.max(hi,h);if(yielding&&((z*nx+x)&127)===127)yield;}
+ const grid=nativeGrid&&field.canyon?field.surfaceGrid?.(minX,minZ,width,height,nx,nz):null;
+ // A borrowed WASM view must be consumed synchronously before another query.
+ if(grid)yielding=false;
+ const samples=grid??new Float32Array(nx*nz);let lo=Infinity,hi=-Infinity;
+ for(let z=0;z<nz;z++)for(let x=0;x<nx;x++){const px=minX+x/(nx-1)*width,pz=minZ+z/(nz-1)*height;const h=grid?grid[z*nx+x]:field.wetland?field.wetlandLevel(px,pz)-Math.max(0,field.waterInfo(px,pz).mask-.61)*3:field.surface(px,pz);samples[z*nx+x]=h;lo=Math.min(lo,h);hi=Math.max(hi,h);if(yielding&&((z*nx+x)&127)===127)yield;}
  const span=Math.max(.001,hi-lo),bytes=new Uint8Array(nx*nz*4);
  for(let i=0;i<samples.length;i++){const h=Math.round((samples[i]-lo)/span*65535);bytes[i*4]=h>>>8;bytes[i*4+1]=h&255;bytes[i*4+2]=Math.round(boundaryDistance(minX+(i%nx)/(nx-1)*width,minZ+Math.floor(i/nx)/(nz-1)*height)/4*255);bytes[i*4+3]=255;if(yielding&&(i&1023)===1023)yield;}
  return {bytes,nx,nz,minX,minZ,width,height,lo,span};
 }
-export function prepareNaturalWater(world,geometry,cx,cz,source,preparedBed=null){
+export function prepareNaturalWater(world,geometry,cx,cz,source,preparedBed=null,options={}){
  let bed=preparedBed;
- if(!bed){const steps=prepareNaturalWaterBed(world,geometry,cx,cz,{yielding:false});bed=steps.next().value;}
+ if(!bed){const steps=prepareNaturalWaterBed(world,geometry,cx,cz,{...options,yielding:false});bed=steps.next().value;}
  if(!bed)return;
  const {bytes,nx,nz,minX,minZ,width,height,lo,span}=bed;
  const texture=new THREE.DataTexture(bytes,nx,nz,THREE.RGBAFormat);texture.minFilter=texture.magFilter=THREE.LinearFilter;texture.unpackAlignment=1;texture.needsUpdate=true;

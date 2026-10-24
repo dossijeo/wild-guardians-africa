@@ -1437,6 +1437,9 @@ void horizonDesertNormals(HorizonSampler& sampler,int ox,int oz){
 
 // Main-thread-only staging buffer; workers never access eviction requests.
 static std::vector<int32_t> chunkRemovalInput;
+static std::vector<float> surfaceGridOutput;
+static std::vector<double> surfaceGridCorners;
+static std::vector<uint8_t> surfaceGridValid;
 extern "C" {
 int spatial_generate_biome(uint32_t seed,int biome,int cx,int cz){
   if(biome<0||biome>6)return -1;
@@ -1681,6 +1684,38 @@ float spatial_surface_anywhere(float x,float z){
   if(residentSample(x,z))return float(surface(x,z));
   const ScopedTerrainSample context(x,z);
   return float(surface(x,z));
+}
+// Read-only Canyon presentation query. Cache repeated integer interpolation
+// corners within one call, never across world edits. All scratch is main-owned.
+float* spatial_surface_grid(double minX,double minZ,double width,double height,int nx,int nz){
+  if(worldBiome!=5||!chunkRasters||nx<2||nz<2||nx>513||nz>513||
+     !std::isfinite(minX)||!std::isfinite(minZ)||!std::isfinite(width)||!std::isfinite(height)||
+     width<=0||height<=0||width>4096||height>4096||std::abs(minX)>1e7||std::abs(minZ)>1e7)return nullptr;
+  const int x0=int(std::floor(float(minX))),z0=int(std::floor(float(minZ)));
+  const int columns=int(std::floor(float(minX+width)))-x0+2,rows=int(std::floor(float(minZ+height)))-z0+2;
+  const size_t cells=size_t(columns)*rows;
+  if(cells>524288)return nullptr;
+  surfaceGridOutput.resize(size_t(nx)*nz);surfaceGridCorners.resize(cells);surfaceGridValid.assign(cells,0);
+  HorizonSampler sampler;
+  auto corner=[&](int x,int z){
+    const size_t index=size_t(z-z0)*columns+(x-x0);
+    if(!surfaceGridValid[index]){surfaceGridCorners[index]=latticeHeight(x,z);surfaceGridValid[index]=1;}
+    return surfaceGridCorners[index];
+  };
+  for(int j=0;j<nz;j++)for(int i=0;i<nx;i++){
+    // Match the scalar JS -> float WASM API's rounding for each query point.
+    const float x=float(minX+double(i)/double(nx-1)*width),z=float(minZ+double(j)/double(nz-1)*height);
+    double result;
+    if(residentSample(x,z))result=surface(x,z);
+    else{
+      sampler.select(x,z);
+      const int ix=int(std::floor(x)),iz=int(std::floor(z));const double fx=double(x)-ix,fz=double(z)-iz;
+      if(fx+fz<=1){const double a=corner(ix,iz);result=a+(corner(ix+1,iz)-a)*fx+(corner(ix,iz+1)-a)*fz;}
+      else {const double c=corner(ix+1,iz+1);result=c+(corner(ix,iz+1)-c)*(1-fx)+(corner(ix+1,iz)-c)*(1-fz);}
+    }
+    surfaceGridOutput[size_t(j)*nx+i]=float(result);
+  }
+  return surfaceGridOutput.data();
 }
 float spatial_fluid_level(float x,float z){
   if(!std::isfinite(x)||!std::isfinite(z))

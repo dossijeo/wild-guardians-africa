@@ -45,6 +45,16 @@ try{
  if(process.env.WG_THREAD_BOOT_FAILURE==='1'&&(!result.isolated||!result.runtime.fallbackReason))throw Error('Missing isolated boot-failure fallback');
  if(result.runtime.backend!==((threaded&&process.env.WG_THREAD_NO_ISOLATION!=='1'&&process.env.WG_THREAD_BOOT_FAILURE!=='1')?'pthreads':'standalone'))throw Error(JSON.stringify(result));
  if(frozen&&result.elapsed!==JSON.parse(fixture.timing.navigationContext.state).elapsed)throw Error('Fixture advanced before pause');
+ if(process.env.WG_THREAD_FAR_CHECK==='1'){
+  const inspect=()=>page.evaluate(()=>{const w=qaThreadWorld,ground=[];w.scene.traverse(o=>{if(o.userData.farGround){const p=o.geometry.attributes.position,index=o.geometry.index?.array;let min=[Infinity,Infinity,Infinity],max=[-Infinity,-Infinity,-Infinity];for(let i=0;i<p.count;i++)for(let c=0;c<3;c++){const v=p.array[i*3+c];min[c]=Math.min(min[c],v);max[c]=Math.max(max[c],v);}const ancestors=[];for(let n=o;n;n=n.parent)ancestors.push({type:n.type,visible:n.visible,name:n.name});ground.push({vertices:p.count,indices:index?.length,drawRange:o.geometry.drawRange,min,max,ancestors,side:o.material.side,opacity:o.material.opacity,position:o.position.toArray(),scale:o.scale.toArray(),uniforms:Object.fromEntries(Object.entries(w.renderer.properties.get(o.material).uniforms??{}).filter(([k])=>['uFarNearBounds','uFarGroundOrigin','uWorldOrigin'].includes(k)).map(([k,u])=>[k,u.value.toArray?.()??u.value]))});}});return {origin:{x:w.renderOrigin.x,z:w.renderOrigin.z},stream:w.chunkStream.summary(),nearBounds:w.nearBounds,camera:w.camera.position.toArray(),target:w.controls.target.toArray(),farEnabled:w.farVegetation?.enabled,adapters:w.farVegetation?.adapters.map(a=>({status:a.preparationStatus(),stats:a.stats,key:a.layer.current?.key,trees:a.layer.current?.trees.length})),ground};});
+  const path=(process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json').replace(/\.json$/,'');
+  result.farGround={initial:await inspect()};await page.screenshot({path:path+'-initial.png'});
+  await page.evaluate(async()=>{for(let i=0;i<300;i++)await new Promise(requestAnimationFrame);});
+  result.farGround.settled=await inspect();await page.screenshot({path:path+'-settled.png'});
+  result.farGround.travel=await page.evaluate(async()=>{const w=qaThreadWorld,eye=w.camera.position.clone(),target=w.controls.target.clone(),update=w.updateCamera;w.updateCamera=()=>{w.camera.lookAt(w.controls.target);w.camera.updateMatrixWorld();};try{for(const dx of [240,0]){w.camera.position.copy(eye);w.camera.position.x+=dx;w.controls.target.copy(target);w.controls.target.x+=dx;for(let i=0;i<300;i++)await new Promise(requestAnimationFrame);}return {origin:{x:w.renderOrigin.x,z:w.renderOrigin.z}};}finally{w.updateCamera=update;}});
+  result.farGround.afterTravel=await inspect();await page.screenshot({path:path+'-travel.png'});
+
+ }
  if(process.env.WG_THREAD_EDIT==='1')result.concurrentEdits=await page.evaluate(async()=>await (await import('/tools/experiments/spatial-thread-edit-case.js')).verifyConcurrentWallEdit(qaThreadWorld));
  if(fixture.concurrentEditExpectations)result.reloadedEdits=await page.evaluate(expected=>{
   const w=qaThreadWorld,s=w.state,crop=s.plants.find(p=>p.id===expected.crop.id);
@@ -85,6 +95,7 @@ try{
   if(w.mangroveMaterialCache)restore.push(wrap(w.mangroveMaterialCache,'update','cache'));
   if(core.preparation){restore.push(wrap(core.preparation,'start','admit'),wrap(core.preparation,'cancel','cancel'),wrap(core.preparation,'publish','publish'));const publish=core.preparation.publish;core.preparation.publish=(...a)=>{rows.nativeCompute.push(core.preparation.metric(1));return publish(...a);};}
   if(options.glDetail){for(const [object,name,key] of [[w.horizon,'update','horizon'],[w,'syncChunks','syncChunks'],[w,'beforeMicroeventDraw','microevents'],[w,'presentationDraw','presentation'],[w,'drawWorldFrame','worldDraw'],[w.renderer,'render','threeRender']])if(typeof object[name]==='function'){rows[key]=[];restore.push(wrap(object,name,key));}const gl=w.renderer.getContext();for(const name of ['compileShader','linkProgram','getProgramParameter','getShaderParameter','getShaderInfoLog','getProgramInfoLog','getUniformLocation','getActiveUniform','getActiveAttrib','drawElements','drawElementsInstanced','drawArrays','drawArraysInstanced','texImage2D','texSubImage2D','bufferData','bufferSubData']){const original=gl[name];gl[name]=function(...args){const t=performance.now();try{return original.apply(this,args);}finally{const ms=performance.now()-t;if(ms>20){const program=name==='getProgramInfoLog'?w.renderer.info.programs.find(p=>p.program===args[0]):null;slowGl.push({name,ms,elapsed:w.state.elapsed,program:program?{id:program.id,name:program.name,cacheKey:program.cacheKey}:null});}}};restore.push(()=>{gl[name]=original;});}}
+  const farPending=()=>w.farVegetation?.adapters.some(adapter=>adapter.preparationPending())??false;
   const frame=()=>new Promise(r=>requestAnimationFrame(r));
   for(let i=0;i<60;i++)await frame();
   for(const values of [...Object.values(rows),...Object.values(detail)])values.length=0;
@@ -110,7 +121,7 @@ try{
       if(performance.now()>deadline)throw Error('Leg/horizon completion timeout');
       const now=await frame();rows.frames.push(now-last);last=now;
       const stream=w.chunkStream.summary(),horizon=w.horizon?.generator;
-      const complete=!stream.busy&&!stream.queued&&!horizon?.latest&&!horizon?.busy&&!w.horizon?.pendingPreparation&&
+      const complete=!stream.busy&&!stream.queued&&!horizon?.latest&&!horizon?.busy&&!w.horizon?.pendingPreparation&&!farPending()&&
        [...w.chunkStream.desired.keys()].every(key=>w.chunks.has(key));
       stable=complete?stable+1:0;
      }
@@ -121,7 +132,7 @@ try{
     if(i%60===0)readiness.push({frame:i,elapsed:w.state.elapsed,ready:w.actorsReady(),pauses:[...w.state.pauses],stream:w.chunkStream.summary()});
    }
    const deadline=performance.now()+60000;
-   while(w.chunkStream.summary().busy||w.chunkStream.summary().queued||w.horizon?.generator.latest||w.horizon?.generator.busy||w.horizon?.pendingPreparation){if(performance.now()>deadline)throw Error('Stream completion deadline');const now=await frame();rows.frames.push(now-last);last=now;}
+   while(w.chunkStream.summary().busy||w.chunkStream.summary().queued||w.horizon?.generator.latest||w.horizon?.generator.busy||w.horizon?.pendingPreparation||farPending()){if(performance.now()>deadline)throw Error('Stream completion deadline');const now=await frame();rows.frames.push(now-last);last=now;}
   }finally{game.pause(w.state,'menu');gpu?.stop();for(const undo of restore)undo();
   programLease?.dispose();
   }
@@ -133,7 +144,7 @@ try{
   const gl=w.renderer.getContext(),debug=gl.getExtension('WEBGL_debug_renderer_info');
   if(options.active&&w.state.elapsed<=initialElapsed)throw Error('Active simulation did not advance');
   const workersAfter=w.state.workers.map(worker=>({id:worker.id,x:worker.x,z:worker.z,status:worker.status}));
-  return {scope:options.active?'Active simulation streaming pilot from frozen initial state, per-frame camera travel; final state varies with wall-clock time. CPU/RAF only, not GPU or equivalence acceptance.':'Paused simulation streaming after 60 warm frames. CPU/RAF only.',options,programRetention:programLease?.stats??null,legs,initialElapsed,workersBefore,workersAfter,actorsReadyFrames,pausedFrames,readiness,slowDraws,slowGl,fixtureTutorialSkipped:options.active,initialPrograms,depthWarmMs,gpu:gpuResult?{...gpuResult,summary:summary(gpuResult.samplesMs)}:null,hardware:debug?gl.getParameter(debug.UNMASKED_RENDERER_WEBGL):null,cameraOrigin:camera.toArray(),targetOrigin:origin.toArray(),elapsed:w.state.elapsed,baseline,final:core.metrics(),created:w.chunkStream.stats.created-initialCreated,detail:Object.fromEntries(Object.entries(detail).map(([k,v])=>[k,summary(v)])),summary:Object.fromEntries(Object.entries(rows).map(([k,v])=>[k,summary(v)])),rows};
+  return {scope:options.active?'Active simulation streaming pilot from frozen initial state, per-frame camera travel; final state varies with wall-clock time. CPU/RAF only, not GPU or equivalence acceptance.':'Paused simulation streaming after 60 warm frames. CPU/RAF only.',options,farSettled:!farPending(),farStatus:w.farVegetation?.adapters.map(a=>({status:a.preparationStatus(),errors:a.stats.errors})),programRetention:programLease?.stats??null,legs,initialElapsed,workersBefore,workersAfter,actorsReadyFrames,pausedFrames,readiness,slowDraws,slowGl,fixtureTutorialSkipped:options.active,initialPrograms,depthWarmMs,gpu:gpuResult?{...gpuResult,summary:summary(gpuResult.samplesMs)}:null,hardware:debug?gl.getParameter(debug.UNMASKED_RENDERER_WEBGL):null,cameraOrigin:camera.toArray(),targetOrigin:origin.toArray(),elapsed:w.state.elapsed,baseline,final:core.metrics(),created:w.chunkStream.stats.created-initialCreated,detail:Object.fromEntries(Object.entries(detail).map(([k,v])=>[k,summary(v)])),summary:Object.fromEntries(Object.entries(rows).map(([k,v])=>[k,summary(v)])),rows};
  },{completeLegs:process.env.WG_THREAD_COMPLETE_LEGS==='1',pinPrograms:process.env.WG_THREAD_PIN_PROGRAMS==='1',zigzag:process.env.WG_THREAD_ZIGZAG==='1',active:process.env.WG_THREAD_ACTIVE==='1',gpu:process.env.WG_THREAD_GPU==='1',depthWarm:process.env.WG_THREAD_DEPTH_WARM==='1',glDetail:process.env.WG_THREAD_GL_DETAIL==='1',frames:Number(process.env.WG_THREAD_FRAMES??180),distance:Number(process.env.WG_THREAD_DISTANCE??96)});
  if(profiler){const {profile}=await profiler.send('Profiler.stop');await writeFile((process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json').replace(/\.json$/,'.cpuprofile'),JSON.stringify(profile));await profiler.detach();}
  if(frozen&&(benchmark||process.env.WG_THREAD_EDIT==='1'||process.env.WG_THREAD_CONTEXT==='1'))await page.screenshot({path:(process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json').replace(/\.json$/,'.png')});
