@@ -1160,3 +1160,33 @@ replacement preserving old ownership. This experiment narrows the diagnosis:
 program churn is present but avoiding it does not explain/fix the remaining tails.
 
 Vite production build passes in7.97s; existing bundle-size/dynamic-import warnings remain.
+
+
+### Current streaming attribution after rejected quality experiments (2026-10-24)
+
+`scheduler-current-admission-stream.json`: active Manglares,720p,media,360frames,
+144m travel,60warmframes,original quality lifecycle (transactionalPrograms absent),
+scheduler enabled.15chunks complete. Mean native pthread compute38.80ms,
+publish0.611ms CPU,max0.94; graphical installation0.495ms,max2.085.
+Private preparation mean8.025ms CPU versus1574.69ms elapsed,p95=3690.64,max4153.47.
+601units average0.200ms,p95.660,max3.78. Main WorldScene.render mean8.073ms,
+p95=13.945,max25.94. RAF mean119.54,p95=216.08,max349.46.121GPU query intervals
+mean93.28,p95=140.94,max240.19ms; intervals include pipeline bubbles, not exclusive
+GPU busy time. These are diagnostic samples, not an accepted improvement.
+
+Lifetime scheduler counters include loading:21pending/no-work frames,all21with
+mandatory CPU pressure;13also late,0elapsed-guard. Therefore relaxing elapsed
+protection is unsupported. Phase sums during streaming: ground20.31ms CPU,
+mud geometry35.18ms,edge vertices39.33ms,props15.41ms. Edge vertex work waits
+8215ms summed across chunks,not all exclusive wall time. Grid construction only
+2.73ms CPU across150units; prior grid coarsening already failed repeated acceptance.
+Do not repeat that unproven budget/coarsening change merely because its wait is high.
+
+Code review: mud geometry queries current authoritative surface/slope/water;
+blind worker regeneration would duplicate world state and is unsuitable. Pure
+edge interpolation/distance work consumes immutable prepared geometry and
+outlines, so it is a plausible independent executor candidate. It currently has
+247cooperative units for15chunks. Any worker version must account for copying,
+cancellation,stale quality/context results and total presentation/stream latency;
+no claim of benefit until actually implemented and compared. This points toward
+moving/eliminating whole preparation dependencies rather than enlarging budgets.
