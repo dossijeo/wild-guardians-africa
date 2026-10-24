@@ -99,6 +99,9 @@ export class WorldScene {
     // Noncasting far uploads retain the live lighting/shadow recipe while
     // avoiding another draw of all resident geometry. QA may opt out explicitly.
     this.farIsolatedPreparation=true;
+    // Gameplay preparations also need owned readiness polling: quality changes
+    // and world exit can dispose their materials before compilation completes.
+    this.farOwnedCompilation=new URLSearchParams(globalThis.location?.search??'').get('ownedFarGpu')!=='0';this.farOwnedWaits=this.farOwnedCompilation;
     this.batchChunkEviction=false;
     this.nativeHorizonBed=new URLSearchParams(globalThis.location?.search??'').get('horizonBed')==='native-grid';
     this.stagedHorizonBed=new URLSearchParams(globalThis.location?.search??'').get('horizonBed')==='staged';
@@ -170,6 +173,7 @@ export class WorldScene {
     // Shadow defines are compiled into materials; re-enable must invalidate unshadowed programs.
     if(shadowsChanged)this.scene.traverse(object=>{for(const material of (Array.isArray(object.material)?object.material:[object.material]))if(material)material.needsUpdate=true;});
     resizeShadowMap(this.sun,mangroveFernEnabled()&&this.state?.biome==='manglares'&&shadowsEnabled?'alta':quality);this.resize();
+    this.refreshStreamingPrograms();
   }
   async loadReady(pending,releaseLate){
     const signal=this.loading?.signal;let value;
@@ -531,14 +535,48 @@ export class WorldScene {
     if(cache)for(const key of cache.states.keys())cache.invalidate(key);
     this.releaseNativeShadow?.cache.invalidate();
     this.renderer.shadowMap.needsUpdate=true;
+    this.refreshStreamingPrograms();
   }
-  retainStreamingPrograms(){
+  retainStreamingPrograms({newestFirst=false}={}){
     this.programLease?.dispose();this.programLease=null;
     if(this.disposed||!this.streamingOptions?.retainPrograms)return;
-    this.programLease=retainWarmedPrograms(this.renderer,{limit:96});
+    this.streamingRetentionStarted=true;
+    this.programLease=retainWarmedPrograms(this.renderer,{limit:96,newestFirst});
     this.obstructionWarmup?.dispose();this.obstructionWarmup=null;
   }
-  releaseRetainedPrograms(){this.programLease?.dispose();this.programLease=null;this.obstructionWarmup?.dispose();this.obstructionWarmup=null;}
+  releaseRetainedPrograms(){this.streamingProgramRefreshAbort?.abort();this.streamingProgramRevision=(this.streamingProgramRevision??0)+1;this.programLease?.dispose();this.programLease=null;this.obstructionWarmup?.dispose();this.obstructionWarmup=null;}
+  refreshStreamingPrograms(){
+    if(new URLSearchParams(globalThis.location?.search??'').get('streamingRecovery')==='0'||!this.streamingRetentionStarted||!this.streamingOptions?.retainPrograms||this.disposed||this.renderer.getContext().isContextLost())return;
+    this.streamingProgramRefreshRequested=true;
+    if(this.streamingProgramRefresh)return this.streamingProgramRefresh;
+    this.streamingProgramRefresh=(async()=>{
+      // Coalesce synchronous quality changes before touching the renderer.
+      await Promise.resolve();
+      while(this.streamingProgramRefreshRequested&&!this.disposed){
+        this.streamingProgramRefreshRequested=false;
+        const revision=this.streamingProgramRevision,started=performance.now(),owner=new AbortController();let warmup;
+        this.streamingProgramRefreshAbort=owner;
+        const cancelled=()=>owner.signal.aborted||this.disposed||revision!==this.streamingProgramRevision||this.renderer.getContext().isContextLost();
+        const check=()=>{if(cancelled())throw Error('Streaming recovery cancelled');};
+        try{
+          if(cancelled())continue;
+          warmup=this.streamingOptions.warmObstruction?this.assetGroups.prepareSmoothWarmup(this.chunks):null;
+          const options={signal:owner.signal,cancelled,screen:true,getEpoch:()=>this.glResourceEpoch?.stats.epoch??0,batchSize:8,frameBudget:6};
+          // Ordinary drawing prepares live scene variants. Only owned warmup materials
+          // survive across awaits: streaming may dispose resident meshes meanwhile.
+          await waitGpuFrame({check,signal:owner.signal});
+          if(cancelled())continue;
+          if(warmup)await compileLoadingProgramsBatched(this.renderer,warmup.group,this.camera,this.scene,options);
+          if(cancelled())continue;
+          // Prefer current quality variants when historical material programs exceed the cap.
+          this.retainStreamingPrograms({newestFirst:true});
+          this.streamingProgramRecovery={revision,ms:performance.now()-started,retained:this.programLease?.stats.retained??0};
+        }catch(error){if(!cancelled())console.warn('Streaming program recovery failed; normal shader lifecycle remains available',error);}
+        finally{warmup?.dispose();if(this.streamingProgramRefreshAbort===owner)this.streamingProgramRefreshAbort=null;}
+      }
+    })().finally(()=>{this.streamingProgramRefresh=null;if(this.streamingProgramRefreshRequested&&!this.disposed)return this.refreshStreamingPrograms();});
+    return this.streamingProgramRefresh;
+  }
   async warmResidentDepth({nextFrame}={}){
     const cancelled=()=>this.disposed||this.loading.signal.aborted;
     const options={signal:this.loading.signal,cancelled,nextFrame,batchSize:32,onPrepare:this.onLoadingSpan};

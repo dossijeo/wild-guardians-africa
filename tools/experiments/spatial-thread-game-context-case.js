@@ -9,10 +9,11 @@ export async function verifyGameContextRestore(w){
  await new Promise(r=>setTimeout(r,150));const restored=event('webglcontextrestored');renderer.forceContextRestore();await restored;
  if(renderer.info.programs===oldPrograms)throw Error('Renderer program collection unchanged');
  for(let i=0;i<30;i++)await new Promise(requestAnimationFrame);
- await w.whenChunksReady();w.render(0);
+ await w.whenChunksReady();w.render(0);await w.streamingProgramRefresh;
+ if(!w.programLease?.stats.retained)throw Error('Context restoration did not reacquire retention');
  if(snapshot()!==before)throw Error('World changed across context restoration');
  if(w.state.pauses.includes('context-lost')||w.state.pauses.includes('runtime-error'))throw Error('Recovery left failure pause');
  const gl=renderer.getContext();if(gl.isContextLost()||gl.getError()!==gl.NO_ERROR)throw Error('GL did not recover cleanly');
  const programs=renderer.info.programs.length;if(!programs||renderer.info.render.calls<=0)throw Error('No restored draw');
- return {abandoned:lease.stats,programs,drawCalls:renderer.info.render.calls,worldUnchanged:true,backend:w.spatialSession.runtime.backend,nativeBytes:core.metrics().memoryBytes,glEpoch:w.glResourceEpoch?.stats};
+ return {recovery:w.streamingProgramRecovery,retained:w.programLease.stats,abandoned:lease.stats,programs,drawCalls:renderer.info.render.calls,worldUnchanged:true,backend:w.spatialSession.runtime.backend,nativeBytes:core.metrics().memoryBytes,glEpoch:w.glResourceEpoch?.stats};
 }

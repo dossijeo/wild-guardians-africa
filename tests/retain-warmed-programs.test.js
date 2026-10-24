@@ -26,3 +26,10 @@ test('context replacement and loss abandon old handles without deleting them',()
   lease.dispose();assert.equal(lease.stats.abandoned,1);assert.equal(lease.stats.released,0);assert.equal(a.destroyed,0);
  }
 });
+
+test('recovery prioritizes newer variants without changing renderer collection order',()=>{
+ const old={...program(),id:1},recent={...program(),id:8},middle={...program(),id:4},renderer={info:{programs:[old,recent,middle]}};
+ const lease=retainWarmedPrograms(renderer,{limit:2,newestFirst:true});
+ assert.equal(old.usedTimes,1);assert.equal(recent.usedTimes,2);assert.equal(middle.usedTimes,2);
+ assert.deepEqual(renderer.info.programs,[old,recent,middle]);lease.dispose();assert.equal(recent.usedTimes,1);
+});

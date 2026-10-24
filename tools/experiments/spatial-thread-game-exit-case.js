@@ -8,7 +8,7 @@ export async function verifyGameExit(w){
  p.start=function(...args){const id=start.apply(this,args);if(id>0&&!observed){observed=true;exitPromise=(async()=>{
   const deadline=performance.now()+10000;while(p.status()===1){if(performance.now()>deadline)throw Error('Start timeout');await new Promise(r=>setTimeout(r,0));}
   if(p.status()!==2)throw Error('Missed running phase');
-  const before=p.status(),begin=performance.now();await globalThis.qaReturnToMenu();await disposePromise;
+  const before=p.status(),begin=performance.now();w.qualitySetting(w.quality==='baja'?'media':'baja');const recovery=w.streamingProgramRefresh;await Promise.resolve();await Promise.resolve();if(!w.streamingProgramRefreshAbort)throw Error('Recovery did not start before exit');await globalThis.qaReturnToMenu();await disposePromise;await recovery;
   return {before,elapsedMs:performance.now()-begin};
  })();}return id;};
  w.updateCamera=()=>{w.camera.lookAt(w.controls.target);w.camera.updateMatrixWorld();};
@@ -20,5 +20,5 @@ export async function verifyGameExit(w){
  const workers=Object.keys(handle.runtime.PThread.pthreads).length+handle.runtime.PThread.unusedWorkers.length;
  if(!w.disposed||workers||lateInstalls||p.status()!==5||!document.querySelector('#native-menu'))throw Error('Game exit cleanup failed');
  if(retained&&retained.stats.released+retained.stats.abandoned!==retained.stats.retained)throw Error('Retained program references leaked');
- return {...exit,programRetention:retained?.stats??null,disposalStates,worldDisposed:w.disposed,workers,lateInstalls,nativeStatus:p.status(),menu:true,stream:w.chunkStream.summary()};
+ return {...exit,programRetention:retained?.stats??null,disposalStates,worldDisposed:w.disposed,recoveryFinished:w.streamingProgramRefresh===null,workers,lateInstalls,nativeStatus:p.status(),menu:true,stream:w.chunkStream.summary()};
 }
