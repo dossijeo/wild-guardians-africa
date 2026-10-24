@@ -2,6 +2,30 @@
 
 Reference: `54075e228`, experimental branch only. Candidate opt-in: `?frameScheduler=1`. No performance benefit claimed yet. No scheduler migration is complete.
 
+## Current status (2026-10-24; supersedes historical checkpoints below)
+
+Candidate remains opt-in with `frameScheduler=1`; main unchanged, PR159 draft.
+It now includes stable shadow recipes and dormant crop depth preparation,
+private terrain staging, bounded overlap with native generation, actor queue
+admission and depth-preparation transactions. Default path remains the control.
+Earlier sections below are chronological experiments, not current API status.
+
+Structural shader reuse removed the measured multi-second quality recompilation
+in controlled experiments. Do NOT generalize that result to overall scheduler
+acceptance: full-frame streaming tails and throughput have not improved
+consistently. Unit/lifecycle coverage and six-biome active quality checks pass;
+fixed-view day/night comparisons preserve the approved image within measured
+small pixel differences. Broader workload/hardware acceptance is outstanding.
+
+Remaining important integration gaps: initial screen compilation, texture
+uploads, far asset preparation and some loading yields still use specialized
+budgets. Do not blindly nest scheduled compilation inside a borrowed depth
+transaction: the borrowed material state must survive synchronous submission
+and be restored before awaiting readiness. Native simulation/navigation remain
+outside optional work scheduling by design. Dependency/coalescing and memory
+backpressure are not universal; bounded producer admission alone is not a
+memory limit. Continue attribution before adding more queue wrappers.
+
 ## Confirmed inventory and costs
 
 - Quality prewarm report: active simulation produced roughly 985 ms presentation stalls, including 832 ms Mangroves ground and 117 ms far terrain synchronous driver work. These atomic calls cannot be preempted. Existing whole-scene retries are not a production solution.
@@ -727,3 +751,81 @@ snapshot so reporting cannot hang behind an unresponsive browser. Attempt3
 fresh run passes. No other process terminated; no production/browser launch
 flags altered. This bounded producer path remains behind experimental scheduler.
 Main unchanged; further loading ABAB needed before default activation.
+
+
+### Current integrated loading ABAB (2026-10-24)
+
+Reports `scheduler-loading-current-{a1,b1,a2,b2}.json` and summary JSON.
+Same Manglares media fixture,1280x720, pthreads, actual default streaming,
+frozen at readiness, fresh Chrome each run, no concurrent benchmarks/builds.
+A: unchanged default; B: frameScheduler=1 including stable shadow/crop prep.
+WG_THREAD_PORT=5190, WG_THREAD_DEFAULT_STREAMING=1, WG_THREAD_FROZEN=1,
+WG_THREAD_LOADING_TIMES=1; alternate WG_FRAME_SCHEDULER=0/1/0/1.
+This compares the whole current bundle, not isolated actor backpressure.
+
+| Run | Initial readiness | Worker actor phase | GPU preparation phase* | Far assets phase* |
+|---|---:|---:|---:|---:|
+| A1 |32.170s|58.61ms|8.302s|7.122s|
+| B1 |31.435s|188.27ms|8.977s|7.170s|
+| A2 |31.322s|58.28ms|8.560s|6.918s|
+| B2 |33.128s|134.36ms|8.836s|8.343s|
+
+*Async elapsed phase duration, NOT GPU execution time; nested/overlapping
+phases must not be summed. Readiness is measured in-page, not10s host polling.
+Paired deltas are -0.734s and +1.807s: no consistent loading improvement or
+strong nonregression conclusion. Mean candidate +0.536s (~1.7%) with only two
+pairs is not statistical acceptance. Previous38s pilot is not reproduced here,
+but that does not establish its cause. Actor CPU remains12.9–14.8ms total for
+two tasks: longer actor phase is waiting/other asynchronous work, not evidence
+of extra native execution. Far assets variance is substantial and not isolated.
+
+All four finish25chunks, zero stream failures/pending work. Candidates complete
+67scheduler jobs/918units, with29.69–31.07ms total coordination during the whole
+load (not per frame), no failed jobs. These runs do not measure loading-frame
+P95/P99, GPU duration or peak memory; the final scheduler two-second policy
+snapshot is NOT a loading latency distribution. Do not use it as one.
+
+Keep the candidate experimental; do not tune a universal budget from these
+four observations. Next structural producer attribution should separate far
+texture decode/upload, preparation and async waits. Existing far phase witness
+can provide that split without changing material quality or atlas density.
+
+
+### Integrated low-quality context restoration (2026-10-24)
+
+`scheduler-bundle-low-context.json` plus before/after PNGs: scheduler bundle,
+Manglares baja, frozen720p fixture. Actual forced WebGL loss/restoration passes:
+world snapshot unchanged, pthread backend and16MiB native memory retained,
+76old program references abandoned,29new retained,72draw calls after recovery,
+GL epoch1, zero unknown deletes, no failure pauses or pending scheduler work.
+Recovery elapsed1503ms is asynchronous wall time, not an asserted CPU block or
+smoothness result. No compilation was pending in this case; do not infer
+interrupted-compilation coverage from it. Inspected images preserve soil,
+vegetation, structures/water and low-quality lighting. Existing context-loss
+notification remains visible after successful recovery; images are therefore
+not globally pixel-identical. This notification/UI issue remains documented.
+
+
+### Far preparation attribution, no production policy change (2026-10-24)
+
+Harness `WG_THREAD_FAR_TIMES=1` records the existing native-far witness alongside
+its original consumer. It does not alter draws, shader recipes or admission.
+`scheduler-loading-far-attribution.json` and summary: integrated Manglares media,
+ready32.682s, same fixture/default streaming. Spans collected until the
+post-readiness snapshot, including preparation completed after readiness;
+incomplete spans absent. Do not interpret their sum as the loading critical path.
+
+Found real remaining synchronous submission spikes: far-gpu draw slot0 max
+117.395ms and slot2 max65.030ms. Other slots max5.815/9.485ms. These are CPU wall
+durations around submission, not GPU timers. Slot0 compilation/readiness max
+1178.825ms is ASYNC elapsed; queue waits up to1679.960ms and fence wait up to
+989.870ms are NOT CPU freezes. Worker waits717–885ms and ground-seam wait1366ms
+also remain asynchronous. Region object creation1.47–2.28ms is much smaller.
+
+This identifies a better next target than blindly splitting cheap object
+creation: explain the117ms native draw and repeated preparation/queue ownership.
+The loading-only far queue deliberately serializes compile/draw/fence after
+parallel texture preparation. Replacing it with a global job that retains
+borrowed GL state or awaits fences in the scheduler would be incorrect. Need
+atomic submission attribution and resource-recipe reuse before integration;
+not established by this single exploratory run. No throughput win claimed.

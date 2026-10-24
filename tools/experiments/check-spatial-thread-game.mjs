@@ -22,6 +22,13 @@ try{
   delete headers['cross-origin-opener-policy'];delete headers['cross-origin-embedder-policy'];
   await route.fulfill({response,headers});
  });
+ if(process.env.WG_THREAD_FAR_TIMES==='1')await page.route('**/tools/experiments/attach-native-far-world.js*',async route=>{
+  const response=await route.fetch(),source=await response.text();
+  const anchor="const witness=world.onLoadingSpan?span=>world.onLoadingSpan({...span,label:span.label+':slot'+slot}):null;";
+  if(source.split(anchor).length!==2)throw Error('Missing far phase witness anchor');
+  const replacement="const witness=span=>{const row={...span,label:span.label+':slot'+slot};(globalThis.qaFarPreparationSpans??=[]).push(row);world.onLoadingSpan?.(row);};";
+  await route.fulfill({response,body:source.replace(anchor,replacement)});
+ });
  if(process.env.WG_THREAD_BOOT_FAILURE==='1')await page.route('**/wild-engine/spatial-threaded.mjs',route=>route.fulfill({status:503,contentType:'text/javascript',body:'// QA: unavailable pthread module'}));
  await page.addInitScript(({text,quality})=>{localStorage.setItem('wild-guardians:slot:opening',text);localStorage.setItem('wild-guardians:settings',JSON.stringify({quality,farVegetation:true}));},{text:fixture.timing.navigationContext.state,quality});
  if(frozen||process.env.WG_THREAD_MAIN_PHASES==='1')await page.route('**/src/app/main.js*',async route=>{
@@ -77,7 +84,7 @@ try{
   if(attempt===17)throw Error('Game readiness deadline exceeded; see thread-game-loading.json');
   await page.waitForTimeout(10000);
  }
- const result=await page.evaluate(async()=>{const w=qaThreadWorld;await w.whenChunksReady();return {cropDepthPreparation:w.cropDepthPreparation??null,loading:{readyMs:globalThis.qaStreamingReadyAt-globalThis.qaStreamingLoadStart,phases:globalThis.qaLoadingPhases??[]},actorPreparation:w.loadingActorQueue?{...w.loadingActorQueue.stats,pending:w.loadingActorQueue.jobs.length,global:!!w.loadingActorQueue.scheduler}:null,streamingOptions:w.streamingOptions,isolated:crossOriginIsolated,runtime:w.spatialSession.runtime,programRetention:w.programLease?.stats??null,stream:w.chunkStream.summary(),native:w.spatialSession.core.metrics(),chunks:w.chunks.size,stage:document.querySelector('#stage')?.getAttribute('aria-busy'),elapsed:w.state.elapsed,renderer:w.renderer.getContext().getParameter(w.renderer.getContext().RENDERER)};});
+ const result=await page.evaluate(async()=>{const w=qaThreadWorld;await w.whenChunksReady();return {farPreparationSpans:globalThis.qaFarPreparationSpans??null,cropDepthPreparation:w.cropDepthPreparation??null,loading:{readyMs:globalThis.qaStreamingReadyAt-globalThis.qaStreamingLoadStart,phases:globalThis.qaLoadingPhases??[]},actorPreparation:w.loadingActorQueue?{...w.loadingActorQueue.stats,pending:w.loadingActorQueue.jobs.length,global:!!w.loadingActorQueue.scheduler}:null,streamingOptions:w.streamingOptions,isolated:crossOriginIsolated,runtime:w.spatialSession.runtime,programRetention:w.programLease?.stats??null,stream:w.chunkStream.summary(),native:w.spatialSession.core.metrics(),chunks:w.chunks.size,stage:document.querySelector('#stage')?.getAttribute('aria-busy'),elapsed:w.state.elapsed,renderer:w.renderer.getContext().getParameter(w.renderer.getContext().RENDERER)};});
  if(process.env.WG_THREAD_NO_ISOLATION==='1'&&(result.isolated||result.runtime.fallbackReason!=='SharedArrayBuffer isolation unavailable'))throw Error('Missing real non-isolated fallback');
  if(process.env.WG_THREAD_BOOT_FAILURE==='1'&&(!result.isolated||!result.runtime.fallbackReason))throw Error('Missing isolated boot-failure fallback');
  if(result.runtime.backend!==((threaded&&process.env.WG_THREAD_NO_ISOLATION!=='1'&&process.env.WG_THREAD_BOOT_FAILURE!=='1')?'pthreads':'standalone'))throw Error(JSON.stringify(result));
