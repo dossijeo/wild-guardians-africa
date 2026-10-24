@@ -390,3 +390,48 @@ WG_THREAD_FROZEN=1 WG_THREAD_ACTIVE=1 WG_THREAD_QUALITY=baja WG_THREAD_BENCH=1
 WG_THREAD_GPU=1 WG_THREAD_FRAMES=360 WG_THREAD_DISTANCE=144;
 run tools/experiments/check-spatial-thread-game.mjs serially with
 WG_THREAD_STABLE_SHADOW_PROGRAMS=0,1,0,1 and distinct WG_THREAD_REPORT paths.
+
+
+### Residual streaming attribution and integrated ABAB (2026-10-24)
+
+`stable-shadow-stream-attribution-1.json` repeats active baja/360frames/144m
+with GL attribution. The long draw is 172 ms, including 157.675 ms in
+getProgramInfoLog for key `depth,...,bioma-local-bridge-depth-v3` (id81).
+Native publication max1.115ms; native computation max63.68ms is already on
+pthread. Terrain installation max22.99ms is separate. Therefore the largest
+observed spike is a first-use dormant crop depth program, not native compute.
+Do not wrap that atomic driver wait in a scheduler promise.
+
+Reused the existing optional loading-only crop depth preparation, with stable
+shadows ON. Serial ABAB isolates scheduler OFF/ON/OFF/ON; both A and B have
+crop prewarm, same active low-quality fixture, 720p Intel UHD, GPU timers,
+360 camera frames/144m, GL instrumentation. Raw `scheduler-stable-crop-abab-*`.
+All four runs: 15 chunks, zero paused frames, no slow GL calls >20ms, no
+stream failures. Draw CPU max12.89/12.93/13.76/13.29ms; the identified first-use
+compile wait is absent. Crop preparation adds 270–399ms during loading.
+
+| Run | ready ms | RAF mean / P95 / max ms | install mean/max ms | preparation latency mean/max ms |
+| --- | --- | --- | --- | --- |
+| A1 | 28257 | 27.71 / 49.92 / 83.17 | 12.70 / 26.96 | synchronous |
+| B1 | 28274 | 28.68 / 49.93 / 99.79 | 0.53 / 2.57 | 681 / 1525 |
+| A2 | 28031 | 27.58 / 49.92 / 99.83 | 10.95 / 19.03 | synchronous |
+| B2 | 31084 | 28.18 / 49.92 / 83.17 | 0.58 / 2.14 | 769 / 2024 |
+
+B has 601 preparation slices, maximum4.25/4.12ms, but no convincing overall
+frametime improvement. GPU means21.61/21.86/21.63/22.28ms; no speedup claim.
+B2 loading is ~3s slower: cannot claim unchanged load cost from B1 alone.
+All queues finish, yet per-chunk latency is too high to count as acceptable
+throughput. Keep scheduler opt-in. The admission policy currently allows one
+small overdue unit per frame when no immediate headroom exists; terrain has
+~40 units per chunk. This is a candidate explanation for preparation delay,
+not a proved attribution of every wait. Revisit admission/batching using this
+integrated workload rather than accepting lower final install cost alone.
+Prior generic deadline batching experiment remained inconclusive and is not
+silently reintroduced. Further work must preserve CPU/elapsed guards and
+measure queue latency plus total presentation, not just units completed.
+
+Reproduce previous active ABAB environment with stableShadowPrograms=1,
+WG_THREAD_CROP_DEPTH_PREPARATION=1, WG_THREAD_GL_DETAIL=1 and
+WG_FRAME_SCHEDULER=0,1,0,1. Summary includes raw-derived RAF P99 and separates
+GPU timings, CPU spans and preparation latency. No default flags changed,
+no artistic edits, main untouched. Full scheduler acceptance remains open.
