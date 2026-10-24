@@ -1,3 +1,4 @@
+import {globalFrameScheduler,globalFrameSchedulerEnabled} from './global-frame-scheduler.js';
 import {streamingOptions} from '../rendering/streaming-options.js';
 import {prepareTerrainChunk,discardPreparedTerrain} from '../rendering/prepare-terrain-chunk.js';
 import {findSpatialStart} from '../world/wild-engine/spatial-initial-site.js';
@@ -44,8 +45,8 @@ export async function prepareWildEngineWorld(world,state,payload,{signal,loaded=
     }
     session=createSpatialGameSession(module,state,{
     ...(threaded?{core:threaded.core}:{}),
-    ...(new URLSearchParams(location.search).get('chunkInstall')==='staged'?{
-      prepareData:(data,current)=>prepareTerrainChunk(world,data,current),
+    ...(globalFrameSchedulerEnabled()||new URLSearchParams(location.search).get('chunkInstall')==='staged'?{
+      prepareData:(data,current)=>prepareTerrainChunk(world,data,current,{scheduler:globalFrameSchedulerEnabled()?globalFrameScheduler:null,signal}),
       discardData:data=>discardPreparedTerrain(world,data)
     }:{}),
     loaded:()=>world.chunks,

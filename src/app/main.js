@@ -1,3 +1,4 @@
+import {globalFrameScheduler,globalFrameSchedulerEnabled} from './global-frame-scheduler.js';
 import {createDesktopExit} from './desktop-exit.js';
 import {preloadScreenOverlays} from '../ui/screen-overlays.js';
 import {GameJuice} from '../ui/game-juice.js';
@@ -550,6 +551,7 @@ function updateRaidLoading(){
   document.querySelector('#stage').append(raidLoading);
 }
 function frame(now) {
+  if(globalFrameSchedulerEnabled())globalFrameScheduler.beginFrame(now);
 
   if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-microevents')&&screen==='game')recordMicroeventFrame(world?.canvas,now-lastFrame,{off:settings.microevents==='off',event:!!microevents?.active,blocked:!!state?.pauses.length||microevents?.qaFrozen||document.hidden});
   requestAnimationFrame(frame);if(cropSpellFrameQa&&globalThis.__wildSpellFrameManual)return;if(preparedLoading?.world.loadingCpuBudget)preparedLoading.world.loadingPresentationEpoch=(preparedLoading.world.loadingPresentationEpoch??0)+1;if(screen==='loading'&&world?.loadingCpuBudget)world.loadingPresentationEpoch=(world.loadingPresentationEpoch??0)+1;const dt=frameDelta(now,lastFrame);lastFrame=now;
@@ -571,6 +573,7 @@ function frame(now) {
     catch(e){Game.pause(state,'runtime-error');guardian?.hide({immediate:true});dialogVoice.stop();error(e.message);console.error(e);}
     if(autosaveEventAfter(state.events,eventIndex))save();
   }
+  if(globalFrameSchedulerEnabled())globalFrameScheduler.endFrame();
 }
 async function boot() {try {await window.WildGuardiansLanguageReady;[selector,thumbnails]=await Promise.all([json('/content/selector.json'),json('/content/crop-thumbnails.json')]);if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-microevents-fixture')){requestAnimationFrame(frame);const fixture={wood:'microevent-wood',wet:'microevent-wet',rocks:'microevent-rocks'}[new URLSearchParams(location.search).get('qa-microevents-fixture')]??'microevent-world';await startGame(await json('/tests/fixtures/'+fixture+'.json'));}else{menu();requestAnimationFrame(frame);}}catch(e){app.textContent='No se pudo iniciar Wild Guardians: '+e.message;}}
 boot();
