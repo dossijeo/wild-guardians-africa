@@ -336,3 +336,15 @@ World compile is5,610.070ms versus5,493.770ms. Do not attribute the whole
 The second pair continues. A regression test for base-key separation and
 unchanged visibility shader output is prepared, awaiting execution after
 benchmarks to avoid overlapping test workloads.
+
+## Shared-key A/B/A/B: no reproducible loading win
+
+The second original/shared pair is37,032.250ms versus39,144.610ms: candidate
+loads2,112.360ms later. First pair favored B by9,054.640ms, dominated by an
+outlying original far-preparation interval. Do not average this into a claimed
+reliable gain. One fewer program is demonstrated; shorter loading is not.
+Five smooth-transition tests pass, including base-key separation and identical
+visibility patch output. This does not substitute for a measured end-to-end win.
+Keep sharedSmoothProgram opt-in and do not promote it as a loading optimization.
+No required visual variant has been removed, and neither candidate is enabled
+by default. This audit has not yet delivered a validated loading-time reduction.

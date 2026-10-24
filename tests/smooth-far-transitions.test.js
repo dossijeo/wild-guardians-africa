@@ -4,6 +4,33 @@ import * as THREE from 'three';
 import {smoothFarTransitionsEnabled,smoothStandbyMaterial} from '../src/rendering/smooth-far-transitions.js';
 import {createFarImpostorPrototype} from '../tools/experiments/far-impostor-prototype.js';
 import {NativeTreeStandby,standbyTreeKey} from '../tools/experiments/native-tree-standby.js';
+import {createSmoothObstructionMaterial} from '../src/rendering/asset-groups.js';
+
+test('shared smooth key preserves base variants and both visibility patches',()=>{
+ const location=Object.getOwnPropertyDescriptor(globalThis,'location');
+ const source=new THREE.MeshStandardMaterial();
+ source.customProgramCacheKey=()=> 'authored-A';
+ const anchor='if(vNativeVisibility<.999){if(vNativeVisibility<.002||coverageThreshold(gl_FragCoord.xy)>=vNativeVisibility)discard;}';
+ source.onBeforeCompile=shader=>{shader.fragmentShader=anchor+'\n#include <opaque_fragment>';shader.uniforms={retained:{value:1}};};
+ const materials=[];
+ try{
+  Object.defineProperty(globalThis,'location',{configurable:true,value:{search:''}});
+  const original=smoothStandbyMaterial(source);materials.push(original);
+  Object.defineProperty(globalThis,'location',{configurable:true,value:{search:'?sharedSmoothProgram=1'}});
+  const shared=smoothStandbyMaterial(source),near=createSmoothObstructionMaterial(source);materials.push(shared,near);
+  assert.notEqual(original.customProgramCacheKey(),shared.customProgramCacheKey());
+  assert.equal(shared.customProgramCacheKey(),near.customProgramCacheKey());
+  const compile=material=>{const shader={fragmentShader:''};material.onBeforeCompile(shader);return shader;};
+  assert.deepEqual(compile(shared),compile(original));assert.deepEqual(compile(shared),compile(near));
+  source.customProgramCacheKey=()=> 'authored-B';
+  const other=smoothStandbyMaterial(source);materials.push(other);
+  assert.notEqual(other.customProgramCacheKey(),shared.customProgramCacheKey());
+  assert.equal(source.transparent,false);assert.equal(shared.depthWrite,false);
+ }finally{
+  for(const material of materials)material.dispose();source.dispose();
+  if(location)Object.defineProperty(globalThis,'location',location);else delete globalThis.location;
+ }
+});
 
 function fixture(scene=new THREE.Scene()){
  const source={geometry:new THREE.BoxGeometry(),material:new THREE.MeshStandardMaterial()},texture=new THREE.Texture();
