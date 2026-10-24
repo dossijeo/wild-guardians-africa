@@ -33,3 +33,13 @@ test('recovery prioritizes newer variants without changing renderer collection o
  assert.equal(old.usedTimes,1);assert.equal(recent.usedTimes,2);assert.equal(middle.usedTimes,2);
  assert.deepEqual(renderer.info.programs,[old,recent,middle]);lease.dispose();assert.equal(recent.usedTimes,1);
 });
+
+test('selected incremental leases avoid repinning old programs and release new owners independently',()=>{
+ const a=program(),b=program(),renderer={info:{programs:[a]}};
+ const first=retainWarmedPrograms(renderer,{select:p=>p===a});renderer.info.programs.push(b);
+ const second=retainWarmedPrograms(renderer,{select:p=>p!==a});
+ assert.deepEqual([a.usedTimes,b.usedTimes],[2,2]);a.usedTimes--;b.usedTimes--;
+ second.dispose();assert.equal(b.destroyed,1);assert.equal(a.destroyed,0);
+ first.dispose();assert.equal(a.destroyed,1);assert.equal(renderer.info.programs.length,0);
+ assert.throws(()=>retainWarmedPrograms(renderer,{select:null}),TypeError);
+});
