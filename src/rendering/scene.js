@@ -168,7 +168,8 @@ export class WorldScene {
     this.destructionPass.effectQuality=quality==='alta'?'high':['muy_baja','baja'].includes(quality)?'low':'medium';
     const qualityGround=this.biomeGround?.mangroveSubstrate?[...this.terrainMeshes,...[...this.chunks.values()].flatMap(group=>group.children.filter(mesh=>mesh.userData.globalMudBlend))]:this.terrainMeshes;
     updateGroundQuality(qualityGround,quality,mesh=>{configureMangroveMudMaterial(this,mesh.material);this.materialRegistry?.refresh(mesh);});
-    const shadowsEnabled=['media','alta'].includes(quality),stableShadows=new URLSearchParams(globalThis.location?.search??'').get('stableShadowPrograms')==='1';
+    const shadowPreparation=new URLSearchParams(globalThis.location?.search??'').get('stableShadowPrograms');
+    const shadowsEnabled=['media','alta'].includes(quality),stableShadows=shadowPreparation==='1'||(shadowPreparation!=='0'&&!!this.frameScheduler);
     const rendererShadows=stableShadows||shadowsEnabled,shadowsChanged=this.renderer.shadowMap.enabled!==rendererShadows;
     if(stableShadows){
       this.sun.userData.nativeShadowQualityIntensity??=this.sun.shadow.intensity;
@@ -233,7 +234,7 @@ export class WorldScene {
     this.locomotionVfx=new LocomotionVfx(this.vfxLibrary,this.destructionPass,this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z),(x,z)=>this.nav.field.canyon?this.nav.field.waterInfo(x,z):null);await milestone('vfx');
     this.raidCamera=new RaidCameraDirector(this.camera,this.controls,nav.field);this.focusFarm();
     const initialFarRegion=this.loadingCpuBudget&&loadingProgress&&farVegetation?startInitialFarRegion(this,farVegetation===true?{}:farVegetation):null;
-    this.chunkStream=spatialSession?.stream??new NativeChunkStream(this.nav.config,this.pack.profile,{loaded:()=>this.chunks,onData:data=>this.installChunk(data),onError:error=>this.onError?.(error),onFallback:error=>console.warn('GeneraciÃƒÂ³n local de chunks:',error.message??error)});
+    this.chunkStream=spatialSession?.stream??new NativeChunkStream(this.nav.config,this.pack.profile,{loaded:()=>this.chunks,onData:data=>this.installChunk(data),onError:error=>this.onError?.(error),onFallback:error=>console.warn('GeneraciÃƒÆ’Ã‚Â³n local de chunks:',error.message??error)});
     this.syncChunks();await phase('load-chunks-horizon-ready',()=>this.loadReady(Promise.all([this.chunkStream.whenReady(),this.horizon.whenReady()])));if(this.disposed)throw new Error('Carga de mundo cancelada');this.syncChunks();await milestone('chunks');
     await this.loadReady(this.prepareSavedAnimalRigs(state));loadingSyncWitness(this.onLoadingSpan,'restore-sync',()=>this.sync(0));
     if(continuousGrassEnabled(state.biome)){
@@ -520,7 +521,8 @@ export class WorldScene {
         await phase('warm-compile-obstruction',()=>compile(this.obstructionWarmup.group,this.camera,this.scene));if(this.disposed)return;
       }
       await phase('warm-prepare-depth',()=>this.destructionPass.prepareDepth(this.camera,this.scene,{scheduler:this.frameScheduler,compile:(scene,camera,target)=>compile(scene,camera,target,{screen:false}),...(this.loadingProgress?{signal:this.loading.signal,onPrepare:this.onLoadingSpan,frameSlack:this.loadingFrameSlack,...pacing,batchSize:32,cancelled:()=>this.disposed||this.loading.signal.aborted}:{})}));if(this.disposed)return;
-      if(new URLSearchParams(globalThis.location?.search??'').get('cropDepthPreparation')==='1'){
+      const cropPreparation=new URLSearchParams(globalThis.location?.search??'').get('cropDepthPreparation');
+      if(cropPreparation==='1'||(cropPreparation!=='0'&&!!this.frameScheduler)){
         this.cropDepthPreparation=await phase('warm-crop-depth',()=>prepareCropDepthPrograms(this.renderer,this.scene,this.camera,this.destructionPass,{scheduler:this.frameScheduler,signal:this.loading.signal,cancelled:()=>this.disposed,getEpoch:()=>this.glResourceEpoch?.stats.epoch??0,onSubmit:this.onLoadingSpan}));if(this.disposed)return;
       }
       this.programBindings=this.loadingProgress?await phase('warm-program-bindings',()=>initializeProgramBindingsAsync(this.renderer,{cancelled:()=>this.disposed})):initializeProgramBindings(this.renderer);

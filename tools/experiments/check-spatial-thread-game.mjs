@@ -44,9 +44,9 @@ try{
  if(process.env.WG_THREAD_CROP_DEPTH_SHADOW_WARM==='1')gameUrl.searchParams.set('cropDepthShadowWarm','1');
  if(process.env.WG_THREAD_QUALITY_COMPILE_CONCURRENCY)gameUrl.searchParams.set('qualityCompileConcurrency',process.env.WG_THREAD_QUALITY_COMPILE_CONCURRENCY);
  if(process.env.WG_THREAD_ACTIVE==='1')gameUrl.searchParams.set('qualityRequireActive','1');
- if(process.env.WG_THREAD_STABLE_SHADOW_PROGRAMS==='1')gameUrl.searchParams.set('stableShadowPrograms','1');
+ if(['0','1'].includes(process.env.WG_THREAD_STABLE_SHADOW_PROGRAMS))gameUrl.searchParams.set('stableShadowPrograms',process.env.WG_THREAD_STABLE_SHADOW_PROGRAMS);
  if(process.env.WG_THREAD_QUALITY_MENU_PROTOCOL==='1')gameUrl.searchParams.set('qualityMenuProtocol','1');
- if(process.env.WG_THREAD_CROP_DEPTH_PREPARATION==='1')gameUrl.searchParams.set('cropDepthPreparation','1');
+ if(['0','1'].includes(process.env.WG_THREAD_CROP_DEPTH_PREPARATION))gameUrl.searchParams.set('cropDepthPreparation',process.env.WG_THREAD_CROP_DEPTH_PREPARATION);
  if(process.env.WG_THREAD_CROP_DEPTH_WARM==='1')gameUrl.searchParams.set('cropDepthWarm','1');
  if(process.env.WG_THREAD_ESTIMATE_OUTLIER==='1')gameUrl.searchParams.set('estimateOutlier','1');
  if(process.env.WG_THREAD_QUALITY_PHASES==='1')gameUrl.searchParams.set('qualityPhases','1');

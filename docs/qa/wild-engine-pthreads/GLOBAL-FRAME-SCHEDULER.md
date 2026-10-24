@@ -656,3 +656,34 @@ camera angles/context restoration or performance. Full integrated nighttime
 Manglares still differs in scope from older stable-shadow-only night pairs;
 do not conflate these checks. All source flags remain opt-in; PR draft/main
 unchanged. Reproduction is the Sabana visual protocol with the four biome ids.
+
+
+### Consolidated experimental activation and integrated Manglares night (2026-10-24)
+
+`frameScheduler=1` now also selects stable shadow programs and loading-only
+crop depth preparation when those options are unspecified. These address the
+measured atomic GL stalls that scheduling alone cannot split. No new scheduler
+or preparation layer: same previously tested components and lifecycle.
+Explicit `stableShadowPrograms=0` / `cropDepthPreparation=0` retain isolated QA
+controls; explicit1 still works without scheduler. With no scheduler and no
+explicit options, old default behavior remains. Harness now forwards explicit
+zero overrides (previously only1). Unit coverage checks scheduler default,
+standalone opt-in, explicit opt-out and material identity/shadow intensity.
+
+Night control/candidate `scheduler-bundle-night-*` uses existing controlled
+Manglares seed712 night fixture (time450), paused,720p, same camera, low/medium/
+low settled captures. Candidate URL has frameScheduler=1 ONLY, no two extra
+preparation switches; crop result confirms32objects/56bindings,274.67ms, all
+56temporary references released. Control has no crop preparation. The actual
+renderer validates the consolidated path, not just its options parsing.
+
+RGB MAD0.003400/.000973/.001615 out of255; fraction delta>8 per pixel
+.000174/.0000141/.0000543. Inspected low/medium side-by-sides: matching soil,
+fern coverage, water, structures and night illumination. Raw PNGs, pair JPEGs
+and difference JSON included. This is visual equivalence, not a performance
+claim or broad night/combat validation. Source changes pass renderer-quality,
+crop-depth and scheduler unit suites; Vite production build passes (existing
+large-bundle warning). Full scheduler remains opt-in pending remaining acceptance;
+no claim that its queue API, all producers or all workload profiles are complete.
+Main untouched, PR159 draft. Use a single frameScheduler=1 for future integrated
+validation; specify explicit zeros only for intentionally isolated comparisons.

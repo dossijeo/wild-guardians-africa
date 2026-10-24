@@ -89,13 +89,14 @@ test('canyon horizon changes only its ground material when the resident rectangl
  assert.equal(geos,0);assert.equal(mats,1);horizon.dispose();assert.equal(geos,1);
 });
 
-test('experimental stable shadow programs retain materials while toggling shadow contribution',()=>{
- const previous=Object.getOwnPropertyDescriptor(globalThis,'location');Object.defineProperty(globalThis,'location',{value:{search:'?stableShadowPrograms=1'},configurable:true});
+for(const search of ['?stableShadowPrograms=1','','?stableShadowPrograms=0'])test('stable shadow programs retain materials: '+(search||'scheduler default'),()=>{
+ const stable=search!=='?stableShadowPrograms=0';
+ const previous=Object.getOwnPropertyDescriptor(globalThis,'location');Object.defineProperty(globalThis,'location',{value:{search},configurable:true});
  const mesh=new THREE.Mesh(new THREE.PlaneGeometry(),nativeGroundMaterial('media')),scene=new THREE.Scene();scene.add(mesh);
- const world={releaseRetainedPrograms(){},refreshStreamingPrograms(){},resize(){},quality:'media',terrainMeshes:[mesh],scene,chunks:new Map(),toon:new AfricanToon(),destructionPass:{},sun:new THREE.DirectionalLight(),renderer:{shadowMap:{enabled:true}},assetGroups:{invalidateMaterials(){assert.fail('unnecessary invalidation');}}};
+ const world={frameScheduler:search==='?stableShadowPrograms=1'?null:{},releaseRetainedPrograms(){},refreshStreamingPrograms(){},resize(){},quality:'media',terrainMeshes:[mesh],scene,chunks:new Map(),toon:new AfricanToon(),destructionPass:{},sun:new THREE.DirectionalLight(),renderer:{shadowMap:{enabled:true}},assetGroups:{invalidateMaterials(){if(stable)assert.fail('unnecessary invalidation');}}};
  const material=mesh.material,version=material.version;world.sun.shadow.intensity=.8;
  try{
-  WorldScene.prototype.qualitySetting.call(world,'baja');assert.equal(world.renderer.shadowMap.enabled,true);assert.equal(world.sun.userData.nativeShadowDisabled,true);assert.equal(world.sun.shadow.intensity,0);
-  WorldScene.prototype.qualitySetting.call(world,'media');assert.equal(world.sun.userData.nativeShadowDisabled,false);assert.equal(world.sun.shadow.intensity,.8);assert.equal(mesh.material,material);assert.equal(material.version,version);
+  WorldScene.prototype.qualitySetting.call(world,'baja');assert.equal(world.renderer.shadowMap.enabled,stable);assert.equal(world.sun.userData.nativeShadowDisabled,stable?true:undefined);assert.equal(world.sun.shadow.intensity,stable?0:.8);
+  WorldScene.prototype.qualitySetting.call(world,'media');assert.equal(world.sun.userData.nativeShadowDisabled,stable?false:undefined);assert.equal(world.sun.shadow.intensity,.8);assert.equal(mesh.material,material);if(stable)assert.equal(material.version,version);else assert.ok(material.version>version);
  }finally{mesh.geometry.dispose();material.dispose();if(previous)Object.defineProperty(globalThis,'location',previous);else delete globalThis.location;}
 });
