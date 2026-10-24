@@ -1,0 +1,172 @@
+{
+  "rows": [
+    {
+      "biome": "gran-rio",
+      "quality": "baja",
+      "night": false,
+      "scope": "Default pthread path, active simulation and continuous camera. Night uses an explicit time-450 fixture, not a tested dusk transition. Final simulation states differ; not an A/B speed claim or full campaign validation.",
+      "created": 15,
+      "elapsed": 9.045499999999137,
+      "frames": {
+        "count": 360,
+        "mean": 25.081277777777782,
+        "p95": 49.94999999999709,
+        "max": 99.75
+      },
+      "publication": {
+        "count": 15,
+        "mean": 0.7876666585604349,
+        "p95": 1.034999966621399,
+        "max": 1.0799999833106995
+      },
+      "eviction": {
+        "count": 15,
+        "mean": 3.2089999953905743,
+        "p95": 5.834999978542328,
+        "max": 6.675000011920929
+      },
+      "horizon": {
+        "count": 361,
+        "mean": 0.015900276869618,
+        "p95": 0.025000035762786865,
+        "max": 0.050000011920928955
+      },
+      "gpu": {
+        "count": 121,
+        "mean": 17.70793154545455,
+        "p95": 26.83177,
+        "max": 40.106717
+      },
+      "memoryBytes": 16777216,
+      "actorsReadyFrames": 360,
+      "pausedFrames": 0,
+      "report": "docs/qa/wild-engine-pthreads/active-default-low-remaining/gran-rio.json"
+    },
+    {
+      "biome": "volcanes",
+      "quality": "baja",
+      "night": false,
+      "scope": "Default pthread path, active simulation and continuous camera. Night uses an explicit time-450 fixture, not a tested dusk transition. Final simulation states differ; not an A/B speed claim or full campaign validation.",
+      "created": 15,
+      "elapsed": 9.195844999999238,
+      "frames": {
+        "count": 360,
+        "mean": 25.54366666666667,
+        "p95": 49.87000000000262,
+        "max": 116.27500000000146
+      },
+      "publication": {
+        "count": 15,
+        "mean": 0.8356666564941406,
+        "p95": 1.0999999642372131,
+        "max": 1.3699999451637268
+      },
+      "eviction": {
+        "count": 15,
+        "mean": 3.584999998410543,
+        "p95": 6.949999988079071,
+        "max": 10.040000021457672
+      },
+      "horizon": {
+        "count": 361,
+        "mean": 0.015401663872673901,
+        "p95": 0.029999971389770508,
+        "max": 0.06499999761581421
+      },
+      "gpu": {
+        "count": 121,
+        "mean": 18.14579479338843,
+        "p95": 25.730832,
+        "max": 35.861613
+      },
+      "memoryBytes": 16777216,
+      "actorsReadyFrames": 360,
+      "pausedFrames": 0,
+      "report": "docs/qa/wild-engine-pthreads/active-default-low-remaining/volcanes.json"
+    },
+    {
+      "biome": "manglares",
+      "quality": "baja",
+      "night": false,
+      "scope": "Default pthread path, active simulation and continuous camera. Night uses an explicit time-450 fixture, not a tested dusk transition. Final simulation states differ; not an A/B speed claim or full campaign validation.",
+      "created": 15,
+      "elapsed": 10.144319999999553,
+      "frames": {
+        "count": 360,
+        "mean": 28.49959722222223,
+        "p95": 50.05500000000029,
+        "max": 182.75500000000466
+      },
+      "publication": {
+        "count": 15,
+        "mean": 0.7926666696866354,
+        "p95": 1.1300000548362732,
+        "max": 1.5099999904632568
+      },
+      "eviction": {
+        "count": 15,
+        "mean": 3.0123333374659222,
+        "p95": 6.245000004768372,
+        "max": 12.47000002861023
+      },
+      "horizon": {
+        "count": 361,
+        "mean": 0.01524930746601559,
+        "p95": 0.025000035762786865,
+        "max": 0.06000000238418579
+      },
+      "gpu": {
+        "count": 121,
+        "mean": 21.40137772727273,
+        "p95": 31.722603,
+        "max": 42.200049
+      },
+      "memoryBytes": 16777216,
+      "actorsReadyFrames": 360,
+      "pausedFrames": 0,
+      "report": "docs/qa/wild-engine-pthreads/active-default-low-remaining/manglares.json"
+    },
+    {
+      "biome": "gran-canon",
+      "quality": "baja",
+      "night": false,
+      "scope": "Default pthread path, active simulation and continuous camera. Night uses an explicit time-450 fixture, not a tested dusk transition. Final simulation states differ; not an A/B speed claim or full campaign validation.",
+      "created": 15,
+      "elapsed": 6.318964999999807,
+      "frames": {
+        "count": 360,
+        "mean": 17.506624999999996,
+        "p95": 16.909999999999854,
+        "max": 83.36999999999898
+      },
+      "publication": {
+        "count": 15,
+        "mean": 0.9450000007947286,
+        "p95": 1.3899999856948853,
+        "max": 1.4599999785423279
+      },
+      "eviction": {
+        "count": 15,
+        "mean": 2.4236666639645894,
+        "p95": 3.8449999690055847,
+        "max": 4.990000009536743
+      },
+      "horizon": {
+        "count": 361,
+        "mean": 0.5758171750237737,
+        "p95": 0.05500000715255737,
+        "max": 68.55500000715256
+      },
+      "gpu": {
+        "count": 121,
+        "mean": 3.976268355371902,
+        "p95": 12.113802,
+        "max": 17.384739
+      },
+      "memoryBytes": 16777216,
+      "actorsReadyFrames": 360,
+      "pausedFrames": 0,
+      "report": "docs/qa/wild-engine-pthreads/active-default-low-remaining/gran-canon.json"
+    }
+  ]
+}
