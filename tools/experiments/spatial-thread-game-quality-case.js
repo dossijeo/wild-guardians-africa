@@ -101,14 +101,18 @@ export async function verifyGameQualityCycle(w){
     if(serializeRecovery){w.refreshStreamingPrograms=refresh;await refresh.call(w);}
     await w.streamingProgramRefresh;
   }finally{temporaryScope?.dispose();w.refreshStreamingPrograms=refresh;prewarmMs=performance.now()-start;w.drawRenderFrame=draw;}}
+  const waitStart=performance.now();
   for(let i=0;i<12;i++)await new Promise(requestAnimationFrame);
-  w.render(0);await w.whenChunksReady();
-  await w.streamingProgramRefresh;
+  const framesReady=performance.now();w.render(0);const renderReady=performance.now();
+  await w.whenChunksReady();const chunksReady=performance.now();
+  await w.streamingProgramRefresh;const programsReady=performance.now();
+  const completionPhases={settleFramesMs:framesReady-waitStart,explicitRenderCpuMs:renderReady-framesReady,chunkWaitMs:chunksReady-renderReady,programWaitMs:programsReady-chunksReady,scope:'Sequential elapsed waits overlap live presentation and native work; only explicitRenderCpuMs measures a synchronous invocation.'};
   tracking=false;
   if(enabled&&!w.programLease?.stats.retained)throw Error('Quality change did not recover retention');
   if(!enabled&&w.programLease!==null)throw Error('Disabled recovery retained programs');
-  const gl=w.renderer.getContext(),glError=gl.getError();if(glError!==gl.NO_ERROR)throw Error('GL error after quality change: 0x'+glError.toString(16));
-  rows.push({quality,terrainPhases:phaseAttribution?structuredClone(terrainPhases):null,phases:phaseAttribution?phaseSummary():null,stagedPreparation,cacheBefore,cacheAfter:cacheState(),programs:w.renderer.info.programs.length,drawCalls:w.renderer.info.render.calls,recovery:w.streamingProgramRecovery,retention:w.programLease?.stats??null,settingMs,prewarmMs,prewarmInvalidations,livePreparation:livePreparation?.rounds?livePreparation:null,temporaryProgramScope:temporaryScope?.stats??null,transitionMs:performance.now()-begin,frameTimes});
+  const beforeDiagnosticMs=performance.now()-begin,diagnosticStart=performance.now();
+  const gl=w.renderer.getContext(),glError=gl.getError();const diagnosticMs=performance.now()-diagnosticStart;if(glError!==gl.NO_ERROR)throw Error('GL error after quality change: 0x'+glError.toString(16));
+  rows.push({quality,completionPhases,terrainPhases:phaseAttribution?structuredClone(terrainPhases):null,phases:phaseAttribution?phaseSummary():null,stagedPreparation,cacheBefore,cacheAfter:cacheState(),programs:w.renderer.info.programs.length,drawCalls:w.renderer.info.render.calls,recovery:w.streamingProgramRecovery,retention:w.programLease?.stats??null,settingMs,prewarmMs,prewarmInvalidations,livePreparation:livePreparation?.rounds?livePreparation:null,temporaryProgramScope:temporaryScope?.stats??null,transitionMs:performance.now()-begin,beforeDiagnosticMs,diagnosticMs,frameTimes});
   if(globalThis.qaCaptureQuality){
    // Screenshot settling is deliberately outside measured transition timings.
    const deadline=performance.now()+30000;let stable=0;

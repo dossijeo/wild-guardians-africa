@@ -1036,3 +1036,52 @@ travel legitimately evicts/replaces chunks. Not a driver VRAM measurement or
 long-session leak test. Preserve the measured loading improvement inside the
 still-opt-in scheduler bundle while investigating this existing active-workload
 cost; do not promote the overall scheduler to default.
+
+
+### Active quality attribution: distinguish QA stalls from game work (2026-10-24)
+
+No renderer change in this attribution step. `scheduler-current-quality-attribution.json`
+finds maximum instrumented WorldScene.render CPU 23.75ms; terrain/group phases
+mostly below5ms. It does not explain hundreds of milliseconds of presentation delay.
+`scheduler-quality-execution-attribution.json` records existing main callback CPU,
+Long Animation Frames and asynchronous render GPU timer intervals. Intel UHD
+0x9A60/D3D11 is confirmed. Main callback maximum25.78ms;81GPU samples average
+82.33ms, maximum246.64ms, no disjoint. These query intervals include pipeline
+bubbles and query overhead; they are not exclusive GPU busy time. Largest LoAF
+734.29ms includes an anonymous RAF continuation593.06ms while main callback
+is10.45ms. Do not infer native generation or scheduler CPU saturation from RAF.
+
+`scheduler-quality-block-profile.json/.cpuprofile` attributes749.1ms cumulative
+sampled self time to getError under verifyGameQualityCycle. The QA helper checks
+GL errors after each transition. This synchronous browser query can drain pending
+GPU work; it is outside the sampled frameTimes but inside legacy transitionMs.
+The test itself therefore contributes blocking, independently of normal gameplay.
+
+`scheduler-quality-diagnostic-cost.json` measures that exact call without removing
+or weakening assertions. Low/media/low legacy totals1934.15/2290.81/5364.72ms;
+before diagnostic1421.64/1666.68/5048.10ms; diagnostic512.41/623.69/316.55ms.
+All240travel frames advance simulation,15new chunks,zero stream failures and
+scheduler pending0. These are single attribution runs, not A/B acceptance.
+This explains part of test blocking, NOT all slow transitions: before-diagnostic
+latency and presentation tails remain high. Retain original totals and reports;
+never claim deleting an error check makes the renderer faster. Subsequent timing
+must separate diagnostics from presentation and retain correctness validation.
+
+QA instrumentation is opt-in via WG_THREAD_QUALITY_EXECUTION and
+WG_THREAD_QUALITY_CPU_PROFILE. It creates no new presentation loop; the existing
+quality scenario still owns its camera RAF. GPU timers are stopped/restored after
+the scenario. No production scheduler policy, artistic content or simulation
+changed. Full-frame acceptance and remaining integration work remain outstanding.
+
+
+Follow-up `scheduler-quality-completion-phases.json` leaves all operations and
+checks unchanged and attributes sequential completion waits. Low/media/low:
+12-frame stabilization842/868/615ms; explicit test render8.47/14.89/12.17ms CPU;
+chunk idle wait0.02/1.17/1200.14ms; remaining program recovery wait effectively0.
+Diagnostic checks309/357/219ms. Thus first two transition totals mainly measure
+presentation pacing plus QA GPU synchronization; third also waits for streaming.
+This run has lower tails than prior runs (max173/193/129ms), without a renderer
+change: evidence of significant variability, not an optimization. No performance
+claim based on this single run.240/240advancing,15new chunks,zero pending/failures.
+15 scheduler/GPU-timer tests pass, QA modules syntax checked. Further work must
+measure frame tails and required-chunk latency independently of QA diagnostics.
