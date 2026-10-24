@@ -911,3 +911,24 @@ first-use program recipes; remove redundant successful diagnostics where safe,
 then address actual texture upload/context creation cost. Do not place one
 large texSubImage2D in a scheduler job and claim it is interruptible. No change
 to assets, density, simulation, or those other producers made in this checkpoint.
+
+
+### Texture identity diagnosis and revised priority (2026-10-24)
+
+QA flag WG_THREAD_TEXTURE_TIMES=1 wraps the existing initTexture call only and
+records dimensions/type/name/mips. `scheduler-loading-texture-attribution.json`
+and summary: largest upload168.885ms for named normal2048x2048 ImageBitmap;
+other2048x2048 bitmaps139.730/95.815/71.070ms. All these already use decoded
+ImageBitmap, mipmaps enabled. A4096x2048 bitmap without mipmaps takes54.950ms.
+Generic GLTF texture names do not yet identify the owning asset, so do not
+claim a specific actor/building source. Adding another decoder worker does not
+address the observed upload cost. Measurements are synchronous wall duration,
+not GPU timers, and this run is diagnostic only.
+
+Re-examined consecutive identical-node samples in the previous CPU profile:
+longest non-idle streak~897.08ms getProgramInfoLog, ~795.25ms getContext, and
+~150.99ms texSubImage2D. Sampling streaks are approximate, not exact GL timing.
+The earlier~930ms texture figure was cumulative, NOT a single900ms upload.
+Priority is therefore first-render deferred diagnostics as well as structural
+texture preparation; do not attempt to explain the full1s spike by one texture.
+No production path changed in this diagnostic checkpoint.

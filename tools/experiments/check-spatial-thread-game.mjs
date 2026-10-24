@@ -30,6 +30,12 @@ try{
   const replacement="const witness=span=>{const row={...span,label:span.label+':slot'+slot};(globalThis.qaFarPreparationSpans??=[]).push(row);world.onLoadingSpan?.(row);};";
   await route.fulfill({response,body:source.replace(anchor,replacement)});
  });
+ if(process.env.WG_THREAD_TEXTURE_TIMES==='1')await page.route('**/src/rendering/loading-textures.js*',async route=>{
+  const response=await route.fetch(),source=await response.text(),anchor='renderer.initTexture(texture);';
+  if(source.split(anchor).length!==2)throw Error('Texture upload witness anchor changed');
+  const body=source.replace(anchor,`{const began=performance.now();renderer.initTexture(texture);const image=texture.image;(globalThis.qaLoadingTextureUploads??=[]).push({ms:performance.now()-began,name:texture.name,width:image?.width,height:image?.height,imageType:image?.constructor?.name,src:image?.currentSrc??image?.src??null,colorSpace:texture.colorSpace,mipmaps:texture.generateMipmaps,flipY:texture.flipY,premultiplyAlpha:texture.premultiplyAlpha});}`);
+  await route.fulfill({response,body});
+ });
  if(process.env.WG_THREAD_BOOT_FAILURE==='1')await page.route('**/wild-engine/spatial-threaded.mjs',route=>route.fulfill({status:503,contentType:'text/javascript',body:'// QA: unavailable pthread module'}));
  if(process.env.WG_THREAD_LOADING_LONG_FRAMES==='1')await page.addInitScript(()=>{
   globalThis.qaLoadingLongFrames=[];
@@ -95,7 +101,7 @@ try{
   if(attempt===17)throw Error('Game readiness deadline exceeded; see thread-game-loading.json');
   await page.waitForTimeout(10000);
  }
- const result=await page.evaluate(async()=>{const w=qaThreadWorld;await w.whenChunksReady();return {farDraws:globalThis.qaFarDraws??null,farPreparationSpans:globalThis.qaFarPreparationSpans??null,cropDepthPreparation:w.cropDepthPreparation??null,loading:{longFrames:globalThis.qaLoadingLongFrames??null,frames:globalThis.qaLoadingFrames??null,readyMs:globalThis.qaStreamingReadyAt-globalThis.qaStreamingLoadStart,phases:globalThis.qaLoadingPhases??[]},actorPreparation:w.loadingActorQueue?{...w.loadingActorQueue.stats,pending:w.loadingActorQueue.jobs.length,global:!!w.loadingActorQueue.scheduler}:null,streamingOptions:w.streamingOptions,isolated:crossOriginIsolated,runtime:w.spatialSession.runtime,programRetention:w.programLease?.stats??null,stream:w.chunkStream.summary(),native:w.spatialSession.core.metrics(),chunks:w.chunks.size,stage:document.querySelector('#stage')?.getAttribute('aria-busy'),elapsed:w.state.elapsed,renderer:w.renderer.getContext().getParameter(w.renderer.getContext().RENDERER)};});
+ const result=await page.evaluate(async()=>{const w=qaThreadWorld;await w.whenChunksReady();return {farDraws:globalThis.qaFarDraws??null,farPreparationSpans:globalThis.qaFarPreparationSpans??null,cropDepthPreparation:w.cropDepthPreparation??null,loading:{textureUploads:globalThis.qaLoadingTextureUploads??null,longFrames:globalThis.qaLoadingLongFrames??null,frames:globalThis.qaLoadingFrames??null,readyMs:globalThis.qaStreamingReadyAt-globalThis.qaStreamingLoadStart,phases:globalThis.qaLoadingPhases??[]},actorPreparation:w.loadingActorQueue?{...w.loadingActorQueue.stats,pending:w.loadingActorQueue.jobs.length,global:!!w.loadingActorQueue.scheduler}:null,streamingOptions:w.streamingOptions,isolated:crossOriginIsolated,runtime:w.spatialSession.runtime,programRetention:w.programLease?.stats??null,stream:w.chunkStream.summary(),native:w.spatialSession.core.metrics(),chunks:w.chunks.size,stage:document.querySelector('#stage')?.getAttribute('aria-busy'),elapsed:w.state.elapsed,renderer:w.renderer.getContext().getParameter(w.renderer.getContext().RENDERER)};});
  if(loadingProfiler){const {profile}=await loadingProfiler.send('Profiler.stop');await writeFile(process.env.WG_THREAD_REPORT.replace(/\.json$/,'.cpuprofile'),JSON.stringify(profile));await loadingProfiler.detach();}
  if(process.env.WG_THREAD_LOADING_CAPTURE==='1')await page.screenshot({path:process.env.WG_THREAD_REPORT.replace(/\.json$/,'.png')});
  if(process.env.WG_THREAD_NO_ISOLATION==='1'&&(result.isolated||result.runtime.fallbackReason!=='SharedArrayBuffer isolation unavailable'))throw Error('Missing real non-isolated fallback');

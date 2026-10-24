@@ -1,0 +1,1665 @@
+{
+  "scope": "Loaded populated game in Chrome; see streaming scope for limitations.",
+  "biome": "manglares",
+  "quality": "media",
+  "terrainDeadline": "required",
+  "url": "http://127.0.0.1:5190/?visualLab=global-lighting&skyAtmosphere=clouds&grassCoverage=continuous&riverSoil=1&riverYards=islands&mangroveSubstrate=full&mangroveMoss=layered&canyonSand=full&canyonSandBlend=soft&canyonNormals=smooth&canyonFloor=warm&canyonShadows=horizon&sandRelief=1&sandWear=residual&sandMeso=1&volcanicAsh=mask&volcanicRock=layered&volcanicNight=spectrum&spatialFar=1&farTransitions=smooth&waterEdges=natural&waterPalette=regional&riverBank=soil&mangroveShore=sediment&mangroveLeaves=cupped&mangroveFerns=holly&groundCache=fixed512&wildEngineThreads=1&chunkInstall=sync&horizonBedBudget=2&horizonBed=sync&ownedFarGpu=1&streamingRecovery=auto&waterBedDirect=0&frameScheduler=1",
+  "result": {
+    "farDraws": null,
+    "farPreparationSpans": null,
+    "cropDepthPreparation": {
+      "objects": 32,
+      "ms": 816.8550000190735,
+      "bindings": {
+        "initialized": 56,
+        "unsupported": 0
+      },
+      "retention": {
+        "retained": 56,
+        "released": 56,
+        "abandoned": 0,
+        "destroyed": 0,
+        "exhausted": false,
+        "closed": true,
+        "unsupported": false
+      }
+    },
+    "loading": {
+      "textureUploads": [
+        {
+          "ms": 0.17500001192092896,
+          "name": "",
+          "width": 1,
+          "height": 1,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.014999985694885254,
+          "name": "",
+          "width": 256,
+          "height": 128,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": true,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.004999995231628418,
+          "name": "",
+          "width": 256,
+          "height": 128,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": true,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 28.719999969005585,
+          "name": "base",
+          "width": 2048,
+          "height": 2048,
+          "imageType": "ImageBitmap",
+          "src": null,
+          "colorSpace": "srgb",
+          "mipmaps": true,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 2.0100000500679016,
+          "name": "normal",
+          "width": 1024,
+          "height": 1024,
+          "imageType": "ImageBitmap",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": true,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.14499998092651367,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.02499997615814209,
+          "name": "",
+          "width": 256,
+          "height": 256,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.025000035762786865,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 1.6150000095367432,
+          "name": "",
+          "width": 1024,
+          "height": 1024,
+          "imageType": "ImageBitmap",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": true,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 2.4649999737739563,
+          "name": "",
+          "width": 1024,
+          "height": 1024,
+          "imageType": "ImageBitmap",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": true,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 1.9050000309944153,
+          "name": "",
+          "width": 1024,
+          "height": 1024,
+          "imageType": "ImageBitmap",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": true,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 2.439999997615814,
+          "name": "",
+          "width": 1024,
+          "height": 1024,
+          "imageType": "ImageBitmap",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": true,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 16.23499995470047,
+          "name": "",
+          "width": 1024,
+          "height": 1024,
+          "imageType": "ImageBitmap",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": true,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 1.925000011920929,
+          "name": "",
+          "width": 1024,
+          "height": 1024,
+          "imageType": "ImageBitmap",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": true,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 1.9549999833106995,
+          "name": "",
+          "width": 1024,
+          "height": 1024,
+          "imageType": "ImageBitmap",
+          "src": null,
+          "colorSpace": "srgb",
+          "mipmaps": true,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.02499997615814209,
+          "name": "",
+          "width": 1024,
+          "height": 1024,
+          "imageType": "ImageBitmap",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": true,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.004999995231628418,
+          "name": "",
+          "width": 1024,
+          "height": 1024,
+          "imageType": "ImageBitmap",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": true,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.09000003337860107,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.04999995231628418,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.020000040531158447,
+          "name": "",
+          "width": 60,
+          "height": 20,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.04500001668930054,
+          "name": "",
+          "width": 256,
+          "height": 256,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": true,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.014999985694885254,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.014999985694885254,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.08500003814697266,
+          "name": "",
+          "width": 12,
+          "height": 15,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.014999985694885254,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.009999990463256836,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.010000050067901611,
+          "name": "",
+          "width": 99,
+          "height": 56,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.004999995231628418,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.014999985694885254,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.025000035762786865,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.009999990463256836,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.009999990463256836,
+          "name": "",
+          "width": 84,
+          "height": 54,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.004999995231628418,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.009999990463256836,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.010000050067901611,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.009999990463256836,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.009999990463256836,
+          "name": "",
+          "width": 99,
+          "height": 66,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.019999980926513672,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.009999990463256836,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 32.480000019073486,
+          "name": "",
+          "width": 2048,
+          "height": 2048,
+          "imageType": "ImageBitmap",
+          "src": null,
+          "colorSpace": "srgb",
+          "mipmaps": true,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 22.094999969005585,
+          "name": "texture_0",
+          "width": 2048,
+          "height": 2048,
+          "imageType": "ImageBitmap",
+          "src": null,
+          "colorSpace": "srgb",
+          "mipmaps": true,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 168.88499999046326,
+          "name": "normal",
+          "width": 2048,
+          "height": 2048,
+          "imageType": "ImageBitmap",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": true,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 20.625,
+          "name": "texture_0_metallic_roughness",
+          "width": 2048,
+          "height": 2048,
+          "imageType": "ImageBitmap",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": true,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.06499999761581421,
+          "name": "",
+          "width": 1,
+          "height": 1,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.36000001430511475,
+          "name": "",
+          "width": 32,
+          "height": 32,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 19.814999997615814,
+          "name": "texture_0",
+          "width": 2048,
+          "height": 2048,
+          "imageType": "ImageBitmap",
+          "src": null,
+          "colorSpace": "srgb",
+          "mipmaps": true,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 18.355000019073486,
+          "name": "texture_0_normal",
+          "width": 2048,
+          "height": 2048,
+          "imageType": "ImageBitmap",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": true,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 23.419999957084656,
+          "name": "texture_0_metallic-texture_0_roughness",
+          "width": 2048,
+          "height": 2048,
+          "imageType": "ImageBitmap",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": true,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 15.354999959468842,
+          "name": "",
+          "width": 1024,
+          "height": 1024,
+          "imageType": "HTMLImageElement",
+          "src": "http://127.0.0.1:5190/assets/visual-lab/holly-fern-frond-20261023/color.png",
+          "colorSpace": "srgb",
+          "mipmaps": true,
+          "flipY": true,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 12.3299999833107,
+          "name": "",
+          "width": 1024,
+          "height": 1024,
+          "imageType": "HTMLImageElement",
+          "src": "http://127.0.0.1:5190/assets/visual-lab/holly-fern-frond-20261023/normal.png",
+          "colorSpace": "",
+          "mipmaps": true,
+          "flipY": true,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 6.760000050067902,
+          "name": "",
+          "width": 2048,
+          "height": 256,
+          "imageType": "HTMLImageElement",
+          "src": "http://127.0.0.1:5190/assets/visual-lab/holly-fern-lod-20261023/fern-day.png",
+          "colorSpace": "srgb",
+          "mipmaps": true,
+          "flipY": true,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 4.860000014305115,
+          "name": "",
+          "width": 2048,
+          "height": 256,
+          "imageType": "HTMLImageElement",
+          "src": "http://127.0.0.1:5190/assets/visual-lab/holly-fern-lod-20261023/fern-night.png",
+          "colorSpace": "srgb",
+          "mipmaps": true,
+          "flipY": true,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 4.349999964237213,
+          "name": "",
+          "width": 2048,
+          "height": 256,
+          "imageType": "HTMLImageElement",
+          "src": "http://127.0.0.1:5190/assets/visual-lab/holly-fern-lod-20261023/shadow-solar.png",
+          "colorSpace": "",
+          "mipmaps": true,
+          "flipY": true,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.07499998807907104,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.030000030994415283,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.009999990463256836,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.014999985694885254,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.014999985694885254,
+          "name": "",
+          "width": 99,
+          "height": 33,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 71.06999999284744,
+          "name": "texture_0",
+          "width": 2048,
+          "height": 2048,
+          "imageType": "ImageBitmap",
+          "src": null,
+          "colorSpace": "srgb",
+          "mipmaps": true,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 19.694999992847443,
+          "name": "texture_0_normal",
+          "width": 2048,
+          "height": 2048,
+          "imageType": "ImageBitmap",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": true,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 22.689999997615814,
+          "name": "texture_0_metallic-texture_0_roughness",
+          "width": 2048,
+          "height": 2048,
+          "imageType": "ImageBitmap",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": true,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 33.67999994754791,
+          "name": "texture_0",
+          "width": 2048,
+          "height": 2048,
+          "imageType": "ImageBitmap",
+          "src": null,
+          "colorSpace": "srgb",
+          "mipmaps": true,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 95.81499999761581,
+          "name": "texture_0_normal",
+          "width": 2048,
+          "height": 2048,
+          "imageType": "ImageBitmap",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": true,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 16.1700000166893,
+          "name": "texture_0_metallic-texture_0_roughness",
+          "width": 2048,
+          "height": 2048,
+          "imageType": "ImageBitmap",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": true,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 24.339999973773956,
+          "name": "texture_0",
+          "width": 2048,
+          "height": 2048,
+          "imageType": "ImageBitmap",
+          "src": null,
+          "colorSpace": "srgb",
+          "mipmaps": true,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 24.97999995946884,
+          "name": "texture_0_normal",
+          "width": 2048,
+          "height": 2048,
+          "imageType": "ImageBitmap",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": true,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 35.21000003814697,
+          "name": "texture_0_metallic-texture_0_roughness",
+          "width": 2048,
+          "height": 2048,
+          "imageType": "ImageBitmap",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": true,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 139.72999995946884,
+          "name": "texture_0",
+          "width": 2048,
+          "height": 2048,
+          "imageType": "ImageBitmap",
+          "src": null,
+          "colorSpace": "srgb",
+          "mipmaps": true,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 22.5450000166893,
+          "name": "texture_0_normal",
+          "width": 2048,
+          "height": 2048,
+          "imageType": "ImageBitmap",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": true,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 24.480000019073486,
+          "name": "texture_0_metallic-texture_0_roughness",
+          "width": 2048,
+          "height": 2048,
+          "imageType": "ImageBitmap",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": true,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 42.235000014305115,
+          "name": "texture_0",
+          "width": 2048,
+          "height": 2048,
+          "imageType": "ImageBitmap",
+          "src": null,
+          "colorSpace": "srgb",
+          "mipmaps": true,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 29.3299999833107,
+          "name": "texture_0_normal",
+          "width": 2048,
+          "height": 2048,
+          "imageType": "ImageBitmap",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": true,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 30.44999998807907,
+          "name": "texture_0_metallic-texture_0_roughness",
+          "width": 2048,
+          "height": 2048,
+          "imageType": "ImageBitmap",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": true,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 54.94999998807907,
+          "name": "",
+          "width": 4096,
+          "height": 2048,
+          "imageType": "ImageBitmap",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": true,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.029999971389770508,
+          "name": "",
+          "width": 1,
+          "height": 1,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.20500004291534424,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.019999980926513672,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.019999980926513672,
+          "name": "",
+          "width": 99,
+          "height": 99,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.04000002145767212,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.014999985694885254,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.0350000262260437,
+          "name": "",
+          "width": 87,
+          "height": 99,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.034999966621398926,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.01500004529953003,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.014999985694885254,
+          "name": "",
+          "width": 17,
+          "height": 99,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.009999990463256836,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.009999990463256836,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.014999985694885254,
+          "name": "",
+          "width": 99,
+          "height": 39,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.014999985694885254,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.004999995231628418,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.014999985694885254,
+          "name": "",
+          "width": 42,
+          "height": 9,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.08500003814697266,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.009999990463256836,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.009999990463256836,
+          "name": "",
+          "width": 44,
+          "height": 99,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.014999985694885254,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.010000050067901611,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.014999985694885254,
+          "name": "",
+          "width": 48,
+          "height": 70,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.004999995231628418,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.004999995231628418,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.014999985694885254,
+          "name": "",
+          "width": 99,
+          "height": 99,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.01500004529953003,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.004999995231628418,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.014999985694885254,
+          "name": "",
+          "width": 99,
+          "height": 99,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.009999990463256836,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.014999985694885254,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.01500004529953003,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.009999990463256836,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.019999980926513672,
+          "name": "",
+          "width": 99,
+          "height": 99,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.009999990463256836,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.01500004529953003,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.029999971389770508,
+          "name": "",
+          "width": 73,
+          "height": 79,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.009999990463256836,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.009999990463256836,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.020000040531158447,
+          "name": "",
+          "width": 99,
+          "height": 99,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.004999995231628418,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        },
+        {
+          "ms": 0.009999990463256836,
+          "name": "",
+          "width": 35,
+          "height": 35,
+          "imageType": "Object",
+          "src": null,
+          "colorSpace": "",
+          "mipmaps": false,
+          "flipY": false,
+          "premultiplyAlpha": false
+        }
+      ],
+      "longFrames": null,
+      "frames": null,
+      "readyMs": 32672.625,
+      "phases": [
+        {
+          "label": "load-sky",
+          "ms": 0.8799999952316284
+        },
+        {
+          "label": "load-milestone:sky",
+          "ms": 1.2999999523162842
+        },
+        {
+          "label": "load-biome-models",
+          "ms": 387.2000000476837
+        },
+        {
+          "label": "load-biome-ground",
+          "ms": 212.11000001430511
+        },
+        {
+          "label": "load-milestone:biome",
+          "ms": 5.1450000405311584
+        },
+        {
+          "label": "load-ground-details",
+          "ms": 0.17000001668930054
+        },
+        {
+          "label": "load-village-models",
+          "ms": 137.22500002384186
+        },
+        {
+          "label": "load-milestone:buildings",
+          "ms": 1.1949999928474426
+        },
+        {
+          "label": "load-animal-models",
+          "ms": 510.19499999284744
+        },
+        {
+          "label": "load-milestone:animals",
+          "ms": 1.3650000095367432
+        },
+        {
+          "label": "load-crop-model",
+          "ms": 0.125
+        },
+        {
+          "label": "load-crop-bridges",
+          "ms": 0.17000001668930054
+        },
+        {
+          "label": "load-crop-batch",
+          "ms": 138.31999999284744
+        },
+        {
+          "label": "load-milestone:crops",
+          "ms": 16.57499998807907
+        },
+        {
+          "label": "load-milestone:walls",
+          "ms": 8.004999995231628
+        },
+        {
+          "label": "load-milestone:vfx",
+          "ms": 3.7899999618530273
+        },
+        {
+          "label": "load-chunks-horizon-ready",
+          "ms": 504.8949999809265
+        },
+        {
+          "label": "load-milestone:chunks",
+          "ms": 7.490000009536743
+        },
+        {
+          "label": "load-continuous-grass",
+          "ms": 129.71499997377396
+        },
+        {
+          "label": "load-hands-ready",
+          "ms": 33.514999985694885
+        },
+        {
+          "label": "load-active-animal-actors",
+          "ms": 0.1850000023841858
+        },
+        {
+          "label": "load-worker-actors",
+          "ms": 68.98500001430511
+        },
+        {
+          "label": "warm-compile-staging",
+          "ms": 707.9749999642372
+        },
+        {
+          "label": "warm-compile-destruction",
+          "ms": 58.060000002384186
+        },
+        {
+          "label": "warm-compile-world",
+          "ms": 3326.7099999785423
+        },
+        {
+          "label": "warm-compile-obstruction",
+          "ms": 163.6850000023842
+        },
+        {
+          "label": "warm-prepare-depth",
+          "ms": 1989.125
+        },
+        {
+          "label": "warm-crop-depth",
+          "ms": 817.5349999666214
+        },
+        {
+          "label": "warm-program-bindings",
+          "ms": 0.0899999737739563
+        },
+        {
+          "label": "warm-upload-textures",
+          "ms": 1145.574999988079
+        },
+        {
+          "label": "warm-draw-batches",
+          "ms": 724.8799999952316
+        },
+        {
+          "label": "warm-final-fence",
+          "ms": 368.63499999046326
+        },
+        {
+          "label": "load-warm-gpu",
+          "ms": 9319.025000035763
+        },
+        {
+          "label": "load-milestone:gpu",
+          "ms": 14.594999969005585
+        },
+        {
+          "label": "load-far-assets",
+          "ms": 6858.324999988079
+        },
+        {
+          "label": "load-milestone:far-assets",
+          "ms": 14.490000009536743
+        }
+      ]
+    },
+    "actorPreparation": {
+      "submitted": 2,
+      "completed": 2,
+      "failed": 0,
+      "yields": 0,
+      "cpuMs": 13.519999980926514,
+      "maxTaskMs": 8.064999997615814,
+      "pending": 0,
+      "global": true
+    },
+    "streamingOptions": {
+      "waterBed": true,
+      "waterShore": true,
+      "batchEviction": true,
+      "warmObstruction": true,
+      "retainPrograms": true
+    },
+    "isolated": true,
+    "runtime": {
+      "backend": "pthreads",
+      "fallbackReason": null
+    },
+    "programRetention": {
+      "retained": 83,
+      "released": 0,
+      "destroyed": 0,
+      "abandoned": 0,
+      "skipped": 0,
+      "unsupported": false
+    },
+    "stream": {
+      "created": 25,
+      "discarded": 0,
+      "failed": 0,
+      "fallbacks": 0,
+      "worker": false,
+      "asyncPreparation": true,
+      "queued": 0,
+      "busy": false,
+      "preparing": 0,
+      "stale": 0,
+      "epoch": 0
+    },
+    "native": {
+      "memoryBytes": 16777216,
+      "loadedChunks": 25,
+      "residentPropRecords": 269,
+      "residentVisiblePropRecords": 5713,
+      "loadedSectors": 400,
+      "sectorSlots": 400,
+      "sectorUpdates": 560,
+      "haloProps": 4
+    },
+    "chunks": 25,
+    "stage": "false",
+    "elapsed": 119.99999999999746,
+    "renderer": "WebKit WebGL",
+    "scheduler": {
+      "moduleUrl": "http://127.0.0.1:5190/src/app/global-frame-scheduler.js?t=1792855074302",
+      "completed": 67,
+      "cancelled": 0,
+      "failed": 0,
+      "units": 918,
+      "workMs": 333.65000027418137,
+      "coordinationMs": 31.014999508857727,
+      "maxUnitMs": 8.814999997615814,
+      "overruns": 20,
+      "deadlineLoans": 14,
+      "oversizeRecoveries": 0,
+      "continuationMs": 21.594999969005585,
+      "continuationTurns": 1067,
+      "median": 66.41999999999825,
+      "p95": 83.46999999999389,
+      "p99": 99.51000000000204,
+      "cpu95": 6.370000004768372,
+      "jitter": 17.049999999995634,
+      "budgetMs": 2.0087253858420056,
+      "pending": 0,
+      "oldestMs": 0
+    }
+  },
+  "errors": [
+    "THREE.WebGLProgram: Program Info Log: (758,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(763,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (758,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(763,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (791,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(796,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (811,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(816,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (650,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(655,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (650,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(655,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (798,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(803,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (798,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(803,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (815,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(820,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(815,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(820,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(822,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(827,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (676,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(681,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (278,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(283,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (205,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(210,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (761,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(766,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(765,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(770,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (615,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(620,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(331,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(336,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (816,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(821,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(816,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(821,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (759,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(764,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(759,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(764,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)",
+    "THREE.WebGLProgram: Program Info Log: (335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(335,1): warning X4000: use of potentially uninitialized variable (f_environment4)\n(340,1): warning X4000: use of potentially uninitialized variable (f_environment4)"
+  ]
+}
