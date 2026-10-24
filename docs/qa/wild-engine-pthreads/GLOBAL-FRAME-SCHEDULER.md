@@ -332,3 +332,25 @@ Frozen visual/streaming pair: `stable-shadow-visual-control.json` and `stable-sh
 After those captures, matched paused moving-camera streaming runs on ANGLE Intel UHD D3D11: 61 GPU samples each, control mean22.4709/p9531.3871/max37.6139 ms, candidate mean20.9583/p9529.2805/max34.0712 ms. CPU render mean7.956/6.781 ms; presentation mean27.253/25.036 ms, p95~49.9ms both. Successive pair, not repeated ABAB: do NOT claim a GPU speedup from this difference; it does not show a gross GPU penalty. Programs at settled quality steps are roughly107 control vs82 candidate (count, not measured allocation bytes). Known f_environment4 compiler warnings remain; no unexpected QA errors.
 
 70 targeted tests pass: native shadow filtering/uniform safety, existing cache and target behavior, stable-program material preservation, asset shadows, quality, VFX and buildings/destruction. Existing quality fixture lacked refreshStreamingPrograms despite production calling it; added a no-op to the mock, without weakening assertions. Production Vite build passes (existing large-bundle warning). Pending: repeated active comparisons, night, initial-low/context restore/rapid changes, other five biomes, shadow-related VFX inspection and GPU/memory validation. Preserve this opt-in structural candidate; do not promote blanket prewarm or declare scheduler complete. Main untouched; PR remains draft.
+
+
+## Stable shadows: six-biome sustained simulation, night, initial-low and context restoration
+
+Initial cross-biome QA stopped in Sabana because the quality harness incorrectly required Manglares' retained-program policy everywhere (`stable-shadow-active-sabana.failure.json`). Fixed the harness to require retention iff streamingOptions.retainPrograms is configured, asserting its absence otherwise. No runtime policy was changed. Initial v2 runs also exposed tutorial pauses: Sabana/Gran Río/Volcanes advanced only ~0.116 seconds, and Gran Cañón failed its activity assertion. These v2 files are lifecycle observations, NOT sustained simulation acceptance; failures are preserved.
+
+Strict v3 repeats use existing WG_THREAD_ACTIVE=1 fixture setup (tutorial explicitly skipped only in QA), and qualityRequireActive records advancing/paused camera frames and pause reasons. It rejects <90% advancing or >5% paused frames instead of accepting any positive elapsed delta. Every biome passes 240/240 advancing frames, zero paused, 15 newly installed chunks, empty queues and zero stream failures. `stable-shadow-active-six-biomes-summary.json` links all six v3 reports. Quality transition latencies / maximum RAF intervals, milliseconds:
+
+| Biome | baja | media | baja |
+|---|---|---|---|
+| Sabana | 346 / 47 | 588 / 87 | 643 / 75 |
+| Gran Río | 350 / 53 | 636 / 68 | 660 / 119 |
+| Desierto | 354 / 31 | 413 / 45 | 287 / 25 |
+| Volcanes | 452 / 76 | 445 / 55 | 708 / 98 |
+| Gran Cañón | 503 / 133 | 292 / 25 | 191 / 18 |
+| Manglares | 427 / 68 | 615 / 103 | 820 / 82 |
+
+These are candidate functional runs, not per-biome A/B or visual equivalence. Presentation samples cover transition windows; the remaining camera travel is checked for activity/errors but not included in those window maxima. Manglares strict run also exercises rapid superseding quality changes with program-retention ownership assertions. Default stable shadows remains OFF.
+
+`stable-shadow-low-context.json`: initial quality baja, subsequent quality cycle and forced WebGL context loss/restore. Authoritative snapshot unchanged; pthread backend and 16 MiB native memory preserved; old79 program references abandoned, new28 retained, no unknown GL resource deletions. Real draw resumes. Both raw before/after images retained and inspected. Full-image comparison includes the existing lost-context notification; below y=180 (outside that notification), RGB MAD0.13495/255 and fraction any channel delta>8=0.004897. Not pixel-identical; no visible terrain/material loss in the inspected restored frame. Context test asserts removal of context-lost/runtime-error pause reasons. It does not assert the notification disappears automatically.
+
+Night pair uses the existing controlled Manglares seed712 fixture at time/elapsed450, paused simulation, identical camera and settled quality captures. `stable-shadow-night-control.json`, `stable-shadow-night-candidate.json`, raw PNGs, three side-by-sides and `stable-shadow-night-difference.json`. RGB MAD0.005195/0.001284/0.003701 for baja/media/baja; fractions any-channel delta>8=0.000235/0.0000228/0.0000879. Inspected media pair: same ground, vegetation, buildings, water and illumination. No night GPU performance claim (capture-only comparison). Other-biome image equivalence, repeated GPU A/B, very-low/high profiles and complete scheduler acceptance remain pending. Main and production flags untouched.

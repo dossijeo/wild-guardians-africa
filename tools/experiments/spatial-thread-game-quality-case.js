@@ -5,10 +5,12 @@ import {prepareLiveScenePrograms} from '/src/rendering/live-program-preparation.
 import {createProgramRetentionScope} from '/src/rendering/retain-warmed-programs.js';
 import {compileLoadingPrograms,compileLoadingProgramsBatched} from '/src/rendering/loading-programs.js';
 export async function verifyGameQualityCycle(w){
- const lease=w.programLease;if(!lease?.stats.retained)throw Error('Expected default retention');
+ const lease=w.programLease,retentionExpected=w.streamingOptions?.retainPrograms===true;
+ if(retentionExpected&&!lease?.stats.retained)throw Error('Expected configured retention');
+ if(!retentionExpected&&lease)throw Error('Unexpected retention outside configured policy');
  const snapshot=()=>JSON.stringify({elapsed:w.state.elapsed,plants:w.state.plants,structures:w.state.structures,native:w.spatialSession.core.snapshot()});
  const cacheState=()=>{const cache=w.mangroveMaterialCache;return cache?{chunks:cache.states.size,ready:[...cache.states.values()].filter(s=>s.texture.value).length,queue:{...cache.queue.stats}}:null;};
- const before=snapshot(),rows=[],enabled=new URLSearchParams(location.search).get('streamingRecovery')!=='0';
+ const before=snapshot(),rows=[],enabled=retentionExpected&&new URLSearchParams(location.search).get('streamingRecovery')!=='0';
  const active=new URLSearchParams(location.search).get('qualityActive')==='1';
  let cropDepthWarm=null;
  if(new URLSearchParams(location.search).get('cropDepthWarm')==='1'){
@@ -35,12 +37,12 @@ export async function verifyGameQualityCycle(w){
   }finally{scope.dispose();}
  }
  const initialElapsed=w.state.elapsed,initialCreated=w.chunkStream.stats.created,originalCameraUpdate=w.updateCamera;
- let travelFrame=0,travelHandle=null,game=null;
+ let travelFrame=0,travelHandle=null,game=null,advancingFrames=0,pausedFrames=0,lastSimulationElapsed=w.state.elapsed;const pauseReasons={};
  if(active){
   const url=performance.getEntriesByType('resource').map(e=>e.name).find(n=>new URL(n).pathname==='/src/simulation/game.js');if(!url)throw Error('Missing canonical game module');game=await import(url);game.resume(w.state,'menu');
   const eye=w.camera.position.clone(),target=w.controls.target.clone();
   w.updateCamera=()=>{w.camera.lookAt(w.controls.target);w.camera.updateMatrixWorld();};
-  const move=()=>{travelFrame++;const offset=144*Math.min(travelFrame/240,1);w.camera.position.copy(eye);w.camera.position.x+=offset;w.controls.target.copy(target);w.controls.target.x+=offset;if(travelFrame<240)travelHandle=requestAnimationFrame(move);};travelHandle=requestAnimationFrame(move);
+  const move=()=>{travelFrame++;if(w.state.elapsed>lastSimulationElapsed)advancingFrames++;lastSimulationElapsed=w.state.elapsed;if(w.state.pauses.length){pausedFrames++;for(const reason of w.state.pauses)pauseReasons[reason]=(pauseReasons[reason]??0)+1;}const offset=144*Math.min(travelFrame/240,1);w.camera.position.copy(eye);w.camera.position.x+=offset;w.controls.target.copy(target);w.controls.target.x+=offset;if(travelFrame<240)travelHandle=requestAnimationFrame(move);};travelHandle=requestAnimationFrame(move);
  }
  const estimateFault=new URLSearchParams(location.search).get('estimateOutlier')==='1',scheduler=w.frameScheduler,originalSubmit=scheduler?.submit;let forcedJobs=0;
  if(estimateFault){if(!scheduler)throw Error('Estimate injection requires scheduler');scheduler.submit=function(iterator,options={}){
@@ -119,11 +121,12 @@ export async function verifyGameQualityCycle(w){
  if(enabled){const previous=w.programLease;w.qualitySetting('media');await new Promise(requestAnimationFrame);w.qualitySetting('baja');await w.streamingProgramRefresh;if(!w.programLease?.stats.retained||w.quality!=='baja')throw Error('Superseded quality recovery failed');if(previous.stats.released!==previous.stats.retained)throw Error('Rapid-change lease leaked');}
  if(active){
   const deadline=performance.now()+30000;while(travelFrame<240||w.chunkStream.summary().busy||w.chunkStream.summary().queued||w.farVegetation?.adapters.some(a=>a.preparationPending())){if(performance.now()>deadline)throw Error('Active quality streaming did not settle');await new Promise(requestAnimationFrame);}
-  if(w.state.elapsed<=initialElapsed||w.chunkStream.stats.created<=initialCreated)throw Error('Active case did not exercise simulation and streaming');
+  if(w.state.elapsed<=initialElapsed||w.chunkStream.stats.created<=initialCreated)throw Error('Active case did not exercise simulation and streaming: '+JSON.stringify({advance:w.state.elapsed-initialElapsed,created:w.chunkStream.stats.created-initialCreated,travelFrame,advancingFrames,pausedFrames,pauseReasons}));
+  if(new URLSearchParams(location.search).get('qualityRequireActive')==='1'&&(advancingFrames<travelFrame*.9||pausedFrames>travelFrame*.05))throw Error('Simulation was not sustained during camera travel: '+JSON.stringify({travelFrame,advancingFrames,pausedFrames,pauseReasons}));
   if(w.chunkStream.summary().failed||w.state.pauses.includes('runtime-error'))throw Error('Active streaming failed');
  }else if(snapshot()!==before)throw Error('World changed during quality cycle');
- if(lease.stats.released!==lease.stats.retained)throw Error('Initial lease not fully released');
+ if(lease&&lease.stats.released!==lease.stats.retained)throw Error('Initial lease not fully released');
  if(estimateFault&&(forcedJobs!==2||scheduler.snapshot().oversizeRecoveries<2))throw Error('Oversized estimate recovery was not exercised');
- return {cropDepthWarm,faultInjection:estimateFault?{forcedJobs,scope:'Correctness-only: two terrain units deliberately estimated at 14 ms until first execution; not a performance benchmark.'}:null,attribution,attributionScope:'Nested synchronous call timings above 10 ms overlap; do not sum parent and child calls. No GPU execution timing is implied.',rows,lease:lease.stats,worldUnchanged:active?null:true,active:active?{initialElapsed,elapsed:w.state.elapsed,travelFrame,created:w.chunkStream.stats.created-initialCreated,stream:w.chunkStream.summary()}:null,limitation:'The refreshed snapshot remains bounded; it prioritizes newer variants and cannot guarantee every future unseen shader is warm.'};
+ return {cropDepthWarm,faultInjection:estimateFault?{forcedJobs,scope:'Correctness-only: two terrain units deliberately estimated at 14 ms until first execution; not a performance benchmark.'}:null,attribution,attributionScope:'Nested synchronous call timings above 10 ms overlap; do not sum parent and child calls. No GPU execution timing is implied.',rows,retentionExpected,lease:lease?.stats??null,worldUnchanged:active?null:true,active:active?{initialElapsed,elapsed:w.state.elapsed,travelFrame,advancingFrames,pausedFrames,pauseReasons,created:w.chunkStream.stats.created-initialCreated,stream:w.chunkStream.summary()}:null,limitation:'The refreshed snapshot remains bounded; it prioritizes newer variants and cannot guarantee every future unseen shader is warm.'};
  }catch(error){globalThis.qaQualityFailure={message:error.message,livePreparation:error.preparation??null,rows,attribution};throw error;}finally{if(estimateFault)scheduler.submit=originalSubmit;if(phaseAttribution){w.onLoadingSpan=previousSpan;w.onTerrainPreparationSlice=previousTerrain;}if(active){cancelAnimationFrame(travelHandle);w.updateCamera=originalCameraUpdate;game.pause(w.state,'menu');}for(const undo of restore.reverse())undo();}
 }

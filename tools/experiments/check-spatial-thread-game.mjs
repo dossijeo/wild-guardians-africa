@@ -31,6 +31,7 @@ try{
  if(process.env.WG_FRAME_SCHEDULER_DIAGNOSTICS==='1')gameUrl.searchParams.set('frameSchedulerDiagnostics','1');
  if(process.env.WG_THREAD_CROP_DEPTH_SHADOW_WARM==='1')gameUrl.searchParams.set('cropDepthShadowWarm','1');
  if(process.env.WG_THREAD_QUALITY_COMPILE_CONCURRENCY)gameUrl.searchParams.set('qualityCompileConcurrency',process.env.WG_THREAD_QUALITY_COMPILE_CONCURRENCY);
+ if(process.env.WG_THREAD_ACTIVE==='1')gameUrl.searchParams.set('qualityRequireActive','1');
  if(process.env.WG_THREAD_STABLE_SHADOW_PROGRAMS==='1')gameUrl.searchParams.set('stableShadowPrograms','1');
  if(process.env.WG_THREAD_QUALITY_MENU_PROTOCOL==='1')gameUrl.searchParams.set('qualityMenuProtocol','1');
  if(process.env.WG_THREAD_CROP_DEPTH_PREPARATION==='1')gameUrl.searchParams.set('cropDepthPreparation','1');
@@ -101,6 +102,7 @@ try{
  if(process.env.WG_THREAD_EXIT==='1')result.exit=await page.evaluate(async()=>await (await import('/tools/experiments/spatial-thread-game-exit-case.js')).verifyGameExit(qaThreadWorld));
  if(process.env.WG_THREAD_CONTEXT==='1')await page.screenshot({path:(process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json').replace(/\.json$/, '-before.png')});
  if(process.env.WG_THREAD_CONTEXT==='1')result.contextRestore=await page.evaluate(async()=>await (await import('/tools/experiments/spatial-thread-game-context-case.js')).verifyGameContextRestore(qaThreadWorld));
+ if(process.env.WG_THREAD_CONTEXT==='1')await page.screenshot({path:(process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json').replace(/\.json$/, '-after-context.png')});
  const profiler=process.env.WG_THREAD_CPU_PROFILE==='1'?await page.context().newCDPSession(page):null;
  if(profiler){await profiler.send('Profiler.enable');await profiler.send('Profiler.start');}
  if(benchmark)result.streaming=await page.evaluate(async(options)=>{
