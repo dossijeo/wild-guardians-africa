@@ -374,3 +374,14 @@ on invocation counts. Reproducible derivation: attribute-far-program-links.py.
 Original high-quality inventory/capture checks now run serially for all six
 biomes to finish profile coverage. Both experimental candidates remain off.
 No visual changes or scheduler changes are introduced by this diagnostic.
+
+## Original high-profile coverage in progress
+
+Sabana high completes49chunks and83links, matching medium program count
+(83) while doubling world residency from25chunks. Low has77links/25chunks.
+All three show one late world link in the observed opening window. High
+records no non-X4000 errors. Cross-profile loading times are not equivalent
+workloads and must not be used as direct speed comparisons.
+The matrix summarizer requires all18original biome/profile reports and rejects
+accidentally enabled candidates before writing a complete coverage table.
+Remaining high-profile loads continue serially; no defaults changed.
