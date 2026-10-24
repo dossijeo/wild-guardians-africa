@@ -3,6 +3,7 @@ let mesh,magic,bitmap,size;
 const fail=error=>self.postMessage({type:'error',message:error.message??String(error)});
 self.onmessage=({data})=>{
  try{
+  if(import.meta.env.DEV&&data.type==='qa-context-loss'){mesh?.gl?.getExtension('WEBGL_lose_context')?.loseContext();return;}
   if(data.type==='init'){
    bitmap=data.bitmap;size=data.size;const {canvas,magicCanvas}=data;
    // The generated renderer's mesh/shaders stay unchanged. Override only DOM

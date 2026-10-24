@@ -1633,3 +1633,39 @@ Keep opt-in. Remaining:actual resize,contextloss,cancelwhilebooting and repeated
 world teardown inbrowser,first-dialog latency and earlier preparation,packaged
 iframe/Tauri fallback,more hardware/biomes and main world context creation. Global
 scheduler remains incomplete. Art,simulation,mainbranch and defaultbackend unchanged.
+
+
+## Guardian early preparation and real context loss (2026-10-24)
+
+Extracted presentation-only ensureGuardianView; tutorial updates and voice remain
+in narrator. Tested preparation during interactive loading, then rejected automatic
+activation. Only guardianWorker=1&guardianWarm=1 requests it now. Original main
+backend and late opt-in worker behavior remain defaults.
+
+Frozen populated Manglares media720p, same first5s post-ready ABAB protocol:
+
+| run | readiness ms | P95 / P99 / max presentation ms | portrait ready relative to world |
+| --- | ---: | --- | ---: |
+| A1 main | 31473.3 |116.56 /266.03 /498.26 |+567.2ms |
+| B1 early worker |32773.8 |166.08 /183.06 /598.57 |−29761.9ms |
+| A2 main |32939.8 |116.64 /149.58 /614.96 |+705.5ms |
+| B2 early worker |33822.1 |166.20 /182.93 /548.71 |−30778.2ms |
+
+Raw scheduler-guardian-warm-* reports retained. Early worker fixes availability,
+but both pairs worsen P95 and readiness (0.9–1.3s); not an accepted optimization.
+No GPU timer in this series. B1 callback CPU max14.055ms does not explain598.57ms
+presentation interval; do not label that interval a measured main-thread CPU block.
+At collection time early preparation was default for worker=1; reproduction now
+requires WG_GUARDIAN_WARM=1, plus WG_GUARDIAN_TAIL=1 and diagnostics.
+
+Real lifecycle report scheduler-guardian-resize-context.json: worker canvas323→240
+and back323, then actual WEBGL_lose_context inside worker (DEV-only hook). Restored
+original main mesh, exactly2canvases, one recorded context-loss failure. Inspected
+fallback screenshot: avatar and glow visible. This advances beyond the earlier
+injected executor exception; it is not a world-context or unsupported-browser test.
+Reproduce with WG_GUARDIAN_VISIBLE=1, WG_GUARDIAN_RESIZE=1,
+WG_GUARDIAN_FAIL_AFTER_READY=context, worker+diagnostics+scheduler enabled,
+WG_THREAD_FROZEN=1, WG_THREAD_DEFAULT_STREAMING=1, port5190.
+40 Guardian tests pass; Vite build6.63s, existing bundle-size warning. Confirmed
+qa-context-loss hook absent from emitted production worker. No new production RAF.
+Remaining global acceptance and packaged/platform lifecycle validation are open.

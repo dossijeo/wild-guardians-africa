@@ -235,6 +235,8 @@ async function startGame(loaded=null,{slotId,preview}={}) {
     app.innerHTML=`<main class="game world-loading" id="stage" aria-busy="true"><div id="world-loading" class="loading interactive-loading-indicator" role="status"><div class="eyebrow">Wild Guardians / Africa</div><h2>La tierra despierta</h2><p>Preparando terreno, poblado y cultivos originales…</p><p id="loading-progress"></p></div><canvas id="world" aria-label="Mundo de Wild Guardians Africa"></canvas>${hudMarkup}<nav id="toolbar" hidden></nav><aside id="panel"></aside><aside id="context"></aside><div id="narrator"></div><div class="notices" id="notices"></div><div id="events" hidden></div><div id="placementBanner" hidden></div><div id="modal"></div><small class="world-stats" id="stats"></small></main>`;
     document.querySelector('#world').replaceWith(prepared.canvas);document.querySelector('#world-loading').replaceWith(overlay.element);loadingDiorama.render(0,loadingProgress.value);refreshLoadingOverlay();
     document.querySelectorAll('[data-sprite]').forEach(img=>img.src=ASSETS[img.dataset.sprite].src);layoutHud(document.querySelector('#stage'));
+    // Prepare only presentation resources; no narrator/tutorial/voice action.
+    if(new URLSearchParams(location.search).get('guardianWorker')==='1'&&new URLSearchParams(location.search).get('guardianWarm')==='1')ensureGuardianView();
     bind('menuButton',pauseDialog);
     document.querySelector('[data-menu="home"]').onclick=()=>world.focusFarm();
     document.querySelector('[data-menu="grow"]').onclick=()=>safe(()=>guidedHudAction('grow',()=>toolPanel('plant')));
@@ -463,8 +465,12 @@ function refreshTutorialGuidance(){
   world.tutorialToolKind=tool?.kind??null;world.tutorialSpellKind=tool?.spell??null;world.tutorialHandsEnabled=guideAllowed&&guidedStep;
   syncTutorialActionPause(state,{hudTarget:!hudHand.image.hidden,worldTarget:guideAllowed?world.tutorialGuideTarget():null,selectionOpen:surfaces.active==='panel'&&guidedStep});
 }
-function narrator() {
+function ensureGuardianView() {
   const el=document.querySelector('#narrator');guardian??=new NativeGuardian(el,e=>error(e.message),phase=>audio.guardianPhase(phase),new SpiritVoice({url:assetUrl,volume:()=>settings.sfx}));
+  return guardian;
+}
+function narrator() {
+  ensureGuardianView();
   tutorial?.update();const warning=budgetWarningVisible();const message=surfaces.active?null:warning?{id:'budget.reserve',gesture:'warning',text:RESERVE_MESSAGE,blocking:false}:tutorial?.presentation();setTutorialInteraction(false);
   refreshTutorialGuidance();
   if(!message){guardian.hide({immediate:state.pauses.some(p=>['menu','hiring','hidden','context-lost'].includes(p))});return null;}
