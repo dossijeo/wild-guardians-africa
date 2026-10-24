@@ -17,14 +17,16 @@ export async function verifyGameQualityCycle(w){
   const prewarm=new URLSearchParams(location.search).get('qualityPrewarm')==='1',draw=w.drawRenderFrame;
   if(prewarm)w.drawRenderFrame=()=>{};
   const begin=performance.now();w.qualitySetting(quality);const settingMs=performance.now()-begin;
-  let prewarmMs=0;
+  let prewarmMs=0,prewarmInvalidations=0;
   if(prewarm){const start=performance.now(),deadline=start+30000;try{
     // Fixed paused QA scene only: drain quality-triggered far preparation first.
     while(w.farVegetation?.adapters.some(a=>a.preparationPending())){if(performance.now()>deadline)throw Error('Far quality preparation timeout');await new Promise(requestAnimationFrame);}
-    const owner=new AbortController(),materials=new Set();w.scene.traverse(o=>{for(const m of (Array.isArray(o.material)?o.material:[o.material]))if(m)materials.add(m);});
-    const changed=()=>owner.abort();for(const m of materials)m.addEventListener('dispose',changed);
-    try{await compileLoadingProgramsBatched(w.renderer,w.scene,w.camera,w.scene,{screen:true,signal:owner.signal,cancelled:()=>w.disposed,getEpoch:()=>w.glResourceEpoch?.stats.epoch??0,batchSize:8,frameBudget:6});await w.streamingProgramRefresh;}
-    finally{for(const m of materials)m.removeEventListener('dispose',changed);}
+    for(;;){
+     if(performance.now()>deadline)throw Error('Quality prewarm scene did not stabilize');
+     try{await compileLoadingProgramsBatched(w.renderer,w.scene,w.camera,w.scene,{screen:true,guardResourceDisposal:true,cancelled:()=>w.disposed,getEpoch:()=>w.glResourceEpoch?.stats.epoch??0,batchSize:8,frameBudget:6});break;}
+     catch(error){if(error.code!=='BORROWED_RESOURCE_DISPOSED'||w.disposed)throw error;prewarmInvalidations++;await new Promise(requestAnimationFrame);}
+    }
+    await w.streamingProgramRefresh;
   }finally{prewarmMs=performance.now()-start;w.drawRenderFrame=draw;}}
   for(let i=0;i<12;i++)await new Promise(requestAnimationFrame);
   w.render(0);await w.whenChunksReady();
@@ -33,7 +35,7 @@ export async function verifyGameQualityCycle(w){
   if(enabled&&!w.programLease?.stats.retained)throw Error('Quality change did not recover retention');
   if(!enabled&&w.programLease!==null)throw Error('Disabled recovery retained programs');
   const gl=w.renderer.getContext();if(gl.getError()!==gl.NO_ERROR)throw Error('GL error after quality change');
-  rows.push({quality,programs:w.renderer.info.programs.length,drawCalls:w.renderer.info.render.calls,recovery:w.streamingProgramRecovery,retention:w.programLease?.stats??null,settingMs,prewarmMs,transitionMs:performance.now()-begin,frameTimes});
+  rows.push({quality,programs:w.renderer.info.programs.length,drawCalls:w.renderer.info.render.calls,recovery:w.streamingProgramRecovery,retention:w.programLease?.stats??null,settingMs,prewarmMs,prewarmInvalidations,transitionMs:performance.now()-begin,frameTimes});
   if(globalThis.qaCaptureQuality){
    // Screenshot settling is deliberately outside measured transition timings.
    const deadline=performance.now()+30000;let stable=0;

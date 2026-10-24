@@ -25,9 +25,21 @@ export function compileLoadingPrograms(renderer,scene,camera,targetScene,{signal
 // scene. No mesh is cloned, reparented or hidden: lights, fog, clipping, skinning
 // and instancing retain the actual target-scene/object recipe. Restore screen
 // state synchronously in each submission before yielding to the loading RAF.
-export async function compileLoadingProgramsBatched(renderer,scene,camera,targetScene,{batchSize=4,frameBudget=0,now=()=>performance.now(),nextFrame,...options}={}) {
+export async function compileLoadingProgramsBatched(renderer,scene,camera,targetScene,{batchSize=4,frameBudget=0,now=()=>performance.now(),nextFrame,guardResourceDisposal=false,...options}={}) {
  if(!Number.isInteger(batchSize)||batchSize<1)throw Error('Loading compile batch size must be positive');
  const objects=[];scene.traverse(object=>{if(object.isMesh||object.isPoints||object.isLine||object.isSprite)objects.push(object);});
+ // Optional live-scene safety: own cancellation for every borrowed resource,
+ // including later batches. This does not freeze scene membership or mutations.
+ const resources=new Set(),owner=guardResourceDisposal?new AbortController():null;
+ let resourceDisposed=false;
+ const externalSignal=options.signal,abort=()=>owner?.abort(),dispose=()=>{resourceDisposed=true;abort();};
+ if(owner){
+  for(const object of objects){if(object.geometry)resources.add(object.geometry);for(const material of (Array.isArray(object.material)?object.material:[object.material]))if(material)resources.add(material);}
+  for(const resource of resources)resource.addEventListener?.('dispose',dispose);
+  externalSignal?.addEventListener('abort',abort,{once:true});if(externalSignal?.aborted)abort();
+  options={...options,signal:owner.signal};
+ }
+ try{
  const target=targetScene??scene;
  const yieldWork=loadingYieldBudget({frameBudget,now,nextFrame,signal:options.signal,cancelled:options.cancelled,onYield:options.onSubmit,frameSlack:options.frameSlack,cpuBudget:options.cpuBudget,getFrame:options.getFrame});
  for(let start=0;start<objects.length;start+=batchSize){
@@ -35,5 +47,12 @@ export async function compileLoadingProgramsBatched(renderer,scene,camera,target
   const view={traverse:callback=>{for(const object of batch)callback(object);},traverseVisible:()=>{}};
   await compileLoadingPrograms(renderer,view,camera,target,options.frameSlack||options.cpuBudget?{...options,now,onCpu:duration=>{yieldWork.recordWork(duration);options.onCpu?.(duration);}}:{...options,now});
   await yieldWork();
+ }
+ }catch(error){
+  if(resourceDisposed){const cancelled=new Error('Loading compilation cancelled: borrowed resource disposed',{cause:error});cancelled.code='BORROWED_RESOURCE_DISPOSED';throw cancelled;}
+  throw error;
+ }finally{
+  externalSignal?.removeEventListener('abort',abort);
+  for(const resource of resources)resource.removeEventListener?.('dispose',dispose);
  }
 }
