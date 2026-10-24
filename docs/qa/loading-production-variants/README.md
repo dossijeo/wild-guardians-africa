@@ -52,3 +52,24 @@ not an unprepared world material. No world link is observed in the short
 post-ready frozen window; this does not cover active play or future streaming.
 The count is link invocations, not resident program count or GPU compile time.
 No variant has yet been proved laboratory-only and safe to remove.
+
+## Source audit and candidate hypotheses
+
+BiomeGround.load selects layered Savanna, river, moss/substrate, desert, canyon
+and volcanic paths by biome/query predicates; there is no eager loop compiling
+all experimental terrain variants. AfricanToon inserts savannaLayerFunctions
+only when uGroundLayered is nonzero. Removing its import alone is not evidence
+of fewer programs or faster readiness.
+Shared groundMaterialFunctions does contain the uniform-driven uGroundDebug
+branch. Potential shader-source specialization must preserve QA access and all
+subsequent patch anchors; count reduction is not expected from deleting that
+branch alone. No change made without a controlled measurable hypothesis.
+Mangrove inventory has one identical fingerprint pair (world program IDs39/74),
+first in screen preload and later in an instanced compile. Check material keys,
+resource disposal and actual retention before calling this an unused variant.
+The fingerprints alone do not establish resource equivalence or safe removal.
+
+Remaining five biome inventories run serially with the same diagnostic flags.
+Sabana and Gran Río completed successfully; later results remain pending.
+Read-only source searches occurred during inventory collection: these diagnostic
+runs establish program identity/counts, not final uninstrumented speed acceptance.
