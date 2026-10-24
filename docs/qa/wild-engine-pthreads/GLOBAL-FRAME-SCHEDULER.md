@@ -100,3 +100,20 @@ LoadingSyncQueue now delegates synchronous actor adoptions to global admission w
 `scheduler-actors-active-1.json`: populated Mangroves Intel UHD 720p media, initial state frozen until readiness, active simulation/camera streaming afterwards. Two actor tasks complete, zero failures/pending, total actor CPU 13.08 ms, maximum 7.56 ms. Startup readiness 28.14 s; ten streamed chunks complete within 180 observed frames, frame P95 66.48 ms/max 166.36 ms. These are one-run functional/pilot results, not repeated performance acceptance. Overall tails still fail the objective of demonstrating improvement. 48 queue/scheduler/compiler tests pass, including no independent actor frame pump and immediate cancellation of queued tasks.
 
 Integration status: terrain staging and native pipeline overlap are used by real gameplay with the opt-in; initial actor adoption now shares that budget. Shader submissions are wired in the explicit quality QA path only. Other initial loading/shader/texture producers still need consolidation. Capacity/backpressure under large actor waves, timeout while presentation is suspended, six-biome rendering, visual equivalence and packaging are pending. No default changed and no overall success claim.
+
+## Fairness/error isolation and Sabana cross-check
+
+Aging now uses time since last service, not job creation: an old nonterminating generator no longer permanently outranks newly queued equal-priority work merely because it was created earlier. Invalid or throwing cost estimates fail and close only their own job instead of aborting the presentation drain. 50 scheduler/queue/compiler tests pass, with explicit regressions for both cases.
+
+Sabana real-renderer cross-check on Intel UHD 720p media, active simulation, same fixture/camera sequence/default streaming settings. Order was candidate then baseline, one run each: diagnostic BA, not repeated ABAB acceptance. Both finish ten chunks in 180 observed frames, no unexpected GL errors, no failed/pending jobs. Candidate screenshot inspected: terrain/grass/trees visible at the final camera, but not a pixel-equivalence validation.
+
+| Metric | Baseline (`scheduler-savanna-baseline-1.json`) | Candidate (`scheduler-savanna-active-1.json`) |
+|---|---:|---:|
+| Initial readiness | 21.09 s | 21.43 s |
+| RAF mean | 42.03 ms | 42.31 ms |
+| RAF P95 | 83.13 ms | 83.48 ms |
+| RAF max | 216.17 ms | 216.08 ms |
+| Final chunk installation mean | 5.81 ms | 0.34 ms |
+| Private preparation mean latency | synchronous | 1064.99 ms |
+
+No frame-time improvement demonstrated; smaller installation cost does not compensate for deferred preparation. This corroborates the Mangroves limitation and is evidence against adopting the present admission policy. The current candidate remains disabled. Safety fixes do not imply performance acceptance. Next performance work must tackle the real synchronous render/material stalls and resource transitions, not claim success from shorter isolated installation.

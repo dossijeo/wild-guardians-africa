@@ -47,3 +47,17 @@ test('ready promise continuations share one presentation budget without another 
  const pending=work();scheduler.beginFrame(time);time+=2;await scheduler.endFrame();await pending;
  assert.equal(calls,5);assert.equal(scheduler.snapshot().completed,5);assert.ok(scheduler.snapshot().continuationTurns>0);
 });
+
+test('aging measures time without service rather than privileging an old endless job',async()=>{
+ let time=1000;const scheduler=new GlobalFrameScheduler({now:()=>time});const order=[];
+ const older=scheduler.submit((function*(){for(let i=0;i<20;i++){order.push('old');time+=1;yield;}})(),{key:'old',deadline:0});
+ time+=100;const newer=scheduler.submit((function*(){order.push('new');return 1;})(),{deadline:0});
+ scheduler.beginFrame(time);time+=2;await scheduler.endFrame();assert.ok(order.indexOf('new')>=0&&order.indexOf('new')<3);assert.equal(await newer,1);scheduler.cancel('old');await older;
+});
+test('a failing cost estimator closes only its job and leaves other work executable',async()=>{
+ let time=1000;const scheduler=new GlobalFrameScheduler({now:()=>time});let closed=false,ran=false;
+ const iterator={next:()=>({done:false}),return:()=>{closed=true;}};
+ const bad=scheduler.submit(iterator,{estimate:()=>{throw Error('estimate fault');},deadline:0});const rejection=assert.rejects(bad,/estimate fault/);
+ const good=scheduler.submit((function*(){ran=true;return 1;})(),{deadline:0});scheduler.beginFrame(time);time+=2;await scheduler.endFrame();await rejection;await good;
+ assert.equal(closed,true);assert.equal(ran,true);assert.equal(scheduler.snapshot().failed,1);assert.equal(scheduler.snapshot().pending,0);
+});

@@ -12,7 +12,8 @@ export class GlobalFrameScheduler {
     if(this.jobs.has(key))this.cancel(key);
     if(this.jobs.size>=this.maxPending)return Promise.reject(new Error('Frame scheduler backpressure'));
     return new Promise((resolve,reject)=>{
-      const job={iterator,key,valid,priority,deadline,estimate,cost:Math.max(.01,estimateMs),created:this.now(),order:this.sequence++,resolve,reject,signal};
+      const created=this.now();
+      const job={iterator,key,valid,priority,deadline,estimate,cost:Math.max(.01,estimateMs),created,lastServed:created,order:this.sequence++,resolve,reject,signal};
       job.abort=()=>this.cancel(key);this.jobs.set(key,job);
       signal?.addEventListener('abort',job.abort,{once:true});
       if(signal?.aborted)this.cancel(key);
@@ -67,11 +68,12 @@ export class GlobalFrameScheduler {
       for(const job of this.jobs.values()){
         let valid;try{valid=job.valid();}catch(error){this.remove(job);try{job.iterator.return?.();}catch{}job.reject(error);this.stats.failed++;continue;}
         if(!valid){this.cancel(job.key);continue;}
-        const age=time-job.created,urgent=job.deadline<=time+period;
+        const age=time-job.lastServed,urgent=job.deadline<=time+period;
         // Deadlines may borrow measured headroom, never unmeasured idle time.
         const allowed=urgent?remaining:base;
-        const cost=job.estimate?.()??job.cost;
-        if(!Number.isFinite(cost)||cost<0)continue;
+        let cost;
+        try{cost=job.estimate?.()??job.cost;if(!Number.isFinite(cost)||cost<0)throw new RangeError('Invalid scheduled unit cost');}
+        catch(error){this.remove(job);try{job.iterator.return?.();}catch{}job.reject(error);this.stats.failed++;continue;}
         const fits=time-began+cost<=allowed;
         // Explicit deadline debt, NOT idle time: permit one measured small unit
         // to miss the next refresh rather than starve a required chunk forever.
@@ -83,7 +85,7 @@ export class GlobalFrameScheduler {
         if(score>best){selected=job;best=score;borrowed=loan;}
       }
       if(!selected)break;
-      const start=this.now();
+      const start=this.now();selected.lastServed=start;
       try{
         const result=selected.iterator.next();
         if(result?.then)throw new TypeError('Scheduled units must be synchronous');
