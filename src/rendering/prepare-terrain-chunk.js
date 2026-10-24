@@ -8,14 +8,17 @@ export async function prepareTerrainChunk(world,data,current,{scheduler=null,sig
   let completed=false;const began=now();let cpuMs=0;
   try{
     if(scheduler){
-      let phase='setup';
+      let phase='setup',lastFinished=began;
       if(!phaseCosts.has(world))phaseCosts.set(world,new Map());
       const costs=phaseCosts.get(world),costKey=()=>quality+':'+phase;
       const measured={
-        next(){const completedPhase=phase,start=now();const step=steps.next();const ms=now()-start;cpuMs+=ms;costs.set(costKey(),Math.max(ms,(costs.get(costKey())??0)*.9));phase=step.value;world.onTerrainPreparationSlice?.({cx:data.cx,cz:data.cz,phase:completedPhase,ms,done:step.done});return step;},
+        next(){const completedPhase=phase,start=now();const step=steps.next();const finished=now(),ms=finished-start,waitMs=start-lastFinished;lastFinished=finished;cpuMs+=ms;costs.set(costKey(),Math.max(ms,(costs.get(costKey())??0)*.9));phase=step.value;world.onTerrainPreparationSlice?.({cx:data.cx,cz:data.cz,phase:completedPhase,ms,waitMs,done:step.done});return step;},
         return(){return steps.return();}
       };
-      const result=await scheduler.submit(measured,{valid,signal,label:()=>`terrain ${data.cx},${data.cz}:${phase}`,estimate:()=>costs.get(costKey())??.25,priority:10,deadline:now()+250});
+      // These chunks are already demanded by streaming, not speculative prefetch.
+      // Let deadline admission use bounded CPU debt immediately; a fresh 250 ms
+      // grace period on every completed native job delayed even trivial setup.
+      const result=await scheduler.submit(measured,{valid,signal,label:()=>`terrain ${data.cx},${data.cz}:${phase}`,estimate:()=>costs.get(costKey())??.25,priority:10,deadline:now()});
       if(result){completed=true;world.onTerrainPreparationDone?.({cx:data.cx,cz:data.cz,cpuMs,elapsedMs:now()-began});return {...data,preparedGroup:result};}
       return null;
     }

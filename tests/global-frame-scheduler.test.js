@@ -83,3 +83,15 @@ test('historical oversized estimates recover without permanent starvation or dro
  time=3300;await frame(4);assert.equal(calls,1);
  time=5300;await frame(4);assert.equal(await b,'b');assert.equal(calls,2);assert.equal(scheduler.snapshot().pending,0);
 });
+
+
+test('required streamed terrain starts without a fresh grace period on late presentation',async()=>{
+ let time=1000,started=false;const scheduler=new GlobalFrameScheduler({now:()=>time});
+ const group={},slices=[];
+ const world={quality:'baja',onTerrainPreparationSlice:row=>slices.push(row),*prepareTerrainSteps(){started=true;time+=.1;yield 'finish';return group;}};
+ const result=prepareTerrainChunk(world,{cx:1,cz:2},()=>true,{scheduler,now:()=>time});
+ scheduler.beginFrame(time-16);time+=4;await scheduler.endFrame();
+ assert.equal(started,true);assert.equal(slices[0].waitMs,4);assert.ok(slices[0].ms<.11);
+ time+=17;scheduler.beginFrame(time);time+=4;await scheduler.endFrame();
+ assert.equal((await result).preparedGroup,group);assert.equal(scheduler.snapshot().pending,0);
+});

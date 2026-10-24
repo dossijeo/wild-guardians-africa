@@ -435,3 +435,52 @@ WG_THREAD_CROP_DEPTH_PREPARATION=1, WG_THREAD_GL_DETAIL=1 and
 WG_FRAME_SCHEDULER=0,1,0,1. Summary includes raw-derived RAF P99 and separates
 GPU timings, CPU spans and preparation latency. No default flags changed,
 no artistic edits, main untouched. Full scheduler acceptance remains open.
+
+
+### Admission diagnosis, rejected burst, required-chunk deadline (2026-10-24)
+
+Tested a bounded overdue burst (max25% refresh period, additionally constrained
+by mandatory CPU P95 and elapsed/instantaneous guards). Four actual runs in
+`scheduler-elastic-debt-*`: preparation mean A1/B1/A2/B2=691/722/729/609ms;
+RAF P95 ~49.94–49.97ms, maxima100/83/100/100ms. Direction inconsistent between
+pairs; no convincing general benefit. Restored scheduler source and archived
+`scheduler-elastic-debt-unproven.patch`, including temporary flag and tests.
+Do not activate this policy based on its isolated better repetition.
+
+`scheduler-admission-diagnosis-1.json`: lifetime109 idle-pending frames;
+49 no-headroom,20 mandatory pressure,34 late callback,18 policy limited,
+only2 elapsed guard (categories overlap). Thus do not relax elapsed guards
+based on an unsupported claim that they dominate. Added phase-specific wait
+versus CPU measurement to terrain preparation and QA aggregation.
+`scheduler-phase-wait-diagnosis-1.json`: setup total3860.7ms wait/15chunks
+(257.4ms mean), while setup CPU total0.375ms. The fresh250ms deadline assigned
+after native completion needlessly delayed already-required chunks.
+
+Kept a narrow scheduling correction: required terrain preparation deadline is
+now immediate; the original bounded admission/CPU/elapsed protections remain.
+No batching-policy change, no authoritative world change, no larger budget.
+Preparation still owns a private group until complete and validates revisions.
+
+| Run | preparation mean/max ms | initial setup wait mean ms | RAF P95/max ms | ready ms |
+| --- | --- | --- | --- | --- |
+| A1 delayed250 | 671/1252 | 263 | 49.955/83.175 | 28934 |
+| B1 immediate | 419/1046 | 38 | 49.955/83.255 | 27799 |
+| A2 delayed250 | 705/1806 | 245 | 49.985/83.155 | 28399 |
+| B2 immediate | 607/1174 | 45 | 49.940/83.020 | 28067 |
+
+15 chunks and zero paused frames in every run; no scheduler failures. Both
+pairs improve preparation latency, with essentially unchanged P95/max RAF.
+This is useful latency progress, NOT evidence that global presentation is now
+faster or that scheduler acceptance is complete. Remaining ~1s chunk tails
+need investigation. Per-phase waits include all intervening wall time, not
+CPU nor native generation. GPU/raw P99 in compact summaries.
+
+Reproduction: prior active low Manglares environment with frameScheduler=1,
+stableShadowPrograms=1,cropDepthPreparation=1. During measurement the QA route
+used WG_THREAD_TERRAIN_URGENT=1 on B to replace now+250 by now. After adopting
+the change, equivalent baseline is WG_THREAD_TERRAIN_DEFERRED=1 on A; B is
+unmodified source. QA route asserts exactly one anchor; report now records
+terrainDeadline mode. No production flag added. Test confirms required work
+starts under late presentation without 250ms grace and measures wait separately;
+20 scheduler/terrain tests pass, including quality/context/teardown invalidation.
+Global scheduler, stable shadows and crop warmup remain opt-in. Main untouched.
