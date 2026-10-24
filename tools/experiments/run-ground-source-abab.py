@@ -5,6 +5,7 @@ from pathlib import Path
 p=argparse.ArgumentParser()
 p.add_argument('--prefix',required=True)
 p.add_argument('--biome',default='manglares')
+p.add_argument('--candidate',choices=['ground-source','shared-smooth'],default='ground-source')
 p.add_argument('--active-streaming',action='store_true',help='Validate identical camera travel with live simulation after loading')
 args=p.parse_args()
 root=Path(__file__).resolve().parents[2]
@@ -21,7 +22,8 @@ for report in reports:
                WG_FRAME_SCHEDULER='1',WG_THREAD_LOADING_FRAMES='1',
                WG_THREAD_LOADING_TIMES='1',WG_THREAD_LOADING_CAPTURE='1',
                WG_GUARDIAN_TAIL='1',WG_THREAD_REPORT=str(report))
-    if run.startswith('b'):env['WG_PRODUCTION_GROUND_SOURCE']='1'
+    if run.startswith('b'):
+        env['WG_PRODUCTION_GROUND_SOURCE' if args.candidate=='ground-source' else 'WG_SHARED_SMOOTH_PROGRAM']='1'
     if args.active_streaming:
         env.update(WG_THREAD_BENCH='1',WG_THREAD_ACTIVE='1',WG_THREAD_FRAMES='180',
                    WG_THREAD_DISTANCE='96',WG_THREAD_LOCK_RAID_CAMERA='1')

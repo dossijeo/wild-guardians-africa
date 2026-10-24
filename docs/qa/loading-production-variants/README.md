@@ -314,3 +314,15 @@ Original/shared diagnostic runs are executing serially with captures.
 Four existing smooth-far transition tests pass with the isolated Three loader.
 The initial Windows loader path invocation failed before running tests; using
 a file URL corrected the invocation. No performance benefit is claimed yet.
+
+## Shared smooth key: duplicate elimination confirmed
+
+Original/shared diagnostic:90->89links and83->82resident programs. Both
+retain one late guardian link and no non-X4000 console errors. Exact string
+comparison confirms matching targeted shader sources, not just hashes.
+RGB absolute mean differences on0..255 scale:0.001055/0.001079/0.001242,
+bounds(218,207)-(1137,496). Opening pixels only, not transition validation.
+This proves one duplicate program is avoided; it does not prove a useful
+loading-time reduction. Serial uninstrumented A/B/A/B now runs under prefix
+manglares-shared-smooth-abab using --candidate shared-smooth. The previously
+rejected ground source specialization remains disabled in every arm.
