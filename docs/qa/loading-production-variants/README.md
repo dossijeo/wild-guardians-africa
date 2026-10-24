@@ -73,3 +73,28 @@ Remaining five biome inventories run serially with the same diagnostic flags.
 Sabana and Gran Río completed successfully; later results remain pending.
 Read-only source searches occurred during inventory collection: these diagnostic
 runs establish program identity/counts, not final uninstrumented speed acceptance.
+
+## Six-biome diagnostic baseline complete
+
+| Biome | Ready seconds | All links | World-context links | Links after ready |
+| --- | ---: | ---: | ---: | ---: |
+| Sabana |27.27|83|82|2|
+| Gran Río |28.48|83|82|2|
+| Manglares |39.47|90|89|1|
+| Desierto |23.85|70|69|2|
+| Volcanes |30.46|81|80|2|
+| Gran Cañón |27.61|67|66|1|
+
+Single diagnostic executions, not comparative optimization evidence. See raw
+reports and baseline-summary.json for exact phases. No experimental paths were
+removed while collecting these baselines.
+
+Important acceptance finding: Sabana, Gran Río, Desierto and Volcanes already
+link one world-context program after ready, in addition to the guardian's
+separate context. Attribute this baseline behavior before evaluating any pruning;
+do not count it as a new regression or silently exclude it from first-play timing.
+Mangroves and Canyon show only the guardian link in this frozen observation.
+
+The loading diorama explicitly sets uFineNoise=0, while normal world uses1.
+Therefore a global unconditional fine-noise substitution would change selected
+loading visuals. Any specialization must preserve both real recipes and QA access.
