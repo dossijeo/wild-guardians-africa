@@ -49,7 +49,7 @@ try{
   const response=await route.fetch();let body=await response.text();
   if(frozen){const anchor='world.render(0);world.retainStreamingPrograms();loadingOverlay?.dispose();';if(body.split(anchor).length!==2)throw Error('Missing readiness freeze anchor');body=body.replace(anchor,"globalThis.qaStreamingReadyAt=performance.now();Game.pause(state,'menu');"+anchor);}
   if(process.env.WG_THREAD_MAIN_PHASES==='1'||process.env.WG_THREAD_LOADING_FRAMES==='1'||process.env.WG_THREAD_QUALITY_EXECUTION==='1')body=instrumentMainFrame(body);
-  if(process.env.WG_THREAD_EXIT==='1')body+='\nglobalThis.qaReturnToMenu=menu;';
+  if(process.env.WG_THREAD_EXIT==='1'||process.env.WG_MUD_WORKER_LIFECYCLE==='exit')body+='\nglobalThis.qaReturnToMenu=menu;';
   await route.fulfill({response,body});
  });
  if(process.env.WG_THREAD_TERRAIN_DEFERRED==='1')await page.route('**/src/rendering/prepare-terrain-chunk.js*',async route=>{
@@ -147,6 +147,7 @@ try{
  if(process.env.WG_THREAD_CONTEXT==='1')await page.screenshot({path:(process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json').replace(/\.json$/, '-after-context.png')});
  const profiler=process.env.WG_THREAD_CPU_PROFILE==='1'?await page.context().newCDPSession(page):null;
  if(profiler){await profiler.send('Profiler.enable');await profiler.send('Profiler.start');}
+ if(process.env.WG_MUD_WORKER_LIFECYCLE)result.mudWorkerLifecycle=await page.evaluate(async mode=>(await import('/tools/experiments/mud-edge-worker-lifecycle-case.js')).verifyMudWorkerLifecycle(qaThreadWorld,mode),process.env.WG_MUD_WORKER_LIFECYCLE);
  if(process.env.WG_MUD_EDGE_WORKER_PROBE==='1')result.mudEdgeWorker=await page.evaluate(async()=>await (await import('/tools/experiments/mud-edge-worker-probe.js')).probeMudEdgeWorker(qaThreadWorld));
  if(benchmark)result.streaming=await page.evaluate(async(options)=>{
   const w=qaThreadWorld,core=w.spatialSession.core;

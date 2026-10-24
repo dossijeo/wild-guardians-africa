@@ -16,5 +16,5 @@ test('cancelled in-flight job remains capacity-bounded and late reply cannot set
  r.worker.onmessage({data:{id:r.messages[1].id,result:7,computeMs:1}});assert.equal(await b,7);r.executor.dispose();
 });
 test('world disposal rejects active and queued requests without retaining the worker',async()=>{
- const r=rig(),a=r.executor.run(input()),b=r.executor.run(input());const assertions=[assert.rejects(a,/disposed/),assert.rejects(b,/disposed/)];r.executor.dispose();await Promise.all(assertions);assert.equal(r.worker.dead,true);assert.equal(r.executor.jobs.size,0);assert.equal(r.executor.active,null);
+ const r=rig(),a=r.executor.run(input()),b=r.executor.run(input());const assertions=[assert.rejects(a,/disposed/),assert.rejects(b,/disposed/)];r.executor.dispose();await Promise.all(assertions);assert.equal(r.worker.dead,true);assert.equal(r.executor.jobs.size,0);assert.equal(r.executor.active,null);assert.equal(r.executor.stats.cancelled,2);assert.equal(r.executor.stats.failed,0);
 });

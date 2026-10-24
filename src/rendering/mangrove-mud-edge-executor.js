@@ -27,6 +27,6 @@ export class MudEdgeExecutor {
   if(this.jobs.delete(job.id)){job.signal?.removeEventListener('abort',job.abort);if(message.error){this.stats.failed++;job.reject(Error(message.error));}else{this.stats.completed++;this.stats.computeMs+=message.computeMs;job.resolve(message.result);}}
   this.dispatch();
  }
- fail(error){if(this.closed)return;this.closed=true;clearTimeout(this.timer);this.worker?.terminate();for(const job of this.jobs.values()){job.signal?.removeEventListener('abort',job.abort);job.reject(error);this.stats.failed++;}this.jobs.clear();this.active=null;}
- dispose(){this.fail(new DOMException('Mud worker disposed','AbortError'));}
+ fail(error,{cancelled=false}={}){if(this.closed)return;this.closed=true;clearTimeout(this.timer);this.worker?.terminate();for(const job of this.jobs.values()){job.signal?.removeEventListener('abort',job.abort);job.reject(error);this.stats[cancelled?'cancelled':'failed']++;}this.jobs.clear();this.active=null;}
+ dispose(){this.fail(new DOMException('Mud worker disposed','AbortError'),{cancelled:true});}
 }

@@ -1285,3 +1285,33 @@ cooperative fallback and byte equivalence. Vite build passes6.81s and emits the
 2.43kBworker asset. This proves packaging, not deployed itch/Tauri execution.
 Remaining: real in-flight cancellation/failure injection,night/low/fast-camera
 coverage,distribution checks,repeatable worst-frame improvement before activation.
+
+
+### Pending worker lifecycle exercised in the real renderer (2026-10-24)
+
+QA WG_MUD_WORKER_LIFECYCLE=quality|failure|exit builds a private duplicate from
+an actual resident native chunk through prepareTerrainChunk and the real worker.
+Intercepts delivery of its completed response before executor.receive. Confirms
+one pending request and one waiting scheduler job, then triggers the event.
+This tests in-flight delivery/ownership, NOT interruption during worker CPU work;
+no perf timings from these injected cases may be used for performance claims.
+
+scheduler-mud-worker-pending-quality.json: quality revision changes,private group
+released exactly once,request cancelled,late reply ignored,global/worker queues0.
+Resident chunk keys and paused simulation time unchanged. Actual quality recovery
+finishes normally. scheduler-mud-worker-pending-failure.json: injected transport
+failure terminates executor,original cooperative fallback completes and produces
+byte-equivalent color/normal/edge arrays;private group explicitly released,queues0.
+
+scheduler-mud-worker-pending-exit.json first verified world/menu teardown while
+delivery was held. It exposed a stats classification issue: dispose counted its
+rejection as failure. Corrected fail's cancellation classification, preserving
+rejection/termination behavior. Final repeat pending-exit-final.json:22submitted,
+21complete,1cancelled,0failed,executor closed,pending0,global waiting0,private group
+released once,stale result discarded and menu restored. Original report retained
+as historical evidence.20scheduler/executor tests pass including cancelled versus
+failed accounting;QA modules syntax checked. No shader or simulation changes.
+
+Worker remains opt-in. Still pending low/night/fast-camera and deployment coverage,
+more worst-frame validation and remaining scheduler producers. These correctness
+checks do not complete the full Global Frame Scheduler objective.
