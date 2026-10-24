@@ -326,3 +326,13 @@ This proves one duplicate program is avoided; it does not prove a useful
 loading-time reduction. Serial uninstrumented A/B/A/B now runs under prefix
 manglares-shared-smooth-abab using --candidate shared-smooth. The previously
 rejected ground source specialization remains disabled in every arm.
+
+### Shared-key first timing pair: provisional
+
+A1 readiness44,240.545ms; B1 readiness35,185.905ms. Far asset preparation
+is16,101.580ms versus8,172.740ms, accounting for most of the difference.
+World compile is5,610.070ms versus5,493.770ms. Do not attribute the whole
+9.055s difference to one removed link without repetition and attribution.
+The second pair continues. A regression test for base-key separation and
+unchanged visibility shader output is prepared, awaiting execution after
+benchmarks to avoid overlapping test workloads.
