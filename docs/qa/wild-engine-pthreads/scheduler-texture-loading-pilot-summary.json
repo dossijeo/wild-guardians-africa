@@ -1,0 +1,63 @@
+{
+  "scope": "Real initial loading ABAB, media720p frozen populated Manglares. No readbacks/profiling. RAF intervals from presentation timestamps, not GPU. Candidate changes only initial lion textures. Does not validate all scenes or context recovery.",
+  "runs": [
+    {
+      "run": "a1",
+      "readyMs": 33128.5150000453,
+      "rafP95Ms": 66.48999999999978,
+      "rafP99Ms": 116.36000000000058,
+      "rafMaxMs": 415.8000000000002,
+      "pilot": null,
+      "uploadPhaseMs": 1054.875,
+      "chunks": 25
+    },
+    {
+      "run": "b1",
+      "readyMs": 34714.78499996662,
+      "rafP95Ms": 66.33500000000095,
+      "rafP99Ms": 116.40499999999975,
+      "rafMaxMs": 382.6149999999998,
+      "pilot": {
+        "completed": 3,
+        "fallbacks": 0,
+        "rejectedAlpha": 0,
+        "units": 102,
+        "maxUnitMs": 30.34500002861023,
+        "workMs": 50.4750000834465,
+        "conversionMs": 124.00499999523163,
+        "peakPixelBytes": 16777216
+      },
+      "uploadPhaseMs": 3931.100000023842,
+      "chunks": 25
+    },
+    {
+      "run": "a2",
+      "readyMs": 31082.57499998808,
+      "rafP95Ms": 66.43500000000131,
+      "rafP99Ms": 116.125,
+      "rafMaxMs": 432.3149999999998,
+      "pilot": null,
+      "uploadPhaseMs": 943.5600000023842,
+      "chunks": 25
+    },
+    {
+      "run": "b2",
+      "readyMs": 61318.7650000453,
+      "rafP95Ms": 49.7300000000032,
+      "rafP99Ms": 99.80000000000291,
+      "rafMaxMs": 365.98000000000025,
+      "pilot": {
+        "completed": 2,
+        "fallbacks": 1,
+        "rejectedAlpha": 0,
+        "units": 101,
+        "maxUnitMs": 33.764999985694885,
+        "workMs": 53.02000015974045,
+        "conversionMs": 74.46500009298325,
+        "peakPixelBytes": 16777216
+      },
+      "uploadPhaseMs": 31288.77999997139,
+      "chunks": 25
+    }
+  ]
+}

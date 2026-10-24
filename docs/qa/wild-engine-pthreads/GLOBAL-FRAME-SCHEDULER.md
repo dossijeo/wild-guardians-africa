@@ -1460,3 +1460,49 @@ and MODE=three for rejected Three path (actual env WG_TEXTURE_STAGING_MODE). Det
 GL instrumentation is QA only,restored in finally. Browser error logs contain the
 existing f_environment4 warnings;failure is explicit watchdog,not a GL upload error.
 No main merge,art changes or production defaults changed. Scheduler objective open.
+
+
+### Three-owned interop and real loading pilot: not accepted (2026-10-24)
+
+scheduler-texture-interop.json uses Three-owned private Texture allocations and
+normal dispose,while raw upload units avoid copyTextureToTexture state queries.
+All opaque bytes/mips remain exact,resource count delta0 every trial. Opaque stripe
+max calls.11–.75ms,preparation34–50ms. Alpha adversarial control still differs7934
+bytes as expected. No source bitmap closed/replaced by interop probe.
+
+Moved beyond the isolated probe with WG_TEXTURE_LOADING_PILOT=1. QA-only route
+replaces the initial texture loop with a serial pilot restricted to the three
+already validated lion textures. Worker conversion refuses nonopaque data;main
+keeps original Texture,Source and bitmap. Initial readiness barrier prevents
+showing partial resources. Allocations remain Three-owned,32row units+allocation
+and mip generation run through the actual scheduler. On failure original bitmap
+upload restores content,or world cancellation rejects. Worker terminated finally.
+No production modules/defaults changed. Pilot remains a rejected QA candidate.
+
+Real ABAB Manglares media720p,frozen populated seed/camera,default streaming,
+scheduler1;no pixel readbacks or profiling. Initial presentation intervals:
+
+| run | ready ms | upload phase ms | RAF P95 / P99 / max ms |
+| --- | ---: | ---: | --- |
+| A1 | 33128.5 | 1054.9 | 66.49 /116.36 /415.80 |
+| B1 | 34714.8 | 3931.1 | 66.34 /116.40 /382.61 |
+| A2 | 31082.6 | 943.6 | 66.44 /116.12 /432.31 |
+| B2 | 61318.8 | 31288.8 | 49.73 /99.80 /365.98 |
+
+B1completes3textures,maxunit30.345ms;B2completes2,fallback1,maxunit33.765ms.
+B1/B2workerconversion124/74ms,peak outputbuffer16MiB(excludes bitmap/canvas/internal
+storage). Allocation+transferCPU50.5/53.0ms. The30s timeout proves unacceptable
+throughput. B2percentile improvement is NOT success:many cheap waiting frames
+inflate the distribution. Ready25chunks in all cases,0failed/queued at end.
+
+A2/B2captures visually inspected:ground,ribera,ferns,building composition retained;
+wind/water phase differ. Lion textures are not prominent in this camera,so these
+screenshots do not replace the separate byte/mip correctness proof. Existing shader
+warnings only. No GPU-speed or full-game equivalence claim.
+
+Decision:do not adopt. Need phase attribution on the observed atomic outlier and
+admission history. The scheduler's generic historical-unit estimate can carry a
+cost across unlike allocation,row,and mip phases;possible contributor,not proved
+by aggregate stats. A bounded estimate by measured operation class may be appropriate,
+but do not simply lower estimates or extend the watchdog. Keep whole-loading
+throughput as acceptance gate,not the attractive isolated stripe timings.
