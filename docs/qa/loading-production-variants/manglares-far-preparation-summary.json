@@ -1,0 +1,56 @@
+{
+  "scope": "Diagnostic observed spans include overlapping awaited phases and post-ready activity. Sums are not additive CPU/GPU costs.",
+  "readyMs": 37931.13499999046,
+  "groups": {
+    "far-region-worker": {
+      "count": 4,
+      "sumDurationMs": 4169.240000009537,
+      "maxDurationMs": 1281.5900000333786
+    },
+    "far-region-create": {
+      "count": 4,
+      "sumDurationMs": 7.0950000286102295,
+      "maxDurationMs": 3.6050000190734863
+    },
+    "far-region-attach-ground": {
+      "count": 4,
+      "sumDurationMs": 10.455000042915344,
+      "maxDurationMs": 10.455000042915344
+    },
+    "far-region-ground-seam": {
+      "count": 1,
+      "sumDurationMs": 2188.8450000286102,
+      "maxDurationMs": 2188.8450000286102
+    },
+    "far-gpu:texture-uploads": {
+      "count": 32,
+      "sumDurationMs": 290.09499979019165,
+      "maxDurationMs": 83.64499998092651
+    },
+    "far-gpu:queue-admission": {
+      "count": 16,
+      "sumDurationMs": 7737.325000047684,
+      "maxDurationMs": 1292.8649998903275
+    },
+    "far-gpu:compile": {
+      "count": 28,
+      "sumDurationMs": 2040.909999847412,
+      "maxDurationMs": 1286.8249999284744
+    },
+    "far-gpu:draw": {
+      "count": 28,
+      "sumDurationMs": 294.14999997615814,
+      "maxDurationMs": 120.99500000476837
+    },
+    "far-gpu:fence": {
+      "count": 26,
+      "sumDurationMs": 3273.0999999046326,
+      "maxDurationMs": 570.1299999952316
+    },
+    "far-region-gpu-ready": {
+      "count": 4,
+      "sumDurationMs": 4698.290000081062,
+      "maxDurationMs": 3668.9800000190735
+    }
+  }
+}

@@ -348,3 +348,15 @@ visibility patch output. This does not substitute for a measured end-to-end win.
 Keep sharedSmoothProgram opt-in and do not promote it as a loading optimization.
 No required visual variant has been removed, and neither candidate is enabled
 by default. This audit has not yet delivered a validated loading-time reduction.
+
+## Far preparation attribution, original renderer
+
+Both candidates disabled. Diagnostic captures147spans, including28compile
+phases (sum2,040.91ms, max1,286.82ms),16queue admissions
+(sum7,737.33ms),26fences(sum3,273.10ms), and one ground seam preparation
+(2,188.85ms). These are overlapping wall spans, including post-ready activity,
+not additive costs or GPU execution times. Loading readiness37,931.135ms.
+Do not label the whole far preparation phase shader compilation.
+Next attribution must join each compile interval to actual link events to
+distinguish new variants from repeated preparation of cached programs.
+No removal is justified merely by the compile invocation count.
