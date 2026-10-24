@@ -2,7 +2,8 @@
 // Synchronous call durations are not GPU execution times.
 export function installLoadingProgramInventory({traceCalls=false}={}){
  const contexts=new WeakMap(),programIdentities=new WeakMap(),getContext=HTMLCanvasElement.prototype.getContext;
- const report=globalThis.qaLoadingProgramInventory={contexts:[],links:[],deletes:[],slowCalls:[],longFrames:[]};
+ const report=globalThis.qaLoadingProgramInventory={contexts:[],links:[],deletes:[],slowCalls:[],longFrames:[],smoothSourceEquality:[]};
+ const smoothSources=new Map();
  // Read existing Three metadata only: no GL status query or resource creation.
  Object.defineProperty(report,'residentPrograms',{enumerable:true,get(){
   return (globalThis.qaThreadWorld?.renderer?.info.programs??[]).map(program=>({
@@ -21,7 +22,7 @@ export function installLoadingProgramInventory({traceCalls=false}={}){
   const id=report.contexts.length,shaders=new WeakMap(),programs=new WeakMap();let serial=0;
   contexts.set(gl,id);report.contexts.push({id,canvasId:this.id});
   const source=gl.shaderSource,attach=gl.attachShader,link=gl.linkProgram,remove=gl.deleteProgram;
-  gl.shaderSource=function(shader,text){shaders.set(shader,{hash:hash(text),name:text.match(/#define SHADER_NAME (.*)/)?.[1]??null,defines:text.match(/^#define .*$/gm)??[]});return source.call(this,shader,text);};
+  gl.shaderSource=function(shader,text){const fingerprint=hash(text);if(['4301934e','66cf9391'].includes(fingerprint)){const first=smoothSources.get(fingerprint);report.smoothSourceEquality.push({context:id,hash:fingerprint,first:first===undefined,exactMatch:first===undefined||first===text});if(first===undefined)smoothSources.set(fingerprint,text);}shaders.set(shader,{hash:fingerprint,name:text.match(/#define SHADER_NAME (.*)/)?.[1]??null,defines:text.match(/^#define .*$/gm)??[]});return source.call(this,shader,text);};
   gl.attachShader=function(program,shader){let record=programs.get(program);if(!record){record={id:serial++,shaders:[]};programs.set(program,record);programIdentities.set(program,{context:id,id:record.id});}record.shaders.push(shader);return attach.call(this,program,shader);};
   gl.linkProgram=function(program){const start=performance.now();try{return link.call(this,program);}finally{const record=programs.get(program);report.links.push({context:id,id:record?.id,start,callMs:performance.now()-start,afterReady:!!globalThis.qaStreamingReadyAt,shaders:record?.shaders.map(shader=>shaders.get(shader))??[],stack:new Error().stack});}};
   gl.deleteProgram=function(program){report.deletes.push({context:id,id:programs.get(program)?.id,at:performance.now()});return remove.call(this,program);};

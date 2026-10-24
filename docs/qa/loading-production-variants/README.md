@@ -302,3 +302,15 @@ may remove a duplicate compile without removing either effect. Not implemented
 or accepted yet: verify callback semantics, material state and exact shader
 source equivalence before changing keys. Hash matches alone are insufficient.
 Observer reads renderer.info.programs metadata only, without GPU queries.
+
+## Opt-in shared smooth-program pilot
+
+sharedSmoothProgram=1 reuses the obstruction shader-key suffix for standby
+transparency only. Shader callbacks and material render state are unchanged;
+Three still keys geometry/render-state parameters. Default remains separate.
+The observer now compares complete strings for the two identified fingerprints
+to rule out a hash collision without serializing large shader sources.
+Original/shared diagnostic runs are executing serially with captures.
+Four existing smooth-far transition tests pass with the isolated Three loader.
+The initial Windows loader path invocation failed before running tests; using
+a file URL corrected the invocation. No performance benefit is claimed yet.
