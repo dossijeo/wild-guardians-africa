@@ -609,3 +609,25 @@ CROP_DEPTH_PREPARATION=1, WG_FRAME_SCHEDULER=1, BIOME each fixture and unique RE
 For edit/exit omit active/quality cycle; EDIT=1 EXIT=1 EXIT_PREWARM=scheduled.
 Prefixes are WG_THREAD_ except WG_FRAME_SCHEDULER. PR159 verified OPEN/draft,
 head codex/global-visual-lab, base main. No default enablement or main merge.
+
+
+### Integrated Sabana visual equivalence (2026-10-24)
+
+`scheduler-visual-sabana-{control,candidate}.json` and raw quality PNGs use the
+same populated seed/camera/time/1280x720 fixture, paused after loading. Quality
+menu protocol baja/media/baja;120 settled frames before every screenshot.
+Control: scheduler/stable-shadow/crop-preparation off; candidate all three on.
+This compares the existing approved art with the integrated architectural
+candidate, not main versus laboratory art. No geometry/density edits.
+
+RGB MAD on scale0–255: .002287/.000325/.005029. Fraction pixels with any-channel
+absolute delta>8: .000114/.0000033/.000225. Side-by-sides
+`scheduler-visual-sabana-pair-{1-baja,2-media,3-baja}.jpg` and difference JSON.
+Inspected low and medium pairs: same grass, buildings, ground, background and
+quality-appropriate shadows. Not mathematically identical; localized minor
+pixel differences remain. This establishes this fixed daytime Sabana scene,
+not all cameras/night/other biomes. Capture durations are not benchmarks.
+Other-biome paired image validation still pending; flags remain opt-in.
+Reproduce WG_THREAD_PORT=5190, BIOME=sabana, DEFAULT_STREAMING/FROZEN=1,
+QUALITY=media, QUALITY_CYCLE/QUALITY_MENU_PROTOCOL/QUALITY_CAPTURE=1, all three
+candidate flags0 then1, no ACTIVE. Main untouched; PR159 remains draft.
