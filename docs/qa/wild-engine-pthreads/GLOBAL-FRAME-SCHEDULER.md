@@ -1190,3 +1190,39 @@ outlines, so it is a plausible independent executor candidate. It currently has
 cancellation,stale quality/context results and total presentation/stream latency;
 no claim of benefit until actually implemented and compared. This points toward
 moving/eliminating whole preparation dependencies rather than enlarging budgets.
+
+
+### Pure mud-edge kernel and real worker feasibility (2026-10-24)
+
+Extracted unchanged grid lookup/interpolation/contour-distance calculation into
+mangrove-mud-edge-data.js. Existing cooperative caller still performs exactly the
+same units, then publishes material/attributes atomically; no worker is active
+in normal streaming. Material shader and terrain/normal/color inputs unchanged.
+Cancellation still closes computation before publication. No native world copied.
+
+QA WG_MUD_EDGE_WORKER_PROBE=1 recomputes immutable resident chunk attributes in
+one reused module Worker without installing its results. Inputs structured-clone
+original float/interleaved arrays (never detach live GPU-facing data); outputs
+transfer newly allocated color/normal/edge buffers. Validates byte-for-byte against
+actual resident attributes and terminates worker on completion/error. Unsupported
+normalized/non-float attributes reject explicitly. This is not yet a general
+worker client, streaming integration, or distribution validation.
+
+scheduler-mud-edge-worker-probe.json:21real mud chunks,all byte-identical.
+Input copy/submission mean0.1205ms,max0.155;setup mean0.0093ms.
+First round trip56.94ms includes worker boot; later mean5.205ms.
+Worker compute warm mean4.386ms; this is NOT faster pure computation than the
+previous main-thread measurements and not an apples-to-apples CPU comparison.
+Its value to test next is removing cooperative waits from the main-thread path.
+Input backing buffers mean132005bytes,max166068;output mean106328,max185808.
+JSON outlines/runtime overhead and temporary clone memory are additional.
+Sequential probe has one in-flight job; no claim of bounded production backlog yet.
+
+Five tests pass: both terrain triangles with nonuniform attributes and translated
+contour,duplicate vertices,incremental byte identity,quality material ownership,
+cancellation and irregular/signed-zero terrain lookup. Actual worker equivalence
+is against the current resident output; it is not a six-biome visual acceptance.
+Next integration must publish only for current owner/revision/context and account
+for cancellation,buffer lifetime,backpressure,worker startup and full-frame A/B.
+
+Vite build passes in7.01s with existing bundle-size/dynamic-import warnings.

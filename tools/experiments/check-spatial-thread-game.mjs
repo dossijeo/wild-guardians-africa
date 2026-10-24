@@ -146,6 +146,7 @@ try{
  if(process.env.WG_THREAD_CONTEXT==='1')await page.screenshot({path:(process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json').replace(/\.json$/, '-after-context.png')});
  const profiler=process.env.WG_THREAD_CPU_PROFILE==='1'?await page.context().newCDPSession(page):null;
  if(profiler){await profiler.send('Profiler.enable');await profiler.send('Profiler.start');}
+ if(process.env.WG_MUD_EDGE_WORKER_PROBE==='1')result.mudEdgeWorker=await page.evaluate(async()=>await (await import('/tools/experiments/mud-edge-worker-probe.js')).probeMudEdgeWorker(qaThreadWorld));
  if(benchmark)result.streaming=await page.evaluate(async(options)=>{
   const w=qaThreadWorld,core=w.spatialSession.core;
   const gameUrl=performance.getEntriesByType('resource').map(e=>e.name).find(n=>new URL(n).pathname==='/src/simulation/game.js');
