@@ -561,3 +561,51 @@ GPU constraints explicitly separated. Do not indefinitely tune sub-ms grid
 units trying to fix these browser intervals. Main/callback phase metrics and
 browser entries are archived for reproducibility; full scheduler goal remains
 open and opt-in. No simulation, artwork, quality defaults or main changes.
+
+
+### Integrated active six-biome quality and edit/exit validation (2026-10-24)
+
+Current production source with opt-in frameScheduler=1, stableShadowPrograms=1,
+cropDepthPreparation=1, immediate required-terrain deadline. Same populated
+fixtures,1280x720 Intel UHD, initial media, menu quality protocol baja/media/baja,
+active tutorial-skipped QA fixture, camera travel240frames/144m. One functional
+run per biome, NOT six comparative performance claims. Reports
+`scheduler-integrated-quality-1.json` (Manglares) and biome-named reports.
+
+| Biome | baja completion/max frame ms | media completion/max | final baja completion/max |
+| --- | --- | --- | --- |
+| Manglares | 403/52 | 670/88 | 1439/70 |
+| Sabana | 404/58 | 507/70 | 1763/117 |
+| Gran Río | 475/72 | 488/60 | 1234/98 |
+| Desierto | 354/40 | 402/35 | 319/30 |
+| Volcanes | 380/39 | 480/58 | 1531/119 |
+| Gran Cañón | 634/127 | 253/23 | 228/59 |
+
+All six:240/240 advancing simulation frames, zero paused frames,15new chunks,
+zero failed stream jobs, zero pending/preparing/busy at completion, zero
+scheduler failures/pending. Final transition completion includes waiting for
+chunks while camera is moving plus12presentation frames; a1.76s completion is
+NOT a1.76s synchronous freeze. No reappearance of multi-second GL freeze in
+these cases. Remaining longest frame127ms and completion latency are not full
+acceptance. Functional all-biome integration does not replace paired visual
+comparisons or prove improved throughput against the reference.
+
+`scheduler-integrated-edit-exit-1.json`: legal wall build/remove and crop command
+overlap confirmed running pthread generation. Old jobs25/31 return-2 and are
+replaced; wall rendered, barrier count0->1->0, crop seen by renderer. This fixture
+pauses between commands: not an active actor-route or combat stress test.
+Then exit with one queued scheduled compilation: compilation rejects as disposed,
+scheduler cancels1 and ends pending0/failed0, zero workers, zero late installs,
+native state5, menu restored, retained programs83/83 released. Exit wall latency
+335ms is asynchronous, not measured main-thread blocking. `recoveryFinished:false`
+is recorded by the generic exit harness; this scheduled-exit branch does not
+start/await a quality recovery and must not be presented as recovery success.
+No resources remaining claimed beyond explicitly checked workers/jobs/program
+references; comprehensive GPU leak testing remains pending.
+
+Reproduction: WG_THREAD_PORT=5190, DEFAULT_STREAMING/FROZEN/ACTIVE=1,
+QUALITY_CYCLE/QUALITY_ACTIVE/QUALITY_MENU_PROTOCOL=1, STABLE_SHADOW_PROGRAMS=1,
+CROP_DEPTH_PREPARATION=1, WG_FRAME_SCHEDULER=1, BIOME each fixture and unique REPORT.
+For edit/exit omit active/quality cycle; EDIT=1 EXIT=1 EXIT_PREWARM=scheduled.
+Prefixes are WG_THREAD_ except WG_FRAME_SCHEDULER. PR159 verified OPEN/draft,
+head codex/global-visual-lab, base main. No default enablement or main merge.
