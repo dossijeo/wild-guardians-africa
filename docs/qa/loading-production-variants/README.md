@@ -98,3 +98,20 @@ Mangroves and Canyon show only the guardian link in this frozen observation.
 The loading diorama explicitly sets uFineNoise=0, while normal world uses1.
 Therefore a global unconditional fine-noise substitution would change selected
 loading visuals. Any specialization must preserve both real recipes and QA access.
+
+## Opt-in candidate: biome-specific historical ground source
+
+productionGroundSource=1 removes the groundMaterialLegacy419 definition only
+for savanna/grand_river/mangrove/volcanoes/canyons. Its current desert call is
+required: desert source is preserved byte-for-byte. The initial claim that this
+function had no runtime reference was corrected by a fail-closed source test.
+The original source and all laboratory options remain available by default.
+
+First real pilot failed: Fixed512 shader anchor changed. The cache identifies
+the end of its replacement region through the desert branch. Candidate revised
+to retain that branch boundary as an empty return in non-desert shaders, keeping
+fixed512's insertion contract while excluding the unused historical function.
+Saved UI failure evidence; stopped the already-failed browser test explicitly,
+then started a fresh corrected pilot. This failure is not a throughput sample.
+Three source-preservation tests pass; renderer validation and A/B/A/B remain
+required. No count reduction or load-time saving is claimed.
