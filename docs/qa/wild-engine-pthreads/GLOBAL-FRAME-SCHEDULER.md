@@ -1315,3 +1315,37 @@ failed accounting;QA modules syntax checked. No shader or simulation changes.
 Worker remains opt-in. Still pending low/night/fast-camera and deployment coverage,
 more worst-frame validation and remaining scheduler producers. These correctness
 checks do not complete the full Global Frame Scheduler objective.
+
+
+### Night/baja streaming and emitted worker smoke test (2026-10-24)
+
+Serial ABAB scheduler-mud-worker-night-low-*,same tracked controlled-night fixture
+(seed712,elapsed450),720p,baja,active simulation,360frames/144m after60warmframes.
+Raid camera is locked to the authored QA path equally in all runs.15new chunks
+complete per run,0paused frames. Both variants retain all original geometry and
+lighting. Worker stays opt-in; no tuning between repetitions.
+
+| run | preparation elapsed mean ms | RAF P95 / P99 / max ms |
+| --- | ---: | --- |
+| A1 | 2344 | 199.55 / 299.29 / 365.88 |
+| B1 | 1478 | 166.37 / 216.25 / 249.39 |
+| A2 | 2481 | 182.83 / 216.33 / 365.39 |
+| B2 | 1942 | 182.96 / 249.38 / 415.72 |
+
+Preparation latency improves21–37%,but worst-frame result is inconsistent;
+B2P99/max regress. Do not turn this into a blanket smoother-game claim. GPU
+interval means77.22/73.53/78.10/64.53ms include bubbles and scene scheduling;
+no pure GPU efficiency claim. Final A2/B2screenshots inspected: same terrain,
+ribera,vegetation composition and visible ground response. HUD clock/water
+animation differ with active evolution,so not pixel-equivalence acceptance.
+Raw captures/data and summary include exact values and scope.
+
+New check-mud-worker-package.mjs tests the ACTUAL emitted Vite worker asset via
+nested URL and a cross-origin iframe with isolation delegation. Both return
+expected color,normal,edge arrays,matching request identity,original input buffer
+still attached,zero page errors;worker explicitly terminated. Artifact2425bytes,
+SHA256ae5f6ba2a3d49558d43fd2c7c872b738399feecd1dcdcb380f49d6606a1c30e4.
+Built with current Vite configuration;scope excludes deployed itch.io/full game
+and actual Tauri/WebView2. JSON report retains those limitations. Production build
+passes with existing bundle/import warnings. This closes the packaged-worker
+protocol smoke test,not global distribution or scheduler acceptance.
