@@ -1506,3 +1506,37 @@ cost across unlike allocation,row,and mip phases;possible contributor,not proved
 by aggregate stats. A bounded estimate by measured operation class may be appropriate,
 but do not simply lower estimates or extend the watchdog. Keep whole-loading
 throughput as acceptance gate,not the attractive isolated stripe timings.
+
+
+### Upload finalization attribution and corrected pilot ABAB (2026-10-24)
+
+scheduler-texture-pilot-phases.json adds per-unit phase/work/wait records without
+changing admission. Confirms the unlike-phase issue:normal-map last row18.945ms,
+then mip generation.030ms waited2223.46ms. Packed map last row6.665ms,then.065ms
+mips waited222.61ms. No need to hypothesize GPU time from these CPU wall spans.
+
+Corrected only the QA producer:final row and mip finalization are executed in the
+same admitted generator step. No yield between them. Full combined synchronous
+cost remains charged;no lower estimates,extra budget,policy or watchdog changes.
+This also avoids exposing an incomplete mipchain between those phases. Earlier
+rows retain cooperative yields. Added two tests:allocation+two-row upload has
+three admissions with final mips included,original bitmap/source ownership kept;
+alpha rejection occurs before allocation. Both pass.
+
+Fresh ABAB,same real initial-loading protocol,no profiler/readbacks:
+
+| run | ready ms | upload phase ms | RAF P95 / P99 / max ms |
+| --- | ---: | ---: | --- |
+| A1 | 32015.2 | 863.1 | 66.50 /133.10 /415.68 |
+| B1 | 32174.9 | 1183.7 | 66.58 /149.65 /498.97 |
+| A2 | 32193.0 | 1234.9 | 66.81 /133.08 /415.70 |
+| B2 | 30997.2 | 1099.5 | 50.10 /116.35 /399.46 |
+
+Both B complete3textures,0fallback,25worldchunks ready. Pertexture preparation
+27.7–91.5ms,versus previous2.2s or30s waits. Real driver unit outliers38.445ms B1
+and20.480ms B2remain;cooperative scheduling cannot interrupt them. One pair worsens
+P99/max,the other improves. Overall load timing does not establish consistent gain.
+Keep corrected experiment QA-only;do NOT activate or broaden to more textures based
+on the isolated upload results. The throughput bug is resolved for this observed
+finalization sequence,but global scheduler acceptance remains unproved. Reports,
+summaries and captures retained;no simulation/art/production defaults changed.
