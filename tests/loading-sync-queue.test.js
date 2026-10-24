@@ -34,9 +34,24 @@ test('global admission replaces the actor queue pump and shares ready continuati
  for(let i=0;i<60;i++){time+=16.67;scheduler.beginFrame(time);time+=2;await scheduler.endFrame();}
  const work=async()=>{for(let i=0;i<4;i++)await queue.run(()=>{calls++;time+=.1;return i;});};
  const done=work();assert.equal(calls,0);time+=300;scheduler.beginFrame(time);time+=1;await scheduler.endFrame();await done;
- assert.equal(calls,4);assert.equal(queue.stats.completed,4);assert.equal(queue.jobs.length,0);assert.equal(queue.scheduled.size,0);queue.dispose();
+ assert.equal(calls,4);assert.equal(queue.stats.completed,4);assert.equal(queue.jobs.length,0);assert.equal(scheduler.snapshot().pending,0);queue.dispose();
 });
 test('closing globally queued actor preparation rejects without another frame',async()=>{
  const scheduler=new GlobalFrameScheduler(),queue=new LoadingSyncQueue({scheduler});let calls=0;
  const pending=queue.run(()=>calls++);queue.dispose();await assert.rejects(pending,/cancelled/);assert.equal(calls,0);assert.equal(scheduler.snapshot().pending,0);
+});
+
+
+test('burst producer preserves FIFO without exhausting global admission capacity',async()=>{
+ let time=1000;const scheduler=new GlobalFrameScheduler({now:()=>time,maxPending:1}),order=[];
+ const queue=new LoadingSyncQueue({scheduler,now:()=>time});
+ const work=Array.from({length:256},(_,i)=>queue.run(()=>{order.push(i);time+=.05;return i;}));
+ assert.equal(scheduler.snapshot().pending,1);assert.equal(queue.jobs.length,256);
+ for(let i=0;i<100&&queue.stats.completed<256;i++){time+=16.67;scheduler.beginFrame(time);time+=2;await scheduler.endFrame();assert.ok(scheduler.snapshot().pending<=1);}
+ assert.deepEqual(await Promise.all(work),Array.from({length:256},(_,i)=>i));assert.deepEqual(order,Array.from({length:256},(_,i)=>i));assert.equal(scheduler.snapshot().failed,0);queue.dispose();
+});
+test('aborting a burst rejects both admitted and producer-held work without adoption',async()=>{
+ const scheduler=new GlobalFrameScheduler({maxPending:1}),owner=new AbortController(),queue=new LoadingSyncQueue({scheduler,signal:owner.signal});let calls=0;
+ const all=Promise.allSettled(Array.from({length:256},()=>queue.run(()=>calls++)));
+ owner.abort();const results=await all;assert.ok(results.every(row=>row.status==='rejected'&&row.reason.name==='AbortError'));assert.equal(calls,0);assert.equal(queue.jobs.length,0);assert.equal(scheduler.snapshot().pending,0);
 });

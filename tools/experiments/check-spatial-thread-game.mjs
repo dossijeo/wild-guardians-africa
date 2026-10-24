@@ -66,7 +66,7 @@ try{
  await page.goto(gameUrl.href);
  await page.waitForSelector('#native-menu',{timeout:60000});
  const frame=page.frames().find(f=>f.url().includes('/menu/'))??await page.waitForEvent('framenavigated',{predicate:f=>f.url().includes('/menu/'),timeout:60000});
- await frame.waitForLoadState('load');await frame.waitForFunction(()=>document.body.innerText.toUpperCase().includes('JUEGO NUEVO'));
+ await frame.waitForLoadState('load',{timeout:60000});await frame.waitForFunction(()=>document.body.innerText.toUpperCase().includes('JUEGO NUEVO'),null,{timeout:60000});
  await page.evaluate(()=>{globalThis.qaStreamingLoadStart=performance.now();});
  await frame.evaluate(()=>parent.postMessage({type:'wild-guardians:menu',action:'load-slot',slotId:'opening'},location.origin));
  for(let attempt=0;attempt<18;attempt++){
@@ -77,7 +77,7 @@ try{
   if(attempt===17)throw Error('Game readiness deadline exceeded; see thread-game-loading.json');
   await page.waitForTimeout(10000);
  }
- const result=await page.evaluate(async()=>{const w=qaThreadWorld;await w.whenChunksReady();return {cropDepthPreparation:w.cropDepthPreparation??null,loading:{readyMs:globalThis.qaStreamingReadyAt-globalThis.qaStreamingLoadStart,phases:globalThis.qaLoadingPhases??[]},actorPreparation:w.loadingActorQueue?{...w.loadingActorQueue.stats,pending:w.loadingActorQueue.jobs.length+w.loadingActorQueue.scheduled.size,global:!!w.loadingActorQueue.scheduler}:null,streamingOptions:w.streamingOptions,isolated:crossOriginIsolated,runtime:w.spatialSession.runtime,programRetention:w.programLease?.stats??null,stream:w.chunkStream.summary(),native:w.spatialSession.core.metrics(),chunks:w.chunks.size,stage:document.querySelector('#stage')?.getAttribute('aria-busy'),elapsed:w.state.elapsed,renderer:w.renderer.getContext().getParameter(w.renderer.getContext().RENDERER)};});
+ const result=await page.evaluate(async()=>{const w=qaThreadWorld;await w.whenChunksReady();return {cropDepthPreparation:w.cropDepthPreparation??null,loading:{readyMs:globalThis.qaStreamingReadyAt-globalThis.qaStreamingLoadStart,phases:globalThis.qaLoadingPhases??[]},actorPreparation:w.loadingActorQueue?{...w.loadingActorQueue.stats,pending:w.loadingActorQueue.jobs.length,global:!!w.loadingActorQueue.scheduler}:null,streamingOptions:w.streamingOptions,isolated:crossOriginIsolated,runtime:w.spatialSession.runtime,programRetention:w.programLease?.stats??null,stream:w.chunkStream.summary(),native:w.spatialSession.core.metrics(),chunks:w.chunks.size,stage:document.querySelector('#stage')?.getAttribute('aria-busy'),elapsed:w.state.elapsed,renderer:w.renderer.getContext().getParameter(w.renderer.getContext().RENDERER)};});
  if(process.env.WG_THREAD_NO_ISOLATION==='1'&&(result.isolated||result.runtime.fallbackReason!=='SharedArrayBuffer isolation unavailable'))throw Error('Missing real non-isolated fallback');
  if(process.env.WG_THREAD_BOOT_FAILURE==='1'&&(!result.isolated||!result.runtime.fallbackReason))throw Error('Missing isolated boot-failure fallback');
  if(result.runtime.backend!==((threaded&&process.env.WG_THREAD_NO_ISOLATION!=='1'&&process.env.WG_THREAD_BOOT_FAILURE!=='1')?'pthreads':'standalone'))throw Error(JSON.stringify(result));
@@ -217,4 +217,4 @@ try{
  console.log(JSON.stringify({result,errors}));
  const unexpected=errors.filter(e=>!e.includes('f_environment4')&&!(process.env.WG_THREAD_BOOT_FAILURE==='1'&&(e.includes('503')||e.includes('pthread runtime unavailable'))));
  if(unexpected.length)throw Error('Unexpected browser errors: '+unexpected.join(' | '));
-}catch(error){const diagnostic=await page.evaluate(()=>globalThis.qaQualityFailure??null).catch(()=>null);await writeFile((process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json').replace(/\.json$/,'.failure.json'),JSON.stringify({message:error.message,diagnostic,qualityStatuses,errors},null,2)+'\n');throw error;}finally{await browser.close();}
+}catch(error){let diagnosticTimer;const diagnostic=await Promise.race([page.evaluate(()=>globalThis.qaQualityFailure??null).catch(()=>null),new Promise(resolve=>{diagnosticTimer=setTimeout(()=>resolve({unavailable:'Browser diagnostic did not respond within 5s'}),5000);})]).finally(()=>clearTimeout(diagnosticTimer));await writeFile((process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json').replace(/\.json$/,'.failure.json'),JSON.stringify({message:error.message,diagnostic,qualityStatuses,errors},null,2)+'\n');throw error;}finally{await browser.close();}

@@ -687,3 +687,43 @@ large-bundle warning). Full scheduler remains opt-in pending remaining acceptanc
 no claim that its queue API, all producers or all workload profiles are complete.
 Main untouched, PR159 draft. Use a single frameScheduler=1 for future integrated
 validation; specify explicit zeros only for intentionally isolated comparisons.
+
+
+### Actor producer backpressure and cancellation (2026-10-24)
+
+LoadingSyncQueue previously submitted each arrival as an independent scheduler
+job; a resource burst could exhaust maxPending128 and reject loading. It now
+uses its existing FIFO with one outstanding global admission per owner. No new
+RAF, timer queue or parallel executor added. Task CPU remains synchronous and
+per-task; promise continuations can refill the same presentation budget. The
+admission deadline is captured when enqueued, not reset on capacity wait.
+Owner abort rejects admitted and producer-held tasks without adoption.
+
+26 loading queue/scheduler tests pass. New tests submit256tasks against global
+maxPending1, verify FIFO/results, <=1admission and no global failures; aborting
+256tasks leaves zero tasks/jobs and every promise rejected. These are burst
+correctness tests, NOT measured game speedups. Producer backlog still retains
+its callbacks/assets until processed/cancelled: this is admission pressure
+control, not a global asset-memory cap or universal dependency system.
+
+Game pilot `scheduler-actor-backpressure-3.json`: integrated scheduler enabled
+with automatic shadow/crop preparation, active Manglares720p, media/baja cycles.
+2actor tasks completed, CPU11.18ms/max6.82ms, pending0;240/240advancing frames,
+15new chunks, zero stream failures and scheduler pending0. Initial ready37994ms;
+this is slower than earlier~28–31s pilots and cannot establish throughput
+non-regression without interleaved current control. Do not call this a loading
+performance improvement. Actual fixture has2actor tasks and does not reproduce
+the256arrival burst; that stress coverage is explicit unit-only evidence.
+
+Attempt1 reached loaded game but QA accessed removed `.scheduled.size`; updated
+harness pending count to the single FIFO. Failure JSON retained. Attempt2 timed
+out waiting for menu text; failure diagnostic page.evaluate then failed to
+respond. Inspected the exact owned Node/Chrome via local inspector, with some
+initial failed inspection queries; no timing measurements accepted. Browser
+had menu frame, not evidence of actor-load deadlock. Closed only its verified
+owned Chrome PID14396(parent40572); runner then exited with menu TimeoutError.
+Both failures archived. Added explicit60s menu waits and a5s bounded failure
+snapshot so reporting cannot hang behind an unresponsive browser. Attempt3
+fresh run passes. No other process terminated; no production/browser launch
+flags altered. This bounded producer path remains behind experimental scheduler.
+Main unchanged; further loading ABAB needed before default activation.
