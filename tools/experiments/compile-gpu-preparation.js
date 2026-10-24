@@ -27,7 +27,7 @@ export async function compileGpuPreparation(renderer,root,camera,scene,{check,si
  const ready=new Promise(resolve=>{resolveReady=resolve;});
  const poll=()=>{
   guard();
-  for(const program of programs){guard();if(program.isReady())programs.delete(program);}
+  for(const program of programs){guard();if('program' in program&&!program.program){const error=new Error('GPU compilation cancelled: selected program disposed');error.code='GPU_PROGRAM_DISPOSED';throw error;}if(program.isReady())programs.delete(program);}
   guard();if(programs.size===0)resolveReady();
  };
  try{

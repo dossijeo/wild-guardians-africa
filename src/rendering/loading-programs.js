@@ -51,7 +51,7 @@ export async function compileLoadingProgramsBatched(renderer,scene,camera,target
   await yieldWork();
  }
  }catch(error){
-  if(resourceDisposed){const cancelled=new Error('Loading compilation cancelled: borrowed resource disposed',{cause:error});cancelled.code='BORROWED_RESOURCE_DISPOSED';throw cancelled;}
+  if(resourceDisposed||error.code==='GPU_PROGRAM_DISPOSED'){const cancelled=new Error('Loading compilation cancelled: borrowed resource disposed',{cause:error});cancelled.code='BORROWED_RESOURCE_DISPOSED';throw cancelled;}
   throw error;
  }finally{
   context?.canvas?.removeEventListener('webglcontextlost',abort);

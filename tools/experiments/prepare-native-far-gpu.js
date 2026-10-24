@@ -94,7 +94,7 @@ export async function prepareNativeFarGpu(renderer,root,scene,camera,textures,{c
   return {elapsedMs:performance.now()-begin,textures:unique.length,cachedTextures:unique.length-pending.length,zeroVertexDraws,textureBatches,maxTextureBatchCount,maxTextureBatchMs,textureUploads};
   };
   return cooperative?await queueLoadingFarPrograms(renderer,compileDrawAndFence,{check,nextFrame:frame,onPrepare}):await compileDrawAndFence();
- }finally{if(sync&&(!(ownedWaits||cooperative)||renderer.getContext()===gl&&!gl.isContextLost()&&!cache.contextLost&&cache.epoch===cacheEpoch))gl.deleteSync(sync);}
+ }catch(error){if(error.code==='GPU_PROGRAM_DISPOSED')throw new NativeFarGpuCancelled('program-disposed');throw error;}finally{if(sync&&(!(ownedWaits||cooperative)||renderer.getContext()===gl&&!gl.isContextLost()&&!cache.contextLost&&cache.epoch===cacheEpoch))gl.deleteSync(sync);}
 }
 
 // Loading-only compile/draw queue. Texture preparation remains concurrent;

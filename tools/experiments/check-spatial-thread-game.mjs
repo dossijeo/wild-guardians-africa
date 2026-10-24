@@ -31,6 +31,8 @@ try{
  if(process.env.WG_THREAD_DEFAULT_STREAMING==='1')for(const key of ['waterBedWorker','waterShoreWorker','chunkEviction','warmObstruction','retainPrograms'])gameUrl.searchParams.delete(key);
  if(process.env.WG_THREAD_EXIT_PREWARM)gameUrl.searchParams.set('exitPrewarm',process.env.WG_THREAD_EXIT_PREWARM);
  if(process.env.WG_THREAD_CONTEXT_PREWARM==='1')gameUrl.searchParams.set('contextPrewarm','1');
+ if(process.env.WG_THREAD_QUALITY_STRICT_GL==='1')gameUrl.searchParams.set('qualityStrictGl','1');
+ if(process.env.WG_THREAD_SEAM_OWNED==='1')gameUrl.searchParams.set('seamOwned','1');
  if(process.env.WG_THREAD_QUALITY_ACTIVE==='1')gameUrl.searchParams.set('qualityActive','1');
  if(process.env.WG_THREAD_QUALITY_ATTRIBUTION==='1')gameUrl.searchParams.set('qualityAttribution','1');
  if(process.env.WG_THREAD_QUALITY_PREWARM==='1')gameUrl.searchParams.set('qualityPrewarm','1');
@@ -165,4 +167,4 @@ try{
  console.log(JSON.stringify({result,errors}));
  const unexpected=errors.filter(e=>!e.includes('f_environment4')&&!(process.env.WG_THREAD_BOOT_FAILURE==='1'&&(e.includes('503')||e.includes('pthread runtime unavailable'))));
  if(unexpected.length)throw Error('Unexpected browser errors: '+unexpected.join(' | '));
-}finally{await browser.close();}
+}catch(error){const diagnostic=await page.evaluate(()=>globalThis.qaQualityFailure??null).catch(()=>null);await writeFile((process.env.WG_THREAD_REPORT??'docs/qa/wild-engine-pthreads/thread-game.json').replace(/\.json$/,'.failure.json'),JSON.stringify({message:error.message,diagnostic,errors},null,2)+'\n');throw error;}finally{await browser.close();}
