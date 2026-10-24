@@ -1,6 +1,6 @@
 # Global Frame Scheduler â€” work in progress
 
-Reference: `54075e228`, experimental branch only. Candidate opt-in: `?frameScheduler=1`. No performance benefit claimed yet. No scheduler migration is complete.
+Reference: `54075e228`, experimental branch only. Candidate opt-in: `?frameScheduler=1`. Scoped active-quality benefit measured below; no complete scheduler acceptance.
 
 ## Current status (2026-10-24; supersedes historical checkpoints below)
 
@@ -13,8 +13,10 @@ Earlier sections below are chronological experiments, not current API status.
 
 Structural shader reuse removed the measured multi-second quality recompilation
 in controlled experiments. Do NOT generalize that result to overall scheduler
-acceptance: full-frame streaming tails and throughput have not improved
-consistently. Unit/lifecycle coverage and six-biome active quality checks pass;
+acceptance: sustained streaming tails and throughput have not improved
+consistently. Latest combined active-quality ABAB does improve whole-scenario
+time in both pairs (29.20/30.52s to19.53/23.55s), with15chunks and no backlog;
+that scoped result does not close the remaining acceptance criteria. Unit/lifecycle coverage and six-biome active quality checks pass;
 fixed-view day/night comparisons preserve the approved image within measured
 small pixel differences. Broader workload/hardware acceptance is outstanding.
 
@@ -1669,3 +1671,51 @@ WG_THREAD_FROZEN=1, WG_THREAD_DEFAULT_STREAMING=1, port5190.
 40 Guardian tests pass; Vite build6.63s, existing bundle-size warning. Confirmed
 qa-context-loss hook absent from emitted production worker. No new production RAF.
 Remaining global acceptance and packaged/platform lifecycle validation are open.
+
+
+## Current combined active-quality ABAB and throughput (2026-10-24)
+
+Revision6603a7428. A: same experimental checkout, frameScheduler absent; NOT main.
+B: frameScheduler=1 + mudEdgeWorker=1, including stable shadows/cache/depth
+preparation; Guardian worker OFF. This compares a structural bundle, not scheduler
+budget alone. Chrome, Manglares populated fixture,1280x720,initial media,active
+simulation and240-frame144m camera travel. Existing low/media/low protocol/checks.
+All8runs passed:15new chunks,240/240simulation-advancing frames,no pausedframes,
+no streamfailure/pending jobs at completion. Existing shader warnings only.
+
+First ABAB scheduler-current-global-quality-* first low maximum presentation
+A1=6653.80,B1=202.58,A2=6750.10,B2=383.21ms. Last low completion before diagnostics
+A1=1127,B1=5090,A2=1386,B2=4443ms. Thus do not declare success from one isolated
+transition; faster initial transitions overlap different portions of streaming.
+Preserve all raw times, samplecounts and summary. CPU/GPU attribution absent.
+
+Added QA-only travelStartedAt/travelCompletedAt/settledAt timestamps. No changed
+camera, waits, work, diagnostics or assertions. Second intercalated ABAB:
+
+| run | complete240-frame travel+settling s | first low max ms | media max ms | last low max ms |
+| --- | ---: | ---: | ---: | ---: |
+| A1 |29.202 |6900.39 |359.67 |279.09 |
+| B1 |19.526 |111.71 |133.58 |178.21 |
+| A2 |30.517 |6422.48 |225.49 |459.73 |
+| B2 |23.546 |218.58 |225.30 |309.99 |
+
+About33.1%/22.8% shorter whole scenario in paired runs. No deferred backlog at end;
+settling aftercamera is submillisecond in both alternatives. This is repeatable
+benefit for this workload, not a general FPS uplift. All timelines include existing
+correctness GL synchronization; diagnostics retained and separately reported in
+per-transition rows. Quantiles have only12–52samples per transition; maxima and
+samplecounts are essential. Do not claim strong P99 confidence. No GPU queries
+or new screenshot equivalence test here; previous fixed-fixture visual validation
+still applies, active simulation states are inherently wall-time dependent.
+
+Reproduce: WG_THREAD_PORT=5190, WG_THREAD_DEFAULT_STREAMING=1,
+WG_THREAD_ACTIVE=1, WG_THREAD_QUALITY_CYCLE=1,
+WG_THREAD_QUALITY_MENU_PROTOCOL=1, WG_THREAD_QUALITY_ACTIVE=1;
+A WG_FRAME_SCHEDULER=0 WG_MUD_EDGE_WORKER=0, B both1, serialABAB, unique reports.
+node tools/experiments/check-spatial-thread-game.mjs. Current raw files and
+summaries are scheduler-current-global-{quality,throughput}-*.json.
+
+Keep integrated candidate for further acceptance; no production default switch,
+no main merge. Continued gaps: sustained streaming tails, load performance,
+memory/queue-age monitoring, other hardware and remaining specialized budgets.
+Do not use this combined comparison to approve each opt-in independently.
