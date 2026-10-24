@@ -274,3 +274,21 @@ First attempt failed: sharing a conservative reflection cost across heterogeneou
 Corrected real run `quality-staged-bindings-2.json`: 15 new chunks, active simulation, no failed/pending chunks, no scheduler failures. Preparation reflection wall costs: 330.0/1132.9/232.5/0.1 ms for media/baja/media/baja. Whole transition latencies: 11688.6/8668.0/1329.3/1794.6 ms; presentation maxima 122.6/94.6/110.9/81.5 ms. Scheduler max atomic unit 102.165 ms; numerous new getProgramInfoLog calls of 18–84 ms plus 100.17 ms. Initial ready 29262.65 ms. This is a successive diagnostic comparison, not acceptance ABAB.
 
 Decision: reject blanket live reflection. It moves some stalls but also forces initialization of currently unused variants, adding work and still exposing indivisible driver calls during interactive presentation. It does not demonstrate the requested whole-frame improvement. Restored all four experimental source/test/harness files to 808382ed8. Reproducible patch `live-bindings-rejected.patch` preserves the corrected experiment; apply on that base, use the existing staged active command plus WG_THREAD_QUALITY_BINDINGS=1 and crop preparation. Initial failed estimator is described above, not retained as production code. The approved targeted dormant-crop preparation and complete depth admission remain unchanged. Next direction: avoid unnecessary quality recipes and identify exact first-draw omissions; do not warm every resident program merely because it exists. Full global scheduler goal remains open, opt-in, main unchanged.
+
+
+## Current direct path versus staged candidate: serial A/B/A/B
+
+After rejecting blanket reflection, re-established the actual current direct quality path as the control instead of comparing only prewarming variants. A: no frame scheduler, no staged quality, no dormant crop prewarm. B: frame scheduler + staged quality + cropDepthPreparation, without rejected live bindings. Same current source e625f8e43, Manglares fixture, 720p, native pthread/default streaming, active simulation and moving camera; no builds/tests concurrently. Order A1/B1/A2/B2. Reports `quality-current-direct-{A1,B1,A2,B2}.json`, aggregate `quality-current-direct-ABAB-summary.json` (nearest-rank percentiles). This is a bundle comparison; it cannot attribute the benefit to scheduler alone.
+
+| Metric | A1 | B1 | A2 | B2 |
+|---|---:|---:|---:|---:|
+| Initial ready ms | 28211 | 29856 | 28324 | 28910 |
+| First baja transition ms | 6881 | 7745 | 6809 | 8265 |
+| First baja max presentation interval ms | 6277 | 162 | 6273 | 156 |
+| First baja p95 / p99 ms | 6277 / 6277 | 55 / 84 | 6273 / 6273 | 56 / 67 |
+| Warm media max interval ms | 89 | 83 | 92 | 50 |
+| Warm baja max interval ms | 95 | 55 | 100 | 97 |
+
+Direct cold activation is demonstrably unacceptable: repeated ~6.27-second presentation blocks, several getProgramInfoLog calls individually hundreds of milliseconds to 1.31 seconds. Staged preparation reduces that extreme substantially in both repetitions, at a latency cost of ~0.86–1.46 seconds for first baja. Contrary to the earlier narrow comparisons, this is evidence of a real benefit over the current direct path, though not complete acceptance. GL timings are synchronous driver-facing durations, not GPU execution; nested spans overlap. Control has very few presentation samples during its blocked interval, so its p95/p99 are unstable descriptors of ordinary steady gameplay. Means/percentiles must not be interpreted as equal-duration frame-rate benchmarks.
+
+Important protocol issue found: the QA loop first prepares media even though media is already active. B pays 11.30/14.27 seconds for that redundant preparation, while the actual settings menu checks previous!==settings.quality and never requests it. A still repeats qualitySetting(media), costing ~0.49/0.54 seconds. This is documented, not silently removed from the evidence; it can warm future programs and changes the subsequent comparison. Next test must skip same-quality requests for BOTH cases and repeat against the actual menu protocol before production integration. No pixel-equivalence or GPU-memory claim is made. Active simulation/stream results are preserved in the aggregate. PR159 verified OPEN/draft on codex/global-visual-lab. No source changes in this turn; no main changes; objective remains open.
