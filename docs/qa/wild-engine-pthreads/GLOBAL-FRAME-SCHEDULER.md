@@ -484,3 +484,38 @@ terrainDeadline mode. No production flag added. Test confirms required work
 starts under late presentation without 250ms grace and measures wait separately;
 20 scheduler/terrain tests pass, including quality/context/teardown invalidation.
 Global scheduler, stable shadows and crop warmup remain opt-in. Main untouched.
+
+
+### Grid-only coarsening: not retained (2026-10-24)
+
+Phase wait evidence suggested over-fragmentation of cheap terrain grid indexing.
+Tested grid units2048 instead of256 (only grid; expensive edge vertices remain
+256). QA source route asserted a unique anchor, no changes to output data.
+Same active Manglares720p Intel UHD low fixture, immediate required terrain,
+scheduler + stable shadow programs + dormant crop depth preparation,360frames
+and144m, serial A/B/A/B/A/B. Raw `scheduler-grid-batch-{A1,B1,A2,B2,A3,B3}`.
+
+| Run | preparation mean/max ms | RAF mean/P95/P99/max ms |
+| --- | --- | --- |
+| A1 | 598/1429 | 27.53/49.96/82.90/83.40 |
+| B1 | 381/909 | 27.81/49.96/83.13/99.79 |
+| A2 | 502/872 | 28.04/49.96/66.71/83.32 |
+| B2 | 449/1044 | 27.67/49.92/66.66/99.86 |
+| A3 | 512/1202 | 27.62/49.93/82.98/99.76 |
+| B3 | 568/1060 | 28.36/49.97/83.16/99.77 |
+
+Grid unit count150->30 across15chunks; B max CPU per grid unit0.225/0.450/
+0.220ms, so grouping stayed individually cheap. Yet third pair reverses mean
+preparation improvement, no convincing P95/P99 improvement, and first two
+candidate maxima exceed control by one refresh. Cannot count this as successful
+whole-frame optimization. Restored harness, archived QA patch as
+`scheduler-grid-batch-unproven.patch`; no new production flag or unit size.
+All runs completed15chunks, no paused simulation frames. CPU and GPU in summary
+remain separate; wall-time simulation means final states differ.
+
+Next: attribute mandatory main-loop phases and callback/presentation latency.
+Remaining RAF83–100ms outliers are not explained by measured draw/installation
+alone; do not repeatedly tune tiny optional units or weaken safeguards without
+finding that cause. No conclusion that mandatory simulation itself is at fault.
+Current required-chunk deadline improvement retained; scheduler still opt-in,
+main and approved graphics unchanged.
