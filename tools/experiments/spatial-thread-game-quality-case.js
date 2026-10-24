@@ -3,6 +3,15 @@ export async function verifyGameQualityCycle(w){
  const lease=w.programLease;if(!lease?.stats.retained)throw Error('Expected default retention');
  const snapshot=()=>JSON.stringify({elapsed:w.state.elapsed,plants:w.state.plants,structures:w.state.structures,native:w.spatialSession.core.snapshot()});
  const before=snapshot(),rows=[],enabled=new URLSearchParams(location.search).get('streamingRecovery')!=='0';
+ const active=new URLSearchParams(location.search).get('qualityActive')==='1';
+ const initialElapsed=w.state.elapsed,initialCreated=w.chunkStream.stats.created,originalCameraUpdate=w.updateCamera;
+ let travelFrame=0,travelHandle=null,game=null;
+ if(active){
+  const url=performance.getEntriesByType('resource').map(e=>e.name).find(n=>new URL(n).pathname==='/src/simulation/game.js');if(!url)throw Error('Missing canonical game module');game=await import(url);game.resume(w.state,'menu');
+  const eye=w.camera.position.clone(),target=w.controls.target.clone();
+  w.updateCamera=()=>{w.camera.lookAt(w.controls.target);w.camera.updateMatrixWorld();};
+  const move=()=>{travelFrame++;const offset=144*Math.min(travelFrame/240,1);w.camera.position.copy(eye);w.camera.position.x+=offset;w.controls.target.copy(target);w.controls.target.x+=offset;if(travelFrame<240)travelHandle=requestAnimationFrame(move);};travelHandle=requestAnimationFrame(move);
+ }
  const attribution=[],restore=[];
  if(new URLSearchParams(location.search).get('qualityAttribution')==='1'){
   const wrap=(object,name,kind)=>{if(typeof object?.[name]!=='function')return;const original=object[name];object[name]=function(...args){const t=performance.now();try{return original.apply(this,args);}finally{const ms=performance.now()-t;if(ms>10){const p=kind==='gl'&&name==='getProgramInfoLog'?w.renderer.info.programs.find(p=>p.program===args[0]):null;attribution.push({kind,name,quality:w.quality,ms,at:performance.now(),program:p?{id:p.id,cacheKey:p.cacheKey}:null});}}};restore.push(()=>{object[name]=original;});};
@@ -19,7 +28,7 @@ export async function verifyGameQualityCycle(w){
   const begin=performance.now();w.qualitySetting(quality);const settingMs=performance.now()-begin;
   let prewarmMs=0,prewarmInvalidations=0;
   if(prewarm){const start=performance.now(),deadline=start+30000;try{
-    // Fixed paused QA scene only: drain quality-triggered far preparation first.
+    // Drain far preparation; active QA additionally exercises concurrent scene changes.
     while(w.farVegetation?.adapters.some(a=>a.preparationPending())){if(performance.now()>deadline)throw Error('Far quality preparation timeout');await new Promise(requestAnimationFrame);}
     for(;;){
      if(performance.now()>deadline)throw Error('Quality prewarm scene did not stabilize');
@@ -46,8 +55,12 @@ export async function verifyGameQualityCycle(w){
   if(!rows.at(-1).drawCalls)throw Error('Missing draw after quality change');
  }
  if(enabled){const previous=w.programLease;w.qualitySetting('media');await new Promise(requestAnimationFrame);w.qualitySetting('baja');await w.streamingProgramRefresh;if(!w.programLease?.stats.retained||w.quality!=='baja')throw Error('Superseded quality recovery failed');if(previous.stats.released!==previous.stats.retained)throw Error('Rapid-change lease leaked');}
- if(snapshot()!==before)throw Error('World changed during quality cycle');
+ if(active){
+  const deadline=performance.now()+30000;while(travelFrame<240||w.chunkStream.summary().busy||w.chunkStream.summary().queued||w.farVegetation?.adapters.some(a=>a.preparationPending())){if(performance.now()>deadline)throw Error('Active quality streaming did not settle');await new Promise(requestAnimationFrame);}
+  if(w.state.elapsed<=initialElapsed||w.chunkStream.stats.created<=initialCreated)throw Error('Active case did not exercise simulation and streaming');
+  if(w.chunkStream.summary().failed||w.state.pauses.includes('runtime-error'))throw Error('Active streaming failed');
+ }else if(snapshot()!==before)throw Error('World changed during quality cycle');
  if(lease.stats.released!==lease.stats.retained)throw Error('Initial lease not fully released');
- return {attribution,attributionScope:'Nested synchronous call timings above 10 ms overlap; do not sum parent and child calls. No GPU execution timing is implied.',rows,lease:lease.stats,worldUnchanged:true,limitation:'The refreshed snapshot remains bounded; it prioritizes newer variants and cannot guarantee every future unseen shader is warm.'};
- }finally{for(const undo of restore.reverse())undo();}
+ return {attribution,attributionScope:'Nested synchronous call timings above 10 ms overlap; do not sum parent and child calls. No GPU execution timing is implied.',rows,lease:lease.stats,worldUnchanged:active?null:true,active:active?{initialElapsed,elapsed:w.state.elapsed,travelFrame,created:w.chunkStream.stats.created-initialCreated,stream:w.chunkStream.summary()}:null,limitation:'The refreshed snapshot remains bounded; it prioritizes newer variants and cannot guarantee every future unseen shader is warm.'};
+ }finally{if(active){cancelAnimationFrame(travelHandle);w.updateCamera=originalCameraUpdate;game.pause(w.state,'menu');}for(const undo of restore.reverse())undo();}
 }
