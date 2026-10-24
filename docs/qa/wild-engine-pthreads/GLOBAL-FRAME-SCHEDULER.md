@@ -230,3 +230,27 @@ QA experiment (`WG_THREAD_CROP_DEPTH_WARM=1`) prepares 32 dormant bridge objects
 Corrected shadow preparation (`WG_THREAD_CROP_DEPTH_SHADOW_WARM=1` together with the first flag) synchronously selects source maps, null fog and enabled shadows in the linear depth target; all borrowed material/renderer state is restored before waiting. Temporary program ownership remains bounded. `quality-staged-crop-depth-native-1.json` records both exact expected cache keys, 32 specialized objects, 539.99 ms extra preparation, and no crop-depth getProgramInfoLog stall above the 10 ms attribution threshold during active gameplay. Other programs still stall 81.2/73.3 ms. First media max RAF 115.2 ms versus baseline 235.4 ms, but first baja max 183.8 versus 173.0 ms; successive diagnostics are NOT ABAB acceptance or a global performance win.
 
 This remains a QA experiment, not an automatic production warmup. The 540 ms is explicitly additional work, not hidden from load cost. It proves a specific recipe omission can be removed; it does not justify warming every possible material. Next: move this bounded, precisely selected preparation into the existing loading coordinator, retain cancellation/context ownership, test restoration/failure, and measure loading responsiveness and whole-frame effects with repeated comparisons. Remaining generic/obstruction program stalls and cold quality preparation still require work. Main unchanged; scheduler remains opt-in.
+
+
+## Dormant crop preparation integrated into loading (opt-in)
+
+`crop-depth-preparation.js` now implements the exact two audited recipes in the existing loading depth executor. `?cropDepthPreparation=1` invokes it from WorldScene.warmAnimalGpu, before bindings and real draw warmup; the default remains unchanged. It registers disposal/context cancellation, checks the resource epoch, bounds program retention, restores fog/maps/shadow settings synchronously before readiness, and uses a cancellable frame wait for reflection. No new RAF loop, geometry, draw pass or lighting change. This is initial stable-scene preparation only, not a concurrent live-scene mutation API. Depth batches still use the existing loading executor; global admission of complete state-owning batches remains pending (never schedule the inner compiler while borrowing renderer state).
+
+Reproduction: existing active staged-quality command with `WG_THREAD_PORT=5190 WG_THREAD_DEFAULT_STREAMING=1 WG_THREAD_FROZEN=1 WG_THREAD_QUALITY_CYCLE=1 WG_THREAD_QUALITY_ACTIVE=1 WG_THREAD_QUALITY_STAGED=1 WG_FRAME_SCHEDULER=1 WG_THREAD_QUALITY_PHASES=1 WG_THREAD_QUALITY_ATTRIBUTION=1`, additionally `WG_THREAD_CROP_DEPTH_PREPARATION=1` for candidate, unique WG_THREAD_REPORT. The older QA pre-activation flags are NOT enabled. Raw evidence: quality-loading-crop-depth-1.json and quality-loading-crop-control-1.json.
+
+Candidate then control, same Manglares fixture/hardware/720p, serial runs (BA diagnostic pair, not repeated ABAB acceptance):
+
+| Metric | Control | Integrated preparation |
+|---|---:|---:|
+| Full initial ready latency | 29,017.90 ms | 28,825.40 ms |
+| Explicit crop preparation within load | none | 403.04 ms |
+| First media max presentation interval | 218.75 ms | 113.61 ms |
+| First baja max presentation interval | 133.84 ms | 164.23 ms |
+| Warm media / baja max interval | 78.04 / 63.47 ms | 81.78 / 82.99 ms |
+| First media transition latency | 10,689.89 ms | 12,109.40 ms |
+| Crop depth getProgramInfoLog >10 ms | 168.05, 123.10 ms | none |
+| Newly installed chunks during movement | 15 | 15 |
+
+Candidate prepared 32 objects, initialized 56 resident bindings, retained/released 56 program references with zero destruction/exhaustion. Both tests finish with zero queued/preparing/failed chunks and active simulation advances ~7.33 seconds. Console contains the same 29 known f_environment4 warning entries; harness reports no unexpected errors. Driver-facing CPU calls overlap parent rendering measurements and are not GPU time.
+
+Conclusion: confirms elimination of this specific cold recipe omission inside actual loading, but no whole-pipeline performance acceptance. The ~193 ms difference in total loading is noise, not a demonstrated saving; the explicit 403 ms remains real preparation cost. Other cold shaders and quality latency remain substantial. No default activation, no art acceptance inferred, no main changes. 44 targeted tests pass, including synchronous state restoration on success/failure, aborted work and resource disposal between batches. Full scheduler objective remains open.

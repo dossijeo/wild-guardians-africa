@@ -1,3 +1,4 @@
+import {prepareCropDepthPrograms} from './crop-depth-preparation.js';
 import {streamingOptions} from './streaming-options.js';
 import {retainWarmedPrograms} from './retain-warmed-programs.js';
 import {createMangroveMaterialCache,mangroveMaterialCacheEnabled} from './mangrove-material-cache.js';
@@ -513,6 +514,9 @@ export class WorldScene {
         await phase('warm-compile-obstruction',()=>compile(this.obstructionWarmup.group,this.camera,this.scene));if(this.disposed)return;
       }
       await phase('warm-prepare-depth',()=>this.destructionPass.prepareDepth(this.camera,this.scene,{compile:(scene,camera,target)=>compile(scene,camera,target,{screen:false}),...(this.loadingProgress?{signal:this.loading.signal,onPrepare:this.onLoadingSpan,frameSlack:this.loadingFrameSlack,...pacing,batchSize:32,cancelled:()=>this.disposed||this.loading.signal.aborted}:{})}));if(this.disposed)return;
+      if(new URLSearchParams(globalThis.location?.search??'').get('cropDepthPreparation')==='1'){
+        this.cropDepthPreparation=await phase('warm-crop-depth',()=>prepareCropDepthPrograms(this.renderer,this.scene,this.camera,this.destructionPass,{signal:this.loading.signal,cancelled:()=>this.disposed,getEpoch:()=>this.glResourceEpoch?.stats.epoch??0,onSubmit:this.onLoadingSpan}));if(this.disposed)return;
+      }
       this.programBindings=this.loadingProgress?await phase('warm-program-bindings',()=>initializeProgramBindingsAsync(this.renderer,{cancelled:()=>this.disposed})):initializeProgramBindings(this.renderer);
       // Actual draw uploads vertex buffers, textures and bone textures, and
       // prepares the shadow shader too. Invisible/culled meshes would not.
