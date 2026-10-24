@@ -266,3 +266,25 @@ mean increases108.455 to135.060ms and P95199.695 to216.305ms. Render CPU
 mean decreases14.274 to12.666ms. This is not evidence of overall smoothness
 improvement. Simulation advances15.798s versus16.843s, so active work is not
 bit-identical. Await the second pair; do not promote based on loading alone.
+
+## Active A/B/A/B complete: do not promote source pruning
+
+All four runs create10chunks and complete the180-frame traversal. Both B runs
+load sooner, but active presentation mean worsens108.455->135.060ms and
+105.591->134.782ms. P95 worsens199.695->216.305ms and183.000->249.145ms.
+The second-pair maximum worsens299.355->631.685ms. Render CPU means are
+slightly lower in B, so the observed regression must not be labelled CPU shader
+preparation or GPU execution without further attribution. Dynamic simulation
+advances by different amounts; this pilot does not establish exact causality.
+Nevertheless, the acceptance gate fails: there is no demonstrated loading win
+without worse active-frame behavior. DO NOT ENABLE productionGroundSource
+by default. Preserve the opt-in experiment and negative results. No approved
+visual settings or preload recipes are removed as a result of this candidate.
+
+The audit still has not established that ordinary loading eagerly compiles all
+laboratory variants. FluidGpuPreload borrows the actual fluid material and
+prepares ordinary/instanced forms needed by future wet chunks; VfxGpuPreload
+uses one shared gameplay composition including its depth recipe. Removing
+these merely because they are initially hidden would defer required work.
+Next work should target proven redundant program preparation, not delete
+these required recipes or continue promoting the failed specialization.
