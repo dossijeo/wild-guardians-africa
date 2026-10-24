@@ -234,7 +234,7 @@ export class WorldScene {
     this.locomotionVfx=new LocomotionVfx(this.vfxLibrary,this.destructionPass,this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z),(x,z)=>this.nav.field.canyon?this.nav.field.waterInfo(x,z):null);await milestone('vfx');
     this.raidCamera=new RaidCameraDirector(this.camera,this.controls,nav.field);this.focusFarm();
     const initialFarRegion=this.loadingCpuBudget&&loadingProgress&&farVegetation?startInitialFarRegion(this,farVegetation===true?{}:farVegetation):null;
-    this.chunkStream=spatialSession?.stream??new NativeChunkStream(this.nav.config,this.pack.profile,{loaded:()=>this.chunks,onData:data=>this.installChunk(data),onError:error=>this.onError?.(error),onFallback:error=>console.warn('GeneraciÃƒÆ’Ã‚Â³n local de chunks:',error.message??error)});
+    this.chunkStream=spatialSession?.stream??new NativeChunkStream(this.nav.config,this.pack.profile,{loaded:()=>this.chunks,onData:data=>this.installChunk(data),onError:error=>this.onError?.(error),onFallback:error=>console.warn('GeneraciÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n local de chunks:',error.message??error)});
     this.syncChunks();await phase('load-chunks-horizon-ready',()=>this.loadReady(Promise.all([this.chunkStream.whenReady(),this.horizon.whenReady()])));if(this.disposed)throw new Error('Carga de mundo cancelada');this.syncChunks();await milestone('chunks');
     await this.loadReady(this.prepareSavedAnimalRigs(state));loadingSyncWitness(this.onLoadingSpan,'restore-sync',()=>this.sync(0));
     if(continuousGrassEnabled(state.biome)){
@@ -516,7 +516,8 @@ export class WorldScene {
       // hidden LODs. Prepare their screen variant with the actual shadow state,
       // not only the linear, shadowless variant used by VFX depth capture.
       // Prepare the first fixed512 recipe before world compilation, not on first draw.
-      if(new URLSearchParams(globalThis.location?.search??'').get('groundCachePreparation')==='1')await phase('warm-ground-cache-recipe',()=>this.prepareFrameResources());
+      const cachePreparation=new URLSearchParams(globalThis.location?.search??'').get('groundCachePreparation');
+      if(cachePreparation==='1'||(cachePreparation!=='0'&&this.frameScheduler))await phase('warm-ground-cache-recipe',()=>this.prepareFrameResources());
       await phase('warm-compile-world',()=>compile(this.scene,this.camera,this.scene));if(this.disposed)return;
       if(this.streamingOptions.warmObstruction){
         this.obstructionWarmup?.dispose();this.obstructionWarmup=this.assetGroups.prepareSmoothWarmup(this.chunks);

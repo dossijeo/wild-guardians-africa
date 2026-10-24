@@ -5,7 +5,8 @@ Reference: `54075e228`, experimental branch only. Candidate opt-in: `?frameSched
 ## Current status (2026-10-24; supersedes historical checkpoints below)
 
 Candidate remains opt-in with `frameScheduler=1`; main unchanged, PR159 draft.
-It now includes stable shadow recipes and dormant crop depth preparation,
+It now includes stable shadow recipes, dormant crop depth preparation and
+first fixed512 recipe preparation before world compilation,
 private terrain staging, bounded overlap with native generation, actor queue
 admission and depth-preparation transactions. Default path remains the control.
 Earlier sections below are chronological experiments, not current API status.
@@ -985,3 +986,53 @@ approved appearance. No claim of all-camera/night/all-biome equivalence.
 Six targeted tests pass including first publication exposing same shader key
 as subsequent chunks with distinct texture owners, budget reserve, invalidations
 and owner events. PR159 rechecked OPEN/draft, base main unchanged.
+
+
+### Cache preparation consolidated with scheduler; nighttime lifecycle (2026-10-24)
+
+After the repeated daytime loading benefit, `frameScheduler=1` now also selects
+first fixed512 recipe preparation unless groundCachePreparation=0 explicitly.
+Explicit1 works standalone; no scheduler/no option preserves old default. The
+harness forwards0 and1. Reproducing historical controls at this commit requires
+explicit0; old reports without the option reflect the earlier opt-in version.
+This removes an extra activation requirement, not the separate experimental
+farValidatedBindings switch (that change lacks global acceptance).
+
+`scheduler-cache-night-low-context.json` validates the earlier explicit recipe
+option in Manglares night,baja,720p. Real loss/restoration: snapshot unchanged,
+shared pthread16MiB,76old retained references abandoned,28new retained,
+29programs/73draw calls,GL epoch1,zero unknown deletes,no GL error/failure pause.
+Recovery1380.565ms asynchronous elapsed, not a smoothness result. Notification
+remains after recovery as previously documented. Below y180 to exclude it,
+RGB MAD.071198/255, fraction delta>8 .002229; full image MAD1.06150 is reported
+separately. No pending-compilation cancellation exercised in this case.
+
+`scheduler-cache-night-bundle-{control,candidate}.json/.png` and summary then
+verify actual consolidated activation: control URL explicitly0, candidate URL
+only frameScheduler1, no cache option. Candidate reports65.16ms recipe phase;
+control has none. Same controlled night fixture(time450),baja,1280x720,25chunks,
+zero pending jobs. RGB MAD.002626/255, fraction delta>8 .0001204. These fixed-view
+visual runs are not repeated performance acceptance;31.826s versus34.178s
+readiness is exploratory only. Day/night appearance and lifecycle remain
+consistent; all hardware/camera/quality acceptance remains outstanding.
+
+
+Active integration check `scheduler-cache-bundle-active-quality.json` then
+immediate explicit0 control `scheduler-cache-bundle-active-control.json`:
+low/media/low transition durations candidate2032/2130/5604ms, control
+2101/2156/6154ms. Per-step maximum RAF candidate228/392/359ms versus
+control248/313/271ms. This is NOT a fluency pass: both are substantially slower
+than historical integrated-quality-1(403/670/1439ms), and frame tails remain high.
+Historical actor-backpressure-3 already showed2071/2285/5594ms before this cache
+ordering change; the slower behavior therefore predates it. Do not conclude
+thermal/browser cause without attribution, nor claim the new preparation fixes
+quality transitions. This single B/A check cannot establish small differences.
+
+Both runs240/240advancing,0paused,15new chunks,zero stream failures/queues and
+scheduler pending0. Native/visual lifecycle functional check passes; full-frame
+quality performance remains explicitly unresolved. Initial cache residency
+35,209,000bytes (about33.58MiB) unchanged across first two quality steps; final
+travel legitimately evicts/replaces chunks. Not a driver VRAM measurement or
+long-session leak test. Preserve the measured loading improvement inside the
+still-opt-in scheduler bundle while investigating this existing active-workload
+cost; do not promote the overall scheduler to default.
