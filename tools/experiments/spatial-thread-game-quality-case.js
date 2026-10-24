@@ -1,3 +1,4 @@
+import {createShadowRecipeRenderer} from '/src/rendering/shadow-recipe-renderer.js';
 import {globalFrameScheduler,globalFrameSchedulerEnabled} from '/src/app/global-frame-scheduler.js';
 import {prepareLiveScenePrograms} from '/src/rendering/live-program-preparation.js';
 import {createProgramRetentionScope} from '/src/rendering/retain-warmed-programs.js';
@@ -31,7 +32,19 @@ export async function verifyGameQualityCycle(w){
   const prewarm=new URLSearchParams(location.search).get('qualityPrewarm')==='1',draw=w.drawRenderFrame;
   const serializeRecovery=new URLSearchParams(location.search).get('qualitySerialRecovery')==='1',refresh=w.refreshStreamingPrograms;
   if(prewarm){w.drawRenderFrame=()=>{};if(serializeRecovery)w.refreshStreamingPrograms=()=>{};}
-  const cacheBefore=cacheState();const begin=performance.now();w.qualitySetting(quality);const settingMs=performance.now()-begin;
+  const cacheBefore=cacheState();const begin=performance.now();
+  let stagedPreparation=null,settingMs=0;
+  if(new URLSearchParams(location.search).get('qualityStaged')==='1'){
+   if(prewarm)throw Error('Staged preparation must keep presentation running');
+   const oldQuality=w.quality,revision=w.streamingProgramRevision,oldShadow=w.renderer.shadowMap.enabled,scope=createProgramRetentionScope(w.renderer),start=performance.now();let draws=0,pinFailed=false;
+   const originalDraw=w.drawRenderFrame;w.drawRenderFrame=function(...args){if(w.quality!==oldQuality||w.renderer.shadowMap.enabled!==oldShadow)throw Error('Staged quality leaked into presentation');draws++;return originalDraw.apply(this,args);};
+   try{
+    const stats=await prepareLiveScenePrograms(createShadowRecipeRenderer(w.renderer,quality==='media'||quality==='alta'),w.scene,w.camera,{screen:true,scheduler:globalFrameSchedulerEnabled()?globalFrameScheduler:null,onSubmit:span=>{if(span.label==='loading-compile-submit'&&!scope.acquire())pinFailed=true;},cancelled:()=>w.disposed||pinFailed||w.quality!==oldQuality||w.streamingProgramRevision!==revision,getEpoch:()=>w.glResourceEpoch?.stats.epoch??0,batchSize:8,frameBudget:6});
+    stagedPreparation={ms:performance.now()-start,draws,stats};
+    w.drawRenderFrame=originalDraw;
+    const activate=performance.now();w.qualitySetting(quality);settingMs=performance.now()-activate;await w.streamingProgramRefresh;stagedPreparation.activationMs=performance.now()-activate;
+   }finally{w.drawRenderFrame=originalDraw;scope.dispose();if(stagedPreparation)stagedPreparation.retention={...scope.stats};}
+  }else {w.qualitySetting(quality);settingMs=performance.now()-begin;}
   let livePreparation=null;let prewarmMs=0,prewarmInvalidations=0;const pinPrograms=new URLSearchParams(location.search).get('qualityPinPrograms')==='1',temporaryScope=pinPrograms?createProgramRetentionScope(w.renderer):null;let pinFailed=false;
   if(prewarm){const start=performance.now(),deadline=start+30000;try{
     // Drain far preparation; active QA additionally exercises concurrent scene changes.
@@ -51,7 +64,7 @@ export async function verifyGameQualityCycle(w){
   if(enabled&&!w.programLease?.stats.retained)throw Error('Quality change did not recover retention');
   if(!enabled&&w.programLease!==null)throw Error('Disabled recovery retained programs');
   const gl=w.renderer.getContext(),glError=gl.getError();if(glError!==gl.NO_ERROR)throw Error('GL error after quality change: 0x'+glError.toString(16));
-  rows.push({quality,cacheBefore,cacheAfter:cacheState(),programs:w.renderer.info.programs.length,drawCalls:w.renderer.info.render.calls,recovery:w.streamingProgramRecovery,retention:w.programLease?.stats??null,settingMs,prewarmMs,prewarmInvalidations,livePreparation:livePreparation?.rounds?livePreparation:null,temporaryProgramScope:temporaryScope?.stats??null,transitionMs:performance.now()-begin,frameTimes});
+  rows.push({quality,stagedPreparation,cacheBefore,cacheAfter:cacheState(),programs:w.renderer.info.programs.length,drawCalls:w.renderer.info.render.calls,recovery:w.streamingProgramRecovery,retention:w.programLease?.stats??null,settingMs,prewarmMs,prewarmInvalidations,livePreparation:livePreparation?.rounds?livePreparation:null,temporaryProgramScope:temporaryScope?.stats??null,transitionMs:performance.now()-begin,frameTimes});
   if(globalThis.qaCaptureQuality){
    // Screenshot settling is deliberately outside measured transition timings.
    const deadline=performance.now()+30000;let stable=0;

@@ -129,3 +129,23 @@ Audit found fixed512 Mangroves cache initialization/update inside `drawRenderFra
 42 relevant tests pass, including cache lifecycle/budget, compiler ownership and a new full-update-phase test proving resource progress with final drawing held. This separates an existing responsibility; it does not make the GPU cache draw preemptible or claim a performance improvement.
 
 Next architectural experiment: prepare target shader recipes while continuing to render the old quality, then activate. For media/baja the near ground material class is identical and the shadow recipe differs; a synchronous scoped compile adapter could select the target shadow setting and restore renderer/material state before any await. It must retain new programs, force correct old-program selection during intervening draws, handle scene churn/context/quality revisions, and measure activation stalls. This would only cover a subset: very-low material replacements, distant terrain, vegetation LOD, shadow resources and other visual systems still require explicit transaction coverage. Do not call a shadow-only prototype a completed quality transition.
+
+
+## Target shadow recipes with uninterrupted presentation (diagnostic only)
+
+Added a preparation-only renderer view that temporarily selects target shadow defines during synchronous compile, restores the renderer in finally, and marks borrowed materials for current-quality program reselection before returning. It forwards other methods with the original renderer as receiver. No state is held across readiness waits, no auxiliary draw is introduced. Unit tests cover success/failure restoration and shared-material invalidation. QA validates the old quality and shadow setting on every intervening actual draw, owns bounded program retention, and cancels preparation on quality revision/context/world invalidation.
+
+Reproduction: existing game harness, port5190, default streaming, frozen initial fixture, quality cycle and active camera/simulation, `WG_THREAD_QUALITY_STAGED=1`; scheduler flag 1 or 0. Do not combine staged with held `QUALITY_PREWARM`. These two runs are diagnostic, not ABAB acceptance: disabling the scheduler also changes streaming/actors, and wall-time simulation/camera progress differs. GPU duration was not measured. Reported RAF values measure presentation intervals, not GPU work.
+
+| Quality step | Global admission prep / draws / RAF max | Local admission prep / draws / RAF max |
+|---|---|---|
+| media | 14493 ms / 406 / 245.7 ms | 139.5 ms / 3 / 82.8 ms |
+| baja | 8749 ms / 297 / 163.2 ms | 8118 ms / 177 / 236.9 ms |
+| media | 3725 ms / 163 / 61.0 ms | 60.2 ms / 1 / 59.8 ms |
+| baja | 3465 ms / 114 / 80.5 ms | 78.2 ms / 1 / 78.0 ms |
+
+Evidence: `quality-staged-shadow-active-1.json` and `quality-staged-shadow-local-active-1.json`. All four changes complete, no unexpected GL errors, retained programs fully released. Global first baja activation plus recovery is 379 ms; local 611.5 ms. These are awaited wall times, not synchronous CPU. In these first reports `settingMs` accidentally includes preparation: do not interpret it as qualitySetting CPU. Harness now measures that synchronous call separately; original reports are preserved.
+
+Conclusion: presentation can remain live during this preparation, but the approach is NOT accepted. Global admission adds seconds even for warm recipes, while the first baja remains ~8 seconds with local admission too. Therefore both admission latency and shader/resource recipe work need attention. The current fixed-per-submission initial estimate and repeated frame admission for warm batches deserve investigation; reducing preparation to one atomic large compile would simply recreate stalls. Scene recipes also churn during live rendering (4–6 global rounds); whole-scene stabilization is still too expensive. This is only shadow-define staging, not a complete transactional quality system, and no production quality path or default was changed.
+
+Next: inspect costs/recipe reuse and scheduler admission for warm compilation, avoid preparing unchanged quality, and cover resource replacement before adopting a transition. Full visual equivalence, all-biome ABAB, deadlines/backpressure and distribution validation remain pending. No end-to-end performance success is claimed.
