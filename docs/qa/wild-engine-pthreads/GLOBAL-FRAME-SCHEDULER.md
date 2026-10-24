@@ -1380,3 +1380,42 @@ That is not implemented or assumed beneficial: changing image representation can
 alter color/alpha handling, and allocation/mipmap generation remain atomic. Simply
 putting the existing119ms initTexture into a scheduler job cannot interrupt it.
 No asset resolution,art,lighting,simulation or production default changed.
+
+
+### Private pixel transfer / scheduler feasibility (2026-10-24)
+
+Actual lion albedo,normal and packed roughness textures,2048square,real world
+renderer/context. QA creates private RGBA8 allocations;never installs or replaces
+visible materials. A module worker converts a cloned ImageBitmap with OffscreenCanvas
+and transfers16MiBpixels. Original bitmap ownership is retained. Every generated
+mip is read back and compared;all bytes match in all three diagnostic runs,zero
+GL errors. Scope does NOT prove sRGB sampling,alpha-cutout assets or all game images.
+
+Reproduce with check-spatial-thread-game.mjs,port5190,WG_THREAD_FROZEN=1,
+WG_THREAD_DEFAULT_STREAMING=1,WG_FRAME_SCHEDULER=1,WG_TEXTURE_STAGING_PROBE=1.
+WG_TEXTURE_STAGING_MODE=original|control|scheduled selects the three reports:
+scheduler-texture-stripes-probe,scheduler-texture-pixels-control,
+scheduler-texture-admitted-stripes. Each repeats its mode sequence twice. Scheduled
+mode uses the actual existing GlobalFrameScheduler,one synchronous64-row unit per
+yield,priority30,250ms admission deadline;QA watchdog cancels after30s.
+
+Original forced-one-frame-per-stripe mode reduces invocation cost but takes1.45–2.57s
+pertexture: not an acceptable production policy. Control distinguishes worker pixel
+conversion from splitting: full pixel uploads still take~9.5–14.5ms,versus cold
+bitmap spikes up to174ms and warmed~14–21ms. Conversion14.8–83.4ms occurs off main;
+cloning submission under.3ms in the control run. Not evidence of faster total load.
+
+Actual scheduler trial: five of six stripe submissions have max unit.09–.20ms,
+~1.9–2.7ms summed calls. Completion41–377ms,not fixedoneframeperstripe. First
+albedo stripe has an18.445ms atomic outlier;total preparation2299ms. Conservative
+cost/recovery and prior probe pressure remain relevant;this is not uniformly fast.
+No budget relaxation or lowered estimates used to hide that observation.
+
+Readbacks take315–710ms and synchronize the pipeline;the diagnostic retains mip
+arrays for all modes until comparison (~128MiB for six2048RGBA mipchains,excluding
+pixelbuffer and GPU allocations). These deliberate validation costs influence
+later trials and cannot be counted as production savings or representative memory.
+No reliable GPU/wholeframe conclusion from this experiment. Next gate:bounded
+validation storage,sRGB/alpha equivalence,private publication via supported Three
+APIs and real loading ABAB without readbacks. Do not adopt rawGL private probe as
+production upload manager or claim the scheduler objective complete.
