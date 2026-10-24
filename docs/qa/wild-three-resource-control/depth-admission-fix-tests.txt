@@ -1,0 +1,427 @@
+TAP version 13
+# (node:14976) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./tools/wild-three/node-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: normal target recipe compiles once and accepts already-ready selected programs
+ok 1 - normal target recipe compiles once and accepts already-ready selected programs
+  ---
+  duration_ms: 2.1404
+  ...
+# Subtest: cancelled owner prevents even synchronous submission
+ok 2 - cancelled owner prevents even synchronous submission
+  ---
+  duration_ms: 0.7534
+  ...
+# Subtest: selected program is snapshotted once while borrowed material is restored
+ok 3 - selected program is snapshotted once while borrowed material is restored
+  ---
+  duration_ms: 7.0985
+  ...
+# Subtest: deduplicates shared programs and stops querying already completed variants
+ok 4 - deduplicates shared programs and stops querying already completed variants
+  ---
+  duration_ms: 21.7553
+  ...
+# Subtest: an abort removes owned polling without querying disposed programs later
+ok 5 - an abort removes owned polling without querying disposed programs later
+  ---
+  duration_ms: 30.2167
+  ...
+# Subtest: context generation change rejects before querying a stale selected program
+ok 6 - context generation change rejects before querying a stale selected program
+  ---
+  duration_ms: 16.6194
+  ...
+# Subtest: never-ready driver has a bounded caller deadline with no remaining poll
+ok 7 - never-ready driver has a bounded caller deadline with no remaining poll
+  ---
+  duration_ms: 33.7788
+  ...
+# Subtest: readiness fault propagates intact and stops polling
+ok 8 - readiness fault propagates intact and stops polling
+  ---
+  duration_ms: 48.4656
+  ...
+# Subtest: missing readiness program fails rather than claiming completion
+ok 9 - missing readiness program fails rather than claiming completion
+  ---
+  duration_ms: 0.7731
+  ...
+# Subtest: owner invalidation inside the final readiness query cannot produce acceptance
+ok 10 - owner invalidation inside the final readiness query cannot produce acceptance
+  ---
+  duration_ms: 0.5345
+  ...
+# Subtest: explicit all-variant selection snapshots once and waits every borrowed recipe
+ok 11 - explicit all-variant selection snapshots once and waits every borrowed recipe
+  ---
+  duration_ms: 15.9394
+  ...
+# Subtest: default selector still ignores unrelated pending variants
+ok 12 - default selector still ignores unrelated pending variants
+  ---
+  duration_ms: 0.4017
+  ...
+# Subtest: invalid or empty explicit selection never claims material readiness
+ok 13 - invalid or empty explicit selection never claims material readiness
+  ---
+  duration_ms: 0.3354
+  ...
+# Subtest: a deleted Three program is cancelled before its driver readiness query
+ok 14 - a deleted Three program is cancelled before its driver readiness query
+  ---
+  duration_ms: 14.9865
+  ...
+# Subtest: ready binding hook runs once for shared selected program and propagates validation errors
+ok 15 - ready binding hook runs once for shared selected program and propagates validation errors
+  ---
+  duration_ms: 0.7426
+  ...
+# Subtest: owner invalidation by ready hook cannot resolve preparation
+ok 16 - owner invalidation by ready hook cannot resolve preparation
+  ---
+  duration_ms: 0.2698
+  ...
+# (node:42228) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./tools/wild-three/node-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: depth preload starts with the actual target and recipes, restores scene immediately, then waits for compilation
+ok 17 - depth preload starts with the actual target and recipes, restores scene immediately, then waits for compilation
+  ---
+  duration_ms: 6.0783
+  ...
+# Subtest: synchronous compile errors and asynchronous rejections restore target, shadows and every borrowed material
+ok 18 - synchronous compile errors and asynchronous rejections restore target, shadows and every borrowed material
+  ---
+  duration_ms: 1.7883
+  ...
+# Subtest: preload honors the same explicit diagnostic options as capture without enabling alpha or empty candidates globally
+ok 19 - preload honors the same explicit diagnostic options as capture without enabling alpha or empty candidates globally
+  ---
+  duration_ms: 0.9074
+  ...
+# Subtest: bounded loading depth submissions restore originals and renderer while each program is pending
+ok 20 - bounded loading depth submissions restore originals and renderer while each program is pending
+  ---
+  duration_ms: 3.1333
+  ...
+# Subtest: cancelling after a bounded depth batch cannot leave borrowed materials or renderer state
+ok 21 - cancelling after a bounded depth batch cannot leave borrowed materials or renderer state
+  ---
+  duration_ms: 0.809
+  ...
+# Subtest: grouped world-depth QA flag applies equally to preload and capture without changing the default
+ok 22 - grouped world-depth QA flag applies equally to preload and capture without changing the default
+  ---
+  duration_ms: 1.4354
+  ...
+# Subtest: a suspended depth frame reacts to owner signal or cancellation predicate before any late frame
+ok 23 - a suspended depth frame reacts to owner signal or cancellation predicate before any late frame
+  ---
+  duration_ms: 19.4519
+  ...
+# Subtest: a depth frame deadline does not require the suspended RAF to resolve
+ok 24 - a depth frame deadline does not require the suspended RAF to resolve
+  ---
+  duration_ms: 17.2875
+  ...
+# Subtest: optional per-batch depth witnesses separate synchronous submission, program readiness and the unchanged frame barrier
+ok 25 - optional per-batch depth witnesses separate synchronous submission, program readiness and the unchanged frame barrier
+  ---
+  duration_ms: 1.6213
+  ...
+# Subtest: opt-in depth slack coalesces cheap batches only inside a delivered presentation frame
+ok 26 - opt-in depth slack coalesces cheap batches only inside a delivered presentation frame
+  ---
+  duration_ms: 1.2242
+  ...
+# Subtest: opt-in depth slack keeps every original barrier when presentation evidence is missing
+ok 27 - opt-in depth slack keeps every original barrier when presentation evidence is missing
+  ---
+  duration_ms: 0.7705
+  ...
+# Subtest: cancel after compilation is observed even when a trustworthy depth lane could skip the next barrier
+ok 28 - cancel after compilation is observed even when a trustworthy depth lane could skip the next barrier
+  ---
+  duration_ms: 0.597
+  ...
+# Subtest: depth CPU candidate coalesces cheap real submissions and restores native recipes before a bounded RAF
+ok 29 - depth CPU candidate coalesces cheap real submissions and restores native recipes before a bounded RAF
+  ---
+  duration_ms: 1.3333
+  ...
+# Subtest: depth CPU candidate retains cancellation during its real suspended frame
+ok 30 - depth CPU candidate retains cancellation during its real suspended frame
+  ---
+  duration_ms: 2.3767
+  ...
+# Subtest: global admission owns the complete depth transaction, preserving state while queued and waiting
+ok 31 - global admission owns the complete depth transaction, preserving state while queued and waiting
+  ---
+  duration_ms: 0.752
+  ...
+# Subtest: cancelled depth admission cannot submit stale borrowed materials
+ok 32 - cancelled depth admission cannot submit stale borrowed materials
+  ---
+  duration_ms: 0.5731
+  ...
+# (node:40628) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./tools/wild-three/node-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: only presentation advances work; a complete private group is published
+ok 33 - only presentation advances work; a complete private group is published
+  ---
+  duration_ms: 5.3063
+  ...
+# Subtest: revision invalidation closes private resources without publishing
+ok 34 - revision invalidation closes private resources without publishing
+  ---
+  duration_ms: 0.5401
+  ...
+# Subtest: replacement and abort settle cancelled jobs immediately
+ok 35 - replacement and abort settle cancelled jobs immediately
+  ---
+  duration_ms: 0.3675
+  ...
+# Subtest: mandatory CPU has precedence even over overdue jobs
+ok 36 - mandatory CPU has precedence even over overdue jobs
+  ---
+  duration_ms: 0.4838
+  ...
+# Subtest: statistics expire after two seconds and do not label intervals GPU time
+ok 37 - statistics expire after two seconds and do not label intervals GPU time
+  ---
+  duration_ms: 1.9187
+  ...
+# Subtest: slow presentation intervals alone do not permanently starve cheap work
+ok 38 - slow presentation intervals alone do not permanently starve cheap work
+  ---
+  duration_ms: 0.7584
+  ...
+# Subtest: an expired deadline borrows one bounded unit instead of starving; mandatory overload still wins
+ok 39 - an expired deadline borrows one bounded unit instead of starving; mandatory overload still wins
+  ---
+  duration_ms: 0.2997
+  ...
+# Subtest: ready promise continuations share one presentation budget without another frame
+ok 40 - ready promise continuations share one presentation budget without another frame
+  ---
+  duration_ms: 0.7518
+  ...
+# Subtest: aging measures time without service rather than privileging an old endless job
+ok 41 - aging measures time without service rather than privileging an old endless job
+  ---
+  duration_ms: 0.366
+  ...
+# Subtest: a failing cost estimator closes only its job and leaves other work executable
+ok 42 - a failing cost estimator closes only its job and leaves other work executable
+  ---
+  duration_ms: 0.8777
+  ...
+# Subtest: admission diagnostics are optional and distinguish late callbacks from CPU work
+ok 43 - admission diagnostics are optional and distinguish late callbacks from CPU work
+  ---
+  duration_ms: 0.2763
+  ...
+# Subtest: historical oversized estimates recover without permanent starvation or dropping CPU guards
+ok 44 - historical oversized estimates recover without permanent starvation or dropping CPU guards
+  ---
+  duration_ms: 0.4255
+  ...
+# Subtest: required streamed terrain starts without a fresh grace period on late presentation
+ok 45 - required streamed terrain starts without a fresh grace period on late presentation
+  ---
+  duration_ms: 0.5625
+  ...
+# Subtest: dependency wait frees presentation capacity and resumes only on an admitted frame
+ok 46 - dependency wait frees presentation capacity and resumes only on an admitted frame
+  ---
+  duration_ms: 1.0574
+  ...
+# Subtest: cancelled dependency cannot resume or remove its replacement
+ok 47 - cancelled dependency cannot resume or remove its replacement
+  ---
+  duration_ms: 0.7257
+  ...
+# Subtest: failed dependency releases only its job and runs cleanup
+ok 48 - failed dependency releases only its job and runs cleanup
+  ---
+  duration_ms: 1.5021
+  ...
+# Subtest: terrain wrapper forwards dependency output but rejects a stale revision before publication
+ok 49 - terrain wrapper forwards dependency output but rejects a stale revision before publication
+  ---
+  duration_ms: 0.8595
+  ...
+# Subtest: required oversized work makes bounded progress; optional work cannot borrow emergency capacity
+ok 50 - required oversized work makes bounded progress; optional work cannot borrow emergency capacity
+  ---
+  duration_ms: 0.5426
+  ...
+# Subtest: required emergency units are globally rate limited and cannot starve on persistent mandatory CPU load
+ok 51 - required emergency units are globally rate limited and cannot starve on persistent mandatory CPU load
+  ---
+  duration_ms: 0.359
+  ...
+# Subtest: cancelled and stale required jobs never use emergency admission
+ok 52 - cancelled and stale required jobs never use emergency admission
+  ---
+  duration_ms: 0.7258
+  ...
+# Subtest: overdue indispensable work is not hidden by a continuously refilled optional queue
+ok 53 - overdue indispensable work is not hidden by a continuously refilled optional queue
+  ---
+  duration_ms: 0.2897
+  ...
+# (node:40892) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./tools/wild-three/node-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: loading compilation snapshots programs before borrowed materials are restored
+ok 54 - loading compilation snapshots programs before borrowed materials are restored
+  ---
+  duration_ms: 20.0579
+  ...
+# Subtest: loading compilation cancellation releases a pending poll immediately
+ok 55 - loading compilation cancellation releases a pending poll immediately
+  ---
+  duration_ms: 1.7047
+  ...
+# Subtest: loading compilation reports timeout without an indefinite poll
+ok 56 - loading compilation reports timeout without an indefinite poll
+  ---
+  duration_ms: 0.4657
+  ...
+# Subtest: loading compilation rejects a destroyed owner before submitting programs
+ok 57 - loading compilation rejects a destroyed owner before submitting programs
+  ---
+  duration_ms: 0.2828
+  ...
+# Subtest: explicit screen compilation restores target and viewport while its program is still pending
+ok 58 - explicit screen compilation restores target and viewport while its program is still pending
+  ---
+  duration_ms: 14.2804
+  ...
+# Subtest: bounded compiler retains original native objects and target-scene lighting without mutation
+ok 59 - bounded compiler retains original native objects and target-scene lighting without mutation
+  ---
+  duration_ms: 1.5338
+  ...
+# Subtest: bounded compiler cancels before a later submission
+ok 60 - bounded compiler cancels before a later submission
+  ---
+  duration_ms: 0.3118
+  ...
+# Subtest: compilation readiness includes every native variant of a shared material
+ok 61 - compilation readiness includes every native variant of a shared material
+  ---
+  duration_ms: 13.4382
+  ...
+# Subtest: loading compilation latches loss and restoration before another program query
+ok 62 - loading compilation latches loss and restoration before another program query
+  ---
+  duration_ms: 29.8325
+  ...
+# Subtest: loading compilation rejects generation changes even without a loss event
+ok 63 - loading compilation rejects generation changes even without a loss event
+  ---
+  duration_ms: 0.9755
+  ...
+# Subtest: submission CPU witness is synchronous and does not include pending program readiness
+ok 64 - submission CPU witness is synchronous and does not include pending program readiness
+  ---
+  duration_ms: 0.9397
+  ...
+# Subtest: optional compile diagnostic failure cannot change native readiness or original submission error
+ok 65 - optional compile diagnostic failure cannot change native readiness or original submission error
+  ---
+  duration_ms: 0.571
+  ...
+# Subtest: optional program readiness witness reports waited wall time separately from submission CPU
+ok 66 - optional program readiness witness reports waited wall time separately from submission CPU
+  ---
+  duration_ms: 14.968
+  ...
+# Subtest: CPU-budget compiler retains every native object while an actual readiness wait already delivers presentation
+ok 67 - CPU-budget compiler retains every native object while an actual readiness wait already delivers presentation
+  ---
+  duration_ms: 16.1896
+  ...
+# Subtest: a throwing optional CPU observer cannot remove the bounded compilation yield or readiness
+ok 68 - a throwing optional CPU observer cannot remove the bounded compilation yield or readiness
+  ---
+  duration_ms: 0.7593
+  ...
+# Subtest: borrowed geometry disposal aborts readiness before another driver query
+ok 69 - borrowed geometry disposal aborts readiness before another driver query
+  ---
+  duration_ms: 32.5987
+  ...
+# Subtest: borrowed material disposal aborts readiness before another driver query
+ok 70 - borrowed material disposal aborts readiness before another driver query
+  ---
+  duration_ms: 31.877
+  ...
+# Subtest: borrowed disposal cancels a suspended frame and never submits the next batch
+ok 71 - borrowed disposal cancels a suspended frame and never submits the next batch
+  ---
+  duration_ms: 0.9782
+  ...
+# Subtest: guarded compilation cleans listeners on success, submission failure and external abort
+ok 72 - guarded compilation cleans listeners on success, submission failure and external abort
+  ---
+  duration_ms: 1.1964
+  ...
+# Subtest: guarded batched compilation cancels during a suspended frame on context loss
+ok 73 - guarded batched compilation cancels during a suspended frame on context loss
+  ---
+  duration_ms: 0.4365
+  ...
+# Subtest: scheduler admits submission but never charges readiness wait as synchronous work
+ok 74 - scheduler admits submission but never charges readiness wait as synchronous work
+  ---
+  duration_ms: 14.8409
+  ...
+# Subtest: aborting queued compilation rejects without submitting or needing another frame
+ok 75 - aborting queued compilation rejects without submitting or needing another frame
+  ---
+  duration_ms: 0.5383
+  ...
+# Subtest: queued compilation latches context loss even if restored before admission
+ok 76 - queued compilation latches context loss even if restored before admission
+  ---
+  duration_ms: 0.2735
+  ...
+# Subtest: compiler forwards the operation deadline and reports queue wait separately
+ok 77 - compiler forwards the operation deadline and reports queue wait separately
+  ---
+  duration_ms: 0.3118
+  ...
+# Subtest: batched scheduler deadline belongs to the operation, not each later batch
+ok 78 - batched scheduler deadline belongs to the operation, not each later batch
+  ---
+  duration_ms: 0.7327
+  ...
+# Subtest: initial loading overlaps bounded readiness waves but preserves every original object
+ok 79 - initial loading overlaps bounded readiness waves but preserves every original object
+  ---
+  duration_ms: 46.4601
+  ...
+# Subtest: failed loading wave drains already-submitted readiness and never submits a later wave
+ok 80 - failed loading wave drains already-submitted readiness and never submits a later wave
+  ---
+  duration_ms: 32.9412
+  ...
+# Subtest: parallel initial compilation rejects unbounded waves and missing global admission
+ok 81 - parallel initial compilation rejects unbounded waves and missing global admission
+  ---
+  duration_ms: 0.5854
+  ...
+1..81
+# tests 81
+# suites 0
+# pass 81
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 516.7731

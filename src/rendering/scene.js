@@ -503,7 +503,9 @@ export class WorldScene {
     const phase=(label,run)=>loadingAwaitWitness(this.onLoadingSpan,label,run);
     const pacing=this.loadingCpuBudget?{cpuBudget:true,getFrame:()=>this.loadingPresentationEpoch??0,frameBudget:16,batchSize:8}:{};
     const loadingCompileConcurrency=this.frameScheduler?Number(new URLSearchParams(globalThis.location?.search??'').get('loadingCompileConcurrency')??1):1;
-    const compile=(scene,camera,target,{screen=true}={})=>this.loadingProgress?(screen?compileLoadingProgramsBatched:compileLoadingPrograms)(this.renderer,scene,camera,target,{signal:this.loading.signal,cancelled:()=>this.disposed,screen,scheduler:this.frameScheduler,concurrency:loadingCompileConcurrency,frameBudget:6,onSubmit:this.onLoadingSpan,frameSlack:this.loadingFrameSlack,...pacing}):this.renderer.compileAsync(scene,camera,target);
+    // Depth preparation already owns scheduler admission and borrowed materials.
+    // Its inner compile must submit before that synchronous transaction restores them.
+    const compile=(scene,camera,target,{screen=true}={})=>this.loadingProgress?(screen?compileLoadingProgramsBatched:compileLoadingPrograms)(this.renderer,scene,camera,target,{signal:this.loading.signal,cancelled:()=>this.disposed,screen,scheduler:screen?this.frameScheduler:null,concurrency:loadingCompileConcurrency,frameBudget:6,onSubmit:this.onLoadingSpan,frameSlack:this.loadingFrameSlack,...pacing}):this.renderer.compileAsync(scene,camera,target);
     const rigs=await this.animalPreload.spares();if(this.disposed)return;
     const staging=new THREE.Group();
     const originals=[];

@@ -143,3 +143,26 @@ cost1485.505,958.325 and350.740ms synchronously. These are driver-call wall time
 not GPU execution durations. Next action: audit the exact depth/material recipe
 prepared before that auxiliary draw, rather than increase compile concurrency
 or disable all shader diagnostics. Reports preserve all slow calls and stacks.
+
+## Correctness regression found in initial compilation admission
+
+The new warmAnimalGpu compiler passed the scheduler to both screen batches and
+the inner depth compile callback. prepareDepth already schedules the complete
+borrowed-state transaction. Nested admission deferred the actual compile until
+after depth materials/render-target state were restored: it warmed the wrong
+recipes, then captureDepth compiled actual depth programs synchronously.
+This is a regression introduced by this branch's initial-wave integration,
+not evidence that original Three.js inevitably stalls for these recipes.
+The fix restricts inner global admission to screen batches; depth retains its
+existing outer admission and synchronous submission before restoration.
+81 depth-preload, compiler and scheduler tests pass. A real instrumented run
+is required before claiming the measured multi-second stall is removed.
+The previous ABAB cannot establish the benefit of correctly prepared waves;
+its negative result is retained with this confounding defect explicitly noted.
+
+The instrumented corrected game completes25chunks in38.471s. Maximum RAF
+interval216.280ms; the multi-second depth capture wait no longer appears.
+Largest traced calls are118.050ms getProgramInfoLog in shadow-map rendering and
+101.780ms texSubImage2D in initializeLoadingTextures. This is correction of our
+nested-admission regression, not a demonstrated throughput optimization over
+the earlier stable renderer. Corrected uninstrumented ABAB is the next gate.
