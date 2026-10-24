@@ -17,9 +17,17 @@ export async function verifyGameQualityCycle(w){
   w.updateCamera=()=>{w.camera.lookAt(w.controls.target);w.camera.updateMatrixWorld();};
   const move=()=>{travelFrame++;const offset=144*Math.min(travelFrame/240,1);w.camera.position.copy(eye);w.camera.position.x+=offset;w.controls.target.copy(target);w.controls.target.x+=offset;if(travelFrame<240)travelHandle=requestAnimationFrame(move);};travelHandle=requestAnimationFrame(move);
  }
+ const estimateFault=new URLSearchParams(location.search).get('estimateOutlier')==='1',scheduler=w.frameScheduler,originalSubmit=scheduler?.submit;let forcedJobs=0;
+ if(estimateFault){if(!scheduler)throw Error('Estimate injection requires scheduler');scheduler.submit=function(iterator,options={}){
+  if(forcedJobs>=2||!options.label)return originalSubmit.call(this,iterator,options);forcedJobs++;let pending=true;
+  const wrapped={next(){pending=false;return iterator.next();},return(){return iterator.return?.();}};
+  return originalSubmit.call(this,wrapped,{...options,estimate:()=>pending?14:(options.estimate?.()??options.estimateMs??.25)});
+ };}
  const deletedPrograms=new WeakMap();
  const phaseAttribution=new URLSearchParams(location.search).get('qualityPhases')==='1',previousSpan=w.onLoadingSpan;let phaseSamples=new Map();
  if(phaseAttribution)w.onLoadingSpan=span=>{previousSpan?.(span);if(span.label.startsWith('world-frame-')){let samples=phaseSamples.get(span.label);if(!samples){samples=[];phaseSamples.set(span.label,samples);}samples.push(span.duration);}};
+ const previousTerrain=w.onTerrainPreparationSlice,terrainPhases={};
+ if(phaseAttribution){globalThis.qaTerrainPhases=terrainPhases;w.onTerrainPreparationSlice=span=>{previousTerrain?.(span);const v=terrainPhases[span.phase]??={count:0,totalMs:0,maxMs:0};v.count++;v.totalMs+=span.ms;v.maxMs=Math.max(v.maxMs,span.ms);};}
  const phaseSummary=()=>Object.fromEntries([...phaseSamples].map(([name,values])=>{const sorted=[...values].sort((a,b)=>a-b);return [name,{count:values.length,totalMs:values.reduce((a,b)=>a+b,0),p95Ms:sorted[Math.floor((sorted.length-1)*.95)],maxMs:sorted.at(-1)}];}));
  const attribution=[],restore=[],strictGl=new URLSearchParams(location.search).get('qualityStrictGl')==='1';
  if(new URLSearchParams(location.search).get('qualityAttribution')==='1'){
@@ -71,7 +79,7 @@ export async function verifyGameQualityCycle(w){
   if(enabled&&!w.programLease?.stats.retained)throw Error('Quality change did not recover retention');
   if(!enabled&&w.programLease!==null)throw Error('Disabled recovery retained programs');
   const gl=w.renderer.getContext(),glError=gl.getError();if(glError!==gl.NO_ERROR)throw Error('GL error after quality change: 0x'+glError.toString(16));
-  rows.push({quality,phases:phaseAttribution?phaseSummary():null,stagedPreparation,cacheBefore,cacheAfter:cacheState(),programs:w.renderer.info.programs.length,drawCalls:w.renderer.info.render.calls,recovery:w.streamingProgramRecovery,retention:w.programLease?.stats??null,settingMs,prewarmMs,prewarmInvalidations,livePreparation:livePreparation?.rounds?livePreparation:null,temporaryProgramScope:temporaryScope?.stats??null,transitionMs:performance.now()-begin,frameTimes});
+  rows.push({quality,terrainPhases:phaseAttribution?structuredClone(terrainPhases):null,phases:phaseAttribution?phaseSummary():null,stagedPreparation,cacheBefore,cacheAfter:cacheState(),programs:w.renderer.info.programs.length,drawCalls:w.renderer.info.render.calls,recovery:w.streamingProgramRecovery,retention:w.programLease?.stats??null,settingMs,prewarmMs,prewarmInvalidations,livePreparation:livePreparation?.rounds?livePreparation:null,temporaryProgramScope:temporaryScope?.stats??null,transitionMs:performance.now()-begin,frameTimes});
   if(globalThis.qaCaptureQuality){
    // Screenshot settling is deliberately outside measured transition timings.
    const deadline=performance.now()+30000;let stable=0;
@@ -88,6 +96,7 @@ export async function verifyGameQualityCycle(w){
   if(w.chunkStream.summary().failed||w.state.pauses.includes('runtime-error'))throw Error('Active streaming failed');
  }else if(snapshot()!==before)throw Error('World changed during quality cycle');
  if(lease.stats.released!==lease.stats.retained)throw Error('Initial lease not fully released');
- return {attribution,attributionScope:'Nested synchronous call timings above 10 ms overlap; do not sum parent and child calls. No GPU execution timing is implied.',rows,lease:lease.stats,worldUnchanged:active?null:true,active:active?{initialElapsed,elapsed:w.state.elapsed,travelFrame,created:w.chunkStream.stats.created-initialCreated,stream:w.chunkStream.summary()}:null,limitation:'The refreshed snapshot remains bounded; it prioritizes newer variants and cannot guarantee every future unseen shader is warm.'};
- }catch(error){globalThis.qaQualityFailure={message:error.message,livePreparation:error.preparation??null,rows,attribution};throw error;}finally{if(phaseAttribution)w.onLoadingSpan=previousSpan;if(active){cancelAnimationFrame(travelHandle);w.updateCamera=originalCameraUpdate;game.pause(w.state,'menu');}for(const undo of restore.reverse())undo();}
+ if(estimateFault&&(forcedJobs!==2||scheduler.snapshot().oversizeRecoveries<2))throw Error('Oversized estimate recovery was not exercised');
+ return {faultInjection:estimateFault?{forcedJobs,scope:'Correctness-only: two terrain units deliberately estimated at 14 ms until first execution; not a performance benchmark.'}:null,attribution,attributionScope:'Nested synchronous call timings above 10 ms overlap; do not sum parent and child calls. No GPU execution timing is implied.',rows,lease:lease.stats,worldUnchanged:active?null:true,active:active?{initialElapsed,elapsed:w.state.elapsed,travelFrame,created:w.chunkStream.stats.created-initialCreated,stream:w.chunkStream.summary()}:null,limitation:'The refreshed snapshot remains bounded; it prioritizes newer variants and cannot guarantee every future unseen shader is warm.'};
+ }catch(error){globalThis.qaQualityFailure={message:error.message,livePreparation:error.preparation??null,rows,attribution};throw error;}finally{if(estimateFault)scheduler.submit=originalSubmit;if(phaseAttribution){w.onLoadingSpan=previousSpan;w.onTerrainPreparationSlice=previousTerrain;}if(active){cancelAnimationFrame(travelHandle);w.updateCamera=originalCameraUpdate;game.pause(w.state,'menu');}for(const undo of restore.reverse())undo();}
 }

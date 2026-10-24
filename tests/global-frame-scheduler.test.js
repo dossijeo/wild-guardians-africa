@@ -70,3 +70,16 @@ test('admission diagnostics are optional and distinguish late callbacks from CPU
  assert.equal(d.idlePendingFrames,1);assert.equal(d.noHeadroom,1);assert.equal(d.mandatoryPressure,0);assert.equal(d.latenessSum,30);assert.equal(d.cpuSum,2);
  scheduler.cancel('job');await result;assert.equal(new GlobalFrameScheduler().snapshot().admissionDiagnostics,undefined);
 });
+
+
+test('historical oversized estimates recover without permanent starvation or dropping CPU guards',async()=>{
+ let time=1000;const scheduler=new GlobalFrameScheduler({now:()=>time});let calls=0;
+ const task=key=>scheduler.submit((function*(){calls++;time+=.2;return key;})(),{key,deadline:1000,estimate:()=>14});
+ const a=task('a'),b=task('b');
+ const frame=async(cpu)=>{scheduler.beginFrame(time);time+=cpu;await scheduler.endFrame();};
+ await frame(4);assert.equal(calls,0);
+ time=3100;await frame(17);assert.equal(calls,0);
+ time=3200;await frame(4);assert.equal(calls,1);assert.equal(await a,'a');assert.equal(scheduler.snapshot().oversizeRecoveries,1);
+ time=3300;await frame(4);assert.equal(calls,1);
+ time=5300;await frame(4);assert.equal(await b,'b');assert.equal(calls,2);assert.equal(scheduler.snapshot().pending,0);
+});

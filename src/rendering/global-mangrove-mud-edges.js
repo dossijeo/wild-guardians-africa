@@ -9,13 +9,20 @@ export function mudTerrainKey(x,z){
 }
 // One-time visual preparation of existing mud triangles; no world queries or per-frame work.
 export function bindMangroveMudEdges(world,group){
+ const steps=bindMangroveMudEdgesSteps(world,group);while(!steps.next().done){}
+}
+
+export function* bindMangroveMudEdgesSteps(world,group){
  let attributeBytes=0,cacheHits=0,uniqueVertices=0,segmentTests=0;
   const ground=group.children.find(m=>m.userData.ground),mud=group.children.find(m=>m.name==='mangrove-mud-patches');if(!ground||!mud)return;
-  const start=performance.now(),gp=ground.geometry.attributes.position,gc=ground.geometry.attributes.color,gn=ground.geometry.attributes.normal,grid=new Map();
-  for(let i=0;i<gp.count;i++)grid.set(mudTerrainKey(gp.getX(i),gp.getZ(i)),i);
+  let cpuMs=0,sliceStart=performance.now();
+  function* pause(label){cpuMs+=performance.now()-sliceStart;yield label;sliceStart=performance.now();}
+  const gp=ground.geometry.attributes.position,gc=ground.geometry.attributes.color,gn=ground.geometry.attributes.normal,grid=new Map();
+  for(let i=0;i<gp.count;i++){if(i%256===0)yield* pause('mud-edges-grid');grid.set(mudTerrainKey(gp.getX(i),gp.getZ(i)),i);}
   const g=mud.geometry,p=g.attributes.position,colors=new Float32Array(p.count*3),normals=new Float32Array(p.count*3),edges=new Float32Array(p.count),origin=group.userData.nativeChunkOrigin,vertexCache=new Map();
   const contours=g.userData.mudOutlines.map(points=>({points,minX:Math.min(...points.map(p=>p[0])),maxX:Math.max(...points.map(p=>p[0])),minZ:Math.min(...points.map(p=>p[1])),maxZ:Math.max(...points.map(p=>p[1]))}));
   for(let i=0;i<p.count;i++){
+   if(i%256===0)yield* pause('mud-edges-vertices');
    const x=p.getX(i),z=p.getZ(i),ix=Math.floor(x),iz=Math.floor(z),fx=x-ix,fz=z-iz;
    const cacheKey=x+','+z,previous=vertexCache?.get(cacheKey);
    if(previous!==undefined){colors.set(colors.subarray(previous*3,previous*3+3),i*3);normals.set(normals.subarray(previous*3,previous*3+3),i*3);edges[i]=edges[previous];cacheHits++;continue;}
@@ -32,13 +39,14 @@ export function bindMangroveMudEdges(world,group){
     scan(nearest);for(const c of contours)if(c!==nearest&&bounds(c)<dist)scan(c);
    }edges[i]=dist;vertexCache?.set(cacheKey,i);
   }
+  yield* pause('mud-edges-publish');
   const old=mud.material,normalAttribute=g.attributes.normal;
   g.setAttribute('color',new THREE.BufferAttribute(colors,3));normalAttribute.array.set(normals);normalAttribute.needsUpdate=true;g.setAttribute('qaMudEdge',new THREE.BufferAttribute(edges,1));attributeBytes+=colors.byteLength+normals.byteLength+edges.byteLength;
   const material=nativeGroundMaterial(world.quality);Object.assign(material.userData,ground.material.userData);material.userData.retainBiomeGround?.(material);
   material.userData.mangroveMudTextures={base:old.map,normal:old.normalMap,packed:old.roughnessMap};
   configureMangroveMudMaterial(world,material);mud.material=material;
   old.dispose();
-  mud.userData.globalMudBlend={attributeBytes,cacheHits,uniqueVertices,segmentTests,buildMs:performance.now()-start};
+  mud.userData.globalMudBlend={attributeBytes,cacheHits,uniqueVertices,segmentTests,buildMs:cpuMs+performance.now()-sliceStart};
 }
 
 // Reapply the same edge recipe when the quality profile replaces the ground material.

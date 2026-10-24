@@ -7,7 +7,7 @@ import {naturalWaterEdgesEnabled,prepareNaturalWaterBed,prepareNaturalWater,prep
 import {regionalWaterEnabled} from './world-atmosphere.js';
 import {prepareMangroveBank} from './mangrove-shore.js';
 import {continuousGrassEnabled,createContinuousGrass} from './continuous-grass.js';
-import {bindMangroveMudEdges,configureMangroveMudMaterial} from './global-mangrove-mud-edges.js';
+import {bindMangroveMudEdgesSteps,configureMangroveMudMaterial} from './global-mangrove-mud-edges.js';
 import {raidEntryChunks,raidResidentDemand,includeRaidBounds} from '../world/raid-entry-residency.js';
 import {PreciseTap} from '../ui/precise-tap.js';
 import {startInitialFarRegion} from './initial-far-region.js';
@@ -355,7 +355,7 @@ export class WorldScene {
     yield 'ground';
     const geometry=payload?nativeTerrainBuffer(payload.terrain):nativeGroundGeometry(this.nav.field,this.pack.profile,cx,cz);
     const material=nativeGroundMaterial(this.quality);
-    this.biomeGround?.attach(material,cx,cz,payload?.groundMask);material.userData.toonGround=true;material.userData.nativeGroundColor=true;const ground=new THREE.Mesh(geometry,material);ground.position.set(0,0,0);ground.receiveShadow=true;ground.castShadow=this.toon.globalVisualLighting&&this.state.biome==='gran-canon';ground.userData.ground=true;group.add(ground);if(this.mudPatches){yield 'mud-geometry';const mud=this.mudPatches.chunk(this.nav.field,cx,cz);if(mud){group.add(mud);group.userData.mudSurface=mud.geometry.userData;yield 'mud-edges';if(this.biomeGround.mangroveSubstrate)bindMangroveMudEdges(this,group);}}
+    this.biomeGround?.attach(material,cx,cz,payload?.groundMask);material.userData.toonGround=true;material.userData.nativeGroundColor=true;const ground=new THREE.Mesh(geometry,material);ground.position.set(0,0,0);ground.receiveShadow=true;ground.castShadow=this.toon.globalVisualLighting&&this.state.biome==='gran-canon';ground.userData.ground=true;group.add(ground);if(this.mudPatches){yield 'mud-geometry';const mud=this.mudPatches.chunk(this.nav.field,cx,cz);if(mud){group.add(mud);group.userData.mudSurface=mud.geometry.userData;yield 'mud-edges';if(this.biomeGround.mangroveSubstrate)yield* bindMangroveMudEdgesSteps(this,group);}}
     yield 'water-geometry';
     const waterGeometry=payload?nativeWaterBuffer(payload.water):nativeChunkWater(this.nav.field,cx,cz,this.pack.profile);
     if(waterGeometry){const waterMaterial=this.naturalWaterEdges&&this.state.biome!=='desierto'?paintedWaterMaterial(this.pack.profile.colors.water,this.state.biome==='volcanes',this.nav.field.seed,null,this.fluidLighting):this.fluidMaterial;const mesh=new THREE.Mesh(waterGeometry,waterMaterial);mesh.position.set(0,0,0);mesh.receiveShadow=true;mesh.userData.nativeFluid='chunk';group.add(mesh);yield 'bank';prepareMangroveBank(this,waterGeometry,cx,cz,waterMaterial,payload?.waterShore);yield 'water-edges';if(waterMaterial!==this.fluidMaterial)prepareNaturalWater(this,waterGeometry,cx,cz,waterMaterial,payload?.waterBed);yield 'water-core';if(this.waterOpaqueCore)prepareOpaqueCore(mesh);}

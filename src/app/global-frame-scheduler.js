@@ -5,9 +5,9 @@ export class GlobalFrameScheduler {
     this.diagnostics=diagnostics?{idlePendingFrames:0,noHeadroom:0,mandatoryPressure:0,lateCallback:0,policyLimited:0,elapsedGuard:0,cpuSum:0,latenessSum:0,maxLateness:0}:null;
     this.now=now;this.targetMs=targetMs;this.maxPending=maxPending;
     this.jobs=new Map();this.sequence=0;this.samples=[];this.lastTimestamp=null;
-    this.budget=0;this.cooldown=0;this.lastPolicy=-Infinity;
+    this.budget=0;this.nextOversizeRecovery=0;this.cooldown=0;this.lastPolicy=-Infinity;
     this.policy={median:0,p95:0,p99:0,cpu95:0,jitter:0};
-    this.stats={completed:0,cancelled:0,failed:0,units:0,workMs:0,coordinationMs:0,maxUnitMs:0,overruns:0,deadlineLoans:0,continuationMs:0,continuationTurns:0};
+    this.stats={completed:0,cancelled:0,failed:0,units:0,workMs:0,coordinationMs:0,maxUnitMs:0,overruns:0,deadlineLoans:0,oversizeRecoveries:0,continuationMs:0,continuationTurns:0};
   }
   submit(iterator,{key=Symbol(),valid=()=>true,priority=0,deadline=Infinity,estimateMs=.25,estimate=null,signal,label=null}={}) {
     if(this.jobs.has(key))this.cancel(key);
@@ -65,7 +65,7 @@ export class GlobalFrameScheduler {
         drainTurns++;this.stats.continuationTurns++;continue;
       }
       if(units++>=1024)break;
-      const time=this.now();let selected=null,best=-Infinity,borrowed=false;
+      const time=this.now();let selected=null,best=-Infinity,borrowed=false,oversized=false;
       for(const job of this.jobs.values()){
         let valid;try{valid=job.valid();}catch(error){this.remove(job);try{job.iterator.return?.();}catch{}job.reject(error);this.stats.failed++;continue;}
         if(!valid){this.cancel(job.key);continue;}
@@ -81,19 +81,25 @@ export class GlobalFrameScheduler {
         // Bound both total synchronous CPU and elapsed presentation latency.
         const loan=!fits&&time>=job.deadline&&work===0&&cost<=period*.5&&
           cpu<period*.85&&cpu+cost<=period*1.25&&time-frame.timestamp+cost<=period*2;
-        if(!fits&&!loan)continue;
+        // A conservative historical outlier must not poison a required unit
+        // forever. After one observation window overdue, allow ONE bounded
+        // oversized retry on a cheap CPU frame, globally rate-limited. This is
+        // an explicit overrun, never headroom or a lowered cost estimate.
+        const recovery=!fits&&!loan&&work===0&&time-job.deadline>=2000&&time>=this.nextOversizeRecovery&&
+          cost>period*.5&&cpu<period*.85&&cpu+cost<=period*2&&time-frame.timestamp+cost<=period*3;
+        if(!fits&&!loan&&!recovery)continue;
         const score=job.priority+age/100+(urgent?1000:0)-job.order*.000001;
-        if(score>best){selected=job;best=score;borrowed=loan;}
+        if(score>best){selected=job;best=score;borrowed=loan||recovery;oversized=recovery;}
       }
       if(!selected)break;
-      const start=this.now();selected.lastServed=start;
+      const start=this.now();selected.lastServed=start;if(oversized){this.nextOversizeRecovery=start+2000;this.stats.oversizeRecoveries++;}
       try{
         const result=selected.iterator.next();
         if(result?.then)throw new TypeError('Scheduled units must be synchronous');
         if(result.done){this.remove(selected);this.stats.completed++;completedSubmission=true;drainTurns=0;selected.resolve(result.value);}
         else selected.order=this.sequence++;
       }catch(error){this.remove(selected);try{selected.iterator.return?.();}catch{}selected.reject(error);this.stats.failed++;}
-      const duration=this.now()-start;work+=duration;if(borrowed)this.stats.deadlineLoans++;this.stats.units++;this.stats.maxUnitMs=Math.max(this.stats.maxUnitMs,duration);
+      const duration=this.now()-start;work+=duration;if(borrowed&&!oversized)this.stats.deadlineLoans++;this.stats.units++;this.stats.maxUnitMs=Math.max(this.stats.maxUnitMs,duration);
       selected.cost=Math.max(duration,selected.cost*.8); // Conservative recent unit estimate.
       if(borrowed||this.now()-began>=remaining){this.stats.overruns++;break;}
     }
