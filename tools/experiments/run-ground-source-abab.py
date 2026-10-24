@@ -5,6 +5,7 @@ from pathlib import Path
 p=argparse.ArgumentParser()
 p.add_argument('--prefix',required=True)
 p.add_argument('--biome',default='manglares')
+p.add_argument('--active-streaming',action='store_true',help='Validate identical camera travel with live simulation after loading')
 args=p.parse_args()
 root=Path(__file__).resolve().parents[2]
 out=root/'docs/qa/loading-production-variants'
@@ -21,6 +22,9 @@ for report in reports:
                WG_THREAD_LOADING_TIMES='1',WG_THREAD_LOADING_CAPTURE='1',
                WG_GUARDIAN_TAIL='1',WG_THREAD_REPORT=str(report))
     if run.startswith('b'):env['WG_PRODUCTION_GROUND_SOURCE']='1'
+    if args.active_streaming:
+        env.update(WG_THREAD_BENCH='1',WG_THREAD_ACTIVE='1',WG_THREAD_FRAMES='180',
+                   WG_THREAD_DISTANCE='96',WG_THREAD_LOCK_RAID_CAMERA='1')
     with report.with_suffix('.log').open('wb') as log:
         result=subprocess.run(['node','tools/experiments/check-spatial-thread-game.mjs'],cwd=root,env=env,stdout=log,stderr=subprocess.STDOUT)
     print(run,'exit',result.returncode,flush=True)

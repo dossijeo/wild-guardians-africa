@@ -225,3 +225,20 @@ are provisional results, not final acceptance. No shader defaults changed.
 The reusable summary explicitly includes the final loading-frame boundary in
 post-ready RAF cadence, so the handoff interval is not silently omitted.
 Neither phase wall time nor RAF cadence is labelled GPU execution time.
+
+## Repeated A/B/A/B complete; active-world gate started
+
+Second pair also favors readiness: 36,394.110ms versus 35,593.580ms, saving
+800.530ms; world compile phase saves 433.065ms. Across this repeat both pairs
+save total loading time, consistent with the first series, but frame cadence
+does not consistently improve. Loading P95 rises from66.485 to83.045ms and
+50.075 to66.455ms. Post-ready P95 rises from116.775 to166.295ms and
+100.050 to116.510ms; maxima improve in one pair and worsen in the other.
+Do not present the candidate as a general smoothness improvement or subtract
+previously attributed guardian initialization costs from the measurements.
+See manglares-pruned-repeat-summary.json for raw-derived metrics, including
+the loading-to-play boundary. Source pruning remains opt-in.
+A serial active-simulation camera-travel A/B/A/B gate is now running under
+manglares-pruned-active: identical180-frame/96-unit path and raid-camera lock,
+with existing harness streaming instrumentation in both arms. This is an
+additional validation scope, not interchangeable with frozen loading timings.
