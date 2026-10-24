@@ -30,8 +30,23 @@ for run in ['a1', 'b1', 'a2', 'b2']:
                  'postReadyCadenceIncludingBoundary': cadence(post_frames),
                  'phases': {x['label']: x['ms'] for x in r['loading']['phases']},
                  'consoleEntries': data['errors']})
+    if r.get('streaming'):
+        stream = r['streaming']
+        rows[-1]['streaming'] = {
+            'scope': stream['scope'], 'hardware': stream['hardware'],
+            'options': stream['options'], 'created': stream['created'],
+            'simulationAdvanced': stream['elapsed'] - stream['initialElapsed'],
+            'actorsReadyFrames': stream['actorsReadyFrames'],
+            'pausedFrames': stream['pausedFrames'], 'farSettled': stream['farSettled'],
+            'summary': stream['summary'],
+        }
 if len({(r['biome'], r['quality'], r['chunks']) for r in rows}) != 1:
     raise ValueError('Run conditions differ')
+if any('streaming' in r for r in rows):
+    if not all('streaming' in r for r in rows):
+        raise ValueError('Mixed streaming and loading-only runs')
+    if len({json.dumps(r['streaming']['options'], sort_keys=True) for r in rows}) != 1:
+        raise ValueError('Streaming protocols differ')
 pairs = [{'pair': i+1, 'readySavedMs': a['readyMs']-b['readyMs'],
           'worldCompileWallSavedMs': a['phases']['warm-compile-world']-b['phases']['warm-compile-world']}
          for i,(a,b) in enumerate(zip(rows[::2],rows[1::2]))]

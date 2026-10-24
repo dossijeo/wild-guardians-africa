@@ -242,3 +242,17 @@ A serial active-simulation camera-travel A/B/A/B gate is now running under
 manglares-pruned-active: identical180-frame/96-unit path and raid-camera lock,
 with existing harness streaming instrumentation in both arms. This is an
 additional validation scope, not interchangeable with frozen loading timings.
+
+## Active original control: first run
+
+The first original active-streaming control completed on Intel UHD / ANGLE D3D11:
+10 additional chunks, all180 sampled frames with actors ready, no paused frames,
+far preparation settled, and simulation advanced15.798s. No captured errors
+beyond existing X4000 warnings. Frame cadence mean108.455ms, P95199.695ms,
+max282.810ms; these are presentation intervals, not GPU durations.
+This establishes a valid original control, not a candidate result. Camera
+travel is frame-based and simulation advances in wall time; final dynamic
+world states can differ. Do not treat final active screenshots as exact
+image-equivalence pairs or conflate this with the frozen workload.
+The complete active series is still running. Its summary will retain options,
+hardware, created chunks and simulation progress alongside timing.
