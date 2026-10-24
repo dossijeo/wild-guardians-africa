@@ -354,3 +354,39 @@ These are candidate functional runs, not per-biome A/B or visual equivalence. Pr
 `stable-shadow-low-context.json`: initial quality baja, subsequent quality cycle and forced WebGL context loss/restore. Authoritative snapshot unchanged; pthread backend and 16 MiB native memory preserved; old79 program references abandoned, new28 retained, no unknown GL resource deletions. Real draw resumes. Both raw before/after images retained and inspected. Full-image comparison includes the existing lost-context notification; below y=180 (outside that notification), RGB MAD0.13495/255 and fraction any channel delta>8=0.004897. Not pixel-identical; no visible terrain/material loss in the inspected restored frame. Context test asserts removal of context-lost/runtime-error pause reasons. It does not assert the notification disappears automatically.
 
 Night pair uses the existing controlled Manglares seed712 fixture at time/elapsed450, paused simulation, identical camera and settled quality captures. `stable-shadow-night-control.json`, `stable-shadow-night-candidate.json`, raw PNGs, three side-by-sides and `stable-shadow-night-difference.json`. RGB MAD0.005195/0.001284/0.003701 for baja/media/baja; fractions any-channel delta>8=0.000235/0.0000228/0.0000879. Inspected media pair: same ground, vegetation, buildings, water and illumination. No night GPU performance claim (capture-only comparison). Other-biome image equivalence, repeated GPU A/B, very-low/high profiles and complete scheduler acceptance remain pending. Main and production flags untouched.
+
+
+### Stable shadow programs: active low-quality ABAB (2026-10-24)
+
+Serial A1/B1/A2/B2 on Intel UHD / ANGLE D3D11, Manglares 1280x720,
+initial baja, 360 camera frames / 144m, same seed/fixture, active simulation,
+121 GPU timer samples per run. A: stableShadowPrograms=0; B: =1.
+No global scheduler or staged quality preparation enabled in this isolation.
+All runs installed 15 chunks, had 360 actor-ready frames, zero paused frames,
+and settled without stream failures. Simulation advances with wall time;
+final entity states are not identical, so these are performance trials rather
+than image equivalence captures.
+
+| Run | RAF mean / P95 / max ms | GPU mean / P95 ms | render CPU mean ms |
+| --- | --- | --- | --- |
+| A1 | 28.22 / 49.95 / 149.65 | 21.37 / 34.19 | 8.40 |
+| B1 | 27.85 / 49.96 / 166.32 | 21.52 / 32.11 | 8.37 |
+| A2 | 28.64 / 50.35 / 183.01 | 22.11 / 41.52 | 8.30 |
+| B2 | 28.55 / 50.04 / 149.53 | 22.26 / 38.21 | 8.53 |
+
+B costs +0.156 ms GPU mean in each pair (~0.7%); insufficient evidence of a
+material regression or speedup. Drift between repetitions exceeds that delta.
+This supports retaining the candidate for its independently measured quality
+transition benefit; it does NOT demonstrate improved steady streaming.
+Residual 150–183 ms RAF spikes exist in both paths, with CPU draw maxima
+140–169 ms. Attribution still required; do not equate these CPU wall spans
+with GPU execution or assume the scheduler can interrupt the underlying call.
+Candidate remains opt-in pending remaining visual/profile validation.
+
+Raw data: stable-shadow-active-abab-{A1,B1,A2,B2}.json; compact summary includes
+P99, CPU render/draw, GPU and activity checks. Reproduction environment:
+WG_THREAD_PORT=5190 WG_THREAD_BIOME=manglares WG_THREAD_DEFAULT_STREAMING=1
+WG_THREAD_FROZEN=1 WG_THREAD_ACTIVE=1 WG_THREAD_QUALITY=baja WG_THREAD_BENCH=1
+WG_THREAD_GPU=1 WG_THREAD_FRAMES=360 WG_THREAD_DISTANCE=144;
+run tools/experiments/check-spatial-thread-game.mjs serially with
+WG_THREAD_STABLE_SHADOW_PROGRAMS=0,1,0,1 and distinct WG_THREAD_REPORT paths.

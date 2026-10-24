@@ -1,0 +1,137 @@
+{
+  "scope": "Interleaved active Manglares low quality, 720p Intel UHD; 360 camera frames / 144m; stableShadowPrograms 0/1/0/1. Simulation advances with wall time: not pixel equivalence nor exact identical final entity states. GPU timer samples distinct from CPU wall duration and RAF intervals. No scheduler flag.",
+  "rows": [
+    {
+      "case": "A1",
+      "frames": {
+        "count": 360,
+        "mean": 28.222138888888892,
+        "p95": 49.94999999999709,
+        "max": 149.64500000000407,
+        "p99": 83.09000000000378
+      },
+      "gpu": {
+        "count": 121,
+        "mean": 21.369074867768607,
+        "p95": 34.18927,
+        "max": 43.316457
+      },
+      "renderCpu": {
+        "count": 361,
+        "mean": 8.397576177219275,
+        "p95": 17.060000002384186,
+        "max": 146.14999997615814
+      },
+      "drawCpu": {
+        "count": 361,
+        "mean": 4.662188366179321,
+        "p95": 9.165000021457672,
+        "max": 140.25
+      },
+      "created": 15,
+      "pausedFrames": 0,
+      "actorsReadyFrames": 360,
+      "simulationSeconds": 10.127009999999345,
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "case": "B1",
+      "frames": {
+        "count": 360,
+        "mean": 27.85280555555554,
+        "p95": 49.95999999999913,
+        "max": 166.3199999999997,
+        "p99": 66.52500000000146
+      },
+      "gpu": {
+        "count": 121,
+        "mean": 21.524958553718996,
+        "p95": 32.11229,
+        "max": 49.183333
+      },
+      "renderCpu": {
+        "count": 361,
+        "mean": 8.366135733279496,
+        "p95": 15.310000002384186,
+        "max": 167.25499999523163
+      },
+      "drawCpu": {
+        "count": 361,
+        "mean": 4.740346256715769,
+        "p95": 8.209999978542328,
+        "max": 161.19999998807907
+      },
+      "created": 15,
+      "pausedFrames": 0,
+      "actorsReadyFrames": 360,
+      "simulationSeconds": 9.977494999999564,
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "case": "A2",
+      "frames": {
+        "count": 360,
+        "mean": 28.637944444444454,
+        "p95": 50.35000000000582,
+        "max": 183.01000000000204,
+        "p99": 83.22000000000116
+      },
+      "gpu": {
+        "count": 121,
+        "mean": 22.107048760330578,
+        "p95": 41.52078,
+        "max": 49.337342
+      },
+      "renderCpu": {
+        "count": 361,
+        "mean": 8.298642661267701,
+        "p95": 15.5,
+        "max": 178.30000001192093
+      },
+      "drawCpu": {
+        "count": 361,
+        "mean": 4.657894736842105,
+        "p95": 8.969999969005585,
+        "max": 169.32499998807907
+      },
+      "created": 15,
+      "pausedFrames": 0,
+      "actorsReadyFrames": 360,
+      "simulationSeconds": 10.244004999999461,
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    },
+    {
+      "case": "B2",
+      "frames": {
+        "count": 360,
+        "mean": 28.54548611111111,
+        "p95": 50.04000000000087,
+        "max": 149.52500000000146,
+        "p99": 83.11499999999796
+      },
+      "gpu": {
+        "count": 121,
+        "mean": 22.26381692561983,
+        "p95": 38.214218,
+        "max": 45.25052
+      },
+      "renderCpu": {
+        "count": 361,
+        "mean": 8.532202215406043,
+        "p95": 17.399999976158142,
+        "max": 146.79000002145767
+      },
+      "drawCpu": {
+        "count": 361,
+        "mean": 4.888850415677576,
+        "p95": 9.785000026226044,
+        "max": 141.7049999833107
+      },
+      "created": 15,
+      "pausedFrames": 0,
+      "actorsReadyFrames": 360,
+      "simulationSeconds": 10.243514999999562,
+      "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+    }
+  ]
+}
