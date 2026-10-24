@@ -98,3 +98,11 @@ test('guarded compilation cleans listeners on success, submission failure and ex
   assert.equal(f.clean(),true);
  }
 });
+
+test('guarded batched compilation cancels during a suspended frame on context loss',async()=>{
+ const f=guardedScene(true),canvas=new EventTarget();f.renderer.getContext().canvas=canvas;
+ let entered;const entry=new Promise(r=>entered=r);
+ const pending=compileLoadingProgramsBatched(f.renderer,f.scene,{},undefined,{batchSize:1,guardResourceDisposal:true,nextFrame:()=>{entered();return new Promise(()=>{});}});
+ await entry;canvas.dispatchEvent(new Event('webglcontextlost'));
+ await assert.rejects(pending,/cancelled/);assert.equal(f.counts().calls,1);assert.equal(f.clean(),true);
+});

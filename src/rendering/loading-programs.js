@@ -32,8 +32,10 @@ export async function compileLoadingProgramsBatched(renderer,scene,camera,target
  // including later batches. This does not freeze scene membership or mutations.
  const resources=new Set(),owner=guardResourceDisposal?new AbortController():null;
  let resourceDisposed=false;
+ const context=owner?renderer.getContext():null;
  const externalSignal=options.signal,abort=()=>owner?.abort(),dispose=()=>{resourceDisposed=true;abort();};
  if(owner){
+  context.canvas?.addEventListener('webglcontextlost',abort);
   for(const object of objects){if(object.geometry)resources.add(object.geometry);for(const material of (Array.isArray(object.material)?object.material:[object.material]))if(material)resources.add(material);}
   for(const resource of resources)resource.addEventListener?.('dispose',dispose);
   externalSignal?.addEventListener('abort',abort,{once:true});if(externalSignal?.aborted)abort();
@@ -52,6 +54,7 @@ export async function compileLoadingProgramsBatched(renderer,scene,camera,target
   if(resourceDisposed){const cancelled=new Error('Loading compilation cancelled: borrowed resource disposed',{cause:error});cancelled.code='BORROWED_RESOURCE_DISPOSED';throw cancelled;}
   throw error;
  }finally{
+  context?.canvas?.removeEventListener('webglcontextlost',abort);
   externalSignal?.removeEventListener('abort',abort);
   for(const resource of resources)resource.removeEventListener?.('dispose',dispose);
  }
