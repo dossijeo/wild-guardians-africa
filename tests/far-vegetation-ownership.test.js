@@ -147,3 +147,22 @@ test('parallel images preserve sequential species admission and all exact textur
  const owner=await task;assert.equal(owner.adapters.length,2);assert.notEqual(admitted[0].prelitAtlas.day,admitted[1].prelitAtlas.day);
  owner.dispose();assert.ok(f.textures.every(t=>t.releases===1));
 });
+
+test('far images decode before admission but no adapter is published until the GPU gate opens',async()=>{
+ const f=fixture();let admit;const gate=new Promise(resolve=>{admit=resolve;});
+ const pending=attachBiomeFarVegetation(f.world,{parallelAssets:true,prepareGate:gate},f.services);
+ for(let i=0;i<30;i++)await Promise.resolve();assert.equal(f.textures.length,3);assert.equal(f.controllers.length,0);
+ admit();const owner=await pending;assert.equal(f.controllers.length,1);owner.dispose();assert.ok(f.textures.every(t=>t.releases===1));
+});
+test('disposing a pending far admission cancels the wait and releases every decoded image once',async()=>{
+ const f=fixture(),gate=new Promise(()=>{});
+ const pending=attachBiomeFarVegetation(f.world,{parallelAssets:true,prepareGate:gate},f.services),rejected=assert.rejects(pending,/cancelled/);
+ for(let i=0;i<30;i++)await Promise.resolve();assert.equal(f.textures.length,3);f.world.farVegetation.dispose();await rejected;
+ assert.equal(f.controllers.length,0);assert.ok(f.textures.every(t=>t.releases===1));assert.equal(f.world.farVegetation,null);
+});
+test('a failed warmup rejects far admission and releases images without publishing geometry',async()=>{
+ const f=fixture();let reject;const gate=new Promise((resolve,fail)=>{reject=fail;});gate.catch(()=>{});
+ const pending=attachBiomeFarVegetation(f.world,{parallelAssets:true,prepareGate:gate},f.services),rejected=assert.rejects(pending,/warmup failed/);
+ for(let i=0;i<30;i++)await Promise.resolve();reject(Error('warmup failed'));await rejected;
+ assert.equal(f.controllers.length,0);assert.ok(f.textures.every(t=>t.releases===1));
+});

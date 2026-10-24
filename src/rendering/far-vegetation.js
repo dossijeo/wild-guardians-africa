@@ -1,3 +1,4 @@
+import {waitGpuPreparation} from '../../tools/experiments/wait-gpu-preparation.js';
 import {withRaisedMountainBase} from './raised-mountain-base.js';
 import {loadingAwaitWitness} from './loading-sync-witness.js';
 import {validateTreeTransitionPolicy} from '../../tools/experiments/tree-transition-range.js';
@@ -17,7 +18,7 @@ const textureStorageEstimate=(texture,width,height)=>{const image=texture.image;
 
 // Baked resources are owned from the beginning of an asynchronous attachment.
 // A world closed during fetch/preparation must release late arrivals as well.
-export async function attachBiomeFarVegetation(world,{start=60,end=90,residentRange=null,visualRange=null,preserveTerrain=true,transitionMargin=8,includeFarGround=true,logicalStandbyPreload=false,smoothTransitions=smoothFarTransitionsEnabled(),parallelAssets=false,initialRegion=null,...options}={},services={}){
+export async function attachBiomeFarVegetation(world,{start=60,end=90,residentRange=null,visualRange=null,preserveTerrain=true,transitionMargin=8,includeFarGround=true,logicalStandbyPreload=false,smoothTransitions=smoothFarTransitionsEnabled(),parallelAssets=false,initialRegion=null,prepareGate=null,...options}={},services={}){
  if(world.farVegetation)throw Error('Far vegetation already attached');
  if(typeof parallelAssets!=='boolean')throw Error('Invalid parallel far assets option');
  const phase=(label,run)=>loadingAwaitWitness(world.onLoadingSpan,'far-assets:'+label,run);
@@ -59,6 +60,7 @@ export async function attachBiomeFarVegetation(world,{start=60,end=90,residentRa
    if(background.status==='rejected')throw background.reason;backdropTexture=background.value;
   }else results=await Promise.allSettled(species.map(async metadata=>({metadata,day:await phase('day:'+metadata.slot,()=>load(metadata.day,{premultiplyAlpha:metadata.prelitAlphaEncoding!=='srgb-encoded-linear-premultiplied'})),night:await phase('night:'+metadata.slot,()=>load(metadata.night,{premultiplyAlpha:metadata.prelitAlphaEncoding!=='srgb-encoded-linear-premultiplied'}))})));
   const failed=results.find(r=>r.status==='rejected');if(failed)throw failed.reason;
+  if(prepareGate)await phase('preparation-gate',()=>waitGpuPreparation(prepareGate,{signal:ownership.signal,check:()=>{if(cancelled())throw Error('Far vegetation attachment cancelled');},nextFrame:()=>new Promise(()=>{})}));
   const transitionSlots=species.map(s=>s.slot);
   const groundTreeBases=Object.fromEntries(species.map(s=>[s.slot,s.localBase]));
   for(const result of results){if(cancelled())throw Error('Far vegetation attachment cancelled');const {metadata,day,night}=result.value;

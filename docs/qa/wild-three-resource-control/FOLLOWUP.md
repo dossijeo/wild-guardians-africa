@@ -77,3 +77,17 @@ preventing a continuously refilled optional queue from hiding recovery.
 The next loading comparison uses ordinary whole texture initialization in both
 arms, P2 source in both, and only toggles parallelFarDecode. This keeps the known
 partial-upload pacing regression out of the test of asset/decode overlap.
+
+## Far-image overlap ABAB: not adopted
+
+Original initialization in both arms; partial texture pilot OFF, P2 in both.
+A1/B1/A2/B2 readiness38.847/38.374/35.195/38.326s. P95 RAF66.50/66.51/50.01/50.01ms;
+max348.99/482.22/315.97/332.56ms. No consistent total-load or tail benefit.
+All four loads complete25chunks with no emergency admissions. The candidate
+remains opt-in, not a performance recommendation.
+A2/B2 captures visually retain ground, shadows, vegetation and background; mean
+absolute RGB differences0.000314/0.000269/0.000228 over720p. This narrowly validates
+the fixed opening view, not animation, all biomes or peak memory.
+The next evidence-led target is overlapping initial program-readiness waits,
+analogous to the existing bounded live-scene compiler, without concurrent borrowed
+GL state or additional shader variants.

@@ -253,10 +253,18 @@ export class WorldScene {
       const {farAtmosphere}=await import('./far-atmosphere.js'),atmosphere=farAtmosphere(farVegetation===true?{}:farVegetation);
       this.scene.fog=new THREE.Fog(atmosphere.fogDayColor,atmosphere.fogStart,atmosphere.fogEnd);
     }
-    await phase('load-warm-gpu',()=>this.loadReady(this.warmAnimalGpu()));await milestone('gpu');
+    const overlapFar=farVegetation&&this.loadingProgress&&new URLSearchParams(globalThis.location?.search??'').get('parallelFarDecode')==='1';
+    let pendingFar=null,admitFar,rejectFar;
+    if(overlapFar){
+      const prepareGate=new Promise((resolve,reject)=>{admitFar=resolve;rejectFar=reject;});prepareGate.catch(()=>{});
+      // Image decode overlaps native/program preparation; scene/GPU admission stays ordered.
+      pendingFar=phase('load-far-overlap',async()=>{const {attachBiomeFarVegetation}=await import('./far-vegetation.js');return this.loadReady(attachBiomeFarVegetation(this,{...(farVegetation===true?{}:farVegetation),parallelAssets:true,initialRegion:initialFarRegion,prepareGate}));}).then(value=>({value}),error=>({error}));
+    }
+    try{await phase('load-warm-gpu',()=>this.loadReady(this.warmAnimalGpu()));await milestone('gpu');admitFar?.();}
+    catch(error){rejectFar?.(error);throw error;}
     // Callers choose a configured horizon through the same loading/cancellation
     // boundary as every other asset; generic worlds may still omit it.
-    if(farVegetation){const {attachBiomeFarVegetation}=await import('./far-vegetation.js');await phase('load-far-assets',()=>this.loadReady(attachBiomeFarVegetation(this,{...(farVegetation===true?{}:farVegetation),parallelAssets:this.loadingCpuBudget===true,initialRegion:initialFarRegion})));}await milestone('far-assets');if(loadingProgress)this.assets.releaseLoadingImageDecoder();
+    if(pendingFar){const outcome=await phase('load-far-assets',()=>this.loadReady(pendingFar));if(outcome.error)throw outcome.error;}else if(farVegetation){const {attachBiomeFarVegetation}=await import('./far-vegetation.js');await phase('load-far-assets',()=>this.loadReady(attachBiomeFarVegetation(this,{...(farVegetation===true?{}:farVegetation),parallelAssets:this.loadingCpuBudget===true,initialRegion:initialFarRegion})));}await milestone('far-assets');if(loadingProgress)this.assets.releaseLoadingImageDecoder();
   }
   prepareSavedAnimalRigs(state){
     const group=state.raid?state.raid.animals.filter(a=>a.status!=='gone').map(a=>a.species):state.nightPlan&&!state.nightPlan.done?state.nightPlan.group??[]:[];
