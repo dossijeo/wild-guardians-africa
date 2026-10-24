@@ -1,6 +1,6 @@
 import {prepareCropDepthPrograms} from './crop-depth-preparation.js';
 import {streamingOptions} from './streaming-options.js';
-import {retainWarmedPrograms} from './retain-warmed-programs.js';
+import {replaceWarmedPrograms} from './retain-warmed-programs.js';
 import {createMangroveMaterialCache,mangroveMaterialCacheEnabled} from './mangrove-material-cache.js';
 import {mangroveFernEnabled} from './mangrove-fern-option.js';
 import {waterOpaqueCoreEnabled,prepareOpaqueCore} from './water-opaque-core.js';
@@ -159,7 +159,7 @@ export class WorldScene {
   clearSpellPreview(){this.spellPreview.clear();}
   clearWallPreview(){if(this.wallPreview){for(const wall of this.wallPreview.children)wall.dispose();this.scene.remove(this.wallPreview);this.wallPreview=null;}}
   qualitySetting(quality) {
-    this.releaseRetainedPrograms();
+    this.releaseRetainedPrograms({preserve:this.transactionalPrograms()});
     this.quality=quality;
     this.farVegetation?.configureQuality?.(quality);
     this.groundDetails?.configureQuality?.(quality);
@@ -557,13 +557,14 @@ export class WorldScene {
     this.refreshStreamingPrograms();
   }
   retainStreamingPrograms({newestFirst=false}={}){
-    this.programLease?.dispose();this.programLease=null;
-    if(this.disposed||!this.streamingOptions?.retainPrograms)return;
+    if(!this.transactionalPrograms()){this.programLease?.dispose();this.programLease=null;}
+    if(this.disposed||!this.streamingOptions?.retainPrograms){this.programLease?.dispose();this.programLease=null;return;}
     this.streamingRetentionStarted=true;
-    this.programLease=retainWarmedPrograms(this.renderer,{limit:96,newestFirst});
+    this.programLease=replaceWarmedPrograms(this.renderer,this.programLease,{limit:96,newestFirst});
     this.obstructionWarmup?.dispose();this.obstructionWarmup=null;
   }
-  releaseRetainedPrograms(){this.streamingProgramRefreshAbort?.abort();this.streamingProgramRevision=(this.streamingProgramRevision??0)+1;this.programLease?.dispose();this.programLease=null;this.obstructionWarmup?.dispose();this.obstructionWarmup=null;}
+  transactionalPrograms(){const query=new URLSearchParams(globalThis.location?.search??'');return query.get('transactionalPrograms')==='1'&&query.get('streamingRecovery')!=='0'&&this.streamingOptions?.retainPrograms&&!this.disposed&&!this.renderer.getContext().isContextLost();}
+  releaseRetainedPrograms({preserve=false}={}){this.streamingProgramRefreshAbort?.abort();this.streamingProgramRevision=(this.streamingProgramRevision??0)+1;if(!preserve){this.programLease?.dispose();this.programLease=null;}this.obstructionWarmup?.dispose();this.obstructionWarmup=null;}
   refreshStreamingPrograms(){
     if(new URLSearchParams(globalThis.location?.search??'').get('streamingRecovery')==='0'||!this.streamingRetentionStarted||!this.streamingOptions?.retainPrograms||this.disposed||this.renderer.getContext().isContextLost())return;
     this.streamingProgramRefreshRequested=true;

@@ -76,6 +76,7 @@ try{
  if(process.env.WG_THREAD_QUALITY_STAGED==='1')gameUrl.searchParams.set('qualityStaged','1');
  if(process.env.WG_THREAD_LIVE_PREPARATION==='1')gameUrl.searchParams.set('qualityLivePreparation','1');
  if(process.env.WG_FRAME_SCHEDULER==='1')gameUrl.searchParams.set('frameScheduler','1');
+ if(process.env.WG_TRANSACTIONAL_PROGRAMS==='1')gameUrl.searchParams.set('transactionalPrograms','1');
  if(process.env.WG_THREAD_DEFAULT_STREAMING==='1')for(const key of ['waterBedWorker','waterShoreWorker','chunkEviction','warmObstruction','retainPrograms'])gameUrl.searchParams.delete(key);
  if(process.env.WG_THREAD_EXIT_PREWARM)gameUrl.searchParams.set('exitPrewarm',process.env.WG_THREAD_EXIT_PREWARM);
  if(process.env.WG_THREAD_CONTEXT_PREWARM==='1')gameUrl.searchParams.set('contextPrewarm','1');

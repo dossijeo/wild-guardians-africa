@@ -52,3 +52,11 @@ export function createProgramRetentionScope(renderer,{limit=192,revision=REVISIO
   leases.length=0;seen.clear();
  }};
 }
+
+// Acquire the replacement before releasing the last owner of warmed-only recipes.
+// If acquisition fails, the caller still owns its original lease unchanged.
+export function replaceWarmedPrograms(renderer,previous,options){
+ const next=retainWarmedPrograms(renderer,options);
+ previous?.dispose();
+ return next;
+}

@@ -1124,3 +1124,39 @@ acquiring. This can delete exclusively pinned variants before reuse. Investigate
 transactional replacement and lifecycle safety rather than repeatedly trying to
 hide the same preparation behind another budget. This remains a hypothesis for
 performance, not a demonstrated saving or completed scheduler integration.
+
+
+### Transactional program leases: functional benefit, no fluency acceptance (2026-10-24)
+
+Implemented opt-in transactionalPrograms=1 (QA WG_TRANSACTIONAL_PROGRAMS=1).
+Quality changes cancel obsolete recovery/revisions as before but preserve the
+old program lease until replacement. Replacement acquires a bounded snapshot
+before releasing the previous lease. Context loss, disabled retention and world
+exit still release/abandon all owned references. Maximum retained selection stays
+96; brief overlapping references do not clone driver programs. Actual driver
+memory bytes unavailable. Default without the option keeps prior release order.
+
+`scheduler-program-swap-{a1,b1,a2,b2}.json`: active Manglares,media720p,
+same240-frame camera protocol and low/media/low changes. Before-diagnostic
+transition totals A1=1240/860/4500ms, B1=1155/1397/6032ms,
+A2=1002/1427/5554ms, B2=1529/1342/5232ms.
+Maximum RAF A1=231/121/183, B1=236/180/271,
+A2=237/395/260, B2=307/176/347ms. No consistent latency/P95/P99 improvement;
+last-step maxima are worse in both candidate runs. Do not enable in the scheduler
+bundle or call this a performance optimization. It does avoid intermediate
+program destruction: recovery leases destroy2programs per legacy step versus0
+for candidate. Fewer destroys alone do not satisfy the user's acceptance gate.
+
+Lifecycle validation with candidate: scheduler-program-swap-context.json reports
+83old references abandoned,38new retained,80draw calls,world unchanged,shared
+pthread16MiB,GL epoch1,unknownDeletes0. Recovery1521.94ms is asynchronous elapsed,
+not CPU or a smoothness claim. No interrupted compilation was exercised here.
+Before/after screenshots retained, but not used to claim broad artistic equivalence.
+`scheduler-program-swap-exit.json` exits during native generation (status2), starts
+quality recovery then cancels it:83/83references released,workers0,lateInstalls0,
+queue0,world disposed,menu restored. Exit496.78ms elapsed, not performance gain.
+10 retention tests pass including warmed-only replacement, cap eviction and failed
+replacement preserving old ownership. This experiment narrows the diagnosis:
+program churn is present but avoiding it does not explain/fix the remaining tails.
+
+Vite production build passes in7.97s; existing bundle-size/dynamic-import warnings remain.

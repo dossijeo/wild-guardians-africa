@@ -1,0 +1,149 @@
+{
+  "scope": "Serial ABAB, existing scheduler bundle in both. B transactionalPrograms=1 only. Prevents intermediate destruction, no demonstrated frame-time gain; remains separate opt-in.",
+  "rows": [
+    {
+      "run": "a1",
+      "step": 0,
+      "quality": "baja",
+      "transitionBeforeDiagnosticMs": 1239.699999988079,
+      "diagnosticMs": 230.47500002384186,
+      "p95Ms": 202.0999999642372,
+      "p99Ms": 202.0999999642372,
+      "maxMs": 230.70999997854233,
+      "frames": 12,
+      "releasedProgramsDestroyed": 2
+    },
+    {
+      "run": "a1",
+      "step": 1,
+      "quality": "media",
+      "transitionBeforeDiagnosticMs": 859.8899999856949,
+      "diagnosticMs": 275.2099999785423,
+      "p95Ms": 99.95999997854233,
+      "p99Ms": 99.95999997854233,
+      "maxMs": 120.86500000953674,
+      "frames": 12,
+      "releasedProgramsDestroyed": 2
+    },
+    {
+      "run": "a1",
+      "step": 2,
+      "quality": "baja",
+      "transitionBeforeDiagnosticMs": 4500.064999997616,
+      "diagnosticMs": 250.76499998569489,
+      "p95Ms": 123.83499997854233,
+      "p99Ms": 138.97000002861023,
+      "maxMs": 182.5450000166893,
+      "frames": 48,
+      "releasedProgramsDestroyed": 2
+    },
+    {
+      "run": "b1",
+      "step": 0,
+      "quality": "baja",
+      "transitionBeforeDiagnosticMs": 1155.1850000023842,
+      "diagnosticMs": 463.4850000143051,
+      "p95Ms": 124.65499997138977,
+      "p99Ms": 124.65499997138977,
+      "maxMs": 236.04999995231628,
+      "frames": 12,
+      "releasedProgramsDestroyed": 0
+    },
+    {
+      "run": "b1",
+      "step": 1,
+      "quality": "media",
+      "transitionBeforeDiagnosticMs": 1396.7150000333786,
+      "diagnosticMs": 763.1699999570847,
+      "p95Ms": 179.10999995470047,
+      "p99Ms": 179.10999995470047,
+      "maxMs": 180.08000004291534,
+      "frames": 12,
+      "releasedProgramsDestroyed": 0
+    },
+    {
+      "run": "b1",
+      "step": 2,
+      "quality": "baja",
+      "transitionBeforeDiagnosticMs": 6032.2300000190735,
+      "diagnosticMs": 296.05500000715256,
+      "p95Ms": 221.4299999475479,
+      "p99Ms": 263.7600000500679,
+      "maxMs": 271.210000038147,
+      "frames": 43,
+      "releasedProgramsDestroyed": 0
+    },
+    {
+      "run": "a2",
+      "step": 0,
+      "quality": "baja",
+      "transitionBeforeDiagnosticMs": 1002.4000000357628,
+      "diagnosticMs": 600.7350000143051,
+      "p95Ms": 103.53000003099442,
+      "p99Ms": 103.53000003099442,
+      "maxMs": 236.76499998569489,
+      "frames": 12,
+      "releasedProgramsDestroyed": 2
+    },
+    {
+      "run": "a2",
+      "step": 1,
+      "quality": "media",
+      "transitionBeforeDiagnosticMs": 1426.5950000286102,
+      "diagnosticMs": 549.4699999690056,
+      "p95Ms": 156.3400000333786,
+      "p99Ms": 156.3400000333786,
+      "maxMs": 395.0199999809265,
+      "frames": 12,
+      "releasedProgramsDestroyed": 2
+    },
+    {
+      "run": "a2",
+      "step": 2,
+      "quality": "baja",
+      "transitionBeforeDiagnosticMs": 5553.689999997616,
+      "diagnosticMs": 453.9050000309944,
+      "p95Ms": 223.35000002384186,
+      "p99Ms": 248.99000000953674,
+      "maxMs": 259.85999995470047,
+      "frames": 38,
+      "releasedProgramsDestroyed": 2
+    },
+    {
+      "run": "b2",
+      "step": 0,
+      "quality": "baja",
+      "transitionBeforeDiagnosticMs": 1528.8100000023842,
+      "diagnosticMs": 419.1050000190735,
+      "p95Ms": 198.2849999666214,
+      "p99Ms": 198.2849999666214,
+      "maxMs": 307.19499999284744,
+      "frames": 12,
+      "releasedProgramsDestroyed": 0
+    },
+    {
+      "run": "b2",
+      "step": 1,
+      "quality": "media",
+      "transitionBeforeDiagnosticMs": 1342.0699999928474,
+      "diagnosticMs": 616.3450000286102,
+      "p95Ms": 165.72000002861023,
+      "p99Ms": 165.72000002861023,
+      "maxMs": 175.8049999475479,
+      "frames": 12,
+      "releasedProgramsDestroyed": 0
+    },
+    {
+      "run": "b2",
+      "step": 2,
+      "quality": "baja",
+      "transitionBeforeDiagnosticMs": 5232.339999973774,
+      "diagnosticMs": 349.6700000166893,
+      "p95Ms": 292.9399999976158,
+      "p99Ms": 323.1550000309944,
+      "maxMs": 347.1899999976158,
+      "frames": 33,
+      "releasedProgramsDestroyed": 0
+    }
+  ]
+}

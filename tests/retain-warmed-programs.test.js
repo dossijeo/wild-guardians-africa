@@ -54,3 +54,19 @@ test('temporary scope bounds incremental ownership, reports exhaustion and relea
 test('temporary scope abandons old context references and rejects collection replacement',()=>{
  const a=program(),renderer={info:{programs:[a]}};const scope=createProgramRetentionScope(renderer);scope.acquire();renderer.info.programs=[];assert.equal(scope.acquire(),false);scope.dispose();assert.equal(scope.stats.abandoned,1);assert.equal(a.destroyed,0);
 });
+
+
+import {replaceWarmedPrograms} from '../src/rendering/retain-warmed-programs.js';
+test('transactional replacement preserves warmed-only programs and retires excluded ones',()=>{
+ const a={...program(),id:1},b={...program(),id:2},renderer={info:{programs:[a,b]}};
+ const previous=retainWarmedPrograms(renderer);a.usedTimes--;b.usedTimes--;
+ const next=replaceWarmedPrograms(renderer,previous,{limit:1,newestFirst:true});
+ assert.equal(a.destroyed,1);assert.equal(b.destroyed,0);assert.equal(b.usedTimes,1);
+ assert.equal(previous.stats.released,2);assert.deepEqual(renderer.info.programs,[b]);
+ next.dispose();assert.equal(b.destroyed,1);assert.equal(renderer.info.programs.length,0);
+});
+test('failed replacement leaves the old lease available for teardown',()=>{
+ const a=program(),renderer={info:{programs:[a]}},previous=retainWarmedPrograms(renderer);a.usedTimes--;
+ assert.throws(()=>replaceWarmedPrograms(renderer,previous,{limit:-1}),RangeError);
+ assert.equal(previous.stats.released,0);assert.equal(a.destroyed,0);previous.dispose();assert.equal(a.destroyed,1);
+});
