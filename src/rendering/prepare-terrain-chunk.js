@@ -15,7 +15,7 @@ export async function prepareTerrainChunk(world,data,current,{scheduler=null,sig
         next(){const start=now();const step=steps.next();const ms=now()-start;cpuMs+=ms;costs.set(costKey(),Math.max(ms,(costs.get(costKey())??0)*.9));phase=step.value;world.onTerrainPreparationSlice?.({cx:data.cx,cz:data.cz,ms,done:step.done});return step;},
         return(){return steps.return();}
       };
-      const result=await scheduler.submit(measured,{valid,signal,estimate:()=>costs.get(costKey())??.25,priority:10,deadline:now()+250});
+      const result=await scheduler.submit(measured,{valid,signal,label:()=>`terrain ${data.cx},${data.cz}:${phase}`,estimate:()=>costs.get(costKey())??.25,priority:10,deadline:now()+250});
       if(result){completed=true;world.onTerrainPreparationDone?.({cx:data.cx,cz:data.cz,cpuMs,elapsedMs:now()-began});return {...data,preparedGroup:result};}
       return null;
     }

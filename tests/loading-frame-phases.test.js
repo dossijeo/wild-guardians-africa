@@ -24,3 +24,10 @@ test('material preparation progresses even when final presentation is held',()=>
  let baked=0;const owner={shaderFailure:{current:null},resize(){},cinematic:true,strokePreview:{render(){}},camera:new PerspectiveCamera(),nav:{field:{}},renderOrigin:{x:0,z:0,update:()=>false},controls:{target:new Vector3()},syncChunks(){},chunks:new Map(),quality:'media',state:{elapsed:0},simElapsed:0,scene:{fog:null},sync(){},assetGroups:{update(){}},toon:{uniforms:{uWorldOrigin:{value:{set(){}}}}},mangroveMaterialCache:{update(){baked++;}},prepareFrameResources:WorldScene.prototype.prepareFrameResources,renderFrameUpdates:WorldScene.prototype.renderFrameUpdates,drawRenderFrame(){}};
  WorldScene.prototype.render.call(owner,0);assert.equal(baked,1);
 });
+
+
+test('gameplay phase witness preserves finite execution and final draw',()=>{
+ const f=fixture(),spans=[];f.owner.onLoadingSpan=span=>spans.push(span);
+ assert.equal(WorldScene.prototype.render.call(f.owner,.016),'rendered');
+ assert.equal(spans.length,7);assert.deepEqual(f.calls,['chunks','entities','far','batches','vfx','draw']);
+});

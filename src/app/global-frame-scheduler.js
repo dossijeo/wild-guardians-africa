@@ -9,12 +9,12 @@ export class GlobalFrameScheduler {
     this.policy={median:0,p95:0,p99:0,cpu95:0,jitter:0};
     this.stats={completed:0,cancelled:0,failed:0,units:0,workMs:0,coordinationMs:0,maxUnitMs:0,overruns:0,deadlineLoans:0,continuationMs:0,continuationTurns:0};
   }
-  submit(iterator,{key=Symbol(),valid=()=>true,priority=0,deadline=Infinity,estimateMs=.25,estimate=null,signal}={}) {
+  submit(iterator,{key=Symbol(),valid=()=>true,priority=0,deadline=Infinity,estimateMs=.25,estimate=null,signal,label=null}={}) {
     if(this.jobs.has(key))this.cancel(key);
     if(this.jobs.size>=this.maxPending)return Promise.reject(new Error('Frame scheduler backpressure'));
     return new Promise((resolve,reject)=>{
       const created=this.now();
-      const job={iterator,key,valid,priority,deadline,estimate,cost:Math.max(.01,estimateMs),created,lastServed:created,order:this.sequence++,resolve,reject,signal};
+      const job={iterator,key,label,valid,priority,deadline,estimate,cost:Math.max(.01,estimateMs),created,lastServed:created,order:this.sequence++,resolve,reject,signal};
       job.abort=()=>this.cancel(key);this.jobs.set(key,job);
       signal?.addEventListener('abort',job.abort,{once:true});
       if(signal?.aborted)this.cancel(key);

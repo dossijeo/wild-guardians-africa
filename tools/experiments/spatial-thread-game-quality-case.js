@@ -18,6 +18,9 @@ export async function verifyGameQualityCycle(w){
   const move=()=>{travelFrame++;const offset=144*Math.min(travelFrame/240,1);w.camera.position.copy(eye);w.camera.position.x+=offset;w.controls.target.copy(target);w.controls.target.x+=offset;if(travelFrame<240)travelHandle=requestAnimationFrame(move);};travelHandle=requestAnimationFrame(move);
  }
  const deletedPrograms=new WeakMap();
+ const phaseAttribution=new URLSearchParams(location.search).get('qualityPhases')==='1',previousSpan=w.onLoadingSpan;let phaseSamples=new Map();
+ if(phaseAttribution)w.onLoadingSpan=span=>{previousSpan?.(span);if(span.label.startsWith('world-frame-')){let samples=phaseSamples.get(span.label);if(!samples){samples=[];phaseSamples.set(span.label,samples);}samples.push(span.duration);}};
+ const phaseSummary=()=>Object.fromEntries([...phaseSamples].map(([name,values])=>{const sorted=[...values].sort((a,b)=>a-b);return [name,{count:values.length,totalMs:values.reduce((a,b)=>a+b,0),p95Ms:sorted[Math.floor((sorted.length-1)*.95)],maxMs:sorted.at(-1)}];}));
  const attribution=[],restore=[],strictGl=new URLSearchParams(location.search).get('qualityStrictGl')==='1';
  if(new URLSearchParams(location.search).get('qualityAttribution')==='1'){
   const wrap=(object,name,kind)=>{if(typeof object?.[name]!=='function')return;const original=object[name];object[name]=function(...args){if(kind==='gl'&&name==='deleteProgram'&&args[0])deletedPrograms.set(args[0],new Error('program deletion').stack);else if(kind==='gl'&&args[0]&&deletedPrograms.has(args[0]))attribution.push({kind:'deleted-program-access',name,ms:0,deleted:deletedPrograms.get(args[0]),stack:new Error('deleted program access').stack});if(strictGl&&kind==='gl'&&name==='getProgramParameter'){const stack=new Error('program query').stack;if(!attribution.some(x=>x.kind==='program-query-stack'&&x.stack===stack))attribution.push({kind:'program-query-stack',name,ms:0,stack});}const t=performance.now();try{const result=original.apply(this,args);if(strictGl&&kind==='gl'){const code=w.renderer.getContext().getError();if(code){attribution.push({kind:'query-gl-error',name,ms:0,code,stack:new Error('program query GL error').stack});throw Error('Diagnostic program query GL error 0x'+code.toString(16));}}return result;}finally{const ms=performance.now()-t;if(ms>10){const p=kind==='gl'&&name==='getProgramInfoLog'?w.renderer.info.programs.find(p=>p.program===args[0]):null;attribution.push({kind,name,quality:w.quality,ms,at:performance.now(),stack:ms>100&&kind==='renderer'&&name==='render'?new Error('slow auxiliary draw').stack:null,program:p?{id:p.id,cacheKey:p.cacheKey}:null});}}};restore.push(()=>{object[name]=original;});};
@@ -27,6 +30,8 @@ export async function verifyGameQualityCycle(w){
  }
  try{
  for(const quality of ['media','baja','media','baja']){
+  phaseSamples=new Map();
+  if(phaseAttribution)globalThis.qaQualityStatus={quality,step:'begin'};
   const frameTimes=[];let previous=performance.now(),tracking=true;
   const sample=()=>{if(!tracking)return;const now=performance.now();frameTimes.push(now-previous);previous=now;if(tracking)requestAnimationFrame(sample);};requestAnimationFrame(sample);
   const prewarm=new URLSearchParams(location.search).get('qualityPrewarm')==='1',draw=w.drawRenderFrame;
@@ -39,9 +44,11 @@ export async function verifyGameQualityCycle(w){
    const oldQuality=w.quality,revision=w.streamingProgramRevision,oldShadow=w.renderer.shadowMap.enabled,scope=createProgramRetentionScope(w.renderer),start=performance.now();let draws=0,pinFailed=false;const compileSpans=[];
    const originalDraw=w.drawRenderFrame;w.drawRenderFrame=function(...args){if(w.quality!==oldQuality||w.renderer.shadowMap.enabled!==oldShadow)throw Error('Staged quality leaked into presentation');draws++;return originalDraw.apply(this,args);};
    try{
+    if(phaseAttribution)globalThis.qaQualityStatus={quality,step:'prepare'};
     const stats=await prepareLiveScenePrograms(createShadowRecipeRenderer(w.renderer,quality==='media'||quality==='alta'),w.scene,w.camera,{screen:true,scheduler:globalFrameSchedulerEnabled()?globalFrameScheduler:null,onSubmit:span=>{compileSpans.push({...span,admission:span.label==='loading-compile-admission-wait'?globalFrameScheduler.snapshot():undefined});if(span.label==='loading-compile-submit'&&!scope.acquire())pinFailed=true;},cancelled:()=>w.disposed||pinFailed||w.quality!==oldQuality||w.streamingProgramRevision!==revision,getEpoch:()=>w.glResourceEpoch?.stats.epoch??0,batchSize:8,frameBudget:6});
     stagedPreparation={ms:performance.now()-start,draws,stats,compileSpans};
     w.drawRenderFrame=originalDraw;
+    if(phaseAttribution)globalThis.qaQualityStatus={quality,step:'activate'};
     const activate=performance.now();w.qualitySetting(quality);settingMs=performance.now()-activate;await w.streamingProgramRefresh;stagedPreparation.activationMs=performance.now()-activate;
    }finally{w.drawRenderFrame=originalDraw;scope.dispose();if(stagedPreparation)stagedPreparation.retention={...scope.stats};}
   }else {w.qualitySetting(quality);settingMs=performance.now()-begin;}
@@ -64,7 +71,7 @@ export async function verifyGameQualityCycle(w){
   if(enabled&&!w.programLease?.stats.retained)throw Error('Quality change did not recover retention');
   if(!enabled&&w.programLease!==null)throw Error('Disabled recovery retained programs');
   const gl=w.renderer.getContext(),glError=gl.getError();if(glError!==gl.NO_ERROR)throw Error('GL error after quality change: 0x'+glError.toString(16));
-  rows.push({quality,stagedPreparation,cacheBefore,cacheAfter:cacheState(),programs:w.renderer.info.programs.length,drawCalls:w.renderer.info.render.calls,recovery:w.streamingProgramRecovery,retention:w.programLease?.stats??null,settingMs,prewarmMs,prewarmInvalidations,livePreparation:livePreparation?.rounds?livePreparation:null,temporaryProgramScope:temporaryScope?.stats??null,transitionMs:performance.now()-begin,frameTimes});
+  rows.push({quality,phases:phaseAttribution?phaseSummary():null,stagedPreparation,cacheBefore,cacheAfter:cacheState(),programs:w.renderer.info.programs.length,drawCalls:w.renderer.info.render.calls,recovery:w.streamingProgramRecovery,retention:w.programLease?.stats??null,settingMs,prewarmMs,prewarmInvalidations,livePreparation:livePreparation?.rounds?livePreparation:null,temporaryProgramScope:temporaryScope?.stats??null,transitionMs:performance.now()-begin,frameTimes});
   if(globalThis.qaCaptureQuality){
    // Screenshot settling is deliberately outside measured transition timings.
    const deadline=performance.now()+30000;let stable=0;
@@ -82,5 +89,5 @@ export async function verifyGameQualityCycle(w){
  }else if(snapshot()!==before)throw Error('World changed during quality cycle');
  if(lease.stats.released!==lease.stats.retained)throw Error('Initial lease not fully released');
  return {attribution,attributionScope:'Nested synchronous call timings above 10 ms overlap; do not sum parent and child calls. No GPU execution timing is implied.',rows,lease:lease.stats,worldUnchanged:active?null:true,active:active?{initialElapsed,elapsed:w.state.elapsed,travelFrame,created:w.chunkStream.stats.created-initialCreated,stream:w.chunkStream.summary()}:null,limitation:'The refreshed snapshot remains bounded; it prioritizes newer variants and cannot guarantee every future unseen shader is warm.'};
- }catch(error){globalThis.qaQualityFailure={message:error.message,livePreparation:error.preparation??null,rows,attribution};throw error;}finally{if(active){cancelAnimationFrame(travelHandle);w.updateCamera=originalCameraUpdate;game.pause(w.state,'menu');}for(const undo of restore.reverse())undo();}
+ }catch(error){globalThis.qaQualityFailure={message:error.message,livePreparation:error.preparation??null,rows,attribution};throw error;}finally{if(phaseAttribution)w.onLoadingSpan=previousSpan;if(active){cancelAnimationFrame(travelHandle);w.updateCamera=originalCameraUpdate;game.pause(w.state,'menu');}for(const undo of restore.reverse())undo();}
 }
