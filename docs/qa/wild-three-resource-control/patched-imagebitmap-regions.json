@@ -1,0 +1,3331 @@
+{
+  "result": {
+    "deferredMips": true,
+    "revision": "180",
+    "hardware": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "scope": "Stock r180 public API feasibility on real lion textures plus alpha adversary. Explicit RAF per region and mip readbacks; NOT game throughput or GPU-time benchmark. No canvas pixel conversion.",
+    "rows": [
+      {
+        "name": "lion:map",
+        "width": 2048,
+        "height": 2048,
+        "colorSpace": "srgb",
+        "imageType": "ImageBitmap",
+        "trials": [
+          {
+            "mode": "full",
+            "preparationMs": 25.00499999523163,
+            "error": null,
+            "units": [
+              24.990000009536743
+            ],
+            "calls": [
+              {
+                "name": "texStorage2D",
+                "parameter": null,
+                "ms": 0.015000104904174805
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 22.924999952316284
+              },
+              {
+                "name": "generateMipmap",
+                "parameter": null,
+                "ms": 0.010000109672546387
+              }
+            ],
+            "differences": [
+              {
+                "level": 0,
+                "bytes": 16777216,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 1,
+                "bytes": 4194304,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 2,
+                "bytes": 1048576,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 3,
+                "bytes": 262144,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 4,
+                "bytes": 65536,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 5,
+                "bytes": 16384,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 6,
+                "bytes": 4096,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 7,
+                "bytes": 1024,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 8,
+                "bytes": 256,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 9,
+                "bytes": 64,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 10,
+                "bytes": 16,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 11,
+                "bytes": 4,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              }
+            ],
+            "glError": 0,
+            "textureCountDelta": 0
+          },
+          {
+            "mode": "regions",
+            "preparationMs": 517.0249999761581,
+            "error": null,
+            "units": [
+              0.29499995708465576,
+              0.6799999475479126,
+              0.2250000238418579,
+              0.46000003814697266,
+              0.1700000762939453,
+              0.2849999666213989,
+              0.46000003814697266,
+              0.43999993801116943,
+              0.5700000524520874,
+              0.36500000953674316,
+              0.25999999046325684,
+              0.15999996662139893,
+              0.30000007152557373,
+              0.25999999046325684,
+              0.13999998569488525,
+              0.3299999237060547,
+              0.18000006675720215,
+              0.28999996185302734,
+              0.18999993801116943,
+              0.18500006198883057,
+              0.16000008583068848,
+              0.23000001907348633,
+              0.1799999475479126,
+              0.17500007152557373,
+              0.2900000810623169,
+              0.2799999713897705,
+              0.2099999189376831,
+              0.43500006198883057,
+              0.22999989986419678,
+              0.14499998092651367,
+              0.21500003337860107,
+              0.15000009536743164,
+              0.18500006198883057
+            ],
+            "calls": [
+              {
+                "name": "texStorage2D",
+                "parameter": null,
+                "ms": 0.004999995231628418
+              },
+              {
+                "name": "generateMipmap",
+                "parameter": null,
+                "ms": 0
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.26499998569488525
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.16499996185302734
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.28000009059906006
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.10499989986419678
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.20000004768371582
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.3049999475479126
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.25999999046325684
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.33500003814697266
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.20000004768371582
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.15999996662139893
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.12999999523162842
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.24000000953674316
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.21000003814697266
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.11000001430511475
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.25
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.125
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.23000001907348633
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.13999998569488525
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.13499999046325684
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.11500000953674316
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.15999996662139893
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.13499999046325684
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.13499999046325684
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.2200000286102295
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.2200000286102295
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.13499999046325684
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.2999999523162842
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.17499995231628418
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.10499989986419678
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.14500010013580322
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.10499989986419678
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.13499999046325684
+              },
+              {
+                "name": "generateMipmap",
+                "parameter": null,
+                "ms": 0
+              }
+            ],
+            "differences": [
+              {
+                "level": 0,
+                "bytes": 16777216,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 1,
+                "bytes": 4194304,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 2,
+                "bytes": 1048576,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 3,
+                "bytes": 262144,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 4,
+                "bytes": 65536,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 5,
+                "bytes": 16384,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 6,
+                "bytes": 4096,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 7,
+                "bytes": 1024,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 8,
+                "bytes": 256,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 9,
+                "bytes": 64,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 10,
+                "bytes": 16,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 11,
+                "bytes": 4,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              }
+            ],
+            "glError": 0,
+            "textureCountDelta": 0
+          },
+          {
+            "mode": "full",
+            "preparationMs": 14.004999995231628,
+            "error": null,
+            "units": [
+              14.004999995231628
+            ],
+            "calls": [
+              {
+                "name": "texStorage2D",
+                "parameter": null,
+                "ms": 0.004999995231628418
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 13.789999961853027
+              },
+              {
+                "name": "generateMipmap",
+                "parameter": null,
+                "ms": 0.010000109672546387
+              }
+            ],
+            "differences": [
+              {
+                "level": 0,
+                "bytes": 16777216,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 1,
+                "bytes": 4194304,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 2,
+                "bytes": 1048576,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 3,
+                "bytes": 262144,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 4,
+                "bytes": 65536,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 5,
+                "bytes": 16384,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 6,
+                "bytes": 4096,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 7,
+                "bytes": 1024,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 8,
+                "bytes": 256,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 9,
+                "bytes": 64,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 10,
+                "bytes": 16,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 11,
+                "bytes": 4,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              }
+            ],
+            "glError": 0,
+            "textureCountDelta": 0
+          },
+          {
+            "mode": "regions",
+            "preparationMs": 525.7749999761581,
+            "error": null,
+            "units": [
+              0.2749999761581421,
+              0.24000000953674316,
+              0.2549999952316284,
+              0.16499996185302734,
+              0.1700000762939453,
+              0.17500007152557373,
+              0.3999999761581421,
+              0.1650000810623169,
+              0.11500000953674316,
+              0.2549999952316284,
+              0.375,
+              0.13999998569488525,
+              0.28999996185302734,
+              0.25999999046325684,
+              0.30000007152557373,
+              0.2799999713897705,
+              0.18000006675720215,
+              0.13499999046325684,
+              0.13999998569488525,
+              0.31000006198883057,
+              0.16499996185302734,
+              0.13999998569488525,
+              0.2849999666213989,
+              0.25999999046325684,
+              0.2549999952316284,
+              0.30000007152557373,
+              0.26499998569488525,
+              0.17499995231628418,
+              0.18999993801116943,
+              0.24000000953674316,
+              0.18000006675720215,
+              0.26499998569488525,
+              0.2700001001358032
+            ],
+            "calls": [
+              {
+                "name": "texStorage2D",
+                "parameter": null,
+                "ms": 0.004999995231628418
+              },
+              {
+                "name": "generateMipmap",
+                "parameter": null,
+                "ms": 0
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.2099999189376831
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.19999992847442627
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.12999999523162842
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.1400001049041748
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.12999999523162842
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.23000001907348633
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.12999999523162842
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.10000002384185791
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.1950000524520874
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.2999999523162842
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.10500001907348633
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.23000001907348633
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.19499993324279785
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.23000001907348633
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.21500003337860107
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.125
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.10000002384185791
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.10000002384185791
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.2200000286102295
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.12000000476837158
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.11000001430511475
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.23000001907348633
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.2200000286102295
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.20000004768371582
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.24500000476837158
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.20500004291534424
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.13999998569488525
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.13499999046325684
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.19000005722045898
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.12000000476837158
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.20000004768371582
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.21499991416931152
+              },
+              {
+                "name": "generateMipmap",
+                "parameter": null,
+                "ms": 0
+              }
+            ],
+            "differences": [
+              {
+                "level": 0,
+                "bytes": 16777216,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 1,
+                "bytes": 4194304,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 2,
+                "bytes": 1048576,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 3,
+                "bytes": 262144,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 4,
+                "bytes": 65536,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 5,
+                "bytes": 16384,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 6,
+                "bytes": 4096,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 7,
+                "bytes": 1024,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 8,
+                "bytes": 256,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 9,
+                "bytes": 64,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 10,
+                "bytes": 16,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 11,
+                "bytes": 4,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              }
+            ],
+            "glError": 0,
+            "textureCountDelta": 0
+          }
+        ]
+      },
+      {
+        "name": "lion:normalMap",
+        "width": 2048,
+        "height": 2048,
+        "colorSpace": "",
+        "imageType": "ImageBitmap",
+        "trials": [
+          {
+            "mode": "full",
+            "preparationMs": 15.075000047683716,
+            "error": null,
+            "units": [
+              15.075000047683716
+            ],
+            "calls": [
+              {
+                "name": "texStorage2D",
+                "parameter": null,
+                "ms": 0
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 14.930000066757202
+              },
+              {
+                "name": "generateMipmap",
+                "parameter": null,
+                "ms": 0.004999995231628418
+              }
+            ],
+            "differences": [
+              {
+                "level": 0,
+                "bytes": 16777216,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 1,
+                "bytes": 4194304,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 2,
+                "bytes": 1048576,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 3,
+                "bytes": 262144,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 4,
+                "bytes": 65536,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 5,
+                "bytes": 16384,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 6,
+                "bytes": 4096,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 7,
+                "bytes": 1024,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 8,
+                "bytes": 256,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 9,
+                "bytes": 64,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 10,
+                "bytes": 16,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 11,
+                "bytes": 4,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              }
+            ],
+            "glError": 0,
+            "textureCountDelta": 0
+          },
+          {
+            "mode": "regions",
+            "preparationMs": 522.9300000667572,
+            "error": null,
+            "units": [
+              0.13499999046325684,
+              0.15000009536743164,
+              0.13499999046325684,
+              0.3299999237060547,
+              0.43999993801116943,
+              0.18500006198883057,
+              0.18499994277954102,
+              0.3049999475479126,
+              0.24500000476837158,
+              0.25999999046325684,
+              0.23000001907348633,
+              0.20000004768371582,
+              0.1950000524520874,
+              0.21500003337860107,
+              0.31000006198883057,
+              0.19499993324279785,
+              0.15500009059906006,
+              0.2049999237060547,
+              0.31499993801116943,
+              0.21000003814697266,
+              0.2200000286102295,
+              0.26999998092651367,
+              0.2549999952316284,
+              0.20000004768371582,
+              0.2799999713897705,
+              0.21000003814697266,
+              0.32499992847442627,
+              0.16999995708465576,
+              0.15999996662139893,
+              0.18500006198883057,
+              0.2549999952316284,
+              0.36500000953674316,
+              0.2200000286102295
+            ],
+            "calls": [
+              {
+                "name": "texStorage2D",
+                "parameter": null,
+                "ms": 0.004999995231628418
+              },
+              {
+                "name": "generateMipmap",
+                "parameter": null,
+                "ms": 0
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.125
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.11000001430511475
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.2549999952316284
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.3700000047683716
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.12000000476837158
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.13999998569488525
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.23000001907348633
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.1799999475479126
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.20000004768371582
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.16000008583068848
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.1499999761581421
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.14499998092651367
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.16499996185302734
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.24000000953674316
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.13999998569488525
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.10000002384185791
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.1499999761581421
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.24000000953674316
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.14499998092651367
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.16999995708465576
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.21500003337860107
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.20000004768371582
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.1499999761581421
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.2099999189376831
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.13999998569488525
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.26499998569488525
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.12999999523162842
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.11000001430511475
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.13499999046325684
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.2099999189376831
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.2849999666213989
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.16999995708465576
+              },
+              {
+                "name": "generateMipmap",
+                "parameter": null,
+                "ms": 0
+              }
+            ],
+            "differences": [
+              {
+                "level": 0,
+                "bytes": 16777216,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 1,
+                "bytes": 4194304,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 2,
+                "bytes": 1048576,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 3,
+                "bytes": 262144,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 4,
+                "bytes": 65536,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 5,
+                "bytes": 16384,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 6,
+                "bytes": 4096,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 7,
+                "bytes": 1024,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 8,
+                "bytes": 256,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 9,
+                "bytes": 64,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 10,
+                "bytes": 16,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 11,
+                "bytes": 4,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              }
+            ],
+            "glError": 0,
+            "textureCountDelta": 0
+          },
+          {
+            "mode": "full",
+            "preparationMs": 15.169999957084656,
+            "error": null,
+            "units": [
+              15.164999961853027
+            ],
+            "calls": [
+              {
+                "name": "texStorage2D",
+                "parameter": null,
+                "ms": 0.004999995231628418
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 14.795000076293945
+              },
+              {
+                "name": "generateMipmap",
+                "parameter": null,
+                "ms": 0.004999995231628418
+              }
+            ],
+            "differences": [
+              {
+                "level": 0,
+                "bytes": 16777216,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 1,
+                "bytes": 4194304,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 2,
+                "bytes": 1048576,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 3,
+                "bytes": 262144,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 4,
+                "bytes": 65536,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 5,
+                "bytes": 16384,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 6,
+                "bytes": 4096,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 7,
+                "bytes": 1024,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 8,
+                "bytes": 256,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 9,
+                "bytes": 64,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 10,
+                "bytes": 16,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 11,
+                "bytes": 4,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              }
+            ],
+            "glError": 0,
+            "textureCountDelta": 0
+          },
+          {
+            "mode": "regions",
+            "preparationMs": 516.2150000333786,
+            "error": null,
+            "units": [
+              0.21000003814697266,
+              0.20500004291534424,
+              0.1549999713897705,
+              0.3400000333786011,
+              0.18500006198883057,
+              0.33000004291534424,
+              0.31000006198883057,
+              0.29499995708465576,
+              0.1799999475479126,
+              0.16499996185302734,
+              0.18000006675720215,
+              0.2849999666213989,
+              0.16499996185302734,
+              0.4750000238418579,
+              0.1499999761581421,
+              0.16999995708465576,
+              0.26999998092651367,
+              0.17500007152557373,
+              0.1650000810623169,
+              0.20500004291534424,
+              0.36000001430511475,
+              0.35500001907348633,
+              0.1700000762939453,
+              0.25,
+              0.26999998092651367,
+              0.13499999046325684,
+              0.3299999237060547,
+              0.18500006198883057,
+              0.13999998569488525,
+              0.13499999046325684,
+              0.23500001430511475,
+              0.26499998569488525,
+              0.2999999523162842
+            ],
+            "calls": [
+              {
+                "name": "texStorage2D",
+                "parameter": null,
+                "ms": 0.004999995231628418
+              },
+              {
+                "name": "generateMipmap",
+                "parameter": null,
+                "ms": 0
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.18500006198883057
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.12999999523162842
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.2549999952316284
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.13999998569488525
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.2549999952316284
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.24500000476837158
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.20000004768371582
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.12999999523162842
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.11500000953674316
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.13499999046325684
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.23000001907348633
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.13999998569488525
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.40500009059906006
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.10000002384185791
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.13499999046325684
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.23500001430511475
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.125
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.11499989032745361
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.15999996662139893
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.26999998092651367
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.26499998569488525
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.13499999046325684
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.1950000524520874
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.19499993324279785
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.10000002384185791
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.24500000476837158
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.12000000476837158
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.10500001907348633
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.11000001430511475
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.18000006675720215
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.1950000524520874
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.23000001907348633
+              },
+              {
+                "name": "generateMipmap",
+                "parameter": null,
+                "ms": 0.004999995231628418
+              }
+            ],
+            "differences": [
+              {
+                "level": 0,
+                "bytes": 16777216,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 1,
+                "bytes": 4194304,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 2,
+                "bytes": 1048576,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 3,
+                "bytes": 262144,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 4,
+                "bytes": 65536,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 5,
+                "bytes": 16384,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 6,
+                "bytes": 4096,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 7,
+                "bytes": 1024,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 8,
+                "bytes": 256,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 9,
+                "bytes": 64,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 10,
+                "bytes": 16,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 11,
+                "bytes": 4,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              }
+            ],
+            "glError": 0,
+            "textureCountDelta": 0
+          }
+        ]
+      },
+      {
+        "name": "lion:roughnessMap",
+        "width": 4096,
+        "height": 4096,
+        "colorSpace": "",
+        "imageType": "ImageBitmap",
+        "trials": [
+          {
+            "mode": "full",
+            "preparationMs": 60,
+            "error": null,
+            "units": [
+              59.99000000953674
+            ],
+            "calls": [
+              {
+                "name": "texStorage2D",
+                "parameter": null,
+                "ms": 0
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 59.62999999523163
+              },
+              {
+                "name": "generateMipmap",
+                "parameter": null,
+                "ms": 0.004999995231628418
+              }
+            ],
+            "differences": [
+              {
+                "level": 0,
+                "bytes": 67108864,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 1,
+                "bytes": 16777216,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 2,
+                "bytes": 4194304,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 3,
+                "bytes": 1048576,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 4,
+                "bytes": 262144,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 5,
+                "bytes": 65536,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 6,
+                "bytes": 16384,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 7,
+                "bytes": 4096,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 8,
+                "bytes": 1024,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 9,
+                "bytes": 256,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 10,
+                "bytes": 64,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 11,
+                "bytes": 16,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 12,
+                "bytes": 4,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              }
+            ],
+            "glError": 0,
+            "textureCountDelta": 0
+          },
+          {
+            "mode": "regions",
+            "preparationMs": 1063.405000090599,
+            "error": null,
+            "units": [
+              0.21000003814697266,
+              0.4650000333786011,
+              0.6649999618530273,
+              0.9049999713897705,
+              1.1649999618530273,
+              1.184999942779541,
+              0.7450000047683716,
+              0.5399999618530273,
+              0.4950000047683716,
+              0.6999999284744263,
+              0.44499993324279785,
+              0.6450001001358032,
+              0.6200000047683716,
+              0.6100000143051147,
+              0.7149999141693115,
+              0.4249999523162842,
+              1.1649999618530273,
+              1.2949999570846558,
+              0.5400000810623169,
+              0.5,
+              0.6100000143051147,
+              0.6599999666213989,
+              0.5249999761581421,
+              1.2899999618530273,
+              0.8100000619888306,
+              0.6449999809265137,
+              0.5900000333786011,
+              0.875,
+              0.5800000429153442,
+              0.6499999761581421,
+              0.8400000333786011,
+              1.15500009059906,
+              1.149999976158142,
+              0.9850000143051147,
+              0.6899999380111694,
+              0.5,
+              0.809999942779541,
+              0.7649999856948853,
+              0.5849999189376831,
+              0.7849999666213989,
+              0.5850000381469727,
+              0.9700000286102295,
+              1.1649999618530273,
+              0.7999999523162842,
+              0.8600000143051147,
+              0.4100000858306885,
+              0.5199999809265137,
+              0.5099999904632568,
+              0.7849999666213989,
+              0.7799999713897705,
+              0.8349999189376831,
+              0.6399999856948853,
+              1.0750000476837158,
+              0.9049999713897705,
+              0.6950000524520874,
+              1.3849999904632568,
+              0.7149999141693115,
+              0.6100000143051147,
+              0.5099999904632568,
+              0.5849999189376831,
+              1.0299999713897705,
+              2.0749999284744263,
+              0.6200000047683716,
+              0.9550000429153442,
+              0.48000001907348633
+            ],
+            "calls": [
+              {
+                "name": "texStorage2D",
+                "parameter": null,
+                "ms": 0.004999995231628418
+              },
+              {
+                "name": "generateMipmap",
+                "parameter": null,
+                "ms": 0
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.4500000476837158
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.625
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.8450000286102295
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 1.1150000095367432
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 1.0749999284744263
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.6599999666213989
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.5049999952316284
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.4750000238418579
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.6449999809265137
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.41499996185302734
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.6000000238418579
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.5950000286102295
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.5800000429153442
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.6949999332427979
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.38499999046325684
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 1.0749999284744263
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 1.209999918937683
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.5149999856948853
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.4650000333786011
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.5750000476837158
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.6150000095367432
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.48000001907348633
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 1.2050000429153442
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.7649999856948853
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.6100000143051147
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.5400000810623169
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.8200000524520874
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.5300000905990601
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.5850000381469727
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.815000057220459
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 1.0850000381469727
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 1.100000023841858
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.9300000667572021
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.6499999761581421
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.4700000286102295
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.7549999952316284
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.7049999237060547
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.5349999666213989
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.7350000143051147
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.5299999713897705
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.9199999570846558
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 1.100000023841858
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.7400000095367432
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.8250000476837158
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.3850001096725464
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.49000000953674316
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.4700000286102295
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.7300000190734863
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.7050000429153442
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.7749999761581421
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.6049998998641968
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 1.0299999713897705
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.8400000333786011
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.6500000953674316
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 1.3149999380111694
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.6699999570846558
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.5600000619888306
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.4650000333786011
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.5149999856948853
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.9750000238418579
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 1.965000033378601
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.5699999332427979
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.8799999952316284
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.41999995708465576
+              },
+              {
+                "name": "generateMipmap",
+                "parameter": null,
+                "ms": 0.005000114440917969
+              }
+            ],
+            "differences": [
+              {
+                "level": 0,
+                "bytes": 67108864,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 1,
+                "bytes": 16777216,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 2,
+                "bytes": 4194304,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 3,
+                "bytes": 1048576,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 4,
+                "bytes": 262144,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 5,
+                "bytes": 65536,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 6,
+                "bytes": 16384,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 7,
+                "bytes": 4096,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 8,
+                "bytes": 1024,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 9,
+                "bytes": 256,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 10,
+                "bytes": 64,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 11,
+                "bytes": 16,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 12,
+                "bytes": 4,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              }
+            ],
+            "glError": 0,
+            "textureCountDelta": 0
+          },
+          {
+            "mode": "full",
+            "preparationMs": 53.25999999046326,
+            "error": null,
+            "units": [
+              53.24500000476837
+            ],
+            "calls": [
+              {
+                "name": "texStorage2D",
+                "parameter": null,
+                "ms": 0
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 53.105000019073486
+              },
+              {
+                "name": "generateMipmap",
+                "parameter": null,
+                "ms": 0.004999995231628418
+              }
+            ],
+            "differences": [
+              {
+                "level": 0,
+                "bytes": 67108864,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 1,
+                "bytes": 16777216,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 2,
+                "bytes": 4194304,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 3,
+                "bytes": 1048576,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 4,
+                "bytes": 262144,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 5,
+                "bytes": 65536,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 6,
+                "bytes": 16384,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 7,
+                "bytes": 4096,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 8,
+                "bytes": 1024,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 9,
+                "bytes": 256,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 10,
+                "bytes": 64,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 11,
+                "bytes": 16,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 12,
+                "bytes": 4,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              }
+            ],
+            "glError": 0,
+            "textureCountDelta": 0
+          },
+          {
+            "mode": "regions",
+            "preparationMs": 1054.4399999380112,
+            "error": null,
+            "units": [
+              0.07499992847442627,
+              0.6700000762939453,
+              0.6100000143051147,
+              1.2750000953674316,
+              0.7100000381469727,
+              1.415000081062317,
+              0.7400000095367432,
+              0.75,
+              0.8450000286102295,
+              0.8350000381469727,
+              0.9399999380111694,
+              1.0800000429153442,
+              1.524999976158142,
+              1.1649999618530273,
+              0.6550000905990601,
+              1.274999976158142,
+              0.4750000238418579,
+              1.340000033378601,
+              1.0100001096725464,
+              0.8100000619888306,
+              0.6800000667572021,
+              0.5649999380111694,
+              0.6050000190734863,
+              1.2450000047683716,
+              1.1100000143051147,
+              0.7050000429153442,
+              0.49000000953674316,
+              0.8849999904632568,
+              0.5149999856948853,
+              0.6049998998641968,
+              0.7599999904632568,
+              0.8299999237060547,
+              0.8600000143051147,
+              0.7200000286102295,
+              1.090000033378601,
+              0.75,
+              1.0200001001358032,
+              1.0950000286102295,
+              0.880000114440918,
+              0.6999999284744263,
+              1.0700000524520874,
+              0.6200000047683716,
+              0.7450000047683716,
+              1.4350000619888306,
+              1.4600000381469727,
+              0.6600000858306885,
+              1.409999966621399,
+              1.6400001049041748,
+              0.6500000953674316,
+              0.7750000953674316,
+              0.7549999952316284,
+              0.6550000905990601,
+              0.6750000715255737,
+              0.5,
+              0.6700000762939453,
+              0.6550000905990601,
+              0.7999999523162842,
+              0.7850000858306885,
+              0.6499999761581421,
+              0.6600000858306885,
+              0.45500004291534424,
+              0.8200000524520874,
+              1.2050000429153442,
+              0.7699999809265137,
+              1.1549999713897705
+            ],
+            "calls": [
+              {
+                "name": "texStorage2D",
+                "parameter": null,
+                "ms": 0.004999995231628418
+              },
+              {
+                "name": "generateMipmap",
+                "parameter": null,
+                "ms": 0
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.6549999713897705
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.565000057220459
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 1.2200000286102295
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.6599999666213989
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 1.3300000429153442
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.6850000619888306
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.690000057220459
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.7850000858306885
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.7750000953674316
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.8600000143051147
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.9900000095367432
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 1.4549999237060547
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 1.1049998998641968
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.6150000095367432
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 1.2300000190734863
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.4500000476837158
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 1.2700001001358032
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.9499999284744263
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.75
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.6200000047683716
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.5149999856948853
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.5550000667572021
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 1.1649999618530273
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.9649999141693115
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.6349999904632568
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.44999992847442627
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.8299999237060547
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.4750000238418579
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.5449999570846558
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.7000000476837158
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.75
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.8050000667572021
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.6649999618530273
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 1.0449999570846558
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.7050000429153442
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.9750000238418579
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 1.040000081062317
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.8549998998641968
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.6599999666213989
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 1.024999976158142
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.5800000429153442
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.6950000524520874
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 1.369999885559082
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 1.4000000953674316
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.5800000429153442
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 1.3350000381469727
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 1.5749999284744263
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.6050000190734863
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.7300000190734863
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.7200000286102295
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.6150000095367432
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.625
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.4599999189376831
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.6349999904632568
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.625
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.75
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.7249999046325684
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.6000000238418579
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.6200000047683716
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.41499996185302734
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.7799999713897705
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 1.1399999856948853
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.7300000190734863
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 1.0750000476837158
+              },
+              {
+                "name": "generateMipmap",
+                "parameter": null,
+                "ms": 0.004999995231628418
+              }
+            ],
+            "differences": [
+              {
+                "level": 0,
+                "bytes": 67108864,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 1,
+                "bytes": 16777216,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 2,
+                "bytes": 4194304,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 3,
+                "bytes": 1048576,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 4,
+                "bytes": 262144,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 5,
+                "bytes": 65536,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 6,
+                "bytes": 16384,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 7,
+                "bytes": 4096,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 8,
+                "bytes": 1024,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 9,
+                "bytes": 256,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 10,
+                "bytes": 64,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 11,
+                "bytes": 16,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 12,
+                "bytes": 4,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              }
+            ],
+            "glError": 0,
+            "textureCountDelta": 0
+          }
+        ]
+      },
+      {
+        "name": "synthetic-alpha",
+        "width": 128,
+        "height": 128,
+        "colorSpace": "srgb",
+        "imageType": "ImageBitmap",
+        "trials": [
+          {
+            "mode": "full",
+            "preparationMs": 0.1499999761581421,
+            "error": null,
+            "units": [
+              0.1499999761581421
+            ],
+            "calls": [
+              {
+                "name": "texStorage2D",
+                "parameter": null,
+                "ms": 0.004999995231628418
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.06500005722045898
+              },
+              {
+                "name": "generateMipmap",
+                "parameter": null,
+                "ms": 0
+              }
+            ],
+            "differences": [
+              {
+                "level": 0,
+                "bytes": 65536,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 1,
+                "bytes": 16384,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 2,
+                "bytes": 4096,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 3,
+                "bytes": 1024,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 4,
+                "bytes": 256,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 5,
+                "bytes": 64,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 6,
+                "bytes": 16,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 7,
+                "bytes": 4,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              }
+            ],
+            "glError": 0,
+            "textureCountDelta": 0
+          },
+          {
+            "mode": "regions",
+            "preparationMs": 19.30999994277954,
+            "error": null,
+            "units": [
+              0.07499992847442627,
+              0.04500007629394531,
+              0.10000002384185791
+            ],
+            "calls": [
+              {
+                "name": "texStorage2D",
+                "parameter": null,
+                "ms": 0
+              },
+              {
+                "name": "generateMipmap",
+                "parameter": null,
+                "ms": 0
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.02499997615814209
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.05500006675720215
+              },
+              {
+                "name": "generateMipmap",
+                "parameter": null,
+                "ms": 0.004999995231628418
+              }
+            ],
+            "differences": [
+              {
+                "level": 0,
+                "bytes": 65536,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 1,
+                "bytes": 16384,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 2,
+                "bytes": 4096,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 3,
+                "bytes": 1024,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 4,
+                "bytes": 256,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 5,
+                "bytes": 64,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 6,
+                "bytes": 16,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 7,
+                "bytes": 4,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              }
+            ],
+            "glError": 0,
+            "textureCountDelta": 0
+          },
+          {
+            "mode": "full",
+            "preparationMs": 0.15999996662139893,
+            "error": null,
+            "units": [
+              0.15999996662139893
+            ],
+            "calls": [
+              {
+                "name": "texStorage2D",
+                "parameter": null,
+                "ms": 0.004999995231628418
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.060000061988830566
+              },
+              {
+                "name": "generateMipmap",
+                "parameter": null,
+                "ms": 0.004999995231628418
+              }
+            ],
+            "differences": [
+              {
+                "level": 0,
+                "bytes": 65536,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 1,
+                "bytes": 16384,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 2,
+                "bytes": 4096,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 3,
+                "bytes": 1024,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 4,
+                "bytes": 256,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 5,
+                "bytes": 64,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 6,
+                "bytes": 16,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 7,
+                "bytes": 4,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              }
+            ],
+            "glError": 0,
+            "textureCountDelta": 0
+          },
+          {
+            "mode": "regions",
+            "preparationMs": 20.085000038146973,
+            "error": null,
+            "units": [
+              0.09500002861022949,
+              0.07999992370605469,
+              0.06500005722045898
+            ],
+            "calls": [
+              {
+                "name": "texStorage2D",
+                "parameter": null,
+                "ms": 0
+              },
+              {
+                "name": "generateMipmap",
+                "parameter": null,
+                "ms": 0
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.06499993801116943
+              },
+              {
+                "name": "texSubImage2D",
+                "parameter": null,
+                "ms": 0.029999971389770508
+              },
+              {
+                "name": "generateMipmap",
+                "parameter": null,
+                "ms": 0
+              }
+            ],
+            "differences": [
+              {
+                "level": 0,
+                "bytes": 65536,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 1,
+                "bytes": 16384,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 2,
+                "bytes": 4096,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 3,
+                "bytes": 1024,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 4,
+                "bytes": 256,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 5,
+                "bytes": 64,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 6,
+                "bytes": 16,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              },
+              {
+                "level": 7,
+                "bytes": 4,
+                "changed": 0,
+                "max": 0,
+                "mean": 0
+              }
+            ],
+            "glError": 0,
+            "textureCountDelta": 0
+          }
+        ]
+      }
+    ]
+  },
+  "errors": []
+}

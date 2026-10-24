@@ -1,0 +1,10 @@
+import {defineConfig} from 'vite';
+import path from 'node:path';
+const publicDir=process.env.WG_ASSET_ROOT?path.resolve(process.env.WG_ASSET_ROOT):'public';
+const variant=process.env.WG_THREE_VARIANT??'official';
+if(!['official','stock','patched'].includes(variant))throw Error('Invalid Three variant');
+const prefix=path.resolve('.cache/wild-three',variant,'src');
+const upstream=path.resolve('tools/wild-three/node_modules/three');
+const alias=variant==='official'?[{find:/^three$/,replacement:upstream+'/build/three.module.js'},{find:/^three\/src\//,replacement:upstream+'/src/'}]:[{find:/^three$/,replacement:prefix+'/Three.js'},{find:/^three\/src\//,replacement:prefix+'/'}];
+alias.push({find:/^three\/addons\//,replacement:upstream+'/examples/jsm/'});
+export default defineConfig({publicDir,resolve:{alias},cacheDir:'.cache/wild-three-vite-'+variant,server:{strictPort:true,headers:{'Cross-Origin-Opener-Policy':'same-origin','Cross-Origin-Embedder-Policy':'require-corp'}},optimizeDeps:{exclude:['three'],entries:['index.html','tools/wild-three/texture-probe.html']}});
