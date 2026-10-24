@@ -91,3 +91,25 @@ the fixed opening view, not animation, all biomes or peak memory.
 The next evidence-led target is overlapping initial program-readiness waits,
 analogous to the existing bounded live-scene compiler, without concurrent borrowed
 GL state or additional shader variants.
+
+## Initial program readiness waves (opt-in, acceptance pending)
+
+The first concurrency4 pilot failed before readiness because the scene caller
+omitted the scheduler argument required by bounded parallel admission. This is
+an integration defect, not a performance result; the failure report is retained.
+The corrected caller passes the existing frame scheduler. Sequential control
+also uses that admission path, so the new ABAB isolates readiness concurrency.
+65 compilation and scheduler tests pass, including bounded outstanding batches,
+original object preservation and draining an already-submitted failed wave.
+
+The corrected pilot completes 25 chunks in37.068s with no emergency admissions,
+no pending work and a maximum scheduled CPU unit of16.120ms. Presentation P95
+is66.465ms and P99 is133.055ms, but the maximum interval is3492.110ms between
+RAF timestamps16985.245 and20477.355. This interval is not a measured GPU time
+or proof of a synchronous compiler stall. It prevents accepting this pilot as
+a fluency improvement without attribution and repeated controls.
+
+Reproduction: tools/wild-three/run-compile-abab.py --fixture <same saved fixture>
+--prefix <new prefix>, against P2 on port5197. Both arms use ordinary texture
+uploads and disable far-image overlap; A uses concurrency1, B concurrency4.
+The default remains concurrency1. No production performance claim yet.

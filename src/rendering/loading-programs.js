@@ -32,8 +32,9 @@ export function compileLoadingPrograms(renderer,scene,camera,targetScene,{schedu
 // scene. No mesh is cloned, reparented or hidden: lights, fog, clipping, skinning
 // and instancing retain the actual target-scene/object recipe. Restore screen
 // state synchronously in each submission before yielding to the loading RAF.
-export async function compileLoadingProgramsBatched(renderer,scene,camera,targetScene,{batchSize=4,frameBudget=0,now=()=>performance.now(),nextFrame,guardResourceDisposal=false,...options}={}) {
+export async function compileLoadingProgramsBatched(renderer,scene,camera,targetScene,{batchSize=4,concurrency=1,frameBudget=0,now=()=>performance.now(),nextFrame,guardResourceDisposal=false,...options}={}) {
  if(!Number.isInteger(batchSize)||batchSize<1)throw Error('Loading compile batch size must be positive');
+ if(!Number.isInteger(concurrency)||concurrency<1||concurrency>8||(concurrency>1&&!options.scheduler))throw Error('Parallel loading compilation requires global admission and concurrency 1..8');
  // All batches serve one operation: do not renew its admission grace period
  // after every driver wait. Explicit caller deadlines remain authoritative.
  if(options.scheduler)options={...options,deadline:options.deadline??now()+250};
@@ -54,11 +55,19 @@ export async function compileLoadingProgramsBatched(renderer,scene,camera,target
  try{
  const target=targetScene??scene;
  const yieldWork=loadingYieldBudget({frameBudget,now,nextFrame,signal:options.signal,cancelled:options.cancelled,onYield:options.onSubmit,frameSlack:options.frameSlack,cpuBudget:options.cpuBudget,getFrame:options.getFrame});
- for(let start=0;start<objects.length;start+=batchSize){
+ const prepareBatch=async start=>{
   const batch=objects.slice(start,start+batchSize);
   const view={traverse:callback=>{for(const object of batch)callback(object);},traverseVisible:()=>{}};
   await compileLoadingPrograms(renderer,view,camera,target,options.frameSlack||options.cpuBudget?{...options,now,onCpu:duration=>{yieldWork.recordWork(duration);options.onCpu?.(duration);}}:{...options,now});
   if(!options.scheduler)await yieldWork();
+ };
+ if(concurrency===1){for(let start=0;start<objects.length;start+=batchSize)await prepareBatch(start);}
+ else for(let start=0;start<objects.length;start+=batchSize*concurrency){
+  const wave=[];
+  for(let offset=0;offset<concurrency&&start+offset*batchSize<objects.length;offset++)wave.push(prepareBatch(start+offset*batchSize));
+  // Submitted GL state is restored synchronously; only readiness waits overlap.
+  const settled=await Promise.allSettled(wave),failed=settled.find(result=>result.status==='rejected');
+  if(failed)throw failed.reason;
  }
  }catch(error){
   if(resourceDisposed||error.code==='GPU_PROGRAM_DISPOSED'){const cancelled=new Error('Loading compilation cancelled: borrowed resource disposed',{cause:error});cancelled.code='BORROWED_RESOURCE_DISPOSED';throw cancelled;}

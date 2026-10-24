@@ -144,3 +144,23 @@ test('batched scheduler deadline belongs to the operation, not each later batch'
   assert.deepEqual(deadlines,Array(3).fill(explicit??350));
  }
 });
+
+test('initial loading overlaps bounded readiness waves but preserves every original object',async()=>{
+ const objects=Array.from({length:5},()=>({isMesh:true,material:{}})),ready=objects.map(()=>false),calls=[];
+ const scene={traverse:fn=>objects.forEach(fn)},gl={isContextLost:()=>false},scheduler={submit:async iterator=>iterator.next().value};
+ const renderer={getContext:()=>gl,compile(view){const batch=[];view.traverse(o=>batch.push(o));calls.push(...batch);return new Set(batch.map(o=>o.material));},properties:{get:material=>({currentProgram:{isReady:()=>ready[objects.findIndex(o=>o.material===material)]}})}};
+ const pending=compileLoadingProgramsBatched(renderer,scene,{},scene,{scheduler,batchSize:1,concurrency:2});
+ await Promise.resolve();assert.equal(calls.length,2);ready[0]=ready[1]=true;
+ await new Promise(resolve=>setTimeout(resolve,25));assert.equal(calls.length,4);
+ ready.fill(true);await pending;assert.deepEqual(calls,objects);
+});
+test('failed loading wave drains already-submitted readiness and never submits a later wave',async()=>{
+ const objects=Array.from({length:3},()=>({isMesh:true,material:{}})),scene={traverse:fn=>objects.forEach(fn)},gl={isContextLost:()=>false};let ready=false,calls=0,finished=false;
+ const renderer={getContext:()=>gl,compile(view){calls++;if(calls===2)throw Error('second submission failed');return new Set([objects[0].material]);},properties:{get:()=>({currentProgram:{isReady:()=>ready}})}};
+ const pending=compileLoadingProgramsBatched(renderer,scene,{},scene,{scheduler:{submit:async iterator=>iterator.next().value},batchSize:1,concurrency:2});
+ const failure=assert.rejects(pending,/second submission failed/).then(()=>{finished=true;});await new Promise(resolve=>setTimeout(resolve,15));assert.equal(finished,false);assert.equal(calls,2);
+ ready=true;await failure;assert.equal(calls,2);
+});
+test('parallel initial compilation rejects unbounded waves and missing global admission',async()=>{
+ for(const concurrency of [0,9,1.5,2])await assert.rejects(compileLoadingProgramsBatched({}, {}, {}, {}, {concurrency}),/global admission/);
+});
