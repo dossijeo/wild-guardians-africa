@@ -288,3 +288,17 @@ uses one shared gameplay composition including its depth recipe. Removing
 these merely because they are initially hidden would defer required work.
 Next work should target proven redundant program preparation, not delete
 these required recipes or continue promoting the failed specialization.
+
+## Confirmed cache-key distinction for matching shader fingerprints
+
+New original diagnostic manglares-program-keys.json observes83resident Three
+programs. World programs39/74 share vertex/fragment hashes4301934e/66cf9391,
+with no deletion between their creation. Their full cache keys match except
+for native-partial-blend-v1 versus smooth-standby-v1. Reference counts14/25.
+These correspond to createSmoothObstructionMaterial and smoothStandbyMaterial;
+both replace the same coverage discard and apply the same visibility alpha.
+Both effects are required. Hypothesis: safely sharing a canonical shader key
+may remove a duplicate compile without removing either effect. Not implemented
+or accepted yet: verify callback semantics, material state and exact shader
+source equivalence before changing keys. Hash matches alone are insufficient.
+Observer reads renderer.info.programs metadata only, without GPU queries.
