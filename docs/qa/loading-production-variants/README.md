@@ -166,3 +166,16 @@ keep raw measurements and do not subtract the guardian from end-to-end timings.
 
 The candidate is now undergoing serial media-profile inventory/capture checks
 for all six biomes, including unchanged Desert. Its source remains opt-in.
+
+## Candidate media-profile validation across six biomes
+
+All six diagnostic loads complete25chunks. Link/post-ready counts match each
+original exactly: Sabana83/2, Gran Río83/2, Mangroves90/1, Desert70/2,
+Volcanoes81/2, Canyon67/1. No additional link is deferred in the observed window.
+Opening captures inspected for all six across the pilot/media series: no obvious
+loss of selected vegetation, ground coverage, shadowing, water/lava or buildings.
+These are limited opening inspections; paired image equivalence outside Mangroves,
+night, moving cameras, active world and profile changes remain unverified.
+Single diagnostic readiness varies (Mangroves41.203s here), reinforcing that
+isolated times must not be used as optimization acceptance. Raw data retained.
+The low-quality six-biome candidate series is now running serially.
