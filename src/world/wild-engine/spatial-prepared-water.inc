@@ -3,8 +3,9 @@
 struct PreparedWaterBed {
   std::array<double,8> metadata{};
   std::vector<uint8_t> bytes;
+  std::vector<float> shore;
 };
-PreparedWaterBed prepareWaterBed(int cx,int cz){
+PreparedWaterBed prepareWaterBed(int cx,int cz,bool prepareShore){
   PreparedWaterBed out;
   if(worldBiome!=4||waterTriangles.empty())return out;
   struct Point {double x,z;};
@@ -15,6 +16,14 @@ PreparedWaterBed prepareWaterBed(int cx,int cz){
     const double x=float(double(waterTriangles[i])-cx*48),z=float(double(waterTriangles[i+2])-cz*48);
     minX=std::min(minX,x);maxX=std::max(maxX,x);minZ=std::min(minZ,z);maxZ=std::max(maxZ,z);
     points.push_back({x+cx*48,z+cz*48});
+  }
+  if(prepareShore){
+    out.shore.reserve(points.size());
+    for(const auto& p:points){
+      // Mirror the float ABI of waterInfo, then keep the existing shore attribute.
+      const double mask=wetlandMask(float(p.x),float(p.z));
+      out.shore.push_back(mask>.61?float(std::min(42.0,std::abs(mask-.61)*52)):0.f);
+    }
   }
   const double width=maxX-minX+1,height=maxZ-minZ+1;
   minX+=cx*48-.5;minZ+=cz*48-.5;

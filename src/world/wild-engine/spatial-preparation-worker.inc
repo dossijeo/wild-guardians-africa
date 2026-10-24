@@ -23,7 +23,7 @@ struct PreparationJob {
   std::array<std::unordered_map<uint64_t,ChunkRaster>,navigationProfiles> neighbors;
   std::array<std::vector<PreparedSector>,navigationProfiles> sectors;
   PreparedChunkData data;
-  bool waterBedRequested=false;
+  bool waterBedRequested=false,waterShoreRequested=false;
   PreparedWaterBed waterBed;
   std::array<std::optional<ChunkRaster>,navigationProfiles> rasters;
 };
@@ -36,7 +36,7 @@ pthread_t preparationThread;
 bool preparationStarted=false;
 int preparationSerial=0;
 int preparationVisualOptions=0;
-extern "C" EMSCRIPTEN_KEEPALIVE void spatial_prepare_visual_options(int flags){preparationVisualOptions=flags&1;}
+extern "C" EMSCRIPTEN_KEEPALIVE void spatial_prepare_visual_options(int flags){preparationVisualOptions=flags&3;}
 void wakePreparation(){emscripten_futex_wake(&preparationState,1);}
 void* preparationLoop(void*){
   while(!preparationStop.load(std::memory_order_acquire)){
@@ -75,7 +75,7 @@ void* preparationLoop(void*){
         }
         job.rasters[profile.index]=std::move(local.at(chunkKey(job.cx,job.cz)));
       }
-      if(job.waterBedRequested&&!preparationCancel.load(std::memory_order_acquire))job.waterBed=prepareWaterBed(job.cx,job.cz);
+      if(job.waterBedRequested&&!preparationCancel.load(std::memory_order_acquire))job.waterBed=prepareWaterBed(job.cx,job.cz,job.waterShoreRequested);
       job.data=takePreparedChunkData();
     }
     // Detach borrowed input addresses before the main thread may release them.
@@ -97,6 +97,7 @@ extern "C" EMSCRIPTEN_KEEPALIVE int spatial_prepare_start(int cx,int cz){
   }
   auto job=std::make_unique<PreparationJob>();
   job->waterBedRequested=(preparationVisualOptions&1)!=0;
+  job->waterShoreRequested=(preparationVisualOptions&2)!=0;
   job->id=++preparationSerial;job->seed=worldSeed;job->biome=worldBiome;
   job->canyon=canyonOpenRight;job->cx=cx;job->cz=cz;
   job->terrainRevision=terrainInputRevision;job->residentRevision=residencyRevision;job->obstacleRevision=overlayRevision;
@@ -172,6 +173,7 @@ std::pair<void*,size_t> preparationBuffer(int field){
   if(!preparationReadable())return {nullptr,0};
   auto& d=preparationJob->data;
   switch(field){
+    case 9:return {preparationJob->waterBed.shore.data(),preparationJob->waterBed.shore.size()*sizeof(float)};
     case 7:return {preparationJob->waterBed.bytes.data(),preparationJob->waterBed.bytes.size()};
     case 8:return {preparationJob->waterBed.metadata.data(),preparationJob->waterBed.bytes.empty()?0:sizeof(preparationJob->waterBed.metadata)};
     case 0:return {d.heights.data(),d.heights.size()*sizeof(float)};

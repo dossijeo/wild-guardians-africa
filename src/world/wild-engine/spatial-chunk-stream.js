@@ -30,9 +30,9 @@ export function createSpatialChunkStream(core,{loaded,onData,onError=()=>{},sche
           await new Promise(resolve=>setTimeout(resolve,4));
         }
         if(cancelled||!current())return null;
-        const waterBed=p.waterBed?.();
+        const waterBed=p.waterBed?.(),waterShore=p.waterShore?.();
         const result=p.publish(id,cx,cz);
-        if(result>0)return {...core.chunkPayload(),...(waterBed?{waterBed}:{})};
+        if(result>0)return {...core.chunkPayload(),...(waterBed?{waterBed}:{}),...(waterShore?{waterShore}:{})};
         if(result!==-2)throw Error(`Native chunk publication failed: ${result}`);
         // A world edit invalidated the snapshot. Retry from current inputs.
       }finally{p.release();}

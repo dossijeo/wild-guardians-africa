@@ -101,6 +101,7 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
     publish:publishPreparedChunk,
     metric:field=>wasm.spatial_prepare_metric(field),
     visualOptions:flags=>wasm.spatial_prepare_visual_options?.(flags),
+    waterShore:()=>{const size=wasm.spatial_prepare_buffer_bytes(9);return size?new Float32Array(wasm.memory.buffer,wasm.spatial_prepare_buffer_ptr(9),size/4).slice():null;},
     waterBed:()=>{
       const size=wasm.spatial_prepare_buffer_bytes(7);if(!size)return null;
       const values=new Float64Array(wasm.memory.buffer,wasm.spatial_prepare_buffer_ptr(8),8);

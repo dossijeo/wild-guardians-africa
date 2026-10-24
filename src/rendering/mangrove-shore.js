@@ -1,8 +1,9 @@
 import * as THREE from 'three';
-export function prepareMangroveBank(world,geometry,cx,cz,material=world.fluidMaterial){
+export function prepareMangroveBank(world,geometry,cx,cz,material=world.fluidMaterial,preparedShore=null){
  if(world.state.biome!=='manglares'||!mangroveShoreEnabled())return;
- const pos=geometry.attributes.position,data=new Float32Array(pos.count),field=world.nav.field;
- for(let i=0;i<pos.count;i++){const info=field.waterInfo(pos.getX(i)+cx*48,pos.getZ(i)+cz*48);data[i]=info.inside?info.shore:0;}
+ const pos=geometry.attributes.position,data=preparedShore??new Float32Array(pos.count),field=world.nav.field;
+ if(data.length!==pos.count)throw Error('Invalid prepared water shore');
+ if(!preparedShore)for(let i=0;i<pos.count;i++){const info=field.waterInfo(pos.getX(i)+cx*48,pos.getZ(i)+cz*48);data[i]=info.inside?info.shore:0;}
  geometry.setAttribute('wetShore',new THREE.BufferAttribute(data,1));
  if(material.userData.wetShore)return;material.userData.wetShore=true;
  const compile=material.onBeforeCompile,key=material.customProgramCacheKey();
