@@ -1,7 +1,8 @@
 // Presentation owns this scheduler. No timers, RAF loop or native execution.
 // CPU measurements are wall durations of synchronous JS, never GPU timings.
 export class GlobalFrameScheduler {
-  constructor({now=()=>performance.now(),targetMs=1000/60,maxPending=128}={}) {
+  constructor({now=()=>performance.now(),targetMs=1000/60,maxPending=128,diagnostics=false}={}) {
+    this.diagnostics=diagnostics?{idlePendingFrames:0,noHeadroom:0,mandatoryPressure:0,lateCallback:0,policyLimited:0,elapsedGuard:0,cpuSum:0,latenessSum:0,maxLateness:0}:null;
     this.now=now;this.targetMs=targetMs;this.maxPending=maxPending;
     this.jobs=new Map();this.sequence=0;this.samples=[];this.lastTimestamp=null;
     this.budget=0;this.cooldown=0;this.lastPolicy=-Infinity;
@@ -96,10 +97,18 @@ export class GlobalFrameScheduler {
       selected.cost=Math.max(duration,selected.cost*.8); // Conservative recent unit estimate.
       if(borrowed||this.now()-began>=remaining){this.stats.overruns++;break;}
     }
+    if(this.diagnostics&&work===0&&this.jobs.size){
+      const d=this.diagnostics,lateness=frame.start-frame.timestamp;d.idlePendingFrames++;d.cpuSum+=cpu;d.latenessSum+=lateness;d.maxLateness=Math.max(d.maxLateness,lateness);
+      if(remaining===0)d.noHeadroom++;
+      if(cpu>=period*.85)d.mandatoryPressure++;
+      if(lateness>=period*.5)d.lateCallback++;
+      if(base<.25&&remaining>=.25)d.policyLimited++;
+      if(this.now()-frame.timestamp+.25>period*2)d.elapsedGuard++;
+    }
     this.stats.workMs+=work;this.stats.continuationMs+=continuation;this.stats.coordinationMs+=Math.max(0,this.now()-began-work-continuation);
   }
-  snapshot(){const now=this.now();let oldestMs=0;for(const job of this.jobs.values())oldestMs=Math.max(oldestMs,now-job.created);return {...this.stats,...this.policy,budgetMs:this.budget,pending:this.jobs.size,oldestMs};}
+  snapshot(){const now=this.now();let oldestMs=0;for(const job of this.jobs.values())oldestMs=Math.max(oldestMs,now-job.created);return {...this.stats,...this.policy,budgetMs:this.budget,pending:this.jobs.size,oldestMs,...(this.diagnostics?{admissionDiagnostics:{...this.diagnostics}}:{})};}
 }
-export const globalFrameScheduler=new GlobalFrameScheduler();
+export const globalFrameScheduler=new GlobalFrameScheduler({diagnostics:new URLSearchParams(globalThis.location?.search??'').get('frameSchedulerDiagnostics')==='1'});
 const enabled=new URLSearchParams(globalThis.location?.search??'').get('frameScheduler')==='1';
 export const globalFrameSchedulerEnabled=()=>enabled;

@@ -61,3 +61,12 @@ test('a failing cost estimator closes only its job and leaves other work executa
  const good=scheduler.submit((function*(){ran=true;return 1;})(),{deadline:0});scheduler.beginFrame(time);time+=2;await scheduler.endFrame();await rejection;await good;
  assert.equal(closed,true);assert.equal(ran,true);assert.equal(scheduler.snapshot().failed,1);assert.equal(scheduler.snapshot().pending,0);
 });
+
+
+test('admission diagnostics are optional and distinguish late callbacks from CPU work',async()=>{
+ let time=100;const scheduler=new GlobalFrameScheduler({now:()=>time,diagnostics:true});
+ const result=scheduler.submit((function*(){return 1;})(),{key:'job'});
+ scheduler.beginFrame(70);time+=2;await scheduler.endFrame();const d=scheduler.snapshot().admissionDiagnostics;
+ assert.equal(d.idlePendingFrames,1);assert.equal(d.noHeadroom,1);assert.equal(d.mandatoryPressure,0);assert.equal(d.latenessSum,30);assert.equal(d.cpuSum,2);
+ scheduler.cancel('job');await result;assert.equal(new GlobalFrameScheduler().snapshot().admissionDiagnostics,undefined);
+});

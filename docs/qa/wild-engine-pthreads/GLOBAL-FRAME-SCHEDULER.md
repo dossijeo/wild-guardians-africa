@@ -180,3 +180,14 @@ Inspected Three r180 WebGLRenderer.prepareMaterial and WebGLPrograms.getParamete
 Decision: discard the grouping layer. Its limited reuse does not justify maintenance or address the dominant cost. Reports/patch preserve reproducibility. These are diagnostic successive runs, not performance acceptance. Do not collapse distinct shader variants to improve counts.
 
 PR159 verified OPEN/draft with the correct experimental head. Remaining focus is admission under streaming and first target shader/resource preparation. Scheduler remains opt-in; overall objective remains unfinished.
+
+
+## Admission conditions and rejected bounded debt batching
+
+Added optional `WG_FRAME_SCHEDULER_DIAGNOSTICS=1` (query frameSchedulerDiagnostics) counters for pending frames that run zero measured work. Records CPU, callback lateness, zero headroom, CPU pressure, low policy budget and the elapsed guard. These are overlapping conditions, not mutually exclusive attribution. Policy/elapsed proxies use the default 0.25 ms estimate. No per-frame journal or allocation; counters absent by default.
+
+`quality-staged-admission-reasons-1.json`: between first and last admission of the initial media preparation, 56 pending zero-work frames all coincide with mandatory CPU pressure (at least 85% of target period); 27 also have late callbacks. Their mandatory CPU sums 1247.39 ms. Thus relaxing admission cannot safely solve this phase. Cumulative counters include loading and waits outside a phase, so subtract within-phase snapshots before attribution.
+
+Tested allowing multiple tiny overdue continuations within a bounded debt envelope (12% of refresh, existing CPU/lateness guards retained). `quality-staged-bounded-debt-1.json`: prep media/baja/media/baja 10581/6674/748/979 ms versus 9207/8049/757/832 ms in preceding diagnostic reference. RAF P95 67.2/49.6/56.1/45.1 versus 76.3/47.4/45.0/45.8 ms; maxima 216.8/148.2/62.7/77.2 versus 202.2/195.3/88.6/56.6 ms. No consistent benefit, especially warm variants; successive pilots are not ABAB acceptance. No unexpected GL failures.
+
+Rejected the debt-batching policy and restored previous admission behavior. `bounded-debt-rejected.patch` reproduces the candidate from 3639ff662 and includes the diagnostic additions that are retained. Only optional diagnostics and their test remain active. Next investigation should attribute and split mandatory graphical preparation during native streaming, rather than repeatedly relax safety limits. The expensive first cold shader preparation also remains unresolved. Overall scheduler success remains unproven.
