@@ -12,19 +12,21 @@ export async function verifyGameQualityCycle(w){
   w.updateCamera=()=>{w.camera.lookAt(w.controls.target);w.camera.updateMatrixWorld();};
   const move=()=>{travelFrame++;const offset=144*Math.min(travelFrame/240,1);w.camera.position.copy(eye);w.camera.position.x+=offset;w.controls.target.copy(target);w.controls.target.x+=offset;if(travelFrame<240)travelHandle=requestAnimationFrame(move);};travelHandle=requestAnimationFrame(move);
  }
+ const deletedPrograms=new WeakMap();
  const attribution=[],restore=[],strictGl=new URLSearchParams(location.search).get('qualityStrictGl')==='1';
  if(new URLSearchParams(location.search).get('qualityAttribution')==='1'){
-  const wrap=(object,name,kind)=>{if(typeof object?.[name]!=='function')return;const original=object[name];object[name]=function(...args){if(strictGl&&kind==='gl'&&name==='getProgramParameter'){const stack=new Error('program query').stack;if(!attribution.some(x=>x.kind==='program-query-stack'&&x.stack===stack))attribution.push({kind:'program-query-stack',name,ms:0,stack});}const t=performance.now();try{const result=original.apply(this,args);if(strictGl&&kind==='gl'){const code=w.renderer.getContext().getError();if(code){attribution.push({kind:'query-gl-error',name,ms:0,code,stack:new Error('program query GL error').stack});throw Error('Diagnostic program query GL error 0x'+code.toString(16));}}return result;}finally{const ms=performance.now()-t;if(ms>10){const p=kind==='gl'&&name==='getProgramInfoLog'?w.renderer.info.programs.find(p=>p.program===args[0]):null;attribution.push({kind,name,quality:w.quality,ms,at:performance.now(),stack:ms>100&&kind==='renderer'&&name==='render'?new Error('slow auxiliary draw').stack:null,program:p?{id:p.id,cacheKey:p.cacheKey}:null});}}};restore.push(()=>{object[name]=original;});};
+  const wrap=(object,name,kind)=>{if(typeof object?.[name]!=='function')return;const original=object[name];object[name]=function(...args){if(kind==='gl'&&name==='deleteProgram'&&args[0])deletedPrograms.set(args[0],new Error('program deletion').stack);else if(kind==='gl'&&args[0]&&deletedPrograms.has(args[0]))attribution.push({kind:'deleted-program-access',name,ms:0,deleted:deletedPrograms.get(args[0]),stack:new Error('deleted program access').stack});if(strictGl&&kind==='gl'&&name==='getProgramParameter'){const stack=new Error('program query').stack;if(!attribution.some(x=>x.kind==='program-query-stack'&&x.stack===stack))attribution.push({kind:'program-query-stack',name,ms:0,stack});}const t=performance.now();try{const result=original.apply(this,args);if(strictGl&&kind==='gl'){const code=w.renderer.getContext().getError();if(code){attribution.push({kind:'query-gl-error',name,ms:0,code,stack:new Error('program query GL error').stack});throw Error('Diagnostic program query GL error 0x'+code.toString(16));}}return result;}finally{const ms=performance.now()-t;if(ms>10){const p=kind==='gl'&&name==='getProgramInfoLog'?w.renderer.info.programs.find(p=>p.program===args[0]):null;attribution.push({kind,name,quality:w.quality,ms,at:performance.now(),stack:ms>100&&kind==='renderer'&&name==='render'?new Error('slow auxiliary draw').stack:null,program:p?{id:p.id,cacheKey:p.cacheKey}:null});}}};restore.push(()=>{object[name]=original;});};
   for(const name of ['render','drawRenderFrame','drawWorldFrame','syncChunks'])wrap(w,name,'scene');
   wrap(w.renderer,'render','renderer');wrap(w.renderer,'compile','renderer');wrap(w.mangroveMaterialCache,'update','groundCache');wrap(w.horizon,'update','horizon');
-  const gl=w.renderer.getContext(),methods=new Set(['compileShader','linkProgram','getProgramParameter','getShaderParameter','getShaderInfoLog','getProgramInfoLog','getUniformLocation','getActiveUniform','getActiveAttrib','drawElements','drawElementsInstanced','drawArrays','drawArraysInstanced','texImage2D','texSubImage2D','bufferData','bufferSubData']);if(strictGl)for(let p=gl;p;p=Object.getPrototypeOf(p))for(const name of Object.getOwnPropertyNames(p))if(name!=='getError'&&name!=='constructor'&&typeof gl[name]==='function')methods.add(name);for(const name of methods)wrap(gl,name,'gl');
+  const gl=w.renderer.getContext(),methods=new Set(['deleteProgram','useProgram','compileShader','linkProgram','getProgramParameter','getShaderParameter','getShaderInfoLog','getProgramInfoLog','getUniformLocation','getActiveUniform','getActiveAttrib','drawElements','drawElementsInstanced','drawArrays','drawArraysInstanced','texImage2D','texSubImage2D','bufferData','bufferSubData']);if(strictGl)for(let p=gl;p;p=Object.getPrototypeOf(p))for(const name of Object.getOwnPropertyNames(p))if(name!=='getError'&&name!=='constructor'&&typeof gl[name]==='function')methods.add(name);for(const name of methods)wrap(gl,name,'gl');
  }
  try{
  for(const quality of ['media','baja','media','baja']){
   const frameTimes=[];let previous=performance.now(),tracking=true;
   const sample=()=>{if(!tracking)return;const now=performance.now();frameTimes.push(now-previous);previous=now;if(tracking)requestAnimationFrame(sample);};requestAnimationFrame(sample);
   const prewarm=new URLSearchParams(location.search).get('qualityPrewarm')==='1',draw=w.drawRenderFrame;
-  if(prewarm)w.drawRenderFrame=()=>{};
+  const serializeRecovery=new URLSearchParams(location.search).get('qualitySerialRecovery')==='1',refresh=w.refreshStreamingPrograms;
+  if(prewarm){w.drawRenderFrame=()=>{};if(serializeRecovery)w.refreshStreamingPrograms=()=>{};}
   const begin=performance.now();w.qualitySetting(quality);const settingMs=performance.now()-begin;
   let prewarmMs=0,prewarmInvalidations=0;
   if(prewarm){const start=performance.now(),deadline=start+30000;try{
@@ -35,8 +37,9 @@ export async function verifyGameQualityCycle(w){
      try{await compileLoadingProgramsBatched(w.renderer,w.scene,w.camera,w.scene,{screen:true,guardResourceDisposal:true,cancelled:()=>w.disposed,getEpoch:()=>w.glResourceEpoch?.stats.epoch??0,batchSize:8,frameBudget:6});break;}
      catch(error){if(error.code!=='BORROWED_RESOURCE_DISPOSED'||w.disposed)throw error;prewarmInvalidations++;await new Promise(requestAnimationFrame);}
     }
+    if(serializeRecovery){w.refreshStreamingPrograms=refresh;await refresh.call(w);}
     await w.streamingProgramRefresh;
-  }finally{prewarmMs=performance.now()-start;w.drawRenderFrame=draw;}}
+  }finally{w.refreshStreamingPrograms=refresh;prewarmMs=performance.now()-start;w.drawRenderFrame=draw;}}
   for(let i=0;i<12;i++)await new Promise(requestAnimationFrame);
   w.render(0);await w.whenChunksReady();
   await w.streamingProgramRefresh;
