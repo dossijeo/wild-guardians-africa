@@ -215,3 +215,13 @@ Diagnostic readiness varies in both directions, including unchanged Desert
 claiming speed from separate inventory series. A second uninstrumented
 Mangrove A/B/A/B series is running under prefix manglares-pruned-repeat.
 No production default is changed.
+
+## Repeated timing series in progress
+
+The first repeated pair completes in 38,344.790ms original versus 37,243.895ms
+candidate (1,100.895ms saved). World compile phase wall time is 5,198.220ms
+versus 4,795.355ms (402.865ms saved). The second pair remains running; these
+are provisional results, not final acceptance. No shader defaults changed.
+The reusable summary explicitly includes the final loading-frame boundary in
+post-ready RAF cadence, so the handoff interval is not silently omitted.
+Neither phase wall time nor RAF cadence is labelled GPU execution time.
